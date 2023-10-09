@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216312C9C
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7575D31A86
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q3MwS5Sq"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3C1B0
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:34 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a3942461aso757250276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pbgOyqyv"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30BFE4
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:36 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59b5a586da6so39519097b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696876773; x=1697481573; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696876776; x=1697481576; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
         bh=husYgJZI8HkXIeEAlVmrxb2HP2ESjHLdcuso9o2l4OQ=;
-        b=q3MwS5SqifOzUElLTHKWkRfZVws4YDTwoeM6IgNevANP0y+8+EOzK57e63WLiODxJX
-         1on8wng9ck5yUo113CPYVkTKH/vhDJ379EuFMBNkjoY0YkSFQES/4+t75/mTtQSYKgup
-         fmS7T4Y2mgfC3jhkaoVNsapb1CXkI48j6qiIeMCcQ9FmAmyG3EiBk+U9rh8u9ilgf+Xn
-         4g8GXp0lmJJvv92MH7iNbyntf/eMtK64JTgXeu1yprg8Eg3uRJwOAo0f5uBCH2UUylry
-         pgwiCXEbuKYjwsN3qvchhjRWYz2TbUwrIKVqyHfUdcwMGVr9K7u+RmLzg1+0vHmu9qD1
-         ZM3Q==
+        b=pbgOyqyvlD011FRFCZ/wnDOEV5NneFzPc1aVqQOX6e9vd71ycHrFTGtTrzsDZpbS51
+         bRy1bc23HNVBTWBUNkbaWEyH0I0zxun1ux+KOKqJdfWvCiDaZO9S4CbXOwftQbK1Fbew
+         G23hRCOPe+DEonYi44XWLaeZ1p+gdsUNgOChZUfpNqKZLan1DooqYNIvPUDMJDMFqB1V
+         jMgQk0o1Ileg0vhoIrVvllaRXwzBaEhJAiwIAP5sWVw9AmMJ7KRmvOcrEaf4nZ0e0AIA
+         ENkf4UU409d3SGJ6YzaCbgQqFvY63FzZkGo6S/PQ5g8GIpqgku46+K3o655OJ3C/qArk
+         IqmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876773; x=1697481573;
+        d=1e100.net; s=20230601; t=1696876776; x=1697481576;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=husYgJZI8HkXIeEAlVmrxb2HP2ESjHLdcuso9o2l4OQ=;
-        b=pGlmiBKh3m1etT4N/5oIjUYxQlVJnAlkNwC8vo16s2t6GDnmp5SGbB0VOqnWfW2gq3
-         CFnmOyNMJNiaGHUUyt5Yvi0BOFSvRoVFRqP4XdVp38gVCViybrsDvPMla498Ls1+wLfI
-         L438qjFHB3WUlHnGXBUy6/T03dqRZ5SsVMzkpBnELtyQMX5pH3/XFZwD6J/QJv4BefiS
-         BQFfsFS4P/uys1kq0T14QUn5kn9Jit/mBrARQsu3+SanQYkJXlnVD5Sh9RDF6VbZoqmu
-         TE5wJTLwLL8PegkyU4oRAfsv9LYVL0zBPVlHBZmaYl2fQNN7RHFsU8R54Ee26RwZYoI6
-         KVwQ==
-X-Gm-Message-State: AOJu0YyYTchIHlMBkTbXtuEYU9YSlPsGiUoGbTDHb4kBdsrqvORkwCU8
-	8C0LhF8RoQ5dKj6tbKCF1KePdzfppmbK
-X-Google-Smtp-Source: AGHT+IHhtsuWVOhbFVDqVr7kwVoc3IhqYcfVk/+Ozn3UkaCuNcjQLVk5uFUA97D/yQhm0NP4FMqRmqlmjGkp
+        b=VcTEQwFDTZQ1gNPrh1WEcRn1nqj3tUWUiHezWmbrxkePGMcMMxMphGHamwRGhuA3oZ
+         aNfULH5TonFlVoHe7JSDcbFQSgJhaWBU+9AJ1OfVsSzm/YSzgytXztaE0XGic/DwJyxH
+         Vq8t39ALyEXHgHV+KSPXu/aQm0upyGzhDraUJ5uLb22SD6v1QmYrmnubk29gT+965Trm
+         JcFv7gmFa5ZMW6EVsMAOmrGTQxlGhaFfpUllzwDrQuLhQI+9kIS8QtbFRODAGalNrBlp
+         ZOCKwVOa6LlrFa9M3VPuVTP7k+krEERyeHzt7SvUrBklr8BTZr2uajIlZFn8LaSPKX9H
+         alAQ==
+X-Gm-Message-State: AOJu0Yz0mJz7Is5bg0xJAfP3aJ/KbRKTo62032rST5n8l5BJpoOE7pL9
+	STG3/lLfg+CFAeLUrnuEIHYeBq+vpifg
+X-Google-Smtp-Source: AGHT+IEmIpves+ngQa/FnxLG2CDSAz+zgDHCABHfkgCw1xRVBQfEO08K/FXFPnYfqQ71+Ihm3xsKsmi3qj2I
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a05:6902:212:b0:d89:b072:d06f with SMTP id
- j18-20020a056902021200b00d89b072d06fmr251520ybs.7.1696876773275; Mon, 09 Oct
- 2023 11:39:33 -0700 (PDT)
-Date: Mon,  9 Oct 2023 11:39:04 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:c90:b0:59b:b0b1:d75a with SMTP id
+ cm16-20020a05690c0c9000b0059bb0b1d75amr262884ywb.4.1696876775752; Mon, 09 Oct
+ 2023 11:39:35 -0700 (PDT)
+Date: Mon,  9 Oct 2023 11:39:05 -0700
 In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-Message-Id: <20231009183920.200859-4-irogers@google.com>
+Message-Id: <20231009183920.200859-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231009183920.200859-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v3 03/18] run-clang-tools: Add pass through checks and and
+Subject: [PATCH v3 03/18] run-clang-tools: Add pass through checks and
  header-filter arguments
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
@@ -65,9 +65,9 @@ To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
