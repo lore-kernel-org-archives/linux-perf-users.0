@@ -1,266 +1,547 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9612536B02
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 17:04:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB72C10A1E
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 17:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E2YoLzDq"
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2046.outbound.protection.outlook.com [40.107.243.46])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B085D9E;
-	Mon,  9 Oct 2023 10:04:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mx3Xtq9PDJkbwIdAnamtobImOQO16Xq6wLWdVqOEkfGfu595LY086ctfVIkHarwqRnpYc4vXJ0gEkf5bDpszV3VXRDrdeMahBaRW6tKUWIqUKkJkiPfE7IeptlXwH6EBTjNruLGZCZZnGhYk6Ve1dxfwszkCw3NdKjCHvXwIMgeE3D3Zf1UxA3w7EcnzfCfQEQDfbUVA08OX8wNx21PzUeNRs5a1hUsY/KMv922lpvKz3qNjHevWfvVMk0KTSQ2cd0LNQ/at2aKCDGi4BgwP1LRyZDfK/ItmZyXVMSIrNuBc/qsfRP9NSRmCqBYtQ8aS6XAtwXlr/jb5o92aF3rZsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bWSJCpVVqJ70JCSNoBlRL8IWgIRxqiTdG2BAEBovVKk=;
- b=Mq8AgTGZH3o3OgE2Ya/JDdzP//Uydi0bWug0zzwAVVYX1KVAzQdrO4aJOr3F/74XAwnQuhjWa96FJk5Wkbz7Ew0YFDlV44WGCkrwApZzZnP883mwvY7sremdIX6AtHC8mjromupOI124yc0P0+TgLvVXM1PZvwZJ3mi4DFNZCcwDBwBrlNFpz4oluM35cB44tefebrUqaVeleJ2nrGbT42/TExVUih1b80/NMqqaPI8mGXYPGlP3Ebxk7pEvQLw9fsVmF3hQox83O2cug1kY2w0L7ab31DNsdvpq7nYTv3TlCTDeRKaxPyhh66SwlpKxS6kef38eEvby95vaCdD8kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bWSJCpVVqJ70JCSNoBlRL8IWgIRxqiTdG2BAEBovVKk=;
- b=E2YoLzDqgqfXy65hHG50zmvagBu/AijQFS4piIgX1mg+xGlo5VY3aqZjZ7TtDrZ/TwoZOY0ZsUoVuHgwDlK+lMFw0n+MqCVakErDFG2pgIB4e/09Yjjdf/5aAWlar60T4ShImRkQ/GuT7ke1c6KPRTUx5JwemRUKRC9rciqmeh8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6214.namprd12.prod.outlook.com (2603:10b6:8:96::13) by
- PH8PR12MB6913.namprd12.prod.outlook.com (2603:10b6:510:1ca::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.42; Mon, 9 Oct
- 2023 17:03:59 +0000
-Received: from DS7PR12MB6214.namprd12.prod.outlook.com
- ([fe80::2d00:60c4:e350:a14d]) by DS7PR12MB6214.namprd12.prod.outlook.com
- ([fe80::2d00:60c4:e350:a14d%5]) with mapi id 15.20.6863.032; Mon, 9 Oct 2023
- 17:03:59 +0000
-Message-ID: <03b7da03-78a1-95b1-3969-634b5c9a5a56@amd.com>
-Date: Mon, 9 Oct 2023 22:33:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics
- event
-To: Sean Christopherson <seanjc@google.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
- Zhang Xiong <xiong.y.zhang@intel.com>, Lv Zhiyuan <zhiyuan.lv@intel.com>,
- Yang Weijiang <weijiang.yang@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- David Dunn <daviddunn@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- Mingwei Zhang <mizhang@google.com>, Jim Mattson <jmattson@google.com>,
- Like Xu <like.xu.linux@gmail.com>
-References: <20231002115718.GB13957@noisy.programming.kicks-ass.net>
- <ZRrF38RGllA04R8o@gmail.com> <ZRroQg6flyGBtZTG@google.com>
- <20231002204017.GB27267@noisy.programming.kicks-ass.net>
- <ZRtmvLJFGfjcusQW@google.com>
- <20231003081616.GE27267@noisy.programming.kicks-ass.net>
- <ZRwx7gcY7x1x3a5y@google.com>
- <20231004112152.GA5947@noisy.programming.kicks-ass.net>
- <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
- <ZR3eNtP5IVAHeFNC@google.com> <ZR3hx9s1yJBR0WRJ@google.com>
- <c69a1eb1-e07a-8270-ca63-54949ded433d@gmail.com>
-From: Manali Shukla <manali.shukla@amd.com>
-In-Reply-To: <c69a1eb1-e07a-8270-ca63-54949ded433d@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0122.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:96::8) To DS7PR12MB6214.namprd12.prod.outlook.com
- (2603:10b6:8:96::13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hB0h+e6T"
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4387694
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 10:13:34 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-5068b69f4aeso8463e87.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 10:13:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696871612; x=1697476412; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=USZw0GHNuB175V2YHfKKNgurGef2WdvOjtdu3+1mZgo=;
+        b=hB0h+e6T/0tE/OklbzBSaz3eVMxScbU2bH9nnAqrVgEbgeJdJiUGqbLFuHdOcQrGAO
+         Q/oBOkqso6LTPd+6K4wnOC6X6oaJC5TdYVzmxDeA142cYiqSD6Sx3NGY2qaeZLRsdJ5X
+         cfcJzatyBdDSkgEXwENGnSFvnsT5Rt1HA5xZLpidWc4Js5XAp+SFXW3R8bMwqU8D8wJ1
+         8tfAoCgysxMx51d9UB6zwYr57NF0a1KYPU3pzOPCbCz0b+JNbFQEynt2ug9AJRFrQWe4
+         9eWdRcgClUtZjRjELB9thN7VLvH8LkeBJxEi0kpQzwxs1XZL3tp0SIJ/IkdBFlLEVDmQ
+         Kbyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696871612; x=1697476412;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=USZw0GHNuB175V2YHfKKNgurGef2WdvOjtdu3+1mZgo=;
+        b=E+b4rGg8MiJ8AzrpmCHZ4xTn1BNWHBfVkfNLhoJ7kpGnxEh/oqYXp7P0a5jfzq7iz0
+         Elhb5ynOzGuMHfBg01pFsZLUc5PnLOolA1v7JwGs8YcMfypoftDNxI2XRHu4ed16syB0
+         SObXBC6kwX5W3gjuJ1PU+hcQD8X25+V2CLR8MdoR/t9kzuuRSfMHq8Ks+OLQG26V9FIL
+         WpghDlYav8FjgOkweKfRaBspaDTWRVzgKvAuSDgYpNuN+u2F4s3DejWGs2l3DDxOYgqG
+         vi10srO+wx4shKEhu/ppNPG1TisUnAXw4uIrLcUXdyYM3G89pQr3F7206OUnnuAkGm+l
+         aVFA==
+X-Gm-Message-State: AOJu0YwT9Vp9UHRRx9+bPSqlXC9Flr5E0ZKryDMtUO5BKTaiV3Oau+/m
+	5BScOFGxEknvPG0FnA8i5GNsiQtMp1JWj35FgkHqdw==
+X-Google-Smtp-Source: AGHT+IGVsX4xfHStmDL+x1OifbyOceUXKJcxj4/NHb1DoOc5oXAK1xokifhDJ9++bokH9VsHXchQtCdyLgMwzO6fTxs=
+X-Received: by 2002:ac2:558c:0:b0:502:cdb6:f316 with SMTP id
+ v12-20020ac2558c000000b00502cdb6f316mr231818lfg.3.1696871612180; Mon, 09 Oct
+ 2023 10:13:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6214:EE_|PH8PR12MB6913:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9aa2bd0d-8195-4940-0515-08dbc8e9bb0e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	L0FP+dmRDKv/hHi8QUZNQg3I3Co0CisD7l1tK3IUN/pXkMNbrnApbHJZwTvPr4C53IEgdP7qNFGZyzXBbeQWQ2tquDEbHUqKV8NU/Arv68mZhzJ0QQLNZpRXae1q9K0Q7+NXTDsN6TbAX8DWB9NqL2Fx5IB9EY/l6e55VWsjwiQhWOdP8VS9uKN06ixQQdyCZu0+vvI8CHnDMHOdfvMy9tZ8E0RRohZib+6Bai1vGU4FKFXnBVMiQRK9bdMCoJSSoTp2by6TsI2I6qvZ2XiZMc6v8Gxq/CU3bQx1xaVmnN0EzaGWzorCyVvfZSZgaA+3uDKkKYxPc7d9egdvvfQOOGz11ZG01I22aBaIMXqWexqLwQOWh4NQzBoaRDounNaVuYBZImgm/wUTTXBFsMZlep2kLTeqxUcNQQB71tCEn0SUHMD3X5oPaO8vlOBqVJqoJz0+GsJZ3hXYproP+JajmOKSlbZOyoBMauhaGByYUmTnedHp/+81zEfrJiF5wxurzBJ+QzDEjVo4Xvd+vbK4e8v2/6TBciH4YR8fUbCWitqfgS0W7U1ofh1zrNE/6A763mmrPzbrUl8UfgbbncMuZAiZ1mvl8mK6274VB/QoggKxT6yDMTAS6nneRVwIxcmXrbGRJbC/XUgkgOvYr0rzcg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6214.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(39860400002)(366004)(396003)(230922051799003)(451199024)(64100799003)(186009)(1800799009)(31686004)(2616005)(26005)(53546011)(38100700002)(36756003)(86362001)(31696002)(83380400001)(6506007)(8676002)(2906002)(4326008)(7416002)(6512007)(478600001)(8936002)(6666004)(6486002)(44832011)(5660300002)(41300700001)(316002)(66476007)(54906003)(66556008)(110136005)(66946007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QU9XdFVWanEvNVR2TEVMMTAzRkhSWVBYVmRrcUpheWtmVklXUTRlSldBY2Vq?=
- =?utf-8?B?R1FsTmxUNzNOSjA2dFl6K2dMcjg3N0Z6Nk1pSzcxV1laUTZURnVNNjNGU2U3?=
- =?utf-8?B?UjRBanVnamcwUE1IcEcvWWxqeFNwV3QrNG02OWV3cDRNN1lxSEFGMGZMTzZK?=
- =?utf-8?B?cDVacUpiM0RUaUxUVnMyejlCV3hHTkoxb0NMc1d1TXl5Q0FrSk15S3ZVblE3?=
- =?utf-8?B?T3hVWGwzYmJOZlR1Q1R3UFg3Y29COHZYUTNiTGdtTjZrMklUZnplRWpyK2VE?=
- =?utf-8?B?SXNEWVdKTmM5emxtNTYxUmNHbVNxMnQwSStrdmwxQlF3ZkZFTFRZOTJscndk?=
- =?utf-8?B?WDA0Vm8zUVdLblBQN0thcStkbDE2Zm5UU2QyT1BGcC81RE1SVHJyUm9RWHN2?=
- =?utf-8?B?ZlJ5TndXMnZ4RjRhUkwwTlhkUWJibHB2K1FtMnpNcFkzSkR1Z1Bib2YyMHBo?=
- =?utf-8?B?THVBcUpBWnk1TXBYemt0YVc5d09RalEwTUlBcXk2TFN6RFFRY2RGRnJmL0lH?=
- =?utf-8?B?UHVzdnk1Zk5UaEVLSTBrTERja0RabkZ0K1E4Z0tpUEVHanNoQnZ1NUFobktQ?=
- =?utf-8?B?L3Zua0haUG50N1BNS0JFUEZwd1hHRkZWQUIrVnV4QlBYeTUxZWlneVJBd2FG?=
- =?utf-8?B?MVp0L1o0cUk5QmJBWmhiMHltdWRKdlpKeUNHRjJJMzlSaG5OeURRNjBOTGs5?=
- =?utf-8?B?UXpnNUV4dzVFMUkzUnQza3llbjZONXVSVUQzOXFVVHdrT1hVNnhpbjZjVTJt?=
- =?utf-8?B?SnZxdnFhKyt4a29VVFZaWGpBSVhpL3BvaFBLYzhJdG9SMFFJdGZZeHBCMUVq?=
- =?utf-8?B?UjE1VmxsalNHL3BxWEJGeW14L21xd0pwM2RubXJ0bHlLSzBVbjlwcHd1YmdM?=
- =?utf-8?B?OEUvckNxN2Ewb1JPaGUxazlOTjRTOUdRb3p3Y0tYVWRKZXpTcmZyVjhONUVw?=
- =?utf-8?B?ek9VRHJtTndhb05KZVNnY2pXOXVub0drdHJqRWtQYjdoOENtdzUvcktDSXJF?=
- =?utf-8?B?MWN3R3l3RWk4SVMyL3Ywd3lLbzZpYkZCOTY3UktsamViT3dhbkdTNmpQN2pJ?=
- =?utf-8?B?Z1Zad1huNWpRUzYxZGJkUWtxWUxBb3FlbWFJTkNLT2RlWStDS0Rkc0ZyQnkr?=
- =?utf-8?B?K1hOTGZxQmxWSld6Zm8wajBYQnphVnUzSEtKTjZpNVQrTmh4OWlmSmwyQ1ZJ?=
- =?utf-8?B?Q3NkVHY4bEtiWGppUmFEcWx6RW1XalkwenE4MDZFYlFQVkx2Z1dkdVNFU3Er?=
- =?utf-8?B?R0tLZytaUHM5L1FrN1kxTlczTmUzL0lHbUVXT1BzUXRlMWpMUmZWSHFzdU56?=
- =?utf-8?B?ZGhERGVTdWk3eHVrR0pzRnJWSzZXbFZXS3o5d0xVSXR1THRtU0s4QlduVmg1?=
- =?utf-8?B?Si9pVTRsUWhRYkJOWVV5ZUl3alF0K3MxL2JoRCs4akVDUm1BbU9mUWl0R3pE?=
- =?utf-8?B?ck9uU0pOMXdyT3ZKSVVvamkrZU9zUHozcDdLVnNxUTAxL2xWN3gwMXp3M2VW?=
- =?utf-8?B?ampROW1LMncyb1V6ZWRUT215MVp3VDFZMi9aN1A5TnJpcFU3YUxNSTJnRjRT?=
- =?utf-8?B?ZTNXRDJzOUdyaTNMYjEydHBEQ0h3d0t3SGxocGRWOVc2LzFaeUg1cHo4UDRk?=
- =?utf-8?B?VE9pSWlaZlVmTURyZ3U0dEN1U3RyZytIOXZ3NnUrL3Q0bGtZMEs1OVozS3Rz?=
- =?utf-8?B?T1lRcEMrSlEwSGcwSkZPNW1sTUYxODByUWNTRnNWU2gxV3Z1S05meU91OUQ3?=
- =?utf-8?B?aHdBdDNRQjF5MllLZ0xsK282ZUwySkN3c2ZMeXB3UTJDSkJmN2I3ZXdjeGpJ?=
- =?utf-8?B?Mm43NEJTODNRZVZKL0FQMnV0S1ltYTlybHRWZ3UyWkQwdFVKaUc3MnVTaTFQ?=
- =?utf-8?B?V2gwTXZydlEyNUZIMDQ0Q0owTnRnM0g4VkhFWEVFNFROb1pWYnNlZVkvRlpK?=
- =?utf-8?B?dGtnTzlVZzNuQms3YzlFRWU5S29TczloMXVYcE1ScjNRbytqeC9Fb1dMOUhS?=
- =?utf-8?B?MVd5SE5aZ2RWQUVxSURaV2ZKdDkvblV2c3RtWmhQNGI5czlSZXVvSjVzVTV0?=
- =?utf-8?B?ZTNCUGZjWHc3Ylc2MUxxUDdmRTdzL2o1YjhmazdhWTl5R0liWkRlQnNTbUpl?=
- =?utf-8?Q?BDCEnJkx4iGx5aRxvbnKbG7LA?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9aa2bd0d-8195-4940-0515-08dbc8e9bb0e
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6214.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 17:03:59.6355
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gYhO99rq4RjncTF/tA1zxS5/vgfrvSK/SP325gXLEzAvkOZqM+Be9YYX7TcHSLz0sq+evqy6tWs7qlXqjJQoLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6913
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-	NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20231005230851.3666908-1-irogers@google.com> <20231005230851.3666908-18-irogers@google.com>
+ <CAM9d7cj=au3DVNqA0OYU_9eu=R9kTz6SQrtfKuSGnrm=FAY=CA@mail.gmail.com>
+In-Reply-To: <CAM9d7cj=au3DVNqA0OYU_9eu=R9kTz6SQrtfKuSGnrm=FAY=CA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 9 Oct 2023 10:13:20 -0700
+Message-ID: <CAP-5=fWtYPzGw0zvPd1VJc8RWi9cRQDg=ZF3Wjxf9yyY1QuPGA@mail.gmail.com>
+Subject: Re: [PATCH v2 17/18] perf header: Fix various error path memory leaks
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ming Wang <wangming01@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Sean Christopherson <seanjc@google.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Yanteng Si <siyanteng@loongson.cn>, 
+	Yuan Can <yuancan@huawei.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	James Clark <james.clark@arm.com>, llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 10/8/2023 3:34 PM, Like Xu wrote:
-> Hi all,
-> 
-> On 5/10/2023 6:05 am, Sean Christopherson wrote:
->> So I'll add a self-NAK to the idea of completely disabling the host PMU, I think
->> that would burn us quite badly at some point.
-> 
-> I seem to have missed a party, so allow me to add a few more comments
-> to better facilitate future discussions in this direction:
-> 
-> (1) PMU counters on TEE
-> 
-> The SGX/SEV is already part of the upstream, but what kind of performance
-> data will be obtained by sampling enclaves or sev-guest with hardware pmu
-> counters on host (will the perf-report show these data missing holes or
-> pure encrypted data), we don't have a clear idea nor have we established
-> the right expectations. But on AMD profiling a SEV-SNP guest is supported:
-> 
-> "Fingerprinting attack protection is also not supported in the current
-> generation of these technologies. Fingerprinting attacks attempt to
-> determine what code the VM is running by monitoring its access patterns,
-> performance counter information, etc." (AMD SEV-SNP White Paper, 2020)
-> 
-> (2) PMU Guest/Host Co-existence Development
-> 
-> The introduction of pt_mode in the KVM was misleading, leading subsequent
-> developers to believe that static slicing of pmu facility usage was allowed.
-> 
-> On user scenarios, the host/perf should treat pmu resource requests from
-> vCPUs with regularity (which can be unequal under the host's authority IMO)
-> while allowing the host to be able to profile any software entity (including
-> hypervisor and guest-code, including TEE code in debug mode). Functionality
-> takes precedence over performance.
-> 
-> The semantics of exclude_guest/host should be tied to the hw-event isolation
-> settings on the hardware interfaces, not to the human-defined sw-context.
-> The perf subsystem is the arbiter of pmu resource allocation on the host,
-> and any attempt to change the status quo (or maintenance scope) will not
-> succeed. Therefore, vPMU developers are required to be familiar with the
-> implementation details of both perf and kvm, and try not to add perf APIs
-> dedicated to serving KVM blindly.
-> 
-> Getting host and guests to share limited PMU resources harmoniously is not
-> particularly difficult compared to real rocket science in the kernel, so
-> please don't be intimidated.
-> 
-> (3) Performance Concern in Co-existence
-> 
-> I wonder if it would be possible to add a knob to turn off the perf counter
-> multiplexing mechanism on the host, so that in coexistence scenarios, the
-> number of VM exits on the vCPU would not be increased by counter rotations
-> due to timer expiration.
-> 
-> For normal counters shared between guest and host, the number of counter
-> msr switches requiring a vm-entry level will be relatively small.
-> (The number of counters is growing; for LBR, it is possible to share LBR
-> select values to avoid frequent switching, but of course this requires the
-> implementation of a software filtering mechanism when the host/guest read
-> the LBR records, and some additional PMI; for DS-based PEBS, host and guest
-> PEBS buffers are automatically segregated based on linear address).
-> 
-> There is a lot of room for optimisation here, and in real scenarios where
-> triggering a large number of register switches in the host/guest PMU is
-> to be expected and observed easily (accompanied by a large number of pmi
-> appearances).
-> 
-> If we are really worried about the virtualisation overhead of vPMU, then
-> virtio-pmu might be an option. In this technology direction, the back-end
-> pmu can add more performance events of interest to the VM (including host
-> un-core and off-core events, host-side software events, etc.) In terms of
-> implementation, the semantics of the MSRLIST instruction can be re-used,
-> along with compatibility with the different PMU hardware interfaces on ARM
-> and Risc-v, which is also very friendly to production environments based on
-> its virtio nature.
-> 
-> (4) New vPMU Feature Development
-> 
-> We should not put KVM's current vPMU support into maintenance-only mode.
-> Users want more PMU features in the guest, like AMD vIBS, Intel pmu higher
-> versions, Intel topdown and Arch lbr, more on the way. The maturity of
-> different features' patch sets aren't the same, but we can't ignore these
-> real needs because of available time for key maintainers, apathy towards
-> contributors, mindset avoidance and laziness, and preference for certain
-> technology stacks. These technical challenges will attract an influx of
-> open source heroes to push the technology forward, which is good in the
-> long run.
-> 
-> (5) More to think about
-> 
-> Similar to the guest PMU feature, the debugging feature may face the same
-> state. For example, what happens when you debug code inside the host and
-> guest at the same time (host debugs hypevisor/guest code and guest debugs
-> guest code only) ?
-> 
-> Forgive my ignorance and offence, but we don't want to see a KVM subsystem
-> controlled and driven by Google's demands.
-> 
-> Please feel free to share comments to move forward.
-> 
+On Sun, Oct 8, 2023 at 11:57=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Thu, Oct 5, 2023 at 4:09=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > Memory leaks were detected by clang-tidy.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/header.c | 63 ++++++++++++++++++++++++----------------
+> >  1 file changed, 38 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > index d812e1e371a7..41b78e40b22b 100644
+> > --- a/tools/perf/util/header.c
+> > +++ b/tools/perf/util/header.c
+> > @@ -2598,8 +2598,10 @@ static int process_cpu_topology(struct feat_fd *=
+ff, void *data __maybe_unused)
+> >                         goto error;
+> >
+> >                 /* include a NULL character at the end */
+> > -               if (strbuf_add(&sb, str, strlen(str) + 1) < 0)
+> > +               if (strbuf_add(&sb, str, strlen(str) + 1) < 0) {
+> > +                       free(str);
+> >                         goto error;
+> > +               }
+> >                 size +=3D string_size(str);
+> >                 free(str);
+> >         }
+> > @@ -2617,8 +2619,10 @@ static int process_cpu_topology(struct feat_fd *=
+ff, void *data __maybe_unused)
+> >                         goto error;
+> >
+> >                 /* include a NULL character at the end */
+> > -               if (strbuf_add(&sb, str, strlen(str) + 1) < 0)
+> > +               if (strbuf_add(&sb, str, strlen(str) + 1) < 0) {
+> > +                       free(str);
+> >                         goto error;
+> > +               }
+> >                 size +=3D string_size(str);
+> >                 free(str);
+> >         }
+> > @@ -2681,8 +2685,10 @@ static int process_cpu_topology(struct feat_fd *=
+ff, void *data __maybe_unused)
+> >                         goto error;
+> >
+> >                 /* include a NULL character at the end */
+> > -               if (strbuf_add(&sb, str, strlen(str) + 1) < 0)
+> > +               if (strbuf_add(&sb, str, strlen(str) + 1) < 0) {
+> > +                       free(str);
+> >                         goto error;
+> > +               }
+> >                 size +=3D string_size(str);
+> >                 free(str);
+> >         }
+>
+> For these cases, it'd be simpler to free it in the error path.
+
+It was a slightly larger change to do it that way, but I'll alter it.
+The issue is not getting a double free on str, which is most easily
+handled by switching frees to zfrees.
+
+
+>
+>
+> > @@ -2736,10 +2742,9 @@ static int process_numa_topology(struct feat_fd =
+*ff, void *data __maybe_unused)
+> >                         goto error;
+> >
+> >                 n->map =3D perf_cpu_map__new(str);
+> > +               free(str);
+> >                 if (!n->map)
+> >                         goto error;
+> > -
+> > -               free(str);
+> >         }
+> >         ff->ph->env.nr_numa_nodes =3D nr;
+> >         ff->ph->env.numa_nodes =3D nodes;
+> > @@ -2913,10 +2918,10 @@ static int process_cache(struct feat_fd *ff, vo=
+id *data __maybe_unused)
+> >                 return -1;
+> >
+> >         for (i =3D 0; i < cnt; i++) {
+> > -               struct cpu_cache_level c;
+> > +               struct cpu_cache_level *c =3D &caches[i];
+> >
+> >                 #define _R(v)                                          =
+ \
+> > -                       if (do_read_u32(ff, &c.v))\
+> > +                       if (do_read_u32(ff, &c->v))                    =
+ \
+> >                                 goto out_free_caches;                  =
+ \
+> >
+> >                 _R(level)
+> > @@ -2926,22 +2931,25 @@ static int process_cache(struct feat_fd *ff, vo=
+id *data __maybe_unused)
+> >                 #undef _R
+> >
+> >                 #define _R(v)                                   \
+> > -                       c.v =3D do_read_string(ff);               \
+> > -                       if (!c.v)                               \
+> > -                               goto out_free_caches;
+> > +                       c->v =3D do_read_string(ff);              \
+> > +                       if (!c->v)                              \
+> > +                               goto out_free_caches;           \
+> >
+> >                 _R(type)
+> >                 _R(size)
+> >                 _R(map)
+> >                 #undef _R
+> > -
+> > -               caches[i] =3D c;
+> >         }
+> >
+> >         ff->ph->env.caches =3D caches;
+> >         ff->ph->env.caches_cnt =3D cnt;
+> >         return 0;
+> >  out_free_caches:
+> > +       for (i =3D 0; i < cnt; i++) {
+> > +               free(caches[i].type);
+> > +               free(caches[i].size);
+> > +               free(caches[i].map);
+> > +       }
+> >         free(caches);
+> >         return -1;
+> >  }
+>
+> Looks ok.
+>
+>
+> > @@ -3585,18 +3593,16 @@ static int perf_header__adds_write(struct perf_=
+header *header,
+> >                                    struct feat_copier *fc)
+> >  {
+> >         int nr_sections;
+> > -       struct feat_fd ff;
+> > +       struct feat_fd ff =3D {
+> > +               .fd  =3D fd,
+> > +               .ph =3D header,
+> > +       };
+>
+> I'm fine with this change.
+>
+>
+> >         struct perf_file_section *feat_sec, *p;
+> >         int sec_size;
+> >         u64 sec_start;
+> >         int feat;
+> >         int err;
+> >
+> > -       ff =3D (struct feat_fd){
+> > -               .fd  =3D fd,
+> > -               .ph =3D header,
+> > -       };
+> > -
+> >         nr_sections =3D bitmap_weight(header->adds_features, HEADER_FEA=
+T_BITS);
+> >         if (!nr_sections)
+> >                 return 0;
+> > @@ -3623,6 +3629,7 @@ static int perf_header__adds_write(struct perf_he=
+ader *header,
+> >         err =3D do_write(&ff, feat_sec, sec_size);
+> >         if (err < 0)
+> >                 pr_debug("failed to write feature section\n");
+> > +       free(ff.buf);
+>
+> But it looks like false alarams.  Since the feat_fd has fd
+> and no buf, it won't allocate the buffer in do_write() and
+> just use __do_write_fd().  So no need to free the buf.
+
+This code looks like it has had a half-done optimization applied to it
+- why have >1 buffer? why are we making the code's life hard? In
+__do_write_buf there is a test that can be true even when a buf is
+provided:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/header.c?h=3Dperf-tools-next#n125
+```
+if (ff->size < new_size) {
+        addr =3D realloc(ff->buf, new_size);
+        if (!addr)
+                return -ENOMEM;
+        ff->buf =3D addr;
+```
+In the case clang-tidy (I'll put the analysis below) has determined
+that new_size may be greater than size (I believe the intent in the
+code is they both evaluate to 0) and this causes the memory leak being
+fixed here. I'll add a TODO comment in v3 but things like 'buf' are
+opaque and not intention revealing in the code, which makes any kind
+of interpretation hard.
+
+I think again this is a good signal that there is worthwhile
+simplification/cleanup in this code.
+
+Thanks,
+Ian
+
+```
+tools/perf/util/header.c:3628:6: warning: Potential leak of memory
+pointed to by 'ff.buf' [clang-analyzer-unix.Malloc]
+        err =3D do_write(&ff, feat_sec, sec_size);
+            ^
+tools/perf/util/header.c:3778:9: note: Calling 'perf_session__do_write_head=
+er'
+        return perf_session__do_write_header(session, evlist, fd, true, fc)=
+;
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:3675:2: note: Loop condition is false.
+Execution continues on line 3685
+        evlist__for_each_entry(session->evlist, evsel) {
+        ^
+tools/perf/util/evlist.h:276:2: note: expanded from macro
+'evlist__for_each_entry'
+        __evlist__for_each_entry(&(evlist)->core.entries, evsel)
+        ^
+tools/perf/util/evlist.h:268:9: note: expanded from macro
+'__evlist__for_each_entry'
+        list_for_each_entry(evsel, list, core.node)
+        ^
+tools/include/linux/list.h:458:2: note: expanded from macro
+'list_for_each_entry'
+        for (pos =3D list_first_entry(head, typeof(*pos), member);        \
+        ^
+tools/perf/util/header.c:3687:2: note: Loop condition is false.
+Execution continues on line 3711
+        evlist__for_each_entry(evlist, evsel) {
+        ^
+tools/perf/util/evlist.h:276:2: note: expanded from macro
+'evlist__for_each_entry'
+        __evlist__for_each_entry(&(evlist)->core.entries, evsel)
+        ^
+tools/perf/util/evlist.h:268:9: note: expanded from macro
+'__evlist__for_each_entry'
+        list_for_each_entry(evsel, list, core.node)
+        ^
+tools/include/linux/list.h:458:2: note: expanded from macro
+'list_for_each_entry'
+        for (pos =3D list_first_entry(head, typeof(*pos), member);        \
+        ^
+tools/perf/util/header.c:3711:6: note: Assuming field 'data_offset' is
+not equal to 0
+        if (!header->data_offset)
+            ^~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:3711:2: note: Taking false branch
+        if (!header->data_offset)
+        ^
+tools/perf/util/header.c:3715:6: note: 'at_exit' is true
+        if (at_exit) {
+            ^~~~~~~
+tools/perf/util/header.c:3715:2: note: Taking true branch
+        if (at_exit) {
+        ^
+tools/perf/util/header.c:3716:9: note: Calling 'perf_header__adds_write'
+                err =3D perf_header__adds_write(header, evlist, fd, fc);
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:3606:6: note: Assuming 'nr_sections' is not equal
+ to 0
+        if (!nr_sections)
+            ^~~~~~~~~~~~
+tools/perf/util/header.c:3606:2: note: Taking false branch
+        if (!nr_sections)
+        ^
+tools/perf/util/header.c:3610:6: note: Assuming 'feat_sec' is not equal to
+ NULL
+        if (feat_sec =3D=3D NULL)
+            ^~~~~~~~~~~~~~~~
+tools/perf/util/header.c:3610:2: note: Taking false branch
+        if (feat_sec =3D=3D NULL)
+        ^
+tools/perf/util/header.c:3618:2: note: Assuming 'feat' is < HEADER_FEAT_BIT=
+S
+        for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
+        ^
+tools/include/linux/bitops.h:54:7: note: expanded from macro 'for_each_set_=
+bit'
+             (bit) < (size);                                    \
+             ^~~~~~~~~~~~~~
+tools/perf/util/header.c:3618:2: note: Loop condition is true.
+Entering loop body
+        for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
+        ^
+tools/include/linux/bitops.h:53:2: note: expanded from macro 'for_each_set_=
+bit'
+        for ((bit) =3D find_first_bit((addr), (size));            \
+        ^
+tools/perf/util/header.c:3619:3: note: Taking true branch
+                if (do_write_feat(&ff, feat, &p, evlist, fc))
+                ^
+tools/perf/util/header.c:3618:2: note: Assuming 'feat' is >=3D HEADER_FEAT_=
+BITS
+        for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
+tools/include/linux/bitops.h:54:7: note: expanded from macro 'for_each_set_=
+bit'
+             (bit) < (size);                                    \
+             ^~~~~~~~~~~~~~
+tools/perf/util/header.c:3618:2: note: Loop condition is false.
+Execution continues on line 3623
+        for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
+        ^
+tools/include/linux/bitops.h:53:2: note: expanded from macro 'for_each_set_=
+bit'
+        for ((bit) =3D find_first_bit((addr), (size));            \
+        ^
+tools/perf/util/header.c:3628:8: note: Calling 'do_write'
+        err =3D do_write(&ff, feat_sec, sec_size);
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:141:6: note: Assuming field 'buf' is non-null
+        if (!ff->buf)
+            ^~~~~~~~
+tools/perf/util/header.c:141:2: note: Taking false branch
+        if (!ff->buf)
+        ^
+tools/perf/util/header.c:143:9: note: Calling '__do_write_buf'
+        return __do_write_buf(ff, buf, size);
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:117:6: note: Assuming the condition is false
+        if (size + ff->offset > max_size)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:117:2: note: Taking false branch
+        if (size + ff->offset > max_size)
+        ^
+tools/perf/util/header.c:120:9: note: Assuming the condition is true
+        while (size > (new_size - ff->offset))
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:120:2: note: Loop condition is true.
+Entering loop body
+        while (size > (new_size - ff->offset))
+        ^
+tools/perf/util/header.c:120:9: note: Assuming the condition is false
+        while (size > (new_size - ff->offset))
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:120:2: note: Loop condition is false.
+Execution continues on line 122
+        while (size > (new_size - ff->offset))
+        ^
+tools/perf/util/header.c:122:13: note: Assuming '_min1' is >=3D '_min2'
+        new_size =3D min(max_size, new_size);
+                   ^
+tools/include/linux/kernel.h:53:2: note: expanded from macro 'min'
+        _min1 < _min2 ? _min1 : _min2; })
+        ^~~~~~~~~~~~~
+tools/perf/util/header.c:122:13: note: '?' condition is false
+        new_size =3D min(max_size, new_size);
+                   ^
+tools/include/linux/kernel.h:53:2: note: expanded from macro 'min'
+        _min1 < _min2 ? _min1 : _min2; })
+        ^
+tools/perf/util/header.c:124:6: note: Assuming 'new_size' is > field 'size'
+        if (ff->size < new_size) {
+            ^~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:124:2: note: Taking true branch
+        if (ff->size < new_size) {
+        ^
+tools/perf/util/header.c:125:10: note: Memory is allocated
+                addr =3D realloc(ff->buf, new_size);
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:126:7: note: Assuming 'addr' is non-null
+                if (!addr)
+                    ^~~~~
+tools/perf/util/header.c:126:3: note: Taking false branch
+                if (!addr)
+                ^
+tools/perf/util/header.c:143:9: note: Returned allocated memory
+        return __do_write_buf(ff, buf, size);
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:3628:8: note: Returned allocated memory
+        err =3D do_write(&ff, feat_sec, sec_size);
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/perf/util/header.c:3628:6: note: Potential leak of memory
+pointed to by 'ff.buf'
+        err =3D do_write(&ff, feat_sec, sec_size);
+```
+
+
 > Thanks,
-> Like Xu
-
-Hi all,
-
-I would like to add following things to the discussion just for the awareness of
-everyone.
-
-Fully virtualized PMC support is coming to an upcoming AMD SoC and we are
-working on prototyping it.
-
-As part of virtualized PMC design, the PERF_CTL registers are defined as Swap
-type C: guest PMC states are loaded at VMRUN automatically but host PMC states
-are not saved by hardware. If hypervisor is using the performance counters, it
-is hypervisor's responsibility to save PERF_CTL registers to host save area
-prior to VMRUN and restore them after VMEXIT. In order to tackle PMC overflow
-interrupts in guest itself, NMI virtualization or AVIC can be used, so that
-interrupt on PMC overflow in guest will not leak to host.
-
-- Manali
+> Namhyung
+>
+>
+> >         free(feat_sec);
+> >         return err;
+> >  }
+> > @@ -3630,11 +3637,11 @@ static int perf_header__adds_write(struct perf_=
+header *header,
+> >  int perf_header__write_pipe(int fd)
+> >  {
+> >         struct perf_pipe_file_header f_header;
+> > -       struct feat_fd ff;
+> > +       struct feat_fd ff =3D {
+> > +               .fd =3D fd,
+> > +       };
+> >         int err;
+> >
+> > -       ff =3D (struct feat_fd){ .fd =3D fd };
+> > -
+> >         f_header =3D (struct perf_pipe_file_header){
+> >                 .magic     =3D PERF_MAGIC,
+> >                 .size      =3D sizeof(f_header),
+> > @@ -3645,7 +3652,7 @@ int perf_header__write_pipe(int fd)
+> >                 pr_debug("failed to write perf pipe header\n");
+> >                 return err;
+> >         }
+> > -
+> > +       free(ff.buf);
+> >         return 0;
+> >  }
+> >
+> > @@ -3658,11 +3665,12 @@ static int perf_session__do_write_header(struct=
+ perf_session *session,
+> >         struct perf_file_attr   f_attr;
+> >         struct perf_header *header =3D &session->header;
+> >         struct evsel *evsel;
+> > -       struct feat_fd ff;
+> > +       struct feat_fd ff =3D {
+> > +               .fd =3D fd,
+> > +       };
+> >         u64 attr_offset;
+> >         int err;
+> >
+> > -       ff =3D (struct feat_fd){ .fd =3D fd};
+> >         lseek(fd, sizeof(f_header), SEEK_SET);
+> >
+> >         evlist__for_each_entry(session->evlist, evsel) {
+> > @@ -3670,6 +3678,7 @@ static int perf_session__do_write_header(struct p=
+erf_session *session,
+> >                 err =3D do_write(&ff, evsel->core.id, evsel->core.ids *=
+ sizeof(u64));
+> >                 if (err < 0) {
+> >                         pr_debug("failed to write perf header\n");
+> > +                       free(ff.buf);
+> >                         return err;
+> >                 }
+> >         }
+> > @@ -3695,6 +3704,7 @@ static int perf_session__do_write_header(struct p=
+erf_session *session,
+> >                 err =3D do_write(&ff, &f_attr, sizeof(f_attr));
+> >                 if (err < 0) {
+> >                         pr_debug("failed to write perf header attribute=
+\n");
+> > +                       free(ff.buf);
+> >                         return err;
+> >                 }
+> >         }
+> > @@ -3705,8 +3715,10 @@ static int perf_session__do_write_header(struct =
+perf_session *session,
+> >
+> >         if (at_exit) {
+> >                 err =3D perf_header__adds_write(header, evlist, fd, fc)=
+;
+> > -               if (err < 0)
+> > +               if (err < 0) {
+> > +                       free(ff.buf);
+> >                         return err;
+> > +               }
+> >         }
+> >
+> >         f_header =3D (struct perf_file_header){
+> > @@ -3728,6 +3740,7 @@ static int perf_session__do_write_header(struct p=
+erf_session *session,
+> >
+> >         lseek(fd, 0, SEEK_SET);
+> >         err =3D do_write(&ff, &f_header, sizeof(f_header));
+> > +       free(ff.buf);
+> >         if (err < 0) {
+> >                 pr_debug("failed to write perf header\n");
+> >                 return err;
+> > --
+> > 2.42.0.609.gbb76f46606-goog
+> >
