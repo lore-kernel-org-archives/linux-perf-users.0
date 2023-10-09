@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC39B199D1
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B249734CFA
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:39:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OFk3wZEK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hdiUtupS"
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AF57FD
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:43 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59ee66806d7so73528397b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:43 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFCC127
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 11:39:45 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59f7d4bbfc7so77501307b3.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 11:39:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696876782; x=1697481582; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696876784; x=1697481584; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fapvG1sgoYBqHgoFOW9TcSIAiI5hx1hj0GAN7+v4jh4=;
-        b=OFk3wZEKRbsVyMjM+9CyBIeNKC7CQOS4Q3CWIkEQeGHzOExrefIAwk74TnX0ULOJ7g
-         gf2IuNSvlsl6dvg/i0SupHeYkkjvTdsN7bOvIrT3Z8mPfIqG5UwbhXnLDT9Qzb+ofA9o
-         HyUTVuUVnDK32cxvmyg8rgr7yhi41QWGmryGHjD/04A3i5Ndq4WdtcKveOiTnf2Z/Ids
-         fxdQrTkfCCthLonmrUPnKPeMCQ7gBZQeY8Orn3AIDZnPR/NZdyg+syaOlLsXOnLfPYyq
-         8iz4w7NCFe1pxo4AUhRpECmwBxRKhlL6r7B7HFXOLzS0b+sH04tgW4CxBktzn0hfnTYM
-         FyeQ==
+        bh=GouG30KZVQtjqm6aov/swqA2g+y6OD5o5DKI6J9/hJA=;
+        b=hdiUtupSykpW0XElbBBe/4kSZCj8u8m+VgHsIC9uBIpw2OeCQntgd2Or4zBdEbuTgf
+         o8Fl8dvqTdKCPzb9QQ96OYyO2jocXYnCk7YsfGy8OWlPlSvLYmUYK7xngvymGis72dz6
+         6LRwWnfhjVkVcmisRxN8zyXC2n1o0GxOilWeOHGjM3s8STxdCs7zVv0B0q7vfWrX66Pd
+         BRPIVRof0u2JM8YFLWlrPnXtKmI+k0r1Boai3dUA/VLl7sqiApH+sYQYeqTYFBH98LUy
+         QSVrUuknZsdVaXQr1MgaowmkngG6z61yOUBTPU4j9wB9/3mw6Zg7DTl5AGhsgYFlyOEx
+         Pdjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876782; x=1697481582;
+        d=1e100.net; s=20230601; t=1696876784; x=1697481584;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fapvG1sgoYBqHgoFOW9TcSIAiI5hx1hj0GAN7+v4jh4=;
-        b=OqPoakf7Wzz6Cl3tebN7NwdFtMlzsj132ABVYBFmtmOpIbIH+Z8ptjfagjhJs1MafX
-         UqGJ6wmXHpLeErc/sylKhHOEFGPjanBx1i6jWrmLNxD800rjDPTnBOpeOX9NWzuHq3he
-         7Xy9n47ES0553fUHj+Ocw3PWHtrZtGF6ln3GFYQXdqBIN3YDx/anuWCCqUK54CYS+VQ2
-         vr582Es0UphEQPkI/0zf4R9i2XyiTU+y9+hNhR0hM1OFjllk5tNamtBGtzXLr5B55U2o
-         iVUFxhGAVX/RIfH8cbsfr6FGGzTs809N4J5H/P8quRIQEfzivlMWd8tRPslUTBABtDOx
-         I4ZQ==
-X-Gm-Message-State: AOJu0Yws8c7bMgTdnhrq7tYsYqAl+tF3i2PAfG6uU1V+XoAgooaYlczu
-	BiQhUyJGc91G9xporbHDWrNLEBIpOHoh
-X-Google-Smtp-Source: AGHT+IFF5Ce3xTASsAOk8I7voMtqVFZ/Fie+83QxW2GS/qJ0vRq1xrYlGTONWtgU9T98ME4DI6ky2PLg0Jc+
+        bh=GouG30KZVQtjqm6aov/swqA2g+y6OD5o5DKI6J9/hJA=;
+        b=dY5AQTR0HrcOnVhpDh89xeuRMIt2TJilLKqwncLzHwv67D+Bb7ai/Fr7Hk5xOyiOoN
+         l/i+XmotSIJ2GfXR9edNOsZh3Mxusq8jBaFvqJgo4dNT1uR5aAqjzKTarCVL36sb9Irp
+         k/4ZGXYoBZfWQmE7sOMgXThbvE2AM8Peb8KHOia4Rt+lwY6nVM7s2d58le5Q5hjxX8XR
+         PexkFbY8i8MUlwp3EE2oHW1NvgdTNF61hptRQONRNZVvLpga8a5LgpnAVw9uQKiFGDjd
+         ezbQZt+SJoVv5Vu/w8zXorlE8gGWzTEPy4KEpIwfEgSAiNCUToQZeqsPjjzZ9ZpHY0iN
+         3UuQ==
+X-Gm-Message-State: AOJu0YzoPDi+zCXFQC7S5NO5RTBvqHjLK1hVETnwmhUDoUgo01jHJl4L
+	+FlTKbnLkLV82cHmmh9Zt1+S7PQeLk/M
+X-Google-Smtp-Source: AGHT+IFoEQ7Dzv18PcmdjnpaSDsoWF/VAum2oAmj8wWzPzLIX73XPP1Ukf1ru5WFK6DwCtdvNWmpgT87L/bK
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a81:bc03:0:b0:59b:c6bb:babb with SMTP id
- a3-20020a81bc03000000b0059bc6bbbabbmr297631ywi.6.1696876782479; Mon, 09 Oct
- 2023 11:39:42 -0700 (PDT)
-Date: Mon,  9 Oct 2023 11:39:08 -0700
+ (user=irogers job=sendgmr) by 2002:a25:d12:0:b0:d9a:3bee:255c with SMTP id
+ 18-20020a250d12000000b00d9a3bee255cmr25038ybn.7.1696876784641; Mon, 09 Oct
+ 2023 11:39:44 -0700 (PDT)
+Date: Mon,  9 Oct 2023 11:39:09 -0700
 In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-Message-Id: <20231009183920.200859-8-irogers@google.com>
+Message-Id: <20231009183920.200859-9-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231009183920.200859-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v3 06/18] perf env: Remove unnecessary NULL tests
+Subject: [PATCH v3 07/18] perf jitdump: Avoid memory leak
 From: Ian Rogers <irogers@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -66,56 +66,31 @@ Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-clang-tidy was warning:
-```
-util/env.c:334:23: warning: Access to field 'nr_pmu_mappings' results in a dereference of a null pointer (loaded from variable 'env') [clang-analyzer-core.NullDereference]
-        env->nr_pmu_mappings = pmu_num;
-```
-
-As functions are called potentially when !env was true. This condition
-could never be true as it would produce a segv, so remove the
-unnecessary NULL tests and silence clang-tidy.
+jit_repipe_unwinding_info is called in a loop by jit_process_dump,
+avoid leaking unwinding_data by free-ing before overwriting. Error
+detected by clang-tidy.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/env.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/jitdump.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index a164164001fb..44140b7f596a 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -457,7 +457,7 @@ const char *perf_env__cpuid(struct perf_env *env)
- {
- 	int status;
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 6b2b96c16ccd..1f657ef8975f 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -675,6 +675,7 @@ jit_repipe_unwinding_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	jd->eh_frame_hdr_size = jr->unwinding.eh_frame_hdr_size;
+ 	jd->unwinding_size = jr->unwinding.unwinding_size;
+ 	jd->unwinding_mapped_size = jr->unwinding.mapped_size;
++	free(jd->unwinding_data);
+ 	jd->unwinding_data = unwinding_data;
  
--	if (!env || !env->cpuid) { /* Assume local operation */
-+	if (!env->cpuid) { /* Assume local operation */
- 		status = perf_env__read_cpuid(env);
- 		if (status)
- 			return NULL;
-@@ -470,7 +470,7 @@ int perf_env__nr_pmu_mappings(struct perf_env *env)
- {
- 	int status;
- 
--	if (!env || !env->nr_pmu_mappings) { /* Assume local operation */
-+	if (!env->nr_pmu_mappings) { /* Assume local operation */
- 		status = perf_env__read_pmu_mappings(env);
- 		if (status)
- 			return 0;
-@@ -483,7 +483,7 @@ const char *perf_env__pmu_mappings(struct perf_env *env)
- {
- 	int status;
- 
--	if (!env || !env->pmu_mappings) { /* Assume local operation */
-+	if (!env->pmu_mappings) { /* Assume local operation */
- 		status = perf_env__read_pmu_mappings(env);
- 		if (status)
- 			return NULL;
+ 	return 0;
 -- 
 2.42.0.609.gbb76f46606-goog
 
