@@ -1,166 +1,108 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D948E2591;
-	Tue, 10 Oct 2023 05:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA65A4;
-	Mon,  9 Oct 2023 22:31:22 -0700 (PDT)
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-690fe10b6a4so4296535b3a.3;
-        Mon, 09 Oct 2023 22:31:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E9D63C4;
+	Tue, 10 Oct 2023 05:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzzwIQd8"
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8647CC;
+	Mon,  9 Oct 2023 22:46:21 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c760b34d25so35879715ad.3;
+        Mon, 09 Oct 2023 22:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696916781; x=1697521581; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nZV2ZA/8PD3wKvcF+YbrnJdD7O9iGtRQwpgfooTt3pA=;
+        b=fzzwIQd87dTpeLC+oIE5/L6NbJr4fyGlaF8OMHSxuvDfwTR495GN+B194401LbaclD
+         OJTOr2FhJqL4l+ZMgsnuCvvCbfj2QQxTwfdVkMttUBnBve/oYrTesjM7lPX18P3IWDrr
+         z6o9Sq9Ci8fYsWDhr8qcU8zsibUsdlQrrqhmzUOWZ/TSBjD9UM15dw1Q+TWl4eVR5XeT
+         F5LNR8Y6PzZpcLv4HumjPhwgOPQe2wNOLEAGMN9NKvuIGRMPX+nY7uTyMRakrI4P7iQv
+         A3ALL9n51OvDzMWpz3xMIiAwdUU49VpPreR2J1DB55n+xgs/HJDTrtzPn1x6NSAMD9BF
+         7J8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696915882; x=1697520682;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vt2BqSIdl0ZNPc+ubdcIw6eHOY2+gZYtqV36VU3obnI=;
-        b=RZmqpZEQnnHvy5bd/idU8FJTIuZkhnpf4c93ng4ppIoS2EnDE52ynqFad4ax94hwsx
-         pHlWGk2Yx+Shp0ApnPomDPporzS7XgjDu/gEI4E/PvXOtbfXVNCiVnC1Anzx8mrwVvXV
-         LrF1MB2WF8E35JVq7utRYECOC5l6TqTweWV2h+Vy5GodYqPYAfmc0SwRB41WOkw4K84E
-         j9rrWZ89oLQVqb1Xs9WJrc/avxpyrmMV7xorL4wxOah7/5/PvX5Kgs0CB5WYFEIc+UUX
-         EUggv1Rl8XJhF9VoXhxepOaHz3aJzmOD4NBS8Qo7a13hW30IR8cn6r0PunxOI/QrmH0Q
-         fZyw==
-X-Gm-Message-State: AOJu0YyhnKGgawITaeGTwodWk1zWCUC460wYF9gtf5aoqi39BP2S7LIz
-	TfyDc8Q3JqDVX0xDMn9chvy/r9ruwXoQDebdKN8=
-X-Google-Smtp-Source: AGHT+IEI28EFr1hR6ZNm1Rf2G5yChgniRPi2Ejn2WPUoqwH0AD8e844VB1VG+gpwmw4dZ5vSHy/gWmU4RMhWv7kEDJk=
-X-Received: by 2002:a05:6a20:a121:b0:16b:d853:9a10 with SMTP id
- q33-20020a056a20a12100b0016bd8539a10mr13408996pzk.39.1696915882046; Mon, 09
- Oct 2023 22:31:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696916781; x=1697521581;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nZV2ZA/8PD3wKvcF+YbrnJdD7O9iGtRQwpgfooTt3pA=;
+        b=dHM3CxonBTWSq2RNIbc3JeYfmUa+pWgskgHcAfUNOW3pIKMuMjFO1RFr3HSfy4RFxW
+         piiwlvZeXgDvhJNmECfcxx2EgxmLzpnqj/a8YpGrFoguNELkV4jDV6AjmHOzCsVckarR
+         pSq+Xfozuqt/fa7gUq/Xie5RuUn99lYu3EdSp3ELKy0GHAYfF1l6xF4S9+BB9yIkFAA/
+         t5MP8ly72HbWvLM0tIYgGpZsyztCeXnLXCWHjZUlLPamnFS47RdrzTqHJXE4AiHzUy3P
+         PxCiDc9A+bIekWSM8cQeHtsiB/x3h0KWKxCaf4R0khccqU1rvniUvauoztXO8ZyiG52H
+         F7YQ==
+X-Gm-Message-State: AOJu0Yz6jGNG34oi3crszq7QcqA9Jj4yh9lAJGYgAF8KBZsOtEOo6zxw
+	5DLhKLGI8Vin+qi/D77t9dM=
+X-Google-Smtp-Source: AGHT+IGgwGdDAROMc9rbopS3EWpWn4e/KTwUWLS+/exKVAfJ/dS8C+Y6v8zEnWJU3rCBrhg6eGwfNA==
+X-Received: by 2002:a17:902:aa05:b0:1bf:c59:c944 with SMTP id be5-20020a170902aa0500b001bf0c59c944mr14195900plb.22.1696916781099;
+        Mon, 09 Oct 2023 22:46:21 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:2749:d38c:68c4:434f])
+        by smtp.gmail.com with ESMTPSA id u10-20020a170902b28a00b001c60a2b5c61sm10590084plr.134.2023.10.09.22.46.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 22:46:20 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	bpf@vger.kernel.org
+Subject: [PATCH v2 2/2] perf lock contention: Check tstamp elem creation
+Date: Mon,  9 Oct 2023 22:46:17 -0700
+Message-ID: <20231010054617.1901616-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
+In-Reply-To: <20231010054617.1901616-1-namhyung@kernel.org>
+References: <20231010054617.1901616-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231009183920.200859-1-irogers@google.com>
-In-Reply-To: <20231009183920.200859-1-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 9 Oct 2023 22:31:10 -0700
-Message-ID: <CAM9d7cgwam22Fn3tvJ7dJL1zHWTQa1ixvePTMPQmvYQLn2=DxA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/18] clang-tools support in tools
-To: Ian Rogers <irogers@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Ming Wang <wangming01@loongson.cn>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Ian,
+To be more conservative, let's check the return value of
+bpf_map_update_elem() for the tstamp map for a task and change
+the flag to BPF_NOEXIST so that it cannot update any existing
+element.
 
-On Mon, Oct 9, 2023 at 11:39=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Allow the clang-tools scripts to work with builds in tools such as
-> tools/perf and tools/lib/perf. An example use looks like:
->
-> ```
-> $ cd tools/perf
-> $ make CC=3Dclang CXX=3Dclang++
-> $ ../../scripts/clang-tools/gen_compile_commands.py
-> $ ../../scripts/clang-tools/run-clang-tools.py clang-tidy compile_command=
-s.json -checks=3D-*,readability-named-parameter
-> Skipping non-C file: 'tools/perf/bench/mem-memcpy-x86-64-asm.S'
-> Skipping non-C file: 'tools/perf/bench/mem-memset-x86-64-asm.S'
-> Skipping non-C file: 'tools/perf/arch/x86/tests/regs_load.S'
-> 8 warnings generated.
-> Suppressed 8 warnings (8 in non-user code).
-> Use -header-filter=3D.* to display errors from all non-system headers. Us=
-e -system-headers to display errors from system headers as well.
-> 2 warnings generated.
-> 4 warnings generated.
-> Suppressed 4 warnings (4 in non-user code).
-> Use -header-filter=3D.* to display errors from all non-system headers. Us=
-e -system-headers to display errors from system headers as well.
-> 2 warnings generated.
-> 4 warnings generated.
-> Suppressed 4 warnings (4 in non-user code).
-> Use -header-filter=3D.* to display errors from all non-system headers. Us=
-e -system-headers to display errors from system headers as well.
-> 3 warnings generated.
-> tools/perf/util/parse-events-flex.c:546:27: warning: all parameters shoul=
-d be named in a function [readability-named-parameter]
-> void *yyalloc ( yy_size_t , yyscan_t yyscanner );
->                           ^
->                            /*size*/
-> ...
-> ```
->
-> Fix a number of the more serious low-hanging issues in perf found by
-> clang-tidy.
->
-> This support isn't complete, in particular it doesn't support output
-> directories properly and so fails for tools/lib/bpf, tools/bpf/bpftool
-> and if an output directory is used.
->
-> v3. Add Nick Desaulniers reviewed-by to patch 3. For Namhyung, drop
->     "perf hisi-ptt: Fix potential memory leak", split lock change out
->     of "perf svghelper: Avoid memory leak" and address comments in
->     "perf header: Fix various error path memory leaks".
-> v2: Address comments by Nick Desaulniers in patch 3, and add their
->     Reviewed-by to patches 1 and 2.
->
-> Ian Rogers (18):
->   gen_compile_commands: Allow the line prefix to still be cmd_
->   gen_compile_commands: Sort output compile commands by file name
->   run-clang-tools: Add pass through checks and header-filter arguments
->   perf bench uprobe: Fix potential use of memory after free
->   perf buildid-cache: Fix use of uninitialized value
->   perf env: Remove unnecessary NULL tests
->   perf jitdump: Avoid memory leak
->   perf mem-events: Avoid uninitialized read
->   perf dlfilter: Be defensive against potential NULL dereference
->   perf hists browser: Reorder variables to reduce padding
->   perf hists browser: Avoid potential NULL dereference
->   perf svghelper: Avoid memory leak
->   perf lock: Fix a memory leak on an error path
->   perf parse-events: Fix unlikely memory leak when cloning terms
->   tools api: Avoid potential double free
->   perf trace-event-info: Avoid passing NULL value to closedir
->   perf header: Fix various error path memory leaks
->   perf bpf_counter: Fix a few memory leaks
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-I agree with your comment on v2 that it needs more work
-to clean the code up.  Anyway I'm ok with v3 now.
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index b11179452e19..69d31fd77cd0 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -328,7 +328,11 @@ int contention_begin(u64 *ctx)
+ 	if (pelem == NULL) {
+ 		struct tstamp_data zero = {};
+ 
+-		bpf_map_update_elem(&tstamp, &pid, &zero, BPF_ANY);
++		if (bpf_map_update_elem(&tstamp, &pid, &zero, BPF_NOEXIST) < 0) {
++			__sync_fetch_and_add(&task_fail, 1);
++			return 0;
++		}
++
+ 		pelem = bpf_map_lookup_elem(&tstamp, &pid);
+ 		if (pelem == NULL) {
+ 			__sync_fetch_and_add(&task_fail, 1);
+-- 
+2.42.0.609.gbb76f46606-goog
 
-For ther perf part (patch 4 to 18),
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
->
->  scripts/clang-tools/gen_compile_commands.py |  8 +--
->  scripts/clang-tools/run-clang-tools.py      | 32 ++++++++---
->  tools/lib/api/io.h                          |  1 +
->  tools/perf/bench/uprobe.c                   |  1 +
->  tools/perf/builtin-buildid-cache.c          |  6 ++-
->  tools/perf/builtin-lock.c                   |  1 +
->  tools/perf/ui/browsers/hists.c              |  6 +--
->  tools/perf/util/bpf_counter.c               |  5 +-
->  tools/perf/util/dlfilter.c                  |  4 +-
->  tools/perf/util/env.c                       |  6 +--
->  tools/perf/util/header.c                    | 60 ++++++++++++---------
->  tools/perf/util/jitdump.c                   |  1 +
->  tools/perf/util/mem-events.c                |  3 +-
->  tools/perf/util/parse-events.c              |  4 +-
->  tools/perf/util/svghelper.c                 |  5 +-
->  tools/perf/util/trace-event-info.c          |  3 +-
->  16 files changed, 94 insertions(+), 52 deletions(-)
->
-> --
-> 2.42.0.609.gbb76f46606-goog
->
