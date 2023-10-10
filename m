@@ -1,118 +1,129 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704E241E49
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 21:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E9F377
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Oct 2023 01:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HTGENdZB"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B41EA6
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 14:41:54 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a4ae873edso501852276.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Oct 2023 14:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696887714; x=1697492514; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ym33VVd2BajpUroKBZvd3tTL/sMIOEowMFesXhruLGo=;
-        b=HTGENdZBPKlywpeRZTnkFxadASq9or7mh1T7skYYVLOrqDM4xcUWynpi/Xb1L3yEO4
-         xODj1nK7ply4KRs8VM4C711ZDgbXpHqvyDgh8+7gPwKtw1qcBzCvgjhnBRh8q/y7DEAm
-         mIJTIjd7cTe3N231oYhgntTvXrasZahcMmhC6N4oluqih0C8S7/jBmrnVZFXIuA4hVtf
-         /8DpBw9aaobz4ejmKCiZoyJmMJ5kwWRlwCO+kYvw3/TGPyxVh2/5b2VqMfIpQJfY1haz
-         pvr8oPQ+mNLYASxBfyX6szbVawfozhiR5z4lXSPbnXlH+NQIyAul+D1uJEvHqoq4VNB0
-         n4Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696887714; x=1697492514;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ym33VVd2BajpUroKBZvd3tTL/sMIOEowMFesXhruLGo=;
-        b=pUbIFyUADcb9DoOpeqIywdU7Xh0mzXZT4PKvGLzBFLR0kzrI6iegoUct9XPTfdxNbS
-         FA8vMfh9RPDLKJTY9hJQfohnl0fCQ1hh8pAbjX3s4Wt6+/a0J5eCtqD4rNQeCH++0QT+
-         VoolTE9E8Frc1pW+WKunZL4QmiBnqmxvA/K+yxm1SHejt3qrFMoqLYar8sDe/1mK59G7
-         g/mH/DQJ1iD75s7FdU3oFwWFUxFOjUrhLPOADSSgwoa5saN6VH6tOYKvlYFtkzsASLHB
-         xIIzZ6EnjR7fWjDVu7ejNFw3NfLBZ0lOFNzaNb+mQS3eBvsWEtA/6qvBHqRWcwi8aS8A
-         Lnjg==
-X-Gm-Message-State: AOJu0YzKmetZdK9JEZDgUWN62QFHcnicXrAkl1LiSHXYnLZxep0t07Zx
-	RNU08kM9p66TyMMIkbsEqciNbrg3R4Ye
-X-Google-Smtp-Source: AGHT+IHnxhKG34IioS36StlETcBwWpm7R+pkHJp4TsAXkkYCJP5Z2X/3faXasm0mt0NAqHj/TMNCjm2I+IU2
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ac4a:9b94:7158:3f4e])
- (user=irogers job=sendgmr) by 2002:a25:694b:0:b0:d7b:8d0c:43f0 with SMTP id
- e72-20020a25694b000000b00d7b8d0c43f0mr262206ybc.11.1696887713827; Mon, 09 Oct
- 2023 14:41:53 -0700 (PDT)
-Date: Mon,  9 Oct 2023 14:41:43 -0700
-In-Reply-To: <20231009214143.349978-1-irogers@google.com>
-Message-Id: <20231009214143.349978-3-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ejDfZXWv"
+X-Greylist: delayed 371 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 09 Oct 2023 18:16:50 PDT
+Received: from out-205.mta0.migadu.com (out-205.mta0.migadu.com [IPv6:2001:41d0:1004:224b::cd])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED9FBA
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 18:16:49 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1696900244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jXH7cg8de1dzBGNJz3ypcSLqe/t7Zxe4VVUQ1QtkOqY=;
+	b=ejDfZXWve4OpKb0m54PztS0ktiSoly/ROpgvaax4Okm/f6iylctHxcSmBmaBI5j//XbtPe
+	JwEz23KliyYcVQfGmdYCSGzBfAYuSG4xGOqdJwwuW+hJEfeNix4GWB/4Lk6WpdvMGPk+Nu
+	sJBWt1+G0UpZQOD3vb4axn8OCrkCSXw=
+From: Oliver Upton <oliver.upton@linux.dev>
+To: kvm@vger.kernel.org
+Cc: kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	Jing Zhang <jingzhangos@google.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: [PATCH v2 2/5] perf build: Generate arm64's sysreg-defs.h and add to include path
+Date: Tue, 10 Oct 2023 01:10:19 +0000
+Message-ID: <20231010011023.2497088-3-oliver.upton@linux.dev>
+In-Reply-To: <20231010011023.2497088-1-oliver.upton@linux.dev>
+References: <20231010011023.2497088-1-oliver.upton@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231009214143.349978-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v1 3/3] perf hist: Add missing puts to hist__account_cycles
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Artem Savkov <asavkov@redhat.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Caught using reference count checking on perf top with
-"--call-graph=lbr". After this no memory leaks were detected.
+Start generating sysreg-defs.h in anticipation of updating sysreg.h to a
+version that needs the generated output.
 
-Fixes: 57849998e2cd ("perf report: Add processing for cycle histograms")
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
 ---
- tools/perf/util/hist.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/Makefile.perf | 15 +++++++++++++--
+ tools/perf/util/Build    |  2 +-
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 3dc8a4968beb..ac8c0ef48a7f 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2676,8 +2676,6 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 37af6df7b978..14dedd11a1f5 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -443,6 +443,15 @@ drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
+ # Create output directory if not already present
+ _dummy := $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
  
- 	/* If we have branch cycles always annotate them. */
- 	if (bs && bs->nr && entries[0].flags.cycles) {
--		int i;
--
- 		bi = sample__resolve_bstack(sample, al);
- 		if (bi) {
- 			struct addr_map_symbol *prev = NULL;
-@@ -2692,7 +2690,7 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
- 			 * Note that perf stores branches reversed from
- 			 * program order!
- 			 */
--			for (i = bs->nr - 1; i >= 0; i--) {
-+			for (int i = bs->nr - 1; i >= 0; i--) {
- 				addr_map_symbol__account_cycles(&bi[i].from,
- 					nonany_branch_mode ? NULL : prev,
- 					bi[i].flags.cycles);
-@@ -2701,6 +2699,12 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
- 				if (total_cycles)
- 					*total_cycles += bi[i].flags.cycles;
- 			}
-+			for (unsigned int i = 0; i < bs->nr; i++) {
-+				map__put(bi[i].to.ms.map);
-+				maps__put(bi[i].to.ms.maps);
-+				map__put(bi[i].from.ms.map);
-+				maps__put(bi[i].from.ms.maps);
-+			}
- 			free(bi);
- 		}
- 	}
++arm64_gen_sysreg_dir := $(srctree)/tools/arch/arm64/tools
++
++arm64-sysreg-defs: FORCE
++	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir)
++
++arm64-sysreg-defs-clean:
++	$(call QUIET_CLEAN,arm64-sysreg-defs)
++	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) clean > /dev/null
++
+ $(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
+ 	$(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
+ 
+@@ -716,7 +725,9 @@ endif
+ __build-dir = $(subst $(OUTPUT),,$(dir $@))
+ build-dir   = $(or $(__build-dir),.)
+ 
+-prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioctl_array) \
++prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders \
++	arm64-sysreg-defs \
++	$(drm_ioctl_array) \
+ 	$(fadvise_advice_array) \
+ 	$(fsconfig_arrays) \
+ 	$(fsmount_arrays) \
+@@ -1125,7 +1136,7 @@ endif # BUILD_BPF_SKEL
+ bpf-skel-clean:
+ 	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+ 
+-clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
++clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+ 	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT).config-detected
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 6d657c9927f7..2f76230958ad 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -345,7 +345,7 @@ CFLAGS_rbtree.o        += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ET
+ CFLAGS_libstring.o     += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+ CFLAGS_hweight.o       += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+ CFLAGS_header.o        += -include $(OUTPUT)PERF-VERSION-FILE
+-CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/
++CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/ -I$(srctree)/tools/arch/arm64/include/generated/
+ 
+ $(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
+ 	$(call rule_mkdir)
 -- 
 2.42.0.609.gbb76f46606-goog
 
