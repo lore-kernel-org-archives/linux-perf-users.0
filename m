@@ -1,134 +1,111 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E4C63A5;
-	Tue, 10 Oct 2023 05:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6828F65;
+	Tue, 10 Oct 2023 05:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZN8RcoiF"
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84ED2AC;
-	Mon,  9 Oct 2023 22:46:20 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-690d8fb3b7eso4668248b3a.1;
-        Mon, 09 Oct 2023 22:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696916780; x=1697521580; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=uvYgbd6jsaxRvqO2oO/xtebxfgxyUR4b8FU8FPolyTQ=;
-        b=ZN8RcoiFcfC24Na+zm1RWNKXxgNC+ERmTsykvdk5lHRzskZIHpn0QPFpwoLyY9W1He
-         JP1zK+ypaNrrOynnWG5SkMFDFTCJq7MTnVyRf7S0KvHJEOwl/x6rqD+2UQ+RPsNUBFqJ
-         3s6PUZKFkvf3Vbub/LHMobbu8aRF3u1GveLMIr9o+P3uWfuhqk8b6eMhrzNIkNBE2ZlZ
-         yg1rrQPdKTKAZ+vdgu4nzev/hNXT7OQNOphw4hcPid4Mx0Yv5XbWdlIeehZZhLPO/g66
-         34YJDM3slFHTzVu/LOpi8Asn6Qb0MUAj1J1Tw83jBdkeOJGrPFwFDPjIG6/YYJ1HLTk/
-         E3kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696916780; x=1697521580;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uvYgbd6jsaxRvqO2oO/xtebxfgxyUR4b8FU8FPolyTQ=;
-        b=RFlXnD7AZXyMhLpsBhN93xCJ2mhaXvgdq2PWCoK/NQBn/xe1r6bmO6N2uy59GoeV1P
-         K1e+IQYPznne2gig7KmTy3HUQILzXkAF1lS45WIsiMxEvxJAcaQup3lE+AOLvO/ghaE9
-         cCY3ix1o90SyZUQIJ+me0SDX31pK9f0mp+bcXD0dfBkpfyEHtTu5pTQNaW4H+VuWJ2rU
-         NdR/Wk3VVT/2GDwoA0o9b2vZxqoO5EpxmP80LegaU5GnLv8IRfyrxf06GTf5+rC4FmJf
-         2IakXHI58h4kGFB7kFf9OatgjGI+z5DSAlzNvg1SqDzCj5UzcIFPlWF+E08VV6v0rc05
-         Xlfg==
-X-Gm-Message-State: AOJu0YzFt+KBGUBrTRGSgVcYJWTsj1sJ+1TS7MQRMzh4xaA9u+T6uCnK
-	NqkpTorDThJCaPI/jCzyoiQ=
-X-Google-Smtp-Source: AGHT+IGSXYrNljbSBZ8JLJG1lxLjBrIBoLUDtOS6inCVelawQFY9TLT3ojme9OmifOlqQQgRQPlURA==
-X-Received: by 2002:a05:6a21:a5a8:b0:152:6b63:f1e5 with SMTP id gd40-20020a056a21a5a800b001526b63f1e5mr24226512pzc.38.1696916779861;
-        Mon, 09 Oct 2023 22:46:19 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:2749:d38c:68c4:434f])
-        by smtp.gmail.com with ESMTPSA id u10-20020a170902b28a00b001c60a2b5c61sm10590084plr.134.2023.10.09.22.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Oct 2023 22:46:19 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Kg+lbBI2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCCE0C433C8;
+	Tue, 10 Oct 2023 05:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696917551;
+	bh=S2Vq73dxgI8Hax8ZDzPktuJJ9WTcUpUL+/KM/V79r44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kg+lbBI2WFWTfw1g2nP0OCMspsLaEmhAGl8iOsaj2cy/oJfzG7zS6LdyTH+rgqFJW
+	 sxCvDQ6Jwy3j0Ae58keCkT9pNIKZqzy2q0BM7QcmVrgaG+duK+v7nL5BaVefquSsO4
+	 loMdrlwL5KeekjdN5/LA2S/AHzLoLV9Rn2EfXKfI=
+Date: Tue, 10 Oct 2023 07:59:07 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	bpf@vger.kernel.org
-Subject: [PATCH v2 1/2] perf lock contention: Clear lock addr after use
-Date: Mon,  9 Oct 2023 22:46:16 -0700
-Message-ID: <20231010054617.1901616-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
+	Sebastian Reichel <sre@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	nvdimm@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
+Message-ID: <2023101025-yogurt-masses-47da@gregkh>
+References: <20231009165741.746184-1-max.kellermann@ionos.com>
+ <20231009165741.746184-6-max.kellermann@ionos.com>
+ <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
+ <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+In-Reply-To: <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
 
-It checks the current lock to calculated the delta of contention time.
-The address is saved in the tstamp map which is allocated at begining of
-contention and released at end of contention.
+On Mon, Oct 09, 2023 at 10:05:55PM +0200, Max Kellermann wrote:
+> On Mon, Oct 9, 2023 at 7:24 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> > Also, I don't know why checkpatch is happy with all the
+> >
+> >         const struct attribute_group *const*groups;
+> >
+> > instead of
+> >
+> >         const struct attribute_group *const *groups;
+> 
+> I found out that checkpatch has no check for this at all; it does
+> complain about such lines, but only for local variables. But that
+> warning is actually a bug, because this is a check for unary
+> operators: it thinks the asterisk is a dereference operator, not a
+> pointer declaration, and complains that the unary operator must be
+> preceded by a space. Thus warnings on local variable are only correct
+> by coincidence, not by design.
+> 
+> Inside structs or parameters (where my coding style violations can be
+> found), it's a different context and thus checkpatch doesn't apply the
+> rules for unary operators.
 
-But it's possible for bpf_map_delete_elem() to fail.  In that case, the
-element in the tstamp map kept for the current lock and it makes the
-next contention for the same lock tracked incorrectly.  Specificially
-the next contention begin will see the existing element for the task and
-it'd just return.  Then the next contention end will see the element and
-calculate the time using the timestamp for the previous begin.
+Ok, checkpatch support isn't always required, we can notice that changes
+like this obviously are not sane and shouldn't be allowed just by
+reading them :)
 
-This can result in a large value for two small contentions happened from
-time to time.  Let's clear the lock address so that it can be updated
-next time even if the bpf_map_delete_elem() failed.
+thanks,
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 4900a5dfb4a4..b11179452e19 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -389,6 +389,7 @@ int contention_end(u64 *ctx)
- 
- 	duration = bpf_ktime_get_ns() - pelem->timestamp;
- 	if ((__s64)duration < 0) {
-+		pelem->lock = 0;
- 		bpf_map_delete_elem(&tstamp, &pid);
- 		__sync_fetch_and_add(&time_fail, 1);
- 		return 0;
-@@ -422,6 +423,7 @@ int contention_end(u64 *ctx)
- 	data = bpf_map_lookup_elem(&lock_stat, &key);
- 	if (!data) {
- 		if (data_map_full) {
-+			pelem->lock = 0;
- 			bpf_map_delete_elem(&tstamp, &pid);
- 			__sync_fetch_and_add(&data_fail, 1);
- 			return 0;
-@@ -445,6 +447,7 @@ int contention_end(u64 *ctx)
- 				data_map_full = 1;
- 			__sync_fetch_and_add(&data_fail, 1);
- 		}
-+		pelem->lock = 0;
- 		bpf_map_delete_elem(&tstamp, &pid);
- 		return 0;
- 	}
-@@ -458,6 +461,7 @@ int contention_end(u64 *ctx)
- 	if (data->min_time > duration)
- 		data->min_time = duration;
- 
-+	pelem->lock = 0;
- 	bpf_map_delete_elem(&tstamp, &pid);
- 	return 0;
- }
--- 
-2.42.0.609.gbb76f46606-goog
-
+greg k-h
