@@ -1,126 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EED9463;
-	Tue, 10 Oct 2023 06:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A34C9473
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Oct 2023 10:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-X-Greylist: delayed 602 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 09 Oct 2023 23:58:43 PDT
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB0499;
-	Mon,  9 Oct 2023 23:58:43 -0700 (PDT)
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 9C649140199;
-	Tue, 10 Oct 2023 06:48:39 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf06.hostedemail.com (Postfix) with ESMTPA id 379272000F;
-	Tue, 10 Oct 2023 06:48:11 +0000 (UTC)
-Message-ID: <f511170fe61d7e7214a3a062661cf4103980dad6.camel@perches.com>
-Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
-From: Joe Perches <joe@perches.com>
-To: Max Kellermann <max.kellermann@ionos.com>, Guenter Roeck
-	 <linux@roeck-us.net>
-Cc: Jens Axboe <axboe@kernel.dk>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, James
- Morse <james.morse@arm.com>,  Mauro Carvalho Chehab <mchehab@kernel.org>,
- Robert Richter <rric@kernel.org>, Jean Delvare <jdelvare@suse.com>, Jason
- Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Bart Van
- Assche <bvanassche@acm.org>, Joerg Roedel <joro@8bytes.org>, Will Deacon
- <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Dan Williams
- <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Dave
- Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, Keith Busch
- <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg
- <sagi@grimberg.me>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre
- Belloni <alexandre.belloni@bootlin.com>,  Jiri Slaby
- <jirislaby@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike
- Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, Leo Yan
- <leo.yan@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
- <peterz@infradead.org>, Pavel Machek <pavel@ucw.cz>, Lee Jones
- <lee@kernel.org>,  Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas
- <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
- <irogers@google.com>,  Adrian Hunter <adrian.hunter@intel.com>, Sebastian
- Reichel <sre@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Wim Van Sebroeck
- <wim@linux-watchdog.org>,  "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org, 
- linux-rdma@vger.kernel.org, iommu@lists.linux.dev, nvdimm@lists.linux.dev, 
- linux-nvme@lists.infradead.org, linux-rtc@vger.kernel.org, 
- linux-serial@vger.kernel.org, coresight@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-watchdog@vger.kernel.org, linux-scsi@vger.kernel.org
-Date: Mon, 09 Oct 2023 23:48:10 -0700
-In-Reply-To: <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
-References: <20231009165741.746184-1-max.kellermann@ionos.com>
-	 <20231009165741.746184-6-max.kellermann@ionos.com>
-	 <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
-	 <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id E4D219E;
+	Tue, 10 Oct 2023 03:41:30 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51FED1FB;
+	Tue, 10 Oct 2023 03:42:11 -0700 (PDT)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1DFA53F762;
+	Tue, 10 Oct 2023 03:41:28 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	suzuki.poulose@arm.com
+Cc: James Clark <james.clark@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Zaid Al-Bassam <zalbassam@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Reiji Watanabe <reijiw@google.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: [PATCH v2 0/3] arm64: perf: Add support for event counting threshold
+Date: Tue, 10 Oct 2023 11:40:26 +0100
+Message-Id: <20231010104048.1923484-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Stat-Signature: x66gji9pr8zwbank5ef871m9qoojjjfr
-X-Rspamd-Server: rspamout04
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
-	version=3.4.6
-X-Rspamd-Queue-Id: 379272000F
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX19bm9nHqj2XrX3TKwatvC/C1GajNvD5h9I=
-X-HE-Tag: 1696920491-749924
-X-HE-Meta: U2FsdGVkX1/+029EmPc9sKVNFK2VRUjBCte/A2E+5y43hxFCP+MAKFoIxkcikfn6Jucu52vLqnvIqQDvdm6WvqlwnI8PH42O3yPwjrf6/Rk44z8SFUR40tWN1QdYZq3HPOEvKn0PLMPTqRRMr7zlpFwkMW85ySQYIyr+J8E4OP6W/LoiP3zYhR+0cmnV5ToftIwEMltweE+g/zUx+NL1fSjTbqk3Sf4w33VMSw7k9oncskJ8CUN/bQZEOiHhpNbgGpLqoQJ7ob3InQymsj8a//o/6ldtQbuoxFCk/RnYuGfC0EahOFEMbfIs5+kJ0g+hK4chvkcdMx/L2QmQgmCvPhqiadvx8BYdkeJ2IpCV5Y5g+W85x67f7ON0uqOVXWab
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, 2023-10-09 at 22:05 +0200, Max Kellermann wrote:
-> On Mon, Oct 9, 2023 at 7:24=E2=80=AFPM Guenter Roeck <linux@roeck-us.net>=
- wrote:
-> > Also, I don't know why checkpatch is happy with all the
-> >=20
-> >         const struct attribute_group *const*groups;
-> >=20
-> > instead of
-> >=20
-> >         const struct attribute_group *const *groups;
->=20
-> I found out that checkpatch has no check for this at all; it does
-> complain about such lines, but only for local variables. But that
-> warning is actually a bug, because this is a check for unary
-> operators: it thinks the asterisk is a dereference operator, not a
-> pointer declaration, and complains that the unary operator must be
-> preceded by a space. Thus warnings on local variable are only correct
-> by coincidence, not by design.
->=20
-> Inside structs or parameters (where my coding style violations can be
-> found), it's a different context and thus checkpatch doesn't apply the
-> rules for unary operators.
+Changes since v1:
 
-My opinion is that const use in the kernel should almost
-always have whitespace before and after it except when
-preceded by a open parenthesis or a newline.
+  * Fix build on aarch32 by disabling FEAT_PMUv3_TH and splitting event
+    type mask between the platforms
+  * Change armv8pmu_write_evtype() to take unsigned long instead of u64
+    so it isn't unnecessarily wide on aarch32
+  * Add UL suffix to aarch64 event type mask definition
 
-$ git grep -wh const -- '*.[ch]' | \
-  grep -oP "[ \*\(]?const[ \*]?" | \
-  sort | uniq -c | sort -rn
- 222438  const=20
-  83386 const=20
-  51667 (const=20
-   2766 *const=20
-    834 const
-    442  const
-    343  const*
-     88 *const
-     37 (const
-      4 *const*
+----
+
+FEAT_PMUv3_TH (Armv8.8) is a new feature that allows conditional
+counting of PMU events depending on how much the event increments on
+a single cycle. Two new config fields for perf_event_open have been
+added, and a PMU cap file for reading the max_threshold. See the second
+commit message and the docs in the last commit for more details.
+
+The change has been validated on the Arm FVP model:
+
+  # Zero values, works as expected (as before).
+  $ perf stat -e dtlb_walk/threshold=0,threshold_control=0/ -- true
+
+    5962      dtlb_walk/threshold=0,threshold_control=0/
+
+  # Threshold >= 255 causes count to be 0 because dtlb_walk doesn't
+  # increase by more than 1 per cycle.
+  $ perf stat -e dtlb_walk/threshold=255,threshold_control=5/ -- true
+
+    0      dtlb_walk/threshold=255,threshold_control=5/
+  
+  # Keeping comparison as >= but lowering the threshold to 1 makes the
+  # count return.
+  $ perf stat -e dtlb_walk/threshold=1,threshold_control=5/ -- true
+
+    6329      dtlb_walk/threshold=1,threshold_control=5/
+
+
+James Clark (3):
+  arm: perf: Include threshold control fields valid in PMEVTYPER mask
+  arm64: perf: Add support for event counting threshold
+  Documentation: arm64: Document the PMU event counting threshold
+    feature
+
+ Documentation/arch/arm64/perf.rst  | 58 ++++++++++++++++++++++++++
+ arch/arm/include/asm/arm_pmuv3.h   |  3 ++
+ arch/arm64/include/asm/arm_pmuv3.h |  4 ++
+ arch/arm64/kvm/pmu-emul.c          |  1 +
+ arch/arm64/kvm/sys_regs.c          |  1 +
+ drivers/perf/arm_pmuv3.c           | 67 +++++++++++++++++++++++++++++-
+ include/linux/perf/arm_pmuv3.h     |  4 +-
+ 7 files changed, 136 insertions(+), 2 deletions(-)
+
+
+base-commit: 94f6f0550c625fab1f373bb86a6669b45e9748b3
+-- 
+2.34.1
 
