@@ -1,128 +1,237 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41C724C8A
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Oct 2023 14:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 06EC5E0;
-	Tue, 10 Oct 2023 07:16:36 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EBC51FB;
-	Tue, 10 Oct 2023 07:17:16 -0700 (PDT)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2FD073F762;
-	Tue, 10 Oct 2023 07:16:33 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	suzuki.poulose@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Reiji Watanabe <reijiw@google.com>,
-	Zaid Al-Bassam <zalbassam@google.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-doc@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B1E24C84
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Oct 2023 14:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GK+YQS2h"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FC191;
+	Tue, 10 Oct 2023 07:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696947767; x=1728483767;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=QuUaC9YOuX87JW2J8slurScV01GdxJIdY83DI5FquNY=;
+  b=GK+YQS2hvDmQGFZ70CGVEBY4pTuFMx08phhs7aPrmdBHTNSjKK1xgOjz
+   Dh5mNGgA7Q7m7whJ62Yt6j1OxdEQPV9PZ+Rlc/IeMHhh8Q53oAnd5HVlR
+   fJX8wZy4wR/1Hj00qfKgpowGbY7rctIw+P6AFdB/RWj8vihJGTqWcTIzb
+   dtKp/soLbL8xjIOSOPKtGukBa6IWrnF6vsLqpFTv1TiioJk1aFPziWm/K
+   bgKiRec1heZrd4gPSsvrMInn8MD3DZ66uK14XxH6MOEhH7SzdE4NK7ymN
+   z6CYvSSTUUXUmzVR92OWLXJqrzBfGevoNbcXekaA5qWVkB+I97mCCSnli
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="381665076"
+X-IronPort-AV: E=Sophos;i="6.03,212,1694761200"; 
+   d="scan'208";a="381665076"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 07:22:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="823794124"
+X-IronPort-AV: E=Sophos;i="6.03,212,1694761200"; 
+   d="scan'208";a="823794124"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.249.36.106])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 07:22:44 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: [PATCH v3 3/3] Documentation: arm64: Document the PMU event counting threshold feature
-Date: Tue, 10 Oct 2023 15:15:43 +0100
-Message-Id: <20231010141551.2262059-4-james.clark@arm.com>
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf tools: Add unaligned.h to check-headers.sh
+Date: Tue, 10 Oct 2023 17:22:34 +0300
+Message-Id: <20231010142234.20061-1-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231010141551.2262059-1-james.clark@arm.com>
-References: <20231010141551.2262059-1-james.clark@arm.com>
+In-Reply-To: <20231005190451.175568-1-adrian.hunter@intel.com>
+References: <20231005190451.175568-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Add documentation for the new Perf event open parameters and
-the threshold_max capability file.
+Add include/asm-generic/unaligned.h to check-headers.sh bringing
+tools/include/asm-generic/unaligned.h up to date so that the kernel and
+tools versions match.
 
-Signed-off-by: James Clark <james.clark@arm.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- Documentation/arch/arm64/perf.rst | 56 +++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
 
-diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64/perf.rst
-index 1f87b57c2332..36b8111a710d 100644
---- a/Documentation/arch/arm64/perf.rst
-+++ b/Documentation/arch/arm64/perf.rst
-@@ -164,3 +164,59 @@ and should be used to mask the upper bits as needed.
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
- .. _tools/lib/perf/tests/test-evsel.c:
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
+
+Based on top of 5 patch set "perf intel-pt: Use of get_unaligned_le16() etc"
+
+
+ tools/include/asm-generic/unaligned.h | 129 ++++++++++++++++++++++++--
+ tools/perf/check-headers.sh           |   1 +
+ 2 files changed, 122 insertions(+), 8 deletions(-)
+
+diff --git a/tools/include/asm-generic/unaligned.h b/tools/include/asm-generic/unaligned.h
+index 9140bb4e16c6..156743d399ae 100644
+--- a/tools/include/asm-generic/unaligned.h
++++ b/tools/include/asm-generic/unaligned.h
+@@ -1,11 +1,11 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_GENERIC_UNALIGNED_H
++#define __ASM_GENERIC_UNALIGNED_H
 +
-+Event Counting Threshold
-+==========================================
+ /*
+- * Copied from the kernel sources to tools/perf/:
++ * This is the most generic implementation of unaligned accesses
++ * and should work almost anywhere.
+  */
+-
+-#ifndef __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
+-#define __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
+-
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wpacked"
+ 
+@@ -37,7 +37,120 @@ static inline u64 get_unaligned_le64(const void *p)
+ 	return le64_to_cpu(__get_unaligned_t(__le64, p));
+ }
+ 
+-#pragma GCC diagnostic pop
++static inline void put_unaligned_le16(u16 val, void *p)
++{
++	__put_unaligned_t(__le16, cpu_to_le16(val), p);
++}
 +
-+Overview
-+--------
++static inline void put_unaligned_le32(u32 val, void *p)
++{
++	__put_unaligned_t(__le32, cpu_to_le32(val), p);
++}
 +
-+FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
-+events whose count meets a specified threshold condition. For example if
-+threshold_compare is set to 2 ('Greater than or equal'), and the
-+threshold is set to 2, then the PMU counter will now only increment by
-+when an event would have previously incremented the PMU counter by 2 or
-+more on a single processor cycle.
++static inline void put_unaligned_le64(u64 val, void *p)
++{
++	__put_unaligned_t(__le64, cpu_to_le64(val), p);
++}
 +
-+To increment by 1 after passing the threshold condition instead of the
-+number of events on that cycle, add the 'threshold_count' option to the
-+commandline.
++static inline u16 get_unaligned_be16(const void *p)
++{
++	return be16_to_cpu(__get_unaligned_t(__be16, p));
++}
 +
-+How-to
-+------
++static inline u32 get_unaligned_be32(const void *p)
++{
++	return be32_to_cpu(__get_unaligned_t(__be32, p));
++}
 +
-+The threshold, threshold_compare and threshold_count values can be
-+provided per event:
++static inline u64 get_unaligned_be64(const void *p)
++{
++	return be64_to_cpu(__get_unaligned_t(__be64, p));
++}
 +
-+.. code-block:: sh
++static inline void put_unaligned_be16(u16 val, void *p)
++{
++	__put_unaligned_t(__be16, cpu_to_be16(val), p);
++}
 +
-+  perf stat -e stall_slot/threshold=2,threshold_compare=2/ \
-+            -e dtlb_walk/threshold=10,threshold_compare=3,threshold_count/
++static inline void put_unaligned_be32(u32 val, void *p)
++{
++	__put_unaligned_t(__be32, cpu_to_be32(val), p);
++}
 +
-+And the following comparison values are supported:
++static inline void put_unaligned_be64(u64 val, void *p)
++{
++	__put_unaligned_t(__be64, cpu_to_be64(val), p);
++}
 +
-+.. code-block::
++static inline u32 __get_unaligned_be24(const u8 *p)
++{
++	return p[0] << 16 | p[1] << 8 | p[2];
++}
+ 
+-#endif /* __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H */
++static inline u32 get_unaligned_be24(const void *p)
++{
++	return __get_unaligned_be24(p);
++}
 +
-+  0: Not-equal
-+  1: Equals
-+  2: Greater-than-or-equal
-+  3: Less-than
++static inline u32 __get_unaligned_le24(const u8 *p)
++{
++	return p[0] | p[1] << 8 | p[2] << 16;
++}
 +
-+The maximum supported threshold value can be read from the caps of each
-+PMU, for example:
++static inline u32 get_unaligned_le24(const void *p)
++{
++	return __get_unaligned_le24(p);
++}
 +
-+.. code-block:: sh
++static inline void __put_unaligned_be24(const u32 val, u8 *p)
++{
++	*p++ = val >> 16;
++	*p++ = val >> 8;
++	*p++ = val;
++}
 +
-+  cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
++static inline void put_unaligned_be24(const u32 val, void *p)
++{
++	__put_unaligned_be24(val, p);
++}
 +
-+  0x000000ff
++static inline void __put_unaligned_le24(const u32 val, u8 *p)
++{
++	*p++ = val;
++	*p++ = val >> 8;
++	*p++ = val >> 16;
++}
 +
-+If a value higher than this is given, then it will be silently clamped
-+to the maximum. The highest possible maximum is 4095, as the config
-+field for threshold is limited to 12 bits, and the Perf tool will refuse
-+to parse higher values.
++static inline void put_unaligned_le24(const u32 val, void *p)
++{
++	__put_unaligned_le24(val, p);
++}
 +
-+If the PMU doesn't support FEAT_PMUv3_TH, then threshold_max will read
-+0, and both threshold and threshold_compare will be silently ignored.
-+threshold_max will also read as 0 on aarch32 guests, even if the host
-+is running on hardware with the feature.
++static inline void __put_unaligned_be48(const u64 val, u8 *p)
++{
++	*p++ = val >> 40;
++	*p++ = val >> 32;
++	*p++ = val >> 24;
++	*p++ = val >> 16;
++	*p++ = val >> 8;
++	*p++ = val;
++}
++
++static inline void put_unaligned_be48(const u64 val, void *p)
++{
++	__put_unaligned_be48(val, p);
++}
++
++static inline u64 __get_unaligned_be48(const u8 *p)
++{
++	return (u64)p[0] << 40 | (u64)p[1] << 32 | (u64)p[2] << 24 |
++		p[3] << 16 | p[4] << 8 | p[5];
++}
++
++static inline u64 get_unaligned_be48(const void *p)
++{
++	return __get_unaligned_be48(p);
++}
++#pragma GCC diagnostic pop
+ 
++#endif /* __ASM_GENERIC_UNALIGNED_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 4314c9197850..d09c3d46f08f 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -161,6 +161,7 @@ check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/ex
+ check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
+ check arch/x86/include/asm/amd-ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
+ check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
++check include/asm-generic/unaligned.h '-I "^#include <linux/unaligned/packed_struct.h>" -I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
+ check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
+ check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
+ check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
 -- 
 2.34.1
 
