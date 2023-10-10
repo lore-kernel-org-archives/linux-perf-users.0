@@ -1,149 +1,112 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E9565C
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Oct 2023 06:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5B4C129;
+	Tue, 10 Oct 2023 06:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LO+3nPGE"
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2051.outbound.protection.outlook.com [40.107.8.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49CE9E
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Oct 2023 23:52:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GC9fL/Expep7jRdkiXD5fINNn9TAWqHPX5kQd35D0/A71iQwj4G0iZlz3fmiZpuzSGmgUc07zezjDoOJJNj53NowBVlIbO5dnIaXJM/qDGCGCIrymK1+Ba0vtVPE1JSXBwRGwr4hNEXU713kPbQf8tJHOrTnQauZSuwVPiIUnAJaLB60R8Teuf8KY7PgcO7xy2H/1y55EbSyNK6xBc/i41ZafJGrEbcMyScXtzYvAmmSjUYhwKfmrYknQ+7UlFCyFSLe2Kwl6ceahp09MKjmxgsFb8HMsQX1S/jLSnyfBgDl592MPSyv/z5VdVRmwcityvPFgJwVJ8sxg89kBpFzbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ptiYoAln2z8ZSesBq+EoIslmp6lhHFOOgPrNH1cbRi4=;
- b=jsLUTO9wYi7IyEMPVvIxsYMaCxsm9wGVZF2pDHfxuO8lx1Ktw/CtNSy8lH/i36/XHSOu3sdPB93nobINAFXWMfBtHbeWd67ZNsuRXn1FaeI7w5EZ1DUwViGzMGdHgkgxyOGMFzVD37ZzjU/AIfcm8KsgMt5iRBBssu8NXHmOmb3hhzg0McC0ug7GQfjdrWqgQPMlIhUom0Iq7jJPX1I4R9JHglpn9VRnMweGjxclsfvcssILmFU6Q/56Kn/Yj7YuvGvI/fq0PJVZJ2YPGNZNRoX5o4JUufwD8LGlhnfTAxkkDo7YDMckgsUELrPlaVKyEEv7xLvbEX9jqzXFjSX8+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ptiYoAln2z8ZSesBq+EoIslmp6lhHFOOgPrNH1cbRi4=;
- b=LO+3nPGEHAqNBXVOO0nQOtyCdyHY6KDjnIU0c1LMKfZsjVLn5/mWnFglxSTJ158jJlcf2pK9nFoGWEpWA+TQVX2LfZ+Y9LTCSAx87ld+P+yrCIM/osQgVyrp5GToJId4AYg57YMVFHYmRmoz9yy0mUA1x4xwrUMRxkhHs6+ZPgA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB7PR04MB5146.eurprd04.prod.outlook.com (2603:10a6:10:23::16)
- by VI1PR04MB9858.eurprd04.prod.outlook.com (2603:10a6:800:1d4::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Tue, 10 Oct
- 2023 06:52:41 +0000
-Received: from DB7PR04MB5146.eurprd04.prod.outlook.com
- ([fe80::f4f8:a4d6:fe5a:3e1]) by DB7PR04MB5146.eurprd04.prod.outlook.com
- ([fe80::f4f8:a4d6:fe5a:3e1%3]) with mapi id 15.20.6863.032; Tue, 10 Oct 2023
- 06:52:41 +0000
-From: Xu Yang <xu.yang_2@nxp.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com
-Cc: linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf pmu: add loaded_json_aliases firstly for perf_pmu__num_events()
-Date: Tue, 10 Oct 2023 14:57:38 +0800
-Message-Id: <20231010065738.2536751-1-xu.yang_2@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0122.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::26) To DB7PR04MB5146.eurprd04.prod.outlook.com
- (2603:10a6:10:23::16)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zzQU1pwc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42CCC433C8;
+	Tue, 10 Oct 2023 06:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696921079;
+	bh=EYuUNIt6jJRwYBy0E3p0Vk5Y1cHFfh6ehg6kHTfAyUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=zzQU1pwcQ/CneY+FW5FxMonJkZiI86OeSlFhEhdRj/hvvySkkTG2K8Sk51p8M1RuX
+	 NA8xXufVqn3K4h0T1GP7rVOn7ryC3K4n6YeVOhjVhWQYEIJa6ayQXO2ZChu8j2BCF+
+	 i7dawBqEH7KL0R9NbBls/UV6Yg3YejnrOELbQ5Mk=
+Date: Tue, 10 Oct 2023 08:57:55 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Joe Perches <joe@perches.com>
+Cc: Max Kellermann <max.kellermann@ionos.com>,
+	Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	nvdimm@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
+Message-ID: <2023101041-giggle-refried-5b8c@gregkh>
+References: <20231009165741.746184-1-max.kellermann@ionos.com>
+ <20231009165741.746184-6-max.kellermann@ionos.com>
+ <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
+ <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
+ <f511170fe61d7e7214a3a062661cf4103980dad6.camel@perches.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB7PR04MB5146:EE_|VI1PR04MB9858:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96eeaf65-aae7-4282-2e1f-08dbc95d7f6d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	41gOW2d0LrwX8PriVo0gJEcGI4wIverauYA3x+F/308cmW4fpXsjNQFuInLuC1/IsBNpOdLs6+IDkEKaw0ZhYiJAJ0wxFLB77+GkvZFj0Wnu5GT+84ETFkWTUtqbcNn+JFHldqBGbRWmrnEKH5Es2udBNMzih3pR6iWbDYOer4lVtmDBSNeSL4Iaj75ctANjnLfTmTDwDJypOtZ33PITfTz4VV+WJDRCNyAFrQHnEz4sLVO2/aj0JACuI3oHLI/0/E4Os79g/aVrlLRIL7tK2l8mxiXjh9DHlsmO0a/PcjmVsBP+tRiaMxMZPFirPLh+M+FUHnLl1za2r2lM2hvWX6vxCSp61t/pK5jpz5p4Wktr3wedccoE8BOEAFZf0II7mZnYYgH9wz3ZfP4nQnZUvPuPfN+qVp29mmDjzG11Ri4gxLb9Zj6Y7HHfZUNFaTEShZ0Gs3BfIIeEk5+hVeiGTCgA8YkDSYfLL6UcmixsMkTInM2sbMfHov01Hvtp8SRYtW/pE53kHs094faaTBC09liyoNpzTOOD/J3D+fu3CFzeBdn0WJwiONEjW+7gxSjnCRqIHcR4GEEhzO/EwVBDxUQ1q+/gJxz9IU/h9KxFkpBs5vUzR4zs86VN9CpwJJ+2DZ6ggA6zzVEFTPi+wtSWWg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5146.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(376002)(346002)(39860400002)(366004)(230922051799003)(186009)(1800799009)(451199024)(64100799003)(86362001)(36756003)(41300700001)(2616005)(1076003)(5660300002)(52116002)(6486002)(2906002)(7416002)(66946007)(66476007)(66556008)(478600001)(6512007)(316002)(6666004)(6506007)(26005)(8676002)(8936002)(4744005)(4326008)(38100700002)(38350700002)(101420200003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eUiwMUj35QAPRa8pCl1YefXv9K/3jNCKWNSDHVUt6uet8F8evP1ebk1O1dJq?=
- =?us-ascii?Q?wV6GE8tKkv6T16EJZ1u0mf2cxDW+zaH+9ehQyWdG2iB16O2RrTBxWkJQCPBX?=
- =?us-ascii?Q?6JRSnNQNeBfseT9nXIkLmMDq+Lv7+r+abzpt4Wa+7JAxk5SujUyTYBUdzV81?=
- =?us-ascii?Q?S8pDLUgEJFOBxYDBJ/s+f+vRQLj6ab2aqGMNhs1fAKHliKvmVcf1cG9roltQ?=
- =?us-ascii?Q?KoXfNUTqj/pF7NWzaF2ynNCinWuWGH3ABYVMvUeomJVf5/hAuYUiVyKoDlar?=
- =?us-ascii?Q?SAilnUFBiGDKRkutEIj4eZVFvbAbhuy6SVNPyoID5zBGZ5lzHx35e+C2u/k0?=
- =?us-ascii?Q?UlnP1U8cIhb0NzcBwwPB7vCWxIp0Kv8H7pGCxw2DoNIKvKnd6/wOOj35w+Hr?=
- =?us-ascii?Q?nmdXOZ++YE5EaOb4UzGUjKldGWloj6tdWlMgg6nk7uVg5wMrPrvT9Qa7YXLm?=
- =?us-ascii?Q?JBAJCYFc/wdf2/gZHExwGCGFh/3BJli7ZsqMMnQLlAEVVNWR3t5I7UKEG1O2?=
- =?us-ascii?Q?7nsEexOEEZRO0EJn1+XcoqsLTh/jmFyMSkszyiKaLjvk2BH1/qqZ4ujg6MUG?=
- =?us-ascii?Q?FIGR6gizCuX7uv39SP8OrrXXCl+R/X+GrjQcGId9tro0EyXf9wFa7YR6aeSE?=
- =?us-ascii?Q?Qnqqwgo6QKUgxUVSA/2k1xL2mHP+ggwcbZJZCzbrN+JVEnlQsjWAW2igDMV/?=
- =?us-ascii?Q?yMvJ/8NVrk07Jh0+nNuzgOcTBzvXvLm916lMZ3qgjQnj6Juphbx+KC2O+w2Y?=
- =?us-ascii?Q?LRxTLhR9GrrJUVFZ16+EbHpcAReboq9Wv0jWiVhADIHAbsjv0Q4yuClLan5s?=
- =?us-ascii?Q?kkisZ4TzMh5OFz4zImo/GkMD6J2AJfhj6GyofyXkmaf0YA0jovPXXFYaAbiY?=
- =?us-ascii?Q?lIsLZFA0Ieb/etqvjvsFUHVvr8IMiSyJh1b9ypH5tiMHJdoX0j5BD/vNTk4n?=
- =?us-ascii?Q?hPRooV13QREFLkzzoXk1OClZ9EQixjxi1BAFAx3b/Xt1KlapQCTb73s4qCTw?=
- =?us-ascii?Q?abRMX4pfL2SZ3E79KBUeQ1YpyeUx0HHnyCQbzs1uPDjJzXP+2yBPIVjwtofz?=
- =?us-ascii?Q?JOZjwljd/GJFzB5ARTSBvm/+x+Ti/issyXvHFkJI7wpDmVws7th949Q0XVg/?=
- =?us-ascii?Q?621uPvNalj+MsKxqkOKTTQmQzEHwlL6h6GTQJ8vXzViKjMtjM7DAAmDahffx?=
- =?us-ascii?Q?rk9OGM3jarp+Qn6B+nNXC2TMYhQA6nLkMIcd8Z0FVngauE5qBrH+lffr1oH/?=
- =?us-ascii?Q?6qVnBHmOIVgJzD3b23OeDrlPvnYBKK4UgfYVfi3KP4jNBlj9JjAUB6mahqE0?=
- =?us-ascii?Q?VuBfv25dAH//PUDq1XxMlmBUT+dH3CQfFzlx17fDh+U5Me53zoeOvG+dVUFz?=
- =?us-ascii?Q?XdR6ZCcTntnr8iiLcmEkhUgEN2BXYBSiwxUy9LlqJ2oilLM6t58YvX5BmnmY?=
- =?us-ascii?Q?ksvtMsHbW0m2OvO+v4ixqN6eFmE/V2nkmRaVgEl92QnXN0LHI3sliOkX7BWj?=
- =?us-ascii?Q?Yrd5w4z6+McVoaiGfLRJ09UpPe777QRcfyXM10R/q62NHHXxQHScMwkc2ZMd?=
- =?us-ascii?Q?k8stBhx7Gxv48kJnI9naK0kSq2jvQZNo2UViPgHp?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96eeaf65-aae7-4282-2e1f-08dbc95d7f6d
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5146.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2023 06:52:41.3325
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mMqf4m6y0pn/D2GH5xqULZEFoj/chclGjIKgyHrB4pVp7gFJCQWCK+ixdcrT1kxI4QOHggtWkzxVBlKVWTe0qQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9858
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f511170fe61d7e7214a3a062661cf4103980dad6.camel@perches.com>
 
-After pmu_read_sysfs(), event aliases in json may be loaded for non-core
-pmu. And pmu->event_table is NULL for non-core pmu.
-If perf_pmu__num_events() didn't add loaded_json_aliases to the total
-number, perf list will show below error:
+On Mon, Oct 09, 2023 at 11:48:10PM -0700, Joe Perches wrote:
+> On Mon, 2023-10-09 at 22:05 +0200, Max Kellermann wrote:
+> > On Mon, Oct 9, 2023 at 7:24 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> > > Also, I don't know why checkpatch is happy with all the
+> > > 
+> > >         const struct attribute_group *const*groups;
+> > > 
+> > > instead of
+> > > 
+> > >         const struct attribute_group *const *groups;
+> > 
+> > I found out that checkpatch has no check for this at all; it does
+> > complain about such lines, but only for local variables. But that
+> > warning is actually a bug, because this is a check for unary
+> > operators: it thinks the asterisk is a dereference operator, not a
+> > pointer declaration, and complains that the unary operator must be
+> > preceded by a space. Thus warnings on local variable are only correct
+> > by coincidence, not by design.
+> > 
+> > Inside structs or parameters (where my coding style violations can be
+> > found), it's a different context and thus checkpatch doesn't apply the
+> > rules for unary operators.
+> 
+> My opinion is that const use in the kernel should almost
+> always have whitespace before and after it except when
+> preceded by a open parenthesis or a newline.
 
-Unexpected event imx8_ddr0/imx8_ddr0/write-command//
-...
-
-This is because perf_pmu__num_events() didn't count correct events number.
-This will allow perf_pmu__num_events() to get corrent events number.
-
-Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
----
- tools/perf/util/pmu.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 8de6f39abd1b..920ab1c2e93b 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1609,6 +1609,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
- 		pmu_aliases_parse(pmu);
- 
- 	nr = pmu->sysfs_aliases;
-+	nr += pmu->loaded_json_aliases;
- 
- 	if (pmu->cpu_aliases_added)
- 		 nr += pmu->loaded_json_aliases;
--- 
-2.34.1
-
+I totally agree.
