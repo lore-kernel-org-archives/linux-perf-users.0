@@ -1,98 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C699B3994A;
-	Wed, 11 Oct 2023 18:13:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EB63A29A
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 20:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PA8d85+b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42408C433C8;
-	Wed, 11 Oct 2023 18:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697048026;
-	bh=Qa05tAAgyS/5aYss7IJ8FsoIgIP2XDxv74PGahPH+tI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PA8d85+bkccWjvLJWiYmqBQJ54HcpwLZQEXbP2IcEDTLrDdjydm30uZB4M3tHChLf
-	 od890PMRvjpgnzFUE4CCbdS7KaWmpNaNIV0XGW6QU5mnc4kKh6iJBKslTeIKcauxwj
-	 VNUi5tOKu2B+JyyuvgV6jkpYT5zsRS2YAQtUNdwA5qCXiK7abyeJN4TSlTQT8gTT8R
-	 WA8I+XqFjult1on0oulrh/7LtZ7+keHJTsEvkNx8kbO9FOOghtWWskQBVDJ2T/oR5f
-	 N3sErsvtN1n2VyFmUv9oC2CsvrRiCf6yusFGBt2dixcAZ13VD79pNq0bS2jKNGKPpa
-	 qn/ZE7e+UmV+Q==
-Date: Wed, 11 Oct 2023 19:13:39 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Marc Zyngier <maz@kernel.org>, kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XSVr3Ias"
+Received: from out-193.mta1.migadu.com (out-193.mta1.migadu.com [95.215.58.193])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D479D
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 13:03:31 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1697054278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NBdFJkgYJSOzXayzM8jpEgticEipqKrh87vuZZUVqWI=;
+	b=XSVr3Iasililq6Jjf897ZcVr2TR3WCtF3BasDbHQAplqCTJ1uripBA2LHchI2JFxJT+oMa
+	OSAkltHILlIHKi5+ll7X6VeJXzcQCgn6N1v+j61rkzdduSBRK6AooSaccrblDz25LKq/uU
+	Zby2ksf7qO6a7XAzQgLmdkwVmyUnQpE=
+From: Oliver Upton <oliver.upton@linux.dev>
+To: kvm@vger.kernel.org
+Cc: kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
 	Jing Zhang <jingzhangos@google.com>,
 	Zenghui Yu <yuzenghui@huawei.com>,
 	Suzuki K Poulose <suzuki.poulose@arm.com>,
 	James Morse <james.morse@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 1/5] tools headers arm64: Copy sysreg-defs generation
- from kernel source
-Message-ID: <a704d2dd-9e42-4b21-bf29-35dd3bb4eefe@sirena.org.uk>
-References: <20231010011023.2497088-1-oliver.upton@linux.dev>
- <20231010011023.2497088-2-oliver.upton@linux.dev>
- <871qe1m79u.wl-maz@kernel.org>
- <cef524b7-ecbc-44c4-a582-e39f495c53db@sirena.org.uk>
- <ZSbj16o2FYOTn9DL@linux.dev>
+	Peter Zijlstra <peterz@infradead.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: [PATCH v3 0/5] KVM: selftests: Add ID reg test, update headers
+Date: Wed, 11 Oct 2023 19:57:35 +0000
+Message-ID: <20231011195740.3349631-1-oliver.upton@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3UfZlHTqfunNo1jj"
-Content-Disposition: inline
-In-Reply-To: <ZSbj16o2FYOTn9DL@linux.dev>
-X-Cookie: What an artist dies with me!
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
+
+v2: https://lore.kernel.org/kvmarm/20231010011023.2497088-1-oliver.upton@linux.dev/
+
+v2 -> v3:
+ - Use the kernel's script/data for generating the header instad of a
+   copy (broonie)
+
+Jing Zhang (2):
+  tools headers arm64: Update sysreg.h with kernel sources
+  KVM: arm64: selftests: Test for setting ID register from usersapce
+
+Oliver Upton (3):
+  tools: arm64: Add a Makefile for generating sysreg-defs.h
+  perf build: Generate arm64's sysreg-defs.h and add to include path
+  KVM: selftests: Generate sysreg-defs.h and add to include path
+
+ tools/arch/arm64/include/.gitignore           |   1 +
+ tools/arch/arm64/include/asm/gpr-num.h        |  26 +
+ tools/arch/arm64/include/asm/sysreg.h         | 839 ++++--------------
+ tools/arch/arm64/tools/Makefile               |  38 +
+ tools/perf/Makefile.perf                      |  15 +-
+ tools/perf/util/Build                         |   2 +-
+ tools/testing/selftests/kvm/Makefile          |  24 +-
+ .../selftests/kvm/aarch64/aarch32_id_regs.c   |   4 +-
+ .../selftests/kvm/aarch64/debug-exceptions.c  |  12 +-
+ .../selftests/kvm/aarch64/page_fault_test.c   |   6 +-
+ .../selftests/kvm/aarch64/set_id_regs.c       | 479 ++++++++++
+ .../selftests/kvm/lib/aarch64/processor.c     |   6 +-
+ 12 files changed, 785 insertions(+), 667 deletions(-)
+ create mode 100644 tools/arch/arm64/include/.gitignore
+ create mode 100644 tools/arch/arm64/include/asm/gpr-num.h
+ create mode 100644 tools/arch/arm64/tools/Makefile
+ create mode 100644 tools/testing/selftests/kvm/aarch64/set_id_regs.c
 
 
---3UfZlHTqfunNo1jj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+base-commit: dafa493dd01d5992f1cb70b08d1741c3ab99e04a
+-- 
+2.42.0.609.gbb76f46606-goog
 
-On Wed, Oct 11, 2023 at 06:05:11PM +0000, Oliver Upton wrote:
-> On Wed, Oct 11, 2023 at 05:59:28PM +0100, Mark Brown wrote:
-> > On Wed, Oct 11, 2023 at 05:51:57PM +0100, Marc Zyngier wrote:
-
-> > > Rather than a copy, which makes the maintenance pretty horrible, why
-> > > don't you just symlink it? Git is perfectly capable of storing them,
-> > > last time I checked.
-
-> > Do we even need to symlink - as I suggested on the previous version can
-> > we not just reference the script and data file directly in the main
-> > kernel tree?  Like I said then there may be some use case for building
-
-> So long as we aren't going to do any further renames I don't have an
-> issue with this approach.
-
-It doesn't seem likely, and it feels like it's reasonable to ask anyone
-who wants to do them to ensure they take care of the tools/ directory as
-part of it.
-
---3UfZlHTqfunNo1jj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUm5dIACgkQJNaLcl1U
-h9B66Qf+PNE9gjqhpKZhLEkzpPJbVvASlUTrnB3gm/SZwawLW2RwIUQGE8GvNPsi
-LtAPYLp5pkBwCeymMSDJjPN996+mozYIxC4TSMY9NzIeYxdkUUKgmGgaPtoMSKCX
-btj09yEAB1Zw8yDhUJlC+jrc4tXtit7xQaJoKE9yhYphsRmkFkHuaeN9Q/FTQfOp
-IsYywyx/Q0vQ9gU2jFmqdxp45MayCWg38WV0FkLzMY8l90E7fKYIqtmAv8tEOe/D
-wRTJiwOHifz5Lsl/o80HfUKKWGao0cWz1n4lqStkOhQFLjUUqviesExV2tNMXPxB
-yl4aoSX7UmVNTVSKQd9PSxk92zPpfQ==
-=23sl
------END PGP SIGNATURE-----
-
---3UfZlHTqfunNo1jj--
