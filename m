@@ -1,32 +1,32 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086541F929
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 14:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743751EA8B
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 14:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LimFqPKT"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BhimHCpi"
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6938CB8;
-	Wed, 11 Oct 2023 07:16:08 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E60A4;
+	Wed, 11 Oct 2023 07:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=h1+bFrTxC9bNpWggJ1/WhAB0lCHgMj17Prrv9vHF3zw=; b=LimFqPKToomKM3ZLamW+/KIPGe
-	FZJLYLU9SZ+I2Tz2YZPKHuBPxyLjsKL/1NrfjN7vtdtt6npXZY64RrPjJR0gGZFjoe6FvTNdHqY0J
-	U/bYopgTCcQ647n9v/bFwel9DWixgUjZvcXP6R6z142PzIYuyKZWQGSxb/FOT/r6TxmoCvCmohxnD
-	se/4tkB5jrGq0Kz9zCrnxkwsEJ87orN6fOdF1aXJxIbb14gjlMxOLHtpNsb8w9hbTWeFPPlL0JlXR
-	ICf4vHeuJRR4Te/5/xgvZP1ZY5QTH8Z8S34GNYkntSo3FXBIJXT546pquCKZlPa7j8hTXhyMjS0A5
-	Bwd3W/oQ==;
+	bh=giWFgglIwvl79cFsu43H0+4WKJFrU3jVnmUoXzCqgBA=; b=BhimHCpistBqcNILTpqmB95VgU
+	7PmFSmnPRvQQyRpFA0g7FVo0LbKL5mLZwxk/6dbjL+y/CSOGsKpPgP9QBf1R85Lcb7iXfpVCC3p9j
+	uQUMiBKlRc+vbq1Fktephy4/45HG9+hQRSjxyNzaWWPv4mBrSIXcl8AqE+imo/sUd6Oia6/wG7jNQ
+	NuVuioo4VIDTezY7pjFo+uV6eqmRDBsi8kf3JlR9roMTFRFib4KOxUv6a04qCfR0BuytGa6g7yzn3
+	0uyvgrPPgjUp3HzKHrRJ4vn9efOIJnnevO4/9BMPcATcav/BS8x5jOrtQNUy6fy3BTyjBA0+5iOwe
+	oBwI4MVg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qqZzr-00BCga-NG; Wed, 11 Oct 2023 14:15:35 +0000
+	id 1qqa4C-00BCzx-9t; Wed, 11 Oct 2023 14:20:04 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 64E5D30036C; Wed, 11 Oct 2023 16:15:35 +0200 (CEST)
-Date: Wed, 11 Oct 2023 16:15:35 +0200
+	id EE6F130036C; Wed, 11 Oct 2023 16:20:03 +0200 (CEST)
+Date: Wed, 11 Oct 2023 16:20:03 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: Manali Shukla <manali.shukla@amd.com>
-Cc: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>,
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Ingo Molnar <mingo@kernel.org>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -41,24 +41,22 @@ Cc: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>,
 	Zhang Xiong <xiong.y.zhang@intel.com>,
 	Lv Zhiyuan <zhiyuan.lv@intel.com>,
 	Yang Weijiang <weijiang.yang@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>, David Dunn <daviddunn@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mingwei Zhang <mizhang@google.com>,
-	Jim Mattson <jmattson@google.com>,
-	Like Xu <like.xu.linux@gmail.com>
+	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>,
+	David Dunn <daviddunn@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics
  event
-Message-ID: <20231011141535.GF6307@noisy.programming.kicks-ass.net>
-References: <20231002204017.GB27267@noisy.programming.kicks-ass.net>
+Message-ID: <20231011142003.GF19999@noisy.programming.kicks-ass.net>
+References: <20231002115718.GB13957@noisy.programming.kicks-ass.net>
+ <ZRrF38RGllA04R8o@gmail.com>
+ <ZRroQg6flyGBtZTG@google.com>
+ <20231002204017.GB27267@noisy.programming.kicks-ass.net>
  <ZRtmvLJFGfjcusQW@google.com>
  <20231003081616.GE27267@noisy.programming.kicks-ass.net>
  <ZRwx7gcY7x1x3a5y@google.com>
  <20231004112152.GA5947@noisy.programming.kicks-ass.net>
  <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
  <ZR3eNtP5IVAHeFNC@google.com>
- <ZR3hx9s1yJBR0WRJ@google.com>
- <c69a1eb1-e07a-8270-ca63-54949ded433d@gmail.com>
- <03b7da03-78a1-95b1-3969-634b5c9a5a56@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,56 +65,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <03b7da03-78a1-95b1-3969-634b5c9a5a56@amd.com>
+In-Reply-To: <ZR3eNtP5IVAHeFNC@google.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
 	SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 09, 2023 at 10:33:41PM +0530, Manali Shukla wrote:
-> Hi all,
+On Wed, Oct 04, 2023 at 02:50:46PM -0700, Sean Christopherson wrote:
+
+> Thinking about this more, what if we do a blend of KVM's FPU swapping and debug
+> register swapping?
 > 
-> I would like to add following things to the discussion just for the awareness of
-> everyone.
+>   A. Load guest PMU state in vcpu_enter_guest() after IRQs are disabled
+>   B. Put guest PMU state (and load host state) in vcpu_enter_guest() before IRQs
+>      are enabled, *if and only if* the current CPU has one or perf events that
+>      wants to use the hardware PMU
+>   C. Put guest PMU state at vcpu_put()
+>   D. Add a perf callback that is invoked from IRQ context when perf wants to
+>      configure a new PMU-based events, *before* actually programming the MSRs,
+>      and have KVM's callback put the guest PMU state
 > 
-> Fully virtualized PMC support is coming to an upcoming AMD SoC and we are
-> working on prototyping it.
-> 
-> As part of virtualized PMC design, the PERF_CTL registers are defined as Swap
-> type C: guest PMC states are loaded at VMRUN automatically but host PMC states
-> are not saved by hardware.
 
-Per the previous discussion, doing this while host has active counters
-that do not have ::exclude_guest=1 is invalid and must result in an
-error.
-
-Also, I'm assuming it is all optional, a host can still profile a guest
-if all is configured just so?
-
-> If hypervisor is using the performance counters, it
-> is hypervisor's responsibility to save PERF_CTL registers to host save area
-> prior to VMRUN and restore them after VMEXIT. 
-
-Does VMEXIT clear global_ctrl at least?
-
-> In order to tackle PMC overflow
-> interrupts in guest itself, NMI virtualization or AVIC can be used, so that
-> interrupt on PMC overflow in guest will not leak to host.
-
-Can you please clarify -- AMD has this history with very dodgy PMI
-boundaries. See the whole amd_pmu_adjust_nmi_window() crud. Even the
-PMUv2 update didn't fix that nonsense.
-
-How is any virt stuff supposed to fix this? If the hardware is late
-delivering PMI, what guarantees a guest PMI does not land in host
-context and vice-versa?
-
-How does NMI virtualization (what even is that) or AVIC (I'm assuming
-that's a virtual interrupt controller) help?
-
-Please make very sure, with your hardware team, that PMI must not be
-delivered after clearing global_ctrl (preferably) or at the very least,
-there exists a sequence of operations that provides a hard barrier
-to order PMI.
-
+No real objection, but I would suggest arriving at that solution by
+first building the simple-stupid thing and then making it more
+complicated in additinoal patches. Hmm?
