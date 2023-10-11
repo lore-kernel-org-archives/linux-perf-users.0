@@ -1,32 +1,32 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620C218B04
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 16:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B91718B04
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 16:14:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395529D;
-	Wed, 11 Oct 2023 09:10:04 -0700 (PDT)
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-58907163519so5286778a12.1;
-        Wed, 11 Oct 2023 09:10:04 -0700 (PDT)
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF63B0;
+	Wed, 11 Oct 2023 09:14:54 -0700 (PDT)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2777a5e22b5so5642600a91.1;
+        Wed, 11 Oct 2023 09:14:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697040603; x=1697645403;
+        d=1e100.net; s=20230601; t=1697040894; x=1697645694;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cZ+VIPsKS+z6FGqu1gSOMc5oXv3t+KffR0mpRHqGu2k=;
-        b=Qnt7cxb2+eM6qJMUL016LqFSXptG2Bhc10IkBoSkIvA0rBgbQeju1cWpAjAOmjrDIC
-         IpkapYAM3PsCniNBB2Bj/b4JJZfU68AxrgdlzHBSDmCIo1QReWXjr3oIhUqWcfhUo3Q/
-         xk8IwzB3adxgtfWLjb+p64S8DW0VnSPbUDk/vWV9va/ZL02QL9SiKGIhhskmUt1INn9H
-         Zs84ctjkeucnb82tt7FKaNM/ZLb5hdevIpIxMWhXhfp+cwPK8fLCaRXKUjzcjc28pCxT
-         coZJczebIVxz7My3c1byKN2QYYeciOG862///+FQN0vOJdb0xD7caXHSlzVIoL1NaRSc
-         blhA==
-X-Gm-Message-State: AOJu0Yxwxb9BeyQWRiDNYbEWd32jpJxv8lPb2RQ2VPqsFhXkuEtzN8yi
-	4OZYSoiNVhxXSAlb3AXrrGNta7abSGFGlAJo9Ds=
-X-Google-Smtp-Source: AGHT+IHnjfzk1SghAsiF23/gGQQawTqA4BpkDSmSW28ox1CFLYnmzEXivE6eYPQlyskK5f+u1Eo/7e7ICRMkd0hM8rU=
-X-Received: by 2002:a17:90b:ecc:b0:27d:a59:ebae with SMTP id
- gz12-20020a17090b0ecc00b0027d0a59ebaemr1571538pjb.46.1697040603539; Wed, 11
- Oct 2023 09:10:03 -0700 (PDT)
+        bh=h6Rqn3iDNwBIeSwR0FMBrCcNoeILKrR52Gk76BQ01wg=;
+        b=WXC0vHJyO+VSup/29i9CdcFvYLb+JRELOswFj/ppx3r6poImLnA9zgK4i9Hxolao3u
+         ty0r9UP/1MBtbpJQSbNfVa8rUBny95nDTBBZJlRWtS3iigYHzQ6OE7G1Y7v5p+7wEIo6
+         9c7myybAlGx7YWZx+WquCOgaCwma6BZlzKl3r7oLoQWJOhGxykM8AZkCJpQaB18IrPBd
+         I7qwzn9vEHIBkbQ1SXnYxJ748xYgAFOLqfhUh/AykyB8vHyfqM29XZZBPMQ8MAEqOy2H
+         qS2zAe1Q/694DvZwyudshz0QLiZju5hmGYF1VuW7aGZaCQLMAn3ibR2EIHE+K0PTrJ1N
+         BGuA==
+X-Gm-Message-State: AOJu0Yyngg/OzAvIAr8NCBOHtfmGOcx+hWATs7Vb7dfwvlE2fzCnFu42
+	CF0sEXeLXppV/1+1emWc7LxQTHlU8ARk9A7txf4=
+X-Google-Smtp-Source: AGHT+IGfQs48C/AEj++/bEHKnuG9iGQnpGYIfydmJxnJBE2zO40oA/uEGx9dJJsNe2wFj0ybJJPszVC4kbOOuZH/Ras=
+X-Received: by 2002:a17:90a:f317:b0:27c:f8f4:fedb with SMTP id
+ ca23-20020a17090af31700b0027cf8f4fedbmr3993191pjb.21.1697040893737; Wed, 11
+ Oct 2023 09:14:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,14 +37,14 @@ References: <20230916040915.1075620-1-irogers@google.com> <CAL715WJxmMbXkZSE3p_+
  <CAP-5=fUjNiDv=KQ7t8jqfOfOt5i8HGvt8Vv1hn2-hLxX_Kqucg@mail.gmail.com>
  <CAL715W+GQuCJm-1SEsNN2qnHghNL1SrzwH9Km5K8UxubEFfYVw@mail.gmail.com>
  <CAM9d7cgKWi0fafwTxSrKLrVZxcwnhwMGz=oNkAsNdOjDwF6pEA@mail.gmail.com>
- <CAP-5=fWXXi7Y=6Q0k8oLOZmYon+vvg-k4dNUSex_ijcL8ti9sQ@mail.gmail.com> <CAL715WJ8w+q_=0_NVZJ=rs0GLs=pYqDiRLcCxxO0gDcGdcvZnw@mail.gmail.com>
-In-Reply-To: <CAL715WJ8w+q_=0_NVZJ=rs0GLs=pYqDiRLcCxxO0gDcGdcvZnw@mail.gmail.com>
+ <CAP-5=fWXXi7Y=6Q0k8oLOZmYon+vvg-k4dNUSex_ijcL8ti9sQ@mail.gmail.com> <CAM9d7cjJxR5bvx5UvywEkwazkzpRZiKo8s7GLWutNiBKYa1J7g@mail.gmail.com>
+In-Reply-To: <CAM9d7cjJxR5bvx5UvywEkwazkzpRZiKo8s7GLWutNiBKYa1J7g@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 11 Oct 2023 09:09:51 -0700
-Message-ID: <CAM9d7ci-G-+FFPsKbMzzSzCr2kS75axYHFDm2=f6TxUk=dM_CA@mail.gmail.com>
+Date: Wed, 11 Oct 2023 09:14:42 -0700
+Message-ID: <CAM9d7ch9cFpe3YzDhKhK0sRMn9pZ3RL+_ONCVB52s+EJgcRdqw@mail.gmail.com>
 Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
-To: Ian Rogers <irogers@google.com>, Mingwei Zhang <mizhang@google.com>
-Cc: Jim Mattson <jmattson@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+To: Ian Rogers <irogers@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
@@ -59,72 +59,11 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Ian,
-
-On Tue, Oct 3, 2023 at 4:20=E2=80=AFPM Mingwei Zhang <mizhang@google.com> w=
+On Tue, Oct 3, 2023 at 4:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
 rote:
 >
 > On Tue, Oct 3, 2023 at 3:36=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
 ote:
-> >
-> > On Tue, Oct 3, 2023 at 1:08=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Wed, Sep 20, 2023 at 10:05=E2=80=AFPM Mingwei Zhang <mizhang@googl=
-e.com> wrote:
-> > > >
-> > > > On Mon, Sep 18, 2023 at 3:43=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
-> > > > >
-> > > > > On Sat, Sep 16, 2023 at 5:46=E2=80=AFPM Mingwei Zhang <mizhang@go=
-ogle.com> wrote:
-> > > > > > Thank you very much for the change. I have one quick question a=
-bout
-> > > > > > the PMU unthrottling logic. When I am looking into the function
-> > > > > > perf_adjust_freq_unthr_context(), I see the loop with PMU stop =
-and
-> > > > > > start in each iteration. Is there a good way to avoid this PMU =
-reset
-> > > > > > operation while quickly figuring out the event in frequency mod=
-e?
-> > > > >
-> > > > > Agreed. I think before the pmu_disable could be avoided for this =
-condition:
-> > > > > ```
-> > > > > if (event->hw.interrupts !=3D MAX_INTERRUPTS &&
-> > > > >     (!event->attr.freq || !event->attr.sample_freq))
-> > > > >         continue;
-> > > > > ```
-> > > > > Fixing up the event stop/start looks harder.
-> > > > >
-> > > >
-> > > > Right, I think putting the check early before pmu_disable() is alre=
-ady
-> > > > a great optimization. The only concern I initially had was whether
-> > > > event->hw.interrupts can be accessed before we disable the pmu. But
-> > > > after checking this field in other locations, I don't see any probl=
-em
-> > > > at all.
-> > >
-> > > The event->hw.interrupts would be increased in the NMI handler
-> > > so there is a race between the check and the NMI.  That's why
-> > > I think it checks that after disabling the PMU.
-> > >
-> > > But I think we can skip non-sampling events for sure.  Then it
-> > > would be better to set attr.sample_period =3D 0 rather than attr.freq=
-.
-> > >
-> > >     if (!is_sampling_event(event))
-> > >         continue;
-> > >
-> > >     perf_pmu_disable(event->pmu);
-> > >     ...
-> > >
-> > > Thanks,
-> > > Namhyung
-> >
 > > With the PMU disabled, isn't there still a risk of an interrupt still
 > > being in flight? In other words the disable doesn't prevent a race and
 > > we'll catch this on the next timer call to
@@ -133,30 +72,14 @@ em
 > > perf_event_pmu_context and disable that PMU, iterate its events and
 > > then re-enable the PMU - i.e. no need for an enable and disable per
 > > event. I'll put a patch together.
-> >
-> > Thanks,
-> > Ian
 >
-> +Jim Mattson
->
-> I initially thought this idea was just an alternative, or a more
-> professional fix in the perf subsystem. I was wrong...
->
-> This would be way better than just skipping frequency events in the
-> loop. Since if we just skip by event, we may still suffer from huge
-> overhead if the event list contains many sampling events in frequency
-> mode. Unfortunately, that is the general case when we do perf record
-> -e 'eventlist' (IIUC all events in eventlist are in frequency mode if
-> we don't specify period=3D). So the problem actually remains whenever we
-> do perf sampling unless we use something like Intel vtune.
->
-> On the other hand, since all of the events are presumably CPU core
-> events, with the fix we pay only once for the PMU reset per hrtimer
-> regardless of how many events are in frequency mode.
->
-> Looking forward to the patch! Please keep us posted if possible.
+> Thanks, I was thinking about that too.  It's also a side effect of
+> the context rewrite.  Maybe we could iterate pmu_ctx's active lists
+> and skip pmus with PERF_PMU_CAP_NO_INTERRUPT and
+> individual non-sampling events.
 
-Any updates?
+Or we can add pmu_ctx->nr_freq and check it before accessing
+pmu MSRs.
 
 Thanks,
 Namhyung
