@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADD2D305
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 06:24:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEBAD50C
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 06:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MfjQ5C7J"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B232619B
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 23:24:31 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7bcbb95b2so9744577b3.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 23:24:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qp8RZwl6"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D955D1B8
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 23:24:33 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7c97d5d5aso9711367b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 23:24:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697091870; x=1697696670; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697091872; x=1697696672; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fc/6/O/gRte1zMhmeMtD4ohISB3aWdPXWc8V2/IjDG4=;
-        b=MfjQ5C7JEOErhS+sVyt+9BIu5x/F+EcfbqxY16YvfH+Baa1uydnkaaaYfeNb++GAhe
-         w1jyj9CRpk9NtQvcuVy0u8EgsYvvICa06QNJGL60h6i1fNgf6a6eec6bbWSHgn9MylgN
-         ctHoEn3sNsfj17CE9duwG0Bt25OAZbgB5aOLWOMaeZIxRP1wm1cyCvbm4lnSbrqK6J7T
-         FjjHz3WCelmLYsstXYwiICf40c9lSzvWP+JzzaATTDQuiHLMs8ZhSdTHGTz5Fk3VVVEV
-         labXbkeucDueh9576aAAymNQDILXk4SL3yfSOXvYg7Wk8wqWmtjhHPUjLgpuc1NODLkv
-         KcfA==
+        bh=flxfAGeU36X3VCWvCeBnyhGj7NRxqRtkjKz9SEhq+zk=;
+        b=Qp8RZwl6K+UKiZuC0kkyEe1H4Dhxz1Q8ofiKc7xh4psBeYZL5MAAFeNeyu00AXzr/H
+         O86dFjRmhv86edW3lyAfIsA9fl7OkdB1dnKHoz12KrDJLt2TleEL1pB/rXW1KOVKrAws
+         QUQG9pxv3eMH4wAwZwB8XoZGCPnUy835T/KsTHrvMJ+MfsfqnG3Qi0l3mUVnSOdVPk9S
+         Hlrcs+dWL0uLJ4yAIbfMe42o724+HWKx0CtsN2ikMCdRxgPwuV2VK1lSSTqs2EQr26vB
+         9rBsoUZMAU/LdWtF0ZEPytcQNBKNTNwGlfc02UEBxuC0aiKcOLokSj9IhegbCuHykG7v
+         uiLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697091870; x=1697696670;
+        d=1e100.net; s=20230601; t=1697091872; x=1697696672;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fc/6/O/gRte1zMhmeMtD4ohISB3aWdPXWc8V2/IjDG4=;
-        b=eFPRKdEes6+nPncWk0GabUOc75xYl4dE0hWZNVE6O0JkdDp/QReeq9yexxLA50DRAU
-         LIinpZDUlCKWuqalKaBGT7tXQdJpsP4kLr09w1Mw7ETSZOiTQ87RqadM3i8DrDqqKGz4
-         mXvGD8eE+djF+mZjyETAN8YZXeM1CMZpD/dSGDKjJv6ysRFjT006ZvoZN+ChfVjOHkWj
-         OnrVPv8CBXpKAkkZnZMZDJBy7OBzPYzRVGlRKAiO0l3JQft5daouKFHTtYjyGK5kJNsy
-         XkTrleZiXAiwVxi1SBF0AywzACrjs8Ch+HqPlcV64PnwOxgbhbgu/xf1fBItwZ5dVUl+
-         nO7Q==
-X-Gm-Message-State: AOJu0Yx0S2CHlFRuE6w8AncPdoxD9/kDQfSqqUrEQIH3uR9Ego0lJgko
-	uhk5aJL37BSoZ7vCeeDjCtYJqI2x3v29
-X-Google-Smtp-Source: AGHT+IHw9CWAC8FY76ZB7h38HkJJCF9yox3JXqj1NldAlfSd6AeHsF169JHHn8w35OGyvCUjrw3Xt+ij0Xpl
+        bh=flxfAGeU36X3VCWvCeBnyhGj7NRxqRtkjKz9SEhq+zk=;
+        b=EdELtWas/rGbURlfvsSpMh0v8qdUXH9xTXUHE2DtQZ0Fpo9ckeyWtDLQKzBNwz4hRJ
+         t2tsAHXFI08UqGeYL6unvzZZmiJdISU5EteK49Becwcjn7uUVDAEnTG6iIdjxz06IMOS
+         x8RKrBDaIbmVOT9EZmdvAtdttVtFlDsZtMe1i8IFXd3iXrRTUnPLFH5gsH7+NTGtzimI
+         Cv1z6SrF7B9Z0TComncnpeOva5tBL9rT+akFlHq3MFTe9r1MewcU0DdsLXWJz5bZE9gm
+         pKgTtN/QRZIVSrwVALvpCcoZ40FaVsMZw45bgdiHEDanDqRT1naL+T/ykVlnaGR+I6IJ
+         dXnA==
+X-Gm-Message-State: AOJu0Ywe/awmDsaQuCbOzGLLO/7YEZX/e61roqN6zWQMW/SK2f0A3bwJ
+	zpKZJ8Qo8osePCzhhJTYfbUbzZ9QjYpF
+X-Google-Smtp-Source: AGHT+IGdUdinYuEq8T3uAohDpFLB8P8wmRDQ5QHEXJxvYYgkout89ScuOm/SWzNEJeVgK30fxeyLC6iN4e5k
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7be5:14d2:880b:c5c9])
- (user=irogers job=sendgmr) by 2002:a81:4005:0:b0:5a7:be34:345 with SMTP id
- l5-20020a814005000000b005a7be340345mr175704ywn.6.1697091870082; Wed, 11 Oct
- 2023 23:24:30 -0700 (PDT)
-Date: Wed, 11 Oct 2023 23:23:56 -0700
+ (user=irogers job=sendgmr) by 2002:a81:a909:0:b0:59b:e97e:f7e3 with SMTP id
+ g9-20020a81a909000000b0059be97ef7e3mr422912ywh.2.1697091872656; Wed, 11 Oct
+ 2023 23:24:32 -0700 (PDT)
+Date: Wed, 11 Oct 2023 23:23:57 -0700
 In-Reply-To: <20231012062359.1616786-1-irogers@google.com>
-Message-Id: <20231012062359.1616786-11-irogers@google.com>
+Message-Id: <20231012062359.1616786-12-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231012062359.1616786-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
-Subject: [PATCH v2 10/13] perf record: Lazy load kernel symbols
+Subject: [PATCH v2 11/13] libperf: Lazily allocate mmap event copy
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -73,82 +73,57 @@ X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Commit 5b7ba82a7591 ("perf symbols: Load kernel maps before using")
-changed it so that loading a kernel dso would cause the symbols for
-the dso to be eagerly loaded. For perf record this is overhead as the
-symbols won't be used. Add a symbol_conf to control the behavior and
-disable it for perf record and perf inject.
+The event copy in the mmap is used to have storage to a read
+event. Not all users of mmaps read the events, such as perf record, so
+switch the allocation to being on first read rather than being
+embedded within the perf_mmap.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c   | 4 ++++
- tools/perf/builtin-record.c   | 2 ++
- tools/perf/util/event.c       | 4 ++--
- tools/perf/util/symbol_conf.h | 3 ++-
- 4 files changed, 10 insertions(+), 3 deletions(-)
+ tools/lib/perf/include/internal/mmap.h | 2 +-
+ tools/lib/perf/mmap.c                  | 9 +++++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index c8cf2fdd9cff..1539fb18c749 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2265,6 +2265,10 @@ int cmd_inject(int argc, const char **argv)
- 		"perf inject [<options>]",
- 		NULL
- 	};
-+
-+	/* Disable eager loading of kernel symbols that adds overhead to perf inject. */
-+	symbol_conf.lazy_load_kernel_maps = true;
-+
- #ifndef HAVE_JITDUMP
- 	set_option_nobuild(options, 'j', "jit", "NO_LIBELF=1", true);
- #endif
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index dcf288a4fb9a..8ec818568662 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -3989,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
- # undef set_nobuild
- #endif
+diff --git a/tools/lib/perf/include/internal/mmap.h b/tools/lib/perf/include/internal/mmap.h
+index 5a062af8e9d8..b11aaf5ed645 100644
+--- a/tools/lib/perf/include/internal/mmap.h
++++ b/tools/lib/perf/include/internal/mmap.h
+@@ -33,7 +33,7 @@ struct perf_mmap {
+ 	bool			 overwrite;
+ 	u64			 flush;
+ 	libperf_unmap_cb_t	 unmap_cb;
+-	char			 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
++	void			*event_copy;
+ 	struct perf_mmap	*next;
+ };
  
-+	/* Disable eager loading of kernel symbols that adds overhead to perf record. */
-+	symbol_conf.lazy_load_kernel_maps = true;
- 	rec->opts.affinity = PERF_AFFINITY_SYS;
+diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+index 2184814b37dd..91ae46aac378 100644
+--- a/tools/lib/perf/mmap.c
++++ b/tools/lib/perf/mmap.c
+@@ -51,6 +51,8 @@ int perf_mmap__mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
  
- 	rec->evlist = evlist__new();
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 923c0fb15122..68f45e9e63b6 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -617,13 +617,13 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 	if (cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
- 		al->level = 'k';
- 		maps = machine__kernel_maps(machine);
--		load_map = true;
-+		load_map = !symbol_conf.lazy_load_kernel_maps;
- 	} else if (cpumode == PERF_RECORD_MISC_USER && perf_host) {
- 		al->level = '.';
- 	} else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL && perf_guest) {
- 		al->level = 'g';
- 		maps = machine__kernel_maps(machine);
--		load_map = true;
-+		load_map = !symbol_conf.lazy_load_kernel_maps;
- 	} else if (cpumode == PERF_RECORD_MISC_GUEST_USER && perf_guest) {
- 		al->level = 'u';
- 	} else {
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index 0b589570d1d0..2b2fb9e224b0 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -42,7 +42,8 @@ struct symbol_conf {
- 			inline_name,
- 			disable_add2line_warn,
- 			buildid_mmap2,
--			guest_code;
-+			guest_code,
-+			lazy_load_kernel_maps;
- 	const char	*vmlinux_name,
- 			*kallsyms_name,
- 			*source_prefix,
+ void perf_mmap__munmap(struct perf_mmap *map)
+ {
++	free(map->event_copy);
++	map->event_copy = NULL;
+ 	if (map && map->base != NULL) {
+ 		munmap(map->base, perf_mmap__mmap_len(map));
+ 		map->base = NULL;
+@@ -226,6 +228,13 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
+ 			unsigned int len = min(sizeof(*event), size), cpy;
+ 			void *dst = map->event_copy;
+ 
++			if (!dst) {
++				dst = malloc(PERF_SAMPLE_MAX_SIZE);
++				if (!dst)
++					return NULL;
++				map->event_copy = dst;
++			}
++
+ 			do {
+ 				cpy = min(map->mask + 1 - (offset & map->mask), len);
+ 				memcpy(dst, &data[offset & map->mask], cpy);
 -- 
 2.42.0.609.gbb76f46606-goog
 
