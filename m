@@ -1,88 +1,225 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C750021373
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 10:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06B52374A
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 11:53:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Nj7cKOfl"
-Received: from qs51p00im-qukt01071902.me.com (qs51p00im-qukt01071902.me.com [17.57.155.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA230B7
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 03:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1697106415;
-	bh=Zm68BCMFb/hYtzGq5UaRnyX7k1qDLFhJZeNJbHCgEJE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	b=Nj7cKOfldEYblETNZbxkiuE/GWDO1mkPSt29lWUQ28dyqf/1YOTkgt5MZsrVJotCW
-	 dV8bg3rq4Y8oa9yd5qnq65ge4zQJYEEwPG9RuT/pwlGjuLSrtHavjp0mWQ0/VTSnrv
-	 EFfw/C60mD5apaVr5LKURwRJ0U1chIamST89LuK0/NgA6RwQS7f3mWuwaFPnKPW1dd
-	 woXVQNWvfAheYqmmr4+ZMOLX35f1yp8RhISSW+Iwg+7Gdy3UDJdnYyaVQQ7U19vRyv
-	 zjnGCPBZUMhWayorxg54dmtd+BfdPOBh/PosANSIqBs6zwshIQW3ZIc3nLrMmp2BPq
-	 h2ZkB05dM7CQA==
-Received: from fedora.fritz.box (qs51p00im-dlb-asmtp-mailmevip.me.com [17.57.155.28])
-	by qs51p00im-qukt01071902.me.com (Postfix) with ESMTPSA id 66A4E5EC02C9;
-	Thu, 12 Oct 2023 10:26:52 +0000 (UTC)
-Date: Thu, 12 Oct 2023 12:26:49 +0200
-From: Lucy Mielke <lucymielke@icloud.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/p4: Fix "Wunused-but-set-variable" warning
-Message-ID: <ZSfJ6c5fo5enjvv+@fedora.fritz.box>
-References: <ZSGpl_hT23B6ix0M@mainframe>
- <20231007203411.GA8085@noisy.programming.kicks-ass.net>
- <ZSQqfr96SfZM_OEk@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lLmWR7H1"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30B16198;
+	Thu, 12 Oct 2023 04:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697111597; x=1728647597;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=Oj8HbFCN1TmF38fodLALxC7xF2mTTbCenSwPteNPHRQ=;
+  b=lLmWR7H1AJw+Fh0UvWPgV64CgMdN1L0+31bt9Cz/eo1/ANyEKLPKAL6X
+   dmDb5YtJ7HYmGMulk2ZW4jz3PTx7FonHJ3TR2olukJR8TuTyfsxagXbvn
+   IOPV1oorKMVc0dkPYUYtxF2BBJkrlAoxcjCM6RTVGYJzdvqU57T9b6WcJ
+   Kr8e//0N6yh7U/5Br6xprB/jzY18DwA5YWg39RX3ueKQ1851nwRELjlfr
+   wKhZhmOaA0vtAYu2kPX1jLOqtGopRISLejn3OvZD33SQbssjXpXX8E1XW
+   PSxzO9LLHQQxvsDzQ/q9PtLMQLMbEzIvIe4l8bgjnREsZxpIgXhFeQjs2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="415949365"
+X-IronPort-AV: E=Sophos;i="6.03,218,1694761200"; 
+   d="scan'208";a="415949365"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 04:51:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="870545422"
+X-IronPort-AV: E=Sophos;i="6.03,218,1694761200"; 
+   d="scan'208";a="870545422"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.41.84])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 04:51:52 -0700
+Message-ID: <002da48a-c40f-4d6a-881c-59490ea2de95@intel.com>
+Date: Thu, 12 Oct 2023 14:51:48 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZSQqfr96SfZM_OEk@google.com>
-X-Proofpoint-ORIG-GUID: 9pFRWMcEYoBw4AFqbI9oJ7ZVnrKWy-je
-X-Proofpoint-GUID: 9pFRWMcEYoBw4AFqbI9oJ7ZVnrKWy-je
-X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
- =?UTF-8?Q?2903e8d5c8f:6.0.138,18.0.790,17.0.605.474.0000000_definitions?=
- =?UTF-8?Q?=3D2022-01-12=5F02:2020-02-14=5F02,2022-01-12=5F02,2020-01-23?=
- =?UTF-8?Q?=5F02_signatures=3D0?=
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=685 adultscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0
- spamscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2310120085
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/7] perf pmu: Rename perf_pmu__get_default_config to
+ perf_pmu__arch_init
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>, Suzuki K Poulose
+ <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Thomas Richter <tmricht@linux.ibm.com>, Ravi Bangoria
+ <ravi.bangoria@amd.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Jing Zhang <renyu.zj@linux.alibaba.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231007021326.4156714-1-irogers@google.com>
+ <20231007021326.4156714-2-irogers@google.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20231007021326.4156714-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
 	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Am Mon, Oct 09, 2023 at 09:29:50AM -0700 schrieb Sean Christopherson:
+On 7/10/23 05:13, Ian Rogers wrote:
+> Assign default_config as part of the
+> init. perf_pmu__get_default_config was doing more than just getting
+> the default config and so this is intended to better align with the
+> code.
 > 
-> rdmsr() writes to "high", but nothing ever reads from high.  FWIW, I would _love_
-> for rdmsrl() to have return semantics, e.g. to be able to do:
-> 
-> 	low  = (u32)rdmsrl(MSR_IA32_MISC_ENABLE);
-> 
-> or even
-> 
-> 	if (!(rdmsrl(MSR_IA32_MISC_ENABLE) & BIT(7)))
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-I have taken a look and it seems to me like this macro is called quite a lot
-for different things thoughout the kernel tree, including drivers. If
-one were to change it to have return semantics instead of the way it
-currently works, you'd have to change around 300 occurences, right?
-(Let me know if I misunderstood something.)
+One cosmetic comment otherwise:
 
-Return semantics or not, since the only way "high" is used in p4_pmu_init()
-is by being written to by rdmsr(), the variable can be completely removed by
-just using rdmsrl(). Would this be a patch you'd be interested in?
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Mit freundlichen Grüßen / Best regards,
-	Lucy
+> ---
+>  tools/perf/arch/arm/util/pmu.c  |  8 +++-----
+>  tools/perf/arch/s390/util/pmu.c |  3 +--
+>  tools/perf/arch/x86/util/pmu.c  |  5 ++---
+>  tools/perf/util/pmu.c           | 14 +++++++-------
+>  tools/perf/util/pmu.h           |  2 +-
+>  5 files changed, 14 insertions(+), 18 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
+> index a9623b128ece..d55d2b15f2e6 100644
+> --- a/tools/perf/arch/arm/util/pmu.c
+> +++ b/tools/perf/arch/arm/util/pmu.c
+> @@ -14,22 +14,20 @@
+>  #include "../../../util/pmu.h"
+>  #include "../../../util/cs-etm.h"
+>  
+> -struct perf_event_attr
+> -*perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+> +void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
+>  {
+>  #ifdef HAVE_AUXTRACE_SUPPORT
+>  	if (!strcmp(pmu->name, CORESIGHT_ETM_PMU_NAME)) {
+>  		/* add ETM default config here */
+>  		pmu->selectable = true;
+> -		return cs_etm_get_default_config(pmu);
+> +		pmu->default_config = cs_etm_get_default_config(pmu);
+>  #if defined(__aarch64__)
+>  	} else if (strstarts(pmu->name, ARM_SPE_PMU_NAME)) {
+> -		return arm_spe_pmu_default_config(pmu);
+> +		pmu->default_config = arm_spe_pmu_default_config(pmu);
+>  	} else if (strstarts(pmu->name, HISI_PTT_PMU_NAME)) {
+>  		pmu->selectable = true;
+>  #endif
+>  	}
+>  
+>  #endif
+> -	return NULL;
+>  }
+> diff --git a/tools/perf/arch/s390/util/pmu.c b/tools/perf/arch/s390/util/pmu.c
+> index 11f03f32e3fd..886c30e001fa 100644
+> --- a/tools/perf/arch/s390/util/pmu.c
+> +++ b/tools/perf/arch/s390/util/pmu.c
+> @@ -13,11 +13,10 @@
+>  #define	S390_PMUPAI_EXT		"pai_ext"
+>  #define	S390_PMUCPUM_CF		"cpum_cf"
+>  
+> -struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu)
+> +void perf_pmu__arch_init(struct perf_pmu *pmu)
+>  {
+>  	if (!strcmp(pmu->name, S390_PMUPAI_CRYPTO) ||
+>  	    !strcmp(pmu->name, S390_PMUPAI_EXT) ||
+>  	    !strcmp(pmu->name, S390_PMUCPUM_CF))
+>  		pmu->selectable = true;
+> -	return NULL;
+>  }
+> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+> index 8b53ca468a50..811e2377d2d5 100644
+> --- a/tools/perf/arch/x86/util/pmu.c
+> +++ b/tools/perf/arch/x86/util/pmu.c
+> @@ -17,19 +17,18 @@
+>  #include "../../../util/pmus.h"
+>  #include "env.h"
+>  
+> -struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+> +void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
+>  {
+>  #ifdef HAVE_AUXTRACE_SUPPORT
+>  	if (!strcmp(pmu->name, INTEL_PT_PMU_NAME)) {
+>  		pmu->auxtrace = true;
+> -		return intel_pt_pmu_default_config(pmu);
+> +		pmu->default_config = intel_pt_pmu_default_config(pmu);
+>  	}
+>  	if (!strcmp(pmu->name, INTEL_BTS_PMU_NAME)) {
+>  		pmu->auxtrace = true;
+>  		pmu->selectable = true;
+>  	}
+>  #endif
+> -	return NULL;
+>  }
+>  
+>  int perf_pmus__num_mem_pmus(void)
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 6b1b7f8f00fa..6e95b3d2c2e3 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -954,12 +954,6 @@ void pmu_add_sys_aliases(struct perf_pmu *pmu)
+>  	pmu_for_each_sys_event(pmu_add_sys_aliases_iter_fn, pmu);
+>  }
+>  
+> -struct perf_event_attr * __weak
+> -perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+> -{
+> -	return NULL;
+> -}
+> -
+>  static char *pmu_find_alias_name(struct perf_pmu *pmu, int dirfd)
+>  {
+>  	FILE *file = perf_pmu__open_file_at(pmu, dirfd, "alias");
+> @@ -991,6 +985,12 @@ static int pmu_max_precise(int dirfd, struct perf_pmu *pmu)
+>  	return max_precise;
+>  }
+>  
+> +
+
+Double blank line
+
+> +void __weak
+> +perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
+> +{
+> +}
+> +
+>  struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *name)
+>  {
+>  	struct perf_pmu *pmu;
+> @@ -1037,7 +1037,7 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+>  	pmu_add_sys_aliases(pmu);
+>  	list_add_tail(&pmu->list, pmus);
+>  
+> -	pmu->default_config = perf_pmu__get_default_config(pmu);
+> +	perf_pmu__arch_init(pmu);
+>  
+>  	return pmu;
+>  err:
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 85190d058852..588c64e38d6b 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -233,7 +233,7 @@ bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name);
+>  
+>  int perf_pmu__test(void);
+>  
+> -struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
+> +void perf_pmu__arch_init(struct perf_pmu *pmu);
+>  void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
+>  			       const struct pmu_events_table *table);
+>  
+
