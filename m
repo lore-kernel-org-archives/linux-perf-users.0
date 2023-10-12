@@ -1,388 +1,88 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57DF21341
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 09:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C750021373
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 10:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NMg0Jrkq"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B289FC4
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 02:54:12 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39C9jnBP003237;
-	Thu, 12 Oct 2023 09:54:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=+IcQnnHRD9zyDe/wFkQD7/u3NNGtDze4SULeQkFNvao=;
- b=NMg0Jrkq3KhuXNZfQkBgF77q1iJAdhpfUl+TQZiE3cAenzP+5EZcByrzEZnMkkEHJCgK
- dLi5kt6xxqtnaclJAZf0VJa2Y2jVpYwQF2VaUccM1zxA+rJddH066CO0kva+jBrURcCY
- iuhg2/XDl9KIVbzmCVHWupj0k/NHhzu6Q0nPBj8EWQRulxtpMLyDvvqiDzTUMBNiGsov
- C3QSSvc/rj8unD6/qaNip5rV8pTFSvxxX3T5dw5lu5AAJM21f3D2cudgM5V8hyaDQDRw
- 73E/qwMrmJ/3qKCIJUsGtKeAuDQibJ1NLLERNv+GC9lwfo9VlKTVFWO+JUkiYHZxMlcW bA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpdy61175-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Oct 2023 09:54:04 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39C9k5gE005045;
-	Thu, 12 Oct 2023 09:54:04 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpdy6116e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Oct 2023 09:54:03 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39C7oZnu001239;
-	Thu, 12 Oct 2023 09:54:02 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tkkvk685u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Oct 2023 09:54:02 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39C9rxcI16450200
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Oct 2023 09:53:59 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 94BC72004D;
-	Thu, 12 Oct 2023 09:53:59 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C36C220040;
-	Thu, 12 Oct 2023 09:53:57 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.214.47])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 12 Oct 2023 09:53:57 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [PATCH V2] tools/perf: Add perf binary dependent rule for
- shellcheck log in Makefile.perf
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAM9d7cj75AzZ29tzuDbo2=1+s_t_kzQEakoUFs8o9vh9NYqCKA@mail.gmail.com>
-Date: Thu, 12 Oct 2023 15:23:45 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com
-Message-Id: <A0EFA81D-83A1-4859-9448-AD1E37C0EA14@linux.vnet.ibm.com>
-References: <20230929064909.1152-1-atrajeev@linux.vnet.ibm.com>
- <DFCC944C-02D9-4BF4-B4CB-358BF1C14A08@linux.vnet.ibm.com>
- <CAM9d7cj75AzZ29tzuDbo2=1+s_t_kzQEakoUFs8o9vh9NYqCKA@mail.gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: QkBIzOkt2Z7pVOHTcqLhAly_zIsnSoc2
-X-Proofpoint-ORIG-GUID: NRo9JDot9YuVJ0xT98cfymmUOD3eMXkL
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Nj7cKOfl"
+Received: from qs51p00im-qukt01071902.me.com (qs51p00im-qukt01071902.me.com [17.57.155.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA230B7
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 03:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1697106415;
+	bh=Zm68BCMFb/hYtzGq5UaRnyX7k1qDLFhJZeNJbHCgEJE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	b=Nj7cKOfldEYblETNZbxkiuE/GWDO1mkPSt29lWUQ28dyqf/1YOTkgt5MZsrVJotCW
+	 dV8bg3rq4Y8oa9yd5qnq65ge4zQJYEEwPG9RuT/pwlGjuLSrtHavjp0mWQ0/VTSnrv
+	 EFfw/C60mD5apaVr5LKURwRJ0U1chIamST89LuK0/NgA6RwQS7f3mWuwaFPnKPW1dd
+	 woXVQNWvfAheYqmmr4+ZMOLX35f1yp8RhISSW+Iwg+7Gdy3UDJdnYyaVQQ7U19vRyv
+	 zjnGCPBZUMhWayorxg54dmtd+BfdPOBh/PosANSIqBs6zwshIQW3ZIc3nLrMmp2BPq
+	 h2ZkB05dM7CQA==
+Received: from fedora.fritz.box (qs51p00im-dlb-asmtp-mailmevip.me.com [17.57.155.28])
+	by qs51p00im-qukt01071902.me.com (Postfix) with ESMTPSA id 66A4E5EC02C9;
+	Thu, 12 Oct 2023 10:26:52 +0000 (UTC)
+Date: Thu, 12 Oct 2023 12:26:49 +0200
+From: Lucy Mielke <lucymielke@icloud.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+	acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/p4: Fix "Wunused-but-set-variable" warning
+Message-ID: <ZSfJ6c5fo5enjvv+@fedora.fritz.box>
+References: <ZSGpl_hT23B6ix0M@mainframe>
+ <20231007203411.GA8085@noisy.programming.kicks-ass.net>
+ <ZSQqfr96SfZM_OEk@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-12_05,2023-10-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0
- mlxscore=0 spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310120082
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZSQqfr96SfZM_OEk@google.com>
+X-Proofpoint-ORIG-GUID: 9pFRWMcEYoBw4AFqbI9oJ7ZVnrKWy-je
+X-Proofpoint-GUID: 9pFRWMcEYoBw4AFqbI9oJ7ZVnrKWy-je
+X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
+ =?UTF-8?Q?2903e8d5c8f:6.0.138,18.0.790,17.0.605.474.0000000_definitions?=
+ =?UTF-8?Q?=3D2022-01-12=5F02:2020-02-14=5F02,2022-01-12=5F02,2020-01-23?=
+ =?UTF-8?Q?=5F02_signatures=3D0?=
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=685 adultscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0
+ spamscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2310120085
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Am Mon, Oct 09, 2023 at 09:29:50AM -0700 schrieb Sean Christopherson:
+> 
+> rdmsr() writes to "high", but nothing ever reads from high.  FWIW, I would _love_
+> for rdmsrl() to have return semantics, e.g. to be able to do:
+> 
+> 	low  = (u32)rdmsrl(MSR_IA32_MISC_ENABLE);
+> 
+> or even
+> 
+> 	if (!(rdmsrl(MSR_IA32_MISC_ENABLE) & BIT(7)))
 
+I have taken a look and it seems to me like this macro is called quite a lot
+for different things thoughout the kernel tree, including drivers. If
+one were to change it to have return semantics instead of the way it
+currently works, you'd have to change around 300 occurences, right?
+(Let me know if I misunderstood something.)
 
-> On 09-Oct-2023, at 10:38 AM, Namhyung Kim <namhyung@kernel.org> wrote:
->=20
-> Hello,
->=20
-> Sorry for the late reply.
->=20
-> On Thu, Oct 5, 2023 at 8:27=E2=80=AFAM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->>=20
->>=20
->>> On 29-Sep-2023, at 12:19 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com=
-> wrote:
->>>=20
->>> Add rule in new Makefile "tests/Makefile.tests" for running
->>> shellcheck on shell test scripts. This automates below shellcheck
->>> into the build.
->>>=20
->>> $ for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellchec=
-k -S warning $F; done
->>>=20
->>> Condition for shellcheck is added in Makefile.perf to avoid build
->>> breakage in the absence of shellcheck binary. Update Makefile.perf
->>> to contain new rule for "SHELLCHECK_TEST" which is for making
->>> shellcheck test as a dependency on perf binary. Added
->>> "tests/Makefile.tests" to run shellcheck on shellscripts in
->>> tests/shell. The make rule "SHLLCHECK_RUN" ensures that, every
->>> time during make, shellcheck will be run only on modified files
->>> during subsequent invocations. By this, if any newly added shell
->>> scripts or fixes in existing scripts breaks coding/formatting
->>> style, it will get captured during the perf build.
->>>=20
->>> Example build failure with present scripts in tests/shell:
->>>=20
->>> INSTALL libsubcmd_headers
->>> INSTALL libperf_headers
->>> INSTALL libapi_headers
->>> INSTALL libsymbol_headers
->>> INSTALL libbpf_headers
->>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
-kefile.tests:17: output/tests/shell/record_sideband.dep] Error 1
->>> make[3]: *** Waiting for unfinished jobs....
->>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
-kefile.tests:17: output/tests/shell/test_arm_coresight.dep] Error 1
->>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
-kefile.tests:17: output/tests/shell/lock_contention.dep] Error 1
->>> make[2]: *** [Makefile.perf:675: SHELLCHECK_TEST] Error 2
->>> make[1]: *** [Makefile.perf:238: sub-make] Error 2
->>> make: *** [Makefile:70: all] Error 2
->>>=20
->>> After this, for testing, changed "tests/shell/record.sh" to
->>> break shellcheck format. In the next make run, it is
->>> also captured:
->=20
-> Where can I see the actual failure messages?
-Hi Namhyung,
-Thanks for the review comments.
+Return semantics or not, since the only way "high" is used in p4_pmu_init()
+is by being written to by rdmsr(), the variable can be completely removed by
+just using rdmsrl(). Would this be a patch you'd be interested in?
 
-Example, with current tree, we have these format issues:
-
- GENSKEL /root/athira/linux/tools/perf/util/bpf_skel/kwork_trace.skel.h
-CC bench/uprobe.o
-CC util/header.o
-LD bench/perf-in.o
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/stat_all_metricgroups.dep] Error 1
-make[3]: *** Waiting for unfinished jobs....
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/record_sideband.dep] Error 1
-CC util/bpf_counter.o
-CC util/bpf_counter_cgroup.o
-CC util/bpf_ftrace.o
-CC util/bpf_off_cpu.o
-CC util/bpf-filter.o
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:15: output=
-/tests/shell/test_arm_coresight.dep] Error 1
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:15: output=
-/tests/shell/lock_contention.dep] Error 1
-make[2]: *** [Makefile.perf:679: SHELLCHECK_TEST] Error 2
-make[2]: *** Waiting for unfinished jobs....
-LD util/perf-in.o
-LD perf-in.o
-make[1]: *** [Makefile.perf:242: sub-make] Error 2
-make: *** [Makefile:70: all] Error 2
-
-The actual fail can be seen here:
-
-# cat output/tests/shell/stat_all_metricgroups.dep.log=20
-
-In ./tests/shell/stat_all_metricgroups.sh line 7:
-function ParanoidAndNotRoot()
-^-- SC2112: 'function' keyword is non-standard. Delete it.
-
-For more information:
-https://www.shellcheck.net/wiki/SC2112 -- 'function' keyword is non-standar=
-...
->=20
-
-
->>>=20
->>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
-kefile.tests:17: output/tests/shell/record_sideband.dep] Error 1
->>> make[3]: *** Waiting for unfinished jobs....
->>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
-kefile.tests:17: output/tests/shell/record.dep] Error 1
->>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
-kefile.tests:17: output/tests/shell/test_arm_coresight.dep] Error 1
->>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
-kefile.tests:17: output/tests/shell/lock_contention.dep] Error 1
->>> make[2]: *** [Makefile.perf:675: SHELLCHECK_TEST] Error 2
->>> make[1]: *** [Makefile.perf:238: sub-make] Error 2
->>> make: *** [Makefile:70: all] Error 2
->=20
-> So is this reported at build time before I run the test command?
-> I'm ok with that but maybe I need to build it even though I know
-> some test is broken.  Can we have an option to do that like with
-> `make NO_SHELLCHECK=3D1` ?
-
-Yes, agree Namhyung. Valid point.
-I will add that in V3
-
->=20
->>>=20
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>> ---
->>> Changelog:
->>> v1 -> v2:
->>> Version1 had shellcheck in feature check which is not
->>> required since shellcheck is already a binary. Presence
->>> of binary can be checked using:
->>> $(shell command -v shellcheck)
->>> Addressed these changes as suggested by Namhyung in V2
->>> Feature test logic is removed in V2. Also added example
->>> for build breakage when shellcheck fails in commit message
->>=20
->> Hi All,
->>=20
->> Looking for feedback on this patch
->>=20
->> Thanks
->> Athira
->>>=20
->>> tools/perf/Makefile.perf        | 14 +++++++++++++-
->>> tools/perf/tests/Makefile.tests | 24 ++++++++++++++++++++++++
->>> 2 files changed, 37 insertions(+), 1 deletion(-)
->>> create mode 100644 tools/perf/tests/Makefile.tests
->>>=20
->>> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->>> index 98604e396ac3..56a66ca253ab 100644
->>> --- a/tools/perf/Makefile.perf
->>> +++ b/tools/perf/Makefile.perf
->>> @@ -667,7 +667,18 @@ $(PERF_IN): prepare FORCE
->>> $(PMU_EVENTS_IN): FORCE prepare
->>> $(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3Dpmu-events o=
-bj=3Dpmu-events
->>>=20
->>> -$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
->>> +# Runs shellcheck on perf test shell scripts
->>> +
->>> +SHELLCHECK :=3D $(shell command -v shellcheck)
->>> +ifneq ($(SHELLCHECK),)
->>> +SHELLCHECK_TEST: FORCE prepare
->>> + $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests
->>> +else
->>> +SHELLCHECK_TEST:
->>> + @:
->>> +endif
->>> +
->>> +$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) SHELLCHECK_TEST
->>> $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
->>> $(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
->>>=20
->>> @@ -1130,6 +1141,7 @@ bpf-skel-clean:
->>> $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
->>>=20
->>> clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)=
--clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-core=
-sight-targets-clean
->>> + $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
->>> $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archiv=
-e $(OUTPUT)perf-iostat $(LANG_BINDINGS)
->>> $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -dele=
-te -o -name '\.*.d' -delete
->>> $(Q)$(RM) $(OUTPUT).config-detected
->>> diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefil=
-e.tests
->>> new file mode 100644
->>> index 000000000000..8011e99768a3
->>> --- /dev/null
->>> +++ b/tools/perf/tests/Makefile.tests
->>> @@ -0,0 +1,24 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +# Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
->>> +
->>> +PROGS =3D $(subst ./,,$(shell find tests/shell -perm -o=3Dx -type f -n=
-ame '*.sh'))
->>> +DEPS =3D $(addprefix output/,$(addsuffix .dep,$(basename $(PROGS))))
->>> +DIRS =3D $(shell echo $(dir $(DEPS)) | xargs -n1 | sort -u | xargs)
->>> +
->>> +.PHONY: all
->>> +all: SHELLCHECK_RUN
->>> + @:
->>> +
->>> +SHELLCHECK_RUN: $(DEPS) $(DIRS)
->>> +
->>> +output/%.dep: %.sh | $(DIRS)
->>> + $(call rule_mkdir)
->>> + $(eval input_file :=3D $(subst output/,./,$(patsubst %.dep, %.sh, $@)=
-))
->>> + $(Q)$(call frecho-cmd,test)@shellcheck -S warning ${input_file} 1> $@=
-.log && ([[ ! -s $@.log ]])
->=20
-> What is the last part?  I guess it checks if shellcheck found no errors.
-> Can we just check the exit code of the shellcheck?  Is there a case
-> it didn't work?
-
-It checks to see if the redirected file has any warnings ( if it is not emp=
-ty ).
-I had tried exit code, but it reported false fails with using exit code
-
-Diff I used:
-
-diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.te=
-sts
-index 8011e99768a3..b3089f46ba6f 100644
---- a/tools/perf/tests/Makefile.tests
-+++ b/tools/perf/tests/Makefile.tests
-@@ -14,7 +14,7 @@ SHELLCHECK_RUN: $(DEPS) $(DIRS)
-output/%.dep: %.sh | $(DIRS)
-$(call rule_mkdir)
-$(eval input_file :=3D $(subst output/,./,$(patsubst %.dep, %.sh, $@)))
-- $(Q)$(call frecho-cmd,test)@shellcheck -S warning ${input_file} 1> $@.log=
- && ([[ ! -s $@.log ]])
-+ $(Q)$(call frecho-cmd,test)@shellcheck -S warning ${input_file} 1> $@.log=
- && ([[ ! $? ]])
-$(Q)$(call frecho-cmd,test)@touch $@
-$(Q)$(call frecho-cmd,test)@rm -rf $@.log
-$(DIRS):
-
-
-  INSTALL libsubcmd_headers
-INSTALL libsymbol_headers
-INSTALL libperf_headers
-INSTALL libapi_headers
-INSTALL libbpf_headers
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/stat_all_metricgroups.dep] Error 1
-make[3]: *** Waiting for unfinished jobs....
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/trace+probe_vfs_getname.dep] Error 1
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/record_sideband.dep] Error 1
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/test_java_symbol.dep] Error 1
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/test_brstack.dep] Error 1
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/test_task_analyzer.dep] Error 1
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/test_arm_coresight.dep] Error 1
-make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
-/tests/shell/lock_contention.dep] Error 1
-make[2]: *** [Makefile.perf:679: SHELLCHECK_TEST] Error 2
-make[1]: *** [Makefile.perf:242: sub-make] Error 2
-make: *** [Makefile:70: all] Error 2
-
-I think it happens since we run the checks parallely.
-Hence checking the corresponding log for the particular script will give us=
- accuracy with the results.
-
-Thanks
-Athira
->=20
-> Thanks,
-> Namhyung
->=20
->=20
->>> + $(Q)$(call frecho-cmd,test)@touch $@
->>> + $(Q)$(call frecho-cmd,test)@rm -rf $@.log
->>> +$(DIRS):
->>> + @mkdir -p $@
->>> +
->>> +clean:
->>> + @rm -rf output
->>> --
->>> 2.31.1
-
-
+Mit freundlichen Grüßen / Best regards,
+	Lucy
