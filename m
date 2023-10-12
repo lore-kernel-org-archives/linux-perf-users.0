@@ -1,147 +1,196 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E68331A85;
-	Thu, 12 Oct 2023 16:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C293D7;
-	Thu, 12 Oct 2023 09:19:18 -0700 (PDT)
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-27cfb84432aso847283a91.2;
-        Thu, 12 Oct 2023 09:19:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697127557; x=1697732357;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nbiq+SbKVzv0umicsGQIbdhA4gJE73jhezJTqZ1Ip3U=;
-        b=K67LX5HRZ2VXLvm3g+RKGJVmR2F0DFJ9Aa1a5XbjFY5JNCvtSOgasy1+ADnB01T9Di
-         C1q5C8vZalVM+ImxX/AkVf12iyf3urb04OIwCutkt6hosVNUjnKgtWsynNotG5z0gGz2
-         lhiG5vLHxn5pZk4inU5xnGMsB0x5dwAiXE+n9ZQooddwcjMBJRatzsf/tuaxpLjxeVa8
-         zBIEV32bFmXJPzcrdk5cDSky+n8DX5tczgxXx6e4AVeSPMJ37l8cSCk147+iP1x/K4BV
-         zE+H88JiJo1OMr3cWQJ+3y1CSKdn4sIYn9+liUAjIInw2gAbvBKKF6blfg3H3Z9QgIgv
-         GOpA==
-X-Gm-Message-State: AOJu0Yy3wI2NpNj/aeu4tm7NQvMTMk2OpbNkaeb51rqb7GRVxk3SEe6I
-	bpM7H7SoFH1TUDGJ3rUI9AjYkV8jKewCmOQSzEM=
-X-Google-Smtp-Source: AGHT+IHYLrnpzZAD48VSQEnb88UJ0/CEHEDk3PHs3RQe1priuwUSfgGoMET9eceQ/VkvhvhIiKvqKxjoKfTP1qNM6Tw=
-X-Received: by 2002:a17:90b:3a8e:b0:274:2906:656a with SMTP id
- om14-20020a17090b3a8e00b002742906656amr22645241pjb.5.1697127557440; Thu, 12
- Oct 2023 09:19:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEED31A85
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 16:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kbe8WR/B"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F869C0
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 09:21:17 -0700 (PDT)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39CG9Olh010020;
+	Thu, 12 Oct 2023 16:20:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=IjQp9btYVsmFNXqyWakKDxSvIesxctkCSDizI5iaJxc=;
+ b=kbe8WR/BFy/pmTuZM61C+gtqaFpo2EciKK0+w5SDE7ChDwOT41R/jxUMe+q0UjHGFUYw
+ r4EngTdl0puKMZ3IxswD8ut4NhQ6pj9TQC485Kn+u/q2b6ReLqiPYZwfDt5rlwAbc7lJ
+ THlUSe6iC2IqXsJok31kYyRbgCYVZTe18bEqmsWIfCyk5kNaobUgRnyADKuhEGlmAX0+
+ DuDMIZ79W+h568BZeJ1piE9QMqNiKj+VlJ1c9r8O/AjAbx049evqGo/RgklQ+0q8KxIJ
+ Qs1mMowXfckCvJiqnk5IGvbnfIn/wdEQRhflM7qQd/CV4BgXL3MHkHLfh01B+QK13HXb gw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpm2r8mtt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 16:20:46 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39CG9d3h011116;
+	Thu, 12 Oct 2023 16:20:46 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpm2r8mt4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 16:20:46 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39CEYZJj023015;
+	Thu, 12 Oct 2023 16:20:45 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tkmc207vp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 16:20:45 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39CGKgsV19071596
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Oct 2023 16:20:42 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6444120043;
+	Thu, 12 Oct 2023 16:20:42 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A77F420040;
+	Thu, 12 Oct 2023 16:20:39 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.59.173])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 12 Oct 2023 16:20:39 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231012035111.676789-1-namhyung@kernel.org> <ZSeMGPPfxkMvdaP3@gmail.com>
-In-Reply-To: <ZSeMGPPfxkMvdaP3@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 12 Oct 2023 09:19:04 -0700
-Message-ID: <CAM9d7chzw4UeHHeXaMfPTiRdLbv7PbpK=xkgxMDojAxAc8y7Jg@mail.gmail.com>
-Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org, Ben Woodard <woodard@redhat.com>, 
-	Joe Mario <jmario@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH 1/3] perf tests test_arm_coresight: Fix the shellcheck
+ warning in latest test_arm_coresight.sh
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <2219fc04-4484-b365-1281-a5307b368ec5@arm.com>
+Date: Thu, 12 Oct 2023 21:50:27 +0530
+Cc: "David.Laight@aculab.com" <David.Laight@ACULAB.COM>, mike.leach@linaro.org,
+        James Clark <james.clark@arm.com>, Namhyung Kim <namhyung@kernel.org>,
+        tianruidong@linux.alibaba.com, Leo Yan <leo.yan@linaro.org>,
+        yangtiezhu@loongson.cn, Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Message-Id: <C4F6149F-C5FD-44AC-818F-0A84C08F45E2@linux.vnet.ibm.com>
+References: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
+ <20230929041133.95355-2-atrajeev@linux.vnet.ibm.com>
+ <CAM9d7cj26Dpit3igZjybsbnotBiv_F8mEu62Aor+9bBhwVh55g@mail.gmail.com>
+ <c59c586e-08ab-df66-7bcd-5249d2481298@arm.com>
+ <4C5929B2-96B3-46D5-82ED-ADD6A0CDE97B@linux.vnet.ibm.com>
+ <2219fc04-4484-b365-1281-a5307b368ec5@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: QUlGt5X_RaH3lf7YKcEWbrXTeJxmM8Zp
+X-Proofpoint-GUID: oGo5VE1O8SEpkrG1tF99oYGyce5QTg0j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-12_05,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 suspectscore=0 mlxlogscore=927
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310120135
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Ingo,
 
-On Wed, Oct 11, 2023 at 11:03=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
-te:
->
->
-> * Namhyung Kim <namhyung@kernel.org> wrote:
->
-> > * How to use it
-> >
-> > To get precise memory access samples, users can use `perf mem record`
-> > command to utilize those events supported by their architecture.  Intel
-> > machines would work best as they have dedicated memory access events bu=
-t
-> > they would have a filter to ignore low latency loads like less than 30
-> > cycles (use --ldlat option to change the default value).
-> >
-> >     # To get memory access samples in kernel for 1 second (on Intel)
-> >     $ sudo perf mem record -a -K --ldlat=3D4 -- sleep 1
-> >
-> >     # Similar for the AMD (but it requires 6.3+ kernel for BPF filters)
-> >     $ sudo perf mem record -a --filter 'mem_op =3D=3D load, ip > 0x8000=
-000000000000' -- sleep 1
->
-> BTW., it would be nice for 'perf mem record' to just do the right thing o=
-n
-> whatever machine it is running on.
->
-> Also, why are BPF filters required - due to the IP filtering of mem-load
-> events?
 
-Right, because AMD uses IBS for precise events and it doesn't
-have a filtering feature.
+> On 12-Oct-2023, at 9:37 PM, Suzuki K Poulose <suzuki.poulose@arm.com> =
+wrote:
+>=20
+> Hi,
+>=20
+> On 12/10/2023 16:56, Athira Rajeev wrote:
+>>> On 05-Oct-2023, at 3:06 PM, Suzuki K Poulose =
+<suzuki.poulose@arm.com> wrote:
+>>>=20
+>>> On 05/10/2023 06:02, Namhyung Kim wrote:
+>>>> On Thu, Sep 28, 2023 at 9:11=E2=80=AFPM Athira Rajeev
+>>>> <atrajeev@linux.vnet.ibm.com> wrote:
+>>>>>=20
+>=20
+> ...
+>=20
+>>> Thanks for the fix.
+>>>=20
+>>> Nothing to do with this patch, but I am wondering if the original =
+patch
+>>> is over engineered and may not be future proof.
+>>>=20
+>>> e.g.,
+>>>=20
+>>> cs_etm_dev_name() {
+>>> + cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name =
+cpu* -print -quit)
+>>>=20
+>>> Right there you got the device name and we can easily deduce the =
+name of
+>>> the "ETM" node.
+>>>=20
+>>> e.g,:
+>>> etm=3D$(basename $(readlink cs_etm_path) | sed "s/[0-9]\+$//")
+>>>=20
+>>> And practically, nobody prevents an ETE mixed with an ETM on a =
+"hybrid"
+>>> system (hopefully, no one builds it ;-))
+>>>=20
+>>> Also, instead of hardcoding "ete" and "etm" prefixes from the arch =
+part,
+>>> we should simply use the cpu nodes from :
+>>>=20
+>>> /sys/bus/event_source/devices/cs_etm/
+>>>=20
+>>> e.g.,
+>>>=20
+>>> arm_cs_etm_traverse_path_test() {
+>>> # Iterate for every ETM device
+>>> for c in /sys/bus/event_source/devices/cs_etm/cpu*; do
+>>> # Read the link to be on the safer side
+>>> dev=3D`readlink $c`
+>>>=20
+>>> # Find the ETM device belonging to which CPU
+>>> cpu=3D`cat $dev/cpu`
+>>>=20
+>>> # Use depth-first search (DFS) to iterate outputs
+>>> arm_cs_iterate_devices $dev $cpu
+>>> done;
+>>> }
+>>>=20
+>>>=20
+>>>=20
+>>>> You'd better add Coresight folks on this.
+>>>> Maybe this file was missing in the MAINTAINERS file.
+>>>=20
+>>> And the original author of the commit, that introduced the issue =
+too.
+>>>=20
+>>> Suzuki
+>> Hi All,
+>> Thanks for the discussion and feedbacks.
+>> This patch fixes the shellcheck warning introduced in function =
+"cs_etm_dev_name". But with the changes that Suzuki suggested, we won't =
+need the function "cs_etm_dev_name" since the code will use =
+"/sys/bus/event_source/devices/cs_etm/" .  In that case, can I drop this =
+patch for now from this series ?
+>=20
+> Yes, please. James will send out the proposed patch
 
->
-> Could we perhaps add an IP filter to perf events to get this built-in?
-> Perhaps attr->exclude_user would achieve something similar?
+Hi Suzuki,
 
-Unfortunately IBS doesn't support privilege filters IIUC.  Maybe
-we could add a general filtering logic in the NMI handler but I'm
-afraid it can complicate the code and maybe slow it down a bit.
-Probably it's ok to have only a simple privilege filter by IP range.
+Sure. Thanks!=20
 
->
-> > In perf report, it's just a matter of selecting new sort keys: 'type'
-> > and 'typeoff'.  The 'type' shows name of the data type as a whole while
-> > 'typeoff' shows name of the field in the data type.  I found it useful
-> > to use it with --hierarchy option to group relevant entries in the same
-> > level.
-> >
-> >     $ sudo perf report -s type,typeoff --hierarchy --stdio
-> >     ...
-> >     #
-> >     #    Overhead  Data Type / Data Type Offset
-> >     # ...........  ............................
-> >     #
-> >         23.95%     (stack operation)
-> >            23.95%     (stack operation) +0 (no field)
-> >         23.43%     (unknown)
-> >            23.43%     (unknown) +0 (no field)
-> >         10.30%     struct pcpu_hot
-> >             4.80%     struct pcpu_hot +0 (current_task)
-> >             3.53%     struct pcpu_hot +8 (preempt_count)
-> >             1.88%     struct pcpu_hot +12 (cpu_number)
-> >             0.07%     struct pcpu_hot +24 (top_of_stack)
-> >             0.01%     struct pcpu_hot +40 (softirq_pending)
-> >          4.25%     struct task_struct
-> >             1.48%     struct task_struct +2036 (rcu_read_lock_nesting)
-> >             0.53%     struct task_struct +2040 (rcu_read_unlock_special=
-.b.blocked)
-> >             0.49%     struct task_struct +2936 (cred)
-> >             0.35%     struct task_struct +3144 (audit_context)
-> >             0.19%     struct task_struct +46 (flags)
-> >             0.17%     struct task_struct +972 (policy)
-> >             0.15%     struct task_struct +32 (stack)
-> >             0.15%     struct task_struct +8 (thread_info.syscall_work)
-> >             0.10%     struct task_struct +976 (nr_cpus_allowed)
-> >             0.09%     struct task_struct +2272 (mm)
-> >         ...
->
-> This looks really useful!
+Athira
+>=20
+> Suzuki
+>=20
+>=20
 
-:)
-
-Thanks,
-Namhyung
