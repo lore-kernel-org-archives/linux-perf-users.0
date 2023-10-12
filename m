@@ -1,93 +1,111 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05172262BB;
-	Thu, 12 Oct 2023 16:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7CA3219A
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 17:20:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53AF5BE;
-	Thu, 12 Oct 2023 09:53:01 -0700 (PDT)
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-27d113508bfso947727a91.3;
-        Thu, 12 Oct 2023 09:53:01 -0700 (PDT)
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00BA0B8;
+	Thu, 12 Oct 2023 10:20:48 -0700 (PDT)
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-27d1f57bda7so844389a91.0;
+        Thu, 12 Oct 2023 10:20:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697129581; x=1697734381;
+        d=1e100.net; s=20230601; t=1697131248; x=1697736048;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wbYdyYCLJzWKhagPtB2fZh6NdUcQYAFm57gjL1qGF48=;
-        b=NDEQvwkQkWubFS0l0atPAWvMdLyJD3omUIvoWkhTmVunGbuJPp980w/XuvrUN2A2pe
-         +ejDIvuti8upy6nF3b5l1YtyWvVFsi2C0Nl55ENLl4k6YOSa0eYMLhyV71IkzLBOSBXB
-         b2SWtiGToYJNvF8G5Xp8YYo4XoiiF+3S2hEbx7zRJjZ6vyCtBc0kB07kcX9ZpglFFsDP
-         1/pyandn6YbTBVy9UkgzcGyBKQA9lovThvkOSUaV3d36VAiop8O+DFQeankxCKn4p7SB
-         jrNU32lp/1Jt0LkUCzW1Ujx34E6zXUTFHBSJnI3JcpzOYhWh4Yk83vmG7SEBfj6zHqB/
-         kaYg==
-X-Gm-Message-State: AOJu0Yw4OAEqA02wq8Xnn8b1AERlmknRdLATmPQsbG+KDE94WMhwVM5Y
-	6SUINky50eTn9ufpvx3Xcq4hjbFH7Vdfpsl4z5M=
-X-Google-Smtp-Source: AGHT+IG9jsSRf7EIm7g+9z1WGXCY0hL8ay7WE0VOiI32HNTtUx5gxJO32EGx3ySvVI7spQ9vBSU3cZfJIJgMJk13zMw=
-X-Received: by 2002:a17:90a:2a8f:b0:27d:6b8:93be with SMTP id
- j15-20020a17090a2a8f00b0027d06b893bemr4680096pjd.42.1697129580644; Thu, 12
- Oct 2023 09:53:00 -0700 (PDT)
+        bh=bGM0orxolwQDYHlwlGGazTy0jcBbxhs1wdeAXhV7h3Y=;
+        b=hhZ4zuysFFLsDu2d89pncICkGNOrYaWQzeNDazuRKYpcTLCfNPjZbpNoRvGyxZBSIu
+         6y067hb1jW2mpkqUGH9KdG+mGQ9Qo1S7Fc+rJUjvEHp522xDzlyD8tnjTgMTBY9wy0eG
+         E2xBt+i99IV2yvh0EnARQ2SZODT3+qV3YKamKZ2dcuNHRUyDC8LVv5rRBYtYO/Dped5x
+         JMHXUDpMnnSyb90bHkhWpzbY9Qe7jAum1E/qDJk3m8X2MtbYWpa+mkLz7sVkQ2iKbcXo
+         Xo+zKs1Ek0c73eKjPU3NvVAV/qHS3t/y/bKB37elh4i0ALtxM6/wgKYUVqGtOfT8O/Pn
+         rWRA==
+X-Gm-Message-State: AOJu0YztyToEeh6HW0PzpQ5TibA3Y3zJHeWs/6mrTV0ASFfrG8QSkodU
+	hoYary1T179YxpMHGfLehSdLUIrGG2njxww4Wvq22oWo
+X-Google-Smtp-Source: AGHT+IEPxre891+/R+saTBS32Agft7q5gaZKp4Bi09ZkOwD5fSlSHo3lCoxtne4U/s4K9msfTnOZiSnlm/h0dSuMtIo=
+X-Received: by 2002:a17:90b:ecc:b0:27d:a59:ebae with SMTP id
+ gz12-20020a17090b0ecc00b0027d0a59ebaemr4670194pjb.46.1697131248206; Thu, 12
+ Oct 2023 10:20:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231012035111.676789-1-namhyung@kernel.org> <20231012091537.GM6307@noisy.programming.kicks-ass.net>
-In-Reply-To: <20231012091537.GM6307@noisy.programming.kicks-ass.net>
+References: <20230907210533.3712979-1-irogers@google.com> <CAP-5=fVaK2hhBTX4=zKX5Dft36RurctYEtGzsdUp6XKsjHguMw@mail.gmail.com>
+ <CAM9d7cjDmX=k1aEYGZAf5NJ-j6_q55BOOaMofABHE52KWD3jjA@mail.gmail.com>
+In-Reply-To: <CAM9d7cjDmX=k1aEYGZAf5NJ-j6_q55BOOaMofABHE52KWD3jjA@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 12 Oct 2023 09:52:49 -0700
-Message-ID: <CAM9d7cgiagnJ3zZ0KvyvYtVVp3ycb3BNwL6x2-eUYJhHbPSohw@mail.gmail.com>
-Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org, Ben Woodard <woodard@redhat.com>, 
-	Joe Mario <jmario@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+Date: Thu, 12 Oct 2023 10:20:37 -0700
+Message-ID: <CAM9d7cihoHMBet3jV43QkmnZfJ=veVuBkN4vQ-VRpWEQJX+htA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf parse-events: Avoid erange from hex numbers
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023 at 2:17=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Fri, Oct 6, 2023 at 12:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Wed, Oct 11, 2023 at 08:50:23PM -0700, Namhyung Kim wrote:
+> Hi Ian,
 >
-> > Actually there's a performance issue about getting disassembly from the
-> > objdump for kernel.  On my system, GNU objdump was really slower than t=
-he
-> > one from LLVM for some reason so I had to pass the following option for
-> > each perf report and perf annotate.
+> On Fri, Oct 6, 2023 at 8:30=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
 > >
-> >     $ sudo perf report --objdump=3Dllvm-objdump ...
-> >
-> >     # To save it in the config file and drop the command line option
-> >     $ sudo perf config annotate.objdump=3Dllvm-objdump
-> >
-> > Even with this change, still the most processing time was spent on the
-> > objdump to get the disassembly.  It'd be nice if we can get the result
-> > without using objdump at all.
+> > On Thu, Sep 7, 2023 at 2:05=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> > >
+> > > We specify that a "num_hex" comprises 1 or more digits, however, that
+> > > allows strtoull to fail with ERANGE. Limit the number of hex digits t=
+o
+> > > being between 1 and 16.
+> > >
+> > > Before:
+> > > ```
+> > > $ perf stat -e 'cpu/rE7574c47490475745/' true
+> > > perf: util/parse-events.c:215: fix_raw: Assertion `errno =3D=3D 0' fa=
+iled.
+> > > Aborted (core dumped)
+> > > ```
+> > >
+> > > After:
+> > > ```
+> > > $ perf stat -e 'cpu/rE7574c47490475745/' true
+> > > event syntax error: 'cpu/rE7574c47490475745/'
+> > >                          \___ Bad event or PMU
+> > >
+> > > Unable to find PMU or event on a PMU of 'cpu'
+> > >
+> > > Initial error:
+> > > event syntax error: 'cpu/rE7574c47490475745/'
+> > >                          \___ unknown term 'rE7574c47490475745' for p=
+mu 'cpu'
+> > >
+> > > valid terms: event,pc,edge,offcore_rsp,ldlat,inv,umask,frontend,cmask=
+,config,config1,config2,config3,name,period,percore,metric-id
+> > > Run 'perf list' for a list of valid events
+> > >
+> > >  Usage: perf stat [<options>] [<command>]
+> > >
+> > >     -e, --event <event>   event selector. use 'perf list' to list ava=
+ilable events
+> > > ```
+> > >
+> > > Issue found through fuzz testing.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
 >
-> So the kernel has an instruction decoder, all we need is something that
-> can pretty print the result. IIRC Masami had an early version of that
-> somewhere.
->
-> With those bits, and some basic ELF parsing (find in objtool for
-> instance) you can implement most of objdump yourself.
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-That would be nice, but I'm a bit afraid of dealing with details
-of instruction decoding especially for unusual ones considering
-extensibility to user space and other architectures.
-
-Thanks,
-Namhyung
+Applied to perf-tools-next, thanks!
