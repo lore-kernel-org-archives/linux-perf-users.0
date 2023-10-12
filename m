@@ -1,50 +1,51 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966683418F
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 17:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49414341BE
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 17:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CFADBB;
-	Thu, 12 Oct 2023 10:21:21 -0700 (PDT)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1c9e072472bso7127505ad.2;
-        Thu, 12 Oct 2023 10:21:21 -0700 (PDT)
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB81519B;
+	Thu, 12 Oct 2023 10:23:12 -0700 (PDT)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-690bc3f82a7so1060861b3a.0;
+        Thu, 12 Oct 2023 10:23:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697131281; x=1697736081;
+        d=1e100.net; s=20230601; t=1697131392; x=1697736192;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lEMxWrFoPYtcFRmMG5By36CMEOzbiNcPHSa8TUmJqE8=;
-        b=DrxxKj7kYNpDgtquEAeZKiy+DTAiH1sbual6z1lRv4rf/Iqh4tpFCyM0BmpYGV4ePx
-         dzLMaI1SPX2ox9W+HfaiHuXCi9B8zNHCKms0aF+KxlbS/G+OQX/ke0v122LZLrSMDy6G
-         E2jux2sDM7MTLG+EucWCk5ySxgQkZ9qJmj5MveVp7dg0pgPQbDosueb183FFy5yCHUGg
-         vn0qFc2YwG/lzScwCWTROi4BXI8ZGSeqnLpDfPtOsN7wR+bk7vVc9FmazEpJISl33U55
-         T5XrO0kcgMF0GUyiZjmIODq3yarWZ8GNpszasTy+5veIUMjZvXJtqwazuWVHmUneOEm6
-         o7hg==
-X-Gm-Message-State: AOJu0YzRmnM6aneMW3oocRu93117ZJZSQiEs7iopgRu2m7bgRgSadEX9
-	TtcvlVLb1oZxDw0uN3pv+jm/Y+/w3Z2m8BDl7KMO0c2I
-X-Google-Smtp-Source: AGHT+IFAWfFlLWtnAbpZxdqOP0mgDeUFhVOcMBZ4fC2zjYsg2bfBWcUKqw5FRC35Ix30n0cy1X+AgRGbMUFfIVaE9rQ=
-X-Received: by 2002:a17:90b:e11:b0:27c:f1f8:261f with SMTP id
- ge17-20020a17090b0e1100b0027cf1f8261fmr7322289pjb.20.1697131280729; Thu, 12
- Oct 2023 10:21:20 -0700 (PDT)
+        bh=2huTdw8gv98PUVaCLOU6DBAj+aarMGXn0Df0CI62RjM=;
+        b=Ta+HKXRcSd74lXModIUNcmzoJ2sIxzZcHFQ5mlOlZwy9M2K/1gyvRDMIGoleJW65zj
+         5Jftra1mmlQwfWvuyqUruJMPdhqnAjnbg+dcADmygl9MUPX5Ho/pBT/GYuEewcGbC5qI
+         cE7DrmnwuL7pEG5Z3+GHSvPUWwmKLx7O7iHelNg/FxJnbBuoqvtWyLgtd7WUc6ryS3HK
+         1X/1ryJ0DwXCLBV+/KIvv5pFpXUeCj5B2uprAFR4IgEQAfF2NtmqsDBb45uXRNzsltvc
+         pbha4o7+8U3ZQSfgkeUpxxlxjb7ohTjg2btD0XtFrWyCsU9WJfD5JKTwiPupXIZyTkqY
+         ixmw==
+X-Gm-Message-State: AOJu0YxsdQjJSQekg3G4FDZHkumLsLILIdXVuDfn5dS14H1jqvU2p9Wg
+	WKUFJBt1rWMG0sRxwPmfXNdCmsmdgD5fON7+oNs=
+X-Google-Smtp-Source: AGHT+IHtewc5TpplcEEAEnaPHRXHWJ0T7pd74csLwuQjugub3DppU6ULdyFpJWb7QI0YjD5qnRhOteXVwbzBrWaFH90=
+X-Received: by 2002:a05:6a20:7f83:b0:15e:b8a1:57b9 with SMTP id
+ d3-20020a056a207f8300b0015eb8a157b9mr30329596pzj.24.1697131391926; Thu, 12
+ Oct 2023 10:23:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZR66Qgbcltt+zG7F@kernel.org> <CAM9d7cgnB0jLTz+PNiJgkJL_LU5Y6oQX9HALJEGqh3v_ngPzxQ@mail.gmail.com>
-In-Reply-To: <CAM9d7cgnB0jLTz+PNiJgkJL_LU5Y6oQX9HALJEGqh3v_ngPzxQ@mail.gmail.com>
+References: <20230928004431.1926969-1-irogers@google.com> <CAP-5=fW6dBQQ7XnDm+Ye7R2bksNrWWwZJ+X33QnDvcjqjgtU5Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fW6dBQQ7XnDm+Ye7R2bksNrWWwZJ+X33QnDvcjqjgtU5Q@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 12 Oct 2023 10:21:09 -0700
-Message-ID: <CAM9d7ciNkQGOdJUV+h=XFvFUb7pyABO8SnMiyp8iSYTS_a4x+Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf symbols: Add 'intel_idle_ibrs' to the list of
- idle symbols
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Thu, 12 Oct 2023 10:23:00 -0700
+Message-ID: <CAM9d7cjMraYFyx4v6ahVJ56ys0Kq769yzzNeO+bQ2my0y2=Jsg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf parse-events: Fix for term values that are raw events
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -54,35 +55,39 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 5, 2023 at 10:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Thu, Oct 5, 2023 at 3:13=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> Hi Arnaldo,
->
-> On Thu, Oct 5, 2023 at 6:29=E2=80=AFAM Arnaldo Carvalho de Melo <acme@ker=
-nel.org> wrote:
+> On Wed, Sep 27, 2023 at 5:44=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
 > >
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Raw events can be strings like 'r0xead' but the 0x is optional so they
+> > can also be 'read'. On IcelakeX uncore_imc_free_running has an event
+> > called 'read' which may be programmed as:
+> > ```
+> > $ perf stat -e 'uncore_imc_free_running/event=3Dread/' -a sleep 1
+> > ```
+> > However, the PE_RAW type isn't allowed on the right of a term, even
+> > though in this case we just want to interpret it as a string. This
+> > leads to the following error on IcelakeX:
+> > ```
+> > $ perf stat -e 'uncore_imc_free_running/event=3Dread/' -a sleep 1
+> > event syntax error: '..nning/event=3Dread/'
+> >                                   \___ parser error
+> > Run 'perf list' for a list of valid events
 > >
-> > This is a longstanding to do list entry: we need a way to see that a
-> > sample took place while in idle state, as the current way to do it is
-> > to infer that by the name of the functions that in such state have
-> > more samples, IOW: a hack.
+> >  Usage: perf stat [<options>] [<command>]
 > >
-> > Maybe we can do flip a bit in samples that take place inside the
-> > enter/exit idle section in do_idle()?
+> >     -e, --event <event> event selector. use 'perf list' to list availab=
+le events
+> > ```
+> > Fix this by allowing raw types on the right of terms and treat them as
+> > strings, just as is already done for PE_LEGACY_CACHE. Make this
+> > consistent by just entirely removing name_or_legacy and always using
+> > name_or_raw that covers all three cases.
 > >
-> > But till then, add one more :-\
-> >
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > cc: Fr=C3=A9d=C3=A9ric Weisbecker <fweisbec@gmail.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>,
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > Fixes: 6fd1e5191591 ("perf parse-events: Support PMUs for legacy cache =
+events")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Applied to perf-tools-next, thanks!
