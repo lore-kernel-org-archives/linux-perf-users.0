@@ -1,51 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76E322339
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 20:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WxjqDrIv"
-Received: from out-191.mta1.migadu.com (out-191.mta1.migadu.com [IPv6:2001:41d0:203:375::bf])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC459E
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 13:03:31 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1697054285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jXH7cg8de1dzBGNJz3ypcSLqe/t7Zxe4VVUQ1QtkOqY=;
-	b=WxjqDrIvpFrblECPWQqArHOCHxrD8YmEykhamTxk0Vykx4UURzg+tQCp7tdxqZRGqwcoT5
-	Bp7RcWmDrjyLZIxeIk6y+EKgbvynDaIYs42pMqw8iMG4BAHUMZzQUosPTxeiav0ajxxU77
-	SURBxMijdzhIfPklOg13jr8OIYZfyr0=
-From: Oliver Upton <oliver.upton@linux.dev>
-To: kvm@vger.kernel.org
-Cc: kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
-	Jing Zhang <jingzhangos@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Morse <james.morse@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: [PATCH v3 2/5] perf build: Generate arm64's sysreg-defs.h and add to include path
-Date: Wed, 11 Oct 2023 19:57:37 +0000
-Message-ID: <20231011195740.3349631-3-oliver.upton@linux.dev>
-In-Reply-To: <20231011195740.3349631-1-oliver.upton@linux.dev>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D537F4
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 03:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8426894;
+	Wed, 11 Oct 2023 20:10:35 -0700 (PDT)
+X-UUID: dc0421b70b7940d7926d50df32f29ce6-20231012
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.32,REQID:9b9bbf93-d7da-4406-ae38-5608042cc064,IP:5,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-15
+X-CID-INFO: VERSION:1.1.32,REQID:9b9bbf93-d7da-4406-ae38-5608042cc064,IP:5,URL
+	:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-15
+X-CID-META: VersionHash:5f78ec9,CLOUDID:d119d5bf-14cc-44ca-b657-2d2783296e72,B
+	ulkID:231012110834CN4UMJ2D,BulkQuantity:1,Recheck:0,SF:44|66|38|24|17|19|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:40,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: dc0421b70b7940d7926d50df32f29ce6-20231012
+X-User: chentao@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.169)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1733807883; Thu, 12 Oct 2023 11:10:21 +0800
+From: "Kunwu.Chan" <chentao@kylinos.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	seanjc@google.com,
+	kprateek.nayak@amd.com,
+	robert.richter@amd.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kunwu.chan@hotmail.com,
+	"Kunwu.Chan" <chentao@kylinos.cn>
+Subject: [PATCH] perf tools: Put the function return operation at the end of the function
+Date: Thu, 12 Oct 2023 11:10:03 +0800
+Message-Id: <20231012031003.842368-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,76 +57,43 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Start generating sysreg-defs.h in anticipation of updating sysreg.h to a
-version that needs the generated output.
+Function return operations should be performed after resource release.
 
-Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+Fixes: 4e1b9c679fcb ("perf tools: Refactor print_event_desc()")
+Signed-off-by: Kunwu.Chan <chentao@kylinos.cn>
 ---
- tools/perf/Makefile.perf | 15 +++++++++++++--
- tools/perf/util/Build    |  2 +-
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ tools/perf/util/header.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 37af6df7b978..14dedd11a1f5 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -443,6 +443,15 @@ drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
- # Create output directory if not already present
- _dummy := $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
- 
-+arm64_gen_sysreg_dir := $(srctree)/tools/arch/arm64/tools
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index d812e1e371a7..5763f21844b1 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1998,13 +1998,14 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 			id++;
+ 		}
+ 	}
+-out:
+-	free(buf);
+-	return events;
 +
-+arm64-sysreg-defs: FORCE
-+	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir)
+ error:
+ 	free_event_desc(events);
+ 	events = NULL;
+-	goto out;
 +
-+arm64-sysreg-defs-clean:
-+	$(call QUIET_CLEAN,arm64-sysreg-defs)
-+	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) clean > /dev/null
-+
- $(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
- 	$(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
++out:
++	free(buf);
++	return events;
+ }
  
-@@ -716,7 +725,9 @@ endif
- __build-dir = $(subst $(OUTPUT),,$(dir $@))
- build-dir   = $(or $(__build-dir),.)
- 
--prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioctl_array) \
-+prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders \
-+	arm64-sysreg-defs \
-+	$(drm_ioctl_array) \
- 	$(fadvise_advice_array) \
- 	$(fsconfig_arrays) \
- 	$(fsmount_arrays) \
-@@ -1125,7 +1136,7 @@ endif # BUILD_BPF_SKEL
- bpf-skel-clean:
- 	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
- 
--clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
-+clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
- 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
- 	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
- 	$(Q)$(RM) $(OUTPUT).config-detected
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 6d657c9927f7..2f76230958ad 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -345,7 +345,7 @@ CFLAGS_rbtree.o        += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ET
- CFLAGS_libstring.o     += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
- CFLAGS_hweight.o       += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
- CFLAGS_header.o        += -include $(OUTPUT)PERF-VERSION-FILE
--CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/
-+CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/ -I$(srctree)/tools/arch/arm64/include/generated/
- 
- $(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
- 	$(call rule_mkdir)
+ static int __desc_attr__fprintf(FILE *fp, const char *name, const char *val,
 -- 
-2.42.0.609.gbb76f46606-goog
+2.25.1
 
