@@ -1,83 +1,82 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4829B20B39;
-	Thu, 12 Oct 2023 09:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kuw8PvSm"
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF0A6CA;
-	Thu, 12 Oct 2023 02:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SY5yqmx7UFQ27nMH5z2Z6G4quyyShMn+b9u4K2hwCUk=; b=Kuw8PvSmEOCGiEh1bcE5c93zOf
-	UfMqN9elE915IiKRRyJatxJw8k66yVw8f6StP7tcTqF8Gxk957xNQ+xH9QRVvlkjW6PEkTf5/+/7b
-	Oq0aeMRXXwlo1UoyY8qUo5kTQniVMMjjBKB9dmKVt6Ro7dADusdPGIoTBvvdu5pcli2Ij6KZbv/jH
-	AYkZHhJtd8sDKci0/Kj9OwuLH2kYm0ltifRtcPkzAIeJ5PxAox8Zvbfm3xhh9A9HlqkX1I6qcdGkN
-	wBS2lnFMKio5saaCjl0JbBdZifa31gUptVONJxMgyMeoHmqUKyEencbuaSS6ZhzFlI+Iw+D1jV2aZ
-	ja5cOr/w==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqrn6-001hMl-2e;
-	Thu, 12 Oct 2023 09:17:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E353830036C; Thu, 12 Oct 2023 11:15:37 +0200 (CEST)
-Date: Thu, 12 Oct 2023 11:15:37 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-toolchains@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-	Ben Woodard <woodard@redhat.com>, Joe Mario <jmario@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
-Message-ID: <20231012091537.GM6307@noisy.programming.kicks-ass.net>
-References: <20231012035111.676789-1-namhyung@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951D72134B;
+	Thu, 12 Oct 2023 09:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id A1368A9;
+	Thu, 12 Oct 2023 02:46:01 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23A8813D5;
+	Thu, 12 Oct 2023 02:46:42 -0700 (PDT)
+Received: from [10.57.69.218] (unknown [10.57.69.218])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1551B3F762;
+	Thu, 12 Oct 2023 02:45:58 -0700 (PDT)
+Message-ID: <998b90f4-1b04-72b0-7524-afe997db1b33@arm.com>
+Date: Thu, 12 Oct 2023 10:45:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012035111.676789-1-namhyung@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 1/3] arm: perf: Include threshold control fields valid
+ in PMEVTYPER mask
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ suzuki.poulose@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Russell King <linux@armlinux.org.uk>, Marc Zyngier <maz@kernel.org>,
+ James Morse <james.morse@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ Mark Rutland <mark.rutland@arm.com>, Zaid Al-Bassam <zalbassam@google.com>,
+ Reiji Watanabe <reijiw@google.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev
+References: <20231010141551.2262059-1-james.clark@arm.com>
+ <20231010141551.2262059-2-james.clark@arm.com> <ZSZb2H8O5fuU3UrA@linux.dev>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <ZSZb2H8O5fuU3UrA@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+	RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Oct 11, 2023 at 08:50:23PM -0700, Namhyung Kim wrote:
 
-> Actually there's a performance issue about getting disassembly from the
-> objdump for kernel.  On my system, GNU objdump was really slower than the
-> one from LLVM for some reason so I had to pass the following option for
-> each perf report and perf annotate.
-> 
->     $ sudo perf report --objdump=llvm-objdump ...
-> 
->     # To save it in the config file and drop the command line option
->     $ sudo perf config annotate.objdump=llvm-objdump
-> 
-> Even with this change, still the most processing time was spent on the
-> objdump to get the disassembly.  It'd be nice if we can get the result
-> without using objdump at all.
 
-So the kernel has an instruction decoder, all we need is something that
-can pretty print the result. IIRC Masami had an early version of that
-somewhere.
+On 11/10/2023 09:24, Oliver Upton wrote:
+> Hi James,
+> 
+> On Tue, Oct 10, 2023 at 03:15:41PM +0100, James Clark wrote:
+>> FEAT_PMUv3_TH (Armv8.8) adds two new fields to PMEVTYPER, so include
+>> them in the mask. These aren't writable on 32 bit kernels as they are in
+>> the high part of the register, so split the mask definition to the asm
+>> files for each platform.
+>>
+>> Now where the value is used in some parts of KVM, include the asm file.
+>> There is no impact on guest PMUs emulated with KVM because the new
+>> fields are ignored when constructing the attributes for opening the
+>> event. But if threshold support is added to KVM at a later time no
+>> change to the mask will be needed.
+> 
+> KVM should treat TH and TC as RES0 if the feature isn't virtualized. I'd
 
-With those bits, and some basic ELF parsing (find in objtool for
-instance) you can implement most of objdump yourself.
+Ok will keep that in mind for if we virtualize it in the future. It
+looks like it will have to happen conditionally depending on the
+presence of the feature. But it looks like your current patch has the
+res0 fix for now.
+
+> rather move KVM away from using ARMV8_PMU_EVTYPE_MASK in the first
+> place. Looks like we already have an issue with the NSH bit, so I've
+> sent the below patch to fix it.
+> 
+> https://lore.kernel.org/kvmarm/20231011081649.3226792-3-oliver.upton@linux.dev/
+> 
+
+
