@@ -1,196 +1,263 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEED31A85
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 16:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kbe8WR/B"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F869C0
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 09:21:17 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39CG9Olh010020;
-	Thu, 12 Oct 2023 16:20:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=IjQp9btYVsmFNXqyWakKDxSvIesxctkCSDizI5iaJxc=;
- b=kbe8WR/BFy/pmTuZM61C+gtqaFpo2EciKK0+w5SDE7ChDwOT41R/jxUMe+q0UjHGFUYw
- r4EngTdl0puKMZ3IxswD8ut4NhQ6pj9TQC485Kn+u/q2b6ReLqiPYZwfDt5rlwAbc7lJ
- THlUSe6iC2IqXsJok31kYyRbgCYVZTe18bEqmsWIfCyk5kNaobUgRnyADKuhEGlmAX0+
- DuDMIZ79W+h568BZeJ1piE9QMqNiKj+VlJ1c9r8O/AjAbx049evqGo/RgklQ+0q8KxIJ
- Qs1mMowXfckCvJiqnk5IGvbnfIn/wdEQRhflM7qQd/CV4BgXL3MHkHLfh01B+QK13HXb gw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpm2r8mtt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Oct 2023 16:20:46 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39CG9d3h011116;
-	Thu, 12 Oct 2023 16:20:46 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpm2r8mt4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Oct 2023 16:20:46 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39CEYZJj023015;
-	Thu, 12 Oct 2023 16:20:45 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tkmc207vp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Oct 2023 16:20:45 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39CGKgsV19071596
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Oct 2023 16:20:42 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6444120043;
-	Thu, 12 Oct 2023 16:20:42 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A77F420040;
-	Thu, 12 Oct 2023 16:20:39 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.59.173])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 12 Oct 2023 16:20:39 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EC122F1B;
+	Thu, 12 Oct 2023 16:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9955FD3;
+	Thu, 12 Oct 2023 09:42:09 -0700 (PDT)
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-27ce05a23e5so1863381a91.1;
+        Thu, 12 Oct 2023 09:42:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697128929; x=1697733729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QT20buiWY9WxsNuSNjOiAMe5fIgWrJA1aPxG7BUKqaQ=;
+        b=v22ha9oXZWsPdyhUPHfV+JjBvOgeP1C300IVx/GzKoAPP+D8jCVy0YMGDHKmMtwW+2
+         O48pRY3x+oWc2xm+CRjI5fC/3FbaphsIJ4v2bINSELz1+8gZRbUrGHEGU60khXTd5PTB
+         Ep6o+9wR8Sl11UEM9Zmgcu0QOmDMz4BC0T6FmEZD8Ei+Okzg0ahdWcu0o8qNoK/yPnVi
+         ciL0GaR/8EpubSTm2Nnws6s1L9n1rSXjKSlBkInyyXPuGWBErotRndQ68jlmRWYnoHnP
+         4PASNUk1vxxrbrtqXaMt1BppsDGD1m99MwnBj1X64V9Yk/1v73sHg++DUCevixsh1UVg
+         VEuA==
+X-Gm-Message-State: AOJu0YzDFRigYCu+GlmmtzhJLMHViJGwyjoFomrsfU7fv+hSXcVJoqeZ
+	GqRQUXHc/sMWhYddaMiMYJkonhKVqb6L4ypRtOM=
+X-Google-Smtp-Source: AGHT+IHXcDvRqS0YnK1j/2YEtrDoSKmAG+ReU7/IL3skg26ji8mHC/Wx4B30n1Kq0695qOUe5ub2v7j0k51HPiw0ozQ=
+X-Received: by 2002:a17:90a:72ca:b0:27d:2ce9:d6d5 with SMTP id
+ l10-20020a17090a72ca00b0027d2ce9d6d5mr960842pjk.12.1697128928859; Thu, 12 Oct
+ 2023 09:42:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH 1/3] perf tests test_arm_coresight: Fix the shellcheck
- warning in latest test_arm_coresight.sh
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <2219fc04-4484-b365-1281-a5307b368ec5@arm.com>
-Date: Thu, 12 Oct 2023 21:50:27 +0530
-Cc: "David.Laight@aculab.com" <David.Laight@ACULAB.COM>, mike.leach@linaro.org,
-        James Clark <james.clark@arm.com>, Namhyung Kim <namhyung@kernel.org>,
-        tianruidong@linux.alibaba.com, Leo Yan <leo.yan@linaro.org>,
-        yangtiezhu@loongson.cn, Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
+MIME-Version: 1.0
+References: <20231012035111.676789-1-namhyung@kernel.org> <20231012091128.GL6307@noisy.programming.kicks-ass.net>
+In-Reply-To: <20231012091128.GL6307@noisy.programming.kicks-ass.net>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 12 Oct 2023 09:41:57 -0700
+Message-ID: <CAM9d7cgcFCidNamZm+O-89N-Jf4EYF263f1GbxYf0xEbkwwE6Q@mail.gmail.com>
+Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org, Ben Woodard <woodard@redhat.com>, 
+	Joe Mario <jmario@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C4F6149F-C5FD-44AC-818F-0A84C08F45E2@linux.vnet.ibm.com>
-References: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
- <20230929041133.95355-2-atrajeev@linux.vnet.ibm.com>
- <CAM9d7cj26Dpit3igZjybsbnotBiv_F8mEu62Aor+9bBhwVh55g@mail.gmail.com>
- <c59c586e-08ab-df66-7bcd-5249d2481298@arm.com>
- <4C5929B2-96B3-46D5-82ED-ADD6A0CDE97B@linux.vnet.ibm.com>
- <2219fc04-4484-b365-1281-a5307b368ec5@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QUlGt5X_RaH3lf7YKcEWbrXTeJxmM8Zp
-X-Proofpoint-GUID: oGo5VE1O8SEpkrG1tF99oYGyce5QTg0j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-12_05,2023-10-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0
- clxscore=1015 malwarescore=0 suspectscore=0 mlxlogscore=927
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310120135
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Hi Peter,
 
+On Thu, Oct 12, 2023 at 2:13=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+>
+> W00t!! Finally! :-)
 
-> On 12-Oct-2023, at 9:37 PM, Suzuki K Poulose <suzuki.poulose@arm.com> =
-wrote:
->=20
-> Hi,
->=20
-> On 12/10/2023 16:56, Athira Rajeev wrote:
->>> On 05-Oct-2023, at 3:06 PM, Suzuki K Poulose =
-<suzuki.poulose@arm.com> wrote:
->>>=20
->>> On 05/10/2023 06:02, Namhyung Kim wrote:
->>>> On Thu, Sep 28, 2023 at 9:11=E2=80=AFPM Athira Rajeev
->>>> <atrajeev@linux.vnet.ibm.com> wrote:
->>>>>=20
->=20
-> ...
->=20
->>> Thanks for the fix.
->>>=20
->>> Nothing to do with this patch, but I am wondering if the original =
-patch
->>> is over engineered and may not be future proof.
->>>=20
->>> e.g.,
->>>=20
->>> cs_etm_dev_name() {
->>> + cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name =
-cpu* -print -quit)
->>>=20
->>> Right there you got the device name and we can easily deduce the =
-name of
->>> the "ETM" node.
->>>=20
->>> e.g,:
->>> etm=3D$(basename $(readlink cs_etm_path) | sed "s/[0-9]\+$//")
->>>=20
->>> And practically, nobody prevents an ETE mixed with an ETM on a =
-"hybrid"
->>> system (hopefully, no one builds it ;-))
->>>=20
->>> Also, instead of hardcoding "ete" and "etm" prefixes from the arch =
-part,
->>> we should simply use the cpu nodes from :
->>>=20
->>> /sys/bus/event_source/devices/cs_etm/
->>>=20
->>> e.g.,
->>>=20
->>> arm_cs_etm_traverse_path_test() {
->>> # Iterate for every ETM device
->>> for c in /sys/bus/event_source/devices/cs_etm/cpu*; do
->>> # Read the link to be on the safer side
->>> dev=3D`readlink $c`
->>>=20
->>> # Find the ETM device belonging to which CPU
->>> cpu=3D`cat $dev/cpu`
->>>=20
->>> # Use depth-first search (DFS) to iterate outputs
->>> arm_cs_iterate_devices $dev $cpu
->>> done;
->>> }
->>>=20
->>>=20
->>>=20
->>>> You'd better add Coresight folks on this.
->>>> Maybe this file was missing in the MAINTAINERS file.
->>>=20
->>> And the original author of the commit, that introduced the issue =
-too.
->>>=20
->>> Suzuki
->> Hi All,
->> Thanks for the discussion and feedbacks.
->> This patch fixes the shellcheck warning introduced in function =
-"cs_etm_dev_name". But with the changes that Suzuki suggested, we won't =
-need the function "cs_etm_dev_name" since the code will use =
-"/sys/bus/event_source/devices/cs_etm/" .  In that case, can I drop this =
-patch for now from this series ?
->=20
-> Yes, please. James will send out the proposed patch
+Yay!
 
-Hi Suzuki,
+>
+> On Wed, Oct 11, 2023 at 08:50:23PM -0700, Namhyung Kim wrote:
+>
+> > * How to use it
+> >
+> > To get precise memory access samples, users can use `perf mem record`
+> > command to utilize those events supported by their architecture.  Intel
+> > machines would work best as they have dedicated memory access events bu=
+t
+> > they would have a filter to ignore low latency loads like less than 30
+> > cycles (use --ldlat option to change the default value).
+> >
+> >     # To get memory access samples in kernel for 1 second (on Intel)
+> >     $ sudo perf mem record -a -K --ldlat=3D4 -- sleep 1
+>
+> Fundamentally this should work with anything PEBS from MEM_ as
+> well, no? No real reason to rely on perf mem for this.
 
-Sure. Thanks!=20
+Correct, experienced users can choose any supported event.
+Right now it doesn't even use any MEM_ (data_src) fields but it
+should be added later.  BTW I think it'd be better to have an option
+to enable the data src sample collection without gathering data MMAPs.
 
-Athira
->=20
-> Suzuki
->=20
->=20
+>
+> > In perf report, it's just a matter of selecting new sort keys: 'type'
+> > and 'typeoff'.  The 'type' shows name of the data type as a whole while
+> > 'typeoff' shows name of the field in the data type.  I found it useful
+> > to use it with --hierarchy option to group relevant entries in the same
+> > level.
+> >
+> >     $ sudo perf report -s type,typeoff --hierarchy --stdio
+> >     ...
+> >     #
+> >     #    Overhead  Data Type / Data Type Offset
+> >     # ...........  ............................
+> >     #
+> >         23.95%     (stack operation)
+> >            23.95%     (stack operation) +0 (no field)
+> >         23.43%     (unknown)
+> >            23.43%     (unknown) +0 (no field)
+> >         10.30%     struct pcpu_hot
+> >             4.80%     struct pcpu_hot +0 (current_task)
+> >             3.53%     struct pcpu_hot +8 (preempt_count)
+> >             1.88%     struct pcpu_hot +12 (cpu_number)
+> >             0.07%     struct pcpu_hot +24 (top_of_stack)
+> >             0.01%     struct pcpu_hot +40 (softirq_pending)
+> >          4.25%     struct task_struct
+> >             1.48%     struct task_struct +2036 (rcu_read_lock_nesting)
+> >             0.53%     struct task_struct +2040 (rcu_read_unlock_special=
+.b.blocked)
+> >             0.49%     struct task_struct +2936 (cred)
+> >             0.35%     struct task_struct +3144 (audit_context)
+> >             0.19%     struct task_struct +46 (flags)
+> >             0.17%     struct task_struct +972 (policy)
+> >             0.15%     struct task_struct +32 (stack)
+> >             0.15%     struct task_struct +8 (thread_info.syscall_work)
+> >             0.10%     struct task_struct +976 (nr_cpus_allowed)
+> >             0.09%     struct task_struct +2272 (mm)
+> >         ...
+> >
+> > The (stack operation) and (unknown) have no type and field info.  FYI,
+> > the stack operations are samples in PUSH, POP or RET instructions which
+> > save or restore registers from/to the stack.  They are usually parts of
+> > function prologue and epilogue and have no type info.  The next is the
+> > struct pcpu_hot and you can see the first field (current_task) at offse=
+t
+> > 0 was accessed mostly.  It's listed in order of access frequency (not i=
+n
+> > offset) as you can see it in the task_struct.
+> >
+> > In perf annotate, new --data-type option was added to enable data
+> > field level annotation.  Now it only shows number of samples for each
+> > field but we can improve it.
+> >
+> >     $ sudo perf annotate --data-type
+> >     Annotate type: 'struct pcpu_hot' in [kernel.kallsyms] (223 samples)=
+:
+> >     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> >         samples     offset       size  field
+> >             223          0         64  struct pcpu_hot       {
+> >             223          0         64      union     {
+> >             223          0         48          struct        {
+> >              78          0          8              struct task_struct* =
+     current_task;
+> >              98          8          4              int      preempt_cou=
+nt;
+> >              45         12          4              int      cpu_number;
+> >               0         16          8              u64      call_depth;
+> >               1         24          8              long unsigned int   =
+     top_of_stack;
+> >               0         32          8              void*    hardirq_sta=
+ck_ptr;
+> >               1         40          2              u16      softirq_pen=
+ding;
+> >               0         42          1              bool     hardirq_sta=
+ck_inuse;
+> >                                                };
+> >             223          0         64          u8*  pad;
+> >                                            };
+> >                                        };
+> >     ...
+> >
+> > This shows each struct one by one and field-level access info in C-like
+> > style.  The number of samples for the outer struct is a sum of number o=
+f
+> > samples in every field in the struct.  In unions, each field is placed
+> > in the same offset so they will have the same number of samples.
+>
+> This is excellent -- and pretty much what I've been asking for forever.
 
+Glad you like it.
+
+>
+> Would it be possible to have multiple sample columns, for eg.
+> MEM_LOADS_UOPS_RETIRED.L1_HIT and MEM_LOADS_UOPS_RETIRED.L1_MISS
+> or even more (adding LLC hit and miss as well etc.) ?
+
+Yep, that should be supported.  Ideally it would display samples
+(or overhead) for each event in an event group.  And you can
+force individual events to a group at report/annotate time.
+But it doesn't work well with this for now.  Will fix.
+
+>
+> (for bonus points: --data-type=3Dtypename, would be awesome)
+
+Right, will do that in the next spin.
+
+>
+> Additionally, annotating the regular perf-annotate output with data-type
+> information (where we have it) might also be very useful. That way, even
+> when profiling with PEBS-cycles, an expensive memop immediately gives a
+> clue as to what data-type to look at.
+>
+> > No TUI support yet.
+>
+> Yeah, nobody needs that anyway :-)
+
+I need that ;-)
+
+At least, interactive transition between perf report and
+perf annotate is really useful for me.  You should try
+that someday.
+
+Note that perf report TUI works well with data types.
+
+>
+> > This can generate instructions like below.
+> >
+> >     ...
+> >     0x123456:  mov    0x18(%rdi), %rcx
+> >     0x12345a:  mov    0x10(%rcx), %rax     <=3D=3D=3D sample
+> >     0x12345e:  test   %rax, %rax
+> >     0x123461:  je     <...>
+> >     ...
+> >
+> > And imagine we have a sample at 0x12345a.  Then it cannot find a
+> > variable for %rcx since DWARF didn't generate one (it only knows about
+> > 'bar').  Without compiler support, all it can do is to track the code
+> > execution in each instruction and propagate the type info in each
+> > register and stack location by following the memory access.
+>
+> Right, this has more or less been the 'excuse' for why doing this has
+> been 'difficult' for the past 10+ years :/
+
+I'm sure I missed some cases, but I managed to make it work on
+usual cases.  We can improve it by handling it more cases and
+instructions but it'd be great if we have a better support from the
+toolchains.
+
+>
+> > Actually I found a discussion in the DWARF mailing list to support
+> > "inverted location lists" and it seems a perfect fit for this project.
+> > It'd be great if new DWARF would provide a way to lookup variable and
+> > type info using a concrete location info (like a register number).
+> >
+> >   https://lists.dwarfstd.org/pipermail/dwarf-discuss/2023-June/002278.h=
+tml
+>
+> Stephane was going to talk to tools people about this over 10 years ago
+> :-)
+
+Hope that they would make some progress.
+
+>
+> Thanks for *finally* getting this started!!
+
+Yep, let's make it better!
+
+Thanks,
+Namhyung
