@@ -1,82 +1,388 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951D72134B;
-	Thu, 12 Oct 2023 09:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id A1368A9;
-	Thu, 12 Oct 2023 02:46:01 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23A8813D5;
-	Thu, 12 Oct 2023 02:46:42 -0700 (PDT)
-Received: from [10.57.69.218] (unknown [10.57.69.218])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1551B3F762;
-	Thu, 12 Oct 2023 02:45:58 -0700 (PDT)
-Message-ID: <998b90f4-1b04-72b0-7524-afe997db1b33@arm.com>
-Date: Thu, 12 Oct 2023 10:45:57 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57DF21341
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 09:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NMg0Jrkq"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B289FC4
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 02:54:12 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39C9jnBP003237;
+	Thu, 12 Oct 2023 09:54:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=+IcQnnHRD9zyDe/wFkQD7/u3NNGtDze4SULeQkFNvao=;
+ b=NMg0Jrkq3KhuXNZfQkBgF77q1iJAdhpfUl+TQZiE3cAenzP+5EZcByrzEZnMkkEHJCgK
+ dLi5kt6xxqtnaclJAZf0VJa2Y2jVpYwQF2VaUccM1zxA+rJddH066CO0kva+jBrURcCY
+ iuhg2/XDl9KIVbzmCVHWupj0k/NHhzu6Q0nPBj8EWQRulxtpMLyDvvqiDzTUMBNiGsov
+ C3QSSvc/rj8unD6/qaNip5rV8pTFSvxxX3T5dw5lu5AAJM21f3D2cudgM5V8hyaDQDRw
+ 73E/qwMrmJ/3qKCIJUsGtKeAuDQibJ1NLLERNv+GC9lwfo9VlKTVFWO+JUkiYHZxMlcW bA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpdy61175-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 09:54:04 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39C9k5gE005045;
+	Thu, 12 Oct 2023 09:54:04 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpdy6116e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 09:54:03 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39C7oZnu001239;
+	Thu, 12 Oct 2023 09:54:02 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tkkvk685u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 09:54:02 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39C9rxcI16450200
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Oct 2023 09:53:59 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 94BC72004D;
+	Thu, 12 Oct 2023 09:53:59 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C36C220040;
+	Thu, 12 Oct 2023 09:53:57 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.109.214.47])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 12 Oct 2023 09:53:57 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH V2] tools/perf: Add perf binary dependent rule for
+ shellcheck log in Makefile.perf
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAM9d7cj75AzZ29tzuDbo2=1+s_t_kzQEakoUFs8o9vh9NYqCKA@mail.gmail.com>
+Date: Thu, 12 Oct 2023 15:23:45 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com
+Message-Id: <A0EFA81D-83A1-4859-9448-AD1E37C0EA14@linux.vnet.ibm.com>
+References: <20230929064909.1152-1-atrajeev@linux.vnet.ibm.com>
+ <DFCC944C-02D9-4BF4-B4CB-358BF1C14A08@linux.vnet.ibm.com>
+ <CAM9d7cj75AzZ29tzuDbo2=1+s_t_kzQEakoUFs8o9vh9NYqCKA@mail.gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: QkBIzOkt2Z7pVOHTcqLhAly_zIsnSoc2
+X-Proofpoint-ORIG-GUID: NRo9JDot9YuVJ0xT98cfymmUOD3eMXkL
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 1/3] arm: perf: Include threshold control fields valid
- in PMEVTYPER mask
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- suzuki.poulose@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>, Marc Zyngier <maz@kernel.org>,
- James Morse <james.morse@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
- Mark Rutland <mark.rutland@arm.com>, Zaid Al-Bassam <zalbassam@google.com>,
- Reiji Watanabe <reijiw@google.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev
-References: <20231010141551.2262059-1-james.clark@arm.com>
- <20231010141551.2262059-2-james.clark@arm.com> <ZSZb2H8O5fuU3UrA@linux.dev>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <ZSZb2H8O5fuU3UrA@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-	RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-12_05,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310120082
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
 
-On 11/10/2023 09:24, Oliver Upton wrote:
-> Hi James,
-> 
-> On Tue, Oct 10, 2023 at 03:15:41PM +0100, James Clark wrote:
->> FEAT_PMUv3_TH (Armv8.8) adds two new fields to PMEVTYPER, so include
->> them in the mask. These aren't writable on 32 bit kernels as they are in
->> the high part of the register, so split the mask definition to the asm
->> files for each platform.
->>
->> Now where the value is used in some parts of KVM, include the asm file.
->> There is no impact on guest PMUs emulated with KVM because the new
->> fields are ignored when constructing the attributes for opening the
->> event. But if threshold support is added to KVM at a later time no
->> change to the mask will be needed.
-> 
-> KVM should treat TH and TC as RES0 if the feature isn't virtualized. I'd
+> On 09-Oct-2023, at 10:38 AM, Namhyung Kim <namhyung@kernel.org> wrote:
+>=20
+> Hello,
+>=20
+> Sorry for the late reply.
+>=20
+> On Thu, Oct 5, 2023 at 8:27=E2=80=AFAM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>=20
+>>=20
+>>=20
+>>> On 29-Sep-2023, at 12:19 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com=
+> wrote:
+>>>=20
+>>> Add rule in new Makefile "tests/Makefile.tests" for running
+>>> shellcheck on shell test scripts. This automates below shellcheck
+>>> into the build.
+>>>=20
+>>> $ for F in $(find tests/shell/ -perm -o=3Dx -name '*.sh'); do shellchec=
+k -S warning $F; done
+>>>=20
+>>> Condition for shellcheck is added in Makefile.perf to avoid build
+>>> breakage in the absence of shellcheck binary. Update Makefile.perf
+>>> to contain new rule for "SHELLCHECK_TEST" which is for making
+>>> shellcheck test as a dependency on perf binary. Added
+>>> "tests/Makefile.tests" to run shellcheck on shellscripts in
+>>> tests/shell. The make rule "SHLLCHECK_RUN" ensures that, every
+>>> time during make, shellcheck will be run only on modified files
+>>> during subsequent invocations. By this, if any newly added shell
+>>> scripts or fixes in existing scripts breaks coding/formatting
+>>> style, it will get captured during the perf build.
+>>>=20
+>>> Example build failure with present scripts in tests/shell:
+>>>=20
+>>> INSTALL libsubcmd_headers
+>>> INSTALL libperf_headers
+>>> INSTALL libapi_headers
+>>> INSTALL libsymbol_headers
+>>> INSTALL libbpf_headers
+>>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
+kefile.tests:17: output/tests/shell/record_sideband.dep] Error 1
+>>> make[3]: *** Waiting for unfinished jobs....
+>>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
+kefile.tests:17: output/tests/shell/test_arm_coresight.dep] Error 1
+>>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
+kefile.tests:17: output/tests/shell/lock_contention.dep] Error 1
+>>> make[2]: *** [Makefile.perf:675: SHELLCHECK_TEST] Error 2
+>>> make[1]: *** [Makefile.perf:238: sub-make] Error 2
+>>> make: *** [Makefile:70: all] Error 2
+>>>=20
+>>> After this, for testing, changed "tests/shell/record.sh" to
+>>> break shellcheck format. In the next make run, it is
+>>> also captured:
+>=20
+> Where can I see the actual failure messages?
+Hi Namhyung,
+Thanks for the review comments.
 
-Ok will keep that in mind for if we virtualize it in the future. It
-looks like it will have to happen conditionally depending on the
-presence of the feature. But it looks like your current patch has the
-res0 fix for now.
+Example, with current tree, we have these format issues:
 
-> rather move KVM away from using ARMV8_PMU_EVTYPE_MASK in the first
-> place. Looks like we already have an issue with the NSH bit, so I've
-> sent the below patch to fix it.
-> 
-> https://lore.kernel.org/kvmarm/20231011081649.3226792-3-oliver.upton@linux.dev/
-> 
+ GENSKEL /root/athira/linux/tools/perf/util/bpf_skel/kwork_trace.skel.h
+CC bench/uprobe.o
+CC util/header.o
+LD bench/perf-in.o
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/stat_all_metricgroups.dep] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/record_sideband.dep] Error 1
+CC util/bpf_counter.o
+CC util/bpf_counter_cgroup.o
+CC util/bpf_ftrace.o
+CC util/bpf_off_cpu.o
+CC util/bpf-filter.o
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:15: output=
+/tests/shell/test_arm_coresight.dep] Error 1
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:15: output=
+/tests/shell/lock_contention.dep] Error 1
+make[2]: *** [Makefile.perf:679: SHELLCHECK_TEST] Error 2
+make[2]: *** Waiting for unfinished jobs....
+LD util/perf-in.o
+LD perf-in.o
+make[1]: *** [Makefile.perf:242: sub-make] Error 2
+make: *** [Makefile:70: all] Error 2
+
+The actual fail can be seen here:
+
+# cat output/tests/shell/stat_all_metricgroups.dep.log=20
+
+In ./tests/shell/stat_all_metricgroups.sh line 7:
+function ParanoidAndNotRoot()
+^-- SC2112: 'function' keyword is non-standard. Delete it.
+
+For more information:
+https://www.shellcheck.net/wiki/SC2112 -- 'function' keyword is non-standar=
+...
+>=20
+
+
+>>>=20
+>>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
+kefile.tests:17: output/tests/shell/record_sideband.dep] Error 1
+>>> make[3]: *** Waiting for unfinished jobs....
+>>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
+kefile.tests:17: output/tests/shell/record.dep] Error 1
+>>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
+kefile.tests:17: output/tests/shell/test_arm_coresight.dep] Error 1
+>>> make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Ma=
+kefile.tests:17: output/tests/shell/lock_contention.dep] Error 1
+>>> make[2]: *** [Makefile.perf:675: SHELLCHECK_TEST] Error 2
+>>> make[1]: *** [Makefile.perf:238: sub-make] Error 2
+>>> make: *** [Makefile:70: all] Error 2
+>=20
+> So is this reported at build time before I run the test command?
+> I'm ok with that but maybe I need to build it even though I know
+> some test is broken.  Can we have an option to do that like with
+> `make NO_SHELLCHECK=3D1` ?
+
+Yes, agree Namhyung. Valid point.
+I will add that in V3
+
+>=20
+>>>=20
+>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>> ---
+>>> Changelog:
+>>> v1 -> v2:
+>>> Version1 had shellcheck in feature check which is not
+>>> required since shellcheck is already a binary. Presence
+>>> of binary can be checked using:
+>>> $(shell command -v shellcheck)
+>>> Addressed these changes as suggested by Namhyung in V2
+>>> Feature test logic is removed in V2. Also added example
+>>> for build breakage when shellcheck fails in commit message
+>>=20
+>> Hi All,
+>>=20
+>> Looking for feedback on this patch
+>>=20
+>> Thanks
+>> Athira
+>>>=20
+>>> tools/perf/Makefile.perf        | 14 +++++++++++++-
+>>> tools/perf/tests/Makefile.tests | 24 ++++++++++++++++++++++++
+>>> 2 files changed, 37 insertions(+), 1 deletion(-)
+>>> create mode 100644 tools/perf/tests/Makefile.tests
+>>>=20
+>>> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+>>> index 98604e396ac3..56a66ca253ab 100644
+>>> --- a/tools/perf/Makefile.perf
+>>> +++ b/tools/perf/Makefile.perf
+>>> @@ -667,7 +667,18 @@ $(PERF_IN): prepare FORCE
+>>> $(PMU_EVENTS_IN): FORCE prepare
+>>> $(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3Dpmu-events o=
+bj=3Dpmu-events
+>>>=20
+>>> -$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
+>>> +# Runs shellcheck on perf test shell scripts
+>>> +
+>>> +SHELLCHECK :=3D $(shell command -v shellcheck)
+>>> +ifneq ($(SHELLCHECK),)
+>>> +SHELLCHECK_TEST: FORCE prepare
+>>> + $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests
+>>> +else
+>>> +SHELLCHECK_TEST:
+>>> + @:
+>>> +endif
+>>> +
+>>> +$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) SHELLCHECK_TEST
+>>> $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
+>>> $(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
+>>>=20
+>>> @@ -1130,6 +1141,7 @@ bpf-skel-clean:
+>>> $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+>>>=20
+>>> clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)=
+-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-core=
+sight-targets-clean
+>>> + $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
+>>> $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archiv=
+e $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+>>> $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -dele=
+te -o -name '\.*.d' -delete
+>>> $(Q)$(RM) $(OUTPUT).config-detected
+>>> diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefil=
+e.tests
+>>> new file mode 100644
+>>> index 000000000000..8011e99768a3
+>>> --- /dev/null
+>>> +++ b/tools/perf/tests/Makefile.tests
+>>> @@ -0,0 +1,24 @@
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +# Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
+>>> +
+>>> +PROGS =3D $(subst ./,,$(shell find tests/shell -perm -o=3Dx -type f -n=
+ame '*.sh'))
+>>> +DEPS =3D $(addprefix output/,$(addsuffix .dep,$(basename $(PROGS))))
+>>> +DIRS =3D $(shell echo $(dir $(DEPS)) | xargs -n1 | sort -u | xargs)
+>>> +
+>>> +.PHONY: all
+>>> +all: SHELLCHECK_RUN
+>>> + @:
+>>> +
+>>> +SHELLCHECK_RUN: $(DEPS) $(DIRS)
+>>> +
+>>> +output/%.dep: %.sh | $(DIRS)
+>>> + $(call rule_mkdir)
+>>> + $(eval input_file :=3D $(subst output/,./,$(patsubst %.dep, %.sh, $@)=
+))
+>>> + $(Q)$(call frecho-cmd,test)@shellcheck -S warning ${input_file} 1> $@=
+.log && ([[ ! -s $@.log ]])
+>=20
+> What is the last part?  I guess it checks if shellcheck found no errors.
+> Can we just check the exit code of the shellcheck?  Is there a case
+> it didn't work?
+
+It checks to see if the redirected file has any warnings ( if it is not emp=
+ty ).
+I had tried exit code, but it reported false fails with using exit code
+
+Diff I used:
+
+diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.te=
+sts
+index 8011e99768a3..b3089f46ba6f 100644
+--- a/tools/perf/tests/Makefile.tests
++++ b/tools/perf/tests/Makefile.tests
+@@ -14,7 +14,7 @@ SHELLCHECK_RUN: $(DEPS) $(DIRS)
+output/%.dep: %.sh | $(DIRS)
+$(call rule_mkdir)
+$(eval input_file :=3D $(subst output/,./,$(patsubst %.dep, %.sh, $@)))
+- $(Q)$(call frecho-cmd,test)@shellcheck -S warning ${input_file} 1> $@.log=
+ && ([[ ! -s $@.log ]])
++ $(Q)$(call frecho-cmd,test)@shellcheck -S warning ${input_file} 1> $@.log=
+ && ([[ ! $? ]])
+$(Q)$(call frecho-cmd,test)@touch $@
+$(Q)$(call frecho-cmd,test)@rm -rf $@.log
+$(DIRS):
+
+
+  INSTALL libsubcmd_headers
+INSTALL libsymbol_headers
+INSTALL libperf_headers
+INSTALL libapi_headers
+INSTALL libbpf_headers
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/stat_all_metricgroups.dep] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/trace+probe_vfs_getname.dep] Error 1
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/record_sideband.dep] Error 1
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/test_java_symbol.dep] Error 1
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/test_brstack.dep] Error 1
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/test_task_analyzer.dep] Error 1
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/test_arm_coresight.dep] Error 1
+make[3]: *** [/root/athira/linux/tools/perf/tests/Makefile.tests:17: output=
+/tests/shell/lock_contention.dep] Error 1
+make[2]: *** [Makefile.perf:679: SHELLCHECK_TEST] Error 2
+make[1]: *** [Makefile.perf:242: sub-make] Error 2
+make: *** [Makefile:70: all] Error 2
+
+I think it happens since we run the checks parallely.
+Hence checking the corresponding log for the particular script will give us=
+ accuracy with the results.
+
+Thanks
+Athira
+>=20
+> Thanks,
+> Namhyung
+>=20
+>=20
+>>> + $(Q)$(call frecho-cmd,test)@touch $@
+>>> + $(Q)$(call frecho-cmd,test)@rm -rf $@.log
+>>> +$(DIRS):
+>>> + @mkdir -p $@
+>>> +
+>>> +clean:
+>>> + @rm -rf output
+>>> --
+>>> 2.31.1
 
 
