@@ -1,244 +1,131 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E43224CF
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 15:23:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAE5273D7
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 15:48:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wjzU5OR5"
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5432CC0
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 08:23:55 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-51e24210395so16355a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 08:23:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697124234; x=1697729034; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VHK1BXeTdm+7g9q0Gbvmqz6TzZXu3xcSDt6W9eTGzYc=;
-        b=wjzU5OR5w4DgbX1SvAChEx94DeItImQhJixpsg5DPd5Gzszf18rP4CU0QSzpL3BBSh
-         jjXXPrGyOWUuW102lTB8KS3StGIFsxW2CcSTdJYvSku95vFjauL0UmJDMhrURjZnme5L
-         6ZvCKntkJNlb9UdmVlBa3fLxbqkwNltp2kl3pGN9z6ZYZPUn6GIxwWutF3r/HW0Artm0
-         XA7OJyUj/zCrwiFfJWLrKxIdCUqrZrL72md8FGOiTy3JSCfI01pMl2fdMLuEGMNWg0vy
-         5Nrr11VhUBFsv6aLeTPElHa2rMOPVOecT4yRc/TS8PMDLQblPS6jLgUOXBnqzOIp5gCa
-         /JWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697124234; x=1697729034;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VHK1BXeTdm+7g9q0Gbvmqz6TzZXu3xcSDt6W9eTGzYc=;
-        b=iIadvPu9dmGFQX12x0sOV390FIKQOFYPPYRZHggk2W5kdNxlKD9Gxq9kWCF5lIc3B7
-         QSJWHwTvoE5ryYy6wCYeXp8/R6sbrtOFP1bolRP9U4FXKzhTBgMPhz8fCqxfsZcHVfck
-         CWUgMupyO4d7PXrXyA6sOB7E9eaGnrC/wryKMgpteFAJmgKBtBXgbyfmGGDSM4SGho8B
-         BgqT/Gw5An4VES76uAuFAX1bdVA0/x5lJNm0bAuKHhSm8acTQucY+kCSWOZLJNua5KG+
-         KxD4lhLOhWQA3QwQP5lBt8iz1kTC2nqBEqaREl6RS2TH7/iKcJvzw3kF1jTKq5L/X1/4
-         YX9A==
-X-Gm-Message-State: AOJu0Yw+TVcjWjHf003WVwVdshx8KBygANz45W/xrARhkzNSWJ+bEiAo
-	m8forE5qOFZRLX4DliPE0vTgb76OSQi1IR93hgaa3w==
-X-Google-Smtp-Source: AGHT+IFZGO459xegjVhoxo3jMuV9imFcJFGdp4gWgXQTdHQumNjI6BXPIPTq79D6jy3RfwJhKb+1ZhKvV4IVglpN5H8=
-X-Received: by 2002:a50:99d8:0:b0:53d:a40e:bed1 with SMTP id
- n24-20020a5099d8000000b0053da40ebed1mr299680edb.3.1697124233496; Thu, 12 Oct
- 2023 08:23:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FmmjQA9Y"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5008EB8
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 08:48:15 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39CFlDki016590;
+	Thu, 12 Oct 2023 15:47:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=U5ir2vs0drNHQeLDviI0cv61McQFqlJaNnUqsSxMXaw=;
+ b=FmmjQA9YVW3cuNeYJJK7fVYY1evtryu2+lFSn9Ufyzg0RltI7YetGovvbJmeG0zU2ZIB
+ 3BXJFLATMXk+UBRBPCP1Hk/ZYv+zVS5b4uY/DZ/0aFHZY0F9MdoJ/QHfICIJ1HP645Mz
+ cghydCkQm1NZsoP/RDxyjXPY1bmnKPnvLxFKDqbsfgl38ePl950iB3P2ZLkxs6pct4e4
+ oDPfOUg/0AXAB/Axtqtw9Ww+O4Uvo+wKZHUwHw84bICI9INOeweKLSXHP4sBw/ULGd2Q
+ ZfXdxluxu7QCh5XY92M0vxCQ/eFeVjFm7rqQqQcxnHDuNy/ur/Ikz/CUVhiD7ClFf+6R fQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpkrdg12f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 15:47:46 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39CFlKtr017185;
+	Thu, 12 Oct 2023 15:47:46 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpkrdg121-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 15:47:46 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39CDtcAG023000;
+	Thu, 12 Oct 2023 15:47:45 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tkmc1yxv4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 15:47:45 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39CFlgC745023956
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Oct 2023 15:47:42 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9847920043;
+	Thu, 12 Oct 2023 15:47:42 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B530E20040;
+	Thu, 12 Oct 2023 15:47:40 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.59.173])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 12 Oct 2023 15:47:40 +0000 (GMT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231007021326.4156714-1-irogers@google.com> <20231007021326.4156714-2-irogers@google.com>
- <002da48a-c40f-4d6a-881c-59490ea2de95@intel.com>
-In-Reply-To: <002da48a-c40f-4d6a-881c-59490ea2de95@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 12 Oct 2023 08:23:41 -0700
-Message-ID: <CAP-5=fX6OkyWD_nC6aruSRi44Nkt-UMLqwRKtLUcE87q_Khgcg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/7] perf pmu: Rename perf_pmu__get_default_config to perf_pmu__arch_init
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH 1/3] perf tests test_arm_coresight: Fix the shellcheck
+ warning in latest test_arm_coresight.sh
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <5d79ca77e4ca4f6c895e26384655563f@AcuMS.aculab.com>
+Date: Thu, 12 Oct 2023 21:17:28 +0530
+Cc: "acme@kernel.org" <acme@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "irogers@google.com" <irogers@google.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "disgoel@linux.vnet.ibm.com" <disgoel@linux.vnet.ibm.com>
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-	autolearn_force=no version=3.4.6
+Message-Id: <F265857D-0D37-4878-908C-D20732F212F9@linux.vnet.ibm.com>
+References: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
+ <20230929041133.95355-2-atrajeev@linux.vnet.ibm.com>
+ <3b7b34e74bdb4b05b6b21edd81af59d0@AcuMS.aculab.com>
+ <5d79ca77e4ca4f6c895e26384655563f@AcuMS.aculab.com>
+To: David Laight <David.Laight@ACULAB.COM>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RovymA2gl0qwa6nsdBmdBMZBHkRN0SfY
+X-Proofpoint-ORIG-GUID: Kqf1swBl_Rra9hI05bdZ2RsP5yJPI95P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-12_05,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0 phishscore=0
+ clxscore=1011 mlxscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310120131
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023 at 4:52=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
-com> wrote:
->
-> On 7/10/23 05:13, Ian Rogers wrote:
-> > Assign default_config as part of the
-> > init. perf_pmu__get_default_config was doing more than just getting
-> > the default config and so this is intended to better align with the
-> > code.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> One cosmetic comment otherwise:
->
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
->
-> > ---
-> >  tools/perf/arch/arm/util/pmu.c  |  8 +++-----
-> >  tools/perf/arch/s390/util/pmu.c |  3 +--
-> >  tools/perf/arch/x86/util/pmu.c  |  5 ++---
-> >  tools/perf/util/pmu.c           | 14 +++++++-------
-> >  tools/perf/util/pmu.h           |  2 +-
-> >  5 files changed, 14 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/=
-pmu.c
-> > index a9623b128ece..d55d2b15f2e6 100644
-> > --- a/tools/perf/arch/arm/util/pmu.c
-> > +++ b/tools/perf/arch/arm/util/pmu.c
-> > @@ -14,22 +14,20 @@
-> >  #include "../../../util/pmu.h"
-> >  #include "../../../util/cs-etm.h"
-> >
-> > -struct perf_event_attr
-> > -*perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
-> > +void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
-> >  {
-> >  #ifdef HAVE_AUXTRACE_SUPPORT
-> >       if (!strcmp(pmu->name, CORESIGHT_ETM_PMU_NAME)) {
-> >               /* add ETM default config here */
-> >               pmu->selectable =3D true;
-> > -             return cs_etm_get_default_config(pmu);
-> > +             pmu->default_config =3D cs_etm_get_default_config(pmu);
-> >  #if defined(__aarch64__)
-> >       } else if (strstarts(pmu->name, ARM_SPE_PMU_NAME)) {
-> > -             return arm_spe_pmu_default_config(pmu);
-> > +             pmu->default_config =3D arm_spe_pmu_default_config(pmu);
-> >       } else if (strstarts(pmu->name, HISI_PTT_PMU_NAME)) {
-> >               pmu->selectable =3D true;
-> >  #endif
-> >       }
-> >
-> >  #endif
-> > -     return NULL;
-> >  }
-> > diff --git a/tools/perf/arch/s390/util/pmu.c b/tools/perf/arch/s390/uti=
-l/pmu.c
-> > index 11f03f32e3fd..886c30e001fa 100644
-> > --- a/tools/perf/arch/s390/util/pmu.c
-> > +++ b/tools/perf/arch/s390/util/pmu.c
-> > @@ -13,11 +13,10 @@
-> >  #define      S390_PMUPAI_EXT         "pai_ext"
-> >  #define      S390_PMUCPUM_CF         "cpum_cf"
-> >
-> > -struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *=
-pmu)
-> > +void perf_pmu__arch_init(struct perf_pmu *pmu)
-> >  {
-> >       if (!strcmp(pmu->name, S390_PMUPAI_CRYPTO) ||
-> >           !strcmp(pmu->name, S390_PMUPAI_EXT) ||
-> >           !strcmp(pmu->name, S390_PMUCPUM_CF))
-> >               pmu->selectable =3D true;
-> > -     return NULL;
-> >  }
-> > diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/=
-pmu.c
-> > index 8b53ca468a50..811e2377d2d5 100644
-> > --- a/tools/perf/arch/x86/util/pmu.c
-> > +++ b/tools/perf/arch/x86/util/pmu.c
-> > @@ -17,19 +17,18 @@
-> >  #include "../../../util/pmus.h"
-> >  #include "env.h"
-> >
-> > -struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *=
-pmu __maybe_unused)
-> > +void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
-> >  {
-> >  #ifdef HAVE_AUXTRACE_SUPPORT
-> >       if (!strcmp(pmu->name, INTEL_PT_PMU_NAME)) {
-> >               pmu->auxtrace =3D true;
-> > -             return intel_pt_pmu_default_config(pmu);
-> > +             pmu->default_config =3D intel_pt_pmu_default_config(pmu);
-> >       }
-> >       if (!strcmp(pmu->name, INTEL_BTS_PMU_NAME)) {
-> >               pmu->auxtrace =3D true;
-> >               pmu->selectable =3D true;
-> >       }
-> >  #endif
-> > -     return NULL;
-> >  }
-> >
-> >  int perf_pmus__num_mem_pmus(void)
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 6b1b7f8f00fa..6e95b3d2c2e3 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -954,12 +954,6 @@ void pmu_add_sys_aliases(struct perf_pmu *pmu)
-> >       pmu_for_each_sys_event(pmu_add_sys_aliases_iter_fn, pmu);
-> >  }
-> >
-> > -struct perf_event_attr * __weak
-> > -perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
-> > -{
-> > -     return NULL;
-> > -}
-> > -
-> >  static char *pmu_find_alias_name(struct perf_pmu *pmu, int dirfd)
-> >  {
-> >       FILE *file =3D perf_pmu__open_file_at(pmu, dirfd, "alias");
-> > @@ -991,6 +985,12 @@ static int pmu_max_precise(int dirfd, struct perf_=
-pmu *pmu)
-> >       return max_precise;
-> >  }
-> >
-> > +
->
-> Double blank line
 
-Thanks, will fix in v2.
 
-Ian
+> On 05-Oct-2023, at 9:15 PM, David Laight <David.Laight@ACULAB.COM> =
+wrote:
+>=20
+> From: David Laight
+>> Sent: 05 October 2023 11:16
+> ...
+>>> - cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name =
+cpu* -print -quit)
+>>> + cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name =
+'cpu*' -print -quit)
+>>=20
+>> Isn't the intention to get the shell to expand "cpu* ?
+>> So quoting it completely breaks the script.
+>=20
+> Complete brain-fade :-(
 
-> > +void __weak
-> > +perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
-> > +{
-> > +}
-> > +
-> >  struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, c=
-onst char *name)
-> >  {
-> >       struct perf_pmu *pmu;
-> > @@ -1037,7 +1037,7 @@ struct perf_pmu *perf_pmu__lookup(struct list_hea=
-d *pmus, int dirfd, const char
-> >       pmu_add_sys_aliases(pmu);
-> >       list_add_tail(&pmu->list, pmus);
-> >
-> > -     pmu->default_config =3D perf_pmu__get_default_config(pmu);
-> > +     perf_pmu__arch_init(pmu);
-> >
-> >       return pmu;
-> >  err:
-> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> > index 85190d058852..588c64e38d6b 100644
-> > --- a/tools/perf/util/pmu.h
-> > +++ b/tools/perf/util/pmu.h
-> > @@ -233,7 +233,7 @@ bool perf_pmu__file_exists(struct perf_pmu *pmu, co=
-nst char *name);
-> >
-> >  int perf_pmu__test(void);
-> >
-> > -struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *=
-pmu);
-> > +void perf_pmu__arch_init(struct perf_pmu *pmu);
-> >  void pmu_add_cpu_aliases_table(struct perf_pmu *pmu,
-> >                              const struct pmu_events_table *table);
-> >
->
+Hi David,
+
+Yeah, quoting it also will expand
+
+Thanks
+Athira
+>=20
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, =
+MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+>=20
+
