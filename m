@@ -1,39 +1,39 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A5624A05
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 11:53:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C91924A0E
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 11:54:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G73GJrIZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YlWQgk0j"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4520265A0;
-	Thu, 12 Oct 2023 04:53:27 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41276A7C;
+	Thu, 12 Oct 2023 04:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697111607; x=1728647607;
+  t=1697111626; x=1728647626;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=gctK71zo6mU9YBXPKhgvnbP3DBiV6PqC8v9oU1p5Z8I=;
-  b=G73GJrIZ1aDvjxYK6R+hJV9Ta3S9B+zAuiL+e59zRGpPMyyJ5xO1s4bl
-   uYFSfDiwShBPyunIafpNCnz2RR17idratMED1kvUuIKeTs8568+cb/aee
-   r2MWYFJbRIBUzRp0spIRYHclItBDb4Qssx0cIlUSHjwcmecuPIfgj/Dug
-   UxV6uDSArzSBF0FqVKSVAVuc28zAdd2hdUjiTPekuJI1I0VUhxTIXejAA
-   3EbVOKL9iS3pJVP9P+/WNvXJ+QgrUTqBKOCH0w91xzDM9Ny3zlTfdZf9U
-   /19psmJs7e+FXKuHYNJjUMtTiLnypqhxVXXBHT7jrFDT78/EtXa0lVbol
+  bh=LnqL56wi3grFaEumVNjs3QvHBuvjmv7Ccggb/DBIQy4=;
+  b=YlWQgk0jl91Jn6hczrXmhpfSkReGzile50pyyU+SXwfsbO0/JW5zsMml
+   kRNNs69le8XLTmynHUeMbIP9PIGKWbkX9NxX9F09boBjZEitcPrSLsths
+   JQsEzqWxvVCWahTTo38KQuxpiT97uil62OFlQA+RAIzQ/f3moauh3Qv5Z
+   DMhengMMn7k+bbozkBblhEw2M9994f22TJggbAbPa11uRT7W+F7SpRpjx
+   P+Ca1Nm+KS4IBz4DGBs+qE+8TZG/JTUfLWpeAnwKj6N35xWKGoHtHy5Xp
+   IrWMjaly1OBXsEtPfJuElXzjyXkDsiqJqtZuLfz7uWJ1q/t18eT9ASIRy
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="415949494"
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="415949525"
 X-IronPort-AV: E=Sophos;i="6.03,218,1694761200"; 
-   d="scan'208";a="415949494"
+   d="scan'208";a="415949525"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 04:52:44 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 04:52:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="870545611"
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="870545678"
 X-IronPort-AV: E=Sophos;i="6.03,218,1694761200"; 
-   d="scan'208";a="870545611"
+   d="scan'208";a="870545678"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.41.84])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 04:52:38 -0700
-Message-ID: <c0aa0f90-21bc-43b3-9498-6b34997c348d@intel.com>
-Date: Thu, 12 Oct 2023 14:52:36 +0300
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 04:52:53 -0700
+Message-ID: <5779887c-d712-40d2-963b-8c912b8cf5fc@intel.com>
+Date: Thu, 12 Oct 2023 14:52:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,8 +41,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/7] perf arm-spe: Move PMU initialization from default
- config code
+Subject: Re: [PATCH v1 4/7] perf pmu: Const-ify file APIs
 Content-Language: en-US
 To: Ian Rogers <irogers@google.com>, Suzuki K Poulose
  <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>,
@@ -60,11 +59,11 @@ To: Ian Rogers <irogers@google.com>, Suzuki K Poulose
  coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20231007021326.4156714-1-irogers@google.com>
- <20231007021326.4156714-4-irogers@google.com>
+ <20231007021326.4156714-5-irogers@google.com>
 From: Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20231007021326.4156714-4-irogers@google.com>
+In-Reply-To: <20231007021326.4156714-5-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -75,42 +74,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 On 7/10/23 05:13, Ian Rogers wrote:
-> Avoid setting PMU values in arm_spe_pmu_default_config, move to
-> perf_pmu__arch_init.
+> File APIs don't alter the struct pmu so allow const ones to be passed.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
 > ---
->  tools/perf/arch/arm/util/pmu.c       | 2 ++
->  tools/perf/arch/arm64/util/arm-spe.c | 3 ---
->  2 files changed, 2 insertions(+), 3 deletions(-)
+>  tools/perf/util/pmu.c    | 12 ++++++------
+>  tools/perf/util/pmu.h    | 11 ++++++-----
+>  tools/perf/util/python.c |  2 +-
+>  3 files changed, 13 insertions(+), 12 deletions(-)
 > 
-> diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
-> index d55d2b15f2e6..f25f68f84a94 100644
-> --- a/tools/perf/arch/arm/util/pmu.c
-> +++ b/tools/perf/arch/arm/util/pmu.c
-> @@ -23,6 +23,8 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
->  		pmu->default_config = cs_etm_get_default_config(pmu);
->  #if defined(__aarch64__)
->  	} else if (strstarts(pmu->name, ARM_SPE_PMU_NAME)) {
-> +		pmu->selectable = true;
-> +		pmu->is_uncore = false;
->  		pmu->default_config = arm_spe_pmu_default_config(pmu);
->  	} else if (strstarts(pmu->name, HISI_PTT_PMU_NAME)) {
->  		pmu->selectable = true;
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> index 9cc3d6dcb849..08a76734ccd2 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -516,8 +516,5 @@ struct perf_event_attr
->  		attr->sample_period = 4096;
->  	}
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 6e95b3d2c2e3..e11901c923d7 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -575,7 +575,7 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
+>  	return 0;
+>  }
 >  
-> -	arm_spe_pmu->selectable = true;
-> -	arm_spe_pmu->is_uncore = false;
-> -
->  	return attr;
+> -static inline bool pmu_alias_info_file(char *name)
+> +static inline bool pmu_alias_info_file(const char *name)
+>  {
+>  	size_t len;
+>  
+> @@ -1771,7 +1771,7 @@ bool perf_pmu__is_software(const struct perf_pmu *pmu)
+>  	return !strcmp(pmu->name, "kprobe") || !strcmp(pmu->name, "uprobe");
+>  }
+>  
+> -FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+> +FILE *perf_pmu__open_file(const struct perf_pmu *pmu, const char *name)
+>  {
+>  	char path[PATH_MAX];
+>  
+> @@ -1782,7 +1782,7 @@ FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+>  	return fopen(path, "r");
+>  }
+>  
+> -FILE *perf_pmu__open_file_at(struct perf_pmu *pmu, int dirfd, const char *name)
+> +FILE *perf_pmu__open_file_at(const struct perf_pmu *pmu, int dirfd, const char *name)
+>  {
+>  	int fd;
+>  
+> @@ -1793,7 +1793,7 @@ FILE *perf_pmu__open_file_at(struct perf_pmu *pmu, int dirfd, const char *name)
+>  	return fdopen(fd, "r");
+>  }
+>  
+> -int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
+> +int perf_pmu__scan_file(const struct perf_pmu *pmu, const char *name, const char *fmt,
+>  			...)
+>  {
+>  	va_list args;
+> @@ -1810,7 +1810,7 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
+>  	return ret;
+>  }
+>  
+> -int perf_pmu__scan_file_at(struct perf_pmu *pmu, int dirfd, const char *name,
+> +int perf_pmu__scan_file_at(const struct perf_pmu *pmu, int dirfd, const char *name,
+>  			   const char *fmt, ...)
+>  {
+>  	va_list args;
+> @@ -1827,7 +1827,7 @@ int perf_pmu__scan_file_at(struct perf_pmu *pmu, int dirfd, const char *name,
+>  	return ret;
+>  }
+>  
+> -bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name)
+> +bool perf_pmu__file_exists(const struct perf_pmu *pmu, const char *name)
+>  {
+>  	char path[PATH_MAX];
+>  
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 588c64e38d6b..24af7297b522 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -222,14 +222,15 @@ bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name);
+>   */
+>  bool perf_pmu__is_software(const struct perf_pmu *pmu);
+>  
+> -FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name);
+> -FILE *perf_pmu__open_file_at(struct perf_pmu *pmu, int dirfd, const char *name);
+> +FILE *perf_pmu__open_file(const struct perf_pmu *pmu, const char *name);
+> +FILE *perf_pmu__open_file_at(const struct perf_pmu *pmu, int dirfd, const char *name);
+>  
+> -int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...) __scanf(3, 4);
+> -int perf_pmu__scan_file_at(struct perf_pmu *pmu, int dirfd, const char *name,
+> +int perf_pmu__scan_file(const struct perf_pmu *pmu, const char *name, const char *fmt, ...)
+> +	__scanf(3, 4);
+> +int perf_pmu__scan_file_at(const struct perf_pmu *pmu, int dirfd, const char *name,
+>  			   const char *fmt, ...) __scanf(4, 5);
+>  
+> -bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name);
+> +bool perf_pmu__file_exists(const struct perf_pmu *pmu, const char *name);
+>  
+>  int perf_pmu__test(void);
+>  
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index c29f5f0bb552..8761f51b5c7c 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -98,7 +98,7 @@ struct perf_pmu *evsel__find_pmu(const struct evsel *evsel __maybe_unused)
+>  	return NULL;
+>  }
+>  
+> -int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...)
+> +int perf_pmu__scan_file(const struct perf_pmu *pmu, const char *name, const char *fmt, ...)
+>  {
+>  	return EOF;
 >  }
 
