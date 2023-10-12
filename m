@@ -1,149 +1,143 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C44613F;
-	Thu, 12 Oct 2023 06:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC137809
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 06:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsRtx4w9"
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F56B7;
-	Wed, 11 Oct 2023 23:03:09 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-9b2f73e3af3so86250066b.3;
-        Wed, 11 Oct 2023 23:03:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q8asiOS7"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D76BA
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 23:24:04 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7bcbb95b2so9738747b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Oct 2023 23:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697090587; x=1697695387; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kndtBynulzd80/3J4MlffDuuBlHDmwn71hGuSrPpZLw=;
-        b=LsRtx4w9pztGtB8bCb7XxL0sY2Nd4X77WFHEpPSLT7NhecpGUksEPofxIM+vzMLH3K
-         71Vwa9CRBxFAtxq7S993Gva7O3J0BlogP+ea54TqO66+UiHEi7SE9xi6rvU8Q2L0smIV
-         ESxzSKQ8os4+/10ZC8sLJoNu9LtlpDNSHmTyAgjHwqbYO0wctzMLlYAC/BCC9K2NzCkv
-         nDreiE1vdJien0QffVh57cKBdGnaBVvkwMDYpn5DESbdhkj07HRgz/Cmtg5LCFwmZSC5
-         HKNYnxs7K5yx+vR0GUAjQyY/u1DSxFbcVm+jmKFQ4xghOJSG8e5Z25oQFBPvhMzVHeah
-         o4PQ==
+        d=google.com; s=20230601; t=1697091843; x=1697696643; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6QJQ7uhIxdVvam4EsyPr00sicdDNbMv8/7DafmssRJc=;
+        b=q8asiOS7fGW7Q4TUpCn/E5BwcBKRPa2Z6TMoj3KMqcOKF6vFp8JaXNKJXZ/JMwomgd
+         +mu+2/+7nSDTmnkrOKgb3TUCxPgaxxAovXwqcwrFBHzV3TVcsYWDcxvZfH/lAOlcFVxO
+         GRTjE++HeKTs0GQ3xEbQVqClAxiOW4c2qdJPkvd8d35nkQB3iqomyDw2AukUR7H9VOvB
+         su6QVB3cEkRaF4I/YPe3r68mjugQh08jtxH1BM7/o4dIC0uYIz5kzp8uJga3jafQzlBQ
+         u16c+Ze2GhPMVIaqNW44W4/IjamLX/8ZfeeQgHiSorjWm4Qie7veIT8mr+Nf057wCtuM
+         LoQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697090587; x=1697695387;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kndtBynulzd80/3J4MlffDuuBlHDmwn71hGuSrPpZLw=;
-        b=Yvw2bWie7d78INAjW/EmUQx410Jj12gMqsiU5OaaGE6dy3roHWl+FsdkZ+fuf3ftvT
-         swU0Y7Ia1YsgIKJcud9cE7Y88VGW4ygYcI68GjohrLQjyK0isAs5hKH8ijut7nYxtgBk
-         WQ/gqGUzPomt+KATyeC+e/Sv0BJlNatKGXf1SwVEC9eFYioaVEqZZBeawFs/D4c0B8OU
-         rZfgXjTAsqV6Projx6U9xJBD5ckWphDmWYLFaQJwSU4y5zLpxAIJ+lvZAHNHI40+FfoL
-         NhzrkYm+zyO9Ewbf6P97eS2KOR/Ph8yejpEx33UHydXhD2Z3MxlBJtvpbuzztrJUj0dA
-         foZQ==
-X-Gm-Message-State: AOJu0YyVfBiLMJ0jiJf9Hb+X7e1nXDJgHEeroayhqKW8E5dJgM6X4661
-	HRdv9e/frwuBKXC/DUVQpxM=
-X-Google-Smtp-Source: AGHT+IEmX/JzwUcGC7jbh+Rrf2P2akTGynH5UTwmvD+60tSI08BzZGYYPdNgwsSVyfhdDsgNlPxROQ==
-X-Received: by 2002:a17:906:738f:b0:9ba:14a3:7221 with SMTP id f15-20020a170906738f00b009ba14a37221mr10002481ejl.73.1697090587162;
-        Wed, 11 Oct 2023 23:03:07 -0700 (PDT)
-Received: from gmail.com (1F2EF405.nat.pool.telekom.hu. [31.46.244.5])
-        by smtp.gmail.com with ESMTPSA id h17-20020a1709063c1100b009b94a8150d8sm10725280ejg.199.2023.10.11.23.03.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 23:03:06 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Thu, 12 Oct 2023 08:03:04 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-toolchains@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-	Ben Woodard <woodard@redhat.com>, Joe Mario <jmario@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
-Message-ID: <ZSeMGPPfxkMvdaP3@gmail.com>
-References: <20231012035111.676789-1-namhyung@kernel.org>
+        d=1e100.net; s=20230601; t=1697091843; x=1697696643;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6QJQ7uhIxdVvam4EsyPr00sicdDNbMv8/7DafmssRJc=;
+        b=CJQqnvRY9YQM7KgIOnXKgEWmNVI7FWzBDtwnVrq8Oc9gLKkN+GOu8/sZGzi6gcxEaR
+         t1gi6kr9cN9ZIv5whK75dDhtaDsZP7BOcy/Ajuvt6rHUSMjFRSHybuIMmaLi2Y/EyRuy
+         66TQOSe94lSRIYEA0ofVabiGJIPSpHs10yI8nLxqNufRo7KTMgysGOCEoC3wocBKNpFg
+         yp4bSGjgWpo+YFLHKjfX7MSZnS7Px4LXleljP5L2ocErMBFPbH63wQzmBa3U8Z15a2Zq
+         fRqRvlKbjo0KxjRo+Ex7IRBAcBP3vEB9CSzsdkxuBjFoHDA5loBVKCeMlAo7NjSWFRvr
+         Fmlg==
+X-Gm-Message-State: AOJu0YzT93b/ygl7O34mzeWKNRpn/Q3k1TwDqmiaMOsXx3izjlYYaMRX
+	eYOSP4vWf3yh7CbXz9/MjcIbtlvtQeXL
+X-Google-Smtp-Source: AGHT+IE9+bGU2dJLV4W9drtMJyLl57j1AoK17XLAh2MK1ViWE0qAcDAFExgoSJrPBgJDJHq6P7kediUOKvSZ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7be5:14d2:880b:c5c9])
+ (user=irogers job=sendgmr) by 2002:a81:a84a:0:b0:59b:e97e:f7df with SMTP id
+ f71-20020a81a84a000000b0059be97ef7dfmr417701ywh.2.1697091843534; Wed, 11 Oct
+ 2023 23:24:03 -0700 (PDT)
+Date: Wed, 11 Oct 2023 23:23:46 -0700
+Message-Id: <20231012062359.1616786-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012035111.676789-1-namhyung@kernel.org>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.609.gbb76f46606-goog
+Subject: [PATCH v2 00/13] Improvements to memory use
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
+	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
+	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Fix memory leaks detected by address/leak sanitizer affecting LBR
+call-graphs, perf mem and BPF offcpu.
 
-* Namhyung Kim <namhyung@kernel.org> wrote:
+Make branch_type_stat in callchain_list optional as it is large and
+not always necessary - in particular it isn't used by perf top.
 
-> * How to use it
-> 
-> To get precise memory access samples, users can use `perf mem record`
-> command to utilize those events supported by their architecture.  Intel
-> machines would work best as they have dedicated memory access events but
-> they would have a filter to ignore low latency loads like less than 30
-> cycles (use --ldlat option to change the default value).
-> 
->     # To get memory access samples in kernel for 1 second (on Intel)
->     $ sudo perf mem record -a -K --ldlat=4 -- sleep 1
-> 
->     # Similar for the AMD (but it requires 6.3+ kernel for BPF filters)
->     $ sudo perf mem record -a --filter 'mem_op == load, ip > 0x8000000000000000' -- sleep 1
+Make the allocations of zstd streams, kernel symbols and event copies
+lazier in order to save memory in cases like perf record.
 
-BTW., it would be nice for 'perf mem record' to just do the right thing on 
-whatever machine it is running on.
+Handle the thread exit event and have it remove the thread from the
+threads set in machine. Don't do this for perf report as it causes a
+regression for task lists, which assume threads are never removed from
+the machine's set, and offcpu events, that may sythensize samples for
+threads that have exited.
 
-Also, why are BPF filters required - due to the IP filtering of mem-load 
-events?
+The overall effect is to reduce memory consumption significantly for
+perf top - with call graphs enabled running longer before 1GB of
+memory is consumed. For a perf record of 'true', the memory
+consumption goes from 39912kb max resident to 20820kb max resident -
+nearly halved.
 
-Could we perhaps add an IP filter to perf events to get this built-in? 
-Perhaps attr->exclude_user would achieve something similar?
+v2: Add additional memory fixes on top of initial LBR and rc check
+    fixes.
 
-> In perf report, it's just a matter of selecting new sort keys: 'type'
-> and 'typeoff'.  The 'type' shows name of the data type as a whole while
-> 'typeoff' shows name of the field in the data type.  I found it useful
-> to use it with --hierarchy option to group relevant entries in the same
-> level.
-> 
->     $ sudo perf report -s type,typeoff --hierarchy --stdio
->     ...
->     #
->     #    Overhead  Data Type / Data Type Offset
->     # ...........  ............................
->     #
->         23.95%     (stack operation)
->            23.95%     (stack operation) +0 (no field)
->         23.43%     (unknown)
->            23.43%     (unknown) +0 (no field)
->         10.30%     struct pcpu_hot
->             4.80%     struct pcpu_hot +0 (current_task)
->             3.53%     struct pcpu_hot +8 (preempt_count)
->             1.88%     struct pcpu_hot +12 (cpu_number)
->             0.07%     struct pcpu_hot +24 (top_of_stack)
->             0.01%     struct pcpu_hot +40 (softirq_pending)
->          4.25%     struct task_struct
->             1.48%     struct task_struct +2036 (rcu_read_lock_nesting)
->             0.53%     struct task_struct +2040 (rcu_read_unlock_special.b.blocked)
->             0.49%     struct task_struct +2936 (cred)
->             0.35%     struct task_struct +3144 (audit_context)
->             0.19%     struct task_struct +46 (flags)
->             0.17%     struct task_struct +972 (policy)
->             0.15%     struct task_struct +32 (stack)
->             0.15%     struct task_struct +8 (thread_info.syscall_work)
->             0.10%     struct task_struct +976 (nr_cpus_allowed)
->             0.09%     struct task_struct +2272 (mm)
->         ...
+Ian Rogers (13):
+  perf machine: Avoid out of bounds LBR memory read
+  libperf rc_check: Make implicit enabling work for GCC
+  perf hist: Add missing puts to hist__account_cycles
+  perf threads: Remove unused dead thread list
+  perf offcpu: Add missed btf_free
+  perf callchain: Make display use of branch_type_stat const
+  perf callchain: Make brtype_stat in callchain_list optional
+  perf callchain: Minor layout changes to callchain_list
+  perf mem_info: Add and use map_symbol__exit and addr_map_symbol__exit
+  perf record: Lazy load kernel symbols
+  libperf: Lazily allocate mmap event copy
+  perf mmap: Lazily initialize zstd streams
+  perf machine thread: Remove exited threads by default
 
-This looks really useful!
+ tools/lib/perf/include/internal/mmap.h     |  2 +-
+ tools/lib/perf/include/internal/rc_check.h |  6 ++-
+ tools/lib/perf/mmap.c                      |  9 ++++
+ tools/perf/builtin-inject.c                |  4 ++
+ tools/perf/builtin-record.c                |  2 +
+ tools/perf/builtin-report.c                |  7 +++
+ tools/perf/util/Build                      |  1 +
+ tools/perf/util/bpf_off_cpu.c              | 10 ++--
+ tools/perf/util/branch.c                   |  4 +-
+ tools/perf/util/branch.h                   |  4 +-
+ tools/perf/util/callchain.c                | 62 ++++++++++++++--------
+ tools/perf/util/callchain.h                | 18 +++----
+ tools/perf/util/compress.h                 |  1 +
+ tools/perf/util/event.c                    |  4 +-
+ tools/perf/util/hist.c                     | 16 +++---
+ tools/perf/util/machine.c                  | 39 +++++++-------
+ tools/perf/util/machine.h                  |  1 -
+ tools/perf/util/map_symbol.c               | 15 ++++++
+ tools/perf/util/map_symbol.h               |  4 ++
+ tools/perf/util/mmap.c                     |  5 +-
+ tools/perf/util/mmap.h                     |  1 -
+ tools/perf/util/symbol.c                   |  5 +-
+ tools/perf/util/symbol_conf.h              |  4 +-
+ tools/perf/util/thread.h                   | 14 +++++
+ tools/perf/util/zstd.c                     | 61 +++++++++++----------
+ 25 files changed, 196 insertions(+), 103 deletions(-)
+ create mode 100644 tools/perf/util/map_symbol.c
 
-Thanks,
+-- 
+2.42.0.609.gbb76f46606-goog
 
-	Ingo
