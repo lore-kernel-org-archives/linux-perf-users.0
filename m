@@ -1,72 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC743A270;
-	Thu, 12 Oct 2023 18:33:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C106D53C
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 20:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GEchmT1H"
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7606BE;
-	Thu, 12 Oct 2023 11:33:08 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-53df747cfe5so2420514a12.2;
-        Thu, 12 Oct 2023 11:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697135587; x=1697740387; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5Yt4HEDKKo6+d4XZeN0QMyHve5mG55+QEMOQYKa6AoA=;
-        b=GEchmT1HUyrD5ndeq8eQvC4BXcid0V1eA3aPYnpS7ES+aKQcQmmO2Bynt6+9yNHmKE
-         iR3DQgoZSlD34fWpxu4CBiMFTIx/l1WxkIGSu8EHjG6VkoBxMvy4uzCXrzY2F13leE/U
-         7dBvnXP6QOYaHaGYzSLle43vxlp44JpkyBcyw47/f5DIABXVX3ynzfCJqOh8zyS0a/Ic
-         AWAw/LzJc6ILx+E9OIeMs1AfwAZdrMlnrIrpkp3eMba1BBWs9e30RowUKOPIDQTSQaHJ
-         msVINpDGZopk+ZhU/109zHYlgO4LoFIBMRd2KUMraEEo1T6aZlNFX+o5cL7gJi/O5QNC
-         tVYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697135587; x=1697740387;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Yt4HEDKKo6+d4XZeN0QMyHve5mG55+QEMOQYKa6AoA=;
-        b=P0XRWzf2MAuTTlOXFvbPz8UYaoVpg8t5p/iC5jSK0jWJ/jgGJ4O354nXY+DUh5rkaH
-         oNmXFgNTCn2KCOHoCllXymsAL+EZIWEBHFQNYKRFSizrXUhQHde+mxWpME0zijajcF2p
-         k110HO2OzGjNWcrip7A/4gxyqI8gHVltMypW2b4G96qhceKGCrxZpjqf2c+7G1E8s4yI
-         8Y6Y4DRBGQWp6ZZi/iowSASwEzgnu0Jt+Cpx0otYm+LLce+lyR0viAvGQxKY9a4FmTmq
-         szy5TUH7n0/UYAuUdwDqg8Zy2OvxFi8uXMBnRkVLtcFbjBbr5Kz6OiSSbq2UCQjRLXhG
-         GRuQ==
-X-Gm-Message-State: AOJu0Yw96VPI1aNA6WDH3a14qWzP4EN/y/KIwBusE2FkopA2XAFxi1oo
-	pSqnZgadrMCJzRhRC+5nvoo=
-X-Google-Smtp-Source: AGHT+IFWp5v0KAwI2KVBXMv/+3XOFfW27pUVJ8GaJohETW+Lt3zJP/kCBmLgd6NrMdPNYaikHa5d9g==
-X-Received: by 2002:a17:907:b1a:b0:9b6:5a86:2926 with SMTP id h26-20020a1709070b1a00b009b65a862926mr20502640ejl.62.1697135587281;
-        Thu, 12 Oct 2023 11:33:07 -0700 (PDT)
-Received: from gmail.com (1F2EF405.nat.pool.telekom.hu. [31.46.244.5])
-        by smtp.gmail.com with ESMTPSA id b13-20020a170906d10d00b009930c80b87csm11532318ejz.142.2023.10.12.11.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 11:33:06 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Thu, 12 Oct 2023 20:33:03 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-toolchains@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-	Ben Woodard <woodard@redhat.com>, Joe Mario <jmario@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
-Message-ID: <ZSg73+7Ar/U2OWMO@gmail.com>
-References: <20231012035111.676789-1-namhyung@kernel.org>
- <ZSeMGPPfxkMvdaP3@gmail.com>
- <CAM9d7chzw4UeHHeXaMfPTiRdLbv7PbpK=xkgxMDojAxAc8y7Jg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LhMEs1Pp"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B5EAD7;
+	Thu, 12 Oct 2023 13:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697143349; x=1728679349;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=grZVskJc6ajq0UaMPLY1+vxdNrKtPGrIR2HY2iTkC6c=;
+  b=LhMEs1PpBrYA9bQkwuqrFDZrd4SocdTJoTV7BaFuUyYDQK2tcpCnS+mI
+   JKIwntNCpJ8Kph0htB2ByC7QyS9h+z70drOjbgXdPyYFNIDtKHNzEdrjz
+   NV+u21jzwaRLrM5M0CKW7l65/DZfD252ib2pbbEmkpDvRf3pePEBzspNC
+   7LOee5erNYibB8XtO1iScuTW5TKuQCsR3sm3xgRggK3xaE97Lc6/fv5qL
+   XS6tZnXfZPO14LX6Y5ps6o8IZ8xL5KpX6130pbHUgyiBhbgs1Pz9UgQJ2
+   2Oh2g4qSxjDHZfz7YfwUVat8zEZnITrpRWclk9TVeitj/qS1soiJNLXmL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="375385887"
+X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
+   d="scan'208";a="375385887"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 13:42:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="824755431"
+X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
+   d="scan'208";a="824755431"
+Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Oct 2023 13:42:05 -0700
+Received: from kbuild by f64821696465 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qr2VP-0003rZ-2F;
+	Thu, 12 Oct 2023 20:42:03 +0000
+Date: Fri, 13 Oct 2023 04:41:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianyi Liu <i.pear@outlook.com>, seanjc@google.com, pbonzini@redhat.com,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+	x86@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	Tianyi Liu <i.pear@outlook.com>
+Subject: Re: [PATCH v2 4/5] perf kvm: Support sampling guest callchains
+Message-ID: <202310130419.cIkNaYZm-lkp@intel.com>
+References: <SY4P282MB108433024762F1F292D47C2A9DCFA@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,32 +58,97 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7chzw4UeHHeXaMfPTiRdLbv7PbpK=xkgxMDojAxAc8y7Jg@mail.gmail.com>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <SY4P282MB108433024762F1F292D47C2A9DCFA@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Hi Tianyi,
 
-* Namhyung Kim <namhyung@kernel.org> wrote:
+kernel test robot noticed the following build warnings:
 
-> > Could we perhaps add an IP filter to perf events to get this built-in?
-> > Perhaps attr->exclude_user would achieve something similar?
-> 
-> Unfortunately IBS doesn't support privilege filters IIUC.  Maybe
-> we could add a general filtering logic in the NMI handler but I'm
-> afraid it can complicate the code and maybe slow it down a bit.
-> Probably it's ok to have only a simple privilege filter by IP range.
+[auto build test WARNING on 8a749fd1a8720d4619c91c8b6e7528c0a355c0aa]
 
-It will still be so much faster than moving it through the BPF machinery, 
-and bonus points if we merge this into the existing privilege-domain 
-filtering ABI, so no magic 0x800000000000 constants are needed.
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianyi-Liu/KVM-Add-arch-specific-interfaces-for-sampling-guest-callchains/20231008-230042
+base:   8a749fd1a8720d4619c91c8b6e7528c0a355c0aa
+patch link:    https://lore.kernel.org/r/SY4P282MB108433024762F1F292D47C2A9DCFA%40SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM
+patch subject: [PATCH v2 4/5] perf kvm: Support sampling guest callchains
+config: i386-randconfig-061-20231012 (https://download.01.org/0day-ci/archive/20231013/202310130419.cIkNaYZm-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231013/202310130419.cIkNaYZm-lkp@intel.com/reproduce)
 
-'Overhead' to other usecases shouldn't be much more than a single branch 
-somewhere.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310130419.cIkNaYZm-lkp@intel.com/
 
-Thanks,
+sparse warnings: (new ones prefixed by >>)
+>> arch/x86/events/core.c:2808:52: sparse: sparse: incorrect type in argument 1 (different modifiers) @@     expected void *addr @@     got struct stack_frame *const * @@
+   arch/x86/events/core.c:2808:52: sparse:     expected void *addr
+   arch/x86/events/core.c:2808:52: sparse:     got struct stack_frame *const *
+>> arch/x86/events/core.c:2811:52: sparse: sparse: incorrect type in argument 1 (different modifiers) @@     expected void *addr @@     got unsigned long const * @@
+   arch/x86/events/core.c:2811:52: sparse:     expected void *addr
+   arch/x86/events/core.c:2811:52: sparse:     got unsigned long const *
+>> arch/x86/events/core.c:2784:44: sparse: sparse: incorrect type in argument 1 (different modifiers) @@     expected void *addr @@     got unsigned int const * @@
+   arch/x86/events/core.c:2784:44: sparse:     expected void *addr
+   arch/x86/events/core.c:2784:44: sparse:     got unsigned int const *
+   arch/x86/events/core.c:2787:44: sparse: sparse: incorrect type in argument 1 (different modifiers) @@     expected void *addr @@     got unsigned int const * @@
+   arch/x86/events/core.c:2787:44: sparse:     expected void *addr
+   arch/x86/events/core.c:2787:44: sparse:     got unsigned int const *
 
-	Ingo
+vim +2808 arch/x86/events/core.c
+
+  2775	
+  2776	static inline void
+  2777	perf_callchain_guest32(struct perf_callchain_entry_ctx *entry)
+  2778	{
+  2779		struct stack_frame_ia32 frame;
+  2780		const struct stack_frame_ia32 *fp;
+  2781	
+  2782		fp = (void *)perf_guest_get_frame_pointer();
+  2783		while (fp && entry->nr < entry->max_stack) {
+> 2784			if (!perf_guest_read_virt(&fp->next_frame, &frame.next_frame,
+  2785				sizeof(frame.next_frame)))
+  2786				break;
+  2787			if (!perf_guest_read_virt(&fp->return_address, &frame.return_address,
+  2788				sizeof(frame.return_address)))
+  2789				break;
+  2790			perf_callchain_store(entry, frame.return_address);
+  2791			fp = (void *)frame.next_frame;
+  2792		}
+  2793	}
+  2794	
+  2795	void
+  2796	perf_callchain_guest(struct perf_callchain_entry_ctx *entry)
+  2797	{
+  2798		struct stack_frame frame;
+  2799		const struct stack_frame *fp;
+  2800		unsigned int guest_state;
+  2801	
+  2802		guest_state = perf_guest_state();
+  2803		perf_callchain_store(entry, perf_guest_get_ip());
+  2804	
+  2805		if (guest_state & PERF_GUEST_64BIT) {
+  2806			fp = (void *)perf_guest_get_frame_pointer();
+  2807			while (fp && entry->nr < entry->max_stack) {
+> 2808				if (!perf_guest_read_virt(&fp->next_frame, &frame.next_frame,
+  2809					sizeof(frame.next_frame)))
+  2810					break;
+> 2811				if (!perf_guest_read_virt(&fp->return_address, &frame.return_address,
+  2812					sizeof(frame.return_address)))
+  2813					break;
+  2814				perf_callchain_store(entry, frame.return_address);
+  2815				fp = (void *)frame.next_frame;
+  2816			}
+  2817		} else {
+  2818			perf_callchain_guest32(entry);
+  2819		}
+  2820	}
+  2821	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
