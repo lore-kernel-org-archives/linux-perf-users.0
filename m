@@ -1,314 +1,105 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD095251;
-	Thu, 12 Oct 2023 03:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0B620E6
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 05:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGuVDFkw"
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A26C1739;
-	Wed, 11 Oct 2023 20:52:09 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c9e06f058bso1579295ad.0;
-        Wed, 11 Oct 2023 20:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697082728; x=1697687528; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c+cQ9CSkhhrD4qbqChHjPumcDdy/6FXJfEC4K6SPW0Y=;
-        b=dGuVDFkw9QZFISzPwqWnHTd5H+JTKV+73FvQMMNZo6nuWJlIA+d5vKt43lp6zQqgdS
-         w/wZOxQm2O2U+AJuF2pwuydFnV3uhzWIpCfunz7X1jChX7pniZHImqFV3Dwpsk6wF1HN
-         ZG+TQo0yKRNBbVrhSOl4NRF5fi16Gjymz8b+lnUrM5FZ3tlkPzT4a++QQLvCy2IkWAnP
-         OQD2cugAgXaYN11kv7bpCfyxPfLxFqXJ4WLFYIIqEl+/FKGoE1vag6ZqVl7fWmCyCxMf
-         cSSBCwBbrKP4TOTlwrW+wrhx1flUoUVudCgUm8B0ARK2qZPFGGL6n1NReOu77i7v3Ra+
-         oGIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697082728; x=1697687528;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=c+cQ9CSkhhrD4qbqChHjPumcDdy/6FXJfEC4K6SPW0Y=;
-        b=gsCkVpz9fd3X6lt4faJ9xymy6aZnhUKgg1Hil2kigNsdywP5dBdZPZKRQrrFI71u0I
-         F2wSFKEsI6f7P9yoWolyncW9kJkQxHpdGwn0W+8ovaKckB+a0aqCmifYLFTS8eVlkg4L
-         MBa/W+S3mnXNKcU8BDi5L4CvDxzEXBnp8CIT62eYTsOTEJCFBdGXzuRTJE4NYyUqyA20
-         C+2xVmdhLTCgomYuaveLnnVwOdYAzJQdbDy2AokLmmD/VtkFby85B+vZOTfrnaX4cwAr
-         PCUlU0TzovelCBoRH5rUY2K0L5tWUhtpN8ZT3d8bIXwtJGlNKa1uL5nAyjFf7YMHgqts
-         FWDA==
-X-Gm-Message-State: AOJu0YyU9WLKXt7wxhzMxvLrJou7bjtkhOC9bDui4+s+nPOj40gTQ1Oo
-	lV0GW4ZfbWaVISIx553j8js=
-X-Google-Smtp-Source: AGHT+IGYY2REijxPTjznI/mr2/Fqobn49pWYTc0Hv7sPSWV59ECYgQRZBNuwQvYFQGVXK1RZC6vNOA==
-X-Received: by 2002:a17:903:110f:b0:1c9:d358:b3d9 with SMTP id n15-20020a170903110f00b001c9d358b3d9mr4393201plh.18.1697082728435;
-        Wed, 11 Oct 2023 20:52:08 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:b1b9:d490:2f5e:be06])
-        by smtp.gmail.com with ESMTPSA id w8-20020a170902d70800b001bc18e579aesm711374ply.101.2023.10.11.20.52.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 20:52:08 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-toolchains@vger.kernel.org,
-	linux-trace-devel@vger.kernel.org
-Subject: [PATCH 41/48] perf annotate-data: Handle global variable access
-Date: Wed, 11 Oct 2023 20:51:04 -0700
-Message-ID: <20231012035111.676789-42-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
-In-Reply-To: <20231012035111.676789-1-namhyung@kernel.org>
-References: <20231012035111.676789-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oAIe2G9B"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E435B7;
+	Wed, 11 Oct 2023 22:02:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697086978; x=1728622978;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jG1dT9othqCwkOqyzv/5X7Fn/ARu2sl5yrw33fqWd5c=;
+  b=oAIe2G9Bsi0cy5uoNjVW6mlv9ZTt8l31xC9CxOmePfLIv+f4RWq6Eknf
+   u915CPYr0VylM7MkrHo6KTCTtCBTE5hCpOTv4zMnJmQeY31+SSVfSPauG
+   NEVJ8xOifPDHa4a5a9vtfVQmLscJIdVrx90i/13gevzLj8hwlZZAurnbx
+   XzHHoPu0R//fNjwdWcdQWykrWdqC2Yp1b/+IxqWjbtgqk4jiQdqTYDvTn
+   1YBt5H7aLLm53XyjkHVAxbrhWdS2hgyKWKzILAAr/EkA6BYprx9TuBjbM
+   A0AGI2fMtoG/aN0SJV++kBNCiaQDaE3TqSMYffBajBrzfhjfFN5FbmE8x
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="451324387"
+X-IronPort-AV: E=Sophos;i="6.03,217,1694761200"; 
+   d="scan'208";a="451324387"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 22:02:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="824441572"
+X-IronPort-AV: E=Sophos;i="6.03,217,1694761200"; 
+   d="scan'208";a="824441572"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.41.84])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 22:02:48 -0700
+Message-ID: <54481503-67c6-40ec-a02a-31f4db4205f7@intel.com>
+Date: Thu, 12 Oct 2023 08:02:45 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tools: Put the function return operation at the end
+ of the function
+To: "Kunwu.Chan" <chentao@kylinos.cn>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
+ irogers@google.com, kan.liang@linux.intel.com, seanjc@google.com,
+ kprateek.nayak@amd.com, robert.richter@amd.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kunwu.chan@hotmail.com
+References: <20231012031003.842368-1-chentao@kylinos.cn>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20231012031003.842368-1-chentao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-When updating the instruction states, it also needs to handle global
-variable accesses.  Same as it does for PC-relative addressing, it can
-look up the type by address (if it's defined in the same file), or by
-name after finding the symbol by address (for declarations).
+On 12/10/23 06:10, Kunwu.Chan wrote:
+> Function return operations should be performed after resource release.
+> 
+> Fixes: 4e1b9c679fcb ("perf tools: Refactor print_event_desc()")
+> Signed-off-by: Kunwu.Chan <chentao@kylinos.cn>
+> ---
+>  tools/perf/util/header.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index d812e1e371a7..5763f21844b1 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1998,13 +1998,14 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+>  			id++;
+>  		}
+>  	}
+> -out:
+> -	free(buf);
+> -	return events;
+> +
+>  error:
+>  	free_event_desc(events);
+>  	events = NULL;
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate-data.c | 45 ++++++++++++++++++++++++++++++---
- tools/perf/util/annotate-data.h | 10 ++++++--
- tools/perf/util/annotate.c      | 45 ++++++++++++++++++++-------------
- tools/perf/util/annotate.h      |  5 ++++
- 4 files changed, 83 insertions(+), 22 deletions(-)
+Always freeing the events is wrong.  That path is only for errors.
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index e8d80b1adda9..37135698a5c8 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -413,6 +413,7 @@ void update_var_state(struct type_state *state, struct data_loc_info *dloc,
-  * update_insn_state - Update type state for an instruction
-  * @state: type state table
-  * @dloc: data location info
-+ * @cu_die: compile unit debug entry
-  * @dl: disasm line for the instruction
-  *
-  * This function updates the @state table for the target operand of the
-@@ -424,7 +425,7 @@ void update_var_state(struct type_state *state, struct data_loc_info *dloc,
-  * are true.
-  */
- void update_insn_state(struct type_state *state, struct data_loc_info *dloc,
--		       struct disasm_line *dl)
-+		       void *cu_die, struct disasm_line *dl)
- {
- 	struct annotated_insn_loc loc;
- 	struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
-@@ -466,8 +467,46 @@ void update_insn_state(struct type_state *state, struct data_loc_info *dloc,
- 			return;
- 
- retry:
--		/* Check stack variables with offset */
--		if (sreg == fbreg) {
-+		/* Check if it's a global variable */
-+		if (sreg == DWARF_REG_PC) {
-+			Dwarf_Die var_die;
-+			struct map_symbol *ms = dloc->ms;
-+			int offset = src->offset;
-+			u64 ip = ms->sym->start + dl->al.offset;
-+			u64 pc, addr;
-+			const char *var_name = NULL;
-+
-+			addr = annotate_calc_pcrel(ms, ip, offset, dl);
-+			pc = map__rip_2objdump(ms->map, ip);
-+
-+			if (die_find_variable_by_addr(cu_die, pc, addr,
-+						      &var_die, &offset) &&
-+			    check_variable(&var_die, &type_die, offset,
-+					   /*is_pointer=*/false) == 0 &&
-+			    die_get_member_type(&type_die, offset, &type_die)) {
-+				state->regs[dst->reg1].type = type_die;
-+				state->regs[dst->reg1].ok = true;
-+				return;
-+			}
-+
-+			/* Try to get the name of global variable */
-+			offset = src->offset;
-+			get_global_var_info(dloc->thread, ms, ip, dl,
-+					    dloc->cpumode, &addr,
-+					    &var_name, &offset);
-+
-+			if (var_name && die_find_variable_at(cu_die, var_name,
-+							     pc, &var_die) &&
-+			    check_variable(&var_die, &type_die, offset,
-+					   /*is_pointer=*/false) == 0 &&
-+			    die_get_member_type(&type_die, offset, &type_die)) {
-+				state->regs[dst->reg1].type = type_die;
-+				state->regs[dst->reg1].ok = true;
-+			} else
-+				state->regs[dst->reg1].ok = false;
-+		}
-+		/* And check stack variables with offset */
-+		else if (sreg == fbreg) {
- 			struct type_state_stack *stack;
- 			int offset = src->offset - fboff;
- 
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index ff9acf6ea808..0bfef29fa52c 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -14,6 +14,7 @@ struct die_var_type;
- struct disasm_line;
- struct evsel;
- struct map_symbol;
-+struct thread;
- struct type_state;
- 
- /**
-@@ -79,11 +80,13 @@ extern struct annotated_data_type stackop_type;
- 
- /**
-  * struct data_loc_info - Data location information
-- * @arch: architecture info
-+ * @arch: CPU architecture info
-+ * @thread: Thread info
-  * @ms: Map and Symbol info
-  * @ip: Instruction address
-  * @var_addr: Data address (for global variables)
-  * @var_name: Variable name (for global variables)
-+ * @cpumode: CPU execution mode
-  * @op: Instruction operand location (regs and offset)
-  * @di: Debug info
-  * @fbreg: Frame base register
-@@ -94,8 +97,10 @@ struct data_loc_info {
- 	/* These are input field, should be filled by caller */
- 	struct arch *arch;
- 	struct map_symbol *ms;
-+	struct thread *thread;
- 	u64 ip;
- 	u64 var_addr;
-+	u8 cpumode;
- 	const char *var_name;
- 	struct annotated_op_loc *op;
- 
-@@ -164,7 +169,7 @@ void update_var_state(struct type_state *state, struct data_loc_info *dloc,
- 
- /* Update type state table for an instruction */
- void update_insn_state(struct type_state *state, struct data_loc_info *dloc,
--		       struct disasm_line *dl);
-+		       void *cu_die, struct disasm_line *dl);
- 
- #else /* HAVE_DWARF_SUPPORT */
- 
-@@ -206,6 +211,7 @@ static inline void update_var_state(struct type_state *state __maybe_unused,
- 
- static inline void update_insn_state(struct type_state *state __maybe_unused,
- 				     struct data_loc_info *dloc __maybe_unused,
-+				     void *cu_die __maybe_unused,
- 				     struct disasm_line *dl __maybe_unused)
- {
- }
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ab4b6a1d86fe..d82bfb3b519d 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -3727,6 +3727,28 @@ u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
- 	return map__rip_2objdump(ms->map, addr);
- }
- 
-+void get_global_var_info(struct thread *thread, struct map_symbol *ms, u64 ip,
-+			 struct disasm_line *dl, u8 cpumode, u64 *var_addr,
-+			 const char **var_name, int *poffset)
-+{
-+	struct addr_location al;
-+	struct symbol *var;
-+	u64 map_addr;
-+
-+	*var_addr = annotate_calc_pcrel(ms, ip, *poffset, dl);
-+	/* Kernel symbols might be relocated */
-+	map_addr = *var_addr + map__reloc(ms->map);
-+
-+	addr_location__init(&al);
-+	var = thread__find_symbol_fb(thread, cpumode, map_addr, &al);
-+	if (var) {
-+		*var_name = var->name;
-+		/* Calculate type offset from the start of variable */
-+		*poffset = map_addr - map__unmap_ip(al.map, var->start);
-+	}
-+	addr_location__exit(&al);
-+}
-+
- /**
-  * hist_entry__get_data_type - find data type for given hist entry
-  * @he: hist entry
-@@ -3796,6 +3818,8 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 	for_each_insn_op_loc(&loc, i, op_loc) {
- 		struct data_loc_info dloc = {
- 			.arch = arch,
-+			.thread = he->thread,
-+			.cpumode = he->cpumode,
- 			.ms = ms,
- 			/* Recalculate IP for LOCK prefix or insn fusion */
- 			.ip = ms->sym->start + dl->al.offset,
-@@ -3810,23 +3834,10 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 
- 		/* PC-relative addressing */
- 		if (op_loc->reg1 == DWARF_REG_PC) {
--			struct addr_location al;
--			struct symbol *var;
--			u64 map_addr;
--
--			dloc.var_addr = annotate_calc_pcrel(ms, ip, op_loc->offset, dl);
--			/* Kernel symbols might be relocated */
--			map_addr = dloc.var_addr + map__reloc(ms->map);
--
--			addr_location__init(&al);
--			var = thread__find_symbol_fb(he->thread, he->cpumode,
--						     map_addr, &al);
--			if (var) {
--				dloc.var_name = var->name;
--				/* Calculate type offset from the start of variable */
--				dloc.type_offset = map_addr - map__unmap_ip(al.map, var->start);
--			}
--			addr_location__exit(&al);
-+			dloc.type_offset = op_loc->offset;
-+			get_global_var_info(he->thread, ms, ip, dl, he->cpumode,
-+					    &dloc.var_addr, &dloc.var_name,
-+					    &dloc.type_offset);
- 		}
- 
- 		mem_type = find_data_type(&dloc);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index c2cc9baf08be..0786528770e1 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -23,6 +23,7 @@ struct option;
- struct perf_sample;
- struct evsel;
- struct symbol;
-+struct thread;
- struct annotated_data_type;
- 
- struct ins {
-@@ -493,6 +494,10 @@ extern struct list_head ann_insn_stat;
- u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
- 			struct disasm_line *dl);
- 
-+void get_global_var_info(struct thread *thread, struct map_symbol *ms, u64 ip,
-+			 struct disasm_line *dl, u8 cpumode, u64 *var_addr,
-+			 const char **var_name, int *poffset);
-+
- /**
-  * struct annotated_basic_block - Basic block of instructions
-  * @list: List node
--- 
-2.42.0.655.g421f12c284-goog
+That would show up if this had been tested.
+
+> -	goto out;
+> +
+> +out:
+> +	free(buf);
+> +	return events;
+>  }
+>  
+>  static int __desc_attr__fprintf(FILE *fp, const char *name, const char *val,
 
