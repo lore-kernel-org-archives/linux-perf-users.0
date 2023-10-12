@@ -1,93 +1,138 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49414341BE
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 17:23:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166C9347CB;
+	Thu, 12 Oct 2023 17:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB81519B;
-	Thu, 12 Oct 2023 10:23:12 -0700 (PDT)
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-690bc3f82a7so1060861b3a.0;
-        Thu, 12 Oct 2023 10:23:12 -0700 (PDT)
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB51FD6C;
+	Thu, 12 Oct 2023 10:24:02 -0700 (PDT)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-27cfb8442f9so881447a91.2;
+        Thu, 12 Oct 2023 10:24:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697131392; x=1697736192;
+        d=1e100.net; s=20230601; t=1697131442; x=1697736242;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2huTdw8gv98PUVaCLOU6DBAj+aarMGXn0Df0CI62RjM=;
-        b=Ta+HKXRcSd74lXModIUNcmzoJ2sIxzZcHFQ5mlOlZwy9M2K/1gyvRDMIGoleJW65zj
-         5Jftra1mmlQwfWvuyqUruJMPdhqnAjnbg+dcADmygl9MUPX5Ho/pBT/GYuEewcGbC5qI
-         cE7DrmnwuL7pEG5Z3+GHSvPUWwmKLx7O7iHelNg/FxJnbBuoqvtWyLgtd7WUc6ryS3HK
-         1X/1ryJ0DwXCLBV+/KIvv5pFpXUeCj5B2uprAFR4IgEQAfF2NtmqsDBb45uXRNzsltvc
-         pbha4o7+8U3ZQSfgkeUpxxlxjb7ohTjg2btD0XtFrWyCsU9WJfD5JKTwiPupXIZyTkqY
-         ixmw==
-X-Gm-Message-State: AOJu0YxsdQjJSQekg3G4FDZHkumLsLILIdXVuDfn5dS14H1jqvU2p9Wg
-	WKUFJBt1rWMG0sRxwPmfXNdCmsmdgD5fON7+oNs=
-X-Google-Smtp-Source: AGHT+IHtewc5TpplcEEAEnaPHRXHWJ0T7pd74csLwuQjugub3DppU6ULdyFpJWb7QI0YjD5qnRhOteXVwbzBrWaFH90=
-X-Received: by 2002:a05:6a20:7f83:b0:15e:b8a1:57b9 with SMTP id
- d3-20020a056a207f8300b0015eb8a157b9mr30329596pzj.24.1697131391926; Thu, 12
- Oct 2023 10:23:11 -0700 (PDT)
+        bh=CJnRK+79WNn0lGWIpav/hJW9jfda5+J6HE7W4OW4WDg=;
+        b=pIni7pUJgajGYSQU9SwzMEYgHHHdN24f7FuW5z6iwT5Y3Qbq4DKAVLmKXDNkehhJfb
+         o84qccj2pQfymB+6z1XrgKf8lXryt/dqJNBSvevXZ48TH0Zv0vSYqs4MC30fJRT7bvR7
+         kHfLxczs5QunRMwof5JIwzbPGEMHIdRC0gl9CzuomngS4iexxt334utspR42uH+tW8BX
+         PcSI3GQXJGAi0UVY934GK/O4ESSlBx/t12kVElLFUlc3ANTWhFdl8ku0u9jORuZOFxg5
+         lOLWAi8R3Uxoz0BjZ180Di6I/1e4CH+zC+Q8NmZ5SCUQuRnoOL7qfpp0PXFRypiRBhZi
+         lbxg==
+X-Gm-Message-State: AOJu0YzqW4RvugHeUHRKUhmnrSlogUhF3HRYg3or4SJpy28JPN8af9yh
+	gOShiXHzCV0D+0UughpY6HQLLgl9qWudgfxnaAU=
+X-Google-Smtp-Source: AGHT+IFUhH11sDmFlYL7MWiTUMkq8goHP9pDVnkcL763Chb34fwG4DLwbzeA5QXZ9dzWHTz7uN1GoKUjJnFvWXox8KU=
+X-Received: by 2002:a17:90b:14a:b0:27c:facc:e3eb with SMTP id
+ em10-20020a17090b014a00b0027cfacce3ebmr6883711pjb.31.1697131442112; Thu, 12
+ Oct 2023 10:24:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230928004431.1926969-1-irogers@google.com> <CAP-5=fW6dBQQ7XnDm+Ye7R2bksNrWWwZJ+X33QnDvcjqjgtU5Q@mail.gmail.com>
-In-Reply-To: <CAP-5=fW6dBQQ7XnDm+Ye7R2bksNrWWwZJ+X33QnDvcjqjgtU5Q@mail.gmail.com>
+References: <20231009183920.200859-1-irogers@google.com> <CAM9d7cgwam22Fn3tvJ7dJL1zHWTQa1ixvePTMPQmvYQLn2=DxA@mail.gmail.com>
+In-Reply-To: <CAM9d7cgwam22Fn3tvJ7dJL1zHWTQa1ixvePTMPQmvYQLn2=DxA@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 12 Oct 2023 10:23:00 -0700
-Message-ID: <CAM9d7cjMraYFyx4v6ahVJ56ys0Kq769yzzNeO+bQ2my0y2=Jsg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf parse-events: Fix for term values that are raw events
+Date: Thu, 12 Oct 2023 10:23:51 -0700
+Message-ID: <CAM9d7cjgpXwC6D7F1DMrMw1j1k=o7oDw94Ofb_Xiyt_s7t5gJA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/18] clang-tools support in tools
 To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
+Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Tom Rix <trix@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>
+	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Ming Wang <wangming01@loongson.cn>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On Thu, Oct 5, 2023 at 3:13=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
+On Mon, Oct 9, 2023 at 10:31=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Wed, Sep 27, 2023 at 5:44=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+> Hi Ian,
+>
+> On Mon, Oct 9, 2023 at 11:39=E2=80=AFAM Ian Rogers <irogers@google.com> w=
 rote:
 > >
-> > Raw events can be strings like 'r0xead' but the 0x is optional so they
-> > can also be 'read'. On IcelakeX uncore_imc_free_running has an event
-> > called 'read' which may be programmed as:
-> > ```
-> > $ perf stat -e 'uncore_imc_free_running/event=3Dread/' -a sleep 1
-> > ```
-> > However, the PE_RAW type isn't allowed on the right of a term, even
-> > though in this case we just want to interpret it as a string. This
-> > leads to the following error on IcelakeX:
-> > ```
-> > $ perf stat -e 'uncore_imc_free_running/event=3Dread/' -a sleep 1
-> > event syntax error: '..nning/event=3Dread/'
-> >                                   \___ parser error
-> > Run 'perf list' for a list of valid events
+> > Allow the clang-tools scripts to work with builds in tools such as
+> > tools/perf and tools/lib/perf. An example use looks like:
 > >
-> >  Usage: perf stat [<options>] [<command>]
-> >
-> >     -e, --event <event> event selector. use 'perf list' to list availab=
-le events
 > > ```
-> > Fix this by allowing raw types on the right of terms and treat them as
-> > strings, just as is already done for PE_LEGACY_CACHE. Make this
-> > consistent by just entirely removing name_or_legacy and always using
-> > name_or_raw that covers all three cases.
+> > $ cd tools/perf
+> > $ make CC=3Dclang CXX=3Dclang++
+> > $ ../../scripts/clang-tools/gen_compile_commands.py
+> > $ ../../scripts/clang-tools/run-clang-tools.py clang-tidy compile_comma=
+nds.json -checks=3D-*,readability-named-parameter
+> > Skipping non-C file: 'tools/perf/bench/mem-memcpy-x86-64-asm.S'
+> > Skipping non-C file: 'tools/perf/bench/mem-memset-x86-64-asm.S'
+> > Skipping non-C file: 'tools/perf/arch/x86/tests/regs_load.S'
+> > 8 warnings generated.
+> > Suppressed 8 warnings (8 in non-user code).
+> > Use -header-filter=3D.* to display errors from all non-system headers. =
+Use -system-headers to display errors from system headers as well.
+> > 2 warnings generated.
+> > 4 warnings generated.
+> > Suppressed 4 warnings (4 in non-user code).
+> > Use -header-filter=3D.* to display errors from all non-system headers. =
+Use -system-headers to display errors from system headers as well.
+> > 2 warnings generated.
+> > 4 warnings generated.
+> > Suppressed 4 warnings (4 in non-user code).
+> > Use -header-filter=3D.* to display errors from all non-system headers. =
+Use -system-headers to display errors from system headers as well.
+> > 3 warnings generated.
+> > tools/perf/util/parse-events-flex.c:546:27: warning: all parameters sho=
+uld be named in a function [readability-named-parameter]
+> > void *yyalloc ( yy_size_t , yyscan_t yyscanner );
+> >                           ^
+> >                            /*size*/
+> > ...
+> > ```
 > >
-> > Fixes: 6fd1e5191591 ("perf parse-events: Support PMUs for legacy cache =
-events")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Fix a number of the more serious low-hanging issues in perf found by
+> > clang-tidy.
+> >
+> > This support isn't complete, in particular it doesn't support output
+> > directories properly and so fails for tools/lib/bpf, tools/bpf/bpftool
+> > and if an output directory is used.
+> >
+> > v3. Add Nick Desaulniers reviewed-by to patch 3. For Namhyung, drop
+> >     "perf hisi-ptt: Fix potential memory leak", split lock change out
+> >     of "perf svghelper: Avoid memory leak" and address comments in
+> >     "perf header: Fix various error path memory leaks".
+> > v2: Address comments by Nick Desaulniers in patch 3, and add their
+> >     Reviewed-by to patches 1 and 2.
+> >
+> > Ian Rogers (18):
+> >   gen_compile_commands: Allow the line prefix to still be cmd_
+> >   gen_compile_commands: Sort output compile commands by file name
+> >   run-clang-tools: Add pass through checks and header-filter arguments
+> >   perf bench uprobe: Fix potential use of memory after free
+> >   perf buildid-cache: Fix use of uninitialized value
+> >   perf env: Remove unnecessary NULL tests
+> >   perf jitdump: Avoid memory leak
+> >   perf mem-events: Avoid uninitialized read
+> >   perf dlfilter: Be defensive against potential NULL dereference
+> >   perf hists browser: Reorder variables to reduce padding
+> >   perf hists browser: Avoid potential NULL dereference
+> >   perf svghelper: Avoid memory leak
+> >   perf lock: Fix a memory leak on an error path
+> >   perf parse-events: Fix unlikely memory leak when cloning terms
+> >   tools api: Avoid potential double free
+> >   perf trace-event-info: Avoid passing NULL value to closedir
+> >   perf header: Fix various error path memory leaks
+> >   perf bpf_counter: Fix a few memory leaks
+>
+> I agree with your comment on v2 that it needs more work
+> to clean the code up.  Anyway I'm ok with v3 now.
+>
+> For ther perf part (patch 4 to 18),
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Applied to perf-tools-next, thanks!
