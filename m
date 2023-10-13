@@ -1,54 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7790C7F3;
-	Fri, 13 Oct 2023 03:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDA61C33
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 04:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 858D7BC;
-	Thu, 12 Oct 2023 20:57:45 -0700 (PDT)
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5a1d91a29a0so1282839a12.1;
-        Thu, 12 Oct 2023 20:57:45 -0700 (PDT)
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5539133;
+	Thu, 12 Oct 2023 21:24:09 -0700 (PDT)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-27d0e3d823fso1123037a91.1;
+        Thu, 12 Oct 2023 21:24:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697169465; x=1697774265;
+        d=1e100.net; s=20230601; t=1697171049; x=1697775849;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rNozd1ni+Cz5fSLucDFdEkSt5iA0mcMvLECDnXGT/RY=;
-        b=gZB1WwG5XA08UeaRjJt1/QId2pZGAEEm0dide4cJ6qojWACVgkCIV7dmpc1/dyCOaY
-         sOYUtPtiNfZyMwMHw9LNBxY4rr/dqB1FnAv1PR1ofBby2p/EnFirJxIcz3gyzDyaptzj
-         wH5izWHCFJqgqLV1Iq2CVDJkLJCunfYYU6nWzTX4YNJxFg5hbTVgapZu82YrwOADjFp0
-         LVqynl0dlIhjYkeqcPcsJV3WRAZFueIjn6xH8QrNzFRDMY9NHdNO105aApZSCJdAYsrZ
-         wxAwydFdp14wTDO7g+YXzb0tmZMHOsXop+j7rieE9OCgwtMwzQ1lBMJSq0deh21MdURr
-         zlZQ==
-X-Gm-Message-State: AOJu0YxhHOJG/e/hjMEfjSvEc5A2My3tVLoW4QlJ6J6tL2+CeoFLVc6j
-	i8wSliR86G64eGJxMiz9+JnBphbEQawntQ917iQ=
-X-Google-Smtp-Source: AGHT+IGGT603rGonIekkwZxglWbdWqNZjFm5mnAk5XSc6weOCIoLUqdBuPZMIJK2zh9zbW8Ll5dkNojEqyeByjJyLLw=
-X-Received: by 2002:a05:6a20:7292:b0:14d:f41c:435a with SMTP id
- o18-20020a056a20729200b0014df41c435amr29980371pzk.39.1697169464600; Thu, 12
- Oct 2023 20:57:44 -0700 (PDT)
+        bh=OPtXecqRleGGMmT5CUZqBotuwI7hZYRU/fdzYpvoY/g=;
+        b=DDp5ep7b+Bep9TBIv1+r2+2J+vw/wKRdz8zpgxkCdLGy4RM5YkADLyWc9Xzv5BIdKe
+         kAAYnpZjET0/IffDECmpidppJFb6oeUZ+HVqapfdH3Web8B5xXg/X+MYlpuELBLvrEfr
+         GH+2vxLxJW9XCByyIa8rcAJaa48frQVumekaXodSw5mf9aVHw2LEGFYVMAe0i8vAM08w
+         E2cYhz7c/zhgb+Rkt531SnEx+KS3qG/YzNgOfjEASLtY0gI9Zkn9fbKyvKkWdnDk+nWt
+         2ocRRe1KWA2ZaOj4UupdHg0xbmEFiGAqUdbEy4uru0G1CIVl0+byWJg+KMZaxvuHdA6W
+         HTEw==
+X-Gm-Message-State: AOJu0YyWvKJGHehkMvpEpo9v95UFcoL6ptbhcLo6o6kVZCroaejYG6ed
+	E40X99wJsIyOp9ErAi1VTSHEJH9FhTmBOMhv6D35SBjS
+X-Google-Smtp-Source: AGHT+IGqx7n6u6EdF1wE5BZc1tBFdG4nONqzdJkFx7oPCWlxS60pkORW9L9ZZUIlygJ8k0P7vm8sP1FzOaaniHpm/dY=
+X-Received: by 2002:a17:90a:1dd:b0:27d:10b1:5deb with SMTP id
+ 29-20020a17090a01dd00b0027d10b15debmr5448912pjd.31.1697171049056; Thu, 12 Oct
+ 2023 21:24:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231008212251.236023-1-jolsa@kernel.org> <20231008212251.236023-2-jolsa@kernel.org>
-In-Reply-To: <20231008212251.236023-2-jolsa@kernel.org>
+References: <20231002221909.2958708-1-irogers@google.com> <CAP-5=fX-VOeCkOJY5xeW67x0+A0tGAHM4VYBBz46L-g2eRCR+w@mail.gmail.com>
+ <93afcf44-5f8b-49c1-abc5-5304cba5f991@intel.com> <CAP-5=fXzcR6QKKhFG5PS1pFYi5JsO4AOUoH_-Bv0O+11YzEkkw@mail.gmail.com>
+ <CAM9d7cjQZvZm+Vyrx9PTUYMFN5RjE+i-Kq1kbffyVp2hGKF6sg@mail.gmail.com>
+ <CAP-5=fUo-vuLofC4jgHC9z=BTe80OEiY_PoQWqQtyVdvHcf+KQ@mail.gmail.com>
+ <CAM9d7cjdb5WE-xdSdKD=p_EtsS7OSVEWL+GL3RVwczu-+1JvFQ@mail.gmail.com>
+ <CAP-5=fVe9v=KOxJE5TfmivBQCD=7SRFpnqkob7e05U76d_bSPQ@mail.gmail.com> <6452eca3-e8de-40b5-8e04-2e37892880f7@intel.com>
+In-Reply-To: <6452eca3-e8de-40b5-8e04-2e37892880f7@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 12 Oct 2023 20:57:33 -0700
-Message-ID: <CAM9d7cjYCrTkOTOmBHry-95nivmkGv1g0wp=+TSA0xPXJW_QvQ@mail.gmail.com>
-Subject: Re: [PATCHv2 1/2] tools/build: Fix -s detection code in tools/build/Makefile.build
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Quentin Monnet <quentin@isovalent.com>, Dmitry Goncharov <dgoncharov@users.sf.net>, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Martin KaFai Lau <kafai@fb.com>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Ian Rogers <irogers@google.com>, 
-	KP Singh <kpsingh@chromium.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+Date: Thu, 12 Oct 2023 21:23:57 -0700
+Message-ID: <CAM9d7cgmDh_39jvYdKdm-jhcLpB6+NmY8nPhdMDLtGNLzKX3JA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf intel-pt: pkt-decoder: Fix alignment issues
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -58,56 +59,68 @@ X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Jiri,
-
-On Sun, Oct 8, 2023 at 2:23=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+On Thu, Oct 12, 2023 at 5:27=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
 >
-> As Dmitry described in [1] changelog the current way of detecting
-> -s option is broken for new make.
+> On 11/10/23 09:50, Ian Rogers wrote:
+> > On Tue, Oct 10, 2023 at 10:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> >>
+> >> On Mon, Oct 9, 2023 at 8:31=E2=80=AFAM Ian Rogers <irogers@google.com>=
+ wrote:
+> >>>
+> >>> On Sun, Oct 8, 2023 at 10:29=E2=80=AFPM Namhyung Kim <namhyung@kernel=
+.org> wrote:
+> >>>>
+> >>>> On Thu, Oct 5, 2023 at 2:24=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
+> >>>>>
+> >>>>> On Thu, Oct 5, 2023 at 12:06=E2=80=AFPM Adrian Hunter <adrian.hunte=
+r@intel.com> wrote:
+> >>>>>>
+> >>>>>> On 5/10/23 18:48, Ian Rogers wrote:
+> >>>>>>> On Mon, Oct 2, 2023 at 3:19=E2=80=AFPM Ian Rogers <irogers@google=
+.com> wrote:
+> >>>>>>>>
+> >>>>>>>> The byte aligned buffer is cast to large types and dereferenced
+> >>>>>>>> causing misaligned pointer warnings from undefined behavior sani=
+tizer.
+> >>>>>>>> Fix the alignment issues with memcpy which may require the
+> >>>>>>>> introduction of temporaries.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+> >>>>>>>> ---
+> >>>>>>>
+> >>>>>>> This is a relatively small change that fixes building with
+> >>>>>>> -fsanitize=3Dalignment -fsanitize-undefined-trap-on-error. Adrian=
+, as
+> >>>>>>> this is Intel-PT could you take a look?
+> >>>>>>
+> >>>>>> Thanks! This has been down my list of things to do for ages,
+> >>>>>> but using get_unaligned_le16() etc seems nicer.  I sent a patch
+> >>>>>> set for that.
+> >>>>>
+> >>>>> Thanks Adrian! Your patch set looks good and I think after Arnaldo'=
+s
+> >>>>> comment is addressed we should go with it.
+> >>>>
+> >>>> I think it can be done as a later step as long as the interface is t=
+he
+> >>>> same.  Can I add your Ack's to the Adrian's patchset?
+> >>>
+> >>> I think addressing Arnaldo's comment:
+> >>> https://lore.kernel.org/lkml/ZR8QnasisGEsaaDR@kernel.org/
+> >>> will need some changes to the patch series, and so I was waiting to
+> >>> see the outcome of that.
+> >>
+> >> It seems it's done without further changes.  Can I get your Ack's now?
+> >
+> > With the unaligned.h patch on its own, I think patch 1 of 5 needs
+> > dropping. For the rest I'm happy to acked-by.
+>
+> The new patch is on top of the others, so patch 1 is still needed.
 
-I'm not sure what -s option does for perf (at least).
-It doesn't seem much different whether I give it or not.
-Am I missing something?
+I think I can squash it to the patch 1 if needed.
 
 Thanks,
 Namhyung
-
->
-> Changing the tools/build -s option detection the same way as it was
-> fixed for root Makefile in [1].
->
-> [1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.=
-")
->
-> Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/build/Makefile.build | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> index fac42486a8cf..5fb3fb3d97e0 100644
-> --- a/tools/build/Makefile.build
-> +++ b/tools/build/Makefile.build
-> @@ -20,7 +20,15 @@ else
->    Q=3D@
->  endif
->
-> -ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
-> +# If the user is running make -s (silent mode), suppress echoing of comm=
-ands
-> +# make-4.0 (and later) keep single letter options in the 1st word of MAK=
-EFLAGS.
-> +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> +short-opts :=3D $(firstword -$(MAKEFLAGS))
-> +else
-> +short-opts :=3D $(filter-out --%,$(MAKEFLAGS))
-> +endif
-> +
-> +ifneq ($(findstring s,$(short-opts)),)
->    quiet=3Dsilent_
->  endif
->
-> --
-> 2.41.0
->
