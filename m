@@ -1,50 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49CE23D6
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 07:18:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B845692
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 07:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQHUhy3v"
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA15BC
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 00:18:17 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-405524e6768so18449365e9.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 00:18:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVDSiank"
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F27B8;
+	Fri, 13 Oct 2023 00:30:51 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-40537481094so19401545e9.0;
+        Fri, 13 Oct 2023 00:30:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697181496; x=1697786296; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tbVF/4xx0+0vu2fMTNsv16S5m/ukxWZpS5bYJMmX8qM=;
-        b=fQHUhy3vDUanMdrmzzXVux/ic01wJ2iX9b/aUS3feozz+Q62J5P3f78MZYWrPV4e93
-         h4VM4iAZmmMqZomxPyD71xCjsghzDsANXlwyFgaX0V2JiN8FhMqgWMnYuB9ROf7uKEz2
-         9HNGVpZ9XxVDpTmWbJWc5CAOHWUeUGT3/p/WwpjZf3UIgww3spTtLpg7k0Pimswrfuxb
-         YHGMYxQ7z3wM1Py/nCj0Hy6J+9Caq5JN43KL9QNzYWaLgwCs6PtcoZmy3NS/7xG/wWn8
-         C+o4KWGz7Xvc9/a5hRlJwiD5vZ3hPVuZwRBBLr1Pr4B/+GtRKZsCLmJS6P1Lxuhpfp0J
-         5MiQ==
+        d=gmail.com; s=20230601; t=1697182250; x=1697787050; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vzVL5vVmRYO7lL+aDIjM1G9uTaxxQRQWQ2vKxVi0PEE=;
+        b=aVDSiankkK8vXZeHSgWVWxEcPu7tkybVPvPmusHLHOfPoTKLWS+pUCSuROzuDaeHgL
+         oZG5iXUrw+gTe9m8hHLTdalAP6mw7KDu1e+W+mJ47g1cKVC8VNAqT4CrqSf1yzG6Xb1Q
+         +bsW5AdSNdxOrm2ySJHxb4Q5DOIbqbdwich18k3bI/d9LAaR8gBh/s8FYkR9AX93B3u8
+         hL0U0btNw2R3zpdqk5wMNCoyLt6MrbjPiq5y0dknbcYzFtepDLbJvY4AH+30iOuApnVo
+         6BDN/ocz7yOrnXyBSjlfSdIo+/fWZeL2/xDz85/AvaJ4opKDKjVDFjbW8ZElWoHnt55t
+         D6Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697181496; x=1697786296;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tbVF/4xx0+0vu2fMTNsv16S5m/ukxWZpS5bYJMmX8qM=;
-        b=FnK2kajAkyWhSMa6K7TxWvsHnpM9p7I8YABGmy1KKLgQcIwJuCbkAHq3LpJD00YoKH
-         OnTulpAOqU8yA1AmE2LJ1VHNMky3mwTZK3v7lvapBc2Kgj2HJRK9IlXTiaW2nzS4PsRj
-         Rd1T8gYLbEK0HF1rw0gyWyVfTtc6ZcBBT+dT+0K51U01Gjn7X8aBUltLGXUkxen/tPtm
-         yrfKUtdGqrOpM/LoemxIL6w8cMpkBqOXNzuLv1Gibn/7HKNMbDSeo/21yPPbxdOVMWZ8
-         nBVewYoElu+nAfxRxj0lRccMmV9PfV32AyTgJjqmYLIh1e33sSycOmstP0dciS8GRP5v
-         bbzA==
-X-Gm-Message-State: AOJu0YwvAmN4skFoqxkGKmmHRHDEsJPpEw3ln59ev8weaWoclYvSAs+0
-	TiXq9ubxxrIPaLUj7yuYuHJJ2Q==
-X-Google-Smtp-Source: AGHT+IHPY0n8rs7CXdxLey7IC8iyznm9iVum45QuAoDN95dpOABZsLi4neDzIKvm+jTtIApmyuc7Og==
-X-Received: by 2002:adf:e542:0:b0:31a:d4e1:ea30 with SMTP id z2-20020adfe542000000b0031ad4e1ea30mr22635389wrm.17.1697181495839;
-        Fri, 13 Oct 2023 00:18:15 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id h12-20020adff18c000000b003232380ffd7sm20203133wro.102.2023.10.13.00.18.15
+        d=1e100.net; s=20230601; t=1697182250; x=1697787050;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vzVL5vVmRYO7lL+aDIjM1G9uTaxxQRQWQ2vKxVi0PEE=;
+        b=jFnm6lS5b4f/28OmjPS1AxQEmmnYqqLp8xiXAW0j1MRYql4cW/b6ohVi9cWG6q2N9e
+         NQAGNrV1Lix2ynn2GyOeCTQ0v2ko+Tt1d6manfLe2oy66S+RudyPkgu7zyIxlXMAWtx8
+         jKAmJ3ju0Si4HKGVySUmUEmoulw+IQJZc4+CPp3KtYFIYrsbqGAXjym+2qTY5UIm2vT/
+         FJz+8X77XqTLLcP2zEyuhQjtn74UOExMVtP+8bYwj+jR79ncHS+2ch7tVgbTQHllyD5n
+         XVFu8Bn9866AxKANlvOebwzO1NyNvODMPiNlHW+zrAws1xH7QbyDpAF0JTAZp5Vnls0B
+         yOVg==
+X-Gm-Message-State: AOJu0YzcgWCCZi2fyWHmZtXeuvzWYiI6Pk0Wjz+RUiIFVipxOmZc5Gab
+	mjZzhDahXQJzsMva6m+yJ5k=
+X-Google-Smtp-Source: AGHT+IGQSk4HywK3W12gZApu9SDZ1U/7aZSF8TJnTms0OUo172gVR9nFhI8WW/HWhSIhw74vG/hXEw==
+X-Received: by 2002:adf:a31e:0:b0:32d:888a:c2cf with SMTP id c30-20020adfa31e000000b0032d888ac2cfmr6034412wrb.7.1697182249845;
+        Fri, 13 Oct 2023 00:30:49 -0700 (PDT)
+Received: from gmail.com (1F2EF405.nat.pool.telekom.hu. [31.46.244.5])
+        by smtp.gmail.com with ESMTPSA id h15-20020a05600016cf00b0032cc35c2ef7sm9889328wrf.29.2023.10.13.00.30.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 00:18:15 -0700 (PDT)
-Date: Fri, 13 Oct 2023 10:18:12 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Fri, 13 Oct 2023 00:30:48 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 13 Oct 2023 09:30:46 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Sandipan Das <sandipan.das@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -55,9 +60,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
 	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] perf/x86/amd/uncore: fix error codes in amd_uncore_init()
-Message-ID: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH] perf/x86/amd/uncore: fix error codes in amd_uncore_init()
+Message-ID: <ZSjyJuqk3z0RyKP2@gmail.com>
+References: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,36 +73,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Some of the error paths in this function return don't initialize the
-error code.  Return -ENODEV.
 
-Fixes: d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore management")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- arch/x86/events/amd/uncore.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+* Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 9b444ce24108..a389828f378c 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -1009,7 +1009,8 @@ static struct amd_uncore uncores[UNCORE_TYPE_MAX] = {
- static int __init amd_uncore_init(void)
- {
- 	struct amd_uncore *uncore;
--	int ret, i;
-+	int ret = -ENODEV;
-+	int i;
- 
- 	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
- 	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
--- 
-2.39.2
+> Some of the error paths in this function return don't initialize the
+> error code.  Return -ENODEV.
+> 
+> Fixes: d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore management")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  arch/x86/events/amd/uncore.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 9b444ce24108..a389828f378c 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -1009,7 +1009,8 @@ static struct amd_uncore uncores[UNCORE_TYPE_MAX] = {
+>  static int __init amd_uncore_init(void)
+>  {
+>  	struct amd_uncore *uncore;
+> -	int ret, i;
+> +	int ret = -ENODEV;
+> +	int i;
+>  
+>  	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
+>  	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
 
+Ugh, why on Earth didn't GCC warn about this? The bad pattern is pretty 
+simple & obvious once pointed out ... compilers should have no trouble 
+realizing that 'ret' is returned uninitialized in some of these control 
+paths. Yet not a peep from the compiler ...
+
+Thanks for the fix!
+
+	Ingo
