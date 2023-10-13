@@ -1,118 +1,131 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B845692
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 07:30:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04858DF6B
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 07:31:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVDSiank"
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F27B8;
-	Fri, 13 Oct 2023 00:30:51 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-40537481094so19401545e9.0;
-        Fri, 13 Oct 2023 00:30:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697182250; x=1697787050; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vzVL5vVmRYO7lL+aDIjM1G9uTaxxQRQWQ2vKxVi0PEE=;
-        b=aVDSiankkK8vXZeHSgWVWxEcPu7tkybVPvPmusHLHOfPoTKLWS+pUCSuROzuDaeHgL
-         oZG5iXUrw+gTe9m8hHLTdalAP6mw7KDu1e+W+mJ47g1cKVC8VNAqT4CrqSf1yzG6Xb1Q
-         +bsW5AdSNdxOrm2ySJHxb4Q5DOIbqbdwich18k3bI/d9LAaR8gBh/s8FYkR9AX93B3u8
-         hL0U0btNw2R3zpdqk5wMNCoyLt6MrbjPiq5y0dknbcYzFtepDLbJvY4AH+30iOuApnVo
-         6BDN/ocz7yOrnXyBSjlfSdIo+/fWZeL2/xDz85/AvaJ4opKDKjVDFjbW8ZElWoHnt55t
-         D6Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697182250; x=1697787050;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vzVL5vVmRYO7lL+aDIjM1G9uTaxxQRQWQ2vKxVi0PEE=;
-        b=jFnm6lS5b4f/28OmjPS1AxQEmmnYqqLp8xiXAW0j1MRYql4cW/b6ohVi9cWG6q2N9e
-         NQAGNrV1Lix2ynn2GyOeCTQ0v2ko+Tt1d6manfLe2oy66S+RudyPkgu7zyIxlXMAWtx8
-         jKAmJ3ju0Si4HKGVySUmUEmoulw+IQJZc4+CPp3KtYFIYrsbqGAXjym+2qTY5UIm2vT/
-         FJz+8X77XqTLLcP2zEyuhQjtn74UOExMVtP+8bYwj+jR79ncHS+2ch7tVgbTQHllyD5n
-         XVFu8Bn9866AxKANlvOebwzO1NyNvODMPiNlHW+zrAws1xH7QbyDpAF0JTAZp5Vnls0B
-         yOVg==
-X-Gm-Message-State: AOJu0YzcgWCCZi2fyWHmZtXeuvzWYiI6Pk0Wjz+RUiIFVipxOmZc5Gab
-	mjZzhDahXQJzsMva6m+yJ5k=
-X-Google-Smtp-Source: AGHT+IGQSk4HywK3W12gZApu9SDZ1U/7aZSF8TJnTms0OUo172gVR9nFhI8WW/HWhSIhw74vG/hXEw==
-X-Received: by 2002:adf:a31e:0:b0:32d:888a:c2cf with SMTP id c30-20020adfa31e000000b0032d888ac2cfmr6034412wrb.7.1697182249845;
-        Fri, 13 Oct 2023 00:30:49 -0700 (PDT)
-Received: from gmail.com (1F2EF405.nat.pool.telekom.hu. [31.46.244.5])
-        by smtp.gmail.com with ESMTPSA id h15-20020a05600016cf00b0032cc35c2ef7sm9889328wrf.29.2023.10.13.00.30.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 00:30:48 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Fri, 13 Oct 2023 09:30:46 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Sandipan Das <sandipan.das@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: Re: [PATCH] perf/x86/amd/uncore: fix error codes in amd_uncore_init()
-Message-ID: <ZSjyJuqk3z0RyKP2@gmail.com>
-References: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LD6CtY37"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECD5CC
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 00:31:04 -0700 (PDT)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39D7KNtK005986;
+	Fri, 13 Oct 2023 07:30:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=rBJ3oWhnehW9sqCwlfWtMKSJwqx8hJPtuqbKFPtOvz4=;
+ b=LD6CtY37psEQXFy0znGSddrCzDVvRwMpwhzG0STJMj7ygrFGso3VGyKj55kdUUdi2AQQ
+ RkyTulclM5OFdAZMh7fsUPDFez1YSS32pCS2d+nn3LxYQlmUWB50w7W7QyUBu6nExrgu
+ zC1R3DO1pg2Ip4cmBYSGJwvWHy3Ux8ox4W8BDa6FvZ0GnJVWg4XRHh4yuJWx/ZGPpeXP
+ ym7oxFXHbVXq2yCi72NiuLR71HCxuOCIeeWd7jeLvFs6/IK7VAj8AZGhEi+4gFq1fj/c
+ RYt3vUf7mBPU+//V9tPgISCP8q57005Up7lTCFbK+uNjojfA59doPlHMG9fehSuol33C 1w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tq1dr09tq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Oct 2023 07:30:33 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39D7L0p5008474;
+	Fri, 13 Oct 2023 07:30:32 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tq1dr09t8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Oct 2023 07:30:32 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39D5KkYi026153;
+	Fri, 13 Oct 2023 07:30:32 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tpt54tb7v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Oct 2023 07:30:31 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39D7UTA827656840
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Oct 2023 07:30:29 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2C0F220043;
+	Fri, 13 Oct 2023 07:30:29 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 46D4B20040;
+	Fri, 13 Oct 2023 07:30:27 +0000 (GMT)
+Received: from athiras-mbp.in.ibm.com (unknown [9.109.214.47])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 13 Oct 2023 07:30:27 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH V2 1/3] tools/perf/tests Ignore the shellcheck SC2046 warning in lock_contention
+Date: Fri, 13 Oct 2023 13:00:19 +0530
+Message-Id: <20231013073021.99794-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20231013073021.99794-1-atrajeev@linux.vnet.ibm.com>
+References: <20231013073021.99794-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: I4zFKI3DedURZdsEvyZj0p_0yR2c7Cds
+X-Proofpoint-GUID: 0oJ52BKz-chzDb_sW0VgaZxp0GDXs-ml
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-13_03,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ clxscore=1015 priorityscore=1501 adultscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310130061
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Running shellcheck on lock_contention.sh generates below
+warning
 
-* Dan Carpenter <dan.carpenter@linaro.org> wrote:
+	In tests/shell/lock_contention.sh line 36:
+	   if [ `nproc` -lt 4 ]; then
+		  ^-----^ SC2046: Quote this to prevent word splitting.
 
-> Some of the error paths in this function return don't initialize the
-> error code.  Return -ENODEV.
-> 
-> Fixes: d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore management")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  arch/x86/events/amd/uncore.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-> index 9b444ce24108..a389828f378c 100644
-> --- a/arch/x86/events/amd/uncore.c
-> +++ b/arch/x86/events/amd/uncore.c
-> @@ -1009,7 +1009,8 @@ static struct amd_uncore uncores[UNCORE_TYPE_MAX] = {
->  static int __init amd_uncore_init(void)
->  {
->  	struct amd_uncore *uncore;
-> -	int ret, i;
-> +	int ret = -ENODEV;
-> +	int i;
->  
->  	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
->  	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
+Here since nproc will generate a single word output
+and there is no possibility of word splitting, this
+warning can be ignored. Use exception for this with
+"disable" option in shellcheck. This warning is observed
+after commit:
+"commit 29441ab3a30a ("perf test lock_contention.sh: Skip test
+if not enough CPUs")"
 
-Ugh, why on Earth didn't GCC warn about this? The bad pattern is pretty 
-simple & obvious once pointed out ... compilers should have no trouble 
-realizing that 'ret' is returned uninitialized in some of these control 
-paths. Yet not a peep from the compiler ...
+Fixes: 29441ab3a30a ("perf test lock_contention.sh: Skip test if not enough CPUs")
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+---
+changelog:
+ v1 -> v2:
+ Add Reviewed-by from Kajol Jain
 
-Thanks for the fix!
+ tools/perf/tests/shell/lock_contention.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-	Ingo
+diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
+index d5a191d3d090..c1ec5762215b 100755
+--- a/tools/perf/tests/shell/lock_contention.sh
++++ b/tools/perf/tests/shell/lock_contention.sh
+@@ -33,6 +33,7 @@ check() {
+ 		exit
+ 	fi
+ 
++	# shellcheck disable=SC2046
+ 	if [ `nproc` -lt 4 ]; then
+ 		echo "[Skip] Low number of CPUs (`nproc`), lock event cannot be triggered certainly"
+ 		err=2
+-- 
+2.31.1
+
