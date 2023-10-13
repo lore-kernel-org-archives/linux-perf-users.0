@@ -1,164 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D7E2C84D
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 23:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUTjQumT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08918C433C8;
-	Fri, 13 Oct 2023 23:03:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697238217;
-	bh=iqMnf/BMDJwzFbazhNU1KYWGcCmtvvfRHnstjXFUjjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZUTjQumTZ1JveX+KrzUF3EwwZD/Pxno1XqLO1TzfKno1IuxXHIs3vOK/nIfwOPdL/
-	 xeNNkczh+TtrWXDVYrRIdnn7+9im/UhKjbxO6iuLlPojtaRryOFXJoj3ncg/btA51H
-	 lhaub5grrZ5APfH3VqKgGNR8JfXkMfVrdtn2irjS/dpnBUjVLtwerlQSXIHgak5Pv5
-	 aKfZi82HsYKYQfNcZ2efxAUVK+KngZj4/7R0Z0j+zymh8hBKyEPLkcJkQC+pRtV6M0
-	 +Gqolbt6tMZKLKv/MzdjR5NT1zKtUfu4QvQbUKXDYp8KHYD5JgCWH0+nCMHY9uYnNs
-	 cHFmtLLXJ9qow==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 32A7D40016; Fri, 13 Oct 2023 20:03:34 -0300 (-03)
-Date: Fri, 13 Oct 2023 20:03:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf bench sched pipe: Add -G/--cgroups option
-Message-ID: <ZSnMxtnt7o5mLj+w@kernel.org>
-References: <20231004204741.985422-1-namhyung@kernel.org>
- <ZSnHek1HlQTkfjhG@kernel.org>
- <CAM9d7cip5qmPRhWF37JH_21Q8SjKQCTBVyF_PLE-ytTFOwpasg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AE0200AB
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 23:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C0F5B7;
+	Fri, 13 Oct 2023 16:10:47 -0700 (PDT)
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5aaebfac4b0so811097a12.2;
+        Fri, 13 Oct 2023 16:10:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697238647; x=1697843447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Jq9pAKpCKsuW4M2aVm6h0RSLxNTvAXPcyrENZdgKoqs=;
+        b=FLbHlM+CsBJ1q47Hkw7tR76MR8JZFIFLdspOuZXXKY3TZRKhgR1znJVNuN5lfOxBRa
+         MXGX021UqhZYrnHPIYseFgpoH/0x4HH7hVB+JclKdNHOb2k6SMjjribeHW+vRyieApz4
+         S7Q5mZ8pXrUmH4wcf8+v9+fgvQNJ7BoYsJxXtGRfm6T8JSWhPfQBlvA7dgGJm4XCEfDM
+         9kbaVcbMQAa2xNrbqMBnKCnRlWMChCPoM6igRwfwjPoPbm2GtsQcr9rcrvTwAJRV4dzq
+         Ok+dgXPMCqwJh2eryd3C/P6E4XC5Ra86r94qHASgcLj43rQ3HI3PL5hjwkw2+G/v0GZJ
+         RKCA==
+X-Gm-Message-State: AOJu0Yy5+mxUrgjh7GGMu1oTHcLCAQlrRL+YtrY239W3nbE6bXTl/4EK
+	go4JtluQ9irS9RuWJrDjA55eUVF6w3aFpBUlYbI=
+X-Google-Smtp-Source: AGHT+IHDM6Zprp24HuVjm/VUZDe7ubNTycIxI/bJLO0R9kpM/9xOBcfm4CfYf+9QwsazMBT1ncN8EY2QEFZc66A0/Lc=
+X-Received: by 2002:a05:6a20:3c90:b0:171:75ef:d636 with SMTP id
+ b16-20020a056a203c9000b0017175efd636mr14759284pzj.21.1697238646628; Fri, 13
+ Oct 2023 16:10:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cip5qmPRhWF37JH_21Q8SjKQCTBVyF_PLE-ytTFOwpasg@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+References: <20231004204741.985422-1-namhyung@kernel.org> <ZSnHek1HlQTkfjhG@kernel.org>
+ <CAM9d7cip5qmPRhWF37JH_21Q8SjKQCTBVyF_PLE-ytTFOwpasg@mail.gmail.com> <ZSnMxtnt7o5mLj+w@kernel.org>
+In-Reply-To: <ZSnMxtnt7o5mLj+w@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 13 Oct 2023 16:10:35 -0700
+Message-ID: <CAM9d7cg75rnPpOUB4wUqUPCbsEZucOyu0sB1UwF3kk-4E8q2SA@mail.gmail.com>
+Subject: Re: [PATCH] perf bench sched pipe: Add -G/--cgroups option
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Em Fri, Oct 13, 2023 at 03:57:27PM -0700, Namhyung Kim escreveu:
-> Hi Arnaldo,
-> 
-> On Fri, Oct 13, 2023 at 3:41 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
+On Fri, Oct 13, 2023 at 4:03=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, Oct 13, 2023 at 03:57:27PM -0700, Namhyung Kim escreveu:
+> > Hi Arnaldo,
 > >
-> > Em Wed, Oct 04, 2023 at 01:47:41PM -0700, Namhyung Kim escreveu:
-> > > The -G/--cgroups option is to put sender and receiver in different
-> > > cgroups in order to measure cgroup context switch overheads.
+> > On Fri, Oct 13, 2023 at 3:41=E2=80=AFPM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/AAA/cgroup.proc=
+s
+> > > [root@quaco ~]# ls -la /sys/fs/cgroup/AAA/cgroup.threads
+> > > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/AAA/cgroup.thre=
+ads
+> > > [root@quaco ~]# ls -la /sys/fs/cgroup/BBB/cgroup.threads
+> > > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/BBB/cgroup.thre=
+ads
+> > > [root@quaco ~]# ls -la /sys/fs/cgroup/BBB/cgroup.procs
+> > > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/BBB/cgroup.proc=
+s
+> > > [root@quaco ~]#
 > > >
-> > > Users need to make sure the cgroups exist and accessible.
+> > > [root@quaco ~]# perf bench sched pipe -G AAA,BBB
+> > > # Running 'sched/pipe' benchmark:
+> > > cannot enter to cgroup: AAA (written=3D-1, len=3D6, errno=3DOperation=
+ not supported)
+> > > cannot enter to cgroup: BBB (written=3D-1, len=3D6, errno=3DOperation=
+ not supported)
+> > > # Executed 1000000 pipe operations between two processes
 > > >
-> > >   # perf stat -e context-switches,cgroup-switches \
-> > >   > taskset -c 0 perf bench sched pipe -l 10000 > /dev/null
+> > >      Total time: 6.303 [sec]
 > > >
-> > >    Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000':
+> > >        6.303221 usecs/op
+> > >          158649 ops/sec
+> > > [root@quaco ~]#
 > > >
-> > >               20,001      context-switches
-> > >                    2      cgroup-switches
-> > >
-> > >          0.053449651 seconds time elapsed
-> > >
-> > >          0.011286000 seconds user
-> > >          0.041869000 seconds sys
-> > >
-> > >   # perf stat -e context-switches,cgroup-switches \
-> > >   > taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB > /dev/null
-> > >
-> > >    Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB':
-> > >
-> > >               20,001      context-switches
-> > >               20,001      cgroup-switches
-> > >
-> > >          0.052768627 seconds time elapsed
+> > > I'm certainly missing something here :-\
 > >
-> > So I tried with:
+> > Try to enable some cgroup controllers first.  Like
 > >
-> > [root@quaco ~]# perf bench sched pipe -G system.slice,user.slice
-> > # Running 'sched/pipe' benchmark:
-> > cannot enter to cgroup: system.slice
-> > cannot enter to cgroup: user.slice
-> > # Executed 1000000 pipe operations between two processes
-> >
-> >      Total time: 6.301 [sec]
-> >
-> >        6.301478 usecs/op
-> >          158692 ops/sec
-> > [root@quaco ~]#
-> >
-> > Should't it bail out when not managing to enter the cgroups?
-> 
-> Hmm.. right.  Will fix.
-> 
-> >
-> > Also:
-> >
-> > [root@quaco ~]# mkdir /sys/fs/cgroup/AAA
-> > [root@quaco ~]# mkdir /sys/fs/cgroup/BBB
-> > [root@quaco ~]#
-> > [root@quaco ~]# perf bench sched pipe -G AAA,BBB
-> > # Running 'sched/pipe' benchmark:
-> > cannot enter to cgroup: AAA
-> > cannot enter to cgroup: BBB
-> > # Executed 1000000 pipe operations between two processes
-> >
-> >      Total time: 6.397 [sec]
-> >
-> >        6.397830 usecs/op
-> >          156302 ops/sec
-> > [root@quaco ~]#
-> >
-> > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/AAA/cgroup.procs
-> > [root@quaco ~]# ls -la /sys/fs/cgroup/AAA/cgroup.threads
-> > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/AAA/cgroup.threads
-> > [root@quaco ~]# ls -la /sys/fs/cgroup/BBB/cgroup.threads
-> > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/BBB/cgroup.threads
-> > [root@quaco ~]# ls -la /sys/fs/cgroup/BBB/cgroup.procs
-> > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/BBB/cgroup.procs
-> > [root@quaco ~]#
-> >
-> > [root@quaco ~]# perf bench sched pipe -G AAA,BBB
-> > # Running 'sched/pipe' benchmark:
-> > cannot enter to cgroup: AAA (written=-1, len=6, errno=Operation not supported)
-> > cannot enter to cgroup: BBB (written=-1, len=6, errno=Operation not supported)
-> > # Executed 1000000 pipe operations between two processes
-> >
-> >      Total time: 6.303 [sec]
-> >
-> >        6.303221 usecs/op
-> >          158649 ops/sec
-> > [root@quaco ~]#
-> >
-> > I'm certainly missing something here :-\
-> 
-> Try to enable some cgroup controllers first.  Like
-> 
->   # echo +cpu > /sys/fs/cgroup/AAA/cgroup.subtree_control
->   # echo +cpu > /sys/fs/cgroup/BBB/cgroup.subtree_control
+> >   # echo +cpu > /sys/fs/cgroup/AAA/cgroup.subtree_control
+> >   # echo +cpu > /sys/fs/cgroup/BBB/cgroup.subtree_control
+>
+> [root@quaco cgroup]# echo +cpu > /sys/fs/cgroup/AAA/cgroup.subtree_contro=
+l
+> [root@quaco cgroup]# echo +cpu > /sys/fs/cgroup/BBB/cgroup.subtree_contro=
+l
+> [root@quaco cgroup]# perf bench sched pipe -G AAA,BBB
+> # Running 'sched/pipe' benchmark:
+> cannot enter to cgroup: AAA (written=3D-1, len=3D6, errno=3DOperation not=
+ supported)
+> cannot enter to cgroup: BBB (written=3D-1, len=3D6, errno=3DOperation not=
+ supported)
+> # Executed 1000000 pipe operations between two processes
+>
+>      Total time: 6.267 [sec]
+>
+>        6.267680 usecs/op
+>          159548 ops/sec
+> [root@quaco cgroup]# cat /sys/fs/cgroup/AAA/cgroup.subtree_control
+> cpu
+> [root@quaco cgroup]# cat /sys/fs/cgroup/BBB/cgroup.subtree_control
+> cpu
+> [root@quaco cgroup]# uname -a
+> Linux quaco 6.5.6-200.fc38.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Oct  6 19:02=
+:35 UTC 2023 x86_64 GNU/Linux
+> [root@quaco cgroup]#
 
-[root@quaco cgroup]# echo +cpu > /sys/fs/cgroup/AAA/cgroup.subtree_control
-[root@quaco cgroup]# echo +cpu > /sys/fs/cgroup/BBB/cgroup.subtree_control
-[root@quaco cgroup]# perf bench sched pipe -G AAA,BBB
-# Running 'sched/pipe' benchmark:
-cannot enter to cgroup: AAA (written=-1, len=6, errno=Operation not supported)
-cannot enter to cgroup: BBB (written=-1, len=6, errno=Operation not supported)
-# Executed 1000000 pipe operations between two processes
+Hmm... I don't know, I've tested it on v1 only ;-p  I'll take a look.
 
-     Total time: 6.267 [sec]
+Also I found a bug, will fix too.
 
-       6.267680 usecs/op
-         159548 ops/sec
-[root@quaco cgroup]# cat /sys/fs/cgroup/AAA/cgroup.subtree_control
-cpu
-[root@quaco cgroup]# cat /sys/fs/cgroup/BBB/cgroup.subtree_control
-cpu
-[root@quaco cgroup]# uname -a
-Linux quaco 6.5.6-200.fc38.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Oct  6 19:02:35 UTC 2023 x86_64 GNU/Linux
-[root@quaco cgroup]#
+Thanks,
+Namhyung
+
+
+diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
+index 1103fd658d5d..25236f339b90 100644
+--- a/tools/perf/bench/sched-pipe.c
++++ b/tools/perf/bench/sched-pipe.c
+@@ -118,9 +118,9 @@ static void enter_cgroup(struct cgroup *cgrp)
+
+        /* try cgroup v2 interface first */
+        if (threaded)
+-               fd =3D openat(cgrp->fd, "cgroup.procs", O_WRONLY);
+-       else
+                fd =3D openat(cgrp->fd, "cgroup.threads", O_WRONLY);
++       else
++               fd =3D openat(cgrp->fd, "cgroup.progs", O_WRONLY);
+
+        /* try cgroup v1 if failed */
+        if (fd < 0)
