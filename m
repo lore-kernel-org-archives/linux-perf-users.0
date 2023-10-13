@@ -1,149 +1,101 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25134110C;
-	Fri, 13 Oct 2023 06:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49CE23D6
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 07:18:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+SNLB1i"
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B2EBC;
-	Thu, 12 Oct 2023 23:37:12 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-9ada2e6e75fso299776266b.2;
-        Thu, 12 Oct 2023 23:37:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQHUhy3v"
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA15BC
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 00:18:17 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-405524e6768so18449365e9.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 00:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697179031; x=1697783831; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Yw2XAIYoGosVaRhpV1LmzXn+oclXPzYHPKDh6+mkVJM=;
-        b=V+SNLB1iiEbK2IN27jgvg5yYTJL7w5p+T8Q1S5SDP1IoSh72n6x1kxmsOQaO+9Swc1
-         RBsYH9hj2XMO0SqlmK2oFnFohOSAUPRUUbZ0xz+ZCglnaePylVYIXWqUBQDuog3OHlPd
-         i66GxRIp0yav/qvVinB3AAR/YUv6bzDKuIRcRuhzMO0/IF4K84APZaIocuxI55Znm8zH
-         sQSYceVA+hqpi3J8IiNMxro0cbsGA4NJ6be4LTieoW+qXOcZ3inz7aBxurmH7H7vfs9U
-         JGGHfWOkz4OqNJdWCkqXETN804U95whdzcKA7qq0O7K16uer6jURI3nMb0v1YYfR39rT
-         wKAQ==
+        d=linaro.org; s=google; t=1697181496; x=1697786296; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tbVF/4xx0+0vu2fMTNsv16S5m/ukxWZpS5bYJMmX8qM=;
+        b=fQHUhy3vDUanMdrmzzXVux/ic01wJ2iX9b/aUS3feozz+Q62J5P3f78MZYWrPV4e93
+         h4VM4iAZmmMqZomxPyD71xCjsghzDsANXlwyFgaX0V2JiN8FhMqgWMnYuB9ROf7uKEz2
+         9HNGVpZ9XxVDpTmWbJWc5CAOHWUeUGT3/p/WwpjZf3UIgww3spTtLpg7k0Pimswrfuxb
+         YHGMYxQ7z3wM1Py/nCj0Hy6J+9Caq5JN43KL9QNzYWaLgwCs6PtcoZmy3NS/7xG/wWn8
+         C+o4KWGz7Xvc9/a5hRlJwiD5vZ3hPVuZwRBBLr1Pr4B/+GtRKZsCLmJS6P1Lxuhpfp0J
+         5MiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697179031; x=1697783831;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
+        d=1e100.net; s=20230601; t=1697181496; x=1697786296;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yw2XAIYoGosVaRhpV1LmzXn+oclXPzYHPKDh6+mkVJM=;
-        b=h9ngPds+9J0S6YGD0/QP+CU6NyZnk5IxJeLpy5eLjN7cN352YnNHthwDPmNlriHyVJ
-         +cYTgFHZ4PDXyhpyZNzvMrYw+km/F4E0abTcsmUS552HpDo0kxxulTfEEfFyizko+0Bg
-         vsC7azmGadHAupPq+f4PYN0SRBLVbU7mXlRAPH7iJbhYQboQxV0fHjMofWSHHnVDLisT
-         WLxJAkDIfIQPHdxhVU7uX0csIRXP3sVHMBir8Usa66bWeNUq+uJTdlDoFjlIFw88yno7
-         dOK18/2GsYgAniJPOVkIWwaO6uMl9z26HNgsDqesduz25C71e+gixd0EPa3+jC/7LuVo
-         mwCQ==
-X-Gm-Message-State: AOJu0YzWMnKRYd/0RlEyLuvWlzFsqlU+z3+jnPI6fPYITPzwso2M31ui
-	nl55vk9YIXar/Z2dLA3feSA=
-X-Google-Smtp-Source: AGHT+IGnIQOy++7g/GxLi2lAayoaVwkkPdJ7exYracwDbOtTZ/0MBIw4RkVOgFpePPvQNylLy+wwGA==
-X-Received: by 2002:a17:906:209a:b0:9ae:69b8:322b with SMTP id 26-20020a170906209a00b009ae69b8322bmr22516291ejq.60.1697179030550;
-        Thu, 12 Oct 2023 23:37:10 -0700 (PDT)
-Received: from krava (ip-94-113-247-30.net.vodafone.cz. [94.113.247.30])
-        by smtp.gmail.com with ESMTPSA id gy6-20020a0564025bc600b0053e2a64b5f8sm1041676edb.14.2023.10.12.23.37.08
+        bh=tbVF/4xx0+0vu2fMTNsv16S5m/ukxWZpS5bYJMmX8qM=;
+        b=FnK2kajAkyWhSMa6K7TxWvsHnpM9p7I8YABGmy1KKLgQcIwJuCbkAHq3LpJD00YoKH
+         OnTulpAOqU8yA1AmE2LJ1VHNMky3mwTZK3v7lvapBc2Kgj2HJRK9IlXTiaW2nzS4PsRj
+         Rd1T8gYLbEK0HF1rw0gyWyVfTtc6ZcBBT+dT+0K51U01Gjn7X8aBUltLGXUkxen/tPtm
+         yrfKUtdGqrOpM/LoemxIL6w8cMpkBqOXNzuLv1Gibn/7HKNMbDSeo/21yPPbxdOVMWZ8
+         nBVewYoElu+nAfxRxj0lRccMmV9PfV32AyTgJjqmYLIh1e33sSycOmstP0dciS8GRP5v
+         bbzA==
+X-Gm-Message-State: AOJu0YwvAmN4skFoqxkGKmmHRHDEsJPpEw3ln59ev8weaWoclYvSAs+0
+	TiXq9ubxxrIPaLUj7yuYuHJJ2Q==
+X-Google-Smtp-Source: AGHT+IHPY0n8rs7CXdxLey7IC8iyznm9iVum45QuAoDN95dpOABZsLi4neDzIKvm+jTtIApmyuc7Og==
+X-Received: by 2002:adf:e542:0:b0:31a:d4e1:ea30 with SMTP id z2-20020adfe542000000b0031ad4e1ea30mr22635389wrm.17.1697181495839;
+        Fri, 13 Oct 2023 00:18:15 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id h12-20020adff18c000000b003232380ffd7sm20203133wro.102.2023.10.13.00.18.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 23:37:09 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 13 Oct 2023 08:37:07 +0200
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Quentin Monnet <quentin@isovalent.com>,
-	Dmitry Goncharov <dgoncharov@users.sf.net>,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        Fri, 13 Oct 2023 00:18:15 -0700 (PDT)
+Date: Fri, 13 Oct 2023 10:18:12 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Ian Rogers <irogers@google.com>, KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCHv2 1/2] tools/build: Fix -s detection code in
- tools/build/Makefile.build
-Message-ID: <ZSjlk99UOV2tTMWO@krava>
-References: <20231008212251.236023-1-jolsa@kernel.org>
- <20231008212251.236023-2-jolsa@kernel.org>
- <CAM9d7cjYCrTkOTOmBHry-95nivmkGv1g0wp=+TSA0xPXJW_QvQ@mail.gmail.com>
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] perf/x86/amd/uncore: fix error codes in amd_uncore_init()
+Message-ID: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cjYCrTkOTOmBHry-95nivmkGv1g0wp=+TSA0xPXJW_QvQ@mail.gmail.com>
+X-Mailer: git-send-email haha only kidding
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023 at 08:57:33PM -0700, Namhyung Kim wrote:
-> Hi Jiri,
-> 
-> On Sun, Oct 8, 2023 at 2:23 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > As Dmitry described in [1] changelog the current way of detecting
-> > -s option is broken for new make.
-> 
-> I'm not sure what -s option does for perf (at least).
-> It doesn't seem much different whether I give it or not.
-> Am I missing something?
+Some of the error paths in this function return don't initialize the
+error code.  Return -ENODEV.
 
-what's your make version? the wrong output is visible when running
-with make version > 4.4 .. basicaly the -s is wrongly detected and
-you either get no output at all from some builds or overly verbose
-output
+Fixes: d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore management")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ arch/x86/events/amd/uncore.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-it's mentioned in the [1] commit changelog, I can put it to the
-changelog in new version
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 9b444ce24108..a389828f378c 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -1009,7 +1009,8 @@ static struct amd_uncore uncores[UNCORE_TYPE_MAX] = {
+ static int __init amd_uncore_init(void)
+ {
+ 	struct amd_uncore *uncore;
+-	int ret, i;
++	int ret = -ENODEV;
++	int i;
+ 
+ 	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
+ 	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
+-- 
+2.39.2
 
-jirka
-
-> 
-> Thanks,
-> Namhyung
-> 
-> >
-> > Changing the tools/build -s option detection the same way as it was
-> > fixed for root Makefile in [1].
-> >
-> > [1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.")
-> >
-> > Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/build/Makefile.build | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> > index fac42486a8cf..5fb3fb3d97e0 100644
-> > --- a/tools/build/Makefile.build
-> > +++ b/tools/build/Makefile.build
-> > @@ -20,7 +20,15 @@ else
-> >    Q=@
-> >  endif
-> >
-> > -ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
-> > +# If the user is running make -s (silent mode), suppress echoing of commands
-> > +# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> > +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> > +short-opts := $(firstword -$(MAKEFLAGS))
-> > +else
-> > +short-opts := $(filter-out --%,$(MAKEFLAGS))
-> > +endif
-> > +
-> > +ifneq ($(findstring s,$(short-opts)),)
-> >    quiet=silent_
-> >  endif
-> >
-> > --
-> > 2.41.0
-> >
