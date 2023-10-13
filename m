@@ -1,163 +1,113 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F743F4AC
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 21:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CL1lcV2N"
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E97BB
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 14:43:11 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-405459d9a96so28495e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Oct 2023 14:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697146989; x=1697751789; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RoYUWazhTuq3/OyQ48ktFaTXNncGid8TDSUHkaGg0J0=;
-        b=CL1lcV2NpYAQX/WvkFSMN07r+t5NIgOZJUDWOacYzAmnPJtox+3UxioFw9RHsxg3cD
-         LpE0vHKE49VIO8EUEadxKKyGrMGY6PFz1KrnWyAOUThF3DRrc5fUxAJGDQ9TjxGMSUU1
-         2juHTjrdltoOITTP3cYQVRrFwMvBOPGeHkQxflKw11PSC3g5PjMjOrsdPZjcH+5V45AS
-         hGEWzH3D4q+tV1pmdz4egorvsM7E5Na/gfMdg8A0u7sABxdfJr466qk0PLPz/CYf5hME
-         ++tjjbIRG+7XJGYaRVhFhNbruXq9tw77FveSgN+d0wtK+zeClXhFiCKr31or0nBSIgsM
-         OhfA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7790C7F3;
+	Fri, 13 Oct 2023 03:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 858D7BC;
+	Thu, 12 Oct 2023 20:57:45 -0700 (PDT)
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5a1d91a29a0so1282839a12.1;
+        Thu, 12 Oct 2023 20:57:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697146989; x=1697751789;
+        d=1e100.net; s=20230601; t=1697169465; x=1697774265;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RoYUWazhTuq3/OyQ48ktFaTXNncGid8TDSUHkaGg0J0=;
-        b=mhgBOkfbpxE0vJAXLoqbhXWkMjQ6769K1ukYNfabFVf0CANlWGcFzzcC1Sqog+2T/0
-         QjHFznbPWq4bln5WK8ZUJe/012SYSkqm9H6TIjr0c4tLw/Z7YZch9ptLVEJiAMBwGtgI
-         ak6ikDjMe+ap9WGkzy7NEUH6nxJZAT7SbFtUfebsUkoNZD9/gUiQMGZTbgEZyPjrlSHC
-         IWoS3JAv/AvMJy51R1zTjRCQvpGQA7Sl7axT6DoMlDumCs52tuVVfgQ2O/1AnCgl+PGQ
-         DDsA4ZbXtTBos7SbYVUUhPVCsdge70wl8sWRe3bR3lQHwlVZIIBJnajma1a5wnT+Ouc/
-         8sxQ==
-X-Gm-Message-State: AOJu0YxaQS6zlmHtQZd4aJsx0ZagBzh7FcA/WzAr7LfW/WcQMZi8CSah
-	ZJlesPldZCgUH5rjf2lNPkFFjkhy8KUbTMBeh3lP7w==
-X-Google-Smtp-Source: AGHT+IGPZxxRRadk+VBxng1fsHuF3phTS4uk8S+jKMOOrqACa6DpWamVfnu3eOUxyXpJ/hFgQ0rrBwvb/fxVLQUICG8=
-X-Received: by 2002:a05:600c:4583:b0:3f6:f4b:d4a6 with SMTP id
- r3-20020a05600c458300b003f60f4bd4a6mr14076wmo.7.1697146989416; Thu, 12 Oct
- 2023 14:43:09 -0700 (PDT)
+        bh=rNozd1ni+Cz5fSLucDFdEkSt5iA0mcMvLECDnXGT/RY=;
+        b=gZB1WwG5XA08UeaRjJt1/QId2pZGAEEm0dide4cJ6qojWACVgkCIV7dmpc1/dyCOaY
+         sOYUtPtiNfZyMwMHw9LNBxY4rr/dqB1FnAv1PR1ofBby2p/EnFirJxIcz3gyzDyaptzj
+         wH5izWHCFJqgqLV1Iq2CVDJkLJCunfYYU6nWzTX4YNJxFg5hbTVgapZu82YrwOADjFp0
+         LVqynl0dlIhjYkeqcPcsJV3WRAZFueIjn6xH8QrNzFRDMY9NHdNO105aApZSCJdAYsrZ
+         wxAwydFdp14wTDO7g+YXzb0tmZMHOsXop+j7rieE9OCgwtMwzQ1lBMJSq0deh21MdURr
+         zlZQ==
+X-Gm-Message-State: AOJu0YxhHOJG/e/hjMEfjSvEc5A2My3tVLoW4QlJ6J6tL2+CeoFLVc6j
+	i8wSliR86G64eGJxMiz9+JnBphbEQawntQ917iQ=
+X-Google-Smtp-Source: AGHT+IGGT603rGonIekkwZxglWbdWqNZjFm5mnAk5XSc6weOCIoLUqdBuPZMIJK2zh9zbW8Ll5dkNojEqyeByjJyLLw=
+X-Received: by 2002:a05:6a20:7292:b0:14d:f41c:435a with SMTP id
+ o18-20020a056a20729200b0014df41c435amr29980371pzk.39.1697169464600; Thu, 12
+ Oct 2023 20:57:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230928091033.33998-1-adrian.hunter@intel.com>
-In-Reply-To: <20230928091033.33998-1-adrian.hunter@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 12 Oct 2023 14:42:57 -0700
-Message-ID: <CAP-5=fVVDRU_NLHvTCaFYwGvvN4v+1Z=TXoy27Hhi9HkOVZ76g@mail.gmail.com>
-Subject: Re: [PATCH] perf dlfilter: Add a test for object_code()
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+References: <20231008212251.236023-1-jolsa@kernel.org> <20231008212251.236023-2-jolsa@kernel.org>
+In-Reply-To: <20231008212251.236023-2-jolsa@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 12 Oct 2023 20:57:33 -0700
+Message-ID: <CAM9d7cjYCrTkOTOmBHry-95nivmkGv1g0wp=+TSA0xPXJW_QvQ@mail.gmail.com>
+Subject: Re: [PATCHv2 1/2] tools/build: Fix -s detection code in tools/build/Makefile.build
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Quentin Monnet <quentin@isovalent.com>, Dmitry Goncharov <dgoncharov@users.sf.net>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Martin KaFai Lau <kafai@fb.com>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Ian Rogers <irogers@google.com>, 
+	KP Singh <kpsingh@chromium.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-	autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 28, 2023 at 2:10=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
-com> wrote:
->
-> Extend the "dlfilter C API" test to test
-> perf_dlfilter_fns.object_code().
->
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Hi Jiri,
 
-Tested-by: Ian Rogers <irogers@google.com>
+On Sun, Oct 8, 2023 at 2:23=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> As Dmitry described in [1] changelog the current way of detecting
+> -s option is broken for new make.
+
+I'm not sure what -s option does for perf (at least).
+It doesn't seem much different whether I give it or not.
+Am I missing something?
 
 Thanks,
-Ian
+Namhyung
 
+>
+> Changing the tools/build -s option detection the same way as it was
+> fixed for root Makefile in [1].
+>
+> [1] 4bf73588165b ("kbuild: Port silent mode detection to future gnu make.=
+")
+>
+> Cc: Dmitry Goncharov <dgoncharov@users.sf.net>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/perf/dlfilters/dlfilter-test-api-v0.c | 12 +++++++++++-
->  tools/perf/dlfilters/dlfilter-test-api-v2.c | 12 +++++++++++-
->  2 files changed, 22 insertions(+), 2 deletions(-)
+>  tools/build/Makefile.build | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/dlf=
-ilters/dlfilter-test-api-v0.c
-> index 72f263d49121..4083b1abeaab 100644
-> --- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
-> +++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
-> @@ -289,6 +289,15 @@ static int check_attr(void *ctx)
->         return 0;
->  }
+> diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
+> index fac42486a8cf..5fb3fb3d97e0 100644
+> --- a/tools/build/Makefile.build
+> +++ b/tools/build/Makefile.build
+> @@ -20,7 +20,15 @@ else
+>    Q=3D@
+>  endif
 >
-> +static int check_object_code(void *ctx, const struct perf_dlfilter_sampl=
-e *sample)
-> +{
-> +       __u8 buf[15];
+> -ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
+> +# If the user is running make -s (silent mode), suppress echoing of comm=
+ands
+> +# make-4.0 (and later) keep single letter options in the 1st word of MAK=
+EFLAGS.
+> +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
+> +short-opts :=3D $(firstword -$(MAKEFLAGS))
+> +else
+> +short-opts :=3D $(filter-out --%,$(MAKEFLAGS))
+> +endif
 > +
-> +       CHECK(perf_dlfilter_fns.object_code(ctx, sample->ip, buf, sizeof(=
-buf)) > 0);
-> +
-> +       return 0;
-> +}
-> +
->  static int do_checks(void *data, const struct perf_dlfilter_sample *samp=
-le, void *ctx, bool early)
->  {
->         struct filter_data *d =3D data;
-> @@ -314,7 +323,8 @@ static int do_checks(void *data, const struct perf_dl=
-filter_sample *sample, void
->         if (early && !d->do_early)
->                 return 0;
+> +ifneq ($(findstring s,$(short-opts)),)
+>    quiet=3Dsilent_
+>  endif
 >
-> -       if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, =
-sample))
-> +       if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, =
-sample) ||
-> +           check_object_code(ctx, sample))
->                 return -1;
->
->         if (early)
-> diff --git a/tools/perf/dlfilters/dlfilter-test-api-v2.c b/tools/perf/dlf=
-ilters/dlfilter-test-api-v2.c
-> index 38e593d92920..32ff619e881c 100644
-> --- a/tools/perf/dlfilters/dlfilter-test-api-v2.c
-> +++ b/tools/perf/dlfilters/dlfilter-test-api-v2.c
-> @@ -308,6 +308,15 @@ static int check_attr(void *ctx)
->         return 0;
->  }
->
-> +static int check_object_code(void *ctx, const struct perf_dlfilter_sampl=
-e *sample)
-> +{
-> +       __u8 buf[15];
-> +
-> +       CHECK(perf_dlfilter_fns.object_code(ctx, sample->ip, buf, sizeof(=
-buf)) > 0);
-> +
-> +       return 0;
-> +}
-> +
->  static int do_checks(void *data, const struct perf_dlfilter_sample *samp=
-le, void *ctx, bool early)
->  {
->         struct filter_data *d =3D data;
-> @@ -333,7 +342,8 @@ static int do_checks(void *data, const struct perf_dl=
-filter_sample *sample, void
->         if (early && !d->do_early)
->                 return 0;
->
-> -       if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, =
-sample))
-> +       if (check_al(ctx) || check_addr_al(ctx) || check_address_al(ctx, =
-sample) ||
-> +           check_object_code(ctx, sample))
->                 return -1;
->
->         if (early)
 > --
-> 2.34.1
+> 2.41.0
 >
