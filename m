@@ -1,290 +1,94 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8AF273E6
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 23:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqMiRrO1"
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C3FBB7;
-	Fri, 13 Oct 2023 16:24:38 -0700 (PDT)
-Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-57b6c7d0cabso1512654eaf.1;
-        Fri, 13 Oct 2023 16:24:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697239477; x=1697844277; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlPy5ggPstA5Vf2bJ1akF8shrqCTEJcK3rV/vSFC+uY=;
-        b=gqMiRrO18E5+Ss6jNtm6vo81haH/wnKIrvxtDPXhRGSSXa+56IJO5l3Z1rHvxKbhij
-         xyqDKceC1zYHIQmQb5ATRZdDZgQ8TWDLyzN75w5ZDzDE3602ac/HCSnepn8pPump3hAl
-         krotG62SleDdPVHrmySwdnTlDKJ9EX7fzPPrdhazwS617QwPoELhNMLIZvLh+DhfUCG8
-         GqB57+IZ7D9DsDXe9mVQNbDXU1wO6wZwv8xvC2AJ0zL4a+YHyyUmT1BveHv3YRnzOt6R
-         Q2k/vFMTpc5jefBsGZmphIZKkshRX8ToE79QmtmxoZxZRlxjUxEAsJwsBHWFcrT1JkO3
-         w+UQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C1E2C869;
+	Fri, 13 Oct 2023 23:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D4DFB7;
+	Fri, 13 Oct 2023 16:40:16 -0700 (PDT)
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-27d4b280e4eso598460a91.1;
+        Fri, 13 Oct 2023 16:40:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697239477; x=1697844277;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hlPy5ggPstA5Vf2bJ1akF8shrqCTEJcK3rV/vSFC+uY=;
-        b=UmygjJkK7UibDnHirK4wirUAJexj2cugq7JniKS/fLojN38AycQRqmnve23yWg0svf
-         F7CpQGtPv8VCK3Ap5l2DsoxQaIDo88A6q4XwRyniv8QahvvnVPy1dt5v8NGVnwFJ8CVr
-         579iCmD/VWhY3sRg1X/xo4FkbH46xQb9spFMiOGwq5ia06G51/AuxsLAP11nzYhEsrmv
-         n5jy8/7xMBqr5Ji4QtLlec+tog/5xw//ohCormeMMAGfmAS7OLf4YCwpnW7H9tdWhAFl
-         KS8Td2oKQ+l1WxzaSbikR5sMQOmgfAGhjSLNHBajzeb6KrUGu07Ablwetyj8IZ9NDxsq
-         8ORA==
-X-Gm-Message-State: AOJu0YzFkHSxbrM8Y1NyRyTFyXclgVc8fFzHZLyhWw/Eh7S1WLnL/Y7d
-	j1dDy5QyTA5Z9DaUZToNcig=
-X-Google-Smtp-Source: AGHT+IGPUDD4kGWOdbhotNpYkmiBsU6AprFMl0FN9460vpyKgU4kGDY4zU25JDLOhFwgxDQ7lsf8qg==
-X-Received: by 2002:a05:6358:72a:b0:139:bbae:1f3 with SMTP id e42-20020a056358072a00b00139bbae01f3mr29316223rwj.3.1697239477136;
-        Fri, 13 Oct 2023 16:24:37 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:cd97:8dac:f4aa:e506])
-        by smtp.gmail.com with ESMTPSA id b8-20020a637148000000b00589b7a9ef01sm3938930pgn.36.2023.10.13.16.24.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 16:24:36 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2] perf bench sched pipe: Add -G/--cgroups option
-Date: Fri, 13 Oct 2023 16:24:35 -0700
-Message-ID: <20231013232435.1012585-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
+        d=1e100.net; s=20230601; t=1697240415; x=1697845215;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NVNwQqiVkrXjE6Ai1N/131eZHMwXAneNV9c8J7fw4cE=;
+        b=P+f/IVMG0eCNDesMou5YKY6mjKPFjHy6liEHqMjKD4ZX6+/00rxMkaJ7W//fbwlKHk
+         vH/9sSrcSXw5o/k4r2VnI6hstgZVoTnKdVvhKwJ0pAQ6VqgmlK+17sH0ucDB27robipU
+         Ahq/0lcXw/B6hRPT8oTedSLBrdVK3J6aS2RJ57xAXHTrjdB/pvpKQ238iBSUAY2bpDFQ
+         0L+qdpmWf0GlPACYThlqlVjYlAt894nVnXtfppaTsSU7AqEXVGpNWjhjeY5yKzhpt7Ep
+         QwCpoUDVArKaGOTsKGvl7OclX+O6NbDoOVENkQJ5fP8bZ93oJTqSnw+0/f1gMfqCkhYd
+         eWuw==
+X-Gm-Message-State: AOJu0Yxx9lLpefY88PGNtHckYvS7NUgyshOqVX/ZRuJ9LUh6/HT7dQH/
+	tydbsmLC6Krhsv4W7kHnPvLLHBcX8TWrU5UECP4=
+X-Google-Smtp-Source: AGHT+IG52rm3IVfLMN35j2TYSaIhI/qMeORhDVxK7PIltzo83RAIDMe7x9kH6keiuKXKVTyBhVxASEmRPyHTSwHgGxA=
+X-Received: by 2002:a17:90a:5ac6:b0:27d:2db5:62c9 with SMTP id
+ n64-20020a17090a5ac600b0027d2db562c9mr2324253pji.0.1697240415439; Fri, 13 Oct
+ 2023 16:40:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20230928235018.2136-1-namhyung@kernel.org> <ZSnMGwlppacZGaXf@kernel.org>
+In-Reply-To: <ZSnMGwlppacZGaXf@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 13 Oct 2023 16:40:04 -0700
+Message-ID: <CAM9d7cg7NgDZz_QAa8=rVp7B2AOPzWkLgTZyxndTgfDVbYL-BQ@mail.gmail.com>
+Subject: Re: [PATCH] perf lock contention: Clear lock addr after use
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, 
+	Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-The -G/--cgroups option is to put sender and receiver in different
-cgroups in order to measure cgroup context switch overheads.
+On Fri, Oct 13, 2023 at 4:00=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Thu, Sep 28, 2023 at 04:50:18PM -0700, Namhyung Kim escreveu:
+> > It checks the current lock to calculated the delta of contention time.
+>
+> > The address is saved in the tstamp map which is allocated at begining o=
+f
+> > contention and released at end of contention.
+> >
+> > But it's possible for bpf_map_delete_elem() to fail.  In that case, the
+>
+> How can it fail?
+>
+> You do:
+>
+>         pelem =3D bpf_map_lookup_elem(&tstamp, &pid);
+>         if (!pelem || pelem->lock !=3D ctx[0])
+>                 return 0;
+>
+> So it is there, why would the removal using the same key fail?
 
-Users need to make sure the cgroups exist and accessible.
+It can fail when it doesn't get a lock for the internal bucket.
+See kernel/bpf/hashtab.c::htab_map_delete_elem().
 
-  # perf stat -e context-switches,cgroup-switches \
-  > taskset -c 0 perf bench sched pipe -l 10000 > /dev/null
+But I'm not sure whether that's actually possible in this case.
 
-   Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000':
+>
+> The patch should work as-is, I'm just curious about what would make
+> there removal of a map entry that was successfully looked up on the same
+> contention_end prog to fail when being removed...
 
-              20,001      context-switches
-                   2      cgroup-switches
+Now I'm seeing some rare error cases like a spinlock wait
+is longer than a minute.  I suspect a bug in this code and
+try to be more defensive.
 
-         0.053449651 seconds time elapsed
-
-         0.011286000 seconds user
-         0.041869000 seconds sys
-
-  # perf stat -e context-switches,cgroup-switches \
-  > taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB > /dev/null
-
-   Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB':
-
-              20,001      context-switches
-              20,001      cgroup-switches
-
-         0.052768627 seconds time elapsed
-
-         0.006284000 seconds user
-         0.046266000 seconds sys
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-bench.txt | 19 +++++
- tools/perf/bench/sched-pipe.c           | 93 +++++++++++++++++++++++++
- 2 files changed, 112 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-index ca5789625cd2..8331bd28b10e 100644
---- a/tools/perf/Documentation/perf-bench.txt
-+++ b/tools/perf/Documentation/perf-bench.txt
-@@ -124,6 +124,14 @@ Options of *pipe*
- --loop=::
- Specify number of loops.
- 
-+-G::
-+--cgroups=::
-+Names of cgroups for sender and receiver, separated by a comma.
-+This is useful to check cgroup context switching overhead.
-+Note that perf doesn't create nor delete the cgroups, so users should
-+make sure that the cgroups exist and are accessible before use.
-+
-+
- Example of *pipe*
- ^^^^^^^^^^^^^^^^^
- 
-@@ -141,6 +149,17 @@ Example of *pipe*
-         Total time:0.016 sec
-                 16.948000 usecs/op
-                 59004 ops/sec
-+
-+% perf bench sched pipe -G AAA,BBB
-+(executing 1000000 pipe operations between cgroups)
-+# Running 'sched/pipe' benchmark:
-+# Executed 1000000 pipe operations between two processes
-+
-+     Total time: 6.886 [sec]
-+
-+       6.886208 usecs/op
-+         145217 ops/sec
-+
- ---------------------
- 
- SUITES FOR 'syscall'
-diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-index a960e7a93aec..a98c2e239908 100644
---- a/tools/perf/bench/sched-pipe.c
-+++ b/tools/perf/bench/sched-pipe.c
-@@ -11,6 +11,7 @@
-  */
- #include <subcmd/parse-options.h>
- #include "bench.h"
-+#include "util/cgroup.h"
- 
- #include <unistd.h>
- #include <stdio.h>
-@@ -19,6 +20,7 @@
- #include <sys/wait.h>
- #include <string.h>
- #include <errno.h>
-+#include <fcntl.h>
- #include <assert.h>
- #include <sys/time.h>
- #include <sys/types.h>
-@@ -40,9 +42,55 @@ static	int			loops = LOOPS_DEFAULT;
- /* Use processes by default: */
- static bool			threaded;
- 
-+static struct cgroup *cgrp_send = NULL;
-+static struct cgroup *cgrp_recv = NULL;
-+
-+static int parse_two_cgroups(const struct option *opt __maybe_unused,
-+			     const char *str, int unset __maybe_unused)
-+{
-+	char *p = strdup(str);
-+	char *q;
-+	int ret = -1;
-+
-+	if (p == NULL) {
-+		fprintf(stderr, "memory allocation failure");
-+		return -1;
-+	}
-+
-+	q = strchr(p, ',');
-+	if (q == NULL) {
-+		fprintf(stderr, "it should have two cgroup names: %s", p);
-+		goto out;
-+	}
-+	*q = '\0';
-+
-+	cgrp_send = cgroup__new(p, /*do_open=*/true);
-+	if (cgrp_send == NULL) {
-+		fprintf(stderr, "cannot open sender cgroup: %s", p);
-+		goto out;
-+	}
-+
-+	/* skip ',' */
-+	q++;
-+
-+	cgrp_recv = cgroup__new(q, /*do_open=*/true);
-+	if (cgrp_recv == NULL) {
-+		fprintf(stderr, "cannot open receiver cgroup: %s", q);
-+		goto out;
-+	}
-+	ret = 0;
-+
-+out:
-+	free(p);
-+	return ret;
-+}
-+
- static const struct option options[] = {
- 	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
- 	OPT_BOOLEAN('T', "threaded",	&threaded,	"Specify threads/process based task setup"),
-+	OPT_CALLBACK('G', "cgroups", NULL, "SEND,RECV",
-+		     "Put sender and receivers in given cgroups",
-+		     parse_two_cgroups),
- 	OPT_END()
- };
- 
-@@ -51,12 +99,54 @@ static const char * const bench_sched_pipe_usage[] = {
- 	NULL
- };
- 
-+static void enter_cgroup(struct cgroup *cgrp)
-+{
-+	char buf[32];
-+	int fd, len;
-+	pid_t pid;
-+
-+	if (cgrp == NULL)
-+		return;
-+
-+	if (threaded)
-+		pid = syscall(__NR_gettid);
-+	else
-+		pid = getpid();
-+
-+	snprintf(buf, sizeof(buf), "%d\n", pid);
-+	len = strlen(buf);
-+
-+	/* try cgroup v2 interface first */
-+	if (threaded)
-+		fd = openat(cgrp->fd, "cgroup.threads", O_WRONLY);
-+	else
-+		fd = openat(cgrp->fd, "cgroup.procs", O_WRONLY);
-+
-+	/* try cgroup v1 if failed */
-+	if (fd < 0)
-+		fd = openat(cgrp->fd, "tasks", O_WRONLY);
-+
-+	if (fd < 0) {
-+		printf("failed to open cgroup file in %s\n", cgrp->name);
-+		return;
-+	}
-+
-+	if (write(fd, buf, len) != len)
-+		printf("cannot enter to cgroup: %s\n", cgrp->name);
-+	close(fd);
-+}
-+
- static void *worker_thread(void *__tdata)
- {
- 	struct thread_data *td = __tdata;
- 	int m = 0, i;
- 	int ret;
- 
-+	if (td->nr)
-+		enter_cgroup(cgrp_send);
-+	else
-+		enter_cgroup(cgrp_recv);
-+
- 	for (i = 0; i < loops; i++) {
- 		if (!td->nr) {
- 			ret = read(td->pipe_read, &m, sizeof(int));
-@@ -147,6 +237,9 @@ int bench_sched_pipe(int argc, const char **argv)
- 	gettimeofday(&stop, NULL);
- 	timersub(&stop, &start, &diff);
- 
-+	cgroup__put(cgrp_send);
-+	cgroup__put(cgrp_recv);
-+
- 	switch (bench_format) {
- 	case BENCH_FORMAT_DEFAULT:
- 		printf("# Executed %d pipe operations between two %s\n\n",
--- 
-2.42.0.655.g421f12c284-goog
-
+Thanks,
+Namhyung
