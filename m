@@ -1,126 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56002273E6;
-	Fri, 13 Oct 2023 23:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D7E2C84D
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 23:03:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khOgFP81"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DCD3C433C7;
-	Fri, 13 Oct 2023 23:00:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUTjQumT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08918C433C8;
+	Fri, 13 Oct 2023 23:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697238046;
-	bh=8qM9BSYxF4si0oZK0+zWRYG3pweYYK3vSzWPG9FsH9Y=;
+	s=k20201202; t=1697238217;
+	bh=iqMnf/BMDJwzFbazhNU1KYWGcCmtvvfRHnstjXFUjjI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=khOgFP816HxAaaJBFb9SGkC1jihPOk1bYRxg562/KgHri4N7/lK+1LGiW2kHsAThk
-	 gMBZIDfcFSDqO7i12sQH5uibP0qc4F721SRUSQqpoqbzo8lhOTdY8N3EC4TqTR8H1p
-	 PSBYfs/hwM54RDVmnyDt7vcN8971GsikBv/x1WUdB/tPfi6JBIwV7LyzOIKvFrkCre
-	 GAQFDP7ZWclQxwciGSXhmaL8uUhKe4uGzRkWM8vqEJDweudGRCh3IWB/Futq4tMW9n
-	 nJ8wYUrH5yUdjN67zTzuEYY9W11dvWp9+DOUeJ5/xUnz7cxQTiE8moewpu2IWKwLgo
-	 W7sZkk+MRDhSw==
+	b=ZUTjQumTZ1JveX+KrzUF3EwwZD/Pxno1XqLO1TzfKno1IuxXHIs3vOK/nIfwOPdL/
+	 xeNNkczh+TtrWXDVYrRIdnn7+9im/UhKjbxO6iuLlPojtaRryOFXJoj3ncg/btA51H
+	 lhaub5grrZ5APfH3VqKgGNR8JfXkMfVrdtn2irjS/dpnBUjVLtwerlQSXIHgak5Pv5
+	 aKfZi82HsYKYQfNcZ2efxAUVK+KngZj4/7R0Z0j+zymh8hBKyEPLkcJkQC+pRtV6M0
+	 +Gqolbt6tMZKLKv/MzdjR5NT1zKtUfu4QvQbUKXDYp8KHYD5JgCWH0+nCMHY9uYnNs
+	 cHFmtLLXJ9qow==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id B2AEA40016; Fri, 13 Oct 2023 20:00:43 -0300 (-03)
-Date: Fri, 13 Oct 2023 20:00:43 -0300
+	id 32A7D40016; Fri, 13 Oct 2023 20:03:34 -0300 (-03)
+Date: Fri, 13 Oct 2023 20:03:34 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH] perf lock contention: Clear lock addr after use
-Message-ID: <ZSnMGwlppacZGaXf@kernel.org>
-References: <20230928235018.2136-1-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf bench sched pipe: Add -G/--cgroups option
+Message-ID: <ZSnMxtnt7o5mLj+w@kernel.org>
+References: <20231004204741.985422-1-namhyung@kernel.org>
+ <ZSnHek1HlQTkfjhG@kernel.org>
+ <CAM9d7cip5qmPRhWF37JH_21Q8SjKQCTBVyF_PLE-ytTFOwpasg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230928235018.2136-1-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cip5qmPRhWF37JH_21Q8SjKQCTBVyF_PLE-ytTFOwpasg@mail.gmail.com>
 X-Url: http://acmel.wordpress.com
 
-Em Thu, Sep 28, 2023 at 04:50:18PM -0700, Namhyung Kim escreveu:
-> It checks the current lock to calculated the delta of contention time.
-
-> The address is saved in the tstamp map which is allocated at begining of
-> contention and released at end of contention.
+Em Fri, Oct 13, 2023 at 03:57:27PM -0700, Namhyung Kim escreveu:
+> Hi Arnaldo,
 > 
-> But it's possible for bpf_map_delete_elem() to fail.  In that case, the
-
-How can it fail? 
-
-You do:
-
-        pelem = bpf_map_lookup_elem(&tstamp, &pid);
-        if (!pelem || pelem->lock != ctx[0])
-                return 0;
-
-So it is there, why would the removal using the same key fail?
-
-The patch should work as-is, I'm just curious about what would make
-there removal of a map entry that was successfully looked up on the same
-contention_end prog to fail when being removed...
-
-- Arnaldo
-
-> element in the tstamp map kept for the current lock and it makes the
-> next contention for the same lock tracked incorrectly.  Specificially
-> the next contention begin will see the existing element for the task and
-> it'd just return.  Then the next contention end will see the element and
-> calculate the time using the timestamp for the previous begin.
+> On Fri, Oct 13, 2023 at 3:41 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Wed, Oct 04, 2023 at 01:47:41PM -0700, Namhyung Kim escreveu:
+> > > The -G/--cgroups option is to put sender and receiver in different
+> > > cgroups in order to measure cgroup context switch overheads.
+> > >
+> > > Users need to make sure the cgroups exist and accessible.
+> > >
+> > >   # perf stat -e context-switches,cgroup-switches \
+> > >   > taskset -c 0 perf bench sched pipe -l 10000 > /dev/null
+> > >
+> > >    Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000':
+> > >
+> > >               20,001      context-switches
+> > >                    2      cgroup-switches
+> > >
+> > >          0.053449651 seconds time elapsed
+> > >
+> > >          0.011286000 seconds user
+> > >          0.041869000 seconds sys
+> > >
+> > >   # perf stat -e context-switches,cgroup-switches \
+> > >   > taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB > /dev/null
+> > >
+> > >    Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB':
+> > >
+> > >               20,001      context-switches
+> > >               20,001      cgroup-switches
+> > >
+> > >          0.052768627 seconds time elapsed
+> >
+> > So I tried with:
+> >
+> > [root@quaco ~]# perf bench sched pipe -G system.slice,user.slice
+> > # Running 'sched/pipe' benchmark:
+> > cannot enter to cgroup: system.slice
+> > cannot enter to cgroup: user.slice
+> > # Executed 1000000 pipe operations between two processes
+> >
+> >      Total time: 6.301 [sec]
+> >
+> >        6.301478 usecs/op
+> >          158692 ops/sec
+> > [root@quaco ~]#
+> >
+> > Should't it bail out when not managing to enter the cgroups?
 > 
-> This can result in a large value for two small contentions happened from
-> time to time.  Let's clear the lock address so that it can be updated
-> next time even if the bpf_map_delete_elem() failed.
+> Hmm.. right.  Will fix.
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/bpf_skel/lock_contention.bpf.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> >
+> > Also:
+> >
+> > [root@quaco ~]# mkdir /sys/fs/cgroup/AAA
+> > [root@quaco ~]# mkdir /sys/fs/cgroup/BBB
+> > [root@quaco ~]#
+> > [root@quaco ~]# perf bench sched pipe -G AAA,BBB
+> > # Running 'sched/pipe' benchmark:
+> > cannot enter to cgroup: AAA
+> > cannot enter to cgroup: BBB
+> > # Executed 1000000 pipe operations between two processes
+> >
+> >      Total time: 6.397 [sec]
+> >
+> >        6.397830 usecs/op
+> >          156302 ops/sec
+> > [root@quaco ~]#
+> >
+> > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/AAA/cgroup.procs
+> > [root@quaco ~]# ls -la /sys/fs/cgroup/AAA/cgroup.threads
+> > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/AAA/cgroup.threads
+> > [root@quaco ~]# ls -la /sys/fs/cgroup/BBB/cgroup.threads
+> > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/BBB/cgroup.threads
+> > [root@quaco ~]# ls -la /sys/fs/cgroup/BBB/cgroup.procs
+> > -rw-r--r--. 1 root root 0 Oct 13 19:22 /sys/fs/cgroup/BBB/cgroup.procs
+> > [root@quaco ~]#
+> >
+> > [root@quaco ~]# perf bench sched pipe -G AAA,BBB
+> > # Running 'sched/pipe' benchmark:
+> > cannot enter to cgroup: AAA (written=-1, len=6, errno=Operation not supported)
+> > cannot enter to cgroup: BBB (written=-1, len=6, errno=Operation not supported)
+> > # Executed 1000000 pipe operations between two processes
+> >
+> >      Total time: 6.303 [sec]
+> >
+> >        6.303221 usecs/op
+> >          158649 ops/sec
+> > [root@quaco ~]#
+> >
+> > I'm certainly missing something here :-\
 > 
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index 4900a5dfb4a4..b11179452e19 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -389,6 +389,7 @@ int contention_end(u64 *ctx)
->  
->  	duration = bpf_ktime_get_ns() - pelem->timestamp;
->  	if ((__s64)duration < 0) {
-> +		pelem->lock = 0;
->  		bpf_map_delete_elem(&tstamp, &pid);
->  		__sync_fetch_and_add(&time_fail, 1);
->  		return 0;
-> @@ -422,6 +423,7 @@ int contention_end(u64 *ctx)
->  	data = bpf_map_lookup_elem(&lock_stat, &key);
->  	if (!data) {
->  		if (data_map_full) {
-> +			pelem->lock = 0;
->  			bpf_map_delete_elem(&tstamp, &pid);
->  			__sync_fetch_and_add(&data_fail, 1);
->  			return 0;
-> @@ -445,6 +447,7 @@ int contention_end(u64 *ctx)
->  				data_map_full = 1;
->  			__sync_fetch_and_add(&data_fail, 1);
->  		}
-> +		pelem->lock = 0;
->  		bpf_map_delete_elem(&tstamp, &pid);
->  		return 0;
->  	}
-> @@ -458,6 +461,7 @@ int contention_end(u64 *ctx)
->  	if (data->min_time > duration)
->  		data->min_time = duration;
->  
-> +	pelem->lock = 0;
->  	bpf_map_delete_elem(&tstamp, &pid);
->  	return 0;
->  }
-> -- 
-> 2.42.0.582.g8ccd20d70d-goog
+> Try to enable some cgroup controllers first.  Like
 > 
+>   # echo +cpu > /sys/fs/cgroup/AAA/cgroup.subtree_control
+>   # echo +cpu > /sys/fs/cgroup/BBB/cgroup.subtree_control
 
--- 
+[root@quaco cgroup]# echo +cpu > /sys/fs/cgroup/AAA/cgroup.subtree_control
+[root@quaco cgroup]# echo +cpu > /sys/fs/cgroup/BBB/cgroup.subtree_control
+[root@quaco cgroup]# perf bench sched pipe -G AAA,BBB
+# Running 'sched/pipe' benchmark:
+cannot enter to cgroup: AAA (written=-1, len=6, errno=Operation not supported)
+cannot enter to cgroup: BBB (written=-1, len=6, errno=Operation not supported)
+# Executed 1000000 pipe operations between two processes
 
-- Arnaldo
+     Total time: 6.267 [sec]
+
+       6.267680 usecs/op
+         159548 ops/sec
+[root@quaco cgroup]# cat /sys/fs/cgroup/AAA/cgroup.subtree_control
+cpu
+[root@quaco cgroup]# cat /sys/fs/cgroup/BBB/cgroup.subtree_control
+cpu
+[root@quaco cgroup]# uname -a
+Linux quaco 6.5.6-200.fc38.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Oct  6 19:02:35 UTC 2023 x86_64 GNU/Linux
+[root@quaco cgroup]#
