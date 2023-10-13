@@ -1,86 +1,99 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5F1200B7
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 16:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DCF1BDE8
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 17:02:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rWmCD4NQ"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4B94228
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 09:13:28 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a3e0f8872so2984108276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 09:13:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yMGt3yxe"
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B34795
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 10:02:44 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-1c9c939cc94so20760435ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 10:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697213605; x=1697818405; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697216564; x=1697821364; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Xx0BMu30zSxzvDEomgzg9E7JT9rYro1tljom2/GGKE=;
-        b=rWmCD4NQ8jNkQakOaTPmXWmr1an3sT6PvgjoRNlGOKSlDaFVpE3WtlV92kXTlLY5Ep
-         gy4+BOqGjCu1k7TzuX5Y316BzsVOpBmAGQKLEqm56BWsH4juZkohVp6ZQ8qeUonRyfgG
-         +RffzadLU+0kKF+52HDrSaeTs3Gf7qBsiO8nuLUcVCDs/89md313fiGqMTdDrdzrPmug
-         cbzLPfcqweGMtpVo4F8vXxawYxSGRzxvs6vlzGZUo7FpPYvwfqLKNtFwhKbPD1acibQK
-         VE8N43M0kQ6CF2NYLQg4EkyJSPQhQkXqhjynQ+i6qKK0BdVEszz44GWafU0IBNKgiu9a
-         yatg==
+        bh=jb2BclJUU7GtSLFO/2WDLc/5XqeRqydzOe9LedmH49A=;
+        b=yMGt3yxemVAgOP5eqHkJfULa0vqhmzwzcWOV6aoVaAnScuQwaGifzk/gG0O8BlmVuz
+         4+7gXkG8ZLohgyc2XB/Wv5BuLT2Obk2w4Lc7Hl/oZOKk0GteJN/0JULJejy6xbnJhDmU
+         6qrZsLlmxpxv5nuYUDaAdt3s+pRX7mrq6JEwM5JjZNQdwP4u9eOz71b89XvlxGXxsE/7
+         jz+KhlhPDeNWzouC/VoEoyeIwLS0Hb2nJpCxAPfYhB1i1/ho/eI8+TyY+O3mXzVqKdJo
+         6wiB6INFSDoK+NRwaZoIBTEBJ8ALpOP3+VSWK+B+RMDK22XkuHG7lQHn7/aiPBgpRXTv
+         q8zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697213605; x=1697818405;
+        d=1e100.net; s=20230601; t=1697216564; x=1697821364;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Xx0BMu30zSxzvDEomgzg9E7JT9rYro1tljom2/GGKE=;
-        b=A+F5iwE/qvOrA8rvAKD5RnW7CCK3gpTvakH4IHLuLLxQ6TfzhaX3Jsxb8xF5RJgDJ5
-         EbNJy0lT08K+8/Fc9zDfUtsGTfMMJAjgJAJDJYCHFWWlKWtaaBS8Fo5qDCyTCsRuiq6n
-         JCRtc/lqKCl5w+EO/Vn3rWSqmJTQiiQWLy0GDiP93klgWFpunpjwNFcWRjA6IvIjBmOa
-         yFgiU6DwPIrZMasSKCx6uxmDBTrZBYZz9h+6+Gu2S9YAwSSADc2Ql1zl9/GF7faroYjQ
-         u+chZcPeP1l6DYArjC1wEskPk1a/8vo3DGrfGqNRIj+AGvKEq8F9jyb3Vnw4mkz2BGAX
-         5kXA==
-X-Gm-Message-State: AOJu0Yx4AmsoBiFJ9b64OcS7V6/gZMaIgg58ptQbvbgpTeSPSlmc/UDQ
-	JDFplQHSDf/Ur8z8otED5xzfc4GR+hQ=
-X-Google-Smtp-Source: AGHT+IE10ZBYKMQNsvc4otdqbSm0jYPRU/RLCtR3agfzWnBXi4zl5QG1flqcubxcBd+LqSyFJIHYTvcnNks=
+        bh=jb2BclJUU7GtSLFO/2WDLc/5XqeRqydzOe9LedmH49A=;
+        b=BhZWPGPOur5c2/7FX8PdJOZV7FnijzjSX6l1qa4NoaVtr8Bu0LZhtA59TSl7v/Vr6q
+         RGGtRNz7DrJ27OnGgHxSLajtB+1YvtlNim6vC2NYszCRMgCskl1qGRip+ZeNDf/AZOsi
+         NS4AZ4lz4nmAZm0dX+eO5bj6Ok1N70sx5IaHGLsITDr6E1wWwYKg16o2M2zPr03AXHJ0
+         mwZwxSX+ET5rfwgtC1ITjDmAwQtOq+CbBQEm5J+ySSLSmXbh4zow5GjgSLnDFlwhs2/E
+         2XSyYQxBWPNajp4ApTcnHLrWw6apsL+mYNenNX5eE+qGKrnANfCVO3SckVJ4BCjrTd1/
+         ufDQ==
+X-Gm-Message-State: AOJu0YwJtJRbWtkKUIdQ0DlFqleMWlnZxaEG5EpQ6JgtneY6tX/WMmHl
+	XX1m0qs4pup+7FD8tSouzquG5B/fgsw=
+X-Google-Smtp-Source: AGHT+IGWJDA/JkbHL4UxviRK8nPCM0Hpb/X0tVV0gEaz38BaIdBKPIHz0U862gy2aLpqFqqR9Gkc+FYROfI=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a5b:5c9:0:b0:d8b:737f:8240 with SMTP id
- w9-20020a5b05c9000000b00d8b737f8240mr566788ybp.0.1697213605131; Fri, 13 Oct
- 2023 09:13:25 -0700 (PDT)
-Date: Fri, 13 Oct 2023 09:13:23 -0700
-In-Reply-To: <ZSfJ6c5fo5enjvv+@fedora.fritz.box>
+ (user=seanjc job=sendgmr) by 2002:a17:903:189:b0:1c8:922e:e018 with SMTP id
+ z9-20020a170903018900b001c8922ee018mr398841plg.13.1697216563840; Fri, 13 Oct
+ 2023 10:02:43 -0700 (PDT)
+Date: Fri, 13 Oct 2023 10:02:42 -0700
+In-Reply-To: <20231011142003.GF19999@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <ZSGpl_hT23B6ix0M@mainframe> <20231007203411.GA8085@noisy.programming.kicks-ass.net>
- <ZSQqfr96SfZM_OEk@google.com> <ZSfJ6c5fo5enjvv+@fedora.fritz.box>
-Message-ID: <ZSlsowuVqQA3ecUb@google.com>
-Subject: Re: [PATCH] perf/x86/p4: Fix "Wunused-but-set-variable" warning
+References: <ZRrF38RGllA04R8o@gmail.com> <ZRroQg6flyGBtZTG@google.com>
+ <20231002204017.GB27267@noisy.programming.kicks-ass.net> <ZRtmvLJFGfjcusQW@google.com>
+ <20231003081616.GE27267@noisy.programming.kicks-ass.net> <ZRwx7gcY7x1x3a5y@google.com>
+ <20231004112152.GA5947@noisy.programming.kicks-ass.net> <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
+ <ZR3eNtP5IVAHeFNC@google.com> <20231011142003.GF19999@noisy.programming.kicks-ass.net>
+Message-ID: <ZSl4Mp3EZ5AnLGRD@google.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
 From: Sean Christopherson <seanjc@google.com>
-To: Lucy Mielke <lucymielke@icloud.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mingwei Zhang <mizhang@google.com>, Ingo Molnar <mingo@kernel.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Like Xu <likexu@tencent.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
+	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, Jim Mattson <jmattson@google.com>, 
+	David Dunn <daviddunn@google.com>, Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="us-ascii"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023, Lucy Mielke wrote:
-> Am Mon, Oct 09, 2023 at 09:29:50AM -0700 schrieb Sean Christopherson:
-> > 
-> > rdmsr() writes to "high", but nothing ever reads from high.  FWIW, I would _love_
-> > for rdmsrl() to have return semantics, e.g. to be able to do:
-> > 
-> > 	low  = (u32)rdmsrl(MSR_IA32_MISC_ENABLE);
-> > 
-> > or even
-> > 
-> > 	if (!(rdmsrl(MSR_IA32_MISC_ENABLE) & BIT(7)))
+On Wed, Oct 11, 2023, Peter Zijlstra wrote:
+> On Wed, Oct 04, 2023 at 02:50:46PM -0700, Sean Christopherson wrote:
 > 
-> I have taken a look and it seems to me like this macro is called quite a lot
-> for different things thoughout the kernel tree, including drivers. If
-> one were to change it to have return semantics instead of the way it
-> currently works, you'd have to change around 300 occurences, right?
+> > Thinking about this more, what if we do a blend of KVM's FPU swapping and debug
+> > register swapping?
+> > 
+> >   A. Load guest PMU state in vcpu_enter_guest() after IRQs are disabled
+> >   B. Put guest PMU state (and load host state) in vcpu_enter_guest() before IRQs
+> >      are enabled, *if and only if* the current CPU has one or perf events that
+> >      wants to use the hardware PMU
+> >   C. Put guest PMU state at vcpu_put()
+> >   D. Add a perf callback that is invoked from IRQ context when perf wants to
+> >      configure a new PMU-based events, *before* actually programming the MSRs,
+> >      and have KVM's callback put the guest PMU state
+> > 
+> 
+> No real objection, but I would suggest arriving at that solution by
+> first building the simple-stupid thing and then making it more
+> complicated in additinoal patches. Hmm?
 
-Yep, which is the only reason I haven't force the issue.
+Yeah, for sure.
