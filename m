@@ -1,105 +1,150 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A201510974
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 09:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7e3NZO8"
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D60D54;
-	Fri, 13 Oct 2023 02:09:56 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-53e16f076b3so2797652a12.0;
-        Fri, 13 Oct 2023 02:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697188192; x=1697792992; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iJzZvH8fBl6ADPsi6DUS9ksyUncHYpaqW3DpQr1VE2E=;
-        b=B7e3NZO8ryyuyijh0TahGkmqE48K7IqNPiQsBTJMEoQ0idChHpMvG5+rpzw0yBz2jf
-         ibd/rXQI4g7Pa2psj1H4/5tKfJrH73vfUWDINv/NwtOXuCT7L/JDLrR3Tr3XBYzAwctQ
-         x07eni3AfGpDI/W+Je9rt1dWa1lIkOtydBCTMLx+kl1uFic1Cd28fhhATPrl9Aa74VHC
-         PIEf78sNj6UvrvPn3+z1SIEobxu/rkZY7S0B60HTTOtaAHQ89hAyGcTdjjpFWpkGKPtg
-         l7HN/EdAMDnMRZu91hhVsGFcuQ0Xjp3WcKYwK9VPK87iS76tCQTcV91UDMLzibfFyzqN
-         hN/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697188192; x=1697792992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iJzZvH8fBl6ADPsi6DUS9ksyUncHYpaqW3DpQr1VE2E=;
-        b=GRA981RsZ77E9qYiZmujt7m4UCBMEGAAomg1FpszRH9pGgordEZCNVOQ6ZRBeh70Jx
-         j5eBOMc23yB4EXaidjLwwZmBjhKHndu2gnVziHOTVJOz0hAe6e2jkwzsjXCNdQbq6rrP
-         aLBUrNtVw6GeFDPsToy2w8oGkr7oksiBxNTe1eNqW7xsmQgSM37lD7Ehsx1VbYGpqYp6
-         E52gi6raNgitMimOurzcYX60k+A825dQA7fojgXrwGkxxp/RyQeqQmV+bFwpcvE/9X0i
-         ixuB7g5guWyeE72/Xwq/D6RhEEvvuXXCoNdib1r6Zt4HkIbSC4GrOYNkm2gfNAhcTIgT
-         pKCQ==
-X-Gm-Message-State: AOJu0YybFIHkYO13NvdWFQgks1MRM65cmSI8GuN5ylF7QktNNktvJwYJ
-	1QZGJYe/kbCnKjy7Ax4C2LWmUIZiwSA0IdqhqT0=
-X-Google-Smtp-Source: AGHT+IHFTCW7zjIdWbJ7zJJDNC9TMhAztBlpLvu213GykOM5zhVVEq8OGtCQFQv9Cd/wi4lA8iUAsCvCiq8XxXye8uM=
-X-Received: by 2002:a05:6402:350b:b0:529:d147:e9f3 with SMTP id
- b11-20020a056402350b00b00529d147e9f3mr21470925edd.5.1697188192093; Fri, 13
- Oct 2023 02:09:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1321EC6
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Oct 2023 14:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6310F95;
+	Fri, 13 Oct 2023 07:01:27 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8872E11FB;
+	Fri, 13 Oct 2023 07:02:07 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.34.145])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2A553F762;
+	Fri, 13 Oct 2023 07:01:24 -0700 (PDT)
+Date: Fri, 13 Oct 2023 15:01:22 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Tianyi Liu <i.pear@outlook.com>
+Cc: maz@kernel.org, acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	jolsa@kernel.org, kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mingo@redhat.com,
+	namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+	seanjc@google.com, x86@kernel.org
+Subject: Re: [PATCH v2 0/5] perf: KVM: Enable callchains for guests
+Message-ID: <ZSlNsn-f1j2bB8pW@FVFF77S0Q05N.cambridge.arm.com>
+References: <8734yhm7km.wl-maz@kernel.org>
+ <SY4P282MB108434CA47F2C55E490A1C6B9DD3A@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
- <ZSjyJuqk3z0RyKP2@gmail.com> <0c973a20-e10c-4989-b7d9-86cb0f522718@kadam.mountain>
- <ZSkInflBriOL9V3M@gmail.com>
-In-Reply-To: <ZSkInflBriOL9V3M@gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Fri, 13 Oct 2023 11:09:40 +0200
-Message-ID: <CAFULd4b7F=MNMduRn99FFcAc7Of7RsL+vyXVzsiBZZ9hz0+HnA@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/amd/uncore: fix error codes in amd_uncore_init()
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, Sandipan Das <sandipan.das@amd.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SY4P282MB108434CA47F2C55E490A1C6B9DD3A@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM>
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Oct 13, 2023 at 11:06=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
-te:
->
->
-> * Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> > On Fri, Oct 13, 2023 at 09:30:46AM +0200, Ingo Molnar wrote:
-> >
-> > > Ugh, why on Earth didn't GCC warn about this? The bad pattern is pret=
-ty
-> > > simple & obvious once pointed out ... compilers should have no troubl=
-e
-> > > realizing that 'ret' is returned uninitialized in some of these contr=
-ol
-> > > paths. Yet not a peep from the compiler ...
-> >
-> > We disabled that warning years ago (5?) because GCC had too many false
-> > positives.
->
-> GCC had some pretty bogus notions about 'possible' uninitialized use that
-> encouraged some bad code patterns, but in this case there's readily
-> provable uninitialized use, that a compiler should warn about.
->
-> Is it possible to disable just the unreliable, probabilistic part of GCC'=
-s
-> uninitialized variables warnings?
+On Thu, Oct 12, 2023 at 02:35:42PM +0800, Tianyi Liu wrote:
+> Hi Marc,
+> 
+> On Sun, 11 Oct 2023 16:45:17 +0000, Marc Zyngier wrote:
+> > > The event processing flow is as follows (shown as backtrace):
+> > >   #0 kvm_arch_vcpu_get_frame_pointer / kvm_arch_vcpu_read_virt (per arch)
+> > >   #1 kvm_guest_get_frame_pointer / kvm_guest_read_virt
+> > >      <callback function pointers in `struct perf_guest_info_callbacks`>
+> > >   #2 perf_guest_get_frame_pointer / perf_guest_read_virt
+> > >   #3 perf_callchain_guest
+> > >   #4 get_perf_callchain
+> > >   #5 perf_callchain
+> > >
+> > > Between #0 and #1 is the interface between KVM and the arch-specific
+> > > impl, while between #1 and #2 is the interface between Perf and KVM.
+> > > The 1st patch implements #0. The 2nd patch extends interfaces between #1
+> > > and #2, while the 3rd patch implements #1. The 4th patch implements #3
+> > > and modifies #4 #5. The last patch is for userspace utils.
+> > >
+> > > Since arm64 hasn't provided some foundational infrastructure (interface
+> > > for reading from a virtual address of guest), the arm64 implementation
+> > > is stubbed for now because it's a bit complex, and will be implemented
+> > > later.
+> > 
+> > I hope you realise that such an "interface" would be, by definition,
+> > fragile and very likely to break in a subtle way. The only existing
+> > case where we walk the guest's page tables is for NV, and even that is
+> > extremely fragile.
+> 
+> For walking the guest's page tables, yes, there're only very few
+> use cases. Most of them are used in nested virtualization and XEN.
 
--Wno-maybe-uninitialized?
+The key point isn't the lack of use cases; the key point is that *this is
+fragile*.
 
-Uros.
+Consider that walking guest page tables is only safe because:
+
+(a) The walks happen in the guest-physical / intermiediate-physical address
+    space of the guest, and so are not themselves subject to translation via
+    the guest's page tables.
+
+(b) Special traps were added to the architecture (e.g. for TLB invalidation)
+    which allow the host to avoid race conditions when the guest modifies page
+    tables.
+
+For unwind we'd have to walk structures in the guest's virtual address space,
+which can change under our feet at any time the guest is running, and handling
+that requires much more care.
+
+I think this needs a stronger justification, and an explanation of how you
+handle such races.
+
+Mark.
+
+> > Given that, I really wonder why this needs to happen in the kernel.
+> > Userspace has all the required information to interrupt a vcpu and
+> > walk its current context, without any additional kernel support. What
+> > are the bits here that cannot be implemented anywhere else?
+> 
+> Thanks for pointing this out, I agree with your opinion.
+> Whether it's walking guest's contexts or performing an unwind,
+> user space can indeed accomplish these tasks.
+> The only reasons I see for implementing them in the kernel are performance
+> and the access to a broader range of PMU events.
+> 
+> Consider if I were to implement these functionalities in userspace:
+> I could have `perf kvm` periodically access the guest through the KVM API
+> to retrieve the necessary information. However, interrupting a VCPU
+> through the KVM API from user space might introduce higher latency
+> (not tested specifically), and the overhead of syscalls could also
+> limit the sampling frequency.
+> 
+> Additionally, it seems that user space can only interrupt the VCPU
+> at a certain frequency, without harnessing the richness of the PMU's
+> performance events. And if we incorporate the logic into the kernel,
+> `perf kvm` can bind to various PMU events and sample with a faster
+> performance in PMU interrupts.
+> 
+> So, it appears to be a tradeoff -- whether it's necessary to introduce
+> more complexity in the kernel to gain access to a broader range and more
+> precise performance data with less overhead. In my current use case,
+> I just require simple periodic sampling, which is sufficient for me,
+> so I'm open to both approaches.
+> 
+> > > Tianyi Liu (5):
+> > >   KVM: Add arch specific interfaces for sampling guest callchains
+> > >   perf kvm: Introduce guest interfaces for sampling callchains
+> > >   KVM: implement new perf interfaces
+> > >   perf kvm: Support sampling guest callchains
+> > >   perf tools: Support PERF_CONTEXT_GUEST_* flags
+> > >
+> > >  arch/arm64/kvm/arm.c                | 17 +++++++++
+> > 
+> > Given that there is more to KVM than just arm64 and x86, I suggest
+> > that you move the lack of support for this feature into the main KVM
+> > code.
+> 
+> Currently, sampling for KVM guests is only available for the guest's
+> instruction pointer, and even the support is limited, it is available
+> on only two architectures (x86 and arm64). This functionality relies on
+> a kernel configuration option called `CONFIG_GUEST_PERF_EVENTS`,
+> which will only be enabled on x86 and arm64.
+> Within the main KVM code, these interfaces are enclosed within
+> `#ifdef CONFIG_GUEST_PERF_EVENTS`. Do you think these are enough?
+> 
+> Best regards,
+> Tianyi Liu
