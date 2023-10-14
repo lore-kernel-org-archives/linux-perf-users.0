@@ -1,35 +1,35 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EF67E
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 01:52:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10807E
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 01:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="alEud5A4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JtY8cMAW"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68D33BF;
-	Fri, 13 Oct 2023 18:52:16 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0955C0;
+	Fri, 13 Oct 2023 18:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697248336; x=1728784336;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zFHx/xW5GogHGqmoDh7SW5qdl32CguSjEtbLiPwLVfk=;
-  b=alEud5A4Pqi/mVFvTGCI3lg3YC2AvTPBXppcgoQPhWggft0MN4rZdBnP
-   uK6klP8nA6Kr8I2Fqx9NUbcvUvpniH5lJs7XpGahguBb4Ne2TVKH/4rd+
-   bXphImS81gYi1IW+Wbu1urDm1gIerSx+JaTbaZJPi+4AMlr1ZJEM+lYub
-   gxzNeYALtkXSzOGKTNpUcU+P7Jx9cOM9LT6OqbX8CMg5nrgU1i+v0xzMq
-   6JCOZBEffBwki/9DTG9SPPjI7r5oejk70SxCIMzVQiKOpu8UQs2QYOCS/
-   cHZBFeacvAjHk8WGB0bQkIp2pHXd+LCCTbdSPBICVzPWqyBijJT8Dpd8s
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="389154658"
+  t=1697248339; x=1728784339;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jx1ojGECSsqX12kMrYvlnZmvQ79nUq0chC/hJm7BgGk=;
+  b=JtY8cMAW9lpaMpRkXuZsRbq3wiXiaVtcExiuCpzv7w5kJqQxzcvgkPiO
+   Rsr3x1ARXgfGE0l6k67gO9h37pxq9o0YFeiYew/KOMtz2JYYbGD4LK4sq
+   DQ8x846LQzecw6/s8Fm619QKPV8HKYMInmRHNKhI01RjOKAaBrh+6FylD
+   hZTFYlUynOXqsGpH0RimHRU7UZdIuXxaxk07rRb/vWGejqTE8WXG3s763
+   teeWp1yCX7Y3AHh3ifSARqqbFJfEv6fjhBb/vo8+4StV+LAPw159jzjwz
+   teDAawcrSvEWK3OEq5riTMaF2fHy9bFyiD37LZEMOySdZnrKuMh/NJQb9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="389154678"
 X-IronPort-AV: E=Sophos;i="6.03,223,1694761200"; 
-   d="scan'208";a="389154658"
+   d="scan'208";a="389154678"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 18:52:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="731565652"
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="731565657"
 X-IronPort-AV: E=Sophos;i="6.03,223,1694761200"; 
-   d="scan'208";a="731565652"
+   d="scan'208";a="731565657"
 Received: from b49691a75598.jf.intel.com ([10.54.34.22])
   by orsmga006.jf.intel.com with ESMTP; 13 Oct 2023 18:52:15 -0700
 From: weilin.wang@intel.com
@@ -50,10 +50,12 @@ Cc: linux-perf-users@vger.kernel.org,
 	Caleb Biggers <caleb.biggers@intel.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Yang Jihong <yangjihong1@huawei.com>
-Subject: [RFC PATCH v2 00/17] Perf stat metric grouping with hardware information
-Date: Fri, 13 Oct 2023 18:51:45 -0700
-Message-Id: <20231014015202.1175377-1-weilin.wang@intel.com>
+Subject: [RFC PATCH v2 02/17] perf stat: Add basic functions for the hardware-grouping stat cmd option
+Date: Fri, 13 Oct 2023 18:51:47 -0700
+Message-Id: <20231014015202.1175377-3-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20231014015202.1175377-1-weilin.wang@intel.com>
+References: <20231014015202.1175377-1-weilin.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,123 +71,288 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-Chanages in v2:
- - Updated the ordering of patches and removed bug fixing patches [Kan]
- - Move code into dedicated patches or more related patches [Kan]
- - Removed unnecessary code [Kan, Yang]
+Add the first set of functions for the hardware-grouping method. Function
+hw_awre_parse_groups() is the entry point of this metric grouping method.
+It does metric grouping on a combined list of events and will create a list
+of grouping strings as final results of the grouping method. These grouping
+strings will be used in the same mannor as existing metric grouping
+process.
 
-Grouping algorithm details:
- - Currently, this grouping method groups a combined list of events, which is a
- unique list of events for the required metrics.
- - The grouping process traverses the event list to build up a event_info_list
- that includes counter restriction rules of each event. It also creates a
- pmu_info_list for the counter info - the number of gp counters and fixed
- counters available in each PMU in current system. When grouping is in progress,
- there are two bitmaps used to represent usages of gp counters and fixed
- counters in each group. These two bitmaps are initialized based on the two
- counter sizes of the corresponding PMU.
- Assumption: this method reads counter availablility from data described in JSON
- files and builds up groups based on this info.
- - The grouping step traverses the event_info_list. For each event, it checks
- bitmaps to get counter availability in current group. It sets the bit and
- inserts event into the group if found a vacant counter that fits the
- restrictions of the event. Otherwise, it creates a new group, places event in
- it, and then inserts it into the group list.
+This method will fall back to normal grouping when hardware aware grouping
+return with err so that perf stat still executes and returns with correct
+result.
 
+Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+---
+ tools/perf/util/metricgroup.c | 210 +++++++++++++++++++++++++++++++++-
+ tools/perf/util/metricgroup.h |   9 ++
+ 2 files changed, 218 insertions(+), 1 deletion(-)
 
-v1: https://lore.kernel.org/all/20230925061824.3818631-1-weilin.wang@intel.com/
-
-
-Weilin Wang (17):
-  perf stat: Add hardware-grouping cmd option to perf stat
-  perf stat: Add basic functions for the hardware-grouping stat cmd
-    option
-  perf pmu-events: Add functions in jevent.py to parse counter and event
-    info for hardware aware grouping
-  perf pmu-events: Add counter info into JSON files for SapphireRapids
-  perf pmu-events: Add event counter data for Cascadelakex
-  perf pmu-events: Add event counter data for Icelakex
-  perf stat: Add functions to set counter bitmaps for hardware-grouping
-    method
-  perf stat: Add functions to get counter info
-  perf stat: Add functions to create new group and assign events into
-    groups for hardware-grouping method
-  perf stat: Add build string function and topdown events handling in
-    hardware-grouping
-  perf stat: Add function to handle special events in hardware-grouping
-  perf stat: Add function to combine metrics for hardware-grouping
-  perf stat: Handle taken alone in hardware-grouping
-  perf stat: Handle NMI in hardware-grouping
-  perf stat: Code refactoring in hardware-grouping
-  perf stat: Add tool events support in hardware-grouping
-  perf pmu-events: Add event counter data for Tigerlake
-
- tools/lib/bitmap.c                            |   20 +
- tools/perf/builtin-stat.c                     |    7 +
- .../arch/x86/cascadelakex/cache.json          | 1237 ++++++++++++
- .../arch/x86/cascadelakex/counter.json        |   17 +
- .../arch/x86/cascadelakex/floating-point.json |   16 +
- .../arch/x86/cascadelakex/frontend.json       |   68 +
- .../arch/x86/cascadelakex/memory.json         |  751 ++++++++
- .../arch/x86/cascadelakex/other.json          |  168 ++
- .../arch/x86/cascadelakex/pipeline.json       |  102 +
- .../arch/x86/cascadelakex/uncore-cache.json   | 1138 +++++++++++
- .../x86/cascadelakex/uncore-interconnect.json | 1272 +++++++++++++
- .../arch/x86/cascadelakex/uncore-io.json      |  394 ++++
- .../arch/x86/cascadelakex/uncore-memory.json  |  509 +++++
- .../arch/x86/cascadelakex/uncore-power.json   |   25 +
- .../arch/x86/cascadelakex/virtual-memory.json |   28 +
- .../pmu-events/arch/x86/icelakex/cache.json   |   98 +
- .../pmu-events/arch/x86/icelakex/counter.json |   17 +
- .../arch/x86/icelakex/floating-point.json     |   13 +
- .../arch/x86/icelakex/frontend.json           |   55 +
- .../pmu-events/arch/x86/icelakex/memory.json  |   53 +
- .../pmu-events/arch/x86/icelakex/other.json   |   52 +
- .../arch/x86/icelakex/pipeline.json           |   92 +
- .../arch/x86/icelakex/uncore-cache.json       |  965 ++++++++++
- .../x86/icelakex/uncore-interconnect.json     | 1667 +++++++++++++++++
- .../arch/x86/icelakex/uncore-io.json          |  966 ++++++++++
- .../arch/x86/icelakex/uncore-memory.json      |  186 ++
- .../arch/x86/icelakex/uncore-power.json       |   26 +
- .../arch/x86/icelakex/virtual-memory.json     |   22 +
- .../arch/x86/sapphirerapids/cache.json        |  104 +
- .../arch/x86/sapphirerapids/counter.json      |   17 +
- .../x86/sapphirerapids/floating-point.json    |   25 +
- .../arch/x86/sapphirerapids/frontend.json     |   98 +-
- .../arch/x86/sapphirerapids/memory.json       |   44 +
- .../arch/x86/sapphirerapids/other.json        |   40 +
- .../arch/x86/sapphirerapids/pipeline.json     |  118 ++
- .../arch/x86/sapphirerapids/uncore-cache.json |  534 +++++-
- .../arch/x86/sapphirerapids/uncore-cxl.json   |   56 +
- .../sapphirerapids/uncore-interconnect.json   |  476 +++++
- .../arch/x86/sapphirerapids/uncore-io.json    |  373 ++++
- .../x86/sapphirerapids/uncore-memory.json     |  391 ++++
- .../arch/x86/sapphirerapids/uncore-power.json |   24 +
- .../x86/sapphirerapids/virtual-memory.json    |   20 +
- .../pmu-events/arch/x86/tigerlake/cache.json  |   65 +
- .../arch/x86/tigerlake/counter.json           |    7 +
- .../arch/x86/tigerlake/floating-point.json    |   13 +
- .../arch/x86/tigerlake/frontend.json          |   56 +
- .../pmu-events/arch/x86/tigerlake/memory.json |   31 +
- .../pmu-events/arch/x86/tigerlake/other.json  |    4 +
- .../arch/x86/tigerlake/pipeline.json          |   96 +
- .../x86/tigerlake/uncore-interconnect.json    |   11 +
- .../arch/x86/tigerlake/uncore-memory.json     |    6 +
- .../arch/x86/tigerlake/uncore-other.json      |    1 +
- .../arch/x86/tigerlake/virtual-memory.json    |   20 +
- tools/perf/pmu-events/jevents.py              |  177 +-
- tools/perf/pmu-events/pmu-events.h            |   26 +-
- tools/perf/util/metricgroup.c                 |  947 ++++++++++
- tools/perf/util/metricgroup.h                 |  106 ++
- tools/perf/util/pmu.c                         |    5 +
- tools/perf/util/pmu.h                         |    1 +
- tools/perf/util/stat.h                        |    1 +
- 60 files changed, 13832 insertions(+), 25 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/counter.json
-
---
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index b08af6860..8d4e29eb1 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1432,6 +1432,101 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+ 	return ret;
+ }
+ 
++/**
++ * hw_aware_build_grouping - Build event groupings by reading counter
++ * requirement of the events and counter available on the system from
++ * pmu-events.
++ * @ctx: the event identifiers parsed from metrics.
++ * @groupings: header to the list of final event grouping.
++ * @modifier: any modifiers added to the events.
++ */
++static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
++				  struct list_head *groupings __maybe_unused,
++				  const char *modifier __maybe_unused)
++{
++	int ret = 0;
++
++	pr_debug("This is a placeholder\n");
++	return ret;
++}
++
++static void group_str_free(struct metricgroup__group_strs *g)
++{
++	if (!g)
++		return;
++
++	strbuf_release(&g->grouping_str);
++	free(g);
++}
++
++static void metricgroup__free_grouping_strs(struct list_head
++					   *grouping_strs)
++{
++	struct metricgroup__group_strs *g, *tmp;
++
++	list_for_each_entry_safe(g, tmp, grouping_strs, nd) {
++		list_del_init(&g->nd);
++		group_str_free(g);
++	}
++}
++
++/**
++ * hw_aware_parse_ids - Build the event string for the ids and parse them
++ * creating an evlist. The encoded metric_ids are decoded. Events are placed
++ * into groups based on event counter requirements and counter availabilities of
++ * the system.
++ * @metric_no_merge: is metric sharing explicitly disabled.
++ * @fake_pmu: used when testing metrics not supported by the current CPU.
++ * @ids: the event identifiers parsed from a metric.
++ * @modifier: any modifiers added to the events.
++ * @out_evlist: the created list of events.
++ */
++static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
++			     struct expr_parse_ctx *ids, const char *modifier,
++			     struct evlist **out_evlist)
++{
++	struct parse_events_error parse_error;
++	struct evlist *parsed_evlist;
++	LIST_HEAD(groupings);
++	struct metricgroup__group_strs *group;
++	int ret;
++
++	*out_evlist = NULL;
++	ret = hw_aware_build_grouping(ids, &groupings, modifier);
++	if (ret) {
++		metricgroup__free_grouping_strs(&groupings);
++		return ret;
++	}
++
++	parsed_evlist = evlist__new();
++	if (!parsed_evlist) {
++		ret = -ENOMEM;
++		goto err_out;
++	}
++	list_for_each_entry(group, &groupings, nd) {
++		struct strbuf *events = &group->grouping_str;
++
++		pr_debug("Parsing metric events '%s'\n", events->buf);
++		parse_events_error__init(&parse_error);
++		ret = __parse_events(parsed_evlist, events->buf, /*pmu_filter=*/NULL,
++				    &parse_error, fake_pmu, /*warn_if_reordered=*/false);
++		if (ret) {
++			parse_events_error__print(&parse_error, events->buf);
++			goto err_out;
++		}
++		ret = decode_all_metric_ids(parsed_evlist, modifier);
++		if (ret)
++			goto err_out;
++	}
++	*out_evlist = parsed_evlist;
++	parsed_evlist = NULL;
++err_out:
++	parse_events_error__exit(&parse_error);
++	evlist__delete(parsed_evlist);
++	metricgroup__free_grouping_strs(&groupings);
++	return ret;
++}
++
+ /**
+  * parse_ids - Build the event string for the ids and parse them creating an
+  *             evlist. The encoded metric_ids are decoded.
+@@ -1520,6 +1615,114 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+ 	return ret;
+ }
+ 
++static int hw_aware_parse_groups(struct evlist *perf_evlist,
++				const char *pmu, const char *str,
++				bool metric_no_threshold,
++				const char *user_requested_cpu_list,
++				bool system_wide,
++				struct perf_pmu *fake_pmu,
++				struct rblist *metric_events_list,
++				const struct pmu_metrics_table *table)
++{
++	struct evlist *combined_evlist = NULL;
++	LIST_HEAD(metric_list);
++	struct metric *m;
++	int ret;
++	bool metric_no_group = false;
++	bool metric_no_merge = false;
++
++	if (metric_events_list->nr_entries == 0)
++		metricgroup__rblist_init(metric_events_list);
++	ret = metricgroup__add_metric_list(pmu, str, metric_no_group, metric_no_threshold,
++					   user_requested_cpu_list,
++					   system_wide, &metric_list, table);
++	if (ret)
++		goto out;
++
++	/* Sort metrics from largest to smallest. */
++	list_sort(NULL, &metric_list, metric_list_cmp);
++
++	if (!metric_no_merge) {
++		struct expr_parse_ctx *combined = NULL;
++
++		ret = build_combined_expr_ctx(&metric_list, &combined);
++
++		if (!ret && combined && hashmap__size(combined->ids)) {
++			ret = hw_aware_parse_ids(fake_pmu, combined,
++						/*modifier=*/NULL,
++						&combined_evlist);
++		}
++
++		if (ret)
++			goto out;
++
++		if (combined)
++			expr__ctx_free(combined);
++	}
++
++	list_for_each_entry(m, &metric_list, nd) {
++		struct metric_expr *expr;
++		struct metric_event *me;
++		struct evsel **metric_events;
++
++		ret = setup_metric_events(fake_pmu ? "all" : m->pmu, m->pctx->ids,
++					 combined_evlist, &metric_events);
++		if (ret) {
++			pr_debug("Cannot resolve IDs for %s: %s\n",
++				m->metric_name, m->metric_expr);
++			goto out;
++		}
++
++		me = metricgroup__lookup(metric_events_list, metric_events[0], true);
++
++		expr = malloc(sizeof(struct metric_expr));
++		if (!expr) {
++			ret = -ENOMEM;
++			free(metric_events);
++			goto out;
++		}
++
++		expr->metric_refs = m->metric_refs;
++		m->metric_refs = NULL;
++		expr->metric_expr = m->metric_expr;
++		if (m->modifier) {
++			char *tmp;
++
++			if (asprintf(&tmp, "%s:%s", m->metric_name, m->modifier) < 0)
++				expr->metric_name = NULL;
++			else
++				expr->metric_name = tmp;
++		} else {
++			expr->metric_name = strdup(m->metric_name);
++		}
++
++		if (!expr->metric_name) {
++			ret = -ENOMEM;
++			free(metric_events);
++			goto out;
++		}
++		expr->metric_threshold = m->metric_threshold;
++		expr->metric_unit = m->metric_unit;
++		expr->metric_events = metric_events;
++		expr->runtime = m->pctx->sctx.runtime;
++		list_add(&expr->nd, &me->head);
++	}
++
++	if (combined_evlist) {
++		evlist__splice_list_tail(perf_evlist, &combined_evlist->core.entries);
++		evlist__delete(combined_evlist);
++	}
++
++	list_for_each_entry(m, &metric_list, nd) {
++		if (m->evlist)
++			evlist__splice_list_tail(perf_evlist, &m->evlist->core.entries);
++	}
++
++out:
++	metricgroup__free_metrics(&metric_list);
++	return ret;
++}
++
+ static int parse_groups(struct evlist *perf_evlist,
+ 			const char *pmu, const char *str,
+ 			bool metric_no_group,
+@@ -1698,10 +1901,15 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 	if (!table)
+ 		return -EINVAL;
+ 	if (hardware_aware_grouping) {
++		int ret;
+ 		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
++		ret = hw_aware_parse_groups(perf_evlist, pmu, str,
++			    metric_no_threshold, user_requested_cpu_list, system_wide,
++			    /*fake_pmu=*/NULL, metric_events, table);
++		if (!ret)
++			return 0;
+ 	}
+ 
+-
+ 	return parse_groups(perf_evlist, pmu, str, metric_no_group, metric_no_merge,
+ 			    metric_no_threshold, user_requested_cpu_list, system_wide,
+ 			    /*fake_pmu=*/NULL, metric_events, table);
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 779f6ede1..89809df85 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -6,6 +6,7 @@
+ #include <linux/rbtree.h>
+ #include <stdbool.h>
+ #include "pmu-events/pmu-events.h"
++#include "strbuf.h"
+ 
+ struct evlist;
+ struct evsel;
+@@ -66,6 +67,14 @@ struct metric_expr {
+ 	int runtime;
+ };
+ 
++/**
++ * Each group is one node in the group string list.
++ */
++struct metricgroup__group_strs {
++	struct list_head nd;
++	struct strbuf grouping_str;
++};
++
+ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+ 					 struct evsel *evsel,
+ 					 bool create);
+-- 
 2.39.3
 
