@@ -1,48 +1,48 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA750567B
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 07:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FB55243
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 07:45:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e5w6CmFj"
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E80BBF
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 00:45:30 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-3573dc94399so11262605ab.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 00:45:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZzRS508k"
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5465CC
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 00:45:34 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6bb4abb8100so141734b3a.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 00:45:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697269529; x=1697874329; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1697269534; x=1697874334; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pUGayCjdfCKVMoAdEORZ5NxIXkJ/ofSNrTgGs/xtftE=;
-        b=e5w6CmFjkySmPdLyRuMcoXlHko8ip3BpnpVLoHnVMBEQXVpNKnKhEPnFZfe6az2Ige
-         cHqfsMNiWabdspaL2GdeBaZAWp2C2oZppT+k3kyS83waVxyXVgzbaxwMUUIDHNpnGbhk
-         APLLUi1MA9sOCsdUjdgWl1Y7iaSGQBCOpynWO0Xv6zbp7GsJkKLmkWONh+qwIKw4+i8G
-         LXHniKLVsNnaQCyT6+zitQ3obM2EaJGnYKmLy+ZOeNePTIAiWEof9z7qa478DzrkTxXy
-         sG/eogQGdFzXbAm+6Pf3kFC8oDXui8y6W6kmR1N980doMzcdMjTkyHuN7iK0xa1mKsm2
-         dUjw==
+        bh=96NwI+szUWVaDtq9XwWAR7aU5/19oJgtQRo7AsJZv38=;
+        b=ZzRS508kUmxaJDRrD/5gZIOzVl1Lcl+4eIkhYEqeQJUCTxSMimNhKfiMf+aOEGOy/t
+         NlnUJBcCQk+ePgoVqQz++/soPpPdGuVReHj2BbDJfAtGWVKlh2TDbzLYeN3eQtZ7xd/k
+         apwLE6UxG6wYL3zZF4DmeQEpu3Ejru2XraknN0PeNu1NXQodg0fGuicl1TPfFxfJyXOZ
+         VOxJ8VAnjFFUCYsd7UH1jJU0zuGCAnnSL9KpuDlH754MsIq+L2abjn4VVxaD59DrJEtY
+         yYMrHtLzlR7qYKA2JCJxIeFgWmxFf2u0zNP8HB4Zp32up6A46kesV9Vw0kXONApDQ5wr
+         Cg5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697269529; x=1697874329;
+        d=1e100.net; s=20230601; t=1697269534; x=1697874334;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pUGayCjdfCKVMoAdEORZ5NxIXkJ/ofSNrTgGs/xtftE=;
-        b=SQpv1haNS+GJAeX8kw6EC2L/Fme8BIjHlPJSBnC3gECGjYPvu0PlBXll4UN9saxEBQ
-         v7ND9AXrqPANZhpI8cvudiKu2oKvi2PTZbhsClo48gMf+iDaNYakJkkXLDcFbicjwiCt
-         5j9EZUpqTaKPCSnR+4lhRvezTft9+czqODVUGBMe8dnWEj8ynqmTmeK5voKgJDnXjKJj
-         ERpSDn9+12iJifSV3v/lmnNCrcF2gaPdzvcGTwCYe5/IjP2EVEjQugiFvjj7JmzYbIBP
-         cnm7o/rFVKNvICAi8YyRBZyapjowU0SqFR8rq4kR1K1Tz7IKlydFTQZF/wVAkmSpuS4g
-         3m/A==
-X-Gm-Message-State: AOJu0YwKOvlNSaDrk7TV1HJ3AynliK4FZir8kZLkk7JDsD19hjtttaQo
-	ohTJEp4A0OUNk9U+UonCmtW9gA==
-X-Google-Smtp-Source: AGHT+IFu4IpYYh0fEp9h0zOOlOY34CAXroKMc6faHAM0eY/L+xaLENO/R/YjFnAwiYbWYfOexjgEcQ==
-X-Received: by 2002:a92:c269:0:b0:357:5234:802d with SMTP id h9-20020a92c269000000b003575234802dmr10535089ild.10.1697269529372;
-        Sat, 14 Oct 2023 00:45:29 -0700 (PDT)
+        bh=96NwI+szUWVaDtq9XwWAR7aU5/19oJgtQRo7AsJZv38=;
+        b=iWwzvUu5j0pKXdwQELRYr5V0XaIU+uVLb96W+DKQrQJL1floX47x0r9dUSdh1uUrKi
+         avzTq2Xj3kBQQ9CCTWH6iwyOfh9ne0bTv/1X8y+kUlAXeJ9LXtdFu1ItvKj5zuB1HZff
+         MBY++AmoUrdH0qLyft8TPVKl/9+dpSPriPEo1C1CxugETQQ55Os8xCX0L1gTH9xfxECF
+         xAbhB6kgv8e23kAlq7YIfcOjoYhloW4rZ58Pykbz3JmBDRq5qqowQrTVtzng3ft/3sR2
+         /J84PqTVcfsslWH8Oto6uNmnbt1f24nbrysAPRYMpgjPpL4pgXYHjdcumtp3efP3PIrA
+         TfEg==
+X-Gm-Message-State: AOJu0YzQgLF2g9mxn6rSUQonTMKgtStYST7mzUe2Gktij79gsp42mole
+	nNyV4HU0rHzy0vC++H9gnLS7gQ==
+X-Google-Smtp-Source: AGHT+IFSuZzpRXBPpMB17Gk7j0z/3Vjzu2h3MJXxx77CEHZ/SOKVJBuTBUwkprQY5woSpJTwPmvLxQ==
+X-Received: by 2002:a17:902:ca14:b0:1c9:ca02:6451 with SMTP id w20-20020a170902ca1400b001c9ca026451mr7855265pld.39.1697269533953;
+        Sat, 14 Oct 2023 00:45:33 -0700 (PDT)
 Received: from leoy-huanghe.lan ([98.98.49.106])
-        by smtp.gmail.com with ESMTPSA id r8-20020a170902be0800b001c3e732b8dbsm4965124pls.168.2023.10.14.00.45.25
+        by smtp.gmail.com with ESMTPSA id r8-20020a170902be0800b001c3e732b8dbsm4965124pls.168.2023.10.14.00.45.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Oct 2023 00:45:28 -0700 (PDT)
+        Sat, 14 Oct 2023 00:45:33 -0700 (PDT)
 From: Leo Yan <leo.yan@linaro.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	James Clark <james.clark@arm.com>,
@@ -63,9 +63,9 @@ Cc: John Garry <john.g.garry@oracle.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 1/2] perf auxtrace: Add 'T' itrace option for timestamp trace
-Date: Sat, 14 Oct 2023 15:45:12 +0800
-Message-Id: <20231014074513.1668000-2-leo.yan@linaro.org>
+Subject: [PATCH v1 2/2] perf cs-etm: Enable itrace option 'T'
+Date: Sat, 14 Oct 2023 15:45:13 +0800
+Message-Id: <20231014074513.1668000-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231014074513.1668000-1-leo.yan@linaro.org>
 References: <20231014074513.1668000-1-leo.yan@linaro.org>
@@ -82,77 +82,66 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-An AUX trace can contain timestamp, but in some situations, the hardware
-trace module (e.g. Arm CoreSight) cannot decide the traced timestamp is
-the same source with CPU's time, thus the decoder can not use the
-timestamp trace for samples.
+Prior to Armv8.4, the feature FEAT_TRF is not supported by Arm CPUs.
+Consequently, the sysfs node 'ts_source' will not be set as 1 by the
+CoreSight ETM driver.  On the other hand, the perf tool relies on the
+'ts_source' node to determine whether the kernel timestamp is traced.
+Since the 'ts_source' is not set for Arm CPUs prior to Armv8.4,
+platforms in this case cannot utilize the traced timestamp as the kernel
+time.
 
-This patch introduces 'T' itrace option. If users know the platforms
-they are working on have the same time counter with CPUs, users can
-use this new option to tell a decoder for using timestamp trace as
+This patch enables the 'T' itrace option, which forcibly utilizes the
+traced timestamp as the kernel time.  If users are aware that their
+working platform's Arm CoreSight shares the same counter with the kernel
+time, they can specify 'T' option to decode the traced timestamp as the
 kernel time.
+
+An usage example is:
+
+  # perf record -e cs_etm// -- test_program
+  # perf script --itrace=i10ibT
+  # perf report --itrace=i10ibT
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/Documentation/itrace.txt | 1 +
- tools/perf/util/auxtrace.c          | 3 +++
- tools/perf/util/auxtrace.h          | 3 +++
- 3 files changed, 7 insertions(+)
+ tools/perf/util/cs-etm.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index a97f95825b14..19cc179be9a7 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -25,6 +25,7 @@
- 		q	quicker (less detailed) decoding
- 		A	approximate IPC
- 		Z	prefer to ignore timestamps (so-called "timeless" decoding)
-+		T	use the timestamp trace as kernel time
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 9729d006550d..4a37fdeb1795 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -3322,12 +3322,27 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	etm->metadata = metadata;
+ 	etm->auxtrace_type = auxtrace_info->type;
  
- 	The default is all events i.e. the same as --itrace=iybxwpe,
- 	except for perf script where it is --itrace=ce
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index a0368202a746..f528c4364d23 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1638,6 +1638,9 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
- 		case 'Z':
- 			synth_opts->timeless_decoding = true;
- 			break;
-+		case 'T':
-+			synth_opts->use_timestamp = true;
-+			break;
- 		case ' ':
- 		case ',':
- 			break;
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 29eb82dff574..55702215a82d 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -99,6 +99,7 @@ enum itrace_period_type {
-  * @remote_access: whether to synthesize remote access events
-  * @mem: whether to synthesize memory events
-  * @timeless_decoding: prefer "timeless" decoding i.e. ignore timestamps
-+ * @use_timestamp: use the timestamp trace as kernel time
-  * @vm_time_correlation: perform VM Time Correlation
-  * @vm_tm_corr_dry_run: VM Time Correlation dry-run
-  * @vm_tm_corr_args:  VM Time Correlation implementation-specific arguments
-@@ -146,6 +147,7 @@ struct itrace_synth_opts {
- 	bool			remote_access;
- 	bool			mem;
- 	bool			timeless_decoding;
-+	bool			use_timestamp;
- 	bool			vm_time_correlation;
- 	bool			vm_tm_corr_dry_run;
- 	char			*vm_tm_corr_args;
-@@ -678,6 +680,7 @@ bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
- "				q:			quicker (less detailed) decoding\n" \
- "				A:			approximate IPC\n" \
- "				Z:			prefer to ignore timestamps (so-called \"timeless\" decoding)\n" \
-+"				T:			use the timestamp trace as kernel time\n" \
- "				PERIOD[ns|us|ms|i|t]:   specify period to sample stream\n" \
- "				concatenate multiple options. Default is iybxwpe or cewp\n"
+-	/* Use virtual timestamps if all ETMs report ts_source = 1 */
+-	etm->has_virtual_ts = cs_etm__has_virtual_ts(metadata, num_cpu);
++	if (etm->synth_opts.use_timestamp)
++		/*
++		 * Prior to Armv8.4, Arm CPUs don't support FEAT_TRF feature,
++		 * therefore the decoder cannot know if the timestamp trace is
++		 * same with the kernel time.
++		 *
++		 * If a user has knowledge for the working platform and can
++		 * specify itrace option 'T' to tell decoder to forcely use the
++		 * traced timestamp as the kernel time.
++		 */
++		etm->has_virtual_ts = true;
++	else
++		/* Use virtual timestamps if all ETMs report ts_source = 1 */
++		etm->has_virtual_ts = cs_etm__has_virtual_ts(metadata, num_cpu);
  
+ 	if (!etm->has_virtual_ts)
+ 		ui__warning("Virtual timestamps are not enabled, or not supported by the traced system.\n"
+-			    "The time field of the samples will not be set accurately.\n\n");
++			    "The time field of the samples will not be set accurately.\n"
++			    "For Arm CPUs prior to Armv8.4 or without support FEAT_TRF,\n"
++			    "you can specify the itrace option 'T' for timestamp decoding\n"
++			    "if the Coresight timestamp on the platform is same with the kernel time.\n\n");
+ 
+ 	etm->auxtrace.process_event = cs_etm__process_event;
+ 	etm->auxtrace.process_auxtrace_event = cs_etm__process_auxtrace_event;
 -- 
 2.34.1
 
