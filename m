@@ -1,147 +1,134 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FB55243
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 07:45:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4497E
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 08:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZzRS508k"
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5465CC
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 00:45:34 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6bb4abb8100so141734b3a.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 00:45:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3Hn33vx"
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5F2BB;
+	Sat, 14 Oct 2023 01:44:13 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-53df747cfe5so5165675a12.2;
+        Sat, 14 Oct 2023 01:44:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697269534; x=1697874334; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=96NwI+szUWVaDtq9XwWAR7aU5/19oJgtQRo7AsJZv38=;
-        b=ZzRS508kUmxaJDRrD/5gZIOzVl1Lcl+4eIkhYEqeQJUCTxSMimNhKfiMf+aOEGOy/t
-         NlnUJBcCQk+ePgoVqQz++/soPpPdGuVReHj2BbDJfAtGWVKlh2TDbzLYeN3eQtZ7xd/k
-         apwLE6UxG6wYL3zZF4DmeQEpu3Ejru2XraknN0PeNu1NXQodg0fGuicl1TPfFxfJyXOZ
-         VOxJ8VAnjFFUCYsd7UH1jJU0zuGCAnnSL9KpuDlH754MsIq+L2abjn4VVxaD59DrJEtY
-         yYMrHtLzlR7qYKA2JCJxIeFgWmxFf2u0zNP8HB4Zp32up6A46kesV9Vw0kXONApDQ5wr
-         Cg5A==
+        d=gmail.com; s=20230601; t=1697273052; x=1697877852; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xfAieePA5vpkTsm3Lg9DT3eg6wz3q+Z/kvUk23qNav0=;
+        b=U3Hn33vxApfL4089fjDVQZAr/zME6ZioR7bTXpE/vVYj3pRhUL5cDGXIi7VVKib9bI
+         uuIgKL94wPUut8PfYp7FR8n9Da7EmAtADg7pBoWCHu/T+uno5bF90/QB/19oQmLgDyJa
+         VagGTLXUlUJSSa3UGaSMGrbJkwn1+Svdcd9Owt+5sEm6aRrtJD68PSjFrmz1Oo0jtxU7
+         csAycMFk0xmDyW1wrmEzCb1ySa9b7qPOGqdI2ZKgLy3NfX7HqEC5Hey5jrcJph0kVHQe
+         yyLDxh4+AdGWAM9LCZQgSg2iCdzP3pAeVA7aZiep2nD8irUR1oyMVdZ8Me9WZBTX2Z/Q
+         3GCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697269534; x=1697874334;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1697273052; x=1697877852;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=96NwI+szUWVaDtq9XwWAR7aU5/19oJgtQRo7AsJZv38=;
-        b=iWwzvUu5j0pKXdwQELRYr5V0XaIU+uVLb96W+DKQrQJL1floX47x0r9dUSdh1uUrKi
-         avzTq2Xj3kBQQ9CCTWH6iwyOfh9ne0bTv/1X8y+kUlAXeJ9LXtdFu1ItvKj5zuB1HZff
-         MBY++AmoUrdH0qLyft8TPVKl/9+dpSPriPEo1C1CxugETQQ55Os8xCX0L1gTH9xfxECF
-         xAbhB6kgv8e23kAlq7YIfcOjoYhloW4rZ58Pykbz3JmBDRq5qqowQrTVtzng3ft/3sR2
-         /J84PqTVcfsslWH8Oto6uNmnbt1f24nbrysAPRYMpgjPpL4pgXYHjdcumtp3efP3PIrA
-         TfEg==
-X-Gm-Message-State: AOJu0YzQgLF2g9mxn6rSUQonTMKgtStYST7mzUe2Gktij79gsp42mole
-	nNyV4HU0rHzy0vC++H9gnLS7gQ==
-X-Google-Smtp-Source: AGHT+IFSuZzpRXBPpMB17Gk7j0z/3Vjzu2h3MJXxx77CEHZ/SOKVJBuTBUwkprQY5woSpJTwPmvLxQ==
-X-Received: by 2002:a17:902:ca14:b0:1c9:ca02:6451 with SMTP id w20-20020a170902ca1400b001c9ca026451mr7855265pld.39.1697269533953;
-        Sat, 14 Oct 2023 00:45:33 -0700 (PDT)
-Received: from leoy-huanghe.lan ([98.98.49.106])
-        by smtp.gmail.com with ESMTPSA id r8-20020a170902be0800b001c3e732b8dbsm4965124pls.168.2023.10.14.00.45.29
+        bh=xfAieePA5vpkTsm3Lg9DT3eg6wz3q+Z/kvUk23qNav0=;
+        b=Xk/JoljJAHYSfmXPIPOLkjLZWzLV5XGGT5lDuLhAjan/QsI5xT6GQbcbueEEiWpIYi
+         YwtVFcPyJmHFGbXtBLFfm0xIVednb65oBVJ3pzbFFK9DohgQMYnQ0ouFk1E2Y3IE5gjX
+         E7J+IzMWk0fQ5EUh4VeXGF+/nYdyCnWJ4XcZOMPhnT6ms9cs7DyXUnnTxQbopKQe3tUj
+         7sHqSqyCN38h9/NprPZ41cHHDULQlAsgSjVhPdGHbyP1ubySHGNzoM37J2iVVoLSDdCJ
+         mp0WgTaL6dIHdW0WpRHqXB9BHlCKjUIwhOO1lOITuql2YGkJK2Jpr+kQXm7SYBpHCmSB
+         /zvQ==
+X-Gm-Message-State: AOJu0YwkD7VVFClPwCm2a4drtmyMuZEGUwEbuVNz3AG4I5NT0FpLaroe
+	ZdDBLu5D0Q8xjhFS98Mjhus=
+X-Google-Smtp-Source: AGHT+IH8YDbJYQgUkAJbgWUajcrExCf6li6de+ubUIq9v+AxEjK8XIgv1EvmMvJHWOgL69PSHU3+8A==
+X-Received: by 2002:a17:906:1d:b0:9b2:9a0e:9972 with SMTP id 29-20020a170906001d00b009b29a0e9972mr26994917eja.13.1697273051953;
+        Sat, 14 Oct 2023 01:44:11 -0700 (PDT)
+Received: from gmail.com (1F2EF7B2.nat.pool.telekom.hu. [31.46.247.178])
+        by smtp.gmail.com with ESMTPSA id o19-20020a17090637d300b009b65a698c16sm639989ejc.220.2023.10.14.01.44.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Oct 2023 00:45:33 -0700 (PDT)
-From: Leo Yan <leo.yan@linaro.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>
-Cc: John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+        Sat, 14 Oct 2023 01:44:11 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Sat, 14 Oct 2023 10:44:09 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 2/2] perf cs-etm: Enable itrace option 'T'
-Date: Sat, 14 Oct 2023 15:45:13 +0800
-Message-Id: <20231014074513.1668000-3-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231014074513.1668000-1-leo.yan@linaro.org>
-References: <20231014074513.1668000-1-leo.yan@linaro.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf bench sched pipe: Add -G/--cgroups option
+Message-ID: <ZSpU2Q7A9ViZe7DB@gmail.com>
+References: <20231013232435.1012585-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231013232435.1012585-1-namhyung@kernel.org>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Prior to Armv8.4, the feature FEAT_TRF is not supported by Arm CPUs.
-Consequently, the sysfs node 'ts_source' will not be set as 1 by the
-CoreSight ETM driver.  On the other hand, the perf tool relies on the
-'ts_source' node to determine whether the kernel timestamp is traced.
-Since the 'ts_source' is not set for Arm CPUs prior to Armv8.4,
-platforms in this case cannot utilize the traced timestamp as the kernel
-time.
 
-This patch enables the 'T' itrace option, which forcibly utilizes the
-traced timestamp as the kernel time.  If users are aware that their
-working platform's Arm CoreSight shares the same counter with the kernel
-time, they can specify 'T' option to decode the traced timestamp as the
-kernel time.
+* Namhyung Kim <namhyung@kernel.org> wrote:
 
-An usage example is:
+> +	cgrp_send = cgroup__new(p, /*do_open=*/true);
+> +	if (cgrp_send == NULL) {
+> +		fprintf(stderr, "cannot open sender cgroup: %s", p);
+> +		goto out;
+> +	}
 
-  # perf record -e cs_etm// -- test_program
-  # perf script --itrace=i10ibT
-  # perf report --itrace=i10ibT
+Maybe in this case print out a small suggestion of how to create this 
+particular cgroup?
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/cs-etm.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+Most distro users and even kernel developers don't ever have to create
+new cgroups.
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 9729d006550d..4a37fdeb1795 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -3322,12 +3322,27 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	etm->metadata = metadata;
- 	etm->auxtrace_type = auxtrace_info->type;
- 
--	/* Use virtual timestamps if all ETMs report ts_source = 1 */
--	etm->has_virtual_ts = cs_etm__has_virtual_ts(metadata, num_cpu);
-+	if (etm->synth_opts.use_timestamp)
-+		/*
-+		 * Prior to Armv8.4, Arm CPUs don't support FEAT_TRF feature,
-+		 * therefore the decoder cannot know if the timestamp trace is
-+		 * same with the kernel time.
-+		 *
-+		 * If a user has knowledge for the working platform and can
-+		 * specify itrace option 'T' to tell decoder to forcely use the
-+		 * traced timestamp as the kernel time.
-+		 */
-+		etm->has_virtual_ts = true;
-+	else
-+		/* Use virtual timestamps if all ETMs report ts_source = 1 */
-+		etm->has_virtual_ts = cs_etm__has_virtual_ts(metadata, num_cpu);
- 
- 	if (!etm->has_virtual_ts)
- 		ui__warning("Virtual timestamps are not enabled, or not supported by the traced system.\n"
--			    "The time field of the samples will not be set accurately.\n\n");
-+			    "The time field of the samples will not be set accurately.\n"
-+			    "For Arm CPUs prior to Armv8.4 or without support FEAT_TRF,\n"
-+			    "you can specify the itrace option 'T' for timestamp decoding\n"
-+			    "if the Coresight timestamp on the platform is same with the kernel time.\n\n");
- 
- 	etm->auxtrace.process_event = cs_etm__process_event;
- 	etm->auxtrace.process_auxtrace_event = cs_etm__process_auxtrace_event;
--- 
-2.34.1
+Maybe even allow the creation of new cgroups for this testing, if they 
+don't already exist? As long as we don't delete any cgroups I don't think 
+much harm can be done - and the increase in usability is substantial.
 
+> +static void enter_cgroup(struct cgroup *cgrp)
+> +{
+> +	char buf[32];
+> +	int fd, len;
+> +	pid_t pid;
+> +
+> +	if (cgrp == NULL)
+> +		return;
+> +
+> +	if (threaded)
+> +		pid = syscall(__NR_gettid);
+> +	else
+> +		pid = getpid();
+> +
+> +	snprintf(buf, sizeof(buf), "%d\n", pid);
+> +	len = strlen(buf);
+> +
+> +	/* try cgroup v2 interface first */
+> +	if (threaded)
+> +		fd = openat(cgrp->fd, "cgroup.threads", O_WRONLY);
+> +	else
+> +		fd = openat(cgrp->fd, "cgroup.procs", O_WRONLY);
+> +
+> +	/* try cgroup v1 if failed */
+> +	if (fd < 0)
+> +		fd = openat(cgrp->fd, "tasks", O_WRONLY);
+> +
+> +	if (fd < 0) {
+> +		printf("failed to open cgroup file in %s\n", cgrp->name);
+> +		return;
+> +	}
+> +
+> +	if (write(fd, buf, len) != len)
+> +		printf("cannot enter to cgroup: %s\n", cgrp->name);
+
+The failures here should probably result in termination of the run with an 
+error code, not just messages which are easy to skip in automated tests?
+
+Thanks,
+
+	Ingo
