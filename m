@@ -1,166 +1,120 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C521C5240
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 09:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBD4266AC
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 21:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3lYgWxU"
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3195BF;
-	Sat, 14 Oct 2023 02:03:05 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-52bd9ddb741so5084892a12.0;
-        Sat, 14 Oct 2023 02:03:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I55+kMc6"
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1DDC9;
+	Sat, 14 Oct 2023 14:58:19 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-538e8eca9c1so5568120a12.3;
+        Sat, 14 Oct 2023 14:58:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697274184; x=1697878984; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vrjdvhuyLi76cWCs4pY1W4T+njgP3cS2nbxIhYnFvBk=;
-        b=I3lYgWxUiRC7SmOnjyEJXdAZfLge044Dz/25M7uxyKe0Q1jonmWIyXR5+veMug/aN7
-         lLDU/QPWxrGbbHAZx+P2l6vi7tQZR8pZ6mQK+DEHyJ87WdBSJg+NkvCPkYompZBMoZUV
-         7mNi+tNv5KeM1/1+oA3Dj8SkQR/2jLb4Dw39441YgK5MvuBiyrVBRt8s5Riftj1goBjN
-         PAkFv9KjcYq+p1pTXk1+3lVJKeErYiTMbaoAypXbSzZs/gII0IwTrFlyd0XvoCoNTSPC
-         Znqjy7zj1Ebo2rtfql5SXIu483/0BmydWwNpkHZVKe13ndQbCPj+MuScwX7JlPb1gegM
-         rjqg==
+        d=gmail.com; s=20230601; t=1697320697; x=1697925497; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=k3rqTgJ5wiRPiIuu/wLqZjqyoaaSm39dvqVRU6EIaGo=;
+        b=I55+kMc6eieL6GYnGBKwYPFll+mRlCRApgP5/jjhBhoOG7Zg9wUfEFCKITLTtdkC0T
+         GyoyE7jJkXxdENSqdphBPwIcuawM8OzlKnQI9C1lTYnbsqwrgqQbJrbkYCDT1rU1lX1/
+         NTBE54OP0eoI70JiNjYJW+ajLyRKVDgibb+IbyGNZG4tWqgVmbyhMqNWoTzVEVUzgEiF
+         em2E9ymfy8onRQmagCHp+uMLmD2mOfIIkmuSLRH7TUoAcY7dxraNwW/7NEJQJTR+WHv7
+         2zU1LHvrK4m+5xs6rbbn+pWrWAzN8QuKA0Z1VWHHpAlo66h5YvPOQS64afN54JXvVji0
+         bKYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697274184; x=1697878984;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vrjdvhuyLi76cWCs4pY1W4T+njgP3cS2nbxIhYnFvBk=;
-        b=A5SkcAYOsIKUH5BcSp7kQ05iEsyBCjRqyGZpgZ7CvWtXijjiuk5+BlwdGrnDQ5oEUs
-         /7paIkFJsRXJoFGJIYyXSNecX844WEyUlak0eNA41+j2DFeNkXbBDUjqs6HIUk3rzjLJ
-         icPxIWWtSsJWRuaqgOlqAO7DmRyFy/Hu4XUlTtNK1HsERiGuhDdUvbWhaCQaVvyI4GJq
-         g7j2oSrwPhAp6kQMzT4hEsx1i/bIP87d/poqF9FlKxC36DkmR7bTsnbmjcvJvjPvptFj
-         yULR2UANkHroA/2woXCTIVO7X/bqajNRRR90+f2vWmDqJ6xPNazxeofC2/rH72m57N86
-         cvsQ==
-X-Gm-Message-State: AOJu0YyOp/wZBpN5hwzVJpMjF8MbokXe3JfUDHdRwAL8uYnlrZxfk5Im
-	YuXdCpeDucew95+3brf74ck=
-X-Google-Smtp-Source: AGHT+IFjOj1/IzQBMj0vcP13kI+ox/4uaCVTPj6ssHEWe+hQtRJFoEQe2IM5SiqE17oNcM5Fwg/Pyw==
-X-Received: by 2002:a05:6402:5192:b0:53e:2b80:2f74 with SMTP id q18-20020a056402519200b0053e2b802f74mr5436034edd.0.1697274184087;
-        Sat, 14 Oct 2023 02:03:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697320697; x=1697925497;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k3rqTgJ5wiRPiIuu/wLqZjqyoaaSm39dvqVRU6EIaGo=;
+        b=fm2j4AYEvGYDcnoD4ej7QS8k4UiFM5T4qxc8YhEUTxMRuyjTtjCXNhKpBluetdsbOc
+         HXjwnhEMwDEwUAHnfsYxaFpyF/kJD0GkfLfhZ1+l/pooKic6DXfqOv8A6iqVaUmMlGrV
+         F+5bU94iNqu/Z63vsIXaEK1/vnzbLDCoNye0L9d1GEAOpJCCwkwUTnq5GeyhZtXArC6B
+         0ooY4chpGmkhEFXw5i81X0kW1o+isxXfiE95S64BHIimPfi7KVthQZEp1z4BSAU3y97o
+         iSoiz2IA+JQL+etK3UoObtilYQXCQxIrMgUq+tgVIjuR/rOc1IhvnZSi/PLGEK1HKiZ2
+         J2VA==
+X-Gm-Message-State: AOJu0Yw2zoyopLi0NgFCzNeYtvKIBi87Mp/U15zmmIbhUo/ImWdXjkF2
+	OcVrz8gXPJO3IizXVA5liRE=
+X-Google-Smtp-Source: AGHT+IFUdDx511EOY3CmDiG8CiCqIVVT01V76bbhfMm3qmD3XI8pW48takEHxunqaD31+hsEQ7c7rg==
+X-Received: by 2002:a17:906:4fc7:b0:9be:aebc:d480 with SMTP id i7-20020a1709064fc700b009beaebcd480mr2359055ejw.24.1697320697107;
+        Sat, 14 Oct 2023 14:58:17 -0700 (PDT)
 Received: from gmail.com (1F2EF7B2.nat.pool.telekom.hu. [31.46.247.178])
-        by smtp.gmail.com with ESMTPSA id a90-20020a509ee3000000b0053e589016a7sm1423959edf.16.2023.10.14.02.03.02
+        by smtp.gmail.com with ESMTPSA id e8-20020a17090681c800b009be23a040cfsm1402017ejx.40.2023.10.14.14.58.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Oct 2023 02:03:03 -0700 (PDT)
+        Sat, 14 Oct 2023 14:58:14 -0700 (PDT)
 Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Sat, 14 Oct 2023 11:03:00 +0200
+Date: Sat, 14 Oct 2023 23:58:11 +0200
 From: Ingo Molnar <mingo@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/amd/uncore: fix error codes in amd_uncore_init()
-Message-ID: <ZSpZRM4ZEnNy98Rz@gmail.com>
-References: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
- <ZSjyJuqk3z0RyKP2@gmail.com>
- <0c973a20-e10c-4989-b7d9-86cb0f522718@kadam.mountain>
- <ZSkInflBriOL9V3M@gmail.com>
- <CAFULd4b7F=MNMduRn99FFcAc7Of7RsL+vyXVzsiBZZ9hz0+HnA@mail.gmail.com>
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] perf events fix
+Message-ID: <ZSsO8/2KhWgd6kLS@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFULd4b7F=MNMduRn99FFcAc7Of7RsL+vyXVzsiBZZ9hz0+HnA@mail.gmail.com>
 X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
-* Uros Bizjak <ubizjak@gmail.com> wrote:
+Linus,
 
-> On Fri, Oct 13, 2023 at 11:06 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> >
-> > > On Fri, Oct 13, 2023 at 09:30:46AM +0200, Ingo Molnar wrote:
-> > >
-> > > > Ugh, why on Earth didn't GCC warn about this? The bad pattern is pretty
-> > > > simple & obvious once pointed out ... compilers should have no trouble
-> > > > realizing that 'ret' is returned uninitialized in some of these control
-> > > > paths. Yet not a peep from the compiler ...
-> > >
-> > > We disabled that warning years ago (5?) because GCC had too many false
-> > > positives.
-> >
-> > GCC had some pretty bogus notions about 'possible' uninitialized use that
-> > encouraged some bad code patterns, but in this case there's readily
-> > provable uninitialized use, that a compiler should warn about.
-> >
-> > Is it possible to disable just the unreliable, probabilistic part of GCC's
-> > uninitialized variables warnings?
-> 
-> -Wno-maybe-uninitialized?
+Please pull the latest perf/urgent git tree from:
 
-No combination of the relevant compiler options appears to be able to get 
-GCC to notice this bug.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-10-14
 
-On top of tip:master, the patch below produces no compiler warnings with 
-GCC 12.3.0:
+   # HEAD: e53899771a02f798d436655efbd9d4b46c0f9265 perf/x86/lbr: Filter vsyscall addresses
 
-  $ git revert 7543365739a4
-  $ rm -f arch/x86/events/amd/uncore.o
-  $ make V=1 W=1e arch/x86/events/amd/uncore.o
+Fix an LBR sampling bug.
 
-The "W=1e" incantation activates, with the patch below applied, among many 
-other GCC options, the following options:
-
-  -Wall
-  -Wuninitialized
-  -Wmaybe-uninitialized
-  -Werror 
-
-Which should have found this bug, right?
-
-[ The V=1 helps double checking the compiler options. ]
-
-Thanks,
+ Thanks,
 
 	Ingo
 
- scripts/Makefile.extrawarn | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+------------------>
+JP Kobryn (1):
+      perf/x86/lbr: Filter vsyscall addresses
 
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 2fe6f2828d37..9d245fcff419 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -108,6 +108,8 @@ KBUILD_CFLAGS += $(call cc-option, -Wformat-overflow)
- KBUILD_CFLAGS += $(call cc-option, -Wformat-truncation)
- KBUILD_CFLAGS += $(call cc-option, -Wstringop-overflow)
- KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
-+KBUILD_CFLAGS += $(call cc-option, -Wuninitialized)
-+KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
+
+ arch/x86/events/utils.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/events/utils.c b/arch/x86/events/utils.c
+index 76b1f8bb0fd5..dab4ed199227 100644
+--- a/arch/x86/events/utils.c
++++ b/arch/x86/events/utils.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <asm/insn.h>
++#include <linux/mm.h>
  
- KBUILD_CPPFLAGS += -Wundef
- KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN1
-@@ -176,7 +178,7 @@ KBUILD_CFLAGS += -Wno-shift-negative-value
- ifdef CONFIG_CC_IS_CLANG
- KBUILD_CFLAGS += -Wno-initializer-overrides
- else
--KBUILD_CFLAGS += -Wno-maybe-uninitialized
-+#KBUILD_CFLAGS += -Wno-maybe-uninitialized
- endif
+ #include "perf_event.h"
  
- endif
+@@ -132,9 +133,9 @@ static int get_branch_type(unsigned long from, unsigned long to, int abort,
+ 		 * The LBR logs any address in the IP, even if the IP just
+ 		 * faulted. This means userspace can control the from address.
+ 		 * Ensure we don't blindly read any address by validating it is
+-		 * a known text address.
++		 * a known text address and not a vsyscall address.
+ 		 */
+-		if (kernel_text_address(from)) {
++		if (kernel_text_address(from) && !in_gate_area_no_mm(from)) {
+ 			addr = (void *)from;
+ 			/*
+ 			 * Assume we can get the maximum possible size
