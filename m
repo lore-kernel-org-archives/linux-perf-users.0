@@ -1,55 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754EF1845
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Oct 2023 22:49:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B132119
+	for <linux-perf-users@vger.kernel.org>; Sun, 15 Oct 2023 10:03:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TpaNn6Np"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E5578C433C8;
-	Sat, 14 Oct 2023 22:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697323795;
-	bh=r7KmBeLhIBHztwszX055XwePH4046HAouTs+IP0R7nQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=TpaNn6NprZ2j0FjjLY9/BOGIsnDfJ7XXqqBHX9k5Ap45ehJHhUrNmRShoeoGu9DLD
-	 ziKkMU6W+TKMf0XW3G20G1kFUDD74PnQ4oN0ODqXfuKmSMRiRdcPVAg2RwX8ijWzR2
-	 JbDyyUkRnlJGdkg1TMezw4IGfCjFyw6yMkYpkjG9zQWVozzzWxTIWIZMiUMzAtcs5g
-	 XfAcFTbBM0zz0zvyWB72nVnM3qpeF17VcIn1FIK5O+FLEpKREck9JewAGCBOqnVl2u
-	 iielkfR2zQjU1yLcJDtqcUIomzGX9FSPt5sJ+KHz6OmOlMvSFi1BPJlgLcMQ1JvfCo
-	 i80MAVQkgDyDg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C918BC73FEA;
-	Sat, 14 Oct 2023 22:49:54 +0000 (UTC)
-Subject: Re: [GIT PULL] perf events fix
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZSsO8/2KhWgd6kLS@gmail.com>
-References: <ZSsO8/2KhWgd6kLS@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZSsO8/2KhWgd6kLS@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-10-14
-X-PR-Tracked-Commit-Id: e53899771a02f798d436655efbd9d4b46c0f9265
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 23931d935363846a9b39a890d4aead208cd46681
-Message-Id: <169732379481.22000.5001415593902459941.pr-tracker-bot@kernel.org>
-Date: Sat, 14 Oct 2023 22:49:54 +0000
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="sDuOhglI"
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E404D9;
+	Sun, 15 Oct 2023 03:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1697364199;
+	bh=Xywli/LLxATt1O56BUYkhx2IGYH2bax1grDbXN8Buis=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=sDuOhglIKCdliRZ0/i8KqEi7rn3qNl+rXH6Mp2V9SMyf4iBHENwSIq1yvPlM1JVqK
+	 DIg/BAChEgmcGyuPmeD8N8zWcT7CIP/wOVZg/DNy/LzgxfcY7h7Gm/0F+as8NWSzsq
+	 pqHfvQWeEEt6Gc+HC6WxCCdiVd+3P5ayvIRf2SOZOi7qzWziVyV7o6CNMKaGY+dG6w
+	 mp1y8EIF3SKVdqN2pCsKB2x8IW/MxY5ho4XbO2uK7indpFxsQKrvKsbPsSxpYBGPlL
+	 ps0oGYQ3nHY9Y1vBDXtgY5FOOLRlMH6M8PLfXUfNCNJbc037yfzLPGqZoV3Y0ECKuP
+	 6kKd0P2wkNjTA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4S7bRC4lP5z4wcZ;
+	Sun, 15 Oct 2023 21:03:19 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com, stable@vger.kernel.org, Naveen N Rao <naveen@kernel.org>
+In-Reply-To: <20230929172337.7906-1-atrajeev@linux.vnet.ibm.com>
+References: <20230929172337.7906-1-atrajeev@linux.vnet.ibm.com>
+Subject: Re: [PATCH 1/2] powerpc/platforms/pseries: Fix STK_PARAM access in the hcall tracing code
+Message-Id: <169736402374.957740.1615846713594615509.b4-ty@ellerman.id.au>
+Date: Sun, 15 Oct 2023 21:00:23 +1100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-The pull request you sent on Sat, 14 Oct 2023 23:58:11 +0200:
+On Fri, 29 Sep 2023 22:53:36 +0530, Athira Rajeev wrote:
+> In powerpc pseries system, below behaviour is observed while
+> enabling tracing on hcall:
+> 	# cd /sys/kernel/debug/tracing/
+> 	# cat events/powerpc/hcall_exit/enable
+> 	0
+> 	# echo 1 > events/powerpc/hcall_exit/enable
+> 
+> [...]
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-10-14
+Applied to powerpc/fixes.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/23931d935363846a9b39a890d4aead208cd46681
+[1/2] powerpc/platforms/pseries: Fix STK_PARAM access in the hcall tracing code
+      https://git.kernel.org/powerpc/c/3b678768c0458e6d8d45fadf61423e44effed4cb
+[2/2] powerpc/platforms/pseries: Remove unused r0 in the hcall tracing code
+      https://git.kernel.org/powerpc/c/dfb5f8cbd5992d5769edfd3e059fad9e0b8bdafb
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+cheers
