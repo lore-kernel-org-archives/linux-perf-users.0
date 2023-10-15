@@ -1,66 +1,124 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B132119
-	for <linux-perf-users@vger.kernel.org>; Sun, 15 Oct 2023 10:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="sDuOhglI"
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E404D9;
-	Sun, 15 Oct 2023 03:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1697364199;
-	bh=Xywli/LLxATt1O56BUYkhx2IGYH2bax1grDbXN8Buis=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=sDuOhglIKCdliRZ0/i8KqEi7rn3qNl+rXH6Mp2V9SMyf4iBHENwSIq1yvPlM1JVqK
-	 DIg/BAChEgmcGyuPmeD8N8zWcT7CIP/wOVZg/DNy/LzgxfcY7h7Gm/0F+as8NWSzsq
-	 pqHfvQWeEEt6Gc+HC6WxCCdiVd+3P5ayvIRf2SOZOi7qzWziVyV7o6CNMKaGY+dG6w
-	 mp1y8EIF3SKVdqN2pCsKB2x8IW/MxY5ho4XbO2uK7indpFxsQKrvKsbPsSxpYBGPlL
-	 ps0oGYQ3nHY9Y1vBDXtgY5FOOLRlMH6M8PLfXUfNCNJbc037yfzLPGqZoV3Y0ECKuP
-	 6kKd0P2wkNjTA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4S7bRC4lP5z4wcZ;
-	Sun, 15 Oct 2023 21:03:19 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com, stable@vger.kernel.org, Naveen N Rao <naveen@kernel.org>
-In-Reply-To: <20230929172337.7906-1-atrajeev@linux.vnet.ibm.com>
-References: <20230929172337.7906-1-atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 1/2] powerpc/platforms/pseries: Fix STK_PARAM access in the hcall tracing code
-Message-Id: <169736402374.957740.1615846713594615509.b4-ty@ellerman.id.au>
-Date: Sun, 15 Oct 2023 21:00:23 +1100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AF233F7
+	for <linux-perf-users@vger.kernel.org>; Sun, 15 Oct 2023 18:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5595A9;
+	Sun, 15 Oct 2023 11:53:58 -0700 (PDT)
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3b2b1b25547so1493621b6e.3;
+        Sun, 15 Oct 2023 11:53:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697396035; x=1698000835;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2G81DqXs3X1Zjdsq9mf6OJafYAWE3ifxu15bBycQsx0=;
+        b=ZIQdbTq6V0lh1rCrIEysHM8lL3OVjgOJOKyafMgnLnoMtbDMpSIy+eSGEhW9q7G8WS
+         KJ5ng4CYaZfHEdySjUbBrjDXrds94MpoXm5Ks1a/S7J6tnr5pTpyaFGAmde42GFHy/U8
+         Vtr0KlQEpM+Nu9RuuoJt9j24NiNRYF+wnWfe4ZSpfvpczLtpxrmEDtAXSg5eA4v/mNTX
+         LP8xiKupOIhMMetMXRIwS1LBjzgwBRRwVWHO0sENpkRrC9kzqlcKBc8/GbWgg6HMr5xj
+         ixJFhcKi/6IzaPYI01jBDw0m66rYE0VAJr8F7hXH4N7c17veFRXblKP3iyPkUKlgxnOf
+         3Qdg==
+X-Gm-Message-State: AOJu0YwT0jwDdGp6cIdul3BYN4rGWzxE252mziLJXQxisAPCLl3FgRfI
+	dyJXoVER2BEgWJdIst6BRFNHmE8F8n/dU7Rc7hg=
+X-Google-Smtp-Source: AGHT+IGL2NAuYiF3Tzso4tRw/ILA5Rg4oP3DMOWmIRCsRHcxo91zB3yKdweqyKe0YdP8r9gI41njaqN2r/bzpoA5UYA=
+X-Received: by 2002:a05:6808:1146:b0:3ae:156f:d312 with SMTP id
+ u6-20020a056808114600b003ae156fd312mr52398901oiu.34.1697396035616; Sun, 15
+ Oct 2023 11:53:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20231013232435.1012585-1-namhyung@kernel.org> <ZSpU2Q7A9ViZe7DB@gmail.com>
+In-Reply-To: <ZSpU2Q7A9ViZe7DB@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Sun, 15 Oct 2023 11:53:44 -0700
+Message-ID: <CAM9d7cgcxz7qn9LskQcZtwGhPbnd7rEXzJr5L2iwhO7iHh0ywA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf bench sched pipe: Add -G/--cgroups option
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 29 Sep 2023 22:53:36 +0530, Athira Rajeev wrote:
-> In powerpc pseries system, below behaviour is observed while
-> enabling tracing on hcall:
-> 	# cd /sys/kernel/debug/tracing/
-> 	# cat events/powerpc/hcall_exit/enable
-> 	0
-> 	# echo 1 > events/powerpc/hcall_exit/enable
-> 
-> [...]
+On Sat, Oct 14, 2023 at 1:44=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrot=
+e:
+>
+>
+> * Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> > +     cgrp_send =3D cgroup__new(p, /*do_open=3D*/true);
+> > +     if (cgrp_send =3D=3D NULL) {
+> > +             fprintf(stderr, "cannot open sender cgroup: %s", p);
+> > +             goto out;
+> > +     }
+>
+> Maybe in this case print out a small suggestion of how to create this
+> particular cgroup?
+>
+> Most distro users and even kernel developers don't ever have to create
+> new cgroups.
+>
+> Maybe even allow the creation of new cgroups for this testing, if they
+> don't already exist? As long as we don't delete any cgroups I don't think
+> much harm can be done - and the increase in usability is substantial.
 
-Applied to powerpc/fixes.
+I'm not sure if it's ok create a new cgroup and leave it after the use.
+Anyway, none of the existing subcommands create new cgroups
+IIUC and I think it'd be ok to print a message on how to create one.
 
-[1/2] powerpc/platforms/pseries: Fix STK_PARAM access in the hcall tracing code
-      https://git.kernel.org/powerpc/c/3b678768c0458e6d8d45fadf61423e44effed4cb
-[2/2] powerpc/platforms/pseries: Remove unused r0 in the hcall tracing code
-      https://git.kernel.org/powerpc/c/dfb5f8cbd5992d5769edfd3e059fad9e0b8bdafb
+>
+> > +static void enter_cgroup(struct cgroup *cgrp)
+> > +{
+> > +     char buf[32];
+> > +     int fd, len;
+> > +     pid_t pid;
+> > +
+> > +     if (cgrp =3D=3D NULL)
+> > +             return;
+> > +
+> > +     if (threaded)
+> > +             pid =3D syscall(__NR_gettid);
+> > +     else
+> > +             pid =3D getpid();
+> > +
+> > +     snprintf(buf, sizeof(buf), "%d\n", pid);
+> > +     len =3D strlen(buf);
+> > +
+> > +     /* try cgroup v2 interface first */
+> > +     if (threaded)
+> > +             fd =3D openat(cgrp->fd, "cgroup.threads", O_WRONLY);
+> > +     else
+> > +             fd =3D openat(cgrp->fd, "cgroup.procs", O_WRONLY);
+> > +
+> > +     /* try cgroup v1 if failed */
+> > +     if (fd < 0)
+> > +             fd =3D openat(cgrp->fd, "tasks", O_WRONLY);
+> > +
+> > +     if (fd < 0) {
+> > +             printf("failed to open cgroup file in %s\n", cgrp->name);
+> > +             return;
+> > +     }
+> > +
+> > +     if (write(fd, buf, len) !=3D len)
+> > +             printf("cannot enter to cgroup: %s\n", cgrp->name);
+>
+> The failures here should probably result in termination of the run with a=
+n
+> error code, not just messages which are easy to skip in automated tests?
 
-cheers
+Right, I'll make the change.
+
+Thanks,
+Namhyung
