@@ -1,115 +1,109 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC15C29418
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 15:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B1B27729
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 15:38:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OvTgN4hO"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF88E6
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 08:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1697470222;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CRf3fYGKsTrlOhUDvR5Nm0aYucqIml+Eu+5HAJHgZQY=;
-	b=OvTgN4hOEX48ZpPSlp6QunEv+rivJBbWBtkjsgbd0liheAiiX18sA3ry+gZ3W+hSFjrRCa
-	jNAo8gaNd2GuOirKZTKT1Q39mo5iU7P1BdNmNeyrv1SjxRGmJxjtXHpxzFrEHPcMkEhIvl
-	/Amv3cOTlVsUbzzaDH7zjJ5iJ6HXcBg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-459-5rnxzrkYOMSSC8X6SHVcYg-1; Mon, 16 Oct 2023 11:30:16 -0400
-X-MC-Unique: 5rnxzrkYOMSSC8X6SHVcYg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7A50881B15E;
-	Mon, 16 Oct 2023 15:30:15 +0000 (UTC)
-Received: from localhost (unknown [10.39.195.34])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7448B492BFA;
-	Mon, 16 Oct 2023 15:30:12 +0000 (UTC)
-From: Cornelia Huck <cohuck@redhat.com>
-To: Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>, Jing
- Zhang <jingzhangos@google.com>, Zenghui Yu <yuzenghui@huawei.com>, Suzuki
- K Poulose <suzuki.poulose@arm.com>, James Morse <james.morse@arm.com>,
- Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Adrian
- Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland
- <mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Oliver
- Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH v3 5/5] KVM: arm64: selftests: Test for setting ID
- register from usersapce
-In-Reply-To: <20231011195740.3349631-6-oliver.upton@linux.dev>
-Organization: "Red Hat GmbH, Sitz: Werner-von-Siemens-Ring 12, D-85630
- Grasbrunn, Handelsregister: Amtsgericht =?utf-8?Q?M=C3=BCnchen=2C?= HRB
- 153243,
- =?utf-8?Q?Gesch=C3=A4ftsf=C3=BChrer=3A?= Ryan Barnhart, Charles Cachera,
- Michael O'Neill, Amy
- Ross"
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-6-oliver.upton@linux.dev>
-User-Agent: Notmuch/0.37 (https://notmuchmail.org)
-Date: Mon, 16 Oct 2023 17:30:06 +0200
-Message-ID: <87fs2aegap.fsf@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ser5PMkz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B41AAC433CA;
+	Mon, 16 Oct 2023 15:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697470695;
+	bh=wtC6ekFrSeHsJyDMoZcgF7d8+qu8m8xwaumKuPeAXd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ser5PMkz2wEu6pyX7zJkesK3olhWDPQ4oeeoGJj99lV5GcAFDrnMDo+icKrldb7kx
+	 aEFqF0XHEYyFFL1ORjedSayoa7Bwh6NSbTQvbUDmZs4RqEJb+YoLcqniFPdaaZ6Dzu
+	 sa0W7FSnlEYzY4sZ1sQjGcvtvDH1gn3aAMRa5hsEihRLFdwJJuQeRscnfhvZafHeGZ
+	 of13Z6JeNR1c/kiB1n8tadcPxj6U3FyR54MyCGSC1IN8G1Aubgxx89imFSzWZuYKyx
+	 n/jzwn8wUcOksYxi/RC93OSZ0uasjNtwVw9ifcYuseFWilggTw20ik/tYgVTwLv81y
+	 FrfB590iNn3tA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id EE3B240016; Mon, 16 Oct 2023 12:38:12 -0300 (-03)
+Date: Mon, 16 Oct 2023 12:38:12 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3] perf bench sched pipe: Add -G/--cgroups option
+Message-ID: <ZS1Y5PhXhp384ynY@kernel.org>
+References: <20231016044225.1125674-1-namhyung@kernel.org>
+ <ZS0D53ckVx356k4o@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-	autolearn=unavailable autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZS0D53ckVx356k4o@gmail.com>
+X-Url: http://acmel.wordpress.com
 
-On Wed, Oct 11 2023, Oliver Upton <oliver.upton@linux.dev> wrote:
+Em Mon, Oct 16, 2023 at 11:35:35AM +0200, Ingo Molnar escreveu:
+> 
+> 
+> * Namhyung Kim <namhyung@kernel.org> wrote:
+> 
+> > +	/* try cgroup v2 interface first */
+> > +	if (threaded)
+> > +		fd = openat(cgrp->fd, "cgroup.threads", O_WRONLY);
+> > +	else
+> > +		fd = openat(cgrp->fd, "cgroup.procs", O_WRONLY);
+> > +
+> > +	/* try cgroup v1 if failed */
+> > +	if (fd < 0)
+> > +		fd = openat(cgrp->fd, "tasks", O_WRONLY);
+> > +
+> > +	if (fd < 0) {
+> > +		char mnt[PATH_MAX];
+> > +
+> > +		printf("Failed to open cgroup file in %s\n", cgrp->name);
+> > +
+> > +		if (cgroupfs_find_mountpoint(mnt, sizeof(mnt), "perf_event") == 0)
+> > +			printf(" Hint: create the cgroup first, like 'mkdir %s/%s'\n",
+> > +			       mnt, cgrp->name);
+> 
+> Ok, this works too I suppose.
+> 
+> Acked-by: Ingo Molnar <mingo@kernel.org>
 
-> From: Jing Zhang <jingzhangos@google.com>
->
-> Add tests to verify setting ID registers from userspace is handled
-> correctly by KVM. Also add a test case to use ioctl
-> KVM_ARM_GET_REG_WRITABLE_MASKS to get writable masks.
->
-> Signed-off-by: Jing Zhang <jingzhangos@google.com>
-> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
-> ---
->  tools/testing/selftests/kvm/Makefile          |   1 +
->  .../selftests/kvm/aarch64/set_id_regs.c       | 479 ++++++++++++++++++
->  2 files changed, 480 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/aarch64/set_id_regs.c
+I'm not getting that:
 
-(...)
+[root@five ~]# perf bench sched pipe -l 10000 -G AAA,BBB
+# Running 'sched/pipe' benchmark:
+no access to cgroup /sys/fs/cgroup/AAA
+cannot open sender cgroup: AAA
+ Usage: perf bench sched pipe <options>
 
-> +static void test_user_set_reg(struct kvm_vcpu *vcpu, bool aarch64_only)
-> +{
-> +	uint64_t masks[KVM_ARM_FEATURE_ID_RANGE_SIZE];
-> +	struct reg_mask_range range = {
-> +		.addr = (__u64)masks,
-> +	};
-> +	int ret;
-> +
-> +	/* KVM should return error when reserved field is not zero */
-> +	range.reserved[0] = 1;
-> +	ret = __vm_ioctl(vcpu->vm, KVM_ARM_GET_REG_WRITABLE_MASKS, &range);
-> +	TEST_ASSERT(ret, "KVM doesn't check invalid parameters.");
+    -G, --cgroups <SEND,RECV>
+                          Put sender and receivers in given cgroups
+[root@five ~]#
 
-I think the code should first check for
-KVM_CAP_ARM_SUPPORTED_REG_MASK_RANGES -- newer kselftests are supposed
-to be able to run on older kernels, and we should just skip all of this
-if the API isn't there.
+Its better now as it bails out, but it is not emitting any message that
+helps with running the test, well, there is that /sys/fs/cgroup/AAA
+path, lemme try doing a mkdir:
 
-> +
-> +	/* Get writable masks for feature ID registers */
-> +	memset(range.reserved, 0, sizeof(range.reserved));
-> +	vm_ioctl(vcpu->vm, KVM_ARM_GET_REG_WRITABLE_MASKS, &range);
+[root@five ~]# perf bench sched pipe -l 10000 -G AAA,BBB
+# Running 'sched/pipe' benchmark:
+no access to cgroup /sys/fs/cgroup/BBB
+cannot open receiver cgroup: BBB
+ Usage: perf bench sched pipe <options>
 
+    -G, --cgroups <SEND,RECV>
+                          Put sender and receivers in given cgroups
+[root@five ~]#
+
+[root@five ~]# perf bench sched pipe -l 10000 -G AAA,BBB
+# Running 'sched/pipe' benchmark:
+[root@five ~]#
+
+It seems to be bailing out but doesn't run the test nor emits any
+warning.
+
+I'm using v3. I'll try to debug it a bit.
+
+- Arnaldo
