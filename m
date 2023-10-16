@@ -1,115 +1,94 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668071CABB
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 09:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E93AB4;
-	Mon, 16 Oct 2023 02:50:16 -0700 (PDT)
-Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.56])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4S8C09669BzvPxM;
-	Mon, 16 Oct 2023 17:45:29 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 16 Oct 2023 17:50:11 +0800
-Subject: Re: [PATCH v2 6/7] perf pmu-events: Remember the perf_events_map for
- a PMU
-To: Ian Rogers <irogers@google.com>, Suzuki K Poulose
-	<suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, James Clark
-	<james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, John Garry
-	<john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>, Ravi Bangoria
-	<ravi.bangoria@amd.com>, Kajol Jain <kjain@linux.ibm.com>, Jing Zhang
-	<renyu.zj@linux.alibaba.com>, Kan Liang <kan.liang@linux.intel.com>,
-	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20231012175645.1849503-1-irogers@google.com>
- <20231012175645.1849503-7-irogers@google.com>
-From: Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <d25f9ef8-b9b7-d632-8ecf-d60f2b255c8b@huawei.com>
-Date: Mon, 16 Oct 2023 17:50:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700B320B0F
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 10:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rt+U9cfJ"
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72221E3
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 03:39:39 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-32daeed7771so1057420f8f.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 03:39:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697452778; x=1698057578; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sIaK3sm66TImARHDtodwxW2o8aXauaz7AMVXRhEFaCs=;
+        b=rt+U9cfJf5hXAKiMwGngW28UXxe0Om5Yevn7YJOqJz8Fye5DXk0EHZT9jlGWD+u9RH
+         rgeI8afG+ckDi8Jl0M9Os1SxVpQOPMW6S6EfDBoha6e8vCIlOyu+kbMuWvrckOt2emIH
+         lTlZt7YX6d5hKQBwHZptDp4ylnGAZ9eenxMk3hWBZERF/UU4m/+tQ2lWmOL20dJWOsIx
+         D1AsyFutb3RwbN6Ng67oOYSva/e1CyplxPU3zHjVLmLLrvUMpgT/JrKXl9XWtqrpcdfW
+         xYsDDz+u9ApB7sptdIYPfuq76M5xrtrQilDjehT8UmuXxoVZKk95BhKmy/X0kY+e08mg
+         jLKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697452778; x=1698057578;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sIaK3sm66TImARHDtodwxW2o8aXauaz7AMVXRhEFaCs=;
+        b=o4+YrdiOpXiYVWC0euxMSFOAdbdarnuh+/aVHxxDE8C/0+q2Ot0Yeyk9fBWNwPb3Bq
+         I+SpA44sQ+ohNXtTgcaO2EsLjOkLt/5w6wqSVviCtAt3cYc1GtYS75friqG61HaODLDX
+         MDLfVwnQx1uBcHRW7gyaJ4adjzTzNdYCfVC7IYZLx6C1Q37Pmcg8A4W4uk5OcFASvhy3
+         Wj8Ro+NNYfryQGlj9AVrK24rEHf+NivoCi5GuC/5R7Jh3th2kCPu2UMiYJrwq6+NUwt5
+         Or1MNuspSWErVY05Mb4ESEwrq53f0h5IZpDH63arRjWstbLxYx2ZaKb1Tq06XJAD03RX
+         8flw==
+X-Gm-Message-State: AOJu0YwmkZkXHUdKZR5VaNlPW1nszGZzhXundjnwhVjeME/80UmkIa+8
+	CFmP/jCfSbAAVnlgz2NRUzjPuA==
+X-Google-Smtp-Source: AGHT+IFveYcznE7UFu1xi5ZfIZ/xSlQ/9xS59UksXA4meHvxl/9Pc9EfDN0Oj/U3lSI4A04Yn/sylg==
+X-Received: by 2002:a05:6000:1c17:b0:32d:a910:6c2a with SMTP id ba23-20020a0560001c1700b0032da9106c2amr4912494wrb.30.1697452777799;
+        Mon, 16 Oct 2023 03:39:37 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id e14-20020adffd0e000000b00315af025098sm27104942wrr.46.2023.10.16.03.39.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Oct 2023 03:39:37 -0700 (PDT)
+Date: Mon, 16 Oct 2023 13:39:34 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>, Sandipan Das <sandipan.das@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/amd/uncore: fix error codes in amd_uncore_init()
+Message-ID: <f13b0b1a-e5f8-48db-9a09-1ef88cc6c6eb@kadam.mountain>
+References: <cec62eba-c4b8-4cb7-9671-58894dd4b974@moroto.mountain>
+ <ZSjyJuqk3z0RyKP2@gmail.com>
+ <0c973a20-e10c-4989-b7d9-86cb0f522718@kadam.mountain>
+ <ZSkInflBriOL9V3M@gmail.com>
+ <CAFULd4b7F=MNMduRn99FFcAc7Of7RsL+vyXVzsiBZZ9hz0+HnA@mail.gmail.com>
+ <ZSpZRM4ZEnNy98Rz@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231012175645.1849503-7-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm000003.china.huawei.com (7.193.23.66)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZSpZRM4ZEnNy98Rz@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hello,
+The surprising thing is the Clang doesn't detect the bug either.  It's
+strange.  (I found this bug with Smatch).
 
-On 2023/10/13 1:56, Ian Rogers wrote:
-> strcmp_cpuid_str performs regular expression comparisons and so per
-> CPUID linear searches over the perf_events_map are expensive. Add a
-> helper function called map_for_pmu that does the search but also
-> caches the map specific to a PMU. As the PMU may differ, also cache
-> the CPUID string so that PMUs with the same CPUID string don't require
-> the linear search and regular expression comparisons. This speeds
-> loading PMUs as the search is done once per PMU to find the
-> appropriate tables.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/pmu-events/jevents.py | 109 ++++++++++++++++++++-----------
->   1 file changed, 70 insertions(+), 39 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index 96dc74c90b20..3c091ab75305 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -976,68 +976,99 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
->           return 0;
->   }
->   
-> -const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
-> +static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
->   {
-> -        const struct pmu_events_table *table = NULL;
-> -        char *cpuid = perf_pmu__getcpuid(pmu);
-> +        static struct {
-> +                const struct pmu_events_map *map;
-> +                struct perf_pmu *pmu;
-> +        } last_result;
-> +        static struct {
-> +                const struct pmu_events_map *map;
-> +                char *cpuid;
-> +        } last_map_search;
-> +        static bool has_last_result, has_last_map_search;
-> +        const struct pmu_events_map *map = NULL;
-> +        char *cpuid = NULL;
->           size_t i;
->   
-> -        /* on some platforms which uses cpus map, cpuid can be NULL for
-> +        if (has_last_result && last_result.pmu == pmu)
-> +                return last_result.map;
-> +
-> +        cpuid = perf_pmu__getcpuid(pmu);
-For the software pmu, we do not need to look for the events table.
-It seems that the software pmu can be filtered out in perf_pmu__lookup() 
-to reduce unnecessary perf_pmu__find_events_table() calls.
+Also I notice that my Fixes tag wasn't correct either.  That patch did
+have a missing error code bug, but "ret" was set to zero.  :/
 
-I tried to submit a patch, please see if it helps:
-https://lore.kernel.org/all/20231016093309.726436-1-yangjihong1@huawei.com/
+regards,
+dan carpenter
 
-Thanks,
-Yang
