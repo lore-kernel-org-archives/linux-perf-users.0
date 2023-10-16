@@ -1,111 +1,120 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1000214002
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 08:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4C614002
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Oct 2023 08:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9037BA1;
-	Mon, 16 Oct 2023 01:42:10 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A86BB1FB;
-	Mon, 16 Oct 2023 01:42:50 -0700 (PDT)
-Received: from [10.57.1.186] (unknown [10.57.1.186])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB3C63F5A1;
-	Mon, 16 Oct 2023 01:42:07 -0700 (PDT)
-Message-ID: <ace45602-2d25-77fe-6cc6-08d43c6bc671@arm.com>
-Date: Mon, 16 Oct 2023 09:42:06 +0100
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E149DE;
+	Mon, 16 Oct 2023 01:48:40 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.53])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4S89gQ0Z6bzrTd6;
+	Mon, 16 Oct 2023 16:45:54 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Mon, 16 Oct 2023 16:48:34 +0800
+Subject: Re: [PATCH v2 6/7] perf pmu-events: Remember the perf_events_map for
+ a PMU
+To: Ian Rogers <irogers@google.com>
+References: <20231012175645.1849503-1-irogers@google.com>
+ <20231012175645.1849503-7-irogers@google.com>
+From: Yang Jihong <yangjihong1@huawei.com>
+CC: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>, Leo Yan
+	<leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, Will Deacon
+	<will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+	<mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Thomas
+ Richter <tmricht@linux.ibm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Kajol
+ Jain <kjain@linux.ibm.com>, Jing Zhang <renyu.zj@linux.alibaba.com>, Kan
+ Liang <kan.liang@linux.intel.com>, <coresight@lists.linaro.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Message-ID: <be81569d-85f8-19db-28d1-7d48cf719c2e@huawei.com>
+Date: Mon, 16 Oct 2023 16:48:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH v1 RESEND 2/2] perf cs-etm: Respect timestamp option
-To: Leo Yan <leo.yan@linaro.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231014074159.1667880-1-leo.yan@linaro.org>
- <20231014074159.1667880-3-leo.yan@linaro.org>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20231014074159.1667880-3-leo.yan@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20231012175645.1849503-7-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 14/10/2023 08:41, Leo Yan wrote:
-> When users pass the option '--timestamp' or '-T' in the record command,
-> all events will set the PERF_SAMPLE_TIME bit in the attribution.  In
-> this case, the AUX event will record the kernel timestamp, but it
-> doesn't mean Arm CoreSight enables timestamp packets in its hardware
-> tracing.
-> 
-> If the option '--timestamp' or '-T' is set, this patch always enables
-> Arm CoreSight timestamp, as a result, the bit 28 in event's config is to
-> be set.
-> 
-> Before:
-> 
->    # perf record -e cs_etm// --per-thread --timestamp -- ls
->    # perf script --header-only
->    ...
->    # event : name = cs_etm//, , id = { 69 }, type = 12, size = 136,
->    config = 0, { sample_period, sample_freq } = 1,
->    sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST,
->    disabled = 1, enable_on_exec = 1, sample_id_all = 1, exclude_guest = 1
->    ...
-> 
-> After:
-> 
->    # perf record -e cs_etm// --per-thread --timestamp -- ls
->    # perf script --header-only
->    ...
->    # event : name = cs_etm//, , id = { 49 }, type = 12, size = 136,
->    config = 0x10000000, { sample_period, sample_freq } = 1,
->    sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST,
->    disabled = 1, enable_on_exec = 1, sample_id_all = 1, exclude_guest = 1
->    ...
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Reviewed-by: James Clark <james.clark@arm.com>
+Hello,
 
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
+On 2023/10/13 1:56, Ian Rogers wrote:
+> strcmp_cpuid_str performs regular expression comparisons and so per
+> CPUID linear searches over the perf_events_map are expensive. Add a
+> helper function called map_for_pmu that does the search but also
+> caches the map specific to a PMU. As the PMU may differ, also cache
+> the CPUID string so that PMUs with the same CPUID string don't require
+> the linear search and regular expression comparisons. This speeds
+> loading PMUs as the search is done once per PMU to find the
+> appropriate tables.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->   tools/perf/arch/arm/util/cs-etm.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
+>   tools/perf/pmu-events/jevents.py | 109 ++++++++++++++++++++-----------
+>   1 file changed, 70 insertions(+), 39 deletions(-)
 > 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index cf9ef9ba800b..58c506e9788d 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -442,6 +442,15 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->   					   "contextid", 1);
->   	}
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 96dc74c90b20..3c091ab75305 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -976,68 +976,99 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
+>           return 0;
+>   }
 >   
-> +	/*
-> +	 * When the option '--timestamp' or '-T' is enabled, the PERF_SAMPLE_TIME
-> +	 * bit is set for all events.  In this case, always enable Arm CoreSight
-> +	 * timestamp tracing.
-> +	 */
-> +	if (opts->sample_time_set)
-> +		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> +					   "timestamp", 1);
+> -const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+> +static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
+>   {
+> -        const struct pmu_events_table *table = NULL;
+> -        char *cpuid = perf_pmu__getcpuid(pmu);
+> +        static struct {
+> +                const struct pmu_events_map *map;
+> +                struct perf_pmu *pmu;
+> +        } last_result;
+> +        static struct {
+> +                const struct pmu_events_map *map;
+> +                char *cpuid;
+> +        } last_map_search;
+> +        static bool has_last_result, has_last_map_search;
+> +        const struct pmu_events_map *map = NULL;
+> +        char *cpuid = NULL;
+>           size_t i;
+>   
+> -        /* on some platforms which uses cpus map, cpuid can be NULL for
+> +        if (has_last_result && last_result.pmu == pmu)
+> +                return last_result.map;
 > +
->   	/* Add dummy event to keep tracking */
->   	err = parse_event(evlist, "dummy:u");
->   	if (err)
+Currently, perf_pmu__find_events_table() is invoked only by 
+perf_pmu__lookup(). Because the `pmu` is alloc memory each time (see 
+perf_pmu__lookup()), the `pmu` is different each time when calling 
+perf_pmu__find_events_table(). Therefore, the condition is false.
 
+IIUC, has_last_result is introduced to avoid reading cpuid every time. 
+ From the above, this variable does not work. Therefore, can we remove it?
+
+In addition to the above questions, the patch is already being tested:
+Tested-by: Yang Jihong <yangjihong1@huawei.com>
+
+
+Thanks,
+Yang
