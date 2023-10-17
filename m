@@ -1,123 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701C84121C
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 12:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106C52D054
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 16:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUalMXV8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3015C433C8;
-	Tue, 17 Oct 2023 12:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697547189;
-	bh=sCVSBncrC5i0GYEhpxlxlXa2wh6iMdOP1tIgkqX072Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RUalMXV8bFNbfyg2W86Bldn7S37B+o2YNQQ/y8NohBDXgSzLqUsp4+fM8xChaaUr/
-	 9HNuA4fL4kS9EmkOHwRXjvVVcift4EfOq+LcAwEmfmQTwbm7wvruA5WGOAbpTqy8Fd
-	 YuYd8/5IHPBsxqHNxKATJO7aXxRM2GpZGOb5njfZy5GJsU7HG2Fz5K2gMCZwJ6tFR0
-	 EqXALEt8gvabo3JG5u7rOdrFF9V5qctsavx8jXkvHEOzwh9X6Jm3vG+0KaLpl402Yl
-	 MXUiQhjhZd36CVKrmKogVDzLm2G2lhjbD9TDfcjRNQC5My7O2UFhfAQGhxmU1zqGc2
-	 yXiYA58cBxZmg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 6877A40016; Tue, 17 Oct 2023 09:53:07 -0300 (-03)
-Date: Tue, 17 Oct 2023 09:53:07 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Guilherme Amadio <amadio@gentoo.org>, linux-perf-users@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>, robert.richter@amd.com
-Subject: Re: NMI received for unknown reason when running perf with IBS on AMD
-Message-ID: <ZS6Ds+rB2IwWmXML@kernel.org>
-References: <ZS0l-k1MASK3547Q@gentoo.org>
- <ZS2vu8bSBS1/zseZ@kernel.org>
- <9d885140-f952-0018-304d-fbc1e15c33a7@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HsZ+yZMW"
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E8FED
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 09:58:55 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-d9a398f411fso6710344276.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 09:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697561935; x=1698166735; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ehHiG5u8VUrGyvdvtZ5izhIhQL5g/E91S/K67Xu9F2I=;
+        b=HsZ+yZMWmDsMDdrizETAGYwBuuk14i732KmQBss8+RTYrOYPV9NoVW/tKkNAnCUYw9
+         gc5YzWhFtvm/7tsVFIdUZ92qutuLi+6uMoAyPMHCW+n6SHmzJ5Pf107eR7etY7E2svPN
+         nYj8Mc3k+fIwBNBpM5IDfuksdX2XvZLWryzwPJUpiK2TBz2D8VPQlNZ8UcL2iZ3WT/7i
+         +Vkeh6pHkUlEN01RJHho9jZv1gIJsS26Rv6RG32tVW40ALqKYQMrAOilAVrEpHECAF3y
+         gHigajW4UztKWIJs6irQoFl9+/slSv6V7KzIM2k5I+4VJeQ5/nFoeWWqEuciHSKbyISp
+         6IUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697561935; x=1698166735;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ehHiG5u8VUrGyvdvtZ5izhIhQL5g/E91S/K67Xu9F2I=;
+        b=WlbVG4Yvj/H2a6CWEY59TfhIALUcFgWYZLGIM8v9HHFA9MW70bAhqDGDmuCdfmMRf8
+         FeXsMOrOmgs4C0jbs7SPtKJROQNjEsS72pv9ggi2LC9twJSuadHRTLQaK4RNTE/ajUQx
+         mZQs4mzJNT3mNFHKbYy0V3e78hRhaKqTyFz4ah2ZhZ3vBV7bUZNIH+RYTwVNe/3+pneJ
+         Tkj9RB2ChBO8uZO4K07wEbuxU662sXBbNLjk2fVF/YErX+25WwCVPfBqTGYLSTlRCW6M
+         UNfnWSxhgmuzCWYhCEQ9iqSnDzjlZdZmXUc8dM62sKMNlJff5u9kr2drs39mNZ3oJJKZ
+         DWhA==
+X-Gm-Message-State: AOJu0Yw38fvW/yR18zw4zQ0OVoIkE/XI4ca8QDCu8HN7JslzwbHCmL6d
+	nBtRO65PQKo3bExEertwZZNahSihwGQeVA5seouLtg==
+X-Google-Smtp-Source: AGHT+IHOaiEbjDuLYdorEK43jj8fJOs7cFKMQURFdPfFeqgkvW7hcEnkbP461Ssg/kEGKu+TUJRF90EXB4vKRbRBnzU=
+X-Received: by 2002:a25:ec02:0:b0:d86:357:e314 with SMTP id
+ j2-20020a25ec02000000b00d860357e314mr2757061ybh.47.1697561934985; Tue, 17 Oct
+ 2023 09:58:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d885140-f952-0018-304d-fbc1e15c33a7@amd.com>
-X-Url: http://acmel.wordpress.com
+References: <20231002204017.GB27267@noisy.programming.kicks-ass.net>
+ <ZRtmvLJFGfjcusQW@google.com> <20231003081616.GE27267@noisy.programming.kicks-ass.net>
+ <ZRwx7gcY7x1x3a5y@google.com> <20231004112152.GA5947@noisy.programming.kicks-ass.net>
+ <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
+ <ZR3eNtP5IVAHeFNC@google.com> <ZR3hx9s1yJBR0WRJ@google.com>
+ <c69a1eb1-e07a-8270-ca63-54949ded433d@gmail.com> <03b7da03-78a1-95b1-3969-634b5c9a5a56@amd.com>
+ <20231011141535.GF6307@noisy.programming.kicks-ass.net> <b2bfead3-0f48-d832-daee-e7c2069dae5d@amd.com>
+In-Reply-To: <b2bfead3-0f48-d832-daee-e7c2069dae5d@amd.com>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Tue, 17 Oct 2023 09:58:18 -0700
+Message-ID: <CAL715WLhJ_xSL-cR+ppoJA+dwWK2gwCPb2ZqfToRYm-ShqkmEw@mail.gmail.com>
+Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
+To: Manali Shukla <manali.shukla@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Sean Christopherson <seanjc@google.com>, 
+	Ingo Molnar <mingo@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
+	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, David Dunn <daviddunn@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Jim Mattson <jmattson@google.com>, 
+	Like Xu <like.xu.linux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Em Tue, Oct 17, 2023 at 01:31:30PM +0530, Ravi Bangoria escreveu:
-> Hi Arnaldo, Guilherme,
-> 
-> >> [443324.404938] Uhhuh. NMI received for unknown reason 2c on CPU 9.
-> >> [443324.404940] Dazed and confused, but trying to continue
-> 
-> This is a known hw bug in Zen2:
-> https://lore.kernel.org/lkml/e08e33d5-4f6d-91aa-f335-9404d16a983c@amd.com
-> 
-> You won't see it on later Zen processors, or at least the possibility of
-> hitting it is very less.
+On Tue, Oct 17, 2023 at 3:24=E2=80=AFAM Manali Shukla <manali.shukla@amd.co=
+m> wrote:
+>
+> On 10/11/2023 7:45 PM, Peter Zijlstra wrote:
+> > On Mon, Oct 09, 2023 at 10:33:41PM +0530, Manali Shukla wrote:
+> >> Hi all,
+> >>
+> >> I would like to add following things to the discussion just for the aw=
+areness of
+> >> everyone.
+> >>
+> >> Fully virtualized PMC support is coming to an upcoming AMD SoC and we =
+are
+> >> working on prototyping it.
+> >>
+> >> As part of virtualized PMC design, the PERF_CTL registers are defined =
+as Swap
+> >> type C: guest PMC states are loaded at VMRUN automatically but host PM=
+C states
+> >> are not saved by hardware.
+> >
+> > Per the previous discussion, doing this while host has active counters
+> > that do not have ::exclude_guest=3D1 is invalid and must result in an
+> > error.
+> >
+>
+> Yeah, exclude_guest should be enforced on host, while host has active PMC
+> counters and VPMC is enabled.
+>
+> > Also, I'm assuming it is all optional, a host can still profile a guest
+> > if all is configured just so?
+> >
+>
+> Correct, host should be able to profile guest, if VPMC is not enabled.
+>
+> >> If hypervisor is using the performance counters, it
+> >> is hypervisor's responsibility to save PERF_CTL registers to host save=
+ area
+> >> prior to VMRUN and restore them after VMEXIT.
+> >
+> > Does VMEXIT clear global_ctrl at least?
+> >
+>
+> global_ctrl will be initialized to reset value(0x3F) during VMEXIT. Simil=
+arly,
+> all the perf_ctl and perf_ctr are initialized to reset values(0) at VMEXI=
+T.
 
-Do you think we can detect that it is a zen2 processor, that it has this
-problem, and then the tools can just avoid using precise_ip != 0? I.e.
-"cycles:P" becomes plain "cycles" and asking for, say, "cycles:p" states
-that this isn't possible on Zen2?
- 
-> > (gdb) print perf_evlist__first(evlist)->attr.precise_ip
-> > $4 = 2
-> > (gdb)
+Are these guest values (automatically) saved in the guest area of VMCB
+on VMEXIT?
 
-> > So it seems to be using IBS:
- 
-> Correct. More details below.
- 
-> > Humm:
+>
+> >> In order to tackle PMC overflow
+> >> interrupts in guest itself, NMI virtualization or AVIC can be used, so=
+ that
+> >> interrupt on PMC overflow in guest will not leak to host.
+> >
+> > Can you please clarify -- AMD has this history with very dodgy PMI
+> > boundaries. See the whole amd_pmu_adjust_nmi_window() crud. Even the
+> > PMUv2 update didn't fix that nonsense.
+> >
+> > How is any virt stuff supposed to fix this? If the hardware is late
+> > delivering PMI, what guarantees a guest PMI does not land in host
+> > context and vice-versa?
+> >
+> > How does NMI virtualization (what even is that) or AVIC (I'm assuming
+> > that's a virtual interrupt controller) help?
+> >
+>
+> When NMI virtualization is enabled and source of VNMI is in guest, micro =
+code will
+> make sure that VNMI will directly be delivered to the guest (even if NMI =
+was late
+> delivered), so there is no issue of leaking guest NMI to the host.
+>
+> > Please make very sure, with your hardware team, that PMI must not be
+> > delivered after clearing global_ctrl (preferably) or at the very least,
+> > there exists a sequence of operations that provides a hard barrier
+> > to order PMI.
+> >
+> We are verifying all the corner cases, while prototyping PMC virtualizati=
+on.
+> As of now, we don't see guest NMIs leaking to host issue. But latency iss=
+ues
+> still stays.
 
-> >> # cpu pmu capabilities: max_precise=0
+How long is the latency? From the existing code (amd_pmu_disable_all()
+=3D> amd_pmu_check_overflow()), it seems to take up to 50 microseconds
+in amd_pmu_check_overflow(). But I wonder how much in reality.
 
-> > For me:
-
-> > [root@five ~]# perf report --header-only | grep "cpu pmu capabilities"
-> > # cpu pmu capabilities: max_precise=0
- 
-> Although confusing, this is technically correct because AMD core pmu
-> does not support precise mode.
- 
-> However, as a special case, 3 core pmu events: cpu-cycles, r076 (same as
-> cpu-cycles) and r0C1 (micro-ops) are supported with attr.precise_ip > 0,
-> and they are forwarded to IBS OP pmu. All other core pmu events with
-> attr.precise_ip > 0 fails with -EINVAL.
-
-If we can programatically detect that IBS is present we can add a note
-right after that 'perf report --header-only' line with this information.
- 
-> > [root@five ~]# cat /sys/devices/cpu/caps/max_precise
-> > 0
-> > [root@five ~]#
-
-> > Ravi, this probably is the max_precise for the "core" PMU, but the "ibs"
-> > one, that gets used when :pp and :p (but not :ppp) is used, i.e. that:
-> > 
-> > +++ b/arch/x86/events/amd/core.c
-> > @@ -374,7 +374,7 @@ static int amd_pmu_hw_config(struct perf_event *event)
-> > 
-> >         /* pass precise event sampling to ibs: */
-> >         if (event->attr.precise_ip && get_ibs_caps())
-> > -               return -ENOENT;
-> > +               return forward_event_to_ibs(event);
-> > 
-> > Thing..
-> > 
-> > Shouldn't we have some sort of max_precise cap for IBS so that we could
-> > use it and not have this confusing "max_precise=0" for the core PMU but
-> > accept attr.precise_ip = 1 and 2?
- 
-> Unlike Intel PEBS which provides levels of precision, AMD core pmu is
-> inherently non-precise and IBS is inherently precise. So max_precise value
-> is irrelevant for IBS. I mean ibs_op//, ibs_op//p, ibs_op//pp and
-> ibs_op//ppp are all same.
-
-This part can go to the man page, where :p, :P is documented.
- 
-> Thanks,
-> Ravi
- 
-> PS: I don't know the history behind not supporting attr.precise_ip = 3 when
-> event is forwarded from core pmu to IBS. This check was added long back in
-> 2012. Robert might know.
-
-Robert? 
+Thanks.
+-Mingwei
+>
