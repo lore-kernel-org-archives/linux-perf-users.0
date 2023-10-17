@@ -1,118 +1,186 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957D3381DF
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 08:03:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AB0C2CD
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 08:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UM5zdtV7"
-Received: from out-202.mta0.migadu.com (out-202.mta0.migadu.com [IPv6:2001:41d0:1004:224b::ca])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 299EFA4
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 01:03:21 -0700 (PDT)
-Date: Tue, 17 Oct 2023 08:03:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1697529798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X41/o5bczvtn2r8r9l6vgC27CyrOUvCR36syb0XC5bs=;
-	b=UM5zdtV751wdwKI/Wqjsx9D6o9Ry46UF+LP/DwUf+aJ3hMmNjco/o3FyR68ou4P+IDOxqL
-	PJB3/NrbCLGk/n6EWyRDvB7ts1fy4wHu38hWOk7TaX5IdJKUjiEKpajU5M6w7s9wHh3sBa
-	LCA9ccbRxTh6daV0+xAJocAcyFtH8MY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Cornelia Huck <cohuck@redhat.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Jing Zhang <jingzhangos@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 5/5] KVM: arm64: selftests: Test for setting ID
- register from usersapce
-Message-ID: <ZS4_wGJPg3G8dA7Z@linux.dev>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-6-oliver.upton@linux.dev>
- <87fs2aegap.fsf@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RS7/o0E2"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B54193;
+	Tue, 17 Oct 2023 01:08:18 -0700 (PDT)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39H84aLv000859;
+	Tue, 17 Oct 2023 08:08:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=QIF7c2z5SMaUpGNE5OZQpDexMR/6W7EPkEtl2ghgegk=;
+ b=RS7/o0E2EFCSoBAUIJ96T/hGrG4+CwKXc/9x++q0HF71ABkd3XF/YVzBFBLF5naDxcxZ
+ yHGnQ7k0C0WR7YyOYMxadusS0116x2lMJYXGLpszDHxu4krRg2R9l3YFREsQ3IJwLaVO
+ C68KVjHE05dDvBYkgtBfqlXrSY7dADGgOlMLZgPu44qn5+4ws4iwATduGVqxbnVm455p
+ N5urQ046yM+/6Y794O5orS0Qg97T1A/DdFC3+Nfo2yZNd/nRyeVeVWDQA4JpGWLdFCQn
+ LY9uh22SXt0jekJpt9UrHBq8vbkdn7qfEC89A8hAVe+GQB+iLsHgac+CGqUCeOCDeqK2 QQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tspedg8v7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Oct 2023 08:08:06 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39H84u16002302;
+	Tue, 17 Oct 2023 08:07:51 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tspedg771-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Oct 2023 08:07:50 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39H7K9Zx012949;
+	Tue, 17 Oct 2023 08:07:05 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tr5py79kj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Oct 2023 08:07:05 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39H873To24838762
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Oct 2023 08:07:03 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1AA9020043;
+	Tue, 17 Oct 2023 08:07:03 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 156032004B;
+	Tue, 17 Oct 2023 08:07:01 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.109.214.47])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 17 Oct 2023 08:07:00 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87fs2aegap.fsf@redhat.com>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH v3] perf bench sched pipe: Add -G/--cgroups option
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZS1Y5PhXhp384ynY@kernel.org>
+Date: Tue, 17 Oct 2023 13:36:49 +0530
+Cc: Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D6B30B31-80DC-4EB0-A111-B92CD99DD75F@linux.vnet.ibm.com>
+References: <20231016044225.1125674-1-namhyung@kernel.org>
+ <ZS0D53ckVx356k4o@gmail.com> <ZS1Y5PhXhp384ynY@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9ryNQzz0UKdRtBIH4P1Cd3mfN3g9GKnV
+X-Proofpoint-GUID: VBlYgYdGEQE3W6GJc8pBdHnmRMIDlg-y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-16_13,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310170066
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 16, 2023 at 05:30:06PM +0200, Cornelia Huck wrote:
-> On Wed, Oct 11 2023, Oliver Upton <oliver.upton@linux.dev> wrote:
-> 
-> > From: Jing Zhang <jingzhangos@google.com>
-> >
-> > Add tests to verify setting ID registers from userspace is handled
-> > correctly by KVM. Also add a test case to use ioctl
-> > KVM_ARM_GET_REG_WRITABLE_MASKS to get writable masks.
-> >
-> > Signed-off-by: Jing Zhang <jingzhangos@google.com>
-> > Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
-> > ---
-> >  tools/testing/selftests/kvm/Makefile          |   1 +
-> >  .../selftests/kvm/aarch64/set_id_regs.c       | 479 ++++++++++++++++++
-> >  2 files changed, 480 insertions(+)
-> >  create mode 100644 tools/testing/selftests/kvm/aarch64/set_id_regs.c
-> 
-> (...)
-> 
-> > +static void test_user_set_reg(struct kvm_vcpu *vcpu, bool aarch64_only)
-> > +{
-> > +	uint64_t masks[KVM_ARM_FEATURE_ID_RANGE_SIZE];
-> > +	struct reg_mask_range range = {
-> > +		.addr = (__u64)masks,
-> > +	};
-> > +	int ret;
-> > +
-> > +	/* KVM should return error when reserved field is not zero */
-> > +	range.reserved[0] = 1;
-> > +	ret = __vm_ioctl(vcpu->vm, KVM_ARM_GET_REG_WRITABLE_MASKS, &range);
-> > +	TEST_ASSERT(ret, "KVM doesn't check invalid parameters.");
-> 
-> I think the code should first check for
-> KVM_CAP_ARM_SUPPORTED_REG_MASK_RANGES -- newer kselftests are supposed
-> to be able to run on older kernels, and we should just skip all of this
-> if the API isn't there.
 
-Ah, thanks! I'll apply the following on top:
 
-diff --git a/tools/testing/selftests/kvm/aarch64/set_id_regs.c b/tools/testing/selftests/kvm/aarch64/set_id_regs.c
-index 5c0718fd1705..bac05210b539 100644
---- a/tools/testing/selftests/kvm/aarch64/set_id_regs.c
-+++ b/tools/testing/selftests/kvm/aarch64/set_id_regs.c
-@@ -452,6 +452,8 @@ int main(void)
- 	uint64_t val, el0;
- 	int ftr_cnt;
- 
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_SUPPORTED_REG_MASK_RANGES));
-+
- 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
- 
- 	/* Check for AARCH64 only system */
+> On 16-Oct-2023, at 9:08 PM, Arnaldo Carvalho de Melo <acme@kernel.org> =
+wrote:
+>=20
+> Em Mon, Oct 16, 2023 at 11:35:35AM +0200, Ingo Molnar escreveu:
+>>=20
+>>=20
+>> * Namhyung Kim <namhyung@kernel.org> wrote:
+>>=20
+>>> + /* try cgroup v2 interface first */
+>>> + if (threaded)
+>>> + fd =3D openat(cgrp->fd, "cgroup.threads", O_WRONLY);
+>>> + else
+>>> + fd =3D openat(cgrp->fd, "cgroup.procs", O_WRONLY);
+>>> +
+>>> + /* try cgroup v1 if failed */
+>>> + if (fd < 0)
+>>> + fd =3D openat(cgrp->fd, "tasks", O_WRONLY);
+>>> +
+>>> + if (fd < 0) {
+>>> + char mnt[PATH_MAX];
+>>> +
+>>> + printf("Failed to open cgroup file in %s\n", cgrp->name);
+>>> +
+>>> + if (cgroupfs_find_mountpoint(mnt, sizeof(mnt), "perf_event") =3D=3D =
+0)
+>>> + printf(" Hint: create the cgroup first, like 'mkdir %s/%s'\n",
+>>> +        mnt, cgrp->name);
+>>=20
+>> Ok, this works too I suppose.
+>>=20
+>> Acked-by: Ingo Molnar <mingo@kernel.org>
+>=20
+> I'm not getting that:
+>=20
+> [root@five ~]# perf bench sched pipe -l 10000 -G AAA,BBB
+> # Running 'sched/pipe' benchmark:
+> no access to cgroup /sys/fs/cgroup/AAA
+> cannot open sender cgroup: AAA
+> Usage: perf bench sched pipe <options>
+>=20
+>    -G, --cgroups <SEND,RECV>
+>                          Put sender and receivers in given cgroups
+> [root@five ~]#
+>=20
+> Its better now as it bails out, but it is not emitting any message =
+that
+> helps with running the test, well, there is that /sys/fs/cgroup/AAA
+> path, lemme try doing a mkdir:
+>=20
+> [root@five ~]# perf bench sched pipe -l 10000 -G AAA,BBB
+> # Running 'sched/pipe' benchmark:
+> no access to cgroup /sys/fs/cgroup/BBB
+> cannot open receiver cgroup: BBB
+> Usage: perf bench sched pipe <options>
+>=20
+>    -G, --cgroups <SEND,RECV>
+>                          Put sender and receivers in given cgroups
+> [root@five ~]#
+>=20
+> [root@five ~]# perf bench sched pipe -l 10000 -G AAA,BBB
+> # Running 'sched/pipe' benchmark:
+> [root@five ~]#
+>=20
+> It seems to be bailing out but doesn't run the test nor emits any
+> warning.
 
--- 
-Thanks,
-Oliver
+In the =E2=80=9Cparse_two_cgroups=E2=80=9D function itself it checks for =
+:
+
+cgrp_send =3D cgroup__new(p, /*do_open=3D*/true);
+        if (cgrp_send =3D=3D NULL) {
+                fprintf(stderr, "cannot open sender cgroup: %s", p);
+                goto out;
+        }
+
+And we fail here since the cgroup is not created. May be we can add the =
+Hint or warning in here ?
+
+
+Thanks
+Athira
+
+>=20
+> I'm using v3. I'll try to debug it a bit.
+>=20
+> - Arnaldo
+
+
