@@ -1,109 +1,98 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F802EAE3
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 19:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91EE1FC;
-	Tue, 17 Oct 2023 12:05:52 -0700 (PDT)
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-564b6276941so4502306a12.3;
-        Tue, 17 Oct 2023 12:05:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470832DF99
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 19:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bc1kwd3a"
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C09F3ED;
+	Tue, 17 Oct 2023 12:55:34 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6b36e1fcea0so3311535b3a.1;
+        Tue, 17 Oct 2023 12:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697572534; x=1698177334; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SJulstcUd5/uTxrCXWl5kYXpRYu+VuExy2t32bX2aJ4=;
+        b=Bc1kwd3a5Rdby4zu+v7ZhwzNtly43d1+xhQGsckCHj7qTPutAORTEWqOee5pUUjNlB
+         JMQf14p6ExU3L3+yzFdKe4nMBFy1oi1bAIqXAOIOZgRpma09rW0NpM7M4wHvmzVgn420
+         A7C931iz1DsiHHa54IlfUJBqoGygJw9rMQUZROfv6ECNMv/L3qMdGlOc/AJR1IAr7UyY
+         YYppPP0ZgRppKqk/WZTr+99noegu2zLVnwn3oPyDMMv1Gdyo5YtnRDJsA249nnxVggAP
+         0KH7ImMkM1B7XI+RTdeR/ZoRD64WzjZ9r3cP5XoiGFA+GX3zsc4i1rid7b0PgGDqjOHi
+         toDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697569552; x=1698174352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iuvHgJEYPvvaf1w7rboxP5KoSmgvNQj+LHx++KlT/8g=;
-        b=tHCDlh+/jxJij7rfKu5tBZ6vqYMmPa6z4rHS4byKW5JuvbmQ9EAP90awCrrtTRdAXH
-         kbj4ybz0Ra5ELctuAtvuevaRFCSSqOFH1wf7wOTiOxKdugck0EXclc7RnPv8o9+xEQRB
-         FN8VED3mhOV4saN9YRm5rMSqn63WyfK+uh1iDK573BHjQtyzS9R+f2LELVdJ2bYqWRDo
-         5IA1BnNYSEY338rbP5Y9+fYUkaqzfx8lZcf2VZgZF81wvG+ev+CCDdy0DdXZz/I2NZTJ
-         KJ47JoWy24Su0LeejHuApTvS5skxZRzBeKBcY2qlvSdKPOnnTeQRPCq3tgYsVMlqXHwS
-         ck/A==
-X-Gm-Message-State: AOJu0Yx+UqlPwGOCzAiT7GgskQnSeiP+00XG6m/gaskCSd8He+plFq0j
-	v/qh6+5rvx1ykNDZXR1fzX2M2hEAJ4TOXilTSOsZ+0VX
-X-Google-Smtp-Source: AGHT+IHG4jXT3a5/Z67JfjBtawbXRS6kej3T7Ck1b85DtR8ldjrqYiN9vM9FJqg17weeNwcHg+SpqIklbh7+EAuMpSw=
-X-Received: by 2002:a17:90a:474e:b0:27d:20f5:3629 with SMTP id
- y14-20020a17090a474e00b0027d20f53629mr2982050pjg.46.1697569551784; Tue, 17
- Oct 2023 12:05:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697572534; x=1698177334;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SJulstcUd5/uTxrCXWl5kYXpRYu+VuExy2t32bX2aJ4=;
+        b=cd1aUkyoaPRb8ORdEL3nxMdn+8l8ceNwshSBmSu8FhsyqFpbgnpAsPI6APn1bFxDRn
+         uHk+JL4DbxAcARW9eEJ59qFtavmqR+gqo1ITOOF5K3EgKCJRsM2ptsLwmvQx+r8QSx7N
+         ENeNS2V9PgLLyRcNUlyShDkYLlEbXm3OyqQcNnWOl61B/tmlGVUfLLk2nOThKLy3ewip
+         4n1H7G6SjnlXKCBBYQGytCCxdWZh9prqw86RxxhzxtkKxXV5CBrph3UhVwlRbctVAo9j
+         8hVklfwFkQbxlMyDEM6gdYE/fPLUfCzmQmHkyTsxfXMgZgmArNoC+YRMy3JtqA3j1tr4
+         9lcA==
+X-Gm-Message-State: AOJu0YySnH8aav45eUJitE9Q/Vxi6YF+Y/uj05EDE0+zBlc8uKGP5tIP
+	7BnjkkuHn3jOICWwv2J6OHzRbSReELY=
+X-Google-Smtp-Source: AGHT+IFVPtvMGRNNqkk6KcRmPHqM39EREZ1KiSDdRWgdSxuPd4g4MGW/CAIiKgMyPjMp9o9/z70fwQ==
+X-Received: by 2002:a05:6a00:134f:b0:691:2d4:238e with SMTP id k15-20020a056a00134f00b0069102d4238emr3530984pfu.6.1697572534136;
+        Tue, 17 Oct 2023 12:55:34 -0700 (PDT)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:c77b:3fef:28e3:81d2])
+        by smtp.gmail.com with ESMTPSA id a6-20020aa79706000000b0068fece2c190sm1848041pfg.70.2023.10.17.12.55.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Oct 2023 12:55:33 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	adrian.hunter@intel.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	maddy@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com,
+	kjain@linux.ibm.com
+Subject: Re: [PATCH] tools/perf/arch/powerpc: Fix the CPU ID const char* value by adding 0x prefix
+Date: Tue, 17 Oct 2023 12:55:26 -0700
+Message-ID: <169757198795.167943.3033399687445090221.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
+In-Reply-To: <20231009050052.64935-1-atrajeev@linux.vnet.ibm.com>
+References: <20231009050052.64935-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016044225.1125674-1-namhyung@kernel.org> <ZS0D53ckVx356k4o@gmail.com>
- <ZS1Y5PhXhp384ynY@kernel.org> <ZS1ajf/9HmgUyyCl@kernel.org>
- <ZS1cGMgyEDJQbwq9@kernel.org> <ZS1c9RCh9MkzPbFG@kernel.org>
- <ZS2ecyCVpK8B2cQq@kernel.org> <ZS5yl3RzVGKBkCvY@gmail.com>
- <ZS592qxF3YxmCoG1@kernel.org> <ZS6BgfOUeWQnI1mS@gmail.com> <ZS7TAr1bpOfkeNuv@kernel.org>
-In-Reply-To: <ZS7TAr1bpOfkeNuv@kernel.org>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 17 Oct 2023 12:05:40 -0700
-Message-ID: <CAM9d7cjLxtDPXXVWMG7SkPpsUrgh848texqH150XP+6+9ZqZxw@mail.gmail.com>
-Subject: Re: [perf stat] Extend --cpu to non-system-wide runs too? was Re:
- [PATCH v3] perf bench sched pipe: Add -G/--cgroups option
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 17, 2023 at 11:31=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Oct 17, 2023 at 02:43:45PM +0200, Ingo Molnar escreveu:
-> > * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > Em Tue, Oct 17, 2023 at 01:40:07PM +0200, Ingo Molnar escreveu:
-> > > > Side note: it might make sense to add a sane cpumask/affinity setti=
-ng
-> > > > option to perf stat itself:
->
-> > > >   perf stat --cpumask
->
-> > > > ... or so?
->
-> > > > We do have -C:
->
-> > > >     -C, --cpu <cpu>       list of cpus to monitor in system-wide
->
-> > > > ... but that's limited to --all-cpus, right?
->
-> > > > Perhaps we could extend --cpu to non-system-wide runs too?
->
-> > > Maybe I misunderstood your question, but its a list of cpus to limit =
-the
-> > > counting:
->
-> > Ok.
->
-> > So I thought that "--cpumask mask/list/etc" should simply do what 'task=
-set'
-> > is doing: using the sched_setaffinity() syscall to make the current
-> > workload and all its children.
->
-> > There's impact on perf stat itself: it could just call sched_setaffinit=
-y()
-> > early on, and not bother about it?
->
-> > Having it built-in into perf would simply make it easier to not forget
-> > running 'taskset'. :-)
->
-> Would that be the only advantage?
->
-> I think using taskset isn't that much of a burden and keeps with the
-> Unix tradition, no? :-\
+On Mon, 9 Oct 2023 10:30:52 +0530, Athira Rajeev wrote:
+> Simple expression parser test fails in powerpc as below:
+> 
+>     4: Simple expression parser
+>     test child forked, pid 170385
+>     Using CPUID 004e2102
+>     division by zero
+>     syntax error
+>     syntax error
+>     FAILED tests/expr.c:65 parse test failed
+>     test child finished with -1
+>     Simple expression parser: FAILED!
+> 
+> [...]
 
-Agreed.  Maybe there's a usecase that wants to profile a specific
-cpu while the target processes are running all available cpus.
+Applied to perf-tools-next, thanks!
 
-Thanks,
-Namhyung
