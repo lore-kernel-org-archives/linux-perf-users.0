@@ -1,35 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303131946A
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 12:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D797442BE2
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 12:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lylVMsvc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B8BC433C7;
-	Tue, 17 Oct 2023 12:09:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kg9x2Do6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E166DC433C8;
+	Tue, 17 Oct 2023 12:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697544552;
-	bh=Nbr+W9iQN07rxrGeF9ml8ztmKyGXJr/6WE1uNPvYYws=;
+	s=k20201202; t=1697545693;
+	bh=LrC/4LpK+Qmq0CP6UaMCTxygoYhd7Sg2HB4cCDrUJc0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lylVMsvcb6xDmtPi9qyEtGHKKdlAR28RVW/kf/UNFXmpUy81m7tNI4hHgx8AtE3aV
-	 kQOCMg6e8N+7d6hKtAM1LY5NuiQ505/TikPzND2NZq1aMk8Xvp5ISZadWXdtOOAq5o
-	 NW67qK2xEqDdNj5ITe41i+n1KtSx5JUxYgE+mD7fm2cl2ZgNAgeVLjNZ3Ai5G92lZ+
-	 8EKACzpRtV35Yxr8Lymnck/iyRlCRy45gfDeQebL2A+8NMtfhwkS4iRWmTy+BlnjMA
-	 G9tfAJYXSpu5LxKvspHQRF1b9KAZ65pG1P7K8P/donx/LsZO1RSkF7/S9VO/JV3Du+
-	 a1PQFT9RCUIIA==
+	b=Kg9x2Do69Icb6QII7+Io3nHRzveUyZry0e0JacmXaIJpNh2f3rfQiKupjBHtMZ5s/
+	 d5dVrOt4WL0tgQCkxWBz/OKzrqRWbpz0x4m/RDRwOHmyhkXnNQW+sH4AzH5VcaqhaU
+	 NRwEhG7kuCf1/eITPY1z2N3apSxJO5IY4c0Q7rO1lOHpR8fE3HTFJgKKg5X8qWzJia
+	 0Z63N0VmVJkneIX2M94YJpD90ckqOuDoerA9tvZ8I/Jta/spjaMQqco60wQEbIzjuX
+	 C1q0ngXNnzhC+HejD/9VUp6mG0LOqZ7kfkmilOm/lyZXvnjrR+68jdjUSTmuF42Vgh
+	 XRQ6R8JwuZ2fQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 0946C40016; Tue, 17 Oct 2023 09:09:10 -0300 (-03)
-Date: Tue, 17 Oct 2023 09:09:09 -0300
+	id 1FB0840016; Tue, 17 Oct 2023 09:28:10 -0300 (-03)
+Date: Tue, 17 Oct 2023 09:28:10 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3] perf bench sched pipe: Add -G/--cgroups option
-Message-ID: <ZS55ZfRFGbQMIbbh@kernel.org>
+Subject: [perf stat] Extend --cpu to non-system-wide runs too? was Re: [PATCH
+ v3] perf bench sched pipe: Add -G/--cgroups option
+Message-ID: <ZS592qxF3YxmCoG1@kernel.org>
 References: <20231016044225.1125674-1-namhyung@kernel.org>
  <ZS0D53ckVx356k4o@gmail.com>
  <ZS1Y5PhXhp384ynY@kernel.org>
@@ -37,117 +38,147 @@ References: <20231016044225.1125674-1-namhyung@kernel.org>
  <ZS1cGMgyEDJQbwq9@kernel.org>
  <ZS1c9RCh9MkzPbFG@kernel.org>
  <ZS2ecyCVpK8B2cQq@kernel.org>
- <CAM9d7cjH+c30MChKyOpMNB6-k6Vy4F4ZbB1Eih0Dk5tgXP8mEg@mail.gmail.com>
+ <ZS5yl3RzVGKBkCvY@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cjH+c30MChKyOpMNB6-k6Vy4F4ZbB1Eih0Dk5tgXP8mEg@mail.gmail.com>
+In-Reply-To: <ZS5yl3RzVGKBkCvY@gmail.com>
 X-Url: http://acmel.wordpress.com
 
-Em Mon, Oct 16, 2023 at 02:44:23PM -0700, Namhyung Kim escreveu:
-> On Mon, Oct 16, 2023 at 1:35 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> > Em Mon, Oct 16, 2023 at 12:55:33PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Mon, Oct 16, 2023 at 12:51:52PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > Now back at testing with with cgroups.
-> >
-> > > Humm, even without the -G I get:
-> >
-> > > [root@five ~]# perf stat -e context-switches,cgroup-switches perf bench sched pipe  -l 10000
-> > > # Running 'sched/pipe' benchmark:
-> > > # Executed 10000 pipe operations between two processes
-> >
-> > >      Total time: 0.082 [sec]
-> >
-> > >        8.246400 usecs/op
-> > >          121265 ops/sec
-> >
-> > >  Performance counter stats for 'perf bench sched pipe -l 10000':
-> >
-> > >             20,002      context-switches
-> > >             20,002      cgroup-switches
-> >
-> > Same number, but then I forgot to add the 'taskset -c 0' part of the
-> > command line, if I have it:
-> >
-> > [root@five ~]# perf stat -e context-switches,cgroup-switches taskset -c 0 perf bench sched pipe -l 10000
-> > # Running 'sched/pipe' benchmark:
-> > # Executed 10000 pipe operations between two processes
-> >
-> >      Total time: 0.072 [sec]
-> >
-> >        7.231500 usecs/op
-> >          138283 ops/sec
-> >
-> >  Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000':
-> >
-> >             20,002      context-switches
-> >                  3      cgroup-switches
-> >
-> >        0.082855113 seconds time elapsed
-> >
-> >        0.007765000 seconds user
-> >        0.074020000 seconds sys
-> >
-> >
-> > [root@five ~]# perf stat -e context-switches,cgroup-switches taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB
-> > # Running 'sched/pipe' benchmark:
-> > # Executed 10000 pipe operations between two processes
-> >
-> >      Total time: 0.093 [sec]
-> >
-> >        9.341800 usecs/op
-> >          107045 ops/sec
-> >
-> >  Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB':
-> >
-> >             20,004      context-switches
-> >             20,003      cgroup-switches
-> >
-> >        0.103436330 seconds time elapsed
-> >
-> >        0.018109000 seconds user
-> >        0.063058000 seconds sys
-> >
-> >
-> > [root@five ~]#
-> >
-> > I.e. it works as in your results, but can you please spell out why that
-> > 'taskset -c 0' is needed to get these results?
-> >
-> > I wasn't expecting the same number of cgroup-switches when not using
-> > 'taskset -c 0' :-\
+Em Tue, Oct 17, 2023 at 01:40:07PM +0200, Ingo Molnar escreveu:
+> Side note: it might make sense to add a sane cpumask/affinity setting 
+> option to perf stat itself:
 > 
-> Without taskset, each task is likely to run on different CPUs
-> and other tasks (including idle) on that CPU would be in
-> different cgroup so it'll create cgroup switches everytime
-> if they run in AAA or BBB.
+>   perf stat --cpumask 
+> 
+> ... or so?
+> 
+> We do have -C:
+> 
+>     -C, --cpu <cpu>       list of cpus to monitor in system-wide
+> 
+> ... but that's limited to --all-cpus, right?
+> 
+> Perhaps we could extend --cpu to non-system-wide runs too?
 
-Sure, and the 'perf stat' is counting _just_ that workload and its
-children (no -a).
+Maybe I misunderstood your question, but its a list of cpus to limit the
+counting:
 
-Can you please add this to the cset commit log message? I.e. describe
-the test setup thoroughly to help in reviewing and for us to quickly
-understand what is being tested, the purpose of the test and how the
-results match our expectations.
+On a mostly idle system (some browsers, etc):
 
-This will be specially helpful in the future, when we do bisects, try to
-understand why changes were made, etc.
+[root@five ~]# perf stat -C 0,2 -e cycles -I 1000
+#           time             counts unit events
+     1.001012960        207,999,675      cycles
+     2.002152464        157,058,633      cycles
+     3.002985969        174,590,102      cycles
+     4.003411871        216,250,416      cycles
+     5.004392310        180,537,857      cycles
+     6.005387846        171,036,571      cycles
+     7.006386564        156,461,753      cycles
+     8.007532366        158,010,466      cycles
+     9.008682339        164,971,366      cycles
+^C     9.377946210         77,242,809      cycles
 
-Even in the man page this information would be useful in helping users
-to understand the purpose of the 'perf bench' -G option. So I think its
-better to have it there instead of in the cset commit log message.
- 
-> With taskset, both sender and receiver would run on the
-> same CPU.  So it'd see the impact of cgroup switches
-> with this option.
+[root@five ~]#
 
-Thanks!
+Then:
+
+[root@five ~]# perf stat -C 0 -e cycles -I 1000
+#           time             counts unit events
+     1.001019469         69,833,637      cycles
+     2.002133490        111,297,731      cycles
+     3.003225211         90,416,063      cycles
+     4.003663853         34,189,884      cycles
+     5.004689751         34,583,822      cycles
+     6.005659918         33,284,110      cycles
+     7.006660396         62,080,246      cycles
+^C     7.229236075         23,250,207      cycles
+
+[root@five ~]#
+
+But:
+
+[root@five ~]# taskset -c 0 stress-ng --cpu 32  &
+[1] 9859
+[root@five ~]# stress-ng: info:  [9859] defaulting to a 1 day, 0 secs run per stressor
+stress-ng: info:  [9859] dispatching hogs: 32 cpu
+
+[root@five ~]#
+
+[root@five ~]# perf stat -C 0,2 -e cycles -I 1000
+#           time             counts unit events
+     1.001024379      4,838,680,041      cycles
+     2.008891551      4,849,936,963      cycles
+     3.017168975      4,835,710,170      cycles
+     4.025437789      4,847,294,589      cycles
+     5.033239780      4,825,463,385      cycles
+     6.039332959      4,834,989,373      cycles
+^C     6.067478756        125,338,359      cycles
+
+[root@five ~]# perf stat -C 2 -e cycles -I 1000
+#           time             counts unit events
+     1.000215845         21,244,609      cycles
+     2.001216573         51,337,887      cycles
+     3.002278103         49,421,924      cycles
+     4.003339432         33,270,235      cycles
+^C     4.338990744         14,178,759      cycles
+
+[root@five ~]# perf stat -C 0 -e cycles -I 1000
+#           time             counts unit events
+     1.000801562      4,767,090,700      cycles
+     2.001800540      4,761,384,154      cycles
+     3.002801468      4,768,816,073      cycles
+^C     3.313349213      1,479,254,494      cycles
+
+[root@five ~]#
+
+If we try to specify a pid and cpu:
+
+[root@five ~]# taskset -c 0 sleep 100m &
+[2] 9964
+[root@five ~]#
+[root@five ~]# perf stat -C 0 -p 9964 -e cycles -I 1000
+PID/TID switch overriding CPU
+#           time             counts unit events
+     1.000929383      <not counted>      cycles
+     2.001933839      <not counted>      cycles
+     3.002927605      <not counted>      cycles
+     4.003983793      <not counted>      cycles
+     5.005051180      <not counted>      cycles
+     6.006123168      <not counted>      cycles
+     7.007182796      <not counted>      cycles
+     8.008261274      <not counted>      cycles
+     9.009324991      <not counted>      cycles
+^C     9.454324736      <not counted>      cycles
+
+[root@five ~]#
+
+
+[root@five ~]# pidof stress-ng
+9891 9890 9889 9888 9887 9886 9885 9884 9883 9882 9881 9880 9879 9878 9877 9876 9875 9874 9873 9872 9871 9870 9869 9868 9867 9866 9865 9864 9863 9862 9861 9860 9859
+[root@five ~]# perf stat -C 0 -p 9860 -e cycles -I 1000
+PID/TID switch overriding CPU
+#           time             counts unit events
+     1.001045336        144,691,886      cycles
+     2.002170624        134,088,343      cycles
+     3.003257911        149,148,823      cycles
+^C     3.301585761         40,468,152      cycles
+
+[root@five ~]#
+
+Do you want to profile some specific PID only when it runs on some
+specific CPU?
+
+That should work, as per man perf_event_open:
+
+       pid == 0 and cpu >= 0
+              This measures the calling process/thread only when running on the specified CPU.
+
+But, as we saw above, tooling is preventing us from doing that :-\
 
 - Arnaldo
