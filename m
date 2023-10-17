@@ -1,101 +1,113 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232AA2DF99
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 19:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwDawMPS"
-Received: from mail-oo1-xc33.google.com (mail-oo1-xc33.google.com [IPv6:2607:f8b0:4864:20::c33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04AB5ED;
-	Tue, 17 Oct 2023 12:55:40 -0700 (PDT)
-Received: by mail-oo1-xc33.google.com with SMTP id 006d021491bc7-57e40f0189aso3215072eaf.1;
-        Tue, 17 Oct 2023 12:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697572539; x=1698177339; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6eA2nFZj1wzdGS7YxyIDKBexw77sgLNg1YSUDsCcOvw=;
-        b=DwDawMPSVtWC9uGjguOqKD7J7aiG0rbFPXus+kC556/ORlRT6XgsMxzYU+whWYN2qk
-         ZqvmYuBygYPFjzZqkoY+9e5OO29w6WYq7bSukrwkbwS1LGSbnas9onBs8liceclfkX9m
-         25hgtKKXQTHAgixiFzCguu07gWTnv5LtJ3/sZR88DxAMkrIJl7nY3MpnPi8qSkC6YND3
-         dW9WFF8WEaoekaxgxTlrC5Z49+w94Uq1RdDMy8Mw5DrUR+UiMRHGy5V2L/gRj7yJalkZ
-         wPrpZ1KTAIXajmS/mow7yK07u9C7OiRZ+RtI0os4/2ua+veUM1bTg9ueWX61Vx0Xg1EJ
-         rZzw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA95430FB;
+	Tue, 17 Oct 2023 20:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE4292;
+	Tue, 17 Oct 2023 13:16:40 -0700 (PDT)
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-27d4372322aso2699665a91.3;
+        Tue, 17 Oct 2023 13:16:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697572539; x=1698177339;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6eA2nFZj1wzdGS7YxyIDKBexw77sgLNg1YSUDsCcOvw=;
-        b=Urdb6eV9pDpL5nLN6SQrYcJl0vJ0I7gu7kOn6COqEyx3oVw784IaDG38Ljko13LKog
-         jCexn+yFQZzzuVfR1R+KkelCMBp8MoDewi3KxoAJgzOcGF74RzxZUPRd72Z9lCED8lHM
-         joUOzFs8bY1ahTJa00dQ3P2mL+vuxd79LDVm/Wi39h/B8sYsOH6tK7FUm3oyE1bnsMiU
-         XBKWJBWpdhZmUjRe8iI7mpl81+DLqhdIw0Rce+0codLABn1jHwYqDI/Aa5rb+YrzQIhA
-         FYut/+RNl8etT4bTYvy3ru4b0UqldFM7t1EKR/NsjX5WPoAAdoE/FCaAnkLYamz/jGZ/
-         eP2A==
-X-Gm-Message-State: AOJu0Yx8OsMR3hQQSotUwDzbUnm63+OjQTtqu0El5xrBG2v0V1cLkcfS
-	RcDDJ45XzvQgzxru2WMY/us=
-X-Google-Smtp-Source: AGHT+IHJU4qw2rYt2MWhCbJ9de4DAvbX9iFmXe9orXLWzJmeTm5oGQlas9DcFBpgR+dqGF6Teq/0zg==
-X-Received: by 2002:a05:6358:ed7:b0:141:162:b0cd with SMTP id 23-20020a0563580ed700b001410162b0cdmr3444338rwh.19.1697572539218;
-        Tue, 17 Oct 2023 12:55:39 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:c77b:3fef:28e3:81d2])
-        by smtp.gmail.com with ESMTPSA id a6-20020aa79706000000b0068fece2c190sm1848041pfg.70.2023.10.17.12.55.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 12:55:38 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Leo Yan <leo.yan@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	John Garry <john.g.garry@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org
-Subject: Re: [PATCH v1 RESEND 0/2] perf cs-etm: Improve timestamp tracing
-Date: Tue, 17 Oct 2023 12:55:30 -0700
-Message-ID: <169757198792.167943.16079905055591841742.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
-In-Reply-To: <20231014074159.1667880-1-leo.yan@linaro.org>
-References: <20231014074159.1667880-1-leo.yan@linaro.org>
+        d=1e100.net; s=20230601; t=1697573799; x=1698178599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kUW+u1TYc1aiMVSluWq8+lAb+fft9seMdrtiitvSu28=;
+        b=Vw4F62MARGmnJRrDmOVjmJvtRpcq6hi+u9GOtsJ1v/gw3u+kAArCTyfM5pd9eJsBG4
+         7iXNTTQH1bK8CkJpMEwEUR7z2xFPyKEv0HQBnJ8HZnzRr7rmpYa8SEwEDWV4wGQGZPeE
+         cwxOfVeq/eTKMW2+9q8b0edYxFj+X5cYiPd4TU8VoqlM9XSuYoG4bjk9KREikjHOxp4n
+         buXCBr/o2J0QQTlLJpsmAzi2rlAl0BSs47rUK5hxW5tZiJCQilWtn91MtCU5BOP98XSk
+         1RZPk/DNjDuTwE/vymovIV2KQif+KnDE5psqpWVr91+lzAcjERYulWqTJ11ij18bwatC
+         JaGg==
+X-Gm-Message-State: AOJu0Yycbd8DoIYzswHo9JjwMKTPznARmu5k/5THq4MYOPcY4Bd0fZoT
+	1u9a65tznr+Aq0woSNqsQktmDBkzuaV2DmwePFg=
+X-Google-Smtp-Source: AGHT+IG0y+1+8mbKTt/Fu2l9gbpU6L+YaEFfx0ecuo6IvHgLrxF44zcafMnC5tKmDYdPqIsIdH41Qn703Ggx7SzbFX0=
+X-Received: by 2002:a17:90b:1e4f:b0:27d:549b:3e6f with SMTP id
+ pi15-20020a17090b1e4f00b0027d549b3e6fmr3060045pjb.46.1697573799340; Tue, 17
+ Oct 2023 13:16:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+References: <20231008212251.236023-1-jolsa@kernel.org> <20231008212251.236023-2-jolsa@kernel.org>
+ <CAM9d7cjYCrTkOTOmBHry-95nivmkGv1g0wp=+TSA0xPXJW_QvQ@mail.gmail.com>
+ <ZSjlk99UOV2tTMWO@krava> <CAM9d7cjqvEs6262GfuF18mtFsWEznqNOWP_NqZN99Ys3MxCXqg@mail.gmail.com>
+ <ZS5JHuwxL200M09H@krava>
+In-Reply-To: <ZS5JHuwxL200M09H@krava>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 17 Oct 2023 13:16:28 -0700
+Message-ID: <CAM9d7chq125TOtnWFVKUC6PwRJqmXwNbfs7Dhm_04B3ZbA4jdw@mail.gmail.com>
+Subject: Re: [PATCHv2 1/2] tools/build: Fix -s detection code in tools/build/Makefile.build
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Quentin Monnet <quentin@isovalent.com>, Dmitry Goncharov <dgoncharov@users.sf.net>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Martin KaFai Lau <kafai@fb.com>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Ian Rogers <irogers@google.com>, 
+	KP Singh <kpsingh@chromium.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, 14 Oct 2023 15:41:57 +0800, Leo Yan wrote:
-> This patch series is to improve timestamp handling in per-thread mode.
-> 
-> The current code doesn't validate timestamp and always return success for
-> per-thread mode, for a sane implementation, the first patch is to allow
-> validation timestamp tracing in per-thread mode.
-> 
-> The second patch is to respect timestamp option "--timestamp" or "-T",
-> when users set this option, the tool will automatically enable hardware
-> timestamp tracing in Arm CoreSight.
-> 
-> [...]
+On Tue, Oct 17, 2023 at 1:43=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Mon, Oct 16, 2023 at 06:36:10PM -0700, Namhyung Kim wrote:
+> > On Thu, Oct 12, 2023 at 11:37=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com>=
+ wrote:
+> > >
+> > > On Thu, Oct 12, 2023 at 08:57:33PM -0700, Namhyung Kim wrote:
+> > > > Hi Jiri,
+> > > >
+> > > > On Sun, Oct 8, 2023 at 2:23=E2=80=AFPM Jiri Olsa <jolsa@kernel.org>=
+ wrote:
+> > > > >
+> > > > > As Dmitry described in [1] changelog the current way of detecting
+> > > > > -s option is broken for new make.
+> > > >
+> > > > I'm not sure what -s option does for perf (at least).
+> > > > It doesn't seem much different whether I give it or not.
+> > > > Am I missing something?
+> > >
+> > > what's your make version? the wrong output is visible when running
+> > > with make version > 4.4 .. basicaly the -s is wrongly detected and
+> > > you either get no output at all from some builds or overly verbose
+> > > output
+> > >
+> > > it's mentioned in the [1] commit changelog, I can put it to the
+> > > changelog in new version
+> >
+> > IIUC it's about detecting `make -s` properly and not being confused
+> > by `make a=3Ds` or something.  I'm not objecting on it but I don't see
+> > what `make -s` does actually.
+>
+> so the tools/build/Makefile.build and tools/scripts/Makefile.include dete=
+ct
+> make -s option, which puts make into silent mode, so both makefiles switc=
+h
+> off the output by setting quiet=3Dsilent_ or silent=3D1
+>
+> the problem is that the detection of make -s option changed in make > 4.4
+> and current code could be tricked to switch to silent mode just by having
+> 's' persent on the command line, like with 'a=3Ds'
 
-Applied to perf-tools-next, thanks!
+I think our talk is circulating :-).  Anyway I'm ok with the change, so
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Which tree do you want to route it?
+
+Thanks,
+Namhyung
