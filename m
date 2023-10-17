@@ -1,70 +1,34 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD35EBE
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 12:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701C84121C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 12:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lmp1O4NO"
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EBE7F7;
-	Tue, 17 Oct 2023 05:43:50 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-507bd19eac8so987435e87.0;
-        Tue, 17 Oct 2023 05:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697546628; x=1698151428; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dU8fcBg2qfnHqJfD8YzF7HjBo3pGHCr4x5VKwo1eLr0=;
-        b=Lmp1O4NOqIU8AnkHQlwWrizbq1nY+neJpVLQbaY9wQaHDR//++bLnJt+uaq7Xautmy
-         nZeofmYtz0GXMTVKdgPgfU71rAbFNZoxUrNpZHlNfNcvZL7Yxmu0VdeGQtov6aoLdHrC
-         ANx16fzn5E2UfFabUhFGRoYid6PeDv7RTSxaJCcwvwt9n9rUudgsTUZ9yC3oHnimYlji
-         jw+nDJitu3NeT3Es2izROC8cBJNM/e8HuIES/7ZVyOgCAaAjQr3AJUgAGUyNMUG/kDSg
-         UXBpIQ7oSXUn/x1N4/2gA31Z5CLTvsHupUb+5iEmbHiHLt23x8UPrR59WKQKVkN+4ueV
-         dJag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697546628; x=1698151428;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dU8fcBg2qfnHqJfD8YzF7HjBo3pGHCr4x5VKwo1eLr0=;
-        b=Gz+OAqNCTjIdF0/kq503lvGe3vG0QxLqIGa2P/y5XQF9uOwTMvkLPrzIC/uXQkSHmT
-         J3bLlkjc3wWSCQxJiakXHLmeNCCCJXbtDi7dcrrXnVFjSflYK+HGiNPFVag5EUCrKTVt
-         +IHRtM4/BoArQt2/MJILj7u5roaNrWgojSi8f2A/AJy+FWXk4nxdKGUovxqYmV/oxY1B
-         FItaDKRJoGWUxYxUc9CDkKaXJvw2x/8sekG4yW7QJvJRs9Kx3SWwded5dOipUg99O8pq
-         s4aG+RUSuv5vgmEDP00TYcVXoIuR1eQum82xup411eXiTf87Ao2vFl1fX7C99vxK82YY
-         TUbw==
-X-Gm-Message-State: AOJu0YyudOfIu0XxS8eccvWaEGccBhTMdNqiawhJd1DCWYGYC3TSWtaH
-	E/PpFANXsHozFxfBW7hQTKI=
-X-Google-Smtp-Source: AGHT+IHvWVUF0JDmvlQh2xBjxEDBsuMN0cpQVq3rhVOa4Mis6fhC7TgE6BIM4XSfgwVi7PlUnIKM5g==
-X-Received: by 2002:a05:6512:2387:b0:503:8fa:da22 with SMTP id c7-20020a056512238700b0050308fada22mr2072367lfv.22.1697546627970;
-        Tue, 17 Oct 2023 05:43:47 -0700 (PDT)
-Received: from gmail.com (1F2EF7B2.nat.pool.telekom.hu. [31.46.247.178])
-        by smtp.gmail.com with ESMTPSA id a6-20020aa7cf06000000b0053e625da9absm1158420edy.41.2023.10.17.05.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 05:43:47 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Tue, 17 Oct 2023 14:43:45 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [perf stat] Extend --cpu to non-system-wide runs too? was Re:
- [PATCH v3] perf bench sched pipe: Add -G/--cgroups option
-Message-ID: <ZS6BgfOUeWQnI1mS@gmail.com>
-References: <20231016044225.1125674-1-namhyung@kernel.org>
- <ZS0D53ckVx356k4o@gmail.com>
- <ZS1Y5PhXhp384ynY@kernel.org>
- <ZS1ajf/9HmgUyyCl@kernel.org>
- <ZS1cGMgyEDJQbwq9@kernel.org>
- <ZS1c9RCh9MkzPbFG@kernel.org>
- <ZS2ecyCVpK8B2cQq@kernel.org>
- <ZS5yl3RzVGKBkCvY@gmail.com>
- <ZS592qxF3YxmCoG1@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUalMXV8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3015C433C8;
+	Tue, 17 Oct 2023 12:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697547189;
+	bh=sCVSBncrC5i0GYEhpxlxlXa2wh6iMdOP1tIgkqX072Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RUalMXV8bFNbfyg2W86Bldn7S37B+o2YNQQ/y8NohBDXgSzLqUsp4+fM8xChaaUr/
+	 9HNuA4fL4kS9EmkOHwRXjvVVcift4EfOq+LcAwEmfmQTwbm7wvruA5WGOAbpTqy8Fd
+	 YuYd8/5IHPBsxqHNxKATJO7aXxRM2GpZGOb5njfZy5GJsU7HG2Fz5K2gMCZwJ6tFR0
+	 EqXALEt8gvabo3JG5u7rOdrFF9V5qctsavx8jXkvHEOzwh9X6Jm3vG+0KaLpl402Yl
+	 MXUiQhjhZd36CVKrmKogVDzLm2G2lhjbD9TDfcjRNQC5My7O2UFhfAQGhxmU1zqGc2
+	 yXiYA58cBxZmg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 6877A40016; Tue, 17 Oct 2023 09:53:07 -0300 (-03)
+Date: Tue, 17 Oct 2023 09:53:07 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Guilherme Amadio <amadio@gentoo.org>, linux-perf-users@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>, robert.richter@amd.com
+Subject: Re: NMI received for unknown reason when running perf with IBS on AMD
+Message-ID: <ZS6Ds+rB2IwWmXML@kernel.org>
+References: <ZS0l-k1MASK3547Q@gentoo.org>
+ <ZS2vu8bSBS1/zseZ@kernel.org>
+ <9d885140-f952-0018-304d-fbc1e15c33a7@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,48 +37,87 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZS592qxF3YxmCoG1@kernel.org>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+In-Reply-To: <9d885140-f952-0018-304d-fbc1e15c33a7@amd.com>
+X-Url: http://acmel.wordpress.com
 
-
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Em Tue, Oct 17, 2023 at 01:40:07PM +0200, Ingo Molnar escreveu:
-> > Side note: it might make sense to add a sane cpumask/affinity setting 
-> > option to perf stat itself:
-> > 
-> >   perf stat --cpumask 
-> > 
-> > ... or so?
-> > 
-> > We do have -C:
-> > 
-> >     -C, --cpu <cpu>       list of cpus to monitor in system-wide
-> > 
-> > ... but that's limited to --all-cpus, right?
-> > 
-> > Perhaps we could extend --cpu to non-system-wide runs too?
+Em Tue, Oct 17, 2023 at 01:31:30PM +0530, Ravi Bangoria escreveu:
+> Hi Arnaldo, Guilherme,
 > 
-> Maybe I misunderstood your question, but its a list of cpus to limit the
-> counting:
+> >> [443324.404938] Uhhuh. NMI received for unknown reason 2c on CPU 9.
+> >> [443324.404940] Dazed and confused, but trying to continue
+> 
+> This is a known hw bug in Zen2:
+> https://lore.kernel.org/lkml/e08e33d5-4f6d-91aa-f335-9404d16a983c@amd.com
+> 
+> You won't see it on later Zen processors, or at least the possibility of
+> hitting it is very less.
 
-Ok.
+Do you think we can detect that it is a zen2 processor, that it has this
+problem, and then the tools can just avoid using precise_ip != 0? I.e.
+"cycles:P" becomes plain "cycles" and asking for, say, "cycles:p" states
+that this isn't possible on Zen2?
+ 
+> > (gdb) print perf_evlist__first(evlist)->attr.precise_ip
+> > $4 = 2
+> > (gdb)
 
-So I thought that "--cpumask mask/list/etc" should simply do what 'taskset' 
-is doing: using the sched_setaffinity() syscall to make the current 
-workload and all its children.
+> > So it seems to be using IBS:
+ 
+> Correct. More details below.
+ 
+> > Humm:
 
-There's impact on perf stat itself: it could just call sched_setaffinity() 
-early on, and not bother about it?
+> >> # cpu pmu capabilities: max_precise=0
 
-Having it built-in into perf would simply make it easier to not forget 
-running 'taskset'. :-)
+> > For me:
 
-Thanks,
+> > [root@five ~]# perf report --header-only | grep "cpu pmu capabilities"
+> > # cpu pmu capabilities: max_precise=0
+ 
+> Although confusing, this is technically correct because AMD core pmu
+> does not support precise mode.
+ 
+> However, as a special case, 3 core pmu events: cpu-cycles, r076 (same as
+> cpu-cycles) and r0C1 (micro-ops) are supported with attr.precise_ip > 0,
+> and they are forwarded to IBS OP pmu. All other core pmu events with
+> attr.precise_ip > 0 fails with -EINVAL.
 
-	Ingo
+If we can programatically detect that IBS is present we can add a note
+right after that 'perf report --header-only' line with this information.
+ 
+> > [root@five ~]# cat /sys/devices/cpu/caps/max_precise
+> > 0
+> > [root@five ~]#
+
+> > Ravi, this probably is the max_precise for the "core" PMU, but the "ibs"
+> > one, that gets used when :pp and :p (but not :ppp) is used, i.e. that:
+> > 
+> > +++ b/arch/x86/events/amd/core.c
+> > @@ -374,7 +374,7 @@ static int amd_pmu_hw_config(struct perf_event *event)
+> > 
+> >         /* pass precise event sampling to ibs: */
+> >         if (event->attr.precise_ip && get_ibs_caps())
+> > -               return -ENOENT;
+> > +               return forward_event_to_ibs(event);
+> > 
+> > Thing..
+> > 
+> > Shouldn't we have some sort of max_precise cap for IBS so that we could
+> > use it and not have this confusing "max_precise=0" for the core PMU but
+> > accept attr.precise_ip = 1 and 2?
+ 
+> Unlike Intel PEBS which provides levels of precision, AMD core pmu is
+> inherently non-precise and IBS is inherently precise. So max_precise value
+> is irrelevant for IBS. I mean ibs_op//, ibs_op//p, ibs_op//pp and
+> ibs_op//ppp are all same.
+
+This part can go to the man page, where :p, :P is documented.
+ 
+> Thanks,
+> Ravi
+ 
+> PS: I don't know the history behind not supporting attr.precise_ip = 3 when
+> event is forwarded from core pmu to IBS. This check was added long back in
+> 2012. Robert might know.
+
+Robert? 
