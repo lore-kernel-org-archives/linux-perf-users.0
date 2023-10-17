@@ -1,178 +1,194 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106C52D054
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 16:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B219CA61
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 18:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HsZ+yZMW"
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E8FED
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 09:58:55 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-d9a398f411fso6710344276.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 09:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697561935; x=1698166735; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ehHiG5u8VUrGyvdvtZ5izhIhQL5g/E91S/K67Xu9F2I=;
-        b=HsZ+yZMWmDsMDdrizETAGYwBuuk14i732KmQBss8+RTYrOYPV9NoVW/tKkNAnCUYw9
-         gc5YzWhFtvm/7tsVFIdUZ92qutuLi+6uMoAyPMHCW+n6SHmzJ5Pf107eR7etY7E2svPN
-         nYj8Mc3k+fIwBNBpM5IDfuksdX2XvZLWryzwPJUpiK2TBz2D8VPQlNZ8UcL2iZ3WT/7i
-         +Vkeh6pHkUlEN01RJHho9jZv1gIJsS26Rv6RG32tVW40ALqKYQMrAOilAVrEpHECAF3y
-         gHigajW4UztKWIJs6irQoFl9+/slSv6V7KzIM2k5I+4VJeQ5/nFoeWWqEuciHSKbyISp
-         6IUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697561935; x=1698166735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ehHiG5u8VUrGyvdvtZ5izhIhQL5g/E91S/K67Xu9F2I=;
-        b=WlbVG4Yvj/H2a6CWEY59TfhIALUcFgWYZLGIM8v9HHFA9MW70bAhqDGDmuCdfmMRf8
-         FeXsMOrOmgs4C0jbs7SPtKJROQNjEsS72pv9ggi2LC9twJSuadHRTLQaK4RNTE/ajUQx
-         mZQs4mzJNT3mNFHKbYy0V3e78hRhaKqTyFz4ah2ZhZ3vBV7bUZNIH+RYTwVNe/3+pneJ
-         Tkj9RB2ChBO8uZO4K07wEbuxU662sXBbNLjk2fVF/YErX+25WwCVPfBqTGYLSTlRCW6M
-         UNfnWSxhgmuzCWYhCEQ9iqSnDzjlZdZmXUc8dM62sKMNlJff5u9kr2drs39mNZ3oJJKZ
-         DWhA==
-X-Gm-Message-State: AOJu0Yw38fvW/yR18zw4zQ0OVoIkE/XI4ca8QDCu8HN7JslzwbHCmL6d
-	nBtRO65PQKo3bExEertwZZNahSihwGQeVA5seouLtg==
-X-Google-Smtp-Source: AGHT+IHOaiEbjDuLYdorEK43jj8fJOs7cFKMQURFdPfFeqgkvW7hcEnkbP461Ssg/kEGKu+TUJRF90EXB4vKRbRBnzU=
-X-Received: by 2002:a25:ec02:0:b0:d86:357:e314 with SMTP id
- j2-20020a25ec02000000b00d860357e314mr2757061ybh.47.1697561934985; Tue, 17 Oct
- 2023 09:58:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+aByyw7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DA58C433C7;
+	Tue, 17 Oct 2023 18:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697567493;
+	bh=I8nwPyTh3TvafnVbJJLXEU77LG2xbbve67ZL5kQU/H0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C+aByyw7gH3deKcZivY72gN8xOJa86XDoE11rQ34t96sTyhNqvl4iQB71G4VWqSjl
+	 WBqDGeZwrytcjj1eghojUwiCDWIljMEv8gztIfEqCeVLQUJa9Hqg9gYYH39QLI3ydT
+	 xotENTMSIQbH/1RC8aaxDgW4OG7+6tDSeqg00YXgnFUOQILB+qSSmkWQ5xblSbiOlU
+	 Pwmifc3LizKzc+hz4ujAs7xQaCsf/skkgS0QuUqjCwpkeHvt0X/cJ27EKcCNKZRYne
+	 Tqh13DfsdnDkqfjWPcJCahOUql4sCNxWp2FYxhH8M7VK3iSJoibDL+LAlG0DGwXl4f
+	 K+ZWZqUnHCSsA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 9402F40016; Tue, 17 Oct 2023 15:31:30 -0300 (-03)
+Date: Tue, 17 Oct 2023 15:31:30 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [perf stat] Extend --cpu to non-system-wide runs too? was Re:
+ [PATCH v3] perf bench sched pipe: Add -G/--cgroups option
+Message-ID: <ZS7TAr1bpOfkeNuv@kernel.org>
+References: <20231016044225.1125674-1-namhyung@kernel.org>
+ <ZS0D53ckVx356k4o@gmail.com>
+ <ZS1Y5PhXhp384ynY@kernel.org>
+ <ZS1ajf/9HmgUyyCl@kernel.org>
+ <ZS1cGMgyEDJQbwq9@kernel.org>
+ <ZS1c9RCh9MkzPbFG@kernel.org>
+ <ZS2ecyCVpK8B2cQq@kernel.org>
+ <ZS5yl3RzVGKBkCvY@gmail.com>
+ <ZS592qxF3YxmCoG1@kernel.org>
+ <ZS6BgfOUeWQnI1mS@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231002204017.GB27267@noisy.programming.kicks-ass.net>
- <ZRtmvLJFGfjcusQW@google.com> <20231003081616.GE27267@noisy.programming.kicks-ass.net>
- <ZRwx7gcY7x1x3a5y@google.com> <20231004112152.GA5947@noisy.programming.kicks-ass.net>
- <CAL715W+RgX2JfeRsenNoU4TuTWwLS5H=P+vrZK_GQVQmMkyraw@mail.gmail.com>
- <ZR3eNtP5IVAHeFNC@google.com> <ZR3hx9s1yJBR0WRJ@google.com>
- <c69a1eb1-e07a-8270-ca63-54949ded433d@gmail.com> <03b7da03-78a1-95b1-3969-634b5c9a5a56@amd.com>
- <20231011141535.GF6307@noisy.programming.kicks-ass.net> <b2bfead3-0f48-d832-daee-e7c2069dae5d@amd.com>
-In-Reply-To: <b2bfead3-0f48-d832-daee-e7c2069dae5d@amd.com>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Tue, 17 Oct 2023 09:58:18 -0700
-Message-ID: <CAL715WLhJ_xSL-cR+ppoJA+dwWK2gwCPb2ZqfToRYm-ShqkmEw@mail.gmail.com>
-Subject: Re: [Patch v4 07/13] perf/x86: Add constraint for guest perf metrics event
-To: Manali Shukla <manali.shukla@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Sean Christopherson <seanjc@google.com>, 
-	Ingo Molnar <mingo@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>, 
-	Lv Zhiyuan <zhiyuan.lv@intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>, David Dunn <daviddunn@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Jim Mattson <jmattson@google.com>, 
-	Like Xu <like.xu.linux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZS6BgfOUeWQnI1mS@gmail.com>
+X-Url: http://acmel.wordpress.com
 
-On Tue, Oct 17, 2023 at 3:24=E2=80=AFAM Manali Shukla <manali.shukla@amd.co=
-m> wrote:
->
-> On 10/11/2023 7:45 PM, Peter Zijlstra wrote:
-> > On Mon, Oct 09, 2023 at 10:33:41PM +0530, Manali Shukla wrote:
-> >> Hi all,
-> >>
-> >> I would like to add following things to the discussion just for the aw=
-areness of
-> >> everyone.
-> >>
-> >> Fully virtualized PMC support is coming to an upcoming AMD SoC and we =
-are
-> >> working on prototyping it.
-> >>
-> >> As part of virtualized PMC design, the PERF_CTL registers are defined =
-as Swap
-> >> type C: guest PMC states are loaded at VMRUN automatically but host PM=
-C states
-> >> are not saved by hardware.
-> >
-> > Per the previous discussion, doing this while host has active counters
-> > that do not have ::exclude_guest=3D1 is invalid and must result in an
-> > error.
-> >
->
-> Yeah, exclude_guest should be enforced on host, while host has active PMC
-> counters and VPMC is enabled.
->
-> > Also, I'm assuming it is all optional, a host can still profile a guest
-> > if all is configured just so?
-> >
->
-> Correct, host should be able to profile guest, if VPMC is not enabled.
->
-> >> If hypervisor is using the performance counters, it
-> >> is hypervisor's responsibility to save PERF_CTL registers to host save=
- area
-> >> prior to VMRUN and restore them after VMEXIT.
-> >
-> > Does VMEXIT clear global_ctrl at least?
-> >
->
-> global_ctrl will be initialized to reset value(0x3F) during VMEXIT. Simil=
-arly,
-> all the perf_ctl and perf_ctr are initialized to reset values(0) at VMEXI=
-T.
+Em Tue, Oct 17, 2023 at 02:43:45PM +0200, Ingo Molnar escreveu:
+> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > Em Tue, Oct 17, 2023 at 01:40:07PM +0200, Ingo Molnar escreveu:
+> > > Side note: it might make sense to add a sane cpumask/affinity setting 
+> > > option to perf stat itself:
 
-Are these guest values (automatically) saved in the guest area of VMCB
-on VMEXIT?
+> > >   perf stat --cpumask 
 
->
-> >> In order to tackle PMC overflow
-> >> interrupts in guest itself, NMI virtualization or AVIC can be used, so=
- that
-> >> interrupt on PMC overflow in guest will not leak to host.
-> >
-> > Can you please clarify -- AMD has this history with very dodgy PMI
-> > boundaries. See the whole amd_pmu_adjust_nmi_window() crud. Even the
-> > PMUv2 update didn't fix that nonsense.
-> >
-> > How is any virt stuff supposed to fix this? If the hardware is late
-> > delivering PMI, what guarantees a guest PMI does not land in host
-> > context and vice-versa?
-> >
-> > How does NMI virtualization (what even is that) or AVIC (I'm assuming
-> > that's a virtual interrupt controller) help?
-> >
->
-> When NMI virtualization is enabled and source of VNMI is in guest, micro =
-code will
-> make sure that VNMI will directly be delivered to the guest (even if NMI =
-was late
-> delivered), so there is no issue of leaking guest NMI to the host.
->
-> > Please make very sure, with your hardware team, that PMI must not be
-> > delivered after clearing global_ctrl (preferably) or at the very least,
-> > there exists a sequence of operations that provides a hard barrier
-> > to order PMI.
-> >
-> We are verifying all the corner cases, while prototyping PMC virtualizati=
-on.
-> As of now, we don't see guest NMIs leaking to host issue. But latency iss=
-ues
-> still stays.
+> > > ... or so?
 
-How long is the latency? From the existing code (amd_pmu_disable_all()
-=3D> amd_pmu_check_overflow()), it seems to take up to 50 microseconds
-in amd_pmu_check_overflow(). But I wonder how much in reality.
+> > > We do have -C:
 
-Thanks.
--Mingwei
->
+> > >     -C, --cpu <cpu>       list of cpus to monitor in system-wide
+
+> > > ... but that's limited to --all-cpus, right?
+
+> > > Perhaps we could extend --cpu to non-system-wide runs too?
+
+> > Maybe I misunderstood your question, but its a list of cpus to limit the
+> > counting:
+ 
+> Ok.
+ 
+> So I thought that "--cpumask mask/list/etc" should simply do what 'taskset' 
+> is doing: using the sched_setaffinity() syscall to make the current 
+> workload and all its children.
+ 
+> There's impact on perf stat itself: it could just call sched_setaffinity() 
+> early on, and not bother about it?
+
+> Having it built-in into perf would simply make it easier to not forget 
+> running 'taskset'. :-)
+
+Would that be the only advantage?
+
+I think using taskset isn't that much of a burden and keeps with the
+Unix tradition, no? :-\
+
+See, using 'perf record -C', i.e. sampling, will use sched_setaffinity,
+and in that case there is a clear advantage... wait, this train of
+thought made me remember something, but its just about counter setup,
+not about the workload:
+
+[acme@five perf-tools-next]$ grep affinity__set tools/perf/*.c
+tools/perf/builtin-stat.c:	else if (affinity__setup(&saved_affinity) < 0)
+tools/perf/builtin-stat.c:		if (affinity__setup(&saved_affinity) < 0)
+[acme@five perf-tools-next]$
+
+/*
+ * perf_event_open does an IPI internally to the target CPU.
+ * It is more efficient to change perf's affinity to the target
+ * CPU and then set up all events on that CPU, so we amortize
+ * CPU communication.
+ */
+void affinity__set(struct affinity *a, int cpu)
+
+[root@five ~]# perf trace --summary -e sched_setaffinity perf stat -e cycles -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+     6,319,186,681      cycles
+
+       1.002665795 seconds time elapsed
+
+
+ Summary of events:
+
+ perf (24307), 396 events, 87.4%
+
+   syscall            calls  errors  total       min       avg       max       stddev
+                                     (msec)    (msec)    (msec)    (msec)        (%)
+   --------------- --------  ------ -------- --------- --------- ---------     ------
+   sched_setaffinity      198      0     4.544     0.006     0.023     0.042      2.30%
+
+
+[root@five ~]#
+
+[root@five ~]# perf trace --summary -e sched_setaffinity perf stat -C 1 -e cycles -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       105,311,506      cycles
+
+       1.001203282 seconds time elapsed
+
+
+ Summary of events:
+
+ perf (24633), 24 events, 29.6%
+
+   syscall            calls  errors  total       min       avg       max       stddev
+                                     (msec)    (msec)    (msec)    (msec)        (%)
+   --------------- --------  ------ -------- --------- --------- ---------     ------
+   sched_setaffinity       12      0     0.105     0.005     0.009     0.039     32.07%
+
+
+[root@five ~]# perf trace --summary -e sched_setaffinity perf stat -C 1,2 -e cycles -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       131,474,375      cycles
+
+       1.001324346 seconds time elapsed
+
+
+ Summary of events:
+
+ perf (24636), 36 events, 38.7%
+
+   syscall            calls  errors  total       min       avg       max       stddev
+                                     (msec)    (msec)    (msec)    (msec)        (%)
+   --------------- --------  ------ -------- --------- --------- ---------     ------
+   sched_setaffinity       18      0     0.442     0.000     0.025     0.093     24.75%
+
+
+[root@five ~]# perf trace --summary -e sched_setaffinity perf stat -C 1,2,30 -e cycles -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       191,674,889      cycles
+
+       1.001280015 seconds time elapsed
+
+
+ Summary of events:
+
+ perf (24639), 48 events, 45.7%
+
+   syscall            calls  errors  total       min       avg       max       stddev
+                                     (msec)    (msec)    (msec)    (msec)        (%)
+   --------------- --------  ------ -------- --------- --------- ---------     ------
+   sched_setaffinity       24      0     0.835     0.000     0.035     0.144     24.40%
+
+
+[root@five ~]#
+
+Too much affinity setting :-)
+
+
+- Arnaldo
