@@ -1,154 +1,226 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AD14311C
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 03:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572F76AD6
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 06:44:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IbVon5U5"
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2069.outbound.protection.outlook.com [40.107.102.69])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5944CBA
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Oct 2023 20:59:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HxeSzEUtqdcok8WbEvbowy5AbMXKmq5cNJ/a9rEWsw2GOthHu4TkrsIAWacS/5yOVy/7xQytFqTP1abkcbc0hH3qmYCorLnJbfGwTxAJp7SlNGUvP2hiSgpjUrrBD35GZJy25OBxrEz9VfB2lM8T0iydzTxOHHFvW1TkbY2v3R3UVgnriRk6vUu1OQPtReBzVqZnJQhF/WtN4UwucOncVASecZowVOJpA5urZIGIxXoFIMxy7iUAvU/hBTaNAuh6ZXkPwCb3KAdd3hRdgfmYCukqXh21q6jk/gtoYy4mpvfL7aTpHNC+y2q4HwYr0nVV3HQYxP9/lFEkFIjQwwo6kA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uu/0fjU5UR4Qj4PrySSlVLyvBzlIXSEEOkBspX8AeUU=;
- b=VuGbtsJnurIky7zY+Yryar5QKCVh0Dpj7DdXA36m0rnT4yf1XNAQtLgNao1Qz1PMM5SjAS6ZfTJuBjpe1+U4GuZysEosNE0pD2cRj9BRsYq1JFN2erDOJU9qAJclbh6wrWz7WtcYBvKniuGEToOY6br84/HzeQaYVHNA1ezqnV6Gl5rrbL//woX8+un1/Q793odWDSe0yokma+RrvBoDaLQcmRoDYrPg0UVxou31TLFR8Zk9SLS5l4uigQxRPSJDj21dV7tSoSmU0KFj37MuzFxgRSjNf6Gj+TQRRcCvQXkr/aXKT9r4Fcpetb7sw3yG2lEx1W5DLKFeSAOz/U91Kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uu/0fjU5UR4Qj4PrySSlVLyvBzlIXSEEOkBspX8AeUU=;
- b=IbVon5U5+WHXz2fb9qhSBdrBHJiiJA4Ks6R+BSvjyZdB15RLZ3hAmsRDAtEdhmUmu05fav4czjtVBqUUJK3C9NW2yXmdY3H+cNmrTZr+JhI3pATQMm9rabUMP11BH1851iYQsjtaA5MR0aRRkUnjey2YHRcG8nBRqN0DuqoL080=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by MW4PR12MB7357.namprd12.prod.outlook.com (2603:10b6:303:219::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.23; Wed, 18 Oct
- 2023 03:59:09 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5272:f678:1d97:c94d]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5272:f678:1d97:c94d%3]) with mapi id 15.20.6907.021; Wed, 18 Oct 2023
- 03:59:09 +0000
-Message-ID: <f48256a1-d165-de5b-06e8-29646218955a@amd.com>
-Date: Wed, 18 Oct 2023 09:29:01 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: NMI received for unknown reason when running perf with IBS on AMD
-Content-Language: en-US
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Guilherme Amadio <amadio@gentoo.org>, linux-perf-users@vger.kernel.org,
- Borislav Petkov <bp@alien8.de>, robert.richter@amd.com,
- Ravi Bangoria <ravi.bangoria@amd.com>
-References: <ZS0l-k1MASK3547Q@gentoo.org> <ZS2vu8bSBS1/zseZ@kernel.org>
- <9d885140-f952-0018-304d-fbc1e15c33a7@amd.com> <ZS6Ds+rB2IwWmXML@kernel.org>
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <ZS6Ds+rB2IwWmXML@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BM1PR01CA0155.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::25) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nJoA+pVS"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDDB93;
+	Tue, 17 Oct 2023 23:44:56 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39I6g2uR029553;
+	Wed, 18 Oct 2023 06:44:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=LqE3bsjS3d7fUFgQ8meolb1vfdC6rlb7wmWsYw/PucM=;
+ b=nJoA+pVSGDOtYfiFAi5xI5nLhruV6f2x/mBG8rJkstAVEMxNHaJ2+qTUSrD0PYobzCFQ
+ uvn0JM+o3e/5KhlepCXpbE8QcgMybcT2SPlpWJYP3O3oqsPuHcYA2azxYH0LTzpf6GMm
+ BVFZBjAi4A1fWOYwZxXbWrCi20+CoovmYnDjDWn0nMbWKtFRU5QRC0IKkMQcSFEAWaEz
+ +bpglfdRD7Qj8KIUcXd/CkCdTLs3Vr/myInHzvkTCRSHnuzE5mFdLvHB4y/LOhmSK31j
+ doBRbDGZrmLLjQ8wg4dgUle1rqRIY4zpUwJMnEkT59iAtRJx8GjYr0WOY4++0q4nfmOL kA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ttaaqg25v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Oct 2023 06:44:53 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39I6ha6u002871;
+	Wed, 18 Oct 2023 06:44:53 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ttaaqg259-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Oct 2023 06:44:52 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39I40Cxc026879;
+	Wed, 18 Oct 2023 06:44:51 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tr5asekgd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Oct 2023 06:44:51 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39I6imHV21299956
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 18 Oct 2023 06:44:48 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4F9092004E;
+	Wed, 18 Oct 2023 06:44:48 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 204FA2004B;
+	Wed, 18 Oct 2023 06:44:48 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 18 Oct 2023 06:44:48 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, iii@linux.ibm.com, irogers@google.com
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: test case 111 fails on s390
+Date: Wed, 18 Oct 2023 08:44:41 +0200
+Message-Id: <20231018064441.2751317-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MW4PR12MB7357:EE_
-X-MS-Office365-Filtering-Correlation-Id: 42c603b4-3ea6-4d0a-8663-08dbcf8e94cb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ooglE3B5/LftxEQzmym/0eksO9ShWJxyK1kjPuIESqf3X34tNOZR33irpoyYKSF5n8LF+8PqSd2rdyLl0a1MdYzH94DL9H7g6Tnd4k+AXmXMfkgLmzXnNXKX2y/4pM0/Cm06ilVeijFaQ0o9wjTOLyHiJvtcx8lvtHYd/qUfCLb/tEltfXxGJveYiapx9NpWw1ajrkHyGcl19eD6tguIs2Mi8EqF4Rghtw2zhEUrOqvH/CeSmC3aT3veV69vcMHPfYvYc4zD0I0dCP2xkfUZZoFvyJw6CxuD2neup3dIOMAdkXyiRIJPH1wGu1hZrWBnv2/mkkwXQ9ttTOwAElpDYB2+ShZlRrnL0C5qdj93dTSf9R/ZZ4KkC6eHDfCwuSiJW45+NMPDTkqPRvcBD+O5tr045Rhz4YQDjHqfrXi/oWwViwmkbg7iLhJnCUvhetS9WyztM1SmM/JoXelEV7pDTU9VIK6OclRXDIbzzPfsxfC4L52BcmiFsjY6vQhFJ72RFJdjOCI1GFZ5qoOY+fgVWVNJ/BW1ybx5ed13QM5RTvSDdlFWDuMBD0PzP9bKQsJQNzK26T8igpxpmhavnCHMiqO9AbMCc08ayqMeufMxUOG56oJBR3bcOmV0ftIvePaUg2VPXtotQfBGgnLmdur1oA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(396003)(136003)(376002)(39860400002)(230922051799003)(64100799003)(1800799009)(451199024)(186009)(54906003)(66476007)(66946007)(316002)(6916009)(66556008)(6486002)(478600001)(6666004)(31696002)(2906002)(5660300002)(36756003)(86362001)(8676002)(8936002)(4326008)(41300700001)(44832011)(26005)(2616005)(83380400001)(38100700002)(31686004)(6512007)(6506007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SktQRFRwZk93VVFnVk1aamtnSG1CYzV4cVcyUXdzSVNORk0rRTVIdUU4QTRR?=
- =?utf-8?B?aStVK1J4b0w4OWUySVRTZWx4THlqbjY4VzRwc3N3K3E0SmtNK2RTcGozWWdR?=
- =?utf-8?B?QjNHQjA2VnV0UHI5R21FWjZoM0FmOWVSYXBwVnlwd1ZJdzRtVDVFek9ETGRx?=
- =?utf-8?B?YnJPRCtDTktPdTc1MDc5cFMxMmJwdDFueC9yRmgzdndibEIvdG0rNERmbnNV?=
- =?utf-8?B?aWs0UXczbFc3dWpKVlU3VWJOaW9XQVMrQ2FxYnJtYlk2NDllZzlMaXE2WFFn?=
- =?utf-8?B?RUxPQTlRd3crSjNQOGJ4c3pLZ25qK2ZTN0F2cWF1RDRXQ2MvZ256VkZRNXhT?=
- =?utf-8?B?RmxqZDJtN0JRbG1NWEltcGNseE4rMnpFVUd0cjdhRXNUVFg1RmFPYmJXdldz?=
- =?utf-8?B?NjVKcFVteG5pLzAzcUNsSVRMb0FjZldPRW9HZkRVb0RGNXcwVVFPOGErRFl0?=
- =?utf-8?B?SW0rOG16aUZLNXhnM2REbzBDemk2SDRPWFh1REVReGVBWDhiOHF1ZHcrRjd2?=
- =?utf-8?B?ZFVFSFpDbHFEVVhnZ293dERiMCtLSEp4RFZVekNrMDRQc3p4NzVRK1NXU0Ri?=
- =?utf-8?B?UC9rN3JXRVJsMXVoNXJLYUxZNHZUZDBPYWVVUWFjdnNJOThhUk1HcGpCT3di?=
- =?utf-8?B?bGNYVXdMTXFDMTc2SVc4K3M1SkRrdjZHSS9yYVFUM0VJQXBMWDNYT0tvb2t6?=
- =?utf-8?B?Zjh1ZFZIYVJRS2pjZmdsbDE5OHpIYmIzRmx0WXhiMkYzZGNFZGoyT0ZiVUJY?=
- =?utf-8?B?aEMvVGN1dmdXejBSTFBMcTNVVFlUVXZreDNiUXlxZzRmNFRZN2ViTmZhMk1U?=
- =?utf-8?B?M0grN25GWGVXV2hCZnd6VVAvTVlSa01BSGdWajJyVEYrb05NNnViOHJnNVhJ?=
- =?utf-8?B?YnYvSmRaQmZSd1BpLzdqRjZqSFdHKzc2UlBJYnZnWGErMmlQU1I4cXpPRkhB?=
- =?utf-8?B?ei9yN2h6SFlESytsbE4rR09QMkdRMDlBbGlvRjVBZnZ6SFlEU09YdjZ4YjlC?=
- =?utf-8?B?OXZqWk1EMFpDV0pyc2UzYkVMRjBZdVgra2xGTDhsUmkvT0ZEV1lKY3daSFpu?=
- =?utf-8?B?L1U2N0dGZHNLaVUwdXBxbWF5cWNhWDJUREpxTGs0Qi9EUjV1R1JuQ2F1d0dC?=
- =?utf-8?B?STVkQUFLKytsaVNVSkQ1N01selVqYW02UTZ1T1E2REJ0c3p0OUdjMjAwV3Zq?=
- =?utf-8?B?ZGdEbUYvZVNRMXhld0lMeFZuTVRSczVQdjVWblpWZ0wzZzcxRzlGQ1JzdjM5?=
- =?utf-8?B?YkNDUEExbm9HaVc0SnJHa1l0SjRaNlJBOE9PR0FobUNaa2NqSEtJSkE4Y1dp?=
- =?utf-8?B?TGV2RXdDaU0yNXUzbk00b2FuZkl2Ym4yZHEvY1JHNVkyU2VRK1EwYU14OWpj?=
- =?utf-8?B?Q2Z2bm1ETnRmU1dKT2ZhNit3KzhWeWxqNUp6R2x0Wk9OY3J1M2VTZlg2R0hS?=
- =?utf-8?B?ZVNTMGxtamFzWkFWWFJ2dGNsV0hMYTlnamIwUGZ1YzdUVnlSa2NTSmF5ZVNY?=
- =?utf-8?B?WVlQWVRuWWVnekIxYmRnU2lzbUlONDZNUzdJY3BTUlJvNXd3QUR4cFpuS2ls?=
- =?utf-8?B?UjhUK1BGekVqVGtWdWZKUXo3bkppeFhsWTFBVkJnS3QrRHFtUFdWMDR0Z2Rk?=
- =?utf-8?B?SjJmMTFRWUxEN1BZeVF2U2NqMDNlcktub3RaZHo3RGVNNjNuSHE2ZnBtZTNL?=
- =?utf-8?B?bWFLYnNjOWJUZ1FEOERUS3hzY2lBNlI2UllNZ0I0dWR6TU83d2FPNTNGNkNk?=
- =?utf-8?B?YjFqSWlWQlhzc2h3QUMxeHliWHZmRkFtM3gvUUxLR3dIbzJCRkp4VkJBZkF0?=
- =?utf-8?B?N05oajZRT2RKUkJFU2NtOTkrdGlydlJYZjBqWFZrcGl0R00xWVFHcDFsbUJX?=
- =?utf-8?B?M2dwUk5iU2hKa1Juam1HQ1kwb3pZT2RhNGRxQTFMT2x5cmZvZ2hESExxb3A2?=
- =?utf-8?B?aHVrUTRxUngxODZ3dFpsYVU3TWJiQUs2aVZlb1FXU055Zmkza1l5YWoxd3Q2?=
- =?utf-8?B?MFd5djB0eUhyVGJOTmhDS1dyT2diT3NaWTEvaFptKzhJVXBsMWYxT3cxa2JG?=
- =?utf-8?B?MUxDdWYrV2pXdkFPVW9qWlRKMHpKNUJZaWdOeWNtUDZEKzVEcVJBRm93VkJE?=
- =?utf-8?Q?nhwwWP0WUvBqNG5ZpRJa0AAQu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42c603b4-3ea6-4d0a-8663-08dbcf8e94cb
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2023 03:59:09.5158
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uuFfWrwalQ3phXn/+c4+eo+wC7O57Bdo+lGhhtc6w9fq8vKRTXmcvxS1s49mYEIf2fksEAlxzHcODQTSKNi7ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7357
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-	NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NXPT4q3yb5Umjie7CUINcWIkWlyPu0Zw
+X-Proofpoint-ORIG-GUID: U7lLSEIItiDpuRwUU0DqJZ27YGPaANCr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-18_04,2023-10-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1011
+ phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
+ definitions=main-2310180056
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-> Do you think we can detect that it is a zen2 processor, that it has this
-> problem, and then the tools can just avoid using precise_ip != 0? I.e.
-> "cycles:P" becomes plain "cycles" and asking for, say, "cycles:p" states
-> that this isn't possible on Zen2?
+Perf test case 111 Check open filename arg using perf trace + vfs_getname
+fails on s390. This is caused by a failing function
+bpf_probe_read() in file util/bpf_skel/augmented_raw_syscalls.bpf.c.
 
-It's possible, but there is no architected way to detect Zen revision 🙁. I
-will need to key off based on Family and Model checks, which is ugly. Also,
-the same problem can happen if user invokes IBS pmus directly.
+The root cause is the lookup by address. Function bpf_probe_read()
+is used. This function works only for architectures
+with ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
 
->>> [root@five ~]# perf report --header-only | grep "cpu pmu capabilities"
->>> # cpu pmu capabilities: max_precise=0
-> ...
-> If we can programatically detect that IBS is present we can add a note
-> right after that 'perf report --header-only' line with this information.
+On s390 is not possible to determine from the address to which
+address space the address belongs to (user or kernel space).
 
-This should be easy to implement.
+Replace bpf_probe_read() by bpf_probe_read_kernel()
+and bpf_probe_read_str() by bpf_probe_read_user_str() to
+explicity specify the address space the address refers to.
 
->> Unlike Intel PEBS which provides levels of precision, AMD core pmu is
->> inherently non-precise and IBS is inherently precise. So max_precise value
->> is irrelevant for IBS. I mean ibs_op//, ibs_op//p, ibs_op//pp and
->> ibs_op//ppp are all same.
-> 
-> This part can go to the man page, where :p, :P is documented.
+Output before:
+ # ./perf trace -eopen,openat -- touch /tmp/111
+ libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
+ libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+ reg type unsupported for arg#0 function sys_enter#75
+ 0: R1=ctx(off=0,imm=0) R10=fp0
+ ; int sys_enter(struct syscall_enter_args *args)
+ 0: (bf) r6 = r1           ; R1=ctx(off=0,imm=0) R6_w=ctx(off=0,imm=0)
+ ; return bpf_get_current_pid_tgid();
+ 1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=scalar()
+ 2: (63) *(u32 *)(r10 -8) = r0 ; R0_w=scalar() R10=fp0 fp-8=????mmmm
+ 3: (bf) r2 = r10              ; R2_w=fp0 R10=fp0
+ ;
+ .....
+ lines deleted here
+ .....
+ 23: (bf) r3 = r6              ; R3_w=ctx(off=0,imm=0) R6=ctx(off=0,imm=0)
+ 24: (85) call bpf_probe_read#4
+ unknown func bpf_probe_read#4
+ processed 23 insns (limit 1000000) max_states_per_insn 0 \
+	 total_states 2 peak_states 2 mark_read 2
+ -- END PROG LOAD LOG --
+ libbpf: prog 'sys_enter': failed to load: -22
+ libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+ libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -22
+ ....
 
-Sure. Let me prepare a patch.
+Output after:
+ # ./perf test -Fv 111
+ 111: Check open filename arg using perf trace + vfs_getname          :
+ --- start ---
+     1.085 ( 0.011 ms): touch/320753 openat(dfd: CWD, filename: \
+	"/tmp/temporary_file.SWH85", \
+	flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+ ---- end ----
+ Check open filename arg using perf trace + vfs_getname: Ok
+ #
 
-Thanks,
-Ravi
+Fixes: 14e4b9f4289a ("perf trace: Raw augmented syscalls fix libbpf 1.0+ compatibility")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>
+---
+ .../util/bpf_skel/augmented_raw_syscalls.bpf.c   | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index 939ec769bf4a..cc22bccfc178 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -153,7 +153,7 @@ static inline
+ unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
+ {
+ 	unsigned int augmented_len = sizeof(*augmented_arg);
+-	int string_len = bpf_probe_read_str(&augmented_arg->value, arg_len, arg);
++	int string_len = bpf_probe_read_user_str(&augmented_arg->value, arg_len, arg);
+ 
+ 	augmented_arg->size = augmented_arg->err = 0;
+ 	/*
+@@ -203,7 +203,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
+ 	_Static_assert(is_power_of_2(sizeof(augmented_args->saddr)), "sizeof(augmented_args->saddr) needs to be a power of two");
+ 	socklen &= sizeof(augmented_args->saddr) - 1;
+ 
+-	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
++	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + socklen);
+ }
+@@ -221,7 +221,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
+ 
+ 	socklen &= sizeof(augmented_args->saddr) - 1;
+ 
+-	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
++	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + socklen);
+ }
+@@ -311,7 +311,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+         if (augmented_args == NULL)
+ 		goto failure;
+ 
+-	if (bpf_probe_read(&augmented_args->__data, sizeof(*attr), attr) < 0)
++	if (bpf_probe_read_kernel(&augmented_args->__data, sizeof(*attr), attr) < 0)
+ 		goto failure;
+ 
+ 	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
+@@ -325,7 +325,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+                 goto failure;
+ 
+ 	// Now that we read attr->size and tested it against the size limits, read it completely
+-	if (bpf_probe_read(&augmented_args->__data, size, attr) < 0)
++	if (bpf_probe_read_kernel(&augmented_args->__data, size, attr) < 0)
+ 		goto failure;
+ 
+ 	return augmented__output(args, augmented_args, len + size);
+@@ -347,7 +347,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+ 	if (size > sizeof(augmented_args->__data))
+                 goto failure;
+ 
+-	bpf_probe_read(&augmented_args->__data, size, rqtp_arg);
++	bpf_probe_read_kernel(&augmented_args->__data, size, rqtp_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + size);
+ failure:
+@@ -385,7 +385,7 @@ int sys_enter(struct syscall_enter_args *args)
+ 	if (augmented_args == NULL)
+ 		return 1;
+ 
+-	bpf_probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
++	bpf_probe_read_kernel(&augmented_args->args, sizeof(augmented_args->args), args);
+ 
+ 	/*
+ 	 * Jump to syscall specific augmenter, even if the default one,
+@@ -406,7 +406,7 @@ int sys_exit(struct syscall_exit_args *args)
+ 	if (pid_filter__has(&pids_filtered, getpid()))
+ 		return 0;
+ 
+-	bpf_probe_read(&exit_args, sizeof(exit_args), args);
++	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
+ 	/*
+ 	 * Jump to syscall specific return augmenter, even if the default one,
+ 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+-- 
+2.41.0
+
