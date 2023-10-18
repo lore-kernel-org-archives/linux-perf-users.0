@@ -1,174 +1,106 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF67335AC
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 12:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38FB200DE;
+	Wed, 18 Oct 2023 12:16:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="By2eJKRS"
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78FDBA;
-	Wed, 18 Oct 2023 05:07:49 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9ae2cc4d17eso1093442866b.1;
-        Wed, 18 Oct 2023 05:07:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697630868; x=1698235668; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=34canogPms5qIpzbgYLbZvTo7CKSJTUSgOrKFfdlG9Y=;
-        b=By2eJKRShKymo7WV3jSvqvFWnzZDuPSFA26xMqTBjHG81J41yr6NOkz/aSmp2qOAvA
-         FLp12btX/8mLsf2EZ/VyeWL24y1AhaM+KuMvPuTEwsgNW3DpjOaKIXXPH0oRKmkStO0L
-         Mi55/ITRLDC7QJdprufhqwlSsHX6iRcPMlASjFDjBM45iQDMyLinmD26IFH9bKCq4y79
-         SGKoUp4dbMhmJ3ka5l9Tq56vfMMk8qWJp6gBLfblu9d5nsm7J+M2aVMftocCFJ2O9PPH
-         +H/MU+ExnrsbiwIak88z4Je6pZArAJZLOM0cOPyh6nQ+K514W9otlm6mrnnVgAdz5dKs
-         eErg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697630868; x=1698235668;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=34canogPms5qIpzbgYLbZvTo7CKSJTUSgOrKFfdlG9Y=;
-        b=bQTiaiTb8Xw+diZAfo3I/G790XxYeBCw7TIwMUZ7qxADCciIOFrO315He3osyRfPKT
-         pEe2eJDJ24W8VWlZLH4wW9BB1v4kc9fLsFXxLssNpbta086ZvT3dllyHH1mBt7s6+wqx
-         rMKulYDFKGRAkw4t1romYpHMEu0o6TqzJ9/qIgkRnzVfrNJ4RErDHnfF0DnTCRJ4pU/6
-         AHRFJ7THaOrbhWol39mXOsEcpivECQpzVXzk0ZrOymU0SBH0Ks4YCDdyA/JZVaOXP6pW
-         VTTWpaK98SdVMs/MRu+wADJ0UtnALpiYDygee5WeY7GZlFvasWf4FCTB0e8EugkTLatO
-         fXMw==
-X-Gm-Message-State: AOJu0YxbbqssNOXF67w5xkRfSmq9W/dNmdFPbyDEbXASQvs4nGr/0ZsP
-	9Lw0DpKGkizzI/cXuxBoNHo=
-X-Google-Smtp-Source: AGHT+IElxjo10kp4swEmg7wdBENFyCwPc02UN0dnhqEEo6GbbrpHj5xH29tAUm5ANJC+MESORdcAVQ==
-X-Received: by 2002:a17:906:c4c2:b0:9c6:1143:b73 with SMTP id cl2-20020a170906c4c200b009c611430b73mr2721811ejb.51.1697630867888;
-        Wed, 18 Oct 2023 05:07:47 -0700 (PDT)
-Received: from gmail.com (1F2EF7B2.nat.pool.telekom.hu. [31.46.247.178])
-        by smtp.gmail.com with ESMTPSA id 27-20020a170906225b00b00997d76981e0sm1528584ejr.208.2023.10.18.05.07.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Oct 2023 05:07:47 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Wed, 18 Oct 2023 14:07:45 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8+v+ykH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F41F7C433C8;
+	Wed, 18 Oct 2023 12:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697631390;
+	bh=snOg2kwIwvrklgP16FSVRjBs8P6XXlk92g89ZTHGFmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c8+v+ykHpLVEceMm7LkYUVPjCWS4qHd3H4eQKatnCb3sP4Bc7CCStareG6HlmU0/O
+	 12+h9fzYm80IgVqAB+eLTFn0t0DdcMDZ/4x7j9+ziqldIz6h24k2OKUAVXw4aXfXat
+	 +pUxpaCGLKzhNn242WgV0vcQr2zNnVSCvEYQhadVKmkrOYjVyKPBM6G13usJ3cT38w
+	 TTuiC2emY1VzizQHGvAEkrRN/HLUuxsrt3sNR91laBXIqskOI9euK/Ef5J1qzj6GdL
+	 kPXdpl4lLUFIINhn/SX7XFylGs15jmyo/9n64jAAI4qloqC0LgEhD7U6MZAsndBtnh
+	 gy57UPN7fNOzQ==
+Date: Wed, 18 Oct 2023 13:16:22 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Eric Auger <eauger@redhat.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	Jing Zhang <jingzhangos@google.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [perf stat] Extend --cpu to non-system-wide runs too? was Re:
- [PATCH v3] perf bench sched pipe: Add -G/--cgroups option
-Message-ID: <ZS/KkfjUdnUPcnVB@gmail.com>
-References: <ZS0D53ckVx356k4o@gmail.com>
- <ZS1Y5PhXhp384ynY@kernel.org>
- <ZS1ajf/9HmgUyyCl@kernel.org>
- <ZS1cGMgyEDJQbwq9@kernel.org>
- <ZS1c9RCh9MkzPbFG@kernel.org>
- <ZS2ecyCVpK8B2cQq@kernel.org>
- <ZS5yl3RzVGKBkCvY@gmail.com>
- <ZS592qxF3YxmCoG1@kernel.org>
- <ZS6BgfOUeWQnI1mS@gmail.com>
- <ZS7TAr1bpOfkeNuv@kernel.org>
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 4/5] tools headers arm64: Update sysreg.h with kernel
+ sources
+Message-ID: <3c5332b0-9035-4cb8-96ce-7a9b8d513c3a@sirena.org.uk>
+References: <20231011195740.3349631-1-oliver.upton@linux.dev>
+ <20231011195740.3349631-5-oliver.upton@linux.dev>
+ <73b94274-4561-1edd-6b1e-8c6245133af2@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uhv6snMZQuJsviI5"
+Content-Disposition: inline
+In-Reply-To: <73b94274-4561-1edd-6b1e-8c6245133af2@redhat.com>
+X-Cookie: Santa Claus is watching!
+
+
+--uhv6snMZQuJsviI5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZS7TAr1bpOfkeNuv@kernel.org>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
+On Wed, Oct 18, 2023 at 01:57:31PM +0200, Eric Auger wrote:
+> On 10/11/23 21:57, Oliver Upton wrote:
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >  #define set_pstate_pan(x)		asm volatile(SET_PSTATE_PAN(x))
+> >  #define set_pstate_uao(x)		asm volatile(SET_PSTATE_UAO(x))
+> >  #define set_pstate_ssbs(x)		asm volatile(SET_PSTATE_SSBS(x))
+> > +#define set_pstate_dit(x)		asm volatile(SET_PSTATE_DIT(x))
 
-> Em Tue, Oct 17, 2023 at 02:43:45PM +0200, Ingo Molnar escreveu:
-> > * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > Em Tue, Oct 17, 2023 at 01:40:07PM +0200, Ingo Molnar escreveu:
-> > > > Side note: it might make sense to add a sane cpumask/affinity setting 
-> > > > option to perf stat itself:
-> 
-> > > >   perf stat --cpumask 
-> 
-> > > > ... or so?
-> 
-> > > > We do have -C:
-> 
-> > > >     -C, --cpu <cpu>       list of cpus to monitor in system-wide
-> 
-> > > > ... but that's limited to --all-cpus, right?
-> 
-> > > > Perhaps we could extend --cpu to non-system-wide runs too?
-> 
-> > > Maybe I misunderstood your question, but its a list of cpus to limit the
-> > > counting:
->  
-> > Ok.
->  
-> > So I thought that "--cpumask mask/list/etc" should simply do what 'taskset' 
-> > is doing: using the sched_setaffinity() syscall to make the current 
-> > workload and all its children.
->  
-> > There's impact on perf stat itself: it could just call sched_setaffinity() 
-> > early on, and not bother about it?
-> 
-> > Having it built-in into perf would simply make it easier to not forget 
-> > running 'taskset'. :-)
-> 
-> Would that be the only advantage?
+> could you comment on the *DIT* addictions, what is it for?
 
-1)
+DIT is data independent timing, this tells the processor to ensure that
+instructions take a constant time regardless of the data they are
+handling.
 
-Another advantage would be that perf stat could itself bind itself to the 
-inverse affinity mask.
+Note that this file is just a copy of arch/arm64/include/asm/gpr-num.h,
+the main purpose here is to sync with the original.
 
-This means the workload that is being executed is disturbed by perf as 
-little as possible.
+> > +/*
+> > + * Automatically generated definitions for system registers, the
+> > + * manual encodings below are in the process of being converted to
+> > + * come from here. The header relies on the definition of sys_reg()
+> > + * earlier in this file.
+> > + */
+> > +#include "asm/sysreg-defs.h"
 
-That's not possible with 'taskset'.
+> strange to have this include in the middle of the file
 
-2)
+It relies on defines from earlier in the header.
 
-Plus taskset's syntax is arguably silly: why does it need a separate -c 
-option for a CPU list, why doesn't it figure it out by itself when there's 
-a comma or dash in the mask string?
+--uhv6snMZQuJsviI5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-A better syntax that perf could use would be to interpret it as a CPU mask 
-only when presented with a '0x' or '0b' prefix for a binary mask which is 
-IMO much more logical if we are talking masks. For example, to run on 8 
-full cores, using the '0b' GCC extension to specify binary literals:
+-----BEGIN PGP SIGNATURE-----
 
-	perf stat --cpus 0b101010101010101
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUvzJYACgkQJNaLcl1U
+h9CzNwf/clb+PGgsMFa+eCK+j+HuF014tCaZnioLYv8VnZelhp7XJYblpFKBu96C
+BYJbsasNvFQfrk9GslEXlkmwhC01AtySSh6tJlUmlJ5Jiw/pqm7gbiNOCNm3nLBK
+SrEevhgINNICVEsoT99kWfWXdOfqGzTwfge0+IZFsFqgwFGmf6q4x8iENlfv8URr
+ZPG78fR4O8PabkMbLK83zih4re0mUs1HMlP3Z7KzPOhPwJThnvIx5Jst60tkyYxa
+5vHaqojTJ1ViNIYd2K/oCwrT84Y1uFE4IcVhRVRww/1aM8JJpIsg3Y5/JfQ8Z8Qb
+Vi8MLZJTfm+yjlOi4QfKGLtOZMamXA==
+=3eRG
+-----END PGP SIGNATURE-----
 
-'taskset' has other syntax idiosyncracies, such as the weird inverted 
-argument order of PID and CPU list:
-
-  kepler:~/tip> taskset -p $$ 0b101010101010101
-  taskset: invalid PID argument: '0b101010101010101'
-
-  # .... erm, what??
-  # .... oh, taskset expects the PID argument last:
-
-  kepler:~/tip> taskset -p 0b101010101010101 $$
-  pid 195878's current affinity mask: ffffffffffffffff
-  pid 195878's new affinity mask: b101010101010101
-
-  # ... damn: taskset doesn't know the 0b prefix and blindly assumed it's 
-  # hexadecimal ...
-
-So I'd love it if perf stat grew a sane CPU-affinity option.
-
-3)
-
-As a bonus perf stat could later also grow matching memory-node-affinity 
-features that 'taskset' doesn't have ...
-
-Anyway, that's my attempt to convince you guys that it's a good idea to 
-have this feature. :-)
-
-Thanks,
-
-	Ingo
+--uhv6snMZQuJsviI5--
