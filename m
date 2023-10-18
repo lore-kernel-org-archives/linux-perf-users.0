@@ -1,199 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345AD18636
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 14:05:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3539C36B1A;
+	Wed, 18 Oct 2023 14:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLgE+f0h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49610C433C8;
-	Wed, 18 Oct 2023 14:05:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+Gvms76"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D05EC433C9;
+	Wed, 18 Oct 2023 14:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697637932;
-	bh=ua4r6UbxGXkonX2AKgsME+v5thK9MYx4yhS7A9v6cK0=;
+	s=k20201202; t=1697638376;
+	bh=51fIDWCVKB8uS2JBPxXFm+H74EFZkbMSdzM2pSNC22c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pLgE+f0hNI77mu4CQlNh8AfuBzndGJRLd7bZMoIQB/C5iFDfNqxAqBZEuSuXMr7SD
-	 cd3llkDur5lB9frl27RMsrDmWs1bkAf4kmQzc9l678VS7GcZwGaQ52B+bU2CAREIZR
-	 iC5X9MLEkeAJqlYH8LXjKv+rNkVmt2P9NnjtoJDimNxurBpNOW2pjuq55EfV4qKMhy
-	 vM3MnQ061F84lTSO4kziPtEkw8K1vXSGBQTM8EiS45dRFYpmIURrfTjixia+e4gRE9
-	 bkAmSCTFIW7SeDxPBp2wP4lXKRR/vkVZjVOFlLcoTNmo4TWE3GSl3Fl592u6A1n7HM
-	 kmN3U07NNdkrQ==
+	b=W+Gvms76pV5hSiJAOrI7JIk44J4aJD7XIdf7yMDCPx20skfodeyV+Cp8GCsFRftJh
+	 qz+RiAq7N/TbfgTkm1dyIZ4LCHrmPMhyJYbYbzSGW4OnqNp1Ht5FdCWP0knGAjbLNw
+	 ukttiawgU6pYBeK4MaphTHoLfctNQ/ntcCNwaHhFwLCVyn7UT4NZu82tLUXFk+JBAh
+	 2mI8IKAxvFfmhVvoUNrHiABrwtp9a07fXKQC1xmVXku52jGP4l0nF9YllHc33owMIw
+	 JRL/RW9l5ne/Prnc1Dk6oMQFiEs1CLsbeWW3uiGULtPDGvHGoRWDp0Xv05zBckuotp
+	 FGdLs3ivRIO5Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id B567E40016; Wed, 18 Oct 2023 11:05:29 -0300 (-03)
-Date: Wed, 18 Oct 2023 11:05:29 -0300
+	id A57F140016; Wed, 18 Oct 2023 11:12:53 -0300 (-03)
+Date: Wed, 18 Oct 2023 11:12:53 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	iii@linux.ibm.com, irogers@google.com, svens@linux.ibm.com,
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf test: test case 111 fails on s390
-Message-ID: <ZS/mKa1Sk4hhJ/zY@kernel.org>
-References: <20231018064441.2751317-1-tmricht@linux.ibm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	Jing Zhang <jingzhangos@google.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 2/5] perf build: Generate arm64's sysreg-defs.h and
+ add to include path
+Message-ID: <ZS/n5dqo6dZE40HE@kernel.org>
+References: <20231011195740.3349631-1-oliver.upton@linux.dev>
+ <20231011195740.3349631-3-oliver.upton@linux.dev>
+ <CAM9d7cjxkAmEc=g0jWBPQ9d6GYmfdZSKjqi5v0UsoPvkQy-fSw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231018064441.2751317-1-tmricht@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cjxkAmEc=g0jWBPQ9d6GYmfdZSKjqi5v0UsoPvkQy-fSw@mail.gmail.com>
 X-Url: http://acmel.wordpress.com
 
-Em Wed, Oct 18, 2023 at 08:44:41AM +0200, Thomas Richter escreveu:
-> Perf test case 111 Check open filename arg using perf trace + vfs_getname
-> fails on s390. This is caused by a failing function
-> bpf_probe_read() in file util/bpf_skel/augmented_raw_syscalls.bpf.c.
+Em Tue, Oct 17, 2023 at 03:23:40PM -0700, Namhyung Kim escreveu:
+> Hello,
+> 
+> On Wed, Oct 11, 2023 at 12:58 PM Oliver Upton <oliver.upton@linux.dev> wrote:
+> >
+> > Start generating sysreg-defs.h in anticipation of updating sysreg.h to a
+> > version that needs the generated output.
+> >
+> > Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+> 
+> It seems we also need this on non-ARM archs to process ARM SPE data.
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
+When building with CORESIGHT=1, yes.
 
-Please change the patch subject to describe what is being really fixed
-instead of the test that spotted the problem, i.e. something like:
+I have it in my tests and:
 
-perf trace: Use the right bpf_probe_read(_str) variant for reading user data
+⬢[acme@toolbox perf-tools-next]$ ls -la /tmp/build/perf-tools-next/util/arm-spe.o
+-rw-r--r--. 1 acme acme 135432 Oct 17 16:49 /tmp/build/perf-tools-next/util/arm-spe.o
+⬢[acme@toolbox perf-tools-next]$ ldd /tmp/build/perf-tools-next/perf | grep csd
+	libopencsd_c_api.so.1 => /lib64/libopencsd_c_api.so.1 (0x00007f36bfca5000)
+	libopencsd.so.1 => /lib64/libopencsd.so.1 (0x00007f36be2e0000)
+⬢[acme@toolbox perf-tools-next]$ rpm -qf /lib64/libopencsd.so.1
+opencsd-1.3.3-1.fc38.x86_64
+⬢[acme@toolbox perf-tools-next]$ rpm -q --qf "%{summary}\n" opencsd
+An open source CoreSight(tm) Trace Decode library
+⬢[acme@toolbox perf-tools-next]$
 
-But then shouldn't all those use bpf_probe_read_user(_str)?
+Well, double checked and arm-spe.o is built by default, only way to
+disable it is using NO_AUXTRACE=1 in the make command line, but then
+IIRC one needs linking with opencsd to decode all those traces, right?
 
-As it is reading arguments to the syscall, that are coming from
-userspace, i.e. both open/openat/etc path/filename, clock_nanosleep rqtp
-args (and connect sockaddr, etc) comes from userspace.
+Anyway:
+
+Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 - Arnaldo
  
-> The root cause is the lookup by address. Function bpf_probe_read()
-> is used. This function works only for architectures
-> with ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
+> Thanks,
+> Namhyung
 > 
-> On s390 is not possible to determine from the address to which
-> address space the address belongs to (user or kernel space).
 > 
-> Replace bpf_probe_read() by bpf_probe_read_kernel()
-> and bpf_probe_read_str() by bpf_probe_read_user_str() to
-> explicity specify the address space the address refers to.
-> 
-> Output before:
->  # ./perf trace -eopen,openat -- touch /tmp/111
->  libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
->  libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
->  reg type unsupported for arg#0 function sys_enter#75
->  0: R1=ctx(off=0,imm=0) R10=fp0
->  ; int sys_enter(struct syscall_enter_args *args)
->  0: (bf) r6 = r1           ; R1=ctx(off=0,imm=0) R6_w=ctx(off=0,imm=0)
->  ; return bpf_get_current_pid_tgid();
->  1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=scalar()
->  2: (63) *(u32 *)(r10 -8) = r0 ; R0_w=scalar() R10=fp0 fp-8=????mmmm
->  3: (bf) r2 = r10              ; R2_w=fp0 R10=fp0
->  ;
->  .....
->  lines deleted here
->  .....
->  23: (bf) r3 = r6              ; R3_w=ctx(off=0,imm=0) R6=ctx(off=0,imm=0)
->  24: (85) call bpf_probe_read#4
->  unknown func bpf_probe_read#4
->  processed 23 insns (limit 1000000) max_states_per_insn 0 \
-> 	 total_states 2 peak_states 2 mark_read 2
->  -- END PROG LOAD LOG --
->  libbpf: prog 'sys_enter': failed to load: -22
->  libbpf: failed to load object 'augmented_raw_syscalls_bpf'
->  libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -22
->  ....
-> 
-> Output after:
->  # ./perf test -Fv 111
->  111: Check open filename arg using perf trace + vfs_getname          :
->  --- start ---
->      1.085 ( 0.011 ms): touch/320753 openat(dfd: CWD, filename: \
-> 	"/tmp/temporary_file.SWH85", \
-> 	flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
->  ---- end ----
->  Check open filename arg using perf trace + vfs_getname: Ok
->  #
-> 
-> Fixes: 14e4b9f4289a ("perf trace: Raw augmented syscalls fix libbpf 1.0+ compatibility")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> Cc: Ian Rogers <irogers@google.com>
-> ---
->  .../util/bpf_skel/augmented_raw_syscalls.bpf.c   | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> index 939ec769bf4a..cc22bccfc178 100644
-> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> @@ -153,7 +153,7 @@ static inline
->  unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
->  {
->  	unsigned int augmented_len = sizeof(*augmented_arg);
-> -	int string_len = bpf_probe_read_str(&augmented_arg->value, arg_len, arg);
-> +	int string_len = bpf_probe_read_user_str(&augmented_arg->value, arg_len, arg);
->  
->  	augmented_arg->size = augmented_arg->err = 0;
->  	/*
-> @@ -203,7 +203,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
->  	_Static_assert(is_power_of_2(sizeof(augmented_args->saddr)), "sizeof(augmented_args->saddr) needs to be a power of two");
->  	socklen &= sizeof(augmented_args->saddr) - 1;
->  
-> -	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
-> +	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
->  
->  	return augmented__output(args, augmented_args, len + socklen);
->  }
-> @@ -221,7 +221,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
->  
->  	socklen &= sizeof(augmented_args->saddr) - 1;
->  
-> -	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
-> +	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
->  
->  	return augmented__output(args, augmented_args, len + socklen);
->  }
-> @@ -311,7 +311,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
->          if (augmented_args == NULL)
->  		goto failure;
->  
-> -	if (bpf_probe_read(&augmented_args->__data, sizeof(*attr), attr) < 0)
-> +	if (bpf_probe_read_kernel(&augmented_args->__data, sizeof(*attr), attr) < 0)
->  		goto failure;
->  
->  	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
-> @@ -325,7 +325,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
->                  goto failure;
->  
->  	// Now that we read attr->size and tested it against the size limits, read it completely
-> -	if (bpf_probe_read(&augmented_args->__data, size, attr) < 0)
-> +	if (bpf_probe_read_kernel(&augmented_args->__data, size, attr) < 0)
->  		goto failure;
->  
->  	return augmented__output(args, augmented_args, len + size);
-> @@ -347,7 +347,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
->  	if (size > sizeof(augmented_args->__data))
->                  goto failure;
->  
-> -	bpf_probe_read(&augmented_args->__data, size, rqtp_arg);
-> +	bpf_probe_read_kernel(&augmented_args->__data, size, rqtp_arg);
->  
->  	return augmented__output(args, augmented_args, len + size);
->  failure:
-> @@ -385,7 +385,7 @@ int sys_enter(struct syscall_enter_args *args)
->  	if (augmented_args == NULL)
->  		return 1;
->  
-> -	bpf_probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
-> +	bpf_probe_read_kernel(&augmented_args->args, sizeof(augmented_args->args), args);
->  
->  	/*
->  	 * Jump to syscall specific augmenter, even if the default one,
-> @@ -406,7 +406,7 @@ int sys_exit(struct syscall_exit_args *args)
->  	if (pid_filter__has(&pids_filtered, getpid()))
->  		return 0;
->  
-> -	bpf_probe_read(&exit_args, sizeof(exit_args), args);
-> +	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
->  	/*
->  	 * Jump to syscall specific return augmenter, even if the default one,
->  	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
-> -- 
-> 2.41.0
-> 
+> > ---
+> >  tools/perf/Makefile.perf | 15 +++++++++++++--
+> >  tools/perf/util/Build    |  2 +-
+> >  2 files changed, 14 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > index 37af6df7b978..14dedd11a1f5 100644
+> > --- a/tools/perf/Makefile.perf
+> > +++ b/tools/perf/Makefile.perf
+> > @@ -443,6 +443,15 @@ drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
+> >  # Create output directory if not already present
+> >  _dummy := $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
+> >
+> > +arm64_gen_sysreg_dir := $(srctree)/tools/arch/arm64/tools
+> > +
+> > +arm64-sysreg-defs: FORCE
+> > +       $(Q)$(MAKE) -C $(arm64_gen_sysreg_dir)
+> > +
+> > +arm64-sysreg-defs-clean:
+> > +       $(call QUIET_CLEAN,arm64-sysreg-defs)
+> > +       $(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) clean > /dev/null
+> > +
+> >  $(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
+> >         $(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
+> >
+> > @@ -716,7 +725,9 @@ endif
+> >  __build-dir = $(subst $(OUTPUT),,$(dir $@))
+> >  build-dir   = $(or $(__build-dir),.)
+> >
+> > -prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioctl_array) \
+> > +prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders \
+> > +       arm64-sysreg-defs \
+> > +       $(drm_ioctl_array) \
+> >         $(fadvise_advice_array) \
+> >         $(fsconfig_arrays) \
+> >         $(fsmount_arrays) \
+> > @@ -1125,7 +1136,7 @@ endif # BUILD_BPF_SKEL
+> >  bpf-skel-clean:
+> >         $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+> >
+> > -clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+> > +clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+> >         $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+> >         $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+> >         $(Q)$(RM) $(OUTPUT).config-detected
+> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> > index 6d657c9927f7..2f76230958ad 100644
+> > --- a/tools/perf/util/Build
+> > +++ b/tools/perf/util/Build
+> > @@ -345,7 +345,7 @@ CFLAGS_rbtree.o        += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ET
+> >  CFLAGS_libstring.o     += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+> >  CFLAGS_hweight.o       += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+> >  CFLAGS_header.o        += -include $(OUTPUT)PERF-VERSION-FILE
+> > -CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/
+> > +CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/ -I$(srctree)/tools/arch/arm64/include/generated/
+> >
+> >  $(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
+> >         $(call rule_mkdir)
+> > --
+> > 2.42.0.609.gbb76f46606-goog
+> >
 
 -- 
 
