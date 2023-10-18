@@ -1,163 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3539C36B1A;
-	Wed, 18 Oct 2023 14:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D0837C90
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 14:32:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+Gvms76"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D05EC433C9;
-	Wed, 18 Oct 2023 14:12:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4QJtwVf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC7DC433C8;
+	Wed, 18 Oct 2023 14:32:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697638376;
-	bh=51fIDWCVKB8uS2JBPxXFm+H74EFZkbMSdzM2pSNC22c=;
+	s=k20201202; t=1697639548;
+	bh=4FEwqJ929JAqfUaP3HMuPeYHbZMSPU9FcgWhb7gRou8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W+Gvms76pV5hSiJAOrI7JIk44J4aJD7XIdf7yMDCPx20skfodeyV+Cp8GCsFRftJh
-	 qz+RiAq7N/TbfgTkm1dyIZ4LCHrmPMhyJYbYbzSGW4OnqNp1Ht5FdCWP0knGAjbLNw
-	 ukttiawgU6pYBeK4MaphTHoLfctNQ/ntcCNwaHhFwLCVyn7UT4NZu82tLUXFk+JBAh
-	 2mI8IKAxvFfmhVvoUNrHiABrwtp9a07fXKQC1xmVXku52jGP4l0nF9YllHc33owMIw
-	 JRL/RW9l5ne/Prnc1Dk6oMQFiEs1CLsbeWW3uiGULtPDGvHGoRWDp0Xv05zBckuotp
-	 FGdLs3ivRIO5Q==
+	b=c4QJtwVf7GipsAh6O4D12K+Dz/6Tvr//wwczIEzjDOtYEymAH4NVxJtrNNqOeh4U/
+	 bNliXOKKZm3AQaC7LBWPQenl7k9FYu0JQ5Pjxf4EkQ+ndennpK16xxWvV2EZeVYnqt
+	 osqN9ONbzqnw/VCNaDwCf2mAfEnasJTBOCKaU5+vLt3eGydYYbuZYu9BOb+zjW5mN1
+	 uhI1AqRCKoE+ku2x8LZObRZ+Dyw3iQoV1U9CR0Ex5JUZolBq6tz4JLhJphSEvZIG9A
+	 qwYf60lUmVls8oLFaetkwxvh1fuwnElxUO99BtxePZfCXjnEo1R7JDvMVT53bXNoQx
+	 AD3wk5riYs1Kg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id A57F140016; Wed, 18 Oct 2023 11:12:53 -0300 (-03)
-Date: Wed, 18 Oct 2023 11:12:53 -0300
+	id 130A640016; Wed, 18 Oct 2023 11:32:25 -0300 (-03)
+Date: Wed, 18 Oct 2023 11:32:25 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Jing Zhang <jingzhangos@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 2/5] perf build: Generate arm64's sysreg-defs.h and
- add to include path
-Message-ID: <ZS/n5dqo6dZE40HE@kernel.org>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-3-oliver.upton@linux.dev>
- <CAM9d7cjxkAmEc=g0jWBPQ9d6GYmfdZSKjqi5v0UsoPvkQy-fSw@mail.gmail.com>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	iii@linux.ibm.com, irogers@google.com, svens@linux.ibm.com,
+	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
+Subject: Re: [PATCH] perf test: test case 111 fails on s390
+Message-ID: <ZS/seVMNrV6j6z1J@kernel.org>
+References: <20231018064441.2751317-1-tmricht@linux.ibm.com>
+ <ZS/mKa1Sk4hhJ/zY@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cjxkAmEc=g0jWBPQ9d6GYmfdZSKjqi5v0UsoPvkQy-fSw@mail.gmail.com>
+In-Reply-To: <ZS/mKa1Sk4hhJ/zY@kernel.org>
 X-Url: http://acmel.wordpress.com
 
-Em Tue, Oct 17, 2023 at 03:23:40PM -0700, Namhyung Kim escreveu:
-> Hello,
+Em Wed, Oct 18, 2023 at 11:05:29AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Oct 18, 2023 at 08:44:41AM +0200, Thomas Richter escreveu:
+> > Perf test case 111 Check open filename arg using perf trace + vfs_getname
+> > fails on s390. This is caused by a failing function
+> > bpf_probe_read() in file util/bpf_skel/augmented_raw_syscalls.bpf.c.
 > 
-> On Wed, Oct 11, 2023 at 12:58 PM Oliver Upton <oliver.upton@linux.dev> wrote:
-> >
-> > Start generating sysreg-defs.h in anticipation of updating sysreg.h to a
-> > version that needs the generated output.
-> >
-> > Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
 > 
-> It seems we also need this on non-ARM archs to process ARM SPE data.
+> Please change the patch subject to describe what is being really fixed
+> instead of the test that spotted the problem, i.e. something like:
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> perf trace: Use the right bpf_probe_read(_str) variant for reading user data
+> 
+> But then shouldn't all those use bpf_probe_read_user(_str)?
+> 
+> As it is reading arguments to the syscall, that are coming from
+> userspace, i.e. both open/openat/etc path/filename, clock_nanosleep rqtp
+> args (and connect sockaddr, etc) comes from userspace.
 
-When building with CORESIGHT=1, yes.
+So, with your patch, on x86_64, I get:
 
-I have it in my tests and:
+^C[root@five ~]# perf trace -e connect*
+     0.000 ( 0.021 ms): DNS Res~ver #1/8756 connect(fd: 229, uservaddr: { .family: UNSPEC }, addrlen: 42)         = 0
+     0.544 ( 0.011 ms): DNS Res~ver #1/8756 connect(fd: 229, uservaddr: { .family: UNSPEC }, addrlen: 16)         = 0
+     0.569 ( 0.009 ms): DNS Res~ver #1/8756 connect(fd: 229, uservaddr: { .family: UNSPEC }, addrlen: 28)         = -1 ENETUNREACH (Network is unreachable)
 
-⬢[acme@toolbox perf-tools-next]$ ls -la /tmp/build/perf-tools-next/util/arm-spe.o
--rw-r--r--. 1 acme acme 135432 Oct 17 16:49 /tmp/build/perf-tools-next/util/arm-spe.o
-⬢[acme@toolbox perf-tools-next]$ ldd /tmp/build/perf-tools-next/perf | grep csd
-	libopencsd_c_api.so.1 => /lib64/libopencsd_c_api.so.1 (0x00007f36bfca5000)
-	libopencsd.so.1 => /lib64/libopencsd.so.1 (0x00007f36be2e0000)
-⬢[acme@toolbox perf-tools-next]$ rpm -qf /lib64/libopencsd.so.1
-opencsd-1.3.3-1.fc38.x86_64
-⬢[acme@toolbox perf-tools-next]$ rpm -q --qf "%{summary}\n" opencsd
-An open source CoreSight(tm) Trace Decode library
-⬢[acme@toolbox perf-tools-next]$
+I.e. it loads the resulting BPF bytecode but doesn't manage to copy the
+sockaddr in userspace pointed by connect's uservaddr argument.
 
-Well, double checked and arm-spe.o is built by default, only way to
-disable it is using NO_AUXTRACE=1 in the make command line, but then
-IIRC one needs linking with opencsd to decode all those traces, right?
+We need to use bpf_probe_read_kernel() for the tracepoint payload, in
+the raw_syscalls/sys_enter and raw_syscalls/sys_exit handlers, as that
+is kernel memory, but in the syscall specific BPF programs we need to
+use bpf_probe_read_user() to get things like sockaddr, etc, i.e.
+userspace contents.
 
-Anyway:
+With the patch below:
 
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[root@five ~]# perf trace -e connect*
+     0.000 ( 0.128 ms): pool/2690 connect(fd: 7, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-socket }, addrlen: 110) = 0
+   304.127 ( 0.018 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: LOCAL, path: /run/systemd/resolve/io.systemd.Resolve }, addrlen: 42) = 0
+   304.554 ( 0.016 ms): systemd-resolv/1167 connect(fd: 24, uservaddr: { .family: INET, port: 53, addr: 192.168.86.1 }, addrlen: 16) = 0
+   304.650 ( 0.009 ms): systemd-resolv/1167 connect(fd: 25, uservaddr: { .family: INET, port: 53, addr: 192.168.86.1 }, addrlen: 16) = 0
+   318.952 ( 0.009 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: INET, port: 0, addr: 216.239.38.177 }, addrlen: 16) = 0
+   318.965 ( 0.003 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: UNSPEC }, addrlen: 16)         = 0
+   318.970 ( 0.004 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: INET, port: 0, addr: 216.239.34.177 }, addrlen: 16) = 0
+   318.977 ( 0.002 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: UNSPEC }, addrlen: 16)         = 0
+
+You can test before/after with:
+
+ # perf trace -e connect*,clo*sleep
+
+To see clock_nanosleep rqtp args as well:
+
+Before:
+
+   999.107 (         ): gnome-terminal/3285 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x7ffdd373adb0) ...
+  1000.228 (         ): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90) ...
+  1030.375 (         ): gnome-terminal/3285 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x7ffdd373adb0) ...
+  1061.694 (         ): gnome-terminal/3285 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x7ffdd373adb0) ...
+
+
+after:
+
+  1000.198 (1000.035 ms): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90) = 0
+  2000.302 (1000.036 ms): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90) = 0
+  3000.410 (1000.037 ms): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90) = 0
+  4000.518 (1000.035 ms): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90
+
+[root@five ~]# perf trace -e *sleep sleep 1.234567890
+     0.000 (1234.630 ms): sleep/64495 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 234567890 }, rmtp: 0x7ffdf49af4a0) = 0
+[root@five ~]#
 
 - Arnaldo
+
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index cc22bccfc178229a..52c270330ae0d2f3 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -203,7 +203,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
+ 	_Static_assert(is_power_of_2(sizeof(augmented_args->saddr)), "sizeof(augmented_args->saddr) needs to be a power of two");
+ 	socklen &= sizeof(augmented_args->saddr) - 1;
  
-> Thanks,
-> Namhyung
-> 
-> 
-> > ---
-> >  tools/perf/Makefile.perf | 15 +++++++++++++--
-> >  tools/perf/util/Build    |  2 +-
-> >  2 files changed, 14 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index 37af6df7b978..14dedd11a1f5 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -443,6 +443,15 @@ drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
-> >  # Create output directory if not already present
-> >  _dummy := $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
-> >
-> > +arm64_gen_sysreg_dir := $(srctree)/tools/arch/arm64/tools
-> > +
-> > +arm64-sysreg-defs: FORCE
-> > +       $(Q)$(MAKE) -C $(arm64_gen_sysreg_dir)
-> > +
-> > +arm64-sysreg-defs-clean:
-> > +       $(call QUIET_CLEAN,arm64-sysreg-defs)
-> > +       $(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) clean > /dev/null
-> > +
-> >  $(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
-> >         $(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
-> >
-> > @@ -716,7 +725,9 @@ endif
-> >  __build-dir = $(subst $(OUTPUT),,$(dir $@))
-> >  build-dir   = $(or $(__build-dir),.)
-> >
-> > -prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioctl_array) \
-> > +prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders \
-> > +       arm64-sysreg-defs \
-> > +       $(drm_ioctl_array) \
-> >         $(fadvise_advice_array) \
-> >         $(fsconfig_arrays) \
-> >         $(fsmount_arrays) \
-> > @@ -1125,7 +1136,7 @@ endif # BUILD_BPF_SKEL
-> >  bpf-skel-clean:
-> >         $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
-> >
-> > -clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
-> > +clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
-> >         $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
-> >         $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
-> >         $(Q)$(RM) $(OUTPUT).config-detected
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 6d657c9927f7..2f76230958ad 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -345,7 +345,7 @@ CFLAGS_rbtree.o        += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ET
-> >  CFLAGS_libstring.o     += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
-> >  CFLAGS_hweight.o       += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
-> >  CFLAGS_header.o        += -include $(OUTPUT)PERF-VERSION-FILE
-> > -CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/
-> > +CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/ -I$(srctree)/tools/arch/arm64/include/generated/
-> >
-> >  $(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
-> >         $(call rule_mkdir)
-> > --
-> > 2.42.0.609.gbb76f46606-goog
-> >
-
--- 
-
-- Arnaldo
+-	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
++	bpf_probe_read_user(&augmented_args->saddr, socklen, sockaddr_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + socklen);
+ }
+@@ -221,7 +221,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
+ 
+ 	socklen &= sizeof(augmented_args->saddr) - 1;
+ 
+-	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
++	bpf_probe_read_user(&augmented_args->saddr, socklen, sockaddr_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + socklen);
+ }
+@@ -311,7 +311,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+         if (augmented_args == NULL)
+ 		goto failure;
+ 
+-	if (bpf_probe_read_kernel(&augmented_args->__data, sizeof(*attr), attr) < 0)
++	if (bpf_probe_read_user(&augmented_args->__data, sizeof(*attr), attr) < 0)
+ 		goto failure;
+ 
+ 	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
+@@ -325,7 +325,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+                 goto failure;
+ 
+ 	// Now that we read attr->size and tested it against the size limits, read it completely
+-	if (bpf_probe_read_kernel(&augmented_args->__data, size, attr) < 0)
++	if (bpf_probe_read_user(&augmented_args->__data, size, attr) < 0)
+ 		goto failure;
+ 
+ 	return augmented__output(args, augmented_args, len + size);
+@@ -347,7 +347,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+ 	if (size > sizeof(augmented_args->__data))
+                 goto failure;
+ 
+-	bpf_probe_read_kernel(&augmented_args->__data, size, rqtp_arg);
++	bpf_probe_read_user(&augmented_args->__data, size, rqtp_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + size);
+ failure:
