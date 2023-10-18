@@ -1,126 +1,129 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC3137143;
-	Wed, 18 Oct 2023 22:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D5E3986C;
+	Wed, 18 Oct 2023 23:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B781118;
-	Wed, 18 Oct 2023 15:29:35 -0700 (PDT)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6be840283ceso1882446b3a.3;
-        Wed, 18 Oct 2023 15:29:35 -0700 (PDT)
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC43113;
+	Wed, 18 Oct 2023 16:16:23 -0700 (PDT)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-27d4b280e4eso155072a91.1;
+        Wed, 18 Oct 2023 16:16:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697668174; x=1698272974;
+        d=1e100.net; s=20230601; t=1697670983; x=1698275783;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GPN5Szaku0fAcpX6+m9F3J03s9I69W40Wqf+QRGeb0M=;
-        b=eSnZ7S3QyRdmXF3XpXdZUK3iJ2gnmHf5gyMkjHk+3cpWuMHqnGtnSwORRg8KvzzWWJ
-         xzXFgCS2WS6YCSWgVhR+FPNkNHy988uOPCCPJ1DPw0hStI48b/Zcd41/fMbfw71+XuKt
-         NwriVzPK+Dmq0ZctdKDv1aqTvinb6WMhkJ98W4aE/R62kpAjzD6PSfT3TLYW/5K7n1Tv
-         mcs0fHesVCA3nJiV75dxSqKSQcLgVjUuLnw4Qz6D0/liKHXIyqNx6vbjDD8kpYicQ/bZ
-         lvWCCP+daQUO2P+Sy/mRNWepv1MYL4ewIMdbIL5fdwBazjcu8FWQi7G5NT3A2tQU712g
-         ng8Q==
-X-Gm-Message-State: AOJu0YyKuqG/1hfmukWU3X5dsvgI0qPh8L66oTDEkd0N1yrEb4zkzQrl
-	0NB3nkBFeo87eRqRywy/iNNMcEreHNFoXUo6CdY=
-X-Google-Smtp-Source: AGHT+IHDeXhculuLAF4lqOCMfOoqWHDPPErUcncs5XN4kIwLgMauKrkapEzKYnZdeep0yVWsD8p0urbYxogC6JidM2o=
-X-Received: by 2002:a05:6a21:3281:b0:15c:b7ba:ea44 with SMTP id
- yt1-20020a056a21328100b0015cb7baea44mr501156pzb.60.1697668174177; Wed, 18 Oct
- 2023 15:29:34 -0700 (PDT)
+        bh=sIqkHqDOHQuBjbbW3lZ0aMJK1GXnPfSHH5+VnCKa+5E=;
+        b=PryT3oDclSMTVDDg6fYZn8mkmOYWiwHOVa+kxvOv3kkZ0TfNV/te79BmguKR66ut1H
+         Rt5kndlH+ufb97DwvBSlgPGG8BX2M5SHzgQAnjgy5DlFicaZeWIwP1idTVuiGzcdToH5
+         DyDYSylfWfh91NH7ycwOcCabWAu7didEqdPJndcC24KYLfOBgLTQJDUtMsPgJqOpA0MC
+         KBtvngeHpFd0KRZWQhmUtVIMOlu8JTn+cZ12pnOALreMkkvAlR4RYisEZe6Y8JEQH9Ej
+         M7DBtiUPpws5vqnEfzsOQNxDZQsnpsdbfGI2k08GphGUwd0K7cLCajCQ8Yw2KpgD+zf4
+         4nxA==
+X-Gm-Message-State: AOJu0YxnlRPCN0AjubabwH7TF4+NA8GYLPB6E8f35pFI2d5V7BsjzExa
+	yDLRBh1fSTn2f+Pswi64EIaqN3t/u3VCwtLur0Y=
+X-Google-Smtp-Source: AGHT+IH3cHfMHMkPW0wf8wXkGXDRsCuzcrZXEfuHGBDHr1Lk29UAyILehq8JUCWlTMiaJCfnLyY53kRk1Q2H/Oveqmk=
+X-Received: by 2002:a17:90a:11:b0:27d:df04:d109 with SMTP id
+ 17-20020a17090a001100b0027ddf04d109mr409283pja.2.1697670982818; Wed, 18 Oct
+ 2023 16:16:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231008212251.236023-1-jolsa@kernel.org> <20231008212251.236023-2-jolsa@kernel.org>
- <CAM9d7cjYCrTkOTOmBHry-95nivmkGv1g0wp=+TSA0xPXJW_QvQ@mail.gmail.com>
- <ZSjlk99UOV2tTMWO@krava> <CAM9d7cjqvEs6262GfuF18mtFsWEznqNOWP_NqZN99Ys3MxCXqg@mail.gmail.com>
- <ZS5JHuwxL200M09H@krava> <CAM9d7chq125TOtnWFVKUC6PwRJqmXwNbfs7Dhm_04B3ZbA4jdw@mail.gmail.com>
- <ZS+Hj3aDWoCV/ckr@krava>
-In-Reply-To: <ZS+Hj3aDWoCV/ckr@krava>
+References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-4-irogers@google.com>
+In-Reply-To: <20231012062359.1616786-4-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 18 Oct 2023 15:29:23 -0700
-Message-ID: <CAM9d7cjtEfuBopVfn2+rpug8-tMjw-HbhHcD9gDmFhfqD_iySQ@mail.gmail.com>
-Subject: Re: [PATCHv2 1/2] tools/build: Fix -s detection code in tools/build/Makefile.build
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Quentin Monnet <quentin@isovalent.com>, Dmitry Goncharov <dgoncharov@users.sf.net>, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Martin KaFai Lau <kafai@fb.com>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Ian Rogers <irogers@google.com>, 
-	KP Singh <kpsingh@chromium.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+Date: Wed, 18 Oct 2023 16:16:11 -0700
+Message-ID: <CAM9d7cg=v9rnPz4cy2yeNZNSCoZ3VReC895gHPTO-emn6XdLXg@mail.gmail.com>
+Subject: Re: [PATCH v2 03/13] perf hist: Add missing puts to hist__account_cycles
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
+	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
+	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 18, 2023 at 12:21=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
-te:
->
-> On Tue, Oct 17, 2023 at 01:16:28PM -0700, Namhyung Kim wrote:
-> > On Tue, Oct 17, 2023 at 1:43=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> =
-wrote:
-> > >
-> > > On Mon, Oct 16, 2023 at 06:36:10PM -0700, Namhyung Kim wrote:
-> > > > On Thu, Oct 12, 2023 at 11:37=E2=80=AFPM Jiri Olsa <olsajiri@gmail.=
-com> wrote:
-> > > > >
-> > > > > On Thu, Oct 12, 2023 at 08:57:33PM -0700, Namhyung Kim wrote:
-> > > > > > Hi Jiri,
-> > > > > >
-> > > > > > On Sun, Oct 8, 2023 at 2:23=E2=80=AFPM Jiri Olsa <jolsa@kernel.=
-org> wrote:
-> > > > > > >
-> > > > > > > As Dmitry described in [1] changelog the current way of detec=
-ting
-> > > > > > > -s option is broken for new make.
-> > > > > >
-> > > > > > I'm not sure what -s option does for perf (at least).
-> > > > > > It doesn't seem much different whether I give it or not.
-> > > > > > Am I missing something?
-> > > > >
-> > > > > what's your make version? the wrong output is visible when runnin=
-g
-> > > > > with make version > 4.4 .. basicaly the -s is wrongly detected an=
-d
-> > > > > you either get no output at all from some builds or overly verbos=
-e
-> > > > > output
-> > > > >
-> > > > > it's mentioned in the [1] commit changelog, I can put it to the
-> > > > > changelog in new version
-> > > >
-> > > > IIUC it's about detecting `make -s` properly and not being confused
-> > > > by `make a=3Ds` or something.  I'm not objecting on it but I don't =
-see
-> > > > what `make -s` does actually.
-> > >
-> > > so the tools/build/Makefile.build and tools/scripts/Makefile.include =
-detect
-> > > make -s option, which puts make into silent mode, so both makefiles s=
-witch
-> > > off the output by setting quiet=3Dsilent_ or silent=3D1
-> > >
-> > > the problem is that the detection of make -s option changed in make >=
- 4.4
-> > > and current code could be tricked to switch to silent mode just by ha=
-ving
-> > > 's' persent on the command line, like with 'a=3Ds'
-> >
-> > I think our talk is circulating :-).  Anyway I'm ok with the change, so
->
-> :) ok, thanks
->
-> >
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Which tree do you want to route it?
->
-> I think perf tree is the best one to route it
+Hi Ian,
 
-Ok, I'll add it.
+On Wed, Oct 11, 2023 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Caught using reference count checking on perf top with
+> "--call-graph=3Dlbr". After this no memory leaks were detected.
+>
+> Fixes: 57849998e2cd ("perf report: Add processing for cycle histograms")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/hist.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 3dc8a4968beb..ac8c0ef48a7f 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -2676,8 +2676,6 @@ void hist__account_cycles(struct branch_stack *bs, =
+struct addr_location *al,
+>
+>         /* If we have branch cycles always annotate them. */
+>         if (bs && bs->nr && entries[0].flags.cycles) {
+> -               int i;
+> -
+
+Seems not necessary.
+
+>                 bi =3D sample__resolve_bstack(sample, al);
+
+It looks like this increases the refcount for each bi entry and
+it didn't put the refcounts.
+
+
+>                 if (bi) {
+>                         struct addr_map_symbol *prev =3D NULL;
+> @@ -2692,7 +2690,7 @@ void hist__account_cycles(struct branch_stack *bs, =
+struct addr_location *al,
+>                          * Note that perf stores branches reversed from
+>                          * program order!
+>                          */
+> -                       for (i =3D bs->nr - 1; i >=3D 0; i--) {
+> +                       for (int i =3D bs->nr - 1; i >=3D 0; i--) {
+>                                 addr_map_symbol__account_cycles(&bi[i].fr=
+om,
+>                                         nonany_branch_mode ? NULL : prev,
+>                                         bi[i].flags.cycles);
+> @@ -2701,6 +2699,12 @@ void hist__account_cycles(struct branch_stack *bs,=
+ struct addr_location *al,
+>                                 if (total_cycles)
+>                                         *total_cycles +=3D bi[i].flags.cy=
+cles;
+>                         }
+> +                       for (unsigned int i =3D 0; i < bs->nr; i++) {
+
+Can we just reuse the int i above?
 
 Thanks,
 Namhyung
+
+
+> +                               map__put(bi[i].to.ms.map);
+> +                               maps__put(bi[i].to.ms.maps);
+> +                               map__put(bi[i].from.ms.map);
+> +                               maps__put(bi[i].from.ms.maps);
+> +                       }
+>                         free(bi);
+>                 }
+>         }
+> --
+> 2.42.0.609.gbb76f46606-goog
+>
