@@ -1,164 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D0837C90
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 14:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B422931A86
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 15:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4QJtwVf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC7DC433C8;
-	Wed, 18 Oct 2023 14:32:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697639548;
-	bh=4FEwqJ929JAqfUaP3HMuPeYHbZMSPU9FcgWhb7gRou8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c4QJtwVf7GipsAh6O4D12K+Dz/6Tvr//wwczIEzjDOtYEymAH4NVxJtrNNqOeh4U/
-	 bNliXOKKZm3AQaC7LBWPQenl7k9FYu0JQ5Pjxf4EkQ+ndennpK16xxWvV2EZeVYnqt
-	 osqN9ONbzqnw/VCNaDwCf2mAfEnasJTBOCKaU5+vLt3eGydYYbuZYu9BOb+zjW5mN1
-	 uhI1AqRCKoE+ku2x8LZObRZ+Dyw3iQoV1U9CR0Ex5JUZolBq6tz4JLhJphSEvZIG9A
-	 qwYf60lUmVls8oLFaetkwxvh1fuwnElxUO99BtxePZfCXjnEo1R7JDvMVT53bXNoQx
-	 AD3wk5riYs1Kg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 130A640016; Wed, 18 Oct 2023 11:32:25 -0300 (-03)
-Date: Wed, 18 Oct 2023 11:32:25 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	iii@linux.ibm.com, irogers@google.com, svens@linux.ibm.com,
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf test: test case 111 fails on s390
-Message-ID: <ZS/seVMNrV6j6z1J@kernel.org>
-References: <20231018064441.2751317-1-tmricht@linux.ibm.com>
- <ZS/mKa1Sk4hhJ/zY@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rrgNx5oB"
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A0FD111
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 08:52:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fDgmaaXWs1UnOA3NZnPEOXB7gVJ35tdg7eTyseemxzeoLaxHIXgUIcNvPZdhJ6sIzwbAqCeaSJZAnGpm1cTxn99JjcAS3FG+D9mtydJ7x6fSWtPma9r3QpI5NdI2U83jOyDSs/M09RLP6W18UQXBjjsxmMT+l/ImzhrKLS+7Y6KFg7kyAKKg02JOheIb/sp0cZZfwW2zuJkfvDnNKQMtZr2ZI7SxOe5EFXCnaM48hBwtyKypMaTEkWxwBJtD2M08mEF0LWvmImlpoB9aTkXSzS9p7kLBMbmKFrsX9/JMS1QEDsiAl74+f2Yx4ifBEdSPVeU6roryvOAt2vCAawxWhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B3l0r0vT1iomRRsZHJuUhULSSUbxIHcQtVnw34twJaQ=;
+ b=haAJiuCenZU5Ca5Xg/P/Sj8sRogiDzdM+UkppDCWb92bl/3MC4dbtyXdSzFXQA8xYjOxH1Asj1X60U8to+hfgsGzBwE/Gl8qqAtINkhoCpygFZkl2f1SyrDkxsAl9GssfLVitNT2ydWdtZjomibcqB9Gqyfk6g2Pnqu2CjFOg4AYDMT5lGdGLwf/zUeNXobIawgEB3McUQBt1xME2OQ0/aRqaR4UY7GR3//N34Js/8VKE7ZPgV1TIYxiDq1VCMqkZNw4qkypHmM6XKPtAqanvF7H0lwztNEaxvp2X9CELPUbd3JOPtbUBmIIIRP/C29TJ5gJ+x8d56y5eXlzFYDxYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B3l0r0vT1iomRRsZHJuUhULSSUbxIHcQtVnw34twJaQ=;
+ b=rrgNx5oBqUzYtd7vNdwmBuDktxhwezZhPHrqdGX6la0O3/3AXkyZueD2J/Z0dAzyQ2hjuQ55fkq2n95zvVHioMuellpWvUhTKepNlmqmWFmd6NEUwdvIA7K6G6lj+5du+Ei46Rk+fAkoU6tydktcxTZetIFlV+jmRqkoBgSARuw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by PH0PR12MB5449.namprd12.prod.outlook.com (2603:10b6:510:e7::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35; Wed, 18 Oct
+ 2023 15:52:30 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5272:f678:1d97:c94d]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5272:f678:1d97:c94d%3]) with mapi id 15.20.6907.021; Wed, 18 Oct 2023
+ 15:52:30 +0000
+Message-ID: <1da634d1-9b2d-c982-a0bd-1b0d5677644a@amd.com>
+Date: Wed, 18 Oct 2023 21:22:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: NMI received for unknown reason when running perf with IBS on AMD
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Guilherme Amadio <amadio@gentoo.org>, linux-perf-users@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>, robert.richter@amd.com,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <ZS0l-k1MASK3547Q@gentoo.org> <ZS2vu8bSBS1/zseZ@kernel.org>
+ <9d885140-f952-0018-304d-fbc1e15c33a7@amd.com> <ZS6Ds+rB2IwWmXML@kernel.org>
+ <f48256a1-d165-de5b-06e8-29646218955a@amd.com> <ZS/k3CSP1g3T27NG@kernel.org>
+Content-Language: en-US
+In-Reply-To: <ZS/k3CSP1g3T27NG@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0118.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::19) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZS/mKa1Sk4hhJ/zY@kernel.org>
-X-Url: http://acmel.wordpress.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|PH0PR12MB5449:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e3cd371-8aec-4370-73ab-08dbcff23c25
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	WGLC6/cj8hQBaBZz4fkxVIZWSkRplsowJYQlKjern9XgunXivcbn3cG+w58R1XvWHYRqINK9Tqh3ipaaw918qzAr/G159OslcULrAemHqJW4mSLSjuzlKHv6P2v1baK0HIgryB7AG0Y319I7tY5iR4BQ2+jpnDde2IB95Uqov5wubVK6SSwfrVaYrbxhDkCESAXMJOET3cXw4vA7fiP00MlPQIZnKscN8/VFOGxo+VtcB7ZIaYlYpyP+znas0Q1xbQXOFXU9CzdUGYOJiD4G2GUb1imtZ/ow6MQhhx4VC8Fo/Tooigz1uIqCwsFqP6p7imP1gbJbnIm9PHRqxL+POnIKe/yzrkWbdK0583IZ+Nv5x8oTwNUL6p9z2bM8M8vQTm5N8h2yD1J5bhQTgCnpFO34/VbhWMC9xUBhfK4s4hjS0urFtJ0J6xmRGKnv20CsszM7/FO87aVM6kmQptTJp0TshQa/WZDA9NoGrBy+NkfeAgZH/9HLR+dt43VejzeZoBs+b0cK4PabvGC87yIM9OtsKV/3pIkqDHo/lWt+3YkN6VlqPG+J5koNXvy1IGFqhFcPjElRNh1gzgogFvimXpG98VnqKcUIZ0uQ7M1pg9UvIV6axdUKVMI/fKzSP6bcnaufwS/wyANttOpcIVzhbg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(346002)(39860400002)(376002)(136003)(230922051799003)(451199024)(64100799003)(186009)(1800799009)(31686004)(6486002)(36756003)(6666004)(38100700002)(83380400001)(6506007)(66476007)(2906002)(54906003)(66556008)(66946007)(31696002)(316002)(2616005)(478600001)(6916009)(44832011)(4744005)(26005)(86362001)(8936002)(41300700001)(6512007)(8676002)(5660300002)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SVZZTmI5a0pueUx0WGxHQ1BJdlhNZE1rUjR2THVHMWkrdlFtSFJHUklzZ2Ur?=
+ =?utf-8?B?dVZrRURIcXBhcTlwMTZBeVBRQTVxVTdQM0Z3SDlmdytJeWtPYlJxNFNZNXlh?=
+ =?utf-8?B?dFpRVXd5MWVndUN2V1JrUmJRdGdNcTQ2cUVIbk1xQVJmSlRBbldDYVFDbHlN?=
+ =?utf-8?B?M0FOdUtHd2xKbG0xOURpZkwySW5vZERMUThOcU9QalVrTGhUblJRTVFUb3o5?=
+ =?utf-8?B?MTBIYnpjYjVMbklIZmhQb09BSWN2eUJCb1Q1dDJTYnIycnRYYSs0VzRVNGJh?=
+ =?utf-8?B?MGZ0OWNpK21DQkxKSENGaUhkMS9ja0lFWFBsY0RnMmdaejVoclF0SDY1L1J6?=
+ =?utf-8?B?T2hrYlBQLzNITEM4SjJObVorQWZZT09DQVM5OUJoNUJOSXZlMzZRSzhUdWp1?=
+ =?utf-8?B?LzFDcVJwS2Y0eG9vd2l3ejloQzJxZTBQV0E3S203VVdMV1BhQXFaQ004QVha?=
+ =?utf-8?B?cWRpeXRGMUoxY2t3NlluYm5oRXczOGJKbWUyUERqdWk4azR5L0F6S3VBSU9v?=
+ =?utf-8?B?VDZJNXZWa2tCbTBDMmV4Q3VRTlptSU5KdzdSOWdDbWNjaUtuS3RFbjlsUUNZ?=
+ =?utf-8?B?NlNab0lta09JOElwcmhFN3JLSlYwaTc4bHNUdzNtMkxvOU9BSUVmcXZHWTh3?=
+ =?utf-8?B?eVRiaHk0S1FxZGgzdmMxM0JtR09Qbmx2RmtpMEFvRWlSR0JSZHdDZWo4cmFM?=
+ =?utf-8?B?Q2oralhLYUxmU0V4SitFbDdBWUVLR2V6V1J6cERnekR1eEtRQk4zcEhMcVZm?=
+ =?utf-8?B?RUtGZzlyeTk5MDNSUHFKdnJyZnc5TlR2Wi9QRnBDV0JqWkkyL3VQa3VwZXAv?=
+ =?utf-8?B?Y0d5VVZXZC85SDRFczRVVndiUnl6ckJzRVpXWDYzSHdDMTk2UFRiMXMrb0Z2?=
+ =?utf-8?B?cWdqK1hYd0x0eDFVblZQZ2gzdXFtemxEK1pubVBOVXlCZ2hNOEtIeXZSRFln?=
+ =?utf-8?B?Nng1UHFQNmY4R3N4TUFFS0Q4NjUwcHZYS0lwKzJmM21pYmVURk5lQzNET3ZY?=
+ =?utf-8?B?RVpVbWVaK1YxOHFRQmxHbG9DNVBLZHA1Snl5bGtpZXN2MDJuZ1dJNlN5R3V0?=
+ =?utf-8?B?Yy95cWNhNk9BanFrbkZvNVVaT1FUaldna0hWdndnVTZuSi9YR2JTYldTZE1r?=
+ =?utf-8?B?bDZQWDc1SmpScmJNVXYrckJPTEhjcHRSbW5oNFZoZjAxOWt4MjBXR3AyckJv?=
+ =?utf-8?B?eGI0TmpUU2UyaU5HRTBNQ1Q0akF1MlBEbExmaEdQeEhhSVZrS29uREV1RCt2?=
+ =?utf-8?B?QnRHUXFvdFdmWno1aHBvZ0M1UXNES2t2L1VXTUo0QmxCMy9ma0FzU3FnMzZY?=
+ =?utf-8?B?SVg3UFFBaGhnUEFLQUROa0QweWRCUkF2cE05YldacEZIQVFyQWtTZkpHNGds?=
+ =?utf-8?B?cThrWTRNUVhOcFdRQzI2cmxRdFp4SzQvK29RcjBPT2xiTXJiRlFUMlZrMS9F?=
+ =?utf-8?B?SjhhR3NDK2MzRGFlb2syTWtqQmFMUTNlU01TK3FUcUJmQ1hXTGJqT2d2blhv?=
+ =?utf-8?B?bDVOWGRQRjRHZ1NTT1RUazI0R0Q0WE8rTmFudXNyVm5tWm12elBVWDB6cUxS?=
+ =?utf-8?B?bDZQYzNhSXA5dFEzZEY0WWJ2b0RoZGNvSXllVFFmRGJJMkw3WWc1ditWeWhq?=
+ =?utf-8?B?YUlwczAzNml1L2dFczhGdUNjYzVnWDh0UXhEWHlzUzFNWGpCU2YzMk1CM3Nu?=
+ =?utf-8?B?b0R3UUliMWt5MU1PanE4RGliY2Rhd3BNa3hKdE9oU0N1NFBNdnlFTWhQRTJ4?=
+ =?utf-8?B?L01UeHhRNDR4bHRJdTg4aGxKT2R2OEV4VEFTUkN5YW1ZbDl1SjR0TnUzeUU5?=
+ =?utf-8?B?eEdtZTUxU3FHL1QxRVRTck5hdDhkVUJHQ3VSZHBOYlc4TFYwU0dvS3dobzlm?=
+ =?utf-8?B?WHJpZnRQVEF4VC9QQUwrYzludk5LanphWGUyWGRXUDcvUWRsM0t4OUFRWUtj?=
+ =?utf-8?B?VFVXSm1hWWpWWEdIaGZwall5NkpVSFJqeSs2M2ZpcEpXOWIrd0RQUTVNeFcy?=
+ =?utf-8?B?QzFHRkpiNmtPL1U2bWE0bWNrY08zeG9ObU1mTzZhdEFGUm5IcXJNQW9TR0Zk?=
+ =?utf-8?B?RkNnRU5ybXlObU0vejIzMENOblFxVlhpR01SOC93MzUrOUxyaS9wQWwxcmxo?=
+ =?utf-8?Q?uFXdXBC26lDmmGjNzzNosdHIx?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e3cd371-8aec-4370-73ab-08dbcff23c25
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2023 15:52:30.5191
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kvbO+tmeOnkO4LsJdLz7f28iKTRMUduXgGDgSnTw4eqpi+pcpVYwil7vofBBewrnzspnqMCbTbRvdauCrjXCKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5449
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Em Wed, Oct 18, 2023 at 11:05:29AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Oct 18, 2023 at 08:44:41AM +0200, Thomas Richter escreveu:
-> > Perf test case 111 Check open filename arg using perf trace + vfs_getname
-> > fails on s390. This is caused by a failing function
-> > bpf_probe_read() in file util/bpf_skel/augmented_raw_syscalls.bpf.c.
+>>>>> [root@five ~]# perf report --header-only | grep "cpu pmu capabilities"
+>>>>> # cpu pmu capabilities: max_precise=0
+>>> ...
+>>> If we can programatically detect that IBS is present we can add a note
+>>> right after that 'perf report --header-only' line with this information.
+>>
+>> This should be easy to implement.
 > 
-> 
-> Please change the patch subject to describe what is being really fixed
-> instead of the test that spotted the problem, i.e. something like:
-> 
-> perf trace: Use the right bpf_probe_read(_str) variant for reading user data
-> 
-> But then shouldn't all those use bpf_probe_read_user(_str)?
-> 
-> As it is reading arguments to the syscall, that are coming from
-> userspace, i.e. both open/openat/etc path/filename, clock_nanosleep rqtp
-> args (and connect sockaddr, etc) comes from userspace.
+> Yeah, I took at stab at it, see the patch below:
 
-So, with your patch, on x86_64, I get:
+Looks good. Thanks!
 
-^C[root@five ~]# perf trace -e connect*
-     0.000 ( 0.021 ms): DNS Res~ver #1/8756 connect(fd: 229, uservaddr: { .family: UNSPEC }, addrlen: 42)         = 0
-     0.544 ( 0.011 ms): DNS Res~ver #1/8756 connect(fd: 229, uservaddr: { .family: UNSPEC }, addrlen: 16)         = 0
-     0.569 ( 0.009 ms): DNS Res~ver #1/8756 connect(fd: 229, uservaddr: { .family: UNSPEC }, addrlen: 28)         = -1 ENETUNREACH (Network is unreachable)
-
-I.e. it loads the resulting BPF bytecode but doesn't manage to copy the
-sockaddr in userspace pointed by connect's uservaddr argument.
-
-We need to use bpf_probe_read_kernel() for the tracepoint payload, in
-the raw_syscalls/sys_enter and raw_syscalls/sys_exit handlers, as that
-is kernel memory, but in the syscall specific BPF programs we need to
-use bpf_probe_read_user() to get things like sockaddr, etc, i.e.
-userspace contents.
-
-With the patch below:
-
-[root@five ~]# perf trace -e connect*
-     0.000 ( 0.128 ms): pool/2690 connect(fd: 7, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-socket }, addrlen: 110) = 0
-   304.127 ( 0.018 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: LOCAL, path: /run/systemd/resolve/io.systemd.Resolve }, addrlen: 42) = 0
-   304.554 ( 0.016 ms): systemd-resolv/1167 connect(fd: 24, uservaddr: { .family: INET, port: 53, addr: 192.168.86.1 }, addrlen: 16) = 0
-   304.650 ( 0.009 ms): systemd-resolv/1167 connect(fd: 25, uservaddr: { .family: INET, port: 53, addr: 192.168.86.1 }, addrlen: 16) = 0
-   318.952 ( 0.009 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: INET, port: 0, addr: 216.239.38.177 }, addrlen: 16) = 0
-   318.965 ( 0.003 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: UNSPEC }, addrlen: 16)         = 0
-   318.970 ( 0.004 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: INET, port: 0, addr: 216.239.34.177 }, addrlen: 16) = 0
-   318.977 ( 0.002 ms): DNS Resolver #/6524 connect(fd: 556, uservaddr: { .family: UNSPEC }, addrlen: 16)         = 0
-
-You can test before/after with:
-
- # perf trace -e connect*,clo*sleep
-
-To see clock_nanosleep rqtp args as well:
-
-Before:
-
-   999.107 (         ): gnome-terminal/3285 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x7ffdd373adb0) ...
-  1000.228 (         ): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90) ...
-  1030.375 (         ): gnome-terminal/3285 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x7ffdd373adb0) ...
-  1061.694 (         ): gnome-terminal/3285 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x7ffdd373adb0) ...
-
-
-after:
-
-  1000.198 (1000.035 ms): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90) = 0
-  2000.302 (1000.036 ms): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90) = 0
-  3000.410 (1000.037 ms): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90) = 0
-  4000.518 (1000.035 ms): pool-gsd-smart/3140 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7f85b61fec90
-
-[root@five ~]# perf trace -e *sleep sleep 1.234567890
-     0.000 (1234.630 ms): sleep/64495 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 234567890 }, rmtp: 0x7ffdf49af4a0) = 0
-[root@five ~]#
-
-- Arnaldo
-
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index cc22bccfc178229a..52c270330ae0d2f3 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -203,7 +203,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
- 	_Static_assert(is_power_of_2(sizeof(augmented_args->saddr)), "sizeof(augmented_args->saddr) needs to be a power of two");
- 	socklen &= sizeof(augmented_args->saddr) - 1;
- 
--	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
-+	bpf_probe_read_user(&augmented_args->saddr, socklen, sockaddr_arg);
- 
- 	return augmented__output(args, augmented_args, len + socklen);
- }
-@@ -221,7 +221,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
- 
- 	socklen &= sizeof(augmented_args->saddr) - 1;
- 
--	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
-+	bpf_probe_read_user(&augmented_args->saddr, socklen, sockaddr_arg);
- 
- 	return augmented__output(args, augmented_args, len + socklen);
- }
-@@ -311,7 +311,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
-         if (augmented_args == NULL)
- 		goto failure;
- 
--	if (bpf_probe_read_kernel(&augmented_args->__data, sizeof(*attr), attr) < 0)
-+	if (bpf_probe_read_user(&augmented_args->__data, sizeof(*attr), attr) < 0)
- 		goto failure;
- 
- 	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
-@@ -325,7 +325,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
-                 goto failure;
- 
- 	// Now that we read attr->size and tested it against the size limits, read it completely
--	if (bpf_probe_read_kernel(&augmented_args->__data, size, attr) < 0)
-+	if (bpf_probe_read_user(&augmented_args->__data, size, attr) < 0)
- 		goto failure;
- 
- 	return augmented__output(args, augmented_args, len + size);
-@@ -347,7 +347,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
- 	if (size > sizeof(augmented_args->__data))
-                 goto failure;
- 
--	bpf_probe_read_kernel(&augmented_args->__data, size, rqtp_arg);
-+	bpf_probe_read_user(&augmented_args->__data, size, rqtp_arg);
- 
- 	return augmented__output(args, augmented_args, len + size);
- failure:
+Ravi
