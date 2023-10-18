@@ -1,226 +1,143 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572F76AD6
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 06:44:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F131F7495;
+	Wed, 18 Oct 2023 07:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nJoA+pVS"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDDB93;
-	Tue, 17 Oct 2023 23:44:56 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39I6g2uR029553;
-	Wed, 18 Oct 2023 06:44:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=LqE3bsjS3d7fUFgQ8meolb1vfdC6rlb7wmWsYw/PucM=;
- b=nJoA+pVSGDOtYfiFAi5xI5nLhruV6f2x/mBG8rJkstAVEMxNHaJ2+qTUSrD0PYobzCFQ
- uvn0JM+o3e/5KhlepCXpbE8QcgMybcT2SPlpWJYP3O3oqsPuHcYA2azxYH0LTzpf6GMm
- BVFZBjAi4A1fWOYwZxXbWrCi20+CoovmYnDjDWn0nMbWKtFRU5QRC0IKkMQcSFEAWaEz
- +bpglfdRD7Qj8KIUcXd/CkCdTLs3Vr/myInHzvkTCRSHnuzE5mFdLvHB4y/LOhmSK31j
- doBRbDGZrmLLjQ8wg4dgUle1rqRIY4zpUwJMnEkT59iAtRJx8GjYr0WOY4++0q4nfmOL kA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ttaaqg25v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Oct 2023 06:44:53 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39I6ha6u002871;
-	Wed, 18 Oct 2023 06:44:53 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ttaaqg259-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Oct 2023 06:44:52 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39I40Cxc026879;
-	Wed, 18 Oct 2023 06:44:51 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tr5asekgd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Oct 2023 06:44:51 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39I6imHV21299956
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Oct 2023 06:44:48 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4F9092004E;
-	Wed, 18 Oct 2023 06:44:48 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 204FA2004B;
-	Wed, 18 Oct 2023 06:44:48 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 18 Oct 2023 06:44:48 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, iii@linux.ibm.com, irogers@google.com
-Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: test case 111 fails on s390
-Date: Wed, 18 Oct 2023 08:44:41 +0200
-Message-Id: <20231018064441.2751317-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6SeqXZr"
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1152CC6;
+	Wed, 18 Oct 2023 00:21:56 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-5079f3f3d7aso6747242e87.1;
+        Wed, 18 Oct 2023 00:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697613714; x=1698218514; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6G8urhdBc1eZTqmtV0ApQqIzJAH2N7GQh3AvU6FGmiw=;
+        b=e6SeqXZrz9v7qVp6ReTxXfPsBGf4xrQy0O/HdJNyCCj/QE1cYz6mXDs2sBo7jp5YeN
+         FaBQZYMFaxCb7LAUJxOLiu7yvTKzbwDqzlg/ygZdTzzPVseyasQS3PjZkuhXEJ0yO9Js
+         3SUR5TI4D3OAFEdvVJbdSualXwJ3Xk9E7VCxtByhBlLm57aQ8hc/8TH7jLLD6qHD9FZ7
+         WVIOswFvzHos2RlAVzC/X9OcC6/YFHAXlpQ+1xlczb26tEx95gzXZ+9TR+9UgeRfFKC6
+         XSdjOWEAMoA3qdU5ILycikjvWTt0lo2RtGXiicNGOQc9Py5sTbDjXgOzTXLVSDYjzC4I
+         yHvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697613714; x=1698218514;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6G8urhdBc1eZTqmtV0ApQqIzJAH2N7GQh3AvU6FGmiw=;
+        b=d8r1O9O5upHxL9cNTujcDc0ZFd9Mx1fIcuiMkNi7r8DLICtCQDlEYFixVw6PRkN5p/
+         7kDjdxqOsJs6z+ak6stfQ0Dj0fcmnpjhXpy7+v4to73H50Cn+ntVitRG+aKwM6tKOnha
+         GP1H+AWHjeE2FzCPLRod9PvGpKL9i4b4yXknbUlLQPFHpSXFODGGh07ELn6IWrIFOLpk
+         5WnA258vSndAnA35diwdA76sLSbsa3CMWgH03LwdJORWPzGFarWEyYwWHUFPwTo4hnWb
+         i4gm7zzngj0uTG1/lc/w+zo8saNQW+M6Bka0elMy/BYUbK2t/V3fK11FJ4WALA6BWv0t
+         Msog==
+X-Gm-Message-State: AOJu0YwNxZZWZ2iWij/SwuJJnINkmvxqDhAR190YVTxvLBeGbEvmdCQl
+	jQ/GUsqHd9re4MCzP0T4IBWmiF4P4W02Jg==
+X-Google-Smtp-Source: AGHT+IFoonVRP81816NJAlLxAEodcFQZefwPN2L3xJAVPhzMjlSX0hk88mhFbgZ2iQuyX6Zd7Uv+gQ==
+X-Received: by 2002:a05:6512:313a:b0:503:364d:b93d with SMTP id p26-20020a056512313a00b00503364db93dmr3529129lfd.20.1697613713890;
+        Wed, 18 Oct 2023 00:21:53 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id v23-20020a056402175700b0053dd8898f75sm2289694edx.81.2023.10.18.00.21.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Oct 2023 00:21:53 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 18 Oct 2023 09:21:51 +0200
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Quentin Monnet <quentin@isovalent.com>,
+	Dmitry Goncharov <dgoncharov@users.sf.net>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Ian Rogers <irogers@google.com>, KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCHv2 1/2] tools/build: Fix -s detection code in
+ tools/build/Makefile.build
+Message-ID: <ZS+Hj3aDWoCV/ckr@krava>
+References: <20231008212251.236023-1-jolsa@kernel.org>
+ <20231008212251.236023-2-jolsa@kernel.org>
+ <CAM9d7cjYCrTkOTOmBHry-95nivmkGv1g0wp=+TSA0xPXJW_QvQ@mail.gmail.com>
+ <ZSjlk99UOV2tTMWO@krava>
+ <CAM9d7cjqvEs6262GfuF18mtFsWEznqNOWP_NqZN99Ys3MxCXqg@mail.gmail.com>
+ <ZS5JHuwxL200M09H@krava>
+ <CAM9d7chq125TOtnWFVKUC6PwRJqmXwNbfs7Dhm_04B3ZbA4jdw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NXPT4q3yb5Umjie7CUINcWIkWlyPu0Zw
-X-Proofpoint-ORIG-GUID: U7lLSEIItiDpuRwUU0DqJZ27YGPaANCr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-18_04,2023-10-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1011
- phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
- definitions=main-2310180056
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
-	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <CAM9d7chq125TOtnWFVKUC6PwRJqmXwNbfs7Dhm_04B3ZbA4jdw@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Perf test case 111 Check open filename arg using perf trace + vfs_getname
-fails on s390. This is caused by a failing function
-bpf_probe_read() in file util/bpf_skel/augmented_raw_syscalls.bpf.c.
+On Tue, Oct 17, 2023 at 01:16:28PM -0700, Namhyung Kim wrote:
+> On Tue, Oct 17, 2023 at 1:43 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Mon, Oct 16, 2023 at 06:36:10PM -0700, Namhyung Kim wrote:
+> > > On Thu, Oct 12, 2023 at 11:37 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > >
+> > > > On Thu, Oct 12, 2023 at 08:57:33PM -0700, Namhyung Kim wrote:
+> > > > > Hi Jiri,
+> > > > >
+> > > > > On Sun, Oct 8, 2023 at 2:23 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> > > > > >
+> > > > > > As Dmitry described in [1] changelog the current way of detecting
+> > > > > > -s option is broken for new make.
+> > > > >
+> > > > > I'm not sure what -s option does for perf (at least).
+> > > > > It doesn't seem much different whether I give it or not.
+> > > > > Am I missing something?
+> > > >
+> > > > what's your make version? the wrong output is visible when running
+> > > > with make version > 4.4 .. basicaly the -s is wrongly detected and
+> > > > you either get no output at all from some builds or overly verbose
+> > > > output
+> > > >
+> > > > it's mentioned in the [1] commit changelog, I can put it to the
+> > > > changelog in new version
+> > >
+> > > IIUC it's about detecting `make -s` properly and not being confused
+> > > by `make a=s` or something.  I'm not objecting on it but I don't see
+> > > what `make -s` does actually.
+> >
+> > so the tools/build/Makefile.build and tools/scripts/Makefile.include detect
+> > make -s option, which puts make into silent mode, so both makefiles switch
+> > off the output by setting quiet=silent_ or silent=1
+> >
+> > the problem is that the detection of make -s option changed in make > 4.4
+> > and current code could be tricked to switch to silent mode just by having
+> > 's' persent on the command line, like with 'a=s'
+> 
+> I think our talk is circulating :-).  Anyway I'm ok with the change, so
 
-The root cause is the lookup by address. Function bpf_probe_read()
-is used. This function works only for architectures
-with ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
+:) ok, thanks
 
-On s390 is not possible to determine from the address to which
-address space the address belongs to (user or kernel space).
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Which tree do you want to route it?
 
-Replace bpf_probe_read() by bpf_probe_read_kernel()
-and bpf_probe_read_str() by bpf_probe_read_user_str() to
-explicity specify the address space the address refers to.
+I think perf tree is the best one to route it
 
-Output before:
- # ./perf trace -eopen,openat -- touch /tmp/111
- libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
- libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
- reg type unsupported for arg#0 function sys_enter#75
- 0: R1=ctx(off=0,imm=0) R10=fp0
- ; int sys_enter(struct syscall_enter_args *args)
- 0: (bf) r6 = r1           ; R1=ctx(off=0,imm=0) R6_w=ctx(off=0,imm=0)
- ; return bpf_get_current_pid_tgid();
- 1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=scalar()
- 2: (63) *(u32 *)(r10 -8) = r0 ; R0_w=scalar() R10=fp0 fp-8=????mmmm
- 3: (bf) r2 = r10              ; R2_w=fp0 R10=fp0
- ;
- .....
- lines deleted here
- .....
- 23: (bf) r3 = r6              ; R3_w=ctx(off=0,imm=0) R6=ctx(off=0,imm=0)
- 24: (85) call bpf_probe_read#4
- unknown func bpf_probe_read#4
- processed 23 insns (limit 1000000) max_states_per_insn 0 \
-	 total_states 2 peak_states 2 mark_read 2
- -- END PROG LOAD LOG --
- libbpf: prog 'sys_enter': failed to load: -22
- libbpf: failed to load object 'augmented_raw_syscalls_bpf'
- libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -22
- ....
-
-Output after:
- # ./perf test -Fv 111
- 111: Check open filename arg using perf trace + vfs_getname          :
- --- start ---
-     1.085 ( 0.011 ms): touch/320753 openat(dfd: CWD, filename: \
-	"/tmp/temporary_file.SWH85", \
-	flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
- ---- end ----
- Check open filename arg using perf trace + vfs_getname: Ok
- #
-
-Fixes: 14e4b9f4289a ("perf trace: Raw augmented syscalls fix libbpf 1.0+ compatibility")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
----
- .../util/bpf_skel/augmented_raw_syscalls.bpf.c   | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index 939ec769bf4a..cc22bccfc178 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -153,7 +153,7 @@ static inline
- unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
- {
- 	unsigned int augmented_len = sizeof(*augmented_arg);
--	int string_len = bpf_probe_read_str(&augmented_arg->value, arg_len, arg);
-+	int string_len = bpf_probe_read_user_str(&augmented_arg->value, arg_len, arg);
- 
- 	augmented_arg->size = augmented_arg->err = 0;
- 	/*
-@@ -203,7 +203,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
- 	_Static_assert(is_power_of_2(sizeof(augmented_args->saddr)), "sizeof(augmented_args->saddr) needs to be a power of two");
- 	socklen &= sizeof(augmented_args->saddr) - 1;
- 
--	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
-+	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
- 
- 	return augmented__output(args, augmented_args, len + socklen);
- }
-@@ -221,7 +221,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
- 
- 	socklen &= sizeof(augmented_args->saddr) - 1;
- 
--	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
-+	bpf_probe_read_kernel(&augmented_args->saddr, socklen, sockaddr_arg);
- 
- 	return augmented__output(args, augmented_args, len + socklen);
- }
-@@ -311,7 +311,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
-         if (augmented_args == NULL)
- 		goto failure;
- 
--	if (bpf_probe_read(&augmented_args->__data, sizeof(*attr), attr) < 0)
-+	if (bpf_probe_read_kernel(&augmented_args->__data, sizeof(*attr), attr) < 0)
- 		goto failure;
- 
- 	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
-@@ -325,7 +325,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
-                 goto failure;
- 
- 	// Now that we read attr->size and tested it against the size limits, read it completely
--	if (bpf_probe_read(&augmented_args->__data, size, attr) < 0)
-+	if (bpf_probe_read_kernel(&augmented_args->__data, size, attr) < 0)
- 		goto failure;
- 
- 	return augmented__output(args, augmented_args, len + size);
-@@ -347,7 +347,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
- 	if (size > sizeof(augmented_args->__data))
-                 goto failure;
- 
--	bpf_probe_read(&augmented_args->__data, size, rqtp_arg);
-+	bpf_probe_read_kernel(&augmented_args->__data, size, rqtp_arg);
- 
- 	return augmented__output(args, augmented_args, len + size);
- failure:
-@@ -385,7 +385,7 @@ int sys_enter(struct syscall_enter_args *args)
- 	if (augmented_args == NULL)
- 		return 1;
- 
--	bpf_probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
-+	bpf_probe_read_kernel(&augmented_args->args, sizeof(augmented_args->args), args);
- 
- 	/*
- 	 * Jump to syscall specific augmenter, even if the default one,
-@@ -406,7 +406,7 @@ int sys_exit(struct syscall_exit_args *args)
- 	if (pid_filter__has(&pids_filtered, getpid()))
- 		return 0;
- 
--	bpf_probe_read(&exit_args, sizeof(exit_args), args);
-+	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
- 	/*
- 	 * Jump to syscall specific return augmenter, even if the default one,
- 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
--- 
-2.41.0
-
+thanks,
+jirka
