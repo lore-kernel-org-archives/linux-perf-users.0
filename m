@@ -1,438 +1,208 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504A729CF3
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 14:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-X-Greylist: delayed 1246 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 19 Oct 2023 07:28:36 PDT
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7A2B0
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 07:28:36 -0700 (PDT)
-Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 39JE7rea036082
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 22:07:53 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 39JE6b0i034309;
-	Thu, 19 Oct 2023 22:06:37 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Thu, 19 Oct 2023
- 22:06:33 +0800
-From: Yu Chien Peter Lin <peterlin@andestech.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <ycliang@andestech.com>,
-        <peterlin@andestech.com>, <dminus@andestech.com>, <n.shubin@yadro.com>,
-        <locus84@andestech.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-CC: <prabhakar.mahadev-lad.rj@bp.renesas.com>, <tim609@andestech.com>,
-        <dylan@andestech.com>
-Subject: [PATCH v2 10/10] riscv: andes: Support symbolic FW and HW raw events
-Date: Thu, 19 Oct 2023 22:03:25 +0800
-Message-ID: <20231019140325.3660923-1-peterlin@andestech.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C3836AE2
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 19:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U71qwD41"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FFCBC433C7;
+	Thu, 19 Oct 2023 19:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697744099;
+	bh=y0Oo/V8pFGO99f5tyMwTJJOuq+D/cyDMJbhKLfmUT9Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U71qwD41v+d3QbOh2thoWU9GVnnqqScVP7tb0JvXuxyyAiB1Tj28QiRqInINGE7ZE
+	 VuoD0XKC/M0xwah3mmc5GL+1GlNDnd2R0kkQ0oOLMup7FfWt2zelNxbJhHZcYaa6Gj
+	 t6tbK4k5sO5dwT31UPnO6HFxE61WWUWf85VDdDmlvATiw9FebVdigNkxtbWvL3LATh
+	 10yoef3KI3XVagbl16XincJumt/pD0FaE7uq9tU6eFgvP7w1gskelQcrOgkutfKrCw
+	 xspYi1Itb5mVe/FWXG0B+EvXz4ILcPwFwRLWaG1XNSZYtBe98NTCkfJVE0o8pC8XS5
+	 puOidhPyt7hZw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id B8A1440016; Thu, 19 Oct 2023 16:34:55 -0300 (-03)
+Date: Thu, 19 Oct 2023 16:34:55 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	iii@linux.ibm.com, irogers@google.com, svens@linux.ibm.com,
+	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH] perf trace: Use the right bpf_probe_read(_str) variant
+ for reading user data
+Message-ID: <ZTGE3zpd3yC2yqxo@kernel.org>
+References: <20231019082642.3286650-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.0.15.183]
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 39JE7rea036082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231019082642.3286650-1-tmricht@linux.ibm.com>
+X-Url: http://acmel.wordpress.com
 
-From: Locus Wei-Han Chen <locus84@andestech.com>
+Em Thu, Oct 19, 2023 at 10:26:42AM +0200, Thomas Richter escreveu:
+> Perf test case 111 Check open filename arg using perf trace + vfs_getname
+> fails on s390. This is caused by a failing function
+> bpf_probe_read() in file util/bpf_skel/augmented_raw_syscalls.bpf.c.
+> 
+> The root cause is the lookup by address. Function bpf_probe_read()
+> is used. This function works only for architectures
+> with ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
+> 
+> On s390 is not possible to determine from the address to which
+> address space the address belongs to (user or kernel space).
+> 
+> Replace bpf_probe_read() by bpf_probe_read_kernel()
+> and bpf_probe_read_str() by bpf_probe_read_user_str() to
+> explicity specify the address space the address refers to.
 
-This patch adds the Andes AX45 JSON files in the perf tool,
-allowing perf to be used with symbolic event names.
+Thanks,
+ 
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
-Reviewed-by: Yu Chien Peter Lin <peterlin@andestech.com>
-Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
----
-Changes v1 -> v2:
-  - No change
----
- .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
- .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
- .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
- .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
- 5 files changed, 330 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+- Arnaldo
 
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-new file mode 100644
-index 000000000000..9b4a032186a7
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-@@ -0,0 +1,68 @@
-+[
-+  {
-+    "ArchStdEvent": "FW_MISALIGNED_LOAD"
-+  },
-+  {
-+    "ArchStdEvent": "FW_MISALIGNED_STORE"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ACCESS_LOAD"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ACCESS_STORE"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ILLEGAL_INSN"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SET_TIMER"
-+  },
-+  {
-+    "ArchStdEvent": "FW_IPI_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_IPI_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_FENCE_I_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-new file mode 100644
-index 000000000000..713a08c1a40f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-@@ -0,0 +1,127 @@
-+[
-+	{
-+		"EventCode": "0x10",
-+		"EventName": "cycle_count",
-+		"BriefDescription": "Cycle count"
-+	},
-+	{
-+		"EventCode": "0x20",
-+		"EventName": "inst_count",
-+		"BriefDescription": "Retired instruction count"
-+	},
-+	{
-+		"EventCode": "0x30",
-+		"EventName": "int_load_inst",
-+		"BriefDescription": "Integer load instruction count"
-+	},
-+	{
-+		"EventCode": "0x40",
-+		"EventName": "int_store_inst",
-+		"BriefDescription": "Integer store instruction count"
-+	},
-+	{
-+		"EventCode": "0x50",
-+		"EventName": "atomic_inst",
-+		"BriefDescription": "Atomic instruction count"
-+	},
-+	{
-+		"EventCode": "0x60",
-+		"EventName": "sys_inst",
-+		"BriefDescription": "System instruction count"
-+	},
-+	{
-+		"EventCode": "0x70",
-+		"EventName": "int_compute_inst",
-+		"BriefDescription": "Integer computational instruction count"
-+	},
-+	{
-+		"EventCode": "0x80",
-+		"EventName": "condition_br",
-+		"BriefDescription": "Conditional branch instruction count"
-+	},
-+	{
-+		"EventCode": "0x90",
-+		"EventName": "taken_condition_br",
-+		"BriefDescription": "Taken conditional branch instruction count"
-+	},
-+	{
-+		"EventCode": "0xA0",
-+		"EventName": "jal_inst",
-+		"BriefDescription": "JAL instruction count"
-+	},
-+	{
-+		"EventCode": "0xB0",
-+		"EventName": "jalr_inst",
-+		"BriefDescription": "JALR instruction count"
-+	},
-+	{
-+		"EventCode": "0xC0",
-+		"EventName": "ret_inst",
-+		"BriefDescription": "Return instruction count"
-+	},
-+	{
-+		"EventCode": "0xD0",
-+		"EventName": "control_trans_inst",
-+		"BriefDescription": "Control transfer instruction count"
-+	},
-+	{
-+		"EventCode": "0xE0",
-+		"EventName": "ex9_inst",
-+		"BriefDescription": "EXEC.IT instruction count"
-+	},
-+	{
-+		"EventCode": "0xF0",
-+		"EventName": "int_mul_inst",
-+		"BriefDescription": "Integer multiplication instruction count"
-+	},
-+	{
-+		"EventCode": "0x100",
-+		"EventName": "int_div_rem_inst",
-+		"BriefDescription": "Integer division/remainder instruction count"
-+	},
-+	{
-+		"EventCode": "0x110",
-+		"EventName": "float_load_inst",
-+		"BriefDescription": "Floating-point load instruction count"
-+	},
-+	{
-+		"EventCode": "0x120",
-+		"EventName": "float_store_inst",
-+		"BriefDescription": "Floating-point store instruction count"
-+	},
-+	{
-+		"EventCode": "0x130",
-+		"EventName": "float_add_sub_inst",
-+		"BriefDescription": "Floating-point addition/subtraction instruction count"
-+	},
-+	{
-+		"EventCode": "0x140",
-+		"EventName": "float_mul_inst",
-+		"BriefDescription": "Floating-point multiplication instruction count"
-+	},
-+	{
-+		"EventCode": "0x150",
-+		"EventName": "float_fused_muladd_inst",
-+		"BriefDescription": "Floating-point fused multiply-add instruction count"
-+	},
-+	{
-+		"EventCode": "0x160",
-+		"EventName": "float_div_sqrt_inst",
-+		"BriefDescription": "Floating-point division or square-root instruction count"
-+	},
-+	{
-+		"EventCode": "0x170",
-+		"EventName": "other_float_inst",
-+		"BriefDescription": "Other floating-point instruction count"
-+	},
-+	{
-+		"EventCode": "0x180",
-+		"EventName": "int_mul_add_sub_inst",
-+		"BriefDescription": "Integer multiplication and add/sub instruction count"
-+	},
-+	{
-+		"EventCode": "0x190",
-+		"EventName": "retired_ops",
-+		"BriefDescription": "Retired operation count"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-new file mode 100644
-index 000000000000..c7401b526c77
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-@@ -0,0 +1,57 @@
-+[
-+	{
-+		"EventCode": "0x01",
-+		"EventName": "ilm_access",
-+		"BriefDescription": "ILM access"
-+	},
-+	{
-+		"EventCode": "0x11",
-+		"EventName": "dlm_access",
-+		"BriefDescription": "DLM access"
-+	},
-+	{
-+		"EventCode": "0x21",
-+		"EventName": "icache_access",
-+		"BriefDescription": "ICACHE access"
-+	},
-+	{
-+		"EventCode": "0x31",
-+		"EventName": "icache_miss",
-+		"BriefDescription": "ICACHE miss"
-+	},
-+	{
-+		"EventCode": "0x41",
-+		"EventName": "dcache_access",
-+		"BriefDescription": "DCACHE access"
-+	},
-+	{
-+		"EventCode": "0x51",
-+		"EventName": "dcache_miss",
-+		"BriefDescription": "DCACHE miss"
-+	},
-+	{
-+		"EventCode": "0x61",
-+		"EventName": "dcache_load_access",
-+		"BriefDescription": "DCACHE load access"
-+	},
-+	{
-+		"EventCode": "0x71",
-+		"EventName": "dcache_load_miss",
-+		"BriefDescription": "DCACHE load miss"
-+	},
-+	{
-+		"EventCode": "0x81",
-+		"EventName": "dcache_store_access",
-+		"BriefDescription": "DCACHE store access"
-+	},
-+	{
-+		"EventCode": "0x91",
-+		"EventName": "dcache_store_miss",
-+		"BriefDescription": "DCACHE store miss"
-+	},
-+	{
-+		"EventCode": "0xA1",
-+		"EventName": "dcache_wb",
-+		"BriefDescription": "DCACHE writeback"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-new file mode 100644
-index 000000000000..a6d378cbaa74
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-@@ -0,0 +1,77 @@
-+[
-+	{
-+		"EventCode": "0xB1",
-+		"EventName": "cycle_wait_icache_fill",
-+		"BriefDescription": "Cycles waiting for ICACHE fill data"
-+	},
-+	{
-+		"EventCode": "0xC1",
-+		"EventName": "cycle_wait_dcache_fill",
-+		"BriefDescription": "Cycles waiting for DCACHE fill data"
-+	},
-+	{
-+		"EventCode": "0xD1",
-+		"EventName": "uncached_ifetch_from_bus",
-+		"BriefDescription": "Uncached ifetch data access from bus"
-+	},
-+	{
-+		"EventCode": "0xE1",
-+		"EventName": "uncached_load_from_bus",
-+		"BriefDescription": "Uncached load data access from bus"
-+	},
-+	{
-+		"EventCode": "0xF1",
-+		"EventName": "cycle_wait_uncached_ifetch",
-+		"BriefDescription": "Cycles waiting for uncached ifetch data from bus"
-+	},
-+	{
-+		"EventCode": "0x101",
-+		"EventName": "cycle_wait_uncached_load",
-+		"BriefDescription": "Cycles waiting for uncached load data from bus"
-+	},
-+	{
-+		"EventCode": "0x111",
-+		"EventName": "main_itlb_access",
-+		"BriefDescription": "Main ITLB access"
-+	},
-+	{
-+		"EventCode": "0x121",
-+		"EventName": "main_itlb_miss",
-+		"BriefDescription": "Main ITLB miss"
-+	},
-+	{
-+		"EventCode": "0x131",
-+		"EventName": "main_dtlb_access",
-+		"BriefDescription": "Main DTLB access"
-+	},
-+	{
-+		"EventCode": "0x141",
-+		"EventName": "main_dtlb_miss",
-+		"BriefDescription": "Main DTLB miss"
-+	},
-+	{
-+		"EventCode": "0x151",
-+		"EventName": "cycle_wait_itlb_fill",
-+		"BriefDescription": "Cycles waiting for Main ITLB fill data"
-+	},
-+	{
-+		"EventCode": "0x161",
-+		"EventName": "pipe_stall_cycle_dtlb_miss",
-+		"BriefDescription": "Pipeline stall cycles caused by Main DTLB miss"
-+	},
-+	{
-+		"EventCode": "0x02",
-+		"EventName": "mispredict_condition_br",
-+		"BriefDescription": "Misprediction of conditional branches"
-+	},
-+	{
-+		"EventCode": "0x12",
-+		"EventName": "mispredict_take_condition_br",
-+		"BriefDescription": "Misprediction of taken conditional branches"
-+	},
-+	{
-+		"EventCode": "0x22",
-+		"EventName": "mispredict_target_ret_inst",
-+		"BriefDescription": "Misprediction of targets of Return instructions"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-index c61b3d6ef616..5bf09af14c1b 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -15,3 +15,4 @@
- #
- #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
- 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-+0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
+> Output before:
+>  # ./perf trace -eopen,openat -- touch /tmp/111
+>  libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
+>  libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+>  reg type unsupported for arg#0 function sys_enter#75
+>  0: R1=ctx(off=0,imm=0) R10=fp0
+>  ; int sys_enter(struct syscall_enter_args *args)
+>  0: (bf) r6 = r1           ; R1=ctx(off=0,imm=0) R6_w=ctx(off=0,imm=0)
+>  ; return bpf_get_current_pid_tgid();
+>  1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=scalar()
+>  2: (63) *(u32 *)(r10 -8) = r0 ; R0_w=scalar() R10=fp0 fp-8=????mmmm
+>  3: (bf) r2 = r10              ; R2_w=fp0 R10=fp0
+>  ;
+>  .....
+>  lines deleted here
+>  .....
+>  23: (bf) r3 = r6              ; R3_w=ctx(off=0,imm=0) R6=ctx(off=0,imm=0)
+>  24: (85) call bpf_probe_read#4
+>  unknown func bpf_probe_read#4
+>  processed 23 insns (limit 1000000) max_states_per_insn 0 \
+> 	 total_states 2 peak_states 2 mark_read 2
+>  -- END PROG LOAD LOG --
+>  libbpf: prog 'sys_enter': failed to load: -22
+>  libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+>  libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -22
+>  ....
+> 
+> Output after:
+>  # ./perf test -Fv 111
+>  111: Check open filename arg using perf trace + vfs_getname          :
+>  --- start ---
+>      1.085 ( 0.011 ms): touch/320753 openat(dfd: CWD, filename: \
+> 	"/tmp/temporary_file.SWH85", \
+> 	flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+>  ---- end ----
+>  Check open filename arg using perf trace + vfs_getname: Ok
+>  #
+> 
+> Test with the sleep command shows:
+> Output before:
+>  # ./perf trace -e *sleep sleep 1.234567890
+>      0.000 (1234.681 ms): sleep/63114 clock_nanosleep(rqtp: \
+>          { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x3ffe0979720) = 0
+>  #
+> 
+> Output after:
+>  # ./perf trace -e *sleep sleep 1.234567890
+>      0.000 (1234.686 ms): sleep/64277 clock_nanosleep(rqtp: \
+>          { .tv_sec: 1, .tv_nsec: 234567890 }, rmtp: 0x3fff3df9ea0) = 0
+>  #
+> 
+> Fixes: 14e4b9f4289a ("perf trace: Raw augmented syscalls fix libbpf 1.0+ compatibility")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Co-developed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> Cc: Ian Rogers <irogers@google.com>
+> ---
+>  .../util/bpf_skel/augmented_raw_syscalls.bpf.c   | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> index 939ec769bf4a..52c270330ae0 100644
+> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> @@ -153,7 +153,7 @@ static inline
+>  unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
+>  {
+>  	unsigned int augmented_len = sizeof(*augmented_arg);
+> -	int string_len = bpf_probe_read_str(&augmented_arg->value, arg_len, arg);
+> +	int string_len = bpf_probe_read_user_str(&augmented_arg->value, arg_len, arg);
+>  
+>  	augmented_arg->size = augmented_arg->err = 0;
+>  	/*
+> @@ -203,7 +203,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
+>  	_Static_assert(is_power_of_2(sizeof(augmented_args->saddr)), "sizeof(augmented_args->saddr) needs to be a power of two");
+>  	socklen &= sizeof(augmented_args->saddr) - 1;
+>  
+> -	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+> +	bpf_probe_read_user(&augmented_args->saddr, socklen, sockaddr_arg);
+>  
+>  	return augmented__output(args, augmented_args, len + socklen);
+>  }
+> @@ -221,7 +221,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
+>  
+>  	socklen &= sizeof(augmented_args->saddr) - 1;
+>  
+> -	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+> +	bpf_probe_read_user(&augmented_args->saddr, socklen, sockaddr_arg);
+>  
+>  	return augmented__output(args, augmented_args, len + socklen);
+>  }
+> @@ -311,7 +311,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+>          if (augmented_args == NULL)
+>  		goto failure;
+>  
+> -	if (bpf_probe_read(&augmented_args->__data, sizeof(*attr), attr) < 0)
+> +	if (bpf_probe_read_user(&augmented_args->__data, sizeof(*attr), attr) < 0)
+>  		goto failure;
+>  
+>  	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
+> @@ -325,7 +325,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+>                  goto failure;
+>  
+>  	// Now that we read attr->size and tested it against the size limits, read it completely
+> -	if (bpf_probe_read(&augmented_args->__data, size, attr) < 0)
+> +	if (bpf_probe_read_user(&augmented_args->__data, size, attr) < 0)
+>  		goto failure;
+>  
+>  	return augmented__output(args, augmented_args, len + size);
+> @@ -347,7 +347,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+>  	if (size > sizeof(augmented_args->__data))
+>                  goto failure;
+>  
+> -	bpf_probe_read(&augmented_args->__data, size, rqtp_arg);
+> +	bpf_probe_read_user(&augmented_args->__data, size, rqtp_arg);
+>  
+>  	return augmented__output(args, augmented_args, len + size);
+>  failure:
+> @@ -385,7 +385,7 @@ int sys_enter(struct syscall_enter_args *args)
+>  	if (augmented_args == NULL)
+>  		return 1;
+>  
+> -	bpf_probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
+> +	bpf_probe_read_kernel(&augmented_args->args, sizeof(augmented_args->args), args);
+>  
+>  	/*
+>  	 * Jump to syscall specific augmenter, even if the default one,
+> @@ -406,7 +406,7 @@ int sys_exit(struct syscall_exit_args *args)
+>  	if (pid_filter__has(&pids_filtered, getpid()))
+>  		return 0;
+>  
+> -	bpf_probe_read(&exit_args, sizeof(exit_args), args);
+> +	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
+>  	/*
+>  	 * Jump to syscall specific return augmenter, even if the default one,
+>  	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+> -- 
+> 2.41.0
+> 
+
 -- 
-2.34.1
 
+- Arnaldo
