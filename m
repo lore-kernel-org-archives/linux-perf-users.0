@@ -1,103 +1,99 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBE819447;
-	Thu, 19 Oct 2023 22:52:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18305321AA;
+	Thu, 19 Oct 2023 22:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqUlDcOn"
-Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD3298;
-	Thu, 19 Oct 2023 15:52:19 -0700 (PDT)
-Received: by mail-oo1-xc2b.google.com with SMTP id 006d021491bc7-57ad95c555eso115883eaf.3;
-        Thu, 19 Oct 2023 15:52:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToZ/deRv"
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 979C498;
+	Thu, 19 Oct 2023 15:54:15 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-53d9f001b35so198164a12.2;
+        Thu, 19 Oct 2023 15:54:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697755939; x=1698360739; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gw+NhNs7Kd8Sn7Jgw+a43o7ZL5jXRR/xNu8rKmPPZ40=;
-        b=cqUlDcOn8B2qnMUm367lem/JMGujVIYophyIKNq4aMiXtD9SllwQvbetUbydstn//8
-         ufOcYr7Q6jGEB1uFhd6xR/RilEZGFKExrP+XabRSdG/v0KRLY7OQoDRk3K0TVsLtEsgC
-         pir6osLTnzboHD8z37Ih0WNL/OjzI6wGwmvwtmieNFZ2P0amKhKOhfdNAbbmYQJvJwh4
-         QRqOzVF0xvO3q7C4NZVwggTEtJinGXcUPmyNytBqrVrMl39DGMNGu7gNUVojaYjA4QZG
-         2oFE8bjTV9SyxxCt6LdvvYzcdd4OVk+gJe2ySANO/8CZnVG9AZNhYQcVj5LFT4zCDFym
-         Uqgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697755939; x=1698360739;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1697756054; x=1698360854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gw+NhNs7Kd8Sn7Jgw+a43o7ZL5jXRR/xNu8rKmPPZ40=;
-        b=vG40LavUgaRsEZq88dlRznRPSkgk/EfTgieDjRjJbjWycsHFP5GLsyUwBWHOGRVdeE
-         n6A9mzhcf6b0EdUk8LT8etvCLo85EvqT8ouFOZZYP6I2I6uGR+2hBfEPJCU3mOBTIC1K
-         I+tfwqv4XRtMWrvufsidyzCsxFdvbFAZeSC15Hge3RY5csyYBb5jIwdkxb+dngs/94cP
-         13QQ+tzt7R4rToZw7Pq27fBb4mv+LPwPAGHH0PD5MgRsVO4CtluH8vELz8hoSGukEU46
-         fzMN5rM9P3ednzmgMSS2a0SxSW1gc8hIQYRf/hJy93rEfyu8Lrx3v9Rx0sdZFY758fvC
-         bHJg==
-X-Gm-Message-State: AOJu0YxHBDqIa7hmwCEjdBIPcPwrtlKfs1Qvvc5t8BXQeTzfr21xzSIu
-	aWZvwpiUkrDU1O6LMzLRlzg=
-X-Google-Smtp-Source: AGHT+IFYnyvkEDIVfG+6uXEDLM3MsKx6hhZ2KQYVQfuI264k9/7LuO5GxhihGAcLJrxNg6KXaIO4ZQ==
-X-Received: by 2002:a05:6358:724e:b0:166:dc89:8c92 with SMTP id i14-20020a056358724e00b00166dc898c92mr108490rwa.26.1697755938799;
-        Thu, 19 Oct 2023 15:52:18 -0700 (PDT)
-Received: from surya ([2600:1700:3ec2:2011:b14a:c750:3938:f592])
-        by smtp.gmail.com with ESMTPSA id x26-20020aa79ada000000b006be5af77f06sm289689pfp.2.2023.10.19.15.52.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Oct 2023 15:52:18 -0700 (PDT)
-Date: Thu, 19 Oct 2023 15:52:15 -0700
-From: Manu Bretelle <chantr4@gmail.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Carsten Haitzler <carsten.haitzler@arm.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Fangrui Song <maskray@google.com>, He Kuang <hekuang@huawei.com>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
-	llvm@lists.linux.dev, Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Quentin Monnet <quentin@isovalent.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Rob Herring <robh@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Tom Rix <trix@redhat.com>, Wang Nan <wangnan0@huawei.com>,
-	Wang ShaoBo <bobo.shaobowang@huawei.com>,
-	Yang Jihong <yangjihong1@huawei.com>, Yonghong Song <yhs@fb.com>,
-	YueHaibing <yuehaibing@huawei.com>,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/1] tools build: Fix llvm feature detection, still used
- by bpftool
-Message-ID: <ZTGzHzhZwJv0+xBH@surya>
-References: <ZTGc8S293uaTqHja@kernel.org>
+        bh=znKTjYCMK7qVlPe1x85VLsQxhjgS/CN/1N2ibCS0Pek=;
+        b=ToZ/deRvOJgo7YWy09hdxkSvDUdtiNPE6yGKf7IsAh+Ao+YfgXFcKBx3vB2x8xEf+l
+         YhNeZZPft61eii3LD7CFV7oSTZkkdtq/X4tGQDLBGVrSLt3D6JhdXugX+vFGQuIZLp3Y
+         9D9YsNX5QEGjPikAayXcSJxKR8AJxy55WFfZoJ2dbJLtd6bHxSCpreRNjOcRqpRaeH9f
+         08XdooA+mY0lmstpvCssiEJg36IUZgWzp4Yqmmf5Gm0xnCK1rBqLM4JDLx7PmxOkBSPH
+         WT763tl1DP3/PsGKWuUw8D6owr9jLft3swwOoTidcw69I3p+jWbj97bfe1hG5JwZuvMY
+         NdEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697756054; x=1698360854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=znKTjYCMK7qVlPe1x85VLsQxhjgS/CN/1N2ibCS0Pek=;
+        b=nypuCifFDmRzA6zPalA3OAYXGHISLv7FBFlWH3rjIQCkm2cUcWnyZ3CpSMPt5Yz2Qz
+         GNrHiHpDpOoJmsstts2lOj9eOw90Q3UN4QWBmuZlK5ykj1USeuQjp2NLLtv7R10fIlZi
+         MkO3+kdpRJiiXDRFwcyeZ1nWV8SuTL0+bx/KGpT1tIg9y9UmS7WsHk/kMUPqmshgUwvo
+         cux3kdEwpoEiQddCpRlHd227VOWKh90GMEiUc50sAvPMMq0KEUHEP35MGw595qaFr+4E
+         hjcuam9yIYIUB57yYdWrgH8WrwY2P/rOZmkQYBQfFjZDx0HTB79B72Stpr8AlBSaHSDG
+         +xjA==
+X-Gm-Message-State: AOJu0YxvBHX5I3Efyunu6QBQvk2g9ATmNtmSAM6tJ7dO68/n71XOEeo2
+	6ecgchJKpXWjTQYJWNHc0Y2dlLtzFVFT3zSpl73I19lp
+X-Google-Smtp-Source: AGHT+IHy65GTNdlUTy4eWmv1QGEZswUfHu0S4xVwjoBxCKL4FFUBpAf6AJ5h6EW3YDS7FnH5QqZ8dN+gP6T4uQF8cf8=
+X-Received: by 2002:ac2:5470:0:b0:500:a6c1:36f7 with SMTP id
+ e16-20020ac25470000000b00500a6c136f7mr73421lfn.3.1697755649162; Thu, 19 Oct
+ 2023 15:47:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <ZTGc8S293uaTqHja@kernel.org>
 In-Reply-To: <ZTGc8S293uaTqHja@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 19 Oct 2023 15:47:17 -0700
+Message-ID: <CAEf4BzYC01Uvj5R+eipu8wmWpNH6K_=_ptj-Wxezdk_O7AFAyA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] tools build: Fix llvm feature detection, still used
+ by bpftool
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Manu Bretelle <chantr4@gmail.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	Carsten Haitzler <carsten.haitzler@arm.com>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Fangrui Song <maskray@google.com>, He Kuang <hekuang@huawei.com>, Ian Rogers <irogers@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, llvm@lists.linux.dev, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Quentin Monnet <quentin@isovalent.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Rob Herring <robh@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, Tom Rix <trix@redhat.com>, 
+	Wang Nan <wangnan0@huawei.com>, Wang ShaoBo <bobo.shaobowang@huawei.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Yonghong Song <yhs@fb.com>, YueHaibing <yuehaibing@huawei.com>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 19, 2023 at 06:17:37PM -0300, Arnaldo Carvalho de Melo wrote:
+On Thu, Oct 19, 2023 at 2:17=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
 > When removing the BPF event for perf a feature test that checks if the
 > llvm devel files are availabe was removed but that is also used by
 > bpftool.
-> 
+>
 > bpftool uses it to decide what kind of disassembly it will use: llvm or
 > binutils based.
-> 
+>
 > Removing the tools/build/feature/test-llvm.cpp file made bpftool to
 > always fallback to binutils disassembly, even with the llvm devel files
 > installed, fix it by restoring just that small test-llvm.cpp test file.
-> 
-> Fixes: 56b11a2126bf2f42 ("perf bpf: Remove support for embedding clang for compiling BPF events (-e foo.c)")
+>
+> Fixes: 56b11a2126bf2f42 ("perf bpf: Remove support for embedding clang fo=
+r compiling BPF events (-e foo.c)")
+
+Should we route this through the bpf-next tree to get the fix for
+bpftool into Github mirror ASAP?
+
 > Reported-by: Manu Bretelle <chantr4@gmail.com>
 > Cc: Adrian Hunter <adrian.hunter@intel.com>
 > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -138,8 +134,9 @@ On Thu, Oct 19, 2023 at 06:17:37PM -0300, Arnaldo Carvalho de Melo wrote:
 >  tools/build/feature/test-llvm.cpp | 14 ++++++++++++++
 >  1 file changed, 14 insertions(+)
 >  create mode 100644 tools/build/feature/test-llvm.cpp
-> 
-> diff --git a/tools/build/feature/test-llvm.cpp b/tools/build/feature/test-llvm.cpp
+>
+> diff --git a/tools/build/feature/test-llvm.cpp b/tools/build/feature/test=
+-llvm.cpp
 > new file mode 100644
 > index 0000000000000000..88a3d1bdd9f6978e
 > --- /dev/null
@@ -148,17 +145,18 @@ On Thu, Oct 19, 2023 at 06:17:37PM -0300, Arnaldo Carvalho de Melo wrote:
 > +// SPDX-License-Identifier: GPL-2.0
 > +#include "llvm/Support/ManagedStatic.h"
 > +#include "llvm/Support/raw_ostream.h"
-> +#define NUM_VERSION (((LLVM_VERSION_MAJOR) << 16) + (LLVM_VERSION_MINOR << 8) + LLVM_VERSION_PATCH)
+> +#define NUM_VERSION (((LLVM_VERSION_MAJOR) << 16) + (LLVM_VERSION_MINOR =
+<< 8) + LLVM_VERSION_PATCH)
 > +
 > +#if NUM_VERSION < 0x030900
 > +# error "LLVM version too low"
 > +#endif
 > +int main()
 > +{
-> +	llvm::errs() << "Hello World!\n";
-> +	llvm::llvm_shutdown();
-> +	return 0;
+> +       llvm::errs() << "Hello World!\n";
+> +       llvm::llvm_shutdown();
+> +       return 0;
 > +}
-
-Thanks for the quick turnaround!
-
+> --
+> 2.41.0
+>
