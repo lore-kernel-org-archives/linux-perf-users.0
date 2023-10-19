@@ -1,245 +1,235 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A5A644
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 00:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0073614AB7
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 08:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U6U/OWno"
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5AA132
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 17:39:35 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-40662119cd0so21625e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 17:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697675974; x=1698280774; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iWzCLiLZGdTDQE6Mm3c5UmIIcTECp3y/VYTIRTvbYV4=;
-        b=U6U/OWnosDk6Gs1AtcU0u9pf31irMk4F8qLim6fgpQmQPsaT5xspNc4OZcQFnd6CNu
-         f3YYjPYCiRudNUwZCCz9sDhqk5NGlCUR/MO00/NZjgcGG0ZSnwOK8Ml3W0+t9JVCtMzQ
-         CWC1Sp2fn4vqOLXJHiuWIEO3BkYK7Fj61DM8mvCOTorb64G0FfKpn4R1SNxZBvAKGOHG
-         PcbyJMimEQoZo5gvmDi3TSnnnTa2Tp/a9JRwVOu5t+4t8iwy09rUgJpDu5f/fVZLkg5P
-         xNMUyEgMYnP9Sjas/KQBky8w4Z+wpsu8Nd6nNUBF6TjOIavFq3Fod3t2e3vOCXFBA1r9
-         JvwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697675974; x=1698280774;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iWzCLiLZGdTDQE6Mm3c5UmIIcTECp3y/VYTIRTvbYV4=;
-        b=JsttA1+rAUgVTMu9EQW5tKcoYPJHJTvszcx5KeKBq5bsI/OrbHST6DS/0VWCHIWHNP
-         GNkFBTTM9uRQwN8LpdySt7O8u5KwL/jGHG8iZ5ZROgFLmyuEhida80efRKBBbetWE4x/
-         BftjbtkpeRBTwixExO2MP8yiC2Z4O6WhPcS2Koeq4RQ8IIySPqitEELK3ru+SSKYt0yl
-         eQG8itsTCE2G1Y2f0ZbxVEefneGppd3yjWeixR7ES1C3nZGpwvbCNcDAjONRQq/Qg8RS
-         ITUU+WJY23DiGjAGQNZdAd8w80+mlN6/3AvIVfDzpdehToK6J15EukvGdfkEqOc8yiEL
-         +XZg==
-X-Gm-Message-State: AOJu0YyoolsAFbeyUablhIXpl4pJF7cac6IMFNqv553BPY7gJq2JQMhe
-	1/B34ySGITZQC5MpUL69M8o3m+6NK0L8tdv3lWTClA==
-X-Google-Smtp-Source: AGHT+IGSSTVjmeIukqthlIjrszaciDHvBd9CrEJpr+LhL33bCUc+CagV3HWVpPBehmpBbckPuve+vWKYaUL9O2mnlM4=
-X-Received: by 2002:a05:600c:1615:b0:3f7:3e85:36a with SMTP id
- m21-20020a05600c161500b003f73e85036amr38163wmn.7.1697675973589; Wed, 18 Oct
- 2023 17:39:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gU/JODCp"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB15113A;
+	Thu, 19 Oct 2023 01:27:26 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39J8KWeb028111;
+	Thu, 19 Oct 2023 08:27:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=ZOmmcefAxJ5+oq4SFK1clWhsG9/Bc4sHzoFO4aplk/8=;
+ b=gU/JODCp+UsT0kwaN3AsqKsdsSVv+gCResD00t48TxrE/fj6Q7U5Mv1H6dJncdtyvMgj
+ ZYNNTmVaCDiGQAQpBbTnodAEZgWZ41nO7PkILvEoS88Il04EAzpBNH8++YAw2E3o5p6D
+ zER641xLlJY4mnI96b7QmOcw2soZ+j2GjRCXiv54nOoXcTiiOEMvWxGZSd4QfsYmP7HM
+ 34kdYp3lEBFXtcPKv/N9UfzWtLaFpB0b/LgnItkERWsK16Y133ukhWHERuMV6ibor5Ef
+ aS2m9LlProSqSBlDH1ITeonZ8yg7moChObLTCpV7x+XKDy1p3ba/1FrACwXwsuhWVUbR CA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tu0uu0bxt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Oct 2023 08:27:22 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39J8KoAn028446;
+	Thu, 19 Oct 2023 08:27:09 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tu0uu0bb9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Oct 2023 08:27:08 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39J7bwjA012850;
+	Thu, 19 Oct 2023 08:26:56 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tr5pyqqv1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Oct 2023 08:26:55 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39J8QqUI16581252
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Oct 2023 08:26:52 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 91E9120043;
+	Thu, 19 Oct 2023 08:26:52 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 68F742005A;
+	Thu, 19 Oct 2023 08:26:52 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 19 Oct 2023 08:26:52 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, iii@linux.ibm.com, irogers@google.com
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH] perf trace: Use the right bpf_probe_read(_str) variant for reading user data
+Date: Thu, 19 Oct 2023 10:26:42 +0200
+Message-Id: <20231019082642.3286650-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-14-irogers@google.com>
- <CAM9d7citTUkj5z4bu0HsF73Msnks=2vOBcZU5skT77zUri_Bag@mail.gmail.com>
-In-Reply-To: <CAM9d7citTUkj5z4bu0HsF73Msnks=2vOBcZU5skT77zUri_Bag@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 18 Oct 2023 17:39:21 -0700
-Message-ID: <CAP-5=fU6ghEpYqy0FhSvxUQ_RSan34Mjp0GDys84FyPcRz_W0w@mail.gmail.com>
-Subject: Re: [PATCH v2 13/13] perf machine thread: Remove exited threads by default
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
-	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
-	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: PU7g41jItrM3CggElCzaGTVuuakomo93
+X-Proofpoint-ORIG-GUID: xMS0ot7ZZ2FptzebZIEnjAih9PlqCOsE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-19_05,2023-10-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 mlxlogscore=999 impostorscore=0 spamscore=0 malwarescore=0
+ bulkscore=0 clxscore=1015 suspectscore=0 phishscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310190069
 
-On Wed, Oct 18, 2023 at 4:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Oct 11, 2023 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > struct thread values hold onto references to mmaps, dsos, etc. When a
-> > thread exits it is necessary to clean all of this memory up by
-> > removing the thread from the machine's threads. Some tools require
-> > this doesn't happen, such as perf report if offcpu events exist or if
-> > a task list is being generated, so add a symbol_conf value to make the
-> > behavior optional. When an exited thread is left in the machine's
-> > threads, mark it as exited.
-> >
-> > This change relates to commit 40826c45eb0b ("perf thread: Remove
-> > notion of dead threads"). Dead threads were removed as they had a
-> > reference count of 0 and were difficult to reason about with the
-> > reference count checker. Here a thread is removed from threads when it
-> > exits, unless via symbol_conf the exited thread isn't remove and is
-> > marked as exited. Reference counting behaves as it normally does.
->
-> Maybe we can do it the other way around.  IOW tools can access
-> dead threads for whatever reason if they are dealing with a data
-> file.  And I guess the main concern is perf top to reduce memory
-> footprint, right?  Then we can declare to remove the dead threads
-> for perf top case only IMHO.
+Perf test case 111 Check open filename arg using perf trace + vfs_getname
+fails on s390. This is caused by a failing function
+bpf_probe_read() in file util/bpf_skel/augmented_raw_syscalls.bpf.c.
 
-Thanks I did consider this but I think this order makes most sense.
-The only tool relying on access to dead threads is perf report, but
-its uses are questionable:
+The root cause is the lookup by address. Function bpf_probe_read()
+is used. This function works only for architectures
+with ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
 
- - task printing - the tools wants to show all threads from a perf run
-and assumes they are in threads. By replacing tool.exit it would be
-easy to record dead threads for this, as the maps aren't required the
-memory overhead could be improved by just recording the necessary
-task's data.
+On s390 is not possible to determine from the address to which
+address space the address belongs to (user or kernel space).
 
- - offcpu - it would be very useful to have offcpu samples be real
-samples, rather than an aggregated sample at the end of the data file
-with a timestamp greater-than when the thread exited. These samples
-would happen before the exit event is processed and so the reason to
-keep dead threads around would be removed. I think we could do some
-kind of sample aggregation using BPF, but I think we need to think it
-through with exit events. Perhaps we can fix things in the short-term
-by generating BPF samples with aggregation when threads exit in the
-offcpu BPF code, but then again, if you have this going it seems as
-easy just to keep to record all offcpu events as distinct.
+Replace bpf_probe_read() by bpf_probe_read_kernel()
+and bpf_probe_read_str() by bpf_probe_read_user_str() to
+explicity specify the address space the address refers to.
 
-Other commands like perf top and perf script don't currently have
-dependencies on dead threads and I'm kind of glad, for
-understandability, memory footprint, etc. Having the default be that
-dead threads linger on will just encourage the kind of issues we see
-currently in perf report and having to have every tool, perf script
-declare it doesn't want dead threads seems burdensome.
+Output before:
+ # ./perf trace -eopen,openat -- touch /tmp/111
+ libbpf: prog 'sys_enter': BPF program load failed: Invalid argument
+ libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+ reg type unsupported for arg#0 function sys_enter#75
+ 0: R1=ctx(off=0,imm=0) R10=fp0
+ ; int sys_enter(struct syscall_enter_args *args)
+ 0: (bf) r6 = r1           ; R1=ctx(off=0,imm=0) R6_w=ctx(off=0,imm=0)
+ ; return bpf_get_current_pid_tgid();
+ 1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=scalar()
+ 2: (63) *(u32 *)(r10 -8) = r0 ; R0_w=scalar() R10=fp0 fp-8=????mmmm
+ 3: (bf) r2 = r10              ; R2_w=fp0 R10=fp0
+ ;
+ .....
+ lines deleted here
+ .....
+ 23: (bf) r3 = r6              ; R3_w=ctx(off=0,imm=0) R6=ctx(off=0,imm=0)
+ 24: (85) call bpf_probe_read#4
+ unknown func bpf_probe_read#4
+ processed 23 insns (limit 1000000) max_states_per_insn 0 \
+	 total_states 2 peak_states 2 mark_read 2
+ -- END PROG LOAD LOG --
+ libbpf: prog 'sys_enter': failed to load: -22
+ libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+ libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -22
+ ....
 
-Thanks,
-Ian
+Output after:
+ # ./perf test -Fv 111
+ 111: Check open filename arg using perf trace + vfs_getname          :
+ --- start ---
+     1.085 ( 0.011 ms): touch/320753 openat(dfd: CWD, filename: \
+	"/tmp/temporary_file.SWH85", \
+	flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+ ---- end ----
+ Check open filename arg using perf trace + vfs_getname: Ok
+ #
 
-> Thanks,
-> Namhyung
->
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-report.c   |  7 +++++++
-> >  tools/perf/util/machine.c     | 10 +++++++---
-> >  tools/perf/util/symbol_conf.h |  3 ++-
-> >  tools/perf/util/thread.h      | 14 ++++++++++++++
-> >  4 files changed, 30 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > index dcedfe00f04d..749246817aed 100644
-> > --- a/tools/perf/builtin-report.c
-> > +++ b/tools/perf/builtin-report.c
-> > @@ -1411,6 +1411,13 @@ int cmd_report(int argc, const char **argv)
-> >         if (ret < 0)
-> >                 goto exit;
-> >
-> > +       /*
-> > +        * tasks_mode require access to exited threads to list those th=
-at are in
-> > +        * the data file. Off-cpu events are synthesized after other ev=
-ents and
-> > +        * reference exited threads.
-> > +        */
-> > +       symbol_conf.keep_exited_threads =3D true;
-> > +
-> >         annotation_options__init(&report.annotation_opts);
-> >
-> >         ret =3D perf_config(report__config, &report);
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 6ca7500e2cf4..5cda47eb337d 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -2157,9 +2157,13 @@ int machine__process_exit_event(struct machine *=
-machine, union perf_event *event
-> >         if (dump_trace)
-> >                 perf_event__fprintf_task(event, stdout);
-> >
-> > -       if (thread !=3D NULL)
-> > -               thread__put(thread);
-> > -
-> > +       if (thread !=3D NULL) {
-> > +               if (symbol_conf.keep_exited_threads)
-> > +                       thread__set_exited(thread, /*exited=3D*/true);
-> > +               else
-> > +                       machine__remove_thread(machine, thread);
-> > +       }
-> > +       thread__put(thread);
-> >         return 0;
-> >  }
-> >
-> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_con=
-f.h
-> > index 2b2fb9e224b0..6040286e07a6 100644
-> > --- a/tools/perf/util/symbol_conf.h
-> > +++ b/tools/perf/util/symbol_conf.h
-> > @@ -43,7 +43,8 @@ struct symbol_conf {
-> >                         disable_add2line_warn,
-> >                         buildid_mmap2,
-> >                         guest_code,
-> > -                       lazy_load_kernel_maps;
-> > +                       lazy_load_kernel_maps,
-> > +                       keep_exited_threads;
-> >         const char      *vmlinux_name,
-> >                         *kallsyms_name,
-> >                         *source_prefix,
-> > diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> > index e79225a0ea46..0df775b5c110 100644
-> > --- a/tools/perf/util/thread.h
-> > +++ b/tools/perf/util/thread.h
-> > @@ -36,13 +36,22 @@ struct thread_rb_node {
-> >  };
-> >
-> >  DECLARE_RC_STRUCT(thread) {
-> > +       /** @maps: mmaps associated with this thread. */
-> >         struct maps             *maps;
-> >         pid_t                   pid_; /* Not all tools update this */
-> > +       /** @tid: thread ID number unique to a machine. */
-> >         pid_t                   tid;
-> > +       /** @ppid: parent process of the process this thread belongs to=
-. */
-> >         pid_t                   ppid;
-> >         int                     cpu;
-> >         int                     guest_cpu; /* For QEMU thread */
-> >         refcount_t              refcnt;
-> > +       /**
-> > +        * @exited: Has the thread had an exit event. Such threads are =
-usually
-> > +        * removed from the machine's threads but some events/tools req=
-uire
-> > +        * access to dead threads.
-> > +        */
-> > +       bool                    exited;
-> >         bool                    comm_set;
-> >         int                     comm_len;
-> >         struct list_head        namespaces_list;
-> > @@ -189,6 +198,11 @@ static inline refcount_t *thread__refcnt(struct th=
-read *thread)
-> >         return &RC_CHK_ACCESS(thread)->refcnt;
-> >  }
-> >
-> > +static inline void thread__set_exited(struct thread *thread, bool exit=
-ed)
-> > +{
-> > +       RC_CHK_ACCESS(thread)->exited =3D exited;
-> > +}
-> > +
-> >  static inline bool thread__comm_set(const struct thread *thread)
-> >  {
-> >         return RC_CHK_ACCESS(thread)->comm_set;
-> > --
-> > 2.42.0.609.gbb76f46606-goog
-> >
+Test with the sleep command shows:
+Output before:
+ # ./perf trace -e *sleep sleep 1.234567890
+     0.000 (1234.681 ms): sleep/63114 clock_nanosleep(rqtp: \
+         { .tv_sec: 0, .tv_nsec: 0 }, rmtp: 0x3ffe0979720) = 0
+ #
+
+Output after:
+ # ./perf trace -e *sleep sleep 1.234567890
+     0.000 (1234.686 ms): sleep/64277 clock_nanosleep(rqtp: \
+         { .tv_sec: 1, .tv_nsec: 234567890 }, rmtp: 0x3fff3df9ea0) = 0
+ #
+
+Fixes: 14e4b9f4289a ("perf trace: Raw augmented syscalls fix libbpf 1.0+ compatibility")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Co-developed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>
+---
+ .../util/bpf_skel/augmented_raw_syscalls.bpf.c   | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index 939ec769bf4a..52c270330ae0 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -153,7 +153,7 @@ static inline
+ unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
+ {
+ 	unsigned int augmented_len = sizeof(*augmented_arg);
+-	int string_len = bpf_probe_read_str(&augmented_arg->value, arg_len, arg);
++	int string_len = bpf_probe_read_user_str(&augmented_arg->value, arg_len, arg);
+ 
+ 	augmented_arg->size = augmented_arg->err = 0;
+ 	/*
+@@ -203,7 +203,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
+ 	_Static_assert(is_power_of_2(sizeof(augmented_args->saddr)), "sizeof(augmented_args->saddr) needs to be a power of two");
+ 	socklen &= sizeof(augmented_args->saddr) - 1;
+ 
+-	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
++	bpf_probe_read_user(&augmented_args->saddr, socklen, sockaddr_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + socklen);
+ }
+@@ -221,7 +221,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
+ 
+ 	socklen &= sizeof(augmented_args->saddr) - 1;
+ 
+-	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
++	bpf_probe_read_user(&augmented_args->saddr, socklen, sockaddr_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + socklen);
+ }
+@@ -311,7 +311,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+         if (augmented_args == NULL)
+ 		goto failure;
+ 
+-	if (bpf_probe_read(&augmented_args->__data, sizeof(*attr), attr) < 0)
++	if (bpf_probe_read_user(&augmented_args->__data, sizeof(*attr), attr) < 0)
+ 		goto failure;
+ 
+ 	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
+@@ -325,7 +325,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+                 goto failure;
+ 
+ 	// Now that we read attr->size and tested it against the size limits, read it completely
+-	if (bpf_probe_read(&augmented_args->__data, size, attr) < 0)
++	if (bpf_probe_read_user(&augmented_args->__data, size, attr) < 0)
+ 		goto failure;
+ 
+ 	return augmented__output(args, augmented_args, len + size);
+@@ -347,7 +347,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+ 	if (size > sizeof(augmented_args->__data))
+                 goto failure;
+ 
+-	bpf_probe_read(&augmented_args->__data, size, rqtp_arg);
++	bpf_probe_read_user(&augmented_args->__data, size, rqtp_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + size);
+ failure:
+@@ -385,7 +385,7 @@ int sys_enter(struct syscall_enter_args *args)
+ 	if (augmented_args == NULL)
+ 		return 1;
+ 
+-	bpf_probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
++	bpf_probe_read_kernel(&augmented_args->args, sizeof(augmented_args->args), args);
+ 
+ 	/*
+ 	 * Jump to syscall specific augmenter, even if the default one,
+@@ -406,7 +406,7 @@ int sys_exit(struct syscall_exit_args *args)
+ 	if (pid_filter__has(&pids_filtered, getpid()))
+ 		return 0;
+ 
+-	bpf_probe_read(&exit_args, sizeof(exit_args), args);
++	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
+ 	/*
+ 	 * Jump to syscall specific return augmenter, even if the default one,
+ 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+-- 
+2.41.0
+
