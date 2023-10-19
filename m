@@ -1,20 +1,20 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE6E1944E
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 10:31:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B96F19457
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 10:39:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2604CFA;
-	Thu, 19 Oct 2023 03:31:24 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F31BFA;
+	Thu, 19 Oct 2023 03:39:04 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 567752F4;
-	Thu, 19 Oct 2023 03:32:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E7802F4;
+	Thu, 19 Oct 2023 03:39:44 -0700 (PDT)
 Received: from [10.57.67.150] (unknown [10.57.67.150])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25EDC3F5A1;
-	Thu, 19 Oct 2023 03:31:18 -0700 (PDT)
-Message-ID: <1bef7744-78ef-f673-a33b-6f8fb00e033b@arm.com>
-Date: Thu, 19 Oct 2023 11:31:16 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE4E63F5A1;
+	Thu, 19 Oct 2023 03:38:59 -0700 (PDT)
+Message-ID: <dd55c313-632e-cf18-161a-50ac6632feb4@arm.com>
+Date: Thu, 19 Oct 2023 11:38:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -23,8 +23,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH v1 1/2] perf auxtrace: Add 'T' itrace option for timestamp
- trace
+Subject: Re: [PATCH v1 2/2] perf cs-etm: Enable itrace option 'T'
 Content-Language: en-US
 To: Leo Yan <leo.yan@linaro.org>
 Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
@@ -38,90 +37,74 @@ Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
  Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>
 References: <20231014074513.1668000-1-leo.yan@linaro.org>
- <20231014074513.1668000-2-leo.yan@linaro.org>
+ <20231014074513.1668000-3-leo.yan@linaro.org>
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231014074513.1668000-2-leo.yan@linaro.org>
+In-Reply-To: <20231014074513.1668000-3-leo.yan@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 14/10/2023 08:45, Leo Yan wrote:
-> An AUX trace can contain timestamp, but in some situations, the hardware
-> trace module (e.g. Arm CoreSight) cannot decide the traced timestamp is
-> the same source with CPU's time, thus the decoder can not use the
-> timestamp trace for samples.
+> Prior to Armv8.4, the feature FEAT_TRF is not supported by Arm CPUs.
+> Consequently, the sysfs node 'ts_source' will not be set as 1 by the
+> CoreSight ETM driver.  On the other hand, the perf tool relies on the
+> 'ts_source' node to determine whether the kernel timestamp is traced.
+> Since the 'ts_source' is not set for Arm CPUs prior to Armv8.4,
+> platforms in this case cannot utilize the traced timestamp as the kernel
+> time.
 > 
-> This patch introduces 'T' itrace option. If users know the platforms
-> they are working on have the same time counter with CPUs, users can
-> use this new option to tell a decoder for using timestamp trace as
+> This patch enables the 'T' itrace option, which forcibly utilizes the
+> traced timestamp as the kernel time.  If users are aware that their
+> working platform's Arm CoreSight shares the same counter with the kernel
+> time, they can specify 'T' option to decode the traced timestamp as the
 > kernel time.
+> 
+> An usage example is:
+> 
+>   # perf record -e cs_etm// -- test_program
+>   # perf script --itrace=i10ibT
+>   # perf report --itrace=i10ibT
 > 
 > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  tools/perf/Documentation/itrace.txt | 1 +
->  tools/perf/util/auxtrace.c          | 3 +++
->  tools/perf/util/auxtrace.h          | 3 +++
->  3 files changed, 7 insertions(+)
+>  tools/perf/util/cs-etm.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-> index a97f95825b14..19cc179be9a7 100644
-> --- a/tools/perf/Documentation/itrace.txt
-> +++ b/tools/perf/Documentation/itrace.txt
-> @@ -25,6 +25,7 @@
->  		q	quicker (less detailed) decoding
->  		A	approximate IPC
->  		Z	prefer to ignore timestamps (so-called "timeless" decoding)
-> +		T	use the timestamp trace as kernel time
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 9729d006550d..4a37fdeb1795 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -3322,12 +3322,27 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>  	etm->metadata = metadata;
+>  	etm->auxtrace_type = auxtrace_info->type;
 >  
+> -	/* Use virtual timestamps if all ETMs report ts_source = 1 */
+> -	etm->has_virtual_ts = cs_etm__has_virtual_ts(metadata, num_cpu);
+> +	if (etm->synth_opts.use_timestamp)
+> +		/*
+> +		 * Prior to Armv8.4, Arm CPUs don't support FEAT_TRF feature,
+> +		 * therefore the decoder cannot know if the timestamp trace is
+> +		 * same with the kernel time.
+> +		 *
+> +		 * If a user has knowledge for the working platform and can
+> +		 * specify itrace option 'T' to tell decoder to forcely use the
+> +		 * traced timestamp as the kernel time.
+> +		 */
+> +		etm->has_virtual_ts = true;
+> +	else
+> +		/* Use virtual timestamps if all ETMs report ts_source = 1 */
+> +		etm->has_virtual_ts = cs_etm__has_virtual_ts(metadata, num_cpu);
+>  
+>  	if (!etm->has_virtual_ts)
+>  		ui__warning("Virtual timestamps are not enabled, or not supported by the traced system.\n"
+> -			    "The time field of the samples will not be set accurately.\n\n");
+> +			    "The time field of the samples will not be set accurately.\n"
+> +			    "For Arm CPUs prior to Armv8.4 or without support FEAT_TRF,\n"
+> +			    "you can specify the itrace option 'T' for timestamp decoding\n"
+> +			    "if the Coresight timestamp on the platform is same with the kernel time.\n\n");
+>  
+>  	etm->auxtrace.process_event = cs_etm__process_event;
+>  	etm->auxtrace.process_auxtrace_event = cs_etm__process_auxtrace_event;
 
-Maybe "Treat hardware timestamps as kernel time (trace and CPU time use
-same clock source)" would be clearer.
-
-And another point, although this isn't really related to this patch, but
-why do we have the single letter arguments for itrace? It seems like it
-massively restricts the available options and makes the command lines
-hard to read because they don't have long forms. Why not just have them
-as normal arguments?
-
-If it's a backwards compatibility thing, would there be any objection to
-adding this new option as a normal one rather than an itrace one?
-
->  	The default is all events i.e. the same as --itrace=iybxwpe,
->  	except for perf script where it is --itrace=ce
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index a0368202a746..f528c4364d23 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -1638,6 +1638,9 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
->  		case 'Z':
->  			synth_opts->timeless_decoding = true;
->  			break;
-> +		case 'T':
-> +			synth_opts->use_timestamp = true;
-> +			break;
->  		case ' ':
->  		case ',':
->  			break;
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index 29eb82dff574..55702215a82d 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -99,6 +99,7 @@ enum itrace_period_type {
->   * @remote_access: whether to synthesize remote access events
->   * @mem: whether to synthesize memory events
->   * @timeless_decoding: prefer "timeless" decoding i.e. ignore timestamps
-> + * @use_timestamp: use the timestamp trace as kernel time
->   * @vm_time_correlation: perform VM Time Correlation
->   * @vm_tm_corr_dry_run: VM Time Correlation dry-run
->   * @vm_tm_corr_args:  VM Time Correlation implementation-specific arguments
-> @@ -146,6 +147,7 @@ struct itrace_synth_opts {
->  	bool			remote_access;
->  	bool			mem;
->  	bool			timeless_decoding;
-> +	bool			use_timestamp;
-
-And then this one could be like "hw_time_is_kernel_time", but I'm
-stuggling to think of something shorter. Maybe your one is fine along
-with the comment.
-
+Reviewed-by: James Clark <james.clark@arm.com>
