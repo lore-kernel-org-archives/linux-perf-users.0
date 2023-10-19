@@ -1,114 +1,245 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F86377
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 00:06:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A5A644
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 00:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mu1Ho+y3"
-Received: from out-192.mta1.migadu.com (out-192.mta1.migadu.com [95.215.58.192])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44DDEFA
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 17:06:34 -0700 (PDT)
-Date: Thu, 19 Oct 2023 00:06:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1697673992;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hzjaIWah6RYMVBvI14tFSfFydhLBL9+gD67Q8Qa+q8o=;
-	b=Mu1Ho+y3nPc2gCgNmE0x7g0+OC562KEeI3AkiOGEZgX2KWfHvGXyjVxRRNFtLT8RQB587x
-	4Z0HeLG3XVWB+f7VAvsy6IORv+ddsOuWlZoCfM4CQc7kVcQ1ytzyuqnVS21I/H/wBru5oY
-	LAAnco/ohZrd5G4pFILAwv7pMXd83bQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Eric Auger <eauger@redhat.com>
-Cc: Mark Brown <broonie@kernel.org>, kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	Jing Zhang <jingzhangos@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 4/5] tools headers arm64: Update sysreg.h with kernel
- sources
-Message-ID: <ZTBzAR1KsWuurob7@linux.dev>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-5-oliver.upton@linux.dev>
- <73b94274-4561-1edd-6b1e-8c6245133af2@redhat.com>
- <3c5332b0-9035-4cb8-96ce-7a9b8d513c3a@sirena.org.uk>
- <8baca35a-9154-97e6-d682-032fc69d2da6@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U6U/OWno"
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5AA132
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 17:39:35 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-40662119cd0so21625e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Oct 2023 17:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697675974; x=1698280774; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iWzCLiLZGdTDQE6Mm3c5UmIIcTECp3y/VYTIRTvbYV4=;
+        b=U6U/OWnosDk6Gs1AtcU0u9pf31irMk4F8qLim6fgpQmQPsaT5xspNc4OZcQFnd6CNu
+         f3YYjPYCiRudNUwZCCz9sDhqk5NGlCUR/MO00/NZjgcGG0ZSnwOK8Ml3W0+t9JVCtMzQ
+         CWC1Sp2fn4vqOLXJHiuWIEO3BkYK7Fj61DM8mvCOTorb64G0FfKpn4R1SNxZBvAKGOHG
+         PcbyJMimEQoZo5gvmDi3TSnnnTa2Tp/a9JRwVOu5t+4t8iwy09rUgJpDu5f/fVZLkg5P
+         xNMUyEgMYnP9Sjas/KQBky8w4Z+wpsu8Nd6nNUBF6TjOIavFq3Fod3t2e3vOCXFBA1r9
+         JvwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697675974; x=1698280774;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iWzCLiLZGdTDQE6Mm3c5UmIIcTECp3y/VYTIRTvbYV4=;
+        b=JsttA1+rAUgVTMu9EQW5tKcoYPJHJTvszcx5KeKBq5bsI/OrbHST6DS/0VWCHIWHNP
+         GNkFBTTM9uRQwN8LpdySt7O8u5KwL/jGHG8iZ5ZROgFLmyuEhida80efRKBBbetWE4x/
+         BftjbtkpeRBTwixExO2MP8yiC2Z4O6WhPcS2Koeq4RQ8IIySPqitEELK3ru+SSKYt0yl
+         eQG8itsTCE2G1Y2f0ZbxVEefneGppd3yjWeixR7ES1C3nZGpwvbCNcDAjONRQq/Qg8RS
+         ITUU+WJY23DiGjAGQNZdAd8w80+mlN6/3AvIVfDzpdehToK6J15EukvGdfkEqOc8yiEL
+         +XZg==
+X-Gm-Message-State: AOJu0YyoolsAFbeyUablhIXpl4pJF7cac6IMFNqv553BPY7gJq2JQMhe
+	1/B34ySGITZQC5MpUL69M8o3m+6NK0L8tdv3lWTClA==
+X-Google-Smtp-Source: AGHT+IGSSTVjmeIukqthlIjrszaciDHvBd9CrEJpr+LhL33bCUc+CagV3HWVpPBehmpBbckPuve+vWKYaUL9O2mnlM4=
+X-Received: by 2002:a05:600c:1615:b0:3f7:3e85:36a with SMTP id
+ m21-20020a05600c161500b003f73e85036amr38163wmn.7.1697675973589; Wed, 18 Oct
+ 2023 17:39:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8baca35a-9154-97e6-d682-032fc69d2da6@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-14-irogers@google.com>
+ <CAM9d7citTUkj5z4bu0HsF73Msnks=2vOBcZU5skT77zUri_Bag@mail.gmail.com>
+In-Reply-To: <CAM9d7citTUkj5z4bu0HsF73Msnks=2vOBcZU5skT77zUri_Bag@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 18 Oct 2023 17:39:21 -0700
+Message-ID: <CAP-5=fU6ghEpYqy0FhSvxUQ_RSan34Mjp0GDys84FyPcRz_W0w@mail.gmail.com>
+Subject: Re: [PATCH v2 13/13] perf machine thread: Remove exited threads by default
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
+	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
+	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Eric,
+On Wed, Oct 18, 2023 at 4:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Oct 11, 2023 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > struct thread values hold onto references to mmaps, dsos, etc. When a
+> > thread exits it is necessary to clean all of this memory up by
+> > removing the thread from the machine's threads. Some tools require
+> > this doesn't happen, such as perf report if offcpu events exist or if
+> > a task list is being generated, so add a symbol_conf value to make the
+> > behavior optional. When an exited thread is left in the machine's
+> > threads, mark it as exited.
+> >
+> > This change relates to commit 40826c45eb0b ("perf thread: Remove
+> > notion of dead threads"). Dead threads were removed as they had a
+> > reference count of 0 and were difficult to reason about with the
+> > reference count checker. Here a thread is removed from threads when it
+> > exits, unless via symbol_conf the exited thread isn't remove and is
+> > marked as exited. Reference counting behaves as it normally does.
+>
+> Maybe we can do it the other way around.  IOW tools can access
+> dead threads for whatever reason if they are dealing with a data
+> file.  And I guess the main concern is perf top to reduce memory
+> footprint, right?  Then we can declare to remove the dead threads
+> for perf top case only IMHO.
 
-Thanks for reviewing the series.
+Thanks I did consider this but I think this order makes most sense.
+The only tool relying on access to dead threads is perf report, but
+its uses are questionable:
 
-On Wed, Oct 18, 2023 at 03:06:12PM +0200, Eric Auger wrote:
-> Hi Mark, Oliver,
-> 
-> On 10/18/23 14:16, Mark Brown wrote:
-> > On Wed, Oct 18, 2023 at 01:57:31PM +0200, Eric Auger wrote:
-> >> On 10/11/23 21:57, Oliver Upton wrote:
-> > 
-> >>>  #define set_pstate_pan(x)		asm volatile(SET_PSTATE_PAN(x))
-> >>>  #define set_pstate_uao(x)		asm volatile(SET_PSTATE_UAO(x))
-> >>>  #define set_pstate_ssbs(x)		asm volatile(SET_PSTATE_SSBS(x))
-> >>> +#define set_pstate_dit(x)		asm volatile(SET_PSTATE_DIT(x))
-> > 
-> >> could you comment on the *DIT* addictions, what is it for?
-> > 
-> > DIT is data independent timing, this tells the processor to ensure that
-> > instructions take a constant time regardless of the data they are
-> > handling.
-> 
-> > 
-> > Note that this file is just a copy of arch/arm64/include/asm/gpr-num.h,
-> > the main purpose here is to sync with the original.
-> 
-> Ah thanks. that's helpful for me to understand where this gpr-num.h
-> comes from. This could be documented in the commit msg though.
-> 
-> Something like:
-> 
-> adding tools/arch/arm64/include/asm/gpr-num.h matching linux
-> arch/arm64/include/asm/gpr-num.h
-> 
-> and syncing tools/arch/arm64/include/asm/sysreg.h with the fellow header
-> in the linux tree.
+ - task printing - the tools wants to show all threads from a perf run
+and assumes they are in threads. By replacing tool.exit it would be
+easy to record dead threads for this, as the maps aren't required the
+memory overhead could be improved by just recording the necessary
+task's data.
 
-Yeah, I could've spelled it out a bit more. I already cracked this off
-of an even larger patch from before I picked up the series because the
-diff was massive.
+ - offcpu - it would be very useful to have offcpu samples be real
+samples, rather than an aggregated sample at the end of the data file
+with a timestamp greater-than when the thread exited. These samples
+would happen before the exit event is processed and so the reason to
+keep dead threads around would be removed. I think we could do some
+kind of sample aggregation using BPF, but I think we need to think it
+through with exit events. Perhaps we can fix things in the short-term
+by generating BPF samples with aggregation when threads exit in the
+offcpu BPF code, but then again, if you have this going it seems as
+easy just to keep to record all offcpu events as distinct.
 
-> tbh I did not initially understand that all this diffstat was aimed to
-> match the linux arch/arm64/include/asm/sysreg.h. Now diffing both I have
-> some diffs. Doesn't it need a refresh?
+Other commands like perf top and perf script don't currently have
+dependencies on dead threads and I'm kind of glad, for
+understandability, memory footprint, etc. Having the default be that
+dead threads linger on will just encourage the kind of issues we see
+currently in perf report and having to have every tool, perf script
+declare it doesn't want dead threads seems burdensome.
 
-I'm worried it is a fool's errand at this point to keep the two in sync,
-as I'm sure there will be more in -rc1. The tools copy of sysreg.h isn't
-a verbatim copy either, there are some deliberate deletions in there as
-well.
-
-I've taken this as is, we can always come back and update the headers
-afterwards if we find a need for it
-
--- 
 Thanks,
-Oliver
+Ian
+
+> Thanks,
+> Namhyung
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-report.c   |  7 +++++++
+> >  tools/perf/util/machine.c     | 10 +++++++---
+> >  tools/perf/util/symbol_conf.h |  3 ++-
+> >  tools/perf/util/thread.h      | 14 ++++++++++++++
+> >  4 files changed, 30 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > index dcedfe00f04d..749246817aed 100644
+> > --- a/tools/perf/builtin-report.c
+> > +++ b/tools/perf/builtin-report.c
+> > @@ -1411,6 +1411,13 @@ int cmd_report(int argc, const char **argv)
+> >         if (ret < 0)
+> >                 goto exit;
+> >
+> > +       /*
+> > +        * tasks_mode require access to exited threads to list those th=
+at are in
+> > +        * the data file. Off-cpu events are synthesized after other ev=
+ents and
+> > +        * reference exited threads.
+> > +        */
+> > +       symbol_conf.keep_exited_threads =3D true;
+> > +
+> >         annotation_options__init(&report.annotation_opts);
+> >
+> >         ret =3D perf_config(report__config, &report);
+> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > index 6ca7500e2cf4..5cda47eb337d 100644
+> > --- a/tools/perf/util/machine.c
+> > +++ b/tools/perf/util/machine.c
+> > @@ -2157,9 +2157,13 @@ int machine__process_exit_event(struct machine *=
+machine, union perf_event *event
+> >         if (dump_trace)
+> >                 perf_event__fprintf_task(event, stdout);
+> >
+> > -       if (thread !=3D NULL)
+> > -               thread__put(thread);
+> > -
+> > +       if (thread !=3D NULL) {
+> > +               if (symbol_conf.keep_exited_threads)
+> > +                       thread__set_exited(thread, /*exited=3D*/true);
+> > +               else
+> > +                       machine__remove_thread(machine, thread);
+> > +       }
+> > +       thread__put(thread);
+> >         return 0;
+> >  }
+> >
+> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_con=
+f.h
+> > index 2b2fb9e224b0..6040286e07a6 100644
+> > --- a/tools/perf/util/symbol_conf.h
+> > +++ b/tools/perf/util/symbol_conf.h
+> > @@ -43,7 +43,8 @@ struct symbol_conf {
+> >                         disable_add2line_warn,
+> >                         buildid_mmap2,
+> >                         guest_code,
+> > -                       lazy_load_kernel_maps;
+> > +                       lazy_load_kernel_maps,
+> > +                       keep_exited_threads;
+> >         const char      *vmlinux_name,
+> >                         *kallsyms_name,
+> >                         *source_prefix,
+> > diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> > index e79225a0ea46..0df775b5c110 100644
+> > --- a/tools/perf/util/thread.h
+> > +++ b/tools/perf/util/thread.h
+> > @@ -36,13 +36,22 @@ struct thread_rb_node {
+> >  };
+> >
+> >  DECLARE_RC_STRUCT(thread) {
+> > +       /** @maps: mmaps associated with this thread. */
+> >         struct maps             *maps;
+> >         pid_t                   pid_; /* Not all tools update this */
+> > +       /** @tid: thread ID number unique to a machine. */
+> >         pid_t                   tid;
+> > +       /** @ppid: parent process of the process this thread belongs to=
+. */
+> >         pid_t                   ppid;
+> >         int                     cpu;
+> >         int                     guest_cpu; /* For QEMU thread */
+> >         refcount_t              refcnt;
+> > +       /**
+> > +        * @exited: Has the thread had an exit event. Such threads are =
+usually
+> > +        * removed from the machine's threads but some events/tools req=
+uire
+> > +        * access to dead threads.
+> > +        */
+> > +       bool                    exited;
+> >         bool                    comm_set;
+> >         int                     comm_len;
+> >         struct list_head        namespaces_list;
+> > @@ -189,6 +198,11 @@ static inline refcount_t *thread__refcnt(struct th=
+read *thread)
+> >         return &RC_CHK_ACCESS(thread)->refcnt;
+> >  }
+> >
+> > +static inline void thread__set_exited(struct thread *thread, bool exit=
+ed)
+> > +{
+> > +       RC_CHK_ACCESS(thread)->exited =3D exited;
+> > +}
+> > +
+> >  static inline bool thread__comm_set(const struct thread *thread)
+> >  {
+> >         return RC_CHK_ACCESS(thread)->comm_set;
+> > --
+> > 2.42.0.609.gbb76f46606-goog
+> >
