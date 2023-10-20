@@ -1,69 +1,71 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B4D612B;
-	Fri, 20 Oct 2023 05:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7308B67E
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 05:40:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F11381A4;
-	Thu, 19 Oct 2023 22:38:58 -0700 (PDT)
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-577fff1cae6so333444a12.1;
-        Thu, 19 Oct 2023 22:38:58 -0700 (PDT)
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02D71A4;
+	Thu, 19 Oct 2023 22:40:42 -0700 (PDT)
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-27d11401516so379485a91.2;
+        Thu, 19 Oct 2023 22:40:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697780338; x=1698385138;
+        d=1e100.net; s=20230601; t=1697780442; x=1698385242;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=phGwGA8YItZvt4Th8CLkdVIJnpS0jaTYB4A+4FYmn78=;
-        b=BbQwS/HzPLEU4rsb0XwXKJqg0beOABNQTbC/mbGr/dPmjsvRxz148Rt9OdTHPfWOMI
-         90B/ZH4HTMjNfQiS7z2DqrT8Eyl5MTxDkVy9Uvjn9bedKXEVDsa1eTD76KnK1zb8FeB6
-         2Nh46vGY6sLcVCa6jqYs8yykwJezfiXrU5aMUGRA1Z38EZtBbWcsDbm45GndoEuzqccQ
-         l6iRVeqmMDAVRSRqM0ETIGyZ/UR2XVQ+Y5fQlB7kIrQ+ntixiKXQ+puZs2lO8NAAIrjY
-         ukzMxSk+RTvLC16Eu1cMb69ukH8fBQVN7vhrw9tIDfBxGJ6b63mBh3cLmsXHaiST+jaG
-         3C7A==
-X-Gm-Message-State: AOJu0YzVVIerwBgYxfAMOSzbANQU0QyzvHAhjS8jmN3KJs20g9+J74fi
-	96sS4TQwBZ8djqmiViD+yT2zw5Y1B9UDAHD06Aw=
-X-Google-Smtp-Source: AGHT+IErBkBy/5ZMJ07P28ZG3olnME3S+coyI4bEZzJOk0Op0i6ln5Bq1mBsvH8/IxI4ziGMlORl9vQn0EbZ1Rr5xEY=
-X-Received: by 2002:a17:90a:e409:b0:27d:1126:1ff6 with SMTP id
- hv9-20020a17090ae40900b0027d11261ff6mr6054838pjb.8.1697780338260; Thu, 19 Oct
- 2023 22:38:58 -0700 (PDT)
+        bh=qjfQX/pwpr+oppLKOPOhk/9biL82OZa0ePqZEoQXKSc=;
+        b=JLpjpLJLKbqv+S78f4qfxkljWAwfjHvKxz00f/rg1yKHXBMyvG/chYPu5gZKSXxQ8e
+         KWtqiuADzVYLhH0g0TeyCpY7t6n9Xd/iy0z49k26OnT03LcYiWjWsAHMAhRhrh+zQZNp
+         kftMfhjnKlnNUhcnmKvL3EsEw+4Ap14bnp9APCMZkYVM/lyHuZD6XFAd8qrzWOmQGTX2
+         ppJbOYTcgVUnxa4/oUKyljKYK29lnadjc6SuX3qRG8Bj7WHxSKp4Fbtee8O7bIUAHDDH
+         lLdo8g5b6OKk10JPhO2Ce5SmYUln/TZVwVlNtEYXUTM0AeonOichXCbpXE3rT6sCsDnj
+         CpTw==
+X-Gm-Message-State: AOJu0YwnPRxCYqXJvn/N3klghEhdbCzihzWI2kyLgIZXHvtU50pQ4Mta
+	mnnZo81rzhm7nZKho3p4wqrk1JHh8GLJVxvrzC8=
+X-Google-Smtp-Source: AGHT+IHE0A9qTEGPi+9UD7nWvOGVy1HeYSmEiDejI/VMRIG458U0FW71nwPO1YaJMg7AuMzAwkqRVxSf2qsG45zjKY0=
+X-Received: by 2002:a17:90a:1c3:b0:27d:546d:f4a5 with SMTP id
+ 3-20020a17090a01c300b0027d546df4a5mr822414pjd.43.1697780442052; Thu, 19 Oct
+ 2023 22:40:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231008212251.236023-1-jolsa@kernel.org> <ZSVLI7yXFHCXqVJp@kernel.org>
-In-Reply-To: <ZSVLI7yXFHCXqVJp@kernel.org>
+References: <202310110451.rvdUZJEY-lkp@intel.com> <20231010234247.71604-1-namhyung@kernel.org>
+ <CAP-5=fVpgYJMTgRjQc6zoMYjNkm7T0TSBPXLgz_VWuzwRo_ktg@mail.gmail.com>
+In-Reply-To: <CAP-5=fVpgYJMTgRjQc6zoMYjNkm7T0TSBPXLgz_VWuzwRo_ktg@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 19 Oct 2023 22:38:46 -0700
-Message-ID: <CAM9d7ci0XOGMC38+X9eUc2p8jigvGwSGPhafA-yxbuaWJsv8qw@mail.gmail.com>
-Subject: Re: [PATCHv2 0/2] tools/build: Fix -s detection code for new make
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Quentin Monnet <quentin@isovalent.com>, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Ian Rogers <irogers@google.com>, 
-	KP Singh <kpsingh@chromium.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>
+Date: Thu, 19 Oct 2023 22:40:30 -0700
+Message-ID: <CAM9d7ci1NMVsF7T5RsveJ3wXAimMWW4dfkf3hM6tvVc1e1AxAA@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Do not ignore the default vmlinux.h
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+	oe-kbuild-all@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 10, 2023 at 6:01=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Tue, Oct 10, 2023 at 6:36=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Em Sun, Oct 08, 2023 at 11:22:49PM +0200, Jiri Olsa escreveu:
-> > hi,
-> > this fixes the detection of silent flag for newer make.
+> On Tue, Oct 10, 2023 at 4:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
 > >
-> > It'd be better to re-use the code, but I don't see simple
-> > way without more refactoring. I put that on my todo list.
+> > The recent change made it possible to generate vmlinux.h from BTF and
+> > to ignore the file.  But we also have a minimal vmlinux.h that will be
+> > used by default.  It should not be ignored by GIT.
 > >
-> > v2 changes:
-> >   - adding the change for tools/scripts/Makefile.include as well
+> > Fixes: b7a2d774c9c5 ("perf build: Add ability to build with a generated=
+ vmlinux.h")
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202310110451.rvdUZJEY-lkp=
+@intel.com/
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 >
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
 Applied to perf-tools-next, thanks!
