@@ -1,84 +1,55 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66D124A19
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 21:21:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E17E2FE09
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 21:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtAiWMPb"
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92EB2D67;
-	Fri, 20 Oct 2023 14:21:31 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-68fb85afef4so1270927b3a.1;
-        Fri, 20 Oct 2023 14:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697836891; x=1698441691; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QuP8YmqjvAlLIcNW4aU20JarMo0gwdZcRbyTjH6FcUY=;
-        b=VtAiWMPblTy3nSPxhb89xwOZKW97ZTsawo9dDPhFle9uW3SXnVsrNEpP6YleKKXsfs
-         6OtaSFqO0wxb5OSJrHecwyhSROA1ql0IvvAW5tCw52WEL9gSwevduQLeGBrp/J3dFdjS
-         +0M72CuV3aRYK32OWPJTanIJViBy7KOtXu3HzFItzHnlFCqoqvKbF7D/yjfruhkx9fIG
-         B1YPaK3+qXJOvCiSHGKEQcjtmjQoXpEXy96gpXZE0ssOJRJz73yFw3PoT3x6zzRQdfPG
-         2dWPBz+A0N8B0GDgsSFjn1bRk/T4Drk8/BYme8ViqBFBYUWqxVPxwcMuK2cHQZ7MiYRk
-         6FpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697836891; x=1698441691;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:sender:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QuP8YmqjvAlLIcNW4aU20JarMo0gwdZcRbyTjH6FcUY=;
-        b=Pk1jiyGMBK7FRPYLvV4T+zBMxw+cviVs5kHQtxeM/VOw6PNyh/hRTxfENj47fxvm+p
-         vJ1o3q1ThjEvISkAxO4xom9m/03ian4hEYPsd+1ai4TTzl0HZCvvBDgTeIblE53pidnF
-         cAsg5AcLq9+JjtE46RfEehXztQidtnNr9gSCJq7rM5xyu7VUlnhghAV+Gf8MXL5mUrow
-         4e84/RkXAmKRr1hVPTD3mikqz/fMmm932LJ4KNE7/Gbn1el0m+1g6LTURkA1kqEZDTg0
-         tkQzjiqJ3QNKSoc/I2ggOspqEROlyixZ9eG0ePJiKZXgPWo4M63Sj2ZvV0F1D5n2giri
-         LiIg==
-X-Gm-Message-State: AOJu0YytlWSEJ1VjsexpP+VrWCp7lzWpq0BQsPeJk6IBniE/yuQiVDL6
-	AEhMKw38GDrWVhY66deQxBs=
-X-Google-Smtp-Source: AGHT+IEfVi+7TdZGvtAx553ZwnhE1hTapL459+g+lFPn8/nql2it7L/WU+SuNSkyjwLfvoslBBF0HQ==
-X-Received: by 2002:a05:6a20:2615:b0:151:7d4c:899c with SMTP id i21-20020a056a20261500b001517d4c899cmr2338039pze.25.1697836891024;
-        Fri, 20 Oct 2023 14:21:31 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:5cd3:25e1:1589:ad95])
-        by smtp.gmail.com with ESMTPSA id p9-20020a63e649000000b0057412d84d25sm1919583pgj.4.2023.10.20.14.21.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Oct 2023 14:21:30 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	irogers@google.com,
-	peterz@infradead.org,
-	linux-kernel@vger.kernel.org,
-	mark.rutland@arm.com,
-	Yang Jihong <yangjihong1@huawei.com>,
-	mingo@redhat.com,
-	jolsa@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	acme@kernel.org
-Subject: Re: [PATCH] perf data: Increase RLIMIT_NOFILE limit when open too many files in perf_data__create_dir()
-Date: Fri, 20 Oct 2023 14:21:16 -0700
-Message-ID: <169783679858.2217970.17247677172655395443.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
-In-Reply-To: <20231013075945.698874-1-yangjihong1@huawei.com>
-References: <20231013075945.698874-1-yangjihong1@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOslLnLi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E571BC433C7;
+	Fri, 20 Oct 2023 21:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697838844;
+	bh=H7eTnQBsNSkxsVEZFpxF7ZW3ihkhDqciD68W6jKMEzk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=eOslLnLiBStvpOffGOJxWr5szJVcnuFEnW3DSS11/37f7aWU0vT8n5FLIsa+kjAiB
+	 5y4FTsUOldGmjOkQKgFt0Shx1wEtmpa7ALy8eaGyCXAJfj7ajgmpXNQ4gsdK38Lw6p
+	 YvLaZAKCVrkiBNAZE6VS83H/Z5rZ6yy9tkNP63Hk1uLRXmke03pZS4M9OopEZHUne8
+	 24gBTVhErL0sHtA9phrj/BWkBZIlrrbVcYJ+76+3e4n9Yo2DbQu6eFGSPkpDZaHLZK
+	 ED8jJPsQXPRYX/ssKG+lwmKbSJhk6V6njcZo93CXShyoa5JJtCPYFLgmqanmVvLpCQ
+	 eKpt9VDw8rDyw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CFEDEC595CE;
+	Fri, 20 Oct 2023 21:54:04 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.6: 2nd batch
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20231020200846.99350-1-acme@kernel.org>
+References: <20231020200846.99350-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20231020200846.99350-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.6-2-2023-10-20
+X-PR-Tracked-Commit-Id: 4fa008a2db484024a5cb52676a1b1534dc82330c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
+Message-Id: <169783884484.25290.8242745922703774031.pr-tracker-bot@kernel.org>
+Date: Fri, 20 Oct 2023 21:54:04 +0000
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Manu Bretelle <chantr4@gmail.com>, Wyes Karny <wyes.karny@amd.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-On Fri, 13 Oct 2023 07:59:45 +0000, Yang Jihong wrote:
-> If using parallel threads to collect data, perf record needs at least 6 fds
-> per CPU. (one for sys_perf_event_open, four for pipe msg and ack of the
-> pipe, see record__thread_data_open_pipes(), and one for open perf.data.XXX)
-> For an environment with more than 100 cores, if perf record uses both
-> `-a` and `--threads` options, it is easy to exceed the upper limit of the
-> file descriptor number, when we run out of them try to increase the limits.
-> 
-> [...]
+The pull request you sent on Fri, 20 Oct 2023 17:08:46 -0300:
 
-Applied to perf-tools-next, thanks!
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.6-2-2023-10-20
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
