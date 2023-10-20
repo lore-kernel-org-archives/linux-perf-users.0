@@ -1,151 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005C21DA50;
-	Fri, 20 Oct 2023 20:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378EF1802E;
+	Fri, 20 Oct 2023 20:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQAL7fTF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43957C433C8;
-	Fri, 20 Oct 2023 20:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697834367;
-	bh=ZKOUkKpmzLJ4Oe8gj86+MBT/cFfPWTMJrQMWrCMlLRA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GQAL7fTFj73N9mM17vO7a1XNixX0srzkwvr30qZUA8sPcIXo6f6GD3XCMHBwpvnii
-	 +sCJehoG1dQw/quOQxyee96FL6M2Sfzu2A2SNIE5YBMtxC8cVUXjKdMUp2BfLsKycz
-	 NPbSxvES6U+nuY//yvUzhucrHcqX0tWP+czV7T39Ra6JuvC2UH9tnGOpPAWOH777JA
-	 EoDEsYhfcoq/tdDTk3y8swxIe9nVX7YbJUoS+UpyMVfMsFIdpT4cbjYPks+ZHU/eDv
-	 Wwui7oB22qAf88qYV9N6z62ZcvQBdtaV9SfSYGfbDArlDgd5QsOxzbV/wdV8i6sYMw
-	 vn6PxhkmQj5jg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 24B354035D; Fri, 20 Oct 2023 17:39:25 -0300 (-03)
-Date: Fri, 20 Oct 2023 17:39:25 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Manu Bretelle <chantr4@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gk2nIdCc"
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC491D51;
+	Fri, 20 Oct 2023 13:47:43 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6b5cac99cfdso1157386b3a.2;
+        Fri, 20 Oct 2023 13:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697834863; x=1698439663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mm7dtlx0Z3ORS3BpllS20dd9G/AciSYgKTckitgJskM=;
+        b=gk2nIdCc3be2ppxntJ0kb3coXmOqwnvKChPTqLAXDndxiomFoOV0T04nefrUJygfg4
+         W7tBAnLSlK66I1MCmXI+rxjqK0zxJ5EujjHeYWOlT1ZmNJNkeo994P63GxoP0mq1eg/Q
+         2oaGXuJbSGH2Q1g0kfP1vFsm75LFl+QoO3cu9/qgNy3NKsuEVuYt8S6tPMrrvz59zfp6
+         2mYqs0U/QUscZW5XM8GDJkYtkHiUhe7bZoR8MsLTXZVjem7BWK1n0d49vOPR3zDMq5Zu
+         WLn5uhLUeRQqXfuxj8oY3TIDsJPg86xmh7pNZ29JPApr+B+VE5olcdrLP6dkYtTuFr7F
+         bm8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697834863; x=1698439663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mm7dtlx0Z3ORS3BpllS20dd9G/AciSYgKTckitgJskM=;
+        b=CpZkfAl61CEyQKgSwE2+mJyUUjM60uqrcdVjf/xPLk0vCNRO8hZEdTmPwf01csBRcK
+         ohHydfs3F7ycxU7iK0Osf3abzVI+kmOO+uNvjlw8EWpT6XS7U8h3CnyWA7/5YrtBZmSI
+         8O9vI7AKsyhBkFvVKi2f2Ga0PRqR4kJ9xXmempiLEJJx3U5qNHVesdk69ExPvNFfuzsZ
+         ShB2AslFM+wLj6ajy5ZTVZT1mr7VfEeWd6LLojCyuq0F9pgWc76XPiT8T30RJ+VYB4F+
+         0h7H4ucW9acTrEylo/NEzlg/86mY4BSWoemhkJ5WpkaPTw9e9/zzQ76kZTVyAczE73mJ
+         DUuQ==
+X-Gm-Message-State: AOJu0YxrS/xNkTKTyOT4FfMZwKThGxoR1p28iAsoi7yE7KOuKPKKCTgK
+	NnhTndWjjxvOFYVvpVZg0YM=
+X-Google-Smtp-Source: AGHT+IGNAW08UrC9GMhPGqpScR5qg4UfBmZqwC6ITV1HsWdo7h5JeeE5B0GTahaJ7KzNxv3P6sKk8A==
+X-Received: by 2002:aa7:88d0:0:b0:68e:41e9:10be with SMTP id k16-20020aa788d0000000b0068e41e910bemr2696426pff.20.1697834863278;
+        Fri, 20 Oct 2023 13:47:43 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:17e0:7ea9:fbc6:4c7d])
+        by smtp.gmail.com with ESMTPSA id r25-20020aa79639000000b00694f14a784bsm1971183pfg.52.2023.10.20.13.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Oct 2023 13:47:42 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, Fangrui Song <maskray@google.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Carsten Haitzler <carsten.haitzler@arm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	James Clark <james.clark@arm.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>, Yonghong Song <yhs@fb.com>,
-	Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	llvm@lists.linux.dev, Wang Nan <wangnan0@huawei.com>,
-	Wang ShaoBo <bobo.shaobowang@huawei.com>,
-	YueHaibing <yuehaibing@huawei.com>, He Kuang <hekuang@huawei.com>,
-	Brendan Gregg <brendan.d.gregg@gmail.com>,
-	Quentin Monnet <quentin@isovalent.com>
-Subject: Re: [PATCH v1 1/4] perf parse-events: Remove BPF event support
-Message-ID: <ZTLlfXM4MhW1GEIJ@kernel.org>
-References: <20230810184853.2860737-1-irogers@google.com>
- <20230810184853.2860737-2-irogers@google.com>
- <ZNZJCWi9MT/HZdQ/@kernel.org>
- <ZNZWsAXg2px1sm2h@kernel.org>
- <ZTGHRAlQtF7Fq8vn@surya>
- <ZTGa0Ukt7QyxWcVy@kernel.org>
- <ZTGyWHTOE8OEhQWq@surya>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	bpf@vger.kernel.org
+Subject: [PATCH v3 1/3] perf lock contention: Clear lock addr after use
+Date: Fri, 20 Oct 2023 13:47:39 -0700
+Message-ID: <20231020204741.1869520-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZTGyWHTOE8OEhQWq@surya>
-X-Url: http://acmel.wordpress.com
 
-Em Thu, Oct 19, 2023 at 03:48:56PM -0700, Manu Bretelle escreveu:
-> On Thu, Oct 19, 2023 at 06:08:33PM -0300, Arnaldo Carvalho de Melo wrote:
-> > I wonder how to improve the current situation to detect these kinds of
-> > problems in the future, i.e. how to notice that some file needed by some
-> > Makefile, etc got removed or that some feature test fails because some
-> > change in the test .c files makes them fail and thus activates fallbacks
-> > like the one above :-\
+It checks the current lock to calculated the delta of contention time.
+The address is saved in the tstamp map which is allocated at begining of
+contention and released at end of contention.
+
+But it's possible for bpf_map_delete_elem() to fail.  In that case, the
+element in the tstamp map kept for the current lock and it makes the
+next contention for the same lock tracked incorrectly.  Specificially
+the next contention begin will see the existing element for the task and
+it'd just return.  Then the next contention end will see the element and
+calculate the time using the timestamp for the previous begin.
+
+This can result in a large value for two small contentions happened from
+time to time.  Let's clear the lock address so that it can be updated
+next time even if the bpf_map_delete_elem() failed.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index 4900a5dfb4a4..b11179452e19 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -389,6 +389,7 @@ int contention_end(u64 *ctx)
  
-> I think it is tricky. Specifically to this situation, some CI could try to build
-> the different combinaison of bpftool and check the features through the build
-> `bpftool --version`.
-
-Right, if the right packages are installed, we expect to get some
-bpftool build output, if that changes after some patch, flag it.
-
-Does bpftool have something like:
-
-⬢[acme@toolbox perf-tools-next]$ perf version --build-options
-perf version 6.6.rc1.ga8dd62d05e56
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-               libpfm4: [ on  ]  # HAVE_LIBPFM
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-⬢[acme@toolbox perf-tools-next]$
-
-?
-
-> This is actually a test that I run internally to make sure our build has some
-> feature enabled.
-> This is actually tested by bpftool in the GH CI:
-> https://github.com/libbpf/bpftool/blob/main/.github/workflows/build.yaml#L62
+ 	duration = bpf_ktime_get_ns() - pelem->timestamp;
+ 	if ((__s64)duration < 0) {
++		pelem->lock = 0;
+ 		bpf_map_delete_elem(&tstamp, &pid);
+ 		__sync_fetch_and_add(&time_fail, 1);
+ 		return 0;
+@@ -422,6 +423,7 @@ int contention_end(u64 *ctx)
+ 	data = bpf_map_lookup_elem(&lock_stat, &key);
+ 	if (!data) {
+ 		if (data_map_full) {
++			pelem->lock = 0;
+ 			bpf_map_delete_elem(&tstamp, &pid);
+ 			__sync_fetch_and_add(&data_fail, 1);
+ 			return 0;
+@@ -445,6 +447,7 @@ int contention_end(u64 *ctx)
+ 				data_map_full = 1;
+ 			__sync_fetch_and_add(&data_fail, 1);
+ 		}
++		pelem->lock = 0;
+ 		bpf_map_delete_elem(&tstamp, &pid);
+ 		return 0;
+ 	}
+@@ -458,6 +461,7 @@ int contention_end(u64 *ctx)
+ 	if (data->min_time > duration)
+ 		data->min_time = duration;
  
-> As a matter of fact, it would not have been detected because that CI uses a
-> different Makefile.feature.
- 
-> Quentin and I were talking offline how we could improve bpftool CI at diff time.
-> This is an example where it would have helped :)
-> 
-> > I'll get this merged in my perf-tools-fixes-for-v6.6 that I'll submit
-> > tomorrow to Linus, thanks for reporting!
-> > 
-> > I'll add your:
-> > 
-> > Reported-by: Manu Bretelle <chantr4@gmail.com>
-> > 
-> > And:
-> > 
-> > Fixes: 56b11a2126bf2f42 ("perf bpf: Remove support for embedding clang for compiling BPF events (-e foo.c)")
-> > 
-> > Ok?
- 
-> SGTM. Thanks for the quick turnaround.
- 
-> Reviewed-by: Manu Bretelle <chantr4@gmail.com>
++	pelem->lock = 0;
+ 	bpf_map_delete_elem(&tstamp, &pid);
+ 	return 0;
+ }
+-- 
+2.42.0.655.g421f12c284-goog
 
-You're welcome, thanks for the detailed report, the patch was just sent
-to Linus.
-
-- Arnaldo
