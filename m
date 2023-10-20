@@ -1,175 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E4C1EA90
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 20:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzvtr4Xj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C6CEC433C8;
-	Fri, 20 Oct 2023 20:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697835049;
-	bh=vcCmM+YIN7c3zbhDbrlN4oi4Ii7L05ap0rwyCwo2eA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dzvtr4Xj9ypoLS+Q12yZ5osJJw5wQhZ3fAvNKABzZI+BcIn58Kn3WoEKf3tQt82gy
-	 RjLPPab1839fBz5qQoYT8u1URaTMSQlT2WAyU7bgJIFl08cZGEjoQoDNnybx7wFRGv
-	 9jDnYy9B/i9UykDg3+8wgt4T+wIODKQrQMJbXep/QhE+SXB83gv87xOV5qEg8jtsbl
-	 1Q7XFdI9yhoRMLFBIma2EQystqW7Gr1FSXsjth5HPTzJtlhJcMF+Y5qIM1L4fGUa/3
-	 s+N+/TJcfk40rBouMTV1ue2ROGjbHG8si/vf2TJZaqYDsdMGleSn+RAKAfQ8MPy9n6
-	 eWe+8cTMte7XQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id A96D24035D; Fri, 20 Oct 2023 17:50:46 -0300 (-03)
-Date: Fri, 20 Oct 2023 17:50:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org,
-	vmolnaro@redhat.com
-Subject: Re: perf sampling count/freq/period strange bahavior
-Message-ID: <ZTLoJtlIJi1F2R4F@kernel.org>
-References: <alpine.LRH.2.20.2310191027320.11297@Diego>
- <CAM9d7cgxWY3ymyz93h+stWXW7UTdKN6V+T7ZyWZ2wn0j1oi1vw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E422B769;
+	Fri, 20 Oct 2023 21:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D77A10C7;
+	Fri, 20 Oct 2023 14:08:18 -0700 (PDT)
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-27d1373f631so994718a91.1;
+        Fri, 20 Oct 2023 14:08:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697836097; x=1698440897;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rMQasgZjpOl1DCFinwfvRlcT3Yj5p5ETw7uv0PZtWMM=;
+        b=FxsxZbfXueFAkIRz4x5l2J659W28JpAOQdLzmmRrhjjQQ78D51E1mxqZ6jZBCjabDR
+         gKdk5CJ0f5ZL/N2re/M3bGGmooGtwllezIj8hLMo9KBMmcQ13skVersp+8HoXyNTANbJ
+         /sboovUtkx3upt2w+9DDgp8WfJvTUmaBVf/mh8g1lom2hbmnNeJ3oNF80gOkCqswRDog
+         MhSEOAfjo9XpaJpB4MmBe7AE61glo8/Csuh0WwIZQERZuYcMGGovRqeuhDxN0SCCa1ns
+         ze//orVKvvEbjhibTkFu2sqzrFAXPZXshjClgMB0a5euZaGEALh+StSqeNMC2BQ+nYO7
+         cuqw==
+X-Gm-Message-State: AOJu0Yxz+BoQvMooM7BPfqjR/OVvtEgCm8YqBShIn8tR2pKTQ/Sm3O15
+	TPmDuWemNWYoHR5ZoT7hIbiN06qS57UzXA0Mz7M=
+X-Google-Smtp-Source: AGHT+IFWTqdHIsafpewxkk4ZrVoJcJsJ7XuBH0C0xeOS65OF9x/7j8Ee1yiZIKAaGC5lEaqhmBJHvmLMF9Lz1G5yLOM=
+X-Received: by 2002:a17:90b:a16:b0:27d:9bef:1454 with SMTP id
+ gg22-20020a17090b0a1600b0027d9bef1454mr2849617pjb.22.1697836097337; Fri, 20
+ Oct 2023 14:08:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cgxWY3ymyz93h+stWXW7UTdKN6V+T7ZyWZ2wn0j1oi1vw@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-14-irogers@google.com>
+ <CAM9d7citTUkj5z4bu0HsF73Msnks=2vOBcZU5skT77zUri_Bag@mail.gmail.com> <CAP-5=fU6ghEpYqy0FhSvxUQ_RSan34Mjp0GDys84FyPcRz_W0w@mail.gmail.com>
+In-Reply-To: <CAP-5=fU6ghEpYqy0FhSvxUQ_RSan34Mjp0GDys84FyPcRz_W0w@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 20 Oct 2023 14:08:06 -0700
+Message-ID: <CAM9d7ciwWYeam0RfvKm+ck2op4q6x2rnp8rrP=zuzQzo1dMnPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 13/13] perf machine thread: Remove exited threads by default
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
+	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
+	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Thu, Oct 19, 2023 at 11:33:19PM -0700, Namhyung Kim escreveu:
-> Hello,
-> 
-> On Thu, Oct 19, 2023 at 1:28 AM Michael Petlan <mpetlan@redhat.com> wrote:
+On Wed, Oct 18, 2023 at 5:39=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Wed, Oct 18, 2023 at 4:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
 > >
-> > Hello all...
+> > On Wed, Oct 11, 2023 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com=
+> wrote:
+> > >
+> > > struct thread values hold onto references to mmaps, dsos, etc. When a
+> > > thread exits it is necessary to clean all of this memory up by
+> > > removing the thread from the machine's threads. Some tools require
+> > > this doesn't happen, such as perf report if offcpu events exist or if
+> > > a task list is being generated, so add a symbol_conf value to make th=
+e
+> > > behavior optional. When an exited thread is left in the machine's
+> > > threads, mark it as exited.
+> > >
+> > > This change relates to commit 40826c45eb0b ("perf thread: Remove
+> > > notion of dead threads"). Dead threads were removed as they had a
+> > > reference count of 0 and were difficult to reason about with the
+> > > reference count checker. Here a thread is removed from threads when i=
+t
+> > > exits, unless via symbol_conf the exited thread isn't remove and is
+> > > marked as exited. Reference counting behaves as it normally does.
 > >
-> > We have encountered a strange behavior related to sampling. Generally
-> > said, the number of samples is usually much lower than it should be.
-> >
-> > Let's say, for load L, `perf stat -e instructions -- L` shows around
-> > 250,000 event hits. If I understand the concept of `-c` option for
-> > `perf record`, with `-c 250` it should make the counter overflow and
-> > generate a sample for every 250th event hit, so, it should result into
-> > ~1000 samples.
-> >
-> > Instead I am getting something like ~62-150 samples, for example 124.
-> > I have checked in dmesg that kernel has not throttled anything. When
-> > running `perf report --stdio`, I see in the header that there were 0
-> > samples lost (so the buffer was consumed fast enough). Additionally,
-> > `perf report --stdio` tries to estimate the actual event count:
-> >
-> >   Event count (approx.): 31000
-> >
-> > (Which is because 250 * 124 = 31000, so perf itself considers this
-> > formula (n_of_samples * sampling_rate = n_of_events) valid.)
-> >
-> > But in reality, this is not the case, `perf stat`, as said, never
-> > shows that low number of events for the same load.
-> >
-> > What else is involved in the sampling rates and why the number of
-> > samples is so much lower than it should be?
-> >
-> > Thank you for ideas!
-> 
-> I don't know but it seems PMU has some internal limit
-> on the period and ignores lower values.
-> 
-> On my Intel machine,
-> 
-> $ perf stat -e instructions:u true
-> 
->  Performance counter stats for 'true':
-> 
->            120,024      instructions:u
-> 
->        0.002002822 seconds time elapsed
-> 
->        0.002040000 seconds user
->        0.000000000 seconds sys
-> 
-> 
-> $ perf record -e instructions:u -c 10000 true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.002 MB perf.data (12 samples) ]
-> 
-> $ perf record -e instructions:u -c 5000 true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.002 MB perf.data (24 samples) ]
-> 
-> $ perf record -e instructions:u -c 4000 true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.002 MB perf.data (30 samples) ]
-> 
-> $ perf record -e instructions:u -c 3000 true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.002 MB perf.data (40 samples) ]
-> 
-> $ perf record -e instructions:u -c 2000 true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
-> 
-> $ perf record -e instructions:u -c 1000 true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
-> 
-> $ perf record -e instructions:u -c 500 true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
+> > Maybe we can do it the other way around.  IOW tools can access
+> > dead threads for whatever reason if they are dealing with a data
+> > file.  And I guess the main concern is perf top to reduce memory
+> > footprint, right?  Then we can declare to remove the dead threads
+> > for perf top case only IMHO.
+>
+> Thanks I did consider this but I think this order makes most sense.
+> The only tool relying on access to dead threads is perf report, but
+> its uses are questionable:
+>
+>  - task printing - the tools wants to show all threads from a perf run
+> and assumes they are in threads. By replacing tool.exit it would be
+> easy to record dead threads for this, as the maps aren't required the
+> memory overhead could be improved by just recording the necessary
+> task's data.
+>
+>  - offcpu - it would be very useful to have offcpu samples be real
+> samples, rather than an aggregated sample at the end of the data file
+> with a timestamp greater-than when the thread exited. These samples
+> would happen before the exit event is processed and so the reason to
+> keep dead threads around would be removed. I think we could do some
+> kind of sample aggregation using BPF, but I think we need to think it
+> through with exit events. Perhaps we can fix things in the short-term
+> by generating BPF samples with aggregation when threads exit in the
+> offcpu BPF code, but then again, if you have this going it seems as
+> easy just to keep to record all offcpu events as distinct.
 
-Same thing here, see below.
+Saving off-cpu event on every context switch might cause event loss
+due to its frequency.  Generating aggregated samples on EXIT sounds
+interesting, but then it'd iterated all possible keys for that thread
+including stack trace ID and few more.  So I'm not 100% sure if it's ok
+doing it on a task exit path.
 
-But if you ask for a small period you'll miss lots of events, right? The
-events that take place while you're processing the bigger number of perf
-interrupts.
+>
+> Other commands like perf top and perf script don't currently have
+> dependencies on dead threads and I'm kind of glad, for
+> understandability, memory footprint, etc. Having the default be that
+> dead threads linger on will just encourage the kind of issues we see
+> currently in perf report and having to have every tool, perf script
+> declare it doesn't want dead threads seems burdensome.
 
-Like lets get an interrupt per instruction: :-)
+Fair enough.
 
-[root@five ~]# perf record -c 1 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.075 MB perf.data (1687 samples) ]
-[root@five ~]#
-
-[root@five ~]# perf stat -r5 -e instructions stress-ng --quiet --cpu 1 -t 2
-
- Performance counter stats for 'stress-ng --quiet --cpu 1 -t 2' (5 runs):
-
-    17,313,307,689      instructions             ( +-  0.17% )
-
-          2.023840 +- 0.000939 seconds time elapsed  ( +-  0.05% )
-
-[root@five ~]# perf record -c 1000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 3 times to write data ]
-[ perf record: Captured and wrote 0.548 MB perf.data (17228 samples) ]
-[root@five ~]# perf record -c 1000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 2 times to write data ]
-[ perf record: Captured and wrote 0.530 MB perf.data (16627 samples) ]
-[root@five ~]# perf record -c 1000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 3 times to write data ]
-[ perf record: Captured and wrote 0.549 MB perf.data (17264 samples) ]
-[root@five ~]# perf record -c 2000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 2 times to write data ]
-[ perf record: Captured and wrote 0.292 MB perf.data (8839 samples) ]
-[root@five ~]# perf record -c 2000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 2 times to write data ]
-[ perf record: Captured and wrote 0.284 MB perf.data (8590 samples) ]
-[root@five ~]# perf record -c 2000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.288 MB perf.data (8694 samples) ]
-[root@five ~]# perf record -c 4000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.154 MB perf.data (4313 samples) ]
-[root@five ~]# perf record -c 4000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.154 MB perf.data (4319 samples) ]
-[root@five ~]# perf record -c 4000000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.154 MB perf.data (4312 samples) ]
-[root@five ~]# perf record -c 1000 -e instructions stress-ng --quiet --cpu 1 -t 2
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.090 MB perf.data (2156 samples) ]
-[root@five ~]#
-
+Thanks,
+Namhyung
