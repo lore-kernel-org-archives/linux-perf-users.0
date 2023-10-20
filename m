@@ -1,278 +1,175 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0060249F6;
-	Fri, 20 Oct 2023 20:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E4C1EA90
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 20:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkrMbFRA"
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70229D65;
-	Fri, 20 Oct 2023 13:47:46 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6be840283ceso1163189b3a.3;
-        Fri, 20 Oct 2023 13:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697834866; x=1698439666; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JOImYZdSx2m0PGY/kvmONhOIa9TTLkTXQlBLoR0LTq8=;
-        b=fkrMbFRAqI1vUZkgOdAfiRdTiQsPUmyzXLXgcCkkysEYDVYfxsQiuUKYLRxgFP1vbe
-         q6+swc7mnpxFDxy07AzB8DNQa38AHMj1rbW8BndpdRWnyQ1r52OQJ1/0huFeae1+riq7
-         eqQesvQvSe0+X65qgaUTpQCUkkPmiN46/Grsy7rj/umcjGQAOV/8OicMXwO2L6fEROcv
-         R7evtYgSeoNgVJvaBBfCcQSZBC7dwVoaNnRNVNupAUB2APAch6mGjYxU98FCZhArLUhX
-         tdRrLQ1pnClr7j0w0fDyOtO5cHnFItv9Na4366M4cugbGgNqXIhwMv9H8fFJwdXRHa5m
-         Enqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697834866; x=1698439666;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JOImYZdSx2m0PGY/kvmONhOIa9TTLkTXQlBLoR0LTq8=;
-        b=N1gCvrqjVfR4Q+g/QIr8XcXhqdVjJZtPqTWCMqdKhlXr+kI7YgHTUgHvt+tnhhLRMA
-         1sXKpN+mXVgxLubwC9PQ0e7r0b6BNxYQHHmzu7YvLEvxWqHhtketc1NTuFQYWJMc0Bgn
-         xYQuiaEp2yd6BvaYn/WTHbkVfzJtEnsAlzwv2SypqIYG+jVR3AajNe47PXMzUQ+PJDW3
-         Ut21pPNTGjm+JfTXpBLCXGwFIKBROlY+qTRiMG2ZDqbVOS8BINrGeTgpcGTycokJd34s
-         OENRhAWu9uR58DpAe/Kj9onSrILmbics07ddf32+WOeOZTD+8JjraeHHZMBKztObaxVb
-         ABmw==
-X-Gm-Message-State: AOJu0YzJIPF3ZLRBAul+jgyC4v2hkU13Ftcp0Z7QeNe/RWE7jxfBDhwP
-	P7m0GC4Fk0myCyh5zlm0H47hYHMdxrU=
-X-Google-Smtp-Source: AGHT+IE6l3rYdCDPQTlPePjtB6GIowh3BYRmShPbEGbnsFP08KqWR8o5JZih7EBMhmrqdM2tdB4dcA==
-X-Received: by 2002:a05:6a21:7989:b0:17b:8404:96d8 with SMTP id bh9-20020a056a21798900b0017b840496d8mr3002343pzc.41.1697834865589;
-        Fri, 20 Oct 2023 13:47:45 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:17e0:7ea9:fbc6:4c7d])
-        by smtp.gmail.com with ESMTPSA id r25-20020aa79639000000b00694f14a784bsm1971183pfg.52.2023.10.20.13.47.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Oct 2023 13:47:45 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	bpf@vger.kernel.org
-Subject: [PATCH v3 3/3] perf lock contention: Use per-cpu array map for spinlocks
-Date: Fri, 20 Oct 2023 13:47:41 -0700
-Message-ID: <20231020204741.1869520-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
-In-Reply-To: <20231020204741.1869520-1-namhyung@kernel.org>
-References: <20231020204741.1869520-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzvtr4Xj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C6CEC433C8;
+	Fri, 20 Oct 2023 20:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697835049;
+	bh=vcCmM+YIN7c3zbhDbrlN4oi4Ii7L05ap0rwyCwo2eA4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dzvtr4Xj9ypoLS+Q12yZ5osJJw5wQhZ3fAvNKABzZI+BcIn58Kn3WoEKf3tQt82gy
+	 RjLPPab1839fBz5qQoYT8u1URaTMSQlT2WAyU7bgJIFl08cZGEjoQoDNnybx7wFRGv
+	 9jDnYy9B/i9UykDg3+8wgt4T+wIODKQrQMJbXep/QhE+SXB83gv87xOV5qEg8jtsbl
+	 1Q7XFdI9yhoRMLFBIma2EQystqW7Gr1FSXsjth5HPTzJtlhJcMF+Y5qIM1L4fGUa/3
+	 s+N+/TJcfk40rBouMTV1ue2ROGjbHG8si/vf2TJZaqYDsdMGleSn+RAKAfQ8MPy9n6
+	 eWe+8cTMte7XQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id A96D24035D; Fri, 20 Oct 2023 17:50:46 -0300 (-03)
+Date: Fri, 20 Oct 2023 17:50:46 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org,
+	vmolnaro@redhat.com
+Subject: Re: perf sampling count/freq/period strange bahavior
+Message-ID: <ZTLoJtlIJi1F2R4F@kernel.org>
+References: <alpine.LRH.2.20.2310191027320.11297@Diego>
+ <CAM9d7cgxWY3ymyz93h+stWXW7UTdKN6V+T7ZyWZ2wn0j1oi1vw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cgxWY3ymyz93h+stWXW7UTdKN6V+T7ZyWZ2wn0j1oi1vw@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-Currently lock contention timestamp is maintained in a hash map keyed by
-pid.  That means it needs to get and release a map element (which is
-proctected by spinlock!) on each contention begin and end pair.  This
-can impact on performance if there are a lot of contention (usually from
-spinlocks).
+Em Thu, Oct 19, 2023 at 11:33:19PM -0700, Namhyung Kim escreveu:
+> Hello,
+> 
+> On Thu, Oct 19, 2023 at 1:28 AM Michael Petlan <mpetlan@redhat.com> wrote:
+> >
+> > Hello all...
+> >
+> > We have encountered a strange behavior related to sampling. Generally
+> > said, the number of samples is usually much lower than it should be.
+> >
+> > Let's say, for load L, `perf stat -e instructions -- L` shows around
+> > 250,000 event hits. If I understand the concept of `-c` option for
+> > `perf record`, with `-c 250` it should make the counter overflow and
+> > generate a sample for every 250th event hit, so, it should result into
+> > ~1000 samples.
+> >
+> > Instead I am getting something like ~62-150 samples, for example 124.
+> > I have checked in dmesg that kernel has not throttled anything. When
+> > running `perf report --stdio`, I see in the header that there were 0
+> > samples lost (so the buffer was consumed fast enough). Additionally,
+> > `perf report --stdio` tries to estimate the actual event count:
+> >
+> >   Event count (approx.): 31000
+> >
+> > (Which is because 250 * 124 = 31000, so perf itself considers this
+> > formula (n_of_samples * sampling_rate = n_of_events) valid.)
+> >
+> > But in reality, this is not the case, `perf stat`, as said, never
+> > shows that low number of events for the same load.
+> >
+> > What else is involved in the sampling rates and why the number of
+> > samples is so much lower than it should be?
+> >
+> > Thank you for ideas!
+> 
+> I don't know but it seems PMU has some internal limit
+> on the period and ignores lower values.
+> 
+> On my Intel machine,
+> 
+> $ perf stat -e instructions:u true
+> 
+>  Performance counter stats for 'true':
+> 
+>            120,024      instructions:u
+> 
+>        0.002002822 seconds time elapsed
+> 
+>        0.002040000 seconds user
+>        0.000000000 seconds sys
+> 
+> 
+> $ perf record -e instructions:u -c 10000 true
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.002 MB perf.data (12 samples) ]
+> 
+> $ perf record -e instructions:u -c 5000 true
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.002 MB perf.data (24 samples) ]
+> 
+> $ perf record -e instructions:u -c 4000 true
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.002 MB perf.data (30 samples) ]
+> 
+> $ perf record -e instructions:u -c 3000 true
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.002 MB perf.data (40 samples) ]
+> 
+> $ perf record -e instructions:u -c 2000 true
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
+> 
+> $ perf record -e instructions:u -c 1000 true
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
+> 
+> $ perf record -e instructions:u -c 500 true
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
 
-It used to go with task local storage but it had an issue on memory
-allocation in some critical paths.  Although it's addressed in recent
-kernels IIUC, the tool should support old kernels too.  So it cannot
-simply switch to the task local storage at least for now.
+Same thing here, see below.
 
-As spinlocks create lots of contention and they disabled preemption
-during the spinning, it can use per-cpu array to keep the timestamp to
-avoid overhead in hashmap update and delete.
+But if you ask for a small period you'll miss lots of events, right? The
+events that take place while you're processing the bigger number of perf
+interrupts.
 
-In contention_begin, it's easy to check the lock types since it can see
-the flags.  But contention_end cannot see it.  So let's try to per-cpu
-array first (unconditionally) if it has an active element (lock != 0).
-Then it should be used and per-task tstamp map should not be used until
-the per-cpu array element is cleared which means nested spinlock
-contention (if any) was finished and it nows see (the outer) lock.
+Like lets get an interrupt per instruction: :-)
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 89 +++++++++++++++----
- 1 file changed, 72 insertions(+), 17 deletions(-)
+[root@five ~]# perf record -c 1 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.075 MB perf.data (1687 samples) ]
+[root@five ~]#
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 69d31fd77cd0..95cd8414f6ef 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -42,6 +42,14 @@ struct {
- 	__uint(max_entries, MAX_ENTRIES);
- } tstamp SEC(".maps");
- 
-+/* maintain per-CPU timestamp at the beginning of contention */
-+struct {
-+	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-+	__uint(key_size, sizeof(__u32));
-+	__uint(value_size, sizeof(struct tstamp_data));
-+	__uint(max_entries, 1);
-+} tstamp_cpu SEC(".maps");
-+
- /* actual lock contention statistics */
- struct {
- 	__uint(type, BPF_MAP_TYPE_HASH);
-@@ -311,34 +319,57 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
- 	return 0;
- }
- 
--SEC("tp_btf/contention_begin")
--int contention_begin(u64 *ctx)
-+static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
- {
- 	__u32 pid;
- 	struct tstamp_data *pelem;
- 
--	if (!enabled || !can_record(ctx))
--		return 0;
-+	/* Use per-cpu array map for spinlock and rwlock */
-+	if (flags == (LCB_F_SPIN | LCB_F_READ) || flags == LCB_F_SPIN ||
-+	    flags == (LCB_F_SPIN | LCB_F_WRITE)) {
-+		__u32 idx = 0;
-+
-+		pelem = bpf_map_lookup_elem(&tstamp_cpu, &idx);
-+		/* Do not update the element for nested locks */
-+		if (pelem && pelem->lock)
-+			pelem = NULL;
-+		return pelem;
-+	}
- 
- 	pid = bpf_get_current_pid_tgid();
- 	pelem = bpf_map_lookup_elem(&tstamp, &pid);
-+	/* Do not update the element for nested locks */
- 	if (pelem && pelem->lock)
--		return 0;
-+		return NULL;
- 
- 	if (pelem == NULL) {
- 		struct tstamp_data zero = {};
- 
- 		if (bpf_map_update_elem(&tstamp, &pid, &zero, BPF_NOEXIST) < 0) {
- 			__sync_fetch_and_add(&task_fail, 1);
--			return 0;
-+			return NULL;
- 		}
- 
- 		pelem = bpf_map_lookup_elem(&tstamp, &pid);
- 		if (pelem == NULL) {
- 			__sync_fetch_and_add(&task_fail, 1);
--			return 0;
-+			return NULL;
- 		}
- 	}
-+	return pelem;
-+}
-+
-+SEC("tp_btf/contention_begin")
-+int contention_begin(u64 *ctx)
-+{
-+	struct tstamp_data *pelem;
-+
-+	if (!enabled || !can_record(ctx))
-+		return 0;
-+
-+	pelem = get_tstamp_elem(ctx[1]);
-+	if (pelem == NULL)
-+		return 0;
- 
- 	pelem->timestamp = bpf_ktime_get_ns();
- 	pelem->lock = (__u64)ctx[0];
-@@ -377,24 +408,42 @@ int contention_begin(u64 *ctx)
- SEC("tp_btf/contention_end")
- int contention_end(u64 *ctx)
- {
--	__u32 pid;
-+	__u32 pid = 0, idx = 0;
- 	struct tstamp_data *pelem;
- 	struct contention_key key = {};
- 	struct contention_data *data;
- 	__u64 duration;
-+	bool need_delete = false;
- 
- 	if (!enabled)
- 		return 0;
- 
--	pid = bpf_get_current_pid_tgid();
--	pelem = bpf_map_lookup_elem(&tstamp, &pid);
--	if (!pelem || pelem->lock != ctx[0])
--		return 0;
-+	/*
-+	 * For spinlock and rwlock, it needs to get the timestamp for the
-+	 * per-cpu map.  However, contention_end does not have the flags
-+	 * so it cannot know whether it reads percpu or hash map.
-+	 *
-+	 * Try per-cpu map first and check if there's active contention.
-+	 * If it is, do not read hash map because it cannot go to sleeping
-+	 * locks before releasing the spinning locks.
-+	 */
-+	pelem = bpf_map_lookup_elem(&tstamp_cpu, &idx);
-+	if (pelem && pelem->lock) {
-+		if (pelem->lock != ctx[0])
-+			return 0;
-+	} else {
-+		pid = bpf_get_current_pid_tgid();
-+		pelem = bpf_map_lookup_elem(&tstamp, &pid);
-+		if (!pelem || pelem->lock != ctx[0])
-+			return 0;
-+		need_delete = true;
-+	}
- 
- 	duration = bpf_ktime_get_ns() - pelem->timestamp;
- 	if ((__s64)duration < 0) {
- 		pelem->lock = 0;
--		bpf_map_delete_elem(&tstamp, &pid);
-+		if (need_delete)
-+			bpf_map_delete_elem(&tstamp, &pid);
- 		__sync_fetch_and_add(&time_fail, 1);
- 		return 0;
- 	}
-@@ -406,8 +455,11 @@ int contention_end(u64 *ctx)
- 	case LOCK_AGGR_TASK:
- 		if (lock_owner)
- 			key.pid = pelem->flags;
--		else
-+		else {
-+			if (!need_delete)
-+				pid = bpf_get_current_pid_tgid();
- 			key.pid = pid;
-+		}
- 		if (needs_callstack)
- 			key.stack_id = pelem->stack_id;
- 		break;
-@@ -428,7 +480,8 @@ int contention_end(u64 *ctx)
- 	if (!data) {
- 		if (data_map_full) {
- 			pelem->lock = 0;
--			bpf_map_delete_elem(&tstamp, &pid);
-+			if (need_delete)
-+				bpf_map_delete_elem(&tstamp, &pid);
- 			__sync_fetch_and_add(&data_fail, 1);
- 			return 0;
- 		}
-@@ -452,7 +505,8 @@ int contention_end(u64 *ctx)
- 			__sync_fetch_and_add(&data_fail, 1);
- 		}
- 		pelem->lock = 0;
--		bpf_map_delete_elem(&tstamp, &pid);
-+		if (need_delete)
-+			bpf_map_delete_elem(&tstamp, &pid);
- 		return 0;
- 	}
- 
-@@ -466,7 +520,8 @@ int contention_end(u64 *ctx)
- 		data->min_time = duration;
- 
- 	pelem->lock = 0;
--	bpf_map_delete_elem(&tstamp, &pid);
-+	if (need_delete)
-+		bpf_map_delete_elem(&tstamp, &pid);
- 	return 0;
- }
- 
--- 
-2.42.0.655.g421f12c284-goog
+[root@five ~]# perf stat -r5 -e instructions stress-ng --quiet --cpu 1 -t 2
+
+ Performance counter stats for 'stress-ng --quiet --cpu 1 -t 2' (5 runs):
+
+    17,313,307,689      instructions             ( +-  0.17% )
+
+          2.023840 +- 0.000939 seconds time elapsed  ( +-  0.05% )
+
+[root@five ~]# perf record -c 1000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 0.548 MB perf.data (17228 samples) ]
+[root@five ~]# perf record -c 1000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.530 MB perf.data (16627 samples) ]
+[root@five ~]# perf record -c 1000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 0.549 MB perf.data (17264 samples) ]
+[root@five ~]# perf record -c 2000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.292 MB perf.data (8839 samples) ]
+[root@five ~]# perf record -c 2000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.284 MB perf.data (8590 samples) ]
+[root@five ~]# perf record -c 2000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.288 MB perf.data (8694 samples) ]
+[root@five ~]# perf record -c 4000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.154 MB perf.data (4313 samples) ]
+[root@five ~]# perf record -c 4000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.154 MB perf.data (4319 samples) ]
+[root@five ~]# perf record -c 4000000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.154 MB perf.data (4312 samples) ]
+[root@five ~]# perf record -c 1000 -e instructions stress-ng --quiet --cpu 1 -t 2
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.090 MB perf.data (2156 samples) ]
+[root@five ~]#
 
