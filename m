@@ -1,148 +1,125 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC52EC146
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 05:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B3FC8FD
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 06:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B399AD41;
-	Thu, 19 Oct 2023 22:59:37 -0700 (PDT)
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-27db9fdec16so415131a91.2;
-        Thu, 19 Oct 2023 22:59:37 -0700 (PDT)
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C19EA3
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 23:33:31 -0700 (PDT)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-27d4372322aso400730a91.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Oct 2023 23:33:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697781577; x=1698386377;
+        d=1e100.net; s=20230601; t=1697783611; x=1698388411;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8QW6mQLWJHq+LWYoj7TKuXQ4crGYlNNS1CC7z5LwBXk=;
-        b=MXU2UDaUYQBFyDXhnZddGiK6P/oYzprSYY0cu2RuYNUx2OTDSgjTFvLVWY59SZmIqn
-         VzqEdJToMaHKUWjAapPd8uzPHHFSPYBFgsziWtHecf7YBGI90UuqOM86HHxHSk2T0PVK
-         YpOqwjvcAv1ok/T4xSPi1QGhIFIFEgb4UF2KKP1sidSIGty491+hg7Gh+8+l2zNSWmPB
-         fYUo8XXZvdhTLMNB4AIG8mbLhnhcGnX9pUDbqZspKoA6ZJPQjP6aH9rpkoAo1zxix8W+
-         WlBtolNCxct3CIdim3TFaa2w2qjW+9LlmatZdZpGJPLUrenpzUQYKCpE5pVUDAmdE9Sd
-         yvwA==
-X-Gm-Message-State: AOJu0YxX/X9y2cENxmuHaeSTvQj79rjE+Rum43K7CkUZLcsMUrSZIqiU
-	gAOmyLNkxwGtK1+GvtKm2q/dRY+uKGdbF8wsXWwyLaq+
-X-Google-Smtp-Source: AGHT+IHRb8Satm905s+fXR/c4OKst8S/LE0P0ERSVLN5jX2GTCjD8MLNa9Fr20z5+3hJflEycocXuJTksjHsTyfMv+A=
-X-Received: by 2002:a17:90a:19c5:b0:27c:eb7f:cd00 with SMTP id
- 5-20020a17090a19c500b0027ceb7fcd00mr891990pjj.22.1697781577025; Thu, 19 Oct
- 2023 22:59:37 -0700 (PDT)
+        bh=eAVEObAMuCIGspLrHXxE29eV73XuLxrGxunihE5n6rU=;
+        b=UGlBMdCU5fvfCOmje+14DdhvAd5m0QMBBh95gMD2vBVf6jItSwwIzRk85zGuQZbOnA
+         R7XzXiqHHsc+vgMRfw+FYzPhgOP5E4qBrX+usQuFiR+e7sKl+pkncMWJSENQiphwN1li
+         YXZUw6+nVDsYo0rBISWqI6meocYkfxZ1vrVYcTXm7Y/P1xmMwW9XVVJPHhyJL5bpIc7W
+         HjOPs6eIFJU6Kjynkv4mpnXEAqPADJ+e1l1GB/dHaDrEeO0RTHkVLVclyAZBJtH/TLS4
+         CVhYs1ECMofwT3fDRFKnpgYWHL6/fAuh3OOkpuU68w8TYR5EF+ivoZqSt14WSFSFHgob
+         LW9A==
+X-Gm-Message-State: AOJu0YwmBAHF5DrNJgNJ+qFotp0m3stMncSHOL9iDCuUAlWkQqCS0q/z
+	kKrtW6RBl8cMlVmOvKdoZUOu3WvcS/HDnw5whII6OXqwM8o=
+X-Google-Smtp-Source: AGHT+IElVuVCqcAuKx5OEvhVsubxsAwJgefl0nwAF8ah72enYf99yFj0Y8OCw03qU1EqrGnCnKf2RPXYM3prfwowWQA=
+X-Received: by 2002:a17:90a:3d45:b0:27d:86a1:ae04 with SMTP id
+ o5-20020a17090a3d4500b0027d86a1ae04mr1038339pjf.15.1697783610764; Thu, 19 Oct
+ 2023 23:33:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231013075945.698874-1-yangjihong1@huawei.com>
-In-Reply-To: <20231013075945.698874-1-yangjihong1@huawei.com>
+References: <alpine.LRH.2.20.2310191027320.11297@Diego>
+In-Reply-To: <alpine.LRH.2.20.2310191027320.11297@Diego>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 19 Oct 2023 22:59:25 -0700
-Message-ID: <CAM9d7cjQ_ZT2wdvFO8v2f8cN+GGH0nLOa=Fvzf4okAr8b27t_w@mail.gmail.com>
-Subject: Re: [PATCH] perf data: Increase RLIMIT_NOFILE limit when open too
- many files in perf_data__create_dir()
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Thu, 19 Oct 2023 23:33:19 -0700
+Message-ID: <CAM9d7cgxWY3ymyz93h+stWXW7UTdKN6V+T7ZyWZ2wn0j1oi1vw@mail.gmail.com>
+Subject: Re: perf sampling count/freq/period strange bahavior
+To: Michael Petlan <mpetlan@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, vmolnaro@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Fri, Oct 13, 2023 at 1:01=E2=80=AFAM Yang Jihong <yangjihong1@huawei.com=
-> wrote:
+On Thu, Oct 19, 2023 at 1:28=E2=80=AFAM Michael Petlan <mpetlan@redhat.com>=
+ wrote:
 >
-> If using parallel threads to collect data, perf record needs at least 6 f=
-ds
-> per CPU. (one for sys_perf_event_open, four for pipe msg and ack of the
-> pipe, see record__thread_data_open_pipes(), and one for open perf.data.XX=
-X)
+> Hello all...
+>
+> We have encountered a strange behavior related to sampling. Generally
+> said, the number of samples is usually much lower than it should be.
+>
+> Let's say, for load L, `perf stat -e instructions -- L` shows around
+> 250,000 event hits. If I understand the concept of `-c` option for
+> `perf record`, with `-c 250` it should make the counter overflow and
+> generate a sample for every 250th event hit, so, it should result into
+> ~1000 samples.
+>
+> Instead I am getting something like ~62-150 samples, for example 124.
+> I have checked in dmesg that kernel has not throttled anything. When
+> running `perf report --stdio`, I see in the header that there were 0
+> samples lost (so the buffer was consumed fast enough). Additionally,
+> `perf report --stdio` tries to estimate the actual event count:
+>
+>   Event count (approx.): 31000
+>
+> (Which is because 250 * 124 =3D 31000, so perf itself considers this
+> formula (n_of_samples * sampling_rate =3D n_of_events) valid.)
+>
+> But in reality, this is not the case, `perf stat`, as said, never
+> shows that low number of events for the same load.
+>
+> What else is involved in the sampling rates and why the number of
+> samples is so much lower than it should be?
+>
+> Thank you for ideas!
 
-Yep, probably one more for the dummy event.
+I don't know but it seems PMU has some internal limit
+on the period and ignores lower values.
 
-> For an environment with more than 100 cores, if perf record uses both
-> `-a` and `--threads` options, it is easy to exceed the upper limit of the
-> file descriptor number, when we run out of them try to increase the limit=
-s.
->
-> Before:
->   $ ulimit -n
->   1024
->   $ lscpu | grep 'On-line CPU(s)'
->   On-line CPU(s) list:                0-159
->   $ perf record --threads -a sleep 1
->   Failed to create data directory: Too many open files
->
-> After:
->   $ ulimit -n
->   1024
->   $ lscpu | grep 'On-line CPU(s)'
->   On-line CPU(s) list:                0-159
->   $ perf record --threads -a sleep 1
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.394 MB perf.data (1576 samples) ]
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/util/data.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-> index fc16299c915f..098f9e3bb2e7 100644
-> --- a/tools/perf/util/data.c
-> +++ b/tools/perf/util/data.c
-> @@ -17,6 +17,7 @@
->  #include "util.h" // rm_rf_perf_data()
->  #include "debug.h"
->  #include "header.h"
-> +#include "evsel.h"
->  #include <internal/lib.h>
->
->  static void close_dir(struct perf_data_file *files, int nr)
-> @@ -35,6 +36,7 @@ void perf_data__close_dir(struct perf_data *data)
->
->  int perf_data__create_dir(struct perf_data *data, int nr)
->  {
-> +       enum rlimit_action set_rlimit =3D NO_CHANGE;
->         struct perf_data_file *files =3D NULL;
->         int i, ret;
->
-> @@ -54,11 +56,21 @@ int perf_data__create_dir(struct perf_data *data, int=
- nr)
->                         goto out_err;
->                 }
->
-> +retry_open:
->                 ret =3D open(file->path, O_RDWR|O_CREAT|O_TRUNC, S_IRUSR|=
-S_IWUSR);
->                 if (ret < 0) {
-> +                       /*
-> +                        * If using parallel threads to collect data,
-> +                        * perf record needs at least 6 fds per CPU.
-> +                        * When we run out of them try to increase the li=
-mits.
-> +                        */
-> +                       if (errno =3D=3D EMFILE && evsel__increase_rlimit=
-(&set_rlimit))
+On my Intel machine,
 
-It seems weird that we have this helper with evsel prefix and
-it does nothing with evsel.  But it's a separate concern, so
+$ perf stat -e instructions:u true
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+ Performance counter stats for 'true':
 
-Thanks,
-Namhyung
+           120,024      instructions:u
+
+       0.002002822 seconds time elapsed
+
+       0.002040000 seconds user
+       0.000000000 seconds sys
 
 
-> +                               goto retry_open;
-> +
->                         ret =3D -errno;
->                         goto out_err;
->                 }
-> +               set_rlimit =3D NO_CHANGE;
->
->                 file->fd =3D ret;
->         }
-> --
-> 2.34.1
->
+$ perf record -e instructions:u -c 10000 true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.002 MB perf.data (12 samples) ]
+
+$ perf record -e instructions:u -c 5000 true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.002 MB perf.data (24 samples) ]
+
+$ perf record -e instructions:u -c 4000 true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.002 MB perf.data (30 samples) ]
+
+$ perf record -e instructions:u -c 3000 true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.002 MB perf.data (40 samples) ]
+
+$ perf record -e instructions:u -c 2000 true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
+
+$ perf record -e instructions:u -c 1000 true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
+
+$ perf record -e instructions:u -c 500 true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.003 MB perf.data (51 samples) ]
