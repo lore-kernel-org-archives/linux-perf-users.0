@@ -1,143 +1,82 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFD720315
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 21:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CD5D60;
-	Fri, 20 Oct 2023 14:14:02 -0700 (PDT)
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-27d329a704bso961208a91.0;
-        Fri, 20 Oct 2023 14:14:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E31200D9
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 21:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rb/qJ7HW"
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BECAD6A
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 14:21:29 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-6b1e46ca282so1237265b3a.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Oct 2023 14:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697836889; x=1698441689; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D5A2KGr1//Sug9d1kfltYNWIKYBNDoz4bih0PnnpI7Y=;
+        b=Rb/qJ7HWv8POwq6RfO3yj32vF9yyCuEz1ohmaC2nckrn/rnqLP/MBFBzYpEI15lwcW
+         dWnvdminPL1EOu/iUSuXzUsYL+2JBJSg4Xtfs6m1M6cgsPVuV3y3XSf6+JsD7E8OKB2P
+         k46K6y1tYrlvEVeiLG5kSfX0ofLE0SQHnpR5WetRtqzKDAX1ubssvtKr5e+d9vZx+JdI
+         EaYKy47STEJ/k3saMXjFTcmO5OuMyK61SaoKIVGznPWdK8OyrcUOHK58bRNEGUhKm9KZ
+         P+oEIGx2n2AxABlBOJVs1aDsh0RTqOopSX5IlT9IpvXee3QspozvG5s3DATmKQqo8eZK
+         q8sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697836441; x=1698441241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+xqiAA7yUfcFNuJz9yt0cNSqQJ4Uy3bxmqwHDlGSMdg=;
-        b=X9I7DJntWiszeBtiKkAP0U17+rnkOyVfsAclN6i5ekgGD2VQzpcCRhBMdbwm9ANE+l
-         UEDjWubM92hPhw6AzolrwmyKEIJkJzQyMEhd97ldijvg8NTbATqKHTBWU9aUsimrUhYf
-         h6HCtPsrbDGhmbi6bWiPgv/jh1LVh3SdHom7EpZOPLaFs+AA02xWMzmXK8y3W+4Xxa69
-         Pkc94z0H+CJtPouKiN8saK+ALyAYRnbSHKAObhgDUFqwz63mhm9wOFfaHAORn1/IqOLt
-         abitL/rtpGpyjfZHVlYjb6kACWh5mZaue9sgzKCFrHLnUxCxOrBaQJbP4a3Chq8YGsLE
-         CTDA==
-X-Gm-Message-State: AOJu0YwITC4aWqHUaEKgL/5yjuRhzrX7FrC9T3ZQ1PiPOaT4hlCayJep
-	pudwj8gFvXWI4aPlQAxyvPkD7vy0IMdL/YEuJmDdx9we
-X-Google-Smtp-Source: AGHT+IG/VoXI1JBpVoEZfBg384XC3qm1W8eZsSVL/jQ0J3rl4+8O3vWvxeYru+v+dhM1C9hmc8pMaid13NsUKFacJKI=
-X-Received: by 2002:a17:90b:3d87:b0:27d:1532:e736 with SMTP id
- pq7-20020a17090b3d8700b0027d1532e736mr2690226pjb.48.1697836441372; Fri, 20
- Oct 2023 14:14:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697836889; x=1698441689;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=D5A2KGr1//Sug9d1kfltYNWIKYBNDoz4bih0PnnpI7Y=;
+        b=v8H/OTr4eIRb2RWAjErTxCYbVoTPKF+JsE3EA6NB+0L4Rd+aseIGrsGUGRg16Fqnig
+         +tUvXrzBzOrAAH32Z0ghoXHKmpKzcpsfWv15zZUTB1Q6/thFKvz2Tb2TY3TotQW83txm
+         rlOYtNAB3XAcx/UD7SaRkWaZLN4+9ESau0qZjnPjhwuOesMzGCmYw7ey091c9L2M+3g6
+         KKJ/t2zQ8RDEbfbkMVHC0+jtwbSeclHA98vjdOFufxZX9Sm+moSy4D/r2txt3klDE+RK
+         BxqZm+qWDmfSe7XTSwWn80FUIbibJWmWEhUCxkUkcX9k3el9mY0JyVokINmaiG5/mUsg
+         BGAQ==
+X-Gm-Message-State: AOJu0YwEFQW4KpEvwWetbr/kIVJo/kj74RBXdYrjsPTq5a/W4sOmrL5J
+	yoq9pE+tuAmWv70pl19uau0=
+X-Google-Smtp-Source: AGHT+IFFRWQ+xhY+lyL6E2NRQML/OhQy8/0ZWP7LZAc1J8O8Ft2QlWoM4IyTJci0q3laR2IxNq7m3Q==
+X-Received: by 2002:a05:6a00:cca:b0:6b2:69c:346a with SMTP id b10-20020a056a000cca00b006b2069c346amr3396718pfv.19.1697836888849;
+        Fri, 20 Oct 2023 14:21:28 -0700 (PDT)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:5cd3:25e1:1589:ad95])
+        by smtp.gmail.com with ESMTPSA id p9-20020a63e649000000b0057412d84d25sm1919583pgj.4.2023.10.20.14.21.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Oct 2023 14:21:28 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: acme@kernel.org,
+	Kajol Jain <kjain@linux.ibm.com>
+Cc: Disha Goel <disgoel@linux.vnet.ibm.com>,
+	maddy@linux.ibm.com,
+	linux-perf-users@vger.kernel.org,
+	disgoel@linux.ibm.com,
+	atrajeev@linux.vnet.ibm.com
+Subject: Re: [PATCH] perf vendor events: Update PMC used in PM_RUN_INST_CMPL event for power10 platform
+Date: Fri, 20 Oct 2023 14:21:14 -0700
+Message-ID: <169783679853.2217970.13950056970410298391.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
+In-Reply-To: <20231016143110.244255-1-kjain@linux.ibm.com>
+References: <20231016143110.244255-1-kjain@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231017202342.1353124-1-namhyung@kernel.org> <ZTLjx3A8LBQMYWHJ@kernel.org>
-In-Reply-To: <ZTLjx3A8LBQMYWHJ@kernel.org>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 20 Oct 2023 14:13:50 -0700
-Message-ID: <CAM9d7cjoStnwi+UbruGKxYbmKnD0+TU4u5suacQFLt6sb5tf=g@mail.gmail.com>
-Subject: Re: [PATCH v4] perf bench sched pipe: Add -G/--cgroups option
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 20, 2023 at 1:32=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Oct 17, 2023 at 01:23:42PM -0700, Namhyung Kim escreveu:
-> > The -G/--cgroups option is to put sender and receiver in different
-> > cgroups in order to measure cgroup context switch overheads.
-> <SNIP>
-> >   > taskset -c 0 perf bench sched pipe -l 10000 -G AAA,BBB > /dev/null
->
-> >    Performance counter stats for 'taskset -c 0 perf bench sched pipe -l=
- 10000 -G AAA,BBB':
-> >
-> >               20,001      context-switches
-> >               20,001      cgroup-switches
->
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Mon, 16 Oct 2023 20:01:10 +0530, Kajol Jain wrote:
+> The CPI_STALL_RATIO metric group can be used to present the high
+> level CPI stall breakdown metrics in powerpc, which will show:
+> 
+> - DISPATCH_STALL_CPI ( Dispatch stall cycles per insn )
+> - ISSUE_STALL_CPI ( Issue stall cycles per insn )
+> - EXECUTION_STALL_CPI ( Execution stall cycles per insn )
+> - COMPLETION_STALL_CPI ( Completion stall cycles per insn )
+> 
+> [...]
 
-Thanks a lot Arnaldo!
+Applied to perf-tools-next, thanks!
 
-Ingo, can I keep you Acked-by here? (forgot to add in v4, sorry!)
-
-Thanks,
-Namhyung
-
->
-> [root@five ~]# perf stat -e context-switches,cgroup-switches taskset -c 0=
- perf bench sched pipe -l 10000
-> # Running 'sched/pipe' benchmark:
-> # Executed 10000 pipe operations between two processes
->
->      Total time: 0.063 [sec]
->
->        6.367500 usecs/op
->          157047 ops/sec
->
->  Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 100=
-00':
->
->             20,004      context-switches
->                  4      cgroup-switches
->
->        0.084191842 seconds time elapsed
->
->        0.008332000 seconds user
->        0.067193000 seconds sys
->
->
-> [root@five ~]# perf stat -e context-switches,cgroup-switches taskset -c 0=
- perf bench sched pipe -l 10000 -G AAA,BBB
-> # Running 'sched/pipe' benchmark:
-> no access to cgroup /sys/fs/cgroup/BBB
-> Failed to open cgroup file in BBB
->  Hint: create the cgroup first, like 'mkdir /sys/fs/cgroup/BBB'
-> no access to cgroup /sys/fs/cgroup/AAA
-> Failed to open cgroup file in AAA
->  Hint: create the cgroup first, like 'mkdir /sys/fs/cgroup/AAA'
->
->  Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 100=
-00 -G AAA,BBB':
->
->                  2      context-switches
->                  1      cgroup-switches
->
->        0.010356533 seconds time elapsed
->
->        0.003209000 seconds user
->        0.007122000 seconds sys
->
->
-> [root@five ~]# vim /tmp/bla
-> [root@five ~]#
-> [root@five ~]# mkdir /sys/fs/cgroup/BBB /sys/fs/cgroup/AAA
-> [root@five ~]# perf stat -e context-switches,cgroup-switches taskset -c 0=
- perf bench sched pipe -l 10000 -G AAA,BBB
-> # Running 'sched/pipe' benchmark:
-> # Executed 10000 pipe operations between two processes
->
->      Total time: 0.079 [sec]
->
->        7.987800 usecs/op
->          125190 ops/sec
->
->  Performance counter stats for 'taskset -c 0 perf bench sched pipe -l 100=
-00 -G AAA,BBB':
->
->             20,008      context-switches
->             20,007      cgroup-switches
->
->        0.089361029 seconds time elapsed
->
->        0.009004000 seconds user
->        0.065376000 seconds sys
->
->
-> [root@five ~]#
