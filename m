@@ -1,147 +1,196 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D80A171B5
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Oct 2023 15:05:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9A3D51D
+	for <linux-perf-users@vger.kernel.org>; Sat, 21 Oct 2023 15:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eXojLl7K"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968D210C0
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Oct 2023 08:05:50 -0700 (PDT)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39LEoFOR017215;
-	Sat, 21 Oct 2023 15:05:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=3f0KZnziKOHAD+qnB23qtU1ZUn7qbA90gTpn2Nh9Cbw=;
- b=eXojLl7KdaNTxHdtJpLg398g0eIrcFY0YQPnS7mgatjI0/dUD7yOb1EMMiqErKh9q3vc
- iFYVYFqzSBEAuc2VgVDe6qyZoX5DjczTJRpZbkCwj6Iny9xj/6XTkXu3mfeXtR+cuDKJ
- aNx8PcNrD7tuDgLUKrKwphduzDDWgDr4M+yIltkQkDizQgaaFVA/+Ijy4ShHp1XlSot1
- qeeTVvOpzNnl9EE/Oz1KNbCIvczeBAFofrljMjIAKMGHeOT3Vw/TfGdBZUNLDhig6OLe
- k902l92yB4432rGKDDPAMM6gc5iKuUdST4Tlsgwf83uNyujdGzxMDZuZ+apcUuWvZoLJ Eg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tvgreg8hx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 21 Oct 2023 15:05:46 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39LEuSaA029763;
-	Sat, 21 Oct 2023 15:05:45 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tvgreg8hs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 21 Oct 2023 15:05:45 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39LD9R0M029794;
-	Sat, 21 Oct 2023 15:05:45 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tuc47ut6k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 21 Oct 2023 15:05:44 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39LF5fl645154746
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 21 Oct 2023 15:05:41 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BCCB020043;
-	Sat, 21 Oct 2023 15:05:41 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8B56120040;
-	Sat, 21 Oct 2023 15:05:39 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.179.5.156])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 21 Oct 2023 15:05:39 +0000 (GMT)
-From: Aditya Gupta <adityag@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH v6 4/4] tools/perf/tests: Update probe_vfs_getname.sh script to use perf check --feature
-Date: Sat, 21 Oct 2023 20:35:26 +0530
-Message-ID: <20231021150526.2231803-5-adityag@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231021150526.2231803-1-adityag@linux.ibm.com>
-References: <20231021150526.2231803-1-adityag@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpBTxM1z"
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675D6B9;
+	Sat, 21 Oct 2023 08:23:08 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-9b96c3b4be4so267973066b.1;
+        Sat, 21 Oct 2023 08:23:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697901787; x=1698506587; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=6VF4qC2hXc2d0oacLPBDdXJdqA+m5UEYXoM+OQj/89g=;
+        b=CpBTxM1zcsoP+oInRKRaq62BqKQSs2v//EYLQYYhV/8rR7wajX2gFcXkXtEoo2yvBJ
+         JbszV9FAPXJ702dXVt+T0TFXWEZ+vSFmp7etSb2q42n5x8uSSqUPttDRdwluTeZ8yaKZ
+         DBKEOr3OcjrwOCPw1ys2nn1c/2dkXKDBRzdlMC8p2XKWcCVyRENsz62wflRbwmeYGEi4
+         9LGgT0fUJOBfH2heDFeEphev3vLw8Udt3PBnhxWsRC2HYXMGTLtvQGgQl/mKk3ii/oQ3
+         Mzcs8sYqX74JMe5yWggpRfjqyDM8s1BKOnraQu5xCDncS74+C99l/2jwJyRsxqqO/DrR
+         At4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697901787; x=1698506587;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6VF4qC2hXc2d0oacLPBDdXJdqA+m5UEYXoM+OQj/89g=;
+        b=fSrjSyhpgfOFKB+mtjYe9KNC9JNkYIja7Q9QkzOQ+cWyQ4mCrl7bf0Z1FThrTeiSOF
+         tAcaYUXSIHiXVKWGEKauib4wRdEUlYTef0V3iNhmm9C3Zx8mYgjjH1GRSTtqhxjB9ZPK
+         BP31TDQrrriR8SBNRkvtiJfXDcl0MwnwunonJUKW91DIMTA6sxPzS8tqZxnm2/iD16Hp
+         sKJU4woFkzzBpyfqboNkNzgrzhX5zU6uFmfmaTinoUYRf/3g0cbGpeZIB3P9CMLLWATK
+         imgAHsxrk/z7tPhCi6PkUSn2vWP0ksghcjpx224OdQJ4F7YAicTLqf/h0GkfYIj80Byt
+         /w9w==
+X-Gm-Message-State: AOJu0YxbcocnIODdrypXkEP5Kg4aetejpvDRvN689mOH6yzRfHs2eMel
+	9K666jKP61w5u54rIK9Or/E=
+X-Google-Smtp-Source: AGHT+IFNaFTbH73weeKJQ/wEth3rN/5nXFTJo+CRuaEMoB6+VbO8OYZJ6btsdyqXC0nRDFkH69F3QQ==
+X-Received: by 2002:a17:907:783:b0:9ae:5253:175b with SMTP id xd3-20020a170907078300b009ae5253175bmr4013246ejb.34.1697901786605;
+        Sat, 21 Oct 2023 08:23:06 -0700 (PDT)
+Received: from gmail.com (1F2EF1E7.nat.pool.telekom.hu. [31.46.241.231])
+        by smtp.gmail.com with ESMTPSA id l20-20020a1709065a9400b009786c8249d6sm3834641ejq.175.2023.10.21.08.23.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Oct 2023 08:23:01 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Sat, 21 Oct 2023 17:22:58 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] perf events fix
+Message-ID: <ZTPs0ncHILbDrGh6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: H_0UExB1oq6qu0mvbmrYHNM5hrUCVCBj
-X-Proofpoint-ORIG-GUID: FUrmixvvBMibK_e8_bOI0taDTKfemW3H
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-21_07,2023-10-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 mlxscore=0 clxscore=1015 spamscore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2310170001 definitions=main-2310210138
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Linus,
 
-In probe_vfs_getname.sh, current we use "perf record --dry-run"
-to check for libtraceevent and skip the test if perf is not
-build with libtraceevent. Change the check to use "perf check --feature"
-option
+Please pull the latest perf/urgent git tree from:
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh           | 4 ++--
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh     | 5 ++++-
- tools/perf/tests/shell/record+script_probe_vfs_getname.sh | 5 ++++-
- 3 files changed, 10 insertions(+), 4 deletions(-)
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-10-21
 
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index bf4c1fb71c4b..368a55c02134 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -27,7 +27,7 @@ skip_if_no_debuginfo() {
- # check if perf is compiled with libtraceevent support
- skip_no_probe_record_support() {
- 	if [ $had_vfs_getname -eq 1 ] ; then
--		perf record --dry-run -e $1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
--		return 1
-+		perf check -q --feature libtraceevent && return 1
-+		return 2
- 	fi
+   # HEAD: 32671e3799ca2e4590773fd0e63aaa4229e50c06 perf: Disallow mis-matched inherited group reads
+
+Fix group event semantics.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Peter Zijlstra (1):
+      perf: Disallow mis-matched inherited group reads
+
+
+ include/linux/perf_event.h |  1 +
+ kernel/events/core.c       | 39 +++++++++++++++++++++++++++++++++------
+ 2 files changed, 34 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index e85cd1c0eaf3..7b5406e3288d 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -704,6 +704,7 @@ struct perf_event {
+ 	/* The cumulative AND of all event_caps for events in this group. */
+ 	int				group_caps;
+ 
++	unsigned int			group_generation;
+ 	struct perf_event		*group_leader;
+ 	/*
+ 	 * event->pmu will always point to pmu in which this event belongs.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4c72a41f11af..d0663b9324e7 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1954,6 +1954,7 @@ static void perf_group_attach(struct perf_event *event)
+ 
+ 	list_add_tail(&event->sibling_list, &group_leader->sibling_list);
+ 	group_leader->nr_siblings++;
++	group_leader->group_generation++;
+ 
+ 	perf_event__header_size(group_leader);
+ 
+@@ -2144,6 +2145,7 @@ static void perf_group_detach(struct perf_event *event)
+ 	if (leader != event) {
+ 		list_del_init(&event->sibling_list);
+ 		event->group_leader->nr_siblings--;
++		event->group_leader->group_generation++;
+ 		goto out;
+ 	}
+ 
+@@ -5440,7 +5442,7 @@ static int __perf_read_group_add(struct perf_event *leader,
+ 					u64 read_format, u64 *values)
+ {
+ 	struct perf_event_context *ctx = leader->ctx;
+-	struct perf_event *sub;
++	struct perf_event *sub, *parent;
+ 	unsigned long flags;
+ 	int n = 1; /* skip @nr */
+ 	int ret;
+@@ -5450,6 +5452,33 @@ static int __perf_read_group_add(struct perf_event *leader,
+ 		return ret;
+ 
+ 	raw_spin_lock_irqsave(&ctx->lock, flags);
++	/*
++	 * Verify the grouping between the parent and child (inherited)
++	 * events is still in tact.
++	 *
++	 * Specifically:
++	 *  - leader->ctx->lock pins leader->sibling_list
++	 *  - parent->child_mutex pins parent->child_list
++	 *  - parent->ctx->mutex pins parent->sibling_list
++	 *
++	 * Because parent->ctx != leader->ctx (and child_list nests inside
++	 * ctx->mutex), group destruction is not atomic between children, also
++	 * see perf_event_release_kernel(). Additionally, parent can grow the
++	 * group.
++	 *
++	 * Therefore it is possible to have parent and child groups in a
++	 * different configuration and summing over such a beast makes no sense
++	 * what so ever.
++	 *
++	 * Reject this.
++	 */
++	parent = leader->parent;
++	if (parent &&
++	    (parent->group_generation != leader->group_generation ||
++	     parent->nr_siblings != leader->nr_siblings)) {
++		ret = -ECHILD;
++		goto unlock;
++	}
+ 
+ 	/*
+ 	 * Since we co-schedule groups, {enabled,running} times of siblings
+@@ -5483,8 +5512,9 @@ static int __perf_read_group_add(struct perf_event *leader,
+ 			values[n++] = atomic64_read(&sub->lost_samples);
+ 	}
+ 
++unlock:
+ 	raw_spin_unlock_irqrestore(&ctx->lock, flags);
+-	return 0;
++	return ret;
  }
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index eebeea6bdc76..758da2a23e26 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -60,7 +60,10 @@ trace_libc_inet_pton_backtrace() {
  
- 	# Check presence of libtraceevent support to run perf record
- 	skip_no_probe_record_support "$event_name/$eventattr/"
--	[ $? -eq 2 ] && return 2
-+	if [ $? -eq 2 ]; then
-+		echo "WARN: Skipping test trace_libc_inet_pton_backtrace. No libtraceevent support."
-+		return 2
-+	fi
+ static int perf_read_group(struct perf_event *event,
+@@ -5503,10 +5533,6 @@ static int perf_read_group(struct perf_event *event,
  
- 	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
- 	# check if perf data file got created in above step.
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index 5eedbe29bba1..9a61928e3c9a 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -21,7 +21,10 @@ record_open_file() {
- 	echo "Recording open file:"
- 	# Check presence of libtraceevent support to run perf record
- 	skip_no_probe_record_support "probe:vfs_getname*"
--	[ $? -eq 2 ] && return 2
-+	if [ $? -eq 2 ]; then
-+		echo "WARN: Skipping test record_open_file. No libtraceevent support"
-+		return 2
-+	fi
- 	perf record -o ${perfdata} -e probe:vfs_getname\* touch $file
+ 	values[0] = 1 + leader->nr_siblings;
+ 
+-	/*
+-	 * By locking the child_mutex of the leader we effectively
+-	 * lock the child list of all siblings.. XXX explain how.
+-	 */
+ 	mutex_lock(&leader->child_mutex);
+ 
+ 	ret = __perf_read_group_add(leader, read_format, values);
+@@ -13346,6 +13372,7 @@ static int inherit_group(struct perf_event *parent_event,
+ 		    !perf_get_aux_event(child_ctr, leader))
+ 			return -EINVAL;
+ 	}
++	leader->group_generation = parent_event->group_generation;
+ 	return 0;
  }
  
--- 
-2.41.0
-
