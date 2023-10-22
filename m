@@ -1,19 +1,19 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C80101E7;
-	Sun, 22 Oct 2023 15:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EE010789;
+	Sun, 22 Oct 2023 15:24:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B7718E;
-	Sun, 22 Oct 2023 08:24:22 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8046135;
+	Sun, 22 Oct 2023 08:24:28 -0700 (PDT)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 39MFMTJX032707;
-	Sun, 22 Oct 2023 23:22:29 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 39MFMdii032740;
+	Sun, 22 Oct 2023 23:22:39 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Sun, 22 Oct 2023
- 23:22:25 +0800
+ 23:22:35 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -37,9 +37,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>
-Subject: [RFC PATCH v3 03/13] irqchip/riscv-intc: Introduce Andes IRQ chip
-Date: Sun, 22 Oct 2023 23:18:48 +0800
-Message-ID: <20231022151858.2479969-4-peterlin@andestech.com>
+Subject: [PATCH v3 05/13] riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes INTC
+Date: Sun, 22 Oct 2023 23:18:50 +0800
+Message-ID: <20231022151858.2479969-6-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231022151858.2479969-1-peterlin@andestech.com>
 References: <20231022151858.2479969-1-peterlin@andestech.com>
@@ -54,146 +54,34 @@ Content-Type: text/plain
 X-Originating-IP: [10.0.15.183]
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 39MFMTJX032707
+X-MAIL:Atcsqr.andestech.com 39MFMdii032740
 
-This commit adds support for the Andes IRQ chip, which provides
-IRQ mask/unmask functions to access the custom CSR (SLIE)
-where the non-standard S-mode local interrupt enable bits are
-located.
-
-The Andes INTC requires the "andestech,cpu-intc" compatible string
-to be present in interrupt-controller of cpu node. e.g.,
-
-  cpu0: cpu@0 {
-      compatible = "andestech,ax45mp", "riscv";
-      ...
-      cpu0-intc: interrupt-controller {
-          #interrupt-cells = <0x01>;
-          compatible = "andestech,cpu-intc", "riscv,cpu-intc";
-          interrupt-controller;
-      };
-  };
+The Andes INTC allows AX45MP cores to handle custom local
+interrupts, such as the performance monitor overflow interrupt.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
 ---
 Changes v1 -> v2:
   - New patch
 Changes v2 -> v3:
-  - Return -ENXIO if no valid compatible INTC found
-  - Allow falling back to generic RISC-V INTC
+  - Fixed possible compatibles for Andes INTC
 ---
- drivers/irqchip/irq-riscv-intc.c       | 51 +++++++++++++++++++++++++-
- include/linux/irqchip/irq-riscv-intc.h | 12 ++++++
- 2 files changed, 61 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/irqchip/irq-riscv-intc.h
+ arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
-index 79d049105384..a0efd645a142 100644
---- a/drivers/irqchip/irq-riscv-intc.c
-+++ b/drivers/irqchip/irq-riscv-intc.c
-@@ -13,6 +13,7 @@
- #include <linux/irq.h>
- #include <linux/irqchip.h>
- #include <linux/irqdomain.h>
-+#include <linux/irqchip/irq-riscv-intc.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -45,6 +46,26 @@ static void riscv_intc_irq_unmask(struct irq_data *d)
- 	csr_set(CSR_IE, BIT(d->hwirq));
- }
+diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+index 8a726407fb76..dfe27550af11 100644
+--- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
++++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+@@ -37,7 +37,7 @@ cpu0: cpu@0 {
  
-+static void andes_intc_irq_mask(struct irq_data *d)
-+{
-+	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
-+
-+	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
-+		csr_clear(CSR_IE, mask);
-+	else
-+		csr_clear(ANDES_CSR_SLIE, mask);
-+}
-+
-+static void andes_intc_irq_unmask(struct irq_data *d)
-+{
-+	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
-+
-+	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
-+		csr_set(CSR_IE, mask);
-+	else
-+		csr_set(ANDES_CSR_SLIE, mask);
-+}
-+
- static void riscv_intc_irq_eoi(struct irq_data *d)
- {
- 	/*
-@@ -68,12 +89,37 @@ static struct irq_chip riscv_intc_chip = {
- 	.irq_eoi = riscv_intc_irq_eoi,
- };
- 
-+static struct irq_chip andes_intc_chip = {
-+	.name = "RISC-V INTC",
-+	.irq_mask = andes_intc_irq_mask,
-+	.irq_unmask = andes_intc_irq_unmask,
-+	.irq_eoi = riscv_intc_irq_eoi,
-+};
-+
- static int riscv_intc_domain_map(struct irq_domain *d, unsigned int irq,
- 				 irq_hw_number_t hwirq)
- {
-+	struct fwnode_handle *fn = riscv_get_intc_hwnode();
-+	struct irq_chip *chip;
-+	const char *cp;
-+	int rc;
-+
- 	irq_set_percpu_devid(irq);
--	irq_domain_set_info(d, irq, hwirq, &riscv_intc_chip, d->host_data,
--			    handle_percpu_devid_irq, NULL, NULL);
-+
-+	rc = fwnode_property_read_string(fn, "compatible", &cp);
-+	if (rc)
-+		return rc;
-+
-+	if (strcmp(cp, "riscv,cpu-intc") == 0)
-+		chip = &riscv_intc_chip;
-+	else if (strcmp(cp, "andestech,cpu-intc") == 0)
-+		chip = &andes_intc_chip;
-+	else
-+		return -ENXIO;
-+
-+	irq_domain_set_info(d, irq, hwirq, chip,
-+			    d->host_data, handle_percpu_devid_irq, NULL,
-+			    NULL);
- 
- 	return 0;
- }
-@@ -166,6 +212,7 @@ static int __init riscv_intc_init(struct device_node *node,
- }
- 
- IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
-+IRQCHIP_DECLARE(andes, "andestech,cpu-intc", riscv_intc_init);
- 
- #ifdef CONFIG_ACPI
- 
-diff --git a/include/linux/irqchip/irq-riscv-intc.h b/include/linux/irqchip/irq-riscv-intc.h
-new file mode 100644
-index 000000000000..87c105b5b545
---- /dev/null
-+++ b/include/linux/irqchip/irq-riscv-intc.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2023 Andes Technology Corporation
-+ */
-+#ifndef __INCLUDE_LINUX_IRQCHIP_IRQ_RISCV_INTC_H
-+#define __INCLUDE_LINUX_IRQCHIP_IRQ_RISCV_INTC_H
-+
-+#define ANDES_SLI_CAUSE_BASE	256
-+#define ANDES_CSR_SLIE		0x9c4
-+#define ANDES_CSR_SLIP		0x9c5
-+
-+#endif /* __INCLUDE_LINUX_IRQCHIP_IRQ_RISCV_INTC_H */
+ 			cpu0_intc: interrupt-controller {
+ 				#interrupt-cells = <1>;
+-				compatible = "riscv,cpu-intc";
++				compatible = "andestech,cpu-intc", "riscv,cpu-intc";
+ 				interrupt-controller;
+ 			};
+ 		};
 -- 
 2.34.1
 
