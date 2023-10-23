@@ -1,87 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD7A1FDB;
-	Mon, 23 Oct 2023 09:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsdUSetC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A67AC433C7;
-	Mon, 23 Oct 2023 09:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698053001;
-	bh=aZBFa7fN1EH0urSii1LHTdENO3pg0U4aosD5CcywGOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VsdUSetCYsPxlm2mEo2erqrcSSEMIbJPN+mwquIMS5v0zBB/zF6vOthd+ohrOuVAZ
-	 UVU8ksImL8gz4CcLRlhjrMCeI/Vf2dsFqgU83vgk4pNmOc7UqFNyYyTW7pKzoOdp9i
-	 Y4vY6QJg0LyHMsDiraZt8HDlO2JNBvvene6Uegl9FK0uUL/hhd1/WzE5DRS6joh6Iv
-	 47DDn0lyl6SBWknnaeb4p/6fbIygzeyZrThucG0QudR/UeulSJsOBp2llQllpS5aTl
-	 Pp6NYW3mNjD0amOF2TrdevqGyAWAf6SDvINhvZGhQ6VW5Mtr1w5Djz0iJqMDQmohMQ
-	 uv3sSew7XVDkQ==
-Date: Mon, 23 Oct 2023 10:23:10 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Yu Chien Peter Lin <peterlin@andestech.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
-	alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
-	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
-	conor+dt@kernel.org, conor.dooley@microchip.com,
-	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com,
-	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de,
-	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org,
-	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com,
-	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org,
-	palmer@dabbelt.com, paul.walmsley@sifive.com, peterz@infradead.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
-	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
-	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me,
-	wens@csie.org, will@kernel.org, ycliang@andestech.com
-Subject: Re: [PATCH v3 RESEND 01/13] riscv: errata: Rename defines for Andes
-Message-ID: <20231023-splashing-dandy-1effebb9ec30@spud>
-References: <20231023004100.2663486-1-peterlin@andestech.com>
- <20231023004100.2663486-2-peterlin@andestech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DEC79F9
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 10:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0A012B6
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 03:44:35 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7367F1FB;
+	Mon, 23 Oct 2023 03:45:15 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 227A73F64C;
+	Mon, 23 Oct 2023 03:44:33 -0700 (PDT)
+Message-ID: <3a9164b4-9ff2-82a1-6339-3a1fdd91dc47@arm.com>
+Date: Mon, 23 Oct 2023 11:44:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Dr6k7xdk2Nj78Rm8"
-Content-Disposition: inline
-In-Reply-To: <20231023004100.2663486-2-peterlin@andestech.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH V3] tools/perf: Add perf binary dependent rule for
+ shellcheck log in Makefile.perf
+Content-Language: en-US
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+ acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+ irogers@google.com, namhyung@kernel.org
+References: <20231013073641.99934-1-atrajeev@linux.vnet.ibm.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20231013073641.99934-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---Dr6k7xdk2Nj78Rm8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 23, 2023 at 08:40:48AM +0800, Yu Chien Peter Lin wrote:
-> Using "ANDES" rather than "ANDESTECH" to unify the naming
-> convention with directory, file names, Kconfig options
-> and other definitions.
->=20
-> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+On 13/10/2023 08:36, Athira Rajeev wrote:
+> Add rule in new Makefile "tests/Makefile.tests" for running
+> shellcheck on shell test scripts. This automates below shellcheck
+> into the build.
+> 
+> 	$ for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck -S warning $F; done
+> 
+> Condition for shellcheck is added in Makefile.perf to avoid build
+> breakage in the absence of shellcheck binary. Update Makefile.perf
+> to contain new rule for "SHELLCHECK_TEST" which is for making
+> shellcheck test as a dependency on perf binary. Added
+> "tests/Makefile.tests" to run shellcheck on shellscripts in
+> tests/shell. The make rule "SHLLCHECK_RUN" ensures that, every
+> time during make, shellcheck will be run only on modified files
+> during subsequent invocations. By this, if any newly added shell
+> scripts or fixes in existing scripts breaks coding/formatting
+> style, it will get captured during the perf build.
+> 
+> Example build failure with present scripts in tests/shell:
+> 
+> 	INSTALL libsubcmd_headers
+> 	INSTALL libperf_headers
+> 	INSTALL libapi_headers
+> 	INSTALL libsymbol_headers
+> 	INSTALL libbpf_headers
+> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/record_sideband.dep] Error 1
+> 	make[3]: *** Waiting for unfinished jobs....
+> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/test_arm_coresight.dep] Error 1
+> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/lock_contention.dep] Error 1
+> 	make[2]: *** [Makefile.perf:675: SHELLCHECK_TEST] Error 2
+> 	make[1]: *** [Makefile.perf:238: sub-make] Error 2
+> 	make: *** [Makefile:70: all] Error 2
+> 
+> After this, for testing, changed "tests/shell/record.sh" to
+> break shellcheck format. In the next make run, it is
+> also captured:
+> 
+> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/record_sideband.dep] Error 1
+> 	make[3]: *** Waiting for unfinished jobs....
+> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/record.dep] Error 1
+> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/test_arm_coresight.dep] Error 1
+> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/lock_contention.dep] Error 1
+> 	make[2]: *** [Makefile.perf:675: SHELLCHECK_TEST] Error 2
+> 	make[1]: *** [Makefile.perf:238: sub-make] Error 2
+> 	make: *** [Makefile:70: all] Error 2
+> 
+> The exact failure log can be found in:
+> output/tests/shell/record.dep.log file
+> 
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Hi Athira,
 
-Cheers,
-Conor.
+Having the reason for a hard failure put into a log file rather than the
+console output is very non standard. I'm not sure what the reason for
+this is.
 
---Dr6k7xdk2Nj78Rm8
-Content-Type: application/pgp-signature; name="signature.asc"
+The log filename isn't even listed in the output so how would anyone
+know what went wrong?
 
------BEGIN PGP SIGNATURE-----
+Can we just have it so that the failure is printed in the make output
+like any other build error.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTY7fgAKCRB4tDGHoIJi
-0szrAQDpbVZqytSdG3WsXMLtVH5Uqmw9YxPlcM5oJY5NdKbzngEAsaz52IDy3Sk5
-0HxrIcXgEJ5z+J2YeJShi5+5WFBDYQc=
-=HAN/
------END PGP SIGNATURE-----
+[...]
 
---Dr6k7xdk2Nj78Rm8--
+> +output/%.dep: %.sh | $(DIRS)
+> +	$(call rule_mkdir)
+> +	$(eval input_file := $(subst output/,./,$(patsubst %.dep, %.sh, $@)))
+> +	$(Q)$(call frecho-cmd,test)@shellcheck -S warning ${input_file} 1> $@.log && ([[ ! -s $@.log ]])
+
+[[ ]] is a bash extension, but the build system seems to use /bin/sh so
+you get this error depending on your distro:
+
+  tools/perf/tests/Makefile.tests:17: output/tests/shell
+      /record+probe_libc_inet_pton.dep] Error 127
+  /bin/sh: 1: [[: not found
+
+Changing it to [ ] fixes it
+
+> +	$(Q)$(call frecho-cmd,test)@touch $@
+
+Touching the source file in the build system doesn't feel right, surely
+this could be open to all kinds of parallel build race conditions or
+version controll issues.
+
+Isn't the output of the rule the .log file, so just a normal make rule
+based on those two files work? Then if the .log file is older than the
+source file, the shellcheck is re-run, otherwise not? It feels like the
+.dep file would then also be unecessary.
+
+The .dep lines in the make output are a bit confusing because they're
+not in the source tree so it's not clear to an outsider what that make
+output is for.
+
+Other than that, it does seem to work ok for me.
+
+> +	$(Q)$(call frecho-cmd,test)@rm -rf $@.log
+> +$(DIRS):
+> +	@mkdir -p $@
+> +
+> +clean:
+> +	@rm -rf output
