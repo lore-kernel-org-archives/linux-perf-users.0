@@ -1,177 +1,250 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355381A26B
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 13:55:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6386E637;
+	Mon, 23 Oct 2023 14:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VzmHAbxa"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA3D2C2;
-	Mon, 23 Oct 2023 06:55:00 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39NDmPXA015890;
-	Mon, 23 Oct 2023 13:54:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=cJbwg2By3UMhLJDVKdBqmyJ5FfX444IdMU802RfnSA4=;
- b=VzmHAbxaejgr7gyIFmCorNgJntdcOZ+uuFUOfN9MU+w9T8VQTUaX7pi+fnqWuE26Kvql
- EEA885UKrdU3Y/fs5I5Rnn7zRC0aoaQWAXVHTbOPZJ/P2+pA+LjdhHGgyF0YxCESGpAt
- RVBtnxctDV5QB99Lf4ccG6CYsTF+Cz/CDEH7fH47JxndtUp8gqz8R1ufWEp4imrySkvd
- jz/JYeH311cXYczJTFMJEocRnykrHz3t7G7uSScvJBqb60iyFHBZLcTg4WgPQEd/I07M
- hRArv4wsZ/NXwrMmFV0P6LqcyS7Vmverq/k92BBFCoHR4ZFQSA3ZiANAgkYjRzjORd0g +w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3twsfm9kbg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Oct 2023 13:54:05 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39NDmQ6c016082;
-	Mon, 23 Oct 2023 13:54:04 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3twsfm9kaq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Oct 2023 13:54:04 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39NCWngn010250;
-	Mon, 23 Oct 2023 13:54:03 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tvsby95q6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Oct 2023 13:54:03 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39NDs1xJ12714750
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Oct 2023 13:54:01 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 583192004D;
-	Mon, 23 Oct 2023 13:54:01 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2FBC120043;
-	Mon, 23 Oct 2023 13:54:00 +0000 (GMT)
-Received: from li-978a334c-2cba-11b2-a85c-a0743a31b510.ibm.com (unknown [9.171.11.96])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 23 Oct 2023 13:54:00 +0000 (GMT)
-Message-ID: <d625c6b75a7ec5508470517b6744afbb95e22657.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 3/5] KVM: selftests: Generate sysreg-defs.h and add
- to include path
-From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-To: Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Jing
- Zhang <jingzhangos@google.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Suzuki K
- Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>, Marc
- Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Adrian
- Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Namhyung
- Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin
- <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>
-Date: Mon, 23 Oct 2023 15:53:59 +0200
-In-Reply-To: <20231011195740.3349631-4-oliver.upton@linux.dev>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
-	 <20231011195740.3349631-4-oliver.upton@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hMwLGxvN"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486F3B3;
+	Mon, 23 Oct 2023 07:24:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698071051; x=1729607051;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=9ZBt9BAMb07zsLNieeIaaNHAXHF6S1JGkj5qybE2s3A=;
+  b=hMwLGxvNtSpbw9YtAtK9Z/hL+RThHf/RdrpG2/niWhVonqtlGLjV0PeI
+   67loshUgUNY2jz8Nae2iu9nK7LoSsyBtgvEwG+E6n8TVQHlhwZwyPM/2F
+   Vu0cm4ATCYZeXxEXp2bT6snxPCr8rbVNakCLg2cQBS1bMamqYTJY4Rq4d
+   A54isO3mx0bP7WyZQdLAWEvnY4N+s8VcciaKUVBnP4EjH+CjrBzxWi7Lh
+   uMNWJp5qb7H1Bm3Tp9FFMnXpFbMXa+SRBnuzDpoGXZy3SIyVvWGksG7jS
+   IokL1B4aR3WlbWpwANxSfZ4arLQMVYqfhrly0+xFe0suGIJXQZPVuzbHb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="389696490"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="389696490"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 07:24:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="874713473"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="874713473"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.40.60])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 07:24:04 -0700
+Message-ID: <c04c196a-3f29-4b89-97a7-5e71def3d3ce@intel.com>
+Date: Mon, 23 Oct 2023 17:24:00 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: NQWui_XPNTrQ_ku4TOM8zKHuT3yfYgfR
-X-Proofpoint-GUID: lkYEi09Gk5C1VfTU80ylIwFXaEls-a29
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-23_12,2023-10-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 mlxlogscore=999 bulkscore=0 spamscore=0 phishscore=0
- adultscore=0 clxscore=1011 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2310170001 definitions=main-2310230121
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 13/13] perf machine thread: Remove exited threads by
+ default
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Nick Terrell <terrelln@fb.com>, Kan Liang <kan.liang@linux.intel.com>,
+ Song Liu <song@kernel.org>, Sandipan Das <sandipan.das@amd.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+ German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Artem Savkov <asavkov@redhat.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Andi Kleen
+ <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+References: <20231012062359.1616786-1-irogers@google.com>
+ <20231012062359.1616786-14-irogers@google.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20231012062359.1616786-14-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2023-10-11 at 19:57 +0000, Oliver Upton wrote:
-> Start generating sysreg-defs.h for arm64 builds in anticipation of
-> updating sysreg.h to a version that depends on it.
->=20
-> Reviewed-by: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+On 12/10/23 09:23, Ian Rogers wrote:
+> struct thread values hold onto references to mmaps, dsos, etc. When a
+> thread exits it is necessary to clean all of this memory up by
+> removing the thread from the machine's threads. Some tools require
+> this doesn't happen, such as perf report if offcpu events exist or if
+> a task list is being generated, so add a symbol_conf value to make the
+> behavior optional. When an exited thread is left in the machine's
+> threads, mark it as exited.
+> 
+> This change relates to commit 40826c45eb0b ("perf thread: Remove
+> notion of dead threads"). Dead threads were removed as they had a
+> reference count of 0 and were difficult to reason about with the
+> reference count checker. Here a thread is removed from threads when it
+> exits, unless via symbol_conf the exited thread isn't remove and is
+> marked as exited. Reference counting behaves as it normally does.
+
+Can we exclude AUX area tracing?
+
+Essentially, the EXIT event happens when the task is still running
+in kernel mode, so the thread has not in fact fully exited.
+
+Example:
+
+# perf record -a --kcore -e intel_pt// uname
+
+Before:
+
+# perf script --itrace=b --show-task-events -C6 | grep -C10 EXIT
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb63124ee __perf_event_header__init_id+0x5e ([kernel.kallsyms]) => ffffffffb63124f7 __perf_event_header__init_id+0x67 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6312501 __perf_event_header__init_id+0x71 ([kernel.kallsyms]) => ffffffffb6312512 __perf_event_header__init_id+0x82 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6312531 __perf_event_header__init_id+0xa1 ([kernel.kallsyms]) => ffffffffb6316b3a perf_event_task_output+0x26a ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6316b40 perf_event_task_output+0x270 ([kernel.kallsyms]) => ffffffffb6316959 perf_event_task_output+0x89 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6316966 perf_event_task_output+0x96 ([kernel.kallsyms]) => ffffffffb6322040 perf_output_begin+0x0 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6322080 perf_output_begin+0x40 ([kernel.kallsyms]) => ffffffffb6194dc0 __rcu_read_lock+0x0 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6194de1 __rcu_read_lock+0x21 ([kernel.kallsyms]) => ffffffffb6322085 perf_output_begin+0x45 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb63220ce perf_output_begin+0x8e ([kernel.kallsyms]) => ffffffffb611d280 preempt_count_add+0x0 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb611d2bf preempt_count_add+0x3f ([kernel.kallsyms]) => ffffffffb63220d3 perf_output_begin+0x93 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb63220e8 perf_output_begin+0xa8 ([kernel.kallsyms]) => ffffffffb63220ff perf_output_begin+0xbf ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638: PERF_RECORD_EXIT(14740:14740):(14739:14739)
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6322119 perf_output_begin+0xd9 ([kernel.kallsyms]) => ffffffffb6322128 perf_output_begin+0xe8 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6322146 perf_output_begin+0x106 ([kernel.kallsyms]) => ffffffffb63220ea perf_output_begin+0xaa ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb63220f9 perf_output_begin+0xb9 ([kernel.kallsyms]) => ffffffffb63221ab perf_output_begin+0x16b ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb63221ae perf_output_begin+0x16e ([kernel.kallsyms]) => ffffffffb63221b6 perf_output_begin+0x176 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6322202 perf_output_begin+0x1c2 ([kernel.kallsyms]) => ffffffffb6322167 perf_output_begin+0x127 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb632218c perf_output_begin+0x14c ([kernel.kallsyms]) => ffffffffb631696b perf_event_task_output+0x9b ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6316990 perf_event_task_output+0xc0 ([kernel.kallsyms]) => ffffffffb61034a0 __task_pid_nr_ns+0x0 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb61034b7 __task_pid_nr_ns+0x17 ([kernel.kallsyms]) => ffffffffb6194dc0 __rcu_read_lock+0x0 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6194de1 __rcu_read_lock+0x21 ([kernel.kallsyms]) => ffffffffb61034bc __task_pid_nr_ns+0x1c ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6103503 __task_pid_nr_ns+0x63 ([kernel.kallsyms]) => ffffffffb610353b __task_pid_nr_ns+0x9b ([kernel.kallsyms])
+
+After:
+
+$ perf script --itrace=b --show-task-events -C6 | grep -C10 EXIT
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb63124ee __perf_event_header__init_id+0x5e ([kernel.kallsyms]) => ffffffffb63124f7 __perf_event_header__init_id+0x67 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6312501 __perf_event_header__init_id+0x71 ([kernel.kallsyms]) => ffffffffb6312512 __perf_event_header__init_id+0x82 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6312531 __perf_event_header__init_id+0xa1 ([kernel.kallsyms]) => ffffffffb6316b3a perf_event_task_output+0x26a ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6316b40 perf_event_task_output+0x270 ([kernel.kallsyms]) => ffffffffb6316959 perf_event_task_output+0x89 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6316966 perf_event_task_output+0x96 ([kernel.kallsyms]) => ffffffffb6322040 perf_output_begin+0x0 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6322080 perf_output_begin+0x40 ([kernel.kallsyms]) => ffffffffb6194dc0 __rcu_read_lock+0x0 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb6194de1 __rcu_read_lock+0x21 ([kernel.kallsyms]) => ffffffffb6322085 perf_output_begin+0x45 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb63220ce perf_output_begin+0x8e ([kernel.kallsyms]) => ffffffffb611d280 preempt_count_add+0x0 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb611d2bf preempt_count_add+0x3f ([kernel.kallsyms]) => ffffffffb63220d3 perf_output_begin+0x93 ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638:          1   branches:  ffffffffb63220e8 perf_output_begin+0xa8 ([kernel.kallsyms]) => ffffffffb63220ff perf_output_begin+0xbf ([kernel.kallsyms])
+           uname   14740 [006] 26795.092638: PERF_RECORD_EXIT(14740:14740):(14739:14739)
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb6322119 perf_output_begin+0xd9 ([kernel.kallsyms]) => ffffffffb6322128 perf_output_begin+0xe8 ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb6322146 perf_output_begin+0x106 ([kernel.kallsyms]) => ffffffffb63220ea perf_output_begin+0xaa ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb63220f9 perf_output_begin+0xb9 ([kernel.kallsyms]) => ffffffffb63221ab perf_output_begin+0x16b ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb63221ae perf_output_begin+0x16e ([kernel.kallsyms]) => ffffffffb63221b6 perf_output_begin+0x176 ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb6322202 perf_output_begin+0x1c2 ([kernel.kallsyms]) => ffffffffb6322167 perf_output_begin+0x127 ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb632218c perf_output_begin+0x14c ([kernel.kallsyms]) => ffffffffb631696b perf_event_task_output+0x9b ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb6316990 perf_event_task_output+0xc0 ([kernel.kallsyms]) => ffffffffb61034a0 __task_pid_nr_ns+0x0 ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb61034b7 __task_pid_nr_ns+0x17 ([kernel.kallsyms]) => ffffffffb6194dc0 __rcu_read_lock+0x0 ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb6194de1 __rcu_read_lock+0x21 ([kernel.kallsyms]) => ffffffffb61034bc __task_pid_nr_ns+0x1c ([kernel.kallsyms])
+          :14740   14740 [006] 26795.092638:          1   branches:  ffffffffb6103503 __task_pid_nr_ns+0x63 ([kernel.kallsyms]) => ffffffffb610353b __task_pid_nr_ns+0x9b ([kernel.kallsyms])
+
+This will also affect samples made after PERF_RECORD_EXIT but before
+the task finishes exiting.
+
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/testing/selftests/kvm/Makefile | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
->=20
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftes=
-ts/kvm/Makefile
-> index a3bb36fb3cfc..07b3f4dc1a77 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -17,6 +17,17 @@ else
->  	ARCH_DIR :=3D $(ARCH)
->  endif
->=20
-> +ifeq ($(ARCH),arm64)
-> +arm64_tools_dir :=3D $(top_srcdir)/tools/arch/arm64/tools/
-> +GEN_HDRS :=3D $(top_srcdir)/tools/arch/arm64/include/generated/
-> +CFLAGS +=3D -I$(GEN_HDRS)
+>  tools/perf/builtin-report.c   |  7 +++++++
+>  tools/perf/util/machine.c     | 10 +++++++---
+>  tools/perf/util/symbol_conf.h |  3 ++-
+>  tools/perf/util/thread.h      | 14 ++++++++++++++
+>  4 files changed, 30 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index dcedfe00f04d..749246817aed 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1411,6 +1411,13 @@ int cmd_report(int argc, const char **argv)
+>  	if (ret < 0)
+>  		goto exit;
+>  
+> +	/*
+> +	 * tasks_mode require access to exited threads to list those that are in
+> +	 * the data file. Off-cpu events are synthesized after other events and
+> +	 * reference exited threads.
+> +	 */
+> +	symbol_conf.keep_exited_threads = true;
 > +
-> +prepare:
-> +	$(MAKE) -C $(arm64_tools_dir)
-> +else
-> +prepare:
-
-This is a force target, all targets depending on this one will always have =
-their recipe run,
-so we'll pretty much rebuild everything.
-Is this intentional?
-
-> +endif
+>  	annotation_options__init(&report.annotation_opts);
+>  
+>  	ret = perf_config(report__config, &report);
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 6ca7500e2cf4..5cda47eb337d 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2157,9 +2157,13 @@ int machine__process_exit_event(struct machine *machine, union perf_event *event
+>  	if (dump_trace)
+>  		perf_event__fprintf_task(event, stdout);
+>  
+> -	if (thread != NULL)
+> -		thread__put(thread);
+> -
+> +	if (thread != NULL) {
+> +		if (symbol_conf.keep_exited_threads)
+> +			thread__set_exited(thread, /*exited=*/true);
+> +		else
+> +			machine__remove_thread(machine, thread);
+> +	}
+> +	thread__put(thread);
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+> index 2b2fb9e224b0..6040286e07a6 100644
+> --- a/tools/perf/util/symbol_conf.h
+> +++ b/tools/perf/util/symbol_conf.h
+> @@ -43,7 +43,8 @@ struct symbol_conf {
+>  			disable_add2line_warn,
+>  			buildid_mmap2,
+>  			guest_code,
+> -			lazy_load_kernel_maps;
+> +			lazy_load_kernel_maps,
+> +			keep_exited_threads;
+>  	const char	*vmlinux_name,
+>  			*kallsyms_name,
+>  			*source_prefix,
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index e79225a0ea46..0df775b5c110 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -36,13 +36,22 @@ struct thread_rb_node {
+>  };
+>  
+>  DECLARE_RC_STRUCT(thread) {
+> +	/** @maps: mmaps associated with this thread. */
+>  	struct maps		*maps;
+>  	pid_t			pid_; /* Not all tools update this */
+> +	/** @tid: thread ID number unique to a machine. */
+>  	pid_t			tid;
+> +	/** @ppid: parent process of the process this thread belongs to. */
+>  	pid_t			ppid;
+>  	int			cpu;
+>  	int			guest_cpu; /* For QEMU thread */
+>  	refcount_t		refcnt;
+> +	/**
+> +	 * @exited: Has the thread had an exit event. Such threads are usually
+> +	 * removed from the machine's threads but some events/tools require
+> +	 * access to dead threads.
+> +	 */
+> +	bool			exited;
+>  	bool			comm_set;
+>  	int			comm_len;
+>  	struct list_head	namespaces_list;
+> @@ -189,6 +198,11 @@ static inline refcount_t *thread__refcnt(struct thread *thread)
+>  	return &RC_CHK_ACCESS(thread)->refcnt;
+>  }
+>  
+> +static inline void thread__set_exited(struct thread *thread, bool exited)
+> +{
+> +	RC_CHK_ACCESS(thread)->exited = exited;
+> +}
 > +
->  LIBKVM +=3D lib/assert.c
->  LIBKVM +=3D lib/elf.c
->  LIBKVM +=3D lib/guest_modes.c
-> @@ -256,13 +267,18 @@ $(TEST_GEN_OBJ): $(OUTPUT)/%.o: %.c
->  $(SPLIT_TESTS_TARGETS): %: %.o $(SPLIT_TESTS_OBJS)
->  	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $=
-@
->=20
-> -EXTRA_CLEAN +=3D $(LIBKVM_OBJS) $(TEST_DEP_FILES) $(TEST_GEN_OBJ) $(SPLI=
-T_TESTS_OBJS) cscope.*
-> +EXTRA_CLEAN +=3D $(GEN_HDRS) \
-> +	       $(LIBKVM_OBJS) \
-> +	       $(SPLIT_TESTS_OBJS) \
-> +	       $(TEST_DEP_FILES) \
-> +	       $(TEST_GEN_OBJ) \
-> +	       cscope.*
->=20
->  x :=3D $(shell mkdir -p $(sort $(dir $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ))))
-> -$(LIBKVM_C_OBJ): $(OUTPUT)/%.o: %.c
-> +$(LIBKVM_C_OBJ): $(OUTPUT)/%.o: %.c prepare
->  	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
->=20
-> -$(LIBKVM_S_OBJ): $(OUTPUT)/%.o: %.S
-> +$(LIBKVM_S_OBJ): $(OUTPUT)/%.o: %.S prepare
->  	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
->=20
->  # Compile the string overrides as freestanding to prevent the compiler f=
-rom
-> @@ -274,6 +290,7 @@ $(LIBKVM_STRING_OBJ): $(OUTPUT)/%.o: %.c
->  x :=3D $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
->  $(TEST_GEN_PROGS): $(LIBKVM_OBJS)
->  $(TEST_GEN_PROGS_EXTENDED): $(LIBKVM_OBJS)
-> +$(TEST_GEN_OBJ): prepare
->=20
->  cscope: include_paths =3D $(LINUX_TOOL_INCLUDE) $(LINUX_HDR_PATH) includ=
-e lib ..
->  cscope:
+>  static inline bool thread__comm_set(const struct thread *thread)
+>  {
+>  	return RC_CHK_ACCESS(thread)->comm_set;
 
