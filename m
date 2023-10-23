@@ -1,48 +1,30 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344A4EA0;
-	Mon, 23 Oct 2023 00:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7F51841
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 03:33:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CE7F1BE3;
-	Sun, 22 Oct 2023 17:46:41 -0700 (PDT)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 39N0jKdt079986;
-	Mon, 23 Oct 2023 08:45:20 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Mon, 23 Oct 2023
- 08:45:16 +0800
-From: Yu Chien Peter Lin <peterlin@andestech.com>
-To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
-        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
-        <conor.dooley@microchip.com>, <conor@kernel.org>,
-        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
-        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
-        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
-        <jolsa@kernel.org>, <jszhang@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <peterlin@andestech.com>,
-        <peterz@infradead.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <rdunlap@infradead.org>, <robh+dt@kernel.org>, <samuel@sholland.org>,
-        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
-        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
-        <will@kernel.org>, <ycliang@andestech.com>
-Subject: [PATCH v3 RESEND 13/13] riscv: andes: Support symbolic FW and HW raw events
-Date: Mon, 23 Oct 2023 08:41:00 +0800
-Message-ID: <20231023004100.2663486-14-peterlin@andestech.com>
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01119E9;
+	Sun, 22 Oct 2023 20:33:43 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.54])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4SDLKH69mLzNp1s;
+	Mon, 23 Oct 2023 11:29:39 +0800 (CST)
+Received: from ubuntu2204.huawei.com (10.67.174.22) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Mon, 23 Oct 2023 11:33:41 +0800
+From: Yang Jihong <yangjihong1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+	<adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <yangjihong1@huawei.com>
+Subject: [PATCH] perf evsel: Rename evsel__increase_rlimit to rlimit__increase_nofile
+Date: Mon, 23 Oct 2023 03:31:44 +0000
+Message-ID: <20231023033144.1011896-1-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231023004100.2663486-1-peterlin@andestech.com>
-References: <20231023004100.2663486-1-peterlin@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,399 +33,185 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Originating-IP: [10.0.15.183]
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 39N0jKdt079986
+X-Originating-IP: [10.67.174.22]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
 
-From: Locus Wei-Han Chen <locus84@andestech.com>
+evsel__increase_rlimit() helper does nothing with evsel, and description
+of the functionality is inaccurate, rename it and move to util/rlimit.c.
 
-This patch adds the Andes AX45 JSON files in the perf tool,
-allowing perf to be used with symbolic event names.
+By the way, fix a checkppatch warning about misplaced license tag:
 
-Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
-Reviewed-by: Yu Chien Peter Lin <peterlin@andestech.com>
-Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+  WARNING: Misplaced SPDX-License-Identifier tag - use line 1 instead
+  #160: FILE: tools/perf/util/rlimit.h:3:
+  /* SPDX-License-Identifier: LGPL-2.1 */
+
+No functional change.
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
-Changes v1 -> v2:
-  - No change
-Changes v2 -> v3:
-  - No change
----
- .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
- .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
- .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
- .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
- 5 files changed, 330 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+ tools/perf/util/data.c   |  4 ++--
+ tools/perf/util/evsel.c  | 30 ++----------------------------
+ tools/perf/util/evsel.h  |  3 ---
+ tools/perf/util/rlimit.c | 28 ++++++++++++++++++++++++++++
+ tools/perf/util/rlimit.h | 11 ++++++++++-
+ 5 files changed, 42 insertions(+), 34 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-new file mode 100644
-index 000000000000..9b4a032186a7
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-@@ -0,0 +1,68 @@
-+[
-+  {
-+    "ArchStdEvent": "FW_MISALIGNED_LOAD"
-+  },
-+  {
-+    "ArchStdEvent": "FW_MISALIGNED_STORE"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ACCESS_LOAD"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ACCESS_STORE"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ILLEGAL_INSN"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SET_TIMER"
-+  },
-+  {
-+    "ArchStdEvent": "FW_IPI_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_IPI_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_FENCE_I_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-new file mode 100644
-index 000000000000..713a08c1a40f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-@@ -0,0 +1,127 @@
-+[
-+	{
-+		"EventCode": "0x10",
-+		"EventName": "cycle_count",
-+		"BriefDescription": "Cycle count"
-+	},
-+	{
-+		"EventCode": "0x20",
-+		"EventName": "inst_count",
-+		"BriefDescription": "Retired instruction count"
-+	},
-+	{
-+		"EventCode": "0x30",
-+		"EventName": "int_load_inst",
-+		"BriefDescription": "Integer load instruction count"
-+	},
-+	{
-+		"EventCode": "0x40",
-+		"EventName": "int_store_inst",
-+		"BriefDescription": "Integer store instruction count"
-+	},
-+	{
-+		"EventCode": "0x50",
-+		"EventName": "atomic_inst",
-+		"BriefDescription": "Atomic instruction count"
-+	},
-+	{
-+		"EventCode": "0x60",
-+		"EventName": "sys_inst",
-+		"BriefDescription": "System instruction count"
-+	},
-+	{
-+		"EventCode": "0x70",
-+		"EventName": "int_compute_inst",
-+		"BriefDescription": "Integer computational instruction count"
-+	},
-+	{
-+		"EventCode": "0x80",
-+		"EventName": "condition_br",
-+		"BriefDescription": "Conditional branch instruction count"
-+	},
-+	{
-+		"EventCode": "0x90",
-+		"EventName": "taken_condition_br",
-+		"BriefDescription": "Taken conditional branch instruction count"
-+	},
-+	{
-+		"EventCode": "0xA0",
-+		"EventName": "jal_inst",
-+		"BriefDescription": "JAL instruction count"
-+	},
-+	{
-+		"EventCode": "0xB0",
-+		"EventName": "jalr_inst",
-+		"BriefDescription": "JALR instruction count"
-+	},
-+	{
-+		"EventCode": "0xC0",
-+		"EventName": "ret_inst",
-+		"BriefDescription": "Return instruction count"
-+	},
-+	{
-+		"EventCode": "0xD0",
-+		"EventName": "control_trans_inst",
-+		"BriefDescription": "Control transfer instruction count"
-+	},
-+	{
-+		"EventCode": "0xE0",
-+		"EventName": "ex9_inst",
-+		"BriefDescription": "EXEC.IT instruction count"
-+	},
-+	{
-+		"EventCode": "0xF0",
-+		"EventName": "int_mul_inst",
-+		"BriefDescription": "Integer multiplication instruction count"
-+	},
-+	{
-+		"EventCode": "0x100",
-+		"EventName": "int_div_rem_inst",
-+		"BriefDescription": "Integer division/remainder instruction count"
-+	},
-+	{
-+		"EventCode": "0x110",
-+		"EventName": "float_load_inst",
-+		"BriefDescription": "Floating-point load instruction count"
-+	},
-+	{
-+		"EventCode": "0x120",
-+		"EventName": "float_store_inst",
-+		"BriefDescription": "Floating-point store instruction count"
-+	},
-+	{
-+		"EventCode": "0x130",
-+		"EventName": "float_add_sub_inst",
-+		"BriefDescription": "Floating-point addition/subtraction instruction count"
-+	},
-+	{
-+		"EventCode": "0x140",
-+		"EventName": "float_mul_inst",
-+		"BriefDescription": "Floating-point multiplication instruction count"
-+	},
-+	{
-+		"EventCode": "0x150",
-+		"EventName": "float_fused_muladd_inst",
-+		"BriefDescription": "Floating-point fused multiply-add instruction count"
-+	},
-+	{
-+		"EventCode": "0x160",
-+		"EventName": "float_div_sqrt_inst",
-+		"BriefDescription": "Floating-point division or square-root instruction count"
-+	},
-+	{
-+		"EventCode": "0x170",
-+		"EventName": "other_float_inst",
-+		"BriefDescription": "Other floating-point instruction count"
-+	},
-+	{
-+		"EventCode": "0x180",
-+		"EventName": "int_mul_add_sub_inst",
-+		"BriefDescription": "Integer multiplication and add/sub instruction count"
-+	},
-+	{
-+		"EventCode": "0x190",
-+		"EventName": "retired_ops",
-+		"BriefDescription": "Retired operation count"
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 098f9e3bb2e7..c29d8a382b19 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -17,7 +17,7 @@
+ #include "util.h" // rm_rf_perf_data()
+ #include "debug.h"
+ #include "header.h"
+-#include "evsel.h"
++#include "rlimit.h"
+ #include <internal/lib.h>
+ 
+ static void close_dir(struct perf_data_file *files, int nr)
+@@ -64,7 +64,7 @@ int perf_data__create_dir(struct perf_data *data, int nr)
+ 			 * perf record needs at least 6 fds per CPU.
+ 			 * When we run out of them try to increase the limits.
+ 			 */
+-			if (errno == EMFILE && evsel__increase_rlimit(&set_rlimit))
++			if (errno == EMFILE && rlimit__increase_nofile(&set_rlimit))
+ 				goto retry_open;
+ 
+ 			ret = -errno;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d5363d23f5d3..72a5dfc38d38 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -49,6 +49,7 @@
+ #include "off_cpu.h"
+ #include "pmu.h"
+ #include "pmus.h"
++#include "rlimit.h"
+ #include "../perf-sys.h"
+ #include "util/parse-branch-options.h"
+ #include "util/bpf-filter.h"
+@@ -1989,33 +1990,6 @@ bool evsel__detect_missing_features(struct evsel *evsel)
+ 	}
+ }
+ 
+-bool evsel__increase_rlimit(enum rlimit_action *set_rlimit)
+-{
+-	int old_errno;
+-	struct rlimit l;
+-
+-	if (*set_rlimit < INCREASED_MAX) {
+-		old_errno = errno;
+-
+-		if (getrlimit(RLIMIT_NOFILE, &l) == 0) {
+-			if (*set_rlimit == NO_CHANGE) {
+-				l.rlim_cur = l.rlim_max;
+-			} else {
+-				l.rlim_cur = l.rlim_max + 1000;
+-				l.rlim_max = l.rlim_cur;
+-			}
+-			if (setrlimit(RLIMIT_NOFILE, &l) == 0) {
+-				(*set_rlimit) += 1;
+-				errno = old_errno;
+-				return true;
+-			}
+-		}
+-		errno = old_errno;
+-	}
+-
+-	return false;
+-}
+-
+ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		struct perf_thread_map *threads,
+ 		int start_cpu_map_idx, int end_cpu_map_idx)
+@@ -2143,7 +2117,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	 * perf stat needs between 5 and 22 fds per CPU. When we run out
+ 	 * of them try to increase the limits.
+ 	 */
+-	if (err == -EMFILE && evsel__increase_rlimit(&set_rlimit))
++	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
+ 		goto retry_open;
+ 
+ 	if (err != -EINVAL || idx > 0 || thread > 0)
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 815be2491938..d791316a1792 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -330,9 +330,6 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		struct perf_thread_map *threads);
+ bool evsel__detect_missing_features(struct evsel *evsel);
+ 
+-enum rlimit_action { NO_CHANGE, SET_TO_MAX, INCREASED_MAX };
+-bool evsel__increase_rlimit(enum rlimit_action *set_rlimit);
+-
+ bool evsel__precise_ip_fallback(struct evsel *evsel);
+ 
+ struct perf_sample;
+diff --git a/tools/perf/util/rlimit.c b/tools/perf/util/rlimit.c
+index 13521d392a22..f857405fe1aa 100644
+--- a/tools/perf/util/rlimit.c
++++ b/tools/perf/util/rlimit.c
+@@ -1,5 +1,6 @@
+ /* SPDX-License-Identifier: LGPL-2.1 */
+ 
++#include <errno.h>
+ #include "util/debug.h"
+ #include "util/rlimit.h"
+ #include <sys/time.h>
+@@ -27,3 +28,30 @@ void rlimit__bump_memlock(void)
+ 		}
+ 	}
+ }
++
++bool rlimit__increase_nofile(enum rlimit_action *set_rlimit)
++{
++	int old_errno;
++	struct rlimit l;
++
++	if (*set_rlimit < INCREASED_MAX) {
++		old_errno = errno;
++
++		if (getrlimit(RLIMIT_NOFILE, &l) == 0) {
++			if (*set_rlimit == NO_CHANGE) {
++				l.rlim_cur = l.rlim_max;
++			} else {
++				l.rlim_cur = l.rlim_max + 1000;
++				l.rlim_max = l.rlim_cur;
++			}
++			if (setrlimit(RLIMIT_NOFILE, &l) == 0) {
++				(*set_rlimit) += 1;
++				errno = old_errno;
++				return true;
++			}
++		}
++		errno = old_errno;
 +	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-new file mode 100644
-index 000000000000..c7401b526c77
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-@@ -0,0 +1,57 @@
-+[
-+	{
-+		"EventCode": "0x01",
-+		"EventName": "ilm_access",
-+		"BriefDescription": "ILM access"
-+	},
-+	{
-+		"EventCode": "0x11",
-+		"EventName": "dlm_access",
-+		"BriefDescription": "DLM access"
-+	},
-+	{
-+		"EventCode": "0x21",
-+		"EventName": "icache_access",
-+		"BriefDescription": "ICACHE access"
-+	},
-+	{
-+		"EventCode": "0x31",
-+		"EventName": "icache_miss",
-+		"BriefDescription": "ICACHE miss"
-+	},
-+	{
-+		"EventCode": "0x41",
-+		"EventName": "dcache_access",
-+		"BriefDescription": "DCACHE access"
-+	},
-+	{
-+		"EventCode": "0x51",
-+		"EventName": "dcache_miss",
-+		"BriefDescription": "DCACHE miss"
-+	},
-+	{
-+		"EventCode": "0x61",
-+		"EventName": "dcache_load_access",
-+		"BriefDescription": "DCACHE load access"
-+	},
-+	{
-+		"EventCode": "0x71",
-+		"EventName": "dcache_load_miss",
-+		"BriefDescription": "DCACHE load miss"
-+	},
-+	{
-+		"EventCode": "0x81",
-+		"EventName": "dcache_store_access",
-+		"BriefDescription": "DCACHE store access"
-+	},
-+	{
-+		"EventCode": "0x91",
-+		"EventName": "dcache_store_miss",
-+		"BriefDescription": "DCACHE store miss"
-+	},
-+	{
-+		"EventCode": "0xA1",
-+		"EventName": "dcache_wb",
-+		"BriefDescription": "DCACHE writeback"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-new file mode 100644
-index 000000000000..a6d378cbaa74
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-@@ -0,0 +1,77 @@
-+[
-+	{
-+		"EventCode": "0xB1",
-+		"EventName": "cycle_wait_icache_fill",
-+		"BriefDescription": "Cycles waiting for ICACHE fill data"
-+	},
-+	{
-+		"EventCode": "0xC1",
-+		"EventName": "cycle_wait_dcache_fill",
-+		"BriefDescription": "Cycles waiting for DCACHE fill data"
-+	},
-+	{
-+		"EventCode": "0xD1",
-+		"EventName": "uncached_ifetch_from_bus",
-+		"BriefDescription": "Uncached ifetch data access from bus"
-+	},
-+	{
-+		"EventCode": "0xE1",
-+		"EventName": "uncached_load_from_bus",
-+		"BriefDescription": "Uncached load data access from bus"
-+	},
-+	{
-+		"EventCode": "0xF1",
-+		"EventName": "cycle_wait_uncached_ifetch",
-+		"BriefDescription": "Cycles waiting for uncached ifetch data from bus"
-+	},
-+	{
-+		"EventCode": "0x101",
-+		"EventName": "cycle_wait_uncached_load",
-+		"BriefDescription": "Cycles waiting for uncached load data from bus"
-+	},
-+	{
-+		"EventCode": "0x111",
-+		"EventName": "main_itlb_access",
-+		"BriefDescription": "Main ITLB access"
-+	},
-+	{
-+		"EventCode": "0x121",
-+		"EventName": "main_itlb_miss",
-+		"BriefDescription": "Main ITLB miss"
-+	},
-+	{
-+		"EventCode": "0x131",
-+		"EventName": "main_dtlb_access",
-+		"BriefDescription": "Main DTLB access"
-+	},
-+	{
-+		"EventCode": "0x141",
-+		"EventName": "main_dtlb_miss",
-+		"BriefDescription": "Main DTLB miss"
-+	},
-+	{
-+		"EventCode": "0x151",
-+		"EventName": "cycle_wait_itlb_fill",
-+		"BriefDescription": "Cycles waiting for Main ITLB fill data"
-+	},
-+	{
-+		"EventCode": "0x161",
-+		"EventName": "pipe_stall_cycle_dtlb_miss",
-+		"BriefDescription": "Pipeline stall cycles caused by Main DTLB miss"
-+	},
-+	{
-+		"EventCode": "0x02",
-+		"EventName": "mispredict_condition_br",
-+		"BriefDescription": "Misprediction of conditional branches"
-+	},
-+	{
-+		"EventCode": "0x12",
-+		"EventName": "mispredict_take_condition_br",
-+		"BriefDescription": "Misprediction of taken conditional branches"
-+	},
-+	{
-+		"EventCode": "0x22",
-+		"EventName": "mispredict_target_ret_inst",
-+		"BriefDescription": "Misprediction of targets of Return instructions"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-index c61b3d6ef616..5bf09af14c1b 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -15,3 +15,4 @@
- #
- #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
- 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-+0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
++
++	return false;
++}
+diff --git a/tools/perf/util/rlimit.h b/tools/perf/util/rlimit.h
+index 9f59d8e710a3..19050d7fb9d7 100644
+--- a/tools/perf/util/rlimit.h
++++ b/tools/perf/util/rlimit.h
+@@ -1,6 +1,15 @@
++/* SPDX-License-Identifier: LGPL-2.1 */
+ #ifndef __PERF_RLIMIT_H_
+ #define __PERF_RLIMIT_H_
+-/* SPDX-License-Identifier: LGPL-2.1 */
++
++enum rlimit_action {
++	NO_CHANGE,
++	SET_TO_MAX,
++	INCREASED_MAX
++};
+ 
+ void rlimit__bump_memlock(void);
++
++bool rlimit__increase_nofile(enum rlimit_action *set_rlimit);
++
+ #endif // __PERF_RLIMIT_H_
 -- 
 2.34.1
 
