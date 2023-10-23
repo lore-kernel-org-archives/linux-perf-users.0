@@ -1,142 +1,313 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DEC79F9
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 10:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0A012B6
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 03:44:35 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7367F1FB;
-	Mon, 23 Oct 2023 03:45:15 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 227A73F64C;
-	Mon, 23 Oct 2023 03:44:33 -0700 (PDT)
-Message-ID: <3a9164b4-9ff2-82a1-6339-3a1fdd91dc47@arm.com>
-Date: Mon, 23 Oct 2023 11:44:33 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA46918629;
+	Mon, 23 Oct 2023 11:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CvbdBVea"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80EA0C433C8;
+	Mon, 23 Oct 2023 11:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698062199;
+	bh=ye0Dbd8QYVtEN8vg7b7frsXs9Dqrk9uXB/oe2lWo/oI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CvbdBVeaxqqYJ3oP/sI6EYSHPI7ct4J1bHnZpQDi4wc3tPSFA99qY+nyyFYOCIHJP
+	 exnZC9FL8kgYxF6wjhENzNjRsgIQFJ2t14BjQ9QlaFNgW9tdl3+JRdGg/Hr+PCnUx0
+	 PcQIqu3MZ3pVDWEaWSdknKZOwCsD0WXrqgPiAyukRVjjEvRqB1bZgO7HrqPsApRg2v
+	 ruyo4J3L3/KsbzqUmOk+bvEWKgR1kdaU0jtwaBpeFjy3N83SZ0w/y1VcewUfu3j2wA
+	 j8f6yb+F1f+BbO3kfV0oLlt4cAqkNw3u4N7m0IgBBq/Up2k8H/k4cmRHJH6QALVw18
+	 xsqr7vsJFaGqA==
+Date: Mon, 23 Oct 2023 12:56:28 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
+	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
+	conor+dt@kernel.org, conor.dooley@microchip.com,
+	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com,
+	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de,
+	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org,
+	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com,
+	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org,
+	palmer@dabbelt.com, paul.walmsley@sifive.com, peterz@infradead.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
+	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
+	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me,
+	wens@csie.org, will@kernel.org, ycliang@andestech.com
+Subject: Re: [RFC PATCH v3 RESEND 07/13] RISC-V: Move T-Head PMU to CPU
+ feature alternative framework
+Message-ID: <20231023-derived-rind-cfec145c9ce6@spud>
+References: <20231023004100.2663486-1-peterlin@andestech.com>
+ <20231023004100.2663486-8-peterlin@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH V3] tools/perf: Add perf binary dependent rule for
- shellcheck log in Makefile.perf
-Content-Language: en-US
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
- acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
- irogers@google.com, namhyung@kernel.org
-References: <20231013073641.99934-1-atrajeev@linux.vnet.ibm.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231013073641.99934-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3CrJUMx+JJd/NlXH"
+Content-Disposition: inline
+In-Reply-To: <20231023004100.2663486-8-peterlin@andestech.com>
 
 
+--3CrJUMx+JJd/NlXH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 13/10/2023 08:36, Athira Rajeev wrote:
-> Add rule in new Makefile "tests/Makefile.tests" for running
-> shellcheck on shell test scripts. This automates below shellcheck
-> into the build.
-> 
-> 	$ for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck -S warning $F; done
-> 
-> Condition for shellcheck is added in Makefile.perf to avoid build
-> breakage in the absence of shellcheck binary. Update Makefile.perf
-> to contain new rule for "SHELLCHECK_TEST" which is for making
-> shellcheck test as a dependency on perf binary. Added
-> "tests/Makefile.tests" to run shellcheck on shellscripts in
-> tests/shell. The make rule "SHLLCHECK_RUN" ensures that, every
-> time during make, shellcheck will be run only on modified files
-> during subsequent invocations. By this, if any newly added shell
-> scripts or fixes in existing scripts breaks coding/formatting
-> style, it will get captured during the perf build.
-> 
-> Example build failure with present scripts in tests/shell:
-> 
-> 	INSTALL libsubcmd_headers
-> 	INSTALL libperf_headers
-> 	INSTALL libapi_headers
-> 	INSTALL libsymbol_headers
-> 	INSTALL libbpf_headers
-> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/record_sideband.dep] Error 1
-> 	make[3]: *** Waiting for unfinished jobs....
-> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/test_arm_coresight.dep] Error 1
-> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/lock_contention.dep] Error 1
-> 	make[2]: *** [Makefile.perf:675: SHELLCHECK_TEST] Error 2
-> 	make[1]: *** [Makefile.perf:238: sub-make] Error 2
-> 	make: *** [Makefile:70: all] Error 2
-> 
-> After this, for testing, changed "tests/shell/record.sh" to
-> break shellcheck format. In the next make run, it is
-> also captured:
-> 
-> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/record_sideband.dep] Error 1
-> 	make[3]: *** Waiting for unfinished jobs....
-> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/record.dep] Error 1
-> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/test_arm_coresight.dep] Error 1
-> 	make[3]: *** [/root/athira/namhyung/perf-tools-next/tools/perf/tests/Makefile.tests:17: output/tests/shell/lock_contention.dep] Error 1
-> 	make[2]: *** [Makefile.perf:675: SHELLCHECK_TEST] Error 2
-> 	make[1]: *** [Makefile.perf:238: sub-make] Error 2
-> 	make: *** [Makefile:70: all] Error 2
-> 
-> The exact failure log can be found in:
-> output/tests/shell/record.dep.log file
-> 
+On Mon, Oct 23, 2023 at 08:40:54AM +0800, Yu Chien Peter Lin wrote:
+> The custom PMU extension aims to support perf event sampling prior
+> to the ratification of Sscofpmf. Instead of utilizing the bits and
+> CSRs reserved for future standard, a set of custom CSRs is added.
+> Hence, we may consider it as a CPU feature rather than an erratum.
+>=20
+> T-Head cores need to append "xtheadpmu" to the riscv,isa-extensions
+> for each cpu node in device tree, and enable CONFIG_THEAD_CUSTOM_PMU
+> for proper functioning as of this commit.
+>=20
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> ---
+> Hi All,
+>=20
+> This is in preparation for introducing other PMU alternative.
+> We follow Conor's suggestion [1] to use cpu feature alternative
+> framework rather than errata, if you want to stick with errata
+> alternative or have other issues, please let me know. Thanks.
 
-Hi Athira,
+I replied to the discussion on v2 earlier this morning (please try to
+wait for previous conversations to resolve before sending new versions)
+commenting on this patch:
+https://lore.kernel.org/linux-riscv/20231023-impulse-quickness-4c7076e6eb58=
+@spud/T/#m77982ce990577b974edd24bb3ac175737b2a621c
 
-Having the reason for a hard failure put into a log file rather than the
-console output is very non standard. I'm not sure what the reason for
-this is.
+Sticking with the existing method for the t-head stuff isn't a matter
+of how the code is structured, but a question of regressing existing
+platforms.
 
-The log filename isn't even listed in the output so how would anyone
-know what went wrong?
+Cheers,
+Conor.
 
-Can we just have it so that the failure is printed in the make output
-like any other build error.
-
-[...]
-
-> +output/%.dep: %.sh | $(DIRS)
-> +	$(call rule_mkdir)
-> +	$(eval input_file := $(subst output/,./,$(patsubst %.dep, %.sh, $@)))
-> +	$(Q)$(call frecho-cmd,test)@shellcheck -S warning ${input_file} 1> $@.log && ([[ ! -s $@.log ]])
-
-[[ ]] is a bash extension, but the build system seems to use /bin/sh so
-you get this error depending on your distro:
-
-  tools/perf/tests/Makefile.tests:17: output/tests/shell
-      /record+probe_libc_inet_pton.dep] Error 127
-  /bin/sh: 1: [[: not found
-
-Changing it to [ ] fixes it
-
-> +	$(Q)$(call frecho-cmd,test)@touch $@
-
-Touching the source file in the build system doesn't feel right, surely
-this could be open to all kinds of parallel build race conditions or
-version controll issues.
-
-Isn't the output of the rule the .log file, so just a normal make rule
-based on those two files work? Then if the .log file is older than the
-source file, the shellcheck is re-run, otherwise not? It feels like the
-.dep file would then also be unecessary.
-
-The .dep lines in the make output are a bit confusing because they're
-not in the source tree so it's not clear to an outsider what that make
-output is for.
-
-Other than that, it does seem to work ok for me.
-
-> +	$(Q)$(call frecho-cmd,test)@rm -rf $@.log
-> +$(DIRS):
-> +	@mkdir -p $@
+>=20
+> [1] https://patchwork.kernel.org/project/linux-riscv/patch/20230907021635=
+=2E1002738-4-peterlin@andestech.com/#25503860
+>=20
+> Changes v1 -> v2:
+>   - New patch
+> Changes v2 -> v3:
+>   - Removed m{vendor/arch/imp}id checks in pmu_sbi_setup_irqs()
+> ---
+>  arch/riscv/Kconfig.errata            | 13 -------------
+>  arch/riscv/errata/thead/errata.c     | 19 -------------------
+>  arch/riscv/include/asm/errata_list.h | 15 +--------------
+>  arch/riscv/include/asm/hwcap.h       |  1 +
+>  arch/riscv/kernel/cpufeature.c       |  1 +
+>  drivers/perf/Kconfig                 | 13 +++++++++++++
+>  drivers/perf/riscv_pmu_sbi.c         | 19 ++++++++++++++-----
+>  7 files changed, 30 insertions(+), 51 deletions(-)
+>=20
+> diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
+> index 566bcefeab50..35dfb19d6a29 100644
+> --- a/arch/riscv/Kconfig.errata
+> +++ b/arch/riscv/Kconfig.errata
+> @@ -85,17 +85,4 @@ config ERRATA_THEAD_CMO
+> =20
+>  	  If you don't know what to do here, say "Y".
+> =20
+> -config ERRATA_THEAD_PMU
+> -	bool "Apply T-Head PMU errata"
+> -	depends on ERRATA_THEAD && RISCV_PMU_SBI
+> -	default y
+> -	help
+> -	  The T-Head C9xx cores implement a PMU overflow extension very
+> -	  similar to the core SSCOFPMF extension.
+> -
+> -	  This will apply the overflow errata to handle the non-standard
+> -	  behaviour via the regular SBI PMU driver and interface.
+> -
+> -	  If you don't know what to do here, say "Y".
+> -
+>  endmenu # "CPU errata selection"
+> diff --git a/arch/riscv/errata/thead/errata.c b/arch/riscv/errata/thead/e=
+rrata.c
+> index 0554ed4bf087..5de5f7209132 100644
+> --- a/arch/riscv/errata/thead/errata.c
+> +++ b/arch/riscv/errata/thead/errata.c
+> @@ -53,22 +53,6 @@ static bool errata_probe_cmo(unsigned int stage,
+>  	return true;
+>  }
+> =20
+> -static bool errata_probe_pmu(unsigned int stage,
+> -			     unsigned long arch_id, unsigned long impid)
+> -{
+> -	if (!IS_ENABLED(CONFIG_ERRATA_THEAD_PMU))
+> -		return false;
+> -
+> -	/* target-c9xx cores report arch_id and impid as 0 */
+> -	if (arch_id !=3D 0 || impid !=3D 0)
+> -		return false;
+> -
+> -	if (stage =3D=3D RISCV_ALTERNATIVES_EARLY_BOOT)
+> -		return false;
+> -
+> -	return true;
+> -}
+> -
+>  static u32 thead_errata_probe(unsigned int stage,
+>  			      unsigned long archid, unsigned long impid)
+>  {
+> @@ -80,9 +64,6 @@ static u32 thead_errata_probe(unsigned int stage,
+>  	if (errata_probe_cmo(stage, archid, impid))
+>  		cpu_req_errata |=3D BIT(ERRATA_THEAD_CMO);
+> =20
+> -	if (errata_probe_pmu(stage, archid, impid))
+> -		cpu_req_errata |=3D BIT(ERRATA_THEAD_PMU);
+> -
+>  	return cpu_req_errata;
+>  }
+> =20
+> diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/include/as=
+m/errata_list.h
+> index c190393aa9db..1b5354a50d55 100644
+> --- a/arch/riscv/include/asm/errata_list.h
+> +++ b/arch/riscv/include/asm/errata_list.h
+> @@ -25,8 +25,7 @@
+>  #ifdef CONFIG_ERRATA_THEAD
+>  #define	ERRATA_THEAD_PBMT 0
+>  #define	ERRATA_THEAD_CMO 1
+> -#define	ERRATA_THEAD_PMU 2
+> -#define	ERRATA_THEAD_NUMBER 3
+> +#define	ERRATA_THEAD_NUMBER 2
+>  #endif
+> =20
+>  #ifdef __ASSEMBLY__
+> @@ -147,18 +146,6 @@ asm volatile(ALTERNATIVE_2(						\
+>  	    "r"((unsigned long)(_start) + (_size))			\
+>  	: "a0")
+> =20
+> -#define THEAD_C9XX_RV_IRQ_PMU			17
+> -#define THEAD_C9XX_CSR_SCOUNTEROF		0x5c5
+> -
+> -#define ALT_SBI_PMU_OVERFLOW(__ovl)					\
+> -asm volatile(ALTERNATIVE(						\
+> -	"csrr %0, " __stringify(CSR_SSCOUNTOVF),			\
+> -	"csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),		\
+> -		THEAD_VENDOR_ID, ERRATA_THEAD_PMU,			\
+> -		CONFIG_ERRATA_THEAD_PMU)				\
+> -	: "=3Dr" (__ovl) :						\
+> -	: "memory")
+> -
+>  #endif /* __ASSEMBLY__ */
+> =20
+>  #endif
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwca=
+p.h
+> index b7b58258f6c7..d3082391c901 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -58,6 +58,7 @@
+>  #define RISCV_ISA_EXT_ZICSR		40
+>  #define RISCV_ISA_EXT_ZIFENCEI		41
+>  #define RISCV_ISA_EXT_ZIHPM		42
+> +#define RISCV_ISA_EXT_XTHEADPMU		43
+> =20
+>  #define RISCV_ISA_EXT_MAX		64
+> =20
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index 1cfbba65d11a..4a3fb017026c 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -181,6 +181,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D {
+>  	__RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
+>  	__RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+>  	__RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+> +	__RISCV_ISA_EXT_DATA(xtheadpmu, RISCV_ISA_EXT_XTHEADPMU),
+>  };
+> =20
+>  const size_t riscv_isa_ext_count =3D ARRAY_SIZE(riscv_isa_ext);
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index 273d67ecf6d2..c71b6f16bdfa 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -86,6 +86,19 @@ config RISCV_PMU_SBI
+>  	  full perf feature support i.e. counter overflow, privilege mode
+>  	  filtering, counter configuration.
+> =20
+> +config THEAD_CUSTOM_PMU
+> +	bool "T-Head custom PMU support"
+> +	depends on RISCV_ALTERNATIVE && RISCV_PMU_SBI
+> +	default y
+> +	help
+> +	  The T-Head C9xx cores implement a PMU overflow extension very
+> +	  similar to the core SSCOFPMF extension.
 > +
-> +clean:
-> +	@rm -rf output
+> +	  This will patch the overflow CSR and handle the non-standard
+> +	  behaviour via the regular SBI PMU driver and interface.
+> +
+> +	  If you don't know what to do here, say "Y".
+> +
+>  config ARM_PMU_ACPI
+>  	depends on ARM_PMU && ACPI
+>  	def_bool y
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index f340db9ce1e2..a3d5ededfd45 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -20,10 +20,21 @@
+>  #include <linux/cpu_pm.h>
+>  #include <linux/sched/clock.h>
+> =20
+> -#include <asm/errata_list.h>
+>  #include <asm/sbi.h>
+>  #include <asm/hwcap.h>
+> =20
+> +#define THEAD_C9XX_RV_IRQ_PMU		17
+> +#define THEAD_C9XX_CSR_SCOUNTEROF	0x5c5
+> +
+> +#define ALT_SBI_PMU_OVERFLOW(__ovl)					\
+> +asm volatile(ALTERNATIVE(						\
+> +	"csrr %0, " __stringify(CSR_SSCOUNTOVF),			\
+> +	"csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),		\
+> +		0, RISCV_ISA_EXT_XTHEADPMU,				\
+> +		CONFIG_THEAD_CUSTOM_PMU)				\
+> +	: "=3Dr" (__ovl) :						\
+> +	: "memory")
+> +
+>  #define SYSCTL_NO_USER_ACCESS	0
+>  #define SYSCTL_USER_ACCESS	1
+>  #define SYSCTL_LEGACY		2
+> @@ -805,10 +816,8 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu,=
+ struct platform_device *pde
+>  	if (riscv_isa_extension_available(NULL, SSCOFPMF)) {
+>  		riscv_pmu_irq_num =3D RV_IRQ_PMU;
+>  		riscv_pmu_use_irq =3D true;
+> -	} else if (IS_ENABLED(CONFIG_ERRATA_THEAD_PMU) &&
+> -		   riscv_cached_mvendorid(0) =3D=3D THEAD_VENDOR_ID &&
+> -		   riscv_cached_marchid(0) =3D=3D 0 &&
+> -		   riscv_cached_mimpid(0) =3D=3D 0) {
+> +	} else if (riscv_isa_extension_available(NULL, XTHEADPMU) &&
+> +		   IS_ENABLED(CONFIG_THEAD_CUSTOM_PMU)) {
+>  		riscv_pmu_irq_num =3D THEAD_C9XX_RV_IRQ_PMU;
+>  		riscv_pmu_use_irq =3D true;
+>  	}
+> --=20
+> 2.34.1
+>=20
+
+--3CrJUMx+JJd/NlXH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTZfbAAKCRB4tDGHoIJi
+0hb7AQChme18l0KgHqpprLTN0kROM107t9194FKQxmlCBOo+9gD+N9abwsMMJfKh
+0A9X4v4ePpcB8tvAnnz58cMfLZt0OAs=
+=CUTY
+-----END PGP SIGNATURE-----
+
+--3CrJUMx+JJd/NlXH--
