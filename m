@@ -1,19 +1,19 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1710810EF;
-	Mon, 23 Oct 2023 00:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F3D366;
+	Mon, 23 Oct 2023 00:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25700D7E;
-	Sun, 22 Oct 2023 17:46:16 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8159D7A;
+	Sun, 22 Oct 2023 17:46:30 -0700 (PDT)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 39N0j0Ah079788;
-	Mon, 23 Oct 2023 08:45:00 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 39N0j5YY079922;
+	Mon, 23 Oct 2023 08:45:05 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Mon, 23 Oct 2023
- 08:44:56 +0800
+ 08:45:01 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -37,9 +37,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>
-Subject: [RFC PATCH v3 RESEND 09/13] dt-bindings: riscv: Add T-Head PMU extension description
-Date: Mon, 23 Oct 2023 08:40:56 +0800
-Message-ID: <20231023004100.2663486-10-peterlin@andestech.com>
+Subject: [PATCH v3 RESEND 10/13] dt-bindings: riscv: Add Andes PMU extension description
+Date: Mon, 23 Oct 2023 08:40:57 +0800
+Message-ID: <20231023004100.2663486-11-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231023004100.2663486-1-peterlin@andestech.com>
 References: <20231023004100.2663486-1-peterlin@andestech.com>
@@ -54,35 +54,38 @@ Content-Type: text/plain
 X-Originating-IP: [10.0.15.183]
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 39N0j0Ah079788
+X-MAIL:Atcsqr.andestech.com 39N0j5YY079922
 
-Document the ISA string for T-Head performance monitor extension
-which provides counter overflow interrupt mechanism.
+Document the ISA string for Andes Technology performance monitor
+extension which provides counter overflow interrupt and mode
+filtering mechanisms.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
 ---
 Changes v2 -> v3:
   - New patch
 ---
- Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index cc1f546fdbdc..5e9291d258d5 100644
+index 5e9291d258d5..e0694e2adbc2 100644
 --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
 +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -246,5 +246,11 @@ properties:
+@@ -246,6 +246,13 @@ properties:
              in commit 2e5236 ("Ztso is now ratified.") of the
              riscv-isa-manual.
  
-+        - const: xtheadpmu
++        - const: xandespmu
 +          description:
-+            The T-Head performance monitor extension for counter overflow. For more
-+            details, see the chapter 12 in the Xuantie C906 user manual.
-+            https://github.com/T-head-Semi/openc906/tree/main/doc
++            The Andes Technology performance monitor extension for counter overflow
++            and privilege mode filtering. For more details, see Counter Related
++            Registers in the AX45MP datasheet.
++            https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
 +
- additionalProperties: true
- ...
+         - const: xtheadpmu
+           description:
+             The T-Head performance monitor extension for counter overflow. For more
 -- 
 2.34.1
 
