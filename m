@@ -1,217 +1,164 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7F51841
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 03:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01119E9;
-	Sun, 22 Oct 2023 20:33:43 -0700 (PDT)
-Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.54])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4SDLKH69mLzNp1s;
-	Mon, 23 Oct 2023 11:29:39 +0800 (CST)
-Received: from ubuntu2204.huawei.com (10.67.174.22) by
- kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 23 Oct 2023 11:33:41 +0800
-From: Yang Jihong <yangjihong1@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-	<adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <yangjihong1@huawei.com>
-Subject: [PATCH] perf evsel: Rename evsel__increase_rlimit to rlimit__increase_nofile
-Date: Mon, 23 Oct 2023 03:31:44 +0000
-Message-ID: <20231023033144.1011896-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5085CF4F8
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 09:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="QWfXkwqL"
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B08D75
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 02:01:38 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-32da4ffd7e5so1687902f8f.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Oct 2023 02:01:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent.com; s=google; t=1698051696; x=1698656496; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Mf+nKan86pP9YxvqNtFB3ioqbhRgtPm5GTm7s8KJe0I=;
+        b=QWfXkwqLCedWOyUHj73NFxHU0uVI8X9lDly8xxsv/mWpNgdxIkSjrHEtMvSVOGLohX
+         tjhuVyngYNeVeyhQ3yfLJXiT+G559gciUv9pwrF8aslWiX/v3zcgGcp/LQr/rmDeqsVE
+         G+O1144nSgElor2Df5Fb336SW5g8+FKdreYn5UgSldu/i1Xwd3h3gx0fJqRbjQmUwklp
+         sYm4vYigJ91xTgSJtC4fKGwKdTPAWf88dn8QGoZgTho7g5yHbnkYAInNlshLLVxTuMqa
+         3SwbfNthaALXa6MTU0S8Sa7P7uVRNJzWyyBLEqQ2HpZQ4URtdTs61RHwS3bqHqbhrxnj
+         R3vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698051696; x=1698656496;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mf+nKan86pP9YxvqNtFB3ioqbhRgtPm5GTm7s8KJe0I=;
+        b=m8N2dXSkvox7VDk/epbnXzZCw7ThT4Eo+0TcpAZVsbIu6fy+2ZePwy8UyYuXW2j45p
+         H0yBwESUhGQsv8t/tLB7GwaXZWYAI4N5Y8dOjg5k9+6itOfkcJPMcUJWrz5KK5vwKPLc
+         bDAu9xwI6QkN3G7GUcZxoJPX5JhCvJSyoziG5r+GSilp+6IPT+LeuxTo209/WKyO44Qi
+         5IZYjnISOS0LK+gG8krVXu3hHgo+XyU1ZSwNNeqMisWdSysNPr4rvzaJ/QSZ+yHRQmx/
+         iOz1MvsuXjvq7cJXpbmGlGqjZHyxnVAqAsfzIiIn/A46Tarjzt4wzZL4FKhtB5JslNro
+         iWYg==
+X-Gm-Message-State: AOJu0YxMDUdG6/QtYAk/VYvuQXHu78xgMneb49lRqrh+dvxi+llEi7aD
+	jAiaGuvvkkJpFL/REfAv6pUryw==
+X-Google-Smtp-Source: AGHT+IGpWjcofGaS/GHzmAITo9rLeiMobJbEAZDzaHpa22JV7SGE2SfbIE4YVP8+tHl7DnA+Q7wPRA==
+X-Received: by 2002:adf:e487:0:b0:32d:84a5:bf5f with SMTP id i7-20020adfe487000000b0032d84a5bf5fmr7402288wrm.28.1698051695873;
+        Mon, 23 Oct 2023 02:01:35 -0700 (PDT)
+Received: from ?IPV6:2a02:8011:e80c:0:68fb:b41e:9c58:360c? ([2a02:8011:e80c:0:68fb:b41e:9c58:360c])
+        by smtp.gmail.com with ESMTPSA id k17-20020a5d66d1000000b00327cd5e5ac1sm7371699wrw.1.2023.10.23.02.01.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Oct 2023 02:01:35 -0700 (PDT)
+Message-ID: <435424a7-efba-4438-917c-61823c374770@isovalent.com>
+Date: Mon, 23 Oct 2023 10:01:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/4] perf parse-events: Remove BPF event support
+Content-Language: en-GB
+To: Manu Bretelle <chantr4@gmail.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ Fangrui Song <maskray@google.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Carsten Haitzler <carsten.haitzler@arm.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>,
+ "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>,
+ James Clark <james.clark@arm.com>, Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Eduard Zingerman <eddyz87@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
+ Yonghong Song <yhs@fb.com>, Rob Herring <robh@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ bpf@vger.kernel.org, llvm@lists.linux.dev, Wang Nan <wangnan0@huawei.com>,
+ Wang ShaoBo <bobo.shaobowang@huawei.com>, YueHaibing
+ <yuehaibing@huawei.com>, He Kuang <hekuang@huawei.com>,
+ Brendan Gregg <brendan.d.gregg@gmail.com>
+References: <20230810184853.2860737-1-irogers@google.com>
+ <20230810184853.2860737-2-irogers@google.com> <ZNZJCWi9MT/HZdQ/@kernel.org>
+ <ZNZWsAXg2px1sm2h@kernel.org> <ZTGHRAlQtF7Fq8vn@surya>
+ <ZTGa0Ukt7QyxWcVy@kernel.org> <ZTGyWHTOE8OEhQWq@surya>
+ <ZTLlfXM4MhW1GEIJ@kernel.org> <ZTMBLllcYRoIF8E1@surya>
+From: Quentin Monnet <quentin@isovalent.com>
+In-Reply-To: <ZTMBLllcYRoIF8E1@surya>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.22]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm000003.china.huawei.com (7.193.23.66)
-X-CFilter-Loop: Reflected
 
-evsel__increase_rlimit() helper does nothing with evsel, and description
-of the functionality is inaccurate, rename it and move to util/rlimit.c.
+On 20/10/2023 23:37, Manu Bretelle wrote:
+> On Fri, Oct 20, 2023 at 05:39:25PM -0300, Arnaldo Carvalho de Melo wrote:
+>> Em Thu, Oct 19, 2023 at 03:48:56PM -0700, Manu Bretelle escreveu:
+>>> On Thu, Oct 19, 2023 at 06:08:33PM -0300, Arnaldo Carvalho de Melo wrote:
+>>>> I wonder how to improve the current situation to detect these kinds of
+>>>> problems in the future, i.e. how to notice that some file needed by some
+>>>> Makefile, etc got removed or that some feature test fails because some
+>>>> change in the test .c files makes them fail and thus activates fallbacks
+>>>> like the one above :-\
+>>  
+>>> I think it is tricky. Specifically to this situation, some CI could try to build
+>>> the different combinaison of bpftool and check the features through the build
+>>> `bpftool --version`.
+>>
+>> Right, if the right packages are installed, we expect to get some
+>> bpftool build output, if that changes after some patch, flag it.
 
-By the way, fix a checkppatch warning about misplaced license tag:
+Correct, this is what we do on the CI on the GitHub mirror (checking
+that the mirrored version builds correctly, with the expected features).
 
-  WARNING: Misplaced SPDX-License-Identifier tag - use line 1 instead
-  #160: FILE: tools/perf/util/rlimit.h:3:
-  /* SPDX-License-Identifier: LGPL-2.1 */
+>>
+>> Does bpftool have something like:
+>>
+>> ⬢[acme@toolbox perf-tools-next]$ perf version --build-options
+>> perf version 6.6.rc1.ga8dd62d05e56
+>>                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+>>     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+>>          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+>>                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
+>>             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+>>                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+>>                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+>> numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+>>                libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+>>              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+>>               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+>>              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+>>              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+>>     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+>>                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+>>                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+>>              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+>>                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+>>                    aio: [ on  ]  # HAVE_AIO_SUPPORT
+>>                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+>>                libpfm4: [ on  ]  # HAVE_LIBPFM
+>>          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+>>          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+>> ⬢[acme@toolbox perf-tools-next]$
+>>
+>> ?
+>>
+> 
+> It has
+> 
+>     $ ./tools/bpf/bpftool/bpftool --version -j | jq .features
+>     {
+>       "libbfd": false,
+>       "llvm": true,
+>       "skeletons": true,
+>       "bootstrap": false
+>     }
+> 
+> 
+> Maybe Quentin knows of something else.
 
-No functional change.
+This, or ldd on the binary (unless it was a static build). But "bpftool
+version" should be enough to tell whether the LLVM disassembler is built
+in or not, so we haven't needed something else so far.
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/util/data.c   |  4 ++--
- tools/perf/util/evsel.c  | 30 ++----------------------------
- tools/perf/util/evsel.h  |  3 ---
- tools/perf/util/rlimit.c | 28 ++++++++++++++++++++++++++++
- tools/perf/util/rlimit.h | 11 ++++++++++-
- 5 files changed, 42 insertions(+), 34 deletions(-)
-
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 098f9e3bb2e7..c29d8a382b19 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -17,7 +17,7 @@
- #include "util.h" // rm_rf_perf_data()
- #include "debug.h"
- #include "header.h"
--#include "evsel.h"
-+#include "rlimit.h"
- #include <internal/lib.h>
- 
- static void close_dir(struct perf_data_file *files, int nr)
-@@ -64,7 +64,7 @@ int perf_data__create_dir(struct perf_data *data, int nr)
- 			 * perf record needs at least 6 fds per CPU.
- 			 * When we run out of them try to increase the limits.
- 			 */
--			if (errno == EMFILE && evsel__increase_rlimit(&set_rlimit))
-+			if (errno == EMFILE && rlimit__increase_nofile(&set_rlimit))
- 				goto retry_open;
- 
- 			ret = -errno;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d5363d23f5d3..72a5dfc38d38 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -49,6 +49,7 @@
- #include "off_cpu.h"
- #include "pmu.h"
- #include "pmus.h"
-+#include "rlimit.h"
- #include "../perf-sys.h"
- #include "util/parse-branch-options.h"
- #include "util/bpf-filter.h"
-@@ -1989,33 +1990,6 @@ bool evsel__detect_missing_features(struct evsel *evsel)
- 	}
- }
- 
--bool evsel__increase_rlimit(enum rlimit_action *set_rlimit)
--{
--	int old_errno;
--	struct rlimit l;
--
--	if (*set_rlimit < INCREASED_MAX) {
--		old_errno = errno;
--
--		if (getrlimit(RLIMIT_NOFILE, &l) == 0) {
--			if (*set_rlimit == NO_CHANGE) {
--				l.rlim_cur = l.rlim_max;
--			} else {
--				l.rlim_cur = l.rlim_max + 1000;
--				l.rlim_max = l.rlim_cur;
--			}
--			if (setrlimit(RLIMIT_NOFILE, &l) == 0) {
--				(*set_rlimit) += 1;
--				errno = old_errno;
--				return true;
--			}
--		}
--		errno = old_errno;
--	}
--
--	return false;
--}
--
- static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		struct perf_thread_map *threads,
- 		int start_cpu_map_idx, int end_cpu_map_idx)
-@@ -2143,7 +2117,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	 * perf stat needs between 5 and 22 fds per CPU. When we run out
- 	 * of them try to increase the limits.
- 	 */
--	if (err == -EMFILE && evsel__increase_rlimit(&set_rlimit))
-+	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
- 		goto retry_open;
- 
- 	if (err != -EINVAL || idx > 0 || thread > 0)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 815be2491938..d791316a1792 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -330,9 +330,6 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		struct perf_thread_map *threads);
- bool evsel__detect_missing_features(struct evsel *evsel);
- 
--enum rlimit_action { NO_CHANGE, SET_TO_MAX, INCREASED_MAX };
--bool evsel__increase_rlimit(enum rlimit_action *set_rlimit);
--
- bool evsel__precise_ip_fallback(struct evsel *evsel);
- 
- struct perf_sample;
-diff --git a/tools/perf/util/rlimit.c b/tools/perf/util/rlimit.c
-index 13521d392a22..f857405fe1aa 100644
---- a/tools/perf/util/rlimit.c
-+++ b/tools/perf/util/rlimit.c
-@@ -1,5 +1,6 @@
- /* SPDX-License-Identifier: LGPL-2.1 */
- 
-+#include <errno.h>
- #include "util/debug.h"
- #include "util/rlimit.h"
- #include <sys/time.h>
-@@ -27,3 +28,30 @@ void rlimit__bump_memlock(void)
- 		}
- 	}
- }
-+
-+bool rlimit__increase_nofile(enum rlimit_action *set_rlimit)
-+{
-+	int old_errno;
-+	struct rlimit l;
-+
-+	if (*set_rlimit < INCREASED_MAX) {
-+		old_errno = errno;
-+
-+		if (getrlimit(RLIMIT_NOFILE, &l) == 0) {
-+			if (*set_rlimit == NO_CHANGE) {
-+				l.rlim_cur = l.rlim_max;
-+			} else {
-+				l.rlim_cur = l.rlim_max + 1000;
-+				l.rlim_max = l.rlim_cur;
-+			}
-+			if (setrlimit(RLIMIT_NOFILE, &l) == 0) {
-+				(*set_rlimit) += 1;
-+				errno = old_errno;
-+				return true;
-+			}
-+		}
-+		errno = old_errno;
-+	}
-+
-+	return false;
-+}
-diff --git a/tools/perf/util/rlimit.h b/tools/perf/util/rlimit.h
-index 9f59d8e710a3..19050d7fb9d7 100644
---- a/tools/perf/util/rlimit.h
-+++ b/tools/perf/util/rlimit.h
-@@ -1,6 +1,15 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
- #ifndef __PERF_RLIMIT_H_
- #define __PERF_RLIMIT_H_
--/* SPDX-License-Identifier: LGPL-2.1 */
-+
-+enum rlimit_action {
-+	NO_CHANGE,
-+	SET_TO_MAX,
-+	INCREASED_MAX
-+};
- 
- void rlimit__bump_memlock(void);
-+
-+bool rlimit__increase_nofile(enum rlimit_action *set_rlimit);
-+
- #endif // __PERF_RLIMIT_H_
--- 
-2.34.1
+Quentin
 
