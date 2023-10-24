@@ -1,168 +1,124 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F203924A11
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 18:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kqj8MJYk"
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02EB186
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 11:42:49 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-53f647c84d4so2384a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 11:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698172968; x=1698777768; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=09epGMxkhhjkdYiw8KiYrXokGkqZWFd0a0WWXHQ6/zM=;
-        b=Kqj8MJYkyul1ZOwP802BG3+Y4g+ksBOBskIt2PCkuuMJ0aBkI+mNNLyvhwukZHtiXM
-         VkseY0e4JT3qAAvdMZ1KNT4RoAPIHanq1/lRmyPtmNBM0d9JHmQQLX6wU9SCyehfdS73
-         eUXT55LTUccCYf32OBfv8/QUqLo42fJfX98r1OM4/1MDeCvhacT8vs0r0WxcC7Dj4UsD
-         rTvYnKrx4hz0ZbehcXiSe4A32Res0OT6QPB7QreN7J6zFOJ775X6bGbT5PcRQL3gdkqm
-         R3+UYIiOR5UB/Ux3ugwubMKPVTw6PEoYKujILK3mxDwuX4jF4apxevKArViMSmVRqAvh
-         FBww==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB64F14ABB;
+	Tue, 24 Oct 2023 19:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE10510C9;
+	Tue, 24 Oct 2023 12:10:13 -0700 (PDT)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-27d425a2dd0so4212773a91.2;
+        Tue, 24 Oct 2023 12:10:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698172968; x=1698777768;
+        d=1e100.net; s=20230601; t=1698174613; x=1698779413;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=09epGMxkhhjkdYiw8KiYrXokGkqZWFd0a0WWXHQ6/zM=;
-        b=UmPxCBRnmmblbntuIHi/7d50RcopgZzfNImX16aFmcP2TMyhzMg4asu2XMEpBEBVKq
-         1p+vcZoTAxFMPt7ghueVU74/i+EKSQpxQlCvFOEfArceuRbLLZXXgPnNr9Kuwy9XSsrr
-         2ZPOhbnDnWer3q3lYxOiPplqUzbI8wG7oUJuANA5nLwbfEUkIrRkktavsXv3Ams8FHw8
-         6u8K3gDfFd4BeIdqktAmi9GiUZuoJHy7amVB4AwI7LP54dBBkF7VSPZAuRcRXOmOLUrg
-         ntugONX6FTj7TdIVV4Wmwk5l7hL7eWtIaQjk2qvkOErDN/lmB5ycjEismCgEdQHp2Pej
-         MdYQ==
-X-Gm-Message-State: AOJu0Yww+EnIZKW92arlUe+5UMtOabTOweyWzdGuTEEAbS48uf+GBb41
-	y0NY/7pzrDfOSYr7dzgTcvH8bdnOi0SuxaYciUG3pA==
-X-Google-Smtp-Source: AGHT+IE5v1BzRWSVw3HW3sQr5xbR/mk1XD9T6KKRACBF8MxbgyF/bGD65mmBKo24Nf0gi8DonjtanmEogkSujhKR/0k=
-X-Received: by 2002:a05:6402:288e:b0:540:9e44:483f with SMTP id
- eg14-20020a056402288e00b005409e44483fmr115978edb.4.1698172967814; Tue, 24 Oct
- 2023 11:42:47 -0700 (PDT)
+        bh=GFLJZBS7agKqAkEvq06+8+duvFvUx+uUvizA/RGK7gk=;
+        b=Gd6TRx6/m7r0r47AI+HnypksqBe5Kspgw8VTtOMTnjP23TZdYOVlAv2/1hidb+YBWP
+         Y9Doi0zYY+HcrTpk9wY9FTuX5psBoB7XWIRikhv7W6Z25gedH4JBdK4Rde8t53ocAjWA
+         YGyhawOzav8/IhVoaPMXW23kXa86vvsouYdTV2v0BAtNMjTWu32eyr//dB2HsQ2x3LtE
+         nwUS/ZeeA8g57PCRWOlbd7WDvizr8W5jLQF8RiBNv+ytVLm6TZGvK8zx9EUL7MRcS/xu
+         fQDYCcklYrrRtrXELY66soS92pVoPlvYYjWogoZtnhMK1XBX7Pb8qiwvx6b+6E4N2qVE
+         65Gg==
+X-Gm-Message-State: AOJu0Yy1JGAKjrFeFLSvtjgY7QvxucFj16NlLTFrEK+NgDzqy+jE1rzS
+	wqnkdJyIN7v/xTF0LApBo191z9DPFdeQhIQOpYA=
+X-Google-Smtp-Source: AGHT+IEsQl/xke1QpF1wrB/mEuwglEi68xhvPN4fzxrQ2MxRHossM2my/b3DKnDGo+wrha+KeeeIJqIyF206c2s2rVw=
+X-Received: by 2002:a17:90b:3812:b0:27d:3f08:cc21 with SMTP id
+ mq18-20020a17090b381200b0027d3f08cc21mr14009203pjb.5.1698174612976; Tue, 24
+ Oct 2023 12:10:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-11-irogers@google.com>
- <f184e872-4673-419d-9ea8-2d449d9cfd5b@intel.com>
-In-Reply-To: <f184e872-4673-419d-9ea8-2d449d9cfd5b@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Oct 2023 11:42:33 -0700
-Message-ID: <CAP-5=fXcQwBk=JBof=MMB7LDoutXEvAkB2FbF46jo2xk3tS6QQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/13] perf record: Lazy load kernel symbols
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
-	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
-	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+References: <20231012035111.676789-1-namhyung@kernel.org> <20231012035111.676789-14-namhyung@kernel.org>
+ <ZTahaOOOgFkclARB@kernel.org>
+In-Reply-To: <ZTahaOOOgFkclARB@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 24 Oct 2023 12:10:01 -0700
+Message-ID: <CAM9d7cg65AYsPg+0eKg8Cj1Vb42vwCdjJAP3_1G_r7-Dwu7z8A@mail.gmail.com>
+Subject: Re: [PATCH 13/48] perf annotate: Add annotate_get_insn_location()
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 19, 2023 at 4:02=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
-com> wrote:
->
-> On 12/10/23 09:23, Ian Rogers wrote:
-> > Commit 5b7ba82a7591 ("perf symbols: Load kernel maps before using")
-> > changed it so that loading a kernel dso would cause the symbols for
-> > the dso to be eagerly loaded. For perf record this is overhead as the
-> > symbols won't be used. Add a symbol_conf to control the behavior and
-> > disable it for perf record and perf inject.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-inject.c   | 4 ++++
-> >  tools/perf/builtin-record.c   | 2 ++
-> >  tools/perf/util/event.c       | 4 ++--
-> >  tools/perf/util/symbol_conf.h | 3 ++-
-> >  4 files changed, 10 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> > index c8cf2fdd9cff..1539fb18c749 100644
-> > --- a/tools/perf/builtin-inject.c
-> > +++ b/tools/perf/builtin-inject.c
-> > @@ -2265,6 +2265,10 @@ int cmd_inject(int argc, const char **argv)
-> >               "perf inject [<options>]",
-> >               NULL
-> >       };
-> > +
-> > +     /* Disable eager loading of kernel symbols that adds overhead to =
-perf inject. */
-> > +     symbol_conf.lazy_load_kernel_maps =3D true;
->
-> Possibly not for itrace kernel decoding, so:
->
->         if (!inject->itrace_synth_opts.set)
->                 symbol_conf.lazy_load_kernel_maps =3D true;
+Hi Arnaldo,
 
-Thanks, added to v3.
-
-Ian
-
-> > +
-> >  #ifndef HAVE_JITDUMP
-> >       set_option_nobuild(options, 'j', "jit", "NO_LIBELF=3D1", true);
-> >  #endif
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index dcf288a4fb9a..8ec818568662 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -3989,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
-> >  # undef set_nobuild
-> >  #endif
-> >
-> > +     /* Disable eager loading of kernel symbols that adds overhead to =
-perf record. */
-> > +     symbol_conf.lazy_load_kernel_maps =3D true;
-> >       rec->opts.affinity =3D PERF_AFFINITY_SYS;
-> >
-> >       rec->evlist =3D evlist__new();
-> > diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> > index 923c0fb15122..68f45e9e63b6 100644
-> > --- a/tools/perf/util/event.c
-> > +++ b/tools/perf/util/event.c
-> > @@ -617,13 +617,13 @@ struct map *thread__find_map(struct thread *threa=
-d, u8 cpumode, u64 addr,
-> >       if (cpumode =3D=3D PERF_RECORD_MISC_KERNEL && perf_host) {
-> >               al->level =3D 'k';
-> >               maps =3D machine__kernel_maps(machine);
-> > -             load_map =3D true;
-> > +             load_map =3D !symbol_conf.lazy_load_kernel_maps;
-> >       } else if (cpumode =3D=3D PERF_RECORD_MISC_USER && perf_host) {
-> >               al->level =3D '.';
-> >       } else if (cpumode =3D=3D PERF_RECORD_MISC_GUEST_KERNEL && perf_g=
-uest) {
-> >               al->level =3D 'g';
-> >               maps =3D machine__kernel_maps(machine);
-> > -             load_map =3D true;
-> > +             load_map =3D !symbol_conf.lazy_load_kernel_maps;
-> >       } else if (cpumode =3D=3D PERF_RECORD_MISC_GUEST_USER && perf_gue=
-st) {
-> >               al->level =3D 'u';
-> >       } else {
-> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_con=
-f.h
-> > index 0b589570d1d0..2b2fb9e224b0 100644
-> > --- a/tools/perf/util/symbol_conf.h
-> > +++ b/tools/perf/util/symbol_conf.h
-> > @@ -42,7 +42,8 @@ struct symbol_conf {
-> >                       inline_name,
-> >                       disable_add2line_warn,
-> >                       buildid_mmap2,
-> > -                     guest_code;
-> > +                     guest_code,
-> > +                     lazy_load_kernel_maps;
-> >       const char      *vmlinux_name,
-> >                       *kallsyms_name,
-> >                       *source_prefix,
+On Mon, Oct 23, 2023 at 9:38=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
+> Em Wed, Oct 11, 2023 at 08:50:36PM -0700, Namhyung Kim escreveu:
+> > The annotate_get_insn_location() is to get the detailed information of
+> > instruction locations like registers and offset.  It has source and
+> > target operands locations in an array.  Each operand can have a
+> > register and an offset.  The offset is meaningful when mem_ref flag is
+> > set.
+>
+> This needs to be enclosed in HAVE_DWARF_SUPPORT, as the build is failing
+> in systems where this isn't available, see patch below.
+
+Thanks for the test and the patch, will add it to v2.
+
+Namhyung
+
+>
+>   CC      /tmp/build/perf/arch/x86/util/pmu.o
+> util/annotate.c: In function 'extract_reg_offset':
+> util/annotate.c:3537:24: error: implicit declaration of function 'get_dwa=
+rf_regnum' [-Werror=3Dimplicit-function-declaration]
+>  3537 |         op_loc->reg1 =3D get_dwarf_regnum(regname, 0);
+>       |                        ^~~~~~~~~~~~~~~~
+>   CC      /tmp/build/perf/tests/vmlinux-kallsyms.o
+>
+> I tested it with 'make NO_DWARF=3D1'
+>
+> - Arnaldo
+>
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 9d653a1e84ce4889..b998c81c89be04fc 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -3486,6 +3486,7 @@ int annotate_check_args(struct annotation_options *=
+args)
+>         return 0;
+>  }
+>
+> +#ifdef HAVE_DWARF_SUPPORT
+>  /*
+>   * Get register number and access offset from the given instruction.
+>   * It assumes AT&T x86 asm format like OFFSET(REG).  Maybe it needs
+> @@ -3591,3 +3592,4 @@ int annotate_get_insn_location(struct arch *arch, s=
+truct disasm_line *dl,
+>
+>         return 0;
+>  }
+> +#endif // HAVE_DWARF_SUPPORT
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index 4adda492233d2742..484be346a279c481 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -437,6 +437,7 @@ int annotate_parse_percent_type(const struct option *=
+opt, const char *_str,
+>
+>  int annotate_check_args(struct annotation_options *args);
+>
+> +#ifdef HAVE_DWARF_SUPPORT
+>  /**
+>   * struct annotated_op_loc - Location info of instruction operand
+>   * @reg: Register in the operand
+> @@ -473,4 +474,5 @@ struct annotated_insn_loc {
+>  int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl=
+,
+>                                struct annotated_insn_loc *loc);
+>
+> +#endif /* HAVE_DWARF_SUPPORT */
+>  #endif /* __PERF_ANNOTATE_H */
