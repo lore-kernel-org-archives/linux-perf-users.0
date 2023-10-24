@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A633224
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9034292A
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zSTUS5jd"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34B51FD4
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:33 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9cb10a5d44so2893005276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IikWft0+"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 561DE2D51
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:31 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a81a80097fso65159817b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698186332; x=1698791132; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698186329; x=1698791129; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MiRI18wPFPsoj3esFQh9IhgomcBelp5JaqZwyCYVfWY=;
-        b=zSTUS5jdV7rKsOD7wncjVXcyqL1sOPHzXG2/a9kSRAwf3/XvbAHBV5zrQ8WsLWkVCk
-         efbjbuAfjgH0FNr5pR251us6BjWcJHX8KZHGzNjnXM9N8F5NSklkreiQEKXnOUyNxP3x
-         eq6QeDZ289YikNgPMqhf3xSLXd0fCmYu/+t9g8n1Zat1fJM0f52DAuEHuKdkgNTvtkSS
-         n7kaGgZXC+gNxiwEcvEXbEs7GtKxegcL9JXCfVHjB2KInCWV3sqH+s+0qymhutcxAooN
-         jVlDCUZXEcHqVf5uA817QVZWRlYKJPmgK1+MwEAUnj8P3EXu8KkLT/5C+lOqK37g/oEm
-         6gfA==
+        bh=g/BBcChnvHkmkYd/yKkYLm0W4V4ebv0lxjgGfrAGFAQ=;
+        b=IikWft0+Z2JZYapaYzZducsS8U/UZgqXninSEVB+zlH+i8i0EAC/IiJDMsOg/YwMgg
+         1vdiLwhQB8Yhct/2Aljp2ItEUU6WxI7oGstRkTzDu0PCYsvzZ/lTNDb6bXKKdoglzboL
+         X5+Wwh7+RRHtobAaoZiTBg81555viJ7u6zG8StT0D05c4sO/ON7lvLvRbYQ/k+za7Khu
+         dDSITUE9C9XWQy4dc9A/Iso3ALZ+17oHeiZbFLgdLzByROS+AFa4XNvHHzW/ZcNuGiO7
+         Of5VeO1ZiCeEo7UN4PM5PnpzWWDDlNUA0QdUtI1e9jovCqgY2Fxh1cn6PQuErjwH7OsW
+         e10Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698186332; x=1698791132;
+        d=1e100.net; s=20230601; t=1698186329; x=1698791129;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MiRI18wPFPsoj3esFQh9IhgomcBelp5JaqZwyCYVfWY=;
-        b=cyx88KgfY+33zNXCPsDSqqSwI0YEehA9ZiBJQpbGjwRqzUR6KU8BUzOI2MKi428xgj
-         MnZzBVoBaGN3XahW3f0/V+q4dbm+02RmFT/ctuIlYdIznQD4FgMH4UUxFgZqX+9q+P/S
-         uFHzVz/ums/LhIHRZVjf43+ywgOCDOvjM2WJvkhQyjNRtjia2e329+1OzEBOTGmJxQX7
-         ETILHNfzFyY/wsAR2eCgvs+Cx6pqPOLL2jykNaAEy5wCaen+8whte/zY8QH9/1cKUp7N
-         pzWqjbtuUPkA54BroWq3UPBARHrfYozeFJWXD2I2fYRUDvtrpfNmw7515vvGMDeMubbJ
-         +TyA==
-X-Gm-Message-State: AOJu0YwvMbLOrBEq82aV2Lw3qGxDWEA0sRaGGa8TDQX+Xhp/Swjzs2AI
-	h/4yBdowRaZoncilCGK9oj0cDhFh5CVU
-X-Google-Smtp-Source: AGHT+IGXDkdr+GYf3+Uii128YBRB9U48VI5EbuLEHC0IkaHgNqKm9aqVymDt2TgW9D08iv713nCAp1+H/yHP
+        bh=g/BBcChnvHkmkYd/yKkYLm0W4V4ebv0lxjgGfrAGFAQ=;
+        b=KTX1hHwDrrrojrdcc/YTfNsdJNKC1mVAPSuPd6E6BfuzOrRjI3z5UKnDAuNglKZMGl
+         Ys3itsrwO6Kn4N1FMKEY98zDG4zjqmIaMsplrsmxB4KxiZxwCyL0CDh623Z8krepJu35
+         dTr82YRfu1jwVFr8+izznmCFwxIKw1/pENz7Hz4eumHxaee6vG+TUX+r0Bo15yKkKN65
+         4XN2Opuf8q5p9ieKlsDwD0BXvuvCh3X6pkfNYHNjd4nr3P7riYnTC4XPngSy19h5RsC0
+         AuRpEXyHSyxYnljseL3GfAzlVoqDhBlosGVeq+v1VECsSrrnDyR4PnmUsP6r6F8ijGhp
+         O83g==
+X-Gm-Message-State: AOJu0Yx78+pXzuye/kurDkS4o7oR0SvAOZwYTFMVnOxZLkN5lt4Bl9Wd
+	3Ndsz/yL6UfGR6Ypq73oa76yIe8uoDw1
+X-Google-Smtp-Source: AGHT+IG0zOXVoS4I27y9mQ3iP8YCnXrnCRbcVVP+t3TFR8m1DZEM6pyqJUzKpCn9UlcVCa0j9N5exd/Lyl00
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:93d2:18cc:4d63:45ba])
- (user=irogers job=sendgmr) by 2002:a05:6902:1743:b0:d9a:50d2:a8be with SMTP
- id bz3-20020a056902174300b00d9a50d2a8bemr262421ybb.1.1698186331901; Tue, 24
- Oct 2023 15:25:31 -0700 (PDT)
-Date: Tue, 24 Oct 2023 15:23:38 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:d954:0:b0:595:5cf0:a9b0 with SMTP id
+ b81-20020a0dd954000000b005955cf0a9b0mr293421ywe.9.1698186329522; Tue, 24 Oct
+ 2023 15:25:29 -0700 (PDT)
+Date: Tue, 24 Oct 2023 15:23:37 -0700
 In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
-Message-Id: <20231024222353.3024098-36-irogers@google.com>
+Message-Id: <20231024222353.3024098-35-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231024222353.3024098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-Subject: [PATCH v3 35/50] perf maps: Add find next entry to give entry after
- the given map
+Subject: [PATCH v3 34/50] perf maps: Add maps__load_first
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -72,70 +71,62 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Use to remove map_rb_node use from machine.c.
+Avoid bpf_lock_contention_touching the internal maps data structure by
+adding a helper function. As access is done directly on the map in
+maps, hold the read lock to stop it being removed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c |  7 +++----
- tools/perf/util/maps.c    | 11 +++++++++++
- tools/perf/util/maps.h    |  2 ++
- 3 files changed, 16 insertions(+), 4 deletions(-)
+ tools/perf/util/bpf_lock_contention.c |  2 +-
+ tools/perf/util/maps.c                | 13 +++++++++++++
+ tools/perf/util/maps.h                |  2 ++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 191e492539e5..ab345604f274 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1759,12 +1759,11 @@ int machine__create_kernel_maps(struct machine *machine)
- 
- 	if (end == ~0ULL) {
- 		/* update end address of the kernel map using adjacent module address */
--		struct map_rb_node *rb_node = maps__find_node(machine__kernel_maps(machine),
--							machine__kernel_map(machine));
--		struct map_rb_node *next = map_rb_node__next(rb_node);
-+		struct map *next = maps__find_next_entry(machine__kernel_maps(machine),
-+							 machine__kernel_map(machine));
- 
- 		if (next)
--			machine__set_kernel_mmap(machine, start, map__start(next->map));
-+			machine__set_kernel_mmap(machine, start, map__start(next));
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index e105245eb905..d9720a910330 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -317,7 +317,7 @@ int lock_contention_read(struct lock_contention *con)
  	}
  
- out_put:
+ 	/* make sure it loads the kernel map */
+-	map__load(maps__first(machine->kmaps)->map);
++	maps__load_first(machine->kmaps);
+ 
+ 	prev_key = NULL;
+ 	while (!bpf_map_get_next_key(fd, prev_key, &key)) {
 diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 9a84d26328a7..38d56709bd5e 100644
+index 85bea2a6dca9..9a84d26328a7 100644
 --- a/tools/perf/util/maps.c
 +++ b/tools/perf/util/maps.c
-@@ -662,6 +662,17 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
- 	return map;
+@@ -792,3 +792,16 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 	}
+ 	return err;
  }
- 
-+struct map *maps__find_next_entry(struct maps *maps, struct map *map)
++
++void maps__load_first(struct maps *maps)
 +{
-+	struct map_rb_node *rb_node = maps__find_node(maps, map);
-+	struct map_rb_node *next = map_rb_node__next(rb_node);
++	struct map_rb_node *first;
 +
-+	if (next)
-+		return next->map;
++	down_read(maps__lock(maps));
 +
-+	return NULL;
++	first = maps__first(maps);
++	if (first)
++		map__load(first->map);
++
++	up_read(maps__lock(maps));
 +}
-+
- void maps__fixup_end(struct maps *maps)
- {
- 	struct map_rb_node *prev = NULL, *curr;
 diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index b7ab3ec61b7c..84b42c8456e8 100644
+index e4a49d6ff5cf..b7ab3ec61b7c 100644
 --- a/tools/perf/util/maps.h
 +++ b/tools/perf/util/maps.h
-@@ -136,6 +136,8 @@ int maps__fixup_overlap_and_insert(struct maps *maps, struct map *new);
+@@ -142,4 +142,6 @@ void __maps__sort_by_name(struct maps *maps);
  
- struct map *maps__find_by_name(struct maps *maps, const char *name);
+ void maps__fixup_end(struct maps *maps);
  
-+struct map *maps__find_next_entry(struct maps *maps, struct map *map);
++void maps__load_first(struct maps *maps);
 +
- int maps__merge_in(struct maps *kmaps, struct map *new_map);
- 
- void __maps__sort_by_name(struct maps *maps);
+ #endif // __PERF_MAPS_H
 -- 
 2.42.0.758.gaed0368e0e-goog
 
