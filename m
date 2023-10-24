@@ -1,58 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0137B208AB
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 19:21:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB4E2AB3A
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 20:52:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GwfGD6xH"
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B758110CE
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 12:21:37 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-53f98cbcd76so2620a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 12:21:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2IGGYXkm"
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D5D10CE
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 13:52:36 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-4078fe6a063so6705e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 13:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698175296; x=1698780096; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698180755; x=1698785555; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fhFkfWG3vGEeLM7vOQJLZJ3KgIqwnn5bowVUsiKiagA=;
-        b=GwfGD6xHoluNOSsgFx0TMnT4q/vv26uUoDRefxjGctv2OlMRBWDWCMB+elsXfb525n
-         zR6k3ZBfkHjbiBsBryqDZywk9tLEWQYe7kpYsaCi5wqZcTjFkaDkKIROTBnJUDAui+Nj
-         03amdqCgVyTGMYUfXcWYRKf0CCIeLpazt1ZrNM5jWHnzVsKPWhs9gwcldyzTIgdf6paz
-         7Eztr+A43SkYaU/RNJrjhVgKrdKyrs+XL7T2k7Meorw3AnsiUSq17evPYtruPWEQtzqx
-         wcRXBabHToQIa2jBn6yKZtJBGdTvO3hCfPgu749g8TMxZv+dPmmZvunytz94CbHHos7u
-         D60Q==
+        bh=uc+eG35bw1iGZpwNNHM4lO0BDe5utnOWKic0Qw9r840=;
+        b=2IGGYXkmwtc7wPMOSEQx9yblKO74epuBGdRk3+sXBxQeKp/zA/6F5mFxe59v8i3Vwu
+         C8JZYgvovm6n/32T1nROm04br6J5pSE6CgiS3q7nDPPEFaitp4l17G2A2oE47vPej/9o
+         bt3M19NHdKUG2UqgS6FcWAiNqrmpC882vlQXTf4HeT6OnjjkCepWguR76nC5UCxgsM+8
+         M4ZJ81wLwdKHm68ip7uVrQAoyGyhobzaim5rNdHesRMVPlwTsmHCqBsp72bsKvXdIphp
+         pwVqLaJk0qVmamQFKxprUkXMi/N+LQ0YW+jC+4NHtEjDFIp/o87n9DB6cUJ2ponnY39h
+         DcRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698175296; x=1698780096;
+        d=1e100.net; s=20230601; t=1698180755; x=1698785555;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fhFkfWG3vGEeLM7vOQJLZJ3KgIqwnn5bowVUsiKiagA=;
-        b=vp1JFyvJucPVHlmPM2evbTt8VI8l6qyOlilRXAAJ9SYCfrBfY0GXxcJl9yufwmhKyR
-         j5aTgaJYP+0SozGF/ZZj/wsAau+2ExcLo5HaL4kQiQbDcgR/JlHGrySPbqoQoOldPI8k
-         VeTmatJkO2oe94bqa85D5PP8UeQ5s/mzB+cXCSv+zQ2jJ3cSdORB8FDSG6keMQI50vsf
-         p+iXWEm9IZbptH3bV53caIpvtF7dCmaBOsXwHrW1r8C7eyM+i4tfcev8Psznfu5/hFe1
-         EhUobCYjg/8vvLW+aE7jq0pAvOGD5MruH6ObeiraLG1Io84KOQ2kuayaVTOCyMN0At+a
-         /9lA==
-X-Gm-Message-State: AOJu0YzIuW2A9UC8H6+kUOcSClHY4VkOyXpg873dV25TA320W/N6Z0wN
-	UCK7d6OvfkMrJMKYsNf7/BnKjhE191e/pz7bhqSIEw==
-X-Google-Smtp-Source: AGHT+IFGcCboRwqUCDY93lGlGItSSyexcFRFTreeWIsuzBJZ2oNk7r2KYeJ4W2+TFOfiDK5RzlI8c33HHtTCyQfFUUo=
-X-Received: by 2002:a50:950b:0:b0:53f:c4d4:6a14 with SMTP id
- u11-20020a50950b000000b0053fc4d46a14mr142452eda.5.1698175295633; Tue, 24 Oct
- 2023 12:21:35 -0700 (PDT)
+        bh=uc+eG35bw1iGZpwNNHM4lO0BDe5utnOWKic0Qw9r840=;
+        b=UZVkhhteQEQQq/Ysni0kPogsrha8Fm4yKnbx+YiN8B9XPeJdX9tUZRfLrCX4y5t9mR
+         D/MiTtaX+TKMCGROhr+SxamjhOV6e3k4gjkM35lp0YaepW0y3OoI6/Z8irUHgT4/SNXj
+         gJoqX6WBqqcAVi8drN27zy/xcn6Aij0kL95kW/E1wyfAQJFyMgKNzHglLQLFiJAkBsWT
+         RPmj9kYLTDnkHDnsG0K+B96c+Pfmbt7gx4Y41c+ZxsEresndZq660fEgWfBfbfuk6hcJ
+         w5xXSTDInt/YX+yksW3bI/x4BIAguKGAJdZCef902fIHOi9NqziWHuTITk+qEHfv+XOb
+         gP/Q==
+X-Gm-Message-State: AOJu0YwxWrUdPToqvZAZwcguvQJ8r04mQjQJrSxojIhQ04axBgiKipqo
+	MgfDI7Tg3bcDgCeEKjQ12ghm7R5EcMoQjIqu1pI3AA==
+X-Google-Smtp-Source: AGHT+IETMDtk6wyzOKg0bJiP64pef7TGydfCj428yOrlmahhZTy+ZQFoPtC2M+gLd0x4a8TD8TJezhZ/hQXskFR1SjI=
+X-Received: by 2002:a05:600c:4f02:b0:404:74f8:f47c with SMTP id
+ l2-20020a05600c4f0200b0040474f8f47cmr8525wmq.5.1698180754478; Tue, 24 Oct
+ 2023 13:52:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-13-irogers@google.com>
- <CAM9d7cgehgF0pXm_7VME0jUo=8dHwRH7_EruGqP7D-CVaj5sEw@mail.gmail.com>
-In-Reply-To: <CAM9d7cgehgF0pXm_7VME0jUo=8dHwRH7_EruGqP7D-CVaj5sEw@mail.gmail.com>
+References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-10-irogers@google.com>
+ <CAM9d7cih9+DCKzVXBFTMUfjjY6ZX-yrj3CEM+Q3tjTNRYmQ=Yw@mail.gmail.com>
+In-Reply-To: <CAM9d7cih9+DCKzVXBFTMUfjjY6ZX-yrj3CEM+Q3tjTNRYmQ=Yw@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Oct 2023 12:21:23 -0700
-Message-ID: <CAP-5=fULcy+9pY5U_S_19AvSQWKf-y28R9T6G4d6Xw7C3ENM8g@mail.gmail.com>
-Subject: Re: [PATCH v2 12/13] perf mmap: Lazily initialize zstd streams
+Date: Tue, 24 Oct 2023 13:52:22 -0700
+Message-ID: <CAP-5=fXzpDbzoL0CVeB8ewv37MNUYyXZahgJZQ=qxRh882jozw@mail.gmail.com>
+Subject: Re: [PATCH v2 09/13] perf mem_info: Add and use map_symbol__exit and addr_map_symbol__exit
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -69,181 +69,291 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 18, 2023 at 4:21=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Wed, Oct 18, 2023 at 4:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
 > On Wed, Oct 11, 2023 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> =
 wrote:
 > >
-> > Zstd streams create dictionaries that can require significant RAM,
-> > especially when there is one per-CPU. Tools like perf record won't use
-> > the streams without the -z option, and so the creation of the streams
-> > is pure overhead. Switch to creating the streams on first use.
+> > Fix leak where mem_info__put wouldn't release the maps/map as used by
+> > perf mem. Add exit functions and use elsewhere that the maps and map
+> > are released.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/compress.h |  1 +
-> >  tools/perf/util/mmap.c     |  5 ++--
-> >  tools/perf/util/mmap.h     |  1 -
-> >  tools/perf/util/zstd.c     | 61 ++++++++++++++++++++------------------
-> >  4 files changed, 35 insertions(+), 33 deletions(-)
+> >  tools/perf/util/Build        |  1 +
+> >  tools/perf/util/callchain.c  | 15 +++++----------
+> >  tools/perf/util/hist.c       |  6 ++----
+> >  tools/perf/util/machine.c    |  6 ++----
+> >  tools/perf/util/map_symbol.c | 15 +++++++++++++++
+> >  tools/perf/util/map_symbol.h |  4 ++++
+> >  tools/perf/util/symbol.c     |  5 ++++-
+> >  7 files changed, 33 insertions(+), 19 deletions(-)
+> >  create mode 100644 tools/perf/util/map_symbol.c
 > >
-> > diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-> > index 0cd3369af2a4..9391850f1a7e 100644
-> > --- a/tools/perf/util/compress.h
-> > +++ b/tools/perf/util/compress.h
-> > @@ -21,6 +21,7 @@ struct zstd_data {
-> >  #ifdef HAVE_ZSTD_SUPPORT
-> >         ZSTD_CStream    *cstream;
-> >         ZSTD_DStream    *dstream;
-> > +       int comp_level;
-> >  #endif
-> >  };
+> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> > index 0ea5a9d368d4..96058f949ec9 100644
+> > --- a/tools/perf/util/Build
+> > +++ b/tools/perf/util/Build
+> > @@ -49,6 +49,7 @@ perf-y +=3D dso.o
+> >  perf-y +=3D dsos.o
+> >  perf-y +=3D symbol.o
+> >  perf-y +=3D symbol_fprintf.o
+> > +perf-y +=3D map_symbol.o
+> >  perf-y +=3D color.o
+> >  perf-y +=3D color_config.o
+> >  perf-y +=3D metricgroup.o
+> > diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> > index 0a7919c2af91..02881d5b822c 100644
+> > --- a/tools/perf/util/callchain.c
+> > +++ b/tools/perf/util/callchain.c
+> > @@ -1496,16 +1496,14 @@ static void free_callchain_node(struct callchai=
+n_node *node)
 > >
-> > diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-> > index 49093b21ee2d..122ee198a86e 100644
-> > --- a/tools/perf/util/mmap.c
-> > +++ b/tools/perf/util/mmap.c
-> > @@ -295,15 +295,14 @@ int mmap__mmap(struct mmap *map, struct mmap_para=
-ms *mp, int fd, struct perf_cpu
-> >
-> >         map->core.flush =3D mp->flush;
-> >
-> > -       map->comp_level =3D mp->comp_level;
-> >  #ifndef PYTHON_PERF
-> > -       if (zstd_init(&map->zstd_data, map->comp_level)) {
-> > +       if (zstd_init(&map->zstd_data, mp->comp_level)) {
-> >                 pr_debug2("failed to init mmap compressor, error %d\n",=
- errno);
-> >                 return -1;
+> >         list_for_each_entry_safe(list, tmp, &node->parent_val, list) {
+> >                 list_del_init(&list->list);
+> > -               map__zput(list->ms.map);
+> > -               maps__zput(list->ms.maps);
+> > +               map_symbol__exit(&list->ms);
+> >                 zfree(&list->brtype_stat);
+> >                 free(list);
 > >         }
-> >  #endif
 > >
-> > -       if (map->comp_level && !perf_mmap__aio_enabled(map)) {
-> > +       if (mp->comp_level && !perf_mmap__aio_enabled(map)) {
-> >                 map->data =3D mmap(NULL, mmap__mmap_len(map), PROT_READ=
-|PROT_WRITE,
-> >                                  MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-> >                 if (map->data =3D=3D MAP_FAILED) {
-> > diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-> > index f944c3cd5efa..0df6e1621c7e 100644
-> > --- a/tools/perf/util/mmap.h
-> > +++ b/tools/perf/util/mmap.h
-> > @@ -39,7 +39,6 @@ struct mmap {
-> >  #endif
-> >         struct mmap_cpu_mask    affinity_mask;
-> >         void            *data;
-> > -       int             comp_level;
-> >         struct perf_data_file *file;
-> >         struct zstd_data      zstd_data;
-> >  };
-> > diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-> > index 48dd2b018c47..60f2d749b1c0 100644
-> > --- a/tools/perf/util/zstd.c
-> > +++ b/tools/perf/util/zstd.c
-> > @@ -7,35 +7,9 @@
+> >         list_for_each_entry_safe(list, tmp, &node->val, list) {
+> >                 list_del_init(&list->list);
+> > -               map__zput(list->ms.map);
+> > -               maps__zput(list->ms.maps);
+> > +               map_symbol__exit(&list->ms);
+> >                 zfree(&list->brtype_stat);
+> >                 free(list);
+> >         }
+> > @@ -1591,8 +1589,7 @@ int callchain_node__make_parent_list(struct callc=
+hain_node *node)
+> >  out:
+> >         list_for_each_entry_safe(chain, new, &head, list) {
+> >                 list_del_init(&chain->list);
+> > -               map__zput(chain->ms.map);
+> > -               maps__zput(chain->ms.maps);
+> > +               map_symbol__exit(&chain->ms);
+> >                 zfree(&chain->brtype_stat);
+> >                 free(chain);
+> >         }
+> > @@ -1676,10 +1673,8 @@ void callchain_cursor_reset(struct callchain_cur=
+sor *cursor)
+> >         cursor->nr =3D 0;
+> >         cursor->last =3D &cursor->first;
 > >
-> >  int zstd_init(struct zstd_data *data, int level)
-> >  {
-> > -       size_t ret;
-> > -
-> > -       data->dstream =3D ZSTD_createDStream();
-> > -       if (data->dstream =3D=3D NULL) {
-> > -               pr_err("Couldn't create decompression stream.\n");
-> > -               return -1;
+> > -       for (node =3D cursor->first; node !=3D NULL; node =3D node->nex=
+t) {
+> > -               map__zput(node->ms.map);
+> > -               maps__zput(node->ms.maps);
 > > -       }
-> > -
-> > -       ret =3D ZSTD_initDStream(data->dstream);
-> > -       if (ZSTD_isError(ret)) {
-> > -               pr_err("Failed to initialize decompression stream: %s\n=
-", ZSTD_getErrorName(ret));
-> > -               return -1;
-> > -       }
-> > -
-> > -       if (!level)
-> > -               return 0;
-> > -
-> > -       data->cstream =3D ZSTD_createCStream();
-> > -       if (data->cstream =3D=3D NULL) {
-> > -               pr_err("Couldn't create compression stream.\n");
-> > -               return -1;
-> > -       }
-> > -
-> > -       ret =3D ZSTD_initCStream(data->cstream, level);
-> > -       if (ZSTD_isError(ret)) {
-> > -               pr_err("Failed to initialize compression stream: %s\n",=
- ZSTD_getErrorName(ret));
-> > -               return -1;
-> > -       }
-> > -
-> > +       data->comp_level =3D level;
-> > +       data->dstream =3D NULL;
-> > +       data->cstream =3D NULL;
-> >         return 0;
+> > +       for (node =3D cursor->first; node !=3D NULL; node =3D node->nex=
+t)
+> > +               map_symbol__exit(&node->ms);
 > >  }
 > >
-> > @@ -63,6 +37,21 @@ size_t zstd_compress_stream_to_records(struct zstd_d=
-ata *data, void *dst, size_t
-> >         ZSTD_outBuffer output;
-> >         void *record;
+> >  void callchain_param_setup(u64 sample_type, const char *arch)
+> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > index ac8c0ef48a7f..d62693b8fad8 100644
+> > --- a/tools/perf/util/hist.c
+> > +++ b/tools/perf/util/hist.c
+> > @@ -524,8 +524,7 @@ static int hist_entry__init(struct hist_entry *he,
+> >                 map__put(he->mem_info->daddr.ms.map);
+> >         }
+> >  err:
+> > -       maps__zput(he->ms.maps);
+> > -       map__zput(he->ms.map);
+> > +       map_symbol__exit(&he->ms);
+> >         zfree(&he->stat_acc);
+> >         return -ENOMEM;
+> >  }
+> > @@ -1317,8 +1316,7 @@ void hist_entry__delete(struct hist_entry *he)
+> >         struct hist_entry_ops *ops =3D he->ops;
 > >
-> > +       if (!data->cstream) {
-> > +               data->cstream =3D ZSTD_createCStream();
-> > +               if (data->cstream =3D=3D NULL) {
-> > +                       pr_err("Couldn't create compression stream.\n")=
-;
-> > +                       return -1;
-> > +               }
-> > +
-> > +               ret =3D ZSTD_initCStream(data->cstream, data->comp_leve=
-l);
-> > +               if (ZSTD_isError(ret)) {
-> > +                       pr_err("Failed to initialize compression stream=
-: %s\n",
-> > +                               ZSTD_getErrorName(ret));
-> > +                       return -1;
+> >         thread__zput(he->thread);
+> > -       maps__zput(he->ms.maps);
+> > -       map__zput(he->ms.map);
+> > +       map_symbol__exit(&he->ms);
+> >
+> >         if (he->branch_info) {
+> >                 map__zput(he->branch_info->from.ms.map);
 >
-> I'm not sure if the callers are ready to handle the failure.
+> What about he->branch_info and he->mem_info ?
+>
+> Also I think we can use it in hists__account_cycles() too.
 
-Thanks, fixed in v3.
+Thanks, I addressed the ones I could find. Running perf mem report I still =
+see:
 
+=3D=3D2948587=3D=3DERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 1296 byte(s) in 162 object(s) allocated from:
+    #0 0x7f2a018d85bf in __interceptor_malloc
+../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x556104500e47 in map__get util/map.h:180
+    #2 0x55610450cd6d in ip__resolve_data util/machine.c:2260
+    #3 0x55610450d022 in sample__resolve_mem util/machine.c:2275
+    #4 0x55610459dc73 in iter_prepare_mem_entry util/hist.c:824
+    #5 0x5561045a0175 in hist_entry_iter__add util/hist.c:1238
+    #6 0x5561042d8e8e in process_sample_event tools/perf/builtin-report.c:3=
+32
+    #7 0x556104526a37 in evlist__deliver_sample util/session.c:1518
+    #8 0x556104526d18 in machines__deliver_event util/session.c:1557
+    #9 0x556104527942 in perf_session__deliver_event util/session.c:1639
+    #10 0x55610451d576 in ordered_events__deliver_event util/session.c:188
+    #11 0x556104536b6a in do_flush util/ordered-events.c:245
+    #12 0x5561045372a8 in __ordered_events__flush util/ordered-events.c:324
+    #13 0x556104537544 in ordered_events__flush util/ordered-events.c:342
+    #14 0x5561045240b0 in perf_event__process_finished_round util/session.c=
+:1080
+    #15 0x556104527fd5 in perf_session__process_user_event util/session.c:1=
+692
+    #16 0x556104529396 in perf_session__process_event util/session.c:1861
+    #17 0x55610452cf8c in process_simple util/session.c:2436
+    #18 0x55610452c69b in reader__read_event util/session.c:2365
+    #19 0x55610452cb36 in reader__process_events util/session.c:2414
+    #20 0x55610452d467 in __perf_session__process_events util/session.c:246=
+1
+    #21 0x55610452ec52 in perf_session__process_events util/session.c:2627
+    #22 0x5561042dd613 in __cmd_report tools/perf/builtin-report.c:992
+    #23 0x5561042e7ac7 in cmd_report tools/perf/builtin-report.c:1711
+    #24 0x556104343967 in report_events tools/perf/builtin-mem.c:374
+    #25 0x556104345278 in cmd_mem tools/perf/builtin-mem.c:516
+    #26 0x55610441848d in run_builtin tools/perf/perf.c:322
+    #27 0x5561044189f9 in handle_internal_command tools/perf/perf.c:375
+    #28 0x556104418dc1 in run_argv tools/perf/perf.c:419
+    #29 0x556104419329 in main tools/perf/perf.c:535
+
+Direct leak of 1296 byte(s) in 162 object(s) allocated from:
+    #0 0x7f2a018d85bf in __interceptor_malloc
+../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x556104500e47 in map__get util/map.h:180
+    #2 0x55610450c97e in ip__resolve_ams util/machine.c:2239
+    #3 0x55610450cf1b in sample__resolve_mem util/machine.c:2274
+    #4 0x55610459dc73 in iter_prepare_mem_entry util/hist.c:824
+    #5 0x5561045a0175 in hist_entry_iter__add util/hist.c:1238
+    #6 0x5561042d8e8e in process_sample_event tools/perf/builtin-report.c:3=
+32
+    #7 0x556104526a37 in evlist__deliver_sample util/session.c:1518
+    #8 0x556104526d18 in machines__deliver_event util/session.c:1557
+    #9 0x556104527942 in perf_session__deliver_event util/session.c:1639
+    #10 0x55610451d576 in ordered_events__deliver_event util/session.c:188
+    #11 0x556104536b6a in do_flush util/ordered-events.c:245
+    #12 0x5561045372a8 in __ordered_events__flush util/ordered-events.c:324
+    #13 0x556104537544 in ordered_events__flush util/ordered-events.c:342
+    #14 0x5561045240b0 in perf_event__process_finished_round util/session.c=
+:1080
+    #15 0x556104527fd5 in perf_session__process_user_event util/session.c:1=
+692
+    #16 0x556104529396 in perf_session__process_event util/session.c:1861
+    #17 0x55610452cf8c in process_simple util/session.c:2436
+    #18 0x55610452c69b in reader__read_event util/session.c:2365
+    #19 0x55610452cb36 in reader__process_events util/session.c:2414
+    #20 0x55610452d467 in __perf_session__process_events util/session.c:246=
+1
+    #21 0x55610452ec52 in perf_session__process_events util/session.c:2627
+    #22 0x5561042dd613 in __cmd_report tools/perf/builtin-report.c:992
+    #23 0x5561042e7ac7 in cmd_report tools/perf/builtin-report.c:1711
+    #24 0x556104343967 in report_events tools/perf/builtin-mem.c:374
+    #25 0x556104345278 in cmd_mem tools/perf/builtin-mem.c:516
+    #26 0x55610441848d in run_builtin tools/perf/perf.c:322
+    #27 0x5561044189f9 in handle_internal_command tools/perf/perf.c:375
+    #28 0x556104418dc1 in run_argv tools/perf/perf.c:419
+    #29 0x556104419329 in main tools/perf/perf.c:535
+
+Which looks like iter->priv was freed without puts. The use of void*s
+and the general layout of the histogram code I find confusing. It
+would be nice to get this resolved but I wasn't able to do it in v3.
+
+Thanks,
 Ian
 
 > Thanks,
 > Namhyung
 >
 >
-> > +               }
-> > +       }
-> > +
-> >         while (input.pos < input.size) {
-> >                 record =3D dst;
-> >                 size =3D process_header(record, 0);
-> > @@ -96,6 +85,20 @@ size_t zstd_decompress_stream(struct zstd_data *data=
-, void *src, size_t src_size
-> >         ZSTD_inBuffer input =3D { src, src_size, 0 };
-> >         ZSTD_outBuffer output =3D { dst, dst_size, 0 };
+> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > index 8e5085b77c7b..6ca7500e2cf4 100644
+> > --- a/tools/perf/util/machine.c
+> > +++ b/tools/perf/util/machine.c
+> > @@ -2389,8 +2389,7 @@ static int add_callchain_ip(struct thread *thread=
+,
+> >                                       iter_cycles, branch_from, srcline=
+);
+> >  out:
+> >         addr_location__exit(&al);
+> > -       maps__put(ms.maps);
+> > -       map__put(ms.map);
+> > +       map_symbol__exit(&ms);
+> >         return err;
+> >  }
 > >
-> > +       if (!data->dstream) {
-> > +               data->dstream =3D ZSTD_createDStream();
-> > +               if (data->dstream =3D=3D NULL) {
-> > +                       pr_err("Couldn't create decompression stream.\n=
-");
-> > +                       return -1;
-> > +               }
+> > @@ -3116,8 +3115,7 @@ static int append_inlines(struct callchain_cursor=
+ *cursor, struct map_symbol *ms
+> >                 if (ret !=3D 0)
+> >                         return ret;
+> >         }
+> > -       map__put(ilist_ms.map);
+> > -       maps__put(ilist_ms.maps);
+> > +       map_symbol__exit(&ilist_ms);
+> >
+> >         return ret;
+> >  }
+> > diff --git a/tools/perf/util/map_symbol.c b/tools/perf/util/map_symbol.=
+c
+> > new file mode 100644
+> > index 000000000000..bef5079f2403
+> > --- /dev/null
+> > +++ b/tools/perf/util/map_symbol.c
+> > @@ -0,0 +1,15 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +#include "map_symbol.h"
+> > +#include "maps.h"
+> > +#include "map.h"
 > > +
-> > +               ret =3D ZSTD_initDStream(data->dstream);
-> > +               if (ZSTD_isError(ret)) {
-> > +                       pr_err("Failed to initialize decompression stre=
-am: %s\n",
-> > +                               ZSTD_getErrorName(ret));
-> > +                       return -1;
-> > +               }
+> > +void map_symbol__exit(struct map_symbol *ms)
+> > +{
+> > +       maps__zput(ms->maps);
+> > +       map__zput(ms->map);
+> > +}
+> > +
+> > +void addr_map_symbol__exit(struct addr_map_symbol *ams)
+> > +{
+> > +       map_symbol__exit(&ams->ms);
+> > +}
+> > diff --git a/tools/perf/util/map_symbol.h b/tools/perf/util/map_symbol.=
+h
+> > index e08817b0c30f..72d5ed938ed6 100644
+> > --- a/tools/perf/util/map_symbol.h
+> > +++ b/tools/perf/util/map_symbol.h
+> > @@ -22,4 +22,8 @@ struct addr_map_symbol {
+> >         u64           phys_addr;
+> >         u64           data_page_size;
+> >  };
+> > +
+> > +void map_symbol__exit(struct map_symbol *ms);
+> > +void addr_map_symbol__exit(struct addr_map_symbol *ams);
+> > +
+> >  #endif // __PERF_MAP_SYMBOL
+> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > index 2740d4457c13..d67a87072eec 100644
+> > --- a/tools/perf/util/symbol.c
+> > +++ b/tools/perf/util/symbol.c
+> > @@ -2790,8 +2790,11 @@ struct mem_info *mem_info__get(struct mem_info *=
+mi)
+> >
+> >  void mem_info__put(struct mem_info *mi)
+> >  {
+> > -       if (mi && refcount_dec_and_test(&mi->refcnt))
+> > +       if (mi && refcount_dec_and_test(&mi->refcnt)) {
+> > +               addr_map_symbol__exit(&mi->iaddr);
+> > +               addr_map_symbol__exit(&mi->daddr);
+> >                 free(mi);
 > > +       }
-> >         while (input.pos < input.size) {
-> >                 ret =3D ZSTD_decompressStream(data->dstream, &output, &=
-input);
-> >                 if (ZSTD_isError(ret)) {
+> >  }
+> >
+> >  struct mem_info *mem_info__new(void)
 > > --
 > > 2.42.0.609.gbb76f46606-goog
 > >
