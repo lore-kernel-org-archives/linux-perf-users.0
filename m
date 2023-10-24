@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7E23D386
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FD13D386
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:25:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9yI6FUy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JJ9VzC3b"
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8D21BFE
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:50 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-da040c021aeso1141034276.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:50 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8244E1FD4
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:51 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9cfec5e73dso4928549276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698186284; x=1698791084; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698186286; x=1698791086; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=mFUu7p9S5YeiUqPkIKu4IgMBXIymBeuUApOrPlH1y/o=;
-        b=X9yI6FUy1ePkOXhvKAD9GqV+iHt4OfjBw2bHjlDjqYkkOzOO8SJo0aitaFi88R9q4d
-         PcsXtoac0P1kCi+WPk/c/B3aRHDMGdDS8BJ0Po4dUsLXYoUQLMUqo+RAdJb7GtxmbNT9
-         1NHVgKxorsA+cswmelXKymelKOdD9jHsZIsOZJRqRZVGUY1nR9vfSbySycHz8irrqpLW
-         GSiU4yVbpMRrQA8NZ1Jr0uOVSkSt8hd3hNpKvKymQMc7NcnuWXOJ0mSFrP/spgzB89fi
-         1gOCBSa3IQRmBuNnA6JkxpIpm7gccogElMpep9X92n9LAAdy7MKeeAPkD0eLHmJVzB3z
-         SsSg==
+        bh=WajoJckjAi5zxZaorb4dU2uWdDAXIk6mTnY41FG9EXU=;
+        b=JJ9VzC3bW43Azd5O2n6Of+NyrZ7Bb+RhUyU1rR3kznMY8YaBvpibNk77LFITLir0nC
+         QUUq2cHXp5lAVByKtm2FPdnS3H61QBYhW3QyrNJkfdBiQtkEhaXZt63lmkiBGCooeq8i
+         o6x1PEmm0/0b9AU/IdeQBlUWbT+WI2JtWKjFME+dKrIbYuKDhct8LlAOxzVF/HXP3gqt
+         ucgspgiO9BqrQGG2VNBNd8JBohe3YWiLmHRNj8XwIUZ/RAdLVFVwlOFO7Qw70fUEfDT9
+         /fvYK0LHOSC9KgQlxb89RDWK+dSRVhlUnCG3OroUqxmEstbXfjhVjRipx2uVt8VwcKbl
+         XtHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698186284; x=1698791084;
+        d=1e100.net; s=20230601; t=1698186286; x=1698791086;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mFUu7p9S5YeiUqPkIKu4IgMBXIymBeuUApOrPlH1y/o=;
-        b=OePpHXpFYu/iH0zolar7GmaImjfaYtZxbliO0n4K7WsG/TbQCQwKR8YevwGd0V2qjn
-         viUWysllaZbkdvfCLC6h47WzXxV/8VT3Y/UWk4MAPjWzmDstRt6qtsAFdWmfNgOCCSkr
-         ShW2aGlVujU0iztTMwpAlOWBKnf8C++9wpIfavhtncLhUDq2+n3DmQfZbqCJUQ/jty+S
-         6HQbDU7igLLFDISmqZi3rH893l/hJBaLp14odPJLIOLibyZmXkR2El/NzPDFfHcSUTmS
-         KV2CRDRLAZIMSS7jtvZhD1xTOC+02zjGGx0VBv8mj9w2F0QUKWKraITvLt/BnZlmCU7u
-         bDjg==
-X-Gm-Message-State: AOJu0YyarKu1oigAhr84LcTCsOGDn//TIdLtlq8YXKRFDxMrdRx51//I
-	T24lgSVhwdm4M/YasNDaNh9ZFdKpjbFS
-X-Google-Smtp-Source: AGHT+IGSu0bx18CPVFKMs58nB3xLIn9DFr9Q0XU1S64CM6ktTDhMVgupYp1iv/ErkMArmokrPupa/XSu0TnC
+        bh=WajoJckjAi5zxZaorb4dU2uWdDAXIk6mTnY41FG9EXU=;
+        b=bD2ZVRk9DMhzNc72Q8mULGrHkRgnM3unXSMiMg1ZMLA3ryDsgJplxlk5sn8RcGRwFg
+         Gm0lUW7dgFfKABVuujSH3QmV2lxDXWSfSZrg7Kd2aMBeBQIOGnZ295keVx406eoZf1Ql
+         dFZNtihTLJBZKQ2RRrzytn7NZpqyvq9tIEorLvq0PqW6cgAYcR5NGzRQefW2hhJl717q
+         USD9lbi7ja5Nps9XKl+W1PRPglO5lcC9rk4jJKgKFTIQOVkQLS4m6bm9BHI60QJkwiAF
+         hz3BwsA/RBjw5DUKhco+5wsRlOeqb4R+pTwpV2A/IUaQSUvsLJT1EMj2NgF7Ot/uy5zt
+         XfOA==
+X-Gm-Message-State: AOJu0Yz5v5gRiRPLYVKQwVYUCC2lPZEgsWYG0FUvVeQQU7+FhpoUpc/M
+	2eF8yJtcc5cZm9B3H7qBq42mWYd0HdLX
+X-Google-Smtp-Source: AGHT+IGdsWaxHw9CjDKm+xTm6UJwh6OhSH7496eT1hX0iNXyq3wv5uZFz5DOt5uWHtv4+jubFfcppt830mx9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:93d2:18cc:4d63:45ba])
- (user=irogers job=sendgmr) by 2002:a25:324b:0:b0:d9b:f88c:ca2b with SMTP id
- y72-20020a25324b000000b00d9bf88cca2bmr258286yby.11.1698186284456; Tue, 24 Oct
- 2023 15:24:44 -0700 (PDT)
-Date: Tue, 24 Oct 2023 15:23:17 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1083:b0:d9a:47ea:69a5 with SMTP
+ id v3-20020a056902108300b00d9a47ea69a5mr366410ybu.1.1698186286686; Tue, 24
+ Oct 2023 15:24:46 -0700 (PDT)
+Date: Tue, 24 Oct 2023 15:23:18 -0700
 In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
-Message-Id: <20231024222353.3024098-15-irogers@google.com>
+Message-Id: <20231024222353.3024098-16-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231024222353.3024098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-Subject: [PATCH v3 14/50] perf mmap: Lazily initialize zstd streams
+Subject: [PATCH v3 15/50] perf machine thread: Remove exited threads by default
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -71,254 +71,138 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Zstd streams create dictionaries that can require significant RAM,
-especially when there is one per-CPU. Tools like perf record won't use
-the streams without the -z option, and so the creation of the streams
-is pure overhead. Switch to creating the streams on first use.
+struct thread values hold onto references to mmaps, dsos, etc. When a
+thread exits it is necessary to clean all of this memory up by
+removing the thread from the machine's threads. Some tools require
+this doesn't happen, such as auxtrace events, perf report if offcpu
+events exist or if a task list is being generated, so add a
+symbol_conf value to make the behavior optional. When an exited thread
+is left in the machine's threads, mark it as exited.
+
+This change relates to commit 40826c45eb0b ("perf thread: Remove
+notion of dead threads"). Dead threads were removed as they had a
+reference count of 0 and were difficult to reason about with the
+reference count checker. Here a thread is removed from threads when it
+exits, unless via symbol_conf the exited thread isn't remove and is
+marked as exited. Reference counting behaves as it normally does.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-record.c | 26 ++++++++++-----
- tools/perf/util/compress.h  |  6 ++--
- tools/perf/util/mmap.c      |  5 ++-
- tools/perf/util/mmap.h      |  1 -
- tools/perf/util/zstd.c      | 63 +++++++++++++++++++------------------
- 5 files changed, 58 insertions(+), 43 deletions(-)
+ tools/perf/builtin-report.c   |  7 +++++++
+ tools/perf/util/machine.c     | 10 +++++++---
+ tools/perf/util/session.c     |  5 +++++
+ tools/perf/util/symbol_conf.h |  3 ++-
+ tools/perf/util/thread.h      | 14 ++++++++++++++
+ 5 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8ec818568662..9b4f3805ca92 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -270,7 +270,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index dcedfe00f04d..749246817aed 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1411,6 +1411,13 @@ int cmd_report(int argc, const char **argv)
+ 	if (ret < 0)
+ 		goto exit;
  
- static int record__aio_enabled(struct record *rec);
- static int record__comp_enabled(struct record *rec);
--static size_t zstd_compress(struct perf_session *session, struct mmap *map,
-+static ssize_t zstd_compress(struct perf_session *session, struct mmap *map,
- 			    void *dst, size_t dst_size, void *src, size_t src_size);
- 
- #ifdef HAVE_AIO_SUPPORT
-@@ -405,9 +405,13 @@ static int record__aio_pushfn(struct mmap *map, void *to, void *buf, size_t size
- 	 */
- 
- 	if (record__comp_enabled(aio->rec)) {
--		size = zstd_compress(aio->rec->session, NULL, aio->data + aio->size,
--				     mmap__mmap_len(map) - aio->size,
--				     buf, size);
-+		ssize_t compressed = zstd_compress(aio->rec->session, NULL, aio->data + aio->size,
-+						   mmap__mmap_len(map) - aio->size,
-+						   buf, size);
-+		if (compressed < 0)
-+			return (int)compressed;
++	/*
++	 * tasks_mode require access to exited threads to list those that are in
++	 * the data file. Off-cpu events are synthesized after other events and
++	 * reference exited threads.
++	 */
++	symbol_conf.keep_exited_threads = true;
 +
-+		size = compressed;
- 	} else {
- 		memcpy(aio->data + aio->size, buf, size);
- 	}
-@@ -633,7 +637,13 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
- 	struct record *rec = to;
+ 	annotation_options__init(&report.annotation_opts);
  
- 	if (record__comp_enabled(rec)) {
--		size = zstd_compress(rec->session, map, map->data, mmap__mmap_len(map), bf, size);
-+		ssize_t compressed = zstd_compress(rec->session, map, map->data,
-+						   mmap__mmap_len(map), bf, size);
-+
-+		if (compressed < 0)
-+			return (int)compressed;
-+
-+		size = compressed;
- 		bf   = map->data;
- 	}
+ 	ret = perf_config(report__config, &report);
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 90c750150b19..a985d004aa8d 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2157,9 +2157,13 @@ int machine__process_exit_event(struct machine *machine, union perf_event *event
+ 	if (dump_trace)
+ 		perf_event__fprintf_task(event, stdout);
  
-@@ -1527,10 +1537,10 @@ static size_t process_comp_header(void *record, size_t increment)
- 	return size;
+-	if (thread != NULL)
+-		thread__put(thread);
+-
++	if (thread != NULL) {
++		if (symbol_conf.keep_exited_threads)
++			thread__set_exited(thread, /*exited=*/true);
++		else
++			machine__remove_thread(machine, thread);
++	}
++	thread__put(thread);
+ 	return 0;
  }
  
--static size_t zstd_compress(struct perf_session *session, struct mmap *map,
-+static ssize_t zstd_compress(struct perf_session *session, struct mmap *map,
- 			    void *dst, size_t dst_size, void *src, size_t src_size)
- {
--	size_t compressed;
-+	ssize_t compressed;
- 	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_record_compressed) - 1;
- 	struct zstd_data *zstd_data = &session->zstd_data;
- 
-@@ -1539,6 +1549,8 @@ static size_t zstd_compress(struct perf_session *session, struct mmap *map,
- 
- 	compressed = zstd_compress_stream_to_records(zstd_data, dst, dst_size, src, src_size,
- 						     max_record_size, process_comp_header);
-+	if (compressed < 0)
-+		return compressed;
- 
- 	if (map && map->file) {
- 		thread->bytes_transferred += src_size;
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index 0cd3369af2a4..9eb6eb5bf038 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -3,6 +3,7 @@
- #define PERF_COMPRESS_H
- 
- #include <stdbool.h>
-+#include <stdlib.h>
- #ifdef HAVE_ZSTD_SUPPORT
- #include <zstd.h>
- #endif
-@@ -21,6 +22,7 @@ struct zstd_data {
- #ifdef HAVE_ZSTD_SUPPORT
- 	ZSTD_CStream	*cstream;
- 	ZSTD_DStream	*dstream;
-+	int comp_level;
- #endif
- };
- 
-@@ -29,7 +31,7 @@ struct zstd_data {
- int zstd_init(struct zstd_data *data, int level);
- int zstd_fini(struct zstd_data *data);
- 
--size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
-+ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
- 				       void *src, size_t src_size, size_t max_record_size,
- 				       size_t process_header(void *record, size_t increment));
- 
-@@ -48,7 +50,7 @@ static inline int zstd_fini(struct zstd_data *data __maybe_unused)
- }
- 
- static inline
--size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
-+ssize_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
- 				       void *dst __maybe_unused, size_t dst_size __maybe_unused,
- 				       void *src __maybe_unused, size_t src_size __maybe_unused,
- 				       size_t max_record_size __maybe_unused,
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 49093b21ee2d..122ee198a86e 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -295,15 +295,14 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, struct perf_cpu
- 
- 	map->core.flush = mp->flush;
- 
--	map->comp_level = mp->comp_level;
- #ifndef PYTHON_PERF
--	if (zstd_init(&map->zstd_data, map->comp_level)) {
-+	if (zstd_init(&map->zstd_data, mp->comp_level)) {
- 		pr_debug2("failed to init mmap compressor, error %d\n", errno);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 1e9aa8ed15b6..c6afba7ab1a5 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -115,6 +115,11 @@ static int perf_session__open(struct perf_session *session, int repipe_fd)
  		return -1;
  	}
- #endif
  
--	if (map->comp_level && !perf_mmap__aio_enabled(map)) {
-+	if (mp->comp_level && !perf_mmap__aio_enabled(map)) {
- 		map->data = mmap(NULL, mmap__mmap_len(map), PROT_READ|PROT_WRITE,
- 				 MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
- 		if (map->data == MAP_FAILED) {
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index f944c3cd5efa..0df6e1621c7e 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -39,7 +39,6 @@ struct mmap {
- #endif
- 	struct mmap_cpu_mask	affinity_mask;
- 	void		*data;
--	int		comp_level;
- 	struct perf_data_file *file;
- 	struct zstd_data      zstd_data;
++	if (perf_header__has_feat(&session->header, HEADER_AUXTRACE)) {
++		/* Auxiliary events may reference exited threads, hold onto dead ones. */
++		symbol_conf.keep_exited_threads = true;
++	}
++
+ 	if (perf_data__is_pipe(data))
+ 		return 0;
+ 
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 2b2fb9e224b0..6040286e07a6 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -43,7 +43,8 @@ struct symbol_conf {
+ 			disable_add2line_warn,
+ 			buildid_mmap2,
+ 			guest_code,
+-			lazy_load_kernel_maps;
++			lazy_load_kernel_maps,
++			keep_exited_threads;
+ 	const char	*vmlinux_name,
+ 			*kallsyms_name,
+ 			*source_prefix,
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index e79225a0ea46..0df775b5c110 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -36,13 +36,22 @@ struct thread_rb_node {
  };
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 48dd2b018c47..57027e0ac7b6 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -7,35 +7,9 @@
  
- int zstd_init(struct zstd_data *data, int level)
- {
--	size_t ret;
--
--	data->dstream = ZSTD_createDStream();
--	if (data->dstream == NULL) {
--		pr_err("Couldn't create decompression stream.\n");
--		return -1;
--	}
--
--	ret = ZSTD_initDStream(data->dstream);
--	if (ZSTD_isError(ret)) {
--		pr_err("Failed to initialize decompression stream: %s\n", ZSTD_getErrorName(ret));
--		return -1;
--	}
--
--	if (!level)
--		return 0;
--
--	data->cstream = ZSTD_createCStream();
--	if (data->cstream == NULL) {
--		pr_err("Couldn't create compression stream.\n");
--		return -1;
--	}
--
--	ret = ZSTD_initCStream(data->cstream, level);
--	if (ZSTD_isError(ret)) {
--		pr_err("Failed to initialize compression stream: %s\n", ZSTD_getErrorName(ret));
--		return -1;
--	}
--
-+	data->comp_level = level;
-+	data->dstream = NULL;
-+	data->cstream = NULL;
- 	return 0;
+ DECLARE_RC_STRUCT(thread) {
++	/** @maps: mmaps associated with this thread. */
+ 	struct maps		*maps;
+ 	pid_t			pid_; /* Not all tools update this */
++	/** @tid: thread ID number unique to a machine. */
+ 	pid_t			tid;
++	/** @ppid: parent process of the process this thread belongs to. */
+ 	pid_t			ppid;
+ 	int			cpu;
+ 	int			guest_cpu; /* For QEMU thread */
+ 	refcount_t		refcnt;
++	/**
++	 * @exited: Has the thread had an exit event. Such threads are usually
++	 * removed from the machine's threads but some events/tools require
++	 * access to dead threads.
++	 */
++	bool			exited;
+ 	bool			comm_set;
+ 	int			comm_len;
+ 	struct list_head	namespaces_list;
+@@ -189,6 +198,11 @@ static inline refcount_t *thread__refcnt(struct thread *thread)
+ 	return &RC_CHK_ACCESS(thread)->refcnt;
  }
  
-@@ -54,7 +28,7 @@ int zstd_fini(struct zstd_data *data)
- 	return 0;
- }
- 
--size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
-+ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
- 				       void *src, size_t src_size, size_t max_record_size,
- 				       size_t process_header(void *record, size_t increment))
++static inline void thread__set_exited(struct thread *thread, bool exited)
++{
++	RC_CHK_ACCESS(thread)->exited = exited;
++}
++
+ static inline bool thread__comm_set(const struct thread *thread)
  {
-@@ -63,6 +37,21 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t
- 	ZSTD_outBuffer output;
- 	void *record;
- 
-+	if (!data->cstream) {
-+		data->cstream = ZSTD_createCStream();
-+		if (data->cstream == NULL) {
-+			pr_err("Couldn't create compression stream.\n");
-+			return -1;
-+		}
-+
-+		ret = ZSTD_initCStream(data->cstream, data->comp_level);
-+		if (ZSTD_isError(ret)) {
-+			pr_err("Failed to initialize compression stream: %s\n",
-+				ZSTD_getErrorName(ret));
-+			return -1;
-+		}
-+	}
-+
- 	while (input.pos < input.size) {
- 		record = dst;
- 		size = process_header(record, 0);
-@@ -96,6 +85,20 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 	ZSTD_inBuffer input = { src, src_size, 0 };
- 	ZSTD_outBuffer output = { dst, dst_size, 0 };
- 
-+	if (!data->dstream) {
-+		data->dstream = ZSTD_createDStream();
-+		if (data->dstream == NULL) {
-+			pr_err("Couldn't create decompression stream.\n");
-+			return 0;
-+		}
-+
-+		ret = ZSTD_initDStream(data->dstream);
-+		if (ZSTD_isError(ret)) {
-+			pr_err("Failed to initialize decompression stream: %s\n",
-+				ZSTD_getErrorName(ret));
-+			return 0;
-+		}
-+	}
- 	while (input.pos < input.size) {
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
+ 	return RC_CHK_ACCESS(thread)->comm_set;
 -- 
 2.42.0.758.gaed0368e0e-goog
 
