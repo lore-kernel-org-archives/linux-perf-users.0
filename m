@@ -1,108 +1,261 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7607461
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 08:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A3733D0
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 09:17:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ltbbf6hn"
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF0410DA
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 01:52:37 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-4084e49a5e5so36065715e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 01:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698137556; x=1698742356; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SrrcjmyOsYhzUAtE3nPjXHtJxGhZGABKJJb1EALYyaI=;
-        b=ltbbf6hnqY+myKc90FFxaD7WOjJHYW+Gni44Z7FArvoYwtWOiU6Wdhot2yl7L+3Vfm
-         BTk/PU5Kz6E1mqkbWwATwJO6+IboF1aFqhfND3ATpEiqcST6HEGI2J++Kqk9VpDzfAEt
-         s/77XbZ3o90D9YwQtMrMT9T2udieNm+iKptK8YJTX6jgcYZdpepkpQNzbTkJzxA6ZiyY
-         CpV/3dmawiWYFydRRR6ptPV1XDbI7W8xukcIaLsy0QZUG3fEow++Pct+Yo+Fasd5XpvB
-         WiG5sfVEqcjN8zPUNKZflwRmTHMkvtpszFMP7aObO3S0QkaDrBdyErz9RMPlRGPB5vQi
-         Hckw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698137556; x=1698742356;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SrrcjmyOsYhzUAtE3nPjXHtJxGhZGABKJJb1EALYyaI=;
-        b=IyguX4YLkiP5tXlwbrWN1dFkEw7vO4VHb1WeCVNIlgRx/rSJdlltM+DF4ekOUfnMFm
-         wvPXhaFLsr4UjxRi/V14PbUS4V3bWNHAUmcFp9fZ0m9Ri5/BvFnHTCWFSI0KuscQ3IwY
-         /G3aftBsOhyB+Q6b/Daxsmz6lvaxkHmdZhG4XGIAcDd1OYYImllH5YxCcpXTIOZD6ItP
-         jFdg22OKIQCawFYo8bR1ITtK1G76zIQdNbdnYhAKkaoeXh3qLe1UOMwSl7gNpQWL+Prw
-         4xS8Eh8K2QsbQP+lmaCEOYPvO8ENsAImaE3g3I6S10dbX99p2ANOd3DOBZHpAelhp1+8
-         AHsg==
-X-Gm-Message-State: AOJu0Yz3S63RkvMz/pm9bllNPEgdjLG1KDyvqz8UugJhwAnG4Nqg5G+d
-	yCSyymiGJYMBy2c6Kt5RgTI5Yw==
-X-Google-Smtp-Source: AGHT+IGJd+Zo8jc5Uk55tbZotCMJAnGI0zkMetklhFZNbBgKiuibrRM/SyCeBJhbt992S+JGVfWR7g==
-X-Received: by 2002:adf:f50f:0:b0:327:e073:d5fe with SMTP id q15-20020adff50f000000b00327e073d5femr8271598wro.38.1698137555987;
-        Tue, 24 Oct 2023 01:52:35 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id f7-20020adff587000000b0031fb91f23e9sm9449222wro.43.2023.10.24.01.52.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 01:52:35 -0700 (PDT)
-Date: Tue, 24 Oct 2023 11:52:31 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: peterz@infradead.org
-Cc: linux-perf-users@vger.kernel.org
-Subject: [bug report] perf: Disallow mis-matched inherited group reads
-Message-ID: <df95d570-0f39-41bb-9072-49eb59fa2d76@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GABldOpc"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C332D8E;
+	Tue, 24 Oct 2023 02:17:50 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39O9ETbO032110;
+	Tue, 24 Oct 2023 09:17:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=JXibhBa4y9KDybxnd7ZPC7vRWnp+48AJkXxnzC/PeTo=;
+ b=GABldOpc2vcoqjRI9z9Nw3ZWJBGz/dWh5GLF2gllsg04kpwzhYwEmgsoWgSwGj/17ISu
+ 8eKfu0hQ6ad5+SNOZH9+Yz3+BkAuca62ah9f+FtlolNP6jwTKPLl+h64rijYlqrGUjWG
+ jbft7CorJN3u0tQdyudDOyyGt003qvxF6DKydLRbWagHkZofn3y1hvmSww5x8jyQnioH
+ cEOgVKS7eRbo7oEwdkuXDkoEt2ghDgxcjsivRMpsq+eOOGrYfpa9Uxeo3peF9qhVQeDM
+ opI8yDTyD0YzNp93MY1M+ArI9WLxt7t0m5rtdXZSgZtTexMdOGtXRHCUrMVKNbbIXzaW sA== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3txb4ag3js-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Oct 2023 09:17:46 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39O905id024381;
+	Tue, 24 Oct 2023 09:17:45 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tvu6jx262-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Oct 2023 09:17:45 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39O9Hgub16450226
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Oct 2023 09:17:42 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5297C2004B;
+	Tue, 24 Oct 2023 09:17:42 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 29ABE20040;
+	Tue, 24 Oct 2023 09:17:42 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 24 Oct 2023 09:17:42 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf report: Add s390 raw data interpretation for PAI counters
+Date: Tue, 24 Oct 2023 11:17:29 +0200
+Message-Id: <20231024091729.4180034-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: HCjMG11keVWICvvCuRY2_UyzZrDqE1Bw
+X-Proofpoint-ORIG-GUID: HCjMG11keVWICvvCuRY2_UyzZrDqE1Bw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-24_07,2023-10-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310170001 definitions=main-2310240078
 
-Hello Peter Zijlstra,
+commit 1bf54f32f525 ("s390/pai: Add support for cryptography counters")
+added support for Processor Activity Instrumentation Facility (PAI)
+counters.  These counters values are added as raw data with the perf
+sample during perf record.
+Now add support to display these counters in perf report command.
+The counter number, its assigned name and value is now printed in
+addition to the hexadecimal output.
 
-The patch 32671e3799ca: "perf: Disallow mis-matched inherited group
-reads" from Oct 18, 2023 (linux-next), leads to the following Smatch
-static checker warning:
+Output before:
+ # perf report -D
 
-	kernel/events/core.c:13392 inherit_group()
-	error: potential NULL/IS_ERR bug 'leader'
+ 6 514766399626050 0x7b058 [0x48]: PERF_RECORD_SAMPLE(IP, 0x1):
+				303977/303977: 0 period: 1 addr: 0
+ ... thread: paitest:303977
+ ...... dso: <not found>
 
-kernel/events/core.c
-    13363 static int inherit_group(struct perf_event *parent_event,
-    13364               struct task_struct *parent,
-    13365               struct perf_event_context *parent_ctx,
-    13366               struct task_struct *child,
-    13367               struct perf_event_context *child_ctx)
-    13368 {
-    13369         struct perf_event *leader;
-    13370         struct perf_event *sub;
-    13371         struct perf_event *child_ctr;
-    13372 
-    13373         leader = inherit_event(parent_event, parent, parent_ctx,
-    13374                                  child, NULL, child_ctx);
-    13375         if (IS_ERR(leader))
-    13376                 return PTR_ERR(leader);
-    13377         /*
-    13378          * @leader can be NULL here because of is_orphaned_event(). In this
-                     ^^^^^^^^^^^^^^^^^^^
+ 0x7b0a0@/root/perf.data.paicrypto [0x48]: event: 9
+ .
+ . ... raw event: size 72 bytes
+ . 0000:  00 00 00 09 00 01 00 48 00 00 00 00 00 00 00 00  .......H........
+ . 0010:  00 04 a3 69 00 04 a3 69 00 01 d4 2d 76 de a0 bb  ...i...i...-v...
+ . 0020:  00 00 00 00 00 01 5c 53 00 00 00 06 00 00 00 00  ......\S........
+ . 0030:  00 00 00 00 00 00 00 01 00 00 00 0c 00 07 00 00  ................
+ . 0040:  00 00 00 53 96 af 00 00                          ...S....
 
-    13379          * case inherit_event() will create individual events, similar to what
-    13380          * perf_group_detach() would do anyway.
-    13381          */
-    13382         for_each_sibling_event(sub, parent_event) {
-    13383                 child_ctr = inherit_event(sub, parent, parent_ctx,
-    13384                                             child, leader, child_ctx);
-    13385                 if (IS_ERR(child_ctr))
-    13386                         return PTR_ERR(child_ctr);
-    13387 
-    13388                 if (sub->aux_event == parent_event && child_ctr &&
-    13389                     !perf_get_aux_event(child_ctr, leader))
-    13390                         return -EINVAL;
-    13391         }
---> 13392         leader->group_generation = parent_event->group_generation;
-                  ^^^^^^^^^^^^^^^^^^^^^^^^
-New unchecked dereference
+Output after:
+ # perf report -D
 
-    13393         return 0;
-    13394 }
+ 6 514766399626050 0x7b058 [0x48]: PERF_RECORD_SAMPLE(IP, 0x1):
+				303977/303977: 0 period: 1 addr: 0
+ ... thread: paitest:303977
+ ...... dso: <not found>
 
-regards,
-dan carpenter
+ 0x7b0a0@/root/perf.data.paicrypto [0x48]: event: 9
+ .
+ . ... raw event: size 72 bytes
+ . 0000:  00 00 00 09 00 01 00 48 00 00 00 00 00 00 00 00  .......H........
+ . 0010:  00 04 a3 69 00 04 a3 69 00 01 d4 2d 76 de a0 bb  ...i...i...-v...
+ . 0020:  00 00 00 00 00 01 5c 53 00 00 00 06 00 00 00 00  ......\S........
+ . 0030:  00 00 00 00 00 00 00 01 00 00 00 0c 00 07 00 00  ................
+ . 0040:  00 00 00 53 96 af 00 00                          ...S....
+
+        Counter:007 km_aes_128 Value:0x00000000005396af     <--- new
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/s390-cpumcf-kernel.h |  2 +
+ tools/perf/util/s390-sample-raw.c    | 89 ++++++++++++++++++++++++++--
+ 2 files changed, 85 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/s390-cpumcf-kernel.h b/tools/perf/util/s390-cpumcf-kernel.h
+index f55ca07f3ca1..74b36644e384 100644
+--- a/tools/perf/util/s390-cpumcf-kernel.h
++++ b/tools/perf/util/s390-cpumcf-kernel.h
+@@ -12,6 +12,8 @@
+ #define	S390_CPUMCF_DIAG_DEF	0xfeef	/* Counter diagnostic entry ID */
+ #define	PERF_EVENT_CPUM_CF_DIAG	0xBC000	/* Event: Counter sets */
+ #define PERF_EVENT_CPUM_SF_DIAG	0xBD000 /* Event: Combined-sampling */
++#define PERF_EVENT_PAI_CRYPTO_ALL	0x1000 /* Event: CRYPTO_ALL */
++#define PERF_EVENT_PAI_NNPA_ALL	0x1800 /* Event: NNPA_ALL */
+ 
+ struct cf_ctrset_entry {	/* CPU-M CF counter set entry (8 byte) */
+ 	unsigned int def:16;	/* 0-15  Data Entry Format */
+diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
+index 115b16edb451..f360aed3bf0a 100644
+--- a/tools/perf/util/s390-sample-raw.c
++++ b/tools/perf/util/s390-sample-raw.c
+@@ -125,6 +125,9 @@ static int get_counterset_start(int setnr)
+ 		return 128;
+ 	case CPUMF_CTR_SET_MT_DIAG:		/* Diagnostic counter set */
+ 		return 448;
++	case PERF_EVENT_PAI_NNPA_ALL:		/* PAI NNPA counter set */
++	case PERF_EVENT_PAI_CRYPTO_ALL:		/* PAI CRYPTO counter set */
++		return setnr;
+ 	default:
+ 		return -1;
+ 	}
+@@ -212,27 +215,101 @@ static void s390_cpumcfdg_dump(struct perf_pmu *pmu, struct perf_sample *sample)
+ 	}
+ }
+ 
++/*
++ * Check for consistency of PAI_CRYPTO/PAI_NNPA raw data.
++ */
++struct pai_data {		/* Event number and value */
++	u16 event_nr;
++	u64 event_val;
++} __packed;
++
++/*
++ * Test for valid raw data. At least one PAI event should be in the raw
++ * data section.
++ */
++static bool s390_pai_all_test(struct perf_sample *sample)
++{
++	unsigned char *buf = sample->raw_data;
++	size_t len = sample->raw_size;
++
++	if (len < 0xa || !buf)
++		return false;
++	return true;
++}
++
++static void s390_pai_all_dump(struct evsel *evsel, struct perf_sample *sample)
++{
++	size_t len = sample->raw_size, offset = 0;
++	unsigned char *p = sample->raw_data;
++	const char *color = PERF_COLOR_BLUE;
++	struct pai_data pai_data;
++	char *ev_name;
++
++	evsel->pmu = perf_pmus__find_by_type(evsel->core.attr.type);
++	while (offset < len) {
++		memcpy(&pai_data.event_nr, p, sizeof(pai_data.event_nr));
++		pai_data.event_nr = be16_to_cpu(pai_data.event_nr);
++		p += sizeof(pai_data.event_nr);
++		offset += sizeof(pai_data.event_nr);
++
++		memcpy(&pai_data.event_val, p, sizeof(pai_data.event_val));
++		pai_data.event_val = be64_to_cpu(pai_data.event_val);
++		p += sizeof(pai_data.event_val);
++		offset += sizeof(pai_data.event_val);
++
++		ev_name = get_counter_name(evsel->core.attr.config,
++					   pai_data.event_nr, evsel->pmu);
++		color_fprintf(stdout, color, "\tCounter:%03d %s Value:%#018lx\n",
++			      pai_data.event_nr, ev_name ?: "<unknown>",
++			      pai_data.event_val);
++
++		if (offset + 0xa > len)
++			break;
++	}
++	color_fprintf(stdout, color, "\n");
++}
++
+ /* S390 specific trace event function. Check for PERF_RECORD_SAMPLE events
+  * and if the event was triggered by a counter set diagnostic event display
+  * its raw data.
+  * The function is only invoked when the dump flag -D is set.
+  */
+-void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
++void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event,
++			     struct perf_sample *sample)
+ {
++	const char *pai_name;
+ 	struct evsel *evsel;
+ 
+ 	if (event->header.type != PERF_RECORD_SAMPLE)
+ 		return;
+ 
+ 	evsel = evlist__event2evsel(evlist, event);
+-	if (evsel == NULL ||
+-	    evsel->core.attr.config != PERF_EVENT_CPUM_CF_DIAG)
++	if (evsel == NULL)
+ 		return;
+ 
+ 	/* Display raw data on screen */
+-	if (!s390_cpumcfdg_testctr(sample)) {
+-		pr_err("Invalid counter set data encountered\n");
++	if (evsel->core.attr.config == PERF_EVENT_CPUM_CF_DIAG) {
++		evsel->pmu = perf_pmus__find("cpum_cf");
++		if (!s390_cpumcfdg_testctr(sample))
++			pr_err("Invalid counter set data encountered\n");
++		else
++			s390_cpumcfdg_dump(evsel->pmu, sample);
+ 		return;
+ 	}
+-	s390_cpumcfdg_dump(evsel->pmu, sample);
++
++	switch (evsel->core.attr.config) {
++	case PERF_EVENT_PAI_NNPA_ALL:
++		pai_name = "NNPA_ALL";
++		break;
++	case PERF_EVENT_PAI_CRYPTO_ALL:
++		pai_name = "CRYPTO_ALL";
++		break;
++	default:
++		return;
++	}
++
++	if (!s390_pai_all_test(sample))
++		pr_err("Invalid %s raw data encountered\n", pai_name);
++	else
++		s390_pai_all_dump(evsel, sample);
+ }
+-- 
+2.41.0
+
