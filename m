@@ -1,202 +1,168 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFF03C6B1
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 18:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F203924A11
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 18:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g1CEeXOB"
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6EA129;
-	Tue, 24 Oct 2023 11:31:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RX8NQ/yzhVOcK6Hs4WvBMosBHcxApIiCZTCGTzRegSVDo9vyu8O/XQHS+xpoNaIOuNJZq7cncwbBNdOiTfMsHf9ySKBczMdLvdQ4jfwsGKYW23hB+PY6lb0Pp0koEorhWYzoJdZhr5bffhr2oKDeJs2nB7sE7H88iJDetA9ITxLXUVmuKqCUjZcIjMx70f88sfSpNMwOp4tMctbQTj3AK7lC06TehlpCv6zbRQ/7SpIj28cLmPS+6H2nWdWr0gupZqeP4fRo+waZ/A1NzdSSuALOy4XShQTGPoUIlAQf8JDf4TuZOk3kXZC3X9QRGi/eH0Z9Rt5UTVSgWnGKhaNLKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Iw+x/zAlPQ9632uJkcJFojF3VCQN2SsFx8Nynr9+5iE=;
- b=dx6raeZi7pdz6jS43Sx7xThRBo7/qjWnwnU82A3fJMdUD5EQvOSbDAbiIeeIWIFDmJLl57DTJ+eHpf5Agv0QPvUBvAkCpzsUzyg2liRR1tzYWGbKhLfq07DMdkQ3vCesUTY3rr++K5HeYLFMOKKwO+m4XA0GJIFkntWRGaF0MFWw3++MaERgIOZHUOjTORJk9jOMG8dfXhenegJh6QL8hA36pV/j6Ze24+iXzsVcHXncimnSYn9tj2Ivtv5QzZ9oW49caFaMCkT9NJKqoywjdciXO1qqa0b+cKgBVihGTv4FuIeJ8bQZkgW104pE9kmKWEXO7a027t2QDplVuNnTHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iw+x/zAlPQ9632uJkcJFojF3VCQN2SsFx8Nynr9+5iE=;
- b=g1CEeXOBctyR3mrH0+NTKcERz/qCGEqzHGXxT6/Vzrg/DuXxUlWZHkSfE4y4DixuLiXsFtHkITCNgJmo9M8hZvFhTbzdD0c+hK/57IXZh+a/lt5Gsew/2lYJRKRJUP5Toh/TYtCsKXify8SrMl3+ABMifnScfKauSDcYn/L458w=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ0PR12MB5456.namprd12.prod.outlook.com (2603:10b6:a03:3ae::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.19; Tue, 24 Oct
- 2023 18:31:03 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a%4]) with mapi id 15.20.6907.022; Tue, 24 Oct 2023
- 18:31:03 +0000
-Message-ID: <0022df64-b7f5-43b4-87ed-5df5d47c5c6a@amd.com>
-Date: Tue, 24 Oct 2023 13:30:59 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf/x86/amd: Don't allow pre-emption in
- amd_pmu_lbr_reset()
-Content-Language: en-US
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>,
- Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Sandipan Das <sandipan.das@amd.com>, "H . Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org, linux-pm@vger.kernel.org,
- rafael@kernel.org, pavel@ucw.cz, linux-perf-users@vger.kernel.org,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-References: <20231023160018.164054-1-mario.limonciello@amd.com>
- <20231023160018.164054-3-mario.limonciello@amd.com>
- <ZTd6BYr17ycdHR2a@gmail.com> <ZTf2IxAVPUFq91F4@gmail.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <ZTf2IxAVPUFq91F4@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DS0PR17CA0013.namprd17.prod.outlook.com
- (2603:10b6:8:191::11) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kqj8MJYk"
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02EB186
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 11:42:49 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-53f647c84d4so2384a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 11:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1698172968; x=1698777768; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=09epGMxkhhjkdYiw8KiYrXokGkqZWFd0a0WWXHQ6/zM=;
+        b=Kqj8MJYkyul1ZOwP802BG3+Y4g+ksBOBskIt2PCkuuMJ0aBkI+mNNLyvhwukZHtiXM
+         VkseY0e4JT3qAAvdMZ1KNT4RoAPIHanq1/lRmyPtmNBM0d9JHmQQLX6wU9SCyehfdS73
+         eUXT55LTUccCYf32OBfv8/QUqLo42fJfX98r1OM4/1MDeCvhacT8vs0r0WxcC7Dj4UsD
+         rTvYnKrx4hz0ZbehcXiSe4A32Res0OT6QPB7QreN7J6zFOJ775X6bGbT5PcRQL3gdkqm
+         R3+UYIiOR5UB/Ux3ugwubMKPVTw6PEoYKujILK3mxDwuX4jF4apxevKArViMSmVRqAvh
+         FBww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698172968; x=1698777768;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=09epGMxkhhjkdYiw8KiYrXokGkqZWFd0a0WWXHQ6/zM=;
+        b=UmPxCBRnmmblbntuIHi/7d50RcopgZzfNImX16aFmcP2TMyhzMg4asu2XMEpBEBVKq
+         1p+vcZoTAxFMPt7ghueVU74/i+EKSQpxQlCvFOEfArceuRbLLZXXgPnNr9Kuwy9XSsrr
+         2ZPOhbnDnWer3q3lYxOiPplqUzbI8wG7oUJuANA5nLwbfEUkIrRkktavsXv3Ams8FHw8
+         6u8K3gDfFd4BeIdqktAmi9GiUZuoJHy7amVB4AwI7LP54dBBkF7VSPZAuRcRXOmOLUrg
+         ntugONX6FTj7TdIVV4Wmwk5l7hL7eWtIaQjk2qvkOErDN/lmB5ycjEismCgEdQHp2Pej
+         MdYQ==
+X-Gm-Message-State: AOJu0Yww+EnIZKW92arlUe+5UMtOabTOweyWzdGuTEEAbS48uf+GBb41
+	y0NY/7pzrDfOSYr7dzgTcvH8bdnOi0SuxaYciUG3pA==
+X-Google-Smtp-Source: AGHT+IE5v1BzRWSVw3HW3sQr5xbR/mk1XD9T6KKRACBF8MxbgyF/bGD65mmBKo24Nf0gi8DonjtanmEogkSujhKR/0k=
+X-Received: by 2002:a05:6402:288e:b0:540:9e44:483f with SMTP id
+ eg14-20020a056402288e00b005409e44483fmr115978edb.4.1698172967814; Tue, 24 Oct
+ 2023 11:42:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB5456:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2577aea7-c0e7-41d7-9e83-08dbd4bf60c1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8Fj4X0Xyi2uGeoAxj/GeRoY149kJeKR48cQXBsuF7VX/TkDAtTUu252Seicz5HKgNwPFdwj4XEl/UpwxsqAAhNbazpGWgPyqjzIMwvgB/oRv7O/+Jz6fjyf5JhuU1udB2OE1/dY5hJjDQp47MvqJ+xoKyIsoSxnofDgbTlni4hRzuzpiGFO00lQPqazKBjjnMAaCQ9O+uBGkmXdQxyrSmxgANSSdetgdbjhRUOO4ChNfxwvUvvr6Le788pVGUAYUkOpNqG3eX4mRrJ6EmgQgHZQwBIRfZxijh58vXP6KAEMFIxNPuQgy6hkIfhEpaBbHjx8C2UqyZPUUsk64sPauu3OdNEpQnpJlJiIhOYzpX/e7Qg59miLdopfgI0avwBsc+63H/iCyd7KDf8FV+uke2b+yqPn2PgziwGniERoW0aC/NvW3h32rXBPiGaqWbWibb93PVAh8F3nbJnKz2WISBIxO7K/3AdCSxLlXXk1YYwuEs+OmcbjGfMsKdVdwHeE0lqJMd/Ip4iET6L5ssVI1/W7PGw4h9DS8IFrF5kF6I/e+7l9EOgjL/qfDpmjEa2z197vJOIonxn3qHd7gD/HE9YA1goZMQ3lhrQYyjLg2zM3s0oS4Ounp5BjR5eQwevkIgK8BZay9xMGRIruhVVCJ3Q==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(39860400002)(376002)(366004)(346002)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(7416002)(2906002)(4326008)(8936002)(44832011)(8676002)(83380400001)(6486002)(53546011)(31696002)(31686004)(41300700001)(5660300002)(6666004)(6512007)(6506007)(86362001)(6916009)(316002)(26005)(478600001)(2616005)(38100700002)(36756003)(66946007)(54906003)(66556008)(66476007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OFU0bnFLMVB1RnpJZHc2V2QvczJlS21VS1RvZElBNnMzRzdKb0Uvayt5OWJa?=
- =?utf-8?B?R0dJbkN0VEJIcko1WFJ4RWFXVG1JeXN1dW5vcHluRnY5VWhidk1Lbm1IOEMw?=
- =?utf-8?B?b1Y0eFFnazMwVmlVWkwrTGxiL25wODAySmt0OS9URmpaTmNHV2hvOTdkTElJ?=
- =?utf-8?B?Mm1sSEhuTWo5UHNYczFCdjhhcFl0TzZEekcvZmlFdWh0YmMwa2JVZVFxVXFn?=
- =?utf-8?B?ekZrSUVQd3NKY2pQY2dmTGdHczZQVmdUNHdFSjFHcys1cjVRVnoyRW96YmVa?=
- =?utf-8?B?SFpuQUVDcklMU2QreUJOTkRScHZvVFlJUTN5OUM1SFZqZzdPajE5MVU3TSs2?=
- =?utf-8?B?c1VNMXlnMHBveEtNTnp1em5Dc1Z1VDEyMTBFRTNyazYwTkx6RHMxYjdiRnJV?=
- =?utf-8?B?K2xKOVQ2NS96UzdZcXZhWEZUWDJyRjhvRDdEN08xbXBXcmhOY0YrR09RMzRL?=
- =?utf-8?B?SDZKU1kwNUZTOC94TVBTMEpERmZJNk04WWQ4cVVIeDFJVVF1UDJpNVZGTkNW?=
- =?utf-8?B?N2tPK3k5TVNKT09LTDZRbjFydkx6K3J3WGRCd21kWGdUcEw1NXpmUFBXQTJE?=
- =?utf-8?B?b1hOM1Y3LzM3TkJ1UWJkemFGSk1JTVJSUnlobGdaek9MQzBjWVBoNmV4K0FB?=
- =?utf-8?B?SVU4VUtxSlFjb29SMHdLZGNnWHJWWFZUMWE5bkdRSVhnMGpRZkFxcnIwekh2?=
- =?utf-8?B?bW42NzF2NjU0OGJEb2JCNTRyelQ1M3FBeE91Sld3YUNJUndLYnRlaTMrVVFm?=
- =?utf-8?B?THZxcHQ0VW5LU3RkTjF3ZFg2aUNKblFCTlRxSFNJY3pxcXJOWGgrZ25iN0pJ?=
- =?utf-8?B?OGdlMEpab1JTZ3Q2QTIrZ3NKUlpHMWpvcXJ0cFJRZUxaY2VpNlZXaTlmYWp0?=
- =?utf-8?B?MjNsK1Y0S3lZbS9vU2ZMdHJoMmJPSG1EcVNYcGFsRzV6SXpYVFV0NXI1emUz?=
- =?utf-8?B?YzdqdGppZTQ1ZVA2ZktnR2JmVlRReFlDaFlIcHFHSnVNZitvWGF1SENGUDF2?=
- =?utf-8?B?YWRiaUtTNjdlK2FueElJVGxXOXc3QUhnZ1MzcjZPdXR4TnN1WCsxSmZZOEc2?=
- =?utf-8?B?VWZad3VqcTdwcHBTclJnNE80SFd3RGFzRU5sd1JTYmcwR0xUckxMckdjbGlm?=
- =?utf-8?B?QUR0c2pNY2J3S05Rc1dsUEJKalgwQlFwaVpUYjdGVzBKUFJCU21LTzlPQXNY?=
- =?utf-8?B?L1l6SW5Pb0pOUFNEOWVCMS9MQ3RwVEtOcHZXamVrOURUQk8vZXVTb2lMdXpt?=
- =?utf-8?B?dEpuS0p1SkFwRFh6MzZTVWpNYjNYVSs3Z0x4cXZHc2s4eGpmY1FhODVNY21Q?=
- =?utf-8?B?WnV6V1dPcEJ0d3VQb21uS0ZxNEsrZ3BjQzBIYm5TbjIrSWxsdlpRcnp3M1VY?=
- =?utf-8?B?RHNlYkpSV3Q0Vngrajl2S0lDRlZoeFhsSXFkS3REQVp5QnRvcnllZjZSQ0tl?=
- =?utf-8?B?UktTSk5SZzZIcC9vbnNycGE0SlhmeTZiVjFKVSs0cFkzaldTNmczbWY0R25Q?=
- =?utf-8?B?NndWc2Q3QmVlR0FhSHB1a0lsMFdVbko4SUtNOHZFazRDZnVpaDRUdWlvak0z?=
- =?utf-8?B?QTNpVXVrd29kdWNuWHFyZ0R1eGpobVEvcFBab3dyN1d3LzE2UkpJWnM0N1o1?=
- =?utf-8?B?NlQ0L2RzQ29INlpkVzI0Y2kwUmx5T2hZcE9WOEpBV2E3YkVHYldUTzdBaFJp?=
- =?utf-8?B?L2ViTXl4WUovRUJodkNKanVLb083aXd0czJQeDB4TjRRTUNmV3NoQngxaW1o?=
- =?utf-8?B?RVlRQ29RalJlbTVXeS85RnBYOU9mZlhmc250MitaRlNGOHpSK3ZrK2RLZjVE?=
- =?utf-8?B?NEw1NDh2YUh4ekZOYVd1MWtEOUdFT0tFUU1zSk1qeWxrc2k5VFVkZFlBeDEw?=
- =?utf-8?B?Q21mUWh5cG90WVJRWFYwdHR4TzhNUGl6RjhzQXhCN0h2QmpEMzc3UytyRGVw?=
- =?utf-8?B?UmpnT1dzd1VhUjdqUG1OdEpOTE1aMUVISTBiUXZIb1JzTEhBK29XMGpBaWFY?=
- =?utf-8?B?djlNVUFPdFVJWUt1UkdLQVd3OExWUm5kVndZbk1rd3NTM0pyZ0Z1TWx5dW5R?=
- =?utf-8?B?VVpYVm9lY0RqQkJLKy9XVmRyQnFyWW1xV1FHYmlKeUFCSStvQm5aRGdiUmE1?=
- =?utf-8?Q?S+N0p6dXC37xGipGCn59ZC5+v?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2577aea7-c0e7-41d7-9e83-08dbd4bf60c1
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2023 18:31:03.2449
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LbdfaiaaVur5ldaNSoihWHbwEHVGW0nuEPXlfm5IEKrXxv3sgKMaoMNdMWuWIl1yq6xHmFc5fYSkVaoXnwPJlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5456
+References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-11-irogers@google.com>
+ <f184e872-4673-419d-9ea8-2d449d9cfd5b@intel.com>
+In-Reply-To: <f184e872-4673-419d-9ea8-2d449d9cfd5b@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 24 Oct 2023 11:42:33 -0700
+Message-ID: <CAP-5=fXcQwBk=JBof=MMB7LDoutXEvAkB2FbF46jo2xk3tS6QQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/13] perf record: Lazy load kernel symbols
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
+	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
+	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/24/2023 11:51, Ingo Molnar wrote:
-> 
-> * Ingo Molnar <mingo@kernel.org> wrote:
-> 
->>
->> * Mario Limonciello <mario.limonciello@amd.com> wrote:
->>
->>> Fixes a BUG reported during suspend to ram testing.
->>>
->>> ```
->>> [  478.274752] BUG: using smp_processor_id() in preemptible [00000000] code: rtcwake/2948
->>> [  478.274754] caller is amd_pmu_lbr_reset+0x19/0xc0
->>> ```
->>>
->>> Cc: stable@vger.kernel.org # 6.1+
->>> Fixes: ca5b7c0d9621 ("perf/x86/amd/lbr: Add LbrExtV2 branch record support")
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
->>>   arch/x86/events/amd/lbr.c | 3 ++-
->>>   1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
->>> index eb31f850841a..5b98e8c7d8b7 100644
->>> --- a/arch/x86/events/amd/lbr.c
->>> +++ b/arch/x86/events/amd/lbr.c
->>> @@ -321,7 +321,7 @@ int amd_pmu_lbr_hw_config(struct perf_event *event)
->>>   
->>>   void amd_pmu_lbr_reset(void)
->>>   {
->>> -	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>> +	struct cpu_hw_events *cpuc = get_cpu_ptr(&cpu_hw_events);
->>>   	int i;
->>>   
->>>   	if (!x86_pmu.lbr_nr)
->>> @@ -335,6 +335,7 @@ void amd_pmu_lbr_reset(void)
->>>   
->>>   	cpuc->last_task_ctx = NULL;
->>>   	cpuc->last_log_id = 0;
->>> +	put_cpu_ptr(&cpu_hw_events);
->>>   	wrmsrl(MSR_AMD64_LBR_SELECT, 0);
->>>   }
->>
->> Weird, amd_pmu_lbr_reset() is called from these places:
->>
->>    - amd_pmu_lbr_sched_task(): during task sched-in during
->>      context-switching, this should already have preemption disabled.
->>
->>    - amd_pmu_lbr_add(): this gets indirectly called by amd_pmu::add
->>      (amd_pmu_add_event()), called by event_sched_in(), which too should have
->>      preemption disabled.
->>
->> I clearly must have missed some additional place it gets called in.
-> 
-> Just for completeness, the additional place I missed is
-> amd_pmu_cpu_reset():
-> 
->                  static_call(amd_pmu_branch_reset)();
-> 
-> ... and the amd_pmu_branch_reset static call is set up with
-> amd_pmu_lbr_reset, which is why git grep missed it.
-> 
-> Anyway, amd_pmu_cpu_reset() is very much something that should run
-> non-preemptable to begin with, so your patch only papers over the real
-> problem AFAICS.
-> 
-> Thanks,
-> 
-> 	Ingo
+On Thu, Oct 19, 2023 at 4:02=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> On 12/10/23 09:23, Ian Rogers wrote:
+> > Commit 5b7ba82a7591 ("perf symbols: Load kernel maps before using")
+> > changed it so that loading a kernel dso would cause the symbols for
+> > the dso to be eagerly loaded. For perf record this is overhead as the
+> > symbols won't be used. Add a symbol_conf to control the behavior and
+> > disable it for perf record and perf inject.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-inject.c   | 4 ++++
+> >  tools/perf/builtin-record.c   | 2 ++
+> >  tools/perf/util/event.c       | 4 ++--
+> >  tools/perf/util/symbol_conf.h | 3 ++-
+> >  4 files changed, 10 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> > index c8cf2fdd9cff..1539fb18c749 100644
+> > --- a/tools/perf/builtin-inject.c
+> > +++ b/tools/perf/builtin-inject.c
+> > @@ -2265,6 +2265,10 @@ int cmd_inject(int argc, const char **argv)
+> >               "perf inject [<options>]",
+> >               NULL
+> >       };
+> > +
+> > +     /* Disable eager loading of kernel symbols that adds overhead to =
+perf inject. */
+> > +     symbol_conf.lazy_load_kernel_maps =3D true;
+>
+> Possibly not for itrace kernel decoding, so:
+>
+>         if (!inject->itrace_synth_opts.set)
+>                 symbol_conf.lazy_load_kernel_maps =3D true;
 
-In that case - should preemption be disabled for all of 
-x86_pmu_dying_cpu() perhaps?
+Thanks, added to v3.
 
-For good measure x86_pmu_starting_cpu() too?
+Ian
+
+> > +
+> >  #ifndef HAVE_JITDUMP
+> >       set_option_nobuild(options, 'j', "jit", "NO_LIBELF=3D1", true);
+> >  #endif
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index dcf288a4fb9a..8ec818568662 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -3989,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
+> >  # undef set_nobuild
+> >  #endif
+> >
+> > +     /* Disable eager loading of kernel symbols that adds overhead to =
+perf record. */
+> > +     symbol_conf.lazy_load_kernel_maps =3D true;
+> >       rec->opts.affinity =3D PERF_AFFINITY_SYS;
+> >
+> >       rec->evlist =3D evlist__new();
+> > diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> > index 923c0fb15122..68f45e9e63b6 100644
+> > --- a/tools/perf/util/event.c
+> > +++ b/tools/perf/util/event.c
+> > @@ -617,13 +617,13 @@ struct map *thread__find_map(struct thread *threa=
+d, u8 cpumode, u64 addr,
+> >       if (cpumode =3D=3D PERF_RECORD_MISC_KERNEL && perf_host) {
+> >               al->level =3D 'k';
+> >               maps =3D machine__kernel_maps(machine);
+> > -             load_map =3D true;
+> > +             load_map =3D !symbol_conf.lazy_load_kernel_maps;
+> >       } else if (cpumode =3D=3D PERF_RECORD_MISC_USER && perf_host) {
+> >               al->level =3D '.';
+> >       } else if (cpumode =3D=3D PERF_RECORD_MISC_GUEST_KERNEL && perf_g=
+uest) {
+> >               al->level =3D 'g';
+> >               maps =3D machine__kernel_maps(machine);
+> > -             load_map =3D true;
+> > +             load_map =3D !symbol_conf.lazy_load_kernel_maps;
+> >       } else if (cpumode =3D=3D PERF_RECORD_MISC_GUEST_USER && perf_gue=
+st) {
+> >               al->level =3D 'u';
+> >       } else {
+> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_con=
+f.h
+> > index 0b589570d1d0..2b2fb9e224b0 100644
+> > --- a/tools/perf/util/symbol_conf.h
+> > +++ b/tools/perf/util/symbol_conf.h
+> > @@ -42,7 +42,8 @@ struct symbol_conf {
+> >                       inline_name,
+> >                       disable_add2line_warn,
+> >                       buildid_mmap2,
+> > -                     guest_code;
+> > +                     guest_code,
+> > +                     lazy_load_kernel_maps;
+> >       const char      *vmlinux_name,
+> >                       *kallsyms_name,
+> >                       *source_prefix,
+>
