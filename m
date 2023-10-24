@@ -1,157 +1,123 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB07E3992A
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 16:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2453A279
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 16:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wU/pUNZo"
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA01D170C
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 09:12:47 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-53eeb28e8e5so13233a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 09:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698163966; x=1698768766; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UTa//f3CF6frOiaIViZbYmNtaYUVdbJcfKPBPGR/E6o=;
-        b=wU/pUNZowpJoYV2JJL1DpeVBnaPBuv7UvxbPvk6BRo1qz1Rr9H3Ljsv6+TMuOO5PvM
-         NiTi/gR0FqwDu3qlGz7Cyd6FGYz6KP4Qo9gHWih6owfGIybZEoFH388F5ZwJM/x09k2d
-         hOIZduSb8YG6G7YyKI92mvt/79Fxa9ZoO3P9wLQTHSHHGq2poroP9aoS6nR8yY4fQY3H
-         ySs9Z4NybZtLe/oGcBWT78bl9131vNrLpMZHK2dtmJXDBe7OOXod0AgUYL/54F8JPw4Y
-         ViUmH12pf6IYO0ooQYc3UrMZYO2KH3rVgPF6IdL5oJTjPTMZxvROphFbqcyUHpF+HXH0
-         AKZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698163966; x=1698768766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UTa//f3CF6frOiaIViZbYmNtaYUVdbJcfKPBPGR/E6o=;
-        b=fwxZaR/0HWnzspEZ3Y3ixOXTzn3Ug9DmxleOuBfP3erWjKFesB/rEYdgnn5EeFJjl4
-         xui9JQJjeF5WsDyRDKd2Gz2ROTSnNUjBkWLXaLiLuLyXCOk/gYtbgUYXLzsnwkz9Wygn
-         epSEQC540jmAy165CJrd05rMXRZUaKBcNhQ+o67lXzb4zswiJP72W6bbyeaJGI3Op6uX
-         brxDBTyc2A7HwLgfWbl4WUo0ZdGpj6fh6wfj1IoExk8DPjMBOOz2M/ah99FKr+jPiqhd
-         ImYprk3uJIASCJzHvWbq9W0dgy1ZG3aWW4QpzNRj1r2rayhRGM85OlIrpKH8m4MkZQJ5
-         gCEg==
-X-Gm-Message-State: AOJu0YylqgQI+NdVefriyIX74+iPY6MNSa8yIN2TvaskGRZl7wCDXtG1
-	4Igce5NItlc35kDUpcjcjAw8+R55i1OSvqgQm+V+IQ==
-X-Google-Smtp-Source: AGHT+IH4lKfrFeJgOMb4mTFEvhZTUWm5ejImQaZrlWnRs+8cmQM7UkjZN12WgMceOxLfpDMFiPWgyIDdE3glHiBrSC8=
-X-Received: by 2002:a05:6402:32c:b0:540:9f24:6006 with SMTP id
- q12-20020a056402032c00b005409f246006mr117406edw.6.1698163965905; Tue, 24 Oct
- 2023 09:12:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jyw7JHuw"
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6123112B;
+	Tue, 24 Oct 2023 09:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yw1JizmzQa21OHIpxEbqWsvPR+Hf7j2CXdWs4xmNF0k=; b=jyw7JHuwxzc7X7X8xzfcxQNQ1b
+	UjBFZlqt75ASSvoLbUxiITUd7kclX9FIdvcnTPmW7R34OmJNJaey6q//Ob1gJe2KDSsYBG6S1ld+D
+	0LFxu9pr0ctPh0ET/BczCKmpYg0PZgX9Ct5SgB9pi2RvbgB5F3hb66yBj0ILSJIUXeaR2Krsbn6L6
+	Fj5eJHWRLKGk1xqoMt0XqlwMdqDuz5M2G3N85hYwoRhAfdfAJYE2ekPn6bmWnilWiErAqNVPMu3YG
+	i0AR6202kThNeaa5o9Hiauquerm5AGL2qqHa96gTJHR+rlfOrK35qlGYv/BKBNxTTYairTWpK68Hc
+	lodsjShg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qvKIg-00Fdqo-3A;
+	Tue, 24 Oct 2023 16:30:39 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A4998300451; Tue, 24 Oct 2023 18:30:38 +0200 (CEST)
+Date: Tue, 24 Oct 2023 18:30:38 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, linux-pm@vger.kernel.org, rafael@kernel.org,
+	pavel@ucw.cz, linux-perf-users@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 2/2] perf/x86/amd: Don't allow pre-emption in
+ amd_pmu_lbr_reset()
+Message-ID: <20231024163038.GC40044@noisy.programming.kicks-ass.net>
+References: <20231023160018.164054-1-mario.limonciello@amd.com>
+ <20231023160018.164054-3-mario.limonciello@amd.com>
+ <ZTd6BYr17ycdHR2a@gmail.com>
+ <38ea48b4-aaba-4ba4-84a1-e88d6cb9df94@amd.com>
+ <20231024155939.GF33965@noisy.programming.kicks-ass.net>
+ <47518940-2803-4a6b-88fd-8cfc872b4219@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-4-irogers@google.com>
- <CAM9d7cg=v9rnPz4cy2yeNZNSCoZ3VReC895gHPTO-emn6XdLXg@mail.gmail.com>
-In-Reply-To: <CAM9d7cg=v9rnPz4cy2yeNZNSCoZ3VReC895gHPTO-emn6XdLXg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Oct 2023 09:12:33 -0700
-Message-ID: <CAP-5=fWBRyw=DZ-neHBMuC=nAjo-MrcUPFo6H-XzwrTPEvZ+yg@mail.gmail.com>
-Subject: Re: [PATCH v2 03/13] perf hist: Add missing puts to hist__account_cycles
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
-	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
-	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47518940-2803-4a6b-88fd-8cfc872b4219@amd.com>
 
-On Wed, Oct 18, 2023 at 4:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi Ian,
->
-> On Wed, Oct 11, 2023 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > Caught using reference count checking on perf top with
-> > "--call-graph=3Dlbr". After this no memory leaks were detected.
-> >
-> > Fixes: 57849998e2cd ("perf report: Add processing for cycle histograms"=
-)
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/hist.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > index 3dc8a4968beb..ac8c0ef48a7f 100644
-> > --- a/tools/perf/util/hist.c
-> > +++ b/tools/perf/util/hist.c
-> > @@ -2676,8 +2676,6 @@ void hist__account_cycles(struct branch_stack *bs=
-, struct addr_location *al,
-> >
-> >         /* If we have branch cycles always annotate them. */
-> >         if (bs && bs->nr && entries[0].flags.cycles) {
-> > -               int i;
-> > -
->
-> Seems not necessary.
->
-> >                 bi =3D sample__resolve_bstack(sample, al);
->
-> It looks like this increases the refcount for each bi entry and
-> it didn't put the refcounts.
+On Tue, Oct 24, 2023 at 11:04:06AM -0500, Mario Limonciello wrote:
 
-Right, this is why the loop doing the puts is added.
+> > IIRC this is the hotplug thread running a teardown function on that CPU
+> > itself. It being a strict per-cpu thread should not trip
+> > smp_processor_id() wanrs.
+> > 
+> 
+> BUG: using smp_processor_id() in preemptible [00000000] code: rtcwake/2960
+> caller is amd_pmu_lbr_reset+0x19/0xc0
+> CPU: 104 PID: 2960 Comm: rtcwake Not tainted 6.6.0-rc6-00002-g3e2c7f3ac51f
 
->
-> >                 if (bi) {
-> >                         struct addr_map_symbol *prev =3D NULL;
-> > @@ -2692,7 +2690,7 @@ void hist__account_cycles(struct branch_stack *bs=
-, struct addr_location *al,
-> >                          * Note that perf stores branches reversed from
-> >                          * program order!
-> >                          */
-> > -                       for (i =3D bs->nr - 1; i >=3D 0; i--) {
-> > +                       for (int i =3D bs->nr - 1; i >=3D 0; i--) {
-> >                                 addr_map_symbol__account_cycles(&bi[i].=
-from,
-> >                                         nonany_branch_mode ? NULL : pre=
-v,
-> >                                         bi[i].flags.cycles);
-> > @@ -2701,6 +2699,12 @@ void hist__account_cycles(struct branch_stack *b=
-s, struct addr_location *al,
-> >                                 if (total_cycles)
-> >                                         *total_cycles +=3D bi[i].flags.=
-cycles;
-> >                         }
-> > +                       for (unsigned int i =3D 0; i < bs->nr; i++) {
->
-> Can we just reuse the int i above?
+Very much not the cpuhp/%u thread :/, let me try and figure out how that
+happens.
 
-I wanted to move to unsigned for consistency with the rest of the
-branch_stack code, nr is a u64, but when iterating down the sign
-matters - so this fixes up where possible.
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
->
->
-> > +                               map__put(bi[i].to.ms.map);
-> > +                               maps__put(bi[i].to.ms.maps);
-> > +                               map__put(bi[i].from.ms.map);
-> > +                               maps__put(bi[i].from.ms.maps);
-> > +                       }
-> >                         free(bi);
-> >                 }
-> >         }
-> > --
-> > 2.42.0.609.gbb76f46606-goog
-> >
+> #1025
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x44/0x60
+>  check_preemption_disabled+0xce/0xf0
+>  ? __pfx_x86_pmu_dead_cpu+0x10/0x10
+>  amd_pmu_lbr_reset+0x19/0xc0
+>  ? __pfx_x86_pmu_dead_cpu+0x10/0x10
+>  amd_pmu_cpu_reset.constprop.0+0x51/0x60
+>  amd_pmu_cpu_dead+0x3e/0x90
+>  x86_pmu_dead_cpu+0x13/0x20
+>  cpuhp_invoke_callback+0x169/0x4b0
+>  ? __pfx_virtnet_cpu_dead+0x10/0x10
+>  __cpuhp_invoke_callback_range+0x76/0xe0
+>  _cpu_down+0x112/0x270
+>  freeze_secondary_cpus+0x8e/0x280
+>  suspend_devices_and_enter+0x342/0x900
+>  pm_suspend+0x2fd/0x690
+>  state_store+0x71/0xd0
+>  kernfs_fop_write_iter+0x128/0x1c0
+>  vfs_write+0x2db/0x400
+>  ksys_write+0x5f/0xe0
+>  do_syscall_64+0x59/0x90
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? count_memcg_events.constprop.0+0x1a/0x30
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? handle_mm_fault+0x1e9/0x340
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? preempt_count_add+0x4d/0xa0
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? up_read+0x38/0x70
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? do_user_addr_fault+0x343/0x6b0
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? exc_page_fault+0x74/0x170
+>  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> RIP: 0033:0x7f32f8d14a77
+> Code: 10 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa
+> 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff
+> 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+> RSP: 002b:00007ffdc648de18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007f32f8d14a77
+> RDX: 0000000000000004 RSI: 000055b2fc2a5670 RDI: 0000000000000004
+> RBP: 000055b2fc2a5670 R08: 0000000000000000 R09: 000055b2fc2a5670
+> R10: 00007f32f8e1a2f0 R11: 0000000000000246 R12: 0000000000000004
+> R13: 000055b2fc2a2480 R14: 00007f32f8e16600 R15: 00007f32f8e15a00
+>  </TASK>
