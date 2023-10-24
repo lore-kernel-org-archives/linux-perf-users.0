@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0D33D97E
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B0D3D3B6
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cj997Knq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zCU8CFVJ"
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EEFE1712
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:31 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9bc6447193so5552211276.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:31 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB34173D
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:34 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a541b720aso5901181276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698186271; x=1698791071; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698186273; x=1698791073; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=E9Urizhv5WS8Bux3imXxMiLlOJqV8I9Pz4v3kegUcno=;
-        b=cj997KnqBuk1bJmOrE1IaIjCfFJfdq7f3X0TDebG3W1tvzl1CfqDsoRbsWSkZbq3EV
-         VILP3F1wqjbRACu+v39fc+dbw/umoBJed3H+6Z3KbqpiOSeTXGXKJaOdgrvzEg3CMPwO
-         FCknZrWklnt84Q14XXGuetp0yDNwIWUVTdVjyYNqz4FTPhU+8kI0nFochpdvBzosdypS
-         y63K/24yBnFMwIP4AmRbjjFMHDZjfPAU1k+jVBjJ25N6bh8kZaocYa2I5BH03L9AiuGR
-         fhbWg0PujwL3cGy4Ad9NGkHZeRYuD4mkPZvDjXGs1Ad8Lrh4IBf++4iHjGZKu36Qk9aX
-         skMw==
+        bh=suhDjyVWL4E1hV+3n6FJxzBer/uTQy3hSIxvwlmIybE=;
+        b=zCU8CFVJ1mxe9S1kRflGZLVulexeKS1d12mFQacSp2B/pkolQVNZfgAneQSp2wc6zw
+         vpEy58qi1Iivguek2u7qnKXofPcWLfXQggQXGr3LzqDLIYOp7TgS6rK4VPwDBzwwuEIG
+         8cRQH35fsSO68wxoTdAABhK16E0c6b1TpBz9SK9IxbRk0rV1waNH1mLDeSdT5VEtaUBf
+         /vjYg9GvB/EmmJ/sLvCEgdCdoXPDssHCIw9yzUWWFoF4NfZpLAWFCFQYV+EyG7a3mLEd
+         aZ0mqsStDXEHowH1sVOSp4VYubJM2QBpXmPMFDFlgBPDCupkSqeecT6bCGDuy/lyFWT+
+         cguw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698186271; x=1698791071;
+        d=1e100.net; s=20230601; t=1698186273; x=1698791073;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E9Urizhv5WS8Bux3imXxMiLlOJqV8I9Pz4v3kegUcno=;
-        b=HPMQtVMBAyDikf60JZYy+p7xNUpjpeMlQ+4Ux2fdq/lOZe3as+xYv4YhjkTvJyHJid
-         dwt1tw37c26WHkJGaj/ed294zCV4xhx8druddTSn2Gne5BqBYcl3lOex2zSCgaoLVlh5
-         EWo7eQDW+I6ZqLyB65zJyN27ewgQaAxtCPpS1Tk9eEmpjRcKkh7/0U/qawCRhxmoU6C2
-         Xh8i06+ZUB4A1e2TKDX3MvgHFKL83nB9GMkVC2aYQba1FAjLuTmnI9An/9DkvHgWF0l7
-         PfNZ9i0okGdYQsw9tDfFddzkNgym2oiWmHy/onZx9LIF68cRM9aTkxpP7xNdpYFHOhS0
-         VFUg==
-X-Gm-Message-State: AOJu0Yz2ljGIi5VkKPKhXIe68JtfHHIcwI6OrMT3G1ZTB5AjQct7IkMC
-	5MJ03cg4vhrW8aBJCgKf2uo+Pdj7pvmg
-X-Google-Smtp-Source: AGHT+IHu39k4c6xkVV7pusgwib5ieSXUcE1SF5wxto++MOEMTeu8moZwxB1soQKzEQ9cZdZ4i+7cZYrcj7Fe
+        bh=suhDjyVWL4E1hV+3n6FJxzBer/uTQy3hSIxvwlmIybE=;
+        b=XBNOwkFsdFiHjpwMWRNN5esTTvlyxDKtsKnxTMr3So8PeIBx0i5/XCJV0CYz/W+TWo
+         9hrCKvJtgos1anxKIprE2sNQ5R2FH/eFYnijc8Xj123YqWZiugWS+GHaj+WPvIzkYxzT
+         6z1HQknellXK5uogGx/3r+XBW7rSkTzsfkpZ+LspDxIt7SPK1/mDrp42x6Vw37f2K3w5
+         lxX2fPO88HiKMPnK7aKY9C7osikAcwcfYc7PwhfvOGzuxenjDILahzA57zHCUFC060Go
+         aVcO2huutzgvsGcunvAGN5GSxvadiiz13Ywdz7CUkhxyPzNO3pfwznXW5YK2CDKDvFut
+         m4Dg==
+X-Gm-Message-State: AOJu0YweWYEpeee9btX6MHr4KzUU2Lb88rrpxDQoYKuM5bBmjU/VjKku
+	EFehdBeI9TIxKHRlKdagpUvXxfBqgP2t
+X-Google-Smtp-Source: AGHT+IGVq816b1HgY133mLzi3Lvv2j14MwG8ioqBQUVZHwZLLQPUE3bo1r23Y1281rxRikEGIIG9NZXUQqpx
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:93d2:18cc:4d63:45ba])
- (user=irogers job=sendgmr) by 2002:a05:6902:1083:b0:d9a:4f4c:961b with SMTP
- id v3-20020a056902108300b00d9a4f4c961bmr353592ybu.1.1698186270729; Tue, 24
- Oct 2023 15:24:30 -0700 (PDT)
-Date: Tue, 24 Oct 2023 15:23:11 -0700
+ (user=irogers job=sendgmr) by 2002:a25:c7c7:0:b0:da0:433e:871d with SMTP id
+ w190-20020a25c7c7000000b00da0433e871dmr54206ybe.7.1698186273164; Tue, 24 Oct
+ 2023 15:24:33 -0700 (PDT)
+Date: Tue, 24 Oct 2023 15:23:12 -0700
 In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
-Message-Id: <20231024222353.3024098-9-irogers@google.com>
+Message-Id: <20231024222353.3024098-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231024222353.3024098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-Subject: [PATCH v3 08/50] perf callchain: Make display use of branch_type_stat const
+Subject: [PATCH v3 09/50] perf callchain: Make brtype_stat in callchain_list optional
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -71,85 +71,239 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Display code doesn't modify the branch_type_stat so switch uses to
-const. This is done to aid refactoring struct callchain_list where
-current the branch_type_stat is embedded even if not used.
+struct callchain_list is 352bytes in size, 232 of which are
+brtype_stat. brtype_stat is only used for certain callchain_list
+items so make it optional, allocating when necessary. So that
+printing doesn't need to deal with an optional brtype_stat, pass
+an empty/zero version.
+
+Before:
+```
+struct callchain_list {
+        u64                        ip;                   /*     0     8 */
+        struct map_symbol          ms;                   /*     8    24 */
+        struct {
+                _Bool              unfolded;             /*    32     1 */
+                _Bool              has_children;         /*    33     1 */
+        };                                               /*    32     2 */
+
+        /* XXX 6 bytes hole, try to pack */
+
+        u64                        branch_count;         /*    40     8 */
+        u64                        from_count;           /*    48     8 */
+        u64                        predicted_count;      /*    56     8 */
+        /* --- cacheline 1 boundary (64 bytes) --- */
+        u64                        abort_count;          /*    64     8 */
+        u64                        cycles_count;         /*    72     8 */
+        u64                        iter_count;           /*    80     8 */
+        u64                        iter_cycles;          /*    88     8 */
+        struct branch_type_stat    brtype_stat;          /*    96   232 */
+        /* --- cacheline 5 boundary (320 bytes) was 8 bytes ago --- */
+        const char  *              srcline;              /*   328     8 */
+        struct list_head           list;                 /*   336    16 */
+
+        /* size: 352, cachelines: 6, members: 13 */
+        /* sum members: 346, holes: 1, sum holes: 6 */
+        /* last cacheline: 32 bytes */
+};
+```
+
+After:
+```
+struct callchain_list {
+        u64                        ip;                   /*     0     8 */
+        struct map_symbol          ms;                   /*     8    24 */
+        struct {
+                _Bool              unfolded;             /*    32     1 */
+                _Bool              has_children;         /*    33     1 */
+        };                                               /*    32     2 */
+
+        /* XXX 6 bytes hole, try to pack */
+
+        u64                        branch_count;         /*    40     8 */
+        u64                        from_count;           /*    48     8 */
+        u64                        predicted_count;      /*    56     8 */
+        /* --- cacheline 1 boundary (64 bytes) --- */
+        u64                        abort_count;          /*    64     8 */
+        u64                        cycles_count;         /*    72     8 */
+        u64                        iter_count;           /*    80     8 */
+        u64                        iter_cycles;          /*    88     8 */
+        struct branch_type_stat *  brtype_stat;          /*    96     8 */
+        const char  *              srcline;              /*   104     8 */
+        struct list_head           list;                 /*   112    16 */
+
+        /* size: 128, cachelines: 2, members: 13 */
+        /* sum members: 122, holes: 1, sum holes: 6 */
+};
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/branch.c    | 4 ++--
- tools/perf/util/branch.h    | 4 ++--
- tools/perf/util/callchain.c | 6 +++---
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/util/callchain.c | 41 +++++++++++++++++++++++++++++--------
+ tools/perf/util/callchain.h |  2 +-
+ 2 files changed, 34 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-index 378f16a24751..ab760e267d41 100644
---- a/tools/perf/util/branch.c
-+++ b/tools/perf/util/branch.c
-@@ -109,7 +109,7 @@ const char *get_branch_type(struct branch_entry *e)
- 	return branch_type_name(e->flags.type);
- }
- 
--void branch_type_stat_display(FILE *fp, struct branch_type_stat *st)
-+void branch_type_stat_display(FILE *fp, const struct branch_type_stat *st)
- {
- 	u64 total = 0;
- 	int i;
-@@ -171,7 +171,7 @@ static int count_str_scnprintf(int idx, const char *str, char *bf, int size)
- 	return scnprintf(bf, size, "%s%s", (idx) ? " " : " (", str);
- }
- 
--int branch_type_str(struct branch_type_stat *st, char *bf, int size)
-+int branch_type_str(const struct branch_type_stat *st, char *bf, int size)
- {
- 	int i, j = 0, printed = 0;
- 	u64 total = 0;
-diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
-index e41bfffe2217..87704d713ff6 100644
---- a/tools/perf/util/branch.h
-+++ b/tools/perf/util/branch.h
-@@ -86,8 +86,8 @@ void branch_type_count(struct branch_type_stat *st, struct branch_flags *flags,
- const char *branch_type_name(int type);
- const char *branch_new_type_name(int new_type);
- const char *get_branch_type(struct branch_entry *e);
--void branch_type_stat_display(FILE *fp, struct branch_type_stat *st);
--int branch_type_str(struct branch_type_stat *st, char *bf, int bfsize);
-+void branch_type_stat_display(FILE *fp, const struct branch_type_stat *st);
-+int branch_type_str(const struct branch_type_stat *st, char *bf, int bfsize);
- 
- const char *branch_spec_desc(int spec);
- 
 diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 18d545c0629e..cde4860e6f28 100644
+index cde4860e6f28..5349c6a21849 100644
 --- a/tools/perf/util/callchain.c
 +++ b/tools/perf/util/callchain.c
-@@ -1339,7 +1339,7 @@ static int count_float_printf(int idx, const char *str, float value,
- static int branch_to_str(char *bf, int bfsize,
- 			 u64 branch_count, u64 predicted_count,
- 			 u64 abort_count,
--			 struct branch_type_stat *brtype_stat)
-+			 const struct branch_type_stat *brtype_stat)
- {
- 	int printed, i = 0;
+@@ -586,7 +586,7 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
+ 		call = zalloc(sizeof(*call));
+ 		if (!call) {
+ 			perror("not enough memory for the code path tree");
+-			return -1;
++			return -ENOMEM;
+ 		}
+ 		call->ip = cursor_node->ip;
+ 		call->ms = cursor_node->ms;
+@@ -602,7 +602,15 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
+ 				 * branch_from is set with value somewhere else
+ 				 * to imply it's "to" of a branch.
+ 				 */
+-				call->brtype_stat.branch_to = true;
++				if (!call->brtype_stat) {
++					call->brtype_stat = zalloc(sizeof(*call->brtype_stat));
++					if (!call->brtype_stat) {
++						perror("not enough memory for the code path branch statisitcs");
++						free(call->brtype_stat);
++						return -ENOMEM;
++					}
++				}
++				call->brtype_stat->branch_to = true;
  
-@@ -1403,7 +1403,7 @@ static int counts_str_build(char *bf, int bfsize,
- 			     u64 abort_count, u64 cycles_count,
- 			     u64 iter_count, u64 iter_cycles,
- 			     u64 from_count,
--			     struct branch_type_stat *brtype_stat)
-+			     const struct branch_type_stat *brtype_stat)
- {
- 	int printed;
+ 				if (cursor_node->branch_flags.predicted)
+ 					call->predicted_count = 1;
+@@ -610,7 +618,7 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
+ 				if (cursor_node->branch_flags.abort)
+ 					call->abort_count = 1;
  
-@@ -1430,7 +1430,7 @@ static int callchain_counts_printf(FILE *fp, char *bf, int bfsize,
- 				   u64 abort_count, u64 cycles_count,
- 				   u64 iter_count, u64 iter_cycles,
- 				   u64 from_count,
--				   struct branch_type_stat *brtype_stat)
-+				   const struct branch_type_stat *brtype_stat)
- {
- 	char str[256];
+-				branch_type_count(&call->brtype_stat,
++				branch_type_count(call->brtype_stat,
+ 						  &cursor_node->branch_flags,
+ 						  cursor_node->branch_from,
+ 						  cursor_node->ip);
+@@ -618,7 +626,8 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
+ 				/*
+ 				 * It's "from" of a branch
+ 				 */
+-				call->brtype_stat.branch_to = false;
++				if (call->brtype_stat && call->brtype_stat->branch_to)
++					call->brtype_stat->branch_to = false;
+ 				call->cycles_count =
+ 					cursor_node->branch_flags.cycles;
+ 				call->iter_count = cursor_node->nr_loop_iter;
+@@ -652,6 +661,7 @@ add_child(struct callchain_node *parent,
+ 			list_del_init(&call->list);
+ 			map__zput(call->ms.map);
+ 			maps__zput(call->ms.maps);
++			zfree(&call->brtype_stat);
+ 			free(call);
+ 		}
+ 		free(new);
+@@ -762,7 +772,14 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 			/*
+ 			 * It's "to" of a branch
+ 			 */
+-			cnode->brtype_stat.branch_to = true;
++			if (!cnode->brtype_stat) {
++				cnode->brtype_stat = zalloc(sizeof(*cnode->brtype_stat));
++				if (!cnode->brtype_stat) {
++					perror("not enough memory for the code path branch statisitcs");
++					return MATCH_ERROR;
++				}
++			}
++			cnode->brtype_stat->branch_to = true;
  
+ 			if (node->branch_flags.predicted)
+ 				cnode->predicted_count++;
+@@ -770,7 +787,7 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 			if (node->branch_flags.abort)
+ 				cnode->abort_count++;
+ 
+-			branch_type_count(&cnode->brtype_stat,
++			branch_type_count(cnode->brtype_stat,
+ 					  &node->branch_flags,
+ 					  node->branch_from,
+ 					  node->ip);
+@@ -778,7 +795,8 @@ static enum match_result match_chain(struct callchain_cursor_node *node,
+ 			/*
+ 			 * It's "from" of a branch
+ 			 */
+-			cnode->brtype_stat.branch_to = false;
++			if (cnode->brtype_stat && cnode->brtype_stat->branch_to)
++				cnode->brtype_stat->branch_to = false;
+ 			cnode->cycles_count += node->branch_flags.cycles;
+ 			cnode->iter_count += node->nr_loop_iter;
+ 			cnode->iter_cycles += node->iter_cycles;
+@@ -1026,6 +1044,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
+ 		maps__zput(ms.maps);
+ 		map__zput(list->ms.map);
+ 		maps__zput(list->ms.maps);
++		zfree(&list->brtype_stat);
+ 		free(list);
+ 	}
+ 
+@@ -1447,11 +1466,14 @@ static int callchain_counts_printf(FILE *fp, char *bf, int bfsize,
+ int callchain_list_counts__printf_value(struct callchain_list *clist,
+ 					FILE *fp, char *bf, int bfsize)
+ {
++	static const struct branch_type_stat empty_brtype_stat = {};
++	const struct branch_type_stat *brtype_stat;
+ 	u64 branch_count, predicted_count;
+ 	u64 abort_count, cycles_count;
+ 	u64 iter_count, iter_cycles;
+ 	u64 from_count;
+ 
++	brtype_stat = clist->brtype_stat ?: &empty_brtype_stat;
+ 	branch_count = clist->branch_count;
+ 	predicted_count = clist->predicted_count;
+ 	abort_count = clist->abort_count;
+@@ -1463,7 +1485,7 @@ int callchain_list_counts__printf_value(struct callchain_list *clist,
+ 	return callchain_counts_printf(fp, bf, bfsize, branch_count,
+ 				       predicted_count, abort_count,
+ 				       cycles_count, iter_count, iter_cycles,
+-				       from_count, &clist->brtype_stat);
++				       from_count, brtype_stat);
+ }
+ 
+ static void free_callchain_node(struct callchain_node *node)
+@@ -1476,6 +1498,7 @@ static void free_callchain_node(struct callchain_node *node)
+ 		list_del_init(&list->list);
+ 		map__zput(list->ms.map);
+ 		maps__zput(list->ms.maps);
++		zfree(&list->brtype_stat);
+ 		free(list);
+ 	}
+ 
+@@ -1483,6 +1506,7 @@ static void free_callchain_node(struct callchain_node *node)
+ 		list_del_init(&list->list);
+ 		map__zput(list->ms.map);
+ 		maps__zput(list->ms.maps);
++		zfree(&list->brtype_stat);
+ 		free(list);
+ 	}
+ 
+@@ -1569,6 +1593,7 @@ int callchain_node__make_parent_list(struct callchain_node *node)
+ 		list_del_init(&chain->list);
+ 		map__zput(chain->ms.map);
+ 		maps__zput(chain->ms.maps);
++		zfree(&chain->brtype_stat);
+ 		free(chain);
+ 	}
+ 	return -ENOMEM;
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index d2618a47deca..86e8a9e81456 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -129,7 +129,7 @@ struct callchain_list {
+ 	u64			cycles_count;
+ 	u64			iter_count;
+ 	u64			iter_cycles;
+-	struct branch_type_stat brtype_stat;
++	struct branch_type_stat *brtype_stat;
+ 	const char		*srcline;
+ 	struct list_head	list;
+ };
 -- 
 2.42.0.758.gaed0368e0e-goog
 
