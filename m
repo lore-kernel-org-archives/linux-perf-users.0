@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F251B405E6
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:25:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E7C3FB1A
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:26:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ti0BxZOq"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52AD51FDD
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:53 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a9012ab0adso61331557b3.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pRRwvyFw"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AFB230C5
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:37 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a90d6ab944so56805167b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698186291; x=1698791091; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698186336; x=1698791136; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XKH/5K4bvubvIr9pw7ZYc/Z4ET3hwQ4HW4s3RX+AQbw=;
-        b=ti0BxZOqkKM1O8RMMAUyNmmZ2o8mbX3dMm8Vjr/jsi/SElnTLRGvvf7tm75ekFnwiP
-         aTja6tBcUnRlTYdAa/U5yaTaroVUtJWEYClh9UtPf3AR59z5jFFreWEiQzusSQnVGRY3
-         S3OLHaoUGOB4ZHSNhCYtNRDALBRJ6eGzSS4AWWWDf0TvXoUOCWwbmgX7ZsTzq0+S74/B
-         Ahn6YidRiKy/TTgwUS9p/Cnai3YnI5tyiTz7S6UBux/y8JM1d2ch5KkkZPaseNvy7xx0
-         ZeX0cs0pJ6lhq1L9FybhTefYg7fLVyVZG5gYtjm/N/lm4c306xGJDGGw6kvBGfSvO6uU
-         Edbw==
+        bh=zZGWaGIyb2MLTR6FKf9sQ21nNy6Say3HBAADxZHBZRA=;
+        b=pRRwvyFwnHwcygLAejayEt2NNSybuNbRUx0dieNKbFFQqJu7pI8tjFYOrawnhYicxv
+         1k0s8yf+6VTLk4WCYSzaql5nS7MVqnV5XCK/g8ICGM/5ONMACRtQHl5LAKKoiJSkVzpN
+         ZsZSKpI+3/nviSFk61QM/s2HdbcWWOt3eneMrl1frMOC92ZOB0zCHQxiH+B+NMIeWo6/
+         OFeWUFRa8I2PAcYmzsGZW5u14sz2uGvKKMCPjejuiVyNyeB+62N037HQ9wkSImkPutMQ
+         n/7rf3FqhGekKlkSqe3kylPdv2yUruR3m8WaAT2A3bPBlQtfL+ujG18gdSUrRdMs0DqJ
+         +uLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698186291; x=1698791091;
+        d=1e100.net; s=20230601; t=1698186336; x=1698791136;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XKH/5K4bvubvIr9pw7ZYc/Z4ET3hwQ4HW4s3RX+AQbw=;
-        b=bEOUEZ5s9o4gYS6//ZYOSEbhLi4BtvocNxpd/G20hZn+xPCdcZhpKhQurpu0SpBsIA
-         LAL7rOhiWxYAFYYe2rHm7ecF7icO4Jy0yVTDKvONlZar76NLj/zSReMqZHWUWR7/h6qG
-         wkWexgl+KMxQhONuNIbG2O91fg33AJtFIXmNZhhMj4cafdj5oA7pcSTj27eOajsdefUv
-         cGJLxK36ajUG1qiIEnP/QYRxZmTbS/51/6AY1MJv4N5YR47nWTzJNSdqEazCuFdsTy1r
-         b9RPnHP0522+z1m9+Xiki3PAz2DKGTVF9wZOh0bbsP98/u+C6RlcWQ2egYUDf9YoQMoa
-         oPUA==
-X-Gm-Message-State: AOJu0YzFoJze6oLW3VXD4ODQ7xAdn/c9kqlieH3rzANFI3UdecVa6HGP
-	gynUE41xDvMwD30aY5JEuwi9TuKtKTCh
-X-Google-Smtp-Source: AGHT+IEA4x6jExeY58G0RliZSteprXCMSpH7tFe0ZHu9NiKL3F8kX6ZLzfPBEolCHwOezoixk0P4f6/+giGa
+        bh=zZGWaGIyb2MLTR6FKf9sQ21nNy6Say3HBAADxZHBZRA=;
+        b=xT99b1wQWBh1ZEI0DtNd75+q/8xzNX0bmW/RaZeUe7FhFG1kEn+Su1rXOeZ+whmu7V
+         DVGXgl3NOucXI16NPcElG8itBPKysEXGp4a9hI5rTmot2KtwZNptdKbLLCJegeQpghkH
+         a2TSNLtlOWcghfnNL4Nr/fcJvCtwLg6Yr9rR9aFeOrtpekEpIRWm0mc0k3G9DE09JOBs
+         cY62UzbbCm76nqKNaq+hiegbpvm2u50mBHzwfez1pnVP9ElkGK1Oy57vz2zuI+IEZwLI
+         gfibswte04MUrdwfKItddwIt3SRI9SjDv+hgWHzBMMd8pT4GcGLJ00xzZXVblbBHVHRI
+         tSTg==
+X-Gm-Message-State: AOJu0YwZZSrC9LcP1EK6X6ICBm+W7kV876b+JuldM8pbEJ/ESDUYhFCl
+	NEmy+n31YdgnSeDVsUzrUTNYP1CMNAm5
+X-Google-Smtp-Source: AGHT+IHVz7pXh1CNxQ6qdbvifEOQamlKLSHKq/wbY1rZuBe6FFyXXl//ZLSKV7rNVjPdUV1Iae1P5nBb37CA
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:93d2:18cc:4d63:45ba])
- (user=irogers job=sendgmr) by 2002:a0d:eb92:0:b0:59b:ca80:919a with SMTP id
- u140-20020a0deb92000000b0059bca80919amr270216ywe.0.1698186291218; Tue, 24 Oct
- 2023 15:24:51 -0700 (PDT)
-Date: Tue, 24 Oct 2023 15:23:20 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:e8c6:0:b0:5a7:b54e:bfc1 with SMTP id
+ r189-20020a0de8c6000000b005a7b54ebfc1mr337662ywe.10.1698186335876; Tue, 24
+ Oct 2023 15:25:35 -0700 (PDT)
+Date: Tue, 24 Oct 2023 15:23:40 -0700
 In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
-Message-Id: <20231024222353.3024098-18-irogers@google.com>
+Message-Id: <20231024222353.3024098-38-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231024222353.3024098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-Subject: [PATCH v3 17/50] tools api fs: Avoid reading whole file for a 1 byte bool
+Subject: [PATCH v3 37/50] perf maps: Fix up overlaps during fixup_end
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -71,53 +71,29 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-sysfs__read_bool used the first byte from a fully read file into a
-string. It then looked at the first byte's value. Avoid doing this and
-just read the first byte.
+Maps are sometimes made overlapping, in particular kernel maps. If the
+end of a map overlaps the start of the next, shorten the overlapping
+map. This should remove potential non-determinism in maps__find, ie
+finding maps by address.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/fs/fs.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/util/maps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 496812b5f1d2..4c35a689d1fc 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -447,15 +447,16 @@ int sysfs__read_str(const char *entry, char **buf, size_t *sizep)
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 01c15d0b300a..fba95a00ecdf 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -700,7 +700,7 @@ void maps__fixup_end(struct maps *maps)
+ 	down_write(maps__lock(maps));
  
- int sysfs__read_bool(const char *entry, bool *value)
- {
--	char *buf;
--	size_t size;
--	int ret;
-+	struct io io;
-+	char bf[16];
-+	int ret = 0;
+ 	maps__for_each_entry(maps, curr) {
+-		if (prev != NULL && !map__end(prev->map))
++		if (prev && (!map__end(prev->map) || map__end(prev->map) > map__start(curr->map)))
+ 			map__set_end(prev->map, map__start(curr->map));
  
--	ret = sysfs__read_str(entry, &buf, &size);
--	if (ret < 0)
--		return ret;
-+	io.fd = open(entry, O_RDONLY);
-+	if (io.fd < 0)
-+		return -errno;
- 
--	switch (buf[0]) {
-+	io__init(&io, io.fd, bf, sizeof(bf));
-+	switch (io__get_char(&io)) {
- 	case '1':
- 	case 'y':
- 	case 'Y':
-@@ -469,8 +470,7 @@ int sysfs__read_bool(const char *entry, bool *value)
- 	default:
- 		ret = -1;
- 	}
--
--	free(buf);
-+	close(io.fd);
- 
- 	return ret;
- }
+ 		prev = curr;
 -- 
 2.42.0.758.gaed0368e0e-goog
 
