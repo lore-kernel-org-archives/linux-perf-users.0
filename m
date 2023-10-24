@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F983D386
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F029C3F4D9
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N7gPJZLT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0I8qcJyc"
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62CF41981
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:10 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9cb4de3bf0so5994235276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:10 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589D210F4
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:15 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9b9f56489fso5889374276.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698186309; x=1698791109; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698186314; x=1698791114; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VkeMr7e2DGGbr085ZHHtUlFQYJENbgEbiqTYBQxfi7g=;
-        b=N7gPJZLTCgY34ySI2k0lhkTeRwmlC/PhUebEiyQWZiSWYbPOuQhaEt4D0LNNp5N7vR
-         Cd2AI9B9CBDXIwNFW6KzMLAXmJLTxvBcQ2VejOc+TxtNuZSQ1GOaUyUzpRTbFScIbWbQ
-         tF2I/KEv+sjzY0fYVfrJ0Fh+nkg+jw0YMPP5snDE0lqJBMV//42F/oRrDm8vQJlVhsAM
-         tLt9Xwcu+CpwlzINT96fPBXU97vubMtwpYNOGd5RPomej58TNxBYp/b53DskmA6FpqMw
-         LFUFCyMOvoOBY5RZOgjxHgH3ixMJAT6Bn7QmXGJlCcHcIlVCfmXNZ99yQQ3QpoLSqffD
-         ydkA==
+        bh=e5GSFwgTEaHeeY2eroEgFXWdX43cKEeIAHSJl2+ftFs=;
+        b=0I8qcJyc3yn8lYPUk7aGbCk15kVD0PJnIqIpfMbU1cSVQQPlXP7U3OjyPmOQGxmjiX
+         rjKs4Lo2BeOP+4NszZQAbgiABujNw5DuGX9G0+do0DukMj3YGTqsut8PsRGYFEBm2dhP
+         sVzbPdXeDPLMHzkQ85eInORAXgCOG7Mux+CH/FD6ORP4rDjoCfKKFpr3KBcEvmZwI4Rx
+         ZdQXu9y7Kt8PcmT54AEdsgCF1e/mISqGhqhrcmmRczT3x6QbW2XTiCsZM32b6pDATWW5
+         yEQY+LCNr7MO1+g5peninPgAi4fX4ND8OybYi1Ovx3cMuc2MguABw99JhAfadDBAmhdx
+         yHfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698186309; x=1698791109;
+        d=1e100.net; s=20230601; t=1698186314; x=1698791114;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VkeMr7e2DGGbr085ZHHtUlFQYJENbgEbiqTYBQxfi7g=;
-        b=Si4G0+e1qb6tNoNxq6pmtutUDHKzofBr6SqxvbUnChhQhBX5DMe6JeaF6fcDFSUa0d
-         fFd6lI0jFeV84p5yOQb5zBzPFO+jNITTxT84jYMMeuw/vH6u0UNPyz9LvPvRiNTMHKoU
-         fvHEhpe3bpk6VLatoZ2bGEahTqwNqplIbHqrGwC1066vXxhO1N1kqwGTNBHWUJgfLiFv
-         8WR7tFcvBasjxb+PUkuLjPuJk95U7EJECB78oEvJ52FQA2bXIBfsxGGv5x+5bwjJuPvA
-         4PVcnaWt5pT/hry+SS+6EBYg/vB2NXWVQths2xDFQFXfUV8p6gIm5FF+gDGux7sTZKee
-         zczA==
-X-Gm-Message-State: AOJu0Yw4loGXyZ0cHub+y27nGRplJjyFic5GaVHUpAC1QnNIHddgieB+
-	Zdpq1LDWJ6aHRiFbHONz/CmKPI5vnTDD
-X-Google-Smtp-Source: AGHT+IH0R8B1ceb+xhjKV30QnBfOiBelHMIjES5YQfWs9YIQaYFwoNHmeKJG0znR2oo3pbZiBBFwIHjmIxNt
+        bh=e5GSFwgTEaHeeY2eroEgFXWdX43cKEeIAHSJl2+ftFs=;
+        b=A47mtg0KDUFP5Aurc66/aJ2GDnK6SFU5jd/KBmJXjpNOYHIKxsPtWgxtjz7rIJkqSw
+         7yM0w+Mp77/sOL9xvo9xaI6OosGOA6sVPXRINJkpkWEKWgku5O/vVyQnYckU65Hbf/Bs
+         kn7YrnLRKdoyVz5pdKITe50vjpIzDhpILBaouQWhQGhF6DMuFviBU35HcvskxFUnTcPK
+         KJMCtbAXZW4PqfU8/4bFsCIIjggFd9mM17UX9UdJ1+5yBw3l2K+KiD1aDhZpJEScbQ7n
+         CPKMpCTCfcg+QzH4PR6kscl8PVb7M545G21r81G7WHVUb1y/35z+nzYRXwWcmA/82/TI
+         AlYQ==
+X-Gm-Message-State: AOJu0YzEEGKWVQzITpGUrNL/Jw4z90JKAXy/AxLFJ4ejKQYZ+g00OXSW
+	Ui1bm1d5B+sGIElNOouzsYJglrlHJglZ
+X-Google-Smtp-Source: AGHT+IFIFIL85ohk9wFL0+k1YIHYu3DYGpabOsSP/C4iBxiw3i3/xw7t4g7qwMBIwQ0eBdmNv5wNqmbfOdVw
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:93d2:18cc:4d63:45ba])
- (user=irogers job=sendgmr) by 2002:a25:bccc:0:b0:d9a:c218:8177 with SMTP id
- l12-20020a25bccc000000b00d9ac2188177mr285569ybm.8.1698186309153; Tue, 24 Oct
- 2023 15:25:09 -0700 (PDT)
-Date: Tue, 24 Oct 2023 15:23:28 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:544:b0:d13:856b:c10a with SMTP id
+ z4-20020a056902054400b00d13856bc10amr287911ybs.3.1698186314186; Tue, 24 Oct
+ 2023 15:25:14 -0700 (PDT)
+Date: Tue, 24 Oct 2023 15:23:30 -0700
 In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
-Message-Id: <20231024222353.3024098-26-irogers@google.com>
+Message-Id: <20231024222353.3024098-28-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231024222353.3024098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-Subject: [PATCH v3 25/50] perf map: Simplify map_ip/unmap_ip and make map size smaller
+Subject: [PATCH v3 27/50] perf thread: Add missing RC_CHK_ACCESS
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -71,310 +71,28 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When mapping an IP it is either an identity mapping or a DSO relative
-mapping, so a single bit is required in the struct to identify
-this. The current code uses function pointers, adding 2 pointers per
-map and also pushing the size of a map beyond 1 cache line. Switch to
-using a byte to identify the mapping type (as well as priv and
-erange_warned), to avoid any masking. Change struct maps's layout to
-avoid holes.
-
-Before:
-```
-struct map {
-        u64                        start;                /*     0     8 */
-        u64                        end;                  /*     8     8 */
-        _Bool                      erange_warned:1;      /*    16: 0  1 */
-        _Bool                      priv:1;               /*    16: 1  1 */
-
-        /* XXX 6 bits hole, try to pack */
-        /* XXX 3 bytes hole, try to pack */
-
-        u32                        prot;                 /*    20     4 */
-        u64                        pgoff;                /*    24     8 */
-        u64                        reloc;                /*    32     8 */
-        u64                        (*map_ip)(const struct map  *, u64); /*    40     8 */
-        u64                        (*unmap_ip)(const struct map  *, u64); /*    48     8 */
-        struct dso *               dso;                  /*    56     8 */
-        /* --- cacheline 1 boundary (64 bytes) --- */
-        refcount_t                 refcnt;               /*    64     4 */
-        u32                        flags;                /*    68     4 */
-
-        /* size: 72, cachelines: 2, members: 12 */
-        /* sum members: 68, holes: 1, sum holes: 3 */
-        /* sum bitfield members: 2 bits, bit holes: 1, sum bit holes: 6 bits */
-        /* last cacheline: 8 bytes */
-};
-```
-
-After:
-```
-struct map {
-        u64                        start;                /*     0     8 */
-        u64                        end;                  /*     8     8 */
-        u64                        pgoff;                /*    16     8 */
-        u64                        reloc;                /*    24     8 */
-        struct dso *               dso;                  /*    32     8 */
-        refcount_t                 refcnt;               /*    40     4 */
-        u32                        prot;                 /*    44     4 */
-        u32                        flags;                /*    48     4 */
-        enum mapping_type          mapping_type:8;       /*    52: 0  4 */
-
-        /* Bitfield combined with next fields */
-
-        _Bool                      erange_warned;        /*    53     1 */
-        _Bool                      priv;                 /*    54     1 */
-
-        /* size: 56, cachelines: 1, members: 11 */
-        /* padding: 1 */
-        /* last cacheline: 56 bytes */
-};
-```
+Comparing pointers without RC_CHK_ACCESS means the indirect object
+will be compared rather than the underlying maps when REFCNT_CHECKING
+is enabled. Fix by adding missing RC_CHK_ACCESS.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c    |  3 +-
- tools/perf/util/map.c        | 20 +--------
- tools/perf/util/map.h        | 83 +++++++++++++++++++-----------------
- tools/perf/util/symbol-elf.c |  6 +--
- tools/perf/util/symbol.c     |  6 +--
- 5 files changed, 50 insertions(+), 68 deletions(-)
+ tools/perf/util/thread.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index be3dab9d5253..b6831a1f909d 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1360,8 +1360,7 @@ __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
- 	if (machine->vmlinux_map == NULL)
- 		return -ENOMEM;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index fe5e6991ae4b..eae3041408a7 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -385,7 +385,7 @@ static int thread__clone_maps(struct thread *thread, struct thread *parent, bool
+ 	if (thread__pid(thread) == thread__pid(parent))
+ 		return thread__prepare_access(thread);
  
--	map__set_map_ip(machine->vmlinux_map, identity__map_ip);
--	map__set_unmap_ip(machine->vmlinux_map, identity__map_ip);
-+	map__set_mapping_type(machine->vmlinux_map, MAPPING_TYPE__IDENTITY);
- 	return maps__insert(machine__kernel_maps(machine), machine->vmlinux_map);
- }
- 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index f64b83004421..54c67cb7ecef 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -109,8 +109,7 @@ void map__init(struct map *map, u64 start, u64 end, u64 pgoff, struct dso *dso)
- 	map__set_pgoff(map, pgoff);
- 	map__set_reloc(map, 0);
- 	map__set_dso(map, dso__get(dso));
--	map__set_map_ip(map, map__dso_map_ip);
--	map__set_unmap_ip(map, map__dso_unmap_ip);
-+	map__set_mapping_type(map, MAPPING_TYPE__DSO);
- 	map__set_erange_warned(map, false);
- 	refcount_set(map__refcnt(map), 1);
- }
-@@ -172,7 +171,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 		map__init(result, start, start + len, pgoff, dso);
- 
- 		if (anon || no_dso) {
--			map->map_ip = map->unmap_ip = identity__map_ip;
-+			map->mapping_type = MAPPING_TYPE__IDENTITY;
- 
- 			/*
- 			 * Set memory without DSO as loaded. All map__find_*
-@@ -630,18 +629,3 @@ struct maps *map__kmaps(struct map *map)
- 	}
- 	return kmap->kmaps;
- }
--
--u64 map__dso_map_ip(const struct map *map, u64 ip)
--{
--	return ip - map__start(map) + map__pgoff(map);
--}
--
--u64 map__dso_unmap_ip(const struct map *map, u64 ip)
--{
--	return ip + map__start(map) - map__pgoff(map);
--}
--
--u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip)
--{
--	return ip;
--}
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 1b53d53adc86..3a3b7757da5f 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -16,23 +16,25 @@ struct dso;
- struct maps;
- struct machine;
- 
-+enum mapping_type {
-+	/* map__map_ip/map__unmap_ip are given as offsets in the DSO. */
-+	MAPPING_TYPE__DSO,
-+	/* map__map_ip/map__unmap_ip are just the given ip value. */
-+	MAPPING_TYPE__IDENTITY,
-+};
-+
- DECLARE_RC_STRUCT(map) {
- 	u64			start;
- 	u64			end;
--	bool			erange_warned:1;
--	bool			priv:1;
--	u32			prot;
- 	u64			pgoff;
- 	u64			reloc;
--
--	/* ip -> dso rip */
--	u64			(*map_ip)(const struct map *, u64);
--	/* dso rip -> ip */
--	u64			(*unmap_ip)(const struct map *, u64);
--
- 	struct dso		*dso;
- 	refcount_t		refcnt;
-+	u32			prot;
- 	u32			flags;
-+	enum mapping_type	mapping_type:8;
-+	bool			erange_warned;
-+	bool			priv;
- };
- 
- struct kmap;
-@@ -41,38 +43,11 @@ struct kmap *__map__kmap(struct map *map);
- struct kmap *map__kmap(struct map *map);
- struct maps *map__kmaps(struct map *map);
- 
--/* ip -> dso rip */
--u64 map__dso_map_ip(const struct map *map, u64 ip);
--/* dso rip -> ip */
--u64 map__dso_unmap_ip(const struct map *map, u64 ip);
--/* Returns ip */
--u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip);
--
- static inline struct dso *map__dso(const struct map *map)
- {
- 	return RC_CHK_ACCESS(map)->dso;
- }
- 
--static inline u64 map__map_ip(const struct map *map, u64 ip)
--{
--	return RC_CHK_ACCESS(map)->map_ip(map, ip);
--}
--
--static inline u64 map__unmap_ip(const struct map *map, u64 ip)
--{
--	return RC_CHK_ACCESS(map)->unmap_ip(map, ip);
--}
--
--static inline void *map__map_ip_ptr(struct map *map)
--{
--	return RC_CHK_ACCESS(map)->map_ip;
--}
--
--static inline void* map__unmap_ip_ptr(struct map *map)
--{
--	return RC_CHK_ACCESS(map)->unmap_ip;
--}
--
- static inline u64 map__start(const struct map *map)
- {
- 	return RC_CHK_ACCESS(map)->start;
-@@ -123,6 +98,34 @@ static inline size_t map__size(const struct map *map)
- 	return map__end(map) - map__start(map);
- }
- 
-+/* ip -> dso rip */
-+static inline u64 map__dso_map_ip(const struct map *map, u64 ip)
-+{
-+	return ip - map__start(map) + map__pgoff(map);
-+}
-+
-+/* dso rip -> ip */
-+static inline u64 map__dso_unmap_ip(const struct map *map, u64 ip)
-+{
-+	return ip + map__start(map) - map__pgoff(map);
-+}
-+
-+static inline u64 map__map_ip(const struct map *map, u64 ip)
-+{
-+	if ((RC_CHK_ACCESS(map)->mapping_type) == MAPPING_TYPE__DSO)
-+		return map__dso_map_ip(map, ip);
-+	else
-+		return ip;
-+}
-+
-+static inline u64 map__unmap_ip(const struct map *map, u64 ip)
-+{
-+	if ((RC_CHK_ACCESS(map)->mapping_type) == MAPPING_TYPE__DSO)
-+		return map__dso_unmap_ip(map, ip);
-+	else
-+		return ip;
-+}
-+
- /* rip/ip <-> addr suitable for passing to `objdump --start-address=` */
- u64 map__rip_2objdump(struct map *map, u64 rip);
- 
-@@ -294,13 +297,13 @@ static inline void map__set_dso(struct map *map, struct dso *dso)
- 	RC_CHK_ACCESS(map)->dso = dso;
- }
- 
--static inline void map__set_map_ip(struct map *map, u64 (*map_ip)(const struct map *map, u64 ip))
-+static inline void map__set_mapping_type(struct map *map, enum mapping_type type)
- {
--	RC_CHK_ACCESS(map)->map_ip = map_ip;
-+	RC_CHK_ACCESS(map)->mapping_type = type;
- }
- 
--static inline void map__set_unmap_ip(struct map *map, u64 (*unmap_ip)(const struct map *map, u64 rip))
-+static inline enum mapping_type map__mapping_type(struct map *map)
- {
--	RC_CHK_ACCESS(map)->unmap_ip = unmap_ip;
-+	return RC_CHK_ACCESS(map)->mapping_type;
- }
- #endif /* __PERF_MAP_H */
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 9e7eeaf616b8..4b934ed3bfd1 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1392,8 +1392,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 			map__set_start(map, shdr->sh_addr + ref_reloc(kmap));
- 			map__set_end(map, map__start(map) + shdr->sh_size);
- 			map__set_pgoff(map, shdr->sh_offset);
--			map__set_map_ip(map, map__dso_map_ip);
--			map__set_unmap_ip(map, map__dso_unmap_ip);
-+			map__set_mapping_type(map, MAPPING_TYPE__DSO);
- 			/* Ensure maps are correctly ordered */
- 			if (kmaps) {
- 				int err;
-@@ -1455,8 +1454,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 			map__set_end(curr_map, map__start(curr_map) + shdr->sh_size);
- 			map__set_pgoff(curr_map, shdr->sh_offset);
- 		} else {
--			map__set_map_ip(curr_map, identity__map_ip);
--			map__set_unmap_ip(curr_map, identity__map_ip);
-+			map__set_mapping_type(curr_map, MAPPING_TYPE__IDENTITY);
- 		}
- 		curr_dso->symtab_type = dso->symtab_type;
- 		if (maps__insert(kmaps, curr_map))
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 82cc74b9358e..314c0263bf3c 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -956,8 +956,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 				return -1;
- 			}
- 
--			map__set_map_ip(curr_map, identity__map_ip);
--			map__set_unmap_ip(curr_map, identity__map_ip);
-+			map__set_mapping_type(curr_map, MAPPING_TYPE__IDENTITY);
- 			if (maps__insert(kmaps, curr_map)) {
- 				dso__put(ndso);
- 				return -1;
-@@ -1475,8 +1474,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 			map__set_start(map, map__start(new_map));
- 			map__set_end(map, map__end(new_map));
- 			map__set_pgoff(map, map__pgoff(new_map));
--			map__set_map_ip(map, map__map_ip_ptr(new_map));
--			map__set_unmap_ip(map, map__unmap_ip_ptr(new_map));
-+			map__set_mapping_type(map, map__mapping_type(new_map));
- 			/* Ensure maps are correctly ordered */
- 			map_ref = map__get(map);
- 			maps__remove(kmaps, map_ref);
+-	if (thread__maps(thread) == thread__maps(parent)) {
++	if (RC_CHK_ACCESS(thread__maps(thread)) == RC_CHK_ACCESS(thread__maps(parent))) {
+ 		pr_debug("broken map groups on thread %d/%d parent %d/%d\n",
+ 			 thread__pid(thread), thread__tid(thread),
+ 			 thread__pid(parent), thread__tid(parent));
 -- 
 2.42.0.758.gaed0368e0e-goog
 
