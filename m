@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64ED42909
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:28:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D19F42909
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zn8XNsJf"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30BC1FC2
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:52 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7cc433782so62478767b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:25:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YfowOvCu"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C78B325D
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:26:04 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9b9f56489fso5889974276.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:26:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698186352; x=1698791152; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698186363; x=1698791163; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UNZsWL7q61tQxw4sAWHRVjc8YNOyPUB86ZxyQzS9cbI=;
-        b=Zn8XNsJfLmg04e+nCbVxxpzHEOoCqg8El1s9vNUzY5D+1jvYoGYevXsCmJBGxhbwkT
-         SkDFIscTsJXX/kigFwQzv14uBhoP+3XQvU5Q5AMF0u6HAdemwSc/M7GvW5xU4JRmTwdc
-         fZNBJuQ45L85BWqbosnh7vlkreIddIbBKVnLxhgs7wgHN0p2mTXlTAV1JiAVh0Tm9IEx
-         OCU0BNGgblUj3tFE4j8u9tv+GVNWOYjC2UxmJpGohFsmAx9S0a/LpFrt0TJtHA0tgtgw
-         YG8TJtnYq0qHm6o8lk0hqyx/uo40fkhjQkSQOJgBcSspuJvMgqmy5FBq70eEtThIgg4r
-         0Y0g==
+        bh=ax4wGMolFNFmvAbtQbFOoT88EvyDd7TbOe2UXPEasko=;
+        b=YfowOvCuZhHULKo4/Orsria5zBpULDar8L1uotSLOtlWhkXsAKVeVjpeLPajKuNBXY
+         msNGFgD7DbZ2z6iGEaULOE0qjZh9OBixYS5F3doRziyBebBdryGHCHZF6/L9mUH4R6yW
+         m5Rzd8L1jYihFBiIQZHpCeA1NoJ6RQkcHCnk1vORMyWIT221USmoYgOIDScWwEZ1Svdm
+         X69iR98au8Pt9H3m0oJ7F8CZvYsl4e8MW0618+G+tf/U0zl0lbRJvYQVzh1tImuy5eKL
+         yT62rfTrRG53XorAE4sWKPvrl++mIMH3Jvr+ubHvMae3ZCxZK+Q7g0YddwPRxcDz50Zy
+         NfLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698186352; x=1698791152;
+        d=1e100.net; s=20230601; t=1698186363; x=1698791163;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UNZsWL7q61tQxw4sAWHRVjc8YNOyPUB86ZxyQzS9cbI=;
-        b=lAaQbtWAT28oh5YcpZIv1OqU1TSMPkkys1AwAoW1vfGvtV9+4SY+9RD9fehI+mvjyj
-         /DGhzzrr/lf1N+E6w+D5Mi7Gs1FfBwi5bP1LEffx9H7uWWGPOvGXkDzOEvbMjqTY97hV
-         2UEPM/QPlEQs+sKDax4/1bwZ/qMdKahupdCow8SEuZ/k3dn18p8xd1PeHDpCXWjaS9Ta
-         7pasl9ry2anDOhtixopQJYAMBc2xLtv0sMRkL9CBX9YitbZyqjqolWff1RVaTV8LNrpE
-         uVHSLzPu9yULMfM1wgtMZIjoAN96E1nQzY2TcRqTl4rl5kxjLHipMuKKT+kXnpcJmXCz
-         zpfQ==
-X-Gm-Message-State: AOJu0Yxd3TQSWkBqOWQPOztYlwv2hhb+qPvL04fO26ZEIYKifOeIVGyT
-	kSmucg6EXLu1RsxZ6FezARbHi4eNMvge
-X-Google-Smtp-Source: AGHT+IEwoYskH75V7nb3ukimfzwIkT6b8PDWGw3HSj+gQ6ooNT7CI/uN6pJzd9Rf7aW3+ZQ6jgVwCeVEBGKm
+        bh=ax4wGMolFNFmvAbtQbFOoT88EvyDd7TbOe2UXPEasko=;
+        b=bIF7n/MMEr4vWnqjGgm9aSE9nwqcVHLjmJK6KW4B0iombOXMZL3cicxr3/1XsyMQtO
+         8kHqxCjdBu88VssndrfLse6X9zfi5KBHdo5BbIgJde24NhBH+tNn2H+qvm8+07tERapr
+         av1w+8c/TjAgww7jkZk7VW+hVK8/IRmZd2tyV8xzv+cHCZKtEucr0UUYIgtQ9QIpMpFN
+         iVaA+2aqJk/201EVYv3u2Cfqbj6KZrKP7Z1JOAYGf4QBGqyNC2C1POKFx2UF+s/JUi1s
+         uEaUsabIPv/cFZORMJrCNEp4eOi/xDat0yFD/0tOyB1JvPVp640Rsbl9Ir48E6bjDajh
+         NWww==
+X-Gm-Message-State: AOJu0YzfIfVZ01+ORFHCEH639SaZoH7I9YLrWxdmM5s01R4o36oq1iuE
+	91IpJVSzdWTsMBJDhA14tKGHWQzKpKid
+X-Google-Smtp-Source: AGHT+IEo5x1lGpihCajjh/HKvb5B1MoaJ53U0j5pLZcJfxb2D5ySgaxj6EHRejLCCVh5kxVMWnCTaQ+IASHx
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:93d2:18cc:4d63:45ba])
- (user=irogers job=sendgmr) by 2002:a25:c785:0:b0:da0:4c77:e77c with SMTP id
- w127-20020a25c785000000b00da04c77e77cmr46443ybe.13.1698186352004; Tue, 24 Oct
- 2023 15:25:52 -0700 (PDT)
-Date: Tue, 24 Oct 2023 15:23:47 -0700
+ (user=irogers job=sendgmr) by 2002:a25:e74b:0:b0:d8b:737f:8246 with SMTP id
+ e72-20020a25e74b000000b00d8b737f8246mr252913ybh.2.1698186363248; Tue, 24 Oct
+ 2023 15:26:03 -0700 (PDT)
+Date: Tue, 24 Oct 2023 15:23:52 -0700
 In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
-Message-Id: <20231024222353.3024098-45-irogers@google.com>
+Message-Id: <20231024222353.3024098-50-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231024222353.3024098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-Subject: [PATCH v3 44/50] perf dso: Reorder variables to save space in struct dso
+Subject: [PATCH v3 49/50] perf threads: Switch from rbtree to hashmap
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -71,332 +71,277 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Save 40 bytes and move from 8 to 7 cache lines. Make variable dwfl
-dependent on being a powerpc build. Squeeze bits of int/enum types
-when appropriate. Remove holes/padding by reordering variables.
-
-Before:
-```
-struct dso {
-        struct mutex               lock;                 /*     0    40 */
-        struct list_head           node;                 /*    40    16 */
-        struct rb_node             rb_node __attribute__((__aligned__(8))); /*    56    24 */
-        /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
-        struct rb_root *           root;                 /*    80     8 */
-        struct rb_root_cached      symbols;              /*    88    16 */
-        struct symbol * *          symbol_names;         /*   104     8 */
-        size_t                     symbol_names_len;     /*   112     8 */
-        struct rb_root_cached      inlined_nodes;        /*   120    16 */
-        /* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
-        struct rb_root_cached      srclines;             /*   136    16 */
-        struct {
-                u64                addr;                 /*   152     8 */
-                struct symbol *    symbol;               /*   160     8 */
-        } last_find_result;                              /*   152    16 */
-        void *                     a2l;                  /*   168     8 */
-        char *                     symsrc_filename;      /*   176     8 */
-        unsigned int               a2l_fails;            /*   184     4 */
-        enum dso_space_type        kernel;               /*   188     4 */
-        /* --- cacheline 3 boundary (192 bytes) --- */
-        _Bool                      is_kmod;              /*   192     1 */
-
-        /* XXX 3 bytes hole, try to pack */
-
-        enum dso_swap_type         needs_swap;           /*   196     4 */
-        enum dso_binary_type       symtab_type;          /*   200     4 */
-        enum dso_binary_type       binary_type;          /*   204     4 */
-        enum dso_load_errno        load_errno;           /*   208     4 */
-        u8                         adjust_symbols:1;     /*   212: 0  1 */
-        u8                         has_build_id:1;       /*   212: 1  1 */
-        u8                         header_build_id:1;    /*   212: 2  1 */
-        u8                         has_srcline:1;        /*   212: 3  1 */
-        u8                         hit:1;                /*   212: 4  1 */
-        u8                         annotate_warned:1;    /*   212: 5  1 */
-        u8                         auxtrace_warned:1;    /*   212: 6  1 */
-        u8                         short_name_allocated:1; /*   212: 7  1 */
-        u8                         long_name_allocated:1; /*   213: 0  1 */
-        u8                         is_64_bit:1;          /*   213: 1  1 */
-
-        /* XXX 6 bits hole, try to pack */
-
-        _Bool                      sorted_by_name;       /*   214     1 */
-        _Bool                      loaded;               /*   215     1 */
-        u8                         rel;                  /*   216     1 */
-
-        /* XXX 7 bytes hole, try to pack */
-
-        struct build_id            bid;                  /*   224    32 */
-        /* --- cacheline 4 boundary (256 bytes) --- */
-        u64                        text_offset;          /*   256     8 */
-        u64                        text_end;             /*   264     8 */
-        const char  *              short_name;           /*   272     8 */
-        const char  *              long_name;            /*   280     8 */
-        u16                        long_name_len;        /*   288     2 */
-        u16                        short_name_len;       /*   290     2 */
-
-        /* XXX 4 bytes hole, try to pack */
-
-        void *                     dwfl;                 /*   296     8 */
-        struct auxtrace_cache *    auxtrace_cache;       /*   304     8 */
-        int                        comp;                 /*   312     4 */
-
-        /* XXX 4 bytes hole, try to pack */
-
-        /* --- cacheline 5 boundary (320 bytes) --- */
-        struct {
-                struct rb_root     cache;                /*   320     8 */
-                int                fd;                   /*   328     4 */
-                int                status;               /*   332     4 */
-                u32                status_seen;          /*   336     4 */
-
-                /* XXX 4 bytes hole, try to pack */
-
-                u64                file_size;            /*   344     8 */
-                struct list_head   open_entry;           /*   352    16 */
-                u64                elf_base_addr;        /*   368     8 */
-                u64                debug_frame_offset;   /*   376     8 */
-                /* --- cacheline 6 boundary (384 bytes) --- */
-                u64                eh_frame_hdr_addr;    /*   384     8 */
-                u64                eh_frame_hdr_offset;  /*   392     8 */
-        } data;                                          /*   320    80 */
-        struct {
-                u32                id;                   /*   400     4 */
-                u32                sub_id;               /*   404     4 */
-                struct perf_env *  env;                  /*   408     8 */
-        } bpf_prog;                                      /*   400    16 */
-        union {
-                void *             priv;                 /*   416     8 */
-                u64                db_id;                /*   416     8 */
-        };                                               /*   416     8 */
-        struct nsinfo *            nsinfo;               /*   424     8 */
-        struct dso_id              id;                   /*   432    24 */
-        /* --- cacheline 7 boundary (448 bytes) was 8 bytes ago --- */
-        refcount_t                 refcnt;               /*   456     4 */
-        char                       name[];               /*   460     0 */
-
-        /* size: 464, cachelines: 8, members: 49 */
-        /* sum members: 440, holes: 4, sum holes: 18 */
-        /* sum bitfield members: 10 bits, bit holes: 1, sum bit holes: 6 bits */
-        /* padding: 4 */
-        /* forced alignments: 1 */
-        /* last cacheline: 16 bytes */
-} __attribute__((__aligned__(8)));
-```
-
-After:
-```
-struct dso {
-        struct mutex               lock;                 /*     0    40 */
-        struct list_head           node;                 /*    40    16 */
-        struct rb_node             rb_node __attribute__((__aligned__(8))); /*    56    24 */
-        /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
-        struct rb_root *           root;                 /*    80     8 */
-        struct rb_root_cached      symbols;              /*    88    16 */
-        struct symbol * *          symbol_names;         /*   104     8 */
-        size_t                     symbol_names_len;     /*   112     8 */
-        struct rb_root_cached      inlined_nodes;        /*   120    16 */
-        /* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
-        struct rb_root_cached      srclines;             /*   136    16 */
-        struct {
-                u64                addr;                 /*   152     8 */
-                struct symbol *    symbol;               /*   160     8 */
-        } last_find_result;                              /*   152    16 */
-        struct build_id            bid;                  /*   168    32 */
-        /* --- cacheline 3 boundary (192 bytes) was 8 bytes ago --- */
-        u64                        text_offset;          /*   200     8 */
-        u64                        text_end;             /*   208     8 */
-        const char  *              short_name;           /*   216     8 */
-        const char  *              long_name;            /*   224     8 */
-        void *                     a2l;                  /*   232     8 */
-        char *                     symsrc_filename;      /*   240     8 */
-        struct nsinfo *            nsinfo;               /*   248     8 */
-        /* --- cacheline 4 boundary (256 bytes) --- */
-        struct auxtrace_cache *    auxtrace_cache;       /*   256     8 */
-        union {
-                void *             priv;                 /*   264     8 */
-                u64                db_id;                /*   264     8 */
-        };                                               /*   264     8 */
-        struct {
-                struct perf_env *  env;                  /*   272     8 */
-                u32                id;                   /*   280     4 */
-                u32                sub_id;               /*   284     4 */
-        } bpf_prog;                                      /*   272    16 */
-        struct {
-                struct rb_root     cache;                /*   288     8 */
-                struct list_head   open_entry;           /*   296    16 */
-                u64                file_size;            /*   312     8 */
-                /* --- cacheline 5 boundary (320 bytes) --- */
-                u64                elf_base_addr;        /*   320     8 */
-                u64                debug_frame_offset;   /*   328     8 */
-                u64                eh_frame_hdr_addr;    /*   336     8 */
-                u64                eh_frame_hdr_offset;  /*   344     8 */
-                int                fd;                   /*   352     4 */
-                int                status;               /*   356     4 */
-                u32                status_seen;          /*   360     4 */
-        } data;                                          /*   288    80 */
-
-        /* XXX last struct has 4 bytes of padding */
-
-        struct dso_id              id;                   /*   368    24 */
-        /* --- cacheline 6 boundary (384 bytes) was 8 bytes ago --- */
-        unsigned int               a2l_fails;            /*   392     4 */
-        int                        comp;                 /*   396     4 */
-        refcount_t                 refcnt;               /*   400     4 */
-        enum dso_load_errno        load_errno;           /*   404     4 */
-        u16                        long_name_len;        /*   408     2 */
-        u16                        short_name_len;       /*   410     2 */
-        enum dso_binary_type       symtab_type:8;        /*   412: 0  4 */
-        enum dso_binary_type       binary_type:8;        /*   412: 8  4 */
-        enum dso_space_type        kernel:2;             /*   412:16  4 */
-        enum dso_swap_type         needs_swap:2;         /*   412:18  4 */
-
-        /* Bitfield combined with next fields */
-
-        _Bool                      is_kmod:1;            /*   414: 4  1 */
-        u8                         adjust_symbols:1;     /*   414: 5  1 */
-        u8                         has_build_id:1;       /*   414: 6  1 */
-        u8                         header_build_id:1;    /*   414: 7  1 */
-        u8                         has_srcline:1;        /*   415: 0  1 */
-        u8                         hit:1;                /*   415: 1  1 */
-        u8                         annotate_warned:1;    /*   415: 2  1 */
-        u8                         auxtrace_warned:1;    /*   415: 3  1 */
-        u8                         short_name_allocated:1; /*   415: 4  1 */
-        u8                         long_name_allocated:1; /*   415: 5  1 */
-        u8                         is_64_bit:1;          /*   415: 6  1 */
-
-        /* XXX 1 bit hole, try to pack */
-
-        _Bool                      sorted_by_name;       /*   416     1 */
-        _Bool                      loaded;               /*   417     1 */
-        u8                         rel;                  /*   418     1 */
-        char                       name[];               /*   419     0 */
-
-        /* size: 424, cachelines: 7, members: 48 */
-        /* sum members: 415 */
-        /* sum bitfield members: 31 bits, bit holes: 1, sum bit holes: 1 bits */
-        /* padding: 5 */
-        /* paddings: 1, sum paddings: 4 */
-        /* forced alignments: 1 */
-        /* last cacheline: 40 bytes */
-} __attribute__((__aligned__(8)));
-```
+The rbtree provides a sorting on entries but this is unused. Switch to
+using hashmap for O(1) rather than O(log n) find/insert/remove
+complexity.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dso.h | 84 +++++++++++++++++++++----------------------
- 1 file changed, 42 insertions(+), 42 deletions(-)
+ tools/perf/util/threads.c | 146 ++++++++++++--------------------------
+ tools/perf/util/threads.h |   6 +-
+ 2 files changed, 47 insertions(+), 105 deletions(-)
 
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 3759de8c2267..8bdc17d78b02 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -158,66 +158,66 @@ struct dso {
- 		u64		addr;
- 		struct symbol	*symbol;
- 	} last_find_result;
--	void		 *a2l;
--	char		 *symsrc_filename;
--	unsigned int	 a2l_fails;
--	enum dso_space_type	kernel;
--	bool			is_kmod;
--	enum dso_swap_type	needs_swap;
--	enum dso_binary_type	symtab_type;
--	enum dso_binary_type	binary_type;
--	enum dso_load_errno	load_errno;
--	u8		 adjust_symbols:1;
--	u8		 has_build_id:1;
--	u8		 header_build_id:1;
--	u8		 has_srcline:1;
--	u8		 hit:1;
--	u8		 annotate_warned:1;
--	u8		 auxtrace_warned:1;
--	u8		 short_name_allocated:1;
--	u8		 long_name_allocated:1;
--	u8		 is_64_bit:1;
--	bool		 sorted_by_name;
--	bool		 loaded;
--	u8		 rel;
- 	struct build_id	 bid;
- 	u64		 text_offset;
- 	u64		 text_end;
- 	const char	 *short_name;
- 	const char	 *long_name;
--	u16		 long_name_len;
--	u16		 short_name_len;
-+	void		 *a2l;
-+	char		 *symsrc_filename;
-+#if defined(__powerpc__)
- 	void		*dwfl;			/* DWARF debug info */
-+#endif
-+	struct nsinfo	*nsinfo;
- 	struct auxtrace_cache *auxtrace_cache;
--	int		 comp;
+diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
+index d984ec939c7b..55923be53180 100644
+--- a/tools/perf/util/threads.c
++++ b/tools/perf/util/threads.c
+@@ -3,25 +3,30 @@
+ #include "machine.h"
+ #include "thread.h"
+ 
+-struct thread_rb_node {
+-	struct rb_node rb_node;
+-	struct thread *thread;
+-};
 -
-+	union { /* Tool specific area */
-+		void	 *priv;
-+		u64	 db_id;
-+	};
-+	/* bpf prog information */
-+	struct {
-+		struct perf_env	*env;
-+		u32		id;
-+		u32		sub_id;
-+	} bpf_prog;
- 	/* dso data file */
- 	struct {
- 		struct rb_root	 cache;
--		int		 fd;
--		int		 status;
--		u32		 status_seen;
--		u64		 file_size;
- 		struct list_head open_entry;
-+		u64		 file_size;
- 		u64		 elf_base_addr;
- 		u64		 debug_frame_offset;
- 		u64		 eh_frame_hdr_addr;
- 		u64		 eh_frame_hdr_offset;
-+		int		 fd;
-+		int		 status;
-+		u32		 status_seen;
- 	} data;
--	/* bpf prog information */
--	struct {
--		u32		id;
--		u32		sub_id;
--		struct perf_env	*env;
--	} bpf_prog;
+ static struct threads_table_entry *threads__table(struct threads *threads, pid_t tid)
+ {
+ 	/* Cast it to handle tid == -1 */
+ 	return &threads->table[(unsigned int)tid % THREADS__TABLE_SIZE];
+ }
+ 
++static size_t key_hash(long key, void *ctx __maybe_unused)
++{
++	/* The table lookup removes low bit entropy, but this is just ignored here. */
++	return key;
++}
++
++static bool key_equal(long key1, long key2, void *ctx __maybe_unused)
++{
++	return key1 == key2;
++}
++
+ void threads__init(struct threads *threads)
+ {
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
+ 
+-		table->entries = RB_ROOT_CACHED;
++		hashmap__init(&table->shard, key_hash, key_equal, NULL);
+ 		init_rwsem(&table->lock);
+-		table->nr = 0;
+ 		table->last_match = NULL;
+ 	}
+ }
+@@ -32,6 +37,7 @@ void threads__exit(struct threads *threads)
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
+ 
++		hashmap__clear(&table->shard);
+ 		exit_rwsem(&table->lock);
+ 	}
+ }
+@@ -44,7 +50,7 @@ size_t threads__nr(struct threads *threads)
+ 		struct threads_table_entry *table = &threads->table[i];
+ 
+ 		down_read(&table->lock);
+-		nr += table->nr;
++		nr += hashmap__size(&table->shard);
+ 		up_read(&table->lock);
+ 	}
+ 	return nr;
+@@ -86,28 +92,13 @@ static void threads_table_entry__set_last_match(struct threads_table_entry *tabl
+ struct thread *threads__find(struct threads *threads, pid_t tid)
+ {
+ 	struct threads_table_entry *table  = threads__table(threads, tid);
+-	struct rb_node **p;
+-	struct thread *res = NULL;
++	struct thread *res;
+ 
+ 	down_read(&table->lock);
+ 	res = __threads_table_entry__get_last_match(table, tid);
+-	if (res)
+-		return res;
 -
--	union { /* Tool specific area */
--		void	 *priv;
--		u64	 db_id;
--	};
--	struct nsinfo	*nsinfo;
- 	struct dso_id	 id;
-+	unsigned int	 a2l_fails;
-+	int		 comp;
- 	refcount_t	 refcnt;
-+	enum dso_load_errno	load_errno;
-+	u16		 long_name_len;
-+	u16		 short_name_len;
-+	enum dso_binary_type	symtab_type:8;
-+	enum dso_binary_type	binary_type:8;
-+	enum dso_space_type	kernel:2;
-+	enum dso_swap_type	needs_swap:2;
-+	bool			is_kmod:1;
-+	u8		 adjust_symbols:1;
-+	u8		 has_build_id:1;
-+	u8		 header_build_id:1;
-+	u8		 has_srcline:1;
-+	u8		 hit:1;
-+	u8		 annotate_warned:1;
-+	u8		 auxtrace_warned:1;
-+	u8		 short_name_allocated:1;
-+	u8		 long_name_allocated:1;
-+	u8		 is_64_bit:1;
-+	bool		 sorted_by_name;
-+	bool		 loaded;
-+	u8		 rel;
- 	char		 name[];
+-	p = &table->entries.rb_root.rb_node;
+-	while (*p != NULL) {
+-		struct rb_node *parent = *p;
+-		struct thread *th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
+-
+-		if (thread__tid(th) == tid) {
+-			res = thread__get(th);
+-			break;
+-		}
+-
+-		if (tid < thread__tid(th))
+-			p = &(*p)->rb_left;
+-		else
+-			p = &(*p)->rb_right;
++	if (!res) {
++		if (hashmap__find(&table->shard, tid, &res))
++			res = thread__get(res);
+ 	}
+ 	up_read(&table->lock);
+ 	if (res)
+@@ -118,49 +109,25 @@ struct thread *threads__find(struct threads *threads, pid_t tid)
+ struct thread *threads__findnew(struct threads *threads, pid_t pid, pid_t tid, bool *created)
+ {
+ 	struct threads_table_entry *table  = threads__table(threads, tid);
+-	struct rb_node **p;
+-	struct rb_node *parent = NULL;
+ 	struct thread *res = NULL;
+-	struct thread_rb_node *nd;
+-	bool leftmost = true;
+ 
+ 	*created = false;
+ 	down_write(&table->lock);
+-	p = &table->entries.rb_root.rb_node;
+-	while (*p != NULL) {
+-		struct thread *th;
+-
+-		parent = *p;
+-		th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
+-
+-		if (thread__tid(th) == tid) {
+-			__threads_table_entry__set_last_match(table, th);
+-			res = thread__get(th);
+-			goto out_unlock;
+-		}
+-
+-		if (tid < thread__tid(th))
+-			p = &(*p)->rb_left;
+-		else {
+-			leftmost = false;
+-			p = &(*p)->rb_right;
+-		}
+-	}
+-	nd = malloc(sizeof(*nd));
+-	if (nd == NULL)
+-		goto out_unlock;
+ 	res = thread__new(pid, tid);
+-	if (!res)
+-		free(nd);
+-	else {
+-		*created = true;
+-		nd->thread = thread__get(res);
+-		rb_link_node(&nd->rb_node, parent, p);
+-		rb_insert_color_cached(&nd->rb_node, &table->entries, leftmost);
+-		++table->nr;
+-		__threads_table_entry__set_last_match(table, res);
++	if (res) {
++		if (hashmap__add(&table->shard, tid, res)) {
++			/* Add failed. Assume a race so find other entry. */
++			thread__put(res);
++			res = NULL;
++			if (hashmap__find(&table->shard, tid, &res))
++				res = thread__get(res);
++		} else {
++			res = thread__get(res);
++			*created = true;
++		}
++		if (res)
++			__threads_table_entry__set_last_match(table, res);
+ 	}
+-out_unlock:
+ 	up_write(&table->lock);
+ 	return res;
+ }
+@@ -169,57 +136,32 @@ void threads__remove_all_threads(struct threads *threads)
+ {
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
+-		struct rb_node *nd;
++		struct hashmap_entry *cur, *tmp;
++		size_t bkt;
+ 
+ 		down_write(&table->lock);
+ 		__threads_table_entry__set_last_match(table, NULL);
+-		nd = rb_first_cached(&table->entries);
+-		while (nd) {
+-			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
+-
+-			nd = rb_next(nd);
+-			thread__put(trb->thread);
+-			rb_erase_cached(&trb->rb_node, &table->entries);
+-			RB_CLEAR_NODE(&trb->rb_node);
+-			--table->nr;
++		hashmap__for_each_entry_safe((&table->shard), cur, tmp, bkt) {
++			struct thread *old_value;
+ 
+-			free(trb);
++			hashmap__delete(&table->shard, cur->key, /*old_key=*/NULL, &old_value);
++			thread__put(old_value);
+ 		}
+-		assert(table->nr == 0);
+ 		up_write(&table->lock);
+ 	}
+ }
+ 
+ void threads__remove(struct threads *threads, struct thread *thread)
+ {
+-	struct rb_node **p;
+ 	struct threads_table_entry *table  = threads__table(threads, thread__tid(thread));
+-	pid_t tid = thread__tid(thread);
++	struct thread *old_value;
+ 
+ 	down_write(&table->lock);
+ 	if (table->last_match && RC_CHK_EQUAL(table->last_match, thread))
+ 		__threads_table_entry__set_last_match(table, NULL);
+ 
+-	p = &table->entries.rb_root.rb_node;
+-	while (*p != NULL) {
+-		struct rb_node *parent = *p;
+-		struct thread_rb_node *nd = rb_entry(parent, struct thread_rb_node, rb_node);
+-		struct thread *th = nd->thread;
+-
+-		if (RC_CHK_EQUAL(th, thread)) {
+-			thread__put(nd->thread);
+-			rb_erase_cached(&nd->rb_node, &table->entries);
+-			RB_CLEAR_NODE(&nd->rb_node);
+-			--table->nr;
+-			free(nd);
+-			break;
+-		}
+-
+-		if (tid < thread__tid(th))
+-			p = &(*p)->rb_left;
+-		else
+-			p = &(*p)->rb_right;
+-	}
++	hashmap__delete(&table->shard, thread__tid(thread), /*old_key=*/NULL, &old_value);
++	thread__put(old_value);
+ 	up_write(&table->lock);
+ }
+ 
+@@ -229,11 +171,11 @@ int threads__for_each_thread(struct threads *threads,
+ {
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
+-		struct rb_node *nd;
++		struct hashmap_entry *cur;
++		size_t bkt;
+ 
+-		for (nd = rb_first_cached(&table->entries); nd; nd = rb_next(nd)) {
+-			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
+-			int rc = fn(trb->thread, data);
++		hashmap__for_each_entry((&table->shard), cur, bkt) {
++			int rc = fn((struct thread *)cur->pvalue, data);
+ 
+ 			if (rc != 0)
+ 				return rc;
+diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
+index ed67de627578..d03bd91a7769 100644
+--- a/tools/perf/util/threads.h
++++ b/tools/perf/util/threads.h
+@@ -2,7 +2,7 @@
+ #ifndef __PERF_THREADS_H
+ #define __PERF_THREADS_H
+ 
+-#include <linux/rbtree.h>
++#include "hashmap.h"
+ #include "rwsem.h"
+ 
+ struct thread;
+@@ -11,9 +11,9 @@ struct thread;
+ #define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
+ 
+ struct threads_table_entry {
+-	struct rb_root_cached  entries;
++	/* Key is tid, value is struct thread. */
++	struct hashmap	       shard;
+ 	struct rw_semaphore    lock;
+-	unsigned int	       nr;
+ 	struct thread	       *last_match;
  };
  
 -- 
