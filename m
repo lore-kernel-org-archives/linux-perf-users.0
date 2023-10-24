@@ -1,104 +1,249 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ABA208AB;
-	Tue, 24 Oct 2023 19:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966FE109;
-	Tue, 24 Oct 2023 12:16:45 -0700 (PDT)
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-27d0acd0903so3300557a91.1;
-        Tue, 24 Oct 2023 12:16:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0137B208AB
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 19:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GwfGD6xH"
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B758110CE
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 12:21:37 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-53f98cbcd76so2620a12.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 12:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1698175296; x=1698780096; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fhFkfWG3vGEeLM7vOQJLZJ3KgIqwnn5bowVUsiKiagA=;
+        b=GwfGD6xHoluNOSsgFx0TMnT4q/vv26uUoDRefxjGctv2OlMRBWDWCMB+elsXfb525n
+         zR6k3ZBfkHjbiBsBryqDZywk9tLEWQYe7kpYsaCi5wqZcTjFkaDkKIROTBnJUDAui+Nj
+         03amdqCgVyTGMYUfXcWYRKf0CCIeLpazt1ZrNM5jWHnzVsKPWhs9gwcldyzTIgdf6paz
+         7Eztr+A43SkYaU/RNJrjhVgKrdKyrs+XL7T2k7Meorw3AnsiUSq17evPYtruPWEQtzqx
+         wcRXBabHToQIa2jBn6yKZtJBGdTvO3hCfPgu749g8TMxZv+dPmmZvunytz94CbHHos7u
+         D60Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698175005; x=1698779805;
+        d=1e100.net; s=20230601; t=1698175296; x=1698780096;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vlrMdORzuIhiCBvkEoOY6AWWIm1ZLrThelr3CoWzGZs=;
-        b=G2uQ1r6dV0Sexax7tleAPNzf9PDdohQaUNLyjU71+QWblGZhm34T/sknLmvijR7fCN
-         5Ec1aEklFtawW92pLmBRIAej8T2d8VAzEdPYvJ7RgDRzjAR+5aQNroGuDQ4CCGUgju/A
-         rPpbqDzJRdGP56P/VSb60x9WH9GhbnNB9c0ycZ9XCqDMxHEjube5Baeu8G10nBE8YKNs
-         koBDYaKedhO6zOWX0Lyi2kyfKI+Tce/VjrrsI1dPcT1+euresj7QW+0wTqZB4qfDPp9q
-         RP7WN0ifzV96CxkS0hpB6JX7b3fAoEWZhuzZdgwOIipuYaB9xldzUgpOEEqqY//nj7Ha
-         mS5A==
-X-Gm-Message-State: AOJu0YzX/6F7qhMfzE5uujK0Ts8ifRzVpplBE0lJc7tJeJl4IAE5FDTv
-	+MvI4e+nHlCVK1MWUhLuIcTSWROdZ+YgkNANyUU=
-X-Google-Smtp-Source: AGHT+IEeRsQ1loc1YYpY1a97APjF3K2XayF3rTQMK7R5xL0iD1J55Zh+XzcrB698bMOcSnEoPrg92TWKjW0OoSHcWxQ=
-X-Received: by 2002:a17:90a:199e:b0:27e:3342:5c1f with SMTP id
- 30-20020a17090a199e00b0027e33425c1fmr6738107pji.43.1698175004908; Tue, 24 Oct
- 2023 12:16:44 -0700 (PDT)
+        bh=fhFkfWG3vGEeLM7vOQJLZJ3KgIqwnn5bowVUsiKiagA=;
+        b=vp1JFyvJucPVHlmPM2evbTt8VI8l6qyOlilRXAAJ9SYCfrBfY0GXxcJl9yufwmhKyR
+         j5aTgaJYP+0SozGF/ZZj/wsAau+2ExcLo5HaL4kQiQbDcgR/JlHGrySPbqoQoOldPI8k
+         VeTmatJkO2oe94bqa85D5PP8UeQ5s/mzB+cXCSv+zQ2jJ3cSdORB8FDSG6keMQI50vsf
+         p+iXWEm9IZbptH3bV53caIpvtF7dCmaBOsXwHrW1r8C7eyM+i4tfcev8Psznfu5/hFe1
+         EhUobCYjg/8vvLW+aE7jq0pAvOGD5MruH6ObeiraLG1Io84KOQ2kuayaVTOCyMN0At+a
+         /9lA==
+X-Gm-Message-State: AOJu0YzIuW2A9UC8H6+kUOcSClHY4VkOyXpg873dV25TA320W/N6Z0wN
+	UCK7d6OvfkMrJMKYsNf7/BnKjhE191e/pz7bhqSIEw==
+X-Google-Smtp-Source: AGHT+IFGcCboRwqUCDY93lGlGItSSyexcFRFTreeWIsuzBJZ2oNk7r2KYeJ4W2+TFOfiDK5RzlI8c33HHtTCyQfFUUo=
+X-Received: by 2002:a50:950b:0:b0:53f:c4d4:6a14 with SMTP id
+ u11-20020a50950b000000b0053fc4d46a14mr142452eda.5.1698175295633; Tue, 24 Oct
+ 2023 12:21:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231012035111.676789-1-namhyung@kernel.org> <87pm15vw5r.fsf@linux.intel.com>
-In-Reply-To: <87pm15vw5r.fsf@linux.intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 24 Oct 2023 12:16:32 -0700
-Message-ID: <CAM9d7ch504cnFzTL1qPh349uSrbEZop19kB-DbUsnoOKEvtFBQ@mail.gmail.com>
-Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org, Ben Woodard <woodard@redhat.com>, 
-	Joe Mario <jmario@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20231012062359.1616786-1-irogers@google.com> <20231012062359.1616786-13-irogers@google.com>
+ <CAM9d7cgehgF0pXm_7VME0jUo=8dHwRH7_EruGqP7D-CVaj5sEw@mail.gmail.com>
+In-Reply-To: <CAM9d7cgehgF0pXm_7VME0jUo=8dHwRH7_EruGqP7D-CVaj5sEw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 24 Oct 2023 12:21:23 -0700
+Message-ID: <CAP-5=fULcy+9pY5U_S_19AvSQWKf-y28R9T6G4d6Xw7C3ENM8g@mail.gmail.com>
+Subject: Re: [PATCH v2 12/13] perf mmap: Lazily initialize zstd streams
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>, 
+	Sandipan Das <sandipan.das@amd.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	James Clark <james.clark@arm.com>, Liam Howlett <liam.howlett@oracle.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Leo Yan <leo.yan@linaro.org>, 
+	German Gomez <german.gomez@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andi,
-
-On Mon, Oct 23, 2023 at 2:58=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wro=
-te:
+On Wed, Oct 18, 2023 at 4:21=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Namhyung Kim <namhyung@kernel.org> writes:
->
-> > Hello,
+> On Wed, Oct 11, 2023 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
 > >
-> > I'm happy to share my work on data type profiling.  This is to associat=
-e
-> > PMU samples to data types they refer using DWARF debug information.  So
-> > basically it depends on quality of PMU events and compiler for producin=
-g
-> > DWARF info.  But it doesn't require any changes in the target program.
+> > Zstd streams create dictionaries that can require significant RAM,
+> > especially when there is one per-CPU. Tools like perf record won't use
+> > the streams without the -z option, and so the creation of the streams
+> > is pure overhead. Switch to creating the streams on first use.
 > >
-> > As it's an early stage, I've targeted the kernel on x86 to reduce the
-> > amount of work but IIUC there's no fundamental blocker to apply it to
-> > other architectures and applications.
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/compress.h |  1 +
+> >  tools/perf/util/mmap.c     |  5 ++--
+> >  tools/perf/util/mmap.h     |  1 -
+> >  tools/perf/util/zstd.c     | 61 ++++++++++++++++++++------------------
+> >  4 files changed, 35 insertions(+), 33 deletions(-)
+> >
+> > diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
+> > index 0cd3369af2a4..9391850f1a7e 100644
+> > --- a/tools/perf/util/compress.h
+> > +++ b/tools/perf/util/compress.h
+> > @@ -21,6 +21,7 @@ struct zstd_data {
+> >  #ifdef HAVE_ZSTD_SUPPORT
+> >         ZSTD_CStream    *cstream;
+> >         ZSTD_DStream    *dstream;
+> > +       int comp_level;
+> >  #endif
+> >  };
+> >
+> > diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+> > index 49093b21ee2d..122ee198a86e 100644
+> > --- a/tools/perf/util/mmap.c
+> > +++ b/tools/perf/util/mmap.c
+> > @@ -295,15 +295,14 @@ int mmap__mmap(struct mmap *map, struct mmap_para=
+ms *mp, int fd, struct perf_cpu
+> >
+> >         map->core.flush =3D mp->flush;
+> >
+> > -       map->comp_level =3D mp->comp_level;
+> >  #ifndef PYTHON_PERF
+> > -       if (zstd_init(&map->zstd_data, map->comp_level)) {
+> > +       if (zstd_init(&map->zstd_data, mp->comp_level)) {
+> >                 pr_debug2("failed to init mmap compressor, error %d\n",=
+ errno);
+> >                 return -1;
+> >         }
+> >  #endif
+> >
+> > -       if (map->comp_level && !perf_mmap__aio_enabled(map)) {
+> > +       if (mp->comp_level && !perf_mmap__aio_enabled(map)) {
+> >                 map->data =3D mmap(NULL, mmap__mmap_len(map), PROT_READ=
+|PROT_WRITE,
+> >                                  MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+> >                 if (map->data =3D=3D MAP_FAILED) {
+> > diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+> > index f944c3cd5efa..0df6e1621c7e 100644
+> > --- a/tools/perf/util/mmap.h
+> > +++ b/tools/perf/util/mmap.h
+> > @@ -39,7 +39,6 @@ struct mmap {
+> >  #endif
+> >         struct mmap_cpu_mask    affinity_mask;
+> >         void            *data;
+> > -       int             comp_level;
+> >         struct perf_data_file *file;
+> >         struct zstd_data      zstd_data;
+> >  };
+> > diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+> > index 48dd2b018c47..60f2d749b1c0 100644
+> > --- a/tools/perf/util/zstd.c
+> > +++ b/tools/perf/util/zstd.c
+> > @@ -7,35 +7,9 @@
+> >
+> >  int zstd_init(struct zstd_data *data, int level)
+> >  {
+> > -       size_t ret;
+> > -
+> > -       data->dstream =3D ZSTD_createDStream();
+> > -       if (data->dstream =3D=3D NULL) {
+> > -               pr_err("Couldn't create decompression stream.\n");
+> > -               return -1;
+> > -       }
+> > -
+> > -       ret =3D ZSTD_initDStream(data->dstream);
+> > -       if (ZSTD_isError(ret)) {
+> > -               pr_err("Failed to initialize decompression stream: %s\n=
+", ZSTD_getErrorName(ret));
+> > -               return -1;
+> > -       }
+> > -
+> > -       if (!level)
+> > -               return 0;
+> > -
+> > -       data->cstream =3D ZSTD_createCStream();
+> > -       if (data->cstream =3D=3D NULL) {
+> > -               pr_err("Couldn't create compression stream.\n");
+> > -               return -1;
+> > -       }
+> > -
+> > -       ret =3D ZSTD_initCStream(data->cstream, level);
+> > -       if (ZSTD_isError(ret)) {
+> > -               pr_err("Failed to initialize compression stream: %s\n",=
+ ZSTD_getErrorName(ret));
+> > -               return -1;
+> > -       }
+> > -
+> > +       data->comp_level =3D level;
+> > +       data->dstream =3D NULL;
+> > +       data->cstream =3D NULL;
+> >         return 0;
+> >  }
+> >
+> > @@ -63,6 +37,21 @@ size_t zstd_compress_stream_to_records(struct zstd_d=
+ata *data, void *dst, size_t
+> >         ZSTD_outBuffer output;
+> >         void *record;
+> >
+> > +       if (!data->cstream) {
+> > +               data->cstream =3D ZSTD_createCStream();
+> > +               if (data->cstream =3D=3D NULL) {
+> > +                       pr_err("Couldn't create compression stream.\n")=
+;
+> > +                       return -1;
+> > +               }
+> > +
+> > +               ret =3D ZSTD_initCStream(data->cstream, data->comp_leve=
+l);
+> > +               if (ZSTD_isError(ret)) {
+> > +                       pr_err("Failed to initialize compression stream=
+: %s\n",
+> > +                               ZSTD_getErrorName(ret));
+> > +                       return -1;
 >
-> FWIW i posted a similar patchkit a long time ago
->
-> https://lore.kernel.org/lkml/20171128002321.2878-13-andi@firstfloor.org/
->
-> It was on my list to resurrect that, it's great that you are doing
-> something similar.
->
-> The latest iteration (not posted) was here:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git/log/?h=
-=3Dperf/var-resolve-7
+> I'm not sure if the callers are ready to handle the failure.
 
-Oh, I wasn't aware of this series.  I'll take a look.
+Thanks, fixed in v3.
 
+Ian
+
+> Thanks,
+> Namhyung
 >
-> The main difference seems to be that mine was more for perf script
-> (e.g. i supported PT decoding), while you are more focused on sampling.
-> I relied on the kprobes/uprobes engine, which unfortunately was always
-> quite slow and had many limitations.
-
-Right, I think dealing with regular samples would be more useful.
-But Intel PT support looks interesting.
-
 >
-> Perhaps it would be possible merge the useful parts of the two approaches=
-?
-
-Sounds good!  Thanks for your comment!
-Namhyung
+> > +               }
+> > +       }
+> > +
+> >         while (input.pos < input.size) {
+> >                 record =3D dst;
+> >                 size =3D process_header(record, 0);
+> > @@ -96,6 +85,20 @@ size_t zstd_decompress_stream(struct zstd_data *data=
+, void *src, size_t src_size
+> >         ZSTD_inBuffer input =3D { src, src_size, 0 };
+> >         ZSTD_outBuffer output =3D { dst, dst_size, 0 };
+> >
+> > +       if (!data->dstream) {
+> > +               data->dstream =3D ZSTD_createDStream();
+> > +               if (data->dstream =3D=3D NULL) {
+> > +                       pr_err("Couldn't create decompression stream.\n=
+");
+> > +                       return -1;
+> > +               }
+> > +
+> > +               ret =3D ZSTD_initDStream(data->dstream);
+> > +               if (ZSTD_isError(ret)) {
+> > +                       pr_err("Failed to initialize decompression stre=
+am: %s\n",
+> > +                               ZSTD_getErrorName(ret));
+> > +                       return -1;
+> > +               }
+> > +       }
+> >         while (input.pos < input.size) {
+> >                 ret =3D ZSTD_decompressStream(data->dstream, &output, &=
+input);
+> >                 if (ZSTD_isError(ret)) {
+> > --
+> > 2.42.0.609.gbb76f46606-goog
+> >
