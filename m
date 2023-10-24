@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D82A3E48D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7E23D386
 	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:25:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YX73kaQO"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4B81FD9
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:52 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a909b4e079so58021397b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9yI6FUy"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8D21BFE
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:50 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-da040c021aeso1141034276.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:24:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698186289; x=1698791089; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698186284; x=1698791084; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ATYLaWcN5bU+Dpgi7a7JWdfUJz5sZd2hiBE3rpvu+hs=;
-        b=YX73kaQOwuAStnFE3CSau5V0IlVcOWh41WNt+xkX/UsxmwQuGGrsZ4CXrp3e3AMPcK
-         y2f9yD9kKb712LZF7vzSiQ2fvH/CLFP7tQxvWhB1/kOHI80Y9mB9qA/Fd98LJ0ZMuK3e
-         p/FtL228WBsz1/KvF+g95duidgiIqJDbxrbQsx/wtXEMYI6jeEVjcRNCOdHN56t3Hlk+
-         XFUSEEUenG6MjLEJ3u3zFUDuRlVF0fnn1Is/M6KwfboSRDX+xTmNLM/ee4usdtT173Yz
-         7t/8+LBKGq7HlRqDHKLhxEeZgzc9sRkBXSppcO/juzkeEgFZ6f3NKpQZN7P5WButQJRD
-         bsfg==
+        bh=mFUu7p9S5YeiUqPkIKu4IgMBXIymBeuUApOrPlH1y/o=;
+        b=X9yI6FUy1ePkOXhvKAD9GqV+iHt4OfjBw2bHjlDjqYkkOzOO8SJo0aitaFi88R9q4d
+         PcsXtoac0P1kCi+WPk/c/B3aRHDMGdDS8BJ0Po4dUsLXYoUQLMUqo+RAdJb7GtxmbNT9
+         1NHVgKxorsA+cswmelXKymelKOdD9jHsZIsOZJRqRZVGUY1nR9vfSbySycHz8irrqpLW
+         GSiU4yVbpMRrQA8NZ1Jr0uOVSkSt8hd3hNpKvKymQMc7NcnuWXOJ0mSFrP/spgzB89fi
+         1gOCBSa3IQRmBuNnA6JkxpIpm7gccogElMpep9X92n9LAAdy7MKeeAPkD0eLHmJVzB3z
+         SsSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698186289; x=1698791089;
+        d=1e100.net; s=20230601; t=1698186284; x=1698791084;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ATYLaWcN5bU+Dpgi7a7JWdfUJz5sZd2hiBE3rpvu+hs=;
-        b=bK9/oFYepklFFKJRqxuzfxIIl7FbtaaUJu9iRLw8CF7FSHUIOaJimZv+wrlSLnhmQU
-         uq3NW5Vlh5rRWBWA2WPmYsPKnmsIDaSjwVNd+r1kSIkMa2RwYr/r1VeYIcuNigfpLMHU
-         aob2Putn5l68XH2QX9vPulKiX9uHnPrrNAT4kxU/t0iB7e0p0xvhxdFRo90zRc7WOGFr
-         cBYL3DiGnZqHGygKXwHZJ1PLSbVzZuMhpWgZtYC8KlVeUBLfs+jMlfu2fkwIW1z80PsA
-         6SPAu3swiYmJqwW9r14jJ9IS2UfjqC+Asus7JGm5Dn/1Uuk++QD3ihTsJMS0vlTERDIx
-         S6bA==
-X-Gm-Message-State: AOJu0YxjGYDe1RbvVFiN4dydR4zUdbfXm2tOWKzKwefRx9CQiT94ywyQ
-	4jGuD7Wnst34rxvDsCBsVCfnnB73qfrw
-X-Google-Smtp-Source: AGHT+IFT+Pd5kd1I8od4cX2G1Bf5fCmCBiz79LjBb1HZ4UWsKZi/GR9vVgFu5bdBd6BAlHb7OsUquC0cyFl1
+        bh=mFUu7p9S5YeiUqPkIKu4IgMBXIymBeuUApOrPlH1y/o=;
+        b=OePpHXpFYu/iH0zolar7GmaImjfaYtZxbliO0n4K7WsG/TbQCQwKR8YevwGd0V2qjn
+         viUWysllaZbkdvfCLC6h47WzXxV/8VT3Y/UWk4MAPjWzmDstRt6qtsAFdWmfNgOCCSkr
+         ShW2aGlVujU0iztTMwpAlOWBKnf8C++9wpIfavhtncLhUDq2+n3DmQfZbqCJUQ/jty+S
+         6HQbDU7igLLFDISmqZi3rH893l/hJBaLp14odPJLIOLibyZmXkR2El/NzPDFfHcSUTmS
+         KV2CRDRLAZIMSS7jtvZhD1xTOC+02zjGGx0VBv8mj9w2F0QUKWKraITvLt/BnZlmCU7u
+         bDjg==
+X-Gm-Message-State: AOJu0YyarKu1oigAhr84LcTCsOGDn//TIdLtlq8YXKRFDxMrdRx51//I
+	T24lgSVhwdm4M/YasNDaNh9ZFdKpjbFS
+X-Google-Smtp-Source: AGHT+IGSu0bx18CPVFKMs58nB3xLIn9DFr9Q0XU1S64CM6ktTDhMVgupYp1iv/ErkMArmokrPupa/XSu0TnC
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:93d2:18cc:4d63:45ba])
- (user=irogers job=sendgmr) by 2002:a05:6902:1083:b0:d9a:4f4c:961b with SMTP
- id v3-20020a056902108300b00d9a4f4c961bmr353608ybu.1.1698186288663; Tue, 24
- Oct 2023 15:24:48 -0700 (PDT)
-Date: Tue, 24 Oct 2023 15:23:19 -0700
+ (user=irogers job=sendgmr) by 2002:a25:324b:0:b0:d9b:f88c:ca2b with SMTP id
+ y72-20020a25324b000000b00d9bf88cca2bmr258286yby.11.1698186284456; Tue, 24 Oct
+ 2023 15:24:44 -0700 (PDT)
+Date: Tue, 24 Oct 2023 15:23:17 -0700
 In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
-Message-Id: <20231024222353.3024098-17-irogers@google.com>
+Message-Id: <20231024222353.3024098-15-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231024222353.3024098-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-Subject: [PATCH v3 16/50] tools api fs: Switch filename__read_str to use io.h
+Subject: [PATCH v3 14/50] perf mmap: Lazily initialize zstd streams
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -71,142 +71,254 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-filename__read_str has its own string reading code that allocates
-memory before reading into it. The memory allocated is sized at BUFSIZ
-that is 8kb. Most strings are short and so most of this 8kb is
-wasted.
-
-Refactor io__getline so that the newline character can be configurable
-and ignored in the case of filename__read_str.
-
-Code like build_caches_for_cpu in perf's header.c will read many
-strings and hold them in a data structure, in this case multiple
-strings per cache level per CPU. Using io.h's io__getline avoids the
-wasted memory as strings are temporarily read into a buffer on the
-stack before being copied to a buffer that grows 128 bytes at a time
-and is never sized larger than the string.
-
-For a 16 hyperthread system the memory consumption of "perf record
-true" is reduced by 180kb, primarily through saving memory when
-reading the cache information.
+Zstd streams create dictionaries that can require significant RAM,
+especially when there is one per-CPU. Tools like perf record won't use
+the streams without the -z option, and so the creation of the streams
+is pure overhead. Switch to creating the streams on first use.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/fs/fs.c | 56 +++++++++++--------------------------------
- tools/lib/api/io.h    |  9 +++++--
- 2 files changed, 21 insertions(+), 44 deletions(-)
+ tools/perf/builtin-record.c | 26 ++++++++++-----
+ tools/perf/util/compress.h  |  6 ++--
+ tools/perf/util/mmap.c      |  5 ++-
+ tools/perf/util/mmap.h      |  1 -
+ tools/perf/util/zstd.c      | 63 +++++++++++++++++++------------------
+ 5 files changed, 58 insertions(+), 43 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 5cb0eeec2c8a..496812b5f1d2 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -16,6 +16,7 @@
- #include <sys/mount.h>
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 8ec818568662..9b4f3805ca92 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -270,7 +270,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
  
- #include "fs.h"
-+#include "../io.h"
- #include "debug-internal.h"
+ static int record__aio_enabled(struct record *rec);
+ static int record__comp_enabled(struct record *rec);
+-static size_t zstd_compress(struct perf_session *session, struct mmap *map,
++static ssize_t zstd_compress(struct perf_session *session, struct mmap *map,
+ 			    void *dst, size_t dst_size, void *src, size_t src_size);
  
- #define _STR(x) #x
-@@ -344,53 +345,24 @@ int filename__read_ull(const char *filename, unsigned long long *value)
- 	return filename__read_ull_base(filename, value, 0);
- }
+ #ifdef HAVE_AIO_SUPPORT
+@@ -405,9 +405,13 @@ static int record__aio_pushfn(struct mmap *map, void *to, void *buf, size_t size
+ 	 */
  
--#define STRERR_BUFSIZE  128     /* For the buffer size of strerror_r */
--
- int filename__read_str(const char *filename, char **buf, size_t *sizep)
- {
--	size_t size = 0, alloc_size = 0;
--	void *bf = NULL, *nbf;
--	int fd, n, err = 0;
--	char sbuf[STRERR_BUFSIZE];
-+	struct io io;
-+	char bf[128];
-+	int err;
- 
--	fd = open(filename, O_RDONLY);
--	if (fd < 0)
-+	io.fd = open(filename, O_RDONLY);
-+	if (io.fd < 0)
- 		return -errno;
--
--	do {
--		if (size == alloc_size) {
--			alloc_size += BUFSIZ;
--			nbf = realloc(bf, alloc_size);
--			if (!nbf) {
--				err = -ENOMEM;
--				break;
--			}
--
--			bf = nbf;
--		}
--
--		n = read(fd, bf + size, alloc_size - size);
--		if (n < 0) {
--			if (size) {
--				pr_warn("read failed %d: %s\n", errno,
--					strerror_r(errno, sbuf, sizeof(sbuf)));
--				err = 0;
--			} else
--				err = -errno;
--
--			break;
--		}
--
--		size += n;
--	} while (n > 0);
--
--	if (!err) {
--		*sizep = size;
--		*buf   = bf;
-+	io__init(&io, io.fd, bf, sizeof(bf));
-+	*buf = NULL;
-+	err = io__getline_nl(&io, buf, sizep, /*nl=*/-1);
-+	if (err < 0) {
-+		free(*buf);
-+		*buf = NULL;
- 	} else
--		free(bf);
--
--	close(fd);
-+		err = 0;
-+	close(io.fd);
- 	return err;
- }
- 
-diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-index a77b74c5fb65..50d33e14fb56 100644
---- a/tools/lib/api/io.h
-+++ b/tools/lib/api/io.h
-@@ -141,7 +141,7 @@ static inline int io__get_dec(struct io *io, __u64 *dec)
- }
- 
- /* Read up to and including the first newline following the pattern of getline. */
--static inline ssize_t io__getline(struct io *io, char **line_out, size_t *line_len_out)
-+static inline ssize_t io__getline_nl(struct io *io, char **line_out, size_t *line_len_out, int nl)
- {
- 	char buf[128];
- 	int buf_pos = 0;
-@@ -151,7 +151,7 @@ static inline ssize_t io__getline(struct io *io, char **line_out, size_t *line_l
- 
- 	/* TODO: reuse previously allocated memory. */
- 	free(*line_out);
--	while (ch != '\n') {
-+	while (ch != nl) {
- 		ch = io__get_char(io);
- 
- 		if (ch < 0)
-@@ -184,4 +184,9 @@ static inline ssize_t io__getline(struct io *io, char **line_out, size_t *line_l
- 	return -ENOMEM;
- }
- 
-+static inline ssize_t io__getline(struct io *io, char **line_out, size_t *line_len_out)
-+{
-+	return io__getline_nl(io, line_out, line_len_out, /*nl=*/'\n');
-+}
+ 	if (record__comp_enabled(aio->rec)) {
+-		size = zstd_compress(aio->rec->session, NULL, aio->data + aio->size,
+-				     mmap__mmap_len(map) - aio->size,
+-				     buf, size);
++		ssize_t compressed = zstd_compress(aio->rec->session, NULL, aio->data + aio->size,
++						   mmap__mmap_len(map) - aio->size,
++						   buf, size);
++		if (compressed < 0)
++			return (int)compressed;
 +
- #endif /* __API_IO__ */
++		size = compressed;
+ 	} else {
+ 		memcpy(aio->data + aio->size, buf, size);
+ 	}
+@@ -633,7 +637,13 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ 	struct record *rec = to;
+ 
+ 	if (record__comp_enabled(rec)) {
+-		size = zstd_compress(rec->session, map, map->data, mmap__mmap_len(map), bf, size);
++		ssize_t compressed = zstd_compress(rec->session, map, map->data,
++						   mmap__mmap_len(map), bf, size);
++
++		if (compressed < 0)
++			return (int)compressed;
++
++		size = compressed;
+ 		bf   = map->data;
+ 	}
+ 
+@@ -1527,10 +1537,10 @@ static size_t process_comp_header(void *record, size_t increment)
+ 	return size;
+ }
+ 
+-static size_t zstd_compress(struct perf_session *session, struct mmap *map,
++static ssize_t zstd_compress(struct perf_session *session, struct mmap *map,
+ 			    void *dst, size_t dst_size, void *src, size_t src_size)
+ {
+-	size_t compressed;
++	ssize_t compressed;
+ 	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_record_compressed) - 1;
+ 	struct zstd_data *zstd_data = &session->zstd_data;
+ 
+@@ -1539,6 +1549,8 @@ static size_t zstd_compress(struct perf_session *session, struct mmap *map,
+ 
+ 	compressed = zstd_compress_stream_to_records(zstd_data, dst, dst_size, src, src_size,
+ 						     max_record_size, process_comp_header);
++	if (compressed < 0)
++		return compressed;
+ 
+ 	if (map && map->file) {
+ 		thread->bytes_transferred += src_size;
+diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
+index 0cd3369af2a4..9eb6eb5bf038 100644
+--- a/tools/perf/util/compress.h
++++ b/tools/perf/util/compress.h
+@@ -3,6 +3,7 @@
+ #define PERF_COMPRESS_H
+ 
+ #include <stdbool.h>
++#include <stdlib.h>
+ #ifdef HAVE_ZSTD_SUPPORT
+ #include <zstd.h>
+ #endif
+@@ -21,6 +22,7 @@ struct zstd_data {
+ #ifdef HAVE_ZSTD_SUPPORT
+ 	ZSTD_CStream	*cstream;
+ 	ZSTD_DStream	*dstream;
++	int comp_level;
+ #endif
+ };
+ 
+@@ -29,7 +31,7 @@ struct zstd_data {
+ int zstd_init(struct zstd_data *data, int level);
+ int zstd_fini(struct zstd_data *data);
+ 
+-size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
++ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
+ 				       void *src, size_t src_size, size_t max_record_size,
+ 				       size_t process_header(void *record, size_t increment));
+ 
+@@ -48,7 +50,7 @@ static inline int zstd_fini(struct zstd_data *data __maybe_unused)
+ }
+ 
+ static inline
+-size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
++ssize_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
+ 				       void *dst __maybe_unused, size_t dst_size __maybe_unused,
+ 				       void *src __maybe_unused, size_t src_size __maybe_unused,
+ 				       size_t max_record_size __maybe_unused,
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 49093b21ee2d..122ee198a86e 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -295,15 +295,14 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, struct perf_cpu
+ 
+ 	map->core.flush = mp->flush;
+ 
+-	map->comp_level = mp->comp_level;
+ #ifndef PYTHON_PERF
+-	if (zstd_init(&map->zstd_data, map->comp_level)) {
++	if (zstd_init(&map->zstd_data, mp->comp_level)) {
+ 		pr_debug2("failed to init mmap compressor, error %d\n", errno);
+ 		return -1;
+ 	}
+ #endif
+ 
+-	if (map->comp_level && !perf_mmap__aio_enabled(map)) {
++	if (mp->comp_level && !perf_mmap__aio_enabled(map)) {
+ 		map->data = mmap(NULL, mmap__mmap_len(map), PROT_READ|PROT_WRITE,
+ 				 MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+ 		if (map->data == MAP_FAILED) {
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index f944c3cd5efa..0df6e1621c7e 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -39,7 +39,6 @@ struct mmap {
+ #endif
+ 	struct mmap_cpu_mask	affinity_mask;
+ 	void		*data;
+-	int		comp_level;
+ 	struct perf_data_file *file;
+ 	struct zstd_data      zstd_data;
+ };
+diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+index 48dd2b018c47..57027e0ac7b6 100644
+--- a/tools/perf/util/zstd.c
++++ b/tools/perf/util/zstd.c
+@@ -7,35 +7,9 @@
+ 
+ int zstd_init(struct zstd_data *data, int level)
+ {
+-	size_t ret;
+-
+-	data->dstream = ZSTD_createDStream();
+-	if (data->dstream == NULL) {
+-		pr_err("Couldn't create decompression stream.\n");
+-		return -1;
+-	}
+-
+-	ret = ZSTD_initDStream(data->dstream);
+-	if (ZSTD_isError(ret)) {
+-		pr_err("Failed to initialize decompression stream: %s\n", ZSTD_getErrorName(ret));
+-		return -1;
+-	}
+-
+-	if (!level)
+-		return 0;
+-
+-	data->cstream = ZSTD_createCStream();
+-	if (data->cstream == NULL) {
+-		pr_err("Couldn't create compression stream.\n");
+-		return -1;
+-	}
+-
+-	ret = ZSTD_initCStream(data->cstream, level);
+-	if (ZSTD_isError(ret)) {
+-		pr_err("Failed to initialize compression stream: %s\n", ZSTD_getErrorName(ret));
+-		return -1;
+-	}
+-
++	data->comp_level = level;
++	data->dstream = NULL;
++	data->cstream = NULL;
+ 	return 0;
+ }
+ 
+@@ -54,7 +28,7 @@ int zstd_fini(struct zstd_data *data)
+ 	return 0;
+ }
+ 
+-size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
++ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
+ 				       void *src, size_t src_size, size_t max_record_size,
+ 				       size_t process_header(void *record, size_t increment))
+ {
+@@ -63,6 +37,21 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t
+ 	ZSTD_outBuffer output;
+ 	void *record;
+ 
++	if (!data->cstream) {
++		data->cstream = ZSTD_createCStream();
++		if (data->cstream == NULL) {
++			pr_err("Couldn't create compression stream.\n");
++			return -1;
++		}
++
++		ret = ZSTD_initCStream(data->cstream, data->comp_level);
++		if (ZSTD_isError(ret)) {
++			pr_err("Failed to initialize compression stream: %s\n",
++				ZSTD_getErrorName(ret));
++			return -1;
++		}
++	}
++
+ 	while (input.pos < input.size) {
+ 		record = dst;
+ 		size = process_header(record, 0);
+@@ -96,6 +85,20 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+ 	ZSTD_inBuffer input = { src, src_size, 0 };
+ 	ZSTD_outBuffer output = { dst, dst_size, 0 };
+ 
++	if (!data->dstream) {
++		data->dstream = ZSTD_createDStream();
++		if (data->dstream == NULL) {
++			pr_err("Couldn't create decompression stream.\n");
++			return 0;
++		}
++
++		ret = ZSTD_initDStream(data->dstream);
++		if (ZSTD_isError(ret)) {
++			pr_err("Failed to initialize decompression stream: %s\n",
++				ZSTD_getErrorName(ret));
++			return 0;
++		}
++	}
+ 	while (input.pos < input.size) {
+ 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+ 		if (ZSTD_isError(ret)) {
 -- 
 2.42.0.758.gaed0368e0e-goog
 
