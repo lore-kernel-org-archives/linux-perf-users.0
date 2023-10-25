@@ -1,49 +1,62 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9404F2E645
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 19:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CB3328C0;
+	Wed, 25 Oct 2023 20:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g1YIzv3U"
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF39810E
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 12:07:33 -0700 (PDT)
-Date: Wed, 25 Oct 2023 19:07:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1698260851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1z86aOessVJf1f7xTckw9Z9ZagBGFYnpPIX+SQ4dj5k=;
-	b=g1YIzv3UzFcSTAdMrk9BTNrjuCINFTW1OhbSWcnaBmNZR5DUPH8XAefDSjxkTzC7PNSTf1
-	Z+lz63/exdLv+COn2chrk19epNG27mgBhnjORcmE4cfuh6+GjAo5021Wn3MpPnMmEdjnjz
-	ubr0VwIRVK0p6CXX0SH10P18OH7Q3Ok=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Jing Zhang <jingzhangos@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KdrfpdGK"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D04183;
+	Wed, 25 Oct 2023 13:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698264202; x=1729800202;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=YLZGgBkznfjPx0x7i1mnmcfOOiepLxrJSAVTpEABg3I=;
+  b=KdrfpdGKHZzii6dq6/Njstq5GoQlhBH3oJQZrwmL9AP5KtqjEwYc9f/w
+   S75sMxRCMuUeoX+aToXqz4jFdf641drwhyTlaNFhxax/tOWJWXV8WEazp
+   gn1PIjdFvRT4xLLLFToJPOJ3zpgQtL32mDN6h98sN+W8O9TZscy5vKomc
+   kxx1Xqllgm2qCitCFcNt4ntzBHjd8LNSONVB4VSPDSCR8T8ZT4r3qKD+e
+   kjqzaNmwVcnt4rTjtW6aOvNYgPe7Y+mCyi58LHdA/H1XeFPgPEpurUT4y
+   lnC0W5ketLiAvQkZJC3sdJ2T0FtbBWK10QbTxg7gluo+KL+HmcRw3Ziu6
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="473624936"
+X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
+   d="scan'208";a="473624936"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 13:01:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="902664878"
+X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
+   d="scan'208";a="902664878"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 12:59:31 -0700
+Date: Wed, 25 Oct 2023 13:01:53 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 3/5] KVM: selftests: Generate sysreg-defs.h and add to
- include path
-Message-ID: <ZTlnbQ2U9ZaAkXYE@linux.dev>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-4-oliver.upton@linux.dev>
- <f25acdcb-269e-fae5-fbbc-54e8d6d05b23@arm.com>
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Stephane Eranian <eranian@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-toolchains@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+	Ben Woodard <woodard@redhat.com>, Joe Mario <jmario@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
+Message-ID: <ZTl0MdKauLd21ahn@tassilo>
+References: <20231012035111.676789-1-namhyung@kernel.org>
+ <87pm15vw5r.fsf@linux.intel.com>
+ <CAM9d7ch504cnFzTL1qPh349uSrbEZop19kB-DbUsnoOKEvtFBQ@mail.gmail.com>
+ <ZTh41epbjwGsMPaB@tassilo>
+ <CAM9d7cgin9=dh-cypSzpvfZu_N7qv8Gxg0VVGdOm+VXB8i1FAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,70 +66,41 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f25acdcb-269e-fae5-fbbc-54e8d6d05b23@arm.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CAM9d7cgin9=dh-cypSzpvfZu_N7qv8Gxg0VVGdOm+VXB8i1FAQ@mail.gmail.com>
 
-On Wed, Oct 25, 2023 at 10:02:36AM +0100, Aishwarya TCV wrote:
-> On 11/10/2023 20:57, Oliver Upton wrote:
-> > Start generating sysreg-defs.h for arm64 builds in anticipation of
-> > updating sysreg.h to a version that depends on it.
-> > 
-> > Reviewed-by: Mark Brown <broonie@kernel.org>
-> > Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
-> > ---
-> >  tools/testing/selftests/kvm/Makefile | 23 ++++++++++++++++++++---
-> >  1 file changed, 20 insertions(+), 3 deletions(-)
-> > 
+On Tue, Oct 24, 2023 at 10:51:41PM -0700, Namhyung Kim wrote:
+> On Tue, Oct 24, 2023 at 7:09 PM Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> > >
+> > > >
+> > > > The main difference seems to be that mine was more for perf script
+> > > > (e.g. i supported PT decoding), while you are more focused on sampling.
+> > > > I relied on the kprobes/uprobes engine, which unfortunately was always
+> > > > quite slow and had many limitations.
+> > >
+> > > Right, I think dealing with regular samples would be more useful.
+> >
+> > My code supported samples too, but only through perf script, not report.
+> >
+> > See
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git/commit/?h=perf/var-resolve-7&id=4775664750a6296acb732b7adfa224c6a06a126f
+> >
+> > for an example.
+> >
+> > My take was that i wasn't sure that perf report is the right interface
+> > to visualize the variables changing -- to be really usable you probably
+> > need some plots and likely something like an UI.
 > 
-> Hi Oliver,
-> 
-> 
-> Currently when building kselftest against next-master with arm64 arch
-> and defconfig+kselftest-kvm  “make[4]: *** [Makefile:26: prepare] Error
-> 2” is observed.
+> I see.  Your concern is to see how variables are changing.
+> But it seems you only displayed constant values.
 
-Looks like we're descending into tools/arch/arm64/tools/ w/
-$(srctree) == ".", which I believe is coming from the top makefile. The
-following diff fixes it for me, care to give it a go?
+Yes the examples were not very good, but that was the intention.
+Values can be much more powerful than only types!
 
-diff --git a/tools/arch/arm64/tools/Makefile b/tools/arch/arm64/tools/Makefile
-index f867e6036c62..7f64b8bb5107 100644
---- a/tools/arch/arm64/tools/Makefile
-+++ b/tools/arch/arm64/tools/Makefile
-@@ -1,13 +1,13 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--ifeq ($(srctree),)
--srctree := $(patsubst %/,%,$(dir $(CURDIR)))
--srctree := $(patsubst %/,%,$(dir $(srctree)))
--srctree := $(patsubst %/,%,$(dir $(srctree)))
--srctree := $(patsubst %/,%,$(dir $(srctree)))
-+ifeq ($(top_srcdir),)
-+top_srcdir := $(patsubst %/,%,$(dir $(CURDIR)))
-+top_srcdir := $(patsubst %/,%,$(dir $(top_srcdir)))
-+top_srcdir := $(patsubst %/,%,$(dir $(top_srcdir)))
-+top_srcdir := $(patsubst %/,%,$(dir $(top_srcdir)))
- endif
- 
--include $(srctree)/tools/scripts/Makefile.include
-+include $(top_srcdir)/tools/scripts/Makefile.include
- 
- AWK	?= awk
- MKDIR	?= mkdir
-@@ -19,10 +19,10 @@ else
- Q = @
- endif
- 
--arm64_tools_dir = $(srctree)/arch/arm64/tools
-+arm64_tools_dir = $(top_srcdir)/arch/arm64/tools
- arm64_sysreg_tbl = $(arm64_tools_dir)/sysreg
- arm64_gen_sysreg = $(arm64_tools_dir)/gen-sysreg.awk
--arm64_generated_dir = $(srctree)/tools/arch/arm64/include/generated
-+arm64_generated_dir = $(top_srcdir)/tools/arch/arm64/include/generated
- arm64_sysreg_defs = $(arm64_generated_dir)/asm/sysreg-defs.h
- 
- all: $(arm64_sysreg_defs)
+For PT I also had special compiler patch that added suitable ptwrites
+(see [1]) that allowed to track any variable.
 
--- 
-Thanks,
-Oliver
+-Andi
+
+[1] https://github.com/andikleen/gcc-old-svn/tree/ptwrite-18
