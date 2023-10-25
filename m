@@ -1,146 +1,120 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFCB1F616
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 09:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0DC111AB;
+	Wed, 25 Oct 2023 09:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F3A8136;
-	Wed, 25 Oct 2023 02:02:42 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5C1D610A;
+	Wed, 25 Oct 2023 02:57:28 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4166F2F4;
-	Wed, 25 Oct 2023 02:03:23 -0700 (PDT)
-Received: from [10.57.1.178] (unknown [10.57.1.178])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FD503F738;
-	Wed, 25 Oct 2023 02:02:39 -0700 (PDT)
-Message-ID: <f25acdcb-269e-fae5-fbbc-54e8d6d05b23@arm.com>
-Date: Wed, 25 Oct 2023 10:02:36 +0100
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FE8B2F4;
+	Wed, 25 Oct 2023 02:58:09 -0700 (PDT)
+Received: from e127643.arm.com (unknown [10.57.70.16])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A47483F738;
+	Wed, 25 Oct 2023 02:57:25 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	suzuki.poulose@arm.com,
+	oliver.upton@linux.dev
+Cc: kvmarm@lists.linux.dev,
+	James Clark <james.clark@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Reiji Watanabe <reijiw@google.com>,
+	Zaid Al-Bassam <zalbassam@google.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] arm64: perf: Add support for event counting threshold
+Date: Wed, 25 Oct 2023 10:57:02 +0100
+Message-Id: <20231025095710.1559601-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 3/5] KVM: selftests: Generate sysreg-defs.h and add to
- include path
-Content-Language: en-US
-To: Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- Jing Zhang <jingzhangos@google.com>, Zenghui Yu <yuzenghui@huawei.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, James Morse
- <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Adrian Hunter
- <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-4-oliver.upton@linux.dev>
-From: Aishwarya TCV <aishwarya.tcv@arm.com>
-In-Reply-To: <20231011195740.3349631-4-oliver.upton@linux.dev>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Changes since v3:
+
+  * Drop #include changes to KVM source files because since
+    commit bc512d6a9b92 ("KVM: arm64: Make PMEVTYPER<n>_EL0.NSH RES0 if
+    EL2 isn't advertised"), KVM doesn't use ARMV8_PMU_EVTYPE_MASK
+    anymore
+
+Changes since v2:
+
+  * Split threshold_control attribute into two, threshold_compare and
+    threshold_count so that it's easier to use
+  * Add some notes to the first commit message and the cover letter
+    about the behavior in KVM
+  * Update the docs commit with regards to the split attribute
+ 
+Changes since v1:
+
+  * Fix build on aarch32 by disabling FEAT_PMUv3_TH and splitting event
+    type mask between the platforms
+  * Change armv8pmu_write_evtype() to take unsigned long instead of u64
+    so it isn't unnecessarily wide on aarch32
+  * Add UL suffix to aarch64 event type mask definition
+
+----
+
+FEAT_PMUv3_TH (Armv8.8) is a new feature that allows conditional
+counting of PMU events depending on how much the event increments on
+a single cycle. Two new config fields for perf_event_open have been
+added, and a PMU cap file for reading the max_threshold. See the second
+commit message and the docs in the last commit for more details.
+
+The feature is not currently supported on KVM guests, and PMMIR is set
+to read as zero, so it's not advertised as available. But it can be
+added at a later time. Writes to PMEVTYPER.TC and TH from guests are
+already RES0.
+
+The change has been validated on the Arm FVP model:
+
+  # Zero values, works as expected (as before).
+  $ perf stat -e dtlb_walk/threshold=0,threshold_compare=0/ -- true
+
+    5962      dtlb_walk/threshold=0,threshold_compare=0/
+
+  # Threshold >= 255 causes count to be 0 because dtlb_walk doesn't
+  # increase by more than 1 per cycle.
+  $ perf stat -e dtlb_walk/threshold=255,threshold_compare=2/ -- true
+
+    0      dtlb_walk/threshold=255,threshold_compare=2/
+  
+  # Keeping comparison as >= but lowering the threshold to 1 makes the
+  # count return.
+  $ perf stat -e dtlb_walk/threshold=1,threshold_compare=2/ -- true
+
+    6329      dtlb_walk/threshold=1,threshold_compare=2/
+
+Applies to kvmarm/next (54552d5bf954)
+
+James Clark (3):
+  arm: perf: Include threshold control fields valid in PMEVTYPER mask
+  arm64: perf: Add support for event counting threshold
+  Documentation: arm64: Document the PMU event counting threshold
+    feature
+
+ Documentation/arch/arm64/perf.rst  | 56 +++++++++++++++++++++
+ arch/arm/include/asm/arm_pmuv3.h   |  3 ++
+ arch/arm64/include/asm/arm_pmuv3.h |  4 ++
+ drivers/perf/arm_pmuv3.c           | 79 +++++++++++++++++++++++++++++-
+ include/linux/perf/arm_pmuv3.h     |  4 +-
+ 5 files changed, 144 insertions(+), 2 deletions(-)
 
 
-On 11/10/2023 20:57, Oliver Upton wrote:
-> Start generating sysreg-defs.h for arm64 builds in anticipation of
-> updating sysreg.h to a version that depends on it.
-> 
-> Reviewed-by: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
-> ---
->  tools/testing/selftests/kvm/Makefile | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
-> 
+base-commit: 54552d5bf9543bbc1edfd32c4e4b8a56ec4f9711
+-- 
+2.34.1
 
-Hi Oliver,
-
-
-Currently when building kselftest against next-master with arm64 arch
-and defconfig+kselftest-kvm  “make[4]: *** [Makefile:26: prepare] Error
-2” is observed.
-
-The bisect log is below and a full log from a failing test job can be
-seen here:
-
-https://storage.kernelci.org/next/master/next-20231023/arm64/defconfig/gcc-10/logs/kselftest.log
-
-make[4]: Entering directory '/tmp/kci/linux/tools/testing/selftests/kvm'
-Makefile:270: warning: overriding recipe for target
-'/tmp/kci/linux/build/kselftest/kvm/get-reg-list'
-Makefile:265: warning: ignoring old recipe for target
-'/tmp/kci/linux/build/kselftest/kvm/get-reg-list'
-make -C ../../../../tools/arch/arm64/tools/
-make[5]: Entering directory '/tmp/kci/linux/tools/arch/arm64/tools'
-Makefile:10: ../tools/scripts/Makefile.include: No such file or directory
-make[5]: *** No rule to make target '../tools/scripts/Makefile.include'.
- Stop.
-make[5]: Leaving directory '/tmp/kci/linux/tools/arch/arm64/tools'
-make[4]: *** [Makefile:26: prepare] Error 2
-make[4]: Leaving directory '/tmp/kci/linux/tools/testing/selftests/kvm'
-
-git bisect log
-git bisect start
-# good: [58720809f52779dc0f08e53e54b014209d13eebb] Linux 6.6-rc6
-git bisect good 58720809f52779dc0f08e53e54b014209d13eebb
-# bad: [4230ea146b1e64628f11e44290bb4008e391bc24] Add linux-next
-specific files for 20231019
-git bisect bad 4230ea146b1e64628f11e44290bb4008e391bc24
-# good: [2958944f7786b88cb86f7b3377c1a8bda75fd506] Merge branch
-'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
-git bisect good 2958944f7786b88cb86f7b3377c1a8bda75fd506
-# good: [359cb2003c0c273b13ec11b3df076ceac95e5eda] Merge branch
-'for-next' of
-https://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git
-git bisect good 359cb2003c0c273b13ec11b3df076ceac95e5eda
-# bad: [53cc85767a1dba86b892f72f18e44138ec5e3f83] Merge branch
-'for-next' of
-git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
-git bisect bad 53cc85767a1dba86b892f72f18e44138ec5e3f83
-# good: [84ceabd4408bd0bae48b58e2c18ddc5263cd5be4] Merge branch
-'next-integrity' of
-git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity
-git bisect good 84ceabd4408bd0bae48b58e2c18ddc5263cd5be4
-# good: [35c2f21c0d4a633305773355e86b41e28d835f67] Merge branch 'master'
-of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-git bisect good 35c2f21c0d4a633305773355e86b41e28d835f67
-# bad: [92a288da516dc7aaab6e92ba3de7d51c415227b1] Merge branch
-'topic/ppc-kvm' of
-git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
-git bisect bad 92a288da516dc7aaab6e92ba3de7d51c415227b1
-# good: [5df10099418f139bbf2f4e0d7b9a8727e76274ec] srcu: Explain why
-callbacks invocations can't run concurrently
-git bisect good 5df10099418f139bbf2f4e0d7b9a8727e76274ec
-# good: [2ca9297790bdd24b4baa6e432d393e92272f7dc5] Merge branch
-kvm-arm64/writable-id-regs into kvmarm/next
-git bisect good 2ca9297790bdd24b4baa6e432d393e92272f7dc5
-# good: [7ae3136edc0787c890e07fbd1d16d54557644068] Merge branch
-'rcu/next' of
-git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
-git bisect good 7ae3136edc0787c890e07fbd1d16d54557644068
-# bad: [50a1ee6541d7c7bac0a43b773b68f20c3ffcbe67] Merge branch 'next' of
-git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git
-git bisect bad 50a1ee6541d7c7bac0a43b773b68f20c3ffcbe67
-# bad: [54a9ea73527d55ab746d5425e10f3fa748e00e70] KVM: arm64: selftests:
-Test for setting ID register from usersapce
-git bisect bad 54a9ea73527d55ab746d5425e10f3fa748e00e70
-# good: [e2bdd172e6652c2f5554d125a5048bc9f9b0dfa3] perf build: Generate
-arm64's sysreg-defs.h and add to include path
-git bisect good e2bdd172e6652c2f5554d125a5048bc9f9b0dfa3
-# bad: [0359c946b13153bd57fac65f4f3600ba5673e3de] tools headers arm64:
-Update sysreg.h with kernel sources
-git bisect bad 0359c946b13153bd57fac65f4f3600ba5673e3de
-# bad: [9697d84cc3b6d9bff4b1fbffc10a4bb1398af9ba] KVM: selftests:
-Generate sysreg-defs.h and add to include path
-git bisect bad 9697d84cc3b6d9bff4b1fbffc10a4bb1398af9ba
-# first bad commit: [9697d84cc3b6d9bff4b1fbffc10a4bb1398af9ba] KVM:
-selftests: Generate sysreg-defs.h and add to include path
-
-Thanks,
-Aishwarya
