@@ -1,349 +1,134 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D19F42909
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 22:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABF879CF
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 00:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YfowOvCu"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C78B325D
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:26:04 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9b9f56489fso5889974276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 15:26:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2+PxccD"
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E404B9;
+	Tue, 24 Oct 2023 17:31:25 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-578b4981526so3087125a12.0;
+        Tue, 24 Oct 2023 17:31:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698186363; x=1698791163; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ax4wGMolFNFmvAbtQbFOoT88EvyDd7TbOe2UXPEasko=;
-        b=YfowOvCuZhHULKo4/Orsria5zBpULDar8L1uotSLOtlWhkXsAKVeVjpeLPajKuNBXY
-         msNGFgD7DbZ2z6iGEaULOE0qjZh9OBixYS5F3doRziyBebBdryGHCHZF6/L9mUH4R6yW
-         m5Rzd8L1jYihFBiIQZHpCeA1NoJ6RQkcHCnk1vORMyWIT221USmoYgOIDScWwEZ1Svdm
-         X69iR98au8Pt9H3m0oJ7F8CZvYsl4e8MW0618+G+tf/U0zl0lbRJvYQVzh1tImuy5eKL
-         yT62rfTrRG53XorAE4sWKPvrl++mIMH3Jvr+ubHvMae3ZCxZK+Q7g0YddwPRxcDz50Zy
-         NfLw==
+        d=gmail.com; s=20230601; t=1698193885; x=1698798685; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=GpAI6ozunbQoZWUQVTayqufjb3hbc6BcZ1+mXMEKxPs=;
+        b=M2+PxccDyn2L92869k0CYOU6hsXIUuz789rKmFSEzqQm9FFiQsIzDvCHe2vcuAmtJ/
+         OtNAU0olNNFOCiGyAgzqeN1+yzXSOfj5CTHpz2YZKKg7GKA2PZtSklMinR67bmvp2RB3
+         85RwsaQh0zfcska2GiWaqkwYo9fnsRLylbm6zgKuEb8pbq9/3oWGndpjmdovAsIRLjF6
+         VTkNHW4n1Rbb6GNBWb1lFnl4pzDsh5yLx4BK/kKeo1NtV1CLjP6ZfAGROKnYHldSjlmm
+         KgdmlYY3ks8VNxpJ4Z9o6yqXRfBptFyrmSXdesaAw9XuP/OCQvb+FE2lJCbvEcpDbgBE
+         qhJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698186363; x=1698791163;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ax4wGMolFNFmvAbtQbFOoT88EvyDd7TbOe2UXPEasko=;
-        b=bIF7n/MMEr4vWnqjGgm9aSE9nwqcVHLjmJK6KW4B0iombOXMZL3cicxr3/1XsyMQtO
-         8kHqxCjdBu88VssndrfLse6X9zfi5KBHdo5BbIgJde24NhBH+tNn2H+qvm8+07tERapr
-         av1w+8c/TjAgww7jkZk7VW+hVK8/IRmZd2tyV8xzv+cHCZKtEucr0UUYIgtQ9QIpMpFN
-         iVaA+2aqJk/201EVYv3u2Cfqbj6KZrKP7Z1JOAYGf4QBGqyNC2C1POKFx2UF+s/JUi1s
-         uEaUsabIPv/cFZORMJrCNEp4eOi/xDat0yFD/0tOyB1JvPVp640Rsbl9Ir48E6bjDajh
-         NWww==
-X-Gm-Message-State: AOJu0YzfIfVZ01+ORFHCEH639SaZoH7I9YLrWxdmM5s01R4o36oq1iuE
-	91IpJVSzdWTsMBJDhA14tKGHWQzKpKid
-X-Google-Smtp-Source: AGHT+IEo5x1lGpihCajjh/HKvb5B1MoaJ53U0j5pLZcJfxb2D5ySgaxj6EHRejLCCVh5kxVMWnCTaQ+IASHx
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:93d2:18cc:4d63:45ba])
- (user=irogers job=sendgmr) by 2002:a25:e74b:0:b0:d8b:737f:8246 with SMTP id
- e72-20020a25e74b000000b00d8b737f8246mr252913ybh.2.1698186363248; Tue, 24 Oct
- 2023 15:26:03 -0700 (PDT)
-Date: Tue, 24 Oct 2023 15:23:52 -0700
-In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
-Message-Id: <20231024222353.3024098-50-irogers@google.com>
+        d=1e100.net; s=20230601; t=1698193885; x=1698798685;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GpAI6ozunbQoZWUQVTayqufjb3hbc6BcZ1+mXMEKxPs=;
+        b=UCZXL4KKO5SC2rA6wXoo+WGcv8IJ/L64GgODwiIMGZ3XsVZ4MRGstQN6bbvjwmjCds
+         pSdOm06m9uQQYXGB1G6t/vC4Dwp5mExFHZ3lDhprMUQ7JQBZXqsm9rDy/9exOCD4co4I
+         AskjRan5AC3nR2XOUCcPnU2iPxJQWAW1et0L1ZAzJ1eHbVFS3l2ufqaM1KdQCjSg5Ek5
+         uwzSRPDe9IuyvBPt/7Gp6vN5nHNXWV0b2wjL2cbIBPal9Wc89ghTo3yO5ycwhl9jBLGp
+         SxDNHmm39aRO8Zwyj5WCXDl4pOjiIv0X/9Qipk/Wznz1YyogoAvGoVmcFI3vXzNH/UsN
+         77Sg==
+X-Gm-Message-State: AOJu0YyvkB0HcTPke/yZYabHSk+s3v9CjcgnMYbJYCZBNIQZlRjPKnuU
+	/vYjxmeuL+PSm1Oae/jkYs0=
+X-Google-Smtp-Source: AGHT+IExbYkV20Qsce/iBoTkvlqsPI+HiuO852xRML9Pw1o5w9+HtqXK+8TBwMKRj/6bH2lzOjAUdA==
+X-Received: by 2002:a05:6a21:47c7:b0:17e:5d2f:f439 with SMTP id as7-20020a056a2147c700b0017e5d2ff439mr4638886pzc.46.1698193884786;
+        Tue, 24 Oct 2023 17:31:24 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:9710:a537:7681:714f])
+        by smtp.gmail.com with ESMTPSA id g17-20020a056a00079100b006930db1e6d1sm8251094pfu.203.2023.10.24.17.31.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 17:31:23 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf report: Fix hierarchy mode on pipe input
+Date: Tue, 24 Oct 2023 17:31:21 -0700
+Message-ID: <20231025003121.2811738-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231024222353.3024098-1-irogers@google.com>
-X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-Subject: [PATCH v3 49/50] perf threads: Switch from rbtree to hashmap
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Leo Yan <leo.yan@linaro.org>, Song Liu <song@kernel.org>, 
-	Sandipan Das <sandipan.das@amd.com>, James Clark <james.clark@arm.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Liam Howlett <liam.howlett@oracle.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, 
-	Yanteng Si <siyanteng@loongson.cn>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	German Gomez <german.gomez@arm.com>, Changbin Du <changbin.du@huawei.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The rbtree provides a sorting on entries but this is unused. Switch to
-using hashmap for O(1) rather than O(log n) find/insert/remove
-complexity.
+The hierarchy mode needs to setup output formats for each evsel.
+Normally setup_sorting() handles this at the beginning, but it cannot
+do that if data comes from a pipe since there's no evsel info before
+reading the data.  And then perf report cannot process the samples
+in hierarchy mode and think as if there's no sample.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Let's check the condition and setup the output formats after reading
+data so that it can find evsels.
+
+Before:
+
+  $ ./perf record -o- true | ./perf report -i- --hierarchy -q
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.000 MB - ]
+  Error:
+  The - data has no samples!
+
+After:
+
+  $ ./perf record -o- true | ./perf report -i- --hierarchy -q
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.000 MB - ]
+      94.76%        true
+         94.76%        [kernel.kallsyms]
+            94.76%        [k] filemap_fault
+       5.24%        perf-ex
+          5.24%        [kernel.kallsyms]
+             5.06%        [k] __memset
+             0.18%        [k] native_write_msr
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/threads.c | 146 ++++++++++++--------------------------
- tools/perf/util/threads.h |   6 +-
- 2 files changed, 47 insertions(+), 105 deletions(-)
+ tools/perf/builtin-report.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
-index d984ec939c7b..55923be53180 100644
---- a/tools/perf/util/threads.c
-+++ b/tools/perf/util/threads.c
-@@ -3,25 +3,30 @@
- #include "machine.h"
- #include "thread.h"
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index dcedfe00f04d..ca8f2331795c 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -691,10 +691,25 @@ static int report__browse_hists(struct report *rep)
  
--struct thread_rb_node {
--	struct rb_node rb_node;
--	struct thread *thread;
--};
--
- static struct threads_table_entry *threads__table(struct threads *threads, pid_t tid)
+ static int report__collapse_hists(struct report *rep)
  {
- 	/* Cast it to handle tid == -1 */
- 	return &threads->table[(unsigned int)tid % THREADS__TABLE_SIZE];
- }
++	struct perf_session *session = rep->session;
++	struct evlist *evlist = session->evlist;
+ 	struct ui_progress prog;
+ 	struct evsel *pos;
+ 	int ret = 0;
  
-+static size_t key_hash(long key, void *ctx __maybe_unused)
-+{
-+	/* The table lookup removes low bit entropy, but this is just ignored here. */
-+	return key;
-+}
-+
-+static bool key_equal(long key1, long key2, void *ctx __maybe_unused)
-+{
-+	return key1 == key2;
-+}
-+
- void threads__init(struct threads *threads)
- {
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
- 
--		table->entries = RB_ROOT_CACHED;
-+		hashmap__init(&table->shard, key_hash, key_equal, NULL);
- 		init_rwsem(&table->lock);
--		table->nr = 0;
- 		table->last_match = NULL;
- 	}
- }
-@@ -32,6 +37,7 @@ void threads__exit(struct threads *threads)
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
- 
-+		hashmap__clear(&table->shard);
- 		exit_rwsem(&table->lock);
- 	}
- }
-@@ -44,7 +50,7 @@ size_t threads__nr(struct threads *threads)
- 		struct threads_table_entry *table = &threads->table[i];
- 
- 		down_read(&table->lock);
--		nr += table->nr;
-+		nr += hashmap__size(&table->shard);
- 		up_read(&table->lock);
- 	}
- 	return nr;
-@@ -86,28 +92,13 @@ static void threads_table_entry__set_last_match(struct threads_table_entry *tabl
- struct thread *threads__find(struct threads *threads, pid_t tid)
- {
- 	struct threads_table_entry *table  = threads__table(threads, tid);
--	struct rb_node **p;
--	struct thread *res = NULL;
-+	struct thread *res;
- 
- 	down_read(&table->lock);
- 	res = __threads_table_entry__get_last_match(table, tid);
--	if (res)
--		return res;
--
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct rb_node *parent = *p;
--		struct thread *th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
--
--		if (thread__tid(th) == tid) {
--			res = thread__get(th);
--			break;
--		}
--
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else
--			p = &(*p)->rb_right;
-+	if (!res) {
-+		if (hashmap__find(&table->shard, tid, &res))
-+			res = thread__get(res);
- 	}
- 	up_read(&table->lock);
- 	if (res)
-@@ -118,49 +109,25 @@ struct thread *threads__find(struct threads *threads, pid_t tid)
- struct thread *threads__findnew(struct threads *threads, pid_t pid, pid_t tid, bool *created)
- {
- 	struct threads_table_entry *table  = threads__table(threads, tid);
--	struct rb_node **p;
--	struct rb_node *parent = NULL;
- 	struct thread *res = NULL;
--	struct thread_rb_node *nd;
--	bool leftmost = true;
- 
- 	*created = false;
- 	down_write(&table->lock);
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct thread *th;
--
--		parent = *p;
--		th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
--
--		if (thread__tid(th) == tid) {
--			__threads_table_entry__set_last_match(table, th);
--			res = thread__get(th);
--			goto out_unlock;
--		}
--
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else {
--			leftmost = false;
--			p = &(*p)->rb_right;
--		}
--	}
--	nd = malloc(sizeof(*nd));
--	if (nd == NULL)
--		goto out_unlock;
- 	res = thread__new(pid, tid);
--	if (!res)
--		free(nd);
--	else {
--		*created = true;
--		nd->thread = thread__get(res);
--		rb_link_node(&nd->rb_node, parent, p);
--		rb_insert_color_cached(&nd->rb_node, &table->entries, leftmost);
--		++table->nr;
--		__threads_table_entry__set_last_match(table, res);
-+	if (res) {
-+		if (hashmap__add(&table->shard, tid, res)) {
-+			/* Add failed. Assume a race so find other entry. */
-+			thread__put(res);
-+			res = NULL;
-+			if (hashmap__find(&table->shard, tid, &res))
-+				res = thread__get(res);
-+		} else {
-+			res = thread__get(res);
-+			*created = true;
++	/*
++	 * The pipe data needs to setup hierarchy hpp formats now, because it
++	 * cannot know about evsels in the data before reading the data.  The
++	 * normal file data saves the event (attribute) info in the header
++	 * section, but pipe does not have the luxury.
++	 */
++	if (perf_data__is_pipe(session->data)) {
++		if (perf_hpp__setup_hists_formats(&perf_hpp_list, evlist) < 0) {
++			ui__error("Failed to setup hierachy output formats\n");
++			return -1;
 +		}
-+		if (res)
-+			__threads_table_entry__set_last_match(table, res);
- 	}
--out_unlock:
- 	up_write(&table->lock);
- 	return res;
- }
-@@ -169,57 +136,32 @@ void threads__remove_all_threads(struct threads *threads)
- {
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
--		struct rb_node *nd;
-+		struct hashmap_entry *cur, *tmp;
-+		size_t bkt;
++	}
++
+ 	ui_progress__init(&prog, rep->nr_entries, "Merging related events...");
  
- 		down_write(&table->lock);
- 		__threads_table_entry__set_last_match(table, NULL);
--		nd = rb_first_cached(&table->entries);
--		while (nd) {
--			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
--
--			nd = rb_next(nd);
--			thread__put(trb->thread);
--			rb_erase_cached(&trb->rb_node, &table->entries);
--			RB_CLEAR_NODE(&trb->rb_node);
--			--table->nr;
-+		hashmap__for_each_entry_safe((&table->shard), cur, tmp, bkt) {
-+			struct thread *old_value;
- 
--			free(trb);
-+			hashmap__delete(&table->shard, cur->key, /*old_key=*/NULL, &old_value);
-+			thread__put(old_value);
- 		}
--		assert(table->nr == 0);
- 		up_write(&table->lock);
- 	}
- }
- 
- void threads__remove(struct threads *threads, struct thread *thread)
- {
--	struct rb_node **p;
- 	struct threads_table_entry *table  = threads__table(threads, thread__tid(thread));
--	pid_t tid = thread__tid(thread);
-+	struct thread *old_value;
- 
- 	down_write(&table->lock);
- 	if (table->last_match && RC_CHK_EQUAL(table->last_match, thread))
- 		__threads_table_entry__set_last_match(table, NULL);
- 
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct rb_node *parent = *p;
--		struct thread_rb_node *nd = rb_entry(parent, struct thread_rb_node, rb_node);
--		struct thread *th = nd->thread;
--
--		if (RC_CHK_EQUAL(th, thread)) {
--			thread__put(nd->thread);
--			rb_erase_cached(&nd->rb_node, &table->entries);
--			RB_CLEAR_NODE(&nd->rb_node);
--			--table->nr;
--			free(nd);
--			break;
--		}
--
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else
--			p = &(*p)->rb_right;
--	}
-+	hashmap__delete(&table->shard, thread__tid(thread), /*old_key=*/NULL, &old_value);
-+	thread__put(old_value);
- 	up_write(&table->lock);
- }
- 
-@@ -229,11 +171,11 @@ int threads__for_each_thread(struct threads *threads,
- {
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
--		struct rb_node *nd;
-+		struct hashmap_entry *cur;
-+		size_t bkt;
- 
--		for (nd = rb_first_cached(&table->entries); nd; nd = rb_next(nd)) {
--			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
--			int rc = fn(trb->thread, data);
-+		hashmap__for_each_entry((&table->shard), cur, bkt) {
-+			int rc = fn((struct thread *)cur->pvalue, data);
- 
- 			if (rc != 0)
- 				return rc;
-diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
-index ed67de627578..d03bd91a7769 100644
---- a/tools/perf/util/threads.h
-+++ b/tools/perf/util/threads.h
-@@ -2,7 +2,7 @@
- #ifndef __PERF_THREADS_H
- #define __PERF_THREADS_H
- 
--#include <linux/rbtree.h>
-+#include "hashmap.h"
- #include "rwsem.h"
- 
- struct thread;
-@@ -11,9 +11,9 @@ struct thread;
- #define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
- 
- struct threads_table_entry {
--	struct rb_root_cached  entries;
-+	/* Key is tid, value is struct thread. */
-+	struct hashmap	       shard;
- 	struct rw_semaphore    lock;
--	unsigned int	       nr;
- 	struct thread	       *last_match;
- };
- 
+ 	evlist__for_each_entry(rep->session->evlist, pos) {
 -- 
 2.42.0.758.gaed0368e0e-goog
 
