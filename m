@@ -1,145 +1,232 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0221D5253
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 03:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ElsKR7XA"
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19ED90
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 20:42:58 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-507a085efa7so1573e87.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 20:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698205377; x=1698810177; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dXAzKvkf49LfpHocgTsA1yczF93G8HBB7kCYq64Or4M=;
-        b=ElsKR7XA3nVm9Ly+MeOdLL+ijvu82n+x1Dfjth4BBMTB4zAB2wFI56Z/wodh5tSqJp
-         2djBEn0I7NKaS054dssYhV074q12LVChvo0rgn0KcQuFIIbA82m+4SWNDTJUC8r7Fah8
-         8VFTkoEyuP7Y+NPCUA9h3Z8FPDFpmOzAzRm+pOEvVvWzwV0z19Pq/RnrkUbJ5+/n7yga
-         L1uF94iX0XoY7mAfHsKbjcBPfU8n44R8OsYDzS/6xzYYNCswLkR9FPR2xCdTQJwtabHr
-         C35DwW11C1Oab8xUvAQWdBYFMLXLJHh33HKObcr6RS6GBxn4yYD15moVmgvIjgcUMRvE
-         baDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698205377; x=1698810177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dXAzKvkf49LfpHocgTsA1yczF93G8HBB7kCYq64Or4M=;
-        b=YU9YuSxYkBL0ul5b74AZ7V2TvhB0WtzW+9oVh5XFCB2DWxvtwKJWVAVFK/63X38/te
-         XOI0T3WwcGpkCXNV6ApIEmywoXTQAIg155MN/0eMfoIdj69/giHLHvB+Gw0O7R7llu2Y
-         EP2u2n2fwCm1zuDcvTOd9C0GrVpH2AAvVpG3iYJZba/ro1nSuplLvqQ0O3OmYIwt1dL8
-         aRkz/X/ZnGPNBwfgausKn7jmqE9iyuZReVWqFalkriudE0qsYs6o8/Md0JCWMjc1WzWX
-         yZtpHJ5cv7z42k3xhr/p/Urqz3SRzt1Q2Quu6bCNc9YLDsCpnZ7HcbGXzY4HGTbDPr7A
-         4JRA==
-X-Gm-Message-State: AOJu0YylBo8uvuIitBCozzqcND6uOmKgtHBrepeIatG2BElXJxbSpCKE
-	M/k+LxAcVCq8LcrKmUx4bRV6AXrnbcmww6b6ODJSWw==
-X-Google-Smtp-Source: AGHT+IEFMNrtwoxhkIe+lYAjwXLdHAlBdDt6Lt6R23HObFxvKkIQyZ0SLUIDTj7EuektCSsnZ6B3IWNAv2gbzu9fHR0=
-X-Received: by 2002:a05:6512:3582:b0:502:932e:2e36 with SMTP id
- m2-20020a056512358200b00502932e2e36mr25286lfr.2.1698205376825; Tue, 24 Oct
- 2023 20:42:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA3E5253
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 03:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE0E90;
+	Tue, 24 Oct 2023 20:44:24 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.56])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4SFZV10fbkzrSB5;
+	Wed, 25 Oct 2023 11:41:29 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Wed, 25 Oct 2023 11:44:20 +0800
+Subject: Re: [PATCH v3 20/50] perf record: Be lazier in allocating lost
+ samples buffer
+To: Ian Rogers <irogers@google.com>
+References: <20231024222353.3024098-1-irogers@google.com>
+ <20231024222353.3024098-21-irogers@google.com>
+From: Yang Jihong <yangjihong1@huawei.com>
+CC: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Nick
+ Terrell <terrelln@fb.com>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen
+	<ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, Song Liu
+	<song@kernel.org>, Sandipan Das <sandipan.das@amd.com>, James Clark
+	<james.clark@arm.com>, Anshuman Khandual <anshuman.khandual@arm.com>, Miguel
+ Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, Athira
+ Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, K
+ Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson
+	<seanjc@google.com>, Yanteng Si <siyanteng@loongson.cn>, Ravi Bangoria
+	<ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, Changbin Du
+	<changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, liuwenyu <liuwenyu7@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+Message-ID: <7516348d-fe6d-9768-049e-328cfcda89ee@huawei.com>
+Date: Wed, 25 Oct 2023 11:44:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231025003121.2811738-1-namhyung@kernel.org>
-In-Reply-To: <20231025003121.2811738-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Oct 2023 20:42:45 -0700
-Message-ID: <CAP-5=fWnD_Ov+rf6sUxrSqu3MSy_TW+xFdD8gXOkz7nn=fUHkg@mail.gmail.com>
-Subject: Re: [PATCH] perf report: Fix hierarchy mode on pipe input
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231024222353.3024098-21-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
 
-On Tue, Oct 24, 2023 at 5:31=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> The hierarchy mode needs to setup output formats for each evsel.
-> Normally setup_sorting() handles this at the beginning, but it cannot
-> do that if data comes from a pipe since there's no evsel info before
-> reading the data.  And then perf report cannot process the samples
-> in hierarchy mode and think as if there's no sample.
->
-> Let's check the condition and setup the output formats after reading
-> data so that it can find evsels.
->
-> Before:
->
->   $ ./perf record -o- true | ./perf report -i- --hierarchy -q
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.000 MB - ]
->   Error:
->   The - data has no samples!
->
-> After:
->
->   $ ./perf record -o- true | ./perf report -i- --hierarchy -q
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.000 MB - ]
->       94.76%        true
->          94.76%        [kernel.kallsyms]
->             94.76%        [k] filemap_fault
->        5.24%        perf-ex
->           5.24%        [kernel.kallsyms]
->              5.06%        [k] __memset
->              0.18%        [k] native_write_msr
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Hello,
 
-Acked-by: Ian Rogers <irogers@google.com>
+On 2023/10/25 6:23, Ian Rogers wrote:
+> Wait until a lost sample occurs to allocate the lost samples buffer,
+> often the buffer isn't necessary. This saves a 64kb allocation and
+> 5.3kb of peak memory consumption.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>   tools/perf/builtin-record.c | 29 +++++++++++++++++++----------
+>   1 file changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 9b4f3805ca92..b6c8c1371b39 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1924,21 +1924,13 @@ static void __record__save_lost_samples(struct record *rec, struct evsel *evsel,
+>   static void record__read_lost_samples(struct record *rec)
+>   {
+>   	struct perf_session *session = rec->session;
+> -	struct perf_record_lost_samples *lost;
+> +	struct perf_record_lost_samples *lost = NULL;
+>   	struct evsel *evsel;
+>   
+>   	/* there was an error during record__open */
+>   	if (session->evlist == NULL)
+>   		return;
+>   
+> -	lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+> -	if (lost == NULL) {
+> -		pr_debug("Memory allocation failed\n");
+> -		return;
+> -	}
+> -
+> -	lost->header.type = PERF_RECORD_LOST_SAMPLES;
+> -
+>   	evlist__for_each_entry(session->evlist, evsel) {
+>   		struct xyarray *xy = evsel->core.sample_id;
+>   		u64 lost_count;
+> @@ -1961,6 +1953,14 @@ static void record__read_lost_samples(struct record *rec)
+>   				}
+>   
+>   				if (count.lost) {
+> +					if (!lost) {
+> +						lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+> +						if (!lost) {
+> +							pr_debug("Memory allocation failed\n");
+> +							return;
+> +						}
+> +						lost->header.type = PERF_RECORD_LOST_SAMPLES;
+> +					}
+>   					__record__save_lost_samples(rec, evsel, lost,
+>   								    x, y, count.lost, 0);
+>   				}
+> @@ -1968,9 +1968,18 @@ static void record__read_lost_samples(struct record *rec)
+>   		}
+>   
+>   		lost_count = perf_bpf_filter__lost_count(evsel);
+> -		if (lost_count)
+> +		if (lost_count) {
+> +			if (!lost) {
+> +				lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+> +				if (!lost) {
+> +					pr_debug("Memory allocation failed\n");
+> +					return;
+> +				}
+> +				lost->header.type = PERF_RECORD_LOST_SAMPLES;
+> +			}
+>   			__record__save_lost_samples(rec, evsel, lost, 0, 0, lost_count,
+>   						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
+> +		}
+>   	}
+
+Can zalloc for `lost` be moved to __record__save_lost_samples?
+This simplifies the code.
+
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index dcf288a4fb9a..8d2eb746031a 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1888,14 +1888,25 @@ record__switch_output(struct record *rec, bool 
+at_exit)
+  }
+
+  static void __record__save_lost_samples(struct record *rec, struct 
+evsel *evsel,
+-                                       struct perf_record_lost_samples 
+*lost,
++                                       struct perf_record_lost_samples 
+**plost,
+                                         int cpu_idx, int thread_idx, 
+u64 lost_count,
+                                         u16 misc_flag)
+  {
+         struct perf_sample_id *sid;
+         struct perf_sample sample = {};
++       struct perf_record_lost_samples *lost = *plost;
+         int id_hdr_size;
+
++       if (!lost) {
++               lost = zalloc(PERF_SAMPLE_MAX_SIZE);
++               if (!lost) {
++                       pr_debug("Memory allocation failed\n");
++                       return;
++               }
++               lost->header.type = PERF_RECORD_LOST_SAMPLES;
++               *plost = lost;
++       }
++
+         lost->lost = lost_count;
+         if (evsel->core.ids) {
+                 sid = xyarray__entry(evsel->core.sample_id, cpu_idx, 
+thread_idx);
+@@ -1912,21 +1923,13 @@ static void __record__save_lost_samples(struct 
+record *rec, struct evsel *evsel,
+  static void record__read_lost_samples(struct record *rec)
+  {
+         struct perf_session *session = rec->session;
+-       struct perf_record_lost_samples *lost;
++       struct perf_record_lost_samples *lost = NULL;
+         struct evsel *evsel;
+
+         /* there was an error during record__open */
+         if (session->evlist == NULL)
+                 return;
+
+-       lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+-       if (lost == NULL) {
+-               pr_debug("Memory allocation failed\n");
+-               return;
+-       }
+-
+-       lost->header.type = PERF_RECORD_LOST_SAMPLES;
+-
+         evlist__for_each_entry(session->evlist, evsel) {
+                 struct xyarray *xy = evsel->core.sample_id;
+                 u64 lost_count;
+@@ -1949,7 +1952,7 @@ static void record__read_lost_samples(struct 
+record *rec)
+                                 }
+
+                                 if (count.lost) {
+-                                       __record__save_lost_samples(rec, 
+evsel, lost,
++                                       __record__save_lost_samples(rec, 
+evsel, &lost,
+                                                                     x, 
+y, count.lost, 0);
+                                 }
+                         }
+@@ -1957,11 +1960,12 @@ static void record__read_lost_samples(struct 
+record *rec)
+
+                 lost_count = perf_bpf_filter__lost_count(evsel);
+                 if (lost_count)
+-                       __record__save_lost_samples(rec, evsel, lost, 0, 
+0, lost_count,
++                       __record__save_lost_samples(rec, evsel, &lost, 
+0, 0, lost_count,
+ 
+PERF_RECORD_MISC_LOST_SAMPLES_BPF);
+         }
+  out:
+-       free(lost);
++       if (lost)
++               free(lost);
+  }
+
+  static volatile sig_atomic_t workload_exec_errno;
+
 
 Thanks,
-Ian
-
-> ---
->  tools/perf/builtin-report.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index dcedfe00f04d..ca8f2331795c 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -691,10 +691,25 @@ static int report__browse_hists(struct report *rep)
->
->  static int report__collapse_hists(struct report *rep)
->  {
-> +       struct perf_session *session =3D rep->session;
-> +       struct evlist *evlist =3D session->evlist;
->         struct ui_progress prog;
->         struct evsel *pos;
->         int ret =3D 0;
->
-> +       /*
-> +        * The pipe data needs to setup hierarchy hpp formats now, becaus=
-e it
-> +        * cannot know about evsels in the data before reading the data. =
- The
-> +        * normal file data saves the event (attribute) info in the heade=
-r
-> +        * section, but pipe does not have the luxury.
-> +        */
-> +       if (perf_data__is_pipe(session->data)) {
-> +               if (perf_hpp__setup_hists_formats(&perf_hpp_list, evlist)=
- < 0) {
-> +                       ui__error("Failed to setup hierachy output format=
-s\n");
-> +                       return -1;
-> +               }
-> +       }
-> +
->         ui_progress__init(&prog, rep->nr_entries, "Merging related events=
-...");
->
->         evlist__for_each_entry(rep->session->evlist, pos) {
-> --
-> 2.42.0.758.gaed0368e0e-goog
->
+Yang
