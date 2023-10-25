@@ -1,143 +1,145 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408EE1FD9
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 03:28:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0221D5253
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 03:43:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tp7T40oX"
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D191DA2
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 20:28:19 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-507a085efa7so1552e87.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 20:28:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ElsKR7XA"
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19ED90
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 20:42:58 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-507a085efa7so1573e87.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Oct 2023 20:42:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698204498; x=1698809298; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698205377; x=1698810177; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DCko5+DNPl5YusM8wx4UX9bq30OCtxNf7RBElMFnTtk=;
-        b=tp7T40oX3P32yX/sFih4mfvleS95R8xZRAHgZmNzczX5OJjfMuoi/LMvnmPesHBtF+
-         cISc96OazgIHlI0JwxArK3e7sySsaOCNGdhXS1jFbJct8D6pUKYCkfjeSQPSY5Xq7sJq
-         nrBsW+JeLCn69GTrFf6ZzClZ+bMEiOsMG5oVfixGOl/3EofmNK+Di5cSrXg6sB8HV56m
-         EjthGNUntYYLJkaCrQ1YSpUm5lE/iXfIXQIt5/18uSsn2SfNvMkX0xN9aMtGUPQo5tuQ
-         UF9YezhT/c5v3PbP8nJSG6gKS2tbvA0K/2MeWi1aWPpRD0TWmh8Fd0T37GoJSXCHHyRp
-         opnw==
+        bh=dXAzKvkf49LfpHocgTsA1yczF93G8HBB7kCYq64Or4M=;
+        b=ElsKR7XA3nVm9Ly+MeOdLL+ijvu82n+x1Dfjth4BBMTB4zAB2wFI56Z/wodh5tSqJp
+         2djBEn0I7NKaS054dssYhV074q12LVChvo0rgn0KcQuFIIbA82m+4SWNDTJUC8r7Fah8
+         8VFTkoEyuP7Y+NPCUA9h3Z8FPDFpmOzAzRm+pOEvVvWzwV0z19Pq/RnrkUbJ5+/n7yga
+         L1uF94iX0XoY7mAfHsKbjcBPfU8n44R8OsYDzS/6xzYYNCswLkR9FPR2xCdTQJwtabHr
+         C35DwW11C1Oab8xUvAQWdBYFMLXLJHh33HKObcr6RS6GBxn4yYD15moVmgvIjgcUMRvE
+         baDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698204498; x=1698809298;
+        d=1e100.net; s=20230601; t=1698205377; x=1698810177;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DCko5+DNPl5YusM8wx4UX9bq30OCtxNf7RBElMFnTtk=;
-        b=OkLkSfH3d2uihh1X08fZ1CF6G2Vgcqj2TLKl2PpCSXhcDczdoRpStkQDA4FK6KDaB1
-         bigZsQlisEfPLWy9HkJmbirxp1/dGM72UltCncoQMQVJelT73OEofN+i5YBG5jfPX+6+
-         7Etzw17zFNpQqqIUTXttQjC5aho32cIPnvQ5S2pWSTniEeOKPfm8L8nZR64R0NwMeegK
-         00opA+MfoR7unGTVnPSdSs2Nm2Z9+oVbTFIKBWuq9gUwpElGtGUdv2ikHC8fYu9WR809
-         JHy57JR5Gqrs3F+JqN+SqgJzb+RGb98VhTzFsqfsL7qUyjfs2Aq+LTXVSKIq7jM8NfkH
-         3dgA==
-X-Gm-Message-State: AOJu0YzLANEpTz8jUur1vtR7W0JrYF9DO0V70IwwdlhgfyDiW/owLurY
-	ZTmVfOzhyTQjVc9/Bm7OeItW/RgG5Zx6mRf/rMVKAA==
-X-Google-Smtp-Source: AGHT+IFeLTh1yjfRikYLn5I7KOGB3atpEKVmC+SBw+D4qBEkHs0UKGbkCiL0qX0EM3uoMQFwAG3J59s+zr3L50i6xPs=
+        bh=dXAzKvkf49LfpHocgTsA1yczF93G8HBB7kCYq64Or4M=;
+        b=YU9YuSxYkBL0ul5b74AZ7V2TvhB0WtzW+9oVh5XFCB2DWxvtwKJWVAVFK/63X38/te
+         XOI0T3WwcGpkCXNV6ApIEmywoXTQAIg155MN/0eMfoIdj69/giHLHvB+Gw0O7R7llu2Y
+         EP2u2n2fwCm1zuDcvTOd9C0GrVpH2AAvVpG3iYJZba/ro1nSuplLvqQ0O3OmYIwt1dL8
+         aRkz/X/ZnGPNBwfgausKn7jmqE9iyuZReVWqFalkriudE0qsYs6o8/Md0JCWMjc1WzWX
+         yZtpHJ5cv7z42k3xhr/p/Urqz3SRzt1Q2Quu6bCNc9YLDsCpnZ7HcbGXzY4HGTbDPr7A
+         4JRA==
+X-Gm-Message-State: AOJu0YylBo8uvuIitBCozzqcND6uOmKgtHBrepeIatG2BElXJxbSpCKE
+	M/k+LxAcVCq8LcrKmUx4bRV6AXrnbcmww6b6ODJSWw==
+X-Google-Smtp-Source: AGHT+IEFMNrtwoxhkIe+lYAjwXLdHAlBdDt6Lt6R23HObFxvKkIQyZ0SLUIDTj7EuektCSsnZ6B3IWNAv2gbzu9fHR0=
 X-Received: by 2002:a05:6512:3582:b0:502:932e:2e36 with SMTP id
- m2-20020a056512358200b00502932e2e36mr25055lfr.2.1698204497691; Tue, 24 Oct
- 2023 20:28:17 -0700 (PDT)
+ m2-20020a056512358200b00502932e2e36mr25286lfr.2.1698205376825; Tue, 24 Oct
+ 2023 20:42:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231024222353.3024098-1-irogers@google.com> <20231024222353.3024098-14-irogers@google.com>
- <4d275fcd-a102-662f-d9f7-3acd3586acf2@huawei.com>
-In-Reply-To: <4d275fcd-a102-662f-d9f7-3acd3586acf2@huawei.com>
+References: <20231025003121.2811738-1-namhyung@kernel.org>
+In-Reply-To: <20231025003121.2811738-1-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Oct 2023 20:28:05 -0700
-Message-ID: <CAP-5=fXej_aBnvtdYJvKFMVKtmm+xXSCxOR-pNkTfr_qHmjWLA@mail.gmail.com>
-Subject: Re: [PATCH v3 13/50] libperf: Lazily allocate mmap event copy
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Nick Terrell <terrelln@fb.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, Song Liu <song@kernel.org>, 
-	Sandipan Das <sandipan.das@amd.com>, James Clark <james.clark@arm.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Liam Howlett <liam.howlett@oracle.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Yanteng Si <siyanteng@loongson.cn>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org, 
+Date: Tue, 24 Oct 2023 20:42:45 -0700
+Message-ID: <CAP-5=fWnD_Ov+rf6sUxrSqu3MSy_TW+xFdD8gXOkz7nn=fUHkg@mail.gmail.com>
+Subject: Re: [PATCH] perf report: Fix hierarchy mode on pipe input
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 24, 2023 at 7:39=E2=80=AFPM Yang Jihong <yangjihong1@huawei.com=
-> wrote:
+On Tue, Oct 24, 2023 at 5:31=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Hello,
+> The hierarchy mode needs to setup output formats for each evsel.
+> Normally setup_sorting() handles this at the beginning, but it cannot
+> do that if data comes from a pipe since there's no evsel info before
+> reading the data.  And then perf report cannot process the samples
+> in hierarchy mode and think as if there's no sample.
 >
-> On 2023/10/25 6:23, Ian Rogers wrote:
-> > The event copy in the mmap is used to have storage to a read
-> > event. Not all users of mmaps read the events, such as perf record, so
-> > switch the allocation to being on first read rather than being
-> > embedded within the perf_mmap.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >   tools/lib/perf/include/internal/mmap.h | 2 +-
-> >   tools/lib/perf/mmap.c                  | 9 +++++++++
-> >   2 files changed, 10 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/lib/perf/include/internal/mmap.h b/tools/lib/perf/in=
-clude/internal/mmap.h
-> > index 5a062af8e9d8..b11aaf5ed645 100644
-> > --- a/tools/lib/perf/include/internal/mmap.h
-> > +++ b/tools/lib/perf/include/internal/mmap.h
-> > @@ -33,7 +33,7 @@ struct perf_mmap {
-> >       bool                     overwrite;
-> >       u64                      flush;
-> >       libperf_unmap_cb_t       unmap_cb;
-> > -     char                     event_copy[PERF_SAMPLE_MAX_SIZE] __align=
-ed(8);
-> > +     void                    *event_copy;
-> >       struct perf_mmap        *next;
-> >   };
-> >
-> > diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> > index 2184814b37dd..91ae46aac378 100644
-> > --- a/tools/lib/perf/mmap.c
-> > +++ b/tools/lib/perf/mmap.c
-> > @@ -51,6 +51,8 @@ int perf_mmap__mmap(struct perf_mmap *map, struct per=
-f_mmap_param *mp,
-> >
-> >   void perf_mmap__munmap(struct perf_mmap *map)
-> >   {
-> > +     free(map->event_copy);
-> > +     map->event_copy =3D NULL;
-> >       if (map && map->base !=3D NULL) {
-> >               munmap(map->base, perf_mmap__mmap_len(map));
-> >               map->base =3D NULL;
-> > @@ -226,6 +228,13 @@ static union perf_event *perf_mmap__read(struct pe=
-rf_mmap *map,
-> >                       unsigned int len =3D min(sizeof(*event), size), c=
-py;
-> >                       void *dst =3D map->event_copy;
-> >
-> > +                     if (!dst) {
-> > +                             dst =3D malloc(PERF_SAMPLE_MAX_SIZE);
-> `event` is used as the return parameter of libperf API
-> perf_mmap__read_event().
-> Is `zalloc` better to avoid dirty data?
+> Let's check the condition and setup the output formats after reading
+> data so that it can find evsels.
+>
+> Before:
+>
+>   $ ./perf record -o- true | ./perf report -i- --hierarchy -q
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.000 MB - ]
+>   Error:
+>   The - data has no samples!
+>
+> After:
+>
+>   $ ./perf record -o- true | ./perf report -i- --hierarchy -q
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.000 MB - ]
+>       94.76%        true
+>          94.76%        [kernel.kallsyms]
+>             94.76%        [k] filemap_fault
+>        5.24%        perf-ex
+>           5.24%        [kernel.kallsyms]
+>              5.06%        [k] __memset
+>              0.18%        [k] native_write_msr
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-We could but I'd prefer not to zero unnecessarily. We've had similar
-uninitialized memory being copied to perf.data file problems such as:
-http://lore.kernel.org/lkml/20210309234945.419254-1-irogers@google.com
-With the sanitizers help we can avoid the problem and do less work,
-which I think is best.
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Thanks,
-> Yang
+> ---
+>  tools/perf/builtin-report.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index dcedfe00f04d..ca8f2331795c 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -691,10 +691,25 @@ static int report__browse_hists(struct report *rep)
+>
+>  static int report__collapse_hists(struct report *rep)
+>  {
+> +       struct perf_session *session =3D rep->session;
+> +       struct evlist *evlist =3D session->evlist;
+>         struct ui_progress prog;
+>         struct evsel *pos;
+>         int ret =3D 0;
+>
+> +       /*
+> +        * The pipe data needs to setup hierarchy hpp formats now, becaus=
+e it
+> +        * cannot know about evsels in the data before reading the data. =
+ The
+> +        * normal file data saves the event (attribute) info in the heade=
+r
+> +        * section, but pipe does not have the luxury.
+> +        */
+> +       if (perf_data__is_pipe(session->data)) {
+> +               if (perf_hpp__setup_hists_formats(&perf_hpp_list, evlist)=
+ < 0) {
+> +                       ui__error("Failed to setup hierachy output format=
+s\n");
+> +                       return -1;
+> +               }
+> +       }
+> +
+>         ui_progress__init(&prog, rep->nr_entries, "Merging related events=
+...");
+>
+>         evlist__for_each_entry(rep->session->evlist, pos) {
+> --
+> 2.42.0.758.gaed0368e0e-goog
+>
