@@ -1,127 +1,146 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD7F11732;
-	Wed, 25 Oct 2023 05:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFCB1F616
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 09:02:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CEB7AC;
-	Tue, 24 Oct 2023 22:58:17 -0700 (PDT)
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-27d3c886671so4634592a91.3;
-        Tue, 24 Oct 2023 22:58:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698213496; x=1698818296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V05i2ECvWgChxk8nStR6mE0WuTD+NL192RARRKjFwM4=;
-        b=KdKhdXrJbHwks4dDUY5wugqHfzHx2H2YrHU5uE132pdi8CdmzT8dqlXklw/jdwbkI1
-         bwhP9Vyaic8cFgJghFxDCrSz+lEYgXwHtXeKVDz9HDQ1+rGTwHVaM3OpqQSrpQCPmB72
-         O95BiQyRmns8yxrVSGXbsz3skrx65ZqvZs5EZ3SRI08s1OO6q7Awhc7NkV/4QGa+IDWy
-         sZ0XdaWSIDSr1PxEw6jMM88L0bLStscDFDJNY24KYQ8Vic8z4/tJ40mSEK62SNl4qB+Y
-         v9nhQFkFPP52a3XL4dVKRuZQyyg8Sw86wpYFymYZ0EqTHhK2lNNSiIPDbUevKSmQ8sC/
-         puHg==
-X-Gm-Message-State: AOJu0YwAijsFzLkYRbTwFILNVE2F780e15PyxkA/ocSfA3UHdIweBuW9
-	UYS7uYzx9QOuUNe6PiUZe9Btt9SDlYUtJbqS3vo=
-X-Google-Smtp-Source: AGHT+IG+vHgzKghvsoVyNwhQEBIST83HNK3dp1eKEgC/ffGx+TKBO/S/DFDh2BcIfu5GbvxcbPLsGTgjzwQGyyDK7Gc=
-X-Received: by 2002:a17:90a:4b0f:b0:27d:ed83:fdff with SMTP id
- g15-20020a17090a4b0f00b0027ded83fdffmr478973pjh.16.1698213496543; Tue, 24 Oct
- 2023 22:58:16 -0700 (PDT)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F3A8136;
+	Wed, 25 Oct 2023 02:02:42 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4166F2F4;
+	Wed, 25 Oct 2023 02:03:23 -0700 (PDT)
+Received: from [10.57.1.178] (unknown [10.57.1.178])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FD503F738;
+	Wed, 25 Oct 2023 02:02:39 -0700 (PDT)
+Message-ID: <f25acdcb-269e-fae5-fbbc-54e8d6d05b23@arm.com>
+Date: Wed, 25 Oct 2023 10:02:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231012035111.676789-1-namhyung@kernel.org> <20231012091128.GL6307@noisy.programming.kicks-ass.net>
- <CAM9d7cgcFCidNamZm+O-89N-Jf4EYF263f1GbxYf0xEbkwwE6Q@mail.gmail.com> <CADzB+2mu98v9EUsA1Y-wVDSrXT2kznKi87Tb6QdN5y4mMFNsyg@mail.gmail.com>
-In-Reply-To: <CADzB+2mu98v9EUsA1Y-wVDSrXT2kznKi87Tb6QdN5y4mMFNsyg@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 24 Oct 2023 22:58:05 -0700
-Message-ID: <CAM9d7ciTKe4O-23j10wC8DUbX_cmNewbLwZq99kMh_1ZA+5e0w@mail.gmail.com>
-Subject: Re: [RFC 00/48] perf tools: Introduce data type profiling (v1)
-To: Jason Merrill <jason@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org, Ben Woodard <woodard@redhat.com>, 
-	Joe Mario <jmario@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 3/5] KVM: selftests: Generate sysreg-defs.h and add to
+ include path
+Content-Language: en-US
+To: Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org
+Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ Jing Zhang <jingzhangos@google.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, James Morse
+ <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>
+References: <20231011195740.3349631-1-oliver.upton@linux.dev>
+ <20231011195740.3349631-4-oliver.upton@linux.dev>
+From: Aishwarya TCV <aishwarya.tcv@arm.com>
+In-Reply-To: <20231011195740.3349631-4-oliver.upton@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
 
-On Tue, Oct 24, 2023 at 8:07=E2=80=AFPM Jason Merrill <jason@redhat.com> wr=
-ote:
->
-> On Thu, Oct 12, 2023 at 12:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
->>
->> On Thu, Oct 12, 2023 at 2:13=E2=80=AFAM Peter Zijlstra <peterz@infradead=
-.org> wrote:
->>
->> > > This can generate instructions like below.
->> > >
->> > >     ...
->> > >     0x123456:  mov    0x18(%rdi), %rcx
->> > >     0x12345a:  mov    0x10(%rcx), %rax     <=3D=3D=3D sample
->> > >     0x12345e:  test   %rax, %rax
->> > >     0x123461:  je     <...>
->> > >     ...
->> > >
->> > > And imagine we have a sample at 0x12345a.  Then it cannot find a
->> > > variable for %rcx since DWARF didn't generate one (it only knows abo=
-ut
->> > > 'bar').  Without compiler support, all it can do is to track the cod=
-e
->> > > execution in each instruction and propagate the type info in each
->> > > register and stack location by following the memory access.
->> >
->> > Right, this has more or less been the 'excuse' for why doing this has
->> > been 'difficult' for the past 10+ years :/
->>
->> I'm sure I missed some cases, but I managed to make it work on
->> usual cases.  We can improve it by handling it more cases and
->> instructions but it'd be great if we have a better support from the
->> toolchains.
->
->
-> How helpful would it be for the compiler to generate an unnamed DW_TAG_va=
-riable for the temporary in %rcx?
 
-That'd be fantastic, and that's exactly what I'm asking. :)
+On 11/10/2023 20:57, Oliver Upton wrote:
+> Start generating sysreg-defs.h for arm64 builds in anticipation of
+> updating sysreg.h to a version that depends on it.
+> 
+> Reviewed-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+> ---
+>  tools/testing/selftests/kvm/Makefile | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+> 
 
->
->>
->> > > Actually I found a discussion in the DWARF mailing list to support
->> > > "inverted location lists" and it seems a perfect fit for this projec=
-t.
->> > > It'd be great if new DWARF would provide a way to lookup variable an=
-d
->> > > type info using a concrete location info (like a register number).
->> > >
->> > >   https://lists.dwarfstd.org/pipermail/dwarf-discuss/2023-June/00227=
-8.html
->> >
->> > Stephane was going to talk to tools people about this over 10 years ag=
-o
->> > :-)
->>
->> Hope that they would make some progress.
->
->
-> This seems expensive in debug info size for a lookup optimization; better=
- IMO to construct the reverse lookup table from the existing information, a=
-s it sounds like you are doing.  Though it would be good to cache that tabl=
-e between runs, and ideally share it with other interested tools.
+Hi Oliver,
 
-Probably.  Then it still needs a standard way to express such data.
-Maybe we can have an option to generate the table.
+
+Currently when building kselftest against next-master with arm64 arch
+and defconfig+kselftest-kvm  “make[4]: *** [Makefile:26: prepare] Error
+2” is observed.
+
+The bisect log is below and a full log from a failing test job can be
+seen here:
+
+https://storage.kernelci.org/next/master/next-20231023/arm64/defconfig/gcc-10/logs/kselftest.log
+
+make[4]: Entering directory '/tmp/kci/linux/tools/testing/selftests/kvm'
+Makefile:270: warning: overriding recipe for target
+'/tmp/kci/linux/build/kselftest/kvm/get-reg-list'
+Makefile:265: warning: ignoring old recipe for target
+'/tmp/kci/linux/build/kselftest/kvm/get-reg-list'
+make -C ../../../../tools/arch/arm64/tools/
+make[5]: Entering directory '/tmp/kci/linux/tools/arch/arm64/tools'
+Makefile:10: ../tools/scripts/Makefile.include: No such file or directory
+make[5]: *** No rule to make target '../tools/scripts/Makefile.include'.
+ Stop.
+make[5]: Leaving directory '/tmp/kci/linux/tools/arch/arm64/tools'
+make[4]: *** [Makefile:26: prepare] Error 2
+make[4]: Leaving directory '/tmp/kci/linux/tools/testing/selftests/kvm'
+
+git bisect log
+git bisect start
+# good: [58720809f52779dc0f08e53e54b014209d13eebb] Linux 6.6-rc6
+git bisect good 58720809f52779dc0f08e53e54b014209d13eebb
+# bad: [4230ea146b1e64628f11e44290bb4008e391bc24] Add linux-next
+specific files for 20231019
+git bisect bad 4230ea146b1e64628f11e44290bb4008e391bc24
+# good: [2958944f7786b88cb86f7b3377c1a8bda75fd506] Merge branch
+'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
+git bisect good 2958944f7786b88cb86f7b3377c1a8bda75fd506
+# good: [359cb2003c0c273b13ec11b3df076ceac95e5eda] Merge branch
+'for-next' of
+https://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git
+git bisect good 359cb2003c0c273b13ec11b3df076ceac95e5eda
+# bad: [53cc85767a1dba86b892f72f18e44138ec5e3f83] Merge branch
+'for-next' of
+git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
+git bisect bad 53cc85767a1dba86b892f72f18e44138ec5e3f83
+# good: [84ceabd4408bd0bae48b58e2c18ddc5263cd5be4] Merge branch
+'next-integrity' of
+git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity
+git bisect good 84ceabd4408bd0bae48b58e2c18ddc5263cd5be4
+# good: [35c2f21c0d4a633305773355e86b41e28d835f67] Merge branch 'master'
+of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+git bisect good 35c2f21c0d4a633305773355e86b41e28d835f67
+# bad: [92a288da516dc7aaab6e92ba3de7d51c415227b1] Merge branch
+'topic/ppc-kvm' of
+git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
+git bisect bad 92a288da516dc7aaab6e92ba3de7d51c415227b1
+# good: [5df10099418f139bbf2f4e0d7b9a8727e76274ec] srcu: Explain why
+callbacks invocations can't run concurrently
+git bisect good 5df10099418f139bbf2f4e0d7b9a8727e76274ec
+# good: [2ca9297790bdd24b4baa6e432d393e92272f7dc5] Merge branch
+kvm-arm64/writable-id-regs into kvmarm/next
+git bisect good 2ca9297790bdd24b4baa6e432d393e92272f7dc5
+# good: [7ae3136edc0787c890e07fbd1d16d54557644068] Merge branch
+'rcu/next' of
+git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+git bisect good 7ae3136edc0787c890e07fbd1d16d54557644068
+# bad: [50a1ee6541d7c7bac0a43b773b68f20c3ffcbe67] Merge branch 'next' of
+git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git
+git bisect bad 50a1ee6541d7c7bac0a43b773b68f20c3ffcbe67
+# bad: [54a9ea73527d55ab746d5425e10f3fa748e00e70] KVM: arm64: selftests:
+Test for setting ID register from usersapce
+git bisect bad 54a9ea73527d55ab746d5425e10f3fa748e00e70
+# good: [e2bdd172e6652c2f5554d125a5048bc9f9b0dfa3] perf build: Generate
+arm64's sysreg-defs.h and add to include path
+git bisect good e2bdd172e6652c2f5554d125a5048bc9f9b0dfa3
+# bad: [0359c946b13153bd57fac65f4f3600ba5673e3de] tools headers arm64:
+Update sysreg.h with kernel sources
+git bisect bad 0359c946b13153bd57fac65f4f3600ba5673e3de
+# bad: [9697d84cc3b6d9bff4b1fbffc10a4bb1398af9ba] KVM: selftests:
+Generate sysreg-defs.h and add to include path
+git bisect bad 9697d84cc3b6d9bff4b1fbffc10a4bb1398af9ba
+# first bad commit: [9697d84cc3b6d9bff4b1fbffc10a4bb1398af9ba] KVM:
+selftests: Generate sysreg-defs.h and add to include path
 
 Thanks,
-Namhyung
+Aishwarya
