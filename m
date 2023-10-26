@@ -1,164 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0C83C078
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 20:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+BgJ1Ts"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0970CC433C7;
-	Thu, 26 Oct 2023 20:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698350929;
-	bh=gyBCNdPwtw3evoAPk5wPF8NhwGxh3JparjbqeAVyNKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B+BgJ1Tsvmkp/sfji8mFMSblCEdmPXyPaoBsl3Vozh4ynOWB4Q83WWHbByyukLZBO
-	 NjAliDjQEzka3rI9Vry8YspNaZro61dDedf/uLh4DwCwpvzPqOCYRhoJprZaAm9CKx
-	 DuIT4IGJ5rVF2HtQ2euB18SLijQjG+I5XdmuA9PeLhAdVwvocMvy5766fO3zu3tC2a
-	 AI22INet69SpMqzlPZab7niexJ5UF7RBzWe3dysuDFoKBertgK5ebyU3vC8O/fa8Lx
-	 LxllZyjIl/NRRUYbcFCiUNILf5ZuOfAWDASQszVI9n3vF0x80o2DFGyPRvcUYNA+v5
-	 7Fk0AYvp1BWbA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id BF8F64035D; Thu, 26 Oct 2023 17:08:46 -0300 (-03)
-Date: Thu, 26 Oct 2023 17:08:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/5] perf tools: Add get_unaligned_leNN()
-Message-ID: <ZTrHTmyc50XNsOVP@kernel.org>
-References: <20231005190451.175568-1-adrian.hunter@intel.com>
- <20231005190451.175568-2-adrian.hunter@intel.com>
- <ZR8QnasisGEsaaDR@kernel.org>
- <ZTptUSQkDYujx9/T@kernel.org>
- <7c5b626c-1de9-4c12-a781-e44985b4a797@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6FF4426
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 22:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD81E91;
+	Thu, 26 Oct 2023 15:09:06 -0700 (PDT)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-27d18475ed4so1241224a91.0;
+        Thu, 26 Oct 2023 15:09:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698358146; x=1698962946;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aVUcrbGUMw0ppD1wYsBtYUJw806ZaiQ+vq+hatkWY30=;
+        b=j2Hw3NrQhTVzD2LQ52cNRHCHI08u8dN1XGY1eOjAKZga2Ew5hkkP3pSkzKXVV9g9EN
+         cjNjY6KBcNl7rL+lYI4/zjzO0y1v26X5tpa1wXQ0a0ptSi/ITXRcu6rPPewAC9RQIdf0
+         +r+hhnWcPKHoXu5cqJ5UFUOLeQ6/TDVb10j9Ch0RMPBBFglvIqM162xGuK8O6An5uePz
+         Tg02R7koXtgzeA4ZzUBDfRhJVNfiUEeFIYnLwrA5/q8nPQrSaVMRo7NNKFs0CQWxEHhB
+         GP4W63vnoCJcvKz/lcIc8hMZTBO+/JguWlO4+wAkGgxy5EnIgBcKov0taBQvUf50DdgM
+         Z6EA==
+X-Gm-Message-State: AOJu0YzjeM3A+6NNtuAxCvvV9wLX6ePZHKKqF3mowv3sI6+8u/Lwusfz
+	MVpGtc5JotVe/AA25vVccHWtzO3xg5tJK4TRnDI=
+X-Google-Smtp-Source: AGHT+IF1Eztk9O6B5GNlWTQCMsNv4J4w3eJLPrhsWk5fPODMQq7Q3d0B288OOj70RxtmdbuVBRUPWhr0Blr4OYJcSXk=
+X-Received: by 2002:a17:90b:111:b0:27d:c95:b0ad with SMTP id
+ p17-20020a17090b011100b0027d0c95b0admr857862pjz.21.1698358146005; Thu, 26 Oct
+ 2023 15:09:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c5b626c-1de9-4c12-a781-e44985b4a797@intel.com>
-X-Url: http://acmel.wordpress.com
+References: <20231023033144.1011896-1-yangjihong1@huawei.com> <ZTrCS5Z3PZAmfPdV@kernel.org>
+In-Reply-To: <ZTrCS5Z3PZAmfPdV@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 26 Oct 2023 15:08:54 -0700
+Message-ID: <CAM9d7cjhSSV+18ZCHLdTFpMM+MmpoDkYSGjUa5JKZp02Kx9XRw@mail.gmail.com>
+Subject: Re: [PATCH] perf evsel: Rename evsel__increase_rlimit to rlimit__increase_nofile
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org, mingo@redhat.com, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Thu, Oct 26, 2023 at 07:09:26PM +0300, Adrian Hunter escreveu:
-> On 26/10/23 16:44, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Oct 05, 2023 at 04:38:05PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Thu, Oct 05, 2023 at 10:04:47PM +0300, Adrian Hunter escreveu:
-> >>> Add get_unaligned_le16(), get_unaligned_le32 and get_unaligned_le64, same
-> >>> as include/asm-generic/unaligned.h.
-> >>>
-> >>> Use diagnostic pragmas to ignore -Wpacked used by perf build.
-> >>
-> >> Can we get the tools copy of include/asm-generic/unaligned.h closer and
-> >> have it in check-headers.sh?
-> > 
-> > And this is not building when cross building to mips, mips64 and mipsel
-> > on debian:experimental:
-> > 
-> > In file included from util/intel-pt-decoder/intel-pt-pkt-decoder.c:10:
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le16':
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:29: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
-> 
-> So I guess another diagnostic pragma is needed, perhaps the following works?
-> 
-> #pragma GCC diagnostic ignored "-Wattributes"
+Hi Arnaldo,
 
-I'll try it.
+On Thu, Oct 26, 2023 at 12:47=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Oct 23, 2023 at 03:31:44AM +0000, Yang Jihong escreveu:
+> > evsel__increase_rlimit() helper does nothing with evsel, and descriptio=
+n
+> > of the functionality is inaccurate, rename it and move to util/rlimit.c=
+.
+>
+> > By the way, fix a checkppatch warning about misplaced license tag:
+>
+> >   WARNING: Misplaced SPDX-License-Identifier tag - use line 1 instead
+> >   #160: FILE: tools/perf/util/rlimit.h:3:
+> >   /* SPDX-License-Identifier: LGPL-2.1 */
+>
+> > No functional change.
+>
+> Please run 'perf test' before sending patches upstream, I'm checking if
+> what is in perf-tools-next/perf-tools-next is building and I noticed
+> this:
+>
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ perf test -v python
+> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF =
+maps, etc
+>  14: 'import perf' in python                                         :
+> --- start ---
+> test child forked, pid 2912462
+> python usage test: "echo "import sys ; sys.path.insert(0, '/tmp/build/per=
+f-tools-next/python'); import perf" | '/usr/bin/python3' "
+> Traceback (most recent call last):
+>   File "<stdin>", line 1, in <module>
+> ImportError: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-li=
+nux-gnu.so: undefined symbol: rlimit__increase_nofile
+> test child finished with -1
+> ---- end ----
+> 'import perf' in python: FAILED!
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
+>
+> The following patch cures it, Namhyung, can you please fold it and force
+> push perf-tools-next/perf-tools-next or let me know if you prefer that I
+> submit a patch fixing this separately.
 
-- Arnaldo
- 
-> 
-> >    13 |         const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);      \
-> >       |                             ^
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:27:28: note: in expansion of macro '__get_unaligned_t'
-> >    27 |         return le16_to_cpu(__get_unaligned_t(__le16, p));
-> >       |                            ^~~~~~~~~~~~~~~~~
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le32':
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:29: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
-> >    13 |         const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);      \
-> >       |                             ^
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:32:28: note: in expansion of macro '__get_unaligned_t'
-> >    32 |         return le32_to_cpu(__get_unaligned_t(__le32, p));
-> >       |                            ^~~~~~~~~~~~~~~~~
-> > 
-> > 
-> > Ditto for some other distros when cross building on ubuntu:18.04
-> > 
-> >   MKDIR   /tmp/build/perf/util/perf-regs-arch/
-> > In file included from /usr/sparc64-linux-gnu/include/bits/byteswap.h:34:0,
-> >                  from /usr/sparc64-linux-gnu/include/endian.h:60,
-> >                  from util/intel-pt-decoder/intel-pt-pkt-decoder.c:9:
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le16':
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:22: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
-> >   const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr); \
-> >                       ^
-> > /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:27:21: note: in expansion of macro '__get_unaligned_t'
-> >   return le16_to_cpu(__get_unaligned_t(__le16, p));
-> >                      ^~~~~~~~~~~~~~~~~
-> > 
-> >   37    14.17 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
-> >   38    13.56 ubuntu:18.04-x-arm64          : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
-> >   42    12.70 ubuntu:18.04-x-riscv64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
-> >   44    13.95 ubuntu:18.04-x-sh4            : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
-> >   45    13.08 ubuntu:18.04-x-sparc64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
-> >  
-> >> - Arnaldo
-> >>  
-> >>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> >>> ---
-> >>>  tools/include/asm-generic/unaligned.h | 20 ++++++++++++++++++++
-> >>>  1 file changed, 20 insertions(+)
-> >>>
-> >>> diff --git a/tools/include/asm-generic/unaligned.h b/tools/include/asm-generic/unaligned.h
-> >>> index 47387c607035..9140bb4e16c6 100644
-> >>> --- a/tools/include/asm-generic/unaligned.h
-> >>> +++ b/tools/include/asm-generic/unaligned.h
-> >>> @@ -6,6 +6,9 @@
-> >>>  #ifndef __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
-> >>>  #define __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
-> >>>  
-> >>> +#pragma GCC diagnostic push
-> >>> +#pragma GCC diagnostic ignored "-Wpacked"
-> >>> +
-> >>>  #define __get_unaligned_t(type, ptr) ({						\
-> >>>  	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
-> >>>  	__pptr->x;								\
-> >>> @@ -19,5 +22,22 @@
-> >>>  #define get_unaligned(ptr)	__get_unaligned_t(typeof(*(ptr)), (ptr))
-> >>>  #define put_unaligned(val, ptr) __put_unaligned_t(typeof(*(ptr)), (val), (ptr))
-> >>>  
-> >>> +static inline u16 get_unaligned_le16(const void *p)
-> >>> +{
-> >>> +	return le16_to_cpu(__get_unaligned_t(__le16, p));
-> >>> +}
-> >>> +
-> >>> +static inline u32 get_unaligned_le32(const void *p)
-> >>> +{
-> >>> +	return le32_to_cpu(__get_unaligned_t(__le32, p));
-> >>> +}
-> >>> +
-> >>> +static inline u64 get_unaligned_le64(const void *p)
-> >>> +{
-> >>> +	return le64_to_cpu(__get_unaligned_t(__le64, p));
-> >>> +}
-> >>> +
-> >>> +#pragma GCC diagnostic pop
-> >>> +
-> >>>  #endif /* __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H */
-> >>>  
-> >>> -- 
-> >>> 2.34.1
-> >>>
-> >>
-> >> -- 
-> >>
-> >> - Arnaldo
-> > 
-> 
+Thanks for fixing this.  I prefer having a separate fix.
+Please send it as a formal patch.
 
--- 
+Thanks,
+Namhyung
 
-- Arnaldo
+
+>
+> - Arnaldo
+>
+> diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-=
+ext-sources
+> index 26e1c8d973ea0b95..593b660ec75e24e1 100644
+> --- a/tools/perf/util/python-ext-sources
+> +++ b/tools/perf/util/python-ext-sources
+> @@ -40,6 +40,7 @@ util/rwsem.c
+>  util/hashmap.c
+>  util/perf_regs.c
+>  util/fncache.c
+> +util/rlimit.c
+>  util/perf-regs-arch/perf_regs_aarch64.c
+>  util/perf-regs-arch/perf_regs_arm.c
+>  util/perf-regs-arch/perf_regs_csky.c
