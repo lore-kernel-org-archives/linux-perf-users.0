@@ -1,168 +1,120 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E882EB05
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 16:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C49381C6;
+	Thu, 26 Oct 2023 17:03:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ky/c4f7C"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F122893;
-	Thu, 26 Oct 2023 09:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698336744; x=1729872744;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=NTn3zQpXQ4OY6HxUDLvEa4CHByRqTBVp52gG5dvy8+c=;
-  b=Ky/c4f7CeXhuf+BhCPsnfWfkjl69cQLtbaWFRouj0KG0ZDrrZV8SQjjl
-   YUc3haz9nSMpG6lu7n9p5PIvcti4f+HqotwyNr1/QQBW51vEoaDkdf9tN
-   1vv7+1smBTjz5FesULPSFToSBO6JwC1SPgMVBbTW88oJRt4JwRU6rAT3B
-   fz/QtvEiSnlRpe+sdhpyG9ykcdndkWAV3tZzBQg3TTe/z1VnpKPx2Ehr5
-   5EL+JjOozQpy23vPLLMzJY5h1ZL6kcUyn296I2mQMLgNowbBgNkcVdupl
-   14VqfehnOBvWt4DQYiRCBXXt+zjdFvOhnypzAwDZzLZi+4TwV8MqD/B1B
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="366936418"
-X-IronPort-AV: E=Sophos;i="6.03,253,1694761200"; 
-   d="scan'208";a="366936418"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 09:09:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,253,1694761200"; 
-   d="scan'208";a="555229"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.211.218])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 09:09:21 -0700
-Message-ID: <7c5b626c-1de9-4c12-a781-e44985b4a797@intel.com>
-Date: Thu, 26 Oct 2023 19:09:26 +0300
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DDwzhl9m"
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2075.outbound.protection.outlook.com [40.107.237.75])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B293F1AE;
+	Thu, 26 Oct 2023 10:03:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UfXeeQGM5ZaC54BS9sCxpimo55IrGWKdP+MUxG4gY7p4CK6Baszkc1rfcJecRTe0uj5mM1kGq76KS+r25vo4aQHnDWyaZpTPUvf9H/j7/rZdwuSNKWMcj3RpCrvhO0Dx1lfKHt6r2Dh/Jq2t5bXpyAHgvA7GAPius/qLOM1X/hF5n/l7mWsLeki7B25Lq1rqLWg4PDBuRF6gchE+yp5G7fT+d+PNPXHtBtSpGE5INtvCoun3grCDu6xVSSPiWlG9AURUdtnqFXmVluRPhfcH9Gkyd/n1VabRGRgS6N8Ej6A71GCwZs/1/g17GGWfLs7cPXPHOQgP2h0AFl1s3uh7TQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4gqpZRTKbezAhXhfFJVDy/c/wxyVZ2csRDXirWwXxko=;
+ b=FtxDa9sQwIPRXMQtbLUzmlny3XcLsNRXsPSCGJlxFWXhARi2NEuYgnCz99alsIoItG/BgsUQbKjwS6W1WzVGbpKQiEKI8izsc1jpkJ1ij564co9IOZjRyqf2EH1OlbvoDtk4HfX/lpn7Tr7fPFMMoIKrBXixGwUbhbIZOVMXLYT55QwWXuEl+1lckUXIYYQxg5tJUaVxf5QWU5eB7Urpe84rB25XYdhrpwff6e46qLh4VV7gsHPKSHTqi5/8MHXZuxtbmS+5g7gr/tFigaE5a5Cw7HFZlmeS1FjxlSnbXpViv9GLV0fhUkKaO7cdwDU+d6Jd5qoPD4O8blhi/m5qtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4gqpZRTKbezAhXhfFJVDy/c/wxyVZ2csRDXirWwXxko=;
+ b=DDwzhl9mB2nX1/HduNhFLv1gj37qSTJOBVQBnayIkQrppgIWQKsGvEvXCSzCE/CEOPat+leuvByFb8G3gB16Y62DYJcYaSiacu6yps4P7A3CFk61gCxrAJU8ZSPMYbq3ar1YqsuXISh6NMNcthuouPQlHkoWUeboVv5T32VBZN8=
+Received: from MN2PR18CA0005.namprd18.prod.outlook.com (2603:10b6:208:23c::10)
+ by CH2PR12MB4261.namprd12.prod.outlook.com (2603:10b6:610:a9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.19; Thu, 26 Oct
+ 2023 17:03:45 +0000
+Received: from BL02EPF0001A0FA.namprd03.prod.outlook.com
+ (2603:10b6:208:23c:cafe::ef) by MN2PR18CA0005.outlook.office365.com
+ (2603:10b6:208:23c::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.22 via Frontend
+ Transport; Thu, 26 Oct 2023 17:03:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A0FA.mail.protection.outlook.com (10.167.242.101) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6933.15 via Frontend Transport; Thu, 26 Oct 2023 17:03:45 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Thu, 26 Oct
+ 2023 12:03:43 -0500
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+CC: Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Namhyung
+ Kim" <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, "H .
+ Peter Anvin" <hpa@zytor.com>, "Rafael J . Wysocki" <rafael@kernel.org>, "Len
+ Brown" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, David Woodhouse
+	<dwmw@amazon.co.uk>, Sandipan Das <sandipan.das@amd.com>, "open
+ list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, "open
+ list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>, "open
+ list:SUSPEND TO RAM" <linux-pm@vger.kernel.org>, "open list:ACPI"
+	<linux-acpi@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v2 0/2] Fixes for s3 with parallel bootup
+Date: Thu, 26 Oct 2023 12:03:28 -0500
+Message-ID: <20231026170330.4657-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] perf tools: Add get_unaligned_leNN()
-Content-Language: en-US
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20231005190451.175568-1-adrian.hunter@intel.com>
- <20231005190451.175568-2-adrian.hunter@intel.com>
- <ZR8QnasisGEsaaDR@kernel.org> <ZTptUSQkDYujx9/T@kernel.org>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZTptUSQkDYujx9/T@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FA:EE_|CH2PR12MB4261:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8c10c76-fdb2-4346-f92e-08dbd6458390
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	XqGBLEHbLDsAdmcEUtsUf4GtLcCLpSkLuVai3qY3YqJ69PXNHhJPQ7Sex3eHY3KdfXlKBdnDZVcDpTQ0jvFedvbPElLqbBihj1LXBgcm/lFfA1sVIwkeT1tZqpkqoA0xmAbJGEzsOHPURUyMaLrTkT23ELXj7Zf+NbDkc3JjuTm0o7u14CV72EZnf9h2iEvmVH+TLkrBghZe4xiVHvfxgv23ZMQrq5dKah58E+9uRCT6cAEc9rT2Notu+Jfh3kfdbdN5LX/cBe6QSDJvyGUMXcoz/LUZjrjkaWQa8HA+ACgcTkQqg81L2ufyzVo1iNfgwBJV4IGzvutpHFVFs7QalrkIEU323M0WKHe8UXWU6JU7I7jlqA4zVRiPJtXsANjn4wFpTnhs3FCh+UxDeI97JaCPYjE+fg6yFb00ZPSuUSTgNAhZdDfioI3XAk80n4h5RCPnsh/4jWFer+zJhPkfeF8X1HxthXKdfWX6UnL61/AaNtdtg6bgCoVZFZHdBJ1fuqY7bxJmtfzanVThX377EGQ7lPMfvywDFmN3JDSB8rNCxZv3PoOplR4uF8My9zal1NNZsOfdfHj18lAPe2xoTjZcJtw8DcBaT2YCFoP2q0LyS80lpB+cY7fBkKK/EANpO2e3BEsmByYE26RG2jOYDOKusQ/8UAwN+NfPgxQCfVogNp7MSHIYy146ePDiwITsqKJJNWFH/Wb8UNYqcr+auF0+VfuXoE3/BPSjv8/JVLSAmjcYPgMlhfgO/EeA9O8+zphTjXsf9uK0Z24jMy5o1Q==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(346002)(376002)(396003)(230922051799003)(186009)(1800799009)(64100799003)(82310400011)(451199024)(36840700001)(40470700004)(46966006)(4744005)(83380400001)(7416002)(110136005)(54906003)(8936002)(70206006)(8676002)(70586007)(5660300002)(4326008)(316002)(478600001)(2906002)(41300700001)(44832011)(7696005)(40460700003)(6666004)(1076003)(2616005)(26005)(16526019)(426003)(336012)(40480700001)(47076005)(36860700001)(81166007)(36756003)(86362001)(82740400003)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2023 17:03:45.0992
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8c10c76-fdb2-4346-f92e-08dbd6458390
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A0FA.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4261
 
-On 26/10/23 16:44, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Oct 05, 2023 at 04:38:05PM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Thu, Oct 05, 2023 at 10:04:47PM +0300, Adrian Hunter escreveu:
->>> Add get_unaligned_le16(), get_unaligned_le32 and get_unaligned_le64, same
->>> as include/asm-generic/unaligned.h.
->>>
->>> Use diagnostic pragmas to ignore -Wpacked used by perf build.
->>
->> Can we get the tools copy of include/asm-generic/unaligned.h closer and
->> have it in check-headers.sh?
-> 
-> And this is not building when cross building to mips, mips64 and mipsel
-> on debian:experimental:
-> 
-> In file included from util/intel-pt-decoder/intel-pt-pkt-decoder.c:10:
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le16':
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:29: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
+Parallel bootup on systems that use x2apic broke suspend to ram.
+This series ensures x2apic is re-enabled at startup and fixes an exposed
+pre-emption issue.
 
-So I guess another diagnostic pragma is needed, perhaps the following works?
+Mario Limonciello (2):
+  x86: Enable x2apic during resume from suspend if used previously
+  perf/x86/amd: Stop calling amd_pmu_cpu_reset() from amd_pmu_cpu_dead()
 
-#pragma GCC diagnostic ignored "-Wattributes"
+ arch/x86/events/amd/core.c   |  7 ++++++-
+ arch/x86/include/asm/smp.h   |  1 +
+ arch/x86/kernel/acpi/sleep.c | 13 +++++++++----
+ arch/x86/kernel/head_64.S    | 15 +++++++++++++++
+ 4 files changed, 31 insertions(+), 5 deletions(-)
 
-
->    13 |         const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);      \
->       |                             ^
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:27:28: note: in expansion of macro '__get_unaligned_t'
->    27 |         return le16_to_cpu(__get_unaligned_t(__le16, p));
->       |                            ^~~~~~~~~~~~~~~~~
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le32':
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:29: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
->    13 |         const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);      \
->       |                             ^
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:32:28: note: in expansion of macro '__get_unaligned_t'
->    32 |         return le32_to_cpu(__get_unaligned_t(__le32, p));
->       |                            ^~~~~~~~~~~~~~~~~
-> 
-> 
-> Ditto for some other distros when cross building on ubuntu:18.04
-> 
->   MKDIR   /tmp/build/perf/util/perf-regs-arch/
-> In file included from /usr/sparc64-linux-gnu/include/bits/byteswap.h:34:0,
->                  from /usr/sparc64-linux-gnu/include/endian.h:60,
->                  from util/intel-pt-decoder/intel-pt-pkt-decoder.c:9:
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le16':
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:22: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
->   const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr); \
->                       ^
-> /git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:27:21: note: in expansion of macro '__get_unaligned_t'
->   return le16_to_cpu(__get_unaligned_t(__le16, p));
->                      ^~~~~~~~~~~~~~~~~
-> 
->   37    14.17 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
->   38    13.56 ubuntu:18.04-x-arm64          : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
->   42    12.70 ubuntu:18.04-x-riscv64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
->   44    13.95 ubuntu:18.04-x-sh4            : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
->   45    13.08 ubuntu:18.04-x-sparc64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
->  
->> - Arnaldo
->>  
->>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->>> ---
->>>  tools/include/asm-generic/unaligned.h | 20 ++++++++++++++++++++
->>>  1 file changed, 20 insertions(+)
->>>
->>> diff --git a/tools/include/asm-generic/unaligned.h b/tools/include/asm-generic/unaligned.h
->>> index 47387c607035..9140bb4e16c6 100644
->>> --- a/tools/include/asm-generic/unaligned.h
->>> +++ b/tools/include/asm-generic/unaligned.h
->>> @@ -6,6 +6,9 @@
->>>  #ifndef __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
->>>  #define __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
->>>  
->>> +#pragma GCC diagnostic push
->>> +#pragma GCC diagnostic ignored "-Wpacked"
->>> +
->>>  #define __get_unaligned_t(type, ptr) ({						\
->>>  	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
->>>  	__pptr->x;								\
->>> @@ -19,5 +22,22 @@
->>>  #define get_unaligned(ptr)	__get_unaligned_t(typeof(*(ptr)), (ptr))
->>>  #define put_unaligned(val, ptr) __put_unaligned_t(typeof(*(ptr)), (val), (ptr))
->>>  
->>> +static inline u16 get_unaligned_le16(const void *p)
->>> +{
->>> +	return le16_to_cpu(__get_unaligned_t(__le16, p));
->>> +}
->>> +
->>> +static inline u32 get_unaligned_le32(const void *p)
->>> +{
->>> +	return le32_to_cpu(__get_unaligned_t(__le32, p));
->>> +}
->>> +
->>> +static inline u64 get_unaligned_le64(const void *p)
->>> +{
->>> +	return le64_to_cpu(__get_unaligned_t(__le64, p));
->>> +}
->>> +
->>> +#pragma GCC diagnostic pop
->>> +
->>>  #endif /* __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H */
->>>  
->>> -- 
->>> 2.34.1
->>>
->>
->> -- 
->>
->> - Arnaldo
-> 
+-- 
+2.34.1
 
