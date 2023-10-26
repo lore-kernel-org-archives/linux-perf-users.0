@@ -1,124 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F41F2E3F5;
-	Thu, 26 Oct 2023 14:09:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2ABD1D52B
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 14:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6xjc64F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FC4C433C7;
-	Thu, 26 Oct 2023 14:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698329381;
-	bh=o+qCmd2p2pNBcodf0yPjWJ37AbBRRvl8Nu1y76ub5Mk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z6xjc64FizKqY/UFZYzRexqwanb6HD1mvGz5Mjl2Oe/EWUThAH391tDMEG60AtLAF
-	 n/69z9xHH1rbXwDaQM/Ng+Z9f+CnRVd2alD7vxO1Be1OIyvzcNfMYkybzD55tObSPw
-	 vkGW/4TFkvQwrwqJh5hZcGo9Sslw/YHNXh17Ez6jyDxXZBN3zRYl2mumQGfSY7+NIc
-	 LeGuyM20Yphheryl8vCIlwO9SnpaYfHeN99qsy+4WKt7z06ZpbKBkVK209nQIetQVV
-	 M/RuSLZ0PdIi5fBoJ0XxCaiEcuN/QFzogBlfwpcDK0cPOVYC5wjRS05wcUD0j26hH1
-	 u+Gy7TnP/udVQ==
-Date: Thu, 26 Oct 2023 15:09:30 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Yu-Chien Peter Lin <peterlin@andestech.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
-	alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
-	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
-	conor+dt@kernel.org, conor.dooley@microchip.com,
-	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com,
-	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de,
-	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org,
-	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com,
-	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org,
-	palmer@dabbelt.com, paul.walmsley@sifive.com, peterz@infradead.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
-	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
-	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me,
-	wens@csie.org, will@kernel.org, ycliang@andestech.com
-Subject: Re: [PATCH v3 RESEND 10/13] dt-bindings: riscv: Add Andes PMU
- extension description
-Message-ID: <20231026-concierge-perfume-6c327fc5282f@spud>
-References: <20231023004100.2663486-1-peterlin@andestech.com>
- <20231023004100.2663486-11-peterlin@andestech.com>
- <20231023-spectacle-module-0516fb35995a@spud>
- <ZTohvi7TPyVoO-Sl@APC323>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fOVJ4Xx2"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2671893;
+	Thu, 26 Oct 2023 07:57:09 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39QEsh1N012174;
+	Thu, 26 Oct 2023 14:57:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=tGqLposxrNDFe/v9DI1KYmIROdqCe7BBYC3oEYQTyZ8=;
+ b=fOVJ4Xx2d4qSz2NTTgEumwVGXh3JPy1xYvZdDKR1F6o+86GKdLZgHskV5eqSlwc+Y8Zi
+ tecAPM64txpJe6Uy1QSF8AnxW0f19niVpEsIVwdGPBzBFNtB2jpeiSmYkr/+shoHUJru
+ 9RaorU0SgroGCtcyx06xgZ27nEzarT2Lc6u1nNvK/uS8Vdx02o3UDkS5kise3ywFW4mJ
+ WxISr0BDaIh0q2QKCo/qJYHdmpjhYPaq5qmJX6pSYXszfVSm3+77Rkxsx3iHruSToqAT
+ pzUVvNxl8QLs6ByQbPuInLuTR1/ML+YgT/cROFjnUcNVaxDID/qivGr8bdGuaLagS2QH EA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tyt4wre4h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Oct 2023 14:57:06 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39QEiYhp026442;
+	Thu, 26 Oct 2023 14:57:05 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tyt4wre41-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Oct 2023 14:57:05 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39QETnBM026853;
+	Thu, 26 Oct 2023 14:57:05 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tvsyp6rvu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Oct 2023 14:57:05 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39QEv1hV38535512
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 26 Oct 2023 14:57:02 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D088420040;
+	Thu, 26 Oct 2023 14:57:01 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 49E0720043;
+	Thu, 26 Oct 2023 14:57:01 +0000 (GMT)
+Received: from osiris (unknown [9.171.73.20])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 26 Oct 2023 14:57:01 +0000 (GMT)
+Date: Thu, 26 Oct 2023 16:56:59 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Daan De Meyer <daan.j.demeyer@gmail.com>
+Cc: linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        "dcavalca@meta.com" <dcavalca@meta.com>, ngompa@fedoraproject.org,
+        Andreas Krebbel <krebbel@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: s390x stack unwinding with perf?
+Message-ID: <20231026145659.7063-A-hca@linux.ibm.com>
+References: <CAO8sHcn3+_qrnvp0580aK7jN0Wion5F7KYeBAa4MnCY4mqABPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BzI6JdR1d6DrVYK+"
-Content-Disposition: inline
-In-Reply-To: <ZTohvi7TPyVoO-Sl@APC323>
-
-
---BzI6JdR1d6DrVYK+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAO8sHcn3+_qrnvp0580aK7jN0Wion5F7KYeBAa4MnCY4mqABPA@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: vLqupC5sjroqOTw1YesYLC8ooTXNOKLp
+X-Proofpoint-GUID: VfvCWKQ2gJqXstJ8M-MKnfNXbQ7xxd_2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-26_13,2023-10-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=449 impostorscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 clxscore=1011 malwarescore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310170001 definitions=main-2310260128
 
-On Thu, Oct 26, 2023 at 04:22:22PM +0800, Yu-Chien Peter Lin wrote:
-> Hi Conor,
->=20
-> On Mon, Oct 23, 2023 at 01:03:53PM +0100, Conor Dooley wrote:
-> > On Mon, Oct 23, 2023 at 08:40:57AM +0800, Yu Chien Peter Lin wrote:
-> > > Document the ISA string for Andes Technology performance monitor
-> > > extension which provides counter overflow interrupt and mode
-> > > filtering mechanisms.
-> > >=20
-> > > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> > > ---
-> > > Changes v2 -> v3:
-> > >   - New patch
-> > > ---
-> > >  Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml =
-b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > index 5e9291d258d5..e0694e2adbc2 100644
-> > > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > @@ -246,6 +246,13 @@ properties:
-> > >              in commit 2e5236 ("Ztso is now ratified.") of the
-> > >              riscv-isa-manual.
-> > > =20
-> > > +        - const: xandespmu
-> > > +          description:
-> > > +            The Andes Technology performance monitor extension for c=
-ounter overflow
-> > > +            and privilege mode filtering. For more details, see Coun=
-ter Related
-> > > +            Registers in the AX45MP datasheet.
-> > > +            https://www.andestech.com/wp-content/uploads/AX45MP-1C-R=
-ev.-5.0.0-Datasheet.pdf
-> >=20
-> > Does/will this PMU function identically on the other CPUs that support =
-it?
->=20
-> Yes, I can confirm that.
+On Thu, Oct 26, 2023 at 02:30:41PM +0200, Daan De Meyer wrote:
+> Hi,
+> 
+> As part of enabling frame pointers system wide for Fedora to get fast
+> system wide stack unwinding, we're now looking to do the same for
+> s390x after previously enabling frame pointers for x86-64 and aarch64.
+> From what we can find, on s390x stack unwinding is done via the
+> "-mbackchain" compiler option. However, from some early experiments
+> rebuilding a small part of the distro, this option alone does not seem
+> to result in usable stack traces in perf (perf record -g => perf
+> report).
+> 
+> Are there any other compiler options that need to be enabled in order
+> to get usable stack traces in perf for s390x? Has anyone managed to
+> get this working before?
 
-If there's a more generic document available, that'd be good.
-Otherwise,
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+So, are you saying that you want to enable "-mbackchain" for whole user
+space for Fedora? If that is the case, what certainly is missing is kernel
+support to unwind user space stack frames from the kernel, since until now
+no distribution had user space where it would be possible to unwind the
+user space stack from the kernel; which is the reason why this was never
+implemented.
 
-Thanks,
-Conor.
-
---BzI6JdR1d6DrVYK+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTpzGgAKCRB4tDGHoIJi
-0uXdAQCoseBoG7Xs6hmuy7UdTh5kG8f+pMwygEI1z4FoVKXYlAEAttRxz9XXoQKp
-UzeNDgGlP1WLp7aj7fbSai8IToBZtgM=
-=eR7X
------END PGP SIGNATURE-----
-
---BzI6JdR1d6DrVYK+--
+If this (or some other compiler options) will be enabled for user space, we
+need to add kernel support in order to make this work.
