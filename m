@@ -1,148 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597302DF96
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 13:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F41F2E3F5;
+	Thu, 26 Oct 2023 14:09:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEAHPGOg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F6E4C433C7;
-	Thu, 26 Oct 2023 13:44:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6xjc64F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FC4C433C7;
+	Thu, 26 Oct 2023 14:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698327892;
-	bh=6OD94wbO0wIznaV3pfmqjwHOEwKHbWFYcAgoTrJBlRs=;
+	s=k20201202; t=1698329381;
+	bh=o+qCmd2p2pNBcodf0yPjWJ37AbBRRvl8Nu1y76ub5Mk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lEAHPGOg8i0HQUfm2Lgj228UggRz4lQMNtHQDK3TS4ckSAxnUnSvKfbmJkOqCnBKg
-	 ciPVbPH3c3i3zhj68S+8ss6cvxwVC03WPLlwpDPT+uQ1xHLqRdhuLZO9fL3cJPTlZ+
-	 oM4aeCsCFe/hheQOTCmVNORieUj55fG0cXJeCgL19WUFPJEYVEFckRlrAn3xFEto12
-	 em3dJqGlS8/bF0/j32PMZ4DJJWDKMtjDlnVza1bFiY/q3/H2zoSBC2Q8qGzUzj3beF
-	 DxMnmjMDzeK9IpwfHVijE/xJcnToWbaAXTwkz7u8zowUrBRG6GBJh6tM/eJ5ybLsgb
-	 C9SBA0/w96NYw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 02DEC4035D; Thu, 26 Oct 2023 10:44:49 -0300 (-03)
-Date: Thu, 26 Oct 2023 10:44:49 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/5] perf tools: Add get_unaligned_leNN()
-Message-ID: <ZTptUSQkDYujx9/T@kernel.org>
-References: <20231005190451.175568-1-adrian.hunter@intel.com>
- <20231005190451.175568-2-adrian.hunter@intel.com>
- <ZR8QnasisGEsaaDR@kernel.org>
+	b=Z6xjc64FizKqY/UFZYzRexqwanb6HD1mvGz5Mjl2Oe/EWUThAH391tDMEG60AtLAF
+	 n/69z9xHH1rbXwDaQM/Ng+Z9f+CnRVd2alD7vxO1Be1OIyvzcNfMYkybzD55tObSPw
+	 vkGW/4TFkvQwrwqJh5hZcGo9Sslw/YHNXh17Ez6jyDxXZBN3zRYl2mumQGfSY7+NIc
+	 LeGuyM20Yphheryl8vCIlwO9SnpaYfHeN99qsy+4WKt7z06ZpbKBkVK209nQIetQVV
+	 M/RuSLZ0PdIi5fBoJ0XxCaiEcuN/QFzogBlfwpcDK0cPOVYC5wjRS05wcUD0j26hH1
+	 u+Gy7TnP/udVQ==
+Date: Thu, 26 Oct 2023 15:09:30 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yu-Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com,
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
+	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
+	conor+dt@kernel.org, conor.dooley@microchip.com,
+	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com,
+	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de,
+	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org,
+	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com,
+	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org,
+	palmer@dabbelt.com, paul.walmsley@sifive.com, peterz@infradead.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
+	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
+	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me,
+	wens@csie.org, will@kernel.org, ycliang@andestech.com
+Subject: Re: [PATCH v3 RESEND 10/13] dt-bindings: riscv: Add Andes PMU
+ extension description
+Message-ID: <20231026-concierge-perfume-6c327fc5282f@spud>
+References: <20231023004100.2663486-1-peterlin@andestech.com>
+ <20231023004100.2663486-11-peterlin@andestech.com>
+ <20231023-spectacle-module-0516fb35995a@spud>
+ <ZTohvi7TPyVoO-Sl@APC323>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BzI6JdR1d6DrVYK+"
+Content-Disposition: inline
+In-Reply-To: <ZTohvi7TPyVoO-Sl@APC323>
+
+
+--BzI6JdR1d6DrVYK+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZR8QnasisGEsaaDR@kernel.org>
-X-Url: http://acmel.wordpress.com
+Content-Transfer-Encoding: quoted-printable
 
-Em Thu, Oct 05, 2023 at 04:38:05PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Oct 05, 2023 at 10:04:47PM +0300, Adrian Hunter escreveu:
-> > Add get_unaligned_le16(), get_unaligned_le32 and get_unaligned_le64, same
-> > as include/asm-generic/unaligned.h.
-> > 
-> > Use diagnostic pragmas to ignore -Wpacked used by perf build.
-> 
-> Can we get the tools copy of include/asm-generic/unaligned.h closer and
-> have it in check-headers.sh?
+On Thu, Oct 26, 2023 at 04:22:22PM +0800, Yu-Chien Peter Lin wrote:
+> Hi Conor,
+>=20
+> On Mon, Oct 23, 2023 at 01:03:53PM +0100, Conor Dooley wrote:
+> > On Mon, Oct 23, 2023 at 08:40:57AM +0800, Yu Chien Peter Lin wrote:
+> > > Document the ISA string for Andes Technology performance monitor
+> > > extension which provides counter overflow interrupt and mode
+> > > filtering mechanisms.
+> > >=20
+> > > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> > > ---
+> > > Changes v2 -> v3:
+> > >   - New patch
+> > > ---
+> > >  Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml =
+b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > index 5e9291d258d5..e0694e2adbc2 100644
+> > > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > @@ -246,6 +246,13 @@ properties:
+> > >              in commit 2e5236 ("Ztso is now ratified.") of the
+> > >              riscv-isa-manual.
+> > > =20
+> > > +        - const: xandespmu
+> > > +          description:
+> > > +            The Andes Technology performance monitor extension for c=
+ounter overflow
+> > > +            and privilege mode filtering. For more details, see Coun=
+ter Related
+> > > +            Registers in the AX45MP datasheet.
+> > > +            https://www.andestech.com/wp-content/uploads/AX45MP-1C-R=
+ev.-5.0.0-Datasheet.pdf
+> >=20
+> > Does/will this PMU function identically on the other CPUs that support =
+it?
+>=20
+> Yes, I can confirm that.
 
-And this is not building when cross building to mips, mips64 and mipsel
-on debian:experimental:
+If there's a more generic document available, that'd be good.
+Otherwise,
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-In file included from util/intel-pt-decoder/intel-pt-pkt-decoder.c:10:
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le16':
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:29: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
-   13 |         const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);      \
-      |                             ^
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:27:28: note: in expansion of macro '__get_unaligned_t'
-   27 |         return le16_to_cpu(__get_unaligned_t(__le16, p));
-      |                            ^~~~~~~~~~~~~~~~~
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le32':
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:29: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
-   13 |         const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);      \
-      |                             ^
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:32:28: note: in expansion of macro '__get_unaligned_t'
-   32 |         return le32_to_cpu(__get_unaligned_t(__le32, p));
-      |                            ^~~~~~~~~~~~~~~~~
+Thanks,
+Conor.
 
+--BzI6JdR1d6DrVYK+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Ditto for some other distros when cross building on ubuntu:18.04
+-----BEGIN PGP SIGNATURE-----
 
-  MKDIR   /tmp/build/perf/util/perf-regs-arch/
-In file included from /usr/sparc64-linux-gnu/include/bits/byteswap.h:34:0,
-                 from /usr/sparc64-linux-gnu/include/endian.h:60,
-                 from util/intel-pt-decoder/intel-pt-pkt-decoder.c:9:
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le16':
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:22: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
-  const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr); \
-                      ^
-/git/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:27:21: note: in expansion of macro '__get_unaligned_t'
-  return le16_to_cpu(__get_unaligned_t(__le16, p));
-                     ^~~~~~~~~~~~~~~~~
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTpzGgAKCRB4tDGHoIJi
+0uXdAQCoseBoG7Xs6hmuy7UdTh5kG8f+pMwygEI1z4FoVKXYlAEAttRxz9XXoQKp
+UzeNDgGlP1WLp7aj7fbSai8IToBZtgM=
+=eR7X
+-----END PGP SIGNATURE-----
 
-  37    14.17 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
-  38    13.56 ubuntu:18.04-x-arm64          : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
-  42    12.70 ubuntu:18.04-x-riscv64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
-  44    13.95 ubuntu:18.04-x-sh4            : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
-  45    13.08 ubuntu:18.04-x-sparc64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
- 
-> - Arnaldo
->  
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> > ---
-> >  tools/include/asm-generic/unaligned.h | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> > 
-> > diff --git a/tools/include/asm-generic/unaligned.h b/tools/include/asm-generic/unaligned.h
-> > index 47387c607035..9140bb4e16c6 100644
-> > --- a/tools/include/asm-generic/unaligned.h
-> > +++ b/tools/include/asm-generic/unaligned.h
-> > @@ -6,6 +6,9 @@
-> >  #ifndef __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
-> >  #define __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H
-> >  
-> > +#pragma GCC diagnostic push
-> > +#pragma GCC diagnostic ignored "-Wpacked"
-> > +
-> >  #define __get_unaligned_t(type, ptr) ({						\
-> >  	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
-> >  	__pptr->x;								\
-> > @@ -19,5 +22,22 @@
-> >  #define get_unaligned(ptr)	__get_unaligned_t(typeof(*(ptr)), (ptr))
-> >  #define put_unaligned(val, ptr) __put_unaligned_t(typeof(*(ptr)), (val), (ptr))
-> >  
-> > +static inline u16 get_unaligned_le16(const void *p)
-> > +{
-> > +	return le16_to_cpu(__get_unaligned_t(__le16, p));
-> > +}
-> > +
-> > +static inline u32 get_unaligned_le32(const void *p)
-> > +{
-> > +	return le32_to_cpu(__get_unaligned_t(__le32, p));
-> > +}
-> > +
-> > +static inline u64 get_unaligned_le64(const void *p)
-> > +{
-> > +	return le64_to_cpu(__get_unaligned_t(__le64, p));
-> > +}
-> > +
-> > +#pragma GCC diagnostic pop
-> > +
-> >  #endif /* __TOOLS_LINUX_ASM_GENERIC_UNALIGNED_H */
-> >  
-> > -- 
-> > 2.34.1
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
-
--- 
-
-- Arnaldo
+--BzI6JdR1d6DrVYK+--
