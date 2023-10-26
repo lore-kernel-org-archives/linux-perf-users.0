@@ -1,68 +1,67 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD62D381DF;
-	Thu, 26 Oct 2023 17:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E078E38BDD
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 17:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEmwCysu"
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76225D40;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qv5+DA2y"
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6216D55;
 	Thu, 26 Oct 2023 10:11:26 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6b5af4662b7so1090487b3a.3;
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-68fb85afef4so1094238b3a.1;
         Thu, 26 Oct 2023 10:11:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1698340286; x=1698945086; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:date:subject:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ykb4Q1y7dfN3TFCtRf01R1L6KzPjKOLsxYjo41J/L4A=;
-        b=bEmwCysuO6pdXdICdwB1bczTBQaf1huY0lJanhKSemAYhUIeKUtrc5dKgMBOhrYI3v
-         d/7lU3kPo9zR7ypAAwfYfpaJKsDfvK1rFhqdQzFxTtbx0fzLL1Zgm505x8NFzqZ0Ha7x
-         wMc2PnyR+pi81n/YhVQZpEMa1LJMkfEN+dDD+OthjkRkoalFeKCG8mFB8xFjlNqKzyrJ
-         DKeaMUxb10NNjTc0tf3bellC6rIIMaPMMpnbC5vdtgPNAxcLPFOCV08GX+zvo3vVA2f9
-         emBg6gdBL9kDmXXxvirsn1OfpMrFzQpzD0C4eohJ21ybsKz8IridvTkLEywfDCK9Eb2T
-         G2tw==
+        bh=d4Hz68yI660ipLu+CvI0RKlL1QB9xvpcH1iNo665HDk=;
+        b=Qv5+DA2y0IsfYTsN8CG0HGSi2OTHa1IXRpEKtnaKGVqNW42SHBhspDRnisJS/jxyZP
+         zxbzCV33vF4uV5epB1LncBg6h+g7kTFIMOcJjT/eJFhqdc+4SI7lDBpeAdsG2M4FRLku
+         UEe0AJ/jRv6GxTmeWOGUB+a9vHMOFhq4epdGGmknk+1S4Ia2zmbAm48byJOmkZ4MPLPU
+         MryZoIYiclkNjCgKDwo3+SvG1foAELpL8yeN7od/GSZeIE48v7B20gjR3BQWhga0ou7Q
+         7AnwquKrrpu+wGf+KrrynjT92DGZxv/OzJdy6RBiIuUjGFNI5bmeX79DJ5sjkM47ginM
+         1dJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1698340286; x=1698945086;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Ykb4Q1y7dfN3TFCtRf01R1L6KzPjKOLsxYjo41J/L4A=;
-        b=Uk96gFwOsN9HXMIhsSZq1lFgEOuIdHByQaxNZ/IDsZy/ofQw+OjPiNi1N2kpEbWMqY
-         MyLYVUqhKD/sOeN1ViQIDsgNLvOdDiRIu3IJ0jtOlWmVaEhPLiHeJLRU4Zufa6Mxrd+3
-         pyWGGaka1STtq7n+xYe1VwuX48/pPx72tXDFvNwABTdpl6L1TySPk7vWOZrMqpBAvjjI
-         a09mjbxn3HSWWUn7+AyqxLIktRMDbKlJYxtrNVJcY//hCHzbw4Qh5BRBV/2Jt4HVLshw
-         8xqoWkf3LEikTAzc5UhZveWR81wzQCQe6iX9Lo2Q+oXO6YFDtvZgyDe9e1yWYdLB2fKS
-         sGMg==
-X-Gm-Message-State: AOJu0YwmkfV6WbXiI7UecpGBrMP25SZL4N6NoHNkpTCh4nF6lUSlm/xu
-	mXz3fqFeR8mydhNyeFDlCo4=
-X-Google-Smtp-Source: AGHT+IGyET22K6+7YGTrkRiBzmcp8nBei0qE3r/2ecYYK88DNgibhj1n3IgLZAlWRCaQsSj7PIyH/A==
-X-Received: by 2002:a05:6a00:814:b0:6b2:2a2d:7a26 with SMTP id m20-20020a056a00081400b006b22a2d7a26mr108343pfk.28.1698340284398;
-        Thu, 26 Oct 2023 10:11:24 -0700 (PDT)
+         :message-id:date:subject:to:from:sender:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=d4Hz68yI660ipLu+CvI0RKlL1QB9xvpcH1iNo665HDk=;
+        b=fJcukXlMazFMmkWx0zZiEZ+kY63wSD71N5fn3MXiPJplgOoI2OvivSdkTF+t1otWOz
+         JC5/dIb3+yRL431STKKyeTedae9dslRTk3oCbYdEvUR3GEn2Y96FNdni2JLk2+JLyDyp
+         gNikfZYPWZSpIuuii9/01AKPntWJKVc0iN96Mffusw47/PM5TM1pCxgrAGuz4lhvzfk2
+         AJ4NG+y31G1Z3GEEpAIAf/JmcbvRuUWCvlYfUHjFVw41DubdPPOTBeDEB7xpmoZyHxnZ
+         e0tQVnnA7sU5Pc/6Q9xhq1/vze9d+zxekTP+AyXYs/X4DP6ou+/0Y6ZJUxObg8RQwp4R
+         Lqbg==
+X-Gm-Message-State: AOJu0YwXMkSACAZ1OOg0grsD3ljq0Ihha/bi9x0BDwmi05ehn4BTeSx/
+	3f8edVZoj+dF92MZydLRqtg=
+X-Google-Smtp-Source: AGHT+IEkQ2kARqa/dlXjvPVpOC4YCNNY/e4UPZDHmu9VPne5KKX6ea12A7c0Zbn9R1W+Ovy5RezpSA==
+X-Received: by 2002:a05:6a00:2284:b0:6be:5367:2131 with SMTP id f4-20020a056a00228400b006be53672131mr128978pfe.24.1698340286275;
+        Thu, 26 Oct 2023 10:11:26 -0700 (PDT)
 Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:ec51:cb82:a169:2ada])
-        by smtp.gmail.com with ESMTPSA id k15-20020aa7998f000000b00688965c5227sm11356315pfh.120.2023.10.26.10.11.23
+        by smtp.gmail.com with ESMTPSA id k15-20020aa7998f000000b00688965c5227sm11356315pfh.120.2023.10.26.10.11.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Oct 2023 10:11:24 -0700 (PDT)
+        Thu, 26 Oct 2023 10:11:26 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Song Liu <song@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	bpf@vger.kernel.org,
+To: jolsa@kernel.org,
+	irogers@google.com,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
 	linux-perf-users@vger.kernel.org,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 1/3] perf lock contention: Clear lock addr after use
-Date: Thu, 26 Oct 2023 10:11:12 -0700
-Message-ID: <169833996388.1181734.6181786783343850640.b4-ty@kernel.org>
+	alexander.shishkin@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	adrian.hunter@intel.com,
+	Yang Jihong <yangjihong1@huawei.com>,
+	acme@kernel.org
+Subject: Re: [PATCH] perf evsel: Rename evsel__increase_rlimit to rlimit__increase_nofile
+Date: Thu, 26 Oct 2023 10:11:14 -0700
+Message-ID: <169833996386.1181734.1116022702370415307.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
-In-Reply-To: <20231020204741.1869520-1-namhyung@kernel.org>
-References: <20231020204741.1869520-1-namhyung@kernel.org>
+In-Reply-To: <20231023033144.1011896-1-yangjihong1@huawei.com>
+References: <20231023033144.1011896-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,17 +71,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 20 Oct 2023 13:47:39 -0700, Namhyung Kim wrote:
-> It checks the current lock to calculated the delta of contention time.
-> The address is saved in the tstamp map which is allocated at begining of
-> contention and released at end of contention.
+On Mon, 23 Oct 2023 03:31:44 +0000, Yang Jihong wrote:
+> evsel__increase_rlimit() helper does nothing with evsel, and description
+> of the functionality is inaccurate, rename it and move to util/rlimit.c.
 > 
-> But it's possible for bpf_map_delete_elem() to fail.  In that case, the
-> element in the tstamp map kept for the current lock and it makes the
-> next contention for the same lock tracked incorrectly.  Specificially
-> the next contention begin will see the existing element for the task and
-> it'd just return.  Then the next contention end will see the element and
-> calculate the time using the timestamp for the previous begin.
+> By the way, fix a checkppatch warning about misplaced license tag:
+> 
+>   WARNING: Misplaced SPDX-License-Identifier tag - use line 1 instead
+>   #160: FILE: tools/perf/util/rlimit.h:3:
+>   /* SPDX-License-Identifier: LGPL-2.1 */
 > 
 > [...]
 
