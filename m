@@ -1,214 +1,108 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7362381D6;
-	Thu, 26 Oct 2023 17:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB71A2E413
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 17:11:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yV6n4T1i"
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2087.outbound.protection.outlook.com [40.107.237.87])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B8B1AB;
-	Thu, 26 Oct 2023 10:03:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mo6KZLCdPlwH3L4A2mdqZtOOQzBKiB4jk9FreNQN6kAyJMxZUsFiBWZf00ICSF90plVcYTh0VTCDFZkmmOWncvKrUb7uPHElQ+51L28uvGecnTVDS5tnMmChOkBmnqf8LOvENCduwFzUt/Ut0ywuw4PYzImZtOheD8J4iTBYy4wZBkfUbyJqlaH6KRRP4GT62ElVleDMJI/eArP8PJ49tLgyNDBOOoF066A92WZpyAETEkThb99Qi8j5md2u6NvkWEwFnj8nf09PeK92aR3Dgtc2nE4Rqyfi5tZsGzdc9G0K8stcMF1k4WUFqKxU/GH3WDD6DsgkTbrkB2wX/d3QuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wzhqXwyYitBxL8SmVdl/oNn/fFZjtfRBxh6ntxao4z8=;
- b=RkCZYo7+0JCodhshCuNMkFGeYiWSKMcBpwubyN7A/E8AXKSAZXn8/MZelWRO9D8fk80KutY6SCUsoiL1eAKnIrP2g1G0MzHj745krR/w1pyb7qfnPnx6JuFyKxqkMyzg69Xo7YwjYktNpCpHaKFKsHXYIzsRSH8/BKZs5xAQN8S7QAcsbs05jRe2E+DB2prx+CHyJ1og1CgHTOVFkADOjsis1xzxZ03l76ox8vagQp0YjSyMNKPvaM2hSQ293H2pdUBJP8D4DvcJ3B5DhbCTTxdXdMxYL+KpaeogUf8XaoKbGEJZVFFZD6EnIgkcyHjIi3Wv06pqmONneKY0s9Rt3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wzhqXwyYitBxL8SmVdl/oNn/fFZjtfRBxh6ntxao4z8=;
- b=yV6n4T1iq8PVBISm8Fq9Qr0Ry9PiH41DbRooJNCkYhsQV9CslzBIEb47qlFXA+8IE1Oc7xtBFV6wwUyg94QPtahYpRr09fh3K1lUatg1bna4Ss9TJDTGgrzyqms8tfUgXf90WcHkC1OIpO1PAGRoE/dfc0+1EeuKw7o4N21qXq4=
-Received: from BL6PEPF0001641B.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1004:0:10) by MW4PR12MB5625.namprd12.prod.outlook.com
- (2603:10b6:303:168::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.33; Thu, 26 Oct
- 2023 17:03:48 +0000
-Received: from BL02EPF0001A0FD.namprd03.prod.outlook.com
- (2a01:111:f403:c922::) by BL6PEPF0001641B.outlook.office365.com
- (2603:1036:903:4::a) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.35 via Frontend
- Transport; Thu, 26 Oct 2023 17:03:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A0FD.mail.protection.outlook.com (10.167.242.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6933.15 via Frontend Transport; Thu, 26 Oct 2023 17:03:47 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Thu, 26 Oct
- 2023 12:03:46 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-CC: Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Namhyung
- Kim" <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, "H .
- Peter Anvin" <hpa@zytor.com>, "Rafael J . Wysocki" <rafael@kernel.org>, "Len
- Brown" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, David Woodhouse
-	<dwmw@amazon.co.uk>, Sandipan Das <sandipan.das@amd.com>, "open
- list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, "open
- list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>, "open
- list:SUSPEND TO RAM" <linux-pm@vger.kernel.org>, "open list:ACPI"
-	<linux-acpi@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v2 2/2] perf/x86/amd: Stop calling amd_pmu_cpu_reset() from amd_pmu_cpu_dead()
-Date: Thu, 26 Oct 2023 12:03:30 -0500
-Message-ID: <20231026170330.4657-3-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231026170330.4657-1-mario.limonciello@amd.com>
-References: <20231026170330.4657-1-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWurleqA"
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35427D43;
+	Thu, 26 Oct 2023 10:11:22 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6b77ab73c6fso844448b3a.1;
+        Thu, 26 Oct 2023 10:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698340281; x=1698945081; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KFNvVAbx08/DrQAY4pWSijv9p7sBshq6k5IYqo9j+O0=;
+        b=NWurleqA5jII/7qscyqKsFTPezSAeGgKz7rJMqdIYrzsFgGYkcHZT+DoUMQUYGJ0qA
+         f7AOpwKHluFrZ3/e4r7eJYfUwl+crd7q0a9Scldj0D/YDnbl3q15vDSZitI0LMTY49DQ
+         pXwhk03LEbgLPHbcTvoMFnx1tXlqqwg1grrM0C3LdGh88AROFxhiLq8Ik35g03/n8X7d
+         ZdxdUbAJarZhe83sLJ1LfyMB/XqMZ2YBuw5IyXzuM5jRbwQpdKfXuflbyMGsHmxy486b
+         5xkYFdpSgqTRFu0AAGFRUDGJfJTIFfKSQakjQZ8TD+1coJc+HmfGsza8d8D5wYPGAZ2c
+         j4ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698340281; x=1698945081;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:sender:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KFNvVAbx08/DrQAY4pWSijv9p7sBshq6k5IYqo9j+O0=;
+        b=XSNd+hKNf8fhuC0kXdYdWm16RaCw8nBNSd4TjOmN5d8mS1ZsTaYJDPwtW9Xbl7ZUF+
+         oRfZOcybsBs0PFQf1P9OBaBXccuEvWYKBaTbbxJZp8rIg+06OpP7WH1Fex3yhrAqAcU6
+         U8dKnoxBcd/5AbJLZL4Ffd3wvzdnkqHzhTwVmQ6Lu8RUzyg9oxMQl5d5vVj+L5w6G5sY
+         VvnrM3J9yXcAV324hVmXbWawdO/jUDI2Tsxe6adCHjXu6imwvcGwfZQK7eOI6PSticPB
+         JSexAZSlsZfaQORmHhFZAFLClJrEtIiV6wPpwXwcGMRefF/CP5iOC9lcNk3oZf6lI8pg
+         MmFA==
+X-Gm-Message-State: AOJu0YwtGQ2j83GcaPOhaYD3Txp8dtsTEMvBgA/+nEUTbkousc6apxVf
+	tCjYYo3JE7cUH1mACfObtuLMc+6k2N8=
+X-Google-Smtp-Source: AGHT+IH5ue2qCyCaQ8EWK2Mm2mpv6yJZ56Zy4N/See2pf6nmdZ5liva45zbhB9WlYRdLXAlzSUEY9w==
+X-Received: by 2002:a05:6a00:1da4:b0:68f:a92a:8509 with SMTP id z36-20020a056a001da400b0068fa92a8509mr4303916pfw.7.1698340281582;
+        Thu, 26 Oct 2023 10:11:21 -0700 (PDT)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:ec51:cb82:a169:2ada])
+        by smtp.gmail.com with ESMTPSA id k15-20020aa7998f000000b00688965c5227sm11356315pfh.120.2023.10.26.10.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Oct 2023 10:11:21 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	James Clark <james.clark@arm.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Nick Terrell <terrelln@fb.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Sandipan Das <sandipan.das@amd.com>,
+	linux-kernel@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	Andi Kleen <ak@linux.intel.com>,
+	Liam Howlett <liam.howlett@oracle.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Leo Yan <leo.yan@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>,
+	German Gomez <german.gomez@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	liuwenyu <liuwenyu7@huawei.com>
+Subject: Re: (subset) [PATCH v3 00/50] Improvements to memory use
+Date: Thu, 26 Oct 2023 10:11:09 -0700
+Message-ID: <169833996405.1181734.469130152279733524.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
+In-Reply-To: <20231024222353.3024098-1-irogers@google.com>
+References: <20231024222353.3024098-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FD:EE_|MW4PR12MB5625:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4172abd5-8ff3-47e7-1a90-08dbd6458536
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	i5bhIpCw3ENQkTjOZyIV98gCiplJTOEmaUE8zpKc9LOpj010xTJCi59y0UM0mYUs154ugupZLYAjpm0WeYSYJeU2WY5AhQBpcctFV519KbtTUjdHNhzzj8sGKmuZDr9KRXCa5mhPnucn9riuv/uFa1b8hzccH6p8FnJHSMjqCnw4wlF7kZh9iF9buD39M5kua5qRaSSm8Gb1upSbxNXUaMph4MASjvo48ddHiCg9dxluaPGWOHzOLRUqwsZ92F8UblHoc4+sfL3gY+6EexLDiETK5YLJ41YZ1MBZgAxd0BLMUPlUb9rxAXN+l5NYPn23b4jUdq7Ry99/PmdqnoCyuyzQ1UzI3KpgdrsT5mypAi8O2MdKA1CIVquWyi88ksOfhHANXLKVX++fTByYHEAmnF4oBcSPr8fxfh1cwr4nqlbUoN+5DZRSQcJB3Rr/17QWmtP2Uxx0Vp1DCkd6oKsvbGbsXmRBZ1WyWDjz02brv1b1k0zha6Qx0WftieXlAP+zblX+R5xXrVvoN5R1oG8ftYi1+MrTJsoDb4NGyHHT5GrMYOHAS2PObAk3Ibpshd9u7U1JCRD5aORqDg46mD7Gtgh9Pae/xH72bxuxq7rcMeDzYfUN/MUsZknoipXVjXK+1zG5rWLWchfzoY/bK+sVcIvkocQTGNZ76cdzRyxHV1RSLhaQA39ywuKMi46D1xwfZeT/u5BMyMH4++X5oRcF2VP2SwccKC9YTbEit4IrCYqYtjLPNv2gmglpg2D6p84MBZaYLbbyDaQ9kjiclCItZw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(346002)(396003)(376002)(230922051799003)(186009)(1800799009)(82310400011)(451199024)(64100799003)(46966006)(36840700001)(40470700004)(110136005)(44832011)(70206006)(8936002)(70586007)(8676002)(4326008)(41300700001)(478600001)(36860700001)(81166007)(2906002)(7416002)(316002)(47076005)(86362001)(40460700003)(54906003)(5660300002)(36756003)(356005)(40480700001)(6666004)(7696005)(426003)(2616005)(82740400003)(26005)(336012)(16526019)(83380400001)(1076003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2023 17:03:47.8278
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4172abd5-8ff3-47e7-1a90-08dbd6458536
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A0FD.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5625
 
-During suspend testing on a workstation CPU a preemption BUG was reported.
+On Tue, 24 Oct 2023 15:23:03 -0700, Ian Rogers wrote:
+> Fix memory leaks detected by address/leak sanitizer affecting LBR
+> call-graphs, perf mem and BPF offcpu.
+> 
+> Make branch_type_stat in callchain_list optional as it is large and
+> not always necessary - in particular it isn't used by perf top.
+> 
+> Make the allocations of zstd streams, kernel symbols and event copies
+> lazier in order to save memory in cases like perf record.
+> 
+> [...]
 
-```
-BUG: using smp_processor_id() in preemptible [00000000] code: rtcwake/2960
-caller is amd_pmu_lbr_reset+0x19/0xc0
-CPU: 104 PID: 2960 Comm: rtcwake Not tainted 6.6.0-rc6-00002-g3e2c7f3ac51f
-Call Trace:
- <TASK>
- dump_stack_lvl+0x44/0x60
- check_preemption_disabled+0xce/0xf0
- ? __pfx_x86_pmu_dead_cpu+0x10/0x10
- amd_pmu_lbr_reset+0x19/0xc0
- ? __pfx_x86_pmu_dead_cpu+0x10/0x10
- amd_pmu_cpu_reset.constprop.0+0x51/0x60
- amd_pmu_cpu_dead+0x3e/0x90
- x86_pmu_dead_cpu+0x13/0x20
- cpuhp_invoke_callback+0x169/0x4b0
- ? __pfx_virtnet_cpu_dead+0x10/0x10
- __cpuhp_invoke_callback_range+0x76/0xe0
- _cpu_down+0x112/0x270
- freeze_secondary_cpus+0x8e/0x280
- suspend_devices_and_enter+0x342/0x900
- pm_suspend+0x2fd/0x690
- state_store+0x71/0xd0
- kernfs_fop_write_iter+0x128/0x1c0
- vfs_write+0x2db/0x400
- ksys_write+0x5f/0xe0
- do_syscall_64+0x59/0x90
- ? srso_alias_return_thunk+0x5/0x7f
- ? count_memcg_events.constprop.0+0x1a/0x30
- ? srso_alias_return_thunk+0x5/0x7f
- ? handle_mm_fault+0x1e9/0x340
- ? srso_alias_return_thunk+0x5/0x7f
- ? preempt_count_add+0x4d/0xa0
- ? srso_alias_return_thunk+0x5/0x7f
- ? up_read+0x38/0x70
- ? srso_alias_return_thunk+0x5/0x7f
- ? do_user_addr_fault+0x343/0x6b0
- ? srso_alias_return_thunk+0x5/0x7f
- ? exc_page_fault+0x74/0x170
- entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-RIP: 0033:0x7f32f8d14a77
-Code: 10 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa
-64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff
-77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
-RSP: 002b:00007ffdc648de18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007f32f8d14a77
-RDX: 0000000000000004 RSI: 000055b2fc2a5670 RDI: 0000000000000004
-RBP: 000055b2fc2a5670 R08: 0000000000000000 R09: 000055b2fc2a5670
-R10: 00007f32f8e1a2f0 R11: 0000000000000246 R12: 0000000000000004
-R13: 000055b2fc2a2480 R14: 00007f32f8e16600 R15: 00007f32f8e15a00
- </TASK>
-```
-
-This bug shows that there is a mistake with the flow used for offlining
-a CPU.  Calling amd_pmu_cpu_reset() from the dead callback is problematic
-because this doesn't run on the actual CPU being offlined.  The intent of
-the function is to reset MSRs local to that CPU.
-
-Move the call into the dying callback which is actually run on the local
-CPU.
-
-Cc: stable@vger.kernel.org # 6.1+
-Fixes: ca5b7c0d9621 ("perf/x86/amd/lbr: Add LbrExtV2 branch record support")
-Suggested-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v1->v2:
- * Add more of trace
- * Explain root cause better
- * Adjust solution to fix real root cause
----
- arch/x86/events/amd/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index e24976593a29..4ec6d3ece07d 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -598,13 +598,17 @@ static void amd_pmu_cpu_starting(int cpu)
- 	cpuc->amd_nb->refcnt++;
- }
- 
-+static void amd_pmu_cpu_dying(int cpu)
-+{
-+	amd_pmu_cpu_reset(cpu);
-+}
-+
- static void amd_pmu_cpu_dead(int cpu)
- {
- 	struct cpu_hw_events *cpuhw = &per_cpu(cpu_hw_events, cpu);
- 
- 	kfree(cpuhw->lbr_sel);
- 	cpuhw->lbr_sel = NULL;
--	amd_pmu_cpu_reset(cpu);
- 
- 	if (!x86_pmu.amd_nb_constraints)
- 		return;
-@@ -1270,6 +1274,7 @@ static __initconst const struct x86_pmu amd_pmu = {
- 
- 	.cpu_prepare		= amd_pmu_cpu_prepare,
- 	.cpu_starting		= amd_pmu_cpu_starting,
-+	.cpu_dying		= amd_pmu_cpu_dying,
- 	.cpu_dead		= amd_pmu_cpu_dead,
- 
- 	.amd_nb_constraints	= 1,
--- 
-2.34.1
+Applied the first 11 patches to perf-tool-next, thanks!
 
