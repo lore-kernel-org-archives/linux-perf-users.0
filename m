@@ -1,93 +1,193 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546A1C132
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 05:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E066F9E5
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 06:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rCOJ8SEQ"
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A2AC1
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 22:32:45 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6b89ab5ddb7so505714b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Oct 2023 22:32:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVBgFX2s"
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12736187;
+	Wed, 25 Oct 2023 23:26:18 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-6bd73395bceso391633b3a.0;
+        Wed, 25 Oct 2023 23:26:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698298365; x=1698903165; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kBEAEsZN4djiQ3228v8fI+FpEgZGRwVs54ro+ujbLE8=;
-        b=rCOJ8SEQNCsKyfcnC1fNGPkGLEvHjyro90ohjhc+WsqQOJGz1lPESKmpxgPdKUOYDs
-         N1ZzZymhMTtnBZxYSRz1pEfCrc0URTH9eepcX2qsCsVzUcOAulQSsmOoFq6Z7EeBm8nV
-         Chs3O+jWqzQND9RZuSjxc3y5ELMYZriav4BLgXdhVN5kDF1uTHrYUn5SaY6XAE9UbY/d
-         orPhslPkoeNL7aC5fW1T39V/xM/x4R/6I0Q9zkUe3R45tAY4sqqAODU8Vkq8G0qsub4F
-         Wr3QhBLenssHkjJPtg/pEiQSWS8aRcKSPMiwdXflnah8Ctl6DBBNUghfVt0bPL05ATzs
-         hRMg==
+        d=gmail.com; s=20230601; t=1698301577; x=1698906377; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=KGFAGOw1jMD4qW4ZS/5Zs1JohmRnxW/EBkFlBVus7WE=;
+        b=TVBgFX2siBkLnhqsU680SN5MHyEkZYJTrAYsho5DJMDiKrnGYLmN/do+B0re8/H5gi
+         KszNxjvPbLImN6HcJs6zH7Om8RygxM/fuTJqibDt82XsWynHMwOKnSObHybsSfzQszeZ
+         AaPjbQgir6B/s9gAVF1nyQccCNGXuHHt6iiV2++KKbXiXIQ3aZM22JHOLDr3PZ6hsbFN
+         h4kMBbhF12/pjJWlxEsbABV2qpGzy5KxjPLwI3G96fHMB7yE+U5mMYVX8XIK5MvbYgyf
+         7AlskJ/7gvFa5IMbuE6Q7s/VdJnxPQXojxEZDH8cTB20gL+nFWDSTF94pKNvfS/4pGTX
+         nXHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698298365; x=1698903165;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1698301577; x=1698906377;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kBEAEsZN4djiQ3228v8fI+FpEgZGRwVs54ro+ujbLE8=;
-        b=IsmhCj8iSW4J06wwliVe7D8yABBHs4lYhIuI/YCY3UCZDznnle8qP5W641YzhpiNU7
-         t4SltZAbulzCkanF1dI1Cud0yQa0nzdYeKmz6RW9xxUlDJ9H9SMBENciqUC+eyQTof+I
-         ywCMcidlxXDKp+EuIDzfEvC/Q7BQ/SrPHUpPWK4wU1IuTXAQMLpEc+sqr5FACEO/GcNW
-         cfBknkSa3f/phQLQiDAtMw6KWb5QBLYUrDvmHsRL/dCJ9/JbPLNCmhblTcO1nf45cpH/
-         5uF4wf8Tr4KhbV31bdqOpIjUythGFViJnDF3mUFlegQtPR9IwWQAKCBADIFtsyaybKVX
-         Cdww==
-X-Gm-Message-State: AOJu0Yy+USYkDYZ7rY8LUBdG+/3cPgaeipQXbjOTAwpTEYYdEXEaievx
-	Ie/mZBcOS5OoJ59xw3y0AwHVygoUP/ahS6v1fJaf3TRH
-X-Google-Smtp-Source: AGHT+IFi79EC7J/PZyT8aPuF3e72CbPEci6W2qWDbfoUzWTFvPv6/KSJviE1GdJ+D1eqdcl62hwo3Q==
-X-Received: by 2002:a05:6a00:248d:b0:6b2:5992:9e89 with SMTP id c13-20020a056a00248d00b006b259929e89mr20526019pfv.9.1698298365176;
-        Wed, 25 Oct 2023 22:32:45 -0700 (PDT)
-Received: from leoy-huanghe.lan (211-75-219-209.hinet-ip.hinet.net. [211.75.219.209])
-        by smtp.gmail.com with ESMTPSA id z2-20020aa79f82000000b00692cac7a065sm10258284pfr.151.2023.10.25.22.32.40
+        bh=KGFAGOw1jMD4qW4ZS/5Zs1JohmRnxW/EBkFlBVus7WE=;
+        b=GBSeOr8eKQ7EHdrOQ0i7WrovnGjkbNCtQMed7xthRmI+6I82Cx95A66eH9m1hCubs7
+         N1/obMu7zNXGuZn2izAgZ3TQSHeM8OtfcX4AHTwQOoUTDojVuzGCMSHy/Ri8eCIqQUP5
+         Mdo0Ou9j53PLypwcY1jp1o8TutmfyHpxPwhIyre5yFqX9NgNqH21Xd9x0hrgcQ/tDIqU
+         FqCeNGAe13taDml9gzlfqWL91qpubvcm3hiP1NFHvyA4fCx6zkEOjUIKpie/7zqGk4Js
+         G14UlUXza6A9F3q8vomfpYsq19zbNiqKYXh+fUJd+mtD3rOPhlN4+RsfC49Ci/7D0bAD
+         tA7w==
+X-Gm-Message-State: AOJu0Yzi2P7tOBbzcvf9wvEYGBvN7CGanQ0nAe1PC4n8QuFTyx3GMe70
+	d7BaufaPI2Mz5W9xdnmo3CM=
+X-Google-Smtp-Source: AGHT+IFLmc+yJ/UAbI38jDjOnkPI+SS1Wbgv3/5Ir3Khrr/2t9WicUpIm1U7LXXAuOrkV8m/MhgemA==
+X-Received: by 2002:a05:6a00:280f:b0:692:6417:728a with SMTP id bl15-20020a056a00280f00b006926417728amr1844186pfb.14.1698301577369;
+        Wed, 25 Oct 2023 23:26:17 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:5393:ee8f:5738:b9c3])
+        by smtp.gmail.com with ESMTPSA id ca27-20020a056a00419b00b006c05374202dsm989282pfb.71.2023.10.25.23.26.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 22:32:44 -0700 (PDT)
-Date: Thu, 26 Oct 2023 13:32:38 +0800
-From: Leo Yan <leo.yan@linaro.org>
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
-	suzuki.poulose@arm.com, atrajeev@linux.vnet.ibm.com,
-	tianruidong@linux.alibaba.com, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+        Wed, 25 Oct 2023 23:26:16 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Anushree Mathur <anushree.mathur@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf tests: test_arm_coresight: Simplify source iteration
-Message-ID: <20231026053238.GB111732@leoy-huanghe.lan>
-References: <20231023131550.487760-1-james.clark@arm.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf tools: Add -H short option for --hierarchy
+Date: Wed, 25 Oct 2023 23:26:15 -0700
+Message-ID: <20231026062615.3096537-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.758.gaed0368e0e-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231023131550.487760-1-james.clark@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 23, 2023 at 02:15:49PM +0100, James Clark wrote:
-> There are two reasons to do this, firstly there is a shellcheck warning
-> in cs_etm_dev_name(), which can be completely deleted. And secondly the
-> current iteration method doesn't support systems with both ETE and ETM
-> because it picks one or the other. There isn't a known system with this
-> configuration, but it could happen in the future.
-> 
-> Iterating over all the sources for each CPU can be done by going through
-> /sys/bus/event_source/devices/cs_etm/cpu* and following the symlink back
-> to the Coresight device in /sys/bus/coresight/devices. This will work
-> whether the device is ETE, ETM or any future name, and is much simpler
-> and doesn't require any hard coded version numbers
-> 
-> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: James Clark <james.clark@arm.com>
+I found the hierarchy mode useful, but it's easy to make a typo when
+using it.  Let's add a short option for that.
 
-Looks good to me.  And I did a test for it:
+Also update the documentation. :)
 
-Tested-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-report.txt | 29 ++++++++++++++++++++-
+ tools/perf/Documentation/perf-top.txt    | 32 +++++++++++++++++++++++-
+ tools/perf/builtin-report.c              |  2 +-
+ tools/perf/builtin-top.c                 |  2 +-
+ 4 files changed, 61 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index af068b4f1e5a..7d8916b2b7f7 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -528,8 +528,35 @@ include::itrace.txt[]
+ --raw-trace::
+ 	When displaying traceevent output, do not use print fmt or plugins.
+ 
++-H::
+ --hierarchy::
+-	Enable hierarchical output.
++	Enable hierarchical output.  In the hierarchy mode, each sort key groups
++	samples based on the criteria and then sub-divide it using the lower
++	level sort key.
++
++	For example:
++	In normal output:
++
++	  perf report -s dso,sym
++	  # Overhead  Shared Object      Symbol
++	      50.00%  [kernel.kallsyms]  [k] kfunc1
++	      20.00%  perf               [.] foo
++	      15.00%  [kernel.kallsyms]  [k] kfunc2
++	      10.00%  perf               [.] bar
++	       5.00%  libc.so            [.] libcall
++
++	In hierarchy output:
++
++	  perf report -s dso,sym --hierarchy
++	  #   Overhead  Shared Object / Symbol
++	      65.00%    [kernel.kallsyms]
++	        50.00%    [k] kfunc1
++	        15.00%    [k] kfunc2
++	      30.00%    perf
++	        20.00%    [.] foo
++	        10.00%    [.] bar
++	       5.00%    libc.so
++	         5.00%    [.] libcall
+ 
+ --inline::
+ 	If a callgraph address belongs to an inlined function, the inline stack
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 3c202ec080ba..a754875fa5bb 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -261,8 +261,38 @@ Default is to monitor all CPUS.
+ --raw-trace::
+ 	When displaying traceevent output, do not use print fmt or plugins.
+ 
++-H::
+ --hierarchy::
+-	Enable hierarchy output.
++	Enable hierarchical output.  In the hierarchy mode, each sort key groups
++	samples based on the criteria and then sub-divide it using the lower
++	level sort key.
++
++	For example, in normal output:
++
++	  perf report -s dso,sym
++	  #
++	  # Overhead  Shared Object      Symbol
++	  # ........  .................  ...........
++	      50.00%  [kernel.kallsyms]  [k] kfunc1
++	      20.00%  perf               [.] foo
++	      15.00%  [kernel.kallsyms]  [k] kfunc2
++	      10.00%  perf               [.] bar
++	       5.00%  libc.so            [.] libcall
++
++	In hierarchy output:
++
++	  perf report -s dso,sym --hierarchy
++	  #
++	  #   Overhead  Shared Object / Symbol
++	  # ..........  ......................
++	      65.00%    [kernel.kallsyms]
++	        50.00%    [k] kfunc1
++	        15.00%    [k] kfunc2
++	      30.00%    perf
++	        20.00%    [.] foo
++	        10.00%    [.] bar
++	       5.00%    libc.so
++	         5.00%    [.] libcall
+ 
+ --overwrite::
+ 	Enable this to use just the most recent records, which helps in high core count
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index ca8f2331795c..b16680d0f82c 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1392,7 +1392,7 @@ int cmd_report(int argc, const char **argv)
+ 		    "only show processor socket that match with this filter"),
+ 	OPT_BOOLEAN(0, "raw-trace", &symbol_conf.raw_trace,
+ 		    "Show raw trace event output (do not use print fmt or plugins)"),
+-	OPT_BOOLEAN(0, "hierarchy", &symbol_conf.report_hierarchy,
++	OPT_BOOLEAN('H', "hierarchy", &symbol_conf.report_hierarchy,
+ 		    "Show entries in a hierarchy"),
+ 	OPT_CALLBACK_DEFAULT(0, "stdio-color", NULL, "mode",
+ 			     "'always' (default), 'never' or 'auto' only applicable to --stdio mode",
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index ea8c7eca5eee..3cccb2a516dc 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1573,7 +1573,7 @@ int cmd_top(int argc, const char **argv)
+ 		    "add last branch records to call history"),
+ 	OPT_BOOLEAN(0, "raw-trace", &symbol_conf.raw_trace,
+ 		    "Show raw trace event output (do not use print fmt or plugins)"),
+-	OPT_BOOLEAN(0, "hierarchy", &symbol_conf.report_hierarchy,
++	OPT_BOOLEAN('H', "hierarchy", &symbol_conf.report_hierarchy,
+ 		    "Show entries in a hierarchy"),
+ 	OPT_BOOLEAN(0, "overwrite", &top.record_opts.overwrite,
+ 		    "Use a backward ring buffer, default: no"),
+-- 
+2.42.0.758.gaed0368e0e-goog
+
