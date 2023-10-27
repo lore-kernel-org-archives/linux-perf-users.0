@@ -1,318 +1,132 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EDA8C0B
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 07:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99FE1B1;
-	Fri, 27 Oct 2023 00:40:08 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id EC5D924E29A;
-	Fri, 27 Oct 2023 15:40:04 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 27 Oct
- 2023 15:40:04 +0800
-Received: from localhost.localdomain (202.188.176.82) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 27 Oct
- 2023 15:39:54 +0800
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Namhyung
- Kim" <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Palmer
- Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Nikita
- Shubin" <n.shubin@yadro.com>
-CC: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, Ley Foon Tan
-	<leyfoon.tan@starfivetech.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH v2] perf vendor events riscv: add StarFive Dubhe-90 JSON file
-Date: Fri, 27 Oct 2023 15:39:25 +0800
-Message-ID: <20231027073925.1523843-1-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B2111715
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 08:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/eFvfla"
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EAEA1B4;
+	Fri, 27 Oct 2023 01:01:05 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6bd32d1a040so1758482b3a.3;
+        Fri, 27 Oct 2023 01:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698393664; x=1698998464; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HcgTb1uk+LNET/CdwAZQedqtTls7gJN7u/d99YpV55w=;
+        b=P/eFvflarEUqQj5mTndnOvUNh5X8QKTacIA01uiR+572YFSR96Mo4NknFcqcTNjchf
+         bAUsFMdoEZVdSgvsCPPXcVG2KD4xSUna28Jax0+S86KLTqH6Wc45HQQtZeqzWygUn6Lm
+         Y8CxirOe7UbgWJl73QVASFXT26LaN7sg15xhVlq9ABydTa06/xNRgXhXREcW2e5LOJYE
+         xCqjGPHwO4mfHgS7LyIJ6hfEZHWQmeomYiGvmuFUVy0WkTZBkr7UmHcpa1MN7FzcpqdP
+         esubUsLEZkzyWwfWtMktqOu9KwlzgjzZp3GB+Jn9dnn870Dj+2awNiAlc1q+FwPobNBW
+         H5DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698393664; x=1698998464;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HcgTb1uk+LNET/CdwAZQedqtTls7gJN7u/d99YpV55w=;
+        b=leCieb8cETS0ggutk7wnGcWB1Dd1jirgsDqFcgEGIxWok5qRHyyQuTrNdWt1UEL1s6
+         uvrnKIv1C7RplmF0PH+gRHG3jbxL6StJ66R6jTCbIG7PIxhSAAeqtpRM8H19FC/Ff7Hk
+         LFq+Bwltnj4j7l/ib3GBFZcPJLWCtgNUU1pF6Emx1hqX4OBULyEknBDkbxs33QoLYTTW
+         jwecJM0bcMk/r8WWUl6fZz+PXkMKiidTxHM32cobcEeAcSw6oIk8oN30YWJHtthsHDKN
+         bATrvPipyklk7SncsqfiuYfcTpE4D75gsAPAjhLFi/U5HWQ0ol7MSEH7jzJsZzSgVX7M
+         7epQ==
+X-Gm-Message-State: AOJu0YzEPLRpVPM6S2906Id2mIfl3aUb46RWPDvr802mmkIKAJrnuPKp
+	k7deiILv90PySKDRPCzmo5P13hBGJbwKD058mgpCai+WL8KeeMsu
+X-Google-Smtp-Source: AGHT+IE+cWamXBpcNmOndSqM2PXeMYmq4wS3kkttK+0iU1/3Sst/PqOIa91Kf4ZC1XQ3lTMcsohN1Eq96Oc3+EdeRWA=
+X-Received: by 2002:a17:90a:7563:b0:27d:853:9109 with SMTP id
+ q90-20020a17090a756300b0027d08539109mr1881208pjk.20.1698393664495; Fri, 27
+ Oct 2023 01:01:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [202.188.176.82]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: quoted-printable
+References: <CAO8sHcn3+_qrnvp0580aK7jN0Wion5F7KYeBAa4MnCY4mqABPA@mail.gmail.com>
+ <20231026145659.7063-A-hca@linux.ibm.com>
+In-Reply-To: <20231026145659.7063-A-hca@linux.ibm.com>
+From: Daan De Meyer <daan.j.demeyer@gmail.com>
+Date: Fri, 27 Oct 2023 10:00:53 +0200
+Message-ID: <CAO8sHckF_D+SjvGySsGHOpOcdy6y7pwQEF9SfV3sw4Ye4_sCKA@mail.gmail.com>
+Subject: Re: s390x stack unwinding with perf?
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	"dcavalca@meta.com" <dcavalca@meta.com>, ngompa@fedoraproject.org, 
+	Andreas Krebbel <krebbel@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-StarFive Dubhe-90 supports raw event id 0x00 - 0x22.
-The raw events are enabled through PMU node of the DT binding.
+> > Hi,
+> >
+> > As part of enabling frame pointers system wide for Fedora to get fast
+> > system wide stack unwinding, we're now looking to do the same for
+> > s390x after previously enabling frame pointers for x86-64 and aarch64.
+> > From what we can find, on s390x stack unwinding is done via the
+> > "-mbackchain" compiler option. However, from some early experiments
+> > rebuilding a small part of the distro, this option alone does not seem
+> > to result in usable stack traces in perf (perf record -g => perf
+> > report).
+> >
+> > Are there any other compiler options that need to be enabled in order
+> > to get usable stack traces in perf for s390x? Has anyone managed to
+> > get this working before?
+>
+> So, are you saying that you want to enable "-mbackchain" for whole user
+> space for Fedora? If that is the case, what certainly is missing is kernel
+> support to unwind user space stack frames from the kernel, since until now
+> no distribution had user space where it would be possible to unwind the
+> user space stack from the kernel; which is the reason why this was never
+> implemented.
+>
+> If this (or some other compiler options) will be enabled for user space, we
+> need to add kernel support in order to make this work.
 
-Example of PMU DT node:
-pmu {
-	compatible =3D "riscv,pmu";
-	riscv,raw-event-to-mhpmcounters =3D
-		/* Event ID 1-31 */
-		<0x00 0x00 0xFFFFFFFF 0xFFFFFFE0 0x00007FF8>,
-		/* Event ID 32-33 */
-		<0x00 0x20 0xFFFFFFFF 0xFFFFFFFE 0x00007FF8>,
-		/* Event ID 34 */
-		<0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;
-};
+If the kernel gets support for s390x user space unwinding using the backchain,
+we'll propose to enable -mbackchain in the default compilation flags for Fedora
+so that s390x on Fedora will have the same profiling experience as x86-64, arm64
+and ppc64. For now we'll keep the status quo since compiling with the backchain
+doesn't provide any benefit until the kernel unwinder can unwind user
+space stacks
+using it.
 
-Perf stat output:
-[root@user]# perf stat -a \
-	-e access_mmu_stlb \
-	-e miss_mmu_stlb \
-	-e access_mmu_pte_c \
-	-e rob_flush \
-	-e btb_prediction_miss \
-	-e itlb_miss \
-	-e sync_del_fetch_g \
-	-e icache_miss \
-	-e bpu_br_retire \
-	-e bpu_br_miss \
-	-e ret_ins_retire \
-	-e ret_ins_miss \
-	-- openssl speed rsa2048
-Doing 2048 bits private rsa's for 10s: 39 2048 bits private RSA's in
-10.03s
-Doing 2048 bits public rsa's for 10s: 1469 2048 bits public RSA's in
-9.47s
-version: 3.0.10
-built on: Tue Aug  1 13:47:24 2023 UTC
-options: bn(64,64)
-CPUINFO: N/A
-                  sign    verify    sign/s verify/s
-rsa 2048 bits 0.257179s 0.006447s      3.9    155.1
+Thanks for clarifying the current state of user space stack unwinding on s390x!
 
- Performance counter stats for 'system wide':
+Cheers,
 
-           3112882      access_mmu_stlb
-             10550      miss_mmu_stlb
-             18251      access_mmu_pte_c
-            274765      rob_flush
-          22470560      btb_prediction_miss
-           3035839      itlb_miss
-         643549060      sync_del_fetch_g
-            133013      icache_miss
-          62982796      bpu_br_retire
-            287548      bpu_br_miss
-           8935910      ret_ins_retire
-              8308      ret_ins_miss
+Daan
 
-      20.656182600 seconds time elapsed
 
-Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-Reviewed-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
----
-Changelog:
-v1 -> v2:
-- Rename 'Starfive Dubhe' to 'StarFive Dubhe-90' in commit message.
-- Rename 'starfive/dubhe' pmu-events folder to 'starfive/dubhe-90'
-- Update MARCHID to 0x80000000db000090 in mapfile.csv
----
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
- .../arch/riscv/starfive/dubhe-90/common.json  | 172 ++++++++++++++++++
- 2 files changed, 173 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/starfive/dubhe-90/co=
-mmon.json
 
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
-u-events/arch/riscv/mapfile.csv
-index c61b3d6ef616..a884eb59a5de 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -15,3 +15,4 @@
- #
- #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
- 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-+0x67e-0x80000000db000090-0x[[:xdigit:]]+,v1,starfive/dubhe-90,core
-diff --git a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-90/common.js=
-on b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-90/common.json
-new file mode 100644
-index 000000000000..fbffcacb2ace
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-90/common.json
-@@ -0,0 +1,172 @@
-+[
-+  {
-+    "EventName": "ACCESS_MMU_STLB",
-+    "EventCode": "0x1",
-+    "BriefDescription": "access MMU STLB"
-+  },
-+  {
-+    "EventName": "MISS_MMU_STLB",
-+    "EventCode": "0x2",
-+    "BriefDescription": "miss MMU STLB"
-+  },
-+  {
-+    "EventName": "ACCESS_MMU_PTE_C",
-+    "EventCode": "0x3",
-+    "BriefDescription": "access MMU PTE-Cache"
-+  },
-+  {
-+    "EventName": "MISS_MMU_PTE_C",
-+    "EventCode": "0x4",
-+    "BriefDescription": "miss MMU PTE-Cache"
-+  },
-+  {
-+    "EventName": "ROB_FLUSH",
-+    "EventCode": "0x5",
-+    "BriefDescription": "ROB flush (all kinds of exceptions)"
-+  },
-+  {
-+    "EventName": "BTB_PREDICTION_MISS",
-+    "EventCode": "0x6",
-+    "BriefDescription": "BTB prediction miss"
-+  },
-+  {
-+    "EventName": "ITLB_MISS",
-+    "EventCode": "0x7",
-+    "BriefDescription": "ITLB miss"
-+  },
-+  {
-+    "EventName": "SYNC_DEL_FETCH_G",
-+    "EventCode": "0x8",
-+    "BriefDescription": "SYNC delivery a fetch-group"
-+  },
-+  {
-+    "EventName": "ICACHE_MISS",
-+    "EventCode": "0x9",
-+    "BriefDescription": "ICache miss"
-+  },
-+  {
-+    "EventName": "BPU_BR_RETIRE",
-+    "EventCode": "0xA",
-+    "BriefDescription": "condition branch instruction retire"
-+  },
-+  {
-+    "EventName": "BPU_BR_MISS",
-+    "EventCode": "0xB",
-+    "BriefDescription": "condition branch instruction miss"
-+  },
-+  {
-+    "EventName": "RET_INS_RETIRE",
-+    "EventCode": "0xC",
-+    "BriefDescription": "return instruction retire"
-+  },
-+  {
-+    "EventName": "RET_INS_MISS",
-+    "EventCode": "0xD",
-+    "BriefDescription": "return instruction miss"
-+  },
-+  {
-+    "EventName": "INDIRECT_JR_MISS",
-+    "EventCode": "0xE",
-+    "BriefDescription": "indirect JR instruction miss (inlcude without t=
-arget)"
-+  },
-+  {
-+    "EventName": "IBUF_VAL_ID_NORDY",
-+    "EventCode": "0xF",
-+    "BriefDescription": "IBUF valid while ID not ready"
-+  },
-+  {
-+    "EventName": "IBUF_NOVAL_ID_RDY",
-+    "EventCode": "0x10",
-+    "BriefDescription": "IBUF not valid while ID ready"
-+  },
-+  {
-+    "EventName": "REN_INT_PHY_REG_NORDY",
-+    "EventCode": "0x11",
-+    "BriefDescription": "REN integer physical register file is not ready=
-"
-+  },
-+  {
-+    "EventName": "REN_FP_PHY_REG_NORDY",
-+    "EventCode": "0x12",
-+    "BriefDescription": "REN floating point physical register file is no=
-t ready"
-+  },
-+  {
-+    "EventName": "REN_CP_NORDY",
-+    "EventCode": "0x13",
-+    "BriefDescription": "REN checkpoint is not ready"
-+  },
-+  {
-+    "EventName": "DEC_VAL_ROB_NORDY",
-+    "EventCode": "0x14",
-+    "BriefDescription": "DEC is valid and ROB is not ready"
-+  },
-+  {
-+    "EventName": "OOD_FLUSH_LS_DEP",
-+    "EventCode": "0x15",
-+    "BriefDescription": "out of order flush due to load/store dependency=
-"
-+  },
-+  {
-+    "EventName": "BRU_RET_IJR_INS",
-+    "EventCode": "0x16",
-+    "BriefDescription": "BRU retire an IJR instruction"
-+  },
-+  {
-+    "EventName": "ACCESS_DTLB",
-+    "EventCode": "0x17",
-+    "BriefDescription": "access DTLB"
-+  },
-+  {
-+    "EventName": "MISS_DTLB",
-+    "EventCode": "0x18",
-+    "BriefDescription": "miss DTLB"
-+  },
-+  {
-+    "EventName": "LOAD_INS_DCACHE",
-+    "EventCode": "0x19",
-+    "BriefDescription": "load instruction access DCache"
-+  },
-+  {
-+    "EventName": "LOAD_INS_MISS_DCACHE",
-+    "EventCode": "0x1A",
-+    "BriefDescription": "load instruction miss DCache"
-+  },
-+  {
-+    "EventName": "STORE_INS_DCACHE",
-+    "EventCode": "0x1B",
-+    "BriefDescription": "store/amo instruction access DCache"
-+  },
-+  {
-+    "EventName": "STORE_INS_MISS_DCACHE",
-+    "EventCode": "0x1C",
-+    "BriefDescription": "store/amo instruction miss DCache"
-+  },
-+  {
-+    "EventName": "LOAD_SCACHE",
-+    "EventCode": "0x1D",
-+    "BriefDescription": "load access SCache"
-+  },
-+  {
-+    "EventName": "STORE_SCACHE",
-+    "EventCode": "0x1E",
-+    "BriefDescription": "store access SCache"
-+  },
-+  {
-+    "EventName": "LOAD_MISS_SCACHE",
-+    "EventCode": "0x1F",
-+    "BriefDescription": "load miss SCache"
-+  },
-+  {
-+    "EventName": "STORE_MISS_SCACHE",
-+    "EventCode": "0x20",
-+    "BriefDescription": "store miss SCache"
-+  },
-+  {
-+    "EventName": "L2C_PF_REQ",
-+    "EventCode": "0x21",
-+    "BriefDescription": "L2C data-prefetcher request"
-+  },
-+  {
-+    "EventName": "L2C_PF_HIT",
-+    "EventCode": "0x22",
-+    "BriefDescription": "L2C data-prefetcher hit"
-+  }
-+]
---=20
-2.25.1
 
+
+On Thu, 26 Oct 2023 at 16:57, Heiko Carstens <hca@linux.ibm.com> wrote:
+>
+> On Thu, Oct 26, 2023 at 02:30:41PM +0200, Daan De Meyer wrote:
+> > Hi,
+> >
+> > As part of enabling frame pointers system wide for Fedora to get fast
+> > system wide stack unwinding, we're now looking to do the same for
+> > s390x after previously enabling frame pointers for x86-64 and aarch64.
+> > From what we can find, on s390x stack unwinding is done via the
+> > "-mbackchain" compiler option. However, from some early experiments
+> > rebuilding a small part of the distro, this option alone does not seem
+> > to result in usable stack traces in perf (perf record -g => perf
+> > report).
+> >
+> > Are there any other compiler options that need to be enabled in order
+> > to get usable stack traces in perf for s390x? Has anyone managed to
+> > get this working before?
+>
+> So, are you saying that you want to enable "-mbackchain" for whole user
+> space for Fedora? If that is the case, what certainly is missing is kernel
+> support to unwind user space stack frames from the kernel, since until now
+> no distribution had user space where it would be possible to unwind the
+> user space stack from the kernel; which is the reason why this was never
+> implemented.
+>
+> If this (or some other compiler options) will be enabled for user space, we
+> need to add kernel support in order to make this work.
