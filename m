@@ -1,89 +1,82 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9AEA5E
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 00:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DrEUuxvA"
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [IPv6:2001:41d0:203:375::b7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EEA1B5
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Oct 2023 17:59:13 -0700 (PDT)
-Date: Fri, 27 Oct 2023 00:59:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1698368352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AeRy8vuS6mrpGOBLOgfWIOKLb2ahrPwA4SS8/6tbWeg=;
-	b=DrEUuxvAI5ctCub2sN1eN21Qzg72HY0TsBDPr1bqy3GTnsXoFfYI9bPzXhydi6npanWckZ
-	2vdktmxqMmE7FJkllnjnVZ5su/xzOdTDPPDsGqMrVQWA7WX3N25/0Ze9lkOKW6hG2PcaBE
-	nHl++HiTXgzE1rrnGHguiWBvGrujEB0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Jing Zhang <jingzhangos@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 3/5] KVM: selftests: Generate sysreg-defs.h and add to
- include path
-Message-ID: <ZTsLWQZWtSnZFaVr@linux.dev>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-4-oliver.upton@linux.dev>
- <d625c6b75a7ec5508470517b6744afbb95e22657.camel@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03AF19C
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 02:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88CD41AA;
+	Thu, 26 Oct 2023 19:32:35 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.53])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4SGmmd6wCHzMmJg;
+	Fri, 27 Oct 2023 10:28:17 +0800 (CST)
+Received: from ubuntu2204.huawei.com (10.67.174.22) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Fri, 27 Oct 2023 10:32:32 +0800
+From: Yang Jihong <yangjihong1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+	<adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <yangjihong1@huawei.com>
+Subject: [PATCH] perf python: Add missing util/rlimit.c file to the python binding linkage list
+Date: Fri, 27 Oct 2023 02:30:28 +0000
+Message-ID: <20231027023028.1106441-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d625c6b75a7ec5508470517b6744afbb95e22657.camel@linux.ibm.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.22]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
 
-Hi Nina,
+In commit c4a852635edd ("perf data: Increase RLIMIT_NOFILE limit when open
+too many files in perf_data__create_dir()") we started using the
+evsel__increase_rlimit() function from util/rlimit.c used
+in the python binding, which caused this entry in 'perf test' to fail:
 
-Apologies, I missed this email in my inbox and happened to see it on
-lore.
+  $ ./perf test python
+   19: 'import perf' in python                                         : FAILED!
 
-On Mon, Oct 23, 2023 at 03:53:59PM +0200, Nina Schoetterl-Glausch wrote:
+After:
 
-[...]
+  $ ./perf test -v python
+  Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+   19: 'import perf' in python                                         :
+  --- start ---
+  test child forked, pid 1100249
+  python usage test: "echo "import sys ; sys.path.insert(0, 'python'); import perf" | '/usr/bin/python3' "
+  test child finished with 0
+  ---- end ----
+  'import perf' in python: Ok
 
-> > +ifeq ($(ARCH),arm64)
-> > +arm64_tools_dir := $(top_srcdir)/tools/arch/arm64/tools/
-> > +GEN_HDRS := $(top_srcdir)/tools/arch/arm64/include/generated/
-> > +CFLAGS += -I$(GEN_HDRS)
-> > +
-> > +prepare:
-> > +	$(MAKE) -C $(arm64_tools_dir)
-> > +else
-> > +prepare:
-> 
-> This is a force target, all targets depending on this one will always have their recipe run,
-> so we'll pretty much rebuild everything.
-> Is this intentional?
+Fixes: c4a852635edd ("perf data: Increase RLIMIT_NOFILE limit when open too many files in perf_data__create_dir()")
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/util/python-ext-sources | 1 +
+ 1 file changed, 1 insertion(+)
 
-No, I just wasn't thinking about what I was doing :)
-
-I've sent out a fix for this, plan to have it resolved before sending
-out the PR for 6.7.
-
-[*] https://lore.kernel.org/kvmarm/20231027005439.3142015-3-oliver.upton@linux.dev/
-
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index 26e1c8d973ea..593b660ec75e 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -40,6 +40,7 @@ util/rwsem.c
+ util/hashmap.c
+ util/perf_regs.c
+ util/fncache.c
++util/rlimit.c
+ util/perf-regs-arch/perf_regs_aarch64.c
+ util/perf-regs-arch/perf_regs_arm.c
+ util/perf-regs-arch/perf_regs_csky.c
 -- 
-Thanks,
-Oliver
+2.34.1
+
