@@ -1,39 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD1D1F5E4
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 13:36:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8743D200DA
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 13:39:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjahxqQV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82214C433C8;
-	Fri, 27 Oct 2023 13:36:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6epLDz4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73CAC433C8;
+	Fri, 27 Oct 2023 13:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698413761;
-	bh=zr+piGqNha8SH1IgRkyvQsYXO7OF+ckvJNeJmO5jOgM=;
+	s=k20201202; t=1698413993;
+	bh=K1n5c9rQ/qe3e3IncOBFgW5/PfZSET5tGuj+Igr0VT4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sjahxqQVlenRUlHbdEbRVeGC1IIxhJZXdbkEzZB+2dJ4sI1mqDmg12r+yjOkvhZAE
-	 8Toj5bz3pGv7l1ta8LJTF/zIVNf/6+LWyyCm/KN8THS85QDI2QoCLaHk1QouEWcSu0
-	 TQXjiSE+KOiLPNb4O+dwyc5INnDIiuBJKDQoYxPUeO0vCLEGk6H+3rarxbwYDSK+7L
-	 Grlb1msx2GIbUbFwNL/DWDZAS94G51BexlAaR1RGi/8I9NHLEH1SMXKusp3OLyUbOQ
-	 f85jJP7riZKW9BuXiUPRt1PJsAlFMIwrO8gtR6vHca1WawHXRFBJAiqE5rKV67DipI
-	 P4PzGMTdlNVdQ==
+	b=T6epLDz4g7CRB9/bsgqS758g9JtDU+MrEaYsHqWjrEs0bncyX+NmBxHHcqNhxzUEM
+	 oZcTIPDP1kBLHkLdhU9mxQCvmRdYtgaX6jO0ApzeDKwY73lHtZo8yd33o5ILx3Qw8g
+	 Qa4l020qA0wWfSFG6TDDfUV2xqI7biRr4KAia+CnIMp+CKUVATf/lhKp4yyC18CgEK
+	 Xl7b7hrDPE41pEa8/+4c43C2M1YKwtG7WkJcW25ms+bqdFt6zegqRGhDZhq0zwybKJ
+	 cPVUeViqhqr1XRYqEmuwoRqNsyE3DKkKAK7zl/ahfHl4G+JlzYMhVPzfFdtibP6Zx1
+	 Ngy9NFszH987Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 8203F4035D; Fri, 27 Oct 2023 10:35:55 -0300 (-03)
-Date: Fri, 27 Oct 2023 10:35:55 -0300
+	id 449404035D; Fri, 27 Oct 2023 10:39:46 -0300 (-03)
+Date: Fri, 27 Oct 2023 10:39:46 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Yang Jihong <yangjihong1@huawei.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf evsel: Rename evsel__increase_rlimit to
- rlimit__increase_nofile
-Message-ID: <ZTu8u3bgNCOhTx8U@kernel.org>
-References: <20231023033144.1011896-1-yangjihong1@huawei.com>
- <ZTrCS5Z3PZAmfPdV@kernel.org>
- <CAM9d7cjhSSV+18ZCHLdTFpMM+MmpoDkYSGjUa5JKZp02Kx9XRw@mail.gmail.com>
- <3458c302-8c43-51e5-f45b-c18657fa7015@huawei.com>
+Subject: Re: [PATCH] perf python: Add missing util/rlimit.c file to the
+ python binding linkage list
+Message-ID: <ZTu9omkWbbShhN97@kernel.org>
+References: <20231027023028.1106441-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,33 +38,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3458c302-8c43-51e5-f45b-c18657fa7015@huawei.com>
+In-Reply-To: <20231027023028.1106441-1-yangjihong1@huawei.com>
 X-Url: http://acmel.wordpress.com
 
-Em Fri, Oct 27, 2023 at 10:43:32AM +0800, Yang Jihong escreveu:
-> Sorry, only rename helper and no function change.
-> I didn't consider the scenario that might affect test python.
- 
-> I've submitted a fix that can be used if needed:
- 
-> https://lore.kernel.org/lkml/20231027023028.1106441-1-yangjihong1@huawei.com/
- 
-> Also, can we consider identifying this problem at the stage of compiling the
-> perf tool?
+Em Fri, Oct 27, 2023 at 02:30:28AM +0000, Yang Jihong escreveu:
+> Fixes: c4a852635edd ("perf data: Increase RLIMIT_NOFILE limit when open too many files in perf_data__create_dir()")
 
-Yes, I have:
+This is not the cset that introduced the problem, I added it to the
+patch I submitted for this:
 
-$ alias m='rm -rf ~/libexec/perf-core/ ; make -k CORESIGHT=1 O=/tmp/build/$(basename $PWD) -C tools/perf install-bin && perf test python'
- 
-And use the 'm' alias to build perf.
+Fixes: e093a222d7cba1eb ("perf evsel: Rename evsel__increase_rlimit to rlimit__increase_nofile")
 
-I also run 'perf test' before sending patches upstream, in addition to:
+Since the patch in your messgage basically has what is in the patch I
+submitted, I added an:
 
-make -C tools/perf build-test
+Acked-by: Yang Jihong <yangjihong1@huawei.com>
 
-I encourage everybody to do the same.
+to it.
 
-Additionally I run a long list of container tests on dozens of distros,
-but those should really be running on some CI system :-\
+In the future, the right thing would be for you to use:
+
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+As I didn't provide a Signed-off-by for the patch, I just mentioned that
+the patch cured things for me, sometimes a patch like this may not be
+the ultimate fix.
+
+Thanks,
 
 - Arnaldo
