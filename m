@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8743D200DA
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 13:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E25536AF7
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 14:18:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6epLDz4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73CAC433C8;
-	Fri, 27 Oct 2023 13:39:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3Y1SWY6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA01C433C7;
+	Fri, 27 Oct 2023 14:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698413993;
-	bh=K1n5c9rQ/qe3e3IncOBFgW5/PfZSET5tGuj+Igr0VT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T6epLDz4g7CRB9/bsgqS758g9JtDU+MrEaYsHqWjrEs0bncyX+NmBxHHcqNhxzUEM
-	 oZcTIPDP1kBLHkLdhU9mxQCvmRdYtgaX6jO0ApzeDKwY73lHtZo8yd33o5ILx3Qw8g
-	 Qa4l020qA0wWfSFG6TDDfUV2xqI7biRr4KAia+CnIMp+CKUVATf/lhKp4yyC18CgEK
-	 Xl7b7hrDPE41pEa8/+4c43C2M1YKwtG7WkJcW25ms+bqdFt6zegqRGhDZhq0zwybKJ
-	 cPVUeViqhqr1XRYqEmuwoRqNsyE3DKkKAK7zl/ahfHl4G+JlzYMhVPzfFdtibP6Zx1
-	 Ngy9NFszH987Q==
+	s=k20201202; t=1698416333;
+	bh=QA/EzngEcjKiHw3G2Xgs28uFBBDEG7gMt/kOCgWKK0g=;
+	h=Date:From:To:Cc:Subject:From;
+	b=h3Y1SWY6TdxTJEd1qTFAa/PZsMR43/bJM9GhhdOHKQHIreUMLM+vsfacgPZVu6WEL
+	 XKvO0346rylCeYEKOmO3Waa+L7+jYHcOworeSqrccDyJFbMX/al46jrkUWQROrUNtH
+	 KCNlEeaNuXSoXHXjgSeCeEnOd8Y1Aa+MP387zFE7b9eYgCLasOU6b9C9sm3UfPaSQL
+	 HsPk4+wd6Ch7ohD/G1bjx7oJdaHbBEaqOhY5UiQTmLQagG67FtFC4cwzhiFyNn2UWw
+	 jC9EjQJq8ARaJypawj4ogUVJsrxMdlZNtG81ekgvQE2SlEUumzP6cD0IbisQvMZUwM
+	 WwW/UkFgBnAOw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 449404035D; Fri, 27 Oct 2023 10:39:46 -0300 (-03)
-Date: Fri, 27 Oct 2023 10:39:46 -0300
+	id 5AE264035D; Fri, 27 Oct 2023 11:18:47 -0300 (-03)
+Date: Fri, 27 Oct 2023 11:18:47 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf python: Add missing util/rlimit.c file to the
- python binding linkage list
-Message-ID: <ZTu9omkWbbShhN97@kernel.org>
-References: <20231027023028.1106441-1-yangjihong1@huawei.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf build: Disable BPF skeletons if clang version is <
+ 12.0.1
+Message-ID: <ZTvGx/Ou6BVnYBqi@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,32 +37,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231027023028.1106441-1-yangjihong1@huawei.com>
-X-Url: http://acmel.wordpress.com
 
-Em Fri, Oct 27, 2023 at 02:30:28AM +0000, Yang Jihong escreveu:
-> Fixes: c4a852635edd ("perf data: Increase RLIMIT_NOFILE limit when open too many files in perf_data__create_dir()")
+While building on a wide range of distros and clang versions it was
+noticed that at least version 12.0.1 (noticed on Alpine 3.15 with
+"Alpine clang version 12.0.1") is needed to not fail with BTF generation
+errors such as:
 
-This is not the cset that introduced the problem, I added it to the
-patch I submitted for this:
+Debian:10
 
-Fixes: e093a222d7cba1eb ("perf evsel: Rename evsel__increase_rlimit to rlimit__increase_nofile")
+  Debian clang version 11.0.1-2~deb10u1:
 
-Since the patch in your messgage basically has what is in the patch I
-submitted, I added an:
+    CLANG   /tmp/build/perf/util/bpf_skel/.tmp/sample_filter.bpf.o
+  <SNIP>
+    GENSKEL /tmp/build/perf/util/bpf_skel/sample_filter.skel.h
+  libbpf: failed to find BTF for extern 'bpf_cast_to_kern_ctx' [21] section: -2
+  Error: failed to open BPF object file: No such file or directory
+  make[2]: *** [Makefile.perf:1121: /tmp/build/perf/util/bpf_skel/sample_filter.skel.h] Error 254
+  make[2]: *** Deleting file '/tmp/build/perf/util/bpf_skel/sample_filter.skel.h'
 
-Acked-by: Yang Jihong <yangjihong1@huawei.com>
+Amazon Linux 2:
 
-to it.
+  clang version 11.1.0 (Amazon Linux 2 11.1.0-1.amzn2.0.2)
 
-In the future, the right thing would be for you to use:
+    GENSKEL /tmp/build/perf/util/bpf_skel/sample_filter.skel.h
+  libbpf: elf: skipping unrecognized data section(18) .eh_frame
+  libbpf: elf: skipping relo section(19) .rel.eh_frame for section(18) .eh_frame
+  libbpf: failed to find BTF for extern 'bpf_cast_to_kern_ctx' [21] section: -2
+  Error: failed to open BPF object file: No such file or directory
+  make[2]: *** [/tmp/build/perf/util/bpf_skel/sample_filter.skel.h] Error 254
+  make[2]: *** Deleting file `/tmp/build/perf/util/bpf_skel/sample_filter.skel.h'
 
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Ubuntu 20.04:
 
-As I didn't provide a Signed-off-by for the patch, I just mentioned that
-the patch cured things for me, sometimes a patch like this may not be
-the ultimate fix.
+  clang version 10.0.0-4ubuntu1
 
-Thanks,
+    CLANG   /tmp/build/perf/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o
+    GENSKEL /tmp/build/perf/util/bpf_skel/bench_uprobe.skel.h
+    GENSKEL /tmp/build/perf/util/bpf_skel/bperf_leader.skel.h
+  libbpf: sec '.reluprobe': corrupted symbol #27 pointing to invalid section #65522 for relo #0
+    GENSKEL /tmp/build/perf/util/bpf_skel/bperf_follower.skel.h
+  Error: failed to open BPF object file: BPF object format invalid
+  make[2]: *** [Makefile.perf:1121: /tmp/build/perf/util/bpf_skel/bench_uprobe.skel.h] Error 95
+  make[2]: *** Deleting file '/tmp/build/perf/util/bpf_skel/bench_uprobe.skel.h'
 
-- Arnaldo
+So check if the version is at least 12.0.1 otherwise disable building
+BPF skels and provide a message about it, continuing the build.
+
+The message, when running on amazonlinux:2:
+
+  Makefile.config:698: Warning: Disabled BPF skeletons as reliable BTF generation needs at least clang version 12.0.1
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Makefile.config | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4300a9e4253a0c87..8b6cffbc485834c8 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -693,6 +693,13 @@ ifeq ($(BUILD_BPF_SKEL),1)
+     dummy := $(warning Warning: Disabled BPF skeletons as clang ($(CLANG)) is missing)
+     BUILD_BPF_SKEL := 0
+   else
++    CLANG_VERSION := $(shell $(CLANG) --version | head -1 | sed 's/.*clang version \([[:digit:]]\+.[[:digit:]]\+.[[:digit:]]\+\).*/\1/g')
++    ifeq ($(call version-lt3,$(CLANG_VERSION),12.0.1),1)
++      dummy := $(warning Warning: Disabled BPF skeletons as reliable BTF generation needs at least $(CLANG) version 12.0.1)
++      BUILD_BPF_SKEL := 0
++    endif
++  endif
++  ifeq ($(BUILD_BPF_SKEL),1)
+     $(call feature_check,clang-bpf-co-re)
+     ifeq ($(feature-clang-bpf-co-re), 0)
+       dummy := $(warning Warning: Disabled BPF skeletons as clang is too old)
+-- 
+2.41.0
+
