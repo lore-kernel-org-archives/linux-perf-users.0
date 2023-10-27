@@ -1,70 +1,38 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59317983
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 10:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACA31EB3D
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 13:33:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="on/HTgOA"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674AD10E;
-	Fri, 27 Oct 2023 03:10:45 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39R9WQej010442;
-	Fri, 27 Oct 2023 10:10:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=Zdppxo1TCnt1+1WH+y7YV+bUn+8htX5Iub4/UTKYWm4=;
- b=on/HTgOAdS4zFn4b5OKS/+QUk1oy24KdZ2S14TDqgLY9BJ4ZJhyMjs8SfZatQ2Y/RP+/
- mqfYPD7FYi3/iPUAaOiftyawZissO6JZ4989afKf9xGHSP5ic1raa21xQDhniLv/V7JE
- zcEdkOlSuUW/EVLNVpDDUMjMh6+SSExtcPv7b3Y3BrEzD79mkWxglRGVopd6BSH0Z1We
- dPGfvEjSS5yg4rjCgAy/uaSB30rI82HAkXNA3KtSAu8rjkLmRVq6nWsSnPtAK2GGSw4G
- PVgUjs5uA/I1vKzc+G3s07RBvOxnHRgZ/IPkNSQQ8t31nvC+9mt8Je+OBvIQEoC9yW23 LQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u0anp96hc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Oct 2023 10:10:35 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39R9o9Bn004880;
-	Fri, 27 Oct 2023 10:10:05 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u0anp94yk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Oct 2023 10:10:05 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39R7h9Jc011857;
-	Fri, 27 Oct 2023 10:09:30 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tywqr486r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Oct 2023 10:09:30 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39RA9RlR44630662
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Oct 2023 10:09:27 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 719DA20067;
-	Fri, 27 Oct 2023 10:09:27 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C476920049;
-	Fri, 27 Oct 2023 10:09:26 +0000 (GMT)
-Received: from osiris (unknown [9.171.25.10])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 27 Oct 2023 10:09:26 +0000 (GMT)
-Date: Fri, 27 Oct 2023 12:09:25 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Daan De Meyer <daan.j.demeyer@gmail.com>
-Cc: linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        "dcavalca@meta.com" <dcavalca@meta.com>, ngompa@fedoraproject.org,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: s390x stack unwinding with perf?
-Message-ID: <20231027100925.9071-B-hca@linux.ibm.com>
-References: <CAO8sHcn3+_qrnvp0580aK7jN0Wion5F7KYeBAa4MnCY4mqABPA@mail.gmail.com>
- <20231026145659.7063-A-hca@linux.ibm.com>
- <CAO8sHckF_D+SjvGySsGHOpOcdy6y7pwQEF9SfV3sw4Ye4_sCKA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pW6FLLzr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338ADC433C7;
+	Fri, 27 Oct 2023 13:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698413617;
+	bh=mkOAnvc/y5wxjD9fXidKsxRBk6fewzPGPXWV4xJ0YoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pW6FLLzrRuFXBKlkMAVKVRP6B3RxZ8In9jAfCOPWFr16tWZbGQDWD5Epqb9vU1f4Y
+	 J87uvzRTKxM3lkIyNhQGUO2THqxsHkPcssnPkp3e7o3AyJVJ2TbHWefrOWK/b3F0qv
+	 DbKWsp4QxJR+UXPysGYq7sFiA9c2BTLbOolNUiiJ2cFPUL4CCHbhwZ6v8zBkUP++qn
+	 rVSkwhC9QKh3S+LX0qhdWwu8KfBOIj6jEEJ+AZb1kmEfyNg2crak8yMkvM4IfQlfir
+	 AsaJRzNVJbJJ+7ZJdGXZkiVCC8AMlkhlZv5/M9ZJI1seHR9UPAH3Yf3F5Hag9Q0Uy1
+	 SX+2gKi4C++EQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 8BCBE4035D; Fri, 27 Oct 2023 10:33:30 -0300 (-03)
+Date: Fri, 27 Oct 2023 10:33:30 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf python: Fix binding linkage due to rename and move
+ of evsel__increase_rlimit()
+Message-ID: <ZTu8Kgb2KqifMBZ3@kernel.org>
+References: <20231023033144.1011896-1-yangjihong1@huawei.com>
+ <ZTrCS5Z3PZAmfPdV@kernel.org>
+ <CAM9d7cjhSSV+18ZCHLdTFpMM+MmpoDkYSGjUa5JKZp02Kx9XRw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,30 +41,56 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAO8sHckF_D+SjvGySsGHOpOcdy6y7pwQEF9SfV3sw4Ye4_sCKA@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: zRSqztLHIpZI_t0IceHuvxdPJ0xSOB8V
-X-Proofpoint-ORIG-GUID: X8YHzSy_NMYz8F7GQ5W8H0P2EvPIFxOA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-27_08,2023-10-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 adultscore=0 impostorscore=0 phishscore=0 bulkscore=0
- malwarescore=0 mlxlogscore=529 clxscore=1015 priorityscore=1501
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2310270087
+In-Reply-To: <CAM9d7cjhSSV+18ZCHLdTFpMM+MmpoDkYSGjUa5JKZp02Kx9XRw@mail.gmail.com>
 
-On Fri, Oct 27, 2023 at 10:00:53AM +0200, Daan De Meyer wrote:
-> 
-> If the kernel gets support for s390x user space unwinding using the backchain,
-> we'll propose to enable -mbackchain in the default compilation flags for Fedora
-> so that s390x on Fedora will have the same profiling experience as x86-64, arm64
-> and ppc64. For now we'll keep the status quo since compiling with the backchain
-> doesn't provide any benefit until the kernel unwinder can unwind user
-> space stacks
-> using it.
-> 
-> Thanks for clarifying the current state of user space stack unwinding on s390x!
+The changes in ("perf evsel: Rename evsel__increase_rlimit to
+rlimit__increase_nofile") ended up breaking the python binding that now
+references the rlimit__increase_nofile function, add the util/rlimit.o
+to the tools/perf/util/python-ext-sources to cure that.
 
-We will implement the missing pieces and let you know when things are
-supposed to work.
+This was detected by the 'perf test python' regression test:
+
+  $ perf test python
+   14: 'import perf' in python        : FAILED!
+
+  $ perf test -v python
+  Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+   14: 'import perf' in python                                         :
+  --- start ---
+  test child forked, pid 2912462
+  python usage test: "echo "import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf" | '/usr/bin/python3' "
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  ImportError: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-linux-gnu.so: undefined symbol: rlimit__increase_nofile
+  test child finished with -1
+  ---- end ----
+  'import perf' in python: FAILED!
+  $
+
+Fixes: e093a222d7cba1eb ("perf evsel: Rename evsel__increase_rlimit to rlimit__increase_nofile")
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Acked-by: Yang Jihong <yangjihong1@huawei.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: https://lore.kernel.org/lkml/ZTrCS5Z3PZAmfPdV@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/python-ext-sources | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index 26e1c8d973ea0b95..593b660ec75e24e1 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -40,6 +40,7 @@ util/rwsem.c
+ util/hashmap.c
+ util/perf_regs.c
+ util/fncache.c
++util/rlimit.c
+ util/perf-regs-arch/perf_regs_aarch64.c
+ util/perf-regs-arch/perf_regs_arm.c
+ util/perf-regs-arch/perf_regs_csky.c
+-- 
+2.41.0
+
