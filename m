@@ -1,38 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACA31EB3D
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 13:33:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD1D1F5E4
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 13:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pW6FLLzr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338ADC433C7;
-	Fri, 27 Oct 2023 13:33:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjahxqQV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82214C433C8;
+	Fri, 27 Oct 2023 13:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698413617;
-	bh=mkOAnvc/y5wxjD9fXidKsxRBk6fewzPGPXWV4xJ0YoE=;
+	s=k20201202; t=1698413761;
+	bh=zr+piGqNha8SH1IgRkyvQsYXO7OF+ckvJNeJmO5jOgM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pW6FLLzrRuFXBKlkMAVKVRP6B3RxZ8In9jAfCOPWFr16tWZbGQDWD5Epqb9vU1f4Y
-	 J87uvzRTKxM3lkIyNhQGUO2THqxsHkPcssnPkp3e7o3AyJVJ2TbHWefrOWK/b3F0qv
-	 DbKWsp4QxJR+UXPysGYq7sFiA9c2BTLbOolNUiiJ2cFPUL4CCHbhwZ6v8zBkUP++qn
-	 rVSkwhC9QKh3S+LX0qhdWwu8KfBOIj6jEEJ+AZb1kmEfyNg2crak8yMkvM4IfQlfir
-	 AsaJRzNVJbJJ+7ZJdGXZkiVCC8AMlkhlZv5/M9ZJI1seHR9UPAH3Yf3F5Hag9Q0Uy1
-	 SX+2gKi4C++EQ==
+	b=sjahxqQVlenRUlHbdEbRVeGC1IIxhJZXdbkEzZB+2dJ4sI1mqDmg12r+yjOkvhZAE
+	 8Toj5bz3pGv7l1ta8LJTF/zIVNf/6+LWyyCm/KN8THS85QDI2QoCLaHk1QouEWcSu0
+	 TQXjiSE+KOiLPNb4O+dwyc5INnDIiuBJKDQoYxPUeO0vCLEGk6H+3rarxbwYDSK+7L
+	 Grlb1msx2GIbUbFwNL/DWDZAS94G51BexlAaR1RGi/8I9NHLEH1SMXKusp3OLyUbOQ
+	 f85jJP7riZKW9BuXiUPRt1PJsAlFMIwrO8gtR6vHca1WawHXRFBJAiqE5rKV67DipI
+	 P4PzGMTdlNVdQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 8BCBE4035D; Fri, 27 Oct 2023 10:33:30 -0300 (-03)
-Date: Fri, 27 Oct 2023 10:33:30 -0300
+	id 8203F4035D; Fri, 27 Oct 2023 10:35:55 -0300 (-03)
+Date: Fri, 27 Oct 2023 10:35:55 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf python: Fix binding linkage due to rename and move
- of evsel__increase_rlimit()
-Message-ID: <ZTu8Kgb2KqifMBZ3@kernel.org>
+To: Yang Jihong <yangjihong1@huawei.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf evsel: Rename evsel__increase_rlimit to
+ rlimit__increase_nofile
+Message-ID: <ZTu8u3bgNCOhTx8U@kernel.org>
 References: <20231023033144.1011896-1-yangjihong1@huawei.com>
  <ZTrCS5Z3PZAmfPdV@kernel.org>
  <CAM9d7cjhSSV+18ZCHLdTFpMM+MmpoDkYSGjUa5JKZp02Kx9XRw@mail.gmail.com>
+ <3458c302-8c43-51e5-f45b-c18657fa7015@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,56 +42,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7cjhSSV+18ZCHLdTFpMM+MmpoDkYSGjUa5JKZp02Kx9XRw@mail.gmail.com>
+In-Reply-To: <3458c302-8c43-51e5-f45b-c18657fa7015@huawei.com>
+X-Url: http://acmel.wordpress.com
 
-The changes in ("perf evsel: Rename evsel__increase_rlimit to
-rlimit__increase_nofile") ended up breaking the python binding that now
-references the rlimit__increase_nofile function, add the util/rlimit.o
-to the tools/perf/util/python-ext-sources to cure that.
+Em Fri, Oct 27, 2023 at 10:43:32AM +0800, Yang Jihong escreveu:
+> Sorry, only rename helper and no function change.
+> I didn't consider the scenario that might affect test python.
+ 
+> I've submitted a fix that can be used if needed:
+ 
+> https://lore.kernel.org/lkml/20231027023028.1106441-1-yangjihong1@huawei.com/
+ 
+> Also, can we consider identifying this problem at the stage of compiling the
+> perf tool?
 
-This was detected by the 'perf test python' regression test:
+Yes, I have:
 
-  $ perf test python
-   14: 'import perf' in python        : FAILED!
+$ alias m='rm -rf ~/libexec/perf-core/ ; make -k CORESIGHT=1 O=/tmp/build/$(basename $PWD) -C tools/perf install-bin && perf test python'
+ 
+And use the 'm' alias to build perf.
 
-  $ perf test -v python
-  Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-   14: 'import perf' in python                                         :
-  --- start ---
-  test child forked, pid 2912462
-  python usage test: "echo "import sys ; sys.path.insert(0, '/tmp/build/perf-tools-next/python'); import perf" | '/usr/bin/python3' "
-  Traceback (most recent call last):
-    File "<stdin>", line 1, in <module>
-  ImportError: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-linux-gnu.so: undefined symbol: rlimit__increase_nofile
-  test child finished with -1
-  ---- end ----
-  'import perf' in python: FAILED!
-  $
+I also run 'perf test' before sending patches upstream, in addition to:
 
-Fixes: e093a222d7cba1eb ("perf evsel: Rename evsel__increase_rlimit to rlimit__increase_nofile")
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Acked-by: Yang Jihong <yangjihong1@huawei.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/lkml/ZTrCS5Z3PZAmfPdV@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/python-ext-sources | 1 +
- 1 file changed, 1 insertion(+)
+make -C tools/perf build-test
 
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index 26e1c8d973ea0b95..593b660ec75e24e1 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -40,6 +40,7 @@ util/rwsem.c
- util/hashmap.c
- util/perf_regs.c
- util/fncache.c
-+util/rlimit.c
- util/perf-regs-arch/perf_regs_aarch64.c
- util/perf-regs-arch/perf_regs_arm.c
- util/perf-regs-arch/perf_regs_csky.c
--- 
-2.41.0
+I encourage everybody to do the same.
 
+Additionally I run a long list of container tests on dozens of distros,
+but those should really be running on some CI system :-\
+
+- Arnaldo
