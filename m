@@ -1,59 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B930A1F5E7
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4335337158
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=isc.org header.i=@isc.org header.b="FtnZOmMK";
-	dkim=pass (1024-bit key) header.d=isc.org header.i=@isc.org header.b="SAay3Q/x"
-X-Greylist: delayed 590 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 27 Oct 2023 08:37:50 PDT
+	dkim=pass (1024-bit key) header.d=isc.org header.i=@isc.org header.b="c3aEAwdO";
+	dkim=pass (1024-bit key) header.d=isc.org header.i=@isc.org header.b="cwgGE/99"
 Received: from mx.pao1.isc.org (mx.pao1.isc.org [149.20.2.50])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC1DC1
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 08:37:50 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0534EC2
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 08:58:21 -0700 (PDT)
 Received: from zimbrang.isc.org (zimbrang.isc.org [149.20.2.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by mx.pao1.isc.org (Postfix) with ESMTPS id 95B303AB007
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:27:59 +0000 (UTC)
-ARC-Filter: OpenARC Filter v1.0.0 mx.pao1.isc.org 95B303AB007
+	by mx.pao1.isc.org (Postfix) with ESMTPS id 7B3283AB007
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:58:21 +0000 (UTC)
+ARC-Filter: OpenARC Filter v1.0.0 mx.pao1.isc.org 7B3283AB007
 Authentication-Results: mx.pao1.isc.org; arc=none smtp.remote-ip=149.20.2.31
-ARC-Seal: i=1; a=rsa-sha256; d=isc.org; s=ostpay; t=1698420479; cv=none; b=emx3YsiGMjOKNZoQYEbhIHjepE+sIDL3zcrz8qkqNBoVcpyqIcfP+jOUUufYsbj1dk5FGRCwrY5PmtVbpHqGQa6wGoPmAXBlFM3QOpbWeS3CA8WEPTcKRRm962YXoZSFqECF4+9Qm0WHQYJ9rhQINopn9fGDjxSs45IufOQ6qNw=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=isc.org; s=ostpay; t=1698420479;
-	c=relaxed/relaxed; bh=HnchWwpgUc9RjLLva1UJlgTnQ9tvFoCSXyXGhcMHhaE=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Date:MIME-Version:To:
-	 From:Subject; b=h69XxW/GTE35jJHscY5m/qzjOrUCzLc99CEDjQEXFbcWILbq8f8DJvC4JvVZs82Nl9ea05hlmKdUoHEOmXUd2+nsiBG5g2bSkeAxbo6dfxiP/rkZZh2gdFBYcbLoV0V+AbsNjAEPBsoww61DxrJMBZWdSD/CuzylmgAIazKrpgY=
+ARC-Seal: i=1; a=rsa-sha256; d=isc.org; s=ostpay; t=1698422301; cv=none; b=l2lZ/3Z7oyBdInMbc9JDEu3uLCAkfahdWAwaVQ0QrsFCkjfHWaCLoeXNuq3E01zX/woTOci8O3Dokh6h17aCluTWu3inxUGHJ7plnd0+1VaUJYDjdnyRXBwAAQqktMB/MSXKq/o9ubrO8zqrphYUoMzgEp2KdHbHioX47g+Va0A=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=isc.org; s=ostpay; t=1698422301;
+	c=relaxed/relaxed; bh=6can0YuIkzDOhaAZP7W1szoPdCtdyP+Q1z+gMgqtnyc=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Date:MIME-Version:From:
+	 Subject:To; b=N/tK9BaPpsEFk5V+ulaOosczUdm1kyGdvP0ZUUevJz2nmHFpfWtUUj/9BGUo/EwMBg61oHRYMPuqTZJEAa5Z8s3Z2zhs7bHYSlMLvzJhMyCeDF39fOis0StClSEKrMiVIpbtea+x6jbZmOEoENsqbO2uhD0hZnLnvjivbr1H6ZQ=
 ARC-Authentication-Results: i=1; mx.pao1.isc.org
-DKIM-Filter: OpenDKIM Filter v2.10.3 mx.pao1.isc.org 95B303AB007
+DKIM-Filter: OpenDKIM Filter v2.10.3 mx.pao1.isc.org 7B3283AB007
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=isc.org; s=ostpay;
-	t=1698420479; bh=TEPKOzt87Vf4/SxeGWp4YEUP25rvaWwhboXHRBJw1kg=;
-	h=Date:To:From:Subject;
-	b=FtnZOmMK+n1U9aGpyw2Ge9OBlkTzncDinMLIB1BS99CYguPJej+J8OMJ/DyzMAHjv
-	 fZ/OZYLDU+xDRcCGSzeR4AnTlHfQFBJ8aQi9M1bGkdBqpvGb/5dGT6wa6uSYSRLnKC
-	 0wO2L460UYWAf2S9HrW1C+xYeXh7KdLAMhV37zHs=
+	t=1698422301; bh=2euBe2Xb/cOwwKyfalxBS57gmhr4lY+vgOxuhOKrJVY=;
+	h=Date:From:Subject:To;
+	b=c3aEAwdOZ9jo7G9neNoTHSKY/+XQ2MFPJMLRLRU2Fh25i3fGN28LXhRQBpnmkOyo5
+	 Ft6iCyD9W/zgefaybPVKcmIDG9IkmJctIwf8wH4e+EgJei4MsGJNhdftpJ6JvdIaPT
+	 DI7VZ1sdtBAkmxaeKdqnsYmK9PulpdeFTrRjTb6A=
 Received: from zimbrang.isc.org (localhost.localdomain [127.0.0.1])
-	by zimbrang.isc.org (Postfix) with ESMTPS id 9268B10EB7BC
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:27:59 +0000 (UTC)
+	by zimbrang.isc.org (Postfix) with ESMTPS id 77DFC10ECD1D
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:58:21 +0000 (UTC)
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by zimbrang.isc.org (Postfix) with ESMTP id 71DCD10ECCE1
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:27:59 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbrang.isc.org 71DCD10ECCE1
+	by zimbrang.isc.org (Postfix) with ESMTP id 57BC310ECD22
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:58:21 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbrang.isc.org 57BC310ECD22
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=isc.org;
-	s=05DFB016-56A2-11EB-AEC0-15368D323330; t=1698420479;
-	bh=HnchWwpgUc9RjLLva1UJlgTnQ9tvFoCSXyXGhcMHhaE=;
-	h=Message-ID:Date:MIME-Version:To:From;
-	b=SAay3Q/xosiaP6aUT+XJcc6qW/s1gjjGubbmANx0oEkT4ovoxZupgFhOL4UMEYhEo
-	 JBeGkG3WEVcMpFpWQu9NwU8t3gRIoFesfSwEyJABHGMT0UFEIecibnUgskq9pvtAbQ
-	 +saUKs+YGEUoBsmbVPSgJ2CXGLTsnwSXfWxsLda4=
+	s=05DFB016-56A2-11EB-AEC0-15368D323330; t=1698422301;
+	bh=6can0YuIkzDOhaAZP7W1szoPdCtdyP+Q1z+gMgqtnyc=;
+	h=Message-ID:Date:MIME-Version:From:To;
+	b=cwgGE/99+n5vOBZzfN6UFOjFC3sNrDh+jAra8GLmKraBi12O9bWEljJiT9njR8Ri9
+	 QqDNu8Njt6Dn8fvGekYztfqYpMNZq4yubUGcVt9FDXoywaz9INe82oitzsWQxa8aUl
+	 N8HaocAyYLdjvpXVjX/A1KDC1theDxaaBIuXUwyg=
 Received: from zimbrang.isc.org ([127.0.0.1])
  by localhost (zimbrang.isc.org [127.0.0.1]) (amavis, port 10026) with ESMTP
- id U4S22UOfHAqQ for <linux-perf-users@vger.kernel.org>;
- Fri, 27 Oct 2023 15:27:59 +0000 (UTC)
+ id 9btx4ZUyaZwW for <linux-perf-users@vger.kernel.org>;
+ Fri, 27 Oct 2023 15:58:21 +0000 (UTC)
 Received: from [192.168.0.157] (ip-86-49-236-9.bb.vodafone.cz [86.49.236.9])
-	by zimbrang.isc.org (Postfix) with ESMTPSA id 133E310EB7BC
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:27:58 +0000 (UTC)
-Message-ID: <95afba45-7152-42d2-b1a2-2fe72900bd6c@isc.org>
-Date: Fri, 27 Oct 2023 17:27:55 +0200
+	by zimbrang.isc.org (Postfix) with ESMTPSA id EDFB410ECD1D
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 15:58:20 +0000 (UTC)
+Message-ID: <3ea2cefb-7417-4cac-98fd-46325c5108e0@isc.org>
+Date: Fri, 27 Oct 2023 17:58:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,11 +60,11 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-perf-users@vger.kernel.org
 From: =?UTF-8?B?UGV0ciDFoHBhxI1law==?= <pspacek@isc.org>
-Content-Language: en-US
 Subject: [bug] nsinfo__mountns_enter failure can cause perf to operate on
  wrong file
+To: linux-perf-users@vger.kernel.org
+Content-Language: en-US
 Autocrypt: addr=pspacek@isc.org; keydata=
  xsFNBF/OJ/4BEAC0jP/EShRZtcI9KmzVK4IoD/GEDtcaNEEQzPt05G8xtC0P4uteXUwW8jaB
  CdcKIKR4eUJw3wdXXScLNlyh0i+gm5mIvKPrBYNAMOGGnkbAmMQOt9Q+TyGeTSSGiAjfvd/N
@@ -167,6 +166,8 @@ failure is not checked.
 I could not follow "perf record" code, but "perf buildid-cache --add"=20
 calls nsinfo__mountns_enter() which has void return type, and hilarity=20
 ensues if that call fails.
+
+It works as expected if I add "sudo" in front of each "perf" command.
 
 I'm happy to assist with debugging and testing.
 
