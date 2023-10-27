@@ -1,132 +1,93 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B2111715
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 08:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE423156D4
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Oct 2023 08:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/eFvfla"
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EAEA1B4;
-	Fri, 27 Oct 2023 01:01:05 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6bd32d1a040so1758482b3a.3;
-        Fri, 27 Oct 2023 01:01:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2pGX+Ia"
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4C219A3;
+	Fri, 27 Oct 2023 01:40:14 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-4084de32db5so14835115e9.0;
+        Fri, 27 Oct 2023 01:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698393664; x=1698998464; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HcgTb1uk+LNET/CdwAZQedqtTls7gJN7u/d99YpV55w=;
-        b=P/eFvflarEUqQj5mTndnOvUNh5X8QKTacIA01uiR+572YFSR96Mo4NknFcqcTNjchf
-         bAUsFMdoEZVdSgvsCPPXcVG2KD4xSUna28Jax0+S86KLTqH6Wc45HQQtZeqzWygUn6Lm
-         Y8CxirOe7UbgWJl73QVASFXT26LaN7sg15xhVlq9ABydTa06/xNRgXhXREcW2e5LOJYE
-         xCqjGPHwO4mfHgS7LyIJ6hfEZHWQmeomYiGvmuFUVy0WkTZBkr7UmHcpa1MN7FzcpqdP
-         esubUsLEZkzyWwfWtMktqOu9KwlzgjzZp3GB+Jn9dnn870Dj+2awNiAlc1q+FwPobNBW
-         H5DA==
+        d=gmail.com; s=20230601; t=1698396013; x=1699000813; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NLfx2GCVwo2B3bImCCwCI1lgsjgZt6z3r+jCmDSbHsg=;
+        b=g2pGX+IaPuhevRFURWowXm7G+66N2yHMN+ZUdFgZlM9C7YpCShA41erZEVlwsueOlX
+         BOhndoi1X3/nRzE2KiLOeoZxilHRKckZDYDcA0uXnrnAjs7fQDtq9ZBzMWdnSVS07C9X
+         Uxe6Au5pbfivno6SCnsw+4TQaccuQQdSyPFjNBZdSzOqUVFDWWaRS6ne4OlbiwZWCdfx
+         0vMs1W+wf+ixYgWgNLaIjcv/12vKwj8VjXFNG8zqTTCQQfAsK7mUGJVzP1iWQTy1TjBo
+         hG7a1O3t5XNuCOgbfMkv1cD0SPd2RBkuqf8FzN1ZLz1KDvFC0ArVVi78B+sjAaHsrjtb
+         R5EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698393664; x=1698998464;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1698396013; x=1699000813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HcgTb1uk+LNET/CdwAZQedqtTls7gJN7u/d99YpV55w=;
-        b=leCieb8cETS0ggutk7wnGcWB1Dd1jirgsDqFcgEGIxWok5qRHyyQuTrNdWt1UEL1s6
-         uvrnKIv1C7RplmF0PH+gRHG3jbxL6StJ66R6jTCbIG7PIxhSAAeqtpRM8H19FC/Ff7Hk
-         LFq+Bwltnj4j7l/ib3GBFZcPJLWCtgNUU1pF6Emx1hqX4OBULyEknBDkbxs33QoLYTTW
-         jwecJM0bcMk/r8WWUl6fZz+PXkMKiidTxHM32cobcEeAcSw6oIk8oN30YWJHtthsHDKN
-         bATrvPipyklk7SncsqfiuYfcTpE4D75gsAPAjhLFi/U5HWQ0ol7MSEH7jzJsZzSgVX7M
-         7epQ==
-X-Gm-Message-State: AOJu0YzEPLRpVPM6S2906Id2mIfl3aUb46RWPDvr802mmkIKAJrnuPKp
-	k7deiILv90PySKDRPCzmo5P13hBGJbwKD058mgpCai+WL8KeeMsu
-X-Google-Smtp-Source: AGHT+IE+cWamXBpcNmOndSqM2PXeMYmq4wS3kkttK+0iU1/3Sst/PqOIa91Kf4ZC1XQ3lTMcsohN1Eq96Oc3+EdeRWA=
-X-Received: by 2002:a17:90a:7563:b0:27d:853:9109 with SMTP id
- q90-20020a17090a756300b0027d08539109mr1881208pjk.20.1698393664495; Fri, 27
- Oct 2023 01:01:04 -0700 (PDT)
+        bh=NLfx2GCVwo2B3bImCCwCI1lgsjgZt6z3r+jCmDSbHsg=;
+        b=LVNkjqfmJvN8vSKQqXsdPY7g85KGl8srZ4cSj3JEGFJA0YE7Xt+2yo88gHbHQnJMSz
+         cyunGEjrPz6iOT+HhyHPemidB/IUWc+IrehkDuIgNCJR/ahgmOxYhcFHCFcgTsR68t1J
+         V0kQ0pkuB1S8tDFe1ZTWfDulnD1lhJxSCaQ4TdlpVECZnLE9xuvQXmO/m1NwLHhD7LKX
+         EFoBfRsUMkjmtMXMdcur6/ouHBmGBr35mKRlHzlvf/tNKsYBi1TLsAu/GE2Lo5NAXGIy
+         EZnMQhLXbuwlNNph/Q/uLfwYiY5zBUxLkjtkA95mtz1OEiPXD7WCLtz0WNXuY6L+1SbO
+         CJQA==
+X-Gm-Message-State: AOJu0YxUXqLg7XRDXFwBFlFOYewKuDf0KW9ON6xo/XdOjtpQ/7folpYB
+	rzfCdybeiypoBTw/p0z0Xa0=
+X-Google-Smtp-Source: AGHT+IHlZlQcpEITcJAvwaFd2YBxY5klWuCO0q22QjmwnyxXzB0IGr8JjdKrK5xSjl6wyD9g6GeoHA==
+X-Received: by 2002:a05:600c:4748:b0:409:325:e499 with SMTP id w8-20020a05600c474800b004090325e499mr1609413wmo.32.1698396012758;
+        Fri, 27 Oct 2023 01:40:12 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id u6-20020a05600c19c600b004064288597bsm1064379wmq.30.2023.10.27.01.40.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Oct 2023 01:40:12 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf report: Fix spelling mistake "heirachy" -> "hierarchy"
+Date: Fri, 27 Oct 2023 09:40:11 +0100
+Message-Id: <20231027084011.1167091-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAO8sHcn3+_qrnvp0580aK7jN0Wion5F7KYeBAa4MnCY4mqABPA@mail.gmail.com>
- <20231026145659.7063-A-hca@linux.ibm.com>
-In-Reply-To: <20231026145659.7063-A-hca@linux.ibm.com>
-From: Daan De Meyer <daan.j.demeyer@gmail.com>
-Date: Fri, 27 Oct 2023 10:00:53 +0200
-Message-ID: <CAO8sHckF_D+SjvGySsGHOpOcdy6y7pwQEF9SfV3sw4Ye4_sCKA@mail.gmail.com>
-Subject: Re: s390x stack unwinding with perf?
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	"dcavalca@meta.com" <dcavalca@meta.com>, ngompa@fedoraproject.org, 
-	Andreas Krebbel <krebbel@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-> > Hi,
-> >
-> > As part of enabling frame pointers system wide for Fedora to get fast
-> > system wide stack unwinding, we're now looking to do the same for
-> > s390x after previously enabling frame pointers for x86-64 and aarch64.
-> > From what we can find, on s390x stack unwinding is done via the
-> > "-mbackchain" compiler option. However, from some early experiments
-> > rebuilding a small part of the distro, this option alone does not seem
-> > to result in usable stack traces in perf (perf record -g => perf
-> > report).
-> >
-> > Are there any other compiler options that need to be enabled in order
-> > to get usable stack traces in perf for s390x? Has anyone managed to
-> > get this working before?
->
-> So, are you saying that you want to enable "-mbackchain" for whole user
-> space for Fedora? If that is the case, what certainly is missing is kernel
-> support to unwind user space stack frames from the kernel, since until now
-> no distribution had user space where it would be possible to unwind the
-> user space stack from the kernel; which is the reason why this was never
-> implemented.
->
-> If this (or some other compiler options) will be enabled for user space, we
-> need to add kernel support in order to make this work.
+There is a spelling mistake in a ui error message. Fix it.
 
-If the kernel gets support for s390x user space unwinding using the backchain,
-we'll propose to enable -mbackchain in the default compilation flags for Fedora
-so that s390x on Fedora will have the same profiling experience as x86-64, arm64
-and ppc64. For now we'll keep the status quo since compiling with the backchain
-doesn't provide any benefit until the kernel unwinder can unwind user
-space stacks
-using it.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/perf/builtin-report.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for clarifying the current state of user space stack unwinding on s390x!
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index ca8f2331795c..9cb1da2dc0c0 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -705,7 +705,7 @@ static int report__collapse_hists(struct report *rep)
+ 	 */
+ 	if (perf_data__is_pipe(session->data)) {
+ 		if (perf_hpp__setup_hists_formats(&perf_hpp_list, evlist) < 0) {
+-			ui__error("Failed to setup hierachy output formats\n");
++			ui__error("Failed to setup hierarchy output formats\n");
+ 			return -1;
+ 		}
+ 	}
+-- 
+2.39.2
 
-Cheers,
-
-Daan
-
-
-
-
-
-On Thu, 26 Oct 2023 at 16:57, Heiko Carstens <hca@linux.ibm.com> wrote:
->
-> On Thu, Oct 26, 2023 at 02:30:41PM +0200, Daan De Meyer wrote:
-> > Hi,
-> >
-> > As part of enabling frame pointers system wide for Fedora to get fast
-> > system wide stack unwinding, we're now looking to do the same for
-> > s390x after previously enabling frame pointers for x86-64 and aarch64.
-> > From what we can find, on s390x stack unwinding is done via the
-> > "-mbackchain" compiler option. However, from some early experiments
-> > rebuilding a small part of the distro, this option alone does not seem
-> > to result in usable stack traces in perf (perf record -g => perf
-> > report).
-> >
-> > Are there any other compiler options that need to be enabled in order
-> > to get usable stack traces in perf for s390x? Has anyone managed to
-> > get this working before?
->
-> So, are you saying that you want to enable "-mbackchain" for whole user
-> space for Fedora? If that is the case, what certainly is missing is kernel
-> support to unwind user space stack frames from the kernel, since until now
-> no distribution had user space where it would be possible to unwind the
-> user space stack from the kernel; which is the reason why this was never
-> implemented.
->
-> If this (or some other compiler options) will be enabled for user space, we
-> need to add kernel support in order to make this work.
