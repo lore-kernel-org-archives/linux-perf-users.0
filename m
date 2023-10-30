@@ -1,124 +1,73 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150EE1C36;
-	Mon, 30 Oct 2023 07:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738F7D50F;
+	Mon, 30 Oct 2023 09:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5C5BD;
-	Mon, 30 Oct 2023 00:15:05 -0700 (PDT)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 39U7Cl8k048592;
-	Mon, 30 Oct 2023 15:12:47 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Mon, 30 Oct 2023 15:12:46 +0800
-Date: Mon, 30 Oct 2023 15:12:46 +0800
-From: Yu-Chien Peter Lin <peterlin@andestech.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
-        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
-        <conor.dooley@microchip.com>, <conor@kernel.org>,
-        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
-        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
-        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
-        <jolsa@kernel.org>, <jszhang@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
-        <robh+dt@kernel.org>, <samuel@sholland.org>,
-        <sunilvl@ventanamicro.com>, <tim609@andestech.com>, <uwu@icenowy.me>,
-        <wens@csie.org>, <will@kernel.org>, <ycliang@andestech.com>
-Subject: Re: [RFC PATCH v3 RESEND 02/13] irqchip/riscv-intc: Allow large
- non-standard hwirq number
-Message-ID: <ZT9XbuxE2vlvsfYG@APC323>
-References: <20231023004100.2663486-1-peterlin@andestech.com>
- <20231023004100.2663486-3-peterlin@andestech.com>
- <87a5s44jyc.ffs@tglx>
+X-Greylist: delayed 186 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 30 Oct 2023 02:15:04 PDT
+Received: from cmccmta2.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id E35D9A7;
+	Mon, 30 Oct 2023 02:15:04 -0700 (PDT)
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee8653f735c45d-61d69;
+	Mon, 30 Oct 2023 17:11:56 +0800 (CST)
+X-RM-TRANSID:2ee8653f735c45d-61d69
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from localhost.localdomain.localdomain (unknown[10.54.5.255])
+	by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee9653f7359c44-21d77;
+	Mon, 30 Oct 2023 17:11:55 +0800 (CST)
+X-RM-TRANSID:2ee9653f7359c44-21d77
+From: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+To: Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+Subject: [PATCH] perf tests:FIx spelling mistake "whic" to "which"
+Date: Mon, 30 Oct 2023 15:58:25 +0800
+Message-Id: <20231030075825.3701-1-zhaimingbing@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87a5s44jyc.ffs@tglx>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Originating-IP: [10.0.12.98]
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 39U7Cl8k048592
+Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
+There is a spelling mistake, Please fix it.
 
-Thanks for the review.
+Signed-off-by: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+---
+ tools/perf/tests/attr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Fri, Oct 27, 2023 at 09:12:59AM +0200, Thomas Gleixner wrote:
-> On Mon, Oct 23 2023 at 08:40, Yu Chien Peter Lin wrote:
-> > Currently, the implementation of the RISC-V INTC driver uses the
-> > interrupt cause as hwirq and has a limitation of supporting a
-> > maximum of 64 hwirqs. However, according to the privileged spec,
-> > interrupt causes >= 16 are defined for platform use.
-> >
-> > This limitation prevents us from fully utilizing the available
-> > local interrupt sources. Additionally, the hwirqs used on RISC-V
-> > are sparse, with only interrupt numbers 1, 5 and 9 (plus Sscofpmf
-> > or T-Head's PMU irq) being currently used for supervisor mode.
-> >
-> > The patch switches to using irq_domain_create_tree() which
-> 
-> git grep "This patch" Documentation/process/
+diff --git a/tools/perf/tests/attr.c b/tools/perf/tests/attr.c
+index 61186d0d1..97e1bdd6e 100644
+--- a/tools/perf/tests/attr.c
++++ b/tools/perf/tests/attr.c
+@@ -188,7 +188,7 @@ static int test__attr(struct test_suite *test __maybe_unused, int subtest __mayb
+ 	if (perf_pmus__num_core_pmus() > 1) {
+ 		/*
+ 		 * TODO: Attribute tests hard code the PMU type. If there are >1
+-		 * core PMU then each PMU will have a different type whic
++		 * core PMU then each PMU will have a different type which
+ 		 * requires additional support.
+ 		 */
+ 		pr_debug("Skip test on hybrid systems");
+-- 
+2.33.0
 
-Sure, will fix.
 
-> > creates the radix tree map, allowing us to handle a larger
-> > number of hwirqs.
-> 
-> Who is 'us'? We are not part of the chip and please write out 'hardware
-> interrupts'
 
-OK!
-
-> > @@ -24,10 +24,8 @@ static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
-> >  {
-> >  	unsigned long cause = regs->cause & ~CAUSE_IRQ_FLAG;
-> >  
-> > -	if (unlikely(cause >= BITS_PER_LONG))
-> > -		panic("unexpected interrupt cause");
-> > -
-> > -	generic_handle_domain_irq(intc_domain, cause);
-> > +	if (generic_handle_domain_irq(intc_domain, cause))
-> > +		pr_warn("Failed to handle interrupt (cause: %ld)\n", cause);
-> 
-> pr_warn_once() or at least pr_warn_ratelimited().
-
-OK!
-
-> >  }
-> >  
-> >  /*
-> > @@ -117,8 +115,8 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
-> >  {
-> >  	int rc;
-> >  
-> > -	intc_domain = irq_domain_create_linear(fn, BITS_PER_LONG,
-> > -					       &riscv_intc_domain_ops, NULL);
-> > +	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops,
-> > +					     NULL);
-> 
-> Put it into one line. Linebreaking arguments is really only required
-> when the line length is exceedingly long. This one is not.
-
-OK! will fix.
-
-Thanks,
-Peter Lin
