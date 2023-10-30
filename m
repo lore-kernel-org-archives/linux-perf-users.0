@@ -1,43 +1,44 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878E3B67E
-	for <linux-perf-users@vger.kernel.org>; Mon, 30 Oct 2023 15:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BEE18AE6
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Oct 2023 15:34:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="abH6EZ67"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8DBDA9;
-	Mon, 30 Oct 2023 08:07:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ayfgtL7Z"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D18A9;
+	Mon, 30 Oct 2023 08:34:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698678445; x=1730214445;
+  t=1698680081; x=1730216081;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=fT1xy4IOWxjIxb8OmxuVL39GBdih42tG4ZGInEuHYxo=;
-  b=abH6EZ67O28ehoizykBcjWHxLqV5tC/0+9TKNNWHIGrLlSLTkGX199Sx
-   DOEFlcYUtCOHzUPDAbX1FiQ2dqsJCtH2UDU9pYE9vDSphCBt1LKnVGlDq
-   gZe1vd5Dlu1NQUl2BcpnOAHH8RsG7FoZCLbLKuf5CJoDN8ZSVBymZnpvV
-   XqitFYn1GbGFOOZZXscb5LGb+ZdXzCz/P4+0oCjPdVpP2ZlbJHUdHBMDs
-   3n3ysM/ZujZBDHclKihAHTRVrhwLwAQyfhPPjM81M+yL172kjyYqYYqWc
-   ywy+76GWO5mVefa+PHSiFoTAByOf4qyCeatuGL2vwgNDUb1O4h7xnkqjQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="385283880"
+  bh=sCfHwKvsR9e65jD7V3rp3T+AppnNifiR6dKSdQ8zmGE=;
+  b=ayfgtL7ZaaYdEasGiq1VwJi1iY2ww4MXpLs7clLYVaiwTmf0YG9LpDtC
+   WZhOT1cJwQ2Siwor/rNqyy8MlWC5WgaRu78+etMS8Rkcn0akAQ6TD+8pN
+   HWvN43TpXub3saVwsbLe6eV0xpSYABM0KFj7OO41C7ng1svVT+Bs1Srra
+   K9s6KZB3O0Mu1xnduLCQRkXmTLJ+2PzmVG7xDVI3LSSwj1VDHwsXzNZ/H
+   2X8U099IOEpDvlkaMrLhkQGntZNLMShH1TFi7YioWQ/32BwuGJu0I+Z1D
+   MVnNAHs8QALcHyye6KNnNHxBXCvm+6mA/9DFefUSOvPfu2QUDsS9CHrJe
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="387905806"
 X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
-   d="scan'208";a="385283880"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 08:07:25 -0700
+   d="scan'208";a="387905806"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 08:32:07 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="883891209"
 X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
-   d="scan'208";a="8368547"
+   d="scan'208";a="883891209"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 08:07:25 -0700
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 08:32:06 -0700
 Received: from [10.212.90.12] (kliang2-mobl1.ccr.corp.intel.com [10.212.90.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C7223580699;
-	Mon, 30 Oct 2023 08:07:22 -0700 (PDT)
-Message-ID: <b9599b44-79a6-4a09-9424-3add58ad53f0@linux.intel.com>
-Date: Mon, 30 Oct 2023 11:07:21 -0400
+	by linux.intel.com (Postfix) with ESMTPS id DEB0A580699;
+	Mon, 30 Oct 2023 08:32:04 -0700 (PDT)
+Message-ID: <ba847510-bdc4-4298-8d9c-10933023e712@linux.intel.com>
+Date: Mon, 30 Oct 2023 11:32:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,8 +46,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 02/17] perf stat: Add basic functions for the
- hardware-grouping stat cmd option
+Subject: Re: [RFC PATCH v2 07/17] perf stat: Add functions to set counter
+ bitmaps for hardware-grouping method
 Content-Language: en-US
 To: weilin.wang@intel.com, Ian Rogers <irogers@google.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -59,9 +60,9 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>,
  Mark Rutland <mark.rutland@arm.com>, Yang Jihong <yangjihong1@huawei.com>
 References: <20231014015202.1175377-1-weilin.wang@intel.com>
- <20231014015202.1175377-3-weilin.wang@intel.com>
+ <20231014015202.1175377-8-weilin.wang@intel.com>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20231014015202.1175377-3-weilin.wang@intel.com>
+In-Reply-To: <20231014015202.1175377-8-weilin.wang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -70,310 +71,298 @@ Content-Transfer-Encoding: 7bit
 On 2023-10-13 9:51 p.m., weilin.wang@intel.com wrote:
 > From: Weilin Wang <weilin.wang@intel.com>
 > 
-> Add the first set of functions for the hardware-grouping method. Function
-> hw_awre_parse_groups() is the entry point of this metric grouping method.
-
-hw_aware_parse_groups()
-
-> It does metric grouping on a combined list of events and will create a list
-> of grouping strings as final results of the grouping method. These grouping
-> strings will be used in the same mannor as existing metric grouping
-
-manner
-
-> process.
+> Add metricgroup__event_info data structure to represent an event in the
+> metric grouping context; the list of counters and the PMU name an event
+> should be collected with.
 > 
-> This method will fall back to normal grouping when hardware aware grouping
-> return with err so that perf stat still executes and returns with correct
-> result.
+> Add functions to parse event counter info from pmu-events and generate a
+> list of metricgroup__event_info data to prepare grouping.
 > 
 > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 > ---
->  tools/perf/util/metricgroup.c | 210 +++++++++++++++++++++++++++++++++-
->  tools/perf/util/metricgroup.h |   9 ++
->  2 files changed, 218 insertions(+), 1 deletion(-)
+>  tools/perf/util/metricgroup.c | 196 +++++++++++++++++++++++++++++++++-
+>  tools/perf/util/metricgroup.h |  27 +++++
+>  2 files changed, 220 insertions(+), 3 deletions(-)
 > 
 > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index b08af6860..8d4e29eb1 100644
+> index 8d4e29eb1..6af8a7341 100644
 > --- a/tools/perf/util/metricgroup.c
 > +++ b/tools/perf/util/metricgroup.c
-> @@ -1432,6 +1432,101 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+> @@ -1432,6 +1432,182 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
 >  	return ret;
 >  }
 >  
 > +/**
-> + * hw_aware_build_grouping - Build event groupings by reading counter
-> + * requirement of the events and counter available on the system from
-> + * pmu-events.
-> + * @ctx: the event identifiers parsed from metrics.
-> + * @groupings: header to the list of final event grouping.
-> + * @modifier: any modifiers added to the events.
+> + * set_counter_bitmap - The counter bit mapping: [8-15,0-7], e.g. the GP0 is the
+> + * 8th bit and GP7 is the 1st bit in this 16-bits bitmap. It is helpful for
+> + * assigning GP4-7 before GP0-3 because some events can be collected using GP0-3
+> + * only on some platforms.
+
+The bitmap looks weird. Can we use the normal bitmap and always search
+from the last set bit to find the available counter?
+
+
 > + */
-> +static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
-> +				  struct list_head *groupings __maybe_unused,
-> +				  const char *modifier __maybe_unused)
+> +static int set_counter_bitmap(int pos, unsigned long *bitmap)
 > +{
-> +	int ret = 0;
+> +	if (pos >= NR_COUNTERS || pos < 0)
+> +		return -EINVAL;
+> +	if (pos <= 7)
+> +		pos = TRANSFER_FIRST_BYTE(pos);
+> +	else
+> +		pos = TRANSFER_SEC_BYTE(pos);
+> +	*bitmap |= 1ul << pos;
+> +	return 0;
+> +}
 > +
-> +	pr_debug("This is a placeholder\n");
-
-I think the patch series still use a reversed way to organize the
-patches. So you have to insert such the useless place holder here.
-
-I think a better way is to start the series from the essential blocks,
-then build more complex functions on top of the blocks, and finally
-add/enable the new feature.
-
+> +static int parse_fixed_counter(const char *counter,
+> +			      unsigned long *bitmap,
+> +			      bool *fixed)
+> +{
+> +	int ret = -ENOENT;
+> +	//TODO: this pattern is different on some other platforms
+> +	const char *pattern = "Fixed counter ";
+> +	int pos = 0;
+> +
+> +	if (!strncmp(counter, pattern, strlen(pattern))) {
+> +		pos = atoi(counter + strlen(pattern));
+> +		ret = set_counter_bitmap(pos, bitmap);
+> +		if (ret)
+> +			return ret;
+> +		*fixed = true;
+> +		return 0;
+> +	}
 > +	return ret;
 > +}
 > +
-> +static void group_str_free(struct metricgroup__group_strs *g)
+> +/**
+> + * parse_counter - Parse event counter info from pmu-events and set up bitmap
+> + * accordingly.
+> + *
+> + * @counter: counter info string to be parsed.
+> + * @bitmap: bitmap to set based on counter info parsed.
+> + * @fixed: is set to true if the event uses fixed counter.
+> + */
+> +static int parse_counter(const char *counter,
+> +			unsigned long *bitmap,
+> +			bool *fixed)
 > +{
-> +	if (!g)
-> +		return;
+> +	int ret = 0;
+> +	char *p;
+> +	char *tok;
+> +	int pos = 0;
 > +
-> +	strbuf_release(&g->grouping_str);
-> +	free(g);
+> +	ret = parse_fixed_counter(counter, bitmap, fixed);
+> +	// ret==0 means matched with fixed counter
+
+Move the comments to the above of parse_fixed_counter().
+Uses /**/.
+
+> +	if (ret == 0)
+> +		return ret;
+> +
+> +	p = strdup(counter);
+> +	tok = strtok(p, ",");
+> +	if (!tok)
+> +		return -ENOENT;
+> +
+> +	while (tok) {
+> +		pos = atoi(tok);
+> +		ret = set_counter_bitmap(pos, bitmap);
+> +		if (ret)
+> +			return ret;
+> +		tok = strtok(NULL, ",");
+> +	}
+> +	return 0;
 > +}
 > +
-> +static void metricgroup__free_grouping_strs(struct list_head
-> +					   *grouping_strs)
+> +static struct metricgroup__event_info *event_info__new(const char *name,
+> +						      const char *pmu_name,
+> +						      const char *counter,
+> +						      bool free_counter)
 > +{
-> +	struct metricgroup__group_strs *g, *tmp;
+> +	int ret = 0;
+> +	char *bit_buf = malloc(NR_COUNTERS);
+> +	bool fixed_counter = false;
+> +	struct metricgroup__event_info *e;
 > +
-> +	list_for_each_entry_safe(g, tmp, grouping_strs, nd) {
-> +		list_del_init(&g->nd);
-> +		group_str_free(g);
+> +	e = zalloc(sizeof(*e));
+> +	if (!e)
+> +		return NULL;
+> +	if (!pmu_name)
+> +		pmu_name = "core";
+> +
+> +	e->name = name;
+> +	e->free_counter = free_counter;
+> +	e->pmu_name = strdup(pmu_name);
+> +	if (free_counter) {
+> +		ret = set_counter_bitmap(0, e->counters);
+> +		if (ret)
+> +			return NULL;
+> +	} else {
+> +		ret = parse_counter(counter, e->counters, &fixed_counter);
+> +		if (ret)
+> +			return NULL;
+> +		e->fixed_counter = fixed_counter;
 > +	}
+> +
+> +	bitmap_scnprintf(e->counters, NR_COUNTERS, bit_buf, NR_COUNTERS);
+> +	pr_debug("Event %s requires pmu %s counter: %s bitmap %s, [pmu=%s]\n",
+> +		e->name, e->pmu_name, counter, bit_buf, pmu_name);
+> +
+> +	return e;
+> +}
+> +
+> +struct metricgroup__add_metric_event_data {
+> +	struct list_head *list;
+> +	/* pure event name, exclude umask and other info*/
+> +	const char *event_name;
+> +	/* event name and umask if applicable*/
+> +	const char *event_id;
+> +};
+> +
+> +static int metricgroup__add_metric_event_callback(const struct pmu_event *pe,
+> +						 const struct pmu_events_table *table __maybe_unused,
+> +						 void *data)
+> +{
+> +	struct metricgroup__event_info *event;
+> +	struct metricgroup__add_metric_event_data *d = data;
+> +
+> +	if (!strcasecmp(pe->name, d->event_name)) {
+> +		event = event_info__new(d->event_id, pe->pmu, pe->counter, /*free_counter=*/false);
+> +		if (!event)
+> +			return -ENOMEM;
+> +		list_add(&event->nd, d->list);
+> +	}
+> +
+> +	return 0;
 > +}
 > +
 > +/**
-> + * hw_aware_parse_ids - Build the event string for the ids and parse them
-> + * creating an evlist. The encoded metric_ids are decoded. Events are placed
-> + * into groups based on event counter requirements and counter availabilities of
-> + * the system.
-> + * @metric_no_merge: is metric sharing explicitly disabled.
-> + * @fake_pmu: used when testing metrics not supported by the current CPU.
-> + * @ids: the event identifiers parsed from a metric.
-> + * @modifier: any modifiers added to the events.
-> + * @out_evlist: the created list of events.
+> + * get_metricgroup_events - Find counter requirement of events from the
+> + * pmu_events table
+> + * @full_id: the full event identifiers.
+> + * @table: pmu_events table that is searched for event data.
+> + * @event_info_list: the list that the new event counter info added to.
 > + */
-> +static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
-> +			     struct expr_parse_ctx *ids, const char *modifier,
-> +			     struct evlist **out_evlist)
-
-The hw_aware_parse_ids() is very similar to parse_ids(). Can we factor a
-common function to avoid the duplication?
-
-
+> +static int get_metricgroup_events(const char *full_id,
+> +				 const struct pmu_events_table *table,
+> +				 struct list_head *event_info_list)
 > +{
-> +	struct parse_events_error parse_error;
-> +	struct evlist *parsed_evlist;
-> +	LIST_HEAD(groupings);
-> +	struct metricgroup__group_strs *group;
-> +	int ret;
+> +	LIST_HEAD(list);
+> +	int ret = 0;
+> +	const char *id;
+> +	const char *rsep, *sep = strchr(full_id, '@');
 > +
-> +	*out_evlist = NULL;
-> +	ret = hw_aware_build_grouping(ids, &groupings, modifier);
-> +	if (ret) {
-> +		metricgroup__free_grouping_strs(&groupings);
-> +		return ret;
-> +	}
-> +
-> +	parsed_evlist = evlist__new();
-> +	if (!parsed_evlist) {
-> +		ret = -ENOMEM;
-> +		goto err_out;
-> +	}
-> +	list_for_each_entry(group, &groupings, nd) {
-> +		struct strbuf *events = &group->grouping_str;
-> +
-> +		pr_debug("Parsing metric events '%s'\n", events->buf);
-> +		parse_events_error__init(&parse_error);
-> +		ret = __parse_events(parsed_evlist, events->buf, /*pmu_filter=*/NULL,
-> +				    &parse_error, fake_pmu, /*warn_if_reordered=*/false);
-> +		if (ret) {
-> +			parse_events_error__print(&parse_error, events->buf);
-> +			goto err_out;
-> +		}
-> +		ret = decode_all_metric_ids(parsed_evlist, modifier);
+> +	if (sep) {
+> +		rsep = strchr(full_id, ',');
+> +		id = strndup(sep + 1, rsep - sep - 1);
 > +		if (ret)
-> +			goto err_out;
+> +			goto out;
+> +	} else {
+> +		id = full_id;
 > +	}
-> +	*out_evlist = parsed_evlist;
-> +	parsed_evlist = NULL;
-> +err_out:
-> +	parse_events_error__exit(&parse_error);
-> +	evlist__delete(parsed_evlist);
-> +	metricgroup__free_grouping_strs(&groupings);
+> +	{
+> +		struct metricgroup__add_metric_event_data data = {
+> +			.list = &list,
+> +			.event_name = id,
+> +			.event_id = full_id,
+> +		};
+> +		ret = pmu_events_table_for_each_event(table,
+> +				metricgroup__add_metric_event_callback, &data);
+> +	}
+
+Please remove the useless {}
+
+Thanks,
+Kan
+> +
+> +out:
+> +	list_splice(&list, event_info_list);
 > +	return ret;
 > +}
 > +
 >  /**
->   * parse_ids - Build the event string for the ids and parse them creating an
->   *             evlist. The encoded metric_ids are decoded.
-> @@ -1520,6 +1615,114 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+>   * hw_aware_build_grouping - Build event groupings by reading counter
+>   * requirement of the events and counter available on the system from
+> @@ -1445,9 +1621,25 @@ static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
+>  				  const char *modifier __maybe_unused)
+>  {
+>  	int ret = 0;
+> +	struct hashmap_entry *cur;
+> +	LIST_HEAD(pmu_info_list);
+> +	LIST_HEAD(event_info_list);
+> +	size_t bkt;
+> +	const struct pmu_events_table *etable = pmu_events_table__find();
+> +
+> +#define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
+> +	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+> +		const char *id = cur->pkey;
+> +
+> +		pr_debug("found event %s\n", id);
+> +
+> +		ret = get_metricgroup_events(id, etable, &event_info_list);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+> -	pr_debug("This is a placeholder\n");
 >  	return ret;
+> +#undef RETURN_IF_NON_ZERO
 >  }
 >  
-> +static int hw_aware_parse_groups(struct evlist *perf_evlist,
-> +				const char *pmu, const char *str,
-> +				bool metric_no_threshold,
-> +				const char *user_requested_cpu_list,
-> +				bool system_wide,
-> +				struct perf_pmu *fake_pmu,
-> +				struct rblist *metric_events_list,
-> +				const struct pmu_metrics_table *table)
-
-The hw_aware_parse_groups() is very similar to parse_groups(). Please
-factor out a common function to avoid the duplication as well.
-
-Thanks,
-Kan
-> +{
-> +	struct evlist *combined_evlist = NULL;
-> +	LIST_HEAD(metric_list);
-> +	struct metric *m;
-> +	int ret;
-> +	bool metric_no_group = false;
-> +	bool metric_no_merge = false;
-> +
-> +	if (metric_events_list->nr_entries == 0)
-> +		metricgroup__rblist_init(metric_events_list);
-> +	ret = metricgroup__add_metric_list(pmu, str, metric_no_group, metric_no_threshold,
-> +					   user_requested_cpu_list,
-> +					   system_wide, &metric_list, table);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* Sort metrics from largest to smallest. */
-> +	list_sort(NULL, &metric_list, metric_list_cmp);
-> +
-> +	if (!metric_no_merge) {
-> +		struct expr_parse_ctx *combined = NULL;
-> +
-> +		ret = build_combined_expr_ctx(&metric_list, &combined);
-> +
-> +		if (!ret && combined && hashmap__size(combined->ids)) {
-> +			ret = hw_aware_parse_ids(fake_pmu, combined,
-> +						/*modifier=*/NULL,
-> +						&combined_evlist);
-> +		}
-> +
-> +		if (ret)
-> +			goto out;
-> +
-> +		if (combined)
-> +			expr__ctx_free(combined);
-> +	}
-> +
-> +	list_for_each_entry(m, &metric_list, nd) {
-> +		struct metric_expr *expr;
-> +		struct metric_event *me;
-> +		struct evsel **metric_events;
-> +
-> +		ret = setup_metric_events(fake_pmu ? "all" : m->pmu, m->pctx->ids,
-> +					 combined_evlist, &metric_events);
-> +		if (ret) {
-> +			pr_debug("Cannot resolve IDs for %s: %s\n",
-> +				m->metric_name, m->metric_expr);
-> +			goto out;
-> +		}
-> +
-> +		me = metricgroup__lookup(metric_events_list, metric_events[0], true);
-> +
-> +		expr = malloc(sizeof(struct metric_expr));
-> +		if (!expr) {
-> +			ret = -ENOMEM;
-> +			free(metric_events);
-> +			goto out;
-> +		}
-> +
-> +		expr->metric_refs = m->metric_refs;
-> +		m->metric_refs = NULL;
-> +		expr->metric_expr = m->metric_expr;
-> +		if (m->modifier) {
-> +			char *tmp;
-> +
-> +			if (asprintf(&tmp, "%s:%s", m->metric_name, m->modifier) < 0)
-> +				expr->metric_name = NULL;
-> +			else
-> +				expr->metric_name = tmp;
-> +		} else {
-> +			expr->metric_name = strdup(m->metric_name);
-> +		}
-> +
-> +		if (!expr->metric_name) {
-> +			ret = -ENOMEM;
-> +			free(metric_events);
-> +			goto out;
-> +		}
-> +		expr->metric_threshold = m->metric_threshold;
-> +		expr->metric_unit = m->metric_unit;
-> +		expr->metric_events = metric_events;
-> +		expr->runtime = m->pctx->sctx.runtime;
-> +		list_add(&expr->nd, &me->head);
-> +	}
-> +
-> +	if (combined_evlist) {
-> +		evlist__splice_list_tail(perf_evlist, &combined_evlist->core.entries);
-> +		evlist__delete(combined_evlist);
-> +	}
-> +
-> +	list_for_each_entry(m, &metric_list, nd) {
-> +		if (m->evlist)
-> +			evlist__splice_list_tail(perf_evlist, &m->evlist->core.entries);
-> +	}
-> +
-> +out:
-> +	metricgroup__free_metrics(&metric_list);
-> +	return ret;
-> +}
-> +
->  static int parse_groups(struct evlist *perf_evlist,
->  			const char *pmu, const char *str,
->  			bool metric_no_group,
-> @@ -1698,10 +1901,15 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
->  	if (!table)
->  		return -EINVAL;
->  	if (hardware_aware_grouping) {
-> +		int ret;
->  		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
-> +		ret = hw_aware_parse_groups(perf_evlist, pmu, str,
-> +			    metric_no_threshold, user_requested_cpu_list, system_wide,
-> +			    /*fake_pmu=*/NULL, metric_events, table);
-> +		if (!ret)
-> +			return 0;
->  	}
->  
-> -
->  	return parse_groups(perf_evlist, pmu, str, metric_no_group, metric_no_merge,
->  			    metric_no_threshold, user_requested_cpu_list, system_wide,
->  			    /*fake_pmu=*/NULL, metric_events, table);
+>  static void group_str_free(struct metricgroup__group_strs *g)
+> @@ -1521,8 +1713,6 @@ static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
+>  	*out_evlist = parsed_evlist;
+>  	parsed_evlist = NULL;
+>  err_out:
+> -	parse_events_error__exit(&parse_error);
+> -	evlist__delete(parsed_evlist);
+>  	metricgroup__free_grouping_strs(&groupings);
+>  	return ret;
+>  }
 > diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-> index 779f6ede1..89809df85 100644
+> index 89809df85..3704545c9 100644
 > --- a/tools/perf/util/metricgroup.h
 > +++ b/tools/perf/util/metricgroup.h
-> @@ -6,6 +6,7 @@
+> @@ -5,6 +5,7 @@
+>  #include <linux/list.h>
 >  #include <linux/rbtree.h>
 >  #include <stdbool.h>
+> +#include <linux/bitmap.h>
 >  #include "pmu-events/pmu-events.h"
-> +#include "strbuf.h"
+>  #include "strbuf.h"
 >  
->  struct evlist;
->  struct evsel;
-> @@ -66,6 +67,14 @@ struct metric_expr {
+> @@ -67,6 +68,32 @@ struct metric_expr {
 >  	int runtime;
 >  };
 >  
-> +/**
-> + * Each group is one node in the group string list.
+> +/* Maximum number of counters per PMU*/
+> +#define NR_COUNTERS	16
+> +/*
+> + * Transfer bit position in the bitmap to ensure start assigning counter from
+> + * the last GP counter to the first.
+> + * bit15 <---> bit0
+> + * [GP8-GP15] [GP0-GP7]
 > + */
-> +struct metricgroup__group_strs {
+> +#define TRANSFER_FIRST_BYTE(pos) (7 - pos)
+> +#define TRANSFER_SEC_BYTE(pos) (23 - pos)
+> +
+> +/**
+> + * An event used in a metric. This info is for metric grouping.
+> + */
+> +struct metricgroup__event_info {
 > +	struct list_head nd;
-> +	struct strbuf grouping_str;
+> +	/** The name of the event. */
+> +	const char *name;
+> +	/** The name of the pmu the event be collected on. */
+> +	const char *pmu_name;
+> +	bool fixed_counter;
+> +	bool free_counter;
+> +	/** The counters the event allowed to be collected on. */
+> +	DECLARE_BITMAP(counters, NR_COUNTERS);
 > +};
 > +
->  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
->  					 struct evsel *evsel,
->  					 bool create);
+>  /**
+>   * Each group is one node in the group string list.
+>   */
