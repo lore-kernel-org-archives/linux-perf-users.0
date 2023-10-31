@@ -1,139 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79C1111E
-	for <linux-perf-users@vger.kernel.org>; Tue, 31 Oct 2023 05:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kL5jWchS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0188C433CA;
-	Tue, 31 Oct 2023 05:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1698731280;
-	bh=p+P/xP9EbaQml5yZke5QeF30o+WUdV6v112azu7rFLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kL5jWchSNYYCG3LQ6IBTiLQvi1Kwr5DwhYV0HdB1dWKwXD3e56mQGPbDbCzpDlean
-	 8/nQgpmdN69VoOZrKLQsKx9X2W+iBuR8+4kFbdY4y+Vb71arz8+ob9ncW5o4NuRSzS
-	 4mdEiGZjKXHZgqNnm3TWqq5rawamhXR1evc9SsVI=
-Date: Tue, 31 Oct 2023 06:47:55 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1] perf evlist: Avoid frequency mode for the dummy event
-Message-ID: <2023103145-ruse-statue-9b8f@gregkh>
-References: <20230916040915.1075620-1-irogers@google.com>
- <CAL715WLq+wMGC26ESviAwSFGCpCYbf8knRFo=6Lbwgk8qwB8xA@mail.gmail.com>
- <CAL715W+gnsi8NiRfwBHAGLhGo5hpS1c=+v8EGbz8iX_ygUxm1w@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0B311182
+	for <linux-perf-users@vger.kernel.org>; Tue, 31 Oct 2023 08:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8FF4A6;
+	Tue, 31 Oct 2023 01:10:36 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.54])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4SKN3z5SQxzvQFr;
+	Tue, 31 Oct 2023 16:05:35 +0800 (CST)
+Received: from ubuntu2204.huawei.com (10.67.174.22) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 31 Oct 2023 16:10:34 +0800
+From: Yang Jihong <yangjihong1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+	<adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <yangjihong1@huawei.com>
+Subject: [PATCH] perf debug: List available options when no variable is specified
+Date: Tue, 31 Oct 2023 08:08:23 +0000
+Message-ID: <20231031080823.1418025-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL715W+gnsi8NiRfwBHAGLhGo5hpS1c=+v8EGbz8iX_ygUxm1w@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.22]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
 
-On Mon, Oct 30, 2023 at 01:01:45PM -0700, Mingwei Zhang wrote:
-> On Mon, Oct 30, 2023 at 12:04 PM Mingwei Zhang <mizhang@google.com> wrote:
-> >
-> > On Fri, Sep 15, 2023 at 9:10 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > Dummy events are created with an attribute where the period and freq
-> > > are zero. evsel__config will then see the uninitialized values and
-> > > initialize them in evsel__default_freq_period. As fequency mode is
-> > > used by default the dummy event would be set to use frequency
-> > > mode. However, this has no effect on the dummy event but does cause
-> > > unnecessary timers/interrupts. Avoid this overhead by setting the
-> > > period to 1 for dummy events.
-> > >
-> > > evlist__add_aux_dummy calls evlist__add_dummy then sets freq=0 and
-> > > period=1. This isn't necessary after this change and so the setting is
-> > > removed.
-> > >
-> > > From Stephane:
-> > >
-> > > The dummy event is not counting anything. It is used to collect mmap
-> > > records and avoid a race condition during the synthesize mmap phase of
-> > > perf record. As such, it should not cause any overhead during active
-> > > profiling. Yet, it did. Because of a bug the dummy event was
-> > > programmed as a sampling event in frequency mode. Events in that mode
-> > > incur more kernel overheads because on timer tick, the kernel has to
-> > > look at the number of samples for each event and potentially adjust
-> > > the sampling period to achieve the desired frequency. The dummy event
-> > > was therefore adding a frequency event to task and ctx contexts we may
-> > > otherwise not have any, e.g., perf record -a -e
-> > > cpu/event=0x3c,period=10000000/. On each timer tick the
-> > > perf_adjust_freq_unthr_context() is invoked and if ctx->nr_freq is
-> > > non-zero, then the kernel will loop over ALL the events of the context
-> > > looking for frequency mode ones. In doing, so it locks the context,
-> > > and enable/disable the PMU of each hw event. If all the events of the
-> > > context are in period mode, the kernel will have to traverse the list for
-> > > nothing incurring overhead. The overhead is multiplied by a very large
-> > > factor when this happens in a guest kernel. There is no need for the
-> > > dummy event to be in frequency mode, it does not count anything and
-> > > therefore should not cause extra overhead for no reason.
-> > >
-> > > Fixes: 5bae0250237f ("perf evlist: Introduce perf_evlist__new_dummy constructor")
-> > > Reported-by: Stephane Eranian <eranian@google.com>
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/evlist.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > > index 25c3ebe2c2f5..e36da58522ef 100644
-> > > --- a/tools/perf/util/evlist.c
-> > > +++ b/tools/perf/util/evlist.c
-> > > @@ -251,6 +251,9 @@ static struct evsel *evlist__dummy_event(struct evlist *evlist)
-> > >                 .type   = PERF_TYPE_SOFTWARE,
-> > >                 .config = PERF_COUNT_SW_DUMMY,
-> > >                 .size   = sizeof(attr), /* to capture ABI version */
-> > > +               /* Avoid frequency mode for dummy events to avoid associated timers. */
-> > > +               .freq = 0,
-> > > +               .sample_period = 1,
-> > >         };
-> > >
-> > >         return evsel__new_idx(&attr, evlist->core.nr_entries);
-> > > @@ -277,8 +280,6 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
-> > >         evsel->core.attr.exclude_kernel = 1;
-> > >         evsel->core.attr.exclude_guest = 1;
-> > >         evsel->core.attr.exclude_hv = 1;
-> > > -       evsel->core.attr.freq = 0;
-> > > -       evsel->core.attr.sample_period = 1;
-> > >         evsel->core.system_wide = system_wide;
-> > >         evsel->no_aux_samples = true;
-> > >         evsel->name = strdup("dummy:u");
-> > > --
-> > > 2.42.0.459.ge4e396fd5e-goog
-> > >
-> >
-> > Hi Greg,
-> >
-> > This patch is a critical performance fix for perf and vPMU. Can you
-> > help us dispatch the commit to all stable kernel versions?
-> >
-> > Appreciate your help. Thanks.
-> > -Mingwei
-> 
-> Oops... Update target email to: stable@vger.kernel.org
+Minor help message improvement for `perf --debug`
 
-<formletter>
+Before:
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+  # perf --debug
+  No variable specified for --debug.
 
-</formletter>
+   Usage: perf [--version] [--help] [OPTIONS] COMMAND [ARGS]
+
+After:
+
+  # perf --debug
+  No variable specified for --debug, available options: verbose,ordered-events,stderr,data-convert,perf-event-open.
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/perf.c       | 4 +++-
+ tools/perf/util/debug.c | 3 +++
+ tools/perf/util/debug.h | 1 +
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index d3fc8090413c..0fc4719e6825 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -279,7 +279,9 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
+ 			exit(0);
+ 		} else if (!strcmp(cmd, "--debug")) {
+ 			if (*argc < 2) {
+-				fprintf(stderr, "No variable specified for --debug.\n");
++				fprintf(stderr,
++					"No variable specified for --debug, available options: %s.\n",
++					perf_debug_options_string);
+ 				usage(perf_usage_string);
+ 			}
+ 			if (perf_debug_option((*argv)[1]))
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index 88378c4c5dd9..e02f6d97b826 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -215,6 +215,9 @@ void trace_event(union perf_event *event)
+ 		     trace_event_printer, event);
+ }
+ 
++const char perf_debug_options_string[] =
++	"verbose,ordered-events,stderr,data-convert,perf-event-open";
++
+ static struct sublevel_option debug_opts[] = {
+ 	{ .name = "verbose",		.value_ptr = &verbose },
+ 	{ .name = "ordered-events",	.value_ptr = &debug_ordered_events},
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index f99468a7f681..b9b4d17a1845 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -13,6 +13,7 @@ extern int debug_peo_args;
+ extern bool quiet, dump_trace;
+ extern int debug_ordered_events;
+ extern int debug_data_convert;
++extern const char perf_debug_options_string[];
+ 
+ #ifndef pr_fmt
+ #define pr_fmt(fmt) fmt
+-- 
+2.34.1
+
