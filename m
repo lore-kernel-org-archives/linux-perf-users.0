@@ -1,39 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AD81E533
-	for <linux-perf-users@vger.kernel.org>; Tue, 31 Oct 2023 15:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE0F1DFD0
+	for <linux-perf-users@vger.kernel.org>; Tue, 31 Oct 2023 15:42:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOlrkHuY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E57EC433C8;
-	Tue, 31 Oct 2023 15:38:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXnFJTIh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A384C433C8;
+	Tue, 31 Oct 2023 15:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698766687;
-	bh=dCDFZB8B9f/JdOi0RnunoHzfl2Qan9ZHBj6X6d5O/tU=;
+	s=k20201202; t=1698766935;
+	bh=Dw8ImV/4ZAJzS87ziXlkmmx+cmvVvi27xsx4oc2kmrk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GOlrkHuYeLzDP2Ti7+Rlu20HSW+VmJOqDcOhnPGbHa3IS4eOB4e685EQ7AuyVkZce
-	 H1LBRydTvIxod/40hlbde8B5ZyGf8fA3/GXv146Iq02/lYBzxJangSUpswnz3u0+Bb
-	 DFAAlgnTLgaSTbzaxmThNivQQYm6pvbEsxf4teuUPl5QVdAWcWP2NbPqdg1xTz1KDh
-	 DMJxTPbcAAY3JAZfCK1vh9FtP955Irx/OaGYRdtn/DGfAwC8Tr6svlxSYA5uLBzNaw
-	 vCd/Ua6yHSXh0UskOn3VPrX6VdEamZ3LeoNf9ZZ7mSu2/iU3SUN1f5znhAx8yQOHdU
-	 GzA9mfomNbO2w==
+	b=LXnFJTIh2x0y83gcmvEuK8CV8TjQKH41UVhXf27AvAwsI5iNQYERacAaa+GPM8JOY
+	 GRXniM8O+WY4+aG2cXLYoDT4VRAPAk1gYW27oUbIg6AA40ahgYK0lev6cX+JQxusnI
+	 BU1ZuftgtsO+vPlMasr7wsdrfzk4D38XybhlBNg9fJltLH9/Lw7+7kqnWxpbQ3a9uP
+	 Nt5di+l2Wv7DX0qZXDpudwQOQMQSILEAtedOECu21mIj0KBj0EC6xQ+OaP90aJaTQS
+	 QFrRPvmd6Hj9Dw+7GpS/WRCSNPYKNDY+VKA3kQYkVWkCpYtSEFisEcpk43jOTfnQd3
+	 2KOUjrItefzeA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 7B99C4035D; Tue, 31 Oct 2023 12:38:05 -0300 (-03)
-Date: Tue, 31 Oct 2023 12:38:05 -0300
+	id 58E314035D; Tue, 31 Oct 2023 12:42:12 -0300 (-03)
+Date: Tue, 31 Oct 2023 12:42:12 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Nick Forrington <nick.forrington@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 2/2] perf lock info: Enforce exactly one of --map and
- --thread
-Message-ID: <ZUEfXU34ZijKe8aA@kernel.org>
-References: <20231031120526.11502-1-nick.forrington@arm.com>
- <20231031120526.11502-3-nick.forrington@arm.com>
+To: Yang Jihong <yangjihong1@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf debug: List available options when no variable is
+ specified
+Message-ID: <ZUEgVDlBQjFQB2W/@kernel.org>
+References: <20231031080823.1418025-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,76 +38,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231031120526.11502-3-nick.forrington@arm.com>
+In-Reply-To: <20231031080823.1418025-1-yangjihong1@huawei.com>
 X-Url: http://acmel.wordpress.com
 
-Em Tue, Oct 31, 2023 at 12:05:25PM +0000, Nick Forrington escreveu:
-> Improve error reporting for command line arguments.
-> 
-> Display error/usage if neither --map or --thread are specified (rather
-> than a non user-friendly error "Unknown type of information").
-> 
-> Display error/usage if both --map and --thread are specified (rather
-> than ignoring "--map" and displaying only thread information).
-
-Shouldn't one of them be the default so that we type less for the most
-common usage?
-
-- Arnaldo
+Em Tue, Oct 31, 2023 at 08:08:23AM +0000, Yang Jihong escreveu:
+> Before:
  
-> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
-> ---
->  tools/perf/builtin-lock.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 3aa8ba5ad928..cf29f648d291 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -2021,6 +2021,27 @@ static int check_lock_report_options(const struct option *options,
->  	return 0;
+>   # perf --debug
+>   No variable specified for --debug.
+ 
+> After:
+ 
+>   # perf --debug
+>   No variable specified for --debug, available options: verbose,ordered-events,stderr,data-convert,perf-event-open.
+
+Looks useful, but the implementation can be different to reduce
+maintainership costs, see below:
+
+> +++ b/tools/perf/perf.c
+> @@ -279,7 +279,9 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
+>  		} else if (!strcmp(cmd, "--debug")) {
+>  			if (*argc < 2) {
+> -				fprintf(stderr, "No variable specified for --debug.\n");
+> +				fprintf(stderr,
+> +					"No variable specified for --debug, available options: %s.\n",
+> +					perf_debug_options_string);
+>  				usage(perf_usage_string);
+
+> +++ b/tools/perf/util/debug.c
+> @@ -215,6 +215,9 @@ void trace_event(union perf_event *event)
+>  		     trace_event_printer, event);
 >  }
 >  
-> +static int check_lock_info_options(const struct option *options,
-> +				   const char * const *usage)
-> +{
-> +	if (!info_map && !info_threads) {
-> +		pr_err("Requires one of --map or --threads\n");
-> +		parse_options_usage(usage, options, "map", 0);
-> +		parse_options_usage(NULL, options, "threads", 0);
-> +		return -1;
-> +
-> +	}
-> +
-> +	if (info_map && info_threads) {
-> +		pr_err("Cannot show map and threads together\n");
-> +		parse_options_usage(usage, options, "map", 0);
-> +		parse_options_usage(NULL, options, "threads", 0);
-> +		return -1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int check_lock_contention_options(const struct option *options,
->  					 const char * const *usage)
->  
-> @@ -2709,6 +2730,10 @@ int cmd_lock(int argc, const char **argv)
->  			if (argc)
->  				usage_with_options(info_usage, info_options);
->  		}
-> +
-> +		if (check_lock_info_options(info_options, info_usage) < 0)
-> +			return -1;
-> +
->  		/* recycling report_lock_ops */
->  		trace_handler = &report_lock_ops;
->  		rc = __cmd_report(true);
-> -- 
-> 2.42.0
-> 
-> 
+> +const char perf_debug_options_string[] =
+> +	"verbose,ordered-events,stderr,data-convert,perf-event-open";
 
--- 
+Instead of adding a new variable that has to be kept in sync with
+debug_opts[], you could provide a function that iterates debug_opts,
+printing its options names, then use that function on perf.c handle_options.
 
 - Arnaldo
+
+>  static struct sublevel_option debug_opts[] = {
+>  	{ .name = "verbose",		.value_ptr = &verbose },
+>  	{ .name = "ordered-events",	.value_ptr = &debug_ordered_events},
