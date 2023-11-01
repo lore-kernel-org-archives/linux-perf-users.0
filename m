@@ -1,131 +1,89 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B74D1850
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Nov 2023 04:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6971415C8
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Nov 2023 06:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6091E103;
-	Tue, 31 Oct 2023 21:51:20 -0700 (PDT)
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6b7f0170d7bso6414679b3a.2;
-        Tue, 31 Oct 2023 21:51:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698814280; x=1699419080;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TflHzLL9mwHfj7Sd/OTyc8fpg+bR2C6DIqUfv6/8H1g=;
-        b=SBziHYS4TmgI0AWh+WxKmxF+NxYpnnGzYS8yaAVrM94GyrDXKO8fUVtDTQhYFe3xIj
-         +qQuL/8O/uHwOpyOS53rQXVZ7ahmT9+KyATWVY/sdXvHM/WBXuMYar3ZLxB73WRt9phO
-         F6TeGSIK206lV7y9yrMZEr1OUSxulzH1y8nFQnx4GgPgBHOdtPMvuRighr2G4ypKxLQJ
-         TjOlzmx/FOwmp+sJ7rzamESrYDXJD7O72OkECpInSx/iWsCX4jaYyvrFpOR05cLREANp
-         mGVdRx39APLIhwpxhPIx4ZuBcP1sXs3qaudfM/b3guHSe92SUZ8XOKTSVVHWL/C0XwEl
-         PHFg==
-X-Gm-Message-State: AOJu0YwUlWEcI37yNUVgvxTHWovsdt0JhgdN7YStR93nkEiHF5UEnXED
-	BGGAhXRmRBk3MY97XYkeVjrKTmfAZLdmQQzlgLcwt7No
-X-Google-Smtp-Source: AGHT+IFdsFFUN0KEmfwfH+o5Css7WEZJM3PT05GVXxMYAaSa5SNSIPjKrTtgQy8rYCc5/76mPbGAFpAgsQ18zPAMZq0=
-X-Received: by 2002:a05:6a20:8c19:b0:161:2607:d815 with SMTP id
- j25-20020a056a208c1900b001612607d815mr12922828pzh.24.1698814279625; Tue, 31
- Oct 2023 21:51:19 -0700 (PDT)
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1629C199;
+	Tue, 31 Oct 2023 23:35:59 -0700 (PDT)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.57])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4SKxyb5f1Gz1P7jD;
+	Wed,  1 Nov 2023 14:32:55 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Wed, 1 Nov 2023 14:35:56 +0800
+Subject: Re: [PATCH] perf debug: List available options when no variable is
+ specified
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<namhyung@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20231031080823.1418025-1-yangjihong1@huawei.com>
+ <ZUEgVDlBQjFQB2W/@kernel.org>
+From: Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <7cd2db58-03ad-4424-94a7-712d03c4adb0@huawei.com>
+Date: Wed, 1 Nov 2023 14:35:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231030111438.1357962-1-yangjihong1@huawei.com>
-In-Reply-To: <20231030111438.1357962-1-yangjihong1@huawei.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 31 Oct 2023 21:51:07 -0700
-Message-ID: <CAM9d7ciTwcj-yGAzH6SFFfSQwjnJpnNfs8HypKOaCTLKT6HoiA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf build: Add loading python binding check to
- python.so build
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZUEgVDlBQjFQB2W/@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
 
 Hello,
 
-On Mon, Oct 30, 2023 at 4:16=E2=80=AFAM Yang Jihong <yangjihong1@huawei.com=
-> wrote:
->
-> Add loading python binding check to python.so build so that problem can b=
-e
-> detected in advance in the build phase instead of being left to `perf tes=
-t`
-> phase.
->
-> In normal scenarios, the original build is not affected:
->
->   $ cd tools/perf
->   $ rm -rf /tmp/perf; mkdir /tmp/perf; make O=3D/tmp/perf
->   $ echo $?
->   0
->   $ cd /tmp/perf
->   $ ./perf test python
->    19: 'import perf' in python                    : Ok
->
-> Create an error scenario, for example, delete util/rlimit.c from
-> util/python-ext-sources:
->
->   $ cd tools/perf
->   $ sed -i 's@util/rlimit.c@#util/rlimit.c@g' util/python-ext-sources
->   $ grep rlimit util/python-ext-sources
->   #util/rlimit.c
->   $ rm -rf /tmp/perf; mkdir /tmp/perf; make JOBS=3D1 O=3D/tmp/perf
->   <SNIP>
->     GEN     /tmp/perf/python/perf.cpython-310-x86_64-linux-gnu.so
->   Error: Load python binding failed. See /tmp/perf/python_ext_build/lib//=
-build.log for more details
->   make[2]: *** [Makefile.perf:644: /tmp/perf/python/perf.cpython-310-x86_=
-64-linux-gnu.so] Error 1
->   make[1]: *** [Makefile.perf:242: sub-make] Error 2
->   make: *** [Makefile:70: all] Error 2
->   $ cat /tmp/perf/python_ext_build/lib//build.log
->   Traceback (most recent call last):
->     File "<string>", line 1, in <module>
->   ImportError: /tmp/perf/python_ext_build/lib/perf.cpython-310-x86_64-lin=
-ux-gnu.so: undefined symbol: rlimit__increase_nofile
->
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+On 2023/10/31 23:42, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Oct 31, 2023 at 08:08:23AM +0000, Yang Jihong escreveu:
+>> Before:
+>   
+>>    # perf --debug
+>>    No variable specified for --debug.
+>   
+>> After:
+>   
+>>    # perf --debug
+>>    No variable specified for --debug, available options: verbose,ordered-events,stderr,data-convert,perf-event-open.
+> 
+> Looks useful, but the implementation can be different to reduce
+> maintainership costs, see below:
+> 
+>> +++ b/tools/perf/perf.c
+>> @@ -279,7 +279,9 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
+>>   		} else if (!strcmp(cmd, "--debug")) {
+>>   			if (*argc < 2) {
+>> -				fprintf(stderr, "No variable specified for --debug.\n");
+>> +				fprintf(stderr,
+>> +					"No variable specified for --debug, available options: %s.\n",
+>> +					perf_debug_options_string);
+>>   				usage(perf_usage_string);
+> 
+>> +++ b/tools/perf/util/debug.c
+>> @@ -215,6 +215,9 @@ void trace_event(union perf_event *event)
+>>   		     trace_event_printer, event);
+>>   }
+>>   
+>> +const char perf_debug_options_string[] =
+>> +	"verbose,ordered-events,stderr,data-convert,perf-event-open";
+> 
+> Instead of adding a new variable that has to be kept in sync with
+> debug_opts[], you could provide a function that iterates debug_opts,
+> printing its options names, then use that function on perf.c handle_options.
 
-For both patches,
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Thanks for the advice.
+OK, will send a v2 patch according to this scheme.
 
 Thanks,
-Namhyung
-
-
-> ---
->  tools/perf/Makefile.perf | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index d80dcaa5a1e3..a2449c4890ad 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -645,7 +645,13 @@ $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PY=
-THON_EXT_SRCS) $(PYTHON_EXT_
->          CFLAGS=3D'$(CFLAGS)' LDFLAGS=3D'$(LDFLAGS)' \
->           $(PYTHON_WORD) util/setup.py \
->           --quiet build_ext; \
-> -       cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
-> +       $(PYTHON_WORD) -c 'import sys; sys.path.insert(0, "$(PYTHON_EXTBU=
-ILD_LIB)"); import perf' 2>$(PYTHON_EXTBUILD_LIB)/build.log; \
-> +       if [ $$? -ne 0 ]; then \
-> +               echo "Error: Load python binding failed. See $(PYTHON_EXT=
-BUILD_LIB)/build.log for more details"; \
-> +               exit 1; \
-> +       else \
-> +               cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/; \
-> +       fi
->
->  python_perf_target:
->         @echo "Target is: $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX)"
-> --
-> 2.34.1
->
+Yang
