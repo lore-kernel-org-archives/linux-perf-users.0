@@ -1,124 +1,125 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D1E186D
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Nov 2023 06:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D86C13FF8
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Nov 2023 14:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F7D98;
-	Tue, 31 Oct 2023 23:48:00 -0700 (PDT)
-Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.55])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4SKyCB5ntszPnly;
-	Wed,  1 Nov 2023 14:43:50 +0800 (CST)
-Received: from ubuntu2204.huawei.com (10.67.174.22) by
- kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Wed, 1 Nov 2023 14:47:56 +0800
-From: Yang Jihong <yangjihong1@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-	<adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <yangjihong1@huawei.com>
-Subject: [PATCH v2] perf debug: List available options when no variable is specified
-Date: Wed, 1 Nov 2023 06:45:43 +0000
-Message-ID: <20231101064543.1481957-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 02D37DE;
+	Wed,  1 Nov 2023 07:35:45 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BB0D2F4;
+	Wed,  1 Nov 2023 07:36:27 -0700 (PDT)
+Received: from [10.57.1.100] (unknown [10.57.1.100])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 224A33F64C;
+	Wed,  1 Nov 2023 07:35:43 -0700 (PDT)
+Message-ID: <3ae2cf90-b0a1-5f54-56aa-ed4a04dca8b0@arm.com>
+Date: Wed, 1 Nov 2023 14:35:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.22]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm000003.china.huawei.com (7.193.23.66)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH 2/2] perf lock info: Enforce exactly one of --map and
+ --thread
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>
+References: <20231031120526.11502-1-nick.forrington@arm.com>
+ <20231031120526.11502-3-nick.forrington@arm.com>
+ <ZUEfXU34ZijKe8aA@kernel.org>
+From: Nick Forrington <nick.forrington@arm.com>
+Content-Language: , en-GB
+In-Reply-To: <ZUEfXU34ZijKe8aA@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Minor help message improvement for `perf --debug`
 
-Before:
+On 31/10/2023 15:38, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Oct 31, 2023 at 12:05:25PM +0000, Nick Forrington escreveu:
+>> Improve error reporting for command line arguments.
+>>
+>> Display error/usage if neither --map or --thread are specified (rather
+>> than a non user-friendly error "Unknown type of information").
+>>
+>> Display error/usage if both --map and --thread are specified (rather
+>> than ignoring "--map" and displaying only thread information).
+> Shouldn't one of them be the default so that we type less for the most
+> common usage?
+>
+> - Arnaldo
+>   
 
-  # perf --debug
-  No variable specified for --debug.
+There isn't an obvious choice (to me) for which would be the default.
 
-   Usage: perf [--version] [--help] [OPTIONS] COMMAND [ARGS]
+Both options display completely different data/outputs, so I think it 
+makes sense to be explicit about which data is requested.
 
-After:
 
-  # perf --debug
-  No variable specified for --debug, available options: verbose,ordered-events,stderr,data-convert,perf-event-open
+An alternative could be to use sub-commands e.g. "perf lock info 
+threads" or just "perf lock threads", although changing the existing 
+options would be more disruptive.
 
-   Usage: perf [--version] [--help] [OPTIONS] COMMAND [ARGS]
 
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
+Cheers,
+Nick
 
-Changes since v1:
- - Provide helper to iterate debug_opts and print name instead of adding a new variable.
-
- tools/perf/perf.c       |  6 +++++-
- tools/perf/util/debug.c | 13 +++++++++++++
- tools/perf/util/debug.h |  1 +
- 3 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index d3fc8090413c..f29c3ef818a3 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -279,7 +279,11 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
- 			exit(0);
- 		} else if (!strcmp(cmd, "--debug")) {
- 			if (*argc < 2) {
--				fprintf(stderr, "No variable specified for --debug.\n");
-+				fprintf(stderr,
-+					"No variable specified for --debug, available options: ");
-+				perf_debug_fprint_options(stderr);
-+				fprintf(stderr, "\n");
-+
- 				usage(perf_usage_string);
- 			}
- 			if (perf_debug_option((*argv)[1]))
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index 88378c4c5dd9..a014e6198d41 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -246,6 +246,19 @@ int perf_debug_option(const char *str)
- 	return 0;
- }
- 
-+void perf_debug_fprint_options(FILE *file)
-+{
-+	struct sublevel_option *opt = debug_opts;
-+
-+	if (!file)
-+		return;
-+
-+	while (opt->name) {
-+		fprintf(file, "%s%s", opt == debug_opts ? "" : ",", opt->name);
-+		opt++;
-+	}
-+}
-+
- int perf_quiet_option(void)
- {
- 	struct sublevel_option *opt = &debug_opts[0];
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index f99468a7f681..17294834cdb4 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -77,6 +77,7 @@ int eprintf_time(int level, int var, u64 t, const char *fmt, ...) __printf(4, 5)
- int veprintf(int level, int var, const char *fmt, va_list args);
- 
- int perf_debug_option(const char *str);
-+void perf_debug_fprint_options(FILE *file);
- void debug_set_file(FILE *file);
- void debug_set_display_time(bool set);
- void perf_debug_setup(void);
--- 
-2.34.1
-
+>> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+>> ---
+>>   tools/perf/builtin-lock.c | 25 +++++++++++++++++++++++++
+>>   1 file changed, 25 insertions(+)
+>>
+>> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+>> index 3aa8ba5ad928..cf29f648d291 100644
+>> --- a/tools/perf/builtin-lock.c
+>> +++ b/tools/perf/builtin-lock.c
+>> @@ -2021,6 +2021,27 @@ static int check_lock_report_options(const struct option *options,
+>>   	return 0;
+>>   }
+>>   
+>> +static int check_lock_info_options(const struct option *options,
+>> +				   const char * const *usage)
+>> +{
+>> +	if (!info_map && !info_threads) {
+>> +		pr_err("Requires one of --map or --threads\n");
+>> +		parse_options_usage(usage, options, "map", 0);
+>> +		parse_options_usage(NULL, options, "threads", 0);
+>> +		return -1;
+>> +
+>> +	}
+>> +
+>> +	if (info_map && info_threads) {
+>> +		pr_err("Cannot show map and threads together\n");
+>> +		parse_options_usage(usage, options, "map", 0);
+>> +		parse_options_usage(NULL, options, "threads", 0);
+>> +		return -1;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int check_lock_contention_options(const struct option *options,
+>>   					 const char * const *usage)
+>>   
+>> @@ -2709,6 +2730,10 @@ int cmd_lock(int argc, const char **argv)
+>>   			if (argc)
+>>   				usage_with_options(info_usage, info_options);
+>>   		}
+>> +
+>> +		if (check_lock_info_options(info_options, info_usage) < 0)
+>> +			return -1;
+>> +
+>>   		/* recycling report_lock_ops */
+>>   		trace_handler = &report_lock_ops;
+>>   		rc = __cmd_report(true);
+>> -- 
+>> 2.42.0
+>>
+>>
