@@ -1,74 +1,131 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599101DFCD;
-	Tue, 31 Oct 2023 23:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BnNetGtU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZtxTAzZT"
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914C5B9;
-	Tue, 31 Oct 2023 16:20:06 -0700 (PDT)
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1698794404;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o/p/v8DdsTAZhW4x3hK+e7JbziGQicpp1+UHXRj/vRA=;
-	b=BnNetGtUP9ff8iPafgQ0VEqe6AlCzxod9HOd2S9FMBZZkDmTfyffLejEYXASGuzM2nm+LD
-	4Ze3LU6JN8EJCZD4lYllj6x04CC7Hvbuh2UmWkn+QO/aXwAaQzcmWjR7qZUiBRYeDFqrcq
-	5yxuA6w3Xxj812med+rzWFF5NNtWbpp9bIuw6eyjNkQdIe79t4klfKrby5Gj+jnJmekldx
-	H+GiejPioQLRadAEx5eE8H6LW3s+VQG463dJROp2HEbnr6Ufv55Q1IG+p6pONcBqG7LEbw
-	pxSj0lwtrX+PDIh2mrkOFyL4ueMmqOG5zIGNahjCxvpzSVxiUJkM1mbxRuNQhA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1698794404;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o/p/v8DdsTAZhW4x3hK+e7JbziGQicpp1+UHXRj/vRA=;
-	b=ZtxTAzZTLE9riytuBh2qcv66tw7avJVdutgXfFYtV3iiwCG0lUneDYQHOW7Gb7uoAC7jl7
-	NrgeDp7OsHRQNeAg==
-To: Mario Limonciello <mario.limonciello@amd.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <x86@kernel.org>, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, "Rafael
- J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel
- Machek <pavel@ucw.cz>, David Woodhouse <dwmw@amazon.co.uk>, Sandipan Das
- <sandipan.das@amd.com>, "open list:PERFORMANCE EVENTS SUBSYSTEM"
- <linux-perf-users@vger.kernel.org>, "open list:PERFORMANCE EVENTS
- SUBSYSTEM" <linux-kernel@vger.kernel.org>, "open list:SUSPEND TO RAM"
- <linux-pm@vger.kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] x86: Enable x2apic during resume from suspend if
- used previously
-In-Reply-To: <d7c3a03e-6f52-4bcf-aaae-668f6601ceb8@amd.com>
-References: <20231026170330.4657-1-mario.limonciello@amd.com>
- <20231026170330.4657-2-mario.limonciello@amd.com> <87wmv721nm.ffs@tglx>
- <d7c3a03e-6f52-4bcf-aaae-668f6601ceb8@amd.com>
-Date: Wed, 01 Nov 2023 00:20:03 +0100
-Message-ID: <878r7imlb0.ffs@tglx>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B74D1850
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Nov 2023 04:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6091E103;
+	Tue, 31 Oct 2023 21:51:20 -0700 (PDT)
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6b7f0170d7bso6414679b3a.2;
+        Tue, 31 Oct 2023 21:51:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698814280; x=1699419080;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TflHzLL9mwHfj7Sd/OTyc8fpg+bR2C6DIqUfv6/8H1g=;
+        b=SBziHYS4TmgI0AWh+WxKmxF+NxYpnnGzYS8yaAVrM94GyrDXKO8fUVtDTQhYFe3xIj
+         +qQuL/8O/uHwOpyOS53rQXVZ7ahmT9+KyATWVY/sdXvHM/WBXuMYar3ZLxB73WRt9phO
+         F6TeGSIK206lV7y9yrMZEr1OUSxulzH1y8nFQnx4GgPgBHOdtPMvuRighr2G4ypKxLQJ
+         TjOlzmx/FOwmp+sJ7rzamESrYDXJD7O72OkECpInSx/iWsCX4jaYyvrFpOR05cLREANp
+         mGVdRx39APLIhwpxhPIx4ZuBcP1sXs3qaudfM/b3guHSe92SUZ8XOKTSVVHWL/C0XwEl
+         PHFg==
+X-Gm-Message-State: AOJu0YwUlWEcI37yNUVgvxTHWovsdt0JhgdN7YStR93nkEiHF5UEnXED
+	BGGAhXRmRBk3MY97XYkeVjrKTmfAZLdmQQzlgLcwt7No
+X-Google-Smtp-Source: AGHT+IFdsFFUN0KEmfwfH+o5Css7WEZJM3PT05GVXxMYAaSa5SNSIPjKrTtgQy8rYCc5/76mPbGAFpAgsQ18zPAMZq0=
+X-Received: by 2002:a05:6a20:8c19:b0:161:2607:d815 with SMTP id
+ j25-20020a056a208c1900b001612607d815mr12922828pzh.24.1698814279625; Tue, 31
+ Oct 2023 21:51:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20231030111438.1357962-1-yangjihong1@huawei.com>
+In-Reply-To: <20231030111438.1357962-1-yangjihong1@huawei.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 31 Oct 2023 21:51:07 -0700
+Message-ID: <CAM9d7ciTwcj-yGAzH6SFFfSQwjnJpnNfs8HypKOaCTLKT6HoiA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf build: Add loading python binding check to
+ python.so build
+To: Yang Jihong <yangjihong1@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 31 2023 at 13:53, Mario Limonciello wrote:
-> Thank you for looking this over.  I've reviewed it with the internal 
-> team and confirmed there was a BIOS bug where the MSR wasn't restored 
-> after the S3 cycle completed.  The BIOS team has fixed it.
+Hello,
 
-Why am I not surprised?
+On Mon, Oct 30, 2023 at 4:16=E2=80=AFAM Yang Jihong <yangjihong1@huawei.com=
+> wrote:
+>
+> Add loading python binding check to python.so build so that problem can b=
+e
+> detected in advance in the build phase instead of being left to `perf tes=
+t`
+> phase.
+>
+> In normal scenarios, the original build is not affected:
+>
+>   $ cd tools/perf
+>   $ rm -rf /tmp/perf; mkdir /tmp/perf; make O=3D/tmp/perf
+>   $ echo $?
+>   0
+>   $ cd /tmp/perf
+>   $ ./perf test python
+>    19: 'import perf' in python                    : Ok
+>
+> Create an error scenario, for example, delete util/rlimit.c from
+> util/python-ext-sources:
+>
+>   $ cd tools/perf
+>   $ sed -i 's@util/rlimit.c@#util/rlimit.c@g' util/python-ext-sources
+>   $ grep rlimit util/python-ext-sources
+>   #util/rlimit.c
+>   $ rm -rf /tmp/perf; mkdir /tmp/perf; make JOBS=3D1 O=3D/tmp/perf
+>   <SNIP>
+>     GEN     /tmp/perf/python/perf.cpython-310-x86_64-linux-gnu.so
+>   Error: Load python binding failed. See /tmp/perf/python_ext_build/lib//=
+build.log for more details
+>   make[2]: *** [Makefile.perf:644: /tmp/perf/python/perf.cpython-310-x86_=
+64-linux-gnu.so] Error 1
+>   make[1]: *** [Makefile.perf:242: sub-make] Error 2
+>   make: *** [Makefile:70: all] Error 2
+>   $ cat /tmp/perf/python_ext_build/lib//build.log
+>   Traceback (most recent call last):
+>     File "<string>", line 1, in <module>
+>   ImportError: /tmp/perf/python_ext_build/lib/perf.cpython-310-x86_64-lin=
+ux-gnu.so: undefined symbol: rlimit__increase_nofile
+>
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 
-Thanks for the heads up!
+For both patches,
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-       tglx
+Thanks,
+Namhyung
+
+
+> ---
+>  tools/perf/Makefile.perf | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index d80dcaa5a1e3..a2449c4890ad 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -645,7 +645,13 @@ $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PY=
+THON_EXT_SRCS) $(PYTHON_EXT_
+>          CFLAGS=3D'$(CFLAGS)' LDFLAGS=3D'$(LDFLAGS)' \
+>           $(PYTHON_WORD) util/setup.py \
+>           --quiet build_ext; \
+> -       cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
+> +       $(PYTHON_WORD) -c 'import sys; sys.path.insert(0, "$(PYTHON_EXTBU=
+ILD_LIB)"); import perf' 2>$(PYTHON_EXTBUILD_LIB)/build.log; \
+> +       if [ $$? -ne 0 ]; then \
+> +               echo "Error: Load python binding failed. See $(PYTHON_EXT=
+BUILD_LIB)/build.log for more details"; \
+> +               exit 1; \
+> +       else \
+> +               cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/; \
+> +       fi
+>
+>  python_perf_target:
+>         @echo "Target is: $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX)"
+> --
+> 2.34.1
+>
