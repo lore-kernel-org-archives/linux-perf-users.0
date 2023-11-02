@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E787210E6
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:00:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DF5210E4
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eAJXjzFs"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9CC1FCF
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:26 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-da040c021aeso1415689276.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AoefiHXN"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D8C2115
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:38 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5af9b0850fdso17028487b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698947965; x=1699552765; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698947977; x=1699552777; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gusYDjmzvPXlbpdRzaTtuVbqaUCwbO2hOJb/75bCX5U=;
-        b=eAJXjzFsqtsEMOkBXu+FeQ9Cas8aZ2gx/VR+Bz9NeMqdcC4pFvtf0L01LgmegIdODt
-         4t1CnzrnkoLvYRdBcX59jRFG6ZipiVVBvyNeLvy30BfdysE0c8VGvxvUlEB9Fb8TlKgO
-         u+ph5+rs/3AsxkmtCllFSFkMn7/OO6WApLbaAsbcAvyQXqyft0f29MPHgYsbweuE+W/g
-         gE8uI8+kmDiwopgwQlpoJPCqE7gDtvT3Y0RYwYkFnfq1QbaDNqOQgARMEyMgil6oR9xf
-         Fqg9nH+NTybtyg3lpvNdm1/jHv2uMogi8ImvQ3LaLuZHhq4wGTbqDWxUC33X2/D/W5vn
-         o7Ig==
+        bh=ETIbyPpooQ3kZGOmPXZ75/2dFjZJwxSdFPAfNzqS1m0=;
+        b=AoefiHXNQpIadUOeIEnj+SfguJNnlfQyqXzknOxP6ZsHKxmvrGboUsXIdpVpkXlMZU
+         SidhpH7xHG/i4tnN//ll20gWsETxnk2j8IFF0qv0XkwXtRHB4DCZT3VpgMWA/WkPsHVU
+         JmN7GQD6R8QiD/2KHOvnu5FGhMqF9Q3LHZhDn3Cik8lg3l37tIbSxXdHltc8oBvaHyHb
+         ApG9eJ0PU7j5n6cxQBX2DV56d33mlcZN9S8qzyTuWGfnOGNhUzO6WFao/4afx1qDE6Ja
+         Mcvu8DrKo+3/1QTZTAsTdQaISy1mpVfUiqNFwdaOBZHNpzG3xRU/P2SCcTIBLV2yxZ8A
+         ll1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698947965; x=1699552765;
+        d=1e100.net; s=20230601; t=1698947977; x=1699552777;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gusYDjmzvPXlbpdRzaTtuVbqaUCwbO2hOJb/75bCX5U=;
-        b=g461BKrNzvtKieTe/kY81G9P4D/dJ59xGyiZGAYAUcXo8TXZPkwczXUUBGtlJ1cseu
-         7AdSC8DdVMv6+tM8Ix/f7cbnvm7vYb88s7UahRqKjgaSBw6waDvccPR/6Q/qERLF5rpG
-         rGAv4I0RPDMqsSwvBWT0zXPtfrMIQRZOwZifwf6+x8ndeGtZSrNEbxYREHnu8awiCc4o
-         i4UJgJNUsc/MRXe1wl2irj6S6yit/sGmZVmXt3oasvNHrWM7BaZA99sSpZfES7cCuaUh
-         r60PW8jwHDBYmqPtk+6ZillwiPtOFiZeJYB4y7jISupcuR0PlUsU+6ImVxauC42Me+qJ
-         MVMQ==
-X-Gm-Message-State: AOJu0YyKpEpjJ2SdKt4v7b4fiq9IvJFwYRbeY+b+c8nAKYQHe6he/Sd6
-	W0OYP1nntA3wGXOqgCnom0T7Jgrdcorv
-X-Google-Smtp-Source: AGHT+IFRKgStJscb3vekJFKAdWhRw295cc/L4wKr13suxwG3v/mB6goTTtHrW1fM75FvCjfwRdlnnMFvhZbD
+        bh=ETIbyPpooQ3kZGOmPXZ75/2dFjZJwxSdFPAfNzqS1m0=;
+        b=K4hHU51hpYkr1H8RuDOlxCE7l9yok/Gm4CtMD9m1Eg4YJ6+28G6SS0z+9p/81fBuQK
+         TPWMsj1dDeGg0aHzSlOH+Met7LUYB9nRz1Z8zw0V+osOHr1wv4ZlIWmKoZJJxVgfibdI
+         sjlEO0tAuJdUnisFK8ln072zbm7lG/RJB/GEEmrl8IAef+wR8gJLSWgouMyd5WR1oQ5P
+         XJTKQiTxqZamPwTMDK+ncEzLqXxnkZjI6GqLrONNRgqX6HSkswYqviAvoV1nGMQmZNY7
+         cg7Ek909Gg+0j1OtBOjSqt9b1Gh+mB6mJnRhqte+9ipE47AH4BV81669mrUGdmQz2i18
+         lHIA==
+X-Gm-Message-State: AOJu0YyUiRVQ4QPXPHJ6VH6GxH74S776ymg70RZGIoXeKpMM9cWe8nqn
+	km5qWISs+aL9yhyedXBz8LTK3bAVB9jU
+X-Google-Smtp-Source: AGHT+IGZ7WBCdNglmil0cZYxXzxa+W7dkDwISFnBscX9I++gkIAdll2b65WQmW8mGHI4QRxyCdR8Voc5Blr9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bb34:df9c:836c:afca])
- (user=irogers job=sendgmr) by 2002:a25:3c3:0:b0:d9a:40ed:8d26 with SMTP id
- 186-20020a2503c3000000b00d9a40ed8d26mr406283ybd.0.1698947965524; Thu, 02 Nov
- 2023 10:59:25 -0700 (PDT)
-Date: Thu,  2 Nov 2023 10:57:21 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:dd90:0:b0:59b:e97e:f7e2 with SMTP id
+ g138-20020a0ddd90000000b0059be97ef7e2mr7907ywe.4.1698947977308; Thu, 02 Nov
+ 2023 10:59:37 -0700 (PDT)
+Date: Thu,  2 Nov 2023 10:57:26 -0700
 In-Reply-To: <20231102175735.2272696-1-irogers@google.com>
-Message-Id: <20231102175735.2272696-40-irogers@google.com>
+Message-Id: <20231102175735.2272696-45-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231102175735.2272696-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
-Subject: [PATCH v4 39/53] perf threads: Switch from rbtree to hashmap
+Subject: [PATCH v4 44/53] perf dso: Move dso functions out of dsos
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -72,279 +72,182 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The rbtree provides a sorting on entries but this is unused. Switch to
-using hashmap for O(1) rather than O(log n) find/insert/remove
-complexity.
+Move dso and dso_id functions to dso.c to match the struct
+declarations.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/threads.c | 146 ++++++++++++--------------------------
- tools/perf/util/threads.h |   6 +-
- 2 files changed, 47 insertions(+), 105 deletions(-)
+ tools/perf/util/dso.c  | 61 ++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/dso.h  |  4 +++
+ tools/perf/util/dsos.c | 61 ------------------------------------------
+ 3 files changed, 65 insertions(+), 61 deletions(-)
 
-diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
-index d984ec939c7b..55923be53180 100644
---- a/tools/perf/util/threads.c
-+++ b/tools/perf/util/threads.c
-@@ -3,25 +3,30 @@
- #include "machine.h"
- #include "thread.h"
- 
--struct thread_rb_node {
--	struct rb_node rb_node;
--	struct thread *thread;
--};
--
- static struct threads_table_entry *threads__table(struct threads *threads, pid_t tid)
- {
- 	/* Cast it to handle tid == -1 */
- 	return &threads->table[(unsigned int)tid % THREADS__TABLE_SIZE];
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 1f629b6fb7cf..1b0990507a42 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1268,6 +1268,67 @@ static void dso__set_long_name_id(struct dso *dso, const char *name, struct dso_
+ 		__dsos__findnew_link_by_longname_id(root, dso, NULL, id);
  }
  
-+static size_t key_hash(long key, void *ctx __maybe_unused)
++static int __dso_id__cmp(struct dso_id *a, struct dso_id *b)
 +{
-+	/* The table lookup removes low bit entropy, but this is just ignored here. */
-+	return key;
++	if (a->maj > b->maj) return -1;
++	if (a->maj < b->maj) return 1;
++
++	if (a->min > b->min) return -1;
++	if (a->min < b->min) return 1;
++
++	if (a->ino > b->ino) return -1;
++	if (a->ino < b->ino) return 1;
++
++	/*
++	 * Synthesized MMAP events have zero ino_generation, avoid comparing
++	 * them with MMAP events with actual ino_generation.
++	 *
++	 * I found it harmful because the mismatch resulted in a new
++	 * dso that did not have a build ID whereas the original dso did have a
++	 * build ID. The build ID was essential because the object was not found
++	 * otherwise. - Adrian
++	 */
++	if (a->ino_generation && b->ino_generation) {
++		if (a->ino_generation > b->ino_generation) return -1;
++		if (a->ino_generation < b->ino_generation) return 1;
++	}
++
++	return 0;
 +}
 +
-+static bool key_equal(long key1, long key2, void *ctx __maybe_unused)
++bool dso_id__empty(struct dso_id *id)
 +{
-+	return key1 == key2;
++	if (!id)
++		return true;
++
++	return !id->maj && !id->min && !id->ino && !id->ino_generation;
 +}
 +
- void threads__init(struct threads *threads)
++void dso__inject_id(struct dso *dso, struct dso_id *id)
++{
++	dso->id.maj = id->maj;
++	dso->id.min = id->min;
++	dso->id.ino = id->ino;
++	dso->id.ino_generation = id->ino_generation;
++}
++
++int dso_id__cmp(struct dso_id *a, struct dso_id *b)
++{
++	/*
++	 * The second is always dso->id, so zeroes if not set, assume passing
++	 * NULL for a means a zeroed id
++	 */
++	if (dso_id__empty(a) || dso_id__empty(b))
++		return 0;
++
++	return __dso_id__cmp(a, b);
++}
++
++int dso__cmp_id(struct dso *a, struct dso *b)
++{
++	return __dso_id__cmp(&a->id, &b->id);
++}
++
+ void dso__set_long_name(struct dso *dso, const char *name, bool name_allocated)
  {
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
- 
--		table->entries = RB_ROOT_CACHED;
-+		hashmap__init(&table->shard, key_hash, key_equal, NULL);
- 		init_rwsem(&table->lock);
--		table->nr = 0;
- 		table->last_match = NULL;
- 	}
+ 	dso__set_long_name_id(dso, name, NULL, name_allocated);
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 8b45dbdae776..1b247eeaa81e 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -235,6 +235,9 @@ static inline void dso__set_loaded(struct dso *dso)
+ 	dso->loaded = true;
  }
-@@ -32,6 +37,7 @@ void threads__exit(struct threads *threads)
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
  
-+		hashmap__clear(&table->shard);
- 		exit_rwsem(&table->lock);
- 	}
++int dso_id__cmp(struct dso_id *a, struct dso_id *b);
++bool dso_id__empty(struct dso_id *id);
++
+ struct dso *dso__new_id(const char *name, struct dso_id *id);
+ struct dso *dso__new(const char *name);
+ void dso__delete(struct dso *dso);
+@@ -242,6 +245,7 @@ void dso__delete(struct dso *dso);
+ int dso__cmp_id(struct dso *a, struct dso *b);
+ void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated);
+ void dso__set_long_name(struct dso *dso, const char *name, bool name_allocated);
++void dso__inject_id(struct dso *dso, struct dso_id *id);
+ 
+ int dso__name_len(const struct dso *dso);
+ 
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index d43f64939b12..f816927a21ff 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -41,67 +41,6 @@ void dsos__exit(struct dsos *dsos)
+ 	exit_rwsem(&dsos->lock);
  }
-@@ -44,7 +50,7 @@ size_t threads__nr(struct threads *threads)
- 		struct threads_table_entry *table = &threads->table[i];
  
- 		down_read(&table->lock);
--		nr += table->nr;
-+		nr += hashmap__size(&table->shard);
- 		up_read(&table->lock);
- 	}
- 	return nr;
-@@ -86,28 +92,13 @@ static void threads_table_entry__set_last_match(struct threads_table_entry *tabl
- struct thread *threads__find(struct threads *threads, pid_t tid)
- {
- 	struct threads_table_entry *table  = threads__table(threads, tid);
--	struct rb_node **p;
--	struct thread *res = NULL;
-+	struct thread *res;
- 
- 	down_read(&table->lock);
- 	res = __threads_table_entry__get_last_match(table, tid);
--	if (res)
--		return res;
+-static int __dso_id__cmp(struct dso_id *a, struct dso_id *b)
+-{
+-	if (a->maj > b->maj) return -1;
+-	if (a->maj < b->maj) return 1;
 -
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct rb_node *parent = *p;
--		struct thread *th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
+-	if (a->min > b->min) return -1;
+-	if (a->min < b->min) return 1;
 -
--		if (thread__tid(th) == tid) {
--			res = thread__get(th);
--			break;
--		}
+-	if (a->ino > b->ino) return -1;
+-	if (a->ino < b->ino) return 1;
 -
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else
--			p = &(*p)->rb_right;
-+	if (!res) {
-+		if (hashmap__find(&table->shard, tid, &res))
-+			res = thread__get(res);
- 	}
- 	up_read(&table->lock);
- 	if (res)
-@@ -118,49 +109,25 @@ struct thread *threads__find(struct threads *threads, pid_t tid)
- struct thread *threads__findnew(struct threads *threads, pid_t pid, pid_t tid, bool *created)
- {
- 	struct threads_table_entry *table  = threads__table(threads, tid);
--	struct rb_node **p;
--	struct rb_node *parent = NULL;
- 	struct thread *res = NULL;
--	struct thread_rb_node *nd;
--	bool leftmost = true;
- 
- 	*created = false;
- 	down_write(&table->lock);
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct thread *th;
--
--		parent = *p;
--		th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
--
--		if (thread__tid(th) == tid) {
--			__threads_table_entry__set_last_match(table, th);
--			res = thread__get(th);
--			goto out_unlock;
--		}
--
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else {
--			leftmost = false;
--			p = &(*p)->rb_right;
--		}
+-	/*
+-	 * Synthesized MMAP events have zero ino_generation, avoid comparing
+-	 * them with MMAP events with actual ino_generation.
+-	 *
+-	 * I found it harmful because the mismatch resulted in a new
+-	 * dso that did not have a build ID whereas the original dso did have a
+-	 * build ID. The build ID was essential because the object was not found
+-	 * otherwise. - Adrian
+-	 */
+-	if (a->ino_generation && b->ino_generation) {
+-		if (a->ino_generation > b->ino_generation) return -1;
+-		if (a->ino_generation < b->ino_generation) return 1;
 -	}
--	nd = malloc(sizeof(*nd));
--	if (nd == NULL)
--		goto out_unlock;
- 	res = thread__new(pid, tid);
--	if (!res)
--		free(nd);
--	else {
--		*created = true;
--		nd->thread = thread__get(res);
--		rb_link_node(&nd->rb_node, parent, p);
--		rb_insert_color_cached(&nd->rb_node, &table->entries, leftmost);
--		++table->nr;
--		__threads_table_entry__set_last_match(table, res);
-+	if (res) {
-+		if (hashmap__add(&table->shard, tid, res)) {
-+			/* Add failed. Assume a race so find other entry. */
-+			thread__put(res);
-+			res = NULL;
-+			if (hashmap__find(&table->shard, tid, &res))
-+				res = thread__get(res);
-+		} else {
-+			res = thread__get(res);
-+			*created = true;
-+		}
-+		if (res)
-+			__threads_table_entry__set_last_match(table, res);
- 	}
--out_unlock:
- 	up_write(&table->lock);
- 	return res;
- }
-@@ -169,57 +136,32 @@ void threads__remove_all_threads(struct threads *threads)
- {
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
--		struct rb_node *nd;
-+		struct hashmap_entry *cur, *tmp;
-+		size_t bkt;
- 
- 		down_write(&table->lock);
- 		__threads_table_entry__set_last_match(table, NULL);
--		nd = rb_first_cached(&table->entries);
--		while (nd) {
--			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
 -
--			nd = rb_next(nd);
--			thread__put(trb->thread);
--			rb_erase_cached(&trb->rb_node, &table->entries);
--			RB_CLEAR_NODE(&trb->rb_node);
--			--table->nr;
-+		hashmap__for_each_entry_safe((&table->shard), cur, tmp, bkt) {
-+			struct thread *old_value;
- 
--			free(trb);
-+			hashmap__delete(&table->shard, cur->key, /*old_key=*/NULL, &old_value);
-+			thread__put(old_value);
- 		}
--		assert(table->nr == 0);
- 		up_write(&table->lock);
- 	}
- }
- 
- void threads__remove(struct threads *threads, struct thread *thread)
- {
--	struct rb_node **p;
- 	struct threads_table_entry *table  = threads__table(threads, thread__tid(thread));
--	pid_t tid = thread__tid(thread);
-+	struct thread *old_value;
- 
- 	down_write(&table->lock);
- 	if (table->last_match && RC_CHK_EQUAL(table->last_match, thread))
- 		__threads_table_entry__set_last_match(table, NULL);
- 
--	p = &table->entries.rb_root.rb_node;
--	while (*p != NULL) {
--		struct rb_node *parent = *p;
--		struct thread_rb_node *nd = rb_entry(parent, struct thread_rb_node, rb_node);
--		struct thread *th = nd->thread;
+-	return 0;
+-}
 -
--		if (RC_CHK_EQUAL(th, thread)) {
--			thread__put(nd->thread);
--			rb_erase_cached(&nd->rb_node, &table->entries);
--			RB_CLEAR_NODE(&nd->rb_node);
--			--table->nr;
--			free(nd);
--			break;
--		}
+-static bool dso_id__empty(struct dso_id *id)
+-{
+-	if (!id)
+-		return true;
 -
--		if (tid < thread__tid(th))
--			p = &(*p)->rb_left;
--		else
--			p = &(*p)->rb_right;
--	}
-+	hashmap__delete(&table->shard, thread__tid(thread), /*old_key=*/NULL, &old_value);
-+	thread__put(old_value);
- 	up_write(&table->lock);
- }
- 
-@@ -229,11 +171,11 @@ int threads__for_each_thread(struct threads *threads,
+-	return !id->maj && !id->min && !id->ino && !id->ino_generation;
+-}
+-
+-static void dso__inject_id(struct dso *dso, struct dso_id *id)
+-{
+-	dso->id.maj = id->maj;
+-	dso->id.min = id->min;
+-	dso->id.ino = id->ino;
+-	dso->id.ino_generation = id->ino_generation;
+-}
+-
+-static int dso_id__cmp(struct dso_id *a, struct dso_id *b)
+-{
+-	/*
+-	 * The second is always dso->id, so zeroes if not set, assume passing
+-	 * NULL for a means a zeroed id
+-	 */
+-	if (dso_id__empty(a) || dso_id__empty(b))
+-		return 0;
+-
+-	return __dso_id__cmp(a, b);
+-}
+-
+-int dso__cmp_id(struct dso *a, struct dso *b)
+-{
+-	return __dso_id__cmp(&a->id, &b->id);
+-}
+-
+ bool __dsos__read_build_ids(struct dsos *dsos, bool with_hits)
  {
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
--		struct rb_node *nd;
-+		struct hashmap_entry *cur;
-+		size_t bkt;
- 
--		for (nd = rb_first_cached(&table->entries); nd; nd = rb_next(nd)) {
--			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
--			int rc = fn(trb->thread, data);
-+		hashmap__for_each_entry((&table->shard), cur, bkt) {
-+			int rc = fn((struct thread *)cur->pvalue, data);
- 
- 			if (rc != 0)
- 				return rc;
-diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
-index ed67de627578..d03bd91a7769 100644
---- a/tools/perf/util/threads.h
-+++ b/tools/perf/util/threads.h
-@@ -2,7 +2,7 @@
- #ifndef __PERF_THREADS_H
- #define __PERF_THREADS_H
- 
--#include <linux/rbtree.h>
-+#include "hashmap.h"
- #include "rwsem.h"
- 
- struct thread;
-@@ -11,9 +11,9 @@ struct thread;
- #define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
- 
- struct threads_table_entry {
--	struct rb_root_cached  entries;
-+	/* Key is tid, value is struct thread. */
-+	struct hashmap	       shard;
- 	struct rw_semaphore    lock;
--	unsigned int	       nr;
- 	struct thread	       *last_match;
- };
- 
+ 	struct list_head *head = &dsos->head;
 -- 
 2.42.0.869.gea05f2083d-goog
 
