@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADF7210F5
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86309210F5
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JLhPbcEy"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B682D71
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:59 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5afacc566f3so17219867b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xP6I2j1k"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC75F2103
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:35 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5afa86b8d66so16530037b3.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698947997; x=1699552797; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698947975; x=1699552775; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W0Aeiri89a2l8MhN1lXBdnG+NxxxLcVo3MoUSdLBJhg=;
-        b=JLhPbcEyuZu3OJCCfei9L5cFwBGROU0h+E9NA8vuutUb/pdBFxRi6yLTFlH/ZN2zRU
-         pfL/AdrX1AZn5AN5hdP7cN2YHWa38/AMkkNejO5H7gakgvsGLuf42hK+QN5eGSUeaYCn
-         SxP7DocfoQMTrm7OSEDU1ChZrpdP/o7GooD9QyhqtEJeAjWTe70UCuwiIvyZ0P81ZBZp
-         U1PsC0S8gEou+UHFMsr3EAVMS/vd0SieZdeKZ+TOEmppkPqjz6hmo8g6S8wVcaeVK3F3
-         4bHXKWdm8kvlgHk7GgIme5xlQkMWZExsw1ty/UH8kt/yrvXdZnTnzP4BTd/mED0a5GY1
-         uKRw==
+        bh=YYGdo15y2jW5NBV57rBqS7hVRUDLmlDHwihGlduFalw=;
+        b=xP6I2j1kTLptZwC3Qge5qr3AZNq38fjpXKvj3f8l/vJXlCnQY2WWFwI9rWjYifsGSI
+         G3tKrqnKvN5IeWR8NISiVyHsxSh1srdGZVK5gvKpAArW3cmKOYX6VH42sSe9NiKQWjRG
+         zLDc/hnBuKocTqGDrh6tw5HAkdn3NuDxi5G6eGe9Foo83QEc+PRM5U2InwcAo7fouAuX
+         cc3E8AzAGOPAxRap5tRbgGZ8h/VZYyOHIWUSEVaapfjfYEUffFsT5Atifs6gzkr61tJU
+         l8iNa6pRVhTiwy7yf2IHZy5KA66YZ1N1DpcR5Gtt1Avx8UZw2A11ZZM2xCzrB1N5+boo
+         EhuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698947997; x=1699552797;
+        d=1e100.net; s=20230601; t=1698947975; x=1699552775;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W0Aeiri89a2l8MhN1lXBdnG+NxxxLcVo3MoUSdLBJhg=;
-        b=ZytIoOTBx7qSGADYC54nK1qbrDodTRoFw1yFG6QhH7J5byA2vWsHqZp/rqIbDef71c
-         jN89qnuQuS2o1fZE0nK2M9YECdohxUk+OxdYMYrCXIm1BhF9mv9d/D6DAnaIBEfL5dQG
-         Q0PQhVH5DoGQRJKEroPgLJEl0en9JNz37ZcQ0l4eVf7o4rOlputmeF45dceUxmXZoRb1
-         SX/vrvytxV3GRJaGiXnDcRZbH+v9CwYwzux6sjvEz4ZHh4ebyIbFGXYHeq2lTN9xpNnu
-         uW8F1WdUgDbMVzCDmbWPqM2RylSeQDw0JRRTGY2JRbh723Fr1GIIMiJPqoZ+lGr3jgbl
-         gk5g==
-X-Gm-Message-State: AOJu0YyRx58e1TC3kN4oZMmJrBvunT3GUudq/gp5uQpZpP8scuIo6Mo9
-	TgNRDCtEpQwQRGKacjaD6dtNU0FaO9nc
-X-Google-Smtp-Source: AGHT+IEZjGt2xj1Wt/hpK9fUP+0zOzGHtBTt+xYPfFMwR2f47aso0S7tLfEqF0lDl4LJwoR6b2jc1+9ooosx
+        bh=YYGdo15y2jW5NBV57rBqS7hVRUDLmlDHwihGlduFalw=;
+        b=hD+ZLcXeGlzm5xekVjZOUgc/rfMsJAi9eP6nZZ6HDnlW2sAAEIMUg3WTphX3dYLdfL
+         Z27wvfWRmTUi7Adp7J+OhXzxgmtUuOPHKAKnWVW6ff5Dswf4xtVNFeHTFWVEijUfUwCw
+         +cCWYZjZs07Jj6KzJ+mGALtMN4zeeU908zMfs3zSzpGtbGptiSzViodRx8bEsRkk5aKg
+         gJHhZs3Sv5v2wNrqn74lGFgbWME7Kl1M1/QiAo4gOsy6YdQBTS/v2IEQU/ukVnR9JZ4w
+         NNGJatpmjW9CaaumnX9GdI9WQjZWkStHZD6qOvEzeeQSaQBh4LSPQmo3FMJ6T1dSoExt
+         wDLw==
+X-Gm-Message-State: AOJu0Yxbm64CULglDoUMrK4zIisT13ccClEOwv+ps/efdxY31tBGPTyI
+	NnEpPsusEaPl7yeNMymakUzELhdhbWHc
+X-Google-Smtp-Source: AGHT+IFj4++1JS0ntMsYdZbCBbLZ8VcwmuWdU7VHrc50yUl2bmYpdvtrum7MQlU7VOaRpfCYcL+vZZGDcWP+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bb34:df9c:836c:afca])
- (user=irogers job=sendgmr) by 2002:a25:d7c9:0:b0:da3:b4ef:29fe with SMTP id
- o192-20020a25d7c9000000b00da3b4ef29femr110389ybg.13.1698947997327; Thu, 02
- Nov 2023 10:59:57 -0700 (PDT)
-Date: Thu,  2 Nov 2023 10:57:35 -0700
+ (user=irogers job=sendgmr) by 2002:a81:6d8a:0:b0:5a1:d0cf:b65d with SMTP id
+ i132-20020a816d8a000000b005a1d0cfb65dmr8475ywc.5.1698947974891; Thu, 02 Nov
+ 2023 10:59:34 -0700 (PDT)
+Date: Thu,  2 Nov 2023 10:57:25 -0700
 In-Reply-To: <20231102175735.2272696-1-irogers@google.com>
-Message-Id: <20231102175735.2272696-54-irogers@google.com>
+Message-Id: <20231102175735.2272696-44-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231102175735.2272696-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
-Subject: [PATCH v4 53/53] perf env: Avoid recursively taking env->bpf_progs.lock
+Subject: [PATCH v4 43/53] perf dsos: Add dsos__for_each_dso
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -72,255 +72,268 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add variants of perf_env__insert_bpf_prog_info, perf_env__insert_btf
-and perf_env__find_btf prefixed with __ to indicate the
-env->bpf_progs.lock is assumed held. Call these variants when the lock
-is held to avoid recursively taking it and potentially having a thread
-deadlock with itself.
+To better abstract the dsos internals, add dsos__for_each_dso that
+does a callback on each dso. This also means the read lock can be
+correctly held.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf-event.c |  8 +++---
- tools/perf/util/bpf-event.h | 12 ++++-----
- tools/perf/util/env.c       | 53 +++++++++++++++++++++++--------------
- tools/perf/util/env.h       |  4 +++
- tools/perf/util/header.c    |  8 +++---
- 5 files changed, 51 insertions(+), 34 deletions(-)
+ tools/perf/builtin-inject.c | 25 +++++++-----
+ tools/perf/util/build-id.c  | 76 ++++++++++++++++++++-----------------
+ tools/perf/util/dsos.c      | 16 ++++++++
+ tools/perf/util/dsos.h      |  8 +---
+ tools/perf/util/machine.c   | 40 +++++++++++--------
+ 5 files changed, 100 insertions(+), 65 deletions(-)
 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index b564d6fd078a..827695cd0408 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -546,9 +546,9 @@ int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env)
- 	return evlist__add_sb_event(evlist, &attr, bpf_event__sb_cb, env);
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index ef73317e6ae7..ce5e28eaad90 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -1187,23 +1187,28 @@ static int synthesize_build_id(struct perf_inject *inject, struct dso *dso, pid_
+ 					       process_build_id, machine);
  }
  
--void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
--				    struct perf_env *env,
--				    FILE *fp)
-+void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
-+				      struct perf_env *env,
-+				      FILE *fp)
- {
- 	__u32 *prog_lens = (__u32 *)(uintptr_t)(info->jited_func_lens);
- 	__u64 *prog_addrs = (__u64 *)(uintptr_t)(info->jited_ksyms);
-@@ -564,7 +564,7 @@ void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
- 	if (info->btf_id) {
- 		struct btf_node *node;
- 
--		node = perf_env__find_btf(env, info->btf_id);
-+		node = __perf_env__find_btf(env, info->btf_id);
- 		if (node)
- 			btf = btf__new((__u8 *)(node->data),
- 				       node->data_size);
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index 1bcbd4fb6c66..e2f0420905f5 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -33,9 +33,9 @@ struct btf_node {
- int machine__process_bpf(struct machine *machine, union perf_event *event,
- 			 struct perf_sample *sample);
- int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
--void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
--				    struct perf_env *env,
--				    FILE *fp);
-+void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
-+				      struct perf_env *env,
-+				      FILE *fp);
- #else
- static inline int machine__process_bpf(struct machine *machine __maybe_unused,
- 				       union perf_event *event __maybe_unused,
-@@ -50,9 +50,9 @@ static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
- 	return 0;
- }
- 
--static inline void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info __maybe_unused,
--						  struct perf_env *env __maybe_unused,
--						  FILE *fp __maybe_unused)
-+static inline void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info __maybe_unused,
-+						    struct perf_env *env __maybe_unused,
-+						    FILE *fp __maybe_unused)
- {
- 
- }
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 44140b7f596a..66ef87176b11 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -20,15 +20,20 @@ struct perf_env perf_env;
- #include "bpf-utils.h"
- #include <bpf/libbpf.h>
- 
--void perf_env__insert_bpf_prog_info(struct perf_env *env,
--				    struct bpf_prog_info_node *info_node)
-+void perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
++static int guest_session__add_build_ids_cb(struct dso *dso, void *data)
 +{
-+	down_write(&env->bpf_progs.lock);
-+	__perf_env__insert_bpf_prog_info(env, info_node);
-+	up_write(&env->bpf_progs.lock);
++	struct guest_session *gs = data;
++	struct perf_inject *inject = container_of(gs, struct perf_inject, guest_session);
++
++	if (!dso->has_build_id)
++		return 0;
++
++	return synthesize_build_id(inject, dso, gs->machine_pid);
++
 +}
 +
-+void __perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
+ static int guest_session__add_build_ids(struct guest_session *gs)
  {
- 	__u32 prog_id = info_node->info_linear->info.id;
- 	struct bpf_prog_info_node *node;
- 	struct rb_node *parent = NULL;
- 	struct rb_node **p;
+ 	struct perf_inject *inject = container_of(gs, struct perf_inject, guest_session);
+-	struct machine *machine = &gs->session->machines.host;
+-	struct dso *dso;
+-	int ret;
  
--	down_write(&env->bpf_progs.lock);
- 	p = &env->bpf_progs.infos.rb_node;
+ 	/* Build IDs will be put in the Build ID feature section */
+ 	perf_header__set_feat(&inject->session->header, HEADER_BUILD_ID);
  
- 	while (*p != NULL) {
-@@ -40,15 +45,13 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
- 			p = &(*p)->rb_right;
- 		} else {
- 			pr_debug("duplicated bpf prog info %u\n", prog_id);
--			goto out;
-+			return;
- 		}
- 	}
- 
- 	rb_link_node(&info_node->rb_node, parent, p);
- 	rb_insert_color(&info_node->rb_node, &env->bpf_progs.infos);
- 	env->bpf_progs.infos_cnt++;
--out:
--	up_write(&env->bpf_progs.lock);
- }
- 
- struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
-@@ -77,14 +80,22 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- }
- 
- bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
-+{
-+	bool ret;
-+
-+	down_write(&env->bpf_progs.lock);
-+	ret = __perf_env__insert_btf(env, btf_node);
-+	up_write(&env->bpf_progs.lock);
-+	return ret;
-+}
-+
-+bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
- {
- 	struct rb_node *parent = NULL;
- 	__u32 btf_id = btf_node->id;
- 	struct btf_node *node;
- 	struct rb_node **p;
--	bool ret = true;
- 
--	down_write(&env->bpf_progs.lock);
- 	p = &env->bpf_progs.btfs.rb_node;
- 
- 	while (*p != NULL) {
-@@ -96,25 +107,31 @@ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
- 			p = &(*p)->rb_right;
- 		} else {
- 			pr_debug("duplicated btf %u\n", btf_id);
--			ret = false;
--			goto out;
-+			return false;
- 		}
- 	}
- 
- 	rb_link_node(&btf_node->rb_node, parent, p);
- 	rb_insert_color(&btf_node->rb_node, &env->bpf_progs.btfs);
- 	env->bpf_progs.btfs_cnt++;
--out:
--	up_write(&env->bpf_progs.lock);
--	return ret;
-+	return true;
- }
- 
- struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
-+{
-+	struct btf_node *res;
-+
-+	down_read(&env->bpf_progs.lock);
-+	res = __perf_env__find_btf(env, btf_id);
-+	up_read(&env->bpf_progs.lock);
-+	return res;
-+}
-+
-+struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id)
- {
- 	struct btf_node *node = NULL;
- 	struct rb_node *n;
- 
--	down_read(&env->bpf_progs.lock);
- 	n = env->bpf_progs.btfs.rb_node;
- 
- 	while (n) {
-@@ -124,13 +141,9 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
- 		else if (btf_id > node->id)
- 			n = n->rb_right;
- 		else
--			goto out;
-+			return node;
- 	}
--	node = NULL;
+-	dsos__for_each_with_build_id(dso, &machine->dsos.head) {
+-		ret = synthesize_build_id(inject, dso, gs->machine_pid);
+-		if (ret)
+-			return ret;
+-	}
 -
--out:
--	up_read(&env->bpf_progs.lock);
--	return node;
-+	return NULL;
+-	return 0;
++	return dsos__for_each_dso(&gs->session->machines.host.dsos,
++				  guest_session__add_build_ids_cb,
++				  gs);
  }
  
- /* purge data in bpf_progs.infos tree */
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 4566c51f2fd9..359eff51cb85 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -164,12 +164,16 @@ const char *perf_env__raw_arch(struct perf_env *env);
- int perf_env__nr_cpus_avail(struct perf_env *env);
+ static int guest_session__ksymbol_event(struct perf_tool *tool,
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index a617b1917e6b..a6d3c253f19f 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -327,48 +327,56 @@ static int write_buildid(const char *name, size_t name_len, struct build_id *bid
+ 	return write_padded(fd, name, name_len + 1, len);
+ }
  
- void perf_env__init(struct perf_env *env);
-+void __perf_env__insert_bpf_prog_info(struct perf_env *env,
-+				      struct bpf_prog_info_node *info_node);
- void perf_env__insert_bpf_prog_info(struct perf_env *env,
- 				    struct bpf_prog_info_node *info_node);
- struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- 							__u32 prog_id);
- bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
-+bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
- struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
-+struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+-static int machine__write_buildid_table(struct machine *machine,
+-					struct feat_fd *fd)
++struct machine__write_buildid_table_cb_args {
++	struct machine *machine;
++	struct feat_fd *fd;
++	u16 kmisc, umisc;
++};
++
++static int machine__write_buildid_table_cb(struct dso *dso, void *data)
+ {
+-	int err = 0;
+-	struct dso *pos;
+-	u16 kmisc = PERF_RECORD_MISC_KERNEL,
+-	    umisc = PERF_RECORD_MISC_USER;
++	struct machine__write_buildid_table_cb_args *args = data;
++	const char *name;
++	size_t name_len;
++	bool in_kernel = false;
  
- int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
- char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 13e23c386601..310a86c16d88 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1848,8 +1848,8 @@ static void print_bpf_prog_info(struct feat_fd *ff, FILE *fp)
- 		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
- 		next = rb_next(&node->rb_node);
+-	if (!machine__is_host(machine)) {
+-		kmisc = PERF_RECORD_MISC_GUEST_KERNEL;
+-		umisc = PERF_RECORD_MISC_GUEST_USER;
+-	}
++	if (!dso->has_build_id)
++		return 0;
  
--		bpf_event__print_bpf_prog_info(&node->info_linear->info,
--					       env, fp);
-+		__bpf_event__print_bpf_prog_info(&node->info_linear->info,
-+						 env, fp);
+-	dsos__for_each_with_build_id(pos, &machine->dsos.head) {
+-		const char *name;
+-		size_t name_len;
+-		bool in_kernel = false;
++	if (!dso->hit && !dso__is_vdso(dso))
++		return 0;
+ 
+-		if (!pos->hit && !dso__is_vdso(pos))
+-			continue;
++	if (dso__is_vdso(dso)) {
++		name = dso->short_name;
++		name_len = dso->short_name_len;
++	} else if (dso__is_kcore(dso)) {
++		name = args->machine->mmap_name;
++		name_len = strlen(name);
++	} else {
++		name = dso->long_name;
++		name_len = dso->long_name_len;
++	}
+ 
+-		if (dso__is_vdso(pos)) {
+-			name = pos->short_name;
+-			name_len = pos->short_name_len;
+-		} else if (dso__is_kcore(pos)) {
+-			name = machine->mmap_name;
+-			name_len = strlen(name);
+-		} else {
+-			name = pos->long_name;
+-			name_len = pos->long_name_len;
+-		}
++	in_kernel = dso->kernel || is_kernel_module(name, PERF_RECORD_MISC_CPUMODE_UNKNOWN);
++	return write_buildid(name, name_len, &dso->bid, args->machine->pid,
++			     in_kernel ? args->kmisc : args->umisc, args->fd);
++}
+ 
+-		in_kernel = pos->kernel ||
+-				is_kernel_module(name,
+-					PERF_RECORD_MISC_CPUMODE_UNKNOWN);
+-		err = write_buildid(name, name_len, &pos->bid, machine->pid,
+-				    in_kernel ? kmisc : umisc, fd);
+-		if (err)
+-			break;
++static int machine__write_buildid_table(struct machine *machine, struct feat_fd *fd)
++{
++	struct machine__write_buildid_table_cb_args args = {
++		.machine = machine,
++		.fd = fd,
++		.kmisc = PERF_RECORD_MISC_KERNEL,
++		.umisc = PERF_RECORD_MISC_USER,
++	};
++
++	if (!machine__is_host(machine)) {
++		args.kmisc = PERF_RECORD_MISC_GUEST_KERNEL;
++		args.umisc = PERF_RECORD_MISC_GUEST_USER;
  	}
  
- 	up_read(&env->bpf_progs.lock);
-@@ -3179,7 +3179,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
- 		/* after reading from file, translate offset to address */
- 		bpil_offs_to_addr(info_linear);
- 		info_node->info_linear = info_linear;
--		perf_env__insert_bpf_prog_info(env, info_node);
-+		__perf_env__insert_bpf_prog_info(env, info_node);
- 	}
+-	return err;
++	return dsos__for_each_dso(&machine->dsos, machine__write_buildid_table_cb, &args);
+ }
  
- 	up_write(&env->bpf_progs.lock);
-@@ -3226,7 +3226,7 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
- 		if (__do_read(ff, node->data, data_size))
- 			goto out;
+ int perf_session__write_buildid_table(struct perf_session *session,
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index d269e09005a7..d43f64939b12 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -433,3 +433,19 @@ struct dso *dsos__find_kernel_dso(struct dsos *dsos)
+ 	up_read(&dsos->lock);
+ 	return res;
+ }
++
++int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data), void *data)
++{
++	struct dso *dso;
++
++	down_read(&dsos->lock);
++	list_for_each_entry(dso, &dsos->head, node) {
++		int err;
++
++		err = cb(dso, data);
++		if (err)
++			return err;
++	}
++	up_read(&dsos->lock);
++	return 0;
++}
+diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
+index a7c7f723c5ff..317a263f0e37 100644
+--- a/tools/perf/util/dsos.h
++++ b/tools/perf/util/dsos.h
+@@ -23,12 +23,6 @@ struct dsos {
+ 	struct rw_semaphore lock;
+ };
  
--		perf_env__insert_btf(env, node);
-+		__perf_env__insert_btf(env, node);
- 		node = NULL;
- 	}
+-#define dsos__for_each_with_build_id(pos, head)	\
+-	list_for_each_entry(pos, head, node)	\
+-		if (!pos->has_build_id)		\
+-			continue;		\
+-		else
+-
+ void dsos__init(struct dsos *dsos);
+ void dsos__exit(struct dsos *dsos);
  
+@@ -55,4 +49,6 @@ struct dso *dsos__findnew_module_dso(struct dsos *dsos, struct machine *machine,
+ 
+ struct dso *dsos__find_kernel_dso(struct dsos *dsos);
+ 
++int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data), void *data);
++
+ #endif /* __PERF_DSOS */
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 06026a1b2d1a..6505f8c2cecc 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1558,16 +1558,14 @@ int machine__create_kernel_maps(struct machine *machine)
+ 	return ret;
+ }
+ 
+-static bool machine__uses_kcore(struct machine *machine)
++static int machine__uses_kcore_cb(struct dso *dso, void *data __maybe_unused)
+ {
+-	struct dso *dso;
+-
+-	list_for_each_entry(dso, &machine->dsos.head, node) {
+-		if (dso__is_kcore(dso))
+-			return true;
+-	}
++	return dso__is_kcore(dso) ? 1 : 0;
++}
+ 
+-	return false;
++static bool machine__uses_kcore(struct machine *machine)
++{
++	return dsos__for_each_dso(&machine->dsos, machine__uses_kcore_cb, NULL) != 0 ? true : false;
+ }
+ 
+ static bool perf_event__is_extra_kernel_mmap(struct machine *machine,
+@@ -3133,16 +3131,28 @@ char *machine__resolve_kernel_addr(void *vmachine, unsigned long long *addrp, ch
+ 	return sym->name;
+ }
+ 
++struct machine__for_each_dso_cb_args {
++	struct machine *machine;
++	machine__dso_t fn;
++	void *priv;
++};
++
++static int machine__for_each_dso_cb(struct dso *dso, void *data)
++{
++	struct machine__for_each_dso_cb_args *args = data;
++
++	return args->fn(dso, args->machine, args->priv);
++}
++
+ int machine__for_each_dso(struct machine *machine, machine__dso_t fn, void *priv)
+ {
+-	struct dso *pos;
+-	int err = 0;
++	struct machine__for_each_dso_cb_args args = {
++		.machine = machine,
++		.fn = fn,
++		.priv = priv,
++	};
+ 
+-	list_for_each_entry(pos, &machine->dsos.head, node) {
+-		if (fn(pos, machine, priv))
+-			err = -1;
+-	}
+-	return err;
++	return dsos__for_each_dso(&machine->dsos, machine__for_each_dso_cb, &args);
+ }
+ 
+ int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, void *priv)
 -- 
 2.42.0.869.gea05f2083d-goog
 
