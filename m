@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A6D210EA
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE018210EF
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cGQsUdvy"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B260D2133
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:42 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5b59662ff67so2724017b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ujyX9Htr"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93923272B
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:54 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5b3715f3b41so16880407b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698947981; x=1699552781; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698947993; x=1699552793; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GNh1fVLEd4MHHgLjwB0947tyE2fDAaVMJBf25RdyfJY=;
-        b=cGQsUdvy62PQn3TH7TmrtxDQf/TjBlj/hG9n12+BVxlKrmdqw1LQyRsC8eBhQfkRPu
-         /rQUB5oyYmjl/Xr74LqeSj8d5T3dQTTYNadZbsto7bzCnMWGywQCo0lmeSeR65QLDg7A
-         iYzeZFMsrta0hGJU86gmuuKZ4mHVh9GG5gVATUJk+0VneMHeIndrmHBJmKInZRCbxIBj
-         9oGT/XBebS2PkSmkIQgEEBPfGOLxAr6bQ5Gh2d/VA96fMoDx70Y2LVRyBlab/E/YZ3Zo
-         pKs8Xw3TgwG4NJq3wzEcikPUzhjlSXMyboKrp/+OJEDCmjHEcGVifctcxO+c7E45Rn+r
-         0MiA==
+        bh=AlT7UeqmlQ8IFDtPogYP/9SjjZolnxzlyo9trNiskvQ=;
+        b=ujyX9HtrTDP+MYrlvtdbWd+UXZcoJduMTAOdzW7twaBomHHBB1pW4jLAptB9U12+dp
+         4HumHWgUvcB/pWIJVyTFZ30vggy0V6HN+M/DwJpsZKs9x7KYXAHlbq/bYMbr3jbsn1Eh
+         gi4VqAtmAqsed8nTCOKOqZPDdTIPIB5Pm9GZsp4R4RnW11A1WoiHDMXVZY7TxwSWLV4w
+         7XpYCyPk2P8AV6ThdGntmg36iIBi2m9WsMytRfdzj3F4rEiBe51E6cNWhRukXDSYGzad
+         TtMwKTkzDaOKO9k4teSat9p4dwtyWnpgROjLzE3GP6uxYBQqfhgwCGfmBTLv6Tg4/myS
+         eq+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698947981; x=1699552781;
+        d=1e100.net; s=20230601; t=1698947993; x=1699552793;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GNh1fVLEd4MHHgLjwB0947tyE2fDAaVMJBf25RdyfJY=;
-        b=KCYAFslzREvYtOl/LuoipfWeMQe6DYq8dgi5P66HhnrVo+FWIkxJHHq0vXfrgOBqwu
-         ocfRKynRBdypIvPDiT8jTc302zV+CubsS7LtioOnmVHvhu0NUX2Z6y//UaEYmn0hVF6H
-         aaQ0jORb1cxBsij9Ok4DPWDFVjYlbJB8WUJ0mG1FwmUeyIE0r141o0zTbjMkEV+GgQHJ
-         05k5B/KxLE4+uLI9vgmjvXI8aJNJz2S0D2WXEGZ5UPpDU/nxYu0xbwLVy3jFWceC+S5r
-         feb0yWsZjQICKbEzC1ZbWkEcc1fsoDjgxJ4bs+0Mlo7hX8bUs60sSN4DWySelh473Blj
-         GLVw==
-X-Gm-Message-State: AOJu0Yx/OShGS7fcYOZITvJ9N2bGgp7RAAQMTD/GQ1Xquvi3jlgrmXlH
-	qFNzF4GEJVjensjhHujmhN1vnOSUqLWB
-X-Google-Smtp-Source: AGHT+IFgcbmOCj3xi9KRnRymdsDUUK1cEQY00JEw3Qo+672TrrJlIN/yt0iuC8MVCfZol+ZAbML0Yc40y7zd
+        bh=AlT7UeqmlQ8IFDtPogYP/9SjjZolnxzlyo9trNiskvQ=;
+        b=gL9tnbkY3J6XHm6VF54S8l8JkzBweBmATq2ICQ1G8SjKcVmlDZlq4snICx3/ue236O
+         VLo8+q7NtFTA+0mAKJb5FItigiXerE9LDrE7E+R6lANzo2SBD0aMHHLIfFM0oUqD+hOD
+         V8aZOxM1b0zvTslubjkfnpR4DCXpFTEjqcRqKAbJPXacZjDVThsgENzpiMhzdwnAtYFr
+         Zsw8P6AsIr9kifrtYErMTvWEPyoW9uAfai1pA/kumSu33uJypm+wbz9dPX0V0IiAsj6B
+         uXdfymrZhkYsfULn7LTKmhvjlSldVffmJ4lO/ep2bQHyrojij0GC7mnpzzWBexo+GCLs
+         aoVQ==
+X-Gm-Message-State: AOJu0YyRKo3n5ewxvbUdw2IaptUE7mOzyYFcOpuG8qibp/6XqxGrP+BU
+	C+cRhJfishsQTPJzr3gxfKr1rBglhwPy
+X-Google-Smtp-Source: AGHT+IGoqutMTalv53VnpIc2nK7Zurxqsao671qvPVWAmrqmS4X00Szpof1fSHgTvPE1HjLMwym6w9N87RqC
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bb34:df9c:836c:afca])
- (user=irogers job=sendgmr) by 2002:a81:b64a:0:b0:5a7:d45d:1223 with SMTP id
- h10-20020a81b64a000000b005a7d45d1223mr4734ywk.3.1698947981697; Thu, 02 Nov
- 2023 10:59:41 -0700 (PDT)
-Date: Thu,  2 Nov 2023 10:57:28 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:ea4f:0:b0:5a7:be10:461d with SMTP id
+ t76-20020a0dea4f000000b005a7be10461dmr8627ywe.2.1698947993053; Thu, 02 Nov
+ 2023 10:59:53 -0700 (PDT)
+Date: Thu,  2 Nov 2023 10:57:33 -0700
 In-Reply-To: <20231102175735.2272696-1-irogers@google.com>
-Message-Id: <20231102175735.2272696-47-irogers@google.com>
+Message-Id: <20231102175735.2272696-52-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231102175735.2272696-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
-Subject: [PATCH v4 46/53] perf dsos: Switch backing storage to array from rbtree/list
+Subject: [PATCH v4 51/53] perf dso: Reference counting related fixes
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -72,574 +72,161 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-DSOs were held on a list for fast iteration and in an rbtree for fast
-finds. Switch to using a lazily sorted array where iteration is just
-iterating through the array and binary searches are the same
-complexity as searching the rbtree. The find may need to sort the
-array first which does increase the complexity, but add operations
-have lower complexity and overall the complexity should remain about
-the same.
-
-The set name operations on the dso just records that the array is no
-longer sorted, avoiding complexity in rebalancing the rbtree. Tighter
-locking discipline is enforced to avoid the array being resorted while
-long and short names or ids are changed.
-
-The array is smaller in size, replacing 6 pointers with 2, and so even
-with extra allocated space in the array, the array may be 50%
-unoccupied, the memory saving should be at least 2x.
+Ensure gets and puts are better aligned fixing reference couting
+checking problems.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dso.c  |  67 +++++++++------
- tools/perf/util/dso.h  |  10 +--
- tools/perf/util/dsos.c | 188 ++++++++++++++++++++++++++---------------
- tools/perf/util/dsos.h |  21 +++--
- 4 files changed, 177 insertions(+), 109 deletions(-)
+ tools/perf/util/machine.c    |  4 ++--
+ tools/perf/util/map.c        |  1 +
+ tools/perf/util/symbol-elf.c | 38 +++++++++++++++++-------------------
+ 3 files changed, 21 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 1b0990507a42..66dc929443ba 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1240,35 +1240,35 @@ struct dso *machine__findnew_kernel(struct machine *machine, const char *name,
- 	return dso;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index d4534fbc7098..bd1e2da5bb6d 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -683,7 +683,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 					     struct perf_sample *sample __maybe_unused)
+ {
+ 	struct symbol *sym;
+-	struct dso *dso;
++	struct dso *dso = NULL;
+ 	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+ 	int err = 0;
+ 
+@@ -696,7 +696,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 		}
+ 		dso__set_kernel(dso, DSO_SPACE__KERNEL);
+ 		map = map__new2(0, dso);
+-		dso__put(dso);
+ 		if (!map) {
+ 			err = -ENOMEM;
+ 			goto out;
+@@ -735,6 +734,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	dso__insert_symbol(dso, sym);
+ out:
+ 	map__put(map);
++	dso__put(dso);
+ 	return err;
  }
  
--static void dso__set_long_name_id(struct dso *dso, const char *name, struct dso_id *id, bool name_allocated)
-+static void dso__set_long_name_id(struct dso *dso, const char *name, bool name_allocated)
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 14fb8cf65b13..4480134ef4ea 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -200,6 +200,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+ 				dso__set_build_id(dso, dso__bid(header_bid_dso));
+ 				dso__set_header_build_id(dso, 1);
+ 			}
++			dso__put(header_bid_dso);
+ 		}
+ 		dso__put(dso);
+ 	}
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index de73f9fb3fe4..4c00463abb7e 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1366,7 +1366,7 @@ void __weak arch__sym_update(struct symbol *s __maybe_unused,
+ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 				      GElf_Sym *sym, GElf_Shdr *shdr,
+ 				      struct maps *kmaps, struct kmap *kmap,
+-				      struct dso **curr_dsop, struct map **curr_mapp,
++				      struct dso **curr_dsop,
+ 				      const char *section_name,
+ 				      bool adjust_kernel_syms, bool kmodule, bool *remap_kernel)
  {
--	struct rb_root *root = dso->root;
-+	struct dsos *dsos = dso->dsos;
+@@ -1416,8 +1416,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 			map__set_pgoff(map, shdr->sh_offset);
+ 		}
  
- 	if (name == NULL)
- 		return;
- 
--	if (dso->long_name_allocated)
--		free((char *)dso->long_name);
--
--	if (root) {
--		rb_erase(&dso->rb_node, root);
-+	if (dsos) {
- 		/*
--		 * __dsos__findnew_link_by_longname_id() isn't guaranteed to
--		 * add it back, so a clean removal is required here.
-+		 * Need to avoid re-sorting the dsos breaking by non-atomically
-+		 * renaming the dso.
- 		 */
--		RB_CLEAR_NODE(&dso->rb_node);
--		dso->root = NULL;
-+		down_write(&dsos->lock);
+-		*curr_mapp = map;
+-		*curr_dsop = dso;
++		dso__put(*curr_dsop);
++		*curr_dsop = dso__get(dso);
+ 		return 0;
  	}
  
-+	if (dso->long_name_allocated)
-+		free((char *)dso->long_name);
-+
- 	dso->long_name		 = name;
- 	dso->long_name_len	 = strlen(name);
- 	dso->long_name_allocated = name_allocated;
+@@ -1442,10 +1442,10 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		dso__set_binary_type(curr_dso, dso__binary_type(dso));
+ 		dso__set_adjust_symbols(curr_dso, dso__adjust_symbols(dso));
+ 		curr_map = map__new2(start, curr_dso);
+-		dso__put(curr_dso);
+-		if (curr_map == NULL)
++		if (curr_map == NULL) {
++			dso__put(curr_dso);
+ 			return -1;
+-
++		}
+ 		if (dso__kernel(curr_dso))
+ 			map__kmap(curr_map)->kmaps = kmaps;
  
--	if (root)
--		__dsos__findnew_link_by_longname_id(root, dso, NULL, id);
-+	if (dsos) {
-+		dsos->sorted = false;
-+		up_write(&dsos->lock);
-+	}
- }
+@@ -1459,21 +1459,15 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		dso__set_symtab_type(curr_dso, dso__symtab_type(dso));
+ 		if (maps__insert(kmaps, curr_map))
+ 			return -1;
+-		/*
+-		 * Add it before we drop the reference to curr_map, i.e. while
+-		 * we still are sure to have a reference to this DSO via
+-		 * *curr_map->dso.
+-		 */
+ 		dsos__add(&maps__machine(kmaps)->dsos, curr_dso);
+-		/* kmaps already got it */
+-		map__put(curr_map);
+ 		dso__set_loaded(curr_dso);
+-		*curr_mapp = curr_map;
++		dso__put(*curr_dsop);
+ 		*curr_dsop = curr_dso;
+ 	} else {
+-		*curr_dsop = map__dso(curr_map);
+-		map__put(curr_map);
++		dso__put(*curr_dsop);
++		*curr_dsop = dso__get(map__dso(curr_map));
+ 	}
++	map__put(curr_map);
  
--static int __dso_id__cmp(struct dso_id *a, struct dso_id *b)
-+static int __dso_id__cmp(const struct dso_id *a, const struct dso_id *b)
- {
- 	if (a->maj > b->maj) return -1;
- 	if (a->maj < b->maj) return 1;
-@@ -1296,7 +1296,7 @@ static int __dso_id__cmp(struct dso_id *a, struct dso_id *b)
  	return 0;
  }
- 
--bool dso_id__empty(struct dso_id *id)
-+bool dso_id__empty(const struct dso_id *id)
+@@ -1484,8 +1478,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
  {
- 	if (!id)
- 		return true;
-@@ -1304,15 +1304,22 @@ bool dso_id__empty(struct dso_id *id)
- 	return !id->maj && !id->min && !id->ino && !id->ino_generation;
- }
+ 	struct kmap *kmap = dso__kernel(dso) ? map__kmap(map) : NULL;
+ 	struct maps *kmaps = kmap ? map__kmaps(map) : NULL;
+-	struct map *curr_map = map;
+-	struct dso *curr_dso = dso;
++	struct dso *curr_dso;
+ 	Elf_Data *symstrs, *secstrs, *secstrs_run, *secstrs_sym;
+ 	uint32_t nr_syms;
+ 	int err = -1;
+@@ -1586,6 +1579,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		remap_kernel = true;
+ 		adjust_kernel_syms = dso__adjust_symbols(dso);
+ 	}
++	curr_dso = dso__get(dso);
+ 	elf_symtab__for_each_symbol(syms, nr_syms, idx, sym) {
+ 		struct symbol *f;
+ 		const char *elf_name = elf_sym__name(&sym, symstrs);
+@@ -1674,8 +1668,11 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 			--sym.st_value;
  
--void dso__inject_id(struct dso *dso, struct dso_id *id)
-+void __dso__inject_id(struct dso *dso, struct dso_id *id)
- {
-+	struct dsos *dsos = dso->dsos;
-+
-+	/* dsos write lock held by caller. */
-+
- 	dso->id.maj = id->maj;
- 	dso->id.min = id->min;
- 	dso->id.ino = id->ino;
- 	dso->id.ino_generation = id->ino_generation;
-+
-+	if (dsos)
-+		dsos->sorted = false;
- }
+ 		if (dso__kernel(dso)) {
+-			if (dso__process_kernel_symbol(dso, map, &sym, &shdr, kmaps, kmap, &curr_dso, &curr_map,
+-						       section_name, adjust_kernel_syms, kmodule, &remap_kernel))
++			if (dso__process_kernel_symbol(dso, map, &sym, &shdr,
++						       kmaps, kmap, &curr_dso,
++						       section_name,
++						       adjust_kernel_syms,
++						       kmodule, &remap_kernel))
+ 				goto out_elf_end;
+ 		} else if ((used_opd && runtime_ss->adjust_symbols) ||
+ 			   (!used_opd && syms_ss->adjust_symbols)) {
+@@ -1724,6 +1721,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		__symbols__insert(dso__symbols(curr_dso), f, dso__kernel(dso));
+ 		nr++;
+ 	}
++	dso__put(curr_dso);
  
--int dso_id__cmp(struct dso_id *a, struct dso_id *b)
-+int dso_id__cmp(const struct dso_id *a, const struct dso_id *b)
- {
  	/*
- 	 * The second is always dso->id, so zeroes if not set, assume passing
-@@ -1331,20 +1338,34 @@ int dso__cmp_id(struct dso *a, struct dso *b)
- 
- void dso__set_long_name(struct dso *dso, const char *name, bool name_allocated)
- {
--	dso__set_long_name_id(dso, name, NULL, name_allocated);
-+	dso__set_long_name_id(dso, name, name_allocated);
- }
- 
- void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated)
- {
-+	struct dsos *dsos = dso->dsos;
-+
- 	if (name == NULL)
- 		return;
- 
-+	if (dsos) {
-+		/*
-+		 * Need to avoid re-sorting the dsos breaking by non-atomically
-+		 * renaming the dso.
-+		 */
-+		down_write(&dsos->lock);
-+	}
- 	if (dso->short_name_allocated)
- 		free((char *)dso->short_name);
- 
- 	dso->short_name		  = name;
- 	dso->short_name_len	  = strlen(name);
- 	dso->short_name_allocated = name_allocated;
-+
-+	if (dsos) {
-+		dsos->sorted = false;
-+		up_write(&dsos->lock);
-+	}
- }
- 
- int dso__name_len(const struct dso *dso)
-@@ -1380,7 +1401,7 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
- 		strcpy(dso->name, name);
- 		if (id)
- 			dso->id = *id;
--		dso__set_long_name_id(dso, dso->name, id, false);
-+		dso__set_long_name_id(dso, dso->name, false);
- 		dso__set_short_name(dso, dso->name, false);
- 		dso->symbols = RB_ROOT_CACHED;
- 		dso->symbol_names = NULL;
-@@ -1403,9 +1424,6 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
- 		dso->is_kmod = 0;
- 		dso->needs_swap = DSO_SWAP__UNSET;
- 		dso->comp = COMP_ID__NONE;
--		RB_CLEAR_NODE(&dso->rb_node);
--		dso->root = NULL;
--		INIT_LIST_HEAD(&dso->node);
- 		INIT_LIST_HEAD(&dso->data.open_entry);
- 		mutex_init(&dso->lock);
- 		refcount_set(&dso->refcnt, 1);
-@@ -1421,9 +1439,8 @@ struct dso *dso__new(const char *name)
- 
- void dso__delete(struct dso *dso)
- {
--	if (!RB_EMPTY_NODE(&dso->rb_node))
--		pr_err("DSO %s is still in rbtree when being deleted!\n",
--		       dso->long_name);
-+	if (dso->dsos)
-+		pr_err("DSO %s is still in rbtree when being deleted!\n", dso->long_name);
- 
- 	/* free inlines first, as they reference symbols */
- 	inlines__tree_delete(&dso->inlined_nodes);
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 1b247eeaa81e..fd500583cd2e 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -146,9 +146,7 @@ struct auxtrace_cache;
- 
- struct dso {
- 	struct mutex	 lock;
--	struct list_head node;
--	struct rb_node	 rb_node;	/* rbtree node sorted by long name */
--	struct rb_root	 *root;		/* root of rbtree that rb_node is in */
-+	struct dsos	 *dsos;
- 	struct rb_root_cached symbols;
- 	struct symbol	 **symbol_names;
- 	size_t		 symbol_names_len;
-@@ -235,8 +233,8 @@ static inline void dso__set_loaded(struct dso *dso)
- 	dso->loaded = true;
- }
- 
--int dso_id__cmp(struct dso_id *a, struct dso_id *b);
--bool dso_id__empty(struct dso_id *id);
-+int dso_id__cmp(const struct dso_id *a, const struct dso_id *b);
-+bool dso_id__empty(const struct dso_id *id);
- 
- struct dso *dso__new_id(const char *name, struct dso_id *id);
- struct dso *dso__new(const char *name);
-@@ -245,7 +243,7 @@ void dso__delete(struct dso *dso);
- int dso__cmp_id(struct dso *a, struct dso *b);
- void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated);
- void dso__set_long_name(struct dso *dso, const char *name, bool name_allocated);
--void dso__inject_id(struct dso *dso, struct dso_id *id);
-+void __dso__inject_id(struct dso *dso, struct dso_id *id);
- 
- int dso__name_len(const struct dso *dso);
- 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index b7fbfb877ae3..cfc10e1a6802 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -14,24 +14,30 @@
- 
- void dsos__init(struct dsos *dsos)
- {
--	INIT_LIST_HEAD(&dsos->head);
--	dsos->root = RB_ROOT;
- 	init_rwsem(&dsos->lock);
-+
-+	dsos->cnt = 0;
-+	dsos->allocated = 0;
-+	dsos->dsos = NULL;
-+	dsos->sorted = true;
- }
- 
- static void dsos__purge(struct dsos *dsos)
- {
--	struct dso *pos, *n;
--
- 	down_write(&dsos->lock);
- 
--	list_for_each_entry_safe(pos, n, &dsos->head, node) {
--		RB_CLEAR_NODE(&pos->rb_node);
--		pos->root = NULL;
--		list_del_init(&pos->node);
--		dso__put(pos);
-+	for (unsigned int i = 0; i < dsos->cnt; i++) {
-+		struct dso *dso = dsos->dsos[i];
-+
-+		dso__put(dso);
-+		dso->dsos = NULL;
- 	}
- 
-+	zfree(&dsos->dsos);
-+	dsos->cnt = 0;
-+	dsos->allocated = 0;
-+	dsos->sorted = true;
-+
- 	up_write(&dsos->lock);
- }
- 
-@@ -46,9 +52,8 @@ static int __dsos__for_each_dso(struct dsos *dsos,
- 				int (*cb)(struct dso *dso, void *data),
- 				void *data)
- {
--	struct dso *dso;
--
--	list_for_each_entry(dso, &dsos->head, node) {
-+	for (unsigned int i = 0; i < dsos->cnt; i++) {
-+		struct dso *dso = dsos->dsos[i];
- 		int err;
- 
- 		err = cb(dso, data);
-@@ -119,16 +124,47 @@ static int dso__cmp_short_name(struct dso *a, struct dso *b)
- 	return __dso__cmp_short_name(a->short_name, &a->id, b);
- }
- 
-+static int dsos__cmp_long_name_id_short_name(const void *va, const void *vb)
-+{
-+	const struct dso *a = *((const struct dso **)va);
-+	const struct dso *b = *((const struct dso **)vb);
-+	int rc = strcmp(a->long_name, b->long_name);
-+
-+	if (!rc) {
-+		rc = dso_id__cmp(&a->id, &b->id);
-+		if (!rc)
-+			rc = strcmp(a->short_name, b->short_name);
-+	}
-+	return rc;
-+}
-+
- /*
-  * Find a matching entry and/or link current entry to RB tree.
-  * Either one of the dso or name parameter must be non-NULL or the
-  * function will not work.
-  */
--struct dso *__dsos__findnew_link_by_longname_id(struct rb_root *root, struct dso *dso,
--						const char *name, struct dso_id *id)
-+struct dso *__dsos__findnew_link_by_longname_id(struct dsos *dsos,
-+						struct dso *dso,
-+						const char *name,
-+						struct dso_id *id,
-+						bool write_locked)
- {
--	struct rb_node **p = &root->rb_node;
--	struct rb_node  *parent = NULL;
-+	int low = 0, high = dsos->cnt - 1;
-+
-+	if (!dsos->sorted) {
-+		if (!write_locked) {
-+			up_read(&dsos->lock);
-+			down_write(&dsos->lock);
-+			dso = __dsos__findnew_link_by_longname_id(dsos, dso, name, id,
-+								  /*write_locked=*/true);
-+			up_write(&dsos->lock);
-+			down_read(&dsos->lock);
-+			return dso;
-+		}
-+		qsort(dsos->dsos, dsos->cnt, sizeof(struct dso *),
-+		      dsos__cmp_long_name_id_short_name);
-+		dsos->sorted = true;
-+	}
- 
- 	if (!name)
- 		name = dso->long_name;
-@@ -136,11 +172,11 @@ struct dso *__dsos__findnew_link_by_longname_id(struct rb_root *root, struct dso
- 	/*
- 	 * Find node with the matching name
- 	 */
--	while (*p) {
--		struct dso *this = rb_entry(*p, struct dso, rb_node);
-+	while (low <= high) {
-+		int mid = (low + high) / 2;
-+		struct dso *this = dsos->dsos[mid];
- 		int rc = __dso__cmp_long_name(name, id, this);
- 
--		parent = *p;
- 		if (rc == 0) {
- 			/*
- 			 * In case the new DSO is a duplicate of an existing
-@@ -161,56 +197,53 @@ struct dso *__dsos__findnew_link_by_longname_id(struct rb_root *root, struct dso
- 			}
- 		}
- 		if (rc < 0)
--			p = &parent->rb_left;
-+			high = mid - 1;
- 		else
--			p = &parent->rb_right;
--	}
--	if (dso) {
--		/* Add new node and rebalance tree */
--		rb_link_node(&dso->rb_node, parent, p);
--		rb_insert_color(&dso->rb_node, root);
--		dso->root = root;
-+			low = mid + 1;
- 	}
-+	if (dso)
-+		__dsos__add(dsos, dso);
- 	return NULL;
- }
- 
--void __dsos__add(struct dsos *dsos, struct dso *dso)
-+int __dsos__add(struct dsos *dsos, struct dso *dso)
- {
--	list_add_tail(&dso->node, &dsos->head);
--	__dsos__findnew_link_by_longname_id(&dsos->root, dso, NULL, &dso->id);
--	/*
--	 * It is now in the linked list, grab a reference, then garbage collect
--	 * this when needing memory, by looking at LRU dso instances in the
--	 * list with atomic_read(&dso->refcnt) == 1, i.e. no references
--	 * anywhere besides the one for the list, do, under a lock for the
--	 * list: remove it from the list, then a dso__put(), that probably will
--	 * be the last and will then call dso__delete(), end of life.
--	 *
--	 * That, or at the end of the 'struct machine' lifetime, when all
--	 * 'struct dso' instances will be removed from the list, in
--	 * dsos__exit(), if they have no other reference from some other data
--	 * structure.
--	 *
--	 * E.g.: after processing a 'perf.data' file and storing references
--	 * to objects instantiated while processing events, we will have
--	 * references to the 'thread', 'map', 'dso' structs all from 'struct
--	 * hist_entry' instances, but we may not need anything not referenced,
--	 * so we might as well call machines__exit()/machines__delete() and
--	 * garbage collect it.
--	 */
--	dso__get(dso);
-+	if (dsos->cnt == dsos->allocated) {
-+		unsigned int to_allocate = 2;
-+		struct dso **temp;
-+
-+		if (dsos->allocated > 0)
-+			to_allocate = dsos->allocated * 2;
-+		temp = realloc(dsos->dsos, sizeof(struct dso *) * to_allocate);
-+		if (!temp)
-+			return -ENOMEM;
-+		dsos->dsos = temp;
-+		dsos->allocated = to_allocate;
-+	}
-+	dsos->dsos[dsos->cnt++] = dso__get(dso);
-+	if (dsos->cnt >= 2 && dsos->sorted) {
-+		dsos->sorted = dsos__cmp_long_name_id_short_name(&dsos->dsos[dsos->cnt - 2],
-+								 &dsos->dsos[dsos->cnt - 1])
-+			<= 0;
-+	}
-+	dso->dsos = dsos;
-+	return 0;
- }
- 
--void dsos__add(struct dsos *dsos, struct dso *dso)
-+int dsos__add(struct dsos *dsos, struct dso *dso)
- {
-+	int ret;
-+
- 	down_write(&dsos->lock);
--	__dsos__add(dsos, dso);
-+	ret = __dsos__add(dsos, dso);
- 	up_write(&dsos->lock);
-+	return ret;
- }
- 
--static struct dso *__dsos__findnew_by_longname_id(struct rb_root *root, const char *name, struct dso_id *id)
-+static struct dso *__dsos__findnew_by_longname_id(struct dsos *dsos, const char *name,
-+						struct dso_id *id, bool write_locked)
- {
--	return __dsos__findnew_link_by_longname_id(root, NULL, name, id);
-+	return __dsos__findnew_link_by_longname_id(dsos, NULL, name, id, write_locked);
- }
- 
- struct dsos__find_id_cb_args {
-@@ -231,7 +264,8 @@ static int dsos__find_id_cb(struct dso *dso, void *data)
- 
- }
- 
--static struct dso *__dsos__find_id(struct dsos *dsos, const char *name, struct dso_id *id, bool cmp_short)
-+static struct dso *__dsos__find_id(struct dsos *dsos, const char *name, struct dso_id *id,
-+				   bool cmp_short, bool write_locked)
- {
- 	struct dso *res;
- 
-@@ -245,7 +279,7 @@ static struct dso *__dsos__find_id(struct dsos *dsos, const char *name, struct d
- 		__dsos__for_each_dso(dsos, dsos__find_id_cb, &args);
- 		return args.res;
- 	}
--	res = __dsos__findnew_by_longname_id(&dsos->root, name, id);
-+	res = __dsos__findnew_by_longname_id(dsos, name, id, write_locked);
- 	return res;
- }
- 
-@@ -254,7 +288,7 @@ struct dso *dsos__find(struct dsos *dsos, const char *name, bool cmp_short)
- 	struct dso *res;
- 
- 	down_read(&dsos->lock);
--	res = __dsos__find_id(dsos, name, NULL, cmp_short);
-+	res = __dsos__find_id(dsos, name, NULL, cmp_short, /*write_locked=*/false);
- 	up_read(&dsos->lock);
- 	return res;
- }
-@@ -296,8 +330,13 @@ static struct dso *__dsos__addnew_id(struct dsos *dsos, const char *name, struct
- 	struct dso *dso = dso__new_id(name, id);
- 
- 	if (dso != NULL) {
--		__dsos__add(dsos, dso);
-+		/*
-+		 * The dsos lock is held on entry, so rename the dso before
-+		 * adding it to avoid needing to take the dsos lock again to say
-+		 * the array isn't sorted.
-+		 */
- 		dso__set_basename(dso);
-+		__dsos__add(dsos, dso);
- 	}
- 	return dso;
- }
-@@ -309,10 +348,10 @@ struct dso *__dsos__addnew(struct dsos *dsos, const char *name)
- 
- static struct dso *__dsos__findnew_id(struct dsos *dsos, const char *name, struct dso_id *id)
- {
--	struct dso *dso = __dsos__find_id(dsos, name, id, false);
-+	struct dso *dso = __dsos__find_id(dsos, name, id, false, /*write_locked=*/true);
- 
- 	if (dso && dso_id__empty(&dso->id) && !dso_id__empty(id))
--		dso__inject_id(dso, id);
-+		__dso__inject_id(dso, id);
- 
- 	return dso ? dso : __dsos__addnew_id(dsos, name, id);
- }
-@@ -403,18 +442,27 @@ struct dso *dsos__findnew_module_dso(struct dsos *dsos,
- 
- 	down_write(&dsos->lock);
- 
--	dso = __dsos__find_id(dsos, m->name, NULL, /*cmp_short=*/true);
-+	dso = __dsos__find_id(dsos, m->name, NULL, /*cmp_short=*/true, /*write_locked=*/true);
-+	if (dso) {
-+		up_write(&dsos->lock);
-+		return dso;
-+	}
-+	/*
-+	 * Failed to find the dso so create it. Change the name before adding it
-+	 * to the array, to avoid unnecessary sorts and potential locking
-+	 * issues.
-+	 */
-+	dso = dso__new_id(m->name, /*id=*/NULL);
- 	if (!dso) {
--		dso = __dsos__addnew(dsos, m->name);
--		if (dso == NULL)
--			goto out_unlock;
--
--		dso__set_module_info(dso, m, machine);
--		dso__set_long_name(dso, strdup(filename), true);
--		dso->kernel = DSO_SPACE__KERNEL;
-+		up_write(&dsos->lock);
-+		return NULL;
- 	}
-+	dso__set_basename(dso);
-+	dso__set_module_info(dso, m, machine);
-+	dso__set_long_name(dso,	strdup(filename), true);
-+	dso->kernel = DSO_SPACE__KERNEL;
-+	__dsos__add(dsos, dso);
- 
--out_unlock:
- 	up_write(&dsos->lock);
- 	return dso;
- }
-diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
-index 50bd51523475..c1b3979ad4bd 100644
---- a/tools/perf/util/dsos.h
-+++ b/tools/perf/util/dsos.h
-@@ -14,20 +14,22 @@ struct kmod_path;
- struct machine;
- 
- /*
-- * DSOs are put into both a list for fast iteration and rbtree for fast
-- * long name lookup.
-+ * Collection of DSOs as an array for iteration speed, but sorted for O(n)
-+ * lookup.
-  */
- struct dsos {
--	struct list_head    head;
--	struct rb_root	    root;	/* rbtree root sorted by long name */
- 	struct rw_semaphore lock;
-+	struct dso **dsos;
-+	unsigned int cnt;
-+	unsigned int allocated;
-+	bool sorted;
- };
- 
- void dsos__init(struct dsos *dsos);
- void dsos__exit(struct dsos *dsos);
- 
--void __dsos__add(struct dsos *dsos, struct dso *dso);
--void dsos__add(struct dsos *dsos, struct dso *dso);
-+int __dsos__add(struct dsos *dsos, struct dso *dso);
-+int dsos__add(struct dsos *dsos, struct dso *dso);
- struct dso *__dsos__addnew(struct dsos *dsos, const char *name);
- struct dso *dsos__find(struct dsos *dsos, const char *name, bool cmp_short);
- 
-@@ -35,8 +37,11 @@ struct dso *dsos__findnew_id(struct dsos *dsos, const char *name, struct dso_id
-  
- bool dsos__read_build_ids(struct dsos *dsos, bool with_hits);
- 
--struct dso *__dsos__findnew_link_by_longname_id(struct rb_root *root, struct dso *dso,
--						const char *name, struct dso_id *id);
-+struct dso *__dsos__findnew_link_by_longname_id(struct dsos *dsos,
-+						struct dso *dso,
-+						const char *name,
-+						struct dso_id *id,
-+						bool write_locked);
- 
- size_t dsos__fprintf_buildid(struct dsos *dsos, FILE *fp,
- 			       bool (skip)(struct dso *dso, int parm), int parm);
+ 	 * For misannotated, zeroed, ASM function sizes.
 -- 
 2.42.0.869.gea05f2083d-goog
 
