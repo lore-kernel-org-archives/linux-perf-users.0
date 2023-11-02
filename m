@@ -1,76 +1,123 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D005B1DA29
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 16:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8484312E;
-	Thu,  2 Nov 2023 09:22:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9205E2F4;
-	Thu,  2 Nov 2023 09:23:30 -0700 (PDT)
-Received: from dsg-hive-n1sdp-01.. (dsg-hive-n1sdp-01.cambridge.arm.com [10.2.2.18])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D379A3F738;
-	Thu,  2 Nov 2023 09:22:46 -0700 (PDT)
-From: Nick Forrington <nick.forrington@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Nick Forrington <nick.forrington@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH] perf test: Remove atomics from test_loop to avoid test failures
-Date: Thu,  2 Nov 2023 16:22:24 +0000
-Message-ID: <20231102162225.50028-1-nick.forrington@arm.com>
-X-Mailer: git-send-email 2.42.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A66F208CB
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 17:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pch6qaGe"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2080C111
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:57:59 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7d261a84bso17644967b3.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:57:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1698947878; x=1699552678; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wm2Wlx9LDH2uZyz0Nou/I5Qg1x4UBSoUiB/FkPORelQ=;
+        b=Pch6qaGemODBCqyrH5aOelNKvoPmI9l2vhAndRxNF9h1qkm4FhiwfpAYppJOSpALZt
+         nqMPF4TT5FwMENns2m8sRAQh16j5Me8G3WsfdQedMLnwuSEXbMKs3nK0GmANkht0b7EQ
+         s926VY26rXyGqY1CXjWTE/qxyxX67QRVAh8w6/sOuKUL8bo1e65FC4+Yl5bSA2/CVMux
+         oA6j8Fnh3IGqAMXMxKW0xaaFJ28d1vMoXWUvQSo9/MlDiWmG6+K/zM2rwBChqd+a8opC
+         IS4RiZgmGmVQqK2HNUYMfVq2s7sO2SjJ0rwSQBCmyN0u5BhRnHt6hzBhndBKYzNdTtqH
+         ZaVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698947878; x=1699552678;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wm2Wlx9LDH2uZyz0Nou/I5Qg1x4UBSoUiB/FkPORelQ=;
+        b=r9QIN0Dv3lqj5pBTkz0sIT2OBH3BrpZNmlNI4W+0JfIrR9Gxx4JJ5qD7JzqURVQ0vX
+         GJhNJL6xU81BrP01SJODOXiuA3zfHPniJKsMSxBDXtfL1QBzFh21q6jrv+YGQ0VW/nZc
+         TotdlawAnikfEatWurP/czbmxB+QWt8wea2pp4mVa2RH9SSuAtoLetV30adM/+ldH3Eb
+         Y+WUmOFc1xjXvcKPUI/9+swH4hsMAR+ygHi+gedhHy65HmuVtUOS+U+Tuxq5LSZff+3B
+         YJHG5UjxXcHn8TjREp/ruQBnmwzh1cCYh2+XZDxcKrX6IgS+qkxxoayzGo7tvls5/+/B
+         47Vg==
+X-Gm-Message-State: AOJu0YxtC6RAkvq2HZOQclnIp4NsezkX4TyAlr0BJHV3dTLProlxGSkp
+	DImcj38XFzAD4C09XX9JphJPbcHyuyKf
+X-Google-Smtp-Source: AGHT+IGhImc8PbN/vWcavGImLPGZXQdTvZdXtvmCdIUpNxNwttCsJ6N6F0SIJP7ks90b81FODbM1hHEu9GRM
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bb34:df9c:836c:afca])
+ (user=irogers job=sendgmr) by 2002:a0d:ea95:0:b0:5a7:b575:49c3 with SMTP id
+ t143-20020a0dea95000000b005a7b57549c3mr8687ywe.4.1698947878251; Thu, 02 Nov
+ 2023 10:57:58 -0700 (PDT)
+Date: Thu,  2 Nov 2023 10:56:43 -0700
+In-Reply-To: <20231102175735.2272696-1-irogers@google.com>
+Message-Id: <20231102175735.2272696-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20231102175735.2272696-1-irogers@google.com>
+X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
+Subject: [PATCH v4 01/53] perf comm: Use regular mutex
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
+	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
+	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
+	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The current use of atomics can lead to test failures, as tests (such as
-tests/shell/record.sh) search for samples with "test_loop" as the
-top-most stack frame, but find frames related to the atomic operation
-(e.g. __aarch64_ldadd4_relax).
+The rwsem is only after used for writing so switch to a mutex that has
+better error checking.
 
-This change simply removes the "count" variable, as it is not necessary.
-
-Fixes: 1962ab6f6e0b ("perf test workload thloop: Make count increments atomic")
-Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+Fixes: 7a8f349e9d14 ("perf rwsem: Add debug mode that uses a mutex")
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/workloads/thloop.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tools/perf/util/comm.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
-index af05269c2eb8..457b29f91c3e 100644
---- a/tools/perf/tests/workloads/thloop.c
-+++ b/tools/perf/tests/workloads/thloop.c
-@@ -7,7 +7,6 @@
- #include "../tests.h"
+diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+index afb8d4fd2644..4ae7bc2aa9a6 100644
+--- a/tools/perf/util/comm.c
++++ b/tools/perf/util/comm.c
+@@ -17,7 +17,7 @@ struct comm_str {
  
- static volatile sig_atomic_t done;
--static volatile unsigned count;
+ /* Should perhaps be moved to struct machine */
+ static struct rb_root comm_str_root;
+-static struct rw_semaphore comm_str_lock = {.lock = PTHREAD_RWLOCK_INITIALIZER,};
++static struct mutex comm_str_lock = {.lock = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP,};
  
- /* We want to check this symbol in perf report */
- noinline void test_loop(void);
-@@ -19,8 +18,7 @@ static void sighandler(int sig __maybe_unused)
- 
- noinline void test_loop(void)
+ static struct comm_str *comm_str__get(struct comm_str *cs)
  {
--	while (!done)
--		__atomic_fetch_add(&count, 1, __ATOMIC_RELAXED);
-+	while (!done);
- }
+@@ -30,9 +30,9 @@ static struct comm_str *comm_str__get(struct comm_str *cs)
+ static void comm_str__put(struct comm_str *cs)
+ {
+ 	if (cs && refcount_dec_and_test(&cs->refcnt)) {
+-		down_write(&comm_str_lock);
++		mutex_lock(&comm_str_lock);
+ 		rb_erase(&cs->rb_node, &comm_str_root);
+-		up_write(&comm_str_lock);
++		mutex_unlock(&comm_str_lock);
+ 		zfree(&cs->str);
+ 		free(cs);
+ 	}
+@@ -98,9 +98,9 @@ static struct comm_str *comm_str__findnew(const char *str, struct rb_root *root)
+ {
+ 	struct comm_str *cs;
  
- static void *thfunc(void *arg)
+-	down_write(&comm_str_lock);
++	mutex_lock(&comm_str_lock);
+ 	cs = __comm_str__findnew(str, root);
+-	up_write(&comm_str_lock);
++	mutex_unlock(&comm_str_lock);
+ 
+ 	return cs;
+ }
 -- 
-2.42.0
+2.42.0.869.gea05f2083d-goog
 
