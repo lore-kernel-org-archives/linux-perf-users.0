@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86309210F5
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCAC20B3D
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:02:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xP6I2j1k"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC75F2103
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:35 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5afa86b8d66so16530037b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gzGiV9oH"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5A626A5
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:49 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-da39d244087so1504759276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698947975; x=1699552775; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698947988; x=1699552788; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YYGdo15y2jW5NBV57rBqS7hVRUDLmlDHwihGlduFalw=;
-        b=xP6I2j1kTLptZwC3Qge5qr3AZNq38fjpXKvj3f8l/vJXlCnQY2WWFwI9rWjYifsGSI
-         G3tKrqnKvN5IeWR8NISiVyHsxSh1srdGZVK5gvKpAArW3cmKOYX6VH42sSe9NiKQWjRG
-         zLDc/hnBuKocTqGDrh6tw5HAkdn3NuDxi5G6eGe9Foo83QEc+PRM5U2InwcAo7fouAuX
-         cc3E8AzAGOPAxRap5tRbgGZ8h/VZYyOHIWUSEVaapfjfYEUffFsT5Atifs6gzkr61tJU
-         l8iNa6pRVhTiwy7yf2IHZy5KA66YZ1N1DpcR5Gtt1Avx8UZw2A11ZZM2xCzrB1N5+boo
-         EhuA==
+        bh=D7T69bsAUNRjcM3qmyt9J8wOUEZXUtACXk4aBD8XhGs=;
+        b=gzGiV9oHebdm3n2Yr9GnfEx3osID6i9Kt3ONaGv6Pc/RCO9mktruKT9X9wzTwFWwCo
+         kqIEZ7/EsHsgVuHM0iVacE8MIAzB5ssOuDGqr7JN1ALOPnRWKZct+dNBTVy+81xUElM5
+         Oi7K0EfeoiAzSZnLOO60qeZVvGr1kQQ029+ErDgXfZKQ1qHZ0VpZG7aGmidYHHF+93KS
+         cJZrUwd51CE7AN0NYSEx+rjt5eMQPGXA+p3AnbGVLy36CDBSQtu/YOafp7t9sLO74cB4
+         4is/qP4otDRjkVA7wbgUYJFOtQ5Fy6lvmkX+mnnYyHEXxegCQIuxFtNgvFLD9q73Gsc4
+         EdDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698947975; x=1699552775;
+        d=1e100.net; s=20230601; t=1698947988; x=1699552788;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YYGdo15y2jW5NBV57rBqS7hVRUDLmlDHwihGlduFalw=;
-        b=hD+ZLcXeGlzm5xekVjZOUgc/rfMsJAi9eP6nZZ6HDnlW2sAAEIMUg3WTphX3dYLdfL
-         Z27wvfWRmTUi7Adp7J+OhXzxgmtUuOPHKAKnWVW6ff5Dswf4xtVNFeHTFWVEijUfUwCw
-         +cCWYZjZs07Jj6KzJ+mGALtMN4zeeU908zMfs3zSzpGtbGptiSzViodRx8bEsRkk5aKg
-         gJHhZs3Sv5v2wNrqn74lGFgbWME7Kl1M1/QiAo4gOsy6YdQBTS/v2IEQU/ukVnR9JZ4w
-         NNGJatpmjW9CaaumnX9GdI9WQjZWkStHZD6qOvEzeeQSaQBh4LSPQmo3FMJ6T1dSoExt
-         wDLw==
-X-Gm-Message-State: AOJu0Yxbm64CULglDoUMrK4zIisT13ccClEOwv+ps/efdxY31tBGPTyI
-	NnEpPsusEaPl7yeNMymakUzELhdhbWHc
-X-Google-Smtp-Source: AGHT+IFj4++1JS0ntMsYdZbCBbLZ8VcwmuWdU7VHrc50yUl2bmYpdvtrum7MQlU7VOaRpfCYcL+vZZGDcWP+
+        bh=D7T69bsAUNRjcM3qmyt9J8wOUEZXUtACXk4aBD8XhGs=;
+        b=vCSkGZxEEYYxr1rSLYlNpprN/c1PWqq2QTRj40zdl9EDn4FKeHZK+EG1GCbPUlZmn5
+         Pe6kGnuY8Y8XCYvwgnC2JZ5qNEAIpEgXjTVdiLevznuMSObcCIV1q4Rtcd8OWJB4v72r
+         Eghwb7ul+e/E/CsuwVVnyMHy1Wm4u37ccSfj7jXiiDJaKOasvteMgyBsMbxxGc2HcbtA
+         IfTK1mA7CJIl8YWpXExDwnQ+SAy5jPPjAuqaZUaWGYamRpgzcMR/9k1oPJOOAknXbsAE
+         ASNjzQoY8d7WndRJM+F72aj0uGGJx+AB1Ej+naVicHO28vaIpLgzGj/ghpeJ5VUQ580l
+         i0ww==
+X-Gm-Message-State: AOJu0YwbdsI6yNb4cqW7y9HKmxhLAlURch5CbIUDCSvOtGzwGodFbmZI
+	OiRPnWAMie4KiVwVEM+CwY9Pd/xEbFtn
+X-Google-Smtp-Source: AGHT+IEyoDJPW1kqDnah2e0Y3xfDQZ5keGT2SWBKBH0TFnLXQMxLoRqOXhWOV08bsD+3jOuDMHyDxGnhFx4R
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bb34:df9c:836c:afca])
- (user=irogers job=sendgmr) by 2002:a81:6d8a:0:b0:5a1:d0cf:b65d with SMTP id
- i132-20020a816d8a000000b005a1d0cfb65dmr8475ywc.5.1698947974891; Thu, 02 Nov
- 2023 10:59:34 -0700 (PDT)
-Date: Thu,  2 Nov 2023 10:57:25 -0700
+ (user=irogers job=sendgmr) by 2002:a25:84d1:0:b0:da0:cbe9:6bb5 with SMTP id
+ x17-20020a2584d1000000b00da0cbe96bb5mr382618ybm.11.1698947988239; Thu, 02 Nov
+ 2023 10:59:48 -0700 (PDT)
+Date: Thu,  2 Nov 2023 10:57:31 -0700
 In-Reply-To: <20231102175735.2272696-1-irogers@google.com>
-Message-Id: <20231102175735.2272696-44-irogers@google.com>
+Message-Id: <20231102175735.2272696-50-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231102175735.2272696-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
-Subject: [PATCH v4 43/53] perf dsos: Add dsos__for_each_dso
+Subject: [PATCH v4 49/53] perf dsos: Switch hand code to bsearch
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -72,268 +72,99 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-To better abstract the dsos internals, add dsos__for_each_dso that
-does a callback on each dso. This also means the read lock can be
-correctly held.
+Switch to using the bsearch library function rather than having a hand
+written binary search. Const-ify some static functions to avoid
+compiler warnings.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c | 25 +++++++-----
- tools/perf/util/build-id.c  | 76 ++++++++++++++++++++-----------------
- tools/perf/util/dsos.c      | 16 ++++++++
- tools/perf/util/dsos.h      |  8 +---
- tools/perf/util/machine.c   | 40 +++++++++++--------
- 5 files changed, 100 insertions(+), 65 deletions(-)
+ tools/perf/util/dsos.c | 46 +++++++++++++++++++++++++-----------------
+ 1 file changed, 27 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index ef73317e6ae7..ce5e28eaad90 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -1187,23 +1187,28 @@ static int synthesize_build_id(struct perf_inject *inject, struct dso *dso, pid_
- 					       process_build_id, machine);
- }
- 
-+static int guest_session__add_build_ids_cb(struct dso *dso, void *data)
-+{
-+	struct guest_session *gs = data;
-+	struct perf_inject *inject = container_of(gs, struct perf_inject, guest_session);
-+
-+	if (!dso->has_build_id)
-+		return 0;
-+
-+	return synthesize_build_id(inject, dso, gs->machine_pid);
-+
-+}
-+
- static int guest_session__add_build_ids(struct guest_session *gs)
- {
- 	struct perf_inject *inject = container_of(gs, struct perf_inject, guest_session);
--	struct machine *machine = &gs->session->machines.host;
--	struct dso *dso;
--	int ret;
- 
- 	/* Build IDs will be put in the Build ID feature section */
- 	perf_header__set_feat(&inject->session->header, HEADER_BUILD_ID);
- 
--	dsos__for_each_with_build_id(dso, &machine->dsos.head) {
--		ret = synthesize_build_id(inject, dso, gs->machine_pid);
--		if (ret)
--			return ret;
--	}
--
--	return 0;
-+	return dsos__for_each_dso(&gs->session->machines.host.dsos,
-+				  guest_session__add_build_ids_cb,
-+				  gs);
- }
- 
- static int guest_session__ksymbol_event(struct perf_tool *tool,
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index a617b1917e6b..a6d3c253f19f 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -327,48 +327,56 @@ static int write_buildid(const char *name, size_t name_len, struct build_id *bid
- 	return write_padded(fd, name, name_len + 1, len);
- }
- 
--static int machine__write_buildid_table(struct machine *machine,
--					struct feat_fd *fd)
-+struct machine__write_buildid_table_cb_args {
-+	struct machine *machine;
-+	struct feat_fd *fd;
-+	u16 kmisc, umisc;
-+};
-+
-+static int machine__write_buildid_table_cb(struct dso *dso, void *data)
- {
--	int err = 0;
--	struct dso *pos;
--	u16 kmisc = PERF_RECORD_MISC_KERNEL,
--	    umisc = PERF_RECORD_MISC_USER;
-+	struct machine__write_buildid_table_cb_args *args = data;
-+	const char *name;
-+	size_t name_len;
-+	bool in_kernel = false;
- 
--	if (!machine__is_host(machine)) {
--		kmisc = PERF_RECORD_MISC_GUEST_KERNEL;
--		umisc = PERF_RECORD_MISC_GUEST_USER;
--	}
-+	if (!dso->has_build_id)
-+		return 0;
- 
--	dsos__for_each_with_build_id(pos, &machine->dsos.head) {
--		const char *name;
--		size_t name_len;
--		bool in_kernel = false;
-+	if (!dso->hit && !dso__is_vdso(dso))
-+		return 0;
- 
--		if (!pos->hit && !dso__is_vdso(pos))
--			continue;
-+	if (dso__is_vdso(dso)) {
-+		name = dso->short_name;
-+		name_len = dso->short_name_len;
-+	} else if (dso__is_kcore(dso)) {
-+		name = args->machine->mmap_name;
-+		name_len = strlen(name);
-+	} else {
-+		name = dso->long_name;
-+		name_len = dso->long_name_len;
-+	}
- 
--		if (dso__is_vdso(pos)) {
--			name = pos->short_name;
--			name_len = pos->short_name_len;
--		} else if (dso__is_kcore(pos)) {
--			name = machine->mmap_name;
--			name_len = strlen(name);
--		} else {
--			name = pos->long_name;
--			name_len = pos->long_name_len;
--		}
-+	in_kernel = dso->kernel || is_kernel_module(name, PERF_RECORD_MISC_CPUMODE_UNKNOWN);
-+	return write_buildid(name, name_len, &dso->bid, args->machine->pid,
-+			     in_kernel ? args->kmisc : args->umisc, args->fd);
-+}
- 
--		in_kernel = pos->kernel ||
--				is_kernel_module(name,
--					PERF_RECORD_MISC_CPUMODE_UNKNOWN);
--		err = write_buildid(name, name_len, &pos->bid, machine->pid,
--				    in_kernel ? kmisc : umisc, fd);
--		if (err)
--			break;
-+static int machine__write_buildid_table(struct machine *machine, struct feat_fd *fd)
-+{
-+	struct machine__write_buildid_table_cb_args args = {
-+		.machine = machine,
-+		.fd = fd,
-+		.kmisc = PERF_RECORD_MISC_KERNEL,
-+		.umisc = PERF_RECORD_MISC_USER,
-+	};
-+
-+	if (!machine__is_host(machine)) {
-+		args.kmisc = PERF_RECORD_MISC_GUEST_KERNEL;
-+		args.umisc = PERF_RECORD_MISC_GUEST_USER;
- 	}
- 
--	return err;
-+	return dsos__for_each_dso(&machine->dsos, machine__write_buildid_table_cb, &args);
- }
- 
- int perf_session__write_buildid_table(struct perf_session *session,
 diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index d269e09005a7..d43f64939b12 100644
+index e4110438841b..23c3fe4f2abb 100644
 --- a/tools/perf/util/dsos.c
 +++ b/tools/perf/util/dsos.c
-@@ -433,3 +433,19 @@ struct dso *dsos__find_kernel_dso(struct dsos *dsos)
- 	up_read(&dsos->lock);
- 	return res;
- }
-+
-+int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data), void *data)
-+{
-+	struct dso *dso;
-+
-+	down_read(&dsos->lock);
-+	list_for_each_entry(dso, &dsos->head, node) {
-+		int err;
-+
-+		err = cb(dso, data);
-+		if (err)
-+			return err;
-+	}
-+	up_read(&dsos->lock);
-+	return 0;
-+}
-diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
-index a7c7f723c5ff..317a263f0e37 100644
---- a/tools/perf/util/dsos.h
-+++ b/tools/perf/util/dsos.h
-@@ -23,12 +23,6 @@ struct dsos {
- 	struct rw_semaphore lock;
- };
- 
--#define dsos__for_each_with_build_id(pos, head)	\
--	list_for_each_entry(pos, head, node)	\
--		if (!pos->has_build_id)		\
--			continue;		\
--		else
--
- void dsos__init(struct dsos *dsos);
- void dsos__exit(struct dsos *dsos);
- 
-@@ -55,4 +49,6 @@ struct dso *dsos__findnew_module_dso(struct dsos *dsos, struct machine *machine,
- 
- struct dso *dsos__find_kernel_dso(struct dsos *dsos);
- 
-+int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data), void *data);
-+
- #endif /* __PERF_DSOS */
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 06026a1b2d1a..6505f8c2cecc 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1558,16 +1558,14 @@ int machine__create_kernel_maps(struct machine *machine)
- 	return ret;
+@@ -107,13 +107,15 @@ bool dsos__read_build_ids(struct dsos *dsos, bool with_hits)
+ 	return args.have_build_id;
  }
  
--static bool machine__uses_kcore(struct machine *machine)
-+static int machine__uses_kcore_cb(struct dso *dso, void *data __maybe_unused)
+-static int __dso__cmp_long_name(const char *long_name, struct dso_id *id, struct dso *b)
++static int __dso__cmp_long_name(const char *long_name, const struct dso_id *id,
++				const struct dso *b)
  {
--	struct dso *dso;
--
--	list_for_each_entry(dso, &machine->dsos.head, node) {
--		if (dso__is_kcore(dso))
--			return true;
--	}
-+	return dso__is_kcore(dso) ? 1 : 0;
-+}
- 
--	return false;
-+static bool machine__uses_kcore(struct machine *machine)
-+{
-+	return dsos__for_each_dso(&machine->dsos, machine__uses_kcore_cb, NULL) != 0 ? true : false;
+ 	int rc = strcmp(long_name, b->long_name);
+ 	return rc ?: dso_id__cmp(id, &b->id);
  }
  
- static bool perf_event__is_extra_kernel_mmap(struct machine *machine,
-@@ -3133,16 +3131,28 @@ char *machine__resolve_kernel_addr(void *vmachine, unsigned long long *addrp, ch
- 	return sym->name;
+-static int __dso__cmp_short_name(const char *short_name, struct dso_id *id, struct dso *b)
++static int __dso__cmp_short_name(const char *short_name, const struct dso_id *id,
++				 const struct dso *b)
+ {
+ 	int rc = strcmp(short_name, b->short_name);
+ 	return rc ?: dso_id__cmp(id, &b->id);
+@@ -133,6 +135,19 @@ static int dsos__cmp_long_name_id_short_name(const void *va, const void *vb)
+ 	return rc;
  }
  
-+struct machine__for_each_dso_cb_args {
-+	struct machine *machine;
-+	machine__dso_t fn;
-+	void *priv;
++struct dsos__key {
++	const char *long_name;
++	const struct dso_id *id;
 +};
 +
-+static int machine__for_each_dso_cb(struct dso *dso, void *data)
++static int dsos__cmp_key_long_name_id(const void *vkey, const void *vdso)
 +{
-+	struct machine__for_each_dso_cb_args *args = data;
++	const struct dsos__key *key = vkey;
++	const struct dso *dso = *((const struct dso **)vdso);
 +
-+	return args->fn(dso, args->machine, args->priv);
++	return __dso__cmp_long_name(key->long_name, key->id, dso);
 +}
 +
- int machine__for_each_dso(struct machine *machine, machine__dso_t fn, void *priv)
+ /*
+  * Find a matching entry and/or link current entry to RB tree.
+  * Either one of the dso or name parameter must be non-NULL or the
+@@ -143,7 +158,11 @@ static struct dso *__dsos__find_by_longname_id(struct dsos *dsos,
+ 					       struct dso_id *id,
+ 					       bool write_locked)
  {
--	struct dso *pos;
--	int err = 0;
-+	struct machine__for_each_dso_cb_args args = {
-+		.machine = machine,
-+		.fn = fn,
-+		.priv = priv,
+-	int low = 0, high = dsos->cnt - 1;
++	struct dsos__key key = {
++		.long_name = name,
++		.id = id,
 +	};
++	struct dso **res;
  
--	list_for_each_entry(pos, &machine->dsos.head, node) {
--		if (fn(pos, machine, priv))
--			err = -1;
+ 	if (!dsos->sorted) {
+ 		if (!write_locked) {
+@@ -162,23 +181,12 @@ static struct dso *__dsos__find_by_longname_id(struct dsos *dsos,
+ 		dsos->sorted = true;
+ 	}
+ 
+-	/*
+-	 * Find node with the matching name
+-	 */
+-	while (low <= high) {
+-		int mid = (low + high) / 2;
+-		struct dso *this = dsos->dsos[mid];
+-		int rc = __dso__cmp_long_name(name, id, this);
++	res = bsearch(&key, dsos->dsos, dsos->cnt, sizeof(struct dso *),
++		      dsos__cmp_key_long_name_id);
++	if (!res)
++		return NULL;
+ 
+-		if (rc == 0) {
+-			return dso__get(this);	/* Find matching dso */
+-		}
+-		if (rc < 0)
+-			high = mid - 1;
+-		else
+-			low = mid + 1;
 -	}
--	return err;
-+	return dsos__for_each_dso(&machine->dsos, machine__for_each_dso_cb, &args);
+-	return NULL;
++	return dso__get(*res);
  }
  
- int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, void *priv)
+ int __dsos__add(struct dsos *dsos, struct dso *dso)
 -- 
 2.42.0.869.gea05f2083d-goog
 
