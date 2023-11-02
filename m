@@ -1,224 +1,224 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731821CF8C
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 23:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D081DDCE
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 23:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ktDwKlH7"
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D00196
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 16:01:01 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-408c6ec1fd1so14065e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 16:01:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ardE/e/O"
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5F4191;
+	Thu,  2 Nov 2023 16:40:15 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-6b1e46ca282so1612356b3a.2;
+        Thu, 02 Nov 2023 16:40:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698966059; x=1699570859; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5a/GtAxkpRNkq4Wv7MJVvEI6nRPwiDosiVmVdshmOnc=;
-        b=ktDwKlH7HwLUbYAcJ4yuPUgk40Jpo6xHf+DpqGBHRZD67wXFN+sz7PyTRjBEDuQUQl
-         lvC/94kRrn44ZJ2bHaRB6aPUZl5vtaAJOlkPl8i1C9KIJ5sU+LLTH2yKFdTowh69SiyM
-         cfqRtwUT2EyqFY6ZcTE4LYvnrijktoE7T8X97JQsY9n3sGZZkjXOvvV93knqb7vKBqrg
-         AxoqId6egHe1pSB0/c37TMxEDvIQpZSuURd6S38f//Ghs3qYhowjW8VePNK+MllAEofK
-         NHZKA+fw1zdtWjj/uJydm70+tleVBDgjD82fl8QkrMVFWqH0BhTY9qRbzHVuJBmsC0mH
-         D6IA==
+        d=gmail.com; s=20230601; t=1698968415; x=1699573215; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=nwx33ziTZV4oUTDb3pCxYB5gse6/L8kFAcjyGJ3wPjU=;
+        b=ardE/e/OFV1WVFlgbsyEk9GhQwbAaJNkEvpDjOTNdlItw7+NYESIYN3Vn17Cloj2k4
+         cPmFj8wN9jveXutC5MFUtmUyJSFm8JvoEfoCaD+6pDN7YT8GWsysXFvlKzDCCGdPhCSl
+         tfrTiODYbaSi3Ro6R9AX/xmmRshyH8PZJl2NrDkDzEP44YLkvaE2yt1JBeX+ogX4Wk/Y
+         rjYSCJdLKrcPJHSNEEw/PUi7QxiLqkHaS++nSbkeojENcXzdOoXduw3Jtq8AAcqtEBfe
+         fwNV0eNdpbvklD7pEojClnt5DsB6plw3VdsAGNB8m7ikCiQkYVT8ujczEqD0yZvPmK6v
+         LTAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698966059; x=1699570859;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5a/GtAxkpRNkq4Wv7MJVvEI6nRPwiDosiVmVdshmOnc=;
-        b=AjvAhzr66v2whzY6NHo17oSjjgnSaGPRZZqXEnhV9JLyaZxSJp6i5GieWVAACm+wYm
-         FhHgKyGAbzCHExJyNfmJ8m+MBj69FbDitdF3W+6ecEkx18/Q0wcS0pOo23WZIBuIi4hL
-         dowSofEKU8k2w4j+5GclgHSm1jtNmMnte//H6P591COeGFxpfeJTGWHBPTQq7shpcUdw
-         0akVw1EEH8gXVL0EKOdE/0lX+1+bqd0uKPnNIa+yn+Qne8KwlaB7JHezPvUBEflNlGJZ
-         gL4qRvinxXHqZbWaOBFeJTeswy5EE+17jvN+Mq4vn9MjqhbD0eDUGcMoMdOMNwaka7H4
-         1MjQ==
-X-Gm-Message-State: AOJu0YwebLXH90AKzAmKOuetfRecMt7D7349NxcQ4Ni+biGFiiIxghnl
-	TZCe/fA658n1Kql6MZitSF2IdDKjz4ot3cVsz5gCAaMv4zGUwufQmsikilRm
-X-Google-Smtp-Source: AGHT+IEXIuOBWHFSzhoMqHUnGKDi/rq+VfG5udY5nxPoxuaWx0asotg3PeW2O87+Hzn8PGhwnELjulSOC7/NY+uwmg4=
-X-Received: by 2002:a05:600c:43c5:b0:405:35bf:7362 with SMTP id
- f5-20020a05600c43c500b0040535bf7362mr128127wmn.0.1698966059275; Thu, 02 Nov
- 2023 16:00:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698968415; x=1699573215;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nwx33ziTZV4oUTDb3pCxYB5gse6/L8kFAcjyGJ3wPjU=;
+        b=OPEl1va01NKi7Lj1xTYUeU0BH4r7G9eXiuH9/gWioXvceab81gA8FNYjSK4hi4+h97
+         bGEtozcf3YibqW/3EK0Oh+sKWq9eCHN7IVgbTzEGBwZyv6iCyQT7Bsg434o/snUrZaIM
+         zre31VgRmXa3mC6L6g3gs7qgHAyOu8gJs+jW15650cKrVRiOIjNADjPpmmfzLNLCxKwA
+         GByUQDs3axuNhLUJ+eXQxMGzIAqvfYEGsPinuR5XsGXnKbGZQhTgez5QPb6POVJDEn5v
+         wxZDL4bOG0PfQ/nICzTAXDUA3VZCFhcydLg5T34C2MtSwHsxjEjyirxOi6DhA2hGRMFo
+         FR0A==
+X-Gm-Message-State: AOJu0YznBYFQBZ0cfM0AfvZq7wVZvEu12jAOTj4kpbe/UYc5t4E76K0s
+	Av9uKz+gX4hSTz4stdKNLAg=
+X-Google-Smtp-Source: AGHT+IFRS21vfiNTeBTx4JqrE7f8vfAvs3pKAEuVgNnJ8sC6kaivycMOu4gEyZ/kviWnLj7RWvebeg==
+X-Received: by 2002:a05:6a21:35c2:b0:181:219f:4a76 with SMTP id ba2-20020a056a2135c200b00181219f4a76mr8749304pzc.38.1698968414935;
+        Thu, 02 Nov 2023 16:40:14 -0700 (PDT)
+Received: from bangji.corp.google.com ([2620:15c:2c0:5:ea22:bed1:d67b:af04])
+        by smtp.gmail.com with ESMTPSA id 184-20020a6308c1000000b005bd2b3a03eesm266410pgi.6.2023.11.02.16.40.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Nov 2023 16:40:14 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Simplify object code reading test
+Date: Thu,  2 Nov 2023 16:40:13 -0700
+Message-ID: <20231102234013.4188687-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231102222653.4165959-1-namhyung@kernel.org> <20231102222653.4165959-6-namhyung@kernel.org>
-In-Reply-To: <20231102222653.4165959-6-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 Nov 2023 16:00:47 -0700
-Message-ID: <CAP-5=fX_unZUBAjrVSM=4w5u9T0r_ewv1RC=xKgpWFhu919yXQ@mail.gmail.com>
-Subject: Re: [PATCH 5/5] perf annotate: Move offsets to annotated_source
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 2, 2023 at 3:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> The offsets array keeps pointers to struct annotation_line which is
-> available in the annotated_source.  Let's move it to there.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+It tries cycles (or cpu-clock on s390) event with exclude_kernel bit to
+open.  But other arch on a VM can fail with the hardware event and need
+to fallback to the software event in the same way.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+So let's get rid of the cpuid check and use generic fallback mechanism
+using an array of event candidates.  Now event in the odd index excludes
+the kernel so use that for the return value.
 
-Thanks,
-Ian
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/code-reading.c | 76 ++++++++++-----------------------
+ 1 file changed, 23 insertions(+), 53 deletions(-)
 
-> ---
->  tools/perf/ui/browsers/annotate.c |  4 ++--
->  tools/perf/util/annotate.c        | 18 +++++++++---------
->  tools/perf/util/annotate.h        |  2 +-
->  3 files changed, 12 insertions(+), 12 deletions(-)
->
-> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/a=
-nnotate.c
-> index 1b42db70c998..163f916fff68 100644
-> --- a/tools/perf/ui/browsers/annotate.c
-> +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -188,7 +188,7 @@ static void annotate_browser__draw_current_jump(struc=
-t ui_browser *browser)
->          *  name right after the '<' token and probably treating this lik=
-e a
->          *  'call' instruction.
->          */
-> -       target =3D notes->offsets[cursor->ops.target.offset];
-> +       target =3D notes->src->offsets[cursor->ops.target.offset];
->         if (target =3D=3D NULL) {
->                 ui_helpline__printf("WARN: jump target inconsistency, pre=
-ss 'o', notes->offsets[%#x] =3D NULL\n",
->                                     cursor->ops.target.offset);
-> @@ -1006,6 +1006,6 @@ int symbol__tui_annotate(struct map_symbol *ms, str=
-uct evsel *evsel,
->
->  out_free_offsets:
->         if(not_annotated)
-> -               zfree(&notes->offsets);
-> +               zfree(&notes->src->offsets);
->         return ret;
->  }
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index ee7b8e1848a8..8ab2e1cf63ea 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -1075,7 +1075,7 @@ static unsigned annotation__count_insn(struct annot=
-ation *notes, u64 start, u64
->         u64 offset;
->
->         for (offset =3D start; offset <=3D end; offset++) {
-> -               if (notes->offsets[offset])
-> +               if (notes->src->offsets[offset])
->                         n_insn++;
->         }
->         return n_insn;
-> @@ -1105,7 +1105,7 @@ static void annotation__count_and_fill(struct annot=
-ation *notes, u64 start, u64
->                         return;
->
->                 for (offset =3D start; offset <=3D end; offset++) {
-> -                       struct annotation_line *al =3D notes->offsets[off=
-set];
-> +                       struct annotation_line *al =3D notes->src->offset=
-s[offset];
->
->                         if (al && al->cycles && al->cycles->ipc =3D=3D 0.=
-0) {
->                                 al->cycles->ipc =3D ipc;
-> @@ -1142,7 +1142,7 @@ void annotation__compute_ipc(struct annotation *not=
-es, size_t size)
->                 if (ch && ch->cycles) {
->                         struct annotation_line *al;
->
-> -                       al =3D notes->offsets[offset];
-> +                       al =3D notes->src->offsets[offset];
->                         if (al && al->cycles =3D=3D NULL) {
->                                 al->cycles =3D zalloc(sizeof(*al->cycles)=
-);
->                                 if (al->cycles =3D=3D NULL)
-> @@ -2783,7 +2783,7 @@ void annotation__mark_jump_targets(struct annotatio=
-n *notes, struct symbol *sym)
->                 return;
->
->         for (offset =3D 0; offset < size; ++offset) {
-> -               struct annotation_line *al =3D notes->offsets[offset];
-> +               struct annotation_line *al =3D notes->src->offsets[offset=
-];
->                 struct disasm_line *dl;
->
->                 dl =3D disasm_line(al);
-> @@ -2791,7 +2791,7 @@ void annotation__mark_jump_targets(struct annotatio=
-n *notes, struct symbol *sym)
->                 if (!disasm_line__is_valid_local_jump(dl, sym))
->                         continue;
->
-> -               al =3D notes->offsets[dl->ops.target.offset];
-> +               al =3D notes->src->offsets[dl->ops.target.offset];
->
->                 /*
->                  * FIXME: Oops, no jump target? Buggy disassembler? Or do=
- we
-> @@ -2830,7 +2830,7 @@ void annotation__set_offsets(struct annotation *not=
-es, s64 size)
->                          * E.g. copy_user_generic_unrolled
->                          */
->                         if (al->offset < size)
-> -                               notes->offsets[al->offset] =3D al;
-> +                               notes->src->offsets[al->offset] =3D al;
->                 } else
->                         al->idx_asm =3D -1;
->         }
-> @@ -3263,8 +3263,8 @@ int symbol__annotate2(struct map_symbol *ms, struct=
- evsel *evsel,
->         size_t size =3D symbol__size(sym);
->         int nr_pcnt =3D 1, err;
->
-> -       notes->offsets =3D zalloc(size * sizeof(struct annotation_line *)=
-);
-> -       if (notes->offsets =3D=3D NULL)
-> +       notes->src->offsets =3D zalloc(size * sizeof(struct annotation_li=
-ne *));
-> +       if (notes->src->offsets =3D=3D NULL)
->                 return ENOMEM;
->
->         if (evsel__is_group_event(evsel))
-> @@ -3290,7 +3290,7 @@ int symbol__annotate2(struct map_symbol *ms, struct=
- evsel *evsel,
->         return 0;
->
->  out_free_offsets:
-> -       zfree(&notes->offsets);
-> +       zfree(&notes->src->offsets);
->         return err;
->  }
->
-> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> index c51ceb857bd6..44af7e71a204 100644
-> --- a/tools/perf/util/annotate.h
-> +++ b/tools/perf/util/annotate.h
-> @@ -272,6 +272,7 @@ struct annotated_source {
->         int                     nr_histograms;
->         size_t                  sizeof_sym_hist;
->         struct sym_hist         *histograms;
-> +       struct annotation_line  **offsets;
->         int                     nr_entries;
->         int                     nr_asm_entries;
->         u16                     max_line_len;
-> @@ -289,7 +290,6 @@ struct annotated_branch {
->  struct LOCKABLE annotation {
->         u64                     start;
->         struct annotation_options *options;
-> -       struct annotation_line  **offsets;
->         int                     nr_events;
->         int                     max_jump_sources;
->         struct {
-> --
-> 2.42.0.869.gea05f2083d-goog
->
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index 3af81012014e..047ba297c6fa 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -511,38 +511,6 @@ static void fs_something(void)
+ 	}
+ }
+ 
+-#ifdef __s390x__
+-#include "header.h" // for get_cpuid()
+-#endif
+-
+-static const char *do_determine_event(bool excl_kernel)
+-{
+-	const char *event = excl_kernel ? "cycles:u" : "cycles";
+-
+-#ifdef __s390x__
+-	char cpuid[128], model[16], model_c[16], cpum_cf_v[16];
+-	unsigned int family;
+-	int ret, cpum_cf_a;
+-
+-	if (get_cpuid(cpuid, sizeof(cpuid)))
+-		goto out_clocks;
+-	ret = sscanf(cpuid, "%*[^,],%u,%[^,],%[^,],%[^,],%x", &family, model_c,
+-		     model, cpum_cf_v, &cpum_cf_a);
+-	if (ret != 5)		 /* Not available */
+-		goto out_clocks;
+-	if (excl_kernel && (cpum_cf_a & 4))
+-		return event;
+-	if (!excl_kernel && (cpum_cf_a & 2))
+-		return event;
+-
+-	/* Fall through: missing authorization */
+-out_clocks:
+-	event = excl_kernel ? "cpu-clock:u" : "cpu-clock";
+-
+-#endif
+-	return event;
+-}
+-
+ static void do_something(void)
+ {
+ 	fs_something();
+@@ -583,8 +551,10 @@ static int do_test_code_reading(bool try_kcore)
+ 	int err = -1, ret;
+ 	pid_t pid;
+ 	struct map *map;
+-	bool have_vmlinux, have_kcore, excl_kernel = false;
++	bool have_vmlinux, have_kcore;
+ 	struct dso *dso;
++	const char *events[] = { "cycles", "cycles:u", "cpu-clock", "cpu-clock:u", NULL };
++	int evidx = 0;
+ 
+ 	pid = getpid();
+ 
+@@ -618,7 +588,7 @@ static int do_test_code_reading(bool try_kcore)
+ 
+ 	/* No point getting kernel events if there is no kernel object */
+ 	if (!have_vmlinux && !have_kcore)
+-		excl_kernel = true;
++		evidx++;
+ 
+ 	threads = thread_map__new_by_tid(pid);
+ 	if (!threads) {
+@@ -646,7 +616,7 @@ static int do_test_code_reading(bool try_kcore)
+ 		goto out_put;
+ 	}
+ 
+-	while (1) {
++	while (events[evidx]) {
+ 		const char *str;
+ 
+ 		evlist = evlist__new();
+@@ -657,7 +627,7 @@ static int do_test_code_reading(bool try_kcore)
+ 
+ 		perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+-		str = do_determine_event(excl_kernel);
++		str = events[evidx];
+ 		pr_debug("Parsing event '%s'\n", str);
+ 		ret = parse_event(evlist, str);
+ 		if (ret < 0) {
+@@ -675,32 +645,32 @@ static int do_test_code_reading(bool try_kcore)
+ 
+ 		ret = evlist__open(evlist);
+ 		if (ret < 0) {
+-			if (!excl_kernel) {
+-				excl_kernel = true;
+-				/*
+-				 * Both cpus and threads are now owned by evlist
+-				 * and will be freed by following perf_evlist__set_maps
+-				 * call. Getting reference to keep them alive.
+-				 */
+-				perf_cpu_map__get(cpus);
+-				perf_thread_map__get(threads);
+-				perf_evlist__set_maps(&evlist->core, NULL, NULL);
+-				evlist__delete(evlist);
+-				evlist = NULL;
+-				continue;
+-			}
++			evidx++;
+ 
+-			if (verbose > 0) {
++			if (events[evidx] == NULL && verbose > 0) {
+ 				char errbuf[512];
+ 				evlist__strerror_open(evlist, errno, errbuf, sizeof(errbuf));
+ 				pr_debug("perf_evlist__open() failed!\n%s\n", errbuf);
+ 			}
+ 
+-			goto out_put;
++			/*
++			 * Both cpus and threads are now owned by evlist
++			 * and will be freed by following perf_evlist__set_maps
++			 * call. Getting reference to keep them alive.
++			 */
++			perf_cpu_map__get(cpus);
++			perf_thread_map__get(threads);
++			perf_evlist__set_maps(&evlist->core, NULL, NULL);
++			evlist__delete(evlist);
++			evlist = NULL;
++			continue;
+ 		}
+ 		break;
+ 	}
+ 
++	if (events[evidx] == NULL)
++		goto out_put;
++
+ 	ret = evlist__mmap(evlist, UINT_MAX);
+ 	if (ret < 0) {
+ 		pr_debug("evlist__mmap failed\n");
+@@ -721,7 +691,7 @@ static int do_test_code_reading(bool try_kcore)
+ 		err = TEST_CODE_READING_NO_KERNEL_OBJ;
+ 	else if (!have_vmlinux && !try_kcore)
+ 		err = TEST_CODE_READING_NO_VMLINUX;
+-	else if (excl_kernel)
++	else if (evidx % 2)
+ 		err = TEST_CODE_READING_NO_ACCESS;
+ 	else
+ 		err = TEST_CODE_READING_OK;
+-- 
+2.42.0.869.gea05f2083d-goog
+
