@@ -1,201 +1,246 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12F52233A
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 22:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEB8219F1
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 22:53:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxI/K0eU"
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B26FD138;
-	Thu,  2 Nov 2023 15:27:01 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-5b9390d6bd3so2093584a12.0;
-        Thu, 02 Nov 2023 15:27:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1aANjZqi"
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8208B185
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 15:53:12 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-408c6ec1fd1so13625e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 15:53:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698964021; x=1699568821; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1698965591; x=1699570391; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2lcxJn56vYeVd7h+U3NtVdyMbKNFOVxA21AaKaNaS0g=;
-        b=fxI/K0eUfCjc8wkzZYneCznDqOtstoteIipECHHVnZKUulTGI82oAyKneWl6x48gr3
-         040F5jLfihojj35uYC1aezntDg/b25+CF7P+Uj9paXqVnFz45twwO8f9Q4cm36e8O2iP
-         V/8S1tbwDEShFIzMxSfNyTxiZf14wWX9W59VGuG0WXYcRpoIGyvthzAl08fMN3aCGyz0
-         xUuCW/uT0ZLateq5RNjw//blDAm7532HSlSz1GWWjhGG3n2gHX2ZpT9/X4MxnGXz8V/9
-         3lhLanMGU3RIWUVaybrDXeeC6fR2a1IAh1ilg0QcFoqghmQpu8RMj2t8OH/kwGNPGzN4
-         QjbQ==
+        bh=74mPwWD5M0b2kFU0MdNGIOkGXTx63ZGOAD5crEqHXGw=;
+        b=1aANjZqiJIU7SZl+PaEixZ1MaPwEgDedmsAee8vp6G7//h26IEW26OZes0aUBb8jrk
+         SBhdIJ2UjNBuCqIz2wYlrFB4OAR3Hc19k1I3zwv5PnCAk/8kJMpqwI8TXw6GcjB/pvTH
+         Qz6qT1NKT7D10ZXZfouFnAwFyy7hXFVm6s/mnavPYyYgyf24Z07FenzuL1ZX+EKzPjzQ
+         yIYanjlIhwbVBXaE3iakzoOtJmbvSczW4TG6XasMqMbeLvB/TEYjOZc2svNAdakFP8SQ
+         X8+JLSKjd6jfVdAvKjZFiyWw701eq/rQ7LvD271YpqgXABudQRBc3ffVgZbATOpnAYdp
+         h+Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698964021; x=1699568821;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2lcxJn56vYeVd7h+U3NtVdyMbKNFOVxA21AaKaNaS0g=;
-        b=wLGkI1tLYtylVHHgiEP6f+Ys7kT41eNLQsGgNkHB9C2ll8V+dXjYmdJx9taA3PTIoX
-         uM9E8DtnM/YqyMq8rYE+iM/K4A1JUnpG7gb9eGk5CFDN9BVKPXszxL7Qp2S6769YCd7h
-         VhopUX6NnsoI/ActtAcUmaCIM6Pb9/tZXeG0EVrdoAaTqpUGfgV/GTj8oIJy1lsMihPC
-         ar16Wi/5KaU+pFhKZguh+0HwixD/yqZJiycRqLMvgR67fCj3MsxYFL7FZPUAzjurCrQM
-         4DQUcCIvZDitje9ff/Vbk8bFGehSNFEjhd0xY/YMI7TgNeFxiC8DZIRGapWNrwExgTJt
-         K71w==
-X-Gm-Message-State: AOJu0Yxl8uMaDcRfa1P1lRM7PoTDo8Kdltrc14osYUlL5Cm+rFtk7+dg
-	tciGEsrQoPoIdRB0b095iMA=
-X-Google-Smtp-Source: AGHT+IGoAFnPTV82jzNleeEAr38dIJIev6KfebPPaJm2N4e4uKwmLnfigLnGe6POFjoFKHbsDJnJyA==
-X-Received: by 2002:a17:90b:3e88:b0:27c:df02:88b3 with SMTP id rj8-20020a17090b3e8800b0027cdf0288b3mr1310728pjb.8.1698964021032;
-        Thu, 02 Nov 2023 15:27:01 -0700 (PDT)
-Received: from bangji.corp.google.com ([2620:15c:2c0:5:ea22:bed1:d67b:af04])
-        by smtp.gmail.com with ESMTPSA id cn18-20020a17090af09200b0027d015c365csm309894pjb.31.2023.11.02.15.27.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Nov 2023 15:27:00 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 5/5] perf annotate: Move offsets to annotated_source
-Date: Thu,  2 Nov 2023 15:26:53 -0700
-Message-ID: <20231102222653.4165959-6-namhyung@kernel.org>
-X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
-In-Reply-To: <20231102222653.4165959-1-namhyung@kernel.org>
-References: <20231102222653.4165959-1-namhyung@kernel.org>
+        d=1e100.net; s=20230601; t=1698965591; x=1699570391;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=74mPwWD5M0b2kFU0MdNGIOkGXTx63ZGOAD5crEqHXGw=;
+        b=c02QN2jrrkc+vEuh4Vs/0A2g1mBKg4BMHv5gmPUOKb+ID2DekXNoXcac4E89Bfr8/E
+         jJrBDj2LYB0FIytwqwHQ5cy6qMgqVq/qSwASDz7Zpd9UlJPvSKxgO51KzAxiRQXWHIQx
+         LKBdTpNezY9g1fiS+HGXkh3vAQiodL1oEQ7lAKv8aZdYc+7W/t2Xm0b1cgZ0IUHFuL/Q
+         iSfc8F5KmonOjPa/oyisUQAJLOjuxupmtvPnWgHQ7nK3gkSgHPHA9x5boGaIn/8xB8OO
+         4vPfBLaz8Nqo0Fy3GUTZuUETMXaHvjRo/b9S2/KwoAQSPzwQ9ici1Oizk3ae/WMWdeSf
+         RNWA==
+X-Gm-Message-State: AOJu0YzAra1gh1z5bU9Wa5R79DE8c7SeEdoW0bMILniTp7rlBqPTdXQT
+	VmIie+7+BLIgcQ7ceLSi87NO+ovEYxLETbMScX3bqg==
+X-Google-Smtp-Source: AGHT+IHw5LIGPGt8HwqAJJO3XVCBDAKbPOAYhmS2RlNB7RAyuX/WNObiSkvk+Xj5TqGKCLhzRVcqq7ql4prXxfVvmDc=
+X-Received: by 2002:a05:600c:1d14:b0:3f7:3e85:36a with SMTP id
+ l20-20020a05600c1d1400b003f73e85036amr111817wms.7.1698965590459; Thu, 02 Nov
+ 2023 15:53:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231102222653.4165959-1-namhyung@kernel.org> <20231102222653.4165959-2-namhyung@kernel.org>
+In-Reply-To: <20231102222653.4165959-2-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 2 Nov 2023 15:52:58 -0700
+Message-ID: <CAP-5=fV=huOH7_8ba_xRT5V4RZUZ0O54OkHcRRHzuSPH_SemCA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] perf annotate: Split struct cycles_info
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The offsets array keeps pointers to struct annotation_line which is
-available in the annotated_source.  Let's move it to there.
+On Thu, Nov 2, 2023 at 3:26=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> The cycles info is used only when branch stack is provided.  Split them
+> into a separate struct and lazy allocate them to save some memory.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/ui/browsers/annotate.c |  2 +-
+>  tools/perf/util/annotate.c        | 34 ++++++++++++++++++-------------
+>  tools/perf/util/annotate.h        | 14 ++++++++-----
+>  3 files changed, 30 insertions(+), 20 deletions(-)
+>
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/a=
+nnotate.c
+> index ccdb2cd11fbf..d2470f87344d 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -337,7 +337,7 @@ static void annotate_browser__calc_percent(struct ann=
+otate_browser *browser,
+>                                 max_percent =3D percent;
+>                 }
+>
+> -               if (max_percent < 0.01 && pos->al.ipc =3D=3D 0) {
+> +               if (max_percent < 0.01 && (!pos->al.cycles || pos->al.cyc=
+les->ipc =3D=3D 0)) {
+>                         RB_CLEAR_NODE(&pos->al.rb_node);
+>                         continue;
+>                 }
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 82956adf9963..3e7f75827270 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -1100,8 +1100,8 @@ static void annotation__count_and_fill(struct annot=
+ation *notes, u64 start, u64
+>                 for (offset =3D start; offset <=3D end; offset++) {
+>                         struct annotation_line *al =3D notes->offsets[off=
+set];
+>
+> -                       if (al && al->ipc =3D=3D 0.0) {
+> -                               al->ipc =3D ipc;
+> +                       if (al && al->cycles && al->cycles->ipc =3D=3D 0.=
+0) {
+> +                               al->cycles->ipc =3D ipc;
+>                                 cover_insn++;
+>                         }
+>                 }
+> @@ -1134,13 +1134,18 @@ void annotation__compute_ipc(struct annotation *n=
+otes, size_t size)
+>                 if (ch && ch->cycles) {
+>                         struct annotation_line *al;
+>
+> +                       al =3D notes->offsets[offset];
+> +                       if (al && al->cycles =3D=3D NULL) {
+> +                               al->cycles =3D zalloc(sizeof(*al->cycles)=
+);
+> +                               if (al->cycles =3D=3D NULL)
+> +                                       continue;
+> +                       }
+>                         if (ch->have_start)
+>                                 annotation__count_and_fill(notes, ch->sta=
+rt, offset, ch);
+> -                       al =3D notes->offsets[offset];
+>                         if (al && ch->num_aggr) {
+> -                               al->cycles =3D ch->cycles_aggr / ch->num_=
+aggr;
+> -                               al->cycles_max =3D ch->cycles_max;
+> -                               al->cycles_min =3D ch->cycles_min;
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/ui/browsers/annotate.c |  4 ++--
- tools/perf/util/annotate.c        | 18 +++++++++---------
- tools/perf/util/annotate.h        |  2 +-
- 3 files changed, 12 insertions(+), 12 deletions(-)
+Thanks for doing this! Would it make sense to do the zalloc here to be
+lazier about allocation?
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 1b42db70c998..163f916fff68 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -188,7 +188,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
- 	 *  name right after the '<' token and probably treating this like a
- 	 *  'call' instruction.
- 	 */
--	target = notes->offsets[cursor->ops.target.offset];
-+	target = notes->src->offsets[cursor->ops.target.offset];
- 	if (target == NULL) {
- 		ui_helpline__printf("WARN: jump target inconsistency, press 'o', notes->offsets[%#x] = NULL\n",
- 				    cursor->ops.target.offset);
-@@ -1006,6 +1006,6 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 
- out_free_offsets:
- 	if(not_annotated)
--		zfree(&notes->offsets);
-+		zfree(&notes->src->offsets);
- 	return ret;
- }
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ee7b8e1848a8..8ab2e1cf63ea 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1075,7 +1075,7 @@ static unsigned annotation__count_insn(struct annotation *notes, u64 start, u64
- 	u64 offset;
- 
- 	for (offset = start; offset <= end; offset++) {
--		if (notes->offsets[offset])
-+		if (notes->src->offsets[offset])
- 			n_insn++;
- 	}
- 	return n_insn;
-@@ -1105,7 +1105,7 @@ static void annotation__count_and_fill(struct annotation *notes, u64 start, u64
- 			return;
- 
- 		for (offset = start; offset <= end; offset++) {
--			struct annotation_line *al = notes->offsets[offset];
-+			struct annotation_line *al = notes->src->offsets[offset];
- 
- 			if (al && al->cycles && al->cycles->ipc == 0.0) {
- 				al->cycles->ipc = ipc;
-@@ -1142,7 +1142,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
- 		if (ch && ch->cycles) {
- 			struct annotation_line *al;
- 
--			al = notes->offsets[offset];
-+			al = notes->src->offsets[offset];
- 			if (al && al->cycles == NULL) {
- 				al->cycles = zalloc(sizeof(*al->cycles));
- 				if (al->cycles == NULL)
-@@ -2783,7 +2783,7 @@ void annotation__mark_jump_targets(struct annotation *notes, struct symbol *sym)
- 		return;
- 
- 	for (offset = 0; offset < size; ++offset) {
--		struct annotation_line *al = notes->offsets[offset];
-+		struct annotation_line *al = notes->src->offsets[offset];
- 		struct disasm_line *dl;
- 
- 		dl = disasm_line(al);
-@@ -2791,7 +2791,7 @@ void annotation__mark_jump_targets(struct annotation *notes, struct symbol *sym)
- 		if (!disasm_line__is_valid_local_jump(dl, sym))
- 			continue;
- 
--		al = notes->offsets[dl->ops.target.offset];
-+		al = notes->src->offsets[dl->ops.target.offset];
- 
- 		/*
- 		 * FIXME: Oops, no jump target? Buggy disassembler? Or do we
-@@ -2830,7 +2830,7 @@ void annotation__set_offsets(struct annotation *notes, s64 size)
- 			 * E.g. copy_user_generic_unrolled
-  			 */
- 			if (al->offset < size)
--				notes->offsets[al->offset] = al;
-+				notes->src->offsets[al->offset] = al;
- 		} else
- 			al->idx_asm = -1;
- 	}
-@@ -3263,8 +3263,8 @@ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
- 	size_t size = symbol__size(sym);
- 	int nr_pcnt = 1, err;
- 
--	notes->offsets = zalloc(size * sizeof(struct annotation_line *));
--	if (notes->offsets == NULL)
-+	notes->src->offsets = zalloc(size * sizeof(struct annotation_line *));
-+	if (notes->src->offsets == NULL)
- 		return ENOMEM;
- 
- 	if (evsel__is_group_event(evsel))
-@@ -3290,7 +3290,7 @@ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
- 	return 0;
- 
- out_free_offsets:
--	zfree(&notes->offsets);
-+	zfree(&notes->src->offsets);
- 	return err;
- }
- 
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index c51ceb857bd6..44af7e71a204 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -272,6 +272,7 @@ struct annotated_source {
- 	int    			nr_histograms;
- 	size_t			sizeof_sym_hist;
- 	struct sym_hist		*histograms;
-+	struct annotation_line	**offsets;
- 	int			nr_entries;
- 	int			nr_asm_entries;
- 	u16			max_line_len;
-@@ -289,7 +290,6 @@ struct annotated_branch {
- struct LOCKABLE annotation {
- 	u64			start;
- 	struct annotation_options *options;
--	struct annotation_line	**offsets;
- 	int			nr_events;
- 	int			max_jump_sources;
- 	struct {
--- 
-2.42.0.869.gea05f2083d-goog
+Ian
 
+> +                               al->cycles->avg =3D ch->cycles_aggr / ch-=
+>num_aggr;
+> +                               al->cycles->max =3D ch->cycles_max;
+> +                               al->cycles->min =3D ch->cycles_min;
+>                         }
+>                         notes->have_cycles =3D true;
+>                 }
+> @@ -1225,6 +1230,7 @@ static void annotation_line__exit(struct annotation=
+_line *al)
+>  {
+>         zfree_srcline(&al->path);
+>         zfree(&al->line);
+> +       zfree(&al->cycles);
+>  }
+>
+>  static size_t disasm_line_size(int nr)
+> @@ -3083,8 +3089,8 @@ static void __annotation_line__write(struct annotat=
+ion_line *al, struct annotati
+>         int printed;
+>
+>         if (first_line && (al->offset =3D=3D -1 || percent_max =3D=3D 0.0=
+)) {
+> -               if (notes->have_cycles) {
+> -                       if (al->ipc =3D=3D 0.0 && al->cycles =3D=3D 0)
+> +               if (notes->have_cycles && al->cycles) {
+> +                       if (al->cycles->ipc =3D=3D 0.0 && al->cycles->avg=
+ =3D=3D 0)
+>                                 show_title =3D true;
+>                 } else
+>                         show_title =3D true;
+> @@ -3121,17 +3127,17 @@ static void __annotation_line__write(struct annot=
+ation_line *al, struct annotati
+>         }
+>
+>         if (notes->have_cycles) {
+> -               if (al->ipc)
+> -                       obj__printf(obj, "%*.2f ", ANNOTATION__IPC_WIDTH =
+- 1, al->ipc);
+> +               if (al->cycles && al->cycles->ipc)
+> +                       obj__printf(obj, "%*.2f ", ANNOTATION__IPC_WIDTH =
+- 1, al->cycles->ipc);
+>                 else if (!show_title)
+>                         obj__printf(obj, "%*s", ANNOTATION__IPC_WIDTH, " =
+");
+>                 else
+>                         obj__printf(obj, "%*s ", ANNOTATION__IPC_WIDTH - =
+1, "IPC");
+>
+>                 if (!notes->options->show_minmax_cycle) {
+> -                       if (al->cycles)
+> +                       if (al->cycles && al->cycles->avg)
+>                                 obj__printf(obj, "%*" PRIu64 " ",
+> -                                          ANNOTATION__CYCLES_WIDTH - 1, =
+al->cycles);
+> +                                          ANNOTATION__CYCLES_WIDTH - 1, =
+al->cycles->avg);
+>                         else if (!show_title)
+>                                 obj__printf(obj, "%*s",
+>                                             ANNOTATION__CYCLES_WIDTH, " "=
+);
+> @@ -3145,8 +3151,8 @@ static void __annotation_line__write(struct annotat=
+ion_line *al, struct annotati
+>
+>                                 scnprintf(str, sizeof(str),
+>                                         "%" PRIu64 "(%" PRIu64 "/%" PRIu6=
+4 ")",
+> -                                       al->cycles, al->cycles_min,
+> -                                       al->cycles_max);
+> +                                       al->cycles->avg, al->cycles->min,
+> +                                       al->cycles->max);
+>
+>                                 obj__printf(obj, "%*s ",
+>                                             ANNOTATION__MINMAX_CYCLES_WID=
+TH - 1,
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index 962780559176..16d27952fd5c 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -130,6 +130,13 @@ struct annotation_data {
+>         struct sym_hist_entry    he;
+>  };
+>
+> +struct cycles_info {
+> +       float                    ipc;
+> +       u64                      avg;
+> +       u64                      max;
+> +       u64                      min;
+> +};
+> +
+>  struct annotation_line {
+>         struct list_head         node;
+>         struct rb_node           rb_node;
+> @@ -137,12 +144,9 @@ struct annotation_line {
+>         char                    *line;
+>         int                      line_nr;
+>         char                    *fileloc;
+> -       int                      jump_sources;
+> -       float                    ipc;
+> -       u64                      cycles;
+> -       u64                      cycles_max;
+> -       u64                      cycles_min;
+>         char                    *path;
+> +       struct cycles_info      *cycles;
+> +       int                      jump_sources;
+>         u32                      idx;
+>         int                      idx_asm;
+>         int                      data_nr;
+> --
+> 2.42.0.869.gea05f2083d-goog
+>
