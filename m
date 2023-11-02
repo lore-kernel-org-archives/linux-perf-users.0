@@ -1,312 +1,224 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C753B1396
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 01:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EE2187A
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 05:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4391811D;
-	Wed,  1 Nov 2023 18:55:36 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id 618E924E281;
-	Thu,  2 Nov 2023 09:55:33 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 2 Nov
- 2023 09:55:33 +0800
-Received: from localhost.localdomain (202.188.176.82) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 2 Nov
- 2023 09:55:24 +0800
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Namhyung
- Kim" <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Palmer
- Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Nikita
- Shubin" <n.shubin@yadro.com>
-CC: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, Ley Foon Tan
-	<leyfoon.tan@starfivetech.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH] perf vendor events riscv: add StarFive Dubhe-80 JSON file
-Date: Thu, 2 Nov 2023 09:54:47 +0800
-Message-ID: <20231102015447.2526572-1-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E5913D;
+	Wed,  1 Nov 2023 22:55:57 -0700 (PDT)
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5bcfc508d14so410267a12.3;
+        Wed, 01 Nov 2023 22:55:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698904556; x=1699509356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5vVpAS4KEjXA0XAlwy4Gm/bodbnW8MsJmEcn/2Y1iWQ=;
+        b=X0TDoYg/3JrTw8lfXZShQNR0zxESxzLVjQ1o/Ouf2CQvJRbjvbXT8I12h7ZaHVjvv+
+         grhAa9noaE3CoCNQiEW8Kcu39xVTAB4q6r3iZSdXP+hgyxfvsa2ii+VoZVqyfp+u2ZK/
+         2Vm6uvJLFVb3w/RCGYtCVKHKOMbh7kF1GVR80vU/BJc2gkQXHbHJt4oRd6na0RPvcWV/
+         QQMJ24as+m3sCmq1abM2jKuQ3Q5HlWumbmtHUUkH+nP6BnuSr6pPvIuP88lmcidwbr4t
+         O0BlI6YNb4D9uXqplNtF9x2AOfBwgg9FMF52RESxUVsMi2oEvHYuTMMoGDr34wahta9G
+         37HA==
+X-Gm-Message-State: AOJu0Ywczc0w6CabaMCmoO3zMPLP+TnW2Gz2mEdz6342lvunAeIf9t7y
+	S0eAjJ9/WAjA+Ulj6XIX5gHETo0rqtTfIc9x660=
+X-Google-Smtp-Source: AGHT+IFK6szul+rBI1mcUan2dKrg3R85vTVjd1HwAe6dw4pdzzu74uUQAeJGrzvacL/sMm/6U4Jg3iywvxbeLK0VZ/I=
+X-Received: by 2002:a17:90b:fd4:b0:27d:6d9c:6964 with SMTP id
+ gd20-20020a17090b0fd400b0027d6d9c6964mr16982311pjb.26.1698904556325; Wed, 01
+ Nov 2023 22:55:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [202.188.176.82]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
+References: <20231031120526.11502-1-nick.forrington@arm.com> <20231031120526.11502-2-nick.forrington@arm.com>
+In-Reply-To: <20231031120526.11502-2-nick.forrington@arm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 1 Nov 2023 22:55:45 -0700
+Message-ID: <CAM9d7cgzbjqU4U9tpAkhme-mZPV-LScJietre=3b01kykG_fcg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf lock report: Restore aggregation by caller by default
+To: Nick Forrington <nick.forrington@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	stable@kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-StarFive's Dubhe-80 supports raw event id 0x00 - 0x22.
-The raw events are enabled through PMU node of DT binding.
+Hello,
 
-Example of PMU DT node:
-pmu {
-	compatible =3D "riscv,pmu";
-	riscv,raw-event-to-mhpmcounters =3D
-		/* Event ID 1-31 */
-		<0x00 0x00 0xFFFFFFFF 0xFFFFFFE0 0x00007FF8>,
-		/* Event ID 32-33 */
-		<0x00 0x20 0xFFFFFFFF 0xFFFFFFFE 0x00007FF8>,
-		/* Event ID 34 */
-		<0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;
-};
+On Tue, Oct 31, 2023 at 5:05=E2=80=AFAM Nick Forrington <nick.forrington@ar=
+m.com> wrote:
+>
+> This change restores the previous default behaviour for "perf lock
+> report", making the current aggregate-by-address behaviour available via
+> the new "--lock-addr" command line parameter.
+>
+> This makes the behaviour consistent with "perf lock contention" (which
+> also aggregates by caller by default, or by address when "--lock-addr"
+> is specified).
 
-Example of Perf stat output:
-[root@user]# perf stat -a \
-	-e access_mmu_stlb \
-	-e miss_mmu_stlb \
-	-e access_mmu_pte_c \
-	-e rob_flush \
-	-e btb_prediction_miss \
-	-e itlb_miss \
-	-e sync_del_fetch_g \
-	-e icache_miss \
-	-e bpu_br_retire \
-	-e bpu_br_miss \
-	-e ret_ins_retire \
-	-e ret_ins_miss \
-	-- openssl speed rsa2048
+I understand your concern but actually there's a difference.
+"perf lock contention" is a new command which works with new
+contention tracepoints whereas "perf lock report" works with old
+lockdep/lockstat tracepoints which are not available in the default
+configuration.
 
-Doing 2048 bits private rsa's for 10s: 39 2048 bits private RSA's in
-10.14s
-Doing 2048 bits public rsa's for 10s: 1563 2048 bits public RSA's in
-10.00s
-version: 3.0.11
-built on: Tue Sep 19 13:02:31 2023 UTC
-options: bn(64,64)
-CPUINFO: N/A
-                  sign    verify    sign/s verify/s
-rsa 2048 bits 0.260000s 0.006398s      3.8    156.3
+I made "perf lock contention" compatible to "perf lock report" so
+it mimics the old tracepoints behavior as much as possible using
+new tracepoints.  But the important difference is that new contention
+tracepoints don't have lock names.  The old perf lock report showed
+lock names by default but contention output had to use the caller
+instead.
 
- Performance counter stats for 'system wide':
+>
+> Commit 688d2e8de231 ("perf lock contention: Add -l/--lock-addr option")
+> introduced aggregation modes for "perf lock contention" and (potentially
+> inadvertently) changed the behaviour of "perf lock report" from
+> aggregate-by-caller to aggregate-by-address (making the prior behaviour
+> inaccessible).
 
-           1338350      access_mmu_stlb
-           1154025      miss_mmu_stlb
-           1162691      access_mmu_pte_c
-             34067      rob_flush
-          11212384      btb_prediction_miss
-           1256242      itlb_miss
-         652523491      sync_del_fetch_g
-            384465      icache_miss
-          64635789      bpu_br_retire
-            323440      bpu_br_miss
-           8785143      ret_ins_retire
-             31236      ret_ins_miss
+So it doesn't change the behavior of perf lock report.
+You're adding a new (default) feature for perf lock report
+to sort the output by caller.  And please note that caller
+info needs callstacks.  perf lock record adds it by default
+when it finds there are only lock contention tracepoints.
+But if it really has the old tracepoints, caller won't work
+unless you enabled callstack collection manually (-g).
 
-      20.760822480 seconds time elapsed
+>
+> Example aggregate-by-address output:
+>
+> $ perf lock report -F acquired
 
-Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
----
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
- .../arch/riscv/starfive/dubhe-80/common.json  | 172 ++++++++++++++++++
- 2 files changed, 173 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/co=
-mmon.json
+I guess you need -l option here.
 
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
-u-events/arch/riscv/mapfile.csv
-index c61b3d6ef616..ee61e26f90cd 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -15,3 +15,4 @@
- #
- #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
- 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-+0x67e-0x80000000db000080-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
-diff --git a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/common.js=
-on b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/common.json
-new file mode 100644
-index 000000000000..fbffcacb2ace
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/common.json
-@@ -0,0 +1,172 @@
-+[
-+  {
-+    "EventName": "ACCESS_MMU_STLB",
-+    "EventCode": "0x1",
-+    "BriefDescription": "access MMU STLB"
-+  },
-+  {
-+    "EventName": "MISS_MMU_STLB",
-+    "EventCode": "0x2",
-+    "BriefDescription": "miss MMU STLB"
-+  },
-+  {
-+    "EventName": "ACCESS_MMU_PTE_C",
-+    "EventCode": "0x3",
-+    "BriefDescription": "access MMU PTE-Cache"
-+  },
-+  {
-+    "EventName": "MISS_MMU_PTE_C",
-+    "EventCode": "0x4",
-+    "BriefDescription": "miss MMU PTE-Cache"
-+  },
-+  {
-+    "EventName": "ROB_FLUSH",
-+    "EventCode": "0x5",
-+    "BriefDescription": "ROB flush (all kinds of exceptions)"
-+  },
-+  {
-+    "EventName": "BTB_PREDICTION_MISS",
-+    "EventCode": "0x6",
-+    "BriefDescription": "BTB prediction miss"
-+  },
-+  {
-+    "EventName": "ITLB_MISS",
-+    "EventCode": "0x7",
-+    "BriefDescription": "ITLB miss"
-+  },
-+  {
-+    "EventName": "SYNC_DEL_FETCH_G",
-+    "EventCode": "0x8",
-+    "BriefDescription": "SYNC delivery a fetch-group"
-+  },
-+  {
-+    "EventName": "ICACHE_MISS",
-+    "EventCode": "0x9",
-+    "BriefDescription": "ICache miss"
-+  },
-+  {
-+    "EventName": "BPU_BR_RETIRE",
-+    "EventCode": "0xA",
-+    "BriefDescription": "condition branch instruction retire"
-+  },
-+  {
-+    "EventName": "BPU_BR_MISS",
-+    "EventCode": "0xB",
-+    "BriefDescription": "condition branch instruction miss"
-+  },
-+  {
-+    "EventName": "RET_INS_RETIRE",
-+    "EventCode": "0xC",
-+    "BriefDescription": "return instruction retire"
-+  },
-+  {
-+    "EventName": "RET_INS_MISS",
-+    "EventCode": "0xD",
-+    "BriefDescription": "return instruction miss"
-+  },
-+  {
-+    "EventName": "INDIRECT_JR_MISS",
-+    "EventCode": "0xE",
-+    "BriefDescription": "indirect JR instruction miss (inlcude without t=
-arget)"
-+  },
-+  {
-+    "EventName": "IBUF_VAL_ID_NORDY",
-+    "EventCode": "0xF",
-+    "BriefDescription": "IBUF valid while ID not ready"
-+  },
-+  {
-+    "EventName": "IBUF_NOVAL_ID_RDY",
-+    "EventCode": "0x10",
-+    "BriefDescription": "IBUF not valid while ID ready"
-+  },
-+  {
-+    "EventName": "REN_INT_PHY_REG_NORDY",
-+    "EventCode": "0x11",
-+    "BriefDescription": "REN integer physical register file is not ready=
-"
-+  },
-+  {
-+    "EventName": "REN_FP_PHY_REG_NORDY",
-+    "EventCode": "0x12",
-+    "BriefDescription": "REN floating point physical register file is no=
-t ready"
-+  },
-+  {
-+    "EventName": "REN_CP_NORDY",
-+    "EventCode": "0x13",
-+    "BriefDescription": "REN checkpoint is not ready"
-+  },
-+  {
-+    "EventName": "DEC_VAL_ROB_NORDY",
-+    "EventCode": "0x14",
-+    "BriefDescription": "DEC is valid and ROB is not ready"
-+  },
-+  {
-+    "EventName": "OOD_FLUSH_LS_DEP",
-+    "EventCode": "0x15",
-+    "BriefDescription": "out of order flush due to load/store dependency=
-"
-+  },
-+  {
-+    "EventName": "BRU_RET_IJR_INS",
-+    "EventCode": "0x16",
-+    "BriefDescription": "BRU retire an IJR instruction"
-+  },
-+  {
-+    "EventName": "ACCESS_DTLB",
-+    "EventCode": "0x17",
-+    "BriefDescription": "access DTLB"
-+  },
-+  {
-+    "EventName": "MISS_DTLB",
-+    "EventCode": "0x18",
-+    "BriefDescription": "miss DTLB"
-+  },
-+  {
-+    "EventName": "LOAD_INS_DCACHE",
-+    "EventCode": "0x19",
-+    "BriefDescription": "load instruction access DCache"
-+  },
-+  {
-+    "EventName": "LOAD_INS_MISS_DCACHE",
-+    "EventCode": "0x1A",
-+    "BriefDescription": "load instruction miss DCache"
-+  },
-+  {
-+    "EventName": "STORE_INS_DCACHE",
-+    "EventCode": "0x1B",
-+    "BriefDescription": "store/amo instruction access DCache"
-+  },
-+  {
-+    "EventName": "STORE_INS_MISS_DCACHE",
-+    "EventCode": "0x1C",
-+    "BriefDescription": "store/amo instruction miss DCache"
-+  },
-+  {
-+    "EventName": "LOAD_SCACHE",
-+    "EventCode": "0x1D",
-+    "BriefDescription": "load access SCache"
-+  },
-+  {
-+    "EventName": "STORE_SCACHE",
-+    "EventCode": "0x1E",
-+    "BriefDescription": "store access SCache"
-+  },
-+  {
-+    "EventName": "LOAD_MISS_SCACHE",
-+    "EventCode": "0x1F",
-+    "BriefDescription": "load miss SCache"
-+  },
-+  {
-+    "EventName": "STORE_MISS_SCACHE",
-+    "EventCode": "0x20",
-+    "BriefDescription": "store miss SCache"
-+  },
-+  {
-+    "EventName": "L2C_PF_REQ",
-+    "EventCode": "0x21",
-+    "BriefDescription": "L2C data-prefetcher request"
-+  },
-+  {
-+    "EventName": "L2C_PF_HIT",
-+    "EventCode": "0x22",
-+    "BriefDescription": "L2C data-prefetcher hit"
-+  }
-+]
---=20
-2.25.1
+>                 Name   acquired
+>
+>          event_mutex         34
+>                              21
+>                               1
 
+This is because you used contention tracepoints
+and they don't have lock names.
+
+>
+> Example aggregate-by-caller output:
+>
+> $ perf lock report -F acquired
+>                 Name   acquired
+>
+>  perf_trace_init+...         34
+>  lock_mm_and_find...         20
+>  inherit_event.co...          1
+>     do_madvise+0x1f8          1
+
+Maybe it's ok to change the default behavior for contention
+tracepoints.  But when lockdep tracepoints are available
+it should use the existing addr (symbol) mode.
+
+>
+> Cc: stable@kernel.org
+> Fixes: 688d2e8de231 ("perf lock contention: Add -l/--lock-addr option")
+
+So, I don't think this is a fix.
+
+Thanks,
+Namhyung
+
+
+> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+> ---
+>  tools/perf/Documentation/perf-lock.txt |  4 ++++
+>  tools/perf/builtin-lock.c              | 24 +++++++++++++++++++++---
+>  2 files changed, 25 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Document=
+ation/perf-lock.txt
+> index 503abcba1438..349333acbbfc 100644
+> --- a/tools/perf/Documentation/perf-lock.txt
+> +++ b/tools/perf/Documentation/perf-lock.txt
+> @@ -80,6 +80,10 @@ REPORT OPTIONS
+>  --combine-locks::
+>         Merge lock instances in the same class (based on name).
+>
+> +-l::
+> +--lock-addr::
+> +       Show lock contention stat by address
+> +
+>  -t::
+>  --threads::
+>      The -t option is to show per-thread lock stat like below:
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index fa7419978353..3aa8ba5ad928 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -78,7 +78,7 @@ struct callstack_filter {
+>
+>  static struct lock_filter filters;
+>
+> -static enum lock_aggr_mode aggr_mode =3D LOCK_AGGR_ADDR;
+> +static enum lock_aggr_mode aggr_mode =3D LOCK_AGGR_CALLER;
+>
+>  static bool needs_callstack(void)
+>  {
+> @@ -1983,8 +1983,8 @@ static int __cmd_report(bool display_info)
+>         if (select_key(false))
+>                 goto out_delete;
+>
+> -       if (show_thread_stats)
+> -               aggr_mode =3D LOCK_AGGR_TASK;
+> +       aggr_mode =3D show_thread_stats ? LOCK_AGGR_TASK :
+> +               show_lock_addrs ? LOCK_AGGR_ADDR : LOCK_AGGR_CALLER;
+>
+>         err =3D perf_session__process_events(session);
+>         if (err)
+> @@ -2008,6 +2008,19 @@ static void sighandler(int sig __maybe_unused)
+>  {
+>  }
+>
+> +static int check_lock_report_options(const struct option *options,
+> +                                    const char * const *usage)
+> +{
+> +       if (show_thread_stats && show_lock_addrs) {
+> +               pr_err("Cannot use thread and addr mode together\n");
+> +               parse_options_usage(usage, options, "threads", 0);
+> +               parse_options_usage(NULL, options, "lock-addr", 0);
+> +               return -1;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int check_lock_contention_options(const struct option *options,
+>                                          const char * const *usage)
+>
+> @@ -2589,6 +2602,7 @@ int cmd_lock(int argc, const char **argv)
+>         /* TODO: type */
+>         OPT_BOOLEAN('c', "combine-locks", &combine_locks,
+>                     "combine locks in the same class"),
+> +       OPT_BOOLEAN('l', "lock-addr", &show_lock_addrs, "show lock stats =
+by address"),
+>         OPT_BOOLEAN('t', "threads", &show_thread_stats,
+>                     "show per-thread lock stats"),
+>         OPT_INTEGER('E', "entries", &print_nr_entries, "display this many=
+ functions"),
+> @@ -2680,6 +2694,10 @@ int cmd_lock(int argc, const char **argv)
+>                         if (argc)
+>                                 usage_with_options(report_usage, report_o=
+ptions);
+>                 }
+> +
+> +               if (check_lock_report_options(report_options, report_usag=
+e) < 0)
+> +                       return -1;
+> +
+>                 rc =3D __cmd_report(false);
+>         } else if (!strcmp(argv[0], "script")) {
+>                 /* Aliased to 'perf script' */
+> --
+> 2.42.0
+>
