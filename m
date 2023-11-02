@@ -1,145 +1,102 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577532111D
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:24:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827163D65
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 22:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i0ZubHsE"
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B7DFB9
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 11:24:39 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-51e24210395so2126a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 11:24:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gS57c+lY"
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3914FB7;
+	Thu,  2 Nov 2023 15:26:56 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5b9a7357553so1177908a12.0;
+        Thu, 02 Nov 2023 15:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698949478; x=1699554278; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gGrFkmhMC1oEo20BN+P9RczALkt6AOOD+e7AfvLCPzc=;
-        b=i0ZubHsEdZuFrGmRLClNU2w+9FUdAxxlXi3+ypjZMxibccDAbKUFeGTLS9axjYD9z0
-         dvixZyCCveeDSo3MkBYF6hntfRPpevmZ8FlzDgoTHFPLJnBwTZjCSEHNIp+GpLh0mCr/
-         VU1zvdCmDOteFSilEs72bFRIrXb+5lf8H7pMA+vcDr9IJpshMdFDWSHCWA3A7h6r/Qzn
-         aZhSJZwFfDADz5V3w5HLeJV2wQnQcOgazzlQvHxdGMzS+FspvbTukULy3V8bS9sy8d0b
-         ADwdw0hMmRpPrc02KJKVKBISZFRutw9OrXEPMIADdcAX1xzKr/0nnLVi0yUAbiDeqd7k
-         pWZg==
+        d=gmail.com; s=20230601; t=1698964015; x=1699568815; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=TjmpE0gPA0E82Gx4VbLnVe9nx66Z7Ry4rmjC/WuSGb0=;
+        b=gS57c+lY2XVefQFdw3VkeOsR7hMrJ3kN+XzP/XjsGZtsBGggbspv2mr3vgNat8G/UO
+         jh8JC+TDu30CVF9O/ZA7ZSbQDtWeO2S5qJHuVprm/8e8XlSai5wK9m13WQQfC+bWWfw0
+         74SBTqXrbMDN4Mq5yD7WW/NzF3vh6A+8436bEELLLdiEiLaAP4FW0ie8ImUbAIEPPDyy
+         Iw3fYPTgyf7Lji3+EGats5h+H7NclHXBQHGZo5iD3p2S/yp/eSdZrWbMNnwbwWp9b8fp
+         uqUztU1PxcYAAqFb9xMmGl/kVuVghaSDd9/M7MFbkO2nuYLlSgt+ka1RDdYddM4haGFR
+         FIhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698949478; x=1699554278;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gGrFkmhMC1oEo20BN+P9RczALkt6AOOD+e7AfvLCPzc=;
-        b=COJ5aVZdCm14Qe/VPWNXgTukmCHTWTvkBHWvmPAc8Kvgw8aHqOxX+seO5HqTsFrV0J
-         6vfGv4OuNtMRJV0se/LloF+517TI6TLaaHz+qfKPdcu33K+opaZ93K05dxCU269FCXZ3
-         FRg6UyqqPODc5z2wMv/jvdDcHBjOj4ePXhDWruhkhnPJDTD+erAL64te8zBXNTmfH07B
-         xaum9viBzFh1bFBpO6cTUjBDMMtjPs6oUQ7BHbIxnx+iS/tBdJlj4kxK/Fb9YbF8eOlh
-         /k9b9j/qLyfvYVS3nrVCnuvvw/jC4zDCShgfHoR/gbjaGPEqYR7CUtj6G8Uqikq4sJ8o
-         Wl3g==
-X-Gm-Message-State: AOJu0YyVX7xnpXs0OCRad8KcbCiAhmXt1Fl2O76srZZmDHJUWFw006ah
-	jQYxoVFzZaMygtlmRTw0WLIsgMwEmMeKkeZoBaos+g==
-X-Google-Smtp-Source: AGHT+IEKx/oi2mHPllRTvhZgICUybvLALbVxPiHdX6jP8Fk42YYckF246DXO1aG6m3T9FlE22dHuiU117WNQri5yrHM=
-X-Received: by 2002:a05:6402:3228:b0:543:fbf7:c70e with SMTP id
- g40-20020a056402322800b00543fbf7c70emr104719eda.5.1698949477935; Thu, 02 Nov
- 2023 11:24:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698964015; x=1699568815;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TjmpE0gPA0E82Gx4VbLnVe9nx66Z7Ry4rmjC/WuSGb0=;
+        b=MTsy/LM6GkgJojWxYUmcXjRhDVPAUwnyF0vOQEGctgN0vSied+uWrvCy7VNzmIGO3k
+         tTH6cLAuPZ4h4OL77A53bm139XbKXxlXBMemuqPH9oDbb/yXSVCBF6moI4e5cBi9GUJ6
+         skFhuMIFiMwsIgG5GMXR0hDZZ9FjDeX/Ygo0eVHEOLqRfBOnpM5v1YjD5fYovjka2SGq
+         OFC3EcQ/ISdWKB/FYmdaoXIIjQlsm/gAgYDr6GpFcSaQ/zoKqmWjEisaloIq7ESOtZfX
+         LBiICXohOHiAqODf3VK03iSrx4TRryRvUSfrzwD/jTN0+QXaRobhIo3wETtHBIxwfJMO
+         500Q==
+X-Gm-Message-State: AOJu0Yz4I78iHUoTXLub0tFOMUxcYaOicDF6r/0z95hEfDkpFPc3h69F
+	08z2d25SUv0dQwp+p8shd7nfgmuo76k=
+X-Google-Smtp-Source: AGHT+IGjYGhw65tppYI5b+jq41E6cHakr+ooY+rEmjqbJzBIZz4hiBipZdHhX+60qcK0lZOtwVyQdg==
+X-Received: by 2002:a17:90b:4f91:b0:27d:3f0c:f087 with SMTP id qe17-20020a17090b4f9100b0027d3f0cf087mr19355978pjb.25.1698964015475;
+        Thu, 02 Nov 2023 15:26:55 -0700 (PDT)
+Received: from bangji.corp.google.com ([2620:15c:2c0:5:ea22:bed1:d67b:af04])
+        by smtp.gmail.com with ESMTPSA id cn18-20020a17090af09200b0027d015c365csm309894pjb.31.2023.11.02.15.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Nov 2023 15:26:55 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCHSET 0/5] perf annotate: Reduce memory footprint (v1)
+Date: Thu,  2 Nov 2023 15:26:48 -0700
+Message-ID: <20231102222653.4165959-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231102015447.2526572-1-jisheng.teoh@starfivetech.com>
-In-Reply-To: <20231102015447.2526572-1-jisheng.teoh@starfivetech.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 Nov 2023 11:24:24 -0700
-Message-ID: <CAP-5=fW6Qeu8Q_mQ7zUBsHn+BiMmDJvjn0nT1YAZaLH6EaBjnA@mail.gmail.com>
-Subject: Re: [PATCH] perf vendor events riscv: add StarFive Dubhe-80 JSON file
-To: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Beeman Strong <beeman@rivosinc.com>, linux-riscv@lists.infradead.org, n.shubin@yadro.com, 
-	kconsul@ventanamicro.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 1, 2023 at 6:55=E2=80=AFPM Ji Sheng Teoh
-<jisheng.teoh@starfivetech.com> wrote:
->
-> StarFive's Dubhe-80 supports raw event id 0x00 - 0x22.
-> The raw events are enabled through PMU node of DT binding.
->
-> Example of PMU DT node:
-> pmu {
->         compatible =3D "riscv,pmu";
->         riscv,raw-event-to-mhpmcounters =3D
->                 /* Event ID 1-31 */
->                 <0x00 0x00 0xFFFFFFFF 0xFFFFFFE0 0x00007FF8>,
->                 /* Event ID 32-33 */
->                 <0x00 0x20 0xFFFFFFFF 0xFFFFFFFE 0x00007FF8>,
->                 /* Event ID 34 */
->                 <0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;
-> };
->
-> Example of Perf stat output:
-> [root@user]# perf stat -a \
->         -e access_mmu_stlb \
->         -e miss_mmu_stlb \
->         -e access_mmu_pte_c \
->         -e rob_flush \
->         -e btb_prediction_miss \
->         -e itlb_miss \
->         -e sync_del_fetch_g \
->         -e icache_miss \
->         -e bpu_br_retire \
->         -e bpu_br_miss \
->         -e ret_ins_retire \
->         -e ret_ins_miss \
->         -- openssl speed rsa2048
->
-> Doing 2048 bits private rsa's for 10s: 39 2048 bits private RSA's in
-> 10.14s
-> Doing 2048 bits public rsa's for 10s: 1563 2048 bits public RSA's in
-> 10.00s
-> version: 3.0.11
-> built on: Tue Sep 19 13:02:31 2023 UTC
-> options: bn(64,64)
-> CPUINFO: N/A
->                   sign    verify    sign/s verify/s
-> rsa 2048 bits 0.260000s 0.006398s      3.8    156.3
->
->  Performance counter stats for 'system wide':
->
->            1338350      access_mmu_stlb
->            1154025      miss_mmu_stlb
->            1162691      access_mmu_pte_c
->              34067      rob_flush
->           11212384      btb_prediction_miss
->            1256242      itlb_miss
->          652523491      sync_del_fetch_g
->             384465      icache_miss
->           64635789      bpu_br_retire
->             323440      bpu_br_miss
->            8785143      ret_ins_retire
->              31236      ret_ins_miss
->
->       20.760822480 seconds time elapsed
->
-> Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+Hello,
 
-Thanks Ji Sheng,
+This is a part of my work to improve perf annotate.  At first, I'd
+like reduce the size of struct annotation which will be allocated
+together with struct symbol in some cases.  In fact, it doesn't use
+most of them so it needs to slim down and lazy-allocate used part.
 
-in adding these events for this new architecture is there a reason not
-to add the architecture standard events in
-tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json ?
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json?h=3Dperf-tools-=
-next
+With this applied, size of the struct goes down from 96 to 48.
 
-Perhaps it is worth commenting in the commit message whether or not
-these events are supported.
+The code is available at perf/annotate-diet-v1 branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
-Ian
+Namhyung
+
+
+Namhyung Kim (5):
+  perf annotate: Split struct cycles_info
+  perf annotate: Split struct annotated_branch
+  perf annotate: Move max_coverage to annotated_branch
+  perf annotate: Move some fields to annotated_source
+  perf annotate: Move offsets to annotated_source
+
+ tools/perf/builtin-annotate.c     |   7 +-
+ tools/perf/ui/browsers/annotate.c |  18 ++--
+ tools/perf/util/annotate.c        | 162 ++++++++++++++++--------------
+ tools/perf/util/annotate.h        |  49 +++++----
+ tools/perf/util/block-info.c      |   4 +-
+ tools/perf/util/block-range.c     |   7 +-
+ tools/perf/util/sort.c            |  14 +--
+ 7 files changed, 147 insertions(+), 114 deletions(-)
+
+-- 
+2.42.0.869.gea05f2083d-goog
+
