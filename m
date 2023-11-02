@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AF2210F6
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0DB210F5
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 18:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jjUuBKLo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uRoCphS4"
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1CB019BA
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:17 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5b053454aeeso17994637b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:17 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C3D1FDC
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:28 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5b1ff96d5b9so17688967b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698947957; x=1699552757; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698947968; x=1699552768; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=U9w4V/td7TVuGDaXfz2/TNcOZMETdM8ldpCuL8GOHhM=;
-        b=jjUuBKLoC99e2efLbyAiFolXteu7hI9XUas+oAVV/JJrrXPkEmlrn/vJiFPjVu0cdp
-         ep33Hr3chxZFPJfsOxpnHqarveFwM/lbIIWp5JTDbOiOFC/F7oZ+7HG9FcJqvzBtFUhj
-         7xSqM4lQhg36IFsXRP/EwnWg4gogP34UcxW0xHtWFCauxVwRUbFGxux0q4Kb9+9KtjRH
-         ko0o3qnElHn8Kp9R73nwp6CDClTMW2B467M+gseoJZp9jkVHRyxIfb8hevZoj3jy55r7
-         uOZfNUFhDS0Kdr0wj97uwpVXO1h8Zws3HehnH5znSwO/yY+TyF92JF0aTZ5gyRbbZfMG
-         3y0g==
+        bh=SWO5cb/JGhq0YhhkeavtzpdshUSY9BdgMbF9Q9qBiTA=;
+        b=uRoCphS4a9ghls3sAYAX7ZAuJANZx9SSqLeMB9FiVNgB/fbH176oYzGdft8sdIpm8o
+         wXq+z+WBKiXVhnxX3RPhsytFffanBsYX6Ta06ScOLtprRjYvR014DfYQo3eKyHs2xiU4
+         Tua9WqMIa4eDW9qpEKNZkEqAblO6J1vRfbJJOpCibqvWYaXcymcYIx2+gEpdvVsa7RyE
+         6mfd6QnBwXUhvFeKM0b08PfFraQOpGE5qnzGiFx4PJFQ+J6c/KXKhq5jT+YEfIZtYc2+
+         sV8TXUwGJozE55n6/j/kGWW74EwZJVpFYpI5fEH+obnqbZfbM9eHWDKoWlxtWTDnIclu
+         nmsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698947957; x=1699552757;
+        d=1e100.net; s=20230601; t=1698947968; x=1699552768;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U9w4V/td7TVuGDaXfz2/TNcOZMETdM8ldpCuL8GOHhM=;
-        b=Rx1iT38hi33tV7eRt6ribzT0RbLJE2w7DC6necrmpbAznPFiSJM2Yw/0NZOW8cSXUP
-         wxm2PGFzwYX1Q95UnIKq0zzlI5fCD3cXhbxEhG2MuTxOARNFEohJ3tVAwJA2zIeiyv4A
-         RqKEPmFEtg+q1P/LU4zaasBA33L3zFMXoRbh4NXH0lTB0JdxLOMpbSi8i5MJVBMVnAoD
-         8DY4I/vKZ5QFjuQ+20VLuE5IgYLgKMAiQnpWSjdrGLLI5AwlWEXxZE0Mfh196C5i3ucp
-         BdcZkJ+6FkSkVj+AZL0HKLLM+WaB5ZO6L9UwSNZtQ2YXFMB0ZpReoFPls1+EPVpZs3Vs
-         BaWw==
-X-Gm-Message-State: AOJu0YwxAmFZUHK8Fpjl7V/AtvhU04f/4gWBgTH5ge+0I7YgY/aOQwXs
-	DO9c8+QQyttkH05TaZuEVSRMR5LkbCNE
-X-Google-Smtp-Source: AGHT+IFHEwYanpvQOzxLDtm5IxZPyvGEQwkE6izZzDQNkeMR66jOK2nGvmZEt4mjFnMBfbdNtDpVVC6bjFVy
+        bh=SWO5cb/JGhq0YhhkeavtzpdshUSY9BdgMbF9Q9qBiTA=;
+        b=o1fvjh3zq5D5UbRStAj43gpaP/622U2JiCiZaIQurCfHoQvx01YBznyY5YU6g7idtk
+         zujK3M58RYDcFQwZ1uFs61bcARvuI9dHUDwcthSmfhyZEbZpJenHZRit5R04q1NaW17l
+         iPkkhHk3VW+rsIjldrB5eC1lJtfwoVnPKAiGZogSldilFfNodzC/lUI0fvy9SnHtHOo1
+         /lLvwr0B3MYshts90LBawJlQULoTL0/5yR7zRw4q+Xj8CPfxvVqJ29P8SSct0Gx/taHD
+         79lI4+h7njP1RjI8OOjCIPMYZKKPALmACNhi4NVbZiRr7c44WHlgF9uH/av1yS0wNTrG
+         rqdg==
+X-Gm-Message-State: AOJu0YwGEpvMwRu57ErdDmGwTQ1gwDPwwEamkynZWjANrXzl4s6/Tn2E
+	PUy1kbRfxvUbRT5iSOaWHlY8vrSG30e5
+X-Google-Smtp-Source: AGHT+IHiCSNiwtVO+sCrdD2Mg2fwEV+vcc69wWBZdswoUAczP+5MhgJ9MgBKBwzIu9ysa21AlSt8cBmLq49h
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bb34:df9c:836c:afca])
- (user=irogers job=sendgmr) by 2002:a25:488:0:b0:da0:5452:29f7 with SMTP id
- 130-20020a250488000000b00da0545229f7mr377530ybe.4.1698947956772; Thu, 02 Nov
- 2023 10:59:16 -0700 (PDT)
-Date: Thu,  2 Nov 2023 10:57:17 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:168c:b0:da0:3e46:8ba5 with SMTP
+ id bx12-20020a056902168c00b00da03e468ba5mr359961ybb.8.1698947967753; Thu, 02
+ Nov 2023 10:59:27 -0700 (PDT)
+Date: Thu,  2 Nov 2023 10:57:22 -0700
 In-Reply-To: <20231102175735.2272696-1-irogers@google.com>
-Message-Id: <20231102175735.2272696-36-irogers@google.com>
+Message-Id: <20231102175735.2272696-41-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231102175735.2272696-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
-Subject: [PATCH v4 35/53] perf report: Sort child tasks by tid
+Subject: [PATCH v4 40/53] perf threads: Reduce table size from 256 to 8
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -72,368 +72,33 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Commit 91e467bc568f ("perf machine: Use hashtable for machine
-threads") made the iteration of thread tids unordered. The perf report
---tasks output now shows child threads in an order determined by the
-hashing. For example, in this snippet tid 3 appears after tid 256 even
-though they have the same ppid 2:
-
-```
-$ perf report --tasks
-%      pid      tid     ppid  comm
-         0        0       -1 |swapper
-         2        2        0 | kthreadd
-       256      256        2 |  kworker/12:1H-k
-    693761   693761        2 |  kworker/10:1-mm
-   1301762  1301762        2 |  kworker/1:1-mm_
-   1302530  1302530        2 |  kworker/u32:0-k
-         3        3        2 |  rcu_gp
-...
-```
-
-The output is easier to read if threads appear numerically
-increasing. To allow for this, read all threads into a list then sort
-with a comparator that orders by the child task's of the first common
-parent. The list creation and deletion are created as utilities on
-machine.  The indentation is possible by counting the number of
-parents a child has.
-
-With this change the output for the same data file is now like:
-```
-$ perf report --tasks
-%      pid      tid     ppid  comm
-         0        0       -1 |swapper
-         1        1        0 | systemd
-       823      823        1 |  systemd-journal
-       853      853        1 |  systemd-udevd
-      3230     3230        1 |  systemd-timesyn
-      3236     3236        1 |  auditd
-      3239     3239     3236 |   audisp-syslog
-      3321     3321        1 |  accounts-daemon
-...
-```
+The threads data structure is an array of hashmaps, previously
+rbtrees. The two levels allows for a fixed outer array where access is
+guarded by rw_semaphores. Commit 91e467bc568f ("perf machine: Use
+hashtable for machine threads") sized the outer table at 256 entries
+to avoid future scalability problems, however, this means the threads
+struct is sized at 30,720 bytes. As the hashmaps allow O(1) access for
+the common find/insert/remove operations, lower the number of entries
+to 8. This reduces the size overhead to 960 bytes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-report.c | 203 ++++++++++++++++++++----------------
- tools/perf/util/machine.c   |  30 ++++++
- tools/perf/util/machine.h   |  10 ++
- 3 files changed, 155 insertions(+), 88 deletions(-)
+ tools/perf/util/threads.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index a5d7bc5b843f..f5b95d45f6da 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -59,6 +59,7 @@
- #include <linux/ctype.h>
- #include <signal.h>
- #include <linux/bitmap.h>
-+#include <linux/list_sort.h>
- #include <linux/string.h>
- #include <linux/stringify.h>
- #include <linux/time64.h>
-@@ -830,35 +831,6 @@ static void tasks_setup(struct report *rep)
- 	rep->tool.no_warn = true;
- }
+diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
+index d03bd91a7769..da68d2223f18 100644
+--- a/tools/perf/util/threads.h
++++ b/tools/perf/util/threads.h
+@@ -7,7 +7,7 @@
  
--struct task {
--	struct thread		*thread;
--	struct list_head	 list;
--	struct list_head	 children;
--};
--
--static struct task *tasks_list(struct task *task, struct machine *machine)
--{
--	struct thread *parent_thread, *thread = task->thread;
--	struct task   *parent_task;
--
--	/* Already listed. */
--	if (!list_empty(&task->list))
--		return NULL;
--
--	/* Last one in the chain. */
--	if (thread__ppid(thread) == -1)
--		return task;
--
--	parent_thread = machine__find_thread(machine, -1, thread__ppid(thread));
--	if (!parent_thread)
--		return ERR_PTR(-ENOENT);
--
--	parent_task = thread__priv(parent_thread);
--	thread__put(parent_thread);
--	list_add_tail(&task->list, &parent_task->children);
--	return tasks_list(parent_task, machine);
--}
--
- struct maps__fprintf_task_args {
- 	int indent;
- 	FILE *fp;
-@@ -902,89 +874,144 @@ static size_t maps__fprintf_task(struct maps *maps, int indent, FILE *fp)
- 	return args.printed;
- }
+ struct thread;
  
--static void task__print_level(struct task *task, FILE *fp, int level)
-+static int thread_level(struct machine *machine, const struct thread *thread)
- {
--	struct thread *thread = task->thread;
--	struct task *child;
--	int comm_indent = fprintf(fp, "  %8d %8d %8d |%*s",
--				  thread__pid(thread), thread__tid(thread),
--				  thread__ppid(thread), level, "");
-+	struct thread *parent_thread;
-+	int res;
+-#define THREADS__TABLE_BITS	8
++#define THREADS__TABLE_BITS	3
+ #define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
  
--	fprintf(fp, "%s\n", thread__comm_str(thread));
-+	if (thread__tid(thread) <= 0)
-+		return 0;
- 
--	maps__fprintf_task(thread__maps(thread), comm_indent, fp);
-+	if (thread__ppid(thread) <= 0)
-+		return 1;
- 
--	if (!list_empty(&task->children)) {
--		list_for_each_entry(child, &task->children, list)
--			task__print_level(child, fp, level + 1);
-+	parent_thread = machine__find_thread(machine, -1, thread__ppid(thread));
-+	if (!parent_thread) {
-+		pr_err("Missing parent thread of %d\n", thread__tid(thread));
-+		return 0;
- 	}
-+	res = 1 + thread_level(machine, parent_thread);
-+	thread__put(parent_thread);
-+	return res;
- }
- 
--static int tasks_print(struct report *rep, FILE *fp)
-+static void task__print_level(struct machine *machine, struct thread *thread, FILE *fp)
- {
--	struct perf_session *session = rep->session;
--	struct machine      *machine = &session->machines.host;
--	struct task *tasks, *task;
--	unsigned int nr = 0, itask = 0, i;
--	struct rb_node *nd;
--	LIST_HEAD(list);
-+	int level = thread_level(machine, thread);
-+	int comm_indent = fprintf(fp, "  %8d %8d %8d |%*s",
-+				  thread__pid(thread), thread__tid(thread),
-+				  thread__ppid(thread), level, "");
- 
--	/*
--	 * No locking needed while accessing machine->threads,
--	 * because --tasks is single threaded command.
--	 */
-+	fprintf(fp, "%s\n", thread__comm_str(thread));
- 
--	/* Count all the threads. */
--	for (i = 0; i < THREADS__TABLE_SIZE; i++)
--		nr += machine->threads[i].nr;
-+	maps__fprintf_task(thread__maps(thread), comm_indent, fp);
-+}
- 
--	tasks = malloc(sizeof(*tasks) * nr);
--	if (!tasks)
--		return -ENOMEM;
-+static int task_list_cmp(void *priv, const struct list_head *la, const struct list_head *lb)
-+{
-+	struct machine *machine = priv;
-+	struct thread_list *task_a = list_entry(la, struct thread_list, list);
-+	struct thread_list *task_b = list_entry(lb, struct thread_list, list);
-+	struct thread *a = task_a->thread;
-+	struct thread *b = task_b->thread;
-+	int level_a, level_b, res;
-+
-+	/* Compare a and b to root. */
-+	if (thread__tid(a) == thread__tid(b))
-+		return 0;
- 
--	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads *threads = &machine->threads[i];
-+	if (thread__tid(a) == 0)
-+		return -1;
- 
--		for (nd = rb_first_cached(&threads->entries); nd;
--		     nd = rb_next(nd)) {
--			task = tasks + itask++;
-+	if (thread__tid(b) == 0)
-+		return 1;
- 
--			task->thread = rb_entry(nd, struct thread_rb_node, rb_node)->thread;
--			INIT_LIST_HEAD(&task->children);
--			INIT_LIST_HEAD(&task->list);
--			thread__set_priv(task->thread, task);
--		}
-+	/* If parents match sort by tid. */
-+	if (thread__ppid(a) == thread__ppid(b)) {
-+		return thread__tid(a) < thread__tid(b)
-+			? -1
-+			: (thread__tid(a) > thread__tid(b) ? 1 : 0);
- 	}
- 
- 	/*
--	 * Iterate every task down to the unprocessed parent
--	 * and link all in task children list. Task with no
--	 * parent is added into 'list'.
-+	 * Find a and b such that if they are a child of each other a and b's
-+	 * tid's match, otherwise a and b have a common parent and distinct
-+	 * tid's to sort by. First make the depths of the threads match.
- 	 */
--	for (itask = 0; itask < nr; itask++) {
--		task = tasks + itask;
--
--		if (!list_empty(&task->list))
--			continue;
--
--		task = tasks_list(task, machine);
--		if (IS_ERR(task)) {
--			pr_err("Error: failed to process tasks\n");
--			free(tasks);
--			return PTR_ERR(task);
-+	level_a = thread_level(machine, a);
-+	level_b = thread_level(machine, b);
-+	a = thread__get(a);
-+	b = thread__get(b);
-+	for (int i = level_a; i > level_b; i--) {
-+		struct thread *parent = machine__find_thread(machine, -1, thread__ppid(a));
-+
-+		thread__put(a);
-+		if (!parent) {
-+			pr_err("Missing parent thread of %d\n", thread__tid(a));
-+			thread__put(b);
-+			return -1;
- 		}
-+		a = parent;
-+	}
-+	for (int i = level_b; i > level_a; i--) {
-+		struct thread *parent = machine__find_thread(machine, -1, thread__ppid(b));
- 
--		if (task)
--			list_add_tail(&task->list, &list);
-+		thread__put(b);
-+		if (!parent) {
-+			pr_err("Missing parent thread of %d\n", thread__tid(b));
-+			thread__put(a);
-+			return 1;
-+		}
-+		b = parent;
-+	}
-+	/* Search up to a common parent. */
-+	while (thread__ppid(a) != thread__ppid(b)) {
-+		struct thread *parent;
-+
-+		parent = machine__find_thread(machine, -1, thread__ppid(a));
-+		thread__put(a);
-+		if (!parent)
-+			pr_err("Missing parent thread of %d\n", thread__tid(a));
-+		a = parent;
-+		parent = machine__find_thread(machine, -1, thread__ppid(b));
-+		thread__put(b);
-+		if (!parent)
-+			pr_err("Missing parent thread of %d\n", thread__tid(b));
-+		b = parent;
-+		if (!a || !b)
-+			return !a && !b ? 0 : (!a ? -1 : 1);
-+	}
-+	if (thread__tid(a) == thread__tid(b)) {
-+		/* a is a child of b or vice-versa, deeper levels appear later. */
-+		res = level_a < level_b ? -1 : (level_a > level_b ? 1 : 0);
-+	} else {
-+		/* Sort by tid now the parent is the same. */
-+		res = thread__tid(a) < thread__tid(b) ? -1 : 1;
- 	}
-+	thread__put(a);
-+	thread__put(b);
-+	return res;
-+}
-+
-+static int tasks_print(struct report *rep, FILE *fp)
-+{
-+	struct machine *machine = &rep->session->machines.host;
-+	LIST_HEAD(tasks);
-+	int ret;
- 
--	fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", "comm");
-+	ret = machine__thread_list(machine, &tasks);
-+	if (!ret) {
-+		struct thread_list *task;
- 
--	list_for_each_entry(task, &list, list)
--		task__print_level(task, fp, 0);
-+		list_sort(machine, &tasks, task_list_cmp);
- 
--	free(tasks);
--	return 0;
-+		fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", "comm");
-+
-+		list_for_each_entry(task, &tasks, list)
-+			task__print_level(machine, task->thread, fp);
-+	}
-+	thread_list__delete(&tasks);
-+	return ret;
- }
- 
- static int __cmd_report(struct report *rep)
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index f9c77119af22..6d7a505850c8 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3258,6 +3258,36 @@ int machines__for_each_thread(struct machines *machines,
- 	return rc;
- }
- 
-+
-+static int thread_list_cb(struct thread *thread, void *data)
-+{
-+	struct list_head *list = data;
-+	struct thread_list *entry = malloc(sizeof(*entry));
-+
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->thread = thread__get(thread);
-+	list_add_tail(&entry->list, list);
-+	return 0;
-+}
-+
-+int machine__thread_list(struct machine *machine, struct list_head *list)
-+{
-+	return machine__for_each_thread(machine, thread_list_cb, list);
-+}
-+
-+void thread_list__delete(struct list_head *list)
-+{
-+	struct thread_list *pos, *next;
-+
-+	list_for_each_entry_safe(pos, next, list, list) {
-+		thread__zput(pos->thread);
-+		list_del(&pos->list);
-+		free(pos);
-+	}
-+}
-+
- pid_t machine__get_current_tid(struct machine *machine, int cpu)
- {
- 	if (cpu < 0 || (size_t)cpu >= machine->current_tid_sz)
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 1279acda6a8a..b738ce84817b 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -280,6 +280,16 @@ int machines__for_each_thread(struct machines *machines,
- 			      int (*fn)(struct thread *thread, void *p),
- 			      void *priv);
- 
-+struct thread_list {
-+	struct list_head	 list;
-+	struct thread		*thread;
-+};
-+
-+/* Make a list of struct thread_list based on threads in the machine. */
-+int machine__thread_list(struct machine *machine, struct list_head *list);
-+/* Free up the nodes within the thread_list list. */
-+void thread_list__delete(struct list_head *list);
-+
- pid_t machine__get_current_tid(struct machine *machine, int cpu);
- int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
- 			     pid_t tid);
+ struct threads_table_entry {
 -- 
 2.42.0.869.gea05f2083d-goog
 
