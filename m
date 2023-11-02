@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA21920B0B
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 17:59:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F7220B3E
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 17:59:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mb5BKuI0"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 896D010CB
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:03 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a541b720aso1517212276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NYIJCuUu"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D7F10F1
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 10:59:10 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7be940fe1so17276397b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 10:59:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698947943; x=1699552743; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698947950; x=1699552750; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/uke6dz3sLBq95/rU70Wxcl4SlZDeN/n2+8hitECOvo=;
-        b=Mb5BKuI0XWCgNBxbPjShHetNd7LYdnc3vKQhlBqVHcs20iGLUmRODSHaLApAUrmAzt
-         wnPUkoT8rjCJW6Nw7+e7V/m5y6hVmcT4NaNyRg0PJ/aXT7zvqYIMLkSV23S00GXwBHB7
-         Hc5Dq4Frw/x5WsO60emym6jRysfKVVx/rdBxyt1x1NlF+WXJGD0v8ERUlSbv//T9oq6M
-         rcLJBhdiYMvATeUccG+p7Vz5/cAlPeuoiVS7Mb4NrOS4ohIo0YLrtFaRuid7r2E80XvZ
-         r+2Y/6Cw/5IU0Dptl9fskseELgJzvNdDIyktwd+LYAV8kmLAFzWRnlyjxCjveRliZFz8
-         BA8A==
+        bh=TbDbs1Im1ZcqPVhA4zTTu8o+l5RjjoaTX+xnUzVHRQ8=;
+        b=NYIJCuUutl0re+r4nfkwkzfjtFb1GZAyyQvZ/uv2IOgjUJbT8kJ9d3xW7zjOpzNsss
+         KesKD7zzS7A22KfgxS0UvfEeKTiafwrY51Y8NQI4uOubp6jHutY59j2Fi+jV6qcSfQ0y
+         UmWAK7twSVBUTvNnJpQeNSWOyewkdjOkOHW5BlByxRPCPO/iP1Tou9OiwZXMQ1PcaVxN
+         JGbbjTKjekQS7ej4PqdWhXhcfm49VqefGr0HipdYItewTX2u2LvNArc8GAXdt0PVSjM4
+         puadafCcGNChgklGcJ7bXIexzGgAAE+eXOsWzixbxl+Eg09oUBhcEBiQjG2fKKQBUqdT
+         JjQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698947943; x=1699552743;
+        d=1e100.net; s=20230601; t=1698947950; x=1699552750;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/uke6dz3sLBq95/rU70Wxcl4SlZDeN/n2+8hitECOvo=;
-        b=Q0CuI5sOnjppBYvmQTDenaXmQ4TQ3yE+Ksc5krFdmruDh+n68cGmpuij25JSlVBDpp
-         BW2vhHHZErTukmVX1B64TkO4XrOAiiUOe52KAKJ3g356FkdpDVPfVgZLv9SNXDHs4hGM
-         g2EG5ZUl9Pmbj1NKJMNAtZAM/CeyI2NJ5oxuA45ZPKgZ4oKCQwfH/DCfiW4MkVmLSLMM
-         1TG8NEnpwi2anfNauXMJsQjSdi07FbjjtJBHIrqguKlzYaIWlZ38VMuLnSgDtyFn5nYR
-         /WaiWU14Mmr6YZ9hBcpedX5jXtilV5joe81BOkX97tP2q7QGUheotafOEDiA4eqN6L4g
-         2YOA==
-X-Gm-Message-State: AOJu0Yx2t/kGIQR1lttTGnOk45WB+hkBz5MUnxFf3Pf2vIIpiDUfvQiz
-	2uUpSqDGzx+b9xEZqfGURvx87/UL8qXj
-X-Google-Smtp-Source: AGHT+IFhvleBPR3MXvp+jRIcJindLHAwLW8bfnu6BkmQJIrCUtN9UKutUD9/8CVRafl+Yn2r+NxR3g6J2u3T
+        bh=TbDbs1Im1ZcqPVhA4zTTu8o+l5RjjoaTX+xnUzVHRQ8=;
+        b=l5y2c1HrOLPcnY+UGT4liJdoUXvTKwgnGthm1lnj9XWuJ6OVAspaCwbfdpvqtGToJ6
+         FZd8PY1TD6QrOJvjTCJfwSUpyGiB8GZW8CsCuJUz8dzdLAuwHf8tijUrWvPgNNB/qtqt
+         yB80D1CnlamZ0Z8IlxwizQglL1jbhtHDDu9UGZThXQRlAzgQ1G/uabwuUwsMARdDdp/C
+         6AvGE1rfVaQx89GGK4MPM+1kMET8mjVGyIjqcrU7EhzJJKTut/P5zUkagjkLvwgkv0/W
+         E+4zHEWvGFrBIEsatd5LHS4b6I4vG4N15GfE/KNJZM2KoZrCxPrsRSmYoEmG8ZdLXxHQ
+         TKSw==
+X-Gm-Message-State: AOJu0YzivwttwFB4J9VTWYbGOkC2XvHzOBe7+jeOzSxGHtUligRzKAiP
+	7UFqcTS0AM24mm+sz4AS6QEY9Myc5lKQ
+X-Google-Smtp-Source: AGHT+IFxR/rimgu0EpfY4U0R4DLHaRXWokLKJp6A1TGbBaaODBzQi/Ul4fDF+VpDq/VTpH3GE0Ataa7yhMT3
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bb34:df9c:836c:afca])
- (user=irogers job=sendgmr) by 2002:a25:5046:0:b0:da0:433e:871d with SMTP id
- e67-20020a255046000000b00da0433e871dmr325547ybb.7.1698947942693; Thu, 02 Nov
- 2023 10:59:02 -0700 (PDT)
-Date: Thu,  2 Nov 2023 10:57:11 -0700
+ (user=irogers job=sendgmr) by 2002:a25:848c:0:b0:d9a:5e10:c34d with SMTP id
+ v12-20020a25848c000000b00d9a5e10c34dmr376753ybk.11.1698947949820; Thu, 02 Nov
+ 2023 10:59:09 -0700 (PDT)
+Date: Thu,  2 Nov 2023 10:57:14 -0700
 In-Reply-To: <20231102175735.2272696-1-irogers@google.com>
-Message-Id: <20231102175735.2272696-30-irogers@google.com>
+Message-Id: <20231102175735.2272696-33-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231102175735.2272696-1-irogers@google.com>
 X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
-Subject: [PATCH v4 29/53] perf maps: Get map before returning in maps__find
+Subject: [PATCH v4 32/53] perf maps: Hide maps internals
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -72,247 +72,389 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Finding a map is done under a lock, returning the map without a
-reference count means it can be removed without notice and causing
-uses after free. Grab a reference count to the map within the lock
-region and return this. Fix up locations that need a map__put
-following this.
+Move the struct into the C file. Add maps__equal to work around
+exposing the struct for reference count checking. Add accessors for
+the unwind_libunwind_ops. Move maps_list_node to its only use in
+symbol.c.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/tests/dwarf-unwind.c |  1 +
- tools/perf/tests/vmlinux-kallsyms.c      |  5 ++---
- tools/perf/util/bpf-event.c              |  1 +
- tools/perf/util/event.c                  |  4 ++--
- tools/perf/util/machine.c                | 22 ++++++++--------------
- tools/perf/util/maps.c                   | 17 ++++++++++-------
- tools/perf/util/symbol.c                 |  3 ++-
- 7 files changed, 26 insertions(+), 27 deletions(-)
+ tools/perf/tests/thread-maps-share.c     |  8 +-
+ tools/perf/util/callchain.c              |  2 +-
+ tools/perf/util/maps.c                   | 96 +++++++++++++++++++++++
+ tools/perf/util/maps.h                   | 97 +++---------------------
+ tools/perf/util/symbol.c                 | 10 +++
+ tools/perf/util/thread.c                 |  2 +-
+ tools/perf/util/unwind-libunwind-local.c |  2 +-
+ tools/perf/util/unwind-libunwind.c       |  7 +-
+ 8 files changed, 123 insertions(+), 101 deletions(-)
 
-diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
-index 5bfec3345d59..c05c0a85dad4 100644
---- a/tools/perf/arch/x86/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
-@@ -34,6 +34,7 @@ static int sample_ustack(struct perf_sample *sample,
- 	}
+diff --git a/tools/perf/tests/thread-maps-share.c b/tools/perf/tests/thread-maps-share.c
+index 7fa6f7c568e2..e9ecd30a5c05 100644
+--- a/tools/perf/tests/thread-maps-share.c
++++ b/tools/perf/tests/thread-maps-share.c
+@@ -46,9 +46,9 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
+ 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(maps)), 4);
  
- 	stack_size = map__end(map) - sp;
-+	map__put(map);
- 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
+ 	/* test the maps pointer is shared */
+-	TEST_ASSERT_VAL("maps don't match", RC_CHK_EQUAL(maps, thread__maps(t1)));
+-	TEST_ASSERT_VAL("maps don't match", RC_CHK_EQUAL(maps, thread__maps(t2)));
+-	TEST_ASSERT_VAL("maps don't match", RC_CHK_EQUAL(maps, thread__maps(t3)));
++	TEST_ASSERT_VAL("maps don't match", maps__equal(maps, thread__maps(t1)));
++	TEST_ASSERT_VAL("maps don't match", maps__equal(maps, thread__maps(t2)));
++	TEST_ASSERT_VAL("maps don't match", maps__equal(maps, thread__maps(t3)));
  
- 	memcpy(buf, (void *) sp, stack_size);
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 822f893e67d5..e808e6fc8f76 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -151,10 +151,8 @@ static int test__vmlinux_matches_kallsyms_cb2(struct map *map, void *data)
- 	u64 mem_end = map__unmap_ip(args->vmlinux_map, map__end(map));
+ 	/*
+ 	 * Verify the other leader was created by previous call.
+@@ -73,7 +73,7 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
+ 	other_maps = thread__maps(other);
+ 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(other_maps)), 2);
  
- 	pair = maps__find(args->kallsyms.kmaps, mem_start);
--	if (pair == NULL || map__priv(pair))
--		return 0;
+-	TEST_ASSERT_VAL("maps don't match", RC_CHK_EQUAL(other_maps, thread__maps(other_leader)));
++	TEST_ASSERT_VAL("maps don't match", maps__equal(other_maps, thread__maps(other_leader)));
  
--	if (map__start(pair) == mem_start) {
-+	if (pair != NULL && !map__priv(pair) && map__start(pair) == mem_start) {
- 		struct dso *dso = map__dso(map);
- 
- 		if (!args->header_printed) {
-@@ -170,6 +168,7 @@ static int test__vmlinux_matches_kallsyms_cb2(struct map *map, void *data)
- 		pr_info(" %s\n", dso->name);
- 		map__set_priv(pair, 1);
- 	}
-+	map__put(pair);
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index 830711cae30d..d07fd5ffa823 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -63,6 +63,7 @@ static int machine__process_bpf_event_load(struct machine *machine,
- 			dso->bpf_prog.id = id;
- 			dso->bpf_prog.sub_id = i;
- 			dso->bpf_prog.env = env;
-+			map__put(map);
- 		}
- 	}
- 	return 0;
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 68f45e9e63b6..198903157f9e 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -511,7 +511,7 @@ size_t perf_event__fprintf_text_poke(union perf_event *event, struct machine *ma
- 		struct addr_location al;
- 
- 		addr_location__init(&al);
--		al.map = map__get(maps__find(machine__kernel_maps(machine), tp->addr));
-+		al.map = maps__find(machine__kernel_maps(machine), tp->addr);
- 		if (al.map && map__load(al.map) >= 0) {
- 			al.addr = map__map_ip(al.map, tp->addr);
- 			al.sym = map__find_symbol(al.map, al.addr);
-@@ -641,7 +641,7 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 		return NULL;
- 	}
- 	al->maps = maps__get(maps);
--	al->map = map__get(maps__find(maps, al->addr));
-+	al->map = maps__find(maps, al->addr);
- 	if (al->map != NULL) {
- 		/*
- 		 * Kernel maps might be changed when loading symbols so loading
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index ab345604f274..1112a9dbb21a 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -897,7 +897,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 	struct symbol *sym;
- 	struct dso *dso;
- 	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
--	bool put_map = false;
- 	int err = 0;
- 
- 	if (!map) {
-@@ -914,12 +913,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 			err = -ENOMEM;
+ 	/* release thread group */
+ 	thread__put(t3);
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 8262f69118db..7517d16c02ec 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -1157,7 +1157,7 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
+ 		if (al->map == NULL)
  			goto out;
- 		}
--		/*
--		 * The inserted map has a get on it, we need to put to release
--		 * the reference count here, but do it after all accesses are
--		 * done.
--		 */
--		put_map = true;
- 		if (event->ksymbol.ksym_type == PERF_RECORD_KSYMBOL_TYPE_OOL) {
- 			dso->binary_type = DSO_BINARY_TYPE__OOL;
- 			dso->data.file_size = event->ksymbol.len;
-@@ -953,8 +946,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
  	}
- 	dso__insert_symbol(dso, sym);
- out:
--	if (put_map)
--		map__put(map);
-+	map__put(map);
- 	return err;
- }
- 
-@@ -978,7 +970,7 @@ static int machine__process_ksymbol_unregister(struct machine *machine,
- 		if (sym)
- 			dso__delete_symbol(dso, sym);
- 	}
--
-+	map__put(map);
- 	return 0;
- }
- 
-@@ -1006,11 +998,11 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
- 		perf_event__fprintf_text_poke(event, machine, stdout);
- 
- 	if (!event->text_poke.new_len)
--		return 0;
-+		goto out;
- 
- 	if (cpumode != PERF_RECORD_MISC_KERNEL) {
- 		pr_debug("%s: unsupported cpumode - ignoring\n", __func__);
--		return 0;
-+		goto out;
- 	}
- 
- 	if (dso) {
-@@ -1033,7 +1025,8 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
- 		pr_debug("Failed to find kernel text poke address map for %#" PRI_lx64 "\n",
- 			 event->text_poke.addr);
- 	}
--
-+out:
-+	map__put(map);
- 	return 0;
- }
- 
-@@ -1301,9 +1294,10 @@ static int machine__map_x86_64_entry_trampolines_cb(struct map *map, void *data)
- 		return 0;
- 
- 	dest_map = maps__find(args->kmaps, map__pgoff(map));
--	if (dest_map != map)
-+	if (RC_CHK_ACCESS(dest_map) != RC_CHK_ACCESS(map))
- 		map__set_pgoff(map, map__map_ip(dest_map, map__pgoff(map)));
- 
-+	map__put(dest_map);
- 	args->found = true;
- 	return 0;
- }
+-	if (RC_CHK_EQUAL(al->maps, machine__kernel_maps(machine))) {
++	if (maps__equal(al->maps, machine__kernel_maps(machine))) {
+ 		if (machine__is_host(machine)) {
+ 			al->cpumode = PERF_RECORD_MISC_KERNEL;
+ 			al->level = 'k';
 diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 06fdd8a7c2a2..28facfdac1d7 100644
+index b3937e734cbf..41e9e39b1b4c 100644
 --- a/tools/perf/util/maps.c
 +++ b/tools/perf/util/maps.c
-@@ -487,15 +487,18 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
- struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp)
+@@ -6,9 +6,63 @@
+ #include "dso.h"
+ #include "map.h"
+ #include "maps.h"
++#include "rwsem.h"
+ #include "thread.h"
+ #include "ui/ui.h"
+ #include "unwind.h"
++#include <internal/rc_check.h>
++
++/*
++ * Locking/sorting note:
++ *
++ * Sorting is done with the write lock, iteration and binary searching happens
++ * under the read lock requiring being sorted. There is a race between sorting
++ * releasing the write lock and acquiring the read lock for iteration/searching
++ * where another thread could insert and break the sorting of the maps. In
++ * practice inserting maps should be rare meaning that the race shouldn't lead
++ * to live lock. Removal of maps doesn't break being sorted.
++ */
++
++DECLARE_RC_STRUCT(maps) {
++	struct rw_semaphore lock;
++	/**
++	 * @maps_by_address: array of maps sorted by their starting address if
++	 * maps_by_address_sorted is true.
++	 */
++	struct map	 **maps_by_address;
++	/**
++	 * @maps_by_name: optional array of maps sorted by their dso name if
++	 * maps_by_name_sorted is true.
++	 */
++	struct map	 **maps_by_name;
++	struct machine	 *machine;
++#ifdef HAVE_LIBUNWIND_SUPPORT
++	void		*addr_space;
++	const struct unwind_libunwind_ops *unwind_libunwind_ops;
++#endif
++	refcount_t	 refcnt;
++	/**
++	 * @nr_maps: number of maps_by_address, and possibly maps_by_name,
++	 * entries that contain maps.
++	 */
++	unsigned int	 nr_maps;
++	/**
++	 * @nr_maps_allocated: number of entries in maps_by_address and possibly
++	 * maps_by_name.
++	 */
++	unsigned int	 nr_maps_allocated;
++	/**
++	 * @last_search_by_name_idx: cache of last found by name entry's index
++	 * as frequent searches for the same dso name are common.
++	 */
++	unsigned int	 last_search_by_name_idx;
++	/** @maps_by_address_sorted: is maps_by_address sorted. */
++	bool		 maps_by_address_sorted;
++	/** @maps_by_name_sorted: is maps_by_name sorted. */
++	bool		 maps_by_name_sorted;
++	/** @ends_broken: does the map contain a map where end values are unset/unsorted? */
++	bool		 ends_broken;
++};
+ 
+ static void check_invariants(const struct maps *maps __maybe_unused)
  {
- 	struct map *map = maps__find(maps, addr);
-+	struct symbol *result = NULL;
- 
- 	/* Ensure map is loaded before using map->map_ip */
- 	if (map != NULL && map__load(map) >= 0) {
--		if (mapp != NULL)
--			*mapp = map; // TODO: map_put on else path when find returns a get.
--		return map__find_symbol(map, map__map_ip(map, addr));
--	}
-+		if (mapp)
-+			*mapp = map;
- 
--	return NULL;
-+		result = map__find_symbol(map, map__map_ip(map, addr));
-+		if (!mapp)
-+			map__put(map);
-+	}
-+	return result;
+@@ -103,6 +157,43 @@ static void maps__set_maps_by_name_sorted(struct maps *maps, bool value)
+ 	RC_CHK_ACCESS(maps)->maps_by_name_sorted = value;
  }
  
- struct maps__find_symbol_by_name_args {
-@@ -539,7 +542,7 @@ int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams)
- 	if (ams->addr < map__start(ams->ms.map) || ams->addr >= map__end(ams->ms.map)) {
- 		if (maps == NULL)
- 			return -1;
--		ams->ms.map = maps__find(maps, ams->addr);  // TODO: map_get
-+		ams->ms.map = maps__find(maps, ams->addr);
- 		if (ams->ms.map == NULL)
- 			return -1;
- 	}
-@@ -848,7 +851,7 @@ struct map *maps__find(struct maps *maps, u64 ip)
- 					sizeof(*mapp), map__addr_cmp);
++struct machine *maps__machine(const struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->machine;
++}
++
++unsigned int maps__nr_maps(const struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->nr_maps;
++}
++
++refcount_t *maps__refcnt(struct maps *maps)
++{
++	return &RC_CHK_ACCESS(maps)->refcnt;
++}
++
++#ifdef HAVE_LIBUNWIND_SUPPORT
++void *maps__addr_space(const struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->addr_space;
++}
++
++void maps__set_addr_space(struct maps *maps, void *addr_space)
++{
++	RC_CHK_ACCESS(maps)->addr_space = addr_space;
++}
++
++const struct unwind_libunwind_ops *maps__unwind_libunwind_ops(const struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->unwind_libunwind_ops;
++}
++
++void maps__set_unwind_libunwind_ops(struct maps *maps, const struct unwind_libunwind_ops *ops)
++{
++	RC_CHK_ACCESS(maps)->unwind_libunwind_ops = ops;
++}
++#endif
++
+ static struct rw_semaphore *maps__lock(struct maps *maps)
+ {
+ 	/*
+@@ -440,6 +531,11 @@ bool maps__empty(struct maps *maps)
+ 	return maps__nr_maps(maps) == 0;
+ }
  
- 			if (mapp)
--				result = *mapp; // map__get(*mapp);
-+				result = map__get(*mapp);
- 			done = true;
- 		}
- 		up_read(maps__lock(maps));
++bool maps__equal(struct maps *a, struct maps *b)
++{
++	return RC_CHK_EQUAL(a, b);
++}
++
+ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data), void *data)
+ {
+ 	bool done = false;
+diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
+index df9dd5a0e3c0..4bcba136ffe5 100644
+--- a/tools/perf/util/maps.h
++++ b/tools/perf/util/maps.h
+@@ -3,80 +3,15 @@
+ #define __PERF_MAPS_H
+ 
+ #include <linux/refcount.h>
+-#include <linux/rbtree.h>
+ #include <stdio.h>
+ #include <stdbool.h>
+ #include <linux/types.h>
+-#include "rwsem.h"
+-#include <internal/rc_check.h>
+ 
+ struct ref_reloc_sym;
+ struct machine;
+ struct map;
+ struct maps;
+ 
+-struct map_list_node {
+-	struct list_head node;
+-	struct map *map;
+-};
+-
+-static inline struct map_list_node *map_list_node__new(void)
+-{
+-	return malloc(sizeof(struct map_list_node));
+-}
+-
+-/*
+- * Locking/sorting note:
+- *
+- * Sorting is done with the write lock, iteration and binary searching happens
+- * under the read lock requiring being sorted. There is a race between sorting
+- * releasing the write lock and acquiring the read lock for iteration/searching
+- * where another thread could insert and break the sorting of the maps. In
+- * practice inserting maps should be rare meaning that the race shouldn't lead
+- * to live lock. Removal of maps doesn't break being sorted.
+- */
+-
+-DECLARE_RC_STRUCT(maps) {
+-	struct rw_semaphore lock;
+-	/**
+-	 * @maps_by_address: array of maps sorted by their starting address if
+-	 * maps_by_address_sorted is true.
+-	 */
+-	struct map	 **maps_by_address;
+-	/**
+-	 * @maps_by_name: optional array of maps sorted by their dso name if
+-	 * maps_by_name_sorted is true.
+-	 */
+-	struct map	 **maps_by_name;
+-	struct machine	 *machine;
+-#ifdef HAVE_LIBUNWIND_SUPPORT
+-	void		*addr_space;
+-	const struct unwind_libunwind_ops *unwind_libunwind_ops;
+-#endif
+-	refcount_t	 refcnt;
+-	/**
+-	 * @nr_maps: number of maps_by_address, and possibly maps_by_name,
+-	 * entries that contain maps.
+-	 */
+-	unsigned int	 nr_maps;
+-	/**
+-	 * @nr_maps_allocated: number of entries in maps_by_address and possibly
+-	 * maps_by_name.
+-	 */
+-	unsigned int	 nr_maps_allocated;
+-	/**
+-	 * @last_search_by_name_idx: cache of last found by name entry's index
+-	 * as frequent searches for the same dso name are common.
+-	 */
+-	unsigned int	 last_search_by_name_idx;
+-	/** @maps_by_address_sorted: is maps_by_address sorted. */
+-	bool		 maps_by_address_sorted;
+-	/** @maps_by_name_sorted: is maps_by_name sorted. */
+-	bool		 maps_by_name_sorted;
+-	/** @ends_broken: does the map contain a map where end values are unset/unsorted? */
+-	bool		 ends_broken;
+-};
+-
+ #define KMAP_NAME_LEN 256
+ 
+ struct kmap {
+@@ -100,36 +35,22 @@ static inline void __maps__zput(struct maps **map)
+ 
+ #define maps__zput(map) __maps__zput(&map)
+ 
++bool maps__equal(struct maps *a, struct maps *b);
++
+ /* Iterate over map calling cb for each entry. */
+ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data), void *data);
+ /* Iterate over map removing an entry if cb returns true. */
+ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
+ 
+-static inline struct machine *maps__machine(struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->machine;
+-}
+-
+-static inline unsigned int maps__nr_maps(const struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->nr_maps;
+-}
+-
+-static inline refcount_t *maps__refcnt(struct maps *maps)
+-{
+-	return &RC_CHK_ACCESS(maps)->refcnt;
+-}
++struct machine *maps__machine(const struct maps *maps);
++unsigned int maps__nr_maps(const struct maps *maps);
++refcount_t *maps__refcnt(struct maps *maps);
+ 
+ #ifdef HAVE_LIBUNWIND_SUPPORT
+-static inline void *maps__addr_space(struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->addr_space;
+-}
+-
+-static inline const struct unwind_libunwind_ops *maps__unwind_libunwind_ops(const struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->unwind_libunwind_ops;
+-}
++void *maps__addr_space(const struct maps *maps);
++void maps__set_addr_space(struct maps *maps, void *addr_space);
++const struct unwind_libunwind_ops *maps__unwind_libunwind_ops(const struct maps *maps);
++void maps__set_unwind_libunwind_ops(struct maps *maps, const struct unwind_libunwind_ops *ops);
+ #endif
+ 
+ size_t maps__fprintf(struct maps *maps, FILE *fp);
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 30da8a405d11..ad4819a24320 100644
+index 0785a54e832e..35975189999b 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -757,7 +757,6 @@ static int dso__load_all_kallsyms(struct dso *dso, const char *filename)
+@@ -63,6 +63,16 @@ struct symbol_conf symbol_conf = {
+ 	.res_sample		= 0,
+ };
  
- static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
++struct map_list_node {
++	struct list_head node;
++	struct map *map;
++};
++
++static struct map_list_node *map_list_node__new(void)
++{
++	return malloc(sizeof(struct map_list_node));
++}
++
+ static enum dso_binary_type binary_type_symtab[] = {
+ 	DSO_BINARY_TYPE__KALLSYMS,
+ 	DSO_BINARY_TYPE__GUEST_KALLSYMS,
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 89c47a5098e2..c59ab4d79163 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -383,7 +383,7 @@ static int thread__clone_maps(struct thread *thread, struct thread *parent, bool
+ 	if (thread__pid(thread) == thread__pid(parent))
+ 		return thread__prepare_access(thread);
+ 
+-	if (RC_CHK_EQUAL(thread__maps(thread), thread__maps(parent))) {
++	if (maps__equal(thread__maps(thread), thread__maps(parent))) {
+ 		pr_debug("broken map groups on thread %d/%d parent %d/%d\n",
+ 			 thread__pid(thread), thread__tid(thread),
+ 			 thread__pid(parent), thread__tid(parent));
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 228f1565bd0b..b69dc3a447db 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -706,7 +706,7 @@ static int _unwind__prepare_access(struct maps *maps)
  {
--	struct map *curr_map;
- 	struct symbol *pos;
- 	int count = 0;
- 	struct rb_root_cached old_root = dso->symbols;
-@@ -770,6 +769,7 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
- 	*root = RB_ROOT_CACHED;
+ 	void *addr_space = unw_create_addr_space(&accessors, 0);
  
- 	while (next) {
-+		struct map *curr_map;
- 		struct dso *curr_map_dso;
- 		char *module;
+-	RC_CHK_ACCESS(maps)->addr_space = addr_space;
++	maps__set_addr_space(maps, addr_space);
+ 	if (!addr_space) {
+ 		pr_err("unwind: Can't create unwind address space.\n");
+ 		return -ENOMEM;
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index 76cd63de80a8..2728eb4f13ea 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -12,11 +12,6 @@ struct unwind_libunwind_ops __weak *local_unwind_libunwind_ops;
+ struct unwind_libunwind_ops __weak *x86_32_unwind_libunwind_ops;
+ struct unwind_libunwind_ops __weak *arm64_unwind_libunwind_ops;
  
-@@ -796,6 +796,7 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
- 			pos->end -= map__start(curr_map) - map__pgoff(curr_map);
- 		symbols__insert(&curr_map_dso->symbols, pos);
- 		++count;
-+		map__put(curr_map);
+-static void unwind__register_ops(struct maps *maps, struct unwind_libunwind_ops *ops)
+-{
+-	RC_CHK_ACCESS(maps)->unwind_libunwind_ops = ops;
+-}
+-
+ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized)
+ {
+ 	const char *arch;
+@@ -60,7 +55,7 @@ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized
+ 		return 0;
  	}
+ out_register:
+-	unwind__register_ops(maps, ops);
++	maps__set_unwind_libunwind_ops(maps, ops);
  
- 	/* Symbols have been adjusted */
+ 	err = maps__unwind_libunwind_ops(maps)->prepare_access(maps);
+ 	if (initialized)
 -- 
 2.42.0.869.gea05f2083d-goog
 
