@@ -1,215 +1,397 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21411FCE
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 05:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="HrKlVHjx"
-Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 86FA9D42
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 22:49:07 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.2.178])
-	by smtp.orange.fr with ESMTPA
-	id ymvyqyGqr2IvKymvyq7BJd; Fri, 03 Nov 2023 06:41:34 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1698990094;
-	bh=/HR6R2/dBCV5KtAoNDtBGcIdggMj4KflzvoVgbVGe3Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=HrKlVHjxRPVmpNH5/JYmdS7ezpXE5VbSGMHB9kFVsrtdIczKexOlVpcjbntVXskkn
-	 yH/VptbmPQ7pkeTwiEJ0Z0Y/c4if7NC4lXmSn5zLiXZB5XoyovKjaa7BIrL9BOXGj0
-	 D8VuWrku7V3IS2lI2ZU4eBaOuNc0FNcFPyktfY9KrVMv7VSE5ZHgUcLXHyf+70lLZ3
-	 rGvnAFe0p5j7N7stVCohDqe3EOPS9+S1Cx9B7gFRoBQYRucAtQzqMDAL3sn0z18Hii
-	 u53db/Eyo0FlHiqhXKXn4i8J8TjNqfSyUwQsQGuzFihhAPsYuiaw7SQykwbiaHcPIe
-	 gqh0soOGbQ8Bg==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 03 Nov 2023 06:41:34 +0100
-X-ME-IP: 86.243.2.178
-Message-ID: <133a66fe-a7e7-42e2-822b-1f3caea7862a@wanadoo.fr>
-Date: Fri, 3 Nov 2023 06:41:30 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC458460
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 08:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018D8182;
+	Fri,  3 Nov 2023 01:27:33 -0700 (PDT)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+	by fd01.gateway.ufhost.com (Postfix) with ESMTP id B92E524E1BB;
+	Fri,  3 Nov 2023 16:27:22 +0800 (CST)
+Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Nov
+ 2023 16:27:22 +0800
+Received: from localhost.localdomain (202.188.176.82) by EXMBX172.cuchost.com
+ (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Nov
+ 2023 16:27:16 +0800
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Namhyung
+ Kim" <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Palmer
+ Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Nikita
+ Shubin" <n.shubin@yadro.com>
+CC: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, Ley Foon Tan
+	<leyfoon.tan@starfivetech.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+Subject: [PATCH v2] perf vendor events riscv: add StarFive Dubhe-80 JSON file
+Date: Fri, 3 Nov 2023 16:24:41 +0800
+Message-ID: <20231103082441.1389842-1-jisheng.teoh@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] perf annotate: Move some fields to annotated_source
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-References: <20231102222653.4165959-1-namhyung@kernel.org>
- <20231102222653.4165959-5-namhyung@kernel.org>
-Content-Language: fr
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20231102222653.4165959-5-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [202.188.176.82]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX172.cuchost.com
+ (172.16.6.92)
+X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: quoted-printable
 
-Le 02/11/2023 à 23:26, Namhyung Kim a écrit :
-> Some fields in the struct annotation are only used with annotated_source
-> so better to be moved there in order to reduce memory consumption for
-> other symbols.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->   tools/perf/ui/browsers/annotate.c | 12 ++++++------
->   tools/perf/util/annotate.c        | 17 +++++++++--------
->   tools/perf/util/annotate.h        | 14 +++++++-------
->   3 files changed, 22 insertions(+), 21 deletions(-)
-> 
-> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> index d2470f87344d..1b42db70c998 100644
-> --- a/tools/perf/ui/browsers/annotate.c
-> +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -384,7 +384,7 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
->   		if (al->idx_asm < offset)
->   			offset = al->idx;
->   
-> -		browser->b.nr_entries = notes->nr_entries;
-> +		browser->b.nr_entries = notes->src->nr_entries;
->   		notes->options->hide_src_code = false;
->   		browser->b.seek(&browser->b, -offset, SEEK_CUR);
->   		browser->b.top_idx = al->idx - offset;
-> @@ -402,7 +402,7 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
->   		if (al->idx_asm < offset)
->   			offset = al->idx_asm;
->   
-> -		browser->b.nr_entries = notes->nr_asm_entries;
-> +		browser->b.nr_entries = notes->src->nr_asm_entries;
->   		notes->options->hide_src_code = true;
->   		browser->b.seek(&browser->b, -offset, SEEK_CUR);
->   		browser->b.top_idx = al->idx_asm - offset;
-> @@ -435,7 +435,7 @@ static void ui_browser__init_asm_mode(struct ui_browser *browser)
->   {
->   	struct annotation *notes = browser__annotation(browser);
->   	ui_browser__reset_index(browser);
-> -	browser->nr_entries = notes->nr_asm_entries;
-> +	browser->nr_entries = notes->src->nr_asm_entries;
->   }
->   
->   static int sym_title(struct symbol *sym, struct map *map, char *title,
-> @@ -860,7 +860,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
->   					   browser->b.height,
->   					   browser->b.index,
->   					   browser->b.top_idx,
-> -					   notes->nr_asm_entries);
-> +					   notes->src->nr_asm_entries);
->   		}
->   			continue;
->   		case K_ENTER:
-> @@ -991,8 +991,8 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
->   
->   	ui_helpline__push("Press ESC to exit");
->   
-> -	browser.b.width = notes->max_line_len;
-> -	browser.b.nr_entries = notes->nr_entries;
-> +	browser.b.width = notes->src->max_line_len;
-> +	browser.b.nr_entries = notes->src->nr_entries;
->   	browser.b.entries = &notes->src->source,
->   	browser.b.width += 18; /* Percentage */
->   
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 92a9adf9d5eb..ee7b8e1848a8 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2808,19 +2808,20 @@ void annotation__mark_jump_targets(struct annotation *notes, struct symbol *sym)
->   void annotation__set_offsets(struct annotation *notes, s64 size)
->   {
->   	struct annotation_line *al;
-> +	struct annotated_source *src = notes->src;
->   
-> -	notes->max_line_len = 0;
-> -	notes->nr_entries = 0;
-> -	notes->nr_asm_entries = 0;
-> +	src->max_line_len = 0;
-> +	src->nr_entries = 0;
-> +	src->nr_asm_entries = 0;
->   
-> -	list_for_each_entry(al, &notes->src->source, node) {
-> +	list_for_each_entry(al, &src->source, node) {
->   		size_t line_len = strlen(al->line);
->   
-> -		if (notes->max_line_len < line_len)
-> -			notes->max_line_len = line_len;
-> -		al->idx = notes->nr_entries++;
-> +		if (src->max_line_len < line_len)
-> +			src->max_line_len = line_len;
-> +		al->idx = src->nr_entries++;
->   		if (al->offset != -1) {
-> -			al->idx_asm = notes->nr_asm_entries++;
-> +			al->idx_asm = src->nr_asm_entries++;
->   			/*
->   			 * FIXME: short term bandaid to cope with assembly
->   			 * routines that comes with labels in the same column
-> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> index d8a221591926..c51ceb857bd6 100644
-> --- a/tools/perf/util/annotate.h
-> +++ b/tools/perf/util/annotate.h
-> @@ -268,10 +268,13 @@ struct cyc_hist {
->    * returns.
->    */
->   struct annotated_source {
-> -	struct list_head   source;
-> -	int    		   nr_histograms;
-> -	size_t		   sizeof_sym_hist;
-> -	struct sym_hist	   *histograms;
-> +	struct list_head	source;
-> +	int    			nr_histograms;
+StarFive's Dubhe-80 supports raw event id 0x00 - 0x22.
+The raw events are enabled through PMU node of DT binding.
+Besides raw event, add standard RISC-V firmware events to
+support monitoring of firmware event.
 
-If this int...
-
-> +	size_t			sizeof_sym_hist;
-> +	struct sym_hist		*histograms;
-> +	int			nr_entries;
-> +	int			nr_asm_entries;
-> +	u16			max_line_len;
-
-... and these int and u16 were grouped, you would also save a hole in 
-the struct and reduce padding.
-
-
-On x86_64, after patch 4/5:
-struct annotated_source {
-	struct list_head           source;               /*     0    16 */
-	int                        nr_histograms;        /*    16     4 */
-
-	/* XXX 4 bytes hole, try to pack */			<====
-
-	size_t                     sizeof_sym_hist;      /*    24     8 */
-	struct sym_hist *          histograms;           /*    32     8 */
-	int                        nr_entries;           /*    40     4 */
-	int                        nr_asm_entries;       /*    44     4 */
-	u16                        max_line_len;         /*    48     2 */
-
-	/* size: 56, cachelines: 1, members: 7 */
-	/* sum members: 46, holes: 1, sum holes: 4 */
-	/* padding: 6 */					<====
-	/* last cacheline: 56 bytes */
+Example of PMU DT node:
+pmu {
+	compatible =3D "riscv,pmu";
+	riscv,raw-event-to-mhpmcounters =3D
+		/* Event ID 1-31 */
+		<0x00 0x00 0xFFFFFFFF 0xFFFFFFE0 0x00007FF8>,
+		/* Event ID 32-33 */
+		<0x00 0x20 0xFFFFFFFF 0xFFFFFFFE 0x00007FF8>,
+		/* Event ID 34 */
+		<0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;
 };
 
-After patch 5/5, the struct would be just 64 bytes. If fields are 
-re-ordered, it would be 56 bytes.
+Example of Perf stat output:
+[root@user]# perf stat -a \
+	-e access_mmu_stlb \
+	-e miss_mmu_stlb \
+	-e access_mmu_pte_c \
+	-e rob_flush \
+	-e btb_prediction_miss \
+	-e itlb_miss \
+	-e sync_del_fetch_g \
+	-e icache_miss \
+	-e bpu_br_retire \
+	-e bpu_br_miss \
+	-e ret_ins_retire \
+	-e ret_ins_miss \
+	-- openssl speed rsa2048
 
-Because of rounding in memory allocations, 56 or 64 shouldn't change 
-anything. But it would be more future proof, should something else be 
-added here in the future.
+Doing 2048 bits private rsa's for 10s: 39 2048 bits private RSA's in
+10.14s
+Doing 2048 bits public rsa's for 10s: 1563 2048 bits public RSA's in
+10.00s
+version: 3.0.11
+built on: Tue Sep 19 13:02:31 2023 UTC
+options: bn(64,64)
+CPUINFO: N/A
+                  sign    verify    sign/s verify/s
+rsa 2048 bits 0.260000s 0.006398s      3.8    156.3
 
-CJ
+ Performance counter stats for 'system wide':
 
->   };
->   
->   struct annotated_branch {
-> @@ -289,9 +292,6 @@ struct LOCKABLE annotation {
->   	struct annotation_line	**offsets;
->   	int			nr_events;
->   	int			max_jump_sources;
-> -	int			nr_entries;
-> -	int			nr_asm_entries;
-> -	u16			max_line_len;
->   	struct {
->   		u8		addr;
->   		u8		jumps;
+           1338350      access_mmu_stlb
+           1154025      miss_mmu_stlb
+           1162691      access_mmu_pte_c
+             34067      rob_flush
+          11212384      btb_prediction_miss
+           1256242      itlb_miss
+         652523491      sync_del_fetch_g
+            384465      icache_miss
+          64635789      bpu_br_retire
+            323440      bpu_br_miss
+           8785143      ret_ins_retire
+             31236      ret_ins_miss
+
+      20.760822480 seconds time elapsed
+
+Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+---
+Changes since V1:
+1. Add standard RISC-V firmware event
+2. Update commit message to reflect addition of standard
+    RISC-V firmware event.
+---
+ tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
+ .../arch/riscv/starfive/dubhe-80/common.json  | 172 ++++++++++++++++++
+ .../riscv/starfive/dubhe-80/firmware.json     |  68 +++++++
+ 3 files changed, 241 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/co=
+mmon.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/fi=
+rmware.json
+
+diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
+u-events/arch/riscv/mapfile.csv
+index c61b3d6ef616..ee61e26f90cd 100644
+--- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
++++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+@@ -15,3 +15,4 @@
+ #
+ #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
+ 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
++0x67e-0x80000000db000080-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
+diff --git a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/common.js=
+on b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/common.json
+new file mode 100644
+index 000000000000..fbffcacb2ace
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/common.json
+@@ -0,0 +1,172 @@
++[
++  {
++    "EventName": "ACCESS_MMU_STLB",
++    "EventCode": "0x1",
++    "BriefDescription": "access MMU STLB"
++  },
++  {
++    "EventName": "MISS_MMU_STLB",
++    "EventCode": "0x2",
++    "BriefDescription": "miss MMU STLB"
++  },
++  {
++    "EventName": "ACCESS_MMU_PTE_C",
++    "EventCode": "0x3",
++    "BriefDescription": "access MMU PTE-Cache"
++  },
++  {
++    "EventName": "MISS_MMU_PTE_C",
++    "EventCode": "0x4",
++    "BriefDescription": "miss MMU PTE-Cache"
++  },
++  {
++    "EventName": "ROB_FLUSH",
++    "EventCode": "0x5",
++    "BriefDescription": "ROB flush (all kinds of exceptions)"
++  },
++  {
++    "EventName": "BTB_PREDICTION_MISS",
++    "EventCode": "0x6",
++    "BriefDescription": "BTB prediction miss"
++  },
++  {
++    "EventName": "ITLB_MISS",
++    "EventCode": "0x7",
++    "BriefDescription": "ITLB miss"
++  },
++  {
++    "EventName": "SYNC_DEL_FETCH_G",
++    "EventCode": "0x8",
++    "BriefDescription": "SYNC delivery a fetch-group"
++  },
++  {
++    "EventName": "ICACHE_MISS",
++    "EventCode": "0x9",
++    "BriefDescription": "ICache miss"
++  },
++  {
++    "EventName": "BPU_BR_RETIRE",
++    "EventCode": "0xA",
++    "BriefDescription": "condition branch instruction retire"
++  },
++  {
++    "EventName": "BPU_BR_MISS",
++    "EventCode": "0xB",
++    "BriefDescription": "condition branch instruction miss"
++  },
++  {
++    "EventName": "RET_INS_RETIRE",
++    "EventCode": "0xC",
++    "BriefDescription": "return instruction retire"
++  },
++  {
++    "EventName": "RET_INS_MISS",
++    "EventCode": "0xD",
++    "BriefDescription": "return instruction miss"
++  },
++  {
++    "EventName": "INDIRECT_JR_MISS",
++    "EventCode": "0xE",
++    "BriefDescription": "indirect JR instruction miss (inlcude without t=
+arget)"
++  },
++  {
++    "EventName": "IBUF_VAL_ID_NORDY",
++    "EventCode": "0xF",
++    "BriefDescription": "IBUF valid while ID not ready"
++  },
++  {
++    "EventName": "IBUF_NOVAL_ID_RDY",
++    "EventCode": "0x10",
++    "BriefDescription": "IBUF not valid while ID ready"
++  },
++  {
++    "EventName": "REN_INT_PHY_REG_NORDY",
++    "EventCode": "0x11",
++    "BriefDescription": "REN integer physical register file is not ready=
+"
++  },
++  {
++    "EventName": "REN_FP_PHY_REG_NORDY",
++    "EventCode": "0x12",
++    "BriefDescription": "REN floating point physical register file is no=
+t ready"
++  },
++  {
++    "EventName": "REN_CP_NORDY",
++    "EventCode": "0x13",
++    "BriefDescription": "REN checkpoint is not ready"
++  },
++  {
++    "EventName": "DEC_VAL_ROB_NORDY",
++    "EventCode": "0x14",
++    "BriefDescription": "DEC is valid and ROB is not ready"
++  },
++  {
++    "EventName": "OOD_FLUSH_LS_DEP",
++    "EventCode": "0x15",
++    "BriefDescription": "out of order flush due to load/store dependency=
+"
++  },
++  {
++    "EventName": "BRU_RET_IJR_INS",
++    "EventCode": "0x16",
++    "BriefDescription": "BRU retire an IJR instruction"
++  },
++  {
++    "EventName": "ACCESS_DTLB",
++    "EventCode": "0x17",
++    "BriefDescription": "access DTLB"
++  },
++  {
++    "EventName": "MISS_DTLB",
++    "EventCode": "0x18",
++    "BriefDescription": "miss DTLB"
++  },
++  {
++    "EventName": "LOAD_INS_DCACHE",
++    "EventCode": "0x19",
++    "BriefDescription": "load instruction access DCache"
++  },
++  {
++    "EventName": "LOAD_INS_MISS_DCACHE",
++    "EventCode": "0x1A",
++    "BriefDescription": "load instruction miss DCache"
++  },
++  {
++    "EventName": "STORE_INS_DCACHE",
++    "EventCode": "0x1B",
++    "BriefDescription": "store/amo instruction access DCache"
++  },
++  {
++    "EventName": "STORE_INS_MISS_DCACHE",
++    "EventCode": "0x1C",
++    "BriefDescription": "store/amo instruction miss DCache"
++  },
++  {
++    "EventName": "LOAD_SCACHE",
++    "EventCode": "0x1D",
++    "BriefDescription": "load access SCache"
++  },
++  {
++    "EventName": "STORE_SCACHE",
++    "EventCode": "0x1E",
++    "BriefDescription": "store access SCache"
++  },
++  {
++    "EventName": "LOAD_MISS_SCACHE",
++    "EventCode": "0x1F",
++    "BriefDescription": "load miss SCache"
++  },
++  {
++    "EventName": "STORE_MISS_SCACHE",
++    "EventCode": "0x20",
++    "BriefDescription": "store miss SCache"
++  },
++  {
++    "EventName": "L2C_PF_REQ",
++    "EventCode": "0x21",
++    "BriefDescription": "L2C data-prefetcher request"
++  },
++  {
++    "EventName": "L2C_PF_HIT",
++    "EventCode": "0x22",
++    "BriefDescription": "L2C data-prefetcher hit"
++  }
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.=
+json b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
+new file mode 100644
+index 000000000000..9b4a032186a7
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
+@@ -0,0 +1,68 @@
++[
++  {
++    "ArchStdEvent": "FW_MISALIGNED_LOAD"
++  },
++  {
++    "ArchStdEvent": "FW_MISALIGNED_STORE"
++  },
++  {
++    "ArchStdEvent": "FW_ACCESS_LOAD"
++  },
++  {
++    "ArchStdEvent": "FW_ACCESS_STORE"
++  },
++  {
++    "ArchStdEvent": "FW_ILLEGAL_INSN"
++  },
++  {
++    "ArchStdEvent": "FW_SET_TIMER"
++  },
++  {
++    "ArchStdEvent": "FW_IPI_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_IPI_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_FENCE_I_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
++  }
++]
+--=20
+2.25.1
 
