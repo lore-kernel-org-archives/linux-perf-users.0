@@ -1,70 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12A21BDF6
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 15:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EC91C2B6
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 15:41:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLKrlXw0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A658C433C8;
-	Fri,  3 Nov 2023 15:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699025374;
-	bh=edDh2XpsaRN563DnkZjJS4NVRd5Q2t6fG+6H66m7udo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pLKrlXw0L/S2UskO27XAQmgmPT6dZ9tMrLKEzIAGadNvTyjmUTgfNTp2/NRvrhXOc
-	 AU7doFGJd5md7YUNuCv/hT6BFkdkw/Iz/mX8YeQXa3iAE9xw2C8NIDIDnAr95xFQqF
-	 ozvx+yZZNsHu2cC04cn4sGCnTqMVyoQpqAivCylvbvEzLg91ZCfwRVFlLA6YUd+Ocf
-	 77mfT7iqC37kNp56ClsZNfCH2r/q0enSSej2pokdgN5cLW3aIRCVkJtBM7miOhsGWU
-	 m8wJ/8JGgvLWLBcjastpZYJCwVI2gEF/6NFKwkydGRDfXthcRja6S6YOkW0u+y5kgV
-	 H0phMvB4epNVQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 768A54035D; Fri,  3 Nov 2023 12:29:31 -0300 (-03)
-Date: Fri, 3 Nov 2023 12:29:31 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf debug: List available options when no variable
- is specified
-Message-ID: <ZUUR2/9An1ccCY+C@kernel.org>
-References: <20231101064543.1481957-1-yangjihong1@huawei.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YVa5r15i"
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CADE91BD
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 08:41:25 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-507c9305727so3575e87.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Nov 2023 08:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1699026084; x=1699630884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vRaJx5yqDoLyT5Xi3DrUXbLg8Rya2MY4ntt0ooWt/pY=;
+        b=YVa5r15iCTcnhduAgAXBO91zsBizM++a3H9jJurUuQ3smDK0JtQ7d6pCNwKt4CS+hG
+         m3hfRf1Dbjh/z1Oqk3axxH+2dO+1YHrUttmpZANCAiRO+wVasa6cYvlMDEfqHoufP+4O
+         U+ATdT/CR6BFzAXoBXbzG4rloH58Mv4yqFeRNeNqfBLjbrpVDNDUXlP+rNcxhcMiDcme
+         EP4YjOjuuLITF4oOiNm9D45aTvxR0j4naQz40tiwedM6drfcdZSxbNuhRE13ArOMGEgU
+         sNAcPHKBnlhNMcolfqipAbPGC9eQg/hWsQ8yZN8fXgwBLGjN8F9rEfbC3lVb9E8GC8zL
+         hhcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699026084; x=1699630884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vRaJx5yqDoLyT5Xi3DrUXbLg8Rya2MY4ntt0ooWt/pY=;
+        b=X2Rs/pN7hxqsK0sr25pfqxNT7YOqSxQp81B8fRgJNZENkHA8b+WE3FU3kxDO0j+cFI
+         uEfJDteJ/yKQ0zMknmd88kQWuYsxgiyc3CT3PvlVK7f+rzaso+dBvrzmx+EegSCGPKh3
+         gjOwrdS4Vp14TuEsfMk/fdx2Fxc8aUU7rOsykmwg/xk/CVCYNGbcXyyBxiGoPVxtPYVw
+         O0gXWEBAWe9zD9sY7LYdb3QoB52RJH3Q7Vm4iC0ek6kKEuEykxYpH4t35jPi/RxZHn7d
+         XwhMLqAOJ8bbt11wISrnNLe4Gf9qFGkcDqIYKeSUuwjxfyQGGLIJT9+oQFk4KJEoMxcE
+         0BUQ==
+X-Gm-Message-State: AOJu0YypyVcoUb7Bo0necPO7NEoRS1kSmd/UXETfm/hpqOUAUjFi5IR1
+	RLBEYWoB/0PEyMa6GD2CMfKAqr5G5Zumf5MZL1NmYQ==
+X-Google-Smtp-Source: AGHT+IH310mUKc8QXz+cZoC/fxdXqHImALuyVrBOwQDL0RiBksQVuXw44g9e6DniBg/n5jlSutqpX8jNZa0LiEdDLEg=
+X-Received: by 2002:a05:6512:358c:b0:509:4535:b272 with SMTP id
+ m12-20020a056512358c00b005094535b272mr143154lfr.3.1699026083710; Fri, 03 Nov
+ 2023 08:41:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231101064543.1481957-1-yangjihong1@huawei.com>
-X-Url: http://acmel.wordpress.com
+References: <20231103113501.490012-1-james.clark@arm.com>
+In-Reply-To: <20231103113501.490012-1-james.clark@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 3 Nov 2023 08:41:12 -0700
+Message-ID: <CAP-5=fWazX_q1W8HN7ErrRMB2bx5sz3x1V=+XqY7Hxx0jR0p9w@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Add option to change objdump binary
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Wed, Nov 01, 2023 at 06:45:43AM +0000, Yang Jihong escreveu:
-> Minor help message improvement for `perf --debug`
- 
-> Before:
- 
->   # perf --debug
->   No variable specified for --debug.
- 
->    Usage: perf [--version] [--help] [OPTIONS] COMMAND [ARGS]
- 
-> After:
- 
->   # perf --debug
->   No variable specified for --debug, available options: verbose,ordered-events,stderr,data-convert,perf-event-open
-> 
->    Usage: perf [--version] [--help] [OPTIONS] COMMAND [ARGS]
+On Fri, Nov 3, 2023 at 4:35=E2=80=AFAM James Clark <james.clark@arm.com> wr=
+ote:
+>
+> All of the other Perf subcommands that use objdump have an option to
+> specify the binary, so add the same option to perf test.
+>
+> This is useful if you have built the kernel with a different toolchain
+> to the system one, where the system objdump may fail to disassemble
+> vmlinux.
+>
+> Now this can be fixed with something like this:
+>
+>   $ perf test --objdump llvm-objdump "object code reading"
+>
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+There is also "perf config" for things like this.
 
-- Arnaldo
- 
-> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
-> 
-> Changes since v1:
->  - Provide helper to iterate debug_opts and print name instead of adding a new variable.
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
