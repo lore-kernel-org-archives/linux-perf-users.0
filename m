@@ -1,242 +1,133 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1197622336
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 23:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R3ga4TMP"
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C697F191
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Nov 2023 16:56:04 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-50931d0bb04so1817e87.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Nov 2023 16:56:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698969363; x=1699574163; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=655oA7OKDcu91aw4GqFY5zeS2TBodJXNtrwxTf8vVRY=;
-        b=R3ga4TMP1YSD6orm+zNiZK+G7VanRkgDZVm7K0dX/8Nns825wggpubCC9wI4ILFibW
-         Gv+S+o1Uu9OeeSDL8wSHJOU2yerMnVOlQxGePAb/YIAZEYpIkan8Zr0OeVGanRos+Urc
-         /+C4YqmV+7JPuIdVdG885bFbwBbZEQPSc2AqCzgvxDhmOFCiXakQ+HmTFmDGHyVO5vaY
-         4NgioDzh3k5VBxRM9UxQvxw8Uxdsq5tqSSSx9dGbuJYbSEECRNWiZZfWUvDXtCgIEKr8
-         yN2oizXusyn8J4KhsPbY+jXF4VDb++JLr+SD/6rd5LoGvwW0VWf4g9ozwLqE3/SzXchM
-         zcOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698969363; x=1699574163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=655oA7OKDcu91aw4GqFY5zeS2TBodJXNtrwxTf8vVRY=;
-        b=ERgwnh7EDFrt29m4vv43S6StggxLbonvIsHoF4EOlBzFDHvaaKuNVd0kZB5LNyXgRY
-         7Xq1GBcrFUUSjaqua2d9mobsRIML26vI5dG6LKtvQwxW4kS+DM6Ws+PgTQYLh/HigJOP
-         gxPVYOzcRviw9Syy89YAn/Qhi0wEYTXw21iZV1eQCrqE3d9h5R29cyd5R+apWJk5+Tp4
-         mW14cQcs4nNFwS5l2XjOFzQ+hEoGw9+PUNgKlyBSST1pPPFd58EP4DHXAh3ZuJI8z28Q
-         17HEA/qMpqAtIUNQJqEQJttcOAj9naVZAY1GqhyJPXXshlmpNnRddfEVKGfrKlnbovFG
-         uHSQ==
-X-Gm-Message-State: AOJu0Yy5diRtTK8JK9O3y0x4nwPmqMAs1m42ds4jlH7hnbPGHBPoHSze
-	PTt2506eSWFr/tTLklsJ9QpLD9A94kV8fV9oG8iG3+CzlrIG6KZsHDUBoheW
-X-Google-Smtp-Source: AGHT+IE/o8eAvzxS2JXI7MiIr3nBo4t/9x2ApeDCA/2FMhkXv0hjBENRL7yDmvoZLqaEGa59p8kcuEpsMm1kHrA5q/A=
-X-Received: by 2002:a05:6512:2387:b0:507:9a37:1483 with SMTP id
- c7-20020a056512238700b005079a371483mr99832lfv.3.1698969362729; Thu, 02 Nov
- 2023 16:56:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D789517C5
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 05:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E737BD;
+	Thu,  2 Nov 2023 22:17:10 -0700 (PDT)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+	by ex01.ufhost.com (Postfix) with ESMTP id E53DB24E288;
+	Fri,  3 Nov 2023 13:17:02 +0800 (CST)
+Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Nov
+ 2023 13:17:02 +0800
+Received: from localhost.localdomain (202.188.176.82) by EXMBX172.cuchost.com
+ (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Nov
+ 2023 13:16:56 +0800
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+To: <irogers@google.com>
+CC: <acme@kernel.org>, <adrian.hunter@intel.com>,
+	<alexander.shishkin@linux.intel.com>, <aou@eecs.berkeley.edu>,
+	<beeman@rivosinc.com>, <jisheng.teoh@starfivetech.com>, <jolsa@kernel.org>,
+	<kconsul@ventanamicro.com>, <leyfoon.tan@starfivetech.com>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <mark.rutland@arm.com>,
+	<mingo@redhat.com>, <n.shubin@yadro.com>, <namhyung@kernel.org>,
+	<palmer@dabbelt.com>, <paul.walmsley@sifive.com>, <peterz@infradead.org>
+Subject: Re: [PATCH] perf vendor events riscv: add StarFive Dubhe-80 JSON file
+Date: Fri, 3 Nov 2023 13:15:30 +0800
+Message-ID: <20231103051530.912669-1-jisheng.teoh@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAP-5=fW6Qeu8Q_mQ7zUBsHn+BiMmDJvjn0nT1YAZaLH6EaBjnA@mail.gmail.com>
+References: <CAP-5=fW6Qeu8Q_mQ7zUBsHn+BiMmDJvjn0nT1YAZaLH6EaBjnA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231102234013.4188687-1-namhyung@kernel.org>
-In-Reply-To: <20231102234013.4188687-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 Nov 2023 16:55:50 -0700
-Message-ID: <CAP-5=fUuDB6W8yUaWu_7SVK5CGBuRLHh8amERQ2dqka_eOX6XQ@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Simplify object code reading test
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [202.188.176.82]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX172.cuchost.com
+ (172.16.6.92)
+X-YovoleRuleAgent: yovoleflag
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 2, 2023 at 4:40=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
+>>
+>> StarFive's Dubhe-80 supports raw event id 0x00 - 0x22.
+>> The raw events are enabled through PMU node of DT binding.
+>>
+>> Example of PMU DT node:
+>> pmu {
+>>         compatible =3D "riscv,pmu";
+>>         riscv,raw-event-to-mhpmcounters =3D
+>>                 /* Event ID 1-31 */
+>>                 <0x00 0x00 0xFFFFFFFF 0xFFFFFFE0 0x00007FF8>,
+>>                 /* Event ID 32-33 */
+>>                 <0x00 0x20 0xFFFFFFFF 0xFFFFFFFE 0x00007FF8>,
+>>                 /* Event ID 34 */
+>>                 <0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;
+>> };
+>>
+>> Example of Perf stat output:
+>> [root@user]# perf stat -a \
+>>         -e access_mmu_stlb \
+>>         -e miss_mmu_stlb \
+>>         -e access_mmu_pte_c \
+>>         -e rob_flush \
+>>         -e btb_prediction_miss \
+>>         -e itlb_miss \
+>>         -e sync_del_fetch_g \
+>>         -e icache_miss \
+>>         -e bpu_br_retire \
+>>         -e bpu_br_miss \
+>>         -e ret_ins_retire \
+>>         -e ret_ins_miss \
+>>         -- openssl speed rsa2048
+>>
+>> Doing 2048 bits private rsa's for 10s: 39 2048 bits private RSA's in
+>> 10.14s
+>> Doing 2048 bits public rsa's for 10s: 1563 2048 bits public RSA's in
+>> 10.00s
+>> version: 3.0.11
+>> built on: Tue Sep 19 13:02:31 2023 UTC
+>> options: bn(64,64)
+>> CPUINFO: N/A
+>>                   sign    verify    sign/s verify/s
+>> rsa 2048 bits 0.260000s 0.006398s      3.8    156.3
+>>
+>>  Performance counter stats for 'system wide':
+>>
+>>            1338350      access_mmu_stlb
+>>            1154025      miss_mmu_stlb
+>>            1162691      access_mmu_pte_c
+>>              34067      rob_flush
+>>           11212384      btb_prediction_miss
+>>            1256242      itlb_miss
+>>          652523491      sync_del_fetch_g
+>>             384465      icache_miss
+>>           64635789      bpu_br_retire
+>>             323440      bpu_br_miss
+>>            8785143      ret_ins_retire
+>>              31236      ret_ins_miss
+>>
+>>       20.760822480 seconds time elapsed
+>>
+>> Signed-off-by: Ji Sheng Teoh <jisheng.teoh@xxxxxxxxxxxxxxxx>
 >
-> It tries cycles (or cpu-clock on s390) event with exclude_kernel bit to
-> open.  But other arch on a VM can fail with the hardware event and need
-> to fallback to the software event in the same way.
+> Thanks Ji Sheng,
 >
-> So let's get rid of the cpuid check and use generic fallback mechanism
-> using an array of event candidates.  Now event in the odd index excludes
-> the kernel so use that for the return value.
+> in adding these events for this new architecture is there a reason not
+> to add the architecture standard events in
+> tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json ?
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json?h=3Dperf-=
+tools-next
 >
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/code-reading.c | 76 ++++++++++-----------------------
->  1 file changed, 23 insertions(+), 53 deletions(-)
+> Perhaps it is worth commenting in the commit message whether or not
+> these events are supported.
 >
-> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-read=
-ing.c
-> index 3af81012014e..047ba297c6fa 100644
-> --- a/tools/perf/tests/code-reading.c
-> +++ b/tools/perf/tests/code-reading.c
-> @@ -511,38 +511,6 @@ static void fs_something(void)
->         }
->  }
->
-> -#ifdef __s390x__
-> -#include "header.h" // for get_cpuid()
-> -#endif
-> -
-> -static const char *do_determine_event(bool excl_kernel)
-> -{
-> -       const char *event =3D excl_kernel ? "cycles:u" : "cycles";
-> -
-> -#ifdef __s390x__
-> -       char cpuid[128], model[16], model_c[16], cpum_cf_v[16];
-> -       unsigned int family;
-> -       int ret, cpum_cf_a;
-> -
-> -       if (get_cpuid(cpuid, sizeof(cpuid)))
-> -               goto out_clocks;
-> -       ret =3D sscanf(cpuid, "%*[^,],%u,%[^,],%[^,],%[^,],%x", &family, =
-model_c,
-> -                    model, cpum_cf_v, &cpum_cf_a);
-> -       if (ret !=3D 5)            /* Not available */
-> -               goto out_clocks;
-> -       if (excl_kernel && (cpum_cf_a & 4))
-> -               return event;
-> -       if (!excl_kernel && (cpum_cf_a & 2))
-> -               return event;
-> -
-> -       /* Fall through: missing authorization */
-> -out_clocks:
-> -       event =3D excl_kernel ? "cpu-clock:u" : "cpu-clock";
-> -
-> -#endif
-> -       return event;
-> -}
-> -
->  static void do_something(void)
->  {
->         fs_something();
-> @@ -583,8 +551,10 @@ static int do_test_code_reading(bool try_kcore)
->         int err =3D -1, ret;
->         pid_t pid;
->         struct map *map;
-> -       bool have_vmlinux, have_kcore, excl_kernel =3D false;
-> +       bool have_vmlinux, have_kcore;
->         struct dso *dso;
-> +       const char *events[] =3D { "cycles", "cycles:u", "cpu-clock", "cp=
-u-clock:u", NULL };
-> +       int evidx =3D 0;
->
->         pid =3D getpid();
->
-> @@ -618,7 +588,7 @@ static int do_test_code_reading(bool try_kcore)
->
->         /* No point getting kernel events if there is no kernel object */
->         if (!have_vmlinux && !have_kcore)
-> -               excl_kernel =3D true;
-> +               evidx++;
->
->         threads =3D thread_map__new_by_tid(pid);
->         if (!threads) {
-> @@ -646,7 +616,7 @@ static int do_test_code_reading(bool try_kcore)
->                 goto out_put;
->         }
->
-> -       while (1) {
-> +       while (events[evidx]) {
->                 const char *str;
->
->                 evlist =3D evlist__new();
-> @@ -657,7 +627,7 @@ static int do_test_code_reading(bool try_kcore)
->
->                 perf_evlist__set_maps(&evlist->core, cpus, threads);
->
-> -               str =3D do_determine_event(excl_kernel);
-> +               str =3D events[evidx];
->                 pr_debug("Parsing event '%s'\n", str);
->                 ret =3D parse_event(evlist, str);
->                 if (ret < 0) {
-> @@ -675,32 +645,32 @@ static int do_test_code_reading(bool try_kcore)
->
->                 ret =3D evlist__open(evlist);
->                 if (ret < 0) {
-> -                       if (!excl_kernel) {
-> -                               excl_kernel =3D true;
-> -                               /*
-> -                                * Both cpus and threads are now owned by=
- evlist
-> -                                * and will be freed by following perf_ev=
-list__set_maps
-> -                                * call. Getting reference to keep them a=
-live.
-> -                                */
-> -                               perf_cpu_map__get(cpus);
-> -                               perf_thread_map__get(threads);
-> -                               perf_evlist__set_maps(&evlist->core, NULL=
-, NULL);
-> -                               evlist__delete(evlist);
-> -                               evlist =3D NULL;
-> -                               continue;
-> -                       }
-> +                       evidx++;
->
-> -                       if (verbose > 0) {
-> +                       if (events[evidx] =3D=3D NULL && verbose > 0) {
->                                 char errbuf[512];
->                                 evlist__strerror_open(evlist, errno, errb=
-uf, sizeof(errbuf));
->                                 pr_debug("perf_evlist__open() failed!\n%s=
-\n", errbuf);
->                         }
->
-> -                       goto out_put;
-> +                       /*
-> +                        * Both cpus and threads are now owned by evlist
-> +                        * and will be freed by following perf_evlist__se=
-t_maps
-> +                        * call. Getting reference to keep them alive.
-> +                        */
-> +                       perf_cpu_map__get(cpus);
-> +                       perf_thread_map__get(threads);
-> +                       perf_evlist__set_maps(&evlist->core, NULL, NULL);
-> +                       evlist__delete(evlist);
-> +                       evlist =3D NULL;
-> +                       continue;
->                 }
->                 break;
->         }
->
-> +       if (events[evidx] =3D=3D NULL)
-> +               goto out_put;
-> +
->         ret =3D evlist__mmap(evlist, UINT_MAX);
->         if (ret < 0) {
->                 pr_debug("evlist__mmap failed\n");
-> @@ -721,7 +691,7 @@ static int do_test_code_reading(bool try_kcore)
->                 err =3D TEST_CODE_READING_NO_KERNEL_OBJ;
->         else if (!have_vmlinux && !try_kcore)
->                 err =3D TEST_CODE_READING_NO_VMLINUX;
-> -       else if (excl_kernel)
-> +       else if (evidx % 2)
->                 err =3D TEST_CODE_READING_NO_ACCESS;
+> Thanks,
+> Ian
 
-Perhaps it would be more intention revealing to do:
+Thanks Ian for the comment,
 
-if (strstr(events[evidx], ":u"))
-
-rather than the "evidx % 2".
+The architecture standard events are supported as well.
+I will include them in v2.
 
 Thanks,
-Ian
-
->         else
->                 err =3D TEST_CODE_READING_OK;
-> --
-> 2.42.0.869.gea05f2083d-goog
->
+Ji Sheng
