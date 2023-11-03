@@ -1,88 +1,141 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EC91C2B6
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 15:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49461C2B6
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 15:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YVa5r15i"
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CADE91BD
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 08:41:25 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-507c9305727so3575e87.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Nov 2023 08:41:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ygq9wikT"
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3383F1BF
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 08:45:47 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-54366bb1c02so11477a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Nov 2023 08:45:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699026084; x=1699630884; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1699026345; x=1699631145; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vRaJx5yqDoLyT5Xi3DrUXbLg8Rya2MY4ntt0ooWt/pY=;
-        b=YVa5r15iCTcnhduAgAXBO91zsBizM++a3H9jJurUuQ3smDK0JtQ7d6pCNwKt4CS+hG
-         m3hfRf1Dbjh/z1Oqk3axxH+2dO+1YHrUttmpZANCAiRO+wVasa6cYvlMDEfqHoufP+4O
-         U+ATdT/CR6BFzAXoBXbzG4rloH58Mv4yqFeRNeNqfBLjbrpVDNDUXlP+rNcxhcMiDcme
-         EP4YjOjuuLITF4oOiNm9D45aTvxR0j4naQz40tiwedM6drfcdZSxbNuhRE13ArOMGEgU
-         sNAcPHKBnlhNMcolfqipAbPGC9eQg/hWsQ8yZN8fXgwBLGjN8F9rEfbC3lVb9E8GC8zL
-         hhcA==
+        bh=IjRwo1IGVBygAppKkGTjsepd5un/ZpXB7p4VbVCjoI8=;
+        b=Ygq9wikTrmkKO1r3SxagfWBppC18gGOlGiG+DEKRoZqiokK1lvnTAzdWxla0cagLB0
+         IBgTzZNy/s+51dOoAmLbn7HGTvhEcFbykAJnQws/WLKWxVpRFwpDsuVLUFJXjxcuky6d
+         29cfHdWT7onNxOvtM5EP7awnVr/u0KowfIgrq+1z2d3BJ6Gm8USLVOcDLhww0MxOjIDH
+         EtoVq2sOLMdvrM0+7cLAUFQklmGr1GVEVbeBZ/ufw5AgBkVtGBrewIsdwmilBwZz+g3q
+         AkGiRX1/pS0hqLCFJNjqIjUIWG5KFZ4kxqaEwAUCiALqDwYW0sCAw7UeR6rgDw2LtVHE
+         8CKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699026084; x=1699630884;
+        d=1e100.net; s=20230601; t=1699026345; x=1699631145;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vRaJx5yqDoLyT5Xi3DrUXbLg8Rya2MY4ntt0ooWt/pY=;
-        b=X2Rs/pN7hxqsK0sr25pfqxNT7YOqSxQp81B8fRgJNZENkHA8b+WE3FU3kxDO0j+cFI
-         uEfJDteJ/yKQ0zMknmd88kQWuYsxgiyc3CT3PvlVK7f+rzaso+dBvrzmx+EegSCGPKh3
-         gjOwrdS4Vp14TuEsfMk/fdx2Fxc8aUU7rOsykmwg/xk/CVCYNGbcXyyBxiGoPVxtPYVw
-         O0gXWEBAWe9zD9sY7LYdb3QoB52RJH3Q7Vm4iC0ek6kKEuEykxYpH4t35jPi/RxZHn7d
-         XwhMLqAOJ8bbt11wISrnNLe4Gf9qFGkcDqIYKeSUuwjxfyQGGLIJT9+oQFk4KJEoMxcE
-         0BUQ==
-X-Gm-Message-State: AOJu0YypyVcoUb7Bo0necPO7NEoRS1kSmd/UXETfm/hpqOUAUjFi5IR1
-	RLBEYWoB/0PEyMa6GD2CMfKAqr5G5Zumf5MZL1NmYQ==
-X-Google-Smtp-Source: AGHT+IH310mUKc8QXz+cZoC/fxdXqHImALuyVrBOwQDL0RiBksQVuXw44g9e6DniBg/n5jlSutqpX8jNZa0LiEdDLEg=
-X-Received: by 2002:a05:6512:358c:b0:509:4535:b272 with SMTP id
- m12-20020a056512358c00b005094535b272mr143154lfr.3.1699026083710; Fri, 03 Nov
- 2023 08:41:23 -0700 (PDT)
+        bh=IjRwo1IGVBygAppKkGTjsepd5un/ZpXB7p4VbVCjoI8=;
+        b=cgBIVo+fm5pRn6cw8OlFBouFdgkDLVGRVvQ2gxdRQeTOZ0FFbB1iDtFVfFW6wCVKRu
+         KP52n75ASTGlhxRLNjrhn+RIODDOs125UrPzWd3yeGupqjSuZ736TmUjiSTdkLABCCM+
+         TnKoamS+9Zedi8vmjhnq/qrVDkRoInRmsuMdU4moSPvFopbBA98vhdDFsV4YLK/2FEwi
+         b3GG4M4Psd4Hw9cv1r35Z8CRcdgZIvpYS+TJLQU08gPwtU+fjgA5IdNR2pAT0txS6mAM
+         X95Od92BtMxL8kP+HTIZcTBUIwRKDjVJbuyEsyytER/tiheWr6w5xh8kzLsbHmvbt3SI
+         oPQA==
+X-Gm-Message-State: AOJu0Yyg6RA81mZt8vVyLZnBUzXyxj1VV/gb9hHx6RQSpJRmU3v2mF74
+	aVRktiOoAAzm/wtNea6aS+e/jnMmq5FnbUD9lhcb/w==
+X-Google-Smtp-Source: AGHT+IHkqI6reqbvYFSR1zZzyPUAt09vCldvmbNvBfqW7ZhzxrLZuWblZNw6SMoFfLURSlI4Q0L7glx/y9ttQADPMr0=
+X-Received: by 2002:a50:a68b:0:b0:542:d6e7:1e09 with SMTP id
+ e11-20020a50a68b000000b00542d6e71e09mr230479edc.0.1699026345421; Fri, 03 Nov
+ 2023 08:45:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231103113501.490012-1-james.clark@arm.com>
-In-Reply-To: <20231103113501.490012-1-james.clark@arm.com>
+References: <20231103082441.1389842-1-jisheng.teoh@starfivetech.com>
+In-Reply-To: <20231103082441.1389842-1-jisheng.teoh@starfivetech.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 3 Nov 2023 08:41:12 -0700
-Message-ID: <CAP-5=fWazX_q1W8HN7ErrRMB2bx5sz3x1V=+XqY7Hxx0jR0p9w@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Add option to change objdump binary
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Date: Fri, 3 Nov 2023 08:45:33 -0700
+Message-ID: <CAP-5=fW4T_j02RLghg=_OB1TkRWFuHKOR59xFyEsdEH5gGnUPA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf vendor events riscv: add StarFive Dubhe-80 JSON file
+To: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Nikita Shubin <n.shubin@yadro.com>, 
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 3, 2023 at 4:35=E2=80=AFAM James Clark <james.clark@arm.com> wr=
-ote:
+On Fri, Nov 3, 2023 at 1:27=E2=80=AFAM Ji Sheng Teoh
+<jisheng.teoh@starfivetech.com> wrote:
 >
-> All of the other Perf subcommands that use objdump have an option to
-> specify the binary, so add the same option to perf test.
+> StarFive's Dubhe-80 supports raw event id 0x00 - 0x22.
+> The raw events are enabled through PMU node of DT binding.
+> Besides raw event, add standard RISC-V firmware events to
+> support monitoring of firmware event.
 >
-> This is useful if you have built the kernel with a different toolchain
-> to the system one, where the system objdump may fail to disassemble
-> vmlinux.
+> Example of PMU DT node:
+> pmu {
+>         compatible =3D "riscv,pmu";
+>         riscv,raw-event-to-mhpmcounters =3D
+>                 /* Event ID 1-31 */
+>                 <0x00 0x00 0xFFFFFFFF 0xFFFFFFE0 0x00007FF8>,
+>                 /* Event ID 32-33 */
+>                 <0x00 0x20 0xFFFFFFFF 0xFFFFFFFE 0x00007FF8>,
+>                 /* Event ID 34 */
+>                 <0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;
+> };
 >
-> Now this can be fixed with something like this:
+> Example of Perf stat output:
+> [root@user]# perf stat -a \
+>         -e access_mmu_stlb \
+>         -e miss_mmu_stlb \
+>         -e access_mmu_pte_c \
+>         -e rob_flush \
+>         -e btb_prediction_miss \
+>         -e itlb_miss \
+>         -e sync_del_fetch_g \
+>         -e icache_miss \
+>         -e bpu_br_retire \
+>         -e bpu_br_miss \
+>         -e ret_ins_retire \
+>         -e ret_ins_miss \
+>         -- openssl speed rsa2048
 >
->   $ perf test --objdump llvm-objdump "object code reading"
+> Doing 2048 bits private rsa's for 10s: 39 2048 bits private RSA's in
+> 10.14s
+> Doing 2048 bits public rsa's for 10s: 1563 2048 bits public RSA's in
+> 10.00s
+> version: 3.0.11
+> built on: Tue Sep 19 13:02:31 2023 UTC
+> options: bn(64,64)
+> CPUINFO: N/A
+>                   sign    verify    sign/s verify/s
+> rsa 2048 bits 0.260000s 0.006398s      3.8    156.3
 >
-> Signed-off-by: James Clark <james.clark@arm.com>
-
-There is also "perf config" for things like this.
+>  Performance counter stats for 'system wide':
+>
+>            1338350      access_mmu_stlb
+>            1154025      miss_mmu_stlb
+>            1162691      access_mmu_pte_c
+>              34067      rob_flush
+>           11212384      btb_prediction_miss
+>            1256242      itlb_miss
+>          652523491      sync_del_fetch_g
+>             384465      icache_miss
+>           64635789      bpu_br_retire
+>             323440      bpu_br_miss
+>            8785143      ret_ins_retire
+>              31236      ret_ins_miss
+>
+>       20.760822480 seconds time elapsed
+>
+> Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
+Thanks Ji Sheng, gmail made a mess of the patches for me, but doing:
+
+b4 am 20231103082441.1389842-1-jisheng.teoh@starfivetech.com
+
+the contents looked correct.
+
 Ian
