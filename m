@@ -1,166 +1,141 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4C81C680
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 15:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UZKx1CqI"
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3CDD45
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 08:49:10 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-50931d0bb04so4507e87.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Nov 2023 08:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699026548; x=1699631348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=392tRVZxGtLzEQKNmN3YbTUmZB8ld747UCZRAgobKm8=;
-        b=UZKx1CqInR3ZeR64N91T0FSZEPRZo1d1rEecXwYALVpexcC2FJwf91mbbc63ZOfcEY
-         8X7OlfWW72Ux4QbdmuthKz7KYFyW/zKhWwbnOt6sZhpW7R3XoxPpE5jQuL/CYOzjLArx
-         ColqZoYu3wXV1VN00nzqihQKVnVLWuy4jkSgXiRK2kSiO0do/6/OXb2PtuKPkijEnR2w
-         H+d7ZTK8S2QQ8mPKIurYbjJHX2/YsasFcxl9BVuqQc4Y8ex+tARiBU1bEXsCvGW8b6jy
-         +4l4yywj+D8+o8NO1qbUabZ9hXaydgqwBaSGrhQVaKsZtITueVoF2rwfwkR2Qs3NohX8
-         8yUg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA842D637
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 18:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A9ED45;
+	Fri,  3 Nov 2023 11:48:35 -0700 (PDT)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-28019b66ad5so2157688a91.3;
+        Fri, 03 Nov 2023 11:48:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699026548; x=1699631348;
+        d=1e100.net; s=20230601; t=1699037315; x=1699642115;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=392tRVZxGtLzEQKNmN3YbTUmZB8ld747UCZRAgobKm8=;
-        b=chLUpyf4a/OUdQF0oghB35GOcHUjTwJfmc6A2kYftNlQLb5BDhxi+LUUh1lDViFQiv
-         tJk9or/w5p4gosHZVNoAgkjE+nRODN2XUdOLP9cCIWwl2zbLHA+nMiOF+UEPn47EQMCn
-         aYPAvyAvt5+igmh4rly/T76zW/PpD57d9p8lmz1gpXTf/qSTlgBSvb5LsmG+4SbOsSDj
-         /5FO4i0UWhxk3nMKv4DgTKKjtQcSRg0Mwc3yIUTCMIRDrP6Fn472yovB2HXLM0yHJEp+
-         ve+SCYzYZq6S7SCp0lpB2nVVIDR0rce3SPsVqQSRWsU6BbXOAwE6ikikY6GovbqZrlgh
-         glrA==
-X-Gm-Message-State: AOJu0Yzt2hMwYvbTvO4XwLFeoJtQb3QvgRdalyMEKtt1xGwPrY59KFEW
-	zFeH8mHFItDPaarV9OkoZ/TMisbDapVRw0YLO6h2kw==
-X-Google-Smtp-Source: AGHT+IEU9qY8K6ePCFkLTQIgMKJOq3f4OTO41CbKsFGSamfOG3t42TUBCLCjTt0zydqgegKWmoCdQvuLKRyGEhr5cCM=
-X-Received: by 2002:a19:9153:0:b0:501:b029:1a47 with SMTP id
- y19-20020a199153000000b00501b0291a47mr120339lfj.1.1699026548121; Fri, 03 Nov
- 2023 08:49:08 -0700 (PDT)
+        bh=0HYAQpuZLbZa219M3eCpKYKVGNMx7y39abDg1zJkZtI=;
+        b=ihz7h5xnOTAFlXa+bbB6ESstP+NJpGiZL1+/cE/sM6vRXugNdNOVKbZSmZpiPI2UBA
+         9Z6AvFhNK1eEshPc7gryj6YxNKinapLNqG/h0C/RgNlBPqLrlj6oChCTeeHD/YNi9zpi
+         4IBr1fQITF9u9T7NtcuK03vI2fxLY1HaxUrIsS0ZQgf9EeNMPqyW0amqgXZfSLgpKlKv
+         8rM+rxQTPofnYxMR/QaOlsmB3UfxUaxuTi4ib0IyEilUGOWlJFFV37bpEEjpfHk+0/VD
+         WC6OZAmsOvIYSyjlt6QqpUCyyavzEw/xsqieAPL3cXDS42lHP/UFVlZCFoTCmV0LafoG
+         C1Nw==
+X-Gm-Message-State: AOJu0Yzw1P9Eu5HYhxH3XlUBx9orTBsL4WhBo1E2WFLlWOpbcHgsc/vx
+	aUCgN8sKNBo6rNWk8ykx+3iuaVoFvZyUa+2tLnM=
+X-Google-Smtp-Source: AGHT+IGU8rAUkw2AaLIR4Nvk+RD/8wl5G4j2haVEz9flfwcdK89oxEEJA8qbHe55QexfKLVKjEPvtphbwJ+Emi7UqzY=
+X-Received: by 2002:a17:90b:4f91:b0:27d:3f0c:f087 with SMTP id
+ qe17-20020a17090b4f9100b0027d3f0cf087mr21908587pjb.25.1699037314556; Fri, 03
+ Nov 2023 11:48:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231102175735.2272696-1-irogers@google.com> <20231102175735.2272696-4-irogers@google.com>
- <ZUSwOlsOyJdDT1ls@gentoo.org>
-In-Reply-To: <ZUSwOlsOyJdDT1ls@gentoo.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 3 Nov 2023 08:48:56 -0700
-Message-ID: <CAP-5=fVm5rmOTvXi1LZzSEc3wHv68HszOfZmBb-RG=eUj2UVHg@mail.gmail.com>
-Subject: Re: [PATCH v4 03/53] libperf: Lazily allocate mmap event copy
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Nick Terrell <terrelln@fb.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Vincent Whitchurch <vincent.whitchurch@axis.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Liam Howlett <liam.howlett@oracle.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Colin Ian King <colin.i.king@gmail.com>, 
-	Dmitrii Dolgov <9erthalion6@gmail.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Ming Wang <wangming01@loongson.cn>, James Clark <james.clark@arm.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20231102222653.4165959-1-namhyung@kernel.org> <20231102222653.4165959-2-namhyung@kernel.org>
+ <CAP-5=fV=huOH7_8ba_xRT5V4RZUZ0O54OkHcRRHzuSPH_SemCA@mail.gmail.com>
+In-Reply-To: <CAP-5=fV=huOH7_8ba_xRT5V4RZUZ0O54OkHcRRHzuSPH_SemCA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 3 Nov 2023 11:48:23 -0700
+Message-ID: <CAM9d7cim4ETcSUUdSL2d_gLXe+4LJo4KUw7iTUJ=35sZNOkcqQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] perf annotate: Split struct cycles_info
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 3, 2023 at 1:33=E2=80=AFAM Guilherme Amadio <amadio@gentoo.org>=
- wrote:
->
-> Hi,
->
-> On Thu, Nov 02, 2023 at 10:56:45AM -0700, Ian Rogers wrote:
-> > The event copy in the mmap is used to have storage to a read
-> > event. Not all users of mmaps read the events, such as perf record, so
-> > switch the allocation to being on first read rather than being
-> > embedded within the perf_mmap.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/perf/include/internal/mmap.h | 2 +-
-> >  tools/lib/perf/mmap.c                  | 9 +++++++++
-> >  2 files changed, 10 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/lib/perf/include/internal/mmap.h b/tools/lib/perf/in=
-clude/internal/mmap.h
-> > index 5a062af8e9d8..b11aaf5ed645 100644
-> > --- a/tools/lib/perf/include/internal/mmap.h
-> > +++ b/tools/lib/perf/include/internal/mmap.h
-> > @@ -33,7 +33,7 @@ struct perf_mmap {
-> >       bool                     overwrite;
-> >       u64                      flush;
-> >       libperf_unmap_cb_t       unmap_cb;
-> > -     char                     event_copy[PERF_SAMPLE_MAX_SIZE] __align=
-ed(8);
-> > +     void                    *event_copy;
-> >       struct perf_mmap        *next;
-> >  };
-> >
-> > diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> > index 2184814b37dd..91ae46aac378 100644
-> > --- a/tools/lib/perf/mmap.c
-> > +++ b/tools/lib/perf/mmap.c
-> > @@ -51,6 +51,8 @@ int perf_mmap__mmap(struct perf_mmap *map, struct per=
-f_mmap_param *mp,
-> >
-> >  void perf_mmap__munmap(struct perf_mmap *map)
-> >  {
-> > +     free(map->event_copy);
-> > +     map->event_copy =3D NULL;
-> >       if (map && map->base !=3D NULL) {
->
-> If map can be NULL as the if statement above suggests, then there is a
-> potential a null pointer dereference bug here. Suggestion:
->
->     if (!map)
->         return;
->
->     free(map->event_copy);
->     map->event_copy =3D NULL;
->     if (map->base !=3D NULL) {
->
->     ...
+Hi Ian,
 
-Makes sense, will fix in v5. Waiting to get additional feedback to
-avoid too much email.
+On Thu, Nov 2, 2023 at 3:53=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Thu, Nov 2, 2023 at 3:26=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> >
+> > The cycles info is used only when branch stack is provided.  Split them
+> > into a separate struct and lazy allocate them to save some memory.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/ui/browsers/annotate.c |  2 +-
+> >  tools/perf/util/annotate.c        | 34 ++++++++++++++++++-------------
+> >  tools/perf/util/annotate.h        | 14 ++++++++-----
+> >  3 files changed, 30 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers=
+/annotate.c
+> > index ccdb2cd11fbf..d2470f87344d 100644
+> > --- a/tools/perf/ui/browsers/annotate.c
+> > +++ b/tools/perf/ui/browsers/annotate.c
+> > @@ -337,7 +337,7 @@ static void annotate_browser__calc_percent(struct a=
+nnotate_browser *browser,
+> >                                 max_percent =3D percent;
+> >                 }
+> >
+> > -               if (max_percent < 0.01 && pos->al.ipc =3D=3D 0) {
+> > +               if (max_percent < 0.01 && (!pos->al.cycles || pos->al.c=
+ycles->ipc =3D=3D 0)) {
+> >                         RB_CLEAR_NODE(&pos->al.rb_node);
+> >                         continue;
+> >                 }
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index 82956adf9963..3e7f75827270 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -1100,8 +1100,8 @@ static void annotation__count_and_fill(struct ann=
+otation *notes, u64 start, u64
+> >                 for (offset =3D start; offset <=3D end; offset++) {
+> >                         struct annotation_line *al =3D notes->offsets[o=
+ffset];
+> >
+> > -                       if (al && al->ipc =3D=3D 0.0) {
+> > -                               al->ipc =3D ipc;
+> > +                       if (al && al->cycles && al->cycles->ipc =3D=3D =
+0.0) {
+> > +                               al->cycles->ipc =3D ipc;
+> >                                 cover_insn++;
+> >                         }
+> >                 }
+> > @@ -1134,13 +1134,18 @@ void annotation__compute_ipc(struct annotation =
+*notes, size_t size)
+> >                 if (ch && ch->cycles) {
+> >                         struct annotation_line *al;
+> >
+> > +                       al =3D notes->offsets[offset];
+> > +                       if (al && al->cycles =3D=3D NULL) {
+> > +                               al->cycles =3D zalloc(sizeof(*al->cycle=
+s));
+> > +                               if (al->cycles =3D=3D NULL)
+> > +                                       continue;
+> > +                       }
+> >                         if (ch->have_start)
+> >                                 annotation__count_and_fill(notes, ch->s=
+tart, offset, ch);
+> > -                       al =3D notes->offsets[offset];
+> >                         if (al && ch->num_aggr) {
+> > -                               al->cycles =3D ch->cycles_aggr / ch->nu=
+m_aggr;
+> > -                               al->cycles_max =3D ch->cycles_max;
+> > -                               al->cycles_min =3D ch->cycles_min;
+>
+> Thanks for doing this! Would it make sense to do the zalloc here to be
+> lazier about allocation?
+
+annotation__count_and_fill() also needs it.
 
 Thanks,
-Ian
+Namhyung
 
-> Cheers,
-> -Guilherme
 >
-> >               munmap(map->base, perf_mmap__mmap_len(map));
-> >               map->base =3D NULL;
-> > @@ -226,6 +228,13 @@ static union perf_event *perf_mmap__read(struct pe=
-rf_mmap *map,
-> >                       unsigned int len =3D min(sizeof(*event), size), c=
-py;
-> >                       void *dst =3D map->event_copy;
-> >
-> > +                     if (!dst) {
-> > +                             dst =3D malloc(PERF_SAMPLE_MAX_SIZE);
-> > +                             if (!dst)
-> > +                                     return NULL;
-> > +                             map->event_copy =3D dst;
-> > +                     }
-> > +
-> >                       do {
-> >                               cpy =3D min(map->mask + 1 - (offset & map=
-->mask), len);
-> >                               memcpy(dst, &data[offset & map->mask], cp=
-y);
-> > --
-> > 2.42.0.869.gea05f2083d-goog
-> >
-> >
+> Ian
+>
+> > +                               al->cycles->avg =3D ch->cycles_aggr / c=
+h->num_aggr;
+> > +                               al->cycles->max =3D ch->cycles_max;
+> > +                               al->cycles->min =3D ch->cycles_min;
+> >                         }
+> >                         notes->have_cycles =3D true;
