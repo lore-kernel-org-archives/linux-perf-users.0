@@ -1,91 +1,109 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E1E11702
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Nov 2023 23:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C37A2D616;
+	Sat,  4 Nov 2023 10:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VG+erxz6"
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C2FD49;
-	Fri,  3 Nov 2023 16:57:57 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2c515527310so36600931fa.2;
-        Fri, 03 Nov 2023 16:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699055876; x=1699660676; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L5tRGRDD9iUOnf+TSyluTXFW45x82OJKqu/PEWf0C3A=;
-        b=VG+erxz6tjCF2xozAm0wfc2KTgSZJ35A20CpI3kfTw8Jh835OpsuOtn9NOM1aKe5wW
-         qPlR2MxwU0pHcssPKfUNbhuCWqhPlBlu0/1kyocKHrRACppR9MFvFtv7oOwrGoVwJRL+
-         bj3UvybLm4hO0lXV3V/eN4VFJ//QjqWhY2jbBv3A2Oa9a8ywQgVuz8nrgMadT7hQg+BA
-         U/oWsJ+o407+p+Hgrwm/IYbC6xkoCnCpn3G3x/dzmZJD5V9v94hXP1e2n+pK5cxpDCvn
-         WIf0NQFpr8G3o+9lxKcI9yaalfk4GwbGKUoS0VMupmANm7JmIKycQZpNj9lVoD7WT88l
-         2f+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699055876; x=1699660676;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L5tRGRDD9iUOnf+TSyluTXFW45x82OJKqu/PEWf0C3A=;
-        b=gs4eYIMsltyPldlXxvZB+QcTQNsGM6IRSpHprUF7Mwpcdw6F8ZpZRFq1M2clablPML
-         bC+exmg/Y85jX5nUMAG3EoNsecBoV/WfkYNaZ+Ycmus9iMM9bL1sVPGNyRkOSNWq4w+y
-         5rZoyaWB34dJoGR7byHvjpm3sZPAMCX0hklZGYCitCkUjXzy5pDWvQCGHRfZEfAVIk1M
-         sPXuEM0K+QnjGff+RRRsQlJuOzSf5g3N8/J+qIz9FCDx1u9ZYPsbiB3RvlW7PRaA8K5f
-         uR51KVxPSbkQ/NOcsEF14lrk+RGaVV2G+Gaugg+lS84EkxDDRUy8G1EQgz1k09ZzWy1E
-         vjVA==
-X-Gm-Message-State: AOJu0YzrB1d1U/OrzD71mPvMCEn2rSkN4fJ+RrWrkQ84pSk+MbhUlb4+
-	WXwre5Z1QlPplYNOTgGvvg==
-X-Google-Smtp-Source: AGHT+IEG9TqEqILz0vjn3OO3CyHVqnQStQg65Ehxz/evYh2guUSxcm9NbFPRWNZ02K0o0AxoYRXKaw==
-X-Received: by 2002:a2e:9410:0:b0:2c4:fe14:a85 with SMTP id i16-20020a2e9410000000b002c4fe140a85mr20329212ljh.18.1699055875875;
-        Fri, 03 Nov 2023 16:57:55 -0700 (PDT)
-Received: from octinomon (202.51.199.146.dyn.plus.net. [146.199.51.202])
-        by smtp.gmail.com with ESMTPSA id r18-20020a05600c35d200b00401e32b25adsm4011858wmq.4.2023.11.03.16.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Nov 2023 16:57:55 -0700 (PDT)
-Date: Fri, 3 Nov 2023 23:57:52 +0000
-From: Jules Irenge <jbi.octave@gmail.com>
-To: irogers@google.com
-Cc: adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3]  perf/x86/amd:Convert snprintf() to sysfs_emit()
-Message-ID: <ZUWJAFlP2pM6ko0-@octinomon>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4NrV/C/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C48C433C7;
+	Sat,  4 Nov 2023 10:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699095128;
+	bh=JAQzfnL7a2XNBBwy0ihLXq/4JX6Tfc5YeXjkF7JEm9s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=t4NrV/C/8GIF+0H0zbZtQPYxVDEDCMLd4m+FsVXa1Rj+XWpC22zaSCG8QXRjYLjA9
+	 of9cchfnYtFBK0W5RasRZpy77ydRhq0H+hBkOk6YKNInyZPHlpedAe5Z2foH5DNu7A
+	 NKESoqXC1rol9dNinnXBD4gy2KLN99lMVw+KHWHgIBvLSimfrfi4S+gge536BlBNR/
+	 PDDs5YQqjKMPTUTWA0HqvLDyO/sRdMTKvbipwuTyzvqDinmrXqUNrkiqEj9oS4Olda
+	 XN18veNqzgZy9yJYiwpivh35AM4ZG9Fx8l7V5hAfPPPEQqcVOkE+6Rd3uI8gJSHOAp
+	 88nhJ+44DN7dA==
+Date: Sat, 4 Nov 2023 19:52:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar
+ <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org,
+ linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH 04/48] perf dwarf-aux: Fix die_get_typename() for void *
+Message-Id: <20231104195202.e8c300fcdc3938e2bf13f5cf@kernel.org>
+In-Reply-To: <20231012035111.676789-5-namhyung@kernel.org>
+References: <20231012035111.676789-1-namhyung@kernel.org>
+	<20231012035111.676789-5-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Coccinelle reports a warning
-WARNING: use scnprintf or sprintf
+On Wed, 11 Oct 2023 20:50:27 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-Following the advice on kernel documentation
-https://www.kernel.org/doc/html/latest/filesystems/sysfs.html
+> The die_get_typename() is to return a C-like type name from DWARF debug
+> entry and it follows data type if the target entry is a pointer type.
+> But I found void pointers don't have the type attribte to follow and
+> then the function returns an error for that case.  This results in a
+> broken type string for void pointer types.
+> 
+> For example, the following type entries are pointer types.
+> 
+>  <1><48c>: Abbrev Number: 4 (DW_TAG_pointer_type)
+>     <48d>   DW_AT_byte_size   : 8
+>     <48d>   DW_AT_type        : <0x481>
+>  <1><491>: Abbrev Number: 211 (DW_TAG_pointer_type)
+>     <493>   DW_AT_byte_size   : 8
+>  <1><494>: Abbrev Number: 4 (DW_TAG_pointer_type)
+>     <495>   DW_AT_byte_size   : 8
+>     <495>   DW_AT_type        : <0x49e>
+> 
+> The first one at offset 48c and the third one at offset 494 have type
+> information.  Then they are pointer types for the referenced types.
+> But the second one at offset 491 doesn't have the type attribute.
 
-For show(device *...) functions, only use sysfs_emit() or sysfs_emit_at()
-especially when formatting the value to be returned to user space.
-Convert snprintf() to sysfs_emit()
+This looks good to me!
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- arch/x86/events/amd/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index e24976593a29..f2fef75d464c 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -1279,7 +1279,7 @@ static ssize_t branches_show(struct device *cdev,
- 			      struct device_attribute *attr,
- 			      char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
-+	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
- }
- 
- static DEVICE_ATTR_RO(branches);
+Thanks!
+
+> 
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/dwarf-aux.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 2941d88f2199..4849c3bbfd95 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1090,7 +1090,14 @@ int die_get_typename(Dwarf_Die *vr_die, struct strbuf *buf)
+>  		return strbuf_addf(buf, "%s%s", tmp, name ?: "");
+>  	}
+>  	ret = die_get_typename(&type, buf);
+> -	return ret ? ret : strbuf_addstr(buf, tmp);
+> +	if (ret < 0) {
+> +		/* void pointer has no type attribute */
+> +		if (tag == DW_TAG_pointer_type && ret == -ENOENT)
+> +			return strbuf_addf(buf, "void*");
+> +
+> +		return ret;
+> +	}
+> +	return strbuf_addstr(buf, tmp);
+>  }
+>  
+>  /**
+> -- 
+> 2.42.0.655.g421f12c284-goog
+> 
+
+
 -- 
-2.41.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
