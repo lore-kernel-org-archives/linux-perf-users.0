@@ -1,251 +1,211 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9858722301
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 Nov 2023 18:29:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33BF1C05;
+	Sun,  5 Nov 2023 08:36:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jr0k/Zks"
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28ECAD49;
-	Sat,  4 Nov 2023 11:29:00 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1cc37fb1310so23357155ad.1;
-        Sat, 04 Nov 2023 11:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699122539; x=1699727339; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zEsQZuc9nVoHcGHnqs5gt4VkGlRSbFN1RbqfZLuRias=;
-        b=jr0k/ZkskQ1sp2DrrFv57FaMrpZjFDQhv2Q6pTvYJJMaGOtxhKJQ+rR2kiGR+1wShO
-         e1VSySGTaXOdJN3S0vD5LezC1GSdjjXMz4qGfikXJXhLxrCyxoiflVzKDb8F2bjPOYwc
-         VIjxn1RegU9PVe1/WYiy0XP1d5da2IAHpGfbAuBJeDhPHRg6MzM8wyYt7POZaLcA66xe
-         /J2c3WrJt9bt4K9YMR29fRuqb/uKk/2hqX76XrKoGN9kIx79Ft66yyxP2S3E4AEKd69e
-         zMo5hcTg7sIXPjNAxOuM0FrAvuAQChgN08mOrOCyKGc0dUOUOZ9wmftrkJEfB4Hbn73P
-         7ghQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699122539; x=1699727339;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zEsQZuc9nVoHcGHnqs5gt4VkGlRSbFN1RbqfZLuRias=;
-        b=DdSqR/cWe0WdqVt6V6tEGXqwffQnSt5Dl6/c3ITTpJeulRgNzhOaVn07Cbbnw3pkyC
-         I1wv+uzXX2AfA2gm3XRYShzG5VpNtBlDZRYsMIpQoK5AdxA9ueum04iuEroKgHkK1i7T
-         p8zqz+v+1JQ6OSF20rao1ZJcEmX5sEkFn04zFNWjWwkrN4XB4O5bHF4aFQUcL4gbUXNe
-         vwkIu4o8NNXYz2xX4TwnC6W/2hyhcCQ2ZpMGj94WKmVy5LE3M8tUIS1CN5t4A6Un3xTb
-         QF3GcxUi6Ri7OgxLMkKrnnisGfOeMJ+UaEP1vSroNZ9oQcNBICkD7+UMioJyfZN/ovHb
-         4Hzg==
-X-Gm-Message-State: AOJu0YxwaHyb3XCwiyYD1MsFxkDtgjeyeUDdPZqLx6wkVVJ8nL6UTnJA
-	CVK97GWrx5hxYmCgK2zWYNo=
-X-Google-Smtp-Source: AGHT+IGDFKvQJCquC226rvqzjML6kGalqiP7rqm6T+svy7T8tdtIEcNkvwe+UXZ+Cj6KKNE+NFWfaA==
-X-Received: by 2002:a17:902:7fcf:b0:1cc:1efb:1bab with SMTP id t15-20020a1709027fcf00b001cc1efb1babmr19323709plb.38.1699122539384;
-        Sat, 04 Nov 2023 11:28:59 -0700 (PDT)
-Received: from yoga ([106.51.129.253])
-        by smtp.gmail.com with ESMTPSA id o14-20020a170902d4ce00b001cc2ebd2c2csm3234347plg.256.2023.11.04.11.28.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Nov 2023 11:28:58 -0700 (PDT)
-Date: Sat, 4 Nov 2023 23:58:50 +0530
-From: Anup Sharma <anupnewsmail@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Anup Sharma <anupnewsmail@gmail.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] perf test: Add support for testing gecko script
-Message-ID: <ZUaNYuFEgIFMkokU@yoga>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lgdbL1ug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6161C433C7;
+	Sun,  5 Nov 2023 08:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699173384;
+	bh=cq1uyWY//yo7TAcMVEgPAIfwQ/7UUGgpAXQ4/ztZPIs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lgdbL1ughmbn5SdYS5NIgJkGd+qRDZYZOzn5e9qsvTMSftldjyJfIbdv7XZSfB1sP
+	 hOazaIlNu3WlZho88+1iQRAbdZaATP66mIlHR8fGOdVPho9yyq+teZCAvJQOju4bmD
+	 h06LFkWCYRAJHzr4EGBaYfoPKs4NMzpGgZ6LahhFjLup4TPfkjbL1Bf1t4ooKdXhzL
+	 budJSW4Q4gqzydby7ppFXZGRbFTiQ0peo4w6Zwo0HAWtjjU5oYlcFbpPsaLqtsQefC
+	 XrC8TCmAe8x5lUitirZZ7cDk145QcshXEfvm0XZbOSc5o08UvdjSBcbuL/uQvrgwCf
+	 CNKoNfupxJRHw==
+Date: Sun, 5 Nov 2023 17:36:18 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar
+ <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org,
+ linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH 09/48] perf dwarf-regs: Add get_dwarf_regnum()
+Message-Id: <20231105173618.c3e5d9faef347f27a6c4f049@kernel.org>
+In-Reply-To: <20231012035111.676789-10-namhyung@kernel.org>
+References: <20231012035111.676789-1-namhyung@kernel.org>
+	<20231012035111.676789-10-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This commit add support for testing gecko script. The test checks
-for the presence of required sections such as "meta," "threads,"
-"samples," "frameTable," "stackTable," "stringTable," and
-"pausedRanges" which are few essential parameter to be present
-in output file. Also it verifies the validity of the JSON format
-using Python's JSON library if available.
+On Wed, 11 Oct 2023 20:50:32 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+> The get_dwarf_regnum() returns a DWARF register number from a register
+> name string according to the psABI.  Also add two pseudo encodings of
+> DWARF_REG_PC which is a register that are used by PC-relative addressing
+> and DWARF_REG_FB which is a frame base register.  They need to be
+> handled in a special way.
+> 
 
----
+I have some comments below.
 
-changes in v3:
-    - Utilizes the --save-only flag to prevent the browser from launching.
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/arch/x86/util/dwarf-regs.c | 38 +++++++++++++++++++++++++++
+>  tools/perf/util/dwarf-regs.c          | 33 +++++++++++++++++++++++
+>  tools/perf/util/include/dwarf-regs.h  | 11 ++++++++
+>  3 files changed, 82 insertions(+)
+> 
+> diff --git a/tools/perf/arch/x86/util/dwarf-regs.c b/tools/perf/arch/x86/util/dwarf-regs.c
+> index 530934805710..79835b897cae 100644
+> --- a/tools/perf/arch/x86/util/dwarf-regs.c
+> +++ b/tools/perf/arch/x86/util/dwarf-regs.c
+> @@ -113,3 +113,41 @@ int regs_query_register_offset(const char *name)
+>  			return roff->offset;
+>  	return -EINVAL;
+>  }
+> +
+> +struct dwarf_regs_idx {
+> +	const char *name;
+> +	int idx;
+> +};
+> +
+> +static const struct dwarf_regs_idx x86_regidx_table[] = {
+> +	{ "rax", 0 }, { "eax", 0 }, { "ax", 0 }, { "al", 0 },
+> +	{ "rdx", 1 }, { "edx", 1 }, { "dx", 1 }, { "dl", 1 },
+> +	{ "rcx", 2 }, { "ecx", 2 }, { "cx", 2 }, { "cl", 2 },
+> +	{ "rbx", 3 }, { "edx", 3 }, { "bx", 3 }, { "bl", 3 },
+> +	{ "rsi", 4 }, { "esi", 4 }, { "si", 4 }, { "sil", 4 },
+> +	{ "rdi", 5 }, { "edi", 5 }, { "di", 5 }, { "dil", 5 },
+> +	{ "rbp", 6 }, { "ebp", 6 }, { "bp", 6 }, { "bpl", 6 },
+> +	{ "rsp", 7 }, { "esp", 7 }, { "sp", 7 }, { "spl", 7 },
+> +	{ "r8", 8 }, { "r8d", 8 }, { "r8w", 8 }, { "r8b", 8 },
+> +	{ "r9", 9 }, { "r9d", 9 }, { "r9w", 9 }, { "r9b", 9 },
+> +	{ "r10", 10 }, { "r10d", 10 }, { "r10w", 10 }, { "r10b", 10 },
+> +	{ "r11", 11 }, { "r11d", 11 }, { "r11w", 11 }, { "r11b", 11 },
+> +	{ "r12", 12 }, { "r12d", 12 }, { "r12w", 12 }, { "r12b", 12 },
+> +	{ "r13", 13 }, { "r13d", 13 }, { "r13w", 13 }, { "r13b", 13 },
+> +	{ "r14", 14 }, { "r14d", 14 }, { "r14w", 14 }, { "r14b", 14 },
+> +	{ "r15", 15 }, { "r15d", 15 }, { "r15w", 15 }, { "r15b", 15 },
+> +	{ "rip", DWARF_REG_PC },
+> +};
+> +
+> +int get_arch_regnum(const char *name)
+> +{
+> +	unsigned int i;
+> +
+> +	if (*name != '%')
+> +		return -1;
 
-To run this script:
-./test_gecko.sh
-or
-bash test_gecko.sh
+Isn't it better to return an error code? e.g. -EINVAL.
 
-Expected output:
+> +
+> +	for (i = 0; i < ARRAY_SIZE(x86_regidx_table); i++)
+> +		if (!strcmp(x86_regidx_table[i].name, name + 1))
+> +			return x86_regidx_table[i].idx;
+> +	return -1;
 
-Testing Gecko Command
-PASS: "Gecko Command"
-PASS: "The file contains valid JSON format"
-PASS: "test_meta"
-PASS: "test_threads"
-PASS: "test_samples"
-PASS: "test_frametable"
-PASS: "test_stacktable"
-PASS: "test_stringtable"
-PASS: "test_pauseranges"
----
- tools/perf/tests/shell/test_gecko.sh | 141 +++++++++++++++++++++++++++
- 1 file changed, 141 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_gecko.sh
+And -ENOENT.
 
-diff --git a/tools/perf/tests/shell/test_gecko.sh b/tools/perf/tests/shell/test_gecko.sh
-new file mode 100755
-index 000000000000..9f9df2fcf199
---- /dev/null
-+++ b/tools/perf/tests/shell/test_gecko.sh
-@@ -0,0 +1,141 @@
-+#!/bin/bash
-+# perf script gecko test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+err=0
-+
-+cleanup() {
-+	rm -f gecko_test.json
-+	rm -f perf.data
-+	rm -f perf.data.old
-+	trap - exit term int
-+}
-+
-+trap_cleanup() {
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup exit term int
-+
-+report() {
-+	if [ "$1" = 0 ]; then
-+		echo "PASS: \"$2\""
-+	else
-+		echo "FAIL: \"$2\" Error message: \"$3\""
-+		err=1
-+	fi
-+}
-+
-+find_str_or_fail() {
-+	grep -q "$1" <<< "$2"
-+	if [ "$?" != 0 ]; then
-+		report 1 "$3" "Failed to find required string:'${1}'."
-+	else
-+		report 0 "$3"
-+	fi
-+}
-+
-+# To validate the json format, check if python is installed
-+if [ "$PYTHON" = "" ] ; then
-+	if which python3 > /dev/null ; then
-+		PYTHON=python3
-+	elif which python > /dev/null ; then
-+		PYTHON=python
-+	else
-+		echo Skipping JSON format check, python not detected please set environment variable PYTHON.
-+		PYTHON_NOT_AVAILABLE=1
-+	fi
-+fi
-+
-+prepare_perf_data() {
-+	perf record -F 99 -g -- perf test -w noploop > /dev/null 2>&1
-+	# check if perf data file got created in above step.
-+	if [ ! -e "perf.data" ]; then
-+		printf "FAIL: perf record failed to create \"perf.data\" \n"
-+		return 1
-+	fi
-+}
-+
-+# Check execution of perf script gecko command
-+test_gecko_command() {
-+    echo "Testing Gecko Command"
-+    perf script report gecko --save-only=gecko_test.json > /dev/null 2>&1
-+	# Check if the Gecko script throws any error, and if so, consider it a failure
-+	if [ "$?" != 0 ]; then
-+		echo "FAIL: \"Gecko Command\""
-+		err=2
-+		exit
-+	else
-+		echo "PASS: \"Gecko Command\""
-+	fi
-+    # Store the content of the file in the 'result' variable
-+    result=$(< "gecko_test.json")
-+}
-+
-+# with the help of python json libary validate the json output
-+if [ "$PYTHON_NOT_AVAILABLE" != "0" ]; then
-+	validate_json_format()
-+	{
-+		if [ "$result" ] ; then
-+			if [ "$PYTHON -c import json; json.load($result)" ]; then
-+				echo "PASS: \"The file contains valid JSON format\""
-+			else
-+				echo "FAIL: \"The file does not contain valid JSON format\""
-+				err=1
-+				exit
-+			fi
-+		else
-+			echo "FAIL: \"File not found\""
-+			err=2
-+			exit
-+		fi
-+	}
-+fi
-+
-+# validate output for the presence of "meta".
-+test_meta() {
-+	find_str_or_fail "meta" "$result" "${FUNCNAME[0]}"
-+}
-+
-+# validate output for the presence of "threads".
-+test_threads() {
-+	find_str_or_fail "threads" "$result" "${FUNCNAME[0]}"
-+}
-+
-+# validate output for the presence of "samples".
-+test_samples() {
-+	find_str_or_fail "samples" "$result" "${FUNCNAME[0]}"
-+}
-+
-+# validate output for the presence of "frameTable".
-+test_frametable() {
-+	find_str_or_fail "frameTable" "$result" "${FUNCNAME[0]}"
-+}
-+
-+# validate output for the presence of "stackTable".
-+test_stacktable() {
-+	find_str_or_fail "stackTable" "$result" "${FUNCNAME[0]}"
-+}
-+
-+# validate output for the presence of "stringTable"
-+test_stringtable() {
-+	find_str_or_fail "stringTable" "$result" "${FUNCNAME[0]}"
-+}
-+
-+# validate output for the presence of "pausedRanges".
-+test_pauseranges(){
-+	find_str_or_fail "pausedRanges" "$result" "${FUNCNAME[0]}"
-+}
-+
-+prepare_perf_data
-+test_gecko_command
-+validate_json_format
-+test_meta
-+test_threads
-+test_samples
-+test_frametable
-+test_stacktable
-+test_stringtable
-+test_pauseranges
-+cleanup
-+exit $err
+> +}
+> diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
+> index 69cfaa5953bf..28d786c7df55 100644
+> --- a/tools/perf/util/dwarf-regs.c
+> +++ b/tools/perf/util/dwarf-regs.c
+> @@ -5,6 +5,8 @@
+>   * Written by: Masami Hiramatsu <mhiramat@kernel.org>
+>   */
+>  
+> +#include <stdlib.h>
+> +#include <string.h>
+>  #include <debug.h>
+>  #include <dwarf-regs.h>
+>  #include <elf.h>
+> @@ -68,3 +70,34 @@ const char *get_dwarf_regstr(unsigned int n, unsigned int machine)
+>  	}
+>  	return NULL;
+>  }
+> +
+> +__weak int get_arch_regnum(const char *name __maybe_unused)
+> +{
+> +	return -1;
+
+And -EOPNOTSUPP.
+
+> +}
+> +
+> +/* Return DWARF register number from architecture register name */
+> +int get_dwarf_regnum(const char *name, unsigned int machine)
+> +{
+> +	char *regname = strdup(name);
+> +	int reg = -1;
+> +	char *p;
+> +
+> +	if (regname == NULL)
+> +		return -1;
+
+Here, -EINVAL.
+
+> +
+> +	/* For convenience, remove trailing characters */
+> +	p = strpbrk(regname, " ,)");
+> +	if (p)
+> +		*p = '\0';
+> +
+> +	switch (machine) {
+> +	case EM_NONE:	/* Generic arch - use host arch */
+> +		reg = get_arch_regnum(regname);
+> +		break;
+> +	default:
+> +		pr_err("ELF MACHINE %x is not supported.\n", machine);
+> +	}
+> +	free(regname);
+> +	return reg;
+> +}
+> diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
+> index 7d99a084e82d..b515f694f55e 100644
+> --- a/tools/perf/util/include/dwarf-regs.h
+> +++ b/tools/perf/util/include/dwarf-regs.h
+> @@ -2,6 +2,9 @@
+>  #ifndef _PERF_DWARF_REGS_H_
+>  #define _PERF_DWARF_REGS_H_
+>  
+> +#define DWARF_REG_PC  0xd3af9c /* random number */
+> +#define DWARF_REG_FB  0xd3affb /* random number */
+> +
+
+Is this for other patch in the series?
+
+>  #ifdef HAVE_DWARF_SUPPORT
+>  const char *get_arch_regstr(unsigned int n);
+>  /*
+> @@ -10,6 +13,14 @@ const char *get_arch_regstr(unsigned int n);
+>   * machine: ELF machine signature (EM_*)
+>   */
+>  const char *get_dwarf_regstr(unsigned int n, unsigned int machine);
+> +
+> +int get_arch_regnum(const char *name);
+> +/*
+> + * get_dwarf_regnum - Returns DWARF regnum from register name
+> + * name: architecture register name
+> + * machine: ELF machine signature (EM_*)
+> + */
+> +int get_dwarf_regnum(const char *name, unsigned int machine);
+>  #endif
+>  
+>  #ifdef HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
+> -- 
+> 2.42.0.655.g421f12c284-goog
+> 
+
+Thank you,
+
 -- 
-2.34.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
