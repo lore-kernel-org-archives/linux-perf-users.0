@@ -1,118 +1,132 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6CE28DC9
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 15:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C81F28DD7
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 15:21:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 385161B2;
-	Mon,  6 Nov 2023 07:11:28 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C6C0DA7;
-	Mon,  6 Nov 2023 07:12:12 -0800 (PST)
-Received: from e127643.broadband (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 393BD3F6C4;
-	Mon,  6 Nov 2023 07:11:25 -0800 (PST)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com
-Cc: James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>,
-	Yonghong Song <yhs@fb.com>,
-	Fangrui Song <maskray@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v2 2/2] perf test: Add support for setting objdump binary via perf config
-Date: Mon,  6 Nov 2023 15:10:49 +0000
-Message-Id: <20231106151051.129440-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231106151051.129440-1-james.clark@arm.com>
-References: <20231106151051.129440-1-james.clark@arm.com>
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD3BF3;
+	Mon,  6 Nov 2023 07:21:47 -0800 (PST)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2802d218242so4382412a91.1;
+        Mon, 06 Nov 2023 07:21:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699284107; x=1699888907;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hC01eFTX9uGCPuSCN6Hq+UaUvIpEOT+vxrlNTGWSxeY=;
+        b=IzS9WM0WuIUHQlOCi80WLMoWL7Qcx37UhW1/Wd2DBoa9R51FKm6igbL6FQZ9ulNyo+
+         3EbfXdjbcBa7bFz67fNODsjkfdZzNojKvGEnJ6koehIUJY00Y+fSnlHyYYJkd9g11DJV
+         pRl2e3muutRUTMwMVE4vMTOeKJ4tb/Ww2JjBxX5el+g5LfpxxblOtEs7VC1fi3kMf50f
+         0b9BOFWz9AzJZ75HNmjPQYrIysfC9XwWcuTenfquYkpFRubYheoIShJtv2+TRPO2/HB7
+         WwiIpk8ilXEwRTUUb78xYOpDOziSnleHkA2vRubwE4JJxOfjKqD2DZ/N5UT8mtN9iMYI
+         gW+A==
+X-Gm-Message-State: AOJu0YwqjK5wqm6Cdq5/cXEGH82pfncrk3rnr6LJmth6pfONtGLY60mP
+	lPjgJ4ochfyPPZgIH+WzYCGCJKFh2fDUNq0PKymp34xm
+X-Google-Smtp-Source: AGHT+IG0Bbsp92U3fyOlWVfA51oBKtjvUge6KMPebYcucyR40fN4XG4A6xs3v4GbFLgiESKSIIqEC4UcMLKsC8MVpXg=
+X-Received: by 2002:a17:90b:4004:b0:280:94e8:99f4 with SMTP id
+ ie4-20020a17090b400400b0028094e899f4mr18257643pjb.46.1699284106836; Mon, 06
+ Nov 2023 07:21:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231106091627.2022530-1-tmricht@linux.ibm.com>
+In-Reply-To: <20231106091627.2022530-1-tmricht@linux.ibm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 6 Nov 2023 07:21:35 -0800
+Message-ID: <CAM9d7chpvhDCkTLiuPVqSKxoZdNYgJ0A2HvVdXbEgMvPZrv1Eg@mail.gmail.com>
+Subject: Re: [PATCH v2 PING] perf test: Adjust test case perf record offcpu
+ profiling tests for s390
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, 
+	Ilya Leoshkevich <iii@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a perf config variable that does the same thing as "perf test
---objdump <x>".
+Hello,
 
-Also update the man page.
+On Mon, Nov 6, 2023 at 1:16=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
+m> wrote:
+>
+> On s390 using linux-next the test case
+>     87: perf record offcpu profiling tests
+> fails. The root cause is this command
+>
+>  # ./perf  record --off-cpu -e dummy -- ./perf bench sched messaging -l 1=
+0
+>  # Running 'sched/messaging' benchmark:
+>  # 20 sender and receiver processes per group
+>  # 10 groups =3D=3D 400 processes run
+>
+>      Total time: 0.231 [sec]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.077 MB perf.data (401 samples) ]
+>  #
+>
+> It does not generate 800+ sample entries, on s390 usually around 40[1-9],
+> sometimes a few more, but never more than 450. The higher the number
+> of CPUs the lower the number of samples.
+>
+> Looking at function chain
+>   bench_sched_messaging()
+>   +--> group()
+> the senders and receiver threads are created. The senders and receivers
+> call function ready() which writes one bytes and wait for a reply using
+> poll system() call.
+>
+> As context switches are counted, the function ready() will trigger
+> a context switch when no input data is available after the write
+> system call. The write system call does not trigger context switches
+> when the data size is small. And writing 1000 bytes (10 iterations with
+> 100 bytes) is not much and certainly won't block.
+>
+> The 400+ context switch on s390 occur when the some receiver/sender
+> threads call ready() and wait for the response from function
+> bench_sched_messaging() being kicked off.
+>
+> Lower the number of expected context switches to 400 to succeed on
+> s390.
+>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> Co-developed-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/Documentation/perf-config.txt |  4 ++++
- tools/perf/tests/builtin-test.c          | 12 ++++++++++++
- 2 files changed, 16 insertions(+)
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 0b4e79dbd3f6..16398babd1ef 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -722,6 +722,10 @@ session-<NAME>.*::
- 		Defines new record session for daemon. The value is record's
- 		command line without the 'record' keyword.
- 
-+test.*::
-+
-+	test.objdump::
-+		objdump binary to use for disassembly and annotations.
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index a8d17dd50588..113e92119e1d 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -14,6 +14,7 @@
- #include <sys/wait.h>
- #include <sys/stat.h>
- #include "builtin.h"
-+#include "config.h"
- #include "hist.h"
- #include "intlist.h"
- #include "tests.h"
-@@ -514,6 +515,15 @@ static int run_workload(const char *work, int argc, const char **argv)
- 	return -1;
- }
- 
-+static int perf_test__config(const char *var, const char *value,
-+			     void *data __maybe_unused)
-+{
-+	if (!strcmp(var, "test.objdump"))
-+		test_objdump_path = value;
-+
-+	return 0;
-+}
-+
- int cmd_test(int argc, const char **argv)
- {
- 	const char *test_usage[] = {
-@@ -541,6 +551,8 @@ int cmd_test(int argc, const char **argv)
-         if (ret < 0)
-                 return ret;
- 
-+	perf_config(perf_test__config, NULL);
-+
- 	/* Unbuffered output */
- 	setvbuf(stdout, NULL, _IONBF, 0);
- 
--- 
-2.34.1
+Thanks,
+Namhyung
 
+
+> ---
+>  tools/perf/tests/shell/record_offcpu.sh | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/s=
+hell/record_offcpu.sh
+> index a1ef8f0d2b5c..67c925f3a15a 100755
+> --- a/tools/perf/tests/shell/record_offcpu.sh
+> +++ b/tools/perf/tests/shell/record_offcpu.sh
+> @@ -77,9 +77,9 @@ test_offcpu_child() {
+>      err=3D1
+>      return
+>    fi
+> -  # each process waits for read and write, so it should be more than 800=
+ events
+> +  # each process waits at least for poll, so it should be more than 400 =
+events
+>    if ! perf report -i ${perfdata} -s comm -q -n -t ';' --percent-limit=
+=3D90 | \
+> -    awk -F ";" '{ if (NF > 3 && int($3) < 800) exit 1; }'
+> +    awk -F ";" '{ if (NF > 3 && int($3) < 400) exit 1; }'
+>    then
+>      echo "Child task off-cpu test [Failed invalid output]"
+>      err=3D1
+> --
+> 2.41.0
+>
