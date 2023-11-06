@@ -1,134 +1,190 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A06F9461
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 04:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iix45Tj8"
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879149B
-	for <linux-perf-users@vger.kernel.org>; Sun,  5 Nov 2023 20:32:48 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-53fa455cd94so2469828a12.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 Nov 2023 20:32:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699245168; x=1699849968; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xh4SnsgjogFb0EHENd8kBh5bdVO85QGU1hVaaPbn9j4=;
-        b=iix45Tj8JWS2vSAkWTvb7U5AMOVbhEBo0y5fMOOXu7hBb2seEYFPFzqBt77hgg+YNX
-         pOP358JESQskaKxc3ABTnI55+gKbtobuKpH24thNrJx+BSAXbsztURekBbFqPSJRux7o
-         KzsVM+2eolbKcigAI4B44hJij/OxIW+Npry729dWR4nVP1AQMB9q6JTSWDZ20s9+HU2J
-         hNNnrn1YZxBYXNopiC9PCPE248b3wcnJxBpxBIwfUQzb3z6COiLxK2jd95HYei5OxUWE
-         RIi3ZAXiA0IrzvOiO4jFJofj3q5VjxV8njszFPiHAdQLb121VTswHlLoIy+I+jjZXes4
-         uOTA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E1E138C
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 04:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B99DB;
+	Sun,  5 Nov 2023 20:43:32 -0800 (PST)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5bbd3eb2f8fso4002441a12.1;
+        Sun, 05 Nov 2023 20:43:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699245168; x=1699849968;
+        d=1e100.net; s=20230601; t=1699245812; x=1699850612;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xh4SnsgjogFb0EHENd8kBh5bdVO85QGU1hVaaPbn9j4=;
-        b=hg0Jsk1loGek7H2SsUmoojFDA6Q0VDqhuKqwUefcRKPIK5qDiJdp4TRgPHBy0yQL1j
-         v5Oq1jSyMymo+Vu5nmaDQWTrKcRUnwTCKOeKmiXNh7BUoFFI0KrbOE7YwU/CzV9tDylS
-         iZ0mk6H6thPRcdMpa2LN6E1I8S+WY+HcuUYhenqdqnigyOajS6pPAEqFY3ztLzaeduHo
-         LlihX5hkCKu8W6UcjwXLEt3YT8uQARpklSN/2BQJC6f/274fo7Bxj3dm6BL5jCwbgNoE
-         8cj7qoNQ1Y6NCXD1CB/nu5eTqrOfU92M0DF5cNvetDOZlPDfYCK87YAqh50oZFwzANko
-         WEOg==
-X-Gm-Message-State: AOJu0YzKk+Bnj3wUm5I3qwHngqkeshpj7erbmMRxXMGuaVSUwqQXIor/
-	BSEWXbVhxZZygOhb3A1C+aip2iF05Q05wt+oMvA1R6yy
-X-Google-Smtp-Source: AGHT+IHEdeEfAGpcocOIsilvwyIdnzF1giSb2/VuJzHo3ZpRV0mxZA/kvYOWkB1e8eVdQvkWBdrKuZx4+f7YpeS9FnY=
-X-Received: by 2002:a05:6a20:9599:b0:131:b3fa:eaaa with SMTP id
- iu25-20020a056a20959900b00131b3faeaaamr27228353pzb.61.1699245167931; Sun, 05
- Nov 2023 20:32:47 -0800 (PST)
+        bh=6C2jeN2Odetxmw6gVUouX0/vQcl2vGThHkHjs3za6HY=;
+        b=hnUR3JNJiiHPJczW84UkZkHBAYJddT3uE+qTGXBj2w5HJKvc5CiOtwUCCLjMUYzq9L
+         XZaOVwI4J+vVhEd25TL+A1kVNXa9jyV1nU6vSwHoPd2/EqJHNWyiKfhXFdHrewQuZ345
+         KDAaQOBOjp9L5H0Dhhq+Zxh/VTqw9lzNeYY3RemursMzotP19dOzvQk4/+U4aXRmyQlf
+         1EClSEPvAq5QfR1a5+MwjxyEoi5+BVAwzovD0VwIleyziGoGBzYHkO+QCy7ZqWVcSdR7
+         dihOI00JSM2uO7U+PGd5UyeZpmVsc+0k73gu0wrcZ8L1UVhlIAKv7fLuTX6BWv45ip0M
+         j3DQ==
+X-Gm-Message-State: AOJu0YxXXMMfSxvE2pgTKN1ZkPG1UBWBtn6JSROhFhWxE8HsQaELx6Xy
+	D51Hmwf7yJnIIHPY0HI2jZaym+4CMwkeP/OrOeUCElU3
+X-Google-Smtp-Source: AGHT+IGm+zzo14njj0m+cNvE7vTXIneDseu1SyMhMZlFHanWdZ8QlLV/UBwo4tEtRXgD6by0PkfdlEYnI1By0SDi6Is=
+X-Received: by 2002:a17:90b:3ec9:b0:27d:1369:515e with SMTP id
+ rm9-20020a17090b3ec900b0027d1369515emr13446086pjb.22.1699245811686; Sun, 05
+ Nov 2023 20:43:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3ea2cefb-7417-4cac-98fd-46325c5108e0@isc.org>
-In-Reply-To: <3ea2cefb-7417-4cac-98fd-46325c5108e0@isc.org>
-From: Namhyung Kim <namhyung@gmail.com>
-Date: Sun, 5 Nov 2023 20:32:36 -0800
-Message-ID: <CAM9d7cj8E7NMnpZ3r-eeYVonQ0UJXAgp6Hpw2fTCbtF7NU=xHQ@mail.gmail.com>
-Subject: Re: [bug] nsinfo__mountns_enter failure can cause perf to operate on
- wrong file
-To: =?UTF-8?B?UGV0ciDFoHBhxI1law==?= <pspacek@isc.org>
-Cc: linux-perf-users@vger.kernel.org
+References: <20231026062615.3096537-1-namhyung@kernel.org> <5a153604-3e9c-4ae9-b216-64f24199efc4@intel.com>
+ <ZTrFxazbxVx5G1N7@kernel.org>
+In-Reply-To: <ZTrFxazbxVx5G1N7@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Sun, 5 Nov 2023 20:43:20 -0800
+Message-ID: <CAM9d7ch7gnYMOc_nvy5neLdEhsjDZpr1=Obh-UW3=A14J_T68w@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Add -H short option for --hierarchy
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Arnaldo,
 
-Sorry for the late reply.
+On Thu, Oct 26, 2023 at 1:02=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Thu, Oct 26, 2023 at 09:46:02AM +0300, Adrian Hunter escreveu:
+> > On 26/10/23 09:26, Namhyung Kim wrote:
+> > > I found the hierarchy mode useful, but it's easy to make a typo when
+> > > using it.  Let's add a short option for that.
+>
+> > > Also update the documentation. :)
+>
+> > Perhaps it would also be possible to support bash-completions for
+> > long options
+>
+> It works:
+>
+>   # . ~acme/git/linux/tools/perf/perf-completion.sh
+>   # perf top --hi<TAB>
+>   --hide_kernel_symbols  --hide_user_symbols    --hierarchy
+>   #
+>
+> And:
+>
+> perf top --hie<ENTER>
+>
+> works as it is unambiguous (so far).
 
-On Fri, Oct 27, 2023 at 8:58=E2=80=AFAM Petr =C5=A0pa=C4=8Dek <pspacek@isc.=
-org> wrote:
->
-> Hello,
->
-> I've noticed that sometimes "perf record" confuses paths between two
-> different namespaces and inadvertently operates on a wrong file (on the
-> same path - but wrong mount namespace).
->
-> Version: 6.5, commit 750b95887e567848ac2c851dae47922cac6db946 from
-> Linus's tree
->
-> Reproducer using Podman container:
-> All commands executed as non-privileged user, except the sysctl tweak.
->
-> $ sudo sysctl -w 'kernel.perf_event_paranoid =3D -1'
->
-> # binary in the container needs to have the same path as on host
-> # but different content
-> $ podman run -ti docker.io/library/ubuntu:23.10 /usr/bin/yes > /dev/null
->
-> # leave this running and get PID of the process inside the container
-> $ docker inspect $(docker ps --latest -q) | jq '.[0].State.Pid'
->
-> # ! record as an unprivileged user !
-> # record and use debuginfod from official Ubuntu servers
-> $ perf record --debuginfod=3D'https://debuginfod.ubuntu.com/' --all-user
-> -F 99 --pid 637217
->
-> # check if we got symbols ... we should have because debuginfod has been
-> configured
-> $ perf script  # notice "unknown" all over the place
->
-> # check build-ids in the recording
-> $ perf buildid-list
-> f53cbc885777b8cfc9e54a8015318a71e6845bc3 /usr/bin/yes
->
-> # check build-id in the container
-> $ docker exec -ti $(docker ps --latest -q) bash -c 'apt update; apt
-> install -yyy file; file `which yes`'
-> ... BuildID[sha1]=3D7c895824831420bd30a372431d2b241bb6ff5554 ...
->
->
-> Values in perf output and in the containerized binary do not match. Huh?
-> Where the "perf" value came from, anyway?
->
-> Turns out the buildid-list shows value from the _host_:
-> $ file /usr/bin/yes
-> ... BuildID[sha1]=3Df53cbc885777b8cfc9e54a8015318a71e6845bc3 ...
->
->
-> My guess is that this can happen when the user executing "perf record"
-> does not have privileges to nsenter() the target namespace, but this
-> failure is not checked.
->
-> I could not follow "perf record" code, but "perf buildid-cache --add"
-> calls nsinfo__mountns_enter() which has void return type, and hilarity
-> ensues if that call fails.
+Thanks for the test!
 
-Right, but I guess there's not much it can do in that case.
-Maybe it can warn the user it could result in unknown symbols.
+>
+> What we don't have is a way to use hierachy by default, i.e. we should
+> have:
+>
+> perf config top.hierarchy=3D1
+>
+> and then:
+>
+> perf top
+>
+> would always use the hierarchy view.
+>
+> tools/perf/Documentation/perf-config.txt has the options that can be
+> set, like:
+>
+> # perf report | head -15
+> # To display the perf.data header info, please use --header/--header-only=
+ options.
+> #
+> #
+> # Total Lost Samples: 0
+> #
+> # Samples: 373K of event 'cycles:P'
+> # Event count (approx.): 205365133495
+> #
+> # Overhead  Command          Shared Object                               =
+      Symbol
+> # ........  ...............  .................    .......................=
+............
+> #
+>      3.17%  MediaDe~hine #6  libc.so.6            [.] pthread_mutex_lock@=
+@GLIBC_2.2.5
+>      2.31%  swapper          [kernel.vmlinux]     [k] psi_group_change
+>      1.87%  MediaSu~sor #10  libc.so.6            [.] pthread_mutex_lock@=
+@GLIBC_2.2.5
+>      1.84%  MediaSu~isor #7  libc.so.6            [.] pthread_mutex_lock@=
+@GLIBC_2.2.5
+> #
+>
+> Then:
+>
+> # perf config report.sort_order=3Ddso
+> # perf report | head -15
+> # To display the perf.data header info, please use --header/--header-only=
+ options.
+> #
+> #
+> # Total Lost Samples: 0
+> #
+> # Samples: 373K of event 'cycles:P'
+> # Event count (approx.): 205365133495
+> #
+> # Overhead  Shared Object
+> # ........  ..............................................
+> #
+>     59.52%  [kernel.vmlinux]
+>     19.79%  libc.so.6
+>      8.07%  libxul.so
+>      5.25%  libopenh264.so.2.3.1
+> #
+>
+> # cat ~/.perfconfig
+> # this file is auto-generated.
+> [report]
+>         sort_order =3D dso
+> [root@five ~]# perf config report.sort_order
+> report.sort_order=3Ddso
+> #
+>
+> Right now 'perf top' has only:
+>
+> static int perf_top_config(const char *var, const char *value, void *cb _=
+_maybe_unused)
+> {
+>         if (!strcmp(var, "top.call-graph")) {
+>                 var =3D "call-graph.record-mode";
+>                 return perf_default_config(var, value, cb);
+>         }
+>         if (!strcmp(var, "top.children")) {
+>                 symbol_conf.cumulate_callchain =3D perf_config_bool(var, =
+value);
+>                 return 0;
+>         }
+>
+>         return 0;
+> }
+>
+> This would be similar to what was done for --no-children on:
+
+Sure, I can add the config option later.  But it's not
+compatible with some options that change the output
+like --children and --fields.  Maybe it needs to handle
+some kind of priority of settings for incompatible one.
 
 Thanks,
 Namhyung
 
-
 >
-> It works as expected if I add "sudo" in front of each "perf" command.
+> https://git.kernel.org/torvalds/c/104ac991bd821773cba6f262f97a4a752ed76dd=
+5
 >
-> I'm happy to assist with debugging and testing.
+> $ git show --pretty=3Dfull 104ac991bd821773cba6f262f97a4a752ed76dd5 | hea=
+d -5
+> commit 104ac991bd821773cba6f262f97a4a752ed76dd5
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Commit: Jiri Olsa <jolsa@kernel.org>
+>
+>     perf top: Add top.children config option
+>
+> - Arnaldo
