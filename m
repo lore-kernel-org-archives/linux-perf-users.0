@@ -1,132 +1,220 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C81F28DD7
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 15:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD3BF3;
-	Mon,  6 Nov 2023 07:21:47 -0800 (PST)
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2802d218242so4382412a91.1;
-        Mon, 06 Nov 2023 07:21:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699284107; x=1699888907;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hC01eFTX9uGCPuSCN6Hq+UaUvIpEOT+vxrlNTGWSxeY=;
-        b=IzS9WM0WuIUHQlOCi80WLMoWL7Qcx37UhW1/Wd2DBoa9R51FKm6igbL6FQZ9ulNyo+
-         3EbfXdjbcBa7bFz67fNODsjkfdZzNojKvGEnJ6koehIUJY00Y+fSnlHyYYJkd9g11DJV
-         pRl2e3muutRUTMwMVE4vMTOeKJ4tb/Ww2JjBxX5el+g5LfpxxblOtEs7VC1fi3kMf50f
-         0b9BOFWz9AzJZ75HNmjPQYrIysfC9XwWcuTenfquYkpFRubYheoIShJtv2+TRPO2/HB7
-         WwiIpk8ilXEwRTUUb78xYOpDOziSnleHkA2vRubwE4JJxOfjKqD2DZ/N5UT8mtN9iMYI
-         gW+A==
-X-Gm-Message-State: AOJu0YwqjK5wqm6Cdq5/cXEGH82pfncrk3rnr6LJmth6pfONtGLY60mP
-	lPjgJ4ochfyPPZgIH+WzYCGCJKFh2fDUNq0PKymp34xm
-X-Google-Smtp-Source: AGHT+IG0Bbsp92U3fyOlWVfA51oBKtjvUge6KMPebYcucyR40fN4XG4A6xs3v4GbFLgiESKSIIqEC4UcMLKsC8MVpXg=
-X-Received: by 2002:a17:90b:4004:b0:280:94e8:99f4 with SMTP id
- ie4-20020a17090b400400b0028094e899f4mr18257643pjb.46.1699284106836; Mon, 06
- Nov 2023 07:21:46 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5EC28DCF;
+	Mon,  6 Nov 2023 15:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MT511RiM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534D7C433C8;
+	Mon,  6 Nov 2023 15:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699284329;
+	bh=CWi4UGxo6LMtp/WDUTP1T/BaJpEl//Tm79Jn7g3fz5A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MT511RiMnKSjIHWrpg5nxDgBg4YMK3zHlDbzkVONkqY0vLEv+Y0NW+9zHxbFXdFJE
+	 o3T2hz0vVXnxawD3egxbEXyDnkXQHk47zvTNcnhyn2nLyNbxg19WfqYthwoGVrbt2E
+	 8CiFB4vy8Yg3WO5hFqfRGhD4Je5zfASPEARWEqYargzbhVjpHR+5HJZdEc/Hror0zA
+	 cHaM3oeIEkQrfUYBCeApKZTzoylas/m9zV9u7QTBOLzTY6EwZUKi4zDM6RK2nAjwoz
+	 SKXrPp2lHiYeO/cJPocmbjoxn6KkltxSLE0S4htyyK2IxZMjODLpe465O+TcjZUw16
+	 /ssDU1TEE1VmA==
+Date: Tue, 7 Nov 2023 00:25:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar
+ <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org,
+ linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH 28/48] perf dwarf-aux: Add die_find_variable_by_addr()
+Message-Id: <20231107002523.f0643720eac144841dedb8a4@kernel.org>
+In-Reply-To: <20231012035111.676789-29-namhyung@kernel.org>
+References: <20231012035111.676789-1-namhyung@kernel.org>
+	<20231012035111.676789-29-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231106091627.2022530-1-tmricht@linux.ibm.com>
-In-Reply-To: <20231106091627.2022530-1-tmricht@linux.ibm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 6 Nov 2023 07:21:35 -0800
-Message-ID: <CAM9d7chpvhDCkTLiuPVqSKxoZdNYgJ0A2HvVdXbEgMvPZrv1Eg@mail.gmail.com>
-Subject: Re: [PATCH v2 PING] perf test: Adjust test case perf record offcpu
- profiling tests for s390
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com, 
-	Ilya Leoshkevich <iii@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Wed, 11 Oct 2023 20:50:51 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-On Mon, Nov 6, 2023 at 1:16=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
-m> wrote:
->
-> On s390 using linux-next the test case
->     87: perf record offcpu profiling tests
-> fails. The root cause is this command
->
->  # ./perf  record --off-cpu -e dummy -- ./perf bench sched messaging -l 1=
-0
->  # Running 'sched/messaging' benchmark:
->  # 20 sender and receiver processes per group
->  # 10 groups =3D=3D 400 processes run
->
->      Total time: 0.231 [sec]
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.077 MB perf.data (401 samples) ]
->  #
->
-> It does not generate 800+ sample entries, on s390 usually around 40[1-9],
-> sometimes a few more, but never more than 450. The higher the number
-> of CPUs the lower the number of samples.
->
-> Looking at function chain
->   bench_sched_messaging()
->   +--> group()
-> the senders and receiver threads are created. The senders and receivers
-> call function ready() which writes one bytes and wait for a reply using
-> poll system() call.
->
-> As context switches are counted, the function ready() will trigger
-> a context switch when no input data is available after the write
-> system call. The write system call does not trigger context switches
-> when the data size is small. And writing 1000 bytes (10 iterations with
-> 100 bytes) is not much and certainly won't block.
->
-> The 400+ context switch on s390 occur when the some receiver/sender
-> threads call ready() and wait for the response from function
-> bench_sched_messaging() being kicked off.
->
-> Lower the number of expected context switches to 400 to succeed on
-> s390.
->
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> Co-developed-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> The die_find_variable_by_addr() is to find a variables in the given DIE
+> using given (PC-relative) address.  Global variables will have a
+> location expression with DW_OP_addr which has an address so can simply
+> compare it with the address.
+> 
+>   <1><143a7>: Abbrev Number: 2 (DW_TAG_variable)
+>       <143a8>   DW_AT_name        : loops_per_jiffy
+>       <143ac>   DW_AT_type        : <0x1cca>
+>       <143b0>   DW_AT_external    : 1
+>       <143b0>   DW_AT_decl_file   : 193
+>       <143b1>   DW_AT_decl_line   : 213
+>       <143b2>   DW_AT_location    : 9 byte block: 3 b0 46 41 82 ff ff ff ff
+>                                      (DW_OP_addr: ffffffff824146b0)
+> 
+> Note that the type-offset should be calculated from the base address of
+> the global variable.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+BTW, for the global variable, you can also find it via maps. Can't you?
 
 Thanks,
-Namhyung
-
 
 > ---
->  tools/perf/tests/shell/record_offcpu.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/s=
-hell/record_offcpu.sh
-> index a1ef8f0d2b5c..67c925f3a15a 100755
-> --- a/tools/perf/tests/shell/record_offcpu.sh
-> +++ b/tools/perf/tests/shell/record_offcpu.sh
-> @@ -77,9 +77,9 @@ test_offcpu_child() {
->      err=3D1
->      return
->    fi
-> -  # each process waits for read and write, so it should be more than 800=
- events
-> +  # each process waits at least for poll, so it should be more than 400 =
-events
->    if ! perf report -i ${perfdata} -s comm -q -n -t ';' --percent-limit=
-=3D90 | \
-> -    awk -F ";" '{ if (NF > 3 && int($3) < 800) exit 1; }'
-> +    awk -F ";" '{ if (NF > 3 && int($3) < 400) exit 1; }'
->    then
->      echo "Child task off-cpu test [Failed invalid output]"
->      err=3D1
-> --
-> 2.41.0
->
+>  tools/perf/util/dwarf-aux.c | 80 +++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/dwarf-aux.h | 14 +++++++
+>  2 files changed, 94 insertions(+)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 5bb05c84d249..97d9ae56350e 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1266,8 +1266,12 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
+>  struct find_var_data {
+>  	/* Target instruction address */
+>  	Dwarf_Addr pc;
+> +	/* Target memory address (for global data) */
+> +	Dwarf_Addr addr;
+>  	/* Target register */
+>  	unsigned reg;
+> +	/* Access offset, set for global data */
+> +	int offset;
+>  };
+>  
+>  /* Max number of registers DW_OP_regN supports */
+> @@ -1328,6 +1332,82 @@ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
+>  	};
+>  	return die_find_child(sc_die, __die_find_var_reg_cb, &data, die_mem);
+>  }
+> +
+> +/* Only checks direct child DIEs in the given scope */
+> +static int __die_find_var_addr_cb(Dwarf_Die *die_mem, void *arg)
+> +{
+> +	struct find_var_data *data = arg;
+> +	int tag = dwarf_tag(die_mem);
+> +	ptrdiff_t off = 0;
+> +	Dwarf_Attribute attr;
+> +	Dwarf_Addr base, start, end;
+> +	Dwarf_Word size;
+> +	Dwarf_Die type_die;
+> +	Dwarf_Op *ops;
+> +	size_t nops;
+> +
+> +	if (tag != DW_TAG_variable)
+> +		return DIE_FIND_CB_SIBLING;
+> +
+> +	if (dwarf_attr(die_mem, DW_AT_location, &attr) == NULL)
+> +		return DIE_FIND_CB_SIBLING;
+> +
+> +	while ((off = dwarf_getlocations(&attr, off, &base, &start, &end, &ops, &nops)) > 0) {
+> +		if (ops->atom != DW_OP_addr)
+> +			continue;
+> +
+> +		if (data->addr < ops->number)
+> +			continue;
+> +
+> +		if (data->addr == ops->number) {
+> +			/* Update offset relative to the start of the variable */
+> +			data->offset = 0;
+> +			return DIE_FIND_CB_END;
+> +		}
+> +
+> +		if (die_get_real_type(die_mem, &type_die) == NULL)
+> +			continue;
+> +
+> +		if (dwarf_aggregate_size(&type_die, &size) < 0)
+> +			continue;
+> +
+> +		if (data->addr >= ops->number + size)
+> +			continue;
+> +
+> +		/* Update offset relative to the start of the variable */
+> +		data->offset = data->addr - ops->number;
+> +		return DIE_FIND_CB_END;
+> +	}
+> +	return DIE_FIND_CB_SIBLING;
+> +}
+> +
+> +/**
+> + * die_find_variable_by_addr - Find variable located at given address
+> + * @sc_die: a scope DIE
+> + * @pc: the program address to find
+> + * @addr: the data address to find
+> + * @die_mem: a buffer to save the resulting DIE
+> + * @offset: the offset in the resulting type
+> + *
+> + * Find the variable DIE located at the given address (in PC-relative mode).
+> + * This is usually for global variables.
+> + */
+> +Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
+> +				     Dwarf_Addr addr, Dwarf_Die *die_mem,
+> +				     int *offset)
+> +{
+> +	struct find_var_data data = {
+> +		.pc = pc,
+> +		.addr = addr,
+> +	};
+> +	Dwarf_Die *result;
+> +
+> +	result = die_find_child(sc_die, __die_find_var_addr_cb, &data, die_mem);
+> +	if (result)
+> +		*offset = data.offset;
+> +	return result;
+> +}
+> +
+>  #endif
+>  
+>  /*
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index 574405c57d3b..742098e3ee7e 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -144,6 +144,11 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf);
+>  Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
+>  				    Dwarf_Die *die_mem);
+>  
+> +/* Find a (global) variable located in the 'addr' */
+> +Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
+> +				     Dwarf_Addr addr, Dwarf_Die *die_mem,
+> +				     int *offset);
+> +
+>  #else /*  HAVE_DWARF_GETLOCATIONS_SUPPORT */
+>  
+>  static inline int die_get_var_range(Dwarf_Die *sp_die __maybe_unused,
+> @@ -161,6 +166,15 @@ static inline Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die __maybe_unus
+>  	return NULL;
+>  }
+>  
+> +static inline Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die __maybe_unused,
+> +						   Dwarf_Addr pc __maybe_unused,
+> +						   Dwarf_Addr addr __maybe_unused,
+> +						   Dwarf_Die *die_mem __maybe_unused,
+> +						   int *offset __maybe_unused)
+> +{
+> +	return NULL;
+> +}
+> +
+>  #endif /* HAVE_DWARF_GETLOCATIONS_SUPPORT */
+>  
+>  #endif /* _DWARF_AUX_H */
+> -- 
+> 2.42.0.655.g421f12c284-goog
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
