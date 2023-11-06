@@ -1,220 +1,218 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5EC28DCF;
-	Mon,  6 Nov 2023 15:25:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6070E29CE7
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 19:34:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MT511RiM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534D7C433C8;
-	Mon,  6 Nov 2023 15:25:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFFiIGrn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87623C433CA;
+	Mon,  6 Nov 2023 19:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699284329;
-	bh=CWi4UGxo6LMtp/WDUTP1T/BaJpEl//Tm79Jn7g3fz5A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MT511RiMnKSjIHWrpg5nxDgBg4YMK3zHlDbzkVONkqY0vLEv+Y0NW+9zHxbFXdFJE
-	 o3T2hz0vVXnxawD3egxbEXyDnkXQHk47zvTNcnhyn2nLyNbxg19WfqYthwoGVrbt2E
-	 8CiFB4vy8Yg3WO5hFqfRGhD4Je5zfASPEARWEqYargzbhVjpHR+5HJZdEc/Hror0zA
-	 cHaM3oeIEkQrfUYBCeApKZTzoylas/m9zV9u7QTBOLzTY6EwZUKi4zDM6RK2nAjwoz
-	 SKXrPp2lHiYeO/cJPocmbjoxn6KkltxSLE0S4htyyK2IxZMjODLpe465O+TcjZUw16
-	 /ssDU1TEE1VmA==
-Date: Tue, 7 Nov 2023 00:25:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	s=k20201202; t=1699299294;
+	bh=muQm112T23le5C+Uxd9oMAYYs0iqRDU3+iNJkbAH0Xc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MFFiIGrnIRu/mrJa2bbMu5CYQ9MgJ6xt7+laLHpJ4f6F5TUNtTNPITvd+ffNqF0cs
+	 AGJTeRWL5iFK2SMj0PyZ3UEwtBC38lcAqcRGgPgO7KwSEboY5cxd3eS4R8yU8W6RN6
+	 j9u0hQHsGDnc94OGZDcGs8TRVxJ2wAeFxr7DtPImbmB7GpQbxyKw0xuUig/OOgxhvJ
+	 dmZnaVK7oEvZ+MMx7Uh+Qkng53VTxLGXl9bbC5lK1SmTBnSONYK4Iw/cARMhicXTEf
+	 XR4+ZNVEc+dMJ510oa7muZhoHqUSqewCoa2xR1ySTBUKzJkuJ1NH1Z5gw3L5Go2xeI
+	 N9iRmK95jDj4A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id B40E74035D; Mon,  6 Nov 2023 16:34:51 -0300 (-03)
+Date: Mon, 6 Nov 2023 16:34:51 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar
- <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-perf-users@vger.kernel.org, Linus Torvalds
- <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org,
- linux-trace-devel@vger.kernel.org
-Subject: Re: [PATCH 28/48] perf dwarf-aux: Add die_find_variable_by_addr()
-Message-Id: <20231107002523.f0643720eac144841dedb8a4@kernel.org>
-In-Reply-To: <20231012035111.676789-29-namhyung@kernel.org>
-References: <20231012035111.676789-1-namhyung@kernel.org>
-	<20231012035111.676789-29-namhyung@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH 1/5] perf annotate: Split struct cycles_info
+Message-ID: <ZUk/27WMwtnQPggF@kernel.org>
+References: <20231103191907.54531-1-namhyung@kernel.org>
+ <20231103191907.54531-2-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231103191907.54531-2-namhyung@kernel.org>
+X-Url: http://acmel.wordpress.com
 
-On Wed, 11 Oct 2023 20:50:51 -0700
-Namhyung Kim <namhyung@kernel.org> wrote:
-
-> The die_find_variable_by_addr() is to find a variables in the given DIE
-> using given (PC-relative) address.  Global variables will have a
-> location expression with DW_OP_addr which has an address so can simply
-> compare it with the address.
-> 
->   <1><143a7>: Abbrev Number: 2 (DW_TAG_variable)
->       <143a8>   DW_AT_name        : loops_per_jiffy
->       <143ac>   DW_AT_type        : <0x1cca>
->       <143b0>   DW_AT_external    : 1
->       <143b0>   DW_AT_decl_file   : 193
->       <143b1>   DW_AT_decl_line   : 213
->       <143b2>   DW_AT_location    : 9 byte block: 3 b0 46 41 82 ff ff ff ff
->                                      (DW_OP_addr: ffffffff824146b0)
-> 
-> Note that the type-offset should be calculated from the base address of
-> the global variable.
+Em Fri, Nov 03, 2023 at 12:19:03PM -0700, Namhyung Kim escreveu:
+> The cycles info is used only when branch stack is provided.  Split them
+> into a separate struct and lazy allocate them to save some memory.
 > 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-BTW, for the global variable, you can also find it via maps. Can't you?
-
-Thanks,
-
 > ---
->  tools/perf/util/dwarf-aux.c | 80 +++++++++++++++++++++++++++++++++++++
->  tools/perf/util/dwarf-aux.h | 14 +++++++
->  2 files changed, 94 insertions(+)
+>  tools/perf/ui/browsers/annotate.c |  2 +-
+>  tools/perf/util/annotate.c        | 34 ++++++++++++++++++-------------
+>  tools/perf/util/annotate.h        | 14 ++++++++-----
+>  3 files changed, 30 insertions(+), 20 deletions(-)
 > 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 5bb05c84d249..97d9ae56350e 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1266,8 +1266,12 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
->  struct find_var_data {
->  	/* Target instruction address */
->  	Dwarf_Addr pc;
-> +	/* Target memory address (for global data) */
-> +	Dwarf_Addr addr;
->  	/* Target register */
->  	unsigned reg;
-> +	/* Access offset, set for global data */
-> +	int offset;
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> index ccdb2cd11fbf..d2470f87344d 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -337,7 +337,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+>  				max_percent = percent;
+>  		}
+>  
+> -		if (max_percent < 0.01 && pos->al.ipc == 0) {
+> +		if (max_percent < 0.01 && (!pos->al.cycles || pos->al.cycles->ipc == 0)) {
+>  			RB_CLEAR_NODE(&pos->al.rb_node);
+>  			continue;
+>  		}
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 82956adf9963..3e7f75827270 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -1100,8 +1100,8 @@ static void annotation__count_and_fill(struct annotation *notes, u64 start, u64
+>  		for (offset = start; offset <= end; offset++) {
+>  			struct annotation_line *al = notes->offsets[offset];
+>  
+> -			if (al && al->ipc == 0.0) {
+> -				al->ipc = ipc;
+> +			if (al && al->cycles && al->cycles->ipc == 0.0) {
+> +				al->cycles->ipc = ipc;
+>  				cover_insn++;
+>  			}
+>  		}
+> @@ -1134,13 +1134,18 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
+>  		if (ch && ch->cycles) {
+>  			struct annotation_line *al;
+>  
+> +			al = notes->offsets[offset];
+> +			if (al && al->cycles == NULL) {
+> +				al->cycles = zalloc(sizeof(*al->cycles));
+> +				if (al->cycles == NULL)
+
+Shouldn't we stop here and tell the user that his system is really tight
+on memory instead of just ignoring it?
+
+	if (al->cycles == NULL) {
+		ui__error("Not enough memory for allocating branch stack cycles info!\n");
+		return ... its a void function :-\
+	}
+
+Since its a void function, can't we detect that we need al->cycles
+allocated at the tool start and allocate it there, then propagate back
+the error?
+
+Its per line, so doing it lazily is indeed easier, so make that function
+return an error and bail out when not being able to calculate the ipc
+for the remaining lines?
+
+- Arnaldo
+
+> +					continue;
+> +			}
+>  			if (ch->have_start)
+>  				annotation__count_and_fill(notes, ch->start, offset, ch);
+> -			al = notes->offsets[offset];
+>  			if (al && ch->num_aggr) {
+> -				al->cycles = ch->cycles_aggr / ch->num_aggr;
+> -				al->cycles_max = ch->cycles_max;
+> -				al->cycles_min = ch->cycles_min;
+> +				al->cycles->avg = ch->cycles_aggr / ch->num_aggr;
+> +				al->cycles->max = ch->cycles_max;
+> +				al->cycles->min = ch->cycles_min;
+>  			}
+>  			notes->have_cycles = true;
+>  		}
+> @@ -1225,6 +1230,7 @@ static void annotation_line__exit(struct annotation_line *al)
+>  {
+>  	zfree_srcline(&al->path);
+>  	zfree(&al->line);
+> +	zfree(&al->cycles);
+>  }
+>  
+>  static size_t disasm_line_size(int nr)
+> @@ -3083,8 +3089,8 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
+>  	int printed;
+>  
+>  	if (first_line && (al->offset == -1 || percent_max == 0.0)) {
+> -		if (notes->have_cycles) {
+> -			if (al->ipc == 0.0 && al->cycles == 0)
+> +		if (notes->have_cycles && al->cycles) {
+> +			if (al->cycles->ipc == 0.0 && al->cycles->avg == 0)
+>  				show_title = true;
+>  		} else
+>  			show_title = true;
+> @@ -3121,17 +3127,17 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
+>  	}
+>  
+>  	if (notes->have_cycles) {
+> -		if (al->ipc)
+> -			obj__printf(obj, "%*.2f ", ANNOTATION__IPC_WIDTH - 1, al->ipc);
+> +		if (al->cycles && al->cycles->ipc)
+> +			obj__printf(obj, "%*.2f ", ANNOTATION__IPC_WIDTH - 1, al->cycles->ipc);
+>  		else if (!show_title)
+>  			obj__printf(obj, "%*s", ANNOTATION__IPC_WIDTH, " ");
+>  		else
+>  			obj__printf(obj, "%*s ", ANNOTATION__IPC_WIDTH - 1, "IPC");
+>  
+>  		if (!notes->options->show_minmax_cycle) {
+> -			if (al->cycles)
+> +			if (al->cycles && al->cycles->avg)
+>  				obj__printf(obj, "%*" PRIu64 " ",
+> -					   ANNOTATION__CYCLES_WIDTH - 1, al->cycles);
+> +					   ANNOTATION__CYCLES_WIDTH - 1, al->cycles->avg);
+>  			else if (!show_title)
+>  				obj__printf(obj, "%*s",
+>  					    ANNOTATION__CYCLES_WIDTH, " ");
+> @@ -3145,8 +3151,8 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
+>  
+>  				scnprintf(str, sizeof(str),
+>  					"%" PRIu64 "(%" PRIu64 "/%" PRIu64 ")",
+> -					al->cycles, al->cycles_min,
+> -					al->cycles_max);
+> +					al->cycles->avg, al->cycles->min,
+> +					al->cycles->max);
+>  
+>  				obj__printf(obj, "%*s ",
+>  					    ANNOTATION__MINMAX_CYCLES_WIDTH - 1,
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index 962780559176..16d27952fd5c 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -130,6 +130,13 @@ struct annotation_data {
+>  	struct sym_hist_entry	 he;
 >  };
 >  
->  /* Max number of registers DW_OP_regN supports */
-> @@ -1328,6 +1332,82 @@ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
->  	};
->  	return die_find_child(sc_die, __die_find_var_reg_cb, &data, die_mem);
->  }
+> +struct cycles_info {
+> +	float			 ipc;
+> +	u64			 avg;
+> +	u64			 max;
+> +	u64			 min;
+> +};
 > +
-> +/* Only checks direct child DIEs in the given scope */
-> +static int __die_find_var_addr_cb(Dwarf_Die *die_mem, void *arg)
-> +{
-> +	struct find_var_data *data = arg;
-> +	int tag = dwarf_tag(die_mem);
-> +	ptrdiff_t off = 0;
-> +	Dwarf_Attribute attr;
-> +	Dwarf_Addr base, start, end;
-> +	Dwarf_Word size;
-> +	Dwarf_Die type_die;
-> +	Dwarf_Op *ops;
-> +	size_t nops;
-> +
-> +	if (tag != DW_TAG_variable)
-> +		return DIE_FIND_CB_SIBLING;
-> +
-> +	if (dwarf_attr(die_mem, DW_AT_location, &attr) == NULL)
-> +		return DIE_FIND_CB_SIBLING;
-> +
-> +	while ((off = dwarf_getlocations(&attr, off, &base, &start, &end, &ops, &nops)) > 0) {
-> +		if (ops->atom != DW_OP_addr)
-> +			continue;
-> +
-> +		if (data->addr < ops->number)
-> +			continue;
-> +
-> +		if (data->addr == ops->number) {
-> +			/* Update offset relative to the start of the variable */
-> +			data->offset = 0;
-> +			return DIE_FIND_CB_END;
-> +		}
-> +
-> +		if (die_get_real_type(die_mem, &type_die) == NULL)
-> +			continue;
-> +
-> +		if (dwarf_aggregate_size(&type_die, &size) < 0)
-> +			continue;
-> +
-> +		if (data->addr >= ops->number + size)
-> +			continue;
-> +
-> +		/* Update offset relative to the start of the variable */
-> +		data->offset = data->addr - ops->number;
-> +		return DIE_FIND_CB_END;
-> +	}
-> +	return DIE_FIND_CB_SIBLING;
-> +}
-> +
-> +/**
-> + * die_find_variable_by_addr - Find variable located at given address
-> + * @sc_die: a scope DIE
-> + * @pc: the program address to find
-> + * @addr: the data address to find
-> + * @die_mem: a buffer to save the resulting DIE
-> + * @offset: the offset in the resulting type
-> + *
-> + * Find the variable DIE located at the given address (in PC-relative mode).
-> + * This is usually for global variables.
-> + */
-> +Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
-> +				     Dwarf_Addr addr, Dwarf_Die *die_mem,
-> +				     int *offset)
-> +{
-> +	struct find_var_data data = {
-> +		.pc = pc,
-> +		.addr = addr,
-> +	};
-> +	Dwarf_Die *result;
-> +
-> +	result = die_find_child(sc_die, __die_find_var_addr_cb, &data, die_mem);
-> +	if (result)
-> +		*offset = data.offset;
-> +	return result;
-> +}
-> +
->  #endif
->  
->  /*
-> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-> index 574405c57d3b..742098e3ee7e 100644
-> --- a/tools/perf/util/dwarf-aux.h
-> +++ b/tools/perf/util/dwarf-aux.h
-> @@ -144,6 +144,11 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf);
->  Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
->  				    Dwarf_Die *die_mem);
->  
-> +/* Find a (global) variable located in the 'addr' */
-> +Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
-> +				     Dwarf_Addr addr, Dwarf_Die *die_mem,
-> +				     int *offset);
-> +
->  #else /*  HAVE_DWARF_GETLOCATIONS_SUPPORT */
->  
->  static inline int die_get_var_range(Dwarf_Die *sp_die __maybe_unused,
-> @@ -161,6 +166,15 @@ static inline Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die __maybe_unus
->  	return NULL;
->  }
->  
-> +static inline Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die __maybe_unused,
-> +						   Dwarf_Addr pc __maybe_unused,
-> +						   Dwarf_Addr addr __maybe_unused,
-> +						   Dwarf_Die *die_mem __maybe_unused,
-> +						   int *offset __maybe_unused)
-> +{
-> +	return NULL;
-> +}
-> +
->  #endif /* HAVE_DWARF_GETLOCATIONS_SUPPORT */
->  
->  #endif /* _DWARF_AUX_H */
+>  struct annotation_line {
+>  	struct list_head	 node;
+>  	struct rb_node		 rb_node;
+> @@ -137,12 +144,9 @@ struct annotation_line {
+>  	char			*line;
+>  	int			 line_nr;
+>  	char			*fileloc;
+> -	int			 jump_sources;
+> -	float			 ipc;
+> -	u64			 cycles;
+> -	u64			 cycles_max;
+> -	u64			 cycles_min;
+>  	char			*path;
+> +	struct cycles_info	*cycles;
+> +	int			 jump_sources;
+>  	u32			 idx;
+>  	int			 idx_asm;
+>  	int			 data_nr;
 > -- 
-> 2.42.0.655.g421f12c284-goog
+> 2.42.0.869.gea05f2083d-goog
 > 
-> 
-
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+- Arnaldo
