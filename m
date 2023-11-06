@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470E21843
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 03:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC07139D
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 03:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26156F9;
-	Sun,  5 Nov 2023 19:55:56 -0800 (PST)
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5b92b670f2aso3218210a12.2;
-        Sun, 05 Nov 2023 19:55:56 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4C7EBF;
+	Sun,  5 Nov 2023 19:59:00 -0800 (PST)
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-577fff1cae6so2943011a12.1;
+        Sun, 05 Nov 2023 19:59:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699242955; x=1699847755;
+        d=1e100.net; s=20230601; t=1699243140; x=1699847940;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QfWESybjsduF9qwoLWKD5+nRstHYc4pbbbkyPkX7v3A=;
-        b=OgztEGUK5KEaQMF2EViuF3gWUTTcpqFPwNBPUG40xh3/IZ7hNDFbaR1hqwg5gfCjVg
-         iWlzY+tBxsdVY8A/dmxp3b31WAq6Ts76RYxQX7W6CU/mX8rWrEl4t3sObwTc7dmOdrtO
-         BAwveymhv/USTGnnJseRBbbWI+wZaN4Cm8dmi4YnWufoDLMmwbqtuhfPeovpoo2/j+DI
-         N5D3qHQSByktQH8TYj+GRT6+VV9m6SbmmrC230YzVs1wg3ISB0lPph5pm9bW8++RJV6A
-         03ekkbybgHbFxXs1cUZwZ36N1kfhroRZqFwZxxDuWlZ/aqoJnb11YxRtJThev3HkmqX+
-         BFDw==
-X-Gm-Message-State: AOJu0YwQhMs3FuuoiXHdMfaP1O7h9CdikJ0zOBI7CMenV0bShnrP6e6G
-	8Ur/ay0DelZJ3iSq/g1cigDlOclom9T9IVDkVXY=
-X-Google-Smtp-Source: AGHT+IGbzywoiCWSH7SJOoGMLj3HgkTdhIfrlAkfTOdxwAJ0kx0qGL3BL1wIafykBBczR49bXKwLpmnOoHl//fXz4SQ=
-X-Received: by 2002:a05:6300:8004:b0:181:61ad:3aeb with SMTP id
- an4-20020a056300800400b0018161ad3aebmr19226207pzc.43.1699242955563; Sun, 05
- Nov 2023 19:55:55 -0800 (PST)
+        bh=yEdoTvgGm7uaeRMpxpJUiRCbk25iqfmxfW6IznSRR4k=;
+        b=wAaHvs2KpBGLKpnrkB7I1GLIFdcdqWNOlu2Qfx4TU7Gh0gomvyOFXKEmq7AapXKCci
+         IgKbhp4Cu7nZpvfbJYQ2oHR5WNaSKEKVoUqkZ9S0EstMhqMwjSD7QKuGLOzv6jI+rdp3
+         RAyqtvS7D5FaCGiFeiqSh1MdRrQgtCVXB8lvhhK32hvxTUQQ3iIje5EoSrsHoLVoQBlx
+         DczNb5VYf0KE8EF86KymxcdOoqARn/7r4UC8seQqRtEK6lag/ThwrOdvwgL6u0Xj/sZj
+         PJgRpAmH+gAOGWLA1Q8c7w27DsDR5xKDKO74uBhGOR/6QseSVG0Mh1zOTUHzer+D0djP
+         Gb3Q==
+X-Gm-Message-State: AOJu0Yzr1C0sO4W08V8oOtW8s6KntMb9opBk4w7POxnF0M01yTBoSIJL
+	HvJ+SL62t96+8Ah8v3RviZqHHLfs+m5NLfoQ0Vs=
+X-Google-Smtp-Source: AGHT+IGqXRhIlSp9n7LFeXq/QU+32ZT64Xuy7q9+PMfg8AU/WfX/S5FEsO/v4jpm1n/CJstkJIgz1QiglBCnSl6U2JY=
+X-Received: by 2002:a17:90b:1c01:b0:280:280c:efe3 with SMTP id
+ oc1-20020a17090b1c0100b00280280cefe3mr12716575pjb.14.1699243140100; Sun, 05
+ Nov 2023 19:59:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231102175735.2272696-1-irogers@google.com> <20231102175735.2272696-8-irogers@google.com>
-In-Reply-To: <20231102175735.2272696-8-irogers@google.com>
+References: <20231102175735.2272696-1-irogers@google.com> <20231102175735.2272696-2-irogers@google.com>
+ <CAM9d7cgbPGzgc=QG8dStvq1iX8snGyeKTJDrg2XBjX0pCX9Qtg@mail.gmail.com> <CAP-5=fXgy95LsYLbbWN85prBs43jvGehOcwYFK-ZK2cOqCyPJA@mail.gmail.com>
+In-Reply-To: <CAP-5=fXgy95LsYLbbWN85prBs43jvGehOcwYFK-ZK2cOqCyPJA@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Sun, 5 Nov 2023 19:55:44 -0800
-Message-ID: <CAM9d7chKHASNE2BbL-6G7KJ-SwKMGXW+wujLsqiB+pFUPxJ2kA@mail.gmail.com>
-Subject: Re: [PATCH v4 07/53] tools api fs: Avoid reading whole file for a 1
- byte bool
+Date: Sun, 5 Nov 2023 19:58:49 -0800
+Message-ID: <CAM9d7ch9pXWZdFKf5zrQZg+nrf_0YpVro5vvkkO+LPfoLTynPQ@mail.gmail.com>
+Subject: Re: [PATCH v4 01/53] perf comm: Use regular mutex
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -61,64 +61,33 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 2, 2023 at 10:58=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Sun, Nov 5, 2023 at 1:35=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> sysfs__read_bool used the first byte from a fully read file into a
-> string. It then looked at the first byte's value. Avoid doing this and
-> just read the first byte.
+> On Sun, Nov 5, 2023 at 9:32=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> >
+> > Hi Ian,
+> >
+> > On Thu, Nov 2, 2023 at 10:58=E2=80=AFAM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > The rwsem is only after used for writing so switch to a mutex that ha=
+s
+> > > better error checking.
+> >
+> > Hmm.. ok.  It doesn't make sense to use rwsem without readers.
+> >
+> > >
+> > > Fixes: 7a8f349e9d14 ("perf rwsem: Add debug mode that uses a mutex")
+> >
+> > But I'm not sure this is a fix.  Other than that,
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/api/fs/fs.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-> index 496812b5f1d2..4c35a689d1fc 100644
-> --- a/tools/lib/api/fs/fs.c
-> +++ b/tools/lib/api/fs/fs.c
-> @@ -447,15 +447,16 @@ int sysfs__read_str(const char *entry, char **buf, =
-size_t *sizep)
->
->  int sysfs__read_bool(const char *entry, bool *value)
->  {
-> -       char *buf;
-> -       size_t size;
-> -       int ret;
-> +       struct io io;
-> +       char bf[16];
-> +       int ret =3D 0;
->
-> -       ret =3D sysfs__read_str(entry, &buf, &size);
-> -       if (ret < 0)
-> -               return ret;
-> +       io.fd =3D open(entry, O_RDONLY);
+> Thanks Namhyung, it fixes the case that you enable RWS_ERRORCHECK in
+> rwsem.h as the rwsem static initialization is wrong for a mutex.
 
-The entry is a name in sysfs, so you need to get the full name.
+Sounds like we need a separate fix.  Maybe you need to
+add a static initializer macro depending on the config.
 
 Thanks,
 Namhyung
-
-
-> +       if (io.fd < 0)
-> +               return -errno;
->
-> -       switch (buf[0]) {
-> +       io__init(&io, io.fd, bf, sizeof(bf));
-> +       switch (io__get_char(&io)) {
->         case '1':
->         case 'y':
->         case 'Y':
-> @@ -469,8 +470,7 @@ int sysfs__read_bool(const char *entry, bool *value)
->         default:
->                 ret =3D -1;
->         }
-> -
-> -       free(buf);
-> +       close(io.fd);
->
->         return ret;
->  }
-> --
-> 2.42.0.869.gea05f2083d-goog
->
