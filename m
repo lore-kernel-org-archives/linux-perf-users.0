@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC3629428
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 23:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0852EAFA
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 23:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pX7NwklT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495B1C433C8;
-	Mon,  6 Nov 2023 23:14:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8pqz8TD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EEE9C433C8;
+	Mon,  6 Nov 2023 23:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699312478;
-	bh=S5iI93LrgOnxgW5bYAeqTVil3rGK7sg8MXiLV7EkTa4=;
+	s=k20201202; t=1699312517;
+	bh=yswmKfGWlE7dB5zfW21GSije38rKBFuNNdQby+2mXG4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=pX7NwklTMSEvfvGWQLwRRPmAZjfnBTotfToM7cvbAY/T3szHX8sySOtjJ8tG1VIes
-	 Gaqt2qV0K24eR3IAvq0+QaDqKMAKKnAoPnQHIH+mnknQ6COwdhdViznHovy1DIaU1x
-	 Tr4MKat+pB1hXvbWXm0BR0WSyoaDZXpapCt1jKWWoy7VlB378Dcr1bKA3VWScHQysD
-	 2QgMxPoVQh4ERB0FNlxD+TyN+m1kLQRqH6Q4jVnFcXU24VUtIsf+CG6sxbz+57ipfP
-	 DOxGiRTjqgA2VEKqbHEXOFHfKTefuV+YrfnJ3TNP/QhAC0SVxx5kZegbxrN4eEyJUx
-	 4Ac3jjs+wwMYg==
+	b=B8pqz8TDZRPgcFOYkRNcopQ9s0x02LOxnaTFXGLtPsr6Za9QPePWlN/gtc2Qbn6NW
+	 ct6tRoQInspXyaZN3EsJgsc99Ih8D1sWlMsxV4UPIpW/Lut0qIGhLPK0RJW41D4BnE
+	 jWX9r6AXiJD2AELihHMWCKmw+ylmL7o/r6hyNUTtBSthPeqXWBB8dliFImxkhDmmgg
+	 GF+GkU0W4vFMyJlZaHmVvgQhEglzNh1IVZUEnREPmKWPCbJL0LmFdEYM92UnRKE1CG
+	 BCE2d0hG4Ozp82Foy8VCqpc2aQuRmKiTQ6ifZqLG4+8Zaw5aCGt9SpztzPO8l5Wb4D
+	 ueA9h/hxZrKnw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -27,9 +27,9 @@ Cc: Shuai Xue <xueshuai@linux.alibaba.com>,
 	mingo@redhat.com,
 	acme@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 01/13] perf/core: Bail out early if the request AUX area is out of bound
-Date: Mon,  6 Nov 2023 18:14:14 -0500
-Message-ID: <20231106231435.3734790-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.5 01/13] perf/core: Bail out early if the request AUX area is out of bound
+Date: Mon,  6 Nov 2023 18:14:54 -0500
+Message-ID: <20231106231514.3735077-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -39,7 +39,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6
+X-stable-base: Linux 6.5.10
 Content-Transfer-Encoding: 8bit
 
 From: Shuai Xue <xueshuai@linux.alibaba.com>
@@ -94,10 +94,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+)
 
 diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index fb1e180b5f0af..e8d82c2f07d0e 100644
+index a0433f37b0243..4a260ceed9c73 100644
 --- a/kernel/events/ring_buffer.c
 +++ b/kernel/events/ring_buffer.c
-@@ -700,6 +700,12 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
+@@ -699,6 +699,12 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
  		watermark = 0;
  	}
  
