@@ -1,39 +1,39 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F702168BC
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 11:00:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4C3182BF
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 11:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPFEJhXB"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6FCB0;
-	Mon,  6 Nov 2023 03:00:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqP7eu2L"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8998F;
+	Mon,  6 Nov 2023 03:28:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699268429; x=1730804429;
+  t=1699270135; x=1730806135;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=vYGTfzfjTaRu1W/Dx7rwKe4uRJQWKt3qrA6K0mo7Kn0=;
-  b=RPFEJhXBiOzclvz0H92IvltjZk59ygjNJoyB402lo4v17p4/oxGd2LX7
-   F4ZrLpoqJTypNT64bbBvlF5BZxPz41xCFiXUwyMdhOBG9A+bnkIdZw8I/
-   zjy5KNqT4KtCPaYAOzk+DEQP3WK99oGMznYqTq8HFlUCejkdNRVVAaA2/
-   frUKpN2jqjvTfJL9SUpENWYD52b0da87o3xm0XvmDnNGvaEKucI6QkAn9
-   q1/F9/UIgwQgR3G50hNMz1uU7fXxgX6koPZg3RlRXkBmWIffRM4a3Wsg8
-   H4nO3mv12cKnBMCJgA50uvwbdyvaUsgwHc9eqtiYsiyaOVaHsqvUKUmZg
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10885"; a="10788723"
+  bh=DQ7rMfvWgYUMuinr30MKysM2GNxuYBC0Zo4SHjV6554=;
+  b=lqP7eu2LE7dGBxNQ48sA6L5s041izsDJMwkMDBYP5OhOGxUqSYlVR/wE
+   7Ue4wqJ0BRQ0OGI0SiKm4mC0eZ6qYzbdFMKYr2nXD6QZJXrrRsEGewNCl
+   DjqN98o8E44ZbL9LBsLcmeSQBRmUun8iN8dhNaF8sVasX2s1ucshpDwhD
+   OwX4lOf5tzR/n6zZXIQDQ2V0cMu8uqGPCVvLux3dN0AFQ0I97PY+a7I+W
+   LjFkniBNyJv/70Gxd12kKAAnyIoRQqWObnWFdgS4BTRbMsxmFRoUCeCUs
+   JQ3mpkwy5LSfS5zdjzrJdfMBVTptAmxVlvVOS6y523hpQQK4QhdyCwf4L
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10885"; a="369462616"
 X-IronPort-AV: E=Sophos;i="6.03,281,1694761200"; 
-   d="scan'208";a="10788723"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 03:00:28 -0800
+   d="scan'208";a="369462616"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 03:28:54 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10885"; a="828176819"
+X-IronPort-AV: E=McAfee;i="6600,9927,10885"; a="1093758672"
 X-IronPort-AV: E=Sophos;i="6.03,281,1694761200"; 
-   d="scan'208";a="828176819"
+   d="scan'208";a="1093758672"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.215.231])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 03:00:17 -0800
-Message-ID: <0d232518-4bac-46cc-8635-d834fa232f85@intel.com>
-Date: Mon, 6 Nov 2023 13:00:14 +0200
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 03:28:46 -0800
+Message-ID: <371634c4-756a-498c-a46d-7459a07075e0@intel.com>
+Date: Mon, 6 Nov 2023 13:28:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,7 +41,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/53] perf record: Lazy load kernel symbols
+Subject: Re: [PATCH v4 05/53] perf machine thread: Remove exited threads by
+ default
 Content-Language: en-US
 To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
  Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -66,94 +67,150 @@ To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
  liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org
 References: <20231102175735.2272696-1-irogers@google.com>
- <20231102175735.2272696-3-irogers@google.com>
+ <20231102175735.2272696-6-irogers@google.com>
 From: Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20231102175735.2272696-3-irogers@google.com>
+In-Reply-To: <20231102175735.2272696-6-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/11/23 19:56, Ian Rogers wrote:
-> Commit 5b7ba82a7591 ("perf symbols: Load kernel maps before using")
-> changed it so that loading a kernel dso would cause the symbols for
-> the dso to be eagerly loaded. For perf record this is overhead as the
-> symbols won't be used. Add a symbol_conf to control the behavior and
-> disable it for perf record and perf inject.
+> struct thread values hold onto references to mmaps, dsos, etc. When a
+> thread exits it is necessary to clean all of this memory up by
+> removing the thread from the machine's threads. Some tools require
+> this doesn't happen, such as auxtrace events, perf report if offcpu
+> events exist or if a task list is being generated, so add a
+> symbol_conf value to make the behavior optional. When an exited thread
+> is left in the machine's threads, mark it as exited.
+> 
+> This change relates to commit 40826c45eb0b ("perf thread: Remove
+> notion of dead threads"). Dead threads were removed as they had a
+> reference count of 0 and were difficult to reason about with the
+> reference count checker. Here a thread is removed from threads when it
+> exits, unless via symbol_conf the exited thread isn't remove and is
+> marked as exited. Reference counting behaves as it normally does.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
+
+For auxtrace:
 
 Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
 > ---
->  tools/perf/builtin-inject.c   | 6 ++++++
->  tools/perf/builtin-record.c   | 2 ++
->  tools/perf/util/event.c       | 4 ++--
->  tools/perf/util/symbol_conf.h | 3 ++-
->  4 files changed, 12 insertions(+), 3 deletions(-)
+>  tools/perf/builtin-report.c   |  7 +++++++
+>  tools/perf/util/machine.c     | 10 +++++++---
+>  tools/perf/util/session.c     |  5 +++++
+>  tools/perf/util/symbol_conf.h |  3 ++-
+>  tools/perf/util/thread.h      | 14 ++++++++++++++
+>  5 files changed, 35 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index c8cf2fdd9cff..eb3ef5c24b66 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -2265,6 +2265,12 @@ int cmd_inject(int argc, const char **argv)
->  		"perf inject [<options>]",
->  		NULL
->  	};
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 9cb1da2dc0c0..121a2781323c 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1426,6 +1426,13 @@ int cmd_report(int argc, const char **argv)
+>  	if (ret < 0)
+>  		goto exit;
+>  
+> +	/*
+> +	 * tasks_mode require access to exited threads to list those that are in
+> +	 * the data file. Off-cpu events are synthesized after other events and
+> +	 * reference exited threads.
+> +	 */
+> +	symbol_conf.keep_exited_threads = true;
 > +
-> +	if (!inject.itrace_synth_opts.set) {
-> +		/* Disable eager loading of kernel symbols that adds overhead to perf inject. */
-> +		symbol_conf.lazy_load_kernel_maps = true;
+>  	annotation_options__init(&report.annotation_opts);
+>  
+>  	ret = perf_config(report__config, &report);
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 90c750150b19..a985d004aa8d 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2157,9 +2157,13 @@ int machine__process_exit_event(struct machine *machine, union perf_event *event
+>  	if (dump_trace)
+>  		perf_event__fprintf_task(event, stdout);
+>  
+> -	if (thread != NULL)
+> -		thread__put(thread);
+> -
+> +	if (thread != NULL) {
+> +		if (symbol_conf.keep_exited_threads)
+> +			thread__set_exited(thread, /*exited=*/true);
+> +		else
+> +			machine__remove_thread(machine, thread);
+> +	}
+> +	thread__put(thread);
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 1e9aa8ed15b6..c6afba7ab1a5 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -115,6 +115,11 @@ static int perf_session__open(struct perf_session *session, int repipe_fd)
+>  		return -1;
+>  	}
+>  
+> +	if (perf_header__has_feat(&session->header, HEADER_AUXTRACE)) {
+> +		/* Auxiliary events may reference exited threads, hold onto dead ones. */
+> +		symbol_conf.keep_exited_threads = true;
 > +	}
 > +
->  #ifndef HAVE_JITDUMP
->  	set_option_nobuild(options, 'j', "jit", "NO_LIBELF=1", true);
->  #endif
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index dcf288a4fb9a..8ec818568662 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -3989,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
->  # undef set_nobuild
->  #endif
+>  	if (perf_data__is_pipe(data))
+>  		return 0;
 >  
-> +	/* Disable eager loading of kernel symbols that adds overhead to perf record. */
-> +	symbol_conf.lazy_load_kernel_maps = true;
->  	rec->opts.affinity = PERF_AFFINITY_SYS;
->  
->  	rec->evlist = evlist__new();
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index 923c0fb15122..68f45e9e63b6 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -617,13 +617,13 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
->  	if (cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
->  		al->level = 'k';
->  		maps = machine__kernel_maps(machine);
-> -		load_map = true;
-> +		load_map = !symbol_conf.lazy_load_kernel_maps;
->  	} else if (cpumode == PERF_RECORD_MISC_USER && perf_host) {
->  		al->level = '.';
->  	} else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL && perf_guest) {
->  		al->level = 'g';
->  		maps = machine__kernel_maps(machine);
-> -		load_map = true;
-> +		load_map = !symbol_conf.lazy_load_kernel_maps;
->  	} else if (cpumode == PERF_RECORD_MISC_GUEST_USER && perf_guest) {
->  		al->level = 'u';
->  	} else {
 > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> index 0b589570d1d0..2b2fb9e224b0 100644
+> index 2b2fb9e224b0..6040286e07a6 100644
 > --- a/tools/perf/util/symbol_conf.h
 > +++ b/tools/perf/util/symbol_conf.h
-> @@ -42,7 +42,8 @@ struct symbol_conf {
->  			inline_name,
+> @@ -43,7 +43,8 @@ struct symbol_conf {
 >  			disable_add2line_warn,
 >  			buildid_mmap2,
-> -			guest_code;
-> +			guest_code,
-> +			lazy_load_kernel_maps;
+>  			guest_code,
+> -			lazy_load_kernel_maps;
+> +			lazy_load_kernel_maps,
+> +			keep_exited_threads;
 >  	const char	*vmlinux_name,
 >  			*kallsyms_name,
 >  			*source_prefix,
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index e79225a0ea46..0df775b5c110 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -36,13 +36,22 @@ struct thread_rb_node {
+>  };
+>  
+>  DECLARE_RC_STRUCT(thread) {
+> +	/** @maps: mmaps associated with this thread. */
+>  	struct maps		*maps;
+>  	pid_t			pid_; /* Not all tools update this */
+> +	/** @tid: thread ID number unique to a machine. */
+>  	pid_t			tid;
+> +	/** @ppid: parent process of the process this thread belongs to. */
+>  	pid_t			ppid;
+>  	int			cpu;
+>  	int			guest_cpu; /* For QEMU thread */
+>  	refcount_t		refcnt;
+> +	/**
+> +	 * @exited: Has the thread had an exit event. Such threads are usually
+> +	 * removed from the machine's threads but some events/tools require
+> +	 * access to dead threads.
+> +	 */
+> +	bool			exited;
+>  	bool			comm_set;
+>  	int			comm_len;
+>  	struct list_head	namespaces_list;
+> @@ -189,6 +198,11 @@ static inline refcount_t *thread__refcnt(struct thread *thread)
+>  	return &RC_CHK_ACCESS(thread)->refcnt;
+>  }
+>  
+> +static inline void thread__set_exited(struct thread *thread, bool exited)
+> +{
+> +	RC_CHK_ACCESS(thread)->exited = exited;
+> +}
+> +
+>  static inline bool thread__comm_set(const struct thread *thread)
+>  {
+>  	return RC_CHK_ACCESS(thread)->comm_set;
 
