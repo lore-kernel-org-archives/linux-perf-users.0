@@ -1,159 +1,130 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C435E358B6
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 18:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F1C2E639
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 18:40:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h8Z4lKZS"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50680B9;
-	Tue,  7 Nov 2023 10:36:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jdj2mgk4"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA6F12B;
+	Tue,  7 Nov 2023 10:40:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699382201; x=1730918201;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=niQ8FAZVB7tsHM0LZXi5A+2Rr2dzc9RtaVvyV81wfiw=;
-  b=h8Z4lKZSQmtZhnCBjXDw/pRo0S/U7h+T/2s6S4U/FcRQZ4gb0ikZjBCy
-   pZHa1cim3L/BJfen0dQRjLfHW7XYjyYpCChDhYmDTZojQhzWwgs/LwX1Q
-   UKYiRYYI6t6D8Xo5NshDte1OHRdRw4RLGeqmDSFnBoux/2dL+axRRo0NC
-   njU/DPE6l2wnLmVJcg7+NQ/1Y3Wq3LaN2ZgOpC8Th0W9cuXOxLeVJ1Smp
-   Dys/iPKxht3EJM0fm91LEXFkN2dcdhy0ALu1IeeRTCHRRbXopJayUlWVP
-   c4xGSF+SNiz0x5bI9ELCn0oPWszASjnBNBdGMhDjXPz3H3+ULKNRld9Hu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="386761366"
+  t=1699382423; x=1730918423;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=K0VNtu18XupFGGixMLkWpky1YTjIXhLMqucmTQYHaMs=;
+  b=jdj2mgk4hnFPhYu+iFSFsJQrNf5JPn0tgUzOf4YQjtkBSPi5ZAegeDrW
+   iwvdRfXcTZJYLK2bEq0dDISoBespVN58lrpxWZJtL2iA/pBemD31GWS3O
+   gsye/0x1bLEUbk12H6FbleRhxAoauKXHJbRagtlh1gXNBl7Afgf1+9ULW
+   4thDt03ZDL4HDkJEW4w0SmUedpQG9ENjveOltNeUVFIK+eAUQ7iBytlJY
+   lhAbkpD+TCeqBpJZMUJPKQNRYlM0McFL+4IQ70g2O43c0Br92GPF1q39j
+   +jUTHKk8Y+aLkioC+L6YlIZWl0GZ6HsrrqPphnOrek1SUNVKsq+eldRBw
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="368925010"
 X-IronPort-AV: E=Sophos;i="6.03,284,1694761200"; 
-   d="scan'208";a="386761366"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2023 10:36:40 -0800
+   d="scan'208";a="368925010"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2023 10:40:23 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="1094232376"
+X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="739227341"
 X-IronPort-AV: E=Sophos;i="6.03,284,1694761200"; 
-   d="scan'208";a="1094232376"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2023 10:36:40 -0800
-Received: from [10.209.174.91] (kliang2-mobl1.ccr.corp.intel.com [10.209.174.91])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id B83DC580D9B;
-	Tue,  7 Nov 2023 10:36:38 -0800 (PST)
-Message-ID: <eff62fd6-10f4-4548-8fab-c6c56338be66@linux.intel.com>
-Date: Tue, 7 Nov 2023 13:36:37 -0500
+   d="scan'208";a="739227341"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orsmga006.jf.intel.com with ESMTP; 07 Nov 2023 10:40:22 -0800
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	irogers@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	adrian.hunter@intel.com,
+	tinghao.zhang@intel.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2] perf test: Basic branch counter support
+Date: Tue,  7 Nov 2023 10:40:20 -0800
+Message-Id: <20231107184020.1497571-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test: Basic branch counter support
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
- jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
- tinghao.zhang@intel.com
-References: <20231107174411.1496958-1-kan.liang@linux.intel.com>
- <CAP-5=fWjXS43xBujQ2DOAeo41WX5L4hfTfJVEV8h6i1Uu2HBEA@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fWjXS43xBujQ2DOAeo41WX5L4hfTfJVEV8h6i1Uu2HBEA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+From: Kan Liang <kan.liang@linux.intel.com>
 
+Add a basic test for the branch counter feature.
 
-On 2023-11-07 1:05 p.m., Ian Rogers wrote:
-> On Tue, Nov 7, 2023 at 9:44 AM <kan.liang@linux.intel.com> wrote:
->>
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> Add a basic test for the branch counter feature.
->>
->> The test verifies that
->> - The new filter can be successfully applied on the supported platforms.
->> - The counter value can be outputted via the perf report -D
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> 
-> Thanks Kan!
-> 
->> ---
->>  tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index 4fbc74805d52..2783e867c07c 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
->> @@ -11,6 +11,9 @@ err=0
->>  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->>  testprog="perf test -w thloop"
->>  testsym="test_loop"
->> +cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
->> +br_cntr_file="/caps/branch_counter_nr"
->> +br_cntr_output="branch stack counters"
->>
->>  cleanup() {
->>    rm -rf "${perfdata}"
->> @@ -154,10 +157,37 @@ test_workload() {
->>    echo "Basic target workload test [Success]"
->>  }
->>
->> +test_branch_counter() {
->> +  echo "Basic branch counter test"
->> +  # Check if the branch counter feature is supported
-> 
-> If $cpu_pmu_dir is empty, e.g. ARM and S390, this should also skip.
-> 
+The test verifies that
+- The new filter can be successfully applied on the supported platforms.
+- The counter value can be outputted via the perf report -D
 
-Yes, I've tested with a fake unsupported dir. The test case is skipped
-as well.
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
 
->> +  for dir in $cpu_pmu_dir
->> +  do
->> +    if [ ! -e "$dir$br_cntr_file" ]
->> +    then
->> +      echo "Not support branch counter feature [Skipped]"
-> 
-> Perhaps here it'd be clearer to output:
-> echo "branch counter feature not supported on all core PMUs ($dir) [Skipped]"
-> 
+Changes since V2:
+- Update the output msg for the skipped case (Ian)
 
-Sure, I will change it in V2.
+ tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Thanks,
-Kan
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 4fbc74805d52..cc207a16ae24 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -11,6 +11,9 @@ err=0
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ testprog="perf test -w thloop"
+ testsym="test_loop"
++cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
++br_cntr_file="/caps/branch_counter_nr"
++br_cntr_output="branch stack counters"
+ 
+ cleanup() {
+   rm -rf "${perfdata}"
+@@ -154,10 +157,37 @@ test_workload() {
+   echo "Basic target workload test [Success]"
+ }
+ 
++test_branch_counter() {
++  echo "Basic branch counter test"
++  # Check if the branch counter feature is supported
++  for dir in $cpu_pmu_dir
++  do
++    if [ ! -e "$dir$br_cntr_file" ]
++    then
++      echo "branch counter feature not supported on all core PMUs ($dir) [Skipped]"
++      return
++    fi
++  done
++  if ! perf record -o "${perfdata}" -j any,counter ${testprog} 2> /dev/null
++  then
++    echo "Basic branch counter test [Failed record]"
++    err=1
++    return
++  fi
++  if ! perf report -i "${perfdata}" -D -q | grep -q "$br_cntr_output"
++  then
++    echo "Basic branch record test [Failed missing output]"
++    err=1
++    return
++  fi
++  echo "Basic branch counter test [Success]"
++}
++
+ test_per_thread
+ test_register_capture
+ test_system_wide
+ test_workload
++test_branch_counter
+ 
+ cleanup
+ exit $err
+-- 
+2.35.1
 
-> Thanks,
-> Ian
-> 
->> +      return
->> +    fi
->> +  done
->> +  if ! perf record -o "${perfdata}" -j any,counter ${testprog} 2> /dev/null
->> +  then
->> +    echo "Basic branch counter test [Failed record]"
->> +    err=1
->> +    return
->> +  fi
->> +  if ! perf report -i "${perfdata}" -D -q | grep -q "$br_cntr_output"
->> +  then
->> +    echo "Basic branch record test [Failed missing output]"
->> +    err=1
->> +    return
->> +  fi
->> +  echo "Basic branch counter test [Success]"
->> +}
->> +
->>  test_per_thread
->>  test_register_capture
->>  test_system_wide
->>  test_workload
->> +test_branch_counter
->>
->>  cleanup
->>  exit $err
->> --
->> 2.35.1
->>
-> 
