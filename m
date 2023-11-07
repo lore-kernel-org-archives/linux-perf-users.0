@@ -1,211 +1,195 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2852F8F7A
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 06:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBE717F0
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 06:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DwFY0WqD"
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A02113
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 22:10:43 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-507a5edc2ebso1478e87.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Nov 2023 22:10:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699337441; x=1699942241; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7w492P8EaMyzzBXQGsoWoq23LSvZpwaYh30vR46ByNc=;
-        b=DwFY0WqDuzVuffzxYZHFksTXVBuK1aS5KiCy8Q0dqtZpO8bevK45K0z21+f+wHCdJz
-         1eW9964gvfut+B6xfrx6kggJV5eKkRZMfU/hoYvkWhsic19ZSK5dwgs7aoYtH7btgwhq
-         mrHAErE4fuR1EE5HRZplc6+JePEpC1dxcE2mijhqr3loxFCVqtaViyVlpYCAus5MOYFJ
-         G1sitE59nihM5Qc/e8mdl8/kv+yrnOxeMlPUcg7DL0lSj/745tuolmP409IQ1h1ucK4G
-         xcdZWcS8sECTnsBYNtPTxEVzSHOANqZcluUSZsgaKz6a9YjXWBmAWFYJjFy9scrdQcNP
-         0AUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699337441; x=1699942241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7w492P8EaMyzzBXQGsoWoq23LSvZpwaYh30vR46ByNc=;
-        b=XxpTVQ7MeOTFdM18CXAxHoijd27jLhfSeMuichwcYPKjxj8hkAIxZq1gTIMbXljXFs
-         zTgK9zEEyxCpclQJhUw/EPe3WKV53aBzTnJq5kk1MrpDyj2C9cN7fwSYMz+S/OUVM04b
-         tho98YqtTGqkZj/jOrxpsSHqx3VZnDjGjdRFCngwaPj6GcSQcRUcHiNfVofRFGN2zY+c
-         CsVwUJ/VhrvvUh4M84Y0mPfS358TckkHoZ1qcYN8JMrALVn8X7r8u5xAkfKCY7L1ZcZp
-         /gJHfjDbwoK+0ePCASv9lgSNuCI5SN9C12D8clED7EnPGwS/qeJXYSt24kaCM1Gp747z
-         +H7w==
-X-Gm-Message-State: AOJu0YzKAc6zTvVvL3aMODtEC2D+Uf+Cu0roPDwZMF4JUiR5z3KqmvFt
-	fjrTk8jAEHK96moXEbur72lmZSKbxGYOxNTxTZ9pEA==
-X-Google-Smtp-Source: AGHT+IEQvtxnLlB7F29eRu/cA7awY+Kxexhgv1i34AQJasD2LNOF96/NDCw5kXIBvzx84FiV23+2NcPPv0JH3c6k38Q=
-X-Received: by 2002:a05:6512:108c:b0:501:a2b9:6046 with SMTP id
- j12-20020a056512108c00b00501a2b96046mr38300lfg.7.1699337441012; Mon, 06 Nov
- 2023 22:10:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="feZuL1Jv"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F5810F
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 22:38:57 -0800 (PST)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A75mMDv015538;
+	Tue, 7 Nov 2023 06:38:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=iGmgARu5sd64vt4eF+2Hdgiq5iln0SDA8QR5/xWExTA=;
+ b=feZuL1JvQrHMVxrkeet3HL1fQ9mIMGxx02w9vx9eHO2dRC4qtf+n+nBINwevI+qTZCRp
+ MWSggvdyKZ0GT4zGnGsrSZG1JNAj7V3CrZLLrvJKrrIGwHE94BVG64GgH/L/UDRnQRuA
+ 1FzPI4eldbbL0zva6euj6rykjagEYa7+26zdIJfzdu9mRF7IUDEO/ex4UUdJ43RPSrhT
+ s95iXh33XGgxygn2tCBNjVzlHhl8480fnWCZytyrm9P6pvuk0j37kV3gTzCCXMhIgs7V
+ xTOhKoKm2qcZpraL8o/cWf7jBW9nHDJ2L7cmv+tNdNwAXR70iNgO65Qqm4SJYq7L2qAf mQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u7eh4kfh2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Nov 2023 06:38:45 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A75nkVB023560;
+	Tue, 7 Nov 2023 06:38:44 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u7eh4kfam-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Nov 2023 06:38:44 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3A75QiLR028237;
+	Tue, 7 Nov 2023 06:38:42 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3u62gjxed6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Nov 2023 06:38:42 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3A76cdJJ7537256
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 7 Nov 2023 06:38:39 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4ECFB2004B;
+	Tue,  7 Nov 2023 06:38:39 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4AB8020040;
+	Tue,  7 Nov 2023 06:38:37 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.91.239])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  7 Nov 2023 06:38:37 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH 1/3] perf tests test_arm_coresight: Fix the shellcheck
+ warning in latest test_arm_coresight.sh
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZUleKdUrbR9oFVW4@kernel.org>
+Date: Tue, 7 Nov 2023 12:08:25 +0530
+Cc: Ian Rogers <irogers@google.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        James Clark <james.clark@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Message-Id: <8DEA17FB-DC0B-41F9-800D-4B74371F4849@linux.vnet.ibm.com>
+References: <20230929041133.95355-1-atrajeev@linux.vnet.ibm.com>
+ <20230929041133.95355-2-atrajeev@linux.vnet.ibm.com>
+ <552cbde4-6077-d5a4-251e-6c77786e1b31@arm.com>
+ <3AFF6660-5A0E-4028-BA5A-D18CBAC8E1A4@linux.vnet.ibm.com>
+ <ZUleKdUrbR9oFVW4@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3731.700.6)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: b47DWhhZN7FaRQ3k4UTneSd_AShfyHS5
+X-Proofpoint-ORIG-GUID: nW7HYgKPOKHzDFDhGWjvtP7jmwlegyfd
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-3-oliver.upton@linux.dev> <CAM9d7cjxkAmEc=g0jWBPQ9d6GYmfdZSKjqi5v0UsoPvkQy-fSw@mail.gmail.com>
- <ZS/n5dqo6dZE40HE@kernel.org>
-In-Reply-To: <ZS/n5dqo6dZE40HE@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 6 Nov 2023 22:10:29 -0800
-Message-ID: <CAP-5=fWcrQqZz5vTEd_YHBcZ8rGF4Shj=QpZ9mTLDnXbwwLZmw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] perf build: Generate arm64's sysreg-defs.h and add
- to include path
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	Jing Zhang <jingzhangos@google.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, James Morse <james.morse@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-06_15,2023-11-02_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 adultscore=0
+ suspectscore=0 impostorscore=0 clxscore=1011 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310240000
+ definitions=main-2311070053
 
-On Wed, Oct 18, 2023 at 7:12=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Oct 17, 2023 at 03:23:40PM -0700, Namhyung Kim escreveu:
-> > Hello,
-> >
-> > On Wed, Oct 11, 2023 at 12:58=E2=80=AFPM Oliver Upton <oliver.upton@lin=
-ux.dev> wrote:
-> > >
-> > > Start generating sysreg-defs.h in anticipation of updating sysreg.h t=
-o a
-> > > version that needs the generated output.
-> > >
-> > > Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
-> >
-> > It seems we also need this on non-ARM archs to process ARM SPE data.
-> >
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
->
-> When building with CORESIGHT=3D1, yes.
->
-> I have it in my tests and:
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ ls -la /tmp/build/perf-tools-nex=
-t/util/arm-spe.o
-> -rw-r--r--. 1 acme acme 135432 Oct 17 16:49 /tmp/build/perf-tools-next/ut=
-il/arm-spe.o
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ ldd /tmp/build/perf-tools-next/p=
-erf | grep csd
->         libopencsd_c_api.so.1 =3D> /lib64/libopencsd_c_api.so.1 (0x00007f=
-36bfca5000)
->         libopencsd.so.1 =3D> /lib64/libopencsd.so.1 (0x00007f36be2e0000)
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ rpm -qf /lib64/libopencsd.so.1
-> opencsd-1.3.3-1.fc38.x86_64
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ rpm -q --qf "%{summary}\n" openc=
-sd
-> An open source CoreSight(tm) Trace Decode library
+
+
+> On 07-Nov-2023, at 3:14 AM, Arnaldo Carvalho de Melo <acme@kernel.org> wr=
+ote:
+>=20
+> Em Thu, Oct 05, 2023 at 02:24:15PM +0530, Athira Rajeev escreveu:
+>>> On 05-Oct-2023, at 1:50 PM, James Clark <james.clark@arm.com> wrote:
+>>> On 29/09/2023 05:11, Athira Rajeev wrote:
+>>>> Running shellcheck on tests/shell/test_arm_coresight.sh
+>>>> throws below warnings:
+>>>>=20
+>>>> In tests/shell/test_arm_coresight.sh line 15:
+>>>> cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name cpu*=
+ -print -quit)
+>>>>                 ^--^ SC2061: Quote the parameter to -name so the shell=
+ won't interpret it.
+>>>>=20
+>>>> In tests/shell/test_arm_coresight.sh line 20:
+>>>> if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" =3D "0xA13" ] ;=
+ then
+>>>>                             ^-- SC2166: Prefer [ p ] && [ q ] as [ p -=
+a q ] is not well defined
+>>>>=20
+>>>> This warning is observed after commit:
+>>>> "commit bb350847965d ("perf test: Update cs_etm testcase for Arm ETE")"
+>>>>=20
+>>>> Fixed this issue by using quoting 'cpu*' for SC2061 and
+>>>> using "&&" in line number 20 for SC2166 warning
+>>>>=20
+>>>> Fixes: bb350847965d ("perf test: Update cs_etm testcase for Arm ETE")
+>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>>> ---
+>>>> tools/perf/tests/shell/test_arm_coresight.sh | 4 ++--
+>>>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>=20
+>>>> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf=
+/tests/shell/test_arm_coresight.sh
+>>>> index fe78c4626e45..f2115dfa24a5 100755
+>>>> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+>>>> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+>>>> @@ -12,12 +12,12 @@
+>>>> glb_err=3D0
+>>>>=20
+>>>> cs_etm_dev_name() {
+>>>> - cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name cp=
+u* -print -quit)
+>>>> + cs_etm_path=3D$(find  /sys/bus/event_source/devices/cs_etm/ -name 'c=
+pu*' -print -quit)
+>>>> trcdevarch=3D$(cat ${cs_etm_path}/mgmt/trcdevarch)
+>>>> archhver=3D$((($trcdevarch >> 12) & 0xf))
+>>>> archpart=3D$(($trcdevarch & 0xfff))
+>>>>=20
+>>>> - if [ $archhver -eq 5 -a "$(printf "0x%X\n" $archpart)" =3D "0xA13" ]=
+ ; then
+>>>> + if [ $archhver -eq 5 ] && [ "$(printf "0x%X\n" $archpart)" =3D "0xA1=
+3" ] ; then
+>>>> echo "ete"
+>>>> else
+>>>> echo "etm"
+>>>=20
+>>>=20
+>>> Reviewed-by: James Clark <james.clark@arm.com>
+>=20
+> Some are not applying, even after b4 picking up v2
+>=20
+> Total patches: 3
+> ---
+> Cover: ./v2_20231013_atrajeev_fix_for_shellcheck_issues_with_latest_scrip=
+ts_in_tests_shell.cover
+> Link: https://lore.kernel.org/r/20231013073021.99794-1-atrajeev@linux.vne=
+t.ibm.com
+> Base: not specified
+>       git am ./v2_20231013_atrajeev_fix_for_shellcheck_issues_with_latest=
+_scripts_in_tests_shell.mbx
+> =E2=AC=A2[acme@toolbox perf-tools-next]$        git am ./v2_20231013_atra=
+jeev_fix_for_shellcheck_issues_with_latest_scripts_in_tests_shell.mbx
+> Applying: tools/perf/tests Ignore the shellcheck SC2046 warning in lock_c=
+ontention
+> error: patch failed: tools/perf/tests/shell/lock_contention.sh:33
+> error: tools/perf/tests/shell/lock_contention.sh: patch does not apply
+> Patch failed at 0001 tools/perf/tests Ignore the shellcheck SC2046 warnin=
+g in lock_contention
+> hint: Use 'git am --show-current-patch=3Ddiff' to see the failed patch
+> When you have resolved this problem, run "git am --continue".
+> If you prefer to skip this patch, run "git am --skip" instead.
+> To restore the original branch and stop patching, run "git am --abort".
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git am --abort
 > =E2=AC=A2[acme@toolbox perf-tools-next]$
->
-> Well, double checked and arm-spe.o is built by default, only way to
-> disable it is using NO_AUXTRACE=3D1 in the make command line, but then
-> IIRC one needs linking with opencsd to decode all those traces, right?
->
-> Anyway:
->
-> Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> - Arnaldo
->
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > > ---
-> > >  tools/perf/Makefile.perf | 15 +++++++++++++--
-> > >  tools/perf/util/Build    |  2 +-
-> > >  2 files changed, 14 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > > index 37af6df7b978..14dedd11a1f5 100644
-> > > --- a/tools/perf/Makefile.perf
-> > > +++ b/tools/perf/Makefile.perf
-> > > @@ -443,6 +443,15 @@ drm_ioctl_tbl :=3D $(srctree)/tools/perf/trace/b=
-eauty/drm_ioctl.sh
-> > >  # Create output directory if not already present
-> > >  _dummy :=3D $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(b=
-eauty_ioctl_outdir)')
-> > >
-> > > +arm64_gen_sysreg_dir :=3D $(srctree)/tools/arch/arm64/tools
-> > > +
-> > > +arm64-sysreg-defs: FORCE
-> > > +       $(Q)$(MAKE) -C $(arm64_gen_sysreg_dir)
 
-Should this not build an install_headers target? The generated code is
-going into the source tree as is, ignoring O=3D options to make.
+Hi Arnaldo
 
-Thanks,
-Ian
+The patch is picked up : https://lore.kernel.org/all/169757198796.167943.10=
+552920255799914362.b4-ty@kernel.org/ .
+Thanks for looking into.
 
-> > > +
-> > > +arm64-sysreg-defs-clean:
-> > > +       $(call QUIET_CLEAN,arm64-sysreg-defs)
-> > > +       $(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) clean > /dev/null
-> > > +
-> > >  $(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $=
-(drm_ioctl_tbl)
-> > >         $(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
-> > >
-> > > @@ -716,7 +725,9 @@ endif
-> > >  __build-dir =3D $(subst $(OUTPUT),,$(dir $@))
-> > >  build-dir   =3D $(or $(__build-dir),.)
-> > >
-> > > -prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheade=
-rs $(drm_ioctl_array) \
-> > > +prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheade=
-rs \
-> > > +       arm64-sysreg-defs \
-> > > +       $(drm_ioctl_array) \
-> > >         $(fadvise_advice_array) \
-> > >         $(fsconfig_arrays) \
-> > >         $(fsmount_arrays) \
-> > > @@ -1125,7 +1136,7 @@ endif # BUILD_BPF_SKEL
-> > >  bpf-skel-clean:
-> > >         $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKEL=
-ETONS)
-> > >
-> > > -clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMB=
-OL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-c=
-oresight-targets-clean
-> > > +clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMB=
-OL)-clean $(LIBPERF)-clean arm64-sysreg-defs-clean fixdep-clean python-clea=
-n bpf-skel-clean tests-coresight-targets-clean
-> > >         $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)p=
-erf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
-> > >         $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.=
-cmd' -delete -o -name '\.*.d' -delete
-> > >         $(Q)$(RM) $(OUTPUT).config-detected
-> > > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > > index 6d657c9927f7..2f76230958ad 100644
-> > > --- a/tools/perf/util/Build
-> > > +++ b/tools/perf/util/Build
-> > > @@ -345,7 +345,7 @@ CFLAGS_rbtree.o        +=3D -Wno-unused-parameter=
- -DETC_PERFCONFIG=3D"BUILD_STR($(ET
-> > >  CFLAGS_libstring.o     +=3D -Wno-unused-parameter -DETC_PERFCONFIG=
-=3D"BUILD_STR($(ETC_PERFCONFIG_SQ))"
-> > >  CFLAGS_hweight.o       +=3D -Wno-unused-parameter -DETC_PERFCONFIG=
-=3D"BUILD_STR($(ETC_PERFCONFIG_SQ))"
-> > >  CFLAGS_header.o        +=3D -include $(OUTPUT)PERF-VERSION-FILE
-> > > -CFLAGS_arm-spe.o       +=3D -I$(srctree)/tools/arch/arm64/include/
-> > > +CFLAGS_arm-spe.o       +=3D -I$(srctree)/tools/arch/arm64/include/ -=
-I$(srctree)/tools/arch/arm64/include/generated/
-> > >
-> > >  $(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
-> > >         $(call rule_mkdir)
-> > > --
-> > > 2.42.0.609.gbb76f46606-goog
-> > >
->
-> --
->
-> - Arnaldo
+Athira
+
+
