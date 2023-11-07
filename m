@@ -1,201 +1,204 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5018E111A4
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 08:34:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0765AE569;
+	Tue,  7 Nov 2023 09:32:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R84rzsic"
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2055.outbound.protection.outlook.com [40.107.93.55])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECC0F3;
-	Tue,  7 Nov 2023 00:34:13 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gFR9MIHeXGm0ryN+KNtENWODVGGhNEgFXhAiWdL1rmn24QYukGL2L8Ug5FQlZBPGZ+kCIxkXHw3HpyC/GPKmxKE3JERaOE09wA2+mrfIksHH4gCHAwi9/QS+bfGOIiKl7OcQC1bYwcIxvc1OUeryN3/GOSPC0HWIgTHgFR8RhKMQ83hoXOfiYxHQvh97PO2PJKmx2pVrj8+rYZXlPRkgTfSf4dGmuO+kO0QbYVli5WOBPpQ7NzixE5g5KyFt/3PindRjym3SNTswkOHPaUDGpOMXEhw8IQ4D+RjTri4+IHATXMoQkT2VEairFWeLFxn60VA1ML1a1u/NhDJHgflbyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bOhHTikOsoF0CTkdslwXiC8q/bD6hc7xxoisvKv8U08=;
- b=RkyZgTjJP22cHv0rFQ193E+6O1ww7ucbokyRS2A4Izbh1YMOt3lVZRNpxZGtt8kwIua8TlOIpZjtbY7QiKDbxP0f27iZNegjdRahfYaHfQt6ylVH0kGV57bmBb79Ez0kCZyjAWWxzF2e9l+znZoHzNOlInixPX9/jSriSx7laxX7Swkcq/ioJhj685q9IBLfPXrm0bItdSgsJ1wk6P1vFL/WZ0qKfFIXJ1DEyQWmRUwEdS2jt1lhQcpEmcPlebQFancSPsAi1pGteYCB+EW7GGBoILerBaM+uPtdv47PF1GcNuTSmiUvEUvy9NayezbtB8yRS1qXMa9eSJTwyeMREQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bOhHTikOsoF0CTkdslwXiC8q/bD6hc7xxoisvKv8U08=;
- b=R84rzsicILneBKEUBPfZ0tNMLP8/SVptGeG3DM6aoxoWeUPYEF1MOhX61QIFQ8TwG3ApGKcXWXxsx8cnAbFFLbfPqE3SiR4NauydkcdFjjOj9YWTkEF8FPxo/rLuZoCbc7fwyA1StO0opo9U3i13oFn+g/A9GTTePtcWpcqAIY0=
-Received: from BN9PR03CA0808.namprd03.prod.outlook.com (2603:10b6:408:13f::33)
- by CY8PR12MB7241.namprd12.prod.outlook.com (2603:10b6:930:5a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.29; Tue, 7 Nov
- 2023 08:34:11 +0000
-Received: from SA2PEPF00001507.namprd04.prod.outlook.com
- (2603:10b6:408:13f:cafe::87) by BN9PR03CA0808.outlook.office365.com
- (2603:10b6:408:13f::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.29 via Frontend
- Transport; Tue, 7 Nov 2023 08:34:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00001507.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6977.16 via Frontend Transport; Tue, 7 Nov 2023 08:34:10 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Tue, 7 Nov
- 2023 02:34:03 -0600
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: <acme@kernel.org>, <namhyung@kernel.org>
-CC: <ravi.bangoria@amd.com>, <kim.phillips@amd.com>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<changbin.du@huawei.com>, <yangjihong1@huawei.com>, <zwisler@chromium.org>,
-	<wangming01@loongson.cn>, <chenhuacai@kernel.org>, <kprateek.nayak@amd.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<sandipan.das@amd.com>, <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH 2/2] perf header: Additional note on AMD IBS for max_precise pmu cap
-Date: Tue, 7 Nov 2023 14:03:31 +0530
-Message-ID: <20231107083331.901-2-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231107083331.901-1-ravi.bangoria@amd.com>
-References: <20231107083331.901-1-ravi.bangoria@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNyTBRsD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA885C433C7;
+	Tue,  7 Nov 2023 09:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699349532;
+	bh=2de/ujfjpG8mGlZWE7v/o1nNFaTyVAJBU4Ts5xFC4U0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LNyTBRsD05STGYMOgAp7X7/N0gA+x1NsiEoSS9iKpCh7a3mCWBTau6vGYnAjuUXfw
+	 CJWgEeO9HFa7knJEmYnCEG30wnz+oNoIhDQKXlWq70W6BC/NyqxgajmtDgHzZ2Shle
+	 Cjjpukmc2z9RJ6V3ngSJKpEI8DgRCk1zmPP7J9imVDfx1Ii6XeQmKNGFgKHSgqbfo+
+	 qTM1Lv+gAGaNTmROZVigZlRoR6PnBbBpaIzgSPK6vq+uVLHudGOl58oyEhaJfH/WYp
+	 am1yeP2MM2KY5omGv3KBPE+AJ346FMudJYcicBuxYh2EIGi/d24+PEEHkLi5ltuVXJ
+	 T9U6eMbLNszNw==
+Date: Tue, 7 Nov 2023 18:32:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar
+ <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org,
+ linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH 33/48] perf dwarf-aux: Check allowed DWARF Ops
+Message-Id: <20231107183207.2e3aded5985f699fdb3bcd16@kernel.org>
+In-Reply-To: <20231012035111.676789-34-namhyung@kernel.org>
+References: <20231012035111.676789-1-namhyung@kernel.org>
+	<20231012035111.676789-34-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001507:EE_|CY8PR12MB7241:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9376233-6d3a-43d5-5147-08dbdf6c50d8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	TAaPcx5/PuoHe3WQa4Z9K6dDNwpxTCkjGo2QSgewS6NrcUTKhn4WpeM22Plx6uJakv78YEWS5TRbj5s+GLYlmyt7nRw2ga5J0g8EXLXWY2QPOsJVb21OSGzU79VgbulGHnfHn6HsU7DmCVFjdvujgj3HS5hDnWQNc3xEF6T6GTqxsXm9e1cLB/pzbJJp4Oc1A+gH65kjGX0cPtL7DnY1H5D5obEkShhh92u8Ojh8mOFp4r9WC6Y4UO4GeYlhoNBT0YztCzSpKJo/QnLS4rCkKHXxQRFOw6Muv0VstgRJHjmLfFycdh4AZloaMdIGD/s790IRm5JDCjhiVMwUnPxPpMf8upZbjaMwIbwOcSo+DY8lFIMKJ/Bx6l9bcVIQ4br3zicrRZm+pQU/0z3b2YhNqEy+RBKUod060O7z6YYMSyC50h6c++teUpz/6hyCJj5G92cth4qycsYNaU7nBop9a8FPQgaq478WbFAUqCdRxIkTRV2/pQmN9HiEaae80Ydh5Yb2arCc9YU/UmmtfCUQ0yUMw2jr+604UoaRWf77pBJE9YFs8kWTPag4VeBP2B4hxsGrs7KjTO5osugYg7TkYflFJfxbu4E6Scqewc+c+w4vXSvgb6whCe4ApY7AERaO8PyF329Ya77X+WF0YO4z769OTwl0xis1tl4S1+Tc6BWH59dRVexToK0nGViZw3cZSVHhSPzjMBI8aOSAUq+5bengRLoX3aIPywcfx+yrVBTsxZJWZ0rIzk6Jq9GvV2VIp5K7A+nic2RpOdcxmEoKDw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(396003)(39860400002)(376002)(230922051799003)(451199024)(1800799009)(186009)(82310400011)(64100799003)(36840700001)(46966006)(40470700004)(40480700001)(40460700003)(2616005)(478600001)(6666004)(7696005)(36860700001)(36756003)(86362001)(81166007)(356005)(82740400003)(7416002)(5660300002)(54906003)(70586007)(70206006)(16526019)(336012)(47076005)(83380400001)(26005)(2906002)(41300700001)(426003)(1076003)(110136005)(44832011)(316002)(8676002)(4326008)(8936002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2023 08:34:10.8248
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9376233-6d3a-43d5-5147-08dbdf6c50d8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001507.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7241
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+On Wed, 11 Oct 2023 20:50:56 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-x86 core pmu exposes supported maximum precision level via max_precise
-pmu capability. Although, AMD core pmu does not support precise mode,
-certain core pmu events with precise_ip > 0 are allowed and forwarded
-to IBS OP pmu. Display a note about this in perf report header and
-document the details in the perf-list man page.
+> The DWARF location expression can be fairly complex and it'd be hard
+> to match it with the condition correctly.  So let's be conservative
+> and only allow simple expressions.  For now it just checks the first
+> operation in the list.  The following operations looks ok:
+> 
+>  * DW_OP_stack_value
+>  * DW_OP_deref_size
+>  * DW_OP_deref
+>  * DW_OP_piece
+> 
+> To refuse complex (and unsupported) location expressions, add
+> check_allowed_ops() to compare the rest of the list.  It seems earlier
+> result contained those unsupported expressions.  For example, I found
+> some local struct variable is placed like below.
+> 
+>  <2><43d1517>: Abbrev Number: 62 (DW_TAG_variable)
+>     <43d1518>   DW_AT_location    : 15 byte block: 91 50 93 8 91 78 93 4 93 84 8 91 68 93 4
+>         (DW_OP_fbreg: -48; DW_OP_piece: 8;
+>          DW_OP_fbreg: -8; DW_OP_piece: 4;
+>          DW_OP_piece: 1028;
+>          DW_OP_fbreg: -24; DW_OP_piece: 4)
+> 
+> Another example is something like this.
+> 
+>     0057c8be ffffffffffffffff ffffffff812109f0 (base address)
+>     0057c8ce ffffffff812112b5 ffffffff812112c8 (DW_OP_breg3 (rbx): 0;
+>                                                 DW_OP_constu: 18446744073709551612;
+>                                                 DW_OP_and;
+>                                                 DW_OP_stack_value)
+> 
+> It should refuse them.  After the change, the stat shows:
+> 
+>   Annotate data type stats:
+>   total 294, ok 158 (53.7%), bad 136 (46.3%)
+>   -----------------------------------------------------------
+>           30 : no_sym
+>           32 : no_mem_ops
+>           53 : no_var
+>           14 : no_typeinfo
+>            7 : bad_offset
+> 
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- tools/perf/Documentation/perf-list.txt | 12 +++++++-----
- tools/perf/util/env.c                  | 18 ++++++++++++++++++
- tools/perf/util/env.h                  |  2 ++
- tools/perf/util/header.c               |  8 ++++++++
- 4 files changed, 35 insertions(+), 5 deletions(-)
+The code itself looks good to me.
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index d5f78e125efe..1b90575ee3c8 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -81,11 +81,13 @@ For Intel systems precise event sampling is implemented with PEBS
- which supports up to precise-level 2, and precise level 3 for
- some special cases
- 
--On AMD systems it is implemented using IBS (up to precise-level 2).
--The precise modifier works with event types 0x76 (cpu-cycles, CPU
--clocks not halted) and 0xC1 (micro-ops retired). Both events map to
--IBS execution sampling (IBS op) with the IBS Op Counter Control bit
--(IbsOpCntCtl) set respectively (see the
-+On AMD systems it is implemented using IBS OP (up to precise-level 2).
-+Unlike Intel PEBS which provides levels of precision, AMD core pmu is
-+inherently non-precise and IBS is inherently precise. (i.e. ibs_op//,
-+ibs_op//p, ibs_op//pp and ibs_op//ppp are all same). The precise modifier
-+works with event types 0x76 (cpu-cycles, CPU clocks not halted) and 0xC1
-+(micro-ops retired). Both events map to IBS execution sampling (IBS op)
-+with the IBS Op Counter Control bit (IbsOpCntCtl) set respectively (see the
- Core Complex (CCX) -> Processor x86 Core -> Instruction Based Sampling (IBS)
- section of the [AMD Processor Programming Reference (PPR)] relevant to the
- family, model and stepping of the processor being used).
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 44140b7f596a..cbc18b22ace5 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -531,6 +531,24 @@ int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu)
- 	return cpu.cpu >= 0 && cpu.cpu < env->nr_numa_map ? env->numa_map[cpu.cpu] : -1;
- }
- 
-+bool perf_env__has_pmu_mapping(struct perf_env *env, const char *pmu_name)
-+{
-+	char *pmu_mapping = env->pmu_mappings, *colon;
-+
-+	for (int i = 0; i < env->nr_pmu_mappings; ++i) {
-+		if (strtoul(pmu_mapping, &colon, 0) == ULONG_MAX || *colon != ':')
-+			goto out_error;
-+
-+		pmu_mapping = colon + 1;
-+		if (strcmp(pmu_mapping, pmu_name) == 0)
-+			return true;
-+
-+		pmu_mapping += strlen(pmu_mapping) + 1;
-+	}
-+out_error:
-+	return false;
-+}
-+
- char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
- 			     const char *cap)
- {
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 4566c51f2fd9..56aea562c61b 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -174,4 +174,6 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
- int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
- char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
- 			     const char *cap);
-+
-+bool perf_env__has_pmu_mapping(struct perf_env *env, const char *pmu_name);
- #endif /* __PERF_ENV_H */
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e86b9439ffee..3cc288d14002 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2145,6 +2145,14 @@ static void print_pmu_caps(struct feat_fd *ff, FILE *fp)
- 		__print_pmu_caps(fp, pmu_caps->nr_caps, pmu_caps->caps,
- 				 pmu_caps->pmu_name);
- 	}
-+
-+	if (strcmp(perf_env__arch(&ff->ph->env), "x86") == 0 &&
-+	    perf_env__has_pmu_mapping(&ff->ph->env, "ibs_op")) {
-+		char *max_precise = perf_env__find_pmu_cap(&ff->ph->env, "cpu", "max_precise");
-+
-+		if (max_precise != NULL && atoi(max_precise) == 0)
-+			fprintf(fp, "# AMD systems uses ibs_op// PMU for some precise events, e.g.: cycles:p, see the 'perf list' man page for further details.\n");
-+	}
- }
- 
- static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+If this fixes the previous patch in the same series (this seems a fix for the
+main usecase), please make it to a single patch.
+
+Thank you,
+
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/dwarf-aux.c | 44 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 40 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 7f3822d08ab7..093d7e82b333 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1305,6 +1305,34 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+>  	return true;
+>  }
+>  
+> +static bool check_allowed_ops(Dwarf_Op *ops, size_t nops)
+> +{
+> +	/* The first op is checked separately */
+> +	ops++;
+> +	nops--;
+> +
+> +	/*
+> +	 * It needs to make sure if the location expression matches to the given
+> +	 * register and offset exactly.  Thus it rejects any complex expressions
+> +	 * and only allows a few of selected operators that doesn't change the
+> +	 * location.
+> +	 */
+> +	while (nops) {
+> +		switch (ops->atom) {
+> +		case DW_OP_stack_value:
+> +		case DW_OP_deref_size:
+> +		case DW_OP_deref:
+> +		case DW_OP_piece:
+> +			break;
+> +		default:
+> +			return false;
+> +		}
+> +		ops++;
+> +		nops--;
+> +	}
+> +	return true;
+> +}
+> +
+>  /* Only checks direct child DIEs in the given scope. */
+>  static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+>  {
+> @@ -1332,25 +1360,31 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+>  		/* Local variables accessed using frame base register */
+>  		if (data->is_fbreg && ops->atom == DW_OP_fbreg &&
+>  		    data->offset >= (int)ops->number &&
+> +		    check_allowed_ops(ops, nops) &&
+>  		    match_var_offset(die_mem, data, data->offset, ops->number))
+>  			return DIE_FIND_CB_END;
+>  
+>  		/* Only match with a simple case */
+>  		if (data->reg < DWARF_OP_DIRECT_REGS) {
+> -			if (ops->atom == (DW_OP_reg0 + data->reg) && nops == 1)
+> +			/* pointer variables saved in a register 0 to 31 */
+> +			if (ops->atom == (DW_OP_reg0 + data->reg) &&
+> +			    check_allowed_ops(ops, nops))
+>  				return DIE_FIND_CB_END;
+>  
+>  			/* Local variables accessed by a register + offset */
+>  			if (ops->atom == (DW_OP_breg0 + data->reg) &&
+> +			    check_allowed_ops(ops, nops) &&
+>  			    match_var_offset(die_mem, data, data->offset, ops->number))
+>  				return DIE_FIND_CB_END;
+>  		} else {
+> +			/* pointer variables saved in a register 32 or above */
+>  			if (ops->atom == DW_OP_regx && ops->number == data->reg &&
+> -			    nops == 1)
+> +			    check_allowed_ops(ops, nops))
+>  				return DIE_FIND_CB_END;
+>  
+>  			/* Local variables accessed by a register + offset */
+>  			if (ops->atom == DW_OP_bregx && data->reg == ops->number &&
+> +			    check_allowed_ops(ops, nops) &&
+>  			    match_var_offset(die_mem, data, data->offset, ops->number2))
+>  				return DIE_FIND_CB_END;
+>  		}
+> @@ -1412,7 +1446,8 @@ static int __die_find_var_addr_cb(Dwarf_Die *die_mem, void *arg)
+>  		if (data->addr < ops->number)
+>  			continue;
+>  
+> -		if (match_var_offset(die_mem, data, data->addr, ops->number))
+> +		if (check_allowed_ops(ops, nops) &&
+> +		    match_var_offset(die_mem, data, data->addr, ops->number))
+>  			return DIE_FIND_CB_END;
+>  	}
+>  	return DIE_FIND_CB_SIBLING;
+> @@ -1501,7 +1536,8 @@ int die_get_cfa(Dwarf *dwarf, u64 pc, int *preg, int *poffset)
+>  		return -1;
+>  
+>  	if (!dwarf_cfi_addrframe(cfi, pc, &frame) &&
+> -	    !dwarf_frame_cfa(frame, &ops, &nops) && nops == 1) {
+> +	    !dwarf_frame_cfa(frame, &ops, &nops) &&
+> +	    check_allowed_ops(ops, nops)) {
+>  		*preg = reg_from_dwarf_op(ops);
+>  		*poffset = offset_from_dwarf_op(ops);
+>  		return 0;
+> -- 
+> 2.42.0.655.g421f12c284-goog
+> 
+
+
 -- 
-2.41.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
