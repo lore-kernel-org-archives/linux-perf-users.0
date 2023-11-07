@@ -1,115 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1492F2EAFA
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Nov 2023 23:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6964715A7;
+	Tue,  7 Nov 2023 00:50:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAQJkY+I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B0C2C116AF;
-	Mon,  6 Nov 2023 23:17:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJP5CGJb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67C1C433C7;
+	Tue,  7 Nov 2023 00:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699312635;
-	bh=syqVOaVrco9HeHy4U5pQqP2otlgkEbvxhduOTsJjKzg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LAQJkY+Iub58uJyQG05oEneJhRjDu+tTwmwnDNQ4jgFTudrbrh9aOoCkGfoC1gw4o
-	 FcGucyTuKEDzzH0kdBFKgVdN7Oe8o2tmnCVONURkmrgBkFlKdKvR8TWkPlQU19Jy4g
-	 Lm5MxK/O2mEW/O/5EFJWACcuHScJ69TuR+hOHBP3Ur14Tlm5nRdDRg0R8U2ASD20zY
-	 56r+hSqz4G5UPp2zMWyB12xzcHuU2KDlbMPBSW19A9/NooXsnOGx4O3mEpTFEP8KTj
-	 OSqU1j+FwVFEtFL5bTh0ZJkRjZS//orgIPhMe+bsTumHwHCzyqJjAloH2/AZEe6EsY
-	 ALMsskwfAJbBQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 1/5] perf/core: Bail out early if the request AUX area is out of bound
-Date: Mon,  6 Nov 2023 18:17:04 -0500
-Message-ID: <20231106231711.3735997-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.42.0
+	s=k20201202; t=1699318217;
+	bh=+vq4d6CCWDzMfZDEDlYqaTwwQMt8QPiakU/bxCSgh5M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FJP5CGJbzzPFKSxm5emzr1yg3F6JIQiXqily3skMibkMoTLWrwsfsgxUiqxb76zX6
+	 D7dPtBLeKnMAuPTs71KoBRVkDkdSTSLkK6aGcxE7n+M9+pCP6D7sGCS5/cdt/laN8d
+	 o3EzBxnSk0/wEe1nEDmz/ZqfrHOx/qoOaZB2GIGV2BG1uVqnRgLEz3F8fmQWfMctCz
+	 sSTBmqm+NpSDVjAsGtFSJ7lrHMw8Ri4+kByhvSUmzvvAQYl0TIDRJQPXBMAMDuGTro
+	 ohYYBx6NlzPcFPxVTudhfOikdGoQbGrn71btej6LK1jfx8WsBdGdCTU3nZJHQSYAH6
+	 l5dQi54xrIa9Q==
+Date: Tue, 7 Nov 2023 09:50:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar
+ <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org,
+ linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH 31/48] perf dwarf-aux: Add die_get_cfa()
+Message-Id: <20231107095011.7538657bbe34f0d7171add09@kernel.org>
+In-Reply-To: <20231012035111.676789-32-namhyung@kernel.org>
+References: <20231012035111.676789-1-namhyung@kernel.org>
+	<20231012035111.676789-32-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.297
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Shuai Xue <xueshuai@linux.alibaba.com>
+On Wed, 11 Oct 2023 20:50:54 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-[ Upstream commit 54aee5f15b83437f23b2b2469bcf21bdd9823916 ]
+> The die_get_cfa() is to get frame base register and offset at the given
+> instruction address (pc).  This info will be used to locate stack
+> variables which have location expression using DW_OP_fbreg.
+> 
 
-When perf-record with a large AUX area, e.g 4GB, it fails with:
+In the util/probe-finder.c, I added the elfutils version checker
 
-    #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
-    failed to mmap with 12 (Cannot allocate memory)
+#if _ELFUTILS_PREREQ(0, 142)
 
-and it reveals a WARNING with __alloc_pages():
+for CFI related code, in commit 7752f1b096e1 ("perf probe: Don't
+ compile CFI related code if elfutils is old"). Maybe we'd better to have
+a config of HAVE_DWARF_CFI_SUPPORT for this.
 
-	------------[ cut here ]------------
-	WARNING: CPU: 44 PID: 17573 at mm/page_alloc.c:5568 __alloc_pages+0x1ec/0x248
-	Call trace:
-	 __alloc_pages+0x1ec/0x248
-	 __kmalloc_large_node+0xc0/0x1f8
-	 __kmalloc_node+0x134/0x1e8
-	 rb_alloc_aux+0xe0/0x298
-	 perf_mmap+0x440/0x660
-	 mmap_region+0x308/0x8a8
-	 do_mmap+0x3c0/0x528
-	 vm_mmap_pgoff+0xf4/0x1b8
-	 ksys_mmap_pgoff+0x18c/0x218
-	 __arm64_sys_mmap+0x38/0x58
-	 invoke_syscall+0x50/0x128
-	 el0_svc_common.constprop.0+0x58/0x188
-	 do_el0_svc+0x34/0x50
-	 el0_svc+0x34/0x108
-	 el0t_64_sync_handler+0xb8/0xc0
-	 el0t_64_sync+0x1a4/0x1a8
+Thank you,
 
-'rb->aux_pages' allocated by kcalloc() is a pointer array which is used to
-maintains AUX trace pages. The allocated page for this array is physically
-contiguous (and virtually contiguous) with an order of 0..MAX_ORDER. If the
-size of pointer array crosses the limitation set by MAX_ORDER, it reveals a
-WARNING.
 
-So bail out early with -ENOMEM if the request AUX area is out of bound,
-e.g.:
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/dwarf-aux.c | 64 +++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/dwarf-aux.h |  9 ++++++
+>  2 files changed, 73 insertions(+)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 97d9ae56350e..796413eb4e8f 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1408,6 +1408,70 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
+>  	return result;
+>  }
+>  
+> +static int reg_from_dwarf_op(Dwarf_Op *op)
+> +{
+> +	switch (op->atom) {
+> +	case DW_OP_reg0 ... DW_OP_reg31:
+> +		return op->atom - DW_OP_reg0;
+> +	case DW_OP_breg0 ... DW_OP_breg31:
+> +		return op->atom - DW_OP_breg0;
+> +	case DW_OP_regx:
+> +	case DW_OP_bregx:
+> +		return op->number;
+> +	default:
+> +		break;
+> +	}
+> +	return -1;
+> +}
+> +
+> +static int offset_from_dwarf_op(Dwarf_Op *op)
+> +{
+> +	switch (op->atom) {
+> +	case DW_OP_reg0 ... DW_OP_reg31:
+> +	case DW_OP_regx:
+> +		return 0;
+> +	case DW_OP_breg0 ... DW_OP_breg31:
+> +		return op->number;
+> +	case DW_OP_bregx:
+> +		return op->number2;
+> +	default:
+> +		break;
+> +	}
+> +	return -1;
+> +}
+> +
+> +/**
+> + * die_get_cfa - Get frame base information
+> + * @dwarf: a Dwarf info
+> + * @pc: program address
+> + * @preg: pointer for saved register
+> + * @poffset: pointer for saved offset
+> + *
+> + * This function gets register and offset for CFA (Canonical Frame Address)
+> + * by searching the CIE/FDE info.  The CFA usually points to the start address
+> + * of the current stack frame and local variables can be located using an offset
+> + * from the CFA.  The @preg and @poffset will be updated if it returns 0.
+> + */
+> +int die_get_cfa(Dwarf *dwarf, u64 pc, int *preg, int *poffset)
+> +{
+> +	Dwarf_CFI *cfi;
+> +	Dwarf_Frame *frame = NULL;
+> +	Dwarf_Op *ops = NULL;
+> +	size_t nops;
+> +
+> +	cfi = dwarf_getcfi(dwarf);
+> +	if (cfi == NULL)
+> +		return -1;
+> +
+> +	if (!dwarf_cfi_addrframe(cfi, pc, &frame) &&
+> +	    !dwarf_frame_cfa(frame, &ops, &nops) && nops == 1) {
+> +		*preg = reg_from_dwarf_op(ops);
+> +		*poffset = offset_from_dwarf_op(ops);
+> +		return 0;
+> +	}
+> +	return -1;
+> +}
+> +
+>  #endif
+>  
+>  /*
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index 742098e3ee7e..29a7243b1a45 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -149,6 +149,9 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
+>  				     Dwarf_Addr addr, Dwarf_Die *die_mem,
+>  				     int *offset);
+>  
+> +/* Get the frame base information from CFA */
+> +int die_get_cfa(Dwarf *dwarf, u64 pc, int *preg, int *poffset);
+> +
+>  #else /*  HAVE_DWARF_GETLOCATIONS_SUPPORT */
+>  
+>  static inline int die_get_var_range(Dwarf_Die *sp_die __maybe_unused,
+> @@ -175,6 +178,12 @@ static inline Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die __maybe_unu
+>  	return NULL;
+>  }
+>  
+> +static inline int die_get_cfa(Dwarf *dwarf __maybe_unused, u64 pc __maybe_unused,
+> +			      int *preg __maybe_unused, int *poffset __maybe_unused)
+> +{
+> +	return -1;
+> +}
+> +
+>  #endif /* HAVE_DWARF_GETLOCATIONS_SUPPORT */
+>  
+>  #endif /* _DWARF_AUX_H */
+> -- 
+> 2.42.0.655.g421f12c284-goog
+> 
 
-    #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
-    failed to mmap with 12 (Cannot allocate memory)
 
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/events/ring_buffer.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 12f351b253bbb..2f6f77658eba2 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -639,6 +639,12 @@ int rb_alloc_aux(struct ring_buffer *rb, struct perf_event *event,
- 		}
- 	}
- 
-+	/*
-+	 * kcalloc_node() is unable to allocate buffer if the size is larger
-+	 * than: PAGE_SIZE << MAX_ORDER; directly bail out in this case.
-+	 */
-+	if (get_order((unsigned long)nr_pages * sizeof(void *)) > MAX_ORDER)
-+		return -ENOMEM;
- 	rb->aux_pages = kcalloc_node(nr_pages, sizeof(void *), GFP_KERNEL,
- 				     node);
- 	if (!rb->aux_pages)
 -- 
-2.42.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
