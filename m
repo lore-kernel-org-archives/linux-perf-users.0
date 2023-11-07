@@ -1,260 +1,140 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA91358A9
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 18:22:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57942358AB
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 18:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G2Btguin"
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4747D73
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 10:22:19 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-51e24210395so1118a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Nov 2023 10:22:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5ptDbDH"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB15012B
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Nov 2023 10:36:08 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d81e9981ff4so5999616276.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Nov 2023 10:36:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699381338; x=1699986138; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mSdU7JREs9y037k7A1zlejJTgak839c0Dl/WV2+r01M=;
-        b=G2BtguinQ/SZN1+vz8JuNQ6y66+NYqLp6AAx5xDUqCYmKNKbJPgCxnAhSA42Nrgi2m
-         K+YpI3DmQXkS+NW7IFU7/frRak8QYSPTIs3iht9nKGc1sUHIA/wPwfe4ZiBTb9eV+BB1
-         dCarsrzssnyYoVymToL1bFpC8uapG5eJYP86mk3ZGPUMVkZJtJn6/DqHkuqJJ56ZG9TV
-         OYgvsbuwZV2pMckoffBBqsVA+7OvI/YjoR1tbJf4+EF0fVbH3JTSG4uvz38odi7twYUt
-         8nM/Ey5q2Zf9IB3Oj2YcDQjP+uJhMFSy6Lyk0pWxjIx1NWQXPqVtaaHztztfcRMzTf7h
-         cn1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699381338; x=1699986138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=google.com; s=20230601; t=1699382168; x=1699986968; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mSdU7JREs9y037k7A1zlejJTgak839c0Dl/WV2+r01M=;
-        b=Q1iHCCrAsG9l6VNtcNRmwcqoJP9xzcR+FDwBeApOmOhrX3CiIZmUBVn7jKMwv53SJG
-         tls+ExBKMvZ0su12Vb8h+iGCV9Q8CGvTWRrEv6jx/sXDldSlk7uoC93rVP4feHg54vip
-         7icV+58OQd/jAEkOgc7tkPkgNuILyPgaN2JqAYbNCrjIDyz2EAZTiailsE2UWYSZyWZ4
-         GDceltXByqc4LsEYJBRmHfQSILEDUgp/GwKY0RW7w2p7UNIog+wtYzQJS338/RrJn63m
-         48lqGyRWKXfBzOQaNBAv9bdcRJyUv8b5DNpBzOUM0TMthpRmE0PS7CQqapwjPeniyzoK
-         G3AA==
-X-Gm-Message-State: AOJu0Yw0B57XzNI88iGe9nA5sXZl2it1N/QddukWzjEFzydHbAWoRoUl
-	OrZ9JQIeR/gXI9ZT84swBkFD+eKQnr3Ci04qbIqEVQ==
-X-Google-Smtp-Source: AGHT+IF96PYByCpsndEWOpjoTz6tR833V1rQ03p9fIw/MrLGg4+a1GsiZv6rwJzA46I1JXGG4tK3hVrSHXICLP+Arng=
-X-Received: by 2002:a05:6402:528e:b0:544:e37e:d597 with SMTP id
- en14-20020a056402528e00b00544e37ed597mr139332edb.7.1699381338190; Tue, 07 Nov
- 2023 10:22:18 -0800 (PST)
+        bh=Nvoe8zuzQD68UsZwn7syk08Ugz3HDvlC6EsBdsDkAvU=;
+        b=j5ptDbDHZ4q2C2BUC5FnZV1JwcS6SZCaIuiapgFRKgZv5rvFpqPvQ5lZk2dFeyiKED
+         oJwVY8G7/2T4xUncgZxg/8+JETVUYf74wBgBFGUELCzMcOAS032mLRrEu5f6Mv1W8WY2
+         DCfR3G/k9Y7Z+89jRw6hfzOlV+QP6Xj5fyTtmeIa4jhND0aDhocswzGhUb9JgF8qjbRJ
+         3b6F+WJV44vhozGQK8VKV/Et4lCn7R3oMU+MqpQOFDXYj7Sa7f9Sk4OOXjKht7KTNhT9
+         gWgpLYbW296fGviaJqDmGI2CWABuwNe5W/mrNzZTCbVI927BqtnaJB9bb2VP8YYZDX/M
+         /htw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699382168; x=1699986968;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nvoe8zuzQD68UsZwn7syk08Ugz3HDvlC6EsBdsDkAvU=;
+        b=sSapJJDs6talmKaNAiVUF8BW/nvcUNyrXprdLy6NmY5Xg3yFMxtGPuxyg7vz/+rxio
+         6YSJralZ7BJuDXXwYl6b6LNyNtnmMqagkooFqUgcpmJ+GbIsD+hMz767jJTGkgcAG3xu
+         z+1IrQzsO+pSfi6BaNl4qsTpQZKr5k7+NIAMzhDnozVDqRq0FS/tLRgAm6hgqoInXW2p
+         TY8yuyo721RelAWiGFFOmRNZARanGfvalLuLh5b8sHmSEXZV3KilGUyXEdZ0KpvQxDqC
+         V2s3LsOevanKYXOkjrEb20tJ/KTzfyi0SaaXAUq1wi6oo7hFU+6U2lOjWenaktCDynQ1
+         3zxQ==
+X-Gm-Message-State: AOJu0YzzZTPxu5Jkbm5N3p9SGuAkYyjVub2uQg5YXQg4UPT1thMAr7F2
+	pmg5iHEADc7fno3WzwKbFF+YSvxWfLM=
+X-Google-Smtp-Source: AGHT+IFRRnefTI1OJ3Cyarh5zcrJx54/I32dAjRx9p8pXEs+7nT0L5MitcVUUOzjXKiwYBkd1gZwljim/Ww=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1788:b0:da0:c9a5:b529 with SMTP id
+ ca8-20020a056902178800b00da0c9a5b529mr601875ybb.12.1699382167904; Tue, 07 Nov
+ 2023 10:36:07 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue,  7 Nov 2023 10:36:05 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231107083331.901-1-ravi.bangoria@amd.com>
-In-Reply-To: <20231107083331.901-1-ravi.bangoria@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 7 Nov 2023 10:22:06 -0800
-Message-ID: <CAP-5=fUkU6OBCEWeaXZ2KqeKDcXF_ZTzwwMVq=uy8CcpK90MyQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf tool AMD: Use non-precise cycles as default
- event on certain Zen2 processors
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: acme@kernel.org, namhyung@kernel.org, kim.phillips@amd.com, 
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, changbin.du@huawei.com, yangjihong1@huawei.com, 
-	zwisler@chromium.org, wangming01@loongson.cn, chenhuacai@kernel.org, 
-	kprateek.nayak@amd.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sandipan.das@amd.com, ananth.narayan@amd.com, 
-	santosh.shukla@amd.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
+Message-ID: <20231107183605.409588-1-seanjc@google.com>
+Subject: [PATCH] perf/x86: Don't enforce minimum period for KVM guest-only events
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Like Xu <likexu@tencent.com>, Jim Mattson <jmattson@google.com>, 
+	Mingwei Zhang <mizhang@google.com>, Sean Christopherson <seanjc@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 7, 2023 at 12:34=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.co=
-m> wrote:
->
-> By default, Perf uses precise cycles event when no explicit event is
-> specified by user. Precise cycles event is forwarded to ibs_op// pmu
-> on AMD. However, IBS has hw issue on certain Zen2 processors where
-> it might raise NMI without sample_valid bit set, which causes Unknown
-> NMI warnings. (Erratum #1215: IBS (Instruction Based Sampling) Counter
-> Valid Value May be Incorrect After Exit From Core C6 (CC6) State.) So,
-> use non-precise cycles as default event on affected processors.
->
-> This does not prevent user to use explicit precise cycles event or
-> ibs_op// pmu directly.
->
-> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Don't apply minimum period workarounds/requirements to events that are
+being created by KVM to virtualize PMCs for guests, i.e. skip limit
+enforcement for events that exclude the host.  Perf's somewhat arbitrary
+limits prevents KVM from correctly virtualizing counter overflow, e.g. if
+the guest sets a counter to have an effective period of '1', forcing a
+minimum period of '2' results in overflow occurring at the incorrect time.
 
-Thanks Ravi,
+Whether or not a "real" profiling use case is affected is debatable, but
+the incorrect behavior is trivially easy to observe and reproduce, and is
+deterministic enough to make the PMU appear to be broken from the guest's
+perspective.
 
-We read max_precise from sysfs:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n984
+Furthermore, the "period" set by KVM isn't actually a period, as KVM won't
+automatically reprogram the event with the same period on overflow.  KVM
+will synthesize a PMI into the guest when appropriate, but what the guest
+does in response to the PMI is purely a guest decision.  In other words,
+KVM effectively operates in a one-shot mode, not a periodic mode.
 
-But it appears not to be used:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/evsel.c?h=3Dperf-tools-next#n1323
+Letting KVM and/or the guest program "too small" periods is safe for the
+host, as events that exclude the host are atomically disabled with respect
+to VM-Exit, i.e. are guaranteed to stop counting upon transitioning to the
+host.  And whether or not *explicitly* programming a short period is safe
+is somewhat of a moot point, as transitions to/from the guest effectively
+yield the same effect, e.g. an unrelated VM-Exit => VM-Enter transition
+will re-enable guest PMCs with whatever count happened to be in the PMC at
+the time of VM-Exit.
 
-I think:
-```
-if (evsel->precise_max)
-    attr->precise_ip =3D 3;
-```
-should be:
-```
-if (evsel->precise_max)
-    attr->precise_ip =3D evsel->pmu->max_precise;
-```
+Cc: Like Xu <likexu@tencent.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
 
-Presumably this is misreporting as some non-zero value on the buggy
-systems - if it doesn't we can declare victory here. If not we can
-modify max_precise's calculation on perf's struct pmu for cpu for AMD
-so that we just hardwire it to zero in arch code.
+Disclaimer: I've only tested this from KVM's side of things.
 
-I think I prefer this approach as it is fixing max_precise in a more
-generic way. If someone were to specify "cycles:P" on the command line
-then it wouldn't trigger the bug, similarly for perf script and other
-places. Wdyt?
+ arch/x86/events/core.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-Thanks,
-Ian
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 40ad1425ffa2..f8a8a4ea4d47 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1388,16 +1388,25 @@ int x86_perf_event_set_period(struct perf_event *event)
+ 		hwc->last_period = period;
+ 		ret = 1;
+ 	}
+-	/*
+-	 * Quirk: certain CPUs dont like it if just 1 hw_event is left:
+-	 */
+-	if (unlikely(left < 2))
+-		left = 2;
+ 
+ 	if (left > x86_pmu.max_period)
+ 		left = x86_pmu.max_period;
+ 
+-	static_call_cond(x86_pmu_limit_period)(event, &left);
++	/*
++	 * Exempt KVM guest events from the minimum period requirements.  It's
++	 * the guest's responsibility to ensure it can make forward progress,
++	 * and it's KVM's responsibility to configure an appropriate "period"
++	 * to correctly virtualize overflow for the guest's PMCs.
++	 */
++	if (!event->attr.exclude_host) {
++		/*
++		 * Quirk: certain CPUs dont like it if just 1 event is left:
++		 */
++		if (unlikely(left < 2))
++			left = 2;
++
++		static_call_cond(x86_pmu_limit_period)(event, &left);
++	}
+ 
+ 	this_cpu_write(pmc_prev_left[idx], left);
+ 
 
-> ---
->  tools/perf/arch/x86/util/evlist.c | 34 +++++++++++++++++++++++++++++++
->  tools/perf/builtin-record.c       |  2 +-
->  tools/perf/builtin-top.c          |  2 +-
->  tools/perf/util/evlist.c          | 12 ++++++++++-
->  tools/perf/util/evlist.h          |  2 ++
->  5 files changed, 49 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util=
-/evlist.c
-> index b1ce0c52d88d..f4478179c91b 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -5,6 +5,8 @@
->  #include "util/evlist.h"
->  #include "util/parse-events.h"
->  #include "util/event.h"
-> +#include "util/env.h"
-> +#include "linux/string.h"
->  #include "topdown.h"
->  #include "evsel.h"
->
-> @@ -92,3 +94,35 @@ int arch_evlist__cmp(const struct evsel *lhs, const st=
-ruct evsel *rhs)
->         /* Default ordering by insertion index. */
->         return lhs->core.idx - rhs->core.idx;
->  }
-> +
-> +/*
-> + * Precise cycles event is forwarded to ibs_op// pmu on AMD. However, IB=
-S
-> + * has hw issue on certain Zen2 processors where it might raise NMI with=
-out
-> + * sample_valid bit set, which causes Unknown NMI warnings. So default t=
-o
-> + * non-precise cycles event on affected processors.
-> + */
-> +const char *arch_evlist__default_cycles_event(bool can_profile_kernel)
-> +{
-> +       struct perf_env env =3D { .total_mem =3D 0, };
-> +       unsigned int family, model, stepping;
-> +       bool is_amd;
-> +       int ret;
-> +
-> +       perf_env__cpuid(&env);
-> +       is_amd =3D env.cpuid && strstarts(env.cpuid, "AuthenticAMD");
-> +       if (!is_amd)
-> +               goto out;
-> +
-> +       ret =3D sscanf(env.cpuid, "%*[^,],%u,%u,%u", &family, &model, &st=
-epping);
-> +       if (ret =3D=3D 3 && family =3D=3D 0x17 && (
-> +           (model >=3D 0x30 && model <=3D 0x3f) ||
-> +           (model >=3D 0x60 && model <=3D 0x7f) ||
-> +           (model >=3D 0x90 && model <=3D 0x9f))) {
-> +               perf_env__exit(&env);
-> +               return can_profile_kernel ? "cycles" : "cycles:u";
-> +       }
-> +
-> +out:
-> +       perf_env__exit(&env);
-> +       return can_profile_kernel ? "cycles:P" : "cycles:Pu";
-> +}
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index dcf288a4fb9a..e58d8ac8a77b 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -4150,7 +4150,7 @@ int cmd_record(int argc, const char **argv)
->         if (rec->evlist->core.nr_entries =3D=3D 0) {
->                 bool can_profile_kernel =3D perf_event_paranoid_check(1);
->
-> -               err =3D parse_event(rec->evlist, can_profile_kernel ? "cy=
-cles:P" : "cycles:Pu");
-> +               err =3D parse_event(rec->evlist, evlist__default_cycles_e=
-vent(can_profile_kernel));
->                 if (err)
->                         goto out;
->         }
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index ea8c7eca5eee..21368421eddd 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1666,7 +1666,7 @@ int cmd_top(int argc, const char **argv)
->
->         if (!top.evlist->core.nr_entries) {
->                 bool can_profile_kernel =3D perf_event_paranoid_check(1);
-> -               int err =3D parse_event(top.evlist, can_profile_kernel ? =
-"cycles:P" : "cycles:Pu");
-> +               int err =3D parse_event(top.evlist, evlist__default_cycle=
-s_event(can_profile_kernel));
->
->                 if (err)
->                         goto out_delete_evlist;
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index e36da58522ef..406ed851cafc 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -90,6 +90,16 @@ struct evlist *evlist__new(void)
->         return evlist;
->  }
->
-> +const char * __weak arch_evlist__default_cycles_event(bool can_profile_k=
-ernel)
-> +{
-> +       return can_profile_kernel ? "cycles:P" : "cycles:Pu";
-> +}
-> +
-> +const char *evlist__default_cycles_event(bool can_profile_kernel)
-> +{
-> +       return arch_evlist__default_cycles_event(can_profile_kernel);
-> +}
-> +
->  struct evlist *evlist__new_default(void)
->  {
->         struct evlist *evlist =3D evlist__new();
-> @@ -100,7 +110,7 @@ struct evlist *evlist__new_default(void)
->                 return NULL;
->
->         can_profile_kernel =3D perf_event_paranoid_check(1);
-> -       err =3D parse_event(evlist, can_profile_kernel ? "cycles:P" : "cy=
-cles:Pu");
-> +       err =3D parse_event(evlist, evlist__default_cycles_event(can_prof=
-ile_kernel));
->         if (err) {
->                 evlist__delete(evlist);
->                 evlist =3D NULL;
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index 98e7ddb2bd30..7267b4fb1981 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -91,6 +91,8 @@ struct evsel_str_handler {
->
->  struct evlist *evlist__new(void);
->  struct evlist *evlist__new_default(void);
-> +const char *arch_evlist__default_cycles_event(bool can_profile_kernel);
-> +const char *evlist__default_cycles_event(bool can_profile_kernel);
->  struct evlist *evlist__new_dummy(void);
->  void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
->                   struct perf_thread_map *threads);
-> --
-> 2.41.0
->
+base-commit: 744940f1921c8feb90e3c4bcc1e153fdd6e10fe2
+-- 
+2.42.0.869.gea05f2083d-goog
+
