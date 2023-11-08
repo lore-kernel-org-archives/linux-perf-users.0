@@ -1,191 +1,189 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F641FC17
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Nov 2023 10:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FA715487;
+	Wed,  8 Nov 2023 10:52:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cern.ch header.i=@cern.ch header.b="w58+rQzh";
-	dkim=pass (1024-bit key) header.d=cern.ch header.i=@cern.ch header.b="w58+rQzh"
-Received: from CHE01-ZR0-obe.outbound.protection.outlook.com (mail-zr0che01on2045.outbound.protection.outlook.com [40.107.24.45])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2938A2685
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Nov 2023 02:46:11 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KAXoOzHW7tXuau1TklHk33lIZKLGmLvl77cwkYDjcG20IG9yBK6ihIijdOn2dcyvzvpxnQa7PIHiQKNQ6lGvryMxELWeCUsz3dWtdBLq0IBRzc3DFKCW/TiK2KVyruRw5cu1e/tu0cR6O5GdrKRN3RUVEnWGIiIbNqKEkrveOxASK5AWQQ4i99M7GvuDOPv29DEz+Ez6VOswOjucxDhl80tpuwlNCtZEOpJiBLtM3//iVSvUs0J66jiaRR5xreHQr+Mvcr/EQzNTxlBrzztNLEH+xKwxtPVuzlWmGOr08t4MdWecK0q5bp/fqFKFlGe5QCEE0RuZLjfsYq6inGTtEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FP9JPg6spVdw44pIahxCNhzoMR5t6VeCMRKHiFuYJOQ=;
- b=X/OQkd34dXmwXRQHX1jd2uqGiLwudtHPWAf0pgFSnIUeC5JdHsB43kVbvW3t9gcFp6zUBg6TJciBSNNifk4EETVX8kcEMjyV51PTEO7AHmqIL7XTvy0X8DRXKmxnaB2s8EXG/cCM7MgMhWy9LgUHShlHHY9L/FTISnT0VH2jr0A7J5wLD5dknmxneuLiTxXjAWRaxD4R3s9rTJmz6FUdjLlXlXybPCbaUlf81XI2Hz7eT9SHrwKZR3v51fR/sKeYn1esnAFkqLG1qpEbOtDyq5HrJJQS8dXnvrEG3zbfO5u1a3cFGMKQyaCCYhKpTotGBS1Vv2azNoggaPFU9E0SqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 20.208.138.155) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=cern.ch;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cern.ch;
- dkim=pass (signature was verified) header.d=cern.ch; arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.ch; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FP9JPg6spVdw44pIahxCNhzoMR5t6VeCMRKHiFuYJOQ=;
- b=w58+rQzhg5elOVL1dZEEt7ERLQzNu08A8sLsUyTA4nzXg3VdLrSXA/HX749UWASjFyE1sIkz83KxmZeUdNeEtvtpv7435sO25Nrixe55Ha/05X7sb7tMU9ho62wNOvs2a4E8EFnHIzp8DEnSf/EDyn0PjG6SIrmopu0+j7WazI8=
-Received: from DB7PR05CA0035.eurprd05.prod.outlook.com (2603:10a6:10:36::48)
- by GV0P278MB0145.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:32::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.29; Wed, 8 Nov
- 2023 10:46:08 +0000
-Received: from DB5PEPF00014B88.eurprd02.prod.outlook.com
- (2603:10a6:10:36:cafe::8b) by DB7PR05CA0035.outlook.office365.com
- (2603:10a6:10:36::48) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.18 via Frontend
- Transport; Wed, 8 Nov 2023 10:46:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.208.138.155)
- smtp.mailfrom=cern.ch; dkim=pass (signature was verified)
- header.d=cern.ch;dmarc=pass action=none header.from=cern.ch;
-Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
- 20.208.138.155 as permitted sender) receiver=protection.outlook.com;
- client-ip=20.208.138.155; helo=mx3.crn.activeguard.cloud; pr=C
-Received: from mx3.crn.activeguard.cloud (20.208.138.155) by
- DB5PEPF00014B88.mail.protection.outlook.com (10.167.8.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6977.16 via Frontend Transport; Wed, 8 Nov 2023 10:46:08 +0000
-Received: from xguard (ag_core.activeguard.xor [172.18.0.4])
-	by mx3.crn.activeguard.cloud (Postfix) with ESMTP id C958A82E0D
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Nov 2023 11:46:07 +0100 (CET)
-Received: from CHE01-GV0-obe.outbound.protection.outlook.com (mail-gv0che01lp2041.outbound.protection.outlook.com [104.47.22.41])
-	by mx3.crn.activeguard.cloud (Postfix) with ESMTPS id DB0E082DE9
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Nov 2023 11:46:06 +0100 (CET)
-Authentication-Results-Original: auth.opendkim.xorlab.com;	dkim=pass (1024-bit
- key; unprotected) header.d=cern.ch header.i=@cern.ch header.a=rsa-sha256
- header.s=selector1 header.b=w58+rQzh
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.ch; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FP9JPg6spVdw44pIahxCNhzoMR5t6VeCMRKHiFuYJOQ=;
- b=w58+rQzhg5elOVL1dZEEt7ERLQzNu08A8sLsUyTA4nzXg3VdLrSXA/HX749UWASjFyE1sIkz83KxmZeUdNeEtvtpv7435sO25Nrixe55Ha/05X7sb7tMU9ho62wNOvs2a4E8EFnHIzp8DEnSf/EDyn0PjG6SIrmopu0+j7WazI8=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cern.ch;
-Received: from ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:56::11)
- by ZR0P278MB0073.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:18::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.29; Wed, 8 Nov
- 2023 10:46:05 +0000
-Received: from ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM
- ([fe80::dc5f:fad6:2a1d:2820]) by ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM
- ([fe80::dc5f:fad6:2a1d:2820%2]) with mapi id 15.20.6954.028; Wed, 8 Nov 2023
- 10:46:05 +0000
-Message-ID: <de597d7c-848e-4a35-887a-4cdefa23ecd2@cern.ch>
-Date: Wed, 8 Nov 2023 11:46:03 +0100
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Maksymilian Graczyk <maksymilian.graczyk@cern.ch>
-To: linux-perf-users@vger.kernel.org
-Cc: syclops-project <syclops-project@cern.ch>,
- Guilherme Amadio <guilherme.amadio@cern.ch>,
- Stephan Hageboeck <stephan.hageboeck@cern.ch>
-Subject: Broken stack traces with --call-graph=fp and a multi-threaded app due
- to page faults?
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0093.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a1::13) To ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:56::11)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/R7fBAZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E76F0C433C7;
+	Wed,  8 Nov 2023 10:52:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699440730;
+	bh=t69XfdiHhJahtVbVhsn1LHGQM/HRauoe8VYClKKVkqI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=F/R7fBAZhpriEEiaQnueNxy3EqSxEY6to0uIwAImHY5kP8o8dWaAiZaqq1zsOwMsq
+	 Gg6JYYGK79+ZCTDiFChbbgYlQMIGAhnZFip2wFOPNuf0CrhIAmAt6NPX3GRz0mjOtL
+	 EktXEtAkYvF5S/qunlrvb07PUiYcYtr6Jm1S8AqRxBSZNByN1zjp9YIZBN/brk4oAw
+	 s+HVokS5Gl215Ydg6yGrgFAi37RmpFzrCFutfYXi2d7mb6Aajgd6gJ5WgqQmsRU4v3
+	 V2Rx5GAJA1QZjqxPX+F/5fsI3wCa2o08nWH1mhdm7CzHXvpdmIW/uCUUG/7CDsL7gX
+	 P9LAp5kYGeOOg==
+Date: Wed, 8 Nov 2023 19:52:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar
+ <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org,
+ linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH 34/48] perf dwarf-aux: Add die_collect_vars()
+Message-Id: <20231108195204.a3ddfe5965e9c33661460ff4@kernel.org>
+In-Reply-To: <20231012035111.676789-35-namhyung@kernel.org>
+References: <20231012035111.676789-1-namhyung@kernel.org>
+	<20231012035111.676789-35-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	ZR0P278MB1123:EE_|ZR0P278MB0073:EE_|DB5PEPF00014B88:EE_|GV0P278MB0145:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce95771c-1be9-477b-1943-08dbe047ea68
-X-LD-Processed: c80d3499-4a40-4a8c-986e-abce017d6b19,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Message-Info-Original:
- d/DoXk9zH7brl4krJTKdDM9cDBa3fMW1csrprQTzeep6tNuoI6MnCgK8Vps9DVXKR31LG040vi403j0KOjRamgvxoxPr+AKnNrtFoyroCE6apeSqYgspCQO31/mRHM2hcpWFTbG1UPlAN65AhB8bgjRLxDwanczWbYySE8lnjJDSCk3gg5oe5xKc1esxckgKL4ZIZNyRi5QGEZhPa9oOQ6agTrxBLRJP2linPHeyNaBKddTga6/ouKFuXP95yz7gbDx8pXgiIOqxT0f6HT4OqI7lJvyOe6iYBOIUa10clfFv6Gt7f/dQC+AZlL1TTz1w8li/ZM7En8k/yYozfSb4yAKLB+50cIuDtgHICUOwTvuEiigcVz+FD9/oCx7uN2rp5mneVPtoOW/qmvLvfw15B5dop/1BGzC7vkyWW8LsjHBarnHDyseXk94x3vlMZX+YDKCudHeBgKlVfqaxq7O4Xq/xUb4scyAD955gsNp/GjTPeZTYut3RcwSpe3KieIZHpR39MqjGIgRi7ceOKaOBKgbEwNsjJtEcw4upjEHNhnFwOcYPE490XR/4ienv1e7EmvRqBeJRq02yUE0TE2ktnxuSJxcpGPgft5Q4e4Mbx758VEKwgJ6U8JOfFBRHi3aH4IErBIbd7bBJyJPDk37bFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR0P278MB0073
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB5PEPF00014B88.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	f3f88cdf-e328-45b8-50f8-08dbe047e8a3
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	PdqtgDw/D8xw6TE28+4DnwpkvAHfvG55I7ozwN4W1NL2DFt0CdhP8NtiAU5ggOKsTVNX+am0G586l7LstcxShygr87FQ70jaSUqE5Hhc5HRWe4dSi0nMH/YQ+23/QgKIHUsJ3Fj1npPivnKTjuTQ0uddIpa8UxEgkxpuOSVX2nj5O7OUNGO1PyNgcRXOI1ZynNDmPLQP0a+fKiPMQAw8zNU05FGrwx97Y18dO9QtleIxhRl3xVBNV6vXXtG5kHBkKZsPwZC51Hpb2jeu2bJbZzw7ToA+pi9d1T76GhHREzDlVcsgdVRR1xTZEIQQukXx8UvGjZ5w/qHi0yAxwfUjn5LOpiv9YEh6LdWja98VwodBGCWnottXsCbYe7tFRbhW565k/bdKIol2oRew7fcb4O/gJ6WYRE3pEJwtnnI3TmpZ1Gr02TUB19SblzkDt3a6QMC1tI0OaA+ZFh7q4rHTjRUUvKuNrwz/UfUeAt22hwR5hHuSMyzhGrl3sc6FMTC7KcBTmshfq4FXD7Sbup6/5570SweF9k94iEXRcrCd8g8X5sdITcBLwoxqqAblOLKacvki3krj5J1L9jQumjIL/OTDBiq18UvpPwct3ykgTsiz8P7UyYFp2MDoUJoZZPRBJsTfettVXk2+23Pm83RPFu602/u4ji0LL4cggtWwYnF6G7qj0dZbecXIKRk//A8519iNpXipyeRfFjP3Dd2gpyFQ3gF0ZWhLb2dVSZxSMlZrnXtBTpXiF1J27HaxbDfocVzATDwlNxnfgYrQkzfyUCUMb3pIZhq4FHD/3qCCfPA=
-X-Forefront-Antispam-Report:
-	CIP:20.208.138.155;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mx3.crn.activeguard.cloud;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(136003)(376002)(346002)(230922051799003)(82310400011)(64100799003)(1800799009)(186009)(451199024)(36840700001)(46966006)(40470700004)(336012)(40460700003)(40480700001)(31686004)(6486002)(966005)(478600001)(36860700001)(47076005)(31696002)(86362001)(81166007)(83380400001)(356005)(107886003)(2616005)(6506007)(4326008)(6512007)(6916009)(786003)(316002)(70586007)(70206006)(44832011)(82740400003)(26005)(54906003)(2906002)(36756003)(41300700001)(5660300002)(8936002)(8676002)(36900700001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: cern.ch
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2023 10:46:08.1797
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce95771c-1be9-477b-1943-08dbe047ea68
-X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[20.208.138.155];Helo=[mx3.crn.activeguard.cloud]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B88.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0145
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello all,
+On Wed, 11 Oct 2023 20:50:57 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-I have a problem with broken stack traces in perf when I profile a small 
-multi-threaded program in C producing deep (~1000 entries) stacks with 
-"perf record --call-graph=fp -e task-clock -F <any number> --off-cpu" 
-attached to the program's PID. The callchains seem to stop at "random" 
-points throughout my application, occasionally managing to reach the 
-bottom (i.e. either "start" or "clone3").
+> The die_collect_vars() is to find all variable information in the scope
+> including function parameters.  The struct die_var_type is to save the
+> type of the variable with the location (reg and offset) as well as where
+> it's defined in the code (addr).
+> 
 
-This is the machine configuration I use:
+This looks good to me.
 
-* Intel Xeon Silver 4216 @ 2.10 GHz, with two 16-core CPUs and 
-hyper-threading disabled
-* 180 GB RAM, with no errors detected by Memtest86+ and no swap
-* Gentoo with Linux 6.5.8 (installed from the Gentoo repo with 
-gentoo-sources and compiled using this config: 
-https://gist.github.com/maksgraczyk/1bce96841a5b2cb2a92f725635c04bf2)
-* perf 6.6 with this quick patch of mine: 
-https://gist.github.com/maksgraczyk/ee1dd98dda79129a35f7fd3acffb35fd
-* Everything is compiled with "-fno-omit-frame-pointer" and 
-"-mno-omit-leaf-frame-pointer" gcc flags
-* kernel.perf_event_max_stack is set to 1024 and 
-kernel.perf_event_paranoid is set to -1
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-The code of the profiled program is at 
-https://gist.github.com/maksgraczyk/da2bc6d0be9d4e7d88f8bea45221a542 
-(the higher the value of NUM_THREADS, the more likely the issue is to 
-occur; you may need to compile the code without compiler optimisations).
+BTW, I did similar thing in collect_variables_cb()@probe-finder.c, maybe
+this can simplify that too.
 
-Alongside sampling-based profiling, I run syscall profiling with a 
-separate "perf record" instance attached to the same PID.
+Thank you,
 
-When I debug the kernel using kgdb, I see more-or-less the following 
-behaviour happening in the stack traversal loop in perf_callchain_user() 
-in arch/x86/events/core.c for the same thread being profiled:
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/dwarf-aux.c | 60 +++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/dwarf-aux.h | 17 +++++++++++
+>  2 files changed, 77 insertions(+)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 093d7e82b333..16e63d8caf83 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1545,6 +1545,66 @@ int die_get_cfa(Dwarf *dwarf, u64 pc, int *preg, int *poffset)
+>  	return -1;
+>  }
+>  
+> +static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+> +{
+> +	struct die_var_type **var_types = arg;
+> +	Dwarf_Die type_die;
+> +	int tag = dwarf_tag(die_mem);
+> +	Dwarf_Attribute attr;
+> +	Dwarf_Addr base, start, end;
+> +	Dwarf_Op *ops;
+> +	size_t nops;
+> +	struct die_var_type *vt;
+> +
+> +	if (tag != DW_TAG_variable && tag != DW_TAG_formal_parameter)
+> +		return DIE_FIND_CB_SIBLING;
+> +
+> +	if (dwarf_attr(die_mem, DW_AT_location, &attr) == NULL)
+> +		return DIE_FIND_CB_SIBLING;
+> +
+> +	/*
+> +	 * Only collect the first location as it can reconstruct the
+> +	 * remaining state by following the instructions.
+> +	 * start = 0 means it covers the whole range.
+> +	 */
+> +	if (dwarf_getlocations(&attr, 0, &base, &start, &end, &ops, &nops) <= 0)
+> +		return DIE_FIND_CB_SIBLING;
+> +
+> +	if (die_get_real_type(die_mem, &type_die) == NULL)
+> +		return DIE_FIND_CB_SIBLING;
+> +
+> +	vt = malloc(sizeof(*vt));
+> +	if (vt == NULL)
+> +		return DIE_FIND_CB_END;
+> +
+> +	vt->die_off = dwarf_dieoffset(&type_die);
+> +	vt->addr = start;
+> +	vt->reg = reg_from_dwarf_op(ops);
+> +	vt->offset = offset_from_dwarf_op(ops);
+> +	vt->next = *var_types;
+> +	*var_types = vt;
+> +
+> +	return DIE_FIND_CB_SIBLING;
+> +}
+> +
+> +/**
+> + * die_collect_vars - Save all variables and parameters
+> + * @sc_die: a scope DIE
+> + * @var_types: a pointer to save the resulting list
+> + *
+> + * Save all variables and parameters in the @sc_die and save them to @var_types.
+> + * The @var_types is a singly-linked list containing type and location info.
+> + * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
+> + *
+> + * Callers should free @var_types.
+> + */
+> +void die_collect_vars(Dwarf_Die *sc_die, struct die_var_type **var_types)
+> +{
+> +	Dwarf_Die die_mem;
+> +
+> +	die_find_child(sc_die, __die_collect_vars_cb, (void *)var_types, &die_mem);
+> +}
+> +
+>  #endif
+>  
+>  /*
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index dc7e98678216..d0ef41738abd 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -135,6 +135,15 @@ void die_skip_prologue(Dwarf_Die *sp_die, Dwarf_Die *cu_die,
+>  /* Get the list of including scopes */
+>  int die_get_scopes(Dwarf_Die *cu_die, Dwarf_Addr pc, Dwarf_Die **scopes);
+>  
+> +/* Variable type information */
+> +struct die_var_type {
+> +	struct die_var_type *next;
+> +	u64 die_off;
+> +	u64 addr;
+> +	int reg;
+> +	int offset;
+> +};
+> +
+>  #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT
+>  
+>  /* Get byte offset range of given variable DIE */
+> @@ -153,6 +162,9 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
+>  /* Get the frame base information from CFA */
+>  int die_get_cfa(Dwarf *dwarf, u64 pc, int *preg, int *poffset);
+>  
+> +/* Save all variables and parameters in this scope */
+> +void die_collect_vars(Dwarf_Die *sc_die, struct die_var_type **var_types);
+> +
+>  #else /*  HAVE_DWARF_GETLOCATIONS_SUPPORT */
+>  
+>  static inline int die_get_var_range(Dwarf_Die *sp_die __maybe_unused,
+> @@ -187,6 +199,11 @@ static inline int die_get_cfa(Dwarf *dwarf __maybe_unused, u64 pc __maybe_unused
+>  	return -1;
+>  }
+>  
+> +static inline void die_collect_vars(Dwarf_Die *sc_die __maybe_unused,
+> +				    struct die_var_type **var_types __maybe_unused)
+> +{
+> +}
+> +
+>  #endif /* HAVE_DWARF_GETLOCATIONS_SUPPORT */
+>  
+>  #endif /* _DWARF_AUX_H */
+> -- 
+> 2.42.0.655.g421f12c284-goog
+> 
 
-1. The first sample goes fine, the entire stack is traversed.
-2. The second sample breaks at some point inside my program, with a page 
-fault due to page not present.
-3. The third sample breaks at another *earlier* point inside my program, 
-with a page fault due to page not present.
-4. The fourth sample breaks at another *later* point inside my program, 
-with a page fault due to page not present.
 
-The stack frame addresses do not change throughout profiling and all 
-page faults happen at __get_user(frame.next_frame, &fp->next_frame). The 
-behaviour above also occurs occasionally in a single-threaded variant of 
-the code (without pthread at all) with a very high sampling frequency 
-(tens of thousands Hz).
-
-This issue makes profiling results unreliable for my use case, as I 
-usually profile multi-threaded applications with deep stacks with 
-hundreds of entries (hence why my test program also produces a deep 
-stack) and use flame graphs for later analysis.
-
-Could you help me diagnose the problem? For example, what may be the 
-cause of my page faults? I also did tests (without debugging though) 
-without syscall profiling and the "--off-cpu" flag, broken stacks still 
-appeared.
-
-(I cannot use DWARF because it makes profiling too slow and perf.data 
-size too large in my tests. I also want to avoid using 
-non-portable/vendor-specific stack unwinding solutions like LBR, as we 
-may need to run profiling on non-Intel CPUs.)
-
-Best regards,
-Maks Graczyk
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
