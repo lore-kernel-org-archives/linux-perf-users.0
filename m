@@ -1,31 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5133034F
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Nov 2023 16:04:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9A13064B
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Nov 2023 16:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzDLvVTK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F043C433C8;
-	Wed,  8 Nov 2023 16:04:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWfCzv8H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA4DC433C7;
+	Wed,  8 Nov 2023 16:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699459489;
-	bh=qmF7hG0v0kmRv1CntymwM7/fOSf0jDyD41yeDqzS85o=;
+	s=k20201202; t=1699460098;
+	bh=x9AiqdNABhWJBcn7lN0wvEkWHm5XpvpOL/ArzqLMP9I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qzDLvVTK52EcL0XKGJ76/899Q4vfJ/kV3Odc8Kx+WQfjcIwrdDyhNN42Dxgfro9ju
-	 v//BbyZJ129NPxOxaLz3nOwiVKtbMsBszc5RX/jVBdbSL/DXbnv4U8klgR2D6vj3Lk
-	 bTiis0GX8rGtXQi2PH61p6rRxFCqG9a41lnTGOcMAh2wPsTEdSP867wdi6CJERKLCc
-	 lydjM8hyPQNZ4EpP9iJtZnJSqbmoNUOBlS0sE4KmgpFT7maDfYFD5PEqFM2RwyBulh
-	 Mrd7F6HpB+O5PiPGLR+9HQeOI4ogLbYwIPodZcyokjoVQW6rwywIjJ36IJLf/6T+rx
-	 1ZeNkPsJ1B6vQ==
+	b=WWfCzv8HYv2DyvNATYj4ofVaqohC/6tedx5T/306ICURUF6V4mr9osCeL+OFF90Nj
+	 9M2KONYWc1JNr/9CD+S8pqb06rK0PHwr1qduPll26oqHtVnaCGGY5sXyRWdNOQhUwJ
+	 i5NULg7MOto7TR3Mu5Z9k8DLcWXHLHm/3/CabGP5MnHudnCEMW/4/QGqWLY62t95F1
+	 So3pPGvQNQ0IdazUo9ncxKXl95DevKuT/M51gvrFwjDGob9hYyQmR6CAOgWa6qlzoH
+	 OSNRLfaNT3cd25HUgfStpJfepEMYQm6Vt5HBnV0CYyeHXTDROf/0pTQw08b5Tc+VGC
+	 551ohL8ajEYrg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 1396B4035D; Wed,  8 Nov 2023 13:04:47 -0300 (-03)
-Date: Wed, 8 Nov 2023 13:04:46 -0300
+	id D4C074035D; Wed,  8 Nov 2023 13:14:55 -0300 (-03)
+Date: Wed, 8 Nov 2023 13:14:55 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+To: Ian Rogers <irogers@google.com>, Song Liu <songliubraving@fb.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Nick Terrell <terrelln@fb.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
 	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>,
@@ -50,12 +51,11 @@ Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	Sandipan Das <sandipan.das@amd.com>,
 	liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 05/53] perf machine thread: Remove exited threads by
- default
-Message-ID: <ZUuxnhu5xrgRw1HR@kernel.org>
+Subject: Re: [PATCH v4 12/53] perf bpf: Don't synthesize BPF events when
+ disabled
+Message-ID: <ZUuz/8EC0orXCffn@kernel.org>
 References: <20231102175735.2272696-1-irogers@google.com>
- <20231102175735.2272696-6-irogers@google.com>
- <371634c4-756a-498c-a46d-7459a07075e0@intel.com>
+ <20231102175735.2272696-13-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,33 +64,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <371634c4-756a-498c-a46d-7459a07075e0@intel.com>
+In-Reply-To: <20231102175735.2272696-13-irogers@google.com>
 X-Url: http://acmel.wordpress.com
 
-Em Mon, Nov 06, 2023 at 01:28:43PM +0200, Adrian Hunter escreveu:
-> On 2/11/23 19:56, Ian Rogers wrote:
-> > struct thread values hold onto references to mmaps, dsos, etc. When a
-> > thread exits it is necessary to clean all of this memory up by
-> > removing the thread from the machine's threads. Some tools require
-> > this doesn't happen, such as auxtrace events, perf report if offcpu
-> > events exist or if a task list is being generated, so add a
-> > symbol_conf value to make the behavior optional. When an exited thread
-> > is left in the machine's threads, mark it as exited.
-> > 
-> > This change relates to commit 40826c45eb0b ("perf thread: Remove
-> > notion of dead threads"). Dead threads were removed as they had a
-> > reference count of 0 and were difficult to reason about with the
-> > reference count checker. Here a thread is removed from threads when it
-> > exits, unless via symbol_conf the exited thread isn't remove and is
-> > marked as exited. Reference counting behaves as it normally does.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> For auxtrace:
-> 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Em Thu, Nov 02, 2023 at 10:56:54AM -0700, Ian Rogers escreveu:
+> If BPF sideband events are disabled on the command line, don't
+> synthesize BPF events too.
 
-Thanks, applied to perf-tools-next.
+
+Interesting, in 71184c6ab7e60fd5 ("perf record: Replace option
+--bpf-event with --no-bpf-event") we checked that, but only down at
+perf_event__synthesize_one_bpf_prog(), where we have:
+
+        if (!opts->no_bpf_event) {
+                /* Synthesize PERF_RECORD_BPF_EVENT */
+                *bpf_event = (struct perf_record_bpf_event)
+
+
+So we better remove that, now redundant check? I'll apply your patch as
+is and then we can remove that other check.
+
+Song, can I have your Acked-by or Reviewed-by, please?
 
 - Arnaldo
 
+
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/bpf-event.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 38fcf3ba5749..830711cae30d 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -386,6 +386,9 @@ int perf_event__synthesize_bpf_events(struct perf_session *session,
+>  	int err;
+>  	int fd;
+>  
+> +	if (opts->no_bpf_event)
+> +		return 0;
+> +
+>  	event = malloc(sizeof(event->bpf) + KSYM_NAME_LEN + machine->id_hdr_size);
+>  	if (!event)
+>  		return -1;
+> -- 
+> 2.42.0.869.gea05f2083d-goog
+> 
+
+-- 
+
+- Arnaldo
