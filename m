@@ -1,160 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FE41DDF2;
-	Thu,  9 Nov 2023 16:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E458225D5
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Nov 2023 16:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVKfYxmb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 035A4C433C8;
-	Thu,  9 Nov 2023 16:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699546476;
-	bh=H5gRNhBAojyGz06n4nyUjlE+Ck3M94YyNimHQhe4wK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XVKfYxmbDwtVvUxGpJMuZJjv4ORhmYur2uarLSbeBoyiCBt2Auo0DEzF5Uyp2mNcE
-	 FGC0OvDqkm/k4/Zxsr0R6X1M76+2+WX6R46GjeNmom0QWQioEIfsoKjv5amzQrKOpB
-	 FzSv1hrw+u+4Yz+d+Suja/cuZNeUEBDMMWU89otDpwEXFKHOuO1+JZ5cwd0oa6hHvk
-	 2e3GUEGim23OhhnaXh7mO/SGuaL2KfKoeiJmmKn+UGOKPMy3381ZwAAro8VhvgQrFR
-	 DLqs72x0xVumhq0CIV/oKxzv1+EvCRvjrZXY8QgjGbeGGDquGJ1IQAhsO2fshaxBzw
-	 k7FOFrlPPtAJw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 653D840094; Thu,  9 Nov 2023 13:14:33 -0300 (-03)
-Date: Thu, 9 Nov 2023 13:14:33 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, irogers@google.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, Yonghong Song <yhs@fb.com>,
-	Fangrui Song <maskray@google.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kk/oULXC"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C488F6F9B;
+	Thu,  9 Nov 2023 08:41:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699548073; x=1731084073;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KzH3foBT6935svPDaKLGpoAT5Z4PddTwZ1RPNXFCxow=;
+  b=kk/oULXCCUHAByIHMC3ioK0C4IA09eVIH2jeDnm142TA7fQAeYV5gKKy
+   40Bki5PjtNRP6NypT1hNClLQbwy+3+60aGXMUA0e+yqr0rI+G48rLHhXu
+   062wNfIdYOtvo0cjkPayzTEyD+Hb16A4AY7s+aWAF7UMEAIYyDrl3+6NT
+   6mv+Jy8yEwh5ceaEo5idXBj67ReMRQIJis4YQuNhZHxxLLc0Kc6FLxtXl
+   rMlfEudU88DOeYSX8kQe6InD6oO6xgV0Qv8cQ1nKlV82uh71NU2EY7ypS
+   WeS6PwmgET7IH9ass3DvSnoNYyPkUro/tJUgG9u7YolYcO85/e1/yn3kK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="388879751"
+X-IronPort-AV: E=Sophos;i="6.03,289,1694761200"; 
+   d="scan'208";a="388879751"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 08:41:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="763462743"
+X-IronPort-AV: E=Sophos;i="6.03,289,1694761200"; 
+   d="scan'208";a="763462743"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orsmga002.jf.intel.com with ESMTP; 09 Nov 2023 08:41:04 -0800
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	irogers@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	adrian.hunter@intel.com,
+	tinghao.zhang@intel.com,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v2 2/2] perf test: Add support for setting objdump binary
- via perf config
-Message-ID: <ZU0FaXoGf/HcLBlb@kernel.org>
-References: <20231106151051.129440-1-james.clark@arm.com>
- <20231106151051.129440-3-james.clark@arm.com>
- <ZUv1TgveArYdvTsl@kernel.org>
- <2e0fb2d4-1410-6a7e-902d-8249a9ea523a@arm.com>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH] perf evsel: Ignore the non-group case for branch counters
+Date: Thu,  9 Nov 2023 08:40:07 -0800
+Message-Id: <20231109164007.2037721-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e0fb2d4-1410-6a7e-902d-8249a9ea523a@arm.com>
-X-Url: http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 
-Em Thu, Nov 09, 2023 at 10:26:34AM +0000, James Clark escreveu:
-> 
-> 
-> On 08/11/2023 20:53, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Nov 06, 2023 at 03:10:49PM +0000, James Clark escreveu:
-> >> Add a perf config variable that does the same thing as "perf test
-> >> --objdump <x>".
-> >>
-> >> Also update the man page.
-> > 
-> > That is ok, if one wants to change objdump just for testing, as a
-> > followup improvement it may be interesting to allow that for the other
-> > tools that have --objdump as well as to add this as a global option,
-> > that affects all tools, no?
-> 
-> For the tools they already all share annotate.objdump in the config. Do
-> you mean that the tests could share the same config instead?
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Probably.
+The perf test 27: Sample parsing fails with the branch counters support
+introduced.
+
+The branch counters feature requires all the events to belong to a
+group. There is no problem with the normal perf usage which usually
+initializes an evlist even for a single evsel.
+But the perf test is special, which may not initialize an evlist. The
+Sample parsing test case is one of the examples. The existing code
+crashes with the !evsel->evlist.
+
+Non-group means the evsel doesn't have branch counters support.
+
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Closes: https://lore.kernel.org/lkml/ZUv+G+w5EvJgQS45@kernel.org/
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/util/evsel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 58a9b8c82790..7a6a2d1f96db 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2355,6 +2355,10 @@ static inline bool evsel__has_branch_counters(const struct evsel *evsel)
+ {
+ 	struct evsel *cur, *leader = evsel__leader(evsel);
  
-> Maybe I could have used annotate.objdump for the tests, but it was used
-> in a slightly different way, and I thought it would be easier for people
-> to find if it started with "test."
-
-Well, we can have both, with "test." overriding "annotate."?
-
-Anyway, I applied this patch locally, now trying to fix some unrelated
-problem that is making 'perf test' fail so that I can push
-perf-tools-next publicly.
-
-- Arnaldo
- 
-> > 
-> > Anyway, applied both patches.
-> > 
-> > - Arnaldo
-> >  
-> >> Signed-off-by: James Clark <james.clark@arm.com>
-> >> ---
-> >>  tools/perf/Documentation/perf-config.txt |  4 ++++
-> >>  tools/perf/tests/builtin-test.c          | 12 ++++++++++++
-> >>  2 files changed, 16 insertions(+)
-> >>
-> >> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-> >> index 0b4e79dbd3f6..16398babd1ef 100644
-> >> --- a/tools/perf/Documentation/perf-config.txt
-> >> +++ b/tools/perf/Documentation/perf-config.txt
-> >> @@ -722,6 +722,10 @@ session-<NAME>.*::
-> >>  		Defines new record session for daemon. The value is record's
-> >>  		command line without the 'record' keyword.
-> >>  
-> >> +test.*::
-> >> +
-> >> +	test.objdump::
-> >> +		objdump binary to use for disassembly and annotations.
-> >>  
-> >>  SEE ALSO
-> >>  --------
-> >> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> >> index a8d17dd50588..113e92119e1d 100644
-> >> --- a/tools/perf/tests/builtin-test.c
-> >> +++ b/tools/perf/tests/builtin-test.c
-> >> @@ -14,6 +14,7 @@
-> >>  #include <sys/wait.h>
-> >>  #include <sys/stat.h>
-> >>  #include "builtin.h"
-> >> +#include "config.h"
-> >>  #include "hist.h"
-> >>  #include "intlist.h"
-> >>  #include "tests.h"
-> >> @@ -514,6 +515,15 @@ static int run_workload(const char *work, int argc, const char **argv)
-> >>  	return -1;
-> >>  }
-> >>  
-> >> +static int perf_test__config(const char *var, const char *value,
-> >> +			     void *data __maybe_unused)
-> >> +{
-> >> +	if (!strcmp(var, "test.objdump"))
-> >> +		test_objdump_path = value;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >>  int cmd_test(int argc, const char **argv)
-> >>  {
-> >>  	const char *test_usage[] = {
-> >> @@ -541,6 +551,8 @@ int cmd_test(int argc, const char **argv)
-> >>          if (ret < 0)
-> >>                  return ret;
-> >>  
-> >> +	perf_config(perf_test__config, NULL);
-> >> +
-> >>  	/* Unbuffered output */
-> >>  	setvbuf(stdout, NULL, _IONBF, 0);
-> >>  
-> >> -- 
-> >> 2.34.1
-> >>
-> > 
-
++	/* The branch counters feature only supports group */
++	if (!leader || !evsel->evlist)
++		return false;
++
+ 	evlist__for_each_entry(evsel->evlist, cur) {
+ 		if ((leader == evsel__leader(cur)) &&
+ 		    (cur->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS))
 -- 
+2.35.1
 
-- Arnaldo
