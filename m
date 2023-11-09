@@ -1,44 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5A4EBD
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Nov 2023 00:43:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EFD360
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Nov 2023 00:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDPeGyqP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62139C43397;
-	Thu,  9 Nov 2023 00:43:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLSjAiIM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C5CCC433C9;
+	Thu,  9 Nov 2023 00:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699490626;
-	bh=8NHcfWQYiDrY3TdwV6wLuh/GROrzM7rVN7CxC7jZJZk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mDPeGyqPNnU7PAB45cqEq79LGLRkEdObLZzQGAG1qfceKrjCHpMV31YkpCXB8L4xd
-	 hI8sCYhCTeKSiJLUlMpQlxAqX1UQ2ircgRL9k/nvMBFVMXmZ242juUtWiLFRRfC57t
-	 nIKxHGRLWRTyTRRH5lFbgf1mu4zylFPvtvIyRpCXU3WzLnIRu7Xre6IGQxEEyXHfNC
-	 z/5lUvuvfyuUi9FHRb8w3B82gHViUaaTKIq0qsO8wzC/MjyHX0PRjyTJpgxXGPiDO0
-	 RbTm6Y/bDOGG0qDwpFLNTd39iVmQn1kqZJOqXg04VjAI5SzNQdlQfBOkdsQtJO6QZb
-	 GCl0JIyobKx2Q==
+	s=k20201202; t=1699490748;
+	bh=YRu4R22LiL/XRUCDX6bXCOEEuo4U/vGZY7DHbSLNVwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PLSjAiIMn2NBulFrRC52cwjm9YTPQLTE5AU/tlNolhqABeG0kKSss8R4fpWqjGE8U
+	 Rn1xGX2bmuGIrkAs8XzOPZYAa8I91721ErFqWtfL1pgoCRp3VAu6pfTCjI3yzxAuIA
+	 XlFVLE0/D0xJ8RbKVh9ech2e8MpnGlQfDnyRMNjVfJVsT1nviFshv1NHjgzalfmQGq
+	 mK7vkrRBEYs9aQWWQnI8+52pSAvHYp6GLtCdoQk/myAbrGlvKDnxKQlqJgqLomPZtd
+	 vFZELx41GJIYn6Vlhsn7GUylIPrN3wAl4VMzSMYjRisM3HWZr0B4AbQRhmlcv0c8zs
+	 bNv88w6VSGAWA==
+Date: Wed, 8 Nov 2023 16:45:45 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 	Indu Bhagat <indu.bhagat@oracle.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
 	linux-toolchains@vger.kernel.org
-Subject: [PATCH RFC 10/10] unwind/x86/64: Add HAVE_USER_UNWIND_SFRAME
-Date: Wed,  8 Nov 2023 16:41:15 -0800
-Message-ID: <ec004e900e02c9c85cf8c89d4c26d4168a6c5d18.1699487758.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <cover.1699487758.git.jpoimboe@kernel.org>
+Subject: Re: [PATCH RFC 00/10] perf: user space sframe unwinding
+Message-ID: <20231109004545.panz6kojksxfcjhi@treble>
 References: <cover.1699487758.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -46,31 +41,98 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cover.1699487758.git.jpoimboe@kernel.org>
 
-Binutils 2.40 supports generating sframe for x86_64.  It works well in
-testing so enable it.
+On Wed, Nov 08, 2023 at 04:41:05PM -0800, Josh Poimboeuf wrote:
+> Some distros have started compiling frame pointers into all their
+> packages to enable the kernel to do system-wide profiling of user space.
+> Unfortunately that creates a runtime performance penalty across the
+> entire system.  Using DWARF (or .eh_frame) instead isn't feasible
+> because of complexity and slowness.
+> 
+> For in-kernel unwinding we solved this problem with the creation of the
+> ORC unwinder for x86_64.  Similarly, for user space the GNU assembler
+> has created the SFrame ("Simple Frame") format starting with binutils
+> 2.40.
+> 
+> These patches add support for unwinding user space from the kernel using
+> SFrame with perf.  It should be easy to add user unwinding support for
+> other components like ftrace.
+> 
+> I tested it on Gentoo by recompiling everything with -Wa,-gsframe and
+> using a custom glibc patch (which I'll send in a reply to this email).
 
-NOTE: An out-of-tree glibc patch is still needed to enable setting
-PR_ADD_SFRAME for shared libraries and dlopens.
+Here's my glibc patch:
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- arch/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 95939cd54dfe..770d0528e4c9 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -279,6 +279,7 @@ config X86
- 	select HAVE_UNSTABLE_SCHED_CLOCK
- 	select HAVE_USER_RETURN_NOTIFIER
- 	select HAVE_USER_UNWIND
-+	select HAVE_USER_UNWIND_SFRAME		if X86_64
- 	select HAVE_GENERIC_VDSO
- 	select HOTPLUG_PARALLEL			if SMP && X86_64
- 	select HOTPLUG_SMT			if SMP
--- 
-2.41.0
-
+diff --git a/elf/dl-load.c b/elf/dl-load.c
+index 2923b1141d..333d7c39fd 100644
+--- a/elf/dl-load.c
++++ b/elf/dl-load.c
+@@ -29,6 +29,7 @@
+ #include <bits/wordsize.h>
+ #include <sys/mman.h>
+ #include <sys/param.h>
++#include <sys/prctl.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <gnu/lib-names.h>
+@@ -88,6 +89,10 @@ struct filebuf
+ 
+ #define STRING(x) __STRING (x)
+ 
++#ifndef PT_GNU_SFRAME
++#define PT_GNU_SFRAME 0x6474e554
++#endif
++
+ 
+ int __stack_prot attribute_hidden attribute_relro
+ #if _STACK_GROWS_DOWN && defined PROT_GROWSDOWN
+@@ -1213,6 +1218,10 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
+ 	  l->l_relro_addr = ph->p_vaddr;
+ 	  l->l_relro_size = ph->p_memsz;
+ 	  break;
++
++	case PT_GNU_SFRAME:
++	  l->l_sframe_addr = ph->p_vaddr;
++	  break;
+ 	}
+ 
+     if (__glibc_unlikely (nloadcmds == 0))
+@@ -1263,6 +1272,8 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
+ 	l->l_map_start = l->l_map_end = 0;
+ 	goto lose;
+       }
++
++
+   }
+ 
+   if (l->l_ld != 0)
+@@ -1376,6 +1387,13 @@ cannot enable executable stack as shared object requires");
+ 	break;
+       }
+ 
++#define PR_ADD_SFRAME 71
++  if (l->l_sframe_addr != 0)
++  {
++    l->l_sframe_addr += l->l_addr;
++    __prctl(PR_ADD_SFRAME, l->l_sframe_addr, NULL, NULL, NULL);
++  }
++
+   /* We are done mapping in the file.  We no longer need the descriptor.  */
+   if (__glibc_unlikely (__close_nocancel (fd) != 0))
+     {
+diff --git a/include/link.h b/include/link.h
+index c6af095d87..36ac75680f 100644
+--- a/include/link.h
++++ b/include/link.h
+@@ -348,6 +348,8 @@ struct link_map
+     ElfW(Addr) l_relro_addr;
+     size_t l_relro_size;
+ 
++    ElfW(Addr) l_sframe_addr;
++
+     unsigned long long int l_serial;
+   };
+ 
