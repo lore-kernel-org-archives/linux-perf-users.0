@@ -1,126 +1,69 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B5FD525
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 12:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6F01803B
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 13:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CUshjWI6"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09B633FB8;
-	Fri, 10 Nov 2023 04:36:25 -0800 (PST)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AACI1vm009871;
-	Fri, 10 Nov 2023 12:36:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=6yxpm78rFMLJRZodQU6fvWzHWHo52kLHQcZXjcXCYho=;
- b=CUshjWI6AqCuWAQRw7N/TdCElHOQBFYdjvpaPkU9lTmEXg0CdhTm7dhCSBIpSHRm4ltq
- X1s4tCPc2h9VFtWp9eSPhMYoaHbfd18tBBcrvPqK98goUrdFLLKFubwrBTuMoLt57td0
- jEG35gYz3TlZfe+1V+t2Zn/F0zO6OM3SLVPN4LAhVemDmEaJfmLfukTLDVbpYmqBhhby
- CPo40x+fKw+h514pLKuVbK9FyOOKs2Lrj9yBoLuJ1kYdxGIjUidozq8jUdTQrFMoQivc
- AV/FDwBw/rC/cLB6hL8ZO/cqaGCbmkT4caCUcMKdUWpiuWk9eRf9rU3ZH1eOg2lDHk+Q fg== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u9kd5j13s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Nov 2023 12:36:15 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AAB6Vbq004129;
-	Fri, 10 Nov 2023 12:32:03 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3u7w21asmv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Nov 2023 12:32:03 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AACW0MT30999020
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 Nov 2023 12:32:00 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3F3CC20043;
-	Fri, 10 Nov 2023 12:32:00 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 08A8720040;
-	Fri, 10 Nov 2023 12:32:00 +0000 (GMT)
-Received: from [9.152.212.233] (unknown [9.152.212.233])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 10 Nov 2023 12:31:59 +0000 (GMT)
-Message-ID: <6d5a8310-d3e4-4fa7-8103-b50b100e22f7@linux.ibm.com>
-Date: Fri, 10 Nov 2023 13:31:59 +0100
-User-Agent: Mozilla Thunderbird
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W76exGFU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966ACC433C7;
+	Fri, 10 Nov 2023 13:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699623231;
+	bh=zeW97rNRPUdz+KuoHgAUP4bAl5sLNJZUkAnGoySTVis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W76exGFUQZVYHtt2nDGBJCNCpc4Bl8ZDBvZOidYVy1MW5SNiWLn1KsoCyEAF+4S6m
+	 NxuRfwRf4lkdtMEsAvz7sJF/8JXSgvCMt2HxRpCwOmYuM0/F+YAz7tmHckSbsj+Jf4
+	 gCgj6QxlI1m4vaV1lkzecaW0zUxdY7QoORGk4AVOF0OnoNmq/wnmfZxieDai6visH0
+	 cfcWfW64eNMb72KNpSKG6JY7PvItjBnWQCXBdYbiTrlsftY5gortmJxjE9zpRpGnc7
+	 A9qFezwplvd13muYNp+vTrxY9hRBH/R8thjrF8duvaptf++jvrlxMHCHAG98Hz8mvr
+	 a8D+Xywi2K9lw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 6ACBF40094; Fri, 10 Nov 2023 10:33:46 -0300 (-03)
+Date: Fri, 10 Nov 2023 10:33:46 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
+	hca@linux.ibm.com
 Subject: Re: [PATCH v3] perf report: Add s390 raw data interpretation for PAI
  counters
-Content-Language: en-US
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com
+Message-ID: <ZU4xOmhlT5IQlI2O@kernel.org>
 References: <20231110110908.2312308-1-tmricht@linux.ibm.com>
  <ZU4d0G23WOKwpIwb@kernel.org>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <ZU4d0G23WOKwpIwb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: AWfigPQbooAU8ChVKF1V67em-vc7D9Ls
-X-Proofpoint-GUID: AWfigPQbooAU8ChVKF1V67em-vc7D9Ls
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+ <6d5a8310-d3e4-4fa7-8103-b50b100e22f7@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-10_09,2023-11-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=653 adultscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 clxscore=1015 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311100103
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6d5a8310-d3e4-4fa7-8103-b50b100e22f7@linux.ibm.com>
+X-Url: http://acmel.wordpress.com
 
-On 11/10/23 13:10, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Nov 10, 2023 at 12:09:08PM +0100, Thomas Richter escreveu:
->> commit 1bf54f32f525 ("s390/pai: Add support for cryptography counters")
-> 
-> Where is this commit?
-> 
-> ⬢[acme@toolbox perf-tools-next]$ git remote update torvalds
-> Fetching torvalds
-> remote: Enumerating objects: 25591, done.
-> remote: Counting objects: 100% (12820/12820), done.
-> remote: Compressing objects: 100% (2379/2379), done.
-> remote: Total 9481 (delta 8254), reused 8289 (delta 7086), pack-reused 0
-> Receiving objects: 100% (9481/9481), 1.76 MiB | 2.89 MiB/s, done.
-> Resolving deltas: 100% (8254/8254), completed with 1792 local objects.
-> From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
->    d2f51b3516dade79..89cdf9d556016a54  master     -> torvalds/master
-> ⬢[acme@toolbox perf-tools-next]$ git show 1bf54f32f525
-> fatal: ambiguous argument '1bf54f32f525': unknown revision or path not in the working tree.
-> Use '--' to separate paths from revisions, like this:
-> 'git <command> [<revision>...] -- [<file>...]'
-> ⬢[acme@toolbox perf-tools-next]$
-> 
-> Looking using the description I get:
-> 
-> 39d62336f5c126ad s390/pai: add support for cryptography counters
-> 
-> Is this the one?
-> 
-> - Arnaldo
-> 
+Em Fri, Nov 10, 2023 at 01:31:59PM +0100, Thomas Richter escreveu:
+> On 11/10/23 13:10, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Nov 10, 2023 at 12:09:08PM +0100, Thomas Richter escreveu:
+> >> commit 1bf54f32f525 ("s390/pai: Add support for cryptography counters")
+> > Where is this commit?
 
+> > ⬢[acme@toolbox perf-tools-next]$ git show 1bf54f32f525
+> > fatal: ambiguous argument '1bf54f32f525': unknown revision or path not in the working tree.
+> > Use '--' to separate paths from revisions, like this:
+> > 'git <command> [<revision>...] -- [<file>...]'
+> > ⬢[acme@toolbox perf-tools-next]$
 
-Yep, I apologise for the cut & paste error, this is the commit number in question.
-Should I reset a corrected version?
+> > Looking using the description I get:
 
-Thanks
+> > 39d62336f5c126ad s390/pai: add support for cryptography counters
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+> > Is this the one?
 
+> Yep, I apologise for the cut & paste error, this is the commit number in question.
+> Should I reset a corrected version?
+
+I can fix this up, thanks for confirming,
+
+- Arnaldo
