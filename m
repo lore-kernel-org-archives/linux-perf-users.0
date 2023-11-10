@@ -1,69 +1,183 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05171B291
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 14:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FEC1BDCA;
+	Fri, 10 Nov 2023 14:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0IMv16W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8973C433C8;
-	Fri, 10 Nov 2023 14:46:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upPWFizS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A12C433C7;
+	Fri, 10 Nov 2023 14:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699627610;
-	bh=ADJXJUQ+yQCokhxG3Gpz902vfTvDUZW88gRg9FvUxeY=;
+	s=k20201202; t=1699627723;
+	bh=67X2QpL1k/tzuflgDk/rSr/3uNaGV1pZVgtU3XFWA4k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D0IMv16WHOf9OHJnWKO+KxsHFlUmJj2cGyUmKPf0XCoXfrBwnDkIJ4l3UwdkLuij6
-	 Txyc1CeqIGDKWNgIH2xuW5SQ8VtLcs0izPCcEmi4VHJ/or4w9Hjod/jJMxhkpg520r
-	 TTdEZIO1jLupxlG0c3qnwHgTJs8oMacLr3mQySvN+L5Cm+QbHVYMVDhj084EDaQJcu
-	 GJBgCCyTDrWw85OJ7QSKfPLBGYbRydNizM/QKZH1P4hQCAp1/vouDq6KLd9FE4moNG
-	 kYgZ4QKtywyrOLasZnlW5QzjkY0kBI0WbsMy/cnXZhoGmtAT1JPD/f2w09kaRTo3bi
-	 vH1JKPnEPaqgg==
+	b=upPWFizS8bmsYb2YUmDIIJC+3+Cce/6EagrzOPUGXQOM3ORz2nTdVJgMmjgee9QZL
+	 LfGRBULui93yS+XnhQeyFUNFM2ixafwUuVELbZ9psa/pFvo9elecGsfmXRnhDoHH94
+	 2f5Kqi1ocC6EN4l8DB0nuyk3OShzydO879mSP3/wpGuaH6QiTWhqOWYDdDDzXdwdwn
+	 nHAROc2H33LqUdhCOyAK85ErahEjLCF+J6F8WGG19hOH16t0ebIagboBhbLe8kwcsX
+	 d1/Gi8jEQ/FZBys6a0SV63OjMw0JWds2e20fhA1+jBNoAUUcA0veJKvoSMm96ozp3v
+	 ETI6pBGwNelsg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 8594C40094; Fri, 10 Nov 2023 11:46:46 -0300 (-03)
-Date: Fri, 10 Nov 2023 11:46:46 -0300
+	id E8A7540094; Fri, 10 Nov 2023 11:48:39 -0300 (-03)
+Date: Fri, 10 Nov 2023 11:48:39 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, irogers@google.com,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nikita Shubin <n.shubin@yadro.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2] perf vendor events riscv: add StarFive Dubhe-80 JSON
- file
-Message-ID: <ZU5CVv0U+Q4BmHeX@kernel.org>
-References: <20231103082441.1389842-1-jisheng.teoh@starfivetech.com>
- <CAP-5=fW4T_j02RLghg=_OB1TkRWFuHKOR59xFyEsdEH5gGnUPA@mail.gmail.com>
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, Yonghong Song <yhs@fb.com>,
+	Fangrui Song <maskray@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v2 2/2] perf test: Add support for setting objdump binary
+ via perf config
+Message-ID: <ZU5Cx4LTrB5q0sIG@kernel.org>
+References: <20231106151051.129440-1-james.clark@arm.com>
+ <20231106151051.129440-3-james.clark@arm.com>
+ <ZUv1TgveArYdvTsl@kernel.org>
+ <2e0fb2d4-1410-6a7e-902d-8249a9ea523a@arm.com>
+ <ZU0FaXoGf/HcLBlb@kernel.org>
+ <da4e59bc-759e-4ccc-2c5b-b8acf7049847@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW4T_j02RLghg=_OB1TkRWFuHKOR59xFyEsdEH5gGnUPA@mail.gmail.com>
+In-Reply-To: <da4e59bc-759e-4ccc-2c5b-b8acf7049847@arm.com>
 X-Url: http://acmel.wordpress.com
 
-Em Fri, Nov 03, 2023 at 08:45:33AM -0700, Ian Rogers escreveu:
-> On Fri, Nov 3, 2023 at 1:27 AM Ji Sheng Teoh <jisheng.teoh@starfivetech.com> wrote:
-
-> > StarFive's Dubhe-80 supports raw event id 0x00 - 0x22.
-> > The raw events are enabled through PMU node of DT binding.
-> > Besides raw event, add standard RISC-V firmware events to
-> > support monitoring of firmware event.
-
-> > Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+Em Fri, Nov 10, 2023 at 01:57:11PM +0000, James Clark escreveu:
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> On 09/11/2023 16:14, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Nov 09, 2023 at 10:26:34AM +0000, James Clark escreveu:
+> >>
+> >>
+> >> On 08/11/2023 20:53, Arnaldo Carvalho de Melo wrote:
+> >>> Em Mon, Nov 06, 2023 at 03:10:49PM +0000, James Clark escreveu:
+> >>>> Add a perf config variable that does the same thing as "perf test
+> >>>> --objdump <x>".
+> >>>>
+> >>>> Also update the man page.
+> >>>
+> >>> That is ok, if one wants to change objdump just for testing, as a
+> >>> followup improvement it may be interesting to allow that for the other
+> >>> tools that have --objdump as well as to add this as a global option,
+> >>> that affects all tools, no?
+> >>
+> >> For the tools they already all share annotate.objdump in the config. Do
+> >> you mean that the tests could share the same config instead?
+> > 
+> > Probably.
+> >  
+> >> Maybe I could have used annotate.objdump for the tests, but it was used
+> >> in a slightly different way, and I thought it would be easier for people
+> >> to find if it started with "test."
+> > 
+> > Well, we can have both, with "test." overriding "annotate."?
+> > 
+> 
+> Yeah overriding could work. IMO just one config value is probably enough
+> though, so we could change it to annotate.objdump in the tests too, and
+> remove the docs change. At least until someone has a usecase for a
+> separate config value for the tests and then add the overriding behavior.
+> 
+> I don't have any strong feelings about either way.
 
-Thanks, applied.
+We didn't publish any new version with test.objdump=, so please consider
+submitting a patch for perf-tools-next making annotate.objdump= be used
+in 'perf test' as well, update the documentation stating that this
+applies to 'perf test' as well.
+
+- Arnaldo
+ 
+> > Anyway, I applied this patch locally, now trying to fix some unrelated
+> > problem that is making 'perf test' fail so that I can push
+> > perf-tools-next publicly.
+> > 
+> > - Arnaldo
+> >  
+> >>>
+> >>> Anyway, applied both patches.
+> >>>
+> >>> - Arnaldo
+> >>>  
+> >>>> Signed-off-by: James Clark <james.clark@arm.com>
+> >>>> ---
+> >>>>  tools/perf/Documentation/perf-config.txt |  4 ++++
+> >>>>  tools/perf/tests/builtin-test.c          | 12 ++++++++++++
+> >>>>  2 files changed, 16 insertions(+)
+> >>>>
+> >>>> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+> >>>> index 0b4e79dbd3f6..16398babd1ef 100644
+> >>>> --- a/tools/perf/Documentation/perf-config.txt
+> >>>> +++ b/tools/perf/Documentation/perf-config.txt
+> >>>> @@ -722,6 +722,10 @@ session-<NAME>.*::
+> >>>>  		Defines new record session for daemon. The value is record's
+> >>>>  		command line without the 'record' keyword.
+> >>>>  
+> >>>> +test.*::
+> >>>> +
+> >>>> +	test.objdump::
+> >>>> +		objdump binary to use for disassembly and annotations.
+> >>>>  
+> >>>>  SEE ALSO
+> >>>>  --------
+> >>>> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> >>>> index a8d17dd50588..113e92119e1d 100644
+> >>>> --- a/tools/perf/tests/builtin-test.c
+> >>>> +++ b/tools/perf/tests/builtin-test.c
+> >>>> @@ -14,6 +14,7 @@
+> >>>>  #include <sys/wait.h>
+> >>>>  #include <sys/stat.h>
+> >>>>  #include "builtin.h"
+> >>>> +#include "config.h"
+> >>>>  #include "hist.h"
+> >>>>  #include "intlist.h"
+> >>>>  #include "tests.h"
+> >>>> @@ -514,6 +515,15 @@ static int run_workload(const char *work, int argc, const char **argv)
+> >>>>  	return -1;
+> >>>>  }
+> >>>>  
+> >>>> +static int perf_test__config(const char *var, const char *value,
+> >>>> +			     void *data __maybe_unused)
+> >>>> +{
+> >>>> +	if (!strcmp(var, "test.objdump"))
+> >>>> +		test_objdump_path = value;
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>>  int cmd_test(int argc, const char **argv)
+> >>>>  {
+> >>>>  	const char *test_usage[] = {
+> >>>> @@ -541,6 +551,8 @@ int cmd_test(int argc, const char **argv)
+> >>>>          if (ret < 0)
+> >>>>                  return ret;
+> >>>>  
+> >>>> +	perf_config(perf_test__config, NULL);
+> >>>> +
+> >>>>  	/* Unbuffered output */
+> >>>>  	setvbuf(stdout, NULL, _IONBF, 0);
+> >>>>  
+> >>>> -- 
+> >>>> 2.34.1
+> >>>>
+> >>>
+> > 
+> 
+
+-- 
 
 - Arnaldo
