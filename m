@@ -1,102 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494BC2111E
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 17:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752E63A27F;
+	Fri, 10 Nov 2023 19:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra52qHk0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C34C4C433CA;
-	Fri, 10 Nov 2023 17:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699638048;
-	bh=fGBoZnP2xadG2rKM/h58nMACuhHYVt8nwgYEioXQRuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ra52qHk0nia5r1gamKEdE1fvUzyjRyJfdaeqz0eIxLNQnsBNHSVR3J+/sUBfaHZwN
-	 oVLfKTpF7lqP6eR2J856K67Er2OANg2u2FCoX/XjdAajlwN3fsco1DNbHFN2sS9yOF
-	 NPS5bNlzwgaAUkU/8cnFk5MTh/bwqo6a4OR7H3fWQlVQjLEOkDiVbiu2XMVNRPd0Hx
-	 ho2ctMiSYHRIk9kv6SkjTk8ghaa6BQe7JO1iZchC1ZosFp7sjyvEXdNVOihh+PbhEJ
-	 0c6lP48US70DkRZrPh+rAxldVOp9ZXlVhZ6o3o5BoKGwIm8OWKJkyAvzx1guewIHGv
-	 3Mjiu4HVRbY0w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 48B3D40094; Fri, 10 Nov 2023 14:40:44 -0300 (-03)
-Date: Fri, 10 Nov 2023 14:40:44 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Maksymilian Graczyk <maksymilian.graczyk@cern.ch>
-Cc: Hao Luo <haoluo@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	linux-perf-users@vger.kernel.org,
-	syclops-project <syclops-project@cern.ch>,
-	Guilherme Amadio <guilherme.amadio@cern.ch>,
-	Stephan Hageboeck <stephan.hageboeck@cern.ch>
-Subject: long BPF stack traces Re: Broken stack traces with --call-graph=fp
- and a multi-threaded app due to page faults?
-Message-ID: <ZU5rHB4DCiBqlKtC@kernel.org>
-References: <de597d7c-848e-4a35-887a-4cdefa23ecd2@cern.ch>
- <ZU5TZiXMUZ4VLOO+@kernel.org>
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="uyQUkJ98"
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05olkn2043.outbound.protection.outlook.com [40.92.89.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF152EF38;
+	Fri, 10 Nov 2023 11:07:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QABjSKEfKCbKTcFgvIX9Hyg/EdYwWeo+YNnxd/b0gEohN/ZRwL/DBa7hLPt4+tfrmE69/EoyoiUoQxHlyFGoMm4hxJ13C4Aa2e70n/eTVybJHESWrPQMm2uhDsJ5bCSU9VmBTMQTzkkvtflrIKIW6jQjMPbTuNpdz/ALXvM0OyFHmMSjC5wTJhYyeCAF8zCR8wvXnjoLZbT2wVTXn0vN92DT3+KSP5YAM/4KQNIDW0Vmkr+2OsMwDumx4A912ujc75/O7/GRggytquGgFwdIxUVrGUnN0gl0OvrM1hsdJm3qU4iJ9o2MV28cyXex8CPYRxgVfjpJZUdgcxgXGDxH5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=92E9ItfYieonP35ZSDNlZ5zXLpNStjSEh2Ht2aJ77GM=;
+ b=BAkxdEM22XE4geaTnu7fdDPXq+UZyWmILXBsmhQYhEl4MC84FsJl+kXt/9P2KZUF7sGNdQe5g5PZKRYYZE7RohbSjguXHLXS6Y3AZEoPxObui50AphOT7lpEkcuEm+b+fkjHvNgMi28KaLBsNKHwCq/w9ux3VW9d0XMGq8Ja3xVruegNfLLMnqPPQyAv7jOgFPDZcpYNx1tnvWEwZd6fjfLEGqUw+HKPFm4gRYTyVrakpL5Ut7Rt5zDdmyFpFYHAL76MJjQeoTIqDfMTfCXVuQONDcWYW5KX1+RSvAW45XKSeV6AN5325HOhGpgd0+nfSwb1B6riDEVL7KUOOMC7qQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=92E9ItfYieonP35ZSDNlZ5zXLpNStjSEh2Ht2aJ77GM=;
+ b=uyQUkJ98BL17AFQuUrE3RRl8ZA0yd2NMzw2Dxbx1ytXk8ooks3zO/oTmPaHq1l8wGA5TryNtRCdHAsBu2K6mYYGwsAdpze4212xivZL5X+KaeTH6nHiaOeNNafbg3NHBH1YISfREf0ycQ25U9PDjwYvjRUMSobOVqgknaOLDwOPpUUqylVEDzPc/NIPSH3Wr5Hf5jatT0IOOdqyJ/NFEgOmwIBwn1BvFqYUT7aAxXD5K6uYvMhdBbDn9rYGGWJK2X0tjVP0QPmpfo87VgI8QTWJ7C0buWGT3FcnNIM5I6WIcBTogBGP2ymE0ir6DeS3K6nDqJU8U3n8614IFXQ3gYQ==
+Received: from AS8PR02MB10217.eurprd02.prod.outlook.com
+ (2603:10a6:20b:63e::17) by GV2PR02MB9424.eurprd02.prod.outlook.com
+ (2603:10a6:150:e3::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.19; Fri, 10 Nov
+ 2023 19:07:29 +0000
+Received: from AS8PR02MB10217.eurprd02.prod.outlook.com
+ ([fe80::2b9c:230f:3297:57e8]) by AS8PR02MB10217.eurprd02.prod.outlook.com
+ ([fe80::2b9c:230f:3297:57e8%6]) with mapi id 15.20.6977.018; Fri, 10 Nov 2023
+ 19:07:29 +0000
+From: David Binderman <dcb314@hotmail.com>
+To: "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
+	<mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org"
+	<namhyung@kernel.org>, "irogers@google.com" <irogers@google.com>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, "bpf@vger.kernel.org"
+	<bpf@vger.kernel.org>
+Subject: linux-6.6/tools/perf/util/bpf_map.c:50:8: style: Suspicious condition
+Thread-Topic: linux-6.6/tools/perf/util/bpf_map.c:50:8: style: Suspicious
+ condition
+Thread-Index: AQHaFAit7umFVzO0jEuo+/jUnZw6ew==
+Date: Fri, 10 Nov 2023 19:07:29 +0000
+Message-ID:
+ <AS8PR02MB102175ECBFEE1AD4D124C9DE69CAEA@AS8PR02MB10217.eurprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn: [c2ujlTM7bpwMdiPb8UMqMcHwwwN3HgL2]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR02MB10217:EE_|GV2PR02MB9424:EE_
+x-ms-office365-filtering-correlation-id: bddef1c6-2f45-422b-50ca-08dbe22048c9
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ S2Wqsh68HsYnKRGmgvhwVIRG7oL2nkUOl3FVFpiuwAW6EdSxYWV4njDP9ycKVFrpxvoo8VUBoeDOzw9mUkCpyfTRCmoPYYpQkemNXTmLXnOEQpo6wTGGwsY+C/pHwRzbQoThDax5Y90ySsHSRrnUCtnO8L+UPswWuE0REVe3AFIgYU5wRVBaPByUSEMKUvNx1IqFQ8RT/BGGpCX6FrgribBve9JUy4yv7asbFVnrhF4Zegf1Vs1wWCXhac6cXTjuyBZN9cHU4H9JT/EadfX5RSdUYPer+OScV59izDjdOa9sRR0S6N28JOgXYMdTt9rPyhNtbERlvrrZ/orLa80bj7GAGxucYOqGq8gkEjL1xL5XMm44owgjavxKYaMnX8p/I9blq79jy0ms8/LH79RcnoMg9/PdfJkQ45k9mxyhyUEDRsuFLp4m2XK1yqbwZyyYufGYZv+93hgG+HiBacB1unhtSUwojplxBMbuHgZzEFTHvSG38su8GDQtsIb+bl9J9+9AsGjVkwvmaNjg3+aMX/8w1xdwTPZP+ib+qYHFIExFJ54vYLs0rVIGxzUPdXS0
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?aG6NImPF3tYbNYsOMuYUIBvCao9JIUwHcBowUJDtMf6Ja74AXo2cGx7kjb?=
+ =?iso-8859-1?Q?SVR3U45V5En2OkVsXotoWW3Y4APNaJGErAvPiq6rignusUg61dOeIenWW8?=
+ =?iso-8859-1?Q?VgwkbUZWUvqoZwzKmALTe6qvvvYBzuQohl1HnTpTtnS+xkurX/Bs5othin?=
+ =?iso-8859-1?Q?k5RLaHOMlsy9DJLK2O1iCdg54qVuNei52JRYubqwvh5jM2SPL+DrfSCGGs?=
+ =?iso-8859-1?Q?94raEcBT5q1j6GkNot/75Frn2RHEiLJ6aNUensRIQcgTuVPZbRLjd6wjHK?=
+ =?iso-8859-1?Q?xknZ5kO1LFvJCypx8v+fis/6f7lqWW5Yfc8sWAzXHFGph+zkVtIjiJzj3S?=
+ =?iso-8859-1?Q?naf6TwHNY+4ZHnv3NXwqvv9NR0rILwoYy3YojfNM1yd02kSPPLl06jz/vd?=
+ =?iso-8859-1?Q?VPSRXV8JSDmrJz9unyLlcDKAo7xWkXGW2nJEuCA+6di/XHGo0YYW9uW3So?=
+ =?iso-8859-1?Q?kdgZSoFPCEeR+Z1dSDB1rl2K1QvleGBR1zbUowLXqmdohbdsiwvwqZNq2X?=
+ =?iso-8859-1?Q?J/jySGRgncLQzb3HrF1WeL5SHLUOskIQnAAJ9/6hN9d143YnNZbO6yZL1F?=
+ =?iso-8859-1?Q?GyOIPbn3WAoZz2KCNZkMzycIpi6AeMcY4Uyg2lJlypVmvhjUtSExgaG4lq?=
+ =?iso-8859-1?Q?O5KFSw/sSjTT0vF6ibBSxYzJ3DUcPuoHw5t6+ewhEFImj6/ruvBN3FKFCn?=
+ =?iso-8859-1?Q?qsntJnLFcJR8eHZ7yNz9bO2DDlVnYbuYDJ9DXkSDUk0V7byF/7lAZ9ggF2?=
+ =?iso-8859-1?Q?LxtU7DZ+nBtVDVpxGYA/XQYazTKEwaYBDYtPnkQ67UlEvmyVKT6O61GcRb?=
+ =?iso-8859-1?Q?bd94gsZWrlu011hdU5P+n57l7lCGan2CKqrv2YXR11QI7K/xZJ+Ec0i2EI?=
+ =?iso-8859-1?Q?+nHQATIiceXeyAjQ+nAZ9+/Jrdv/IXdFvmRKIwjcD7Hoc+B997QVaKh1wX?=
+ =?iso-8859-1?Q?W7JNUhVPAl5gLsG96qX1IE6QZeHl7Dgh31NMghk1zLUc9t5hZRwDd1gWlv?=
+ =?iso-8859-1?Q?agkSNhmRb/SwKUa5PTnhzXgWk4p5fCf6vZVnO8ZfUuOZj+1ozbN2DgcyzP?=
+ =?iso-8859-1?Q?Srz7WwBwkb9fE6gvkGTjT1HK/jxFomcLXkO/83lE2bNdbQazryK2CUyoWj?=
+ =?iso-8859-1?Q?MK9yfz3mExkKjjtFHO0PEjgBDhIRXYqwOtRbMQr3IYouTvSJ9LP+2xH7y/?=
+ =?iso-8859-1?Q?4G7fRCW2v9Xbalh92ebB8KclbS3HiGY6UuLOpbzaol4vHILI8ITqJZPx?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZU5TZiXMUZ4VLOO+@kernel.org>
-X-Url: http://acmel.wordpress.com
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-ab7de.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB10217.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: bddef1c6-2f45-422b-50ca-08dbe22048c9
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Nov 2023 19:07:29.0452
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR02MB9424
 
-Em Fri, Nov 10, 2023 at 12:59:34PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Nov 08, 2023 at 11:46:03AM +0100, Maksymilian Graczyk escreveu:
-> > Alongside sampling-based profiling, I run syscall profiling with a separate
-> > "perf record" instance attached to the same PID.
-
-> > When I debug the kernel using kgdb, I see more-or-less the following
-> > behaviour happening in the stack traversal loop in perf_callchain_user() in
-> > arch/x86/events/core.c for the same thread being profiled:
-
-> > 1. The first sample goes fine, the entire stack is traversed.
-> > 2. The second sample breaks at some point inside my program, with a page
-> > fault due to page not present.
-> > 3. The third sample breaks at another *earlier* point inside my program,
-> > with a page fault due to page not present.
-> > 4. The fourth sample breaks at another *later* point inside my program, with
-> > a page fault due to page not present.
- 
-> Namhyung, Jiri: ideas? I have to stop this analysis now, will continue later.
-
-Would https://lore.kernel.org/all/20220225234339.2386398-7-haoluo@google.com/
-this come into play, i.e. we would need to use a sleepable tp_btf (see
-below about __get_user(frame.next_frame...) page faulting) in
-tools/perf/util/bpf_skel/off_cpu.bpf.c, here:
-
-[acme@quaco perf-tools-next]$ grep tp_btf tools/perf/util/bpf_skel/off_cpu.bpf.c
-SEC("tp_btf/task_newtask")
-SEC("tp_btf/sched_switch")
-[acme@quaco perf-tools-next]$
-
-But Hao's patch (CCed here) doesn't seem to have made its way to
-tools/lib/bpf/, Hao, why this hasn't made into libbpf?
-
-+	SEC_DEF("tp_btf.s/",            TRACING, BPF_TRACE_RAW_TP, SEC_ATTACH_BTF | SEC_SLEEPABLE, attach_trace),
-
-- Arnaldo
-  
-> > The stack frame addresses do not change throughout profiling and all page
-> > faults happen at __get_user(frame.next_frame, &fp->next_frame). The
-> > behaviour above also occurs occasionally in a single-threaded variant of the
-> > code (without pthread at all) with a very high sampling frequency (tens of
-> > thousands Hz).
-
-> > This issue makes profiling results unreliable for my use case, as I usually
-> > profile multi-threaded applications with deep stacks with hundreds of
-> > entries (hence why my test program also produces a deep stack) and use flame
-> > graphs for later analysis.
-
-> > Could you help me diagnose the problem? For example, what may be the cause
-> > of my page faults? I also did tests (without debugging though) without
-> > syscall profiling and the "--off-cpu" flag, broken stacks still appeared.
-
-> > (I cannot use DWARF because it makes profiling too slow and perf.data size
-> > too large in my tests. I also want to avoid using
-> > non-portable/vendor-specific stack unwinding solutions like LBR, as we may
-> > need to run profiling on non-Intel CPUs.)
+Hello there,=0A=
+=0A=
+Static analyser cppcheck says:=0A=
+=0A=
+linux-6.6/tools/perf/util/bpf_map.c:50:8: style: Suspicious condition (assi=
+gnment + comparison); Clarify expression with parentheses. [clarifyConditio=
+n]=0A=
+=0A=
+Source code is=0A=
+=0A=
+    while ((err =3D bpf_map_get_next_key(fd, prev_key, key) =3D=3D 0)) {=0A=
+=0A=
+Suggest new code:=0A=
+=0A=
+    while ((err =3D bpf_map_get_next_key(fd, prev_key, key)) =3D=3D 0) {=0A=
+=0A=
+Regards=0A=
+=0A=
+David Binderman=0A=
+=0A=
