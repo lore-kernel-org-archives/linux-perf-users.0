@@ -1,183 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FEC1BDCA;
-	Fri, 10 Nov 2023 14:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upPWFizS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A12C433C7;
-	Fri, 10 Nov 2023 14:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699627723;
-	bh=67X2QpL1k/tzuflgDk/rSr/3uNaGV1pZVgtU3XFWA4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=upPWFizS8bmsYb2YUmDIIJC+3+Cce/6EagrzOPUGXQOM3ORz2nTdVJgMmjgee9QZL
-	 LfGRBULui93yS+XnhQeyFUNFM2ixafwUuVELbZ9psa/pFvo9elecGsfmXRnhDoHH94
-	 2f5Kqi1ocC6EN4l8DB0nuyk3OShzydO879mSP3/wpGuaH6QiTWhqOWYDdDDzXdwdwn
-	 nHAROc2H33LqUdhCOyAK85ErahEjLCF+J6F8WGG19hOH16t0ebIagboBhbLe8kwcsX
-	 d1/Gi8jEQ/FZBys6a0SV63OjMw0JWds2e20fhA1+jBNoAUUcA0veJKvoSMm96ozp3v
-	 ETI6pBGwNelsg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id E8A7540094; Fri, 10 Nov 2023 11:48:39 -0300 (-03)
-Date: Fri, 10 Nov 2023 11:48:39 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, irogers@google.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, Yonghong Song <yhs@fb.com>,
-	Fangrui Song <maskray@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v2 2/2] perf test: Add support for setting objdump binary
- via perf config
-Message-ID: <ZU5Cx4LTrB5q0sIG@kernel.org>
-References: <20231106151051.129440-1-james.clark@arm.com>
- <20231106151051.129440-3-james.clark@arm.com>
- <ZUv1TgveArYdvTsl@kernel.org>
- <2e0fb2d4-1410-6a7e-902d-8249a9ea523a@arm.com>
- <ZU0FaXoGf/HcLBlb@kernel.org>
- <da4e59bc-759e-4ccc-2c5b-b8acf7049847@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDA263B4
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 17:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8579C42C28;
+	Fri, 10 Nov 2023 09:02:03 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A977A106F;
+	Fri, 10 Nov 2023 09:02:47 -0800 (PST)
+Received: from [10.57.1.85] (unknown [10.57.1.85])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 957993F6C4;
+	Fri, 10 Nov 2023 09:02:01 -0800 (PST)
+Message-ID: <1c92865b-a9dd-5dc8-8bc4-383da79ff49b@arm.com>
+Date: Fri, 10 Nov 2023 17:01:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da4e59bc-759e-4ccc-2c5b-b8acf7049847@arm.com>
-X-Url: http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH 1/2] perf lock report: Restore aggregation by caller by
+ default
+Content-Language: en-GB
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ stable@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>
+References: <20231031120526.11502-1-nick.forrington@arm.com>
+ <20231031120526.11502-2-nick.forrington@arm.com>
+ <CAM9d7cgzbjqU4U9tpAkhme-mZPV-LScJietre=3b01kykG_fcg@mail.gmail.com>
+From: Nick Forrington <nick.forrington@arm.com>
+In-Reply-To: <CAM9d7cgzbjqU4U9tpAkhme-mZPV-LScJietre=3b01kykG_fcg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Em Fri, Nov 10, 2023 at 01:57:11PM +0000, James Clark escreveu:
-> 
-> 
-> On 09/11/2023 16:14, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Nov 09, 2023 at 10:26:34AM +0000, James Clark escreveu:
-> >>
-> >>
-> >> On 08/11/2023 20:53, Arnaldo Carvalho de Melo wrote:
-> >>> Em Mon, Nov 06, 2023 at 03:10:49PM +0000, James Clark escreveu:
-> >>>> Add a perf config variable that does the same thing as "perf test
-> >>>> --objdump <x>".
-> >>>>
-> >>>> Also update the man page.
-> >>>
-> >>> That is ok, if one wants to change objdump just for testing, as a
-> >>> followup improvement it may be interesting to allow that for the other
-> >>> tools that have --objdump as well as to add this as a global option,
-> >>> that affects all tools, no?
-> >>
-> >> For the tools they already all share annotate.objdump in the config. Do
-> >> you mean that the tests could share the same config instead?
-> > 
-> > Probably.
-> >  
-> >> Maybe I could have used annotate.objdump for the tests, but it was used
-> >> in a slightly different way, and I thought it would be easier for people
-> >> to find if it started with "test."
-> > 
-> > Well, we can have both, with "test." overriding "annotate."?
-> > 
-> 
-> Yeah overriding could work. IMO just one config value is probably enough
-> though, so we could change it to annotate.objdump in the tests too, and
-> remove the docs change. At least until someone has a usecase for a
-> separate config value for the tests and then add the overriding behavior.
-> 
-> I don't have any strong feelings about either way.
 
-We didn't publish any new version with test.objdump=, so please consider
-submitting a patch for perf-tools-next making annotate.objdump= be used
-in 'perf test' as well, update the documentation stating that this
-applies to 'perf test' as well.
+On 02/11/2023 05:55, Namhyung Kim wrote:
+> Hello,
+>
+> On Tue, Oct 31, 2023 at 5:05 AM Nick Forrington <nick.forrington@arm.com> wrote:
+>> This change restores the previous default behaviour for "perf lock
+>> report", making the current aggregate-by-address behaviour available via
+>> the new "--lock-addr" command line parameter.
+>>
+>> This makes the behaviour consistent with "perf lock contention" (which
+>> also aggregates by caller by default, or by address when "--lock-addr"
+>> is specified).
+> I understand your concern but actually there's a difference.
+> "perf lock contention" is a new command which works with new
+> contention tracepoints whereas "perf lock report" works with old
+> lockdep/lockstat tracepoints which are not available in the default
+> configuration.
+>
+> I made "perf lock contention" compatible to "perf lock report" so
+> it mimics the old tracepoints behavior as much as possible using
+> new tracepoints.  But the important difference is that new contention
+> tracepoints don't have lock names.  The old perf lock report showed
+> lock names by default but contention output had to use the caller
+> instead.
 
-- Arnaldo
- 
-> > Anyway, I applied this patch locally, now trying to fix some unrelated
-> > problem that is making 'perf test' fail so that I can push
-> > perf-tools-next publicly.
-> > 
-> > - Arnaldo
-> >  
-> >>>
-> >>> Anyway, applied both patches.
-> >>>
-> >>> - Arnaldo
-> >>>  
-> >>>> Signed-off-by: James Clark <james.clark@arm.com>
-> >>>> ---
-> >>>>  tools/perf/Documentation/perf-config.txt |  4 ++++
-> >>>>  tools/perf/tests/builtin-test.c          | 12 ++++++++++++
-> >>>>  2 files changed, 16 insertions(+)
-> >>>>
-> >>>> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-> >>>> index 0b4e79dbd3f6..16398babd1ef 100644
-> >>>> --- a/tools/perf/Documentation/perf-config.txt
-> >>>> +++ b/tools/perf/Documentation/perf-config.txt
-> >>>> @@ -722,6 +722,10 @@ session-<NAME>.*::
-> >>>>  		Defines new record session for daemon. The value is record's
-> >>>>  		command line without the 'record' keyword.
-> >>>>  
-> >>>> +test.*::
-> >>>> +
-> >>>> +	test.objdump::
-> >>>> +		objdump binary to use for disassembly and annotations.
-> >>>>  
-> >>>>  SEE ALSO
-> >>>>  --------
-> >>>> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> >>>> index a8d17dd50588..113e92119e1d 100644
-> >>>> --- a/tools/perf/tests/builtin-test.c
-> >>>> +++ b/tools/perf/tests/builtin-test.c
-> >>>> @@ -14,6 +14,7 @@
-> >>>>  #include <sys/wait.h>
-> >>>>  #include <sys/stat.h>
-> >>>>  #include "builtin.h"
-> >>>> +#include "config.h"
-> >>>>  #include "hist.h"
-> >>>>  #include "intlist.h"
-> >>>>  #include "tests.h"
-> >>>> @@ -514,6 +515,15 @@ static int run_workload(const char *work, int argc, const char **argv)
-> >>>>  	return -1;
-> >>>>  }
-> >>>>  
-> >>>> +static int perf_test__config(const char *var, const char *value,
-> >>>> +			     void *data __maybe_unused)
-> >>>> +{
-> >>>> +	if (!strcmp(var, "test.objdump"))
-> >>>> +		test_objdump_path = value;
-> >>>> +
-> >>>> +	return 0;
-> >>>> +}
-> >>>> +
-> >>>>  int cmd_test(int argc, const char **argv)
-> >>>>  {
-> >>>>  	const char *test_usage[] = {
-> >>>> @@ -541,6 +551,8 @@ int cmd_test(int argc, const char **argv)
-> >>>>          if (ret < 0)
-> >>>>                  return ret;
-> >>>>  
-> >>>> +	perf_config(perf_test__config, NULL);
-> >>>> +
-> >>>>  	/* Unbuffered output */
-> >>>>  	setvbuf(stdout, NULL, _IONBF, 0);
-> >>>>  
-> >>>> -- 
-> >>>> 2.34.1
-> >>>>
-> >>>
-> > 
-> 
+Thanks for the information.
 
--- 
 
-- Arnaldo
+It looks like "perf lock record" requests both tracepoint types.
+
+
+However, on the system I used the lockdep tracepoints were not available 
+- only lock:contention_begin/end.
+
+>
+>> Commit 688d2e8de231 ("perf lock contention: Add -l/--lock-addr option")
+>> introduced aggregation modes for "perf lock contention" and (potentially
+>> inadvertently) changed the behaviour of "perf lock report" from
+>> aggregate-by-caller to aggregate-by-address (making the prior behaviour
+>> inaccessible).
+> So it doesn't change the behavior of perf lock report.
+> You're adding a new (default) feature for perf lock report
+> to sort the output by caller.  And please note that caller
+> info needs callstacks.  perf lock record adds it by default
+> when it finds there are only lock contention tracepoints.
+> But if it really has the old tracepoints, caller won't work
+> unless you enabled callstack collection manually (-g).
+
+With the caveat that only lock:contention_begin/end were available in my 
+test, there does appear to be a difference in output for perf lock report.
+
+
+I arrived at 688d2e8de231 via git bisect. 688d2e8de231~ (eca949b2b4ad) 
+shows the aggregate-by-caller behaviour (seen below, and "restored" by 
+this patch).
+
+>
+>> Example aggregate-by-address output:
+>>
+>> $ perf lock report -F acquired
+> I guess you need -l option here.
+
+This was the default output before this patch (or output with the patch 
+and "-l"), I can clarify this if the patch goes ahead.
+
+>>                  Name   acquired
+>>
+>>           event_mutex         34
+>>                               21
+>>                                1
+> This is because you used contention tracepoints
+> and they don't have lock names.
+
+Yes, the lockdep tracepoints weren't available for my test, although on 
+the same machine, versions prior to 688d2e8de231 appear to show the 
+below output rather than the above.
+
+>
+>> Example aggregate-by-caller output:
+>>
+>> $ perf lock report -F acquired
+>>                  Name   acquired
+>>
+>>   perf_trace_init+...         34
+>>   lock_mm_and_find...         20
+>>   inherit_event.co...          1
+>>      do_madvise+0x1f8          1
+> Maybe it's ok to change the default behavior for contention
+> tracepoints.  But when lockdep tracepoints are available
+> it should use the existing addr (symbol) mode.
+>
+>> Cc: stable@kernel.org
+>> Fixes: 688d2e8de231 ("perf lock contention: Add -l/--lock-addr option")
+> So, I don't think this is a fix.
+>
+> Thanks,
+> Namhyung
+
+
+Thanks,
+Nick
+
+>
+>
+>> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+>> ---
+>>   tools/perf/Documentation/perf-lock.txt |  4 ++++
+>>   tools/perf/builtin-lock.c              | 24 +++++++++++++++++++++---
+>>   2 files changed, 25 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+>> index 503abcba1438..349333acbbfc 100644
+>> --- a/tools/perf/Documentation/perf-lock.txt
+>> +++ b/tools/perf/Documentation/perf-lock.txt
+>> @@ -80,6 +80,10 @@ REPORT OPTIONS
+>>   --combine-locks::
+>>          Merge lock instances in the same class (based on name).
+>>
+>> +-l::
+>> +--lock-addr::
+>> +       Show lock contention stat by address
+>> +
+>>   -t::
+>>   --threads::
+>>       The -t option is to show per-thread lock stat like below:
+>> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+>> index fa7419978353..3aa8ba5ad928 100644
+>> --- a/tools/perf/builtin-lock.c
+>> +++ b/tools/perf/builtin-lock.c
+>> @@ -78,7 +78,7 @@ struct callstack_filter {
+>>
+>>   static struct lock_filter filters;
+>>
+>> -static enum lock_aggr_mode aggr_mode = LOCK_AGGR_ADDR;
+>> +static enum lock_aggr_mode aggr_mode = LOCK_AGGR_CALLER;
+>>
+>>   static bool needs_callstack(void)
+>>   {
+>> @@ -1983,8 +1983,8 @@ static int __cmd_report(bool display_info)
+>>          if (select_key(false))
+>>                  goto out_delete;
+>>
+>> -       if (show_thread_stats)
+>> -               aggr_mode = LOCK_AGGR_TASK;
+>> +       aggr_mode = show_thread_stats ? LOCK_AGGR_TASK :
+>> +               show_lock_addrs ? LOCK_AGGR_ADDR : LOCK_AGGR_CALLER;
+>>
+>>          err = perf_session__process_events(session);
+>>          if (err)
+>> @@ -2008,6 +2008,19 @@ static void sighandler(int sig __maybe_unused)
+>>   {
+>>   }
+>>
+>> +static int check_lock_report_options(const struct option *options,
+>> +                                    const char * const *usage)
+>> +{
+>> +       if (show_thread_stats && show_lock_addrs) {
+>> +               pr_err("Cannot use thread and addr mode together\n");
+>> +               parse_options_usage(usage, options, "threads", 0);
+>> +               parse_options_usage(NULL, options, "lock-addr", 0);
+>> +               return -1;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>>   static int check_lock_contention_options(const struct option *options,
+>>                                           const char * const *usage)
+>>
+>> @@ -2589,6 +2602,7 @@ int cmd_lock(int argc, const char **argv)
+>>          /* TODO: type */
+>>          OPT_BOOLEAN('c', "combine-locks", &combine_locks,
+>>                      "combine locks in the same class"),
+>> +       OPT_BOOLEAN('l', "lock-addr", &show_lock_addrs, "show lock stats by address"),
+>>          OPT_BOOLEAN('t', "threads", &show_thread_stats,
+>>                      "show per-thread lock stats"),
+>>          OPT_INTEGER('E', "entries", &print_nr_entries, "display this many functions"),
+>> @@ -2680,6 +2694,10 @@ int cmd_lock(int argc, const char **argv)
+>>                          if (argc)
+>>                                  usage_with_options(report_usage, report_options);
+>>                  }
+>> +
+>> +               if (check_lock_report_options(report_options, report_usage) < 0)
+>> +                       return -1;
+>> +
+>>                  rc = __cmd_report(false);
+>>          } else if (!strcmp(argv[0], "script")) {
+>>                  /* Aliased to 'perf script' */
+>> --
+>> 2.42.0
+>>
