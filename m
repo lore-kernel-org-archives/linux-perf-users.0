@@ -1,69 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6F01803B
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 13:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W76exGFU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966ACC433C7;
-	Fri, 10 Nov 2023 13:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699623231;
-	bh=zeW97rNRPUdz+KuoHgAUP4bAl5sLNJZUkAnGoySTVis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W76exGFUQZVYHtt2nDGBJCNCpc4Bl8ZDBvZOidYVy1MW5SNiWLn1KsoCyEAF+4S6m
-	 NxuRfwRf4lkdtMEsAvz7sJF/8JXSgvCMt2HxRpCwOmYuM0/F+YAz7tmHckSbsj+Jf4
-	 gCgj6QxlI1m4vaV1lkzecaW0zUxdY7QoORGk4AVOF0OnoNmq/wnmfZxieDai6visH0
-	 cfcWfW64eNMb72KNpSKG6JY7PvItjBnWQCXBdYbiTrlsftY5gortmJxjE9zpRpGnc7
-	 A9qFezwplvd13muYNp+vTrxY9hRBH/R8thjrF8duvaptf++jvrlxMHCHAG98Hz8mvr
-	 a8D+Xywi2K9lw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 6ACBF40094; Fri, 10 Nov 2023 10:33:46 -0300 (-03)
-Date: Fri, 10 Nov 2023 10:33:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-	hca@linux.ibm.com
-Subject: Re: [PATCH v3] perf report: Add s390 raw data interpretation for PAI
- counters
-Message-ID: <ZU4xOmhlT5IQlI2O@kernel.org>
-References: <20231110110908.2312308-1-tmricht@linux.ibm.com>
- <ZU4d0G23WOKwpIwb@kernel.org>
- <6d5a8310-d3e4-4fa7-8103-b50b100e22f7@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DA119BD8
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 13:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9C7463822A;
+	Fri, 10 Nov 2023 05:57:29 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDAC312FC;
+	Fri, 10 Nov 2023 05:58:13 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D89E63F7C5;
+	Fri, 10 Nov 2023 05:57:23 -0800 (PST)
+Message-ID: <da4e59bc-759e-4ccc-2c5b-b8acf7049847@arm.com>
+Date: Fri, 10 Nov 2023 13:57:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6d5a8310-d3e4-4fa7-8103-b50b100e22f7@linux.ibm.com>
-X-Url: http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 2/2] perf test: Add support for setting objdump binary
+ via perf config
+Content-Language: en-US
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, irogers@google.com,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ Yonghong Song <yhs@fb.com>, Fangrui Song <maskray@google.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20231106151051.129440-1-james.clark@arm.com>
+ <20231106151051.129440-3-james.clark@arm.com> <ZUv1TgveArYdvTsl@kernel.org>
+ <2e0fb2d4-1410-6a7e-902d-8249a9ea523a@arm.com> <ZU0FaXoGf/HcLBlb@kernel.org>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <ZU0FaXoGf/HcLBlb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Em Fri, Nov 10, 2023 at 01:31:59PM +0100, Thomas Richter escreveu:
-> On 11/10/23 13:10, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Nov 10, 2023 at 12:09:08PM +0100, Thomas Richter escreveu:
-> >> commit 1bf54f32f525 ("s390/pai: Add support for cryptography counters")
-> > Where is this commit?
 
-> > ⬢[acme@toolbox perf-tools-next]$ git show 1bf54f32f525
-> > fatal: ambiguous argument '1bf54f32f525': unknown revision or path not in the working tree.
-> > Use '--' to separate paths from revisions, like this:
-> > 'git <command> [<revision>...] -- [<file>...]'
-> > ⬢[acme@toolbox perf-tools-next]$
 
-> > Looking using the description I get:
+On 09/11/2023 16:14, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Nov 09, 2023 at 10:26:34AM +0000, James Clark escreveu:
+>>
+>>
+>> On 08/11/2023 20:53, Arnaldo Carvalho de Melo wrote:
+>>> Em Mon, Nov 06, 2023 at 03:10:49PM +0000, James Clark escreveu:
+>>>> Add a perf config variable that does the same thing as "perf test
+>>>> --objdump <x>".
+>>>>
+>>>> Also update the man page.
+>>>
+>>> That is ok, if one wants to change objdump just for testing, as a
+>>> followup improvement it may be interesting to allow that for the other
+>>> tools that have --objdump as well as to add this as a global option,
+>>> that affects all tools, no?
+>>
+>> For the tools they already all share annotate.objdump in the config. Do
+>> you mean that the tests could share the same config instead?
+> 
+> Probably.
+>  
+>> Maybe I could have used annotate.objdump for the tests, but it was used
+>> in a slightly different way, and I thought it would be easier for people
+>> to find if it started with "test."
+> 
+> Well, we can have both, with "test." overriding "annotate."?
+> 
 
-> > 39d62336f5c126ad s390/pai: add support for cryptography counters
+Yeah overriding could work. IMO just one config value is probably enough
+though, so we could change it to annotate.objdump in the tests too, and
+remove the docs change. At least until someone has a usecase for a
+separate config value for the tests and then add the overriding behavior.
 
-> > Is this the one?
+I don't have any strong feelings about either way.
 
-> Yep, I apologise for the cut & paste error, this is the commit number in question.
-> Should I reset a corrected version?
-
-I can fix this up, thanks for confirming,
-
-- Arnaldo
+> Anyway, I applied this patch locally, now trying to fix some unrelated
+> problem that is making 'perf test' fail so that I can push
+> perf-tools-next publicly.
+> 
+> - Arnaldo
+>  
+>>>
+>>> Anyway, applied both patches.
+>>>
+>>> - Arnaldo
+>>>  
+>>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>>> ---
+>>>>  tools/perf/Documentation/perf-config.txt |  4 ++++
+>>>>  tools/perf/tests/builtin-test.c          | 12 ++++++++++++
+>>>>  2 files changed, 16 insertions(+)
+>>>>
+>>>> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+>>>> index 0b4e79dbd3f6..16398babd1ef 100644
+>>>> --- a/tools/perf/Documentation/perf-config.txt
+>>>> +++ b/tools/perf/Documentation/perf-config.txt
+>>>> @@ -722,6 +722,10 @@ session-<NAME>.*::
+>>>>  		Defines new record session for daemon. The value is record's
+>>>>  		command line without the 'record' keyword.
+>>>>  
+>>>> +test.*::
+>>>> +
+>>>> +	test.objdump::
+>>>> +		objdump binary to use for disassembly and annotations.
+>>>>  
+>>>>  SEE ALSO
+>>>>  --------
+>>>> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+>>>> index a8d17dd50588..113e92119e1d 100644
+>>>> --- a/tools/perf/tests/builtin-test.c
+>>>> +++ b/tools/perf/tests/builtin-test.c
+>>>> @@ -14,6 +14,7 @@
+>>>>  #include <sys/wait.h>
+>>>>  #include <sys/stat.h>
+>>>>  #include "builtin.h"
+>>>> +#include "config.h"
+>>>>  #include "hist.h"
+>>>>  #include "intlist.h"
+>>>>  #include "tests.h"
+>>>> @@ -514,6 +515,15 @@ static int run_workload(const char *work, int argc, const char **argv)
+>>>>  	return -1;
+>>>>  }
+>>>>  
+>>>> +static int perf_test__config(const char *var, const char *value,
+>>>> +			     void *data __maybe_unused)
+>>>> +{
+>>>> +	if (!strcmp(var, "test.objdump"))
+>>>> +		test_objdump_path = value;
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>>  int cmd_test(int argc, const char **argv)
+>>>>  {
+>>>>  	const char *test_usage[] = {
+>>>> @@ -541,6 +551,8 @@ int cmd_test(int argc, const char **argv)
+>>>>          if (ret < 0)
+>>>>                  return ret;
+>>>>  
+>>>> +	perf_config(perf_test__config, NULL);
+>>>> +
+>>>>  	/* Unbuffered output */
+>>>>  	setvbuf(stdout, NULL, _IONBF, 0);
+>>>>  
+>>>> -- 
+>>>> 2.34.1
+>>>>
+>>>
+> 
