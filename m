@@ -1,234 +1,210 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDA263B4
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 17:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8579C42C28;
-	Fri, 10 Nov 2023 09:02:03 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A977A106F;
-	Fri, 10 Nov 2023 09:02:47 -0800 (PST)
-Received: from [10.57.1.85] (unknown [10.57.1.85])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 957993F6C4;
-	Fri, 10 Nov 2023 09:02:01 -0800 (PST)
-Message-ID: <1c92865b-a9dd-5dc8-8bc4-383da79ff49b@arm.com>
-Date: Fri, 10 Nov 2023 17:01:50 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59421118
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Nov 2023 17:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHtbqTL8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A51C433C8;
+	Fri, 10 Nov 2023 17:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699637113;
+	bh=DfP9hjT8zX6yNC7H2p7TwjATDIvAvNBlfCKGJXMSaBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LHtbqTL8dvA+bay8SCRuBzo7HaI2OeGrcQ7M95Uj2znSH9jyFJ02rU0UXdZNRVrXM
+	 VljT6mcVRfHbQ4SroTPiqy81ZQ4WmLNxljHj9C2kE0vaJAjSx0D+1kiR598ZVjuqvk
+	 hqHkm1dl9pwsB0ygtpQ9Ga+Yk1j1/WeEgZpzkHydUs47Q0gxyJdu0pJsK2ae7qK77q
+	 4qtfrpuoSr4jFKDKS0u5J8xitTxWvmn+wbEppwEBElFFcuf69vbhDPIH6EXy9IoI6a
+	 jj9CepI82y91RzbsXF8Nm3hY7kKkB3lUoZFWM71mOvTqjOZDejAGauzfNw0GwS1LX1
+	 FppOMpV1Lsi4Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 1F5E640094; Fri, 10 Nov 2023 12:59:34 -0300 (-03)
+Date: Fri, 10 Nov 2023 12:59:34 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Maksymilian Graczyk <maksymilian.graczyk@cern.ch>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	syclops-project <syclops-project@cern.ch>,
+	Guilherme Amadio <guilherme.amadio@cern.ch>,
+	Stephan Hageboeck <stephan.hageboeck@cern.ch>
+Subject: Re: Broken stack traces with --call-graph=fp and a multi-threaded
+ app due to page faults?
+Message-ID: <ZU5TZiXMUZ4VLOO+@kernel.org>
+References: <de597d7c-848e-4a35-887a-4cdefa23ecd2@cern.ch>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH 1/2] perf lock report: Restore aggregation by caller by
- default
-Content-Language: en-GB
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- stable@kernel.org, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20231031120526.11502-1-nick.forrington@arm.com>
- <20231031120526.11502-2-nick.forrington@arm.com>
- <CAM9d7cgzbjqU4U9tpAkhme-mZPV-LScJietre=3b01kykG_fcg@mail.gmail.com>
-From: Nick Forrington <nick.forrington@arm.com>
-In-Reply-To: <CAM9d7cgzbjqU4U9tpAkhme-mZPV-LScJietre=3b01kykG_fcg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de597d7c-848e-4a35-887a-4cdefa23ecd2@cern.ch>
+X-Url: http://acmel.wordpress.com
+
+Em Wed, Nov 08, 2023 at 11:46:03AM +0100, Maksymilian Graczyk escreveu:
+> Hello all,
+ 
+> I have a problem with broken stack traces in perf when I profile a small
+> multi-threaded program in C producing deep (~1000 entries) stacks with "perf
+> record --call-graph=fp -e task-clock -F <any number> --off-cpu" attached to
+> the program's PID. The callchains seem to stop at "random" points throughout
+> my application, occasionally managing to reach the bottom (i.e. either
+> "start" or "clone3").
+
+> This is the machine configuration I use:
+> 
+> * Intel Xeon Silver 4216 @ 2.10 GHz, with two 16-core CPUs and
+> hyper-threading disabled
+> * 180 GB RAM, with no errors detected by Memtest86+ and no swap
+> * Gentoo with Linux 6.5.8 (installed from the Gentoo repo with
+> gentoo-sources and compiled using this config:
+> https://gist.github.com/maksgraczyk/1bce96841a5b2cb2a92f725635c04bf2)
+> * perf 6.6 with this quick patch of mine:
+> https://gist.github.com/maksgraczyk/ee1dd98dda79129a35f7fd3acffb35fd
 
 
-On 02/11/2023 05:55, Namhyung Kim wrote:
-> Hello,
->
-> On Tue, Oct 31, 2023 at 5:05 AM Nick Forrington <nick.forrington@arm.com> wrote:
->> This change restores the previous default behaviour for "perf lock
->> report", making the current aggregate-by-address behaviour available via
->> the new "--lock-addr" command line parameter.
->>
->> This makes the behaviour consistent with "perf lock contention" (which
->> also aggregates by caller by default, or by address when "--lock-addr"
->> is specified).
-> I understand your concern but actually there's a difference.
-> "perf lock contention" is a new command which works with new
-> contention tracepoints whereas "perf lock report" works with old
-> lockdep/lockstat tracepoints which are not available in the default
-> configuration.
->
-> I made "perf lock contention" compatible to "perf lock report" so
-> it mimics the old tracepoints behavior as much as possible using
-> new tracepoints.  But the important difference is that new contention
-> tracepoints don't have lock names.  The old perf lock report showed
-> lock names by default but contention output had to use the caller
-> instead.
+Ok, so the backtrace is being collected in the BPF skel (copying the
+patch here for convenience):
 
-Thanks for the information.
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index 01f70b8e705a8..cb2e4f335b0ad 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -16,7 +16,7 @@
 
+ #include "bpf_skel/off_cpu.skel.h"
 
-It looks like "perf lock record" requests both tracepoint types.
+-#define MAX_STACKS  32
++#define MAX_STACKS  1024
+ #define MAX_PROC  4096
+ /* we don't need actual timestamp, just want to put the samples at last */
+ #define OFF_CPU_TIMESTAMP  (~0ull << 32)
+@@ -33,7 +33,7 @@ struct off_cpu_key {
 
+ union off_cpu_data {
+ 	struct perf_event_header hdr;
+-	u64 array[1024 / sizeof(u64)];
++	u64 array[1024 / sizeof(u64) + (MAX_STACKS - 32)];
+ };
 
-However, on the system I used the lockdep tracepoints were not available 
-- only lock:contention_begin/end.
+ static int off_cpu_config(struct evlist *evlist)
+diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+index d877a0a9731f9..802c2389c400a 100644
+--- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
++++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+@@ -15,7 +15,7 @@
+ /* create a new thread */
+ #define CLONE_THREAD  0x10000
 
->
->> Commit 688d2e8de231 ("perf lock contention: Add -l/--lock-addr option")
->> introduced aggregation modes for "perf lock contention" and (potentially
->> inadvertently) changed the behaviour of "perf lock report" from
->> aggregate-by-caller to aggregate-by-address (making the prior behaviour
->> inaccessible).
-> So it doesn't change the behavior of perf lock report.
-> You're adding a new (default) feature for perf lock report
-> to sort the output by caller.  And please note that caller
-> info needs callstacks.  perf lock record adds it by default
-> when it finds there are only lock contention tracepoints.
-> But if it really has the old tracepoints, caller won't work
-> unless you enabled callstack collection manually (-g).
+-#define MAX_STACKS   32
++#define MAX_STACKS   1024
+ #define MAX_ENTRIES  102400
 
-With the caveat that only lock:contention_begin/end were available in my 
-test, there does appear to be a difference in output for perf lock report.
+ struct tstamp_data {
+--
+
+That changes the size of the 'stacks' BPF map that is then used in:
+
+        stack_id = bpf_get_stackid(ctx, &stacks,
+                                   BPF_F_FAST_STACK_CMP | BPF_F_USER_STACK);
 
 
-I arrived at 688d2e8de231 via git bisect. 688d2e8de231~ (eca949b2b4ad) 
-shows the aggregate-by-caller behaviour (seen below, and "restored" by 
-this patch).
+So, in the bpf_get_stackid implementation:
 
->
->> Example aggregate-by-address output:
->>
->> $ perf lock report -F acquired
-> I guess you need -l option here.
+BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+           u64, flags)
+{
+        u32 max_depth = map->value_size / stack_map_data_size(map);
+        u32 skip = flags & BPF_F_SKIP_FIELD_MASK;
+        bool user = flags & BPF_F_USER_STACK;
+        struct perf_callchain_entry *trace;
+        bool kernel = !user;
 
-This was the default output before this patch (or output with the patch 
-and "-l"), I can clarify this if the patch goes ahead.
+        if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+                               BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
+                return -EINVAL;
 
->>                  Name   acquired
->>
->>           event_mutex         34
->>                               21
->>                                1
-> This is because you used contention tracepoints
-> and they don't have lock names.
+        max_depth += skip;
+        if (max_depth > sysctl_perf_event_max_stack)
+                max_depth = sysctl_perf_event_max_stack;
 
-Yes, the lockdep tracepoints weren't available for my test, although on 
-the same machine, versions prior to 688d2e8de231 appear to show the 
-below output rather than the above.
+        trace = get_perf_callchain(regs, 0, kernel, user, max_depth,
+                                   false, false);
 
->
->> Example aggregate-by-caller output:
->>
->> $ perf lock report -F acquired
->>                  Name   acquired
->>
->>   perf_trace_init+...         34
->>   lock_mm_and_find...         20
->>   inherit_event.co...          1
->>      do_madvise+0x1f8          1
-> Maybe it's ok to change the default behavior for contention
-> tracepoints.  But when lockdep tracepoints are available
-> it should use the existing addr (symbol) mode.
->
->> Cc: stable@kernel.org
->> Fixes: 688d2e8de231 ("perf lock contention: Add -l/--lock-addr option")
-> So, I don't think this is a fix.
->
-> Thanks,
-> Namhyung
+        if (unlikely(!trace))
+                /* couldn't fetch the stack trace */
+                return -EFAULT;
 
+        return __bpf_get_stackid(map, trace, flags);
+}
 
-Thanks,
-Nick
+So it is capped by sysctl_perf_event_max_stack, that is:
 
->
->
->> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
->> ---
->>   tools/perf/Documentation/perf-lock.txt |  4 ++++
->>   tools/perf/builtin-lock.c              | 24 +++++++++++++++++++++---
->>   2 files changed, 25 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
->> index 503abcba1438..349333acbbfc 100644
->> --- a/tools/perf/Documentation/perf-lock.txt
->> +++ b/tools/perf/Documentation/perf-lock.txt
->> @@ -80,6 +80,10 @@ REPORT OPTIONS
->>   --combine-locks::
->>          Merge lock instances in the same class (based on name).
->>
->> +-l::
->> +--lock-addr::
->> +       Show lock contention stat by address
->> +
->>   -t::
->>   --threads::
->>       The -t option is to show per-thread lock stat like below:
->> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
->> index fa7419978353..3aa8ba5ad928 100644
->> --- a/tools/perf/builtin-lock.c
->> +++ b/tools/perf/builtin-lock.c
->> @@ -78,7 +78,7 @@ struct callstack_filter {
->>
->>   static struct lock_filter filters;
->>
->> -static enum lock_aggr_mode aggr_mode = LOCK_AGGR_ADDR;
->> +static enum lock_aggr_mode aggr_mode = LOCK_AGGR_CALLER;
->>
->>   static bool needs_callstack(void)
->>   {
->> @@ -1983,8 +1983,8 @@ static int __cmd_report(bool display_info)
->>          if (select_key(false))
->>                  goto out_delete;
->>
->> -       if (show_thread_stats)
->> -               aggr_mode = LOCK_AGGR_TASK;
->> +       aggr_mode = show_thread_stats ? LOCK_AGGR_TASK :
->> +               show_lock_addrs ? LOCK_AGGR_ADDR : LOCK_AGGR_CALLER;
->>
->>          err = perf_session__process_events(session);
->>          if (err)
->> @@ -2008,6 +2008,19 @@ static void sighandler(int sig __maybe_unused)
->>   {
->>   }
->>
->> +static int check_lock_report_options(const struct option *options,
->> +                                    const char * const *usage)
->> +{
->> +       if (show_thread_stats && show_lock_addrs) {
->> +               pr_err("Cannot use thread and addr mode together\n");
->> +               parse_options_usage(usage, options, "threads", 0);
->> +               parse_options_usage(NULL, options, "lock-addr", 0);
->> +               return -1;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->>   static int check_lock_contention_options(const struct option *options,
->>                                           const char * const *usage)
->>
->> @@ -2589,6 +2602,7 @@ int cmd_lock(int argc, const char **argv)
->>          /* TODO: type */
->>          OPT_BOOLEAN('c', "combine-locks", &combine_locks,
->>                      "combine locks in the same class"),
->> +       OPT_BOOLEAN('l', "lock-addr", &show_lock_addrs, "show lock stats by address"),
->>          OPT_BOOLEAN('t', "threads", &show_thread_stats,
->>                      "show per-thread lock stats"),
->>          OPT_INTEGER('E', "entries", &print_nr_entries, "display this many functions"),
->> @@ -2680,6 +2694,10 @@ int cmd_lock(int argc, const char **argv)
->>                          if (argc)
->>                                  usage_with_options(report_usage, report_options);
->>                  }
->> +
->> +               if (check_lock_report_options(report_options, report_usage) < 0)
->> +                       return -1;
->> +
->>                  rc = __cmd_report(false);
->>          } else if (!strcmp(argv[0], "script")) {
->>                  /* Aliased to 'perf script' */
->> --
->> 2.42.0
->>
+[root@quaco ~]# cat /proc/sys/kernel/perf_event_max_stack
+127
+[root@quaco ~]#
+
+Can you try after doing:
+
+[root@quaco ~]# echo 1024 > /proc/sys/kernel/perf_event_max_stack 
+[root@quaco ~]# cat /proc/sys/kernel/perf_event_max_stack 
+1024
+[root@quaco ~]#
+
+more comments below
+
+> * Everything is compiled with "-fno-omit-frame-pointer" and
+> "-mno-omit-leaf-frame-pointer" gcc flags
+> * kernel.perf_event_max_stack is set to 1024 and kernel.perf_event_paranoid
+> is set to -1
+> 
+> The code of the profiled program is at
+> https://gist.github.com/maksgraczyk/da2bc6d0be9d4e7d88f8bea45221a542 (the
+> higher the value of NUM_THREADS, the more likely the issue is to occur; you
+> may need to compile the code without compiler optimisations).
+> 
+> Alongside sampling-based profiling, I run syscall profiling with a separate
+> "perf record" instance attached to the same PID.
+> 
+> When I debug the kernel using kgdb, I see more-or-less the following
+> behaviour happening in the stack traversal loop in perf_callchain_user() in
+> arch/x86/events/core.c for the same thread being profiled:
+> 
+> 1. The first sample goes fine, the entire stack is traversed.
+> 2. The second sample breaks at some point inside my program, with a page
+> fault due to page not present.
+> 3. The third sample breaks at another *earlier* point inside my program,
+> with a page fault due to page not present.
+> 4. The fourth sample breaks at another *later* point inside my program, with
+> a page fault due to page not present.
+
+Namhyung, Jiri: ideas? I have to stop this analysis now, will continue later.
+ 
+> The stack frame addresses do not change throughout profiling and all page
+> faults happen at __get_user(frame.next_frame, &fp->next_frame). The
+> behaviour above also occurs occasionally in a single-threaded variant of the
+> code (without pthread at all) with a very high sampling frequency (tens of
+> thousands Hz).
+> 
+> This issue makes profiling results unreliable for my use case, as I usually
+> profile multi-threaded applications with deep stacks with hundreds of
+> entries (hence why my test program also produces a deep stack) and use flame
+> graphs for later analysis.
+> 
+> Could you help me diagnose the problem? For example, what may be the cause
+> of my page faults? I also did tests (without debugging though) without
+> syscall profiling and the "--off-cpu" flag, broken stacks still appeared.
+> 
+> (I cannot use DWARF because it makes profiling too slow and perf.data size
+> too large in my tests. I also want to avoid using
+> non-portable/vendor-specific stack unwinding solutions like LBR, as we may
+> need to run profiling on non-Intel CPUs.)
+> 
+> Best regards,
+> Maks Graczyk
+> 
+
+-- 
+
+- Arnaldo
