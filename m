@@ -1,68 +1,129 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3201610E7;
-	Sat, 11 Nov 2023 02:27:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C0563BA;
+	Sat, 11 Nov 2023 02:30:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B93BF44B3;
-	Fri, 10 Nov 2023 18:27:45 -0800 (PST)
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-28035cf6a30so2440833a91.3;
-        Fri, 10 Nov 2023 18:27:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699669665; x=1700274465;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g5Sg9zl2/Jzlb48PWJ9qHhhq1o2YXxnmZN1o79Ovm5g=;
-        b=Ed5Ef8RJfghbbpMlLhLhpthRfFVSCrBWQkTSS23PjirESoFAgiMp/apPkG3R6A3Ek7
-         BHS+y5xUm8aZ5dC9+R4zixEcYkcOgrF2LNEiG+bTV1iOES0WDOhCoXIJ9aNdeG9Yz45A
-         txTNH+4mT09ckfXDsA8WZaXQQiyAQDP2pTDw9wc8sXQr0DcJ9hkXi0Rv+Wjom0LV3F1D
-         v92QAJ5U5SgujX1kzxzcEx9BGvWL0WlwtgqdokwyToOL68+ndnZVHolCtgnGz7SNwVhX
-         sVVal8wb9YXOL3omOb52HAwJriHopMdrewEBmsCP0MPbgxYX1ZO85U5rdJ2CgoVx6yDG
-         CaTg==
-X-Gm-Message-State: AOJu0Yxf2df4WDY9QBZrY1jVGVe+U4+Xs3MVdkDjKIEZZo2VTERqLLt5
-	DgJ7XYQCIMCkXZKceaRG2Hq5of/yCl2r2yHZZZo=
-X-Google-Smtp-Source: AGHT+IFJT/GE7XsIKWeegpPDXB2vEidUCs6t3J32mEXwB2x6MYR6YO1B05VwyOchlDPl21bc/r73Baf/pNfKM3XLF78=
-X-Received: by 2002:a17:90b:4ad1:b0:27d:375a:e322 with SMTP id
- mh17-20020a17090b4ad100b0027d375ae322mr812696pjb.31.1699669664922; Fri, 10
- Nov 2023 18:27:44 -0800 (PST)
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E673C0E;
+	Fri, 10 Nov 2023 18:30:07 -0800 (PST)
+Received: from mail-wm1-f43.google.com ([209.85.128.43]) by mrelay.perfora.net
+ (mreueus002 [74.208.5.2]) with ESMTPSA (Nemesis) id 0LfCzm-1rlgwg1tn6-00olib;
+ Sat, 11 Nov 2023 03:30:06 +0100
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4084095722aso20433765e9.1;
+        Fri, 10 Nov 2023 18:30:05 -0800 (PST)
+X-Gm-Message-State: AOJu0YwPi7NGY0OOz6mOAjlfGLVPxQQDUFEDOzhwNrtQY04eyy55wxYN
+	1oAxLewDn/sJYLzYHp2CVqZHCmw+dCMWfegtvAA=
+X-Google-Smtp-Source: AGHT+IFTZVbn/LxCz9/JehXI3dYfDcmbPo3yVbrbvkP3/EdIblCAqeTep3MHXfr9+Hg3c6gD6E3OW1lwT2m1GpNBBp8=
+X-Received: by 2002:a5d:6d87:0:b0:32d:9d79:33a3 with SMTP id
+ l7-20020a5d6d87000000b0032d9d7933a3mr585788wrs.0.1699663375932; Fri, 10 Nov
+ 2023 16:42:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231110000012.3538610-1-namhyung@kernel.org> <ZU4cmwfQSK5wXbAD@kernel.org>
-In-Reply-To: <ZU4cmwfQSK5wXbAD@kernel.org>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 10 Nov 2023 18:27:33 -0800
-Message-ID: <CAM9d7ciqiKMXqah34vGL_qqwL8Pm8uaNTokYq+=VwbV5qdrBxQ@mail.gmail.com>
-Subject: Re: [RFC 00/52] perf tools: Introduce data type profiling (v2)
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Andi Kleen <ak@linux.intel.com>, 
-	linux-trace-devel@vger.kernel.org, linux-toolchains@vger.kernel.org, 
-	Ben Woodard <woodard@redhat.com>, Joe Mario <jmario@redhat.com>, 
-	Kees Cook <keescook@chromium.org>, David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Mark Wielaard <mark@klomp.org>, Jason Merrill <jason@redhat.com>
+References: <20231110235021.192796-1-linux@jordanrome.com> <CAEf4BzaWtOeTBb_+b7Td3NHaKjZU+OohuBJje_nvw9kd6xPA3g@mail.gmail.com>
+In-Reply-To: <CAEf4BzaWtOeTBb_+b7Td3NHaKjZU+OohuBJje_nvw9kd6xPA3g@mail.gmail.com>
+From: Jordan Rome <linux@jordanrome.com>
+Date: Fri, 10 Nov 2023 19:42:44 -0500
+X-Gmail-Original-Message-ID: <CA+QiOd4X_=rZ5s=XgxBrmSkoepJLFmN4p+3q-0ST9j1sj_BhPw@mail.gmail.com>
+Message-ID: <CA+QiOd4X_=rZ5s=XgxBrmSkoepJLFmN4p+3q-0ST9j1sj_BhPw@mail.gmail.com>
+Subject: Re: [PATCH perf] perf: get_perf_callchain return NULL for crosstask
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Kernel Team <kernel-team@fb.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Song Liu <songliubraving@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0n6amA8NZTNpZhW29M/yzbamQFj5jlSVby+Oy5oQkXivvS86r4a
+ iZWVDrR1irBQhcXpV5C79c0JVFfFo+gJ+Bt1VvkU/Ltrc74nByws7Mn7eGz7HEwn4+s6YZe
+ pPAFlWICAYQjdkSki8FSvzn+QGVgFNMfDX57mn4Himu7KMHCrN6VFNim2ecvgy1uI0/m41k
+ r0ulXGAx+fyS8e/XWrB2g==
+UI-OutboundReport: notjunk:1;M01:P0:vTKOcDoAyfw=;fS41sZOwunzghXyQH5vWwHD7qYP
+ gA52vyK00kfz96+Mxy+E+7KuxrTLyFG4ak8QZ1BSqEP3SvB6eLW1wUUW1+tUcjF8BNhy0Jciv
+ T+4kayvM9/c4cbSVy7VgrToMYA7Gra3ZIzuVZkEXB1Gal+XUS29fkrAM4Xtj1/knSmzjCS39J
+ SdySMAieWtzCnTBclEpkVN6fHyhpyGHztPDYrJQ6CN0lCfas+TUGNk2SQNyv05zQON2pCxPhH
+ gRdlM9lagmcZGlodwxbqeUxIa/v/M0oNcJVZzPS2UWU5wbMGa3hfLv0kKw0yGNjlv8XwcZOcl
+ s98fVfSMEJIXl7hOCQPa8WFBvVXRxejImVPAqQBnaPQDB7DrBujuNCUWHgl/e2tR9xXMMfcpB
+ 8Em0hQxPrw3FNrRjlXr2oNB02c0gtr2WmuQgp8qJNOow/vYwXw4j+MZ2m/x7hpSaxwuAA8iOn
+ sxhkJDBympm8L8QgIWajyJQU7bOofxlTpT7fGrM8zWQZnFys4K0udbb33EE+iOlpq4LGH5Exg
+ dPR8Gz0xG0TYjjvssMdFtidUv/nNuC4iAzPJ9dJZpbduRDe5Rf1yhgEDJ4YNz6M97nXNb1RhK
+ wcqcaUTTwDRN9Yesa89EkrrfEiv8X+SZweRFdFcxzbOH+hi6rNqsnXd/E90qZoC0aHNMTxLX7
+ vSagOODRUYh4QRne3MsnJVYB9yrlv2RK0iQxVVsBgenkN0rTZq/bZ6DArBoSQDmrnB13ZXfoW
+ hlreIlF+M/rbGtOd4hfjeMTWB1t3+WsX+m8xnBDahZjAyRz+cPWgVjK4Qo+2k/yezTr2q9tBy
+ C6rE7Utllaqpz4nUgA/e4xqgB9QyH9nzwvc48vDH3famjut5dhHJyuFg7le4e7D3K/CIOWgk0
+ sOfCo+ESp+YW3ww==
 
-On Fri, Nov 10, 2023 at 4:05=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, Nov 10, 2023 at 7:10=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> Em Thu, Nov 09, 2023 at 03:59:19PM -0800, Namhyung Kim escreveu:
-> > * Patch structure
+> On Fri, Nov 10, 2023 at 3:51=E2=80=AFPM Jordan Rome <linux@jordanrome.com=
+> wrote:
 > >
-> > The patch 1-5 are cleanups and a fix that can be applied separately.
+> > Return NULL instead of returning 1 incorrect frame, which
+> > currently happens when trying to walk the user stack for
+> > any task that isn't current. Returning NULL is a better
+> > indicator that this behavior is not supported.
+> >
+> > This issue was found using bpf_get_task_stack inside a BPF
+> > iterator ("iter/task"), which iterates over all tasks. The
+> > single address/frame in the buffer when getting user stacks
+> > for tasks that aren't current could not be symbolized (testing
+> > multiple symbolizers).
+> >
+> > Signed-off-by: Jordan Rome <linux@jordanrome.com>
+> > ---
+> >  kernel/events/callchain.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> > index 1273be84392c..430fa544fa80 100644
+> > --- a/kernel/events/callchain.c
+> > +++ b/kernel/events/callchain.c
+> > @@ -201,6 +201,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_n=
+r, bool kernel, bool user,
+> >         }
+> >
+> >         if (user) {
+> > +               if (crosstask)
+> > +                       return NULL;
 >
-> Applied so far 1-9, will continue later.
+> I think you need that goto exit_put here.
+>
 
-Great, thanks a lot!
-Namhyung
+Why is that? Wouldn't that be the same behavior that already exists?
+That being said we can probably move this check above get_callchain_entry
+and exit earlier.
+
+> > +
+> >                 if (!user_mode(regs)) {
+> >                         if  (current->mm)
+> >                                 regs =3D task_pt_regs(current);
+> > @@ -209,9 +212,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_n=
+r, bool kernel, bool user,
+> >                 }
+> >
+> >                 if (regs) {
+> > -                       if (crosstask)
+> > -                               goto exit_put;
+> > -
+> >                         if (add_mark)
+> >                                 perf_callchain_store_context(&ctx, PERF=
+_CONTEXT_USER);
+> >
+> > @@ -219,7 +219,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_n=
+r, bool kernel, bool user,
+> >                 }
+> >         }
+> >
+> > -exit_put:
+> >         put_callchain_entry(rctx);
+> >
+> >         return entry;
+> > --
+> > 2.39.3
+> >
