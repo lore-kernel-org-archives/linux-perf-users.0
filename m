@@ -1,104 +1,124 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADE83FB00;
-	Fri, 10 Nov 2023 23:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-X-Greylist: delayed 313 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Nov 2023 15:56:35 PST
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2AEA47BA;
-	Fri, 10 Nov 2023 15:56:35 -0800 (PST)
-Received: from localhost ([173.252.127.6]) by mrelay.perfora.net (mreueus003
- [74.208.5.2]) with ESMTPSA (Nemesis) id 0LtYx8-1rQjKW1h12-010xXD; Sat, 11 Nov
- 2023 00:51:04 +0100
-From: Jordan Rome <linux@jordanrome.com>
-To: linux-perf-users@vger.kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Kernel Team <kernel-team@fb.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Song Liu <songliubraving@fb.com>
-Subject: [PATCH perf] perf: get_perf_callchain return NULL for crosstask
-Date: Fri, 10 Nov 2023 15:50:21 -0800
-Message-Id: <20231110235021.192796-1-linux@jordanrome.com>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD81F372;
+	Sat, 11 Nov 2023 00:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXXQFP/s"
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EF73C39;
+	Fri, 10 Nov 2023 16:10:26 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-50797cf5b69so3508921e87.2;
+        Fri, 10 Nov 2023 16:10:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699661424; x=1700266224; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6iUpKnAP+GZy4RHyPvoIjHluSL+zR9tj4/HlA//4Cq4=;
+        b=GXXQFP/s3WGR54dXdTnEVD0pt/kBZ4y0TD5w8U4TNsH71/x2vBAP/nEE1t0FxAUoVl
+         bgT6U4A8wRnPEWUHiO24+j4hg+JBmU5H1W7jb40plv3jkPcl+TddZj7W9c/xphY+w767
+         3AfA5kPmBXl9m/nVMMoW4nBPXzlOrPagyczueFM0/U7PsFsSEPO8IeZwOZUUG9VOJTVa
+         mDc8OpQ1nqpdfklQfjQqxDt6fMIyfVuUfLjQ5b83HNRi55RLhQyM3UY9E9uZx+d0MC5a
+         EwkeuwPBVYLGvEDhkjgQ1bknDcF2uHZ35b3ZUHBaEstJkxjCBPCRVscfOrT3ACtINcTy
+         wYtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699661424; x=1700266224;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6iUpKnAP+GZy4RHyPvoIjHluSL+zR9tj4/HlA//4Cq4=;
+        b=pQBqbZupnSPzQzB41Jmt84o+6vCjp6agXliKdi/Ucx1SkomtMgxKOeq3nKr3wMNBWm
+         fuzj9OUpZOXGLOoCkadklnVOR6aDnooau74s3j+YtCKEda58y3igF2Yezve9oLtl4RW9
+         vMX96s7zm37Zi5GTKEXC36DLtmfZYApxXuWWK1A5wI2dx66rmAJnXK9r6HLqq0NfaMzv
+         qNNRJ2aSdD8ijmy6oCRNS4cCW7xfBGniamVxTk/ejurgkoQoeIVfDf/oBjbK3qyPz6Ec
+         okjEeHk3XzIbtLN3Pcl8Gql5XcadkwozWOtc+50X3INcK2hCm656QQkJqThQdgixQryi
+         7neQ==
+X-Gm-Message-State: AOJu0YxOTriXpYRtbVwc1zHKMv8EUCSESq+Bl2ohIlyaQkcUWiqsRW4F
+	2j7dWyf4GUMtMideYIluOMftoLy2fxb4ocsLDkj8RjZf
+X-Google-Smtp-Source: AGHT+IF9Xyu5EaFiMDd1Oslutv8xlJxIaeJXH+mNAkqjONZZZr5o/hUbRrq1b0RJmj4tXiznTsfqpiHOWq5kNhcWltY=
+X-Received: by 2002:ac2:5551:0:b0:509:2b80:f90c with SMTP id
+ l17-20020ac25551000000b005092b80f90cmr301025lfk.68.1699661424162; Fri, 10 Nov
+ 2023 16:10:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:a6BVsRL2QRpAGaOBDD1hPPv2MbJ4fjgivIhGK89IR6F1Es22JW5
- EjTfkYVl8kvZNLUGrRy5VhllM84wfApjuMhjhHU9ILgscjvmbFkwp6n0WWlEHZyEFsWuTKk
- uDb7MDVHxR7uBtqx4IfUjTkgKBWAGdgu0eYQtRMRhhoOFEGfbEtp2/Ep0Qo48svwQ0qqpN2
- g868W0KIFAKc6YEDAW6Sw==
-UI-OutboundReport: notjunk:1;M01:P0:/ES/WiAn14I=;UDkRPJ6QSK0f/ugHCl3Fxb640kB
- Ko1MpqQFSQrQH+1JMsU5rD9By19oUarED4fhbpGfhRGJNp+b5F/b5KbxHVPdF4Ru2IKMVOx0+
- ayGM25/ztCbgn0YVMk7V3FqIZh1xvPUa4dF/ZrFIVUg5HhK3wTM5/gPpnICeXGdl5aHt9ka+b
- GvnZcHih62dDioJ+y3qNiI8y6/e6OnhEmUhRgJTXoUZHx18BeeVqkp90bZfmjfsIjGekvE89O
- wOhbMuKn+lZQP+MMwcZsMUd8ikjGOe1mlcLOEJEn07xKQRctaMDXkbu6WL4jA6F/3XAZakLTM
- fU/qT/mbQLXuRjPfBVRTZXWBQvx3VL6Dv6C/jLKVnLL5wy1HkC3rowE0G02pIsukaLWv+QfAk
- 8eG6mWicO+vTpkjNfSyoA1y/nap20dX8R10rZ/xZkjlKKw01B5H7Ct6VRxz01/DJIX084/GVj
- VpKaxx/JKioGeCySB9MYs06+dzYfCwbqX1CgTIF50qWL3E/0vcNpAdRsZeqAFI45X5sZcPY8N
- J12poUZv6YosamRWCT1542GlyCNfdmRJAAPUgVPWEEmsnLxXV3w0pEufYYnmYQ2QF02yTio02
- SXkiyLae08ZUX1lBoQA0W0fYC9Xs3QyFczN9Fo/F2clpzmgfPsWXxNQMkmhu2axXG70+MxsTW
- G6Ae3uTt/5gAw9muWauTU9TEsRuKHdVHZS9EkN5OMgsn3uY+ra2F7oA2LH3XTHyqExwj57ZCg
- 7GJNJ1WHT8wDfUqOMQrwbmg03iI9m6XntrAsNaU7Dtxzy8oZyoLjhLkkI7QGqQuEMrGkqJQ9x
- 6HForIw+ibAA+EueskYQosMv6xxtCtACmyvkbqeS8Qji99dkqlCQauqF6gSU3oaL6wZbRe8mD
- 4RGZmyl9MB1+zYw==
+References: <20231110235021.192796-1-linux@jordanrome.com>
+In-Reply-To: <20231110235021.192796-1-linux@jordanrome.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 10 Nov 2023 16:10:13 -0800
+Message-ID: <CAEf4BzaWtOeTBb_+b7Td3NHaKjZU+OohuBJje_nvw9kd6xPA3g@mail.gmail.com>
+Subject: Re: [PATCH perf] perf: get_perf_callchain return NULL for crosstask
+To: Jordan Rome <linux@jordanrome.com>
+Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Kernel Team <kernel-team@fb.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Song Liu <songliubraving@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Return NULL instead of returning 1 incorrect frame, which
-currently happens when trying to walk the user stack for
-any task that isn't current. Returning NULL is a better
-indicator that this behavior is not supported.
+On Fri, Nov 10, 2023 at 3:51=E2=80=AFPM Jordan Rome <linux@jordanrome.com> =
+wrote:
+>
+> Return NULL instead of returning 1 incorrect frame, which
+> currently happens when trying to walk the user stack for
+> any task that isn't current. Returning NULL is a better
+> indicator that this behavior is not supported.
+>
+> This issue was found using bpf_get_task_stack inside a BPF
+> iterator ("iter/task"), which iterates over all tasks. The
+> single address/frame in the buffer when getting user stacks
+> for tasks that aren't current could not be symbolized (testing
+> multiple symbolizers).
+>
+> Signed-off-by: Jordan Rome <linux@jordanrome.com>
+> ---
+>  kernel/events/callchain.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> index 1273be84392c..430fa544fa80 100644
+> --- a/kernel/events/callchain.c
+> +++ b/kernel/events/callchain.c
+> @@ -201,6 +201,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr,=
+ bool kernel, bool user,
+>         }
+>
+>         if (user) {
+> +               if (crosstask)
+> +                       return NULL;
 
-This issue was found using bpf_get_task_stack inside a BPF
-iterator ("iter/task"), which iterates over all tasks. The
-single address/frame in the buffer when getting user stacks
-for tasks that aren't current could not be symbolized (testing
-multiple symbolizers).
+I think you need that goto exit_put here.
 
-Signed-off-by: Jordan Rome <linux@jordanrome.com>
----
- kernel/events/callchain.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 1273be84392c..430fa544fa80 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -201,6 +201,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 	}
- 
- 	if (user) {
-+		if (crosstask)
-+			return NULL;
-+
- 		if (!user_mode(regs)) {
- 			if  (current->mm)
- 				regs = task_pt_regs(current);
-@@ -209,9 +212,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 		}
- 
- 		if (regs) {
--			if (crosstask)
--				goto exit_put;
--
- 			if (add_mark)
- 				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
- 
-@@ -219,7 +219,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 		}
- 	}
- 
--exit_put:
- 	put_callchain_entry(rctx);
- 
- 	return entry;
--- 
-2.39.3
-
+> +
+>                 if (!user_mode(regs)) {
+>                         if  (current->mm)
+>                                 regs =3D task_pt_regs(current);
+> @@ -209,9 +212,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr,=
+ bool kernel, bool user,
+>                 }
+>
+>                 if (regs) {
+> -                       if (crosstask)
+> -                               goto exit_put;
+> -
+>                         if (add_mark)
+>                                 perf_callchain_store_context(&ctx, PERF_C=
+ONTEXT_USER);
+>
+> @@ -219,7 +219,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr,=
+ bool kernel, bool user,
+>                 }
+>         }
+>
+> -exit_put:
+>         put_callchain_entry(rctx);
+>
+>         return entry;
+> --
+> 2.39.3
+>
