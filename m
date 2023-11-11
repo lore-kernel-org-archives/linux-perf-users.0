@@ -1,322 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAB012B70
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Nov 2023 12:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5632F14AA3
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Nov 2023 13:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4SuLcF4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4064C433C7;
-	Sat, 11 Nov 2023 12:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699704660;
-	bh=yPCWcBAfG/u6d4A2IxQav/QG52PrTiH0rCXIFF7fnwo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n4SuLcF4G96RgHmy7+4Jq4HBt+G8NxoEdOIRGuSf+2JzCR1kVdyIK4M+twtX6PGt0
-	 U1bnkmvS1bQW2aNomw2+4f+0BTX/Oj99ncE8b4v9XW7naFOQjBLe9VbSYsmg4C4aj/
-	 n0K7k16rzOPzd9+SQu2NFndEGd7TWH9Zqy+5WkCqrkxYpM+ouZotUI1fj6Jwfd72cc
-	 NRHHhUWYgk7lTdngMYIBYfX29ti0+GfzcW/QQvpYeA4qHpiDdG/KG8yq0wMg5fKQTI
-	 ztRnVR6D6S2IrzyOo3gKcT1WTbxM4tvALgfMPo++H20XJGoM4sYK5nepUIKy8JqtCK
-	 W0yxBGG7wxwgQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id F276F40094; Sat, 11 Nov 2023 09:10:56 -0300 (-03)
-Date: Sat, 11 Nov 2023 09:10:56 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-	hca@linux.ibm.com
-Subject: Re: [PATCH v3] perf report: Add s390 raw data interpretation for PAI
- counters
-Message-ID: <ZU9vUEzF4opW5Gb/@kernel.org>
-References: <20231110110908.2312308-1-tmricht@linux.ibm.com>
- <ZU4d0G23WOKwpIwb@kernel.org>
+	dkim=pass (1024-bit key) header.d=cern.ch header.i=@cern.ch header.b="bms7kDXu";
+	dkim=pass (1024-bit key) header.d=cern.ch header.i=@cern.ch header.b="bms7kDXu"
+Received: from CHE01-GV0-obe.outbound.protection.outlook.com (mail-gv0che01on2043.outbound.protection.outlook.com [40.107.23.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F0B3868
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Nov 2023 05:38:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mHRDFiw5ht1P1v0WIgDnTiN5oFI8SXW1dJ1aADA2jFnC5bRLLsNIJNnWHTkmKSiJHsT3DW2+rAfUz2n/oNxlyJCNkZQ9fRNjrUgUxygAWFFCpSXyiM1cwv6+WpyvaRXvsAfyJd8yRR8LZ+w4SpS3LcWIW0QhLs1D7AxB5RLuE083YTWFSEJZrLg5UqdmgoijA0sRtneW8CNssRG0zYlHyEw26L/w7UcDXZqOWwGkCnpVhObGIfJeLlYyPUhyWE6YqJPLUkVae1hoPyRjkiC0GVg3GrnkhJrFnCcGXtUygiDtMRjT+umBIPU8Qyi4jiF7BVrHMlxECY1GQ0fWHF3ndw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gy6v1NIbz/7KCUE3RMV5lOh5JFkRU15AYOvytFFWcHs=;
+ b=cWHmXn5BfcXRML9fKI+3vRk17IfYO9VrPb5JchbfbYwhbPJLfsxVf6t5++ubYID4y+5aBMEZ+lg4VBJ2sdpsoqQpeeRl1xoTHjHsrK6YCa4PCd7nJHqWLUcoChcYVFslvO7NvjM6a9VIvg5930KVM4nsL6hMXJmvYIJg5Z9Dz1YwCXPy7xublhFgLT5gvhI5+jnCgC0KxF7SGf1JatncfbiBTTgXVwWOQo+pxhfiugjR8o7VSIiJ4Yv32V0sE3EOaxgiMGtUjxRJp95DBHNf6eP/njPTCTzOOa07gR2WCwF8af0YQqpytO+iv+Mo7x7XhBa2DBn0YzaBuh6iMvAuiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 51.103.219.121) smtp.rcpttodomain=gmail.com smtp.mailfrom=cern.ch; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=cern.ch; dkim=pass
+ (signature was verified) header.d=cern.ch; arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.ch; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gy6v1NIbz/7KCUE3RMV5lOh5JFkRU15AYOvytFFWcHs=;
+ b=bms7kDXu281v2pHIaGBKHqgtz7pKwMl6w4qwiqDrQYM3QDXoTAkLKMl/49Dpw0ogzxBinnztu/JG+0r9p/+Mdxj3qgvIHdHXZkk0/jBS83n/IgB12+WIfhlk1S/rw1yQ8OE1hJ6Lbu9wEldUEpmZsaenkKkv2APSKu6y2YSXrCk=
+Received: from AM6P193CA0096.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:88::37)
+ by GV0P278MB0065.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:27::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.26; Sat, 11 Nov
+ 2023 13:37:57 +0000
+Received: from AMS1EPF00000044.eurprd04.prod.outlook.com
+ (2603:10a6:209:88:cafe::21) by AM6P193CA0096.outlook.office365.com
+ (2603:10a6:209:88::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.19 via Frontend
+ Transport; Sat, 11 Nov 2023 13:37:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 51.103.219.121)
+ smtp.mailfrom=cern.ch; dkim=pass (signature was verified)
+ header.d=cern.ch;dmarc=pass action=none header.from=cern.ch;
+Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
+ 51.103.219.121 as permitted sender) receiver=protection.outlook.com;
+ client-ip=51.103.219.121; helo=mx1.crn.activeguard.cloud; pr=C
+Received: from mx1.crn.activeguard.cloud (51.103.219.121) by
+ AMS1EPF00000044.mail.protection.outlook.com (10.167.16.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7002.14 via Frontend Transport; Sat, 11 Nov 2023 13:37:57 +0000
+Received: from xguard (ag_core.activeguard.xor [172.18.0.4])
+	by mx1.crn.activeguard.cloud (Postfix) with ESMTP id 1CC70FC293;
+	Sat, 11 Nov 2023 14:37:57 +0100 (CET)
+Received: from CHE01-GV0-obe.outbound.protection.outlook.com (mail-gv0che01lp2040.outbound.protection.outlook.com [104.47.22.40])
+	by mx1.crn.activeguard.cloud (Postfix) with ESMTPS id 139E9FC20B;
+	Sat, 11 Nov 2023 14:37:56 +0100 (CET)
+Authentication-Results-Original: auth.opendkim.xorlab.com;	dkim=pass (1024-bit
+ key; unprotected) header.d=cern.ch header.i=@cern.ch header.a=rsa-sha256
+ header.s=selector1 header.b=bms7kDXu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.ch; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gy6v1NIbz/7KCUE3RMV5lOh5JFkRU15AYOvytFFWcHs=;
+ b=bms7kDXu281v2pHIaGBKHqgtz7pKwMl6w4qwiqDrQYM3QDXoTAkLKMl/49Dpw0ogzxBinnztu/JG+0r9p/+Mdxj3qgvIHdHXZkk0/jBS83n/IgB12+WIfhlk1S/rw1yQ8OE1hJ6Lbu9wEldUEpmZsaenkKkv2APSKu6y2YSXrCk=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cern.ch;
+Received: from ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:56::11)
+ by ZRAP278MB0029.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:13::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.26; Sat, 11 Nov
+ 2023 13:37:55 +0000
+Received: from ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::d9d4:3fda:5220:b62e]) by ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::d9d4:3fda:5220:b62e%7]) with mapi id 15.20.6977.019; Sat, 11 Nov 2023
+ 13:37:55 +0000
+Message-ID: <ed21730f-7fdb-4c1c-a66a-ffbcd5c215c1@cern.ch>
+Date: Sat, 11 Nov 2023 14:37:53 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: long BPF stack traces Re: Broken stack traces with
+ --call-graph=fp and a multi-threaded app due to page faults?
+Content-Language: en-GB
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ linux-perf-users@vger.kernel.org, syclops-project <syclops-project@cern.ch>,
+ Guilherme Amadio <guilherme.amadio@cern.ch>,
+ Stephan Hageboeck <stephan.hageboeck@cern.ch>
+References: <de597d7c-848e-4a35-887a-4cdefa23ecd2@cern.ch>
+ <ZU5TZiXMUZ4VLOO+@kernel.org> <ZU5rHB4DCiBqlKtC@kernel.org>
+ <CAM9d7cjRBWnFoSkR+Gu8fN_0G6PDLMHRq3rim_Aksdwh8tWBmQ@mail.gmail.com>
+From: Maksymilian Graczyk <maksymilian.graczyk@cern.ch>
+In-Reply-To: <CAM9d7cjRBWnFoSkR+Gu8fN_0G6PDLMHRq3rim_Aksdwh8tWBmQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AS4P251CA0026.EURP251.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d3::15) To ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:56::11)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZU4d0G23WOKwpIwb@kernel.org>
-X-Url: http://acmel.wordpress.com
+X-MS-TrafficTypeDiagnostic:
+	ZR0P278MB1123:EE_|ZRAP278MB0029:EE_|AMS1EPF00000044:EE_|GV0P278MB0065:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd502023-f22a-4db2-3e97-08dbe2bb6a5c
+X-LD-Processed: c80d3499-4a40-4a8c-986e-abce017d6b19,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Message-Info-Original:
+ QB3sjvuGqewGPXPkNd91+ksSZxE0CFMqPUnsS0E5w9fjfwMaPqNK2okv576l6UFsPq498mYU30LHxGw83Zx06lIw9aFGmyvxRsLUj6T1ejki6dAsQxXVWKmCl6K/WxcSOXxi3f1a26iFMqsXFqEdY9YRONh2zXBFENiL7l95IrprUzcYYMguJi3IvRH6LOgQOmtebv1BnPELOgaqqT4ScZDexXN8/R8u3u0JVdHFbEEi+vy6NUoPqVC8SrnEonKEehprf33hB11BPmHszv8prreEVeuA0rursHwVwHtAsR7Sjbw/DQga0bIGUkf/4mFFLnphXaGBmHl8HYiqZ12Emg/6V3TRquz6eRg88UT7FonPLlPzHcZuJO6RI9x1GG72O8LotJ6rTj3hksDOXV/rvt2GzYfOa12m7/0pfvpVCuDLU4hCeyZZpTvR3v1Z5GTXpi8vedmx/l7a9f4A5vtL7O6G9LlCP+WCjhPBKNtmm9tAc4S6TZB5PUWt9bb/AiqCB3u/maSyCxlwgeEDL22s5WOcDlLOhRQJA9ncwQTM1ls5QbYew/hESBnugxxEgyvwg7OrLCRoN8kzihg2hJNvFtmdwMPgDiO575l+dzDQl3zOwbROiuzn0d1fsiyFbSdQs7iH5C5CetN1AMVJKXNv6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZRAP278MB0029
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AMS1EPF00000044.eurprd04.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	a713800e-0e43-482c-4faf-08dbe2bb68d4
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	GHPQQAQtWXzPnRSoZZj9cy9G6a0g2O8PkGjCtcrmKqahhgbNeKpffAowH5FRx3eVIGQa2B8ykc7n6gCEPFh57wFpH5nCHja7fAX8i/7ZfMahVNRubaGtzEGU52lgeRgzbUep3v5i/zmeYEIhcTkOdXJb28z82gpZ7z8vzcRCfVK66nZOztpDcOpujMbCi9czudc4nMyX7zSHpLGTdzPH6ggIKHKlWGJ7kU6N/LLi5xrQypREsjFVvqOZPoPSiPUnVA2JdSt7JUenntm/EbDmceMSNpZzCQpGcJi1nSNQFvqNxE+DZej0XmfaJkq4JWbOnkKySyDJK86Sn3LJKqA4b+vbPfGqfm8mJeLS5xJSfq4P0PqvPEqFN5An0ySmWks6qzWTWv5kPQKQzymfN+oo+GdB9I2zG1jB3psoPFwNJesdnM7vqZ6KLiHVIQ4+mlH02bsT/+n3c4yXUTdpfJNWfZTLDv8G8ms9AzvHegqDx0g7x4U5otfoTX+dtLokYxz8lGvZO4iueopasemj7208QWalANNYrsnMvamZoogRXASOlQuSOrDriU+N2hjRUnHzEY83oQy1CrRjBUUwyzwpTfbkZtZVqK8+7gTiNkWJ/Mq3KeETLky4Y1ygIl3ChATM2S3nt1Uuq2dL1+2OGQHFzd0p8d5oCA+KI5HXPP9IHWlBMcQE01ZUEUq1Pn53Cp++L1VmROu1UliXnjt4PhfYW8UwHnlBRj7cPRbnzO+iDr1xTdbculbetJiw9rEvI2ltvF5mpYB7AMN9FvpKcNvbtBmzMRG3RcfeI0ntDpHJd/BiJB4J/0gErYobF07uuhz3
+X-Forefront-Antispam-Report:
+	CIP:51.103.219.121;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mx1.crn.activeguard.cloud;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(376002)(39860400002)(396003)(230922051799003)(8000799017)(451199024)(1800799009)(186009)(82310400011)(64100799003)(36840700001)(40470700004)(46966006)(40460700003)(336012)(107886003)(26005)(6506007)(2616005)(6512007)(36860700001)(83380400001)(47076005)(44832011)(5660300002)(4326008)(8936002)(8676002)(41300700001)(2906002)(966005)(6486002)(478600001)(316002)(786003)(110136005)(54906003)(70206006)(70586007)(31696002)(86362001)(36756003)(356005)(81166007)(82740400003)(31686004)(40480700001)(66899024)(36900700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cern.ch
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2023 13:37:57.3467
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd502023-f22a-4db2-3e97-08dbe2bb6a5c
+X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[51.103.219.121];Helo=[mx1.crn.activeguard.cloud]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS1EPF00000044.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0065
 
-Em Fri, Nov 10, 2023 at 09:10:56AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Nov 10, 2023 at 12:09:08PM +0100, Thomas Richter escreveu:
-> > commit 1bf54f32f525 ("s390/pai: Add support for cryptography counters")
-> 
-> Where is this commit?
-> 
-> ⬢[acme@toolbox perf-tools-next]$ git remote update torvalds
-> Fetching torvalds
-> remote: Enumerating objects: 25591, done.
-> remote: Counting objects: 100% (12820/12820), done.
-> remote: Compressing objects: 100% (2379/2379), done.
-> remote: Total 9481 (delta 8254), reused 8289 (delta 7086), pack-reused 0
-> Receiving objects: 100% (9481/9481), 1.76 MiB | 2.89 MiB/s, done.
-> Resolving deltas: 100% (8254/8254), completed with 1792 local objects.
-> From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
->    d2f51b3516dade79..89cdf9d556016a54  master     -> torvalds/master
-> ⬢[acme@toolbox perf-tools-next]$ git show 1bf54f32f525
-> fatal: ambiguous argument '1bf54f32f525': unknown revision or path not in the working tree.
-> Use '--' to separate paths from revisions, like this:
-> 'git <command> [<revision>...] -- [<file>...]'
-> ⬢[acme@toolbox perf-tools-next]$
-> 
-> Looking using the description I get:
-> 
-> 39d62336f5c126ad s390/pai: add support for cryptography counters
-> 
-> Is this the one?
-> 
-> - Arnaldo
-> 
-> > added support for Processor Activity Instrumentation Facility (PAI)
-> > counters.  These counters values are added as raw data with the perf
-> > sample during perf record.
-> > Now add support to display these counters in perf report command.
-> > The counter number, its assigned name and value is now printed in
-> > addition to the hexadecimal output.
-> > 
-> > Output before:
-> >  # perf report -D
-> > 
-> >  6 514766399626050 0x7b058 [0x48]: PERF_RECORD_SAMPLE(IP, 0x1):
-> > 				303977/303977: 0 period: 1 addr: 0
-> >  ... thread: paitest:303977
-> >  ...... dso: <not found>
-> > 
-> >  0x7b0a0@/root/perf.data.paicrypto [0x48]: event: 9
-> >  .
-> >  . ... raw event: size 72 bytes
-> >  . 0000:  00 00 00 09 00 01 00 48 00 00 00 00 00 00 00 00  .......H........
-> >  . 0010:  00 04 a3 69 00 04 a3 69 00 01 d4 2d 76 de a0 bb  ...i...i...-v...
-> >  . 0020:  00 00 00 00 00 01 5c 53 00 00 00 06 00 00 00 00  ......\S........
-> >  . 0030:  00 00 00 00 00 00 00 01 00 00 00 0c 00 07 00 00  ................
-> >  . 0040:  00 00 00 53 96 af 00 00                          ...S....
-> > 
-> > Output after:
-> >  # perf report -D
-> > 
-> >  6 514766399626050 0x7b058 [0x48]: PERF_RECORD_SAMPLE(IP, 0x1):
-> > 				303977/303977: 0 period: 1 addr: 0
-> >  ... thread: paitest:303977
-> >  ...... dso: <not found>
-> > 
-> >  0x7b0a0@/root/perf.data.paicrypto [0x48]: event: 9
-> >  .
-> >  . ... raw event: size 72 bytes
-> >  . 0000:  00 00 00 09 00 01 00 48 00 00 00 00 00 00 00 00  .......H........
-> >  . 0010:  00 04 a3 69 00 04 a3 69 00 01 d4 2d 76 de a0 bb  ...i...i...-v...
-> >  . 0020:  00 00 00 00 00 01 5c 53 00 00 00 06 00 00 00 00  ......\S........
-> >  . 0030:  00 00 00 00 00 00 00 01 00 00 00 0c 00 07 00 00  ................
-> >  . 0040:  00 00 00 53 96 af 00 00                          ...S....
-> > 
-> >         Counter:007 km_aes_128 Value:0x00000000005396af     <--- new
-> > 
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Tested-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > ---
-> >  tools/perf/util/s390-cpumcf-kernel.h |   2 +
-> >  tools/perf/util/s390-sample-raw.c    | 104 ++++++++++++++++++++++++---
-> >  2 files changed, 98 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/s390-cpumcf-kernel.h b/tools/perf/util/s390-cpumcf-kernel.h
-> > index f55ca07f3ca1..74b36644e384 100644
-> > --- a/tools/perf/util/s390-cpumcf-kernel.h
-> > +++ b/tools/perf/util/s390-cpumcf-kernel.h
-> > @@ -12,6 +12,8 @@
-> >  #define	S390_CPUMCF_DIAG_DEF	0xfeef	/* Counter diagnostic entry ID */
-> >  #define	PERF_EVENT_CPUM_CF_DIAG	0xBC000	/* Event: Counter sets */
-> >  #define PERF_EVENT_CPUM_SF_DIAG	0xBD000 /* Event: Combined-sampling */
-> > +#define PERF_EVENT_PAI_CRYPTO_ALL	0x1000 /* Event: CRYPTO_ALL */
-> > +#define PERF_EVENT_PAI_NNPA_ALL	0x1800 /* Event: NNPA_ALL */
-> >  
-> >  struct cf_ctrset_entry {	/* CPU-M CF counter set entry (8 byte) */
-> >  	unsigned int def:16;	/* 0-15  Data Entry Format */
-> > diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-> > index 115b16edb451..d4dc84aa889a 100644
-> > --- a/tools/perf/util/s390-sample-raw.c
-> > +++ b/tools/perf/util/s390-sample-raw.c
-> > @@ -125,6 +125,9 @@ static int get_counterset_start(int setnr)
-> >  		return 128;
-> >  	case CPUMF_CTR_SET_MT_DIAG:		/* Diagnostic counter set */
-> >  		return 448;
-> > +	case PERF_EVENT_PAI_NNPA_ALL:		/* PAI NNPA counter set */
-> > +	case PERF_EVENT_PAI_CRYPTO_ALL:		/* PAI CRYPTO counter set */
-> > +		return setnr;
-> >  	default:
-> >  		return -1;
-> >  	}
-> > @@ -212,27 +215,112 @@ static void s390_cpumcfdg_dump(struct perf_pmu *pmu, struct perf_sample *sample)
-> >  	}
-> >  }
-> >  
-> > +/*
-> > + * Check for consistency of PAI_CRYPTO/PAI_NNPA raw data.
-> > + */
-> > +struct pai_data {		/* Event number and value */
-> > +	u16 event_nr;
-> > +	u64 event_val;
-> > +} __packed;
+Hi all,
 
+Thank you for your responses.
 
-We'll have to disable this warning:
+As I said in my first e-mail, perf_event_max_stack is already set to 
+1024 and it doesn't help unfortunately.
 
-  19    10.55 debian:experimental-x-mips    : FAIL gcc version 12.3.0 (Debian 12.3.0-6)
-    util/s390-sample-raw.c:222:13: error: packed attribute causes inefficient alignment for 'event_nr' [-Werror=attributes]
-      222 |         u16 event_nr;
-          |             ^~~~~~~~
-    cc1: all warnings being treated as errors
-  20    10.58 debian:experimental-x-mips64  : FAIL gcc version 12.3.0 (Debian 12.3.0-6)
-    util/s390-sample-raw.c:222:13: error: packed attribute causes inefficient alignment for 'event_nr' [-Werror=attributes]
-      222 |         u16 event_nr;
-          |             ^~~~~~~~
-    cc1: all warnings being treated as errors
-  21    10.89 debian:experimental-x-mipsel  : FAIL gcc version 12.3.0 (Debian 12.3.0-6)
-    util/s390-sample-raw.c:222:13: error: packed attribute causes inefficient alignment for 'event_nr' [-Werror=attributes]
-      222 |         u16 event_nr;
-          |             ^~~~~~~~
-    cc1: all warnings being treated as errors
+Also, as Namhyung has spotted, my problem isn't limited only to BPF, I 
+get broken stacks for both on-CPU and off-CPU stuff. The page faults I 
+caught in my debugging sessions actually come from on-CPU stack 
+traversal and they cannot be currently (if at all) handled by perf 
+because a sample is taken inside an interrupt handler.
 
-Like I did in:
+In the meantime, I have managed to find the exact cause of my page 
+faults, which is narrower than what I posted in my last update: it's 
+NUMA automatic balancing, which unmaps program's pages to migrate them 
+closer to a CPU running that program on the next page fault. Disabling 
+it with "sysctl kernel.numa_balancing=0" seems to fix the broken stack 
+issue and is a smaller overkill than turning off NUMA awareness 
+completely in the kernel, but it's still only a workaround with a 
+potential performance penalty (unless there is a manual way of setting 
+up NUMA properly so that the performance penalty is negligible and 
+callchains are not broken).
 
-commit a399ee6773d6a0203f9bd764f8bd9d978878cef1
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Thu Nov 9 16:34:09 2023 -0300
+The ideal solution for me would be fixing perf so that stack unwinding 
+can always be fully done without disabling or tinkering with any 
+performance-enhancing mechanisms enabled by default. By "the proposed 
+sframe unwinder", do you mean the set of patches suggested in this 
+thread? 
+https://lore.kernel.org/all/cover.1699487758.git.jpoimboe@kernel.org/
 
-    tools: Disable __packed attribute compiler warning due to -Werror=attributes
-
-    +++ b/tools/include/asm-generic/unaligned.h
-@@ -8,6 +8,7 @@
-  */
- #pragma GCC diagnostic push
- #pragma GCC diagnostic ignored "-Wpacked"
-+#pragma GCC diagnostic ignored "-Wattributes"
-
-I'll do it while waiting for flights later today.
-
-- Arnaldo
-
-> > +/*
-> > + * Test for valid raw data. At least one PAI event should be in the raw
-> > + * data section.
-> > + */
-> > +static bool s390_pai_all_test(struct perf_sample *sample)
-> > +{
-> > +	unsigned char *buf = sample->raw_data;
-> > +	size_t len = sample->raw_size;
-> > +
-> > +	if (len < 0xa || !buf)
-> > +		return false;
-> > +	return true;
-> > +}
-> > +
-> > +static void s390_pai_all_dump(struct evsel *evsel, struct perf_sample *sample)
-> > +{
-> > +	size_t len = sample->raw_size, offset = 0;
-> > +	unsigned char *p = sample->raw_data;
-> > +	const char *color = PERF_COLOR_BLUE;
-> > +	struct pai_data pai_data;
-> > +	char *ev_name;
-> > +
-> > +	while (offset < len) {
-> > +		memcpy(&pai_data.event_nr, p, sizeof(pai_data.event_nr));
-> > +		pai_data.event_nr = be16_to_cpu(pai_data.event_nr);
-> > +		p += sizeof(pai_data.event_nr);
-> > +		offset += sizeof(pai_data.event_nr);
-> > +
-> > +		memcpy(&pai_data.event_val, p, sizeof(pai_data.event_val));
-> > +		pai_data.event_val = be64_to_cpu(pai_data.event_val);
-> > +		p += sizeof(pai_data.event_val);
-> > +		offset += sizeof(pai_data.event_val);
-> > +
-> > +		ev_name = get_counter_name(evsel->core.attr.config,
-> > +					   pai_data.event_nr, evsel->pmu);
-> > +		color_fprintf(stdout, color, "\tCounter:%03d %s Value:%#018lx\n",
-> > +			      pai_data.event_nr, ev_name ?: "<unknown>",
-> > +			      pai_data.event_val);
-> > +		free(ev_name);
-> > +
-> > +		if (offset + 0xa > len)
-> > +			break;
-> > +	}
-> > +	color_fprintf(stdout, color, "\n");
-> > +}
-> > +
-> >  /* S390 specific trace event function. Check for PERF_RECORD_SAMPLE events
-> > - * and if the event was triggered by a counter set diagnostic event display
-> > - * its raw data.
-> > + * and if the event was triggered by a
-> > + * - counter set diagnostic event
-> > + * - processor activity assist (PAI) crypto counter event
-> > + * - processor activity assist (PAI) neural network processor assist (NNPA)
-> > + *   counter event
-> > + * display its raw data.
-> >   * The function is only invoked when the dump flag -D is set.
-> > + *
-> > + * Function evlist__s390_sample_raw() is defined as call back after it has
-> > + * been verified that the perf.data file was created on s390 platform.
-> >   */
-> > -void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event, struct perf_sample *sample)
-> > +void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event,
-> > +			     struct perf_sample *sample)
-> >  {
-> > +	const char *pai_name;
-> >  	struct evsel *evsel;
-> >  
-> >  	if (event->header.type != PERF_RECORD_SAMPLE)
-> >  		return;
-> >  
-> >  	evsel = evlist__event2evsel(evlist, event);
-> > -	if (evsel == NULL ||
-> > -	    evsel->core.attr.config != PERF_EVENT_CPUM_CF_DIAG)
-> > +	if (!evsel)
-> >  		return;
-> >  
-> >  	/* Display raw data on screen */
-> > -	if (!s390_cpumcfdg_testctr(sample)) {
-> > -		pr_err("Invalid counter set data encountered\n");
-> > +	if (evsel->core.attr.config == PERF_EVENT_CPUM_CF_DIAG) {
-> > +		if (!evsel->pmu)
-> > +			evsel->pmu = perf_pmus__find("cpum_cf");
-> > +		if (!s390_cpumcfdg_testctr(sample))
-> > +			pr_err("Invalid counter set data encountered\n");
-> > +		else
-> > +			s390_cpumcfdg_dump(evsel->pmu, sample);
-> >  		return;
-> >  	}
-> > -	s390_cpumcfdg_dump(evsel->pmu, sample);
-> > +
-> > +	switch (evsel->core.attr.config) {
-> > +	case PERF_EVENT_PAI_NNPA_ALL:
-> > +		pai_name = "NNPA_ALL";
-> > +		break;
-> > +	case PERF_EVENT_PAI_CRYPTO_ALL:
-> > +		pai_name = "CRYPTO_ALL";
-> > +		break;
-> > +	default:
-> > +		return;
-> > +	}
-> > +
-> > +	if (!s390_pai_all_test(sample)) {
-> > +		pr_err("Invalid %s raw data encountered\n", pai_name);
-> > +	} else {
-> > +		if (!evsel->pmu)
-> > +			evsel->pmu = perf_pmus__find_by_type(evsel->core.attr.type);
-> > +		s390_pai_all_dump(evsel, sample);
-> > +	}
-> >  }
-> > -- 
-> > 2.41.0
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
-
--- 
-
-- Arnaldo
+Best regards,
+Maks Graczyk
