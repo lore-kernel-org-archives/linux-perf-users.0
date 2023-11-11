@@ -1,124 +1,68 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD81F372;
-	Sat, 11 Nov 2023 00:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXXQFP/s"
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EF73C39;
-	Fri, 10 Nov 2023 16:10:26 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-50797cf5b69so3508921e87.2;
-        Fri, 10 Nov 2023 16:10:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699661424; x=1700266224; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6iUpKnAP+GZy4RHyPvoIjHluSL+zR9tj4/HlA//4Cq4=;
-        b=GXXQFP/s3WGR54dXdTnEVD0pt/kBZ4y0TD5w8U4TNsH71/x2vBAP/nEE1t0FxAUoVl
-         bgT6U4A8wRnPEWUHiO24+j4hg+JBmU5H1W7jb40plv3jkPcl+TddZj7W9c/xphY+w767
-         3AfA5kPmBXl9m/nVMMoW4nBPXzlOrPagyczueFM0/U7PsFsSEPO8IeZwOZUUG9VOJTVa
-         mDc8OpQ1nqpdfklQfjQqxDt6fMIyfVuUfLjQ5b83HNRi55RLhQyM3UY9E9uZx+d0MC5a
-         EwkeuwPBVYLGvEDhkjgQ1bknDcF2uHZ35b3ZUHBaEstJkxjCBPCRVscfOrT3ACtINcTy
-         wYtQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3201610E7;
+	Sat, 11 Nov 2023 02:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B93BF44B3;
+	Fri, 10 Nov 2023 18:27:45 -0800 (PST)
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-28035cf6a30so2440833a91.3;
+        Fri, 10 Nov 2023 18:27:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699661424; x=1700266224;
+        d=1e100.net; s=20230601; t=1699669665; x=1700274465;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6iUpKnAP+GZy4RHyPvoIjHluSL+zR9tj4/HlA//4Cq4=;
-        b=pQBqbZupnSPzQzB41Jmt84o+6vCjp6agXliKdi/Ucx1SkomtMgxKOeq3nKr3wMNBWm
-         fuzj9OUpZOXGLOoCkadklnVOR6aDnooau74s3j+YtCKEda58y3igF2Yezve9oLtl4RW9
-         vMX96s7zm37Zi5GTKEXC36DLtmfZYApxXuWWK1A5wI2dx66rmAJnXK9r6HLqq0NfaMzv
-         qNNRJ2aSdD8ijmy6oCRNS4cCW7xfBGniamVxTk/ejurgkoQoeIVfDf/oBjbK3qyPz6Ec
-         okjEeHk3XzIbtLN3Pcl8Gql5XcadkwozWOtc+50X3INcK2hCm656QQkJqThQdgixQryi
-         7neQ==
-X-Gm-Message-State: AOJu0YxOTriXpYRtbVwc1zHKMv8EUCSESq+Bl2ohIlyaQkcUWiqsRW4F
-	2j7dWyf4GUMtMideYIluOMftoLy2fxb4ocsLDkj8RjZf
-X-Google-Smtp-Source: AGHT+IF9Xyu5EaFiMDd1Oslutv8xlJxIaeJXH+mNAkqjONZZZr5o/hUbRrq1b0RJmj4tXiznTsfqpiHOWq5kNhcWltY=
-X-Received: by 2002:ac2:5551:0:b0:509:2b80:f90c with SMTP id
- l17-20020ac25551000000b005092b80f90cmr301025lfk.68.1699661424162; Fri, 10 Nov
- 2023 16:10:24 -0800 (PST)
+        bh=g5Sg9zl2/Jzlb48PWJ9qHhhq1o2YXxnmZN1o79Ovm5g=;
+        b=Ed5Ef8RJfghbbpMlLhLhpthRfFVSCrBWQkTSS23PjirESoFAgiMp/apPkG3R6A3Ek7
+         BHS+y5xUm8aZ5dC9+R4zixEcYkcOgrF2LNEiG+bTV1iOES0WDOhCoXIJ9aNdeG9Yz45A
+         txTNH+4mT09ckfXDsA8WZaXQQiyAQDP2pTDw9wc8sXQr0DcJ9hkXi0Rv+Wjom0LV3F1D
+         v92QAJ5U5SgujX1kzxzcEx9BGvWL0WlwtgqdokwyToOL68+ndnZVHolCtgnGz7SNwVhX
+         sVVal8wb9YXOL3omOb52HAwJriHopMdrewEBmsCP0MPbgxYX1ZO85U5rdJ2CgoVx6yDG
+         CaTg==
+X-Gm-Message-State: AOJu0Yxf2df4WDY9QBZrY1jVGVe+U4+Xs3MVdkDjKIEZZo2VTERqLLt5
+	DgJ7XYQCIMCkXZKceaRG2Hq5of/yCl2r2yHZZZo=
+X-Google-Smtp-Source: AGHT+IFJT/GE7XsIKWeegpPDXB2vEidUCs6t3J32mEXwB2x6MYR6YO1B05VwyOchlDPl21bc/r73Baf/pNfKM3XLF78=
+X-Received: by 2002:a17:90b:4ad1:b0:27d:375a:e322 with SMTP id
+ mh17-20020a17090b4ad100b0027d375ae322mr812696pjb.31.1699669664922; Fri, 10
+ Nov 2023 18:27:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231110235021.192796-1-linux@jordanrome.com>
-In-Reply-To: <20231110235021.192796-1-linux@jordanrome.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 10 Nov 2023 16:10:13 -0800
-Message-ID: <CAEf4BzaWtOeTBb_+b7Td3NHaKjZU+OohuBJje_nvw9kd6xPA3g@mail.gmail.com>
-Subject: Re: [PATCH perf] perf: get_perf_callchain return NULL for crosstask
-To: Jordan Rome <linux@jordanrome.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@kernel.org>, Kernel Team <kernel-team@fb.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Song Liu <songliubraving@fb.com>
+References: <20231110000012.3538610-1-namhyung@kernel.org> <ZU4cmwfQSK5wXbAD@kernel.org>
+In-Reply-To: <ZU4cmwfQSK5wXbAD@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 10 Nov 2023 18:27:33 -0800
+Message-ID: <CAM9d7ciqiKMXqah34vGL_qqwL8Pm8uaNTokYq+=VwbV5qdrBxQ@mail.gmail.com>
+Subject: Re: [RFC 00/52] perf tools: Introduce data type profiling (v2)
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Andi Kleen <ak@linux.intel.com>, 
+	linux-trace-devel@vger.kernel.org, linux-toolchains@vger.kernel.org, 
+	Ben Woodard <woodard@redhat.com>, Joe Mario <jmario@redhat.com>, 
+	Kees Cook <keescook@chromium.org>, David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Mark Wielaard <mark@klomp.org>, Jason Merrill <jason@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 10, 2023 at 3:51=E2=80=AFPM Jordan Rome <linux@jordanrome.com> =
-wrote:
+On Fri, Nov 10, 2023 at 4:05=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Return NULL instead of returning 1 incorrect frame, which
-> currently happens when trying to walk the user stack for
-> any task that isn't current. Returning NULL is a better
-> indicator that this behavior is not supported.
+> Em Thu, Nov 09, 2023 at 03:59:19PM -0800, Namhyung Kim escreveu:
+> > * Patch structure
+> >
+> > The patch 1-5 are cleanups and a fix that can be applied separately.
 >
-> This issue was found using bpf_get_task_stack inside a BPF
-> iterator ("iter/task"), which iterates over all tasks. The
-> single address/frame in the buffer when getting user stacks
-> for tasks that aren't current could not be symbolized (testing
-> multiple symbolizers).
->
-> Signed-off-by: Jordan Rome <linux@jordanrome.com>
-> ---
->  kernel/events/callchain.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index 1273be84392c..430fa544fa80 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
-> @@ -201,6 +201,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr,=
- bool kernel, bool user,
->         }
->
->         if (user) {
-> +               if (crosstask)
-> +                       return NULL;
+> Applied so far 1-9, will continue later.
 
-I think you need that goto exit_put here.
-
-> +
->                 if (!user_mode(regs)) {
->                         if  (current->mm)
->                                 regs =3D task_pt_regs(current);
-> @@ -209,9 +212,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr,=
- bool kernel, bool user,
->                 }
->
->                 if (regs) {
-> -                       if (crosstask)
-> -                               goto exit_put;
-> -
->                         if (add_mark)
->                                 perf_callchain_store_context(&ctx, PERF_C=
-ONTEXT_USER);
->
-> @@ -219,7 +219,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr,=
- bool kernel, bool user,
->                 }
->         }
->
-> -exit_put:
->         put_callchain_entry(rctx);
->
->         return entry;
-> --
-> 2.39.3
->
+Great, thanks a lot!
+Namhyung
