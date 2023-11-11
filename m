@@ -1,109 +1,206 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF3B134DC;
-	Sat, 11 Nov 2023 17:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E0A3868;
-	Sat, 11 Nov 2023 09:20:35 -0800 (PST)
-Received: from localhost ([173.252.127.16]) by mrelay.perfora.net (mreueus003
- [74.208.5.2]) with ESMTPSA (Nemesis) id 0MVerB-1qtMG72qyt-00Z2Iv; Sat, 11 Nov
- 2023 18:20:24 +0100
-From: Jordan Rome <linux@jordanrome.com>
-To: linux-perf-users@vger.kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Kernel Team <kernel-team@fb.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Song Liu <songliubraving@fb.com>
-Subject: [PATCH v2] perf: get_perf_callchain return NULL for crosstask
-Date: Sat, 11 Nov 2023 09:20:01 -0800
-Message-Id: <20231111172001.1259065-1-linux@jordanrome.com>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC411B280
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Nov 2023 18:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKhDpNVQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E82ECC433C7;
+	Sat, 11 Nov 2023 18:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699728550;
+	bh=ATwLr/Z79d09EhjptUII4Di/VJZD5uMiL2/srCUcLzk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GKhDpNVQ3WFy19cyXyasIz8JdzWAHYV+izdmJJK8ObjTdI51ns//7DZ6NFXOwbsxz
+	 Ip/4v6vsw+v+7SkIuVIvtjjjjczCKmVWmnBSwwBkXurBkrLZAy5B7wz/dW8s/4Piax
+	 L6UlGHZvQVnoIbT77AAQIGryWm0OkYutACQ8SDF8t3IhshWna0lP61PAdKRliuYLoI
+	 n197UTsR74TgwrLjz5czTx6N+f09y6grygerVniHao4c0EYkVATp3OJkDY1FQGNjoY
+	 gS5+LySg8StdxbUNgPSa8kJTTeUCHi7Fix54evBN6gckHIiryN/cQ00nbWTMqxM18T
+	 PjErX00Zp8aGw==
+Date: Sat, 11 Nov 2023 10:49:08 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org
+Subject: Re: [PATCH RFC 04/10] perf: Introduce deferred user callchains
+Message-ID: <20231111184908.ym4l6cwzwnkl7e6m@treble>
+References: <cover.1699487758.git.jpoimboe@kernel.org>
+ <d5def69b0c88bcbe2a85d0e1fd6cfca62b472ed4.1699487758.git.jpoimboe@kernel.org>
+ <CAM9d7chZcqR8WCEYtjpP4KzUOeNdJ=kSvae0UrjsO8OgsepjDw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:s2eFJhlecoDiCk+dLUOWdzHXVSfIPqWK8rQs8+oEb7pPamWVzmH
- lDJ1PtH/liy8GPSArfaTBzjd5ZsVUbtVVUKSNYm5fc3aW1gP80qShj6t26b7mWmzyzazZWr
- PFkGvcIQcI0OHDWgWhnq4UEvvP7hg2s+4s2PF3rKHr/Du+anvAe8Cb/81RGDpgSek3/VuV9
- Hj4nh3Q5nz4k4ekFNvIxg==
-UI-OutboundReport: notjunk:1;M01:P0:fruvtgheXxY=;TnPHChnpK8ROngAKulxwnbR5Z1l
- CljawbclxrJeeL2qtHEE1srUXWRt0rbM44KHE9A+Ae+IpINO6FUz3Ln27mPiOqGyWbLvtkIS6
- ngM1vNHfy9NwetrVtiXfQUYGPPOmA6UwLXniqK2IqLexeBrqoXOZETwHYaaReA67OQ+gN2+/R
- /VIhlmK8DT3rWp2341Kh1iWxk6vy99Z4HOc0zJW9BepHCwfuGrgjSiRYd4nDlWuwdpRGeCLkH
- cTXPNsFOLROg2EfCpZgTuowISWKgJ/cKKdMp+YcYD2dmmRelXvNsnpjRMYGECQhqw9gm4Dq8w
- K5YgVcWpks3RSIYIrZBzcfPC5WIR8e7YpZS4b4KFYKwp0ADRJdPmOzltHD4BIGCUNPGE+xio+
- ACkKzmtaay17r4HHi97nOQQSsZwKlLEoYWLtJ5PlrBpLmmW8x3nksxknQ2ap4DgN+I7iiDc67
- Ux5jX3rNwQ08qgHRzI1r4eZEBv+prxrCvuUgyc1EWl/ZDDeBLzwsMtAE5E6EKlwB6b5eYBBXL
- 0ypKNT4AueQc9ZCmlmEJPo97RSkVXFlU26L5CwFUS5ffKAybpc2/Y67GSnJr/6ppBWezHoPAn
- Utmkqa3IZ1R3AX6ikRMOUbPK6fx/kfHnLO4k8btge0BHPBXa6uIO+Tj0ehkv+EkZT9LbYnJlg
- qYTN7la4fpkLBZc79gTJQaNA31B3UUikQ4ndUhnfzV2eetHAIBO9jGCQdWLLxBNkwT5htoN1Y
- GEVzz1dv1VrYm0hWtAGj4AUQgPfrOaouSFDDCz6jzU5h26vFIF+7AtCg8D9QSppiOQnSnwI8G
- Zo6YmkD4faN4x2LPBxFazOb/sOhcDT3VdhiKXlq+cm9bPJVPsVoSGBwSrQZOF1Juh8VJTjYzN
- HgvdQJ2L/4GBM5g==
+In-Reply-To: <CAM9d7chZcqR8WCEYtjpP4KzUOeNdJ=kSvae0UrjsO8OgsepjDw@mail.gmail.com>
 
-Return NULL instead of returning 1 incorrect frame, which
-currently happens when trying to walk the user stack for
-any task that isn't current. Returning NULL is a better
-indicator that this behavior is not supported.
+On Fri, Nov 10, 2023 at 10:57:58PM -0800, Namhyung Kim wrote:
+> On Wed, Nov 8, 2023 at 4:43 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > +++ b/kernel/bpf/stackmap.c
+> > @@ -294,8 +294,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+> >         if (max_depth > sysctl_perf_event_max_stack)
+> >                 max_depth = sysctl_perf_event_max_stack;
+> >
+> > -       trace = get_perf_callchain(regs, kernel, user, max_depth, false);
+> > -
+> > +       trace = get_perf_callchain(regs, kernel, user, max_depth, false, false);
+> >         if (unlikely(!trace))
+> >                 /* couldn't fetch the stack trace */
+> >                 return -EFAULT;
+> > @@ -420,7 +419,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+> >                 trace = get_callchain_entry_for_task(task, max_depth);
+> >         else
+> >                 trace = get_perf_callchain(regs, kernel, user, max_depth,
+> > -                                          false);
+> > +                                          false, false);
+> 
+> Hmm.. BPF is not supported.  Any plans?
 
-This issue was found using bpf_get_task_stack inside a BPF
-iterator ("iter/task"), which iterates over all tasks. The
-single address/frame in the buffer when getting user stacks
-for tasks that aren't current could not be symbolized (testing
-multiple symbolizers).
+I'm not sure whether this feature makes sense for BPF.  If the BPF
+program runs in atomic context then it would have to defer the unwind
+until right before exiting to user space.  But then the program is no
+longer running.
 
-Signed-off-by: Jordan Rome <linux@jordanrome.com>
----
+> > +++ b/kernel/events/callchain.c
+> > @@ -178,7 +178,7 @@ put_callchain_entry(int rctx)
+> >
+> >  struct perf_callchain_entry *
+> >  get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+> > -                  u32 max_stack, bool add_mark)
+> > +                  u32 max_stack, bool add_mark, bool defer_user)
+> >  {
+> >         struct perf_callchain_entry *entry;
+> >         struct perf_callchain_entry_ctx ctx;
+> > @@ -207,6 +207,11 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+> >                         regs = task_pt_regs(current);
+> >                 }
+> >
+> > +               if (defer_user) {
+> > +                       perf_callchain_store_context(&ctx, PERF_CONTEXT_USER_DEFERRED);
+> > +                       goto exit_put;
+> 
+> Hmm.. ok.  Then now perf tools need to stitch the call stacks
+> in two (or more?) samples.
 
-Changes in v2:
-* move user and crosstask check before get_callchain_entry
+Yes.  And it could be more than two samples if there were multiple NMIs
+before returning to user space.  In that case there would be a single
+user sample which needs to be stitched to each of the kernel samples.
 
-v1:
-https://lore.kernel.org/linux-perf-users/CAEf4BzaWtOeTBb_+b7Td3NHaKjZU+OohuBJje_nvw9kd6xPA3g@mail.gmail.com/T/#t
+> > +               }
+> > +
+> >                 if (add_mark)
+> >                         perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 5e41a3b70bcd..290e06b0071c 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -6751,6 +6751,12 @@ static void perf_pending_irq(struct irq_work *entry)
+> >         struct perf_event *event = container_of(entry, struct perf_event, pending_irq);
+> >         int rctx;
+> >
+> > +       if (!is_software_event(event)) {
+> > +               if (event->pending_unwind)
+> > +                       task_work_add(current, &event->pending_task, TWA_RESUME);
+> 
+> I'm not familiar with this code.  Is it possible to the current task
+> is preempted before returning to user space (and run the
+> perf_pending_task_unwind) ?
 
- kernel/events/callchain.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Yes, the task work (perf_pending_task_unwind) is preemptible.
 
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 1273be84392c..104ea2975a57 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -184,6 +184,9 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 	struct perf_callchain_entry_ctx ctx;
- 	int rctx;
- 
-+	if (user && crosstask)
-+		return NULL;
-+
- 	entry = get_callchain_entry(&rctx);
- 	if (!entry)
- 		return NULL;
-@@ -209,9 +212,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 		}
- 
- 		if (regs) {
--			if (crosstask)
--				goto exit_put;
--
- 			if (add_mark)
- 				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
- 
-@@ -219,7 +219,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 		}
- 	}
- 
--exit_put:
- 	put_callchain_entry(rctx);
- 
- 	return entry;
+> > +static void perf_pending_task_unwind(struct perf_event *event)
+> > +{
+> > +       struct pt_regs *regs = task_pt_regs(current);
+> > +       struct perf_output_handle handle;
+> > +       struct perf_event_header header;
+> > +       struct perf_sample_data data;
+> > +       struct perf_callchain_entry *callchain;
+> > +
+> > +       callchain = kmalloc(sizeof(struct perf_callchain_entry) +
+> > +                           (sizeof(__u64) * event->attr.sample_max_stack) +
+> > +                           (sizeof(__u64) * 1) /* one context */,
+> > +                           GFP_KERNEL);
+> 
+> Any chance it can reuse get_perf_callchain() instead of
+> allocating the callchains every time?
+
+I don't think so, because if it gets preempted, the new task might also
+need to do an unwind.  But there's only one task-context callchain per
+CPU.
+
+The allocation is less than ideal.  I could just allocate it on the
+stack, and keep the number of entries bounded to 128 entries or so.
+
+> > +       if (!callchain)
+> > +               return;
+> > +
+> > +       callchain->nr = 0;
+> > +       data.callchain = callchain;
+> > +
+> > +       perf_sample_data_init(&data, 0, event->hw.last_period);
+> 
+> It would double count the period for a sample.
+> I guess we want to set the period to 0.
+
+Ok.
+
+> > +
+> > +       data.deferred = true;
+> > +
+> > +       perf_prepare_sample(&data, event, regs);
+> 
+> I don't think this would work properly.  Not to mention it duplicates
+> sample data unnecessarily, some data needs special handling to
+> avoid inefficient (full) data copy like for (user) stack, regs and aux.
+
+Yeah.  I tried sending only the sample ID and callchain, but perf tool
+didn't appreciate that ;-) So for the RFC I gave up and did this.
+
+> Anyway I'm not sure it can support these additional samples for
+> deferred callchains without breaking the existing perf tools.
+> Anyway it doesn't know PERF_CONTEXT_USER_DEFERRED at least.
+> I think this should be controlled by a new feature bit in the
+> perf_event_attr.
+> 
+> Then we might add a breaking change to have a special
+> sample record for the deferred callchains and sample ID only.
+
+Sounds like a good idea.  I'll need to study the code to figure out how
+to do that on the perf tool side.  Or would you care to write a patch?
+
+> > -struct perf_callchain_entry *
+> > -perf_callchain(struct perf_event *event, struct pt_regs *regs)
+> > +void perf_callchain(struct perf_sample_data *data, struct perf_event *event,
+> > +                   struct pt_regs *regs)
+> >  {
+> >         bool kernel = !event->attr.exclude_callchain_kernel;
+> >         bool user   = !event->attr.exclude_callchain_user;
+> >         const u32 max_stack = event->attr.sample_max_stack;
+> > -       struct perf_callchain_entry *callchain;
+> > +       bool defer_user = IS_ENABLED(CONFIG_HAVE_PERF_CALLCHAIN_DEFERRED);
+> 
+> Is it always enabled depending on the kernel config?
+> It could be controlled by event->attr.something..
+
+Possibly, depending on what y'all think.  Also, fp vs sframe could be an
+attr (though sframe implies deferred).
+
+Thanks for the review!
+
 -- 
-2.39.3
-
+Josh
