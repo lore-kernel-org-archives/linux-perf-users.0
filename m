@@ -1,44 +1,44 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D84020B19
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Nov 2023 16:10:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BF822309
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Nov 2023 16:12:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SSQLZ99C"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03B710E0;
-	Mon, 13 Nov 2023 08:10:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JtmQIICI"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D9210F4;
+	Mon, 13 Nov 2023 08:12:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699891833; x=1731427833;
+  t=1699891942; x=1731427942;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=vRyOHh8fGEaI4QGodHnPBNlhG7VgWbIgHMktGZ0CYWU=;
-  b=SSQLZ99CdcG4FEvNo1pSAfyq1AnPlH9Pd9GDMRkcIuca7sKhEiJJz+NR
-   08/spa41Dh5c4svQCv8SXzOAjeKhsx/x59VcPyeg2khzf7Z9JM4q3lTMX
-   bm4/elYcbnwf28g8v8auMDoV0W+WtL+oaTDMVZcZ0ojvzdmWzuGgMAkQc
-   kmnjQcH6wH779sLkqkRSaxS/RppiuKaKxbuU3GE91gjbs544fSu882gpf
-   T+c9N27F2Leu7X8omM2VAUBrpBU/ybb+syhlDcsQScfrCL2sg7UW52Niy
-   CgvvZEIyq2FOZOHqzOymMiRJFhWCLBwteNOvoMGBrquHu4lcGiaaFL9DZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="456950049"
+  bh=4VEc6JlfwxRewMFkIOiVv53BgqJpYuGG3zMaWjS+Giw=;
+  b=JtmQIICINi0s15C8ltOAu8IzrUcNhOJk99Yg3OL+RJ/YrNrlB2jfm9EL
+   /N03d18fQ2OSpi4pBPNq/Cxam7Y76GsoNnpYe5hSBnGnmhO1wlJf+h0Pr
+   jH+mKMScfWjWKOi+88/b7fHMEZGL/Ain9vGcrWOf7FAJuudwsotb22TId
+   X56gX/4AsUULXnfzMtAAsrjmEXQhP0u7/9wSbK+P6+VUy2DeNzNanpMap
+   +8sHQRQt9XzPDJcF/5lXPvd3t0JRsJy+lVSP6hlxby28QNOo0SRcsR+bb
+   cWUCW2Gh4tUhSmQVVkcw/Jjt+NDUVLxs5vBb1Ad7n1jNPd6w6fUcrZQZu
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="3509097"
 X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
-   d="scan'208";a="456950049"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 08:10:33 -0800
+   d="scan'208";a="3509097"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 08:11:45 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="799227519"
+X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="764368123"
 X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
-   d="scan'208";a="799227519"
+   d="scan'208";a="764368123"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 08:10:33 -0800
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 08:11:44 -0800
 Received: from [10.212.17.243] (kliang2-mobl1.ccr.corp.intel.com [10.212.17.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id B56875805B5;
-	Mon, 13 Nov 2023 08:10:31 -0800 (PST)
-Message-ID: <d7887fd3-ebf1-47f9-bda7-fd47d79b9807@linux.intel.com>
-Date: Mon, 13 Nov 2023 11:10:30 -0500
+	by linux.intel.com (Postfix) with ESMTPS id ACAA45805B5;
+	Mon, 13 Nov 2023 08:11:43 -0800 (PST)
+Message-ID: <85aac482-2318-4fb5-be8a-b6d17e19407b@linux.intel.com>
+Date: Mon, 13 Nov 2023 11:11:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,82 +46,93 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf evsel: Ignore the non-group case for branch counters
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
- jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
- tinghao.zhang@intel.com, Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20231109164007.2037721-1-kan.liang@linux.intel.com>
- <CAP-5=fXGavfHvSPs5dRWmS93gspj4uUE6ftd855xFyN-hKRTzg@mail.gmail.com>
+Subject: Re: [PATCH V2] perf test: Basic branch counter support
 Content-Language: en-US
+To: acme@kernel.org, irogers@google.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, jolsa@kernel.org,
+ namhyung@kernel.org, adrian.hunter@intel.com, tinghao.zhang@intel.com
+References: <20231107184020.1497571-1-kan.liang@linux.intel.com>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fXGavfHvSPs5dRWmS93gspj4uUE6ftd855xFyN-hKRTzg@mail.gmail.com>
+In-Reply-To: <20231107184020.1497571-1-kan.liang@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+Hi Ian,
 
-
-On 2023-11-13 10:49 a.m., Ian Rogers wrote:
-> On Thu, Nov 9, 2023 at 8:41 AM <kan.liang@linux.intel.com> wrote:
->>
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The perf test 27: Sample parsing fails with the branch counters support
->> introduced.
->>
->> The branch counters feature requires all the events to belong to a
->> group. There is no problem with the normal perf usage which usually
->> initializes an evlist even for a single evsel.
->> But the perf test is special, which may not initialize an evlist. The
->> Sample parsing test case is one of the examples. The existing code
->> crashes with the !evsel->evlist.
->>
->> Non-group means the evsel doesn't have branch counters support.
+On 2023-11-07 1:40 p.m., kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> Thanks Kan, do we need to add this condition to
-> parse_events__sort_events_and_fix_groups?
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c#n2174
+> Add a basic test for the branch counter feature.
+> 
+> The test verifies that
+> - The new filter can be successfully applied on the supported platforms.
+> - The counter value can be outputted via the perf report -D
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+> 
+> Changes since V2:
+> - Update the output msg for the skipped case (Ian)
 > 
 
-I don't think so. The "non-group" here means the case that the evlist is
-not initialized. It should only happen with some perf test case.
-
-In the parse_events__sort_events_and_fix_groups(), IIUC, the ungrouped
-event should mean a single event group. The feature works with the case.
-We don't need to add the condition.
-
-BTW: Arnaldo should have already folded it with the original patch. We
-don't need the patch anymore.
-https://lore.kernel.org/lkml/ZU0pGuUBJH+bF1yU@kernel.org/
+Any comments for this patch?
 
 Thanks,
 Kan
 
-> Ian
+>  tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
->> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->> Closes: https://lore.kernel.org/lkml/ZUv+G+w5EvJgQS45@kernel.org/
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>  tools/perf/util/evsel.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->> index 58a9b8c82790..7a6a2d1f96db 100644
->> --- a/tools/perf/util/evsel.c
->> +++ b/tools/perf/util/evsel.c
->> @@ -2355,6 +2355,10 @@ static inline bool evsel__has_branch_counters(const struct evsel *evsel)
->>  {
->>         struct evsel *cur, *leader = evsel__leader(evsel);
->>
->> +       /* The branch counters feature only supports group */
->> +       if (!leader || !evsel->evlist)
->> +               return false;
->> +
->>         evlist__for_each_entry(evsel->evlist, cur) {
->>                 if ((leader == evsel__leader(cur)) &&
->>                     (cur->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS))
->> --
->> 2.35.1
->>
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index 4fbc74805d52..cc207a16ae24 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -11,6 +11,9 @@ err=0
+>  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+>  testprog="perf test -w thloop"
+>  testsym="test_loop"
+> +cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
+> +br_cntr_file="/caps/branch_counter_nr"
+> +br_cntr_output="branch stack counters"
+>  
+>  cleanup() {
+>    rm -rf "${perfdata}"
+> @@ -154,10 +157,37 @@ test_workload() {
+>    echo "Basic target workload test [Success]"
+>  }
+>  
+> +test_branch_counter() {
+> +  echo "Basic branch counter test"
+> +  # Check if the branch counter feature is supported
+> +  for dir in $cpu_pmu_dir
+> +  do
+> +    if [ ! -e "$dir$br_cntr_file" ]
+> +    then
+> +      echo "branch counter feature not supported on all core PMUs ($dir) [Skipped]"
+> +      return
+> +    fi
+> +  done
+> +  if ! perf record -o "${perfdata}" -j any,counter ${testprog} 2> /dev/null
+> +  then
+> +    echo "Basic branch counter test [Failed record]"
+> +    err=1
+> +    return
+> +  fi
+> +  if ! perf report -i "${perfdata}" -D -q | grep -q "$br_cntr_output"
+> +  then
+> +    echo "Basic branch record test [Failed missing output]"
+> +    err=1
+> +    return
+> +  fi
+> +  echo "Basic branch counter test [Success]"
+> +}
+> +
+>  test_per_thread
+>  test_register_capture
+>  test_system_wide
+>  test_workload
+> +test_branch_counter
+>  
+>  cleanup
+>  exit $err
