@@ -1,147 +1,96 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747FE15480
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Nov 2023 07:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dG86i2z2"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0429710D1;
-	Sun, 12 Nov 2023 23:44:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699861464; x=1731397464;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=AFfCD1YyiU2ZTy2YU+nVobKc5Z+t2ndgqqB/PxSqrUI=;
-  b=dG86i2z2+JdxiXuWg3yma7G/x6YsbDP69YAfJs1vsvnnvOdsw8YDMP7f
-   w1YLDa++lK1b3gNMizEwFDfjL/8NG8jrIuU3mSDgziZaH0ZgloxyFhSKk
-   gD07NvonAW0DkDfsPBZlzya+wzAUNBmhdMKYeT0Dd/6PDi/OGCDNmtiJs
-   yj+rvD5fhWZw1dCMaF54BUZ6FCR7UJXAywyt7oXAmX5xj/AEJxBA9naTG
-   y1+XaR/v3blcq53HuO1mQpmKjUxT9yEO//tGeuoIXDEsRUAAtqm3oEiTn
-   eGNTvtyB2SPIKoF/IvwqlzuimZjoKo3b86uF268kEHaDAXnD7yGDPUA3U
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10892"; a="370591247"
-X-IronPort-AV: E=Sophos;i="6.03,298,1694761200"; 
-   d="scan'208";a="370591247"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2023 23:44:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,298,1694761200"; 
-   d="scan'208";a="12024301"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.43.117])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2023 23:44:20 -0800
-Message-ID: <5a909795-bd93-4c33-9de4-729f45182427@intel.com>
-Date: Mon, 13 Nov 2023 09:44:15 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270BC1CA94
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Nov 2023 10:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id DFF1AD75;
+	Mon, 13 Nov 2023 02:23:35 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2E1E14BF;
+	Mon, 13 Nov 2023 02:24:20 -0800 (PST)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 11E673F6C4;
+	Mon, 13 Nov 2023 02:23:31 -0800 (PST)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	acme@kernel.org
+Cc: James Clark <james.clark@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yonghong Song <yhs@fb.com>,
+	Fangrui Song <maskray@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf test: Use existing config value for objdump path
+Date: Mon, 13 Nov 2023 10:23:24 +0000
+Message-Id: <20231113102327.695386-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf script python: Fail check on dynamic allocation.
-To: Paran Lee <p4ranlee@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- shjy180909@gmail.com, austindh.kim@gmail.com, honggyu.kp@gmail.com
-References: <20231112071446.7811-1-p4ranlee@gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20231112071446.7811-1-p4ranlee@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/11/23 09:14, Paran Lee wrote:
-> There is Ommitted PyList_New() Fail check
-> and set_regs_in_dict(), python_start_script()
-> dynamic allocation checking.
-> 
-> Signed-off-by: Paran Lee <p4ranlee@gmail.com>
+There is already an existing config value for changing the objdump path,
+so instead of having two values that do the same thing, make perf test
+use annotate.objdump as well.
 
-Please ensure patches compile before submitting.  Also run checkpatch
-and fix any errors, and consider fixing warnings and checks.  Have a look
-at checkpatch --strict also.
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/Documentation/perf-config.txt | 8 ++------
+ tools/perf/tests/builtin-test.c          | 2 +-
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-> ---
->  .../scripting-engines/trace-event-python.c     | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 94312741443a..0847c50d4601 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -353,6 +353,8 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
->  
->  	if (is_array) {
->  		list = PyList_New(field->arraylen);
-> +		if (!list)
-> +			Py_FatalError("couldn't create Python list");
->  		item_size = field->size / field->arraylen;
->  		n_items = field->arraylen;
->  	} else {
-> @@ -754,7 +756,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
->  	}
->  }
->  
-> -static void set_regs_in_dict(PyObject *dict,
-> +static int set_regs_in_dict(PyObject *dict,
->  			     struct perf_sample *sample,
->  			     struct evsel *evsel)
->  {
-> @@ -770,6 +772,9 @@ static void set_regs_in_dict(PyObject *dict,
->  	 */
->  	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
->  	char *bf = malloc(size);
-> +	if (!bf)
-> +		return -1;
-> +	}
->  
->  	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
->  
-> @@ -781,6 +786,8 @@ static void set_regs_in_dict(PyObject *dict,
->  	pydict_set_item_string_decref(dict, "uregs",
->  			_PyUnicode_FromString(bf));
->  	free(bf);
-> +
-> +	return 0;
->  }
->  
->  static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
-> @@ -920,7 +927,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
->  			PyLong_FromUnsignedLongLong(sample->cyc_cnt));
->  	}
->  
-> -	set_regs_in_dict(dict, sample, evsel);
-> +	if (!set_regs_in_dict(dict, sample, evsel))
-> +		Py_FatalError("Failed to setting regs in dict");
->  
->  	return dict;
->  }
-> @@ -1918,12 +1926,18 @@ static int python_start_script(const char *script, int argc, const char **argv,
->  	scripting_context->session = session;
->  #if PY_MAJOR_VERSION < 3
->  	command_line = malloc((argc + 1) * sizeof(const char *));
-> +	if(!command_line) {
-> +		return -1;
-> +	}
->  	command_line[0] = script;
->  	for (i = 1; i < argc + 1; i++)
->  		command_line[i] = argv[i - 1];
->  	PyImport_AppendInittab(name, initperf_trace_context);
->  #else
->  	command_line = malloc((argc + 1) * sizeof(wchar_t *));
-> +	if(!command_line) {
-> +		return -1;
-> +	}
->  	command_line[0] = Py_DecodeLocale(script, NULL);
->  	for (i = 1; i < argc + 1; i++)
->  		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index 16398babd1ef..379f9d7a8ab1 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -251,7 +251,8 @@ annotate.*::
+ 		addr2line binary to use for file names and line numbers.
+ 
+ 	annotate.objdump::
+-		objdump binary to use for disassembly and annotations.
++		objdump binary to use for disassembly and annotations,
++		including in the 'perf test' command.
+ 
+ 	annotate.disassembler_style::
+ 		Use this to change the default disassembler style to some other value
+@@ -722,11 +723,6 @@ session-<NAME>.*::
+ 		Defines new record session for daemon. The value is record's
+ 		command line without the 'record' keyword.
+ 
+-test.*::
+-
+-	test.objdump::
+-		objdump binary to use for disassembly and annotations.
+-
+ SEE ALSO
+ --------
+ linkperf:perf[1]
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 113e92119e1d..b8c21e81a021 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -518,7 +518,7 @@ static int run_workload(const char *work, int argc, const char **argv)
+ static int perf_test__config(const char *var, const char *value,
+ 			     void *data __maybe_unused)
+ {
+-	if (!strcmp(var, "test.objdump"))
++	if (!strcmp(var, "annotate.objdump"))
+ 		test_objdump_path = value;
+ 
+ 	return 0;
+-- 
+2.34.1
 
