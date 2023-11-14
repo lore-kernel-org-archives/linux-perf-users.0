@@ -1,331 +1,87 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF103E479
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 12:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC8A61A7;
-	Tue, 14 Nov 2023 04:14:20 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9004C15;
-	Tue, 14 Nov 2023 04:15:05 -0800 (PST)
-Received: from [10.57.72.217] (unknown [10.57.72.217])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0DBC3F6C4;
-	Tue, 14 Nov 2023 04:14:17 -0800 (PST)
-Message-ID: <62b84faf-f413-6bfd-5fc1-ac2489e61e00@arm.com>
-Date: Tue, 14 Nov 2023 12:14:15 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AB93FB34
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 13:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcAe94TZ"
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE80F1B9;
+	Tue, 14 Nov 2023 05:36:40 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-6c34e87b571so4676254b3a.3;
+        Tue, 14 Nov 2023 05:36:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699969000; x=1700573800; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KgJwRlEMoHzpEQlLwG6IQKGKZ066IKihId2W0KLkg2o=;
+        b=XcAe94TZJocshhlnsoVFUyT4oTN/uaXS9N1vfPoZDnXOZSM2V/7T+6XR7Ys1vNtcfJ
+         d7ozcepHpHKWPoEKVUp2sFd8vSO0bE5fdoA4FsmpKRYWMSOodCgDYb2FrtOinKtVNa9P
+         jPEB6og8KKzRDYp0GB509on1rSGsxLp9QNSNgvC1yJywqh/KueHybOmtroPNm9vV9S8N
+         InKzFBLEe6W+O7tWdwxRIzUdGC6jWS2PejOSu+ora7w/7kT8c1SX19/unIksACJYAJ4v
+         qfVtd4DFE9Mn9X5ovyGDkRWddRht2cpyP6czAOPmWWEmbNWzPj8T9kzFGgIvgpxME5Ro
+         824g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699969000; x=1700573800;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KgJwRlEMoHzpEQlLwG6IQKGKZ066IKihId2W0KLkg2o=;
+        b=mPY+sOz4zC0xY57F2vyMhxaSuFC65zOVUC8xulxb9+kz3e012Dr9t9ps4s2qRYU51m
+         zXbtwF7pliv07wnU6YDrZ+wnHS5b8ZfFZyKPnzO7eRqW6f6Rr7QPvLWpANObu9U4i0bR
+         45n//T8I8sS3748RzyYNxXTs3xwLQtrwPDEYr6OrF6QyBOm5q3wYQ62T7IdupkEbKJOj
+         HvnmF0jGNaJxVv+ELqWZHqsr+FTKjEcZSnm07jfLKnkAcTLaqrajJBwYshfIhNhzo5rP
+         WbNnppAwEq+JYvhqP9bsJWXKZGWl5/Xud5XvYaVXKAccNtDCj3pMlF8suy63sy9AMN5A
+         5RWQ==
+X-Gm-Message-State: AOJu0Ywi4lirfFJHWbwXBh4VDe8XjPdsYW8r5Ze4p8AanzN0+L6rLOsg
+	mjS8FGZ7hGkaOZF0cnp++dY=
+X-Google-Smtp-Source: AGHT+IHwC9+iiP2XoMjsRObvZ8Sr1dpHUfScABioBmEanqShk/UZJR+IF+5VXhYhbcLmcwLerU8qVQ==
+X-Received: by 2002:aa7:9a82:0:b0:6c6:af58:c9f2 with SMTP id x2-20020aa79a82000000b006c6af58c9f2mr6255960pfi.2.1699969000145;
+        Tue, 14 Nov 2023 05:36:40 -0800 (PST)
+Received: from [220.72.86.144] ([220.72.86.144])
+        by smtp.gmail.com with ESMTPSA id fa19-20020a056a002d1300b0068fe7e07190sm1159601pfb.3.2023.11.14.05.36.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Nov 2023 05:36:39 -0800 (PST)
+Message-ID: <04449bfd-7eee-4e66-86a8-4065be0b1127@gmail.com>
+Date: Tue, 14 Nov 2023 22:36:35 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [V14 3/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
- framework
-Content-Language: en-US
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
- mark.rutland@arm.com
-References: <20231114051329.327572-1-anshuman.khandual@arm.com>
- <20231114051329.327572-4-anshuman.khandual@arm.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231114051329.327572-4-anshuman.khandual@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf script python: Fail check on dynamic allocation.
+Content-Language: ko
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ shjy180909@gmail.com, austindh.kim@gmail.com, honggyu.kp@gmail.com
+References: <20231112071446.7811-1-p4ranlee@gmail.com>
+ <5a909795-bd93-4c33-9de4-729f45182427@intel.com>
+From: Paran Lee <p4ranlee@gmail.com>
+In-Reply-To: <5a909795-bd93-4c33-9de4-729f45182427@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 14/11/2023 05:13, Anshuman Khandual wrote:
-[...]
+On 2023-11-13 오후 4:44, Adrian Hunter wrote:
 
-> +/*
-> + * This is a read only constant and safe during multi threaded access
-> + */
-> +static struct perf_branch_stack zero_branch_stack = { .nr = 0, .hw_idx = -1ULL};
-> +
-> +static void read_branch_records(struct pmu_hw_events *cpuc,
-> +				struct perf_event *event,
-> +				struct perf_sample_data *data,
-> +				bool *branch_captured)
-> +{
-> +	/*
-> +	 * CPU specific branch records buffer must have been allocated already
-> +	 * for the hardware records to be captured and processed further.
-> +	 */
-> +	if (WARN_ON(!cpuc->branches))
-> +		return;
-> +
-> +	/*
-> +	 * Overflowed event's branch_sample_type does not match the configured
-> +	 * branch filters in the BRBE HW. So the captured branch records here
-> +	 * cannot be co-related to the overflowed event. Report to the user as
-> +	 * if no branch records have been captured, and flush branch records.
-> +	 * The same scenario is applicable when the current task context does
-> +	 * not match with overflown event.
-> +	 */
-> +	if ((cpuc->brbe_sample_type != event->attr.branch_sample_type) ||
-> +	    (event->ctx->task && cpuc->brbe_context != event->ctx)) {
-> +		perf_sample_save_brstack(data, event, &zero_branch_stack);
+Thank you so much for the review Adrian!
+My first patch were my inexperience came in.
 
-Is there any benefit to outputting a zero size stack vs not outputting
-anything at all?
+> Please ensure patches compile before submitting.  Also run checkpatch
+> and fix any errors, and consider fixing warnings and checks.  Have a look
+> at checkpatch --strict also.
 
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Read the branch records from the hardware once after the PMU IRQ
-> +	 * has been triggered but subsequently same records can be used for
-> +	 * other events that might have been overflowed simultaneously thus
-> +	 * saving much CPU cycles.
-> +	 */
-> +	if (!*branch_captured) {
-> +		armv8pmu_branch_read(cpuc, event);
-> +		*branch_captured = true;
-> +	}
-> +	perf_sample_save_brstack(data, event, &cpuc->branches->branch_stack);
-> +}
-> +
->  static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
->  {
->  	u32 pmovsr;
-> @@ -766,6 +815,7 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
->  	struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
->  	struct pt_regs *regs;
->  	int idx;
-> +	bool branch_captured = false;
->  
->  	/*
->  	 * Get and reset the IRQ flags
-> @@ -809,6 +859,13 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
->  		if (!armpmu_event_set_period(event))
->  			continue;
->  
-> +		/*
-> +		 * PMU IRQ should remain asserted until all branch records
-> +		 * are captured and processed into struct perf_sample_data.
-> +		 */
-> +		if (has_branch_stack(event) && cpu_pmu->has_branch_stack)
-> +			read_branch_records(cpuc, event, &data, &branch_captured);
+I'll check you mentioned and send the v2 patch.
 
-You could return instead of using the out param, not really any
-different, but maybe a bit more normal:
-
-  branch_captured |= read_branch_records(cpuc, event, &data,
-branch_captured);
-
-> +
->  		/*
->  		 * Perf event overflow will queue the processing of the event as
->  		 * an irq_work which will be taken care of in the handling of
-> @@ -818,6 +875,8 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
->  			cpu_pmu->disable(event);
->  	}
->  	armv8pmu_start(cpu_pmu);
-> +	if (cpu_pmu->has_branch_stack)
-> +		armv8pmu_branch_reset();
->  
->  	return IRQ_HANDLED;
->  }
-> @@ -907,6 +966,24 @@ static int armv8pmu_user_event_idx(struct perf_event *event)
->  	return event->hw.idx;
->  }
->  
-> +static void armv8pmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
-> +{
-> +	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
-> +	void *task_ctx = pmu_ctx->task_ctx_data;
-> +
-> +	if (armpmu->has_branch_stack) {
-> +		/* Save branch records in task_ctx on sched out */
-> +		if (task_ctx && !sched_in) {
-> +			armv8pmu_branch_save(armpmu, task_ctx);
-> +			return;
-> +		}
-> +
-> +		/* Reset branch records on sched in */
-> +		if (sched_in)
-> +			armv8pmu_branch_reset();
-> +	}
-> +}
-> +
->  /*
->   * Add an event filter to a given event.
->   */
-> @@ -977,6 +1054,9 @@ static void armv8pmu_reset(void *info)
->  		pmcr |= ARMV8_PMU_PMCR_LP;
->  
->  	armv8pmu_pmcr_write(pmcr);
-> +
-> +	if (cpu_pmu->has_branch_stack)
-> +		armv8pmu_branch_reset();
->  }
->  
->  static int __armv8_pmuv3_map_event_id(struct arm_pmu *armpmu,
-> @@ -1014,6 +1094,20 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
->  
->  	hw_event_id = __armv8_pmuv3_map_event_id(armpmu, event);
->  
-> +	if (has_branch_stack(event)) {
-> +		if (!armv8pmu_branch_attr_valid(event))
-> +			return -EOPNOTSUPP;
-> +
-> +		/*
-> +		 * If a task gets scheduled out, the current branch records
-> +		 * get saved in the task's context data, which can be later
-> +		 * used to fill in the records upon an event overflow. Let's
-> +		 * enable PERF_ATTACH_TASK_DATA in 'event->attach_state' for
-> +		 * all branch stack sampling perf events.
-> +		 */
-> +		event->attach_state |= PERF_ATTACH_TASK_DATA;
-> +	}
-> +
->  	/*
->  	 * CHAIN events only work when paired with an adjacent counter, and it
->  	 * never makes sense for a user to open one in isolation, as they'll be
-> @@ -1130,6 +1224,35 @@ static void __armv8pmu_probe_pmu(void *info)
->  		cpu_pmu->reg_pmmir = read_pmmir();
->  	else
->  		cpu_pmu->reg_pmmir = 0;
-> +	armv8pmu_branch_probe(cpu_pmu);
-
-I'm not sure if this is splitting hairs or not, but
-__armv8pmu_probe_pmu() is run on only one of 'any' of the supported CPUs
-for this PMU.
-
-Is it not possible to have some of those CPUs support and some not
-support BRBE, even though they are all the same PMU type? Maybe we could
-wait for it to explode with some weird system, or change it so that the
-BRBE probe is run on every CPU, with a second 'supported_brbe_mask' field.
-
-> +}
-> +
-> +static int branch_records_alloc(struct arm_pmu *armpmu)
-> +{
-> +	struct branch_records __percpu *records;
-> +	int cpu;
-> +
-> +	records = alloc_percpu_gfp(struct branch_records, GFP_KERNEL);
-> +	if (!records)
-> +		return -ENOMEM;
-> +
-
-Doesn't this technically need to take the CPU mask where BRBE is
-supported into account? Otherwise you are allocating for cores that
-never use it.
-
-Also it's done per-CPU _and_ per-PMU type, multiplying the number of
-BRBE buffers allocated, even if they can only ever be used per-CPU.
-
-> +	/*
-> +	 * percpu memory allocated for 'records' gets completely consumed
-> +	 * here, and never required to be freed up later. So permanently
-> +	 * losing access to this anchor i.e 'records' is acceptable.
-> +	 *
-> +	 * Otherwise this allocation handle would have to be saved up for
-> +	 * free_percpu() release later if required.
-> +	 */
-> +	for_each_possible_cpu(cpu) {
-> +		struct pmu_hw_events *events_cpu;
-> +		struct branch_records *records_cpu;
-> +
-> +		events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
-> +		records_cpu = per_cpu_ptr(records, cpu);
-> +		events_cpu->branches = records_cpu;
-> +	}
-> +	return 0;
->  }
->  
->  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
-> @@ -1146,7 +1269,21 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->  	if (ret)
->  		return ret;
->  
-> -	return probe.present ? 0 : -ENODEV;
-> +	if (!probe.present)
-> +		return -ENODEV;
-> +
-> +	if (cpu_pmu->has_branch_stack) {
-> +		ret = armv8pmu_task_ctx_cache_alloc(cpu_pmu);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = branch_records_alloc(cpu_pmu);
-> +		if (ret) {
-> +			armv8pmu_task_ctx_cache_free(cpu_pmu);
-> +			return ret;
-> +		}
-> +	}
-> +	return 0;
->  }
->  
-
-[...]
-> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
-> index 9c226adf938a..72da4522397c 100644
-> --- a/include/linux/perf/arm_pmuv3.h
-> +++ b/include/linux/perf/arm_pmuv3.h
-> @@ -303,4 +303,50 @@
->  		}						\
->  	} while (0)
->  
-> +struct pmu_hw_events;
-> +struct arm_pmu;
-> +struct perf_event;
-> +
-> +#ifdef CONFIG_PERF_EVENTS
-
-Very minor nit, but if you end up moving the stubs to the brbe header
-you probably don't need the #ifdef CONFIG_PERF_EVENTS because it just
-won't be included in that case.
-
-> +static inline void armv8pmu_branch_reset(void)
-> +{
-> +}
-> +
-> +static inline void armv8pmu_branch_probe(struct arm_pmu *arm_pmu)
-> +{
-> +}
-> +
-> +static inline bool armv8pmu_branch_attr_valid(struct perf_event *event)
-> +{
-> +	WARN_ON_ONCE(!has_branch_stack(event));
-> +	return false;
-> +}
-> +
-> +static inline void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)
-> +{
-> +}
-> +
-> +static inline void armv8pmu_branch_disable(void)
-> +{
-> +}
-> +
-> +static inline void armv8pmu_branch_read(struct pmu_hw_events *cpuc,
-> +					struct perf_event *event)
-> +{
-> +	WARN_ON_ONCE(!has_branch_stack(event));
-> +}
-> +
-> +static inline void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)
-> +{
-> +}
-> +
-> +static inline int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *arm_pmu)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void armv8pmu_task_ctx_cache_free(struct arm_pmu *arm_pmu)
-> +{
-> +}
-> +#endif /* CONFIG_PERF_EVENTS */
->  #endif
+BR,
+Paran Lee
