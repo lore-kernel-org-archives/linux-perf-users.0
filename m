@@ -1,132 +1,99 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0B4210F6
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Nov 2023 19:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC74BBA2D
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 04:47:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZpC5rsHp"
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D823D46
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Nov 2023 11:28:30 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-6c4ed8eef16so3178809b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Nov 2023 11:28:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699903710; x=1700508510; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j6zAXSnrAERC5bkOosNQUecD7gKE0Mvf1RD8tBnHIyA=;
-        b=ZpC5rsHp1/S97FcbzsmivWb7hUbuJbL/zDohoivP5klisRHlFMnSOrYR2MWCm2L2/B
-         qr/EyFttS00d81oy5oQkRLPr0dRJfGkRTbU5UkqmBOrrT0wabYdzscr1DFrBHBrWG4bU
-         z1rKW4lJZac/jw9UvvBlLb28oWAGX4lHQ5V76O+JdF+IUf+GctsczkiAV4J/N7RI2/yz
-         1lO8/kaUxW2562QE5i1tle9WPpJ/QnMa+mYeRHtLiroCgBGxZV9yHY2LcbKcA3vmlqiB
-         Smzbz3IqiLZHYU2tF+Axq05wBAZNTVh6dc5etZlHmfnMqyrQglNhe2fPTBy8mPraS1SJ
-         BXbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699903710; x=1700508510;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j6zAXSnrAERC5bkOosNQUecD7gKE0Mvf1RD8tBnHIyA=;
-        b=wJ0QQEN9BjrRcgxpZ8lF1AFh5LaE9vfNwCljksiky9ZpPcX6HY4Yc1gc1TqqcbudvE
-         Z2HdWCtDHcmFyE9E3HFr2+j9HFUkxZFMAtFg0JFBHntBFZht0wCOeQAPmcZ7VB3bol9a
-         1CYKNwZ7pAVKr56ewM+B94lGis+UmS8BU3kHqrh1C40vjnRMVuj+WrNhYpfVF8iOzcoX
-         nDnheXgeSqXy/hG/JzYx6jyt3ryKB+CszOo4tKS1EnF9oOMuRIAj7jKnhA6b+s7ZGyHo
-         aYA1xDwipBeTwYqCE77wHvG87efCAOO4pfx5ZtBQQW3CZ5nkKUpPKmtaW32vGK0rxJ6l
-         DDhw==
-X-Gm-Message-State: AOJu0YwK8jB4gNroFW2afSwbNpCiQgAxLeFFOPdWYbUQsIeB6kC100ZS
-	aLjLr6BaBOC9QyU0XoyXEDgLsAJbU4VtWRllb34kug==
-X-Google-Smtp-Source: AGHT+IGr0HRXbgLk/YXcNfzDC/qE+X2UVnJ6UfBcxb8aJ/lod2vZNkPsoWbu7+KbvKjyq7oBnYToSfstL9LwRfepiRc=
-X-Received: by 2002:a05:6a00:391a:b0:6bc:f819:fcf0 with SMTP id
- fh26-20020a056a00391a00b006bcf819fcf0mr8928964pfb.1.1699903709845; Mon, 13
- Nov 2023 11:28:29 -0800 (PST)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="mY+Tb1fZ"
+X-Greylist: delayed 916 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Nov 2023 20:47:14 PST
+Received: from m1396.mail.163.com (m1396.mail.163.com [220.181.13.96])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B8D56FE
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Nov 2023 20:47:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=eTgTzkwRMYce5WhYO0ZMUB0IQPgQEeP4HKrPGJksQH4=; b=m
+	Y+Tb1fZSScranVrkLvuWjioTqe1oVzqivxnhW5KYmwY/Tg9dMvgVW+ACMlXxdTwl
+	wyyT82YreQ560oc0RvcJ3kqbflqxsiJ8HCTu6z8AGoTG2xken79TH7WYQytME42n
+	fxAOSRRYrL9yLyxufNcLDq6wLVfWNt2kmriDoWQmw4=
+Received: from 00107082$163.com ( [111.35.186.243] ) by ajax-webmail-wmsvr96
+ (Coremail) ; Tue, 14 Nov 2023 12:31:12 +0800 (CST)
+X-Originating-IP: [111.35.186.243]
+Date: Tue, 14 Nov 2023 12:31:12 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: [Regression or Fix]perf: profiling stats sigificantly changed for
+ aio_write/read(ext4) between 6.7.0-rc1 and 6.6.0
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2023 www.mailtech.cn 163com
+X-NTES-SC: AL_QuySC/WYuUos5CSZYOkXn0oTju85XMCzuv8j3YJeN500kSrK1AkRWlleF3rz4em0MTyWlj6nbx1X0OlBRK9Ebp/h+AxE6wR1p8UaELO2aVLz
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231102150620.940538-1-namhyung@kernel.org>
-In-Reply-To: <20231102150620.940538-1-namhyung@kernel.org>
-From: =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date: Mon, 13 Nov 2023 13:28:18 -0600
-Message-ID: <CAEUSe78g5XUpQ19t4LbeGK4v_PZNTDZ=wjRM325Bm8haiUCoXA@mail.gmail.com>
-Subject: Re: [GIT PULL] perf tools changes for v6.7
-To: Namhyung Kim <namhyung@kernel.org>, Yang Jihong <yangjihong1@huawei.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:YMGowADnj00R+FJloUIgAA--.34439W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiEAUoql8YMc69BgAJsd
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hello!
-
-On Thu, 2 Nov 2023 at 09:06, Namhyung Kim <namhyung@kernel.org> wrote:
-> Hi Linus,
->
-> Please consider pulling the latest perf tools changes.
->
-> Thanks,
-> Namhyung
-[...]
-> Yang Jihong (29):
->       perf evlist: Add perf_evlist__go_system_wide() helper
->       perf evlist: Add evlist__findnew_tracking_event() helper
->       perf record: Move setting tracking events before record__init_threa=
-d_masks()
->       perf record: Track sideband events for all CPUs when tracing select=
-ed CPUs
->       perf test: Add test case for record sideband events
->       perf test: Add perf_event_attr test for record dummy event
->       perf kwork: Fix incorrect and missing free atom in work_push_atom()
->       perf kwork: Add the supported subcommands to the document
->       perf kwork: Set ordered_events to true in 'struct perf_tool'
->       perf kwork: Add `kwork` and `src_type` to work_init() for 'struct k=
-work_class'
->       perf kwork: Overwrite original atom in the list when a new atom is =
-pushed.
->       perf kwork: Set default events list if not specified in setup_event=
-_list()
->       perf kwork: Add sched record support
->       perf kwork: Add `root` parameter to work_sort()
->       perf kwork top: Introduce new top utility
-[...]
-
-We have found some build regressions on yesterday's 6.7-rc1:
------8<-----
-  builtin-kwork.c: In function 'top_print_work':
-  builtin-kwork.c:1646:28: error: format '%ld' expects argument of
-type 'long int', but argument 3 has type 'u64' {aka 'long long
-unsigned int'} [-Werror=3Dformat=3D]
-   1646 |         ret +=3D printf(" %*ld ", PRINT_PID_WIDTH, work->id);
-        |                         ~~~^                     ~~~~~~~~
-        |                            |                         |
-        |                            long int                  u64
-{aka long long unsigned int}
-        |                         %*lld
-  cc1: all warnings being treated as errors
-  make[3]: *** [/builds/linux/tools/build/Makefile.build:106:
-/home/tuxbuild/.cache/tuxmake/builds/1/build/builtin-kwork.o] Error 1
------>8-----
-
-This is when building for Arm (32-bits) and i386. Bisection points to
-commit 55c40e505234 ("perf kwork top: Introduce new top utility").
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-To reproduce locally,
-  tuxmake \
-    --runtime podman \
-    --target-arch arm \
-    --toolchain gcc-13 \
-    --kconfig https://storage.tuxsuite.com/public/linaro/lkft/builds/2Y6I5B=
-lgre1fELnAgUTZxqjByvv/config
-\
-    debugkernel dtbs dtbs-legacy headers kernel modules perf
-
-Greetings!
-
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+SGksCgpJIHdhcyBtYWtpbmcga2VybmVsIHByb2ZpbGluZyB0byBpZGVudGlmeSBrZXJuZWwgY2hh
+bmdlcyBiZXR3ZWVuIHJldmlzaW9ucyB1bmRlciB0aGUgbG9hZCBvZiBmaW8gYmVuY2htYXJrLCAK
+VGhlIHByb2ZpbGVyIHVzZSBwZXJmX2V2ZW50X29wZW4gd2l0aCBhIGNncm91cCB3aGVyZSBhIGZp
+byBydW4gYSAxMG1pbnV0ZXMgc3RyZXNzOiAgZmlvIC0tcmFuZHJlcGVhdD0xIC0taW9lbmdpbmU9
+bGliYWlvIC0tZGlyZWN0PTEgLS1uYW1lPXRlc3QgIC0tYnM9NGsgLS1pb2RlcHRoPTY0IC0tc2l6
+ZT0xRyAtLXJlYWR3cml0ZT1yYW5kcncgIC0tcnVudGltZT02MDAgLS1udW1qb2JzPTQgLS10aW1l
+X2Jhc2VkPTEKCkkgbm90aWNlIGEgfjQlIGNoYW5nZSBpbiB0aGUgcHJvZmlsaW5nIGRhdGEuClRo
+ZSBwcm9maWxpbmcgc3RhdCBmb3IgNi42LjA6CgphaW9fd3JpdGUoNTQuOTc0JSAxMTcxNTMvMjEz
+MTA4KQogICAgZXh0NF9maWxlX3dyaXRlX2l0ZXIoOTcuMzk1JSAxMTQxMDEvMTE3MTUzKQogICAg
+ICAgIGlvbWFwX2Rpb19ydyg5MS4xOTUlIDEwNDA1NC8xMTQxMDEpCiAgICAgICAgICAgIF9faW9t
+YXBfZGlvX3J3KDk5LjgzNSUgMTAzODgyLzEwNDA1NCkKICAgICAgICAgICAgICAgIGlvbWFwX2Rp
+b19iaW9faXRlcig2OC44MDAlIDcxNDcxLzEwMzg4MikgIDw8LS0tCiAgICAgICAgICAgICAgICBi
+bGtfZmluaXNoX3BsdWcoMjIuMTQ2JSAyMzAwNi8xMDM4ODIpICAgPDwtLS0KICAgICAgICAgICAg
+ICAgIGlvbWFwX2l0ZXIoNi4xNjElIDY0MDAvMTAzODgyKQogICAgICAgICAgICAgICAga21hbGxv
+Y190cmFjZSgwLjg1MCUgODgzLzEwMzg4MikKICAgICAgICAgICAgICAgIGtpb2NiX2ludmFsaWRh
+dGVfcGFnZXMoMC4yMDUlIDIxMy8xMDM4ODIpCiAgICAgICAgICAgICAgICBpbnZhbGlkYXRlX2lu
+b2RlX3BhZ2VzMl9yYW5nZSgwLjEzMCUgMTM1LzEwMzg4MikKICAgICAgICAgICAgICAgIHNyc29f
+cmV0dXJuX3RodW5rKDAuMTA5JSAxMTMvMTAzODgyKQoKCkFuZCBmb3IgNi43LjAtcmMxCgphaW9f
+d3JpdGUoNTQuMzE3JSA5NjAzOS8xNzY4MTMpCiAgICBleHQ0X2ZpbGVfd3JpdGVfaXRlcig5Ny40
+ODIlIDkzNjIxLzk2MDM5KQogICAgICAgIGlvbWFwX2Rpb19ydyg5MS4yMTElIDg1MzkzLzkzNjIx
+KQogICAgICAgICAgICBfX2lvbWFwX2Rpb19ydyg5OS44MjIlIDg1MjQxLzg1MzkzKQogICAgICAg
+ICAgICAgICAgaW9tYXBfZGlvX2Jpb19pdGVyKDY0Ljc5MyUgNTUyMzAvODUyNDEpICA8PC0tLS0t
+CiAgICAgICAgICAgICAgICBibGtfZmluaXNoX3BsdWcoMjYuNDQ2JSAyMjU0My84NTI0MSkgIDw8
+LS0tLQogICAgICAgICAgICAgICAgaW9tYXBfaXRlcig1Ljg4MSUgNTAxMy84NTI0MSkKICAgICAg
+ICAgICAgICAgIGttYWxsb2NfdHJhY2UoMC42ODIlIDU4MS84NTI0MSkKICAgICAgICAgICAgICAg
+IGtpb2NiX2ludmFsaWRhdGVfcGFnZXMoMC4yMzAlIDE5Ni84NTI0MSkKICAgICAgICAgICAgICAg
+IGludmFsaWRhdGVfaW5vZGVfcGFnZXMyX3JhbmdlKDAuMTQ3JSAxMjUvODUyNDEpCgoKVGhlIGlv
+bWFwX2Rpb19iaW9faXRlciBzYW1wbGVzIGRlY3JlYXNlIDQlIHdoaWxlIGJsa19maW5pc2hfcGx1
+ZyBpbmNyZWFzZSA0JS4KCkkgaGF2ZSBydW4gYSBiaXNlY3QsIG5hcnJvdyBkb3duIHRvIGZvbGxv
+d2luZyBjb21taXQ6CmNvbW1pdCBmMDZjYzY2N2Y3OTkwOWU5MTc1NDYwYjE2N2MyNzdiN2M2NGQz
+ZGYwCkF1dGhvcjogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPgpEYXRlOiAg
+IE1vbiBPY3QgOSAyMzowNDoyNSAyMDIzICswMjAwCgogICAgcGVyZjogT3B0aW1pemUgcGVyZl9j
+Z3JvdXBfc3dpdGNoKCkKCkFuZCBhZnRlciBJIHJldmVydCB0aGlzIGNvbW1pdCwgdGhlIHByb2Zp
+bGluZyBzdGF0IG5vdyBhbG1vc3QgYWdyZWUgd2l0aCA2LjYuMAoKYWlvX3dyaXRlKDU0LjkzNyUg
+MTA0NjkxLzE5MDU2NCkKICAgIGV4dDRfZmlsZV93cml0ZV9pdGVyKDk3LjU4NiUgMTAyMTY0LzEw
+NDY5MSkKICAgICAgICBpb21hcF9kaW9fcncoOTEuMjU3JSA5MzIzMi8xMDIxNjQpCiAgICAgICAg
+ICAgIF9faW9tYXBfZGlvX3J3KDk5LjgxOSUgOTMwNjMvOTMyMzIpCiAgICAgICAgICAgICAgICBp
+b21hcF9kaW9fYmlvX2l0ZXIoNjkuNjU0JSA2NDgyMi85MzA2MykgPDwtLS0tLS0KICAgICAgICAg
+ICAgICAgIGJsa19maW5pc2hfcGx1ZygyMS43MjQlIDIwMjE3LzkzMDYzKSAgPDwtLS0tCiAgICAg
+ICAgICAgICAgICBpb21hcF9pdGVyKDUuODU5JSA1NDUzLzkzMDYzKQogICAgICAgICAgICAgICAg
+a21hbGxvY190cmFjZSgwLjc1OCUgNzA1LzkzMDYzKQogICAgICAgICAgICAgICAga2lvY2JfaW52
+YWxpZGF0ZV9wYWdlcygwLjI1MSUgMjM0LzkzMDYzKQogICAgICAgICAgICAgICAgaW52YWxpZGF0
+ZV9pbm9kZV9wYWdlczJfcmFuZ2UoMC4xMzQlIDEyNS85MzA2MykKCgpJIGhhdmUgcnVuIHNldmVy
+YWwgcm91bmQgb2YgdGVzdHMsIG1vc3RseSBkdXJpbmcgdGhlIGJpc2VjdCBwcm9jZXNzLCBhbmQg
+dGhlIH40JSBjaGFuZ2UgaXMgY29uc2lzdGVudC4KVGhlIHByb2ZpbGVyIEkgdXNlZCBpcyBhbiBl
+eHBlcmltZW50YWwgdG9vbCwgIG5vdCBwZXJmIHRob3VnaCwgSSB0aGluayB0aGUgYmVoYXZpb3Ig
+Y2hhbmdlcyBpdCBkZXRlY3RlZCBpcyBsZWdpdC4gCmh0dHBzOi8vZ2l0aHViLmNvbS96cS1kYXZp
+ZC13YW5nL2xpbnV4LXRvb2xzL2Jsb2IvbWFpbi9wZXJmL3Byb2ZpbGVyL3Byb2ZpbGVyLmNwcAoK
+QnV0IEkgZGlkIG5vdCBub3RpY2UgYSBzaWduaWZpY2FudCBjaGFuZ2UgaW4gdGhlIG92ZXJoZWFk
+IG9mIHBlcmYgdHJhY2luZyBiYXNlZCBvbiB0aGUgZmlvIHJlcG9ydCwgCnRoYXQgaXMgd2h5IEkg
+YW0gbm90IHN1cmUgd2hldGhlciB0aGlzIGlzIGEgcmVncmVzc2lvbiBvciBhbiBpbXByb3ZlbWVu
+dC4uLi4KSnVzdCByZXBvcnQgdGhlIGNoYW5nZS4KCgpUaGFua3MKRGF2aWQgV2FuZwog
