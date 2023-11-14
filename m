@@ -1,20 +1,20 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB15168BF
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 09:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E1E3D984
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 12:11:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7C6C0191;
-	Tue, 14 Nov 2023 01:58:32 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B45B7130;
+	Tue, 14 Nov 2023 04:11:55 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9391DC15;
-	Tue, 14 Nov 2023 01:59:17 -0800 (PST)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 420223F641;
-	Tue, 14 Nov 2023 01:58:29 -0800 (PST)
-Message-ID: <0020aa0d-e9a5-aef6-f33d-817da56411a3@arm.com>
-Date: Tue, 14 Nov 2023 09:58:27 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D42FC15;
+	Tue, 14 Nov 2023 04:12:40 -0800 (PST)
+Received: from [10.57.72.217] (unknown [10.57.72.217])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 837F83F6C4;
+	Tue, 14 Nov 2023 04:11:52 -0800 (PST)
+Message-ID: <00f05970-c793-242e-485a-f987201651ad@arm.com>
+Date: Tue, 14 Nov 2023 12:11:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -23,9 +23,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [V14 3/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
- framework
-Content-Language: en-US
+Subject: Re: [V14 4/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
+ via FEAT_BRBE
+Content-Language: en-US, en-GB
 To: Anshuman Khandual <anshuman.khandual@arm.com>
 Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
  Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
@@ -35,37 +35,179 @@ Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
  linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
  mark.rutland@arm.com
 References: <20231114051329.327572-1-anshuman.khandual@arm.com>
- <20231114051329.327572-4-anshuman.khandual@arm.com>
+ <20231114051329.327572-5-anshuman.khandual@arm.com>
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231114051329.327572-4-anshuman.khandual@arm.com>
+In-Reply-To: <20231114051329.327572-5-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 14/11/2023 05:13, Anshuman Khandual wrote:
-> Branch stack sampling support i.e capturing branch records during execution
-> in core perf, rides along with normal HW events being scheduled on the PMU.
-> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
-> with required HW implementation.
-> 
-
 [...]
 
-> - All armv8pmu_branch_xxxx() stub definitions have been moved inside
->   include/linux/perf/arm_pmuv3.h for easy access from both arm32 and
->   arm64 platforms
-> 
+> +/*
+> + * BRBE supports the following functional branch type filters while
+> + * generating branch records. These branch filters can be enabled,
+> + * either individually or as a group i.e ORing multiple filters
+> + * with each other.
+> + *
+> + * BRBFCR_EL1_CONDDIR  - Conditional direct branch
+> + * BRBFCR_EL1_DIRCALL  - Direct call
+> + * BRBFCR_EL1_INDCALL  - Indirect call
+> + * BRBFCR_EL1_INDIRECT - Indirect branch
+> + * BRBFCR_EL1_DIRECT   - Direct branch
+> + * BRBFCR_EL1_RTN      - Subroutine return
+> + */
+> +static u64 branch_type_to_brbfcr(int branch_type)
+> +{
+> +	u64 brbfcr = 0;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
+> +		brbfcr |= BRBFCR_EL1_BRANCH_FILTERS;
+> +		return brbfcr;
+> +	}
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL) {
+> +		brbfcr |= BRBFCR_EL1_INDCALL;
+> +		brbfcr |= BRBFCR_EL1_DIRCALL;
+> +	}
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
+> +		brbfcr |= BRBFCR_EL1_RTN;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_CALL)
+> +		brbfcr |= BRBFCR_EL1_INDCALL;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_COND)
+> +		brbfcr |= BRBFCR_EL1_CONDDIR;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_JUMP)
+> +		brbfcr |= BRBFCR_EL1_INDIRECT;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_CALL)
+> +		brbfcr |= BRBFCR_EL1_DIRCALL;
+> +
+> +	return brbfcr;
+> +}
+> +
+> +/*
+> + * BRBE supports the following privilege mode filters while generating
+> + * branch records.
+> + *
+> + * BRBCR_ELx_E0BRE - EL0 branch records
+> + * BRBCR_ELx_ExBRE - EL1/EL2 branch records
+> + *
+> + * BRBE also supports the following additional functional branch type
+> + * filters while generating branch records.
+> + *
+> + * BRBCR_ELx_EXCEPTION - Exception
+> + * BRBCR_ELx_ERTN     -  Exception return
+> + */
+> +static u64 branch_type_to_brbcr(int branch_type)
+> +{
+> +	u64 brbcr = BRBCR_ELx_DEFAULT_TS;
+> +
+> +	/*
+> +	 * BRBE should be paused on PMU interrupt while tracing kernel
+> +	 * space to stop capturing further branch records. Otherwise
+> +	 * interrupt handler branch records might get into the samples
+> +	 * which is not desired.
+> +	 *
+> +	 * BRBE need not be paused on PMU interrupt while tracing only
+> +	 * the user space, because it will automatically be inside the
+> +	 * prohibited region. But even after PMU overflow occurs, the
+> +	 * interrupt could still take much more cycles, before it can
+> +	 * be taken and by that time BRBE will have been overwritten.
+> +	 * Hence enable pause on PMU interrupt mechanism even for user
+> +	 * only traces as well.
+> +	 */
+> +	brbcr |= BRBCR_ELx_FZP;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_USER)
+> +		brbcr |= BRBCR_ELx_E0BRE;
+> +
+> +	/*
+> +	 * When running in the hyp mode, writing into BRBCR_EL1
+> +	 * actually writes into BRBCR_EL2 instead. Field E2BRE
+> +	 * is also at the same position as E1BRE.
+> +	 */
+> +	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
+> +		brbcr |= BRBCR_ELx_ExBRE;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_HV) {
+> +		if (is_kernel_in_hyp_mode())
+> +			brbcr |= BRBCR_ELx_ExBRE;
+> +	}
+> +
+> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
+> +		brbcr |= BRBCR_ELx_CC;
+> +
+> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_FLAGS))
+> +		brbcr |= BRBCR_ELx_MPRED;
+> +
+> +	/*
+> +	 * The exception and exception return branches could be
+> +	 * captured, irrespective of the perf event's privilege.
+> +	 * If the perf event does not have enough privilege for
+> +	 * a given exception level, then addresses which falls
+> +	 * under that exception level will be reported as zero
+> +	 * for the captured branch record, creating source only
+> +	 * or target only records.
+> +	 */
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
+> +		brbcr |= BRBCR_ELx_EXCEPTION;
+> +		brbcr |= BRBCR_ELx_ERTN;
+> +	}
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL)
+> +		brbcr |= BRBCR_ELx_EXCEPTION;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
+> +		brbcr |= BRBCR_ELx_ERTN;
+> +
+> +	return brbcr & BRBCR_ELx_CONFIG_MASK;
+> +}
+> +
+> +void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)
+> +{
+> +	struct pmu_hw_events *cpuc = this_cpu_ptr(arm_pmu->hw_events);
+> +	u64 brbfcr, brbcr;
+> +
+> +	if (!(cpuc->brbe_sample_type && cpuc->brbe_users))
+> +		return;
+> +
+> +	/*
+> +	 * BRBE gets configured with a new mismatched branch sample
+> +	 * type request, overriding any previous branch filters.
+> +	 */
+> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> +	brbfcr &= ~BRBFCR_EL1_DEFAULT_CONFIG;
 
-This causes lots of W=1 build errors because the prototypes are in
-arm_pmuv3.h, but arm_brbe.c doesn't include it.
+This is called default_config, but is being used semantically the same
+way as BRBCR_ELx_CONFIG_MASK below to clear out the fields. Doesn't that
+mean that it's a mask rather than a default config? It's only ever used
+in this way. default_config implies it's written or used as an
+initialiser at some point.
 
-It seems like the main reason you can't include arm_brbe.h in arm32 code
-is because there are a load of inline functions and references to
-registers in there. But these are only used in arm_brbe.c, so they don't
-need to be in the header anyway.
+> +	brbfcr |= branch_type_to_brbfcr(cpuc->brbe_sample_type);
+> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
+> +	isb();
+> +
+> +	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+> +	brbcr &= ~BRBCR_ELx_CONFIG_MASK;
+> +	brbcr |= branch_type_to_brbcr(cpuc->brbe_sample_type);
 
-If you removed the code from the header and moved it to the source file
-you could move the brbe prototypes to the brbe header and it would be a
-bit cleaner and more idiomatic.
+BRBCR_ELx_CONFIG_MASK is already &'d at the end of
+branch_type_to_brbcr(), so isn't it easier and equivalent to just do the
+following instead of the read(), &= and then |= ?
 
+  write_sysreg_s(branch_type_to_brbcr(...), SYS_BRBCR_EL1);
+
+Or at least make branch_type_to_brbfcr() consistent and &
+BRBFCR_EL1_DEFAULT_CONFIG at the end of that function too.
+
+> +	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
+> +	isb();
+> +}
+> +
