@@ -1,87 +1,113 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AB93FB34
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 13:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5213FE27
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 15:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcAe94TZ"
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE80F1B9;
-	Tue, 14 Nov 2023 05:36:40 -0800 (PST)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-6c34e87b571so4676254b3a.3;
-        Tue, 14 Nov 2023 05:36:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699969000; x=1700573800; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KgJwRlEMoHzpEQlLwG6IQKGKZ066IKihId2W0KLkg2o=;
-        b=XcAe94TZJocshhlnsoVFUyT4oTN/uaXS9N1vfPoZDnXOZSM2V/7T+6XR7Ys1vNtcfJ
-         d7ozcepHpHKWPoEKVUp2sFd8vSO0bE5fdoA4FsmpKRYWMSOodCgDYb2FrtOinKtVNa9P
-         jPEB6og8KKzRDYp0GB509on1rSGsxLp9QNSNgvC1yJywqh/KueHybOmtroPNm9vV9S8N
-         InKzFBLEe6W+O7tWdwxRIzUdGC6jWS2PejOSu+ora7w/7kT8c1SX19/unIksACJYAJ4v
-         qfVtd4DFE9Mn9X5ovyGDkRWddRht2cpyP6czAOPmWWEmbNWzPj8T9kzFGgIvgpxME5Ro
-         824g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699969000; x=1700573800;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgJwRlEMoHzpEQlLwG6IQKGKZ066IKihId2W0KLkg2o=;
-        b=mPY+sOz4zC0xY57F2vyMhxaSuFC65zOVUC8xulxb9+kz3e012Dr9t9ps4s2qRYU51m
-         zXbtwF7pliv07wnU6YDrZ+wnHS5b8ZfFZyKPnzO7eRqW6f6Rr7QPvLWpANObu9U4i0bR
-         45n//T8I8sS3748RzyYNxXTs3xwLQtrwPDEYr6OrF6QyBOm5q3wYQ62T7IdupkEbKJOj
-         HvnmF0jGNaJxVv+ELqWZHqsr+FTKjEcZSnm07jfLKnkAcTLaqrajJBwYshfIhNhzo5rP
-         WbNnppAwEq+JYvhqP9bsJWXKZGWl5/Xud5XvYaVXKAccNtDCj3pMlF8suy63sy9AMN5A
-         5RWQ==
-X-Gm-Message-State: AOJu0Ywi4lirfFJHWbwXBh4VDe8XjPdsYW8r5Ze4p8AanzN0+L6rLOsg
-	mjS8FGZ7hGkaOZF0cnp++dY=
-X-Google-Smtp-Source: AGHT+IHwC9+iiP2XoMjsRObvZ8Sr1dpHUfScABioBmEanqShk/UZJR+IF+5VXhYhbcLmcwLerU8qVQ==
-X-Received: by 2002:aa7:9a82:0:b0:6c6:af58:c9f2 with SMTP id x2-20020aa79a82000000b006c6af58c9f2mr6255960pfi.2.1699969000145;
-        Tue, 14 Nov 2023 05:36:40 -0800 (PST)
-Received: from [220.72.86.144] ([220.72.86.144])
-        by smtp.gmail.com with ESMTPSA id fa19-20020a056a002d1300b0068fe7e07190sm1159601pfb.3.2023.11.14.05.36.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Nov 2023 05:36:39 -0800 (PST)
-Message-ID: <04449bfd-7eee-4e66-86a8-4065be0b1127@gmail.com>
-Date: Tue, 14 Nov 2023 22:36:35 +0900
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="hszApbOk"
+Received: from m1355.mail.163.com (m1355.mail.163.com [220.181.13.55])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id DABCB11D;
+	Tue, 14 Nov 2023 07:21:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=Ak9EaB59gyCEovqIJ4okvRmDFNn2Tsq6SQNmb/KynmA=; b=h
+	szApbOkjvcouCNHA0UL3mcYCo94gsDOb0vzOEeHarESLt1heuH+mnfeXSmsRq9XI
+	Q9X9jlJFsDC3o5c5zUmqYqH3i84LLT2f5Ak1ILffD2QcTwFh13ug9EYQOn6mgc28
+	U6Y5WZyLu+KroSveuQBCEF0bDMFUi4M8Z6NwjbKHp8=
+Received: from 00107082$163.com ( [111.35.186.243] ) by ajax-webmail-wmsvr55
+ (Coremail) ; Tue, 14 Nov 2023 23:20:32 +0800 (CST)
+X-Originating-IP: [111.35.186.243]
+Date: Tue, 14 Nov 2023 23:20:32 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re:[Regression or Fix]perf: profiling stats sigificantly changed
+ for aio_write/read(ext4) between 6.7.0-rc1 and 6.6.0
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2023 www.mailtech.cn 163com
+In-Reply-To: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
+References: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
+X-NTES-SC: AL_QuySC/Wcukoo5CidYOkXn0oTju85XMCzuv8j3YJeN500tyri5QwQR0VyH1LL4tuQJiWxiiKGbiFg28FDR5VFXKNVrSKz3rpiSPu6Zw1DOCNb
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf script python: Fail check on dynamic allocation.
-Content-Language: ko
-To: Adrian Hunter <adrian.hunter@intel.com>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- shjy180909@gmail.com, austindh.kim@gmail.com, honggyu.kp@gmail.com
-References: <20231112071446.7811-1-p4ranlee@gmail.com>
- <5a909795-bd93-4c33-9de4-729f45182427@intel.com>
-From: Paran Lee <p4ranlee@gmail.com>
-In-Reply-To: <5a909795-bd93-4c33-9de4-729f45182427@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <76d75357.6ab6.18bce6b7d5b.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:N8GowAD3n_tBkFNlYzYYAA--.57550W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiTAEoqmI0cP8ufQAGsD
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-
-
-On 2023-11-13 오후 4:44, Adrian Hunter wrote:
-
-Thank you so much for the review Adrian!
-My first patch were my inexperience came in.
-
-> Please ensure patches compile before submitting.  Also run checkpatch
-> and fix any errors, and consider fixing warnings and checks.  Have a look
-> at checkpatch --strict also.
-
-I'll check you mentioned and send the v2 patch.
-
-BR,
-Paran Lee
+CgpBdCAyMDIzLTExLTE0IDEyOjMxOjEyLCAiRGF2aWQgV2FuZyIgPDAwMTA3MDgyQDE2My5jb20+
+IHdyb3RlOgo+SGksCj4KPkkgd2FzIG1ha2luZyBrZXJuZWwgcHJvZmlsaW5nIHRvIGlkZW50aWZ5
+IGtlcm5lbCBjaGFuZ2VzIGJldHdlZW4gcmV2aXNpb25zIHVuZGVyIHRoZSBsb2FkIG9mIGZpbyBi
+ZW5jaG1hcmssIAoKPkJ1dCBJIGRpZCBub3Qgbm90aWNlIGEgc2lnbmlmaWNhbnQgY2hhbmdlIGlu
+IHRoZSBvdmVyaGVhZCBvZiBwZXJmIHRyYWNpbmcgYmFzZWQgb24gdGhlIGZpbyByZXBvcnQsIAo+
+dGhhdCBpcyB3aHkgSSBhbSBub3Qgc3VyZSB3aGV0aGVyIHRoaXMgaXMgYSByZWdyZXNzaW9uIG9y
+IGFuIGltcHJvdmVtZW50Li4uLgo+SnVzdCByZXBvcnQgdGhlIGNoYW5nZS4KPgoKSSBydW4gdGhl
+IHNhbWUgdGVzdCBvbiBhbm90aGVyIGRpc2sgd2hpY2ggaXMgYWxtb3N0IGlkbGUgYWxsIHRoZSB0
+aW1lLCBhbmQgc3RpbGwsIHNpZ25pZmljYW50IHBlcmYgc2FtcGxlIHN0YXRzIGNoYW5nZXMgZGV0
+ZWN0ZWQ6Cgo2LjcuMC1yYzEKCmFpb193cml0ZSg0OS4zNDAlIDEzMTUwMS8yNjY1MjEpCiAgICBl
+eHQ0X2ZpbGVfd3JpdGVfaXRlcig5NC41NjclIDEyNDM1Ni8xMzE1MDEpCiAgICAgICAgaW9tYXBf
+ZGlvX3J3KDc4LjQ5NCUgOTc2MTIvMTI0MzU2KQogICAgICAgICAgICBfX2lvbWFwX2Rpb19ydyg5
+OS41NTAlIDk3MTczLzk3NjEyKQogICAgICAgICAgICAgICAgaW9tYXBfZGlvX2Jpb19pdGVyKDQ3
+Ljc3MyUgNDY0MjIvOTcxNzMpICAgPDwtLS0tCiAgICAgICAgICAgICAgICBibGtfZmluaXNoX3Bs
+dWcoMjkuOTMxJSAyOTA4NS85NzE3MykgICAgICA8PC0tLS0KICAgICAgICAgICAgICAgIGlvbWFw
+X2l0ZXIoMTQuMDgyJSAxMzY4NC85NzE3MykKICAgICAgICAgICAgICAgIGttYWxsb2NfdHJhY2Uo
+MS44MTQlIDE3NjMvOTcxNzMpCiAgICAgICAgICAgICAgICBraW9jYl9pbnZhbGlkYXRlX3BhZ2Vz
+KDAuNjMxJSA2MTMvOTcxNzMpCiAgICAgICAgICAgICAgICBpbnZhbGlkYXRlX2lub2RlX3BhZ2Vz
+Ml9yYW5nZSgwLjQ0OCUgNDM1Lzk3MTczKQogICAgICAgICAgICAgICAgc3Jzb19yZXR1cm5fdGh1
+bmsoMC4zMjAlIDMxMS85NzE3MykKICAgICAgICAgICAgICAgIGJsa19zdGFydF9wbHVnKDAuMTY3
+JSAxNjIvOTcxNzMpCgoKNi43LjAtcmMxIHdpdGggZjA2Y2M2NjdmNzkgcmV2ZXJ0ZWQKCmFpb193
+cml0ZSg0OS4wNzElIDE1NTg3My8zMTc2NDkpCiAgICBleHQ0X2ZpbGVfd3JpdGVfaXRlcig5NS4y
+MTElIDE0ODQwOS8xNTU4NzMpCiAgICAgICAgaW9tYXBfZGlvX3J3KDgxLjgxNiUgMTIxNDIyLzE0
+ODQwOSkKICAgICAgICAgICAgX19pb21hcF9kaW9fcncoOTkuNjg0JSAxMjEwMzgvMTIxNDIyKQog
+ICAgICAgICAgICAgICAgaW9tYXBfZGlvX2Jpb19pdGVyKDQwLjI4MCUgNDg3NTQvMTIxMDM4KSAg
+IDw8LS0tCiAgICAgICAgICAgICAgICBibGtfZmluaXNoX3BsdWcoMzYuNzYwJSA0NDQ5NC8xMjEw
+MzgpICAgICAgPDwtLS0KICAgICAgICAgICAgICAgIGlvbWFwX2l0ZXIoMTQuNjU3JSAxNzc0MC8x
+MjEwMzgpCiAgICAgICAgICAgICAgICBrbWFsbG9jX3RyYWNlKDEuNzc1JSAyMTQ5LzEyMTAzOCkK
+ICAgICAgICAgICAgICAgIGtpb2NiX2ludmFsaWRhdGVfcGFnZXMoMC41OTklIDcyNS8xMjEwMzgp
+CiAgICAgICAgICAgICAgICBpbnZhbGlkYXRlX2lub2RlX3BhZ2VzMl9yYW5nZSgwLjMzMCUgMzk5
+LzEyMTAzOCkKICAgICAgICAgICAgICAgIHNyc29fcmV0dXJuX3RodW5rKDAuMjYzJSAzMTgvMTIx
+MDM4KQogICAgICAgICAgICAgICAgYmxrX3N0YXJ0X3BsdWcoMC4xNjklIDIwNC8xMjEwMzgpCgoK
+SSByZW1vdmUgdGhlIDQgb2NjdXJyZW5jZXMgZm9yIGNoZWNraW5nIG5yX2Nncm91cHM6CgpkaWZm
+IC0tZ2l0IGEva2VybmVsL2V2ZW50cy9jb3JlLmMgYi9rZXJuZWwvZXZlbnRzL2NvcmUuYwppbmRl
+eCA2ODNkYzA4NmVmMTAuLjc1ODM0MThlOTRkOSAxMDA2NDQKLS0tIGEva2VybmVsL2V2ZW50cy9j
+b3JlLmMKKysrIGIva2VybmVsL2V2ZW50cy9jb3JlLmMKQEAgLTY5MCw4ICs2OTAsOCBAQCBzdGF0
+aWMgdm9pZCBwZXJmX2N0eF9kaXNhYmxlKHN0cnVjdCBwZXJmX2V2ZW50X2NvbnRleHQgKmN0eCwg
+Ym9vbCBjZ3JvdXApCiAgICAgICAgc3RydWN0IHBlcmZfZXZlbnRfcG11X2NvbnRleHQgKnBtdV9j
+dHg7CiAKICAgICAgICBsaXN0X2Zvcl9lYWNoX2VudHJ5KHBtdV9jdHgsICZjdHgtPnBtdV9jdHhf
+bGlzdCwgcG11X2N0eF9lbnRyeSkgewotICAgICAgICAgICAgICAgaWYgKGNncm91cCAmJiAhcG11
+X2N0eC0+bnJfY2dyb3VwcykKLSAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7CisgICAg
+ICAgLy8gICAgICBpZiAoY2dyb3VwICYmICFwbXVfY3R4LT5ucl9jZ3JvdXBzKQorICAgICAgIC8v
+ICAgICAgICAgICAgICBjb250aW51ZTsKICAgICAgICAgICAgICAgIHBlcmZfcG11X2Rpc2FibGUo
+cG11X2N0eC0+cG11KTsKICAgICAgICB9CiB9CkBAIC03MDEsOCArNzAxLDggQEAgc3RhdGljIHZv
+aWQgcGVyZl9jdHhfZW5hYmxlKHN0cnVjdCBwZXJmX2V2ZW50X2NvbnRleHQgKmN0eCwgYm9vbCBj
+Z3JvdXApCiAgICAgICAgc3RydWN0IHBlcmZfZXZlbnRfcG11X2NvbnRleHQgKnBtdV9jdHg7CiAK
+ICAgICAgICBsaXN0X2Zvcl9lYWNoX2VudHJ5KHBtdV9jdHgsICZjdHgtPnBtdV9jdHhfbGlzdCwg
+cG11X2N0eF9lbnRyeSkgewotICAgICAgICAgICAgICAgaWYgKGNncm91cCAmJiAhcG11X2N0eC0+
+bnJfY2dyb3VwcykKLSAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7CisgICAgICAgLy8g
+ICAgICBpZiAoY2dyb3VwICYmICFwbXVfY3R4LT5ucl9jZ3JvdXBzKQorICAgICAgIC8vICAgICAg
+ICAgICAgICBjb250aW51ZTsKICAgICAgICAgICAgICAgIHBlcmZfcG11X2VuYWJsZShwbXVfY3R4
+LT5wbXUpOwogICAgICAgIH0KIH0KQEAgLTMzMDcsOCArMzMwNyw4IEBAIGN0eF9zY2hlZF9vdXQo
+c3RydWN0IHBlcmZfZXZlbnRfY29udGV4dCAqY3R4LCBlbnVtIGV2ZW50X3R5cGVfdCBldmVudF90
+eXBlKQogICAgICAgIGlzX2FjdGl2ZSBePSBjdHgtPmlzX2FjdGl2ZTsgLyogY2hhbmdlZCBiaXRz
+ICovCiAKICAgICAgICBsaXN0X2Zvcl9lYWNoX2VudHJ5KHBtdV9jdHgsICZjdHgtPnBtdV9jdHhf
+bGlzdCwgcG11X2N0eF9lbnRyeSkgewotICAgICAgICAgICAgICAgaWYgKGNncm91cCAmJiAhcG11
+X2N0eC0+bnJfY2dyb3VwcykKLSAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7CisgICAg
+ICAgLy8gICAgICBpZiAoY2dyb3VwICYmICFwbXVfY3R4LT5ucl9jZ3JvdXBzKQorICAgICAgIC8v
+ICAgICAgICAgICAgICBjb250aW51ZTsKICAgICAgICAgICAgICAgIF9fcG11X2N0eF9zY2hlZF9v
+dXQocG11X2N0eCwgaXNfYWN0aXZlKTsKICAgICAgICB9CiB9CgoKIFRoZSByZXN1bHRpbmcgcHJv
+ZmlsaW5nIHN0YXRzIGlzIHNpbWlsYXIgdG8gcmV2ZXJ0aW5nIGYwNmNjNjY3Zjc5LgpJIHRoaW5r
+IHRoZXJlIGFyZSBzb21lIGNhc2VzIHdoZXJlIHBtdV9jdHgtPm5yX2Nncm91cHMgaXMgemVybyBi
+dXQgdGhlcmUgaXMgc3RpbGwgY2dyb3VwIGV2ZW50IHdpdGhpbiwgYW5kIHNvbWUgc2FtcGxlcyBh
+cmUgbWlzc2VkLCBjYXVzaW5nIHRoZSBzdGF0cyBjaGFuZ2VzLCBqdXN0IGEgZ3Vlc3MuCgoKRGF2
+aWQgV2FuZwoK
