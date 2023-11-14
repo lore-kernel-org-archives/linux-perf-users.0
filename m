@@ -1,20 +1,20 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E1E3D984
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 12:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF103E479
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 12:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B45B7130;
-	Tue, 14 Nov 2023 04:11:55 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC8A61A7;
+	Tue, 14 Nov 2023 04:14:20 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D42FC15;
-	Tue, 14 Nov 2023 04:12:40 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9004C15;
+	Tue, 14 Nov 2023 04:15:05 -0800 (PST)
 Received: from [10.57.72.217] (unknown [10.57.72.217])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 837F83F6C4;
-	Tue, 14 Nov 2023 04:11:52 -0800 (PST)
-Message-ID: <00f05970-c793-242e-485a-f987201651ad@arm.com>
-Date: Tue, 14 Nov 2023 12:11:50 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0DBC3F6C4;
+	Tue, 14 Nov 2023 04:14:17 -0800 (PST)
+Message-ID: <62b84faf-f413-6bfd-5fc1-ac2489e61e00@arm.com>
+Date: Tue, 14 Nov 2023 12:14:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -23,9 +23,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [V14 4/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
- via FEAT_BRBE
-Content-Language: en-US, en-GB
+Subject: Re: [V14 3/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
+ framework
+Content-Language: en-US
 To: Anshuman Khandual <anshuman.khandual@arm.com>
 Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
  Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
@@ -35,9 +35,9 @@ Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
  linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
  mark.rutland@arm.com
 References: <20231114051329.327572-1-anshuman.khandual@arm.com>
- <20231114051329.327572-5-anshuman.khandual@arm.com>
+ <20231114051329.327572-4-anshuman.khandual@arm.com>
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231114051329.327572-5-anshuman.khandual@arm.com>
+In-Reply-To: <20231114051329.327572-4-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -47,167 +47,285 @@ On 14/11/2023 05:13, Anshuman Khandual wrote:
 [...]
 
 > +/*
-> + * BRBE supports the following functional branch type filters while
-> + * generating branch records. These branch filters can be enabled,
-> + * either individually or as a group i.e ORing multiple filters
-> + * with each other.
-> + *
-> + * BRBFCR_EL1_CONDDIR  - Conditional direct branch
-> + * BRBFCR_EL1_DIRCALL  - Direct call
-> + * BRBFCR_EL1_INDCALL  - Indirect call
-> + * BRBFCR_EL1_INDIRECT - Indirect branch
-> + * BRBFCR_EL1_DIRECT   - Direct branch
-> + * BRBFCR_EL1_RTN      - Subroutine return
+> + * This is a read only constant and safe during multi threaded access
 > + */
-> +static u64 branch_type_to_brbfcr(int branch_type)
+> +static struct perf_branch_stack zero_branch_stack = { .nr = 0, .hw_idx = -1ULL};
+> +
+> +static void read_branch_records(struct pmu_hw_events *cpuc,
+> +				struct perf_event *event,
+> +				struct perf_sample_data *data,
+> +				bool *branch_captured)
 > +{
-> +	u64 brbfcr = 0;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
-> +		brbfcr |= BRBFCR_EL1_BRANCH_FILTERS;
-> +		return brbfcr;
-> +	}
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL) {
-> +		brbfcr |= BRBFCR_EL1_INDCALL;
-> +		brbfcr |= BRBFCR_EL1_DIRCALL;
-> +	}
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
-> +		brbfcr |= BRBFCR_EL1_RTN;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_CALL)
-> +		brbfcr |= BRBFCR_EL1_INDCALL;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_COND)
-> +		brbfcr |= BRBFCR_EL1_CONDDIR;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_JUMP)
-> +		brbfcr |= BRBFCR_EL1_INDIRECT;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_CALL)
-> +		brbfcr |= BRBFCR_EL1_DIRCALL;
-> +
-> +	return brbfcr;
-> +}
-> +
-> +/*
-> + * BRBE supports the following privilege mode filters while generating
-> + * branch records.
-> + *
-> + * BRBCR_ELx_E0BRE - EL0 branch records
-> + * BRBCR_ELx_ExBRE - EL1/EL2 branch records
-> + *
-> + * BRBE also supports the following additional functional branch type
-> + * filters while generating branch records.
-> + *
-> + * BRBCR_ELx_EXCEPTION - Exception
-> + * BRBCR_ELx_ERTN     -  Exception return
-> + */
-> +static u64 branch_type_to_brbcr(int branch_type)
-> +{
-> +	u64 brbcr = BRBCR_ELx_DEFAULT_TS;
-> +
 > +	/*
-> +	 * BRBE should be paused on PMU interrupt while tracing kernel
-> +	 * space to stop capturing further branch records. Otherwise
-> +	 * interrupt handler branch records might get into the samples
-> +	 * which is not desired.
-> +	 *
-> +	 * BRBE need not be paused on PMU interrupt while tracing only
-> +	 * the user space, because it will automatically be inside the
-> +	 * prohibited region. But even after PMU overflow occurs, the
-> +	 * interrupt could still take much more cycles, before it can
-> +	 * be taken and by that time BRBE will have been overwritten.
-> +	 * Hence enable pause on PMU interrupt mechanism even for user
-> +	 * only traces as well.
+> +	 * CPU specific branch records buffer must have been allocated already
+> +	 * for the hardware records to be captured and processed further.
 > +	 */
-> +	brbcr |= BRBCR_ELx_FZP;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_USER)
-> +		brbcr |= BRBCR_ELx_E0BRE;
-> +
-> +	/*
-> +	 * When running in the hyp mode, writing into BRBCR_EL1
-> +	 * actually writes into BRBCR_EL2 instead. Field E2BRE
-> +	 * is also at the same position as E1BRE.
-> +	 */
-> +	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
-> +		brbcr |= BRBCR_ELx_ExBRE;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_HV) {
-> +		if (is_kernel_in_hyp_mode())
-> +			brbcr |= BRBCR_ELx_ExBRE;
-> +	}
-> +
-> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
-> +		brbcr |= BRBCR_ELx_CC;
-> +
-> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_FLAGS))
-> +		brbcr |= BRBCR_ELx_MPRED;
-> +
-> +	/*
-> +	 * The exception and exception return branches could be
-> +	 * captured, irrespective of the perf event's privilege.
-> +	 * If the perf event does not have enough privilege for
-> +	 * a given exception level, then addresses which falls
-> +	 * under that exception level will be reported as zero
-> +	 * for the captured branch record, creating source only
-> +	 * or target only records.
-> +	 */
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
-> +		brbcr |= BRBCR_ELx_EXCEPTION;
-> +		brbcr |= BRBCR_ELx_ERTN;
-> +	}
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL)
-> +		brbcr |= BRBCR_ELx_EXCEPTION;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
-> +		brbcr |= BRBCR_ELx_ERTN;
-> +
-> +	return brbcr & BRBCR_ELx_CONFIG_MASK;
-> +}
-> +
-> +void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)
-> +{
-> +	struct pmu_hw_events *cpuc = this_cpu_ptr(arm_pmu->hw_events);
-> +	u64 brbfcr, brbcr;
-> +
-> +	if (!(cpuc->brbe_sample_type && cpuc->brbe_users))
+> +	if (WARN_ON(!cpuc->branches))
 > +		return;
 > +
 > +	/*
-> +	 * BRBE gets configured with a new mismatched branch sample
-> +	 * type request, overriding any previous branch filters.
+> +	 * Overflowed event's branch_sample_type does not match the configured
+> +	 * branch filters in the BRBE HW. So the captured branch records here
+> +	 * cannot be co-related to the overflowed event. Report to the user as
+> +	 * if no branch records have been captured, and flush branch records.
+> +	 * The same scenario is applicable when the current task context does
+> +	 * not match with overflown event.
 > +	 */
-> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-> +	brbfcr &= ~BRBFCR_EL1_DEFAULT_CONFIG;
+> +	if ((cpuc->brbe_sample_type != event->attr.branch_sample_type) ||
+> +	    (event->ctx->task && cpuc->brbe_context != event->ctx)) {
+> +		perf_sample_save_brstack(data, event, &zero_branch_stack);
 
-This is called default_config, but is being used semantically the same
-way as BRBCR_ELx_CONFIG_MASK below to clear out the fields. Doesn't that
-mean that it's a mask rather than a default config? It's only ever used
-in this way. default_config implies it's written or used as an
-initialiser at some point.
+Is there any benefit to outputting a zero size stack vs not outputting
+anything at all?
 
-> +	brbfcr |= branch_type_to_brbfcr(cpuc->brbe_sample_type);
-> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-> +	isb();
+> +		return;
+> +	}
 > +
-> +	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
-> +	brbcr &= ~BRBCR_ELx_CONFIG_MASK;
-> +	brbcr |= branch_type_to_brbcr(cpuc->brbe_sample_type);
-
-BRBCR_ELx_CONFIG_MASK is already &'d at the end of
-branch_type_to_brbcr(), so isn't it easier and equivalent to just do the
-following instead of the read(), &= and then |= ?
-
-  write_sysreg_s(branch_type_to_brbcr(...), SYS_BRBCR_EL1);
-
-Or at least make branch_type_to_brbfcr() consistent and &
-BRBFCR_EL1_DEFAULT_CONFIG at the end of that function too.
-
-> +	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
-> +	isb();
+> +	/*
+> +	 * Read the branch records from the hardware once after the PMU IRQ
+> +	 * has been triggered but subsequently same records can be used for
+> +	 * other events that might have been overflowed simultaneously thus
+> +	 * saving much CPU cycles.
+> +	 */
+> +	if (!*branch_captured) {
+> +		armv8pmu_branch_read(cpuc, event);
+> +		*branch_captured = true;
+> +	}
+> +	perf_sample_save_brstack(data, event, &cpuc->branches->branch_stack);
 > +}
 > +
+>  static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>  {
+>  	u32 pmovsr;
+> @@ -766,6 +815,7 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>  	struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
+>  	struct pt_regs *regs;
+>  	int idx;
+> +	bool branch_captured = false;
+>  
+>  	/*
+>  	 * Get and reset the IRQ flags
+> @@ -809,6 +859,13 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>  		if (!armpmu_event_set_period(event))
+>  			continue;
+>  
+> +		/*
+> +		 * PMU IRQ should remain asserted until all branch records
+> +		 * are captured and processed into struct perf_sample_data.
+> +		 */
+> +		if (has_branch_stack(event) && cpu_pmu->has_branch_stack)
+> +			read_branch_records(cpuc, event, &data, &branch_captured);
+
+You could return instead of using the out param, not really any
+different, but maybe a bit more normal:
+
+  branch_captured |= read_branch_records(cpuc, event, &data,
+branch_captured);
+
+> +
+>  		/*
+>  		 * Perf event overflow will queue the processing of the event as
+>  		 * an irq_work which will be taken care of in the handling of
+> @@ -818,6 +875,8 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>  			cpu_pmu->disable(event);
+>  	}
+>  	armv8pmu_start(cpu_pmu);
+> +	if (cpu_pmu->has_branch_stack)
+> +		armv8pmu_branch_reset();
+>  
+>  	return IRQ_HANDLED;
+>  }
+> @@ -907,6 +966,24 @@ static int armv8pmu_user_event_idx(struct perf_event *event)
+>  	return event->hw.idx;
+>  }
+>  
+> +static void armv8pmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+> +{
+> +	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
+> +	void *task_ctx = pmu_ctx->task_ctx_data;
+> +
+> +	if (armpmu->has_branch_stack) {
+> +		/* Save branch records in task_ctx on sched out */
+> +		if (task_ctx && !sched_in) {
+> +			armv8pmu_branch_save(armpmu, task_ctx);
+> +			return;
+> +		}
+> +
+> +		/* Reset branch records on sched in */
+> +		if (sched_in)
+> +			armv8pmu_branch_reset();
+> +	}
+> +}
+> +
+>  /*
+>   * Add an event filter to a given event.
+>   */
+> @@ -977,6 +1054,9 @@ static void armv8pmu_reset(void *info)
+>  		pmcr |= ARMV8_PMU_PMCR_LP;
+>  
+>  	armv8pmu_pmcr_write(pmcr);
+> +
+> +	if (cpu_pmu->has_branch_stack)
+> +		armv8pmu_branch_reset();
+>  }
+>  
+>  static int __armv8_pmuv3_map_event_id(struct arm_pmu *armpmu,
+> @@ -1014,6 +1094,20 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
+>  
+>  	hw_event_id = __armv8_pmuv3_map_event_id(armpmu, event);
+>  
+> +	if (has_branch_stack(event)) {
+> +		if (!armv8pmu_branch_attr_valid(event))
+> +			return -EOPNOTSUPP;
+> +
+> +		/*
+> +		 * If a task gets scheduled out, the current branch records
+> +		 * get saved in the task's context data, which can be later
+> +		 * used to fill in the records upon an event overflow. Let's
+> +		 * enable PERF_ATTACH_TASK_DATA in 'event->attach_state' for
+> +		 * all branch stack sampling perf events.
+> +		 */
+> +		event->attach_state |= PERF_ATTACH_TASK_DATA;
+> +	}
+> +
+>  	/*
+>  	 * CHAIN events only work when paired with an adjacent counter, and it
+>  	 * never makes sense for a user to open one in isolation, as they'll be
+> @@ -1130,6 +1224,35 @@ static void __armv8pmu_probe_pmu(void *info)
+>  		cpu_pmu->reg_pmmir = read_pmmir();
+>  	else
+>  		cpu_pmu->reg_pmmir = 0;
+> +	armv8pmu_branch_probe(cpu_pmu);
+
+I'm not sure if this is splitting hairs or not, but
+__armv8pmu_probe_pmu() is run on only one of 'any' of the supported CPUs
+for this PMU.
+
+Is it not possible to have some of those CPUs support and some not
+support BRBE, even though they are all the same PMU type? Maybe we could
+wait for it to explode with some weird system, or change it so that the
+BRBE probe is run on every CPU, with a second 'supported_brbe_mask' field.
+
+> +}
+> +
+> +static int branch_records_alloc(struct arm_pmu *armpmu)
+> +{
+> +	struct branch_records __percpu *records;
+> +	int cpu;
+> +
+> +	records = alloc_percpu_gfp(struct branch_records, GFP_KERNEL);
+> +	if (!records)
+> +		return -ENOMEM;
+> +
+
+Doesn't this technically need to take the CPU mask where BRBE is
+supported into account? Otherwise you are allocating for cores that
+never use it.
+
+Also it's done per-CPU _and_ per-PMU type, multiplying the number of
+BRBE buffers allocated, even if they can only ever be used per-CPU.
+
+> +	/*
+> +	 * percpu memory allocated for 'records' gets completely consumed
+> +	 * here, and never required to be freed up later. So permanently
+> +	 * losing access to this anchor i.e 'records' is acceptable.
+> +	 *
+> +	 * Otherwise this allocation handle would have to be saved up for
+> +	 * free_percpu() release later if required.
+> +	 */
+> +	for_each_possible_cpu(cpu) {
+> +		struct pmu_hw_events *events_cpu;
+> +		struct branch_records *records_cpu;
+> +
+> +		events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
+> +		records_cpu = per_cpu_ptr(records, cpu);
+> +		events_cpu->branches = records_cpu;
+> +	}
+> +	return 0;
+>  }
+>  
+>  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+> @@ -1146,7 +1269,21 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>  	if (ret)
+>  		return ret;
+>  
+> -	return probe.present ? 0 : -ENODEV;
+> +	if (!probe.present)
+> +		return -ENODEV;
+> +
+> +	if (cpu_pmu->has_branch_stack) {
+> +		ret = armv8pmu_task_ctx_cache_alloc(cpu_pmu);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = branch_records_alloc(cpu_pmu);
+> +		if (ret) {
+> +			armv8pmu_task_ctx_cache_free(cpu_pmu);
+> +			return ret;
+> +		}
+> +	}
+> +	return 0;
+>  }
+>  
+
+[...]
+> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+> index 9c226adf938a..72da4522397c 100644
+> --- a/include/linux/perf/arm_pmuv3.h
+> +++ b/include/linux/perf/arm_pmuv3.h
+> @@ -303,4 +303,50 @@
+>  		}						\
+>  	} while (0)
+>  
+> +struct pmu_hw_events;
+> +struct arm_pmu;
+> +struct perf_event;
+> +
+> +#ifdef CONFIG_PERF_EVENTS
+
+Very minor nit, but if you end up moving the stubs to the brbe header
+you probably don't need the #ifdef CONFIG_PERF_EVENTS because it just
+won't be included in that case.
+
+> +static inline void armv8pmu_branch_reset(void)
+> +{
+> +}
+> +
+> +static inline void armv8pmu_branch_probe(struct arm_pmu *arm_pmu)
+> +{
+> +}
+> +
+> +static inline bool armv8pmu_branch_attr_valid(struct perf_event *event)
+> +{
+> +	WARN_ON_ONCE(!has_branch_stack(event));
+> +	return false;
+> +}
+> +
+> +static inline void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)
+> +{
+> +}
+> +
+> +static inline void armv8pmu_branch_disable(void)
+> +{
+> +}
+> +
+> +static inline void armv8pmu_branch_read(struct pmu_hw_events *cpuc,
+> +					struct perf_event *event)
+> +{
+> +	WARN_ON_ONCE(!has_branch_stack(event));
+> +}
+> +
+> +static inline void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)
+> +{
+> +}
+> +
+> +static inline int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *arm_pmu)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void armv8pmu_task_ctx_cache_free(struct arm_pmu *arm_pmu)
+> +{
+> +}
+> +#endif /* CONFIG_PERF_EVENTS */
+>  #endif
