@@ -1,82 +1,135 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D779063C4
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Nov 2023 09:28:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B5E8F4F
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Nov 2023 09:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 17BAD116;
-	Wed, 15 Nov 2023 01:28:29 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 60AD4E5;
+	Wed, 15 Nov 2023 01:37:39 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 624CEDA7;
-	Wed, 15 Nov 2023 01:29:14 -0800 (PST)
-Received: from a077893.arm.com (unknown [10.163.37.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0EF813F7B4;
-	Wed, 15 Nov 2023 01:28:23 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drivers: perf: arm_pmu: Drop 'pmu_lock' element from 'struct pmu_hw_events'
-Date: Wed, 15 Nov 2023 14:58:05 +0530
-Message-Id: <20231115092805.737822-3-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231115092805.737822-1-anshuman.khandual@arm.com>
-References: <20231115092805.737822-1-anshuman.khandual@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4A97DA7;
+	Wed, 15 Nov 2023 01:38:24 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A7653F7B4;
+	Wed, 15 Nov 2023 01:37:37 -0800 (PST)
+Message-ID: <4fa8ca52-b40c-65ec-59a0-7ad14c4e93b7@arm.com>
+Date: Wed, 15 Nov 2023 09:37:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [V14 3/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
+ framework
+Content-Language: en-US
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
+ mark.rutland@arm.com
+References: <20231114051329.327572-1-anshuman.khandual@arm.com>
+ <20231114051329.327572-4-anshuman.khandual@arm.com>
+ <0020aa0d-e9a5-aef6-f33d-817da56411a3@arm.com>
+ <5bf73672-4094-490b-b0a9-b983d512c904@arm.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <5bf73672-4094-490b-b0a9-b983d512c904@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-As 'pmu_lock' element is not being used in any ARM PMU implementation, just
-drop this from 'struct pmu_hw_events'.
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/perf/arm_pmu.c       | 1 -
- include/linux/perf/arm_pmu.h | 6 ------
- 2 files changed, 7 deletions(-)
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index d712a19e47ac..379479b50bdd 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -893,7 +893,6 @@ struct arm_pmu *armpmu_alloc(void)
- 		struct pmu_hw_events *events;
- 
- 		events = per_cpu_ptr(pmu->hw_events, cpu);
--		raw_spin_lock_init(&events->pmu_lock);
- 		events->percpu_pmu = pmu;
- 	}
- 
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 143fbc10ecfe..e2503d48ddee 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -59,12 +59,6 @@ struct pmu_hw_events {
- 	 */
- 	DECLARE_BITMAP(used_mask, ARMPMU_MAX_HWEVENTS);
- 
--	/*
--	 * Hardware lock to serialize accesses to PMU registers. Needed for the
--	 * read/modify/write sequences.
--	 */
--	raw_spinlock_t		pmu_lock;
--
- 	/*
- 	 * When using percpu IRQs, we need a percpu dev_id. Place it here as we
- 	 * already have to allocate this struct per cpu.
--- 
-2.25.1
+On 15/11/2023 05:44, Anshuman Khandual wrote:
+> On 11/14/23 15:28, James Clark wrote:
+>>
+>>
+>> On 14/11/2023 05:13, Anshuman Khandual wrote:
+>>> Branch stack sampling support i.e capturing branch records during execution
+>>> in core perf, rides along with normal HW events being scheduled on the PMU.
+>>> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
+>>> with required HW implementation.
+>>>
+>>
+>> [...]
+>>
+>>> - All armv8pmu_branch_xxxx() stub definitions have been moved inside
+>>>   include/linux/perf/arm_pmuv3.h for easy access from both arm32 and
+>>>   arm64 platforms
+>>>
+>>
+>> This causes lots of W=1 build errors because the prototypes are in
+>> arm_pmuv3.h, but arm_brbe.c doesn't include it.
+> 
+> I guess these are the W=1 warnings you mentioned above.
+> 
+> drivers/perf/arm_brbe.c:11:6: warning: no previous prototype for ‘armv8pmu_branch_reset’ [-Wmissing-prototypes]
+>    11 | void armv8pmu_branch_reset(void)                                                                                                                                                                   
+>       |      ^~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                         
+> drivers/perf/arm_brbe.c:190:6: warning: no previous prototype for ‘armv8pmu_branch_save’ [-Wmissing-prototypes]      
+>   190 | void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)                      
+>       |      ^~~~~~~~~~~~~~~~~~~~                                                                                                                                                                          
+> drivers/perf/arm_brbe.c:236:6: warning: no previous prototype for ‘armv8pmu_branch_attr_valid’ [-Wmissing-prototypes]
+>   236 | bool armv8pmu_branch_attr_valid(struct perf_event *event)                                                                                                                                          
+>       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                    
+> drivers/perf/arm_brbe.c:269:5: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_alloc’ [-Wmissing-prototypes]
+>   269 | int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *arm_pmu)                            
+>       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
+> drivers/perf/arm_brbe.c:279:6: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_free’ [-Wmissing-prototypes]
+>   279 | void armv8pmu_task_ctx_cache_free(struct arm_pmu *arm_pmu)                       
+>       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
+> drivers/perf/arm_brbe.c:303:6: warning: no previous prototype for ‘armv8pmu_branch_probe’ [-Wmissing-prototypes]
+>   303 | void armv8pmu_branch_probe(struct arm_pmu *armpmu)                                
+>       |      ^~~~~~~~~~~~~~~~~~~~~                                                                   
+> drivers/perf/arm_brbe.c:449:6: warning: no previous prototype for ‘armv8pmu_branch_enable’ [-Wmissing-prototypes]
+>   449 | void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)                             
+>       |      ^~~~~~~~~~~~~~~~~~~~~~                                                                  
+> drivers/perf/arm_brbe.c:474:6: warning: no previous prototype for ‘armv8pmu_branch_disable’ [-Wmissing-prototypes]
+>   474 | void armv8pmu_branch_disable(void)                                                           
+>       |      ^~~~~~~~~~~~~~~~~~~~~~~                                                                 
+> drivers/perf/arm_brbe.c:717:6: warning: no previous prototype for ‘armv8pmu_branch_read’ [-Wmissing-prototypes]
+>   717 | void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+> 
+> Branch helpers are used in ARM PMU V3 driver i.e drivers/perf/arm_pmuv3.c.
+> Whether the actual BRBE helper definitions, or their fallback stubs (when
+> CONFIG_ARM64_BRBE is not enabled), need to be accessible from arm_pmuv3.c
+> driver not from brbe.c implementations itself.
+> 
+>>
+>> It seems like the main reason you can't include arm_brbe.h in arm32 code
+>> is because there are a load of inline functions and references to
+>> registers in there. But these are only used in arm_brbe.c, so they don't
+> 
+> Right, arm32 should not be exposed to BRBE internals via arm_brbe.h header.
+> 
+>> need to be in the header anyway.
+> 
+> Right, these are only used in arm_brbe.c
+> 
+>>
+>> If you removed the code from the header and moved it to the source file
+>> you could move the brbe prototypes to the brbe header and it would be a
+>> bit cleaner and more idiomatic.
+> 
+> Alight, how about the following changes - build tested on arm32 and arm64.
+> 
+> - Move BRBE helpers from arm_brbe.h into arm_brbe.c
+> - Move armv8_pmu_xxx() declaration inside arm_brbe.h for arm64 (CONFIG_ARM64_BRBE)
+> - Move armv8_pmu_xxx() stub definitions inside arm_pmuv3.c for arm32 (!CONFIG_ARM64_BRBE)
+> - Include arm_brbe.h header both in arm_pmuv3.c and arm_brbe.c
+
+Agree to them all except:
+
+  - Move armv8_pmu_xxx() stub definitions inside arm_pmuv3.c for arm32
+(!CONFIG_ARM64_BRBE)
+
+Normally you put the stubs right next to the prototypes with #else, so
+in this case both would be in arm_brbe.h. Not sure what the reason for
+splitting them here is? You already said "include arm_brbe.h in
+arm_pmuv3.c", so that covers arm32 too.
 
