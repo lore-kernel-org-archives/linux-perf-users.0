@@ -1,119 +1,99 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198B47E
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Nov 2023 05:44:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD2F4685
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Nov 2023 06:46:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6C04FD1;
-	Tue, 14 Nov 2023 21:44:24 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71AF1DA7;
-	Tue, 14 Nov 2023 21:45:09 -0800 (PST)
-Received: from [10.163.37.87] (unknown [10.163.37.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A60603F6C4;
-	Tue, 14 Nov 2023 21:44:16 -0800 (PST)
-Message-ID: <5bf73672-4094-490b-b0a9-b983d512c904@arm.com>
-Date: Wed, 15 Nov 2023 11:14:12 +0530
+X-Greylist: delayed 193 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Nov 2023 22:46:14 PST
+Received: from cmccmta2.chinamobile.com (cmccmta8.chinamobile.com [111.22.67.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1FB20E7
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 22:46:13 -0800 (PST)
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee665546870055-d78de;
+	Wed, 15 Nov 2023 14:42:58 +0800 (CST)
+X-RM-TRANSID:2ee665546870055-d78de
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from ubuntu.localdomain (unknown[10.54.5.255])
+	by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee8655468705d7-6b236;
+	Wed, 15 Nov 2023 14:42:58 +0800 (CST)
+X-RM-TRANSID:2ee8655468705d7-6b236
+From: zhujun2 <zhujun2@cmss.chinamobile.com>
+To: suzuki.poulose@arm.com
+Cc: mike.leach@linaro.org,
+	james.clark@arm.com,
+	leo.yan@linaro.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	coresight@lists.linaro.org,
+	linux-perf-users@vger.kernel.org,
+	zhujun2@cmss.chinamobile.com
+Subject: [PATCH] perf/tests:coresight:remove unused variables
+Date: Tue, 14 Nov 2023 22:42:55 -0800
+Message-Id: <20231115064255.11057-1-zhujun2@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [V14 3/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
- framework
-Content-Language: en-US
-To: James Clark <james.clark@arm.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
- mark.rutland@arm.com
-References: <20231114051329.327572-1-anshuman.khandual@arm.com>
- <20231114051329.327572-4-anshuman.khandual@arm.com>
- <0020aa0d-e9a5-aef6-f33d-817da56411a3@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <0020aa0d-e9a5-aef6-f33d-817da56411a3@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 11/14/23 15:28, James Clark wrote:
-> 
-> 
-> On 14/11/2023 05:13, Anshuman Khandual wrote:
->> Branch stack sampling support i.e capturing branch records during execution
->> in core perf, rides along with normal HW events being scheduled on the PMU.
->> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
->> with required HW implementation.
->>
-> 
-> [...]
-> 
->> - All armv8pmu_branch_xxxx() stub definitions have been moved inside
->>   include/linux/perf/arm_pmuv3.h for easy access from both arm32 and
->>   arm64 platforms
->>
-> 
-> This causes lots of W=1 build errors because the prototypes are in
-> arm_pmuv3.h, but arm_brbe.c doesn't include it.
+These variables are never referenced in the code, just remove them.
 
-I guess these are the W=1 warnings you mentioned above.
+Signed-off-by: zhujun2 <zhujun2@cmss.chinamobile.com>
+---
+ tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c   | 1 -
+ tools/perf/tests/shell/coresight/thread_loop/thread_loop.c       | 1 -
+ .../shell/coresight/unroll_loop_thread/unroll_loop_thread.c      | 1 -
+ 3 files changed, 3 deletions(-)
 
-drivers/perf/arm_brbe.c:11:6: warning: no previous prototype for ‘armv8pmu_branch_reset’ [-Wmissing-prototypes]
-   11 | void armv8pmu_branch_reset(void)                                                                                                                                                                   
-      |      ^~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                         
-drivers/perf/arm_brbe.c:190:6: warning: no previous prototype for ‘armv8pmu_branch_save’ [-Wmissing-prototypes]      
-  190 | void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)                      
-      |      ^~~~~~~~~~~~~~~~~~~~                                                                                                                                                                          
-drivers/perf/arm_brbe.c:236:6: warning: no previous prototype for ‘armv8pmu_branch_attr_valid’ [-Wmissing-prototypes]
-  236 | bool armv8pmu_branch_attr_valid(struct perf_event *event)                                                                                                                                          
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                    
-drivers/perf/arm_brbe.c:269:5: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_alloc’ [-Wmissing-prototypes]
-  269 | int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *arm_pmu)                            
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
-drivers/perf/arm_brbe.c:279:6: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_free’ [-Wmissing-prototypes]
-  279 | void armv8pmu_task_ctx_cache_free(struct arm_pmu *arm_pmu)                       
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
-drivers/perf/arm_brbe.c:303:6: warning: no previous prototype for ‘armv8pmu_branch_probe’ [-Wmissing-prototypes]
-  303 | void armv8pmu_branch_probe(struct arm_pmu *armpmu)                                
-      |      ^~~~~~~~~~~~~~~~~~~~~                                                                   
-drivers/perf/arm_brbe.c:449:6: warning: no previous prototype for ‘armv8pmu_branch_enable’ [-Wmissing-prototypes]
-  449 | void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)                             
-      |      ^~~~~~~~~~~~~~~~~~~~~~                                                                  
-drivers/perf/arm_brbe.c:474:6: warning: no previous prototype for ‘armv8pmu_branch_disable’ [-Wmissing-prototypes]
-  474 | void armv8pmu_branch_disable(void)                                                           
-      |      ^~~~~~~~~~~~~~~~~~~~~~~                                                                 
-drivers/perf/arm_brbe.c:717:6: warning: no previous prototype for ‘armv8pmu_branch_read’ [-Wmissing-prototypes]
-  717 | void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+diff --git a/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c b/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
+index a7e169d1bf64..5f886cd09e6b 100644
+--- a/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
++++ b/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
+@@ -42,7 +42,6 @@ static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
+ int main(int argc, char **argv)
+ {
+ 	unsigned long i, len, size, thr;
+-	pthread_t threads[256];
+ 	struct args args[256];
+ 	long long v;
+ 
+diff --git a/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+index c0158fac7d0b..e05a559253ca 100644
+--- a/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
++++ b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+@@ -57,7 +57,6 @@ static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
+ int main(int argc, char **argv)
+ {
+ 	unsigned int i, len, thr;
+-	pthread_t threads[256];
+ 	struct args args[256];
+ 
+ 	if (argc < 3) {
+diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
+index 8f6d384208ed..0fc7bf1a25af 100644
+--- a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
++++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
+@@ -51,7 +51,6 @@ static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
+ int main(int argc, char **argv)
+ {
+ 	unsigned int i, thr;
+-	pthread_t threads[256];
+ 	struct args args[256];
+ 
+ 	if (argc < 2) {
+-- 
+2.17.1
 
-Branch helpers are used in ARM PMU V3 driver i.e drivers/perf/arm_pmuv3.c.
-Whether the actual BRBE helper definitions, or their fallback stubs (when
-CONFIG_ARM64_BRBE is not enabled), need to be accessible from arm_pmuv3.c
-driver not from brbe.c implementations itself.
 
-> 
-> It seems like the main reason you can't include arm_brbe.h in arm32 code
-> is because there are a load of inline functions and references to
-> registers in there. But these are only used in arm_brbe.c, so they don't
 
-Right, arm32 should not be exposed to BRBE internals via arm_brbe.h header.
-
-> need to be in the header anyway.
-
-Right, these are only used in arm_brbe.c
-
-> 
-> If you removed the code from the header and moved it to the source file
-> you could move the brbe prototypes to the brbe header and it would be a
-> bit cleaner and more idiomatic.
-
-Alight, how about the following changes - build tested on arm32 and arm64.
-
-- Move BRBE helpers from arm_brbe.h into arm_brbe.c
-- Move armv8_pmu_xxx() declaration inside arm_brbe.h for arm64 (CONFIG_ARM64_BRBE)
-- Move armv8_pmu_xxx() stub definitions inside arm_pmuv3.c for arm32 (!CONFIG_ARM64_BRBE)
-- Include arm_brbe.h header both in arm_pmuv3.c and arm_brbe.c
