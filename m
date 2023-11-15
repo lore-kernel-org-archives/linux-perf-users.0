@@ -1,110 +1,119 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8562E2FC2F
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 21:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pTnaNVkn"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A49F5D2
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 13:13:01 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5afbcffe454so126779597b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Nov 2023 13:13:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699996381; x=1700601181; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9kP7vFMucwkO9DgpHTpA5ugmcWvw1owRDA2lNLDfZSQ=;
-        b=pTnaNVkntULJMaYde3U1icGxyOhz8/3y4ftmBt34UBiC1OqHuvGIv/Z2qHSBfOy6za
-         tNF8fdPlzGxgV8u7gHpkBLyF42Cd4OEBlT22av8MaWFnTTdcZ9kmyzIMm28W1RIn0lXg
-         Qk3HxupPv7+byexmBsmPgDqxQy+HWdf47LVf/nDJoYge4/LIgjO68SyEyyIOG7fGtjTk
-         FtATpJqO0ueinNe2DJxDVqn/3ZTuq8ROXy+zWwgtEazlPp7ZezUGcooF/iTrxmV1Oh5F
-         KLK5UheXHDKxVTNtGVG2xY3cDAtruZyKmfpC8R7bPGZzbfTnVb/FTZ2kUUgP9juWBPUO
-         3orQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699996381; x=1700601181;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9kP7vFMucwkO9DgpHTpA5ugmcWvw1owRDA2lNLDfZSQ=;
-        b=dStkaKIP5KESaf1/tPFtWZ4HzDbaykaBgFZ+4x1/9y15T0OvGA64UL4Cznh77fOdLW
-         4Le0xpCeL8N1sysndo6+u9Qfw0qLpAIrkttmWUY2lonmXQjLGbonfMC6NlP2RbLSw0Ud
-         X7HLQcTcOM15KDpr3YMo4UahmkVJtxmLSMyWzhDQn66HI+8nLJVKkGvqz1koNJtomX4c
-         MBCo3NeVHYq6HiMcu/re6aHh4YDGwSFNjhBnMjkocb+blv9vtLEexNth8S3KnCjFi7D4
-         ClH2BIn6v4qTcRSlWyn8qNIP03UM0lkoah81u2+YosvXBU92c5CzBZMHzHZFz4cCqk8c
-         j+9w==
-X-Gm-Message-State: AOJu0Yxp0QIs9exLmKaCYFiGLugVvKrscTakCQtYFsxA00/sueipOwet
-	8KwkyDDmCJwCDxH4WZtPwemxkJtMVLbP
-X-Google-Smtp-Source: AGHT+IGZmYT/3dxnbJaR+KEJM8cQwHyZ+q0FuLosgPSaZhyfvwiC48S7AEMtCug4qEUgkvyR5CzYtP2hfGRK
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:2838:18b7:26f1:2c68])
- (user=irogers job=sendgmr) by 2002:a25:6ad7:0:b0:d9a:50d2:a8be with SMTP id
- f206-20020a256ad7000000b00d9a50d2a8bemr260648ybc.1.1699996380803; Tue, 14 Nov
- 2023 13:13:00 -0800 (PST)
-Date: Tue, 14 Nov 2023 13:12:54 -0800
-Message-Id: <20231114211254.3137289-1-irogers@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198B47E
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Nov 2023 05:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6C04FD1;
+	Tue, 14 Nov 2023 21:44:24 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71AF1DA7;
+	Tue, 14 Nov 2023 21:45:09 -0800 (PST)
+Received: from [10.163.37.87] (unknown [10.163.37.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A60603F6C4;
+	Tue, 14 Nov 2023 21:44:16 -0800 (PST)
+Message-ID: <5bf73672-4094-490b-b0a9-b983d512c904@arm.com>
+Date: Wed, 15 Nov 2023 11:14:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.rc0.421.g78406f8d94-goog
-Subject: [RFC PATCH v1] perf evsel: Fallback to task-clock when not system wide
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Leo Yan <leo.yan@linaro.org>, 
-	Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ajay Kaher <akaher@vmware.com>, Alexey Makhalov <amakhalov@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [V14 3/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
+ framework
+Content-Language: en-US
+To: James Clark <james.clark@arm.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
+ mark.rutland@arm.com
+References: <20231114051329.327572-1-anshuman.khandual@arm.com>
+ <20231114051329.327572-4-anshuman.khandual@arm.com>
+ <0020aa0d-e9a5-aef6-f33d-817da56411a3@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <0020aa0d-e9a5-aef6-f33d-817da56411a3@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-When the cycles event isn't available evsel will fallback to the
-cpu-clock software event. task-clock is similar to cpu-clock but only
-runs when the process is running. Falling back to cpu-clock when not
-system wide leads to confusion, by falling back to task-clock it is
-hoped the confusion is less.
+On 11/14/23 15:28, James Clark wrote:
+> 
+> 
+> On 14/11/2023 05:13, Anshuman Khandual wrote:
+>> Branch stack sampling support i.e capturing branch records during execution
+>> in core perf, rides along with normal HW events being scheduled on the PMU.
+>> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
+>> with required HW implementation.
+>>
+> 
+> [...]
+> 
+>> - All armv8pmu_branch_xxxx() stub definitions have been moved inside
+>>   include/linux/perf/arm_pmuv3.h for easy access from both arm32 and
+>>   arm64 platforms
+>>
+> 
+> This causes lots of W=1 build errors because the prototypes are in
+> arm_pmuv3.h, but arm_brbe.c doesn't include it.
 
-Update a nearby comment and debug string for the change.
+I guess these are the W=1 warnings you mentioned above.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/evsel.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+drivers/perf/arm_brbe.c:11:6: warning: no previous prototype for ‘armv8pmu_branch_reset’ [-Wmissing-prototypes]
+   11 | void armv8pmu_branch_reset(void)                                                                                                                                                                   
+      |      ^~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                         
+drivers/perf/arm_brbe.c:190:6: warning: no previous prototype for ‘armv8pmu_branch_save’ [-Wmissing-prototypes]      
+  190 | void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)                      
+      |      ^~~~~~~~~~~~~~~~~~~~                                                                                                                                                                          
+drivers/perf/arm_brbe.c:236:6: warning: no previous prototype for ‘armv8pmu_branch_attr_valid’ [-Wmissing-prototypes]
+  236 | bool armv8pmu_branch_attr_valid(struct perf_event *event)                                                                                                                                          
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                    
+drivers/perf/arm_brbe.c:269:5: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_alloc’ [-Wmissing-prototypes]
+  269 | int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *arm_pmu)                            
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
+drivers/perf/arm_brbe.c:279:6: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_free’ [-Wmissing-prototypes]
+  279 | void armv8pmu_task_ctx_cache_free(struct arm_pmu *arm_pmu)                       
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
+drivers/perf/arm_brbe.c:303:6: warning: no previous prototype for ‘armv8pmu_branch_probe’ [-Wmissing-prototypes]
+  303 | void armv8pmu_branch_probe(struct arm_pmu *armpmu)                                
+      |      ^~~~~~~~~~~~~~~~~~~~~                                                                   
+drivers/perf/arm_brbe.c:449:6: warning: no previous prototype for ‘armv8pmu_branch_enable’ [-Wmissing-prototypes]
+  449 | void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)                             
+      |      ^~~~~~~~~~~~~~~~~~~~~~                                                                  
+drivers/perf/arm_brbe.c:474:6: warning: no previous prototype for ‘armv8pmu_branch_disable’ [-Wmissing-prototypes]
+  474 | void armv8pmu_branch_disable(void)                                                           
+      |      ^~~~~~~~~~~~~~~~~~~~~~~                                                                 
+drivers/perf/arm_brbe.c:717:6: warning: no previous prototype for ‘armv8pmu_branch_read’ [-Wmissing-prototypes]
+  717 | void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a5da74e3a517..e1175313e4bc 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2861,18 +2861,19 @@ bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t msgsize)
- 	    evsel->core.attr.type   == PERF_TYPE_HARDWARE &&
- 	    evsel->core.attr.config == PERF_COUNT_HW_CPU_CYCLES) {
- 		/*
--		 * If it's cycles then fall back to hrtimer based
--		 * cpu-clock-tick sw counter, which is always available even if
--		 * no PMU support.
-+		 * If it's cycles then fall back to hrtimer based cpu-clock sw
-+		 * counter, which is always available even if no PMU support.
- 		 *
- 		 * PPC returns ENXIO until 2.6.37 (behavior changed with commit
- 		 * b0a873e).
- 		 */
--		scnprintf(msg, msgsize, "%s",
--"The cycles event is not supported, trying to fall back to cpu-clock-ticks");
--
- 		evsel->core.attr.type   = PERF_TYPE_SOFTWARE;
--		evsel->core.attr.config = PERF_COUNT_SW_CPU_CLOCK;
-+		evsel->core.attr.config = evsel->core.system_wide
-+			? PERF_COUNT_SW_CPU_CLOCK
-+			: PERF_COUNT_SW_TASK_CLOCK;
-+		scnprintf(msg, msgsize,
-+			"The cycles event is not supported, trying to fall back to %s",
-+			evsel->core.system_wide ? "cpu-clock" : "task-clock");
- 
- 		zfree(&evsel->name);
- 		return true;
--- 
-2.43.0.rc0.421.g78406f8d94-goog
+Branch helpers are used in ARM PMU V3 driver i.e drivers/perf/arm_pmuv3.c.
+Whether the actual BRBE helper definitions, or their fallback stubs (when
+CONFIG_ARM64_BRBE is not enabled), need to be accessible from arm_pmuv3.c
+driver not from brbe.c implementations itself.
 
+> 
+> It seems like the main reason you can't include arm_brbe.h in arm32 code
+> is because there are a load of inline functions and references to
+> registers in there. But these are only used in arm_brbe.c, so they don't
+
+Right, arm32 should not be exposed to BRBE internals via arm_brbe.h header.
+
+> need to be in the header anyway.
+
+Right, these are only used in arm_brbe.c
+
+> 
+> If you removed the code from the header and moved it to the source file
+> you could move the brbe prototypes to the brbe header and it would be a
+> bit cleaner and more idiomatic.
+
+Alight, how about the following changes - build tested on arm32 and arm64.
+
+- Move BRBE helpers from arm_brbe.h into arm_brbe.c
+- Move armv8_pmu_xxx() declaration inside arm_brbe.h for arm64 (CONFIG_ARM64_BRBE)
+- Move armv8_pmu_xxx() stub definitions inside arm_pmuv3.c for arm32 (!CONFIG_ARM64_BRBE)
+- Include arm_brbe.h header both in arm_pmuv3.c and arm_brbe.c
