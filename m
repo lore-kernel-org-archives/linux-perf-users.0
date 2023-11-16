@@ -1,592 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EC541238;
-	Wed, 15 Nov 2023 19:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oeSDY/DD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9226C433C7;
-	Wed, 15 Nov 2023 19:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700076826;
-	bh=C9d7m2stdHGAuOhCF7kDVySq8E4Kx449Rr4h5fAi4Tg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oeSDY/DDUcgWFLOgfksulyUFBnN5f2Jm0ZjxIHc+ACf3RSr6kAWiRGMRJS5wRka5W
-	 ZTDxiHwLly+8BRa82k2QklzK2UgMyPTc4LtNUHZDfFRYKRIgNDpN+NZNvJW5/I+arx
-	 WZbKX3LiAZ13Km+3rtq+di3bHmflpahsnScEHM1k=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Ian Rogers <irogers@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	James Clark <james.clark@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Suzuki Poulouse <suzuki.poulose@arm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Wei Li <liwei391@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Leo Yan <leo.yan@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Ming Wang <wangming01@loongson.cn>,
-	John Garry <john.g.garry@oracle.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.5 426/550] perf pmu: Remove logic for PMU name being NULL
-Date: Wed, 15 Nov 2023 14:16:50 -0500
-Message-ID: <20231115191630.292521239@linuxfoundation.org>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <20231115191600.708733204@linuxfoundation.org>
-References: <20231115191600.708733204@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="AhCVZXUd"
+Received: from m1313.mail.163.com (m1313.mail.163.com [220.181.13.13])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF606194;
+	Wed, 15 Nov 2023 20:09:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=Lm+lGQ6cuTe+iguvJaCIfyWXgvW+qe8m5TXZ8O2Dx8g=; b=A
+	hCVZXUdwDlLx4W6LruaAt1/ZFmVEnUjrKCLYBee356O8nEUIclNP7t0UdwF+ON8i
+	Q4Yz6uoLRVLQBUx0s3+E9Tsi555rsaIc6Du49qeXjf5PIPYycQctlpTqIB6TF8BK
+	RVXG5FfhIN+vaQ+hwlyJwTmp/qyrlsz7y9u7Bim4x0=
+Received: from 00107082$163.com ( [111.35.186.243] ) by ajax-webmail-wmsvr13
+ (Coremail) ; Thu, 16 Nov 2023 12:08:14 +0800 (CST)
+X-Originating-IP: [111.35.186.243]
+Date: Thu, 16 Nov 2023 12:08:14 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: "Peter Zijlstra" <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re:Re: [Regression or Fix]perf: profiling stats sigificantly
+ changed for aio_write/read(ext4) between 6.7.0-rc1 and 6.6.0
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2023 www.mailtech.cn 163com
+In-Reply-To: <CAM9d7cgjCKynoTC0L53pEXnCWHF7AZ8Gr2a0xQnes7L24KVNsA@mail.gmail.com>
+References: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
+ <76d75357.6ab6.18bce6b7d5b.Coremail.00107082@163.com>
+ <20231115103241.GD3818@noisy.programming.kicks-ass.net>
+ <407a06f8.632a.18bd2a2ece1.Coremail.00107082@163.com>
+ <CAM9d7cgdUJytP31y90c5AuQAmR6FgkBWjj4brVjH8Pg+d00O+Q@mail.gmail.com>
+ <1a1338d0.6b3a.18bd3c09056.Coremail.00107082@163.com>
+ <CAM9d7cgjCKynoTC0L53pEXnCWHF7AZ8Gr2a0xQnes7L24KVNsA@mail.gmail.com>
+X-NTES-SC: AL_Qu2bAv2buE4i4iCfZ+kZnEYQheY4XMKyuPkg1YJXOp80oCnX5x0xXHZ+L0Dc0NmkDwW8uRGlfzNf28ZCUqVKXrhHHyaxWExH7dqCJUN0zxoD
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <489ecb9e.28cc.18bd650affa.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:DcGowAD3n8WvlVVl9B8IAA--.64573W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiEB8qql8YMgdEUgAKsh
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-6.5-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-From: Ian Rogers <irogers@google.com>
-
-[ Upstream commit c091ee90897aacf60aee510464cfc28b4041186f ]
-
-The PMU name could be NULL in the case of the fake_pmu. Initialize the
-name for the fake_pmu to "fake" so that all other logic can assume it
-is initialized. Add a const to the type of name so that a literal can
-be used to avoid additional initialization code. Propagate the cost
-through related routines and remove now unnecessary "(char *)"
-casts. Doing this located a bug in builtin-list for the pmu_glob that
-was missing a strdup.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Link: https://lore.kernel.org/r/20230825024002.801955-3-irogers@google.com
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Wei Li <liwei391@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Ming Wang <wangming01@loongson.cn>
-Cc: John Garry <john.g.garry@oracle.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Stable-dep-of: 85f73c377b2a ("perf mem-events: Avoid uninitialized read")
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/arch/arm64/util/mem-events.c   |  2 +-
- tools/perf/arch/powerpc/util/mem-events.c |  6 +++---
- tools/perf/arch/x86/util/mem-events.c     |  8 ++++----
- tools/perf/arch/x86/util/pmu.c            | 10 +++++-----
- tools/perf/builtin-list.c                 |  2 +-
- tools/perf/tests/pmu-events.c             | 16 ++++++++--------
- tools/perf/util/env.c                     |  8 ++------
- tools/perf/util/header.c                  |  8 +-------
- tools/perf/util/mem-events.c              | 16 ++++++++--------
- tools/perf/util/mem-events.h              |  2 +-
- tools/perf/util/parse-events.c            |  7 ++-----
- tools/perf/util/parse-events.h            |  2 +-
- tools/perf/util/parse-events.y            |  2 +-
- tools/perf/util/pmu.c                     | 16 +++++++++-------
- tools/perf/util/pmu.h                     |  8 ++++----
- 15 files changed, 51 insertions(+), 62 deletions(-)
-
-diff --git a/tools/perf/arch/arm64/util/mem-events.c b/tools/perf/arch/arm64/util/mem-events.c
-index df817d1f9f3eb..3bcc5c7035c21 100644
---- a/tools/perf/arch/arm64/util/mem-events.c
-+++ b/tools/perf/arch/arm64/util/mem-events.c
-@@ -20,7 +20,7 @@ struct perf_mem_event *perf_mem_events__ptr(int i)
- 	return &perf_mem_events[i];
- }
- 
--char *perf_mem_events__name(int i, char *pmu_name __maybe_unused)
-+const char *perf_mem_events__name(int i, const char *pmu_name __maybe_unused)
- {
- 	struct perf_mem_event *e = perf_mem_events__ptr(i);
- 
-diff --git a/tools/perf/arch/powerpc/util/mem-events.c b/tools/perf/arch/powerpc/util/mem-events.c
-index 4120fafe0be41..78b986e5268d9 100644
---- a/tools/perf/arch/powerpc/util/mem-events.c
-+++ b/tools/perf/arch/powerpc/util/mem-events.c
-@@ -3,10 +3,10 @@
- #include "mem-events.h"
- 
- /* PowerPC does not support 'ldlat' parameter. */
--char *perf_mem_events__name(int i, char *pmu_name __maybe_unused)
-+const char *perf_mem_events__name(int i, const char *pmu_name __maybe_unused)
- {
- 	if (i == PERF_MEM_EVENTS__LOAD)
--		return (char *) "cpu/mem-loads/";
-+		return "cpu/mem-loads/";
- 
--	return (char *) "cpu/mem-stores/";
-+	return "cpu/mem-stores/";
- }
-diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
-index a8a782bcb1213..191b372f9a2d3 100644
---- a/tools/perf/arch/x86/util/mem-events.c
-+++ b/tools/perf/arch/x86/util/mem-events.c
-@@ -52,7 +52,7 @@ bool is_mem_loads_aux_event(struct evsel *leader)
- 	return leader->core.attr.config == MEM_LOADS_AUX;
- }
- 
--char *perf_mem_events__name(int i, char *pmu_name)
-+const char *perf_mem_events__name(int i, const char *pmu_name)
- {
- 	struct perf_mem_event *e = perf_mem_events__ptr(i);
- 
-@@ -65,7 +65,7 @@ char *perf_mem_events__name(int i, char *pmu_name)
- 
- 		if (!pmu_name) {
- 			mem_loads_name__init = true;
--			pmu_name = (char *)"cpu";
-+			pmu_name = "cpu";
- 		}
- 
- 		if (perf_pmus__have_event(pmu_name, "mem-loads-aux")) {
-@@ -82,12 +82,12 @@ char *perf_mem_events__name(int i, char *pmu_name)
- 
- 	if (i == PERF_MEM_EVENTS__STORE) {
- 		if (!pmu_name)
--			pmu_name = (char *)"cpu";
-+			pmu_name = "cpu";
- 
- 		scnprintf(mem_stores_name, sizeof(mem_stores_name),
- 			  e->name, pmu_name);
- 		return mem_stores_name;
- 	}
- 
--	return (char *)e->name;
-+	return e->name;
- }
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index 65d8cdff4d5f4..f428cffb03781 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -126,7 +126,7 @@ static int setup_pmu_alias_list(void)
- 	return ret;
- }
- 
--static char *__pmu_find_real_name(const char *name)
-+static const char *__pmu_find_real_name(const char *name)
- {
- 	struct pmu_alias *pmu_alias;
- 
-@@ -135,10 +135,10 @@ static char *__pmu_find_real_name(const char *name)
- 			return pmu_alias->name;
- 	}
- 
--	return (char *)name;
-+	return name;
- }
- 
--char *pmu_find_real_name(const char *name)
-+const char *pmu_find_real_name(const char *name)
- {
- 	if (cached_list)
- 		return __pmu_find_real_name(name);
-@@ -149,7 +149,7 @@ char *pmu_find_real_name(const char *name)
- 	return __pmu_find_real_name(name);
- }
- 
--static char *__pmu_find_alias_name(const char *name)
-+static const char *__pmu_find_alias_name(const char *name)
- {
- 	struct pmu_alias *pmu_alias;
- 
-@@ -160,7 +160,7 @@ static char *__pmu_find_alias_name(const char *name)
- 	return NULL;
- }
- 
--char *pmu_find_alias_name(const char *name)
-+const char *pmu_find_alias_name(const char *name)
- {
- 	if (cached_list)
- 		return __pmu_find_alias_name(name);
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 7fec2cca759f6..e74d0223deb7f 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -502,7 +502,7 @@ int cmd_list(int argc, const char **argv)
- 				ret = -1;
- 				goto out;
- 			}
--			default_ps.pmu_glob = pmu->name;
-+			default_ps.pmu_glob = strdup(pmu->name);
- 		}
- 	}
- 	print_cb.print_start(ps);
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 64383fc34ef1b..5c6f930db4387 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -508,7 +508,7 @@ static struct perf_pmu_alias *find_alias(const char *test_event, struct list_hea
- }
- 
- /* Verify aliases are as expected */
--static int __test_core_pmu_event_aliases(char *pmu_name, int *count)
-+static int __test_core_pmu_event_aliases(const char *pmu_name, int *count)
- {
- 	struct perf_pmu_test_event const **test_event_table;
- 	struct perf_pmu *pmu;
-@@ -635,7 +635,7 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
- static struct perf_pmu_test_pmu test_pmus[] = {
- 	{
- 		.pmu = {
--			.name = (char *)"hisi_sccl1_ddrc2",
-+			.name = "hisi_sccl1_ddrc2",
- 			.is_uncore = 1,
- 		},
- 		.aliases = {
-@@ -644,7 +644,7 @@ static struct perf_pmu_test_pmu test_pmus[] = {
- 	},
- 	{
- 		.pmu = {
--			.name = (char *)"uncore_cbox_0",
-+			.name = "uncore_cbox_0",
- 			.is_uncore = 1,
- 		},
- 		.aliases = {
-@@ -655,7 +655,7 @@ static struct perf_pmu_test_pmu test_pmus[] = {
- 	},
- 	{
- 		.pmu = {
--			.name = (char *)"hisi_sccl3_l3c7",
-+			.name = "hisi_sccl3_l3c7",
- 			.is_uncore = 1,
- 		},
- 		.aliases = {
-@@ -664,7 +664,7 @@ static struct perf_pmu_test_pmu test_pmus[] = {
- 	},
- 	{
- 		.pmu = {
--			.name = (char *)"uncore_imc_free_running_0",
-+			.name = "uncore_imc_free_running_0",
- 			.is_uncore = 1,
- 		},
- 		.aliases = {
-@@ -673,7 +673,7 @@ static struct perf_pmu_test_pmu test_pmus[] = {
- 	},
- 	{
- 		.pmu = {
--			.name = (char *)"uncore_imc_0",
-+			.name = "uncore_imc_0",
- 			.is_uncore = 1,
- 		},
- 		.aliases = {
-@@ -682,7 +682,7 @@ static struct perf_pmu_test_pmu test_pmus[] = {
- 	},
- 	{
- 		.pmu = {
--			.name = (char *)"uncore_sys_ddr_pmu0",
-+			.name = "uncore_sys_ddr_pmu0",
- 			.is_uncore = 1,
- 			.id = (char *)"v8",
- 		},
-@@ -692,7 +692,7 @@ static struct perf_pmu_test_pmu test_pmus[] = {
- 	},
- 	{
- 		.pmu = {
--			.name = (char *)"uncore_sys_ccn_pmu4",
-+			.name = "uncore_sys_ccn_pmu4",
- 			.is_uncore = 1,
- 			.id = (char *)"0x01",
- 		},
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 9eabf3ec56e97..a164164001fb5 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -324,11 +324,9 @@ int perf_env__read_pmu_mappings(struct perf_env *env)
- 	u32 pmu_num = 0;
- 	struct strbuf sb;
- 
--	while ((pmu = perf_pmus__scan(pmu))) {
--		if (!pmu->name)
--			continue;
-+	while ((pmu = perf_pmus__scan(pmu)))
- 		pmu_num++;
--	}
-+
- 	if (!pmu_num) {
- 		pr_debug("pmu mappings not available\n");
- 		return -ENOENT;
-@@ -339,8 +337,6 @@ int perf_env__read_pmu_mappings(struct perf_env *env)
- 		return -ENOMEM;
- 
- 	while ((pmu = perf_pmus__scan(pmu))) {
--		if (!pmu->name)
--			continue;
- 		if (strbuf_addf(&sb, "%u:%s", pmu->type, pmu->name) < 0)
- 			goto error;
- 		/* include a NULL character at the end */
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 7af85a479786b..083919e3b8d88 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -746,20 +746,14 @@ static int write_pmu_mappings(struct feat_fd *ff,
- 	 * Do a first pass to count number of pmu to avoid lseek so this
- 	 * works in pipe mode as well.
- 	 */
--	while ((pmu = perf_pmus__scan(pmu))) {
--		if (!pmu->name)
--			continue;
-+	while ((pmu = perf_pmus__scan(pmu)))
- 		pmu_num++;
--	}
- 
- 	ret = do_write(ff, &pmu_num, sizeof(pmu_num));
- 	if (ret < 0)
- 		return ret;
- 
- 	while ((pmu = perf_pmus__scan(pmu))) {
--		if (!pmu->name)
--			continue;
--
- 		ret = do_write(ff, &pmu->type, sizeof(pmu->type));
- 		if (ret < 0)
- 			return ret;
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index c07fe3a907220..39ffe8ceb3809 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -37,7 +37,7 @@ struct perf_mem_event * __weak perf_mem_events__ptr(int i)
- 	return &perf_mem_events[i];
- }
- 
--char * __weak perf_mem_events__name(int i, char *pmu_name  __maybe_unused)
-+const char * __weak perf_mem_events__name(int i, const char *pmu_name  __maybe_unused)
- {
- 	struct perf_mem_event *e = perf_mem_events__ptr(i);
- 
-@@ -53,7 +53,7 @@ char * __weak perf_mem_events__name(int i, char *pmu_name  __maybe_unused)
- 		return mem_loads_name;
- 	}
- 
--	return (char *)e->name;
-+	return e->name;
- }
- 
- __weak bool is_mem_loads_aux_event(struct evsel *leader __maybe_unused)
-@@ -186,7 +186,6 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
- 	int i = *argv_nr, k = 0;
- 	struct perf_mem_event *e;
- 	struct perf_pmu *pmu;
--	char *s;
- 
- 	for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
- 		e = perf_mem_events__ptr(j);
-@@ -209,15 +208,16 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
- 			}
- 
- 			while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+				const char *s = perf_mem_events__name(j, pmu->name);
-+
- 				rec_argv[i++] = "-e";
--				s = perf_mem_events__name(j, pmu->name);
- 				if (s) {
--					s = strdup(s);
--					if (!s)
-+					char *copy = strdup(s);
-+					if (!copy)
- 						return -1;
- 
--					rec_argv[i++] = s;
--					rec_tmp[k++] = s;
-+					rec_argv[i++] = copy;
-+					rec_tmp[k++] = copy;
- 				}
- 			}
- 		}
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 12372309d60ed..b40ad6ea93fcd 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -38,7 +38,7 @@ extern unsigned int perf_mem_events__loads_ldlat;
- int perf_mem_events__parse(const char *str);
- int perf_mem_events__init(void);
- 
--char *perf_mem_events__name(int i, char *pmu_name);
-+const char *perf_mem_events__name(int i, const char *pmu_name);
- struct perf_mem_event *perf_mem_events__ptr(int i);
- bool is_mem_loads_aux_event(struct evsel *leader);
- 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 979fc92c2f47d..596ba10129870 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -271,7 +271,7 @@ __add_event(struct list_head *list, int *idx,
- 	evsel->core.is_pmu_core = pmu ? pmu->is_core : false;
- 	evsel->auto_merge_stats = auto_merge_stats;
- 	evsel->pmu = pmu;
--	evsel->pmu_name = pmu && pmu->name ? strdup(pmu->name) : NULL;
-+	evsel->pmu_name = pmu ? strdup(pmu->name) : NULL;
- 
- 	if (name)
- 		evsel->name = strdup(name);
-@@ -446,9 +446,6 @@ bool parse_events__filter_pmu(const struct parse_events_state *parse_state,
- 	if (parse_state->pmu_filter == NULL)
- 		return false;
- 
--	if (pmu->name == NULL)
--		return true;
--
- 	return strcmp(parse_state->pmu_filter, pmu->name) != 0;
- }
- 
-@@ -1551,7 +1548,7 @@ static bool config_term_percore(struct list_head *config_terms)
- }
- 
- int parse_events_add_pmu(struct parse_events_state *parse_state,
--			 struct list_head *list, char *name,
-+			 struct list_head *list, const char *name,
- 			 struct list_head *head_config,
- 			 bool auto_merge_stats)
- {
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index b0eb95f93e9c3..8e8682ca84654 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -190,7 +190,7 @@ int parse_events_add_breakpoint(struct parse_events_state *parse_state,
- 				u64 addr, char *type, u64 len,
- 				struct list_head *head_config);
- int parse_events_add_pmu(struct parse_events_state *parse_state,
--			 struct list_head *list, char *name,
-+			 struct list_head *list, const char *name,
- 			 struct list_head *head_config,
- 			 bool auto_merge_stats);
- 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index a049c577bae3d..59108f70d1e45 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -312,7 +312,7 @@ PE_NAME opt_pmu_config
- 		}
- 
- 		while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--			char *name = pmu->name;
-+			const char *name = pmu->name;
- 
- 			if (parse_events__filter_pmu(parse_state, pmu))
- 				continue;
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index d5406effc1695..f20fcea215e4b 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -29,7 +29,9 @@
- #include "fncache.h"
- #include "util/evsel_config.h"
- 
--struct perf_pmu perf_pmu__fake;
-+struct perf_pmu perf_pmu__fake = {
-+	.name = "fake",
-+};
- 
- /**
-  * struct perf_pmu_format - Values from a format file read from
-@@ -840,13 +842,13 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- 	return NULL;
- }
- 
--char * __weak
-+const char * __weak
- pmu_find_real_name(const char *name)
- {
--	return (char *)name;
-+	return name;
- }
- 
--char * __weak
-+const char * __weak
- pmu_find_alias_name(const char *name __maybe_unused)
- {
- 	return NULL;
-@@ -866,8 +868,8 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
- 	LIST_HEAD(format);
- 	LIST_HEAD(aliases);
- 	__u32 type;
--	char *name = pmu_find_real_name(lookup_name);
--	char *alias_name;
-+	const char *name = pmu_find_real_name(lookup_name);
-+	const char *alias_name;
- 
- 	/*
- 	 * The pmu data we store & need consists of the pmu
-@@ -1710,7 +1712,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
- 		   name ?: "N/A", buf, config_name, config);
- }
- 
--int perf_pmu__match(char *pattern, char *name, char *tok)
-+int perf_pmu__match(const char *pattern, const char *name, const char *tok)
- {
- 	if (!name)
- 		return -1;
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 6b414cecbad22..461af638399c9 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -39,7 +39,7 @@ struct perf_pmu_caps {
-  */
- struct perf_pmu {
- 	/** @name: The name of the PMU such as "cpu". */
--	char *name;
-+	const char *name;
- 	/**
- 	 * @alias_name: Optional alternate name for the PMU determined in
- 	 * architecture specific code.
-@@ -275,10 +275,10 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
- 				   const char *config_name);
- void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu);
- 
--int perf_pmu__match(char *pattern, char *name, char *tok);
-+int perf_pmu__match(const char *pattern, const char *name, const char *tok);
- 
--char *pmu_find_real_name(const char *name);
--char *pmu_find_alias_name(const char *name);
-+const char *pmu_find_real_name(const char *name);
-+const char *pmu_find_alias_name(const char *name);
- double perf_pmu__cpu_slots_per_cycle(void);
- int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
- int perf_pmu__pathname_scnprintf(char *buf, size_t size,
--- 
-2.42.0
-
-
-
+CkF0IDIwMjMtMTEtMTYgMDA6MjY6MDYsICJOYW1oeXVuZyBLaW0iIDxuYW1oeXVuZ0BrZXJuZWwu
+b3JnPiB3cm90ZToKPk9uIFdlZCwgTm92IDE1LCAyMDIzIGF0IDg6MTLigK9BTSBEYXZpZCBXYW5n
+IDwwMDEwNzA4MkAxNjMuY29tPiB3cm90ZToKPj4KPj4KPj4g5ZyoIDIwMjMtMTEtMTUgMjM6NDg6
+MzPvvIwiTmFtaHl1bmcgS2ltIiA8bmFtaHl1bmdAa2VybmVsLm9yZz4g5YaZ6YGT77yaCj4+ID5P
+biBXZWQsIE5vdiAxNSwgMjAyMyBhdCAzOjAw4oCvQU0gRGF2aWQgV2FuZyA8MDAxMDcwODJAMTYz
+LmNvbT4gd3JvdGU6Cj4+ID4+Cj4+ID4+Cj4+ID4+Cj4+ID4+IEF0IDIwMjMtMTEtMTUgMTg6MzI6
+NDEsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRlYWQub3JnPiB3cm90ZToKPj4gPj4g
+Pgo+PiA+PiA+TmFtaHl1bmcsIGNvdWxkIHlvdSBwbGVhc2UgdGFrZSBhIGxvb2ssIHlvdSBrbm93
+IGhvdyB0byBvcGVyYXRlIHRoaXMKPj4gPj4gPmNncm91cCBzdHVmZi4KPj4gPj4gPgo+PiA+Pgo+
+PiA+PiBNb3JlIGluZm9ybWF0aW9uLCAgSSBydW4gdGhlIHByb2ZpbGluZyB3aXRoIDhjcHUgbWFj
+aGluZSBvbiBhIFNTRCB3aXRoIGV4dDQgZmlsZXN5c3RlbSA6Cj4+ID4+Cj4+ID4+ICMgbWtkaXIg
+L3N5cy9mcy9jZ3JvdXAvbXl0ZXN0Cj4+ID4+ICMgZWNobyAkJCA+IC9zeXMvZnMvY2dyb3VwL215
+dGVzdC9jZ3JvdXAucHJvY3MKPj4gPj4gIyMgU3RhcnQgcHJvZmlsaW5nIHRhcmdldGluZyBjZ3Jv
+dXAgL3N5cy9mcy9jZ3JvdXAvbXl0ZXN0ICAgb24gYW5vdGhlciB0ZXJtaW5hbAo+PiA+PiAjIGZp
+byAtLXJhbmRyZXBlYXQ9MSAtLWlvZW5naW5lPWxpYmFpbyAtLWRpcmVjdD0xIC0tbmFtZT10ZXN0
+ICAtLWJzPTRrIC0taW9kZXB0aD02NCAtLXNpemU9MUcgLS1yZWFkd3JpdGU9cmFuZHJ3ICAtLXJ1
+bnRpbWU9NjAwIC0tbnVtam9icz00IC0tdGltZV9iYXNlZD0xCj4+ID4+Cj4+ID4+IEkgZ290IGEg
+ZmVlbGluZyB0aGF0IGYwNmNjNjY3Zjc5OTAgd291bGQgZGVjcmVhc2UgdG90YWwgc2FtcGxlcyBi
+eSAxMCV+MjAlIHdoZW4gcHJvZmlsaW5nIElPIGJlbmNobWFyayB3aXRoaW4gY2dyb3VwLgoKCj4K
+PlRoZW4gd2hhdCBpcyB5b3VyIHByb2ZpbGluZyB0b29sPyAgV2hlcmUgZGlkIHlvdSBzZWUKPnRo
+ZSAxMCV+MjAlIGRyb3AgaW4gc2FtcGxlcz8KPgoKSSB3cm90ZSBhIHNpbXBsZS9yYXcgdG9vbCBq
+dXN0IGZvciBwcm9maWxpbmcgY2FsbGNoYWlucywgd2hpY2ggdXNlIHBlcmZfZXZlbnRfb3BlbiB3
+aXRoIGZvbGxvd2luZyBhdHRyOgogICAgYXR0ci50eXBlID0gUEVSRl9UWVBFX1NPRlRXQVJFOwog
+ICAgIGF0dHIuY29uZmlnID0gUEVSRl9DT1VOVF9TV19DUFVfQ0xPQ0s7CiAgICAgYXR0ci5zYW1w
+bGVfZnJlcSA9IDc3NzsgLy8gYWRqdXN0IGl0CiAgICAgYXR0ci5mcmVxID0gMTsKICAgICBhdHRy
+Lndha2V1cF9ldmVudHMgPSAxNjsKICAgICBhdHRyLnNhbXBsZV90eXBlID0gUEVSRl9TQU1QTEVf
+VElEfFBFUkZfU0FNUExFX0NBTExDSEFJTjsKICAgICBhdHRyLnNhbXBsZV9tYXhfc3RhY2sgPSAz
+MjsKClRoZSBzb3VyY2UgY29kZSBjb3VsZCBiZSBmb3VuZCBoZXJlOiBodHRwczovL2dpdGh1Yi5j
+b20venEtZGF2aWQtd2FuZy9saW51eC10b29scy90cmVlL21haW4vcGVyZi9wcm9maWxlcgo+Pgo+
+PiBJIGFtIG5vdCBleHBlcmllbmNlZCB3aXRoIHRoZSBwZXJmLXRvb2wgYXQgYWxsLCAgIHRvbyBj
+b21wbGljYXRlZCBhIHRvb2wgZm9yIG1lLi4uLiBCdXQgSSB0aGluayBJIGNhbiB0cnkgaXQuCj4K
+PkkgZmVlbCBzb3JyeSBhYm91dCB0aGF0LiAgSW4gbW9zdCBjYXNlcywganVzdCBgcGVyZiByZWNv
+cmQgLWFgIGFuZAo+dGhlbiBgcGVyZiByZXBvcnRgIHdvdWxkIHdvcmsgd2VsbC4gOikKPgpUaGFu
+a3MgZm9yIHRoZSBpbmZvcm1hdGlvbiwgIEkgdXNlIGZvbGxvd2luZyBjb21tYW5kIHRvIHByb2Zp
+bGUgd2l0aCBwZXJmOgpgLi9wZXJmIHJlY29yZCAtYSAtZSBjcHUtY2xvY2sgLUcgbXl0ZXN0YApJ
+IGhhdmUgcnVuIHNldmVyYWwgcm91bmQgb2YgdGVzdCwgYW5kIGJlZm9yZSBlYWNoIHRlc3QsIHRo
+ZSBzeXN0ZW0gd2FzIHJlYm9vdGVkLCBhbmQgcGVyZiBvdXRwdXQgaXMKCk9uIDYuNy4wLXJjMToK
+JCBzdWRvIC4vcGVyZiByZWNvcmQgLWEgLWUgY3B1LWNsb2NrIC1HIG15dGVzdAogIF5DWyBwZXJm
+IHJlY29yZDogV29rZW4gdXAgNTI3IHRpbWVzIHRvIHdyaXRlIGRhdGEgXQogIFsgcGVyZiByZWNv
+cmQ6IENhcHR1cmVkIGFuZCB3cm90ZSAxMzIuNjQ4IE1CIHBlcmYuZGF0YSAoMjQ3ODc0NSBzYW1w
+bGVzKSBdICAKIC0tLXJlYm9vdAogICQgc3VkbyAuL3BlcmYgcmVjb3JkIC1hIC1lIGNwdS1jbG9j
+ayAtRyBteXRlc3QKICBeQ1sgcGVyZiByZWNvcmQ6IFdva2VuIHVwIDQ3MyB0aW1lcyB0byB3cml0
+ZSBkYXRhIF0KICBbIHBlcmYgcmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMTE5LjIwNSBNQiBw
+ZXJmLmRhdGEgKDIyMjY5OTQgc2FtcGxlcykgXQoKCk9uIDYuNy4wLXJjMSB3aXRoIGYwNmNjNjY3
+Zjc5OTA5ZTkxNzU0NjBiMTY3YzI3N2I3YzY0ZDNkZjAgcmV2ZXJ0ZWQKCiQgc3VkbyAuL3BlcmYg
+cmVjb3JkIC1hIC1lIGNwdS1jbG9jayAtRyBteXRlc3QKICBeQ1sgcGVyZiByZWNvcmQ6IFdva2Vu
+IHVwIDU2NyB0aW1lcyB0byB3cml0ZSBkYXRhIF0KICBbIHBlcmYgcmVjb3JkOiBDYXB0dXJlZCBh
+bmQgd3JvdGUgMTQyLjc3MSBNQiBwZXJmLmRhdGEgKDI2NjgyMjQgc2FtcGxlcykgXQogIC0tLXJl
+Ym9vdAogICQgc3VkbyAuL3BlcmYgcmVjb3JkIC1hIC1lIGNwdS1jbG9jayAtRyBteXRlc3QKICBe
+Q1sgcGVyZiByZWNvcmQ6IFdva2VuIHVwIDU1NyB0aW1lcyB0byB3cml0ZSBkYXRhIF0KICBbIHBl
+cmYgcmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMTQwLjYwNCBNQiBwZXJmLmRhdGEgKDI2Mjcx
+Njcgc2FtcGxlcykgXQogIAoKSSBhbHNvIHJ1biB3aXRoIGAtRiA3NzdgLCB3aGljaCBpcyBzb21l
+IHJhbmRvbSBudW1iZXIgSSB1c2VkIGluIG15IHRvb2wsICAgKGp1c3QgdG8gY29tcGFyZSB3aXRo
+IG15IHRvb2wgKQoKT24gNi43LjAtcmMxCiQgc3VkbyAuL3BlcmYgcmVjb3JkIC1hIC1lIGNwdS1j
+bG9jayAtRiA3NzcgLUcgbXl0ZXN0Cl5DWyBwZXJmIHJlY29yZDogV29rZW4gdXAgOTMgdGltZXMg
+dG8gd3JpdGUgZGF0YSBdClsgcGVyZiByZWNvcmQ6IENhcHR1cmVkIGFuZCB3cm90ZSAyNC41NzUg
+TUIgcGVyZi5kYXRhICg0NTUyMjIgc2FtcGxlcykgXSAoIE15IHRvb2wgaGF2ZSBvbmx5IH4zNTlL
+IHNhbXBsZXMsIG5vdCBzdGFibGUpCgogIApPbiA2LjcuMC1yYzEgd2l0aCBmMDZjYzY2N2Y3OTkw
+OWU5MTc1NDYwYjE2N2MyNzdiN2M2NGQzZGYwIHJldmVydGVkCiQgc3VkbyAuL3BlcmYgcmVjb3Jk
+IC1hIC1lIGNwdS1jbG9jayAtRiA3NzcgLUcgbXl0ZXN0Cl5DWyBwZXJmIHJlY29yZDogV29rZW4g
+dXAgOTggdGltZXMgdG8gd3JpdGUgZGF0YSBdClsgcGVyZiByZWNvcmQ6IENhcHR1cmVkIGFuZCB3
+cm90ZSAyNS43MDMgTUIgcGVyZi5kYXRhICg0NzYzOTAgc2FtcGxlcykgXSAgKE15IHRvb2wgaGF2
+ZSBhYm91dCB+NDQ2Sywgc3RhYmxlKQoKCkZyb20gdGhlIGRhdGEgSSBjb2xsZWN0ZWQsIEkgdGhp
+bmsgdHdvIHByb2JsZW0gY291bGQgYmUgb2JzZXJ2ZWQgZm9yIGYwNmNjNjY3Zjc5OTA5ZTkxNzU0
+NjBiMTY3YzI3N2I3YzY0ZDNkZjAKMS4gc2FtcGxlIG1pc3NpbmcuIAoyLiBzYW1wbGUgdW5zdGFi
+bGUsIHRvdGFsIHNhbXBsZSBjb3VudCBkcmlmdCBhIGxvdCBiZXR3ZWVuIHRlc3RzLiAKClRoYW5r
+cwpEYXZpZAoKCg==
