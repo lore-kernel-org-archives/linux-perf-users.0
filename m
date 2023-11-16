@@ -1,116 +1,131 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="AhCVZXUd"
-Received: from m1313.mail.163.com (m1313.mail.163.com [220.181.13.13])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF606194;
-	Wed, 15 Nov 2023 20:09:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=Lm+lGQ6cuTe+iguvJaCIfyWXgvW+qe8m5TXZ8O2Dx8g=; b=A
-	hCVZXUdwDlLx4W6LruaAt1/ZFmVEnUjrKCLYBee356O8nEUIclNP7t0UdwF+ON8i
-	Q4Yz6uoLRVLQBUx0s3+E9Tsi555rsaIc6Du49qeXjf5PIPYycQctlpTqIB6TF8BK
-	RVXG5FfhIN+vaQ+hwlyJwTmp/qyrlsz7y9u7Bim4x0=
-Received: from 00107082$163.com ( [111.35.186.243] ) by ajax-webmail-wmsvr13
- (Coremail) ; Thu, 16 Nov 2023 12:08:14 +0800 (CST)
-X-Originating-IP: [111.35.186.243]
-Date: Thu, 16 Nov 2023 12:08:14 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: "Peter Zijlstra" <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re:Re: [Regression or Fix]perf: profiling stats sigificantly
- changed for aio_write/read(ext4) between 6.7.0-rc1 and 6.6.0
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2023 www.mailtech.cn 163com
-In-Reply-To: <CAM9d7cgjCKynoTC0L53pEXnCWHF7AZ8Gr2a0xQnes7L24KVNsA@mail.gmail.com>
-References: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
- <76d75357.6ab6.18bce6b7d5b.Coremail.00107082@163.com>
- <20231115103241.GD3818@noisy.programming.kicks-ass.net>
- <407a06f8.632a.18bd2a2ece1.Coremail.00107082@163.com>
- <CAM9d7cgdUJytP31y90c5AuQAmR6FgkBWjj4brVjH8Pg+d00O+Q@mail.gmail.com>
- <1a1338d0.6b3a.18bd3c09056.Coremail.00107082@163.com>
- <CAM9d7cgjCKynoTC0L53pEXnCWHF7AZ8Gr2a0xQnes7L24KVNsA@mail.gmail.com>
-X-NTES-SC: AL_Qu2bAv2buE4i4iCfZ+kZnEYQheY4XMKyuPkg1YJXOp80oCnX5x0xXHZ+L0Dc0NmkDwW8uRGlfzNf28ZCUqVKXrhHHyaxWExH7dqCJUN0zxoD
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TyPzeKbG"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B9819B
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Nov 2023 22:52:24 -0800 (PST)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AG6mRSq011191;
+	Thu, 16 Nov 2023 06:52:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=ON8uwaEsXMFU89oLOtW5XuocTcZZveB+szj0nXIsuGw=;
+ b=TyPzeKbGRXy5plQV8cozs812jju4wVDsJVmvODX6pGwv6wpFoRv6+V5/ZieGtom5IY0t
+ ZlmkyHraBF2LbR/B8kbQL7IEce1hXwfqz6a8GQntkR71X4HvzPv6ffPNkGNR1DQwTwGw
+ PBnQB4/jydmRcj1rHXmM7R1u+72bUATQzbjyZ7KZEoNqHwrS2w8sSSwlmXo6FusWAqKS
+ enHldIyp1NPeyAkj9Irm+ufz7nv9SbKaERbHhnIF/jUSuqDFclhHudy0Rjgvn32jGAVZ
+ wqg+Eo8sslwrZTdPgjIR0yG9IeO8FUe8/WhY8TDDtusy844IIdtaQdczZJbXLIBPK1YI xA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uddn9rvbp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 Nov 2023 06:52:20 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AG6c4Q0029115;
+	Thu, 16 Nov 2023 06:52:20 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uddn9rvb7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 Nov 2023 06:52:19 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AG5LUSJ010595;
+	Thu, 16 Nov 2023 06:52:19 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uakxt59y5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 Nov 2023 06:52:19 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AG6qGSs41419220
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 16 Nov 2023 06:52:16 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7EAFB20043;
+	Thu, 16 Nov 2023 06:52:16 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4037420040;
+	Thu, 16 Nov 2023 06:52:14 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 16 Nov 2023 06:52:14 +0000 (GMT)
+Date: Thu, 16 Nov 2023 12:22:08 +0530
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH v6 1/4] perf check: introduce check subcommand
+Message-ID: <nqr6glszgzn5jglb5va2t4pedcrztevenzqmtybyild2sxn2wn@4jxgjtfvbajv>
+References: <20231021150526.2231803-1-adityag@linux.ibm.com>
+ <20231021150526.2231803-2-adityag@linux.ibm.com>
+ <ZU493oMRpGgNBrQV@kernel.org>
+ <ZU4+3HxUMg7hW52e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <489ecb9e.28cc.18bd650affa.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:DcGowAD3n8WvlVVl9B8IAA--.64573W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiEB8qql8YMgdEUgAKsh
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZU4+3HxUMg7hW52e@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: YDxjM_9M9hLArvJTgBcTwk8xWblF5HNf
+X-Proofpoint-GUID: QSMcOht25pIMox5xE8CV38Mqz_SXP_Yr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-16_04,2023-11-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 clxscore=1011 phishscore=0
+ suspectscore=0 mlxlogscore=600 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2311160052
 
-CkF0IDIwMjMtMTEtMTYgMDA6MjY6MDYsICJOYW1oeXVuZyBLaW0iIDxuYW1oeXVuZ0BrZXJuZWwu
-b3JnPiB3cm90ZToKPk9uIFdlZCwgTm92IDE1LCAyMDIzIGF0IDg6MTLigK9BTSBEYXZpZCBXYW5n
-IDwwMDEwNzA4MkAxNjMuY29tPiB3cm90ZToKPj4KPj4KPj4g5ZyoIDIwMjMtMTEtMTUgMjM6NDg6
-MzPvvIwiTmFtaHl1bmcgS2ltIiA8bmFtaHl1bmdAa2VybmVsLm9yZz4g5YaZ6YGT77yaCj4+ID5P
-biBXZWQsIE5vdiAxNSwgMjAyMyBhdCAzOjAw4oCvQU0gRGF2aWQgV2FuZyA8MDAxMDcwODJAMTYz
-LmNvbT4gd3JvdGU6Cj4+ID4+Cj4+ID4+Cj4+ID4+Cj4+ID4+IEF0IDIwMjMtMTEtMTUgMTg6MzI6
-NDEsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRlYWQub3JnPiB3cm90ZToKPj4gPj4g
-Pgo+PiA+PiA+TmFtaHl1bmcsIGNvdWxkIHlvdSBwbGVhc2UgdGFrZSBhIGxvb2ssIHlvdSBrbm93
-IGhvdyB0byBvcGVyYXRlIHRoaXMKPj4gPj4gPmNncm91cCBzdHVmZi4KPj4gPj4gPgo+PiA+Pgo+
-PiA+PiBNb3JlIGluZm9ybWF0aW9uLCAgSSBydW4gdGhlIHByb2ZpbGluZyB3aXRoIDhjcHUgbWFj
-aGluZSBvbiBhIFNTRCB3aXRoIGV4dDQgZmlsZXN5c3RlbSA6Cj4+ID4+Cj4+ID4+ICMgbWtkaXIg
-L3N5cy9mcy9jZ3JvdXAvbXl0ZXN0Cj4+ID4+ICMgZWNobyAkJCA+IC9zeXMvZnMvY2dyb3VwL215
-dGVzdC9jZ3JvdXAucHJvY3MKPj4gPj4gIyMgU3RhcnQgcHJvZmlsaW5nIHRhcmdldGluZyBjZ3Jv
-dXAgL3N5cy9mcy9jZ3JvdXAvbXl0ZXN0ICAgb24gYW5vdGhlciB0ZXJtaW5hbAo+PiA+PiAjIGZp
-byAtLXJhbmRyZXBlYXQ9MSAtLWlvZW5naW5lPWxpYmFpbyAtLWRpcmVjdD0xIC0tbmFtZT10ZXN0
-ICAtLWJzPTRrIC0taW9kZXB0aD02NCAtLXNpemU9MUcgLS1yZWFkd3JpdGU9cmFuZHJ3ICAtLXJ1
-bnRpbWU9NjAwIC0tbnVtam9icz00IC0tdGltZV9iYXNlZD0xCj4+ID4+Cj4+ID4+IEkgZ290IGEg
-ZmVlbGluZyB0aGF0IGYwNmNjNjY3Zjc5OTAgd291bGQgZGVjcmVhc2UgdG90YWwgc2FtcGxlcyBi
-eSAxMCV+MjAlIHdoZW4gcHJvZmlsaW5nIElPIGJlbmNobWFyayB3aXRoaW4gY2dyb3VwLgoKCj4K
-PlRoZW4gd2hhdCBpcyB5b3VyIHByb2ZpbGluZyB0b29sPyAgV2hlcmUgZGlkIHlvdSBzZWUKPnRo
-ZSAxMCV+MjAlIGRyb3AgaW4gc2FtcGxlcz8KPgoKSSB3cm90ZSBhIHNpbXBsZS9yYXcgdG9vbCBq
-dXN0IGZvciBwcm9maWxpbmcgY2FsbGNoYWlucywgd2hpY2ggdXNlIHBlcmZfZXZlbnRfb3BlbiB3
-aXRoIGZvbGxvd2luZyBhdHRyOgogICAgYXR0ci50eXBlID0gUEVSRl9UWVBFX1NPRlRXQVJFOwog
-ICAgIGF0dHIuY29uZmlnID0gUEVSRl9DT1VOVF9TV19DUFVfQ0xPQ0s7CiAgICAgYXR0ci5zYW1w
-bGVfZnJlcSA9IDc3NzsgLy8gYWRqdXN0IGl0CiAgICAgYXR0ci5mcmVxID0gMTsKICAgICBhdHRy
-Lndha2V1cF9ldmVudHMgPSAxNjsKICAgICBhdHRyLnNhbXBsZV90eXBlID0gUEVSRl9TQU1QTEVf
-VElEfFBFUkZfU0FNUExFX0NBTExDSEFJTjsKICAgICBhdHRyLnNhbXBsZV9tYXhfc3RhY2sgPSAz
-MjsKClRoZSBzb3VyY2UgY29kZSBjb3VsZCBiZSBmb3VuZCBoZXJlOiBodHRwczovL2dpdGh1Yi5j
-b20venEtZGF2aWQtd2FuZy9saW51eC10b29scy90cmVlL21haW4vcGVyZi9wcm9maWxlcgo+Pgo+
-PiBJIGFtIG5vdCBleHBlcmllbmNlZCB3aXRoIHRoZSBwZXJmLXRvb2wgYXQgYWxsLCAgIHRvbyBj
-b21wbGljYXRlZCBhIHRvb2wgZm9yIG1lLi4uLiBCdXQgSSB0aGluayBJIGNhbiB0cnkgaXQuCj4K
-PkkgZmVlbCBzb3JyeSBhYm91dCB0aGF0LiAgSW4gbW9zdCBjYXNlcywganVzdCBgcGVyZiByZWNv
-cmQgLWFgIGFuZAo+dGhlbiBgcGVyZiByZXBvcnRgIHdvdWxkIHdvcmsgd2VsbC4gOikKPgpUaGFu
-a3MgZm9yIHRoZSBpbmZvcm1hdGlvbiwgIEkgdXNlIGZvbGxvd2luZyBjb21tYW5kIHRvIHByb2Zp
-bGUgd2l0aCBwZXJmOgpgLi9wZXJmIHJlY29yZCAtYSAtZSBjcHUtY2xvY2sgLUcgbXl0ZXN0YApJ
-IGhhdmUgcnVuIHNldmVyYWwgcm91bmQgb2YgdGVzdCwgYW5kIGJlZm9yZSBlYWNoIHRlc3QsIHRo
-ZSBzeXN0ZW0gd2FzIHJlYm9vdGVkLCBhbmQgcGVyZiBvdXRwdXQgaXMKCk9uIDYuNy4wLXJjMToK
-JCBzdWRvIC4vcGVyZiByZWNvcmQgLWEgLWUgY3B1LWNsb2NrIC1HIG15dGVzdAogIF5DWyBwZXJm
-IHJlY29yZDogV29rZW4gdXAgNTI3IHRpbWVzIHRvIHdyaXRlIGRhdGEgXQogIFsgcGVyZiByZWNv
-cmQ6IENhcHR1cmVkIGFuZCB3cm90ZSAxMzIuNjQ4IE1CIHBlcmYuZGF0YSAoMjQ3ODc0NSBzYW1w
-bGVzKSBdICAKIC0tLXJlYm9vdAogICQgc3VkbyAuL3BlcmYgcmVjb3JkIC1hIC1lIGNwdS1jbG9j
-ayAtRyBteXRlc3QKICBeQ1sgcGVyZiByZWNvcmQ6IFdva2VuIHVwIDQ3MyB0aW1lcyB0byB3cml0
-ZSBkYXRhIF0KICBbIHBlcmYgcmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMTE5LjIwNSBNQiBw
-ZXJmLmRhdGEgKDIyMjY5OTQgc2FtcGxlcykgXQoKCk9uIDYuNy4wLXJjMSB3aXRoIGYwNmNjNjY3
-Zjc5OTA5ZTkxNzU0NjBiMTY3YzI3N2I3YzY0ZDNkZjAgcmV2ZXJ0ZWQKCiQgc3VkbyAuL3BlcmYg
-cmVjb3JkIC1hIC1lIGNwdS1jbG9jayAtRyBteXRlc3QKICBeQ1sgcGVyZiByZWNvcmQ6IFdva2Vu
-IHVwIDU2NyB0aW1lcyB0byB3cml0ZSBkYXRhIF0KICBbIHBlcmYgcmVjb3JkOiBDYXB0dXJlZCBh
-bmQgd3JvdGUgMTQyLjc3MSBNQiBwZXJmLmRhdGEgKDI2NjgyMjQgc2FtcGxlcykgXQogIC0tLXJl
-Ym9vdAogICQgc3VkbyAuL3BlcmYgcmVjb3JkIC1hIC1lIGNwdS1jbG9jayAtRyBteXRlc3QKICBe
-Q1sgcGVyZiByZWNvcmQ6IFdva2VuIHVwIDU1NyB0aW1lcyB0byB3cml0ZSBkYXRhIF0KICBbIHBl
-cmYgcmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMTQwLjYwNCBNQiBwZXJmLmRhdGEgKDI2Mjcx
-Njcgc2FtcGxlcykgXQogIAoKSSBhbHNvIHJ1biB3aXRoIGAtRiA3NzdgLCB3aGljaCBpcyBzb21l
-IHJhbmRvbSBudW1iZXIgSSB1c2VkIGluIG15IHRvb2wsICAgKGp1c3QgdG8gY29tcGFyZSB3aXRo
-IG15IHRvb2wgKQoKT24gNi43LjAtcmMxCiQgc3VkbyAuL3BlcmYgcmVjb3JkIC1hIC1lIGNwdS1j
-bG9jayAtRiA3NzcgLUcgbXl0ZXN0Cl5DWyBwZXJmIHJlY29yZDogV29rZW4gdXAgOTMgdGltZXMg
-dG8gd3JpdGUgZGF0YSBdClsgcGVyZiByZWNvcmQ6IENhcHR1cmVkIGFuZCB3cm90ZSAyNC41NzUg
-TUIgcGVyZi5kYXRhICg0NTUyMjIgc2FtcGxlcykgXSAoIE15IHRvb2wgaGF2ZSBvbmx5IH4zNTlL
-IHNhbXBsZXMsIG5vdCBzdGFibGUpCgogIApPbiA2LjcuMC1yYzEgd2l0aCBmMDZjYzY2N2Y3OTkw
-OWU5MTc1NDYwYjE2N2MyNzdiN2M2NGQzZGYwIHJldmVydGVkCiQgc3VkbyAuL3BlcmYgcmVjb3Jk
-IC1hIC1lIGNwdS1jbG9jayAtRiA3NzcgLUcgbXl0ZXN0Cl5DWyBwZXJmIHJlY29yZDogV29rZW4g
-dXAgOTggdGltZXMgdG8gd3JpdGUgZGF0YSBdClsgcGVyZiByZWNvcmQ6IENhcHR1cmVkIGFuZCB3
-cm90ZSAyNS43MDMgTUIgcGVyZi5kYXRhICg0NzYzOTAgc2FtcGxlcykgXSAgKE15IHRvb2wgaGF2
-ZSBhYm91dCB+NDQ2Sywgc3RhYmxlKQoKCkZyb20gdGhlIGRhdGEgSSBjb2xsZWN0ZWQsIEkgdGhp
-bmsgdHdvIHByb2JsZW0gY291bGQgYmUgb2JzZXJ2ZWQgZm9yIGYwNmNjNjY3Zjc5OTA5ZTkxNzU0
-NjBiMTY3YzI3N2I3YzY0ZDNkZjAKMS4gc2FtcGxlIG1pc3NpbmcuIAoyLiBzYW1wbGUgdW5zdGFi
-bGUsIHRvdGFsIHNhbXBsZSBjb3VudCBkcmlmdCBhIGxvdCBiZXR3ZWVuIHRlc3RzLiAKClRoYW5r
-cwpEYXZpZAoKCg==
+Extremely sorry for the delayed reply, I was on leave. Around this time, we have
+a major festival in India, so was on a long leave.
+
+On Fri, Nov 10, 2023 at 11:31:56AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Nov 10, 2023 at 11:27:42AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Sat, Oct 21, 2023 at 08:35:23PM +0530, Aditya Gupta escreveu:
+> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+>  
+> > Right after applying this first patch:
+>  
+> > [acme@quaco perf-tools-next]$ m
+> > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+> > builtin-check.c:53:56: error: expected ‘}’ before ‘;’ token
+> >    53 |         FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL);
+> >       |                                                        ^
+> > builtin-check.c:29:47: note: to match this ‘{’
+> >    29 | struct feature_support supported_features[] = {
+> >       |                                               ^
+> > make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:106: /tmp/build/perf-tools-next/builtin-check.o] Error 1
+> > make[3]: *** Waiting for unfinished jobs....
+> > make[2]: *** [Makefile.perf:669: /tmp/build/perf-tools-next/perf-in.o] Error 2
+> > make[1]: *** [Makefile.perf:242: sub-make] Error 2
+> > make: *** [Makefile:113: install-bin] Error 2
+> > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> 
+> It was a simple error, please be more careful next time.
+> 
+> I'm testing the rest of the patchset now.
+
+Thank you. I will be more careful next time.
+
+> 
+> - Arnaldo
+> 
+> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+> index 1183983e4352798d..1502804780507b5d 100644
+> --- a/tools/perf/builtin-check.c
+> +++ b/tools/perf/builtin-check.c
+> @@ -50,7 +50,7 @@ struct feature_support supported_features[] = {
+>  	FEATURE_SUPPORT("zstd", HAVE_ZSTD_SUPPORT),
+>  	FEATURE_SUPPORT("libpfm4", HAVE_LIBPFM),
+>  	FEATURE_SUPPORT("libtraceevent", HAVE_LIBTRACEEVENT),
+> -	FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL);
+> +	FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL),
+>  
+>  	/* this should remain at end, to know the array end */
+>  	FEATURE_SUPPORT(NULL, _)
