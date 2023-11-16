@@ -1,65 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Fp0kRtgZ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e4ka7DF8"
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B8F192
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Nov 2023 23:12:15 -0800 (PST)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AG7BGRv010692;
-	Thu, 16 Nov 2023 07:12:12 GMT
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B90182
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Nov 2023 23:12:56 -0800 (PST)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AG7Aojn017038;
+	Thu, 16 Nov 2023 07:12:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
  subject : message-id : references : mime-version : content-type :
  content-transfer-encoding : in-reply-to; s=pp1;
- bh=uschxzA9WJL2+sjXqRBiWusJT5oUaSLNXxRFI7y65zA=;
- b=Fp0kRtgZ7uhHaoH2SRJUW/mFNa/4+NDgDsCL4q8CE449W6tvAffcBWDGfedapbx+7rPJ
- qbaJmUlYnuz8dxe7b9VHnXr6kyuKd+JXYhQPrlU5OJIzc9zsDdBsTr2gNdzuTPRfJMvi
- H4oisB3OmhriZNPUtva3wBgII8EwzX0tllcy/ngY9ppEGhuomDLsfYcNW6jN9JSs1jGd
- FmZ0I3aSwtZuYNpjB/TeE9d2UJ1TrCoRyCcWPjXlhjvDKdY6izTO1haM7YaLcuTSl3qi
- SoM/NanYfiehmMTmq/+YpfUa4OqVaTuOUXujuhmtk+7RsuIfEW8GI7rZRdTrpx0+Yl/o IA== 
+ bh=FbliIxJCmii/rlCSvRC5OvkVYXjrDcDqRMz3/H06XaI=;
+ b=e4ka7DF8L6pn6AFRpCPMgnIowC5pkHTDONbZy4Eyqskdh6K0REQPkBLgJHVmRPEea9Oa
+ iwN9vzX/u4/43/AU6PthC9G4kCrGm0hG8y9ig5pPx4I8sfmEaiys3nT2cpeCy1X+t8eL
+ W0fIDVfGheItR1omfRa5KtPwO3LhAUHbSaM9Axw6TvGU5vdjt9XUPnef087EJBaBlFeO
+ Je/wh91VHVODzVQoPwchj/BpnfAetvr4SMFiz5gdl4FOSdk/Q8dVJrXyU8oGkgeJ5Fm3
+ s2CPpWBVX2RoixxlttFvqX9KiUT2uZKHihP84qK1vCUD570SaGIJ+3S7zCYKSSwMmW1D zw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uddpf9g8j-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ude4cgub8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Nov 2023 07:12:12 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AG7CBTI018029;
-	Thu, 16 Nov 2023 07:12:11 GMT
+	Thu, 16 Nov 2023 07:12:54 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AG7Bq95020525;
+	Thu, 16 Nov 2023 07:12:53 GMT
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uddpf9der-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ude4cguaq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Nov 2023 07:12:09 +0000
+	Thu, 16 Nov 2023 07:12:53 +0000
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AG5Hji7019745;
-	Thu, 16 Nov 2023 07:06:38 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uap5kchd4-1
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AG5Fn9A019663;
+	Thu, 16 Nov 2023 07:12:52 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uap5kcj6q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Nov 2023 07:06:38 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AG76ZLp62914862
+	Thu, 16 Nov 2023 07:12:52 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AG7Cntn3539516
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Nov 2023 07:06:35 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C39C32004E;
-	Thu, 16 Nov 2023 07:06:35 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 962422004B;
-	Thu, 16 Nov 2023 07:06:33 +0000 (GMT)
+	Thu, 16 Nov 2023 07:12:49 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 888112004D;
+	Thu, 16 Nov 2023 07:12:49 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 859962004B;
+	Thu, 16 Nov 2023 07:12:47 +0000 (GMT)
 Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 16 Nov 2023 07:06:33 +0000 (GMT)
-Date: Thu, 16 Nov 2023 12:36:28 +0530
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 16 Nov 2023 07:12:47 +0000 (GMT)
+Date: Thu, 16 Nov 2023 12:42:42 +0530
 From: Aditya Gupta <adityag@linux.ibm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, jolsa@kernel.org,
+        irogers@google.com, linux-perf-users@vger.kernel.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
 Subject: Re: [PATCH v6 1/4] perf check: introduce check subcommand
-Message-ID: <k45gzpnpkqbmkthhgj2gdnvddnmwk53qjwu2dztdloj6b5hka4@vqdibzxgpj27>
+Message-ID: <kp5ftxsenkywukvlpsd76xexfozlz7a7qsrbtrzqpukytc2gmo@e2xlbfgadhgn>
 References: <20231021150526.2231803-1-adityag@linux.ibm.com>
  <20231021150526.2231803-2-adityag@linux.ibm.com>
  <ZU493oMRpGgNBrQV@kernel.org>
  <ZU4+3HxUMg7hW52e@kernel.org>
  <ZU5AcywaEAM1zUvG@kernel.org>
+ <CAM9d7cjJckDtP8Xhw4fFc7gk98fQQbHQ2nBpoWcikUgASRHgUw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,159 +70,146 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZU5AcywaEAM1zUvG@kernel.org>
+In-Reply-To: <CAM9d7cjJckDtP8Xhw4fFc7gk98fQQbHQ2nBpoWcikUgASRHgUw@mail.gmail.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: VRtg8W9S4sHWms9rv1WrX7QcmOgka9Pu
-X-Proofpoint-ORIG-GUID: vTyLUZs1WcrGM018LQdZS7IGbZxTepRj
+X-Proofpoint-ORIG-GUID: 6-5OMTozaiWwNu3TLhqd31gZjhzxag8h
+X-Proofpoint-GUID: RZIeR4241OhqIkEnGRBRPw9zy42zU8Pw
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-11-16_04,2023-11-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- mlxlogscore=860 clxscore=1015 lowpriorityscore=0 impostorscore=0
- adultscore=0 phishscore=0 priorityscore=1501 mlxscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=786
+ spamscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311060000 definitions=main-2311160055
 
-On Fri, Nov 10, 2023 at 11:38:43AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Nov 10, 2023 at 11:31:57AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Nov 10, 2023 at 11:27:42AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Sat, Oct 21, 2023 at 08:35:23PM +0530, Aditya Gupta escreveu:
-> > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > > > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
->   
-> > > Right after applying this first patch:
->   
-> > > [acme@quaco perf-tools-next]$ m
-> > > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-> > > builtin-check.c:53:56: error: expected ‘}’ before ‘;’ token
-> > >    53 |         FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL);
-> > >       |                                                        ^
-> > > builtin-check.c:29:47: note: to match this ‘{’
-> > >    29 | struct feature_support supported_features[] = {
-> > >       |                                               ^
-> > > make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:106: /tmp/build/perf-tools-next/builtin-check.o] Error 1
-> > > make[3]: *** Waiting for unfinished jobs....
-> > > make[2]: *** [Makefile.perf:669: /tmp/build/perf-tools-next/perf-in.o] Error 2
-> > > make[1]: *** [Makefile.perf:242: sub-make] Error 2
-> > > make: *** [Makefile:113: install-bin] Error 2
-> > > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
->  
-> > It was a simple error, please be more careful next time.
->  
-> > I'm testing the rest of the patchset now.
+On Fri, Nov 10, 2023 at 02:46:46PM -0800, Namhyung Kim wrote:
+> On Fri, Nov 10, 2023 at 6:38 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Fri, Nov 10, 2023 at 11:31:57AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Fri, Nov 10, 2023 at 11:27:42AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > Em Sat, Oct 21, 2023 at 08:35:23PM +0530, Aditya Gupta escreveu:
+> > > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > > > > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+> >
+> > > > Right after applying this first patch:
+> >
+> > > > [acme@quaco perf-tools-next]$ m
+> > > > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+> > > > builtin-check.c:53:56: error: expected ‘}’ before ‘;’ token
+> > > >    53 |         FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL);
+> > > >       |                                                        ^
+> > > > builtin-check.c:29:47: note: to match this ‘{’
+> > > >    29 | struct feature_support supported_features[] = {
+> > > >       |                                               ^
+> > > > make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:106: /tmp/build/perf-tools-next/builtin-check.o] Error 1
+> > > > make[3]: *** Waiting for unfinished jobs....
+> > > > make[2]: *** [Makefile.perf:669: /tmp/build/perf-tools-next/perf-in.o] Error 2
+> > > > make[1]: *** [Makefile.perf:242: sub-make] Error 2
+> > > > make: *** [Makefile:113: install-bin] Error 2
+> > > > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> >
+> > > It was a simple error, please be more careful next time.
+> >
+> > > I'm testing the rest of the patchset now.
+> >
+> > Please resubmit when you address the problem fixed with this patch and:
+> >
+> > Mussing newline, why print the version again? What is that "perf check "
+> > prefix for?
+> >
+> > [acme@quaco perf-tools-next]$ perf check --feature traceevent
+> > perf check 6.6.rc1.g78fa196349bc
+> > Feature not known: traceevent[acme@quaco perf-tools-next]$
+> >
+> > Why should we require "--feature"? The following format is descriptive
+> > enough:
 > 
-> Please resubmit when you address the problem fixed with this patch and:
+> I thought we might want to extend the functionality of the check
+> command later.  Maybe we can check how many perf counters
+> are supported or which sysctl settings are affected and so on.
 > 
-> Mussing newline, why print the version again? What is that "perf check "
-> prefix for?
+> Maybe we need to make '--feature' option to a sub-command
+> like `perf check feature xxx`.  So it cannot be mixed with others
+> later.
 
-Sure, I will send a V7 with the problems fixed.
-
-> 
-> [acme@quaco perf-tools-next]$ perf check --feature traceevent
-> perf check 6.6.rc1.g78fa196349bc
-> Feature not known: traceevent[acme@quaco perf-tools-next]$
-> 
-> Why should we require "--feature"? The following format is descriptive
-> enough:
-> 
-> [acme@quaco perf-tools-next]$
-> [acme@quaco perf-tools-next]$ perf check traceevent
-> perf check 6.6.rc1.g78fa196349bc
-> [acme@quaco perf-tools-next]$
-
-This was done, so that the proposed 'perf check' command could be extended
-in future for other usage also, and not just for checking if a feature is
-available or not
-
-In initial versions of this patch series, it was implemented also
-'perf build --has libtraceevent', though with discussions, we arrived at a new
-sucommand 'perf check', and checking if a feature is enabled is done just
-with a flag 'perf check --feature', so that 'perf check' can be extended in
-future.
+True, 'perf check' is intended to be extended.
+We can make it 'perf check feature libtraceevent', but any extra flags etc to
+'perf check feature' can be equally verbose of what was intended to be a replacement
+for 'perf version --build-options | grep "libtraceevent.*on"'
 
 > 
-> So I had to go back and use:
+> >
+> > [acme@quaco perf-tools-next]$
+> > [acme@quaco perf-tools-next]$ perf check traceevent
+> > perf check 6.6.rc1.g78fa196349bc
+> > [acme@quaco perf-tools-next]$
+> >
+> > So I had to go back and use:
+> >
+> > [acme@quaco perf-tools-next]$ perf -vv
+> > perf version 6.6.rc1.g78fa196349bc
+> >                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+> >     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+> >          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+> >                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
+> >             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+> >                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+> >                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+> > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+> >                libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+> >              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+> >               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+> >              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+> >              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+> >     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+> >                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+> >                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+> >              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+> >                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+> >                    aio: [ on  ]  # HAVE_AIO_SUPPORT
+> >                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+> >                libpfm4: [ on  ]  # HAVE_LIBPFM
+> >          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+> >          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+> > [acme@quaco perf-tools-next]$
+> >
+> > To see (some) of the features, please add a:
+> >
+> > # perf check --list-features
+> >
+> > So that we can get that features array printed.
+> >
+> > Some other feature requests:
+> >
+> > [acme@quaco perf-tools-next]$ perf check --feature libtraceevent,libbpf_support
+> > perf check 6.6.rc1.g78fa196349bc
+> > Feature not known: libtraceevent,libbpf_support[acme@quaco perf-tools-next]$
+> >
+> > This should return true if both are available.
 > 
-> [acme@quaco perf-tools-next]$ perf -vv
-> perf version 6.6.rc1.g78fa196349bc
->                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
->     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
->          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
->                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
->             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
->                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
->                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
->                libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
->              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
->               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
->              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
->              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
->     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
->                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
->                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
->              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
->                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
->                    aio: [ on  ]  # HAVE_AIO_SUPPORT
->                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
->                libpfm4: [ on  ]  # HAVE_LIBPFM
->          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
->          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-> [acme@quaco perf-tools-next]$
-> 
-> To see (some) of the features, please add a:
-> 
-> # perf check --list-features
-> 
-> So that we can get that features array printed.
+> Sounds good.
 
-This is already there in 'perf version --build-options' command. And that is the
-command which was being used by scripts to check if a feature is enabled or not.
+Sure, I will do it next version.
 
 > 
-> Some other feature requests:
+> >
+> > Also, shouldn't be --quiet be the default since this is being designed
+> > for use in scripts?
 > 
-> [acme@quaco perf-tools-next]$ perf check --feature libtraceevent,libbpf_support
-> perf check 6.6.rc1.g78fa196349bc
-> Feature not known: libtraceevent,libbpf_support[acme@quaco perf-tools-next]$
+> I don't know.. users might want to see the result instead
+> of checking the return value.
 > 
-> This should return true if both are available.
-
-This can be done. Sure.
-
-> 
-> Also, shouldn't be --quiet be the default since this is being designed
-> for use in scripts?
+>      libtraceevent: [ on  ]
+>     libbpf_support: [ OFF ]
 > 
 
-It will mostly be used by scripts only, but still if used as a command by any
-user, it's intended that they also see whether feature was enabled or not,
-instead of relying on the exit code.
-
-Thanks for your reviews, and fixing the mistake I made.
+Thanks Namhyung for answering the questions while I was not active.
 
 Thanks,
-- Aditya Gupta
+- Aditya
 
-> - Arnaldo
->  
-> > - Arnaldo
-> > 
-> > diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> > index 1183983e4352798d..1502804780507b5d 100644
-> > --- a/tools/perf/builtin-check.c
-> > +++ b/tools/perf/builtin-check.c
-> > @@ -50,7 +50,7 @@ struct feature_support supported_features[] = {
-> >  	FEATURE_SUPPORT("zstd", HAVE_ZSTD_SUPPORT),
-> >  	FEATURE_SUPPORT("libpfm4", HAVE_LIBPFM),
-> >  	FEATURE_SUPPORT("libtraceevent", HAVE_LIBTRACEEVENT),
-> > -	FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL);
-> > +	FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL),
-> >  
-> >  	/* this should remain at end, to know the array end */
-> >  	FEATURE_SUPPORT(NULL, _)
-> 
-> -- 
-> 
-> - Arnaldo
+> Thanks,
+> Namhyung
+
