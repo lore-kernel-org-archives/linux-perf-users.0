@@ -1,184 +1,179 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Na2Yx3OL"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE0B5129;
-	Fri, 17 Nov 2023 02:33:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=esOzA9VVK9bUu3e2cxLHY6AuD1sva62ndBB8LGOwhgA=; b=Na2Yx3OL2X/FAh6FULgf3IRx5J
-	BS5WYPaXqDE8y/ejczxsKfF45a94a0j6oUoqV4K26rR10+PXIeohx3BSzR1LU0whkvO+O0MkKIxYi
-	kC4b65tfrTAO2tJxVE1EAUvQurWxDCZYOOQ4Vi/KsMy2PogrWyOIR6gPPgBeFSSwZ8WnIz0CyHM7z
-	vVL7sIqe8JkMtWYi+O1NPE+jWkieuE7HHT9kSAyniVG0B3EvYbGAkGZBVlmdyxnB6MmJo/Ke4i2WC
-	leaXXhpNYu4QMZwXxzJTr+vQsxwc8tnYJqJKrrc/6eo33Y6nULqqDEBbfIYIt0RtcB3tD+azYB935
-	ZQTI6fLg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r3w9M-008qar-KX; Fri, 17 Nov 2023 10:32:36 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4B5F6300478; Fri, 17 Nov 2023 11:32:36 +0100 (CET)
-Date: Fri, 17 Nov 2023 11:32:36 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Like Xu <likexu@tencent.com>, Jim Mattson <jmattson@google.com>,
-	Mingwei Zhang <mizhang@google.com>
-Subject: Re: [PATCH] perf/x86: Don't enforce minimum period for KVM
- guest-only events
-Message-ID: <20231117103236.GI3818@noisy.programming.kicks-ass.net>
-References: <20231107183605.409588-1-seanjc@google.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A95B6;
+	Fri, 17 Nov 2023 13:11:14 -0800 (PST)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6c4884521f6so2296089b3a.0;
+        Fri, 17 Nov 2023 13:11:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700255474; x=1700860274;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BjUoFQmdVqozJfSUnsX9imt403boBh1aBRoDnrn1A2M=;
+        b=w+grTICixzvvCRUcDf7zYxXRAV+XtHer0D8/FDoSaRqNL8WRekwE+qe6anBbhwbPC5
+         7GnFmopL2XAJwJpcYxgoZIrSgg95YAzSpqAJYqoKMDWm0HmdOBuEjDf2xs7i3sPN4j/y
+         hxDlM6Z041dfmUToLp8ZXLsOJ0p1XDT18VETdzozWSM/Tp42FXhJ4xENcmd6mtk3H8XJ
+         McPINezB4e3pSRuKFq3rUtDwlZyG4CpGR7RV2cCbxS6XEI/B7o+78pgqcMqOomuvGtx+
+         2fUMLDWf8D6Bj7Cho1wNPTjifQzChHWPmvV6VDTzdLI8v23PMktkuSty2I/wB366DG8h
+         pDKA==
+X-Gm-Message-State: AOJu0YyFPZY0Sg4o+tmtmCdNOMUHzoSigwI95ItPn3OIU0vOT1UOsOH5
+	biegzdQvgRdmZrAL/mpMZRH2q/uw85THUiZcc0Y=
+X-Google-Smtp-Source: AGHT+IF3XVtiOmkgk1Kge+dgUxNLC/3cYBOxTHLuT5ZoJ7saow0OJ/a9aSGpJCTbf8o9jp7YnYcAZZLBVs2kK5IO2I8=
+X-Received: by 2002:a05:6a20:5485:b0:187:2521:4581 with SMTP id
+ i5-20020a056a20548500b0018725214581mr370551pzk.60.1700255473768; Fri, 17 Nov
+ 2023 13:11:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231107183605.409588-1-seanjc@google.com>
+References: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
+ <76d75357.6ab6.18bce6b7d5b.Coremail.00107082@163.com> <20231115103241.GD3818@noisy.programming.kicks-ass.net>
+ <407a06f8.632a.18bd2a2ece1.Coremail.00107082@163.com> <CAM9d7cgdUJytP31y90c5AuQAmR6FgkBWjj4brVjH8Pg+d00O+Q@mail.gmail.com>
+ <1a1338d0.6b3a.18bd3c09056.Coremail.00107082@163.com> <CAM9d7cgjCKynoTC0L53pEXnCWHF7AZ8Gr2a0xQnes7L24KVNsA@mail.gmail.com>
+ <489ecb9e.28cc.18bd650affa.Coremail.00107082@163.com>
+In-Reply-To: <489ecb9e.28cc.18bd650affa.Coremail.00107082@163.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 17 Nov 2023 13:11:02 -0800
+Message-ID: <CAM9d7cg-tudzG4iPMHs5L-zYMe-WhyzZXN9eOtkoapS1n7t8AA@mail.gmail.com>
+Subject: Re: Re: [Regression or Fix]perf: profiling stats sigificantly changed
+ for aio_write/read(ext4) between 6.7.0-rc1 and 6.6.0
+To: David Wang <00107082@163.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 07, 2023 at 10:36:05AM -0800, Sean Christopherson wrote:
-> Don't apply minimum period workarounds/requirements to events that are
-> being created by KVM to virtualize PMCs for guests, i.e. skip limit
-> enforcement for events that exclude the host.  Perf's somewhat arbitrary
-> limits prevents KVM from correctly virtualizing counter overflow, e.g. if
-> the guest sets a counter to have an effective period of '1', forcing a
-> minimum period of '2' results in overflow occurring at the incorrect time.
-> 
-> Whether or not a "real" profiling use case is affected is debatable, but
-> the incorrect behavior is trivially easy to observe and reproduce, and is
-> deterministic enough to make the PMU appear to be broken from the guest's
-> perspective.
-> 
-> Furthermore, the "period" set by KVM isn't actually a period, as KVM won't
-> automatically reprogram the event with the same period on overflow.  KVM
-> will synthesize a PMI into the guest when appropriate, but what the guest
-> does in response to the PMI is purely a guest decision.  In other words,
-> KVM effectively operates in a one-shot mode, not a periodic mode.
-> 
-> Letting KVM and/or the guest program "too small" periods is safe for the
-> host, as events that exclude the host are atomically disabled with respect
-> to VM-Exit, i.e. are guaranteed to stop counting upon transitioning to the
-> host.  And whether or not *explicitly* programming a short period is safe
-> is somewhat of a moot point, as transitions to/from the guest effectively
-> yield the same effect, e.g. an unrelated VM-Exit => VM-Enter transition
-> will re-enable guest PMCs with whatever count happened to be in the PMC at
-> the time of VM-Exit.
-> 
-> Cc: Like Xu <likexu@tencent.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Mingwei Zhang <mizhang@google.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
-> 
-> Disclaimer: I've only tested this from KVM's side of things.
-> 
->  arch/x86/events/core.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 40ad1425ffa2..f8a8a4ea4d47 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1388,16 +1388,25 @@ int x86_perf_event_set_period(struct perf_event *event)
->  		hwc->last_period = period;
->  		ret = 1;
->  	}
-> -	/*
-> -	 * Quirk: certain CPUs dont like it if just 1 hw_event is left:
-> -	 */
-> -	if (unlikely(left < 2))
-> -		left = 2;
->  
->  	if (left > x86_pmu.max_period)
->  		left = x86_pmu.max_period;
->  
-> -	static_call_cond(x86_pmu_limit_period)(event, &left);
-> +	/*
-> +	 * Exempt KVM guest events from the minimum period requirements.  It's
-> +	 * the guest's responsibility to ensure it can make forward progress,
-> +	 * and it's KVM's responsibility to configure an appropriate "period"
-> +	 * to correctly virtualize overflow for the guest's PMCs.
-> +	 */
-> +	if (!event->attr.exclude_host) {
-> +		/*
-> +		 * Quirk: certain CPUs dont like it if just 1 event is left:
-> +		 */
-> +		if (unlikely(left < 2))
-> +			left = 2;
-> +
-> +		static_call_cond(x86_pmu_limit_period)(event, &left);
-> +	}
+On Wed, Nov 15, 2023 at 8:09=E2=80=AFPM David Wang <00107082@163.com> wrote=
+:
+>
+>
+> At 2023-11-16 00:26:06, "Namhyung Kim" <namhyung@kernel.org> wrote:
+> >On Wed, Nov 15, 2023 at 8:12=E2=80=AFAM David Wang <00107082@163.com> wr=
+ote:
+> >>
+> >>
+> >> =E5=9C=A8 2023-11-15 23:48:33=EF=BC=8C"Namhyung Kim" <namhyung@kernel.=
+org> =E5=86=99=E9=81=93=EF=BC=9A
+> >> >On Wed, Nov 15, 2023 at 3:00=E2=80=AFAM David Wang <00107082@163.com>=
+ wrote:
+> >> >>
+> >> >>
+> >> >>
+> >> >> At 2023-11-15 18:32:41, "Peter Zijlstra" <peterz@infradead.org> wro=
+te:
+> >> >> >
+> >> >> >Namhyung, could you please take a look, you know how to operate th=
+is
+> >> >> >cgroup stuff.
+> >> >> >
+> >> >>
+> >> >> More information,  I run the profiling with 8cpu machine on a SSD w=
+ith ext4 filesystem :
+> >> >>
+> >> >> # mkdir /sys/fs/cgroup/mytest
+> >> >> # echo $$ > /sys/fs/cgroup/mytest/cgroup.procs
+> >> >> ## Start profiling targeting cgroup /sys/fs/cgroup/mytest   on anot=
+her terminal
+> >> >> # fio --randrepeat=3D1 --ioengine=3Dlibaio --direct=3D1 --name=3Dte=
+st  --bs=3D4k --iodepth=3D64 --size=3D1G --readwrite=3Drandrw  --runtime=3D=
+600 --numjobs=3D4 --time_based=3D1
+> >> >>
+> >> >> I got a feeling that f06cc667f7990 would decrease total samples by =
+10%~20% when profiling IO benchmark within cgroup.
+>
+>
+> >
+> >Then what is your profiling tool?  Where did you see
+> >the 10%~20% drop in samples?
+> >
+>
+> I wrote a simple/raw tool just for profiling callchains, which use perf_e=
+vent_open with following attr:
+>     attr.type =3D PERF_TYPE_SOFTWARE;
+>      attr.config =3D PERF_COUNT_SW_CPU_CLOCK;
+>      attr.sample_freq =3D 777; // adjust it
+>      attr.freq =3D 1;
+>      attr.wakeup_events =3D 16;
+>      attr.sample_type =3D PERF_SAMPLE_TID|PERF_SAMPLE_CALLCHAIN;
+>      attr.sample_max_stack =3D 32;
+>
+> The source code could be found here: https://github.com/zq-david-wang/lin=
+ux-tools/tree/main/perf/profiler
+> >>
+> >> I am not experienced with the perf-tool at all,   too complicated a to=
+ol for me.... But I think I can try it.
+> >
+> >I feel sorry about that.  In most cases, just `perf record -a` and
+> >then `perf report` would work well. :)
+> >
+> Thanks for the information,  I use following command to profile with perf=
+:
+> `./perf record -a -e cpu-clock -G mytest`
+> I have run several round of test, and before each test, the system was re=
+booted, and perf output is
+>
+> On 6.7.0-rc1:
+> $ sudo ./perf record -a -e cpu-clock -G mytest
+>   ^C[ perf record: Woken up 527 times to write data ]
+>   [ perf record: Captured and wrote 132.648 MB perf.data (2478745 samples=
+) ]
+>  ---reboot
+>   $ sudo ./perf record -a -e cpu-clock -G mytest
+>   ^C[ perf record: Woken up 473 times to write data ]
+>   [ perf record: Captured and wrote 119.205 MB perf.data (2226994 samples=
+) ]
+>
+>
+> On 6.7.0-rc1 with f06cc667f79909e9175460b167c277b7c64d3df0 reverted
+>
+> $ sudo ./perf record -a -e cpu-clock -G mytest
+>   ^C[ perf record: Woken up 567 times to write data ]
+>   [ perf record: Captured and wrote 142.771 MB perf.data (2668224 samples=
+) ]
+>   ---reboot
+>   $ sudo ./perf record -a -e cpu-clock -G mytest
+>   ^C[ perf record: Woken up 557 times to write data ]
+>   [ perf record: Captured and wrote 140.604 MB perf.data (2627167 samples=
+) ]
+>
+>
+> I also run with `-F 777`, which is some random number I used in my tool, =
+  (just to compare with my tool )
+>
+> On 6.7.0-rc1
+> $ sudo ./perf record -a -e cpu-clock -F 777 -G mytest
+> ^C[ perf record: Woken up 93 times to write data ]
+> [ perf record: Captured and wrote 24.575 MB perf.data (455222 samples) ] =
+( My tool have only ~359K samples, not stable)
+>
+>
+> On 6.7.0-rc1 with f06cc667f79909e9175460b167c277b7c64d3df0 reverted
+> $ sudo ./perf record -a -e cpu-clock -F 777 -G mytest
+> ^C[ perf record: Woken up 98 times to write data ]
+> [ perf record: Captured and wrote 25.703 MB perf.data (476390 samples) ] =
+ (My tool have about ~446K, stable)
+>
+>
+> From the data I collected, I think two problem could be observed for f06c=
+c667f79909e9175460b167c277b7c64d3df0
+> 1. sample missing.
+> 2. sample unstable, total sample count drift a lot between tests.
 
-Hmm, IIRC we can disable that left < 2 thing for anything that doesn't
-have x86_pmu.pebs_no_isolation IIRC.
+Hmm.. so the fio process was running in the background during
+the profiling, right?  But I'm not sure how you measured the same
+amount of time.  Probably you need to run this (for 10 seconds):
 
-I'm not sure about taking out the limit_period call, why does it make
-sense to allow the guest to program obviously invalid settings?
+  sudo perf record -a -G mytest -- sleep 10
 
-That is, would something like the below work for you?
+And I guess you don't run the perf command in the target cgroup
+which is good.
 
----
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 40ad1425ffa2..5543a0bab1f8 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -152,6 +152,14 @@ u64 x86_perf_event_update(struct perf_event *event)
- 	return new_raw_count;
- }
- 
-+static void x86_perf_limit_period(struct perf_event *event, s64 *left)
-+{
-+	/*
-+	 * Quirk: certain CPUs dont like it if just 1 hw_event is left:
-+	 */
-+	*left = max(*left, 2);
-+}
-+
- /*
-  * Find and validate any extra registers to set up.
-  */
-@@ -1388,11 +1396,6 @@ int x86_perf_event_set_period(struct perf_event *event)
- 		hwc->last_period = period;
- 		ret = 1;
- 	}
--	/*
--	 * Quirk: certain CPUs dont like it if just 1 hw_event is left:
--	 */
--	if (unlikely(left < 2))
--		left = 2;
- 
- 	if (left > x86_pmu.max_period)
- 		left = x86_pmu.max_period;
-@@ -2130,6 +2133,10 @@ static int __init init_hw_perf_events(void)
- 	if (!x86_pmu.update)
- 		x86_pmu.update = x86_perf_event_update;
- 
-+	// XXX check non-Intel
-+	if (!x86_pmu.limit_period && x86_pmu.pebs_no_isolation)
-+		x86_pmu.limit_update = x86_perf_limit_period;
-+
- 	x86_pmu_static_call_update();
- 
- 	/*
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index a08f794a0e79..9fe0f241779e 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4471,7 +4471,10 @@ static void bdw_limit_period(struct perf_event *event, s64 *left)
- 		if (*left < 128)
- 			*left = 128;
- 		*left &= ~0x3fULL;
-+		return;
- 	}
-+	if (unlikely(x86_pmu.pebs_no_isolation))
-+		*left = max(*left, 2);
- }
- 
- static void nhm_limit_period(struct perf_event *event, s64 *left)
+And is there any chance if it's improved because of the change?
+Are the numbers in 6.7 better or worse?
+
+Thanks,
+Namhyung
