@@ -1,150 +1,184 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="keRh9EON"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4E65181
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Nov 2023 13:34:58 -0800 (PST)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AGLWalK013319;
-	Thu, 16 Nov 2023 21:34:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=ATNL7mnGXKIQV+XWWI5Ju5P5etAmQtQSRyZfZ/9H/zE=;
- b=keRh9EON6fy/V5g0Hpyszj97nLmPBfuCsrjUf46WSXITV94gLX2ZJ/Jzf9QhfOGZ8cwO
- CKcdCyqsuSBTFRsC/to4zILdHM0Y+aENfX95p64KT53RCRzETKgYLilk00vTgxBnOH2J
- Vims3GyVg7961I5JfGxa9JXMzmOXytaXTlobkJqJao8y/N0xXzBbY83KaYqRxuGuBgv7
- 3WOe2q1WPvEE4r9Au0LQkeE0eZoic9zh1S0Jrn83NLCOOa46tJxh784bAZsK/vHno8Sr
- dLG2/tTJMXP9TL2jIUsr4QpjpCRGYKenL3v4QvqZaRTcDMJH0SP9KQvM3OS3SzzLG/D3 kg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3udtvq8b88-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Nov 2023 21:34:50 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AGLWlgY014436;
-	Thu, 16 Nov 2023 21:34:49 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3udtvq8b85-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Nov 2023 21:34:49 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AGKqbKu030151;
-	Thu, 16 Nov 2023 21:34:49 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uanem1cnn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Nov 2023 21:34:48 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AGLYj9x19923686
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Nov 2023 21:34:45 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B1CF520049;
-	Thu, 16 Nov 2023 21:34:45 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 28BCC20040;
-	Thu, 16 Nov 2023 21:34:43 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.179.27.153])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 16 Nov 2023 21:34:42 +0000 (GMT)
-From: Aditya Gupta <adityag@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH v7 2/4] perf version: update --build-options to use 'supported_features' array
-Date: Fri, 17 Nov 2023 03:04:33 +0530
-Message-ID: <20231116213435.382484-3-adityag@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231116213435.382484-1-adityag@linux.ibm.com>
-References: <20231116213435.382484-1-adityag@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Na2Yx3OL"
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE0B5129;
+	Fri, 17 Nov 2023 02:33:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=esOzA9VVK9bUu3e2cxLHY6AuD1sva62ndBB8LGOwhgA=; b=Na2Yx3OL2X/FAh6FULgf3IRx5J
+	BS5WYPaXqDE8y/ejczxsKfF45a94a0j6oUoqV4K26rR10+PXIeohx3BSzR1LU0whkvO+O0MkKIxYi
+	kC4b65tfrTAO2tJxVE1EAUvQurWxDCZYOOQ4Vi/KsMy2PogrWyOIR6gPPgBeFSSwZ8WnIz0CyHM7z
+	vVL7sIqe8JkMtWYi+O1NPE+jWkieuE7HHT9kSAyniVG0B3EvYbGAkGZBVlmdyxnB6MmJo/Ke4i2WC
+	leaXXhpNYu4QMZwXxzJTr+vQsxwc8tnYJqJKrrc/6eo33Y6nULqqDEBbfIYIt0RtcB3tD+azYB935
+	ZQTI6fLg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1r3w9M-008qar-KX; Fri, 17 Nov 2023 10:32:36 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4B5F6300478; Fri, 17 Nov 2023 11:32:36 +0100 (CET)
+Date: Fri, 17 Nov 2023 11:32:36 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Like Xu <likexu@tencent.com>, Jim Mattson <jmattson@google.com>,
+	Mingwei Zhang <mizhang@google.com>
+Subject: Re: [PATCH] perf/x86: Don't enforce minimum period for KVM
+ guest-only events
+Message-ID: <20231117103236.GI3818@noisy.programming.kicks-ass.net>
+References: <20231107183605.409588-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: -nQMdhVBp4cB6OVm4pUzVClxezMigiPj
-X-Proofpoint-GUID: EmIUXjZdaUOy7lUXna7EuPGUv7S6NY6D
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-16_23,2023-11-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- phishscore=0 mlxscore=0 clxscore=1015 impostorscore=0 suspectscore=0
- mlxlogscore=999 adultscore=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311160168
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231107183605.409588-1-seanjc@google.com>
 
-Now that the feature list has been duplicated in a global
-'supported_features' array, use that array instead of manually checking
-status of built-in features.
+On Tue, Nov 07, 2023 at 10:36:05AM -0800, Sean Christopherson wrote:
+> Don't apply minimum period workarounds/requirements to events that are
+> being created by KVM to virtualize PMCs for guests, i.e. skip limit
+> enforcement for events that exclude the host.  Perf's somewhat arbitrary
+> limits prevents KVM from correctly virtualizing counter overflow, e.g. if
+> the guest sets a counter to have an effective period of '1', forcing a
+> minimum period of '2' results in overflow occurring at the incorrect time.
+> 
+> Whether or not a "real" profiling use case is affected is debatable, but
+> the incorrect behavior is trivially easy to observe and reproduce, and is
+> deterministic enough to make the PMU appear to be broken from the guest's
+> perspective.
+> 
+> Furthermore, the "period" set by KVM isn't actually a period, as KVM won't
+> automatically reprogram the event with the same period on overflow.  KVM
+> will synthesize a PMI into the guest when appropriate, but what the guest
+> does in response to the PMI is purely a guest decision.  In other words,
+> KVM effectively operates in a one-shot mode, not a periodic mode.
+> 
+> Letting KVM and/or the guest program "too small" periods is safe for the
+> host, as events that exclude the host are atomically disabled with respect
+> to VM-Exit, i.e. are guaranteed to stop counting upon transitioning to the
+> host.  And whether or not *explicitly* programming a short period is safe
+> is somewhat of a moot point, as transitions to/from the guest effectively
+> yield the same effect, e.g. an unrelated VM-Exit => VM-Enter transition
+> will re-enable guest PMCs with whatever count happened to be in the PMC at
+> the time of VM-Exit.
+> 
+> Cc: Like Xu <likexu@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Mingwei Zhang <mizhang@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+> 
+> Disclaimer: I've only tested this from KVM's side of things.
+> 
+>  arch/x86/events/core.c | 21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 40ad1425ffa2..f8a8a4ea4d47 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1388,16 +1388,25 @@ int x86_perf_event_set_period(struct perf_event *event)
+>  		hwc->last_period = period;
+>  		ret = 1;
+>  	}
+> -	/*
+> -	 * Quirk: certain CPUs dont like it if just 1 hw_event is left:
+> -	 */
+> -	if (unlikely(left < 2))
+> -		left = 2;
+>  
+>  	if (left > x86_pmu.max_period)
+>  		left = x86_pmu.max_period;
+>  
+> -	static_call_cond(x86_pmu_limit_period)(event, &left);
+> +	/*
+> +	 * Exempt KVM guest events from the minimum period requirements.  It's
+> +	 * the guest's responsibility to ensure it can make forward progress,
+> +	 * and it's KVM's responsibility to configure an appropriate "period"
+> +	 * to correctly virtualize overflow for the guest's PMCs.
+> +	 */
+> +	if (!event->attr.exclude_host) {
+> +		/*
+> +		 * Quirk: certain CPUs dont like it if just 1 event is left:
+> +		 */
+> +		if (unlikely(left < 2))
+> +			left = 2;
+> +
+> +		static_call_cond(x86_pmu_limit_period)(event, &left);
+> +	}
 
-This helps in being consistent with commands such as 'perf check --feature',
-so commands can use the same array, and any new feature can be added at
-one place, in the 'supported_features' array
+Hmm, IIRC we can disable that left < 2 thing for anything that doesn't
+have x86_pmu.pebs_no_isolation IIRC.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+I'm not sure about taking out the limit_period call, why does it make
+sense to allow the guest to program obviously invalid settings?
+
+That is, would something like the below work for you?
+
 ---
- tools/perf/builtin-version.c | 40 ++++++++----------------------------
- 1 file changed, 8 insertions(+), 32 deletions(-)
-
-diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index ac20c2b9bbc2..e149d96c6dc5 100644
---- a/tools/perf/builtin-version.c
-+++ b/tools/perf/builtin-version.c
-@@ -46,42 +46,18 @@ static void status_print(const char *name, const char *macro,
- 	printf("  # %s\n", macro);
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 40ad1425ffa2..5543a0bab1f8 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -152,6 +152,14 @@ u64 x86_perf_event_update(struct perf_event *event)
+ 	return new_raw_count;
  }
  
--#define STATUS(__d, __m)				\
--do {							\
--	if (IS_BUILTIN(__d))				\
--		status_print(#__m, #__d, "on");		\
--	else						\
--		status_print(#__m, #__d, "OFF");	\
-+#define STATUS(feature)                                   \
-+do {                                                      \
-+	if (feature.is_builtin)                               \
-+		status_print(feature.name, feature.macro, "on");  \
-+	else                                                  \
-+		status_print(feature.name, feature.macro, "OFF"); \
- } while (0)
++static void x86_perf_limit_period(struct perf_event *event, s64 *left)
++{
++	/*
++	 * Quirk: certain CPUs dont like it if just 1 hw_event is left:
++	 */
++	*left = max(*left, 2);
++}
++
+ /*
+  * Find and validate any extra registers to set up.
+  */
+@@ -1388,11 +1396,6 @@ int x86_perf_event_set_period(struct perf_event *event)
+ 		hwc->last_period = period;
+ 		ret = 1;
+ 	}
+-	/*
+-	 * Quirk: certain CPUs dont like it if just 1 hw_event is left:
+-	 */
+-	if (unlikely(left < 2))
+-		left = 2;
  
- static void library_status(void)
- {
--	STATUS(HAVE_DWARF_SUPPORT, dwarf);
--	STATUS(HAVE_DWARF_GETLOCATIONS_SUPPORT, dwarf_getlocations);
--#ifndef HAVE_SYSCALL_TABLE_SUPPORT
--	STATUS(HAVE_LIBAUDIT_SUPPORT, libaudit);
--#endif
--	STATUS(HAVE_SYSCALL_TABLE_SUPPORT, syscall_table);
--	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
--	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
--	STATUS(HAVE_LIBELF_SUPPORT, libelf);
--	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
--	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
--	STATUS(HAVE_LIBPERL_SUPPORT, libperl);
--	STATUS(HAVE_LIBPYTHON_SUPPORT, libpython);
--	STATUS(HAVE_SLANG_SUPPORT, libslang);
--	STATUS(HAVE_LIBCRYPTO_SUPPORT, libcrypto);
--	STATUS(HAVE_LIBUNWIND_SUPPORT, libunwind);
--	STATUS(HAVE_DWARF_SUPPORT, libdw-dwarf-unwind);
--	STATUS(HAVE_ZLIB_SUPPORT, zlib);
--	STATUS(HAVE_LZMA_SUPPORT, lzma);
--	STATUS(HAVE_AUXTRACE_SUPPORT, get_cpuid);
--	STATUS(HAVE_LIBBPF_SUPPORT, bpf);
--	STATUS(HAVE_AIO_SUPPORT, aio);
--	STATUS(HAVE_ZSTD_SUPPORT, zstd);
--	STATUS(HAVE_LIBPFM, libpfm4);
--	STATUS(HAVE_LIBTRACEEVENT, libtraceevent);
--	STATUS(HAVE_BPF_SKEL, bpf_skeletons);
-+	for (int i = 0; supported_features[i].name; ++i)
-+		STATUS(supported_features[i]);
+ 	if (left > x86_pmu.max_period)
+ 		left = x86_pmu.max_period;
+@@ -2130,6 +2133,10 @@ static int __init init_hw_perf_events(void)
+ 	if (!x86_pmu.update)
+ 		x86_pmu.update = x86_perf_event_update;
+ 
++	// XXX check non-Intel
++	if (!x86_pmu.limit_period && x86_pmu.pebs_no_isolation)
++		x86_pmu.limit_update = x86_perf_limit_period;
++
+ 	x86_pmu_static_call_update();
+ 
+ 	/*
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a08f794a0e79..9fe0f241779e 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4471,7 +4471,10 @@ static void bdw_limit_period(struct perf_event *event, s64 *left)
+ 		if (*left < 128)
+ 			*left = 128;
+ 		*left &= ~0x3fULL;
++		return;
+ 	}
++	if (unlikely(x86_pmu.pebs_no_isolation))
++		*left = max(*left, 2);
  }
  
- int cmd_version(int argc, const char **argv)
--- 
-2.41.0
-
+ static void nhm_limit_period(struct perf_event *event, s64 *left)
