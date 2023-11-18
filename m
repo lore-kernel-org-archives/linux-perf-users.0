@@ -1,79 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="TO+JTLpU"
-Received: from m1316.mail.163.com (m1316.mail.163.com [220.181.13.16])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0683BD79;
-	Fri, 17 Nov 2023 17:48:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=kQWPGBGA003W+v9st+8v1Kv9E76Ff1X5kUDffYhbGBI=; b=T
-	O+JTLpUzLYRo1dBC0/wba80D8xtLS7ZpUELIy4iQA604J9sGsXmONX+c7j/DtqRo
-	xuBvElWpUVqYfplpfmtNzj3zoLOIGgsx6Z9/ojhNgfo3GWWL8dissbtR3ykq1PCK
-	79z5ZmUtwbuWya3WYXEgUgk+EHqFzQA8CyAEZDoAMA=
-Received: from 00107082$163.com ( [111.35.185.43] ) by ajax-webmail-wmsvr16
- (Coremail) ; Sat, 18 Nov 2023 09:46:42 +0800 (CST)
-X-Originating-IP: [111.35.185.43]
-Date: Sat, 18 Nov 2023 09:46:42 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: "Peter Zijlstra" <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Regression or Fix]perf: profiling stats sigificantly changed
- for aio_write/read(ext4) between 6.7.0-rc1 and 6.6.0
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2023 www.mailtech.cn 163com
-In-Reply-To: <CAM9d7cg-tudzG4iPMHs5L-zYMe-WhyzZXN9eOtkoapS1n7t8AA@mail.gmail.com>
-References: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
- <76d75357.6ab6.18bce6b7d5b.Coremail.00107082@163.com>
- <20231115103241.GD3818@noisy.programming.kicks-ass.net>
- <407a06f8.632a.18bd2a2ece1.Coremail.00107082@163.com>
- <CAM9d7cgdUJytP31y90c5AuQAmR6FgkBWjj4brVjH8Pg+d00O+Q@mail.gmail.com>
- <1a1338d0.6b3a.18bd3c09056.Coremail.00107082@163.com>
- <CAM9d7cgjCKynoTC0L53pEXnCWHF7AZ8Gr2a0xQnes7L24KVNsA@mail.gmail.com>
- <489ecb9e.28cc.18bd650affa.Coremail.00107082@163.com>
- <CAM9d7cg-tudzG4iPMHs5L-zYMe-WhyzZXN9eOtkoapS1n7t8AA@mail.gmail.com>
-X-NTES-SC: AL_Qu2bAv6cvUgr5CeeYekZnEYQheY4XMKyuPkg1YJXOp80oync1S84Y3JdOXXx0/2PKjCsvRWLYQpXyuhjfrl9UJyuyfAn6WnRQ3hZgeYIctXO
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 058C1D6A;
+	Fri, 17 Nov 2023 18:51:42 -0800 (PST)
+Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.53])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4SXJ9Y32bmz1P8FM;
+	Sat, 18 Nov 2023 10:48:17 +0800 (CST)
+Received: from ubuntu2204.huawei.com (10.67.174.22) by
+ kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Sat, 18 Nov 2023 10:51:40 +0800
+From: Yang Jihong <yangjihong1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+	<adrian.hunter@intel.com>, <avagin@google.com>, <daniel.diaz@linaro.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <yangjihong1@huawei.com>
+Subject: [PATCH 1/3] perf kwork: Fix a build error on 32-bit
+Date: Sat, 18 Nov 2023 02:48:56 +0000
+Message-ID: <20231118024858.1567039-2-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231118024858.1567039-1-yangjihong1@huawei.com>
+References: <20231118024858.1567039-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <1da1b7f.564.18be01bd6ce.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:EMGowAD3nwaDF1hlGDUgAA--.24165W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiEBIrql8YMjKeegAGsm
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.22]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm000003.china.huawei.com (7.193.23.66)
+X-CFilter-Loop: Reflected
 
-CkF0IDIwMjMtMTEtMTggMDU6MTE6MDIsICJOYW1oeXVuZyBLaW0iIDxuYW1oeXVuZ0BrZXJuZWwu
-b3JnPiB3cm90ZToKPk9uIFdlZCwgTm92IDE1LCAyMDIzIGF0IDg6MDnigK9QTSBEYXZpZCBXYW5n
-IDwwMDEwNzA4MkAxNjMuY29tPiB3cm90ZToKPj4KCj4+Cj4+Cj4+IEZyb20gdGhlIGRhdGEgSSBj
-b2xsZWN0ZWQsIEkgdGhpbmsgdHdvIHByb2JsZW0gY291bGQgYmUgb2JzZXJ2ZWQgZm9yIGYwNmNj
-NjY3Zjc5OTA5ZTkxNzU0NjBiMTY3YzI3N2I3YzY0ZDNkZjAKPj4gMS4gc2FtcGxlIG1pc3Npbmcu
-Cj4+IDIuIHNhbXBsZSB1bnN0YWJsZSwgdG90YWwgc2FtcGxlIGNvdW50IGRyaWZ0IGEgbG90IGJl
-dHdlZW4gdGVzdHMuCj4KPkhtbS4uIHNvIHRoZSBmaW8gcHJvY2VzcyB3YXMgcnVubmluZyBpbiB0
-aGUgYmFja2dyb3VuZCBkdXJpbmcKPnRoZSBwcm9maWxpbmcsIHJpZ2h0PyAgQnV0IEknbSBub3Qg
-c3VyZSBob3cgeW91IG1lYXN1cmVkIHRoZSBzYW1lCj5hbW91bnQgb2YgdGltZS4gIFByb2JhYmx5
-IHlvdSBuZWVkIHRvIHJ1biB0aGlzIChmb3IgMTAgc2Vjb25kcyk6Cj4KPiAgc3VkbyBwZXJmIHJl
-Y29yZCAtYSAtRyBteXRlc3QgLS0gc2xlZXAgMTAKPgo+QW5kIEkgZ3Vlc3MgeW91IGRvbid0IHJ1
-biB0aGUgcGVyZiBjb21tYW5kIGluIHRoZSB0YXJnZXQgY2dyb3VwCj53aGljaCBpcyBnb29kLgo+
-CgpZZXMgIHByb2ZpbGluZyBwcm9jZXNzIHdhcyBub3QgaW4gdGhlIHRhcmdldCBjZ3JvdXAuCkkg
-dXNlICBmaW8gd2l0aCBgZmlvIC0tcmFuZHJlcGVhdD0xIC0taW9lbmdpbmU9bGliYWlvIC0tZGly
-ZWN0PTEgLS1uYW1lPXRlc3QgIC0tYnM9NGsgLS1pb2RlcHRoPTY0IC0tc2l6ZT0xRyAtLXJlYWR3
-cml0ZT1yYW5kcncgIC0tcnVudGltZT02MDAgLS1udW1qb2JzPTQgLS10aW1lX2Jhc2VkPTFgIHdo
-aWNoIHdvdWxkIHJ1biA2MDAgc2Vjb25kcy4KVGhlcmUgd291bGQgYmUgZHJpZnRzIGluIHRoZSBw
-cm9maWxpbmcgcmVwb3J0IGJldHdlZW4gcnVucywgIGZyb20gdGhvc2Ugc21hbGwgIHNhbXBsZXMg
-b2YgdGVzdCBkYXRhIEkgY29sbGVjdGVkLCBtYXliZSBub3QgZW5vdWdoIHRvIG1ha2UgYSBmaXJt
-IGNvbmNsdXNpb24sICBJIGZlZWwgd2hlbiB0aGUgY29tbWl0IGlzIHJldmVydGVkLCB0aGUgZXhw
-ZWN0YXRpb24gZm9yIHRvdGFsIHNhbXBsZSBjb3VudCBpcyBoaWdoZXIgYW5kIHRoZSBzdGFuZGFy
-ZCBkZXZpYXRpb24gaXMgc21hbGxlci4KCj5BbmQgaXMgdGhlcmUgYW55IGNoYW5jZSBpZiBpdCdz
-IGltcHJvdmVkIGJlY2F1c2Ugb2YgdGhlIGNoYW5nZT8KPkFyZSB0aGUgbnVtYmVycyBpbiA2Ljcg
-YmV0dGVyIG9yIHdvcnNlPwo+CkkgaGF2ZSBubyBpZGVhIHdoZXRoZXIgdGhlIGNoYW5nZSBvZiBl
-eHBlY3RlZCB0b3RhbCBzYW1wbGUgY291bnQgYSBidWcgb3IgYSBmaXgsICBidXQsICB0aGUgb2Jz
-ZXJ2ZWQgcmVzdWx0IHRoYXQgdG90YWwgc2FtcGxlIGNvdW50IGRyaWZ0IGEgbG90IChiaWdnZXIg
-c3RhbmRhcmQgZGV2aWF0aW9uKSwgSSB0aGluayAsICBpcyBhIGJhZCB0aGluZy4gCiAKClRoYW5r
-cwpEYXZpZCBXYW5nCg==
+lkft reported a build error for 32-bit system:
+
+    builtin-kwork.c: In function 'top_print_work':
+    builtin-kwork.c:1646:28: error: format '%ld' expects argument of
+  type 'long int', but argument 3 has type 'u64' {aka 'long long
+  unsigned int'} [-Werror=format=]
+     1646 |         ret += printf(" %*ld ", PRINT_PID_WIDTH, work->id);
+          |                         ~~~^                     ~~~~~~~~
+          |                            |                         |
+          |                            long int                  u64
+  {aka long long unsigned int}
+          |                         %*lld
+    cc1: all warnings being treated as errors
+    make[3]: *** [/builds/linux/tools/build/Makefile.build:106:
+  /home/tuxbuild/.cache/tuxmake/builds/1/build/builtin-kwork.o] Error 1
+
+Fix it.
+
+Fixes: 55c40e505234 ("perf kwork top: Introduce new top utility")
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-kwork.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index f007a9b27065..0092b9b39611 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -1643,7 +1643,7 @@ static int top_print_work(struct perf_kwork *kwork __maybe_unused, struct kwork_
+ 	/*
+ 	 * pid
+ 	 */
+-	ret += printf(" %*ld ", PRINT_PID_WIDTH, work->id);
++	ret += printf(" %*" PRIu64 " ", PRINT_PID_WIDTH, work->id);
+ 
+ 	/*
+ 	 * tgid
+-- 
+2.34.1
+
