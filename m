@@ -1,112 +1,152 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB9F9B0;
-	Fri, 17 Nov 2023 18:59:29 -0800 (PST)
-Received: from kwepemm000003.china.huawei.com (unknown [172.30.72.54])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4SXJLW63cXzsR6T;
-	Sat, 18 Nov 2023 10:56:03 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm000003.china.huawei.com (7.193.23.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Sat, 18 Nov 2023 10:59:27 +0800
-Subject: Re: [GIT PULL] perf tools changes for v6.7
-To: =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>, Namhyung Kim
-	<namhyung@kernel.org>
-CC: Linus Torvalds <torvalds@linux-foundation.org>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Ian Rogers <irogers@google.com>, Jiri Olsa
-	<jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-References: <20231102150620.940538-1-namhyung@kernel.org>
- <CAEUSe78g5XUpQ19t4LbeGK4v_PZNTDZ=wjRM325Bm8haiUCoXA@mail.gmail.com>
-From: Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <63a2652b-e62a-348e-e92b-47d3c86461ae@huawei.com>
-Date: Sat, 18 Nov 2023 10:59:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SPJuJR8x"
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77463182;
+	Sat, 18 Nov 2023 20:13:07 -0800 (PST)
+Received: by mail-oi1-x233.google.com with SMTP id 5614622812f47-3b2ea7cca04so2275973b6e.2;
+        Sat, 18 Nov 2023 20:13:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700367187; x=1700971987; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SOgwgaiftsipEDq0IwhuZKtoSJ1SnhGvWaa7wLnN7nQ=;
+        b=SPJuJR8x2NUhyeYcq97FMH9GqKa1kE93ufqZWHJ4HQvf91fOqxdMUeGOnz0wsQO2DN
+         i3DRPoaIwlPdKvZOb59HOr9lJCqrmnJ1Ye7YYPEJZrBK55olobz5hlZ4Ap4Lg9wyMzO7
+         QZ+ASbZIRQhgqL2Du1PonqHTuUYaB5al9Rqe8gxOMnSyE93qVhc/+ZDgP07sjUkRtD8t
+         KN8j2fojLijKH3ZsXlQBm0GsxJqXpyR6bgWXNX4KBo6sgaHqZidYtfpgXWrT+vj2pBbg
+         vor2S6HH3kX3CoBs3iRvlvkxIo7HEhObU2ylu7YPLDPiXfSPgQXjktLG/qqyIQCaayM4
+         Tl3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700367187; x=1700971987;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SOgwgaiftsipEDq0IwhuZKtoSJ1SnhGvWaa7wLnN7nQ=;
+        b=afabjw/Tj/ckQcT92Dq8cbB97mI980S7zCpgQoeQOXPkAlWKJfwfRK59u9nPPOCFe1
+         L6getlR7Zc4Rb9AmUltC39ifHzyshb/yqgwGT6zlqPgFQgHs4uawUfxeKEJ94w/Oz0Ky
+         /tgvPi2qnu3d6jirt2EBZj2oTOyhcpaukdhdU/YmExlVJaAJizqaeqxkOeb0swy/LwLz
+         baQIZAaV/yjR1xvHuhpXjZjuiOMpsrDQIF6R/KCD+fa3nT3AGtMfUkOY6wfudu44e18R
+         eY9Q5Sg9Z3WSREj2JRiYgW/xGN51nXGvsFlzri0NGQPIWkP+kA/t3lwpuB1Uh9AypzMM
+         j8UQ==
+X-Gm-Message-State: AOJu0YwIuAUEB5bp83yuERWW1BmImUd0YbLTsoCwWo+kEPbaMi/cA58m
+	sU2WTRbVR9/i6BQPYD2y+cw=
+X-Google-Smtp-Source: AGHT+IHA73OATWMatatsNAiauzxenxDWV/aT0yxMPKEdQiv5iFqhWZKrpLfzT0g1Pcqt+7oMk+VkBg==
+X-Received: by 2002:a05:6808:1410:b0:3b2:e536:a442 with SMTP id w16-20020a056808141000b003b2e536a442mr5993983oiv.16.1700367186570;
+        Sat, 18 Nov 2023 20:13:06 -0800 (PST)
+Received: from DESKTOP-NK4TH6S.localdomain ([220.72.86.144])
+        by smtp.gmail.com with ESMTPSA id it18-20020a056a00459200b006c6f668c90bsm3724360pfb.134.2023.11.18.20.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Nov 2023 20:13:06 -0800 (PST)
+From: Paran Lee <p4ranlee@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Li Dong <lidong@vivo.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shjy180909@gmail.com,
+	austindh.kim@gmail.com,
+	honggyu.kp@gmail.com,
+	Paran Lee <p4ranlee@gmail.com>
+Subject: [PATCH V2] perf script python: Fail check on dynamic allocation
+Date: Sun, 19 Nov 2023 13:09:44 +0900
+Message-Id: <20231119040943.13500-1-p4ranlee@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAEUSe78g5XUpQ19t4LbeGK4v_PZNTDZ=wjRM325Bm8haiUCoXA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm000003.china.huawei.com (7.193.23.66)
-X-CFilter-Loop: Reflected
 
-Hello,
+Add PyList_New() Fail check in
+get_field_numeric_entry() function
+and dynamic allocation checking for
+set_regs_in_dict(), python_start_script().
 
-On 2023/11/14 3:28, Daniel Díaz wrote:
-> Hello!
-> 
-> On Thu, 2 Nov 2023 at 09:06, Namhyung Kim <namhyung@kernel.org> wrote:
->> Hi Linus,
->>
->> Please consider pulling the latest perf tools changes.
->>
->> Thanks,
->> Namhyung
-> [...]
->> Yang Jihong (29):
->>        perf evlist: Add perf_evlist__go_system_wide() helper
->>        perf evlist: Add evlist__findnew_tracking_event() helper
->>        perf record: Move setting tracking events before record__init_thread_masks()
->>        perf record: Track sideband events for all CPUs when tracing selected CPUs
->>        perf test: Add test case for record sideband events
->>        perf test: Add perf_event_attr test for record dummy event
->>        perf kwork: Fix incorrect and missing free atom in work_push_atom()
->>        perf kwork: Add the supported subcommands to the document
->>        perf kwork: Set ordered_events to true in 'struct perf_tool'
->>        perf kwork: Add `kwork` and `src_type` to work_init() for 'struct kwork_class'
->>        perf kwork: Overwrite original atom in the list when a new atom is pushed.
->>        perf kwork: Set default events list if not specified in setup_event_list()
->>        perf kwork: Add sched record support
->>        perf kwork: Add `root` parameter to work_sort()
->>        perf kwork top: Introduce new top utility
-> [...]
-> 
-> We have found some build regressions on yesterday's 6.7-rc1:
-> -----8<-----
->    builtin-kwork.c: In function 'top_print_work':
->    builtin-kwork.c:1646:28: error: format '%ld' expects argument of
-> type 'long int', but argument 3 has type 'u64' {aka 'long long
-> unsigned int'} [-Werror=format=]
->     1646 |         ret += printf(" %*ld ", PRINT_PID_WIDTH, work->id);
->          |                         ~~~^                     ~~~~~~~~
->          |                            |                         |
->          |                            long int                  u64
-> {aka long long unsigned int}
->          |                         %*lld
->    cc1: all warnings being treated as errors
->    make[3]: *** [/builds/linux/tools/build/Makefile.build:106:
-> /home/tuxbuild/.cache/tuxmake/builds/1/build/builtin-kwork.o] Error 1
-> ----->8-----
-> 
-> This is when building for Arm (32-bits) and i386. Bisection points to
-> commit 55c40e505234 ("perf kwork top: Introduce new top utility").
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> To reproduce locally,
->    tuxmake \
->      --runtime podman \
->      --target-arch arm \
->      --toolchain gcc-13 \
->      --kconfig https://storage.tuxsuite.com/public/linaro/lkft/builds/2Y6I5Blgre1fELnAgUTZxqjByvv/config
-> \
->      debugkernel dtbs dtbs-legacy headers kernel modules perf
-> 
-> Greetings!
-> 
-Thanks for informing of build error, has send fix patch for it:
-https://lore.kernel.org/all/20231118024858.1567039-2-yangjihong1@huawei.com/
+Signed-off-by: Paran Lee <p4ranlee@gmail.com>
+Reviewed-by: Seonghee Jin<shjy180909@gmail.com>
+---
+ .../util/scripting-engines/trace-event-python.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 94312741443a..f96968ba371f 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -353,6 +353,8 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
+ 
+ 	if (is_array) {
+ 		list = PyList_New(field->arraylen);
++		if (!list)
++			Py_FatalError("couldn't create Python list");
+ 		item_size = field->size / field->arraylen;
+ 		n_items = field->arraylen;
+ 	} else {
+@@ -754,7 +756,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
+ 	}
+ }
+ 
+-static void set_regs_in_dict(PyObject *dict,
++static int set_regs_in_dict(PyObject *dict,
+ 			     struct perf_sample *sample,
+ 			     struct evsel *evsel)
+ {
+@@ -770,6 +772,8 @@ static void set_regs_in_dict(PyObject *dict,
+ 	 */
+ 	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
+ 	char *bf = malloc(size);
++	if (!bf)
++		return -1;
+ 
+ 	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
+ 
+@@ -781,6 +785,8 @@ static void set_regs_in_dict(PyObject *dict,
+ 	pydict_set_item_string_decref(dict, "uregs",
+ 			_PyUnicode_FromString(bf));
+ 	free(bf);
++
++	return 0;
+ }
+ 
+ static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
+@@ -920,7 +926,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 			PyLong_FromUnsignedLongLong(sample->cyc_cnt));
+ 	}
+ 
+-	set_regs_in_dict(dict, sample, evsel);
++	if (!set_regs_in_dict(dict, sample, evsel))
++		Py_FatalError("Failed to setting regs in dict");
+ 
+ 	return dict;
+ }
+@@ -1918,12 +1925,18 @@ static int python_start_script(const char *script, int argc, const char **argv,
+ 	scripting_context->session = session;
+ #if PY_MAJOR_VERSION < 3
+ 	command_line = malloc((argc + 1) * sizeof(const char *));
++	if (!command_line)
++		return -1;
++
+ 	command_line[0] = script;
+ 	for (i = 1; i < argc + 1; i++)
+ 		command_line[i] = argv[i - 1];
+ 	PyImport_AppendInittab(name, initperf_trace_context);
+ #else
+ 	command_line = malloc((argc + 1) * sizeof(wchar_t *));
++	if (!command_line)
++		return -1;
++
+ 	command_line[0] = Py_DecodeLocale(script, NULL);
+ 	for (i = 1; i < argc + 1; i++)
+ 		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+-- 
+2.25.1
 
-Thanks,
-Yang
-.
