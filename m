@@ -1,162 +1,152 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEFGX72r"
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30B099;
-	Mon, 20 Nov 2023 13:31:30 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-27ff7fe7fbcso3808378a91.1;
-        Mon, 20 Nov 2023 13:31:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKp4IGfR"
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D320797;
+	Mon, 20 Nov 2023 14:31:45 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6c398717726so4093714b3a.2;
+        Mon, 20 Nov 2023 14:31:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700515890; x=1701120690; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FctPSCj7tPevGlMSxSjEDJsdguhwQ45p/dX89rjXqg0=;
-        b=iEFGX72rNsTsiFJxQVlbFyDezownQPzvJdrkL37X9YUOE0AMBvRoUG/zuQppmjAjoc
-         CfpHglAfZVdDTXjo6H3mn4r67GQf2N5uOGJqG4zXY1QqkiqDomU8dx1wE3NwpMAu7FyB
-         fUSfGzVV3Nu+lSCxxEGu5dd7e+Um8vnx8I9+9Z62qaSNKSxGqV+e8zylbdYNQMjEx3nd
-         u59JEfrEXSVgUOvsC5lnpRdU6ITjgwZJk0/S2pwS0bs2bqiuL/qsZvlTPUnLAULnTsa5
-         RPi/Uitcc1u1Z5xdJyMVFV6S9BGxzaPBsUAigb4Xg4apK9UgXuLqYCYvoSc8dj5QAHlO
-         zlyw==
+        d=gmail.com; s=20230601; t=1700519505; x=1701124305; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gwUXyg7MBmR4xeoVYVivfJ5Bm/G7s4W1J7Z6JZoWHTc=;
+        b=MKp4IGfR5ny5B4xEtxTgSYgxX6398lSHdLMSiCKxCHqccRkOclg28ofqqKbIYUqQMj
+         FMje+1HrC6iE1KCifk7noWCy1JoLXewuAI21AuM+eKZMA09+cLxMYu8H8gb2fjXjVlMe
+         4TlQv1AYvJtvPWxOR9h5V6B2dLoVOjOr6IEXX3FXy3sjyatC88+OtPGJiUFlC7H3GGiF
+         kkI4M5dQH33DawJNATPBkpoOfUa3ObbzLCUx5Wl2K1K8gsejpsnSFBH8AA+HYaI5xu/q
+         q5CaOFGVKu5wbtOhkEkdlkinn92uh53yKEYGaDnB13fiGpgf3EFzNrypo5UCyARix+Wj
+         fwGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700515890; x=1701120690;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FctPSCj7tPevGlMSxSjEDJsdguhwQ45p/dX89rjXqg0=;
-        b=X2Q7lA0f07xCFqxbCNCigaALAnGUB218xz04Rw3o1+y2glYf6UK97rdMrWShD1BEQc
-         m31DSVO3ECcmSdH32FfhGwC5TSEETJ9Jfc+KjggettlBd4tsI7vOwAENLbYYIhKZM/iF
-         FtVDs2xYp/OclB3SLN9sdH1HNHuC1EZpZq2Twj2FPNx0cqg2F8EKJOvXcxC1cK4xR48j
-         DKEJeCTszjYnAGMaOGzKEqngNDFRoCzmg4nSx+05eLuqrkIZr/cFTWrRjXEnkTSkxCsk
-         pqWKKEJpvsLE5POpBTMXVLA/3hAN1RBO408K8mmWSZ0xTq5a9S+wqH6yllVyqHtXsQAx
-         zmfw==
-X-Gm-Message-State: AOJu0Yy6biaX4VmbOdf0BSoJBbaltf9LzBOTSk7A9AEzmjxXVQcLOzKj
-	8dH20N5GclmqBx+94QxWJya5eOKT6E0ylJDR2/U=
-X-Google-Smtp-Source: AGHT+IFLPipHGoDrsUtzfKJWJKbruw7OLvOy/n33f2E9xeIwg0s9OZsP2ZNEj7FYbdOZ7ZsOwoP28ZXjjGjcte1L2+0=
-X-Received: by 2002:a17:90b:3a82:b0:27d:12e1:7e20 with SMTP id
- om2-20020a17090b3a8200b0027d12e17e20mr8939742pjb.12.1700515889879; Mon, 20
- Nov 2023 13:31:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700519505; x=1701124305;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gwUXyg7MBmR4xeoVYVivfJ5Bm/G7s4W1J7Z6JZoWHTc=;
+        b=soKRUQSQcMD7Ae0mB6DY8p9D4XtXiu3tHMmCxE1pWzlpluxSTatt52KKevdVxMIZus
+         g1/wspojAb1gEmKHHHnMtN0HhjDMbktqgjTp74TlLNSudyUjoH+YD9gPhOc1saUAltgA
+         ecxM/D2w6A9r+9K2ZbStH7idATr5jl6MnU0Lipv1RRmoqEWwT0eh3GnvsJ1TNdrjxIS4
+         Sc0Uo8bzLCeOda7thucCZAYG1rPezMTqApyq5+J8S6kwcPCBP6DTTnnfs95zNCUtH3pD
+         e1TkyktpKRHB+xh3uB3V/p/T4TkTxjvZzi7DoeC+W7bq9Mtv/fGOXABxzh8IlR6NpvUM
+         5r9g==
+X-Gm-Message-State: AOJu0YxE4mai7Al02hAwMaFoYnnkbScxEl0/ctuslXVlaKoxbbcLA9jd
+	lT2NXHdEINnDnFCBpK56QZE=
+X-Google-Smtp-Source: AGHT+IFz0824EWcEuMS1toXRyWZ/LEEacSZ1N8m+U91pmRtcJFeB50VsKHCpD3RPXxTLBFTz3xFQmg==
+X-Received: by 2002:a05:6a00:2908:b0:6be:5367:2131 with SMTP id cg8-20020a056a00290800b006be53672131mr7460789pfb.24.1700519505134;
+        Mon, 20 Nov 2023 14:31:45 -0800 (PST)
+Received: from DESKTOP-NK4TH6S.localdomain ([220.72.86.144])
+        by smtp.gmail.com with ESMTPSA id h7-20020a056a00170700b006cb574445efsm4566141pfc.88.2023.11.20.14.31.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Nov 2023 14:31:44 -0800 (PST)
+From: Paran Lee <p4ranlee@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Li Dong <lidong@vivo.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shjy180909@gmail.com,
+	austindh.kim@gmail.com,
+	honggyu.kp@gmail.com,
+	Paran Lee <p4ranlee@gmail.com>
+Subject: [PATCiH V3] perf script python: Fail check on dynamic allocation
+Date: Tue, 21 Nov 2023 07:26:24 +0900
+Message-Id: <20231120222624.2396-1-p4ranlee@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231113112507.917107-1-james.clark@arm.com> <20231113112507.917107-4-james.clark@arm.com>
-In-Reply-To: <20231113112507.917107-4-james.clark@arm.com>
-From: Namhyung Kim <namhyung@gmail.com>
-Date: Mon, 20 Nov 2023 13:31:18 -0800
-Message-ID: <CAM9d7ciDq-te1DQPrMrZQC9er0pSMY24nvC-atxdRu1C6uD08A@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] Documentation: arm64: Document the PMU event
- counting threshold feature
-To: James Clark <james.clark@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	suzuki.poulose@arm.com, will@kernel.org, mark.rutland@arm.com, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 13, 2023 at 3:26=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
-> Add documentation for the new Perf event open parameters and
-> the threshold_max capability file.
->
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  Documentation/arch/arm64/perf.rst | 56 +++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->
-> diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64=
-/perf.rst
-> index 1f87b57c2332..36b8111a710d 100644
-> --- a/Documentation/arch/arm64/perf.rst
-> +++ b/Documentation/arch/arm64/perf.rst
-> @@ -164,3 +164,59 @@ and should be used to mask the upper bits as needed.
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/tools/perf/arch/arm64/tests/user-events.c
->  .. _tools/lib/perf/tests/test-evsel.c:
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/tools/lib/perf/tests/test-evsel.c
-> +
-> +Event Counting Threshold
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Overview
-> +--------
-> +
-> +FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
-> +events whose count meets a specified threshold condition. For example if
-> +threshold_compare is set to 2 ('Greater than or equal'), and the
-> +threshold is set to 2, then the PMU counter will now only increment by
-> +when an event would have previously incremented the PMU counter by 2 or
-> +more on a single processor cycle.
-> +
-> +To increment by 1 after passing the threshold condition instead of the
-> +number of events on that cycle, add the 'threshold_count' option to the
-> +commandline.
-> +
-> +How-to
-> +------
-> +
-> +The threshold, threshold_compare and threshold_count values can be
-> +provided per event:
-> +
-> +.. code-block:: sh
-> +
-> +  perf stat -e stall_slot/threshold=3D2,threshold_compare=3D2/ \
-> +            -e dtlb_walk/threshold=3D10,threshold_compare=3D3,threshold_=
-count/
+Add PyList_New() Fail check in get_field_numeric_entry()
+function and dynamic allocation checking for
+set_regs_in_dict(), python_start_script().
 
-Can you please explain this a bit more?
+Signed-off-by: Paran Lee <p4ranlee@gmail.com>
+Reviewed-by: MichelleJin <shjy180909@gmail.com>
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ .../util/scripting-engines/trace-event-python.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-I guess the first event counts stall_slot PMU if the event if it's
-greater than or equal to 2.  And as threshold_count is not set,
-it'd count the stall_slot as is.  E.g. it counts 3 when it sees 3.
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 94312741443a..860e1837ba96 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -353,6 +353,8 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
+ 
+ 	if (is_array) {
+ 		list = PyList_New(field->arraylen);
++		if (!list)
++			Py_FatalError("couldn't create Python list");
+ 		item_size = field->size / field->arraylen;
+ 		n_items = field->arraylen;
+ 	} else {
+@@ -754,7 +756,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
+ 	}
+ }
+ 
+-static void set_regs_in_dict(PyObject *dict,
++static int set_regs_in_dict(PyObject *dict,
+ 			     struct perf_sample *sample,
+ 			     struct evsel *evsel)
+ {
+@@ -770,6 +772,8 @@ static void set_regs_in_dict(PyObject *dict,
+ 	 */
+ 	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
+ 	char *bf = malloc(size);
++	if (!bf)
++		return -1;
+ 
+ 	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
+ 
+@@ -781,6 +785,8 @@ static void set_regs_in_dict(PyObject *dict,
+ 	pydict_set_item_string_decref(dict, "uregs",
+ 			_PyUnicode_FromString(bf));
+ 	free(bf);
++
++	return 0;
+ }
+ 
+ static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
+@@ -920,7 +926,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 			PyLong_FromUnsignedLongLong(sample->cyc_cnt));
+ 	}
+ 
+-	set_regs_in_dict(dict, sample, evsel);
++	if (set_regs_in_dict(dict, sample, evsel))
++		Py_FatalError("Failed to setting regs in dict");
+ 
+ 	return dict;
+ }
+@@ -1918,12 +1925,18 @@ static int python_start_script(const char *script, int argc, const char **argv,
+ 	scripting_context->session = session;
+ #if PY_MAJOR_VERSION < 3
+ 	command_line = malloc((argc + 1) * sizeof(const char *));
++	if (!command_line)
++		return -1;
++
+ 	command_line[0] = script;
+ 	for (i = 1; i < argc + 1; i++)
+ 		command_line[i] = argv[i - 1];
+ 	PyImport_AppendInittab(name, initperf_trace_context);
+ #else
+ 	command_line = malloc((argc + 1) * sizeof(wchar_t *));
++	if (!command_line)
++		return -1;
++
+ 	command_line[0] = Py_DecodeLocale(script, NULL);
+ 	for (i = 1; i < argc + 1; i++)
+ 		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+-- 
+2.25.1
 
-OTOH, dtlb_walk will count 1 if it sees an event less than 10.
-Is my understanding correct?
-
-> +
-> +And the following comparison values are supported:
-> +
-> +.. code-block::
-> +
-> +  0: Not-equal
-> +  1: Equals
-> +  2: Greater-than-or-equal
-> +  3: Less-than
-
-So the above values are for threashold_compare, right?
-It'd be nice if it's more explicit.
-
-Similarly, it'd be helpful to have a description for the
-threshold and threshold_count fields.
-
-Thanks,
-Namhyung
-
-> +
-> +The maximum supported threshold value can be read from the caps of each
-> +PMU, for example:
-> +
-> +.. code-block:: sh
-> +
-> +  cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
-> +
-> +  0x000000ff
-> +
-> +If a value higher than this is given, then it will be silently clamped
-> +to the maximum. The highest possible maximum is 4095, as the config
-> +field for threshold is limited to 12 bits, and the Perf tool will refuse
-> +to parse higher values.
-> +
-> +If the PMU doesn't support FEAT_PMUv3_TH, then threshold_max will read
-> +0, and both threshold and threshold_compare will be silently ignored.
-> +threshold_max will also read as 0 on aarch32 guests, even if the host
-> +is running on hardware with the feature.
-> --
-> 2.34.1
->
->
