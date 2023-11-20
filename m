@@ -1,152 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5FSm8Ec"
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD2C7AA;
-	Mon, 20 Nov 2023 14:33:04 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-5c2139492d9so1620878a12.0;
-        Mon, 20 Nov 2023 14:33:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700519584; x=1701124384; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gwUXyg7MBmR4xeoVYVivfJ5Bm/G7s4W1J7Z6JZoWHTc=;
-        b=D5FSm8Ec+P9QK18MgaEK6Ua3hbx6eGzyxSvsGa0lioMTkWpEudlAQhDA7MfEQKrayL
-         WzeiQ5cnZuDkCuWxr3WDr56BuDZ05SnQWQ+i6XugProUXbY7uVUfbGQ/1DBgnhjHED0x
-         hMXfW6rAmb0TirMH2btDtmY+4I1JCspDoCgDuA0JfHFds61SwOPQpwfZ9bZ2UA/xdFOB
-         HAX+HpARlAv4PzigYQ1oy7Je9TtYZk2eMHbz/m6bXq042v0/EhzBko1i8wRrAqb+WVv5
-         lRB8sy59CREuwtl+IUvdPaZ/+pKtCFKi+dakOSKJpnG6hXw6pyoA1nbf5HwuOfdRXbJM
-         aozA==
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8B7A2;
+	Mon, 20 Nov 2023 14:59:30 -0800 (PST)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-1e9c9d181d6so3036125fac.0;
+        Mon, 20 Nov 2023 14:59:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700519584; x=1701124384;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gwUXyg7MBmR4xeoVYVivfJ5Bm/G7s4W1J7Z6JZoWHTc=;
-        b=rOME1N/+G98BaaLE2FKU7pIO5pVygKQe/Ho7FN/f1504ZCvjEDihN0j+PMv6jJ2dg0
-         aUoUzo8NNVBMi02mmdk39KZAlZ8xmOJP1t+S99joSH5Thx0Ro/R8HUK5lldzNuPVbcsv
-         yMdoZ1KC+SyEnIxJvdpJTaWA0rNV6STsls7buzlAN4LQKQfcikwv89MVB0wDbqSzbnAO
-         cm+/vyK6k8uV/rJdObbFUEpW71w3tHxo6tOxcaRkkGl1hXeuvT9QHMj+7gaXPP9y8AIS
-         QKmjnEhw59I3VX6rQmNvo1br4f8AezE0uYutRqwzn/45i22YbJQdjjPUM4pbsbYDNWSj
-         ywEQ==
-X-Gm-Message-State: AOJu0Yy5bjhE6r0I7+32ODE4fS6Kdfe8yoXCrDJZwMyIr+15yrND1kbF
-	wrP/L0AXS9azd+qfU7dAntQ=
-X-Google-Smtp-Source: AGHT+IF8aM7kBXwdxWcd5QRBWOgY83+8colpgzLEa0t5kFMKqb+LSLgcbvB3DrS/MP2lq41NucbcnQ==
-X-Received: by 2002:a17:90b:4d0d:b0:27d:c36:e12d with SMTP id mw13-20020a17090b4d0d00b0027d0c36e12dmr6759637pjb.6.1700519583993;
-        Mon, 20 Nov 2023 14:33:03 -0800 (PST)
-Received: from DESKTOP-NK4TH6S.localdomain ([220.72.86.144])
-        by smtp.gmail.com with ESMTPSA id k8-20020a17090a658800b00283a0b0fd39sm4917352pjj.53.2023.11.20.14.32.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Nov 2023 14:33:03 -0800 (PST)
-From: Paran Lee <p4ranlee@gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Li Dong <lidong@vivo.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	shjy180909@gmail.com,
-	austindh.kim@gmail.com,
-	honggyu.kp@gmail.com,
-	Paran Lee <p4ranlee@gmail.com>
-Subject: [PATCH V3 RESEND] perf script python: Fail check on dynamic allocation
-Date: Tue, 21 Nov 2023 07:32:19 +0900
-Message-Id: <20231120223218.9036-1-p4ranlee@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1700521169; x=1701125969;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4dZP1CpgWwT6/Z66YkAUxS5DUl+N3kpH1NW1HsPopb8=;
+        b=Qt38cGYsWK6Ew6N3ZLimPQFW2CewaJQACJzy/crNcX/3QaB7ULmSdXCSfVW+9QQOmw
+         ioiNHmhyMuRswX0Dyd6DOeP9ZE0aSNo466T6+fPppQl0564k7Y4ZWHI1TgONTF3ukhIu
+         mUUgdWPvH2BDix4PP289QBQLadk+btViSs/k3E+ta/7TTcjOM/0en7Sbk5xifGvnHeDn
+         ThxdKbaWSyPFQ8jnCRrGERN/Tedf8BZbDlhFyWGwvvZdHbRAa/hcH/seLrwZ3XmzkjkX
+         f+BcOI+6ws335nPFmB2OGrTlhKnz7aIOH3+OUdLZqivZX96VM4L7AeHOqhQIQllbw3tG
+         z9Fg==
+X-Gm-Message-State: AOJu0YzF2NhsTrx6RkWf+ceVUIa3XDkUw2OC6aLImA2f+XzjhmdQT3fy
+	spGvWQ/H2otjvjB2sr8Q26ZK0uACfwSu8TW5vPYKPEBH
+X-Google-Smtp-Source: AGHT+IHZYCmSiVsMg5RbPK+Qqi6FabJEEst4pGayAdFMvCMlMPSl41S5C6Rsr+aONbxNaWOHXLfjcLa0zaKOrFGjPBs=
+X-Received: by 2002:a05:6871:22c7:b0:1f9:4afd:e3c9 with SMTP id
+ se7-20020a05687122c700b001f94afde3c9mr3570756oab.1.1700521169416; Mon, 20 Nov
+ 2023 14:59:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
+ <76d75357.6ab6.18bce6b7d5b.Coremail.00107082@163.com> <20231115103241.GD3818@noisy.programming.kicks-ass.net>
+ <407a06f8.632a.18bd2a2ece1.Coremail.00107082@163.com> <CAM9d7cgdUJytP31y90c5AuQAmR6FgkBWjj4brVjH8Pg+d00O+Q@mail.gmail.com>
+ <1a1338d0.6b3a.18bd3c09056.Coremail.00107082@163.com> <CAM9d7cgjCKynoTC0L53pEXnCWHF7AZ8Gr2a0xQnes7L24KVNsA@mail.gmail.com>
+ <489ecb9e.28cc.18bd650affa.Coremail.00107082@163.com> <CAM9d7cg-tudzG4iPMHs5L-zYMe-WhyzZXN9eOtkoapS1n7t8AA@mail.gmail.com>
+ <1da1b7f.564.18be01bd6ce.Coremail.00107082@163.com>
+In-Reply-To: <1da1b7f.564.18be01bd6ce.Coremail.00107082@163.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 20 Nov 2023 14:59:18 -0800
+Message-ID: <CAM9d7chFQ1L0h0av7ziXU4ja_j1FMRgwd-CHULnOB5YuH9yo2w@mail.gmail.com>
+Subject: Re: [Regression or Fix]perf: profiling stats sigificantly changed for
+ aio_write/read(ext4) between 6.7.0-rc1 and 6.6.0
+To: David Wang <00107082@163.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add PyList_New() Fail check in get_field_numeric_entry()
-function and dynamic allocation checking for
-set_regs_in_dict(), python_start_script().
+On Fri, Nov 17, 2023 at 5:48=E2=80=AFPM David Wang <00107082@163.com> wrote=
+:
+>
+>
+> At 2023-11-18 05:11:02, "Namhyung Kim" <namhyung@kernel.org> wrote:
+> >On Wed, Nov 15, 2023 at 8:09=E2=80=AFPM David Wang <00107082@163.com> wr=
+ote:
+> >>
+>
+> >>
+> >>
+> >> From the data I collected, I think two problem could be observed for f=
+06cc667f79909e9175460b167c277b7c64d3df0
+> >> 1. sample missing.
+> >> 2. sample unstable, total sample count drift a lot between tests.
+> >
+> >Hmm.. so the fio process was running in the background during
+> >the profiling, right?  But I'm not sure how you measured the same
+> >amount of time.  Probably you need to run this (for 10 seconds):
+> >
+> >  sudo perf record -a -G mytest -- sleep 10
+> >
+> >And I guess you don't run the perf command in the target cgroup
+> >which is good.
+> >
+>
+> Yes  profiling process was not in the target cgroup.
+> I use  fio with `fio --randrepeat=3D1 --ioengine=3Dlibaio --direct=3D1 --=
+name=3Dtest  --bs=3D4k --iodepth=3D64 --size=3D1G --readwrite=3Drandrw  --r=
+untime=3D600 --numjobs=3D4 --time_based=3D1` which would run 600 seconds.
+> There would be drifts in the profiling report between runs,  from those s=
+mall  samples of test data I collected, maybe not enough to make a firm con=
+clusion,  I feel when the commit is reverted, the expectation for total sam=
+ple count is higher and the standard deviation is smaller.
+>
+> >And is there any chance if it's improved because of the change?
+> >Are the numbers in 6.7 better or worse?
+> >
+> I have no idea whether the change of expected total sample count a bug or=
+ a fix,  but,  the observed result that total sample count drift a lot (big=
+ger standard deviation), I think ,  is a bad thing.
 
-Signed-off-by: Paran Lee <p4ranlee@gmail.com>
-Reviewed-by: MichelleJin <shjy180909@gmail.com>
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
----
- .../util/scripting-engines/trace-event-python.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+Right.  Can you run perf stat to measure the number of context
+switches and cgroup switches, then?
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 94312741443a..860e1837ba96 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -353,6 +353,8 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
- 
- 	if (is_array) {
- 		list = PyList_New(field->arraylen);
-+		if (!list)
-+			Py_FatalError("couldn't create Python list");
- 		item_size = field->size / field->arraylen;
- 		n_items = field->arraylen;
- 	} else {
-@@ -754,7 +756,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
- 	}
- }
- 
--static void set_regs_in_dict(PyObject *dict,
-+static int set_regs_in_dict(PyObject *dict,
- 			     struct perf_sample *sample,
- 			     struct evsel *evsel)
- {
-@@ -770,6 +772,8 @@ static void set_regs_in_dict(PyObject *dict,
- 	 */
- 	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
- 	char *bf = malloc(size);
-+	if (!bf)
-+		return -1;
- 
- 	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
- 
-@@ -781,6 +785,8 @@ static void set_regs_in_dict(PyObject *dict,
- 	pydict_set_item_string_decref(dict, "uregs",
- 			_PyUnicode_FromString(bf));
- 	free(bf);
-+
-+	return 0;
- }
- 
- static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
-@@ -920,7 +926,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 			PyLong_FromUnsignedLongLong(sample->cyc_cnt));
- 	}
- 
--	set_regs_in_dict(dict, sample, evsel);
-+	if (set_regs_in_dict(dict, sample, evsel))
-+		Py_FatalError("Failed to setting regs in dict");
- 
- 	return dict;
- }
-@@ -1918,12 +1925,18 @@ static int python_start_script(const char *script, int argc, const char **argv,
- 	scripting_context->session = session;
- #if PY_MAJOR_VERSION < 3
- 	command_line = malloc((argc + 1) * sizeof(const char *));
-+	if (!command_line)
-+		return -1;
-+
- 	command_line[0] = script;
- 	for (i = 1; i < argc + 1; i++)
- 		command_line[i] = argv[i - 1];
- 	PyImport_AppendInittab(name, initperf_trace_context);
- #else
- 	command_line = malloc((argc + 1) * sizeof(wchar_t *));
-+	if (!command_line)
-+		return -1;
-+
- 	command_line[0] = Py_DecodeLocale(script, NULL);
- 	for (i = 1; i < argc + 1; i++)
- 		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
--- 
-2.25.1
+  sudo perf stat -a -e context-switches,cgroup-switches -- sleep 10
 
+Thanks,
+Namhyung
