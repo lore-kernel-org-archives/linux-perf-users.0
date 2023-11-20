@@ -1,146 +1,178 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HsCysVvT"
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CAC210CB
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Nov 2023 10:36:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TywSXqEv"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126FCD9
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Nov 2023 11:04:14 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5c9f34703ebso21910667b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Nov 2023 11:04:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1700505386; x=1732041386;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=7q8uZR2qM3wrSgIwAkbJbBmGYC2hjQx6YxzlrSsORNk=;
-  b=HsCysVvTSrKdvEqwof8SJQbU0LHRoxfnCv6ZSr5eNmw7WjBEMVM04VFe
-   mIgJYPAWn6olhVekpHeq0u2OrUd0EZ/i03C6AVAvjB/EK65ElC/13hyPT
-   3Q74ncmQx88JFiFBgxTRO4xobztKtZrJh/oNq01aYuGifKkDRCJMJ9stk
-   0=;
-X-Amazon-filename: counter-overflow-test-aarch64.c
-X-IronPort-AV: E=Sophos;i="6.04,214,1695686400"; 
-   d="c'?scan'208";a="369134113"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-83883bdb.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 18:36:25 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-2a-m6i4x-83883bdb.us-west-2.amazon.com (Postfix) with ESMTPS id C336F60CF9
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Nov 2023 18:36:24 +0000 (UTC)
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:44777]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.54.99:2525] with esmtp (Farcaster)
- id 386bc34f-e3e7-4576-9994-d6a51df2906e; Mon, 20 Nov 2023 18:36:24 +0000 (UTC)
-X-Farcaster-Flow-ID: 386bc34f-e3e7-4576-9994-d6a51df2906e
-Received: from EX19D012UWC001.ant.amazon.com (10.13.138.177) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.39; Mon, 20 Nov 2023 18:36:23 +0000
-Received: from EX19D012UWC002.ant.amazon.com (10.13.138.165) by
- EX19D012UWC001.ant.amazon.com (10.13.138.177) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.39; Mon, 20 Nov 2023 18:36:23 +0000
-Received: from EX19D012UWC002.ant.amazon.com ([fe80::afb2:a509:3c85:23c6]) by
- EX19D012UWC002.ant.amazon.com ([fe80::afb2:a509:3c85:23c6%5]) with mapi id
- 15.02.1118.039; Mon, 20 Nov 2023 18:36:23 +0000
-From: "Ashley, William" <wash@amazon.com>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-CC: "Ashley, William" <wash@amazon.com>
-Subject: armv8pmu: Pending overflow interrupt is discarded when perf event is
- disabled
-Thread-Topic: armv8pmu: Pending overflow interrupt is discarded when perf
- event is disabled
-Thread-Index: AQHaG+B2preRGLMobEe2ogRfnSWcUg==
-Date: Mon, 20 Nov 2023 18:36:23 +0000
-Message-ID: <950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator:
-x-originating-ip: [10.106.239.31]
-Content-Type: multipart/mixed;
-	boundary="_002_950001BD490C4BAC8EEACDB9F7C4ADFCamazoncom_"
+        d=google.com; s=20230601; t=1700507053; x=1701111853; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NwegP4grp+NKVnXxnLCbPPhC1AoQpO7Vl3AwS2tf1V0=;
+        b=TywSXqEvMpo5ZbZuXWqr18X4YXCVS6DIXbLqZQq38nST77LY4YihWyoVsW4V9hLNEN
+         IU0m2q02LZeVounQQk5uMDWd+ky1U+qJAIAwI90ovxUpbxzLk2pkLyU9RRCuhp622qKA
+         OKD+FU/kbYrL79cXE7g29//7sGIZb2bW0U6TStW2S0IKUiSGMYSjpWYrSyX3soKVTXcM
+         D8kIbOwYzzPRBtaYxWW9XaAVmKevuE0rVKkpErAuVfWmapXB5Hl4chT4fHCTFcIlyheH
+         /nNdmiKg7QnPpSomfOqfIcihXwxcTKmeZZvi0uxZW3we596GY3ps6SZt3W623SOciLxn
+         AKqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700507053; x=1701111853;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NwegP4grp+NKVnXxnLCbPPhC1AoQpO7Vl3AwS2tf1V0=;
+        b=whNl5E9vLYGLNmRKQUAOORlLKMX79VM77C8R0+cfhdfDK8dP28M8uxMOGPvdWQKLhm
+         MZwXG2UcghGtq0GMUeQ3kvvmhbtruEblV5lBgq/jBwYlRPfA8MoiCW7kNGImORHC78/V
+         uVjIzy5h+rS2oUInGlpdW4R9IekkneiUQTptVkWeK38upi3rYqV8Q/s0CY6gd/EZVDoX
+         V+DNitfoWpfqIHxHjwbP4OCFpkgqczU7hr8udsNwFtFBb9knY1QSkSLEqqfAkPw5nr2D
+         LRYci3Z6DpeSqXmB+NHmuXVHIi6dTlpTN3q8gzMs19qZaaqk5y0PNW8U9jJCkzrfWZaC
+         5rnw==
+X-Gm-Message-State: AOJu0YxDX8dT9JHg0dMNzut+FXFM2gQ7HkSlZ/tONj0KHfxpF6AraSge
+	JHKtO1kcebUbonqty3YaV9vdXDezG2NF
+X-Google-Smtp-Source: AGHT+IGW9SCeYhNevQuiBWINPc7ABYMlEDWVxjfLt0OfeZ0gvhANIZO2KmcWZfOBL//9RfVl2axpoFhRQ4f3
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:274d:270:40a9:df3f])
+ (user=irogers job=sendgmr) by 2002:a81:6dc9:0:b0:59b:c6bb:bab9 with SMTP id
+ i192-20020a816dc9000000b0059bc6bbbab9mr227590ywc.3.1700507053127; Mon, 20 Nov
+ 2023 11:04:13 -0800 (PST)
+Date: Mon, 20 Nov 2023 11:04:08 -0800
+Message-Id: <20231120190408.281826-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
+Subject: [PATCH v1] perf test: Add basic perf diff test
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	atrajeev@linux.vnet.ibm.com
+Cc: Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
---_002_950001BD490C4BAC8EEACDB9F7C4ADFCamazoncom_
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1F15D0AF02263D4FB66B1E5EC43516C0@amazon.com>
-Content-Transfer-Encoding: base64
+There are some old bug reports on perf diff crashing:
+https://rhaas.blogspot.com/2012/06/perf-good-bad-ugly.html
 
-QW4gaXNzdWUgWzFdIHdhcyBvcGVuZWQgaW4gdGhlIHJyLWRlYnVnZ2VyIHByb2plY3QgcmVwb3J0
-aW5nIG9jY2FzaW9uYWwgbWlzc2VkDQpwZXJmIGV2ZW50IG92ZXJmbG93IHNpZ25hbHMgb24gYXJt
-NjQuIEkndmUgYmVlbiBkaWdnaW5nIGludG8gdGhpcyBhbmQgdGhpbmsgSQ0KdW5kZXJzdGFuZCB3
-aGF0J3MgaGFwcGVuaW5nLCBidXQgd2FudGVkIHRvIGNvbmZpcm0gbXkgdW5kZXJzdGFuZGluZy4N
-Cg0KVGhlIGF0dGFjaGVkIGV4YW1wbGUgYXBwbGljYXRpb24sIGRlcml2ZWQgZnJvbSBhbiByci1k
-ZWJ1Z2dlciB0ZXN0IGNhc2UsIHJlcG9ydHMNCndoZW4gdGhlIHZhbHVlIG9mIGEgY291bnRlciBk
-b2Vzbid0IGluY3JlYXNlIGJ5IHRoZSBleHBlY3RlZCBwZXJpb2QgKy8tIHNvbWUNCnRvbGVyYW5j
-ZS4gV2hlbiBpdCBpcyBwaW5nLXBvbmdlZCBiZXR3ZWVuIGNvcmVzIChlLmcuIHdpdGggdGFza3Nl
-dCkgYXQgYSBoaWdoDQpmcmVxdWVuY3ksIGl0IGZyZXF1ZW50bHkgcmVwb3J0cyBpbmNyZWFzZXMg
-b2YgfjJ4IHRoZSBleHBlY3RlZC4gSSd2ZSBjb25maXJtZWQNCnRoaXMgc2FtZSBiZWhhdmlvciBv
-biBrZXJuZWxzIDUuNCwgNS4xMCwgNi4xIGFuZCA2LjUuDQoNCkkgZm91bmQgYXJtdjhwbXVfZGlz
-YWJsZV9pbnRlbnMgWzJdIHRoYXQgaXMgY2FsbGVkIGFzIHBhcnQgb2YgZXZlbnQNCmRlLXNjaGVk
-dWxpbmcgYW5kIGNvbnRhaW5zDQogICAgLyogQ2xlYXIgdGhlIG92ZXJmbG93IGZsYWcgaW4gY2Fz
-ZSBhbiBpbnRlcnJ1cHQgaXMgcGVuZGluZy4gKi8NCiAgICB3cml0ZV9wbW92c2NscihtYXNrKTsN
-CndoaWNoIHJlc3VsdHMgaW4gYW55IHBlbmRpbmcgb3ZlcmZsb3cgaW50ZXJydXB0IGJlaW5nIGRy
-b3BwZWQuIEkgYWRkZWQgc29tZQ0KZGVidWcgb3V0cHV0IGhlcmUgYW5kIGluZGVlZCB0aGVyZSBp
-cyBhIGNvcnJlbGF0aW9uIG9mIHRoaXMgYml0IGJlaW5nIGhpZ2ggYXQNCnRoZSBwb2ludCBvZiB0
-aGUgYWJvdmUgY29kZSBhbmQgdGhlIHJlcHJvZHVjZXIgaWRlbnRpZnlpbmcgYSBtaXNzZWQgc2ln
-bmFsLg0KDQpUaGlzIGJlaGF2aW9yIGRvZXMgbm90IG9jY3VyIHdpdGggcHNldWRvLU5NSXMgKGly
-cWNoaXAuZ2ljdjNfcHNldWRvX25taT0xKQ0KZW5hYmxlZC4NCg0KV2hlbiBhbiBldmVudCBpcyBu
-b3QgYmVpbmcgZXhwbGljaXRseSB0b3JuIGRvd24gKGUuZy4gYmVpbmcgY2xvc2VkKSwgdGhpcyBz
-ZWVtcw0KbGlrZSBhbiB1bmRlc2lyYWJsZSBiZWhhdmlvci4gSSBoYXZlbid0IGF0dGVtcHRlZCB0
-byBkZW1vIGl0IHlldCwgYnV0IEkgc3VzcGVjdA0KYW4gYXBwbGljYXRpb24gZGlzYWJsaW5nIGFu
-IGV2ZW50IHRlbXBvcmFyaWx5IGNvdWxkIG9jY2FzaW9uYWxseSBzZWUgdGhlIHNhbWUNCm1pc3Nl
-ZCBvdmVyZmxvdyBzaWduYWxzLiBJcyBteSB1bmRlcnN0YW5kaW5nIGhlcmUgY29ycmVjdD8gRG9l
-cyBhbnlvbmUgaGF2ZQ0KdGhvdWdodHMgb24gaG93IHRoaXMgY291bGQgYmUgYWRkcmVzc2VkIHdp
-dGhvdXQgY3JlYXRpbmcgb3RoZXIgaXNzdWVzPw0KDQpbMV0gaHR0cHM6Ly9naXRodWIuY29tL3Jy
-LWRlYnVnZ2VyL3JyL2lzc3Vlcy8zNjA3DQpbMl0gaHR0cHM6Ly9naXRodWIuY29tL3RvcnZhbGRz
-L2xpbnV4L2Jsb2IvYzQyZDllZWVmOGU1YmE5MjkyZWRhMzZmZDhlM2MxMWYzNWVlMDY1Yy9kcml2
-ZXJzL3BlcmYvYXJtX3BtdXYzLmMjTDY1MkMyMC1MNjUyQzQzDQoNCg0K
+Happening across them I was prompted to add two very basic tests that
+will give some perf diff coverage.
 
---_002_950001BD490C4BAC8EEACDB9F7C4ADFCamazoncom_
-Content-Type: application/octet-stream;
-	name="counter-overflow-test-aarch64.c"
-Content-Description: counter-overflow-test-aarch64.c
-Content-Disposition: attachment; filename="counter-overflow-test-aarch64.c";
-	size=2103; creation-date="Mon, 20 Nov 2023 18:36:22 GMT";
-	modification-date="Mon, 20 Nov 2023 18:36:22 GMT"
-Content-ID: <C8E4FD874567304F8CA7D582EC0CC784@amazon.com>
-Content-Transfer-Encoding: base64
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/diff.sh | 101 +++++++++++++++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
+ create mode 100755 tools/perf/tests/shell/diff.sh
 
-I2luY2x1ZGUgPGVycm5vLmg+CiNpbmNsdWRlIDxmY250bC5oPgojaW5jbHVkZSA8bGludXgvcGVy
-Zl9ldmVudC5oPgojaW5jbHVkZSA8c2lnbmFsLmg+CiNpbmNsdWRlIDxpbnR0eXBlcy5oPgojaW5j
-bHVkZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgojaW5jbHVkZSA8c3RyaW5nLmg+CiNp
-bmNsdWRlIDxzeXMvaW9jdGwuaD4KI2luY2x1ZGUgPHN5cy9zeXNjYWxsLmg+CiNpbmNsdWRlIDx1
-bmlzdGQuaD4KI2luY2x1ZGUgPHN0ZGJvb2wuaD4KCiNkZWZpbmUgQ0hFQ0soY29uZGl0aW9uKSBc
-CiAgZG8geyBcCiAgICBpZiAoIShjb25kaXRpb24pKSB7IFwKICAgICAgZnByaW50ZihzdGRlcnIs
-ICJDSEVDSyAnJXMnIGZhaWxlZCBhdCAlczolZCAoZXJybm89JWQpXG4iLCAjY29uZGl0aW9uLCBf
-X0ZJTEVfXywgX19MSU5FX18sIGVycm5vKTsgXAogICAgICBhYm9ydCgpOyBcCiAgICB9IFwKICB9
-IHdoaWxlICgwKQoKY29uc3Qgc3RhdGljIHVpbnQ2NF90IHBlcmlvZCA9IDEwMDAwOwpjb25zdCBz
-dGF0aWMgdWludDMyX3QgcGVyaW9kX3RvbGVyYW5jZSA9IDEwMDA7CgpzdGF0aWMgaW50IGNvdW50
-ZXJfZmQ7CnN0YXRpYyB1aW50NjRfdCBzaWduYWxfY291bnQgPSAwOwpzdGF0aWMgdWludDY0X3Qg
-bGFzdF92YWx1ZSA9IDA7Cgp2b2lkIHNpZ2hhbmRsZXIoaW50IHNpZykgewogIHNpZ25hbF9jb3Vu
-dCsrOwoKICB1aW50NjRfdCBjdXJfdmFsdWU7CiAgQ0hFQ0soc2l6ZW9mKGN1cl92YWx1ZSkgPT0g
-cmVhZChjb3VudGVyX2ZkLCAmY3VyX3ZhbHVlLCBzaXplb2YoY3VyX3ZhbHVlKSkpOwogIHVpbnQ2
-NF90IGRpZmYgPSBjdXJfdmFsdWUgLSBsYXN0X3ZhbHVlOwogIGlmIChkaWZmID4gcGVyaW9kICsg
-cGVyaW9kX3RvbGVyYW5jZSB8fCBkaWZmIDwgcGVyaW9kIC0gcGVyaW9kX3RvbGVyYW5jZSkgewog
-ICAgcHJpbnRmKCJTaWduYWwgIyUiIFBSSXU2NCAiOiBkZWx0YSBvZiAlIiBQUkl1NjQgIiBpcyBv
-dXRzaWRlICUiIFBSSXU2NCAiICsvLSAlIiBQUkl1MzIgIlxuIiwKICAgICAgICAgICBzaWduYWxf
-Y291bnQsIGRpZmYsIHBlcmlvZCwgcGVyaW9kX3RvbGVyYW5jZSk7CiAgfQogIGxhc3RfdmFsdWUg
-PSBjdXJfdmFsdWU7Cn0KCmludCBtYWluKGludCBhcmdjLCBjb25zdCBjaGFyKiogYXJndikgewog
-IHN0cnVjdCBwZXJmX2V2ZW50X2F0dHIgcGVyZl9hdHRyOwogIG1lbXNldCgmcGVyZl9hdHRyLCAw
-LCBzaXplb2YocGVyZl9hdHRyKSk7CiAgcGVyZl9hdHRyLnR5cGUgPSBQRVJGX1RZUEVfUkFXOwog
-IHBlcmZfYXR0ci5zaXplID0gc2l6ZW9mKHBlcmZfYXR0cik7CiAgcGVyZl9hdHRyLmNvbmZpZyA9
-IDB4MjE7IC8vIEJyYW5jaGVzCiAgcGVyZl9hdHRyLmV4Y2x1ZGVfa2VybmVsID0gMTsKICBwZXJm
-X2F0dHIuc2FtcGxlX3BlcmlvZCA9IDB4MTAwMDAwMDAwMDAwMDAwMExMOyAvLyBNYXggcGVyaW9k
-CgogIGNvdW50ZXJfZmQgPSBzeXNjYWxsKF9fTlJfcGVyZl9ldmVudF9vcGVuLCAmcGVyZl9hdHRy
-LCAwLCAtMSwgLTEsIDApOwogIENIRUNLKGNvdW50ZXJfZmQgPj0gMCk7CiAgQ0hFQ0soMCA9PSBm
-Y250bChjb3VudGVyX2ZkLCBGX1NFVE9XTiwgZ2V0cGlkKCkpKTsKICBDSEVDSygwID09IGZjbnRs
-KGNvdW50ZXJfZmQsIEZfU0VURkwsIE9fQVNZTkMpKTsKICBzaWduYWwoU0lHSU8sIHNpZ2hhbmRs
-ZXIpOwoKICBwcmludGYoIlBpZCAlZCBydW5uaW5nIHdpdGggcGVyaW9kICUiIFBSSXU2NCAiIHRv
-bGVyYW5jZSAlIiBQUkl1MzIgIlxuIiwKICAgICAgICAgZ2V0cGlkKCksIHBlcmlvZCwgcGVyaW9k
-X3RvbGVyYW5jZSk7CgogIENIRUNLKDAgPT0gaW9jdGwoY291bnRlcl9mZCwgUEVSRl9FVkVOVF9J
-T0NfRElTQUJMRSwgMCkpOwogIENIRUNLKDAgPT0gaW9jdGwoY291bnRlcl9mZCwgUEVSRl9FVkVO
-VF9JT0NfUkVTRVQsIDApKTsKICBDSEVDSygwID09IGlvY3RsKGNvdW50ZXJfZmQsIFBFUkZfRVZF
-TlRfSU9DX1BFUklPRCwgJnBlcmlvZCkpOwogIENIRUNLKDAgPT0gaW9jdGwoY291bnRlcl9mZCwg
-UEVSRl9FVkVOVF9JT0NfRU5BQkxFLCAwKSk7CgogIC8vIFRoaXMgaXMgd2hlcmUgd2UgY3JlYXRl
-IHRoZSBicmFuY2hlcyBiZWluZyBjb3VudGVkCiAgd2hpbGUgKHRydWUpIHsKICB9Cn0K
+diff --git a/tools/perf/tests/shell/diff.sh b/tools/perf/tests/shell/diff.sh
+new file mode 100755
+index 000000000000..213185763688
+--- /dev/null
++++ b/tools/perf/tests/shell/diff.sh
+@@ -0,0 +1,101 @@
++#!/bin/sh
++# perf diff tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++err=0
++perfdata1=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perfdata2=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perfdata3=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++testprog="perf test -w thloop"
++testsym="test_loop"
++
++cleanup() {
++  rm -rf "${perfdata1}"
++  rm -rf "${perfdata1}".old
++  rm -rf "${perfdata2}"
++  rm -rf "${perfdata2}".old
++  rm -rf "${perfdata3}"
++  rm -rf "${perfdata3}".old
++
++  trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++make_data() {
++  file="$1"
++  if ! perf record -o "${file}" ${testprog} 2> /dev/null
++  then
++    echo "Workload record [Failed record]"
++    echo 1
++    return
++  fi
++  if ! perf report -i "${file}" -q | grep -q "${testsym}"
++  then
++    echo "Workload record [Failed missing output]"
++    echo 1
++    return
++  fi
++  echo 0
++}
++
++test_two_files() {
++  echo "Basic two file diff test"
++  err=$(make_data "${perfdata1}")
++  if [ $err != 0 ]
++  then
++    return
++  fi
++  err=$(make_data "${perfdata2}")
++  if [ $err != 0 ]
++  then
++    return
++  fi
++
++  if ! perf diff "${perfdata1}" "${perfdata2}" | grep -q "${testsym}"
++  then
++    echo "Basic two file diff test [Failed diff]"
++    err=1
++    return
++  fi
++  echo "Basic two file diff test [Success]"
++}
++
++test_three_files() {
++  echo "Basic three file diff test"
++  err=$(make_data "${perfdata1}")
++  if [ $err != 0 ]
++  then
++    return
++  fi
++  err=$(make_data "${perfdata2}")
++  if [ $err != 0 ]
++  then
++    return
++  fi
++  err=$(make_data "${perfdata3}")
++  if [ $err != 0 ]
++  then
++    return
++  fi
++
++  if ! perf diff "${perfdata1}" "${perfdata2}" "${perfdata3}" | grep -q "${testsym}"
++  then
++    echo "Basic three file diff test [Failed diff]"
++    err=1
++    return
++  fi
++  echo "Basic three file diff test [Success]"
++}
++
++test_two_files
++test_three_files
++
++cleanup
++exit $err
+-- 
+2.43.0.rc1.413.gea7ed67945-goog
 
---_002_950001BD490C4BAC8EEACDB9F7C4ADFCamazoncom_--
