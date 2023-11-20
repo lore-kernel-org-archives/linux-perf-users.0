@@ -1,118 +1,115 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 169D2E3;
-	Mon, 20 Nov 2023 12:43:12 -0800 (PST)
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2839b418f7fso2076048a91.2;
-        Mon, 20 Nov 2023 12:43:12 -0800 (PST)
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 285A8D2;
+	Mon, 20 Nov 2023 12:48:50 -0800 (PST)
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5c210e34088so2400386a12.2;
+        Mon, 20 Nov 2023 12:48:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700512991; x=1701117791;
+        d=1e100.net; s=20230601; t=1700513329; x=1701118129;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5uEWKcf0Qu+JBFnsj4DeP5h18wjA4sNIxAJuwdb8sxU=;
-        b=hKwgQgnBzTZLF4RlW/aeaGNubHJTv+IgO+8jkMihNlQbqXgOc3Oh+LkyqDspkbCF48
-         HirD1OmCLY4bfxnMXmoGdsJxdEINbsTr0byj+I2AzmZ58JLHjA+HZeNKTBVVa4atRFyd
-         2kfi/BmS5xjYe+VmQ/RtI5sUF5Ng9ghKJA6SFqeCz37t8EJ6rwpNNICrobxa0qBsUmKq
-         26k8yrUb04UHl/xcxwCVHrJ53H5V8Q8Z8NAH3i6LsmhPsGLwcmI6hI5iAed8QEe5B5G+
-         qiYqhTzh6opezbQbHDX0vRrpsLrG72xnfix4D4iuZXDqXrPU3HWoW9uViQh4GfuoRi/7
-         O9rg==
-X-Gm-Message-State: AOJu0YyQ9GApiYr1CPYdwsB31aUifcx80iXOPrwgHvmGJwhX2gJ4Np0n
-	fLpqrtR6v2kYTsFM2CgDijkD4tvkjaEhcrYiwcc=
-X-Google-Smtp-Source: AGHT+IG/d7JgW8EAdqGPjQumtNuDPJUeNf5SpANhbNyrZWBbVaf/AsuklIdvm5uo7lAZd0Z3QCaEp67JShW5j0p1u5U=
-X-Received: by 2002:a17:90a:f018:b0:27f:fc2f:4831 with SMTP id
- bt24-20020a17090af01800b0027ffc2f4831mr7539084pjb.13.1700512991415; Mon, 20
- Nov 2023 12:43:11 -0800 (PST)
+        bh=HLACAszJAsDeK07wyfvEz6u3BDeunNq6zbMUiAuxf0E=;
+        b=A10hVPw9mQD8NCYDOwlRZVNFeUqHvFZExfTIhcwWVuTtAg6Nc0D6bCJLK7HGtxyxvM
+         TBcNFghjCN8y4y4UsIJ4pJQj4zmd5p8JxOx9gNeDFCAjd05GLm3c8KV28xk6CfuI0PBy
+         hMqLD1PhKO31aQrLRV2goC+T8F7eFG6ZMMFDAp2AhbGfTa/peIhBAVPCBoKv4HVYoh7v
+         oM5o+rE+Qqi87V82VTllu15Ij+Du/7cXvsvzCJmIX/OWkd2LsKTnsT6Dozchkrkd4Jl9
+         Y87tu0a/9SmlWsq+N5sTe3UsnKYXqExW4kzfwX8cBCobdMcxP5TwR+mzPuIVu6tL+vzr
+         zcnw==
+X-Gm-Message-State: AOJu0Yx92rmzrf2SMLSRD9L5rmMcVcczucppHB/DBZC+OGqD6QKaiPKW
+	qDrZtLL9LAbEYr/BbzsN2j3MjZlhmRXGR8P+XfE=
+X-Google-Smtp-Source: AGHT+IHywMwLFnWqSkjrlIFC80pbu6VrGJfN+mUb07oSvHQbrBOCZAsTklCHMyBM/aeS0v3kXbPfBpmEekRrnV8UFe8=
+X-Received: by 2002:a17:90b:4c06:b0:280:e2e1:f955 with SMTP id
+ na6-20020a17090b4c0600b00280e2e1f955mr9229635pjb.35.1700513329510; Mon, 20
+ Nov 2023 12:48:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231110000012.3538610-1-namhyung@kernel.org> <20231110000012.3538610-13-namhyung@kernel.org>
- <CA+JHD90fkWNrQWO5DrHeV8mCmFyKKqJ8fV=KwztRi7TSw+8yDg@mail.gmail.com>
-In-Reply-To: <CA+JHD90fkWNrQWO5DrHeV8mCmFyKKqJ8fV=KwztRi7TSw+8yDg@mail.gmail.com>
+References: <20231113102327.695386-1-james.clark@arm.com>
+In-Reply-To: <20231113102327.695386-1-james.clark@arm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 20 Nov 2023 12:43:00 -0800
-Message-ID: <CAM9d7chUNfAnLB-Hwry8M1d1Nb+YH3jf3ySmTZJoC0NYeqDAdA@mail.gmail.com>
-Subject: Re: [PATCH 12/52] perf annotate-data: Add find_data_type()
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Andi Kleen <ak@linux.intel.com>, 
-	Linux Trace Devel <linux-trace-devel@vger.kernel.org>, linux-toolchains@vger.kernel.org
+Date: Mon, 20 Nov 2023 12:48:38 -0800
+Message-ID: <CAM9d7cj=nF_Vq7dPkOGvYd1G0nFOffiCoyZQ=hx1hco-0_ZMBw@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Use existing config value for objdump path
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, irogers@google.com, acme@kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Yonghong Song <yhs@fb.com>, Fangrui Song <maskray@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Arnaldo,
+Hello,
 
-On Sat, Nov 11, 2023 at 10:55=E2=80=AFAM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
+On Mon, Nov 13, 2023 at 2:23=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
 >
-> On Thu, Nov 9, 2023, 9:00 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>
->>
->> +static bool find_cu_die(struct debuginfo *di, u64 pc, Dwarf_Die *cu_die=
-)
->> +{
->> +       Dwarf_Off off, next_off;
->> +       size_t header_size;
->> +
->> +       if (dwarf_addrdie(di->dbg, pc, cu_die) !=3D NULL)
->> +               return cu_die;
+> There is already an existing config value for changing the objdump path,
+> so instead of having two values that do the same thing, make perf test
+> use annotate.objdump as well.
 >
-> Isn't the return type a bool?
->
-> Shouldn't be 'return true;'?
->
-> Ends up like that as cu_die isn't NULL, but looks confusing.
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Ok, will change.
-
->
->> +
->> +       /*
->> +        * There are some kernels don't have full aranges and contain on=
-ly a few
->> +        * aranges entries.  Fallback to iterate all CU entries in .debu=
-g_info
->> +        * in case it's missing.
->> +        */
->> +       off =3D 0;
->> +       while (dwarf_nextcu(di->dbg, off, &next_off, &header_size,
->> +                           NULL, NULL, NULL) =3D=3D 0) {
->> +               if (dwarf_offdie(di->dbg, off + header_size, cu_die) &&
->> +                   dwarf_haspc(cu_die, pc))
->> +                       return true;
->> +
->> +               off =3D next_off;
->> +       }
->> +       return false;
->> +}
->> +
->>
->> +struct annotated_data_type *find_data_type(struct map_symbol *ms, u64 i=
-p,
->> +                                          int reg, int offset)
->> +{
->> +       struct annotated_data_type *result =3D NULL;
->> +       struct dso *dso =3D ms->map->dso;
->> +       struct debuginfo *di;
->> +       Dwarf_Die type_die;
->> +       struct strbuf sb;
->> +       u64 pc;
->> +
->> +       di =3D debuginfo__new(dso->long_name);
->> +       if (di =3D=3D NULL) {
->> +               pr_debug("cannot get the debug info\n");
->
->
-> Shouldn't inform the dso->long_name and function name to ease debugging?
-
-Sounds good, I'll update it in the v3.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
+
+> ---
+>  tools/perf/Documentation/perf-config.txt | 8 ++------
+>  tools/perf/tests/builtin-test.c          | 2 +-
+>  2 files changed, 3 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Docume=
+ntation/perf-config.txt
+> index 16398babd1ef..379f9d7a8ab1 100644
+> --- a/tools/perf/Documentation/perf-config.txt
+> +++ b/tools/perf/Documentation/perf-config.txt
+> @@ -251,7 +251,8 @@ annotate.*::
+>                 addr2line binary to use for file names and line numbers.
+>
+>         annotate.objdump::
+> -               objdump binary to use for disassembly and annotations.
+> +               objdump binary to use for disassembly and annotations,
+> +               including in the 'perf test' command.
+>
+>         annotate.disassembler_style::
+>                 Use this to change the default disassembler style to some=
+ other value
+> @@ -722,11 +723,6 @@ session-<NAME>.*::
+>                 Defines new record session for daemon. The value is recor=
+d's
+>                 command line without the 'record' keyword.
+>
+> -test.*::
+> -
+> -       test.objdump::
+> -               objdump binary to use for disassembly and annotations.
+> -
+>  SEE ALSO
+>  --------
+>  linkperf:perf[1]
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 113e92119e1d..b8c21e81a021 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -518,7 +518,7 @@ static int run_workload(const char *work, int argc, c=
+onst char **argv)
+>  static int perf_test__config(const char *var, const char *value,
+>                              void *data __maybe_unused)
+>  {
+> -       if (!strcmp(var, "test.objdump"))
+> +       if (!strcmp(var, "annotate.objdump"))
+>                 test_objdump_path =3D value;
+>
+>         return 0;
+> --
+> 2.34.1
+>
