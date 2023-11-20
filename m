@@ -1,115 +1,118 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99DFC7
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Nov 2023 12:40:13 -0800 (PST)
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5bdfbd69bd5so4264636a12.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Nov 2023 12:40:13 -0800 (PST)
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 169D2E3;
+	Mon, 20 Nov 2023 12:43:12 -0800 (PST)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2839b418f7fso2076048a91.2;
+        Mon, 20 Nov 2023 12:43:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700512813; x=1701117613;
+        d=1e100.net; s=20230601; t=1700512991; x=1701117791;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HRF5rVybXkdcsrKHCGQAP3IxXwdrS0UAySae7/HWR0g=;
-        b=EBlUizofRm8G4lUASni8KO8g23UZaOLrfgcmXJkrLxc93NTJZUarrPQFyAOgUCk0uS
-         nDzUV7QG68Kp9gAvVNhf0s6S3y/uDMAww5vcSjlRt8oXP3LD7vR9R4/lQMOxpStQjSmQ
-         SEKp9gntQaN8m7rsGrbn2bULzXzTR+4AuSgg8r7sAKec5Xk60c28778xla+3UAHOpP/q
-         ZOcPRJCUMkTE2lR/NbcmyVCQBJxB9u8I8XEoUlfGVLVObP93xS7ZA9DvYfidRAOE5wAn
-         zh6BBHPdKY8vEbFMmxdLeR8T3ptsbZEaaTVcwFVF9YzY2eVjPEEcyIVpfHeiI36QEplf
-         WNqA==
-X-Gm-Message-State: AOJu0YxnvAYzkRK6fIZS+B7rOGNPRQMf4sojt4622sMnUUcuoJJKi5ob
-	SXadv2GbLJQw76brohZZXzrWlp6vr2aj79pQZMG1kUxH
-X-Google-Smtp-Source: AGHT+IFJJrGhG4dEfYwak8+anvmehsd+QknMeG0WrhXHb4j2/y0t/70y8lAHscT/xjvJtOKTWw5FkYjWyugSKZJcU04=
-X-Received: by 2002:a17:90b:1c87:b0:280:a002:be85 with SMTP id
- oo7-20020a17090b1c8700b00280a002be85mr886338pjb.20.1700512812677; Mon, 20 Nov
- 2023 12:40:12 -0800 (PST)
+        bh=5uEWKcf0Qu+JBFnsj4DeP5h18wjA4sNIxAJuwdb8sxU=;
+        b=hKwgQgnBzTZLF4RlW/aeaGNubHJTv+IgO+8jkMihNlQbqXgOc3Oh+LkyqDspkbCF48
+         HirD1OmCLY4bfxnMXmoGdsJxdEINbsTr0byj+I2AzmZ58JLHjA+HZeNKTBVVa4atRFyd
+         2kfi/BmS5xjYe+VmQ/RtI5sUF5Ng9ghKJA6SFqeCz37t8EJ6rwpNNICrobxa0qBsUmKq
+         26k8yrUb04UHl/xcxwCVHrJ53H5V8Q8Z8NAH3i6LsmhPsGLwcmI6hI5iAed8QEe5B5G+
+         qiYqhTzh6opezbQbHDX0vRrpsLrG72xnfix4D4iuZXDqXrPU3HWoW9uViQh4GfuoRi/7
+         O9rg==
+X-Gm-Message-State: AOJu0YyQ9GApiYr1CPYdwsB31aUifcx80iXOPrwgHvmGJwhX2gJ4Np0n
+	fLpqrtR6v2kYTsFM2CgDijkD4tvkjaEhcrYiwcc=
+X-Google-Smtp-Source: AGHT+IG/d7JgW8EAdqGPjQumtNuDPJUeNf5SpANhbNyrZWBbVaf/AsuklIdvm5uo7lAZd0Z3QCaEp67JShW5j0p1u5U=
+X-Received: by 2002:a17:90a:f018:b0:27f:fc2f:4831 with SMTP id
+ bt24-20020a17090af01800b0027ffc2f4831mr7539084pjb.13.1700512991415; Mon, 20
+ Nov 2023 12:43:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJfuBxyYPdKtA_XCmpdb-qexM0ux3mfNHxCTJFimQ_MycCyeqQ@mail.gmail.com>
-In-Reply-To: <CAJfuBxyYPdKtA_XCmpdb-qexM0ux3mfNHxCTJFimQ_MycCyeqQ@mail.gmail.com>
+References: <20231110000012.3538610-1-namhyung@kernel.org> <20231110000012.3538610-13-namhyung@kernel.org>
+ <CA+JHD90fkWNrQWO5DrHeV8mCmFyKKqJ8fV=KwztRi7TSw+8yDg@mail.gmail.com>
+In-Reply-To: <CA+JHD90fkWNrQWO5DrHeV8mCmFyKKqJ8fV=KwztRi7TSw+8yDg@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 20 Nov 2023 12:40:01 -0800
-Message-ID: <CAM9d7chnAQ1gHYGTL+bYR6pFnKz9fJ5rAP+qe2pktsKr4Suzsg@mail.gmail.com>
-Subject: Re: how to measure cost of 'cat /proc/dynamic_debug/control'
-To: jim.cromie@gmail.com
-Cc: linux-perf-users@vger.kernel.org
+Date: Mon, 20 Nov 2023 12:43:00 -0800
+Message-ID: <CAM9d7chUNfAnLB-Hwry8M1d1Nb+YH3jf3ySmTZJoC0NYeqDAdA@mail.gmail.com>
+Subject: Re: [PATCH 12/52] perf annotate-data: Add find_data_type()
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Andi Kleen <ak@linux.intel.com>, 
+	Linux Trace Devel <linux-trace-devel@vger.kernel.org>, linux-toolchains@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Arnaldo,
 
-On Sat, Nov 11, 2023 at 11:49=E2=80=AFAM <jim.cromie@gmail.com> wrote:
+On Sat, Nov 11, 2023 at 10:55=E2=80=AFAM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
-> hi all,
+> On Thu, Nov 9, 2023, 9:00 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>
+>>
+>> +static bool find_cu_die(struct debuginfo *di, u64 pc, Dwarf_Die *cu_die=
+)
+>> +{
+>> +       Dwarf_Off off, next_off;
+>> +       size_t header_size;
+>> +
+>> +       if (dwarf_addrdie(di->dbg, pc, cu_die) !=3D NULL)
+>> +               return cu_die;
 >
-> I have a patchset which "condenses"  module, filename, function-name
-> columns of the __dyndbg section into 3 maple-trees.
+> Isn't the return type a bool?
 >
-> This reduces the #entries by about 80%,
-> so it seems likely to reduce overall memory footprint.
+> Shouldn't be 'return true;'?
 >
-> accessor functions replace the raw field derefs.
->
-> `cat /proc/dynamic_debug/control`
-> is an ideal workload to evaluate the added cost.
->
-> that said, this doesnt appear to be seeing that cost.
->    perf stat -r 200  $cmd
->
-> bash-5.2# uname -r; \
-> time perf stat -r200 cat /proc/dynamic_debug/control > /dev/null; \ uptim=
-e
->
-> 6.6.0-f2bi-00037-g078217875494
->
->  Performance counter stats for 'cat /proc/dynamic_debug/control' (200 run=
-s):
->
->       21.73 msec task-clock          #    0.628 CPUs utilized   ( +-0.45%=
- )
->       44      context-switches      #    2.025 K/sec              ( +-
->  0.12%            1      cpu-migrations         #   46.020 /sec
->         ( +-  4.32% )
->       73      page-faults              #    3.359 K/sec              (
-> +-  0.11% )
-> 51894505      cycles                 #    2.388 GHz                ( +-  =
-0.34% )
-> 165896      stalled-cycles-frontend    #  0.32% frontend cycles idle
->      ( +-  0.23% )
->   83546      stalled-cycles-backend    #    0.16% backend cycles idle
->        ( +-  4.23% )
-> 144663807      instructions                #    2.79  insn per cycle
->                                   #    0.00  stalled cycles per insn
->   ( +-  0.28% )
->  42439211      branches            #    1.953 G/sec             ( +-  0.2=
-8% )
->                  0      branch-misses
->
->           0.034600 +- 0.000119 seconds time elapsed  ( +-  0.34% )
+> Ends up like that as cu_die isn't NULL, but looks confusing.
 
-Looks like it's too small to measure.
+Ok, will change.
 
 >
+>> +
+>> +       /*
+>> +        * There are some kernels don't have full aranges and contain on=
+ly a few
+>> +        * aranges entries.  Fallback to iterate all CU entries in .debu=
+g_info
+>> +        * in case it's missing.
+>> +        */
+>> +       off =3D 0;
+>> +       while (dwarf_nextcu(di->dbg, off, &next_off, &header_size,
+>> +                           NULL, NULL, NULL) =3D=3D 0) {
+>> +               if (dwarf_offdie(di->dbg, off + header_size, cu_die) &&
+>> +                   dwarf_haspc(cu_die, pc))
+>> +                       return true;
+>> +
+>> +               off =3D next_off;
+>> +       }
+>> +       return false;
+>> +}
+>> +
+>>
+>> +struct annotated_data_type *find_data_type(struct map_symbol *ms, u64 i=
+p,
+>> +                                          int reg, int offset)
+>> +{
+>> +       struct annotated_data_type *result =3D NULL;
+>> +       struct dso *dso =3D ms->map->dso;
+>> +       struct debuginfo *di;
+>> +       Dwarf_Die type_die;
+>> +       struct strbuf sb;
+>> +       u64 pc;
+>> +
+>> +       di =3D debuginfo__new(dso->long_name);
+>> +       if (di =3D=3D NULL) {
+>> +               pr_debug("cannot get the debug info\n");
 >
-> real 0m8.994s
-> user 0m0.120s
-> sys 0m6.888s
->  14:04:11 up 53 min,  0 users,  load average: 0.15, 0.03, 0.01
 >
->
-> Comparing that to master, I dont see much difference,
-> which suggests Im doing it wrong.
-> (adding > /dev/null  does more to reduce work than the kernel change
-> increases it)
->
-> Can anyone suggest a better perf invocation to distinguish
-> the relative cost increase ?
+> Shouldn't inform the dso->long_name and function name to ease debugging?
 
-Do you really want to see the difference in CPU usage?
-Maybe it's better to check the memory..
+Sounds good, I'll update it in the v3.
 
 Thanks,
 Namhyung
