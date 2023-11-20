@@ -1,99 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8B7A2;
-	Mon, 20 Nov 2023 14:59:30 -0800 (PST)
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-1e9c9d181d6so3036125fac.0;
-        Mon, 20 Nov 2023 14:59:30 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V344SgaQ"
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8027FBE
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Nov 2023 15:50:21 -0800 (PST)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-1ef370c2e12so2903251fac.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Nov 2023 15:50:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700524220; x=1701129020; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=G5iQCOzzRdu94j6HW7MkWYuq4VPVCMXAq88PvI8TRHo=;
+        b=V344SgaQRER9VUwbp0WfjKFLnscVE8ARD3Q4VHl61J/8XnNziOnEXhsYPXEp3yVh70
+         an3fbxiHPPR8sfDABbQf5bmL8PzEjelZmee62SFZz8D8PaaTeNKSes8KiU5TuRcSpKO6
+         RFuGWfYfCpijkxYJ7IMixZzdpsxq0N7DoYcjOj+pj+1trbN17y5BqSQXnrHVIyNq+MBW
+         LOu9j2ouUEqcs3Olyc0JBUzYF8+8Nr+q18s6L7OD6g6W8EiVtmPzAj8oJdUSuOITMhuo
+         vyj4/RpZYrkUpzbBBlYHHfgfPPuaGl6C7w5FeI6pZ6bZ+SwhklaH4307TWxObnJhIuKg
+         cVfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700521169; x=1701125969;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4dZP1CpgWwT6/Z66YkAUxS5DUl+N3kpH1NW1HsPopb8=;
-        b=Qt38cGYsWK6Ew6N3ZLimPQFW2CewaJQACJzy/crNcX/3QaB7ULmSdXCSfVW+9QQOmw
-         ioiNHmhyMuRswX0Dyd6DOeP9ZE0aSNo466T6+fPppQl0564k7Y4ZWHI1TgONTF3ukhIu
-         mUUgdWPvH2BDix4PP289QBQLadk+btViSs/k3E+ta/7TTcjOM/0en7Sbk5xifGvnHeDn
-         ThxdKbaWSyPFQ8jnCRrGERN/Tedf8BZbDlhFyWGwvvZdHbRAa/hcH/seLrwZ3XmzkjkX
-         f+BcOI+6ws335nPFmB2OGrTlhKnz7aIOH3+OUdLZqivZX96VM4L7AeHOqhQIQllbw3tG
-         z9Fg==
-X-Gm-Message-State: AOJu0YzF2NhsTrx6RkWf+ceVUIa3XDkUw2OC6aLImA2f+XzjhmdQT3fy
-	spGvWQ/H2otjvjB2sr8Q26ZK0uACfwSu8TW5vPYKPEBH
-X-Google-Smtp-Source: AGHT+IHZYCmSiVsMg5RbPK+Qqi6FabJEEst4pGayAdFMvCMlMPSl41S5C6Rsr+aONbxNaWOHXLfjcLa0zaKOrFGjPBs=
-X-Received: by 2002:a05:6871:22c7:b0:1f9:4afd:e3c9 with SMTP id
- se7-20020a05687122c700b001f94afde3c9mr3570756oab.1.1700521169416; Mon, 20 Nov
- 2023 14:59:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700524220; x=1701129020;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G5iQCOzzRdu94j6HW7MkWYuq4VPVCMXAq88PvI8TRHo=;
+        b=j3n+IsSSAC52MJEhjzoZFOPoLE8LNNlZ1jZIyuDtppwWabGh+HcViudC8lApMWVUZL
+         WQ6I3dZoif+ruasmC/07vLdkerq/1FCrBib9pw8WBhw9Gn86ZVhbssldao+/PDjoSwC1
+         KMmLJDQBd4Jus50Brye3u6fYtAo5OFKTOdbxNmnnCnk1X5FSntvT4dc8DTN43pjDtmvI
+         9UN4YmhYay5CjDXBE+AN9jNKYAngnwD9WzvyXkKn1bM6xgmrRO2VuAZrke3jwgVq3sP+
+         D1/x6WsBNUBgU1anmmfJoEV/uRYQuC2NDX/CW3QXpyUP7773W2q4n/I82s35Ft1eHAJJ
+         Ulog==
+X-Gm-Message-State: AOJu0Ywqs0+7xi4vBfLqet1DKDDMytU6zEoXHheVAJDnzIJTblFRHlRa
+	BLHligEjdXQYkRm1ooPOCzjKwt3n2jot5oq10YmpE+LoqmsWa/R7
+X-Google-Smtp-Source: AGHT+IEmXJYBtgE4WdVREbpDUipBCtwi9nJU+jBzlOSJPmkzOiSFGNqh5yeDmh+CIBq7c9VSIPgoh0CaY8veAZObnpA=
+X-Received: by 2002:a05:6870:791:b0:1e9:8fa0:a7ab with SMTP id
+ en17-20020a056870079100b001e98fa0a7abmr11660688oab.21.1700524220186; Mon, 20
+ Nov 2023 15:50:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <449fb8d2.27fb.18bcc190021.Coremail.00107082@163.com>
- <76d75357.6ab6.18bce6b7d5b.Coremail.00107082@163.com> <20231115103241.GD3818@noisy.programming.kicks-ass.net>
- <407a06f8.632a.18bd2a2ece1.Coremail.00107082@163.com> <CAM9d7cgdUJytP31y90c5AuQAmR6FgkBWjj4brVjH8Pg+d00O+Q@mail.gmail.com>
- <1a1338d0.6b3a.18bd3c09056.Coremail.00107082@163.com> <CAM9d7cgjCKynoTC0L53pEXnCWHF7AZ8Gr2a0xQnes7L24KVNsA@mail.gmail.com>
- <489ecb9e.28cc.18bd650affa.Coremail.00107082@163.com> <CAM9d7cg-tudzG4iPMHs5L-zYMe-WhyzZXN9eOtkoapS1n7t8AA@mail.gmail.com>
- <1da1b7f.564.18be01bd6ce.Coremail.00107082@163.com>
-In-Reply-To: <1da1b7f.564.18be01bd6ce.Coremail.00107082@163.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 20 Nov 2023 14:59:18 -0800
-Message-ID: <CAM9d7chFQ1L0h0av7ziXU4ja_j1FMRgwd-CHULnOB5YuH9yo2w@mail.gmail.com>
-Subject: Re: [Regression or Fix]perf: profiling stats sigificantly changed for
- aio_write/read(ext4) between 6.7.0-rc1 and 6.6.0
-To: David Wang <00107082@163.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+From: Pablo Galindo Salgado <pablogsal@gmail.com>
+Date: Mon, 20 Nov 2023 23:50:09 +0000
+Message-ID: <CAFjbc8G+q4sFpO5D6PqbDFNbHHpgYZ_2ADV7sUp7Lw=AefprJA@mail.gmail.com>
+Subject: Perf support in CPython
+To: linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 17, 2023 at 5:48=E2=80=AFPM David Wang <00107082@163.com> wrote=
-:
->
->
-> At 2023-11-18 05:11:02, "Namhyung Kim" <namhyung@kernel.org> wrote:
-> >On Wed, Nov 15, 2023 at 8:09=E2=80=AFPM David Wang <00107082@163.com> wr=
-ote:
-> >>
->
-> >>
-> >>
-> >> From the data I collected, I think two problem could be observed for f=
-06cc667f79909e9175460b167c277b7c64d3df0
-> >> 1. sample missing.
-> >> 2. sample unstable, total sample count drift a lot between tests.
-> >
-> >Hmm.. so the fio process was running in the background during
-> >the profiling, right?  But I'm not sure how you measured the same
-> >amount of time.  Probably you need to run this (for 10 seconds):
-> >
-> >  sudo perf record -a -G mytest -- sleep 10
-> >
-> >And I guess you don't run the perf command in the target cgroup
-> >which is good.
-> >
->
-> Yes  profiling process was not in the target cgroup.
-> I use  fio with `fio --randrepeat=3D1 --ioengine=3Dlibaio --direct=3D1 --=
-name=3Dtest  --bs=3D4k --iodepth=3D64 --size=3D1G --readwrite=3Drandrw  --r=
-untime=3D600 --numjobs=3D4 --time_based=3D1` which would run 600 seconds.
-> There would be drifts in the profiling report between runs,  from those s=
-mall  samples of test data I collected, maybe not enough to make a firm con=
-clusion,  I feel when the commit is reverted, the expectation for total sam=
-ple count is higher and the standard deviation is smaller.
->
-> >And is there any chance if it's improved because of the change?
-> >Are the numbers in 6.7 better or worse?
-> >
-> I have no idea whether the change of expected total sample count a bug or=
- a fix,  but,  the observed result that total sample count drift a lot (big=
-ger standard deviation), I think ,  is a bad thing.
+Hi,
 
-Right.  Can you run perf stat to measure the number of context
-switches and cgroup switches, then?
+I am Pablo Galindo Salgado from the CPython core development team. In
+the past release of CPython (Python 3.12) I have added support
+for including Python function calls in the output of perf by
+leveraging the jit-interface support by writing to /tmp/perf-%d.map.
+The support
+works by compiling assembly trampolines at runtime that just call the
+Python bytecode evaluation loop and assigning function names to the
+trampolines by writing in /tmp/perf-%d.map. This has worked really
+well when CPython is compiled with frame pointers but unfortunately
+CPython also suffers from 5% to 10% slow down when frame pointers are
+used. Unfortunately, perf cannot unwind through the jitted trampolines
+without frame pointers currently.
 
-  sudo perf stat -a -e context-switches,cgroup-switches -- sleep 10
+I am looking to extend support to the jitdump specification to allow
+perf to unwind through these trampolines when using dwarf unwinding
+mode.
+I have a draft for a patch
+(https://github.com/python/cpython/pull/112254) that adds support for
+the specification by writing JIT_CODE_LOAD and
+JIT_CODE_UNWINDING_INFO (currently with empty EH Frame entries to
+force perf to defer to FP based unwinding). This works well in my
+current
+distribution (Arch Linux with perf version 6.5) but when tested in
+other distributions it falls apart.
 
-Thanks,
-Namhyung
+* One problem I have struggled to debug is that even when compiled
+with frame pointers and without emitting JIT_CODE_UNWINDING_INFO
+(using fp-based unwinding), in some cases (such as the latest Ubuntu
+versions), the shared objects and addresses generated by perf-inject
+-j look sane, the addresses match but perf report or perf script do
+not include the symbol names in their output. I do not understand why
+this
+is happening and my debuggins so far has not allowed me to get any
+thread I can pull so I wanted to reach to this mailing list for
+assistance.
+
+* The other problem I am finding is to include the eh_frames to our
+trampolines as it looks like deferring to FP unwinding is unreliable
+even if
+our trampolines are trivial. This is a different problem but my
+current attempts to add EH Frames have failed and I don't know how to
+properly
+debug them correctly as it looks like perf doesn't expect some of the
+values we are writing. I would love it if someone with perf and DWARF
+expertise could help us in the CPython team to get steered in the
+right direction.
+
+Thanks a lot in advance,
+Pablo Galindo Salgado
