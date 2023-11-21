@@ -1,42 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yp9JIov+"
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4CFBB;
-	Tue, 21 Nov 2023 14:56:53 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1cc29f39e7aso40274025ad.0;
-        Tue, 21 Nov 2023 14:56:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MtmmtrEV"
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D684DD;
+	Tue, 21 Nov 2023 14:56:58 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1cf6373ce31so2154975ad.0;
+        Tue, 21 Nov 2023 14:56:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700607413; x=1701212213; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=VvsEAsvFJCAuzTkOhawjNcVDzfJqg2jxoNzCw1vuYxM=;
-        b=Yp9JIov+wo0DTDXoobNFWkySiptxCV3/DkKvymOHb/eK6z6/I5CB6en5pHK3b4G6pm
-         xRunPR/DDdojptiJz5F1r2OyrhmOIG1hB/uSfPGyySZhphmtrOpzByjwpsiznR4cSKX5
-         zf1LR910qlKxYv2fG3k7aWNG302y0xH3ZC7M6oatdtQm7FQA24VyrVQAAay3ALIVVbE/
-         ivS82PbhCpc5Rrft5W7SC3TVj9I+lNWx5b9ywoDc7xXj8DBvQIvfhOp53YMSWbo7bMNI
-         aKfK0+N3cIq4Pny7xnfznm3j0PiywWAXHYaz/OOy+FWwslRj7dNEz74hP4h9euWM2IpK
-         YDPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700607413; x=1701212213;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1700607418; x=1701212218; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VvsEAsvFJCAuzTkOhawjNcVDzfJqg2jxoNzCw1vuYxM=;
-        b=EZZ+vQFdtvMuAfpLGQ+PiLGwO7rF8TJ4I6+GoOAtsbcc0B7Jy6fPCxljTnND2PEcgr
-         WnygRDpYLZcw8KUhtSQ8XMFoctyTOwdx7J+fdM/Q2y0r7ii9ZgeBodijfhh8XDNi397A
-         dAkDfvZ7PVgYeIcz34QADZXyC3XAEpaN1wiqBS2DiiRyUemLss52yRIkbcVjMahz1+Na
-         6WAWr41T8jk9U4Smu2sh6qBJfVj5JCwOddjl05SvhwCioq3/5OGDAh3StFSU1cxCWu2b
-         N5yYBXmNhS16pNPCFQSlw7KeukX4oDq1bUSKOijD3XXrmLLycKsSFF6tuorTjYKF/Ca8
-         7kDQ==
-X-Gm-Message-State: AOJu0YwFpLGEnvY01HBQk8MTTjRuldcxVG8XEkccbnkkPneFK9JRr13Q
-	3v639ajHIChQv0mKs4T/TxfIBWfeqPI=
-X-Google-Smtp-Source: AGHT+IEixIM7V9jXUvQI2iY90FGeBw9eNcXJcsg0YhY579MahaeWwDFx+r2X2Fo8ANAZMdHPBZ1vYA==
-X-Received: by 2002:a17:902:d346:b0:1cc:3932:4a87 with SMTP id l6-20020a170902d34600b001cc39324a87mr588713plk.56.1700607412734;
-        Tue, 21 Nov 2023 14:56:52 -0800 (PST)
+        bh=pHi5YlXCcsX/D19JuU9Nw7CLS9+F6yhOBOO+wjnP29E=;
+        b=MtmmtrEVs8W0K7YmHL0aSsy4KlgbCiR/rzEoaxxd5xgwo6yySKIEcftF7a0eDvv5mW
+         sV3En1IQR2ITwWxA/VZvWTgYismKndDmu2SujOe6djQOnmzzw5WjZIG/jUf796bR1aMh
+         sh2pdnh1tpajr+3Mlca7eIzXmCJhVnnRAJ5DMHZO7Bmzhxs7oS0pe/9DI9kug2oTyeG/
+         JsF+ACBz/WxwiOu+PrN2SA/V4/lqhfbljF9Z19dghmlWxf/C2IstNvmhoPhbOF6VKUXI
+         dF+6V4pyoJoO00MS6/Yg4floS8gsSbgACoGnjkfmWA5weSVC/ixWDm+VfRESce3FI7d3
+         JoUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700607418; x=1701212218;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pHi5YlXCcsX/D19JuU9Nw7CLS9+F6yhOBOO+wjnP29E=;
+        b=iVwc9nEIheyTCs/+WJ+947PMVdO1zTldADUa5yo0JnccNN5/TOHzAd6HE5iwvqj6ih
+         QQuMihy4cGfbENu6+YvjKsWx5L9OUHt5L8jdzbukHqb/vcOszYzqT+iw6wz1JNEAFIsm
+         Xnr5JLAlqWhIcfoS6axPBhzgNsGE0oEENFztz6fIBzEglrJBg8jY78riOA/E8IbapcYb
+         Dc9/YcZ2XQd1hRBlBSgZ/YOXSrUZG4ecHIFrNp5yJFp2zRFKz2buE/VvGExSACXA+CCz
+         bntL2SVz7ABcJ3mywbqw9w2mdh5fJA4RadkIysAYFcK6PRR5fPhDJdhrKtFD3GvhXNaf
+         iq8g==
+X-Gm-Message-State: AOJu0YzMiCcI1hT2KwER33RCOLOmXYkzq2T7h6/cD4Yy6i7iHYd6jqxN
+	k5Jtk/ju2MK5utyvZoFCzXg=
+X-Google-Smtp-Source: AGHT+IE6s57NYG7jptMBdy5DVewa70KWUQtBlIN7PP5AfrSGIy85Ot97zH3PYYTC8wgjLQNl/n6VtQ==
+X-Received: by 2002:a17:902:c94b:b0:1c5:cf7c:4d50 with SMTP id i11-20020a170902c94b00b001c5cf7c4d50mr1008200pla.18.1700607418027;
+        Tue, 21 Nov 2023 14:56:58 -0800 (PST)
 Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:7377:923f:1ff3:266d])
-        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b001cc47c1c29csm8413189plt.84.2023.11.21.14.56.50
+        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b001cc47c1c29csm8413189plt.84.2023.11.21.14.56.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 14:56:51 -0800 (PST)
+        Tue, 21 Nov 2023 14:56:57 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -47,16 +48,17 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH 01/14] tools headers UAPI: Update tools's copy of drm headers
-Date: Tue, 21 Nov 2023 14:56:36 -0800
-Message-ID: <20231121225650.390246-1-namhyung@kernel.org>
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	kvm@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	netdev@vger.kernel.org
+Subject: [PATCH 05/14] tools headers UAPI: Update tools's copy of vhost.h header
+Date: Tue, 21 Nov 2023 14:56:40 -0800
+Message-ID: <20231121225650.390246-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
+In-Reply-To: <20231121225650.390246-1-namhyung@kernel.org>
+References: <20231121225650.390246-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -108,71 +110,33 @@ So its important not to touch the copies in tools/ when doing changes in
 the original kernel headers, that will be done later, when
 check-headers.sh inform about the change to the perf tools hackers.
 
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: kvm@vger.kernel.org
+Cc: virtualization@lists.linux.dev
+Cc: netdev@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/include/uapi/drm/drm.h      | 20 ++++++++++++++++++++
- tools/include/uapi/drm/i915_drm.h |  8 ++++----
- 2 files changed, 24 insertions(+), 4 deletions(-)
+ tools/include/uapi/linux/vhost.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
-index 794c1d857677..de723566c5ae 100644
---- a/tools/include/uapi/drm/drm.h
-+++ b/tools/include/uapi/drm/drm.h
-@@ -1134,6 +1134,26 @@ extern "C" {
- #define DRM_IOCTL_MODE_PAGE_FLIP	DRM_IOWR(0xB0, struct drm_mode_crtc_page_flip)
- #define DRM_IOCTL_MODE_DIRTYFB		DRM_IOWR(0xB1, struct drm_mode_fb_dirty_cmd)
- 
-+/**
-+ * DRM_IOCTL_MODE_CREATE_DUMB - Create a new dumb buffer object.
-+ *
-+ * KMS dumb buffers provide a very primitive way to allocate a buffer object
-+ * suitable for scanout and map it for software rendering. KMS dumb buffers are
-+ * not suitable for hardware-accelerated rendering nor video decoding. KMS dumb
-+ * buffers are not suitable to be displayed on any other device than the KMS
-+ * device where they were allocated from. Also see
-+ * :ref:`kms_dumb_buffer_objects`.
-+ *
-+ * The IOCTL argument is a struct drm_mode_create_dumb.
-+ *
-+ * User-space is expected to create a KMS dumb buffer via this IOCTL, then add
-+ * it as a KMS framebuffer via &DRM_IOCTL_MODE_ADDFB and map it via
-+ * &DRM_IOCTL_MODE_MAP_DUMB.
-+ *
-+ * &DRM_CAP_DUMB_BUFFER indicates whether this IOCTL is supported.
-+ * &DRM_CAP_DUMB_PREFERRED_DEPTH and &DRM_CAP_DUMB_PREFER_SHADOW indicate
-+ * driver preferences for dumb buffers.
-+ */
- #define DRM_IOCTL_MODE_CREATE_DUMB DRM_IOWR(0xB2, struct drm_mode_create_dumb)
- #define DRM_IOCTL_MODE_MAP_DUMB    DRM_IOWR(0xB3, struct drm_mode_map_dumb)
- #define DRM_IOCTL_MODE_DESTROY_DUMB    DRM_IOWR(0xB4, struct drm_mode_destroy_dumb)
-diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
-index 7000e5910a1d..218edb0a96f8 100644
---- a/tools/include/uapi/drm/i915_drm.h
-+++ b/tools/include/uapi/drm/i915_drm.h
-@@ -38,13 +38,13 @@ extern "C" {
+diff --git a/tools/include/uapi/linux/vhost.h b/tools/include/uapi/linux/vhost.h
+index f5c48b61ab62..649560c685f1 100644
+--- a/tools/include/uapi/linux/vhost.h
++++ b/tools/include/uapi/linux/vhost.h
+@@ -219,4 +219,12 @@
   */
+ #define VHOST_VDPA_RESUME		_IO(VHOST_VIRTIO, 0x7E)
  
- /**
-- * DOC: uevents generated by i915 on it's device node
-+ * DOC: uevents generated by i915 on its device node
-  *
-  * I915_L3_PARITY_UEVENT - Generated when the driver receives a parity mismatch
-- *	event from the gpu l3 cache. Additional information supplied is ROW,
-+ *	event from the GPU L3 cache. Additional information supplied is ROW,
-  *	BANK, SUBBANK, SLICE of the affected cacheline. Userspace should keep
-- *	track of these events and if a specific cache-line seems to have a
-- *	persistent error remap it with the l3 remapping tool supplied in
-+ *	track of these events, and if a specific cache-line seems to have a
-+ *	persistent error, remap it with the L3 remapping tool supplied in
-  *	intel-gpu-tools.  The value supplied with the event is always 1.
-  *
-  * I915_ERROR_UEVENT - Generated upon error detection, currently only via
++/* Get the group for the descriptor table including driver & device areas
++ * of a virtqueue: read index, write group in num.
++ * The virtqueue index is stored in the index field of vhost_vring_state.
++ * The group ID of the descriptor table for this specific virtqueue
++ * is returned via num field of vhost_vring_state.
++ */
++#define VHOST_VDPA_GET_VRING_DESC_GROUP	_IOWR(VHOST_VIRTIO, 0x7F,	\
++					      struct vhost_vring_state)
+ #endif
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
