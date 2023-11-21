@@ -1,147 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48DA5B1E2
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Nov 2023 17:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3745B1E8
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Nov 2023 17:23:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdjlrNYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D45CC433C7;
-	Tue, 21 Nov 2023 17:21:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyWpJe5O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 748E7C433C8;
+	Tue, 21 Nov 2023 17:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700587304;
-	bh=aTJWlG4/89RSZo7lqtYiYHxKSO1In+COa2oKMyyaAiw=;
+	s=k20201202; t=1700587404;
+	bh=/AUV+T6dC4Jy/S3IQTHApQXK2DkGP6Vfy23a7EuIvPY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tdjlrNYsCBlBXHs2rsBylv2ju5LVVItyFohcZG+xaLMlxMolNHhN+NYggcVDFfmrG
-	 G4Sszr55VVjURjnulIp3T3OlqW35DHecMV9DvFnvaemwlCzy7e2m8aGzQILrjpKbYx
-	 smPRIBNbEUQQSRyxg3RcCMAI3vW5S8cPTO746siMRoTBgQqmV2JwZ1CrPxo86qZM6B
-	 tmB5mcXzQT6E4SvIjTz249mjIDmYznD7+C9YKfeBpvYxlvTdlgj0AFfRbwr/PVL9ka
-	 datQzrF07aoJWBtbRKhP/U9oYfyMnRaJ1sz10tuk50ntDyZ3GjJNX/Fw1y8obL9tVa
-	 c78O/nFLpWXwA==
+	b=tyWpJe5OcyLhfTFF9PqLPR/vnTVJ7yoOnLGeFEtTT25znxVoqK+4d/dJ0dtzqWDNA
+	 rdvdL3bjdTlNNQxeL8rP5TToGieiLWX9BoyIG3WmEOBkrr12BvI9rUak6CPmcSTf6c
+	 dhgI070/vfz8QdhZORqr1uHKT8h1jZMR4RXX/VWMunzaXCrCtHYnppnCaz45Q40Kph
+	 jWP0VYWzr9k3etTsgqixpQbL9ils+kQbsPngzcBIPWJlw5VaTeLdaJMMpxf2gFPGj9
+	 ShKIyiEUAPKR4X0yVyqQZ+XUiIqEZXum19BcafJ147FvZ3imDP4jnu3Qk8G+ZPWKcS
+	 eYYcr6i/dxrMg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 1EF9B40094; Tue, 21 Nov 2023 14:21:41 -0300 (-03)
-Date: Tue, 21 Nov 2023 14:21:41 -0300
+	id 2FD1640094; Tue, 21 Nov 2023 14:23:22 -0300 (-03)
+Date: Tue, 21 Nov 2023 14:23:22 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Paran Lee <p4ranlee@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	shjy180909@gmail.com, austindh.kim@gmail.com, honggyu.kp@gmail.com
-Subject: Re: [PATCH V3 RESEND] perf script python: Fail check on dynamic
- allocation
-Message-ID: <ZVznJS+LF7fySGom@kernel.org>
-References: <20231120223218.9036-1-p4ranlee@gmail.com>
- <4890f020-b4ad-4a50-9394-2cf4be1c19ca@intel.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf script perl: Fail check on dynamic allocation
+Message-ID: <ZVznim5Grz/biW76@kernel.org>
+References: <20231120112356.8652-1-zhaimingbing@cmss.chinamobile.com>
+ <CAP-5=fU4FBah=S_C7Zwh3MSNjwWtT5WrVB9OCc1jRM3eDCykng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4890f020-b4ad-4a50-9394-2cf4be1c19ca@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU4FBah=S_C7Zwh3MSNjwWtT5WrVB9OCc1jRM3eDCykng@mail.gmail.com>
 X-Url: http://acmel.wordpress.com
 
-Em Tue, Nov 21, 2023 at 09:39:12AM +0200, Adrian Hunter escreveu:
-> On 21/11/23 00:32, Paran Lee wrote:
-> > Add PyList_New() Fail check in get_field_numeric_entry()
-> > function and dynamic allocation checking for
-> > set_regs_in_dict(), python_start_script().
-> > 
-> > Signed-off-by: Paran Lee <p4ranlee@gmail.com>
-> > Reviewed-by: MichelleJin <shjy180909@gmail.com>
-> > Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Em Mon, Nov 20, 2023 at 04:30:28PM -0800, Ian Rogers escreveu:
+> On Mon, Nov 20, 2023 at 3:24 AM zhaimingbing
+> <zhaimingbing@cmss.chinamobile.com> wrote:
+> >
+> > Return ENOMEM when dynamic allocation failed.
+> >
+> > Signed-off-by: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
 > 
-> I did not give a Reviewed-by tag.
-> 
-> Please never assume someone else's tag.  It breaks the process.
-> 
-> However, I have now reviewed it, so:
-> 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks, applied.
+Thanks, applied to perf-tools-next.
 
 - Arnaldo
+
  
-> > ---
-> >  .../util/scripting-engines/trace-event-python.c | 17 +++++++++++++++--
-> >  1 file changed, 15 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> > index 94312741443a..860e1837ba96 100644
-> > --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> > +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> > @@ -353,6 +353,8 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
-> >  
-> >  	if (is_array) {
-> >  		list = PyList_New(field->arraylen);
-> > +		if (!list)
-> > +			Py_FatalError("couldn't create Python list");
-> >  		item_size = field->size / field->arraylen;
-> >  		n_items = field->arraylen;
-> >  	} else {
-> > @@ -754,7 +756,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
-> >  	}
-> >  }
-> >  
-> > -static void set_regs_in_dict(PyObject *dict,
-> > +static int set_regs_in_dict(PyObject *dict,
-> >  			     struct perf_sample *sample,
-> >  			     struct evsel *evsel)
-> >  {
-> > @@ -770,6 +772,8 @@ static void set_regs_in_dict(PyObject *dict,
-> >  	 */
-> >  	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
-> >  	char *bf = malloc(size);
-> > +	if (!bf)
-> > +		return -1;
-> >  
-> >  	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
-> >  
-> > @@ -781,6 +785,8 @@ static void set_regs_in_dict(PyObject *dict,
-> >  	pydict_set_item_string_decref(dict, "uregs",
-> >  			_PyUnicode_FromString(bf));
-> >  	free(bf);
-> > +
-> > +	return 0;
-> >  }
-> >  
-> >  static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
-> > @@ -920,7 +926,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
-> >  			PyLong_FromUnsignedLongLong(sample->cyc_cnt));
-> >  	}
-> >  
-> > -	set_regs_in_dict(dict, sample, evsel);
-> > +	if (set_regs_in_dict(dict, sample, evsel))
-> > +		Py_FatalError("Failed to setting regs in dict");
-> >  
-> >  	return dict;
-> >  }
-> > @@ -1918,12 +1925,18 @@ static int python_start_script(const char *script, int argc, const char **argv,
-> >  	scripting_context->session = session;
-> >  #if PY_MAJOR_VERSION < 3
-> >  	command_line = malloc((argc + 1) * sizeof(const char *));
-> > +	if (!command_line)
-> > +		return -1;
-> > +
-> >  	command_line[0] = script;
-> >  	for (i = 1; i < argc + 1; i++)
-> >  		command_line[i] = argv[i - 1];
-> >  	PyImport_AppendInittab(name, initperf_trace_context);
-> >  #else
-> >  	command_line = malloc((argc + 1) * sizeof(wchar_t *));
-> > +	if (!command_line)
-> > +		return -1;
-> > +
-> >  	command_line[0] = Py_DecodeLocale(script, NULL);
-> >  	for (i = 1; i < argc + 1; i++)
-> >  		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+> Thanks,
+> Ian
 > 
+> > ---
+> >  tools/perf/util/scripting-engines/trace-event-perl.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+> > index 603091317..b072ac5d3 100644
+> > --- a/tools/perf/util/scripting-engines/trace-event-perl.c
+> > +++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+> > @@ -490,6 +490,9 @@ static int perl_start_script(const char *script, int argc, const char **argv,
+> >         scripting_context->session = session;
+> >
+> >         command_line = malloc((argc + 2) * sizeof(const char *));
+> > +       if (!command_line)
+> > +               return -ENOMEM;
+> > +
+> >         command_line[0] = "";
+> >         command_line[1] = script;
+> >         for (i = 2; i < argc + 2; i++)
+> > --
+> > 2.33.0
+> >
+> >
+> >
+> >
 
 -- 
 
