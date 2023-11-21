@@ -1,38 +1,63 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bOAZPPxG"
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [IPv6:2001:41d0:203:375::bd])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2F4194
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Nov 2023 11:30:22 -0800 (PST)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1700595021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+mQR8cKzw4YvxUsn4BIfi8vpujv8/0B55bVmVxQ9uDc=;
-	b=bOAZPPxG+2wifGfQxb6o7Y39f0IQP1/cOSAvqSwmixPtocXDF8HnfqYf3LEIbi8hZHR1kb
-	Czi+LqhTNmnJi9BLAMt8JDNfam2eIPS6gtdpxSsIDNWWUSQdos+0qNSPAuwueh71gE9qGu
-	cf1TfWAnUOiA0vtHeqY76mWKMGWr4y8=
-From: Oliver Upton <oliver.upton@linux.dev>
-To: linux-perf-users@vger.kernel.org
-Cc: kvmarm@lists.linux.dev,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEu6w1af"
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D52719E;
+	Tue, 21 Nov 2023 14:56:54 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1cc938f9612so40361575ad.1;
+        Tue, 21 Nov 2023 14:56:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700607414; x=1701212214; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wo5dqey6I8QbyZ6Fam9wAbARY07XFw/XeE4bQ28EgY0=;
+        b=JEu6w1afdz8Hu27VUzP9Khj5RCJ7GpOn5dgugyME5UtqgJd2CWujQuZ+EBBOuckNKF
+         QvgxGntVtrFXpj6dJYcGudmkYF7SJtSqrGw14OZDUaA+9Etc5ULDYPgb8IEOcM51TbZy
+         XPJeL6dwoJ544kri/7bWwEvT3aGTz4rgGh4/BRKH+3cHkReS/uLoiGWtY8ko6PRrQDTg
+         gqqKDQd8dvJF+vSKQ9aL31kQ0VcZAVnYOE7Od0bbi7u7eZ+u8LaM5QYecIWcToNcfDeX
+         /MmOj9MYiLbkT9jUGoEfA/DTAqhL3LYuL4GvPZ0c6dFLsqz2nA/SJyb51h4+p/um4jSa
+         23zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700607414; x=1701212214;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wo5dqey6I8QbyZ6Fam9wAbARY07XFw/XeE4bQ28EgY0=;
+        b=SrDFeAc14cxHFbXaGUWCGLXAMpztgZuzzyJdt9jQtxGHdE1d8Lizobg5GoEmomvHO2
+         gPxXsR5jYNI/ciVB/ojyem6x+WKeSIdZSKNrHqaHD9JJkFsuCTkgUR+e9sdGU2j1JkeD
+         HZXSGgkrGVu1RLphm+CPBhLHWAkQnxLKLtKAB0uf48c9v0ViCm4UFKHetqIDnRENLMqL
+         6y9qJVkQ3ipHjxkglK0Lu6Oc+DCeWeYETZCo8aKi9NDK6KHvkz99Wj+bimbmt9mOzuIc
+         7OuBDCQt1xiJWZHaH0ZIfgjwyWCyugRBvrQDSHVaNda3B7dsNTeBeI7TsQmIVSa3qt6Y
+         zzAQ==
+X-Gm-Message-State: AOJu0Yx5n0ujhgIBcOtY/lKFIZbQ4n9GyIyi0rvvLV19gZ9GKzj6i6wG
+	+oWEE2WdOD4e+MOOMlTCZstkm7X/now=
+X-Google-Smtp-Source: AGHT+IGIxq+l3yx4uYvZ5XmfPTWhnQX0FwJnRjQlkZ5Na4RwXZf6doms4MSbaTaFoR61OXOoFguLJQ==
+X-Received: by 2002:a17:903:11ce:b0:1cf:66a3:16c with SMTP id q14-20020a17090311ce00b001cf66a3016cmr649997plh.21.1700607413955;
+        Tue, 21 Nov 2023 14:56:53 -0800 (PST)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:7377:923f:1ff3:266d])
+        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b001cc47c1c29csm8413189plt.84.2023.11.21.14.56.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Nov 2023 14:56:53 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: [PATCH 2/2] perf build: Ensure sysreg-defs Makefile respects output dir
-Date: Tue, 21 Nov 2023 19:29:56 +0000
-Message-ID: <20231121192956.919380-3-oliver.upton@linux.dev>
-In-Reply-To: <20231121192956.919380-1-oliver.upton@linux.dev>
-References: <20231121192956.919380-1-oliver.upton@linux.dev>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Eric Biggers <ebiggers@kernel.org>,
+	"Theodore Y. Ts'o" <tytso@mit.edu>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	linux-fscrypt@vger.kernel.org
+Subject: [PATCH 02/14] tools headers UAPI: Update tools's copy of fscrypt.h header
+Date: Tue, 21 Nov 2023 14:56:37 -0800
+Message-ID: <20231121225650.390246-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
+In-Reply-To: <20231121225650.390246-1-namhyung@kernel.org>
+References: <20231121225650.390246-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,111 +65,73 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Currently the sysreg-defs are written out to the source tree
-unconditionally, ignoring the specified output directory. Correct the
-build rule to emit the header to the output directory. Opportunistically
-reorganize the rules to avoid interleaving with the set of beauty make
-rules.
+tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-Reported-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+Full explanation:
+
+There used to be no copies, with tools/ code using kernel headers
+directly. From time to time tools/perf/ broke due to legitimate kernel
+hacking. At some point Linus complained about such direct usage. Then we
+adopted the current model.
+
+The way these headers are used in perf are not restricted to just
+including them to compile something.
+
+There are sometimes used in scripts that convert defines into string
+tables, etc, so some change may break one of these scripts, or new MSRs
+may use some different #define pattern, etc.
+
+E.g.:
+
+  $ ls -1 tools/perf/trace/beauty/*.sh | head -5
+  tools/perf/trace/beauty/arch_errno_names.sh
+  tools/perf/trace/beauty/drm_ioctl.sh
+  tools/perf/trace/beauty/fadvise.sh
+  tools/perf/trace/beauty/fsconfig.sh
+  tools/perf/trace/beauty/fsmount.sh
+  $
+  $ tools/perf/trace/beauty/fadvise.sh
+  static const char *fadvise_advices[] = {
+        [0] = "NORMAL",
+        [1] = "RANDOM",
+        [2] = "SEQUENTIAL",
+        [3] = "WILLNEED",
+        [4] = "DONTNEED",
+        [5] = "NOREUSE",
+  };
+  $
+
+The tools/perf/check-headers.sh script, part of the tools/ build
+process, points out changes in the original files.
+
+So its important not to touch the copies in tools/ when doing changes in
+the original kernel headers, that will be done later, when
+check-headers.sh inform about the change to the perf tools hackers.
+
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-fscrypt@vger.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/arch/arm64/tools/Makefile      |  2 +-
- tools/perf/Makefile.perf             | 24 +++++++++++++++---------
- tools/perf/util/Build                |  2 +-
- tools/testing/selftests/kvm/Makefile |  5 +++--
- 4 files changed, 20 insertions(+), 13 deletions(-)
+ tools/include/uapi/linux/fscrypt.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/arch/arm64/tools/Makefile b/tools/arch/arm64/tools/Makefile
-index 7f64b8bb5107..7b42feedf647 100644
---- a/tools/arch/arm64/tools/Makefile
-+++ b/tools/arch/arm64/tools/Makefile
-@@ -22,7 +22,7 @@ endif
- arm64_tools_dir = $(top_srcdir)/arch/arm64/tools
- arm64_sysreg_tbl = $(arm64_tools_dir)/sysreg
- arm64_gen_sysreg = $(arm64_tools_dir)/gen-sysreg.awk
--arm64_generated_dir = $(top_srcdir)/tools/arch/arm64/include/generated
-+arm64_generated_dir = $(OUTPUT)arch/arm64/include/generated
- arm64_sysreg_defs = $(arm64_generated_dir)/asm/sysreg-defs.h
+diff --git a/tools/include/uapi/linux/fscrypt.h b/tools/include/uapi/linux/fscrypt.h
+index fd1fb0d5389d..7a8f4c290187 100644
+--- a/tools/include/uapi/linux/fscrypt.h
++++ b/tools/include/uapi/linux/fscrypt.h
+@@ -71,7 +71,8 @@ struct fscrypt_policy_v2 {
+ 	__u8 contents_encryption_mode;
+ 	__u8 filenames_encryption_mode;
+ 	__u8 flags;
+-	__u8 __reserved[4];
++	__u8 log2_data_unit_size;
++	__u8 __reserved[3];
+ 	__u8 master_key_identifier[FSCRYPT_KEY_IDENTIFIER_SIZE];
+ };
  
- all: $(arm64_sysreg_defs)
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d88da787e815..058c9aecf608 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -434,6 +434,21 @@ export INSTALL SHELL_PATH
- 
- SHELL = $(SHELL_PATH)
- 
-+arm64_gen_sysreg_dir := $(srctree)/tools/arch/arm64/tools
-+ifneq ($(OUTPUT),)
-+  arm64_gen_sysreg_outdir := $(OUTPUT)
-+else
-+  arm64_gen_sysreg_outdir := $(CURDIR)
-+endif
-+
-+arm64-sysreg-defs: FORCE
-+	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) O=$(arm64_gen_sysreg_outdir)
-+
-+arm64-sysreg-defs-clean:
-+	$(call QUIET_CLEAN,arm64-sysreg-defs)
-+	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) O=$(arm64_gen_sysreg_outdir) \
-+		clean > /dev/null
-+
- beauty_linux_dir := $(srctree)/tools/perf/trace/beauty/include/linux/
- linux_uapi_dir := $(srctree)/tools/include/uapi/linux
- asm_generic_uapi_dir := $(srctree)/tools/include/uapi/asm-generic
-@@ -450,15 +465,6 @@ drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
- # Create output directory if not already present
- _dummy := $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
- 
--arm64_gen_sysreg_dir := $(srctree)/tools/arch/arm64/tools
--
--arm64-sysreg-defs: FORCE
--	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir)
--
--arm64-sysreg-defs-clean:
--	$(call QUIET_CLEAN,arm64-sysreg-defs)
--	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) clean > /dev/null
--
- $(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
- 	$(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
- 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index fb661c48992f..988473bf907a 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -347,7 +347,7 @@ CFLAGS_rbtree.o        += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ET
- CFLAGS_libstring.o     += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
- CFLAGS_hweight.o       += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
- CFLAGS_header.o        += -include $(OUTPUT)PERF-VERSION-FILE
--CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/ -I$(srctree)/tools/arch/arm64/include/generated/
-+CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/ -I$(OUTPUT)arch/arm64/include/generated/
- 
- $(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
- 	$(call rule_mkdir)
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index a5963ab9215b..52c59bad7213 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -18,12 +18,13 @@ else
- endif
- 
- ifeq ($(ARCH),arm64)
--arm64_tools_dir := $(top_srcdir)/tools/arch/arm64/tools/
-+tools_dir := $(top_srcdir)/tools
-+arm64_tools_dir := $(tools_dir)/arch/arm64/tools/
- GEN_HDRS := $(top_srcdir)/tools/arch/arm64/include/generated/
- CFLAGS += -I$(GEN_HDRS)
- 
- $(GEN_HDRS): $(wildcard $(arm64_tools_dir)/*)
--	$(MAKE) -C $(arm64_tools_dir)
-+	$(MAKE) -C $(arm64_tools_dir) O=$(tools_dir)
- endif
- 
- LIBKVM += lib/assert.c
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
