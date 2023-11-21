@@ -1,159 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A4919E;
-	Tue, 21 Nov 2023 08:55:38 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id E75F224DCA6;
-	Wed, 22 Nov 2023 00:55:35 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 22 Nov
- 2023 00:55:36 +0800
-Received: from localhost.localdomain (202.188.176.82) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 22 Nov
- 2023 00:55:30 +0800
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: <irogers@google.com>
-CC: <acme@kernel.org>, <adrian.hunter@intel.com>,
-	<alexander.shishkin@linux.intel.com>, <aou@eecs.berkeley.edu>,
-	<jisheng.teoh@starfivetech.com>, <jolsa@kernel.org>,
-	<leyfoon.tan@starfivetech.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<mark.rutland@arm.com>, <mingo@redhat.com>, <n.shubin@yadro.com>,
-	<namhyung@kernel.org>, <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
-	<peterz@infradead.org>
-Subject: Re: [PATCH v3] perf vendor events riscv: add StarFive Dubhe-90 JSON file
-Date: Wed, 22 Nov 2023 00:53:39 +0800
-Message-ID: <20231121165339.2177083-1-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAP-5=fVgD7sc1uP5G-Q_bo8bf82rncFt=LLTA725csAT7g63rA@mail.gmail.com>
-References: <CAP-5=fVgD7sc1uP5G-Q_bo8bf82rncFt=LLTA725csAT7g63rA@mail.gmail.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043D458108
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Nov 2023 17:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y94UqoRH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49119C433C8;
+	Tue, 21 Nov 2023 17:04:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700586269;
+	bh=o2lje6MLDqWiG8m5cmgUnmkPV9kdCM+y2t1aBGDhWPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y94UqoRHkQKyT5snXO0zL0cPLp27Whhzi57swkI35O5TtB6q4bKXBNqhbs5SvmZJB
+	 by9FFd97dtah0xc3DfQ0ViQCQYpI9c5xwEjNE4yhdG7071a3XmTSknkdfiYfHgtZyM
+	 BdV/Rmo/4vYAbqWfKjOw5BWYc5JRahNpq+FaoiK8gcIm3ff5VgpxQoSVcJ6bHDsRP7
+	 uiXgqvpW4VAoqVZXXdVBXxiFz9WRh9apr1KMfD54qNy5y+BKu3Wfcz6SouVYGg2x4f
+	 6OfQevim5IEEFt/1Nnus3bCgBsDSpXoGVA9PeGIlCuvMjKXPOZlvr40+DLwBWHxoBU
+	 3MuftqI16U5mw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id D280640094; Tue, 21 Nov 2023 14:04:26 -0300 (-03)
+Date: Tue, 21 Nov 2023 14:04:26 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@arm.com>
+Cc: Nick Forrington <nick.forrington@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH] perf test: Remove atomics from test_loop to avoid test
+ failures
+Message-ID: <ZVzjGqKv9GxYATli@kernel.org>
+References: <20231102162225.50028-1-nick.forrington@arm.com>
+ <9e3355e0-f0d6-5f82-d2f6-b7e84bda996c@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-X-Originating-IP: [202.188.176.82]
-X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9e3355e0-f0d6-5f82-d2f6-b7e84bda996c@arm.com>
+X-Url: http://acmel.wordpress.com
 
-On Tue, 21 Nov 2023 07:25:21 -0800
-Ian Rogers <irogers@google.com> wrote:
+Em Fri, Nov 03, 2023 at 09:14:45AM +0000, James Clark escreveu:
+> On 02/11/2023 16:22, Nick Forrington wrote:
+> > The current use of atomics can lead to test failures, as tests (such as
+> > tests/shell/record.sh) search for samples with "test_loop" as the
+> > top-most stack frame, but find frames related to the atomic operation
+> > (e.g. __aarch64_ldadd4_relax).
 
-> On Wed, Nov 8, 2023 at 11:51=E2=80=AFPM Ji Sheng Teoh
-> <jisheng.teoh@starfivetech.com> wrote:
-> >
-> > StarFive's Dubhe-90 supports raw event id 0x00 - 0x22.
-> > The raw events are enabled through PMU node of DT binding.
-> > Besides raw event, add standard RISC-V firmware events to
-> > support monitoring of firmware event.
-> >
-> > Example of PMU DT node:
-> > pmu {
-> >         compatible =3D "riscv,pmu";
-> >         riscv,raw-event-to-mhpmcounters =3D
-> >                 /* Event ID 1-31 */
-> >                 <0x00 0x00 0xFFFFFFFF 0xFFFFFFE0 0x00007FF8>,
-> >                 /* Event ID 32-33 */
-> >                 <0x00 0x20 0xFFFFFFFF 0xFFFFFFFE 0x00007FF8>,
-> >                 /* Event ID 34 */
-> >                 <0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;
-> > };
-> >
-> > Perf stat output:
-> > [root@user]# perf stat -a \
-> >         -e access_mmu_stlb \
-> >         -e miss_mmu_stlb \
-> >         -e access_mmu_pte_c \
-> >         -e rob_flush \
-> >         -e btb_prediction_miss \
-> >         -e itlb_miss \
-> >         -e sync_del_fetch_g \
-> >         -e icache_miss \
-> >         -e bpu_br_retire \
-> >         -e bpu_br_miss \
-> >         -e ret_ins_retire \
-> >         -e ret_ins_miss \
-> >         -- openssl speed rsa2048
-> > Doing 2048 bits private rsa's for 10s: 39 2048 bits private RSA's in
-> > 10.03s
-> > Doing 2048 bits public rsa's for 10s: 1469 2048 bits public RSA's in
-> > 9.47s
-> > version: 3.0.10
-> > built on: Tue Aug  1 13:47:24 2023 UTC
-> > options: bn(64,64)
-> > CPUINFO: N/A
-> >                   sign    verify    sign/s verify/s
-> > rsa 2048 bits 0.257179s 0.006447s      3.9    155.1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> >            3112882      access_mmu_stlb
-> >              10550      miss_mmu_stlb
-> >              18251      access_mmu_pte_c
-> >             274765      rob_flush
-> >           22470560      btb_prediction_miss
-> >            3035839      itlb_miss
-> >          643549060      sync_del_fetch_g
-> >             133013      icache_miss
-> >           62982796      bpu_br_retire
-> >             287548      bpu_br_miss
-> >            8935910      ret_ins_retire
-> >               8308      ret_ins_miss
-> >
-> >       20.656182600 seconds time elapsed
-> >
-> > Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-> > Reviewed-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
-> > ---
-> > Changelog:
-> > v2 -> v3:
-> > - Add standard RISC-V firmware event
-> > - Update commit message to reflect addition of standard
-> >   RISC-V firmware event.
-> > v1 -> v2:
-> > - Rename 'Starfive Dubhe' to 'StarFive Dubhe-90' in commit message.
-> > - Rename 'starfive/dubhe' pmu-events folder to 'starfive/dubhe-90'
-> > - Update MARCHID to 0x80000000db000090 in mapfile.csv
-> > ---
-> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
-> >  .../arch/riscv/starfive/dubhe-90/common.json  | 172
-> > ++++++++++++++++++ .../riscv/starfive/dubhe-90/firmware.json     |
-> > 68 +++++++ 3 files changed, 241 insertions(+)
-> >  create mode 100644
-> > tools/perf/pmu-events/arch/riscv/starfive/dubhe-90/common.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/starfive/dubhe-90/firmware.json
-> >
-> > diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-> > b/tools/perf/pmu-events/arch/riscv/mapfile.csv index
-> > c61b3d6ef616..5b75ecfe206d 100644 ---
-> > a/tools/perf/pmu-events/arch/riscv/mapfile.csv +++
-> > b/tools/perf/pmu-events/arch/riscv/mapfile.csv @@ -15,3 +15,4 @@
-> >  #
-> >  #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
-> >  0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-> > +0x67e-0x80000000db000090-0x[[:xdigit:]]+,v1,starfive/dubhe-90,core
-> > =20
->=20
-> I've no problem with this approach, but dubhe-90's json files match
-> dubhe-80s. Those files are available in perf-tools-next:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80?h=3Dperf-tools-=
-next
-> It could be useful to rebase the patch on that branch to make it
-> easier to merge. As the files match you could make the regular
-> expression for dubhe-80 match both of them like:
->=20
-> 0x67e-0x80000000db0000[89]0-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
->=20
-> Thanks,
-> Ian
+> > This change simply removes the "count" variable, as it is not necessary.
 
-Thanks Ian. The suggestion makes sense, will take it in and rebase in
-v4.
+> > Fixes: 1962ab6f6e0b ("perf test workload thloop: Make count increments atomic")
+> > Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+
+> > +++ b/tools/perf/tests/workloads/thloop.c
+> > @@ -7,7 +7,6 @@
+> >   #include "../tests.h"
+> >   static volatile sig_atomic_t done;
+> > -static volatile unsigned count;
+> >   /* We want to check this symbol in perf report */
+> >   noinline void test_loop(void);
+> > @@ -19,8 +18,7 @@ static void sighandler(int sig __maybe_unused)
+> >   noinline void test_loop(void)
+> >   {
+> > -	while (!done)
+> > -		__atomic_fetch_add(&count, 1, __ATOMIC_RELAXED);
+> > +	while (!done);
+> >   }
+> >   static void *thfunc(void *arg)
+ 
+> Reviewed-by: James Clark <james.clark@arm.com>
+
+Thanks, applied to perf-tools-next.
+
+- Arnaldo
+
