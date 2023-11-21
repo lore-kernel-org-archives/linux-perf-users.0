@@ -1,15 +1,15 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4E42495;
-	Tue, 21 Nov 2023 02:47:16 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1A46FCA;
+	Tue, 21 Nov 2023 03:12:27 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8D37FEC;
-	Tue, 21 Nov 2023 02:48:02 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77650FEC;
+	Tue, 21 Nov 2023 03:13:13 -0800 (PST)
 Received: from [10.163.36.237] (unknown [10.163.36.237])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EB713F6C4;
-	Tue, 21 Nov 2023 02:47:11 -0800 (PST)
-Message-ID: <616bed59-d3c5-4d33-aae7-ea93f63743d3@arm.com>
-Date: Tue, 21 Nov 2023 16:17:08 +0530
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F0063F7A6;
+	Tue, 21 Nov 2023 03:12:21 -0800 (PST)
+Message-ID: <20858eb9-a4d0-41be-ad1d-2a5f2d2fa0de@arm.com>
+Date: Tue, 21 Nov 2023 16:42:18 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -17,203 +17,200 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [V14 4/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
- via FEAT_BRBE
+Subject: Re: [V14 5/8] KVM: arm64: nvhe: Disable branch generation in nVHE
+ guests
 Content-Language: en-US
 To: James Clark <james.clark@arm.com>
 Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
  Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
- mark.rutland@arm.com
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
 References: <20231114051329.327572-1-anshuman.khandual@arm.com>
- <20231114051329.327572-5-anshuman.khandual@arm.com>
- <00f05970-c793-242e-485a-f987201651ad@arm.com>
+ <20231114051329.327572-6-anshuman.khandual@arm.com>
+ <f2661879-636c-1865-0e1c-60d8e11f80f0@arm.com>
 From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <00f05970-c793-242e-485a-f987201651ad@arm.com>
+In-Reply-To: <f2661879-636c-1865-0e1c-60d8e11f80f0@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 11/14/23 17:41, James Clark wrote:
+On 11/14/23 14:46, James Clark wrote:
 > 
 > 
 > On 14/11/2023 05:13, Anshuman Khandual wrote:
-> [...]
+>> Disable the BRBE before we enter the guest, saving the status and enable it
+>> back once we get out of the guest. This is just to avoid capturing records
+>> in the guest kernel/userspace, which would be confusing the samples.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Oliver Upton <oliver.upton@linux.dev>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: kvmarm@lists.linux.dev
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> CC: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> Changes in V14:
+>>
+>> - This is a new patch in the series
+>>
+>>  arch/arm64/include/asm/kvm_host.h  |  4 ++++
+>>  arch/arm64/kvm/debug.c             |  6 +++++
+>>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 38 ++++++++++++++++++++++++++++++
+>>  3 files changed, 48 insertions(+)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index 68421c74283a..1faa0430d8dd 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -449,6 +449,8 @@ enum vcpu_sysreg {
+>>  	CNTHV_CVAL_EL2,
+>>  	PMSCR_EL1,	/* Statistical profiling extension */
+>>  	TRFCR_EL1,	/* Self-hosted trace filters */
+>> +	BRBCR_EL1,	/* Branch Record Buffer Control Register */
+>> +	BRBFCR_EL1,	/* Branch Record Buffer Function Control Register */
+>>  
+>>  	NR_SYS_REGS	/* Nothing after this line! */
+>>  };
+>> @@ -753,6 +755,8 @@ struct kvm_vcpu_arch {
+>>  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
+>>  /* Save trace filter controls */
+>>  #define DEBUG_STATE_SAVE_TRFCR	__vcpu_single_flag(iflags, BIT(8))
+>> +/* Save BRBE context if active  */
+>> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(9))
+>>  
+>>  /* SVE enabled for host EL0 */
+>>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+>> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+>> index 2ab41b954512..4055783c3d34 100644
+>> --- a/arch/arm64/kvm/debug.c
+>> +++ b/arch/arm64/kvm/debug.c
+>> @@ -354,6 +354,11 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>>  		    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>>  			vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>>  	}
+>> +
+>> +	/* Check if we have BRBE implemented and available at the host */
+>> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT) &&
+>> +	    (read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+>> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
 > 
->> +/*
->> + * BRBE supports the following functional branch type filters while
->> + * generating branch records. These branch filters can be enabled,
->> + * either individually or as a group i.e ORing multiple filters
->> + * with each other.
->> + *
->> + * BRBFCR_EL1_CONDDIR  - Conditional direct branch
->> + * BRBFCR_EL1_DIRCALL  - Direct call
->> + * BRBFCR_EL1_INDCALL  - Indirect call
->> + * BRBFCR_EL1_INDIRECT - Indirect branch
->> + * BRBFCR_EL1_DIRECT   - Direct branch
->> + * BRBFCR_EL1_RTN      - Subroutine return
->> + */
->> +static u64 branch_type_to_brbfcr(int branch_type)
+> Isn't this supposed to just be the feature check? Whether BRBE is
+> enabled or not is checked later in __debug_save_brbe() anyway.
+
+Okay, will make it just a feature check via ID_AA64DFR0_EL1_BRBE_SHIFT.
+
+> 
+> It seems like it's possible to become enabled after this flag load part.
+
+Agreed.
+
+> 
+>>  }
+>>  
+>>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>> @@ -361,6 +366,7 @@ void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
+>> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>>  }
+>>  
+>>  void kvm_etm_set_guest_trfcr(u64 trfcr_guest)
+>> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> index 6174f710948e..e44a1f71a0f8 100644
+>> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> @@ -93,6 +93,38 @@ static void __debug_restore_trace(struct kvm_cpu_context *host_ctxt,
+>>  		write_sysreg_s(ctxt_sys_reg(host_ctxt, TRFCR_EL1), SYS_TRFCR_EL1);
+>>  }
+>>  
+>> +static void __debug_save_brbe(struct kvm_cpu_context *host_ctxt)
 >> +{
->> +	u64 brbfcr = 0;
+>> +	ctxt_sys_reg(host_ctxt, BRBCR_EL1) = 0;
+>> +	ctxt_sys_reg(host_ctxt, BRBFCR_EL1) = 0;
 >> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
->> +		brbfcr |= BRBFCR_EL1_BRANCH_FILTERS;
->> +		return brbfcr;
->> +	}
+>> +	/* Check if the BRBE is enabled */
+>> +	if (!(ctxt_sys_reg(host_ctxt, BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+>> +		return;
+> 
+> Doesn't this always fail, the host BRBCR_EL1 value was just cleared on
+> the line above.
+
+Agreed, this error might have slipped in while converting to ctxt_sys_reg().
+
+> 
+> Also, you need to read the register to determine if it was enabled or
+
+Right
+
+> not, so you might as well always store the real value, rather than 0 in
+> the not enabled case.
+
+But if it is not enabled - why store the real value ?
+
+> 
 >> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL) {
->> +		brbfcr |= BRBFCR_EL1_INDCALL;
->> +		brbfcr |= BRBFCR_EL1_DIRCALL;
->> +	}
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
->> +		brbfcr |= BRBFCR_EL1_RTN;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_CALL)
->> +		brbfcr |= BRBFCR_EL1_INDCALL;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_COND)
->> +		brbfcr |= BRBFCR_EL1_CONDDIR;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_JUMP)
->> +		brbfcr |= BRBFCR_EL1_INDIRECT;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_CALL)
->> +		brbfcr |= BRBFCR_EL1_DIRCALL;
->> +
->> +	return brbfcr;
+>> +	/*
+>> +	 * Prohibit branch record generation while we are in guest.
+>> +	 * Since access to BRBCR_EL1 and BRBFCR_EL1 is trapped, the
+>> +	 * guest can't modify the filtering set by the host.
+>> +	 */
+>> +	ctxt_sys_reg(host_ctxt, BRBCR_EL1) = read_sysreg_s(SYS_BRBCR_EL1);
+>> +	ctxt_sys_reg(host_ctxt, BRBFCR_EL1) = read_sysreg_s(SYS_BRBFCR_EL1)
+>> +	write_sysreg_s(0, SYS_BRBCR_EL1);
+>> +	write_sysreg_s(0, SYS_BRBFCR_EL1);
+> 
+> Why does SYS_BRBFCR_EL1 need to be saved and restored? Only
+> BRBCR_ELx_E0BRE and BRBCR_ELx_ExBRE need to be cleared to disable BRBE.
+
+Right, just thought both brbcr, and brbfcr system registers represent
+current BRBE state (besides branch records), in a more comprehensive
+manner, although none would be changed from inside the guest.
+
+> 
+>> +	isb();
 >> +}
 >> +
->> +/*
->> + * BRBE supports the following privilege mode filters while generating
->> + * branch records.
->> + *
->> + * BRBCR_ELx_E0BRE - EL0 branch records
->> + * BRBCR_ELx_ExBRE - EL1/EL2 branch records
->> + *
->> + * BRBE also supports the following additional functional branch type
->> + * filters while generating branch records.
->> + *
->> + * BRBCR_ELx_EXCEPTION - Exception
->> + * BRBCR_ELx_ERTN     -  Exception return
->> + */
->> +static u64 branch_type_to_brbcr(int branch_type)
+>> +static void __debug_restore_brbe(struct kvm_cpu_context *host_ctxt)
 >> +{
->> +	u64 brbcr = BRBCR_ELx_DEFAULT_TS;
->> +
->> +	/*
->> +	 * BRBE should be paused on PMU interrupt while tracing kernel
->> +	 * space to stop capturing further branch records. Otherwise
->> +	 * interrupt handler branch records might get into the samples
->> +	 * which is not desired.
->> +	 *
->> +	 * BRBE need not be paused on PMU interrupt while tracing only
->> +	 * the user space, because it will automatically be inside the
->> +	 * prohibited region. But even after PMU overflow occurs, the
->> +	 * interrupt could still take much more cycles, before it can
->> +	 * be taken and by that time BRBE will have been overwritten.
->> +	 * Hence enable pause on PMU interrupt mechanism even for user
->> +	 * only traces as well.
->> +	 */
->> +	brbcr |= BRBCR_ELx_FZP;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_USER)
->> +		brbcr |= BRBCR_ELx_E0BRE;
->> +
->> +	/*
->> +	 * When running in the hyp mode, writing into BRBCR_EL1
->> +	 * actually writes into BRBCR_EL2 instead. Field E2BRE
->> +	 * is also at the same position as E1BRE.
->> +	 */
->> +	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
->> +		brbcr |= BRBCR_ELx_ExBRE;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_HV) {
->> +		if (is_kernel_in_hyp_mode())
->> +			brbcr |= BRBCR_ELx_ExBRE;
->> +	}
->> +
->> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
->> +		brbcr |= BRBCR_ELx_CC;
->> +
->> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_FLAGS))
->> +		brbcr |= BRBCR_ELx_MPRED;
->> +
->> +	/*
->> +	 * The exception and exception return branches could be
->> +	 * captured, irrespective of the perf event's privilege.
->> +	 * If the perf event does not have enough privilege for
->> +	 * a given exception level, then addresses which falls
->> +	 * under that exception level will be reported as zero
->> +	 * for the captured branch record, creating source only
->> +	 * or target only records.
->> +	 */
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
->> +		brbcr |= BRBCR_ELx_EXCEPTION;
->> +		brbcr |= BRBCR_ELx_ERTN;
->> +	}
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL)
->> +		brbcr |= BRBCR_ELx_EXCEPTION;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
->> +		brbcr |= BRBCR_ELx_ERTN;
->> +
->> +	return brbcr & BRBCR_ELx_CONFIG_MASK;
->> +}
->> +
->> +void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)
->> +{
->> +	struct pmu_hw_events *cpuc = this_cpu_ptr(arm_pmu->hw_events);
->> +	u64 brbfcr, brbcr;
->> +
->> +	if (!(cpuc->brbe_sample_type && cpuc->brbe_users))
+>> +	if (!ctxt_sys_reg(host_ctxt, BRBCR_EL1) || !ctxt_sys_reg(host_ctxt, BRBFCR_EL1))
 >> +		return;
 >> +
->> +	/*
->> +	 * BRBE gets configured with a new mismatched branch sample
->> +	 * type request, overriding any previous branch filters.
->> +	 */
->> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
->> +	brbfcr &= ~BRBFCR_EL1_DEFAULT_CONFIG;
-> 
-> This is called default_config, but is being used semantically the same
-> way as BRBCR_ELx_CONFIG_MASK below to clear out the fields. Doesn't that
-> mean that it's a mask rather than a default config? It's only ever used
-> in this way. default_config implies it's written or used as an
-> initialiser at some point.
-
-Sure, will rename BRBFCR_EL1_DEFAULT_CONFIG as BRBFCR_EL1_CONFIG_MASK
-making it similar to BRBCR_ELx_CONFIG_MASK.
-
-> 
->> +	brbfcr |= branch_type_to_brbfcr(cpuc->brbe_sample_type);
->> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
->> +	isb();
->> +
->> +	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
->> +	brbcr &= ~BRBCR_ELx_CONFIG_MASK;
->> +	brbcr |= branch_type_to_brbcr(cpuc->brbe_sample_type);
-> 
-> BRBCR_ELx_CONFIG_MASK is already &'d at the end of
-> branch_type_to_brbcr(), so isn't it easier and equivalent to just do the
-> following instead of the read(), &= and then |= ?
-> 
->   write_sysreg_s(branch_type_to_brbcr(...), SYS_BRBCR_EL1);
-> 
-> Or at least make branch_type_to_brbfcr() consistent and &
-> BRBFCR_EL1_DEFAULT_CONFIG at the end of that function too.
-
-This sounds better I guess, will '&' BRBFCR_EL1_CONFIG_MASK at the end
-of branch_type_to_brbfcr().
-
-> 
->> +	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
+>> +	/* Restore BRBE controls */
+>> +	write_sysreg_s(ctxt_sys_reg(host_ctxt, BRBCR_EL1), SYS_BRBCR_EL1);
+>> +	write_sysreg_s(ctxt_sys_reg(host_ctxt, BRBFCR_EL1), SYS_BRBFCR_EL1);
 >> +	isb();
 >> +}
 >> +
+>>  void __debug_save_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>>  				    struct kvm_cpu_context *guest_ctxt)
+>>  {
+>> @@ -102,6 +134,10 @@ void __debug_save_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>>  
+>>  	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_TRFCR))
+>>  		__debug_save_trace(host_ctxt, guest_ctxt);
+>> +
+>> +	/* Disable BRBE branch records */
+>> +	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_BRBE))
+>> +		__debug_save_brbe(host_ctxt);
+>>  }
+>>  
+>>  void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
+>> @@ -116,6 +152,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>>  		__debug_restore_spe(host_ctxt);
+>>  	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_TRFCR))
+>>  		__debug_restore_trace(host_ctxt, guest_ctxt);
+>> +	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_BRBE))
+>> +		__debug_restore_brbe(host_ctxt);
+>>  }
+>>  
+>>  void __debug_switch_to_host(struct kvm_vcpu *vcpu)
