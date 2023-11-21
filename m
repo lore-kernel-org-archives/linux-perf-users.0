@@ -1,43 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffnhW4Ze"
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B90771A3;
-	Tue, 21 Nov 2023 14:56:55 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1cf6a67e290so17786575ad.1;
-        Tue, 21 Nov 2023 14:56:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yp9JIov+"
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4CFBB;
+	Tue, 21 Nov 2023 14:56:53 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1cc29f39e7aso40274025ad.0;
+        Tue, 21 Nov 2023 14:56:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700607415; x=1701212215; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JxF1JBOvpbEkbZ2xcwyAv8zJQ1WR68j2h9WNm5DzsV8=;
-        b=ffnhW4ZeHX7vb7c5PrFy5srl5TF2CCKXV5Mx2yaW4Aqj1gy7j+GEdcpsxa9zW0p550
-         jHwfUnpGaGMB4s5yGqn+1BmBKbURywxlXqnQyLoulGL0UmI4F3mJV1IFuAyqDdtrIBAB
-         e9CmWFDw+4eKXu7eBTVklbtuW5KFBIYrBehd+iufNVxcvai93utoZMhjaztha9MWhRdI
-         3Ds5CK03YF/iYQiUX7Fux6SclUPybdMqdf7GqsZpFa9Zkk4rEdcEnr5wF95zqD4YZz1i
-         bp0E9nHLeZJ56GfzjrHzHMPGFRa0r91Yp3JQGyLuKJCugKOe0V0WrrlMxxYTr3lVSRnO
-         uHwQ==
+        d=gmail.com; s=20230601; t=1700607413; x=1701212213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=VvsEAsvFJCAuzTkOhawjNcVDzfJqg2jxoNzCw1vuYxM=;
+        b=Yp9JIov+wo0DTDXoobNFWkySiptxCV3/DkKvymOHb/eK6z6/I5CB6en5pHK3b4G6pm
+         xRunPR/DDdojptiJz5F1r2OyrhmOIG1hB/uSfPGyySZhphmtrOpzByjwpsiznR4cSKX5
+         zf1LR910qlKxYv2fG3k7aWNG302y0xH3ZC7M6oatdtQm7FQA24VyrVQAAay3ALIVVbE/
+         ivS82PbhCpc5Rrft5W7SC3TVj9I+lNWx5b9ywoDc7xXj8DBvQIvfhOp53YMSWbo7bMNI
+         aKfK0+N3cIq4Pny7xnfznm3j0PiywWAXHYaz/OOy+FWwslRj7dNEz74hP4h9euWM2IpK
+         YDPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700607415; x=1701212215;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JxF1JBOvpbEkbZ2xcwyAv8zJQ1WR68j2h9WNm5DzsV8=;
-        b=jQi+UGj9uCgotj6zK0q0Wjo1qx1DDHgtrLJiRrb2BEeDY2KHBaC7lGOUUey4LV2iaO
-         JGOA0HX/H0w3Hfik6Weh3/7PBt7vcTIcypE+uX1QZ+JalZkfxAPQtRrlfbVbEVaAbe7I
-         la4uubJvrkpWMTk02wmYueBkVoA4/KG7p8FYqrrd1/egxewOxOHZPYovpAGr+lpN3P/i
-         pQPXYTLTbYf8OSbZW6XSLveYpEVv0v+462+MSI/twuxsa0v9IBbaMTsGyQl33RtuiRmb
-         1qspTiYLoSoPzc8NlsLOvXYtLwnAav6JJq/+33X6hnYX4AxCfKUpz0otMBYQnCR0yrOn
-         8HVw==
-X-Gm-Message-State: AOJu0Yy/zEIPf4zpNHe0nD7SIqQrpwypNSIMTy82eroFWGY31jI/xLCY
-	GGxatK2Sc87wXn6gLG6IqR4=
-X-Google-Smtp-Source: AGHT+IEwD5N2N/yS3WerIGGZK8EVLzzmxstnplnYe+9ptzxDn8R/KfwukCdJd9CyXbraAoaucA4SbA==
-X-Received: by 2002:a17:903:41c1:b0:1cc:665d:f818 with SMTP id u1-20020a17090341c100b001cc665df818mr526789ple.68.1700607415108;
-        Tue, 21 Nov 2023 14:56:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700607413; x=1701212213;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VvsEAsvFJCAuzTkOhawjNcVDzfJqg2jxoNzCw1vuYxM=;
+        b=EZZ+vQFdtvMuAfpLGQ+PiLGwO7rF8TJ4I6+GoOAtsbcc0B7Jy6fPCxljTnND2PEcgr
+         WnygRDpYLZcw8KUhtSQ8XMFoctyTOwdx7J+fdM/Q2y0r7ii9ZgeBodijfhh8XDNi397A
+         dAkDfvZ7PVgYeIcz34QADZXyC3XAEpaN1wiqBS2DiiRyUemLss52yRIkbcVjMahz1+Na
+         6WAWr41T8jk9U4Smu2sh6qBJfVj5JCwOddjl05SvhwCioq3/5OGDAh3StFSU1cxCWu2b
+         N5yYBXmNhS16pNPCFQSlw7KeukX4oDq1bUSKOijD3XXrmLLycKsSFF6tuorTjYKF/Ca8
+         7kDQ==
+X-Gm-Message-State: AOJu0YwFpLGEnvY01HBQk8MTTjRuldcxVG8XEkccbnkkPneFK9JRr13Q
+	3v639ajHIChQv0mKs4T/TxfIBWfeqPI=
+X-Google-Smtp-Source: AGHT+IEixIM7V9jXUvQI2iY90FGeBw9eNcXJcsg0YhY579MahaeWwDFx+r2X2Fo8ANAZMdHPBZ1vYA==
+X-Received: by 2002:a17:902:d346:b0:1cc:3932:4a87 with SMTP id l6-20020a170902d34600b001cc39324a87mr588713plk.56.1700607412734;
+        Tue, 21 Nov 2023 14:56:52 -0800 (PST)
 Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:7377:923f:1ff3:266d])
-        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b001cc47c1c29csm8413189plt.84.2023.11.21.14.56.54
+        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b001cc47c1c29csm8413189plt.84.2023.11.21.14.56.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 14:56:54 -0800 (PST)
+        Tue, 21 Nov 2023 14:56:51 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -48,14 +47,16 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	kvm@vger.kernel.org
-Subject: [PATCH 03/14] tools headers UAPI: Update tools's copy of kvm.h header
-Date: Tue, 21 Nov 2023 14:56:38 -0800
-Message-ID: <20231121225650.390246-3-namhyung@kernel.org>
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH 01/14] tools headers UAPI: Update tools's copy of drm headers
+Date: Tue, 21 Nov 2023 14:56:36 -0800
+Message-ID: <20231121225650.390246-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-In-Reply-To: <20231121225650.390246-1-namhyung@kernel.org>
-References: <20231121225650.390246-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -107,83 +108,71 @@ So its important not to touch the copies in tools/ when doing changes in
 the original kernel headers, that will be done later, when
 check-headers.sh inform about the change to the perf tools hackers.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
+Cc: David Airlie <airlied@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/include/uapi/linux/kvm.h | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ tools/include/uapi/drm/drm.h      | 20 ++++++++++++++++++++
+ tools/include/uapi/drm/i915_drm.h |  8 ++++----
+ 2 files changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index f089ab290978..211b86de35ac 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -264,6 +264,7 @@ struct kvm_xen_exit {
- #define KVM_EXIT_RISCV_SBI        35
- #define KVM_EXIT_RISCV_CSR        36
- #define KVM_EXIT_NOTIFY           37
-+#define KVM_EXIT_LOONGARCH_IOCSR  38
+diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
+index 794c1d857677..de723566c5ae 100644
+--- a/tools/include/uapi/drm/drm.h
++++ b/tools/include/uapi/drm/drm.h
+@@ -1134,6 +1134,26 @@ extern "C" {
+ #define DRM_IOCTL_MODE_PAGE_FLIP	DRM_IOWR(0xB0, struct drm_mode_crtc_page_flip)
+ #define DRM_IOCTL_MODE_DIRTYFB		DRM_IOWR(0xB1, struct drm_mode_fb_dirty_cmd)
  
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -336,6 +337,13 @@ struct kvm_run {
- 			__u32 len;
- 			__u8  is_write;
- 		} mmio;
-+		/* KVM_EXIT_LOONGARCH_IOCSR */
-+		struct {
-+			__u64 phys_addr;
-+			__u8  data[8];
-+			__u32 len;
-+			__u8  is_write;
-+		} iocsr_io;
- 		/* KVM_EXIT_HYPERCALL */
- 		struct {
- 			__u64 nr;
-@@ -1192,6 +1200,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_COUNTER_OFFSET 227
- #define KVM_CAP_ARM_EAGER_SPLIT_CHUNK_SIZE 228
- #define KVM_CAP_ARM_SUPPORTED_BLOCK_SIZES 229
-+#define KVM_CAP_ARM_SUPPORTED_REG_MASK_RANGES 230
++/**
++ * DRM_IOCTL_MODE_CREATE_DUMB - Create a new dumb buffer object.
++ *
++ * KMS dumb buffers provide a very primitive way to allocate a buffer object
++ * suitable for scanout and map it for software rendering. KMS dumb buffers are
++ * not suitable for hardware-accelerated rendering nor video decoding. KMS dumb
++ * buffers are not suitable to be displayed on any other device than the KMS
++ * device where they were allocated from. Also see
++ * :ref:`kms_dumb_buffer_objects`.
++ *
++ * The IOCTL argument is a struct drm_mode_create_dumb.
++ *
++ * User-space is expected to create a KMS dumb buffer via this IOCTL, then add
++ * it as a KMS framebuffer via &DRM_IOCTL_MODE_ADDFB and map it via
++ * &DRM_IOCTL_MODE_MAP_DUMB.
++ *
++ * &DRM_CAP_DUMB_BUFFER indicates whether this IOCTL is supported.
++ * &DRM_CAP_DUMB_PREFERRED_DEPTH and &DRM_CAP_DUMB_PREFER_SHADOW indicate
++ * driver preferences for dumb buffers.
++ */
+ #define DRM_IOCTL_MODE_CREATE_DUMB DRM_IOWR(0xB2, struct drm_mode_create_dumb)
+ #define DRM_IOCTL_MODE_MAP_DUMB    DRM_IOWR(0xB3, struct drm_mode_map_dumb)
+ #define DRM_IOCTL_MODE_DESTROY_DUMB    DRM_IOWR(0xB4, struct drm_mode_destroy_dumb)
+diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
+index 7000e5910a1d..218edb0a96f8 100644
+--- a/tools/include/uapi/drm/i915_drm.h
++++ b/tools/include/uapi/drm/i915_drm.h
+@@ -38,13 +38,13 @@ extern "C" {
+  */
  
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1362,6 +1371,7 @@ struct kvm_dirty_tlb {
- #define KVM_REG_ARM64		0x6000000000000000ULL
- #define KVM_REG_MIPS		0x7000000000000000ULL
- #define KVM_REG_RISCV		0x8000000000000000ULL
-+#define KVM_REG_LOONGARCH	0x9000000000000000ULL
- 
- #define KVM_REG_SIZE_SHIFT	52
- #define KVM_REG_SIZE_MASK	0x00f0000000000000ULL
-@@ -1418,9 +1428,16 @@ struct kvm_device_attr {
- 	__u64	addr;		/* userspace address of attr data */
- };
- 
--#define  KVM_DEV_VFIO_GROUP			1
--#define   KVM_DEV_VFIO_GROUP_ADD			1
--#define   KVM_DEV_VFIO_GROUP_DEL			2
-+#define  KVM_DEV_VFIO_FILE			1
-+
-+#define   KVM_DEV_VFIO_FILE_ADD			1
-+#define   KVM_DEV_VFIO_FILE_DEL			2
-+
-+/* KVM_DEV_VFIO_GROUP aliases are for compile time uapi compatibility */
-+#define  KVM_DEV_VFIO_GROUP	KVM_DEV_VFIO_FILE
-+
-+#define   KVM_DEV_VFIO_GROUP_ADD	KVM_DEV_VFIO_FILE_ADD
-+#define   KVM_DEV_VFIO_GROUP_DEL	KVM_DEV_VFIO_FILE_DEL
- #define   KVM_DEV_VFIO_GROUP_SET_SPAPR_TCE		3
- 
- enum kvm_device_type {
-@@ -1555,6 +1572,7 @@ struct kvm_s390_ucas_mapping {
- #define KVM_ARM_MTE_COPY_TAGS	  _IOR(KVMIO,  0xb4, struct kvm_arm_copy_mte_tags)
- /* Available with KVM_CAP_COUNTER_OFFSET */
- #define KVM_ARM_SET_COUNTER_OFFSET _IOW(KVMIO,  0xb5, struct kvm_arm_counter_offset)
-+#define KVM_ARM_GET_REG_WRITABLE_MASKS _IOR(KVMIO,  0xb6, struct reg_mask_range)
- 
- /* ioctl for vm fd */
- #define KVM_CREATE_DEVICE	  _IOWR(KVMIO,  0xe0, struct kvm_create_device)
+ /**
+- * DOC: uevents generated by i915 on it's device node
++ * DOC: uevents generated by i915 on its device node
+  *
+  * I915_L3_PARITY_UEVENT - Generated when the driver receives a parity mismatch
+- *	event from the gpu l3 cache. Additional information supplied is ROW,
++ *	event from the GPU L3 cache. Additional information supplied is ROW,
+  *	BANK, SUBBANK, SLICE of the affected cacheline. Userspace should keep
+- *	track of these events and if a specific cache-line seems to have a
+- *	persistent error remap it with the l3 remapping tool supplied in
++ *	track of these events, and if a specific cache-line seems to have a
++ *	persistent error, remap it with the L3 remapping tool supplied in
+  *	intel-gpu-tools.  The value supplied with the event is always 1.
+  *
+  * I915_ERROR_UEVENT - Generated upon error detection, currently only via
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
