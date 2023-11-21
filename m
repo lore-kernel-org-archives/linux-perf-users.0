@@ -1,123 +1,289 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ME5CypEp"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0DA5D6F;
-	Tue, 21 Nov 2023 05:52:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700574752; x=1732110752;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nKvIk90rjbpOesN0GkWDLTjTMmHVHeY5G6qeYk14C4g=;
-  b=ME5CypEpdwocmfxswsfCjeuCszy/yPaDWFAQdbnmCN0xzrqEWNNvhxzx
-   Qnd9wEiEXbnWbWYQFFYnIgWJd5KOajoOzIarQmbQCfzu0m4H+EPKNI2+N
-   yEtvdM+QeTMUoj4DHDrrRb2MYukWRJgodwBNv2mepjnD9eZymzd41AVCF
-   HfcUYRsA4aphbH1kJqjjf7fieok7OGHYL53HMtvFS8OAXr3spMy3Pwbgg
-   4WEgECDX5qQEaG6KTzN0Tg4Z/U2+jAWq1nRFA7Jv43GkwRmktOPIEev/y
-   HASwGQDqDGSrAz4/lnLsszaCFpWYuka6ylcmyfDEefUo5lomKdgacjh0l
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="456176834"
-X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
-   d="scan'208";a="456176834"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 05:52:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="801531928"
-X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
-   d="scan'208";a="801531928"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 05:52:32 -0800
-Received: from [10.209.157.143] (smittai-mobl1.amr.corp.intel.com [10.209.157.143])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 29919580689;
-	Tue, 21 Nov 2023 05:52:31 -0800 (PST)
-Message-ID: <d409d76f-cbd9-42ba-a492-c0cdd23e88da@linux.intel.com>
-Date: Tue, 21 Nov 2023 08:52:30 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CB55676D;
+	Tue, 21 Nov 2023 15:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMyfE2Px"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7702C433C8;
+	Tue, 21 Nov 2023 15:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700580268;
+	bh=FHSRXrO0Yfw9vDw/yW+guLOeuDCv8w0Xl7JslG6as/0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZMyfE2PxSBMM9cAAljWOoj5yQKmfYy9Ff6/Nd4h2FPRcK+UgiEEIrYRfQnY0xf/KT
+	 A8Y7/Iys9utpmrEa4cUvnvdgLz/qOgH8Ju6qO3ubwiRaT0XUU5Fmn6W5WQKcZoMHTS
+	 ZDpuWdwTzAuFCs7ooisFN66GHv9s2oVj03ySlpYbNdwn+n/2UwkEIkjNNs1yv5HDhv
+	 aS9WK1NNcAl4ICEIdDwALs4t7QauDTn+DJ4HX09pYL6Gd+lwW5z+9fLuGFMYHlA5/o
+	 n0YJgkR24pEuau76rf4Q2Q53yh1gVp35nDkjtixX+nm71GIJ7BbIYOD9vn2I3fEz0m
+	 RHyeWEFupwnNQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1r5Sby-00F8Q5-7L;
+	Tue, 21 Nov 2023 15:24:26 +0000
+Date: Tue, 21 Nov 2023 15:24:25 +0000
+Message-ID: <86o7fnyvrq.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>, Hector Martin <marcan@marcan.st>,
+	Arnaldo Carvalho de Melo   <acme@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Asahi Linux <asahi@lists.linux.dev>
+Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
+In-Reply-To: <86pm03z0kw.wl-maz@kernel.org>
+References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
+	<86pm03z0kw.wl-maz@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Correct wrong 'or' operation for pmu
- capabilities
-Content-Language: en-US
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- stable@vger.kernel.org
-References: <20231121014628.729989-1-dapeng1.mi@linux.intel.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20231121014628.729989-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: mark.rutland@arm.com, marcan@marcan.st, acme@redhat.com, irogers@google.com, james.clark@arm.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Tue, 21 Nov 2023 13:40:31 +0000,
+Marc Zyngier <maz@kernel.org> wrote:
+> 
+> [Adding key people on Cc]
+> 
+> On Tue, 21 Nov 2023 12:08:48 +0000,
+> Hector Martin <marcan@marcan.st> wrote:
+> > 
+> > Perf broke on all Apple ARM64 systems (tested almost everything), and
+> > according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
+> 
+> I can confirm that at least on 6.7-rc2, perf is pretty busted on any
+> asymmetric ARM platform. It isn't clear what criteria is used to pick
+> the PMU, but nothing works anymore.
+> 
+> The saving grace in my case is that Debian still ships a 6.1 perftool
+> package, but that's obviously not going to last.
+> 
+> I'm happy to test potential fixes.
 
+At Mark's request, I've dumped a couple of perf (as of -rc2) runs with
+-vvv.  And it is quite entertaining (this is taskset to an 'icestorm'
+CPU):
 
-On 2023-11-20 8:46 p.m., Dapeng Mi wrote:
-> When running perf-stat command on Intel hybrid platform, perf-stat
-> reports the following errors.
-> 
-> sudo taskset -c 7 ./perf stat -vvvv -e cpu_atom/instructions/ sleep 1
-> 
-> Opening: cpu/cycles/:HG
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   config                           0xa00000000
->   disabled                         1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
-> sys_perf_event_open failed, error -16
-> 
->  Performance counter stats for 'sleep 1':
-> 
->      <not counted>      cpu_atom/instructions/
-> 
-> It looks the cpu_atom/instructions/ event can't be enabled on atom pmu
-> even the process is pinned on atom core. The investigation shows that
-> exclusive_event_init() helper always returns -EBUSY error in the perf
-> event creation. That's strange since the atom pmu should not be a
-> exclusive PMU.
-> 
-> Further investigation shows the issue is introduced by commit 97588df87b56
-> ("perf/x86/intel: Add common intel_pmu_init_hybrid()"). The commit
-> originally intents to clear the bit PERF_PMU_CAP_AUX_OUTPUT from pmu
-> capabilities if intel_cap.pebs_output_pt_available is not set, but it
-> incorrectly uses 'or' operation and leads to all pmu capabilities bits
-> are set to 1 except bit PERF_PMU_CAP_AUX_OUTPUT.
-> 
-> Testing this fix on Intel hybrid platforms, the observed issues
-> disappear.
-> 
-> Fixes: 97588df87b56 ("perf/x86/intel: Add common intel_pmu_init_hybrid()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+<quote>
+maz@valley-girl:~/hot-poop/arm-platforms/tools/perf$ sudo taskset -c 0 ./perf stat -vvv -e apple_icestorm_pmu/cycles/ -e
+ apple_firestorm_pmu/cycles/ -e cycles ls
+Using CPUID 0x00000000612f0280
+Attempt to add: apple_icestorm_pmu/cycles=0/
+..after resolving event: apple_icestorm_pmu/cycles=0/
+Opening: unknown-hardware:HG
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  config                           0xb00000000
+  disabled                         1
+------------------------------------------------------------
+sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
+sys_perf_event_open failed, error -95
+Attempt to add: apple_firestorm_pmu/cycles=0/
+..after resolving event: apple_firestorm_pmu/cycles=0/
+Control descriptor is not initialized
+Opening: apple_icestorm_pmu/cycles/
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             136
+  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+  sample_type                      IDENTIFIER
+  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+  disabled                         1
+  inherit                          1
+  enable_on_exec                   1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid 1045843  cpu -1  group_fd -1  flags 0x8 = 3
+Opening: apple_firestorm_pmu/cycles/
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             136
+  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+  sample_type                      IDENTIFIER
+  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+  disabled                         1
+  inherit                          1
+  enable_on_exec                   1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid 1045843  cpu -1  group_fd -1  flags 0x8 = 4
+Opening: cycles
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             136
+  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+  sample_type                      IDENTIFIER
+  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+  disabled                         1
+  inherit                          1
+  enable_on_exec                   1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid 1045843  cpu -1  group_fd -1  flags 0x8 = 5
+arch			builtin-diff.o      builtin-mem.o	 common-cmds.h    perf-completion.sh
+bench			builtin-evlist.c    builtin-probe.c	 CREDITS	  perf.h
+Build			builtin-evlist.o    builtin-probe.o	 design.txt	  perf-in.o
+builtin-annotate.c	builtin-ftrace.c    builtin-record.c	 dlfilters	  perf-iostat
+builtin-annotate.o	builtin-ftrace.o    builtin-record.o	 Documentation    perf-iostat.sh
+builtin-bench.c		builtin.h	    builtin-report.c	 FEATURE-DUMP	  perf.o
+builtin-bench.o		builtin-help.c      builtin-report.o	 include	  perf-read-vdso.c
+builtin-buildid-cache.c  builtin-help.o      builtin-sched.c	 jvmti		  perf-sys.h
+builtin-buildid-cache.o  builtin-inject.c    builtin-script.c	 libapi	  PERF-VERSION-FILE
+builtin-buildid-list.c	builtin-inject.o    builtin-script.o	 libperf	  perf-with-kcore
+builtin-buildid-list.o	builtin-kallsyms.c  builtin-stat.c	 libsubcmd	  pmu-events
+builtin-c2c.c		builtin-kallsyms.o  builtin-stat.o	 libsymbol	  python
+builtin-c2c.o		builtin-kmem.c      builtin-timechart.c  Makefile	  python_ext_build
+builtin-config.c	builtin-kvm.c	    builtin-top.c	 Makefile.config  scripts
+builtin-config.o	builtin-kvm.o	    builtin-top.o	 Makefile.perf    tests
+builtin-daemon.c	builtin-kwork.c     builtin-trace.c	 MANIFEST	  trace
+builtin-daemon.o	builtin-list.c      builtin-version.c	 perf		  ui
+builtin-data.c		builtin-list.o      builtin-version.o	 perf-archive	  util
+builtin-data.o		builtin-lock.c      check-headers.sh	 perf-archive.sh
+builtin-diff.c		builtin-mem.c	    command-list.txt	 perf.c
+apple_icestorm_pmu/cycles/: -1: 0 873709 0
+apple_firestorm_pmu/cycles/: -1: 0 873709 0
+cycles: -1: 0 873709 0
+apple_icestorm_pmu/cycles/: 0 873709 0
+apple_firestorm_pmu/cycles/: 0 873709 0
+cycles: 0 873709 0
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+ Performance counter stats for 'ls':
 
-Thanks,
-Kan
+     <not counted>      apple_icestorm_pmu/cycles/                                              (0.00%)
+     <not counted>      apple_firestorm_pmu/cycles/                                             (0.00%)
+     <not counted>      cycles                                                                  (0.00%)
 
-> ---
->  arch/x86/events/intel/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index a08f794a0e79..ce1c777227b4 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4660,7 +4660,7 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
->  	if (pmu->intel_cap.pebs_output_pt_available)
->  		pmu->pmu.capabilities |= PERF_PMU_CAP_AUX_OUTPUT;
->  	else
-> -		pmu->pmu.capabilities |= ~PERF_PMU_CAP_AUX_OUTPUT;
-> +		pmu->pmu.capabilities &= ~PERF_PMU_CAP_AUX_OUTPUT;
->  
->  	intel_pmu_check_event_constraints(pmu->event_constraints,
->  					  pmu->num_counters,
-> 
-> base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
+       0.000002250 seconds time elapsed
+
+       0.000000000 seconds user
+       0.000000000 seconds sys
+</quote>
+
+If I run the same thing on another CPU cluster (firestorm), I get
+this:
+
+<quote>
+maz@valley-girl:~/hot-poop/arm-platforms/tools/perf$ sudo taskset -c 2 ./perf stat -vvv -e apple_icestorm_pmu/cycles/ -e
+ apple_firestorm_pmu/cycles/ -e cycles ls
+Using CPUID 0x00000000612f0280
+Attempt to add: apple_icestorm_pmu/cycles=0/
+..after resolving event: apple_icestorm_pmu/cycles=0/
+Opening: unknown-hardware:HG
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  config                           0xb00000000
+  disabled                         1
+------------------------------------------------------------
+sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
+sys_perf_event_open failed, error -95
+Attempt to add: apple_firestorm_pmu/cycles=0/
+..after resolving event: apple_firestorm_pmu/cycles=0/
+Control descriptor is not initialized
+Opening: apple_icestorm_pmu/cycles/
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             136
+  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+  sample_type                      IDENTIFIER
+  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+  disabled                         1
+  inherit                          1
+  enable_on_exec                   1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid 1045925  cpu -1  group_fd -1  flags 0x8 = 3
+Opening: apple_firestorm_pmu/cycles/
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             136
+  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+  sample_type                      IDENTIFIER
+  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+  disabled                         1
+  inherit                          1
+  enable_on_exec                   1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid 1045925  cpu -1  group_fd -1  flags 0x8 = 4
+Opening: cycles
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             136
+  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+  sample_type                      IDENTIFIER
+  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+  disabled                         1
+  inherit                          1
+  enable_on_exec                   1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid 1045925  cpu -1  group_fd -1  flags 0x8 = 5
+arch			builtin-diff.o      builtin-mem.o	 common-cmds.h    perf-completion.sh
+bench			builtin-evlist.c    builtin-probe.c	 CREDITS	  perf.h
+Build			builtin-evlist.o    builtin-probe.o	 design.txt	  perf-in.o
+builtin-annotate.c	builtin-ftrace.c    builtin-record.c	 dlfilters	  perf-iostat
+builtin-annotate.o	builtin-ftrace.o    builtin-record.o	 Documentation    perf-iostat.sh
+builtin-bench.c		builtin.h	    builtin-report.c	 FEATURE-DUMP	  perf.o
+builtin-bench.o		builtin-help.c      builtin-report.o	 include	  perf-read-vdso.c
+builtin-buildid-cache.c  builtin-help.o      builtin-sched.c	 jvmti		  perf-sys.h
+builtin-buildid-cache.o  builtin-inject.c    builtin-script.c	 libapi	  PERF-VERSION-FILE
+builtin-buildid-list.c	builtin-inject.o    builtin-script.o	 libperf	  perf-with-kcore
+builtin-buildid-list.o	builtin-kallsyms.c  builtin-stat.c	 libsubcmd	  pmu-events
+builtin-c2c.c		builtin-kallsyms.o  builtin-stat.o	 libsymbol	  python
+builtin-c2c.o		builtin-kmem.c      builtin-timechart.c  Makefile	  python_ext_build
+builtin-config.c	builtin-kvm.c	    builtin-top.c	 Makefile.config  scripts
+builtin-config.o	builtin-kvm.o	    builtin-top.o	 Makefile.perf    tests
+builtin-daemon.c	builtin-kwork.c     builtin-trace.c	 MANIFEST	  trace
+builtin-daemon.o	builtin-list.c      builtin-version.c	 perf		  ui
+builtin-data.c		builtin-list.o      builtin-version.o	 perf-archive	  util
+builtin-data.o		builtin-lock.c      check-headers.sh	 perf-archive.sh
+builtin-diff.c		builtin-mem.c	    command-list.txt	 perf.c
+apple_icestorm_pmu/cycles/: -1: 1035101 469125 469125
+apple_firestorm_pmu/cycles/: -1: 1035035 469125 469125
+cycles: -1: 1034653 469125 469125
+apple_icestorm_pmu/cycles/: 1035101 469125 469125
+apple_firestorm_pmu/cycles/: 1035035 469125 469125
+cycles: 1034653 469125 469125
+
+ Performance counter stats for 'ls':
+
+         1,035,101      apple_icestorm_pmu/cycles/                                            
+         1,035,035      apple_firestorm_pmu/cycles/                                           
+         1,034,653      cycles                                                                
+
+       0.000001333 seconds time elapsed
+
+       0.000000000 seconds user
+       0.000000000 seconds sys
+</quote>
+
+which doesn't make any sense either. I really don't understand what
+this PERF_TYPE_HARDWARE does here (the *real* types are 10 and 11),
+nor what this 'cycle=0' stuff is.
+
+/puzzled
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
