@@ -1,15 +1,15 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id CD42995;
-	Tue, 21 Nov 2023 02:33:42 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4E42495;
+	Tue, 21 Nov 2023 02:47:16 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37575FEC;
-	Tue, 21 Nov 2023 02:34:29 -0800 (PST)
-Received: from [10.57.42.32] (unknown [10.57.42.32])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B19443F73F;
-	Tue, 21 Nov 2023 02:33:40 -0800 (PST)
-Message-ID: <0058ca82-e55b-4490-90d0-871afce787c7@arm.com>
-Date: Tue, 21 Nov 2023 10:33:38 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8D37FEC;
+	Tue, 21 Nov 2023 02:48:02 -0800 (PST)
+Received: from [10.163.36.237] (unknown [10.163.36.237])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EB713F6C4;
+	Tue, 21 Nov 2023 02:47:11 -0800 (PST)
+Message-ID: <616bed59-d3c5-4d33-aae7-ea93f63743d3@arm.com>
+Date: Tue, 21 Nov 2023 16:17:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -17,131 +17,203 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/3] Documentation: arm64: Document the PMU event
- counting threshold feature
-Content-Language: en-GB
-To: Namhyung Kim <namhyung@gmail.com>, James Clark <james.clark@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- will@kernel.org, mark.rutland@arm.com,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231113112507.917107-1-james.clark@arm.com>
- <20231113112507.917107-4-james.clark@arm.com>
- <CAM9d7ciDq-te1DQPrMrZQC9er0pSMY24nvC-atxdRu1C6uD08A@mail.gmail.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <CAM9d7ciDq-te1DQPrMrZQC9er0pSMY24nvC-atxdRu1C6uD08A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [V14 4/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
+ via FEAT_BRBE
+Content-Language: en-US
+To: James Clark <james.clark@arm.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
+ mark.rutland@arm.com
+References: <20231114051329.327572-1-anshuman.khandual@arm.com>
+ <20231114051329.327572-5-anshuman.khandual@arm.com>
+ <00f05970-c793-242e-485a-f987201651ad@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <00f05970-c793-242e-485a-f987201651ad@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 20/11/2023 21:31, Namhyung Kim wrote:
-> On Mon, Nov 13, 2023 at 3:26 AM James Clark <james.clark@arm.com> wrote:
->>
->> Add documentation for the new Perf event open parameters and
->> the threshold_max capability file.
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>   Documentation/arch/arm64/perf.rst | 56 +++++++++++++++++++++++++++++++
->>   1 file changed, 56 insertions(+)
->>
->> diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64/perf.rst
->> index 1f87b57c2332..36b8111a710d 100644
->> --- a/Documentation/arch/arm64/perf.rst
->> +++ b/Documentation/arch/arm64/perf.rst
->> @@ -164,3 +164,59 @@ and should be used to mask the upper bits as needed.
->>      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
->>   .. _tools/lib/perf/tests/test-evsel.c:
->>      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
->> +
->> +Event Counting Threshold
->> +==========================================
->> +
->> +Overview
->> +--------
->> +
->> +FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
->> +events whose count meets a specified threshold condition. For example if
->> +threshold_compare is set to 2 ('Greater than or equal'), and the
->> +threshold is set to 2, then the PMU counter will now only increment by
->> +when an event would have previously incremented the PMU counter by 2 or
->> +more on a single processor cycle.
->> +
->> +To increment by 1 after passing the threshold condition instead of the
->> +number of events on that cycle, add the 'threshold_count' option to the
->> +commandline.
->> +
->> +How-to
->> +------
->> +
->> +The threshold, threshold_compare and threshold_count values can be
->> +provided per event:
->> +
->> +.. code-block:: sh
->> +
->> +  perf stat -e stall_slot/threshold=2,threshold_compare=2/ \
->> +            -e dtlb_walk/threshold=10,threshold_compare=3,threshold_count/
+
+
+On 11/14/23 17:41, James Clark wrote:
 > 
-> Can you please explain this a bit more?
 > 
-> I guess the first event counts stall_slot PMU if the event if it's
-> greater than or equal to 2.  And as threshold_count is not set,
-> it'd count the stall_slot as is.  E.g. it counts 3 when it sees 3.
+> On 14/11/2023 05:13, Anshuman Khandual wrote:
+> [...]
 > 
-> OTOH, dtlb_walk will count 1 if it sees an event less than 10.
-> Is my understanding correct?
+>> +/*
+>> + * BRBE supports the following functional branch type filters while
+>> + * generating branch records. These branch filters can be enabled,
+>> + * either individually or as a group i.e ORing multiple filters
+>> + * with each other.
+>> + *
+>> + * BRBFCR_EL1_CONDDIR  - Conditional direct branch
+>> + * BRBFCR_EL1_DIRCALL  - Direct call
+>> + * BRBFCR_EL1_INDCALL  - Indirect call
+>> + * BRBFCR_EL1_INDIRECT - Indirect branch
+>> + * BRBFCR_EL1_DIRECT   - Direct branch
+>> + * BRBFCR_EL1_RTN      - Subroutine return
+>> + */
+>> +static u64 branch_type_to_brbfcr(int branch_type)
+>> +{
+>> +	u64 brbfcr = 0;
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
+>> +		brbfcr |= BRBFCR_EL1_BRANCH_FILTERS;
+>> +		return brbfcr;
+>> +	}
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL) {
+>> +		brbfcr |= BRBFCR_EL1_INDCALL;
+>> +		brbfcr |= BRBFCR_EL1_DIRCALL;
+>> +	}
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
+>> +		brbfcr |= BRBFCR_EL1_RTN;
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_CALL)
+>> +		brbfcr |= BRBFCR_EL1_INDCALL;
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_COND)
+>> +		brbfcr |= BRBFCR_EL1_CONDDIR;
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_JUMP)
+>> +		brbfcr |= BRBFCR_EL1_INDIRECT;
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_CALL)
+>> +		brbfcr |= BRBFCR_EL1_DIRCALL;
+>> +
+>> +	return brbfcr;
+>> +}
+>> +
+>> +/*
+>> + * BRBE supports the following privilege mode filters while generating
+>> + * branch records.
+>> + *
+>> + * BRBCR_ELx_E0BRE - EL0 branch records
+>> + * BRBCR_ELx_ExBRE - EL1/EL2 branch records
+>> + *
+>> + * BRBE also supports the following additional functional branch type
+>> + * filters while generating branch records.
+>> + *
+>> + * BRBCR_ELx_EXCEPTION - Exception
+>> + * BRBCR_ELx_ERTN     -  Exception return
+>> + */
+>> +static u64 branch_type_to_brbcr(int branch_type)
+>> +{
+>> +	u64 brbcr = BRBCR_ELx_DEFAULT_TS;
+>> +
+>> +	/*
+>> +	 * BRBE should be paused on PMU interrupt while tracing kernel
+>> +	 * space to stop capturing further branch records. Otherwise
+>> +	 * interrupt handler branch records might get into the samples
+>> +	 * which is not desired.
+>> +	 *
+>> +	 * BRBE need not be paused on PMU interrupt while tracing only
+>> +	 * the user space, because it will automatically be inside the
+>> +	 * prohibited region. But even after PMU overflow occurs, the
+>> +	 * interrupt could still take much more cycles, before it can
+>> +	 * be taken and by that time BRBE will have been overwritten.
+>> +	 * Hence enable pause on PMU interrupt mechanism even for user
+>> +	 * only traces as well.
+>> +	 */
+>> +	brbcr |= BRBCR_ELx_FZP;
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_USER)
+>> +		brbcr |= BRBCR_ELx_E0BRE;
+>> +
+>> +	/*
+>> +	 * When running in the hyp mode, writing into BRBCR_EL1
+>> +	 * actually writes into BRBCR_EL2 instead. Field E2BRE
+>> +	 * is also at the same position as E1BRE.
+>> +	 */
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
+>> +		brbcr |= BRBCR_ELx_ExBRE;
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_HV) {
+>> +		if (is_kernel_in_hyp_mode())
+>> +			brbcr |= BRBCR_ELx_ExBRE;
+>> +	}
+>> +
+>> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
+>> +		brbcr |= BRBCR_ELx_CC;
+>> +
+>> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_FLAGS))
+>> +		brbcr |= BRBCR_ELx_MPRED;
+>> +
+>> +	/*
+>> +	 * The exception and exception return branches could be
+>> +	 * captured, irrespective of the perf event's privilege.
+>> +	 * If the perf event does not have enough privilege for
+>> +	 * a given exception level, then addresses which falls
+>> +	 * under that exception level will be reported as zero
+>> +	 * for the captured branch record, creating source only
+>> +	 * or target only records.
+>> +	 */
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
+>> +		brbcr |= BRBCR_ELx_EXCEPTION;
+>> +		brbcr |= BRBCR_ELx_ERTN;
+>> +	}
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL)
+>> +		brbcr |= BRBCR_ELx_EXCEPTION;
+>> +
+>> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
+>> +		brbcr |= BRBCR_ELx_ERTN;
+>> +
+>> +	return brbcr & BRBCR_ELx_CONFIG_MASK;
+>> +}
+>> +
+>> +void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)
+>> +{
+>> +	struct pmu_hw_events *cpuc = this_cpu_ptr(arm_pmu->hw_events);
+>> +	u64 brbfcr, brbcr;
+>> +
+>> +	if (!(cpuc->brbe_sample_type && cpuc->brbe_users))
+>> +		return;
+>> +
+>> +	/*
+>> +	 * BRBE gets configured with a new mismatched branch sample
+>> +	 * type request, overriding any previous branch filters.
+>> +	 */
+>> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+>> +	brbfcr &= ~BRBFCR_EL1_DEFAULT_CONFIG;
+> 
+> This is called default_config, but is being used semantically the same
+> way as BRBCR_ELx_CONFIG_MASK below to clear out the fields. Doesn't that
+> mean that it's a mask rather than a default config? It's only ever used
+> in this way. default_config implies it's written or used as an
+> initialiser at some point.
 
-That is correct. The behavior is described in the paragraph above.
-But I agree that it would be really helpful if we explained with the
-example above.
+Sure, will rename BRBFCR_EL1_DEFAULT_CONFIG as BRBFCR_EL1_CONFIG_MASK
+making it similar to BRBCR_ELx_CONFIG_MASK.
 
 > 
+>> +	brbfcr |= branch_type_to_brbfcr(cpuc->brbe_sample_type);
+>> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
+>> +	isb();
 >> +
->> +And the following comparison values are supported:
->> +
->> +.. code-block::
->> +
->> +  0: Not-equal
->> +  1: Equals
->> +  2: Greater-than-or-equal
->> +  3: Less-than
+>> +	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+>> +	brbcr &= ~BRBCR_ELx_CONFIG_MASK;
+>> +	brbcr |= branch_type_to_brbcr(cpuc->brbe_sample_type);
 > 
-> So the above values are for threashold_compare, right?
-> It'd be nice if it's more explicit.
+> BRBCR_ELx_CONFIG_MASK is already &'d at the end of
+> branch_type_to_brbcr(), so isn't it easier and equivalent to just do the
+> following instead of the read(), &= and then |= ?
 > 
-> Similarly, it'd be helpful to have a description for the
-> threshold and threshold_count fields.
+>   write_sysreg_s(branch_type_to_brbcr(...), SYS_BRBCR_EL1);
+> 
+> Or at least make branch_type_to_brbfcr() consistent and &
+> BRBFCR_EL1_DEFAULT_CONFIG at the end of that function too.
 
-Agreed.
-
-Suzuki
-
-
+This sounds better I guess, will '&' BRBFCR_EL1_CONFIG_MASK at the end
+of branch_type_to_brbfcr().
 
 > 
-> Thanks,
-> Namhyung
-> 
+>> +	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
+>> +	isb();
+>> +}
 >> +
->> +The maximum supported threshold value can be read from the caps of each
->> +PMU, for example:
->> +
->> +.. code-block:: sh
->> +
->> +  cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
->> +
->> +  0x000000ff
->> +
->> +If a value higher than this is given, then it will be silently clamped
->> +to the maximum. The highest possible maximum is 4095, as the config
->> +field for threshold is limited to 12 bits, and the Perf tool will refuse
->> +to parse higher values.
->> +
->> +If the PMU doesn't support FEAT_PMUv3_TH, then threshold_max will read
->> +0, and both threshold and threshold_compare will be silently ignored.
->> +threshold_max will also read as 0 on aarch32 guests, even if the host
->> +is running on hardware with the feature.
->> --
->> 2.34.1
->>
->>
-
