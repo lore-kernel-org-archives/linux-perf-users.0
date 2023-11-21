@@ -1,34 +1,15 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LfnIPw+o"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2E3C3;
-	Mon, 20 Nov 2023 23:39:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700552372; x=1732088372;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8+iupdkYjP2gRjVTUeD0WGE4EXxdTodJbZkzY2nHgKI=;
-  b=LfnIPw+o1WKAUp9Yh4fwQUqKoX0tzVf8f96ESfqDmqVTpY1NMl2OQjeg
-   pCEQm+94pxEetjteERA3qF5SLs5HfsFpjmbXza7tUXw6OCBvmXIrMYKua
-   OmxtZTYo8SCz1mDTRdsB6s+76NDQbCiZ61wCKUzYFau7ePp7uC4Bubyeg
-   WcXS3PBFqqY8tbbUaJe4AITncu077o3XYTojmKipxPzRfoQdRnEcP6My+
-   ty80tHh9ozXKp4jK27t4nBXYtGbFcbfzyKpjTauMpquiLKXuCxxqhadKf
-   LtmL30K2XZs9xPhp4ar7aCq6Cpz5kvZU5m739tztqyBiV5nGF6LuVM63M
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="391561063"
-X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
-   d="scan'208";a="391561063"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 23:39:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="716441517"
-X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
-   d="scan'208";a="716441517"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.56.230])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 23:39:18 -0800
-Message-ID: <4890f020-b4ad-4a50-9394-2cf4be1c19ca@intel.com>
-Date: Tue, 21 Nov 2023 09:39:12 +0200
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3AAB124;
+	Tue, 21 Nov 2023 01:14:01 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 429CAFEC;
+	Tue, 21 Nov 2023 01:14:48 -0800 (PST)
+Received: from [10.163.36.237] (unknown [10.163.36.237])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 182C33F73F;
+	Tue, 21 Nov 2023 01:13:56 -0800 (PST)
+Message-ID: <c8ddb80b-4228-4ed3-bc54-fba334b70c2b@arm.com>
+Date: Tue, 21 Nov 2023 14:43:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -36,114 +17,133 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 RESEND] perf script python: Fail check on dynamic
- allocation
-To: Paran Lee <p4ranlee@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
+Subject: Re: [V14 3/8] drivers: perf: arm_pmuv3: Enable branch stack sampling
+ framework
+Content-Language: en-US
+To: James Clark <james.clark@arm.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- shjy180909@gmail.com, austindh.kim@gmail.com, honggyu.kp@gmail.com
-References: <20231120223218.9036-1-p4ranlee@gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20231120223218.9036-1-p4ranlee@gmail.com>
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
+ mark.rutland@arm.com
+References: <20231114051329.327572-1-anshuman.khandual@arm.com>
+ <20231114051329.327572-4-anshuman.khandual@arm.com>
+ <0020aa0d-e9a5-aef6-f33d-817da56411a3@arm.com>
+ <5bf73672-4094-490b-b0a9-b983d512c904@arm.com>
+ <4fa8ca52-b40c-65ec-59a0-7ad14c4e93b7@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <4fa8ca52-b40c-65ec-59a0-7ad14c4e93b7@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 21/11/23 00:32, Paran Lee wrote:
-> Add PyList_New() Fail check in get_field_numeric_entry()
-> function and dynamic allocation checking for
-> set_regs_in_dict(), python_start_script().
+
+
+On 11/15/23 15:07, James Clark wrote:
 > 
-> Signed-off-by: Paran Lee <p4ranlee@gmail.com>
-> Reviewed-by: MichelleJin <shjy180909@gmail.com>
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
-I did not give a Reviewed-by tag.
-
-Please never assume someone else's tag.  It breaks the process.
-
-However, I have now reviewed it, so:
-
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  .../util/scripting-engines/trace-event-python.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 94312741443a..860e1837ba96 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -353,6 +353,8 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
->  
->  	if (is_array) {
->  		list = PyList_New(field->arraylen);
-> +		if (!list)
-> +			Py_FatalError("couldn't create Python list");
->  		item_size = field->size / field->arraylen;
->  		n_items = field->arraylen;
->  	} else {
-> @@ -754,7 +756,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
->  	}
->  }
->  
-> -static void set_regs_in_dict(PyObject *dict,
-> +static int set_regs_in_dict(PyObject *dict,
->  			     struct perf_sample *sample,
->  			     struct evsel *evsel)
->  {
-> @@ -770,6 +772,8 @@ static void set_regs_in_dict(PyObject *dict,
->  	 */
->  	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
->  	char *bf = malloc(size);
-> +	if (!bf)
-> +		return -1;
->  
->  	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
->  
-> @@ -781,6 +785,8 @@ static void set_regs_in_dict(PyObject *dict,
->  	pydict_set_item_string_decref(dict, "uregs",
->  			_PyUnicode_FromString(bf));
->  	free(bf);
-> +
-> +	return 0;
->  }
->  
->  static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
-> @@ -920,7 +926,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
->  			PyLong_FromUnsignedLongLong(sample->cyc_cnt));
->  	}
->  
-> -	set_regs_in_dict(dict, sample, evsel);
-> +	if (set_regs_in_dict(dict, sample, evsel))
-> +		Py_FatalError("Failed to setting regs in dict");
->  
->  	return dict;
->  }
-> @@ -1918,12 +1925,18 @@ static int python_start_script(const char *script, int argc, const char **argv,
->  	scripting_context->session = session;
->  #if PY_MAJOR_VERSION < 3
->  	command_line = malloc((argc + 1) * sizeof(const char *));
-> +	if (!command_line)
-> +		return -1;
-> +
->  	command_line[0] = script;
->  	for (i = 1; i < argc + 1; i++)
->  		command_line[i] = argv[i - 1];
->  	PyImport_AppendInittab(name, initperf_trace_context);
->  #else
->  	command_line = malloc((argc + 1) * sizeof(wchar_t *));
-> +	if (!command_line)
-> +		return -1;
-> +
->  	command_line[0] = Py_DecodeLocale(script, NULL);
->  	for (i = 1; i < argc + 1; i++)
->  		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+> On 15/11/2023 05:44, Anshuman Khandual wrote:
+>> On 11/14/23 15:28, James Clark wrote:
+>>>
+>>>
+>>> On 14/11/2023 05:13, Anshuman Khandual wrote:
+>>>> Branch stack sampling support i.e capturing branch records during execution
+>>>> in core perf, rides along with normal HW events being scheduled on the PMU.
+>>>> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
+>>>> with required HW implementation.
+>>>>
+>>>
+>>> [...]
+>>>
+>>>> - All armv8pmu_branch_xxxx() stub definitions have been moved inside
+>>>>   include/linux/perf/arm_pmuv3.h for easy access from both arm32 and
+>>>>   arm64 platforms
+>>>>
+>>>
+>>> This causes lots of W=1 build errors because the prototypes are in
+>>> arm_pmuv3.h, but arm_brbe.c doesn't include it.
+>>
+>> I guess these are the W=1 warnings you mentioned above.
+>>
+>> drivers/perf/arm_brbe.c:11:6: warning: no previous prototype for ‘armv8pmu_branch_reset’ [-Wmissing-prototypes]
+>>    11 | void armv8pmu_branch_reset(void)                                                                                                                                                                   
+>>       |      ^~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                         
+>> drivers/perf/arm_brbe.c:190:6: warning: no previous prototype for ‘armv8pmu_branch_save’ [-Wmissing-prototypes]      
+>>   190 | void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)                      
+>>       |      ^~~~~~~~~~~~~~~~~~~~                                                                                                                                                                          
+>> drivers/perf/arm_brbe.c:236:6: warning: no previous prototype for ‘armv8pmu_branch_attr_valid’ [-Wmissing-prototypes]
+>>   236 | bool armv8pmu_branch_attr_valid(struct perf_event *event)                                                                                                                                          
+>>       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                    
+>> drivers/perf/arm_brbe.c:269:5: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_alloc’ [-Wmissing-prototypes]
+>>   269 | int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *arm_pmu)                            
+>>       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
+>> drivers/perf/arm_brbe.c:279:6: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_free’ [-Wmissing-prototypes]
+>>   279 | void armv8pmu_task_ctx_cache_free(struct arm_pmu *arm_pmu)                       
+>>       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
+>> drivers/perf/arm_brbe.c:303:6: warning: no previous prototype for ‘armv8pmu_branch_probe’ [-Wmissing-prototypes]
+>>   303 | void armv8pmu_branch_probe(struct arm_pmu *armpmu)                                
+>>       |      ^~~~~~~~~~~~~~~~~~~~~                                                                   
+>> drivers/perf/arm_brbe.c:449:6: warning: no previous prototype for ‘armv8pmu_branch_enable’ [-Wmissing-prototypes]
+>>   449 | void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)                             
+>>       |      ^~~~~~~~~~~~~~~~~~~~~~                                                                  
+>> drivers/perf/arm_brbe.c:474:6: warning: no previous prototype for ‘armv8pmu_branch_disable’ [-Wmissing-prototypes]
+>>   474 | void armv8pmu_branch_disable(void)                                                           
+>>       |      ^~~~~~~~~~~~~~~~~~~~~~~                                                                 
+>> drivers/perf/arm_brbe.c:717:6: warning: no previous prototype for ‘armv8pmu_branch_read’ [-Wmissing-prototypes]
+>>   717 | void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+>>
+>> Branch helpers are used in ARM PMU V3 driver i.e drivers/perf/arm_pmuv3.c.
+>> Whether the actual BRBE helper definitions, or their fallback stubs (when
+>> CONFIG_ARM64_BRBE is not enabled), need to be accessible from arm_pmuv3.c
+>> driver not from brbe.c implementations itself.
+>>
+>>>
+>>> It seems like the main reason you can't include arm_brbe.h in arm32 code
+>>> is because there are a load of inline functions and references to
+>>> registers in there. But these are only used in arm_brbe.c, so they don't
+>>
+>> Right, arm32 should not be exposed to BRBE internals via arm_brbe.h header.
+>>
+>>> need to be in the header anyway.
+>>
+>> Right, these are only used in arm_brbe.c
+>>
+>>>
+>>> If you removed the code from the header and moved it to the source file
+>>> you could move the brbe prototypes to the brbe header and it would be a
+>>> bit cleaner and more idiomatic.
+>>
+>> Alight, how about the following changes - build tested on arm32 and arm64.
+>>
+>> - Move BRBE helpers from arm_brbe.h into arm_brbe.c
+>> - Move armv8_pmu_xxx() declaration inside arm_brbe.h for arm64 (CONFIG_ARM64_BRBE)
+>> - Move armv8_pmu_xxx() stub definitions inside arm_pmuv3.c for arm32 (!CONFIG_ARM64_BRBE)
+>> - Include arm_brbe.h header both in arm_pmuv3.c and arm_brbe.c
+> 
+> Agree to them all except:
+> 
+>   - Move armv8_pmu_xxx() stub definitions inside arm_pmuv3.c for arm32
+> (!CONFIG_ARM64_BRBE)
+> 
+> Normally you put the stubs right next to the prototypes with #else, so
+> in this case both would be in arm_brbe.h. Not sure what the reason for
+> splitting them here is? You already said "include arm_brbe.h in
+> arm_pmuv3.c", so that covers arm32 too.
 
+Not any particular strong reason for the split as such, will move these
+stubs to the header as well. BRBE header includes <linux/perf/arm_pmu.h>
+which causes the following redefinition warning for the pr_fmt().
+
+drivers/perf/arm_brbe.c:11: warning: "pr_fmt" redefined
+   11 | #define pr_fmt(fmt) "brbe: " fmt
+      | 
+In file included from ./include/linux/kernel.h:31,
+                 from ./include/linux/interrupt.h:6,
+                 from ./include/linux/perf/arm_pmu.h:11,
+                 from drivers/perf/arm_brbe.h:10,
+                 from drivers/perf/arm_brbe.c:9:
+./include/linux/printk.h:345: note: this is the location of the previous definition
+  345 | #define pr_fmt(fmt) fmt
+
+Although it should be okay to just drop this custom pr_fmt() from BRBE.
