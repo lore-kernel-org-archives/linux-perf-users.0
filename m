@@ -1,136 +1,160 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jo1eK27d"
-Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D892C19B5;
-	Tue, 21 Nov 2023 14:57:21 -0800 (PST)
-Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1eb6c559ab4so3660540fac.0;
-        Tue, 21 Nov 2023 14:57:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGYnISL+"
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170C6D1;
+	Tue, 21 Nov 2023 15:43:29 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id 5614622812f47-3b83d2981b5so170102b6e.0;
+        Tue, 21 Nov 2023 15:43:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700607437; x=1701212237; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D8ZZgvmAXPhmKzJU9UhObSbddp4HrtBDtV0ojPM1K/w=;
-        b=Jo1eK27dcXMPNedOfNH9AG8n7aBtJ3uKMq994iRaYs+FvIRWrRRl1+XUGSwhzbw5oD
-         4MEt06OOhIL8COpC9IJJKOfpi9alktwEmupP8b1/JloPQ1JoMW6XvKd+0E9MFuVzK0rS
-         t2eVfnzzMEX+Fa7ErV+C7hxbQg/6fws2D2LqHyMGrb0hJHs4liK6eMNuD4Ipk4WHR9L0
-         gIch9saDt3eV+PGOPSIn9bUZcnei8GAcx8jtjnFI1SsIfT4v7g5n3s6MmJmNXd3DWM3k
-         G4Ll4YLpArveEXdvj30UmLrhSiEZd6UC9wS27XVqxzw37LTfTtNMzYPyexQpQHQnoEp8
-         FLyA==
+        d=gmail.com; s=20230601; t=1700610208; x=1701215008; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nBS+DVGQWY8oXSxEgPe4ez0bnbZp4j8xClzB0D/ObR8=;
+        b=OGYnISL+5IdS+qh2pYoRA1IaUeTCUIRBb962wa2nj8tKI/woDSwkbhtu20BarwOLJm
+         4IcZ9bgh05vXm2/o8m6UYlhmpYmu2ZCiJLx3H/rUFiAR6/5Vn7lDbZxxHlViGITunYXp
+         +cYz0JahbAOmDwk3u7QNLWdNbUslOaLwtuYoThJiPAeRg2V5796w0M8scgnrj1zew8uk
+         85qXnqmDOaOCC7wm1raux1kUUKYRClZDc4u9mDQvfCMkWRFJUK5d6D1E6KzRjUAnqGvL
+         DTH1sn5rYAzy0qWR/uhqJOsl7Xa5lQZEafv0RcA8SjPNTOOJ+ppxasgZvJF6ikEDSWMz
+         Y6Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700607437; x=1701212237;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=D8ZZgvmAXPhmKzJU9UhObSbddp4HrtBDtV0ojPM1K/w=;
-        b=RDqDJixmnSchGJkfIkuY3bg+qt7DdbnEq+crhQAd2nPYd++AZt1Z/SL/ZOO/NG8nJp
-         UWhKOcN/lVxRHsHSA+KjZwS/OdBGAQadklkSsvdThGLCQw6bY95zigbY8SGDjb/OV734
-         8Abq9U93/o5rIMi/GaZ2hsYbrEh3KaK6M+fL/mfVrpKLq0kryDhYTDYDr0M8LFMyTBzP
-         RB9Hw/QpaHwnbE6hdNhMGxpUoTcoaKP8zdpw9OAo7qXyo+G9na59lhYe8NDdyoq4vRAm
-         PLPak8LMJ62E3kUa15/Fxkw30AZZQxCCWHHg0JmDMIGklzXbyhjwOl9CuOjOyqN4g53d
-         rE/w==
-X-Gm-Message-State: AOJu0YwDreePlrM3hwg1MeXFYeKcnlDJSJQ/t3d8uDKqaokH6pjHBS+l
-	8Ux+lq2E7QYAQpu+ChZL1GZ2cJfuRRI=
-X-Google-Smtp-Source: AGHT+IHGy7cYb+GxVBQPuDn9AEvXhzEI4tjhctSPPKP0HsuLd5XM6dwayXZ/6IYPEvsvmfe1c4ocNQ==
-X-Received: by 2002:a17:902:cec8:b0:1cf:6969:581 with SMTP id d8-20020a170902cec800b001cf69690581mr689443plg.49.1700607416739;
-        Tue, 21 Nov 2023 14:56:56 -0800 (PST)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:7377:923f:1ff3:266d])
-        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b001cc47c1c29csm8413189plt.84.2023.11.21.14.56.55
+        d=1e100.net; s=20230601; t=1700610208; x=1701215008;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nBS+DVGQWY8oXSxEgPe4ez0bnbZp4j8xClzB0D/ObR8=;
+        b=gz9iXtJHUXjwCyAPD3hqrPFo20ggjkFvuGocliCoPD7IvgpWjczo/wtCelxYixalwl
+         zEM6grODO/625H3tEQI1r+aCW2EnTljFUNyEW4qCGiHNcyL6NclPj57JJzPqXSd2ItNf
+         zNn63Pgv59LAGEUpVTON5e/rxljJBzqED2Z8YoDh/rB/l+6/OLbxhpKaOIs0/qrSlFXe
+         N/wDF9bScuNW+H29vr6MZCyDdJv0hFN8QzKNbryEc6tBFHtYBTzy9zxFbPiwJlLU7dPK
+         fJiK3vr2kz0XWGDXZtUDqcs7KWfEWOzhZgLfdMEehMYObJo6W1KW7GRkI7fVQpqPN9qw
+         o3UA==
+X-Gm-Message-State: AOJu0YzsCjK9WZLF8mDJTmBPdnV0ODPFyrtBUqLsnfqA1149MM27YXnI
+	npjtJ1hNyqWGy8Qo53DyZB46RWtjEcgfnA==
+X-Google-Smtp-Source: AGHT+IHZ6/VS/djvTTtSjXXmpmFyVh1llZ04rQQ0TgJw5/LQzTx02CtBWjROC9dZrUGxzj3LMx4Y1w==
+X-Received: by 2002:a05:6808:1407:b0:3b2:dcff:9e54 with SMTP id w7-20020a056808140700b003b2dcff9e54mr1108746oiv.24.1700610208258;
+        Tue, 21 Nov 2023 15:43:28 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id bw1-20020a056a02048100b005c216d903bdsm5980436pgb.89.2023.11.21.15.43.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 14:56:56 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 04/14] tools headers UAPI: Update tools's copy of mount.h header
-Date: Tue, 21 Nov 2023 14:56:39 -0800
-Message-ID: <20231121225650.390246-4-namhyung@kernel.org>
-X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-In-Reply-To: <20231121225650.390246-1-namhyung@kernel.org>
-References: <20231121225650.390246-1-namhyung@kernel.org>
+        Tue, 21 Nov 2023 15:43:27 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id DB697102106EA; Wed, 22 Nov 2023 06:43:24 +0700 (WIB)
+Date: Wed, 22 Nov 2023 06:43:24 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Hector Martin <marcan@marcan.st>,
+	Linux perf Profiling <linux-perf-users@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>,
+	Asahi Linux Mailing List <asahi@lists.linux.dev>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since
+ v6.5
+Message-ID: <ZV1AnNB2CSbAUFVg@archie.me>
+References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fu/8SvnJ7Xc8DEer"
+Content-Disposition: inline
+In-Reply-To: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-Full explanation:
+--fu/8SvnJ7Xc8DEer
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
+On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
+> Perf broke on all Apple ARM64 systems (tested almost everything), and
+> according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
+>=20
+> Test command:
+>=20
+> sudo taskset -c 0 ./perf stat -e apple_icestorm_pmu/cycles/ -e
+> apple_firestorm_pmu/cycles/ -e cycles ls
+>=20
+> Since this is taskset to CPU #0 (LITTLE core, icestorm), only events for
+> icestorm are expected.
+>=20
+> I bisected the breakage to two distinct points:
+>=20
+> 5ea8f2ccffb is the first bad commit. With its parent, the output is as
+> expected (same as v6.4):
+>=20
+>          3,297,462      apple_icestorm_pmu/cycles/
+>=20
+>      <not counted>      apple_firestorm_pmu/cycles/
+>                        (0.00%)
+>      <not counted>      cycles
+>                        (0.00%)
+>=20
+> With 5ea8f2ccffb everything breaks:
+>=20
+>    <not supported>      apple_icestorm_pmu/cycles/
+>=20
+>    <not supported>      apple_firestorm_pmu/cycles/
+>=20
+>      <not counted>      cycles
+>                        (0.00%)
+>=20
+> Somewhere along the way to 82fe2e45cdb00 things get even worse (didn't
+> bother bisecting this range). With its parent:
+>=20
+>    <not supported>      apple_icestorm_pmu/cycles/
+>=20
+>    <not supported>      apple_firestorm_pmu/cycles/
+>=20
+>    <not supported>      apple_icestorm_pmu/cycles/
+>=20
+>    <not supported>      apple_firestorm_pmu/cycles/
+>=20
+> Then 82fe2e45cdb00 leads to the current v6.5 behavior:
+>=20
+>      <not counted>      apple_icestorm_pmu/cycles/
+>                        (0.00%)
+>      <not counted>      apple_firestorm_pmu/cycles/
+>                        (0.00%)
+>      <not counted>      cycles
+>                        (0.00%)
+>=20
+> If I taskset the task to CPU#2 (big core, firestorm), I get events:
+>=20
+>          1,454,858      apple_icestorm_pmu/cycles/
+>=20
+>          1,454,760      apple_firestorm_pmu/cycles/
+>=20
+>          1,454,384      cycles
+>=20
+>=20
+> So the current behavior is that all output seems to come from the
+> firestorm PMU event counter, regardless of requested event.
+>=20
+> This is all unchanged and still broken in v6.7-rc2.
+>=20
 
-The way these headers are used in perf are not restricted to just
-including them to compile something.
+Thanks for the regression report (and it has been handled well already).
+I'm adding it to regzbot for tracking:
 
-There are sometimes used in scripts that convert defines into string
-tables, etc, so some change may break one of these scripts, or new MSRs
-may use some different #define pattern, etc.
+#regzbot ^introduced: 5ea8f2ccffb239
 
-E.g.:
+--=20
+An old man doll... just what I always wanted! - Clara
 
-  $ ls -1 tools/perf/trace/beauty/*.sh | head -5
-  tools/perf/trace/beauty/arch_errno_names.sh
-  tools/perf/trace/beauty/drm_ioctl.sh
-  tools/perf/trace/beauty/fadvise.sh
-  tools/perf/trace/beauty/fsconfig.sh
-  tools/perf/trace/beauty/fsmount.sh
-  $
-  $ tools/perf/trace/beauty/fadvise.sh
-  static const char *fadvise_advices[] = {
-        [0] = "NORMAL",
-        [1] = "RANDOM",
-        [2] = "SEQUENTIAL",
-        [3] = "WILLNEED",
-        [4] = "DONTNEED",
-        [5] = "NOREUSE",
-  };
-  $
+--fu/8SvnJ7Xc8DEer
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The tools/perf/check-headers.sh script, part of the tools/ build
-process, points out changes in the original files.
+-----BEGIN PGP SIGNATURE-----
 
-So its important not to touch the copies in tools/ when doing changes in
-the original kernel headers, that will be done later, when
-check-headers.sh inform about the change to the perf tools hackers.
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZV1AlwAKCRD2uYlJVVFO
+o8aCAP9VLRaP2SCBxEoyHuPgsn0Q5WQW3SmEqOCX6a8pq9iEYAD9FltPgjVA6zjk
+h9C6hLjE6H67lgw50GnDhziUTCtluAY=
+=9D7c
+-----END PGP SIGNATURE-----
 
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/include/uapi/linux/mount.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/include/uapi/linux/mount.h b/tools/include/uapi/linux/mount.h
-index 8eb0d7b758d2..bb242fdcfe6b 100644
---- a/tools/include/uapi/linux/mount.h
-+++ b/tools/include/uapi/linux/mount.h
-@@ -100,8 +100,9 @@ enum fsconfig_command {
- 	FSCONFIG_SET_PATH	= 3,	/* Set parameter, supplying an object by path */
- 	FSCONFIG_SET_PATH_EMPTY	= 4,	/* Set parameter, supplying an object by (empty) path */
- 	FSCONFIG_SET_FD		= 5,	/* Set parameter, supplying an object by fd */
--	FSCONFIG_CMD_CREATE	= 6,	/* Invoke superblock creation */
-+	FSCONFIG_CMD_CREATE	= 6,	/* Create new or reuse existing superblock */
- 	FSCONFIG_CMD_RECONFIGURE = 7,	/* Invoke superblock reconfiguration */
-+	FSCONFIG_CMD_CREATE_EXCL = 8,	/* Create new superblock, fail if reusing existing superblock */
- };
- 
- /*
--- 
-2.43.0.rc1.413.gea7ed67945-goog
-
+--fu/8SvnJ7Xc8DEer--
