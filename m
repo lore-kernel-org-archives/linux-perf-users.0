@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043D458108
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Nov 2023 17:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48DA5B1E2
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Nov 2023 17:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y94UqoRH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49119C433C8;
-	Tue, 21 Nov 2023 17:04:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdjlrNYs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D45CC433C7;
+	Tue, 21 Nov 2023 17:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700586269;
-	bh=o2lje6MLDqWiG8m5cmgUnmkPV9kdCM+y2t1aBGDhWPo=;
+	s=k20201202; t=1700587304;
+	bh=aTJWlG4/89RSZo7lqtYiYHxKSO1In+COa2oKMyyaAiw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y94UqoRHkQKyT5snXO0zL0cPLp27Whhzi57swkI35O5TtB6q4bKXBNqhbs5SvmZJB
-	 by9FFd97dtah0xc3DfQ0ViQCQYpI9c5xwEjNE4yhdG7071a3XmTSknkdfiYfHgtZyM
-	 BdV/Rmo/4vYAbqWfKjOw5BWYc5JRahNpq+FaoiK8gcIm3ff5VgpxQoSVcJ6bHDsRP7
-	 uiXgqvpW4VAoqVZXXdVBXxiFz9WRh9apr1KMfD54qNy5y+BKu3Wfcz6SouVYGg2x4f
-	 6OfQevim5IEEFt/1Nnus3bCgBsDSpXoGVA9PeGIlCuvMjKXPOZlvr40+DLwBWHxoBU
-	 3MuftqI16U5mw==
+	b=tdjlrNYsCBlBXHs2rsBylv2ju5LVVItyFohcZG+xaLMlxMolNHhN+NYggcVDFfmrG
+	 G4Sszr55VVjURjnulIp3T3OlqW35DHecMV9DvFnvaemwlCzy7e2m8aGzQILrjpKbYx
+	 smPRIBNbEUQQSRyxg3RcCMAI3vW5S8cPTO746siMRoTBgQqmV2JwZ1CrPxo86qZM6B
+	 tmB5mcXzQT6E4SvIjTz249mjIDmYznD7+C9YKfeBpvYxlvTdlgj0AFfRbwr/PVL9ka
+	 datQzrF07aoJWBtbRKhP/U9oYfyMnRaJ1sz10tuk50ntDyZ3GjJNX/Fw1y8obL9tVa
+	 c78O/nFLpWXwA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id D280640094; Tue, 21 Nov 2023 14:04:26 -0300 (-03)
-Date: Tue, 21 Nov 2023 14:04:26 -0300
+	id 1EF9B40094; Tue, 21 Nov 2023 14:21:41 -0300 (-03)
+Date: Tue, 21 Nov 2023 14:21:41 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: Nick Forrington <nick.forrington@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Paran Lee <p4ranlee@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH] perf test: Remove atomics from test_loop to avoid test
- failures
-Message-ID: <ZVzjGqKv9GxYATli@kernel.org>
-References: <20231102162225.50028-1-nick.forrington@arm.com>
- <9e3355e0-f0d6-5f82-d2f6-b7e84bda996c@arm.com>
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	shjy180909@gmail.com, austindh.kim@gmail.com, honggyu.kp@gmail.com
+Subject: Re: [PATCH V3 RESEND] perf script python: Fail check on dynamic
+ allocation
+Message-ID: <ZVznJS+LF7fySGom@kernel.org>
+References: <20231120223218.9036-1-p4ranlee@gmail.com>
+ <4890f020-b4ad-4a50-9394-2cf4be1c19ca@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,40 +43,106 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9e3355e0-f0d6-5f82-d2f6-b7e84bda996c@arm.com>
+In-Reply-To: <4890f020-b4ad-4a50-9394-2cf4be1c19ca@intel.com>
 X-Url: http://acmel.wordpress.com
 
-Em Fri, Nov 03, 2023 at 09:14:45AM +0000, James Clark escreveu:
-> On 02/11/2023 16:22, Nick Forrington wrote:
-> > The current use of atomics can lead to test failures, as tests (such as
-> > tests/shell/record.sh) search for samples with "test_loop" as the
-> > top-most stack frame, but find frames related to the atomic operation
-> > (e.g. __aarch64_ldadd4_relax).
+Em Tue, Nov 21, 2023 at 09:39:12AM +0200, Adrian Hunter escreveu:
+> On 21/11/23 00:32, Paran Lee wrote:
+> > Add PyList_New() Fail check in get_field_numeric_entry()
+> > function and dynamic allocation checking for
+> > set_regs_in_dict(), python_start_script().
+> > 
+> > Signed-off-by: Paran Lee <p4ranlee@gmail.com>
+> > Reviewed-by: MichelleJin <shjy180909@gmail.com>
+> > Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> 
+> I did not give a Reviewed-by tag.
+> 
+> Please never assume someone else's tag.  It breaks the process.
+> 
+> However, I have now reviewed it, so:
+> 
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> > This change simply removes the "count" variable, as it is not necessary.
-
-> > Fixes: 1962ab6f6e0b ("perf test workload thloop: Make count increments atomic")
-> > Signed-off-by: Nick Forrington <nick.forrington@arm.com>
-
-> > +++ b/tools/perf/tests/workloads/thloop.c
-> > @@ -7,7 +7,6 @@
-> >   #include "../tests.h"
-> >   static volatile sig_atomic_t done;
-> > -static volatile unsigned count;
-> >   /* We want to check this symbol in perf report */
-> >   noinline void test_loop(void);
-> > @@ -19,8 +18,7 @@ static void sighandler(int sig __maybe_unused)
-> >   noinline void test_loop(void)
-> >   {
-> > -	while (!done)
-> > -		__atomic_fetch_add(&count, 1, __ATOMIC_RELAXED);
-> > +	while (!done);
-> >   }
-> >   static void *thfunc(void *arg)
- 
-> Reviewed-by: James Clark <james.clark@arm.com>
-
-Thanks, applied to perf-tools-next.
+Thanks, applied.
 
 - Arnaldo
+ 
+> > ---
+> >  .../util/scripting-engines/trace-event-python.c | 17 +++++++++++++++--
+> >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> > index 94312741443a..860e1837ba96 100644
+> > --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> > +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> > @@ -353,6 +353,8 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
+> >  
+> >  	if (is_array) {
+> >  		list = PyList_New(field->arraylen);
+> > +		if (!list)
+> > +			Py_FatalError("couldn't create Python list");
+> >  		item_size = field->size / field->arraylen;
+> >  		n_items = field->arraylen;
+> >  	} else {
+> > @@ -754,7 +756,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
+> >  	}
+> >  }
+> >  
+> > -static void set_regs_in_dict(PyObject *dict,
+> > +static int set_regs_in_dict(PyObject *dict,
+> >  			     struct perf_sample *sample,
+> >  			     struct evsel *evsel)
+> >  {
+> > @@ -770,6 +772,8 @@ static void set_regs_in_dict(PyObject *dict,
+> >  	 */
+> >  	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
+> >  	char *bf = malloc(size);
+> > +	if (!bf)
+> > +		return -1;
+> >  
+> >  	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
+> >  
+> > @@ -781,6 +785,8 @@ static void set_regs_in_dict(PyObject *dict,
+> >  	pydict_set_item_string_decref(dict, "uregs",
+> >  			_PyUnicode_FromString(bf));
+> >  	free(bf);
+> > +
+> > +	return 0;
+> >  }
+> >  
+> >  static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
+> > @@ -920,7 +926,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+> >  			PyLong_FromUnsignedLongLong(sample->cyc_cnt));
+> >  	}
+> >  
+> > -	set_regs_in_dict(dict, sample, evsel);
+> > +	if (set_regs_in_dict(dict, sample, evsel))
+> > +		Py_FatalError("Failed to setting regs in dict");
+> >  
+> >  	return dict;
+> >  }
+> > @@ -1918,12 +1925,18 @@ static int python_start_script(const char *script, int argc, const char **argv,
+> >  	scripting_context->session = session;
+> >  #if PY_MAJOR_VERSION < 3
+> >  	command_line = malloc((argc + 1) * sizeof(const char *));
+> > +	if (!command_line)
+> > +		return -1;
+> > +
+> >  	command_line[0] = script;
+> >  	for (i = 1; i < argc + 1; i++)
+> >  		command_line[i] = argv[i - 1];
+> >  	PyImport_AppendInittab(name, initperf_trace_context);
+> >  #else
+> >  	command_line = malloc((argc + 1) * sizeof(wchar_t *));
+> > +	if (!command_line)
+> > +		return -1;
+> > +
+> >  	command_line[0] = Py_DecodeLocale(script, NULL);
+> >  	for (i = 1; i < argc + 1; i++)
+> >  		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+> 
 
+-- 
+
+- Arnaldo
