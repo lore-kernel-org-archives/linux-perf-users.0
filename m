@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2/RI8eu"
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F37F10EB;
-	Tue, 21 Nov 2023 14:57:10 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-28014fed9efso4839522a91.0;
-        Tue, 21 Nov 2023 14:57:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jo1eK27d"
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D892C19B5;
+	Tue, 21 Nov 2023 14:57:21 -0800 (PST)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1eb6c559ab4so3660540fac.0;
+        Tue, 21 Nov 2023 14:57:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700607429; x=1701212229; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1700607437; x=1701212237; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b+EFg98kTfCiA5bJ0hLVEAxGuf511Fc6FKmEpnkyoH0=;
-        b=L2/RI8eud8oCzmcYHwdKZeb84WHnS+jTdlkfVv5EWu5iKAGwJpn5u62uuLjiZUSlTx
-         EUU8yhwGcIVN4jsds3uo40iADvgcw1RndSu6dtBByu58jmW9S+U0XGvuhNcioycV+kxm
-         V7Y349RWPC62d8wl/et5tFdUfucRx5O+OlYjdqnlOeo0zFK6g04klTYRKyW+r7tJJhnI
-         mN21S8s2bKCr6z/KAQ3I4LcdVIDpsF/0DciH+EkaqQ6zrX3K93f5zof41x1UynDzC6xu
-         ND4rJNTjs8TpqmppcrFqxsJ5qEn7g6NJrqkN5svizWW/uxvQGx9sAZ9VVA5JNvbB+A93
-         pflg==
+        bh=D8ZZgvmAXPhmKzJU9UhObSbddp4HrtBDtV0ojPM1K/w=;
+        b=Jo1eK27dcXMPNedOfNH9AG8n7aBtJ3uKMq994iRaYs+FvIRWrRRl1+XUGSwhzbw5oD
+         4MEt06OOhIL8COpC9IJJKOfpi9alktwEmupP8b1/JloPQ1JoMW6XvKd+0E9MFuVzK0rS
+         t2eVfnzzMEX+Fa7ErV+C7hxbQg/6fws2D2LqHyMGrb0hJHs4liK6eMNuD4Ipk4WHR9L0
+         gIch9saDt3eV+PGOPSIn9bUZcnei8GAcx8jtjnFI1SsIfT4v7g5n3s6MmJmNXd3DWM3k
+         G4Ll4YLpArveEXdvj30UmLrhSiEZd6UC9wS27XVqxzw37LTfTtNMzYPyexQpQHQnoEp8
+         FLyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700607429; x=1701212229;
+        d=1e100.net; s=20230601; t=1700607437; x=1701212237;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=b+EFg98kTfCiA5bJ0hLVEAxGuf511Fc6FKmEpnkyoH0=;
-        b=eOYs5kUbOmro6+9aJ3p3pwSthlHBWBfMnSZjJ68vdXwMz/I+bA0qjO5+mTpYY+H2re
-         r6M5bzy9sw6i6iWRNp+8zeFuU+h9UB0lCEJwHwQLcQ4GcuANQvDO08afyzWwp8WlmHxR
-         9bXArAAZIBobsoKiJVVukzpjc7ZiWYAfZgro3iKCiEzvyqg7ehUE7kT7zllu1/mm+djG
-         p7/U5JD+CmmETvHO9xfZK6riVvU7wSfolAaqzGR4ktZLRnMUEHUIR3nAASdB+vlfpRqT
-         N3NiTbK3yrovEZyAIC+v8bXY1syz44SDqbGNctT4usYXS7XlSSW1n7OcyNhhxs6JiHpC
-         kP/Q==
-X-Gm-Message-State: AOJu0Yzct+6vi7xRJTdZV9BpDxLfBCj+4evK8gmFJydTG3brtngH4cQn
-	j/n4AfCgQTHhKISYpzEbb20=
-X-Google-Smtp-Source: AGHT+IHAZfTYnEfvM9N+zU+BwpEcd7b2hFqzj/wQ/s49uhp3ltuCY1GxTKUsvtdHQvGJMpOyeG5YFg==
-X-Received: by 2002:a17:90b:4ace:b0:27f:f260:ceaf with SMTP id mh14-20020a17090b4ace00b0027ff260ceafmr679899pjb.10.1700607429547;
-        Tue, 21 Nov 2023 14:57:09 -0800 (PST)
+        bh=D8ZZgvmAXPhmKzJU9UhObSbddp4HrtBDtV0ojPM1K/w=;
+        b=RDqDJixmnSchGJkfIkuY3bg+qt7DdbnEq+crhQAd2nPYd++AZt1Z/SL/ZOO/NG8nJp
+         UWhKOcN/lVxRHsHSA+KjZwS/OdBGAQadklkSsvdThGLCQw6bY95zigbY8SGDjb/OV734
+         8Abq9U93/o5rIMi/GaZ2hsYbrEh3KaK6M+fL/mfVrpKLq0kryDhYTDYDr0M8LFMyTBzP
+         RB9Hw/QpaHwnbE6hdNhMGxpUoTcoaKP8zdpw9OAo7qXyo+G9na59lhYe8NDdyoq4vRAm
+         PLPak8LMJ62E3kUa15/Fxkw30AZZQxCCWHHg0JmDMIGklzXbyhjwOl9CuOjOyqN4g53d
+         rE/w==
+X-Gm-Message-State: AOJu0YwDreePlrM3hwg1MeXFYeKcnlDJSJQ/t3d8uDKqaokH6pjHBS+l
+	8Ux+lq2E7QYAQpu+ChZL1GZ2cJfuRRI=
+X-Google-Smtp-Source: AGHT+IHGy7cYb+GxVBQPuDn9AEvXhzEI4tjhctSPPKP0HsuLd5XM6dwayXZ/6IYPEvsvmfe1c4ocNQ==
+X-Received: by 2002:a17:902:cec8:b0:1cf:6969:581 with SMTP id d8-20020a170902cec800b001cf69690581mr689443plg.49.1700607416739;
+        Tue, 21 Nov 2023 14:56:56 -0800 (PST)
 Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:7377:923f:1ff3:266d])
-        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b001cc47c1c29csm8413189plt.84.2023.11.21.14.57.08
+        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b001cc47c1c29csm8413189plt.84.2023.11.21.14.56.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 14:57:09 -0800 (PST)
+        Tue, 21 Nov 2023 14:56:56 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -48,11 +48,12 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org
-Subject: [PATCH 14/14] tools/perf: Update tools's copy of mips syscall table
-Date: Tue, 21 Nov 2023 14:56:49 -0800
-Message-ID: <20231121225650.390246-14-namhyung@kernel.org>
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH 04/14] tools headers UAPI: Update tools's copy of mount.h header
+Date: Tue, 21 Nov 2023 14:56:39 -0800
+Message-ID: <20231121225650.390246-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
 In-Reply-To: <20231121225650.390246-1-namhyung@kernel.org>
 References: <20231121225650.390246-1-namhyung@kernel.org>
@@ -107,25 +108,29 @@ So its important not to touch the copies in tools/ when doing changes in
 the original kernel headers, that will be done later, when
 check-headers.sh inform about the change to the perf tools hackers.
 
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/include/uapi/linux/mount.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-index 80be0e98ea0c..116ff501bf92 100644
---- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-+++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-@@ -367,3 +367,7 @@
- 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	n64	cachestat			sys_cachestat
- 452	n64	fchmodat2			sys_fchmodat2
-+453	n64	map_shadow_stack		sys_map_shadow_stack
-+454	n64	futex_wake			sys_futex_wake
-+455	n64	futex_wait			sys_futex_wait
-+456	n64	futex_requeue			sys_futex_requeue
+diff --git a/tools/include/uapi/linux/mount.h b/tools/include/uapi/linux/mount.h
+index 8eb0d7b758d2..bb242fdcfe6b 100644
+--- a/tools/include/uapi/linux/mount.h
++++ b/tools/include/uapi/linux/mount.h
+@@ -100,8 +100,9 @@ enum fsconfig_command {
+ 	FSCONFIG_SET_PATH	= 3,	/* Set parameter, supplying an object by path */
+ 	FSCONFIG_SET_PATH_EMPTY	= 4,	/* Set parameter, supplying an object by (empty) path */
+ 	FSCONFIG_SET_FD		= 5,	/* Set parameter, supplying an object by fd */
+-	FSCONFIG_CMD_CREATE	= 6,	/* Invoke superblock creation */
++	FSCONFIG_CMD_CREATE	= 6,	/* Create new or reuse existing superblock */
+ 	FSCONFIG_CMD_RECONFIGURE = 7,	/* Invoke superblock reconfiguration */
++	FSCONFIG_CMD_CREATE_EXCL = 8,	/* Create new superblock, fail if reusing existing superblock */
+ };
+ 
+ /*
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
