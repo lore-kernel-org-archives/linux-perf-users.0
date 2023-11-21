@@ -1,15 +1,15 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3AAB124;
-	Tue, 21 Nov 2023 01:14:01 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 09A34FA;
+	Tue, 21 Nov 2023 01:58:03 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 429CAFEC;
-	Tue, 21 Nov 2023 01:14:48 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 654B4FEC;
+	Tue, 21 Nov 2023 01:58:49 -0800 (PST)
 Received: from [10.163.36.237] (unknown [10.163.36.237])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 182C33F73F;
-	Tue, 21 Nov 2023 01:13:56 -0800 (PST)
-Message-ID: <c8ddb80b-4228-4ed3-bc54-fba334b70c2b@arm.com>
-Date: Tue, 21 Nov 2023 14:43:54 +0530
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73DEF3F73F;
+	Tue, 21 Nov 2023 01:57:57 -0800 (PST)
+Message-ID: <6ab8a99b-00cb-4e53-9f95-51fa1f45a3b8@arm.com>
+Date: Tue, 21 Nov 2023 15:27:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,120 +30,402 @@ Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
  mark.rutland@arm.com
 References: <20231114051329.327572-1-anshuman.khandual@arm.com>
  <20231114051329.327572-4-anshuman.khandual@arm.com>
- <0020aa0d-e9a5-aef6-f33d-817da56411a3@arm.com>
- <5bf73672-4094-490b-b0a9-b983d512c904@arm.com>
- <4fa8ca52-b40c-65ec-59a0-7ad14c4e93b7@arm.com>
+ <62b84faf-f413-6bfd-5fc1-ac2489e61e00@arm.com>
+ <648dc72b-7120-498f-8963-dbdc0d1acce0@arm.com>
+ <1d731458-d339-1ffa-0d18-33628634224f@arm.com>
 From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <4fa8ca52-b40c-65ec-59a0-7ad14c4e93b7@arm.com>
+In-Reply-To: <1d731458-d339-1ffa-0d18-33628634224f@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 11/15/23 15:07, James Clark wrote:
+On 11/15/23 15:37, James Clark wrote:
 > 
 > 
-> On 15/11/2023 05:44, Anshuman Khandual wrote:
->> On 11/14/23 15:28, James Clark wrote:
+> On 15/11/2023 07:22, Anshuman Khandual wrote:
+>> On 11/14/23 17:44, James Clark wrote:
 >>>
 >>>
 >>> On 14/11/2023 05:13, Anshuman Khandual wrote:
->>>> Branch stack sampling support i.e capturing branch records during execution
->>>> in core perf, rides along with normal HW events being scheduled on the PMU.
->>>> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
->>>> with required HW implementation.
->>>>
->>>
 >>> [...]
 >>>
->>>> - All armv8pmu_branch_xxxx() stub definitions have been moved inside
->>>>   include/linux/perf/arm_pmuv3.h for easy access from both arm32 and
->>>>   arm64 platforms
->>>>
+>>>> +/*
+>>>> + * This is a read only constant and safe during multi threaded access
+>>>> + */
+>>>> +static struct perf_branch_stack zero_branch_stack = { .nr = 0, .hw_idx = -1ULL};
+>>>> +
+>>>> +static void read_branch_records(struct pmu_hw_events *cpuc,
+>>>> +				struct perf_event *event,
+>>>> +				struct perf_sample_data *data,
+>>>> +				bool *branch_captured)
+>>>> +{
+>>>> +	/*
+>>>> +	 * CPU specific branch records buffer must have been allocated already
+>>>> +	 * for the hardware records to be captured and processed further.
+>>>> +	 */
+>>>> +	if (WARN_ON(!cpuc->branches))
+>>>> +		return;
+>>>> +
+>>>> +	/*
+>>>> +	 * Overflowed event's branch_sample_type does not match the configured
+>>>> +	 * branch filters in the BRBE HW. So the captured branch records here
+>>>> +	 * cannot be co-related to the overflowed event. Report to the user as
+>>>> +	 * if no branch records have been captured, and flush branch records.
+>>>> +	 * The same scenario is applicable when the current task context does
+>>>> +	 * not match with overflown event.
+>>>> +	 */
+>>>> +	if ((cpuc->brbe_sample_type != event->attr.branch_sample_type) ||
+>>>> +	    (event->ctx->task && cpuc->brbe_context != event->ctx)) {
+>>>> +		perf_sample_save_brstack(data, event, &zero_branch_stack);
 >>>
->>> This causes lots of W=1 build errors because the prototypes are in
->>> arm_pmuv3.h, but arm_brbe.c doesn't include it.
+>>> Is there any benefit to outputting a zero size stack vs not outputting
+>>> anything at all?
 >>
->> I guess these are the W=1 warnings you mentioned above.
+>> The event has got PERF_SAMPLE_BRANCH_STACK marked and hence perf_sample_data
+>> must have PERF_SAMPLE_BRANCH_STACK with it's br_stack pointing to the branch
+>> records. Hence without assigning a zeroed struct perf_branch_stack, there is
+>> a chance, that perf_sample_data will pass on some garbage branch records to
+>> the ring buffer.
 >>
->> drivers/perf/arm_brbe.c:11:6: warning: no previous prototype for ‘armv8pmu_branch_reset’ [-Wmissing-prototypes]
->>    11 | void armv8pmu_branch_reset(void)                                                                                                                                                                   
->>       |      ^~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                         
->> drivers/perf/arm_brbe.c:190:6: warning: no previous prototype for ‘armv8pmu_branch_save’ [-Wmissing-prototypes]      
->>   190 | void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)                      
->>       |      ^~~~~~~~~~~~~~~~~~~~                                                                                                                                                                          
->> drivers/perf/arm_brbe.c:236:6: warning: no previous prototype for ‘armv8pmu_branch_attr_valid’ [-Wmissing-prototypes]
->>   236 | bool armv8pmu_branch_attr_valid(struct perf_event *event)                                                                                                                                          
->>       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~                                                                                                                                                                    
->> drivers/perf/arm_brbe.c:269:5: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_alloc’ [-Wmissing-prototypes]
->>   269 | int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *arm_pmu)                            
->>       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
->> drivers/perf/arm_brbe.c:279:6: warning: no previous prototype for ‘armv8pmu_task_ctx_cache_free’ [-Wmissing-prototypes]
->>   279 | void armv8pmu_task_ctx_cache_free(struct arm_pmu *arm_pmu)                       
->>       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                            
->> drivers/perf/arm_brbe.c:303:6: warning: no previous prototype for ‘armv8pmu_branch_probe’ [-Wmissing-prototypes]
->>   303 | void armv8pmu_branch_probe(struct arm_pmu *armpmu)                                
->>       |      ^~~~~~~~~~~~~~~~~~~~~                                                                   
->> drivers/perf/arm_brbe.c:449:6: warning: no previous prototype for ‘armv8pmu_branch_enable’ [-Wmissing-prototypes]
->>   449 | void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)                             
->>       |      ^~~~~~~~~~~~~~~~~~~~~~                                                                  
->> drivers/perf/arm_brbe.c:474:6: warning: no previous prototype for ‘armv8pmu_branch_disable’ [-Wmissing-prototypes]
->>   474 | void armv8pmu_branch_disable(void)                                                           
->>       |      ^~~~~~~~~~~~~~~~~~~~~~~                                                                 
->> drivers/perf/arm_brbe.c:717:6: warning: no previous prototype for ‘armv8pmu_branch_read’ [-Wmissing-prototypes]
->>   717 | void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+> 
+> I don't think that's an issue, the perf core code handles the case where
+> no branch stack exists on a sample. It even outputs the zero length for
+> you, but there is other stuff that can be skipped if you just never call
+> perf_sample_save_brstack():
+
+Sending out perf_sample_data without valid data->br_stack seems problematic,
+which would be the case when perf_sample_save_brstack() never gets called on
+the perf_sample_data being prepared, and depend on the below 'else' case for
+pushing out zero records.
+
+Alternatively - temporarily just zeroing out cpuc->branches->branch_stack.nr
+for immediate perf_sample_save_brstack(), and then restoring it back to it's
+original value might work as well. Remember it still has got valid records
+for other qualifying events.
+
+> 
+> from kernel/events/core.c:
+> 
+>  if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+>   if (data->br_stack) {
+>     size_t size;
+> 
+>     size = data->br_stack->nr
+>       * sizeof(struct perf_branch_entry);
+> 
+>     perf_output_put(handle, data->br_stack->nr);
+>     if (branch_sample_hw_index(event))
+>       perf_output_put(handle, data->br_stack->hw_idx);
+>     perf_output_copy(handle, data->br_stack->entries, size);
+>   } else {
+>     /*
+>      * we always store at least the value of nr
+>      */
+>     u64 nr = 0;
+>     perf_output_put(handle, nr);
+>   }
+> }
+> 
+> 
+>>>
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	/*
+>>>> +	 * Read the branch records from the hardware once after the PMU IRQ
+>>>> +	 * has been triggered but subsequently same records can be used for
+>>>> +	 * other events that might have been overflowed simultaneously thus
+>>>> +	 * saving much CPU cycles.
+>>>> +	 */
+>>>> +	if (!*branch_captured) {
+>>>> +		armv8pmu_branch_read(cpuc, event);
+>>>> +		*branch_captured = true;
+>>>> +	}
+>>>> +	perf_sample_save_brstack(data, event, &cpuc->branches->branch_stack);
+>>>> +}
+>>>> +
+>>>>  static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>>>>  {
+>>>>  	u32 pmovsr;
+>>>> @@ -766,6 +815,7 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>>>>  	struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
+>>>>  	struct pt_regs *regs;
+>>>>  	int idx;
+>>>> +	bool branch_captured = false;
+>>>>  
+>>>>  	/*
+>>>>  	 * Get and reset the IRQ flags
+>>>> @@ -809,6 +859,13 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>>>>  		if (!armpmu_event_set_period(event))
+>>>>  			continue;
+>>>>  
+>>>> +		/*
+>>>> +		 * PMU IRQ should remain asserted until all branch records
+>>>> +		 * are captured and processed into struct perf_sample_data.
+>>>> +		 */
+>>>> +		if (has_branch_stack(event) && cpu_pmu->has_branch_stack)
+>>>> +			read_branch_records(cpuc, event, &data, &branch_captured);
+>>>
+>>> You could return instead of using the out param, not really any
+>>> different, but maybe a bit more normal:
+>>>
+>>>   branch_captured |= read_branch_records(cpuc, event, &data,
+>>> branch_captured);
 >>
->> Branch helpers are used in ARM PMU V3 driver i.e drivers/perf/arm_pmuv3.c.
->> Whether the actual BRBE helper definitions, or their fallback stubs (when
->> CONFIG_ARM64_BRBE is not enabled), need to be accessible from arm_pmuv3.c
->> driver not from brbe.c implementations itself.
+>> I am just wondering - how that would be any better ?
+>>
+> 
+> Maybe it wouldn't, but I suppose it's just the same way you don't write
+> returns like:
+> 
+>   armv8pmu_task_ctx_cache_alloc(cpu_pmu, &ret);
+> 
+> instead of:
+> 
+>   ret = armv8pmu_task_ctx_cache_alloc(cpu_pmu);
+> 
+> Out params can be hard to reason about sometimes. Maybe not in this case
+> though.
+
+The out parameter 'branch_captured' is checked inside read_branch_records()
+to ascertain whether the BRBE records have been already captured inside the
+buffer i.e cpuc->branches->branch_stack, in case the process can be skipped
+(optimization) for subsequent events in the session. Keeping this parameter
+branch_captured just inside the caller i.e armv8pmu_handle_irq() would not
+achieve that objective.
+
+>>>
+>>>> +
+>>>>  		/*
+>>>>  		 * Perf event overflow will queue the processing of the event as
+>>>>  		 * an irq_work which will be taken care of in the handling of
+>>>> @@ -818,6 +875,8 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>>>>  			cpu_pmu->disable(event);
+>>>>  	}
+>>>>  	armv8pmu_start(cpu_pmu);
+>>>> +	if (cpu_pmu->has_branch_stack)
+>>>> +		armv8pmu_branch_reset();
+>>>>  
+>>>>  	return IRQ_HANDLED;
+>>>>  }
+>>>> @@ -907,6 +966,24 @@ static int armv8pmu_user_event_idx(struct perf_event *event)
+>>>>  	return event->hw.idx;
+>>>>  }
+>>>>  
+>>>> +static void armv8pmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+>>>> +{
+>>>> +	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
+>>>> +	void *task_ctx = pmu_ctx->task_ctx_data;
+>>>> +
+>>>> +	if (armpmu->has_branch_stack) {
+>>>> +		/* Save branch records in task_ctx on sched out */
+>>>> +		if (task_ctx && !sched_in) {
+>>>> +			armv8pmu_branch_save(armpmu, task_ctx);
+>>>> +			return;
+>>>> +		}
+>>>> +
+>>>> +		/* Reset branch records on sched in */
+>>>> +		if (sched_in)
+>>>> +			armv8pmu_branch_reset();
+>>>> +	}
+>>>> +}
+>>>> +
+>>>>  /*
+>>>>   * Add an event filter to a given event.
+>>>>   */
+>>>> @@ -977,6 +1054,9 @@ static void armv8pmu_reset(void *info)
+>>>>  		pmcr |= ARMV8_PMU_PMCR_LP;
+>>>>  
+>>>>  	armv8pmu_pmcr_write(pmcr);
+>>>> +
+>>>> +	if (cpu_pmu->has_branch_stack)
+>>>> +		armv8pmu_branch_reset();
+>>>>  }
+>>>>  
+>>>>  static int __armv8_pmuv3_map_event_id(struct arm_pmu *armpmu,
+>>>> @@ -1014,6 +1094,20 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
+>>>>  
+>>>>  	hw_event_id = __armv8_pmuv3_map_event_id(armpmu, event);
+>>>>  
+>>>> +	if (has_branch_stack(event)) {
+>>>> +		if (!armv8pmu_branch_attr_valid(event))
+>>>> +			return -EOPNOTSUPP;
+>>>> +
+>>>> +		/*
+>>>> +		 * If a task gets scheduled out, the current branch records
+>>>> +		 * get saved in the task's context data, which can be later
+>>>> +		 * used to fill in the records upon an event overflow. Let's
+>>>> +		 * enable PERF_ATTACH_TASK_DATA in 'event->attach_state' for
+>>>> +		 * all branch stack sampling perf events.
+>>>> +		 */
+>>>> +		event->attach_state |= PERF_ATTACH_TASK_DATA;
+>>>> +	}
+>>>> +
+>>>>  	/*
+>>>>  	 * CHAIN events only work when paired with an adjacent counter, and it
+>>>>  	 * never makes sense for a user to open one in isolation, as they'll be
+>>>> @@ -1130,6 +1224,35 @@ static void __armv8pmu_probe_pmu(void *info)
+>>>>  		cpu_pmu->reg_pmmir = read_pmmir();
+>>>>  	else
+>>>>  		cpu_pmu->reg_pmmir = 0;
+>>>> +	armv8pmu_branch_probe(cpu_pmu);
+>>>
+>>> I'm not sure if this is splitting hairs or not, but
+>>> __armv8pmu_probe_pmu() is run on only one of 'any' of the supported CPUs
+>>> for this PMU.
+>>
+>> Right.
 >>
 >>>
->>> It seems like the main reason you can't include arm_brbe.h in arm32 code
->>> is because there are a load of inline functions and references to
->>> registers in there. But these are only used in arm_brbe.c, so they don't
+>>> Is it not possible to have some of those CPUs support and some not
+>>> support BRBE, even though they are all the same PMU type? Maybe we could
 >>
->> Right, arm32 should not be exposed to BRBE internals via arm_brbe.h header.
+>> I am not sure, but not something I have come across.
 >>
->>> need to be in the header anyway.
+>>> wait for it to explode with some weird system, or change it so that the
+>>> BRBE probe is run on every CPU, with a second 'supported_brbe_mask' field.
 >>
->> Right, these are only used in arm_brbe.c
+>> Right, but for now, the current solutions looks sufficient.
+>>
+> 
+> I suppose it means people will have to split their PMUs to ones that do
+> and don't support BRBE. I'm not sure if that's worth adding a comment in
+> the docs or it's too obscure
+
+Sure, can add that comment in brbe.rst. Also with debug enabled i.e wrapped
+inside some debug config, it can be ascertained that all cpus on a given ARM
+PMU have BRBE with exact same properties.
+
+> 
+>>>
+>>>> +}
+>>>> +
+>>>> +static int branch_records_alloc(struct arm_pmu *armpmu)
+>>>> +{
+>>>> +	struct branch_records __percpu *records;
+>>>> +	int cpu;
+>>>> +
+>>>> +	records = alloc_percpu_gfp(struct branch_records, GFP_KERNEL);
+>>>> +	if (!records)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>
+>>> Doesn't this technically need to take the CPU mask where BRBE is
+>>> supported into account? Otherwise you are allocating for cores that
+>>> never use it.
+>>>
+>>> Also it's done per-CPU _and_ per-PMU type, multiplying the number of
+>>> BRBE buffers allocated, even if they can only ever be used per-CPU.
+>>
+>> Agreed, but I believe we have already been though this discussion, and
+>> settled for this method - for being a simpler approach.
 >>
 >>>
->>> If you removed the code from the header and moved it to the source file
->>> you could move the brbe prototypes to the brbe header and it would be a
->>> bit cleaner and more idiomatic.
+>>>> +	/*
+>>>> +	 * percpu memory allocated for 'records' gets completely consumed
+>>>> +	 * here, and never required to be freed up later. So permanently
+>>>> +	 * losing access to this anchor i.e 'records' is acceptable.
+>>>> +	 *
+>>>> +	 * Otherwise this allocation handle would have to be saved up for
+>>>> +	 * free_percpu() release later if required.
+>>>> +	 */
+>>>> +	for_each_possible_cpu(cpu) {
+>>>> +		struct pmu_hw_events *events_cpu;
+>>>> +		struct branch_records *records_cpu;
+>>>> +
+>>>> +		events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
+>>>> +		records_cpu = per_cpu_ptr(records, cpu);
+>>>> +		events_cpu->branches = records_cpu;
+>>>> +	}
+>>>> +	return 0;
+>>>>  }
+>>>>  
+>>>>  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>>>> @@ -1146,7 +1269,21 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>>>>  	if (ret)
+>>>>  		return ret;
+>>>>  
+>>>> -	return probe.present ? 0 : -ENODEV;
+>>>> +	if (!probe.present)
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	if (cpu_pmu->has_branch_stack) {
+>>>> +		ret = armv8pmu_task_ctx_cache_alloc(cpu_pmu);
+>>>> +		if (ret)
+>>>> +			return ret;
+>>>> +
+>>>> +		ret = branch_records_alloc(cpu_pmu);
+>>>> +		if (ret) {
+>>>> +			armv8pmu_task_ctx_cache_free(cpu_pmu);
+>>>> +			return ret;
+>>>> +		}
+>>>> +	}
+>>>> +	return 0;
+>>>>  }
+>>>>  
+>>>
+>>> [...]
+>>>> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+>>>> index 9c226adf938a..72da4522397c 100644
+>>>> --- a/include/linux/perf/arm_pmuv3.h
+>>>> +++ b/include/linux/perf/arm_pmuv3.h
+>>>> @@ -303,4 +303,50 @@
+>>>>  		}						\
+>>>>  	} while (0)
+>>>>  
+>>>> +struct pmu_hw_events;
+>>>> +struct arm_pmu;
+>>>> +struct perf_event;
+>>>> +
+>>>> +#ifdef CONFIG_PERF_EVENTS
+>>>
+>>> Very minor nit, but if you end up moving the stubs to the brbe header
+>>> you probably don't need the #ifdef CONFIG_PERF_EVENTS because it just
+>>> won't be included in that case.
 >>
->> Alight, how about the following changes - build tested on arm32 and arm64.
+>> Right, will drop CONFIG_PERF_EVENTS wrapper.
 >>
->> - Move BRBE helpers from arm_brbe.h into arm_brbe.c
->> - Move armv8_pmu_xxx() declaration inside arm_brbe.h for arm64 (CONFIG_ARM64_BRBE)
->> - Move armv8_pmu_xxx() stub definitions inside arm_pmuv3.c for arm32 (!CONFIG_ARM64_BRBE)
->> - Include arm_brbe.h header both in arm_pmuv3.c and arm_brbe.c
-> 
-> Agree to them all except:
-> 
->   - Move armv8_pmu_xxx() stub definitions inside arm_pmuv3.c for arm32
-> (!CONFIG_ARM64_BRBE)
-> 
-> Normally you put the stubs right next to the prototypes with #else, so
-> in this case both would be in arm_brbe.h. Not sure what the reason for
-> splitting them here is? You already said "include arm_brbe.h in
-> arm_pmuv3.c", so that covers arm32 too.
-
-Not any particular strong reason for the split as such, will move these
-stubs to the header as well. BRBE header includes <linux/perf/arm_pmu.h>
-which causes the following redefinition warning for the pr_fmt().
-
-drivers/perf/arm_brbe.c:11: warning: "pr_fmt" redefined
-   11 | #define pr_fmt(fmt) "brbe: " fmt
-      | 
-In file included from ./include/linux/kernel.h:31,
-                 from ./include/linux/interrupt.h:6,
-                 from ./include/linux/perf/arm_pmu.h:11,
-                 from drivers/perf/arm_brbe.h:10,
-                 from drivers/perf/arm_brbe.c:9:
-./include/linux/printk.h:345: note: this is the location of the previous definition
-  345 | #define pr_fmt(fmt) fmt
-
-Although it should be okay to just drop this custom pr_fmt() from BRBE.
+>>>
+>>>> +static inline void armv8pmu_branch_reset(void)
+>>>> +{
+>>>> +}
+>>>> +
+>>>> +static inline void armv8pmu_branch_probe(struct arm_pmu *arm_pmu)
+>>>> +{
+>>>> +}
+>>>> +
+>>>> +static inline bool armv8pmu_branch_attr_valid(struct perf_event *event)
+>>>> +{
+>>>> +	WARN_ON_ONCE(!has_branch_stack(event));
+>>>> +	return false;
+>>>> +}
+>>>> +
+>>>> +static inline void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)
+>>>> +{
+>>>> +}
+>>>> +
+>>>> +static inline void armv8pmu_branch_disable(void)
+>>>> +{
+>>>> +}
+>>>> +
+>>>> +static inline void armv8pmu_branch_read(struct pmu_hw_events *cpuc,
+>>>> +					struct perf_event *event)
+>>>> +{
+>>>> +	WARN_ON_ONCE(!has_branch_stack(event));
+>>>> +}
+>>>> +
+>>>> +static inline void armv8pmu_branch_save(struct arm_pmu *arm_pmu, void *ctx)
+>>>> +{
+>>>> +}
+>>>> +
+>>>> +static inline int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *arm_pmu)
+>>>> +{
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static inline void armv8pmu_task_ctx_cache_free(struct arm_pmu *arm_pmu)
+>>>> +{
+>>>> +}
+>>>> +#endif /* CONFIG_PERF_EVENTS */
+>>>>  #endif
