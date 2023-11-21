@@ -1,106 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="o3tsAP39"
-X-Greylist: delayed 460 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 21 Nov 2023 04:16:35 PST
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3BA137
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Nov 2023 04:16:35 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: marcan@marcan.st)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id 42BE542118;
-	Tue, 21 Nov 2023 12:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-	t=1700568533; bh=izpovA0XHb89VRrGlum7I7YsipyerFuXhLb0jEFlzB4=;
-	h=Date:To:From:Subject:Cc;
-	b=o3tsAP39aOWCf2InCItbLug8RNYooAAn10p4t1Uiq4fCQxp3UcnqgJoU3XuEb8frn
-	 pGWdSs8OVwDZAlJy68MEs6p/W4cfxudO1LppS5ET7Nmi7uQVWSDfwk/0tu3Fec59at
-	 4pN1uJ8uijvfztdmQNmWRIDctx2BtjAVN0qCpFEVbC0ISw/SCK+ctX5Jg2Aa1ma+aN
-	 +I/fACBQJE5HBd+J4V1kZIfGKA9jfM0+Os9M4hlIdy68mTYe/Ti4p+rAKpdfj2MlhU
-	 H3Wh+bSDZWP8qopJxkHcHkt6hf2CIFt3v5zKs1X0NAOBWHYrRwSgA6pW5AzeScdFQ4
-	 lHVsG8gD6Fs7g==
-Message-ID: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
-Date: Tue, 21 Nov 2023 21:08:48 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8161951C31
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Nov 2023 12:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwulOFOw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DFEC433C8;
+	Tue, 21 Nov 2023 12:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700569961;
+	bh=zGnoedvglamEbp32UJfoHImXoP4xUfJaqjgMd05AtNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VwulOFOw54sw8cq8gtxbQvDcUCh068vF14yB5jDdYBcQp1hb1PqQWzqYBFNRD32eY
+	 RqWYoFAprQ8Lrb3ZnkVhBFbFGzXceKyyAbiCVn6ip+xpaqfEmg+wYQqUiVspW3Ts7s
+	 sdP7xyh6jFZDfBj2TnyhpM+qkY3+ZKm3M6j+yz/e+rN7/6O/7oEN35JSleWCt5flN+
+	 X3gpDII1rTjMuYHidqggpjkik4y+sjp8+Cxe7PMLOIuAfeGr5ZB1mDLbN8Tb1Oukso
+	 wEs2jHS+G9XtydMJlZmY6FIsweNXCpNCLCtenO5JLZkVmlQv65hi+0XjquesLBTf6E
+	 yPv6i6/yRi8qA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id E2AD340094; Tue, 21 Nov 2023 09:32:38 -0300 (-03)
+Date: Tue, 21 Nov 2023 09:32:38 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: vmolnaro@redhat.com
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf test record.sh: Raise limit of open file descriptors
+Message-ID: <ZVyjZjPCXVmGGVFk@kernel.org>
+References: <20231115140522.28200-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-From: Hector Martin <marcan@marcan.st>
-Subject: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
-Cc: Marc Zyngier <maz@kernel.org>, Asahi Linux <asahi@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231115140522.28200-1-vmolnaro@redhat.com>
+X-Url: http://acmel.wordpress.com
 
-Perf broke on all Apple ARM64 systems (tested almost everything), and
-according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
+Em Wed, Nov 15, 2023 at 03:05:22PM +0100, vmolnaro@redhat.com escreveu:
+> From: Veronika Molnarova <vmolnaro@redhat.com>
+ 
+> Subtest for system-wide record with '--threads' option fails due to a
+> limit of open file descriptors(usually set to 1024) on systems with
+> 128 and more CPUs.
+> 
+> If the default limit is set lower than 2048 file descriptors,
+> temporarily raise it to this value for the test.
 
-Test command:
+Can we instead raise it to a multiple of the number of CPUs? Using:
 
-sudo taskset -c 0 ./perf stat -e apple_icestorm_pmu/cycles/ -e
-apple_firestorm_pmu/cycles/ -e cycles ls
+[acme@five ~]$ getconf _NPROCESSORS_ONLN
+32
+[acme@five ~]$
 
-Since this is taskset to CPU #0 (LITTLE core, icestorm), only events for
-icestorm are expected.
+If you tested 2048 is ok for a 128 CPU system, then maybe this is more
+future proof:
 
-I bisected the breakage to two distinct points:
+[acme@five ~]$ echo $(($(getconf _NPROCESSORS_ONLN) * 16))
+512
+[acme@five ~]$ echo $((128 * 16))
+2048
+[acme@five ~]$
 
-5ea8f2ccffb is the first bad commit. With its parent, the output is as
-expected (same as v6.4):
-
-         3,297,462      apple_icestorm_pmu/cycles/
-
-     <not counted>      apple_firestorm_pmu/cycles/
-                       (0.00%)
-     <not counted>      cycles
-                       (0.00%)
-
-With 5ea8f2ccffb everything breaks:
-
-   <not supported>      apple_icestorm_pmu/cycles/
-
-   <not supported>      apple_firestorm_pmu/cycles/
-
-     <not counted>      cycles
-                       (0.00%)
-
-Somewhere along the way to 82fe2e45cdb00 things get even worse (didn't
-bother bisecting this range). With its parent:
-
-   <not supported>      apple_icestorm_pmu/cycles/
-
-   <not supported>      apple_firestorm_pmu/cycles/
-
-   <not supported>      apple_icestorm_pmu/cycles/
-
-   <not supported>      apple_firestorm_pmu/cycles/
-
-Then 82fe2e45cdb00 leads to the current v6.5 behavior:
-
-     <not counted>      apple_icestorm_pmu/cycles/
-                       (0.00%)
-     <not counted>      apple_firestorm_pmu/cycles/
-                       (0.00%)
-     <not counted>      cycles
-                       (0.00%)
-
-If I taskset the task to CPU#2 (big core, firestorm), I get events:
-
-         1,454,858      apple_icestorm_pmu/cycles/
-
-         1,454,760      apple_firestorm_pmu/cycles/
-
-         1,454,384      cycles
-
-
-So the current behavior is that all output seems to come from the
-firestorm PMU event counter, regardless of requested event.
-
-This is all unchanged and still broken in v6.7-rc2.
-
-- Hector
+- Arnaldo
+ 
+> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> ---
+>  tools/perf/tests/shell/record.sh | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index 4fbc74805d52..c6c43263809a 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -11,6 +11,8 @@ err=0
+>  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+>  testprog="perf test -w thloop"
+>  testsym="test_loop"
+> +min_fd_limit=2048
+> +default_fd_limit=$(ulimit -n)
+>  
+>  cleanup() {
+>    rm -rf "${perfdata}"
+> @@ -154,10 +156,16 @@ test_workload() {
+>    echo "Basic target workload test [Success]"
+>  }
+>  
+> +if [[ $default_fd_limit -lt $min_fd_limit ]]; then
+> +	ulimit -n $min_fd_limit
+> +fi
+> +
+>  test_per_thread
+>  test_register_capture
+>  test_system_wide
+>  test_workload
+>  
+> +ulimit -n $default_fd_limit
+> +
+>  cleanup
+>  exit $err
+> -- 
+> 2.41.0
