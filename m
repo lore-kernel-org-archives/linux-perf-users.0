@@ -1,253 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5043E46D;
-	Wed, 22 Nov 2023 13:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WiolzToI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5384C433C7;
-	Wed, 22 Nov 2023 13:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700658386;
-	bh=Y6xAGgfADYxboftFlWMmXrKJq8g9fEh88y/hP5ytW28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WiolzToIV2impMQAaxb7yDqAn3vPNl/yoxsqC+2IbN2PLfSh3yfPFFgnN0n03xTJn
-	 //w92GX9G6xFva1ZalRObUZX3XJ4h35TTWIk3nh3zqM/p5+fMfGZDkdesZCHmrdr0n
-	 9cIn9htqUVk7XBbUQkvQGb29mpXVP2AlbDoge+opS44NJx4KCaWijcBDffU/TjbBJS
-	 l8cccNqYC5PEDJTCbS2oIlcx9mpwybS0xmQIHz+OCMX4QERb1uqmCm3PFA5PuHZp9/
-	 TAkQ/8I1AeNTjayd8/cXvC3vcp95deOT5Iv+XISZD8VC2G/HInWusci1ToGgr0HMHW
-	 F1fOVOEaV7iEQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 40CCB40094; Wed, 22 Nov 2023 10:06:23 -0300 (-03)
-Date: Wed, 22 Nov 2023 10:06:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Hector Martin <marcan@marcan.st>
-Cc: Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Asahi Linux <asahi@lists.linux.dev>
-Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since
- v6.5
-Message-ID: <ZV38z3+p2S2ETtzG@kernel.org>
-References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
- <86pm03z0kw.wl-maz@kernel.org>
- <86o7fnyvrq.wl-maz@kernel.org>
- <ZVzPUjOiH6zpUlz5@FVFF77S0Q05N.cambridge.arm.com>
- <CAP-5=fUB75DCL4+8YO62iPVsnxoeXGv5cLmT7eP2bHNs=xoMdg@mail.gmail.com>
- <ZVzUr7TWEYPoZrWX@FVFF77S0Q05N.cambridge.arm.com>
- <CAP-5=fUWm7efu3xdUBbiifs_KNU1igwAxbXmum=V38SjHQHtXg@mail.gmail.com>
- <ZVzXjz_0nYbmSGPQ@FVFF77S0Q05N.cambridge.arm.com>
- <CAP-5=fWLGOCWv=wp2xsi4AVxfbS8KhkmtkMwOA4yVrz791=Z8Q@mail.gmail.com>
- <930bfb9a-dcbe-4385-9ae3-26e2aa14c50e@marcan.st>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pI9nPJX/"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 755B69A
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 06:39:48 -0800 (PST)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AMDlCU7026127;
+	Wed, 22 Nov 2023 14:39:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=rD5CIAvlIW3SeOYjd55cdiEkITsj/TY4vFmyAm6f2T8=;
+ b=pI9nPJX/ASxXhcxnX9MgH45RRK3MgRpbD+Gl9kSYw9F3oL5tFgWl6MSVRe6ZfliqgDmy
+ KULc79Sy0vs1r1U17hqjh9IcMPmV/p30lEJf7zoeqNZVzl7ybPG5dJEq5+MvF7ALjEBC
+ HQ5KCYxx5q9aKd6K/8DyzC2HL0H7DYqxiB/fovvu7VUcadM20rJof18pms531VohHt32
+ 3g3v+gRHsAhrPHuVyKpREZgds1U4SO+0jootQqIHbhQGnJ7yG8GglkEIi3qBblKvDyNI
+ Mx8gqYleefB0DUHjp0unHLw377QB3pW0cmtMIFkVdquKFKHX7/+QyxWrxSAgL8mDBQaz lQ== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uhju5hj2s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Nov 2023 14:39:38 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AMDMkKi032399;
+	Wed, 22 Nov 2023 14:38:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uf8kp0dd7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Nov 2023 14:38:40 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AMEcaW220447750
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Nov 2023 14:38:36 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CFF7A20040;
+	Wed, 22 Nov 2023 14:38:36 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6D23520043;
+	Wed, 22 Nov 2023 14:38:36 +0000 (GMT)
+Received: from [9.171.44.146] (unknown [9.171.44.146])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 22 Nov 2023 14:38:36 +0000 (GMT)
+Message-ID: <375537e9-1382-4e27-88df-3c636e72f69d@linux.ibm.com>
+Date: Wed, 22 Nov 2023 15:38:36 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: REGRESSION linux-next since Nov 16th, perf tool broken (at least
+ on s390)
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>
+References: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
+ <20231122100756.GP8262@noisy.programming.kicks-ass.net>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20231122100756.GP8262@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: GuKYtrOSynTTJX1QXqBP6ZFvC4G8N-m8
+X-Proofpoint-GUID: GuKYtrOSynTTJX1QXqBP6ZFvC4G8N-m8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <930bfb9a-dcbe-4385-9ae3-26e2aa14c50e@marcan.st>
-X-Url: http://acmel.wordpress.com
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-22_10,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=999 adultscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311220104
 
-Em Wed, Nov 22, 2023 at 12:23:27PM +0900, Hector Martin escreveu:
-> On 2023/11/22 1:38, Ian Rogers wrote:
-> > On Tue, Nov 21, 2023 at 8:15 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >> On Tue, Nov 21, 2023 at 08:09:37AM -0800, Ian Rogers wrote:
-> >>> On Tue, Nov 21, 2023 at 8:03 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >>>> On Tue, Nov 21, 2023 at 07:46:57AM -0800, Ian Rogers wrote:
-> >>>>> On Tue, Nov 21, 2023 at 7:40 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >>>>>> On Tue, Nov 21, 2023 at 03:24:25PM +0000, Marc Zyngier wrote:
-> >>>>>>> On Tue, 21 Nov 2023 13:40:31 +0000,
-> >>>>>>> Marc Zyngier <maz@kernel.org> wrote:
-> >>>>>>>>
-> >>>>>>>> [Adding key people on Cc]
-> >>>>>>>>
-> >>>>>>>> On Tue, 21 Nov 2023 12:08:48 +0000,
-> >>>>>>>> Hector Martin <marcan@marcan.st> wrote:
-> >>>>>>>>>
-> >>>>>>>>> Perf broke on all Apple ARM64 systems (tested almost everything), and
-> >>>>>>>>> according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
-> >>>>>>>>
-> >>>>>>>> I can confirm that at least on 6.7-rc2, perf is pretty busted on any
-> >>>>>>>> asymmetric ARM platform. It isn't clear what criteria is used to pick
-> >>>>>>>> the PMU, but nothing works anymore.
-> >>>>>>>>
-> >>>>>>>> The saving grace in my case is that Debian still ships a 6.1 perftool
-> >>>>>>>> package, but that's obviously not going to last.
-> >>>>>>>>
-> >>>>>>>> I'm happy to test potential fixes.
-> >>>>>>>
-> >>>>>>> At Mark's request, I've dumped a couple of perf (as of -rc2) runs with
-> >>>>>>> -vvv.  And it is quite entertaining (this is taskset to an 'icestorm'
-> >>>>>>> CPU):
-> >>>>>>
-> >>>>>> IIUC the tool is doing the wrong thing here and overriding explicit
-> >>>>>> ${pmu}/${event}/ events with PERF_TYPE_HARDWARE events rather than events using
-> >>>>>> that ${pmu}'s type and event namespace.
-> >>>>>>
-> >>>>>> Regardless of the *new* ABI that allows PERF_TYPE_HARDWARE events to be
-> >>>>>> targetted to a specific PMU, it's semantically wrong to rewrite events like
-> >>>>>> this since ${pmu}/${event}/ is not necessarily equivalent to a similarly-named
-> >>>>>> PERF_COUNT_HW_${EVENT}.
-> >>>>>
-> >>>>> If you name a PMU and an event then the event should only be opened on
-> >>>>> that PMU, 100% agree. There's a bunch of output, but when the legacy
-> >>>>> cycles event is opened it appears to be because it was explicitly
-> >>>>> requested.
-> >>>>
-> >>>> I think you've missed that the named PMU events are being erreously transformed
-> >>>> into PERF_TYPE_HARDWARE events. Look at the -vvv output, e.g.
-> >>>>
-> >>>>   Opening: apple_firestorm_pmu/cycles/
-> >>>>   ------------------------------------------------------------
-> >>>>   perf_event_attr:
-> >>>>     type                             0 (PERF_TYPE_HARDWARE)
-> >>>>     size                             136
-> >>>>     config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-> >>>>     sample_type                      IDENTIFIER
-> >>>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-> >>>>     disabled                         1
-> >>>>     inherit                          1
-> >>>>     enable_on_exec                   1
-> >>>>     exclude_guest                    1
-> >>>>   ------------------------------------------------------------
-> >>>>   sys_perf_event_open: pid 1045843  cpu -1  group_fd -1  flags 0x8 = 4
-> >>>>
-> >>>> ... which should not be PERF_TYPE_HARDWARE && PERF_COUNT_HW_CPU_CYCLES.
-> >>>>
-> >>>> Marc said that he bisected the issue down to commit:
-> >>>>
-> >>>>   5ea8f2ccffb23983 ("perf parse-events: Support hardware events as terms")
-> >>>>
-> >>>> ... so it looks like something is going wrong when the events are being parsed,
-> >>>> e.g. losing the HW PMU information?
-> >>>
-> >>> Ok, I think I'm getting confused by other things. This looks like the issue.
-> >>>
-> >>> I think it may be working as intended, but not how you intended :-) If
-> >>> a core PMU is listed and then a legacy event, the legacy event should
+On 11/22/23 11:07, Peter Zijlstra wrote:
+> On Wed, Nov 22, 2023 at 08:38:28AM +0100, Thomas Richter wrote:
+>> perf tool fails on linux-next since Nov 16th on s390 when invoking perf on
+>> any PMU event, as in
+>>
+>>   # perf stat -e cycles -- true
+>>
+>>    Performance counter stats for 'true':
+>>
+>>      <not supported>      cycles                                                               
+>>
+>>        0.000598399 seconds time elapsed
+>>
+>>        0.000055000 seconds user
+>>        0.000567000 seconds sys
+>>
+>>   # perf stat -e pai_ext/NNPA_ALL/ -C0 -- true
+>>   event syntax error: 'pai_ext/NNPA_ALL/'
+>>                        \___ Bad event or PMU
+>>
+>>   Unable to find PMU or event on a PMU of 'pai_ext'
+>>
+>>   Initial error:
+>>   event syntax error: 'pai_ext/NNPA_ALL/'
+>>                        \___ Cannot find PMU `pai_ext'. Missing kernel support?
+>>   #
+>>
+>> This error is caused by following commit, which got into linux-next around November 15th:
+>>
+>> commit 652ffc2104ec1f69dd4a46313888c33527145ccf
+>> Author: Greg KH <gregkh@linuxfoundation.org>
+>> Date:   Mon Jun 12 15:09:09 2023 +0200
+>>
+>>     perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
+>>
+>>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>     Link: https://lkml.kernel.org/r/2023061204-decal-flyable-6090@gregkh
+>>
+>> This commit adds function pmu_dev_is_visible() as the PMU bus function
+>> to make sysfs attribute files visible.
+>> On a failing system these sysfs attribute files are exported:
+> 
+> Does this help? I'm not entirely sure on the is_visible thing, but the
+> way I understand it, it was only supposed to hide the nr_filters thing,
+> not the entire group and @n helps select the attribute.
+> 
+> Greg, did I get that right?
 
-The point is that "cycles" when prefixed with "pmu/" shouldn't be
-considered "cycles" as HW/0, in that setting it is "cycles" for that
-PMU. (but we only have "cpu_cycles" for at least the a53 and a72 PMUs I
-have access in a Libre Computer rockchip 3399-pc hybrid board, if we use
-it, then we get what we want/had before, see below):
+Yes, the is_visible call back function hides whole group, not just this
+one attribute.
 
-And there is an attempt at using the specified PMU, see the first
-perf_event_open:
+static struct attribute *pmu_dev_attrs[] = {    <--- This group controlled by is_visibly                              
+        &dev_attr_type.attr,                                                  
+        &dev_attr_perf_event_mux_interval_ms.attr,                            
+        &dev_attr_nr_addr_filters.attr,                                       
+        NULL,                                                                 
+};    
+static struct attribute_group pmu_dev_attr_group = {                          
+        .is_visible = pmu_dev_is_visible,                                     
+        .attrs = pmu_dev_attrs,                                               
+};
 
-root@roc-rk3399-pc:~# strace -e perf_event_open perf stat -vv -e cycles,armv8_cortex_a53/cycles/,armv8_cortex_a72/cycles/ echo
-Using CPUID 0x00000000410fd082
-------------------------------------------------------------
-perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  config                           0x700000000
-  disabled                         1
-------------------------------------------------------------
-sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0x7<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = -1 ENOENT (No such file or directory)
-                                                   
-//// HERE: it tries config=0x7<<32|PERF_COUNT_HW_CPU_CYCLES taking into
-//account the PMU number 0x7
+So is_visible call back hides whole pmu_dev_attrs group with all 3 files.
 
-root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a53/type
-7
-root@roc-rk3399-pc:~#
+> 
+> Also, spurious return... clearly I should've woken up before merging
+> that patch... oh well.
+> 
+> 
 
-But then we don't have "cycles" in that PMU:
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
-root@roc-rk3399-pc:~# ls -la /sys/devices/armv8_cortex_a53/events/cycles
-ls: cannot access '/sys/devices/armv8_cortex_a53/events/cycles': No such file or directory
-root@roc-rk3399-pc:~#
-
-Maybe:
-
-root@roc-rk3399-pc:~# taskset -c 5,6 perf stat -v -e armv8_cortex_a53/cpu_cycles/,armv8_cortex_a72/cpu_cycles/ echo
-Using CPUID 0x00000000410fd034
-Control descriptor is not initialized
-
-armv8_cortex_a53/cpu_cycles/: 0 2079000 0
-armv8_cortex_a72/cpu_cycles/: 2488961 2079000 2079000
-
- Performance counter stats for 'echo':
-
-     <not counted>      armv8_cortex_a53/cpu_cycles/                                            (0.00%)
-           2488961      armv8_cortex_a72/cpu_cycles/
-
-       0.003449266 seconds time elapsed
-
-       0.003502000 seconds user
-       0.000000000 seconds sys
-
-
-root@roc-rk3399-pc:~# taskset -c 0,1,2,3,4 perf stat -v -e armv8_cortex_a53/cpu_cycles/,armv8_cortex_a72/cpu_cycles/ echo
-Using CPUID 0x00000000410fd034
-Control descriptor is not initialized
-
-armv8_cortex_a53/cpu_cycles/: 2986601 6999416 6999416
-armv8_cortex_a72/cpu_cycles/: 0 6999416 0
-
- Performance counter stats for 'echo':
-
-           2986601      armv8_cortex_a53/cpu_cycles/
-     <not counted>      armv8_cortex_a72/cpu_cycles/                                            (0.00%)
-
-       0.011434508 seconds time elapsed
-
-       0.003911000 seconds user
-       0.007454000 seconds sys
-
-
-root@roc-rk3399-pc:~#
-
-root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a53/events/cpu_cycles
-event=0x0011
-root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a72/events/cpu_cycles
-event=0x0011
-root@roc-rk3399-pc:~#
-
-And the syscalls seem sane:
-
-root@roc-rk3399-pc:~# strace -e perf_event_open taskset -c 0,1,2,3,4 perf stat -v -e armv8_cortex_a53/cpu_cycles/,armv8_cortex_a72/cpu_cycles/ echo
-Using CPUID 0x00000000410fd034
-Control descriptor is not initialized
-perf_event_open({type=0x7 /* PERF_TYPE_??? */, size=0x88 /* PERF_ATTR_SIZE_??? */, config=0x11, sample_period=0, sample_type=PERF_SAMPLE_IDENTIFIER, read_format=PERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING, disabled=1, inherit=1, enable_on_exec=1, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, 14573, -1, -1, PERF_FLAG_FD_CLOEXEC) = 3
-perf_event_open({type=0x8 /* PERF_TYPE_??? */, size=0x88 /* PERF_ATTR_SIZE_??? */, config=0x11, sample_period=0, sample_type=PERF_SAMPLE_IDENTIFIER, read_format=PERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING, disabled=1, inherit=1, enable_on_exec=1, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, 14573, -1, -1, PERF_FLAG_FD_CLOEXEC) = 4
-
---- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14573, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
-armv8_cortex_a53/cpu_cycles/: 3227098 4480875 4480875
-armv8_cortex_a72/cpu_cycles/: 0 4480875 0
-
- Performance counter stats for 'echo':
-
-           3227098      armv8_cortex_a53/cpu_cycles/
-     <not counted>      armv8_cortex_a72/cpu_cycles/                                            (0.00%)
-
-       0.008381759 seconds time elapsed
-
-       0.004064000 seconds user
-       0.004121000 seconds sys
-
-
---- SIGCHLD {si_signo=SIGCHLD, si_code=SI_USER, si_pid=14572, si_uid=0} ---
-+++ exited with 0 +++
-root@roc-rk3399-pc:~#
-
-As:
-
-root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a53/type
-7
-root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a72/type
-8
-root@roc-rk3399-pc:~#
-
-See the type=0x7 and type=0x8.
-
-So what we need here seems to be to translate the generic term "cycles"
-to "cpu_cycles" when a PMU is explicitely passed in the event name and
-it doesn't have "cycles" and then just retry.
-
-- Arnaldo
