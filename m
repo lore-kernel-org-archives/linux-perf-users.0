@@ -1,31 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE353DB9D
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 09:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ybOBnr3m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C4EC433CA;
-	Wed, 22 Nov 2023 09:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700645487;
-	bh=wuQbmKuP8ke77VDsHsQadgcU9siRkJrWGwGpsyHIPjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ybOBnr3mSLnqTxX8lj1dwt0OGddS/Rv0+lBbPy/LqzmfvANnWbPPavBuVS6M7EPcA
-	 n5TOAjVOG9Et3y/DJit2uTIIroym80pkrLzBJCQKIarI/p9rBlNNTuGGsh10wSpRl6
-	 2n/IjLhHom4C4Rhfw6PSRa+tGNITQtUSh3POpV3w=
-Date: Wed, 22 Nov 2023 09:31:24 +0000
-From: Greg KH <gregkh@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ffrPuI6A"
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A336E100
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 02:08:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RNEwfbDbJ86pvqZWuQNi9RT+2L+t/+EiesqSiaL5nqY=; b=ffrPuI6Al9WkfuAguq/vI9Dr5B
+	k8E1pGyEFOmxpMVjfU5/5UM12RXhSj8miFxN0N1TFLQfmD4BO9NHEb6HEALth6CIArMMlPeZ1Rdf8
+	kRBjPOzyXv124DFXtimoje57MUwb91PM36WV7YcpBUHcGmFEu/UdMp1ulHotSdosEpwR/2Nvs7TlE
+	a+0HtJfOuguhtq8Dw9rPEmJXwpLRUG6GmNmpaUEulL3k2zzN7GAFE2dWPqGnvS2V2ulS1+1VM4oi9
+	BihhqZCoR0ugROn7zhBmPwI3VCYxHsSY9H5XDdQBqYNYE8ZiXVwkSnTFvyJfTxifYXfCvc79nhgHa
+	syVikdlg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1r5k9E-00CH9m-1V;
+	Wed, 22 Nov 2023 10:07:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 266223005AA; Wed, 22 Nov 2023 11:07:56 +0100 (CET)
+Date: Wed, 22 Nov 2023 11:07:56 +0100
+From: Peter Zijlstra <peterz@infradead.org>
 To: Thomas Richter <tmricht@linux.ibm.com>
 Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
 	Heiko Carstens <hca@linux.ibm.com>,
 	Vasily Gorbik <gor@linux.ibm.com>,
 	Sumanth Korikkar <sumanthk@linux.ibm.com>
 Subject: Re: REGRESSION linux-next since Nov 16th, perf tool broken (at least
  on s390)
-Message-ID: <2023112248-unskilled-flagman-05e6@gregkh>
+Message-ID: <20231122100756.GP8262@noisy.programming.kicks-ass.net>
 References: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -78,63 +83,33 @@ On Wed, Nov 22, 2023 at 08:38:28AM +0100, Thomas Richter wrote:
 > This commit adds function pmu_dev_is_visible() as the PMU bus function
 > to make sysfs attribute files visible.
 > On a failing system these sysfs attribute files are exported:
-> 
-> #  ll /sys/devices/pai_ext/
-> drwxr-xr-x. 2 root root    0 Nov 21 14:59 events
-> drwxr-xr-x. 2 root root    0 Nov 21 14:59 format
-> lrwxrwxrwx. 1 root root    0 Nov 21 14:43 subsystem -> ../../bus/event_source
-> -rw-r--r--. 1 root root 4096 Nov 21 14:43 uevent
-> #
 
-/sys/devices/pai_ext/ is a real device?  Why there?  That's a very odd
-location, what type of device is this?
+Does this help? I'm not entirely sure on the is_visible thing, but the
+way I understand it, it was only supposed to hide the nr_filters thing,
+not the entire group and @n helps select the attribute.
 
-> These is no file named 'type'. Other files are also missing.
-> Therefore the perf tool can not access any PMU event defined by this PMU.
-> 
-> On a system with proper export of all PMU sysfs attributes (same linux-next kernel):
-> #  ll /sys/devices/pai_crypto/
-> total 0
-> drwxr-xr-x. 2 root root    0 Nov 21 14:44 events
-> drwxr-xr-x. 2 root root    0 Nov 21 14:44 format
-> -r--r--r--. 1 root root 4096 Nov 21 14:44 nr_addr_filters
-> -rw-r--r--. 1 root root 4096 Nov 21 14:44 perf_event_mux_interval_ms
-> lrwxrwxrwx. 1 root root    0 Nov 21 14:43 subsystem -> ../../bus/event_source
-> -r--r--r--. 1 root root 4096 Nov 21 14:44 type
-> -rw-r--r--. 1 root root 4096 Nov 21 14:44 uevent
+Greg, did I get that right?
 
-Ick, again, a "root" device?  That's not right and needs to be fixed
-first.
+Also, spurious return... clearly I should've woken up before merging
+that patch... oh well.
 
-> # cat /sys/devices/pai_crypto/type
-> 12
-> #
-> 
-> Also on such a system the perf stat works again:
-> # perf stat -e pai_crypto/CRYPTO_ALL/ -C0 -- true
-> 
->  Performance counter stats for 'CPU(s) 0':
-> 
->                  0      pai_crypto/CRYPTO_ALL/
-> 
->        0.000741258 seconds time elapsed
-> 
-> #
-> 
-> On s390 there is no need to export sysfs file 'nr_addr_filters', but setting
-> this member pmu::nr_addr_filters to a non-zero value before
-> calling perf_pmu_register() exhibits the old behavior again.
-> 
-> In my opinion this breaks previous behavior.
-> 
-> Is this intended?
-> How to fix this?
+---
 
-Looks like no attributes are exported unless nr_addr_filters is present
-in the device, right?  That's the way the patch was written, maybe the
-change is not correct?  I wrote it a while ago, sorry, I can't
-remember...
-
-thanks,
-
-greg k-h
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4f0c45ab8d7d..59b332cce9e7 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11417,12 +11417,10 @@ static umode_t pmu_dev_is_visible(struct kobject *kobj, struct attribute *a, int
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	if (!pmu->nr_addr_filters)
++	if (n == 2 && !pmu->nr_addr_filters)
+ 		return 0;
+ 
+ 	return a->mode;
+-
+-	return 0;
+ }
+ 
+ static struct attribute_group pmu_dev_attr_group = {
