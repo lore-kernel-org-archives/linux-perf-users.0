@@ -1,445 +1,115 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F0C1724;
-	Wed, 22 Nov 2023 04:18:37 -0800 (PST)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3AMCH8YI025322;
-	Wed, 22 Nov 2023 20:17:08 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Wed, 22 Nov 2023
- 20:17:05 +0800
-From: Yu Chien Peter Lin <peterlin@andestech.com>
-To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
-        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
-        <conor.dooley@microchip.com>, <conor@kernel.org>,
-        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
-        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
-        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
-        <jolsa@kernel.org>, <jszhang@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <peterlin@andestech.com>,
-        <peterz@infradead.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <rdunlap@infradead.org>, <robh+dt@kernel.org>, <samuel@sholland.org>,
-        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
-        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
-        <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>
-Subject: [PATCH v4 13/13] riscv: andes: Support symbolic FW and HW raw events
-Date: Wed, 22 Nov 2023 20:12:35 +0800
-Message-ID: <20231122121235.827122-14-peterlin@andestech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231122121235.827122-1-peterlin@andestech.com>
-References: <20231122121235.827122-1-peterlin@andestech.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CF84D588
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 12:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IscDCzdR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137CFC433C9;
+	Wed, 22 Nov 2023 12:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700655640;
+	bh=shRm6TT5lP3owC5SoqOCvq7GBAZYeAO4PDux6pprpqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IscDCzdRfv6pkcajcRW/OztWdnR8DCPOWxJvzBcXZTjXNsGG6M/kZSt6TCgtlJpcN
+	 pYuJDz+849khGK/6ZaATVINws4d9zSt6BMCUff06swG2NKiFgkGyse4/PJbDnlF/Dg
+	 XymCNgPqTtSuKhtq8b+0uANvKzxC0PU46sROUEMameWEbHWOzieVEqeH97iXdFwAaQ
+	 HDc4c1yKeTzkH+qQwE4bYA2lEPKtYZbu934Ew3cgXKO1813NobMMUCNVlrU+B+MGQ6
+	 aj7bmW//DMkeYmPdDV6UsZqmZH9XUAa0PekdhkXP1d7VCZ+4ZB9BpBbfGTIAk2Pz/a
+	 ac/M0faJphr5g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 6D4EE40094; Wed, 22 Nov 2023 09:20:37 -0300 (-03)
+Date: Wed, 22 Nov 2023 09:20:37 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Marc Zyngier <maz@kernel.org>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf MANIFEST: Add gen-sysreg for ARM SPE
+Message-ID: <ZV3yFe7+wUNWwkVc@kernel.org>
+References: <20231122022805.511839-1-irogers@google.com>
+ <ZV3xe1qVCiz5bkLP@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3AMCH8YI025322
+In-Reply-To: <ZV3xe1qVCiz5bkLP@kernel.org>
+X-Url: http://acmel.wordpress.com
 
-From: Locus Wei-Han Chen <locus84@andestech.com>
+Em Wed, Nov 22, 2023 at 09:18:03AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, Nov 21, 2023 at 06:28:05PM -0800, Ian Rogers escreveu:
+> > The necessary files for generating sysreg-defs.h need adding to the
+> > perf tool MANIFEST that lists the files for packaging the perf tool
+> > source code. Fix for the following:
+> > 
+> > ```
+> > $ make perf-tar-src-pkg
+> > $ tar xvf perf-6.7.0-rc2.tar
+> > $ cd perf-6.7.0-rc2
+> > $ make -C tools/perf
 
-This patch adds the Andes AX45 JSON files in the perf tool,
-allowing perf to be used with symbolic event names.
+And I detected this while doing these tests on
+perf-tools/tmp.perf-tools:
 
-Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
-Reviewed-by: Yu Chien Peter Lin <peterlin@andestech.com>
-Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
----
-Changes v1 -> v2:
-  - No change
-Changes v2 -> v3:
-  - No change
-Changes v3 -> v4:
-  - No change
----
- .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
- .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
- .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
- .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
- 5 files changed, 330 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+[acme@toolbox perf-tools]$ git log --oneline -1 ; time make -C tools/perf build-test
+4dbc034e08146c48 (HEAD -> perf-tools) tools/perf: Update tools's copy of mips syscall table
+make: Entering directory '/home/acme/git/perf-tools/tools/perf'
+egrep: warning: egrep is obsolescent; using grep -E
+- tarpkg: ./tests/perf-targz-src-pkg .
+make[1]: *** [tests/make:348: tarpkg] Error 2
+make: *** [Makefile:103: build-test] Error 2
+make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
 
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-new file mode 100644
-index 000000000000..9b4a032186a7
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-@@ -0,0 +1,68 @@
-+[
-+  {
-+    "ArchStdEvent": "FW_MISALIGNED_LOAD"
-+  },
-+  {
-+    "ArchStdEvent": "FW_MISALIGNED_STORE"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ACCESS_LOAD"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ACCESS_STORE"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ILLEGAL_INSN"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SET_TIMER"
-+  },
-+  {
-+    "ArchStdEvent": "FW_IPI_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_IPI_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_FENCE_I_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-new file mode 100644
-index 000000000000..713a08c1a40f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-@@ -0,0 +1,127 @@
-+[
-+	{
-+		"EventCode": "0x10",
-+		"EventName": "cycle_count",
-+		"BriefDescription": "Cycle count"
-+	},
-+	{
-+		"EventCode": "0x20",
-+		"EventName": "inst_count",
-+		"BriefDescription": "Retired instruction count"
-+	},
-+	{
-+		"EventCode": "0x30",
-+		"EventName": "int_load_inst",
-+		"BriefDescription": "Integer load instruction count"
-+	},
-+	{
-+		"EventCode": "0x40",
-+		"EventName": "int_store_inst",
-+		"BriefDescription": "Integer store instruction count"
-+	},
-+	{
-+		"EventCode": "0x50",
-+		"EventName": "atomic_inst",
-+		"BriefDescription": "Atomic instruction count"
-+	},
-+	{
-+		"EventCode": "0x60",
-+		"EventName": "sys_inst",
-+		"BriefDescription": "System instruction count"
-+	},
-+	{
-+		"EventCode": "0x70",
-+		"EventName": "int_compute_inst",
-+		"BriefDescription": "Integer computational instruction count"
-+	},
-+	{
-+		"EventCode": "0x80",
-+		"EventName": "condition_br",
-+		"BriefDescription": "Conditional branch instruction count"
-+	},
-+	{
-+		"EventCode": "0x90",
-+		"EventName": "taken_condition_br",
-+		"BriefDescription": "Taken conditional branch instruction count"
-+	},
-+	{
-+		"EventCode": "0xA0",
-+		"EventName": "jal_inst",
-+		"BriefDescription": "JAL instruction count"
-+	},
-+	{
-+		"EventCode": "0xB0",
-+		"EventName": "jalr_inst",
-+		"BriefDescription": "JALR instruction count"
-+	},
-+	{
-+		"EventCode": "0xC0",
-+		"EventName": "ret_inst",
-+		"BriefDescription": "Return instruction count"
-+	},
-+	{
-+		"EventCode": "0xD0",
-+		"EventName": "control_trans_inst",
-+		"BriefDescription": "Control transfer instruction count"
-+	},
-+	{
-+		"EventCode": "0xE0",
-+		"EventName": "ex9_inst",
-+		"BriefDescription": "EXEC.IT instruction count"
-+	},
-+	{
-+		"EventCode": "0xF0",
-+		"EventName": "int_mul_inst",
-+		"BriefDescription": "Integer multiplication instruction count"
-+	},
-+	{
-+		"EventCode": "0x100",
-+		"EventName": "int_div_rem_inst",
-+		"BriefDescription": "Integer division/remainder instruction count"
-+	},
-+	{
-+		"EventCode": "0x110",
-+		"EventName": "float_load_inst",
-+		"BriefDescription": "Floating-point load instruction count"
-+	},
-+	{
-+		"EventCode": "0x120",
-+		"EventName": "float_store_inst",
-+		"BriefDescription": "Floating-point store instruction count"
-+	},
-+	{
-+		"EventCode": "0x130",
-+		"EventName": "float_add_sub_inst",
-+		"BriefDescription": "Floating-point addition/subtraction instruction count"
-+	},
-+	{
-+		"EventCode": "0x140",
-+		"EventName": "float_mul_inst",
-+		"BriefDescription": "Floating-point multiplication instruction count"
-+	},
-+	{
-+		"EventCode": "0x150",
-+		"EventName": "float_fused_muladd_inst",
-+		"BriefDescription": "Floating-point fused multiply-add instruction count"
-+	},
-+	{
-+		"EventCode": "0x160",
-+		"EventName": "float_div_sqrt_inst",
-+		"BriefDescription": "Floating-point division or square-root instruction count"
-+	},
-+	{
-+		"EventCode": "0x170",
-+		"EventName": "other_float_inst",
-+		"BriefDescription": "Other floating-point instruction count"
-+	},
-+	{
-+		"EventCode": "0x180",
-+		"EventName": "int_mul_add_sub_inst",
-+		"BriefDescription": "Integer multiplication and add/sub instruction count"
-+	},
-+	{
-+		"EventCode": "0x190",
-+		"EventName": "retired_ops",
-+		"BriefDescription": "Retired operation count"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-new file mode 100644
-index 000000000000..c7401b526c77
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-@@ -0,0 +1,57 @@
-+[
-+	{
-+		"EventCode": "0x01",
-+		"EventName": "ilm_access",
-+		"BriefDescription": "ILM access"
-+	},
-+	{
-+		"EventCode": "0x11",
-+		"EventName": "dlm_access",
-+		"BriefDescription": "DLM access"
-+	},
-+	{
-+		"EventCode": "0x21",
-+		"EventName": "icache_access",
-+		"BriefDescription": "ICACHE access"
-+	},
-+	{
-+		"EventCode": "0x31",
-+		"EventName": "icache_miss",
-+		"BriefDescription": "ICACHE miss"
-+	},
-+	{
-+		"EventCode": "0x41",
-+		"EventName": "dcache_access",
-+		"BriefDescription": "DCACHE access"
-+	},
-+	{
-+		"EventCode": "0x51",
-+		"EventName": "dcache_miss",
-+		"BriefDescription": "DCACHE miss"
-+	},
-+	{
-+		"EventCode": "0x61",
-+		"EventName": "dcache_load_access",
-+		"BriefDescription": "DCACHE load access"
-+	},
-+	{
-+		"EventCode": "0x71",
-+		"EventName": "dcache_load_miss",
-+		"BriefDescription": "DCACHE load miss"
-+	},
-+	{
-+		"EventCode": "0x81",
-+		"EventName": "dcache_store_access",
-+		"BriefDescription": "DCACHE store access"
-+	},
-+	{
-+		"EventCode": "0x91",
-+		"EventName": "dcache_store_miss",
-+		"BriefDescription": "DCACHE store miss"
-+	},
-+	{
-+		"EventCode": "0xA1",
-+		"EventName": "dcache_wb",
-+		"BriefDescription": "DCACHE writeback"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-new file mode 100644
-index 000000000000..a6d378cbaa74
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-@@ -0,0 +1,77 @@
-+[
-+	{
-+		"EventCode": "0xB1",
-+		"EventName": "cycle_wait_icache_fill",
-+		"BriefDescription": "Cycles waiting for ICACHE fill data"
-+	},
-+	{
-+		"EventCode": "0xC1",
-+		"EventName": "cycle_wait_dcache_fill",
-+		"BriefDescription": "Cycles waiting for DCACHE fill data"
-+	},
-+	{
-+		"EventCode": "0xD1",
-+		"EventName": "uncached_ifetch_from_bus",
-+		"BriefDescription": "Uncached ifetch data access from bus"
-+	},
-+	{
-+		"EventCode": "0xE1",
-+		"EventName": "uncached_load_from_bus",
-+		"BriefDescription": "Uncached load data access from bus"
-+	},
-+	{
-+		"EventCode": "0xF1",
-+		"EventName": "cycle_wait_uncached_ifetch",
-+		"BriefDescription": "Cycles waiting for uncached ifetch data from bus"
-+	},
-+	{
-+		"EventCode": "0x101",
-+		"EventName": "cycle_wait_uncached_load",
-+		"BriefDescription": "Cycles waiting for uncached load data from bus"
-+	},
-+	{
-+		"EventCode": "0x111",
-+		"EventName": "main_itlb_access",
-+		"BriefDescription": "Main ITLB access"
-+	},
-+	{
-+		"EventCode": "0x121",
-+		"EventName": "main_itlb_miss",
-+		"BriefDescription": "Main ITLB miss"
-+	},
-+	{
-+		"EventCode": "0x131",
-+		"EventName": "main_dtlb_access",
-+		"BriefDescription": "Main DTLB access"
-+	},
-+	{
-+		"EventCode": "0x141",
-+		"EventName": "main_dtlb_miss",
-+		"BriefDescription": "Main DTLB miss"
-+	},
-+	{
-+		"EventCode": "0x151",
-+		"EventName": "cycle_wait_itlb_fill",
-+		"BriefDescription": "Cycles waiting for Main ITLB fill data"
-+	},
-+	{
-+		"EventCode": "0x161",
-+		"EventName": "pipe_stall_cycle_dtlb_miss",
-+		"BriefDescription": "Pipeline stall cycles caused by Main DTLB miss"
-+	},
-+	{
-+		"EventCode": "0x02",
-+		"EventName": "mispredict_condition_br",
-+		"BriefDescription": "Misprediction of conditional branches"
-+	},
-+	{
-+		"EventCode": "0x12",
-+		"EventName": "mispredict_take_condition_br",
-+		"BriefDescription": "Misprediction of taken conditional branches"
-+	},
-+	{
-+		"EventCode": "0x22",
-+		"EventName": "mispredict_target_ret_inst",
-+		"BriefDescription": "Misprediction of targets of Return instructions"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-index c61b3d6ef616..5bf09af14c1b 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -15,3 +15,4 @@
- #
- #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
- 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-+0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
+real	0m7.498s
+user	0m12.059s
+sys	0m5.491s
+⬢[acme@toolbox perf-tools]$
+
+> > Fixes: e2bdd172e665 ("perf build: Generate arm64's sysreg-defs.h and add to include path")
+> 
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Namhyung, I'm testing this together with your headers sync series + what
+> is in perf-tools/tmp.perf-tools, will report results soon.
+> 
+> - Arnaldo
+> 
+> > ---
+> > Note: the breakage is in Linus' tree and perf-tools, not yet in perf-tools-next.
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/MANIFEST | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+> > index 1da7f4b91b4f..dc42de1785ce 100644
+> > --- a/tools/perf/MANIFEST
+> > +++ b/tools/perf/MANIFEST
+> > @@ -1,3 +1,5 @@
+> > +arch/arm64/tools/gen-sysreg.awk
+> > +arch/arm64/tools/sysreg
+> >  tools/perf
+> >  tools/arch
+> >  tools/scripts
+> > -- 
+> > 2.43.0.rc1.413.gea7ed67945-goog
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
+
 -- 
-2.34.1
 
+- Arnaldo
