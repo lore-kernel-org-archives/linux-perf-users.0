@@ -1,350 +1,224 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kq5muNg7"
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497921B3;
-	Wed, 22 Nov 2023 07:56:31 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-2851b271e51so772172a91.1;
-        Wed, 22 Nov 2023 07:56:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P21Hg/aF"
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AF89A
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 08:04:40 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-50aa698b384so4667e87.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 08:04:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700668591; x=1701273391; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uI9QwUqTrK/TTo7oDObuDkV0/9qXHslf5MXRPDTXe08=;
-        b=Kq5muNg7TUtzzx/HxhrRAHDCaAKP8jQ+W2rmXje2lX5p6ablcAGx4zMaLM5rn+IWAd
-         dpM1k9QlSop4BgZh0dQApFeBqFeZkoUDF01+/uktcKQa2Tbn6AlXdNx3dmKdvZu0p1i2
-         Y6S7WGEr0Frv5k3tt/bRL7Ul8EEVWBgiuswmDjg4KilTJcGBiY74G5jDgly6dLzey1u9
-         UOQVuT58FoOmODPTK5S96Xk6VKrZPc6msj2hV7t942BB7j7OoLU9z8ld5BP8HAGTs+Zr
-         E229tRZ0yCdDtfkkIrgUjdnX7xVhniAepXiVrNEs8Xyz+me8dJ2jDnia/y+i7Wwsn+BP
-         X1fQ==
+        d=google.com; s=20230601; t=1700669078; x=1701273878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nj+30jdiOOCg1UaHjY820RtiMj34MynXeJNrGTwqL0A=;
+        b=P21Hg/aFfOzi3tbMDwSB/VF1XmLZAS0FbVaqEPdRcpJpYFW2O9J0q4nJksegh2EIqW
+         OsvFYtLzxyl3ZKBmRPNh2+3SldOPz83puVZxCNeF+Punuf9FXSY3YMVLSa4DrZDRCDpI
+         uh7RWHQKP+WZxGKZmP/cUogBp5KcOMK6se0DL1zdxE4JguuQSRZwqgg8/VwOz6TQw96I
+         fDIY3ZXpvtzIfZ0G6OOcT/zepiTe47aWbFUoAMslk1JnIWyYFWos69gzMudc7nHGQcKe
+         DOf2meaUHCiJykJX9jknvz3KRurM+xZWQ313JK9euGZrBUQQlfxkPkJRUlqwpO1ytrGa
+         tn8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700668591; x=1701273391;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uI9QwUqTrK/TTo7oDObuDkV0/9qXHslf5MXRPDTXe08=;
-        b=Q6xdHh9+EAz/Slylvc3s0QxEIEBXDqFRTfL5lPM07BP7LQ31o5BmO7s31jkryShFRP
-         N2QX6dk/eb6n8Ixy9ER0FcPNCbHcgZi9ZpnVqZCDLqPhXw9wX3IZjR04xQv/2IbDPg+Y
-         v9kfwxxEkBJtkMWiXKNr4WP3qwHXPSfcB6HPsUBQcLWZZD0bUAtnDqhFxDNEeW8xx3ZP
-         /QoPW+UK6hghxkObmrstSqafDunYTGqp69aa61i37sdezjvTO9TTnrTjt9Gta+fz6crT
-         yYHa4i/18FLnALnhQcmDlKWdOrmwrKHZ3nqcvu7nsZ56eQiifRt/UgJNnnPEQ40+pFHK
-         uHHQ==
-X-Gm-Message-State: AOJu0YyqEbGA+8zwvnK1zbY58aDJ5m/uhhZNr2X6L0WyYkKB29kP3Sq4
-	vL5/Boy5MVDu3fdozhHO6YYL2XoSW0UcjF6j
-X-Google-Smtp-Source: AGHT+IFFl/m9AR6jyfXLquchr+iRx8oQ6H0cn+mgEm8bXuVtz6+CPLuwrrAzdX4uRMx9FfkOw6HBcw==
-X-Received: by 2002:a17:90b:3e83:b0:280:a002:be85 with SMTP id rj3-20020a17090b3e8300b00280a002be85mr4489253pjb.20.1700668590236;
-        Wed, 22 Nov 2023 07:56:30 -0800 (PST)
-Received: from DESKTOP-NK4TH6S.localdomain ([220.116.189.210])
-        by smtp.gmail.com with ESMTPSA id lx3-20020a17090b4b0300b00285139b71cdsm168400pjb.11.2023.11.22.07.56.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Nov 2023 07:56:30 -0800 (PST)
-From: Paran Lee <p4ranlee@gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Li Dong <lidong@vivo.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	shjy180909@gmail.com,
-	austindh.kim@gmail.com,
-	honggyu.kp@gmail.com,
-	tegongkang@gmail.com,
-	Paran Lee <p4ranlee@gmail.com>
-Subject: [PATCH] perf callchain: Support riscv cross-platform
-Date: Thu, 23 Nov 2023 00:55:48 +0900
-Message-Id: <20231122155548.2449-1-p4ranlee@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1700669078; x=1701273878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nj+30jdiOOCg1UaHjY820RtiMj34MynXeJNrGTwqL0A=;
+        b=d3cVfCG85e4TnSNjFWk3Q5TJvbWWVb3Wq2qGhCxDWUHP8+cDZ8GZfVLAyw8l1tRust
+         jIcTX8KNVWi8/HQKYILGim2ckpG/djKrs0D/+A046OgI/we+eM5XTdkzLhyiMtFGpY1v
+         PuMF6+BzFAZX1YXhg9LuuQ+xlpGgjlCkjyMmcJHJs3iY2KrwUagZhTZ7MbzeiHU9LWJ8
+         t8zCKkCifqBeSp1uTReCOPRaApdR3mMiZMVdeDrsPGTJEg6rYj4oFmTnZWXoO6yBp29m
+         dJN3PRTjC7Y3OqRUIx0yd5Bqx2SXJmy+EcV3E9TF0ItuXOCxLLIXJoO9+B73tVnyBK5/
+         Ljug==
+X-Gm-Message-State: AOJu0YxlU+LkR2gT5fPGWyn0487b+u9CksyYAMvAKiIwiwyrgYcfPH+s
+	MTPoUwTM9R5+0a3N83hENfkpNzjJMm09Xp4nVoN3tQ==
+X-Google-Smtp-Source: AGHT+IHIYUVek53rAYMk/EECqSGezlgDvPNPBPmgTsRwifeiw896LVsKTisgifmKhCgNz4bvZjesbvW46vtyHZKxGRk=
+X-Received: by 2002:a05:6512:b91:b0:509:9035:a2bb with SMTP id
+ b17-20020a0565120b9100b005099035a2bbmr146919lfv.2.1700669078382; Wed, 22 Nov
+ 2023 08:04:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <86pm03z0kw.wl-maz@kernel.org> <86o7fnyvrq.wl-maz@kernel.org>
+ <ZVzPUjOiH6zpUlz5@FVFF77S0Q05N.cambridge.arm.com> <CAP-5=fUB75DCL4+8YO62iPVsnxoeXGv5cLmT7eP2bHNs=xoMdg@mail.gmail.com>
+ <ZVzUr7TWEYPoZrWX@FVFF77S0Q05N.cambridge.arm.com> <CAP-5=fUWm7efu3xdUBbiifs_KNU1igwAxbXmum=V38SjHQHtXg@mail.gmail.com>
+ <ZVzXjz_0nYbmSGPQ@FVFF77S0Q05N.cambridge.arm.com> <CAP-5=fWLGOCWv=wp2xsi4AVxfbS8KhkmtkMwOA4yVrz791=Z8Q@mail.gmail.com>
+ <930bfb9a-dcbe-4385-9ae3-26e2aa14c50e@marcan.st> <ZV38z3+p2S2ETtzG@kernel.org>
+ <ZV4i_lrhbOVdEpwH@FVFF77S0Q05N>
+In-Reply-To: <ZV4i_lrhbOVdEpwH@FVFF77S0Q05N>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 22 Nov 2023 08:04:26 -0800
+Message-ID: <CAP-5=fXxdt4-j7ea=3oXpqyfOQEmSRYBugzND0r+gZUd5sMi1w@mail.gmail.com>
+Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Hector Martin <marcan@marcan.st>, Marc Zyngier <maz@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Asahi Linux <asahi@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Support riscv cross platform callchain unwind.
-Tested on RISCV 64 Starfive VisionFive2 Board
-------------
-$ uname -ra
-Linux starfive 5.15.0-starfive #
-1 SMP Mon Dec 19 07:56:37 EST 2022 riscv64 GNU/Linux
-paran@starfive:~/linux-next$ cat /etc/os-release
-PRETTY_NAME="Debian GNU/Linux bookworm/sid"
-NAME="Debian GNU/Linux"
-ID=debian
-HOME_URL="https://www.debian.org/"
-SUPPORT_URL="https://www.debian.org/support"
-BUG_REPORT_URL="https://bugs.debian.org/"
-------------
-paran@starfive:~/linux-next/tools/perf$
- make  NO_AUXTRACE=1  NO_LIBTRACEEVENT=1 -j4
-Auto-detecting system features:
-...                                   dwarf: [ on  ]
-...                      dwarf_getlocations: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ on  ]
-...                          libbfd-buildid: [ on  ]
-...                                  libcap: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                               libunwind: [ on  ]
-...                      libdw-dwarf-unwind: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ OFF ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-...
-CC      arch/riscv/util/dwarf-regs.o
-CC      arch/riscv/util/unwind-libunwind.o
-...
-LINK    perf
-------------
-Signed-off-by: Paran Lee <p4ranlee@gmail.com>
----
- tools/build/Makefile.feature                  |  2 +
- tools/build/feature/Makefile                  |  8 ++++
- tools/perf/Makefile.config                    | 18 +++++++++
- tools/perf/arch/riscv/util/Build              |  1 +
- tools/perf/arch/riscv/util/unwind-libunwind.c | 17 ++++++++
- tools/perf/check-headers.sh                   |  3 ++
- tools/perf/util/libunwind/riscv.c             | 40 +++++++++++++++++++
- tools/perf/util/unwind-libunwind.c            |  5 +++
- 8 files changed, 94 insertions(+)
- create mode 100644 tools/perf/arch/riscv/util/unwind-libunwind.c
- create mode 100644 tools/perf/util/libunwind/riscv.c
+On Wed, Nov 22, 2023 at 7:49=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
+ wrote:
+>
+> On Wed, Nov 22, 2023 at 10:06:23AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Nov 22, 2023 at 12:23:27PM +0900, Hector Martin escreveu:
+> > > On 2023/11/22 1:38, Ian Rogers wrote:
+> > > > On Tue, Nov 21, 2023 at 8:15=E2=80=AFAM Mark Rutland <mark.rutland@=
+arm.com> wrote:
+> > > >> On Tue, Nov 21, 2023 at 08:09:37AM -0800, Ian Rogers wrote:
+> > > >>> On Tue, Nov 21, 2023 at 8:03=E2=80=AFAM Mark Rutland <mark.rutlan=
+d@arm.com> wrote:
+> > > >>>> On Tue, Nov 21, 2023 at 07:46:57AM -0800, Ian Rogers wrote:
+> > > >>>>> On Tue, Nov 21, 2023 at 7:40=E2=80=AFAM Mark Rutland <mark.rutl=
+and@arm.com> wrote:
+> > > >>>>>> On Tue, Nov 21, 2023 at 03:24:25PM +0000, Marc Zyngier wrote:
+> > > >>>>>>> On Tue, 21 Nov 2023 13:40:31 +0000,
+> > > >>>>>>> Marc Zyngier <maz@kernel.org> wrote:
+> > > >>>>>>>>
+> > > >>>>>>>> [Adding key people on Cc]
+> > > >>>>>>>>
+> > > >>>>>>>> On Tue, 21 Nov 2023 12:08:48 +0000,
+> > > >>>>>>>> Hector Martin <marcan@marcan.st> wrote:
+> > > >>>>>>>>>
+> > > >>>>>>>>> Perf broke on all Apple ARM64 systems (tested almost everyt=
+hing), and
+> > > >>>>>>>>> according to maz also on Juno (so, probably all big.LITTLE)=
+ since v6.5.
+> > > >>>>>>>>
+> > > >>>>>>>> I can confirm that at least on 6.7-rc2, perf is pretty buste=
+d on any
+> > > >>>>>>>> asymmetric ARM platform. It isn't clear what criteria is use=
+d to pick
+> > > >>>>>>>> the PMU, but nothing works anymore.
+> > > >>>>>>>>
+> > > >>>>>>>> The saving grace in my case is that Debian still ships a 6.1=
+ perftool
+> > > >>>>>>>> package, but that's obviously not going to last.
+> > > >>>>>>>>
+> > > >>>>>>>> I'm happy to test potential fixes.
+> > > >>>>>>>
+> > > >>>>>>> At Mark's request, I've dumped a couple of perf (as of -rc2) =
+runs with
+> > > >>>>>>> -vvv.  And it is quite entertaining (this is taskset to an 'i=
+cestorm'
+> > > >>>>>>> CPU):
+> > > >>>>>>
+> > > >>>>>> IIUC the tool is doing the wrong thing here and overriding exp=
+licit
+> > > >>>>>> ${pmu}/${event}/ events with PERF_TYPE_HARDWARE events rather =
+than events using
+> > > >>>>>> that ${pmu}'s type and event namespace.
+> > > >>>>>>
+> > > >>>>>> Regardless of the *new* ABI that allows PERF_TYPE_HARDWARE eve=
+nts to be
+> > > >>>>>> targetted to a specific PMU, it's semantically wrong to rewrit=
+e events like
+> > > >>>>>> this since ${pmu}/${event}/ is not necessarily equivalent to a=
+ similarly-named
+> > > >>>>>> PERF_COUNT_HW_${EVENT}.
+> > > >>>>>
+> > > >>>>> If you name a PMU and an event then the event should only be op=
+ened on
+> > > >>>>> that PMU, 100% agree. There's a bunch of output, but when the l=
+egacy
+> > > >>>>> cycles event is opened it appears to be because it was explicit=
+ly
+> > > >>>>> requested.
+> > > >>>>
+> > > >>>> I think you've missed that the named PMU events are being erreou=
+sly transformed
+> > > >>>> into PERF_TYPE_HARDWARE events. Look at the -vvv output, e.g.
+> > > >>>>
+> > > >>>>   Opening: apple_firestorm_pmu/cycles/
+> > > >>>>   ------------------------------------------------------------
+> > > >>>>   perf_event_attr:
+> > > >>>>     type                             0 (PERF_TYPE_HARDWARE)
+> > > >>>>     size                             136
+> > > >>>>     config                           0 (PERF_COUNT_HW_CPU_CYCLES=
+)
+> > > >>>>     sample_type                      IDENTIFIER
+> > > >>>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TI=
+ME_RUNNING
+> > > >>>>     disabled                         1
+> > > >>>>     inherit                          1
+> > > >>>>     enable_on_exec                   1
+> > > >>>>     exclude_guest                    1
+> > > >>>>   ------------------------------------------------------------
+> > > >>>>   sys_perf_event_open: pid 1045843  cpu -1  group_fd -1  flags 0=
+x8 =3D 4
+> > > >>>>
+> > > >>>> ... which should not be PERF_TYPE_HARDWARE && PERF_COUNT_HW_CPU_=
+CYCLES.
+> > > >>>>
+> > > >>>> Marc said that he bisected the issue down to commit:
+> > > >>>>
+> > > >>>>   5ea8f2ccffb23983 ("perf parse-events: Support hardware events =
+as terms")
+> > > >>>>
+> > > >>>> ... so it looks like something is going wrong when the events ar=
+e being parsed,
+> > > >>>> e.g. losing the HW PMU information?
+> > > >>>
+> > > >>> Ok, I think I'm getting confused by other things. This looks like=
+ the issue.
+> > > >>>
+> > > >>> I think it may be working as intended, but not how you intended :=
+-) If
+> > > >>> a core PMU is listed and then a legacy event, the legacy event sh=
+ould
+> >
+> > The point is that "cycles" when prefixed with "pmu/" shouldn't be
+> > considered "cycles" as HW/0, in that setting it is "cycles" for that
+> > PMU.
+>
+> Exactly.
+>
+> > (but we only have "cpu_cycles" for at least the a53 and a72 PMUs I
+> > have access in a Libre Computer rockchip 3399-pc hybrid board, if we us=
+e
+> > it, then we get what we want/had before, see below):
+>
+> Both Cortex-A53 and Cortex-A72 have the common PMUv3 events, so they have
+> "cpu_cycles" and "bus_cycles".
+>
+> The Apple PMUs that Hector and Marc anre using don't follow the PMUv3
+> architecture, and just have a "cycles" event.
+>
+> [...]
+>
+> > So what we need here seems to be to translate the generic term "cycles"
+> > to "cpu_cycles" when a PMU is explicitely passed in the event name and
+> > it doesn't have "cycles" and then just retry.
+>
+> I'm not sure we need to map that.
+>
+> My thinking is:
+>
+> * If the user asks for "cycles" without a PMU name, that should use the
+>   PERF_TYPE_HARDWARE cycles event. The ARM PMUs handle that correctly whe=
+n the
+>   event is directed to them.
+>
+> * If the user asks for "${pmu}/cycles/", that should only use the "cycles=
+"
+>   event in that PMU's namespace, not PERF_TYPE_HARDWARE.
+>
+> * If we need a way so say "use the PERF_TYPE_HARDWARE cycles event on ${p=
+mu}",
+>   then we should have a new syntax for that (e.g. as we have for raw even=
+ts),
+>   e.g. it would be possible to have "pmu/hw:cycles/" or something like th=
+at.
+>
+> That way there's no ambiguity.
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 934e2777a2db..e4140dee1d70 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -93,9 +93,11 @@ FEATURE_TESTS_EXTRA :=                  \
-          libunwind-x86_64               \
-          libunwind-arm                  \
-          libunwind-aarch64              \
-+         libunwind-riscv                \
-          libunwind-debug-frame          \
-          libunwind-debug-frame-arm      \
-          libunwind-debug-frame-aarch64  \
-+         libunwind-debug-frame-riscv    \
-          cxx                            \
-          llvm                           \
-          llvm-version                   \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index dad79ede4e0a..e3218f98f824 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -45,8 +45,10 @@ FILES=                                          \
-          test-libunwind-x86_64.bin              \
-          test-libunwind-arm.bin                 \
-          test-libunwind-aarch64.bin             \
-+		 test-libunwind-riscv.bin               \
-          test-libunwind-debug-frame-arm.bin     \
-          test-libunwind-debug-frame-aarch64.bin \
-+		 test-libunwind-debug-frame-riscv.bin   \
-          test-pthread-attr-setaffinity-np.bin   \
-          test-pthread-barrier.bin		\
-          test-stackprotector-all.bin            \
-@@ -189,12 +191,18 @@ $(OUTPUT)test-libunwind-arm.bin:
- $(OUTPUT)test-libunwind-aarch64.bin:
- 	$(BUILD) -lelf -lunwind-aarch64
- 
-+$(OUTPUT)test-libunwind-riscv.bin:
-+	$(BUILD) -lelf -lunwind-riscv
-+
- $(OUTPUT)test-libunwind-debug-frame-arm.bin:
- 	$(BUILD) -lelf -lunwind-arm
- 
- $(OUTPUT)test-libunwind-debug-frame-aarch64.bin:
- 	$(BUILD) -lelf -lunwind-aarch64
- 
-+$(OUTPUT)test-libunwind-debug-frame-riscv.bin:
-+	$(BUILD) -lelf -lunwind-riscv
-+
- $(OUTPUT)test-libaudit.bin:
- 	$(BUILD) -laudit
- 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b3e6ed10f40c..b72c1b886b28 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -88,6 +88,8 @@ endif
- 
- ifeq ($(SRCARCH),riscv)
-   NO_PERF_REGS := 0
-+    CFLAGS += -I$(OUTPUT)arch/riscv/include/generated
-+    LIBUNWIND_LIBS = -lunwind -lunwind-riscv
- endif
- 
- ifeq ($(SRCARCH),csky)
-@@ -147,6 +149,7 @@ FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_L
- 
- FEATURE_CHECK_LDFLAGS-libunwind-arm += -lunwind -lunwind-arm
- FEATURE_CHECK_LDFLAGS-libunwind-aarch64 += -lunwind -lunwind-aarch64
-+FEATURE_CHECK_LDFLAGS-libunwind-riscv += -lunwind -lunwind-riscv
- FEATURE_CHECK_LDFLAGS-libunwind-x86 += -lunwind -llzma -lunwind-x86
- FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
- 
-@@ -651,6 +654,21 @@ ifndef NO_LIBUNWIND
-     endif
-   endif
- 
-+  $(call feature_check,libunwind-riscv)
-+  ifeq ($(feature-libunwind-riscv), 1)
-+    $(call detected,CONFIG_LIBUNWIND_RISCV)
-+    CFLAGS += -DHAVE_LIBUNWIND_RISCV_SUPPORT
-+    LDFLAGS += -lunwind-riscv
-+    EXTLIBS_LIBUNWIND += -lunwind-riscv
-+    have_libunwind = 1
-+    $(call feature_check,libunwind-debug-frame-riscv)
-+    ifneq ($(feature-libunwind-debug-frame-riscv), 1)
-+      msg := $(warning No debug_frame support found in libunwind-riscv);
-+      CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME_riscv
-+    endif
-+  endif
-+
-+
-   ifneq ($(feature-libunwind), 1)
-     msg := $(warning No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR);
-     NO_LOCAL_LIBUNWIND := 1
-diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
-index 603dbb5ae4dc..0f75e25ae638 100644
---- a/tools/perf/arch/riscv/util/Build
-+++ b/tools/perf/arch/riscv/util/Build
-@@ -2,4 +2,5 @@ perf-y += perf_regs.o
- perf-y += header.o
- 
- perf-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
- perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/riscv/util/unwind-libunwind.c b/tools/perf/arch/riscv/util/unwind-libunwind.c
-new file mode 100644
-index 000000000000..e9d6c9c06f84
---- /dev/null
-+++ b/tools/perf/arch/riscv/util/unwind-libunwind.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <errno.h>
-+
-+#ifndef REMOTE_UNWIND_LIBUNWIND
-+#include <libunwind.h>
-+#include "perf_regs.h"
-+#include "../../../util/unwind.h"
-+#endif
-+#include "../../../util/debug.h"
-+
-+int LIBUNWIND__ARCH_REG_ID(int regnum)
-+{
-+	if (regnum < 0 || regnum >= PERF_REG_RISCV_MAX)
-+		return -EINVAL;
-+
-+	return regnum;
-+}
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 66ba33dbcef2..3a774c9544c4 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -48,6 +48,7 @@ FILES=(
-   "arch/loongarch/include/uapi/asm/perf_regs.h"
-   "arch/mips/include/uapi/asm/perf_regs.h"
-   "arch/powerpc/include/uapi/asm/perf_regs.h"
-+  "arch/riscv/include/uapi/asm/perf_regs.h"
-   "arch/s390/include/uapi/asm/perf_regs.h"
-   "arch/x86/include/uapi/asm/perf_regs.h"
-   "arch/x86/include/uapi/asm/kvm.h"
-@@ -67,6 +68,8 @@ FILES=(
-   "arch/mips/include/uapi/asm/errno.h"
-   "arch/parisc/include/uapi/asm/errno.h"
-   "arch/powerpc/include/uapi/asm/errno.h"
-+  "arch/riscv/include/uapi/asm/kvm.h"
-+  "arch/riscv/include/uapi/asm/unistd.h"
-   "arch/sparc/include/uapi/asm/errno.h"
-   "arch/x86/include/uapi/asm/errno.h"
-   "include/asm-generic/bitops/arch_hweight.h"
-diff --git a/tools/perf/util/libunwind/riscv.c b/tools/perf/util/libunwind/riscv.c
-new file mode 100644
-index 000000000000..c340c5609161
---- /dev/null
-+++ b/tools/perf/util/libunwind/riscv.c
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * This file setups defines to compile arch specific binary from the
-+ * generic one.
-+ *
-+ * The function 'LIBUNWIND__ARCH_REG_ID' name is set according to arch
-+ * name and the definition of this function is included directly from
-+ * 'arch/riscv/util/unwind-libunwind.c', to make sure that this function
-+ * is defined no matter what arch the host is.
-+ *
-+ * Finally, the arch specific unwind methods are exported which will
-+ * be assigned to each riscv thread.
-+ */
-+
-+#define REMOTE_UNWIND_LIBUNWIND
-+
-+/* Define arch specific functions & regs for libunwind, should be
-+ * defined before including "unwind.h"
-+ */
-+#define LIBUNWIND__ARCH_REG_ID(regnum) libunwind__riscv_reg_id(regnum)
-+
-+#include "unwind.h"
-+#include "libunwind-riscv.h"
-+#define perf_event_riscv_regs perf_event_riscv64_regs
-+#include <../../../arch/riscv/include/uapi/asm/perf_regs.h>
-+#undef perf_event_riscv_regs
-+#include "../../arch/riscv/util/unwind-libunwind.c"
-+
-+/* NO_LIBUNWIND_DEBUG_FRAME is a feature flag for local libunwind,
-+ * assign NO_LIBUNWIND_DEBUG_FRAME_RISCV64 to it for compiling riscv
-+ * unwind methods.
-+ */
-+#undef NO_LIBUNWIND_DEBUG_FRAME
-+#ifdef NO_LIBUNWIND_DEBUG_FRAME_RISCV
-+#define NO_LIBUNWIND_DEBUG_FRAME
-+#endif
-+#include "util/unwind-libunwind-local.c"
-+
-+struct unwind_libunwind_ops *
-+riscv_unwind_libunwind_ops = &_unwind_libunwind_ops;
-diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
-index 76cd63de80a8..52190f1eaf0d 100644
---- a/tools/perf/util/unwind-libunwind.c
-+++ b/tools/perf/util/unwind-libunwind.c
-@@ -11,6 +11,7 @@
- struct unwind_libunwind_ops __weak *local_unwind_libunwind_ops;
- struct unwind_libunwind_ops __weak *x86_32_unwind_libunwind_ops;
- struct unwind_libunwind_ops __weak *arm64_unwind_libunwind_ops;
-+struct unwind_libunwind_ops __weak *riscv_unwind_libunwind_ops;
- 
- static void unwind__register_ops(struct maps *maps, struct unwind_libunwind_ops *ops)
- {
-@@ -54,6 +55,10 @@ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized
- 		if (dso_type == DSO__TYPE_64BIT)
- 			ops = arm64_unwind_libunwind_ops;
- 	}
-+	} else if (!strcmp(arch, "riscv64") || !strcmp(arch, "riscv")) {
-+		if (dso_type == DSO__TYPE_64BIT)
-+			ops = riscv_unwind_libunwind_ops;
-+	}
- 
- 	if (!ops) {
- 		pr_warning_once("unwind: target platform=%s is not supported\n", arch);
--- 
-2.25.1
+This would break cpu_core/LLC-load-misses/ on Intel hybrid as the
+LLC-load-misses event is legacy and not advertised in either sysfs or
+in json.
 
+Thanks,
+Ian
+
+> Mark.
