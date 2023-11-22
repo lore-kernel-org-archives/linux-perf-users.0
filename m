@@ -1,94 +1,128 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB3483;
-	Wed, 22 Nov 2023 09:24:41 -0800 (PST)
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5c239897895so2518272a12.2;
-        Wed, 22 Nov 2023 09:24:41 -0800 (PST)
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9A383;
+	Wed, 22 Nov 2023 09:35:46 -0800 (PST)
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5bdb0be3591so5373753a12.2;
+        Wed, 22 Nov 2023 09:35:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700673881; x=1701278681;
+        d=1e100.net; s=20230601; t=1700674546; x=1701279346;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mKbC8s4IlnELPuS9rnCyIQ9xG0e09amttwp/cHghswQ=;
-        b=fxa6eO+QdMbjIBrQL3EEN+FRM/BkIXLZvDs0eBu0r4oBiKCN3f0HTHZz3Zb/oNTNNN
-         TiPntVszK6nlo5DIdJyn0UjzzS5fHFWNma+tH1jcynMdfU/QH9sybHNKEk73E8FdYTDu
-         piS82no0X/GJMvi3V7TxP2NYkRhX1irLeVdknhRnWy68OBZHz7blq041dQEFjOYpa/bp
-         hLm/z5iZGfchVVuSgLfkF9QYTjH+sKPEuTQSUwyoM19xA6R7KbyNE48JC6GDZih3buBz
-         HUdqy67nd83L7bUj9wRV6QdiGBZVixTvqWS270o+s6c4CaMSWfNVJDpxfYPSkiYegD0s
-         MUOA==
-X-Gm-Message-State: AOJu0Yw9CDOaTQM/isLvEg5I5eXk32AmaQPpZvB0dt588CACpUuvFSZ0
-	26nC9oHs/jlGvz0ZKk3HRIkGuGHRsgJJZqciBGg=
-X-Google-Smtp-Source: AGHT+IH2AdMpsfKZKttBW5WYkolV8QcPT+iP6etg+hWfFsNaod1qAG4rhj+szwmmc3WWwIDLlTQ94d+eS8+aX4ITmwM=
-X-Received: by 2002:a17:90b:1e53:b0:280:2422:d2b4 with SMTP id
- pi19-20020a17090b1e5300b002802422d2b4mr3011155pjb.22.1700673881209; Wed, 22
- Nov 2023 09:24:41 -0800 (PST)
+        bh=q64HA3g4BGidyi1Zr+WVLkIHIT41U29VcqcT8ARi/uk=;
+        b=DrdgQ7IKvz+bPnZEvLDHhdnG0itjzpurjDxVJtpwaumeS3vVAiieCTw07q9mlMFtXy
+         91IYJkGXyojZv5ghASMTIak81fAnn/vAQ9mLu8IODyV4SBw5bQaOAEthVEGIZ0BLJxUL
+         oJ83t8Oimkp/2zEW4tNQHQcuedGU+jTioCR7qJIajAMThF89zDhtJEC1hlW4gTVE+9pr
+         N18N1taxKHfvo9unPh20yiM2HrwMhbQgOrAuLcnwgL1+7QH5k/skBy+fqU9rCpqDx7hr
+         9CQw4GCPq5m6b/lvavUJcKl8A3CEE8MBQ/9lNkeB4OISZ6qUqdtIFNlroH+8Mt89Fk6i
+         UXMg==
+X-Gm-Message-State: AOJu0Yz8MetPc7WU7ZNE9OpA1dAIBaTAPeC4JE8D5A9K8odTP2YmIbwj
+	4soECjwFjEWWj2I05fVyuvTco+K+0wlF/n+TxAzif5q1
+X-Google-Smtp-Source: AGHT+IFPO4nw6FY753XdB3sG7l4+V/22wueWCO3IWWkbzq0KklEGGmFX9XQ6ULvObN3vYH3DtqFCawvx232Q0wHhBr4=
+X-Received: by 2002:a17:90b:4d8b:b0:27e:277:3015 with SMTP id
+ oj11-20020a17090b4d8b00b0027e02773015mr3423032pjb.16.1700674545824; Wed, 22
+ Nov 2023 09:35:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231122022805.511839-1-irogers@google.com> <ZV40tp7uiaTk-Qp1@linux.dev>
-In-Reply-To: <ZV40tp7uiaTk-Qp1@linux.dev>
+References: <ZV4vUuxBILOC3j73@kernel.org>
+In-Reply-To: <ZV4vUuxBILOC3j73@kernel.org>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 22 Nov 2023 09:24:30 -0800
-Message-ID: <CAM9d7ci8J_3+Hv+tHPBLx3SOXiPsGyxpYNHxZU==qR544f9hVw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf MANIFEST: Add gen-sysreg for ARM SPE
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Marc Zyngier <maz@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 22 Nov 2023 09:35:34 -0800
+Message-ID: <CAM9d7chCfEfCdopCiEeumeGU2191eJrLQQeUJL_OGY-a4fFtOQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] tools: Disable __packed attribute compiler warning
+ due to -Werror=attributes
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Oliver,
+On Wed, Nov 22, 2023 at 8:41=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Namhyung, I had to cherry pick this from perf-tools-next as I noticed it
+> was also failing when trying to build perf-tools/tmp.perf-tools + your
+> header sync series + Ian's ARM files missing in MANIFEST for the
+> detached tarball build.
+>
+> With these patches I managed to complete 'make -C tools/perf build-test'
+> + 'perf test' + my suite of perf build containers.
 
-On Wed, Nov 22, 2023 at 9:05=E2=80=AFAM Oliver Upton <oliver.upton@linux.de=
-v> wrote:
->
-> Hi Ian,
->
-> On Tue, Nov 21, 2023 at 06:28:05PM -0800, Ian Rogers wrote:
-> > The necessary files for generating sysreg-defs.h need adding to the
-> > perf tool MANIFEST that lists the files for packaging the perf tool
-> > source code. Fix for the following:
-> >
-> > ```
-> > $ make perf-tar-src-pkg
-> > $ tar xvf perf-6.7.0-rc2.tar
-> > $ cd perf-6.7.0-rc2
-> > $ make -C tools/perf
-> > ...
-> >   PERF_VERSION =3D 6.7.rc2.gc2d5304e6c64
-> > make[3]: *** No rule to make target 'perf-6.7.0-rc2/arch/arm64/tools/ge=
-n-sysreg.awk', needed by 'perf-6.7.0-rc2/tools/arch/arm64/include/generated=
-/asm/sysreg-defs.h'.  Stop.
-> > make[2]: *** [Makefile.perf:456: arm64-sysreg-defs] Error 2
-> > make[2]: *** Waiting for unfinished jobs....
-> > make[1]: *** [Makefile.perf:242: sub-make] Error 2
-> > make: *** [Makefile:70: all] Error 2
-> > make: Leaving directory 'perf-6.7.0-rc2/tools/perf'
-> > ...
-> > ```
-> >
-> > Fixes: e2bdd172e665 ("perf build: Generate arm64's sysreg-defs.h and ad=
-d to include path")
-> > ---
-> > Note: the breakage is in Linus' tree and perf-tools, not yet in perf-to=
-ols-next.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> I had sent out fixes for both of your comments [*], no preference as to
-> which gets applied. So, FWIW:
->
-> Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+Hmm.. ok.  I will cherry-pick it to perf-tools.
 
-Thanks, I think I can pick up your patches as they came before.
+Thanks,
 Namhyung
 
+> ----
 >
-> [*] https://lore.kernel.org/linux-perf-users/20231121192956.919380-1-oliv=
-er.upton@linux.dev/
+> Noticed on several perf tools cross build test containers:
+>
+>   [perfbuilder@five ~]$ grep FAIL ~/dm.log/summary
+>     19    10.18 debian:experimental-x-mips    : FAIL gcc version 12.3.0 (=
+Debian 12.3.0-6)
+>     20    11.21 debian:experimental-x-mips64  : FAIL gcc version 12.3.0 (=
+Debian 12.3.0-6)
+>     21    11.30 debian:experimental-x-mipsel  : FAIL gcc version 12.3.0 (=
+Debian 12.3.0-6)
+>     37    12.07 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (U=
+buntu/Linaro 7.5.0-3ubuntu1~18.04)
+>     42    11.91 ubuntu:18.04-x-riscv64        : FAIL gcc version 7.5.0 (U=
+buntu 7.5.0-3ubuntu1~18.04)
+>     44    13.17 ubuntu:18.04-x-sh4            : FAIL gcc version 7.5.0 (U=
+buntu 7.5.0-3ubuntu1~18.04)
+>     45    12.09 ubuntu:18.04-x-sparc64        : FAIL gcc version 7.5.0 (U=
+buntu 7.5.0-3ubuntu1~18.04)
+>   [perfbuilder@five ~]$
+>
+>   In file included from util/intel-pt-decoder/intel-pt-pkt-decoder.c:10:
+>   /tmp/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function =
+'get_unaligned_le16':
+>   /tmp/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:29: error:=
+ packed attribute causes inefficient alignment for 'x' [-Werror=3Dattribute=
+s]
+>      13 |         const struct { type x; } __packed *__pptr =3D (typeof(_=
+_pptr))(ptr);      \
+>         |                             ^
+>   /tmp/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:27:28: note: =
+in expansion of macro '__get_unaligned_t'
+>      27 |         return le16_to_cpu(__get_unaligned_t(__le16, p));
+>         |                            ^~~~~~~~~~~~~~~~~
+>
+> This comes from the kernel, where the -Wattributes and -Wpacked isn't
+> used, -Wpacked is already disabled, do it for the attributes as well.
+>
+> Fixes: a91c987254651443 ("perf tools: Add get_unaligned_leNN()")
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lore.kernel.org/lkml/7c5b626c-1de9-4c12-a781-e44985b4a797@i=
+ntel.com
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/include/asm-generic/unaligned.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/include/asm-generic/unaligned.h b/tools/include/asm-ge=
+neric/unaligned.h
+> index 156743d399aed223..2fd551915c2025ee 100644
+> --- a/tools/include/asm-generic/unaligned.h
+> +++ b/tools/include/asm-generic/unaligned.h
+> @@ -8,6 +8,7 @@
+>   */
+>  #pragma GCC diagnostic push
+>  #pragma GCC diagnostic ignored "-Wpacked"
+> +#pragma GCC diagnostic ignored "-Wattributes"
+>
+>  #define __get_unaligned_t(type, ptr) ({                                 =
+               \
+>         const struct { type x; } __packed *__pptr =3D (typeof(__pptr))(pt=
+r);      \
+> --
+> 2.41.0
+>
