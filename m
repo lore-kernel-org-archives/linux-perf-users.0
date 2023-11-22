@@ -1,14 +1,14 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A44D50;
-	Wed, 22 Nov 2023 04:18:19 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88686D52;
+	Wed, 22 Nov 2023 04:18:16 -0800 (PST)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3AMCGmH2025218;
-	Wed, 22 Nov 2023 20:16:48 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3AMCGSii025106;
+	Wed, 22 Nov 2023 20:16:28 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Wed, 22 Nov 2023
- 20:16:44 +0800
+ 20:16:24 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -32,9 +32,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>
-Subject: [PATCH v4 09/13] dt-bindings: riscv: Add T-Head PMU extension description
-Date: Wed, 22 Nov 2023 20:12:31 +0800
-Message-ID: <20231122121235.827122-10-peterlin@andestech.com>
+Subject: [PATCH v4 05/13] riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes INTC
+Date: Wed, 22 Nov 2023 20:12:27 +0800
+Message-ID: <20231122121235.827122-6-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231122121235.827122-1-peterlin@andestech.com>
 References: <20231122121235.827122-1-peterlin@andestech.com>
@@ -48,37 +48,37 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3AMCGmH2025218
+X-MAIL:Atcsqr.andestech.com 3AMCGSii025106
 
-Document the ISA string for T-Head performance monitor extension
-which provides counter overflow interrupt mechanism.
+The Andes hart-level interrupt controller (Andes INTC) allows AX45MP
+cores to handle custom local interrupts, such as the performance
+counter overflow interrupt.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
 ---
-Changes v2 -> v3:
+Changes v1 -> v2:
   - New patch
+Changes v2 -> v3:
+  - Fixed possible compatibles for Andes INTC
 Changes v3 -> v4:
   - No change
 ---
- Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index c91ab0e46648..694efaea8fce 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -258,5 +258,11 @@ properties:
-             in commit 2e5236 ("Ztso is now ratified.") of the
-             riscv-isa-manual.
+diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+index eb301d8eb2b0..78072e80793d 100644
+--- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
++++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+@@ -38,7 +38,7 @@ cpu0: cpu@0 {
  
-+        - const: xtheadpmu
-+          description:
-+            The T-Head performance monitor extension for counter overflow. For more
-+            details, see the chapter 12 in the Xuantie C906 user manual.
-+            https://github.com/T-head-Semi/openc906/tree/main/doc
-+
- additionalProperties: true
- ...
+ 			cpu0_intc: interrupt-controller {
+ 				#interrupt-cells = <1>;
+-				compatible = "riscv,cpu-intc";
++				compatible = "andestech,cpu-intc", "riscv,cpu-intc";
+ 				interrupt-controller;
+ 			};
+ 		};
 -- 
 2.34.1
 
