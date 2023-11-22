@@ -1,78 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBFD4F5F6;
-	Wed, 22 Nov 2023 19:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrNG99+m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 786A1C433C7;
-	Wed, 22 Nov 2023 19:54:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700682856;
-	bh=zRXHgQP88VauegiSbHXFvskpTZuZ3/Jyf1lcUiA8WAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mrNG99+mNALbVJhcW1vZYsOwvFPrCrTvA/jh7hRpd+LcpAjrWl05+dsKNccSbPsQl
-	 CLw7RDjB0YX0WiVhHbqf4bY9sED1Rdv/BrMc8ZrGKZ5/BLGHHvd20AZO2c0TAHDJ8/
-	 UIEsJBiFfOmx7vSiQzWUEMb1af9hnvTsLwmFPMzoJZVyDpEAz00YfkUslW/9lK6sx+
-	 w1utbiS0AeRY7ZD+z8iRjs28Gdo/91ZkODeVDhByD7rdvYxm4uzW1S1FJxUq9i27h1
-	 GY17Su7N4FztAwiZgXMRDkO+eDd7QrVLu3b9aC4GNwIsYnFVZUOWHLbkaF/UDnTO2G
-	 8WLRqznC+zHrw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 71AA640094; Wed, 22 Nov 2023 16:54:13 -0300 (-03)
-Date: Wed, 22 Nov 2023 16:54:13 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andi Kleen <ak@linux.intel.com>, linux-trace-devel@vger.kernel.org,
-	linux-toolchains@vger.kernel.org
-Subject: Re: [PATCH 18/52] perf report: Add 'type' sort key
-Message-ID: <ZV5cZe8dxv/GzdGa@kernel.org>
-References: <20231110000012.3538610-1-namhyung@kernel.org>
- <20231110000012.3538610-19-namhyung@kernel.org>
- <ZVzvFen/214ylf32@kernel.org>
- <CAM9d7cijprv2fOM_jwYbrV0jbhno2ZQDCT3SExG=Ot=b2mANmw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xyK3Bjbg"
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB551BF
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 12:36:29 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-50aba9b8955so83e87.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 12:36:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1700685387; x=1701290187; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kR4sLw90jB12SVs/JReLRRIAKLV6ovCULQumS/HywIo=;
+        b=xyK3Bjbg5natYbI1sJSkHMOIvgxXT/ngZn0nZ2CNZ88JbK6rC+uoKoR3/uHXPpmPac
+         zJ0Aai80dptatQeI6M1inxsZNHcgXxhRdsC7H09mes7S3Yj0FJhEVzR/wvItYTaRWGjf
+         OOapPLLH/nfIIvT6RsGjkSHdJQpo7Z63uv2+PZSEZVPALgJJP1VXVwoeYRBxcKL5VmHS
+         sGZXpl5GtA4oEV58rqNrChCb4BeYEV5G6wGdzh5VLC1v/YnQPu70IjO6IxNXfqQV2+vU
+         MGse+yP3dLTsmfJ+mCt8dch0orHhBaRCy35r93L6bIcacujjOLcmY2rEGMq8qonEQHp6
+         DzVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700685387; x=1701290187;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kR4sLw90jB12SVs/JReLRRIAKLV6ovCULQumS/HywIo=;
+        b=YQnDl6bdDkHMR8z6DR3TIq147yb9DOEQhoRctiaaDZ1T2mHHvMwuhor+jGluH9OxAe
+         GbERdcb4j7Lztm68/fItWuMjObP9gZITnvfYHcDyU/OyceK9pyxnD94eOtgt4fgnKKOH
+         dvrHUTefqVQhqTgBDVmUUt9R45SUXzjVuw1mLBBUOzvndqozCyxWe1qDZv2MAoEYOxdY
+         huY7hJZAqQil3XuqzjyIk6eLNSZ3oDNWttGjZXQ/rds/SqkgCrgtsoAa0UEfXRUwQvdp
+         mLbX5sBmy3L8Nyf+O1xaQSfn9zbR/a5ygZjidexOGl8+RsStZ/36SWFtcSmPdeG0pIYu
+         +NeQ==
+X-Gm-Message-State: AOJu0YzJljqlhUklT2fZCwWvI7mUIwVwkGvijkcZndgugo5ibXYCrEUW
+	q0++fFKu+5BFww4IvflDkVESak52mgqMXYbD3EyYqQ==
+X-Google-Smtp-Source: AGHT+IH32WEfT+14LMY74Y2LUjqrzFffVQ9DiIpbxOANbwCDQlxmcKw7nqP4W+anXj5b6r+AmwoFKvQ+hO6ZTs6Gqq8=
+X-Received: by 2002:a19:ad43:0:b0:504:7b50:ec9a with SMTP id
+ s3-20020a19ad43000000b005047b50ec9amr99424lfd.1.1700685387341; Wed, 22 Nov
+ 2023 12:36:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cijprv2fOM_jwYbrV0jbhno2ZQDCT3SExG=Ot=b2mANmw@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+References: <20231121192956.919380-1-oliver.upton@linux.dev>
+In-Reply-To: <20231121192956.919380-1-oliver.upton@linux.dev>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 22 Nov 2023 12:36:12 -0800
+Message-ID: <CAP-5=fU3MdtsayuvLja-_-Sc11+SivPXENMhztwPA6bMugdLSA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] perf build: Fixes for arm64 sysreg-defs build rules
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Wed, Nov 22, 2023 at 10:49:13AM -0800, Namhyung Kim escreveu:
-> On Tue, Nov 21, 2023 at 9:55 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > ⬢[acme@toolbox perf-tools-next]$ perf report -s type
-> > perf: Segmentation fault
-> > -------- backtrace --------
-> > perf[0x69f743]
-> > /lib64/libc.so.6(+0x3dbb0)[0x7f89b4778bb0]
-> > perf[0x505af6]
-<SNIP>
-> > perf[0x504f01]
-> > /lib64/libc.so.6(+0x27b8a)[0x7f89b4762b8a]
-> > /lib64/libc.so.6(__libc_start_main+0x8b)[0x7f89b4762c4b]
-> > perf[0x40ed65]
-> > ⬢[acme@toolbox perf-tools-next]$
+On Tue, Nov 21, 2023 at 11:30=E2=80=AFAM Oliver Upton <oliver.upton@linux.d=
+ev> wrote:
 >
-> Right, the 'type' sort key was added here but unfortunately
-> it's not ready for prime time yet.  It also needs the next patch
-> 19/52 ("perf report: Support data type profiling") to fully enable
-> the feature.  Do you think it's better to squash into here?
+> Small series to address the issues Ian raised in [*]. Tested with
+> perf-targz-src-pkg and building arm64 KVM selftests.
+>
+> [*] https://lore.kernel.org/linux-perf-users/CAP-5=3DfXxiOJMVqaH1JPU_K6+1=
+GhaEgVeR7YyN+F0r7qTE8DGEw@mail.gmail.com/
+>
+> Oliver Upton (2):
+>   tools perf: Add arm64 sysreg files to MANIFEST
+>   perf build: Ensure sysreg-defs Makefile respects output dir
 
-I haven't checked if squashing would be a good idea, but if you think
-its the right granularity, then do it, as long as we can test features
-in various ways as they are getting added, as I did, using a random
-perf.data file.
+Sorry for missing these, scripts/get_maintainer.pl will recommend
+linux-kernel@vger.kernel.org so this didn't show in my review pile due
+to my email filters.
 
-- Arnaldo
+Tested-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+>  tools/arch/arm64/tools/Makefile      |  2 +-
+>  tools/perf/MANIFEST                  |  2 ++
+>  tools/perf/Makefile.perf             | 24 +++++++++++++++---------
+>  tools/perf/util/Build                |  2 +-
+>  tools/testing/selftests/kvm/Makefile |  5 +++--
+>  5 files changed, 22 insertions(+), 13 deletions(-)
+>
+>
+> base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
+> --
+> 2.43.0.rc1.413.gea7ed67945-goog
+>
