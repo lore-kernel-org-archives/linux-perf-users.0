@@ -1,91 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DF51FD7;
-	Wed, 22 Nov 2023 08:36:41 -0800 (PST)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5c85e8fdd2dso55845627b3.2;
-        Wed, 22 Nov 2023 08:36:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700671000; x=1701275800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YnNltyNH2Qapz/Qt/SgTE3LNVbUWrueMgIGKLwuGujM=;
-        b=dabEhPsZ8hWe1ZhM4I3aw1Fz1FsO/cXksOA4ScePBdyYVn/+uAGAJcXAwphghZfso+
-         ekcW3D9ll/LqPd1q8XZgsEXw2tEr0CLGBn9UweZ9IKj5K5D/g3uQR/8alb2d7u5tuDxv
-         9fjMsRzCnXaN8uLFEmKySEisRkyxk5sBg2PfpQxnAQx0sSBjhrkkgm2bqMvKZCGc3Ppd
-         WtD/IEThn48Iwc07rcsazbwsCkIuKAJwwzf6x2KPa6iIjrdMviDTexbFxkE9PV5RUdPx
-         T/q7NpKC4QaFcKhTwhJDdphWt4Aqxo6Aot/TKTmdVFrHQoNuvxlI+FTyzbCDwOBEi9rm
-         k1QQ==
-X-Gm-Message-State: AOJu0YzrTjUJMUjQwJjGKq+SEhJlPKNgQkhcGMjpeHa/uQL0HAWvQtMZ
-	8+6H3i0axRzOgmA6nh58wJQaJrKI4vnjfA==
-X-Google-Smtp-Source: AGHT+IEtwFQIyER05QBhtqE64v8Xa6vCpxfd4cINyz0QT9Cg8FRMPIaPUjrd36xFGOl3qYaqXRgqTg==
-X-Received: by 2002:a0d:f4c4:0:b0:5a8:e6f4:4b6c with SMTP id d187-20020a0df4c4000000b005a8e6f44b6cmr2848601ywf.25.1700671000549;
-        Wed, 22 Nov 2023 08:36:40 -0800 (PST)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
-        by smtp.gmail.com with ESMTPSA id i6-20020a816d06000000b005ccd9a64bcfsm179841ywc.1.2023.11.22.08.36.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 08:36:38 -0800 (PST)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5c85e8fdd2dso55845127b3.2;
-        Wed, 22 Nov 2023 08:36:38 -0800 (PST)
-X-Received: by 2002:a0d:d78f:0:b0:5a8:22b5:399c with SMTP id
- z137-20020a0dd78f000000b005a822b5399cmr3089413ywd.24.1700670998325; Wed, 22
- Nov 2023 08:36:38 -0800 (PST)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A981425772
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 16:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIO7SJYf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAEAEC433C9;
+	Wed, 22 Nov 2023 16:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700671318;
+	bh=7EKdU32WWa/sEoS6u1uS+G0T8qjltebPy5sZKOAuHMU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DIO7SJYfX8czGIfPUzI7CtRQbOjHEu0W3xEqzylbNEJqlliAVA+b2ypsBO2aF4s3D
+	 9QFpRCnzTSqp6WXSFYlfOnq1G1O1kpaOmgLN/kbHkJEp/75G1j62tLjFSz3nFgHJRM
+	 WE/1Hr2iv5PZN2ueDWHBY2EKoFl5TVwwHVNwR5JwUf8WGwBoSz3neK+tJ1IedsUL1O
+	 5tF64A8FjIkMZo4WDt3dzadVFdaZYOfV0qzOR6KMAIgb2tYfcqqFRshT5Ac2p8/Inm
+	 r5B4leRabnQmOdMyh4d59TiwiptzWznKTJBwzYZ9FMsGMMbDS4JIY74NiMr0zH+3Hp
+	 hm0RP8z6xuh8w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 0168840094; Wed, 22 Nov 2023 13:41:54 -0300 (-03)
+Date: Wed, 22 Nov 2023 13:41:54 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] tools: Disable __packed attribute compiler warning due
+ to -Werror=attributes
+Message-ID: <ZV4vUuxBILOC3j73@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231122121235.827122-1-peterlin@andestech.com> <20231122121235.827122-6-peterlin@andestech.com>
-In-Reply-To: <20231122121235.827122-6-peterlin@andestech.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 Nov 2023 17:36:24 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVL9_VQ7e7-Cr7vcFWqpCTeptczZmgWN4seENcJKTi0eQ@mail.gmail.com>
-Message-ID: <CAMuHMdVL9_VQ7e7-Cr7vcFWqpCTeptczZmgWN4seENcJKTi0eQ@mail.gmail.com>
-Subject: Re: [PATCH v4 05/13] riscv: dts: renesas: r9a07g043f: Update
- compatible string to use Andes INTC
-To: Yu Chien Peter Lin <peterlin@andestech.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
-	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org, 
-	conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org, 
-	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com, 
-	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
-	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
-	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
-	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
-	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
-	uwu@icenowy.me, wens@csie.org, will@kernel.org, ycliang@andestech.com, 
-	inochiama@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url: http://acmel.wordpress.com
 
-On Wed, Nov 22, 2023 at 1:16=E2=80=AFPM Yu Chien Peter Lin
-<peterlin@andestech.com> wrote:
-> The Andes hart-level interrupt controller (Andes INTC) allows AX45MP
-> cores to handle custom local interrupts, such as the performance
-> counter overflow interrupt.
->
-> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Namhyung, I had to cherry pick this from perf-tools-next as I noticed it
+was also failing when trying to build perf-tools/tmp.perf-tools + your
+header sync series + Ian's ARM files missing in MANIFEST for the
+detached tarball build.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+With these patches I managed to complete 'make -C tools/perf build-test'
++ 'perf test' + my suite of perf build containers.
 
-Gr{oetje,eeting}s,
+- Arnaldo
 
-                        Geert
+----
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Noticed on several perf tools cross build test containers:
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+  [perfbuilder@five ~]$ grep FAIL ~/dm.log/summary
+    19    10.18 debian:experimental-x-mips    : FAIL gcc version 12.3.0 (Debian 12.3.0-6)
+    20    11.21 debian:experimental-x-mips64  : FAIL gcc version 12.3.0 (Debian 12.3.0-6)
+    21    11.30 debian:experimental-x-mipsel  : FAIL gcc version 12.3.0 (Debian 12.3.0-6)
+    37    12.07 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
+    42    11.91 ubuntu:18.04-x-riscv64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+    44    13.17 ubuntu:18.04-x-sh4            : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+    45    12.09 ubuntu:18.04-x-sparc64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+  [perfbuilder@five ~]$
+
+  In file included from util/intel-pt-decoder/intel-pt-pkt-decoder.c:10:
+  /tmp/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h: In function 'get_unaligned_le16':
+  /tmp/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:13:29: error: packed attribute causes inefficient alignment for 'x' [-Werror=attributes]
+     13 |         const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);      \
+        |                             ^
+  /tmp/perf-6.6.0-rc1/tools/include/asm-generic/unaligned.h:27:28: note: in expansion of macro '__get_unaligned_t'
+     27 |         return le16_to_cpu(__get_unaligned_t(__le16, p));
+        |                            ^~~~~~~~~~~~~~~~~
+
+This comes from the kernel, where the -Wattributes and -Wpacked isn't
+used, -Wpacked is already disabled, do it for the attributes as well.
+
+Fixes: a91c987254651443 ("perf tools: Add get_unaligned_leNN()")
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/lkml/7c5b626c-1de9-4c12-a781-e44985b4a797@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/include/asm-generic/unaligned.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/include/asm-generic/unaligned.h b/tools/include/asm-generic/unaligned.h
+index 156743d399aed223..2fd551915c2025ee 100644
+--- a/tools/include/asm-generic/unaligned.h
++++ b/tools/include/asm-generic/unaligned.h
+@@ -8,6 +8,7 @@
+  */
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wpacked"
++#pragma GCC diagnostic ignored "-Wattributes"
+ 
+ #define __get_unaligned_t(type, ptr) ({						\
+ 	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
+-- 
+2.41.0
+
