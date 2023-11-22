@@ -1,75 +1,76 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3621D101;
-	Wed, 22 Nov 2023 08:34:31 -0800 (PST)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5cc62cca0efso9551077b3.2;
-        Wed, 22 Nov 2023 08:34:31 -0800 (PST)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DF51FD7;
+	Wed, 22 Nov 2023 08:36:41 -0800 (PST)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5c85e8fdd2dso55845627b3.2;
+        Wed, 22 Nov 2023 08:36:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700670870; x=1701275670;
+        d=1e100.net; s=20230601; t=1700671000; x=1701275800;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ophsLbscDpT/fxf0eBhWE8ZK8OIp8kFL24DJaRjaQW8=;
-        b=XlNhJpVG0IUme74oamEOlp1oUOtTcL7W5kJvyLDl0PmqzoDk0Je2TG3lHI+VrQvE5U
-         2oVgtZHl3dZRh2dBDSrTzYM4cPmyAkOhnkb+8F7BCTFMKFc9NJLzzyAkc4vAHdZv+1vz
-         AMSsg6e/2h2Gp8yIKxPCSFVE9925W4Kf5fU30Lse82MeGTOJUwWvgwvDNQvlP5jqNA9V
-         n01VvGeCNC1fvLE1doTAFzGBUc98jPGh+fIygZQ+mMdqztX+Faplk23Cs+HxCZyN8/6C
-         Ok4/aBaZVJ+eSZmldyXFfRGUsX+tqXuvrYEvLP1zS6e5aTQXHj7iDkZNXwV/NiHB8bb0
-         7RNw==
-X-Gm-Message-State: AOJu0YzeJJzYJKDuafmswgauEFJ0D1CDiiZKbMOZpna0wxtyvGx1d3wh
-	8gw9Z8GYAQeK0uNY0uoHmZ2V1/42ojGUsw==
-X-Google-Smtp-Source: AGHT+IGxOwoBoFb6bhUx/nujYr41iMhIuJe5EFQCCe+cDSqkpRY/GmB9x2NxAdNR7LXbeaEU2UaUwQ==
-X-Received: by 2002:a0d:e695:0:b0:5c9:70b9:84d5 with SMTP id p143-20020a0de695000000b005c970b984d5mr2828263ywe.8.1700670869750;
-        Wed, 22 Nov 2023 08:34:29 -0800 (PST)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id p13-20020a81ca0d000000b005cb994c12f6sm1153749ywi.115.2023.11.22.08.34.29
+        bh=YnNltyNH2Qapz/Qt/SgTE3LNVbUWrueMgIGKLwuGujM=;
+        b=dabEhPsZ8hWe1ZhM4I3aw1Fz1FsO/cXksOA4ScePBdyYVn/+uAGAJcXAwphghZfso+
+         ekcW3D9ll/LqPd1q8XZgsEXw2tEr0CLGBn9UweZ9IKj5K5D/g3uQR/8alb2d7u5tuDxv
+         9fjMsRzCnXaN8uLFEmKySEisRkyxk5sBg2PfpQxnAQx0sSBjhrkkgm2bqMvKZCGc3Ppd
+         WtD/IEThn48Iwc07rcsazbwsCkIuKAJwwzf6x2KPa6iIjrdMviDTexbFxkE9PV5RUdPx
+         T/q7NpKC4QaFcKhTwhJDdphWt4Aqxo6Aot/TKTmdVFrHQoNuvxlI+FTyzbCDwOBEi9rm
+         k1QQ==
+X-Gm-Message-State: AOJu0YzrTjUJMUjQwJjGKq+SEhJlPKNgQkhcGMjpeHa/uQL0HAWvQtMZ
+	8+6H3i0axRzOgmA6nh58wJQaJrKI4vnjfA==
+X-Google-Smtp-Source: AGHT+IEtwFQIyER05QBhtqE64v8Xa6vCpxfd4cINyz0QT9Cg8FRMPIaPUjrd36xFGOl3qYaqXRgqTg==
+X-Received: by 2002:a0d:f4c4:0:b0:5a8:e6f4:4b6c with SMTP id d187-20020a0df4c4000000b005a8e6f44b6cmr2848601ywf.25.1700671000549;
+        Wed, 22 Nov 2023 08:36:40 -0800 (PST)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id i6-20020a816d06000000b005ccd9a64bcfsm179841ywc.1.2023.11.22.08.36.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 08:34:29 -0800 (PST)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5ca9114e0e2so35656247b3.3;
-        Wed, 22 Nov 2023 08:34:29 -0800 (PST)
-X-Received: by 2002:a0d:cb58:0:b0:5cb:576a:ec1c with SMTP id
- n85-20020a0dcb58000000b005cb576aec1cmr2804676ywd.9.1700670868874; Wed, 22 Nov
- 2023 08:34:28 -0800 (PST)
+        Wed, 22 Nov 2023 08:36:38 -0800 (PST)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5c85e8fdd2dso55845127b3.2;
+        Wed, 22 Nov 2023 08:36:38 -0800 (PST)
+X-Received: by 2002:a0d:d78f:0:b0:5a8:22b5:399c with SMTP id
+ z137-20020a0dd78f000000b005a822b5399cmr3089413ywd.24.1700670998325; Wed, 22
+ Nov 2023 08:36:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231122121235.827122-1-peterlin@andestech.com> <20231122121235.827122-13-peterlin@andestech.com>
-In-Reply-To: <20231122121235.827122-13-peterlin@andestech.com>
+References: <20231122121235.827122-1-peterlin@andestech.com> <20231122121235.827122-6-peterlin@andestech.com>
+In-Reply-To: <20231122121235.827122-6-peterlin@andestech.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 Nov 2023 17:34:14 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWHx6FoTCZZqaUAES5wJ=JBu7iLvVtNdBZAHB9mgBX4Gg@mail.gmail.com>
-Message-ID: <CAMuHMdWHx6FoTCZZqaUAES5wJ=JBu7iLvVtNdBZAHB9mgBX4Gg@mail.gmail.com>
-Subject: Re: [PATCH v4 12/13] riscv: dts: renesas: Add Andes PMU extension
+Date: Wed, 22 Nov 2023 17:36:24 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVL9_VQ7e7-Cr7vcFWqpCTeptczZmgWN4seENcJKTi0eQ@mail.gmail.com>
+Message-ID: <CAMuHMdVL9_VQ7e7-Cr7vcFWqpCTeptczZmgWN4seENcJKTi0eQ@mail.gmail.com>
+Subject: Re: [PATCH v4 05/13] riscv: dts: renesas: r9a07g043f: Update
+ compatible string to use Andes INTC
 To: Yu Chien Peter Lin <peterlin@andestech.com>
 Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
 	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
 	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org, 
 	conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org, 
 	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com, 
-	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de, 
-	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org, 
-	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com, 
-	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org, palmer@dabbelt.com, 
-	paul.walmsley@sifive.com, peterz@infradead.org, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org, 
-	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com, 
-	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me, wens@csie.org, 
-	will@kernel.org, ycliang@andestech.com, inochiama@outlook.com
+	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
+	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
+	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
+	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
+	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
+	uwu@icenowy.me, wens@csie.org, will@kernel.org, ycliang@andestech.com, 
+	inochiama@outlook.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 22, 2023 at 1:17=E2=80=AFPM Yu Chien Peter Lin
+On Wed, Nov 22, 2023 at 1:16=E2=80=AFPM Yu Chien Peter Lin
 <peterlin@andestech.com> wrote:
-> xandespmu stands for Andes Performance Monitor Unit extension.
-> Based on the added Andes PMU ISA string, the SBI PMU driver
-> will make use of the non-standard irq source.
+> The Andes hart-level interrupt controller (Andes INTC) allows AX45MP
+> cores to handle custom local interrupts, such as the performance
+> counter overflow interrupt.
 >
 > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
 
