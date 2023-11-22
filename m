@@ -1,40 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MbfJINdg"
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6442F11F
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 07:29:48 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-54744e66d27so16170a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 07:29:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qFCeU5nw"
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6126119B2
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 07:33:48 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-50aba9b8955so3603e87.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 07:33:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1700666987; x=1701271787; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1700667226; x=1701272026; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c9dOCm5SU1mMLPQ9rPgmLvh5++djlzqvOD55yee9GwI=;
-        b=MbfJINdgmTKwLVdJ2ZqODosPoPHV8zL7RI8w+zbtqmj95wfWUMuLy+EU+ud7SoUr/h
-         chX2Z+cH14xVNJyZqGvDD6WzIlKY7k8LSqoJcEBpkJSutQsGM79hjj2XnVMeAvc1vzpQ
-         oqlNswcJahYOADe/ZMKI4yeUpUDTW/235DCVmsHXxXGWScgckgD7QGyW/xXQRCu9LRqV
-         gdETCMok9TuXp2hrecrwPHcCE4x5yD1ABtvjFDz9i5ayNL19Y7O0TgPh1Pw+QHbHLrpT
-         pNvpRKnyyhJPFnFNvZfe9pbH78q+/jv58PyTNK9Yu45b/mzhZ2u8IAW5LpagIAgf4mXw
-         b/Zg==
+        bh=AWid6eIzgQXVTn+FJFm1OcXKu1j1/Z6O6m4d0ApRahA=;
+        b=qFCeU5nwFcR4EBIItSurssC3nOEwt1RYF+JBTG9GRobpZt9/bvlDh2VtW8kirTMqKL
+         q/bWsA3XN6rlPIha/DKMOO85oA2kvitv/5HAl+06twctGfNkUQilDSXMNVxgfvsgan80
+         MkPNCSTy6w2d1KPB3tJi5J6nSeQM8gfwoVi1PNB/F2ZsUYAcpopdM2pYG6voOc0Jp38x
+         UmM56efiRDW/SU257O9vLe6rIz8MJP11/0gtqMU3icW/RtioT3kYc50mcncAdugQ9X/t
+         OGHohFMNEqb/ZB4AnyAu4QkzeftJ7i+92fUe/60k2mrIepJnlUynWC6Y2EJIvhQoYQnH
+         oSGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700666987; x=1701271787;
+        d=1e100.net; s=20230601; t=1700667226; x=1701272026;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c9dOCm5SU1mMLPQ9rPgmLvh5++djlzqvOD55yee9GwI=;
-        b=PjNo7P3C7wb+omPMPJo7THgkn77zjU/joaz7ftZiDOf24zwfTZWANUW4IOVeobHxRt
-         JZDAj/fcy0R/imU+hngWNggPWGINfYAYz5RXe6ZVZRPOtsYEOYo4x2QUk42zcnM+zSwX
-         fHAxNDnyblI6k6QBCqBpZy1QgngwxvRvT5ziBn+J/nDiLqMXoSFgtWoVJBR7C2+fVDfq
-         1nu0Ao1KHVhgmxTFNgQIrIlseCrQrt27yG8kRxqxjRO79oFzhep78L7FJe/st1Tm7tsv
-         bb20SQviFZoIGROswVnxHzbj72/IHYiKYmSf0pIJxBdPpmOmeb4U5mxQLNq3mcKpNU9s
-         /udg==
-X-Gm-Message-State: AOJu0Yx+TEB5MrS1niKqlDC3eXwOHOGN2v3dLalnyRk3FeMT6pf82HWQ
-	uJC6zpefB5JpqKJllnSBALd6TdNmOK0NikK1aYRkzQ==
-X-Google-Smtp-Source: AGHT+IHyMYA+l6DYjgWNxneqMcAUH0qwfXEpRcCi+2+/1JhcDH7zq+nyT+k/bmP7CKy3YDsDb3kui/RgozpfAT31ZFg=
-X-Received: by 2002:a05:6402:5516:b0:54a:94af:8743 with SMTP id
- fi22-20020a056402551600b0054a94af8743mr23159edb.5.1700666986545; Wed, 22 Nov
- 2023 07:29:46 -0800 (PST)
+        bh=AWid6eIzgQXVTn+FJFm1OcXKu1j1/Z6O6m4d0ApRahA=;
+        b=fdIyEESpGoIPHqUiPQ7enYTb2r/OSAcovM3FSlifd1CcovyBAsPh+lf+g/pSjFvFNw
+         0O17qDxBPd9NhgwWW0e7bEcOmqVgvs9ROl+hWA6e4qiuL157DW4zs9SyOxfkt7c8P0Eo
+         RjZNxxpetPmpdMxTWY1rcLkmdWDAwpJLtbICppijENVNV+JPKbRqjXJwn3ZIv9b9F6VY
+         tNb2gZ53szBsBtzZk2EEGKM5EoYTNPKr9dy7nT/+CoeJag6wvuULolj5AcJq4KIKkNUk
+         BAqgThcnYmHKdCYMUDykzS6uKZQ87YMefGdrWu8PbDuwtKY1JK4IeVMpLpruiHy/Q/ak
+         nr+A==
+X-Gm-Message-State: AOJu0Ywr1h05XrwaRksF/OzAgmao+U9kLTGh5ouZQeTC/mfBdvHp9AW9
+	YaLmHGp1CM7CiJNyWwVwD9JbmVRvFEuSaqh8Ky1ddw==
+X-Google-Smtp-Source: AGHT+IEqRlZl1vl3IXc4KJ5dpcRfB73lyXQ/rpLqQDx+63npnZw58JIljRndHuL0aOmb+1b2atr9K7Xjp5kGX/UOmdY=
+X-Received: by 2002:a05:6512:4002:b0:509:4ac3:12c with SMTP id
+ br2-20020a056512400200b005094ac3012cmr94633lfb.7.1700667226281; Wed, 22 Nov
+ 2023 07:33:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,401 +46,278 @@ References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
  <ZVzPUjOiH6zpUlz5@FVFF77S0Q05N.cambridge.arm.com> <CAP-5=fUB75DCL4+8YO62iPVsnxoeXGv5cLmT7eP2bHNs=xoMdg@mail.gmail.com>
  <ZVzUr7TWEYPoZrWX@FVFF77S0Q05N.cambridge.arm.com> <CAP-5=fUWm7efu3xdUBbiifs_KNU1igwAxbXmum=V38SjHQHtXg@mail.gmail.com>
  <ZVzXjz_0nYbmSGPQ@FVFF77S0Q05N.cambridge.arm.com> <CAP-5=fWLGOCWv=wp2xsi4AVxfbS8KhkmtkMwOA4yVrz791=Z8Q@mail.gmail.com>
- <ZV38ParIEYWOjt6T@FVFF77S0Q05N>
-In-Reply-To: <ZV38ParIEYWOjt6T@FVFF77S0Q05N>
+ <930bfb9a-dcbe-4385-9ae3-26e2aa14c50e@marcan.st> <ZV38z3+p2S2ETtzG@kernel.org>
+In-Reply-To: <ZV38z3+p2S2ETtzG@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 22 Nov 2023 07:29:34 -0800
-Message-ID: <CAP-5=fUxBv4kbXyLrD5G-=wyRh6tKEJMy5qX0_86wQXxT79dJw@mail.gmail.com>
+Date: Wed, 22 Nov 2023 07:33:34 -0800
+Message-ID: <CAP-5=fWr17kGwo-xrggM5u4Ydjb=_LeyTPXOP1-i6Fsvq=2xxw@mail.gmail.com>
 Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>, Hector Martin <marcan@marcan.st>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Asahi Linux <asahi@lists.linux.dev>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Hector Martin <marcan@marcan.st>, Mark Rutland <mark.rutland@arm.com>, 
+	Marc Zyngier <maz@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, James Clark <james.clark@arm.com>, 
+	linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	Asahi Linux <asahi@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 22, 2023 at 5:04=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
+On Wed, Nov 22, 2023 at 5:06=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> On Tue, Nov 21, 2023 at 08:38:45AM -0800, Ian Rogers wrote:
-> > On Tue, Nov 21, 2023 at 8:15=E2=80=AFAM Mark Rutland <mark.rutland@arm.=
-com> wrote:
-> > >
-> > > On Tue, Nov 21, 2023 at 08:09:37AM -0800, Ian Rogers wrote:
-> > > > On Tue, Nov 21, 2023 at 8:03=E2=80=AFAM Mark Rutland <mark.rutland@=
+> Em Wed, Nov 22, 2023 at 12:23:27PM +0900, Hector Martin escreveu:
+> > On 2023/11/22 1:38, Ian Rogers wrote:
+> > > On Tue, Nov 21, 2023 at 8:15=E2=80=AFAM Mark Rutland <mark.rutland@ar=
+m.com> wrote:
+> > >> On Tue, Nov 21, 2023 at 08:09:37AM -0800, Ian Rogers wrote:
+> > >>> On Tue, Nov 21, 2023 at 8:03=E2=80=AFAM Mark Rutland <mark.rutland@=
 arm.com> wrote:
-> > > > >
-> > > > > On Tue, Nov 21, 2023 at 07:46:57AM -0800, Ian Rogers wrote:
-> > > > > > On Tue, Nov 21, 2023 at 7:40=E2=80=AFAM Mark Rutland <mark.rutl=
-and@arm.com> wrote:
-> > > > > > >
-> > > > > > > On Tue, Nov 21, 2023 at 03:24:25PM +0000, Marc Zyngier wrote:
-> > > > > > > > On Tue, 21 Nov 2023 13:40:31 +0000,
-> > > > > > > > Marc Zyngier <maz@kernel.org> wrote:
-> > > > > > > > >
-> > > > > > > > > [Adding key people on Cc]
-> > > > > > > > >
-> > > > > > > > > On Tue, 21 Nov 2023 12:08:48 +0000,
-> > > > > > > > > Hector Martin <marcan@marcan.st> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Perf broke on all Apple ARM64 systems (tested almost ev=
-erything), and
-> > > > > > > > > > according to maz also on Juno (so, probably all big.LIT=
-TLE) since v6.5.
-> > > > > > > > >
-> > > > > > > > > I can confirm that at least on 6.7-rc2, perf is pretty bu=
-sted on any
-> > > > > > > > > asymmetric ARM platform. It isn't clear what criteria is =
-used to pick
-> > > > > > > > > the PMU, but nothing works anymore.
-> > > > > > > > >
-> > > > > > > > > The saving grace in my case is that Debian still ships a =
-6.1 perftool
-> > > > > > > > > package, but that's obviously not going to last.
-> > > > > > > > >
-> > > > > > > > > I'm happy to test potential fixes.
-> > > > > > > >
-> > > > > > > > At Mark's request, I've dumped a couple of perf (as of -rc2=
-) runs with
-> > > > > > > > -vvv.  And it is quite entertaining (this is taskset to an =
-'icestorm'
-> > > > > > > > CPU):
-> > > > > > >
-> > > > > > > IIUC the tool is doing the wrong thing here and overriding ex=
-plicit
-> > > > > > > ${pmu}/${event}/ events with PERF_TYPE_HARDWARE events rather=
- than events using
-> > > > > > > that ${pmu}'s type and event namespace.
-> > > > > > >
-> > > > > > > Regardless of the *new* ABI that allows PERF_TYPE_HARDWARE ev=
-ents to be
-> > > > > > > targetted to a specific PMU, it's semantically wrong to rewri=
-te events like
-> > > > > > > this since ${pmu}/${event}/ is not necessarily equivalent to =
-a similarly-named
-> > > > > > > PERF_COUNT_HW_${EVENT}.
-> > > > > >
-> > > > > > If you name a PMU and an event then the event should only be op=
-ened on
-> > > > > > that PMU, 100% agree. There's a bunch of output, but when the l=
-egacy
-> > > > > > cycles event is opened it appears to be because it was explicit=
-ly
-> > > > > > requested.
-> > > > >
-> > > > > I think you've missed that the named PMU events are being erreous=
-ly transformed
-> > > > > into PERF_TYPE_HARDWARE events. Look at the -vvv output, e.g.
-> > > > >
-> > > > >   Opening: apple_firestorm_pmu/cycles/
-> > > > >   ------------------------------------------------------------
-> > > > >   perf_event_attr:
-> > > > >     type                             0 (PERF_TYPE_HARDWARE)
-> > > > >     size                             136
-> > > > >     config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-> > > > >     sample_type                      IDENTIFIER
-> > > > >     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIM=
-E_RUNNING
-> > > > >     disabled                         1
-> > > > >     inherit                          1
-> > > > >     enable_on_exec                   1
-> > > > >     exclude_guest                    1
-> > > > >   ------------------------------------------------------------
-> > > > >   sys_perf_event_open: pid 1045843  cpu -1  group_fd -1  flags 0x=
-8 =3D 4
-> > > > >
-> > > > > ... which should not be PERF_TYPE_HARDWARE && PERF_COUNT_HW_CPU_C=
-YCLES.
-> > > > >
-> > > > > Marc said that he bisected the issue down to commit:
-> > > > >
-> > > > >   5ea8f2ccffb23983 ("perf parse-events: Support hardware events a=
-s terms")
-> > > > >
-> > > > > ... so it looks like something is going wrong when the events are=
- being parsed,
-> > > > > e.g. losing the HW PMU information?
-> > > >
-> > > > Ok, I think I'm getting confused by other things. This looks like t=
+> > >>>> On Tue, Nov 21, 2023 at 07:46:57AM -0800, Ian Rogers wrote:
+> > >>>>> On Tue, Nov 21, 2023 at 7:40=E2=80=AFAM Mark Rutland <mark.rutlan=
+d@arm.com> wrote:
+> > >>>>>> On Tue, Nov 21, 2023 at 03:24:25PM +0000, Marc Zyngier wrote:
+> > >>>>>>> On Tue, 21 Nov 2023 13:40:31 +0000,
+> > >>>>>>> Marc Zyngier <maz@kernel.org> wrote:
+> > >>>>>>>>
+> > >>>>>>>> [Adding key people on Cc]
+> > >>>>>>>>
+> > >>>>>>>> On Tue, 21 Nov 2023 12:08:48 +0000,
+> > >>>>>>>> Hector Martin <marcan@marcan.st> wrote:
+> > >>>>>>>>>
+> > >>>>>>>>> Perf broke on all Apple ARM64 systems (tested almost everythi=
+ng), and
+> > >>>>>>>>> according to maz also on Juno (so, probably all big.LITTLE) s=
+ince v6.5.
+> > >>>>>>>>
+> > >>>>>>>> I can confirm that at least on 6.7-rc2, perf is pretty busted =
+on any
+> > >>>>>>>> asymmetric ARM platform. It isn't clear what criteria is used =
+to pick
+> > >>>>>>>> the PMU, but nothing works anymore.
+> > >>>>>>>>
+> > >>>>>>>> The saving grace in my case is that Debian still ships a 6.1 p=
+erftool
+> > >>>>>>>> package, but that's obviously not going to last.
+> > >>>>>>>>
+> > >>>>>>>> I'm happy to test potential fixes.
+> > >>>>>>>
+> > >>>>>>> At Mark's request, I've dumped a couple of perf (as of -rc2) ru=
+ns with
+> > >>>>>>> -vvv.  And it is quite entertaining (this is taskset to an 'ice=
+storm'
+> > >>>>>>> CPU):
+> > >>>>>>
+> > >>>>>> IIUC the tool is doing the wrong thing here and overriding expli=
+cit
+> > >>>>>> ${pmu}/${event}/ events with PERF_TYPE_HARDWARE events rather th=
+an events using
+> > >>>>>> that ${pmu}'s type and event namespace.
+> > >>>>>>
+> > >>>>>> Regardless of the *new* ABI that allows PERF_TYPE_HARDWARE event=
+s to be
+> > >>>>>> targetted to a specific PMU, it's semantically wrong to rewrite =
+events like
+> > >>>>>> this since ${pmu}/${event}/ is not necessarily equivalent to a s=
+imilarly-named
+> > >>>>>> PERF_COUNT_HW_${EVENT}.
+> > >>>>>
+> > >>>>> If you name a PMU and an event then the event should only be open=
+ed on
+> > >>>>> that PMU, 100% agree. There's a bunch of output, but when the leg=
+acy
+> > >>>>> cycles event is opened it appears to be because it was explicitly
+> > >>>>> requested.
+> > >>>>
+> > >>>> I think you've missed that the named PMU events are being erreousl=
+y transformed
+> > >>>> into PERF_TYPE_HARDWARE events. Look at the -vvv output, e.g.
+> > >>>>
+> > >>>>   Opening: apple_firestorm_pmu/cycles/
+> > >>>>   ------------------------------------------------------------
+> > >>>>   perf_event_attr:
+> > >>>>     type                             0 (PERF_TYPE_HARDWARE)
+> > >>>>     size                             136
+> > >>>>     config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+> > >>>>     sample_type                      IDENTIFIER
+> > >>>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME=
+_RUNNING
+> > >>>>     disabled                         1
+> > >>>>     inherit                          1
+> > >>>>     enable_on_exec                   1
+> > >>>>     exclude_guest                    1
+> > >>>>   ------------------------------------------------------------
+> > >>>>   sys_perf_event_open: pid 1045843  cpu -1  group_fd -1  flags 0x8=
+ =3D 4
+> > >>>>
+> > >>>> ... which should not be PERF_TYPE_HARDWARE && PERF_COUNT_HW_CPU_CY=
+CLES.
+> > >>>>
+> > >>>> Marc said that he bisected the issue down to commit:
+> > >>>>
+> > >>>>   5ea8f2ccffb23983 ("perf parse-events: Support hardware events as=
+ terms")
+> > >>>>
+> > >>>> ... so it looks like something is going wrong when the events are =
+being parsed,
+> > >>>> e.g. losing the HW PMU information?
+> > >>>
+> > >>> Ok, I think I'm getting confused by other things. This looks like t=
 he issue.
-> > > >
-> > > > I think it may be working as intended, but not how you intended :-)=
+> > >>>
+> > >>> I think it may be working as intended, but not how you intended :-)=
  If
-> > > > a core PMU is listed and then a legacy event, the legacy event shou=
+> > >>> a core PMU is listed and then a legacy event, the legacy event shou=
 ld
-> > > > be opened on the core PMU as a legacy event with the extended type
-> > > > set. This is to allow things like legacy cache events to be opened =
-on
-> > > > a specified PMU. Legacy event names match with a higher priority th=
-an
-> > > > those in sysfs or json as they are hard coded.
-> > >
-> > > That has never been the case previously, so this is user-visible brea=
-kage, and
-> > > it prevents users from being able to do the right thing, so I think t=
-hat's a
-> > > broken design.
-> >
-> > So the problem was caused by ARM and Intel doing two different things.
-> > Intel did at least contribute to the perf tool in support for their
-> > BIG.little/hybrid, so that's why the semantics match their approach.
 >
-> I appreciate that, and I agree that from the Arm side we haven't been as
-> engaged with userspace on this front (please understand I'm the messenger=
- here,
-> this is something I've repeatedly asked for within Arm).
+> The point is that "cycles" when prefixed with "pmu/" shouldn't be
+> considered "cycles" as HW/0, in that setting it is "cycles" for that
+> PMU. (but we only have "cpu_cycles" for at least the a53 and a72 PMUs I
+> have access in a Libre Computer rockchip 3399-pc hybrid board, if we use
+> it, then we get what we want/had before, see below):
 >
-> Regardless, I don't think that changes the substance of the bug, which is=
- that
-> we're converting named-pmu events into entirely different PERF_TYPE_HARDW=
-ARE
-> events.
+> And there is an attempt at using the specified PMU, see the first
+> perf_event_open:
 >
-> I agree that expanding plain legacy event names to a set of PMU-tagetted =
-legacy
-> events makes sense (and even for Arm, that's the right thing to do, IMO).=
- If
-> I ask for 'cycles' and that gets expanded to multiple legacy cycles event=
-s that
-> target specific CPU PMUs, that's good.
+> root@roc-rk3399-pc:~# strace -e perf_event_open perf stat -vv -e cycles,a=
+rmv8_cortex_a53/cycles/,armv8_cortex_a72/cycles/ echo
+> Using CPUID 0x00000000410fd082
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   config                           0x700000000
+>   disabled                         1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8perf_event_open=
+({type=3DPERF_TYPE_HARDWARE, size=3D0 /* PERF_ATTR_SIZE_??? */, config=3D0x=
+7<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=3D0, sample_type=3D0, read_fo=
+rmat=3D0, disabled=3D1, precise_ip=3D0 /* arbitrary skid */, ...}, 0, -1, -=
+1, PERF_FLAG_FD_CLOEXEC) =3D -1 ENOENT (No such file or directory)
 >
-> The thing that doesn't make sense here is converting named-pmu events int=
-o
-> egacy events. If I ask for 'apple_firestorm_pmu/cycles/', that should be =
-the
-> 'cycles' event in the apple_firestorm_pmu's event namespace, and *shouldn=
-'t* be
-> converted to a (potentially semantically different) PERF_TYPE_HARDWARE ev=
-ent,
-> even if that's targetted towards the apple_firestorm_pmu. I think that sh=
-ould
-> be true for *any* PMU, whether thats an arm/x86/whatever CPU PMU or a sys=
-tem
-> PMU.
+> //// HERE: it tries config=3D0x7<<32|PERF_COUNT_HW_CPU_CYCLES taking into
+> //account the PMU number 0x7
+>
+> root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a53/type
+> 7
+> root@roc-rk3399-pc:~#
+>
+> But then we don't have "cycles" in that PMU:
+>
+> root@roc-rk3399-pc:~# ls -la /sys/devices/armv8_cortex_a53/events/cycles
+> ls: cannot access '/sys/devices/armv8_cortex_a53/events/cycles': No such =
+file or directory
+> root@roc-rk3399-pc:~#
+>
+> Maybe:
+>
+> root@roc-rk3399-pc:~# taskset -c 5,6 perf stat -v -e armv8_cortex_a53/cpu=
+_cycles/,armv8_cortex_a72/cpu_cycles/ echo
+> Using CPUID 0x00000000410fd034
+> Control descriptor is not initialized
+>
+> armv8_cortex_a53/cpu_cycles/: 0 2079000 0
+> armv8_cortex_a72/cpu_cycles/: 2488961 2079000 2079000
+>
+>  Performance counter stats for 'echo':
+>
+>      <not counted>      armv8_cortex_a53/cpu_cycles/                     =
+                       (0.00%)
+>            2488961      armv8_cortex_a72/cpu_cycles/
+>
+>        0.003449266 seconds time elapsed
+>
+>        0.003502000 seconds user
+>        0.000000000 seconds sys
+>
+>
+> root@roc-rk3399-pc:~# taskset -c 0,1,2,3,4 perf stat -v -e armv8_cortex_a=
+53/cpu_cycles/,armv8_cortex_a72/cpu_cycles/ echo
+> Using CPUID 0x00000000410fd034
+> Control descriptor is not initialized
+>
+> armv8_cortex_a53/cpu_cycles/: 2986601 6999416 6999416
+> armv8_cortex_a72/cpu_cycles/: 0 6999416 0
+>
+>  Performance counter stats for 'echo':
+>
+>            2986601      armv8_cortex_a53/cpu_cycles/
+>      <not counted>      armv8_cortex_a72/cpu_cycles/                     =
+                       (0.00%)
+>
+>        0.011434508 seconds time elapsed
+>
+>        0.003911000 seconds user
+>        0.007454000 seconds sys
+>
+>
+> root@roc-rk3399-pc:~#
+>
+> root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a53/events/cpu_cycles
+> event=3D0x0011
+> root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a72/events/cpu_cycles
+> event=3D0x0011
+> root@roc-rk3399-pc:~#
+>
+> And the syscalls seem sane:
+>
+> root@roc-rk3399-pc:~# strace -e perf_event_open taskset -c 0,1,2,3,4 perf=
+ stat -v -e armv8_cortex_a53/cpu_cycles/,armv8_cortex_a72/cpu_cycles/ echo
+> Using CPUID 0x00000000410fd034
+> Control descriptor is not initialized
+> perf_event_open({type=3D0x7 /* PERF_TYPE_??? */, size=3D0x88 /* PERF_ATTR=
+_SIZE_??? */, config=3D0x11, sample_period=3D0, sample_type=3DPERF_SAMPLE_I=
+DENTIFIER, read_format=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_T=
+IME_RUNNING, disabled=3D1, inherit=3D1, enable_on_exec=3D1, precise_ip=3D0 =
+/* arbitrary skid */, exclude_guest=3D1, ...}, 14573, -1, -1, PERF_FLAG_FD_=
+CLOEXEC) =3D 3
+> perf_event_open({type=3D0x8 /* PERF_TYPE_??? */, size=3D0x88 /* PERF_ATTR=
+_SIZE_??? */, config=3D0x11, sample_period=3D0, sample_type=3DPERF_SAMPLE_I=
+DENTIFIER, read_format=3DPERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_T=
+IME_RUNNING, disabled=3D1, inherit=3D1, enable_on_exec=3D1, precise_ip=3D0 =
+/* arbitrary skid */, exclude_guest=3D1, ...}, 14573, -1, -1, PERF_FLAG_FD_=
+CLOEXEC) =3D 4
+>
+> --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED, si_pid=3D14573, si=
+_uid=3D0, si_status=3D0, si_utime=3D0, si_stime=3D0} ---
+> armv8_cortex_a53/cpu_cycles/: 3227098 4480875 4480875
+> armv8_cortex_a72/cpu_cycles/: 0 4480875 0
+>
+>  Performance counter stats for 'echo':
+>
+>            3227098      armv8_cortex_a53/cpu_cycles/
+>      <not counted>      armv8_cortex_a72/cpu_cycles/                     =
+                       (0.00%)
+>
+>        0.008381759 seconds time elapsed
+>
+>        0.004064000 seconds user
+>        0.004121000 seconds sys
+>
+>
+> --- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DSI_USER, si_pid=3D14572, si_ui=
+d=3D0} ---
+> +++ exited with 0 +++
+> root@roc-rk3399-pc:~#
+>
+> As:
+>
+> root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a53/type
+> 7
+> root@roc-rk3399-pc:~# cat /sys/devices/armv8_cortex_a72/type
+> 8
+> root@roc-rk3399-pc:~#
+>
+> See the type=3D0x7 and type=3D0x8.
+>
+> So what we need here seems to be to translate the generic term "cycles"
+> to "cpu_cycles" when a PMU is explicitely passed in the event name and
+> it doesn't have "cycles" and then just retry.
 
-This is saying that legacy events are lower than system events. We
-don't do this historically and as it requires extra PMU set up. On an
-Intel Tigerlake:
-
-```
-$ ls /sys/devices/cpu/events
-branch-instructions  cache-misses      instructions  ref-cycles
-topdown-be-bound
-branch-misses        cache-references  mem-loads     slots
-topdown-fe-bound
-bus-cycles           cpu-cycles        mem-stores    topdown-bad-spec
-topdown-retiring
-```
-here (at least) branch-misses, bus-cycles, cache-references,
-cpu-cycles and instructions overlap with legacy event names
-```
-$ perf --version
-perf version 6.5.6
-$ perf stat -vv -e branch-misses,bus-cycles,cache-references,cp
-u-cycles,instructions true
-Using CPUID GenuineIntel-6-8D-1
-intel_pt default config: tsc,mtc,mtc_period=3D3,psb_period=3D3,pt,branch
-Control descriptor is not initialized
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0x5 (PERF_COUNT_HW_BRANCH_MISSES)
-...
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0x6 (PERF_COUNT_HW_BUS_CYCLES)
-...
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0x2 (PERF_COUNT_HW_CACHE_REFERENCES)
-...
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-...
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0x1 (PERF_COUNT_HW_INSTRUCTIONS)
-...
-branch-misses: -1: 6571 826226 826226
-bus-cycles: -1: 31411 826226 826226
-cache-references: -1: 19507 826226 826226
-cpu-cycles: -1: 1127215 826226 826226
-instructions: -1: 1301583 826226 826226
-branch-misses: 6571 826226 826226
-bus-cycles: 31411 826226 826226
-cache-references: 19507 826226 826226
-cpu-cycles: 1127215 826226 826226
-instructions: 1301583 826226 826226
-
-Performance counter stats for 'true':
-...
-```
-ie perf 6.5 and all events even though sysfs has events we're opening
-them with PERF_TYPE_HARDWARE.
-
-> > > > Presumably the expectation was that by advertising a cycles event, =
-presumably
-> > > > in sysfs, then this is what would be matched.
->
-> Yes. That's how this has always worked prior to the changes Marc referenc=
-ed.
-> Note that this can *also* be expaned to events from json databases, but w=
-as
-> *never* previously silently converted to a PERF_TYPE_HARDWARE event.
->
-> Please note that the events in sysfs are *namespaced* to the PMU (specifi=
-cally,
-> when using that PMU's dynamic type); they are not necessarily the same as
-> legacy events (though they may have similar or matching
-> names in some cases), they may be semantically distinct from the legacy e=
-vents
-> even if the names match, and it is incorrect to conflate the two.
-
-This was a behavior added by Intel so that say cpu_atom/legacy-event/
-would only open as a hardware event on that PMU. The point of the
-blamed change is to make that behavior consistent for all core PMUs.
-
-> > > I expect that if I ask for ${pmu}/${event}/, that PMU is used, and th=
-e event
-> > > *in that PMU's namespace* is used. Overriding that breaks long-establ=
-ished
-> > > practice and provides users with no recourse to get the behavioru the=
-y expect
-> > > (and previosuly had).
-> >
-> > On ARM but not Intel.
->
-> As above, I don't think the CPU architecture matters here for the case th=
-at I'm
-> saying is broken. I think that regardless of CPU architecture (or for any
-> non-CPU PMU) it is semantically incorrect to convert a named-pmu event to=
- a
-> legacy event.
-
-So perf's behavior has always been that legacy event priority is
-greater-than sysfs and json. The distinction here is that a core PMU
-is explicitly listed and it doesn't seem unreasonable to use core PMU
-names with legacy events, the behavior Intel added.
-
-> > > I do think that (regardless of whther this was the sematnic you inten=
-ded)
-> > > silently overriding events with legacy events is a bug, and one we sh=
-ould fix.
-> > > As I mentioned in another reply, just because the events have the sam=
-e name
-> > > does not mean that they are semantically the same, so we're liable to=
- give
-> > > people the wrong numbers anyhow.
-> > >
-> > > Can we fix this?
-> >
-> > So I'd like to fix this, some things from various conversations:
-> >
-> > 1) we lack testing. Our testing relies on the sysfs of the machine
-> > being run on, which is better than nothing. I think ideally we'd have
-> > a collection of zipped up sysfs directories and then we could have a
-> > test that asserts on ARM you get the behavior you want.
->
-> I agree we lack testing, and I'd be happy to help here going forwards, th=
-ough I
-> don't think this is a prerequisite for fixing this issue.
->
-> > 2) for RISC-V they want to make the legacy event matching something in
-> > user land to simplify the PMU driver.
->
-> Ok; I see how this might be related, but it doesn't sound like a prerequi=
-site
-> for fixing this issue -- there are plenty of people in this thread who ca=
-n
-> test.
->
-> > 3) I'd like to get rid of the PMU json interface. My idea is to
-> > convert json events/metrics into sysfs style files, zip these up and
-> > then link them into the perf binary. On Intel the json is 70% of the
-> > binary (7MB out of 10MB) and we may get this down to 3MB with this
-> > approach. The json lookup would need to incorporate the cpuid matching
-> > that currently exists. When we look up an event I'd like the approach
-> > to be like unionfs with a specified but configurable order. Users
-> > could provide directories of their own events/metrics for various
-> > PMUs, and then this approach could be used to help with (1).
->
-> I can see how that might interact with whatever changes we make to fix th=
-is
-> issue, but this seems like a future aspiration, and not a prerequisite fo=
-r
-> fixing the existing functional regression.
->
-> > Those proposals are not something to add as a -rc fix, so what I think
-> > you're asking for here is a "if ARM" fix somewhere in the event
-> > parsing. That's of course possible but it will cause problems if you
-> > did say:
-> >
-> > perf stat -e arm_pmu/LLC-load-misses/ ...
->
-> As above, I do not think this is an arm-specific issue, we're just the ca=
-nary
-> in the coalmine.
-
-Disagree, see comments above. A behavior change here would impact Intel.
-
-> Please note that:
->
->         perf stat -e arm_pmu/LLC-load-misses/ ...
->
-> ... would never have worked previously. No arm_pmu instances have a
-> "LLC-load-misses" event in their event namespaces, and we don't have any
-> userspace file mapping that event.
-
-This event was for the purpose of giving an example, perf list will
-show you events that work. The point is that a legacy event may not be
-available on both BIG.little PMU types so being able to designate the
-PMU there is helpful.
-
-> That said, If I really wanted that legacy event, I'd have asked for it ba=
-re,
-> e.g.
->
->         perf stat -e LLC-load-misses
->
-> ... and we're in agreement that it's sensible to expand this to multiple
-> PERF_TYPE_HARDWARE events targeting the individual CPU PMUs.
->
-> So I see no need to do anything to have magic for 'arm_pmu/LLC-load-misse=
-s/'.
->
-> > as I doubt the PMU driver is advertising this legacy event in sysfs
-> > and the "if ARM" logic would presumably be trying to disable legacy
-> > events in the term list for the ARM PMU.
-> >
-> > Given all of this, is anything actually broken and needing a fix for 6.=
-7?
->
-> There is absolutely a bug that needs to be fixed here (and needs to be
-> backported to stable so that it gets picked up by distributions).
-
-I'm not seeing this. The behavior is consistent with Intel, this has
-gone 2 releases without being spotted, it was triggered by a PMU event
-name aliasing a legacy event name and the behavior has always been
-legacy event names have higher priority than sysfs and json events.
-
-Whilst I'm seeing a lot of complaining, I've not seen a proposal of
-what behavior you want. Isn't it a PMU bug if the legacy event
-specifying the PMU doesn't get opened by the core PMU? Fixing the PMU
-driver appears to be the right fix and means there is consistency on
-core events across architectures.
+The PMU driver does the legacy to raw encoding translation, this is an
+assumption the tool has of core PMUs. You can see ARM's PMU driver
+doing the mapping here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dri=
+vers/perf/arm_pmuv3.c#n40
 
 Thanks,
 Ian
 
-> Thanks,
-> Mark.
+
+> - Arnaldo
