@@ -1,95 +1,94 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3881B3;
-	Wed, 22 Nov 2023 09:23:05 -0800 (PST)
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2809b4d648bso36522a91.2;
-        Wed, 22 Nov 2023 09:23:05 -0800 (PST)
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB3483;
+	Wed, 22 Nov 2023 09:24:41 -0800 (PST)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5c239897895so2518272a12.2;
+        Wed, 22 Nov 2023 09:24:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700673785; x=1701278585;
+        d=1e100.net; s=20230601; t=1700673881; x=1701278681;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qlEt1Uw0z9InptNq6gWRXZziu0xVvzCJEDfECIpRgbU=;
-        b=ied5aNWjLmNNiJLJ0xMkURaFxYS35+C3DZ1iuHU0idNWpUehJm8DaFdkrf1DYyp6OJ
-         v3jZPzAZIMAYxHL38qsfe9KeTAbonKcAkspqu7BhKcRIY1mkhLwCpzFJZL4RfnYmH8qP
-         BT0EwaMeAkE7zxiTOlfPaE+brH5bPAF8BWu7K5HhdWiROBXF4RNwh0eNrSrngvDSsiAC
-         QxgEc+27rk9a5b2lABVe6T7a+Q0/OcfOYu2+uDMMFiZ5zPHmXfsuAjDPQw77ziOKEPTS
-         os7kLrGkbi6wtm6ongetUUfhVyBmcNLMx1J6XJMG6HUEXZoO49z4F+AY1cp+k7vsAbkH
-         VHSw==
-X-Gm-Message-State: AOJu0YxWOETipAKDex14/NM3bXlSbjrpqnTxfuv0wCEMin9p82frdI9S
-	YgmU0qSfgLgJG+Bq3EWgxOYpb4og3P8EcPl0qXY=
-X-Google-Smtp-Source: AGHT+IHhciAc8GOaHAfwCV2MofLEnns1P6djCRCLVGmDUUH5/kcvWPo9QSzh52G3s7wjF2oFJQ0fpF6/xb2Wg7iJF4I=
-X-Received: by 2002:a17:90b:b13:b0:280:4c83:5f31 with SMTP id
- bf19-20020a17090b0b1300b002804c835f31mr2648019pjb.48.1700673784801; Wed, 22
- Nov 2023 09:23:04 -0800 (PST)
+        bh=mKbC8s4IlnELPuS9rnCyIQ9xG0e09amttwp/cHghswQ=;
+        b=fxa6eO+QdMbjIBrQL3EEN+FRM/BkIXLZvDs0eBu0r4oBiKCN3f0HTHZz3Zb/oNTNNN
+         TiPntVszK6nlo5DIdJyn0UjzzS5fHFWNma+tH1jcynMdfU/QH9sybHNKEk73E8FdYTDu
+         piS82no0X/GJMvi3V7TxP2NYkRhX1irLeVdknhRnWy68OBZHz7blq041dQEFjOYpa/bp
+         hLm/z5iZGfchVVuSgLfkF9QYTjH+sKPEuTQSUwyoM19xA6R7KbyNE48JC6GDZih3buBz
+         HUdqy67nd83L7bUj9wRV6QdiGBZVixTvqWS270o+s6c4CaMSWfNVJDpxfYPSkiYegD0s
+         MUOA==
+X-Gm-Message-State: AOJu0Yw9CDOaTQM/isLvEg5I5eXk32AmaQPpZvB0dt588CACpUuvFSZ0
+	26nC9oHs/jlGvz0ZKk3HRIkGuGHRsgJJZqciBGg=
+X-Google-Smtp-Source: AGHT+IH2AdMpsfKZKttBW5WYkolV8QcPT+iP6etg+hWfFsNaod1qAG4rhj+szwmmc3WWwIDLlTQ94d+eS8+aX4ITmwM=
+X-Received: by 2002:a17:90b:1e53:b0:280:2422:d2b4 with SMTP id
+ pi19-20020a17090b1e5300b002802422d2b4mr3011155pjb.22.1700673881209; Wed, 22
+ Nov 2023 09:24:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231122022805.511839-1-irogers@google.com> <ZV3xe1qVCiz5bkLP@kernel.org>
- <ZV3yFe7+wUNWwkVc@kernel.org>
-In-Reply-To: <ZV3yFe7+wUNWwkVc@kernel.org>
+References: <20231122022805.511839-1-irogers@google.com> <ZV40tp7uiaTk-Qp1@linux.dev>
+In-Reply-To: <ZV40tp7uiaTk-Qp1@linux.dev>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 22 Nov 2023 09:22:53 -0800
-Message-ID: <CAM9d7cjn6ozPxZTjTQWtjGVWnOZBYfog1EWdbrBiwN9vS=fu-A@mail.gmail.com>
+Date: Wed, 22 Nov 2023 09:24:30 -0800
+Message-ID: <CAM9d7ci8J_3+Hv+tHPBLx3SOXiPsGyxpYNHxZU==qR544f9hVw@mail.gmail.com>
 Subject: Re: [PATCH v1] perf MANIFEST: Add gen-sysreg for ARM SPE
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
 Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Marc Zyngier <maz@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Marc Zyngier <maz@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Arnaldo,
+Hi Oliver,
 
-On Wed, Nov 22, 2023 at 4:20=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Wed, Nov 22, 2023 at 9:05=E2=80=AFAM Oliver Upton <oliver.upton@linux.de=
+v> wrote:
 >
-> Em Wed, Nov 22, 2023 at 09:18:03AM -0300, Arnaldo Carvalho de Melo escrev=
-eu:
-> > Em Tue, Nov 21, 2023 at 06:28:05PM -0800, Ian Rogers escreveu:
-> > > The necessary files for generating sysreg-defs.h need adding to the
-> > > perf tool MANIFEST that lists the files for packaging the perf tool
-> > > source code. Fix for the following:
-> > >
-> > > ```
-> > > $ make perf-tar-src-pkg
-> > > $ tar xvf perf-6.7.0-rc2.tar
-> > > $ cd perf-6.7.0-rc2
-> > > $ make -C tools/perf
+> Hi Ian,
 >
-> And I detected this while doing these tests on
-> perf-tools/tmp.perf-tools:
->
-> [acme@toolbox perf-tools]$ git log --oneline -1 ; time make -C tools/perf=
- build-test
-> 4dbc034e08146c48 (HEAD -> perf-tools) tools/perf: Update tools's copy of =
-mips syscall table
-> make: Entering directory '/home/acme/git/perf-tools/tools/perf'
-> egrep: warning: egrep is obsolescent; using grep -E
-> - tarpkg: ./tests/perf-targz-src-pkg .
-> make[1]: *** [tests/make:348: tarpkg] Error 2
-> make: *** [Makefile:103: build-test] Error 2
-> make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
->
-> real    0m7.498s
-> user    0m12.059s
-> sys     0m5.491s
-> =E2=AC=A2[acme@toolbox perf-tools]$
->
-> > > Fixes: e2bdd172e665 ("perf build: Generate arm64's sysreg-defs.h and =
-add to include path")
+> On Tue, Nov 21, 2023 at 06:28:05PM -0800, Ian Rogers wrote:
+> > The necessary files for generating sysreg-defs.h need adding to the
+> > perf tool MANIFEST that lists the files for packaging the perf tool
+> > source code. Fix for the following:
 > >
-> > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ```
+> > $ make perf-tar-src-pkg
+> > $ tar xvf perf-6.7.0-rc2.tar
+> > $ cd perf-6.7.0-rc2
+> > $ make -C tools/perf
+> > ...
+> >   PERF_VERSION =3D 6.7.rc2.gc2d5304e6c64
+> > make[3]: *** No rule to make target 'perf-6.7.0-rc2/arch/arm64/tools/ge=
+n-sysreg.awk', needed by 'perf-6.7.0-rc2/tools/arch/arm64/include/generated=
+/asm/sysreg-defs.h'.  Stop.
+> > make[2]: *** [Makefile.perf:456: arm64-sysreg-defs] Error 2
+> > make[2]: *** Waiting for unfinished jobs....
+> > make[1]: *** [Makefile.perf:242: sub-make] Error 2
+> > make: *** [Makefile:70: all] Error 2
+> > make: Leaving directory 'perf-6.7.0-rc2/tools/perf'
+> > ...
+> > ```
 > >
-> > Namhyung, I'm testing this together with your headers sync series + wha=
-t
-> > is in perf-tools/tmp.perf-tools, will report results soon.
+> > Fixes: e2bdd172e665 ("perf build: Generate arm64's sysreg-defs.h and ad=
+d to include path")
+> > ---
+> > Note: the breakage is in Linus' tree and perf-tools, not yet in perf-to=
+ols-next.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> I had sent out fixes for both of your comments [*], no preference as to
+> which gets applied. So, FWIW:
+>
+> Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
 
-Great, thanks for the testing!
+Thanks, I think I can pick up your patches as they came before.
 Namhyung
+
+>
+> [*] https://lore.kernel.org/linux-perf-users/20231121192956.919380-1-oliv=
+er.upton@linux.dev/
