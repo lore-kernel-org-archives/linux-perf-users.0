@@ -1,108 +1,134 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5B922A1;
-	Wed, 22 Nov 2023 00:44:58 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0DDC1595;
-	Wed, 22 Nov 2023 00:45:44 -0800 (PST)
-Received: from [10.162.41.8] (a077893.blr.arm.com [10.162.41.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12E723F73F;
-	Wed, 22 Nov 2023 00:44:54 -0800 (PST)
-Message-ID: <347fc210-8c31-47be-a87a-656fa30a72ef@arm.com>
-Date: Wed, 22 Nov 2023 14:14:52 +0530
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T9XW4ctj"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD72DD;
+	Wed, 22 Nov 2023 01:27:17 -0800 (PST)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AM9FY0S012287;
+	Wed, 22 Nov 2023 09:27:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=H6LLZviQ9lPZw2kIi5P1Ao+W/EERLpQEZlWwK1Bc2n4=;
+ b=T9XW4ctjya4bqAPU3c2xVl2W+z/XoieFFgihQ4mV2UE1qRhdFQ+/4kbLD+NqVc/7TFnd
+ ukz33mT6ltHOUIFOrFLesYgybjNrOVHwbcW9C4+E9fVLqjHTUTa03Z0g/KvDbKLiFIlE
+ VcyUZi7HBzNDoZSAklxriVkJ9/toi9LjvltvEGQGhGpfrIZDHe/78u8BNStB0qMWiFSV
+ Qu6H1J6AT0Md1pHlyF8/mv33IUgrNVzLpxPpXcTttxB9aPI10vMxj+RnHuFQQqPkfc7F
+ RIB+QTz9ZHwcx6LETSS5zebTJqm2GB+X/Eq9VRj2zb5O54p2WmaH7BL01tfq3BHTnTQw Rg== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uheqxga9e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Nov 2023 09:27:15 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AM7IQDF002623;
+	Wed, 22 Nov 2023 09:27:14 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uf93kxrby-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Nov 2023 09:27:13 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AM9RAHF43254142
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Nov 2023 09:27:10 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A5CFD20043;
+	Wed, 22 Nov 2023 09:27:10 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D18520040;
+	Wed, 22 Nov 2023 09:27:10 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 22 Nov 2023 09:27:10 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH linux-next] perf report: remove warning on missing raw data for s390
+Date: Wed, 22 Nov 2023 10:27:03 +0100
+Message-Id: <20231122092703.3163191-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] arm64: perf: Include threshold control fields in
- PMEVTYPER mask
-Content-Language: en-US
-To: James Clark <james.clark@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, suzuki.poulose@arm.com, will@kernel.org,
- mark.rutland@arm.com
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231113112507.917107-1-james.clark@arm.com>
- <20231113112507.917107-2-james.clark@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20231113112507.917107-2-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: coljJEbv67BzOlUm18XeAk2gGN680Z1W
+X-Proofpoint-GUID: coljJEbv67BzOlUm18XeAk2gGN680Z1W
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-22_06,2023-11-21_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 priorityscore=1501
+ spamscore=0 mlxscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311220066
 
+Command
+ # ./perf report -i /tmp/111 -D > /dev/null
+emits an error message when a sample for event CRYPTO_ALL in the
+perf.data file does not contain any raw data. This is ok.
+Do not trigger this warning when the sample in the perf.data files
+does not contain any raw data at all.
+Check for availability of raw data for all events and return if
+none is available.
 
+Output before:
+ # ./perf report -i /tmp/111 -D > /dev/null
+ Invalid CRYPTO_ALL raw data encountered
+ Invalid CRYPTO_ALL raw data encountered
+ Invalid CRYPTO_ALL raw data encountered
+ #
 
-On 11/13/23 16:55, James Clark wrote:
-> FEAT_PMUv3_TH (Armv8.8) adds two new fields to PMEVTYPER, so include
-> them in the mask. These aren't writable on 32 bit kernels as they are in
-> the high part of the register, so only include them for arm64.
-> 
-> It would be difficult to do this statically in the asm header files for
-> each platform without resulting in circular includes or #ifdefs inline
-> in the code. For that reason the ARMV8_PMU_EVTYPE_MASK definition has
-> been removed and the mask is constructed programmatically.
+Output after:
+ # ./perf report -i /tmp/111 -D > /dev/null
+ #
 
-Agreed, and this also makes sense because there is just a single instance
-for ARMV8_PMU_EVTYPE_MASK in armv8pmu_write_evtype().
+Fixes: b539deafbadb ("perf report: Add s390 raw data interpretation for PAI counters")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ tools/perf/util/s390-sample-raw.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  drivers/perf/arm_pmuv3.c       | 9 ++++++++-
->  include/linux/perf/arm_pmuv3.h | 3 ++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index 6ca7be05229c..1d40d794f5e4 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -555,8 +555,15 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
->  static inline void armv8pmu_write_evtype(int idx, u32 val)
->  {
->  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
-> +	unsigned long mask = ARMV8_PMU_EVTYPE_EVENT |
-> +			     ARMV8_PMU_INCLUDE_EL2 |
-> +			     ARMV8_PMU_EXCLUDE_EL0 |
-> +			     ARMV8_PMU_EXCLUDE_EL1;
+diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
+index 29a744eeb71e..53383e97ec9d 100644
+--- a/tools/perf/util/s390-sample-raw.c
++++ b/tools/perf/util/s390-sample-raw.c
+@@ -51,8 +51,6 @@ static bool s390_cpumcfdg_testctr(struct perf_sample *sample)
+ 	struct cf_trailer_entry *te;
+ 	struct cf_ctrset_entry *cep, ce;
+ 
+-	if (!len)
+-		return false;
+ 	while (offset < len) {
+ 		cep = (struct cf_ctrset_entry *)(buf + offset);
+ 		ce.def = be16_to_cpu(cep->def);
+@@ -234,10 +232,9 @@ struct pai_data {		/* Event number and value */
+  */
+ static bool s390_pai_all_test(struct perf_sample *sample)
+ {
+-	unsigned char *buf = sample->raw_data;
+ 	size_t len = sample->raw_size;
+ 
+-	if (len < 0xa || !buf)
++	if (len < 0xa)
+ 		return false;
+ 	return true;
+ }
+@@ -299,6 +296,10 @@ void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event,
+ 	if (!evsel)
+ 		return;
+ 
++	/* Check for raw data in sample */
++	if (!sample->raw_size || !sample->raw_data)
++		return;
++
+ 	/* Display raw data on screen */
+ 	if (evsel->core.attr.config == PERF_EVENT_CPUM_CF_DIAG) {
+ 		if (!evsel->pmu)
+-- 
+2.41.0
 
-At first this looks bit odd sequence - EL2, EL0, EL1 but such as these
-bit positions.
-
-#define ARMV8_PMU_EXCLUDE_EL1           (1U << 31)
-#define ARMV8_PMU_EXCLUDE_EL0           (1U << 30)
-#define ARMV8_PMU_INCLUDE_EL2           (1U << 27)
-
->  
-> -	val &= ARMV8_PMU_EVTYPE_MASK;
-> +	if (IS_ENABLED(CONFIG_ARM64))
-> +		mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
-
-This makes sense.
-
-> +
-> +	val &= mask;
->  	write_pmevtypern(counter, val);
->  }
->  
-> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
-> index 9c226adf938a..ddd1fec86739 100644
-> --- a/include/linux/perf/arm_pmuv3.h
-> +++ b/include/linux/perf/arm_pmuv3.h
-> @@ -228,7 +228,8 @@
->  /*
->   * PMXEVTYPER: Event selection reg
->   */
-> -#define ARMV8_PMU_EVTYPE_MASK	0xc800ffff	/* Mask for writable bits */
-> +#define ARMV8_PMU_EVTYPE_TH	GENMASK(43, 32)
-> +#define ARMV8_PMU_EVTYPE_TC	GENMASK(63, 61)
-
-Looks correct.
-
->  #define ARMV8_PMU_EVTYPE_EVENT	0xffff		/* Mask for EVENT bits */
->  
->  /*
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
