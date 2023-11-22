@@ -1,115 +1,518 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CF84D588
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 12:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IscDCzdR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137CFC433C9;
-	Wed, 22 Nov 2023 12:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700655640;
-	bh=shRm6TT5lP3owC5SoqOCvq7GBAZYeAO4PDux6pprpqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IscDCzdRfv6pkcajcRW/OztWdnR8DCPOWxJvzBcXZTjXNsGG6M/kZSt6TCgtlJpcN
-	 pYuJDz+849khGK/6ZaATVINws4d9zSt6BMCUff06swG2NKiFgkGyse4/PJbDnlF/Dg
-	 XymCNgPqTtSuKhtq8b+0uANvKzxC0PU46sROUEMameWEbHWOzieVEqeH97iXdFwAaQ
-	 HDc4c1yKeTzkH+qQwE4bYA2lEPKtYZbu934Ew3cgXKO1813NobMMUCNVlrU+B+MGQ6
-	 aj7bmW//DMkeYmPdDV6UsZqmZH9XUAa0PekdhkXP1d7VCZ+4ZB9BpBbfGTIAk2Pz/a
-	 ac/M0faJphr5g==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 6D4EE40094; Wed, 22 Nov 2023 09:20:37 -0300 (-03)
-Date: Wed, 22 Nov 2023 09:20:37 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ttwHTI+9"
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2097.outbound.protection.outlook.com [40.92.41.97])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EB312C;
+	Wed, 22 Nov 2023 04:41:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k8NeKcid/siHPeVHlHnQpVF/6IjKctFwU8+VZoZ306Ji5jSIAOl0fSGqj9Xdvkuv4cTTKNULk8sckVhZoM6AVGtVrKwh6C1lcAssSYTQ7s5WrV9nNQ73lLW7NzCZIYrCsofotaOOU4piQM1N8XVJawO9in3h4WDv0O2IKhDsiClfy/hyA1Gct0SEFiQW8iaNYwpqB9EE51L0o4/eMQIphqsnN8kQAl51m3/qMgiwxBTttAbscIcW/pJhrMbnYWOHnsGEdC1Bsm3JjAkmv8JseePN+4R7pM/ysaEh0vNSouUsainGmtW4c5Uszl2fJKX9XXv10puul20osuAuK2q+ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Xvw3h6FioMg4PK5p5fNJW1vQnpncRenq+hQCcqJAZP0=;
+ b=gMHb06c+LpRBoU0LBjoI30nj+dvcH/SPXn+OSQUOE7s7+bb1HAa7YBfrco552hgzO0cgEk/otqLKaM4h6QEaTSw5w+3+bG8tf6pXQeAjYUYV4o68Pb9xnQRFPEpMQNzQKFmstOym/0f7SlPyrkfLjTRcgmUwVdQXDMSTG9y/KHIKatQz09yndxWq9td6h2kK/sWd7plhyxw6q8qZDgBfvemD3fxYykyiCIhNg6xHsqy9HK7xEDgVbyZO2c8f/5pXYppQcBo3lEqaZ12Pk1wF9n09qZvFvDnON2gY5CFg+9eduDV27/+T/6loqpJEOl5bU42cBUSzHT0YTfxTx+D9FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xvw3h6FioMg4PK5p5fNJW1vQnpncRenq+hQCcqJAZP0=;
+ b=ttwHTI+9AWqsPX1pKY7IvInkKS31ajfMZoOHysTClorkgZ5JSRdDbd7xoQ8ZsUHnzK7GGYETsA8bRY5jNplSxCgrMviHXqAESqwcUHkRxBUaSXVto6/hdeML25Dn12di8AIrEHq4z8aKDwxUfPej8EMViDFeTB88azvOflqF/sLq4MjUhxz34a2D3bQ/199KJjHmyX15qMIq4RjQYnd95rmpnp87DMH6O/K2qAqdSUrh9e61fjLWwWk32GpGFQgF6BW7iLa61AcTcoS2zqydzXVg3iDN7v2iQn1rpQexxWqs7TRwW/9+8gkHN1lO1NhYWIml+ajJKCq4wMC1egPlmA==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by IA1PR20MB6246.namprd20.prod.outlook.com (2603:10b6:208:3f6::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.18; Wed, 22 Nov
+ 2023 12:41:44 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::55b:c350:980:ad8]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::55b:c350:980:ad8%6]) with mapi id 15.20.7002.027; Wed, 22 Nov 2023
+ 12:41:44 +0000
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Guo Ren <guoren@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Marc Zyngier <maz@kernel.org>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf MANIFEST: Add gen-sysreg for ARM SPE
-Message-ID: <ZV3yFe7+wUNWwkVc@kernel.org>
-References: <20231122022805.511839-1-irogers@google.com>
- <ZV3xe1qVCiz5bkLP@kernel.org>
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Wei Fu <wefu@redhat.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Palmer Dabbelt <palmer@rivosinc.com>
+Subject: [PATCH V4 RESEND] perf vendor events riscv: add T-HEAD C9xx JSON file
+Date: Wed, 22 Nov 2023 20:41:06 +0800
+Message-ID:
+ <IA1PR20MB495325FCF603BAA841E29281BBBAA@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [qdDgYaHcsczjhX8Sqo05jecRSAP5g+zOOzentFXGi30=]
+X-ClientProxiedBy: TYAPR01CA0075.jpnprd01.prod.outlook.com
+ (2603:1096:404:2c::15) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <20231122124106.836436-1-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZV3xe1qVCiz5bkLP@kernel.org>
-X-Url: http://acmel.wordpress.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|IA1PR20MB6246:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18d4352a-522a-48cb-bce3-08dbeb586261
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	jr8JH/NXHihiANn9ml2v/YK3e7eNUZql8TUHo7gA30rSD0u0ym/Ae7KqNaQ2pM3e+8jzWwx97OBK/YKy0BylxauSQS/XLIqNLuuuczyhIKGNsP4ONOsJX5Kqj3v8GWyCdFrthFFJbREcsAkpkM3VGepVH+FoSu3LsYgoxJcixMgj6m8qi2USEb9cHaq5dD1j0N9Ukq7q8i7ZzqXP2jvv/0iYthe2CIEpAvGBC1M4nsWfFkT1aB8+Lo/PHtSpMIAVCfJhFt+dNwvQUXmfnYjgTo4ya3Y3NGmkx9VLpJwQ+Jw2Qn9aXBs82QMBBqy2ocWgnA/N/j57lqf1DbhVNC4/LW3wTOxUw5bwayTJdyIsIk/PM8o9EGSp3ZHtEGXXXMbI/G8EID/AIugwjEn13NyxLF2IGZ875oo/oqjvd+ZLror2fibA9ttfCxH1c0EjbH/53VZZDhnJeAvxOsxjXwozbXxe/sNJgjRKoPAt2atJIG8vPjgWOIuB10vv8Eg0GIQeJzLzj+ACxXYMJda3wBwITsH05PuJ8HFUPHGXFhIa2fy4Z2hw5G9SH2egvg/U7Icm+dmFVRy/xJ0cH1AC77q7xNmwTR760QKLPYM8/6erAJlzm3tueMR1z14FnYCQ4RK7Ppq2kAdH2TIxoRg4fnQv9rbgZ05oRi5Yc49qPtc2ZZs=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sGEAefeJHo/KWUhPKA02HVIoDoarziG7Ifz8icpX8YZ34S6Soi0ZRSVvEn7X?=
+ =?us-ascii?Q?HU9RvjNpRaMqGXdD7oDZYZKNmO1viiFhNr+wmXmB0XsY9ayZjleoeDGZG+mb?=
+ =?us-ascii?Q?kX2ctC54zqxyPX8XG9pTt99C4br7gAJ8u53QTKGiYNdN25Mluqn++/HfsRNQ?=
+ =?us-ascii?Q?SgYSd1f5fQaC+mJcnoC/74rqWuWJqaMS+UobCr02Zmvn9RfIr3jIsOQkkm5Q?=
+ =?us-ascii?Q?/v3kI1+6t1va+VpJJ0B5yHBloSKfxWyWkOPvyPKxniMbQoRSNlnev/QvVN45?=
+ =?us-ascii?Q?tXD9K/0jphviouGjE+apZIpc51DCY35ymATzAYLrNK3KybVsuSSuWZPft7PT?=
+ =?us-ascii?Q?TOaZbCCikB4sDpc5gb564jcB3r3kAqhzqyNQKN3SNSG1KjqgBKKwnSEJdtO6?=
+ =?us-ascii?Q?Fslx8FHsBewKPVe7algxsDSn9aBuuuYB8uWr6NaF1qnQ2TD4eZB011JMELmd?=
+ =?us-ascii?Q?T94x55yYiygYLQsCuHXP9wFJvZLTFbejjVLiw3pp1CM9cVl83/cdTHQiFhvn?=
+ =?us-ascii?Q?yPWAR1cKfBtS6UvXFyPS1gzpTjBaLq24J24qjRD7EP/XXGSMV2OaoCT387Ss?=
+ =?us-ascii?Q?jd4P9AAUrKm94n1lSrJm0FQhT0V7MmqZEB5u9ty8OjtyeCRJzkqmlwKwI2te?=
+ =?us-ascii?Q?b50201rfdsJrKdW77oj3CcNuVwQzZAlXLjCeDRSwPKKHCgZFuf6nIBuBcJpz?=
+ =?us-ascii?Q?llHq/seixfkn4TINLzCO3nCHqpeCFDMCbXJyQn9rKlM7sLRhLcMOAoib8x+L?=
+ =?us-ascii?Q?Qki3SLZE8+BJLkkSZa4lkeYNLC0+oL0CiKe1ThVuH8hYXrVfnNoAqhZ5EH7b?=
+ =?us-ascii?Q?WkIHdf71u1f/+ziihBBrX/XITPzqyfMh8v/U6iECGwbSfIhzqg/vAXqo5U1E?=
+ =?us-ascii?Q?dQJ5SBD8E8adP6tOkJ1gpb1kVZEFEAGNf6mb9zDace7BGb1m/SKO7d3BnW/G?=
+ =?us-ascii?Q?gOS9MP8bdd7tXD2x/uTDxgI0/XLDYpwpnLxvUuNuYCZzbLpk8CUj+K0NGxsT?=
+ =?us-ascii?Q?uGYPxwC6HsxWT08rDwPIhEroDMf87E0b5M3m6XD+dXiOEQW2sQbxJhf1AxXj?=
+ =?us-ascii?Q?JcMjWY9raGGEuiATEqW8lrQLr+Xqfcp0uQnFcvXCH8IsdfVphim9N3lnviwa?=
+ =?us-ascii?Q?r1gxQY+S5qKajJ6sgVuRVMmV6UszuEh5pznN4kz0AH6oS2ZPt9LkQrJaBBEA?=
+ =?us-ascii?Q?5pOKSPC/J0xogqceH/Fh5+ZND5sQqfz7VXhHcTJkAJwp7ZhWTkeA3R76LMg?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18d4352a-522a-48cb-bce3-08dbeb586261
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2023 12:41:44.6332
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR20MB6246
 
-Em Wed, Nov 22, 2023 at 09:18:03AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Nov 21, 2023 at 06:28:05PM -0800, Ian Rogers escreveu:
-> > The necessary files for generating sysreg-defs.h need adding to the
-> > perf tool MANIFEST that lists the files for packaging the perf tool
-> > source code. Fix for the following:
-> > 
-> > ```
-> > $ make perf-tar-src-pkg
-> > $ tar xvf perf-6.7.0-rc2.tar
-> > $ cd perf-6.7.0-rc2
-> > $ make -C tools/perf
+Add json file of T-HEAD C9xx series events.
 
-And I detected this while doing these tests on
-perf-tools/tmp.perf-tools:
+The event idx (raw value) is summary as following:
 
-[acme@toolbox perf-tools]$ git log --oneline -1 ; time make -C tools/perf build-test
-4dbc034e08146c48 (HEAD -> perf-tools) tools/perf: Update tools's copy of mips syscall table
-make: Entering directory '/home/acme/git/perf-tools/tools/perf'
-egrep: warning: egrep is obsolescent; using grep -E
-- tarpkg: ./tests/perf-targz-src-pkg .
-make[1]: *** [tests/make:348: tarpkg] Error 2
-make: *** [Makefile:103: build-test] Error 2
-make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
+event id range   | support cpu
+ 0x01 - 0x2a     |  c906,c910,c920
 
-real	0m7.498s
-user	0m12.059s
-sys	0m5.491s
-⬢[acme@toolbox perf-tools]$
+The event ids are based on the public document of T-HEAD and cover
+the c900 series.
 
-> > Fixes: e2bdd172e665 ("perf build: Generate arm64's sysreg-defs.h and add to include path")
-> 
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Namhyung, I'm testing this together with your headers sync series + what
-> is in perf-tools/tmp.perf-tools, will report results soon.
-> 
-> - Arnaldo
-> 
-> > ---
-> > Note: the breakage is in Linus' tree and perf-tools, not yet in perf-tools-next.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/MANIFEST | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-> > index 1da7f4b91b4f..dc42de1785ce 100644
-> > --- a/tools/perf/MANIFEST
-> > +++ b/tools/perf/MANIFEST
-> > @@ -1,3 +1,5 @@
-> > +arch/arm64/tools/gen-sysreg.awk
-> > +arch/arm64/tools/sysreg
-> >  tools/perf
-> >  tools/arch
-> >  tools/scripts
-> > -- 
-> > 2.43.0.rc1.413.gea7ed67945-goog
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+These events are the max that c900 series support.
+Since T-HEAD let manufacturers decide whether events are usable,
+the final support of the perf events is determined by the pmu node
+of the soc dtb.
 
--- 
+Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+Tested-by: Guo Ren <guoren@kernel.org>
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+---
+Change from V3:
+1. fix some typo in json file
+2. correct the event id range in commit
+3. rename directory to c900-legacy to identify the old T-HEAD cpus
 
-- Arnaldo
+This patch need the following patches for opensbi to function normaly:
+https://lists.infradead.org/pipermail/opensbi/2023-August/005500.html
+
+The dtb patch:
+https://lists.infradead.org/pipermail/linux-riscv/2023-August/039040.html
+
+A test result on D1 board with mainline opensbi and mainline kernel:
+[root@test perf]# ./perf stat -a \
+>   -e l1_icache_access \
+>   -e l1_icache_miss \
+>   -e itlb_miss \
+>   -e dtlb_miss \
+>   -e jtlb_miss \
+>   -e inst_branch_mispredict \
+>   -e inst_branch \
+>   -e inst_store \
+>   -e l1_dcache_read_access \
+>   -e l1_dcache_read_miss \
+>   -e l1_dcache_write_access \
+>   -e l1_dcache_write_miss \
+>   -- openssl speed rsa2048
+Doing 2048 bits private rsa's for 10s: 100 2048 bits private RSA's in 10.06s
+Doing 2048 bits public rsa's for 10s: 4051 2048 bits public RSA's in 10.00s
+version: 3.1.2
+built on: Sat Aug  5 14:56:47 2023 UTC
+options: bn(64,64)
+CPUINFO: N/A
+                  sign    verify    sign/s verify/s
+rsa 2048 bits 0.100600s 0.002469s      9.9    405.1
+
+ Performance counter stats for 'system wide':
+
+     7,120,831,110      l1_icache_access
+         2,145,279      l1_icache_miss
+         1,307,935      itlb_miss
+         2,477,482      dtlb_miss
+           402,760      jtlb_miss
+         8,043,723      inst_branch_mispredict
+       153,469,454      inst_branch
+       537,300,381      inst_store
+       947,508,099      l1_dcache_read_access
+           770,550      l1_dcache_read_miss
+       537,262,702      l1_dcache_write_access
+           171,436      l1_dcache_write_miss
+
+      20.315046885 seconds time elapsed
+
+---
+ tools/perf/pmu-events/arch/riscv/mapfile.csv  |  1 +
+ .../arch/riscv/thead/c900-legacy/cache.json   | 67 ++++++++++++++++
+ .../riscv/thead/c900-legacy/firmware.json     | 68 ++++++++++++++++
+ .../riscv/thead/c900-legacy/instruction.json  | 72 +++++++++++++++++
+ .../riscv/thead/c900-legacy/microarch.json    | 80 +++++++++++++++++++
+ 5 files changed, 288 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/riscv/thead/c900-legacy/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/thead/c900-legacy/instruction.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/thead/c900-legacy/microarch.json
+
+diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+index c61b3d6ef616..b42b65d09c36 100644
+--- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
++++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+@@ -15,3 +15,4 @@
+ #
+ #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
+ 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
++0x5b7-0x0-0x0,v1,thead/c900-legacy,core
+diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/cache.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/cache.json
+new file mode 100644
+index 000000000000..2b142348d635
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/cache.json
+@@ -0,0 +1,67 @@
++[
++  {
++    "EventName": "L1_ICACHE_ACCESS",
++    "EventCode": "0x00000001",
++    "BriefDescription": "L1 instruction cache access"
++  },
++  {
++    "EventName": "L1_ICACHE_MISS",
++    "EventCode": "0x00000002",
++    "BriefDescription": "L1 instruction cache miss"
++  },
++  {
++    "EventName": "ITLB_MISS",
++    "EventCode": "0x00000003",
++    "BriefDescription": "I-UTLB miss"
++  },
++  {
++    "EventName": "DTLB_MISS",
++    "EventCode": "0x00000004",
++    "BriefDescription": "D-UTLB miss"
++  },
++  {
++    "EventName": "JTLB_MISS",
++    "EventCode": "0x00000005",
++    "BriefDescription": "JTLB miss"
++  },
++  {
++    "EventName": "L1_DCACHE_READ_ACCESS",
++    "EventCode": "0x0000000c",
++    "BriefDescription": "L1 data cache read access"
++  },
++  {
++    "EventName": "L1_DCACHE_READ_MISS",
++    "EventCode": "0x0000000d",
++    "BriefDescription": "L1 data cache read miss"
++  },
++  {
++    "EventName": "L1_DCACHE_WRITE_ACCESS",
++    "EventCode": "0x0000000e",
++    "BriefDescription": "L1 data cache write access"
++  },
++  {
++    "EventName": "L1_DCACHE_WRITE_MISS",
++    "EventCode": "0x0000000f",
++    "BriefDescription": "L1 data cache write miss"
++  },
++  {
++    "EventName": "LL_CACHE_READ_ACCESS",
++    "EventCode": "0x00000010",
++    "BriefDescription": "LL Cache read access"
++  },
++  {
++    "EventName": "LL_CACHE_READ_MISS",
++    "EventCode": "0x00000011",
++    "BriefDescription": "LL Cache read miss"
++  },
++  {
++    "EventName": "LL_CACHE_WRITE_ACCESS",
++    "EventCode": "0x00000012",
++    "BriefDescription": "LL Cache write access"
++  },
++  {
++    "EventName": "LL_CACHE_WRITE_MISS",
++    "EventCode": "0x00000013",
++    "BriefDescription": "LL Cache write miss"
++  }
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+new file mode 100644
+index 000000000000..9b4a032186a7
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+@@ -0,0 +1,68 @@
++[
++  {
++    "ArchStdEvent": "FW_MISALIGNED_LOAD"
++  },
++  {
++    "ArchStdEvent": "FW_MISALIGNED_STORE"
++  },
++  {
++    "ArchStdEvent": "FW_ACCESS_LOAD"
++  },
++  {
++    "ArchStdEvent": "FW_ACCESS_STORE"
++  },
++  {
++    "ArchStdEvent": "FW_ILLEGAL_INSN"
++  },
++  {
++    "ArchStdEvent": "FW_SET_TIMER"
++  },
++  {
++    "ArchStdEvent": "FW_IPI_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_IPI_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_FENCE_I_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
++  }
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/instruction.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/instruction.json
+new file mode 100644
+index 000000000000..c822b5373333
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/instruction.json
+@@ -0,0 +1,72 @@
++[
++  {
++    "EventName": "INST_BRANCH_MISPREDICT",
++    "EventCode": "0x00000006",
++    "BriefDescription": "Mispredicted branch instructions"
++  },
++  {
++    "EventName": "INST_BRANCH",
++    "EventCode": "0x00000007",
++    "BriefDescription": "Retired branch instructions"
++  },
++  {
++    "EventName": "INST_JMP_MISPREDICT",
++    "EventCode": "0x00000008",
++    "BriefDescription": "Indirect branch mispredict"
++  },
++  {
++    "EventName": "INST_JMP",
++    "EventCode": "0x00000009",
++    "BriefDescription": "Retired jmp instructions"
++  },
++  {
++    "EventName": "INST_STORE",
++    "EventCode": "0x0000000b",
++    "BriefDescription": "Retired store instructions"
++  },
++  {
++    "EventName": "INST_ALU",
++    "EventCode": "0x0000001d",
++    "BriefDescription": "Retired ALU instructions"
++  },
++  {
++    "EventName": "INST_LDST",
++    "EventCode": "0x0000001e",
++    "BriefDescription": "Retired Load/Store instructions"
++  },
++  {
++    "EventName": "INST_VECTOR",
++    "EventCode": "0x0000001f",
++    "BriefDescription": "Retired Vector instructions"
++  },
++  {
++    "EventName": "INST_CSR",
++    "EventCode": "0x00000020",
++    "BriefDescription": "Retired CSR instructions"
++  },
++  {
++    "EventName": "INST_SYNC",
++    "EventCode": "0x00000021",
++    "BriefDescription": "Retired sync instructions (AMO/LR/SC instructions)"
++  },
++  {
++    "EventName": "INST_UNALIGNED_ACCESS",
++    "EventCode": "0x00000022",
++    "BriefDescription": "Retired Store/Load instructions with unaligned memory access"
++  },
++  {
++    "EventName": "INST_ECALL",
++    "EventCode": "0x00000025",
++    "BriefDescription": "Retired ecall instructions"
++  },
++  {
++    "EventName": "INST_LONG_JP",
++    "EventCode": "0x00000026",
++    "BriefDescription": "Retired long jump instructions"
++  },
++  {
++    "EventName": "INST_FP",
++    "EventCode": "0x0000002a",
++    "BriefDescription": "Retired FPU instructions"
++  }
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/microarch.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/microarch.json
+new file mode 100644
+index 000000000000..0ab6f288af91
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/microarch.json
+@@ -0,0 +1,80 @@
++[
++  {
++    "EventName": "LSU_SPEC_FAIL",
++    "EventCode": "0x0000000a",
++    "BriefDescription": "LSU speculation fail"
++  },
++  {
++    "EventName": "IDU_RF_PIPE_FAIL",
++    "EventCode": "0x00000014",
++    "BriefDescription": "Instruction decode unit launch pipeline failed in RF state"
++  },
++  {
++    "EventName": "IDU_RF_REG_FAIL",
++    "EventCode": "0x00000015",
++    "BriefDescription": "Instruction decode unit launch register file fail in RF state"
++  },
++  {
++    "EventName": "IDU_RF_INSTRUCTION",
++    "EventCode": "0x00000016",
++    "BriefDescription": "retired instruction count of Instruction decode unit in RF (Register File) stage"
++  },
++  {
++    "EventName": "LSU_4K_STALL",
++    "EventCode": "0x00000017",
++    "BriefDescription": "LSU stall times for long distance data access (Over 4K)",
++    "PublicDescription": "This stall occurs when translate virtual address with page offset over 4k"
++  },
++  {
++    "EventName": "LSU_OTHER_STALL",
++    "EventCode": "0x00000018",
++    "BriefDescription": "LSU stall times for other reasons (except the 4k stall)"
++  },
++  {
++    "EventName": "LSU_SQ_OTHER_DIS",
++    "EventCode": "0x00000019",
++    "BriefDescription": "LSU store queue discard others"
++  },
++  {
++    "EventName": "LSU_SQ_DATA_DISCARD",
++    "EventCode": "0x0000001a",
++    "BriefDescription": "LSU store queue discard data (uops)"
++  },
++  {
++    "EventName": "BRANCH_DIRECTION_MISPREDICTION",
++    "EventCode": "0x0000001b",
++    "BriefDescription": "Branch misprediction in BTB"
++  },
++  {
++    "EventName": "BRANCH_DIRECTION_PREDICTION",
++    "EventCode": "0x0000001c",
++    "BriefDescription": "All branch prediction in BTB",
++    "PublicDescription": "This event including both successful prediction and failed prediction in BTB"
++  },
++  {
++    "EventName": "INTERRUPT_ACK_COUNT",
++    "EventCode": "0x00000023",
++    "BriefDescription": "acknowledged interrupt count"
++  },
++  {
++    "EventName": "INTERRUPT_OFF_CYCLE",
++    "EventCode": "0x00000024",
++    "BriefDescription": "PLIC arbitration time when the interrupt is not responded",
++    "PublicDescription": "The arbitration time is recorded while meeting any of the following:\n- CPU is M-mode and MIE == 0\n- CPU is S-mode and delegation and SIE == 0\n"
++  },
++  {
++    "EventName": "IFU_STALLED_CYCLE",
++    "EventCode": "0x00000027",
++    "BriefDescription": "Number of stall cycles of the instruction fetch unit (IFU)."
++  },
++  {
++    "EventName": "IDU_STALLED_CYCLE",
++    "EventCode": "0x00000028",
++    "BriefDescription": "hpcp_backend_stall Number of stall cycles of the instruction decoding unit (IDU) and next-level pipeline unit."
++  },
++  {
++    "EventName": "SYNC_STALL",
++    "EventCode": "0x00000029",
++    "BriefDescription": "Sync instruction stall cycle fence/fence.i/sync/sfence"
++  }
++]
+--
+2.41.0
+
