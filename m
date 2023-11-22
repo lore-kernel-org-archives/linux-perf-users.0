@@ -1,134 +1,140 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE353DB9D
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 09:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T9XW4ctj"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD72DD;
-	Wed, 22 Nov 2023 01:27:17 -0800 (PST)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AM9FY0S012287;
-	Wed, 22 Nov 2023 09:27:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=H6LLZviQ9lPZw2kIi5P1Ao+W/EERLpQEZlWwK1Bc2n4=;
- b=T9XW4ctjya4bqAPU3c2xVl2W+z/XoieFFgihQ4mV2UE1qRhdFQ+/4kbLD+NqVc/7TFnd
- ukz33mT6ltHOUIFOrFLesYgybjNrOVHwbcW9C4+E9fVLqjHTUTa03Z0g/KvDbKLiFIlE
- VcyUZi7HBzNDoZSAklxriVkJ9/toi9LjvltvEGQGhGpfrIZDHe/78u8BNStB0qMWiFSV
- Qu6H1J6AT0Md1pHlyF8/mv33IUgrNVzLpxPpXcTttxB9aPI10vMxj+RnHuFQQqPkfc7F
- RIB+QTz9ZHwcx6LETSS5zebTJqm2GB+X/Eq9VRj2zb5O54p2WmaH7BL01tfq3BHTnTQw Rg== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uheqxga9e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Nov 2023 09:27:15 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AM7IQDF002623;
-	Wed, 22 Nov 2023 09:27:14 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uf93kxrby-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Nov 2023 09:27:13 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AM9RAHF43254142
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Nov 2023 09:27:10 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A5CFD20043;
-	Wed, 22 Nov 2023 09:27:10 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D18520040;
-	Wed, 22 Nov 2023 09:27:10 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 22 Nov 2023 09:27:10 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH linux-next] perf report: remove warning on missing raw data for s390
-Date: Wed, 22 Nov 2023 10:27:03 +0100
-Message-Id: <20231122092703.3163191-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ybOBnr3m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C4EC433CA;
+	Wed, 22 Nov 2023 09:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1700645487;
+	bh=wuQbmKuP8ke77VDsHsQadgcU9siRkJrWGwGpsyHIPjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ybOBnr3mSLnqTxX8lj1dwt0OGddS/Rv0+lBbPy/LqzmfvANnWbPPavBuVS6M7EPcA
+	 n5TOAjVOG9Et3y/DJit2uTIIroym80pkrLzBJCQKIarI/p9rBlNNTuGGsh10wSpRl6
+	 2n/IjLhHom4C4Rhfw6PSRa+tGNITQtUSh3POpV3w=
+Date: Wed, 22 Nov 2023 09:31:24 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>
+Subject: Re: REGRESSION linux-next since Nov 16th, perf tool broken (at least
+ on s390)
+Message-ID: <2023112248-unskilled-flagman-05e6@gregkh>
+References: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: coljJEbv67BzOlUm18XeAk2gGN680Z1W
-X-Proofpoint-GUID: coljJEbv67BzOlUm18XeAk2gGN680Z1W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-22_06,2023-11-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 priorityscore=1501
- spamscore=0 mlxscore=0 suspectscore=0 impostorscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311220066
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
 
-Command
- # ./perf report -i /tmp/111 -D > /dev/null
-emits an error message when a sample for event CRYPTO_ALL in the
-perf.data file does not contain any raw data. This is ok.
-Do not trigger this warning when the sample in the perf.data files
-does not contain any raw data at all.
-Check for availability of raw data for all events and return if
-none is available.
+On Wed, Nov 22, 2023 at 08:38:28AM +0100, Thomas Richter wrote:
+> perf tool fails on linux-next since Nov 16th on s390 when invoking perf on
+> any PMU event, as in
+> 
+>   # perf stat -e cycles -- true
+> 
+>    Performance counter stats for 'true':
+> 
+>      <not supported>      cycles                                                               
+> 
+>        0.000598399 seconds time elapsed
+> 
+>        0.000055000 seconds user
+>        0.000567000 seconds sys
+> 
+>   # perf stat -e pai_ext/NNPA_ALL/ -C0 -- true
+>   event syntax error: 'pai_ext/NNPA_ALL/'
+>                        \___ Bad event or PMU
+> 
+>   Unable to find PMU or event on a PMU of 'pai_ext'
+> 
+>   Initial error:
+>   event syntax error: 'pai_ext/NNPA_ALL/'
+>                        \___ Cannot find PMU `pai_ext'. Missing kernel support?
+>   #
+> 
+> This error is caused by following commit, which got into linux-next around November 15th:
+> 
+> commit 652ffc2104ec1f69dd4a46313888c33527145ccf
+> Author: Greg KH <gregkh@linuxfoundation.org>
+> Date:   Mon Jun 12 15:09:09 2023 +0200
+> 
+>     perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
+> 
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>     Link: https://lkml.kernel.org/r/2023061204-decal-flyable-6090@gregkh
+> 
+> This commit adds function pmu_dev_is_visible() as the PMU bus function
+> to make sysfs attribute files visible.
+> On a failing system these sysfs attribute files are exported:
+> 
+> #  ll /sys/devices/pai_ext/
+> drwxr-xr-x. 2 root root    0 Nov 21 14:59 events
+> drwxr-xr-x. 2 root root    0 Nov 21 14:59 format
+> lrwxrwxrwx. 1 root root    0 Nov 21 14:43 subsystem -> ../../bus/event_source
+> -rw-r--r--. 1 root root 4096 Nov 21 14:43 uevent
+> #
 
-Output before:
- # ./perf report -i /tmp/111 -D > /dev/null
- Invalid CRYPTO_ALL raw data encountered
- Invalid CRYPTO_ALL raw data encountered
- Invalid CRYPTO_ALL raw data encountered
- #
+/sys/devices/pai_ext/ is a real device?  Why there?  That's a very odd
+location, what type of device is this?
 
-Output after:
- # ./perf report -i /tmp/111 -D > /dev/null
- #
+> These is no file named 'type'. Other files are also missing.
+> Therefore the perf tool can not access any PMU event defined by this PMU.
+> 
+> On a system with proper export of all PMU sysfs attributes (same linux-next kernel):
+> #  ll /sys/devices/pai_crypto/
+> total 0
+> drwxr-xr-x. 2 root root    0 Nov 21 14:44 events
+> drwxr-xr-x. 2 root root    0 Nov 21 14:44 format
+> -r--r--r--. 1 root root 4096 Nov 21 14:44 nr_addr_filters
+> -rw-r--r--. 1 root root 4096 Nov 21 14:44 perf_event_mux_interval_ms
+> lrwxrwxrwx. 1 root root    0 Nov 21 14:43 subsystem -> ../../bus/event_source
+> -r--r--r--. 1 root root 4096 Nov 21 14:44 type
+> -rw-r--r--. 1 root root 4096 Nov 21 14:44 uevent
 
-Fixes: b539deafbadb ("perf report: Add s390 raw data interpretation for PAI counters")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- tools/perf/util/s390-sample-raw.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Ick, again, a "root" device?  That's not right and needs to be fixed
+first.
 
-diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-index 29a744eeb71e..53383e97ec9d 100644
---- a/tools/perf/util/s390-sample-raw.c
-+++ b/tools/perf/util/s390-sample-raw.c
-@@ -51,8 +51,6 @@ static bool s390_cpumcfdg_testctr(struct perf_sample *sample)
- 	struct cf_trailer_entry *te;
- 	struct cf_ctrset_entry *cep, ce;
- 
--	if (!len)
--		return false;
- 	while (offset < len) {
- 		cep = (struct cf_ctrset_entry *)(buf + offset);
- 		ce.def = be16_to_cpu(cep->def);
-@@ -234,10 +232,9 @@ struct pai_data {		/* Event number and value */
-  */
- static bool s390_pai_all_test(struct perf_sample *sample)
- {
--	unsigned char *buf = sample->raw_data;
- 	size_t len = sample->raw_size;
- 
--	if (len < 0xa || !buf)
-+	if (len < 0xa)
- 		return false;
- 	return true;
- }
-@@ -299,6 +296,10 @@ void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event,
- 	if (!evsel)
- 		return;
- 
-+	/* Check for raw data in sample */
-+	if (!sample->raw_size || !sample->raw_data)
-+		return;
-+
- 	/* Display raw data on screen */
- 	if (evsel->core.attr.config == PERF_EVENT_CPUM_CF_DIAG) {
- 		if (!evsel->pmu)
--- 
-2.41.0
+> # cat /sys/devices/pai_crypto/type
+> 12
+> #
+> 
+> Also on such a system the perf stat works again:
+> # perf stat -e pai_crypto/CRYPTO_ALL/ -C0 -- true
+> 
+>  Performance counter stats for 'CPU(s) 0':
+> 
+>                  0      pai_crypto/CRYPTO_ALL/
+> 
+>        0.000741258 seconds time elapsed
+> 
+> #
+> 
+> On s390 there is no need to export sysfs file 'nr_addr_filters', but setting
+> this member pmu::nr_addr_filters to a non-zero value before
+> calling perf_pmu_register() exhibits the old behavior again.
+> 
+> In my opinion this breaks previous behavior.
+> 
+> Is this intended?
+> How to fix this?
 
+Looks like no attributes are exported unless nr_addr_filters is present
+in the device, right?  That's the way the patch was written, maybe the
+change is not correct?  I wrote it a while ago, sorry, I can't
+remember...
+
+thanks,
+
+greg k-h
