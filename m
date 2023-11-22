@@ -1,115 +1,67 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBAA4AF93
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 11:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ffrPuI6A"
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A336E100
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 02:08:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RNEwfbDbJ86pvqZWuQNi9RT+2L+t/+EiesqSiaL5nqY=; b=ffrPuI6Al9WkfuAguq/vI9Dr5B
-	k8E1pGyEFOmxpMVjfU5/5UM12RXhSj8miFxN0N1TFLQfmD4BO9NHEb6HEALth6CIArMMlPeZ1Rdf8
-	kRBjPOzyXv124DFXtimoje57MUwb91PM36WV7YcpBUHcGmFEu/UdMp1ulHotSdosEpwR/2Nvs7TlE
-	a+0HtJfOuguhtq8Dw9rPEmJXwpLRUG6GmNmpaUEulL3k2zzN7GAFE2dWPqGnvS2V2ulS1+1VM4oi9
-	BihhqZCoR0ugROn7zhBmPwI3VCYxHsSY9H5XDdQBqYNYE8ZiXVwkSnTFvyJfTxifYXfCvc79nhgHa
-	syVikdlg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1r5k9E-00CH9m-1V;
-	Wed, 22 Nov 2023 10:07:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 266223005AA; Wed, 22 Nov 2023 11:07:56 +0100 (CET)
-Date: Wed, 22 Nov 2023 11:07:56 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>
-Subject: Re: REGRESSION linux-next since Nov 16th, perf tool broken (at least
- on s390)
-Message-ID: <20231122100756.GP8262@noisy.programming.kicks-ass.net>
-References: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeTRur9H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E42C433C7;
+	Wed, 22 Nov 2023 11:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700654172;
+	bh=gcIvVi41TiyJFoCAf0hPX4QrNIjbM2fEg39e1k2zPfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UeTRur9HRU867a5vrzWtdMYaOxKNsKKQC+Fn2VgYaBrmnbh17GxEpVgybUrCUK/Yh
+	 C49WykXj9WHZVav4xJtVcoxYvKd61JdP1z7yfGmrq7LPsVTP+qJ7OEHMc6T239akp4
+	 CobKPWMU0cyWB+4+krxBOYP01kZVt/UDY+IOln9R/rOUL4axdwfVl4UbGZiFDSQZzV
+	 aiH9PfHC416dOq749PZ+Jrsw908B8vKB2S306JV/bBKJW/u5/VRRzP+qPYvVCxvTPd
+	 /98VXgdn+5/JKSIoJ1KqZWusnhcxhU7kQYvjlj+Q1Ag9DfXcN259l0Mpx4hVxml4g6
+	 Y6sqhte2ddGsQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id F403140094; Wed, 22 Nov 2023 08:56:09 -0300 (-03)
+Date: Wed, 22 Nov 2023 08:56:09 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, peterz@infradead.org,
+	mingo@redhat.com, jolsa@kernel.org, namhyung@kernel.org,
+	adrian.hunter@intel.com, tinghao.zhang@intel.com
+Subject: Re: [PATCH V2] perf test: Basic branch counter support
+Message-ID: <ZV3sWeqnuEZYsTHA@kernel.org>
+References: <20231107184020.1497571-1-kan.liang@linux.intel.com>
+ <85aac482-2318-4fb5-be8a-b6d17e19407b@linux.intel.com>
+ <CAP-5=fVqWc70w1twQdOK3u6dzS_u3ELAtcr--qmiP5x+vkbK+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVqWc70w1twQdOK3u6dzS_u3ELAtcr--qmiP5x+vkbK+w@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-On Wed, Nov 22, 2023 at 08:38:28AM +0100, Thomas Richter wrote:
-> perf tool fails on linux-next since Nov 16th on s390 when invoking perf on
-> any PMU event, as in
-> 
->   # perf stat -e cycles -- true
-> 
->    Performance counter stats for 'true':
-> 
->      <not supported>      cycles                                                               
-> 
->        0.000598399 seconds time elapsed
-> 
->        0.000055000 seconds user
->        0.000567000 seconds sys
-> 
->   # perf stat -e pai_ext/NNPA_ALL/ -C0 -- true
->   event syntax error: 'pai_ext/NNPA_ALL/'
->                        \___ Bad event or PMU
-> 
->   Unable to find PMU or event on a PMU of 'pai_ext'
-> 
->   Initial error:
->   event syntax error: 'pai_ext/NNPA_ALL/'
->                        \___ Cannot find PMU `pai_ext'. Missing kernel support?
->   #
-> 
-> This error is caused by following commit, which got into linux-next around November 15th:
-> 
-> commit 652ffc2104ec1f69dd4a46313888c33527145ccf
-> Author: Greg KH <gregkh@linuxfoundation.org>
-> Date:   Mon Jun 12 15:09:09 2023 +0200
-> 
->     perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
-> 
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->     Link: https://lkml.kernel.org/r/2023061204-decal-flyable-6090@gregkh
-> 
-> This commit adds function pmu_dev_is_visible() as the PMU bus function
-> to make sysfs attribute files visible.
-> On a failing system these sysfs attribute files are exported:
+Em Mon, Nov 20, 2023 at 04:22:24PM -0800, Ian Rogers escreveu:
+> On Mon, Nov 13, 2023 at 8:12 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> > On 2023-11-07 1:40 p.m., kan.liang@linux.intel.com wrote:
+> > > From: Kan Liang <kan.liang@linux.intel.com>
 
-Does this help? I'm not entirely sure on the is_visible thing, but the
-way I understand it, it was only supposed to hide the nr_filters thing,
-not the entire group and @n helps select the attribute.
+> > > Add a basic test for the branch counter feature.
 
-Greg, did I get that right?
+> > > The test verifies that
+> > > - The new filter can be successfully applied on the supported platforms.
+> > > - The counter value can be outputted via the perf report -D
 
-Also, spurious return... clearly I should've woken up before merging
-that patch... oh well.
+> > > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
----
+> > Any comments for this patch?
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4f0c45ab8d7d..59b332cce9e7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11417,12 +11417,10 @@ static umode_t pmu_dev_is_visible(struct kobject *kobj, struct attribute *a, int
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct pmu *pmu = dev_get_drvdata(dev);
- 
--	if (!pmu->nr_addr_filters)
-+	if (n == 2 && !pmu->nr_addr_filters)
- 		return 0;
- 
- 	return a->mode;
--
--	return 0;
- }
- 
- static struct attribute_group pmu_dev_attr_group = {
+> Confirmed the wildcard works as expected.
+> Tested-by: Ian Rogers <irogers@google.com>
+
+Thanks, applied to perf-tools-next.
+
+- Arnaldo
+
