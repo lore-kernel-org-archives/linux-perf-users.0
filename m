@@ -1,144 +1,92 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3033A33CD3
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 14:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="uy6sth0X"
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9631A8;
-	Thu, 23 Nov 2023 06:39:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1700750358; x=1732286358;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5mio/kqNaH+U+jZDajo8QsPctXLeEgKj3mmEzUpaptE=;
-  b=uy6sth0XpBDieWmqTLLcKObU0l5RePp1b+wounYNo/cIUBlw0rQgijII
-   oBGhH+21EmDMLepyfmGgYWTfrPVwg7neEvGVjhw8nZfNPvmAH50qyJiFP
-   CHR3bgiB88pF+1PHebhNQVlBhzToZYrq0QUyGPTHyZD3ATLjXLTG4uEtg
-   NUJoYLvWsf8n4VkGwWZPTC7zbT3vdUeVm0tppUdQk4NX8Cd0MyVtkZ5zu
-   fmbEAYzMHM+TSl8D9QnCCvxa9TOZ/OgxgyNAOw7mT8qRsyucumjjIwZ7+
-   VTXzwnI7xQWyLv2xj77EYBdWmjLaEM7tjTrUhz9J7y9qDtdKVqtF8/Own
-   Q==;
-X-CSE-ConnectionGUID: 4AAYCoZfTi6PJe832bnWGg==
-X-CSE-MsgGUID: 4TersX+dTLKSZqX2n5bjxw==
-X-ThreatScanner-Verdict: Negative
-X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="asc'?scan'208";a="12937545"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Nov 2023 07:39:17 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 23 Nov 2023 07:39:06 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Thu, 23 Nov 2023 07:38:58 -0700
-Date: Thu, 23 Nov 2023 14:38:30 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Yu Chien Peter Lin <peterlin@andestech.com>
-CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-	<alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-	<anup@brainfault.org>, <aou@eecs.berkeley.edu>, <atishp@atishpatra.org>,
-	<conor+dt@kernel.org>, <conor@kernel.org>, <devicetree@vger.kernel.org>,
-	<dminus@andestech.com>, <evan@rivosinc.com>, <geert+renesas@glider.be>,
-	<guoren@kernel.org>, <heiko@sntech.de>, <irogers@google.com>,
-	<jernej.skrabec@gmail.com>, <jolsa@kernel.org>, <jszhang@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-	<magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-	<n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-	<paul.walmsley@sifive.com>, <peterz@infradead.org>,
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
-	<robh+dt@kernel.org>, <samuel@sholland.org>, <sunilvl@ventanamicro.com>,
-	<tglx@linutronix.de>, <tim609@andestech.com>, <uwu@icenowy.me>,
-	<wens@csie.org>, <will@kernel.org>, <ycliang@andestech.com>,
-	<inochiama@outlook.com>
-Subject: Re: [PATCH v4 04/13] dt-bindings: riscv: Add Andes interrupt
- controller compatible string
-Message-ID: <20231123-vigorous-worrier-c8ed0fbbec55@wendy>
-References: <20231122121235.827122-1-peterlin@andestech.com>
- <20231122121235.827122-5-peterlin@andestech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6AkV1eg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6870BC433C8;
+	Thu, 23 Nov 2023 14:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700750541;
+	bh=mfaBvRhfODG3G//JXKw40tGCkxSfBY+Q43wy4Fkk4fI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q6AkV1egQOR4iwp/oOQIOVMdXVAh6VnMf44ZFxdWRxYcQPdOSem5/kDFtj4RqqbrR
+	 DLGrlfnWEXE26WGZheblSS7JJKLf4n0QhwRzEDx05eY7gPTUcgfR+6Q+BfX6sC0avk
+	 gSKAI4hu6OxQ/vheUP97V32TMhd0fdhKR38u/S4vEUHX2XmZT37oyM1SWjNddY+BTn
+	 9cj7eSax0g9aTJRSYcnGHJV8PSFGcZMhmxfH/ejo7t3gB38ZWyrYg/cGJ9pymjx21p
+	 mq6jPFox0f17VWk1o9s8Ohx/vhJCQ/kVoKATYEw7m+zMzyYzdskPKOau1FpBlIFeUb
+	 1LKCcDV2IHuaw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 925D740094; Thu, 23 Nov 2023 11:42:18 -0300 (-03)
+Date: Thu, 23 Nov 2023 11:42:18 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf auxtrace: Add 'T' itrace option for
+ timestamp trace
+Message-ID: <ZV9kypSaAZNvaP1X@kernel.org>
+References: <20231014074513.1668000-1-leo.yan@linaro.org>
+ <20231014074513.1668000-2-leo.yan@linaro.org>
+ <8a2ea58f-f835-4d1a-8bd6-3a63b3b0db94@intel.com>
+ <ZUlgM8pgf19UeyM9@kernel.org>
+ <2940af18-8bcd-4456-a8ed-e77cade1b160@intel.com>
+ <20231107094852.GA656098@leoy-yangtze.lan>
+ <6fc8bc4c-abc3-45d5-a8c8-045f91adfebf@intel.com>
+ <20231107141808.GD656098@leoy-yangtze.lan>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Myq4yn8cC+6SYdA6"
-Content-Disposition: inline
-In-Reply-To: <20231122121235.827122-5-peterlin@andestech.com>
-
---Myq4yn8cC+6SYdA6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231107141808.GD656098@leoy-yangtze.lan>
+X-Url: http://acmel.wordpress.com
 
-On Wed, Nov 22, 2023 at 08:12:26PM +0800, Yu Chien Peter Lin wrote:
-> Add "andestech,cpu-intc" compatible string to indicate that
-> Andes specific local interrupt is supported on the core,
-> e.g. AX45MP cores have 3 types of non-standard local interrupt
-> can be handled in supervisor mode:
->=20
-> - Slave port ECC error interrupt
-> - Bus write transaction error interrupt
-> - Performance monitor overflow interrupt
->=20
-> These interrupts are enabled/disabled via a custom register
-> SLIE instead of the standard interrupt enable register SIE.
->=20
-> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Em Tue, Nov 07, 2023 at 10:18:08PM +0800, Leo Yan escreveu:
+> On Tue, Nov 07, 2023 at 12:16:25PM +0200, Adrian Hunter wrote:
+> 
+> [...]
+> 
+> > >>>> "If users know" <- how would users know?  Could the kernel
+> > >>>> or tools also figure it out?
+> > >>>
+> > >>> Adrian, I'm trying to go all the outstanding patches, do you still have
+> > >>> any issues with this series?
+> > >>
+> > >> No, although the question wasn't actually answered.  I presume users
+> > >> just have to try the 'T' option and see if it helps.
+> > > 
+> > > Sometimes, users are software developers in SoC companies, they can
+> > > know well for the hardware design but are confused why current
+> > > implementation cannot use timestamp trace.  This is the main reason
+> > > I sent this patch set.
+> > > 
+> > > An example hardware platform is DB410c [1], we know its CoreSight can
+> > > support timestamp trace, but if without this adding option 'T', we
+> > > have no chance to use it due to it its CPU arch is prior to Armv8.4.
+> > 
+> > perf config might be better than an itrace option, but you decide.
+> 
+> I understand perf config is a better approach due to users don't need
+> to bother inputting options after set it once.  I will look at it and
+> respin new patch set.
+> 
+> Thanks for suggestion!
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Thanks, applied.
 
-Cheers,
-Conor.
-
-> ---
-> Changes v1 -> v2:
->   - New patch
-> Changes v2 -> v3:
->   - Updated commit message
->   - Fixed possible compatibles for Andes INTC
-> Changes v3 -> v4:
->   - Add const entry instead of enum (Suggested by Conor)
-> ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Document=
-ation/devicetree/bindings/riscv/cpus.yaml
-> index f392e367d673..50307554478f 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -100,7 +100,11 @@ properties:
->          const: 1
-> =20
->        compatible:
-> -        const: riscv,cpu-intc
-> +        oneOf:
-> +          - items:
-> +              - const: andestech,cpu-intc
-> +              - const: riscv,cpu-intc
-> +          - const: riscv,cpu-intc
-> =20
->        interrupt-controller: true
-> =20
-> --=20
-> 2.34.1
->=20
-
---Myq4yn8cC+6SYdA6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZV9j5gAKCRB4tDGHoIJi
-0hycAP9qsI3APm3yGB24FyPPA6csDBgW0MdowMy/BXFdk8mpqgD6A+eIkaU3B8V0
-LKuOUJhXb2lSRMosR/DWKoi3S/tGZgg=
-=H/7m
------END PGP SIGNATURE-----
-
---Myq4yn8cC+6SYdA6--
+- Arnaldo
