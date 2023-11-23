@@ -1,232 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bjbDcBqi"
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E10419E
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 20:33:17 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-548c6efc020so6708a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Nov 2023 20:33:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1700713996; x=1701318796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wHYFGmfIL28khD5t+/nzZLl2KHtCKuHF6ms78F8Fe70=;
-        b=bjbDcBqiAdkd/f6YuNyg7kWJfGA+HBbnYK6Jz2PUooPz+hwv/1hCutqTEdmPyB4qvl
-         /9UC/jmIYz0c7hvL6n+xctqhDLENzkMx6wApJyyhJkCtdJ4XpHpXBdw6Vp63yclggK85
-         fAkKkddz4P4zsUd/QrvciVtsL8vz40MfvElYtl2AXRKQ3jCjP0nusyHYIzcJpDILZc+x
-         dgrFA7VQHj4LnYql1tco1qHnXmFwABVHk2tC2bwKq1C7T82WdLww8YFU2bi2GG8F3lYy
-         z+Ql2Ji2ZvFi6YaNhVcPLt+sbqCYjoc7E38Qo079BXccttZyRvAaY9xfqLCReqIReTRx
-         d8gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700713996; x=1701318796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wHYFGmfIL28khD5t+/nzZLl2KHtCKuHF6ms78F8Fe70=;
-        b=elK1uVXFL0zr+GRprFz1Zww13F0r9MmUY61OFCEABZInyAPHY+b724LHGR/pd9WOFM
-         RIepO6Tyq7b4wbfpqf9EgNia7USHcRF8UkhKRCwqFQ6YiLH7ZMd79QGyYXSoqq1D7moJ
-         sGAI/0r3mke23fD6iJznyP34ZlX6I9186RszsETN+6TRaEbR8SbmgxF5x9ML7U8sb6xO
-         T/e6iUMEzCXhLaPHfbaHUqYdfTrqCMru9Bsszkto+ARuD5v2U+4f+7Orcc4A6xrblNPX
-         LdcS1Nv/RO+l3nTqHCxHArSpc3aq54o0LE4PmM38FYOT2kap+4ndUlzYRkdgL5eABROS
-         pKXA==
-X-Gm-Message-State: AOJu0Yw/LGT/xL6hWRY1IaruCyvTGQfaJP5Hb9/sxAw6eoeMZdttW01L
-	FwSJL/Siv6t33ns2G0tD4MfnoGkQ3qWrESAtc2y6pA==
-X-Google-Smtp-Source: AGHT+IHs5+fqXcXd6ogn/DfeaeTkDYlrlCqReCllXHbGsBBw6ajb2Kavkb8kz1MLsS7u9oYhFeF+v3hNOungmV1z2Y0=
-X-Received: by 2002:a05:6402:1cbc:b0:547:3f1:84e0 with SMTP id
- cz28-20020a0564021cbc00b0054703f184e0mr211893edb.7.1700713995667; Wed, 22 Nov
- 2023 20:33:15 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4AA60191;
+	Wed, 22 Nov 2023 21:50:16 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 519771042;
+	Wed, 22 Nov 2023 21:51:02 -0800 (PST)
+Received: from [10.163.39.193] (unknown [10.163.39.193])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B7683F6C4;
+	Wed, 22 Nov 2023 21:50:12 -0800 (PST)
+Message-ID: <0bcda96e-df9a-4342-af4e-e4485c33ff55@arm.com>
+Date: Thu, 23 Nov 2023 11:20:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZVzPUjOiH6zpUlz5@FVFF77S0Q05N.cambridge.arm.com>
- <CAP-5=fUB75DCL4+8YO62iPVsnxoeXGv5cLmT7eP2bHNs=xoMdg@mail.gmail.com>
- <ZVzUr7TWEYPoZrWX@FVFF77S0Q05N.cambridge.arm.com> <CAP-5=fUWm7efu3xdUBbiifs_KNU1igwAxbXmum=V38SjHQHtXg@mail.gmail.com>
- <ZVzXjz_0nYbmSGPQ@FVFF77S0Q05N.cambridge.arm.com> <CAP-5=fWLGOCWv=wp2xsi4AVxfbS8KhkmtkMwOA4yVrz791=Z8Q@mail.gmail.com>
- <ZV38ParIEYWOjt6T@FVFF77S0Q05N> <CAP-5=fUxBv4kbXyLrD5G-=wyRh6tKEJMy5qX0_86wQXxT79dJw@mail.gmail.com>
- <ZV4nj-_q4hHaf8Wl@FVFF77S0Q05N> <CAP-5=fWtHYr9J2izkNmTpfKvdEdt0ViELJ1Gsih6H9XBTE83UA@mail.gmail.com>
- <ZV4yd3oz2Ykl/N5Q@kernel.org> <CAP-5=fU==+UoF64AZz5HAwcL2xSDxLfyS1Q+SQ0d2SGwFC8j5A@mail.gmail.com>
-In-Reply-To: <CAP-5=fU==+UoF64AZz5HAwcL2xSDxLfyS1Q+SQ0d2SGwFC8j5A@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 22 Nov 2023 20:33:03 -0800
-Message-ID: <CAP-5=fVE-GayAsg0PVf+WZuLh_KJAd2ErG2qvNROjhQOLYp=4w@mail.gmail.com>
-Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
-	Hector Martin <marcan@marcan.st>, Arnaldo Carvalho de Melo <acme@redhat.com>, James Clark <james.clark@arm.com>, 
-	linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Asahi Linux <asahi@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/3] Documentation: arm64: Document the PMU event
+ counting threshold feature
+Content-Language: en-US
+To: Namhyung Kim <namhyung@gmail.com>, James Clark <james.clark@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ suzuki.poulose@arm.com, will@kernel.org, mark.rutland@arm.com,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231113112507.917107-1-james.clark@arm.com>
+ <20231113112507.917107-4-james.clark@arm.com>
+ <CAM9d7ciDq-te1DQPrMrZQC9er0pSMY24nvC-atxdRu1C6uD08A@mail.gmail.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <CAM9d7ciDq-te1DQPrMrZQC9er0pSMY24nvC-atxdRu1C6uD08A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 22, 2023 at 8:59=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, Nov 22, 2023 at 8:55=E2=80=AFAM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Wed, Nov 22, 2023 at 08:29:58AM -0800, Ian Rogers escreveu:
-> > > I can look at doing an event parser change like:
-> > >
-> > > ```
-> > > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-e=
-vents.c
-> > > index aa2f5c6fc7fc..9a18fda525d2 100644
-> > > --- a/tools/perf/util/parse-events.c
-> > > +++ b/tools/perf/util/parse-events.c
-> > > @@ -986,7 +986,8 @@ static int config_term_pmu(struct perf_event_attr=
- *attr,
-> > >                                                           err_str,
-> > > /*help=3D*/NULL);
-> > >                        return -EINVAL;
-> > >                }
-> > > -               if (perf_pmu__supports_legacy_cache(pmu)) {
-> > > +               if (perf_pmu__supports_legacy_cache(pmu) &&
-> > > +                   !perf_pmu__have_event(pmu, term->val.str)) {
-> > >                        attr->type =3D PERF_TYPE_HW_CACHE;
-> > >                        return
-> > > parse_events__decode_legacy_cache(term->config, pmu->type,
-> > >                                                                 &attr=
-->config);
-> > > @@ -1004,10 +1005,15 @@ static int config_term_pmu(struct perf_event_=
-attr *attr,
-> > >                                                           err_str,
-> > > /*help=3D*/NULL);
-> > >                        return -EINVAL;
-> > >                }
-> > > -               attr->type =3D PERF_TYPE_HARDWARE;
-> > > -               attr->config =3D term->val.num;
-> > > -               if (perf_pmus__supports_extended_type())
-> > > -                       attr->config |=3D (__u64)pmu->type << PERF_PM=
-U_TYPE_SHIFT;
-> > > +               if (perf_pmu__have_event(pmu, term->val.str)) {
-> > > +                       /* If the PMU has a sysfs or json event prefe=
-r
-> > > it over legacy. ARM requires this. */
-> > > +                       term->term_type =3D PARSE_EVENTS__TERM_TYPE_U=
-SER;
-> > > +               } else {
-> > > +                       attr->type =3D PERF_TYPE_HARDWARE;
-> > > +                       attr->config =3D term->val.num;
-> > > +                       if (perf_pmus__supports_extended_type())
-> > > +                               attr->config |=3D (__u64)pmu->type <<
-> > > PERF_PMU_TYPE_SHIFT;
-> > > +               }
-> > >                return 0;
-> > >        }
-> > >        if (term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_USER ||
-> > > ```
-> > > (note: this is incomplete as term->val.str isn't populated for
-> > > PARSE_EVENTS__TERM_TYPE_HARDWARE)
-> >
-> > Yeah, I had to apply manually as your MUA mangled it, then it didn't
-> > build, had to remove some consts, then there was a struct member
-> > mistake, after all fixed I get to the patch below, but it now segfaults=
-,
-> > probably what you mention...
-> >
-> > root@roc-rk3399-pc:~# strace -e perf_event_open taskset -c 4,5 perf sta=
-t -v -e cycles,armv8_cortex_a53/cycles/,armv8_cortex_a72/cycles/ echo
-> > Using CPUID 0x00000000410fd082
-> > perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3D0 /* PERF_ATTR_SIZE_=
-??? */, config=3D0x7<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=3D0, sampl=
-e_type=3D0, read_format=3D0, disabled=3D1, precise_ip=3D0 /* arbitrary skid=
- */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) =3D -1 ENOENT (No such file or =
-directory)
-> > --- SIGSEGV {si_signo=3DSIGSEGV, si_code=3DSEGV_MAPERR, si_addr=3DNULL}=
- ---
-> > +++ killed by SIGSEGV +++
-> > Segmentation fault
-> > root@roc-rk3399-pc:~#
->
-> Right, I have something further along that fails tests. I'll try to
-> send out an RFC today, but given the Intel behavior change =C2=AF\_(=E3=
-=83=84)_/=C2=AF
-> But Intel don't appear to have an issue having two things called, for
-> example, cycles and them both being a cycles event so they may not
-> care. It is only ARM's PMUs that appear broken in this way.
 
-To workaround the PMU bug posted:
-https://lore.kernel.org/lkml/20231123042922.834425-1-irogers@google.com/
 
-Thanks,
-Ian
+On 11/21/23 03:01, Namhyung Kim wrote:
+> On Mon, Nov 13, 2023 at 3:26 AM James Clark <james.clark@arm.com> wrote:
+>> Add documentation for the new Perf event open parameters and
+>> the threshold_max capability file.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  Documentation/arch/arm64/perf.rst | 56 +++++++++++++++++++++++++++++++
+>>  1 file changed, 56 insertions(+)
+>>
+>> diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64/perf.rst
+>> index 1f87b57c2332..36b8111a710d 100644
+>> --- a/Documentation/arch/arm64/perf.rst
+>> +++ b/Documentation/arch/arm64/perf.rst
+>> @@ -164,3 +164,59 @@ and should be used to mask the upper bits as needed.
+>>     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
+>>  .. _tools/lib/perf/tests/test-evsel.c:
+>>     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
+>> +
+>> +Event Counting Threshold
+>> +==========================================
+>> +
+>> +Overview
+>> +--------
+>> +
+>> +FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
+>> +events whose count meets a specified threshold condition. For example if
+>> +threshold_compare is set to 2 ('Greater than or equal'), and the
+>> +threshold is set to 2, then the PMU counter will now only increment by
+>> +when an event would have previously incremented the PMU counter by 2 or
+>> +more on a single processor cycle.
+>> +
+>> +To increment by 1 after passing the threshold condition instead of the
+>> +number of events on that cycle, add the 'threshold_count' option to the
+>> +commandline.
+>> +
+>> +How-to
+>> +------
+>> +
+>> +The threshold, threshold_compare and threshold_count values can be
+>> +provided per event:
+>> +
+>> +.. code-block:: sh
+>> +
+>> +  perf stat -e stall_slot/threshold=2,threshold_compare=2/ \
+>> +            -e dtlb_walk/threshold=10,threshold_compare=3,threshold_count/
+> Can you please explain this a bit more?
+> 
+> I guess the first event counts stall_slot PMU if the event if it's
+> greater than or equal to 2.  And as threshold_count is not set,
+> it'd count the stall_slot as is.  E.g. it counts 3 when it sees 3.
 
-> Thanks,
-> Ian
->
-> > - Arnaldo
-> >
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
-nts.c
-> > index aa2f5c6fc7fc..1e648454cc49 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -976,7 +976,7 @@ static int config_term_pmu(struct perf_event_attr *=
-attr,
-> >                            struct parse_events_error *err)
-> >  {
-> >         if (term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE=
-) {
-> > -               const struct perf_pmu *pmu =3D perf_pmus__find_by_type(=
-attr->type);
-> > +               struct perf_pmu *pmu =3D perf_pmus__find_by_type(attr->=
-type);
-> >
-> >                 if (!pmu) {
-> >                         char *err_str;
-> > @@ -986,7 +986,8 @@ static int config_term_pmu(struct perf_event_attr *=
-attr,
-> >                                                            err_str, /*h=
-elp=3D*/NULL);
-> >                         return -EINVAL;
-> >                 }
-> > -               if (perf_pmu__supports_legacy_cache(pmu)) {
-> > +               if (perf_pmu__supports_legacy_cache(pmu) &&
-> > +                   !perf_pmu__have_event(pmu, term->val.str)) {
-> >                         attr->type =3D PERF_TYPE_HW_CACHE;
-> >                         return parse_events__decode_legacy_cache(term->=
-config, pmu->type,
-> >                                                                  &attr-=
->config);
-> > @@ -994,7 +995,7 @@ static int config_term_pmu(struct perf_event_attr *=
-attr,
-> >                         term->type_term =3D PARSE_EVENTS__TERM_TYPE_USE=
-R;
-> >         }
-> >         if (term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_HARDWARE) {
-> > -               const struct perf_pmu *pmu =3D perf_pmus__find_by_type(=
-attr->type);
-> > +               struct perf_pmu *pmu =3D perf_pmus__find_by_type(attr->=
-type);
-> >
-> >                 if (!pmu) {
-> >                         char *err_str;
-> > @@ -1004,10 +1005,15 @@ static int config_term_pmu(struct perf_event_at=
-tr *attr,
-> >                                                            err_str, /*h=
-elp=3D*/NULL);
-> >                         return -EINVAL;
-> >                 }
-> > -               attr->type =3D PERF_TYPE_HARDWARE;
-> > -               attr->config =3D term->val.num;
-> > -               if (perf_pmus__supports_extended_type())
-> > -                       attr->config |=3D (__u64)pmu->type << PERF_PMU_=
-TYPE_SHIFT;
-> > +               if (perf_pmu__have_event(pmu, term->val.str)) {
-> > +                       /* If the PMU has a sysfs or JSON event prefer =
-it over legacy. ARM requires this. */
-> > +                       term->type_term =3D PARSE_EVENTS__TERM_TYPE_USE=
-R;
-> > +               } else {
-> > +                       attr->type =3D PERF_TYPE_HARDWARE;
-> > +                       attr->config =3D term->val.num;
-> > +                       if (perf_pmus__supports_extended_type())
-> > +                           attr->config |=3D (__u64)pmu->type << PERF_=
-PMU_TYPE_SHIFT;
-> > +               }
-> >                 return 0;
-> >         }
-> >         if (term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_USER ||
+Hence without 'threshold_count' being set, the other two config requests
+will not have an effect, is that correct ?
+
+> 
+> OTOH, dtlb_walk will count 1 if it sees an event less than 10.
+> Is my understanding correct?
+
+'Equals' and 'Greater-than-or-equal' makes sense and are intuitive. Just
+wondering what will happen for 'Not-equal' and 'Less-than' - when would
+the counter count in such cases ?
+
+  0: Not-equal
+  1: Equals
+  2: Greater-than-or-equal
+  3: Less-than
