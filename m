@@ -1,81 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258DB250E9;
-	Thu, 23 Nov 2023 13:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0pEvxvw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3BDDC433C8;
-	Thu, 23 Nov 2023 13:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700746829;
-	bh=4/3MFKcSnNzFxXpwdTahwPqZj1DbgJoJ7bLgc5su8HI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E0pEvxvwR7cPb6GEgqdMm3JUCtR3QEhvZZ62nN9kkwaFO0hoPEXeWh8O11XgxoUXC
-	 LJNFXhV9g13IanBMELMe/9XENgNAYOkf/gWR1HCpN6yrW7QL0qAo0ytrJJnE+3JkLj
-	 w2eO3eN4zLXCIT2HqPaYW+bGLkIgnyuCE6npWxS1d9iI5vAJkhoNDKZynfeejpoD7q
-	 Am+/UYj9YEZiT6qesCZ+GSmA6/HAi8R8J+qKzYVodPag6MDfd/n5+nniihQ+jxWSPo
-	 s69Llhy++rs+NdjnVyLssmEltR1eJ+tKpzf3MsiqCqFdIGArRRxhtle6MNXv0LFovx
-	 y30es4PLZDpXg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id EDCD940094; Thu, 23 Nov 2023 10:40:25 -0300 (-03)
-Date: Thu, 23 Nov 2023 10:40:25 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andi Kleen <ak@linux.intel.com>, linux-trace-devel@vger.kernel.org,
-	linux-toolchains@vger.kernel.org
-Subject: Re: [PATCH 18/52] perf report: Add 'type' sort key
-Message-ID: <ZV9WSdshxv9MZTb0@kernel.org>
-References: <20231110000012.3538610-1-namhyung@kernel.org>
- <20231110000012.3538610-19-namhyung@kernel.org>
- <ZVzvFen/214ylf32@kernel.org>
- <CAM9d7cijprv2fOM_jwYbrV0jbhno2ZQDCT3SExG=Ot=b2mANmw@mail.gmail.com>
- <ZV5cZe8dxv/GzdGa@kernel.org>
- <CAM9d7ci+rgyGmLmosNpA4Bk1u8sfwYCLVwN4grky5y4g2Weu3g@mail.gmail.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id F1C481A5;
+	Thu, 23 Nov 2023 05:55:04 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 273271063;
+	Thu, 23 Nov 2023 05:55:51 -0800 (PST)
+Received: from [10.57.3.62] (unknown [10.57.3.62])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 547B23F6C4;
+	Thu, 23 Nov 2023 05:54:57 -0800 (PST)
+Message-ID: <1a94cccd-d871-1824-9fad-a8f7b99bb02a@arm.com>
+Date: Thu, 23 Nov 2023 13:54:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ci+rgyGmLmosNpA4Bk1u8sfwYCLVwN4grky5y4g2Weu3g@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [V14 5/8] KVM: arm64: nvhe: Disable branch generation in nVHE
+ guests
+Content-Language: en-US
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+References: <20231114051329.327572-1-anshuman.khandual@arm.com>
+ <20231114051329.327572-6-anshuman.khandual@arm.com>
+ <f2661879-636c-1865-0e1c-60d8e11f80f0@arm.com>
+ <20858eb9-a4d0-41be-ad1d-2a5f2d2fa0de@arm.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20858eb9-a4d0-41be-ad1d-2a5f2d2fa0de@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Em Wed, Nov 22, 2023 at 01:13:04PM -0800, Namhyung Kim escreveu:
-> On Wed, Nov 22, 2023 at 11:54 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > Em Wed, Nov 22, 2023 at 10:49:13AM -0800, Namhyung Kim escreveu:
-> > > On Tue, Nov 21, 2023 at 9:55 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > ⬢[acme@toolbox perf-tools-next]$ perf report -s type
-> > > > perf: Segmentation fault
 
-> > > Right, the 'type' sort key was added here but unfortunately
-> > > it's not ready for prime time yet.  It also needs the next patch
-> > > 19/52 ("perf report: Support data type profiling") to fully enable
-> > > the feature.  Do you think it's better to squash into here?
 
-> > I haven't checked if squashing would be a good idea, but if you think
-> > its the right granularity, then do it, as long as we can test features
-> > in various ways as they are getting added, as I did, using a random
-> > perf.data file.
- 
-> I still think it's better to split the change as it's logically separate.
+On 21/11/2023 11:12, Anshuman Khandual wrote:
+> 
+> 
+> On 11/14/23 14:46, James Clark wrote:
+>>
+>>
+>> On 14/11/2023 05:13, Anshuman Khandual wrote:
+>>> Disable the BRBE before we enter the guest, saving the status and enable it
+>>> back once we get out of the guest. This is just to avoid capturing records
+>>> in the guest kernel/userspace, which would be confusing the samples.
+>>>
+>>> Cc: Marc Zyngier <maz@kernel.org>
+>>> Cc: Oliver Upton <oliver.upton@linux.dev>
+>>> Cc: James Morse <james.morse@arm.com>
+>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>> Cc: Will Deacon <will@kernel.org>
+>>> Cc: kvmarm@lists.linux.dev
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> CC: linux-kernel@vger.kernel.org
+>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> ---
+>>> Changes in V14:
+>>>
+>>> - This is a new patch in the series
+>>>
+>>>  arch/arm64/include/asm/kvm_host.h  |  4 ++++
+>>>  arch/arm64/kvm/debug.c             |  6 +++++
+>>>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 38 ++++++++++++++++++++++++++++++
+>>>  3 files changed, 48 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>>> index 68421c74283a..1faa0430d8dd 100644
+>>> --- a/arch/arm64/include/asm/kvm_host.h
+>>> +++ b/arch/arm64/include/asm/kvm_host.h
+>>> @@ -449,6 +449,8 @@ enum vcpu_sysreg {
+>>>  	CNTHV_CVAL_EL2,
+>>>  	PMSCR_EL1,	/* Statistical profiling extension */
+>>>  	TRFCR_EL1,	/* Self-hosted trace filters */
+>>> +	BRBCR_EL1,	/* Branch Record Buffer Control Register */
+>>> +	BRBFCR_EL1,	/* Branch Record Buffer Function Control Register */
+>>>  
+>>>  	NR_SYS_REGS	/* Nothing after this line! */
+>>>  };
+>>> @@ -753,6 +755,8 @@ struct kvm_vcpu_arch {
+>>>  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
+>>>  /* Save trace filter controls */
+>>>  #define DEBUG_STATE_SAVE_TRFCR	__vcpu_single_flag(iflags, BIT(8))
+>>> +/* Save BRBE context if active  */
+>>> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(9))
+>>>  
+>>>  /* SVE enabled for host EL0 */
+>>>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+>>> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+>>> index 2ab41b954512..4055783c3d34 100644
+>>> --- a/arch/arm64/kvm/debug.c
+>>> +++ b/arch/arm64/kvm/debug.c
+>>> @@ -354,6 +354,11 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>>>  		    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>>>  			vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>>>  	}
+>>> +
+>>> +	/* Check if we have BRBE implemented and available at the host */
+>>> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT) &&
+>>> +	    (read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+>>> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>>
+>> Isn't this supposed to just be the feature check? Whether BRBE is
+>> enabled or not is checked later in __debug_save_brbe() anyway.
+> 
+> Okay, will make it just a feature check via ID_AA64DFR0_EL1_BRBE_SHIFT.
+> 
+>>
+>> It seems like it's possible to become enabled after this flag load part.
+> 
+> Agreed.
+> 
+>>
+>>>  }
+>>>  
+>>>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>>> @@ -361,6 +366,7 @@ void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
+>>> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>>>  }
+>>>  
+>>>  void kvm_etm_set_guest_trfcr(u64 trfcr_guest)
+>>> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>>> index 6174f710948e..e44a1f71a0f8 100644
+>>> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>>> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>>> @@ -93,6 +93,38 @@ static void __debug_restore_trace(struct kvm_cpu_context *host_ctxt,
+>>>  		write_sysreg_s(ctxt_sys_reg(host_ctxt, TRFCR_EL1), SYS_TRFCR_EL1);
+>>>  }
+>>>  
+>>> +static void __debug_save_brbe(struct kvm_cpu_context *host_ctxt)
+>>> +{
+>>> +	ctxt_sys_reg(host_ctxt, BRBCR_EL1) = 0;
+>>> +	ctxt_sys_reg(host_ctxt, BRBFCR_EL1) = 0;
+>>> +
+>>> +	/* Check if the BRBE is enabled */
+>>> +	if (!(ctxt_sys_reg(host_ctxt, BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+>>> +		return;
+>>
+>> Doesn't this always fail, the host BRBCR_EL1 value was just cleared on
+>> the line above.
+> 
+> Agreed, this error might have slipped in while converting to ctxt_sys_reg().
+> 
+>>
+>> Also, you need to read the register to determine if it was enabled or
+> 
+> Right
+> 
+>> not, so you might as well always store the real value, rather than 0 in
+>> the not enabled case.
+> 
+> But if it is not enabled - why store the real value ?
+> 
 
-The smaller the patches, the better, I'd say in general.
+It's fewer lines of code and it's less likely to catch someone out if
+it's always set to whatever the host value was. Using 0 as a special
+value could also be an issue because it's indistinguishable from if the
+register was actually set to 0. It's just more to reason about when you
+could reduce it to a single assignment.
 
-> But it's prematurely exposed then maybe needs some protection.
+Also it probably would have avoided the current mistake if it was always
+assigned to the host value as well.
 
-Yeah, that is what I felt like it needed, make it more robust by
-checking if the used fields were properly initialized, etc.
+>>
+>>> +
+>>> +	/*
+>>> +	 * Prohibit branch record generation while we are in guest.
+>>> +	 * Since access to BRBCR_EL1 and BRBFCR_EL1 is trapped, the
+>>> +	 * guest can't modify the filtering set by the host.
+>>> +	 */
+>>> +	ctxt_sys_reg(host_ctxt, BRBCR_EL1) = read_sysreg_s(SYS_BRBCR_EL1);
+>>> +	ctxt_sys_reg(host_ctxt, BRBFCR_EL1) = read_sysreg_s(SYS_BRBFCR_EL1)
+>>> +	write_sysreg_s(0, SYS_BRBCR_EL1);
+>>> +	write_sysreg_s(0, SYS_BRBFCR_EL1);
+>>
+>> Why does SYS_BRBFCR_EL1 need to be saved and restored? Only
+>> BRBCR_ELx_E0BRE and BRBCR_ELx_ExBRE need to be cleared to disable BRBE.
+> 
+> Right, just thought both brbcr, and brbfcr system registers represent
+> current BRBE state (besides branch records), in a more comprehensive
+> manner, although none would be changed from inside the guest.
+> 
 
-- Arnaldo
+The comment above doesn't match up with this explanation.
+
+Having it in the code implies that it's needed. And as you say the
+branch records are missing anyway, so you can't even infer that it's
+only done to be comprehensive.
+
+It would be better to not make anyone reading it wonder why it's done
+and just not do it. It's only 8 bytes but it's also a waste of space.
+
+>>
+>>> +	isb();
+>>> +}
+>>> +
+>>> +static void __debug_restore_brbe(struct kvm_cpu_context *host_ctxt)
+>>> +{
+>>> +	if (!ctxt_sys_reg(host_ctxt, BRBCR_EL1) || !ctxt_sys_reg(host_ctxt, BRBFCR_EL1))
+>>> +		return;
+>>> +
+>>> +	/* Restore BRBE controls */
+>>> +	write_sysreg_s(ctxt_sys_reg(host_ctxt, BRBCR_EL1), SYS_BRBCR_EL1);
+>>> +	write_sysreg_s(ctxt_sys_reg(host_ctxt, BRBFCR_EL1), SYS_BRBFCR_EL1);
+>>> +	isb();
+>>> +}
+>>> +
+>>>  void __debug_save_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>>>  				    struct kvm_cpu_context *guest_ctxt)
+>>>  {
+>>> @@ -102,6 +134,10 @@ void __debug_save_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>>>  
+>>>  	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_TRFCR))
+>>>  		__debug_save_trace(host_ctxt, guest_ctxt);
+>>> +
+>>> +	/* Disable BRBE branch records */
+>>> +	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_BRBE))
+>>> +		__debug_save_brbe(host_ctxt);
+>>>  }
+>>>  
+>>>  void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
+>>> @@ -116,6 +152,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>>>  		__debug_restore_spe(host_ctxt);
+>>>  	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_TRFCR))
+>>>  		__debug_restore_trace(host_ctxt, guest_ctxt);
+>>> +	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_BRBE))
+>>> +		__debug_restore_brbe(host_ctxt);
+>>>  }
+>>>  
+>>>  void __debug_switch_to_host(struct kvm_vcpu *vcpu)
+> 
