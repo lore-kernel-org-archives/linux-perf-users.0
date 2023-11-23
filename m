@@ -1,31 +1,31 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K9oRkGKn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L/HBexlh"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EB5DD;
-	Wed, 22 Nov 2023 23:59:30 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407771B2;
+	Wed, 22 Nov 2023 23:59:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700726370; x=1732262370;
+  t=1700726371; x=1732262371;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kUUFMnMOTmqXLUn2vId7q0QVssfMrP3gOX/sAt3Ulg0=;
-  b=K9oRkGKnWGnRD3VVQBccxpNVBHIBEFDV7gSazu/dRLskV58/MNu/Hvhx
-   zYpnnwqhTl6zLIvu5dbrtbquLNTpKpEG2dTMn+Sxc27dmu29+t2l/QyBP
-   vFoj6fM5iQcxvDwQbHB7Z+3VVYZY5sVnyvA/EhG5+jjdHZu4JFnyYEGnO
-   NdiJyZBBd7Uo7Up0UmOQSWRPqrn/Y7Zd8pD8zjwvpYNZrVWRm4roZq40f
-   ZRquMC7tarPubZvTHs96CFrl9wh5ZKJk56xIrSIQ3nEYbSxyMiDveS//8
-   L+EkSLr8DH3XT8VrN0IwqcUtJBkzKn3EBJL0ozG93a7gD8LWwFNoBISg1
+  bh=7da/0iEnQCMxy/lLCWXMFnGwlTG2TiSr880zeoxTvII=;
+  b=L/HBexlhTOpnqTb9b5I3EvqTLF7hGl6h3DFzVNB703C+2Liq2imeKXRM
+   lSqL72jwiYAi5huJAXM0L7SI8jWQt9JmVPA53fxB0rGt75d69ZlwGaTSs
+   sfCmo47qEHy5TZxmhoX9S2h9lV7ZUApH0WuheRfOyMHUFgXpiy9GoM1cz
+   Rx0gaZTFl7Qa7y17OI+igJJGhrDjHNPIbuWTtZfYwjetL+2U3NFQpOjxb
+   UOzhTRFKCA3qaE8XzCmybnchcUMmY8Jmpns23gO5A7YYVbyvQMAZNHtaA
+   U1x6pLMAk0G6771b5ElB8fJEahbI8yNaENU2FfQjXfODD6S36n61Avn65
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="396126413"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="396126425"
 X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="396126413"
+   d="scan'208";a="396126425"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
   by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:29 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="8764981"
+   d="scan'208";a="8764988"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.41.107])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:09 -0800
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:14 -0800
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Jiri Olsa <jolsa@kernel.org>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Leo Yan <leo.yan@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/8] perf tests lib: Add perf_has_symbol.sh
-Date: Thu, 23 Nov 2023 09:58:42 +0200
-Message-Id: <20231123075848.9652-3-adrian.hunter@intel.com>
+Subject: [PATCH 4/8] perf tests: Skip record test if test_loop symbol is missing
+Date: Thu, 23 Nov 2023 09:58:44 +0200
+Message-Id: <20231123075848.9652-5-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231123075848.9652-1-adrian.hunter@intel.com>
 References: <20231123075848.9652-1-adrian.hunter@intel.com>
@@ -51,60 +51,76 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Some shell tests depend on finding symbols for perf itself, and fail if
-perf has been stripped and no debug object is available. Add helper
-functions to check if perf has a needed symbol. This is preparation for
-amending the tests themselves to be skipped if a needed symbol is not
-found.
+perf record test depends on finding symbol test_loop in perf, and fails if
+perf has been stripped and no debug object is available. In that case, skip
+the test instead.
 
-The functions make use of the "Symbols" test which reads and checks symbols
-from a dso, perf itself by default. Note the "Symbols" test will find
-symbols using the same method as other perf tests, including, for example,
-looking in the buildid cache.
+Example:
 
-An alternative would be to prevent the needed symbols from being stripped,
-which seems to work with gcc's externally_visible attribute, but that
-attribute is not supported by clang.
+ Note, building with perl support adds option -Wl,-E which causes the
+ linker to add all (global) symbols to the dynamic symbol table. So the
+ test_loop symbol, being global, does not get stripped unless NO_LIBPERL=1
 
-Another alternative would be to use option -Wl,-E (which is already used
-when perf is built with perl support) which causes the linker to add all
-(global) symbols to the dynamic symbol table. Then the required symbols
-need only be made global in scope to avoid being strippable. However that
-goes beyond what is needed.
+ Before:
+
+  $ make NO_LIBPERL=1 -C tools/perf >/dev/null 2>&1
+  $ strip tools/perf/perf
+  $ tools/perf/perf buildid-cache -p `realpath tools/perf/perf`
+  $ tools/perf/perf test -v 'record tests'
+   91: perf record tests                                               :
+  --- start ---
+  test child forked, pid 118750
+  Basic --per-thread mode test
+  Per-thread record [Failed missing output]
+  Register capture test
+  Register capture test [Success]
+  Basic --system-wide mode test
+  System-wide record [Skipped not supported]
+  Basic target workload test
+  Workload record [Failed missing output]
+  test child finished with -1
+  ---- end ----
+  perf record tests: FAILED!
+
+ After:
+
+  $ tools/perf/perf test -v 'record tests'
+   91: perf record tests                                               :
+  --- start ---
+  test child forked, pid 120025
+  perf does not have symbol 'test_loop'
+  perf is missing symbols - skipping test
+  test child finished with -2
+  ---- end ----
+  perf record tests: Skip
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/tests/shell/lib/perf_has_symbol.sh | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 tools/perf/tests/shell/lib/perf_has_symbol.sh
+ tools/perf/tests/shell/record.sh | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/lib/perf_has_symbol.sh b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-new file mode 100644
-index 000000000000..5d59c32ae3e7
---- /dev/null
-+++ b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-@@ -0,0 +1,21 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 29443b8e8876..1838b76e2282 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -8,10 +8,16 @@ shelldir=$(dirname "$0")
+ # shellcheck source=lib/waiting.sh
+ . "${shelldir}"/lib/waiting.sh
+ 
++# shellcheck source=lib/perf_has_symbol.sh
++. "${shelldir}"/lib/perf_has_symbol.sh
 +
-+perf_has_symbol()
-+{
-+	if perf test -vv "Symbols" 2>&1 | grep "[[:space:]]$1$"; then
-+		echo "perf does have symbol '$1'"
-+		return 0
-+	fi
-+	echo "perf does not have symbol '$1'"
-+	return 1
-+}
++testsym="test_loop"
 +
-+skip_test_missing_symbol()
-+{
-+	if ! perf_has_symbol "$1" ; then
-+		echo "perf is missing symbols - skipping test"
-+		exit 2
-+	fi
-+	return 0
-+}
++skip_test_missing_symbol ${testsym}
++
+ err=0
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ testprog="perf test -w thloop"
+-testsym="test_loop"
+ 
+ cleanup() {
+   rm -rf "${perfdata}"
 -- 
 2.34.1
 
