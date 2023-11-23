@@ -1,31 +1,31 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CSZb5yyL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+0xxbMr"
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42B41BE;
-	Wed, 22 Nov 2023 23:59:31 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C12D40;
+	Wed, 22 Nov 2023 23:59:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700726371; x=1732262371;
+  t=1700726372; x=1732262372;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2OpMiIHy1rwUwpgqeA63R+mAPX/eG5N2QSzht7697gg=;
-  b=CSZb5yyLbbFNKuYDXGmk/iKBNU7mvcebIbwWwmRP14C0pJ4sfJHwDu4y
-   WcCzpO9GTuWtYO1AHFXnrS7KqDiiQ1cuXRExnn4KG4S36WwHDT5eoaLRC
-   fmL8pzGImZn9J+efl8TN2lW78f5lJA52F+LW7E+ZoIPr0srKrP5jBrv2C
-   Z06+TJBlAyxyydZ9LmzOTyHDiEIgwDPXRbpqPoOuC67ulVSbHWn1yxsrT
-   3xbCUgkIsQT/ZEVyBl61kA3GXsLtNHnlKVAxgUYSTNi1RuqILsGzSMMw8
-   QdHb3LTrBqh9EfWprlDuwn3vLJVWxxsSVTw12enzCxdAOxEUmI0sdRTIZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="396126434"
+  bh=6i1yfJdZ3uedWfOmXBTKC5wUpcQHqTQufb6AFjSj/ic=;
+  b=e+0xxbMrv78teOAI1e5ReGpXPnq1x1NSlR0NLkjuzGWfCbYtHgDnPsgk
+   Uu32rSxx/NFlHoIMBYcYEpM99GusyuCaOwaCC2woLH1+A4acZb4V8QJQg
+   ybiI5h5qgIFe/7cQmo2dQmOUJl2YKHloOdxDkcnjki7QkGNAVy3IASNu/
+   s2106uh6TTqxLjyRIiBMe07w6xG2KgKQaPNBDKxF+EJdYHJ753JjGsf0o
+   v/3LnROm3dPxTXl/3F3kvQ/XkMJO7PJ5Cj8PCPd5bJeBgxWa32g1szUeZ
+   59xTkCEe+Leo8kY7DFczvgHw7/qlizjHyXkNy3WlwafWcAdUSwCfCbfC1
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="396126439"
 X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="396126434"
+   d="scan'208";a="396126439"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:29 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:30 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="8764990"
+   d="scan'208";a="8764993"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.41.107])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:20 -0800
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:25 -0800
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Jiri Olsa <jolsa@kernel.org>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Leo Yan <leo.yan@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 6/8] perf tests: Skip branch stack sampling test if brstack_bench symbol is missing
-Date: Thu, 23 Nov 2023 09:58:46 +0200
-Message-Id: <20231123075848.9652-7-adrian.hunter@intel.com>
+Subject: [PATCH 8/8] perf tests: Skip data symbol test if buf1 symbol is missing
+Date: Thu, 23 Nov 2023 09:58:48 +0200
+Message-Id: <20231123075848.9652-9-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231123075848.9652-1-adrian.hunter@intel.com>
 References: <20231123075848.9652-1-adrian.hunter@intel.com>
@@ -51,10 +51,9 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-The test "Check branch stack sampling" depends on finding symbol
-brstack_bench (and several others) in perf, and fails if perf has been
-stripped and no debug object is available. In that case, skip the test
-instead.
+perf data symbol test depends on finding symbol buf1 in perf, and fails if
+perf has been stripped and no debug object is available. In that case, skip
+the test instead.
 
 Example:
 
@@ -62,59 +61,58 @@ Example:
 
   $ strip tools/perf/perf
   $ tools/perf/perf buildid-cache -p `realpath tools/perf/perf`
-  $ tools/perf/perf test -v 'branch stack sampling'
-  112: Check branch stack sampling                                     :
+  $ tools/perf/perf test -v 'data symbol'
+  113: Test data symbol                                                :
   --- start ---
-  test child forked, pid 123741
-  Testing user branch stack sampling
-  + grep -E -m1 ^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$ /tmp/__perf_test.program.5Dz1U/perf.script
-  + cleanup
-  + rm -rf /tmp/__perf_test.program.5Dz1U
+  test child forked, pid 125646
+  Recording workload...
+  [ perf record: Woken up 3 times to write data ]
+  [ perf record: Captured and wrote 0.577 MB /tmp/__perf_test.perf.data.Jhbdp (7794 samples) ]
+  Cleaning up files...
   test child finished with -1
   ---- end ----
-  Check branch stack sampling: FAILED!
+  Test data symbol: FAILED!
 
  After:
 
-  $ tools/perf/perf test -v 'branch stack sampling'
-  112: Check branch stack sampling                                     :
+  $ tools/perf/perf test -v 'data symbol'
+  113: Test data symbol                                                :
   --- start ---
-  test child forked, pid 125157
-  perf does not have symbol 'brstack_bench'
+  test child forked, pid 125747
+  perf does not have symbol 'buf1'
   perf is missing symbols - skipping test
   test child finished with -2
   ---- end ----
-  Check branch stack sampling: Skip
+  Test data symbol: Skip
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/tests/shell/test_brstack.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/tests/shell/test_data_symbol.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index 09908d71c994..5f14d0cb013f 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -4,6 +4,10 @@
- # SPDX-License-Identifier: GPL-2.0
- # German Gomez <german.gomez@arm.com>, 2022
+diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
+index e50e54e94f6f..3dfa91832aa8 100755
+--- a/tools/perf/tests/shell/test_data_symbol.sh
++++ b/tools/perf/tests/shell/test_data_symbol.sh
+@@ -8,6 +8,9 @@ shelldir=$(dirname "$0")
+ # shellcheck source=lib/waiting.sh
+ . "${shelldir}"/lib/waiting.sh
  
-+shelldir=$(dirname "$0")
 +# shellcheck source=lib/perf_has_symbol.sh
 +. "${shelldir}"/lib/perf_has_symbol.sh
 +
- # skip the test if the hardware doesn't support branch stack sampling
- # and if the architecture doesn't support filter types: any,save_type,u
- if ! perf record -o- --no-buildid --branch-filter any,save_type,u -- true > /dev/null 2>&1 ; then
-@@ -11,6 +15,8 @@ if ! perf record -o- --no-buildid --branch-filter any,save_type,u -- true > /dev
- 	exit 2
- fi
+ skip_if_no_mem_event() {
+ 	perf mem record -e list 2>&1 | grep -E -q 'available' && return 0
+ 	return 2
+@@ -15,6 +18,8 @@ skip_if_no_mem_event() {
  
-+skip_test_missing_symbol brstack_bench
+ skip_if_no_mem_event || exit 2
+ 
++skip_test_missing_symbol buf1
 +
- TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
- TESTPROG="perf test -w brstack"
- 
+ TEST_PROGRAM="perf test -w datasym"
+ PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ ERR_FILE=$(mktemp /tmp/__perf_test.stderr.XXXXX)
 -- 
 2.34.1
 
