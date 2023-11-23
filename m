@@ -1,128 +1,166 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id F2D45C1;
-	Thu, 23 Nov 2023 07:45:14 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25C4512FC;
-	Thu, 23 Nov 2023 07:46:01 -0800 (PST)
-Received: from [10.57.3.62] (unknown [10.57.3.62])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DE0C3F6C4;
-	Thu, 23 Nov 2023 07:45:13 -0800 (PST)
-Message-ID: <4f959354-74c7-5240-bf8f-78a49fb34437@arm.com>
-Date: Thu, 23 Nov 2023 15:45:11 +0000
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fd4SdN9S"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACFEE10D8
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 08:01:40 -0800 (PST)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ANFSBMV031778;
+	Thu, 23 Nov 2023 16:01:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=RaxoUYUTxcRmgIFsQiRD/3jXhAp4sE+eQI/C5kR7aac=;
+ b=fd4SdN9SdMbBqkKWV+Gbf41rU52fUlmLlC5g+Qy0rqoRjk1oqSJJyDtorwhUGFORX4dv
+ WN0RqQp12Ds4lvNZXe4KTw05n7euvNQ+svLoilALIujdbRZ8SVJC+U58YwmEh8LIqe63
+ TNIykwSvymTvyobRX7T8XcKsCGdHh9ONxDuG7Ra7tIa21GWCpxO9/4u+OQVqJA5lj8io
+ pR8j2oU7AqOk/gPAM+5r1YjXVAfpP4D5JlZarSLhIwZQvKPSiN8z4JPfj9inCga2YbU7
+ NxShkmjyIfuVHBkK0sS3sGB2PnycWsN9LHnj+eyBPu+L9ssSo5SbMhM7uynQzZsTgaYD ow== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uj9db8xn7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Nov 2023 16:01:23 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ANFUPwL006391;
+	Thu, 23 Nov 2023 16:01:23 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uj9db8xmh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Nov 2023 16:01:23 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ANFmv4N031483;
+	Thu, 23 Nov 2023 16:01:22 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uf8kp8243-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Nov 2023 16:01:22 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ANG1JYJ22348404
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 Nov 2023 16:01:19 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 688422004D;
+	Thu, 23 Nov 2023 16:01:19 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2D87E20040;
+	Thu, 23 Nov 2023 16:01:17 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.34.234])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 23 Nov 2023 16:01:16 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, james.clark@arm.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH] perf vendor events: Update datasource event name to fix duplicate events
+Date: Thu, 23 Nov 2023 21:31:10 +0530
+Message-Id: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v5 3/3] Documentation: arm64: Document the PMU event
- counting threshold feature
-Content-Language: en-US
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Namhyung Kim <namhyung@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- suzuki.poulose@arm.com, will@kernel.org, mark.rutland@arm.com,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231113112507.917107-1-james.clark@arm.com>
- <20231113112507.917107-4-james.clark@arm.com>
- <CAM9d7ciDq-te1DQPrMrZQC9er0pSMY24nvC-atxdRu1C6uD08A@mail.gmail.com>
- <0bcda96e-df9a-4342-af4e-e4485c33ff55@arm.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <0bcda96e-df9a-4342-af4e-e4485c33ff55@arm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: -XtrAhc2GVsgwYVo8IFvSu9IEZ8UEoxd
+X-Proofpoint-GUID: UFklTmMwwYNu3xh1K9OIM8-64fSHSyHp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-23_12,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxlogscore=999
+ priorityscore=1501 mlxscore=0 bulkscore=0 adultscore=0 spamscore=0
+ phishscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311230116
 
+Running "perf list" on powerpc fails with segfault
+as below:
 
+   ./perf list
+   Segmentation fault (core dumped)
 
-On 23/11/2023 05:50, Anshuman Khandual wrote:
-> 
-> 
-> On 11/21/23 03:01, Namhyung Kim wrote:
->> On Mon, Nov 13, 2023 at 3:26 AM James Clark <james.clark@arm.com> wrote:
->>> Add documentation for the new Perf event open parameters and
->>> the threshold_max capability file.
->>>
->>> Signed-off-by: James Clark <james.clark@arm.com>
->>> ---
->>>  Documentation/arch/arm64/perf.rst | 56 +++++++++++++++++++++++++++++++
->>>  1 file changed, 56 insertions(+)
->>>
->>> diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64/perf.rst
->>> index 1f87b57c2332..36b8111a710d 100644
->>> --- a/Documentation/arch/arm64/perf.rst
->>> +++ b/Documentation/arch/arm64/perf.rst
->>> @@ -164,3 +164,59 @@ and should be used to mask the upper bits as needed.
->>>     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
->>>  .. _tools/lib/perf/tests/test-evsel.c:
->>>     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
->>> +
->>> +Event Counting Threshold
->>> +==========================================
->>> +
->>> +Overview
->>> +--------
->>> +
->>> +FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
->>> +events whose count meets a specified threshold condition. For example if
->>> +threshold_compare is set to 2 ('Greater than or equal'), and the
->>> +threshold is set to 2, then the PMU counter will now only increment by
->>> +when an event would have previously incremented the PMU counter by 2 or
->>> +more on a single processor cycle.
->>> +
->>> +To increment by 1 after passing the threshold condition instead of the
->>> +number of events on that cycle, add the 'threshold_count' option to the
->>> +commandline.
->>> +
->>> +How-to
->>> +------
->>> +
->>> +The threshold, threshold_compare and threshold_count values can be
->>> +provided per event:
->>> +
->>> +.. code-block:: sh
->>> +
->>> +  perf stat -e stall_slot/threshold=2,threshold_compare=2/ \
->>> +            -e dtlb_walk/threshold=10,threshold_compare=3,threshold_count/
->> Can you please explain this a bit more?
->>
->> I guess the first event counts stall_slot PMU if the event if it's
->> greater than or equal to 2.  And as threshold_count is not set,
->> it'd count the stall_slot as is.  E.g. it counts 3 when it sees 3.
-> 
-> Hence without 'threshold_count' being set, the other two config requests
-> will not have an effect, is that correct ?
+This happens because of duplicate events in the json list.
+The powerpc Json event list contains some event with same
+event name, but different event code. They are:
+- PM_INST_FROM_L3MISS (Present in datasource and frontend)
+- PM_MRK_DATA_FROM_L2MISS (Present in datasource and marked)
+- PM_MRK_INST_FROM_L3MISS (Present in datasource and marked)
+- PM_MRK_DATA_FROM_L3MISS (Present in datasource and marked)
 
-Yeah I can mention this. It's implied because 0 is the default value of
-config fields, and 0 is a valid value for compare and count field, so
-threshold=0 has to be the way to disable it. But I can mention it
-explicitly.
+pmu_events_table__num_events uses the value from
+table_pmu->num_entries which includes duplicate events as
+well. This causes issue during "perf list" and results in
+segmentation fault.
 
-> 
->>
->> OTOH, dtlb_walk will count 1 if it sees an event less than 10.
->> Is my understanding correct?
-> 
-> 'Equals' and 'Greater-than-or-equal' makes sense and are intuitive. Just
-> wondering what will happen for 'Not-equal' and 'Less-than' - when would
-> the counter count in such cases ?
-> 
->   0: Not-equal
->   1: Equals
->   2: Greater-than-or-equal
->   3: Less-than
-> 
+Since both event codes are valid, append _DSRC to the Data
+Source events (datasource.json), so that they would have a
+unique name. Also add PM_DATA_FROM_L2MISS_DSRC and
+PM_DATA_FROM_L3MISS_DSRC events. With the fix, perf list
+works as expected.
 
-They would count when the event is not equal to or less than the
-threshold value on any cycle. Probably going into more detail would
-start to reproduce what's in the reference manual. All the pseudocode is
-in there which describes how it works.
+Fixes: fc1435807533 ("perf vendor events power10: Update JSON/events")
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ .../arch/powerpc/power10/datasource.json       | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-As for use cases, I'm not really sure. It probably wasn't any effort to
-add into the hardware with a single not gate, and something could have
-been missed if it wasn't added. You might be able to do things like
-count the inverse of something without having to open another event to
-subtract from to find what the inverse would be.
+diff --git a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+index 6b0356f2d301..0eeaaf1a95b8 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
++++ b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+@@ -99,6 +99,11 @@
+     "EventName": "PM_INST_FROM_L2MISS",
+     "BriefDescription": "The processor's instruction cache was reloaded from a source beyond the local core's L2 due to a demand miss."
+   },
++  {
++    "EventCode": "0x0003C0000000C040",
++    "EventName": "PM_DATA_FROM_L2MISS_DSRC",
++    "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss."
++  },
+   {
+     "EventCode": "0x000380000010C040",
+     "EventName": "PM_INST_FROM_L2MISS_ALL",
+@@ -161,9 +166,14 @@
+   },
+   {
+     "EventCode": "0x000780000000C040",
+-    "EventName": "PM_INST_FROM_L3MISS",
++    "EventName": "PM_INST_FROM_L3MISS_DSRC",
+     "BriefDescription": "The processor's instruction cache was reloaded from beyond the local core's L3 due to a demand miss."
+   },
++  {
++    "EventCode": "0x0007C0000000C040",
++    "EventName": "PM_DATA_FROM_L3MISS_DSRC",
++    "BriefDescription": "The processor's L1 data cache was reloaded from beyond the local core's L3 due to a demand miss."
++  },
+   {
+     "EventCode": "0x000780000010C040",
+     "EventName": "PM_INST_FROM_L3MISS_ALL",
+@@ -981,7 +991,7 @@
+   },
+   {
+     "EventCode": "0x0003C0000000C142",
+-    "EventName": "PM_MRK_DATA_FROM_L2MISS",
++    "EventName": "PM_MRK_DATA_FROM_L2MISS_DSRC",
+     "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss for a marked instruction."
+   },
+   {
+@@ -1046,12 +1056,12 @@
+   },
+   {
+     "EventCode": "0x000780000000C142",
+-    "EventName": "PM_MRK_INST_FROM_L3MISS",
++    "EventName": "PM_MRK_INST_FROM_L3MISS_DSRC",
+     "BriefDescription": "The processor's instruction cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
+   },
+   {
+     "EventCode": "0x0007C0000000C142",
+-    "EventName": "PM_MRK_DATA_FROM_L3MISS",
++    "EventName": "PM_MRK_DATA_FROM_L3MISS_DSRC",
+     "BriefDescription": "The processor's L1 data cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
+   },
+   {
+-- 
+2.39.3
+
