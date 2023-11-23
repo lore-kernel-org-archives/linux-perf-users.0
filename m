@@ -1,72 +1,918 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1AE33CD7
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 14:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="isIs17Dt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F5DC433C7;
-	Thu, 23 Nov 2023 14:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700749889;
-	bh=c7OkPUznAAchcebEgWWplu2JA5cYUW6AoggSDeYEnUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=isIs17Dtqp+pc98n2d7ijWAn8hxjijg6LS2cnd/eWW9B8UNaPtGFGa6wDyi0dNoes
-	 7rOXhM7yybPW2CXmIEPrz8ObL1t+vsePn7hxo9E28d/YyNKZ77xw1bfQr7FA6xp/9u
-	 kF6KtDK6Lrm9K8/HZ+ryF/d6Jpw8BiFyXFoOqN8r8C0PZutmntxd4tOneh7NHCWlQx
-	 VdLkH8qSot+BuMJW95lVx3/Pxm8AL3X3f0F7d9haY8QPu+5MPGM4Ry4UKYBP3O+dk4
-	 ntKROYy9XQVsAxPC1bTx1Fa5wioCTYUkqRpakuLEXW72iXAnChWem++lHhBy+Fbr9B
-	 7LOp9sts+vIxg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 7F73040094; Thu, 23 Nov 2023 11:31:26 -0300 (-03)
-Date: Thu, 23 Nov 2023 11:31:26 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 05080A4;
+	Thu, 23 Nov 2023 06:37:37 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30DB712FC;
+	Thu, 23 Nov 2023 06:38:23 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.26.148])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFA663F6C4;
+	Thu, 23 Nov 2023 06:37:34 -0800 (PST)
+Date: Thu, 23 Nov 2023 14:37:31 +0000
+From: Mark Rutland <mark.rutland@arm.com>
 To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf cs-etm: Bump minimum OpenCSD version to ensure a
- bugfix is present
-Message-ID: <ZV9iPl0q5Clt9fNY@kernel.org>
-References: <20230901133716.677499-1-james.clark@arm.com>
- <CAP-5=fUE2jVDXCMszLDTmrhJ67mXi68yt1581i9R42G80p=QsA@mail.gmail.com>
+Cc: Marc Zyngier <maz@kernel.org>, Hector Martin <marcan@marcan.st>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1] perf parse-events: Make legacy events lower
+ priority than sysfs/json
+Message-ID: <ZV9jq1C0TUh8MbeU@FVFF77S0Q05N.cambridge.arm.com>
+References: <20231123042922.834425-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUE2jVDXCMszLDTmrhJ67mXi68yt1581i9R42G80p=QsA@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+In-Reply-To: <20231123042922.834425-1-irogers@google.com>
 
-Em Sun, Sep 03, 2023 at 08:36:35PM -0700, Ian Rogers escreveu:
-> On Fri, Sep 1, 2023 at 6:37 AM James Clark <james.clark@arm.com> wrote:
-> >
-> > Since commit d927ef5004ef ("perf cs-etm: Add exception level consistency
-> > check"), the exception that was added to Perf will be triggered unless
-> > the following bugfix from OpenCSD is present:
-> >
-> >  - _Version 1.2.1_:
-> >   - __Bugfix__:
-> >     ETM4x / ETE - output of context elements to client can in some
-> >     circumstances be delayed until after subsequent atoms have been
-> >     processed leading to incorrect memory decode access via the client
-> >     callbacks. Fixed to flush context elements immediately they are
-> >     committed.
-> >
-> > Rather than remove the assert and silently fail, just increase the
-> > minimum version requirement to avoid hard to debug issues and
-> > regressions.
-> >
-> > Signed-off-by: James Clark <james.clark@arm.com>
+
+Hi Ian,
+
+Thanks for this!
+
+On Wed, Nov 22, 2023 at 08:29:22PM -0800, Ian Rogers wrote:
+> The perf tool has previously made legacy events the priority so with
+> or without a PMU the legacy event would be opened:
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> ```
+> $ perf stat -e cpu-cycles,cpu/cpu-cycles/ true
+> Using CPUID GenuineIntel-6-8D-1
+> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+> Attempting to add event pmu 'cpu' with 'cpu-cycles,' that may result in non-fatal errors
+> After aliases, add event pmu 'cpu' with 'cpu-cycles,' that may result in non-fatal errors
+> Control descriptor is not initialized
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   size                             136
+>   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   enable_on_exec                   1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 833967  cpu -1  group_fd -1  flags 0x8 = 3
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   size                             136
+>   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   enable_on_exec                   1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> ...
+> ```
+> 
+> Fixes to make hybrid/BIG.little PMUs behave correctly, ie as core PMUs
+> capable of opening legacy events on each, removing hard coded
+> "cpu_core" and "cpu_atom" Intel PMU names, etc. caused a behavioral
+> difference on Apple/ARM due to latent issues in the PMU driver
+> reported in:
+> https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st/
+> 
+> As part of that report Mark Rutland <mark.rutland@arm.com> requested
+> that legacy events not be higher in priority when a PMU is specified
+> reversing what has until this change been perf's default
+> behavior. With this change the above becomes:
+> 
+> ```
+> $ perf stat -e cpu-cycles,cpu/cpu-cycles/ true
+> Using CPUID GenuineIntel-6-8D-1
+> Attempt to add: cpu/cpu-cycles=0/
+> ..after resolving event: cpu/event=0x3c/
+> Control descriptor is not initialized
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   size                             136
+>   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   enable_on_exec                   1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 827628  cpu -1  group_fd -1  flags 0x8 = 3
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             4 (PERF_TYPE_RAW)
+>   size                             136
+>   config                           0x3c
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   enable_on_exec                   1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> ...
+> ```
+> 
+> So the second event has become a raw event as
+> /sys/devices/cpu/events/cpu-cycles exists.
+> 
+> A fix was necessary to config_term_pmu in parse-events.c as
+> check_alias expansion needs to happen after config_term_pmu, and
+> config_term_pmu may need calling a second time because of this.
+> 
+> config_term_pmu is updated to not use the legacy event when the PMU
+> has such a named event (either from json or sysfs).
+> 
+> The bulk of this change is updating all of the parse-events test
+> expectations so that if a sysfs/json event exists for a PMU the test
+> doesn't fail - a further sign, if it were needed, that the legacy
+> event priority was a known and tested behavior of the perf tool.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Thanks, applied to perf-tools-next.
+Regardless of my comments below, for this patch as-is:
 
-- Arnaldo
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
+> ---
+> This is a large behavioral change:
+> 1) the scope of the change means it should bake on linux-next and I
+> don't believe should be a 6.7-rc fix.
+
+I'm happy for this to bake, but I do think it needs to be backported for the
+sake of users, especially given that it *restores* the old behaviour.
+
+> 2) a fixes tag and stable backport I don't think are appropriate.
+
+For the sake of users I think a fixes tag and stable backport are necssary. In
+practice distributions ship the perf tool associated with their stable kernel,
+so (for better or worse) a stable backport is certainly necessary for distros
+that'll use the v6.6 stable kernel.
+
+> The real reported issue is with the PMU driver. 
+
+Having trawled through the driver and core perf code, I don't believe the PMU
+driver is at fault. Please see my analysis at:
+
+  https://lore.kernel.org/lkml/ZV9gThJ52slPHqlV@FVFF77S0Q05N.cambridge.arm.com/
+
+... where it looks like the perf tool is dropping the extended type ID in some
+cases.
+
+If you know of a specific bug in the PMU driver or perf core code, please let
+me know and I will investigate. As it stands we have no evidence of a bug in
+the PMU driver, and pretty clear evidence (as linked above) there there is
+*some* issue in userspace. In the absence of such evidence, please don't assert
+that there must be a kernel bug.
+
+> A backport would bring the
+> risk that later fixes, due to the large behavior change, wouldn't be
+> backported and past releases get regressed in scenarios like
+> hybrid. Backports for the perf tool are also less necessary than say a
+> buggy PMU driver, as distributions should be updating to the latest
+> perf tool regardless of what Linux kernel is being run (the perf tool
+> is backward compatible).
+
+As above I believe that a backport is necessary.
+
+Thanks,
+Mark.
+
+> ---
+>  tools/perf/tests/parse-events.c | 256 +++++++++++++++++++++++---------
+>  tools/perf/util/parse-events.c  |  52 +++++--
+>  tools/perf/util/pmu.c           |   8 +-
+>  tools/perf/util/pmu.h           |   3 +-
+>  4 files changed, 231 insertions(+), 88 deletions(-)
+> 
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index e52f45c7c3d1..fbdf710d5eea 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -162,6 +162,22 @@ static int test__checkevent_numeric(struct evlist *evlist)
+>  	return TEST_OK;
+>  }
+>  
+> +
+> +static int assert_hw(struct perf_evsel *evsel, enum perf_hw_id id, const char *name)
+> +{
+> +	struct perf_pmu *pmu;
+> +
+> +	if (evsel->attr.type == PERF_TYPE_HARDWARE) {
+> +		TEST_ASSERT_VAL("wrong config", test_perf_config(evsel, id));
+> +		return 0;
+> +	}
+> +	pmu = perf_pmus__find_by_type(evsel->attr.type);
+> +
+> +	TEST_ASSERT_VAL("unexpected PMU type", pmu);
+> +	TEST_ASSERT_VAL("PMU missing event", perf_pmu__have_event(pmu, name));
+> +	return 0;
+> +}
+> +
+>  static int test__checkevent_symbolic_name(struct evlist *evlist)
+>  {
+>  	struct perf_evsel *evsel;
+> @@ -169,10 +185,12 @@ static int test__checkevent_symbolic_name(struct evlist *evlist)
+>  	TEST_ASSERT_VAL("wrong number of entries", 0 != evlist->core.nr_entries);
+>  
+>  	perf_evlist__for_each_evsel(&evlist->core, evsel) {
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->attr.type);
+> -		TEST_ASSERT_VAL("wrong config",
+> -				test_perf_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +		int ret = assert_hw(evsel, PERF_COUNT_HW_INSTRUCTIONS, "instructions");
+> +
+> +		if (ret)
+> +			return ret;
+>  	}
+> +
+>  	return TEST_OK;
+>  }
+>  
+> @@ -183,8 +201,10 @@ static int test__checkevent_symbolic_name_config(struct evlist *evlist)
+>  	TEST_ASSERT_VAL("wrong number of entries", 0 != evlist->core.nr_entries);
+>  
+>  	perf_evlist__for_each_evsel(&evlist->core, evsel) {
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_perf_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		int ret = assert_hw(evsel, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +
+> +		if (ret)
+> +			return ret;
+>  		/*
+>  		 * The period value gets configured within evlist__config,
+>  		 * while this test executes only parse events method.
+> @@ -861,10 +881,14 @@ static int test__group1(struct evlist *evlist)
+>  			evlist__nr_groups(evlist) == num_core_entries());
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* instructions:k */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_INSTRUCTIONS, "instructions");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -878,8 +902,10 @@ static int test__group1(struct evlist *evlist)
+>  
+>  		/* cycles:upp */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -907,6 +933,8 @@ static int test__group2(struct evlist *evlist)
+>  	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist__nr_groups(evlist));
+>  
+>  	evlist__for_each_entry(evlist, evsel) {
+> +		int ret;
+> +
+>  		if (evsel->core.attr.type == PERF_TYPE_SOFTWARE) {
+>  			/* faults + :ku modifier */
+>  			leader = evsel;
+> @@ -939,8 +967,10 @@ static int test__group2(struct evlist *evlist)
+>  			continue;
+>  		}
+>  		/* cycles:k */
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -957,6 +987,7 @@ static int test__group2(struct evlist *evlist)
+>  static int test__group3(struct evlist *evlist __maybe_unused)
+>  {
+>  	struct evsel *evsel, *group1_leader = NULL, *group2_leader = NULL;
+> +	int ret;
+>  
+>  	TEST_ASSERT_VAL("wrong number of entries",
+>  			evlist->core.nr_entries == (3 * perf_pmus__num_core_pmus() + 2));
+> @@ -1045,8 +1076,10 @@ static int test__group3(struct evlist *evlist __maybe_unused)
+>  			continue;
+>  		}
+>  		/* instructions:u */
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_INSTRUCTIONS, "instructions");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1070,10 +1103,14 @@ static int test__group4(struct evlist *evlist __maybe_unused)
+>  			num_core_entries() == evlist__nr_groups(evlist));
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* cycles:u + p */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1089,8 +1126,10 @@ static int test__group4(struct evlist *evlist __maybe_unused)
+>  
+>  		/* instructions:kp + p */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_INSTRUCTIONS, "instructions");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1108,6 +1147,7 @@ static int test__group4(struct evlist *evlist __maybe_unused)
+>  static int test__group5(struct evlist *evlist __maybe_unused)
+>  {
+>  	struct evsel *evsel = NULL, *leader;
+> +	int ret;
+>  
+>  	TEST_ASSERT_VAL("wrong number of entries",
+>  			evlist->core.nr_entries == (5 * num_core_entries()));
+> @@ -1117,8 +1157,10 @@ static int test__group5(struct evlist *evlist __maybe_unused)
+>  	for (int i = 0; i < num_core_entries(); i++) {
+>  		/* cycles + G */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1133,8 +1175,10 @@ static int test__group5(struct evlist *evlist __maybe_unused)
+>  
+>  		/* instructions + G */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_INSTRUCTIONS, "instructions");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1148,8 +1192,10 @@ static int test__group5(struct evlist *evlist __maybe_unused)
+>  	for (int i = 0; i < num_core_entries(); i++) {
+>  		/* cycles:G */
+>  		evsel = leader = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1164,8 +1210,10 @@ static int test__group5(struct evlist *evlist __maybe_unused)
+>  
+>  		/* instructions:G */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_INSTRUCTIONS, "instructions");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1178,8 +1226,10 @@ static int test__group5(struct evlist *evlist __maybe_unused)
+>  	for (int i = 0; i < num_core_entries(); i++) {
+>  		/* cycles */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1201,10 +1251,14 @@ static int test__group_gh1(struct evlist *evlist)
+>  			evlist__nr_groups(evlist) == num_core_entries());
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* cycles + :H group modifier */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1218,8 +1272,10 @@ static int test__group_gh1(struct evlist *evlist)
+>  
+>  		/* cache-misses:G + :H group modifier */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CACHE_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CACHE_MISSES, "cache-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1242,10 +1298,14 @@ static int test__group_gh2(struct evlist *evlist)
+>  			evlist__nr_groups(evlist) == num_core_entries());
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* cycles + :G group modifier */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1259,8 +1319,10 @@ static int test__group_gh2(struct evlist *evlist)
+>  
+>  		/* cache-misses:H + :G group modifier */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CACHE_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CACHE_MISSES, "cache-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1283,10 +1345,14 @@ static int test__group_gh3(struct evlist *evlist)
+>  			evlist__nr_groups(evlist) == num_core_entries());
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* cycles:G + :u group modifier */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1300,8 +1366,10 @@ static int test__group_gh3(struct evlist *evlist)
+>  
+>  		/* cache-misses:H + :u group modifier */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CACHE_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CACHE_MISSES, "cache-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1324,10 +1392,14 @@ static int test__group_gh4(struct evlist *evlist)
+>  			evlist__nr_groups(evlist) == num_core_entries());
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* cycles:G + :uG group modifier */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1341,8 +1413,10 @@ static int test__group_gh4(struct evlist *evlist)
+>  
+>  		/* cache-misses:H + :uG group modifier */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CACHE_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CACHE_MISSES, "cache-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1363,10 +1437,14 @@ static int test__leader_sample1(struct evlist *evlist)
+>  			evlist->core.nr_entries == (3 * num_core_entries()));
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* cycles - sampling group leader */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1379,8 +1457,10 @@ static int test__leader_sample1(struct evlist *evlist)
+>  
+>  		/* cache-misses - not sampling */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CACHE_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CACHE_MISSES, "cache-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1392,8 +1472,10 @@ static int test__leader_sample1(struct evlist *evlist)
+>  
+>  		/* branch-misses - not sampling */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_BRANCH_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_BRANCH_MISSES, "branch-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+> @@ -1415,10 +1497,14 @@ static int test__leader_sample2(struct evlist *evlist __maybe_unused)
+>  			evlist->core.nr_entries == (2 * num_core_entries()));
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* instructions - sampling group leader */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_INSTRUCTIONS, "instructions");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1431,8 +1517,10 @@ static int test__leader_sample2(struct evlist *evlist __maybe_unused)
+>  
+>  		/* branch-misses - not sampling */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_BRANCH_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_BRANCH_MISSES, "branch-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+> @@ -1472,10 +1560,14 @@ static int test__pinned_group(struct evlist *evlist)
+>  			evlist->core.nr_entries == (3 * num_core_entries()));
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* cycles - group leader */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+>  		TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
+>  		/* TODO: The group modifier is not copied to the split group leader. */
+> @@ -1484,13 +1576,18 @@ static int test__pinned_group(struct evlist *evlist)
+>  
+>  		/* cache-misses - can not be pinned, but will go on with the leader */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CACHE_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CACHE_MISSES, "cache-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned);
+>  
+>  		/* branch-misses - ditto */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_BRANCH_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_BRANCH_MISSES, "branch-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned);
+>  	}
+>  	return TEST_OK;
+> @@ -1517,10 +1614,14 @@ static int test__exclusive_group(struct evlist *evlist)
+>  			evlist->core.nr_entries == 3 * num_core_entries());
+>  
+>  	for (int i = 0; i < num_core_entries(); i++) {
+> +		int ret;
+> +
+>  		/* cycles - group leader */
+>  		evsel = leader = (i == 0 ? evlist__first(evlist) : evsel__next(evsel));
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+>  		TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
+>  		/* TODO: The group modifier is not copied to the split group leader. */
+> @@ -1529,13 +1630,18 @@ static int test__exclusive_group(struct evlist *evlist)
+>  
+>  		/* cache-misses - can not be pinned, but will go on with the leader */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CACHE_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_CACHE_MISSES, "cache-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.exclusive);
+>  
+>  		/* branch-misses - ditto */
+>  		evsel = evsel__next(evsel);
+> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_BRANCH_MISSES));
+> +		ret = assert_hw(&evsel->core, PERF_COUNT_HW_BRANCH_MISSES, "branch-misses");
+> +		if (ret)
+> +			return ret;
+> +
+>  		TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.exclusive);
+>  	}
+>  	return TEST_OK;
+> @@ -1677,9 +1783,11 @@ static int test__checkevent_raw_pmu(struct evlist *evlist)
+>  static int test__sym_event_slash(struct evlist *evlist)
+>  {
+>  	struct evsel *evsel = evlist__first(evlist);
+> +	int ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +
+> +	if (ret)
+> +		return ret;
+>  
+> -	TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
+> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+>  	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+>  	return TEST_OK;
+>  }
+> @@ -1687,9 +1795,11 @@ static int test__sym_event_slash(struct evlist *evlist)
+>  static int test__sym_event_dc(struct evlist *evlist)
+>  {
+>  	struct evsel *evsel = evlist__first(evlist);
+> +	int ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +
+> +	if (ret)
+> +		return ret;
+>  
+> -	TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
+> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+>  	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
+>  	return TEST_OK;
+>  }
+> @@ -1697,9 +1807,11 @@ static int test__sym_event_dc(struct evlist *evlist)
+>  static int test__term_equal_term(struct evlist *evlist)
+>  {
+>  	struct evsel *evsel = evlist__first(evlist);
+> +	int ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +
+> +	if (ret)
+> +		return ret;
+>  
+> -	TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
+> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+>  	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "name") == 0);
+>  	return TEST_OK;
+>  }
+> @@ -1707,9 +1819,11 @@ static int test__term_equal_term(struct evlist *evlist)
+>  static int test__term_equal_legacy(struct evlist *evlist)
+>  {
+>  	struct evsel *evsel = evlist__first(evlist);
+> +	int ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
+> +
+> +	if (ret)
+> +		return ret;
+>  
+> -	TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
+> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+>  	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "l1d") == 0);
+>  	return TEST_OK;
+>  }
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index aa2f5c6fc7fc..767aa718faa5 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -976,7 +976,7 @@ static int config_term_pmu(struct perf_event_attr *attr,
+>  			   struct parse_events_error *err)
+>  {
+>  	if (term->type_term == PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE) {
+> -		const struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
+> +		struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
+>  
+>  		if (!pmu) {
+>  			char *err_str;
+> @@ -986,15 +986,23 @@ static int config_term_pmu(struct perf_event_attr *attr,
+>  							   err_str, /*help=*/NULL);
+>  			return -EINVAL;
+>  		}
+> -		if (perf_pmu__supports_legacy_cache(pmu)) {
+> +		/*
+> +		 * Rewrite the PMU event to a legacy cache one unless the PMU
+> +		 * doesn't support legacy cache events or the event is present
+> +		 * within the PMU.
+> +		 */
+> +		if (perf_pmu__supports_legacy_cache(pmu) &&
+> +		    !perf_pmu__have_event(pmu, term->config)) {
+>  			attr->type = PERF_TYPE_HW_CACHE;
+>  			return parse_events__decode_legacy_cache(term->config, pmu->type,
+>  								 &attr->config);
+> -		} else
+> +		} else {
+>  			term->type_term = PARSE_EVENTS__TERM_TYPE_USER;
+> +			term->no_value = true;
+> +		}
+>  	}
+>  	if (term->type_term == PARSE_EVENTS__TERM_TYPE_HARDWARE) {
+> -		const struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
+> +		struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
+>  
+>  		if (!pmu) {
+>  			char *err_str;
+> @@ -1004,10 +1012,19 @@ static int config_term_pmu(struct perf_event_attr *attr,
+>  							   err_str, /*help=*/NULL);
+>  			return -EINVAL;
+>  		}
+> -		attr->type = PERF_TYPE_HARDWARE;
+> -		attr->config = term->val.num;
+> -		if (perf_pmus__supports_extended_type())
+> -			attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+> +		/*
+> +		 * If the PMU has a sysfs or json event prefer it over
+> +		 * legacy. ARM requires this.
+> +		 */
+> +		if (perf_pmu__have_event(pmu, term->config)) {
+> +			term->type_term = PARSE_EVENTS__TERM_TYPE_USER;
+> +			term->no_value = true;
+> +		} else {
+> +			attr->type = PERF_TYPE_HARDWARE;
+> +			attr->config = term->val.num;
+> +			if (perf_pmus__supports_extended_type())
+> +				attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+> +		}
+>  		return 0;
+>  	}
+>  	if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER ||
+> @@ -1381,6 +1398,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>  	YYLTYPE *loc = loc_;
+>  	LIST_HEAD(config_terms);
+>  	struct parse_events_terms parsed_terms;
+> +	bool alias_rewrote_terms;
+>  
+>  	pmu = parse_state->fake_pmu ?: perf_pmus__find(name);
+>  
+> @@ -1433,7 +1451,15 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>  		return evsel ? 0 : -ENOMEM;
+>  	}
+>  
+> -	if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms, &info, err)) {
+> +	/* Configure attr/terms with a known PMU, this will set hardcoded terms. */
+> +	if (config_attr(&attr, &parsed_terms, parse_state->error, config_term_pmu)) {
+> +		parse_events_terms__exit(&parsed_terms);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Look for event names in the terms and rewrite into format based terms. */
+> +	if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
+> +							    &info, &alias_rewrote_terms, err)) {
+>  		parse_events_terms__exit(&parsed_terms);
+>  		return -EINVAL;
+>  	}
+> @@ -1447,11 +1473,9 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>  		strbuf_release(&sb);
+>  	}
+>  
+> -	/*
+> -	 * Configure hardcoded terms first, no need to check
+> -	 * return value when called with fail == 0 ;)
+> -	 */
+> -	if (config_attr(&attr, &parsed_terms, parse_state->error, config_term_pmu)) {
+> +	/* Configure attr/terms again if an alias was expanded. */
+> +	if (alias_rewrote_terms &&
+> +	    config_attr(&attr, &parsed_terms, parse_state->error, config_term_pmu)) {
+>  		parse_events_terms__exit(&parsed_terms);
+>  		return -EINVAL;
+>  	}
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index d3c9aa4326be..3c9609944a2f 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1494,12 +1494,14 @@ static int check_info_data(struct perf_pmu *pmu,
+>   * defined for the alias
+>   */
+>  int perf_pmu__check_alias(struct perf_pmu *pmu, struct parse_events_terms *head_terms,
+> -			  struct perf_pmu_info *info, struct parse_events_error *err)
+> +			  struct perf_pmu_info *info, bool *rewrote_terms,
+> +			  struct parse_events_error *err)
+>  {
+>  	struct parse_events_term *term, *h;
+>  	struct perf_pmu_alias *alias;
+>  	int ret;
+>  
+> +	*rewrote_terms = false;
+>  	info->per_pkg = false;
+>  
+>  	/*
+> @@ -1521,7 +1523,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct parse_events_terms *head_
+>  						NULL);
+>  			return ret;
+>  		}
+> -
+> +		*rewrote_terms = true;
+>  		ret = check_info_data(pmu, alias, info, err, term->err_term);
+>  		if (ret)
+>  			return ret;
+> @@ -1615,6 +1617,8 @@ bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
+>  
+>  bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name)
+>  {
+> +	if (!name)
+> +		return false;
+>  	if (perf_pmu__find_alias(pmu, name, /*load=*/ true) != NULL)
+>  		return true;
+>  	if (pmu->cpu_aliases_added || !pmu->events_table)
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index d2895d415f08..424c3fee0949 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -201,7 +201,8 @@ int perf_pmu__config_terms(const struct perf_pmu *pmu,
+>  __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name);
+>  int perf_pmu__format_type(struct perf_pmu *pmu, const char *name);
+>  int perf_pmu__check_alias(struct perf_pmu *pmu, struct parse_events_terms *head_terms,
+> -			  struct perf_pmu_info *info, struct parse_events_error *err);
+> +			  struct perf_pmu_info *info, bool *rewrote_terms,
+> +			  struct parse_events_error *err);
+>  int perf_pmu__find_event(struct perf_pmu *pmu, const char *event, void *state, pmu_event_callback cb);
+>  
+>  int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_load);
+> -- 
+> 2.43.0.rc1.413.gea7ed67945-goog
+> 
