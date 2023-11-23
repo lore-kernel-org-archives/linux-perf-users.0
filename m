@@ -1,212 +1,182 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="RQFgZgRr"
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6847CD42;
-	Thu, 23 Nov 2023 00:45:29 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: marcan@marcan.st)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id 31BB441F5F;
-	Thu, 23 Nov 2023 08:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-	t=1700729126; bh=HutI9EG0kKFuTj0lAK98ZuffMEYUqaLfWIup+i0AkAw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RQFgZgRr4dxfXUj8osOldDjyiWHNtOZZ2dTanRaueLvNgJTV6f9Ye+vJKWzbcnZ0Y
-	 mt5G5F3oCCBnwwzr1L/28O5HA8+NMEPqil6jTHEgeOXRPdOjPV/hBkPEfroZOUNI0q
-	 OG9HHKozlJKlq+g2iC7H2/JJI2MBKiazcyenQLKaQ3v9QFDYbllbejbIh1rdMBxYgW
-	 izhE8befv8ABOeBJ5ZZ9tNJW56CKPYMdNObY7WrHSv8YPwvjcX5I/vZ6cOhkgB5bHH
-	 ROtz5kV8S301GCOkryE41GGrpC2fWz/C9DzMSq0UNo8xiIeU+IxAibza5dvUb8qBCx
-	 g5IRlkMU3ARWA==
-Message-ID: <ac4cf01d-4bb5-4b4d-bd87-bf05ddb67f2d@marcan.st>
-Date: Thu, 23 Nov 2023 17:45:19 +0900
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qYDhJHoI"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB2F19D
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 03:38:44 -0800 (PST)
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ANA6Yrb015147;
+	Thu, 23 Nov 2023 11:38:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=1qbzHg+20nA6Mp5kPOPrZCNQmNSmK3FxFunTTWG9F58=;
+ b=qYDhJHoIMniWpOKbXHuWlH0DIbhNISYVPka6M5m3mBzrEHDJAKOT/JKkk2HzDb3vBFRn
+ 9TiiaJkkFRyNLH7Or8rZSoazJEPLzH8QdB4+nU7qR1G/AuWO44N9cp1TXQGjMEL3jQUO
+ OPlE5S4Ovt/Ed6m3smrO5wh1fcPwMzlALK0/PQkPsXlRI6HSzWtAgvb9LqatrK/5aOu0
+ bXF9wVstnCHH7bHtfuazFO+aBp58P/0kIviAxKbqdztfCenT4emYsYgNrTTL8lbFDOKB
+ urplE0XlbVSg2xm1CGsNGyUevHiUeNRt/m+siCe3y108MQOmQVBZh0Gb5cNejJYw7M2C iw== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uj4psa7wp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Nov 2023 11:38:35 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ANBIirE003503;
+	Thu, 23 Nov 2023 11:38:34 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uf7ktf34g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Nov 2023 11:38:34 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ANBcW4G38208068
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 Nov 2023 11:38:32 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1F43C20040;
+	Thu, 23 Nov 2023 11:38:32 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D43262004D;
+	Thu, 23 Nov 2023 11:38:31 +0000 (GMT)
+Received: from [9.152.212.233] (unknown [9.152.212.233])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 23 Nov 2023 11:38:31 +0000 (GMT)
+Message-ID: <74ee8a88-1b3a-4aa5-84d0-d1c77e400e1b@linux.ibm.com>
+Date: Thu, 23 Nov 2023 12:38:31 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: REGRESSION linux-next since Nov 16th, perf tool broken (at least
+ on s390)
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>
+References: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
+ <20231122100756.GP8262@noisy.programming.kicks-ass.net>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20231122100756.GP8262@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _e9KSDjhPKYCOgUJmHYHA4dub45AOJ5H
+X-Proofpoint-GUID: _e9KSDjhPKYCOgUJmHYHA4dub45AOJ5H
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1] perf parse-events: Make legacy events lower
- priority than sysfs/json
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>,
- Marc Zyngier <maz@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231123042922.834425-1-irogers@google.com>
-From: Hector Martin <marcan@marcan.st>
-In-Reply-To: <20231123042922.834425-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-23_09,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 spamscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311230083
 
-On 2023/11/23 13:29, Ian Rogers wrote:
-> The perf tool has previously made legacy events the priority so with
-> or without a PMU the legacy event would be opened:
+On 11/22/23 11:07, Peter Zijlstra wrote:
+> On Wed, Nov 22, 2023 at 08:38:28AM +0100, Thomas Richter wrote:
+>> perf tool fails on linux-next since Nov 16th on s390 when invoking perf on
+>> any PMU event, as in
+>>
+>>   # perf stat -e cycles -- true
+>>
+>>    Performance counter stats for 'true':
+>>
+>>      <not supported>      cycles                                                               
+>>
+>>        0.000598399 seconds time elapsed
+>>
+>>        0.000055000 seconds user
+>>        0.000567000 seconds sys
+>>
+>>   # perf stat -e pai_ext/NNPA_ALL/ -C0 -- true
+>>   event syntax error: 'pai_ext/NNPA_ALL/'
+>>                        \___ Bad event or PMU
+>>
+>>   Unable to find PMU or event on a PMU of 'pai_ext'
+>>
+>>   Initial error:
+>>   event syntax error: 'pai_ext/NNPA_ALL/'
+>>                        \___ Cannot find PMU `pai_ext'. Missing kernel support?
+>>   #
+>>
+>> This error is caused by following commit, which got into linux-next around November 15th:
+>>
+>> commit 652ffc2104ec1f69dd4a46313888c33527145ccf
+>> Author: Greg KH <gregkh@linuxfoundation.org>
+>> Date:   Mon Jun 12 15:09:09 2023 +0200
+>>
+>>     perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
+>>
+>>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>     Link: https://lkml.kernel.org/r/2023061204-decal-flyable-6090@gregkh
+>>
+>> This commit adds function pmu_dev_is_visible() as the PMU bus function
+>> to make sysfs attribute files visible.
+>> On a failing system these sysfs attribute files are exported:
 > 
-> ```
-> $ perf stat -e cpu-cycles,cpu/cpu-cycles/ true
-> Using CPUID GenuineIntel-6-8D-1
-> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-> Attempting to add event pmu 'cpu' with 'cpu-cycles,' that may result in non-fatal errors
-> After aliases, add event pmu 'cpu' with 'cpu-cycles,' that may result in non-fatal errors
-> Control descriptor is not initialized
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             136
->   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   enable_on_exec                   1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid 833967  cpu -1  group_fd -1  flags 0x8 = 3
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             136
->   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   enable_on_exec                   1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> ...
-> ```
+> Does this help? I'm not entirely sure on the is_visible thing, but the
+> way I understand it, it was only supposed to hide the nr_filters thing,
+> not the entire group and @n helps select the attribute.
 > 
-> Fixes to make hybrid/BIG.little PMUs behave correctly, ie as core PMUs
-> capable of opening legacy events on each, removing hard coded
-> "cpu_core" and "cpu_atom" Intel PMU names, etc. caused a behavioral
-> difference on Apple/ARM due to latent issues in the PMU driver
-> reported in:
-> https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st/
+> Greg, did I get that right?
 > 
-> As part of that report Mark Rutland <mark.rutland@arm.com> requested
-> that legacy events not be higher in priority when a PMU is specified
-> reversing what has until this change been perf's default
-> behavior. With this change the above becomes:
+> Also, spurious return... clearly I should've woken up before merging
+> that patch... oh well.
 > 
-> ```
-> $ perf stat -e cpu-cycles,cpu/cpu-cycles/ true
-> Using CPUID GenuineIntel-6-8D-1
-> Attempt to add: cpu/cpu-cycles=0/
-> ..after resolving event: cpu/event=0x3c/
-> Control descriptor is not initialized
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             136
->   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   enable_on_exec                   1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid 827628  cpu -1  group_fd -1  flags 0x8 = 3
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             4 (PERF_TYPE_RAW)
->   size                             136
->   config                           0x3c
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   enable_on_exec                   1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> ...
-> ```
-> 
-> So the second event has become a raw event as
-> /sys/devices/cpu/events/cpu-cycles exists.
-> 
-> A fix was necessary to config_term_pmu in parse-events.c as
-> check_alias expansion needs to happen after config_term_pmu, and
-> config_term_pmu may need calling a second time because of this.
-> 
-> config_term_pmu is updated to not use the legacy event when the PMU
-> has such a named event (either from json or sysfs).
-> 
-> The bulk of this change is updating all of the parse-events test
-> expectations so that if a sysfs/json event exists for a PMU the test
-> doesn't fail - a further sign, if it were needed, that the legacy
-> event priority was a known and tested behavior of the perf tool.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> This is a large behavioral change:
-> 1) the scope of the change means it should bake on linux-next and I
-> don't believe should be a 6.7-rc fix.
-> 2) a fixes tag and stable backport I don't think are appropriate. The
-> real reported issue is with the PMU driver. A backport would bring the
-> risk that later fixes, due to the large behavior change, wouldn't be
-> backported and past releases get regressed in scenarios like
-> hybrid. Backports for the perf tool are also less necessary than say a
-> buggy PMU driver, as distributions should be updating to the latest
-> perf tool regardless of what Linux kernel is being run (the perf tool
-> is backward compatible).
-> ---
->  tools/perf/tests/parse-events.c | 256 +++++++++++++++++++++++---------
->  tools/perf/util/parse-events.c  |  52 +++++--
->  tools/perf/util/pmu.c           |   8 +-
->  tools/perf/util/pmu.h           |   3 +-
->  4 files changed, 231 insertions(+), 88 deletions(-)
 > 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4f0c45ab8d7d..59b332cce9e7 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11417,12 +11417,10 @@ static umode_t pmu_dev_is_visible(struct kobject *kobj, struct attribute *a, int
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct pmu *pmu = dev_get_drvdata(dev);
+>  
+> -	if (!pmu->nr_addr_filters)
+> +	if (n == 2 && !pmu->nr_addr_filters)
+>  		return 0;
+>  
+>  	return a->mode;
+> -
+> -	return 0;
+>  }
+>  
+>  static struct attribute_group pmu_dev_attr_group = {
 
-Tested-by: Hector Martin <marcan@marcan.st>
-
-$ sudo taskset -c 2 ./perf stat -e apple_icestorm_pmu/cycles/ -e
-apple_firestorm_pmu/cycles/ -e cycles echo
-
-
- Performance counter stats for 'echo':
-
-     <not counted>      apple_icestorm_pmu/cycles/
-                       (0.00%)
-            34,622      apple_firestorm_pmu/cycles/
-
-            30,751      cycles
-
-
-       0.000429625 seconds time elapsed
-
-       0.000000000 seconds user
-       0.000443000 seconds sys
-
-
-$ sudo taskset -c 0 ./perf stat -e apple_icestorm_pmu/cycles/ -e
-apple_firestorm_pmu/cycles/ -e cycles echo
+Yep, this fixes the issue. As you can see, the type file etc is exported again:
 
 
- Performance counter stats for 'echo':
+# ll /sys/devices/pai_crypto/
+total 0
+drwxr-xr-x. 2 root root    0 Nov 23 12:19 events
+drwxr-xr-x. 2 root root    0 Nov 23 12:19 format
+-rw-r--r--. 1 root root 4096 Nov 23 12:19 perf_event_mux_interval_ms
+lrwxrwxrwx. 1 root root    0 Nov 23 12:18 subsystem -> ../../bus/event_source
+-r--r--r--. 1 root root 4096 Nov 23 12:19 type
+-rw-r--r--. 1 root root 4096 Nov 23 12:19 uevent
+# perf stat -a -e pai_crypto/KM_DEA/ -- true
 
-            13,413      apple_icestorm_pmu/cycles/
+ Performance counter stats for 'system wide':
 
-     <not counted>      apple_firestorm_pmu/cycles/
-                       (0.00%)
-     <not counted>      cycles
-                       (0.00%)
+                 0      pai_crypto/KM_DEA/                                                    
 
-       0.000898458 seconds time elapsed
+       0.000983239 seconds time elapsed
+#
 
-       0.000908000 seconds user
-       0.000000000 seconds sys
+This looks very and and you have my 
+Tested-by: Thomas Richter <tmricht@linux.ibm.com
 
-(It would be nice to have "cycles" match/aggregate both PMUs, but that's
-a story for another day. The behavior above is what was there in 6.4 and
-earlier.)
+--
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
-- Hector
