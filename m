@@ -1,151 +1,116 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8EF14F65
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 21:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eryl6Wgv"
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93EFB9
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 10:00:12 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-548db776f6cso13030a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 10:00:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1700762411; x=1701367211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oC1A8FYWCE9VFXIWJCcHsK/1/70L94HS4n6KVdO2o8A=;
-        b=eryl6WgvluWuvqsuvNz+n6Cin8fCM1fVm+YqTcpyHHvgvM1HkxyvVPtynz5R9YOEtw
-         lalRDk7PV2k2PUKSYNIT4MZjx2NjV7vPwnaPaufc7h/XqXqz8/jAMi+ZZMmYUst8B2eV
-         bWje0hX1zICLBmQol88EnygPKeBOsXYfhEDCwNsY5goWKcreRwutla00Lg7VzBD76HF7
-         gaMzI+RNl0fpDio8LxQSHBLGp3rleQp/JKjWcogK28xrJQtJbKDQdJOjOUP+KUDXiKIM
-         ch5dSMWzhSQAfMGat9YSJ1CUqqg37N+YuT4+NCF0sj6PyYtLusxpataKI1d/tyWQrEGG
-         lwJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700762411; x=1701367211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oC1A8FYWCE9VFXIWJCcHsK/1/70L94HS4n6KVdO2o8A=;
-        b=jj62kcBjpkZZeaWdmaz9sCWpk5ZdFekn/kY9ybhM0I++QcY6enBYfgR/lZ/B6Iq++2
-         gjL42+I5Xxv1EsQj2Ol8J8ZOE/ezRUCeUYbEfFdQoyyxBeo6eWXAqf2qMYcuaMT7MHzQ
-         0nuknEuC0KhyKly8tgXWgLSdXnyKtsrVVarkyh2X1mUB7IZHm9wBPwh+nCcGUcyAQV3o
-         ZwjUaBShnTSBhn0TV/zZ/zT86eF0JUlq+ZEuEYtBQ5HololG0ubpk7KcLi8kXhbMsYwo
-         EMksAG6MFJDtrSSbDXDLzzGysy2l2cwha6O/1oW9TTVckUkiIyLebVKosB1KOjrVuV0t
-         40hg==
-X-Gm-Message-State: AOJu0YwmToeWNNX1f8pl43UVMwPgCxG08jBj+Oy/l44aGFQcCYt9zqua
-	pS8nKHWJlERepElHNyF0BMhee3pUeYZVSF4EzRJF5A==
-X-Google-Smtp-Source: AGHT+IHoBIIXEGSlxDzz0Dj3khuJipljirn6ek0M2FA+OCRKBDUg44tbPGTWEee8EfzTFB6XoqrHGN7ahfjVHOEnbQM=
-X-Received: by 2002:a05:6402:540a:b0:545:279:d075 with SMTP id
- ev10-20020a056402540a00b005450279d075mr327312edb.1.1700762410841; Thu, 23 Nov
- 2023 10:00:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYWXp6jw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74259C433C7;
+	Thu, 23 Nov 2023 21:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700774112;
+	bh=tPDvNTF6lQgs9PwbaY+2NnDjcoV4Bkdql130mx3he5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IYWXp6jws2n5+lhs66eOrghIpdRqwujIZ0d1v0m7OuQbWAkGnFzuAOJDAIy+C4L1a
+	 vVU9MhIPf9NzkYY0F0p+lMXkbG2ZIhtjIllki7jNYch4MKxKNU0CMiHgcPALLL/ds/
+	 1K4AViDU/I3YVTaJiLo5SZFx8CzDtYEQ6kDuWQMxUQzc4rsGGh5B/GR4hlB9ZDD2RT
+	 mN8kxB5/ANc1tCpPXYb0CF8A63knqKpHYpCgKeU95fgo0kRgDrtzhi4l3FAYoXlKAu
+	 H65qQOtV14MHk1VZ5ZZrcpkXjQCTm3BqII/mAIamf6txGQHjJSCXebQFsLAv9p4HeX
+	 5FG6Ri7FNdlaQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id E6BC540094; Thu, 23 Nov 2023 18:15:09 -0300 (-03)
+Date: Thu, 23 Nov 2023 18:15:09 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Hector Martin <marcan@marcan.st>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Rogers <irogers@google.com>,
+	Marc Zyngier <maz@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1] perf parse-events: Make legacy events lower
+ priority than sysfs/json
+Message-ID: <ZV/A3YhtMHsZZRQd@kernel.org>
+References: <20231123042922.834425-1-irogers@google.com>
+ <ac4cf01d-4bb5-4b4d-bd87-bf05ddb67f2d@marcan.st>
+ <ZV9fLgHshKGoAPYK@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231123042922.834425-1-irogers@google.com> <86cyw0zeiu.wl-maz@kernel.org>
- <CAP-5=fXjX2pNmmX3WOY=m0BqUHTR2YPKVki6bbgG3g1Btc2=Ng@mail.gmail.com> <86bkbkzc2p.wl-maz@kernel.org>
-In-Reply-To: <86bkbkzc2p.wl-maz@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 23 Nov 2023 09:59:59 -0800
-Message-ID: <CAP-5=fUU4ZRLUrg7h+ua0f9mJBONfTd2JuCRPaXq2CApk5-_fA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf parse-events: Make legacy events lower
- priority than sysfs/json
-To: Marc Zyngier <maz@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Hector Martin <marcan@marcan.st>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZV9fLgHshKGoAPYK@kernel.org>
+X-Url: http://acmel.wordpress.com
 
-On Thu, Nov 23, 2023 at 8:09=E2=80=AFAM Marc Zyngier <maz@kernel.org> wrote=
-:
->
-> On Thu, 23 Nov 2023 15:27:54 +0000,
-> Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Thu, Nov 23, 2023 at 7:16=E2=80=AFAM Marc Zyngier <maz@kernel.org> w=
-rote:
-> > >
-> > > Again, perf gets shipped in distros, and not necessary as the latest
-> > > version. Rather, they tend to ship the version matching the kernel. N=
-o
-> > > backport, buggy perf.
-> >
-> > Please complain to the distros. I complained to Debian, we got rid of
-> > the horrible wrapper script thing they did. I complained to two
-> > separate Ubuntu people over the last two weeks as they still have
-> > broken packaging even though they derive from Debian. Fedora is of
-> > course perfect as Arnaldo oversees it :-)
->
-> In this instance, I don't need to complain to anyone but you. And
-> guess what: it is on Fedora that this issue was first discovered.
->
-> I also don't see what distro packaging policy has anything to do with
-> the issue at hand, but that's beside the point.
+Em Thu, Nov 23, 2023 at 11:18:22AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Nov 23, 2023 at 05:45:19PM +0900, Hector Martin escreveu:
+> > On 2023/11/23 13:29, Ian Rogers wrote:
+> > > The bulk of this change is updating all of the parse-events test
+> > > expectations so that if a sysfs/json event exists for a PMU the test
+> > > doesn't fail - a further sign, if it were needed, that the legacy
+> > > event priority was a known and tested behavior of the perf tool.
+> 
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > > This is a large behavioral change:
+> > > 1) the scope of the change means it should bake on linux-next and I
+> > > don't believe should be a 6.7-rc fix.
+> > > 2) a fixes tag and stable backport I don't think are appropriate. The
+> > > real reported issue is with the PMU driver. A backport would bring the
+> > > risk that later fixes, due to the large behavior change, wouldn't be
+> > > backported and past releases get regressed in scenarios like
+> > > hybrid. Backports for the perf tool are also less necessary than say a
+> > > buggy PMU driver, as distributions should be updating to the latest
+> > > perf tool regardless of what Linux kernel is being run (the perf tool
+> > > is backward compatible).
+> > 
+> > Tested-by: Hector Martin <marcan@marcan.st>
+> 
+> Thanks, applied locally, doing some tests and then will push for
+> linux-next to pick it up.
+> 
+> Mark, can I have your Reviewed-by or Acked-by?
 
-Because the latest perf tool is always improved and carries fixes,
-just as say gcc or clang. We don't ask these tools to backport fixes
-and then deliberately run out-of-date versions of them.
+I'll collect those, but only after addressing these:
 
-> >
-> > > And again, I don't see a bug in the PMU driver.
-> >
-> > Whether the PMU driver is requested a legacy cycles event or the
-> > cycles event as an event code, the PMU driver should support it.
-> > Supporting legacy events is just something core PMU drivers do. This
-> > workaround wouldn't be necessary were it not for this PMU bug.
->
-> Again, *which* PMU bug? What is a legacy event, and when has this
-> terminology made it into the kernel? Who has decided that a change was
-> necessary? Why haven't you submitted patches upgrading all the PMU
-> drivers to support whatever you are referring to?
-
-I did fix ARM's PMU driver for extended types, James Clark took over
-the patch. The term legacy has at least been in use in kernel source
-code for over 11 years:
-http://lkml.kernel.org/r/1337584373-2741-4-git-send-email-jolsa@redhat.com
-
-An issue I face in fixing somebody's PMU driver is it is ever so
-useful to be able to test. The work done with James was done blind by
-me except for checking for regressions on a raspberry pi 4, which
-isn't heterogeneous (nor is the 5 *sigh*). The fact there were bugs in
-ARM's PMU driver for so long shows a lack of testing by ARM and we've
-been going out of our way to increase testing. Something positive ARM
-could do in this area is to update the parse-events test, yes the one
-that is supposed to test issues like this, so that the hardcoded "cpu"
-PMU assumption that works on most platforms who name their core PMU
-"cpu" also works on ARM. For bonus points setting up testing so that
-we know when things break would be useful. As mentioned in previous
-emails I hope to work away from needing an actual machine to test the
-perf tool's correctness, but we're a long way from that. There are
-very many BIG.little Android devices in the field where the PMUs are
-not set up as heterogeneous, ARM could contribute a CTS test to
-Android to make sure this doesn't happen.
-
-Thanks,
-Ian
-
-> > This change impacts every user of perf not just a partial fix to
-> > workaround ARM PMU driver issues, see the updated parse-events test
-> > for a list of what a simple test sees as a behavior change.
->
-> When making far-reaching changes to a subsystem, I apply two rules:
->
-> - I address everything that is affected, not just my pet architecture
->
-> - I don't break other people's toys, which means compatibility is a
->   *must*, not a 'nice to have'
->
-> By this standard, your complaining that "ARM is broken" doesn't hold.
-> It was working just fine until your changes rendered perf unusable.
->
-> Nonetheless, thank you for addressing it quickly. This is sincerely
-> appreciated.
->
->         M.
->
-> --
-> Without deviation from the norm, progress is not possible.
+[perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.86.5/perf/perf-6.6.0-rc1.tar.xz
+[perfbuilder@five ~]$ time dm
+   1   100.09 almalinux:8                   : FAIL clang version 15.0.7 (Red Hat 15.0.7-1.module_el8.8.0+3466+dfcbc058)
+    util/parse-events.c:1461:6: error: variable 'alias_rewrote_terms' is used uninitialized whenever '&&' condition is false [-Werror,-Wsometimes-uninitialized]
+            if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
+                ^~~~~~~~~~~~~~~~~~~~~~
+    util/parse-events.c:1477:6: note: uninitialized use occurs here
+            if (alias_rewrote_terms &&
+                ^~~~~~~~~~~~~~~~~~~
+    util/parse-events.c:1461:6: note: remove the '&&' if its condition is always true
+            if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
+                ^~~~~~~~~~~~~~~~~~~~~~~~~
+    util/parse-events.c:1401:26: note: initialize the variable 'alias_rewrote_terms' to silence this warning
+            bool alias_rewrote_terms;
+                                    ^
+                                     = false
+    1 error generated.
+    make[3]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: util] Error 2
+   2   114.29 almalinux:9                   : FAIL clang version 15.0.7 (Red Hat 15.0.7-2.el9)
+    util/parse-events.c:1461:6: error: variable 'alias_rewrote_terms' is used uninitialized whenever '&&' condition is false [-Werror,-Wsometimes-uninitialized]
+            if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
+                ^~~~~~~~~~~~~~~~~~~~~~
+    util/parse-events.c:1477:6: note: uninitialized use occurs here
+            if (alias_rewrote_terms &&
+                ^~~~~~~~~~~~~~~~~~~
+    util/parse-events.c:1461:6: note: remove the '&&' if its condition is always true
+            if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
+                ^~~~~~~~~~~~~~~~~~~~~~~~~
+    util/parse-events.c:1401:26: note: initialize the variable 'alias_rewrote_terms' to silence this warning
+            bool alias_rewrote_terms;
+                                    ^
+                                     = false
+    1 error generated.
+    make[3]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: util] Error 2
