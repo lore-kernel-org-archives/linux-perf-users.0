@@ -1,107 +1,112 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444E611C87
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 08:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T+gUYuP3"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4201BF;
-	Wed, 22 Nov 2023 23:59:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700726372; x=1732262372;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qwCi8/cRXyz2gskGyZ4nkWESSM864LSQWnYjItBPCos=;
-  b=T+gUYuP3/+guSO5zChUKQfSEXJ62P5+md/lTbHdAsiTN44MJaQAQpnh2
-   R+2VH+OfGlxVfLceiIdDOpRGekegNqTlVIiH/GHh4siK1C4ZBfxe1HpoH
-   ksexi9yFpz9VP0S451ZSldiuzHqhExuxwJdlw0XJSGj9C2kq20mArr4sS
-   Fdm0mCdcxcj/9IPFnSyHS+STx9VlkFhAQVTDFbUtL8YmDjsqWkpd4ppKU
-   CHuZf2H00N24nshRxahDB8ha0zWD0tUGvQ1dIHZbdkiLtE0om/mO6RZJc
-   L59XzGI7PzWibppUGA/1Ca+bcGPC2si9/w2MpzjTlbysaM0IF/ve7nTKP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="396126438"
-X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="396126438"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="8764991"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.41.107])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 23:59:22 -0800
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@arm.com>,
-	German Gomez <german.gomez@arm.com>,
-	Leo Yan <leo.yan@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 7/8] perf tests: Make data symbol test wait for perf to start
-Date: Thu, 23 Nov 2023 09:58:47 +0200
-Message-Id: <20231123075848.9652-8-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231123075848.9652-1-adrian.hunter@intel.com>
-References: <20231123075848.9652-1-adrian.hunter@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2N6V6Bnv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2437C433C8;
+	Thu, 23 Nov 2023 08:43:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1700729006;
+	bh=X6UC0tS12SQOCt0lR7U1b/1JhPu/SkTtugMUqL64nTc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2N6V6BnvIGAbQBN7qjltzbQX/le4K1s3yx/Ywvi7F9BJ4Tg4y8sy4LAxaEwKx2sII
+	 MrsHGYW8KibdChXzs4600b9I05tS8EtTzTCXHms8G3V2g2/Y35t/AOul65Qh0IJYqb
+	 w9QQ5c8wKtD5Go2Jd004YKdSfiaJPi1eXTK14TIs=
+Date: Thu, 23 Nov 2023 08:43:21 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>
+Subject: Re: REGRESSION linux-next since Nov 16th, perf tool broken (at least
+ on s390)
+Message-ID: <2023112312-sandbar-emu-fbb1@gregkh>
+References: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
+ <2023112248-unskilled-flagman-05e6@gregkh>
+ <2be9c97e-3208-4deb-8172-004601aabc7e@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2be9c97e-3208-4deb-8172-004601aabc7e@linux.ibm.com>
 
-The perf data symbol test waits 1 second for perf to run and collect data,
-which may be too little if perf takes a long time to start up, which has
-been noticed on systems with many CPUs. Use existing wait_for_perf_to_start
-helper to wait for perf to start.
+On Thu, Nov 23, 2023 at 08:54:19AM +0100, Thomas Richter wrote:
+> On 11/22/23 10:31, Greg KH wrote:
+> > On Wed, Nov 22, 2023 at 08:38:28AM +0100, Thomas Richter wrote:
+> >> perf tool fails on linux-next since Nov 16th on s390 when invoking perf on
+> >> any PMU event, as in
+> >>
+> >>   # perf stat -e cycles -- true
+> >>
+> >>    Performance counter stats for 'true':
+> >>
+> >>      <not supported>      cycles                                                               
+> >>
+> >>        0.000598399 seconds time elapsed
+> >>
+> >>        0.000055000 seconds user
+> >>        0.000567000 seconds sys
+> >>
+> >>   # perf stat -e pai_ext/NNPA_ALL/ -C0 -- true
+> >>   event syntax error: 'pai_ext/NNPA_ALL/'
+> >>                        \___ Bad event or PMU
+> >>
+> >>   Unable to find PMU or event on a PMU of 'pai_ext'
+> >>
+> >>   Initial error:
+> >>   event syntax error: 'pai_ext/NNPA_ALL/'
+> >>                        \___ Cannot find PMU `pai_ext'. Missing kernel support?
+> >>   #
+> >>
+> >> This error is caused by following commit, which got into linux-next around November 15th:
+> >>
+> >> commit 652ffc2104ec1f69dd4a46313888c33527145ccf
+> >> Author: Greg KH <gregkh@linuxfoundation.org>
+> >> Date:   Mon Jun 12 15:09:09 2023 +0200
+> >>
+> >>     perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
+> >>
+> >>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >>     Link: https://lkml.kernel.org/r/2023061204-decal-flyable-6090@gregkh
+> >>
+> >> This commit adds function pmu_dev_is_visible() as the PMU bus function
+> >> to make sysfs attribute files visible.
+> >> On a failing system these sysfs attribute files are exported:
+> >>
+> >> #  ll /sys/devices/pai_ext/
+> >> drwxr-xr-x. 2 root root    0 Nov 21 14:59 events
+> >> drwxr-xr-x. 2 root root    0 Nov 21 14:59 format
+> >> lrwxrwxrwx. 1 root root    0 Nov 21 14:43 subsystem -> ../../bus/event_source
+> >> -rw-r--r--. 1 root root 4096 Nov 21 14:43 uevent
+> >> #
+> > 
+> > /sys/devices/pai_ext/ is a real device?  Why there?  That's a very odd
+> > location, what type of device is this?
+> 
+> S390 has 5 different PMU devices, all show up at /sys/devices/ directory:
+> drwxr-xr-x   4 root root 0 Nov 22 14:30 cpum_cf
+> drwxr-xr-x   4 root root 0 Nov 22 14:30 cpum_cf_diag
+> drwxr-xr-x   4 root root 0 Nov 22 14:30 cpum_sf
+> drwxr-xr-x   4 root root 0 Nov 22 14:30 pai_crypto
+> drwxr-xr-x   4 root root 0 Nov 22 14:30 pai_ext
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/tests/shell/test_data_symbol.sh | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+And that's messed up, we need to put them in the "proper" place, in
+either a bus-specific directory, or somewhere lower, they shouldn't be
+in the "root" of the device hierarchy which is what I think started this
+whole conversation a while ago.
 
-diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-index 69bb6fe86c50..e50e54e94f6f 100755
---- a/tools/perf/tests/shell/test_data_symbol.sh
-+++ b/tools/perf/tests/shell/test_data_symbol.sh
-@@ -4,6 +4,10 @@
- # SPDX-License-Identifier: GPL-2.0
- # Leo Yan <leo.yan@linaro.org>, 2022
- 
-+shelldir=$(dirname "$0")
-+# shellcheck source=lib/waiting.sh
-+. "${shelldir}"/lib/waiting.sh
-+
- skip_if_no_mem_event() {
- 	perf mem record -e list 2>&1 | grep -E -q 'available' && return 0
- 	return 2
-@@ -13,6 +17,7 @@ skip_if_no_mem_event || exit 2
- 
- TEST_PROGRAM="perf test -w datasym"
- PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+ERR_FILE=$(mktemp /tmp/__perf_test.stderr.XXXXX)
- 
- check_result() {
- 	# The memory report format is as below:
-@@ -50,13 +55,15 @@ echo "Recording workload..."
- # specific CPU and test in per-CPU mode.
- is_amd=$(grep -E -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
- if (($is_amd >= 1)); then
--	perf mem record -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM &
-+	perf mem record -vvv -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM 2>"${ERR_FILE}" &
- else
--	perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
-+	perf mem record -vvv --all-user -o ${PERF_DATA} -- $TEST_PROGRAM 2>"${ERR_FILE}" &
- fi
- 
- PERFPID=$!
- 
-+wait_for_perf_to_start ${PERFPID} "${ERR_FILE}"
-+
- sleep 1
- 
- kill $PERFPID
--- 
-2.34.1
+I'll work on that as a different patch...
 
+thanks,
+
+greg k-h
