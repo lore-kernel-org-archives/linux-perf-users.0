@@ -1,112 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444E611C87
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Nov 2023 08:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2N6V6Bnv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2437C433C8;
-	Thu, 23 Nov 2023 08:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700729006;
-	bh=X6UC0tS12SQOCt0lR7U1b/1JhPu/SkTtugMUqL64nTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2N6V6BnvIGAbQBN7qjltzbQX/le4K1s3yx/Ywvi7F9BJ4Tg4y8sy4LAxaEwKx2sII
-	 MrsHGYW8KibdChXzs4600b9I05tS8EtTzTCXHms8G3V2g2/Y35t/AOul65Qh0IJYqb
-	 w9QQ5c8wKtD5Go2Jd004YKdSfiaJPi1eXTK14TIs=
-Date: Thu, 23 Nov 2023 08:43:21 +0000
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>
-Subject: Re: REGRESSION linux-next since Nov 16th, perf tool broken (at least
- on s390)
-Message-ID: <2023112312-sandbar-emu-fbb1@gregkh>
-References: <aca1eb79-5dee-4634-8727-eebb251c9e1e@linux.ibm.com>
- <2023112248-unskilled-flagman-05e6@gregkh>
- <2be9c97e-3208-4deb-8172-004601aabc7e@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="RQFgZgRr"
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6847CD42;
+	Thu, 23 Nov 2023 00:45:29 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: marcan@marcan.st)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 31BB441F5F;
+	Thu, 23 Nov 2023 08:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1700729126; bh=HutI9EG0kKFuTj0lAK98ZuffMEYUqaLfWIup+i0AkAw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=RQFgZgRr4dxfXUj8osOldDjyiWHNtOZZ2dTanRaueLvNgJTV6f9Ye+vJKWzbcnZ0Y
+	 mt5G5F3oCCBnwwzr1L/28O5HA8+NMEPqil6jTHEgeOXRPdOjPV/hBkPEfroZOUNI0q
+	 OG9HHKozlJKlq+g2iC7H2/JJI2MBKiazcyenQLKaQ3v9QFDYbllbejbIh1rdMBxYgW
+	 izhE8befv8ABOeBJ5ZZ9tNJW56CKPYMdNObY7WrHSv8YPwvjcX5I/vZ6cOhkgB5bHH
+	 ROtz5kV8S301GCOkryE41GGrpC2fWz/C9DzMSq0UNo8xiIeU+IxAibza5dvUb8qBCx
+	 g5IRlkMU3ARWA==
+Message-ID: <ac4cf01d-4bb5-4b4d-bd87-bf05ddb67f2d@marcan.st>
+Date: Thu, 23 Nov 2023 17:45:19 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2be9c97e-3208-4deb-8172-004601aabc7e@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1] perf parse-events: Make legacy events lower
+ priority than sysfs/json
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>,
+ Marc Zyngier <maz@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231123042922.834425-1-irogers@google.com>
+From: Hector Martin <marcan@marcan.st>
+In-Reply-To: <20231123042922.834425-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 23, 2023 at 08:54:19AM +0100, Thomas Richter wrote:
-> On 11/22/23 10:31, Greg KH wrote:
-> > On Wed, Nov 22, 2023 at 08:38:28AM +0100, Thomas Richter wrote:
-> >> perf tool fails on linux-next since Nov 16th on s390 when invoking perf on
-> >> any PMU event, as in
-> >>
-> >>   # perf stat -e cycles -- true
-> >>
-> >>    Performance counter stats for 'true':
-> >>
-> >>      <not supported>      cycles                                                               
-> >>
-> >>        0.000598399 seconds time elapsed
-> >>
-> >>        0.000055000 seconds user
-> >>        0.000567000 seconds sys
-> >>
-> >>   # perf stat -e pai_ext/NNPA_ALL/ -C0 -- true
-> >>   event syntax error: 'pai_ext/NNPA_ALL/'
-> >>                        \___ Bad event or PMU
-> >>
-> >>   Unable to find PMU or event on a PMU of 'pai_ext'
-> >>
-> >>   Initial error:
-> >>   event syntax error: 'pai_ext/NNPA_ALL/'
-> >>                        \___ Cannot find PMU `pai_ext'. Missing kernel support?
-> >>   #
-> >>
-> >> This error is caused by following commit, which got into linux-next around November 15th:
-> >>
-> >> commit 652ffc2104ec1f69dd4a46313888c33527145ccf
-> >> Author: Greg KH <gregkh@linuxfoundation.org>
-> >> Date:   Mon Jun 12 15:09:09 2023 +0200
-> >>
-> >>     perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
-> >>
-> >>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >>     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >>     Link: https://lkml.kernel.org/r/2023061204-decal-flyable-6090@gregkh
-> >>
-> >> This commit adds function pmu_dev_is_visible() as the PMU bus function
-> >> to make sysfs attribute files visible.
-> >> On a failing system these sysfs attribute files are exported:
-> >>
-> >> #  ll /sys/devices/pai_ext/
-> >> drwxr-xr-x. 2 root root    0 Nov 21 14:59 events
-> >> drwxr-xr-x. 2 root root    0 Nov 21 14:59 format
-> >> lrwxrwxrwx. 1 root root    0 Nov 21 14:43 subsystem -> ../../bus/event_source
-> >> -rw-r--r--. 1 root root 4096 Nov 21 14:43 uevent
-> >> #
-> > 
-> > /sys/devices/pai_ext/ is a real device?  Why there?  That's a very odd
-> > location, what type of device is this?
+On 2023/11/23 13:29, Ian Rogers wrote:
+> The perf tool has previously made legacy events the priority so with
+> or without a PMU the legacy event would be opened:
 > 
-> S390 has 5 different PMU devices, all show up at /sys/devices/ directory:
-> drwxr-xr-x   4 root root 0 Nov 22 14:30 cpum_cf
-> drwxr-xr-x   4 root root 0 Nov 22 14:30 cpum_cf_diag
-> drwxr-xr-x   4 root root 0 Nov 22 14:30 cpum_sf
-> drwxr-xr-x   4 root root 0 Nov 22 14:30 pai_crypto
-> drwxr-xr-x   4 root root 0 Nov 22 14:30 pai_ext
+> ```
+> $ perf stat -e cpu-cycles,cpu/cpu-cycles/ true
+> Using CPUID GenuineIntel-6-8D-1
+> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+> Attempting to add event pmu 'cpu' with 'cpu-cycles,' that may result in non-fatal errors
+> After aliases, add event pmu 'cpu' with 'cpu-cycles,' that may result in non-fatal errors
+> Control descriptor is not initialized
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   size                             136
+>   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   enable_on_exec                   1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 833967  cpu -1  group_fd -1  flags 0x8 = 3
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   size                             136
+>   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   enable_on_exec                   1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> ...
+> ```
+> 
+> Fixes to make hybrid/BIG.little PMUs behave correctly, ie as core PMUs
+> capable of opening legacy events on each, removing hard coded
+> "cpu_core" and "cpu_atom" Intel PMU names, etc. caused a behavioral
+> difference on Apple/ARM due to latent issues in the PMU driver
+> reported in:
+> https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st/
+> 
+> As part of that report Mark Rutland <mark.rutland@arm.com> requested
+> that legacy events not be higher in priority when a PMU is specified
+> reversing what has until this change been perf's default
+> behavior. With this change the above becomes:
+> 
+> ```
+> $ perf stat -e cpu-cycles,cpu/cpu-cycles/ true
+> Using CPUID GenuineIntel-6-8D-1
+> Attempt to add: cpu/cpu-cycles=0/
+> ..after resolving event: cpu/event=0x3c/
+> Control descriptor is not initialized
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   size                             136
+>   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   enable_on_exec                   1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 827628  cpu -1  group_fd -1  flags 0x8 = 3
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             4 (PERF_TYPE_RAW)
+>   size                             136
+>   config                           0x3c
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   enable_on_exec                   1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> ...
+> ```
+> 
+> So the second event has become a raw event as
+> /sys/devices/cpu/events/cpu-cycles exists.
+> 
+> A fix was necessary to config_term_pmu in parse-events.c as
+> check_alias expansion needs to happen after config_term_pmu, and
+> config_term_pmu may need calling a second time because of this.
+> 
+> config_term_pmu is updated to not use the legacy event when the PMU
+> has such a named event (either from json or sysfs).
+> 
+> The bulk of this change is updating all of the parse-events test
+> expectations so that if a sysfs/json event exists for a PMU the test
+> doesn't fail - a further sign, if it were needed, that the legacy
+> event priority was a known and tested behavior of the perf tool.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> This is a large behavioral change:
+> 1) the scope of the change means it should bake on linux-next and I
+> don't believe should be a 6.7-rc fix.
+> 2) a fixes tag and stable backport I don't think are appropriate. The
+> real reported issue is with the PMU driver. A backport would bring the
+> risk that later fixes, due to the large behavior change, wouldn't be
+> backported and past releases get regressed in scenarios like
+> hybrid. Backports for the perf tool are also less necessary than say a
+> buggy PMU driver, as distributions should be updating to the latest
+> perf tool regardless of what Linux kernel is being run (the perf tool
+> is backward compatible).
+> ---
+>  tools/perf/tests/parse-events.c | 256 +++++++++++++++++++++++---------
+>  tools/perf/util/parse-events.c  |  52 +++++--
+>  tools/perf/util/pmu.c           |   8 +-
+>  tools/perf/util/pmu.h           |   3 +-
+>  4 files changed, 231 insertions(+), 88 deletions(-)
+> 
 
-And that's messed up, we need to put them in the "proper" place, in
-either a bus-specific directory, or somewhere lower, they shouldn't be
-in the "root" of the device hierarchy which is what I think started this
-whole conversation a while ago.
+Tested-by: Hector Martin <marcan@marcan.st>
 
-I'll work on that as a different patch...
+$ sudo taskset -c 2 ./perf stat -e apple_icestorm_pmu/cycles/ -e
+apple_firestorm_pmu/cycles/ -e cycles echo
 
-thanks,
 
-greg k-h
+ Performance counter stats for 'echo':
+
+     <not counted>      apple_icestorm_pmu/cycles/
+                       (0.00%)
+            34,622      apple_firestorm_pmu/cycles/
+
+            30,751      cycles
+
+
+       0.000429625 seconds time elapsed
+
+       0.000000000 seconds user
+       0.000443000 seconds sys
+
+
+$ sudo taskset -c 0 ./perf stat -e apple_icestorm_pmu/cycles/ -e
+apple_firestorm_pmu/cycles/ -e cycles echo
+
+
+ Performance counter stats for 'echo':
+
+            13,413      apple_icestorm_pmu/cycles/
+
+     <not counted>      apple_firestorm_pmu/cycles/
+                       (0.00%)
+     <not counted>      cycles
+                       (0.00%)
+
+       0.000898458 seconds time elapsed
+
+       0.000908000 seconds user
+       0.000000000 seconds sys
+
+(It would be nice to have "cycles" match/aggregate both PMUs, but that's
+a story for another day. The behavior above is what was there in 6.4 and
+earlier.)
+
+- Hector
