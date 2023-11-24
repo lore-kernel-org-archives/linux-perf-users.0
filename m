@@ -1,68 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UrY8nM7t"
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A87D59;
-	Fri, 24 Nov 2023 01:55:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=sZ2n5kJr0I8EW9IHtq/ppoCQzkJzXCFITxFVQG51leA=; b=UrY8nM7tzzYrO+J1quhqWmDI62
-	a4qKLYgw0nxQI9wq9hdcvc8bEMvs+BEWQdT1ffr7xcwsXmSDZQ4XJ+nJ7kC7g+F1fsWOJYigUy1Uy
-	5ACkjxB0q9mz1QPtTG43GmvCD2BUubBdfRTEGagnnCDFeIMBESQXJXAv0s0ONNcKeGOUV1ZYv3lT1
-	8u6KRlqCbMjmN8lNk5X4lUQnJ9qeqVadq5LoIn6qdbZtJe2zyGfMbCOd3bm84ukjZHcrZOxQ4fUd3
-	qHt8jlB5zgMV1XsUcJv64sT6iWBLNHx/dCPuFqQSmAYUfwzUYVmKy/1dh0f5mF+8La9uq5lbpSCf4
-	IfNqdqqw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6SsC-00Dpus-27;
-	Fri, 24 Nov 2023 09:55:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 045F1300134; Fri, 24 Nov 2023 10:53:20 +0100 (CET)
-Date: Fri, 24 Nov 2023 10:53:19 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf lock: Fix a memory leak on an error path
-Message-ID: <20231124095319.GN3818@noisy.programming.kicks-ass.net>
-References: <20231124092657.10392-1-zhaimingbing@cmss.chinamobile.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B65A21B2;
+	Fri, 24 Nov 2023 02:31:47 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEF0B1424;
+	Fri, 24 Nov 2023 02:32:33 -0800 (PST)
+Received: from e127643.arm.com (unknown [10.57.5.4])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AAF083F7A6;
+	Fri, 24 Nov 2023 02:31:45 -0800 (PST)
+From: James Clark <james.clark@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	suzuki.poulose@arm.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	anshuman.khandual@arm.com,
+	namhyung@gmail.com
+Cc: James Clark <james.clark@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/3] arm64: perf: Include threshold control fields in PMEVTYPER mask
+Date: Fri, 24 Nov 2023 10:28:55 +0000
+Message-Id: <20231124102857.1106453-2-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231124102857.1106453-1-james.clark@arm.com>
+References: <20231124102857.1106453-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231124092657.10392-1-zhaimingbing@cmss.chinamobile.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 24, 2023 at 05:26:57PM +0800, zhaimingbing wrote:
-> if a strdup-ed string is NULL,the allocated memory needs freeing.
-> 
-> Signed-off-by: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
-> ---
->  tools/perf/builtin-lock.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index b141f2134..086041bcb 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -2228,8 +2228,10 @@ static int __cmd_record(int argc, const char **argv)
->  		else
->  			ev_name = strdup(contention_tracepoints[j].name);
->  
-> -		if (!ev_name)
-> +		if (!ev_name) {
-> +			free(rec_argv);
->  			return -ENOMEM;
-> +		}
+FEAT_PMUv3_TH (Armv8.8) adds two new fields to PMEVTYPER, so include
+them in the mask. These aren't writable on 32 bit kernels as they are in
+the high part of the register, so only include them for arm64.
 
-Isn't this an error path straight into exit?
+It would be difficult to do this statically in the asm header files for
+each platform without resulting in circular includes or #ifdefs inline
+in the code. For that reason the ARMV8_PMU_EVTYPE_MASK definition has
+been removed and the mask is constructed programmatically.
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ drivers/perf/arm_pmuv3.c       | 9 ++++++++-
+ include/linux/perf/arm_pmuv3.h | 3 ++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 6ca7be05229c..1d40d794f5e4 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -555,8 +555,15 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
+ static inline void armv8pmu_write_evtype(int idx, u32 val)
+ {
+ 	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
++	unsigned long mask = ARMV8_PMU_EVTYPE_EVENT |
++			     ARMV8_PMU_INCLUDE_EL2 |
++			     ARMV8_PMU_EXCLUDE_EL0 |
++			     ARMV8_PMU_EXCLUDE_EL1;
+ 
+-	val &= ARMV8_PMU_EVTYPE_MASK;
++	if (IS_ENABLED(CONFIG_ARM64))
++		mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
++
++	val &= mask;
+ 	write_pmevtypern(counter, val);
+ }
+ 
+diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+index 9c226adf938a..ddd1fec86739 100644
+--- a/include/linux/perf/arm_pmuv3.h
++++ b/include/linux/perf/arm_pmuv3.h
+@@ -228,7 +228,8 @@
+ /*
+  * PMXEVTYPER: Event selection reg
+  */
+-#define ARMV8_PMU_EVTYPE_MASK	0xc800ffff	/* Mask for writable bits */
++#define ARMV8_PMU_EVTYPE_TH	GENMASK(43, 32)
++#define ARMV8_PMU_EVTYPE_TC	GENMASK(63, 61)
+ #define ARMV8_PMU_EVTYPE_EVENT	0xffff		/* Mask for EVENT bits */
+ 
+ /*
+-- 
+2.34.1
+
