@@ -1,33 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 027D21709;
-	Fri, 24 Nov 2023 03:19:21 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E62B61063;
-	Fri, 24 Nov 2023 03:20:07 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.42.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 201613F7A6;
-	Fri, 24 Nov 2023 03:19:17 -0800 (PST)
-Date: Fri, 24 Nov 2023 11:19:11 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Marc Zyngier <maz@kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gmuo1cfM"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA63D5A;
+	Fri, 24 Nov 2023 03:48:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700826531; x=1732362531;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NWTZKPB6947/lzmM2oYhnJ+7TJUw4xxaIF4D9FZKFiY=;
+  b=Gmuo1cfMaaVnDT/WjcuqmVQiagM01X0VvcPOUcfnz7EoQk6DXPOMTpk5
+   3hXyfw9uGOhxmUZuSi9W4KX9H6Add8r3bhJjH1B8O4ETB+GCfBzw5lACg
+   C7s/UrY7hB/cM5DyKxRsWg9s1PE9ZjNaZhHzHafOhg4FS9vIQ7icT9JOJ
+   4NRWnFS8yzb5GX+9Bb0QMHXda3VamScgRxZmwY4rZrt9CCnIbFTpEMIrG
+   gFCmTyvVYoEa415sy7G4GiPZI0xG7dgxVKPh9fhRfdXqB7FdeNsbC2zri
+   bemJ25Ht51gsgrGxOAYBG/8Df1h97z/DBDTMhjiH40hgCOvw8tt6vdUXG
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="377449233"
+X-IronPort-AV: E=Sophos;i="6.04,223,1695711600"; 
+   d="scan'208";a="377449233"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 03:48:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="1014884517"
+X-IronPort-AV: E=Sophos;i="6.04,223,1695711600"; 
+   d="scan'208";a="1014884517"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Nov 2023 03:48:46 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r6Ufr-0002iG-2D;
+	Fri, 24 Nov 2023 11:48:43 +0000
+Date: Fri, 24 Nov 2023 19:47:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Paran Lee <p4ranlee@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1] perf parse-events: Make legacy events lower
- priority than sysfs/json
-Message-ID: <ZWCGr0bYMyfuhGbx@FVFF77S0Q05N>
-References: <20231123042922.834425-1-irogers@google.com>
- <ZV9jq1C0TUh8MbeU@FVFF77S0Q05N.cambridge.arm.com>
- <ZV/FA+tGFWkMhXiM@kernel.org>
+	Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: oe-kbuild-all@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	shjy180909@gmail.com, austindh.kim@gmail.com, honggyu.kp@gmail.com,
+	tegongkang@gmail.com, Paran Lee <p4ranlee@gmail.com>
+Subject: Re: [PATCH] perf callchain: Support riscv cross-platform
+Message-ID: <202311241453.S2nsKqhx-lkp@intel.com>
+References: <20231122155548.2449-1-p4ranlee@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -36,92 +59,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZV/FA+tGFWkMhXiM@kernel.org>
+In-Reply-To: <20231122155548.2449-1-p4ranlee@gmail.com>
 
-On Thu, Nov 23, 2023 at 06:32:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Nov 23, 2023 at 02:37:31PM +0000, Mark Rutland escreveu:
-> > Hi Ian,
-> > 
-> > Thanks for this!
-> 
-> Yeah, it seems we're making progress, thanks for the continuous effort
-> in getting this fixed!
->  
-> > On Wed, Nov 22, 2023 at 08:29:22PM -0800, Ian Rogers wrote:
-> > > The perf tool has previously made legacy events the priority so with
-> > > or without a PMU the legacy event would be opened:
-> 
-> <SNIP> 
-> 
-> > > The bulk of this change is updating all of the parse-events test
-> > > expectations so that if a sysfs/json event exists for a PMU the test
-> > > doesn't fail - a further sign, if it were needed, that the legacy
-> > > event priority was a known and tested behavior of the perf tool.
-> 
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
->  
-> > Regardless of my comments below, for this patch as-is:
->  
-> > Acked-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> I'm collecting this even with the problems in some setups so far, thanks
-> for providing it.
+Hi Paran,
 
-That's fine by me, thanks!
+kernel test robot noticed the following build errors:
 
-> > > ---
-> > > This is a large behavioral change:
-> > > 1) the scope of the change means it should bake on linux-next and I
-> > > don't believe should be a 6.7-rc fix.
-> > 
-> > I'm happy for this to bake, but I do think it needs to be backported for the
-> > sake of users, especially given that it *restores* the old behaviour.
-> > 
-> > > 2) a fixes tag and stable backport I don't think are appropriate.
->  
-> > For the sake of users I think a fixes tag and stable backport are necssary. In
-> > practice distributions ship the perf tool associated with their stable kernel,
-> > so (for better or worse) a stable backport is certainly necessary for distros
-> > that'll use the v6.6 stable kernel.
-> 
-> Which, as Ian mentioned, is a common misconception, as the lack of
-> lockstep of perf/kernel versions was never properly stated in
-> documentation, only in the source code, look for the
-> evsel__disable_missing_features() function that tries to do whatever we
-> managed to do from what was being asked (new features for old kernels)
-> and the laconic responses from perf_event_open() given back to those
-> requests.
-> 
-> But the fact is that most if not all distros think perf is in lockstep
-> with the kernel, which is not the intent.
+[auto build test ERROR on perf-tools-next/perf-tools-next]
+[also build test ERROR on tip/perf/core perf-tools/perf-tools linus/master acme/perf/core v6.7-rc2 next-20231124]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Sorry, I didn't mean to imply that these were in lockstep.
+url:    https://github.com/intel-lab-lkp/linux/commits/Paran-Lee/perf-callchain-Support-riscv-cross-platform/20231123-000232
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+patch link:    https://lore.kernel.org/r/20231122155548.2449-1-p4ranlee%40gmail.com
+patch subject: [PATCH] perf callchain: Support riscv cross-platform
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231124/202311241453.S2nsKqhx-lkp@intel.com/reproduce)
 
-All I meant was:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311241453.S2nsKqhx-lkp@intel.com/
 
-(a) Distributions typically ship a stable version of the perf tool, and don't
-    update to the latest-and-greatest version, but will take stable bug fixes.
-    Basically what they do for every other userspace application they ship.
+All errors (new ones prefixed by >>):
 
-    Distros with a rolling release policy will update, but they're not the
-    common case today.
+   Makefile.config:1176: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
+     PERF_VERSION = 6.6.rc1.g1f4d296e5f76
+   util/unwind-libunwind.c: In function 'unwind__prepare_access':
+>> util/unwind-libunwind.c:43:17: error: label 'out_register' used but not defined
+      43 |                 goto out_register;
+         |                 ^~~~
+>> util/unwind-libunwind.c:28:13: error: unused variable 'err' [-Werror=unused-variable]
+      28 |         int err;
+         |             ^~~
+>> util/unwind-libunwind.c:25:38: error: variable 'ops' set but not used [-Werror=unused-but-set-variable]
+      25 |         struct unwind_libunwind_ops *ops = local_unwind_libunwind_ops;
+         |                                      ^~~
+   util/unwind-libunwind.c: At top level:
+>> util/unwind-libunwind.c:58:11: error: expected identifier or '(' before 'else'
+      58 |         } else if (!strcmp(arch, "riscv64") || !strcmp(arch, "riscv")) {
+         |           ^~~~
+>> util/unwind-libunwind.c:63:9: error: expected identifier or '(' before 'if'
+      63 |         if (!ops) {
+         |         ^~
+>> util/unwind-libunwind.c:67:13: error: expected '=', ',', ';', 'asm' or '__attribute__' before ':' token
+      67 | out_register:
+         |             ^
+>> util/unwind-libunwind.c:70:9: error: data definition has no type or storage class [-Werror]
+      70 |         err = maps__unwind_libunwind_ops(maps)->prepare_access(maps);
+         |         ^~~
+>> util/unwind-libunwind.c:70:9: error: type defaults to 'int' in declaration of 'err' [-Werror=implicit-int]
+>> util/unwind-libunwind.c:70:42: error: 'maps' undeclared here (not in a function)
+      70 |         err = maps__unwind_libunwind_ops(maps)->prepare_access(maps);
+         |                                          ^~~~
+   util/unwind-libunwind.c:71:9: error: expected identifier or '(' before 'if'
+      71 |         if (initialized)
+         |         ^~
+>> util/unwind-libunwind.c:73:9: error: expected identifier or '(' before 'return'
+      73 |         return err;
+         |         ^~~~~~
+>> util/unwind-libunwind.c:74:1: error: expected identifier or '(' before '}' token
+      74 | }
+         | ^
+   util/unwind-libunwind.c: In function 'unwind__flush_access':
+>> util/unwind-libunwind.c:76:40: error: declaration of 'maps' shadows previous non-variable [-Werror=shadow]
+      76 | void unwind__flush_access(struct maps *maps)
+         |                           ~~~~~~~~~~~~~^~~~
+   util/unwind-libunwind.c: In function 'unwind__finish_access':
+   util/unwind-libunwind.c:84:41: error: declaration of 'maps' shadows previous non-variable [-Werror=shadow]
+      84 | void unwind__finish_access(struct maps *maps)
+         |                            ~~~~~~~~~~~~~^~~~
+   util/unwind-libunwind.c: In function 'unwind__prepare_access':
+>> util/unwind-libunwind.c:58:9: error: control reaches end of non-void function [-Werror=return-type]
+      58 |         } else if (!strcmp(arch, "riscv64") || !strcmp(arch, "riscv")) {
+         |         ^
+   util/unwind-libunwind.c: At top level:
+>> util/unwind-libunwind.c:16:13: error: 'unwind__register_ops' defined but not used [-Werror=unused-function]
+      16 | static void unwind__register_ops(struct maps *maps, struct unwind_libunwind_ops *ops)
+         |             ^~~~~~~~~~~~~~~~~~~~
+   cc1: all warnings being treated as errors
+   make[7]: *** [tools/build/Makefile.build:105: tools/perf/util/unwind-libunwind.o] Error 1
+   make[7]: *** Waiting for unfinished jobs....
+   make[6]: *** [tools/build/Makefile.build:158: util] Error 2
+   make[5]: *** [Makefile.perf:669: tools/perf/perf-in.o] Error 2
+   make[5]: *** Waiting for unfinished jobs....
+   make[4]: *** [Makefile.perf:242: sub-make] Error 2
+   make[3]: *** [Makefile:70: all] Error 2
+--
+>> diff: tools/arch/riscv/include/uapi/asm/kvm.h: No such file or directory
+     diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+     diff -u tools/include/uapi/linux/mount.h include/uapi/linux/mount.h
+     diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+     diff -u tools/arch/x86/include/asm/disabled-features.h arch/x86/include/asm/disabled-features.h
+     diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+     diff -u tools/arch/x86/include/uapi/asm/prctl.h arch/x86/include/uapi/asm/prctl.h
+     diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+     diff -u tools/arch/s390/include/uapi/asm/kvm.h arch/s390/include/uapi/asm/kvm.h
+     diff -u tools/arch/riscv/include/uapi/asm/kvm.h arch/riscv/include/uapi/asm/kvm.h
+     diff -u tools/arch/riscv/include/uapi/asm/unistd.h arch/riscv/include/uapi/asm/unistd.h
 
-(b) The tool version that distributions happen to ship is typically the same as
-    the kernel version, since packagers will grab them at the same time, and
-    they're in the same source tree anyway.
-
-... and hence, if a distro uses kernel v6.6, they are *very* likely to also
-pick perf tool version v6.6.
-
-> That said, for distros that do backports, this is one to be done, and
-> for stable@kernel.org, yeah, I also think this is one to be flagged as
-> that, but since this hybrid thing has such a miscoordinated
-> user/kernel/arches history, with such great number of nuances and
-> interpretations, I think we better continue to test it for a while, in
-> perf-tools-next/perf-tools-next and linux-next, to the flag it for
-> backports.
-
-100% agreed!
-
-Thanks,
-Mark.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
