@@ -1,60 +1,44 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70799286BF
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Nov 2023 13:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTxzI/nU"
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB9310E3;
-	Fri, 24 Nov 2023 04:56:40 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-54af61f2a40so757649a12.3;
-        Fri, 24 Nov 2023 04:56:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700830599; x=1701435399; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PsG/xpa6fYr9saCYlpjmtHbE191RyPnMbq2PrnjwWUE=;
-        b=dTxzI/nUvZDNm6z2WTgQlSCzR8HlSQdJApnMMHNr8q8gn40B8KVjhpTxXlrzrFaJ2K
-         8gWwgC6V3yUYqjhYK2tY4X3cNvroE77tbSWqXmaRlJdrho/qCHzTz1iW5jzCHoQqWjZ3
-         chYyW42UVqvp7SAHkjCOv+QuwwUJLRGgNjPQQHfuNvu0szvWk79s0k5iLay1aA9v8Qde
-         pbiMGdzIjjM7oy0XCIcDhrSCfZ9azmlzoCGlTMPhsCDxJOlHYNzOtXdIYsHhmtOfudDA
-         68Lppf9a9JHwM87fnTgzXVxuNa/eUK4AsBW+C+qFB8Fds6M0sSOIhSOBMTD9uBhoXBR6
-         dmIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700830599; x=1701435399;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PsG/xpa6fYr9saCYlpjmtHbE191RyPnMbq2PrnjwWUE=;
-        b=SUlFp/rq/q4vDeywcZMhfj+V9tYZxgF5Wqtao9o6zoqYq+HUiqp7nQjHhqancTXxRN
-         4jlKFu12f3BZYcqDEEgjHNoLm3y4n1S2jeuo6clDtOoUA4pfaXTbSHG79oQfImM+mXgE
-         r8I9ZkzULXDrciJFanwCU4o1SXheOJoPH+CwGUrWB6cdwsuvfsRz0Dy3iLnApk0NBQt7
-         cX5713cOFjwq+dqYv/o5bDMg9etdHgyJtF7hZjSpReeQ3PcZNCPpb/TtKh0CCpIoDQyD
-         N8AseeBKeE0TQJ6pjfrHL50aI7/StaJvlUqzWYs7IT/YcOCF3Q55GkAcMFusI0tx6T5i
-         dTPA==
-X-Gm-Message-State: AOJu0YyxLwgcz4VDscE4r371mp/JMbJKtDHFGuDxIiHB34ehoKlC5mOy
-	3/g/LjwORA8y0EbH3ob3DZE=
-X-Google-Smtp-Source: AGHT+IGHhB0W7LrNFaiTC07AZdhYUaA1fzJ0LYKGOarscRN/3Vxd7ogp8nATxdNnsuo1g2r9KtLMDQ==
-X-Received: by 2002:a50:f68c:0:b0:547:bb6:5830 with SMTP id d12-20020a50f68c000000b005470bb65830mr1953661edn.34.1700830598661;
-        Fri, 24 Nov 2023 04:56:38 -0800 (PST)
-Received: from gmail.com (1F2EF15C.nat.pool.telekom.hu. [31.46.241.92])
-        by smtp.gmail.com with ESMTPSA id d25-20020a50fb19000000b0054a92ddc3e2sm1758320edq.48.2023.11.24.04.56.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Nov 2023 04:56:38 -0800 (PST)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Fri, 24 Nov 2023 13:56:35 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
-	Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MflN0Xjx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3A4BC433C7;
+	Fri, 24 Nov 2023 13:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700833760;
+	bh=RK/Qw8o4ovbyL3c/RrcyncPvhe8T4y1yfBBbLNiqdck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MflN0XjxEtFzbz6akRRAKiW1WlNp0Aa39uvDxNCE+H2yHsfMETcSGfT54TsfpH2hj
+	 muordg+4h/Z5FOx7u+TQGBtosrkhU9GwWibuZje+NpE4V5XVGUwPFLMto6hwl1JfCE
+	 cZ4Ak09zk5qiEda3LY00mZ3CZ+V+ZxknExb3VGzFt1sWvsxU7NzY/Z/lYbUXt5hGNZ
+	 GUBFkn5HgjIT1wt96ZimOYXptHGKJoD4jzZPdYs/u7BOwvheEh0HOBnqjGaXleMjuX
+	 clolK4MrVlAK740BietvtX/6yw+topNR9YsZuIRhfhBA4U4M8BZszIK+T2ADYZezlM
+	 ztoNEXXvIj01Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id E547A40094; Fri, 24 Nov 2023 10:49:17 -0300 (-03)
+Date: Fri, 24 Nov 2023 10:49:17 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Hector Martin <marcan@marcan.st>, Mark Rutland <mark.rutland@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf lock: Fix a memory leak on an error path
-Message-ID: <ZWCdg5gcizJitxVw@gmail.com>
-References: <20231124092657.10392-1-zhaimingbing@cmss.chinamobile.com>
- <20231124095319.GN3818@noisy.programming.kicks-ass.net>
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1] perf parse-events: Make legacy events lower
+ priority than sysfs/json
+Message-ID: <ZWCp3beoYHR8Ka2V@kernel.org>
+References: <20231123042922.834425-1-irogers@google.com>
+ <ac4cf01d-4bb5-4b4d-bd87-bf05ddb67f2d@marcan.st>
+ <ZV9fLgHshKGoAPYK@kernel.org>
+ <ZV/A3YhtMHsZZRQd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,40 +47,36 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231124095319.GN3818@noisy.programming.kicks-ass.net>
+In-Reply-To: <ZV/A3YhtMHsZZRQd@kernel.org>
+X-Url: http://acmel.wordpress.com
 
-
-* Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Fri, Nov 24, 2023 at 05:26:57PM +0800, zhaimingbing wrote:
-> > if a strdup-ed string is NULL,the allocated memory needs freeing.
-> > 
-> > Signed-off-by: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
-> > ---
-> >  tools/perf/builtin-lock.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> > index b141f2134..086041bcb 100644
-> > --- a/tools/perf/builtin-lock.c
-> > +++ b/tools/perf/builtin-lock.c
-> > @@ -2228,8 +2228,10 @@ static int __cmd_record(int argc, const char **argv)
-> >  		else
-> >  			ev_name = strdup(contention_tracepoints[j].name);
-> >  
-> > -		if (!ev_name)
-> > +		if (!ev_name) {
-> > +			free(rec_argv);
-> >  			return -ENOMEM;
-> > +		}
+Em Thu, Nov 23, 2023 at 06:15:09PM -0300, Arnaldo Carvalho de Melo escreveu:
 > 
-> Isn't this an error path straight into exit?
+> I'll collect those, but only after addressing these:
+> 
+> [perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.86.5/perf/perf-6.6.0-rc1.tar.xz
+> [perfbuilder@five ~]$ time dm
+>    1   100.09 almalinux:8                   : FAIL clang version 15.0.7 (Red Hat 15.0.7-1.module_el8.8.0+3466+dfcbc058)
+>     util/parse-events.c:1461:6: error: variable 'alias_rewrote_terms' is used uninitialized whenever '&&' condition is false [-Werror,-Wsometimes-uninitialized]
+>             if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
+>                 ^~~~~~~~~~~~~~~~~~~~~~
+>     util/parse-events.c:1477:6: note: uninitialized use occurs here
+>             if (alias_rewrote_terms &&
+>                 ^~~~~~~~~~~~~~~~~~~
+>     util/parse-events.c:1461:6: note: remove the '&&' if its condition is always true
+>             if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
+>                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+>     util/parse-events.c:1401:26: note: initialize the variable 'alias_rewrote_terms' to silence this warning
+>             bool alias_rewrote_terms;
+>                                     ^
+>                                      = false
+>     1 error generated.
+>     make[3]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: util] Error 2
 
-It increases the quality of implementation if resources are free()d 
-consistently regardless of whether the task is going to exit() immediately, 
-for example it makes it easier to validate perf for the lack of memory 
-leaks with Valgrind.
+It built well with gcc but clang didn't notice that
+perf_pmu__check_alias() unconditionally initializes that variable to
+false as one of its first steps.
 
-Thanks,
+So I just did what clang suggested.
 
-	Ingo
+- Arnaldo
