@@ -1,112 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8080E1727;
-	Fri, 24 Nov 2023 01:52:03 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2E591063;
-	Fri, 24 Nov 2023 01:52:49 -0800 (PST)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E34173F7A6;
-	Fri, 24 Nov 2023 01:52:01 -0800 (PST)
-Message-ID: <b85d165d-7f21-5896-a969-1f162903582b@arm.com>
-Date: Fri, 24 Nov 2023 09:52:00 +0000
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UrY8nM7t"
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A87D59;
+	Fri, 24 Nov 2023 01:55:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=sZ2n5kJr0I8EW9IHtq/ppoCQzkJzXCFITxFVQG51leA=; b=UrY8nM7tzzYrO+J1quhqWmDI62
+	a4qKLYgw0nxQI9wq9hdcvc8bEMvs+BEWQdT1ffr7xcwsXmSDZQ4XJ+nJ7kC7g+F1fsWOJYigUy1Uy
+	5ACkjxB0q9mz1QPtTG43GmvCD2BUubBdfRTEGagnnCDFeIMBESQXJXAv0s0ONNcKeGOUV1ZYv3lT1
+	8u6KRlqCbMjmN8lNk5X4lUQnJ9qeqVadq5LoIn6qdbZtJe2zyGfMbCOd3bm84ukjZHcrZOxQ4fUd3
+	qHt8jlB5zgMV1XsUcJv64sT6iWBLNHx/dCPuFqQSmAYUfwzUYVmKy/1dh0f5mF+8La9uq5lbpSCf4
+	IfNqdqqw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1r6SsC-00Dpus-27;
+	Fri, 24 Nov 2023 09:55:21 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 045F1300134; Fri, 24 Nov 2023 10:53:20 +0100 (CET)
+Date: Fri, 24 Nov 2023 10:53:19 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf lock: Fix a memory leak on an error path
+Message-ID: <20231124095319.GN3818@noisy.programming.kicks-ass.net>
+References: <20231124092657.10392-1-zhaimingbing@cmss.chinamobile.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v5 3/3] Documentation: arm64: Document the PMU event
- counting threshold feature
-From: James Clark <james.clark@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Namhyung Kim <namhyung@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- suzuki.poulose@arm.com, will@kernel.org, mark.rutland@arm.com,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231113112507.917107-1-james.clark@arm.com>
- <20231113112507.917107-4-james.clark@arm.com>
- <CAM9d7ciDq-te1DQPrMrZQC9er0pSMY24nvC-atxdRu1C6uD08A@mail.gmail.com>
- <0bcda96e-df9a-4342-af4e-e4485c33ff55@arm.com>
- <4f959354-74c7-5240-bf8f-78a49fb34437@arm.com>
-Content-Language: en-US
-In-Reply-To: <4f959354-74c7-5240-bf8f-78a49fb34437@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231124092657.10392-1-zhaimingbing@cmss.chinamobile.com>
 
-
-
-On 23/11/2023 15:45, James Clark wrote:
+On Fri, Nov 24, 2023 at 05:26:57PM +0800, zhaimingbing wrote:
+> if a strdup-ed string is NULL,the allocated memory needs freeing.
 > 
+> Signed-off-by: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+> ---
+>  tools/perf/builtin-lock.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> On 23/11/2023 05:50, Anshuman Khandual wrote:
->>
->>
->> On 11/21/23 03:01, Namhyung Kim wrote:
->>> On Mon, Nov 13, 2023 at 3:26 AM James Clark <james.clark@arm.com> wrote:
->>>> Add documentation for the new Perf event open parameters and
->>>> the threshold_max capability file.
->>>>
->>>> Signed-off-by: James Clark <james.clark@arm.com>
->>>> ---
->>>>  Documentation/arch/arm64/perf.rst | 56 +++++++++++++++++++++++++++++++
->>>>  1 file changed, 56 insertions(+)
->>>>
->>>> diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64/perf.rst
->>>> index 1f87b57c2332..36b8111a710d 100644
->>>> --- a/Documentation/arch/arm64/perf.rst
->>>> +++ b/Documentation/arch/arm64/perf.rst
->>>> @@ -164,3 +164,59 @@ and should be used to mask the upper bits as needed.
->>>>     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
->>>>  .. _tools/lib/perf/tests/test-evsel.c:
->>>>     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
->>>> +
->>>> +Event Counting Threshold
->>>> +==========================================
->>>> +
->>>> +Overview
->>>> +--------
->>>> +
->>>> +FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
->>>> +events whose count meets a specified threshold condition. For example if
->>>> +threshold_compare is set to 2 ('Greater than or equal'), and the
->>>> +threshold is set to 2, then the PMU counter will now only increment by
->>>> +when an event would have previously incremented the PMU counter by 2 or
->>>> +more on a single processor cycle.
->>>> +
->>>> +To increment by 1 after passing the threshold condition instead of the
->>>> +number of events on that cycle, add the 'threshold_count' option to the
->>>> +commandline.
->>>> +
->>>> +How-to
->>>> +------
->>>> +
->>>> +The threshold, threshold_compare and threshold_count values can be
->>>> +provided per event:
->>>> +
->>>> +.. code-block:: sh
->>>> +
->>>> +  perf stat -e stall_slot/threshold=2,threshold_compare=2/ \
->>>> +            -e dtlb_walk/threshold=10,threshold_compare=3,threshold_count/
->>> Can you please explain this a bit more?
->>>
->>> I guess the first event counts stall_slot PMU if the event if it's
->>> greater than or equal to 2.  And as threshold_count is not set,
->>> it'd count the stall_slot as is.  E.g. it counts 3 when it sees 3.
->>
->> Hence without 'threshold_count' being set, the other two config requests
->> will not have an effect, is that correct ?
-> 
-> Yeah I can mention this. It's implied because 0 is the default value of
-> config fields, and 0 is a valid value for compare and count field, so
-> threshold=0 has to be the way to disable it. But I can mention it
-> explicitly.
-> 
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index b141f2134..086041bcb 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -2228,8 +2228,10 @@ static int __cmd_record(int argc, const char **argv)
+>  		else
+>  			ev_name = strdup(contention_tracepoints[j].name);
+>  
+> -		if (!ev_name)
+> +		if (!ev_name) {
+> +			free(rec_argv);
+>  			return -ENOMEM;
+> +		}
 
-To avoid any confusion, I thought you meant threshold here instead of
-threshold_count. But I replied in more detail about the same issue on
-patch 2.
-
+Isn't this an error path straight into exit?
