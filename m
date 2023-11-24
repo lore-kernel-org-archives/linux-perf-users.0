@@ -1,503 +1,112 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRHSU6UA"
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086F819B1;
-	Fri, 24 Nov 2023 07:08:48 -0800 (PST)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-58d4968c362so121702eaf.0;
-        Fri, 24 Nov 2023 07:08:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700838527; x=1701443327; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bOCl1swrFbW/7sFUtbSrbFab89YweYfN5WTmXg3TDK4=;
-        b=FRHSU6UAFdebVwiSN2e7gRICCVSa6Jik2v5Bw6jbd0SH/HW99FY679X5pbpg1BQA5H
-         ILxhNuPmgIpGXExubW897LHTrXiBIXsrUMrJqaQSg5aHRWkGBlubm04jag7vdYL5ha5E
-         qwBHygZH+/5lY5QZN9D5mThX87CNeNA1S0ze5vlJ58NVXQTt3O9ABLjEPv5k2TzZsoV1
-         cknGV/F31lYMV8+LQwlZUSAbId+9E6APpGvnF/g/FBnbr6m7+YuD1tEFbP6HKymo1HZ+
-         2vwQISs7+hnTVaSV11z2HmsK8AlqTJoGrnOVk10fY2ZX2epIIqQ6jRQEqAYBWUwrb3hU
-         LT1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700838527; x=1701443327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bOCl1swrFbW/7sFUtbSrbFab89YweYfN5WTmXg3TDK4=;
-        b=rvxgUDRRwWcX84685q/9iwiFVZiF42KgaC5urIo9T6LufdUOHUsZ1pxG4k9tFc/SA+
-         4nx/1oThOOk9ig17IInPWw7z7YqCbF8LC5+Ra6HFARZgMYqrijZNnDbNvqKj5sA70f+x
-         e8ctIrbGDhLCd8Y3mhXCXrdwkVjL9rnSs044unpeV8qcorTPjNpfJQDutQMxw47vVvoD
-         3yixRUDrrO+96QE3ISHzZon3MsPM7ORIb1mod3J6fwBHKLB/AgJ1G+gwEdXK0PwHVWRK
-         jnCK+8V/bE5lIyJD2vRpNWDJ+QZonql7f7lWHY49v0oW5N4YHjRfWWFBK9Rtfl4biCP/
-         9mLg==
-X-Gm-Message-State: AOJu0YyRxAEi4oAXpfNXwXi5j3U6oxuLCIrsbNyPM5+MKTr7XW6xF/oI
-	lsRphLmNfc/hRcMxOCh6KKAI+CX+UEppU/xjJeg=
-X-Google-Smtp-Source: AGHT+IHbug40/QYz+/7p5JxTk4BbKhmH+Y2/rax9GKSlZ7ONB0Q5R/TbT3m8srbn2jl1Ir5SdK3oYg2mW7a0rR13vWY=
-X-Received: by 2002:a05:6358:611e:b0:16e:29eb:98c8 with SMTP id
- 30-20020a056358611e00b0016e29eb98c8mr676506rws.30.1700838527192; Fri, 24 Nov
- 2023 07:08:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KjOE6EI6"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FE81FCA;
+	Fri, 24 Nov 2023 09:00:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700845224; x=1732381224;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CsPU2FoPcijKvs590lWs+PQl80hznLAFh85H8dFyWBo=;
+  b=KjOE6EI6oztSxVG+fXW2brqC1gb7YbXzvGljechsOG46K3k2/CIT6sy2
+   PgROhmH2+fXG7FyGjkNKzUyyBHkBk0eIF0/itthuO8iFqoozWqtVyJylc
+   cHXr4AhsBmZ8PNlKBly5sKD6RbGZRk6kFTDjHdzv0D/mAsAKEmyA5xNz/
+   JWB7E9HEzXnBJfWl4VfGmFcB63EhT/Fi+grCNV20bZNeNoaF7SrR6OQdY
+   jNCjKcjMf+63Sgro2R6DcouXqsXIFZysYZITtNy9aa+SiTNsMvX+kcY4J
+   cXR+jqNLbTzRVD4Z1lVWKNEckl03jEEBw3EtllG99GxnLZOhOmAkUf1CL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="372608744"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="372608744"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 09:00:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="717422043"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="717422043"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 24 Nov 2023 09:00:20 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r6ZXN-00036C-2w;
+	Fri, 24 Nov 2023 17:00:17 +0000
+Date: Sat, 25 Nov 2023 00:59:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+Subject: Re: [PATCH] perf help:Fail check on dynamic allocation
+Message-ID: <202311242306.fuT56YtA-lkp@intel.com>
+References: <20231124083910.10169-1-zhaimingbing@cmss.chinamobile.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231122121235.827122-1-peterlin@andestech.com> <20231122121235.827122-14-peterlin@andestech.com>
-In-Reply-To: <20231122121235.827122-14-peterlin@andestech.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 24 Nov 2023 15:08:21 +0000
-Message-ID: <CA+V-a8tozeqAN=R1UHciT=hOCcnSRack=h3gpb3=pytQY9TpAQ@mail.gmail.com>
-Subject: Re: [PATCH v4 13/13] riscv: andes: Support symbolic FW and HW raw events
-To: Yu Chien Peter Lin <peterlin@andestech.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
-	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org, 
-	conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org, 
-	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com, 
-	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de, 
-	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org, 
-	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com, 
-	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org, palmer@dabbelt.com, 
-	paul.walmsley@sifive.com, peterz@infradead.org, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org, 
-	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com, 
-	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me, wens@csie.org, 
-	will@kernel.org, ycliang@andestech.com, inochiama@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231124083910.10169-1-zhaimingbing@cmss.chinamobile.com>
 
-On Wed, Nov 22, 2023 at 12:19=E2=80=AFPM Yu Chien Peter Lin
-<peterlin@andestech.com> wrote:
->
-> From: Locus Wei-Han Chen <locus84@andestech.com>
->
-> This patch adds the Andes AX45 JSON files in the perf tool,
-> allowing perf to be used with symbolic event names.
->
-> Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
-> Reviewed-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
-> ---
-> Changes v1 -> v2:
->   - No change
-> Changes v2 -> v3:
->   - No change
-> Changes v3 -> v4:
->   - No change
-> ---
->  .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
->  .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
->  .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
->  .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
->  tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
->  5 files changed, 330 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.=
-json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructi=
-ons.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.js=
-on
->  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch=
-.json
->
-Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi zhaimingbing,
 
-Cheers,
-Prabhakar
+kernel test robot noticed the following build errors:
 
-> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/=
-tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-> new file mode 100644
-> index 000000000000..9b4a032186a7
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-> @@ -0,0 +1,68 @@
-> +[
-> +  {
-> +    "ArchStdEvent": "FW_MISALIGNED_LOAD"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_MISALIGNED_STORE"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_ACCESS_LOAD"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_ACCESS_STORE"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_ILLEGAL_INSN"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_SET_TIMER"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_IPI_SENT"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_IPI_RECEIVED"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_FENCE_I_SENT"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
-> +  },
-> +  {
-> +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
-> +  }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.jso=
-n b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-> new file mode 100644
-> index 000000000000..713a08c1a40f
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-> @@ -0,0 +1,127 @@
-> +[
-> +       {
-> +               "EventCode": "0x10",
-> +               "EventName": "cycle_count",
-> +               "BriefDescription": "Cycle count"
-> +       },
-> +       {
-> +               "EventCode": "0x20",
-> +               "EventName": "inst_count",
-> +               "BriefDescription": "Retired instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0x30",
-> +               "EventName": "int_load_inst",
-> +               "BriefDescription": "Integer load instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0x40",
-> +               "EventName": "int_store_inst",
-> +               "BriefDescription": "Integer store instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0x50",
-> +               "EventName": "atomic_inst",
-> +               "BriefDescription": "Atomic instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0x60",
-> +               "EventName": "sys_inst",
-> +               "BriefDescription": "System instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0x70",
-> +               "EventName": "int_compute_inst",
-> +               "BriefDescription": "Integer computational instruction co=
-unt"
-> +       },
-> +       {
-> +               "EventCode": "0x80",
-> +               "EventName": "condition_br",
-> +               "BriefDescription": "Conditional branch instruction count=
-"
-> +       },
-> +       {
-> +               "EventCode": "0x90",
-> +               "EventName": "taken_condition_br",
-> +               "BriefDescription": "Taken conditional branch instruction=
- count"
-> +       },
-> +       {
-> +               "EventCode": "0xA0",
-> +               "EventName": "jal_inst",
-> +               "BriefDescription": "JAL instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0xB0",
-> +               "EventName": "jalr_inst",
-> +               "BriefDescription": "JALR instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0xC0",
-> +               "EventName": "ret_inst",
-> +               "BriefDescription": "Return instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0xD0",
-> +               "EventName": "control_trans_inst",
-> +               "BriefDescription": "Control transfer instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0xE0",
-> +               "EventName": "ex9_inst",
-> +               "BriefDescription": "EXEC.IT instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0xF0",
-> +               "EventName": "int_mul_inst",
-> +               "BriefDescription": "Integer multiplication instruction c=
-ount"
-> +       },
-> +       {
-> +               "EventCode": "0x100",
-> +               "EventName": "int_div_rem_inst",
-> +               "BriefDescription": "Integer division/remainder instructi=
-on count"
-> +       },
-> +       {
-> +               "EventCode": "0x110",
-> +               "EventName": "float_load_inst",
-> +               "BriefDescription": "Floating-point load instruction coun=
-t"
-> +       },
-> +       {
-> +               "EventCode": "0x120",
-> +               "EventName": "float_store_inst",
-> +               "BriefDescription": "Floating-point store instruction cou=
-nt"
-> +       },
-> +       {
-> +               "EventCode": "0x130",
-> +               "EventName": "float_add_sub_inst",
-> +               "BriefDescription": "Floating-point addition/subtraction =
-instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0x140",
-> +               "EventName": "float_mul_inst",
-> +               "BriefDescription": "Floating-point multiplication instru=
-ction count"
-> +       },
-> +       {
-> +               "EventCode": "0x150",
-> +               "EventName": "float_fused_muladd_inst",
-> +               "BriefDescription": "Floating-point fused multiply-add in=
-struction count"
-> +       },
-> +       {
-> +               "EventCode": "0x160",
-> +               "EventName": "float_div_sqrt_inst",
-> +               "BriefDescription": "Floating-point division or square-ro=
-ot instruction count"
-> +       },
-> +       {
-> +               "EventCode": "0x170",
-> +               "EventName": "other_float_inst",
-> +               "BriefDescription": "Other floating-point instruction cou=
-nt"
-> +       },
-> +       {
-> +               "EventCode": "0x180",
-> +               "EventName": "int_mul_add_sub_inst",
-> +               "BriefDescription": "Integer multiplication and add/sub i=
-nstruction count"
-> +       },
-> +       {
-> +               "EventCode": "0x190",
-> +               "EventName": "retired_ops",
-> +               "BriefDescription": "Retired operation count"
-> +       }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json b/to=
-ols/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-> new file mode 100644
-> index 000000000000..c7401b526c77
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-> @@ -0,0 +1,57 @@
-> +[
-> +       {
-> +               "EventCode": "0x01",
-> +               "EventName": "ilm_access",
-> +               "BriefDescription": "ILM access"
-> +       },
-> +       {
-> +               "EventCode": "0x11",
-> +               "EventName": "dlm_access",
-> +               "BriefDescription": "DLM access"
-> +       },
-> +       {
-> +               "EventCode": "0x21",
-> +               "EventName": "icache_access",
-> +               "BriefDescription": "ICACHE access"
-> +       },
-> +       {
-> +               "EventCode": "0x31",
-> +               "EventName": "icache_miss",
-> +               "BriefDescription": "ICACHE miss"
-> +       },
-> +       {
-> +               "EventCode": "0x41",
-> +               "EventName": "dcache_access",
-> +               "BriefDescription": "DCACHE access"
-> +       },
-> +       {
-> +               "EventCode": "0x51",
-> +               "EventName": "dcache_miss",
-> +               "BriefDescription": "DCACHE miss"
-> +       },
-> +       {
-> +               "EventCode": "0x61",
-> +               "EventName": "dcache_load_access",
-> +               "BriefDescription": "DCACHE load access"
-> +       },
-> +       {
-> +               "EventCode": "0x71",
-> +               "EventName": "dcache_load_miss",
-> +               "BriefDescription": "DCACHE load miss"
-> +       },
-> +       {
-> +               "EventCode": "0x81",
-> +               "EventName": "dcache_store_access",
-> +               "BriefDescription": "DCACHE store access"
-> +       },
-> +       {
-> +               "EventCode": "0x91",
-> +               "EventName": "dcache_store_miss",
-> +               "BriefDescription": "DCACHE store miss"
-> +       },
-> +       {
-> +               "EventCode": "0xA1",
-> +               "EventName": "dcache_wb",
-> +               "BriefDescription": "DCACHE writeback"
-> +       }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json b=
-/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-> new file mode 100644
-> index 000000000000..a6d378cbaa74
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-> @@ -0,0 +1,77 @@
-> +[
-> +       {
-> +               "EventCode": "0xB1",
-> +               "EventName": "cycle_wait_icache_fill",
-> +               "BriefDescription": "Cycles waiting for ICACHE fill data"
-> +       },
-> +       {
-> +               "EventCode": "0xC1",
-> +               "EventName": "cycle_wait_dcache_fill",
-> +               "BriefDescription": "Cycles waiting for DCACHE fill data"
-> +       },
-> +       {
-> +               "EventCode": "0xD1",
-> +               "EventName": "uncached_ifetch_from_bus",
-> +               "BriefDescription": "Uncached ifetch data access from bus=
-"
-> +       },
-> +       {
-> +               "EventCode": "0xE1",
-> +               "EventName": "uncached_load_from_bus",
-> +               "BriefDescription": "Uncached load data access from bus"
-> +       },
-> +       {
-> +               "EventCode": "0xF1",
-> +               "EventName": "cycle_wait_uncached_ifetch",
-> +               "BriefDescription": "Cycles waiting for uncached ifetch d=
-ata from bus"
-> +       },
-> +       {
-> +               "EventCode": "0x101",
-> +               "EventName": "cycle_wait_uncached_load",
-> +               "BriefDescription": "Cycles waiting for uncached load dat=
-a from bus"
-> +       },
-> +       {
-> +               "EventCode": "0x111",
-> +               "EventName": "main_itlb_access",
-> +               "BriefDescription": "Main ITLB access"
-> +       },
-> +       {
-> +               "EventCode": "0x121",
-> +               "EventName": "main_itlb_miss",
-> +               "BriefDescription": "Main ITLB miss"
-> +       },
-> +       {
-> +               "EventCode": "0x131",
-> +               "EventName": "main_dtlb_access",
-> +               "BriefDescription": "Main DTLB access"
-> +       },
-> +       {
-> +               "EventCode": "0x141",
-> +               "EventName": "main_dtlb_miss",
-> +               "BriefDescription": "Main DTLB miss"
-> +       },
-> +       {
-> +               "EventCode": "0x151",
-> +               "EventName": "cycle_wait_itlb_fill",
-> +               "BriefDescription": "Cycles waiting for Main ITLB fill da=
-ta"
-> +       },
-> +       {
-> +               "EventCode": "0x161",
-> +               "EventName": "pipe_stall_cycle_dtlb_miss",
-> +               "BriefDescription": "Pipeline stall cycles caused by Main=
- DTLB miss"
-> +       },
-> +       {
-> +               "EventCode": "0x02",
-> +               "EventName": "mispredict_condition_br",
-> +               "BriefDescription": "Misprediction of conditional branche=
-s"
-> +       },
-> +       {
-> +               "EventCode": "0x12",
-> +               "EventName": "mispredict_take_condition_br",
-> +               "BriefDescription": "Misprediction of taken conditional b=
-ranches"
-> +       },
-> +       {
-> +               "EventCode": "0x22",
-> +               "EventName": "mispredict_target_ret_inst",
-> +               "BriefDescription": "Misprediction of targets of Return i=
-nstructions"
-> +       }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
-u-events/arch/riscv/mapfile.csv
-> index c61b3d6ef616..5bf09af14c1b 100644
-> --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-> @@ -15,3 +15,4 @@
->  #
->  #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
->  0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-> +0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
-> --
-> 2.34.1
->
->
+[auto build test ERROR on tip/perf/core]
+[also build test ERROR on perf-tools/perf-tools acme/perf/core linus/master v6.7-rc2 next-20231124]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/zhaimingbing/perf-help-Fail-check-on-dynamic-allocation/20231124-164725
+base:   tip/perf/core
+patch link:    https://lore.kernel.org/r/20231124083910.10169-1-zhaimingbing%40cmss.chinamobile.com
+patch subject: [PATCH] perf help:Fail check on dynamic allocation
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231124/202311242306.fuT56YtA-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311242306.fuT56YtA-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   Makefile.config:1153: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
+     PERF_VERSION = 6.7.rc1.g299992a2f4e2
+   builtin-help.c: In function 'add_man_viewer':
+>> builtin-help.c:200:24: error: 'return' with a value, in function returning void [-Werror=return-type]
+     200 |                 return NULL;
+         |                        ^~~~
+   builtin-help.c:191:13: note: declared here
+     191 | static void add_man_viewer(const char *name)
+         |             ^~~~~~~~~~~~~~
+   builtin-help.c: In function 'do_add_man_viewer_info':
+   builtin-help.c:218:24: error: 'return' with a value, in function returning void [-Werror=return-type]
+     218 |                 return NULL;
+         |                        ^~~~
+   builtin-help.c:212:13: note: declared here
+     212 | static void do_add_man_viewer_info(const char *name,
+         |             ^~~~~~~~~~~~~~~~~~~~~~
+   cc1: all warnings being treated as errors
+   make[6]: *** [tools/build/Makefile.build:105: tools/perf/builtin-help.o] Error 1
+   make[6]: *** Waiting for unfinished jobs....
+   make[5]: *** [Makefile.perf:678: tools/perf/perf-in.o] Error 2
+   make[5]: *** Waiting for unfinished jobs....
+   make[4]: *** [Makefile.perf:242: sub-make] Error 2
+   make[3]: *** [Makefile:70: all] Error 2
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
