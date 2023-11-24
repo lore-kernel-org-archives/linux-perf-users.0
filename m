@@ -1,29 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70799286BF
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Nov 2023 13:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6504828E17
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Nov 2023 13:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MflN0Xjx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3A4BC433C7;
-	Fri, 24 Nov 2023 13:49:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dz4lq766"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AECC433C7;
+	Fri, 24 Nov 2023 13:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700833760;
-	bh=RK/Qw8o4ovbyL3c/RrcyncPvhe8T4y1yfBBbLNiqdck=;
+	s=k20201202; t=1700833878;
+	bh=zL6LSOUpyol3f/TTZLpJE1N///sAY2bgqyQEwH2vTkQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MflN0XjxEtFzbz6akRRAKiW1WlNp0Aa39uvDxNCE+H2yHsfMETcSGfT54TsfpH2hj
-	 muordg+4h/Z5FOx7u+TQGBtosrkhU9GwWibuZje+NpE4V5XVGUwPFLMto6hwl1JfCE
-	 cZ4Ak09zk5qiEda3LY00mZ3CZ+V+ZxknExb3VGzFt1sWvsxU7NzY/Z/lYbUXt5hGNZ
-	 GUBFkn5HgjIT1wt96ZimOYXptHGKJoD4jzZPdYs/u7BOwvheEh0HOBnqjGaXleMjuX
-	 clolK4MrVlAK740BietvtX/6yw+topNR9YsZuIRhfhBA4U4M8BZszIK+T2ADYZezlM
-	 ztoNEXXvIj01Q==
+	b=dz4lq766LPUPsGNg13Wj3cUhzgX7roA48usWCBEOUNwh2o5eEZS9ZMdO8vg2yUmE2
+	 JR9gEIts5UayGvhIHpm2f+lE9m2v/Ab3dt0dvePqK1ng7yQQRky5nkfYBAK1Szb1ab
+	 6et34VwqAaO3gt0YqEqF0TnRL4oZf2PKvmudFR4pbiHmKR7JKzdz/edbjvX4Q8Ufh5
+	 jTdjfAz1x6jpD/537bcMyUHGT7caB7uzh2agTQkLVYoveMobi/i2sok+78lOhRPgDy
+	 aVP/beH/uYvILfCOyTRA4+ogGJeb1TQKfR4KQEKUK8/zNooxIQTYGgZlREISYAN0Zd
+	 Ezlg2D3cRMmww==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id E547A40094; Fri, 24 Nov 2023 10:49:17 -0300 (-03)
-Date: Fri, 24 Nov 2023 10:49:17 -0300
+	id 0245440094; Fri, 24 Nov 2023 10:51:15 -0300 (-03)
+Date: Fri, 24 Nov 2023 10:51:15 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Hector Martin <marcan@marcan.st>, Mark Rutland <mark.rutland@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+To: Marc Zyngier <maz@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	Hector Martin <marcan@marcan.st>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -34,11 +35,9 @@ Cc: Hector Martin <marcan@marcan.st>, Mark Rutland <mark.rutland@arm.com>,
 	linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH v1] perf parse-events: Make legacy events lower
  priority than sysfs/json
-Message-ID: <ZWCp3beoYHR8Ka2V@kernel.org>
+Message-ID: <ZWCqUwZHUAWarXZY@kernel.org>
 References: <20231123042922.834425-1-irogers@google.com>
- <ac4cf01d-4bb5-4b4d-bd87-bf05ddb67f2d@marcan.st>
- <ZV9fLgHshKGoAPYK@kernel.org>
- <ZV/A3YhtMHsZZRQd@kernel.org>
+ <86cyw0zeiu.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,36 +46,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZV/A3YhtMHsZZRQd@kernel.org>
+In-Reply-To: <86cyw0zeiu.wl-maz@kernel.org>
 X-Url: http://acmel.wordpress.com
 
-Em Thu, Nov 23, 2023 at 06:15:09PM -0300, Arnaldo Carvalho de Melo escreveu:
-> 
-> I'll collect those, but only after addressing these:
-> 
-> [perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.86.5/perf/perf-6.6.0-rc1.tar.xz
-> [perfbuilder@five ~]$ time dm
->    1   100.09 almalinux:8                   : FAIL clang version 15.0.7 (Red Hat 15.0.7-1.module_el8.8.0+3466+dfcbc058)
->     util/parse-events.c:1461:6: error: variable 'alias_rewrote_terms' is used uninitialized whenever '&&' condition is false [-Werror,-Wsometimes-uninitialized]
->             if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
->                 ^~~~~~~~~~~~~~~~~~~~~~
->     util/parse-events.c:1477:6: note: uninitialized use occurs here
->             if (alias_rewrote_terms &&
->                 ^~~~~~~~~~~~~~~~~~~
->     util/parse-events.c:1461:6: note: remove the '&&' if its condition is always true
->             if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, &parsed_terms,
->                 ^~~~~~~~~~~~~~~~~~~~~~~~~
->     util/parse-events.c:1401:26: note: initialize the variable 'alias_rewrote_terms' to silence this warning
->             bool alias_rewrote_terms;
->                                     ^
->                                      = false
->     1 error generated.
->     make[3]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: util] Error 2
+Em Thu, Nov 23, 2023 at 03:16:09PM +0000, Marc Zyngier escreveu:
+> Now, in the interest of moving forward: this patch seems to address
+> the basic problems I was seeing on both M1/M2 (running any kernel
+> version) and Juno (running an older kernel), so:
+ 
+> Tested-by: Marc Zyngier <maz@kernel.org>
 
-It built well with gcc but clang didn't notice that
-perf_pmu__check_alias() unconditionally initializes that variable to
-false as one of its first steps.
-
-So I just did what clang suggested.
+Thanks, added to the cset.
 
 - Arnaldo
