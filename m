@@ -1,119 +1,196 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 43DA7129;
-	Sat, 25 Nov 2023 11:10:29 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A032CDA7;
-	Sat, 25 Nov 2023 11:11:15 -0800 (PST)
-Received: from [10.57.5.64] (unknown [10.57.5.64])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 446CA3F6C4;
-	Sat, 25 Nov 2023 11:10:27 -0800 (PST)
-Message-ID: <f0ac7523-edce-4b0b-a142-14c03c912720@arm.com>
-Date: Sat, 25 Nov 2023 19:10:25 +0000
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ouHE+qHJ"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE485111
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Nov 2023 23:15:20 -0800 (PST)
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AQ6eaJm027758;
+	Sun, 26 Nov 2023 07:15:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=WY6h/tmdE4HeZvaHgqTTueAm8o4h4g187iAQ5G/36CI=;
+ b=ouHE+qHJb0QGotXYTZIGHm9A+398QsLaA1wMf1OHHCigw/d2eAmtvtalXztJEV99Baul
+ 0QPwYXld9GGsQoMKYdJ7/E8ES6lABTIJmg7kWzdiUdky4WAaus7hTonyFYSucGZDGbQZ
+ Cbar/xg8BQMG0jlNdCK2hxqMB1CJiZ6I5e80J97ZVRoBv9Qozo9XscyfMCZ9rIGZasDv
+ FxmS8+oU+Nmid9Yur8Uk1lsaExE3/qZUUbMmETnkpOG685xcdT1FL7dn8ejogZllI3rD
+ 4rXyKs3uMZDOzGl6FpAy4meVtN3VIOU0dbwB1gp5sxuN7/kNUcy6+vuofqGOrJHNR+c8 Kg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ukyr49jtd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 26 Nov 2023 07:15:00 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AQ7A92L006529;
+	Sun, 26 Nov 2023 07:15:00 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ukyr49jt1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 26 Nov 2023 07:15:00 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AQ54JKv016595;
+	Sun, 26 Nov 2023 07:14:59 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uku8shmm8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 26 Nov 2023 07:14:59 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AQ7EuDv61800750
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 26 Nov 2023 07:14:56 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 520132004B;
+	Sun, 26 Nov 2023 07:14:56 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 08D9C20040;
+	Sun, 26 Nov 2023 07:14:54 +0000 (GMT)
+Received: from ltcden12-lp10.aus.stglabs.ibm.com (unknown [9.40.195.121])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 26 Nov 2023 07:14:53 +0000 (GMT)
+From: Likhitha Korrapati <likhitha@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, james.clark@arm.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com,
+        Likhitha Korrapati <likhitha@linux.ibm.com>,
+        Disha Goel <disgoel@linux.ibm.com>
+Subject: [PATCH] perf test record+probe_libc_inet_pton: Fix call chain match on powerpc
+Date: Sun, 26 Nov 2023 02:09:14 -0500
+Message-Id: <20231126070914.175332-1-likhitha@linux.ibm.com>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test: Remove atomics from test_loop to avoid test
- failures
-To: Leo Yan <leo.yan@linaro.org>, Michael Petlan <mpetlan@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, vmolnaro@redhat.com
-References: <20231102162225.50028-1-nick.forrington@arm.com>
- <alpine.LRH.2.20.2311242037260.11297@Diego>
- <20231125030529.GB178091@leoy-huanghe>
-Content-Language: en-GB
-From: Nick Forrington <nick.forrington@arm.com>
-In-Reply-To: <20231125030529.GB178091@leoy-huanghe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 6Sz3_eJznTKIDP9xJX-XLJqjAFSYDRcq
+X-Proofpoint-GUID: Qti3jEb68miCrsB0R9kYs-XJtfeZaN5Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-26_05,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 clxscore=1011
+ adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2311260049
 
+The perf test "probe libc's inet_pton & backtrace it with ping" fails on
+powerpc as below:
 
-On 25/11/2023 03:05, Leo Yan wrote:
-> Hi all,
->
-> On Fri, Nov 24, 2023 at 08:57:52PM +0100, Michael Petlan wrote:
->> On Thu, 2 Nov 2023, Nick Forrington wrote:
->>> The current use of atomics can lead to test failures, as tests (such as
->>> tests/shell/record.sh) search for samples with "test_loop" as the
->>> top-most stack frame, but find frames related to the atomic operation
->>> (e.g. __aarch64_ldadd4_relax).
-> I am confused by above description.  As I went through the script
-> record.sh, which is the only test invoking the program 'test_loop',
-> but I don't find any test is related with stack frame.
->
-> Do I miss anything?  I went through record.sh but no clue why the
-> failure is caused by stack frame.  All the testings use command:
->
->    if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
->      ...
->    fi
->
-> @Nick, could you narrow down which specific test case causing the
-> failure.
->
-> [...]
+root@xxx perf]# perf test -v "probe libc's inet_pton & backtrace it with
+ping"
+ 85: probe libc's inet_pton & backtrace it with ping                 :
+--- start ---
+test child forked, pid 96028
+ping 96056 [002] 127271.101961: probe_libc:inet_pton: (7fffa1779a60)
+7fffa1779a60 __GI___inet_pton+0x0
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+7fffa172a73c getaddrinfo+0x121c
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+FAIL: expected backtrace entry
+"gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/libc.so.6\)$"
+got "7fffa172a73c getaddrinfo+0x121c
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
+test child finished with -1
+---- end ----
+probe libc's inet_pton & backtrace it with ping: FAILED!
 
+This test installs a probe on libc's inet_pton function, which will use
+uprobes and then uses perf trace on a ping to localhost. It gets 3
+levels deep backtrace and checks whether it is what we expected or not.
 
-All checks for ${testsym} in record.sh (including the example you 
-provide) can fail, as the expected symbol (test_loop) is not the 
-top-most function on the stack (and therefore not the symbol associated 
-with the sample).
+The test started failing from RHEL 9.4 where as it works in previous
+distro version (RHEL 9.2). Test expects gaih_inet function to be part of
+backtrace. But in the glibc version (2.34-86) which is part of distro
+where it fails, this function is missing and hence the test is failing.
 
+From nm and ping command output we can confirm that gaih_inet function
+is not present in the expected backtrace for glibc version glibc-2.34-86
 
-Example perf report output:
+[root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep gaih_inet
+00000000001273e0 t gaih_inet_serv
+00000000001cd8d8 r gaih_inet_typeproto
 
-# Overhead  Command  Shared Object          Symbol
-# ........  .......  ..................... .............................
-#
-     99.53%  perf     perf                   [.] __aarch64_ldadd4_relax
+[root@xxx perf]# perf script -i /tmp/perf.data.6E8
+ping  104048 [000] 128582.508976: probe_libc:inet_pton: (7fff83779a60)
+            7fff83779a60 __GI___inet_pton+0x0
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+            7fff8372a73c getaddrinfo+0x121c
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+               11dc73534 [unknown] (/usr/bin/ping)
+            7fff8362a8c4 __libc_start_call_main+0x84
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
 
-...
+FAIL: expected backtrace entry
+"gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/libc.so.6\)$"
+got "7fff9d52a73c getaddrinfo+0x121c
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
 
+With version glibc-2.34-60 gaih_inet function is present as part of the
+expected backtrace. So we cannot just remove the gaih_inet function from
+the backtrace.
 
-You can see the issue when recording/reporting with call stacks:
+[root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep gaih_inet
+0000000000130490 t gaih_inet.constprop.0
+000000000012e830 t gaih_inet_serv
+00000000001d45e4 r gaih_inet_typeproto
 
-# Children      Self  Command  Shared Object          Symbol
-# ........  ........  .......  ..................... 
-..........................................................
-#
-     99.52%    99.52%  perf     perf                   [.] 
-__aarch64_ldadd4_relax
-             |
-             |--49.77%--0xffffb905a5dc
-             |          0xffffb8ff0aec
-             |          thfunc
-             |          test_loop
-             |          __aarch64_ldadd4_relax
+[root@xxx perf]# ./perf script -i /tmp/perf.data.b6S
+ping   67906 [000] 22699.591699: probe_libc:inet_pton_3: (7fffbdd80820)
+            7fffbdd80820 __GI___inet_pton+0x0
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+            7fffbdd31160 gaih_inet.constprop.0+0xcd0
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+            7fffbdd31c7c getaddrinfo+0x14c
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+               1140d3558 [unknown] (/usr/bin/ping)
 
-...
+This patch solves this issue by doing a conditional skip. If there is a
+gaih_inet function present in the libc then it will be added to the
+expected backtrace else the function will be skipped from being added
+to the expected backtrace.
 
->
->> I believe that it was there to prevent the compiler to optimize the loop
->> out or some reason like that. Hopefully, it will work even without that
->> on all architectures with all compilers that are used for building perf...
-> Agreed.
->
-> As said above, I'd like to step back a bit for making clear what's the
-> exactly failure caused by the program.
+Output with the patch
 
+[root@xxx perf]# ./perf test -v "probe libc's inet_pton & backtrace it
+with ping"
+ 83: probe libc's inet_pton & backtrace it with ping                 :
+--- start ---
+test child forked, pid 102662
+ping 102692 [000] 127935.549973: probe_libc:inet_pton: (7fff93379a60)
+7fff93379a60 __GI___inet_pton+0x0
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+7fff9332a73c getaddrinfo+0x121c
+(/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+11ef03534 [unknown] (/usr/bin/ping)
+test child finished with 0
+---- end ----
+probe libc's inet_pton & backtrace it with ping: Ok
 
-I don't think this loop could be sensibly optimised away, as it depends 
-on "done", which is defined at file scope (and assigned by a signal 
-handler).
+Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
+Reported-by: Disha Goel <disgoel@linux.ibm.com>
+---
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index eebeea6bdc76..72c65570db37 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -45,7 +45,10 @@ trace_libc_inet_pton_backtrace() {
+ 		;;
+ 	ppc64|ppc64le)
+ 		eventattr='max-stack=4'
+-		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
++		# Add gaih_inet to expected backtrace only if it is part of libc.
++		if nm $libc | grep -F -q gaih_inet.; then
++			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
++		fi
+ 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+ 		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 		;;
+-- 
+2.39.1
 
-Cheers,
-Nick
-
->
-> Thanks,
-> Leo
->
