@@ -1,99 +1,55 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5554EDDD5
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 Nov 2023 17:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GloAkL1v"
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC4D85;
-	Sun, 26 Nov 2023 01:43:26 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-54acdd65c88so2922151a12.2;
-        Sun, 26 Nov 2023 01:43:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700991805; x=1701596605; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Wr5w0BU6Nxj+T7K1dCzyqq4zRAETI3BGm2U/8N1jKw=;
-        b=GloAkL1vILeWPMPYv5IfoBLRW5T6qpsNmlMJxSqaDshN1nJnzTGvd63eP1KwdSXhJq
-         lIMwKaaE7nrslxXDlJAXlJdesjtfGyrakTr/yiYiZCj1ksGwmi65jW24uV+BIr02u+N3
-         4SE5JAPH+JBo4+/Ruy0E8rCRa512QEIB9XlaudT3NCbPkrF0qXvhPdo2BgY/sPXD4x+L
-         +jU1eimt60KAHs2lK3Q1nS3prmGIiVVfpLs/zDNyS1QcJD8zGvcPNTmrbBMK1w7cvJLN
-         6xRZW62iBsBBMrJJlqkVK7Z76foTTL+hb5CEfkMTxwxCBGODr54Kp/tsanvsH/D/uzhz
-         X2ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700991805; x=1701596605;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4Wr5w0BU6Nxj+T7K1dCzyqq4zRAETI3BGm2U/8N1jKw=;
-        b=AQ6pRV+ZO4Q/66oW3G/llfObne4Gjb9o9OQeUtfUxKpPHoI8SsfhuR740Fl3XyE83l
-         92Mb/CSOo/nsVu0k8WCMB76s1bsYS+MknyBolGp/BH6/M1XU2ElVwTjpbcId/i2rrMCC
-         VdgGxwNPAP3C/ZE1Nr5Or67vQEcinsAwlL1DVJlCa4vAd+jP3POWZw3DMs6bj7iVKqpR
-         byXa8My1gg2yA+EekfBW1eG4kdo2r6lw65h6DYNwJDVMrwE9/wZ5Ux3gAQa3q2Jk80Gg
-         H6SlbC0o/6QTQrRYpBvPQAPkIa0SGicr7f8ptG8NzIRq6awM4dv27hn0GPUn9fSPngDb
-         SfDg==
-X-Gm-Message-State: AOJu0Yzf6CRMjblNzK1G6v2SnhopovdF6d2KdTtb/S9yXK4mgkGZBzou
-	fmPG7XZZc8Ge73DHBVUx9h4=
-X-Google-Smtp-Source: AGHT+IEHl1D2BVkv/ZgdOZvn1cSJozLIyR+UjGFxMwvhHViijRmBOt1NAFH80yTdSlDCtwziIeYNgg==
-X-Received: by 2002:a50:cc95:0:b0:54a:8fa5:807f with SMTP id q21-20020a50cc95000000b0054a8fa5807fmr6535751edi.34.1700991804876;
-        Sun, 26 Nov 2023 01:43:24 -0800 (PST)
-Received: from gmail.com (1F2EF15C.nat.pool.telekom.hu. [31.46.241.92])
-        by smtp.gmail.com with ESMTPSA id s29-20020a50ab1d000000b0054b2393312dsm1697388edc.6.2023.11.26.01.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Nov 2023 01:43:23 -0800 (PST)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Sun, 26 Nov 2023 10:43:21 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf events fix
-Message-ID: <ZWMTOVr/81MoNEEH@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFUt143O"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C156FC433C9;
+	Sun, 26 Nov 2023 17:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701018979;
+	bh=7M3/4ZbMyAhepzjvoftadoun0c9VmWveW1PP1vraAZU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=pFUt143OeVpyZMB88ctmg/6C5l34B1l8ljz+lWEJGusMUmSdHRaEC8M1bCSLQ5gKy
+	 QJQZ/maWLg0FY/OI7FeuT/+zYc3MIrgF+F/bQcNB+AAM+3DP+2YaD2ukCei1mTwl7W
+	 Drz/eNoydusTUSL4SxwcPL6arYROBgm7XPUZrO1p8EQ58id7b4zjzIk53XK8DodOQg
+	 YSGSdWAHCP+/o/edcbmtGL4DYR4cD7lX3bexHQ2MdEYiaVOd4kcz93kdfoOG52BW6Y
+	 0nDqX5gBuHZB001EYAZimcyYwFyW78an9qY3gSh93UEDdU8xUuqWZuA+HKufaayQAZ
+	 /8tI9SBFOAIOg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A5538C39562;
+	Sun, 26 Nov 2023 17:16:19 +0000 (UTC)
+Subject: Re: [GIT PULL] perf events fix
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZWMTOVr/81MoNEEH@gmail.com>
+References: <ZWMTOVr/81MoNEEH@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZWMTOVr/81MoNEEH@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-11-26
+X-PR-Tracked-Commit-Id: e8df9d9f4209c04161321d8c12640ae560f65939
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e81fe505202fdc07b1925aa70fca5e2a714eb259
+Message-Id: <170101897967.23229.17645807255711173572.pr-tracker-bot@kernel.org>
+Date: Sun, 26 Nov 2023 17:16:19 +0000
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Linus,
+The pull request you sent on Sun, 26 Nov 2023 10:43:21 +0100:
 
-Please pull the latest perf/urgent git tree from:
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-11-26
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2023-11-26
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e81fe505202fdc07b1925aa70fca5e2a714eb259
 
-   # HEAD: e8df9d9f4209c04161321d8c12640ae560f65939 perf/x86/intel: Correct incorrect 'or' operation for PMU capabilities
+Thank you!
 
-Fix a bug in the Intel hybrid CPUs hardware-capabilities enumeration
-code resulting in non-working events on those platforms.
-
- Thanks,
-
-	Ingo
-
------------------->
-Dapeng Mi (1):
-      perf/x86/intel: Correct incorrect 'or' operation for PMU capabilities
-
-
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index a08f794a0e79..ce1c777227b4 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4660,7 +4660,7 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
- 	if (pmu->intel_cap.pebs_output_pt_available)
- 		pmu->pmu.capabilities |= PERF_PMU_CAP_AUX_OUTPUT;
- 	else
--		pmu->pmu.capabilities |= ~PERF_PMU_CAP_AUX_OUTPUT;
-+		pmu->pmu.capabilities &= ~PERF_PMU_CAP_AUX_OUTPUT;
- 
- 	intel_pmu_check_event_constraints(pmu->event_constraints,
- 					  pmu->num_counters,
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
