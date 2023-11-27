@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XYwqrCHA"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A2C3859
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:11:07 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-db40f549659so5816622276.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:11:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RNQjwwX9"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95893AB5
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:11:16 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5cdde93973aso57474337b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:11:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701123066; x=1701727866; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701123075; x=1701727875; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4wSAh26bOFuK46pelhW7xt46dEdfvdkTq4iPcKBortg=;
-        b=XYwqrCHAG2/ZWR0C0ArOxJizZDgnoPPzK5OBeBVN5yRcDmBJDhpcSeko/r7eNDpnGJ
-         iC+u/19NHoXzFqc+l/uOCjXca8vWnQl8w8DOwWX0EMd5ji54oCjUtA6visSx8MzImp25
-         Jm66cILhQIGC/A7l+ZSrdQI1CrYoWAGI7zCIjAcsoOg+UAjtE+Ybpj5S13+J8WgQdrzh
-         o7mPTPsdg9+aTKYI6AqJdtyElcQumv5a/6mYEqt55Nm0nV8KnhyNhECGpQL1Gtx5rqSu
-         WBAYOr/kDVwfH9H20ZkyEPbDsZZIfh1Q+mmaH/Qyne32dLp10Z8D1ncsV4Kxs6dRWlUS
-         Pv0g==
+        bh=2hLpls334vNuqrLnN/2f2LhxSUCc8ekMEx1mSAx5dAI=;
+        b=RNQjwwX94j4eYZ2iMSmnsY4kYTlMCOZX+sb3f73jCNXwoaIK8YazgPxmf7YWXYOl/T
+         U1ZUE/dMJr3340tESPYvD4bUy05krNVXsFWU31oyzRgJVZYhvAPiSYgmRmL5M4jqM355
+         dJpKI3e5Xa11UA1hvSyuFTBVHRFx72hCU3WaF3drN8wy7JC26sojtN1e2xFRkRsa6TLY
+         KKiYhsekjk442Y2/4MQlzFoqPqAsOeA5kppeIaYORIDbMpQ/VKixx8xBUumpufk/213o
+         kXg0D3NIxqzbe0AFngRIg9jp04DtjWXEtqFo3GVz4V2BVU322YcR4TbcN1pWUCDzarxZ
+         5sew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701123066; x=1701727866;
+        d=1e100.net; s=20230601; t=1701123075; x=1701727875;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4wSAh26bOFuK46pelhW7xt46dEdfvdkTq4iPcKBortg=;
-        b=LeBbX4hzMejAXOCUHGMcolqQPrKuwTO7tfTagRmpkAW3IjViEaP+QbDDxHPTzzUOKI
-         c03T25/rUjBqBbdCXxFU4wHq9OUp4x/o+8+78nJWJHrC45XzVfkZkhuBFBbkyebBPIoA
-         OSB3NRU3eR9w/uw5Z7RdzcXffvmfF244pXGvya9emWEQs4PVYFSu8vfRkO6ozCvrZIvj
-         CK3uJg2lIohc8OeYVi0Auj3o6rrttlQNQB67ukdNckzkPZAUUhf2LdTSP0C8rTPyjgeH
-         LbQENBlFLp7dIpEXAQrN4KKW4bjb6GaTiayUe2XWY0nyJVFZ2AiUGJgNJ+GjlyKQPfwJ
-         fOsg==
-X-Gm-Message-State: AOJu0YzH9CzbCye7qYAjC4BK6Pt6L9gL4F8DzvTnsIHborUsBbkLvkxo
-	xESOlXnugvLw9gD0OXwSwCp77pRLEmQs
-X-Google-Smtp-Source: AGHT+IEWjyzn8rHHFU1t/ctdPdQBHEa57LjltCH4h1aV5w0x7Nb2ROGyXteHvi2vqrvj+YAOYTwnFOnO+84l
+        bh=2hLpls334vNuqrLnN/2f2LhxSUCc8ekMEx1mSAx5dAI=;
+        b=kQRiclBGPinOtk04k62MtTqYHWpyA/coGAwXt0IE+3Z2PvXKlMk+UqrWxYkzEfw1AC
+         2LZXEIQvFcv0LwI2vKc66Ecg4Djhhkw6flBvn/nQot0hDThF3qEtUG/dOae6W3/dv0xd
+         LjddFKdh78aedGY4Q0JbX+P4s6dsuyR2gMInnesJ+Rfv/nKqbvobzuI9L3E+PnkOGTyv
+         XAJSGO7GMpbKelzU25N9mio1gEFSxBNk5wR859jzC6tBi2GImeuFzwL1A3YjYJj/IE04
+         BJ/i8XuIOWLasxtUP+OkjgCE8EPBK/tR3w6/nr/yCFTyMwJA/CdGhsJn4VkfTR9HsgwW
+         WIWg==
+X-Gm-Message-State: AOJu0YznrlhRyxD8K0oJVvTSi3W8ZJc4mqBywlbUx8nbw3MInR32Ys88
+	ZuTvfklD5O0bqyybiUuynwbC75S0nSQJ
+X-Google-Smtp-Source: AGHT+IFUW/QsJ5gGw0Vr94MrVkwXFsNtcS0Q0arqKvCcEqZBn+rO3IZUDPcm/weaqyz3mhjdd4ia6BD4GvNm
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:829:6e77:9093:f39b])
- (user=irogers job=sendgmr) by 2002:a25:ab8e:0:b0:db4:5db7:9519 with SMTP id
- v14-20020a25ab8e000000b00db45db79519mr391813ybi.3.1701123066435; Mon, 27 Nov
- 2023 14:11:06 -0800 (PST)
-Date: Mon, 27 Nov 2023 14:08:57 -0800
+ (user=irogers job=sendgmr) by 2002:a25:d081:0:b0:d9a:c946:c18c with SMTP id
+ h123-20020a25d081000000b00d9ac946c18cmr452780ybg.6.1701123075664; Mon, 27 Nov
+ 2023 14:11:15 -0800 (PST)
+Date: Mon, 27 Nov 2023 14:09:01 -0800
 In-Reply-To: <20231127220902.1315692-1-irogers@google.com>
-Message-Id: <20231127220902.1315692-46-irogers@google.com>
+Message-Id: <20231127220902.1315692-50-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231127220902.1315692-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v5 45/50] perf dsos: Remove __dsos__findnew_link_by_longname_id
+Subject: [PATCH v5 49/50] perf dso: Use container_of to avoid a pointer in dso_data
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,143 +68,247 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Function was only called in dsos.c with the dso parameter as
-NULL. Remove the function and specialize for the dso being NULL case
-removing other unused functions along the way.
+The dso pointer in dso_data is necessary for reference count checking
+to account for the dso_data forming a global list of open dso's with
+references to the dso. The dso pointer also allows for the indirection
+that reference count checking needs. Outside of reference count
+checking the indirection isn't needed and container_of is more
+efficient and saves space.
+
+The reference count won't be increased by placing items onto the
+global list, matching how things were before the reference count
+checking change, but we assert the dso is in dsos holding it live (and
+that the set of open dsos is a subset of all dsos for the
+machine). Update the DSO data tests so that they use a dsos struct to
+make the invariant true.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dsos.c | 51 +++++++++---------------------------------
- tools/perf/util/dsos.h |  6 -----
- 2 files changed, 10 insertions(+), 47 deletions(-)
+ tools/perf/tests/dso-data.c | 60 ++++++++++++++++++-------------------
+ tools/perf/util/dso.c       | 16 +++++++++-
+ tools/perf/util/dso.h       |  2 ++
+ 3 files changed, 46 insertions(+), 32 deletions(-)
 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 1495ab1cd7a0..e4110438841b 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -119,11 +119,6 @@ static int __dso__cmp_short_name(const char *short_name, struct dso_id *id, stru
- 	return rc ?: dso_id__cmp(id, &b->id);
+diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
+index 625dbb2ffe8a..deaefcdd8f09 100644
+--- a/tools/perf/tests/dso-data.c
++++ b/tools/perf/tests/dso-data.c
+@@ -10,6 +10,7 @@
+ #include <sys/resource.h>
+ #include <api/fs/fs.h>
+ #include "dso.h"
++#include "dsos.h"
+ #include "machine.h"
+ #include "symbol.h"
+ #include "tests.h"
+@@ -123,9 +124,10 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
+ 	TEST_ASSERT_VAL("No test file", file);
+ 
+ 	memset(&machine, 0, sizeof(machine));
++	dsos__init(&machine.dsos);
+ 
+-	dso = dso__new((const char *)file);
+-
++	dso = dso__new(file);
++	TEST_ASSERT_VAL("Failed to add dso", !dsos__add(&machine.dsos, dso));
+ 	TEST_ASSERT_VAL("Failed to access to dso",
+ 			dso__data_fd(dso, &machine) >= 0);
+ 
+@@ -170,6 +172,7 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
+ 	}
+ 
+ 	dso__put(dso);
++	dsos__exit(&machine.dsos);
+ 	unlink(file);
+ 	return 0;
+ }
+@@ -199,41 +202,35 @@ static long open_files_cnt(void)
+ 	return nr - 1;
  }
  
--static int dso__cmp_short_name(struct dso *a, struct dso *b)
--{
--	return __dso__cmp_short_name(a->short_name, &a->id, b);
--}
+-static struct dso **dsos;
 -
- static int dsos__cmp_long_name_id_short_name(const void *va, const void *vb)
+-static int dsos__create(int cnt, int size)
++static int dsos__create(int cnt, int size, struct dsos *dsos)
  {
- 	const struct dso *a = *((const struct dso **)va);
-@@ -143,20 +138,21 @@ static int dsos__cmp_long_name_id_short_name(const void *va, const void *vb)
-  * Either one of the dso or name parameter must be non-NULL or the
-  * function will not work.
-  */
--struct dso *__dsos__findnew_link_by_longname_id(struct dsos *dsos,
--						struct dso *dso,
--						const char *name,
--						struct dso_id *id,
--						bool write_locked)
-+static struct dso *__dsos__find_by_longname_id(struct dsos *dsos,
-+					       const char *name,
-+					       struct dso_id *id,
-+					       bool write_locked)
+ 	int i;
+ 
+-	dsos = malloc(sizeof(*dsos) * cnt);
+-	TEST_ASSERT_VAL("failed to alloc dsos array", dsos);
++	dsos__init(dsos);
+ 
+ 	for (i = 0; i < cnt; i++) {
+-		char *file;
++		struct dso *dso;
++		char *file = test_file(size);
+ 
+-		file = test_file(size);
+ 		TEST_ASSERT_VAL("failed to get dso file", file);
+-
+-		dsos[i] = dso__new(file);
+-		TEST_ASSERT_VAL("failed to get dso", dsos[i]);
++		dso = dso__new(file);
++		TEST_ASSERT_VAL("failed to get dso", dso);
++		TEST_ASSERT_VAL("failed to add dso", !dsos__add(dsos, dso));
++		dso__put(dso);
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static void dsos__delete(int cnt)
++static void dsos__delete(struct dsos *dsos)
  {
- 	int low = 0, high = dsos->cnt - 1;
- 
- 	if (!dsos->sorted) {
- 		if (!write_locked) {
-+			struct dso *dso;
-+
- 			up_read(&dsos->lock);
- 			down_write(&dsos->lock);
--			dso = __dsos__findnew_link_by_longname_id(dsos, dso, name, id,
--								  /*write_locked=*/true);
-+			dso = __dsos__find_by_longname_id(dsos, name, id,
-+							  /*write_locked=*/true);
- 			up_write(&dsos->lock);
- 			down_read(&dsos->lock);
- 			return dso;
-@@ -166,9 +162,6 @@ struct dso *__dsos__findnew_link_by_longname_id(struct dsos *dsos,
- 		dsos->sorted = true;
- 	}
- 
--	if (!name)
--		name = dso->long_name;
+-	int i;
 -
- 	/*
- 	 * Find node with the matching name
- 	 */
-@@ -178,31 +171,13 @@ struct dso *__dsos__findnew_link_by_longname_id(struct dsos *dsos,
- 		int rc = __dso__cmp_long_name(name, id, this);
+-	for (i = 0; i < cnt; i++) {
+-		struct dso *dso = dsos[i];
++	for (unsigned int i = 0; i < dsos->cnt; i++) {
++		struct dso *dso = dsos->dsos[i];
  
- 		if (rc == 0) {
--			/*
--			 * In case the new DSO is a duplicate of an existing
--			 * one, print a one-time warning & put the new entry
--			 * at the end of the list of duplicates.
--			 */
--			if (!dso || (dso == this))
--				return dso__get(this);	/* Find matching dso */
--			/*
--			 * The core kernel DSOs may have duplicated long name.
--			 * In this case, the short name should be different.
--			 * Comparing the short names to differentiate the DSOs.
--			 */
--			rc = dso__cmp_short_name(dso, this);
--			if (rc == 0) {
--				pr_err("Duplicated dso name: %s\n", name);
--				return NULL;
--			}
-+			return dso__get(this);	/* Find matching dso */
- 		}
- 		if (rc < 0)
- 			high = mid - 1;
- 		else
- 			low = mid + 1;
+ 		dso__data_close(dso);
+ 		unlink(dso__name(dso));
+-		dso__put(dso);
  	}
--	if (dso)
--		__dsos__add(dsos, dso);
- 	return NULL;
+-
+-	free(dsos);
++	dsos__exit(dsos);
  }
  
-@@ -240,12 +215,6 @@ int dsos__add(struct dsos *dsos, struct dso *dso)
- 	return ret;
+ static int set_fd_limit(int n)
+@@ -267,10 +264,10 @@ static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subt
+ 	/* and this is now our dso open FDs limit */
+ 	dso_cnt = limit / 2;
+ 	TEST_ASSERT_VAL("failed to create dsos\n",
+-		!dsos__create(dso_cnt, TEST_FILE_SIZE));
++			!dsos__create(dso_cnt, TEST_FILE_SIZE, &machine.dsos));
+ 
+ 	for (i = 0; i < (dso_cnt - 1); i++) {
+-		struct dso *dso = dsos[i];
++		struct dso *dso = machine.dsos.dsos[i];
+ 
+ 		/*
+ 		 * Open dsos via dso__data_fd(), it opens the data
+@@ -290,17 +287,17 @@ static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subt
+ 	}
+ 
+ 	/* verify the first one is already open */
+-	TEST_ASSERT_VAL("dsos[0] is not open", dso__data(dsos[0])->fd != -1);
++	TEST_ASSERT_VAL("dsos[0] is not open", dso__data(machine.dsos.dsos[0])->fd != -1);
+ 
+ 	/* open +1 dso to reach the allowed limit */
+-	fd = dso__data_fd(dsos[i], &machine);
++	fd = dso__data_fd(machine.dsos.dsos[i], &machine);
+ 	TEST_ASSERT_VAL("failed to get fd", fd > 0);
+ 
+ 	/* should force the first one to be closed */
+-	TEST_ASSERT_VAL("failed to close dsos[0]", dso__data(dsos[0])->fd == -1);
++	TEST_ASSERT_VAL("failed to close dsos[0]", dso__data(machine.dsos.dsos[0])->fd == -1);
+ 
+ 	/* cleanup everything */
+-	dsos__delete(dso_cnt);
++	dsos__delete(&machine.dsos);
+ 
+ 	/* Make sure we did not leak any file descriptor. */
+ 	nr_end = open_files_cnt();
+@@ -325,9 +322,9 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
+ 	long nr_end, nr = open_files_cnt(), lim = new_limit(3);
+ 	int fd, fd_extra;
+ 
+-#define dso_0 (dsos[0])
+-#define dso_1 (dsos[1])
+-#define dso_2 (dsos[2])
++#define dso_0 (machine.dsos.dsos[0])
++#define dso_1 (machine.dsos.dsos[1])
++#define dso_2 (machine.dsos.dsos[2])
+ 
+ 	/* Rest the internal dso open counter limit. */
+ 	reset_fd_limit();
+@@ -347,7 +344,8 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
+ 	TEST_ASSERT_VAL("failed to set file limit",
+ 			!set_fd_limit((lim)));
+ 
+-	TEST_ASSERT_VAL("failed to create dsos\n", !dsos__create(3, TEST_FILE_SIZE));
++	TEST_ASSERT_VAL("failed to create dsos\n",
++			!dsos__create(3, TEST_FILE_SIZE, &machine.dsos));
+ 
+ 	/* open dso_0 */
+ 	fd = dso__data_fd(dso_0, &machine);
+@@ -386,7 +384,7 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
+ 
+ 	/* cleanup everything */
+ 	close(fd_extra);
+-	dsos__delete(3);
++	dsos__delete(&machine.dsos);
+ 
+ 	/* Make sure we did not leak any file descriptor. */
+ 	nr_end = open_files_cnt();
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 0fef597725c7..4f20dac89b77 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -496,14 +496,20 @@ static pthread_mutex_t dso__data_open_lock = PTHREAD_MUTEX_INITIALIZER;
+ static void dso__list_add(struct dso *dso)
+ {
+ 	list_add_tail(&dso__data(dso)->open_entry, &dso__data_open);
++#ifdef REFCNT_CHECKING
+ 	dso__data(dso)->dso = dso__get(dso);
++#endif
++	/* Assume the dso is part of dsos, hence the optional reference count above. */
++	assert(dso__dsos(dso));
+ 	dso__data_open_cnt++;
  }
  
--static struct dso *__dsos__findnew_by_longname_id(struct dsos *dsos, const char *name,
--						struct dso_id *id, bool write_locked)
--{
--	return __dsos__findnew_link_by_longname_id(dsos, NULL, name, id, write_locked);
--}
--
- struct dsos__find_id_cb_args {
- 	const char *name;
- 	struct dso_id *id;
-@@ -279,7 +248,7 @@ static struct dso *__dsos__find_id(struct dsos *dsos, const char *name, struct d
- 		__dsos__for_each_dso(dsos, dsos__find_id_cb, &args);
- 		return args.res;
+ static void dso__list_del(struct dso *dso)
+ {
+ 	list_del_init(&dso__data(dso)->open_entry);
++#ifdef REFCNT_CHECKING
+ 	dso__put(dso__data(dso)->dso);
++#endif
+ 	WARN_ONCE(dso__data_open_cnt <= 0,
+ 		  "DSO data fd counter out of bounds.");
+ 	dso__data_open_cnt--;
+@@ -653,9 +659,15 @@ static void close_dso(struct dso *dso)
+ static void close_first_dso(void)
+ {
+ 	struct dso_data *dso_data;
++	struct dso *dso;
+ 
+ 	dso_data = list_first_entry(&dso__data_open, struct dso_data, open_entry);
+-	close_dso(dso_data->dso);
++#ifdef REFCNT_CHECKING
++	dso = dso_data->dso;
++#else
++	dso = container_of(dso_data, struct dso, data);
++#endif
++	close_dso(dso);
+ }
+ 
+ static rlim_t get_fd_limit(void)
+@@ -1444,7 +1456,9 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
+ 		data->fd = -1;
+ 		data->status = DSO_DATA_STATUS_UNKNOWN;
+ 		INIT_LIST_HEAD(&data->open_entry);
++#ifdef REFCNT_CHECKING
+ 		data->dso = NULL; /* Set when on the open_entry list. */
++#endif
  	}
--	res = __dsos__findnew_by_longname_id(dsos, name, id, write_locked);
-+	res = __dsos__find_by_longname_id(dsos, name, id, write_locked);
  	return res;
  }
- 
-diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
-index d1497b11d64c..6c13b65648bc 100644
---- a/tools/perf/util/dsos.h
-+++ b/tools/perf/util/dsos.h
-@@ -36,12 +36,6 @@ struct dso *dsos__findnew_id(struct dsos *dsos, const char *name, struct dso_id
-  
- bool dsos__read_build_ids(struct dsos *dsos, bool with_hits);
- 
--struct dso *__dsos__findnew_link_by_longname_id(struct dsos *dsos,
--						struct dso *dso,
--						const char *name,
--						struct dso_id *id,
--						bool write_locked);
--
- size_t dsos__fprintf_buildid(struct dsos *dsos, FILE *fp,
- 			       bool (skip)(struct dso *dso, int parm), int parm);
- size_t dsos__fprintf(struct dsos *dsos, FILE *fp);
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index fa311ffd2538..e02a4718f1f8 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -147,7 +147,9 @@ struct dso_cache {
+ struct dso_data {
+ 	struct rb_root	 cache;
+ 	struct list_head open_entry;
++#ifdef REFCNT_CHECKING
+ 	struct dso	 *dso;
++#endif
+ 	int		 fd;
+ 	int		 status;
+ 	u32		 status_seen;
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
