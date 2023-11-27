@@ -1,254 +1,183 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61CE893
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 03:12:57 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA8262F4;
-	Mon, 27 Nov 2023 03:13:44 -0800 (PST)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C76D53F73F;
-	Mon, 27 Nov 2023 03:12:55 -0800 (PST)
-Message-ID: <e8143e4d-d3ca-88c5-f1c8-b79f70ee5ffa@arm.com>
-Date: Mon, 27 Nov 2023 11:12:57 +0000
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ep4482iO"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9993BCB
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 04:02:24 -0800 (PST)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ARBk3o2013180;
+	Mon, 27 Nov 2023 12:02:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=qUzFEhPn70J4CgXFRu3istZbtk83B+/MorkvH5PO9iE=;
+ b=ep4482iOSu/wW8Yc8PUQNwqTBXyX6VopuoCBS+/QmYMS03zYUZCFYdgVvEdxZZ6yaLkC
+ wn8LTN7CohQQX8pPIyqee90rODi0JA7s5tvrcoTOKa7e2AU5wRLT39QlrJRLAaIAZNb5
+ W2eqrpF4rgOFLkBdosrMF5GUp+KmvkpFdN7nlYEVfyXPBZ6Rfu4jlPaDTRk8usPKc3Kt
+ 0gs4Hr30YTmI6aVcG1VLJL60yuEjMqRfsIe8Opg98S3eM2hc+gvhxnv5htFzhw6K4/RZ
+ STtK2j1Bw63PPgGWFotawimkzAoAMwz18GrTPGoCeUbz7faaKmuQzGMUcr3xGdPChO2l Pw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ukrbbb0p7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 12:02:09 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ARBkDBP013994;
+	Mon, 27 Nov 2023 12:02:08 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ukrbbb0nw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 12:02:08 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ARBYZ6m011082;
+	Mon, 27 Nov 2023 12:02:07 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ukwy1fy4r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 12:02:07 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ARC24Fg11207240
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 27 Nov 2023 12:02:04 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACFAC20040;
+	Mon, 27 Nov 2023 12:02:04 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EB2BC2004E;
+	Mon, 27 Nov 2023 12:02:01 +0000 (GMT)
+Received: from [9.43.15.114] (unknown [9.43.15.114])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 27 Nov 2023 12:02:01 +0000 (GMT)
+Message-ID: <92bbba90-c7e4-43de-98dc-497ca323eacc@linux.ibm.com>
+Date: Mon, 27 Nov 2023 17:32:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH V4] tools/perf: Add perf binary dependent rule for
- shellcheck log in Makefile.perf
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf vendor events: Update datasource event name to fix
+ duplicate events
 To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
- jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
- namhyung@kernel.org
+        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+        james.clark@arm.com, namhyung@kernel.org
 Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20231123160232.94253-1-atrajeev@linux.vnet.ibm.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231123160232.94253-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+References: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
+Content-Language: en-GB
+From: Disha Goel <disgoel@linux.ibm.com>
+In-Reply-To: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: YHE9b4sl5yw4eRmBBROA7V3jaGLBxAeP
+X-Proofpoint-GUID: 5oIl70ZNfC0Xf7RIKW0POau_wkqXS47f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-27_09,2023-11-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1011 phishscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ mlxscore=0 spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2311270082
 
+On 23/11/23 9:31 pm, Athira Rajeev wrote:
 
-
-On 23/11/2023 16:02, Athira Rajeev wrote:
-> Add rule in new Makefile "tests/Makefile.tests" for running
-> shellcheck on shell test scripts. This automates below shellcheck
-> into the build.
-> 
-
-Seems to work really well. I also tested it on Ubuntu, and checked
-NO_SHELLCHECK, cleaning and with and without shellcheck installed etc.
-
-Reviewed-by: James Clark <james.clark@arm.com>
-
-> 	$ for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck -S warning $F; done
-> 
-> Condition for shellcheck is added in Makefile.perf to avoid build
-> breakage in the absence of shellcheck binary. Update Makefile.perf
-> to contain new rule for "SHELLCHECK_TEST" which is for making
-> shellcheck test as a dependency on perf binary.
-> 
-> Added "tests/Makefile.tests" to run shellcheck on shellscripts in
-> tests/shell. The make rule "SHLLCHECK_RUN" ensures that, every
-> time during make, shellcheck will be run only on modified files
-> during subsequent invocations. By this, if any newly added shell
-> scripts or fixes in existing scripts breaks coding/formatting
-> style, it will get captured during the perf build.
-> 
-> Example build failure by modifying probe_vfs_getname.sh in tests/shell:
-> 
-> 	In tests/shell/probe_vfs_getname.sh line 8:
-> 	. $(dirname $0)/lib/probe.sh
-> 	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
-> 
-> 	For more information:
-> 	  https://www.shellcheck.net/wiki/SC2046 -- Quote this to prevent word splitt...
-> 	make[3]: *** [/root/athira/perf-tools-next/tools/perf/tests/Makefile.tests:18: tests/shell/.probe_vfs_getname.sh.shellcheck_log] Error 1
-> 	make[2]: *** [Makefile.perf:686: SHELLCHECK_TEST] Error 2
-> 	make[2]: *** Waiting for unfinished jobs....
-> 	make[1]: *** [Makefile.perf:244: sub-make] Error 2
-> 	make: *** [Makefile:70: all] Error 2
-> 
-> Here, like other files which gets created during
-> compilation (ex: .builtin-bench.o.cmd or .perf.o.cmd ),
-> create .shellcheck_log also as a hidden file.
-> Example: tests/shell/.probe_vfs_getname.sh.shellcheck_log
-> shellcheck is re-run if any of the script gets modified
-> based on its dependency of this log file.
-> 
-> After this, for testing, changed "tests/shell/trace+probe_vfs_getname.sh" to
-> break shellcheck format. In the next make run, it is
-> also captured:
-> 
-> 	In tests/shell/probe_vfs_getname.sh line 8:
-> 	. $(dirname $0)/lib/probe.sh
-> 	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
-> 
-> 	For more information:
-> 	  https://www.shellcheck.net/wiki/SC2046 -- Quote this to prevent word splitt...
-> 	make[3]: *** [/root/athira/perf-tools-next/tools/perf/tests/Makefile.tests:18: tests/shell/.probe_vfs_getname.sh.shellcheck_log] Error 1
-> 	make[3]: *** Waiting for unfinished jobs....
-> 
-> 	In tests/shell/trace+probe_vfs_getname.sh line 14:
-> 	. $(dirname $0)/lib/probe.sh
-> 	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
-> 
-> 	For more information:
-> 	  https://www.shellcheck.net/wiki/SC2046 -- Quote this to prevent word splitt...
-> 	make[3]: *** [/root/athira/perf-tools-next/tools/perf/tests/Makefile.tests:18: tests/shell/.trace+probe_vfs_getname.sh.shellcheck_log] Error 1
-> 	make[2]: *** [Makefile.perf:686: SHELLCHECK_TEST] Error 2
-> 	make[2]: *** Waiting for unfinished jobs....
-> 	make[1]: *** [Makefile.perf:244: sub-make] Error 2
-> 	make: *** [Makefile:70: all] Error 2
-> 
-> Failure log can be found in the stdout of make itself.
-> 
-> This is reported at build time. To be able to go ahead with
-> the build or disable shellcheck even though it is known that
-> some test is broken, add a "NO_SHELLCHECK" option. Example:
-> 
->   make NO_SHELLCHECK=1
-> 
-> 	  INSTALL libsubcmd_headers
-> 	  INSTALL libsymbol_headers
-> 	  INSTALL libapi_headers
-> 	  INSTALL libperf_headers
-> 	  INSTALL libbpf_headers
-> 	  LINK    perf
-> 
-> Note:
-> This is tested on RHEL and also SLES. Use below check:
-> "$(shell which shellcheck 2> /dev/null)" to look for presence
-> of shellcheck binary. The approach "shell command -v" is not
-> used here. In some of the distros(RHEL), command is available
-> as executable file (/usr/bin/command). But in some distros(SLES),
-> it is a shell builtin and not available as executable file.
-> 
+> Running "perf list" on powerpc fails with segfault
+> as below:
+>
+>     ./perf list
+>     Segmentation fault (core dumped)
+>
+> This happens because of duplicate events in the json list.
+> The powerpc Json event list contains some event with same
+> event name, but different event code. They are:
+> - PM_INST_FROM_L3MISS (Present in datasource and frontend)
+> - PM_MRK_DATA_FROM_L2MISS (Present in datasource and marked)
+> - PM_MRK_INST_FROM_L3MISS (Present in datasource and marked)
+> - PM_MRK_DATA_FROM_L3MISS (Present in datasource and marked)
+>
+> pmu_events_table__num_events uses the value from
+> table_pmu->num_entries which includes duplicate events as
+> well. This causes issue during "perf list" and results in
+> segmentation fault.
+>
+> Since both event codes are valid, append _DSRC to the Data
+> Source events (datasource.json), so that they would have a
+> unique name. Also add PM_DATA_FROM_L2MISS_DSRC and
+> PM_DATA_FROM_L3MISS_DSRC events. With the fix, perf list
+> works as expected.
+>
+> Fixes: fc1435807533 ("perf vendor events power10: Update JSON/events")
 > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+
+I have tested the patch on Power10 machine. Perf list works correctly without any segfault now.
+
+	# ./perf list
+
+	List of pre-defined events (to be used in -e or -M):
+
+	  branch-instructions OR branches                    [Hardware event]
+	  branch-misses                                      [Hardware event]
+
+Tested-by: Disha Goel <disgoel@linux.ibm.com>
+
 > ---
-> changelog:
-> v3 -> v4:
-> Addressed review comments from James Clark.
-> - Made the shellcheck errors to be reported in make output
->   itself during make like any other build error.
-> - Removed creating .dep files. Instead use the log file
-> to determine whether shellcheck has to be re-run when
-> there is a change in source file.
-> - Change log file to have suffix as shellcheck_log so
-> as to differentiate it from test execution log.
-> - Also like other files which gets created during
-> compilation, example, .builtin-bench.o.cmd or .perf.o.cmd,
-> create .shellcheck_log as hidden file.
-> Example: tests/shell/.buildid.sh.shellcheck_log
-> - Initial version used "command -v shellcheck" to check
-> presence of shellcheck. But while testing SLES, hit an
-> issue with using "command". In RHEL, /usr/bin/command
-> is available as part of bash rpm
-> # rpm -qf /usr/bin/command 
-> bash-5.1.8-6.el9_1.ppc64le
-> 
-> But in SLES ( tested in SLES 15 SP4 ), this is not
-> available as an executable file, instead it is only
-> a shell builtin. This resulted in below fail:
-> make[2]: command: Command not found
-> 
-> So use "which shellcheck" to check for presence of
-> shellcheck binary
-> 
-> v2 -> v3:
-> Add option "NO_SHELLCHECK". This will allow to go ahead
-> with the build or disable shellcheck even though it is
-> known that some test is broken
-> 
-> v1 -> v2:
-> Version1 had shellcheck in feature check which is not
-> required since shellcheck is already a binary. Presence
-> of binary can be checked using:
-> $(shell command -v shellcheck)
-> Addressed these changes as suggested by Namhyung in V2
-> Feature test logic is removed in V2. Also added example
-> for build breakage when shellcheck fails in commit message
-> 
->  tools/perf/Makefile.perf        | 21 ++++++++++++++++++++-
->  tools/perf/tests/Makefile.tests | 22 ++++++++++++++++++++++
->  2 files changed, 42 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/tests/Makefile.tests
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index d80dcaa5a1e3..824cbc0af7d7 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -134,6 +134,8 @@ include ../scripts/utilities.mak
->  #	x86 instruction decoder - new instructions test
->  #
->  # Define GEN_VMLINUX_H to generate vmlinux.h from the BTF.
-> +#
-> +# Define NO_SHELLCHECK if you do not want to run shellcheck during build
->  
->  # As per kernel Makefile, avoid funny character set dependencies
->  unexport LC_ALL
-> @@ -671,7 +673,23 @@ $(PERF_IN): prepare FORCE
->  $(PMU_EVENTS_IN): FORCE prepare
->  	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
->  
-> -$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
-> +# Runs shellcheck on perf test shell scripts
-> +
-> +SHELLCHECK := $(shell which shellcheck 2> /dev/null)
-> +
-> +ifeq ($(NO_SHELLCHECK),1)
-> +SHELLCHECK :=
-> +endif
-> +
-> +ifneq ($(SHELLCHECK),)
-> +SHELLCHECK_TEST: FORCE prepare
-> +	$(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests
-> +else
-> +SHELLCHECK_TEST:
-> +	@:
-> +endif
-> +
-> +$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) SHELLCHECK_TEST
->  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
->  		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
->  
-> @@ -1134,6 +1152,7 @@ bpf-skel-clean:
->  	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
->  
->  clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
-> +	$(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
->  	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
->  	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
->  	$(Q)$(RM) $(OUTPUT).config-detected
-> diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.tests
-> new file mode 100644
-> index 000000000000..fdaca5f7a946
-> --- /dev/null
-> +++ b/tools/perf/tests/Makefile.tests
-> @@ -0,0 +1,22 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
-> +
-> +PROGS := $(shell find tests/shell -perm -o=x -type f -name '*.sh')
-> +FILE_NAME := $(notdir $(PROGS))
-> +FILE_NAME := $(FILE_NAME:%=.%)
-> +LOGS := $(join $(dir $(PROGS)),$(FILE_NAME))
-> +LOGS := $(LOGS:%=%.shellcheck_log)
-> +
-> +.PHONY: all
-> +all: SHELLCHECK_RUN
-> +	@:
-> +
-> +SHELLCHECK_RUN: $(LOGS)
-> +
-> +.%.shellcheck_log: %
-> +	$(call rule_mkdir)
-> +	$(Q)$(call frecho-cmd,test)@shellcheck -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-> +
-> +clean:
-> +	$(eval log_files := $(shell find . -name '.*.shellcheck_log'))
-> +	@rm -rf $(log_files)
+>   .../arch/powerpc/power10/datasource.json       | 18 ++++++++++++++----
+>   1 file changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+> index 6b0356f2d301..0eeaaf1a95b8 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+> @@ -99,6 +99,11 @@
+>       "EventName": "PM_INST_FROM_L2MISS",
+>       "BriefDescription": "The processor's instruction cache was reloaded from a source beyond the local core's L2 due to a demand miss."
+>     },
+> +  {
+> +    "EventCode": "0x0003C0000000C040",
+> +    "EventName": "PM_DATA_FROM_L2MISS_DSRC",
+> +    "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss."
+> +  },
+>     {
+>       "EventCode": "0x000380000010C040",
+>       "EventName": "PM_INST_FROM_L2MISS_ALL",
+> @@ -161,9 +166,14 @@
+>     },
+>     {
+>       "EventCode": "0x000780000000C040",
+> -    "EventName": "PM_INST_FROM_L3MISS",
+> +    "EventName": "PM_INST_FROM_L3MISS_DSRC",
+>       "BriefDescription": "The processor's instruction cache was reloaded from beyond the local core's L3 due to a demand miss."
+>     },
+> +  {
+> +    "EventCode": "0x0007C0000000C040",
+> +    "EventName": "PM_DATA_FROM_L3MISS_DSRC",
+> +    "BriefDescription": "The processor's L1 data cache was reloaded from beyond the local core's L3 due to a demand miss."
+> +  },
+>     {
+>       "EventCode": "0x000780000010C040",
+>       "EventName": "PM_INST_FROM_L3MISS_ALL",
+> @@ -981,7 +991,7 @@
+>     },
+>     {
+>       "EventCode": "0x0003C0000000C142",
+> -    "EventName": "PM_MRK_DATA_FROM_L2MISS",
+> +    "EventName": "PM_MRK_DATA_FROM_L2MISS_DSRC",
+>       "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss for a marked instruction."
+>     },
+>     {
+> @@ -1046,12 +1056,12 @@
+>     },
+>     {
+>       "EventCode": "0x000780000000C142",
+> -    "EventName": "PM_MRK_INST_FROM_L3MISS",
+> +    "EventName": "PM_MRK_INST_FROM_L3MISS_DSRC",
+>       "BriefDescription": "The processor's instruction cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
+>     },
+>     {
+>       "EventCode": "0x0007C0000000C142",
+> -    "EventName": "PM_MRK_DATA_FROM_L3MISS",
+> +    "EventName": "PM_MRK_DATA_FROM_L3MISS_DSRC",
+>       "BriefDescription": "The processor's L1 data cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
+>     },
+>     {
