@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WPCl6vSI"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABD21FD4
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:09:56 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5cef61289fdso38425097b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:09:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1F0Y4RdN"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2DDA1FF1
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:01 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-db3fc4a1254so5501901276.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701122996; x=1701727796; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701123001; x=1701727801; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=WzfDI2A+Dhir6Mech0OT0IIjPNEDsBuzrIL0dTnaONc=;
-        b=WPCl6vSIkYCmhmu5akCPCP2wiA+siWnPsU1ovqYyvnlCilvAj/f6d/b7vgwr+E/diC
-         Ba6bBizXb1y82anhXo8OS5HdKsXpKCjA72oMgZuGAhFyaGlM6TMycIJBW9NdDAqdzyO9
-         te6IJFlwKLbAZxtZbDSSMlhAZfqszic+zOL7Ercp+Q3xfVjP1Mg/DeWRNDcNYsY8m4PE
-         5agcqzjazPelhn8a3OdtyzNGmjQHFNE1NUbmPvqx0AVDmc5rnl07tzOO47U5JmptxV37
-         HousULPdBYyjJfZUeAIy95e8Afl3enRxsd2XgUbJzEi8G5D9WLdQA+K+9FdqpMjMgOiB
-         jL5w==
+        bh=dubn7azNjRzLb/gPhpvhXF4YdgS4DTAmzBs+Pldy+XA=;
+        b=1F0Y4RdNqaCYCQTk06YJ6pUPFLkE7uIJ1/Ya10PV8BgKPIRrjQMmXJ82pbYpsttWBT
+         SAURZX/TBEpHGC7ZComRk2qzGAtgSPJgUmG3C1ihtma3AIQ5pMZKnNok3r0ElsaG2rlP
+         6VZSEtKB5trBSeqnts5YZPydD/hgYXHuG677NWsK7N+aZYMI8hOeEXCMXCn39POryreL
+         biP8FrIrTlH6ASc6ZLghFPeXBjDK3y99+/WJfFvyzEwFKVv+lYBbj51CxkTDQ8sUTJQj
+         a7zpiozgiA4W5I9Az4aS0CJ8jupsD0Cg2n4cgedFwxB95GOEYEbqCt4QEp/8Hw2zYNJO
+         oXNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701122996; x=1701727796;
+        d=1e100.net; s=20230601; t=1701123001; x=1701727801;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WzfDI2A+Dhir6Mech0OT0IIjPNEDsBuzrIL0dTnaONc=;
-        b=ct2+U1rpa8UxptLi9zbX9A6h0/dYxQbsRqlIAjWp+niqEc/DBQnNBoAmjN4gLb6khx
-         TFT4gd7JhyLDvlu7VJDUnX+3BL78a2ynKG51xJJ8XtK4WrjF9x9HVKIzp7a/AY5LuCS9
-         iZmpu8CTo4A7vmffoolHPBWL73yemOY5U1XtAQPM7WY3JuioXm4IDyYPhn09u8Ww0vZy
-         N2eua7kzwI6brrxu1r+2xxjaVF3//Y2MS7YBhOnXQBQOKDuFMQ9IqBgvb1FihbwVAjsZ
-         /xfKQmjKcvvlhkzUrpmNdgG96kEbsDuAwL8oNmGnekQqi8zO4l0oDkfmNxPbSwPgNnQR
-         2qhA==
-X-Gm-Message-State: AOJu0YzAmbLn8TePf+dg1M+erBsfd4kO5DCxg+oNSb37HyBTGNIY6zSs
-	6YJH9FQ88+rPwG9Ee9adT5rTzeiheQLE
-X-Google-Smtp-Source: AGHT+IGaIKu2ArZXpqNdtgLevplTsAmQxqFNH6ymMaSKl7+FsV5pF6ixsfu9G03ipjuFp54UpIs7B5jz9E9Z
+        bh=dubn7azNjRzLb/gPhpvhXF4YdgS4DTAmzBs+Pldy+XA=;
+        b=wx9RW57EuSYeJR5IqpL2LBUBVgBbYhsu1NmVp25mtZeAUuIMQgTOF0I46clXkKRO0i
+         ikG/H2NIDcbmMbmI9rv2tU/Blg5xKBR4FCCAj7IXwbbx3mtU9/vDkH2NdY+YXL6Nz0ru
+         xNqaW324+vaYuKz4PAdxiNp4jkwUjm059w+5M/g50IxKh93k85TztQInK6APINIDv4IX
+         J27NvrHbMvoDJpB25yVOOlcy6nOi88YUDt8zitOcwqrU3S16wyBZshSTFmwGbzMZoLEk
+         qV4TxIMIYGX/mhxL3QdUMRXM2vie/PS/oaSE8HC6IbVvSE+9vkYfVvXpd+2N0oSTxRMP
+         bVKA==
+X-Gm-Message-State: AOJu0Yw4q854BeZd5T+Dmp0jXEuLdIanfwBzvBx9cR30EpTZa/d7QBst
+	FrW/U8jbNKfgTA5vH5+cQp67H7VEnQfU
+X-Google-Smtp-Source: AGHT+IEaOCzWw58O6tkRPhmEwrRer+C2IAwifWt4WHXhCTkV1/h3rdF36OO/vwJHAzjbY7qpMjDmoOokUH97
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:829:6e77:9093:f39b])
- (user=irogers job=sendgmr) by 2002:a05:690c:2e87:b0:5cc:3d0c:2b60 with SMTP
- id eu7-20020a05690c2e8700b005cc3d0c2b60mr369861ywb.4.1701122996145; Mon, 27
- Nov 2023 14:09:56 -0800 (PST)
-Date: Mon, 27 Nov 2023 14:08:26 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:e91:b0:db4:5e66:98fe with SMTP id
+ dg17-20020a0569020e9100b00db45e6698femr358446ybb.11.1701123000839; Mon, 27
+ Nov 2023 14:10:00 -0800 (PST)
+Date: Mon, 27 Nov 2023 14:08:28 -0800
 In-Reply-To: <20231127220902.1315692-1-irogers@google.com>
-Message-Id: <20231127220902.1315692-15-irogers@google.com>
+Message-Id: <20231127220902.1315692-17-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231127220902.1315692-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v5 14/50] perf thread: Add missing RC_CHK_EQUAL
+Subject: [PATCH v5 16/50] perf maps: Add remove maps function to remove a map
+ based on callback
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,28 +69,135 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Comparing pointers without RC_CHK_ACCESS means the indirect object
-will be compared rather than the underlying maps when REFCNT_CHECKING
-is enabled. Fix by adding missing RC_CHK_EQUAL.
+Removing maps wasn't being done under the write lock. Similar to
+maps__for_each_map, iterate the entries but in this case remove the
+entry based on the result of the callback. If an entry was removed
+then maps_by_name also needs updating, so add missed flush.
+
+In dso__load_kcore, the test of map to save would always be false with
+REFCNT_CHECKING because of a missing RC_CHK_ACCESS.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/thread.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/maps.c   | 24 ++++++++++++++++++++++++
+ tools/perf/util/maps.h   |  6 ++----
+ tools/perf/util/symbol.c | 24 ++++++++++++------------
+ 3 files changed, 38 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index fe5e6991ae4b..b9c2039c4230 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -385,7 +385,7 @@ static int thread__clone_maps(struct thread *thread, struct thread *parent, bool
- 	if (thread__pid(thread) == thread__pid(parent))
- 		return thread__prepare_access(thread);
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 00e6589bba10..f13fd3a9686b 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -13,6 +13,10 @@
+ #define maps__for_each_entry(maps, map) \
+ 	for (map = maps__first(maps); map; map = map_rb_node__next(map))
  
--	if (thread__maps(thread) == thread__maps(parent)) {
-+	if (RC_CHK_EQUAL(thread__maps(thread), thread__maps(parent))) {
- 		pr_debug("broken map groups on thread %d/%d parent %d/%d\n",
- 			 thread__pid(thread), thread__tid(thread),
- 			 thread__pid(parent), thread__tid(parent));
++#define maps__for_each_entry_safe(maps, map, next) \
++	for (map = maps__first(maps), next = map_rb_node__next(map); map; \
++	     map = next, next = map_rb_node__next(map))
++
+ static void maps__init(struct maps *maps, struct machine *machine)
+ {
+ 	refcount_set(maps__refcnt(maps), 1);
+@@ -214,6 +218,26 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
+ 	return ret;
+ }
+ 
++void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data)
++{
++	struct map_rb_node *pos, *next;
++	unsigned int start_nr_maps;
++
++	down_write(maps__lock(maps));
++
++	start_nr_maps = maps__nr_maps(maps);
++	maps__for_each_entry_safe(maps, pos, next)	{
++		if (cb(pos->map, data)) {
++			__maps__remove(maps, pos);
++			--RC_CHK_ACCESS(maps)->nr_maps;
++		}
++	}
++	if (maps__maps_by_name(maps) && start_nr_maps != maps__nr_maps(maps))
++		__maps__free_maps_by_name(maps);
++
++	up_write(maps__lock(maps));
++}
++
+ struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp)
+ {
+ 	struct map *map = maps__find(maps, addr);
+diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
+index 8ac30cdaf5bd..b94ad5c8fea7 100644
+--- a/tools/perf/util/maps.h
++++ b/tools/perf/util/maps.h
+@@ -36,10 +36,6 @@ struct map_rb_node *map_rb_node__next(struct map_rb_node *node);
+ struct map_rb_node *maps__find_node(struct maps *maps, struct map *map);
+ struct map *maps__find(struct maps *maps, u64 addr);
+ 
+-#define maps__for_each_entry_safe(maps, map, next) \
+-	for (map = maps__first(maps), next = map_rb_node__next(map); map; \
+-	     map = next, next = map_rb_node__next(map))
+-
+ DECLARE_RC_STRUCT(maps) {
+ 	struct rb_root      entries;
+ 	struct rw_semaphore lock;
+@@ -80,6 +76,8 @@ static inline void __maps__zput(struct maps **map)
+ 
+ /* Iterate over map calling cb for each entry. */
+ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data), void *data);
++/* Iterate over map removing an entry if cb returns true. */
++void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
+ 
+ static inline struct rb_root *maps__entries(struct maps *maps)
+ {
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 72f03b875478..30da8a405d11 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1239,13 +1239,23 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
+ 	return 0;
+ }
+ 
++static bool remove_old_maps(struct map *map, void *data)
++{
++	const struct map *map_to_save = data;
++
++	/*
++	 * We need to preserve eBPF maps even if they are covered by kcore,
++	 * because we need to access eBPF dso for source data.
++	 */
++	return RC_CHK_ACCESS(map) != RC_CHK_ACCESS(map_to_save) && !__map__is_bpf_prog(map);
++}
++
+ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 			   const char *kallsyms_filename)
+ {
+ 	struct maps *kmaps = map__kmaps(map);
+ 	struct kcore_mapfn_data md;
+ 	struct map *replacement_map = NULL;
+-	struct map_rb_node *old_node, *next;
+ 	struct machine *machine;
+ 	bool is_64_bit;
+ 	int err, fd;
+@@ -1292,17 +1302,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	}
+ 
+ 	/* Remove old maps */
+-	maps__for_each_entry_safe(kmaps, old_node, next) {
+-		struct map *old_map = old_node->map;
+-
+-		/*
+-		 * We need to preserve eBPF maps even if they are
+-		 * covered by kcore, because we need to access
+-		 * eBPF dso for source data.
+-		 */
+-		if (old_map != map && !__map__is_bpf_prog(old_map))
+-			maps__remove(kmaps, old_map);
+-	}
++	maps__remove_maps(kmaps, remove_old_maps, map);
+ 	machine->trampolines_mapped = false;
+ 
+ 	/* Find the kernel map using the '_stext' symbol */
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
