@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t9mKuVfR"
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0C710D8
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 11:28:38 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-50babb66dedso5377e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 11:28:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v2u4G/Ni"
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3882D5B
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 12:26:43 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-50aba9b8955so13167e87.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 12:26:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701113316; x=1701718116; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701116802; x=1701721602; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=emsUw2/bJXpid3wTNhP0ePyetslR3hOrktzFF6VS7Tk=;
-        b=t9mKuVfRYSi11h4hMOeCOUqEwtrsSrLieu0r+Iw880q0KBobBe8KEzYRcTBKlf9RI3
-         DekwH/ccmNl/UqUaBmFXIEsd01cbAsm75bNqGV5SmQbZgMvOr2RwQ6sGCbPwoUjZYha2
-         VTQSfnqFw9gXGcUUS9iGQLNbksr+BEap9jBmNZaF5aA2xdgRp3/7QHmSgQC3EQ9owuz7
-         DPHqWSrZ7aJ/1PgU+AQWfkPDhzRecUROp6gPJOLk9XrvdkdAo6HJ8kzS6juYs1Gwdpc2
-         Lm4/P0WQHB0j+WNPYyEoq2Dzrxzahr1gpaldntzzmuMcWVP4pWg9Z7wHtvU4XMekpR7x
-         9pgg==
+        bh=dNtbW7bb1joRBd02cZwF5zPKpcLSt2ynX6nmeWUG++o=;
+        b=v2u4G/NikjoCRNKLXT7gRsYoU/kJ2LI4RxhcCkFKP6AyoYIIZHUueQToNBIinzlOmP
+         lN3xbMLJRPjngBLVSAbLZrnc0S1GmL/PPxfl/7J5QVNSK4S1xd6IcYGscb5/Br/VWeC8
+         encknEOx/j4fcHsxKJmiNX5D1gZA6gg/ZpAw3D7T3kMzB+0GhcAYO1+UtJ30aRV/MFWx
+         iVBClxyZ3DhH2IG6y7b61MUBgRs4MGevC9eEiQcoWzwbeoIrdQsrBOKFmz4UGkVwFea4
+         1D5hSBzZTBZpA4BeDu5GVaHVmqRCJPPGxuj9/yo8hoIxi/TNXfMw1PsJirm/pPvGpe66
+         8tpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701113316; x=1701718116;
+        d=1e100.net; s=20230601; t=1701116802; x=1701721602;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=emsUw2/bJXpid3wTNhP0ePyetslR3hOrktzFF6VS7Tk=;
-        b=jhnIbEfO+QxLCUBN3jgCMZ2WZqSP1iD8LRNDty4VqnuqwQqwb+vwnjFGK0F1F9zjAb
-         C3qV/STn1wxZF18yUWcO2lndrm+YUr8fx40311TlcLE/NPo36zzD+6MhgBpBBImeDMuw
-         I3LWIlhgyNCXV7e+P+kBhicdyFMV5fh/0MdKWxJoavG/Ps00x+O9EHnCVCB5FPKQFXCT
-         jED/UjIJVdXR6Zjqdt44YxY4bb/r/q5QKdd4Z5XRVDNHLev6aXJdP/XS1wMMQBdDI1Ut
-         HDJqe7rrI2R7SyZ/c3YmMRr34+zGvdJ2zerO9Vyq9V4cnwTTIT6FhQ76VQmHz9xq4K+Z
-         u+pA==
-X-Gm-Message-State: AOJu0Yxo9R5UY1ZjvaX//AH5W6fhBVKYjkW/KuG5j9+d8UUj2PeFzOMT
-	hpT8C9PAlo/yR5bYDRYwD6gBMFdi0v9Rmwp3XRualA==
-X-Google-Smtp-Source: AGHT+IGqz5YV8saJWdO+etbO+UPSAP/D4OHFvMdJV3aIAzcmDHsaTLH1laau0c92fGE4K+1K5IgG18qww6GSfojHddI=
-X-Received: by 2002:ac2:4c8e:0:b0:50a:a790:30b9 with SMTP id
- d14-20020ac24c8e000000b0050aa79030b9mr324468lfl.0.1701113315882; Mon, 27 Nov
- 2023 11:28:35 -0800 (PST)
+        bh=dNtbW7bb1joRBd02cZwF5zPKpcLSt2ynX6nmeWUG++o=;
+        b=DXAMo1wTKvR1Lwzwt7F9uygPiRbaG996u30UWJ1WFYBuMm7KXrd0yA571wCvz93kbQ
+         kfDjCEz0OEqW8SrSgTB4D+KFvCVn1k0Bv7m+r4A0cvM5ox4WRrZK+eAhouKji+t8uszX
+         6CJlIFjtGdQ3/7rSJODrOT17vzU58ZBVpKMIW/C7GACHBFQETkPvnOipXB+XZ2pjU9lW
+         zdMSqNMHss7SphVgNLqyLoq6di8QeISUinQ2UlrdY0wUJykjGp00NKI5scpxTLY/9eNb
+         AXv3ndtIu6ma0iRhxkP/U5S/Ooy5zrQJddO7hXBP2Nqh1PvUg2bHUnilRAY4aEgVfPsu
+         n7Ww==
+X-Gm-Message-State: AOJu0Yw0ExLmHoHX6aJd0vmuwj91tj/DGWrpkPrLfppLT44hhGhnqBS2
+	D0ZX56B9y5TiE7OsZr/tSvhRjLInY0mBV4vJB3Mc2g==
+X-Google-Smtp-Source: AGHT+IE0vJHXXs+UpDyTFUu/c9agbsDp0hdFxUpV6rm235xacPJlBYe+WQXjBEzMzPbALedPRf2rjhzf79SOYkWJSjM=
+X-Received: by 2002:a05:6512:1585:b0:50a:519d:5a8a with SMTP id
+ bp5-20020a056512158500b0050a519d5a8amr327946lfb.5.1701116802002; Mon, 27 Nov
+ 2023 12:26:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231102175735.2272696-1-irogers@google.com> <20231102175735.2272696-4-irogers@google.com>
- <ZUSwOlsOyJdDT1ls@gentoo.org> <CAP-5=fVm5rmOTvXi1LZzSEc3wHv68HszOfZmBb-RG=eUj2UVHg@mail.gmail.com>
- <CAM9d7ciqPsR1DNnngZApwkyNd+6AQPtqxBvy=m_jsMnchHvr9w@mail.gmail.com>
-In-Reply-To: <CAM9d7ciqPsR1DNnngZApwkyNd+6AQPtqxBvy=m_jsMnchHvr9w@mail.gmail.com>
+References: <20231102175735.2272696-1-irogers@google.com> <20231102175735.2272696-7-irogers@google.com>
+ <CAM9d7chgQBGMmyDyi98OUzyJHWaNUfw34VD=pStkX_n-t5Vpkg@mail.gmail.com>
+In-Reply-To: <CAM9d7chgQBGMmyDyi98OUzyJHWaNUfw34VD=pStkX_n-t5Vpkg@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 27 Nov 2023 11:28:24 -0800
-Message-ID: <CAP-5=fXFPnpOvYJeKTeDGDjDw4FD1KS22U+D0Aeffx3qaNW7MQ@mail.gmail.com>
-Subject: Re: [PATCH v4 03/53] libperf: Lazily allocate mmap event copy
+Date: Mon, 27 Nov 2023 12:26:29 -0800
+Message-ID: <CAP-5=fVLOghVQjHAjLrJPN9wMTAwbCY+Fx4DU-QuJBVPq6BejA@mail.gmail.com>
+Subject: Re: [PATCH v4 06/53] tools api fs: Switch filename__read_str to use io.h
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Guilherme Amadio <amadio@gentoo.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
 	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
@@ -70,127 +69,90 @@ Cc: Guilherme Amadio <amadio@gentoo.org>, Peter Zijlstra <peterz@infradead.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 5, 2023 at 10:12=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Sun, Nov 5, 2023 at 7:53=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
 >
-> On Fri, Nov 3, 2023 at 8:49=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+> On Thu, Nov 2, 2023 at 10:58=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
 > >
-> > On Fri, Nov 3, 2023 at 1:33=E2=80=AFAM Guilherme Amadio <amadio@gentoo.=
-org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Nov 02, 2023 at 10:56:45AM -0700, Ian Rogers wrote:
-> > > > The event copy in the mmap is used to have storage to a read
-> > > > event. Not all users of mmaps read the events, such as perf record,=
- so
-> > > > switch the allocation to being on first read rather than being
-> > > > embedded within the perf_mmap.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/lib/perf/include/internal/mmap.h | 2 +-
-> > > >  tools/lib/perf/mmap.c                  | 9 +++++++++
-> > > >  2 files changed, 10 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/lib/perf/include/internal/mmap.h b/tools/lib/per=
-f/include/internal/mmap.h
-> > > > index 5a062af8e9d8..b11aaf5ed645 100644
-> > > > --- a/tools/lib/perf/include/internal/mmap.h
-> > > > +++ b/tools/lib/perf/include/internal/mmap.h
-> > > > @@ -33,7 +33,7 @@ struct perf_mmap {
-> > > >       bool                     overwrite;
-> > > >       u64                      flush;
-> > > >       libperf_unmap_cb_t       unmap_cb;
-> > > > -     char                     event_copy[PERF_SAMPLE_MAX_SIZE] __a=
-ligned(8);
-> > > > +     void                    *event_copy;
-> > > >       struct perf_mmap        *next;
-> > > >  };
-> > > >
-> > > > diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> > > > index 2184814b37dd..91ae46aac378 100644
-> > > > --- a/tools/lib/perf/mmap.c
-> > > > +++ b/tools/lib/perf/mmap.c
-> > > > @@ -51,6 +51,8 @@ int perf_mmap__mmap(struct perf_mmap *map, struct=
- perf_mmap_param *mp,
-> > > >
-> > > >  void perf_mmap__munmap(struct perf_mmap *map)
-> > > >  {
-> > > > +     free(map->event_copy);
-> > > > +     map->event_copy =3D NULL;
-> > > >       if (map && map->base !=3D NULL) {
-> > >
-> > > If map can be NULL as the if statement above suggests, then there is =
-a
-> > > potential a null pointer dereference bug here. Suggestion:
-> > >
-> > >     if (!map)
-> > >         return;
-> > >
-> > >     free(map->event_copy);
-> > >     map->event_copy =3D NULL;
-> > >     if (map->base !=3D NULL) {
-> > >
-> > >     ...
+> > filename__read_str has its own string reading code that allocates
+> > memory before reading into it. The memory allocated is sized at BUFSIZ
+> > that is 8kb. Most strings are short and so most of this 8kb is
+> > wasted.
 > >
-> > Makes sense, will fix in v5. Waiting to get additional feedback to
-> > avoid too much email.
+> > Refactor io__getline so that the newline character can be configurable
+> > and ignored in the case of filename__read_str.
+> >
+> > Code like build_caches_for_cpu in perf's header.c will read many
+> > strings and hold them in a data structure, in this case multiple
+> > strings per cache level per CPU. Using io.h's io__getline avoids the
+> > wasted memory as strings are temporarily read into a buffer on the
+> > stack before being copied to a buffer that grows 128 bytes at a time
+> > and is never sized larger than the string.
+> >
+> > For a 16 hyperthread system the memory consumption of "perf record
+> > true" is reduced by 180kb, primarily through saving memory when
+> > reading the cache information.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
 >
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> [SNIP]
+> > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+> > index a77b74c5fb65..50d33e14fb56 100644
+> > --- a/tools/lib/api/io.h
+> > +++ b/tools/lib/api/io.h
+> > @@ -141,7 +141,7 @@ static inline int io__get_dec(struct io *io, __u64 =
+*dec)
+> >  }
+> >
+> >  /* Read up to and including the first newline following the pattern of=
+ getline. */
 >
+> You may want to update the comment as well.
 >
-> But I have another concern (not related to this change).
+> > -static inline ssize_t io__getline(struct io *io, char **line_out, size=
+_t *line_len_out)
+> > +static inline ssize_t io__getline_nl(struct io *io, char **line_out, s=
+ize_t *line_len_out, int nl)
 >
-> > >
-> > > >               munmap(map->base, perf_mmap__mmap_len(map));
-> > > >               map->base =3D NULL;
-> > > > @@ -226,6 +228,13 @@ static union perf_event *perf_mmap__read(struc=
-t perf_mmap *map,
-> > > >                       unsigned int len =3D min(sizeof(*event), size=
-), cpy;
->
-> I'm not sure if it's ok to read less than the actual size, IOW
-> it seems to assume 'size' is smaller than sizeof(*event).
-> I guess it's true for most cases as union perf_event has
-> perf_record_mmap2 (among others) which contains a
-> filename array of size PATH_MAX.
->
-> But the SAMPLE record can be larger than that when it has
-> PERF_SAMPLE_AUX IIRC.  It'd happen only if it crossed the mmap
-> boundary and I'm afraid it'd corrupt the data.
+> How about io__getdelim() similar to POSIX?
 
-Thanks, I was thinking this would just be a drop in change but I think
-given this feedback it would be better to switch from allocating once
-a PERF_SAMPLE_MAX_SIZE buffer to allocating or reallocating one based
-on size. This potentially saves memory when size is less than
-PERF_SAMPLE_MAX_SIZE and by removing the min calculation for the
-amount copied (len) we can potentially exceed it and fix a potential
-bug. I'll add this in v5.
+Thanks done for v5.
 
-Thanks,
 Ian
 
 > Thanks,
 > Namhyung
 >
 >
-> > > >                       void *dst =3D map->event_copy;
-> > > >
-> > > > +                     if (!dst) {
-> > > > +                             dst =3D malloc(PERF_SAMPLE_MAX_SIZE);
-> > > > +                             if (!dst)
-> > > > +                                     return NULL;
-> > > > +                             map->event_copy =3D dst;
-> > > > +                     }
-> > > > +
-> > > >                       do {
-> > > >                               cpy =3D min(map->mask + 1 - (offset &=
- map->mask), len);
-> > > >                               memcpy(dst, &data[offset & map->mask]=
-, cpy);
-> > > > --
-> > > > 2.42.0.869.gea05f2083d-goog
-> > > >
-> > > >
+> >  {
+> >         char buf[128];
+> >         int buf_pos =3D 0;
+> > @@ -151,7 +151,7 @@ static inline ssize_t io__getline(struct io *io, ch=
+ar **line_out, size_t *line_l
+> >
+> >         /* TODO: reuse previously allocated memory. */
+> >         free(*line_out);
+> > -       while (ch !=3D '\n') {
+> > +       while (ch !=3D nl) {
+> >                 ch =3D io__get_char(io);
+> >
+> >                 if (ch < 0)
+> > @@ -184,4 +184,9 @@ static inline ssize_t io__getline(struct io *io, ch=
+ar **line_out, size_t *line_l
+> >         return -ENOMEM;
+> >  }
+> >
+> > +static inline ssize_t io__getline(struct io *io, char **line_out, size=
+_t *line_len_out)
+> > +{
+> > +       return io__getline_nl(io, line_out, line_len_out, /*nl=3D*/'\n'=
+);
+> > +}
+> > +
+> >  #endif /* __API_IO__ */
+> > --
+> > 2.42.0.869.gea05f2083d-goog
+> >
+>
