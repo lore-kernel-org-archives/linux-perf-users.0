@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bZyJN1sZ"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529482D69
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:38 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-db3ef4c7094so5513471276.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HTiwxl7r"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C56330C5
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:40 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5ca61d84dc3so57570697b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701123037; x=1701727837; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701123039; x=1701727839; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FQr150ScOb/lbmGkQrGttGTuSJdOwS+GnCjhxbgSEVc=;
-        b=bZyJN1sZF/Zm6vA5ddG3bNStjQ3cCTiYTaIVoKTHwees3lAo63QG/fMlJi4m3zky+L
-         GQlNQ1wLeVvJsCYPCWEjZp0dOgmOhCun+852HzTD6Rf4cNkpWOZb6Go/bhsUXiOGlnkh
-         aAor42mJr6Sgc9U80jhlAy/cJFOQH/4lXBAr9wY1Dhvpb3zXAVZAUsMie1eSyJkjuw5t
-         IJQT/mHw5J4T/PaONFTz8Nz8TByKSKaxBelxy4et1Nvyeu6pBEXfkcywWI2oyfTbM0nA
-         elhJQnK5gwK92Gi1Pc4XWjRQxiL7+2KmQj/Ft/d8IppMTNW0tU0yIQe8AoCnKaFyVKgZ
-         jaBQ==
+        bh=r3twY0uvBPOzHwJLVb2BMNzOWz+K3rhS0UQd7tzXJ1M=;
+        b=HTiwxl7rfRbjsqEWMZ7Upc3NL1leZE/IrDiO/xhJXJVjdavxvhHQEPW0ewRDahfDTG
+         MU7q9s73888ixd/3lXOiTzblB/hks7KA3iQX2C9HM2P+xb9+H+Ose9FGmifIzSe7A06d
+         TiKpdlKC9Nz2/RAHy0k52m9jwiz/Z5y9UZDwpfq0oTHIpriBE6qsf3OrYKezEQeMkUHp
+         zsLQJcYnmMT6Z4gK6gpWCBzzC6Ww8FaZvJpxB/SqSvArGI0YBofkh6fYYCXxoOchqSKu
+         Zm3fzhJBhI2mF62iRrUqxe6zFfPE47IHn9qJwg8tNTYl7UhQE8t3gPnyDuiQbaAj/7eF
+         sdyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701123037; x=1701727837;
+        d=1e100.net; s=20230601; t=1701123039; x=1701727839;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FQr150ScOb/lbmGkQrGttGTuSJdOwS+GnCjhxbgSEVc=;
-        b=KrmtJYZi9UGgqFHB5S/nTJJzo4BsZrlDkHq1xbkoK1TrZzAQoR65kNfeH9t1HFComB
-         QhFSr+G0tCF7yusudVG1MghYjdQK8sc6bE3SVAMsJu4OKAjfX2j3QZbQngeJGrTDNGQy
-         Pq9pCrTKwdHLQZmmBgcc+VTAGGH3+7zLFJJCoOteWoHZBHn+IEvYasW/Oe6eBDcXFENj
-         eMz7qIMn4ZZv3RnvR02cE8oxKKIenj4CGnaUXqYQrsmH/1OixVNrchZl9kwyz2YQLOb/
-         qxoy/UF2n4Y9plO3wxValaPOubpnUSZKrduO5znXzTq9Zi//oQdcl8DYlFiGCAsx4sQP
-         1MoQ==
-X-Gm-Message-State: AOJu0Yyk9aFBNbdb4uCGkYlZ79uN+8lY6D4yz6eGCgcHrus1e2dnkrRV
-	IISHEMNeb2eDcs6rmWyutqFTEBiZR0fx
-X-Google-Smtp-Source: AGHT+IExtR2pdCcyaQBNptluUzL8OErI9UZpcunqQynNOJ2BLbzrG9bJgqNJRJQmBc6vM4zmMn2NnsW+SRIu
+        bh=r3twY0uvBPOzHwJLVb2BMNzOWz+K3rhS0UQd7tzXJ1M=;
+        b=pFunbAQu9Nhb3cnz27BZhJwzYSHI7tIvkxGYsCI1CoRqmez5qXuji4Jicy/88r1rY3
+         yP8ixDmI1PQLZoyTn9GwZ0W7aW5g/f0aorq6rZZKZ3l4hNW8bzMABn0SRllnBr+KIPd1
+         DzsMHkLm9oWyGZiyoI6WV9tXXdvu0GeQBr9tla7uEQpTOmPSiPG8Rl3L+0fnCXA6Llqu
+         FgyIMDQ2oG7+LfydWMbttK3drb7cT6bfJNYX7oNrTsJOC8IwDc7yziFcs9bjOehlcJBL
+         SeB1bB+9jazPxZYQXXbNULxLn6kcwhu7wefutP5oexi6nxTd/zI98olWKSC/pdeNUSo9
+         GJUw==
+X-Gm-Message-State: AOJu0Yza7f4ef0C1g/J0rkp31ie6ij8JFkwLVBlEXZ7YGpJrvCNZulT/
+	GNnH2Hlq2sYnUzLF8rpS5UGYT/lL9zgx
+X-Google-Smtp-Source: AGHT+IEFv5RfRf/1pX/6Mw4XjOAKzvTXSY+p9X3X0nyJCS2pYRCz77kP9ZMqgnV3c58JMs2IoLRKBtaxXvUM
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:829:6e77:9093:f39b])
- (user=irogers job=sendgmr) by 2002:a05:6902:e91:b0:db4:5e66:98fe with SMTP id
- dg17-20020a0569020e9100b00db45e6698femr358495ybb.11.1701123037192; Mon, 27
- Nov 2023 14:10:37 -0800 (PST)
-Date: Mon, 27 Nov 2023 14:08:44 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:f84:b0:5ca:ad72:2d78 with SMTP id
+ df4-20020a05690c0f8400b005caad722d78mr503602ywb.8.1701123039435; Mon, 27 Nov
+ 2023 14:10:39 -0800 (PST)
+Date: Mon, 27 Nov 2023 14:08:45 -0800
 In-Reply-To: <20231127220902.1315692-1-irogers@google.com>
-Message-Id: <20231127220902.1315692-33-irogers@google.com>
+Message-Id: <20231127220902.1315692-34-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231127220902.1315692-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v5 32/50] perf report: Sort child tasks by tid
+Subject: [PATCH v5 33/50] perf trace: Ignore thread hashing in summary
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -69,367 +69,102 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 
 Commit 91e467bc568f ("perf machine: Use hashtable for machine
-threads") made the iteration of thread tids unordered. The perf report
---tasks output now shows child threads in an order determined by the
-hashing. For example, in this snippet tid 3 appears after tid 256 even
-though they have the same ppid 2:
-
-```
-$ perf report --tasks
-%      pid      tid     ppid  comm
-         0        0       -1 |swapper
-         2        2        0 | kthreadd
-       256      256        2 |  kworker/12:1H-k
-    693761   693761        2 |  kworker/10:1-mm
-   1301762  1301762        2 |  kworker/1:1-mm_
-   1302530  1302530        2 |  kworker/u32:0-k
-         3        3        2 |  rcu_gp
-...
-```
-
-The output is easier to read if threads appear numerically
-increasing. To allow for this, read all threads into a list then sort
-with a comparator that orders by the child task's of the first common
-parent. The list creation and deletion are created as utilities on
-machine.  The indentation is possible by counting the number of
-parents a child has.
-
-With this change the output for the same data file is now like:
-```
-$ perf report --tasks
-%      pid      tid     ppid  comm
-         0        0       -1 |swapper
-         1        1        0 | systemd
-       823      823        1 |  systemd-journal
-       853      853        1 |  systemd-udevd
-      3230     3230        1 |  systemd-timesyn
-      3236     3236        1 |  auditd
-      3239     3239     3236 |   audisp-syslog
-      3321     3321        1 |  accounts-daemon
-...
-```
+threads") made the iteration of thread tids unordered. The perf trace
+--summary output sorts and prints each hash bucket, rather than all
+threads globally. Change this behavior by turn all threads into a
+list, sort the list by number of trace events then by tids, finally
+print the list. This also allows the rbtree in threads to be not
+accessed outside of machine.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-report.c | 203 ++++++++++++++++++++----------------
- tools/perf/util/machine.c   |  30 ++++++
- tools/perf/util/machine.h   |  10 ++
- 3 files changed, 155 insertions(+), 88 deletions(-)
+ tools/perf/builtin-trace.c  | 41 +++++++++++++++++++++----------------
+ tools/perf/util/rb_resort.h |  5 -----
+ 2 files changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index a5d7bc5b843f..f5b95d45f6da 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -59,6 +59,7 @@
- #include <linux/ctype.h>
- #include <signal.h>
- #include <linux/bitmap.h>
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index e541d0e2777a..e9ff78b331fe 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -74,6 +74,7 @@
+ #include <linux/err.h>
+ #include <linux/filter.h>
+ #include <linux/kernel.h>
 +#include <linux/list_sort.h>
- #include <linux/string.h>
+ #include <linux/random.h>
  #include <linux/stringify.h>
  #include <linux/time64.h>
-@@ -830,35 +831,6 @@ static void tasks_setup(struct report *rep)
- 	rep->tool.no_warn = true;
+@@ -4314,34 +4315,38 @@ static unsigned long thread__nr_events(struct thread_trace *ttrace)
+ 	return ttrace ? ttrace->nr_events : 0;
  }
  
--struct task {
--	struct thread		*thread;
--	struct list_head	 list;
--	struct list_head	 children;
--};
--
--static struct task *tasks_list(struct task *task, struct machine *machine)
--{
--	struct thread *parent_thread, *thread = task->thread;
--	struct task   *parent_task;
--
--	/* Already listed. */
--	if (!list_empty(&task->list))
--		return NULL;
--
--	/* Last one in the chain. */
--	if (thread__ppid(thread) == -1)
--		return task;
--
--	parent_thread = machine__find_thread(machine, -1, thread__ppid(thread));
--	if (!parent_thread)
--		return ERR_PTR(-ENOENT);
--
--	parent_task = thread__priv(parent_thread);
--	thread__put(parent_thread);
--	list_add_tail(&task->list, &parent_task->children);
--	return tasks_list(parent_task, machine);
--}
--
- struct maps__fprintf_task_args {
- 	int indent;
- 	FILE *fp;
-@@ -902,89 +874,144 @@ static size_t maps__fprintf_task(struct maps *maps, int indent, FILE *fp)
- 	return args.printed;
- }
- 
--static void task__print_level(struct task *task, FILE *fp, int level)
-+static int thread_level(struct machine *machine, const struct thread *thread)
+-DEFINE_RESORT_RB(threads,
+-		(thread__nr_events(thread__priv(a->thread)) <
+-		 thread__nr_events(thread__priv(b->thread))),
+-	struct thread *thread;
+-)
++static int trace_nr_events_cmp(void *priv __maybe_unused,
++			       const struct list_head *la,
++			       const struct list_head *lb)
  {
--	struct thread *thread = task->thread;
--	struct task *child;
--	int comm_indent = fprintf(fp, "  %8d %8d %8d |%*s",
--				  thread__pid(thread), thread__tid(thread),
--				  thread__ppid(thread), level, "");
-+	struct thread *parent_thread;
-+	int res;
- 
--	fprintf(fp, "%s\n", thread__comm_str(thread));
-+	if (thread__tid(thread) <= 0)
-+		return 0;
- 
--	maps__fprintf_task(thread__maps(thread), comm_indent, fp);
-+	if (thread__ppid(thread) <= 0)
-+		return 1;
- 
--	if (!list_empty(&task->children)) {
--		list_for_each_entry(child, &task->children, list)
--			task__print_level(child, fp, level + 1);
-+	parent_thread = machine__find_thread(machine, -1, thread__ppid(thread));
-+	if (!parent_thread) {
-+		pr_err("Missing parent thread of %d\n", thread__tid(thread));
-+		return 0;
- 	}
-+	res = 1 + thread_level(machine, parent_thread);
-+	thread__put(parent_thread);
-+	return res;
+-	entry->thread = rb_entry(nd, struct thread_rb_node, rb_node)->thread;
++	struct thread_list *a = list_entry(la, struct thread_list, list);
++	struct thread_list *b = list_entry(lb, struct thread_list, list);
++	unsigned long a_nr_events = thread__nr_events(thread__priv(a->thread));
++	unsigned long b_nr_events = thread__nr_events(thread__priv(b->thread));
++
++	if (a_nr_events != b_nr_events)
++		return a_nr_events < b_nr_events ? -1 : 1;
++
++	/* Identical number of threads, place smaller tids first. */
++	return thread__tid(a->thread) < thread__tid(b->thread)
++		? -1
++		: (thread__tid(a->thread) > thread__tid(b->thread) ? 1 : 0);
  }
  
--static int tasks_print(struct report *rep, FILE *fp)
-+static void task__print_level(struct machine *machine, struct thread *thread, FILE *fp)
+ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp)
  {
--	struct perf_session *session = rep->session;
--	struct machine      *machine = &session->machines.host;
--	struct task *tasks, *task;
--	unsigned int nr = 0, itask = 0, i;
+ 	size_t printed = trace__fprintf_threads_header(fp);
 -	struct rb_node *nd;
--	LIST_HEAD(list);
-+	int level = thread_level(machine, thread);
-+	int comm_indent = fprintf(fp, "  %8d %8d %8d |%*s",
-+				  thread__pid(thread), thread__tid(thread),
-+				  thread__ppid(thread), level, "");
- 
--	/*
--	 * No locking needed while accessing machine->threads,
--	 * because --tasks is single threaded command.
--	 */
-+	fprintf(fp, "%s\n", thread__comm_str(thread));
- 
--	/* Count all the threads. */
--	for (i = 0; i < THREADS__TABLE_SIZE; i++)
--		nr += machine->threads[i].nr;
-+	maps__fprintf_task(thread__maps(thread), comm_indent, fp);
-+}
- 
--	tasks = malloc(sizeof(*tasks) * nr);
--	if (!tasks)
--		return -ENOMEM;
-+static int task_list_cmp(void *priv, const struct list_head *la, const struct list_head *lb)
-+{
-+	struct machine *machine = priv;
-+	struct thread_list *task_a = list_entry(la, struct thread_list, list);
-+	struct thread_list *task_b = list_entry(lb, struct thread_list, list);
-+	struct thread *a = task_a->thread;
-+	struct thread *b = task_b->thread;
-+	int level_a, level_b, res;
-+
-+	/* Compare a and b to root. */
-+	if (thread__tid(a) == thread__tid(b))
-+		return 0;
- 
+-	int i;
+-
 -	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads *threads = &machine->threads[i];
-+	if (thread__tid(a) == 0)
-+		return -1;
+-		DECLARE_RESORT_RB_MACHINE_THREADS(threads, trace->host, i);
++	LIST_HEAD(threads);
  
--		for (nd = rb_first_cached(&threads->entries); nd;
--		     nd = rb_next(nd)) {
--			task = tasks + itask++;
-+	if (thread__tid(b) == 0)
-+		return 1;
- 
--			task->thread = rb_entry(nd, struct thread_rb_node, rb_node)->thread;
--			INIT_LIST_HEAD(&task->children);
--			INIT_LIST_HEAD(&task->list);
--			thread__set_priv(task->thread, task);
+-		if (threads == NULL) {
+-			fprintf(fp, "%s", "Error sorting output by nr_events!\n");
+-			return 0;
 -		}
-+	/* If parents match sort by tid. */
-+	if (thread__ppid(a) == thread__ppid(b)) {
-+		return thread__tid(a) < thread__tid(b)
-+			? -1
-+			: (thread__tid(a) > thread__tid(b) ? 1 : 0);
++	if (machine__thread_list(trace->host, &threads) == 0) {
++		struct thread_list *pos;
+ 
+-		resort_rb__for_each_entry(nd, threads)
+-			printed += trace__fprintf_thread(fp, threads_entry->thread, trace);
++		list_sort(NULL, &threads, trace_nr_events_cmp);
+ 
+-		resort_rb__delete(threads);
++		list_for_each_entry(pos, &threads, list)
++			printed += trace__fprintf_thread(fp, pos->thread, trace);
  	}
- 
- 	/*
--	 * Iterate every task down to the unprocessed parent
--	 * and link all in task children list. Task with no
--	 * parent is added into 'list'.
-+	 * Find a and b such that if they are a child of each other a and b's
-+	 * tid's match, otherwise a and b have a common parent and distinct
-+	 * tid's to sort by. First make the depths of the threads match.
- 	 */
--	for (itask = 0; itask < nr; itask++) {
--		task = tasks + itask;
--
--		if (!list_empty(&task->list))
--			continue;
--
--		task = tasks_list(task, machine);
--		if (IS_ERR(task)) {
--			pr_err("Error: failed to process tasks\n");
--			free(tasks);
--			return PTR_ERR(task);
-+	level_a = thread_level(machine, a);
-+	level_b = thread_level(machine, b);
-+	a = thread__get(a);
-+	b = thread__get(b);
-+	for (int i = level_a; i > level_b; i--) {
-+		struct thread *parent = machine__find_thread(machine, -1, thread__ppid(a));
-+
-+		thread__put(a);
-+		if (!parent) {
-+			pr_err("Missing parent thread of %d\n", thread__tid(a));
-+			thread__put(b);
-+			return -1;
- 		}
-+		a = parent;
-+	}
-+	for (int i = level_b; i > level_a; i--) {
-+		struct thread *parent = machine__find_thread(machine, -1, thread__ppid(b));
- 
--		if (task)
--			list_add_tail(&task->list, &list);
-+		thread__put(b);
-+		if (!parent) {
-+			pr_err("Missing parent thread of %d\n", thread__tid(b));
-+			thread__put(a);
-+			return 1;
-+		}
-+		b = parent;
-+	}
-+	/* Search up to a common parent. */
-+	while (thread__ppid(a) != thread__ppid(b)) {
-+		struct thread *parent;
-+
-+		parent = machine__find_thread(machine, -1, thread__ppid(a));
-+		thread__put(a);
-+		if (!parent)
-+			pr_err("Missing parent thread of %d\n", thread__tid(a));
-+		a = parent;
-+		parent = machine__find_thread(machine, -1, thread__ppid(b));
-+		thread__put(b);
-+		if (!parent)
-+			pr_err("Missing parent thread of %d\n", thread__tid(b));
-+		b = parent;
-+		if (!a || !b)
-+			return !a && !b ? 0 : (!a ? -1 : 1);
-+	}
-+	if (thread__tid(a) == thread__tid(b)) {
-+		/* a is a child of b or vice-versa, deeper levels appear later. */
-+		res = level_a < level_b ? -1 : (level_a > level_b ? 1 : 0);
-+	} else {
-+		/* Sort by tid now the parent is the same. */
-+		res = thread__tid(a) < thread__tid(b) ? -1 : 1;
- 	}
-+	thread__put(a);
-+	thread__put(b);
-+	return res;
-+}
-+
-+static int tasks_print(struct report *rep, FILE *fp)
-+{
-+	struct machine *machine = &rep->session->machines.host;
-+	LIST_HEAD(tasks);
-+	int ret;
- 
--	fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", "comm");
-+	ret = machine__thread_list(machine, &tasks);
-+	if (!ret) {
-+		struct thread_list *task;
- 
--	list_for_each_entry(task, &list, list)
--		task__print_level(task, fp, 0);
-+		list_sort(machine, &tasks, task_list_cmp);
- 
--	free(tasks);
--	return 0;
-+		fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", "comm");
-+
-+		list_for_each_entry(task, &tasks, list)
-+			task__print_level(machine, task->thread, fp);
-+	}
-+	thread_list__delete(&tasks);
-+	return ret;
++	thread_list__delete(&threads);
+ 	return printed;
  }
  
- static int __cmd_report(struct report *rep)
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index f9c77119af22..6d7a505850c8 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3258,6 +3258,36 @@ int machines__for_each_thread(struct machines *machines,
- 	return rc;
- }
+diff --git a/tools/perf/util/rb_resort.h b/tools/perf/util/rb_resort.h
+index 376e86cb4c3c..d927a0d25052 100644
+--- a/tools/perf/util/rb_resort.h
++++ b/tools/perf/util/rb_resort.h
+@@ -143,9 +143,4 @@ struct __name##_sorted *__name = __name##_sorted__new
+ 	DECLARE_RESORT_RB(__name)(&__ilist->rblist.entries.rb_root,		\
+ 				  __ilist->rblist.nr_entries)
  
-+
-+static int thread_list_cb(struct thread *thread, void *data)
-+{
-+	struct list_head *list = data;
-+	struct thread_list *entry = malloc(sizeof(*entry));
-+
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->thread = thread__get(thread);
-+	list_add_tail(&entry->list, list);
-+	return 0;
-+}
-+
-+int machine__thread_list(struct machine *machine, struct list_head *list)
-+{
-+	return machine__for_each_thread(machine, thread_list_cb, list);
-+}
-+
-+void thread_list__delete(struct list_head *list)
-+{
-+	struct thread_list *pos, *next;
-+
-+	list_for_each_entry_safe(pos, next, list, list) {
-+		thread__zput(pos->thread);
-+		list_del(&pos->list);
-+		free(pos);
-+	}
-+}
-+
- pid_t machine__get_current_tid(struct machine *machine, int cpu)
- {
- 	if (cpu < 0 || (size_t)cpu >= machine->current_tid_sz)
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 1279acda6a8a..b738ce84817b 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -280,6 +280,16 @@ int machines__for_each_thread(struct machines *machines,
- 			      int (*fn)(struct thread *thread, void *p),
- 			      void *priv);
- 
-+struct thread_list {
-+	struct list_head	 list;
-+	struct thread		*thread;
-+};
-+
-+/* Make a list of struct thread_list based on threads in the machine. */
-+int machine__thread_list(struct machine *machine, struct list_head *list);
-+/* Free up the nodes within the thread_list list. */
-+void thread_list__delete(struct list_head *list);
-+
- pid_t machine__get_current_tid(struct machine *machine, int cpu);
- int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
- 			     pid_t tid);
+-/* For 'struct machine->threads' */
+-#define DECLARE_RESORT_RB_MACHINE_THREADS(__name, __machine, hash_bucket)    \
+- DECLARE_RESORT_RB(__name)(&__machine->threads[hash_bucket].entries.rb_root, \
+-			   __machine->threads[hash_bucket].nr)
+-
+ #endif /* _PERF_RESORT_RB_H_ */
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
