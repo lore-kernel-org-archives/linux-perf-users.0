@@ -1,15 +1,15 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8A60310F;
-	Mon, 27 Nov 2023 02:45:10 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61CE893
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 03:12:57 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB4A32F4;
-	Mon, 27 Nov 2023 02:45:57 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA8262F4;
+	Mon, 27 Nov 2023 03:13:44 -0800 (PST)
 Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C02BB3F73F;
-	Mon, 27 Nov 2023 02:45:08 -0800 (PST)
-Message-ID: <be1d187c-a282-9b07-8485-72cf55833abf@arm.com>
-Date: Mon, 27 Nov 2023 10:45:10 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C76D53F73F;
+	Mon, 27 Nov 2023 03:12:55 -0800 (PST)
+Message-ID: <e8143e4d-d3ca-88c5-f1c8-b79f70ee5ffa@arm.com>
+Date: Mon, 27 Nov 2023 11:12:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -18,141 +18,237 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH] perf test: Remove atomics from test_loop to avoid test
- failures
+Subject: Re: [PATCH V4] tools/perf: Add perf binary dependent rule for
+ shellcheck log in Makefile.perf
 Content-Language: en-US
-To: Michael Petlan <mpetlan@redhat.com>,
- Nick Forrington <nick.forrington@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, vmolnaro@redhat.com
-References: <20231102162225.50028-1-nick.forrington@arm.com>
- <alpine.LRH.2.20.2311242037260.11297@Diego>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+ jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+ namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+References: <20231123160232.94253-1-atrajeev@linux.vnet.ibm.com>
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <alpine.LRH.2.20.2311242037260.11297@Diego>
+In-Reply-To: <20231123160232.94253-1-atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 24/11/2023 19:57, Michael Petlan wrote:
-> On Thu, 2 Nov 2023, Nick Forrington wrote:
->> The current use of atomics can lead to test failures, as tests (such as
->> tests/shell/record.sh) search for samples with "test_loop" as the
->> top-most stack frame, but find frames related to the atomic operation
->> (e.g. __aarch64_ldadd4_relax).
->>
->> This change simply removes the "count" variable, as it is not necessary.
-> 
-> Hello.
-> 
-> I believe that it was there to prevent the compiler to optimize the loop
-> out or some reason like that. Hopefully, it will work even without that
-> on all architectures with all compilers that are used for building perf...
+On 23/11/2023 16:02, Athira Rajeev wrote:
+> Add rule in new Makefile "tests/Makefile.tests" for running
+> shellcheck on shell test scripts. This automates below shellcheck
+> into the build.
 > 
 
-If that optimisation ever happens and there is a concrete case, I think
-it should be treated like any other test regression and fixed at that
-time when it's known what the specifics of that issue are. As Nick says
-in a later comment, the loop can't be optimised out because it depends
-on the done variable and the function is noinline.
+Seems to work really well. I also tested it on Ubuntu, and checked
+NO_SHELLCHECK, cleaning and with and without shellcheck installed etc.
 
-> I also think that the tests should be designed in a more robust way, so
-> that they aren't directly dependent on exact stack frames, e.g. let's look
-> at the "inet_pton" testcase...
+Reviewed-by: James Clark <james.clark@arm.com>
 
-This one doesn't look like it's dependent on exact stack frames, but
-just one frame at the end, which unless something is actually broken in
-Perf causing a failure, I don't see how could be made any more robust.
-
+> 	$ for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do shellcheck -S warning $F; done
 > 
-> The inet_pton test result check algorithm is designed to rely on exact
-> stacktrace, without a possibility to specify something like "we want this
-> and that in the stack trace, but otherwise, it does not matter which
-> wrappers are aroung". Then there must be the following code to adjust
-> the expected output exactly per architecture:
+> Condition for shellcheck is added in Makefile.perf to avoid build
+> breakage in the absence of shellcheck binary. Update Makefile.perf
+> to contain new rule for "SHELLCHECK_TEST" which is for making
+> shellcheck test as a dependency on perf binary.
 > 
->     echo "ping[][0-9 \.:]+$event_name: \([[:xdigit:]]+\)" > $expected
->     echo ".*inet_pton\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
->     case "$(uname -m)" in
->       s390x)
->         eventattr='call-graph=dwarf,max-stack=4'
->         echo "(__GI_)?getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
->         echo "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->       ;;
->       ppc64|ppc64le)
->         eventattr='max-stack=4'
->         echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
->         echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
->         echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->       ;;
->       *)
->         eventattr='max-stack=3'
->         echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->       ;;
->     esac
+> Added "tests/Makefile.tests" to run shellcheck on shellscripts in
+> tests/shell. The make rule "SHLLCHECK_RUN" ensures that, every
+> time during make, shellcheck will be run only on modified files
+> during subsequent invocations. By this, if any newly added shell
+> scripts or fixes in existing scripts breaks coding/formatting
+> style, it will get captured during the perf build.
 > 
-> Of course, since it relies on libc version, then we need patches, such as
->     1f85d016768f ("perf test record+probe_libc_inet_pton: Fix call chain match on x86_64")
->     311693ce81c9 ("perf test record+probe_libc_inet_pton: Fix call chain match on s390")
->     fb710ddee75f ("perf test record_probe_libc_inet_pton: Fix test on s/390 where 'text_to_binary_address' now appears on the backtrace")
->     ...
-> which break the test when used with older libc...
+> Example build failure by modifying probe_vfs_getname.sh in tests/shell:
 > 
-
-I definitely think that relying on external libraries for stacks in
-tests can be annoying to keep up to date, but that's exactly what we
-just removed from test_loop.
-
-For the inet_pton test it seems to be specifically testing probing libc,
-so maybe making the test program ourselves would make the test much less
-valuable. And then as long as all the tests are not like that and there
-is only this one to keep up to date, maybe it's not that bad.
-
-> I think that a better design of such test is either probing some program
-> of ourselves that has predictable and stable function call sequence or
-> be more robust in checking the stack trace.
+> 	In tests/shell/probe_vfs_getname.sh line 8:
+> 	. $(dirname $0)/lib/probe.sh
+> 	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
 > 
-> Thoughts?
+> 	For more information:
+> 	  https://www.shellcheck.net/wiki/SC2046 -- Quote this to prevent word splitt...
+> 	make[3]: *** [/root/athira/perf-tools-next/tools/perf/tests/Makefile.tests:18: tests/shell/.probe_vfs_getname.sh.shellcheck_log] Error 1
+> 	make[2]: *** [Makefile.perf:686: SHELLCHECK_TEST] Error 2
+> 	make[2]: *** Waiting for unfinished jobs....
+> 	make[1]: *** [Makefile.perf:244: sub-make] Error 2
+> 	make: *** [Makefile:70: all] Error 2
 > 
-> Michael
+> Here, like other files which gets created during
+> compilation (ex: .builtin-bench.o.cmd or .perf.o.cmd ),
+> create .shellcheck_log also as a hidden file.
+> Example: tests/shell/.probe_vfs_getname.sh.shellcheck_log
+> shellcheck is re-run if any of the script gets modified
+> based on its dependency of this log file.
 > 
->>
->> Fixes: 1962ab6f6e0b ("perf test workload thloop: Make count increments atomic")
->> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
->> ---
->>  tools/perf/tests/workloads/thloop.c | 4 +---
->>  1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
->> index af05269c2eb8..457b29f91c3e 100644
->> --- a/tools/perf/tests/workloads/thloop.c
->> +++ b/tools/perf/tests/workloads/thloop.c
->> @@ -7,7 +7,6 @@
->>  #include "../tests.h"
->>  
->>  static volatile sig_atomic_t done;
->> -static volatile unsigned count;
->>  
->>  /* We want to check this symbol in perf report */
->>  noinline void test_loop(void);
->> @@ -19,8 +18,7 @@ static void sighandler(int sig __maybe_unused)
->>  
->>  noinline void test_loop(void)
->>  {
->> -	while (!done)
->> -		__atomic_fetch_add(&count, 1, __ATOMIC_RELAXED);
->> +	while (!done);
->>  }
->>  
->>  static void *thfunc(void *arg)
->> -- 
->> 2.42.0
->>
->>
->>
+> After this, for testing, changed "tests/shell/trace+probe_vfs_getname.sh" to
+> break shellcheck format. In the next make run, it is
+> also captured:
 > 
+> 	In tests/shell/probe_vfs_getname.sh line 8:
+> 	. $(dirname $0)/lib/probe.sh
+> 	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
 > 
+> 	For more information:
+> 	  https://www.shellcheck.net/wiki/SC2046 -- Quote this to prevent word splitt...
+> 	make[3]: *** [/root/athira/perf-tools-next/tools/perf/tests/Makefile.tests:18: tests/shell/.probe_vfs_getname.sh.shellcheck_log] Error 1
+> 	make[3]: *** Waiting for unfinished jobs....
+> 
+> 	In tests/shell/trace+probe_vfs_getname.sh line 14:
+> 	. $(dirname $0)/lib/probe.sh
+> 	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
+> 
+> 	For more information:
+> 	  https://www.shellcheck.net/wiki/SC2046 -- Quote this to prevent word splitt...
+> 	make[3]: *** [/root/athira/perf-tools-next/tools/perf/tests/Makefile.tests:18: tests/shell/.trace+probe_vfs_getname.sh.shellcheck_log] Error 1
+> 	make[2]: *** [Makefile.perf:686: SHELLCHECK_TEST] Error 2
+> 	make[2]: *** Waiting for unfinished jobs....
+> 	make[1]: *** [Makefile.perf:244: sub-make] Error 2
+> 	make: *** [Makefile:70: all] Error 2
+> 
+> Failure log can be found in the stdout of make itself.
+> 
+> This is reported at build time. To be able to go ahead with
+> the build or disable shellcheck even though it is known that
+> some test is broken, add a "NO_SHELLCHECK" option. Example:
+> 
+>   make NO_SHELLCHECK=1
+> 
+> 	  INSTALL libsubcmd_headers
+> 	  INSTALL libsymbol_headers
+> 	  INSTALL libapi_headers
+> 	  INSTALL libperf_headers
+> 	  INSTALL libbpf_headers
+> 	  LINK    perf
+> 
+> Note:
+> This is tested on RHEL and also SLES. Use below check:
+> "$(shell which shellcheck 2> /dev/null)" to look for presence
+> of shellcheck binary. The approach "shell command -v" is not
+> used here. In some of the distros(RHEL), command is available
+> as executable file (/usr/bin/command). But in some distros(SLES),
+> it is a shell builtin and not available as executable file.
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+> changelog:
+> v3 -> v4:
+> Addressed review comments from James Clark.
+> - Made the shellcheck errors to be reported in make output
+>   itself during make like any other build error.
+> - Removed creating .dep files. Instead use the log file
+> to determine whether shellcheck has to be re-run when
+> there is a change in source file.
+> - Change log file to have suffix as shellcheck_log so
+> as to differentiate it from test execution log.
+> - Also like other files which gets created during
+> compilation, example, .builtin-bench.o.cmd or .perf.o.cmd,
+> create .shellcheck_log as hidden file.
+> Example: tests/shell/.buildid.sh.shellcheck_log
+> - Initial version used "command -v shellcheck" to check
+> presence of shellcheck. But while testing SLES, hit an
+> issue with using "command". In RHEL, /usr/bin/command
+> is available as part of bash rpm
+> # rpm -qf /usr/bin/command 
+> bash-5.1.8-6.el9_1.ppc64le
+> 
+> But in SLES ( tested in SLES 15 SP4 ), this is not
+> available as an executable file, instead it is only
+> a shell builtin. This resulted in below fail:
+> make[2]: command: Command not found
+> 
+> So use "which shellcheck" to check for presence of
+> shellcheck binary
+> 
+> v2 -> v3:
+> Add option "NO_SHELLCHECK". This will allow to go ahead
+> with the build or disable shellcheck even though it is
+> known that some test is broken
+> 
+> v1 -> v2:
+> Version1 had shellcheck in feature check which is not
+> required since shellcheck is already a binary. Presence
+> of binary can be checked using:
+> $(shell command -v shellcheck)
+> Addressed these changes as suggested by Namhyung in V2
+> Feature test logic is removed in V2. Also added example
+> for build breakage when shellcheck fails in commit message
+> 
+>  tools/perf/Makefile.perf        | 21 ++++++++++++++++++++-
+>  tools/perf/tests/Makefile.tests | 22 ++++++++++++++++++++++
+>  2 files changed, 42 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/perf/tests/Makefile.tests
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index d80dcaa5a1e3..824cbc0af7d7 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -134,6 +134,8 @@ include ../scripts/utilities.mak
+>  #	x86 instruction decoder - new instructions test
+>  #
+>  # Define GEN_VMLINUX_H to generate vmlinux.h from the BTF.
+> +#
+> +# Define NO_SHELLCHECK if you do not want to run shellcheck during build
+>  
+>  # As per kernel Makefile, avoid funny character set dependencies
+>  unexport LC_ALL
+> @@ -671,7 +673,23 @@ $(PERF_IN): prepare FORCE
+>  $(PMU_EVENTS_IN): FORCE prepare
+>  	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
+>  
+> -$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
+> +# Runs shellcheck on perf test shell scripts
+> +
+> +SHELLCHECK := $(shell which shellcheck 2> /dev/null)
+> +
+> +ifeq ($(NO_SHELLCHECK),1)
+> +SHELLCHECK :=
+> +endif
+> +
+> +ifneq ($(SHELLCHECK),)
+> +SHELLCHECK_TEST: FORCE prepare
+> +	$(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests
+> +else
+> +SHELLCHECK_TEST:
+> +	@:
+> +endif
+> +
+> +$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) SHELLCHECK_TEST
+>  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
+>  		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
+>  
+> @@ -1134,6 +1152,7 @@ bpf-skel-clean:
+>  	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+>  
+>  clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+> +	$(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
+>  	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+>  	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+>  	$(Q)$(RM) $(OUTPUT).config-detected
+> diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.tests
+> new file mode 100644
+> index 000000000000..fdaca5f7a946
+> --- /dev/null
+> +++ b/tools/perf/tests/Makefile.tests
+> @@ -0,0 +1,22 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
+> +
+> +PROGS := $(shell find tests/shell -perm -o=x -type f -name '*.sh')
+> +FILE_NAME := $(notdir $(PROGS))
+> +FILE_NAME := $(FILE_NAME:%=.%)
+> +LOGS := $(join $(dir $(PROGS)),$(FILE_NAME))
+> +LOGS := $(LOGS:%=%.shellcheck_log)
+> +
+> +.PHONY: all
+> +all: SHELLCHECK_RUN
+> +	@:
+> +
+> +SHELLCHECK_RUN: $(LOGS)
+> +
+> +.%.shellcheck_log: %
+> +	$(call rule_mkdir)
+> +	$(Q)$(call frecho-cmd,test)@shellcheck -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+> +
+> +clean:
+> +	$(eval log_files := $(shell find . -name '.*.shellcheck_log'))
+> +	@rm -rf $(log_files)
