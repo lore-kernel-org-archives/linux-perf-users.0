@@ -1,98 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0465A31735;
-	Mon, 27 Nov 2023 17:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHInnaUb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27BE6C433C7;
-	Mon, 27 Nov 2023 17:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701106570;
-	bh=T9aHRJVjeoKb38nUJtTSE5Hb5iAydevh3MV0AnOO2os=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hHInnaUbk8vPpP53zjdtj8Uzs9Nj2hN9z9T4PL+6pq/auYsgwB4tIt8jrFjnH7/e6
-	 yGT4VMvW0ZvVplmn8pTjhXkZQC5zyGqNvCAEAn3mHHedVD4bX4vTtNz9OoztTQBZTd
-	 l0N6XynSXKhibqrR8mNyTJjATa+j7oUNS3VI4bltfnO2h1AYZYW2xW5Gk5bWPzMciq
-	 zKH8qpySZHFB1F0+3YhcXwwqwlD98Mli5wgEyN0a06VDyRE5DOXrf0c1x/68bG7hHK
-	 AsA7xIDb+DHfO4E1+oHTv+HCJjIq5664X4tjpNAEPuxMLQE6tPKokppCvyPrIM+mJ8
-	 MfgUH1PFK8wig==
-Date: Mon, 27 Nov 2023 17:36:03 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: Frank.li@nxp.com, will@kernel.org, mark.rutland@arm.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, irogers@google.com,
-	namhyung@kernel.org, acme@kernel.org, john.g.garry@oracle.com,
-	james.clark@arm.com, mike.leach@linaro.org, leo.yan@linaro.org,
-	peterz@infradead.org, mingo@redhat.com,
-	alexander.shishkin@linux.intel.com,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: perf: fsl-imx-ddr: Add i.MX95 compatible
-Message-ID: <20231127-whoever-magical-5a7cf2b142e1@spud>
-References: <20231127073208.1055466-1-xu.yang_2@nxp.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QYZdNSY5"
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C76B19A
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 10:18:01 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-548ae9a5eeaso43663a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 10:18:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701109079; x=1701713879; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YbO6Rn3HgozfB603dwPHxujztq3d0wQRYz9hizN4I5c=;
+        b=QYZdNSY5CQWlwu5md0+10k2T/B1aw1+Kg2M0nJrTeMryt/NTBM9PJPydYLgF6PTqYR
+         fUxVbiZ927yCL/pcyjsvME1Jb/3L9+DSMUm/2+T58VW18zDZT789fJP9FOZjrARBXX/1
+         IXD4x+wUEjJqouXllXdnm4pDn5CnR+cEIkszbs1uBVfhPk8BCRndNoZz2j5Pk87ywWM+
+         z7JCrNYi86kgGg8RY5SQMtybUQIcg64IHOY13S6y75JIieZufeiu8/Ppk49VYw6bpFuA
+         ZkD9OmSR3OT4zzSqWbJL5dwr9tikMvJuPaaOstPIOMO9j4qJ+VD7+IzxvvYL3Eqr0iNk
+         Il1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701109079; x=1701713879;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YbO6Rn3HgozfB603dwPHxujztq3d0wQRYz9hizN4I5c=;
+        b=v5VJ51tSIwjlEXSsmN43efLCXaJErvyGolibVbQcx7POFZPWRsxoiyQrNoVoAWZZhZ
+         DkBxypNUk2gksAzzO/mqMdVvtrSxgP1DWr+d6NCic60IY9LAOY4Vsu7gnI3sx45HdmEZ
+         7GKiiWVDyyxuA1QOWFZpv0r4k3upnIP4H74v14cURlxkHHhnSWYLlRrpZ0H4/xt7xXRD
+         7qdNCXsjIPxC+7cPJIKlw84ewU56sOTtM2k5Gm3uyZpt61ySZCw4WudKW9SGVFi0sjSA
+         3273XUkwsvp9a9t81RJuZUO8uZ80hm74awQm1ZfYmclYEBR1jG/ZB8t34GywtFNsdJZL
+         uJHQ==
+X-Gm-Message-State: AOJu0Yx6fNwbV5ITLr8UzL5hwEJOG7Xne6STgf6G7jg9uGXgNCNE/8/H
+	8nzGmXJk+X9TRYVXzxd/gERXmXPcxYkDJWcNYSePwA==
+X-Google-Smtp-Source: AGHT+IGcxh9IUDZlSXE311RsVrwWNEKtFxWrzMAlc7/JeAkg9bemUQ7+Rz1b7VOxjjNQLe6zlmzJJ/CQlZzxCrhVyUw=
+X-Received: by 2002:a05:6402:88d:b0:54b:221d:ee1c with SMTP id
+ e13-20020a056402088d00b0054b221dee1cmr249061edy.5.1701109079467; Mon, 27 Nov
+ 2023 10:17:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bqCvTtn/vn49SB7T"
-Content-Disposition: inline
-In-Reply-To: <20231127073208.1055466-1-xu.yang_2@nxp.com>
-
-
---bqCvTtn/vn49SB7T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20231109232732.2973015-1-irogers@google.com>
+In-Reply-To: <20231109232732.2973015-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 27 Nov 2023 10:17:48 -0800
+Message-ID: <CAP-5=fV50dXzK47WyqT-MEX1TfTrEJdGNhuBLSQ3nLE0+F3_Uw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf vendor events: Add skx, clx, icx and spr upi
+ bandwidth metric
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 27, 2023 at 03:32:06PM +0800, Xu Yang wrote:
-> i.MX95 has a more precise counting capability than i.MX93. This will add
-> a compatible for it.
+On Thu, Nov 9, 2023 at 3:28=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> Add upi_data_receive_bw metric for skylakex, cascadelakex, icelakex
+> and sapphirerapids. The metric was added to perfmon metrics in:
+> https://github.com/intel/perfmon/pull/119
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-It is hard to tell from this comment, but I figure this "more precise
-capability" is not an option you can enable, but instead makes the
-programming model of this device different to that of the imx93?
+Ping.
 
 Thanks,
-Conor.
+Ian
 
->=20
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
 > ---
->  Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Do=
-cumentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-> index e9fad4b3de68..1bc7bf1c8368 100644
-> --- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-> +++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-> @@ -20,6 +20,7 @@ properties:
->            - fsl,imx8mn-ddr-pmu
->            - fsl,imx8mp-ddr-pmu
->            - fsl,imx93-ddr-pmu
-> +          - fsl,imx95-ddr-pmu
->        - items:
->            - enum:
->                - fsl,imx8mm-ddr-pmu
-> --=20
-> 2.34.1
->=20
-
---bqCvTtn/vn49SB7T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZWTTgwAKCRB4tDGHoIJi
-0ikLAP9tu0wxGmk25cjdbqeGdZvGn4NbjVTL5qsfZz4bjeAA/wEAvvoBXvC9fdQH
-KSTCMB62c3ddeFfzxxsMDT4xgMAv8AI=
-=dSz3
------END PGP SIGNATURE-----
-
---bqCvTtn/vn49SB7T--
+>  .../perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 6 ++++++
+>  tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json    | 6 ++++++
+>  .../pmu-events/arch/x86/sapphirerapids/spr-metrics.json     | 6 ++++++
+>  tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json    | 6 ++++++
+>  4 files changed, 24 insertions(+)
+>
+> diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json=
+ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+> index 84c132af3dfa..8bc6c0707856 100644
+> --- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+> @@ -1862,6 +1862,12 @@
+>          "MetricName": "uncore_frequency",
+>          "ScaleUnit": "1GHz"
+>      },
+> +    {
+> +        "BriefDescription": "Intel(R) Ultra Path Interconnect (UPI) data=
+ receive bandwidth (MB/sec)",
+> +        "MetricExpr": "UNC_UPI_RxL_FLITS.ALL_DATA * 7.111111111111111 / =
+1e6 / duration_time",
+> +        "MetricName": "upi_data_receive_bw",
+> +        "ScaleUnit": "1MB/s"
+> +    },
+>      {
+>          "BriefDescription": "Intel(R) Ultra Path Interconnect (UPI) data=
+ transmit bandwidth (MB/sec)",
+>          "MetricExpr": "UNC_UPI_TxL_FLITS.ALL_DATA * 7.111111111111111 / =
+1e6 / duration_time",
+> diff --git a/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json b/t=
+ools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
+> index e98602c66707..71d78a7841ea 100644
+> --- a/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
+> @@ -1846,6 +1846,12 @@
+>          "MetricName": "uncore_frequency",
+>          "ScaleUnit": "1GHz"
+>      },
+> +    {
+> +        "BriefDescription": "Intel(R) Ultra Path Interconnect (UPI) data=
+ receive bandwidth (MB/sec)",
+> +        "MetricExpr": "UNC_UPI_RxL_FLITS.ALL_DATA * 7.111111111111111 / =
+1e6 / duration_time",
+> +        "MetricName": "upi_data_receive_bw",
+> +        "ScaleUnit": "1MB/s"
+> +    },
+>      {
+>          "BriefDescription": "Intel(R) Ultra Path Interconnect (UPI) data=
+ transmit bandwidth (MB/sec)",
+>          "MetricExpr": "UNC_UPI_TxL_FLITS.ALL_DATA * 7.111111111111111 / =
+1e6 / duration_time",
+> diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.js=
+on b/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
+> index 06c6d67cb76b..e31a4aac9f20 100644
+> --- a/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
+> @@ -1964,6 +1964,12 @@
+>          "MetricName": "uncore_frequency",
+>          "ScaleUnit": "1GHz"
+>      },
+> +    {
+> +        "BriefDescription": "Intel(R) Ultra Path Interconnect (UPI) data=
+ receive bandwidth (MB/sec)",
+> +        "MetricExpr": "UNC_UPI_RxL_FLITS.ALL_DATA * 7.111111111111111 / =
+1e6 / duration_time",
+> +        "MetricName": "upi_data_receive_bw",
+> +        "ScaleUnit": "1MB/s"
+> +    },
+>      {
+>          "BriefDescription": "Intel(R) Ultra Path Interconnect (UPI) data=
+ transmit bandwidth (MB/sec)",
+>          "MetricExpr": "UNC_UPI_TxL_FLITS.ALL_DATA * 7.111111111111111 / =
+1e6 / duration_time",
+> diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/t=
+ools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+> index 4a8f8eeb7525..ec3aa5ef00a3 100644
+> --- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+> @@ -1806,6 +1806,12 @@
+>          "MetricName": "uncore_frequency",
+>          "ScaleUnit": "1GHz"
+>      },
+> +    {
+> +        "BriefDescription": "Intel(R) Ultra Path Interconnect (UPI) data=
+ receive bandwidth (MB/sec)",
+> +        "MetricExpr": "UNC_UPI_RxL_FLITS.ALL_DATA * 7.111111111111111 / =
+1e6 / duration_time",
+> +        "MetricName": "upi_data_receive_bw",
+> +        "ScaleUnit": "1MB/s"
+> +    },
+>      {
+>          "BriefDescription": "Intel(R) Ultra Path Interconnect (UPI) data=
+ transmit bandwidth (MB/sec)",
+>          "MetricExpr": "UNC_UPI_TxL_FLITS.ALL_DATA * 7.111111111111111 / =
+1e6 / duration_time",
+> --
+> 2.43.0.rc0.421.g78406f8d94-goog
+>
