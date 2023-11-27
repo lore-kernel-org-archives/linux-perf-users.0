@@ -1,183 +1,85 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA2B2DF84
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 13:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ep4482iO"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9993BCB
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 04:02:24 -0800 (PST)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ARBk3o2013180;
-	Mon, 27 Nov 2023 12:02:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=qUzFEhPn70J4CgXFRu3istZbtk83B+/MorkvH5PO9iE=;
- b=ep4482iOSu/wW8Yc8PUQNwqTBXyX6VopuoCBS+/QmYMS03zYUZCFYdgVvEdxZZ6yaLkC
- wn8LTN7CohQQX8pPIyqee90rODi0JA7s5tvrcoTOKa7e2AU5wRLT39QlrJRLAaIAZNb5
- W2eqrpF4rgOFLkBdosrMF5GUp+KmvkpFdN7nlYEVfyXPBZ6Rfu4jlPaDTRk8usPKc3Kt
- 0gs4Hr30YTmI6aVcG1VLJL60yuEjMqRfsIe8Opg98S3eM2hc+gvhxnv5htFzhw6K4/RZ
- STtK2j1Bw63PPgGWFotawimkzAoAMwz18GrTPGoCeUbz7faaKmuQzGMUcr3xGdPChO2l Pw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ukrbbb0p7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 Nov 2023 12:02:09 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ARBkDBP013994;
-	Mon, 27 Nov 2023 12:02:08 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ukrbbb0nw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 Nov 2023 12:02:08 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ARBYZ6m011082;
-	Mon, 27 Nov 2023 12:02:07 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ukwy1fy4r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 Nov 2023 12:02:07 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ARC24Fg11207240
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 27 Nov 2023 12:02:04 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ACFAC20040;
-	Mon, 27 Nov 2023 12:02:04 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EB2BC2004E;
-	Mon, 27 Nov 2023 12:02:01 +0000 (GMT)
-Received: from [9.43.15.114] (unknown [9.43.15.114])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 27 Nov 2023 12:02:01 +0000 (GMT)
-Message-ID: <92bbba90-c7e4-43de-98dc-497ca323eacc@linux.ibm.com>
-Date: Mon, 27 Nov 2023 17:32:00 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pl2TTh2k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A01C433C7;
+	Mon, 27 Nov 2023 13:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701091085;
+	bh=McrNEpfZZaZARie6QYahkn6MCqkCCeXaKU1VOHtga9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pl2TTh2kcriaU1EUjLRa4gu4jUprUbnia5vCe+KAgNDrKYJX8dgFzPsUswbNMNL/I
+	 8AzdlrFXpL0pmzcWbUg/qcZ+jxFrX0j2mt/N2pK1sK/H9ai0OwbCMitdmd78IOBau8
+	 WEIlCVyKm/SshMKPi1akWI8CKHsAHvGD3s0JhCGOLXcKG3JfuaPwTfPsD7fGPJ+J6L
+	 LJNqcBVbuzfjcBWWEnG7HXcSSDr1X7n8P0NJysuBIGkCoppp8OK4G2HgrbVokqEQNT
+	 yZMqHSCrSs6eRn0BvSuiGmB8qSnAecgrJdOuZ9/ZbDCR0UlsjY1S4O2yZi2ivp4Wr7
+	 d2I18wWFr/h7Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 1920B40094; Mon, 27 Nov 2023 10:18:03 -0300 (-03)
+Date: Mon, 27 Nov 2023 10:18:03 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Sean Christopherson <seanjc@google.com>, Li Dong <lidong@vivo.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf lock: Fix a memory leak on an error path
+Message-ID: <ZWSXCwrx5BUpYGi/@kernel.org>
+References: <20231124092657.10392-1-zhaimingbing@cmss.chinamobile.com>
+ <20231124095319.GN3818@noisy.programming.kicks-ass.net>
+ <ZWCdg5gcizJitxVw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf vendor events: Update datasource event name to fix
- duplicate events
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
-        james.clark@arm.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-GB
-From: Disha Goel <disgoel@linux.ibm.com>
-In-Reply-To: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: YHE9b4sl5yw4eRmBBROA7V3jaGLBxAeP
-X-Proofpoint-GUID: 5oIl70ZNfC0Xf7RIKW0POau_wkqXS47f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-27_09,2023-11-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1011 phishscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- mlxscore=0 spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311060000 definitions=main-2311270082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZWCdg5gcizJitxVw@gmail.com>
+X-Url: http://acmel.wordpress.com
 
-On 23/11/23 9:31 pm, Athira Rajeev wrote:
+Em Fri, Nov 24, 2023 at 01:56:35PM +0100, Ingo Molnar escreveu:
+> 
+> * Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Fri, Nov 24, 2023 at 05:26:57PM +0800, zhaimingbing wrote:
+> > > if a strdup-ed string is NULL,the allocated memory needs freeing.
+> > > 
+> > > Signed-off-by: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+> > > ---
+> > >  tools/perf/builtin-lock.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> > > index b141f2134..086041bcb 100644
+> > > --- a/tools/perf/builtin-lock.c
+> > > +++ b/tools/perf/builtin-lock.c
+> > > @@ -2228,8 +2228,10 @@ static int __cmd_record(int argc, const char **argv)
+> > >  		else
+> > >  			ev_name = strdup(contention_tracepoints[j].name);
+> > >  
+> > > -		if (!ev_name)
+> > > +		if (!ev_name) {
+> > > +			free(rec_argv);
+> > >  			return -ENOMEM;
+> > > +		}
+> > 
+> > Isn't this an error path straight into exit?
+> 
+> It increases the quality of implementation if resources are free()d 
+> consistently regardless of whether the task is going to exit() immediately, 
+> for example it makes it easier to validate perf for the lack of memory 
+> leaks with Valgrind.
 
-> Running "perf list" on powerpc fails with segfault
-> as below:
->
->     ./perf list
->     Segmentation fault (core dumped)
->
-> This happens because of duplicate events in the json list.
-> The powerpc Json event list contains some event with same
-> event name, but different event code. They are:
-> - PM_INST_FROM_L3MISS (Present in datasource and frontend)
-> - PM_MRK_DATA_FROM_L2MISS (Present in datasource and marked)
-> - PM_MRK_INST_FROM_L3MISS (Present in datasource and marked)
-> - PM_MRK_DATA_FROM_L3MISS (Present in datasource and marked)
->
-> pmu_events_table__num_events uses the value from
-> table_pmu->num_entries which includes duplicate events as
-> well. This causes issue during "perf list" and results in
-> segmentation fault.
->
-> Since both event codes are valid, append _DSRC to the Data
-> Source events (datasource.json), so that they would have a
-> unique name. Also add PM_DATA_FROM_L2MISS_DSRC and
-> PM_DATA_FROM_L3MISS_DSRC events. With the fix, perf list
-> works as expected.
->
-> Fixes: fc1435807533 ("perf vendor events power10: Update JSON/events")
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+I'm taking this positive comment about the patch as an Acked-by, ok?
 
-I have tested the patch on Power10 machine. Perf list works correctly without any segfault now.
-
-	# ./perf list
-
-	List of pre-defined events (to be used in -e or -M):
-
-	  branch-instructions OR branches                    [Hardware event]
-	  branch-misses                                      [Hardware event]
-
-Tested-by: Disha Goel <disgoel@linux.ibm.com>
-
-> ---
->   .../arch/powerpc/power10/datasource.json       | 18 ++++++++++++++----
->   1 file changed, 14 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-> index 6b0356f2d301..0eeaaf1a95b8 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-> @@ -99,6 +99,11 @@
->       "EventName": "PM_INST_FROM_L2MISS",
->       "BriefDescription": "The processor's instruction cache was reloaded from a source beyond the local core's L2 due to a demand miss."
->     },
-> +  {
-> +    "EventCode": "0x0003C0000000C040",
-> +    "EventName": "PM_DATA_FROM_L2MISS_DSRC",
-> +    "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss."
-> +  },
->     {
->       "EventCode": "0x000380000010C040",
->       "EventName": "PM_INST_FROM_L2MISS_ALL",
-> @@ -161,9 +166,14 @@
->     },
->     {
->       "EventCode": "0x000780000000C040",
-> -    "EventName": "PM_INST_FROM_L3MISS",
-> +    "EventName": "PM_INST_FROM_L3MISS_DSRC",
->       "BriefDescription": "The processor's instruction cache was reloaded from beyond the local core's L3 due to a demand miss."
->     },
-> +  {
-> +    "EventCode": "0x0007C0000000C040",
-> +    "EventName": "PM_DATA_FROM_L3MISS_DSRC",
-> +    "BriefDescription": "The processor's L1 data cache was reloaded from beyond the local core's L3 due to a demand miss."
-> +  },
->     {
->       "EventCode": "0x000780000010C040",
->       "EventName": "PM_INST_FROM_L3MISS_ALL",
-> @@ -981,7 +991,7 @@
->     },
->     {
->       "EventCode": "0x0003C0000000C142",
-> -    "EventName": "PM_MRK_DATA_FROM_L2MISS",
-> +    "EventName": "PM_MRK_DATA_FROM_L2MISS_DSRC",
->       "BriefDescription": "The processor's L1 data cache was reloaded from a source beyond the local core's L2 due to a demand miss for a marked instruction."
->     },
->     {
-> @@ -1046,12 +1056,12 @@
->     },
->     {
->       "EventCode": "0x000780000000C142",
-> -    "EventName": "PM_MRK_INST_FROM_L3MISS",
-> +    "EventName": "PM_MRK_INST_FROM_L3MISS_DSRC",
->       "BriefDescription": "The processor's instruction cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
->     },
->     {
->       "EventCode": "0x0007C0000000C142",
-> -    "EventName": "PM_MRK_DATA_FROM_L3MISS",
-> +    "EventName": "PM_MRK_DATA_FROM_L3MISS_DSRC",
->       "BriefDescription": "The processor's L1 data cache was reloaded from beyond the local core's L3 due to a demand miss for a marked instruction."
->     },
->     {
+- Arnaldo
