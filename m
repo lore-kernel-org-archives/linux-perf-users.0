@@ -1,158 +1,119 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dPdL8TVu"
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2047.outbound.protection.outlook.com [40.107.105.47])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D62393;
-	Sun, 26 Nov 2023 22:33:50 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Igw9aO5LRS25ksgZsPQht2A6ItDeLkzoGWemanRKeijla09Hv6uBj1d/0OsY0ZEDm2Fxhb5hljtfaIpE9Ik0BpGSufFACFeZrIxIcjki/P5gKZK01HTgj/jtQ6gs+NA7qYGDxgavuXgYYAVRnpYH/r+1/H8cVuPlCAedq9xrrPLdmhagD/69pZXhRcb17MQsiYu95FMRyXz456BZEN2m03fdL1zhJ0O0gpgpfg2ZNCIy0OuXnI3kGu0DfclGFAIetwn4YKfPKAkaO/tS72OcpgRdvkgs60c/XVd9r3R6P4x89EmhQKJo3ItTSxDDlmedUi8X3GgaqP83o7G7lcKjbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FjfXcdzZ3BkIWlvyxw/EJmXSsYRJPOlPGWUo3rW91q0=;
- b=lFRZ6PuPguQbxhdKcHoVUyM1dRQoksbKTIjGEIXPIAW6KtZyF7dxXl7pJng5pvIsAHH1BkQuguH9jYZulqKIuYkMqPFYEGx8/a+R9mJBOTas1nrrMrUvq6Priy0pbpzQuSOb45vr6AlU47CrfMqut0Kb1RvOcy8v3GK6ytW5J+QLtt8wNS739niR3JVXaVZp0eaLbJX9fxovTwdNYZs8MzGWSxSFUU6ms81YLKW7k/RbfS0SucR8hEiXiHpUW6Q1+LjVQW8b/gqPZSCD2/pdJ2Xq4kcFJUkXPF82qaFt6dwN91/YCoe6dys0GkWE4+/x4bpxo7PdiqLxo7BhxUAVjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FjfXcdzZ3BkIWlvyxw/EJmXSsYRJPOlPGWUo3rW91q0=;
- b=dPdL8TVuSo578Pu4g0uTabceIzKqKk/cnwPV49ny3rAYgoRkKK/82to8KR6DKEnGsZIQG1HqG53W5j/t8OUh0upeDlQQZBjPksbSa0pCXdlJxx1CFH24bwtYpc7e33Y3EFQHvK8WmsghH7wILy+5uv7rQkE8TZYZQo/t4Mq8Sgo=
-Received: from DB7PR04MB5146.eurprd04.prod.outlook.com (2603:10a6:10:23::16)
- by DB9PR04MB8236.eurprd04.prod.outlook.com (2603:10a6:10:245::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.19; Mon, 27 Nov
- 2023 06:33:45 +0000
-Received: from DB7PR04MB5146.eurprd04.prod.outlook.com
- ([fe80::709e:6876:7df0:fc30]) by DB7PR04MB5146.eurprd04.prod.outlook.com
- ([fe80::709e:6876:7df0:fc30%7]) with mapi id 15.20.7046.015; Mon, 27 Nov 2023
- 06:33:44 +0000
-From: Xu Yang <xu.yang_2@nxp.com>
-To: "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org"
-	<namhyung@kernel.org>, "irogers@google.com" <irogers@google.com>
-CC: "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] perf pmu: add loaded_json_aliases for non-core pmu when
- get total events number
-Thread-Topic: [PATCH] perf pmu: add loaded_json_aliases for non-core pmu when
- get total events number
-Thread-Index: AQHaIPr1j5vK430PdUi1IDNgjX5a+LCNtBVQ
-Date: Mon, 27 Nov 2023 06:33:44 +0000
-Message-ID:
- <DB7PR04MB5146CA5E3126922635E181CC8CBDA@DB7PR04MB5146.eurprd04.prod.outlook.com>
-References: <20231127063415.996831-1-xu.yang_2@nxp.com>
-In-Reply-To: <20231127063415.996831-1-xu.yang_2@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB7PR04MB5146:EE_|DB9PR04MB8236:EE_
-x-ms-office365-filtering-correlation-id: 0b04baa7-beef-402a-b62b-08dbef12ce05
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- aSxPUJtMPXjwjFqlG6S6VfTQlgVS+nALds2xH8jtUIppWSXaO3p1sA3YZefAQqDWbZS/uehts672fZWMMVh4wnh9pd7NzHI2hVzjNiaAC1GGQPxz9eiA3s4ZsTfJ0yp3V3TeSUmHAqE9+yfRzej4eFFn6xNvAsOiQFmqIrMBZwQXUVLmcgxvk9gG5cEq9n/PsBygaSswFSFVvpLSDZELb0nE4MfMbp4bRmeS4UtOuy7uwL2ZB4z41QdUAvvIgHp1m+vjJn059yZNQ4/tfdBsIVbEd9Bm+NNHV4qhEq3CGS7jDTjlE9wGJCvwIOaPk6mAPvuJ8EJBTc12rJEqce3S0u837xoPzOFH6w5op2V1b08a5O2BBFDKGF7eGITmH1cKrqSKFHV2JVwCLnMlhnLP3smLXnydyblJmzOpfqLKbKnqWuV7iw3TNkZOFJXUDJ3DDIzPXeoh6dTCppZml8OHj7t+d6lOfYmAyJjYvuOsRifCrIfR/F7jiGxWubZWSRvPahic4VrNE6ytCTYg8IqcYo9hKZnTEeb4AS/tQvr0NNVrJW9dIcTReDWpo+gIH+1HnKQiMHgffN0vDzzd+r98I+N/sJwYZcSGNaYiIW/9tBI=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5146.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(39860400002)(396003)(366004)(376002)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(6506007)(966005)(478600001)(9686003)(7696005)(71200400001)(83380400001)(2906002)(7416002)(41300700001)(5660300002)(66946007)(76116006)(64756008)(66476007)(110136005)(54906003)(66556008)(316002)(66446008)(4326008)(52536014)(8936002)(8676002)(38100700002)(38070700009)(86362001)(122000001)(33656002)(55016003)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?9tAWmhaRijEih63bTISvwM42AV6/jrKlz29sq5kgLKYPuTuNM3WO1SktqUMl?=
- =?us-ascii?Q?4C1bRXZOk7ZQyc2ya5HvKYg2+RqChzn6u7gV+UODw9+2XId/3kdn8wyvbPII?=
- =?us-ascii?Q?uDKXESq62tkROEHaIhwbUtjneHNXarrRjBkfZImY4G+jHOz7RhzDQAb/RQo4?=
- =?us-ascii?Q?U3ARytJilo/vYd4F/gJtq+/35eZhhPxKA/ZV4/TOyI9NnovDeQzA4fQAkeGV?=
- =?us-ascii?Q?6Xuu61EwFSrcsUbKFNLWpth7it7987T7qoSCogfqZ0VRAZBSE8XugWZa1SRQ?=
- =?us-ascii?Q?bmJQlxGEJkpxKaI9etjPPCkxEGiRxvbd4AbD1xlwP9PwHNcqSwDPzca5nrDL?=
- =?us-ascii?Q?H91iqTU+fFXsLUuW1cngxMCEuAVNyd1Bio/lrgSgiqFhOMO4N1l1zYV2kN19?=
- =?us-ascii?Q?sWXyGRmgEfzBzgrzFXP+zZtoIgZ6FSQdtu6B6rJOeHEQCp5Pvk8FIuih109o?=
- =?us-ascii?Q?71jmfv6rw1eKr1+kLQ3Qj1KdkMLjuSES6F0IpDZC2br4i5BuY59OA8rcRF7A?=
- =?us-ascii?Q?H3OjvuZWzO9XCaZIJungPlTxbPYFc0L6FYshsgApy7Hgms1t9e9ppfNcRxFg?=
- =?us-ascii?Q?Bvm2SEZDSmgxca5t68KZOlDO/Tf8pKUJeWSVwKQffhsGOs8Zq5GN+AuJPTw8?=
- =?us-ascii?Q?aYqIgjyzqZpRjMro82sl0haOdjDTujrAw73GMyv7hxtBxXjnROpju1VBEJ+T?=
- =?us-ascii?Q?kZESyT43B+mAwp5oIjmAdBIQDZvtNupQz27562tcFlaqhWpUawjTXj9ZySlj?=
- =?us-ascii?Q?yZji7y86RxSPvizlYGACUR+6v8nxDWv+/X76v19CrSDMXjQ3hfM5KT9ykUVM?=
- =?us-ascii?Q?0sRUo6796mZWeM/Uzy+goXCJGJLffwxuIbTr66I/gwRzBZD1n77iTIXdkIeY?=
- =?us-ascii?Q?1DgLNw0V6WICtTHxzl3m8VUzgJHdi62fHESkpFc79aPoPW6grU5F8mZUQfKj?=
- =?us-ascii?Q?NMMqVXrEW6XCUITcFKW6ViuX1W6PwAMURE2F1DAkuKUi9YSLUFCbEjVvncFy?=
- =?us-ascii?Q?fk86U6vj1D+8Lx/ehLMFGczmqRZV5pzzkH+6Zl86yA0rnCZBIs+UsufgQD/D?=
- =?us-ascii?Q?toI+h7cwZw4JVEOohGECY/AtzEFeP9ZZCaEhU7vN9cBL2jy9C3UMZXwqoNqr?=
- =?us-ascii?Q?Fv4f1J9pDh3y2PN4K2TQYQUTVH843EhoRjk59JCRSx4rhlzxTTMf5wVeYhBm?=
- =?us-ascii?Q?xCG1nUYxaRuwfzULqHyJ6iU6o3LDfEr2AE798NNJ6NK/jBd+qSNLNL5zp/kM?=
- =?us-ascii?Q?DRdr9MK0csNcnWi1M/SNBKbHcpzqxsNUfTBJd4xjC6P89C5VMOKj6z6KXVZ/?=
- =?us-ascii?Q?/2EwN+WLsW4MR+tUbouxWYalZi7lG2fC2hXOkTEO0nAsvKPZifGYx+l3C2xB?=
- =?us-ascii?Q?z42e9zUcK4eLVJ31VVw+6925YxPdv6erex+TZFtajkpmRs/GT9WWH3l9io0U?=
- =?us-ascii?Q?5IJQl3nVDOO2srlEu8Mb5x7ih1HiCDxcgIorsTZ50mBW5U0JusvA5KXP/cb7?=
- =?us-ascii?Q?yR91fhuuwfLcsx1cn8sfJLiVy6lN3jvXJgEWQ45TGOwLTFKQNfASC9EynjVv?=
- =?us-ascii?Q?gSHLnPSXAsMBLxu4Msw=3D?=
-Content-Type: text/plain; charset="us-ascii"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="V3dDIYMg"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99471122;
+	Sun, 26 Nov 2023 23:19:40 -0800 (PST)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AR75i7x008786;
+	Mon, 27 Nov 2023 07:19:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=ZC25i0ucH08wXwMAWmTMiJ+MH1UDzBh+RZ+RL/+21c8=;
+ b=V3dDIYMg0k0opwtcgpqini96y93E7Be9UiW0yB+1Asf04J5naIXNkQz/1G2es6zEp7yf
+ zwzPFak8JWntDAvYoQeOpDhti6u6HgcZ04CF9IpKzBKneKdCKQzQ+GueP+NvXn8swSPp
+ ooKqV2laFFEOA3HXpSWNgHu4aXB04bfOkDTHf/galLtznWavHsEZ2U9lhueiVvrGxMwS
+ 335cMsCY5YXQI8PYmnRn/TjbHx/ZmxIzax2zDNJGECQOrimDcMy8pIOYTctG75E1wWiX
+ hEiieCSwuLjorlJnARj/ogoTL2RKqfulNCCf6917zM8t56EKYHjGD09/gaqdS3PYD3bR dQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3umdd2t510-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 07:19:31 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AR6fB3x032128;
+	Mon, 27 Nov 2023 07:19:30 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3umdd2t509-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 07:19:30 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AR44GbR029807;
+	Mon, 27 Nov 2023 07:19:29 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ukumy7687-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 07:19:29 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AR7JRhP38535628
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 27 Nov 2023 07:19:27 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0D41020049;
+	Mon, 27 Nov 2023 07:19:27 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0F07D20040;
+	Mon, 27 Nov 2023 07:19:25 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.109.214.114])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 27 Nov 2023 07:19:24 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH 0/8] perf tests: Reduce inexplicable test failures
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZV9cgN3e7jWcRwlu@kernel.org>
+Date: Mon, 27 Nov 2023 12:49:13 +0530
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Tinghao Zhang <tinghao.zhang@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>, German Gomez <german.gomez@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Message-Id: <5B01AC52-3A95-48E2-BBA8-EC499DFFDFC3@linux.vnet.ibm.com>
+References: <20231123075848.9652-1-adrian.hunter@intel.com>
+ <ZV9cgN3e7jWcRwlu@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3774.200.91.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ug47KixhMHkIAsuHNB6ZD-hFW0qfckcN
+X-Proofpoint-ORIG-GUID: DBhmPLi-gWgL8TKkOys5wAwE_8s2wb9f
 Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5146.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b04baa7-beef-402a-b62b-08dbef12ce05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2023 06:33:44.7932
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hJi1B8k7YXA3soDdxdQEHgmgnwseKsUKU+XKTKj+LZswmmxND3Bu1BIr9yEQPoaKe6WOpP4wigbp0Pk2AlYIBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8236
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-27_05,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 phishscore=0 priorityscore=1501 adultscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311270050
 
->=20
-> After pmu_read_sysfs(), event aliases in json may be loaded for non-core
-> pmu. And pmu->event_table is NULL for non-core pmu.
-> If perf_pmu__num_events() didn't add loaded_json_aliases to the total
-> number, perf list will show below error:
->=20
-> Unexpected event imx8_ddr0/imx8_ddr0/write-command//
-> ...
->=20
-> This is because perf_pmu__num_events() didn't count correct events number=
-.
-> This will allow perf_pmu__num_events() to get corrent events number.
 
-Not sure how, but previous thread about this issue is disconnected.
-You can refer to: https://lore.kernel.org/all/20231010065738.2536751-1-xu.y=
-ang_2@nxp.com/
 
-Thanks,
-Xu Yang
+> On 23-Nov-2023, at 7:36=E2=80=AFPM, Arnaldo Carvalho de Melo <acme@kernel=
+.org> wrote:
+>=20
+> Em Thu, Nov 23, 2023 at 09:58:40AM +0200, Adrian Hunter escreveu:
+>> Here are some small changes to help reduce inexplicable perf test failur=
+es.
+>=20
+> Looks ok, applying to perf-tools-next, had to remove a patch adding a
+> new test, by Kan Liang, then reapply it on top of your series, git
+> managed to sort it out:
 
+Hi Arnaldo,
+
+I didn=E2=80=99t find this in either of these places:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=3Dper=
+f-tools-next
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/lo=
+g/?h=3Dperf-tools-next
+
+Sorry if I missed checking correct location. Can you please point to git li=
+nk ?
+
+Thanks
+Athira
 >=20
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> ---
->  tools/perf/util/pmu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> https://lore.kernel.org/r/20231107184020.1497571-1-kan.liang@linux.intel.=
+com
 >=20
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index d3c9aa4326be..646cf3351883 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1631,8 +1631,8 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
 >=20
->  	nr =3D pmu->sysfs_aliases;
->=20
-> -	if (pmu->cpu_aliases_added)
-> -		 nr +=3D pmu->loaded_json_aliases;
-> +	if (pmu->cpu_aliases_added || pmu->is_uncore)
-> +		nr +=3D pmu->loaded_json_aliases;
->  	else if (pmu->events_table)
->  		nr +=3D pmu_events_table__num_events(pmu->events_table, pmu) - pmu->lo=
-aded_json_aliases;
->=20
-> --
-> 2.34.1
+> - Arnaldo
 
