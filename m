@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Km0rF0ZH"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56A41AD
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:09:23 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-daf6c1591d5so4291392276.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:09:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ik6rg0Ri"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE9ED12C
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:09:25 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5cd3cf2e21dso70741007b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:09:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701122963; x=1701727763; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701122965; x=1701727765; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qbPv4PyEdmBWH7WUrzt8/XaXbmHzexj4Rz5EFZB1OQM=;
-        b=Km0rF0ZHW0TaTKx+npA8OJvPAtKyQKPO0A8M2mJ/DBBM41qhFvDyHLcEZxTP3w4vaS
-         NwknOG+NnF1RF1aat0v7kfg2YfEpZn+q9ULMB4TONRjsECUCb8RdWk1SvrJjGGC2h3t7
-         jNmmImB82KKjBgexV9sN64hmZU85VFmA8SO5GNZnXKxbfsPcmnLVdZb79Y4U7X07Cyii
-         R7R8wv9Pw/BsiSbhDOc/CmjIe/9diA7ZDgl/UMgusk9oDsMg4f0bEDNDf0wbhQfVLMY0
-         3uB5/YY3q1N5VdPdRG8gkqZV9iYZISz2aC1K7m9MJ0dNfvGx3N/4CqwWyc3ocgAzmdG/
-         pACA==
+        bh=LW5iu3CW2lKtmsJ3ZW+qTTKgcFmtY4yDP5ns7rJcimg=;
+        b=Ik6rg0RijjlMXBcDelVnY03go2HXnrP5sD7WhESFH5F/0vwbI13yht3ikAZshpcvXg
+         k3aS+LIdf8VG0dGQsLGTpj0DQJwhGh4I0eA9wgkwtJKaGKSu61P+8jcdTYSwEzb9wg0b
+         eoQAJ1Ju3T+JRd7WZFwyaHcFQG7TML7EZcERn1/e6IwuR7fmURTKijxkVal2aeE785x7
+         Yoxlfxmyeu97NOVIzXO9ZPcZswVSpqQw3VDvGbS9kDZ45gzJBckEswOngkkm6X5+SzdG
+         oGlYlqQ1bYsMp+p9YgOQALga+8AUEpeNJFwqunzxmEDxit1GrBioTTdX4M2RnvwwQbsE
+         A7JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701122963; x=1701727763;
+        d=1e100.net; s=20230601; t=1701122965; x=1701727765;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qbPv4PyEdmBWH7WUrzt8/XaXbmHzexj4Rz5EFZB1OQM=;
-        b=LTexO737UsNqeZhL/KyQN7H9A31GYklLsJmqONxdjqvTNQqJciuSbioHYRtSmIp07D
-         nJ5op9fnoNxTWXqZgAr2akcUJJNr1C1ncqqX4AVP/55o+PGZb5ZB2u3sKhQZvdL5P63p
-         9qKdny+WjcIwrNK0uUSlnuN02dxsdU7Sq1KPSl41H/coRtkyBlAjBU9ennbMbkRk8QRX
-         KyFEbK3oidJuhiR36mTMpBE0Hmn/fI5KYbAfmVOFFo3me/Pv+WEqUVId4/vhY79DLP/v
-         +/IJmH7citItL0tYsJYjS+LqAjqUQM3cvT49nEpbPu/8zfUbNVa07LWGxdFdq6nGSp5i
-         tukw==
-X-Gm-Message-State: AOJu0Yw9e42vn+0CGTmPuIyjGMBDOSPiKjidefdmHbMOByn3UIeyzxXH
-	lOTP2ENHAfeMxIS5//zzHlEwXvvXc3ee
-X-Google-Smtp-Source: AGHT+IExUtMtiR+ptGG23+Vabnoaqo7AIZnyIS3yKYDbfx4Y1r3PAu2qXUtV6Z+us//6QncipclrfVxBHfi9
+        bh=LW5iu3CW2lKtmsJ3ZW+qTTKgcFmtY4yDP5ns7rJcimg=;
+        b=aOw2go1uM2CYOb0lIdkbzc1cOAamFd8UMcNbxvgwD4NWaWrRGZxqMiiYi5AMTNfUv9
+         OXYsWdjzXetq+urfrfPsteQorredE0GDoNbUyBQICqSu0bfiJ7xb+Cz+aCnfUkafrbuh
+         Q95Lipabfhx6Fvb6fwqIGxHSuLKIZ1hhqerOGf1A9vomMWgxPAFRzrdv+pAzvJKSAO3Y
+         0W+IFlUxRjlGQLANP53jy246wtWap2J74d7sFw48/IkRtYd0ERbrC8zkKjwuCU+FtfRx
+         vm202ldNVuFL5ckXlCJqtpFAfjaRSouASsH4YwxnpQSKeu3ZWq+xarZhqbNy/+mBFa+9
+         t/uQ==
+X-Gm-Message-State: AOJu0YxkEWHbQh51OelUOcxLgWarRUWjnBgudiJFuel9xyGQA3bT5zag
+	IF2VxqY24u08fxwier7NtxDvXbFzo2Wr
+X-Google-Smtp-Source: AGHT+IHrjzGaMohbnyZmZunt0pY/JBcPIj9iQ71g+HIknVMYLcz9ZiMJpSadREjAdP7yXiUZcSiIkkocQx/y
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:829:6e77:9093:f39b])
- (user=irogers job=sendgmr) by 2002:a25:d081:0:b0:d9a:c946:c18c with SMTP id
- h123-20020a25d081000000b00d9ac946c18cmr452645ybg.6.1701122962825; Mon, 27 Nov
- 2023 14:09:22 -0800 (PST)
-Date: Mon, 27 Nov 2023 14:08:13 -0800
+ (user=irogers job=sendgmr) by 2002:a25:d114:0:b0:dae:b98c:6ffa with SMTP id
+ i20-20020a25d114000000b00daeb98c6ffamr375100ybg.8.1701122964882; Mon, 27 Nov
+ 2023 14:09:24 -0800 (PST)
+Date: Mon, 27 Nov 2023 14:08:14 -0800
 In-Reply-To: <20231127220902.1315692-1-irogers@google.com>
-Message-Id: <20231127220902.1315692-2-irogers@google.com>
+Message-Id: <20231127220902.1315692-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231127220902.1315692-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v5 01/50] perf comm: Use regular mutex
+Subject: [PATCH v5 02/50] libperf: Lazily allocate/size mmap event copy
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,52 +68,94 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-The rwsem is only after used for writing so switch to a mutex that has
-better error checking.
+The event copy in the mmap is used to have storage to read an
+event. Not all users of mmaps read the events, such as perf
+record. The amount of buffer was also statically set to
+PERF_SAMPLE_MAX_SIZE rather than the amount necessary from the
+header's event size. Switch to a model where the event_copy is
+reallocated if too small to the event's size. This adds the potential
+for the event to move, so if a copy of the event pointer were stored
+it could be broken. All the current users do:
 
-Fixes: 7a8f349e9d14 ("perf rwsem: Add debug mode that uses a mutex")
+  while(event = perf_mmap__read_event()) { ... }
+
+and so they would be broken due to the event being overwritten if they
+had stored the pointer. Manual inspection and address sanitizer
+testing also shows the event pointer not being stored.
+
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/comm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/lib/perf/include/internal/mmap.h |  3 ++-
+ tools/lib/perf/mmap.c                  | 21 ++++++++++++++++++---
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-index afb8d4fd2644..4ae7bc2aa9a6 100644
---- a/tools/perf/util/comm.c
-+++ b/tools/perf/util/comm.c
-@@ -17,7 +17,7 @@ struct comm_str {
+diff --git a/tools/lib/perf/include/internal/mmap.h b/tools/lib/perf/include/internal/mmap.h
+index 5a062af8e9d8..5f08cab61ece 100644
+--- a/tools/lib/perf/include/internal/mmap.h
++++ b/tools/lib/perf/include/internal/mmap.h
+@@ -33,7 +33,8 @@ struct perf_mmap {
+ 	bool			 overwrite;
+ 	u64			 flush;
+ 	libperf_unmap_cb_t	 unmap_cb;
+-	char			 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
++	void			*event_copy;
++	size_t			 event_copy_sz;
+ 	struct perf_mmap	*next;
+ };
  
- /* Should perhaps be moved to struct machine */
- static struct rb_root comm_str_root;
--static struct rw_semaphore comm_str_lock = {.lock = PTHREAD_RWLOCK_INITIALIZER,};
-+static struct mutex comm_str_lock = {.lock = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP,};
+diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+index 2184814b37dd..c829db7bf1fa 100644
+--- a/tools/lib/perf/mmap.c
++++ b/tools/lib/perf/mmap.c
+@@ -19,6 +19,7 @@
+ void perf_mmap__init(struct perf_mmap *map, struct perf_mmap *prev,
+ 		     bool overwrite, libperf_unmap_cb_t unmap_cb)
+ {
++	/* Assume fields were zero initialized. */
+ 	map->fd = -1;
+ 	map->overwrite = overwrite;
+ 	map->unmap_cb  = unmap_cb;
+@@ -51,13 +52,19 @@ int perf_mmap__mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
  
- static struct comm_str *comm_str__get(struct comm_str *cs)
+ void perf_mmap__munmap(struct perf_mmap *map)
  {
-@@ -30,9 +30,9 @@ static struct comm_str *comm_str__get(struct comm_str *cs)
- static void comm_str__put(struct comm_str *cs)
- {
- 	if (cs && refcount_dec_and_test(&cs->refcnt)) {
--		down_write(&comm_str_lock);
-+		mutex_lock(&comm_str_lock);
- 		rb_erase(&cs->rb_node, &comm_str_root);
--		up_write(&comm_str_lock);
-+		mutex_unlock(&comm_str_lock);
- 		zfree(&cs->str);
- 		free(cs);
+-	if (map && map->base != NULL) {
++	if (!map)
++		return;
++
++	free(map->event_copy);
++	map->event_copy = NULL;
++	map->event_copy_sz = 0;
++	if (map->base) {
+ 		munmap(map->base, perf_mmap__mmap_len(map));
+ 		map->base = NULL;
+ 		map->fd = -1;
+ 		refcount_set(&map->refcnt, 0);
  	}
-@@ -98,9 +98,9 @@ static struct comm_str *comm_str__findnew(const char *str, struct rb_root *root)
- {
- 	struct comm_str *cs;
- 
--	down_write(&comm_str_lock);
-+	mutex_lock(&comm_str_lock);
- 	cs = __comm_str__findnew(str, root);
--	up_write(&comm_str_lock);
-+	mutex_unlock(&comm_str_lock);
- 
- 	return cs;
+-	if (map && map->unmap_cb)
++	if (map->unmap_cb)
+ 		map->unmap_cb(map);
  }
+ 
+@@ -223,9 +230,17 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
+ 		 */
+ 		if ((*startp & map->mask) + size != ((*startp + size) & map->mask)) {
+ 			unsigned int offset = *startp;
+-			unsigned int len = min(sizeof(*event), size), cpy;
++			unsigned int len = size, cpy;
+ 			void *dst = map->event_copy;
+ 
++			if (size > map->event_copy_sz) {
++				dst = realloc(map->event_copy, size);
++				if (!dst)
++					return NULL;
++				map->event_copy = dst;
++				map->event_copy_sz = size;
++			}
++
+ 			do {
+ 				cpy = min(map->mask + 1 - (offset & map->mask), len);
+ 				memcpy(dst, &data[offset & map->mask], cpy);
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
