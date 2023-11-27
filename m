@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lOOgu7Dp"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96092273C
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:33 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5cd3cf2e21dso70758587b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N6pY9XBh"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B442D52
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:35 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-da04fb79246so5512943276.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701123032; x=1701727832; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701123035; x=1701727835; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YZfEEyCJPKtNkyz47mAJgILH81a+f20AhnpCUE58jks=;
-        b=lOOgu7DpFF5e/5fBy4hzKmtp9Lhidfv2FMQzXONNxPyKIusQBoniXCvavpIVz7skqD
-         3Gf8PT7TnxR5n4k/nDb28s+mvOzX5OGasLTfB5/2i3kkqLl4/V8AgXP+AEL/Oo5qyzFf
-         ymSOkFJPvgq1itMhvvS6bY9X2EampnnBN2GKLDPOU8N7O5z79CpL+2Zzv9HaEBxwBFFB
-         75ah3pTCsut1T9Ar/YNdjEhDINNfgfOG3RFob93Nysy6lwWt84ENxyMzTiV8k3wJv0Ve
-         uzOM6C5H5oEOFFaCMYxRs5AD5WfZPhEcImbpDoliuM2Z/4PsjUn4W7smXBE5EoCNfBHf
-         HjBw==
+        bh=2gwNtaO/xwDVBPGvkaCR+ac57XhkxC33qdRg/k7uvrk=;
+        b=N6pY9XBh3saQzve2jZ7+2eXllFmFsl2+8lIK9HS7BId/A9GF5peJodpxH+4s0TAKE7
+         QQwMrdxWTlpHtzwBQ71gqb69k+LzbLVYJUH2CluMf5iRmnj/VsIJbMmpgL7sX9JgRKga
+         2mioZEZoSsBUlMHAEuljGM4JzgE3cSeU1/9oLxzMmoaR4xTz1IwifCv1f2Wbk47QSigW
+         4Hix6dCZjK1LYao23pfYGlcyL1Z+7OzyoVVbyqMcUn83geaeO0szifuXMVMHYzircXbL
+         cXGQW6ndNG1giwKdgn3cvWgaqfX+fr9Fi2MSzrWUC0Cv7p9P/wKdpjlo/1Mc2HKQcI5S
+         kVHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701123032; x=1701727832;
+        d=1e100.net; s=20230601; t=1701123035; x=1701727835;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YZfEEyCJPKtNkyz47mAJgILH81a+f20AhnpCUE58jks=;
-        b=LNywHzz/AD8+90/IoTgsn/7gbq7LriTjC+fRhee/BV8A8k1MJW3mkVc/PFmiMA2lnP
-         cMTKrZQv3a+jEWrdfcOCLDKrKezCXCxUJyCPdO5ois3tD7B8p8AXr/aJxIQAe8CyIRL0
-         0XfqXU+IOCQwYJT9IOaAVwFrvTJaMFR+LWqzZJ5pWJK7AR5xxRTYxqBvYVehr4+hB5Ql
-         khZCE9wsj0NuXc7knmBrIJSB8428+euRU/WBdA/DcLJprvDNQgmdEvCRKelBQfolAUax
-         1LB+SHDS4o3a5rlDLVTIek9nrnxKUArcpKM/tkdNo5v1Z8cCIefaVYq6t1e3sMehFf/s
-         JNsQ==
-X-Gm-Message-State: AOJu0YzrgStkYtnxEBijIY2CE8M76ZSsPxa2BLTb5ns/oMrbUcOCYHAV
-	MuJY4O2NtqNTqw/M4k4p6odXOncSWeJ2
-X-Google-Smtp-Source: AGHT+IG12047g3qu0QJHS31vadZmor6Ba21ahU2lhuvfPpDRFMFveDvv/1r5dwsWgpSCdgHN2aeCCDHbABgA
+        bh=2gwNtaO/xwDVBPGvkaCR+ac57XhkxC33qdRg/k7uvrk=;
+        b=DqXGYhwFlnPQWBZXaLDXhqT8HJZXk94RUidYqmzEF+7vswjFsdvWCKq1KWra0uwxRK
+         8JruVLW9xjJsx1ShcRbXSCCL3E9uyknZSwZpY/4hRjJ99sJsum4G88+MWORc34gbWUVf
+         bC8XJaNVAOp5q540fJYOFjzw5JSfWBi/7+8vpWay5Rez+NbJttd1pzftGAtEI7MoIkOG
+         tKidTz+mnTDYq55aWbxD6XOZlru102Idv08OQLr1ZF7SgdDnmhc+v/dR5VBMO+drPzrR
+         XuKQsLXq9oo+S10NtCRe4ZQXV5FY2R6HQK27y1uoxmwGbBcFvh99DwKA9Ram37RGi1P2
+         kQ4g==
+X-Gm-Message-State: AOJu0YwGRU8O6LCjIVZILV1SVu40s0N3kbM3K+xDVdkWfFbfcy2uuO9S
+	UKI8ifKrJ3ok2konxso+TyTBhQO393nv
+X-Google-Smtp-Source: AGHT+IE91X9tqcZ9rA8or5gPe0pfoGuUjRjuNLHdlhGGOH3DdRAbzvPiufBM9TNAxHgX4liTfK2hYVmNshci
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:829:6e77:9093:f39b])
- (user=irogers job=sendgmr) by 2002:a05:690c:270e:b0:5ca:fa88:f4b6 with SMTP
- id dy14-20020a05690c270e00b005cafa88f4b6mr443123ywb.3.1701123032722; Mon, 27
- Nov 2023 14:10:32 -0800 (PST)
-Date: Mon, 27 Nov 2023 14:08:42 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:e91:b0:db4:5e66:98fe with SMTP id
+ dg17-20020a0569020e9100b00db45e6698femr358491ybb.11.1701123034980; Mon, 27
+ Nov 2023 14:10:34 -0800 (PST)
+Date: Mon, 27 Nov 2023 14:08:43 -0800
 In-Reply-To: <20231127220902.1315692-1-irogers@google.com>
-Message-Id: <20231127220902.1315692-31-irogers@google.com>
+Message-Id: <20231127220902.1315692-32-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231127220902.1315692-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v5 30/50] perf maps: Locking tidy up of nr_maps
+Subject: [PATCH v5 31/50] perf dso: Reorder variables to save space in struct dso
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,72 +68,334 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-After this change maps__nr_maps is only used by tests, existing users
-are migrated to maps__empty. Compute maps__empty under the read lock.
+Save 40 bytes and move from 8 to 7 cache lines. Make variable dwfl
+dependent on being a powerpc build. Squeeze bits of int/enum types
+when appropriate. Remove holes/padding by reordering variables.
+
+Before:
+```
+struct dso {
+        struct mutex               lock;                 /*     0    40 */
+        struct list_head           node;                 /*    40    16 */
+        struct rb_node             rb_node __attribute__((__aligned__(8))); /*    56    24 */
+        /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+        struct rb_root *           root;                 /*    80     8 */
+        struct rb_root_cached      symbols;              /*    88    16 */
+        struct symbol * *          symbol_names;         /*   104     8 */
+        size_t                     symbol_names_len;     /*   112     8 */
+        struct rb_root_cached      inlined_nodes;        /*   120    16 */
+        /* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+        struct rb_root_cached      srclines;             /*   136    16 */
+        struct {
+                u64                addr;                 /*   152     8 */
+                struct symbol *    symbol;               /*   160     8 */
+        } last_find_result;                              /*   152    16 */
+        void *                     a2l;                  /*   168     8 */
+        char *                     symsrc_filename;      /*   176     8 */
+        unsigned int               a2l_fails;            /*   184     4 */
+        enum dso_space_type        kernel;               /*   188     4 */
+        /* --- cacheline 3 boundary (192 bytes) --- */
+        _Bool                      is_kmod;              /*   192     1 */
+
+        /* XXX 3 bytes hole, try to pack */
+
+        enum dso_swap_type         needs_swap;           /*   196     4 */
+        enum dso_binary_type       symtab_type;          /*   200     4 */
+        enum dso_binary_type       binary_type;          /*   204     4 */
+        enum dso_load_errno        load_errno;           /*   208     4 */
+        u8                         adjust_symbols:1;     /*   212: 0  1 */
+        u8                         has_build_id:1;       /*   212: 1  1 */
+        u8                         header_build_id:1;    /*   212: 2  1 */
+        u8                         has_srcline:1;        /*   212: 3  1 */
+        u8                         hit:1;                /*   212: 4  1 */
+        u8                         annotate_warned:1;    /*   212: 5  1 */
+        u8                         auxtrace_warned:1;    /*   212: 6  1 */
+        u8                         short_name_allocated:1; /*   212: 7  1 */
+        u8                         long_name_allocated:1; /*   213: 0  1 */
+        u8                         is_64_bit:1;          /*   213: 1  1 */
+
+        /* XXX 6 bits hole, try to pack */
+
+        _Bool                      sorted_by_name;       /*   214     1 */
+        _Bool                      loaded;               /*   215     1 */
+        u8                         rel;                  /*   216     1 */
+
+        /* XXX 7 bytes hole, try to pack */
+
+        struct build_id            bid;                  /*   224    32 */
+        /* --- cacheline 4 boundary (256 bytes) --- */
+        u64                        text_offset;          /*   256     8 */
+        u64                        text_end;             /*   264     8 */
+        const char  *              short_name;           /*   272     8 */
+        const char  *              long_name;            /*   280     8 */
+        u16                        long_name_len;        /*   288     2 */
+        u16                        short_name_len;       /*   290     2 */
+
+        /* XXX 4 bytes hole, try to pack */
+
+        void *                     dwfl;                 /*   296     8 */
+        struct auxtrace_cache *    auxtrace_cache;       /*   304     8 */
+        int                        comp;                 /*   312     4 */
+
+        /* XXX 4 bytes hole, try to pack */
+
+        /* --- cacheline 5 boundary (320 bytes) --- */
+        struct {
+                struct rb_root     cache;                /*   320     8 */
+                int                fd;                   /*   328     4 */
+                int                status;               /*   332     4 */
+                u32                status_seen;          /*   336     4 */
+
+                /* XXX 4 bytes hole, try to pack */
+
+                u64                file_size;            /*   344     8 */
+                struct list_head   open_entry;           /*   352    16 */
+                u64                elf_base_addr;        /*   368     8 */
+                u64                debug_frame_offset;   /*   376     8 */
+                /* --- cacheline 6 boundary (384 bytes) --- */
+                u64                eh_frame_hdr_addr;    /*   384     8 */
+                u64                eh_frame_hdr_offset;  /*   392     8 */
+        } data;                                          /*   320    80 */
+        struct {
+                u32                id;                   /*   400     4 */
+                u32                sub_id;               /*   404     4 */
+                struct perf_env *  env;                  /*   408     8 */
+        } bpf_prog;                                      /*   400    16 */
+        union {
+                void *             priv;                 /*   416     8 */
+                u64                db_id;                /*   416     8 */
+        };                                               /*   416     8 */
+        struct nsinfo *            nsinfo;               /*   424     8 */
+        struct dso_id              id;                   /*   432    24 */
+        /* --- cacheline 7 boundary (448 bytes) was 8 bytes ago --- */
+        refcount_t                 refcnt;               /*   456     4 */
+        char                       name[];               /*   460     0 */
+
+        /* size: 464, cachelines: 8, members: 49 */
+        /* sum members: 440, holes: 4, sum holes: 18 */
+        /* sum bitfield members: 10 bits, bit holes: 1, sum bit holes: 6 bits */
+        /* padding: 4 */
+        /* forced alignments: 1 */
+        /* last cacheline: 16 bytes */
+} __attribute__((__aligned__(8)));
+```
+
+After:
+```
+struct dso {
+        struct mutex               lock;                 /*     0    40 */
+        struct list_head           node;                 /*    40    16 */
+        struct rb_node             rb_node __attribute__((__aligned__(8))); /*    56    24 */
+        /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+        struct rb_root *           root;                 /*    80     8 */
+        struct rb_root_cached      symbols;              /*    88    16 */
+        struct symbol * *          symbol_names;         /*   104     8 */
+        size_t                     symbol_names_len;     /*   112     8 */
+        struct rb_root_cached      inlined_nodes;        /*   120    16 */
+        /* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+        struct rb_root_cached      srclines;             /*   136    16 */
+        struct {
+                u64                addr;                 /*   152     8 */
+                struct symbol *    symbol;               /*   160     8 */
+        } last_find_result;                              /*   152    16 */
+        struct build_id            bid;                  /*   168    32 */
+        /* --- cacheline 3 boundary (192 bytes) was 8 bytes ago --- */
+        u64                        text_offset;          /*   200     8 */
+        u64                        text_end;             /*   208     8 */
+        const char  *              short_name;           /*   216     8 */
+        const char  *              long_name;            /*   224     8 */
+        void *                     a2l;                  /*   232     8 */
+        char *                     symsrc_filename;      /*   240     8 */
+        struct nsinfo *            nsinfo;               /*   248     8 */
+        /* --- cacheline 4 boundary (256 bytes) --- */
+        struct auxtrace_cache *    auxtrace_cache;       /*   256     8 */
+        union {
+                void *             priv;                 /*   264     8 */
+                u64                db_id;                /*   264     8 */
+        };                                               /*   264     8 */
+        struct {
+                struct perf_env *  env;                  /*   272     8 */
+                u32                id;                   /*   280     4 */
+                u32                sub_id;               /*   284     4 */
+        } bpf_prog;                                      /*   272    16 */
+        struct {
+                struct rb_root     cache;                /*   288     8 */
+                struct list_head   open_entry;           /*   296    16 */
+                u64                file_size;            /*   312     8 */
+                /* --- cacheline 5 boundary (320 bytes) --- */
+                u64                elf_base_addr;        /*   320     8 */
+                u64                debug_frame_offset;   /*   328     8 */
+                u64                eh_frame_hdr_addr;    /*   336     8 */
+                u64                eh_frame_hdr_offset;  /*   344     8 */
+                int                fd;                   /*   352     4 */
+                int                status;               /*   356     4 */
+                u32                status_seen;          /*   360     4 */
+        } data;                                          /*   288    80 */
+
+        /* XXX last struct has 4 bytes of padding */
+
+        struct dso_id              id;                   /*   368    24 */
+        /* --- cacheline 6 boundary (384 bytes) was 8 bytes ago --- */
+        unsigned int               a2l_fails;            /*   392     4 */
+        int                        comp;                 /*   396     4 */
+        refcount_t                 refcnt;               /*   400     4 */
+        enum dso_load_errno        load_errno;           /*   404     4 */
+        u16                        long_name_len;        /*   408     2 */
+        u16                        short_name_len;       /*   410     2 */
+        enum dso_binary_type       symtab_type:8;        /*   412: 0  4 */
+        enum dso_binary_type       binary_type:8;        /*   412: 8  4 */
+        enum dso_space_type        kernel:2;             /*   412:16  4 */
+        enum dso_swap_type         needs_swap:2;         /*   412:18  4 */
+
+        /* Bitfield combined with next fields */
+
+        _Bool                      is_kmod:1;            /*   414: 4  1 */
+        u8                         adjust_symbols:1;     /*   414: 5  1 */
+        u8                         has_build_id:1;       /*   414: 6  1 */
+        u8                         header_build_id:1;    /*   414: 7  1 */
+        u8                         has_srcline:1;        /*   415: 0  1 */
+        u8                         hit:1;                /*   415: 1  1 */
+        u8                         annotate_warned:1;    /*   415: 2  1 */
+        u8                         auxtrace_warned:1;    /*   415: 3  1 */
+        u8                         short_name_allocated:1; /*   415: 4  1 */
+        u8                         long_name_allocated:1; /*   415: 5  1 */
+        u8                         is_64_bit:1;          /*   415: 6  1 */
+
+        /* XXX 1 bit hole, try to pack */
+
+        _Bool                      sorted_by_name;       /*   416     1 */
+        _Bool                      loaded;               /*   417     1 */
+        u8                         rel;                  /*   418     1 */
+        char                       name[];               /*   419     0 */
+
+        /* size: 424, cachelines: 7, members: 48 */
+        /* sum members: 415 */
+        /* sum bitfield members: 31 bits, bit holes: 1, sum bit holes: 1 bits */
+        /* padding: 5 */
+        /* paddings: 1, sum paddings: 4 */
+        /* forced alignments: 1 */
+        /* last cacheline: 40 bytes */
+} __attribute__((__aligned__(8)));
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c |  2 +-
- tools/perf/util/maps.c    | 10 ++++++++--
- tools/perf/util/maps.h    |  4 ++--
- 3 files changed, 11 insertions(+), 5 deletions(-)
+ tools/perf/util/dso.h | 84 +++++++++++++++++++++----------------------
+ 1 file changed, 42 insertions(+), 42 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 42d73f00f9c1..f9c77119af22 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -441,7 +441,7 @@ static struct thread *findnew_guest_code(struct machine *machine,
- 		return NULL;
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 3759de8c2267..8bdc17d78b02 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -158,66 +158,66 @@ struct dso {
+ 		u64		addr;
+ 		struct symbol	*symbol;
+ 	} last_find_result;
+-	void		 *a2l;
+-	char		 *symsrc_filename;
+-	unsigned int	 a2l_fails;
+-	enum dso_space_type	kernel;
+-	bool			is_kmod;
+-	enum dso_swap_type	needs_swap;
+-	enum dso_binary_type	symtab_type;
+-	enum dso_binary_type	binary_type;
+-	enum dso_load_errno	load_errno;
+-	u8		 adjust_symbols:1;
+-	u8		 has_build_id:1;
+-	u8		 header_build_id:1;
+-	u8		 has_srcline:1;
+-	u8		 hit:1;
+-	u8		 annotate_warned:1;
+-	u8		 auxtrace_warned:1;
+-	u8		 short_name_allocated:1;
+-	u8		 long_name_allocated:1;
+-	u8		 is_64_bit:1;
+-	bool		 sorted_by_name;
+-	bool		 loaded;
+-	u8		 rel;
+ 	struct build_id	 bid;
+ 	u64		 text_offset;
+ 	u64		 text_end;
+ 	const char	 *short_name;
+ 	const char	 *long_name;
+-	u16		 long_name_len;
+-	u16		 short_name_len;
++	void		 *a2l;
++	char		 *symsrc_filename;
++#if defined(__powerpc__)
+ 	void		*dwfl;			/* DWARF debug info */
++#endif
++	struct nsinfo	*nsinfo;
+ 	struct auxtrace_cache *auxtrace_cache;
+-	int		 comp;
+-
++	union { /* Tool specific area */
++		void	 *priv;
++		u64	 db_id;
++	};
++	/* bpf prog information */
++	struct {
++		struct perf_env	*env;
++		u32		id;
++		u32		sub_id;
++	} bpf_prog;
+ 	/* dso data file */
+ 	struct {
+ 		struct rb_root	 cache;
+-		int		 fd;
+-		int		 status;
+-		u32		 status_seen;
+-		u64		 file_size;
+ 		struct list_head open_entry;
++		u64		 file_size;
+ 		u64		 elf_base_addr;
+ 		u64		 debug_frame_offset;
+ 		u64		 eh_frame_hdr_addr;
+ 		u64		 eh_frame_hdr_offset;
++		int		 fd;
++		int		 status;
++		u32		 status_seen;
+ 	} data;
+-	/* bpf prog information */
+-	struct {
+-		u32		id;
+-		u32		sub_id;
+-		struct perf_env	*env;
+-	} bpf_prog;
+-
+-	union { /* Tool specific area */
+-		void	 *priv;
+-		u64	 db_id;
+-	};
+-	struct nsinfo	*nsinfo;
+ 	struct dso_id	 id;
++	unsigned int	 a2l_fails;
++	int		 comp;
+ 	refcount_t	 refcnt;
++	enum dso_load_errno	load_errno;
++	u16		 long_name_len;
++	u16		 short_name_len;
++	enum dso_binary_type	symtab_type:8;
++	enum dso_binary_type	binary_type:8;
++	enum dso_space_type	kernel:2;
++	enum dso_swap_type	needs_swap:2;
++	bool			is_kmod:1;
++	u8		 adjust_symbols:1;
++	u8		 has_build_id:1;
++	u8		 header_build_id:1;
++	u8		 has_srcline:1;
++	u8		 hit:1;
++	u8		 annotate_warned:1;
++	u8		 auxtrace_warned:1;
++	u8		 short_name_allocated:1;
++	u8		 long_name_allocated:1;
++	u8		 is_64_bit:1;
++	bool		 sorted_by_name;
++	bool		 loaded;
++	u8		 rel;
+ 	char		 name[];
+ };
  
- 	/* Assume maps are set up if there are any */
--	if (maps__nr_maps(thread__maps(thread)))
-+	if (!maps__empty(thread__maps(thread)))
- 		return thread;
- 
- 	host_thread = machine__find_thread(host_machine, -1, pid);
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 41e9e39b1b4c..725f5d73e93a 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -528,7 +528,13 @@ void maps__remove(struct maps *maps, struct map *map)
- 
- bool maps__empty(struct maps *maps)
- {
--	return maps__nr_maps(maps) == 0;
-+	bool res;
-+
-+	down_read(maps__lock(maps));
-+	res = maps__nr_maps(maps) == 0;
-+	up_read(maps__lock(maps));
-+
-+	return res;
- }
- 
- bool maps__equal(struct maps *a, struct maps *b)
-@@ -851,7 +857,7 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
- 
- 	parent_maps_by_address = maps__maps_by_address(parent);
- 	n = maps__nr_maps(parent);
--	if (maps__empty(dest)) {
-+	if (maps__nr_maps(dest) == 0) {
- 		/* No existing mappings so just copy from parent to avoid reallocs in insert. */
- 		unsigned int nr_maps_allocated = RC_CHK_ACCESS(parent)->nr_maps_allocated;
- 		struct map **dest_maps_by_address =
-diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index 4bcba136ffe5..d9aa62ed968a 100644
---- a/tools/perf/util/maps.h
-+++ b/tools/perf/util/maps.h
-@@ -43,8 +43,8 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
- void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
- 
- struct machine *maps__machine(const struct maps *maps);
--unsigned int maps__nr_maps(const struct maps *maps);
--refcount_t *maps__refcnt(struct maps *maps);
-+unsigned int maps__nr_maps(const struct maps *maps); /* Test only. */
-+refcount_t *maps__refcnt(struct maps *maps); /* Test only. */
- 
- #ifdef HAVE_LIBUNWIND_SUPPORT
- void *maps__addr_space(const struct maps *maps);
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
