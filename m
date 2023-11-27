@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iITNyCpb"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF371FD4
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:06 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5caf61210e3so65809677b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BUrE4/XM"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8451988
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:11 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-da033914f7cso5544132276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Nov 2023 14:10:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701123005; x=1701727805; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701123010; x=1701727810; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kx7LDUS3rY7lBdLFklcEVdSsIMEbcaAgKdOgd/PIIs0=;
-        b=iITNyCpb6bqpFVm0KKOdbt3O5WJ2wmRho7nr+iO8qkwzge4HoVjJNoFCT6XG/0+reN
-         PblzarBbgt8eNdL5UFxn+NS7PX4jqQmwMQcdVRdSk+1a/VXIxndWciVS9cWeTgV6gSE7
-         K1EooAsWV3qTLkwkt3jsED8GVyHRMxDBSPJc8eOWgj7/i/E3rc5PJe8ux5fkFfuZ4ozp
-         zCt2h5NyeMe9WzBUzLLc74qywRub+YrjwE8hhsquXTOoUDOB2E96Q2uCLuwQZuXUnpBV
-         PpObH8j+ijYa/qQk/n+MrXDb+yPXrjb6nWyJeVgyQIv2FyPFuTMC9PtTrI/30oCorg+C
-         wakw==
+        bh=Xp8iIxo035oHbvCFG1UawGFv2rk11B4jTXVswVvjASk=;
+        b=BUrE4/XMQNQ1Ra4CBGM1v3cF4C7O32Gl+n96nIN4DM6rc1W2CzhsGnHacDEPHyU5X6
+         15RKWKSch4tTWHHa1f5wq0xKJGfdI57w7vWHmc5lNizb2sjj5r5bsoAK3vsLfmpta9tM
+         dAhJPfivtEt2QWVn6acsGOeZZ4KVxxvl9TYS/2xi9Plam4LTGEnEwKe1pmu6txI0iT6s
+         ONpZ2Gl15Oms1QYGJ6TPTle+HG/2mwIZsrNpeUMROa4gLCKOk1ONyhQZU8iE05JZdNvG
+         SM0NJbeqN3WvECRIthmYl9dO+aySHjRsPasf/EyqEnwD7i6LfKE9+E7UjkIVJ+pa0RTj
+         4IHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701123005; x=1701727805;
+        d=1e100.net; s=20230601; t=1701123010; x=1701727810;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kx7LDUS3rY7lBdLFklcEVdSsIMEbcaAgKdOgd/PIIs0=;
-        b=WJRy1fLC8ubyavOmy5/aeB1XGTQbbzp6nHpmyVKfQevt0EL/jdSB7Ih4UdW4EvGFQ0
-         2mggM98NluP+2FSU1Rpv/Jm9MLDQGmOYsWBGfVg7vsiYlUtywcrMbypzuRHX1lIhJz2N
-         RN3dZKLXu6w+R8ef7kkawdqFMm2wo1eYN6mjisM607VJFZcKKeOw6wKDqxzVynEpd2jm
-         ODK36e/Uq3ytWBMFCCmKCtdsnC8e3n6kTTPEy6M9X+qur48pL05xwc6rmGmRmZtdTAZm
-         L7rjUgFNynz0XXX28eyKgV2pcNZ2IaGpcYAnVXZocWk5uKGTRDa5LlfYlJVHGcCZlaXC
-         /HrA==
-X-Gm-Message-State: AOJu0YxX6UNwuvCotpZqmi00bRleFCMohqmSRttcUqiM29DkRGOftMtz
-	Ep+IsnvYqvitJbD5ijDUST4wk8o1gl8P
-X-Google-Smtp-Source: AGHT+IHwTOPDxEhKc7nYUbfhqyZJy/IY4/U9t9445mIszH9ERuGI/i+lfl5FPYsTbTCbarA2wQnGLHAPUOym
+        bh=Xp8iIxo035oHbvCFG1UawGFv2rk11B4jTXVswVvjASk=;
+        b=vQpsA78bAxx/qDKtUh+BKNMRA/SMQ2ToWxCY5BxfsELQFwwMHEMTeTnhzYzclz4qes
+         p7ZmeqUMToWeCnfhIAeZmmupZ3UMzKUmeVsEBftQUxd2EQIgT4rKRqg/Cc8dx0QgD3Gx
+         oxiplNwYK1Z2OeB4v0uzPYwAiundsYzCBkPWf+Z4jSl3SyVJVhVaBo09RnST2unHVf2c
+         dLMIIf5IZ6HwsBkDS5MNjzvp2ZK5z5+MEfwYJsoSzvuOaDjAJWoglo59ZwPURVVD8NDK
+         7CwODtaVDXz1SDt2XqtkTvsFTuNeVGd3g8JkIPgAu8Jx5ccowhNh7ev1Y2Tdx/11RmI/
+         spuw==
+X-Gm-Message-State: AOJu0YxmgowORzFenRpzV+Z8KyPwS2dtjYnBP5fYFT5cSV62Yyq4KcnO
+	aMVM3PrZXzcFqUaYU+NERlrf9W6yO2bC
+X-Google-Smtp-Source: AGHT+IGeyyQaMmLbqCN92w+hBxIYvS3reZkb5q+BcPSfsU7r0C55NGH7xLQ0bx7pKgMF4gkf9x+xa70Lb3Pt
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:829:6e77:9093:f39b])
- (user=irogers job=sendgmr) by 2002:a81:ad23:0:b0:5be:a336:4a6 with SMTP id
- l35-20020a81ad23000000b005bea33604a6mr478251ywh.3.1701123005663; Mon, 27 Nov
- 2023 14:10:05 -0800 (PST)
-Date: Mon, 27 Nov 2023 14:08:30 -0800
+ (user=irogers job=sendgmr) by 2002:a25:3383:0:b0:da0:c6d7:8231 with SMTP id
+ z125-20020a253383000000b00da0c6d78231mr445480ybz.0.1701123010280; Mon, 27 Nov
+ 2023 14:10:10 -0800 (PST)
+Date: Mon, 27 Nov 2023 14:08:32 -0800
 In-Reply-To: <20231127220902.1315692-1-irogers@google.com>
-Message-Id: <20231127220902.1315692-19-irogers@google.com>
+Message-Id: <20231127220902.1315692-21-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231127220902.1315692-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v5 18/50] perf maps: Refactor maps__fixup_overlappings
+Subject: [PATCH v5 20/50] perf maps: Rename clone to copy from
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,188 +68,82 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Rename to maps__fixup_overlap_and_insert as the given mapping is
-always inserted. Factor out first_ending_after as a utility
-function. Minor variable name changes. Switch to using debug_file()
-rather than passing a debug FILE*.
+Rename maps__clone to maps__copy_from to be more intention revealing
+of its behavior. Pass the underlying maps rather than the thread.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/maps.c   | 62 ++++++++++++++++++++++++----------------
- tools/perf/util/maps.h   |  2 +-
- tools/perf/util/thread.c |  3 +-
- 3 files changed, 39 insertions(+), 28 deletions(-)
+ tools/perf/util/machine.c | 2 +-
+ tools/perf/util/maps.c    | 6 +-----
+ tools/perf/util/maps.h    | 3 +--
+ tools/perf/util/thread.c  | 2 +-
+ 4 files changed, 4 insertions(+), 9 deletions(-)
 
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 3c967295c9a3..191e492539e5 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -454,7 +454,7 @@ static struct thread *findnew_guest_code(struct machine *machine,
+ 	 * Guest code can be found in hypervisor process at the same address
+ 	 * so copy host maps.
+ 	 */
+-	err = maps__clone(thread, thread__maps(host_thread));
++	err = maps__copy_from(thread__maps(thread), thread__maps(host_thread));
+ 	thread__put(host_thread);
+ 	if (err)
+ 		goto out_err;
 diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index f13fd3a9686b..40df08dd9bf3 100644
+index 14e1a169433d..85bea2a6dca9 100644
 --- a/tools/perf/util/maps.c
 +++ b/tools/perf/util/maps.c
-@@ -334,20 +334,16 @@ size_t maps__fprintf(struct maps *maps, FILE *fp)
- 	return args.printed;
- }
- 
--int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
-+/*
-+ * Find first map where end > new->start.
-+ * Same as find_vma() in kernel.
-+ */
-+static struct rb_node *first_ending_after(struct maps *maps, const struct map *map)
- {
- 	struct rb_root *root;
- 	struct rb_node *next, *first;
--	int err = 0;
--
--	down_write(maps__lock(maps));
- 
- 	root = maps__entries(maps);
--
--	/*
--	 * Find first map where end > map->start.
--	 * Same as find_vma() in kernel.
--	 */
- 	next = root->rb_node;
- 	first = NULL;
- 	while (next) {
-@@ -361,8 +357,22 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 		} else
- 			next = next->rb_right;
- 	}
-+	return first;
-+}
-+
-+/*
-+ * Adds new to maps, if new overlaps existing entries then the existing maps are
-+ * adjusted or removed so that new fits without overlapping any entries.
-+ */
-+int maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
-+{
-+
-+	struct rb_node *next;
-+	int err = 0;
-+
-+	down_write(maps__lock(maps));
- 
--	next = first;
-+	next = first_ending_after(maps, new);
- 	while (next && !err) {
- 		struct map_rb_node *pos = rb_entry(next, struct map_rb_node, rb_node);
- 		next = rb_next(&pos->rb_node);
-@@ -371,27 +381,27 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 		 * Stop if current map starts after map->end.
- 		 * Maps are ordered by start: next will not overlap for sure.
- 		 */
--		if (map__start(pos->map) >= map__end(map))
-+		if (map__start(pos->map) >= map__end(new))
- 			break;
- 
- 		if (verbose >= 2) {
- 
- 			if (use_browser) {
- 				pr_debug("overlapping maps in %s (disable tui for more info)\n",
--					 map__dso(map)->name);
-+					 map__dso(new)->name);
- 			} else {
--				fputs("overlapping maps:\n", fp);
--				map__fprintf(map, fp);
--				map__fprintf(pos->map, fp);
-+				pr_debug("overlapping maps:\n");
-+				map__fprintf(new, debug_file());
-+				map__fprintf(pos->map, debug_file());
- 			}
- 		}
- 
--		rb_erase_init(&pos->rb_node, root);
-+		rb_erase_init(&pos->rb_node, maps__entries(maps));
- 		/*
- 		 * Now check if we need to create new maps for areas not
- 		 * overlapped by the new map:
- 		 */
--		if (map__start(map) > map__start(pos->map)) {
-+		if (map__start(new) > map__start(pos->map)) {
- 			struct map *before = map__clone(pos->map);
- 
- 			if (before == NULL) {
-@@ -399,7 +409,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 				goto put_map;
- 			}
- 
--			map__set_end(before, map__start(map));
-+			map__set_end(before, map__start(new));
- 			err = __maps__insert(maps, before);
- 			if (err) {
- 				map__put(before);
-@@ -407,11 +417,11 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 			}
- 
- 			if (verbose >= 2 && !use_browser)
--				map__fprintf(before, fp);
-+				map__fprintf(before, debug_file());
- 			map__put(before);
- 		}
- 
--		if (map__end(map) < map__end(pos->map)) {
-+		if (map__end(new) < map__end(pos->map)) {
- 			struct map *after = map__clone(pos->map);
- 
- 			if (after == NULL) {
-@@ -419,23 +429,25 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 				goto put_map;
- 			}
- 
--			map__set_start(after, map__end(map));
--			map__add_pgoff(after, map__end(map) - map__start(pos->map));
--			assert(map__map_ip(pos->map, map__end(map)) ==
--				map__map_ip(after, map__end(map)));
-+			map__set_start(after, map__end(new));
-+			map__add_pgoff(after, map__end(new) - map__start(pos->map));
-+			assert(map__map_ip(pos->map, map__end(new)) ==
-+				map__map_ip(after, map__end(new)));
- 			err = __maps__insert(maps, after);
- 			if (err) {
- 				map__put(after);
- 				goto put_map;
- 			}
- 			if (verbose >= 2 && !use_browser)
--				map__fprintf(after, fp);
-+				map__fprintf(after, debug_file());
- 			map__put(after);
- 		}
- put_map:
- 		map__put(pos->map);
- 		free(pos);
- 	}
-+	/* Add the map. */
-+	err = __maps__insert(maps, new);
- 	up_write(maps__lock(maps));
+@@ -452,12 +452,8 @@ int maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
  	return err;
  }
+ 
+-/*
+- * XXX This should not really _copy_ te maps, but refcount them.
+- */
+-int maps__clone(struct thread *thread, struct maps *parent)
++int maps__copy_from(struct maps *maps, struct maps *parent)
+ {
+-	struct maps *maps = thread__maps(thread);
+ 	int err;
+ 	struct map_rb_node *rb_node;
+ 
 diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index b94ad5c8fea7..62e94d443c02 100644
+index 62e94d443c02..e4a49d6ff5cf 100644
 --- a/tools/perf/util/maps.h
 +++ b/tools/perf/util/maps.h
-@@ -133,7 +133,7 @@ struct addr_map_symbol;
+@@ -14,7 +14,6 @@ struct ref_reloc_sym;
+ struct machine;
+ struct map;
+ struct maps;
+-struct thread;
  
- int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams);
+ struct map_rb_node {
+ 	struct rb_node rb_node;
+@@ -61,7 +60,7 @@ struct kmap {
  
--int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp);
-+int maps__fixup_overlap_and_insert(struct maps *maps, struct map *new);
+ struct maps *maps__new(struct machine *machine);
+ bool maps__empty(struct maps *maps);
+-int maps__clone(struct thread *thread, struct maps *parent);
++int maps__copy_from(struct maps *maps, struct maps *parent);
  
- struct map *maps__find_by_name(struct maps *maps, const char *name);
- 
+ struct maps *maps__get(struct maps *maps);
+ void maps__put(struct maps *maps);
 diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index b6986a81aa6d..3d47b5c5528b 100644
+index 3d47b5c5528b..89c47a5098e2 100644
 --- a/tools/perf/util/thread.c
 +++ b/tools/perf/util/thread.c
-@@ -345,8 +345,7 @@ int thread__insert_map(struct thread *thread, struct map *map)
- 	if (ret)
- 		return ret;
- 
--	maps__fixup_overlappings(thread__maps(thread), map, stderr);
--	return maps__insert(thread__maps(thread), map);
-+	return maps__fixup_overlap_and_insert(thread__maps(thread), map);
+@@ -390,7 +390,7 @@ static int thread__clone_maps(struct thread *thread, struct thread *parent, bool
+ 		return 0;
+ 	}
+ 	/* But this one is new process, copy maps. */
+-	return do_maps_clone ? maps__clone(thread, thread__maps(parent)) : 0;
++	return do_maps_clone ? maps__copy_from(thread__maps(thread), thread__maps(parent)) : 0;
  }
  
- struct thread__prepare_access_maps_cb_args {
+ int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bool do_maps_clone)
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
