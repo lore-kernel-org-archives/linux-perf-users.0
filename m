@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UTiD8QGp"
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCD6D66
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 11:14:12 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-40b367a0a12so9195e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 11:14:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q+yjBtnf"
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E48D1988
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 11:21:13 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-40b35199f94so12155e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 11:21:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701198851; x=1701803651; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701199272; x=1701804072; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1sQJEQO1lAXLUO7lOurIsnWNVY/yZ4K1PFUY114AiIg=;
-        b=UTiD8QGp5Xp1eKjwifmVLLr7sxUtHpUEziO2Noc8x1Sa37ahGCzd70cf9mCLlsriYR
-         HZD+A+nLCdmaZgOAt1LFCEdH0a3v4V5/yO8F5ej7JhiIyw4AJS+wSsRA1Eyw7RoNmHbS
-         kEprG0pVuaaVo2AYOfUQIfypUCGP+UKZoRh2lSKEO06R8raWtHeTgJvRQCCmC9b+p6T3
-         5id3cBOWTHJDTewr1W4SgT2jaTr6kna3vAlN3wTGnrJqg2ootaVfB373R/jCYusW81go
-         3ib+Dg2t2i5xOP546YGZTw9JSZrLDP9pCGbzhpZDIACDYc9IVXsiZyG/jjKB0ZMFjimt
-         nG+A==
+        bh=C2kX/2e3hW2xYuQeL6N8B1cfHiFYGSQRCDO5Myxr9Ek=;
+        b=Q+yjBtnfYkpbLTeio0fdiG/FnCqPVL1DIezBqIQYe93Yg6vhAmN7a17yWqyUZONXO9
+         T9ZuqkrtSDaUOhu872WfQpxPd1vXb9AHs9Wglx/umiaYGoI/riEekoHSYL2jAwLhUuv2
+         Oi4HcwulemIOLIrKPYhlDIIdvBMI9JT3KA2gn3iZ1wEeocus8qxeMyGb59dKf5i83Y4A
+         H/u2e+3wyWbThIyNCHf0oG+tQLCNydt6UlnBzcvIEMKPY2neRS6cDNhdMNQ+17dz13qs
+         au9Bu4N+0D4unmP/oo/vyys8fsV8rjwkpdZNQTdN2Y5Wri/iSGEdC77y17uoa0EytJ0s
+         QrGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701198851; x=1701803651;
+        d=1e100.net; s=20230601; t=1701199272; x=1701804072;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1sQJEQO1lAXLUO7lOurIsnWNVY/yZ4K1PFUY114AiIg=;
-        b=vCKroKu9rFvvTquQA2zmV6cF6ypVf6Tq4V2APb/TGzBX2fCM5vjPsikf2pn906IRpD
-         1UkD4nj3m0S3g6uKOX0KtzZvbEoKmMuuZBxMiRCvlgyPcclyMxdbJ+26GSXsPqQt2zdM
-         DN9r1mAxV4tPj17loBA318eKJSHO2BJM0JvDo9FRa2CCc2t5lkQJ3sg12igFYh1RleT0
-         5pxEo3dQJEOswxUeCFpq7GXg2tH9edvH6GWIAYUNjdOoUQS5k7uvabFOOe6udB2bERpw
-         cevdawOok3I7pPByiZFQAeXzcR0bpnPwjiDrMjZtY0XyPC/biANKJu7VVNImEkes+zz1
-         iIcQ==
-X-Gm-Message-State: AOJu0Yx6gvDpsKBpXhW2E9yc9sdPvxxcvNHuzATB/C/qeH24LROQYOMY
-	+RCRoCOpdXcQu7dc/CXJ/FFUa2MTSVUcNVx0amZbcsolQKhmY+A5cqzPuQ==
-X-Google-Smtp-Source: AGHT+IEuzdV2LP9iggW4NsbrWUCJTF1PKKYjnA9pmxZjCHha1l8TTtDbQbnJcZcnV6cuVeQyFQfWgediT0WIcK14cYo=
-X-Received: by 2002:a05:600c:4f44:b0:408:3727:92c5 with SMTP id
- m4-20020a05600c4f4400b00408372792c5mr852331wmq.2.1701198850618; Tue, 28 Nov
- 2023 11:14:10 -0800 (PST)
+        bh=C2kX/2e3hW2xYuQeL6N8B1cfHiFYGSQRCDO5Myxr9Ek=;
+        b=veBldo/BTMPArvbYRT2jNVUrylrt3CtjlUFoNHyDhs/HBOl/SzRrhEESJVsroWRjme
+         ph3K3kQDVLGwNaV0l1EKv0utxuu5qJ5FUTa6l4fPVyUCgd6bOaWXPo9T2WDM8gmEzzg5
+         6O2CScJUmJsLgurDENFzjZ4Y4rlgyIelwmgNd/nl7+ENrV0dkTxXGb3jKGBzQLo29vUL
+         MYAxM0QgwUQMJNEDzNJQIJGt2t8it5/qvM+LSgG2pNPATpIUKFZ6CTB0m8ACWaR4hBM3
+         EHk9Um+kEX1Ifhfh+DnkLMF+ci7c1miAOp8D1YxNhJXQtl4naxAfUkr37l6I6qY2Nf16
+         pDaw==
+X-Gm-Message-State: AOJu0YzC2cNrIB+ZZTtukboy1hGMAkvMXbQ7KgoNUMuHJOh1OECQOxkJ
+	Ac46KJA+4uZUe0mv8ubaUuU0pf7zTtrH4eE8bXesPQ==
+X-Google-Smtp-Source: AGHT+IGoTRXABDJu4fFnrO34y3AjBm9f0fTVxjrSDkONHExUrC8SGFUFb0XGpc0OBSgrty2clYzV4fiSTs5y0jTGKN8=
+X-Received: by 2002:a05:600c:5112:b0:40b:2979:9cc2 with SMTP id
+ o18-20020a05600c511200b0040b29799cc2mr820326wms.1.1701199271844; Tue, 28 Nov
+ 2023 11:21:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231128175441.721579-1-namhyung@kernel.org>
-In-Reply-To: <20231128175441.721579-1-namhyung@kernel.org>
+References: <20231128175441.721579-1-namhyung@kernel.org> <20231128175441.721579-7-namhyung@kernel.org>
+In-Reply-To: <20231128175441.721579-7-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 28 Nov 2023 11:13:55 -0800
-Message-ID: <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
-Subject: Re: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
+Date: Tue, 28 Nov 2023 11:20:59 -0800
+Message-ID: <CAP-5=fW3f_96=rWeYg-qpL2T9VjLKnqnmq8T4dvaixWEo-0NRA@mail.gmail.com>
+Subject: Re: [PATCH 6/8] perf annotate: Ensure init/exit for global options
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -58,73 +58,227 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Nov 28, 2023 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> Hello,
->
-> It used to have annotation_options for each command separately (for
-> example, perf report, annotate, and top), but we can make it global as
-> they never used together (with different settings).  This would save
-> some memory for each symbol when annotation is enabled.
->
-> This code is available at 'perf/annotate-option-v1' branch in
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
->
-> Thanks,
-> Namhyung
+> Now it only cares about the global options so it can just handle it
+> without the argument.
 
-Thanks for doing this and I think it is progress. I think there is a
-common problem with having things be an option rather than say part of
-session. Having a global variable seems unfortunate but I'm not sure
-if in all locations we have easy access to the session. The rough
-structure with annotations as I understand it is:
-
-session has machines
-a machine has dsos
-a dso has symbols
-a symbol has an annotation
-
-Annotation is something of unfortunate abstraction as it covers things
-like an IPC per symbol (why hard code to just IPC?) and things like
-source files and line numbers.
-
-A recent success story where we got rid of a configuration variable
-was by switching to lazy allocation with sorting by name for symbols
-within a dso. If we could have a lazy allocation model with
-annotations then maybe we can do away with large hammers like global
-options.
+If annotate_opts were accessed by a function then you could
+pthread_once the initialization on the first call to get
+annotate_opts. Removing annotation_options__init/exit would remove
+some potential for error.
 
 Thanks,
 Ian
 
 
-
-
-> Namhyung Kim (8):
->   perf annotate: Introduce global annotation_options
->   perf report: Convert to the global annotation_options
->   perf top: Convert to the global annotation_options
->   perf annotate: Use global annotation_options
->   perf ui/browser/annotate: Use global annotation_options
->   perf annotate: Ensure init/exit for global options
->   perf annotate: Remove remaining usages of local annotation options
->   perf annotate: Get rid of local annotation options
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-annotate.c |  8 ++++----
+>  tools/perf/builtin-report.c   |  8 ++++----
+>  tools/perf/builtin-top.c      |  8 ++++----
+>  tools/perf/util/annotate.c    | 19 +++++++++++--------
+>  tools/perf/util/annotate.h    |  8 ++++----
+>  5 files changed, 27 insertions(+), 24 deletions(-)
 >
->  tools/perf/builtin-annotate.c     |  43 +++++----
->  tools/perf/builtin-report.c       |  37 ++++----
->  tools/perf/builtin-top.c          |  45 +++++-----
->  tools/perf/ui/browsers/annotate.c |  85 ++++++++----------
->  tools/perf/ui/browsers/hists.c    |  34 +++----
->  tools/perf/ui/browsers/hists.h    |   2 -
->  tools/perf/util/annotate.c        | 142 +++++++++++++++---------------
->  tools/perf/util/annotate.h        |  38 ++++----
->  tools/perf/util/block-info.c      |   6 +-
->  tools/perf/util/block-info.h      |   3 +-
->  tools/perf/util/hist.h            |  25 ++----
->  tools/perf/util/top.h             |   1 -
->  12 files changed, 206 insertions(+), 255 deletions(-)
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.=
+c
+> index 87af95634879..9b3dd456a1ee 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -616,13 +616,13 @@ int cmd_annotate(int argc, const char **argv)
+>         set_option_flag(options, 0, "show-total-period", PARSE_OPT_EXCLUS=
+IVE);
+>         set_option_flag(options, 0, "show-nr-samples", PARSE_OPT_EXCLUSIV=
+E);
 >
+> -       annotation_options__init(&annotate_opts);
+> +       annotation_options__init();
 >
-> base-commit: 757489991f7c08603395b85037a981c31719c92c
+>         ret =3D hists__init();
+>         if (ret < 0)
+>                 return ret;
+>
+> -       annotation_config__init(&annotate_opts);
+> +       annotation_config__init();
+>
+>         argc =3D parse_options(argc, argv, options, annotate_usage, 0);
+>         if (argc) {
+> @@ -652,7 +652,7 @@ int cmd_annotate(int argc, const char **argv)
+>                         return -ENOMEM;
+>         }
+>
+> -       if (annotate_check_args(&annotate_opts) < 0)
+> +       if (annotate_check_args() < 0)
+>                 return -EINVAL;
+>
+>  #ifdef HAVE_GTK2_SUPPORT
+> @@ -733,7 +733,7 @@ int cmd_annotate(int argc, const char **argv)
+>  #ifndef NDEBUG
+>         perf_session__delete(annotate.session);
+>  #endif
+> -       annotation_options__exit(&annotate_opts);
+> +       annotation_options__exit();
+>
+>         return ret;
+>  }
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index bc0d986c1e0c..17fb171e898b 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1430,7 +1430,7 @@ int cmd_report(int argc, const char **argv)
+>          */
+>         symbol_conf.keep_exited_threads =3D true;
+>
+> -       annotation_options__init(&annotate_opts);
+> +       annotation_options__init();
+>
+>         ret =3D perf_config(report__config, &report);
+>         if (ret)
+> @@ -1464,7 +1464,7 @@ int cmd_report(int argc, const char **argv)
+>                         return -ENOMEM;
+>         }
+>
+> -       if (annotate_check_args(&annotate_opts) < 0) {
+> +       if (annotate_check_args() < 0) {
+>                 ret =3D -EINVAL;
+>                 goto exit;
+>         }
+> @@ -1696,7 +1696,7 @@ int cmd_report(int argc, const char **argv)
+>                          */
+>                         symbol_conf.priv_size +=3D sizeof(u32);
+>                 }
+> -               annotation_config__init(&annotate_opts);
+> +               annotation_config__init();
+>         }
+>
+>         if (symbol__init(&session->header.env) < 0)
+> @@ -1750,7 +1750,7 @@ int cmd_report(int argc, const char **argv)
+>         zstd_fini(&(session->zstd_data));
+>         perf_session__delete(session);
+>  exit:
+> -       annotation_options__exit(&annotate_opts);
+> +       annotation_options__exit();
+>         free(sort_order_help);
+>         free(field_order_help);
+>         return ret;
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 60399e4233ee..0de963ca3196 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1608,7 +1608,7 @@ int cmd_top(int argc, const char **argv)
+>         if (status < 0)
+>                 return status;
+>
+> -       annotation_options__init(&annotate_opts);
+> +       annotation_options__init();
+>
+>         annotate_opts.min_pcnt =3D 5;
+>         annotate_opts.context  =3D 4;
+> @@ -1660,7 +1660,7 @@ int cmd_top(int argc, const char **argv)
+>         if (status)
+>                 goto out_delete_evlist;
+>
+> -       if (annotate_check_args(&annotate_opts) < 0)
+> +       if (annotate_check_args() < 0)
+>                 goto out_delete_evlist;
+>
+>         if (!top.evlist->core.nr_entries) {
+> @@ -1786,7 +1786,7 @@ int cmd_top(int argc, const char **argv)
+>         if (status < 0)
+>                 goto out_delete_evlist;
+>
+> -       annotation_config__init(&annotate_opts);
+> +       annotation_config__init();
+>
+>         symbol_conf.try_vmlinux_path =3D (symbol_conf.vmlinux_name =3D=3D=
+ NULL);
+>         status =3D symbol__init(NULL);
+> @@ -1839,7 +1839,7 @@ int cmd_top(int argc, const char **argv)
+>  out_delete_evlist:
+>         evlist__delete(top.evlist);
+>         perf_session__delete(top.session);
+> -       annotation_options__exit(&annotate_opts);
+> +       annotation_options__exit();
+>
+>         return status;
+>  }
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index daff9af552f4..626ff3baeb85 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -3416,8 +3416,10 @@ static int annotation__config(const char *var, con=
+st char *value, void *data)
+>         return 0;
+>  }
+>
+> -void annotation_options__init(struct annotation_options *opt)
+> +void annotation_options__init(void)
+>  {
+> +       struct annotation_options *opt =3D &annotate_opts;
+> +
+>         memset(opt, 0, sizeof(*opt));
+>
+>         /* Default values. */
+> @@ -3428,16 +3430,15 @@ void annotation_options__init(struct annotation_o=
+ptions *opt)
+>         opt->percent_type =3D PERCENT_PERIOD_LOCAL;
+>  }
+>
+> -
+> -void annotation_options__exit(struct annotation_options *opt)
+> +void annotation_options__exit(void)
+>  {
+> -       zfree(&opt->disassembler_style);
+> -       zfree(&opt->objdump_path);
+> +       zfree(&annotate_opts.disassembler_style);
+> +       zfree(&annotate_opts.objdump_path);
+>  }
+>
+> -void annotation_config__init(struct annotation_options *opt)
+> +void annotation_config__init(void)
+>  {
+> -       perf_config(annotation__config, opt);
+> +       perf_config(annotation__config, &annotate_opts);
+>  }
+>
+>  static unsigned int parse_percent_type(char *str1, char *str2)
+> @@ -3491,8 +3492,10 @@ int annotate_parse_percent_type(const struct optio=
+n *opt __maybe_unused, const c
+>         return err;
+>  }
+>
+> -int annotate_check_args(struct annotation_options *args)
+> +int annotate_check_args(void)
+>  {
+> +       struct annotation_options *args =3D &annotate_opts;
+> +
+>         if (args->prefix_strip && !args->prefix) {
+>                 pr_err("--prefix-strip requires --prefix\n");
+>                 return -1;
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index 857c5fa0e6b1..4283eb4522b2 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -428,14 +428,14 @@ static inline int symbol__tui_annotate(struct map_s=
+ymbol *ms __maybe_unused,
+>  }
+>  #endif
+>
+> -void annotation_options__init(struct annotation_options *opt);
+> -void annotation_options__exit(struct annotation_options *opt);
+> +void annotation_options__init(void);
+> +void annotation_options__exit(void);
+>
+> -void annotation_config__init(struct annotation_options *opt);
+> +void annotation_config__init(void);
+>
+>  int annotate_parse_percent_type(const struct option *opt, const char *_s=
+tr,
+>                                 int unset);
+>
+> -int annotate_check_args(struct annotation_options *args);
+> +int annotate_check_args(void);
+>
+>  #endif /* __PERF_ANNOTATE_H */
 > --
 > 2.43.0.rc1.413.gea7ed67945-goog
 >
