@@ -1,672 +1,237 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ky5Amp35"
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 207C01727;
-	Tue, 28 Nov 2023 09:54:55 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-6bd32d1a040so5736862b3a.3;
-        Tue, 28 Nov 2023 09:54:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oB/5DRkO"
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FCCB324C
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 09:55:36 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-50bbf7a6029so167e87.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 09:55:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701194094; x=1701798894; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1701194135; x=1701798935; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8d1bVoRgK9y5LwRIkv9wOKItAYFVYohC3YMot6kdjDk=;
-        b=Ky5Amp35IgFW41uaZV29/0m6+zG0js9KTtyih57qlYm9D/yh2SdqMqSjx9RH764MlP
-         fP901UBQNKakdFCDBCqsOZTHK1JQjzIw4jBPvqETPUt4092CTbLfHwbbQyVrkUmhUrKa
-         HucJd9qJaCkpNNPXfrodW8ceEBELG5/7rkz4JaJYzXWlukZROVAbCQFaDtf9yvuTFl64
-         3hn5WsSVyGlIVtXTBeQCok34ImC34FUqezjOXhl68G32TU9J1ouN8yE8NSWaiL1hjEHy
-         yQ+hXDZo0IkRdfNmOiUk3hlr3+LdgbdmyB0XnoBFwTRLAUdPpDp/DFPT4oaTaHUJmpNN
-         3rNg==
+        bh=ugBeSgSYCz9ybgMm2e5vxSBN02IdcZ2SmwFOGZ5+9F0=;
+        b=oB/5DRkOGxxviIWEL62mZQ+uG/0sNBpNs0jLysXVVgRcN9OW9HuPqk26AHPZfOwar3
+         3pajZmcJGgfnaxcAs1xvQQ5TBBloOdFFGA//cYjJbX02TXjzqBEBistq2P0+BEViDwpi
+         YkRjtsfxrZU88QJMwrf0o50x2mDGhguvsp+kJV04AQYYma5I+DWTqSONHq1W7fdCPVVX
+         kacUv0XK6GM4YAEymoR4Thb6S3OGDNCX0T4ota/IB9URp/y4XcOSvESNPsb9V2X3wNT+
+         hzdGwno4t4PXmWd8+H2b2kK7pfOL4Vz8Mn3zvSc6IvHfETFz1+Irzyu402A9O0YyyFay
+         WLMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701194094; x=1701798894;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8d1bVoRgK9y5LwRIkv9wOKItAYFVYohC3YMot6kdjDk=;
-        b=eoiRBYQWp2S+Cnp5UPsioGFjfg/eqjDhxDkY0jFBn1nhpmdGM1dO8GCo0ELtyfmeia
-         q1JLRh5G4ANuXmtx8cYP8K0O+rTaejpyRO9smjzTX/KNvoQonPKbAC0byuIRlDrnQkdt
-         IK+g9tWVWXVHz7C3+42lcZJ8WWBHBeUXIuU5CaKpj6scXyzoE4mVAQJZRaIqpPH7ydYx
-         yJUJbtdk3COQcFixkfrKiyL80uaYkTPbdSae3v+qKLtBQLHLNtA+dDhNGp8hS9HY1sPq
-         al2QN2Ksce5k8ITYxAF4EcqHYLbiiiS4sNlkvZXDc87oMKQex1eGR6++H9Hq8c+MgCkB
-         op0Q==
-X-Gm-Message-State: AOJu0YwtNK+dYTK04ZEFvcLReTWC+KYjXsUyLbk0PJxtAM+VupAnmd79
-	PLcEZUh3gYipIjhOdIa9bSOAg5SziLwdvw==
-X-Google-Smtp-Source: AGHT+IFPGJkZ+WZeiyKEhNZYRhVZvueJNwts0SVpx+Kie0BpceRGAIn+b1XarauxX9niu1nEzNXwYg==
-X-Received: by 2002:a05:6a20:a10b:b0:187:d808:f082 with SMTP id q11-20020a056a20a10b00b00187d808f082mr20092906pzk.48.1701194094296;
-        Tue, 28 Nov 2023 09:54:54 -0800 (PST)
-Received: from bangji.corp.google.com ([2620:15c:2c0:5:146f:6347:3bb4:8cf4])
-        by smtp.gmail.com with ESMTPSA id y2-20020aa78042000000b006cbbc07a1c0sm9224721pfm.156.2023.11.28.09.54.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Nov 2023 09:54:53 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 5/8] perf ui/browser/annotate: Use global annotation_options
-Date: Tue, 28 Nov 2023 09:54:38 -0800
-Message-ID: <20231128175441.721579-6-namhyung@kernel.org>
-X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-In-Reply-To: <20231128175441.721579-1-namhyung@kernel.org>
-References: <20231128175441.721579-1-namhyung@kernel.org>
+        d=1e100.net; s=20230601; t=1701194135; x=1701798935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ugBeSgSYCz9ybgMm2e5vxSBN02IdcZ2SmwFOGZ5+9F0=;
+        b=a43RxaYIeurHg66GKJrho4VpGdAUDn/OgRmeJGV6N+e/eeTD3o4rbSqxCegW/8zhcc
+         Y3qJ4Ln65ltHT3bpLvZkHWeBUIGwYCYhsauj0mb2IYCNR2uGerUoYHWtJrFonQM+21OZ
+         pMHh2L2fbi6nSLoMtTFgU6mQG1opfYdP6Lt6uNnwkQSMuKDNvCfAnFlsAh3n7JDJGoFU
+         rKScQnQeJkodyab/VAEia+CO3/8yBrkKIzE0+hzpSItyTeBL7QMr8gifCbPr8HEkvpLt
+         RyBHmPSnRSWDZA6ewwyyCY5N9xwTNvM/6zuBk8aXO2BZmUsAP5F2TJmbRr6PW1n6J9g+
+         Tubg==
+X-Gm-Message-State: AOJu0Yy7VfTzj4y4SMClJtekLqu3kdutFzRNJM62w7SlRU3FcZjvOWoy
+	K9SCBS+IeTQKMdKbMT4RRGG6DUrqxlz13lr1rsvflg==
+X-Google-Smtp-Source: AGHT+IFaDkaMABJ614yhVDsD1gyDQpT8ElYwuxkdZVgJr7NOCU4EaS8jYCxz2m7q7PAH8Cgd13o5YCt9dKwp9QyPghQ=
+X-Received: by 2002:a19:3811:0:b0:50b:bca9:72c with SMTP id
+ f17-20020a193811000000b0050bbca9072cmr65388lfa.3.1701194134505; Tue, 28 Nov
+ 2023 09:55:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231102175735.2272696-1-irogers@google.com> <20231102175735.2272696-5-irogers@google.com>
+ <ZWURZvDA2L4Mr3HR@kernel.org> <ZWYf+Sy6JKd7CYlN@kernel.org> <ZWYlgPwGmAEUKIsE@kernel.org>
+In-Reply-To: <ZWYlgPwGmAEUKIsE@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 28 Nov 2023 09:55:22 -0800
+Message-ID: <CAP-5=fVgVY8hhhhgW-aJic6Vez2CJmA8VLx+Az3kKJFB7fz1Pg@mail.gmail.com>
+Subject: Re: [PATCH v4 04/53] perf mmap: Lazily initialize zstd streams
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Nick Terrell <terrelln@fb.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Vincent Whitchurch <vincent.whitchurch@axis.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Liam Howlett <liam.howlett@oracle.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Colin Ian King <colin.i.king@gmail.com>, 
+	Dmitrii Dolgov <9erthalion6@gmail.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Ming Wang <wangming01@loongson.cn>, James Clark <james.clark@arm.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
+	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
+	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now it can use the global options and no need save local browser
-options separately.
+On Tue, Nov 28, 2023 at 9:38=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Tue, Nov 28, 2023 at 02:14:33PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+> > Em Mon, Nov 27, 2023 at 07:00:06PM -0300, Arnaldo Carvalho de Melo escr=
+eveu:
+> > > Em Thu, Nov 02, 2023 at 10:56:46AM -0700, Ian Rogers escreveu:
+> > > > Zstd streams create dictionaries that can require significant RAM,
+> > > > especially when there is one per-CPU. Tools like perf record won't =
+use
+> > > > the streams without the -z option, and so the creation of the strea=
+ms
+> > > > is pure overhead. Switch to creating the streams on first use.
+>
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> > > Thanks, applied to perf-tools-next.
+>
+> > Trying to fix this now:
+> >
+> >   6    20.59 alpine:3.18                   : FAIL gcc version 12.2.1 20=
+220924 (Alpine 12.2.1_git20220924-r10)
+> >     In file included from util/zstd.c:5:
+> >     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:1: error: unknown=
+ type name 'ssize_t'; did you mean 'size_t'?
+>
+> So the problem was really the one above, that got fixed with the patch
+> below, that is what 'man size_t' documents on my fedora:38 system.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-annotate.c     |  2 +-
- tools/perf/builtin-report.c       |  8 ++--
- tools/perf/builtin-top.c          |  3 +-
- tools/perf/ui/browsers/annotate.c | 65 ++++++++++++++-----------------
- tools/perf/ui/browsers/hists.c    | 34 ++++++----------
- tools/perf/ui/browsers/hists.h    |  2 -
- tools/perf/util/annotate.h        |  6 +--
- tools/perf/util/block-info.c      |  6 +--
- tools/perf/util/block-info.h      |  3 +-
- tools/perf/util/hist.h            | 25 ++++--------
- 10 files changed, 59 insertions(+), 95 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index a53a4e711899..87af95634879 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -382,7 +382,7 @@ static void hists__find_annotations(struct hists *hists,
- 			/* skip missing symbols */
- 			nd = rb_next(nd);
- 		} else if (use_browser == 1) {
--			key = hist_entry__tui_annotate(he, evsel, NULL, &annotate_opts);
-+			key = hist_entry__tui_annotate(he, evsel, NULL);
- 
- 			switch (key) {
- 			case -1:
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 2b86651615cd..bc0d986c1e0c 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -540,8 +540,7 @@ static int evlist__tui_block_hists_browse(struct evlist *evlist, struct report *
- 	evlist__for_each_entry(evlist, pos) {
- 		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
- 						 rep->min_percent, pos,
--						 &rep->session->header.env,
--						 &annotate_opts);
-+						 &rep->session->header.env);
- 		if (ret != 0)
- 			return ret;
- 	}
-@@ -573,8 +572,7 @@ static int evlist__tty_browse_hists(struct evlist *evlist, struct report *rep, c
- 
- 		if (rep->total_cycles_mode) {
- 			report__browse_block_hists(&rep->block_reports[i++].hist,
--						   rep->min_percent, pos,
--						   NULL, NULL);
-+						   rep->min_percent, pos, NULL);
- 			continue;
- 		}
- 
-@@ -669,7 +667,7 @@ static int report__browse_hists(struct report *rep)
- 		}
- 
- 		ret = evlist__tui_browse_hists(evlist, help, NULL, rep->min_percent,
--					       &session->header.env, true, &annotate_opts);
-+					       &session->header.env, true);
- 		/*
- 		 * Usually "ret" is the last pressed key, and we only
- 		 * care if the key notifies us to switch data file.
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 80d126279208..60399e4233ee 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -646,8 +646,7 @@ static void *display_thread_tui(void *arg)
- 	}
- 
- 	ret = evlist__tui_browse_hists(top->evlist, help, &hbt, top->min_percent,
--				       &top->session->header.env, !top->record_opts.overwrite,
--				       &annotate_opts);
-+				       &top->session->header.env, !top->record_opts.overwrite);
- 	if (ret == K_RELOAD) {
- 		top->zero = true;
- 		goto repeat;
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index ed0e692afdbe..fda17c1f2031 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -27,7 +27,6 @@ struct annotate_browser {
- 	struct rb_node		   *curr_hot;
- 	struct annotation_line	   *selection;
- 	struct arch		   *arch;
--	struct annotation_options  *opts;
- 	bool			    searching_backwards;
- 	char			    search_bf[128];
- };
-@@ -97,7 +96,7 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 	struct annotation_write_ops ops = {
- 		.first_line		 = row == 0,
- 		.current_entry		 = is_current_entry,
--		.change_color		 = (!notes->options->hide_src_code &&
-+		.change_color		 = (!annotate_opts.hide_src_code &&
- 					    (!is_current_entry ||
- 					     (browser->use_navkeypressed &&
- 					      !browser->navkeypressed))),
-@@ -128,7 +127,7 @@ static int is_fused(struct annotate_browser *ab, struct disasm_line *cursor)
- 
- 	while (pos && pos->al.offset == -1) {
- 		pos = list_prev_entry(pos, al.node);
--		if (!ab->opts->hide_src_code)
-+		if (!annotate_opts.hide_src_code)
- 			diff++;
- 	}
- 
-@@ -195,7 +194,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
- 		return;
- 	}
- 
--	if (notes->options->hide_src_code) {
-+	if (annotate_opts.hide_src_code) {
- 		from = cursor->al.idx_asm;
- 		to = target->idx_asm;
- 	} else {
-@@ -224,7 +223,7 @@ static unsigned int annotate_browser__refresh(struct ui_browser *browser)
- 	int ret = ui_browser__list_head_refresh(browser);
- 	int pcnt_width = annotation__pcnt_width(notes);
- 
--	if (notes->options->jump_arrows)
-+	if (annotate_opts.jump_arrows)
- 		annotate_browser__draw_current_jump(browser);
- 
- 	ui_browser__set_color(browser, HE_COLORSET_NORMAL);
-@@ -258,7 +257,7 @@ static void disasm_rb_tree__insert(struct annotate_browser *browser,
- 		parent = *p;
- 		l = rb_entry(parent, struct annotation_line, rb_node);
- 
--		if (disasm__cmp(al, l, browser->opts->percent_type) < 0)
-+		if (disasm__cmp(al, l, annotate_opts.percent_type) < 0)
- 			p = &(*p)->rb_left;
- 		else
- 			p = &(*p)->rb_right;
-@@ -294,11 +293,10 @@ static void annotate_browser__set_top(struct annotate_browser *browser,
- static void annotate_browser__set_rb_top(struct annotate_browser *browser,
- 					 struct rb_node *nd)
- {
--	struct annotation *notes = browser__annotation(&browser->b);
- 	struct annotation_line * pos = rb_entry(nd, struct annotation_line, rb_node);
- 	u32 idx = pos->idx;
- 
--	if (notes->options->hide_src_code)
-+	if (annotate_opts.hide_src_code)
- 		idx = pos->idx_asm;
- 	annotate_browser__set_top(browser, pos, idx);
- 	browser->curr_hot = nd;
-@@ -331,7 +329,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
- 			double percent;
- 
- 			percent = annotation_data__percent(&pos->al.data[i],
--							   browser->opts->percent_type);
-+							   annotate_opts.percent_type);
- 
- 			if (max_percent < percent)
- 				max_percent = percent;
-@@ -380,12 +378,12 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
- 	browser->b.seek(&browser->b, offset, SEEK_CUR);
- 	al = list_entry(browser->b.top, struct annotation_line, node);
- 
--	if (notes->options->hide_src_code) {
-+	if (annotate_opts.hide_src_code) {
- 		if (al->idx_asm < offset)
- 			offset = al->idx;
- 
- 		browser->b.nr_entries = notes->src->nr_entries;
--		notes->options->hide_src_code = false;
-+		annotate_opts.hide_src_code = false;
- 		browser->b.seek(&browser->b, -offset, SEEK_CUR);
- 		browser->b.top_idx = al->idx - offset;
- 		browser->b.index = al->idx;
-@@ -403,7 +401,7 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
- 			offset = al->idx_asm;
- 
- 		browser->b.nr_entries = notes->src->nr_asm_entries;
--		notes->options->hide_src_code = true;
-+		annotate_opts.hide_src_code = true;
- 		browser->b.seek(&browser->b, -offset, SEEK_CUR);
- 		browser->b.top_idx = al->idx_asm - offset;
- 		browser->b.index = al->idx_asm;
-@@ -483,8 +481,8 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
- 	annotation__unlock(notes);
--	symbol__tui_annotate(&target_ms, evsel, hbt, browser->opts);
--	sym_title(ms->sym, ms->map, title, sizeof(title), browser->opts->percent_type);
-+	symbol__tui_annotate(&target_ms, evsel, hbt);
-+	sym_title(ms->sym, ms->map, title, sizeof(title), annotate_opts.percent_type);
- 	ui_browser__show_title(&browser->b, title);
- 	return true;
- }
-@@ -659,7 +657,6 @@ bool annotate_browser__continue_search_reverse(struct annotate_browser *browser,
- 
- static int annotate_browser__show(struct ui_browser *browser, char *title, const char *help)
- {
--	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
- 	struct map_symbol *ms = browser->priv;
- 	struct symbol *sym = ms->sym;
- 	char symbol_dso[SYM_TITLE_MAX_SIZE];
-@@ -667,7 +664,7 @@ static int annotate_browser__show(struct ui_browser *browser, char *title, const
- 	if (ui_browser__show(browser, title, help) < 0)
- 		return -1;
- 
--	sym_title(sym, ms->map, symbol_dso, sizeof(symbol_dso), ab->opts->percent_type);
-+	sym_title(sym, ms->map, symbol_dso, sizeof(symbol_dso), annotate_opts.percent_type);
- 
- 	ui_browser__gotorc_title(browser, 0, 0);
- 	ui_browser__set_color(browser, HE_COLORSET_ROOT);
-@@ -809,7 +806,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			annotate_browser__show(&browser->b, title, help);
- 			continue;
- 		case 'k':
--			notes->options->show_linenr = !notes->options->show_linenr;
-+			annotate_opts.show_linenr = !annotate_opts.show_linenr;
- 			continue;
- 		case 'l':
- 			annotate_browser__show_full_location (&browser->b);
-@@ -822,18 +819,18 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 				ui_helpline__puts(help);
- 			continue;
- 		case 'o':
--			notes->options->use_offset = !notes->options->use_offset;
-+			annotate_opts.use_offset = !annotate_opts.use_offset;
- 			annotation__update_column_widths(notes);
- 			continue;
- 		case 'O':
--			if (++notes->options->offset_level > ANNOTATION__MAX_OFFSET_LEVEL)
--				notes->options->offset_level = ANNOTATION__MIN_OFFSET_LEVEL;
-+			if (++annotate_opts.offset_level > ANNOTATION__MAX_OFFSET_LEVEL)
-+				annotate_opts.offset_level = ANNOTATION__MIN_OFFSET_LEVEL;
- 			continue;
- 		case 'j':
--			notes->options->jump_arrows = !notes->options->jump_arrows;
-+			annotate_opts.jump_arrows = !annotate_opts.jump_arrows;
- 			continue;
- 		case 'J':
--			notes->options->show_nr_jumps = !notes->options->show_nr_jumps;
-+			annotate_opts.show_nr_jumps = !annotate_opts.show_nr_jumps;
- 			annotation__update_column_widths(notes);
- 			continue;
- 		case '/':
-@@ -897,15 +894,15 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			annotation__update_column_widths(notes);
- 			continue;
- 		case 'c':
--			if (notes->options->show_minmax_cycle)
--				notes->options->show_minmax_cycle = false;
-+			if (annotate_opts.show_minmax_cycle)
-+				annotate_opts.show_minmax_cycle = false;
- 			else
--				notes->options->show_minmax_cycle = true;
-+				annotate_opts.show_minmax_cycle = true;
- 			annotation__update_column_widths(notes);
- 			continue;
- 		case 'p':
- 		case 'b':
--			switch_percent_type(browser->opts, key == 'b');
-+			switch_percent_type(&annotate_opts, key == 'b');
- 			hists__scnprintf_title(hists, title, sizeof(title));
- 			annotate_browser__show(&browser->b, title, help);
- 			continue;
-@@ -932,26 +929,23 @@ static int annotate_browser__run(struct annotate_browser *browser,
- }
- 
- int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
--			     struct hist_browser_timer *hbt,
--			     struct annotation_options *opts)
-+			     struct hist_browser_timer *hbt)
- {
--	return symbol__tui_annotate(ms, evsel, hbt, opts);
-+	return symbol__tui_annotate(ms, evsel, hbt);
- }
- 
- int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
--			     struct hist_browser_timer *hbt,
--			     struct annotation_options *opts)
-+			     struct hist_browser_timer *hbt)
- {
- 	/* reset abort key so that it can get Ctrl-C as a key */
- 	SLang_reset_tty();
- 	SLang_init_tty(0, 0, 0);
- 
--	return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
-+	return map_symbol__tui_annotate(&he->ms, evsel, hbt);
- }
- 
- int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
--			 struct hist_browser_timer *hbt,
--			 struct annotation_options *opts)
-+			 struct hist_browser_timer *hbt)
- {
- 	struct symbol *sym = ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
-@@ -965,7 +959,6 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 			.priv	 = ms,
- 			.use_navkeypressed = true,
- 		},
--		.opts = opts,
- 	};
- 	struct dso *dso;
- 	int ret = -1, err;
-@@ -996,7 +989,7 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	browser.b.entries = &notes->src->source,
- 	browser.b.width += 18; /* Percentage */
- 
--	if (notes->options->hide_src_code)
-+	if (annotate_opts.hide_src_code)
- 		ui_browser__init_asm_mode(&browser.b);
- 
- 	ret = annotate_browser__run(&browser, evsel, hbt);
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index f4812b226818..3061dea29e6b 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2250,8 +2250,7 @@ struct hist_browser *hist_browser__new(struct hists *hists)
- static struct hist_browser *
- perf_evsel_browser__new(struct evsel *evsel,
- 			struct hist_browser_timer *hbt,
--			struct perf_env *env,
--			struct annotation_options *annotation_opts)
-+			struct perf_env *env)
- {
- 	struct hist_browser *browser = hist_browser__new(evsel__hists(evsel));
- 
-@@ -2259,7 +2258,6 @@ perf_evsel_browser__new(struct evsel *evsel,
- 		browser->hbt   = hbt;
- 		browser->env   = env;
- 		browser->title = hists_browser__scnprintf_title;
--		browser->annotation_opts = annotation_opts;
- 	}
- 	return browser;
- }
-@@ -2432,8 +2430,8 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
- 	struct hist_entry *he;
- 	int err;
- 
--	if (!browser->annotation_opts->objdump_path &&
--	    perf_env__lookup_objdump(browser->env, &browser->annotation_opts->objdump_path))
-+	if (!annotate_opts.objdump_path &&
-+	    perf_env__lookup_objdump(browser->env, &annotate_opts.objdump_path))
- 		return 0;
- 
- 	notes = symbol__annotation(act->ms.sym);
-@@ -2445,8 +2443,7 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
- 	else
- 		evsel = hists_to_evsel(browser->hists);
- 
--	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt,
--				       browser->annotation_opts);
-+	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt);
- 	he = hist_browser__selected_entry(browser);
- 	/*
- 	 * offer option to annotate the other branch source or target
-@@ -2943,11 +2940,10 @@ static void hist_browser__update_percent_limit(struct hist_browser *hb,
- 
- static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *helpline,
- 			       bool left_exits, struct hist_browser_timer *hbt, float min_pcnt,
--			       struct perf_env *env, bool warn_lost_event,
--			       struct annotation_options *annotation_opts)
-+			       struct perf_env *env, bool warn_lost_event)
- {
- 	struct hists *hists = evsel__hists(evsel);
--	struct hist_browser *browser = perf_evsel_browser__new(evsel, hbt, env, annotation_opts);
-+	struct hist_browser *browser = perf_evsel_browser__new(evsel, hbt, env);
- 	struct branch_info *bi = NULL;
- #define MAX_OPTIONS  16
- 	char *options[MAX_OPTIONS];
-@@ -3398,7 +3394,6 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
- struct evsel_menu {
- 	struct ui_browser b;
- 	struct evsel *selection;
--	struct annotation_options *annotation_opts;
- 	bool lost_events, lost_events_warned;
- 	float min_pcnt;
- 	struct perf_env *env;
-@@ -3499,8 +3494,7 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
- 				hbt->timer(hbt->arg);
- 			key = evsel__hists_browse(pos, nr_events, help, true, hbt,
- 						  menu->min_pcnt, menu->env,
--						  warn_lost_event,
--						  menu->annotation_opts);
-+						  warn_lost_event);
- 			ui_browser__show_title(&menu->b, title);
- 			switch (key) {
- 			case K_TAB:
-@@ -3557,7 +3551,7 @@ static bool filter_group_entries(struct ui_browser *browser __maybe_unused,
- 
- static int __evlist__tui_browse_hists(struct evlist *evlist, int nr_entries, const char *help,
- 				      struct hist_browser_timer *hbt, float min_pcnt, struct perf_env *env,
--				      bool warn_lost_event, struct annotation_options *annotation_opts)
-+				      bool warn_lost_event)
- {
- 	struct evsel *pos;
- 	struct evsel_menu menu = {
-@@ -3572,7 +3566,6 @@ static int __evlist__tui_browse_hists(struct evlist *evlist, int nr_entries, con
- 		},
- 		.min_pcnt = min_pcnt,
- 		.env = env,
--		.annotation_opts = annotation_opts,
- 	};
- 
- 	ui_helpline__push("Press ESC to exit");
-@@ -3607,8 +3600,7 @@ static bool evlist__single_entry(struct evlist *evlist)
- }
- 
- int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
--			     float min_pcnt, struct perf_env *env, bool warn_lost_event,
--			     struct annotation_options *annotation_opts)
-+			     float min_pcnt, struct perf_env *env, bool warn_lost_event)
- {
- 	int nr_entries = evlist->core.nr_entries;
- 
-@@ -3617,7 +3609,7 @@ single_entry: {
- 		struct evsel *first = evlist__first(evlist);
- 
- 		return evsel__hists_browse(first, nr_entries, help, false, hbt, min_pcnt,
--					   env, warn_lost_event, annotation_opts);
-+					   env, warn_lost_event);
- 	}
- 	}
- 
-@@ -3635,7 +3627,7 @@ single_entry: {
- 	}
- 
- 	return __evlist__tui_browse_hists(evlist, nr_entries, help, hbt, min_pcnt, env,
--					  warn_lost_event, annotation_opts);
-+					  warn_lost_event);
- }
- 
- static int block_hists_browser__title(struct hist_browser *browser, char *bf,
-@@ -3654,8 +3646,7 @@ static int block_hists_browser__title(struct hist_browser *browser, char *bf,
- }
- 
- int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
--			   float min_percent, struct perf_env *env,
--			   struct annotation_options *annotation_opts)
-+			   float min_percent, struct perf_env *env)
- {
- 	struct hists *hists = &bh->block_hists;
- 	struct hist_browser *browser;
-@@ -3672,7 +3663,6 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
- 	browser->title = block_hists_browser__title;
- 	browser->min_pcnt = min_percent;
- 	browser->env = env;
--	browser->annotation_opts = annotation_opts;
- 
- 	/* reset abort key so that it can get Ctrl-C as a key */
- 	SLang_reset_tty();
-diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
-index 1e938d9ffa5e..de46f6c56b0e 100644
---- a/tools/perf/ui/browsers/hists.h
-+++ b/tools/perf/ui/browsers/hists.h
-@@ -4,7 +4,6 @@
- 
- #include "ui/browser.h"
- 
--struct annotation_options;
- struct evsel;
- 
- struct hist_browser {
-@@ -15,7 +14,6 @@ struct hist_browser {
- 	struct hist_browser_timer *hbt;
- 	struct pstack	    *pstack;
- 	struct perf_env	    *env;
--	struct annotation_options *annotation_opts;
- 	struct evsel	    *block_evsel;
- 	int		     print_seq;
- 	bool		     show_dso;
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 7bf29baa43f5..857c5fa0e6b1 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -418,13 +418,11 @@ int symbol__tty_annotate2(struct map_symbol *ms, struct evsel *evsel);
- 
- #ifdef HAVE_SLANG_SUPPORT
- int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
--			 struct hist_browser_timer *hbt,
--			 struct annotation_options *opts);
-+			 struct hist_browser_timer *hbt);
- #else
- static inline int symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
- 				struct evsel *evsel  __maybe_unused,
--				struct hist_browser_timer *hbt __maybe_unused,
--				struct annotation_options *opts __maybe_unused)
-+				struct hist_browser_timer *hbt __maybe_unused)
- {
- 	return 0;
- }
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 08f82c1f166c..dec910989701 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -464,8 +464,7 @@ void block_info__free_report(struct block_report *reps, int nr_reps)
- }
- 
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
--			       struct evsel *evsel, struct perf_env *env,
--			       struct annotation_options *annotation_opts)
-+			       struct evsel *evsel, struct perf_env *env)
- {
- 	int ret;
- 
-@@ -477,8 +476,7 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 		return 0;
- 	case 1:
- 		symbol_conf.report_individual_block = true;
--		ret = block_hists_tui_browse(bh, evsel, min_percent,
--					     env, annotation_opts);
-+		ret = block_hists_tui_browse(bh, evsel, min_percent, env);
- 		return ret;
- 	default:
- 		return -1;
-diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-index 42e9dcc4cf0a..96f53e89795e 100644
---- a/tools/perf/util/block-info.h
-+++ b/tools/perf/util/block-info.h
-@@ -78,8 +78,7 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- void block_info__free_report(struct block_report *reps, int nr_reps);
- 
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
--			       struct evsel *evsel, struct perf_env *env,
--			       struct annotation_options *annotation_opts);
-+			       struct evsel *evsel, struct perf_env *env);
- 
- float block_info__total_cycles_percent(struct hist_entry *he);
- 
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index afc9f1c7f4dc..5d0db96609df 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -457,7 +457,6 @@ struct hist_browser_timer {
- 	int refresh;
- };
- 
--struct annotation_options;
- struct res_sample;
- 
- enum rstype {
-@@ -473,16 +472,13 @@ struct block_hist;
- void attr_to_script(char *buf, struct perf_event_attr *attr);
- 
- int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
--			     struct hist_browser_timer *hbt,
--			     struct annotation_options *annotation_opts);
-+			     struct hist_browser_timer *hbt);
- 
- int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
--			     struct hist_browser_timer *hbt,
--			     struct annotation_options *annotation_opts);
-+			     struct hist_browser_timer *hbt);
- 
- int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
--			     float min_pcnt, struct perf_env *env, bool warn_lost_event,
--			     struct annotation_options *annotation_options);
-+			     float min_pcnt, struct perf_env *env, bool warn_lost_event);
- 
- int script_browse(const char *script_opt, struct evsel *evsel);
- 
-@@ -492,8 +488,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- void res_sample_init(void);
- 
- int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
--			   float min_percent, struct perf_env *env,
--			   struct annotation_options *annotation_opts);
-+			   float min_percent, struct perf_env *env);
- #else
- static inline
- int evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
-@@ -501,23 +496,20 @@ int evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
- 			     struct hist_browser_timer *hbt __maybe_unused,
- 			     float min_pcnt __maybe_unused,
- 			     struct perf_env *env __maybe_unused,
--			     bool warn_lost_event __maybe_unused,
--			     struct annotation_options *annotation_options __maybe_unused)
-+			     bool warn_lost_event __maybe_unused)
- {
- 	return 0;
- }
- static inline int map_symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
- 					   struct evsel *evsel __maybe_unused,
--					   struct hist_browser_timer *hbt __maybe_unused,
--					   struct annotation_options *annotation_options __maybe_unused)
-+					   struct hist_browser_timer *hbt __maybe_unused)
- {
- 	return 0;
- }
- 
- static inline int hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
- 					   struct evsel *evsel __maybe_unused,
--					   struct hist_browser_timer *hbt __maybe_unused,
--					   struct annotation_options *annotation_opts __maybe_unused)
-+					   struct hist_browser_timer *hbt __maybe_unused)
- {
- 	return 0;
- }
-@@ -541,8 +533,7 @@ static inline void res_sample_init(void) {}
- static inline int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
- 					 struct evsel *evsel __maybe_unused,
- 					 float min_percent __maybe_unused,
--					 struct perf_env *env __maybe_unused,
--					 struct annotation_options *annotation_opts __maybe_unused)
-+					 struct perf_env *env __maybe_unused)
- {
- 	return 0;
- }
--- 
-2.43.0.rc1.413.gea7ed67945-goog
+Thanks, perhaps this is something clang-tidy, clang-format or similar
+could help with in the future. There was event IWYU discussion at LPC:
+https://lpc.events/event/17/contributions/1620/attachments/1228/2520/Linux%=
+20Kernel%20Header%20Optimization.pdf
 
+Thanks,
+Ian
+
+> - Arnaldo
+>
+> diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
+> index 9eb6eb5bf038ce54..b29109cd36095c4f 100644
+> --- a/tools/perf/util/compress.h
+> +++ b/tools/perf/util/compress.h
+> @@ -3,7 +3,8 @@
+>  #define PERF_COMPRESS_H
+>
+>  #include <stdbool.h>
+> -#include <stdlib.h>
+> +#include <stddef.h>
+> +#include <sys/types.h>
+>  #ifdef HAVE_ZSTD_SUPPORT
+>  #include <zstd.h>
+>  #endif
+>
+> >        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           | ^~~~~~~
+> >           | size_t
+> >     util/zstd.c:31:9: error: conflicting types for 'zstd_compress_strea=
+m_to_records'; have 'ssize_t(struct zstd_data *, void *, size_t,  void *, s=
+ize_t,  size_t,  size_t (*)(void *, size_t))' {aka 'long int(struct zstd_da=
+ta *, void *, long unsigned int,  void *, long unsigned int,  long unsigned=
+ int,  long unsigned int (*)(void *, long unsigned int))'}
+> >        31 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:9: note: previous=
+ declaration of 'zstd_compress_stream_to_records' with type 'int(struct zst=
+d_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, siz=
+e_t))' {aka 'int(struct zstd_data *, void *, long unsigned int,  void *, lo=
+ng unsigned int,  long unsigned int,  long unsigned int (*)(void *, long un=
+signed int))'}
+> >        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     make[3]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: u=
+til] Error 2
+> >       CC      /tmp/build/perf/util/zstd.o
+> >       CC      /tmp/build/perf/util/cap.o
+> >       CXX     /tmp/build/perf/util/demangle-cxx.o
+> >       CC      /tmp/build/perf/util/demangle-ocaml.o
+> >     In file included from util/zstd.c:5:
+> >     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:1: error: unknown=
+ type name 'ssize_t'; did you mean 'size_t'?
+> >        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           | ^~~~~~~
+> >           | size_t
+> >       CC      /tmp/build/perf/util/demangle-java.o
+> >     util/zstd.c:31:9: error: conflicting types for 'zstd_compress_strea=
+m_to_records'; have 'ssize_t(struct zstd_data *, void *, size_t,  void *, s=
+ize_t,  size_t,  size_t (*)(void *, size_t))' {aka 'long int(struct zstd_da=
+ta *, void *, long unsigned int,  void *, long unsigned int,  long unsigned=
+ int,  long unsigned int (*)(void *, long unsigned int))'}
+> >        31 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:9: note: previous=
+ declaration of 'zstd_compress_stream_to_records' with type 'int(struct zst=
+d_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, siz=
+e_t))' {aka 'int(struct zstd_data *, void *, long unsigned int,  void *, lo=
+ng unsigned int,  long unsigned int,  long unsigned int (*)(void *, long un=
+signed int))'}
+> >        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >    7    21.14 alpine:edge                   : FAIL gcc version 13.1.1 2=
+0230722 (Alpine 13.1.1_git20230722)
+> >     In file included from util/zstd.c:5:
+> >     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:1: error: unknown=
+ type name 'ssize_t'; did you mean 'size_t'?
+> >        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           | ^~~~~~~
+> >           | size_t
+> >     util/zstd.c:31:9: error: conflicting types for 'zstd_compress_strea=
+m_to_records'; have 'ssize_t(struct zstd_data *, void *, size_t,  void *, s=
+ize_t,  size_t,  size_t (*)(void *, size_t))' {aka 'long int(struct zstd_da=
+ta *, void *, long unsigned int,  void *, long unsigned int,  long unsigned=
+ int,  long unsigned int (*)(void *, long unsigned int))'}
+> >        31 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:9: note: previous=
+ declaration of 'zstd_compress_stream_to_records' with type 'int(struct zst=
+d_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, siz=
+e_t))' {aka 'int(struct zstd_data *, void *, long unsigned int,  void *, lo=
+ng unsigned int,  long unsigned int,  long unsigned int (*)(void *, long un=
+signed int))'}
+> >        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     make[3]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: u=
+til] Error 2
+> >       CC      /tmp/build/perf/util/cap.o
+> >       CXX     /tmp/build/perf/util/demangle-cxx.o
+> >       CC      /tmp/build/perf/util/demangle-ocaml.o
+> >       CC      /tmp/build/perf/util/demangle-java.o
+> >     In file included from util/zstd.c:5:
+> >     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:1: error: unknown=
+ type name 'ssize_t'; did you mean 'size_t'?
+> >        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           | ^~~~~~~
+> >           | size_t
+> >     util/zstd.c:31:9: error: conflicting types for 'zstd_compress_strea=
+m_to_records'; have 'ssize_t(struct zstd_data *, void *, size_t,  void *, s=
+ize_t,  size_t,  size_t (*)(void *, size_t))' {aka 'long int(struct zstd_da=
+ta *, void *, long unsigned int,  void *, long unsigned int,  long unsigned=
+ int,  long unsigned int (*)(void *, long unsigned int))'}
+> >        31 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:9: note: previous=
+ declaration of 'zstd_compress_stream_to_records' with type 'int(struct zst=
+d_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, siz=
+e_t))' {aka 'int(struct zstd_data *, void *, long unsigned int,  void *, lo=
+ng unsigned int,  long unsigned int,  long unsigned int (*)(void *, long un=
+signed int))'}
+> >        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *d=
+ata, void *dst, size_t dst_size,
+> >           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+>
+> --
