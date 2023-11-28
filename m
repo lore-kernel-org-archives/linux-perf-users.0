@@ -1,164 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C125D48C
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 17:38:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bz4SkCeb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595FFC433C8;
-	Tue, 28 Nov 2023 17:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701193091;
-	bh=RNOf8IUGxxmeyuakZPDZPc9mbJAGG9faA4v5329Ernw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bz4SkCebOTVMTP6Qa7rIp0+bVTQpj0o9TlcZB74as2jAGtg3bYSAUF7Xbs9XhxoJf
-	 i3H5zpbjrNdQ0Z9wMVcezaM/z7GU0TOr0qLMPnsQHNFvlCAYh21X/M/GwZDZ2cMuNS
-	 ywI6hyORJRnNNuxwrqFV/iY/q6YIFxsVh636iQ8iMZiOr/H/fHWb2yBdMuXvHDJOaI
-	 bUg+40VS2I1a6IlJhSAD/b2Qa312hcR4XAFBnd6vJV5JxOcGhl68xRcr9OrasJeocY
-	 hWqHXmTy+C5hSwokkLdo9b29Af/tfyOqn+D3oAYRsNuJJB+Eilv9ooTrdP7wvKVtgl
-	 CDs1Pb8P4o1vg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 0EDFA40094; Tue, 28 Nov 2023 14:38:09 -0300 (-03)
-Date: Tue, 28 Nov 2023 14:38:08 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHU0LgaF"
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65700C1;
+	Tue, 28 Nov 2023 09:54:49 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6cb4d366248so4904337b3a.0;
+        Tue, 28 Nov 2023 09:54:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701194089; x=1701798889; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=UFccXEXz7IM6tMF3bP+Pq5FuCNUT9piA8FwAmlVMJeo=;
+        b=jHU0LgaFecYLrQpdNh2/xvNWQI6zZAzH+/C0L/UGDJGTVFkEtSZ4zWaVLlXIbI6P7F
+         zFyXKONPFv6Yj0gEOfOGv0KCDEetR7MSzdDuqlKg8Ue7bSE1zMU0nekVrJHSmjhmfAcw
+         BfUJHmG27lSGex+MbAisCw/m/Fx0N8HvZeFALAu3XpFqBjii4532IsD6drHZX/dMkA+I
+         lxBHVJHaDeUwRkBqMtd1gvNEnIcnff/jjQrvstS3uYZ69UjHD4LiDBXaO2wVJV2sg4ia
+         o4pOuW1IKkc9tTRGo3eVFgc2tFGrwM/8Jg8A5ZhuyxuWLY0XRHe81jowq1S1MQtRW5pv
+         WXDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701194089; x=1701798889;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UFccXEXz7IM6tMF3bP+Pq5FuCNUT9piA8FwAmlVMJeo=;
+        b=Ae70X63FhSoYwKgT/LgtjlTSPsUkmO/+AhWFPIGb7z32W/VB383DSZtv23l7b+FCq5
+         /WA9e7x+br1MvwteTAFeExV8AafyykcjYcblZ2fGzjdur9tMSo9Xu9VSysXUYxiZD1Me
+         fR8wjSEKkYDqpXbsx0EF1O4fEKEyWyKP/9f1avy+m3pR2eRwdLaR/p0O+DSAnjfvPnQb
+         BTYrf0ADOm2yOTwkciKN4b6obiwDWqrnePseBGeoImNdAxO2DrN3OAVKdJmrOiKPDWLX
+         9VxbSa482Xp8UXpgIE289FZVtpQJfIt6ZL8SE1sIqqP77rj1RAG9FILk8JGu7lwf0AAF
+         cCew==
+X-Gm-Message-State: AOJu0YyNH1jjAeVqNbq147551+WXWZAAdYQJGzNZsbqwUDcfB1sw2MCM
+	3qffv1g1JCqQKSt6wovRWg8=
+X-Google-Smtp-Source: AGHT+IG1fyLz3hjrMvqqjDVaeVSTsB32SJb9KJPNzE7V3BkwlCpjFFK0rpQTAp+z+26bWksoXKJkPA==
+X-Received: by 2002:a05:6a00:1d25:b0:6b3:aded:7e9a with SMTP id a37-20020a056a001d2500b006b3aded7e9amr15712535pfx.27.1701194088596;
+        Tue, 28 Nov 2023 09:54:48 -0800 (PST)
+Received: from bangji.corp.google.com ([2620:15c:2c0:5:146f:6347:3bb4:8cf4])
+        by smtp.gmail.com with ESMTPSA id y2-20020aa78042000000b006cbbc07a1c0sm9224721pfm.156.2023.11.28.09.54.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Nov 2023 09:54:48 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Nick Terrell <terrelln@fb.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Vincent Whitchurch <vincent.whitchurch@axis.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Liam Howlett <liam.howlett@oracle.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Ming Wang <wangming01@loongson.cn>,
-	James Clark <james.clark@arm.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Leo Yan <leo.yan@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
-	German Gomez <german.gomez@arm.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 04/53] perf mmap: Lazily initialize zstd streams
-Message-ID: <ZWYlgPwGmAEUKIsE@kernel.org>
-References: <20231102175735.2272696-1-irogers@google.com>
- <20231102175735.2272696-5-irogers@google.com>
- <ZWURZvDA2L4Mr3HR@kernel.org>
- <ZWYf+Sy6JKd7CYlN@kernel.org>
+Subject: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
+Date: Tue, 28 Nov 2023 09:54:33 -0800
+Message-ID: <20231128175441.721579-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZWYf+Sy6JKd7CYlN@kernel.org>
-X-Url: http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 
-Em Tue, Nov 28, 2023 at 02:14:33PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Nov 27, 2023 at 07:00:06PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, Nov 02, 2023 at 10:56:46AM -0700, Ian Rogers escreveu:
-> > > Zstd streams create dictionaries that can require significant RAM,
-> > > especially when there is one per-CPU. Tools like perf record won't use
-> > > the streams without the -z option, and so the creation of the streams
-> > > is pure overhead. Switch to creating the streams on first use.
+Hello,
 
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
+It used to have annotation_options for each command separately (for
+example, perf report, annotate, and top), but we can make it global as
+they never used together (with different settings).  This would save
+some memory for each symbol when annotation is enabled.
 
-> > Thanks, applied to perf-tools-next.
+This code is available at 'perf/annotate-option-v1' branch in
 
-> Trying to fix this now:
-> 
->   6    20.59 alpine:3.18                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r10)
->     In file included from util/zstd.c:5:
->     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:1: error: unknown type name 'ssize_t'; did you mean 'size_t'?
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
-So the problem was really the one above, that got fixed with the patch
-below, that is what 'man size_t' documents on my fedora:38 system.
+Thanks,
+Namhyung
 
-- Arnaldo
 
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index 9eb6eb5bf038ce54..b29109cd36095c4f 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -3,7 +3,8 @@
- #define PERF_COMPRESS_H
- 
- #include <stdbool.h>
--#include <stdlib.h>
-+#include <stddef.h>
-+#include <sys/types.h>
- #ifdef HAVE_ZSTD_SUPPORT
- #include <zstd.h>
- #endif
+Namhyung Kim (8):
+  perf annotate: Introduce global annotation_options
+  perf report: Convert to the global annotation_options
+  perf top: Convert to the global annotation_options
+  perf annotate: Use global annotation_options
+  perf ui/browser/annotate: Use global annotation_options
+  perf annotate: Ensure init/exit for global options
+  perf annotate: Remove remaining usages of local annotation options
+  perf annotate: Get rid of local annotation options
 
->        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           | ^~~~~~~
->           | size_t
->     util/zstd.c:31:9: error: conflicting types for 'zstd_compress_stream_to_records'; have 'ssize_t(struct zstd_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, size_t))' {aka 'long int(struct zstd_data *, void *, long unsigned int,  void *, long unsigned int,  long unsigned int,  long unsigned int (*)(void *, long unsigned int))'}
->        31 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:9: note: previous declaration of 'zstd_compress_stream_to_records' with type 'int(struct zstd_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, size_t))' {aka 'int(struct zstd_data *, void *, long unsigned int,  void *, long unsigned int,  long unsigned int,  long unsigned int (*)(void *, long unsigned int))'}
->        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     make[3]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: util] Error 2
->       CC      /tmp/build/perf/util/zstd.o
->       CC      /tmp/build/perf/util/cap.o
->       CXX     /tmp/build/perf/util/demangle-cxx.o
->       CC      /tmp/build/perf/util/demangle-ocaml.o
->     In file included from util/zstd.c:5:
->     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:1: error: unknown type name 'ssize_t'; did you mean 'size_t'?
->        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           | ^~~~~~~
->           | size_t
->       CC      /tmp/build/perf/util/demangle-java.o
->     util/zstd.c:31:9: error: conflicting types for 'zstd_compress_stream_to_records'; have 'ssize_t(struct zstd_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, size_t))' {aka 'long int(struct zstd_data *, void *, long unsigned int,  void *, long unsigned int,  long unsigned int,  long unsigned int (*)(void *, long unsigned int))'}
->        31 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:9: note: previous declaration of 'zstd_compress_stream_to_records' with type 'int(struct zstd_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, size_t))' {aka 'int(struct zstd_data *, void *, long unsigned int,  void *, long unsigned int,  long unsigned int,  long unsigned int (*)(void *, long unsigned int))'}
->        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->    7    21.14 alpine:edge                   : FAIL gcc version 13.1.1 20230722 (Alpine 13.1.1_git20230722)
->     In file included from util/zstd.c:5:
->     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:1: error: unknown type name 'ssize_t'; did you mean 'size_t'?
->        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           | ^~~~~~~
->           | size_t
->     util/zstd.c:31:9: error: conflicting types for 'zstd_compress_stream_to_records'; have 'ssize_t(struct zstd_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, size_t))' {aka 'long int(struct zstd_data *, void *, long unsigned int,  void *, long unsigned int,  long unsigned int,  long unsigned int (*)(void *, long unsigned int))'}
->        31 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:9: note: previous declaration of 'zstd_compress_stream_to_records' with type 'int(struct zstd_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, size_t))' {aka 'int(struct zstd_data *, void *, long unsigned int,  void *, long unsigned int,  long unsigned int,  long unsigned int (*)(void *, long unsigned int))'}
->        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     make[3]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: util] Error 2
->       CC      /tmp/build/perf/util/cap.o
->       CXX     /tmp/build/perf/util/demangle-cxx.o
->       CC      /tmp/build/perf/util/demangle-ocaml.o
->       CC      /tmp/build/perf/util/demangle-java.o
->     In file included from util/zstd.c:5:
->     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:1: error: unknown type name 'ssize_t'; did you mean 'size_t'?
->        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           | ^~~~~~~
->           | size_t
->     util/zstd.c:31:9: error: conflicting types for 'zstd_compress_stream_to_records'; have 'ssize_t(struct zstd_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, size_t))' {aka 'long int(struct zstd_data *, void *, long unsigned int,  void *, long unsigned int,  long unsigned int,  long unsigned int (*)(void *, long unsigned int))'}
->        31 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     /git/perf-6.6.0-rc1/tools/perf/util/compress.h:34:9: note: previous declaration of 'zstd_compress_stream_to_records' with type 'int(struct zstd_data *, void *, size_t,  void *, size_t,  size_t,  size_t (*)(void *, size_t))' {aka 'int(struct zstd_data *, void *, long unsigned int,  void *, long unsigned int,  long unsigned int,  long unsigned int (*)(void *, long unsigned int))'}
->        34 | ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->           |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
+ tools/perf/builtin-annotate.c     |  43 +++++----
+ tools/perf/builtin-report.c       |  37 ++++----
+ tools/perf/builtin-top.c          |  45 +++++-----
+ tools/perf/ui/browsers/annotate.c |  85 ++++++++----------
+ tools/perf/ui/browsers/hists.c    |  34 +++----
+ tools/perf/ui/browsers/hists.h    |   2 -
+ tools/perf/util/annotate.c        | 142 +++++++++++++++---------------
+ tools/perf/util/annotate.h        |  38 ++++----
+ tools/perf/util/block-info.c      |   6 +-
+ tools/perf/util/block-info.h      |   3 +-
+ tools/perf/util/hist.h            |  25 ++----
+ tools/perf/util/top.h             |   1 -
+ 12 files changed, 206 insertions(+), 255 deletions(-)
 
+
+base-commit: 757489991f7c08603395b85037a981c31719c92c
 -- 
+2.43.0.rc1.413.gea7ed67945-goog
+
