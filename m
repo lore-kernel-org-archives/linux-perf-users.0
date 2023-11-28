@@ -1,284 +1,104 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q+yjBtnf"
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E48D1988
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 11:21:13 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-40b35199f94so12155e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 11:21:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DbhahV18"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B44510F0
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 11:46:29 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5cd1172b815so1376007b3.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 11:46:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701199272; x=1701804072; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C2kX/2e3hW2xYuQeL6N8B1cfHiFYGSQRCDO5Myxr9Ek=;
-        b=Q+yjBtnfYkpbLTeio0fdiG/FnCqPVL1DIezBqIQYe93Yg6vhAmN7a17yWqyUZONXO9
-         T9ZuqkrtSDaUOhu872WfQpxPd1vXb9AHs9Wglx/umiaYGoI/riEekoHSYL2jAwLhUuv2
-         Oi4HcwulemIOLIrKPYhlDIIdvBMI9JT3KA2gn3iZ1wEeocus8qxeMyGb59dKf5i83Y4A
-         H/u2e+3wyWbThIyNCHf0oG+tQLCNydt6UlnBzcvIEMKPY2neRS6cDNhdMNQ+17dz13qs
-         au9Bu4N+0D4unmP/oo/vyys8fsV8rjwkpdZNQTdN2Y5Wri/iSGEdC77y17uoa0EytJ0s
-         QrGg==
+        d=google.com; s=20230601; t=1701200788; x=1701805588; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UTOP80w6oO59ioynFIZpUkq+H0Ur/HUQD/Hl4Lb3+fo=;
+        b=DbhahV18jqpZxyjInbhmmGuKGlGjLA5z1U5MrdYNP8VtMYN8dF3Fv2hIgCpCXU79Dv
+         Yz4lkea6zmOOhXH9CsZ/ZnyQl8SAdsolGqgZS59A1fU+GOwK7DLS1xg89uEr+pSGKYWE
+         KEtKZcNa+2I2MRItgzgw8Ag3FiI1BcmkU4QcxMRbck/95iFQp2dDbPrdDe7rmWzdrWtm
+         Lse+lo2Zx1nl7WAYGEJooVBKe/hJ1Wm0SOL7ncCyRZ1qIIgQT2zpTdMzLBesBtY4q5KK
+         nrUBiYpDKX+Vlh1csvsOD7KjFMXK5qsEWBJDqMiHx2mhofu6UquByEkhE8TxNxfN8DzW
+         YIjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701199272; x=1701804072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C2kX/2e3hW2xYuQeL6N8B1cfHiFYGSQRCDO5Myxr9Ek=;
-        b=veBldo/BTMPArvbYRT2jNVUrylrt3CtjlUFoNHyDhs/HBOl/SzRrhEESJVsroWRjme
-         ph3K3kQDVLGwNaV0l1EKv0utxuu5qJ5FUTa6l4fPVyUCgd6bOaWXPo9T2WDM8gmEzzg5
-         6O2CScJUmJsLgurDENFzjZ4Y4rlgyIelwmgNd/nl7+ENrV0dkTxXGb3jKGBzQLo29vUL
-         MYAxM0QgwUQMJNEDzNJQIJGt2t8it5/qvM+LSgG2pNPATpIUKFZ6CTB0m8ACWaR4hBM3
-         EHk9Um+kEX1Ifhfh+DnkLMF+ci7c1miAOp8D1YxNhJXQtl4naxAfUkr37l6I6qY2Nf16
-         pDaw==
-X-Gm-Message-State: AOJu0YzC2cNrIB+ZZTtukboy1hGMAkvMXbQ7KgoNUMuHJOh1OECQOxkJ
-	Ac46KJA+4uZUe0mv8ubaUuU0pf7zTtrH4eE8bXesPQ==
-X-Google-Smtp-Source: AGHT+IGoTRXABDJu4fFnrO34y3AjBm9f0fTVxjrSDkONHExUrC8SGFUFb0XGpc0OBSgrty2clYzV4fiSTs5y0jTGKN8=
-X-Received: by 2002:a05:600c:5112:b0:40b:2979:9cc2 with SMTP id
- o18-20020a05600c511200b0040b29799cc2mr820326wms.1.1701199271844; Tue, 28 Nov
- 2023 11:21:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701200788; x=1701805588;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UTOP80w6oO59ioynFIZpUkq+H0Ur/HUQD/Hl4Lb3+fo=;
+        b=N16x0fkki3FnY+HAgidgD3ODNvn5p4SbsySobU8ArVGaN6uSWTmH3aefJaKaXzugK4
+         rdL7nYvyGGRfuFfSqEb5uJ0Bn93ISLeDbE+lB3gnBGEtU3MQJg48KxoiXPOgnegVsXfQ
+         e1Vl1WfrX7oQdpSSKYXW4yKNjUAEZ//bwCYGq+NkYKh1JmxpMjVwHPb0slkRE4kkccpL
+         HYbu5ERu8BGU3Jjk9Z7JSBxjrQyCoIvFtIA11q0AAYBTli9YYFPtxkZjPskcEMdoWDJH
+         yOnhQYaEsJwcA9nYanMMVxBhfsXes9Y2rsAtaqsQ2QwMcO41qg5hpg42mH9qTJ/OWhWx
+         3VHA==
+X-Gm-Message-State: AOJu0YzIIR1CvSEimKD5cll9TaGtR7dS+DL9wWYlewm2Ohoml89Jj3w4
+	amO1EhwADzgM1MAtDj8cQG7s12RT9V1D
+X-Google-Smtp-Source: AGHT+IG3hnlUY9stfckcsSokuct8uB5ZoMSmtqqHO79OB5z62Y2t7aa6NOpQmwwM9Dw+gUzo2c4XxgLa4dpO
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:254b:c025:1be9:f61e])
+ (user=irogers job=sendgmr) by 2002:a05:690c:fd3:b0:5be:baac:54e4 with SMTP id
+ dg19-20020a05690c0fd300b005bebaac54e4mr699860ywb.5.1701200788269; Tue, 28 Nov
+ 2023 11:46:28 -0800 (PST)
+Date: Tue, 28 Nov 2023 11:46:24 -0800
+Message-Id: <20231128194624.1419260-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231128175441.721579-1-namhyung@kernel.org> <20231128175441.721579-7-namhyung@kernel.org>
-In-Reply-To: <20231128175441.721579-7-namhyung@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
+Subject: [PATCH v1] perf tests: Make DSO tests a suite rather than individual
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 28 Nov 2023 11:20:59 -0800
-Message-ID: <CAP-5=fW3f_96=rWeYg-qpL2T9VjLKnqnmq8T4dvaixWEo-0NRA@mail.gmail.com>
-Subject: Re: [PATCH 6/8] perf annotate: Ensure init/exit for global options
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 28, 2023 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Now it only cares about the global options so it can just handle it
-> without the argument.
+Make the DSO data tests a suite rather than individual so their output
+is grouped.
 
-If annotate_opts were accessed by a function then you could
-pthread_once the initialization on the first call to get
-annotate_opts. Removing annotation_options__init/exit would remove
-some potential for error.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/builtin-test.c |  2 --
+ tools/perf/tests/dso-data.c     | 15 ++++++++++++---
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 113e92119e1d..9c09e4681c3a 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -62,8 +62,6 @@ static struct test_suite *generic_tests[] = {
+ 	&suite__pmu,
+ 	&suite__pmu_events,
+ 	&suite__dso_data,
+-	&suite__dso_data_cache,
+-	&suite__dso_data_reopen,
+ 	&suite__perf_evsel__roundtrip_name_test,
+ #ifdef HAVE_LIBTRACEEVENT
+ 	&suite__perf_evsel__tp_sched_test,
+diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
+index deaefcdd8f09..5286ae8bd2d7 100644
+--- a/tools/perf/tests/dso-data.c
++++ b/tools/perf/tests/dso-data.c
+@@ -393,6 +393,15 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
+ 	return 0;
+ }
+ 
+-DEFINE_SUITE("DSO data read", dso_data);
+-DEFINE_SUITE("DSO data cache", dso_data_cache);
+-DEFINE_SUITE("DSO data reopen", dso_data_reopen);
++
++static struct test_case tests__dso_data[] = {
++	TEST_CASE("read", dso_data),
++	TEST_CASE("cache", dso_data_cache),
++	TEST_CASE("reopen", dso_data_reopen),
++	{	.name = NULL, }
++};
++
++struct test_suite suite__dso_data = {
++	.desc = "DSO data tests",
++	.test_cases = tests__dso_data,
++};
+-- 
+2.43.0.rc1.413.gea7ed67945-goog
 
-
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-annotate.c |  8 ++++----
->  tools/perf/builtin-report.c   |  8 ++++----
->  tools/perf/builtin-top.c      |  8 ++++----
->  tools/perf/util/annotate.c    | 19 +++++++++++--------
->  tools/perf/util/annotate.h    |  8 ++++----
->  5 files changed, 27 insertions(+), 24 deletions(-)
->
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.=
-c
-> index 87af95634879..9b3dd456a1ee 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -616,13 +616,13 @@ int cmd_annotate(int argc, const char **argv)
->         set_option_flag(options, 0, "show-total-period", PARSE_OPT_EXCLUS=
-IVE);
->         set_option_flag(options, 0, "show-nr-samples", PARSE_OPT_EXCLUSIV=
-E);
->
-> -       annotation_options__init(&annotate_opts);
-> +       annotation_options__init();
->
->         ret =3D hists__init();
->         if (ret < 0)
->                 return ret;
->
-> -       annotation_config__init(&annotate_opts);
-> +       annotation_config__init();
->
->         argc =3D parse_options(argc, argv, options, annotate_usage, 0);
->         if (argc) {
-> @@ -652,7 +652,7 @@ int cmd_annotate(int argc, const char **argv)
->                         return -ENOMEM;
->         }
->
-> -       if (annotate_check_args(&annotate_opts) < 0)
-> +       if (annotate_check_args() < 0)
->                 return -EINVAL;
->
->  #ifdef HAVE_GTK2_SUPPORT
-> @@ -733,7 +733,7 @@ int cmd_annotate(int argc, const char **argv)
->  #ifndef NDEBUG
->         perf_session__delete(annotate.session);
->  #endif
-> -       annotation_options__exit(&annotate_opts);
-> +       annotation_options__exit();
->
->         return ret;
->  }
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index bc0d986c1e0c..17fb171e898b 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1430,7 +1430,7 @@ int cmd_report(int argc, const char **argv)
->          */
->         symbol_conf.keep_exited_threads =3D true;
->
-> -       annotation_options__init(&annotate_opts);
-> +       annotation_options__init();
->
->         ret =3D perf_config(report__config, &report);
->         if (ret)
-> @@ -1464,7 +1464,7 @@ int cmd_report(int argc, const char **argv)
->                         return -ENOMEM;
->         }
->
-> -       if (annotate_check_args(&annotate_opts) < 0) {
-> +       if (annotate_check_args() < 0) {
->                 ret =3D -EINVAL;
->                 goto exit;
->         }
-> @@ -1696,7 +1696,7 @@ int cmd_report(int argc, const char **argv)
->                          */
->                         symbol_conf.priv_size +=3D sizeof(u32);
->                 }
-> -               annotation_config__init(&annotate_opts);
-> +               annotation_config__init();
->         }
->
->         if (symbol__init(&session->header.env) < 0)
-> @@ -1750,7 +1750,7 @@ int cmd_report(int argc, const char **argv)
->         zstd_fini(&(session->zstd_data));
->         perf_session__delete(session);
->  exit:
-> -       annotation_options__exit(&annotate_opts);
-> +       annotation_options__exit();
->         free(sort_order_help);
->         free(field_order_help);
->         return ret;
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 60399e4233ee..0de963ca3196 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1608,7 +1608,7 @@ int cmd_top(int argc, const char **argv)
->         if (status < 0)
->                 return status;
->
-> -       annotation_options__init(&annotate_opts);
-> +       annotation_options__init();
->
->         annotate_opts.min_pcnt =3D 5;
->         annotate_opts.context  =3D 4;
-> @@ -1660,7 +1660,7 @@ int cmd_top(int argc, const char **argv)
->         if (status)
->                 goto out_delete_evlist;
->
-> -       if (annotate_check_args(&annotate_opts) < 0)
-> +       if (annotate_check_args() < 0)
->                 goto out_delete_evlist;
->
->         if (!top.evlist->core.nr_entries) {
-> @@ -1786,7 +1786,7 @@ int cmd_top(int argc, const char **argv)
->         if (status < 0)
->                 goto out_delete_evlist;
->
-> -       annotation_config__init(&annotate_opts);
-> +       annotation_config__init();
->
->         symbol_conf.try_vmlinux_path =3D (symbol_conf.vmlinux_name =3D=3D=
- NULL);
->         status =3D symbol__init(NULL);
-> @@ -1839,7 +1839,7 @@ int cmd_top(int argc, const char **argv)
->  out_delete_evlist:
->         evlist__delete(top.evlist);
->         perf_session__delete(top.session);
-> -       annotation_options__exit(&annotate_opts);
-> +       annotation_options__exit();
->
->         return status;
->  }
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index daff9af552f4..626ff3baeb85 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -3416,8 +3416,10 @@ static int annotation__config(const char *var, con=
-st char *value, void *data)
->         return 0;
->  }
->
-> -void annotation_options__init(struct annotation_options *opt)
-> +void annotation_options__init(void)
->  {
-> +       struct annotation_options *opt =3D &annotate_opts;
-> +
->         memset(opt, 0, sizeof(*opt));
->
->         /* Default values. */
-> @@ -3428,16 +3430,15 @@ void annotation_options__init(struct annotation_o=
-ptions *opt)
->         opt->percent_type =3D PERCENT_PERIOD_LOCAL;
->  }
->
-> -
-> -void annotation_options__exit(struct annotation_options *opt)
-> +void annotation_options__exit(void)
->  {
-> -       zfree(&opt->disassembler_style);
-> -       zfree(&opt->objdump_path);
-> +       zfree(&annotate_opts.disassembler_style);
-> +       zfree(&annotate_opts.objdump_path);
->  }
->
-> -void annotation_config__init(struct annotation_options *opt)
-> +void annotation_config__init(void)
->  {
-> -       perf_config(annotation__config, opt);
-> +       perf_config(annotation__config, &annotate_opts);
->  }
->
->  static unsigned int parse_percent_type(char *str1, char *str2)
-> @@ -3491,8 +3492,10 @@ int annotate_parse_percent_type(const struct optio=
-n *opt __maybe_unused, const c
->         return err;
->  }
->
-> -int annotate_check_args(struct annotation_options *args)
-> +int annotate_check_args(void)
->  {
-> +       struct annotation_options *args =3D &annotate_opts;
-> +
->         if (args->prefix_strip && !args->prefix) {
->                 pr_err("--prefix-strip requires --prefix\n");
->                 return -1;
-> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> index 857c5fa0e6b1..4283eb4522b2 100644
-> --- a/tools/perf/util/annotate.h
-> +++ b/tools/perf/util/annotate.h
-> @@ -428,14 +428,14 @@ static inline int symbol__tui_annotate(struct map_s=
-ymbol *ms __maybe_unused,
->  }
->  #endif
->
-> -void annotation_options__init(struct annotation_options *opt);
-> -void annotation_options__exit(struct annotation_options *opt);
-> +void annotation_options__init(void);
-> +void annotation_options__exit(void);
->
-> -void annotation_config__init(struct annotation_options *opt);
-> +void annotation_config__init(void);
->
->  int annotate_parse_percent_type(const struct option *opt, const char *_s=
-tr,
->                                 int unset);
->
-> -int annotate_check_args(struct annotation_options *args);
-> +int annotate_check_args(void);
->
->  #endif /* __PERF_ANNOTATE_H */
-> --
-> 2.43.0.rc1.413.gea7ed67945-goog
->
