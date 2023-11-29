@@ -1,155 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176B53AC19;
-	Wed, 29 Nov 2023 16:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acJpDzkv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9248DC433C8;
-	Wed, 29 Nov 2023 16:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701275227;
-	bh=GwC4XY5uvJk/yRp22B+OakqJ33CPv5WWStiKtTgdZ1o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=acJpDzkvFaC19Wixe4FsPIxaEbIQ/rGiElA1YztWdmEvhOA2ka9rKnCZu+rlzKh+R
-	 JAXiIlVjd6f4Z4FR5+Exz2sdIQHl+AL8xEf9XHwnCWamnUT6LbJbmyNV1R1rwmU0gB
-	 //CqOlc7T8G65thnCQIp2WWMnD3+tOh1eMtnFLRYi+YZoh9H0w78ypEWPsnzT9XRhH
-	 E1q/YHbHckcwGFB2FBvff4KIDW5AFdsh23S3Cc3gTCy31Rj4pPiNmGDVAiZJ0Pn1ht
-	 D14SePrMXtxnZAYx98l8eb7QlDMCzeHMEMqRVeqjRGgTI9Kyfy2EIO71baTC/Jzgit
-	 5d2SL5x2C98Qw==
-Date: Wed, 29 Nov 2023 16:27:01 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 2/2] perf build: Ensure sysreg-defs Makefile respects
- output dir
-Message-ID: <c701bf6b-0ff0-44a0-9d1d-84e8515d077c@sirena.org.uk>
-References: <20231121192956.919380-1-oliver.upton@linux.dev>
- <20231121192956.919380-3-oliver.upton@linux.dev>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 704DCD7F;
+	Wed, 29 Nov 2023 08:35:08 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DED0C15;
+	Wed, 29 Nov 2023 08:35:55 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.31.168])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16EB33F73F;
+	Wed, 29 Nov 2023 08:35:06 -0800 (PST)
+Date: Wed, 29 Nov 2023 16:35:01 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Ashley, William" <wash@amazon.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	will@kernel.org
+Subject: Re: armv8pmu: Pending overflow interrupt is discarded when perf
+ event is disabled
+Message-ID: <ZWdoNWps4izj5WJy@FVFF77S0Q05N.cambridge.arm.com>
+References: <950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com>
+ <EBAF38AB-2BE5-425F-8A52-DDCB0B390309@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mCUpdAwQuB6wbXWa"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231121192956.919380-3-oliver.upton@linux.dev>
-X-Cookie: Jesus is my POSTMASTER GENERAL ...
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <EBAF38AB-2BE5-425F-8A52-DDCB0B390309@amazon.com>
 
+Hi William,
 
---mCUpdAwQuB6wbXWa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 20, 2023 at 10:32:10PM +0000, Ashley, William wrote:
+> Adding linux-arm-kernel@lists.infradead.org and linux-kernel@vger.kernel.org,
+> sorry for the noise.
 
-On Tue, Nov 21, 2023 at 07:29:56PM +0000, Oliver Upton wrote:
+Thanks for this!
 
-> Currently the sysreg-defs are written out to the source tree
-> unconditionally, ignoring the specified output directory. Correct the
-> build rule to emit the header to the output directory. Opportunistically
-> reorganize the rules to avoid interleaving with the set of beauty make
-> rules.
+For the benefit of others, the original mail (and attachment) can be found at:
 
-This breaks some build configurations:
+  https://lore.kernel.org/linux-perf-users/950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com/
 
-Running:
+For some reason, links and whitespace seem to have been mangled in the resend;
+I'm not sure what happened there.
 
-make --silent --keep-going --jobs=3D56 O=3D/home/broonie/.cache/tuxmake/bui=
-lds/16/build ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- LLVM=3D1 defco=
-nfig
-make --silent --keep-going --jobs=3D56 O=3D/home/broonie/.cache/tuxmake/bui=
-lds/16/bu
-ild INSTALL_PATH=3D/home/broonie/.cache/tuxmake/builds/16/build/kselftest_i=
-nstall=20
-ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- LLVM=3D1 kselftest-install
+I've added Will Deacon, as Will and I co-maintain the ARM PMU drivers.
 
-gives:
+> ﻿On 11/20/23, 12:36 PM, "Ashley, William" <wash@amazon.com <mailto:wash@amazon.com>> wrote:
+> 
+> 
+> An issue [1] was opened in the rr-debugger project reporting occasional missed
+> perf event overflow signals on arm64. I've been digging into this and think I
+> understand what's happening, but wanted to confirm my understanding.
+> 
+> The attached example application, derived from an rr-debugger test case, reports
+> when the value of a counter doesn't increase by the expected period +/- some
+> tolerance. When it is ping-ponged between cores (e.g. with taskset) at a high
+> frequency, it frequently reports increases of ~2x the expected. I've confirmed
+> this same behavior on kernels 5.4, 5.10, 6.1 and 6.5.
+> 
+> 
+> I found armv8pmu_disable_intens [2] that is called as part of event
+> de-scheduling and contains
+> /* Clear the overflow flag in case an interrupt is pending. */
+> write_pmovsclr(mask);
+> which results in any pending overflow interrupt being dropped. I added some
+> debug output here and indeed there is a correlation of this bit being high at
+> the point of the above code and the reproducer identifying a missed signal.
 
-make[4]: Leaving directory '/home/broonie/git/bisect/tools/testing/selftest=
-s/kex
-ec'
-make[4]: Entering directory '/home/broonie/git/bisect/tools/testing/selftes=
-ts/kvm'
-Makefile:270: warning: overriding recipe for target '/home/broonie/.cache/t=
-uxmake/builds/16/build/kselftest/kvm/get-reg-list'
-Makefile:265: warning: ignoring old recipe for target '/home/broonie/.cache=
-/tuxmake/builds/16/build/kselftest/kvm/get-reg-list'
-make -C ../../../../tools/arch/arm64/tools/ O=3D../../../../tools
-make[5]: Entering directory '/home/broonie/git/bisect/tools/arch/arm64/tool=
-s'
-/home/broonie/git/bisect/tools/scripts/Makefile.include:4: *** O=3D../../..=
-/../tools does not exist.  Stop.
+I think you're right that if we had an overflow asserted at this point, we'll
+throw away the occurrence of the overflow (and so not call
+perf_event_overflow() and generate a sample, etc).
 
-I'm using tuxmake with:
+It looks like we only lose the occurrence of the overflow; the actual counts
+will get sampled correctly and when we next reprogram the event,
+armpmu_event_set_period() should set up the next overflow period.
 
-    tuxmake -a arm64 -k defconfig -r docker -t llvm-17 kselftest
+> This behavior does not occur with pseudo-NMIs (irqchip.gicv3_pseudo_nmi=1)
+> enabled.
 
-to invoke the build.
+That's interesting, because it implies that the PMU overflow interrupt is being
+recognised by the CPU while regular interrupts are disabled. There are some
+narrow races where that could occur (e.g. taking a timer or scheduler IRQ
+*just* as an overflow occurs), and some other cases I'd expect RR to avoid by
+construction (e.g. if RR isn't using mode exclusion and also counts kernel
+events). It's also worth noting that this means there are races even with
+pseudo-NMI where overflows could be lost.
 
-Bisection log identifying the commit that failed:
+How often do you see the overflow being lost?
 
-git bisect start
-# bad: [1f5c003694fab4b1ba6cbdcc417488b975c088d0] Add linux-next specific f=
-iles for 20231129
-git bisect bad 1f5c003694fab4b1ba6cbdcc417488b975c088d0
-# bad: [1618cb8f574175a196b0e8926c62efc45760e856] Merge branch 'for-linux-n=
-ext-fixes' of git://anongit.freedesktop.org/drm/drm-misc
-git bisect bad 1618cb8f574175a196b0e8926c62efc45760e856
-# good: [18d46e76d7c2eedd8577fae67e3f1d4db25018b0] Merge tag 'for-6.7-rc3-t=
-ag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-git bisect good 18d46e76d7c2eedd8577fae67e3f1d4db25018b0
-# good: [c33497720d50d39a9f3918975ee691ad570b77a6] Merge branch 'for-linus'=
- of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
-git bisect good c33497720d50d39a9f3918975ee691ad570b77a6
-# good: [35fb33a953396cae852e18a316173f5a2887bb0a] Merge branch 'fixes' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
-git bisect good 35fb33a953396cae852e18a316173f5a2887bb0a
-# good: [09a2ad2501da54228679dd21aaef72e783034a4e] Merge branch 'kunit-fixe=
-s' of git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.g=
-it
-git bisect good 09a2ad2501da54228679dd21aaef72e783034a4e
-# bad: [a29ee6aea7030786a63fde0d6d83a8f477b060fb] perf build: Ensure sysreg=
--defs Makefile respects output dir
-git bisect bad a29ee6aea7030786a63fde0d6d83a8f477b060fb
-# good: [fd2ddee727d1ae9296b3875087410cc3698885f0] tools headers: Update to=
-ols's copy of socket.h header
-git bisect good fd2ddee727d1ae9296b3875087410cc3698885f0
-# good: [b3b11aed147af8f7c3d79c5b0b7474505d1dde7b] tools/perf: Update tools=
-'s copy of x86 syscall table
-git bisect good b3b11aed147af8f7c3d79c5b0b7474505d1dde7b
-# good: [d3968c974a2453de9289bdb9d34130b2ce323628] tools/perf: Update tools=
-'s copy of s390 syscall table
-git bisect good d3968c974a2453de9289bdb9d34130b2ce323628
-# good: [ef5c958090a909c9f2ab717ba6abb86869e42da7] tools perf: Add arm64 sy=
-sreg files to MANIFEST
-git bisect good ef5c958090a909c9f2ab717ba6abb86869e42da7
-# first bad commit: [a29ee6aea7030786a63fde0d6d83a8f477b060fb] perf build: =
-Ensure sysreg-defs Makefile respects output dir
+Does RR set any of the perf_event_attr::exclude_* bits? If not, does RR
+intentionally count events that occur within the kernel?
 
---mCUpdAwQuB6wbXWa
-Content-Type: application/pgp-signature; name="signature.asc"
+> When an event is not being explicitly torn down (e.g. being closed), this seems
+> like an undesirable behavior.
 
------BEGIN PGP SIGNATURE-----
+I agree it's undesirable, though my understanding is that for most other users
+this isn't any worse than losing samples for other reasons (e.g. the perf ring
+buffer being full), and for the general case of sample-based profiling, losing
+a sample every so often isn't the end of the world.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVnZlQACgkQJNaLcl1U
-h9CyQAf+O203S5VakDekJEwudWmw65mzZ6ucKwQ0lZmDZRJXrSXdhI4cYCa6mKcy
-YIVfj1IpfhjYA1WQ8noc7+gnCNglSXkr1h9tGvQMRTyI9F5af2ShDLSAp5S5iCAA
-STjTL5KArB6Y86qJYIpfgu7g7rYiWYKhH0v7hSrojlUGxONnDAbUvFncXsa21o9h
-CJLdkko4ZD75fm813Qow1dSQkoUlKrkQjWxkW8VQ1S0boV3u/atduQngBxvpv8iu
-9kqSPCMBEh2H5+dS302xwJR8LYWTTtVTRUYgIPJIlE5u1QmHrArV7bsT2evrYLLA
-l8RJr+j+ZEl92E24gVIWZWtcE8cMdw==
-=G/h/
------END PGP SIGNATURE-----
+> I haven't attempted to demo it yet, but I suspect
+> an application disabling an event temporarily could occasionally see the same
+> missed overflow signals. Is my understanding here correct?
 
---mCUpdAwQuB6wbXWa--
+That sounds right to me, though I haven't checked that end-to-end yet.
+
+> Does anyone have thoughts on how this could be addressed without creating
+> other issues?
+
+We should be able to detect overflow from the counter value alone, so we might
+be able to account for that when we actually read the event out, or when we
+schedule it back in and reprogram the period.
+
+I'm not sure if we can reasonably do that when scheduling the event out, since
+if we're switching tasks, that'll queue up IRQ work which will be triggered in
+the context of the next task.
+
+We might be able to figure out that we have an overflow when we schedule the
+event in under armpmu_start(), but I'll need to go digging to see if there are
+any free-running counters as the comment above the call to
+armpmu_event_set_period() says, or whether that's a historical artifact.
+
+I suspect we might need to restructure the code somewhat to be able to catch
+overflows more consistently. I'll see if I can come up with something, but we
+might not be able to guarantee this in all cases.
+
+Mark.
+
+> [1] https://github.com/rr-debugger/rr/issues/3607 <https://github.com/rr-debugger/rr/issues/3607>
+> [2] https://github.com/torvalds/linux/blob/c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c/drivers/perf/arm_pmuv3.c#L652C20-L652C43 <https://github.com/torvalds/linux/blob/c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c/drivers/perf/arm_pmuv3.c#L652C20-L652C43>
