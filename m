@@ -1,124 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450801DFD8;
-	Wed, 29 Nov 2023 12:33:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjRhol3c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCF62C433C7;
-	Wed, 29 Nov 2023 12:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701261237;
-	bh=rcKNM4SrzvOTPOMTTnNAkDwa6umDcm/Z1HWPpEbPqyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tjRhol3cWY3zuGru3VVvU0O2nvIZ1iroKFgUGd5udxtr1+fOZwwjI4yf34DDZBv6e
-	 3prqd/wUw5nFVikChUwzQVlOj3jKDgliaH6N/gbEFyGYqMRPILgkTeJgSOPo6go4Ru
-	 QA0lsDQ1IkYy0myr5ssNkCMZE4Fye5x+f/6igxF5houf7db1oPc0rp0j7PyJpwicjP
-	 dnGM+Ga37Jy74eyQgKrb/5PqccEYDaKnLbwudYSK4RJ+LSyr3qDaXHuk+396BqI0ae
-	 ZJRjIlDqvg/ucpgMXN/p3WqucvWHyOw6mCXMInn8nuHvw2Wfvi4HdmHJxvZUsU5dII
-	 SB0+fpQJHj75w==
-Date: Wed, 29 Nov 2023 12:33:46 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Yu-Chien Peter Lin <peterlin@andestech.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, acme@kernel.org,
-	adrian.hunter@intel.com, ajones@ventanamicro.com,
-	alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
-	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	dminus@andestech.com, evan@rivosinc.com, geert+renesas@glider.be,
-	guoren@kernel.org, heiko@sntech.de, irogers@google.com,
-	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com,
-	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org,
-	palmer@dabbelt.com, paul.walmsley@sifive.com, peterz@infradead.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
-	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
-	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me,
-	wens@csie.org, will@kernel.org, ycliang@andestech.com,
-	inochiama@outlook.com
-Subject: Re: [PATCH v4 09/13] dt-bindings: riscv: Add T-Head PMU extension
- description
-Message-ID: <20231129-curvature-stainable-bf77c735438f@spud>
-References: <20231122121235.827122-1-peterlin@andestech.com>
- <20231122121235.827122-10-peterlin@andestech.com>
- <20231123-obscurity-copied-7a7bcc66d69d@wendy>
- <ZWb6qqaNzzNUJ7aX@APC323>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TsWqyHGw"
+X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 29 Nov 2023 05:53:20 PST
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 374341BD4;
+	Wed, 29 Nov 2023 05:53:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701266000; x=1732802000;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xDKJIeoivK1p+x913AqcwpvvGVtvmCb2yCDvN18VT8s=;
+  b=TsWqyHGwkrVMACtbKs9cWaYwwlnAkrg2M+AVmhXoHeVLnIZxJP4PC9+Q
+   pxu72RUctLLdCgFyAxO0mc4lLkI5nSzJ9G4EOqU58aBfusEte+t+yj1nk
+   K7YZunNgxjCXOkiHTFGoce1em+Y8bwLlWqtYWFmWAvEMM9P33y0ZxfMca
+   o4oh0xOlyLEP5xKGESOu5A0ZmRqXsBWP2l9KY8gZHipEWgGZRSbWqbwri
+   HCPBZBAfgPlbDddi7lOsglvHoBF3+2cix/fhfGBU9A0ZBZ992voupemAE
+   5/S1bmSPCuAf7daabxK1jSLoM8la0wQuC46S5kdQk4fh5lNheUCWUFArw
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="51228"
+X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
+   d="scan'208";a="51228"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 05:52:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="839433885"
+X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
+   d="scan'208";a="839433885"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 05:52:16 -0800
+Received: from [10.213.167.24] (kliang2-mobl1.ccr.corp.intel.com [10.213.167.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id C37F3580D96;
+	Wed, 29 Nov 2023 05:52:14 -0800 (PST)
+Message-ID: <083bfe11-6f6e-487f-ac28-aec22e6b6b06@linux.intel.com>
+Date: Wed, 29 Nov 2023 08:52:13 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Utvw2SdgzW4fg31u"
-Content-Disposition: inline
-In-Reply-To: <ZWb6qqaNzzNUJ7aX@APC323>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf mem: Fix perf mem error on hybrid
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+ mark.rutland@arm.com, namhyung@kernel.org, jolsa@kernel.org,
+ adrian.hunter@intel.com, ravi.bangoria@amd.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Ammy Yi <ammy.yi@intel.com>
+References: <20231128203940.3964287-1-kan.liang@linux.intel.com>
+ <CAP-5=fUdEgnwk_FNHb-Ju3wCYE2PLLrPHqwZoyBGyURXQhBeSA@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fUdEgnwk_FNHb-Ju3wCYE2PLLrPHqwZoyBGyURXQhBeSA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
---Utvw2SdgzW4fg31u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 04:47:38PM +0800, Yu-Chien Peter Lin wrote:
-> Hi Conor,
->=20
-> On Thu, Nov 23, 2023 at 02:48:20PM +0000, Conor Dooley wrote:
-> > On Wed, Nov 22, 2023 at 08:12:31PM +0800, Yu Chien Peter Lin wrote:
-> > > Document the ISA string for T-Head performance monitor extension
-> > > which provides counter overflow interrupt mechanism.
-> > >=20
-> > > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> > > ---
-> > > Changes v2 -> v3:
-> > >   - New patch
-> > > Changes v3 -> v4:
-> > >   - No change
-> > > ---
-> > >  Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml =
-b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > index c91ab0e46648..694efaea8fce 100644
-> > > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > @@ -258,5 +258,11 @@ properties:
-> > >              in commit 2e5236 ("Ztso is now ratified.") of the
-> > >              riscv-isa-manual.
-> > > =20
-> > > +        - const: xtheadpmu
-> > > +          description:
-> > > +            The T-Head performance monitor extension for counter ove=
-rflow. For more
-> > > +            details, see the chapter 12 in the Xuantie C906 user man=
-ual.
-> > > +            https://github.com/T-head-Semi/openc906/tree/main/doc
-> >=20
-> > I'm pretty sure that I asked on the previous revision for you to
-> > identify a specific revision of this document.
->=20
-> Sorry, I'm still searching for it.
+On 2023-11-29 1:24 a.m., Ian Rogers wrote:
+> On Tue, Nov 28, 2023 at 12:39 PM <kan.liang@linux.intel.com> wrote:
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The below error can be triggered on a hybrid machine.
+>>
+>>  $ perf mem record -t load sleep 1
+>>  event syntax error: 'breakpoint/mem-loads,ldlat=30/P'
+>>                                 \___ Bad event or PMU
+>>
+>>  Unable to find PMU or event on a PMU of 'breakpoint'
+>>
+>> In the perf_mem_events__record_args(), the current perf never checks the
+>> availability of a mem event on a given PMU. All the PMUs will be added
+>> to the perf mem event list. Perf errors out for the unsupported PMU.
+>>
+>> Extend perf_mem_event__supported() and take a PMU into account. Check
+>> the mem event for each PMU before adding it to the perf mem event list.
+>>
+>> Optimize the perf_mem_events__init() a little bit. The function is to
+>> check whether the mem events are supported in the system. It doesn't
+>> need to scan all PMUs. Just return with the first supported PMU is good
+>> enough.
+>>
+>> Fixes: 5752c20f3787 ("perf mem: Scan all PMUs instead of just core ones")
+>> Reported-by: Ammy Yi <ammy.yi@intel.com>
+>> Tested-by: Ammy Yi <ammy.yi@intel.com>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>  tools/perf/util/mem-events.c | 25 ++++++++++++++-----------
+>>  1 file changed, 14 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+>> index 954b235e12e5..3a2e3687878c 100644
+>> --- a/tools/perf/util/mem-events.c
+>> +++ b/tools/perf/util/mem-events.c
+>> @@ -100,11 +100,14 @@ int perf_mem_events__parse(const char *str)
+>>         return -1;
+>>  }
+>>
+>> -static bool perf_mem_event__supported(const char *mnt, char *sysfs_name)
+>> +static bool perf_mem_event__supported(const char *mnt, struct perf_pmu *pmu,
+>> +                                     struct perf_mem_event *e)
+>>  {
+>> +       char sysfs_name[100];
+>>         char path[PATH_MAX];
+>>         struct stat st;
+>>
+>> +       scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name, pmu->name);
+> 
+> Not sure if this is right. Looking at sysfs_name values:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/mem-events.c?h=perf-tools-next#n23
+> "cpu/events/mem-loads" and "cpu/events/mem-stores", so won't pmu->name
+> never be used?
+> Is there a missed change to change the cpu to %s?
 
-Identifying a specific commit from that repo as the revision would be
-okay. Follow the format used elsewhere for the standard extensions.
+There is a X86 specific perf_mem_events__ptr(), which uses the
+"%s/mem-loads,ldlat=%u/P" and "%s/events/mem-loads" for Intel platforms.
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/x86/util/mem-events.c?h=perf-tools-next#n20
+The pmu->name is used especially for the hybrid platforms.
 
-Cheers,
-Conor.
-
---Utvw2SdgzW4fg31u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZWcvqgAKCRB4tDGHoIJi
-0pQuAQDZZfwrh03OUXbGE0xwEKsxZcfxxPGdlMVElJGo9ksISAD+KCK6j7yitR3a
-gkIK95gOtiUMn/8ZposqtImCwROI7gg=
-=RvjF
------END PGP SIGNATURE-----
-
---Utvw2SdgzW4fg31u--
+Thanks,
+Kan
+> 
+> Thanks,
+> Ian
+> 
+>>         scnprintf(path, PATH_MAX, "%s/devices/%s", mnt, sysfs_name);
+>>         return !stat(path, &st);
+>>  }
+>> @@ -120,7 +123,6 @@ int perf_mem_events__init(void)
+>>
+>>         for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+>>                 struct perf_mem_event *e = perf_mem_events__ptr(j);
+>> -               char sysfs_name[100];
+>>                 struct perf_pmu *pmu = NULL;
+>>
+>>                 /*
+>> @@ -136,12 +138,12 @@ int perf_mem_events__init(void)
+>>                  * of core PMU.
+>>                  */
+>>                 while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+>> -                       scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name, pmu->name);
+>> -                       e->supported |= perf_mem_event__supported(mnt, sysfs_name);
+>> +                       e->supported |= perf_mem_event__supported(mnt, pmu, e);
+>> +                       if (e->supported) {
+>> +                               found = true;
+>> +                               break;
+>> +                       }
+>>                 }
+>> -
+>> -               if (e->supported)
+>> -                       found = true;
+>>         }
+>>
+>>         return found ? 0 : -ENOENT;
+>> @@ -167,13 +169,10 @@ static void perf_mem_events__print_unsupport_hybrid(struct perf_mem_event *e,
+>>                                                     int idx)
+>>  {
+>>         const char *mnt = sysfs__mount();
+>> -       char sysfs_name[100];
+>>         struct perf_pmu *pmu = NULL;
+>>
+>>         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+>> -               scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name,
+>> -                         pmu->name);
+>> -               if (!perf_mem_event__supported(mnt, sysfs_name)) {
+>> +               if (!perf_mem_event__supported(mnt, pmu, e)) {
+>>                         pr_err("failed: event '%s' not supported\n",
+>>                                perf_mem_events__name(idx, pmu->name));
+>>                 }
+>> @@ -183,6 +182,7 @@ static void perf_mem_events__print_unsupport_hybrid(struct perf_mem_event *e,
+>>  int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
+>>                                  char **rec_tmp, int *tmp_nr)
+>>  {
+>> +       const char *mnt = sysfs__mount();
+>>         int i = *argv_nr, k = 0;
+>>         struct perf_mem_event *e;
+>>
+>> @@ -211,6 +211,9 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
+>>                         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+>>                                 const char *s = perf_mem_events__name(j, pmu->name);
+>>
+>> +                               if (!perf_mem_event__supported(mnt, pmu, e))
+>> +                                       continue;
+>> +
+>>                                 rec_argv[i++] = "-e";
+>>                                 if (s) {
+>>                                         char *copy = strdup(s);
+>> --
+>> 2.35.1
+>>
