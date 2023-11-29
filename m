@@ -1,80 +1,82 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A3B170B;
-	Wed, 29 Nov 2023 01:36:23 -0800 (PST)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3AT9Ya14074351;
-	Wed, 29 Nov 2023 17:34:36 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Wed, 29 Nov 2023 17:34:33 +0800
-Date: Wed, 29 Nov 2023 17:34:30 +0800
-From: Yu-Chien Peter Lin <peterlin@andestech.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
-        <atishp@atishpatra.org>, <conor+dt@kernel.org>, <conor@kernel.org>,
-        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
-        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
-        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
-        <jolsa@kernel.org>, <jszhang@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
-        <robh+dt@kernel.org>, <samuel@sholland.org>,
-        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
-        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
-        <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>
-Subject: Re: [PATCH v4 11/13] riscv: dts: allwinner: Add T-Head PMU extension
-Message-ID: <ZWcFpjLbAf1-YtLs@APC323>
-References: <20231122121235.827122-1-peterlin@andestech.com>
- <20231122121235.827122-12-peterlin@andestech.com>
- <20231123-coping-revenue-be284a351c9d@wendy>
+Received: from cmccmta2.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id C958A1999;
+	Wed, 29 Nov 2023 01:42:06 -0800 (PST)
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee565670766cd0-3c572;
+	Wed, 29 Nov 2023 17:42:04 +0800 (CST)
+X-RM-TRANSID:2ee565670766cd0-3c572
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from localhost.localdomain.localdomain (unknown[10.54.5.252])
+	by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee76567076b191-69aba;
+	Wed, 29 Nov 2023 17:42:04 +0800 (CST)
+X-RM-TRANSID:2ee76567076b191-69aba
+From: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Li Dong <lidong@vivo.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+Subject: [PATCH] perf help:Fail check on dynamic allocation
+Date: Wed, 29 Nov 2023 17:42:02 +0800
+Message-Id: <20231129094202.11500-1-zhaimingbing@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20231123-coping-revenue-be284a351c9d@wendy>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3AT9Ya14074351
+Content-Transfer-Encoding: 8bit
 
-Hi Conor,
+Return error  if dynamic allocation failed.
 
-On Thu, Nov 23, 2023 at 02:58:55PM +0000, Conor Dooley wrote:
-> On Wed, Nov 22, 2023 at 08:12:33PM +0800, Yu Chien Peter Lin wrote:
-> > xtheadpmu stands for T-Head Performance Monitor Unit extension.
-> > Based on the added T-Head PMU ISA string, the SBI PMU driver
-> > will make use of the non-standard irq source.
-> 
-> Allwinner aren't the only ones using T-Head CPUs that the previous
-> m*id pmu detection code would have matched on. I think the first three
-> files below will also need to be updated:
-> 
-> rg -l "thead,c[0-9]*\b[^-]" arch/riscv/boot/dts/
-> arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
-> arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> arch/riscv/boot/dts/thead/th1520.dtsi
-> arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
+Signed-off-by: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+---
+ tools/perf/builtin-help.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-That's really helpful, I'll add these .dtsi files in the patchset v5.
+diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
+index b2a368ae2..ca05cc795 100644
+--- a/tools/perf/builtin-help.c
++++ b/tools/perf/builtin-help.c
+@@ -196,6 +196,11 @@ static void add_man_viewer(const char *name)
+ 	while (*p)
+ 		p = &((*p)->next);
+ 	*p = zalloc(sizeof(**p) + len + 1);
++	if(!*p) {
++		pr_err("Failed to zalloc man viewer list\n");
++		return ;
++	}
++
+ 	strcpy((*p)->name, name);
+ }
+ 
+@@ -211,6 +216,10 @@ static void do_add_man_viewer_info(const char *name,
+ 				   const char *value)
+ {
+ 	struct man_viewer_info_list *new = zalloc(sizeof(*new) + len + 1);
++	if(!new) {
++		pr_err("Failed to zalloc man viewer info list\n");
++		return ;
++	}
+ 
+ 	strncpy(new->name, name, len);
+ 	new->info = strdup(value);
+-- 
+2.33.0
 
-Thanks,
-Peter Lin
-
-> Cheers,
-> Conor.
 
 
