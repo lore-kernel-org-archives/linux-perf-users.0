@@ -1,119 +1,125 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8LMXvad"
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B166D19A0;
-	Wed, 29 Nov 2023 01:51:13 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6cbd24d9557so555417b3a.1;
-        Wed, 29 Nov 2023 01:51:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701251473; x=1701856273; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HQ+LDwQ3Bi2N8eKNE7wHcwQgSEsXHaXC33trFiDy14A=;
-        b=C8LMXvadrV0O1RBJGUBUQK+4otduMBx/iuXvPRjuMVVijERfNwUYvIWFiEEQsp8//U
-         AB2pshEPz6c0z/sfOTyUW641dwu6IIsxK4PgvzF+QASdrZmqzInSyNScKvC8kTka3nV+
-         q6q2RSF2z9gPyPzqWmCnhzdSlWzu3CTOLGhT0k/RV26icKX+c1+SHIVkQRyYcZiQr6i3
-         /4MqXlwewDDH9URVLEGWsih88nG8DMYS1/hl19uR6IG41tzL2XQ475Gl+/3B8CneE+3Z
-         zcYafS1Qbae2qBB898NoJ+u/W5dCAlCnknHYrk3fa77Ty9typdkz3fHUSIeS4CC5WP5l
-         IOFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701251473; x=1701856273;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HQ+LDwQ3Bi2N8eKNE7wHcwQgSEsXHaXC33trFiDy14A=;
-        b=ZU3meDAX7AbQrXChEXrnwGDbVhRuFRPYfCMjiTyD+GaJ/ycGNkEwLmDSnlQVECefb5
-         ttseXXybHtLEiRqPKD5qNs80K0A4O/DPQNRWw6z5XuHRmP+Ubpn9Lu77cnBRUtRV7bSb
-         HvO8Mxvorxs/GYToQhh4Bp0Lk5yVUUbayYR90ZETAhJlpFpPxXVytV7TNfv/MVCQJ4a9
-         YwwXmsp7zUfaHzNCYMg2AC3P8BeeDIgFYijCZozEVuUzRT55xNACjO+obIU5O9Zf/pQP
-         L8YaUJuKdJLVCrJfY/C15r/6bEPQLA12T3YxfM/2Y0rItiVgj1qn9yUPEmA5XPswaeWX
-         rQnA==
-X-Gm-Message-State: AOJu0YzQ4vd7RfNY3PS5JlTBX1UyX9BBeFOiC+hAsV9+R8xiwjVV6P3S
-	0+D1b7tS8FHIx3ISqeOsoTp2QtPvpPBZKg==
-X-Google-Smtp-Source: AGHT+IFpJ3hbbirJvJcO0PH2i+MFHeaYEpCKvtbNeWEu+FvLJW+FrPzyTw1o93Y56hSatIM/rtCNWQ==
-X-Received: by 2002:a05:6a20:8e1f:b0:13f:13cb:bc50 with SMTP id y31-20020a056a208e1f00b0013f13cbbc50mr23216894pzj.25.1701251473085;
-        Wed, 29 Nov 2023 01:51:13 -0800 (PST)
-Received: from localhost.localdomain ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id j21-20020a62e915000000b006c34015a8f2sm10692761pfh.146.2023.11.29.01.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 01:51:12 -0800 (PST)
-From: Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86/pmu: Prevent any host user from enabling PEBS for profiling guest
-Date: Wed, 29 Nov 2023 17:50:55 +0800
-Message-ID: <20231129095055.88060-1-likexu@tencent.com>
-X-Mailer: git-send-email 2.43.0
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7F23D2123;
+	Wed, 29 Nov 2023 01:53:43 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54CAD2F4;
+	Wed, 29 Nov 2023 01:54:30 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 986C23F5A1;
+	Wed, 29 Nov 2023 01:53:40 -0800 (PST)
+Message-ID: <c63808b2-2049-da18-f0af-5dff2bc87cd2@arm.com>
+Date: Wed, 29 Nov 2023 09:53:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH RFC 2/3] perf/x86/intel/pt: Add support for pause_resume()
+Content-Language: en-US
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, Yicong Yang
+ <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20231123121851.10826-1-adrian.hunter@intel.com>
+ <20231123121851.10826-3-adrian.hunter@intel.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20231123121851.10826-3-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Like Xu <likexu@tencent.com>
 
-Stop using PEBS counters on host to profiling guest. Limit the range of
-enabled PEBS counters to only those counters enabled from the guest PEBS
-emulation perspective.
 
-If there is a perf-record agent on host that uses perf-tools events like
-"cpu-cycles:GP" (G for attr.exclude_host, P for max precise event counter)
-to capture guest performance events, then the guest will be hanged. This is
-because Intel DS-based PEBS buffer is addressed using the 64-bit linear
-address of the current {p/v}CPU context based on MSR_IA32_DS_AREA.
+On 23/11/2023 12:18, Adrian Hunter wrote:
+> Prevent tracing to start if aux_paused.
+> 
+> Implement pause_resume() callback. When aux_paused, stop tracing. When
+> not aux_paused, only start tracing if it isn't currently meant to be
+> stopped.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  arch/x86/events/intel/pt.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index 42a55794004a..aa883b64814a 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -418,6 +418,9 @@ static void pt_config_start(struct perf_event *event)
+>  	struct pt *pt = this_cpu_ptr(&pt_ctx);
+>  	u64 ctl = event->hw.config;
+>  
+> +	if (event->aux_paused)
+> +		return;
+> +
+>  	ctl |= RTIT_CTL_TRACEEN;
+>  	if (READ_ONCE(pt->vmx_on))
+>  		perf_aux_output_flag(&pt->handle, PERF_AUX_FLAG_PARTIAL);
+> @@ -1563,6 +1566,14 @@ EXPORT_SYMBOL_GPL(intel_pt_handle_vmx);
+>   * PMU callbacks
+>   */
+>  
+> +static void pt_event_pause_resume(struct perf_event *event)
+> +{
+> +	if (event->aux_paused)
+> +		pt_config_stop(event);
+> +	else if (!event->hw.state)
+> +		pt_config_start(event);
+> +}
 
-Any perf user using PEBS counters to profile guest on host is, in perf/core
-implementation details, trying to set bits on cpuc->intel_ctrl_guest_mask
-and arr[pebs_enable].guest, much like the guest PEBS emulation behaviour.
-But the subsequent PEBS memory write, regardless of whether guest PEBS is
-enabled, can overshoot guest entry and corrupt guest memory.
+It seems like having a single pause/resume callback rather than separate
+pause and resume ones pushes some of the event state management into the
+individual drivers and would be prone to code duplication and divergent
+behavior.
 
-Profiling guest via PEBS-DS buffer on host is not supported at this time.
-Fix this by filtering the real configured value of arr[pebs_enable].guest
-with the emulated state of guest enabled PEBS counters, under the condition
-of none cross-mapped PEBS counters.
+Would it be possible to move the conditions from here into the core code
+and call separate functions instead?
 
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-Signed-off-by: Like Xu <likexu@tencent.com>
----
- arch/x86/events/intel/core.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> +
+>  static void pt_event_start(struct perf_event *event, int mode)
+>  {
+>  	struct hw_perf_event *hwc = &event->hw;
+> @@ -1798,6 +1809,7 @@ static __init int pt_init(void)
+>  	pt_pmu.pmu.del			 = pt_event_del;
+>  	pt_pmu.pmu.start		 = pt_event_start;
+>  	pt_pmu.pmu.stop			 = pt_event_stop;
+> +	pt_pmu.pmu.pause_resume		 = pt_event_pause_resume;
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index a08f794a0e79..17afd504c35b 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4103,13 +4103,19 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
- 	};
- 
-+	/* In any case, clear guest PEBS bits first. */
-+	arr[global_ctrl].guest &= ~arr[pebs_enable].guest;
-+
- 	if (arr[pebs_enable].host) {
- 		/* Disable guest PEBS if host PEBS is enabled. */
- 		arr[pebs_enable].guest = 0;
- 	} else {
- 		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
- 		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
--		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
-+
-+		/* Prevent any host user from enabling PEBS for profiling guest. */
-+		arr[pebs_enable].guest &= (kvm_pmu->pebs_enable & kvm_pmu->global_ctrl);
-+
- 		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
- 		arr[global_ctrl].guest |= arr[pebs_enable].guest;
- 	}
+The general idea seems ok to me. Is there a reason to not use the
+existing start() stop() callbacks, rather than adding a new one?
 
-base-commit: 6803fb00772cc50cd59a66bd8caaee5c84b13fcf
--- 
-2.43.0
+I assume it's intended to be something like an optimisation where you
+can turn it on and off without having to do the full setup, teardown and
+emit an AUX record because you know the process being traced never gets
+switched out?
 
+Could you make it so that it works out of the box, with the option of
+later optimisation if you do something like this (not here but something
+like this in events/core.c):
+
+  /* Use specialised pause/resume if it exists, otherwise use more
+   * expensive start/stop.
+   */
+  if (pmu->pause_resume)
+	pmu->pause_resume(...)
+  else
+        pmu->stop(...)
+
+
+>  	pt_pmu.pmu.snapshot_aux		 = pt_event_snapshot_aux;
+>  	pt_pmu.pmu.read			 = pt_event_read;
+>  	pt_pmu.pmu.setup_aux		 = pt_buffer_setup_aux;
