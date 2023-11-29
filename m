@@ -1,49 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X/snFXEy"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B49E419B9
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 00:10:30 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-db410931c23so7779154276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 00:10:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c1+LsFpW"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B13AE172E
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 00:10:32 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5cd573c2cccso5307697b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 00:10:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701245430; x=1701850230; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cizzxjAOXVtNMhutvuRuFXeQ97rL+0eSPOInOH69jLw=;
-        b=X/snFXEy8faZNX6QoGJzhEUbNV1WjZARbZDPCvqBThRN12rlcWhd6juUuU6E+vfzIF
-         HDnaayxQuUF+Wg33rLzJp0HqET17oiK+ooFXT1yuMAzRpaUSIpAwy71YUDItnPoNdh9T
-         zVpN+dx/k/AY3od4+skeLV+Dv3aOsP0PGgniJTo5cvZU2RmfXGZRJgTs1y6szv57iXsj
-         kYThJ24xeEQVP4oG979Pe/oPCrj5/8mHHO/nRFYIGRh6cqVG9y/ZxVlxvWIeetXt9qNC
-         1q9m9mUF1pCKhbIY3iAntfnnQBzOIHX5QfWv8JNc8DstLN72noFnuMCUiV5TSpzsMoTz
-         lxLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701245430; x=1701850230;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1701245432; x=1701850232; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cizzxjAOXVtNMhutvuRuFXeQ97rL+0eSPOInOH69jLw=;
-        b=FKzEVzOAKk3noe4zWKSKAULuTBxVdglji4EddQ+U8jGm/GQqb//4/5ALvtTf2hVh40
-         vwE7czPwVqy8p9FjVVsbuITa9kxhVIRB24rTJMzuWEO+Z3XimyeYgoISJ2pYyHZYrKPk
-         5hd4SdWajgTcBMOL3/D8nDsKTMY7I0dC/mD7gzh3gN8TcbPaFwhI7VYGFA8s+xPJ2eYU
-         OlTuOdZtfSKjR7G5YMfPwo1wfzN82d5IeCJLyMzeFxe0hlYWdlvkJvzUWPF7bkMTeN7u
-         3IMNxhkxdbniGFdMyrbHEkFN2U7lykIOmWTfYUfZCgCNBg0OE7a9EVQKbhCJIr9Ez2ja
-         Om7A==
-X-Gm-Message-State: AOJu0YwnbmCAobg/+24P2Go/BT/hxsk2l8gOHuWWmWvtlsxbhYv7OxHV
-	KZWr/Hi3TT2V5VUBluQWUuYBBEnGZnPa
-X-Google-Smtp-Source: AGHT+IGmneAGaPYvOs8mdl9PtOV8N6GGuxvdo2hPaYRLDR7wynZTsfXHXMus8ynoyI5qMDICYh6DPo/GfI/B
+        bh=pfx1JC4eBOGrcYnY6xicCWpxUTppoeccvNEbp92VzIk=;
+        b=c1+LsFpWXVZa9f0P5WSJVas0Ky1Ns9z08OWReCQPUx8UbCCItqqEjvqKl9VaEWy/T8
+         +KVwuU6p8GeqL84vzu9l2ePUgs154JheZQq+kFRA6eb0XGF5SQqR0fKtljCEUlxCO4mn
+         D4n8LB1H18QLEMUBV05lbnVllpkBtSl++Ankn+zpMLqLcPQw8UfhBeVdNAwdhXCe45ex
+         bEN5J6Fx4j9jRZ+mKczV96Bz0+gYWgXpqBsQAdNXYxkeg+mJLCuCUnULQ0Y28bc4K4rF
+         dJ4RyLAfPIzZ79PeyQ1kmBlcAId4DIzHFFuVS2qe4AzRYdC1nBJDRbe2b4byUD/na57w
+         HnVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701245432; x=1701850232;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pfx1JC4eBOGrcYnY6xicCWpxUTppoeccvNEbp92VzIk=;
+        b=Dz8xejeGoOhEcNZBTUuADTesTW3fDDO8tVLOh1CYC9URUVhMKeY3WxTvO0xX64MccQ
+         HijgBkZsefSHEgErJqD+jAVS9bSEa6M5MgQYPTUp+EML/QOnuxJLpDfoxo1K9/iN0bUx
+         OeokUfunpKpUAcYlQbFVzy4UXLEZJm1OjaUN/HCerYlHeNYLjGir8IBY9eEjtR9MYv0l
+         /eicBxJ9wveSvdl34Bg9fCJY84R2JvSmcsHfPU2gVbudBgswo0mpLc4M1yp5Zrtgyx+p
+         CBUc2WWWv4rpiK6YYMzYFzltZcvQbV11Esotkbc0kpgrrNiOMV7wlBfaguuNfkIhhHIe
+         2bBw==
+X-Gm-Message-State: AOJu0Yw7LkIlE8rVwP5TvvgcMq/z1xj61/RgzqROv6ZU+74SOfMXra2G
+	7YqVdHP9ceqH4x7W4Nj/tpo7tw398Rr8
+X-Google-Smtp-Source: AGHT+IE5b9oYoQQYInppAwId01GLHLrLVHBthTMBolUCilxrEIoPz5tuG8kxIflGG6rgmhKBscV72D45W3Am
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:763b:80fa:23ca:96f8])
- (user=irogers job=sendgmr) by 2002:a25:ca04:0:b0:da3:a91c:7356 with SMTP id
- a4-20020a25ca04000000b00da3a91c7356mr440438ybg.8.1701245429912; Wed, 29 Nov
- 2023 00:10:29 -0800 (PST)
-Date: Wed, 29 Nov 2023 00:10:03 -0800
-Message-Id: <20231129081004.1918096-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:2b0a:b0:5d0:8fb3:559c with SMTP
+ id em10-20020a05690c2b0a00b005d08fb3559cmr253486ywb.0.1701245431941; Wed, 29
+ Nov 2023 00:10:31 -0800 (PST)
+Date: Wed, 29 Nov 2023 00:10:04 -0800
+In-Reply-To: <20231129081004.1918096-1-irogers@google.com>
+Message-Id: <20231129081004.1918096-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20231129081004.1918096-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v1 1/2] perf list: Fix json segfault
+Subject: [PATCH v1 2/2] perf test: Add basic list test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -53,39 +55,49 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Json output didn't set the skip_duplicate_pmus callback yielding a
-segfault.
+Test that json output produces valid json.
 
-Fixes: cd4e1efbbc40 ("perf pmus: Skip duplicate PMUs and don't print list suffix by default")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-list.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/tests/shell/list.sh | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100755 tools/perf/tests/shell/list.sh
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index a343823c8ddf..61c2c96cc070 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -434,6 +434,11 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
- 	strbuf_release(&buf);
- }
- 
-+static bool json_skip_duplicate_pmus(void *ps __maybe_unused)
-+{
-+	return false;
+diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
+new file mode 100755
+index 000000000000..286879a9837a
+--- /dev/null
++++ b/tools/perf/tests/shell/list.sh
+@@ -0,0 +1,29 @@
++#!/bin/sh
++# perf list tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++err=0
++
++if [ "x$PYTHON" == "x" ]
++then
++	if which python3 > /dev/null
++	then
++		PYTHON=python3
++	elif which python > /dev/null
++	then
++		PYTHON=python
++	else
++		echo Skipping test, python not detected please set environment variable PYTHON.
++		exit 2
++	fi
++fi
++
++test_list_json() {
++  echo "Json output test"
++  perf list -j | $PYTHON -m json.tool
++  echo "Json output test [Success]"
 +}
 +
- static bool default_skip_duplicate_pmus(void *ps)
- {
- 	struct print_state *print_state = ps;
-@@ -503,6 +508,7 @@ int cmd_list(int argc, const char **argv)
- 			.print_end = json_print_end,
- 			.print_event = json_print_event,
- 			.print_metric = json_print_metric,
-+			.skip_duplicate_pmus = json_skip_duplicate_pmus,
- 		};
- 		ps = &json_ps;
- 	} else {
++test_list_json
++exit $err
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
