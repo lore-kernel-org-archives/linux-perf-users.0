@@ -1,104 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13520E1;
-	Wed, 29 Nov 2023 00:50:28 -0800 (PST)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3AT8mw3e055241;
-	Wed, 29 Nov 2023 16:48:58 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Wed, 29 Nov 2023 16:48:56 +0800
-Date: Wed, 29 Nov 2023 16:48:56 +0800
-From: Yu-Chien Peter Lin <peterlin@andestech.com>
-To: Guo Ren <guoren@kernel.org>
-CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
-        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
-        <conor.dooley@microchip.com>, <conor@kernel.org>,
-        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
-        <evan@rivosinc.com>, <geert+renesas@glider.be>, <heiko@sntech.de>,
-        <irogers@google.com>, <jernej.skrabec@gmail.com>, <jolsa@kernel.org>,
-        <jszhang@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
-        <robh+dt@kernel.org>, <samuel@sholland.org>,
-        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
-        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
-        <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>
-Subject: Re: [PATCH v4 09/13] dt-bindings: riscv: Add T-Head PMU extension
- description
-Message-ID: <ZWb6-LEkyh5RRpcP@APC323>
-References: <20231122121235.827122-1-peterlin@andestech.com>
- <20231122121235.827122-10-peterlin@andestech.com>
- <CAJF2gTSMe-yfzKfX92eWhBnJ_WwoYQu7_7fsOQuNqXdafHA1dg@mail.gmail.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N2QjqL9A"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC31111;
+	Wed, 29 Nov 2023 01:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701248441; x=1732784441;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=29gtM7lRrs8xXEzW5BzN8a4ywpjYYsoTZjZd3DuYHwc=;
+  b=N2QjqL9Ae+30BVIsQmcRfu//DEZXE/3dsu7GjP+xM8Jzs230EHMbhRDa
+   FMBPkeZum6idCdBlgeP3JlkLk7kxHGsl8rjDiRkUsvFvoh4Iu66KUvtgJ
+   ulSTMp0M9zDfINC+NCQycOcmAcC/6Q9zO1YbWjOq/uTmqiFD1UFS8Hjx0
+   3alc6jRfZ2odQeFALbAppbwYVJbmHu2M1MF1YDEQQqhc5Ee8bqqM6bJg9
+   OLqhCSrBkcSCGlRm0IBcAXJ4978j6oxlGoXplByglLoXNPBh9jWw62Kb5
+   EgovtZ5GtqUKvQXfBFLTUQ1qWMna+FKsj10VuSTLWr9E4irdBlrx9/Ng3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="392873524"
+X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
+   d="scan'208";a="392873524"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 01:00:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="762240382"
+X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
+   d="scan'208";a="762240382"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.43.226])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 01:00:37 -0800
+Message-ID: <a54d0a93-aacd-4c69-a34c-8628b0e18ee7@intel.com>
+Date: Wed, 29 Nov 2023 11:00:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJF2gTSMe-yfzKfX92eWhBnJ_WwoYQu7_7fsOQuNqXdafHA1dg@mail.gmail.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3AT8mw3e055241
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] perf test: Add basic list test
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20231129081004.1918096-1-irogers@google.com>
+ <20231129081004.1918096-2-irogers@google.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20231129081004.1918096-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Guo Ren,
+On 29/11/23 10:10, Ian Rogers wrote:
+> Test that json output produces valid json.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/shell/list.sh | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/list.sh
+> 
+> diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
+> new file mode 100755
+> index 000000000000..286879a9837a
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/list.sh
+> @@ -0,0 +1,29 @@
+> +#!/bin/sh
+> +# perf list tests
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +err=0
+> +
+> +if [ "x$PYTHON" == "x" ]
+> +then
+> +	if which python3 > /dev/null
 
-On Thu, Nov 23, 2023 at 05:14:30AM +0800, Guo Ren wrote:
-> On Wed, Nov 22, 2023 at 8:17 PM Yu Chien Peter Lin
-> <peterlin@andestech.com> wrote:
-> >
-> > Document the ISA string for T-Head performance monitor extension
-> > which provides counter overflow interrupt mechanism.
-> >
-> > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> > ---
-> > Changes v2 -> v3:
-> >   - New patch
-> > Changes v3 -> v4:
-> >   - No change
-> > ---
-> >  Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > index c91ab0e46648..694efaea8fce 100644
-> > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > @@ -258,5 +258,11 @@ properties:
-> >              in commit 2e5236 ("Ztso is now ratified.") of the
-> >              riscv-isa-manual.
-> >
-> > +        - const: xtheadpmu
-> > +          description:
-> > +            The T-Head performance monitor extension for counter overflow. For more
-> > +            details, see the chapter 12 in the Xuantie C906 user manual.
-> > +            https://github.com/T-head-Semi/openc906/tree/main/doc
-> > +
-> >  additionalProperties: true
-> >  ...
-> > --
-> > 2.34.1
-> >
-> Reviewed-by: Guo Ren <guoren@kernel.org>
+'which' isn't always present.  Maybe
 
-Thanks for the review.
-Would you share document about T-Head PMU?
+python3 --version >/dev/null 2>&1 && PYTHON=python3
 
-Best regards,
-Peter Lin
+> +	then
+> +		PYTHON=python3
+> +	elif which python > /dev/null
+> +	then
+> +		PYTHON=python
+> +	else
+> +		echo Skipping test, python not detected please set environment variable PYTHON.
+> +		exit 2
+> +	fi
+> +fi
+> +
+> +test_list_json() {
+> +  echo "Json output test"
+> +  perf list -j | $PYTHON -m json.tool
+> +  echo "Json output test [Success]"
+> +}
+> +
+> +test_list_json
+> +exit $err
 
-> -- 
-> Best Regards
->  Guo Ren
