@@ -1,40 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TsWqyHGw"
-X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 29 Nov 2023 05:53:20 PST
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 374341BD4;
-	Wed, 29 Nov 2023 05:53:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XZ2/sO5H"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A3319A;
+	Wed, 29 Nov 2023 06:38:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701266000; x=1732802000;
+  t=1701268709; x=1732804709;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=xDKJIeoivK1p+x913AqcwpvvGVtvmCb2yCDvN18VT8s=;
-  b=TsWqyHGwkrVMACtbKs9cWaYwwlnAkrg2M+AVmhXoHeVLnIZxJP4PC9+Q
-   pxu72RUctLLdCgFyAxO0mc4lLkI5nSzJ9G4EOqU58aBfusEte+t+yj1nk
-   K7YZunNgxjCXOkiHTFGoce1em+Y8bwLlWqtYWFmWAvEMM9P33y0ZxfMca
-   o4oh0xOlyLEP5xKGESOu5A0ZmRqXsBWP2l9KY8gZHipEWgGZRSbWqbwri
-   HCPBZBAfgPlbDddi7lOsglvHoBF3+2cix/fhfGBU9A0ZBZ992voupemAE
-   5/S1bmSPCuAf7daabxK1jSLoM8la0wQuC46S5kdQk4fh5lNheUCWUFArw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="51228"
+  bh=iiu1CrAFtHvE/LyjDhTrOzwbBCvrQr7xMUO05abJSSU=;
+  b=XZ2/sO5HrsIyTFQfcThBTuDeElZw0BLGiZM2C5135DmqWnx3t3jQxYF4
+   /iyFVcQ9jqGWS2wNz9R9VtEpqTQJWq2cECOgk4aQXIYqc3XOy1xszg9PZ
+   wkftTHdiv2U1vDRmnjPT+OkJxIu1lehcq5VVHiySsMkXLbWlq9ODBYwUi
+   vfhWDdR4/ZZBnO+i+87kprkWb4gYmb2tpFOBJVFQorMASbD+sKKCjPI2x
+   VbdwRV4gNQq6eazOg2TTe7BQYUepDCOMEigNKg8/aInc9BGChAl8mPcqI
+   Q+pDMMczuOBPC88MT7PM6JAH7MSahHIFC04xbxO7CjsKlReYiLzFuzjXs
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="372536842"
 X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="51228"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 05:52:17 -0800
+   d="scan'208";a="372536842"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 06:38:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="839433885"
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="892468033"
 X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="839433885"
+   d="scan'208";a="892468033"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 05:52:16 -0800
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 06:38:29 -0800
 Received: from [10.213.167.24] (kliang2-mobl1.ccr.corp.intel.com [10.213.167.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C37F3580D96;
-	Wed, 29 Nov 2023 05:52:14 -0800 (PST)
-Message-ID: <083bfe11-6f6e-487f-ac28-aec22e6b6b06@linux.intel.com>
-Date: Wed, 29 Nov 2023 08:52:13 -0500
+	by linux.intel.com (Postfix) with ESMTPS id 7005F580D96;
+	Wed, 29 Nov 2023 06:38:28 -0800 (PST)
+Message-ID: <6c4bd247-1f81-4b43-9e21-012f831d26b8@linux.intel.com>
+Date: Wed, 29 Nov 2023 09:38:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,153 +41,106 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf mem: Fix perf mem error on hybrid
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
- mark.rutland@arm.com, namhyung@kernel.org, jolsa@kernel.org,
- adrian.hunter@intel.com, ravi.bangoria@amd.com,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Ammy Yi <ammy.yi@intel.com>
-References: <20231128203940.3964287-1-kan.liang@linux.intel.com>
- <CAP-5=fUdEgnwk_FNHb-Ju3wCYE2PLLrPHqwZoyBGyURXQhBeSA@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86/pmu: Prevent any host user from enabling PEBS
+ for profiling guest
 Content-Language: en-US
+To: Like Xu <like.xu.linux@gmail.com>, Sean Christopherson
+ <seanjc@google.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20231129095055.88060-1-likexu@tencent.com>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fUdEgnwk_FNHb-Ju3wCYE2PLLrPHqwZoyBGyURXQhBeSA@mail.gmail.com>
+In-Reply-To: <20231129095055.88060-1-likexu@tencent.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2023-11-29 1:24 a.m., Ian Rogers wrote:
-> On Tue, Nov 28, 2023 at 12:39 PM <kan.liang@linux.intel.com> wrote:
->>
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The below error can be triggered on a hybrid machine.
->>
->>  $ perf mem record -t load sleep 1
->>  event syntax error: 'breakpoint/mem-loads,ldlat=30/P'
->>                                 \___ Bad event or PMU
->>
->>  Unable to find PMU or event on a PMU of 'breakpoint'
->>
->> In the perf_mem_events__record_args(), the current perf never checks the
->> availability of a mem event on a given PMU. All the PMUs will be added
->> to the perf mem event list. Perf errors out for the unsupported PMU.
->>
->> Extend perf_mem_event__supported() and take a PMU into account. Check
->> the mem event for each PMU before adding it to the perf mem event list.
->>
->> Optimize the perf_mem_events__init() a little bit. The function is to
->> check whether the mem events are supported in the system. It doesn't
->> need to scan all PMUs. Just return with the first supported PMU is good
->> enough.
->>
->> Fixes: 5752c20f3787 ("perf mem: Scan all PMUs instead of just core ones")
->> Reported-by: Ammy Yi <ammy.yi@intel.com>
->> Tested-by: Ammy Yi <ammy.yi@intel.com>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>  tools/perf/util/mem-events.c | 25 ++++++++++++++-----------
->>  1 file changed, 14 insertions(+), 11 deletions(-)
->>
->> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
->> index 954b235e12e5..3a2e3687878c 100644
->> --- a/tools/perf/util/mem-events.c
->> +++ b/tools/perf/util/mem-events.c
->> @@ -100,11 +100,14 @@ int perf_mem_events__parse(const char *str)
->>         return -1;
->>  }
->>
->> -static bool perf_mem_event__supported(const char *mnt, char *sysfs_name)
->> +static bool perf_mem_event__supported(const char *mnt, struct perf_pmu *pmu,
->> +                                     struct perf_mem_event *e)
->>  {
->> +       char sysfs_name[100];
->>         char path[PATH_MAX];
->>         struct stat st;
->>
->> +       scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name, pmu->name);
+On 2023-11-29 4:50 a.m., Like Xu wrote:
+> From: Like Xu <likexu@tencent.com>
 > 
-> Not sure if this is right. Looking at sysfs_name values:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/mem-events.c?h=perf-tools-next#n23
-> "cpu/events/mem-loads" and "cpu/events/mem-stores", so won't pmu->name
-> never be used?
-> Is there a missed change to change the cpu to %s?
+> Stop using PEBS counters on host to profiling guest. Limit the range of
+> enabled PEBS counters to only those counters enabled from the guest PEBS
+> emulation perspective.
+> 
+> If there is a perf-record agent on host that uses perf-tools events like
+> "cpu-cycles:GP" (G for attr.exclude_host, P for max precise event counter)
+> to capture guest performance events, then the guest will be hanged. This is
+> because Intel DS-based PEBS buffer is addressed using the 64-bit linear
+> address of the current {p/v}CPU context based on MSR_IA32_DS_AREA.
+> 
+> Any perf user using PEBS counters to profile guest on host is, in perf/core
+> implementation details, trying to set bits on cpuc->intel_ctrl_guest_mask
+> and arr[pebs_enable].guest, much like the guest PEBS emulation behaviour.
+> But the subsequent PEBS memory write, regardless of whether guest PEBS is
+> enabled, can overshoot guest entry and corrupt guest memory.
+> 
+> Profiling guest via PEBS-DS buffer on host is not supported at this time.
+> Fix this by filtering the real configured value of arr[pebs_enable].guest
+> with the emulated state of guest enabled PEBS counters, under the condition
+> of none cross-mapped PEBS counters.
 
-There is a X86 specific perf_mem_events__ptr(), which uses the
-"%s/mem-loads,ldlat=%u/P" and "%s/events/mem-loads" for Intel platforms.
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/x86/util/mem-events.c?h=perf-tools-next#n20
-The pmu->name is used especially for the hybrid platforms.
+So the counter will be silently disabled. The user never knows why
+nothing is sampled.
+Since we don't support the case, profiling guest via PEBS-DS buffer on
+host. Maybe we should error out when creating the event. For example
+(not tested),
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 3871267d3237..24b90c70737f 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3958,6 +3958,10 @@ static int intel_pmu_hw_config(struct perf_event
+*event)
+ 		if ((event->attr.config & INTEL_ARCH_EVENT_MASK) ==
+INTEL_FIXED_VLBR_EVENT)
+ 			return -EINVAL;
+
++		/* Profiling guest via PEBS-DS buffer on host is not supported. */
++		if (event->attr.exclude_host)
++			return -EINVAL;
++
+ 		if (!(event->attr.freq || (event->attr.wakeup_events &&
+!event->attr.watermark))) {
+ 		    event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+
 
 Thanks,
 Kan
+
 > 
-> Thanks,
-> Ian
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
+> Signed-off-by: Like Xu <likexu@tencent.com>
+> ---
+>  arch/x86/events/intel/core.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
->>         scnprintf(path, PATH_MAX, "%s/devices/%s", mnt, sysfs_name);
->>         return !stat(path, &st);
->>  }
->> @@ -120,7 +123,6 @@ int perf_mem_events__init(void)
->>
->>         for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
->>                 struct perf_mem_event *e = perf_mem_events__ptr(j);
->> -               char sysfs_name[100];
->>                 struct perf_pmu *pmu = NULL;
->>
->>                 /*
->> @@ -136,12 +138,12 @@ int perf_mem_events__init(void)
->>                  * of core PMU.
->>                  */
->>                 while ((pmu = perf_pmus__scan(pmu)) != NULL) {
->> -                       scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name, pmu->name);
->> -                       e->supported |= perf_mem_event__supported(mnt, sysfs_name);
->> +                       e->supported |= perf_mem_event__supported(mnt, pmu, e);
->> +                       if (e->supported) {
->> +                               found = true;
->> +                               break;
->> +                       }
->>                 }
->> -
->> -               if (e->supported)
->> -                       found = true;
->>         }
->>
->>         return found ? 0 : -ENOENT;
->> @@ -167,13 +169,10 @@ static void perf_mem_events__print_unsupport_hybrid(struct perf_mem_event *e,
->>                                                     int idx)
->>  {
->>         const char *mnt = sysfs__mount();
->> -       char sysfs_name[100];
->>         struct perf_pmu *pmu = NULL;
->>
->>         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
->> -               scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name,
->> -                         pmu->name);
->> -               if (!perf_mem_event__supported(mnt, sysfs_name)) {
->> +               if (!perf_mem_event__supported(mnt, pmu, e)) {
->>                         pr_err("failed: event '%s' not supported\n",
->>                                perf_mem_events__name(idx, pmu->name));
->>                 }
->> @@ -183,6 +182,7 @@ static void perf_mem_events__print_unsupport_hybrid(struct perf_mem_event *e,
->>  int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
->>                                  char **rec_tmp, int *tmp_nr)
->>  {
->> +       const char *mnt = sysfs__mount();
->>         int i = *argv_nr, k = 0;
->>         struct perf_mem_event *e;
->>
->> @@ -211,6 +211,9 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
->>                         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
->>                                 const char *s = perf_mem_events__name(j, pmu->name);
->>
->> +                               if (!perf_mem_event__supported(mnt, pmu, e))
->> +                                       continue;
->> +
->>                                 rec_argv[i++] = "-e";
->>                                 if (s) {
->>                                         char *copy = strdup(s);
->> --
->> 2.35.1
->>
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index a08f794a0e79..17afd504c35b 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4103,13 +4103,19 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
+>  	};
+>  
+> +	/* In any case, clear guest PEBS bits first. */
+> +	arr[global_ctrl].guest &= ~arr[pebs_enable].guest;
+> +
+>  	if (arr[pebs_enable].host) {
+>  		/* Disable guest PEBS if host PEBS is enabled. */
+>  		arr[pebs_enable].guest = 0;
+>  	} else {
+>  		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
+>  		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
+> -		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
+> +
+> +		/* Prevent any host user from enabling PEBS for profiling guest. */
+> +		arr[pebs_enable].guest &= (kvm_pmu->pebs_enable & kvm_pmu->global_ctrl);
+> +
+>  		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
+>  		arr[global_ctrl].guest |= arr[pebs_enable].guest;
+>  	}
+> 
+> base-commit: 6803fb00772cc50cd59a66bd8caaee5c84b13fcf
