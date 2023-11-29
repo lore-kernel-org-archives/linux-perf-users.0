@@ -1,35 +1,35 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="abH9ikdM"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q2NbVUFM"
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA82010CE;
-	Wed, 29 Nov 2023 02:53:02 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 286D295;
+	Wed, 29 Nov 2023 02:59:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/OekEShUlQdJpo7AqAfaxY+vi6Bol0LFK9LTWBoiQ5M=; b=abH9ikdMp2xRajwn9eXjNI/KOg
-	Lugjk+J03nV25J4wm8/VAsB0k9Bq9Fyvu9PUe/dU8oZDnvjoXoUwWhpvB13zqiK76ie8AqQKiaVIL
-	QrnjLjqnMAWY3FzNnL64l9KwFK6OWKI+vhrQc6er/btaes0Iu1me2jWgNdBFBZRXvNKcv1K2FKHvp
-	glxDq3LMgoZ4nyGu2fzvAm0rLTQO8QhMEKSXlXuYCLZvW5Oz0krdizLlmseM+UDtl4xK3+b5WVqbO
-	S4u1awcHr6Xr6jeE9arGWFB1upo8yi8jXcEzY73+RqUSM9D3ueK6t/xnbtusOC+ScXoLotNS3cq7r
-	hDCZWf8A==;
+	bh=KigNA1TZVqFp7ATaA0tVgaRfg+vW2ATtcc+1Uw9papU=; b=Q2NbVUFMfdymSbxHURADyz+2dQ
+	gbloL7jZqkpqjodYwok3ql66wYy7cdufNcJCC2EZfTYZLQyR/x16CzXMCFWFAQ3xgYLkmVqdyBUVL
+	SD/WEF1Px2v/ctRMyjh4QZt853ckle8P++uVw2YAyyTUTNP5IwmiX0ev188ZEFO1lJtV6566KeSGu
+	azaZQxJrOH6ovUcIMOTCL4Me2IJuKOJxtMyQroIbFOezolfDgAK2wHEhkImI+LwO3rXB5XBgHi7tU
+	EGgIQAFXLUKMXOUSyXIwwYAspPX0mlLRGJs0LSa0MlK/S9XbzLVn6AUhHZ0SfWb53PlCWcSCwHUBa
+	Bz6/9MZA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1r8IAh-000Jk4-0K;
-	Wed, 29 Nov 2023 10:52:01 +0000
+	id 1r8IH7-000Jr8-0G;
+	Wed, 29 Nov 2023 10:58:38 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 01183300293; Wed, 29 Nov 2023 11:51:57 +0100 (CET)
-Date: Wed, 29 Nov 2023 11:51:57 +0100
+	id B7D0B300487; Wed, 29 Nov 2023 11:58:36 +0100 (CET)
+Date: Wed, 29 Nov 2023 11:58:36 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+To: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Heiko Carstens <hca@linux.ibm.com>,
 	Thomas Richter <tmricht@linux.ibm.com>,
 	Hendrik Brueckner <brueckner@linux.ibm.com>,
 	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+	Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
 	linux-arm-kernel@lists.infradead.org,
 	Yicong Yang <yangyicong@hisilicon.com>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -38,11 +38,11 @@ Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH RFC 1/3] perf/core: Add aux_pause, aux_resume,
- aux_start_paused
-Message-ID: <20231129105157.GE30650@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH RFC 2/3] perf/x86/intel/pt: Add support for pause_resume()
+Message-ID: <20231129105836.GF30650@noisy.programming.kicks-ass.net>
 References: <20231123121851.10826-1-adrian.hunter@intel.com>
- <20231123121851.10826-2-adrian.hunter@intel.com>
+ <20231123121851.10826-3-adrian.hunter@intel.com>
+ <c63808b2-2049-da18-f0af-5dff2bc87cd2@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,41 +51,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231123121851.10826-2-adrian.hunter@intel.com>
+In-Reply-To: <c63808b2-2049-da18-f0af-5dff2bc87cd2@arm.com>
 
-On Thu, Nov 23, 2023 at 02:18:49PM +0200, Adrian Hunter wrote:
+On Wed, Nov 29, 2023 at 09:53:39AM +0000, James Clark wrote:
+> On 23/11/2023 12:18, Adrian Hunter wrote:
 
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 39c6a250dd1b..1232e70adfba 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -456,7 +456,8 @@ struct perf_event_attr {
->  				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
->  				remove_on_exec :  1, /* event is removed from task on exec */
->  				sigtrap        :  1, /* send synchronous SIGTRAP on event */
-> -				__reserved_1   : 26;
-> +				aux_start_paused :  1, /* start AUX area tracing paused */
-> +				__reserved_1   : 25;
->  
->  	union {
->  		__u32		wakeup_events;	  /* wakeup every n events */
-> @@ -507,7 +508,15 @@ struct perf_event_attr {
->  	__u16	sample_max_stack;
->  	__u16	__reserved_2;
->  	__u32	aux_sample_size;
-> -	__u32	__reserved_3;
-> +
-> +	union {
-> +		__u32	aux_output_cfg;
-> +		struct {
-> +			__u64	aux_pause      :  1, /* on overflow, pause AUX area tracing */
-> +				aux_resume     :  1, /* on overflow, resume AUX area tracing */
-> +				__reserved_3   : 30;
-> +		};
-> +	};
->  
->  	/*
->  	 * User provided data if sigtrap=1, passed back to user via
+> > +static void pt_event_pause_resume(struct perf_event *event)
+> > +{
+> > +	if (event->aux_paused)
+> > +		pt_config_stop(event);
+> > +	else if (!event->hw.state)
+> > +		pt_config_start(event);
+> > +}
+> 
+> It seems like having a single pause/resume callback rather than separate
+> pause and resume ones pushes some of the event state management into the
+> individual drivers and would be prone to code duplication and divergent
+> behavior.
+> 
+> Would it be possible to move the conditions from here into the core code
+> and call separate functions instead?
+> 
+> > +
+> >  static void pt_event_start(struct perf_event *event, int mode)
+> >  {
+> >  	struct hw_perf_event *hwc = &event->hw;
+> > @@ -1798,6 +1809,7 @@ static __init int pt_init(void)
+> >  	pt_pmu.pmu.del			 = pt_event_del;
+> >  	pt_pmu.pmu.start		 = pt_event_start;
+> >  	pt_pmu.pmu.stop			 = pt_event_stop;
+> > +	pt_pmu.pmu.pause_resume		 = pt_event_pause_resume;
+> 
+> The general idea seems ok to me. Is there a reason to not use the
+> existing start() stop() callbacks, rather than adding a new one?
+> 
+> I assume it's intended to be something like an optimisation where you
+> can turn it on and off without having to do the full setup, teardown and
+> emit an AUX record because you know the process being traced never gets
+> switched out?
 
-So since you're adding a aux_output_cfg word, could you not also put the
-start_paused thing in there?
+So the actual scheduling uses ->add() / ->del(), the ->start() /
+->stop() methods are something that can be used after ->add() and before
+->del() to 'temporarily' pause things.
+
+Pretty much exactly what is required here I think. We currently use this
+for PMI throttling and adaptive frequency stuff, but there is no reason
+it could not also be used for this.
+
+As is, we don't track the paused state across ->del() / ->add(), but
+perhaps that can be fixed. We can easily add more PERF_EF_ / PERF_HES_
+bits to manage things.
+
+
