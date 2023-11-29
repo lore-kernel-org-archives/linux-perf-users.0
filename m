@@ -1,38 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from cmccmta2.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id C958A1999;
-	Wed, 29 Nov 2023 01:42:06 -0800 (PST)
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee565670766cd0-3c572;
-	Wed, 29 Nov 2023 17:42:04 +0800 (CST)
-X-RM-TRANSID:2ee565670766cd0-3c572
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from localhost.localdomain.localdomain (unknown[10.54.5.252])
-	by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee76567076b191-69aba;
-	Wed, 29 Nov 2023 17:42:04 +0800 (CST)
-X-RM-TRANSID:2ee76567076b191-69aba
-From: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Li Dong <lidong@vivo.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>
-Subject: [PATCH] perf help:Fail check on dynamic allocation
-Date: Wed, 29 Nov 2023 17:42:02 +0800
-Message-Id: <20231129094202.11500-1-zhaimingbing@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.33.0
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8LMXvad"
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B166D19A0;
+	Wed, 29 Nov 2023 01:51:13 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6cbd24d9557so555417b3a.1;
+        Wed, 29 Nov 2023 01:51:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701251473; x=1701856273; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HQ+LDwQ3Bi2N8eKNE7wHcwQgSEsXHaXC33trFiDy14A=;
+        b=C8LMXvadrV0O1RBJGUBUQK+4otduMBx/iuXvPRjuMVVijERfNwUYvIWFiEEQsp8//U
+         AB2pshEPz6c0z/sfOTyUW641dwu6IIsxK4PgvzF+QASdrZmqzInSyNScKvC8kTka3nV+
+         q6q2RSF2z9gPyPzqWmCnhzdSlWzu3CTOLGhT0k/RV26icKX+c1+SHIVkQRyYcZiQr6i3
+         /4MqXlwewDDH9URVLEGWsih88nG8DMYS1/hl19uR6IG41tzL2XQ475Gl+/3B8CneE+3Z
+         zcYafS1Qbae2qBB898NoJ+u/W5dCAlCnknHYrk3fa77Ty9typdkz3fHUSIeS4CC5WP5l
+         IOFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701251473; x=1701856273;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HQ+LDwQ3Bi2N8eKNE7wHcwQgSEsXHaXC33trFiDy14A=;
+        b=ZU3meDAX7AbQrXChEXrnwGDbVhRuFRPYfCMjiTyD+GaJ/ycGNkEwLmDSnlQVECefb5
+         ttseXXybHtLEiRqPKD5qNs80K0A4O/DPQNRWw6z5XuHRmP+Ubpn9Lu77cnBRUtRV7bSb
+         HvO8Mxvorxs/GYToQhh4Bp0Lk5yVUUbayYR90ZETAhJlpFpPxXVytV7TNfv/MVCQJ4a9
+         YwwXmsp7zUfaHzNCYMg2AC3P8BeeDIgFYijCZozEVuUzRT55xNACjO+obIU5O9Zf/pQP
+         L8YaUJuKdJLVCrJfY/C15r/6bEPQLA12T3YxfM/2Y0rItiVgj1qn9yUPEmA5XPswaeWX
+         rQnA==
+X-Gm-Message-State: AOJu0YzQ4vd7RfNY3PS5JlTBX1UyX9BBeFOiC+hAsV9+R8xiwjVV6P3S
+	0+D1b7tS8FHIx3ISqeOsoTp2QtPvpPBZKg==
+X-Google-Smtp-Source: AGHT+IFpJ3hbbirJvJcO0PH2i+MFHeaYEpCKvtbNeWEu+FvLJW+FrPzyTw1o93Y56hSatIM/rtCNWQ==
+X-Received: by 2002:a05:6a20:8e1f:b0:13f:13cb:bc50 with SMTP id y31-20020a056a208e1f00b0013f13cbbc50mr23216894pzj.25.1701251473085;
+        Wed, 29 Nov 2023 01:51:13 -0800 (PST)
+Received: from localhost.localdomain ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id j21-20020a62e915000000b006c34015a8f2sm10692761pfh.146.2023.11.29.01.51.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Nov 2023 01:51:12 -0800 (PST)
+From: Like Xu <like.xu.linux@gmail.com>
+X-Google-Original-From: Like Xu <likexu@tencent.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86/pmu: Prevent any host user from enabling PEBS for profiling guest
+Date: Wed, 29 Nov 2023 17:50:55 +0800
+Message-ID: <20231129095055.88060-1-likexu@tencent.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,42 +57,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Return error  if dynamic allocation failed.
+From: Like Xu <likexu@tencent.com>
 
-Signed-off-by: zhaimingbing <zhaimingbing@cmss.chinamobile.com>
+Stop using PEBS counters on host to profiling guest. Limit the range of
+enabled PEBS counters to only those counters enabled from the guest PEBS
+emulation perspective.
+
+If there is a perf-record agent on host that uses perf-tools events like
+"cpu-cycles:GP" (G for attr.exclude_host, P for max precise event counter)
+to capture guest performance events, then the guest will be hanged. This is
+because Intel DS-based PEBS buffer is addressed using the 64-bit linear
+address of the current {p/v}CPU context based on MSR_IA32_DS_AREA.
+
+Any perf user using PEBS counters to profile guest on host is, in perf/core
+implementation details, trying to set bits on cpuc->intel_ctrl_guest_mask
+and arr[pebs_enable].guest, much like the guest PEBS emulation behaviour.
+But the subsequent PEBS memory write, regardless of whether guest PEBS is
+enabled, can overshoot guest entry and corrupt guest memory.
+
+Profiling guest via PEBS-DS buffer on host is not supported at this time.
+Fix this by filtering the real configured value of arr[pebs_enable].guest
+with the emulated state of guest enabled PEBS counters, under the condition
+of none cross-mapped PEBS counters.
+
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
+Signed-off-by: Like Xu <likexu@tencent.com>
 ---
- tools/perf/builtin-help.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/events/intel/core.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-index b2a368ae2..ca05cc795 100644
---- a/tools/perf/builtin-help.c
-+++ b/tools/perf/builtin-help.c
-@@ -196,6 +196,11 @@ static void add_man_viewer(const char *name)
- 	while (*p)
- 		p = &((*p)->next);
- 	*p = zalloc(sizeof(**p) + len + 1);
-+	if(!*p) {
-+		pr_err("Failed to zalloc man viewer list\n");
-+		return ;
-+	}
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a08f794a0e79..17afd504c35b 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4103,13 +4103,19 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
+ 	};
+ 
++	/* In any case, clear guest PEBS bits first. */
++	arr[global_ctrl].guest &= ~arr[pebs_enable].guest;
 +
- 	strcpy((*p)->name, name);
- }
- 
-@@ -211,6 +216,10 @@ static void do_add_man_viewer_info(const char *name,
- 				   const char *value)
- {
- 	struct man_viewer_info_list *new = zalloc(sizeof(*new) + len + 1);
-+	if(!new) {
-+		pr_err("Failed to zalloc man viewer info list\n");
-+		return ;
-+	}
- 
- 	strncpy(new->name, name, len);
- 	new->info = strdup(value);
+ 	if (arr[pebs_enable].host) {
+ 		/* Disable guest PEBS if host PEBS is enabled. */
+ 		arr[pebs_enable].guest = 0;
+ 	} else {
+ 		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
+ 		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
+-		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
++
++		/* Prevent any host user from enabling PEBS for profiling guest. */
++		arr[pebs_enable].guest &= (kvm_pmu->pebs_enable & kvm_pmu->global_ctrl);
++
+ 		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
+ 		arr[global_ctrl].guest |= arr[pebs_enable].guest;
+ 	}
+
+base-commit: 6803fb00772cc50cd59a66bd8caaee5c84b13fcf
 -- 
-2.33.0
-
-
+2.43.0
 
