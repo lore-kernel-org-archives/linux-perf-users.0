@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="puIJfeNh"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RQ07XaYC"
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5D51BE
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 21:24:41 -0800 (PST)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT5E4VS018426;
-	Wed, 29 Nov 2023 05:24:32 GMT
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF3919B6
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 21:33:01 -0800 (PST)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT5FuE0002692;
+	Wed, 29 Nov 2023 05:32:52 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to; s=pp1;
- bh=IbJw7nl0JnTIXKoXWcz+D+hyBTQRmhEtnAVn4qZ49tU=;
- b=puIJfeNhjvW7TYOL4852Xn6kWMAXwbKZewMp57DtOG/o9I9W8UKJOEKYrX28x98VTB+l
- 3m3vLIuMi/iiEzHF9pSovPOVR5DnGkBdJMqeYawpIPxR8dHVdjYz0ii9oTpWg5fBoon8
- wNLddkbCSmyOHjl9IO5gGlPrxRY3l5p/uuARS5UOK0m+C6crkHMKgffxi51JEFVl1gBG
- hD1oMcExPsVs4sFEXqkw5BdLPoy3BTPjqRHsLdXzKOhqpDLo80YciWdr9v2Z2T+On1EO
- YRC85MwB04wF3Xtzt1+VcYz71muUbskEjuTGyd/in5vk5L6hFso6Wrt2t1tlTrJCkD5m Gg== 
+ bh=Wn6ogUo1+kz5b4j5g1uTHAsFz4YXyyJ/RDHh7bRnCTg=;
+ b=RQ07XaYCiqOaVfjw0VLztPONsNc8tuS+LYBFcjlLnM0UiZYv+TQKrBnrFV5x9pm/RcXj
+ GYfD6uV5ZND5FtiaIU6SGTdEfQG7KTcXhfV3E4LsTBSJdX7AhdbOULpqgce0SA9zqXXs
+ uadW0PoGQdGQCTtNdnujxnOw8ZXU/jCiJQ7XTvF6KItYMa4XVJIhV2RI9FmHtpSDYIXM
+ s6p/YUqrEBq6jJInkmPSoabPAWoTcvmFxb0YhDsdhhpfi1Jg06bkuRplPuTKOUHXNj35
+ HI0bo10cVGiI/jaA0Ma0LwRv4Kjm9YbXOIjKVQYw9tXHwus22KSI9I7HKhla1MnnytBs /Q== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3unxc793y4-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uny0b0fr6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 05:24:32 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AT5EFNn019589;
-	Wed, 29 Nov 2023 05:24:31 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3unxc793xg-1
+	Wed, 29 Nov 2023 05:32:51 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AT5GnFt005153;
+	Wed, 29 Nov 2023 05:32:51 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uny0b0fpq-3
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 05:24:31 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT5IBbQ028293;
-	Wed, 29 Nov 2023 05:24:31 GMT
+	Wed, 29 Nov 2023 05:32:51 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT57R5f031065;
+	Wed, 29 Nov 2023 05:21:42 GMT
 Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ukv8nn6d3-1
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uku8t5ess-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 05:24:30 +0000
+	Wed, 29 Nov 2023 05:21:42 +0000
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AT5OROQ44892844
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AT5LdTk41550226
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Nov 2023 05:24:28 GMT
+	Wed, 29 Nov 2023 05:21:39 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D6D5A20040;
-	Wed, 29 Nov 2023 05:24:27 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 7A8F220040;
+	Wed, 29 Nov 2023 05:21:39 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E2C9E20043;
-	Wed, 29 Nov 2023 05:24:24 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 948592004D;
+	Wed, 29 Nov 2023 05:21:37 +0000 (GMT)
 Received: from smtpclient.apple (unknown [9.43.74.136])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 29 Nov 2023 05:24:24 +0000 (GMT)
+	Wed, 29 Nov 2023 05:21:37 +0000 (GMT)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -54,185 +54,162 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
-Subject: Re: [PATCH] perf test record+probe_libc_inet_pton: Fix call chain
- match on powerpc
+Subject: Re: [PATCH] perf vendor events: Update datasource event name to fix
+ duplicate events
 From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20231126070914.175332-1-likhitha@linux.ibm.com>
-Date: Wed, 29 Nov 2023 10:54:12 +0530
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Disha Goel <disgoel@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>,
+In-Reply-To: <92bbba90-c7e4-43de-98dc-497ca323eacc@linux.ibm.com>
+Date: Wed, 29 Nov 2023 10:51:25 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
         Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        James Clark <james.clark@arm.com>
+        Disha Goel <disgoel@linux.vnet.ibm.com>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <77B600DB-2A88-4634-8788-76C3D70C136F@linux.vnet.ibm.com>
-References: <20231126070914.175332-1-likhitha@linux.ibm.com>
-To: Likhitha Korrapati <likhitha@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Message-Id: <5293CFEC-6578-477B-86C2-40A50EBA144B@linux.vnet.ibm.com>
+References: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
+ <92bbba90-c7e4-43de-98dc-497ca323eacc@linux.ibm.com>
+To: Disha Goel <disgoel@linux.ibm.com>
 X-Mailer: Apple Mail (2.3774.200.91.1.1)
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WqdZ9kVS-uI8cK8kid5B2y-GYSLWLohm
-X-Proofpoint-GUID: 7vt4kGQg2E-xdV17MwlC27h40iQlFjjZ
+X-Proofpoint-ORIG-GUID: Zj4lg6DtThJPbmvSyfzsDBMTbDrYMkNu
+X-Proofpoint-GUID: lxnOOtkRJLi09e0RIwUzDxTHTAA2tJGy
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-11-29_02,2023-11-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 phishscore=0 impostorscore=0 suspectscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311290039
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0 impostorscore=0
+ spamscore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311290040
 
 
 
-> On 26-Nov-2023, at 12:39=E2=80=AFPM, Likhitha Korrapati =
-<likhitha@linux.ibm.com> wrote:
+> On 27-Nov-2023, at 5:32=E2=80=AFPM, Disha Goel <disgoel@linux.ibm.com> =
+wrote:
 >=20
-> The perf test "probe libc's inet_pton & backtrace it with ping" fails =
-on
-> powerpc as below:
+> On 23/11/23 9:31 pm, Athira Rajeev wrote:
 >=20
-> root@xxx perf]# perf test -v "probe libc's inet_pton & backtrace it =
-with
-> ping"
-> 85: probe libc's inet_pton & backtrace it with ping                 :
-> --- start ---
-> test child forked, pid 96028
-> ping 96056 [002] 127271.101961: probe_libc:inet_pton: (7fffa1779a60)
-> 7fffa1779a60 __GI___inet_pton+0x0
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
-> 7fffa172a73c getaddrinfo+0x121c
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
-> FAIL: expected backtrace entry
-> =
-"gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/=
-libc.so.6\)$"
-> got "7fffa172a73c getaddrinfo+0x121c
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
-> test child finished with -1
-> ---- end ----
-> probe libc's inet_pton & backtrace it with ping: FAILED!
+>> Running "perf list" on powerpc fails with segfault
+>> as below:
+>>=20
+>>    ./perf list
+>>    Segmentation fault (core dumped)
+>>=20
+>> This happens because of duplicate events in the json list.
+>> The powerpc Json event list contains some event with same
+>> event name, but different event code. They are:
+>> - PM_INST_FROM_L3MISS (Present in datasource and frontend)
+>> - PM_MRK_DATA_FROM_L2MISS (Present in datasource and marked)
+>> - PM_MRK_INST_FROM_L3MISS (Present in datasource and marked)
+>> - PM_MRK_DATA_FROM_L3MISS (Present in datasource and marked)
+>>=20
+>> pmu_events_table__num_events uses the value from
+>> table_pmu->num_entries which includes duplicate events as
+>> well. This causes issue during "perf list" and results in
+>> segmentation fault.
+>>=20
+>> Since both event codes are valid, append _DSRC to the Data
+>> Source events (datasource.json), so that they would have a
+>> unique name. Also add PM_DATA_FROM_L2MISS_DSRC and
+>> PM_DATA_FROM_L3MISS_DSRC events. With the fix, perf list
+>> works as expected.
+>>=20
+>> Fixes: fc1435807533 ("perf vendor events power10: Update =
+JSON/events")
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> I have tested the patch on Power10 machine. Perf list works correctly =
+without any segfault now.
+>=20
+> # ./perf list
+>=20
+> List of pre-defined events (to be used in -e or -M):
+>=20
+>   branch-instructions OR branches                    [Hardware event]
+>   branch-misses                                      [Hardware event]
+>=20
+> Tested-by: Disha Goel <disgoel@linux.ibm.com>
+>=20
 
-Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Thanks Disha for testing
 
-Thanks
 Athira
->=20
-> This test installs a probe on libc's inet_pton function, which will =
-use
-> uprobes and then uses perf trace on a ping to localhost. It gets 3
-> levels deep backtrace and checks whether it is what we expected or =
-not.
->=20
-> The test started failing from RHEL 9.4 where as it works in previous
-> distro version (RHEL 9.2). Test expects gaih_inet function to be part =
-of
-> backtrace. But in the glibc version (2.34-86) which is part of distro
-> where it fails, this function is missing and hence the test is =
-failing.
->=20
-> =46rom nm and ping command output we can confirm that gaih_inet =
-function
-> is not present in the expected backtrace for glibc version =
-glibc-2.34-86
->=20
-> [root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep =
-gaih_inet
-> 00000000001273e0 t gaih_inet_serv
-> 00000000001cd8d8 r gaih_inet_typeproto
->=20
-> [root@xxx perf]# perf script -i /tmp/perf.data.6E8
-> ping  104048 [000] 128582.508976: probe_libc:inet_pton: (7fff83779a60)
->            7fff83779a60 __GI___inet_pton+0x0
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->            7fff8372a73c getaddrinfo+0x121c
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->               11dc73534 [unknown] (/usr/bin/ping)
->            7fff8362a8c4 __libc_start_call_main+0x84
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->=20
-> FAIL: expected backtrace entry
-> =
-"gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/=
-libc.so.6\)$"
-> got "7fff9d52a73c getaddrinfo+0x121c
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
->=20
-> With version glibc-2.34-60 gaih_inet function is present as part of =
-the
-> expected backtrace. So we cannot just remove the gaih_inet function =
-from
-> the backtrace.
->=20
-> [root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep =
-gaih_inet
-> 0000000000130490 t gaih_inet.constprop.0
-> 000000000012e830 t gaih_inet_serv
-> 00000000001d45e4 r gaih_inet_typeproto
->=20
-> [root@xxx perf]# ./perf script -i /tmp/perf.data.b6S
-> ping   67906 [000] 22699.591699: probe_libc:inet_pton_3: =
-(7fffbdd80820)
->            7fffbdd80820 __GI___inet_pton+0x0
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->            7fffbdd31160 gaih_inet.constprop.0+0xcd0
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->            7fffbdd31c7c getaddrinfo+0x14c
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->               1140d3558 [unknown] (/usr/bin/ping)
->=20
-> This patch solves this issue by doing a conditional skip. If there is =
-a
-> gaih_inet function present in the libc then it will be added to the
-> expected backtrace else the function will be skipped from being added
-> to the expected backtrace.
->=20
-> Output with the patch
->=20
-> [root@xxx perf]# ./perf test -v "probe libc's inet_pton & backtrace it
-> with ping"
-> 83: probe libc's inet_pton & backtrace it with ping                 :
-> --- start ---
-> test child forked, pid 102662
-> ping 102692 [000] 127935.549973: probe_libc:inet_pton: (7fff93379a60)
-> 7fff93379a60 __GI___inet_pton+0x0
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
-> 7fff9332a73c getaddrinfo+0x121c
-> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
-> 11ef03534 [unknown] (/usr/bin/ping)
-> test child finished with 0
-> ---- end ----
-> probe libc's inet_pton & backtrace it with ping: Ok
->=20
-> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
-> Reported-by: Disha Goel <disgoel@linux.ibm.com>
-> ---
-> tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 5 ++++-
-> 1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh =
-b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> index eebeea6bdc76..72c65570db37 100755
-> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> @@ -45,7 +45,10 @@ trace_libc_inet_pton_backtrace() {
-> ;;
-> ppc64|ppc64le)
-> eventattr=3D'max-stack=3D4'
-> - echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> =
-$expected
-> + # Add gaih_inet to expected backtrace only if it is part of libc.
-> + if nm $libc | grep -F -q gaih_inet.; then
-> + echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> =
-$expected
-> + fi
-> echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
-> echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" =
->> $expected
-> ;;
-> --=20
-> 2.39.1
->=20
+>> ---
+>>  .../arch/powerpc/power10/datasource.json       | 18 =
+++++++++++++++----
+>>  1 file changed, 14 insertions(+), 4 deletions(-)
+>>=20
+>> diff --git =
+a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json =
+b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+>> index 6b0356f2d301..0eeaaf1a95b8 100644
+>> --- a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+>> +++ b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+>> @@ -99,6 +99,11 @@
+>>      "EventName": "PM_INST_FROM_L2MISS",
+>>      "BriefDescription": "The processor's instruction cache was =
+reloaded from a source beyond the local core's L2 due to a demand miss."
+>>    },
+>> +  {
+>> +    "EventCode": "0x0003C0000000C040",
+>> +    "EventName": "PM_DATA_FROM_L2MISS_DSRC",
+>> +    "BriefDescription": "The processor's L1 data cache was reloaded =
+from a source beyond the local core's L2 due to a demand miss."
+>> +  },
+>>    {
+>>      "EventCode": "0x000380000010C040",
+>>      "EventName": "PM_INST_FROM_L2MISS_ALL",
+>> @@ -161,9 +166,14 @@
+>>    },
+>>    {
+>>      "EventCode": "0x000780000000C040",
+>> -    "EventName": "PM_INST_FROM_L3MISS",
+>> +    "EventName": "PM_INST_FROM_L3MISS_DSRC",
+>>      "BriefDescription": "The processor's instruction cache was =
+reloaded from beyond the local core's L3 due to a demand miss."
+>>    },
+>> +  {
+>> +    "EventCode": "0x0007C0000000C040",
+>> +    "EventName": "PM_DATA_FROM_L3MISS_DSRC",
+>> +    "BriefDescription": "The processor's L1 data cache was reloaded =
+from beyond the local core's L3 due to a demand miss."
+>> +  },
+>>    {
+>>      "EventCode": "0x000780000010C040",
+>>      "EventName": "PM_INST_FROM_L3MISS_ALL",
+>> @@ -981,7 +991,7 @@
+>>    },
+>>    {
+>>      "EventCode": "0x0003C0000000C142",
+>> -    "EventName": "PM_MRK_DATA_FROM_L2MISS",
+>> +    "EventName": "PM_MRK_DATA_FROM_L2MISS_DSRC",
+>>      "BriefDescription": "The processor's L1 data cache was reloaded =
+from a source beyond the local core's L2 due to a demand miss for a =
+marked instruction."
+>>    },
+>>    {
+>> @@ -1046,12 +1056,12 @@
+>>    },
+>>    {
+>>      "EventCode": "0x000780000000C142",
+>> -    "EventName": "PM_MRK_INST_FROM_L3MISS",
+>> +    "EventName": "PM_MRK_INST_FROM_L3MISS_DSRC",
+>>      "BriefDescription": "The processor's instruction cache was =
+reloaded from beyond the local core's L3 due to a demand miss for a =
+marked instruction."
+>>    },
+>>    {
+>>      "EventCode": "0x0007C0000000C142",
+>> -    "EventName": "PM_MRK_DATA_FROM_L3MISS",
+>> +    "EventName": "PM_MRK_DATA_FROM_L3MISS_DSRC",
+>>      "BriefDescription": "The processor's L1 data cache was reloaded =
+from beyond the local core's L3 due to a demand miss for a marked =
+instruction."
+>>    },
+>>    {
+
 
