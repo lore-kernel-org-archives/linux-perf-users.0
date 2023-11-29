@@ -1,43 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B90B219EF
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 20:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822E43B782
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 20:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pPSumhXD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368CDC433C7;
-	Wed, 29 Nov 2023 20:42:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLY8PbCo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9118BC433C7;
+	Wed, 29 Nov 2023 20:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701290554;
-	bh=SVwxP2iECxaAaRjYUKPB82HlCDKzRNHkS7oX5cfLIpY=;
+	s=k20201202; t=1701291410;
+	bh=oz1oE+pVXkj1GqtEpZDqy1MTTXf/mn39PvAchD3E9zc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pPSumhXDPf7c9ZaH+q/FapiH1qxgvEOa0nbUmSonZSmjynUdRasBZwEqPlUu7kFMF
-	 iLyu2IR0PQsJ6o783VcalcOg+SRkyDziKkYHtTjyXoxlV/znSUzeoKfsf+L1JEokI5
-	 ivZq+YFCXv3Cx2tlcHkm6510QGQWz6gftbrz3BhKvDFuZhFnFFXRJBA8K/srsTkHbA
-	 bUjD0+eyjZECITggCAWXwnGfjziVMy8WELteQz01tsJOM0N73sD0njCv3o8r9U67sC
-	 awYW8Mkgt4/1h2M/DUB7U443SN5jhAy7pn3gT/wyiSUt+skAAHxBPBlkqx6llDG7fx
-	 h02R34ql7pGEQ==
+	b=kLY8PbCo0Fr41TUFsPWRDF6ipLMUigMVrx0G7+xzNUqjqnh02SdB04iUl+Pc/lJAg
+	 ShVroHBdftI6Q8E6YMYX2GRvZauy3SLqb/YAMRMsK8EXrkzO6jmnTP0Uf5FmZlh1BU
+	 klkAdgsDQq/wtnDSiv3ffOP2qZB1tHeupxq6a1WULmmpV4YR3msB4zzx+GvnBe57HT
+	 PQQNV+JClVeXfu7pS7RZ6vupdCc+8iEnrnku/N+RwNGTQvuO8ZVA22pZCZu7vYBUDE
+	 hfCS4Lubnj9Y+8L0TqfBFE/FyXIhowIlegca/Hkhj/Br3D8z1in/2EM93IgOX2q19h
+	 Ldzy9w3TgNUrQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 02DD240094; Wed, 29 Nov 2023 17:42:30 -0300 (-03)
-Date: Wed, 29 Nov 2023 17:42:30 -0300
+	id BEF2140094; Wed, 29 Nov 2023 17:56:46 -0300 (-03)
+Date: Wed, 29 Nov 2023 17:56:46 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>, Mike Galbraith <efault@gmx.de>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/2] perf tests sigtrap: Skip if running on a kernel with
- sleepable spinlocks
-Message-ID: <ZWeiNj7B+5dJosE9@kernel.org>
-References: <20231129154718.326330-1-acme@kernel.org>
- <20231129154718.326330-3-acme@kernel.org>
- <CANpmjNMftTuqPwmujNx5e+ajgdYtik9uL6dt62Ucotc7oz-uUw@mail.gmail.com>
+To: Likhitha Korrapati <likhitha@linux.ibm.com>
+Cc: jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+	james.clark@arm.com, namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+	kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+	Disha Goel <disgoel@linux.ibm.com>
+Subject: Re: [PATCH] perf test record+probe_libc_inet_pton: Fix call chain
+ match on powerpc
+Message-ID: <ZWeljhj9ZH4xrqjw@kernel.org>
+References: <20231126070914.175332-1-likhitha@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,120 +40,153 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANpmjNMftTuqPwmujNx5e+ajgdYtik9uL6dt62Ucotc7oz-uUw@mail.gmail.com>
+In-Reply-To: <20231126070914.175332-1-likhitha@linux.ibm.com>
 X-Url: http://acmel.wordpress.com
 
-Em Wed, Nov 29, 2023 at 04:57:47PM +0100, Marco Elver escreveu:
-> On Wed, 29 Nov 2023 at 16:47, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >
-> > There are issues as reported that need some more investigation on the
-> > RT kernel front, till that is addressed, skip this test.
-> >
-> > This test is already skipped for multiple hardware architectures where
-> > the tested kernel feature is not supported.
-> >
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Clark Williams <williams@redhat.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Juri Lelli <juri.lelli@redhat.com>
-> > Cc: Marco Elver <elver@google.com>
-> > Cc: Mike Galbraith <efault@gmx.de>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Link: https://lore.kernel.org/all/e368f2c848d77fbc8d259f44e2055fe469c219cf.camel@gmx.de/
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Em Sun, Nov 26, 2023 at 02:09:14AM -0500, Likhitha Korrapati escreveu:
+> The perf test "probe libc's inet_pton & backtrace it with ping" fails on
+> powerpc as below:
 > 
-> Acked-by: Marco Elver <elver@google.com>
-> 
-> > ---
-> >  tools/perf/tests/sigtrap.c | 46 ++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 44 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> > index a1bc7c776254ed2f..e6fd934b027a3d0c 100644
-> > --- a/tools/perf/tests/sigtrap.c
-> > +++ b/tools/perf/tests/sigtrap.c
-> > @@ -103,6 +103,34 @@ static bool attr_has_sigtrap(void)
-> >
-> >         return __btf_type__find_member_by_name(id, "sigtrap") != NULL;
-> >  }
-> > +
-> > +static bool kernel_with_sleepable_spinlocks(void)
-> > +{
-> > +       const struct btf_member *member;
-> > +       const struct btf_type *type;
-> > +       const char *type_name;
-> > +       int id;
-> > +
-> > +       if (!btf__available())
-> > +               return false;
-> > +
-> > +       id = btf__find_by_name_kind(btf, "spinlock", BTF_KIND_STRUCT);
-> > +       if (id < 0)
-> > +               return false;
-> > +
-> > +       // Only RT has a "lock" member for "struct spinlock"
-> > +       member = __btf_type__find_member_by_name(id, "lock");
-> > +       if (member == NULL)
-> > +               return false;
-> > +
-> > +       // But check its type as well
-> > +       type = btf__type_by_id(btf, member->type);
-> > +       if (!type || !btf_is_struct(type))
-> > +               return false;
-> > +
-> > +       type_name = btf__name_by_offset(btf, type->name_off);
-> > +       return type_name && !strcmp(type_name, "rt_mutex_base");
-> > +}
-> >  #else  /* !HAVE_BPF_SKEL */
-> >  static bool attr_has_sigtrap(void)
-> >  {
-> > @@ -125,6 +153,11 @@ static bool attr_has_sigtrap(void)
-> >         return ret;
-> >  }
-> >
-> > +static bool kernel_with_sleepable_spinlocks(void)
-> > +{
-> > +       return false;
-> > +}
-> > +
-> >  static void btf__exit(void)
-> >  {
-> >  }
-> > @@ -166,7 +199,7 @@ static int run_test_threads(pthread_t *threads, pthread_barrier_t *barrier)
-> >
-> >  static int run_stress_test(int fd, pthread_t *threads, pthread_barrier_t *barrier)
-> >  {
-> > -       int ret;
-> > +       int ret, expected_sigtraps;
-> >
-> >         ctx.iterate_on = 3000;
-> >
-> > @@ -175,7 +208,16 @@ static int run_stress_test(int fd, pthread_t *threads, pthread_barrier_t *barrie
-> >         ret = run_test_threads(threads, barrier);
-> >         TEST_ASSERT_EQUAL("disable failed", ioctl(fd, PERF_EVENT_IOC_DISABLE, 0), 0);
-> >
-> > -       TEST_ASSERT_EQUAL("unexpected sigtraps", ctx.signal_count, NUM_THREADS * ctx.iterate_on);
-> > +       expected_sigtraps = NUM_THREADS * ctx.iterate_on;
-> > +
-> > +       if (ctx.signal_count < expected_sigtraps && kernel_with_sleepable_spinlocks()) {
-> > +               pr_debug("Expected %d sigtraps, got %d, running on a kernel with sleepable spinlocks.\n",
-> > +                        expected_sigtraps, ctx.signal_count);
-> > +               pr_debug("See https://lore.kernel.org/all/e368f2c848d77fbc8d259f44e2055fe469c219cf.camel@gmx.de/\n");
-> 
-> No changes from the RT side since? A fix exists, but apparently not
-> good enough... Sigh.
+> root@xxx perf]# perf test -v "probe libc's inet_pton & backtrace it with
+> ping"
+>  85: probe libc's inet_pton & backtrace it with ping                 :
+> --- start ---
+> test child forked, pid 96028
+> ping 96056 [002] 127271.101961: probe_libc:inet_pton: (7fffa1779a60)
+> 7fffa1779a60 __GI___inet_pton+0x0
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+> 7fffa172a73c getaddrinfo+0x121c
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+> FAIL: expected backtrace entry
+> "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/libc.so.6\)$"
+> got "7fffa172a73c getaddrinfo+0x121c
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
+> test child finished with -1
+> ---- end ----
 
-Yeah, my impression, and first attempt at writing that patch wast that
-no sigtraps were being sent, but then when I tried with a random, more
-recent machine in the Red Hat labs, I got some signals, way less than
-the expected ones, but some, maybe this is an interesting data point?
+Try to have quoted output, the ones separated by ---- at the beginning
+of the line indented two spaces, so as to avoid:
 
-I'll try again to reproduce in the local machine, old i7 lenovo notebook
-and at the newer machine, a Xeon(R) Silver 4216, 32 cpu and report here.
+perf test record+probe_libc_inet_pton: Fix call chain match on powerpc
+
+The perf test "probe libc's inet_pton & backtrace it with ping" fails on
+powerpc as below:
+
+root@xxx perf]# perf test -v "probe libc's inet_pton & backtrace it with
+ping"
+ 85: probe libc's inet_pton & backtrace it with ping                 :
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Author:    Likhitha Korrapati <likhitha@linux.ibm.com>
+# Date:      Sun Nov 26 02:09:14 2023 -0500
+
+
+I'm copy and pasting from the original post, thanks!
+
+- Arnaldo
+
+> probe libc's inet_pton & backtrace it with ping: FAILED!
+> 
+> This test installs a probe on libc's inet_pton function, which will use
+> uprobes and then uses perf trace on a ping to localhost. It gets 3
+> levels deep backtrace and checks whether it is what we expected or not.
+> 
+> The test started failing from RHEL 9.4 where as it works in previous
+> distro version (RHEL 9.2). Test expects gaih_inet function to be part of
+> backtrace. But in the glibc version (2.34-86) which is part of distro
+> where it fails, this function is missing and hence the test is failing.
+> 
+> From nm and ping command output we can confirm that gaih_inet function
+> is not present in the expected backtrace for glibc version glibc-2.34-86
+> 
+> [root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep gaih_inet
+> 00000000001273e0 t gaih_inet_serv
+> 00000000001cd8d8 r gaih_inet_typeproto
+> 
+> [root@xxx perf]# perf script -i /tmp/perf.data.6E8
+> ping  104048 [000] 128582.508976: probe_libc:inet_pton: (7fff83779a60)
+>             7fff83779a60 __GI___inet_pton+0x0
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>             7fff8372a73c getaddrinfo+0x121c
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>                11dc73534 [unknown] (/usr/bin/ping)
+>             7fff8362a8c4 __libc_start_call_main+0x84
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+> 
+> FAIL: expected backtrace entry
+> "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/libc.so.6\)$"
+> got "7fff9d52a73c getaddrinfo+0x121c
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
+> 
+> With version glibc-2.34-60 gaih_inet function is present as part of the
+> expected backtrace. So we cannot just remove the gaih_inet function from
+> the backtrace.
+> 
+> [root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep gaih_inet
+> 0000000000130490 t gaih_inet.constprop.0
+> 000000000012e830 t gaih_inet_serv
+> 00000000001d45e4 r gaih_inet_typeproto
+> 
+> [root@xxx perf]# ./perf script -i /tmp/perf.data.b6S
+> ping   67906 [000] 22699.591699: probe_libc:inet_pton_3: (7fffbdd80820)
+>             7fffbdd80820 __GI___inet_pton+0x0
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>             7fffbdd31160 gaih_inet.constprop.0+0xcd0
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>             7fffbdd31c7c getaddrinfo+0x14c
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>                1140d3558 [unknown] (/usr/bin/ping)
+> 
+> This patch solves this issue by doing a conditional skip. If there is a
+> gaih_inet function present in the libc then it will be added to the
+> expected backtrace else the function will be skipped from being added
+> to the expected backtrace.
+> 
+> Output with the patch
+> 
+> [root@xxx perf]# ./perf test -v "probe libc's inet_pton & backtrace it
+> with ping"
+>  83: probe libc's inet_pton & backtrace it with ping                 :
+> --- start ---
+> test child forked, pid 102662
+> ping 102692 [000] 127935.549973: probe_libc:inet_pton: (7fff93379a60)
+> 7fff93379a60 __GI___inet_pton+0x0
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+> 7fff9332a73c getaddrinfo+0x121c
+> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+> 11ef03534 [unknown] (/usr/bin/ping)
+> test child finished with 0
+> ---- end ----
+> probe libc's inet_pton & backtrace it with ping: Ok
+> 
+> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
+> Reported-by: Disha Goel <disgoel@linux.ibm.com>
+> ---
+>  tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> index eebeea6bdc76..72c65570db37 100755
+> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> @@ -45,7 +45,10 @@ trace_libc_inet_pton_backtrace() {
+>  		;;
+>  	ppc64|ppc64le)
+>  		eventattr='max-stack=4'
+> -		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+> +		# Add gaih_inet to expected backtrace only if it is part of libc.
+> +		if nm $libc | grep -F -q gaih_inet.; then
+> +			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+> +		fi
+>  		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+>  		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+>  		;;
+> -- 
+> 2.39.1
+> 
+
+-- 
 
 - Arnaldo
