@@ -1,66 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xzsit8hd"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5107C19A6;
-	Wed, 29 Nov 2023 03:20:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nfefCCnsqpDIQXnjyw2pclwrJzrSnNB6gX+SxRbmJt8=; b=Xzsit8hdjIXnV/LLaOje1WqND2
-	qpXp5/+AZR2doILvXM7Y6gsiEurZzcX610rYa2dylpxmp5/IOA2YwKHiOn17kVEfw3lgZWUJGem/p
-	H1yXJR6RyNGr3qGFTmVnvGEVXXdIF5z+/xEFzIzFIpf4Q8Vc/vUwpLNExrQStEi5gzQrF8GeAMi9p
-	Uwew1WUyvUsBwsHB3T3ESOWHyDPY8HK/7xn1ou+fNPqu/hcg72QglukPXPF+Ki5PEnL6T1hn1Hl8m
-	Zc3+5b9UTZlHG1sgtfbsq+PDExcsN7V/0pY+8CdSng4gBPfWlFTaeZl3RzIV8D7nPznmujELrTXUh
-	+i+odGAg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r8Ic9-00DKbP-2s; Wed, 29 Nov 2023 11:20:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4324F300293; Wed, 29 Nov 2023 12:20:19 +0100 (CET)
-Date: Wed, 29 Nov 2023 12:20:19 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Like Xu <likexu@tencent.com>, Jim Mattson <jmattson@google.com>,
-	Mingwei Zhang <mizhang@google.com>
-Subject: Re: [PATCH] perf/x86: Don't enforce minimum period for KVM
- guest-only events
-Message-ID: <20231129112019.GG30650@noisy.programming.kicks-ass.net>
-References: <20231107183605.409588-1-seanjc@google.com>
- <20231117103236.GI3818@noisy.programming.kicks-ass.net>
- <ZWaU3HZURCjms5DM@google.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A105910C3
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 04:17:05 -0800 (PST)
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-5b7fb057153so8505595a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 04:17:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701260225; x=1701865025;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vm0iiEEDW67QXAU5hmtno74YGdHPjqHpci2ImvBkZog=;
+        b=DGvSGdV/r5WJJWmQSuY+XV8qu8AChcZ/bH5PNAbUnQLPEyEJ8AMqw9WsTSeEezr5cu
+         HiEnY1QrWjN2bOf4o4G/gkgIh0fXvLq501QHb/VjyGCttf/BU+HcrCeiY7oM1g38ys6o
+         cPUJdT2CvL7WSc1gBPJPuTViRBisMmeGzst2Wkv8F9b2c4Q3SM64sToiIA+0FvnMnyHC
+         Ty4pec1yrRpYPsizZRF/i+Cp1VgF9XlfT3Qag0XyR3tpcaQDFYV+5TwOYdjzOH6wA+IQ
+         hvOkx0dd6yRKZNfsMRsoShlIlXkacpoKvqtrM5cXA5veU0ToYRsUTIwrk6lHUAABoaQK
+         rvHg==
+X-Gm-Message-State: AOJu0Yxt6QWvULq6rFn6M52MHgdRwbgl8gAbgu4ROFXq48drRh/zc4Ou
+	Zi0cjq9BG6AW4NDT9q8cNfgRuO5G21/DMh0Xb1nwBI5POGc/
+X-Google-Smtp-Source: AGHT+IHm5egSj7drq/h6+tM2rakLRXVKiS/fewy4S6Rq3VCjTdYJQzjNbgFLIYLHh4HPavMnmoOq+9UCKki4IZlbNFEDmoS03isK
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZWaU3HZURCjms5DM@google.com>
+X-Received: by 2002:a17:90a:2b86:b0:27d:e40a:96d3 with SMTP id
+ u6-20020a17090a2b8600b0027de40a96d3mr3758871pjd.2.1701260225232; Wed, 29 Nov
+ 2023 04:17:05 -0800 (PST)
+Date: Wed, 29 Nov 2023 04:17:05 -0800
+In-Reply-To: <000000000000d9483d060901f460@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006547d3060b498385@google.com>
+Subject: Re: [syzbot] [perf?] general protection fault in inherit_task_group
+From: syzbot <syzbot+756fe9affda890e892ae@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, bpf@vger.kernel.org, irogers@google.com, 
+	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@kernel.org, 
+	mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Nov 28, 2023 at 05:33:16PM -0800, Sean Christopherson wrote:
+syzbot suspects this issue was fixed by commit:
 
-> If programming a "period" of 1 puts the host at risk in some way, then I agree
-> that this is unsafe and we need a different solution. 
+commit a71ef31485bb51b846e8db8b3a35e432cc15afb5
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Tue Oct 24 09:42:21 2023 +0000
 
-IIRC if you put in -1 on a Nehalem, you end up with an NMI-storm which
-wasn't trivial to recover from if at all (it's too long ago and I don't
-have ancient hardware like that anymore :/)
+    perf/core: Fix potential NULL deref
 
-> But if the worst case
-> scenario is non-determinstic or odd behavior from the guest's perspective, then
-> that's the guest's problem (with the caveat that the guest might not have accurate
-> Family/Model/Stepping data to make informed decisions).
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17172162e80000
+start commit:   6808918343a8 net: bridge: fill in MODULE_DESCRIPTION()
+git tree:       bpf-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=429fa76d04cf393c
+dashboard link: https://syzkaller.appspot.com/bug?extid=756fe9affda890e892ae
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12db572b680000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10839a1b680000
 
-Things like bdm_limit_period() will cause odd behaviour IIRC, it does
-daft things like generate extra PEBS records on overflow and gives
-otherwise daft results for PDIR.
+If the result looks correct, please mark the issue as fixed by replying with:
 
-glc_limit_period() lacks a useful comment :/
+#syz fix: perf/core: Fix potential NULL deref
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
