@@ -1,134 +1,161 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 704DCD7F;
-	Wed, 29 Nov 2023 08:35:08 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DED0C15;
-	Wed, 29 Nov 2023 08:35:55 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.31.168])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16EB33F73F;
-	Wed, 29 Nov 2023 08:35:06 -0800 (PST)
-Date: Wed, 29 Nov 2023 16:35:01 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Ashley, William" <wash@amazon.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	will@kernel.org
-Subject: Re: armv8pmu: Pending overflow interrupt is discarded when perf
- event is disabled
-Message-ID: <ZWdoNWps4izj5WJy@FVFF77S0Q05N.cambridge.arm.com>
-References: <950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com>
- <EBAF38AB-2BE5-425F-8A52-DDCB0B390309@amazon.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TMt+sY1y"
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22751A6
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 09:21:25 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-50bc4eeeadaso3273e87.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 09:21:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701278484; x=1701883284; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p0WD7fcwZghshT6pQtqRNF+fU/TfXoDz5lmg+dpWNqY=;
+        b=TMt+sY1y0gZU98aS5T7VlQsd23rxE+ppDeECKYGoJN88+nSkZ/Iva8lT/EEY6PGJc2
+         flCcS4hEzb893NaRl8kMKbFKBzlKRORw3EL3VwoT0vGVYRLyAzci87KPSVhfcz6jgt8n
+         4glOp4uU6GC3MWEvF311MlN28e8xkJLJU/h12BHcJQ/RwjtuhdNV6MKwgMj9jk+gigja
+         UOnhvTZ6QdneXlt8Dbwxvi12mLX/BRR9Y9igWyUYlb8yN3g8417t3SLwaQK1Bdly4DYC
+         6qCL4IcmO1dE5DVunck6Oeq4p98mUUHdJQPAuE0r4ApuMo13YWwLGmzUK/1uYaOtDLny
+         T35A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701278484; x=1701883284;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p0WD7fcwZghshT6pQtqRNF+fU/TfXoDz5lmg+dpWNqY=;
+        b=SWfRQbLPE6/QosvcLsOWVcW/URwJPWru30RGMIrc191eJ8W8N9knk/L7Rgw4+sYtC3
+         qXMjdLUGLvaT90j3H3eZN+AbW3G2qpKFH/li6w05tB1wtaKFZVFacMkDgH/lqBapbXKX
+         L3kowW2iwU/ZbTSh9LFCMhrieod5AshKAcUKHXNE2+/ElxlwN1NWrCkSpAA2+a6jADEh
+         UWqX5OSNRPRBDlJji3Br5PpTmV3WKx8HmqYhw/rGHU0GsSNf137HgQbzDG8JeK3i+IML
+         oi4c1RXA4INH2zmuWOkbshJKYqdYGyyNcroq+6cZokw+B/iPsUI9lTUuBmDcWRcb0Cu7
+         USBA==
+X-Gm-Message-State: AOJu0Yx7/GcG1yCu0BJFOip24aIa4feU1NbsmtUoTWo3Cs93T0ELakbs
+	tqtCTNlk8W7Cf8U2UAPqiTD7l+eVLRYFwyXrBdcypA==
+X-Google-Smtp-Source: AGHT+IGVV1TGIDxwnNXLYTa0rh72NULVQOapS8AJzg1O7PwjPII7qvDdW/qTKXFLUpdv3kJ9T/l+ukXpSPWQFHaF/DQ=
+X-Received: by 2002:a19:ad43:0:b0:504:7b50:ec9a with SMTP id
+ s3-20020a19ad43000000b005047b50ec9amr536638lfd.1.1701278483956; Wed, 29 Nov
+ 2023 09:21:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <EBAF38AB-2BE5-425F-8A52-DDCB0B390309@amazon.com>
+References: <20231129081004.1918096-1-irogers@google.com> <20231129081004.1918096-2-irogers@google.com>
+ <a54d0a93-aacd-4c69-a34c-8628b0e18ee7@intel.com> <03b314c6-ed6d-ae17-5bc5-0170139f7feb@arm.com>
+In-Reply-To: <03b314c6-ed6d-ae17-5bc5-0170139f7feb@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Nov 2023 09:21:12 -0800
+Message-ID: <CAP-5=fX7UQGCXp3rqk8bKdevPUH6bnP2hxZ_jktj17YDzkuUDA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] perf test: Add basic list test
+To: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi William,
+On Wed, Nov 29, 2023 at 1:27=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
+>
+>
+>
+> On 29/11/2023 09:00, Adrian Hunter wrote:
+> > On 29/11/23 10:10, Ian Rogers wrote:
+> >> Test that json output produces valid json.
+> >>
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> >> ---
+> >>  tools/perf/tests/shell/list.sh | 29 +++++++++++++++++++++++++++++
+> >>  1 file changed, 29 insertions(+)
+> >>  create mode 100755 tools/perf/tests/shell/list.sh
+> >>
+> >> diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/l=
+ist.sh
+> >> new file mode 100755
+> >> index 000000000000..286879a9837a
+> >> --- /dev/null
+> >> +++ b/tools/perf/tests/shell/list.sh
+> >> @@ -0,0 +1,29 @@
+> >> +#!/bin/sh
+> >> +# perf list tests
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +set -e
+> >> +err=3D0
+> >> +
+> >> +if [ "x$PYTHON" =3D=3D "x" ]
+> >> +then
+> >> +    if which python3 > /dev/null
+> >
+> > 'which' isn't always present.  Maybe
+> >
+> > python3 --version >/dev/null 2>&1 && PYTHON=3Dpython3
+> >
+>
+> Now that we have shellcheck integrated into the build, we could enable
+> the POSIX mode test which would warn against this usage of which and
+> suggest the alternative.
+>
+> At the moment though there are several other usages of which already in
+> the tests. And probably enabling POSIX mode would come with hundreds of
+> other warnings to fix.
+>
+> I'm not saying we shouldn't change this instance though, just adding the
+> info for the discussion.
 
-On Mon, Nov 20, 2023 at 10:32:10PM +0000, Ashley, William wrote:
-> Adding linux-arm-kernel@lists.infradead.org and linux-kernel@vger.kernel.org,
-> sorry for the noise.
+Sounds good to me. Fwiw, the instance where I lifted this code was:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/tests/shell/stat+json_output.sh?h=3Dperf-tools-next#n12
 
-Thanks for this!
+With this change:
+```
+diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.te=
+sts
+index fdaca5f7a946..06de6d3f4842 100644
+--- a/tools/perf/tests/Makefile.tests
++++ b/tools/perf/tests/Makefile.tests
+@@ -1,7 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0
+# Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
 
-For the benefit of others, the original mail (and attachment) can be found at:
+-PROGS :=3D $(shell find tests/shell -perm -o=3Dx -type f -name '*.sh')
++PROGS :=3D $(shell find tests/shell -executable -type f -name '*.sh')
+FILE_NAME :=3D $(notdir $(PROGS))
+FILE_NAME :=3D $(FILE_NAME:%=3D.%)
+LOGS :=3D $(join $(dir $(PROGS)),$(FILE_NAME))
+```
 
-  https://lore.kernel.org/linux-perf-users/950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com/
+shellcheck now runs for me. I'll try adding the posix check into the
+patch series, as well as fixing other instances I can see.
 
-For some reason, links and whitespace seem to have been mangled in the resend;
-I'm not sure what happened there.
+Thanks,
+Ian
 
-I've added Will Deacon, as Will and I co-maintain the ARM PMU drivers.
 
-> ﻿On 11/20/23, 12:36 PM, "Ashley, William" <wash@amazon.com <mailto:wash@amazon.com>> wrote:
-> 
-> 
-> An issue [1] was opened in the rr-debugger project reporting occasional missed
-> perf event overflow signals on arm64. I've been digging into this and think I
-> understand what's happening, but wanted to confirm my understanding.
-> 
-> The attached example application, derived from an rr-debugger test case, reports
-> when the value of a counter doesn't increase by the expected period +/- some
-> tolerance. When it is ping-ponged between cores (e.g. with taskset) at a high
-> frequency, it frequently reports increases of ~2x the expected. I've confirmed
-> this same behavior on kernels 5.4, 5.10, 6.1 and 6.5.
-> 
-> 
-> I found armv8pmu_disable_intens [2] that is called as part of event
-> de-scheduling and contains
-> /* Clear the overflow flag in case an interrupt is pending. */
-> write_pmovsclr(mask);
-> which results in any pending overflow interrupt being dropped. I added some
-> debug output here and indeed there is a correlation of this bit being high at
-> the point of the above code and the reproducer identifying a missed signal.
 
-I think you're right that if we had an overflow asserted at this point, we'll
-throw away the occurrence of the overflow (and so not call
-perf_event_overflow() and generate a sample, etc).
-
-It looks like we only lose the occurrence of the overflow; the actual counts
-will get sampled correctly and when we next reprogram the event,
-armpmu_event_set_period() should set up the next overflow period.
-
-> This behavior does not occur with pseudo-NMIs (irqchip.gicv3_pseudo_nmi=1)
-> enabled.
-
-That's interesting, because it implies that the PMU overflow interrupt is being
-recognised by the CPU while regular interrupts are disabled. There are some
-narrow races where that could occur (e.g. taking a timer or scheduler IRQ
-*just* as an overflow occurs), and some other cases I'd expect RR to avoid by
-construction (e.g. if RR isn't using mode exclusion and also counts kernel
-events). It's also worth noting that this means there are races even with
-pseudo-NMI where overflows could be lost.
-
-How often do you see the overflow being lost?
-
-Does RR set any of the perf_event_attr::exclude_* bits? If not, does RR
-intentionally count events that occur within the kernel?
-
-> When an event is not being explicitly torn down (e.g. being closed), this seems
-> like an undesirable behavior.
-
-I agree it's undesirable, though my understanding is that for most other users
-this isn't any worse than losing samples for other reasons (e.g. the perf ring
-buffer being full), and for the general case of sample-based profiling, losing
-a sample every so often isn't the end of the world.
-
-> I haven't attempted to demo it yet, but I suspect
-> an application disabling an event temporarily could occasionally see the same
-> missed overflow signals. Is my understanding here correct?
-
-That sounds right to me, though I haven't checked that end-to-end yet.
-
-> Does anyone have thoughts on how this could be addressed without creating
-> other issues?
-
-We should be able to detect overflow from the counter value alone, so we might
-be able to account for that when we actually read the event out, or when we
-schedule it back in and reprogram the period.
-
-I'm not sure if we can reasonably do that when scheduling the event out, since
-if we're switching tasks, that'll queue up IRQ work which will be triggered in
-the context of the next task.
-
-We might be able to figure out that we have an overflow when we schedule the
-event in under armpmu_start(), but I'll need to go digging to see if there are
-any free-running counters as the comment above the call to
-armpmu_event_set_period() says, or whether that's a historical artifact.
-
-I suspect we might need to restructure the code somewhat to be able to catch
-overflows more consistently. I'll see if I can come up with something, but we
-might not be able to guarantee this in all cases.
-
-Mark.
-
-> [1] https://github.com/rr-debugger/rr/issues/3607 <https://github.com/rr-debugger/rr/issues/3607>
-> [2] https://github.com/torvalds/linux/blob/c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c/drivers/perf/arm_pmuv3.c#L652C20-L652C43 <https://github.com/torvalds/linux/blob/c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c/drivers/perf/arm_pmuv3.c#L652C20-L652C43>
+> >> +    then
+> >> +            PYTHON=3Dpython3
+> >> +    elif which python > /dev/null
+> >> +    then
+> >> +            PYTHON=3Dpython
+> >> +    else
+> >> +            echo Skipping test, python not detected please set enviro=
+nment variable PYTHON.
+> >> +            exit 2
+> >> +    fi
+> >> +fi
+> >> +
+> >> +test_list_json() {
+> >> +  echo "Json output test"
+> >> +  perf list -j | $PYTHON -m json.tool
+> >> +  echo "Json output test [Success]"
+> >> +}
+> >> +
+> >> +test_list_json
+> >> +exit $err
+> >
+> >
