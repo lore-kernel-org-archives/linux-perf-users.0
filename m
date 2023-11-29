@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ybnh1lIH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8F3/jBS"
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D921BC1
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 22:02:27 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5ca61d84dc3so83801047b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 22:02:27 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A931BCE
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 22:02:30 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d29c50d337so659337b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 22:02:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701237747; x=1701842547; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701237749; x=1701842549; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=u4ZVQm6BXfm09/tS57asaxt2XeV8jv3rjSJhFgaw+iA=;
-        b=ybnh1lIHrqCD75MWPzDGjjlZEGSE6JvL1bGsP63SmVP5TDDczIG0mK42B2wyYyKJAe
-         GhcmUFT2PqIqEqK3kr+XjXEhpcv+O8K28eAikeVJ73WIPedf8e0+uUveJ233kGX3JH8g
-         dP85102lX13NMXZenBa2nDjZ6b4QhCi/Jlo9QPKv3Xf7cOeP/toykEweiA1zY1MPrtdq
-         CW9hwAk4MaBwoYaLIDmsEUrNDky2rJvMNtFNjHNhtHFh5VoN4UrZwol6AgZ1sym/pjMK
-         OVpuBRsaiz4pudo/ld/F+Tc2tvFl/TUNukOV7/y90p1vHrNs4VYAbgEPGFxNkX/7840g
-         iZAQ==
+        bh=oKpplEK/d17CHcbqAj9G9D9QvSt6Rl/kdbFVrBTbVJE=;
+        b=r8F3/jBSyyKMVrpC9Hj8PeyFnViEY4aP9iji/6hoW8nwhIQ2Y5C+IygZ3PS3AsmkXp
+         UJ+YGJ+HYj3zd4bF9BNnW4PVCqdQfZgbm2iP3HngZR5Fk5AagGgCvOmmhR/uU4/g8uRR
+         Pp647zAa4QbJ0uB7CPO6cn0EsqAykWQn+H98jGOQp6qzU5zo+aXYA1k31BkGPvPviYBb
+         Gr5LvP46omEIi1m97hCtcpjXoRnwRKsX3R8dfYU+fEHcei1rFx+jQdwBOpJwIogD2sI4
+         sJ561UJus7eNwWlSwCpjPEezoLYxhBkreEWTHVVjpLK8jODMfQ94TJ+zz3n2XMfRGgpg
+         ZpGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701237747; x=1701842547;
+        d=1e100.net; s=20230601; t=1701237749; x=1701842549;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u4ZVQm6BXfm09/tS57asaxt2XeV8jv3rjSJhFgaw+iA=;
-        b=UGmYTx3PnJfZ7Lbo2jYchEPwkC2m3B/NPW1m0xCVu8RPcpv0GrvydXU6gW939Aoith
-         zZ0x4Ir3kHB8zEE+G5LjVWdeA6DH81wRLRUwjv/Er6MO/ftweOG8q3BwtbJaSXtCYuoV
-         +Ec4RhjTnHuZF5YF0+3imDRpYkAFbdaFDMAz5qd/SIKSoeoKCRwwGnOEPPFWEfGRIdZj
-         kKER0qnYfNkHSKr2ueGKp0nTESYa5vXSBNbs0GJA/SJvp61sTaUCe7WzSHp52XlY7UCQ
-         gKJshWPsggkVGnqPnVNl82WM/lh92GBGOKZZli+xjRAR/jEb6FmZW+I5AfiE+S7KP1At
-         736A==
-X-Gm-Message-State: AOJu0YxZmq76iLtv8h91itwqLnlXneNwgYJUQIdx4TsmhhYlXCGg1iRW
-	AvF5A2lc9BsLkiV6+EP42r1IDL+77LBA
-X-Google-Smtp-Source: AGHT+IGrbmAcgGFKWGO4CN4DZuwGzNNirWTnRPFt7368NYxc+4IVjA+ETsxRxMz4iHCrslIZ6bnFdP+hkjGF
+        bh=oKpplEK/d17CHcbqAj9G9D9QvSt6Rl/kdbFVrBTbVJE=;
+        b=ORjnJmoOc8RdfugESl3fFtbLfbmAOsGVhuZysSHiQi/u3sUMScTdPMEcIJb9pgtEdL
+         SgE8x3GUDR67pAUBl6kh4DJnlpd4nT3uJVLEq1rbg62v4NDL46lQsUmBbxp9zK/TK2oq
+         qruO6xo3OInFgLVC74E26LAJjevCwoL0nUrwhj9RwSuF5muo6R8TDpqpf7gSslyEc5Qo
+         4hL7KCakcl5OQYNChn8zh1NpEjd94qaI19nbX6JrGlqZQvto0tYu42jfYP1BCnldAgxg
+         wX9eX/0sXFk+fP8fBiZPwO3GJp/bd+BWKW/ZPue0ij3K+jETn6uPzhS1sSh9Mnja4ebE
+         3pZg==
+X-Gm-Message-State: AOJu0YzrxIDtS+Et6LzrTFw3RcG4SFqC1PMQAX6DVFrDgCBelaBVefyZ
+	Fwd0IefzcBDhCZvpfKQS7/ePOt1rBwwV
+X-Google-Smtp-Source: AGHT+IEN+gAwFsf4MSRmBYmw9rtmwPFX3A/a9Ww3oOkFZ/AmBgDB+5vxiQ7AVxAvJsCiACy2MQaf8zl4pEkT
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:763b:80fa:23ca:96f8])
- (user=irogers job=sendgmr) by 2002:a25:7141:0:b0:da0:c9a5:b529 with SMTP id
- m62-20020a257141000000b00da0c9a5b529mr472146ybc.12.1701237746973; Tue, 28 Nov
- 2023 22:02:26 -0800 (PST)
-Date: Tue, 28 Nov 2023 22:02:02 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:fd3:b0:5cc:41c1:606 with SMTP id
+ dg19-20020a05690c0fd300b005cc41c10606mr691036ywb.6.1701237749390; Tue, 28 Nov
+ 2023 22:02:29 -0800 (PST)
+Date: Tue, 28 Nov 2023 22:02:03 -0800
 In-Reply-To: <20231129060211.1890454-1-irogers@google.com>
-Message-Id: <20231129060211.1890454-6-irogers@google.com>
+Message-Id: <20231129060211.1890454-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,8 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231129060211.1890454-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v1 05/14] libperf cpumap: Add for_each_cpu that skips the "any
- CPU" case
+Subject: [PATCH v1 06/14] libperf cpumap: Add any, empty and min helpers
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -72,48 +71,103 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When iterating CPUs in a CPU map it is often desirable to skip the
-"any CPU" (aka dummy) case. Add a helper for this and use in
-builtin-record.
+Additional helpers to better replace
+perf_cpu_map__has_any_cpu_or_is_empty.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/include/perf/cpumap.h | 6 ++++++
- tools/perf/builtin-record.c          | 4 +---
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ tools/lib/perf/cpumap.c              | 27 +++++++++++++++++++++++++++
+ tools/lib/perf/include/perf/cpumap.h | 16 ++++++++++++++++
+ tools/lib/perf/libperf.map           |  4 ++++
+ 3 files changed, 47 insertions(+)
 
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index 49fc98e16514..7403819da8fd 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -316,6 +316,19 @@ bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map)
+ 	return map ? __perf_cpu_map__cpu(map, 0).cpu == -1 : true;
+ }
+ 
++bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map)
++{
++	if (!map)
++		return true;
++
++	return __perf_cpu_map__nr(map) == 1 && __perf_cpu_map__cpu(map, 0).cpu == -1;
++}
++
++bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
++{
++	return map == NULL;
++}
++
+ int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
+ {
+ 	int low, high;
+@@ -372,6 +385,20 @@ bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map)
+ 	return map && __perf_cpu_map__cpu(map, 0).cpu == -1;
+ }
+ 
++struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map)
++{
++	struct perf_cpu cpu, result = {
++		.cpu = -1
++	};
++	int idx;
++
++	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, map) {
++		result = cpu;
++		break;
++	}
++	return result;
++}
++
+ struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
+ {
+ 	struct perf_cpu result = {
 diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index 9cf361fc5edc..dbe0a7352b64 100644
+index dbe0a7352b64..523e4348fc96 100644
 --- a/tools/lib/perf/include/perf/cpumap.h
 +++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -64,6 +64,12 @@ LIBPERF_API bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map);
- 	     (idx) < perf_cpu_map__nr(cpus);			\
- 	     (idx)++, (cpu) = perf_cpu_map__cpu(cpus, idx))
- 
-+#define perf_cpu_map__for_each_cpu_skip_any(_cpu, idx, cpus)	\
-+	for ((idx) = 0, (_cpu) = perf_cpu_map__cpu(cpus, idx);	\
-+	     (idx) < perf_cpu_map__nr(cpus);			\
-+	     (idx)++, (_cpu) = perf_cpu_map__cpu(cpus, idx))	\
-+		if ((_cpu).cpu != -1)
-+
- #define perf_cpu_map__for_each_idx(idx, cpus)				\
- 	for ((idx) = 0; (idx) < perf_cpu_map__nr(cpus); (idx)++)
- 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8ec818568662..066f9232e947 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -3580,9 +3580,7 @@ static int record__mmap_cpu_mask_init(struct mmap_cpu_mask *mask, struct perf_cp
- 	if (cpu_map__is_dummy(cpus))
- 		return 0;
- 
--	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
--		if (cpu.cpu == -1)
--			continue;
-+	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, cpus) {
- 		/* Return ENODEV is input cpu is greater than max cpu */
- 		if ((unsigned long)cpu.cpu > mask->nbits)
- 			return -ENODEV;
+@@ -50,6 +50,22 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
+  * perf_cpu_map__has_any_cpu_or_is_empty - is map either empty or has the "any CPU"/dummy value.
+  */
+ LIBPERF_API bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map);
++/**
++ * perf_cpu_map__is_any_cpu_or_is_empty - is map either empty or the "any CPU"/dummy value.
++ */
++LIBPERF_API bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map);
++/**
++ * perf_cpu_map__is_empty - does the map contain no values and it doesn't
++ *                          contain the special "any CPU"/dummy value.
++ */
++LIBPERF_API bool perf_cpu_map__is_empty(const struct perf_cpu_map *map);
++/**
++ * perf_cpu_map__min - the minimum CPU value or -1 if empty or just the "any CPU"/dummy value.
++ */
++LIBPERF_API struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map);
++/**
++ * perf_cpu_map__max - the maximum CPU value or -1 if empty or just the "any CPU"/dummy value.
++ */
+ LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
+ LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
+ LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
+diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+index 10b3f3722642..2aa79b696032 100644
+--- a/tools/lib/perf/libperf.map
++++ b/tools/lib/perf/libperf.map
+@@ -10,6 +10,10 @@ LIBPERF_0.0.1 {
+ 		perf_cpu_map__nr;
+ 		perf_cpu_map__cpu;
+ 		perf_cpu_map__has_any_cpu_or_is_empty;
++		perf_cpu_map__is_any_cpu_or_is_empty;
++		perf_cpu_map__is_empty;
++		perf_cpu_map__has_any_cpu;
++		perf_cpu_map__min;
+ 		perf_cpu_map__max;
+ 		perf_cpu_map__has;
+ 		perf_thread_map__new_array;
 -- 
 2.43.0.rc1.413.gea7ed67945-goog
 
