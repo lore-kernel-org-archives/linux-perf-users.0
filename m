@@ -1,126 +1,165 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBBF60EE7
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 20:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B90B219EF
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 20:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frL0nD/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A474C433C8;
-	Wed, 29 Nov 2023 20:30:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pPSumhXD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368CDC433C7;
+	Wed, 29 Nov 2023 20:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701289843;
-	bh=kDVqqhvS7fMT+IWmCg5HfszY7e3uXpelsi48BU7S+Ws=;
+	s=k20201202; t=1701290554;
+	bh=SVwxP2iECxaAaRjYUKPB82HlCDKzRNHkS7oX5cfLIpY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=frL0nD/GBuZLBlqS9AaNxXlTopyV8umDgZWa4jDEWA46BH7Q++/5ueTIpJzU6XZDV
-	 vRMPCFXPA9li0858dY4Bta3UtlgJpANTseqlwjLG52exFFE3KyAk9CUS0I8kq3D7Mo
-	 1ixyF+sT+dXVwzCvjABZdcYiwTkrBp4oHnYg+M/EDsEu4XJyWP2uvvwoKBDbVP1Bvv
-	 KVu8IQYgBMM0TRh0TdrfFSqLUsftMcNp0Y/UDYAbGOl0YXUo1Mizb3/EMq3eD6zAZ2
-	 qH8iX5u/zeDA8YBc8kGAq3Y0PNNgglDNpZfo56hdw2fnM8pGfTELN1UCm4W1utKt3t
-	 H/5SWbOEZTV7g==
+	b=pPSumhXDPf7c9ZaH+q/FapiH1qxgvEOa0nbUmSonZSmjynUdRasBZwEqPlUu7kFMF
+	 iLyu2IR0PQsJ6o783VcalcOg+SRkyDziKkYHtTjyXoxlV/znSUzeoKfsf+L1JEokI5
+	 ivZq+YFCXv3Cx2tlcHkm6510QGQWz6gftbrz3BhKvDFuZhFnFFXRJBA8K/srsTkHbA
+	 bUjD0+eyjZECITggCAWXwnGfjziVMy8WELteQz01tsJOM0N73sD0njCv3o8r9U67sC
+	 awYW8Mkgt4/1h2M/DUB7U443SN5jhAy7pn3gT/wyiSUt+skAAHxBPBlkqx6llDG7fx
+	 h02R34ql7pGEQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 85D8A40094; Wed, 29 Nov 2023 17:30:40 -0300 (-03)
-Date: Wed, 29 Nov 2023 17:30:40 -0300
+	id 02DD240094; Wed, 29 Nov 2023 17:42:30 -0300 (-03)
+Date: Wed, 29 Nov 2023 17:42:30 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@arm.com>,
+To: Marco Elver <elver@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf test: Add basic list test
-Message-ID: <ZWefcAoHBe+GpuiY@kernel.org>
-References: <20231129081004.1918096-1-irogers@google.com>
- <20231129081004.1918096-2-irogers@google.com>
- <a54d0a93-aacd-4c69-a34c-8628b0e18ee7@intel.com>
- <03b314c6-ed6d-ae17-5bc5-0170139f7feb@arm.com>
- <CAP-5=fX7UQGCXp3rqk8bKdevPUH6bnP2hxZ_jktj17YDzkuUDA@mail.gmail.com>
+	Clark Williams <williams@redhat.com>,
+	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>, Mike Galbraith <efault@gmx.de>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 2/2] perf tests sigtrap: Skip if running on a kernel with
+ sleepable spinlocks
+Message-ID: <ZWeiNj7B+5dJosE9@kernel.org>
+References: <20231129154718.326330-1-acme@kernel.org>
+ <20231129154718.326330-3-acme@kernel.org>
+ <CANpmjNMftTuqPwmujNx5e+ajgdYtik9uL6dt62Ucotc7oz-uUw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX7UQGCXp3rqk8bKdevPUH6bnP2hxZ_jktj17YDzkuUDA@mail.gmail.com>
+In-Reply-To: <CANpmjNMftTuqPwmujNx5e+ajgdYtik9uL6dt62Ucotc7oz-uUw@mail.gmail.com>
 X-Url: http://acmel.wordpress.com
 
-Em Wed, Nov 29, 2023 at 09:21:12AM -0800, Ian Rogers escreveu:
-> On Wed, Nov 29, 2023 at 1:27 AM James Clark <james.clark@arm.com> wrote:
+Em Wed, Nov 29, 2023 at 04:57:47PM +0100, Marco Elver escreveu:
+> On Wed, 29 Nov 2023 at 16:47, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 > >
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > >
+> > There are issues as reported that need some more investigation on the
+> > RT kernel front, till that is addressed, skip this test.
 > >
-> > On 29/11/2023 09:00, Adrian Hunter wrote:
-> > > On 29/11/23 10:10, Ian Rogers wrote:
-> > >> Test that json output produces valid json.
-> > >>
-> > >> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >> ---
-> > >>  tools/perf/tests/shell/list.sh | 29 +++++++++++++++++++++++++++++
-> > >>  1 file changed, 29 insertions(+)
-> > >>  create mode 100755 tools/perf/tests/shell/list.sh
-> > >>
-> > >> diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
-> > >> new file mode 100755
-> > >> index 000000000000..286879a9837a
-> > >> --- /dev/null
-> > >> +++ b/tools/perf/tests/shell/list.sh
-> > >> @@ -0,0 +1,29 @@
-> > >> +#!/bin/sh
-> > >> +# perf list tests
-> > >> +# SPDX-License-Identifier: GPL-2.0
-> > >> +
-> > >> +set -e
-> > >> +err=0
-> > >> +
-> > >> +if [ "x$PYTHON" == "x" ]
-> > >> +then
-> > >> +    if which python3 > /dev/null
-> > >
-> > > 'which' isn't always present.  Maybe
-> > >
-> > > python3 --version >/dev/null 2>&1 && PYTHON=python3
-> > >
+> > This test is already skipped for multiple hardware architectures where
+> > the tested kernel feature is not supported.
 > >
-> > Now that we have shellcheck integrated into the build, we could enable
-> > the POSIX mode test which would warn against this usage of which and
-> > suggest the alternative.
-> >
-> > At the moment though there are several other usages of which already in
-> > the tests. And probably enabling POSIX mode would come with hundreds of
-> > other warnings to fix.
-> >
-> > I'm not saying we shouldn't change this instance though, just adding the
-> > info for the discussion.
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Clark Williams <williams@redhat.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Juri Lelli <juri.lelli@redhat.com>
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Mike Galbraith <efault@gmx.de>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Link: https://lore.kernel.org/all/e368f2c848d77fbc8d259f44e2055fe469c219cf.camel@gmx.de/
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Sounds good to me. Fwiw, the instance where I lifted this code was:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/stat+json_output.sh?h=perf-tools-next#n12
+> Acked-by: Marco Elver <elver@google.com>
 > 
-> With this change:
-> ```
-> diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.tests
-> index fdaca5f7a946..06de6d3f4842 100644
-> --- a/tools/perf/tests/Makefile.tests
-> +++ b/tools/perf/tests/Makefile.tests
-> @@ -1,7 +1,7 @@
-> # SPDX-License-Identifier: GPL-2.0
-> # Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
+> > ---
+> >  tools/perf/tests/sigtrap.c | 46 ++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 44 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> > index a1bc7c776254ed2f..e6fd934b027a3d0c 100644
+> > --- a/tools/perf/tests/sigtrap.c
+> > +++ b/tools/perf/tests/sigtrap.c
+> > @@ -103,6 +103,34 @@ static bool attr_has_sigtrap(void)
+> >
+> >         return __btf_type__find_member_by_name(id, "sigtrap") != NULL;
+> >  }
+> > +
+> > +static bool kernel_with_sleepable_spinlocks(void)
+> > +{
+> > +       const struct btf_member *member;
+> > +       const struct btf_type *type;
+> > +       const char *type_name;
+> > +       int id;
+> > +
+> > +       if (!btf__available())
+> > +               return false;
+> > +
+> > +       id = btf__find_by_name_kind(btf, "spinlock", BTF_KIND_STRUCT);
+> > +       if (id < 0)
+> > +               return false;
+> > +
+> > +       // Only RT has a "lock" member for "struct spinlock"
+> > +       member = __btf_type__find_member_by_name(id, "lock");
+> > +       if (member == NULL)
+> > +               return false;
+> > +
+> > +       // But check its type as well
+> > +       type = btf__type_by_id(btf, member->type);
+> > +       if (!type || !btf_is_struct(type))
+> > +               return false;
+> > +
+> > +       type_name = btf__name_by_offset(btf, type->name_off);
+> > +       return type_name && !strcmp(type_name, "rt_mutex_base");
+> > +}
+> >  #else  /* !HAVE_BPF_SKEL */
+> >  static bool attr_has_sigtrap(void)
+> >  {
+> > @@ -125,6 +153,11 @@ static bool attr_has_sigtrap(void)
+> >         return ret;
+> >  }
+> >
+> > +static bool kernel_with_sleepable_spinlocks(void)
+> > +{
+> > +       return false;
+> > +}
+> > +
+> >  static void btf__exit(void)
+> >  {
+> >  }
+> > @@ -166,7 +199,7 @@ static int run_test_threads(pthread_t *threads, pthread_barrier_t *barrier)
+> >
+> >  static int run_stress_test(int fd, pthread_t *threads, pthread_barrier_t *barrier)
+> >  {
+> > -       int ret;
+> > +       int ret, expected_sigtraps;
+> >
+> >         ctx.iterate_on = 3000;
+> >
+> > @@ -175,7 +208,16 @@ static int run_stress_test(int fd, pthread_t *threads, pthread_barrier_t *barrie
+> >         ret = run_test_threads(threads, barrier);
+> >         TEST_ASSERT_EQUAL("disable failed", ioctl(fd, PERF_EVENT_IOC_DISABLE, 0), 0);
+> >
+> > -       TEST_ASSERT_EQUAL("unexpected sigtraps", ctx.signal_count, NUM_THREADS * ctx.iterate_on);
+> > +       expected_sigtraps = NUM_THREADS * ctx.iterate_on;
+> > +
+> > +       if (ctx.signal_count < expected_sigtraps && kernel_with_sleepable_spinlocks()) {
+> > +               pr_debug("Expected %d sigtraps, got %d, running on a kernel with sleepable spinlocks.\n",
+> > +                        expected_sigtraps, ctx.signal_count);
+> > +               pr_debug("See https://lore.kernel.org/all/e368f2c848d77fbc8d259f44e2055fe469c219cf.camel@gmx.de/\n");
 > 
-> -PROGS := $(shell find tests/shell -perm -o=x -type f -name '*.sh')
-> +PROGS := $(shell find tests/shell -executable -type f -name '*.sh')
-> FILE_NAME := $(notdir $(PROGS))
-> FILE_NAME := $(FILE_NAME:%=.%)
-> LOGS := $(join $(dir $(PROGS)),$(FILE_NAME))
-> ```
-> 
-> shellcheck now runs for me. I'll try adding the posix check into the
-> patch series, as well as fixing other instances I can see.
+> No changes from the RT side since? A fix exists, but apparently not
+> good enough... Sigh.
 
-So I'll wait for a v2 for this one, ok?
+Yeah, my impression, and first attempt at writing that patch wast that
+no sigtraps were being sent, but then when I tried with a random, more
+recent machine in the Red Hat labs, I got some signals, way less than
+the expected ones, but some, maybe this is an interesting data point?
+
+I'll try again to reproduce in the local machine, old i7 lenovo notebook
+and at the newer machine, a Xeon(R) Silver 4216, 32 cpu and report here.
 
 - Arnaldo
