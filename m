@@ -1,288 +1,204 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fl5mDbWG"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 203DC1A8;
-	Wed, 29 Nov 2023 13:15:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701292521; x=1732828521;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LYQJ2kxOs+ySL55VSSD9xEF2a/IPV5Ke9VnU2n5ULHs=;
-  b=Fl5mDbWG5qtn19VBcDC/kDohvy+FDxawOBW4iLAfZmRxMsZ9Vumth8rF
-   lE0QLNyp/3NxFFh+QGiu9ETuf3y4tibJKyGDjIyob5oyEs75pN1ij8NHS
-   kTw9pTc2jvKPSR45DJe5euVYnvp/sos4Kbkqh7i8L9xnYSZiixIKscCJs
-   j2mpIcAkvGgh7Sj+OBYuRwYNOkSCj3UmAoKLdAPHxYVXbx65l3NP2Budh
-   ZbG82a7ACucMR0swfgpdgDTe0rSRz2flkoGynKzv9jc33jUQYhkj/4aZG
-   i3JGZgECGA79kFl6PdULPK3FYvzZIzOo6pairuBCVxTuoD7v6c58cAssf
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="396036034"
-X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="396036034"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 13:15:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="912971018"
-X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="912971018"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 13:15:20 -0800
-Received: from [10.213.167.24] (kliang2-mobl1.ccr.corp.intel.com [10.213.167.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 3F6205807E2;
-	Wed, 29 Nov 2023 13:15:18 -0800 (PST)
-Message-ID: <f5112f5e-c77c-4a9a-ac3b-66772adba471@linux.intel.com>
-Date: Wed, 29 Nov 2023 16:15:16 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ic379tAt"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC76ED67
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 13:34:53 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5d064f9e2a1so3465897b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 13:34:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701293693; x=1701898493; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5YO3106VcJoEnKsYaYybDwf29d5B1fnPm7TdPpVslxA=;
+        b=Ic379tAtShN+caolBP6/lBFDRShmDdp3ndgxKzBOosiLlGaYN2JS0+qV/62/3xOcJj
+         qfY3glRhEwbPL0FuxSO1ROee8uutWpDbvSHzZf1/LYAPCnp1y95bzVND7Brs9pmPmPmS
+         hfoGOkjE30OmlN9pvQLRJghuWInS6oC6eM+KFDdN+5+EPPCfhIel4yds2TKFPI6fT1el
+         HfIP8mJoHbc4/31l9iRbJLgv1Tf62HyadlSmvyT+kascHioW7dHEKKZmvahl8zzhJRbZ
+         CKXsp11eEbADSoFwk0WdqeSr3qZHsGrg2oec6qi9xEjRUd8XfUH+qXAxQS7nVP2o/3Ct
+         VOpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701293693; x=1701898493;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5YO3106VcJoEnKsYaYybDwf29d5B1fnPm7TdPpVslxA=;
+        b=WECe5lBQrbG6ZeI5F91Khr05fRC3jJ5LdFFCu48IhXphcRO1owA5unPnrJBzwnuKQW
+         3U9vpGy/4fETXZoKCHH/qQCPmav6tg/5sYqL4S3Uw4Awjd/HFP0f9eNseflnzq5bFAad
+         bM/8KxMm80C6c4ULQGCuTyRTejletl2LUgXsMYwwo13omg8L+yhv0Mgt62CJretN85/W
+         1UZorI9UA3/ZVZnNvJpSV0LN6UDdeWfiTTfqAsv9ppI89bQ1AaO4PCNIYPLmceSCBXpq
+         ujvco97YTBNVQvJHqRP4G6zxygI0SdxTblHHD8ihRyBBx1/O0fEuYfUvGhe8xnrlVIyn
+         q/JQ==
+X-Gm-Message-State: AOJu0YwQQHn72sGc+fpGywwHvhtp+4KLRv1gkejHaCh+ngJcbcg42T3l
+	sHq5hJGaw2ylCrZNfSAC3315MFYxlp2z
+X-Google-Smtp-Source: AGHT+IE5bYIzYaD1+Qb2IMev9lR6DOQZLExlNK2MQ6lI/iGpshOnp3b2Ehag0qhQ5bY18hXROAvjF1iZ0jk5
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:763b:80fa:23ca:96f8])
+ (user=irogers job=sendgmr) by 2002:a05:690c:a98:b0:5ca:f857:2bf6 with SMTP id
+ ci24-20020a05690c0a9800b005caf8572bf6mr699400ywb.5.1701293693154; Wed, 29 Nov
+ 2023 13:34:53 -0800 (PST)
+Date: Wed, 29 Nov 2023 13:34:25 -0800
+Message-Id: <20231129213428.2227448-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf mem: Fix perf mem error on hybrid
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
- mark.rutland@arm.com, namhyung@kernel.org, jolsa@kernel.org,
- adrian.hunter@intel.com, ravi.bangoria@amd.com,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Ammy Yi <ammy.yi@intel.com>
-References: <20231128203940.3964287-1-kan.liang@linux.intel.com>
- <CAP-5=fUdEgnwk_FNHb-Ju3wCYE2PLLrPHqwZoyBGyURXQhBeSA@mail.gmail.com>
- <083bfe11-6f6e-487f-ac28-aec22e6b6b06@linux.intel.com>
- <CAP-5=fXTYX6_QdR4RCBu9yh+k1VwhsTjabKdseVP9Cvi6PE=sA@mail.gmail.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fXTYX6_QdR4RCBu9yh+k1VwhsTjabKdseVP9Cvi6PE=sA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
+Subject: [PATCH v2 1/4] perf build: Shellcheck support for OUTPUT directory
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	James Clark <james.clark@arm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Migrate Makefile.tests to Build so that variables like rule_mkdir are
+defined via Makefile.build (needed so the output directory can be
+created). This requires SHELLCHECK being exported and the clean rule
+tweaking to remove the files in find.
 
+Change find "-perm -o=x" as it was failing on my Debian based Linux
+kernel tree, switch to using "-executable".
 
-On 2023-11-29 11:17 a.m., Ian Rogers wrote:
-> On Wed, Nov 29, 2023 at 5:52 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2023-11-29 1:24 a.m., Ian Rogers wrote:
->>> On Tue, Nov 28, 2023 at 12:39 PM <kan.liang@linux.intel.com> wrote:
->>>>
->>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>
->>>> The below error can be triggered on a hybrid machine.
->>>>
->>>>  $ perf mem record -t load sleep 1
->>>>  event syntax error: 'breakpoint/mem-loads,ldlat=30/P'
->>>>                                 \___ Bad event or PMU
->>>>
->>>>  Unable to find PMU or event on a PMU of 'breakpoint'
->>>>
->>>> In the perf_mem_events__record_args(), the current perf never checks the
->>>> availability of a mem event on a given PMU. All the PMUs will be added
->>>> to the perf mem event list. Perf errors out for the unsupported PMU.
->>>>
->>>> Extend perf_mem_event__supported() and take a PMU into account. Check
->>>> the mem event for each PMU before adding it to the perf mem event list.
->>>>
->>>> Optimize the perf_mem_events__init() a little bit. The function is to
->>>> check whether the mem events are supported in the system. It doesn't
->>>> need to scan all PMUs. Just return with the first supported PMU is good
->>>> enough.
->>>>
->>>> Fixes: 5752c20f3787 ("perf mem: Scan all PMUs instead of just core ones")
->>>> Reported-by: Ammy Yi <ammy.yi@intel.com>
->>>> Tested-by: Ammy Yi <ammy.yi@intel.com>
->>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>>> ---
->>>>  tools/perf/util/mem-events.c | 25 ++++++++++++++-----------
->>>>  1 file changed, 14 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
->>>> index 954b235e12e5..3a2e3687878c 100644
->>>> --- a/tools/perf/util/mem-events.c
->>>> +++ b/tools/perf/util/mem-events.c
->>>> @@ -100,11 +100,14 @@ int perf_mem_events__parse(const char *str)
->>>>         return -1;
->>>>  }
->>>>
->>>> -static bool perf_mem_event__supported(const char *mnt, char *sysfs_name)
->>>> +static bool perf_mem_event__supported(const char *mnt, struct perf_pmu *pmu,
->>>> +                                     struct perf_mem_event *e)
->>>>  {
->>>> +       char sysfs_name[100];
->>>>         char path[PATH_MAX];
->>>>         struct stat st;
->>>>
->>>> +       scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name, pmu->name);
->>>
->>> Not sure if this is right. Looking at sysfs_name values:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/mem-events.c?h=perf-tools-next#n23
->>> "cpu/events/mem-loads" and "cpu/events/mem-stores", so won't pmu->name
->>> never be used?
->>> Is there a missed change to change the cpu to %s?
->>
->> There is a X86 specific perf_mem_events__ptr(), which uses the
->> "%s/mem-loads,ldlat=%u/P" and "%s/events/mem-loads" for Intel platforms.
->> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/x86/util/mem-events.c?h=perf-tools-next#n20
->> The pmu->name is used especially for the hybrid platforms.
-> 
-> Right, that seems wrong. For one thing we're losing the compiler's
-> format string argument checking, but hardcoding PMU names just seems
-> to be something that will keep needing maintenance. This patch set
-> looks to fix an Intel issue but in general it is increasing tech debt
-> (or at least churning it) that will need cleaning up to do something
-> with better error checking and more generic. perf_mem_event looks like
-> a bad abstraction and then there are the integers whose special values
-> hold meaning. Could this fix come with some cleanup? It wouldn't seem
-> wrong to me to add notions of memory events to the PMU abstraction. As
-> it stands this scnprintf looks wrong in non-Intel cases.
->
+Adding a filename prefix of "." to the shellcheck log files is a pain
+and error prone in make, remove this prefix and just add the
+shellcheck log files to .gitignore.
 
-The problem is that different ARCHs check different things. Arm and AMD
-checks the PMU name, while Intel and Power checks the specific events.
-It's hard to have a unified scnprintf.
+Fix the command echo so that running the test is displayed.
 
-But we can abstract them into two cases, PMU name and event name. We use
-a different scnprintf to handle them.
-How about something as below?
+Fixes: 1638b11ef815 ("perf tools: Add perf binary dependent rule for shellcheck log in Makefile.perf")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/.gitignore           |  3 +++
+ tools/perf/Makefile.perf        | 30 ++++++++++--------------------
+ tools/perf/tests/Build          | 14 ++++++++++++++
+ tools/perf/tests/Makefile.tests | 22 ----------------------
+ 4 files changed, 27 insertions(+), 42 deletions(-)
+ delete mode 100644 tools/perf/tests/Makefile.tests
 
-diff --git a/tools/perf/arch/x86/util/mem-events.c
-b/tools/perf/arch/x86/util/mem-events.c
-index 191b372f9a2d..4ef70fb9132b 100644
---- a/tools/perf/arch/x86/util/mem-events.c
-+++ b/tools/perf/arch/x86/util/mem-events.c
-@@ -17,8 +17,8 @@ static char mem_stores_name[100];
- #define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
-
- static struct perf_mem_event
-perf_mem_events_intel[PERF_MEM_EVENTS__MAX] = {
--	E("ldlat-loads",	"%s/mem-loads,ldlat=%u/P",	"%s/events/mem-loads"),
--	E("ldlat-stores",	"%s/mem-stores/P",		"%s/events/mem-stores"),
-+	E("ldlat-loads",	"%s/mem-loads,ldlat=%u/P",	"events/mem-loads"),
-+	E("ldlat-stores",	"%s/mem-stores/P",		"events/mem-stores"),
- 	E(NULL,			NULL,				NULL),
- };
-
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 3a2e3687878c..ba88cb3d804f 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -8,6 +8,7 @@
- #include <unistd.h>
- #include <api/fs/fs.h>
- #include <linux/kernel.h>
-+#include <linux/string.h>
- #include "map_symbol.h"
- #include "mem-events.h"
- #include "debug.h"
-@@ -20,8 +21,8 @@ unsigned int perf_mem_events__loads_ldlat = 30;
- #define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
-
- static struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
--	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"cpu/events/mem-loads"),
--	E("ldlat-stores",	"cpu/mem-stores/P",		"cpu/events/mem-stores"),
-+	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"events/mem-loads"),
-+	E("ldlat-stores",	"cpu/mem-stores/P",		"events/mem-stores"),
- 	E(NULL,			NULL,				NULL),
- };
- #undef E
-@@ -103,12 +104,14 @@ int perf_mem_events__parse(const char *str)
- static bool perf_mem_event__supported(const char *mnt, struct perf_pmu
-*pmu,
- 				      struct perf_mem_event *e)
- {
--	char sysfs_name[100];
- 	char path[PATH_MAX];
- 	struct stat st;
-
--	scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name, pmu->name);
--	scnprintf(path, PATH_MAX, "%s/devices/%s", mnt, sysfs_name);
-+	if (strstarts(e->sysfs_name, "event/"))
-+		scnprintf(path, PATH_MAX, "%s/devices/%s/%s", mnt, pmu->name,
-e->sysfs_name);
-+	else
-+		scnprintf(path, PATH_MAX, "%s/devices/%s", mnt, e->sysfs_name);
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index ee5c14f3b8b1..f5b81d439387 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -39,6 +39,9 @@ trace/beauty/generated/
+ pmu-events/pmu-events.c
+ pmu-events/jevents
+ pmu-events/metric_test.log
++tests/shell/*.shellcheck_log
++tests/shell/coresight/*.shellcheck_log
++tests/shell/lib/*.shellcheck_log
+ feature/
+ libapi/
+ libbpf/
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 824cbc0af7d7..1ab2a908f240 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -229,8 +229,15 @@ else
+   force_fixdep := $(config)
+ endif
+ 
++# Runs shellcheck on perf test shell scripts
++ifeq ($(NO_SHELLCHECK),1)
++  SHELLCHECK :=
++else
++  SHELLCHECK := $(shell which shellcheck 2> /dev/null)
++endif
 +
- 	return !stat(path, &st);
- }
+ export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
+-export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
++export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK
+ 
+ include $(srctree)/tools/build/Makefile.include
+ 
+@@ -673,23 +680,7 @@ $(PERF_IN): prepare FORCE
+ $(PMU_EVENTS_IN): FORCE prepare
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
+ 
+-# Runs shellcheck on perf test shell scripts
+-
+-SHELLCHECK := $(shell which shellcheck 2> /dev/null)
+-
+-ifeq ($(NO_SHELLCHECK),1)
+-SHELLCHECK :=
+-endif
+-
+-ifneq ($(SHELLCHECK),)
+-SHELLCHECK_TEST: FORCE prepare
+-	$(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests
+-else
+-SHELLCHECK_TEST:
+-	@:
+-endif
+-
+-$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) SHELLCHECK_TEST
++$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
+ 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
+ 		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
+ 
+@@ -1152,9 +1143,8 @@ bpf-skel-clean:
+ 	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+ 
+ clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+-	$(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+-	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
++	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete -o -name '*.shellcheck_log' -delete
+ 	$(Q)$(RM) $(OUTPUT).config-detected
+ 	$(call QUIET_CLEAN, core-progs) $(RM) $(ALL_PROGRAMS) perf perf-read-vdso32 perf-read-vdsox32 $(OUTPUT)$(LIBJVMTI).so
+ 	$(call QUIET_CLEAN, core-gen)   $(RM)  *.spec *.pyc *.pyo */*.pyc */*.pyo $(OUTPUT)common-cmds.h TAGS tags cscope* $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)FEATURE-DUMP $(OUTPUT)util/*-bison* $(OUTPUT)util/*-flex* \
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 2b45ffa462a6..53ba9c3e20e0 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -77,3 +77,17 @@ CFLAGS_python-use.o   += -DPYTHONPATH="BUILD_STR($(OUTPUT)python)" -DPYTHON="BUI
+ CFLAGS_dwarf-unwind.o += -fno-optimize-sibling-calls
+ 
+ perf-y += workloads/
++
++ifdef SHELLCHECK
++  SHELL_TESTS := $(shell find tests/shell -executable -type f -name '*.sh')
++  TEST_LOGS := $(SHELL_TESTS:tests/shell/%=shell/%.shellcheck_log)
++else
++  SHELL_TESTS :=
++  TEST_LOGS :=
++endif
++
++$(OUTPUT)%.shellcheck_log: %
++	$(call rule_mkdir)
++	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
++
++perf-y += $(TEST_LOGS)
+diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.tests
+deleted file mode 100644
+index fdaca5f7a946..000000000000
+--- a/tools/perf/tests/Makefile.tests
++++ /dev/null
+@@ -1,22 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-# Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
+-
+-PROGS := $(shell find tests/shell -perm -o=x -type f -name '*.sh')
+-FILE_NAME := $(notdir $(PROGS))
+-FILE_NAME := $(FILE_NAME:%=.%)
+-LOGS := $(join $(dir $(PROGS)),$(FILE_NAME))
+-LOGS := $(LOGS:%=%.shellcheck_log)
+-
+-.PHONY: all
+-all: SHELLCHECK_RUN
+-	@:
+-
+-SHELLCHECK_RUN: $(LOGS)
+-
+-.%.shellcheck_log: %
+-	$(call rule_mkdir)
+-	$(Q)$(call frecho-cmd,test)@shellcheck -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+-
+-clean:
+-	$(eval log_files := $(shell find . -name '.*.shellcheck_log'))
+-	@rm -rf $(log_files)
+-- 
+2.43.0.rc1.413.gea7ed67945-goog
 
-
-Thanks,
-Kan
-
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Kan
->>>
->>> Thanks,
->>> Ian
->>>
->>>>         scnprintf(path, PATH_MAX, "%s/devices/%s", mnt, sysfs_name);
->>>>         return !stat(path, &st);
->>>>  }
->>>> @@ -120,7 +123,6 @@ int perf_mem_events__init(void)
->>>>
->>>>         for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
->>>>                 struct perf_mem_event *e = perf_mem_events__ptr(j);
->>>> -               char sysfs_name[100];
->>>>                 struct perf_pmu *pmu = NULL;
->>>>
->>>>                 /*
->>>> @@ -136,12 +138,12 @@ int perf_mem_events__init(void)
->>>>                  * of core PMU.
->>>>                  */
->>>>                 while ((pmu = perf_pmus__scan(pmu)) != NULL) {
->>>> -                       scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name, pmu->name);
->>>> -                       e->supported |= perf_mem_event__supported(mnt, sysfs_name);
->>>> +                       e->supported |= perf_mem_event__supported(mnt, pmu, e);
->>>> +                       if (e->supported) {
->>>> +                               found = true;
->>>> +                               break;
->>>> +                       }
->>>>                 }
->>>> -
->>>> -               if (e->supported)
->>>> -                       found = true;
->>>>         }
->>>>
->>>>         return found ? 0 : -ENOENT;
->>>> @@ -167,13 +169,10 @@ static void perf_mem_events__print_unsupport_hybrid(struct perf_mem_event *e,
->>>>                                                     int idx)
->>>>  {
->>>>         const char *mnt = sysfs__mount();
->>>> -       char sysfs_name[100];
->>>>         struct perf_pmu *pmu = NULL;
->>>>
->>>>         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
->>>> -               scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name,
->>>> -                         pmu->name);
->>>> -               if (!perf_mem_event__supported(mnt, sysfs_name)) {
->>>> +               if (!perf_mem_event__supported(mnt, pmu, e)) {
->>>>                         pr_err("failed: event '%s' not supported\n",
->>>>                                perf_mem_events__name(idx, pmu->name));
->>>>                 }
->>>> @@ -183,6 +182,7 @@ static void perf_mem_events__print_unsupport_hybrid(struct perf_mem_event *e,
->>>>  int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
->>>>                                  char **rec_tmp, int *tmp_nr)
->>>>  {
->>>> +       const char *mnt = sysfs__mount();
->>>>         int i = *argv_nr, k = 0;
->>>>         struct perf_mem_event *e;
->>>>
->>>> @@ -211,6 +211,9 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
->>>>                         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
->>>>                                 const char *s = perf_mem_events__name(j, pmu->name);
->>>>
->>>> +                               if (!perf_mem_event__supported(mnt, pmu, e))
->>>> +                                       continue;
->>>> +
->>>>                                 rec_argv[i++] = "-e";
->>>>                                 if (s) {
->>>>                                         char *copy = strdup(s);
->>>> --
->>>> 2.35.1
->>>>
-> 
