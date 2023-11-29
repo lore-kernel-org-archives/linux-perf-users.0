@@ -1,150 +1,126 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBBF60EE7
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 20:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+egvpst"
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D61E61A8;
-	Wed, 29 Nov 2023 11:22:02 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6cbd24d9557so103063b3a.1;
-        Wed, 29 Nov 2023 11:22:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701285722; x=1701890522; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=XJAENFh/MmUTKzAnQ+33gujVhhNm0oQkxcdUhTqEisg=;
-        b=F+egvpstqBgYoc92Fyn/eeKpj4nvQsREcvs3ObKQ/OIuqtZLJaoI+4Xa9q8sWU5UtS
-         R8GeKHY97l6a0/ohjTGlTScT3GrqstR00IlbdlU3QWDIox2E2v/lp3llKetFC+OCvLZy
-         pSH1GCvL8NiPPX/bvI6V2Ie20fMvQnHMc+pmMd05lfC7e8Z+/ATywqk0NgvkvWdZMZe6
-         TVh+St9lqFiBZvhrl9WH02WXuPK3BbqoMLBb55wjX4izv11Cpq0q5YbNuAwII+pw5n4W
-         +icOtATRcoqOUB0BrJmYEBU5DDdXyui6wdsMopMK8VsUzlb2REiuAY8Ad7LRy7CpTgXS
-         /GQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701285722; x=1701890522;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XJAENFh/MmUTKzAnQ+33gujVhhNm0oQkxcdUhTqEisg=;
-        b=DxgltfwFmJtRvooNkED07XOsSLJ2z0E6FT9EC8dBLDCnXLcS8LyzO6Mxz/rqOjWAQs
-         7tlEnQXFFfZT78tbK1mXefreUuiK5U7V1/yY/2ZIpWG9L0GDwn4IqHJRjsPqvG9P+eTo
-         Alx/LfdpBA2KzXX8OFZoHMwgOdGMhtfjKg66PkxcPuxkLO1eG4rvtlWgPLMXZdPM6mYP
-         3kgPCQZXkD2CW2OZvnY4MD1LTiSvOowlEVrvCIcpqaqtzgxobERUF3chVL8ZssAuct51
-         Knj2D1pUmClyZMP+gNC5+0wbvmyVXeJFXsHE9B92SxSls/Bg6FFvSN3kJ0CVGGVYWBR/
-         S8/Q==
-X-Gm-Message-State: AOJu0YzpiH2XcRvIvIHoQ88VyTCypSHeMApZdmB3UMe7oWvl++eWR8Nz
-	Ny4Ee/7qmIJmx6JL89VWynQ=
-X-Google-Smtp-Source: AGHT+IEgE9s0HMGzZrE63UWaEvHBNOnpr5Wl7XwgReRkmaQuCOe8bxI6dDd1v6nW3SO5fE/jGZWDFQ==
-X-Received: by 2002:a05:6a00:17a1:b0:6cd:dc48:1fff with SMTP id s33-20020a056a0017a100b006cddc481fffmr2613129pfg.0.1701285722116;
-        Wed, 29 Nov 2023 11:22:02 -0800 (PST)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:cd6b:329c:a3c7:d0d0])
-        by smtp.gmail.com with ESMTPSA id p6-20020a056a000a0600b006c0685422e0sm11069955pfh.214.2023.11.29.11.22.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 11:22:01 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frL0nD/G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A474C433C8;
+	Wed, 29 Nov 2023 20:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701289843;
+	bh=kDVqqhvS7fMT+IWmCg5HfszY7e3uXpelsi48BU7S+Ws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=frL0nD/GBuZLBlqS9AaNxXlTopyV8umDgZWa4jDEWA46BH7Q++/5ueTIpJzU6XZDV
+	 vRMPCFXPA9li0858dY4Bta3UtlgJpANTseqlwjLG52exFFE3KyAk9CUS0I8kq3D7Mo
+	 1ixyF+sT+dXVwzCvjABZdcYiwTkrBp4oHnYg+M/EDsEu4XJyWP2uvvwoKBDbVP1Bvv
+	 KVu8IQYgBMM0TRh0TdrfFSqLUsftMcNp0Y/UDYAbGOl0YXUo1Mizb3/EMq3eD6zAZ2
+	 qH8iX5u/zeDA8YBc8kGAq3Y0PNNgglDNpZfo56hdw2fnM8pGfTELN1UCm4W1utKt3t
+	 H/5SWbOEZTV7g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 85D8A40094; Wed, 29 Nov 2023 17:30:40 -0300 (-03)
+Date: Wed, 29 Nov 2023 17:30:40 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@arm.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] perf tools fixes for v6.7: 1st batch
-Date: Wed, 29 Nov 2023 11:21:58 -0800
-Message-ID: <20231129192158.1026606-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
+Subject: Re: [PATCH v1 2/2] perf test: Add basic list test
+Message-ID: <ZWefcAoHBe+GpuiY@kernel.org>
+References: <20231129081004.1918096-1-irogers@google.com>
+ <20231129081004.1918096-2-irogers@google.com>
+ <a54d0a93-aacd-4c69-a34c-8628b0e18ee7@intel.com>
+ <03b314c6-ed6d-ae17-5bc5-0170139f7feb@arm.com>
+ <CAP-5=fX7UQGCXp3rqk8bKdevPUH6bnP2hxZ_jktj17YDzkuUDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX7UQGCXp3rqk8bKdevPUH6bnP2hxZ_jktj17YDzkuUDA@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-Hi Linus,
+Em Wed, Nov 29, 2023 at 09:21:12AM -0800, Ian Rogers escreveu:
+> On Wed, Nov 29, 2023 at 1:27 AM James Clark <james.clark@arm.com> wrote:
+> >
+> >
+> >
+> > On 29/11/2023 09:00, Adrian Hunter wrote:
+> > > On 29/11/23 10:10, Ian Rogers wrote:
+> > >> Test that json output produces valid json.
+> > >>
+> > >> Signed-off-by: Ian Rogers <irogers@google.com>
+> > >> ---
+> > >>  tools/perf/tests/shell/list.sh | 29 +++++++++++++++++++++++++++++
+> > >>  1 file changed, 29 insertions(+)
+> > >>  create mode 100755 tools/perf/tests/shell/list.sh
+> > >>
+> > >> diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
+> > >> new file mode 100755
+> > >> index 000000000000..286879a9837a
+> > >> --- /dev/null
+> > >> +++ b/tools/perf/tests/shell/list.sh
+> > >> @@ -0,0 +1,29 @@
+> > >> +#!/bin/sh
+> > >> +# perf list tests
+> > >> +# SPDX-License-Identifier: GPL-2.0
+> > >> +
+> > >> +set -e
+> > >> +err=0
+> > >> +
+> > >> +if [ "x$PYTHON" == "x" ]
+> > >> +then
+> > >> +    if which python3 > /dev/null
+> > >
+> > > 'which' isn't always present.  Maybe
+> > >
+> > > python3 --version >/dev/null 2>&1 && PYTHON=python3
+> > >
+> >
+> > Now that we have shellcheck integrated into the build, we could enable
+> > the POSIX mode test which would warn against this usage of which and
+> > suggest the alternative.
+> >
+> > At the moment though there are several other usages of which already in
+> > the tests. And probably enabling POSIX mode would come with hundreds of
+> > other warnings to fix.
+> >
+> > I'm not saying we shouldn't change this instance though, just adding the
+> > info for the discussion.
+> 
+> Sounds good to me. Fwiw, the instance where I lifted this code was:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/stat+json_output.sh?h=perf-tools-next#n12
+> 
+> With this change:
+> ```
+> diff --git a/tools/perf/tests/Makefile.tests b/tools/perf/tests/Makefile.tests
+> index fdaca5f7a946..06de6d3f4842 100644
+> --- a/tools/perf/tests/Makefile.tests
+> +++ b/tools/perf/tests/Makefile.tests
+> @@ -1,7 +1,7 @@
+> # SPDX-License-Identifier: GPL-2.0
+> # Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
+> 
+> -PROGS := $(shell find tests/shell -perm -o=x -type f -name '*.sh')
+> +PROGS := $(shell find tests/shell -executable -type f -name '*.sh')
+> FILE_NAME := $(notdir $(PROGS))
+> FILE_NAME := $(FILE_NAME:%=.%)
+> LOGS := $(join $(dir $(PROGS)),$(FILE_NAME))
+> ```
+> 
+> shellcheck now runs for me. I'll try adding the posix check into the
+> patch series, as well as fixing other instances I can see.
 
-Please consider pulling the following fixes for the perf tools.
+So I'll wait for a v2 for this one, ok?
 
-Thanks
-Namhyung
-
-
-The following changes since commit 98b1cc82c4affc16f5598d4fa14b1858671b2263:
-
-  Linux 6.7-rc2 (2023-11-19 15:02:14 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.7-1-2023-11-29
-
-for you to fetch changes up to 57686a72da08ae555d93148aa8756b16417a6aff:
-
-  tools: Disable __packed attribute compiler warning due to -Werror=attributes (2023-11-22 12:23:27 -0800)
-
-----------------------------------------------------------------
-perf tools fixes for v6.7: 1st batch
-
-Assorted build fixes including:
-- fix compile errors in printf() with u64 on 32-bit systesm
-- sync kernel headers to the tool copies
-- update arm64 sysreg generation for tarballs
-- disable compile warnings on __packed attribute
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (1):
-      tools: Disable __packed attribute compiler warning due to -Werror=attributes
-
-Namhyung Kim (14):
-      tools headers UAPI: Update tools's copy of drm headers
-      tools headers UAPI: Update tools's copy of fscrypt.h header
-      tools headers UAPI: Update tools's copy of kvm.h header
-      tools headers UAPI: Update tools's copy of mount.h header
-      tools headers UAPI: Update tools's copy of vhost.h header
-      tools headers UAPI: Update tools's copy of unistd.h header
-      tools headers: Update tools's copy of socket.h header
-      tools headers: Update tools's copy of x86/asm headers
-      tools headers: Update tools's copy of arm64/asm headers
-      tools headers: Update tools's copy of s390/asm headers
-      tools/perf: Update tools's copy of x86 syscall table
-      tools/perf: Update tools's copy of powerpc syscall table
-      tools/perf: Update tools's copy of s390 syscall table
-      tools/perf: Update tools's copy of mips syscall table
-
-Oliver Upton (2):
-      tools perf: Add arm64 sysreg files to MANIFEST
-      perf build: Ensure sysreg-defs Makefile respects output dir
-
-Yang Jihong (2):
-      perf kwork: Fix a build error on 32-bit
-      perf lock contention: Fix a build error on 32-bit
-
- tools/arch/arm64/include/asm/cputype.h             |  5 +++-
- tools/arch/arm64/include/uapi/asm/kvm.h            | 32 ++++++++++++++++++++++
- tools/arch/arm64/include/uapi/asm/perf_regs.h      | 10 ++++---
- tools/arch/arm64/tools/Makefile                    |  2 +-
- tools/arch/s390/include/uapi/asm/kvm.h             | 16 +++++++++++
- tools/arch/x86/include/asm/cpufeatures.h           | 16 ++++++++++-
- tools/arch/x86/include/asm/disabled-features.h     | 16 +++++++++--
- tools/arch/x86/include/asm/msr-index.h             | 23 +++++++++++++---
- tools/arch/x86/include/uapi/asm/prctl.h            | 12 ++++++++
- tools/include/asm-generic/unaligned.h              |  1 +
- tools/include/uapi/asm-generic/unistd.h            | 12 ++++++--
- tools/include/uapi/drm/drm.h                       | 20 ++++++++++++++
- tools/include/uapi/drm/i915_drm.h                  |  8 +++---
- tools/include/uapi/linux/fscrypt.h                 |  3 +-
- tools/include/uapi/linux/kvm.h                     | 24 ++++++++++++++--
- tools/include/uapi/linux/mount.h                   |  3 +-
- tools/include/uapi/linux/vhost.h                   |  8 ++++++
- tools/perf/MANIFEST                                |  2 ++
- tools/perf/Makefile.perf                           | 24 ++++++++++------
- .../perf/arch/mips/entry/syscalls/syscall_n64.tbl  |  4 +++
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |  4 +++
- tools/perf/arch/s390/entry/syscalls/syscall.tbl    |  4 +++
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |  3 ++
- tools/perf/builtin-kwork.c                         |  2 +-
- tools/perf/trace/beauty/include/linux/socket.h     |  1 +
- tools/perf/util/Build                              |  2 +-
- tools/perf/util/bpf_lock_contention.c              |  3 +-
- tools/testing/selftests/kvm/Makefile               |  5 ++--
- 28 files changed, 226 insertions(+), 39 deletions(-)
+- Arnaldo
