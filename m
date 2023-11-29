@@ -1,148 +1,124 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450801DFD8;
+	Wed, 29 Nov 2023 12:33:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c03Ofld+"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DFBD48;
-	Wed, 29 Nov 2023 04:23:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pNYBN4X8Pb/Yx1Vd4NeSsqJHNsCvDKBkPdpgHN9QiTY=; b=c03Ofld+THOSR45IGAoDp8+pt+
-	UkfL9dRdtWJkl7qb6AU+5c+x7KX6JkdgemiwCTtdFLtC8j3nqM8IVqnrXMofOelxpK29X8uF5ZtqK
-	2psuTW1FBHw7w+hCAukfMR+AbdMf4DY/XhmeCl29l+MfJN1SJ1PJx8jAD2H7bBe/pj7nl2oALLxTQ
-	/Wq9rmsH7ut3/zJvmxsteA+NWfhM0iTJv5+2fIYirsXNN2z3k3oqWVXNW+EmUuRGCbVR2gZ+vinsR
-	mMtyscTw9AeKHR2Ata9aGOkAtE7CW4vS+gUvFOQgZD958IO8eheGXfLqbaFjb9TAuhe82KOK/eFx7
-	PW7yzbiQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r8Jb8-00DNTe-4M; Wed, 29 Nov 2023 12:23:22 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DAA0B30017D; Wed, 29 Nov 2023 13:23:20 +0100 (CET)
-Date: Wed, 29 Nov 2023 13:23:20 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: James Clark <james.clark@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH RFC 2/3] perf/x86/intel/pt: Add support for pause_resume()
-Message-ID: <20231129122320.GH30650@noisy.programming.kicks-ass.net>
-References: <20231123121851.10826-1-adrian.hunter@intel.com>
- <20231123121851.10826-3-adrian.hunter@intel.com>
- <c63808b2-2049-da18-f0af-5dff2bc87cd2@arm.com>
- <20231129105836.GF30650@noisy.programming.kicks-ass.net>
- <842ce784-fbd2-4667-a5f7-aaa10a1108dc@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjRhol3c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCF62C433C7;
+	Wed, 29 Nov 2023 12:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701261237;
+	bh=rcKNM4SrzvOTPOMTTnNAkDwa6umDcm/Z1HWPpEbPqyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tjRhol3cWY3zuGru3VVvU0O2nvIZ1iroKFgUGd5udxtr1+fOZwwjI4yf34DDZBv6e
+	 3prqd/wUw5nFVikChUwzQVlOj3jKDgliaH6N/gbEFyGYqMRPILgkTeJgSOPo6go4Ru
+	 QA0lsDQ1IkYy0myr5ssNkCMZE4Fye5x+f/6igxF5houf7db1oPc0rp0j7PyJpwicjP
+	 dnGM+Ga37Jy74eyQgKrb/5PqccEYDaKnLbwudYSK4RJ+LSyr3qDaXHuk+396BqI0ae
+	 ZJRjIlDqvg/ucpgMXN/p3WqucvWHyOw6mCXMInn8nuHvw2Wfvi4HdmHJxvZUsU5dII
+	 SB0+fpQJHj75w==
+Date: Wed, 29 Nov 2023 12:33:46 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Yu-Chien Peter Lin <peterlin@andestech.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>, acme@kernel.org,
+	adrian.hunter@intel.com, ajones@ventanamicro.com,
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
+	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+	dminus@andestech.com, evan@rivosinc.com, geert+renesas@glider.be,
+	guoren@kernel.org, heiko@sntech.de, irogers@google.com,
+	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com,
+	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org,
+	palmer@dabbelt.com, paul.walmsley@sifive.com, peterz@infradead.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
+	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
+	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me,
+	wens@csie.org, will@kernel.org, ycliang@andestech.com,
+	inochiama@outlook.com
+Subject: Re: [PATCH v4 09/13] dt-bindings: riscv: Add T-Head PMU extension
+ description
+Message-ID: <20231129-curvature-stainable-bf77c735438f@spud>
+References: <20231122121235.827122-1-peterlin@andestech.com>
+ <20231122121235.827122-10-peterlin@andestech.com>
+ <20231123-obscurity-copied-7a7bcc66d69d@wendy>
+ <ZWb6qqaNzzNUJ7aX@APC323>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Utvw2SdgzW4fg31u"
+Content-Disposition: inline
+In-Reply-To: <ZWb6qqaNzzNUJ7aX@APC323>
+
+
+--Utvw2SdgzW4fg31u
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <842ce784-fbd2-4667-a5f7-aaa10a1108dc@intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 01:15:43PM +0200, Adrian Hunter wrote:
-> On 29/11/23 12:58, Peter Zijlstra wrote:
-> > On Wed, Nov 29, 2023 at 09:53:39AM +0000, James Clark wrote:
-> >> On 23/11/2023 12:18, Adrian Hunter wrote:
-> > 
-> >>> +static void pt_event_pause_resume(struct perf_event *event)
-> >>> +{
-> >>> +	if (event->aux_paused)
-> >>> +		pt_config_stop(event);
-> >>> +	else if (!event->hw.state)
-> >>> +		pt_config_start(event);
-> >>> +}
-> >>
-> >> It seems like having a single pause/resume callback rather than separate
-> >> pause and resume ones pushes some of the event state management into the
-> >> individual drivers and would be prone to code duplication and divergent
-> >> behavior.
-> >>
-> >> Would it be possible to move the conditions from here into the core code
-> >> and call separate functions instead?
-> >>
-> >>> +
-> >>>  static void pt_event_start(struct perf_event *event, int mode)
-> >>>  {
-> >>>  	struct hw_perf_event *hwc = &event->hw;
-> >>> @@ -1798,6 +1809,7 @@ static __init int pt_init(void)
-> >>>  	pt_pmu.pmu.del			 = pt_event_del;
-> >>>  	pt_pmu.pmu.start		 = pt_event_start;
-> >>>  	pt_pmu.pmu.stop			 = pt_event_stop;
-> >>> +	pt_pmu.pmu.pause_resume		 = pt_event_pause_resume;
-> >>
-> >> The general idea seems ok to me. Is there a reason to not use the
-> >> existing start() stop() callbacks, rather than adding a new one?
-> >>
-> >> I assume it's intended to be something like an optimisation where you
-> >> can turn it on and off without having to do the full setup, teardown and
-> >> emit an AUX record because you know the process being traced never gets
-> >> switched out?
-> > 
-> > So the actual scheduling uses ->add() / ->del(), the ->start() /
-> > ->stop() methods are something that can be used after ->add() and before
-> > ->del() to 'temporarily' pause things.
-> > 
-> > Pretty much exactly what is required here I think. We currently use this
-> > for PMI throttling and adaptive frequency stuff, but there is no reason
-> > it could not also be used for this.
-> > 
-> > As is, we don't track the paused state across ->del() / ->add(), but
-> > perhaps that can be fixed. We can easily add more PERF_EF_ / PERF_HES_
-> > bits to manage things.
-> > 
-> > 
-> 
-> I am not sure stop / start play nice with NMI's from other events e.g.
-> 
-> PMC NMI wants to pause or resume AUX but what if AUX event is currently
-> being processed in ->stop() or ->start()?  Or maybe that can't happen?
+On Wed, Nov 29, 2023 at 04:47:38PM +0800, Yu-Chien Peter Lin wrote:
+> Hi Conor,
+>=20
+> On Thu, Nov 23, 2023 at 02:48:20PM +0000, Conor Dooley wrote:
+> > On Wed, Nov 22, 2023 at 08:12:31PM +0800, Yu Chien Peter Lin wrote:
+> > > Document the ISA string for T-Head performance monitor extension
+> > > which provides counter overflow interrupt mechanism.
+> > >=20
+> > > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> > > ---
+> > > Changes v2 -> v3:
+> > >   - New patch
+> > > Changes v3 -> v4:
+> > >   - No change
+> > > ---
+> > >  Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml =
+b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > index c91ab0e46648..694efaea8fce 100644
+> > > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > @@ -258,5 +258,11 @@ properties:
+> > >              in commit 2e5236 ("Ztso is now ratified.") of the
+> > >              riscv-isa-manual.
+> > > =20
+> > > +        - const: xtheadpmu
+> > > +          description:
+> > > +            The T-Head performance monitor extension for counter ove=
+rflow. For more
+> > > +            details, see the chapter 12 in the Xuantie C906 user man=
+ual.
+> > > +            https://github.com/T-head-Semi/openc906/tree/main/doc
+> >=20
+> > I'm pretty sure that I asked on the previous revision for you to
+> > identify a specific revision of this document.
+>=20
+> Sorry, I'm still searching for it.
 
-I think that can happen, and pt_event_stop() can actually handle some of
-that, while your pause_resume() thing, which uses pt_config_stop() does
-not.
+Identifying a specific commit from that repo as the revision would be
+okay. Follow the format used elsewhere for the standard extensions.
 
-But yes, I think that if you add pt_event_{stop,start}() calls from
-*other* events their PMI, then you get to deal with more 'fun'.
+Cheers,
+Conor.
 
-Something like:
+--Utvw2SdgzW4fg31u
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  perf_addr_filters_adjust()
-    __perf_addr_filters_adjust()
-      perf_event_stop()
-        __perf_event_stop()
-	  event->pmu->stop()
-	  <NMI>
-	    ...
-	    perf_event_overflow()
-	      pt_event->pmu->stop()
-	  </NMI>
-	  event->pmu->start() // whoopsie!
+-----BEGIN PGP SIGNATURE-----
 
-Should now be possible.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZWcvqgAKCRB4tDGHoIJi
+0pQuAQDZZfwrh03OUXbGE0xwEKsxZcfxxPGdlMVElJGo9ksISAD+KCK6j7yitR3a
+gkIK95gOtiUMn/8ZposqtImCwROI7gg=
+=RvjF
+-----END PGP SIGNATURE-----
 
-I think what you want to do is rename pt->handle_nmi into pt->stop_count
-and make it a counter, then ->stop() increments it, and ->start()
-decrements it and everybody ensures the thing doesn't get restart while
-!0 etc..
-
-I suspect you need to guard the generic part of this feature with a new
-PERF_PMU_CAP_ flag and then have the coresight/etc. people opt-in once
-they've audited things.
-
-James, does that work for you?
-
+--Utvw2SdgzW4fg31u--
