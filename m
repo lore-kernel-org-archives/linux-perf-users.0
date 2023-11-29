@@ -1,116 +1,113 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PnOs/mTB"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267A510C0
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 17:33:19 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-db403a0f25eso7456926276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 17:33:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701221598; x=1701826398; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uOZ4wahs3lobvOneDy8Jd5Ygdm6wAPNocIR2yUTw9Co=;
-        b=PnOs/mTB+UZFcfgkl/eOoXceVOBF34eTKjpbAZnbEQcOnRB6OCbbpSa0nb+gFFnNBL
-         R5QINtMz7/9/FfP4DrcVq6GwEkMl9Q/Kc1Y8MNpM0b/aYiGjHcMXlX1025le7eloitOP
-         npjQ2la37cOxtlu30553XWGmVEcCHnBMJYLzpfMUMUvTIbn9IvUu8iu0msbfVh4/v5pZ
-         ei5tDYcf1RA7KlHIVyJZCn8AMgBFBatvY3TJzSmLTYntWYG0aHZgMFrEPM4mmkxGNEIw
-         Wurmx4nLt8sEdLgJ6xitjlVdgJDVABBHzHWsmQGox0qhvxF6MLiNHdMob5MZH5sxHqv7
-         e6aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701221598; x=1701826398;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uOZ4wahs3lobvOneDy8Jd5Ygdm6wAPNocIR2yUTw9Co=;
-        b=eNjc76JR3T1qZJTKq0NQUzH406SnasfTQxz8cbMdzLx6c1YRW6v6947ijzlEtRf4Jr
-         TzB1lZ631vTITZJ3q4en6mEe3i9/XTF7jiKu7MFypMFVkT/yjnI2cUqeLnNFXxvKB/c8
-         bwGWpe+5e95NcSjEEYUh9hnP32hlP0Y5oiEgqu7Vtt3ozyNYVfZT1TdUYcLAie9q4yvn
-         sx98DX6SeGA1cIjhs/6MgaYY8uwbFuR7xNqJgQPVhFWb1+CEziYyRTyoZ5QPNspbqQM6
-         Md0t9oNrgWzg0zNVzLjWzP8RIF0P+2PXM/1rWVAMMO9QFukryYqt1QX91uiW4atGP4b+
-         mR9Q==
-X-Gm-Message-State: AOJu0Yx3XneNf47A5TNBhsHDhDY1BXqYOnRy8UVQyksQw1QbxSi8YjjL
-	dwDwswQ8vuDwAyS6Tb/N66EQLcL2EKM=
-X-Google-Smtp-Source: AGHT+IFhGe4EXP7BVJs2IZlP2wbVgEkiFOTUDd8qRLyNsc8IhtYPIoOTFtT363Z5UQTHRTeqBUDaEInNAgo=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:ca04:0:b0:da3:a91c:7356 with SMTP id
- a4-20020a25ca04000000b00da3a91c7356mr428452ybg.8.1701221598425; Tue, 28 Nov
- 2023 17:33:18 -0800 (PST)
-Date: Tue, 28 Nov 2023 17:33:16 -0800
-In-Reply-To: <20231117103236.GI3818@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S38dokYd"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B423172E
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 21:23:07 -0800 (PST)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT5Mo3Y017898;
+	Wed, 29 Nov 2023 05:22:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=9BZRD7+g12jtxt2zKB4bSK5o36BET56W5aEFeCFEpNc=;
+ b=S38dokYdqy2bHcRn7M6czdqw7KjiwMgkE/uRaHOLYeE0u1dq0iOhtfC18MhqvqwN+LAc
+ boyox0e+Jdz0y7jpVMizGN82em8G3tdXLKb2GMXd2OUHUmejV4ud1zQZSiPpX2ZzMDDx
+ pkBcIywy+FDWMuwn4ZLxw8TwQCxV0OnI7z0GdH7yTqwJYJwPRotZa1S3PPMaCeFSFdem
+ Sy9ivV7w8zSTGWaTBoiAhKB/9GDgiNjjEzsC6jRa5PvI2WMZQO2NGuTBqBk11qRzetqn
+ lSXXj4Nrb/ESga1X8Qa7uq50prSmbMOBymRoYW3Z11FqygFySGfai8wgs2FIfNv/TYaP Fw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uny3mg048-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Nov 2023 05:22:53 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AT5Mqxp017950;
+	Wed, 29 Nov 2023 05:22:52 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uny3mg03q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Nov 2023 05:22:52 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT581JO018236;
+	Wed, 29 Nov 2023 05:22:51 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ukwy1vnp1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Nov 2023 05:22:51 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AT5Mm025112326
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Nov 2023 05:22:48 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4B34620040;
+	Wed, 29 Nov 2023 05:22:48 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8851620043;
+	Wed, 29 Nov 2023 05:22:46 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.74.136])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 29 Nov 2023 05:22:46 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231107183605.409588-1-seanjc@google.com> <20231117103236.GI3818@noisy.programming.kicks-ass.net>
-Message-ID: <ZWaU3HZURCjms5DM@google.com>
-Subject: Re: [PATCH] perf/x86: Don't enforce minimum period for KVM guest-only events
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Like Xu <likexu@tencent.com>, Jim Mattson <jmattson@google.com>, 
-	Mingwei Zhang <mizhang@google.com>
-Content-Type: text/plain; charset="us-ascii"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
+Subject: Re: [PATCH V4] tools/perf: Add perf binary dependent rule for
+ shellcheck log in Makefile.perf
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZWSs6zn1NqWqzoyC@kernel.org>
+Date: Wed, 29 Nov 2023 10:52:34 +0530
+Cc: Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1D08EDB0-E0FD-4D1C-A9D8-5FF9EB9329AC@linux.vnet.ibm.com>
+References: <20231123160232.94253-1-atrajeev@linux.vnet.ibm.com>
+ <e8143e4d-d3ca-88c5-f1c8-b79f70ee5ffa@arm.com> <ZWSs6zn1NqWqzoyC@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        James Clark <james.clark@arm.com>
+X-Mailer: Apple Mail (2.3774.200.91.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: SyP_gbK58jxCdmTjTcSUojZw8EYBTUcG
+X-Proofpoint-GUID: 3HvkAO0Jp9bV1OQDdqlDhykgcqbvHj6F
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-29_02,2023-11-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 mlxlogscore=508 adultscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311290039
 
-On Fri, Nov 17, 2023, Peter Zijlstra wrote:
-> On Tue, Nov 07, 2023 at 10:36:05AM -0800, Sean Christopherson wrote:
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index 40ad1425ffa2..f8a8a4ea4d47 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -1388,16 +1388,25 @@ int x86_perf_event_set_period(struct perf_event *event)
-> >  		hwc->last_period = period;
-> >  		ret = 1;
-> >  	}
-> > -	/*
-> > -	 * Quirk: certain CPUs dont like it if just 1 hw_event is left:
-> > -	 */
-> > -	if (unlikely(left < 2))
-> > -		left = 2;
-> >  
-> >  	if (left > x86_pmu.max_period)
-> >  		left = x86_pmu.max_period;
-> >  
-> > -	static_call_cond(x86_pmu_limit_period)(event, &left);
-> > +	/*
-> > +	 * Exempt KVM guest events from the minimum period requirements.  It's
-> > +	 * the guest's responsibility to ensure it can make forward progress,
-> > +	 * and it's KVM's responsibility to configure an appropriate "period"
-> > +	 * to correctly virtualize overflow for the guest's PMCs.
-> > +	 */
-> > +	if (!event->attr.exclude_host) {
-> > +		/*
-> > +		 * Quirk: certain CPUs dont like it if just 1 event is left:
-> > +		 */
-> > +		if (unlikely(left < 2))
-> > +			left = 2;
-> > +
-> > +		static_call_cond(x86_pmu_limit_period)(event, &left);
-> > +	}
-> 
-> Hmm, IIRC we can disable that left < 2 thing for anything that doesn't
-> have x86_pmu.pebs_no_isolation IIRC.
-> 
-> I'm not sure about taking out the limit_period call, why does it make
-> sense to allow the guest to program obviously invalid settings?
 
-I don't see how the guest behavior is obviously invalid.  Architecturally, writing
--1 to a counter should result in overflow after a single event.  Underlying uarch
-goofiness shouldn't enter into that equation.
 
-Honoring the guest's programming *might* cause oddness for the guest, whereas
-not honoring the architecture is guaranteed to cause visible issues.
+> On 27-Nov-2023, at 8:21=E2=80=AFPM, Arnaldo Carvalho de Melo =
+<acme@kernel.org> wrote:
+>=20
+> Em Mon, Nov 27, 2023 at 11:12:57AM +0000, James Clark escreveu:
+>> On 23/11/2023 16:02, Athira Rajeev wrote:
+>>> Add rule in new Makefile "tests/Makefile.tests" for running
+>>> shellcheck on shell test scripts. This automates below shellcheck
+>>> into the build.
+>=20
+>> Seems to work really well. I also tested it on Ubuntu, and checked
+>> NO_SHELLCHECK, cleaning and with and without shellcheck installed =
+etc.
+>=20
+>> Reviewed-by: James Clark <james.clark@arm.com>
+>=20
+> Tested on Fedora 38, works as advertised, applied.
+>=20
+> - Arnaldo
 
-If programming a "period" of 1 puts the host at risk in some way, then I agree
-that this is unsafe and we need a different solution.  But if the worst case
-scenario is non-determinstic or odd behavior from the guest's perspective, then
-that's the guest's problem (with the caveat that the guest might not have accurate
-Family/Model/Stepping data to make informed decisions).
+Hi James, Arnaldo
 
-> That is, would something like the below work for you?
+Thanks for testing the patch and comments.
 
-No, because the fix ideally wouldn't require fancy hardware, i.e. would work for
-all CPUs for which KVM supports a virtual PMU.
+Athira Rajeev=
