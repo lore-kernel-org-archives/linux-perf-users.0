@@ -1,82 +1,140 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j38Jd5Hb"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2921B2
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 14:36:10 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-db53919e062so9723276.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 14:36:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701297370; x=1701902170; darn=vger.kernel.org;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WXS7/e2VY4X2gQe3kEWDUpAXAmm4xsAO1n9z3bPt+MA=;
-        b=j38Jd5HbasSPeHNKCfmy4mnlVxhAxOWxmBqpBdlqRWcQngjrlYGNIS8/H9NSFysi73
-         6sc25+fADc0JDTW5gqYuGUF/3k8/OMNPxp0fvEvhjEGsX5Rkn/CGdQttKLVkKUHQRtfN
-         3FQCi9bOGiGJMXfJdjp9pqIms/IITxcyIsJ09MXzuPl6yj4pLqrYj/qVEeOgN/KtkFnI
-         siOL48+kIUPMMgFYIeXvkw74TqFi79oV7fav9Erm6Zy5betC9OEcjQ/g3+nzp7wgPP98
-         8LVJx4397j7r1qtJeyPDM3J4pxiiaTn0QKdqgNOEE1Iw6eUQLaRz4bwGDtH099EuPxA9
-         VJnw==
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684B110C2;
+	Wed, 29 Nov 2023 15:56:49 -0800 (PST)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-28613d87c4cso398494a91.3;
+        Wed, 29 Nov 2023 15:56:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701297370; x=1701902170;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WXS7/e2VY4X2gQe3kEWDUpAXAmm4xsAO1n9z3bPt+MA=;
-        b=gjdq9a9xQbNQtFp9KnVo+bH2kFZnKR9O3H8TYueFVAT1ty8BGe/TYqmDn8y6pu4gMQ
-         IeebalAxdlEXExBhh8uEjMfHMILXZLk6MJ5P3pkg525CCGbyLAYtPuLOUnWYeTn4IEcY
-         EQRIuLMee9yUgia5Ioj1EEUf198cv2+hLiPhghGqjpP/gQngRqbcw7E1i5G0QqKMiJH7
-         7mYEnk0Y4TW3QoWf8fBIHdW1NEMyjKFE4Wu+USASGDom8B2Oc2sD/TuCVE7y+e9jYvKg
-         7sT5LOqaWvKO0PS4GxroJfima5SHe84VJ/2pVSgIrWHEron2jX7cwrDRFYSNZsag2p6J
-         SyFg==
-X-Gm-Message-State: AOJu0Yx3XpC4vfgIFkSsB2I+qV1gql0sd7A61b9w7nzvBSouaZTh59Qb
-	QWb27WtsO8Zgc3XGpfsJUGlWQdla9jAM
-X-Google-Smtp-Source: AGHT+IGyIcR99e16Ql+7yHk9cIo1V6bGooAvuqVpsvfGfU0chUWlBlm5DOUyxAipjVYAsyWt9PiLLaEIu6yW
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:70ed:81b4:2b6c:fbc0])
- (user=irogers job=sendgmr) by 2002:a25:24d8:0:b0:db5:2a4:c55b with SMTP id
- k207-20020a2524d8000000b00db502a4c55bmr189209ybk.2.1701297369900; Wed, 29 Nov
- 2023 14:36:09 -0800 (PST)
-Date: Wed, 29 Nov 2023 14:35:40 -0800
-Message-Id: <20231129223540.2247030-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1701302209; x=1701907009;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dyQl4Vy/rEx3cdSpEiRXOw3IV56Abu0Xky4Rbxj2uHw=;
+        b=VsOMszPlF/a39vu0arMliKClNCPkj8EaEgUrDNrgdLUSemSYx1B+G+6Bva4FAiHeS+
+         0kKWYqJDEfjtIGh0057No4GSYw0Ny9Mfq1K03wjPIBi8XoXbDS8Tr+5WD7M+1WzLHouw
+         JIznvx41Rw5nuutQsv3i6s44ilU9Uvtf8tRstPSaDhzO17WeL/+v/tlGkIrEgd88T3q2
+         4+/DFQPU0tevIEh/MXxY83/hCvGB0Lyf+7eIV1c/LlBAYzd3YZ/yRnTDHhge1Ep973Je
+         LLkGCP/BgHhPe3VRiaKUz7SANKPl4NN05NmQT+g/x6BjwXYmUB7ZmBYNdQIgRoyQw/sd
+         +D7w==
+X-Gm-Message-State: AOJu0YyZUdm3l5ZcNZi2HxztIKv3Tpj4OyfZrl6XZ5SzdKw64l7CNRzt
+	VfbQ/Yjr3Zm2xVKrrrbhsrnTxMIxPtKTcm8s9Qk=
+X-Google-Smtp-Source: AGHT+IHDfzxX1rS5SziiRbb7Ev377hzw2KeazGnVixPVbRxHPgBzKCjzHnxqN2V1TD3i9FlP2mIwuiIlI5mSyuUhpa4=
+X-Received: by 2002:a17:90b:2b50:b0:285:9e58:1bac with SMTP id
+ rr16-20020a17090b2b5000b002859e581bacmr19346035pjb.27.1701302208691; Wed, 29
+ Nov 2023 15:56:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Subject: [PATCH v1] perf stat: Fix help message for --metric-no-threshold option
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Stephane Eranian <eranian@google.com>
+MIME-Version: 1.0
+References: <20231128175441.721579-1-namhyung@kernel.org> <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 29 Nov 2023 15:56:37 -0800
+Message-ID: <CAM9d7chKmDETK6Ea2wyR8L21jyHWcPHbKavarnq-JmNA-AoUnQ@mail.gmail.com>
+Subject: Re: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Copy-paste error led to help message for metric-no-threshold repeating
-that of metric-no-merge.
+Hi Ian,
 
-Reported-by: Stephane Eranian <eranian@google.com>
-Fixes: 1fd09e299bdd ("perf metric: Add --metric-no-threshold option")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Nov 28, 2023 at 11:14=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Tue, Nov 28, 2023 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hello,
+> >
+> > It used to have annotation_options for each command separately (for
+> > example, perf report, annotate, and top), but we can make it global as
+> > they never used together (with different settings).  This would save
+> > some memory for each symbol when annotation is enabled.
+> >
+> > This code is available at 'perf/annotate-option-v1' branch in
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> >
+> > Thanks,
+> > Namhyung
+>
+> Thanks for doing this and I think it is progress. I think there is a
+> common problem with having things be an option rather than say part of
+> session. Having a global variable seems unfortunate but I'm not sure
+> if in all locations we have easy access to the session.
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index a3af805a1d57..c77a3308d3fb 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1255,7 +1255,7 @@ static struct option stat_options[] = {
- 	OPT_BOOLEAN(0, "metric-no-merge", &stat_config.metric_no_merge,
- 		       "don't try to share events between metrics in a group"),
- 	OPT_BOOLEAN(0, "metric-no-threshold", &stat_config.metric_no_threshold,
--		       "don't try to share events between metrics in a group  "),
-+		       "disable adding events for the metric threshold calculation"),
- 	OPT_BOOLEAN(0, "topdown", &topdown_run,
- 			"measure top-down statistics"),
- 	OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
--- 
-2.43.0.rc1.413.gea7ed67945-goog
+That's not the case when you deal with hist entry or TUI browser.
+I think that's the reason we have the option in the annotation.
 
+
+> The rough
+> structure with annotations as I understand it is:
+>
+> session has machines
+> a machine has dsos
+> a dso has symbols
+> a symbol has an annotation
+
+That's true.  But the annotation struct is used only if
+symbol__annotation_init() is called.
+
+>
+> Annotation is something of unfortunate abstraction as it covers things
+> like an IPC per symbol (why hard code to just IPC?) and things like
+> source files and line numbers.
+
+Right, that's why I splitted the struct annotated_branch.
+
+>
+> A recent success story where we got rid of a configuration variable
+> was by switching to lazy allocation with sorting by name for symbols
+> within a dso. If we could have a lazy allocation model with
+> annotations then maybe we can do away with large hammers like global
+> options.
+
+Maybe I can move the pointer to option into the annotated_source
+which is allocated lazily.  But I don't think it needs to keep the option
+for each symbol or annotation.  It's usually to control some display
+behaviors in the disasm output globally.  So I think it's better to have
+a global variable.
+
+Thanks,
+Namhyung
+
+>
+>
+> > Namhyung Kim (8):
+> >   perf annotate: Introduce global annotation_options
+> >   perf report: Convert to the global annotation_options
+> >   perf top: Convert to the global annotation_options
+> >   perf annotate: Use global annotation_options
+> >   perf ui/browser/annotate: Use global annotation_options
+> >   perf annotate: Ensure init/exit for global options
+> >   perf annotate: Remove remaining usages of local annotation options
+> >   perf annotate: Get rid of local annotation options
+> >
+> >  tools/perf/builtin-annotate.c     |  43 +++++----
+> >  tools/perf/builtin-report.c       |  37 ++++----
+> >  tools/perf/builtin-top.c          |  45 +++++-----
+> >  tools/perf/ui/browsers/annotate.c |  85 ++++++++----------
+> >  tools/perf/ui/browsers/hists.c    |  34 +++----
+> >  tools/perf/ui/browsers/hists.h    |   2 -
+> >  tools/perf/util/annotate.c        | 142 +++++++++++++++---------------
+> >  tools/perf/util/annotate.h        |  38 ++++----
+> >  tools/perf/util/block-info.c      |   6 +-
+> >  tools/perf/util/block-info.h      |   3 +-
+> >  tools/perf/util/hist.h            |  25 ++----
+> >  tools/perf/util/top.h             |   1 -
+> >  12 files changed, 206 insertions(+), 255 deletions(-)
+> >
+> >
+> > base-commit: 757489991f7c08603395b85037a981c31719c92c
+> > --
+> > 2.43.0.rc1.413.gea7ed67945-goog
+> >
