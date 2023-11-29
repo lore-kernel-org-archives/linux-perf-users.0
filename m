@@ -1,33 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f6DmFnm0"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C52E6BA;
-	Wed, 29 Nov 2023 02:32:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="abH9ikdM"
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA82010CE;
+	Wed, 29 Nov 2023 02:53:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rmJD+aYpwKfnMSY8EiaL3anh7OCP8CuiZJQUFpIlc2c=; b=f6DmFnm07pCKf5vCvLX5iJiXku
-	0mt6ap+4UM2JIz9QRobfISt+nnqnUWngst5c23B2ABQC27GAr5POvMPvRz0Ur7jtzFIg86HESII4O
-	qv3dMRC4FQL5kNCqQ4dDFE+9g13nopYSMEDp1MrK4zP0gz1vRXQpqWItVGoIubYDbVzsw95Kmo9jq
-	SJE/vGNBqWHHQoJol9xG7dc7fj1nwOUDf8TFzlW8uirIBqnWdWLN/EmW+9KsRviXKESYIjocPrZcJ
-	W8Qdb67/0EGqR1hhQazwItanBaGCbVh31yO3ouTEusmc+nNzJTGEunNAWzpYN4hIVuvkrnDcuLuHh
-	600hduqQ==;
+	bh=/OekEShUlQdJpo7AqAfaxY+vi6Bol0LFK9LTWBoiQ5M=; b=abH9ikdMp2xRajwn9eXjNI/KOg
+	Lugjk+J03nV25J4wm8/VAsB0k9Bq9Fyvu9PUe/dU8oZDnvjoXoUwWhpvB13zqiK76ie8AqQKiaVIL
+	QrnjLjqnMAWY3FzNnL64l9KwFK6OWKI+vhrQc6er/btaes0Iu1me2jWgNdBFBZRXvNKcv1K2FKHvp
+	glxDq3LMgoZ4nyGu2fzvAm0rLTQO8QhMEKSXlXuYCLZvW5Oz0krdizLlmseM+UDtl4xK3+b5WVqbO
+	S4u1awcHr6Xr6jeE9arGWFB1upo8yi8jXcEzY73+RqUSM9D3ueK6t/xnbtusOC+ScXoLotNS3cq7r
+	hDCZWf8A==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r8Hru-00DIE6-BU; Wed, 29 Nov 2023 10:32:34 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1r8IAh-000Jk4-0K;
+	Wed, 29 Nov 2023 10:52:01 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 02130300293; Wed, 29 Nov 2023 11:32:34 +0100 (CET)
-Date: Wed, 29 Nov 2023 11:32:33 +0100
+	id 01183300293; Wed, 29 Nov 2023 11:51:57 +0100 (CET)
+Date: Wed, 29 Nov 2023 11:51:57 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: Zhengyuan Liu <liuzhengyuang521@gmail.com>
-Cc: mingo@redhat.com, linux-perf-users@vger.kernel.org,
-	stable@vger.kernel.org, =?utf-8?B?6IOh5rW3?= <huhai@kylinos.cn>,
-	=?utf-8?B?5YiY5LqR?= <liuyun01@kylinos.cn>, huangjinhui@kylinos.cn,
-	Zhengyuan Liu <liuzhengyuan@kylinos.cn>, acme@kernel.org
-Subject: Re: Question about perf sibling_list race problem
-Message-ID: <20231129103233.GD30650@noisy.programming.kicks-ass.net>
-References: <CAOOPZo5oFZAs3sMcEgmTEZy3ef4jg630xL3mUBx3bvV6tQcdQg@mail.gmail.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH RFC 1/3] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+Message-ID: <20231129105157.GE30650@noisy.programming.kicks-ass.net>
+References: <20231123121851.10826-1-adrian.hunter@intel.com>
+ <20231123121851.10826-2-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -36,19 +51,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOOPZo5oFZAs3sMcEgmTEZy3ef4jg630xL3mUBx3bvV6tQcdQg@mail.gmail.com>
+In-Reply-To: <20231123121851.10826-2-adrian.hunter@intel.com>
 
-On Wed, Nov 29, 2023 at 05:33:33PM +0800, Zhengyuan Liu wrote:
-> Hi, all
-> 
-> We are encountering a perf related soft lockup as shown below:
-> 
-> [25023823.265138] watchdog: BUG: soft lockup - CPU#29 stuck for 45s!
-> [YD:3284696]
-> [25023823.275772]  net_failover virtio_scsi failover
-> [25023823.276750] CPU: 29 PID: 3284696 Comm: YD Kdump: loaded Not
-> tainted 4.19.90-23.18.v2101.ky10.aarch64 #1
-          ^^^^^^^^^^^^^^^^^^^
+On Thu, Nov 23, 2023 at 02:18:49PM +0200, Adrian Hunter wrote:
 
-That is some unholy ancient kernel. Please see if you can reproduce on
-something recent.
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 39c6a250dd1b..1232e70adfba 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -456,7 +456,8 @@ struct perf_event_attr {
+>  				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
+>  				remove_on_exec :  1, /* event is removed from task on exec */
+>  				sigtrap        :  1, /* send synchronous SIGTRAP on event */
+> -				__reserved_1   : 26;
+> +				aux_start_paused :  1, /* start AUX area tracing paused */
+> +				__reserved_1   : 25;
+>  
+>  	union {
+>  		__u32		wakeup_events;	  /* wakeup every n events */
+> @@ -507,7 +508,15 @@ struct perf_event_attr {
+>  	__u16	sample_max_stack;
+>  	__u16	__reserved_2;
+>  	__u32	aux_sample_size;
+> -	__u32	__reserved_3;
+> +
+> +	union {
+> +		__u32	aux_output_cfg;
+> +		struct {
+> +			__u64	aux_pause      :  1, /* on overflow, pause AUX area tracing */
+> +				aux_resume     :  1, /* on overflow, resume AUX area tracing */
+> +				__reserved_3   : 30;
+> +		};
+> +	};
+>  
+>  	/*
+>  	 * User provided data if sigtrap=1, passed back to user via
+
+So since you're adding a aux_output_cfg word, could you not also put the
+start_paused thing in there?
