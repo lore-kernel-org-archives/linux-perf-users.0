@@ -1,221 +1,154 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bUEmBzfJ"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A6D120
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 21:33:35 -0800 (PST)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT4g7E9014583;
-	Wed, 29 Nov 2023 05:33:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=K66gz+p529eAiE5mE/jqI+aiLewIzWdd/aGyOZrNxX8=;
- b=bUEmBzfJs85/nuPvs2kb/woEjj3ThxNkdfanIAcEXlZWltpfDZyzjxaetFYYu7mZeNtn
- nVXOplu68q4vSBHu7tf5YufWE54Jr6GSevPWC4cjkQmwiGJjHcGu+9abkRYEoZzCeE/R
- fbR6L73gSOXxx9O/iPxCjpcGO7V/hzBanAFflGg2RCBsV23S8aH8IHA62NYYyCRZMWk9
- EjyGYjrFm5ot5ZlerlEjK2tcFgaV0/WsHQwUtHRPOrfevkCS7ol/aUdh6mbedOgosau7
- nzRdh2QfqWeMdiYZgpsxRkcEa+IUQOTV2QWIu5sluAp+TnnXxrF7KuYlrODLXsR8o0sE Lg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3unxgj15jp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 05:33:32 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AT5AQBo013428;
-	Wed, 29 Nov 2023 05:33:32 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3unxgj15jb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 05:33:32 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT581Mw018236;
-	Wed, 29 Nov 2023 05:33:31 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ukwy1vq6p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 05:33:31 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AT5XSxb43254192
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Nov 2023 05:33:28 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B699D20043;
-	Wed, 29 Nov 2023 05:33:28 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A6A520040;
-	Wed, 29 Nov 2023 05:33:27 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.74.136])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 29 Nov 2023 05:33:27 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [PATCH v7 0/4] Introduce perf check subcommand
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20231116213435.382484-1-adityag@linux.ibm.com>
-Date: Wed, 29 Nov 2023 11:03:15 +0530
-Cc: Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
-Message-Id: <02ADEADB-0FEB-423B-B3A3-96C5529AF0A8@linux.vnet.ibm.com>
-References: <20231116213435.382484-1-adityag@linux.ibm.com>
-To: Aditya Gupta <adityag@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: CH4hjnSpJWCfDzevmVUQLKJQTlKHNpvC
-X-Proofpoint-GUID: FW_ddomR9_EFXqNURoe4YOHu2eiynMRW
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F43Cdyei"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9215519B0
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 22:02:15 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-da04fb79246so7699314276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Nov 2023 22:02:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701237735; x=1701842535; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=M0G+iPFdqPEFrwKvYIt+aM1SI2CrgzPYcwp9sXOSF54=;
+        b=F43Cdyei04AdOpfSQd3OpAJLSm9xhRahe1O9QqkF0mPs+iLhQVMaGKePv7pinYZ8Tt
+         0wvo1siGlfX7V9OTI2E1LDcrKbupla3Oq1lkJ9v3JRvjB/+Z5gDI6OAfI7dgs+FN5cE6
+         Hjx4ZL1f7OMt0sQXCWHzs+0jBc4NqNejl8NeWqOYRUlrJOu71IZ0zvvaojVqYF96RQUV
+         fBz+l7xylyjOOwEaNhN8igDLxh1OHIortZ8drWSn4OsasC7ouRfbL1ihY0d2nc0kbL9J
+         7Qb42/47N4NEToqDAXQRLXwX/AT3ivOJJ6+RvfdawBEMIyP2+qMNC69Fw5BO9I5kQPL9
+         yahw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701237735; x=1701842535;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M0G+iPFdqPEFrwKvYIt+aM1SI2CrgzPYcwp9sXOSF54=;
+        b=MSU2piYF/n3kLghoTilV8oTle6PtEjamV3k0XQkR3kNnDTLj4D5dzqJP8tnmKYk0Si
+         VRoOmpW3966hfxtSkFF+pEkl5vozz8UDnfuMEXurDehRv/kWL3lPfk7EvtkCk1MIiZOO
+         TUINUCEH0v2CfFv3ZguQpIw9K6LoTnCuUI48VXaGF1bpijZ1rrgrn32GpcqnJIh5GXiH
+         Vg0OaTDqgpLluUA28WKInz9nd8kdVXueAtbI/aLLRmhMUNzJkl7DfsS8M8xVHyRJ7lNi
+         Lf3QQBkxrkG84yeB7mV5YM6U5KbbXuWyKSUYobNXd5IfoYt/N/vHBmGOx2A15hFagzCV
+         Dwvg==
+X-Gm-Message-State: AOJu0YxXsm4y1k+RKuYUTLN33ACd6pOR0d32/0hqQ15abz/E5ZhRObYc
+	0H1NtvRJDkPNWRoxtSEW5h9Iq/+clXM/
+X-Google-Smtp-Source: AGHT+IF0ACoSYZCtsTHrbz5F11NIz13TQ5Pg2yk0VsMy0quHAj1RB3jL2FGMYTv/jpjjrYqF7QXw8dBKFGOB
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:763b:80fa:23ca:96f8])
+ (user=irogers job=sendgmr) by 2002:a25:d114:0:b0:da3:ab41:304a with SMTP id
+ i20-20020a25d114000000b00da3ab41304amr505879ybg.4.1701237734702; Tue, 28 Nov
+ 2023 22:02:14 -0800 (PST)
+Date: Tue, 28 Nov 2023 22:01:57 -0800
+Message-Id: <20231129060211.1890454-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-29_02,2023-11-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- mlxscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311290040
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
+Subject: [PATCH v1 00/14] Clean up libperf cpumap's empty function
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
+	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, 
+	"=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Yang Li <yang.lee@linux.alibaba.com>, Changbin Du <changbin.du@huawei.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Paran Lee <p4ranlee@gmail.com>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Rename and clean up the use of libperf CPU map functions particularly
+focussing on perf_cpu_map__empty that may return true for maps
+containing CPUs but also with an "any CPU"/dummy value.
 
+perf_cpu_map__nr is also troubling in that iterating an empty CPU map
+will yield the "any CPU"/dummy value. Reduce the appearance of some
+calls to this by using the perf_cpu_map__for_each_cpu macro.
 
-> On 17-Nov-2023, at 3:04=E2=80=AFAM, Aditya Gupta <adityag@linux.ibm.com> =
-wrote:
->=20
-> The Problem
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> Currently the presence of a feature is checked with a combination of
-> perf version --build-options and greps, such as:
->=20
->    perf version --build-options | grep " on .* HAVE_FEATURE"
->=20
-> Proposed solution
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> As suggested by contributors in:
-> https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
->=20
-> Introduce a subcommand "perf check --feature", with which
-> scripts can test for presence of a feature or multiple features, such as:
->=20
->    perf check --feature HAVE_LIBTRACEEVENT
->=20
->    or
->=20
->    perf check --feature libtraceevent
->=20
->    or
->=20
->    perf check --feature libtraceevent,libbpf_support
->=20
-> The usage of "perf version --build-options | grep" has been replaced in t=
-wo
-> tests, with "perf check --feature" command
->=20
-> Also, to not duplicate the same feature list at multiple places, a new gl=
-obal
-> 'supported_features' array has been introduced in builtin.h, so both comm=
-ands
-> 'perf check --feature' and 'perf version --build-options' use the same ar=
-ray
->=20
-> 'supported_features' feature is an array of 'struct feature_support', whi=
-ch
-> also has the name of the feature, macro used to test it's presence, and a
-> is_builtin member, which will be 0 if feature not built-in, and 1 if buil=
-t-in
+Ian Rogers (14):
+  libperf cpumap: Rename perf_cpu_map__dummy_new
+  libperf cpumap: Rename and prefer sysfs for perf_cpu_map__default_new
+  libperf cpumap: Rename perf_cpu_map__empty
+  libperf cpumap: Replace usage of perf_cpu_map__new(NULL)
+  libperf cpumap: Add for_each_cpu that skips the "any CPU" case
+  libperf cpumap: Add any, empty and min helpers
+  perf arm-spe/cs-etm: Directly iterate CPU maps
+  perf intel-pt/intel-bts: Switch perf_cpu_map__has_any_cpu_or_is_empty
+    use
+  perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_empty
+  perf top: Avoid repeated function calls
+  perf arm64 header: Remove unnecessary CPU map get and put
+  perf stat: Remove duplicate cpus_map_matched function
+  perf cpumap: Use perf_cpu_map__for_each_cpu when possible
+  libperf cpumap: Document perf_cpu_map__nr's behavior
 
-For the series,=20
+ .../perf/Documentation/examples/sampling.c    |  2 +-
+ .../perf/Documentation/libperf-sampling.txt   |  2 +-
+ tools/lib/perf/Documentation/libperf.txt      |  4 +-
+ tools/lib/perf/cpumap.c                       | 92 +++++++++++++------
+ tools/lib/perf/evlist.c                       |  6 +-
+ tools/lib/perf/evsel.c                        |  2 +-
+ tools/lib/perf/include/perf/cpumap.h          | 56 ++++++++++-
+ tools/lib/perf/libperf.map                    | 10 +-
+ tools/lib/perf/tests/test-cpumap.c            |  4 +-
+ tools/lib/perf/tests/test-evlist.c            |  6 +-
+ tools/lib/perf/tests/test-evsel.c             |  2 +-
+ tools/perf/arch/arm/util/cs-etm.c             | 83 +++++++----------
+ tools/perf/arch/arm64/util/arm-spe.c          |  4 +-
+ tools/perf/arch/arm64/util/header.c           | 15 +--
+ tools/perf/arch/x86/util/intel-bts.c          |  4 +-
+ tools/perf/arch/x86/util/intel-pt.c           | 10 +-
+ tools/perf/bench/epoll-ctl.c                  |  2 +-
+ tools/perf/bench/epoll-wait.c                 |  2 +-
+ tools/perf/bench/futex-hash.c                 |  2 +-
+ tools/perf/bench/futex-lock-pi.c              |  2 +-
+ tools/perf/bench/futex-requeue.c              |  2 +-
+ tools/perf/bench/futex-wake-parallel.c        |  2 +-
+ tools/perf/bench/futex-wake.c                 |  2 +-
+ tools/perf/builtin-c2c.c                      |  6 +-
+ tools/perf/builtin-ftrace.c                   |  2 +-
+ tools/perf/builtin-record.c                   |  4 +-
+ tools/perf/builtin-stat.c                     | 31 +------
+ tools/perf/tests/bitmap.c                     | 13 +--
+ tools/perf/tests/code-reading.c               |  2 +-
+ tools/perf/tests/cpumap.c                     |  2 +-
+ tools/perf/tests/keep-tracking.c              |  2 +-
+ tools/perf/tests/mmap-basic.c                 |  2 +-
+ tools/perf/tests/openat-syscall-all-cpus.c    |  2 +-
+ tools/perf/tests/perf-time-to-tsc.c           |  2 +-
+ tools/perf/tests/sw-clock.c                   |  2 +-
+ tools/perf/tests/switch-tracking.c            |  2 +-
+ tools/perf/tests/task-exit.c                  |  2 +-
+ tools/perf/tests/topology.c                   | 48 +++++-----
+ tools/perf/util/auxtrace.c                    |  4 +-
+ tools/perf/util/bpf_counter.c                 |  2 +-
+ tools/perf/util/bpf_kwork.c                   | 16 ++--
+ tools/perf/util/bpf_kwork_top.c               | 12 +--
+ tools/perf/util/cpumap.c                      | 14 ++-
+ tools/perf/util/cputopo.c                     |  2 +-
+ tools/perf/util/evlist.c                      |  4 +-
+ tools/perf/util/evsel.c                       |  2 +-
+ tools/perf/util/perf_api_probe.c              |  4 +-
+ tools/perf/util/record.c                      |  4 +-
+ .../scripting-engines/trace-event-python.c    | 12 ++-
+ tools/perf/util/session.c                     |  5 +-
+ tools/perf/util/stat.c                        |  2 +-
+ tools/perf/util/svghelper.c                   | 20 ++--
+ tools/perf/util/top.c                         |  9 +-
+ 53 files changed, 296 insertions(+), 254 deletions(-)
 
-Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-
-Thanks
-Athira
-> Architectures Tested
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> * x86_64
-> * ppc64le
->=20
-> Git tree
-> =3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> Git tree with this patch series applied for testing:
-> https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v7
->=20
-> Changelog
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> V7
-> + modified patch #1 to fix compile issue, and add feature to allow
->  multiple comma-separated features
->=20
-> V6
-> + rebased to perf-tools-next/perf-tools-next
-> + modified patch #1 to include FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_=
-SKEL)
->=20
-> V5
-> + invert return value of 'has_support', but return value of perf check --=
-feature
-> according to shell convention
->=20
-> V4
-> + invert return value of perf check --feature
->=20
-> V3
-> + simplified has_support code in builtin-check.c (patch #1)
-> + modified patch #3 and patch #4 according to change in return value in p=
-atch #1
->=20
-> V2
-> + improved the patch series with suggestions from Namhyung
-> + fix incorrect return value, added -q option, and moved array definition=
- to
->  perf-check.c
->=20
-> V1
-> + changed subcommand name to 'perf check --feature'
-> + added documentation for perf check
-> + support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceeven=
-t) as
->  input to 'perf check --feature'
-> + change subject and descriptions of all patch mentioning perf check inst=
-ead of
->  perf build
->=20
-> V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230=
-825061125.24312-1-adityag@linux.ibm.com/
->=20
-> Aditya Gupta (3):
->  perf check: introduce check subcommand
->  perf version: update --build-options to use 'supported_features' array
->  perf tests task_analyzer: use perf check for libtraceevent support
->=20
-> Athira Rajeev (1):
->  tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
->    --feature
->=20
-> tools/perf/Build                              |   1 +
-> tools/perf/Documentation/perf-check.txt       |  59 +++++++++
-> tools/perf/builtin-check.c                    | 122 ++++++++++++++++++
-> tools/perf/builtin-version.c                  |  39 ++----
-> tools/perf/builtin.h                          |  18 +++
-> tools/perf/perf.c                             |   1 +
-> .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
-> .../shell/record+probe_libc_inet_pton.sh      |   5 +-
-> .../shell/record+script_probe_vfs_getname.sh  |   5 +-
-> tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
-> 10 files changed, 221 insertions(+), 37 deletions(-)
-> create mode 100644 tools/perf/Documentation/perf-check.txt
-> create mode 100644 tools/perf/builtin-check.c
->=20
-> --=20
-> 2.41.0
->=20
+-- 
+2.43.0.rc1.413.gea7ed67945-goog
 
