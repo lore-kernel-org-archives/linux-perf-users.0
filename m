@@ -1,227 +1,96 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wmlleAvw"
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0701110D9
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 09:56:56 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-50bc9893f32so99e87.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 09:56:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IEqQUT45"
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68FA1197
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 09:57:36 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-40b35199f94so5865e9.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 09:57:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701367014; x=1701971814; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701367055; x=1701971855; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XSbGF5t6T+9UlC48SI7S6PeC5mxJiIPR6wB9iBHA1fQ=;
-        b=wmlleAvw2aLYGVOMkvpQBOqUhtgYLqtTvJPGpDqpglBHXuAEkA7iCd7RwtczQyEXc6
-         5+fSR+uJft1CMDWqBlUNV+LZmvHUqJ9uMEJxi+P3Hls42BtVItRqowbNQsNqsaGMzX8P
-         EBj+kKQdSW7wX96+N7FSlG0Efx+ESf2sc799YSeQlf0nuVqMLYcMD+c+C91g6nc6ADk0
-         Wm3V6JxawawidbnMkJpFMtVCaaK3PmdWSIUF1kymKkvKW0qNE4gJ58VcpFlaUftXbu88
-         vQaWAowcTDvkerNAbKqmHdQLuFNCd7ugAEs+P3+igeYJKmhqhfG3wBTydy184mkihwQf
-         pm1A==
+        bh=iibl1Xbm3GB8W/wJpqz8MDirHOnwc3sWdRrSTTEFiCY=;
+        b=IEqQUT45g2vV8C4ZcEI5BQ0dHUqzhfWW6LcbWdGmcLiA3WgOtSKUfwmCI5nwZpZAIs
+         82QQs3MaG4O8hI40EO6zXmSegLKF1QdiVO2jhx8Yeaxr2TcL9kdEIk/JDlgeetvVvgT6
+         hDLd6gD42lq040PYpYyiingWCnzTFGy8C94BTaqOQ35V3Br7SvIjvt3FAIIOEzyagEYE
+         GJOksbEbHWlO5vPb/qcfLC2vaPlHQMv4dagbR5cOAy+ivxcHz0ht4zs3aaPP5TT2IZsX
+         ZfAGtCs4QvYeXzMR49VuQIkNwb1iq+wyG2r3ckmgIbhpaI3cf3Mx27U2kdssrxUHwYuJ
+         ry9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701367014; x=1701971814;
+        d=1e100.net; s=20230601; t=1701367055; x=1701971855;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XSbGF5t6T+9UlC48SI7S6PeC5mxJiIPR6wB9iBHA1fQ=;
-        b=lze1MH686VZhvEHla0d3yqztCbcs/Tpo/2m3XXTvuep7w8FojazSH+cFJLwwueZXB1
-         LP6r9Jq7AiRSW4eZY+fqgFNK3GTver4hhX+jFK1+xUNY5ofIKhr6Hupebzt8fbq3kyLS
-         zGkaVOCX3J6VAOJEHe99trhnimApdnta0G9kDsat/t4XMHnGV1cdxLvDHFriBA7zf+VE
-         B24HwTe/wX9VDKNeItFE8WWqKpM50cB8bywzfCj6QXTzDtmttn0oGHdeLWzv07SQ3qXs
-         Kg0FrnxKASLZxrmSCLb6g2CIYtBTktyc/t2GzbvbgMd2DPPd1LSbym7aSyL+7xA9wKGF
-         3VOw==
-X-Gm-Message-State: AOJu0YwL6g1aXV8UcdS4rHZvXGzlGqhv9z0gY/uQpLAEfC8wKbC4iPD8
-	3B57vX9+gy+o13VM5mf+FDKkJHTrrWS8YWuC5TV9sQ==
-X-Google-Smtp-Source: AGHT+IFmf00GZEF0WkytTlhiJpWOU0N28CHWo0KQFKLeG/+tsP7UTFr+oZ+N6ohgKjjF0maheTscfXTHgvwITI9CXQ0=
-X-Received: by 2002:a19:5f57:0:b0:505:7c88:9e45 with SMTP id
- a23-20020a195f57000000b005057c889e45mr127635lfj.0.1701367013906; Thu, 30 Nov
- 2023 09:56:53 -0800 (PST)
+        bh=iibl1Xbm3GB8W/wJpqz8MDirHOnwc3sWdRrSTTEFiCY=;
+        b=kVj9Hqv0YlkvQ9Wz6KK7Nchm8vgFBFQZhnX3Kchlin3x4EuhyZZa5uuIHMN3DM90pr
+         FmTExpI5MN/1v1WRlGGcl7J6vKPx4UfoAUvEyuAXRkY9u4hlr0PIlQPJav4zzVCtAqGX
+         SbPjaIadw1nOmjgj361ulY+XF4bs9qDAHL+cHScSabHM9WgxD0xE9utZ9uJ7jcgh0ANN
+         NcVzmMMWOgbFdpXhy2lXtQZ4nC+SGC/NtvUq2OSMvs0kmnlBFJWzIlxabUe/+4/gdhHm
+         haSbLCWnFnz0/P+qzTR6YXpLmbhZbTvS9TGtI3DjVTXt0HkzoJ10sh+auRxD24GL5zRi
+         Pxgw==
+X-Gm-Message-State: AOJu0YzivmbkfEKA+RqtdrCiiUcwbQ4YliBTdPB3zkTCWoiYFkOTqlFA
+	hW/nX0jvuPCE/lh45lX/z6mCi7s/omKg26PZMSJSsA==
+X-Google-Smtp-Source: AGHT+IEpGD0t7I0UEuDM+s1ijAIH0PtY0u4nBUtoBBjhJ+joazqMED3bm0OchkfEGpizhKskl6P3GzHGSmXuKcad5eM=
+X-Received: by 2002:a05:600c:1d10:b0:40b:2979:9cc2 with SMTP id
+ l16-20020a05600c1d1000b0040b29799cc2mr159073wms.1.1701367054801; Thu, 30 Nov
+ 2023 09:57:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-7-irogers@google.com>
- <ZWjEqw1cAw/eIpQH@kernel.org>
-In-Reply-To: <ZWjEqw1cAw/eIpQH@kernel.org>
+References: <ZWjDPL+IzPPsuC3X@kernel.org>
+In-Reply-To: <ZWjDPL+IzPPsuC3X@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 30 Nov 2023 09:56:42 -0800
-Message-ID: <CAP-5=fUj7ZCchuwBW7xLe0UK8eupQUH3n9t0vcXGg=F57g-eMQ@mail.gmail.com>
-Subject: Re: [PATCH v5 06/50] tools lib api: Add io_dir an allocation free
- readdir alternative
+Date: Thu, 30 Nov 2023 09:57:23 -0800
+Message-ID: <CAP-5=fUkUnaGkdPoUWCQBWkTKdWX5KXs7drR34x1bUW6JRJY-w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] libapi: Add missing linux/types.h header to get the
+ __u64 type on io.h
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Nick Terrell <terrelln@fb.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Vincent Whitchurch <vincent.whitchurch@axis.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Liam Howlett <liam.howlett@oracle.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Colin Ian King <colin.i.king@gmail.com>, 
-	Dmitrii Dolgov <9erthalion6@gmail.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Ming Wang <wangming01@loongson.cn>, James Clark <james.clark@arm.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Guilherme Amadio <amadio@gentoo.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 30, 2023 at 9:21=E2=80=AFAM Arnaldo Carvalho de Melo
+On Thu, Nov 30, 2023 at 9:15=E2=80=AFAM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
-> Em Mon, Nov 27, 2023 at 02:08:18PM -0800, Ian Rogers escreveu:
-> > glibc's opendir allocates a minimum of 32kb, when called recursively
-> > for a directory tree the memory consumption can add up - nearly 300kb
-> > during perf start-up when processing modules. Add a stack allocated
-> > variant of readdir sized a little more than 1kb.
+> There are functions using __u64, so we need to have the linux/types.h
+> header otherwise we'll break when its not included before api/io.h.
 >
-> Now, on some systems:
->
->   CC      /tmp/build/perf/pmu-events/pmu-events.o
-> In file included from util/machine.c:39:
-> /tmp/build/perf/libapi/include/api/io_dir.h: In function =E2=80=98io_dir_=
-_readdir=E2=80=99:
-> /tmp/build/perf/libapi/include/api/io_dir.h:46:16: error: implicit declar=
-ation of function =E2=80=98getdents64=E2=80=99; did you mean =E2=80=98geten=
-tropy=E2=80=99? [-Werror=3Dimplicit-function-declaration]
->    ssize_t rc =3D getdents64(iod->dirfd, iod->buff, sizeof(iod->buff));
->                 ^~~~~~~~~~
->                 getentropy
->   CC      /tmp/build/perf/tests/workloads/brstack.o
->   CC      /tmp/build/perf/tests/workloads/datasym.o
->   CC      /tmp/build/perf/util/maps.o
+> Fixes: e95770af4c4a280f ("tools api: Add a lightweight buffered reading a=
+pi")
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lore.kernel.org/lkml/
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-
-Sorry for that. Is it a _GNU_SOURCE issue? I thought we generally had
-_GNU_SOURCE defined on the command line for reallocarray. Maybe we
-shouldn't define this on the command line and do it immediately before
-the relevant include with:
-
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
-
-like in tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
+> ---
+>  tools/lib/api/io.h | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/api/Makefile |  2 +-
-> >  tools/lib/api/io_dir.h | 75 ++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 76 insertions(+), 1 deletion(-)
-> >  create mode 100644 tools/lib/api/io_dir.h
-> >
-> > diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
-> > index 044860ac1ed1..186aa407de8c 100644
-> > --- a/tools/lib/api/Makefile
-> > +++ b/tools/lib/api/Makefile
-> > @@ -99,7 +99,7 @@ install_lib: $(LIBFILE)
-> >               $(call do_install_mkdir,$(libdir_SQ)); \
-> >               cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
-> >
-> > -HDRS :=3D cpu.h debug.h io.h
-> > +HDRS :=3D cpu.h debug.h io.h io_dir.h
-> >  FD_HDRS :=3D fd/array.h
-> >  FS_HDRS :=3D fs/fs.h fs/tracing_path.h
-> >  INSTALL_HDRS_PFX :=3D $(DESTDIR)$(prefix)/include/api
-> > diff --git a/tools/lib/api/io_dir.h b/tools/lib/api/io_dir.h
-> > new file mode 100644
-> > index 000000000000..f3479006edb6
-> > --- /dev/null
-> > +++ b/tools/lib/api/io_dir.h
-> > @@ -0,0 +1,75 @@
-> > +/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-> > +/*
-> > + * Lightweight directory reading library.
-> > + */
-> > +#ifndef __API_IO_DIR__
-> > +#define __API_IO_DIR__
-> > +
-> > +#include <dirent.h>
-> > +#include <fcntl.h>
-> > +#include <stdlib.h>
-> > +#include <unistd.h>
-> > +#include <sys/stat.h>
-> > +
-> > +struct io_dirent64 {
-> > +     ino64_t        d_ino;    /* 64-bit inode number */
-> > +     off64_t        d_off;    /* 64-bit offset to next structure */
-> > +     unsigned short d_reclen; /* Size of this dirent */
-> > +     unsigned char  d_type;   /* File type */
-> > +     char           d_name[NAME_MAX + 1]; /* Filename (null-terminated=
-) */
-> > +};
-> > +
-> > +struct io_dir {
-> > +     int dirfd;
-> > +     ssize_t available_bytes;
-> > +     struct io_dirent64 *next;
-> > +     struct io_dirent64 buff[4];
-> > +};
-> > +
-> > +static inline void io_dir__init(struct io_dir *iod, int dirfd)
-> > +{
-> > +     iod->dirfd =3D dirfd;
-> > +     iod->available_bytes =3D 0;
-> > +}
-> > +
-> > +static inline void io_dir__rewinddir(struct io_dir *iod)
-> > +{
-> > +     lseek(iod->dirfd, 0, SEEK_SET);
-> > +     iod->available_bytes =3D 0;
-> > +}
-> > +
-> > +static inline struct io_dirent64 *io_dir__readdir(struct io_dir *iod)
-> > +{
-> > +     struct io_dirent64 *entry;
-> > +
-> > +     if (iod->available_bytes <=3D 0) {
-> > +             ssize_t rc =3D getdents64(iod->dirfd, iod->buff, sizeof(i=
-od->buff));
-> > +
-> > +             if (rc <=3D 0)
-> > +                     return NULL;
-> > +             iod->available_bytes =3D rc;
-> > +             iod->next =3D iod->buff;
-> > +     }
-> > +     entry =3D iod->next;
-> > +     iod->next =3D (struct io_dirent64 *)((char *)entry + entry->d_rec=
-len);
-> > +     iod->available_bytes -=3D entry->d_reclen;
-> > +     return entry;
-> > +}
-> > +
-> > +static inline bool io_dir__is_dir(const struct io_dir *iod, struct io_=
-dirent64 *dent)
-> > +{
-> > +     if (dent->d_type =3D=3D DT_UNKNOWN) {
-> > +             struct stat st;
-> > +
-> > +             if (fstatat(iod->dirfd, dent->d_name, &st, /*flags=3D*/0)=
-)
-> > +                     return false;
-> > +
-> > +             if (S_ISDIR(st.st_mode)) {
-> > +                     dent->d_type =3D DT_DIR;
-> > +                     return true;
-> > +             }
-> > +     }
-> > +     return dent->d_type =3D=3D DT_DIR;
-> > +}
-> > +
-> > +#endif
-> > --
-> > 2.43.0.rc1.413.gea7ed67945-goog
-> >
+> diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+> index a77b74c5fb655a8c..2a7fe9758813172d 100644
+> --- a/tools/lib/api/io.h
+> +++ b/tools/lib/api/io.h
+> @@ -12,6 +12,7 @@
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <unistd.h>
+> +#include <linux/types.h>
 >
+>  struct io {
+>         /* File descriptor being read/ */
 > --
+> 2.41.0
 >
-> - Arnaldo
