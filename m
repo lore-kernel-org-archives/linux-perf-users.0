@@ -1,145 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009913BB5B
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 13:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfDBPr8f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E9CCC433C8;
-	Thu, 30 Nov 2023 13:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701350145;
-	bh=ESm2XXf+f9FWS1yFlh8OmKYXTJZxIwuCreSBi7nmY00=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BfDBPr8fn0WoNKCpDTDlL374d6/n0Vh5pSkf88RafdnaRhwVotRG1gVzSgfUfMnUr
-	 FnnGbWOHMSre9aDBVg64y3N8n50e+vkNiLNsLk/fSC6KIOVV0cixMVjQeVRu48jNTZ
-	 VLfEY1Yafvf4nAOMyFKxPv7ydsO00A173dW3KphDPMie9GHH9/S9gBbaGrzJaSAvNS
-	 wn+ISUZ23eruuJlQRrJXWjrk3uPQGmjC0iw/t3VoiVZ4XSwwI8IdU3Ar1IX/XL/OTv
-	 rakfqB4dPjcYqcTFCMyhw10buFsGUMKGYcoprxGQ0d+8cndqwbSsPnFWyeCRLWv0l2
-	 SW9Mu6EeOPdDg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 1BF0840094; Thu, 30 Nov 2023 10:15:43 -0300 (-03)
-Date: Thu, 30 Nov 2023 10:15:43 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nick Terrell <terrelln@fb.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Vincent Whitchurch <vincent.whitchurch@axis.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Liam Howlett <liam.howlett@oracle.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Ming Wang <wangming01@loongson.cn>,
-	James Clark <james.clark@arm.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Leo Yan <leo.yan@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
-	German Gomez <german.gomez@arm.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Guilherme Amadio <amadio@gentoo.org>
-Subject: Re: [PATCH v5 02/50] libperf: Lazily allocate/size mmap event copy
-Message-ID: <ZWiK/9JJjOElTTq7@kernel.org>
-References: <20231127220902.1315692-1-irogers@google.com>
- <20231127220902.1315692-3-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4xLGEEj"
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD13010E6
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 05:29:13 -0800 (PST)
+Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-46458475f2aso212885137.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 05:29:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701350953; x=1701955753; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GaZdUcof5XjDf+X5zkRshJUxUnTsKxTLWHlD+h1i55Q=;
+        b=R4xLGEEjfUD5Oe2BT5TvKUYRh+lhgnOog2jkG4zPo2+uvKkeTDCu6utTHFJ6mvnGh2
+         KVm/Ye8fjN3T4sPlPsvIE2DMsiperJHVjlUaas43qk+ltr92HZqYatP5tWSpA4lUHCyo
+         MbBXKgPcz/gsTx7YTrfxifHNqFg8bYg44YB1xv5Qu3agLCl10Iy4zfW5JBZm0Vvo+uxs
+         0aABaq+3+azbjA27rrxXQH/Ds22wGCJUOiL5DtIHgWrLhftrXyMTkc4WvsTxuHrsYo+b
+         DJqj8jJGlyABEzsVf5FWUwb9i3OZEAXChX8jOI9G4fxn5z6b2KcuHM7rJbydapI95mCA
+         xmCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701350953; x=1701955753;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GaZdUcof5XjDf+X5zkRshJUxUnTsKxTLWHlD+h1i55Q=;
+        b=hvnT6EOBrtMaGelFXGg9DXY3LQ1m3Zgo2iyLPla3/cvtZtLvs/M7REUdCWT92XSsVV
+         FfOIkofth/7lYHegX9q96pzRgxbRwWheoNlVRdeRPnW6De+lkKktdswGyBuL6fjQ4vvS
+         KUemg+wkI8rp3O+okBpi6SOap0LkkNyQpyCkDQe56l4TR07PxVLHlCc4xO2Qw/vP3Yey
+         qKdR1gybWhpFg/KpHS7Nk5hLhdaIcoyeORXQtju5+prfUhX4PiQpBSTMdCIVD+sZrg3g
+         7eZ5VPLRuUxm/ZDSkXobMNyrq9EK56XdltMFR3s86Y9CbssdC5whhR3jzm7TvrjEgjZe
+         0jzg==
+X-Gm-Message-State: AOJu0YwCvMnQO2Ibe5zWQpwsBLCEHGczb31zA2A8nOg8R2lK8vSXa+Qd
+	CdsQM54A9U/xd23uhKa+7mC98CFUtFUdkOgFX9mAIg==
+X-Google-Smtp-Source: AGHT+IFrg8PoC9BDlbB+lP3tYKm70vwJBufD+MJtDfNABL41x93ikSiIu/3BIGytJ0eWp06aIkXKg4NwwScaTBzt7hw=
+X-Received: by 2002:a05:6102:1794:b0:464:4b26:5111 with SMTP id
+ je20-20020a056102179400b004644b265111mr4474014vsb.8.1701350952674; Thu, 30
+ Nov 2023 05:29:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231127220902.1315692-3-irogers@google.com>
-X-Url: http://acmel.wordpress.com
+References: <20231129154718.326330-1-acme@kernel.org> <20231129154718.326330-3-acme@kernel.org>
+ <CANpmjNMftTuqPwmujNx5e+ajgdYtik9uL6dt62Ucotc7oz-uUw@mail.gmail.com>
+ <ZWeiNj7B+5dJosE9@kernel.org> <ZWiHm/RmtmOfQwVI@kernel.org>
+In-Reply-To: <ZWiHm/RmtmOfQwVI@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Thu, 30 Nov 2023 14:28:33 +0100
+Message-ID: <CANpmjNOQpqKO27Pbox0j+=aKAnpGCR6vV_6rwF4AWTssXc+c3w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf tests sigtrap: Skip if running on a kernel with
+ sleepable spinlocks
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, 
+	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Mike Galbraith <efault@gmx.de>, 
+	Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Em Mon, Nov 27, 2023 at 02:08:14PM -0800, Ian Rogers escreveu:
-> The event copy in the mmap is used to have storage to read an
-> event. Not all users of mmaps read the events, such as perf
-> record. The amount of buffer was also statically set to
-> PERF_SAMPLE_MAX_SIZE rather than the amount necessary from the
-> header's event size. Switch to a model where the event_copy is
-> reallocated if too small to the event's size. This adds the potential
-> for the event to move, so if a copy of the event pointer were stored
-> it could be broken. All the current users do:
-> 
->   while(event = perf_mmap__read_event()) { ... }
-> 
-> and so they would be broken due to the event being overwritten if they
-> had stored the pointer. Manual inspection and address sanitizer
-> testing also shows the event pointer not being stored.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/perf/include/internal/mmap.h |  3 ++-
->  tools/lib/perf/mmap.c                  | 21 ++++++++++++++++++---
->  2 files changed, 20 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/lib/perf/include/internal/mmap.h b/tools/lib/perf/include/internal/mmap.h
-> index 5a062af8e9d8..5f08cab61ece 100644
-> --- a/tools/lib/perf/include/internal/mmap.h
-> +++ b/tools/lib/perf/include/internal/mmap.h
-> @@ -33,7 +33,8 @@ struct perf_mmap {
->  	bool			 overwrite;
->  	u64			 flush;
->  	libperf_unmap_cb_t	 unmap_cb;
-> -	char			 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
-> +	void			*event_copy;
-> +	size_t			 event_copy_sz;
->  	struct perf_mmap	*next;
->  };
->  
-> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> index 2184814b37dd..c829db7bf1fa 100644
-> --- a/tools/lib/perf/mmap.c
-> +++ b/tools/lib/perf/mmap.c
-> @@ -19,6 +19,7 @@
->  void perf_mmap__init(struct perf_mmap *map, struct perf_mmap *prev,
->  		     bool overwrite, libperf_unmap_cb_t unmap_cb)
->  {
-> +	/* Assume fields were zero initialized. */
->  	map->fd = -1;
->  	map->overwrite = overwrite;
->  	map->unmap_cb  = unmap_cb;
-> @@ -51,13 +52,19 @@ int perf_mmap__mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
->  
->  void perf_mmap__munmap(struct perf_mmap *map)
->  {
-> -	if (map && map->base != NULL) {
-> +	if (!map)
-> +		return;
-> +
-> +	free(map->event_copy);
-> +	map->event_copy = NULL;
+On Thu, 30 Nov 2023 at 14:01, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Wed, Nov 29, 2023 at 05:42:30PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Wed, Nov 29, 2023 at 04:57:47PM +0100, Marco Elver escreveu:
+> > > > @@ -175,7 +208,16 @@ static int run_stress_test(int fd, pthread_t *threads, pthread_barrier_t *barrie
+> > > >         ret = run_test_threads(threads, barrier);
+> > > >         TEST_ASSERT_EQUAL("disable failed", ioctl(fd, PERF_EVENT_IOC_DISABLE, 0), 0);
+>
+> > > > -       TEST_ASSERT_EQUAL("unexpected sigtraps", ctx.signal_count, NUM_THREADS * ctx.iterate_on);
+> > > > +       expected_sigtraps = NUM_THREADS * ctx.iterate_on;
+>
+> > > > +       if (ctx.signal_count < expected_sigtraps && kernel_with_sleepable_spinlocks()) {
+> > > > +               pr_debug("Expected %d sigtraps, got %d, running on a kernel with sleepable spinlocks.\n",
+> > > > +                        expected_sigtraps, ctx.signal_count);
+> > > > +               pr_debug("See https://lore.kernel.org/all/e368f2c848d77fbc8d259f44e2055fe469c219cf.camel@gmx.de/\n");
+>
+> > > No changes from the RT side since? A fix exists, but apparently not
+> > > good enough... Sigh.
+>
+> > Yeah, my impression, and first attempt at writing that patch wast that
+> > no sigtraps were being sent, but then when I tried with a random, more
+> > recent machine in the Red Hat labs, I got some signals, way less than
+> > the expected ones, but some, maybe this is an interesting data point?
+>
+> > I'll try again to reproduce in the local machine, old i7 lenovo notebook
+> > and at the newer machine, a Xeon(R) Silver 4216, 32 cpu and report here.
+>
+> So, on the i7 lenovo:
+>
+> [root@nine ~]# uname -a
+> Linux nine 5.14.0-284.30.1.rt14.315.el9_2.x86_64 #1 SMP PREEMPT_RT Fri Aug 25 10:53:59 EDT 2023 x86_64 x86_64 x86_64 GNU/Linux
+[...]
+>
+> I guess I'll try to get hold of the older kernel with 0 sigtraps to see
+> if I get the same behaviour (consistent 0 sigtraps) on that kernel on
+> the bigger machine :-\
 
-I´m converting this to:
+Thanks for checking.
 
-	zfree(&map->event_copy);
+In any case, it looks like it's still broken. If the fix (bf9ad37dc8a
++ small diff by Mike) from [1] still works, what's blocking it from
+being upstreamed?
 
-Hopefully we'll find some tool to flag these before submitting patches,
-does clang-tidy do these kinds of things?
-
-Also, applied:
-
- b4 am -P2,4-7 -ctsl --cc-trailers 20231127220902.1315692-1-irogers@google.com
-
-The ones that Namhyung acked and that applied cleanly in order.
-
-The first one, as Namhyung noted, is already merged.
-
-- Arnaldo
+https://lore.kernel.org/all/e368f2c848d77fbc8d259f44e2055fe469c219cf.camel@gmx.de/
