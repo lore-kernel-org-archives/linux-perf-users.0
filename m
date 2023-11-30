@@ -1,96 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IEqQUT45"
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68FA1197
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 09:57:36 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-40b35199f94so5865e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 09:57:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701367055; x=1701971855; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iibl1Xbm3GB8W/wJpqz8MDirHOnwc3sWdRrSTTEFiCY=;
-        b=IEqQUT45g2vV8C4ZcEI5BQ0dHUqzhfWW6LcbWdGmcLiA3WgOtSKUfwmCI5nwZpZAIs
-         82QQs3MaG4O8hI40EO6zXmSegLKF1QdiVO2jhx8Yeaxr2TcL9kdEIk/JDlgeetvVvgT6
-         hDLd6gD42lq040PYpYyiingWCnzTFGy8C94BTaqOQ35V3Br7SvIjvt3FAIIOEzyagEYE
-         GJOksbEbHWlO5vPb/qcfLC2vaPlHQMv4dagbR5cOAy+ivxcHz0ht4zs3aaPP5TT2IZsX
-         ZfAGtCs4QvYeXzMR49VuQIkNwb1iq+wyG2r3ckmgIbhpaI3cf3Mx27U2kdssrxUHwYuJ
-         ry9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701367055; x=1701971855;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iibl1Xbm3GB8W/wJpqz8MDirHOnwc3sWdRrSTTEFiCY=;
-        b=kVj9Hqv0YlkvQ9Wz6KK7Nchm8vgFBFQZhnX3Kchlin3x4EuhyZZa5uuIHMN3DM90pr
-         FmTExpI5MN/1v1WRlGGcl7J6vKPx4UfoAUvEyuAXRkY9u4hlr0PIlQPJav4zzVCtAqGX
-         SbPjaIadw1nOmjgj361ulY+XF4bs9qDAHL+cHScSabHM9WgxD0xE9utZ9uJ7jcgh0ANN
-         NcVzmMMWOgbFdpXhy2lXtQZ4nC+SGC/NtvUq2OSMvs0kmnlBFJWzIlxabUe/+4/gdhHm
-         haSbLCWnFnz0/P+qzTR6YXpLmbhZbTvS9TGtI3DjVTXt0HkzoJ10sh+auRxD24GL5zRi
-         Pxgw==
-X-Gm-Message-State: AOJu0YzivmbkfEKA+RqtdrCiiUcwbQ4YliBTdPB3zkTCWoiYFkOTqlFA
-	hW/nX0jvuPCE/lh45lX/z6mCi7s/omKg26PZMSJSsA==
-X-Google-Smtp-Source: AGHT+IEpGD0t7I0UEuDM+s1ijAIH0PtY0u4nBUtoBBjhJ+joazqMED3bm0OchkfEGpizhKskl6P3GzHGSmXuKcad5eM=
-X-Received: by 2002:a05:600c:1d10:b0:40b:2979:9cc2 with SMTP id
- l16-20020a05600c1d1000b0040b29799cc2mr159073wms.1.1701367054801; Thu, 30 Nov
- 2023 09:57:34 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id BFECB131
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 10:09:52 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44EBB1042;
+	Thu, 30 Nov 2023 10:10:39 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36C533F6C4;
+	Thu, 30 Nov 2023 10:09:52 -0800 (PST)
+Message-ID: <c845d1f1-4463-7c00-e63b-b3c9968c600c@arm.com>
+Date: Thu, 30 Nov 2023 18:09:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZWjDPL+IzPPsuC3X@kernel.org>
-In-Reply-To: <ZWjDPL+IzPPsuC3X@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 30 Nov 2023 09:57:23 -0800
-Message-ID: <CAP-5=fUkUnaGkdPoUWCQBWkTKdWX5KXs7drR34x1bUW6JRJY-w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] libapi: Add missing linux/types.h header to get the
- __u64 type on io.h
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: Perf support in CPython
+Content-Language: en-US
+To: Pablo Galindo Salgado <pablogsal@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+References: <CAFjbc8G+q4sFpO5D6PqbDFNbHHpgYZ_2ADV7sUp7Lw=AefprJA@mail.gmail.com>
+ <896b5786-8ed7-af6c-2c64-a24bb06a0d89@arm.com>
+ <CAFjbc8FXJwJShr88XUybWFQa1HC6rYdq7cpc3XPCuPKjOUoz2g@mail.gmail.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAFjbc8FXJwJShr88XUybWFQa1HC6rYdq7cpc3XPCuPKjOUoz2g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 30, 2023 at 9:15=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> There are functions using __u64, so we need to have the linux/types.h
-> header otherwise we'll break when its not included before api/io.h.
->
-> Fixes: e95770af4c4a280f ("tools api: Add a lightweight buffered reading a=
-pi")
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lore.kernel.org/lkml/
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+On 30/11/2023 12:42, Pablo Galindo Salgado wrote:
+>> Do you really want to use full Dwarf mode? You have to save the entire
+>> stack space on every sample for that to work, so it seems a bit slow.
+>> But maybe it's not an issue for lower sampling frequencies. If the
+>> application has a huge stack it's not really scalable.
+>> Is that just so you have a mode that works out of the box without any
+>> recompilation of Python? But not necessarily the best way to do it?
+> 
+> I do not *want* to do it as we already have a fully working version
+> when frame pointers are included
+> using the perf maps version. But the problem is that users cannot
+> generally leverage this as most
+> Python redistributors do not compile with frame pointers, and this
+> renders the integration useless
+> for most people.
+> 
+> So indeed, as you mention dwarf unwinding is a suboptimal way but it
+> will provide a way
+> for most users to get the integration working for them and people that
+> really care about the
+> most performant way can compile Python with frame pointers. The
+> problem is that most
+> Python users do not compile Python themselves and this is a huge
+> barrier for them.
+> 
+> That's why we want to *also* have DWARF unwinding working, even if it
+> is suboptimal.
 
-> ---
->  tools/lib/api/io.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-> index a77b74c5fb655a8c..2a7fe9758813172d 100644
-> --- a/tools/lib/api/io.h
-> +++ b/tools/lib/api/io.h
-> @@ -12,6 +12,7 @@
->  #include <stdlib.h>
->  #include <string.h>
->  #include <unistd.h>
-> +#include <linux/types.h>
->
->  struct io {
->         /* File descriptor being read/ */
-> --
-> 2.41.0
->
+Makes sense, it just makes me wonder if there isn't something that's low
+overhead that could be added to the default build configuration of
+Python that makes it work even in frame pointer mode. Like putting frame
+pointers only in the trampolines.
+
+If that doesn't work, maybe this is kind of a ridiculous idea, but what
+if you compiled the final binary so that it had two versions of Python,
+one with frame pointers and one without, and when you run "python -X
+perf" it goes down the path with frame pointers on. Presumably the
+performance hit isn't as big of a deal if it's only on for profiling.
+
+I suppose everything is a tradeoff, and that trades fewer build
+configurations for a larger binary size and more complicated build system.
+
+Feel free to ignore me though, I'm just thinking out loud. But if Python
+was already modified to insert the trampolines, it seems like there must
+be some modification that can be done to make frame pointer unwinding
+work without turning them on for every single performance critical function.
