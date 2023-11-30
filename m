@@ -1,128 +1,192 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id C3C27D50
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 03:00:39 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3AC6D84;
+	Thu, 30 Nov 2023 03:49:05 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C655C15;
-	Thu, 30 Nov 2023 03:01:26 -0800 (PST)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 326B73F6C4;
-	Thu, 30 Nov 2023 03:00:39 -0800 (PST)
-Message-ID: <896b5786-8ed7-af6c-2c64-a24bb06a0d89@arm.com>
-Date: Thu, 30 Nov 2023 11:00:38 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94F3F1042;
+	Thu, 30 Nov 2023 03:49:51 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.43.250])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 128D03F5A1;
+	Thu, 30 Nov 2023 03:49:03 -0800 (PST)
+Date: Thu, 30 Nov 2023 11:48:54 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Ashley, William" <wash@amazon.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	will@kernel.org
+Subject: Re: armv8pmu: Pending overflow interrupt is discarded when perf
+ event is disabled
+Message-ID: <ZWh2pnR_Z5-CKuZb@FVFF77S0Q05N>
+References: <950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com>
+ <EBAF38AB-2BE5-425F-8A52-DDCB0B390309@amazon.com>
+ <ZWdoNWps4izj5WJy@FVFF77S0Q05N.cambridge.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: Perf support in CPython
-Content-Language: en-US
-To: Pablo Galindo Salgado <pablogsal@gmail.com>,
- linux-perf-users@vger.kernel.org
-References: <CAFjbc8G+q4sFpO5D6PqbDFNbHHpgYZ_2ADV7sUp7Lw=AefprJA@mail.gmail.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAFjbc8G+q4sFpO5D6PqbDFNbHHpgYZ_2ADV7sUp7Lw=AefprJA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZWdoNWps4izj5WJy@FVFF77S0Q05N.cambridge.arm.com>
 
-
-
-On 20/11/2023 23:50, Pablo Galindo Salgado wrote:
-> Hi,
+On Wed, Nov 29, 2023 at 04:35:01PM +0000, Mark Rutland wrote:
+> Hi William,
 > 
-> I am Pablo Galindo Salgado from the CPython core development team. In
-> the past release of CPython (Python 3.12) I have added support
-> for including Python function calls in the output of perf by
-> leveraging the jit-interface support by writing to /tmp/perf-%d.map.
-> The support
-> works by compiling assembly trampolines at runtime that just call the
-> Python bytecode evaluation loop and assigning function names to the
-> trampolines by writing in /tmp/perf-%d.map. This has worked really
-> well when CPython is compiled with frame pointers but unfortunately
-> CPython also suffers from 5% to 10% slow down when frame pointers are
-> used. Unfortunately, perf cannot unwind through the jitted trampolines
-> without frame pointers currently.
+> On Mon, Nov 20, 2023 at 10:32:10PM +0000, Ashley, William wrote:
+> > Adding linux-arm-kernel@lists.infradead.org and linux-kernel@vger.kernel.org,
+> > sorry for the noise.
 > 
-
-I doubt this will have any impact on the 5% - 10%, but I'll leave it
-here anyway just in case:
-
-(At least on Arm) you can avoid "-mno-omit-leaf-frame-pointer". As in,
-leaf frame pointers can be omitted. This is because of this change that
-we added to Perf:
-
-  void arch__add_leaf_frame_record_opts(struct record_opts *opts)
-  {
-     opts->sample_user_regs |= sample_reg_masks[PERF_REG_ARM64_LR].mask;
-  }
-
-After sampling the register, even in FP unwind mode, we'll still try to
-do a single step of Dwarf unwind of the last frame, using only the link
-register as the input data, and none of the stack space. The unwinder
-knows at that instruction whether the link register contains the return
-address, and there is a high chance that it does.
-
-We did this because at least with some compilers,
-"-no-omit-frame-pointer" actually has no effect on leaf frames, it will
-still omit it even if you asked for it not to be (because they don't do
-anything in leaf frames). Although maybe "-no-omit-leaf-frame-pointer"
-fixes this, you actually don't need it as long as you sampled the link
-register and have the Dwarf available.
-
-So I suppose to get that working you'd have to add the
-JIT_CODE_UNWINDING_INFO stuff.
-
-> I am looking to extend support to the jitdump specification to allow
-> perf to unwind through these trampolines when using dwarf unwinding
-> mode.
-
-Do you really want to use full Dwarf mode? You have to save the entire
-stack space on every sample for that to work, so it seems a bit slow.
-But maybe it's not an issue for lower sampling frequencies. If the
-application has a huge stack it's not really scalable.
-
-Is that just so you have a mode that works out of the box without any
-recompilation of Python? But not necessarily the best way to do it?
-
-I don't know if it's possible to have some kind of hybrid approach where
-only the trampolines have leaf frame pointers, but none of the other
-code does, so you don't get overhead issue? Or that would also fall
-apart in the kernel's FP unwinder?
-
-> I have a draft for a patch
-> (https://github.com/python/cpython/pull/112254) that adds support for
-> the specification by writing JIT_CODE_LOAD and
-> JIT_CODE_UNWINDING_INFO (currently with empty EH Frame entries to
-> force perf to defer to FP based unwinding). This works well in my
-> current
-> distribution (Arch Linux with perf version 6.5) but when tested in
-> other distributions it falls apart.
+> Thanks for this!
 > 
-> * One problem I have struggled to debug is that even when compiled
-> with frame pointers and without emitting JIT_CODE_UNWINDING_INFO
-> (using fp-based unwinding), in some cases (such as the latest Ubuntu
-> versions), the shared objects and addresses generated by perf-inject
-> -j look sane, the addresses match but perf report or perf script do
-> not include the symbol names in their output. I do not understand why
-> this
-> is happening and my debuggins so far has not allowed me to get any
-> thread I can pull so I wanted to reach to this mailing list for
-> assistance.
+> For the benefit of others, the original mail (and attachment) can be found at:
 > 
-> * The other problem I am finding is to include the eh_frames to our
-> trampolines as it looks like deferring to FP unwinding is unreliable
-> even if
-> our trampolines are trivial. This is a different problem but my
-> current attempts to add EH Frames have failed and I don't know how to
-> properly
-> debug them correctly as it looks like perf doesn't expect some of the
-> values we are writing. I would love it if someone with perf and DWARF
-> expertise could help us in the CPython team to get steered in the
-> right direction.
+>   https://lore.kernel.org/linux-perf-users/950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com/
 > 
-> Thanks a lot in advance,
-> Pablo Galindo Salgado
+> For some reason, links and whitespace seem to have been mangled in the resend;
+> I'm not sure what happened there.
 > 
+> I've added Will Deacon, as Will and I co-maintain the ARM PMU drivers.
+> 
+> > ﻿On 11/20/23, 12:36 PM, "Ashley, William" <wash@amazon.com <mailto:wash@amazon.com>> wrote:
+> > 
+> > 
+> > An issue [1] was opened in the rr-debugger project reporting occasional missed
+> > perf event overflow signals on arm64. I've been digging into this and think I
+> > understand what's happening, but wanted to confirm my understanding.
+> > 
+> > The attached example application, derived from an rr-debugger test case, reports
+> > when the value of a counter doesn't increase by the expected period +/- some
+> > tolerance. When it is ping-ponged between cores (e.g. with taskset) at a high
+> > frequency, it frequently reports increases of ~2x the expected. I've confirmed
+> > this same behavior on kernels 5.4, 5.10, 6.1 and 6.5.
+> > 
+> > 
+> > I found armv8pmu_disable_intens [2] that is called as part of event
+> > de-scheduling and contains
+> > /* Clear the overflow flag in case an interrupt is pending. */
+> > write_pmovsclr(mask);
+> > which results in any pending overflow interrupt being dropped. I added some
+> > debug output here and indeed there is a correlation of this bit being high at
+> > the point of the above code and the reproducer identifying a missed signal.
+> 
+> I think you're right that if we had an overflow asserted at this point, we'll
+> throw away the occurrence of the overflow (and so not call
+> perf_event_overflow() and generate a sample, etc).
+> 
+> It looks like we only lose the occurrence of the overflow; the actual counts
+> will get sampled correctly and when we next reprogram the event,
+> armpmu_event_set_period() should set up the next overflow period.
+> 
+> > This behavior does not occur with pseudo-NMIs (irqchip.gicv3_pseudo_nmi=1)
+> > enabled.
+> 
+> That's interesting, because it implies that the PMU overflow interrupt is being
+> recognised by the CPU while regular interrupts are disabled. There are some
+> narrow races where that could occur (e.g. taking a timer or scheduler IRQ
+> *just* as an overflow occurs), and some other cases I'd expect RR to avoid by
+> construction (e.g. if RR isn't using mode exclusion and also counts kernel
+> events). It's also worth noting that this means there are races even with
+> pseudo-NMI where overflows could be lost.
+> 
+> How often do you see the overflow being lost?
+> 
+> Does RR set any of the perf_event_attr::exclude_* bits? If not, does RR
+> intentionally count events that occur within the kernel?
+
+Looking at the test, I see it sets perf_event_attr::exclude_kernel to 1, but
+doesn't set perf_event_attr::exclude_host or perf_event_attr::exclude_hv. I
+think the poorly-defined exclude_* bits are part of the problem here.
+
+Using your test as-is on my ThunderX2, I can reproduce the period being longer
+than expected by concurrently running the following in a shell:
+
+  while true; do
+    for C in $(seq 0 63); do
+      taskset -c -p $C ${TEST_PID_HERE};
+    done; 
+  done > /dev/null
+
+... resulting in:
+
+| [mark@gravadlaks:~]% ./counter-overflow                                     
+| Pid 20060 running with period 10000 tolerance 1000
+| Signal #1: last: 0, cur: 10292, max diff: 0
+| Signal #415330: delta of 19999 is outside 10000 +/- 1000
+| Signal #415330: last: 4153290187, cur: 4153310186, max diff: 10292
+| Signal #489879: delta of 19998 is outside 10000 +/- 1000
+| Signal #511842: delta of 20058 is outside 10000 +/- 1000
+| Signal #511842: last: 5118430130, cur: 5118450188, max diff: 19999
+
+However, if I modify the test to also set perf_event_attr::exclude_host=1, I do
+not see any lost overflows after many minutes. On VHE hosts (like the
+ThunderX2), the host kernel gets counted when perf_event_attr::exclude_host=0,
+even if perf_event_attr::exclude_kernel=1 (which I agree is surprising), so I
+think what's happening is the counters are counting in the host kernel, which
+isn't what RR actually wants regardless.
+
+From looking at:
+
+  https://github.com/rr-debugger/rr/blob/master/src/PerfCounters.cc
+
+... it looks like RR only sets perf_event_attr::exclude_{kernel,guest}, and due
+to this I think it's still counting the host kernel (and potentially the
+hypervisor, depending on that hypervisor's policy for what it filters from the
+guest).
+
+There's still a potential race on the kernel side, but I suspect that if RR
+were to set the non-user exclude_* bits it could significantly reduce the
+chance of a lost overflow signal on existing kernels, at least on bare-metal.
+
+This is an annoying ABI; the interaction between all the bits is ill-defined,
+especially host/hv/kernel (since for VHE those are the same thing). Ideally
+this would have had the opposite polarity and you'd have only needed to set an
+include_user bit and be done with it.
+
+I'll continue to look at what we can do kernel-side, but I reckon it's worth
+having RR try the other exclude bits regardless, if that's possible? It would
+be interesting to know whether that helps you under a hypervisor.
+
+Thanks,
+Mark.
+
+> > When an event is not being explicitly torn down (e.g. being closed), this seems
+> > like an undesirable behavior.
+> 
+> I agree it's undesirable, though my understanding is that for most other users
+> this isn't any worse than losing samples for other reasons (e.g. the perf ring
+> buffer being full), and for the general case of sample-based profiling, losing
+> a sample every so often isn't the end of the world.
+> 
+> > I haven't attempted to demo it yet, but I suspect
+> > an application disabling an event temporarily could occasionally see the same
+> > missed overflow signals. Is my understanding here correct?
+> 
+> That sounds right to me, though I haven't checked that end-to-end yet.
+> 
+> > Does anyone have thoughts on how this could be addressed without creating
+> > other issues?
+> 
+> We should be able to detect overflow from the counter value alone, so we might
+> be able to account for that when we actually read the event out, or when we
+> schedule it back in and reprogram the period.
+> 
+> I'm not sure if we can reasonably do that when scheduling the event out, since
+> if we're switching tasks, that'll queue up IRQ work which will be triggered in
+> the context of the next task.
+> 
+> We might be able to figure out that we have an overflow when we schedule the
+> event in under armpmu_start(), but I'll need to go digging to see if there are
+> any free-running counters as the comment above the call to
+> armpmu_event_set_period() says, or whether that's a historical artifact.
+> 
+> I suspect we might need to restructure the code somewhat to be able to catch
+> overflows more consistently. I'll see if I can come up with something, but we
+> might not be able to guarantee this in all cases.
+> 
+> Mark.
+> 
+> > [1] https://github.com/rr-debugger/rr/issues/3607 <https://github.com/rr-debugger/rr/issues/3607>
+> > [2] https://github.com/torvalds/linux/blob/c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c/drivers/perf/arm_pmuv3.c#L652C20-L652C43 <https://github.com/torvalds/linux/blob/c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c/drivers/perf/arm_pmuv3.c#L652C20-L652C43>
