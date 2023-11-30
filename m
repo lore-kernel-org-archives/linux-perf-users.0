@@ -1,53 +1,15 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="chOB2DKz"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB6BD6C
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 02:46:41 -0800 (PST)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AUAH0xW005280;
-	Thu, 30 Nov 2023 10:46:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=AE/2XERR7UPht8zuKb8qAW9heYjd6XiKMF9o3XqjiuU=;
- b=chOB2DKz9dfdwFJcSBCzT9H296uRgtJ6DPIQaQbSWvTcF0NHHae4KjfM0rlVjMCPn/u+
- uYHFHgXLP/6RisoK8YHu5RKe7PAd9CPorTIaFBYXZ6mLBhPRbgeOazUWAKVAywM3cHxY
- FnX3lopUJW+44Eam39Dp4050fXHL5jy/OCgxVwcdKWuEixwLcaKGmFrac8b0t3XMNwxy
- mrqimBhRFjMt3eIzxqmWvvWnMS3WncDsyjsGzyVgLwAiFwHOJm6xNOxTdmydJbx2Wsnr
- UJt5GPjswAbQgdk3LBnutGjJE0tSj6tXmu4TYfW+wn4pj2eX4Clyr7kH8g90hYF9OOM4 XA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uprgm8q1x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Nov 2023 10:46:29 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AUAeXxC023656;
-	Thu, 30 Nov 2023 10:46:28 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uprgm8q14-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Nov 2023 10:46:28 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AU7YD2Z030222;
-	Thu, 30 Nov 2023 10:46:27 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ukv8nwhue-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Nov 2023 10:46:27 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AUAkO6O25755910
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Nov 2023 10:46:24 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 55B3F20043;
-	Thu, 30 Nov 2023 10:46:24 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D88FA20040;
-	Thu, 30 Nov 2023 10:46:21 +0000 (GMT)
-Received: from [9.109.248.124] (unknown [9.109.248.124])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 30 Nov 2023 10:46:21 +0000 (GMT)
-Message-ID: <6f6d99fd-9f97-d56a-ef56-3b822ae26f1e@linux.ibm.com>
-Date: Thu, 30 Nov 2023 16:16:20 +0530
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id C3C27D50
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 03:00:39 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C655C15;
+	Thu, 30 Nov 2023 03:01:26 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 326B73F6C4;
+	Thu, 30 Nov 2023 03:00:39 -0800 (PST)
+Message-ID: <896b5786-8ed7-af6c-2c64-a24bb06a0d89@arm.com>
+Date: Thu, 30 Nov 2023 11:00:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,180 +17,112 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] perf test record+probe_libc_inet_pton: Fix call chain
- match on powerpc
+ Thunderbird/102.15.1
+Subject: Re: Perf support in CPython
 Content-Language: en-US
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
-        james.clark@arm.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, Disha Goel <disgoel@linux.ibm.com>
-References: <20231126070914.175332-1-likhitha@linux.ibm.com>
- <ZWeljhj9ZH4xrqjw@kernel.org>
-From: Likhitha Korrapati <likhitha@linux.ibm.com>
-In-Reply-To: <ZWeljhj9ZH4xrqjw@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Pablo Galindo Salgado <pablogsal@gmail.com>,
+ linux-perf-users@vger.kernel.org
+References: <CAFjbc8G+q4sFpO5D6PqbDFNbHHpgYZ_2ADV7sUp7Lw=AefprJA@mail.gmail.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAFjbc8G+q4sFpO5D6PqbDFNbHHpgYZ_2ADV7sUp7Lw=AefprJA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QvQHJWsDOgW-gK1QL78ji5ZCyLg9NF-O
-X-Proofpoint-GUID: Ick8DDAxu2XAnTHUlJ7fbRokj7GFkrwt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-30_08,2023-11-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- adultscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 phishscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311300080
 
-Hi Arnaldo,
 
-Thank you for pointing it. From next time I will take care of it.
 
--Likhitha.
+On 20/11/2023 23:50, Pablo Galindo Salgado wrote:
+> Hi,
+> 
+> I am Pablo Galindo Salgado from the CPython core development team. In
+> the past release of CPython (Python 3.12) I have added support
+> for including Python function calls in the output of perf by
+> leveraging the jit-interface support by writing to /tmp/perf-%d.map.
+> The support
+> works by compiling assembly trampolines at runtime that just call the
+> Python bytecode evaluation loop and assigning function names to the
+> trampolines by writing in /tmp/perf-%d.map. This has worked really
+> well when CPython is compiled with frame pointers but unfortunately
+> CPython also suffers from 5% to 10% slow down when frame pointers are
+> used. Unfortunately, perf cannot unwind through the jitted trampolines
+> without frame pointers currently.
+> 
 
-On 30/11/23 02:26, Arnaldo Carvalho de Melo wrote:
-> Em Sun, Nov 26, 2023 at 02:09:14AM -0500, Likhitha Korrapati escreveu:
->> The perf test "probe libc's inet_pton & backtrace it with ping" fails on
->> powerpc as below:
->>
->> root@xxx perf]# perf test -v "probe libc's inet_pton & backtrace it with
->> ping"
->>   85: probe libc's inet_pton & backtrace it with ping                 :
->> --- start ---
->> test child forked, pid 96028
->> ping 96056 [002] 127271.101961: probe_libc:inet_pton: (7fffa1779a60)
->> 7fffa1779a60 __GI___inet_pton+0x0
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->> 7fffa172a73c getaddrinfo+0x121c
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->> FAIL: expected backtrace entry
->> "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/libc.so.6\)$"
->> got "7fffa172a73c getaddrinfo+0x121c
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
->> test child finished with -1
->> ---- end ----
-> Try to have quoted output, the ones separated by ---- at the beginning
-> of the line indented two spaces, so as to avoid:
->
-> perf test record+probe_libc_inet_pton: Fix call chain match on powerpc
->
-> The perf test "probe libc's inet_pton & backtrace it with ping" fails on
-> powerpc as below:
->
-> root@xxx perf]# perf test -v "probe libc's inet_pton & backtrace it with
-> ping"
->   85: probe libc's inet_pton & backtrace it with ping                 :
->
-> # Please enter the commit message for your changes. Lines starting
-> # with '#' will be ignored, and an empty message aborts the commit.
-> #
-> # Author:    Likhitha Korrapati <likhitha@linux.ibm.com>
-> # Date:      Sun Nov 26 02:09:14 2023 -0500
->
->
-> I'm copy and pasting from the original post, thanks!
->
-> - Arnaldo
->
->> probe libc's inet_pton & backtrace it with ping: FAILED!
->>
->> This test installs a probe on libc's inet_pton function, which will use
->> uprobes and then uses perf trace on a ping to localhost. It gets 3
->> levels deep backtrace and checks whether it is what we expected or not.
->>
->> The test started failing from RHEL 9.4 where as it works in previous
->> distro version (RHEL 9.2). Test expects gaih_inet function to be part of
->> backtrace. But in the glibc version (2.34-86) which is part of distro
->> where it fails, this function is missing and hence the test is failing.
->>
->>  From nm and ping command output we can confirm that gaih_inet function
->> is not present in the expected backtrace for glibc version glibc-2.34-86
->>
->> [root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep gaih_inet
->> 00000000001273e0 t gaih_inet_serv
->> 00000000001cd8d8 r gaih_inet_typeproto
->>
->> [root@xxx perf]# perf script -i /tmp/perf.data.6E8
->> ping  104048 [000] 128582.508976: probe_libc:inet_pton: (7fff83779a60)
->>              7fff83779a60 __GI___inet_pton+0x0
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->>              7fff8372a73c getaddrinfo+0x121c
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->>                 11dc73534 [unknown] (/usr/bin/ping)
->>              7fff8362a8c4 __libc_start_call_main+0x84
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->>
->> FAIL: expected backtrace entry
->> "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/libc.so.6\)$"
->> got "7fff9d52a73c getaddrinfo+0x121c
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
->>
->> With version glibc-2.34-60 gaih_inet function is present as part of the
->> expected backtrace. So we cannot just remove the gaih_inet function from
->> the backtrace.
->>
->> [root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep gaih_inet
->> 0000000000130490 t gaih_inet.constprop.0
->> 000000000012e830 t gaih_inet_serv
->> 00000000001d45e4 r gaih_inet_typeproto
->>
->> [root@xxx perf]# ./perf script -i /tmp/perf.data.b6S
->> ping   67906 [000] 22699.591699: probe_libc:inet_pton_3: (7fffbdd80820)
->>              7fffbdd80820 __GI___inet_pton+0x0
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->>              7fffbdd31160 gaih_inet.constprop.0+0xcd0
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->>              7fffbdd31c7c getaddrinfo+0x14c
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->>                 1140d3558 [unknown] (/usr/bin/ping)
->>
->> This patch solves this issue by doing a conditional skip. If there is a
->> gaih_inet function present in the libc then it will be added to the
->> expected backtrace else the function will be skipped from being added
->> to the expected backtrace.
->>
->> Output with the patch
->>
->> [root@xxx perf]# ./perf test -v "probe libc's inet_pton & backtrace it
->> with ping"
->>   83: probe libc's inet_pton & backtrace it with ping                 :
->> --- start ---
->> test child forked, pid 102662
->> ping 102692 [000] 127935.549973: probe_libc:inet_pton: (7fff93379a60)
->> 7fff93379a60 __GI___inet_pton+0x0
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->> 7fff9332a73c getaddrinfo+0x121c
->> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
->> 11ef03534 [unknown] (/usr/bin/ping)
->> test child finished with 0
->> ---- end ----
->> probe libc's inet_pton & backtrace it with ping: Ok
->>
->> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
->> Reported-by: Disha Goel <disgoel@linux.ibm.com>
->> ---
->>   tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
->> index eebeea6bdc76..72c65570db37 100755
->> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
->> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
->> @@ -45,7 +45,10 @@ trace_libc_inet_pton_backtrace() {
->>   		;;
->>   	ppc64|ppc64le)
->>   		eventattr='max-stack=4'
->> -		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
->> +		# Add gaih_inet to expected backtrace only if it is part of libc.
->> +		if nm $libc | grep -F -q gaih_inet.; then
->> +			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
->> +		fi
->>   		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
->>   		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
->>   		;;
->> -- 
->> 2.39.1
->>
+I doubt this will have any impact on the 5% - 10%, but I'll leave it
+here anyway just in case:
+
+(At least on Arm) you can avoid "-mno-omit-leaf-frame-pointer". As in,
+leaf frame pointers can be omitted. This is because of this change that
+we added to Perf:
+
+  void arch__add_leaf_frame_record_opts(struct record_opts *opts)
+  {
+     opts->sample_user_regs |= sample_reg_masks[PERF_REG_ARM64_LR].mask;
+  }
+
+After sampling the register, even in FP unwind mode, we'll still try to
+do a single step of Dwarf unwind of the last frame, using only the link
+register as the input data, and none of the stack space. The unwinder
+knows at that instruction whether the link register contains the return
+address, and there is a high chance that it does.
+
+We did this because at least with some compilers,
+"-no-omit-frame-pointer" actually has no effect on leaf frames, it will
+still omit it even if you asked for it not to be (because they don't do
+anything in leaf frames). Although maybe "-no-omit-leaf-frame-pointer"
+fixes this, you actually don't need it as long as you sampled the link
+register and have the Dwarf available.
+
+So I suppose to get that working you'd have to add the
+JIT_CODE_UNWINDING_INFO stuff.
+
+> I am looking to extend support to the jitdump specification to allow
+> perf to unwind through these trampolines when using dwarf unwinding
+> mode.
+
+Do you really want to use full Dwarf mode? You have to save the entire
+stack space on every sample for that to work, so it seems a bit slow.
+But maybe it's not an issue for lower sampling frequencies. If the
+application has a huge stack it's not really scalable.
+
+Is that just so you have a mode that works out of the box without any
+recompilation of Python? But not necessarily the best way to do it?
+
+I don't know if it's possible to have some kind of hybrid approach where
+only the trampolines have leaf frame pointers, but none of the other
+code does, so you don't get overhead issue? Or that would also fall
+apart in the kernel's FP unwinder?
+
+> I have a draft for a patch
+> (https://github.com/python/cpython/pull/112254) that adds support for
+> the specification by writing JIT_CODE_LOAD and
+> JIT_CODE_UNWINDING_INFO (currently with empty EH Frame entries to
+> force perf to defer to FP based unwinding). This works well in my
+> current
+> distribution (Arch Linux with perf version 6.5) but when tested in
+> other distributions it falls apart.
+> 
+> * One problem I have struggled to debug is that even when compiled
+> with frame pointers and without emitting JIT_CODE_UNWINDING_INFO
+> (using fp-based unwinding), in some cases (such as the latest Ubuntu
+> versions), the shared objects and addresses generated by perf-inject
+> -j look sane, the addresses match but perf report or perf script do
+> not include the symbol names in their output. I do not understand why
+> this
+> is happening and my debuggins so far has not allowed me to get any
+> thread I can pull so I wanted to reach to this mailing list for
+> assistance.
+> 
+> * The other problem I am finding is to include the eh_frames to our
+> trampolines as it looks like deferring to FP unwinding is unreliable
+> even if
+> our trampolines are trivial. This is a different problem but my
+> current attempts to add EH Frames have failed and I don't know how to
+> properly
+> debug them correctly as it looks like perf doesn't expect some of the
+> values we are writing. I would love it if someone with perf and DWARF
+> expertise could help us in the CPython team to get steered in the
+> right direction.
+> 
+> Thanks a lot in advance,
+> Pablo Galindo Salgado
+> 
