@@ -1,39 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31B4D5C;
-	Wed, 29 Nov 2023 20:17:27 -0800 (PST)
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-285abb82925so538847a91.3;
-        Wed, 29 Nov 2023 20:17:27 -0800 (PST)
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A61210C6;
+	Wed, 29 Nov 2023 20:23:10 -0800 (PST)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6cd8ce7bf7fso567964b3a.0;
+        Wed, 29 Nov 2023 20:23:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701317847; x=1701922647;
+        d=1e100.net; s=20230601; t=1701318190; x=1701922990;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u3cq8FTSpv7C38uDQTMDW9F009UvP5iBZjjRKd8DHB8=;
-        b=YGJegXT6GiQxmoBH8sS/XPp1axV0x5bPNssOvDFtyGbAATwwUwRtFHIScHpzXgxlO6
-         OWWtS5ZT5HW68Y2XxcFeKXniH6/cUSjT2oPUawMlMGBvz2Idlxwa4o3NB7yeD3+lfaCj
-         5zcmyP204fCfBJ6pVR1beJ0KD6O6UKw96ss5ASsvUEwkHbrzI0+fAYGtlM8vFyiLYI8k
-         Zbujl4g2yCR29E+ZB5Iz467zqZJjje0K1uVi6hJTTONJ34FnjKaX0g5raksUjuR+2fz6
-         oauB1gHnjpU+bc9KKtkf59UIKKW3nOOvp3BsgUJJoCTGUfsZypH8XctSOMmDs+Q4VRUt
-         wzYw==
-X-Gm-Message-State: AOJu0Yx+JVrST4xOjHibgcmLReiEJnlAk6+XHnqLimXVQil180bToKw0
-	r3QKLILqEc+DG8GZfAaRzh4TXMrj5nKpfnmbcBw=
-X-Google-Smtp-Source: AGHT+IF97srqpkw0k2/pzJL6e6S3Suh0Vq/E2N5CrXt2Wry0qz+a0HYkx1L+vhfzQ1Y60zRH8OwC/EH7AiOnbY78a6s=
-X-Received: by 2002:a17:90b:38d2:b0:285:b99a:a92d with SMTP id
- nn18-20020a17090b38d200b00285b99aa92dmr14982377pjb.32.1701317847219; Wed, 29
- Nov 2023 20:17:27 -0800 (PST)
+        bh=7Ru0HoM8F5gEi5lsp4Ae2vkSPRXvivIWKegDRC3hurM=;
+        b=kLBfYqeZNz7bD6sjXU00r7eq75oRVmWXsNwYVxd4aEQEgeTMGcNEZTbwpPPTW7RJWg
+         kb7qh8s/mEZTZ/9FeownuaQ4U7z51vuQeD6eQoxN6TtgkF6e273eVhcbvpcuQN6y+bFo
+         L+7Np577fPitVjQZTRNQmLUkd1ZWeG6F/UcQMNYlxRs0bU0R1BSSAS60GDTixmPYl+8h
+         T7JqzvqEp19ctX2LrAOGMg+U2FdNNC9E7W53Qag1A4VWpZJn6CawHQ4A8ob6LUpwuQgv
+         1r6e29HNlVaSpbEzHylI12lMob9B2m508+gzrkXM45QeQ33oK5qSCvYYNcV0BmFufAij
+         uphw==
+X-Gm-Message-State: AOJu0YylKpoYvt+BR51pqqwk2VgomdA0SNWgWiaJj9oolN69Cycvq1Gc
+	fFlGXVU6QXr20EGD8i4Poe5BnolvNH2KqFlyBA0=
+X-Google-Smtp-Source: AGHT+IE/BzFn89+JfyXo3c/BrBjQxaM+/JBIP+KTvzSqLxPmTlHW4UbUyKFvcCia698ym4wopcRqmg+rKv3xmQI0rZc=
+X-Received: by 2002:a05:6a20:54a8:b0:18c:3511:665f with SMTP id
+ i40-20020a056a2054a800b0018c3511665fmr19591250pzk.51.1701318189821; Wed, 29
+ Nov 2023 20:23:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-11-irogers@google.com>
-In-Reply-To: <20231127220902.1315692-11-irogers@google.com>
+References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-12-irogers@google.com>
+In-Reply-To: <20231127220902.1315692-12-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 Nov 2023 20:17:15 -0800
-Message-ID: <CAM9d7cjtpbjv-Em9E7bDOnO=jFYL_HjH+S_2wKkTgrkA8YUL4g@mail.gmail.com>
-Subject: Re: [PATCH v5 10/50] perf header: Switch mem topology to io_dir__readdir
+Date: Wed, 29 Nov 2023 20:22:58 -0800
+Message-ID: <CAM9d7ciHHWLseUx92hoMWk5+E4+MdDwWELjjJ5uTSGb+yiP1Vw@mail.gmail.com>
+Subject: Re: [PATCH v5 11/50] perf events: Remove scandir in thread synthesis
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -59,9 +59,8 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
 te:
 >
-> Switch memory_node__read and build_mem_topology from opendir/readdir
-> to io_dir__readdir, with smaller stack allocations. Reduces peak
-> memory consumption of perf record by 10kb.
+> This avoids scanddir reading the directory into memory that's
+> allocated and instead allocates on the stack.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
