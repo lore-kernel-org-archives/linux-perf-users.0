@@ -1,40 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF3395;
-	Wed, 29 Nov 2023 17:42:58 -0800 (PST)
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2856254bd74so456968a91.2;
-        Wed, 29 Nov 2023 17:42:58 -0800 (PST)
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE7C10DB;
+	Wed, 29 Nov 2023 17:50:01 -0800 (PST)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6cdde2aeb64so424605b3a.2;
+        Wed, 29 Nov 2023 17:50:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701308578; x=1701913378;
+        d=1e100.net; s=20230601; t=1701309000; x=1701913800;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ivoJxkCdzt3z1KRXcXZxqZP8Xkb6cmsg3m3L6Nbeo2w=;
-        b=QTglPJA3ByKUKhnDH3eWl5l1kKBfj3Xv1XhDXQUyhK3Fua3BS5BryUg+7RAFPUCPpn
-         /IZY3VbJHUR5qfIJqAdtMMqIsLj03h9Hav2Yu0uH50AJjLCBdDu5AXkHi3bviejepPai
-         iQwWIWG7pQZKuQDyK0n0dVWb3ewo3y1enif/7x28tHReWUUqm3TuhzZpzuXjquCFkCyG
-         FSnWb13WCyfdCF1MVpShcD5tG4SP1WfsyQiUyuk6KB455nuyBxXXExdmjTuUZEhHD4IM
-         p+bTIefiz5mHjY7FJsXG3jW6UUpWd718luz54PLLcmT611am57ZCpdTZPHMxo52g8b/P
-         qu/A==
-X-Gm-Message-State: AOJu0Yxpv4+et9z31x7foeS1H8cS7fYyZNPXAdtv26/lqHVYooLByI+I
-	FVTSCGQhJr3s7Oxl2R4O0H9hIC6x5ja3/Tqiqms=
-X-Google-Smtp-Source: AGHT+IF1rO1VkZ51jkR3hbMtb53x10XLTbSAz/OODkgWbTstVWu31Cgg87bOxSAYY24ZZ6D54ByCuy5rp5ek8BgaOpQ=
-X-Received: by 2002:a17:90b:17cf:b0:285:a18e:7565 with SMTP id
- me15-20020a17090b17cf00b00285a18e7565mr15721075pjb.5.1701308577748; Wed, 29
- Nov 2023 17:42:57 -0800 (PST)
+        bh=UJ1p2+ISWRL6Js+YhCiI0715c5Y3azFj2GwPodT3Wto=;
+        b=SGROZ8nevUWPztdDVQaRtjIg674a+M5vBA+12nwuEtkrPszMXdaLJ9lfnKfUi4EaO1
+         it8EnKpfJCuo1t+qZPkLguq6A9kthQat9+JVGqwFNKRTalxyEkJBDERwgaTUpBNvdZiW
+         +0uNXxuGy7Sps1jIl4xnRvMKaTp/7oLAmNc1AWz3hj3vfPKG2I3H34B3NdrwGBdXVg/v
+         zmzLgRnrURMTqaC2B99UAjQpsXa+bkYYGwglUBqvRFvKU0BF26nPuQwUBeAYsOyTooaq
+         gT4A/W7uMIyXI+mkw/zeK6Hx0l0jMkivNdJWDMMoJtbwjDLsgYBj3hjZZ68aTRiMlnNp
+         kVvg==
+X-Gm-Message-State: AOJu0YzlHhO+MS7zBKV+x5ImS9tuGqBF6ju2OT5IXGZduQcJZwva6H13
+	i0hKNtDninIVh3hzajDZdqYxTSjYHINMpXMV/eY=
+X-Google-Smtp-Source: AGHT+IE55/JJiB5fPNHVAw2uUqmDUlC6s9lgSp+ZZAVtpRvjYzw3lCKucPLV4W1GCbOVlU92JIzMXh9of2ulZeah7hM=
+X-Received: by 2002:a05:6a21:3392:b0:18c:ba47:74ea with SMTP id
+ yy18-20020a056a21339200b0018cba4774eamr10946235pzb.31.1701309000571; Wed, 29
+ Nov 2023 17:50:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-6-irogers@google.com>
-In-Reply-To: <20231127220902.1315692-6-irogers@google.com>
+References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-7-irogers@google.com>
+In-Reply-To: <20231127220902.1315692-7-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 Nov 2023 17:42:46 -0800
-Message-ID: <CAM9d7cgFJ4i05-ow07VXoCGxEHTbmuetM5C_8bvMC43JGOmwpw@mail.gmail.com>
-Subject: Re: [PATCH v5 05/50] tools api fs: Avoid reading whole file for a 1
- byte bool
+Date: Wed, 29 Nov 2023 17:49:49 -0800
+Message-ID: <CAM9d7ci20GuVga9XBBOx_GXZsiPEFsqAvAYiz42Tgvc6ygSP9w@mail.gmail.com>
+Subject: Re: [PATCH v5 06/50] tools lib api: Add io_dir an allocation free
+ readdir alternative
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -60,9 +60,10 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
 te:
 >
-> sysfs__read_bool used the first byte from a fully read file into a
-> string. It then looked at the first byte's value. Avoid doing this and
-> just read the first byte.
+> glibc's opendir allocates a minimum of 32kb, when called recursively
+> for a directory tree the memory consumption can add up - nearly 300kb
+> during perf start-up when processing modules. Add a stack allocated
+> variant of readdir sized a little more than 1kb.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -70,56 +71,3 @@ Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
-
-> ---
->  tools/lib/api/fs/fs.c | 24 +++++++++++++++---------
->  1 file changed, 15 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-> index 004f2af5504b..337fde770e45 100644
-> --- a/tools/lib/api/fs/fs.c
-> +++ b/tools/lib/api/fs/fs.c
-> @@ -447,15 +447,22 @@ int sysfs__read_str(const char *entry, char **buf, =
-size_t *sizep)
->
->  int sysfs__read_bool(const char *entry, bool *value)
->  {
-> -       char *buf;
-> -       size_t size;
-> -       int ret;
-> +       struct io io;
-> +       char bf[16];
-> +       int ret =3D 0;
-> +       char path[PATH_MAX];
-> +       const char *sysfs =3D sysfs__mountpoint();
-> +
-> +       if (!sysfs)
-> +               return -1;
->
-> -       ret =3D sysfs__read_str(entry, &buf, &size);
-> -       if (ret < 0)
-> -               return ret;
-> +       snprintf(path, sizeof(path), "%s/%s", sysfs, entry);
-> +       io.fd =3D open(path, O_RDONLY);
-> +       if (io.fd < 0)
-> +               return -errno;
->
-> -       switch (buf[0]) {
-> +       io__init(&io, io.fd, bf, sizeof(bf));
-> +       switch (io__get_char(&io)) {
->         case '1':
->         case 'y':
->         case 'Y':
-> @@ -469,8 +476,7 @@ int sysfs__read_bool(const char *entry, bool *value)
->         default:
->                 ret =3D -1;
->         }
-> -
-> -       free(buf);
-> +       close(io.fd);
->
->         return ret;
->  }
-> --
-> 2.43.0.rc1.413.gea7ed67945-goog
->
