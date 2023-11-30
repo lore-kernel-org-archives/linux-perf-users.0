@@ -1,116 +1,135 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ouETubjN"
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9E4D6C
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 10:29:43 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-40b35199f94so17465e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 10:29:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YMjGxcKp"
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F33A610F1
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 10:37:56 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-40b51e26a7aso17065e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 10:37:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701368982; x=1701973782; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701369475; x=1701974275; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FBKQZd68edVxF6ECkF2oX9KfXPiYc6EetlvZAUBR47c=;
-        b=ouETubjN1Hdfwdi3lj5ciw9BryOW7yvcfzKQ8Y6c9yMy99sUrEZjdtvK4hgBXQcrHw
-         QOKA/wmdEMYw8XZhz70GYM/rzYolQYCaA/htcob/jmnpV9u06qUnjK/rlDjXJalwiolJ
-         UyBsk8YT8+T8NWijedkchFVYnMhjTsmaZi5AfrsNxxq71qnVGwJccjjm4xWh+/JrxXtn
-         gxBp4vE83nlRW5PewqnFvmVSjDvi6STPDLTpS/2PE/+sJfusmXGrMAyyn8aJ9nq7PZ69
-         B2Gcq76iRn1gs0o3w1id+LxjamdEHE19sbD8RJdXLPJSguWAMHMJLPIIG8QTp4jISYC9
-         +JxA==
+        bh=jXco1RY+ISh2r9hYhXm6nxpoVtv+hMYlnAajh2Nsll0=;
+        b=YMjGxcKpDEbynuBh8yfWNljj3wlXZ10SXzDhUhQxRodrPPO1BI+GwD7Of7ouisLfsz
+         2esZ06f/rtxqKL2+gs1LsdPtxhVKv+onTwvIi5SysNAL9nYs9YALCWZMx3sGdiiPS0Jc
+         A1hPx4Qr1nkbIzQIgazRQzF23ggAT8+BNM6CxFNsEGO22ZXcaBb8nW1y1jJEqwdo0JrU
+         EUmWaBX5kp2z4qSy2ooE7V3Lr7LFbOEZe/N1Vpdaq5T3mL/5fxXpqlA00yVVQelaGAVH
+         ycyz1wADRHQlvrzaqh13vl8VY6SaN+nuZ+TqObZlzGk4P5YVldS+6rSfpYmmJ8XCnpAX
+         MFAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701368982; x=1701973782;
+        d=1e100.net; s=20230601; t=1701369475; x=1701974275;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FBKQZd68edVxF6ECkF2oX9KfXPiYc6EetlvZAUBR47c=;
-        b=NDiJn28M9p9M21czPfXLcXigE57QTdhpe1Bz0G40R2Gb3MQrko0x6XMBr4xgyWh+Dh
-         4gRG2px3JYlzaudEYz6RRtt3gzWgFLQ5t/AetqEjdkY66Dh9KCV3CZyqr0tvwk9Swy01
-         f2INKoycWqnnxewmIZGkyN5hK+bdN8WvAVjmfVy8Rk5QEUK5IzZ9W9koZeDkK1D1nVSJ
-         DoxjaPcABT/rTi5JJhAfhjxmJZd4G6qj4YqdnMHuaPZ5Lq0z3brCPTCU1bE2khJgApkJ
-         vkfQoSuCCwLtuYknqxt9bnpV+aVzG2iVk1PO218q7aAJQVPcH9kYpmsmz+yHrZ08OTjy
-         Ugkw==
-X-Gm-Message-State: AOJu0YyiW04q5T23Jmr1pJ+/TqCi4tA64bcHaZrc5f8l7HJDerDNPNxq
-	L7O6tAfsDWUCxMUmf36PVRoWp4dScaBesn8WmzUvnA==
-X-Google-Smtp-Source: AGHT+IGJXurzgm9WUTj0WY4QgYfh64X35gMpEmBv6sX8eZgPY8mokBM6500vWNCCFVYZsaGL0tJ3UdVaHekQSMyAvhA=
-X-Received: by 2002:a05:600c:1c04:b0:40b:43f4:df9e with SMTP id
- j4-20020a05600c1c0400b0040b43f4df9emr211199wms.2.1701368981847; Thu, 30 Nov
- 2023 10:29:41 -0800 (PST)
+        bh=jXco1RY+ISh2r9hYhXm6nxpoVtv+hMYlnAajh2Nsll0=;
+        b=fJU/c3xZtNZ7/qp7NhvtSMKt0toKTY9fyCRgPDw3nwcp9yfzbXewUov6hg016g3AHE
+         RwxB8VLOJBmum9vwOt//X9BPekqa54FS8PEZQXPMaHGEUQZv0TXScdNJ9Q8nr1nkO53n
+         GBntmgy5V+DjmC8cPEaRMIb4QDgrAaPNFjvh8qz/pMOM/h0SPJy/Umy83RwsSzCgraI8
+         Ffeo4bkHj/vjbvNrsybVlNHgxt0Is4gc4BoB+2eRTCkUAABB4CKTifU04z8NgA/d6G5q
+         saN+MLmpdG6msNzrrBZsQfjZd0grAKc68i72NqEoywyecUV+mFPXn3O63+CydtwrOPb7
+         6Aag==
+X-Gm-Message-State: AOJu0YxTs2CSzPPG+yK4YpE3ltd5AuDbMtwfduPfEGl5QMl3QY/hF7uQ
+	Xi3tu+pH7jXTfgcUZie+t8uVaNZwVKyaPfSzrmkdfQ==
+X-Google-Smtp-Source: AGHT+IGanbiuBztJsruAZoXU2GoCMTZMLwl7B6oJzmVXrqiHFVZTRDjzE/pUmh/xmmwmSWkZonhhRNjkQdD1ZvPhpCo=
+X-Received: by 2002:a05:600c:1e15:b0:40b:3483:8488 with SMTP id
+ ay21-20020a05600c1e1500b0040b34838488mr173166wmb.3.1701369475263; Thu, 30 Nov
+ 2023 10:37:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-9-irogers@google.com>
- <CAM9d7cjpYHN_Q63sW70vTCisdW=-SzjsrryUUJjgtZ3+9jdxfA@mail.gmail.com>
-In-Reply-To: <CAM9d7cjpYHN_Q63sW70vTCisdW=-SzjsrryUUJjgtZ3+9jdxfA@mail.gmail.com>
+References: <20231128175441.721579-1-namhyung@kernel.org> <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
+ <CAM9d7chKmDETK6Ea2wyR8L21jyHWcPHbKavarnq-JmNA-AoUnQ@mail.gmail.com>
+In-Reply-To: <CAM9d7chKmDETK6Ea2wyR8L21jyHWcPHbKavarnq-JmNA-AoUnQ@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 30 Nov 2023 10:29:30 -0800
-Message-ID: <CAP-5=fXjReF38T_GKohtWd7_7fZjYVnKBj-Fwt+agi1vSWAEdQ@mail.gmail.com>
-Subject: Re: [PATCH v5 08/50] perf record: Be lazier in allocating lost
- samples buffer
+Date: Thu, 30 Nov 2023 10:37:43 -0800
+Message-ID: <CAP-5=fUf6R=bsfg7i8atFApJBY-=zWUBMq7inFsCPZhB+w2==Q@mail.gmail.com>
+Subject: Re: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
-	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Guilherme Amadio <amadio@gentoo.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 6:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Wed, Nov 29, 2023 at 3:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > Wait until a lost sample occurs to allocate the lost samples buffer,
-> > often the buffer isn't necessary. This saves a 64kb allocation and
-> > 5.3kb of peak memory consumption.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-record.c | 29 +++++++++++++++++++----------
-> >  1 file changed, 19 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 9b4f3805ca92..b6c8c1371b39 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -1924,21 +1924,13 @@ static void __record__save_lost_samples(struct =
-record *rec, struct evsel *evsel,
-> >  static void record__read_lost_samples(struct record *rec)
-> >  {
-> >         struct perf_session *session =3D rec->session;
-> > -       struct perf_record_lost_samples *lost;
-> > +       struct perf_record_lost_samples *lost =3D NULL;
-> >         struct evsel *evsel;
-> >
-> >         /* there was an error during record__open */
-> >         if (session->evlist =3D=3D NULL)
-> >                 return;
-> >
-> > -       lost =3D zalloc(PERF_SAMPLE_MAX_SIZE);
+> Hi Ian,
 >
-> To minimize the allocation size, this can be
-> sizeof(*lost) + session->machines.host.id_hdr_size
-> instead of PERF_SAMPLE_MAX_SIZE.
+> On Tue, Nov 28, 2023 at 11:14=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > On Tue, Nov 28, 2023 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > Hello,
+> > >
+> > > It used to have annotation_options for each command separately (for
+> > > example, perf report, annotate, and top), but we can make it global a=
+s
+> > > they never used together (with different settings).  This would save
+> > > some memory for each symbol when annotation is enabled.
+> > >
+> > > This code is available at 'perf/annotate-option-v1' branch in
+> > >
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.g=
+it
+> > >
+> > > Thanks,
+> > > Namhyung
+> >
+> > Thanks for doing this and I think it is progress. I think there is a
+> > common problem with having things be an option rather than say part of
+> > session. Having a global variable seems unfortunate but I'm not sure
+> > if in all locations we have easy access to the session.
+>
+> That's not the case when you deal with hist entry or TUI browser.
+> I think that's the reason we have the option in the annotation.
+>
+>
+> > The rough
+> > structure with annotations as I understand it is:
+> >
+> > session has machines
+> > a machine has dsos
+> > a dso has symbols
+> > a symbol has an annotation
+>
+> That's true.  But the annotation struct is used only if
+> symbol__annotation_init() is called.
 
-Sounds good, should probably be a follow up. The current size is
-PERF_SAMPLE_MAX_SIZE.
+Right. I find this approach likely to lead to errors, such as a symbol
+created globally before symbol__annotation_init() was called breaking
+the container_of assumptions.
+
+> >
+> > Annotation is something of unfortunate abstraction as it covers things
+> > like an IPC per symbol (why hard code to just IPC?) and things like
+> > source files and line numbers.
+>
+> Right, that's why I splitted the struct annotated_branch.
+>
+> >
+> > A recent success story where we got rid of a configuration variable
+> > was by switching to lazy allocation with sorting by name for symbols
+> > within a dso. If we could have a lazy allocation model with
+> > annotations then maybe we can do away with large hammers like global
+> > options.
+>
+> Maybe I can move the pointer to option into the annotated_source
+> which is allocated lazily.  But I don't think it needs to keep the option
+> for each symbol or annotation.  It's usually to control some display
+> behaviors in the disasm output globally.  So I think it's better to have
+> a global variable.
+
+Sgtm. My point wasn't to criticize, I think this is a good change, I
+was just trying to imagine doing things in a way that could overall
+reduce complexity
 
 Thanks,
 Ian
@@ -118,63 +137,35 @@ Ian
 > Thanks,
 > Namhyung
 >
->
-> > -       if (lost =3D=3D NULL) {
-> > -               pr_debug("Memory allocation failed\n");
-> > -               return;
-> > -       }
-> > -
-> > -       lost->header.type =3D PERF_RECORD_LOST_SAMPLES;
-> > -
-> >         evlist__for_each_entry(session->evlist, evsel) {
-> >                 struct xyarray *xy =3D evsel->core.sample_id;
-> >                 u64 lost_count;
-> > @@ -1961,6 +1953,14 @@ static void record__read_lost_samples(struct rec=
-ord *rec)
-> >                                 }
 > >
-> >                                 if (count.lost) {
-> > +                                       if (!lost) {
-> > +                                               lost =3D zalloc(PERF_SA=
-MPLE_MAX_SIZE);
-> > +                                               if (!lost) {
-> > +                                                       pr_debug("Memor=
-y allocation failed\n");
-> > +                                                       return;
-> > +                                               }
-> > +                                               lost->header.type =3D P=
-ERF_RECORD_LOST_SAMPLES;
-> > +                                       }
-> >                                         __record__save_lost_samples(rec=
-, evsel, lost,
-> >                                                                     x, =
-y, count.lost, 0);
-> >                                 }
-> > @@ -1968,9 +1968,18 @@ static void record__read_lost_samples(struct rec=
-ord *rec)
-> >                 }
 > >
-> >                 lost_count =3D perf_bpf_filter__lost_count(evsel);
-> > -               if (lost_count)
-> > +               if (lost_count) {
-> > +                       if (!lost) {
-> > +                               lost =3D zalloc(PERF_SAMPLE_MAX_SIZE);
-> > +                               if (!lost) {
-> > +                                       pr_debug("Memory allocation fai=
-led\n");
-> > +                                       return;
-> > +                               }
-> > +                               lost->header.type =3D PERF_RECORD_LOST_=
-SAMPLES;
-> > +                       }
-> >                         __record__save_lost_samples(rec, evsel, lost, 0=
-, 0, lost_count,
-> >                                                     PERF_RECORD_MISC_LO=
-ST_SAMPLES_BPF);
-> > +               }
-> >         }
-> >  out:
-> >         free(lost);
-> > --
-> > 2.43.0.rc1.413.gea7ed67945-goog
-> >
+> > > Namhyung Kim (8):
+> > >   perf annotate: Introduce global annotation_options
+> > >   perf report: Convert to the global annotation_options
+> > >   perf top: Convert to the global annotation_options
+> > >   perf annotate: Use global annotation_options
+> > >   perf ui/browser/annotate: Use global annotation_options
+> > >   perf annotate: Ensure init/exit for global options
+> > >   perf annotate: Remove remaining usages of local annotation options
+> > >   perf annotate: Get rid of local annotation options
+> > >
+> > >  tools/perf/builtin-annotate.c     |  43 +++++----
+> > >  tools/perf/builtin-report.c       |  37 ++++----
+> > >  tools/perf/builtin-top.c          |  45 +++++-----
+> > >  tools/perf/ui/browsers/annotate.c |  85 ++++++++----------
+> > >  tools/perf/ui/browsers/hists.c    |  34 +++----
+> > >  tools/perf/ui/browsers/hists.h    |   2 -
+> > >  tools/perf/util/annotate.c        | 142 +++++++++++++++-------------=
+--
+> > >  tools/perf/util/annotate.h        |  38 ++++----
+> > >  tools/perf/util/block-info.c      |   6 +-
+> > >  tools/perf/util/block-info.h      |   3 +-
+> > >  tools/perf/util/hist.h            |  25 ++----
+> > >  tools/perf/util/top.h             |   1 -
+> > >  12 files changed, 206 insertions(+), 255 deletions(-)
+> > >
+> > >
+> > > base-commit: 757489991f7c08603395b85037a981c31719c92c
+> > > --
+> > > 2.43.0.rc1.413.gea7ed67945-goog
+> > >
