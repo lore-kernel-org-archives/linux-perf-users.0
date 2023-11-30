@@ -1,40 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9F5BD;
-	Wed, 29 Nov 2023 18:09:53 -0800 (PST)
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5c628bf8d2eso9715a12.1;
-        Wed, 29 Nov 2023 18:09:53 -0800 (PST)
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EEB9D50;
+	Wed, 29 Nov 2023 18:16:41 -0800 (PST)
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5c21e185df5so394977a12.1;
+        Wed, 29 Nov 2023 18:16:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701310192; x=1701914992;
+        d=1e100.net; s=20230601; t=1701310601; x=1701915401;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ovI0zY83WFzXVjFngO+tObf/AjtMhdLqbooVZa7zEB0=;
-        b=k/H8w4/HfR/JOLvoTw2CdtCuled8aDxUqVGTgZ/CtAKdKT/v59atGqf8PnwRqPzJmz
-         syE0Erw7zQh/xoVerIpJ7y0JccGD3bHfuFKhWqFwPZFwtrgvzE/qRlzLRoPb2rK2ei5U
-         9L2AscsNC5C3/A7aBmLtsadsoMcjofUq/UfRy5gjgIhOsXKYTBSubg5/sQdgTHwM4TdV
-         x2kYlGLIzwMMCfOFA3p5aeRPm4xa46yUTrZCiodJhZFkw1QzoBMYYAdkLdUvdd3MtmJv
-         Xdb7EI2QapoDRVpLSxyaom8SW69bOepOlfCrrgCOrKkV9trcwLsVbtV8kLC/goMMm9Oh
-         jyKA==
-X-Gm-Message-State: AOJu0YyNyGQWaHzxfyi0DYG8gqNwdpg5s7er6nbOJT+m63BNd3QXVwRm
-	8euVd12gTbyAsphhNH7YbPjRm00KSzXPdtkMipk=
-X-Google-Smtp-Source: AGHT+IFL/oWGodxfj2gIxGZ0pIi1lOlv+rNGoAZqFmmjDpiR73lQCuWvwh7JFyX9GUBVKGsurdz0lS4edmFhsSFU8hs=
-X-Received: by 2002:a17:90a:dc08:b0:285:6622:ed1 with SMTP id
- i8-20020a17090adc0800b0028566220ed1mr34013929pjv.10.1701310192576; Wed, 29
- Nov 2023 18:09:52 -0800 (PST)
+        bh=/VLuQtpdBc32KjxQOcjqDfowfS2XJTyc1MGIgZJtNMg=;
+        b=kNDsS4nySjH3LJ0FdpxULxEkVwk2YzWNPwGoQNlWnsEc3KBf4OmzTkhWof/m9dZaBT
+         apIZ/O6hna9RQvC9mXSg3k3d1f+igCp+zNbowv6MS8QO1bLSuVfQXNp/rMvNO3jgXDaX
+         S5GndEMQPiM8Mi5NHNXJQRlRlzvg2JqOHgnKfg9FKuI0Xyt+XiZkrtUqr5uDsOqhSHA3
+         +9Rhd5YvOtC+K6Uz9PQs5G1h3PccxGZ1L4wro/MYNeOMUck30dDl4EwlOyIwP+8a8oPi
+         iF0vVdJWS1ne2FTwOsZjwGTT5KNaZpHACc6Bolrt36l4TFzk1G1PeAD1rFkORw4dwo9H
+         4wmA==
+X-Gm-Message-State: AOJu0YyJbk0DUIBhVsX2B3105c7BCRaV229l3jPncR8wY1NNhcVWo2iz
+	XgJkGFfS9716CQtLXiuWQCecbB8u4qvZg3Gtzuc=
+X-Google-Smtp-Source: AGHT+IFc99F048eopfGGkgAVArdOb2xa84JCR/S9okjBZCgS5cbT/5lCnhrv7ynQHOv2BqxNnwYu5+mWJR103p2CBL8=
+X-Received: by 2002:a17:90b:3808:b0:25e:a8ab:9157 with SMTP id
+ mq8-20020a17090b380800b0025ea8ab9157mr20010117pjb.22.1701310600944; Wed, 29
+ Nov 2023 18:16:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-9-irogers@google.com>
-In-Reply-To: <20231127220902.1315692-9-irogers@google.com>
+References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-10-irogers@google.com>
+In-Reply-To: <20231127220902.1315692-10-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 Nov 2023 18:09:41 -0800
-Message-ID: <CAM9d7cjpYHN_Q63sW70vTCisdW=-SzjsrryUUJjgtZ3+9jdxfA@mail.gmail.com>
-Subject: Re: [PATCH v5 08/50] perf record: Be lazier in allocating lost
- samples buffer
+Date: Wed, 29 Nov 2023 18:16:29 -0800
+Message-ID: <CAM9d7ch_Nw4mjjGVSc_DzaA+XhosjcjnKeG4MMxN8zu33eBPPA@mail.gmail.com>
+Subject: Re: [PATCH v5 09/50] perf pmu: Switch to io_dir__readdir
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -60,98 +59,12 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
 te:
 >
-> Wait until a lost sample occurs to allocate the lost samples buffer,
-> often the buffer isn't necessary. This saves a 64kb allocation and
-> 5.3kb of peak memory consumption.
+> Avoid DIR allocations when scanning sysfs by using io_dir for the
+> readdir implementation, that allocates about 1kb on the stack.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-record.c | 29 +++++++++++++++++++----------
->  1 file changed, 19 insertions(+), 10 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 9b4f3805ca92..b6c8c1371b39 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1924,21 +1924,13 @@ static void __record__save_lost_samples(struct re=
-cord *rec, struct evsel *evsel,
->  static void record__read_lost_samples(struct record *rec)
->  {
->         struct perf_session *session =3D rec->session;
-> -       struct perf_record_lost_samples *lost;
-> +       struct perf_record_lost_samples *lost =3D NULL;
->         struct evsel *evsel;
->
->         /* there was an error during record__open */
->         if (session->evlist =3D=3D NULL)
->                 return;
->
-> -       lost =3D zalloc(PERF_SAMPLE_MAX_SIZE);
 
-To minimize the allocation size, this can be
-sizeof(*lost) + session->machines.host.id_hdr_size
-instead of PERF_SAMPLE_MAX_SIZE.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
-
-
-> -       if (lost =3D=3D NULL) {
-> -               pr_debug("Memory allocation failed\n");
-> -               return;
-> -       }
-> -
-> -       lost->header.type =3D PERF_RECORD_LOST_SAMPLES;
-> -
->         evlist__for_each_entry(session->evlist, evsel) {
->                 struct xyarray *xy =3D evsel->core.sample_id;
->                 u64 lost_count;
-> @@ -1961,6 +1953,14 @@ static void record__read_lost_samples(struct recor=
-d *rec)
->                                 }
->
->                                 if (count.lost) {
-> +                                       if (!lost) {
-> +                                               lost =3D zalloc(PERF_SAMP=
-LE_MAX_SIZE);
-> +                                               if (!lost) {
-> +                                                       pr_debug("Memory =
-allocation failed\n");
-> +                                                       return;
-> +                                               }
-> +                                               lost->header.type =3D PER=
-F_RECORD_LOST_SAMPLES;
-> +                                       }
->                                         __record__save_lost_samples(rec, =
-evsel, lost,
->                                                                     x, y,=
- count.lost, 0);
->                                 }
-> @@ -1968,9 +1968,18 @@ static void record__read_lost_samples(struct recor=
-d *rec)
->                 }
->
->                 lost_count =3D perf_bpf_filter__lost_count(evsel);
-> -               if (lost_count)
-> +               if (lost_count) {
-> +                       if (!lost) {
-> +                               lost =3D zalloc(PERF_SAMPLE_MAX_SIZE);
-> +                               if (!lost) {
-> +                                       pr_debug("Memory allocation faile=
-d\n");
-> +                                       return;
-> +                               }
-> +                               lost->header.type =3D PERF_RECORD_LOST_SA=
-MPLES;
-> +                       }
->                         __record__save_lost_samples(rec, evsel, lost, 0, =
-0, lost_count,
->                                                     PERF_RECORD_MISC_LOST=
-_SAMPLES_BPF);
-> +               }
->         }
->  out:
->         free(lost);
-> --
-> 2.43.0.rc1.413.gea7ed67945-goog
->
