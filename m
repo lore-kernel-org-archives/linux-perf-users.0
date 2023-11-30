@@ -1,39 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684B110C2;
-	Wed, 29 Nov 2023 15:56:49 -0800 (PST)
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-28613d87c4cso398494a91.3;
-        Wed, 29 Nov 2023 15:56:49 -0800 (PST)
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACA412F;
+	Wed, 29 Nov 2023 16:01:53 -0800 (PST)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d001e4cf7cso3710995ad.2;
+        Wed, 29 Nov 2023 16:01:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701302209; x=1701907009;
+        d=1e100.net; s=20230601; t=1701302513; x=1701907313;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dyQl4Vy/rEx3cdSpEiRXOw3IV56Abu0Xky4Rbxj2uHw=;
-        b=VsOMszPlF/a39vu0arMliKClNCPkj8EaEgUrDNrgdLUSemSYx1B+G+6Bva4FAiHeS+
-         0kKWYqJDEfjtIGh0057No4GSYw0Ny9Mfq1K03wjPIBi8XoXbDS8Tr+5WD7M+1WzLHouw
-         JIznvx41Rw5nuutQsv3i6s44ilU9Uvtf8tRstPSaDhzO17WeL/+v/tlGkIrEgd88T3q2
-         4+/DFQPU0tevIEh/MXxY83/hCvGB0Lyf+7eIV1c/LlBAYzd3YZ/yRnTDHhge1Ep973Je
-         LLkGCP/BgHhPe3VRiaKUz7SANKPl4NN05NmQT+g/x6BjwXYmUB7ZmBYNdQIgRoyQw/sd
-         +D7w==
-X-Gm-Message-State: AOJu0YyZUdm3l5ZcNZi2HxztIKv3Tpj4OyfZrl6XZ5SzdKw64l7CNRzt
-	VfbQ/Yjr3Zm2xVKrrrbhsrnTxMIxPtKTcm8s9Qk=
-X-Google-Smtp-Source: AGHT+IHDfzxX1rS5SziiRbb7Ev377hzw2KeazGnVixPVbRxHPgBzKCjzHnxqN2V1TD3i9FlP2mIwuiIlI5mSyuUhpa4=
-X-Received: by 2002:a17:90b:2b50:b0:285:9e58:1bac with SMTP id
- rr16-20020a17090b2b5000b002859e581bacmr19346035pjb.27.1701302208691; Wed, 29
- Nov 2023 15:56:48 -0800 (PST)
+        bh=W3As+H3ba0cBEdpLgXC4M2L7j366iPfI/nKdLUEgmlU=;
+        b=nqFU+2O5JNxryODpf7vQd8jhR9Y6zIDDY2XSXLdwVAt4jaQnuWwNQBxL2klplqarVW
+         TdwW8s3ekyM6YVTNwxyGZd4a4b0iqUEjDhlo08IUqL92X5W9mCEx1nDrylTRDOIWJmHP
+         59yfyTxRqTFVGGByHIVj38gQnGT1o1eA0m5a1TZrUt9CLa2HPwY2PzT1z/WyTBu0uiHr
+         7B9Ks+/mSQAjGuPYX2vN04rCzodaFAnkBzhtlD77AGNyxJPPXYtqTeuz/+/CwmICT4yp
+         lCZmsKzHuIWDgj54l5t2Tk+DhIR7SnDcVFvPKJe3+CUD4znqd9ZIoRln/EJFdd5CRy8j
+         Wiig==
+X-Gm-Message-State: AOJu0Yz/f8bRuoSa4CT/9/mSszO+k9KrkPsIwegz8Mil3Y4OdM9un+0a
+	8LnBaGzY4eWqPCBbgji8y/4elS+Hq2fitlC5RSxEVta2Uwc=
+X-Google-Smtp-Source: AGHT+IEc4tL3VRN6B47qi922MCt9p4QJOtKNJyJQi9ansNVakoZdDGjvhkxqK9FNDFb25GOPZrUzwv8Z4j4KTEY1NAk=
+X-Received: by 2002:a17:902:ee95:b0:1cc:6dd5:59e8 with SMTP id
+ a21-20020a170902ee9500b001cc6dd559e8mr17932368pld.26.1701302513109; Wed, 29
+ Nov 2023 16:01:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231128175441.721579-1-namhyung@kernel.org> <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
+References: <20231128175441.721579-1-namhyung@kernel.org> <20231128175441.721579-7-namhyung@kernel.org>
+ <CAP-5=fW3f_96=rWeYg-qpL2T9VjLKnqnmq8T4dvaixWEo-0NRA@mail.gmail.com>
+In-Reply-To: <CAP-5=fW3f_96=rWeYg-qpL2T9VjLKnqnmq8T4dvaixWEo-0NRA@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 Nov 2023 15:56:37 -0800
-Message-ID: <CAM9d7chKmDETK6Ea2wyR8L21jyHWcPHbKavarnq-JmNA-AoUnQ@mail.gmail.com>
-Subject: Re: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
+Date: Wed, 29 Nov 2023 16:01:41 -0800
+Message-ID: <CAM9d7cgw+A1nxSqA+fcSiBH972gF-yRNTiadQwZDvJXTGre6=w@mail.gmail.com>
+Subject: Re: [PATCH 6/8] perf annotate: Ensure init/exit for global options
 To: Ian Rogers <irogers@google.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -42,99 +43,23 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
-
-On Tue, Nov 28, 2023 at 11:14=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+On Tue, Nov 28, 2023 at 11:21=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
 ote:
 >
 > On Tue, Nov 28, 2023 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
 > wrote:
 > >
-> > Hello,
-> >
-> > It used to have annotation_options for each command separately (for
-> > example, perf report, annotate, and top), but we can make it global as
-> > they never used together (with different settings).  This would save
-> > some memory for each symbol when annotation is enabled.
-> >
-> > This code is available at 'perf/annotate-option-v1' branch in
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> >
-> > Thanks,
-> > Namhyung
+> > Now it only cares about the global options so it can just handle it
+> > without the argument.
 >
-> Thanks for doing this and I think it is progress. I think there is a
-> common problem with having things be an option rather than say part of
-> session. Having a global variable seems unfortunate but I'm not sure
-> if in all locations we have easy access to the session.
+> If annotate_opts were accessed by a function then you could
+> pthread_once the initialization on the first call to get
+> annotate_opts. Removing annotation_options__init/exit would remove
+> some potential for error.
 
-That's not the case when you deal with hist entry or TUI browser.
-I think that's the reason we have the option in the annotation.
-
-
-> The rough
-> structure with annotations as I understand it is:
->
-> session has machines
-> a machine has dsos
-> a dso has symbols
-> a symbol has an annotation
-
-That's true.  But the annotation struct is used only if
-symbol__annotation_init() is called.
-
->
-> Annotation is something of unfortunate abstraction as it covers things
-> like an IPC per symbol (why hard code to just IPC?) and things like
-> source files and line numbers.
-
-Right, that's why I splitted the struct annotated_branch.
-
->
-> A recent success story where we got rid of a configuration variable
-> was by switching to lazy allocation with sorting by name for symbols
-> within a dso. If we could have a lazy allocation model with
-> annotations then maybe we can do away with large hammers like global
-> options.
-
-Maybe I can move the pointer to option into the annotated_source
-which is allocated lazily.  But I don't think it needs to keep the option
-for each symbol or annotation.  It's usually to control some display
-behaviors in the disasm output globally.  So I think it's better to have
-a global variable.
+Currently all call sites (perf annotate, report and top) initialize the
+options and check if it has conflicting options before running the
+commands.  So I'm not sure if it needs pthread_once() for that.
 
 Thanks,
 Namhyung
-
->
->
-> > Namhyung Kim (8):
-> >   perf annotate: Introduce global annotation_options
-> >   perf report: Convert to the global annotation_options
-> >   perf top: Convert to the global annotation_options
-> >   perf annotate: Use global annotation_options
-> >   perf ui/browser/annotate: Use global annotation_options
-> >   perf annotate: Ensure init/exit for global options
-> >   perf annotate: Remove remaining usages of local annotation options
-> >   perf annotate: Get rid of local annotation options
-> >
-> >  tools/perf/builtin-annotate.c     |  43 +++++----
-> >  tools/perf/builtin-report.c       |  37 ++++----
-> >  tools/perf/builtin-top.c          |  45 +++++-----
-> >  tools/perf/ui/browsers/annotate.c |  85 ++++++++----------
-> >  tools/perf/ui/browsers/hists.c    |  34 +++----
-> >  tools/perf/ui/browsers/hists.h    |   2 -
-> >  tools/perf/util/annotate.c        | 142 +++++++++++++++---------------
-> >  tools/perf/util/annotate.h        |  38 ++++----
-> >  tools/perf/util/block-info.c      |   6 +-
-> >  tools/perf/util/block-info.h      |   3 +-
-> >  tools/perf/util/hist.h            |  25 ++----
-> >  tools/perf/util/top.h             |   1 -
-> >  12 files changed, 206 insertions(+), 255 deletions(-)
-> >
-> >
-> > base-commit: 757489991f7c08603395b85037a981c31719c92c
-> > --
-> > 2.43.0.rc1.413.gea7ed67945-goog
-> >
