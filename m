@@ -1,129 +1,234 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B69C910DB;
-	Thu, 30 Nov 2023 02:36:18 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A27C143D;
-	Thu, 30 Nov 2023 02:37:05 -0800 (PST)
-Received: from [10.57.41.237] (unknown [10.57.41.237])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB8C93F6C4;
-	Thu, 30 Nov 2023 02:36:16 -0800 (PST)
-Message-ID: <31b68b10-9819-4c96-a237-ac04887be305@arm.com>
-Date: Thu, 30 Nov 2023 10:36:15 +0000
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="chOB2DKz"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB6BD6C
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 02:46:41 -0800 (PST)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AUAH0xW005280;
+	Thu, 30 Nov 2023 10:46:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=AE/2XERR7UPht8zuKb8qAW9heYjd6XiKMF9o3XqjiuU=;
+ b=chOB2DKz9dfdwFJcSBCzT9H296uRgtJ6DPIQaQbSWvTcF0NHHae4KjfM0rlVjMCPn/u+
+ uYHFHgXLP/6RisoK8YHu5RKe7PAd9CPorTIaFBYXZ6mLBhPRbgeOazUWAKVAywM3cHxY
+ FnX3lopUJW+44Eam39Dp4050fXHL5jy/OCgxVwcdKWuEixwLcaKGmFrac8b0t3XMNwxy
+ mrqimBhRFjMt3eIzxqmWvvWnMS3WncDsyjsGzyVgLwAiFwHOJm6xNOxTdmydJbx2Wsnr
+ UJt5GPjswAbQgdk3LBnutGjJE0tSj6tXmu4TYfW+wn4pj2eX4Clyr7kH8g90hYF9OOM4 XA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uprgm8q1x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Nov 2023 10:46:29 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AUAeXxC023656;
+	Thu, 30 Nov 2023 10:46:28 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uprgm8q14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Nov 2023 10:46:28 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AU7YD2Z030222;
+	Thu, 30 Nov 2023 10:46:27 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ukv8nwhue-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Nov 2023 10:46:27 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AUAkO6O25755910
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Nov 2023 10:46:24 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 55B3F20043;
+	Thu, 30 Nov 2023 10:46:24 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D88FA20040;
+	Thu, 30 Nov 2023 10:46:21 +0000 (GMT)
+Received: from [9.109.248.124] (unknown [9.109.248.124])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 30 Nov 2023 10:46:21 +0000 (GMT)
+Message-ID: <6f6d99fd-9f97-d56a-ef56-3b822ae26f1e@linux.ibm.com>
+Date: Thu, 30 Nov 2023 16:16:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/3] Documentation: arm64: Document the PMU event
- counting threshold feature
-To: James Clark <james.clark@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, will@kernel.org, mark.rutland@arm.com,
- anshuman.khandual@arm.com, namhyung@gmail.com
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231124102857.1106453-1-james.clark@arm.com>
- <20231124102857.1106453-4-james.clark@arm.com>
-Content-Language: en-GB
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20231124102857.1106453-4-james.clark@arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] perf test record+probe_libc_inet_pton: Fix call chain
+ match on powerpc
+Content-Language: en-US
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+        james.clark@arm.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, Disha Goel <disgoel@linux.ibm.com>
+References: <20231126070914.175332-1-likhitha@linux.ibm.com>
+ <ZWeljhj9ZH4xrqjw@kernel.org>
+From: Likhitha Korrapati <likhitha@linux.ibm.com>
+In-Reply-To: <ZWeljhj9ZH4xrqjw@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: QvQHJWsDOgW-gK1QL78ji5ZCyLg9NF-O
+X-Proofpoint-GUID: Ick8DDAxu2XAnTHUlJ7fbRokj7GFkrwt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-30_08,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ adultscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ mlxscore=0 phishscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2311300080
 
-On 24/11/2023 10:28, James Clark wrote:
-> Add documentation for the new Perf event open parameters and
-> the threshold_max capability file.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
+Hi Arnaldo,
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Thank you for pointing it. From next time I will take care of it.
 
+-Likhitha.
 
-> ---
->   Documentation/arch/arm64/perf.rst | 72 +++++++++++++++++++++++++++++++
->   1 file changed, 72 insertions(+)
-> 
-> diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64/perf.rst
-> index 1f87b57c2332..41eee68951ff 100644
-> --- a/Documentation/arch/arm64/perf.rst
-> +++ b/Documentation/arch/arm64/perf.rst
-> @@ -164,3 +164,75 @@ and should be used to mask the upper bits as needed.
->      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
->   .. _tools/lib/perf/tests/test-evsel.c:
->      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
-> +
-> +Event Counting Threshold
-> +==========================================
-> +
-> +Overview
-> +--------
-> +
-> +FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
-> +events whose count meets a specified threshold condition. For example if
-> +threshold_compare is set to 2 ('Greater than or equal'), and the
-> +threshold is set to 2, then the PMU counter will now only increment by
-> +when an event would have previously incremented the PMU counter by 2 or
-> +more on a single processor cycle.
-> +
-> +To increment by 1 after passing the threshold condition instead of the
-> +number of events on that cycle, add the 'threshold_count' option to the
-> +commandline.
-> +
-> +How-to
-> +------
-> +
-> +These are the parameters for controlling the feature:
-> +
-> +.. list-table::
-> +   :header-rows: 1
-> +
-> +   * - Parameter
-> +     - Description
-> +   * - threshold
-> +     - Value to threshold the event by. A value of 0 means that
-> +       thresholding is disabled and the other parameters have no effect.
-> +   * - threshold_compare
-> +     - | Comparison function to use, with the following values supported:
-> +       |
-> +       | 0: Not-equal
-> +       | 1: Equals
-> +       | 2: Greater-than-or-equal
-> +       | 3: Less-than
-> +   * - threshold_count
-> +     - If this is set, count by 1 after passing the threshold condition
-> +       instead of the value of the event on this cycle.
-> +
-> +The threshold, threshold_compare and threshold_count values can be
-> +provided per event, for example:
-> +
-> +.. code-block:: sh
-> +
-> +  perf stat -e stall_slot/threshold=2,threshold_compare=2/ \
-> +            -e dtlb_walk/threshold=10,threshold_compare=3,threshold_count/
-> +
-> +In this example the stall_slot event will count by 2 or more on every
-> +cycle where 2 or more stalls happen. And dtlb_walk will count by 1 on
-> +every cycle where the number of dtlb walks were less than 10.
-> +
-> +The maximum supported threshold value can be read from the caps of each
-> +PMU, for example:
-> +
-> +.. code-block:: sh
-> +
-> +  cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
-> +
-> +  0x000000ff
-> +
-> +If a value higher than this is given, then it will be silently clamped
-> +to the maximum. The highest possible maximum is 4095, as the config
-> +field for threshold is limited to 12 bits, and the Perf tool will refuse
-> +to parse higher values.
-> +
-> +If the PMU doesn't support FEAT_PMUv3_TH, then threshold_max will read
-> +0, and both threshold and threshold_compare will be silently ignored.
-> +threshold_max will also read as 0 on aarch32 guests, even if the host
-> +is running on hardware with the feature.
-
+On 30/11/23 02:26, Arnaldo Carvalho de Melo wrote:
+> Em Sun, Nov 26, 2023 at 02:09:14AM -0500, Likhitha Korrapati escreveu:
+>> The perf test "probe libc's inet_pton & backtrace it with ping" fails on
+>> powerpc as below:
+>>
+>> root@xxx perf]# perf test -v "probe libc's inet_pton & backtrace it with
+>> ping"
+>>   85: probe libc's inet_pton & backtrace it with ping                 :
+>> --- start ---
+>> test child forked, pid 96028
+>> ping 96056 [002] 127271.101961: probe_libc:inet_pton: (7fffa1779a60)
+>> 7fffa1779a60 __GI___inet_pton+0x0
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>> 7fffa172a73c getaddrinfo+0x121c
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>> FAIL: expected backtrace entry
+>> "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/libc.so.6\)$"
+>> got "7fffa172a73c getaddrinfo+0x121c
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
+>> test child finished with -1
+>> ---- end ----
+> Try to have quoted output, the ones separated by ---- at the beginning
+> of the line indented two spaces, so as to avoid:
+>
+> perf test record+probe_libc_inet_pton: Fix call chain match on powerpc
+>
+> The perf test "probe libc's inet_pton & backtrace it with ping" fails on
+> powerpc as below:
+>
+> root@xxx perf]# perf test -v "probe libc's inet_pton & backtrace it with
+> ping"
+>   85: probe libc's inet_pton & backtrace it with ping                 :
+>
+> # Please enter the commit message for your changes. Lines starting
+> # with '#' will be ignored, and an empty message aborts the commit.
+> #
+> # Author:    Likhitha Korrapati <likhitha@linux.ibm.com>
+> # Date:      Sun Nov 26 02:09:14 2023 -0500
+>
+>
+> I'm copy and pasting from the original post, thanks!
+>
+> - Arnaldo
+>
+>> probe libc's inet_pton & backtrace it with ping: FAILED!
+>>
+>> This test installs a probe on libc's inet_pton function, which will use
+>> uprobes and then uses perf trace on a ping to localhost. It gets 3
+>> levels deep backtrace and checks whether it is what we expected or not.
+>>
+>> The test started failing from RHEL 9.4 where as it works in previous
+>> distro version (RHEL 9.2). Test expects gaih_inet function to be part of
+>> backtrace. But in the glibc version (2.34-86) which is part of distro
+>> where it fails, this function is missing and hence the test is failing.
+>>
+>>  From nm and ping command output we can confirm that gaih_inet function
+>> is not present in the expected backtrace for glibc version glibc-2.34-86
+>>
+>> [root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep gaih_inet
+>> 00000000001273e0 t gaih_inet_serv
+>> 00000000001cd8d8 r gaih_inet_typeproto
+>>
+>> [root@xxx perf]# perf script -i /tmp/perf.data.6E8
+>> ping  104048 [000] 128582.508976: probe_libc:inet_pton: (7fff83779a60)
+>>              7fff83779a60 __GI___inet_pton+0x0
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>>              7fff8372a73c getaddrinfo+0x121c
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>>                 11dc73534 [unknown] (/usr/bin/ping)
+>>              7fff8362a8c4 __libc_start_call_main+0x84
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>>
+>> FAIL: expected backtrace entry
+>> "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/glibc-hwcaps/power10/libc.so.6\)$"
+>> got "7fff9d52a73c getaddrinfo+0x121c
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)"
+>>
+>> With version glibc-2.34-60 gaih_inet function is present as part of the
+>> expected backtrace. So we cannot just remove the gaih_inet function from
+>> the backtrace.
+>>
+>> [root@xxx perf]# nm /usr/lib64/glibc-hwcaps/power10/libc.so.6 | grep gaih_inet
+>> 0000000000130490 t gaih_inet.constprop.0
+>> 000000000012e830 t gaih_inet_serv
+>> 00000000001d45e4 r gaih_inet_typeproto
+>>
+>> [root@xxx perf]# ./perf script -i /tmp/perf.data.b6S
+>> ping   67906 [000] 22699.591699: probe_libc:inet_pton_3: (7fffbdd80820)
+>>              7fffbdd80820 __GI___inet_pton+0x0
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>>              7fffbdd31160 gaih_inet.constprop.0+0xcd0
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>>              7fffbdd31c7c getaddrinfo+0x14c
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>>                 1140d3558 [unknown] (/usr/bin/ping)
+>>
+>> This patch solves this issue by doing a conditional skip. If there is a
+>> gaih_inet function present in the libc then it will be added to the
+>> expected backtrace else the function will be skipped from being added
+>> to the expected backtrace.
+>>
+>> Output with the patch
+>>
+>> [root@xxx perf]# ./perf test -v "probe libc's inet_pton & backtrace it
+>> with ping"
+>>   83: probe libc's inet_pton & backtrace it with ping                 :
+>> --- start ---
+>> test child forked, pid 102662
+>> ping 102692 [000] 127935.549973: probe_libc:inet_pton: (7fff93379a60)
+>> 7fff93379a60 __GI___inet_pton+0x0
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>> 7fff9332a73c getaddrinfo+0x121c
+>> (/usr/lib64/glibc-hwcaps/power10/libc.so.6)
+>> 11ef03534 [unknown] (/usr/bin/ping)
+>> test child finished with 0
+>> ---- end ----
+>> probe libc's inet_pton & backtrace it with ping: Ok
+>>
+>> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
+>> Reported-by: Disha Goel <disgoel@linux.ibm.com>
+>> ---
+>>   tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+>> index eebeea6bdc76..72c65570db37 100755
+>> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+>> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+>> @@ -45,7 +45,10 @@ trace_libc_inet_pton_backtrace() {
+>>   		;;
+>>   	ppc64|ppc64le)
+>>   		eventattr='max-stack=4'
+>> -		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+>> +		# Add gaih_inet to expected backtrace only if it is part of libc.
+>> +		if nm $libc | grep -F -q gaih_inet.; then
+>> +			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+>> +		fi
+>>   		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+>>   		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+>>   		;;
+>> -- 
+>> 2.39.1
+>>
