@@ -1,40 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE7C10DB;
-	Wed, 29 Nov 2023 17:50:01 -0800 (PST)
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6cdde2aeb64so424605b3a.2;
-        Wed, 29 Nov 2023 17:50:01 -0800 (PST)
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 579BA1B4;
+	Wed, 29 Nov 2023 17:59:27 -0800 (PST)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d001e4cf7cso4424625ad.2;
+        Wed, 29 Nov 2023 17:59:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701309000; x=1701913800;
+        d=1e100.net; s=20230601; t=1701309567; x=1701914367;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UJ1p2+ISWRL6Js+YhCiI0715c5Y3azFj2GwPodT3Wto=;
-        b=SGROZ8nevUWPztdDVQaRtjIg674a+M5vBA+12nwuEtkrPszMXdaLJ9lfnKfUi4EaO1
-         it8EnKpfJCuo1t+qZPkLguq6A9kthQat9+JVGqwFNKRTalxyEkJBDERwgaTUpBNvdZiW
-         +0uNXxuGy7Sps1jIl4xnRvMKaTp/7oLAmNc1AWz3hj3vfPKG2I3H34B3NdrwGBdXVg/v
-         zmzLgRnrURMTqaC2B99UAjQpsXa+bkYYGwglUBqvRFvKU0BF26nPuQwUBeAYsOyTooaq
-         gT4A/W7uMIyXI+mkw/zeK6Hx0l0jMkivNdJWDMMoJtbwjDLsgYBj3hjZZ68aTRiMlnNp
-         kVvg==
-X-Gm-Message-State: AOJu0YzlHhO+MS7zBKV+x5ImS9tuGqBF6ju2OT5IXGZduQcJZwva6H13
-	i0hKNtDninIVh3hzajDZdqYxTSjYHINMpXMV/eY=
-X-Google-Smtp-Source: AGHT+IE55/JJiB5fPNHVAw2uUqmDUlC6s9lgSp+ZZAVtpRvjYzw3lCKucPLV4W1GCbOVlU92JIzMXh9of2ulZeah7hM=
-X-Received: by 2002:a05:6a21:3392:b0:18c:ba47:74ea with SMTP id
- yy18-20020a056a21339200b0018cba4774eamr10946235pzb.31.1701309000571; Wed, 29
- Nov 2023 17:50:00 -0800 (PST)
+        bh=0Scw2aCR9gSmd89SGL5dYIOKKFRpiyaWuC/eM4b4hck=;
+        b=MxNOYNazkNTyd7cup6xbI4SVNx0K/VXzbeq91nYsoYSNEAZQQQ4DQ/u+Dq4dXLuaTL
+         CJ94I2506SifKveg+Ak/HHUmIZaJBSEMN3sXB2V6l6viGnYA0au53X4ife5KB99N0mJT
+         /Gw6ZlZOU1UFK4fi9aPITj5+ebhMKzL3fz6/qrwJI4XBvt7jD7fhnZrtPtioxqK9PkLr
+         u0zwL7GYUJwZtQ7og8eBhNBj8NWI2KD06PO7viud2ZTEdXZnZdXj1NLbq8GWr5BxYxoG
+         bp+dtxUlhtos8ivyKk86x0mnPGs0/jAp6xq0YKgvrG21BOs6v9ROWzFz5/WWdRP+B1gR
+         KQDw==
+X-Gm-Message-State: AOJu0YxH5kAufCabrXFrf7LVDM84gNYcThF7QJYYnEPMadodPgRa5dmt
+	C1U9d1ZIX2JLjTKoZc93JD9AKal0floHDsyK1/4=
+X-Google-Smtp-Source: AGHT+IFTqWqKOB2XJ49uuqo+U1YChwhrEKvy8rlyOR7UbtUVKneMenIwsRoA435NfayofWqJFE7KkrIb7VUr76OYDS0=
+X-Received: by 2002:a17:90b:1b4b:b0:285:b1b8:e29c with SMTP id
+ nv11-20020a17090b1b4b00b00285b1b8e29cmr15014619pjb.12.1701309566671; Wed, 29
+ Nov 2023 17:59:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-7-irogers@google.com>
-In-Reply-To: <20231127220902.1315692-7-irogers@google.com>
+References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-8-irogers@google.com>
+In-Reply-To: <20231127220902.1315692-8-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 Nov 2023 17:49:49 -0800
-Message-ID: <CAM9d7ci20GuVga9XBBOx_GXZsiPEFsqAvAYiz42Tgvc6ygSP9w@mail.gmail.com>
-Subject: Re: [PATCH v5 06/50] tools lib api: Add io_dir an allocation free
- readdir alternative
+Date: Wed, 29 Nov 2023 17:59:15 -0800
+Message-ID: <CAM9d7cjYGo0USDXfVSJ-gZXhs1waTyeat4S3eH7S+8L09VQZSw@mail.gmail.com>
+Subject: Re: [PATCH v5 07/50] perf maps: Switch modules tree walk to io_dir__readdir
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -60,10 +59,8 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
 te:
 >
-> glibc's opendir allocates a minimum of 32kb, when called recursively
-> for a directory tree the memory consumption can add up - nearly 300kb
-> during perf start-up when processing modules. Add a stack allocated
-> variant of readdir sized a little more than 1kb.
+> Compared to glibc's opendir/readdir this lowers the max RSS of perf
+> record by 1.8MB on a Debian machine.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
