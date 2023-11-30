@@ -1,430 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8AB4A989
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Nov 2023 14:19:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKfxRLoV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28012C433C8;
-	Thu, 30 Nov 2023 14:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701353994;
-	bh=VKxrswh9rBTc4rekSC5g2YrBfDsKwnq0c27wKsWH5gc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PKfxRLoVYos/v32HejhfZ2yWYCfLL2A+z5mivOMxuCbeKEQiHGNBPwFnxFJ3PxXFK
-	 WyyGXEi1o9l0kygc2EMP3b1UHGKwDxWG6mafJYWfnk1aG7Ht81DjvZA7+ChKd+O69n
-	 HdE90CKZQAB6PiX/EdrgztI30CXh7HGe5k0wY3gE/YY06N/2uZkMYWuBswC0HdRLnA
-	 MEgTbgYOZU9nExmSVW8QcU2O0vmaMhIc5p1JiSKRDy5d75g8s8avC4ccYLU82yUMRv
-	 fv7KmIycyDVkESTilzF8pnmRR8Xi5p2ywXP4u80wlh2tRc8xaX0XcpNluijbqWq5gy
-	 gITiAab4dW5QA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 99CEC40094; Thu, 30 Nov 2023 11:19:51 -0300 (-03)
-Date: Thu, 30 Nov 2023 11:19:51 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nick Terrell <terrelln@fb.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Vincent Whitchurch <vincent.whitchurch@axis.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Liam Howlett <liam.howlett@oracle.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Ming Wang <wangming01@loongson.cn>,
-	James Clark <james.clark@arm.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Leo Yan <leo.yan@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
-	German Gomez <german.gomez@arm.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Guilherme Amadio <amadio@gentoo.org>
-Subject: Re: [PATCH v5 02/50] libperf: Lazily allocate/size mmap event copy
-Message-ID: <ZWiaB+ygpN+46JAm@kernel.org>
-References: <20231127220902.1315692-1-irogers@google.com>
- <20231127220902.1315692-3-irogers@google.com>
- <ZWiK/9JJjOElTTq7@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q3M0V0lo"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D75E2C1;
+	Thu, 30 Nov 2023 07:50:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701359402; x=1732895402;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YieU54vQSiljrJ0OfXJfns8iSJq1dGCvc2BrbX4lqjE=;
+  b=Q3M0V0lojVhFr90CYWsi7wmQXNVXMRi5GCKCRsLiq90GxFLST6McVlYC
+   Wjezh4x32vV53Z8EAT6oPUhGADXFQ/lWMnxvsMAhmtfG5kqlvlgvoYgyt
+   oo2HSWwwd3zhkINdGAjcSMRmEEUF/QBBbkBD+zjrWgTuBQNhmdf3qNPFw
+   JucXWcqIgOBMIkyCA71jiX9MmA/3vQDFpvJnrzqavpPAn3lrpjoNmqczE
+   Ud+A1dSFhK2P75FHY3seLSV/Tj0E1I3M/omzAH/7IlkJAJ03uA4+8Uayl
+   WE+nwcgpNPAgpmXTq/eLHinAGF/FrMM9XI6HgyF/pc9eLLMoMMmBHXAtW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="336775"
+X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
+   d="scan'208";a="336775"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 07:50:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="860235598"
+X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
+   d="scan'208";a="860235598"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 07:50:01 -0800
+Received: from [10.213.168.26] (kliang2-mobl1.ccr.corp.intel.com [10.213.168.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 267F9580C3B;
+	Thu, 30 Nov 2023 07:50:00 -0800 (PST)
+Message-ID: <84903edf-96a7-40da-8bbb-52511b4ec893@linux.intel.com>
+Date: Thu, 30 Nov 2023 10:49:58 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: x86/pmu: Prevent any host user from enabling PEBS
+ for profiling guest
+Content-Language: en-US
+To: Like Xu <like.xu.linux@gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>
+References: <20231129095055.88060-1-likexu@tencent.com>
+ <6c4bd247-1f81-4b43-9e21-012f831d26b8@linux.intel.com>
+ <fd847e77-0510-48db-ad0b-5946458e2fb3@gmail.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <fd847e77-0510-48db-ad0b-5946458e2fb3@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZWiK/9JJjOElTTq7@kernel.org>
-X-Url: http://acmel.wordpress.com
-
-Em Thu, Nov 30, 2023 at 10:15:43AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Nov 27, 2023 at 02:08:14PM -0800, Ian Rogers escreveu:
-> >  void perf_mmap__munmap(struct perf_mmap *map)
-> >  {
-> > -	if (map && map->base != NULL) {
-> > +	if (!map)
-> > +		return;
-> > +
-> > +	free(map->event_copy);
-> > +	map->event_copy = NULL;
-> 
-> I�m converting this to:
-> 
-> 	zfree(&map->event_copy);
-> 
-> Hopefully we'll find some tool to flag these before submitting patches,
-> does clang-tidy do these kinds of things?
-> 
-> Also, applied:
-> 
->  b4 am -P2,4-7 -ctsl --cc-trailers 20231127220902.1315692-1-irogers@google.com
-> 
-> The ones that Namhyung acked and that applied cleanly in order.
-> 
-> The first one, as Namhyung noted, is already merged.
-
-I'll fix this later:
-
-[perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.86.5/perf/perf-6.6.0-rc1.tar.xz
-[perfbuilder@five ~]$ time dm
-   1    16.97 almalinux:8                   : FAIL gcc version 8.5.0 20210514 (Red Hat 8.5.0-20) (GCC)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-     static inline int io__get_hex(struct io *io, __u64 *hex)
-                                                  ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-     static inline int io__get_dec(struct io *io, __u64 *dec)
-                                                  ^~~~~
-      INSTALL libbpf_headers
-      INSTALL libperf_headers
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      INSTALL /tmp/build/perf/libperf/include/perf/event.h
-      CC      /tmp/build/perf/libperf/mmap.o
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf_legacy.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_helpers.h
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-     static inline int io__get_hex(struct io *io, __u64 *hex)
-                                                  ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-     static inline int io__get_dec(struct io *io, __u64 *dec)
-                                                  ^~~~~
-      INSTALL /tmp/build/perf/libperf/include/perf/mmap.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_tracing.h
-      CC      /tmp/build/perf/libperf/zalloc.o
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_endian.h
-   2    17.28 almalinux:9                   : FAIL gcc version 11.4.1 20230605 (Red Hat 11.4.1-2) (GCC)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-      INSTALL libperf_headers
-      INSTALL libbpf_headers
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      INSTALL /tmp/build/perf/libperf/include/perf/evlist.h
-      INSTALL /tmp/build/perf/libperf/include/perf/evsel.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf_legacy.h
-      INSTALL /tmp/build/perf/libperf/include/perf/event.h
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_helpers.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_tracing.h
-      INSTALL /tmp/build/perf/libperf/include/perf/mmap.h
-      CC      /tmp/build/perf/libperf/evlist.o
-   3    20.71 alpine:3.15                   : FAIL gcc version 10.3.1 20211027 (Alpine 10.3.1_git20211027)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      CC      /tmp/build/perf/libperf/xyarray.o
-      CC      /tmp/build/perf/libperf/lib.o
-      LINK    /tmp/build/perf/dlfilters/dlfilter-test-api-v0.so
-      LINK    /tmp/build/perf/dlfilters/dlfilter-test-api-v2.so
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[5]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:106: /tmp/build/perf/libapi/fs/fs.o] Error 1
-    make[5]: *** Waiting for unfinished jobs....
-      LD      /tmp/build/perf/libapi/fd/libapi-in.o
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-   4    20.52 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      LINK    /tmp/build/perf/dlfilters/dlfilter-test-api-v2.so
-      CC      /tmp/build/perf/libperf/xyarray.o
-      INSTALL libperf_headers
-      CC      /tmp/build/perf/libperf/lib.o
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[5]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:106: /tmp/build/perf/libapi/fs/fs.o] Error 1
-    make[5]: *** Waiting for unfinished jobs....
-      LD      /tmp/build/perf/libapi/fd/libapi-in.o
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-   5    19.77 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-      INSTALL libperf_headers
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      INSTALL /tmp/build/perf/libperf/include/internal/threadmap.h
-      CC      /tmp/build/perf/libperf/xyarray.o
-      CC      /tmp/build/perf/libperf/lib.o
-      LINK    /tmp/build/perf/dlfilters/dlfilter-test-api-v0.so
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-      LINK    /tmp/build/perf/dlfilters/dlfilter-test-api-v2.so
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf_version.h
-      INSTALL /tmp/build/perf/libperf/include/internal/xyarray.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/usdt.bpf.h
-   6    17.79 alpine:3.18                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r10)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_core_read.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/skel_internal.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf_version.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/usdt.bpf.h
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[5]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:106: /tmp/build/perf/libapi/fs/fs.o] Error 1
-    make[5]: *** Waiting for unfinished jobs....
-      LD      /tmp/build/perf/libapi/fd/libapi-in.o
-      LD      /tmp/build/perf/libsymbol/libsymbol-in.o
-   7    19.74 alpine:edge                   : FAIL gcc version 13.1.1 20230722 (Alpine 13.1.1_git20230722)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      CC      /tmp/build/perf/libperf/zalloc.o
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf.h
-      CC      /tmp/build/perf/libperf/xyarray.o
-      CC      /tmp/build/perf/libperf/lib.o
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-      LINK    /tmp/build/perf/dlfilters/dlfilter-show-cycles.so
-      LINK    /tmp/build/perf/dlfilters/dlfilter-test-api-v0.so
-      LINK    /tmp/build/perf/dlfilters/dlfilter-test-api-v2.so
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf.h
-   8    11.61 amazonlinux:2                 : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-17) (GCC)
-    In file included from fs/fs.c:19:0:
-    fs/../io.h:94:46: error: unknown type name '__u64'; did you mean '_LP64'?
-     static inline int io__get_hex(struct io *io, __u64 *hex)
-                                                  ^~~~~
-                                                  _LP64
-    fs/../io.h:123:46: error: unknown type name '__u64'; did you mean '_LP64'?
-     static inline int io__get_dec(struct io *io, __u64 *dec)
-                                                  ^~~~~
-                                                  _LP64
-      INSTALL libapi_headers
-      INSTALL libsymbol_headers
-    make[4]: *** [fs] Error 2
-      CC      /tmp/build/perf/libsubcmd/subcmd-config.o
-      GEN     /tmp/build/perf/libbpf/bpf_helper_defs.h
-      INSTALL /tmp/build/perf/libperf/include/perf/cpumap.h
-      CC      /tmp/build/perf/libperf/cpumap.o
-    In file included from fs/fs.c:19:0:
-    fs/../io.h:94:46: error: unknown type name '__u64'; did you mean '_LP64'?
-     static inline int io__get_hex(struct io *io, __u64 *hex)
-                                                  ^~~~~
-                                                  _LP64
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf.h
-    fs/../io.h:123:46: error: unknown type name '__u64'; did you mean '_LP64'?
-     static inline int io__get_dec(struct io *io, __u64 *dec)
-                                                  ^~~~~
-                                                  _LP64
-      INSTALL /tmp/build/perf/libperf/include/perf/threadmap.h
-   9    12.89 amazonlinux:2023              : FAIL gcc version 11.4.1 20230605 (Red Hat 11.4.1-2) (GCC)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_core_read.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf_version.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/skel_internal.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/usdt.bpf.h
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[5]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:106: /tmp/build/perf/libapi/fs/fs.o] Error 1
-    make[5]: *** Waiting for unfinished jobs....
-      LD      /tmp/build/perf/libapi/fd/libapi-in.o
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-  10    12.84 amazonlinux:devel             : FAIL gcc version 11.3.1 20221121 (Red Hat 11.3.1-4) (GCC)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      CC      /tmp/build/perf/libperf/lib.o
-      INSTALL /tmp/build/perf/libbpf/include/bpf/skel_internal.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf_version.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/usdt.bpf.h
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-    make[5]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:106: /tmp/build/perf/libapi/fs/fs.o] Error 1
-    make[5]: *** Waiting for unfinished jobs....
-      LD      /tmp/build/perf/libapi/fd/libapi-in.o
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-  11   147.52 archlinux:base                : Ok   gcc (GCC) 13.2.1 20230801 , clang version 16.0.6 flex 2.6.4
-  12    13.41 centos:stream                 : FAIL gcc version 8.5.0 20210514 (Red Hat 8.5.0-21) (GCC)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-     static inline int io__get_hex(struct io *io, __u64 *hex)
-                                                  ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-     static inline int io__get_dec(struct io *io, __u64 *dec)
-                                                  ^~~~~
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_tracing.h
-      CC      /tmp/build/perf/libperf/xyarray.o
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_endian.h
-      CC      /tmp/build/perf/libperf/lib.o
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-     static inline int io__get_hex(struct io *io, __u64 *hex)
-                                                  ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-     static inline int io__get_dec(struct io *io, __u64 *dec)
-                                                  ^~~~~
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_core_read.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/skel_internal.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf_version.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/usdt.bpf.h
-  13   108.26 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 13.2.1 20231115 releases/gcc-13.2.0-463-g5d6f62c9b2 , clang version 16.0.6 flex 2.6.4
-  14    10.87 debian:10                     : FAIL gcc version 8.3.0 (Debian 8.3.0-6)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-     static inline int io__get_hex(struct io *io, __u64 *hex)
-                                                  ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-     static inline int io__get_dec(struct io *io, __u64 *dec)
-                                                  ^~~~~
-      INSTALL libbpf_headers
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_tracing.h
-      CC      /tmp/build/perf/libapi/cpu.o
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_endian.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/bpf_core_read.h
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-     static inline int io__get_hex(struct io *io, __u64 *hex)
-                                                  ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-     static inline int io__get_dec(struct io *io, __u64 *dec)
-                                                  ^~~~~
-      INSTALL /tmp/build/perf/libbpf/include/bpf/skel_internal.h
-      INSTALL /tmp/build/perf/libbpf/include/bpf/libbpf_version.h
-      CC      /tmp/build/perf/libapi/debug.o
-      CC      /tmp/build/perf/libapi/str_error_r.o
-  15    12.70 debian:11                     : FAIL gcc version 10.2.1 20210110 (Debian 10.2.1-6)
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-      INSTALL libperf_headers
-    make[4]: *** [/git/perf-6.6.0-rc1/tools/build/Makefile.build:158: fs] Error 2
-      INSTALL /tmp/build/perf/libbpf/include/bpf/usdt.bpf.h
-      INSTALL /tmp/build/perf/libperf/include/internal/cpumap.h
-      INSTALL /tmp/build/perf/libperf/include/internal/evlist.h
-      INSTALL /tmp/build/perf/libperf/include/internal/evsel.h
-    In file included from fs/fs.c:19:
-    fs/../io.h:94:46: error: unknown type name '__u64'
-       94 | static inline int io__get_hex(struct io *io, __u64 *hex)
-          |                                              ^~~~~
-    fs/../io.h:123:46: error: unknown type name '__u64'
-      123 | static inline int io__get_dec(struct io *io, __u64 *dec)
-          |                                              ^~~~~
-      CC      /tmp/build/perf/libperf/zalloc.o
-      INSTALL /tmp/build/perf/libperf/include/internal/lib.h
-      INSTALL /tmp/build/perf/libperf/include/internal/mmap.h
-      CC      /tmp/build/perf/libperf/xyarray.o
-  16    85.50 debian:12                     : Ok   gcc (Debian 12.2.0-14) 12.2.0 , Debian clang version 14.0.6 flex 2.6.4
-  17: debian:experimental
 
 
+
+On 2023-11-30 2:29 a.m., Like Xu wrote:
+> On 29/11/2023 10:38 pm, Liang, Kan wrote:
+>>
+>>
+>> On 2023-11-29 4:50 a.m., Like Xu wrote:
+>>> From: Like Xu <likexu@tencent.com>
+>>>
+>>> Stop using PEBS counters on host to profiling guest. Limit the range of
+>>> enabled PEBS counters to only those counters enabled from the guest PEBS
+>>> emulation perspective.
+>>>
+>>> If there is a perf-record agent on host that uses perf-tools events like
+>>> "cpu-cycles:GP" (G for attr.exclude_host, P for max precise event
+>>> counter)
+>>> to capture guest performance events, then the guest will be hanged.
+>>> This is
+>>> because Intel DS-based PEBS buffer is addressed using the 64-bit linear
+>>> address of the current {p/v}CPU context based on MSR_IA32_DS_AREA.
+>>>
+>>> Any perf user using PEBS counters to profile guest on host is, in
+>>> perf/core
+>>> implementation details, trying to set bits on
+>>> cpuc->intel_ctrl_guest_mask
+>>> and arr[pebs_enable].guest, much like the guest PEBS emulation
+>>> behaviour.
+>>> But the subsequent PEBS memory write, regardless of whether guest
+>>> PEBS is
+>>> enabled, can overshoot guest entry and corrupt guest memory.
+>>>
+>>> Profiling guest via PEBS-DS buffer on host is not supported at this
+>>> time.
+>>> Fix this by filtering the real configured value of
+>>> arr[pebs_enable].guest
+>>> with the emulated state of guest enabled PEBS counters, under the
+>>> condition
+>>> of none cross-mapped PEBS counters.
+>>
+>> So the counter will be silently disabled. The user never knows why
+>> nothing is sampled.
+>> Since we don't support the case, profiling guest via PEBS-DS buffer on
+>> host. Maybe we should error out when creating the event. For example
+>> (not tested),
+> 
+> Test failed.
+> 
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 3871267d3237..24b90c70737f 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -3958,6 +3958,10 @@ static int intel_pmu_hw_config(struct perf_event
+>> *event)
+>>           if ((event->attr.config & INTEL_ARCH_EVENT_MASK) ==
+>> INTEL_FIXED_VLBR_EVENT)
+>>               return -EINVAL;
+>>
+>> +        /* Profiling guest via PEBS-DS buffer on host is not
+>> supported. */
+>> +        if (event->attr.exclude_host)
+>> +            return -EINVAL;
+>> +
+> 
+> Guest PEBS emulation also sets this bit, a typical call stack looks like:
+> 
+>     intel_pmu_hw_config+0x441/0x4d0
+>     hsw_hw_config+0x12/0xa0
+>     x86_pmu_event_init+0x98/0x370
+>     perf_try_init_event+0x47/0x130
+>     perf_event_alloc+0x446/0xeb0
+>     perf_event_create_kernel_counter+0x38/0x190
+>     pmc_reprogram_counter.constprop.17+0xd9/0x230 [kvm]
+>     kvm_pmu_handle_event+0x1a6/0x310 [kvm]
+>     vcpu_enter_guest+0x1388/0x19b0 [kvm]
+>     vcpu_run+0x117/0x6c0 [kvm]
+>     kvm_arch_vcpu_ioctl_run+0x13d/0x4d0 [kvm]
+>     kvm_vcpu_ioctl+0x301/0x6e0 [kvm]
+>
+
+Oh right, the event from the KVM guest is also exclude_host.
+So we should only error out with the non-KVM exclude_host PEBS event.
+
+> Alternatively, this path is taken when using PEBS-via-PT to profile
+> guests on host.
+
+There is a is_pebs_pt(event), so we can skip the PEBS-via-PT.
+
+Seems we just need to distinguish a KVM event and a normal host event.
+I don't have a better way to do it except using
+event->overflow_handler_context, which is NULL for a normal host event.
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a968708ed1fb..c93a2aaff7c3 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3958,6 +3958,16 @@ static int intel_pmu_hw_config(struct perf_event
+*event)
+ 		if ((event->attr.config & INTEL_ARCH_EVENT_MASK) ==
+INTEL_FIXED_VLBR_EVENT)
+ 			return -EINVAL;
+
++		/*
++		 * Profiling guest via PEBS-DS buffer on host is not supported.
++		 * The event->overflow_handler_context is to distinguish a KVM
++		 * event and a normal host event.
++		 */
++		if (event->attr.exclude_host &&
++		    !is_pebs_pt(event) &&
++		    !event->overflow_handler_context)
++			return -EINVAL;
++
+ 		if (!(event->attr.freq || (event->attr.wakeup_events &&
+!event->attr.watermark))) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+
+> 
+> The status of the guest can only be queried in the NMI handler and the func
+> intel_guest_get_msrs() in the perf/core context, where it's easier and more
+> centrally to review this part of changes that affects vPMU for corner
+> cases.
+> 
+> Maybe adding print info on the perf-tool side would help.
+> 
+> For perf-tool users, it will get 0 number of sample for "cpu-cycles:GP"
+> events,
+> just like other uncounted perf-tool events.
+
+perf-tool would never know such details, e.g., whether the platform
+supports PEBS-DS or other PEBS method. It's hard to tell if the 0 is
+because of an unsupported hardware or nothing sampled in the guest.
+
+Thanks,
+Kan
+> 
+>>           if (!(event->attr.freq || (event->attr.wakeup_events &&
+>> !event->attr.watermark))) {
+>>               event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+>>               if (!(event->attr.sample_type &
+>>
+>>
+>> Thanks,
+>> Kan
+>>
+>>>
+>>> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR
+>>> emulation for extended PEBS")
+>>> Signed-off-by: Like Xu <likexu@tencent.com>
+>>> ---
+>>>   arch/x86/events/intel/core.c | 8 +++++++-
+>>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>>> index a08f794a0e79..17afd504c35b 100644
+>>> --- a/arch/x86/events/intel/core.c
+>>> +++ b/arch/x86/events/intel/core.c
+>>> @@ -4103,13 +4103,19 @@ static struct perf_guest_switch_msr
+>>> *intel_guest_get_msrs(int *nr, void *data)
+>>>           .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
+>>>       };
+>>>   +    /* In any case, clear guest PEBS bits first. */
+>>> +    arr[global_ctrl].guest &= ~arr[pebs_enable].guest;
+>>> +
+>>>       if (arr[pebs_enable].host) {
+>>>           /* Disable guest PEBS if host PEBS is enabled. */
+>>>           arr[pebs_enable].guest = 0;
+>>>       } else {
+>>>           /* Disable guest PEBS thoroughly for cross-mapped PEBS
+>>> counters. */
+>>>           arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
+>>> -        arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
+>>> +
+>>> +        /* Prevent any host user from enabling PEBS for profiling
+>>> guest. */
+>>> +        arr[pebs_enable].guest &= (kvm_pmu->pebs_enable &
+>>> kvm_pmu->global_ctrl);
+>>> +
+>>>           /* Set hw GLOBAL_CTRL bits for PEBS counter when it runs
+>>> for guest */
+>>>           arr[global_ctrl].guest |= arr[pebs_enable].guest;
+>>>       }
+>>>
+>>> base-commit: 6803fb00772cc50cd59a66bd8caaee5c84b13fcf
