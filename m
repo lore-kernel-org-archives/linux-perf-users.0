@@ -1,153 +1,129 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id F01B910DE;
-	Thu, 30 Nov 2023 02:07:20 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B69C910DB;
+	Thu, 30 Nov 2023 02:36:18 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B1691042;
-	Thu, 30 Nov 2023 02:08:06 -0800 (PST)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CD043F6C4;
-	Thu, 30 Nov 2023 02:07:17 -0800 (PST)
-Message-ID: <07c9b3be-676a-f7f8-d1d2-94ce3abcb61b@arm.com>
-Date: Thu, 30 Nov 2023 10:07:15 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A27C143D;
+	Thu, 30 Nov 2023 02:37:05 -0800 (PST)
+Received: from [10.57.41.237] (unknown [10.57.41.237])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB8C93F6C4;
+	Thu, 30 Nov 2023 02:36:16 -0800 (PST)
+Message-ID: <31b68b10-9819-4c96-a237-ac04887be305@arm.com>
+Date: Thu, 30 Nov 2023 10:36:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH RFC 2/3] perf/x86/intel/pt: Add support for pause_resume()
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, Yicong Yang
- <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20231123121851.10826-1-adrian.hunter@intel.com>
- <20231123121851.10826-3-adrian.hunter@intel.com>
- <c63808b2-2049-da18-f0af-5dff2bc87cd2@arm.com>
- <20231129105836.GF30650@noisy.programming.kicks-ass.net>
- <842ce784-fbd2-4667-a5f7-aaa10a1108dc@intel.com>
- <20231129122320.GH30650@noisy.programming.kicks-ass.net>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231129122320.GH30650@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/3] Documentation: arm64: Document the PMU event
+ counting threshold feature
+To: James Clark <james.clark@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, will@kernel.org, mark.rutland@arm.com,
+ anshuman.khandual@arm.com, namhyung@gmail.com
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20231124102857.1106453-1-james.clark@arm.com>
+ <20231124102857.1106453-4-james.clark@arm.com>
+Content-Language: en-GB
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20231124102857.1106453-4-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 24/11/2023 10:28, James Clark wrote:
+> Add documentation for the new Perf event open parameters and
+> the threshold_max capability file.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
 
-On 29/11/2023 12:23, Peter Zijlstra wrote:
-> On Wed, Nov 29, 2023 at 01:15:43PM +0200, Adrian Hunter wrote:
->> On 29/11/23 12:58, Peter Zijlstra wrote:
->>> On Wed, Nov 29, 2023 at 09:53:39AM +0000, James Clark wrote:
->>>> On 23/11/2023 12:18, Adrian Hunter wrote:
->>>
->>>>> +static void pt_event_pause_resume(struct perf_event *event)
->>>>> +{
->>>>> +	if (event->aux_paused)
->>>>> +		pt_config_stop(event);
->>>>> +	else if (!event->hw.state)
->>>>> +		pt_config_start(event);
->>>>> +}
->>>>
->>>> It seems like having a single pause/resume callback rather than separate
->>>> pause and resume ones pushes some of the event state management into the
->>>> individual drivers and would be prone to code duplication and divergent
->>>> behavior.
->>>>
->>>> Would it be possible to move the conditions from here into the core code
->>>> and call separate functions instead?
->>>>
->>>>> +
->>>>>  static void pt_event_start(struct perf_event *event, int mode)
->>>>>  {
->>>>>  	struct hw_perf_event *hwc = &event->hw;
->>>>> @@ -1798,6 +1809,7 @@ static __init int pt_init(void)
->>>>>  	pt_pmu.pmu.del			 = pt_event_del;
->>>>>  	pt_pmu.pmu.start		 = pt_event_start;
->>>>>  	pt_pmu.pmu.stop			 = pt_event_stop;
->>>>> +	pt_pmu.pmu.pause_resume		 = pt_event_pause_resume;
->>>>
->>>> The general idea seems ok to me. Is there a reason to not use the
->>>> existing start() stop() callbacks, rather than adding a new one?
->>>>
->>>> I assume it's intended to be something like an optimisation where you
->>>> can turn it on and off without having to do the full setup, teardown and
->>>> emit an AUX record because you know the process being traced never gets
->>>> switched out?
->>>
->>> So the actual scheduling uses ->add() / ->del(), the ->start() /
->>> ->stop() methods are something that can be used after ->add() and before
->>> ->del() to 'temporarily' pause things.
->>>
->>> Pretty much exactly what is required here I think. We currently use this
->>> for PMI throttling and adaptive frequency stuff, but there is no reason
->>> it could not also be used for this.
->>>
->>> As is, we don't track the paused state across ->del() / ->add(), but
->>> perhaps that can be fixed. We can easily add more PERF_EF_ / PERF_HES_
->>> bits to manage things.
->>>
->>>
->>
->> I am not sure stop / start play nice with NMI's from other events e.g.
->>
->> PMC NMI wants to pause or resume AUX but what if AUX event is currently
->> being processed in ->stop() or ->start()?  Or maybe that can't happen?
+> ---
+>   Documentation/arch/arm64/perf.rst | 72 +++++++++++++++++++++++++++++++
+>   1 file changed, 72 insertions(+)
 > 
-> I think that can happen, and pt_event_stop() can actually handle some of
-> that, while your pause_resume() thing, which uses pt_config_stop() does
-> not.
-> 
-> But yes, I think that if you add pt_event_{stop,start}() calls from
-> *other* events their PMI, then you get to deal with more 'fun'.
-> 
-> Something like:
-> 
->   perf_addr_filters_adjust()
->     __perf_addr_filters_adjust()
->       perf_event_stop()
->         __perf_event_stop()
-> 	  event->pmu->stop()
-> 	  <NMI>
-> 	    ...
-> 	    perf_event_overflow()
-> 	      pt_event->pmu->stop()
-> 	  </NMI>
-> 	  event->pmu->start() // whoopsie!
-> 
-> Should now be possible.
-> 
-> I think what you want to do is rename pt->handle_nmi into pt->stop_count
-> and make it a counter, then ->stop() increments it, and ->start()
-> decrements it and everybody ensures the thing doesn't get restart while
-> !0 etc..
-> 
-> I suspect you need to guard the generic part of this feature with a new
-> PERF_PMU_CAP_ flag and then have the coresight/etc. people opt-in once
-> they've audited things.
-> 
-> James, does that work for you?
-> 
+> diff --git a/Documentation/arch/arm64/perf.rst b/Documentation/arch/arm64/perf.rst
+> index 1f87b57c2332..41eee68951ff 100644
+> --- a/Documentation/arch/arm64/perf.rst
+> +++ b/Documentation/arch/arm64/perf.rst
+> @@ -164,3 +164,75 @@ and should be used to mask the upper bits as needed.
+>      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
+>   .. _tools/lib/perf/tests/test-evsel.c:
+>      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
+> +
+> +Event Counting Threshold
+> +==========================================
+> +
+> +Overview
+> +--------
+> +
+> +FEAT_PMUv3_TH (Armv8.8) permits a PMU counter to increment only on
+> +events whose count meets a specified threshold condition. For example if
+> +threshold_compare is set to 2 ('Greater than or equal'), and the
+> +threshold is set to 2, then the PMU counter will now only increment by
+> +when an event would have previously incremented the PMU counter by 2 or
+> +more on a single processor cycle.
+> +
+> +To increment by 1 after passing the threshold condition instead of the
+> +number of events on that cycle, add the 'threshold_count' option to the
+> +commandline.
+> +
+> +How-to
+> +------
+> +
+> +These are the parameters for controlling the feature:
+> +
+> +.. list-table::
+> +   :header-rows: 1
+> +
+> +   * - Parameter
+> +     - Description
+> +   * - threshold
+> +     - Value to threshold the event by. A value of 0 means that
+> +       thresholding is disabled and the other parameters have no effect.
+> +   * - threshold_compare
+> +     - | Comparison function to use, with the following values supported:
+> +       |
+> +       | 0: Not-equal
+> +       | 1: Equals
+> +       | 2: Greater-than-or-equal
+> +       | 3: Less-than
+> +   * - threshold_count
+> +     - If this is set, count by 1 after passing the threshold condition
+> +       instead of the value of the event on this cycle.
+> +
+> +The threshold, threshold_compare and threshold_count values can be
+> +provided per event, for example:
+> +
+> +.. code-block:: sh
+> +
+> +  perf stat -e stall_slot/threshold=2,threshold_compare=2/ \
+> +            -e dtlb_walk/threshold=10,threshold_compare=3,threshold_count/
+> +
+> +In this example the stall_slot event will count by 2 or more on every
+> +cycle where 2 or more stalls happen. And dtlb_walk will count by 1 on
+> +every cycle where the number of dtlb walks were less than 10.
+> +
+> +The maximum supported threshold value can be read from the caps of each
+> +PMU, for example:
+> +
+> +.. code-block:: sh
+> +
+> +  cat /sys/bus/event_source/devices/armv8_pmuv3/caps/threshold_max
+> +
+> +  0x000000ff
+> +
+> +If a value higher than this is given, then it will be silently clamped
+> +to the maximum. The highest possible maximum is 4095, as the config
+> +field for threshold is limited to 12 bits, and the Perf tool will refuse
+> +to parse higher values.
+> +
+> +If the PMU doesn't support FEAT_PMUv3_TH, then threshold_max will read
+> +0, and both threshold and threshold_compare will be silently ignored.
+> +threshold_max will also read as 0 on aarch32 guests, even if the host
+> +is running on hardware with the feature.
 
-Yep I think that would work.
-
-If I understand it with the stop_count counter, to be able to support
-the new CAP, every device would basically have to implement a similar
-counter?
-
-Would it be possible to do that reference counting on the outside of
-start() and stop() in the core code? So that a device only ever sees one
-call to start and one call to stop and doesn't need to do any extra
-tracking?
