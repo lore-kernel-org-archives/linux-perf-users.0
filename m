@@ -1,133 +1,153 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE35E10C2;
-	Thu, 30 Nov 2023 01:23:40 -0800 (PST)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3AU9L7OD077461;
-	Thu, 30 Nov 2023 17:21:07 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Thu, 30 Nov 2023 17:21:04 +0800
-Date: Thu, 30 Nov 2023 17:21:01 +0800
-From: Yu-Chien Peter Lin <peterlin@andestech.com>
-To: Inochi Amaoto <inochiama@outlook.com>
-CC: Guo Ren <guoren@kernel.org>, <acme@kernel.org>, <adrian.hunter@intel.com>,
-        <ajones@ventanamicro.com>, <alexander.shishkin@linux.intel.com>,
-        <andre.przywara@arm.com>, <anup@brainfault.org>,
-        <aou@eecs.berkeley.edu>, <atishp@atishpatra.org>,
-        <conor+dt@kernel.org>, <conor.dooley@microchip.com>,
-        <conor@kernel.org>, <devicetree@vger.kernel.org>,
-        <dminus@andestech.com>, <evan@rivosinc.com>, <geert+renesas@glider.be>,
-        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
-        <jolsa@kernel.org>, <jszhang@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
-        <robh+dt@kernel.org>, <samuel@sholland.org>,
-        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
-        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
-        <will@kernel.org>, <ycliang@andestech.com>
-Subject: Re: [PATCH v4 09/13] dt-bindings: riscv: Add T-Head PMU extension
- description
-Message-ID: <ZWhT_VSpl2aksVK7@APC323>
-References: <ZWb6-LEkyh5RRpcP@APC323>
- <IA1PR20MB49537364BDF1ADE185CA8FE4BB82A@IA1PR20MB4953.namprd20.prod.outlook.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id F01B910DE;
+	Thu, 30 Nov 2023 02:07:20 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B1691042;
+	Thu, 30 Nov 2023 02:08:06 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CD043F6C4;
+	Thu, 30 Nov 2023 02:07:17 -0800 (PST)
+Message-ID: <07c9b3be-676a-f7f8-d1d2-94ce3abcb61b@arm.com>
+Date: Thu, 30 Nov 2023 10:07:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <IA1PR20MB49537364BDF1ADE185CA8FE4BB82A@IA1PR20MB4953.namprd20.prod.outlook.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3AU9L7OD077461
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH RFC 2/3] perf/x86/intel/pt: Add support for pause_resume()
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, Yicong Yang
+ <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20231123121851.10826-1-adrian.hunter@intel.com>
+ <20231123121851.10826-3-adrian.hunter@intel.com>
+ <c63808b2-2049-da18-f0af-5dff2bc87cd2@arm.com>
+ <20231129105836.GF30650@noisy.programming.kicks-ass.net>
+ <842ce784-fbd2-4667-a5f7-aaa10a1108dc@intel.com>
+ <20231129122320.GH30650@noisy.programming.kicks-ass.net>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20231129122320.GH30650@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Inochi,
 
-On Thu, Nov 30, 2023 at 04:29:22PM +0800, Inochi Amaoto wrote:
-> >
-> >Hi Guo Ren,
-> >
-> >On Thu, Nov 23, 2023 at 05:14:30AM +0800, Guo Ren wrote:
-> >> On Wed, Nov 22, 2023 at 8:17 PM Yu Chien Peter Lin
-> >> <peterlin@andestech.com> wrote:
-> >>>
-> >>> Document the ISA string for T-Head performance monitor extension
-> >>> which provides counter overflow interrupt mechanism.
-> >>>
-> >>> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> >>> ---
-> >>> Changes v2 -> v3:
-> >>>   - New patch
-> >>> Changes v3 -> v4:
-> >>>   - No change
-> >>> ---
-> >>>  Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
-> >>>  1 file changed, 6 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> >>> index c91ab0e46648..694efaea8fce 100644
-> >>> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> >>> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> >>> @@ -258,5 +258,11 @@ properties:
-> >>>              in commit 2e5236 ("Ztso is now ratified.") of the
-> >>>              riscv-isa-manual.
-> >>>
-> >>> +        - const: xtheadpmu
-> >>> +          description:
-> >>> +            The T-Head performance monitor extension for counter overflow. For more
-> >>> +            details, see the chapter 12 in the Xuantie C906 user manual.
-> >>> +            https://github.com/T-head-Semi/openc906/tree/main/doc
-> >>> +
-> >>>  additionalProperties: true
-> >>>  ...
-> >>> --
-> >>> 2.34.1
-> >>>
-> >> Reviewed-by: Guo Ren <guoren@kernel.org>
-> >
-> >Thanks for the review.
-> >Would you share document about T-Head PMU?
-> >
+
+On 29/11/2023 12:23, Peter Zijlstra wrote:
+> On Wed, Nov 29, 2023 at 01:15:43PM +0200, Adrian Hunter wrote:
+>> On 29/11/23 12:58, Peter Zijlstra wrote:
+>>> On Wed, Nov 29, 2023 at 09:53:39AM +0000, James Clark wrote:
+>>>> On 23/11/2023 12:18, Adrian Hunter wrote:
+>>>
+>>>>> +static void pt_event_pause_resume(struct perf_event *event)
+>>>>> +{
+>>>>> +	if (event->aux_paused)
+>>>>> +		pt_config_stop(event);
+>>>>> +	else if (!event->hw.state)
+>>>>> +		pt_config_start(event);
+>>>>> +}
+>>>>
+>>>> It seems like having a single pause/resume callback rather than separate
+>>>> pause and resume ones pushes some of the event state management into the
+>>>> individual drivers and would be prone to code duplication and divergent
+>>>> behavior.
+>>>>
+>>>> Would it be possible to move the conditions from here into the core code
+>>>> and call separate functions instead?
+>>>>
+>>>>> +
+>>>>>  static void pt_event_start(struct perf_event *event, int mode)
+>>>>>  {
+>>>>>  	struct hw_perf_event *hwc = &event->hw;
+>>>>> @@ -1798,6 +1809,7 @@ static __init int pt_init(void)
+>>>>>  	pt_pmu.pmu.del			 = pt_event_del;
+>>>>>  	pt_pmu.pmu.start		 = pt_event_start;
+>>>>>  	pt_pmu.pmu.stop			 = pt_event_stop;
+>>>>> +	pt_pmu.pmu.pause_resume		 = pt_event_pause_resume;
+>>>>
+>>>> The general idea seems ok to me. Is there a reason to not use the
+>>>> existing start() stop() callbacks, rather than adding a new one?
+>>>>
+>>>> I assume it's intended to be something like an optimisation where you
+>>>> can turn it on and off without having to do the full setup, teardown and
+>>>> emit an AUX record because you know the process being traced never gets
+>>>> switched out?
+>>>
+>>> So the actual scheduling uses ->add() / ->del(), the ->start() /
+>>> ->stop() methods are something that can be used after ->add() and before
+>>> ->del() to 'temporarily' pause things.
+>>>
+>>> Pretty much exactly what is required here I think. We currently use this
+>>> for PMI throttling and adaptive frequency stuff, but there is no reason
+>>> it could not also be used for this.
+>>>
+>>> As is, we don't track the paused state across ->del() / ->add(), but
+>>> perhaps that can be fixed. We can easily add more PERF_EF_ / PERF_HES_
+>>> bits to manage things.
+>>>
+>>>
+>>
+>> I am not sure stop / start play nice with NMI's from other events e.g.
+>>
+>> PMC NMI wants to pause or resume AUX but what if AUX event is currently
+>> being processed in ->stop() or ->start()?  Or maybe that can't happen?
 > 
-> Hi, Peter Lin:
+> I think that can happen, and pt_event_stop() can actually handle some of
+> that, while your pause_resume() thing, which uses pt_config_stop() does
+> not.
 > 
-> You can use the following two document to get all events:
-> https://github.com/T-head-Semi/openc906/tree/main/doc
-> https://github.com/T-head-Semi/openc910/tree/main/doc
+> But yes, I think that if you add pt_event_{stop,start}() calls from
+> *other* events their PMI, then you get to deal with more 'fun'.
 > 
-> There are also some RTL code can describe these events:
-> https://github.com/T-head-Semi/openc910/blob/e0c4ad8ec7f8c70f649d826ebd6c949086453272/C910_RTL_FACTORY/gen_rtl/pmu/rtl/ct_hpcp_top.v#L1123
-> https://github.com/T-head-Semi/openc906/blob/af5614d72de7e5a4b8609c427d2e20af1deb21c4/C906_RTL_FACTORY/gen_rtl/pmu/rtl/aq_hpcp_top.v#L543
+> Something like:
 > 
-> The perf events json can also be used as document, this is already
-> applied (with more detailed explanation):
-> https://lore.kernel.org/all/IA1PR20MB495325FCF603BAA841E29281BBBAA@IA1PR20MB4953.namprd20.prod.outlook.com/
+>   perf_addr_filters_adjust()
+>     __perf_addr_filters_adjust()
+>       perf_event_stop()
+>         __perf_event_stop()
+> 	  event->pmu->stop()
+> 	  <NMI>
+> 	    ...
+> 	    perf_event_overflow()
+> 	      pt_event->pmu->stop()
+> 	  </NMI>
+> 	  event->pmu->start() // whoopsie!
+> 
+> Should now be possible.
+> 
+> I think what you want to do is rename pt->handle_nmi into pt->stop_count
+> and make it a counter, then ->stop() increments it, and ->start()
+> decrements it and everybody ensures the thing doesn't get restart while
+> !0 etc..
+> 
+> I suspect you need to guard the generic part of this feature with a new
+> PERF_PMU_CAP_ flag and then have the coresight/etc. people opt-in once
+> they've audited things.
+> 
+> James, does that work for you?
+> 
 
-Thanks for reaching out!
-The updated description will be:
+Yep I think that would work.
 
-- const: xtheadpmu
-  description:
-    The T-Head performance monitor extension for counter overflow, as ratified
-    in commit bd9206 ("Initial commit") of Xuantie C906 user manual.
-    https://github.com/T-head-Semi/openc906/tree/main/doc
+If I understand it with the stop_count counter, to be able to support
+the new CAP, every device would basically have to implement a similar
+counter?
 
-Is it OK with you?
-
-Best regards,
-Peter Lin
-
-> Best regards,
-> Inochi
+Would it be possible to do that reference counting on the outside of
+start() and stop() in the core code? So that a device only ever sees one
+call to start and one call to stop and doesn't need to do any extra
+tracking?
