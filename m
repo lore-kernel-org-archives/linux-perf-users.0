@@ -1,119 +1,124 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MfDgRLyu"
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2044.outbound.protection.outlook.com [40.107.212.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6C510C6;
-	Wed, 29 Nov 2023 22:23:31 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BIxFkRN44tTMBn+5vnXnzEfc4ntlAOP4/YnJhyCGkpr9UgUTFZ+go0E1tG440oGA5lJXqXWHqji3Hygx0yYLB9AkiXnSoRl5zCnzpYWe47y/rtIK9K4+KY8GYPVJxo9zPs+zVQQnCTSUTwbRW2hg3NJllPIERWYDkvaaocVRuhcv57Gdzk2p/kwjY0OW43zAAWIPLWJ4QCU6TZx9ss+kx/4IyO8kMJ28djNPW2i7lR6QVuc57mvKhC+A/DnRbOjiz8RURuSQw0GNdJAPYmBRvOIqP+phayrl1GWq1wHIsOtbhZUn+X28UtUUSuliYhmBMAWgLhDigjyQU/E/Nt8sUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=neiPgAnC5Cn+Jbqgsk6HgAn+fPI9D2BIoHx5zTlDrfE=;
- b=VvPT8XzFs91EYk19onlUfUQApwKZ0oCcDBzosaIIDHL5DW44MJTmCsdHmQPZWLntHklAlV0mGmYQ9nlpNrURK3VMp9KPGQfIQkdVCCjxTO05/IJ7vqajlH78uiJNGRVqeTigA/HsTx3Fm9y2/Hci8BRWrsBnaizLrAVy/r+z5K2HOc8dLK4VvuVTziqL8O/YHU/7JXQ15ZUf7B62w7f1s0jSGbpELzOei0EQJrzTIpeZ52ToKzvpBlAZH+G4/5fFJU2OT4h7CqHzyoadcqL4N51pzLLZJMvgP1HPRY1tLVUeDfZhj9t3D+xrZLiqCfd8RFFczYcuFvYaBUF48UyuXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=neiPgAnC5Cn+Jbqgsk6HgAn+fPI9D2BIoHx5zTlDrfE=;
- b=MfDgRLyu8h7VAdq4RxL4iCu1ZW9TMxgc7U7hXRJ5NDt5NDVr4S85paJGPvVs7ycdwkbiIUXwhOrjlDYWmxLeKsERpiLIcf6iEXtsZ/Lbj1YqV5NfpQjKujQvDofJOmmdyh+zhMIDcA/5d2n2PGGB717qhY/8USrMlb81vuX1RHc=
-Received: from CH0PR03CA0214.namprd03.prod.outlook.com (2603:10b6:610:e7::9)
- by SA1PR12MB8597.namprd12.prod.outlook.com (2603:10b6:806:251::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.29; Thu, 30 Nov
- 2023 06:23:28 +0000
-Received: from DS3PEPF000099E2.namprd04.prod.outlook.com
- (2603:10b6:610:e7:cafe::31) by CH0PR03CA0214.outlook.office365.com
- (2603:10b6:610:e7::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.24 via Frontend
- Transport; Thu, 30 Nov 2023 06:23:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099E2.mail.protection.outlook.com (10.167.17.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7046.17 via Frontend Transport; Thu, 30 Nov 2023 06:23:25 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 30 Nov
- 2023 00:23:08 -0600
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: <peterz@infradead.org>, <acme@kernel.org>
-CC: <ravi.bangoria@amd.com>, <mingo@kernel.org>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <eranian@google.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<sandipan.das@amd.com>, <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH v2] perf/x86/amd: Reject branch stack for IBS events
-Date: Thu, 30 Nov 2023 11:52:46 +0530
-Message-ID: <20231130062246.290-1-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVFewOoY"
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A87A3
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 22:39:17 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-285699ebabcso559016a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Nov 2023 22:39:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701326356; x=1701931156; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4ZOG6QhYSjAo2zw8BnDMBufdX2aNPPAp6VVfW0kMVz0=;
+        b=ZVFewOoYK/kZVIVQUa88AsvQZQwk87ECqLefV/zcpKP83iEBLxJMNSbU+oqTzQkqIz
+         IVHMpuDrY/rz4ONyLDDfKR6dITwRCw6UDi8t+siJ9Tnacl2pCS+7NmS/sN7J256xiuUp
+         UMF7gRIZ/2yJ6K1J0MrRKg47n7iaRKuNd7tw1r0IQWVmnO8IsDAmThFaixPZwnZ10mKT
+         94iORHvHR9XqDbdK1k0upneJerD1TdKdhbDdj7z9F7IpHN+azEBc3oU656TKxUcDSnJn
+         3ujQz913hGpszeqvFzkcL7oGfONdqBQ+lgtj6N6F6D066/pI0sVkHrQLOL5Z1HS5cKgw
+         obfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701326356; x=1701931156;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4ZOG6QhYSjAo2zw8BnDMBufdX2aNPPAp6VVfW0kMVz0=;
+        b=uVoYkr51uRE3I5XX6dAVmqtX9K5i9y6CAXxR2+AHxlOa2XV4QfpjzMKOg5UZ7yq1Le
+         loR94SzbNnFipwFrpSzMZsBNAfasPWvAbdO2IFjY92sH+WDi/l1TPjdcigI5K6EsE8FG
+         wQuONLt+/I1XNGgnCqZFyE9ansG8uGfuosSHpgJC7mxuSG9CchSRHP5zKVhrbAVhX1h7
+         WPhYBLThYftC8uz6q0y1mrusvHvi17YZoXU0FXq1pVcTVIHxkF8Km0g7XbyfPjxsU2+0
+         WOJSnrkbYb/Js7djc9yi22PYXd5MeLRsSUwCr7UCXJNYbDfUa293V71QJPQTRArKFd5c
+         6szQ==
+X-Gm-Message-State: AOJu0Yx3Y1Rik4opOMDRPBjWJajR/2hH5YomA6d1DmK8O8pETvnf+10X
+	idpOHTUxFsNiRnzRXdiH7hTHEAfTgE6HOYjmjqw=
+X-Google-Smtp-Source: AGHT+IG7LygpYdzW7wyZGhiKvkgaUtkXk/qLuxK7DZi3J9qfZAM7ApmGHsz+wWBCnJojqxR0pETyyitNqMVBZhYj8e0=
+X-Received: by 2002:a17:90a:e38c:b0:280:72b:397d with SMTP id
+ b12-20020a17090ae38c00b00280072b397dmr33667878pjz.20.1701326356331; Wed, 29
+ Nov 2023 22:39:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099E2:EE_|SA1PR12MB8597:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b841a0d-ed68-4f23-ab1b-08dbf16cdc51
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	AXrd8069iNkQ0Nd8t5svt4CEgZblByu0V6grF5BkUpZ2tlC2P0jzRDyT0Fpe8oQpwnuRnWQlJf9czr/iMswi/iksSdgn9iL1ArhCkrIl5UcHEPmK0LLFsAp0uCNXnO/wQB9ZNeKaZPA4mY8EzX4iy5nADytd3BPHaG1vV9J4KxLEmZJ9Re1xmzYWpBhsfKkciRqAFeus8eS2Gjon5mk5M7I3EfDtgPZQ7bIEsjaRjTSoubtOr/32NrhxKxBaVGT7K89XGrf9spN1ppx1ufAebWxlLEI3S6HeFyhsoQEaaZoe8Sr+4y3z4U77lZfhn3yu5p6WO9TC3dWRUfJWpDmaa9Q+9SONQV212oz44k8eyk4ntwPQ8p9QESea2o8u3sK7wMD6f8WlQTCZ117EsiZt0geBzR/Es8rlqvGumI9yB/M2Zzfdhr+jGv8WNqFxa/lkoG4Ni0tUl1aJoKwMu4OXqVvfS3OVc2ZPUmAIi7bhgn/SfiAY5iqcyWHRvF1ulOJihhY8QN6ALQtySHflMqT0WOpK/aE7+e9VLOFoMLz3XDO3zpJ1HxHYMLAa7rpgL67Jp/UwAsZy1wiKgAvczstLQnbikaLNspKI3GRYqfeGl5nk1BVqBxPWheSMdqZ3eUc88wruc6UHI3uXvjehmVlL3VpMyqe5L48uPusJUqPD9l0JZdNi4AvYjfAtqXmHIyRaZ+tLAaD30oXBEu2rpDwka1XF7igIxfChfamaMemTOes3J6c5xS9XkEKxEBknyk4klkSnK0ubMS9+NBdEI57PBOLFfVv4aD9JzGzhSbu4laODRAkZ16vZpgBEeXC5lHCN
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(39860400002)(136003)(376002)(396003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(82310400011)(36840700001)(40470700004)(46966006)(8936002)(4326008)(6666004)(8676002)(7696005)(40460700003)(316002)(110136005)(54906003)(478600001)(966005)(2616005)(2906002)(36860700001)(81166007)(4744005)(47076005)(356005)(36756003)(41300700001)(1076003)(86362001)(44832011)(26005)(70586007)(202311291699003)(40480700001)(336012)(426003)(16526019)(83380400001)(5660300002)(82740400003)(70206006)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2023 06:23:25.7377
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b841a0d-ed68-4f23-ab1b-08dbf16cdc51
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099E2.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8597
+References: <CAFjbc8G+q4sFpO5D6PqbDFNbHHpgYZ_2ADV7sUp7Lw=AefprJA@mail.gmail.com>
+ <CAP-5=fXjNrE9ts5mdL0UxC=dp=Qd0d3pJsRi=VsgozM6BCWa3A@mail.gmail.com>
+In-Reply-To: <CAP-5=fXjNrE9ts5mdL0UxC=dp=Qd0d3pJsRi=VsgozM6BCWa3A@mail.gmail.com>
+From: Namhyung Kim <namhyung@gmail.com>
+Date: Wed, 29 Nov 2023 22:39:05 -0800
+Message-ID: <CAM9d7cjQaNS1QCdE6yGtUFJEVA9UNJA=5rNwp6TJPZ_1geW_1A@mail.gmail.com>
+Subject: Re: Perf support in CPython
+To: Ian Rogers <irogers@google.com>
+Cc: Pablo Galindo Salgado <pablogsal@gmail.com>, linux-perf-users@vger.kernel.org, 
+	Andrii Nakryiko <andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Namhyung Kim <namhyung@kernel.org>
+On Wed, Nov 22, 2023 at 1:05=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Mon, Nov 20, 2023 at 3:50=E2=80=AFPM Pablo Galindo Salgado
+> <pablogsal@gmail.com> wrote:
+> >
+> > Hi,
+> >
+> > I am Pablo Galindo Salgado from the CPython core development team. In
+> > the past release of CPython (Python 3.12) I have added support
+> > for including Python function calls in the output of perf by
+> > leveraging the jit-interface support by writing to /tmp/perf-%d.map.
+> > The support
+> > works by compiling assembly trampolines at runtime that just call the
+> > Python bytecode evaluation loop and assigning function names to the
+> > trampolines by writing in /tmp/perf-%d.map. This has worked really
+> > well when CPython is compiled with frame pointers but unfortunately
+> > CPython also suffers from 5% to 10% slow down when frame pointers are
+> > used. Unfortunately, perf cannot unwind through the jitted trampolines
+> > without frame pointers currently.
+>
+> There was an analysis of the CPython frame pointer regression here:
+> https://pagure.io/fesco/issue/2817#comment-826636
+> but with GCC some of it was stemming from sloppy code generation, not
+> using a shorter [ESP + ..] address rather than always [EBP + ..].
 
-The AMD IBS PMU doesn't handle branch stacks, so it should not accept
-events with brstack.
+So I went through the thread and felt like compilers could be
+improved with frame pointers.  But changing compilers would
+take long time so I think we need a workaround in the meantime.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
-v1: https://lore.kernel.org/r/20230602194513.1589179-1-namhyung@kernel.org
-v1->v2:
- - Rebase on top of peterz/queue/perf/core
+>
+> I was ranting at LPC last week about people not wanting frame pointers
+> so I'll try to write a blog, but some pertinent points:
+>
+> - we're only talking x86 here and we should try to avoid overfitting
+> to one particular architecture.
+>
+> - x86 with APX extensions (ETA 2025) is getting 16 new registers.
+>
+> - frame pointers don't need to cost a register: you can put the frame
+> pointer in thread-local storage and then "push (fs|gs):[offset]"
+> replaces the "push rbp", you place the new frame pointer in the TLS
+> and at exit you reverse the push. To make the stack unwinder support
+> this we just need a thread-local storage convention which (imo) is way
+> less painful than say supporting page faults, to map in debug
+> information, during stack unwinding.
+>
+> - when function call overhead is significant it is evidence that your
+> inlining is broken. With FDO, AutoFDO, LTO, etc. there are many tools
+> to tackle this. A constant problem is that the x86-64 ABI lacks
+> callee-save registers meaning that if you do use the registers at your
+> disposal you can end up with a function call looking like a context
+> switch in terms of spilling out and then needing to refill registers.
+> Setting up FDO and LTO is necessary to eliminate not just function
+> call overhead from establishing a frame but also the more significant
+> costs due to a lack of callee-save registers. APX is adding fast
+> push/pop instructions to try to alleviate this, but we're overdue for
+> a new x86-64 ABI.
+>
+> Making jitdump better is good, but I'm not motivated by frame pointers
+> being a problem. Fixing jitdump won't fix BPF, etc.
 
- arch/x86/events/amd/ibs.c | 3 +++
- 1 file changed, 3 insertions(+)
+I'd be happy if new hardwares or compilers would bring the frame
+pointers back.  But I'm also open to find some alternatives like
+shadow stack, SFrame or jitdump before that.
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 6911c5399d02..e91970b01d62 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -287,6 +287,9 @@ static int perf_ibs_init(struct perf_event *event)
- 	if (config & ~perf_ibs->config_mask)
- 		return -EINVAL;
- 
-+	if (has_branch_stack(event))
-+		return -EOPNOTSUPP;
-+
- 	ret = validate_group(event);
- 	if (ret)
- 		return ret;
--- 
-2.34.1
-
+Thanks,
+Namhyung
