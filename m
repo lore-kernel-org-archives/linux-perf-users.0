@@ -1,85 +1,96 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04928106
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 09:16:30 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-63-yqVC9vEsO-yucNhPuXm0ag-1; Fri, 01 Dec 2023 17:16:27 +0000
-X-MC-Unique: yqVC9vEsO-yucNhPuXm0ag-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 1 Dec
- 2023 17:16:20 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 1 Dec 2023 17:16:20 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Arnaldo Carvalho de Melo' <acme@kernel.org>
-CC: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "Linux
- Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/1] perf beauty: Don't use 'find ... -printf' as it isn't
- available in busybox
-Thread-Topic: [PATCH 1/1] perf beauty: Don't use 'find ... -printf' as it
- isn't available in busybox
-Thread-Index: AQHaI9e+SqSraxumCUi58U+dHeCYHbCUUq5AgABV0YCAAAJZgA==
-Date: Fri, 1 Dec 2023 17:16:20 +0000
-Message-ID: <970de0610f8e4c9481817f6aea76c5a3@AcuMS.aculab.com>
-References: <ZWkEeqdmCHMLhLr2@kernel.org>
- <ecad5dffa8474ed8a5367e917610e707@AcuMS.aculab.com>
- <ZWoRhbyvClv0TffR@kernel.org>
-In-Reply-To: <ZWoRhbyvClv0TffR@kernel.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VboVc8LW"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF83E129
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 11:46:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701460003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5bAOLpYJ2nJlzCe8j/QXYogtqZvLNOuGnLuLyxl8bsY=;
+	b=VboVc8LW6RhNvjNW6g8RixuD/4KYM1oM3Uo6Mkn106DIJ3R5UUPgOf+EtrjR+5gEEsCFiR
+	JZYHucZ6LhNcHQAGWY+7RNtQ8eckZNQqi8lBYWNWMFpfNOcFc7G9+kQpoIo4z419Mq7xCf
+	Rz8dr30X/JW+da3OtY4fZHyYwh2TDs4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-586-tsZXnde5O5O6N81ZRvNlUA-1; Fri, 01 Dec 2023 14:46:40 -0500
+X-MC-Unique: tsZXnde5O5O6N81ZRvNlUA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 05E7F918561;
+	Fri,  1 Dec 2023 19:46:40 +0000 (UTC)
+Received: from telekom.ip.com (unknown [10.45.224.75])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 466F310EA5;
+	Fri,  1 Dec 2023 19:46:38 +0000 (UTC)
+From: vmolnaro@redhat.com
+To: linux-perf-users@vger.kernel.org,
+	acme@kernel.org,
+	acme@redhat.com,
+	vmolnaro@redhat.com
+Cc: mpetlan@redhat.com,
+	leo.yan@linaro.org,
+	james.clark@arm.com
+Subject: [PATCH] perf test record user-regs: Fix mask for vg register
+Date: Fri,  1 Dec 2023 20:46:17 +0100
+Message-ID: <20231201194617.13012-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-RnJvbTogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvDQo+IFNlbnQ6IDAxIERlY2VtYmVyIDIwMjMg
-MTc6MDINCj4gDQo+IEVtIEZyaSwgRGVjIDAxLCAyMDIzIGF0IDEyOjA1OjMxUE0gKzAwMDAsIERh
-dmlkIExhaWdodCBlc2NyZXZldToNCj4gPiAuLi4NCj4gPiA+ICAjIENyZWF0ZSBsaXN0IG9mIGFy
-Y2hpdGVjdHVyZXMgdGhhdCBoYXZlIGEgc3BlY2lmaWMgZXJybm8uaC4NCj4gPiA+ICBhcmNobGlz
-dD0iIg0KPiA+ID4gLWZvciBhcmNoIGluICQoZmluZCAkdG9vbHNkaXIvYXJjaCAtbWF4ZGVwdGgg
-MSAtbWluZGVwdGggMSAtdHlwZSBkIC1wcmludGYgIiVmXG4iIHwgc29ydCAtcik7IGRvDQo+ID4g
-PiArZm9yIGFyY2ggaW4gJChmaW5kICR0b29sc2Rpci9hcmNoIC1tYXhkZXB0aCAxIC1taW5kZXB0
-aCAxIC10eXBlIGQgfCB3aGlsZSByZWFkIGFyY2ggOyBkbyBiYXNlbmFtZQ0KPiA+ID4gJGFyY2gg
-OyBkb25lIHwgc29ydCAtcik7IGRvDQo+ID4gPiAgCXRlc3QgLWYgJHRvb2xzZGlyL2FyY2gvJGFy
-Y2gvaW5jbHVkZS91YXBpL2FzbS9lcnJuby5oICYmIGFyY2hsaXN0PSIkYXJjaGxpc3QgJGFyY2gi
-DQo+ID4gPiAgZG9uZQ0KPiA+DQo+ID4gSmVlcGVycyAuLi4NCj4gPiBEb2VzIHRoaXMgd29yaz8N
-Cj4gPiAJZm9yIGYgaW4gJHRvb2xzZGlyL2FyY2gvKi9pbmNsdWRlL3VhcGkvYXNtL2Vycm5vLmg7
-IGRvDQo+ID4gCQlbICEgLWYgJGYgXSAmJiBicmVhaw0KPiA+IAkJZD0ke2YlL2luY2x1ZGUvdWFw
-aS9hc20vZXJybm8uaH0NCj4gPiAJCWFyY2hsaXN0PSIke2QjIyovfSAkYXJjaGxpc3QiDQo+ID4g
-CWRvbmUNCj4gPiBObyBmb3JrKClzIG9yIGV4ZWMoKXMuDQo+ID4gSSB0aGluayBpdCBvbmx5IGRp
-ZmZlcnMgaW4gaGF2aW5nIGEgdHJhaWxpbmcgc3BhY2UgaW5zdGVhZCBvZiBhIGxlYWRpbmcgb25l
-Lg0KPiANCj4g4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJCBmb3IgZiBpbiB0b29s
-cy9hcmNoLyovaW5jbHVkZS91YXBpL2FzbS9lcnJuby5oOyBkbw0KPiBkPSR7ZiUvaW5jbHVkZS91
-YXBpL2FzbS9lcnJuby5ofSA7IGFyY2g9IiR7ZCMjKi99IiA7IGVjaG8gIickYXJjaCciIDsgZG9u
-ZQ0KPiAnYWxwaGEnDQo+ICdtaXBzJw0KPiAncGFyaXNjJw0KPiAncG93ZXJwYycNCj4gJ3NwYXJj
-Jw0KPiAneDg2Jw0KPiDirKJbYWNtZUB0b29sYm94IHBlcmYtdG9vbHMtbmV4dF0kIGZvciBhcmNo
-IGluICQoZmluZCB0b29scy9hcmNoIC1tYXhkZXB0aCAxIC1taW5kZXB0aCAxIC10eXBlIGQgfA0K
-PiB3aGlsZSByZWFkIGFyY2ggOyBkbyBiYXNlbmFtZSAkYXJjaCA7IGRvbmUgfCBzb3J0IC1yKSA7
-IGRvIHRlc3QgLWYNCj4gdG9vbHMvYXJjaC8kYXJjaC9pbmNsdWRlL3VhcGkvYXNtL2Vycm5vLmgg
-JiYgZWNobyAiJyRhcmNoJyIgOyBkb25lDQo+ICd4ODYnDQo+ICdzcGFyYycNCj4gJ3Bvd2VycGMn
-DQo+ICdwYXJpc2MnDQo+ICdtaXBzJw0KPiAnYWxwaGEnDQo+IOKsolthY21lQHRvb2xib3ggcGVy
-Zi10b29scy1uZXh0XSQNCj4gDQo+IFRoZXJlIHdhcyBhIHJlYXNvbiBmb3IgaGF2aW5nIHg4NiBm
-aXJzdCwgbGVtbWUgZGlnIGl0Li4uIEp1c3QgdG8gaGF2ZQ0KPiBhcyB0aGUgZmlyc3Qgc3RyY21w
-IGluOg0KDQpJIHJldmVyc2VkIHRoZSBvcmRlciBieSBhZGRpbmcgdGhlIG5hbWVzIGF0IHRoZSBm
-cm9udCBvZiAkYXJjaGxpc3QgLSBzbyB0aGUgb3JkZXINCndvdWxkIHN0aWxsIGJlIHJldmVyc2Ug
-c29ydGVkICh0aGUgc2hlbGwgc29ydHMgZmlsZW5hbWUgZ2xvYnMpLg0KDQpUaGUgJ1sgLWYgJGYg
-XSB8fCBicmVhaycgbGluZSBpcyBvbmx5IHRoZXJlIGluIGNhc2UgdGhlcmUgYXJlIG5vIG1hdGNo
-aW5nIGZpbGVzLg0KSWYgdGhhdCBjYW4gaGFwcGVuIHB1dHRpbmcgWyAiJGFyY2hsaXN0IiA9ICIq
-ICIgXSAmJiBhcmNobGlzdD0NCmFmdGVyIHRoZSBsb29wIHdvdWxkIGJlIHNsaWdodGx5IGJldHRl
-ci4NCkJ1dCB3aXRoIG9ubHkgNiBpdGVtIHRoZSBleHRyYSBzdGF0KCkgd2lsbCBiZSBub2lzZS4N
-Cg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2Fk
-LCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5v
-OiAxMzk3Mzg2IChXYWxlcykNCg==
+From: Veronika Molnarova <vmolnaro@redhat.com>
+
+The 'vg' register for arm64 shows up in --user_regs as available when
+masking the variable AT_HWCAP with 1 << 22 returns '1' as done in
+perf_regs.c. However, in subtests for support of SVE, the check for
+the 'vg' register is done by masking the variable AT_HWCAP with the value
+0x200000 which is equals to 1 << 21 instead of 1 << 22. This results in
+inconsistencies on certain systems where the test expects that the 'vg'
+register is not operational when it is, and vice-versa.
+
+During the testing on a machine that the test expected not to have the
+'vg' register available, the perf record with option --user-regs showed
+records for the 'vg' register together with all of the others, which
+means that the mask for the subtest of perf_event_attr is off by one.
+Change the value of the mask from 0x200000 to 0x400000 to correct it.
+
+Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+---
+ tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64 | 2 +-
+ tools/perf/tests/attr/test-record-user-regs-sve-aarch64    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64 b/tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64
+index fbb065842880..bed765450ca9 100644
+--- a/tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64
++++ b/tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64
+@@ -6,4 +6,4 @@ args    = --no-bpf-event --user-regs=vg kill >/dev/null 2>&1
+ ret     = 129
+ test_ret = true
+ arch    = aarch64
+-auxv    = auxv["AT_HWCAP"] & 0x200000 == 0
++auxv    = auxv["AT_HWCAP"] & 0x400000 == 0
+diff --git a/tools/perf/tests/attr/test-record-user-regs-sve-aarch64 b/tools/perf/tests/attr/test-record-user-regs-sve-aarch64
+index c598c803221d..a65113cd7311 100644
+--- a/tools/perf/tests/attr/test-record-user-regs-sve-aarch64
++++ b/tools/perf/tests/attr/test-record-user-regs-sve-aarch64
+@@ -6,7 +6,7 @@ args    = --no-bpf-event --user-regs=vg kill >/dev/null 2>&1
+ ret     = 1
+ test_ret = true
+ arch    = aarch64
+-auxv    = auxv["AT_HWCAP"] & 0x200000 == 0x200000
++auxv    = auxv["AT_HWCAP"] & 0x400000 == 0x400000
+ kernel_since = 6.1
+ 
+ [event:base-record]
+-- 
+2.41.0
 
