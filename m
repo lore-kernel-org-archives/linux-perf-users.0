@@ -1,134 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506294D105
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 16:59:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BBA4D10B
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 17:02:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S16GIxoM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BC7C433C9;
-	Fri,  1 Dec 2023 16:58:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qk7/+Mmh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94609C433C8;
+	Fri,  1 Dec 2023 17:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701449942;
-	bh=ySU1Do4RoJYFQTmBppKfMwL1Zs9QJ8j0N4J7GgsQg9A=;
+	s=k20201202; t=1701450120;
+	bh=y7kiPIdMJ/eHRHRKfNv778aTflt1jqgDvDpBOIx25i8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S16GIxoMRd4elQiyuXo8z2fG6ZF6RPsXHnh/XMUeZmtFYmLAW06VSOwXYTkMifDbx
-	 fOvjwqokKn4G/HI9ygdQjVbvlljIH6+Z5DeWBhpqJ7Ugplw0po37kAT6Y2l5/Osv9N
-	 jdsPF8mTqtd5Uy6yFU66y+dOQKGQxAeaQ4rUhrpOMh6wD/M6w+qiv1Q0bRHVuZ7seF
-	 QZLIiv/fZRavvt0T7bLIuWXAnQi6nb2wi4HEL7z/hnVCy6Qrs3W4E6RvWav0NHYSta
-	 v+V0OlZweKRyXTkSdguQRy+/qCMV2oFzBaAGntoLQ8eMluGwZ+Kdc2/LRlO9rmljXw
-	 OmDzevbcsXuWw==
-Date: Fri, 1 Dec 2023 16:58:55 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-	James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V15 1/8] arm64/sysreg: Add BRBE registers and fields
-Message-ID: <fd278f4e-0632-4474-8609-7711ad725f85@sirena.org.uk>
-References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
- <20231201053906.1261704-2-anshuman.khandual@arm.com>
+	b=Qk7/+MmhgtRaOSV3nMg2hBe9LMIviJrooLIwyhArHVbQegd6wgxG7ggpgUri5+FF9
+	 SIs8mNRQqX1iDqAWeRcRoQXWYA6nCSDkQUtvllR7KSQrW3tJQxyJ+t+DT0RmPu2UVl
+	 PenZWXCm30cBL4KiL8L2KHCrEnrVFjLvPx7HaaQJLklVmuhRkEftssFwPzIYS2aKn8
+	 cm8AHoOou/Z8Ol8u/e/Cb9cQ0HSbjT94qaR5WcweEtHlRA8suG3K79jT21HcJfIhBO
+	 nZuNVlEpPS2lenVtkdIj9sgCnltzmtV7m01UMKotFlWjb/JW7ALin/eLabr6eaxUEK
+	 0Aa6we3I13Kyw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id CAD9340094; Fri,  1 Dec 2023 14:01:57 -0300 (-03)
+Date: Fri, 1 Dec 2023 14:01:57 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: David Laight <David.Laight@aculab.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] perf beauty: Don't use 'find ... -printf' as it
+ isn't available in busybox
+Message-ID: <ZWoRhbyvClv0TffR@kernel.org>
+References: <ZWkEeqdmCHMLhLr2@kernel.org>
+ <ecad5dffa8474ed8a5367e917610e707@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JISdTfvGKwhKa25v"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231201053906.1261704-2-anshuman.khandual@arm.com>
-X-Cookie: The early worm gets the late bird.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ecad5dffa8474ed8a5367e917610e707@AcuMS.aculab.com>
+X-Url: http://acmel.wordpress.com
+
+Em Fri, Dec 01, 2023 at 12:05:31PM +0000, David Laight escreveu:
+> ...
+> >  # Create list of architectures that have a specific errno.h.
+> >  archlist=""
+> > -for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d -printf "%f\n" | sort -r); do
+> > +for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d | while read arch ; do basename
+> > $arch ; done | sort -r); do
+> >  	test -f $toolsdir/arch/$arch/include/uapi/asm/errno.h && archlist="$archlist $arch"
+> >  done
+> 
+> Jeepers ...
+> Does this work?
+> 	for f in $toolsdir/arch/*/include/uapi/asm/errno.h; do
+> 		[ ! -f $f ] && break
+> 		d=${f%/include/uapi/asm/errno.h}
+> 		archlist="${d##*/} $archlist"
+> 	done
+> No fork()s or exec()s.
+> I think it only differs in having a trailing space instead of a leading one.
+
+⬢[acme@toolbox perf-tools-next]$ for f in tools/arch/*/include/uapi/asm/errno.h; do d=${f%/include/uapi/asm/errno.h} ; arch="${d##*/}" ; echo "'$arch'" ; done
+'alpha'
+'mips'
+'parisc'
+'powerpc'
+'sparc'
+'x86'
+⬢[acme@toolbox perf-tools-next]$ for arch in $(find tools/arch -maxdepth 1 -mindepth 1 -type d | while read arch ; do basename $arch ; done | sort -r) ; do test -f tools/arch/$arch/include/uapi/asm/errno.h && echo "'$arch'" ; done
+'x86'
+'sparc'
+'powerpc'
+'parisc'
+'mips'
+'alpha'
+⬢[acme@toolbox perf-tools-next]$
+
+There was a reason for having x86 first, lemme dig it... Just to have
+as the first strcmp in:
+
+const char *arch_syscalls__strerrno(const char *arch, int err)
+{
+        if (!strcmp(arch, "x86"))
+                return errno_to_name__x86(err);
+        if (!strcmp(arch, "sparc"))
+                return errno_to_name__sparc(err);
+        if (!strcmp(arch, "powerpc"))
+                return errno_to_name__powerpc(err);
+        if (!strcmp(arch, "parisc"))
+                return errno_to_name__parisc(err);
+        if (!strcmp(arch, "mips"))
+                return errno_to_name__mips(err);
+        if (!strcmp(arch, "alpha"))
+                return errno_to_name__alpha(err);
+        return errno_to_name__generic(err);
+}
+
+But that is a weak reason, we better make users resolve the right
+errno_to_name__$arch() pointer just once and use it without that strcmp.
+
+Will do it in a follow up patch.
+
+Thanks, the resulting diff is below, but I'll first do changes that will
+remove the need for arch_syscalls__strerrno.
+
+diff --git a/tools/perf/trace/beauty/arch_errno_names.sh b/tools/perf/trace/beauty/arch_errno_names.sh
+index 3ec8781344db13ba..b6e0767b4b34e46a 100755
+--- a/tools/perf/trace/beauty/arch_errno_names.sh
++++ b/tools/perf/trace/beauty/arch_errno_names.sh
+@@ -76,7 +76,9 @@ EoHEADER
+ 
+ # Create list of architectures that have a specific errno.h.
+ archlist=""
+-for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d | while read arch ; do basename $arch ; done | sort -r); do
++for f in $toolsdir/arch/*/include/uapi/asm/errno.h; do
++	d=${f%/include/uapi/asm/errno.h}
++	arch="${d##*/}"
+ 	test -f $toolsdir/arch/$arch/include/uapi/asm/errno.h && archlist="$archlist $arch"
+ done
+ 
 
 
---JISdTfvGKwhKa25v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Dec 01, 2023 at 11:08:59AM +0530, Anshuman Khandual wrote:
-
-This looks good apart from a few small omissions:
-
-> +SysregFields BRBINFx_EL1
-
-> +Enum	13:8		TYPE
-> +	0b000000	UNCOND_DIRECT
-> +	0b000001	INDIRECT
-> +	0b000010	DIRECT_LINK
-> +	0b000011	INDIRECT_LINK
-> +	0b000101	RET
-> +	0b000111	ERET
-> +	0b001000	COND_DIRECT
-> +	0b100001	DEBUG_HALT
-> +	0b100010	CALL
-> +	0b100011	TRAP
-> +	0b100100	SERROR
-> +	0b100110	INSN_DEBUG
-> +	0b100111	DATA_DEBUG
-> +	0b101010	ALIGN_FAULT
-> +	0b101011	INSN_FAULT
-> +	0b101100	DATA_FAULT
-> +	0b101110	IRQ
-> +	0b101111	FIQ
-> +	0b111001	DEBUG_EXIT
-> +EndEnum
-
-DDI0601 2023-09 also defines 0b110000 as an IMPLEMENTATION DEFINED
-exception to EL3.
-
-> +SysregFields	BRBCR_ELx
-> +Res0	63:24
-> +Field	23 	EXCEPTION
-> +Field	22 	ERTN
-> +Res0	21:9
-
-DDI0601 2023-09 defines bit 9 as FZPSS.
-
-> +Sysreg	BRBINFINJ_EL1	2	1	9	1	0
-
-> +Enum	13:8		TYPE
-> +	0b000000	UNCOND_DIRECT
-> +	0b000001	INDIRECT
-> +	0b000010	DIRECT_LINK
-> +	0b000011	INDIRECT_LINK
-> +	0b000101	RET
-> +	0b000111	ERET
-> +	0b001000	COND_DIRECT
-> +	0b100001	DEBUG_HALT
-> +	0b100010	CALL
-> +	0b100011	TRAP
-> +	0b100100	SERROR
-> +	0b100110	INSN_DEBUG
-> +	0b100111	DATA_DEBUG
-> +	0b101010	ALIGN_FAULT
-> +	0b101011	INSN_FAULT
-> +	0b101100	DATA_FAULT
-> +	0b101110	IRQ
-> +	0b101111	FIQ
-> +	0b111001	DEBUG_EXIT
-> +EndEnum
-
-DDI0601 2023-09 also defines 0b11000 as IMPLEMENTATION DEFINED exception
-to EL3.
-
---JISdTfvGKwhKa25v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVqEM8ACgkQJNaLcl1U
-h9CdgAf+PuTg+CfzlrPSJrZ9Z36MlL8ZKYtD9hjauM4agzZsJ0u0RLkbkBRi6R+q
-fcLF3WcaI80+35YGa/1BIyM4qYmO7JJNVDvZNf0E6dL7FzPgf499sOSxYHIn8zWP
-5sRunmMDycdZlXGSRVVB+oTf5lFeMT9aKy765546cMNspxDbCOBUBCUcw5I/dxQG
-nuzCEyADW36yKxodStDCx6Jptz8dO3qF0r02YEoc/xCNSXv4lG9CLrM0acDXxyZ/
-BwvWOvSlv66Ta+QM/DL4UhcditW+HXHK71OPD2q/xhSjI41z6tMxKtZwQ02cFO/Z
-cfl0g+Aj1tfzyQdK6OTLxP+i4lASSw==
-=Zs5/
------END PGP SIGNATURE-----
-
---JISdTfvGKwhKa25v--
