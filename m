@@ -1,127 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BBA4D10B
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 17:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qk7/+Mmh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94609C433C8;
-	Fri,  1 Dec 2023 17:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701450120;
-	bh=y7kiPIdMJ/eHRHRKfNv778aTflt1jqgDvDpBOIx25i8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qk7/+MmhgtRaOSV3nMg2hBe9LMIviJrooLIwyhArHVbQegd6wgxG7ggpgUri5+FF9
-	 SIs8mNRQqX1iDqAWeRcRoQXWYA6nCSDkQUtvllR7KSQrW3tJQxyJ+t+DT0RmPu2UVl
-	 PenZWXCm30cBL4KiL8L2KHCrEnrVFjLvPx7HaaQJLklVmuhRkEftssFwPzIYS2aKn8
-	 cm8AHoOou/Z8Ol8u/e/Cb9cQ0HSbjT94qaR5WcweEtHlRA8suG3K79jT21HcJfIhBO
-	 nZuNVlEpPS2lenVtkdIj9sgCnltzmtV7m01UMKotFlWjb/JW7ALin/eLabr6eaxUEK
-	 0Aa6we3I13Kyw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id CAD9340094; Fri,  1 Dec 2023 14:01:57 -0300 (-03)
-Date: Fri, 1 Dec 2023 14:01:57 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: David Laight <David.Laight@aculab.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] perf beauty: Don't use 'find ... -printf' as it
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04928106
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 09:16:30 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-63-yqVC9vEsO-yucNhPuXm0ag-1; Fri, 01 Dec 2023 17:16:27 +0000
+X-MC-Unique: yqVC9vEsO-yucNhPuXm0ag-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 1 Dec
+ 2023 17:16:20 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Fri, 1 Dec 2023 17:16:20 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Arnaldo Carvalho de Melo' <acme@kernel.org>
+CC: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "Linux
+ Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/1] perf beauty: Don't use 'find ... -printf' as it isn't
+ available in busybox
+Thread-Topic: [PATCH 1/1] perf beauty: Don't use 'find ... -printf' as it
  isn't available in busybox
-Message-ID: <ZWoRhbyvClv0TffR@kernel.org>
+Thread-Index: AQHaI9e+SqSraxumCUi58U+dHeCYHbCUUq5AgABV0YCAAAJZgA==
+Date: Fri, 1 Dec 2023 17:16:20 +0000
+Message-ID: <970de0610f8e4c9481817f6aea76c5a3@AcuMS.aculab.com>
 References: <ZWkEeqdmCHMLhLr2@kernel.org>
  <ecad5dffa8474ed8a5367e917610e707@AcuMS.aculab.com>
+ <ZWoRhbyvClv0TffR@kernel.org>
+In-Reply-To: <ZWoRhbyvClv0TffR@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ecad5dffa8474ed8a5367e917610e707@AcuMS.aculab.com>
-X-Url: http://acmel.wordpress.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-Em Fri, Dec 01, 2023 at 12:05:31PM +0000, David Laight escreveu:
-> ...
-> >  # Create list of architectures that have a specific errno.h.
-> >  archlist=""
-> > -for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d -printf "%f\n" | sort -r); do
-> > +for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d | while read arch ; do basename
-> > $arch ; done | sort -r); do
-> >  	test -f $toolsdir/arch/$arch/include/uapi/asm/errno.h && archlist="$archlist $arch"
-> >  done
-> 
-> Jeepers ...
-> Does this work?
-> 	for f in $toolsdir/arch/*/include/uapi/asm/errno.h; do
-> 		[ ! -f $f ] && break
-> 		d=${f%/include/uapi/asm/errno.h}
-> 		archlist="${d##*/} $archlist"
-> 	done
-> No fork()s or exec()s.
-> I think it only differs in having a trailing space instead of a leading one.
-
-⬢[acme@toolbox perf-tools-next]$ for f in tools/arch/*/include/uapi/asm/errno.h; do d=${f%/include/uapi/asm/errno.h} ; arch="${d##*/}" ; echo "'$arch'" ; done
-'alpha'
-'mips'
-'parisc'
-'powerpc'
-'sparc'
-'x86'
-⬢[acme@toolbox perf-tools-next]$ for arch in $(find tools/arch -maxdepth 1 -mindepth 1 -type d | while read arch ; do basename $arch ; done | sort -r) ; do test -f tools/arch/$arch/include/uapi/asm/errno.h && echo "'$arch'" ; done
-'x86'
-'sparc'
-'powerpc'
-'parisc'
-'mips'
-'alpha'
-⬢[acme@toolbox perf-tools-next]$
-
-There was a reason for having x86 first, lemme dig it... Just to have
-as the first strcmp in:
-
-const char *arch_syscalls__strerrno(const char *arch, int err)
-{
-        if (!strcmp(arch, "x86"))
-                return errno_to_name__x86(err);
-        if (!strcmp(arch, "sparc"))
-                return errno_to_name__sparc(err);
-        if (!strcmp(arch, "powerpc"))
-                return errno_to_name__powerpc(err);
-        if (!strcmp(arch, "parisc"))
-                return errno_to_name__parisc(err);
-        if (!strcmp(arch, "mips"))
-                return errno_to_name__mips(err);
-        if (!strcmp(arch, "alpha"))
-                return errno_to_name__alpha(err);
-        return errno_to_name__generic(err);
-}
-
-But that is a weak reason, we better make users resolve the right
-errno_to_name__$arch() pointer just once and use it without that strcmp.
-
-Will do it in a follow up patch.
-
-Thanks, the resulting diff is below, but I'll first do changes that will
-remove the need for arch_syscalls__strerrno.
-
-diff --git a/tools/perf/trace/beauty/arch_errno_names.sh b/tools/perf/trace/beauty/arch_errno_names.sh
-index 3ec8781344db13ba..b6e0767b4b34e46a 100755
---- a/tools/perf/trace/beauty/arch_errno_names.sh
-+++ b/tools/perf/trace/beauty/arch_errno_names.sh
-@@ -76,7 +76,9 @@ EoHEADER
- 
- # Create list of architectures that have a specific errno.h.
- archlist=""
--for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d | while read arch ; do basename $arch ; done | sort -r); do
-+for f in $toolsdir/arch/*/include/uapi/asm/errno.h; do
-+	d=${f%/include/uapi/asm/errno.h}
-+	arch="${d##*/}"
- 	test -f $toolsdir/arch/$arch/include/uapi/asm/errno.h && archlist="$archlist $arch"
- done
- 
-
+RnJvbTogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvDQo+IFNlbnQ6IDAxIERlY2VtYmVyIDIwMjMg
+MTc6MDINCj4gDQo+IEVtIEZyaSwgRGVjIDAxLCAyMDIzIGF0IDEyOjA1OjMxUE0gKzAwMDAsIERh
+dmlkIExhaWdodCBlc2NyZXZldToNCj4gPiAuLi4NCj4gPiA+ICAjIENyZWF0ZSBsaXN0IG9mIGFy
+Y2hpdGVjdHVyZXMgdGhhdCBoYXZlIGEgc3BlY2lmaWMgZXJybm8uaC4NCj4gPiA+ICBhcmNobGlz
+dD0iIg0KPiA+ID4gLWZvciBhcmNoIGluICQoZmluZCAkdG9vbHNkaXIvYXJjaCAtbWF4ZGVwdGgg
+MSAtbWluZGVwdGggMSAtdHlwZSBkIC1wcmludGYgIiVmXG4iIHwgc29ydCAtcik7IGRvDQo+ID4g
+PiArZm9yIGFyY2ggaW4gJChmaW5kICR0b29sc2Rpci9hcmNoIC1tYXhkZXB0aCAxIC1taW5kZXB0
+aCAxIC10eXBlIGQgfCB3aGlsZSByZWFkIGFyY2ggOyBkbyBiYXNlbmFtZQ0KPiA+ID4gJGFyY2gg
+OyBkb25lIHwgc29ydCAtcik7IGRvDQo+ID4gPiAgCXRlc3QgLWYgJHRvb2xzZGlyL2FyY2gvJGFy
+Y2gvaW5jbHVkZS91YXBpL2FzbS9lcnJuby5oICYmIGFyY2hsaXN0PSIkYXJjaGxpc3QgJGFyY2gi
+DQo+ID4gPiAgZG9uZQ0KPiA+DQo+ID4gSmVlcGVycyAuLi4NCj4gPiBEb2VzIHRoaXMgd29yaz8N
+Cj4gPiAJZm9yIGYgaW4gJHRvb2xzZGlyL2FyY2gvKi9pbmNsdWRlL3VhcGkvYXNtL2Vycm5vLmg7
+IGRvDQo+ID4gCQlbICEgLWYgJGYgXSAmJiBicmVhaw0KPiA+IAkJZD0ke2YlL2luY2x1ZGUvdWFw
+aS9hc20vZXJybm8uaH0NCj4gPiAJCWFyY2hsaXN0PSIke2QjIyovfSAkYXJjaGxpc3QiDQo+ID4g
+CWRvbmUNCj4gPiBObyBmb3JrKClzIG9yIGV4ZWMoKXMuDQo+ID4gSSB0aGluayBpdCBvbmx5IGRp
+ZmZlcnMgaW4gaGF2aW5nIGEgdHJhaWxpbmcgc3BhY2UgaW5zdGVhZCBvZiBhIGxlYWRpbmcgb25l
+Lg0KPiANCj4g4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJCBmb3IgZiBpbiB0b29s
+cy9hcmNoLyovaW5jbHVkZS91YXBpL2FzbS9lcnJuby5oOyBkbw0KPiBkPSR7ZiUvaW5jbHVkZS91
+YXBpL2FzbS9lcnJuby5ofSA7IGFyY2g9IiR7ZCMjKi99IiA7IGVjaG8gIickYXJjaCciIDsgZG9u
+ZQ0KPiAnYWxwaGEnDQo+ICdtaXBzJw0KPiAncGFyaXNjJw0KPiAncG93ZXJwYycNCj4gJ3NwYXJj
+Jw0KPiAneDg2Jw0KPiDirKJbYWNtZUB0b29sYm94IHBlcmYtdG9vbHMtbmV4dF0kIGZvciBhcmNo
+IGluICQoZmluZCB0b29scy9hcmNoIC1tYXhkZXB0aCAxIC1taW5kZXB0aCAxIC10eXBlIGQgfA0K
+PiB3aGlsZSByZWFkIGFyY2ggOyBkbyBiYXNlbmFtZSAkYXJjaCA7IGRvbmUgfCBzb3J0IC1yKSA7
+IGRvIHRlc3QgLWYNCj4gdG9vbHMvYXJjaC8kYXJjaC9pbmNsdWRlL3VhcGkvYXNtL2Vycm5vLmgg
+JiYgZWNobyAiJyRhcmNoJyIgOyBkb25lDQo+ICd4ODYnDQo+ICdzcGFyYycNCj4gJ3Bvd2VycGMn
+DQo+ICdwYXJpc2MnDQo+ICdtaXBzJw0KPiAnYWxwaGEnDQo+IOKsolthY21lQHRvb2xib3ggcGVy
+Zi10b29scy1uZXh0XSQNCj4gDQo+IFRoZXJlIHdhcyBhIHJlYXNvbiBmb3IgaGF2aW5nIHg4NiBm
+aXJzdCwgbGVtbWUgZGlnIGl0Li4uIEp1c3QgdG8gaGF2ZQ0KPiBhcyB0aGUgZmlyc3Qgc3RyY21w
+IGluOg0KDQpJIHJldmVyc2VkIHRoZSBvcmRlciBieSBhZGRpbmcgdGhlIG5hbWVzIGF0IHRoZSBm
+cm9udCBvZiAkYXJjaGxpc3QgLSBzbyB0aGUgb3JkZXINCndvdWxkIHN0aWxsIGJlIHJldmVyc2Ug
+c29ydGVkICh0aGUgc2hlbGwgc29ydHMgZmlsZW5hbWUgZ2xvYnMpLg0KDQpUaGUgJ1sgLWYgJGYg
+XSB8fCBicmVhaycgbGluZSBpcyBvbmx5IHRoZXJlIGluIGNhc2UgdGhlcmUgYXJlIG5vIG1hdGNo
+aW5nIGZpbGVzLg0KSWYgdGhhdCBjYW4gaGFwcGVuIHB1dHRpbmcgWyAiJGFyY2hsaXN0IiA9ICIq
+ICIgXSAmJiBhcmNobGlzdD0NCmFmdGVyIHRoZSBsb29wIHdvdWxkIGJlIHNsaWdodGx5IGJldHRl
+ci4NCkJ1dCB3aXRoIG9ubHkgNiBpdGVtIHRoZSBleHRyYSBzdGF0KCkgd2lsbCBiZSBub2lzZS4N
+Cg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2Fk
+LCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5v
+OiAxMzk3Mzg2IChXYWxlcykNCg==
 
