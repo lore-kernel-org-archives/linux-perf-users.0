@@ -1,115 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBA71171C;
-	Fri,  1 Dec 2023 16:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506294D105
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 16:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXOtzgxT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D10DCC433C7;
-	Fri,  1 Dec 2023 16:17:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S16GIxoM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BC7C433C9;
+	Fri,  1 Dec 2023 16:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701447426;
-	bh=1clXQHaKlN3+Iey4fwvTDjGR7w5qW4bBovJgyAH6bm0=;
+	s=k20201202; t=1701449942;
+	bh=ySU1Do4RoJYFQTmBppKfMwL1Zs9QJ8j0N4J7GgsQg9A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DXOtzgxTZmqTX7UMTBKAELYx0R+uGIzx1B+2m8VO3+dC+h/phPJnHkvjZuHzYjrs0
-	 RA1ZG6+t7FLbFSgM648hNOOH313ZOvtkCkQoF2AsQBBwfYIasV3QECsUNrUaFgkBda
-	 ov6QgW4jCFO9P4m0vdcvg3eRPbrMkYTiSpp/xM6xH30feYpk4OneCB3d1eBJ2wUP4u
-	 nk5w3gjQ07fJriufkNUvdTnAh1WLcv9FAcR7HdRLuHhngaFOwTrFMycJ2M1IYAaRKb
-	 PXAKJ0dHhe011leboXXazfoD1N9l/EitARVA4/qPWNwkr9PESF4uUa60Qr0zIwdDvQ
-	 oBHkyZWd/C/Bw==
-Date: Fri, 1 Dec 2023 16:16:59 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>, "will@kernel.org" <will@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"irogers@google.com" <irogers@google.com>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"john.g.garry@oracle.com" <john.g.garry@oracle.com>,
-	"james.clark@arm.com" <james.clark@arm.com>,
-	"mike.leach@linaro.org" <mike.leach@linaro.org>,
-	"leo.yan@linaro.org" <leo.yan@linaro.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH 1/3] dt-bindings: perf: fsl-imx-ddr: Add i.MX95
- compatible
-Message-ID: <20231201-pointer-statue-f30a42b8102e@spud>
-References: <20231127073208.1055466-1-xu.yang_2@nxp.com>
- <20231127-whoever-magical-5a7cf2b142e1@spud>
- <DB7PR04MB51460A715C6870642B6D7BBE8C81A@DB7PR04MB5146.eurprd04.prod.outlook.com>
+	b=S16GIxoMRd4elQiyuXo8z2fG6ZF6RPsXHnh/XMUeZmtFYmLAW06VSOwXYTkMifDbx
+	 fOvjwqokKn4G/HI9ygdQjVbvlljIH6+Z5DeWBhpqJ7Ugplw0po37kAT6Y2l5/Osv9N
+	 jdsPF8mTqtd5Uy6yFU66y+dOQKGQxAeaQ4rUhrpOMh6wD/M6w+qiv1Q0bRHVuZ7seF
+	 QZLIiv/fZRavvt0T7bLIuWXAnQi6nb2wi4HEL7z/hnVCy6Qrs3W4E6RvWav0NHYSta
+	 v+V0OlZweKRyXTkSdguQRy+/qCMV2oFzBaAGntoLQ8eMluGwZ+Kdc2/LRlO9rmljXw
+	 OmDzevbcsXuWw==
+Date: Fri, 1 Dec 2023 16:58:55 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+	James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V15 1/8] arm64/sysreg: Add BRBE registers and fields
+Message-ID: <fd278f4e-0632-4474-8609-7711ad725f85@sirena.org.uk>
+References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
+ <20231201053906.1261704-2-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TkOZ/60oHOjywoPV"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JISdTfvGKwhKa25v"
 Content-Disposition: inline
-In-Reply-To: <DB7PR04MB51460A715C6870642B6D7BBE8C81A@DB7PR04MB5146.eurprd04.prod.outlook.com>
+In-Reply-To: <20231201053906.1261704-2-anshuman.khandual@arm.com>
+X-Cookie: The early worm gets the late bird.
 
 
---TkOZ/60oHOjywoPV
+--JISdTfvGKwhKa25v
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 01, 2023 at 06:41:59AM +0000, Xu Yang wrote:
-> Hi Conor,
->=20
-> >=20
-> > On Mon, Nov 27, 2023 at 03:32:06PM +0800, Xu Yang wrote:
-> > > i.MX95 has a more precise counting capability than i.MX93. This will =
-add
-> > > a compatible for it.
-> >=20
-> > It is hard to tell from this comment, but I figure this "more precise
-> > capability" is not an option you can enable, but instead makes the
-> > programming model of this device different to that of the imx93?
->=20
-> Actually, imx95 is compatible with imx93 except AXI ID filter capability.
-> But for AXI ID filter, imx95 is using different registers and bits from
-> imx93 for filter configuration.
+On Fri, Dec 01, 2023 at 11:08:59AM +0530, Anshuman Khandual wrote:
 
-This sounds like it conflicts with...
+This looks good apart from a few small omissions:
 
-> To distinguish them, I need use different
-> compatible because programming model cannot recognize which device is
-> running.
->=20
-> compatible =3D "fsl,imx95-ddr-pmu";
+> +SysregFields BRBINFx_EL1
 
-> compatible =3D "fsl,imx95-ddr-pmu", "fsl,imx93-ddr-pmu";
+> +Enum	13:8		TYPE
+> +	0b000000	UNCOND_DIRECT
+> +	0b000001	INDIRECT
+> +	0b000010	DIRECT_LINK
+> +	0b000011	INDIRECT_LINK
+> +	0b000101	RET
+> +	0b000111	ERET
+> +	0b001000	COND_DIRECT
+> +	0b100001	DEBUG_HALT
+> +	0b100010	CALL
+> +	0b100011	TRAP
+> +	0b100100	SERROR
+> +	0b100110	INSN_DEBUG
+> +	0b100111	DATA_DEBUG
+> +	0b101010	ALIGN_FAULT
+> +	0b101011	INSN_FAULT
+> +	0b101100	DATA_FAULT
+> +	0b101110	IRQ
+> +	0b101111	FIQ
+> +	0b111001	DEBUG_EXIT
+> +EndEnum
 
-=2E..this. If drivers for the imx93 need changes to work on the imx95,
-then `compatible =3D "fsl,imx95-ddr-pmu", "fsl,imx93-ddr-pmu";` cannot be
-used. If they will work, with only the new imx95 features being
-non-functional, then you can use it.
+DDI0601 2023-09 also defines 0b110000 as an IMPLEMENTATION DEFINED
+exception to EL3.
 
-> Both above compatible is okay for me. Therefore, "fsl,imx95-ddr-pmu" is n=
-eeded.
+> +SysregFields	BRBCR_ELx
+> +Res0	63:24
+> +Field	23 	EXCEPTION
+> +Field	22 	ERTN
+> +Res0	21:9
 
---TkOZ/60oHOjywoPV
+DDI0601 2023-09 defines bit 9 as FZPSS.
+
+> +Sysreg	BRBINFINJ_EL1	2	1	9	1	0
+
+> +Enum	13:8		TYPE
+> +	0b000000	UNCOND_DIRECT
+> +	0b000001	INDIRECT
+> +	0b000010	DIRECT_LINK
+> +	0b000011	INDIRECT_LINK
+> +	0b000101	RET
+> +	0b000111	ERET
+> +	0b001000	COND_DIRECT
+> +	0b100001	DEBUG_HALT
+> +	0b100010	CALL
+> +	0b100011	TRAP
+> +	0b100100	SERROR
+> +	0b100110	INSN_DEBUG
+> +	0b100111	DATA_DEBUG
+> +	0b101010	ALIGN_FAULT
+> +	0b101011	INSN_FAULT
+> +	0b101100	DATA_FAULT
+> +	0b101110	IRQ
+> +	0b101111	FIQ
+> +	0b111001	DEBUG_EXIT
+> +EndEnum
+
+DDI0601 2023-09 also defines 0b11000 as IMPLEMENTATION DEFINED exception
+to EL3.
+
+--JISdTfvGKwhKa25v
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZWoG+wAKCRB4tDGHoIJi
-0vEhAP4wzNFvpXcJTLzerrD4dUi4x/ljKAP60wZOIvaUeVfIggEAmh++tRu2JE6H
-W9PxEUNaXYdEI2l4eUhUFMLEGSaNvws=
-=61zC
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVqEM8ACgkQJNaLcl1U
+h9CdgAf+PuTg+CfzlrPSJrZ9Z36MlL8ZKYtD9hjauM4agzZsJ0u0RLkbkBRi6R+q
+fcLF3WcaI80+35YGa/1BIyM4qYmO7JJNVDvZNf0E6dL7FzPgf499sOSxYHIn8zWP
+5sRunmMDycdZlXGSRVVB+oTf5lFeMT9aKy765546cMNspxDbCOBUBCUcw5I/dxQG
+nuzCEyADW36yKxodStDCx6Jptz8dO3qF0r02YEoc/xCNSXv4lG9CLrM0acDXxyZ/
+BwvWOvSlv66Ta+QM/DL4UhcditW+HXHK71OPD2q/xhSjI41z6tMxKtZwQ02cFO/Z
+cfl0g+Aj1tfzyQdK6OTLxP+i4lASSw==
+=Zs5/
 -----END PGP SIGNATURE-----
 
---TkOZ/60oHOjywoPV--
+--JISdTfvGKwhKa25v--
