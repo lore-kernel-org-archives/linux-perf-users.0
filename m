@@ -1,218 +1,270 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5C4991986;
-	Thu, 30 Nov 2023 21:40:07 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EB901042;
-	Thu, 30 Nov 2023 21:40:53 -0800 (PST)
-Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.41.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4E0C23F73F;
-	Thu, 30 Nov 2023 21:40:02 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	German Gomez <german.gomez@arm.com>
-Subject: [PATCH V15 8/8] perf: test: Extend branch stack sampling test for Arm64 BRBE
-Date: Fri,  1 Dec 2023 11:09:06 +0530
-Message-Id: <20231201053906.1261704-9-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231201053906.1261704-1-anshuman.khandual@arm.com>
-References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="igh+I/vU"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DD61703;
+	Thu, 30 Nov 2023 22:20:40 -0800 (PST)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B15vO4M030978;
+	Fri, 1 Dec 2023 06:20:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=peQl/tDK1iN+/COEagrUEUhe4ofvOLFew080LgiG+W8=;
+ b=igh+I/vUd/WKY0WexQ3S8/E78NP99zxcQ/UgBQ87yugNpmPa/itcbs4HEC6YJx52XNcK
+ Jy/g2222XGBaQ7kazIn0tMRoyw/UMaqFGyeOVEdietj8oJNQtLVZ3xknL26Do7m4ZdJ8
+ LALt9Ipqi/2g/jjKZl9cNdivyUxxcZEpm6zMYB5rN2dqT3FeAiY6BA8wUkfZrlS7QhJs
+ ZWvjFI1qTOMYUBcjteysSnlog1rlHm87tDKE0OojwmmgJQWcWjEcaLuEstTXWtfDBRwD
+ OSsKAk0lAsMJ19cO0KfVuSXemToi3fQZ1VzJO+GOClAQ9ezu/pdyGniNeMtRG9lfipli hA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uq9stgedn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Dec 2023 06:20:18 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B16C8Zx005865;
+	Fri, 1 Dec 2023 06:20:17 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uq9stgeda-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Dec 2023 06:20:17 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B16Itwu010627;
+	Fri, 1 Dec 2023 06:20:16 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ukun03gxs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Dec 2023 06:20:16 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B16KEK221824202
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 1 Dec 2023 06:20:14 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ED43B20040;
+	Fri,  1 Dec 2023 06:20:13 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53A2020049;
+	Fri,  1 Dec 2023 06:20:11 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.109.214.114])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  1 Dec 2023 06:20:11 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
+Subject: Re: [PATCH v2 1/4] perf build: Shellcheck support for OUTPUT
+ directory
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20231129213428.2227448-1-irogers@google.com>
+Date: Fri, 1 Dec 2023 11:49:59 +0530
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CE3EBC99-B6B0-4DD5-A88E-26B28B1A4A46@linux.vnet.ibm.com>
+References: <20231129213428.2227448-1-irogers@google.com>
+To: Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, James Clark <james.clark@arm.com>
+X-Mailer: Apple Mail (2.3774.200.91.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tFQNelDEBth-gCDYvq9y_3KBuOz6ndTs
+X-Proofpoint-ORIG-GUID: puxtTMiz6HJwvQWJIE4TPxfaxbJ7LE0T
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-01_03,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
+ suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2312010036
 
-From: James Clark <james.clark@arm.com>
 
-Add Arm64 BRBE-specific testing to the existing branch stack sampling test.
-The test currently passes on the Arm FVP RevC model, but no hardware has
-been tested yet.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Co-developed-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- tools/perf/tests/builtin-test.c        |  1 +
- tools/perf/tests/shell/test_brstack.sh | 42 ++++++++++++++++++++++++--
- tools/perf/tests/tests.h               |  1 +
- tools/perf/tests/workloads/Build       |  2 ++
- tools/perf/tests/workloads/traploop.c  | 39 ++++++++++++++++++++++++
- 5 files changed, 82 insertions(+), 3 deletions(-)
- create mode 100644 tools/perf/tests/workloads/traploop.c
+> On 30-Nov-2023, at 3:04=E2=80=AFAM, Ian Rogers <irogers@google.com> =
+wrote:
+>=20
+> Migrate Makefile.tests to Build so that variables like rule_mkdir are
+> defined via Makefile.build (needed so the output directory can be
+> created). This requires SHELLCHECK being exported and the clean rule
+> tweaking to remove the files in find.
+>=20
+> Change find "-perm -o=3Dx" as it was failing on my Debian based Linux
+> kernel tree, switch to using "-executable".
+>=20
+> Adding a filename prefix of "." to the shellcheck log files is a pain
+> and error prone in make, remove this prefix and just add the
+> shellcheck log files to .gitignore.
+>=20
+> Fix the command echo so that running the test is displayed.
+>=20
+> Fixes: 1638b11ef815 ("perf tools: Add perf binary dependent rule for =
+shellcheck log in Makefile.perf")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index cb6f1dd00dc4..7d9e0a311ef9 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -139,6 +139,7 @@ static struct test_workload *workloads[] = {
- 	&workload__sqrtloop,
- 	&workload__brstack,
- 	&workload__datasym,
-+	&workload__traploop
- };
- 
- static int num_subtests(const struct test_suite *t)
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index b1fe29bb71b3..b0c96bfae304 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -47,12 +47,43 @@ test_user_branches() {
- 	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"	$TMPDIR/perf.script
- 	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"	$TMPDIR/perf.script
- 	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"		$TMPDIR/perf.script
-+
-+	if is_arm64; then
-+		# in arm64 with BRBE, we get IRQ entries that correspond
-+		# to any point in the process
-+		grep -m1 "/IRQ/"					$TMPDIR/perf.script
-+	fi
- 	set +x
- 
- 	# some branch types are still not being tested:
- 	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
- }
- 
-+test_arm64_trap_eret_branches() {
-+	echo "Testing trap & eret branches (arm64 brbe)"
-+	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- \
-+		perf test -w traploop 250
-+	perf script -i $TMPDIR/perf.data --fields brstacksym | tr ' ' '\n' > $TMPDIR/perf.script
-+	set -x
-+	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_SYSCALL by the BRBE driver
-+	grep -E -m1 "^trap_bench\+[^ ]*/\[unknown\][^ ]*/SYSCALL/" $TMPDIR/perf.script
-+	grep -E -m1 "^\[unknown\][^ ]*/trap_bench\+[^ ]*/ERET/"	$TMPDIR/perf.script
-+	set +x
-+}
-+
-+test_arm64_kernel_branches() {
-+	echo "Testing kernel branches (arm64 brbe)"
-+	# skip if perf doesn't have enough privileges
-+	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
-+		echo "[skipped: not enough privileges]"
-+		return 0
-+	fi
-+	perf record -o $TMPDIR/perf.data --branch-filter any,k -- uname -a
-+	perf script -i $TMPDIR/perf.data --fields brstack | tr ' ' '\n' > $TMPDIR/perf.script
-+	grep -E -m1 "0xffff[0-9a-f]{12}" $TMPDIR/perf.script
-+	! egrep -E -m1 "0x0000[0-9a-f]{12}" $TMPDIR/perf.script
-+}
-+
- # first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
- # second argument are the expected branch types for the given filter
- test_filter() {
-@@ -75,11 +106,16 @@ set -e
- 
- test_user_branches
- 
--test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ"
-+if is_arm64; then
-+	test_arm64_trap_eret_branches
-+	test_arm64_kernel_branches
-+fi
-+
-+test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|FAULT_DATA|FAULT_INST"
- test_filter "call"	"CALL|SYSCALL"
- test_filter "cond"	"COND"
- test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
- 
- test_filter "call,cond"		"CALL|SYSCALL|COND"
--test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
--test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
-+test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND|FAULT_DATA|FAULT_INST"
-+test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET|FAULT_DATA|FAULT_INST"
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index b394f3ac2d66..c65455da4eaf 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -205,6 +205,7 @@ DECLARE_WORKLOAD(leafloop);
- DECLARE_WORKLOAD(sqrtloop);
- DECLARE_WORKLOAD(brstack);
- DECLARE_WORKLOAD(datasym);
-+DECLARE_WORKLOAD(traploop);
- 
- extern const char *dso_to_test;
- 
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index a1f34d5861e3..a9dc93d8468b 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -6,8 +6,10 @@ perf-y += leafloop.o
- perf-y += sqrtloop.o
- perf-y += brstack.o
- perf-y += datasym.o
-+perf-y += traploop.o
- 
- CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
- CFLAGS_brstack.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/traploop.c b/tools/perf/tests/workloads/traploop.c
-new file mode 100644
-index 000000000000..7dac94897e49
---- /dev/null
-+++ b/tools/perf/tests/workloads/traploop.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include "../tests.h"
-+
-+#define BENCH_RUNS 999999
-+
-+static volatile int cnt;
-+
-+#ifdef __aarch64__
-+static void trap_bench(void)
-+{
-+	unsigned long val;
-+
-+	asm("mrs %0, ID_AA64ISAR0_EL1" : "=r" (val));   /* TRAP + ERET */
-+}
-+#else
-+static void trap_bench(void)
-+{
-+
-+}
-+#endif
-+
-+static int traploop(int argc, const char **argv)
-+{
-+	int num_loops = BENCH_RUNS;
-+
-+	if (argc > 0)
-+		num_loops = atoi(argv[0]);
-+
-+	while (1) {
-+		if ((cnt++) > num_loops)
-+			break;
-+
-+		trap_bench();
-+	}
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(traploop);
--- 
-2.25.1
+Hi Ian,
+
+Changes looks good to me.
+Tested with make, make clean, make with shellcheck error, make with =
+NO_SHELLCHECK
+
+Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+
+Thanks
+Athira
+> ---
+> tools/perf/.gitignore           |  3 +++
+> tools/perf/Makefile.perf        | 30 ++++++++++--------------------
+> tools/perf/tests/Build          | 14 ++++++++++++++
+> tools/perf/tests/Makefile.tests | 22 ----------------------
+> 4 files changed, 27 insertions(+), 42 deletions(-)
+> delete mode 100644 tools/perf/tests/Makefile.tests
+>=20
+> diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+> index ee5c14f3b8b1..f5b81d439387 100644
+> --- a/tools/perf/.gitignore
+> +++ b/tools/perf/.gitignore
+> @@ -39,6 +39,9 @@ trace/beauty/generated/
+> pmu-events/pmu-events.c
+> pmu-events/jevents
+> pmu-events/metric_test.log
+> +tests/shell/*.shellcheck_log
+> +tests/shell/coresight/*.shellcheck_log
+> +tests/shell/lib/*.shellcheck_log
+> feature/
+> libapi/
+> libbpf/
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 824cbc0af7d7..1ab2a908f240 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -229,8 +229,15 @@ else
+>   force_fixdep :=3D $(config)
+> endif
+>=20
+> +# Runs shellcheck on perf test shell scripts
+> +ifeq ($(NO_SHELLCHECK),1)
+> +  SHELLCHECK :=3D
+> +else
+> +  SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null)
+> +endif
+> +
+> export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
+> -export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
+> +export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK
+>=20
+> include $(srctree)/tools/build/Makefile.include
+>=20
+> @@ -673,23 +680,7 @@ $(PERF_IN): prepare FORCE
+> $(PMU_EVENTS_IN): FORCE prepare
+> $(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3Dpmu-events =
+obj=3Dpmu-events
+>=20
+> -# Runs shellcheck on perf test shell scripts
+> -
+> -SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null)
+> -
+> -ifeq ($(NO_SHELLCHECK),1)
+> -SHELLCHECK :=3D
+> -endif
+> -
+> -ifneq ($(SHELLCHECK),)
+> -SHELLCHECK_TEST: FORCE prepare
+> - $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests
+> -else
+> -SHELLCHECK_TEST:
+> - @:
+> -endif
+> -
+> -$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) =
+SHELLCHECK_TEST
+> +$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
+> $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
+> $(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
+>=20
+> @@ -1152,9 +1143,8 @@ bpf-skel-clean:
+> $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+>=20
+> clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean =
+$(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean =
+bpf-skel-clean tests-coresight-targets-clean
+> - $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
+> $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) =
+$(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+> - $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' =
+-delete -o -name '\.*.d' -delete
+> + $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' =
+-delete -o -name '\.*.d' -delete -o -name '*.shellcheck_log' -delete
+> $(Q)$(RM) $(OUTPUT).config-detected
+> $(call QUIET_CLEAN, core-progs) $(RM) $(ALL_PROGRAMS) perf =
+perf-read-vdso32 perf-read-vdsox32 $(OUTPUT)$(LIBJVMTI).so
+> $(call QUIET_CLEAN, core-gen)   $(RM)  *.spec *.pyc *.pyo */*.pyc =
+*/*.pyo $(OUTPUT)common-cmds.h TAGS tags cscope* =
+$(OUTPUT)PERF-VERSION-FILE $(OUTPUT)FEATURE-DUMP $(OUTPUT)util/*-bison* =
+$(OUTPUT)util/*-flex* \
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 2b45ffa462a6..53ba9c3e20e0 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -77,3 +77,17 @@ CFLAGS_python-use.o   +=3D =
+-DPYTHONPATH=3D"BUILD_STR($(OUTPUT)python)" -DPYTHON=3D"BUI
+> CFLAGS_dwarf-unwind.o +=3D -fno-optimize-sibling-calls
+>=20
+> perf-y +=3D workloads/
+> +
+> +ifdef SHELLCHECK
+> +  SHELL_TESTS :=3D $(shell find tests/shell -executable -type f -name =
+'*.sh')
+> +  TEST_LOGS :=3D $(SHELL_TESTS:tests/shell/%=3Dshell/%.shellcheck_log)
+> +else
+> +  SHELL_TESTS :=3D
+> +  TEST_LOGS :=3D
+> +endif
+> +
+> +$(OUTPUT)%.shellcheck_log: %
+> + $(call rule_mkdir)
+> + $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat =
+$@ && rm $@ && false)
+> +
+> +perf-y +=3D $(TEST_LOGS)
+> diff --git a/tools/perf/tests/Makefile.tests =
+b/tools/perf/tests/Makefile.tests
+> deleted file mode 100644
+> index fdaca5f7a946..000000000000
+> --- a/tools/perf/tests/Makefile.tests
+> +++ /dev/null
+> @@ -1,22 +0,0 @@
+> -# SPDX-License-Identifier: GPL-2.0
+> -# Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 2023
+> -
+> -PROGS :=3D $(shell find tests/shell -perm -o=3Dx -type f -name =
+'*.sh')
+> -FILE_NAME :=3D $(notdir $(PROGS))
+> -FILE_NAME :=3D $(FILE_NAME:%=3D.%)
+> -LOGS :=3D $(join $(dir $(PROGS)),$(FILE_NAME))
+> -LOGS :=3D $(LOGS:%=3D%.shellcheck_log)
+> -
+> -.PHONY: all
+> -all: SHELLCHECK_RUN
+> - @:
+> -
+> -SHELLCHECK_RUN: $(LOGS)
+> -
+> -.%.shellcheck_log: %
+> - $(call rule_mkdir)
+> - $(Q)$(call frecho-cmd,test)@shellcheck -S warning "$<" > $@ || (cat =
+$@ && rm $@ && false)
+> -
+> -clean:
+> - $(eval log_files :=3D $(shell find . -name '.*.shellcheck_log'))
+> - @rm -rf $(log_files)
+> --=20
+> 2.43.0.rc1.413.gea7ed67945-goog
+>=20
 
