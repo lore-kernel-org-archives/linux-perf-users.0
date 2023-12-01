@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fVev5DUb"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D7A810DA
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 15:50:45 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5c87663a873so39464797b3.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Dec 2023 15:50:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qwxdpe+O"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A605AD7E
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Dec 2023 15:50:47 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-db548aff7baso1765095276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 Dec 2023 15:50:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701474644; x=1702079444; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701474647; x=1702079447; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1mumLSgmv33VvcRWr1T4zCbxKl06nV2/FpT8+bbjZvo=;
-        b=fVev5DUbr+bp757gk6NGZOC5GGW4F+iJnQM1qTyULolhbBS3fWk5FfZwfWwhv7Rk3u
-         KnC0yFZ07Y71dN0z4Y9tsz1qj2nV+A8sOswBWhsNfXnQI6GEZIo+NjDEUlD5en04Mhhg
-         w8AsCJ3xRY4Pa+89Xu0vHioP250JYIBk7nbRmdsX+LOWvfiDoQ4ySz/MLIyRenu/Q9fV
-         cfBo/tnp1PYd5VOsn70J8xawg5HxMlrwi18Dd/mbXtoAoT1Qb4o0ivgmOwbd0QFF7BB2
-         GL51rKQB+mJ044Agai7QNp8Evr+j5ZVKJ1jKVsRegYj9Om9EwVul01ftypk0PVdTwILn
-         yxNw==
+        bh=uS8pGWtETXg2WFdrfgf4aQEd7sN6fnFiI3KEJAmFcnQ=;
+        b=Qwxdpe+OvR2aKj5F5/OWkSDLPN8gkV3TD4oWKi/FRVcHKy59OFHkqYG/Qtu3PNpyhj
+         3K5OzbRqz1Tu36EYtMdFSF4iVKTnrHflQOyLqvDKx8IdRWJb2UX4yJyu+7pGoIsnjbkn
+         ax9NxqoP6R9RsCgY+RwmeCH8AWTXuJRLR2/wKldqYKsmrPJfEo6MK9CT1sXD2wtSuR7J
+         1Pt5vzWuWP/Y7yoVXWs8FzyzcD4hU1atr6DesP2w3n66qreGosBo8GFymYoxYuccLIXk
+         MgkHDciLgE9pyEvKCnlyG/j3yOkKt+gp7qq4zTg+5qxvciEbTN6eUYgNTkarONbOPtYn
+         8wjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701474644; x=1702079444;
+        d=1e100.net; s=20230601; t=1701474647; x=1702079447;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1mumLSgmv33VvcRWr1T4zCbxKl06nV2/FpT8+bbjZvo=;
-        b=P2SQmQYnTuHWmw1mERM8MDBfOQckBkUVKJAQEgKyGa3UtLxAVDfEz4BmIO3TkatvsS
-         KJ8jbabrdarF4yYb+uxv8PNWF1F3fACyrVBfCcT9Q2JBzy0UYGXKlE7gtOPXywa2OXiQ
-         tHyWr32JZGTQqHLjfKIx6z6eNzwZWHF7IxNm/UPSiwhHNly9LGY+FzIal3EmRyjxD8yP
-         h3Wek3EjZrDfAiUgIfFp96o+TOQJKDWphxpz3rqKYx6SubS4xY1uTwEU3qbcrBRY4Spx
-         I76wMcs8ApJaSVQvEASCbHl7mV5iIUkHC81moVTlGjL6qG3m6WaAQ//Gj4DSIUPXs9qh
-         7x1w==
-X-Gm-Message-State: AOJu0YwWffO8qc0uDm8MN1x7qyGKw7zO4z6BVjLSfnI3ni+dGClizYTC
-	vyijqVqFHLaM12L5cavJALR2+muoMWB1
-X-Google-Smtp-Source: AGHT+IGWRlInLywjlQJmaHodIvzIlFUD3Gt7blh1cNR88fx8scsrg22BeeHPNTZ+X7DF2opsxPQDN/rgdj2g
+        bh=uS8pGWtETXg2WFdrfgf4aQEd7sN6fnFiI3KEJAmFcnQ=;
+        b=LgHP+Xun4B+YHYSGQlydrbgZtiH2oUbOgol0/778nrRz0hEDxwe66xzw2BHEip9TDt
+         ypic+5e4UZHuNZ1vBp/TKAHw2vTUZXiZI8d5NZbgQHEr2Nz+vbfN6cOBcUa8O0tAKpPo
+         z6vTu3yXHs4xZYAe8hYX8vYDdvaTGaFEB2Xc5viaV0Md9xsN9Y62xXX7fZqG6n5pJGFp
+         9MrsCtLzEvclKAHy/Y3btkSuCfbL/yZJWrEFWT+zBj1qSX+lzX/B6xUZSqgVg+Bk18MS
+         4xWTAZitPJfCvPqicAppvadeMVKs4YjvCCNbCkgDJFMQ644iWUCE8jWS6y+6tBiQEnOG
+         1GMg==
+X-Gm-Message-State: AOJu0Yzefo/MTxPlNQVEgpNkYZJIQ9F/HZaovPEI0jIuTW4vxWvkIvjv
+	8k7bq5F/5ej19lRPKe/+kv5NsR/VLRDs
+X-Google-Smtp-Source: AGHT+IELuyhuddMHz5qtKM8eoJ79tm6AThFMCEOnNC7A6AOrGbqi8w9ilpLSl58oEgA5OGcFVrpJO15dM0Y8
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:df3:224b:7b7f:efc5])
- (user=irogers job=sendgmr) by 2002:a05:690c:2849:b0:5d4:1b2d:f43f with SMTP
- id ed9-20020a05690c284900b005d41b2df43fmr125134ywb.6.1701474644325; Fri, 01
- Dec 2023 15:50:44 -0800 (PST)
-Date: Fri,  1 Dec 2023 15:50:25 -0800
+ (user=irogers job=sendgmr) by 2002:a25:ddc1:0:b0:db5:347d:44b with SMTP id
+ u184-20020a25ddc1000000b00db5347d044bmr257636ybg.11.1701474646915; Fri, 01
+ Dec 2023 15:50:46 -0800 (PST)
+Date: Fri,  1 Dec 2023 15:50:26 -0800
 In-Reply-To: <20231201235031.475293-1-irogers@google.com>
-Message-Id: <20231201235031.475293-3-irogers@google.com>
+Message-Id: <20231201235031.475293-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231201235031.475293-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v1 3/9] perf tests: Avoid fork in perf_has_symbol test
+Subject: [PATCH v1 4/9] tools subcmd: Add a no exec function call option
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -59,28 +59,45 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-perf test -vv Symbols is used to indentify symbols within the perf
-binary. Add the -F flag so that the test command doesn't fork the test
-before running. This removes a little overhead.
+Tools like perf fork tests in case they crash, but they don't want to
+exec a full binary. Add an option to call a function rather than do an
+exec. The child process exits with the result of the function call and
+is passed the struct of the run_command, things like container_of can
+then allow the child process function to determine additional
+arguments.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/lib/perf_has_symbol.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/subcmd/run-command.c | 2 ++
+ tools/lib/subcmd/run-command.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/tests/shell/lib/perf_has_symbol.sh b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-index 5d59c32ae3e7..561c93b75d77 100644
---- a/tools/perf/tests/shell/lib/perf_has_symbol.sh
-+++ b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-@@ -3,7 +3,7 @@
+diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+index 5cdac2162532..d435eb42354b 100644
+--- a/tools/lib/subcmd/run-command.c
++++ b/tools/lib/subcmd/run-command.c
+@@ -122,6 +122,8 @@ int start_command(struct child_process *cmd)
+ 		}
+ 		if (cmd->preexec_cb)
+ 			cmd->preexec_cb();
++		if (cmd->no_exec_cmd)
++			exit(cmd->no_exec_cmd(cmd));
+ 		if (cmd->exec_cmd) {
+ 			execv_cmd(cmd->argv);
+ 		} else {
+diff --git a/tools/lib/subcmd/run-command.h b/tools/lib/subcmd/run-command.h
+index 17d969c6add3..d794138a797f 100644
+--- a/tools/lib/subcmd/run-command.h
++++ b/tools/lib/subcmd/run-command.h
+@@ -47,6 +47,8 @@ struct child_process {
+ 	unsigned exec_cmd:1; /* if this is to be external sub-command */
+ 	unsigned stdout_to_stderr:1;
+ 	void (*preexec_cb)(void);
++	 /* If set, call function in child rather than doing an exec. */
++	int (*no_exec_cmd)(struct child_process *process);
+ };
  
- perf_has_symbol()
- {
--	if perf test -vv "Symbols" 2>&1 | grep "[[:space:]]$1$"; then
-+	if perf test -vv -F "Symbols" 2>&1 | grep "[[:space:]]$1$"; then
- 		echo "perf does have symbol '$1'"
- 		return 0
- 	fi
+ int start_command(struct child_process *);
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
