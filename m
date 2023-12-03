@@ -1,50 +1,93 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BvmX0WX5"
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08867E3
-	for <linux-perf-users@vger.kernel.org>; Sat,  2 Dec 2023 22:14:05 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-2866951b6e0so1316515a91.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 02 Dec 2023 22:14:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OKzguQkS"
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0AC1FC
+	for <linux-perf-users@vger.kernel.org>; Sun,  3 Dec 2023 06:07:58 -0800 (PST)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-425411978c1so11822771cf.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 03 Dec 2023 06:07:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701584044; x=1702188844; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1701612478; x=1702217278; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=USyvH5CutrKzFubmRpisjGv4lda2nBk/5nqYGwGadMU=;
-        b=BvmX0WX5aVspC4ifTKijMToSm1mOE+ZvtnWyciGXEPk4JoY81kRI9CdGGuJZt5rp3M
-         A94TZdJEaCqMhC8hZcdVHXeZtF1Wv3Bj27SyqRS9QHcf+rHxF9sQlkkChRGPrPZAyY72
-         E1CfxTPtQoXxRfROVbvdZI75cc2IgbAW9FDVgbo8ifV5adW6aksUF1JQKzzDGuGwpypt
-         7QfWLbabVJvkuAgNqUUjfkiIu1CwIU5A7Qg5SKxJCoY2HWtOcg4vJy4KJs4hcp0N2KUU
-         JcNbMCLEFcB21cMdKcZaVpxsfpIE3hoSRYTKU9Gl6uObpEPZ4Aq2n+f+l48LnEVkK/+v
-         TufA==
+        bh=CiMNgzFr7xNUwBtnhCHdgoiuX87pimcKNL7aMsL6fgY=;
+        b=OKzguQkSABjtxWcOMcm+Qbmet+nHku05O6x23HTlp1qxdIcYZhiIeX07SPUb1E2IF/
+         kYP/aC1uzAYZHJX6YNAFeYWxjkGz87iG6PM5xB8mIeskDKJW2Jd1oz2mWRNywi13ddRb
+         rL5cnPtHr04ZcvHCFcbbh1FJ3/i2ih0Z2s8KEqc8CV1X69q2fEzRg9NPvGRmq1DUEy2L
+         I01Fz22rSLoLI7+p4usNhV5XZetpCquDVJjGgygKl8tZYmK2sYyXfqyqacbQwAyEVJci
+         zescEoj/ayE/KRPps3Qc6uCwyA3DUXhbQJpwWZtn7ppvYg52EJ+lhK/mbycRZIl2Jn2J
+         sZIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701584044; x=1702188844;
+        d=1e100.net; s=20230601; t=1701612478; x=1702217278;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=USyvH5CutrKzFubmRpisjGv4lda2nBk/5nqYGwGadMU=;
-        b=DOR5f8Fp3lEPTDIj3mAkVkJv+8ldSlcZ46z1VaRnB2kvw6ZSt9ngc6ORbZso6numxx
-         mhR6fXi39p+mg8hcvGltauQZLhwkA1B2tFVTEObo2SlyRDDJEAXXM014i73pQGqn8eRF
-         4eTKcHblGxfQ0TQE53navKBpAyYqprA6P+D9yGg1pW8wUkpeJNO2K4Rtqe288y/dRrtn
-         ETltZZ1mTf+QdGv2fbJYJgVLGAuyX7vvam1vTo4a5BB5dcDxCzsFlJgjBuyrgvTRgfJz
-         JgxItUTX/PjWE9RMvM4LTL7Yw0DVSd2BVrIpAklGyuseoL+2sd3vA33aAPXlQoDmLR2Y
-         cAZQ==
-X-Gm-Message-State: AOJu0YxsImv+tOkz9NTBeNxF1Ii77YfzOzlDtIFirA+ra3+FDKAmvht3
-	LeX31M5JPoHCNyOPeT/u7BNmEw==
-X-Google-Smtp-Source: AGHT+IFZDKXJjdVyw4Mw/K7Vtk3CCkmIf7ahLJ8Txg+438zRp8/9ZSK+sY9Ag415LqZEIKEHSipb9A==
-X-Received: by 2002:a17:903:2312:b0:1d0:7844:5055 with SMTP id d18-20020a170903231200b001d078445055mr1842801plh.62.1701584044093;
-        Sat, 02 Dec 2023 22:14:04 -0800 (PST)
-Received: from leoy-huanghe ([98.98.115.171])
-        by smtp.gmail.com with ESMTPSA id u9-20020a17090341c900b001d087d2c42fsm751908ple.24.2023.12.02.22.14.01
+        bh=CiMNgzFr7xNUwBtnhCHdgoiuX87pimcKNL7aMsL6fgY=;
+        b=DzAwYll0S4gRU/LueJ1Jc/JvXEGJJzW+SDtnxp9g37bFXLy4s33iwIbQvHEFxmxi4g
+         o09H6r4loyTLdbOke8txm7UTcTt5JowAFoXQQPn4NnUw/fjXKkmsjjf16cf1iEaktPVp
+         yzrtEi+Qd5MCmwf2DupHUvdzuNC0gpumLRdNk4RpoFtsGHF7sK6SBKIgP0lA3ydt+msg
+         SXUKM4MD6gTk42wYVPfPwOH0U+7+j63pClIuMZVuwhpsphl5L90COOtJhFRxq8Y5sSwj
+         ZtpKxWxRXwt10NQuHVM9F1V84M2xu3+SpkGMdLdIAcA7VX1ui95aGHBtzJhacJdWTm8w
+         lScw==
+X-Gm-Message-State: AOJu0YwBIE2lHC42tV+TPmuwoJNcVuZiyDy6xf9v/1SrpKF74PVGQm4A
+	ZHJ3e5lXeO9JldgBf70qpbcTSA==
+X-Google-Smtp-Source: AGHT+IHLblrSR9v9mU82kXzYVsIygmNXeBVbxztP2WE72q1qjIUsHC92qYjoWB74bCqvYp2tHSpE/Q==
+X-Received: by 2002:a05:622a:7148:b0:423:e4f1:4958 with SMTP id jc8-20020a05622a714800b00423e4f14958mr3926493qtb.56.1701612477906;
+        Sun, 03 Dec 2023 06:07:57 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-134-23-187.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.134.23.187])
+        by smtp.gmail.com with ESMTPSA id z9-20020ac87109000000b00419c40a0d70sm3402958qto.54.2023.12.03.06.07.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Dec 2023 22:14:03 -0800 (PST)
-Date: Sun, 3 Dec 2023 14:13:53 +0800
-From: Leo Yan <leo.yan@linaro.org>
-To: vmolnaro@redhat.com
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
-	mpetlan@redhat.com, james.clark@arm.com
-Subject: Re: [PATCH] perf test record user-regs: Fix mask for vg register
-Message-ID: <20231203061353.GA19079@leoy-huanghe>
-References: <20231201194617.13012-1-vmolnaro@redhat.com>
+        Sun, 03 Dec 2023 06:07:56 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1r9n8W-009HdE-5C;
+	Sun, 03 Dec 2023 10:07:56 -0400
+Date: Sun, 3 Dec 2023 10:07:56 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tony Krowiak <akrowiak@linux.ibm.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Jason Herne <jjherne@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Anish Ghulati <aghulati@google.com>,
+	Venkatesh Srinivas <venkateshs@chromium.org>,
+	Andrew Thornton <andrewth@google.com>
+Subject: Re: [PATCH 05/26] vfio: KVM: Pass get/put helpers from KVM to VFIO,
+ don't do circular lookup
+Message-ID: <20231203140756.GI1489931@ziepe.ca>
+References: <20230916003118.2540661-1-seanjc@google.com>
+ <20230916003118.2540661-6-seanjc@google.com>
+ <20230918152110.GI13795@ziepe.ca>
+ <ZQhxpesyXeG+qbS6@google.com>
+ <20230918160258.GL13795@ziepe.ca>
+ <ZWp_q1w01NCZi8KX@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,31 +96,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231201194617.13012-1-vmolnaro@redhat.com>
+In-Reply-To: <ZWp_q1w01NCZi8KX@google.com>
 
-On Fri, Dec 01, 2023 at 08:46:17PM +0100, vmolnaro@redhat.com wrote:
-> From: Veronika Molnarova <vmolnaro@redhat.com>
-> 
-> The 'vg' register for arm64 shows up in --user_regs as available when
-> masking the variable AT_HWCAP with 1 << 22 returns '1' as done in
-> perf_regs.c. However, in subtests for support of SVE, the check for
-> the 'vg' register is done by masking the variable AT_HWCAP with the value
-> 0x200000 which is equals to 1 << 21 instead of 1 << 22. This results in
-> inconsistencies on certain systems where the test expects that the 'vg'
-> register is not operational when it is, and vice-versa.
-> 
-> During the testing on a machine that the test expected not to have the
-> 'vg' register available, the perf record with option --user-regs showed
-> records for the 'vg' register together with all of the others, which
-> means that the mask for the subtest of perf_event_attr is off by one.
-> Change the value of the mask from 0x200000 to 0x400000 to correct it.
-> 
-> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+On Fri, Dec 01, 2023 at 04:51:55PM -0800, Sean Christopherson wrote:
 
-LGTM, except I think it's good to add fix tag:
+> There's one more wrinkle: this patch is buggy in that it doesn't ensure the liveliness
+> of KVM-the-module, i.e. nothing prevents userspace from unloading kvm.ko while VFIO
+> still holds a reference to a kvm structure, and so invoking ->put_kvm() could jump
+> into freed code.  To fix that, KVM would also need to pass along a module pointer :-(
 
-  Fixes: 9440ebdc333d ("perf test arm64: Add attr tests for new VG register")
+Maybe we should be refcounting the struct file not the struct kvm?
 
-With above fix tag:
+Then we don't need special helpers and it keeps the module alive correctly.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Jason
