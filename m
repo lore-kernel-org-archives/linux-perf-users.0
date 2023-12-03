@@ -1,110 +1,98 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 842CDC8;
-	Sat,  2 Dec 2023 15:57:00 -0800 (PST)
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-58e30de3933so161782eaf.3;
-        Sat, 02 Dec 2023 15:57:00 -0800 (PST)
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE3A115
+	for <linux-perf-users@vger.kernel.org>; Sat,  2 Dec 2023 16:56:16 -0800 (PST)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ce015fd299so2049325b3a.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 02 Dec 2023 16:56:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701561420; x=1702166220;
+        d=1e100.net; s=20230601; t=1701564976; x=1702169776;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dyAFX5VXBNLiHxSUJrFaDK1h2Fd8kYr2nkmMBD96klk=;
-        b=nyLE8eGts8o1gZtnxXDKop+gHfI9GfKD5FVATuhA5ovkRXyJdsbviah2rCwgLytfJI
-         Tcen5yRkuQUG9g334YrPAPuFumU6BU12zJl2Xl4sEHe0iy3v7cNO6DVFRUQRGLpOBkZL
-         EThsFcuDbgM/Vlf95ykrOGx4FNFslZEabS0yuZFxPfFViRL/+8xaDYVEwbzE+HHPEqoO
-         /8Jw+4jChcFoKyXwUB4p6X0i3BwTVd4nziXfHmXMZE7/AX0rlreexS5Ed6+nbe9Q6XQB
-         uLkRzNbM5tm+z3MQELeD0m2iP+oIYJCM3LNt+OZwiWiOPFxfMkXi5ES/uelJFhNSTdHf
-         ZhDg==
-X-Gm-Message-State: AOJu0YzXTkJNsyvDFvor7cQ0+0SpNNEMTC2kUPItAzVkmy2Q3fFuU6YF
-	iZ4qvTqghlJN613RxKb6LL7n0CctAC/aAej52wk=
-X-Google-Smtp-Source: AGHT+IHvzJ/yen72Iq8iWvF0CMtoAph2WUTrNZS2EDd04xg31B8EzlS/DS+gvHK+cUyAQ9O0zdwCNzqeBe/vXF4cNFo=
-X-Received: by 2002:a05:6358:5e14:b0:16f:ffd6:7cd3 with SMTP id
- q20-20020a0563585e1400b0016fffd67cd3mr2207633rwn.6.1701561419684; Sat, 02 Dec
- 2023 15:56:59 -0800 (PST)
+        bh=n7MqtF2QhFM8WgYD9I6oDGrIZxp6j65KHoiY/Bh94+8=;
+        b=rimY0wtcN3KXfrAVxyWwl5MTIAO4jOpFlbnpyNwdyhc0yM40Bf3ZFjSwb3hMPIIkW0
+         ojbXfj0qMKTRITc46RaMLkz1i5X4myBqeqEoQRqzcQAfxkugxd8MyyefsdIIqNw8cg7d
+         1/u+bf3e6P2yZQbHvG93T+tJc4EuPOa2gU7B7aT2vJYwpniv1NGRhiUU+gCotiBs0HXU
+         mpHR5FmXIIsFRj62HWyCIm1QCcR4nnMp5PsuNhOZVLY84X+s1zuPwTjVg+2jDXCdnnVs
+         DTnX6AaGz9TcGnDA/rrIb2X5Aa6qZwjWOP+q4EqnppTxtZ82ZL+YPm274EUqdrnFalrR
+         KHaQ==
+X-Gm-Message-State: AOJu0Yw3kKZya7ZNr9sQfHWzuLr2eKBeITsAhoZG+hRqo0mUmSVSdofI
+	K3eLBRYj/V2e9eMz0cHyxX/vgsorh+aye9tgKtE=
+X-Google-Smtp-Source: AGHT+IHmtRDUjZVNc1pejWwcR1JjBai5yEtgwPSe/fFP0dKrjtbZONDt6BIvC7Bl/KUii09x0Y5ZLv27vVABrVuLhB4=
+X-Received: by 2002:a05:6a20:a114:b0:18f:97c:975a with SMTP id
+ q20-20020a056a20a11400b0018f097c975amr2586926pzk.66.1701564975855; Sat, 02
+ Dec 2023 16:56:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-9-irogers@google.com>
- <CAM9d7cjpYHN_Q63sW70vTCisdW=-SzjsrryUUJjgtZ3+9jdxfA@mail.gmail.com> <CAP-5=fXjReF38T_GKohtWd7_7fZjYVnKBj-Fwt+agi1vSWAEdQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fXjReF38T_GKohtWd7_7fZjYVnKBj-Fwt+agi1vSWAEdQ@mail.gmail.com>
+References: <20231202023256.3398906-1-siyanteng@loongson.cn>
+In-Reply-To: <20231202023256.3398906-1-siyanteng@loongson.cn>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Sat, 2 Dec 2023 15:56:48 -0800
-Message-ID: <CAM9d7chU1Jyurb6bmZOSmeuFky9eN+2Ty7kMrQxyUXN=r0FKvg@mail.gmail.com>
-Subject: Re: [PATCH v5 08/50] perf record: Be lazier in allocating lost
- samples buffer
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
-	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Guilherme Amadio <amadio@gentoo.org>
+Date: Sat, 2 Dec 2023 16:56:04 -0800
+Message-ID: <CAM9d7cjFhVag8nTjtkJvz63vgm+-NbKRhf1Z7OVRWUfgLWCgVA@mail.gmail.com>
+Subject: Re: [PATCH] objtool/perf: Fix malloc call for new -Walloc-size
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, mark.rutland@arm.com, 
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	Sun Haiyong <sunhaiyong@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 30, 2023 at 10:29=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Wed, Nov 29, 2023 at 6:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > Wait until a lost sample occurs to allocate the lost samples buffer,
-> > > often the buffer isn't necessary. This saves a 64kb allocation and
-> > > 5.3kb of peak memory consumption.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/builtin-record.c | 29 +++++++++++++++++++----------
-> > >  1 file changed, 19 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.=
-c
-> > > index 9b4f3805ca92..b6c8c1371b39 100644
-> > > --- a/tools/perf/builtin-record.c
-> > > +++ b/tools/perf/builtin-record.c
-> > > @@ -1924,21 +1924,13 @@ static void __record__save_lost_samples(struc=
-t record *rec, struct evsel *evsel,
-> > >  static void record__read_lost_samples(struct record *rec)
-> > >  {
-> > >         struct perf_session *session =3D rec->session;
-> > > -       struct perf_record_lost_samples *lost;
-> > > +       struct perf_record_lost_samples *lost =3D NULL;
-> > >         struct evsel *evsel;
-> > >
-> > >         /* there was an error during record__open */
-> > >         if (session->evlist =3D=3D NULL)
-> > >                 return;
-> > >
-> > > -       lost =3D zalloc(PERF_SAMPLE_MAX_SIZE);
-> >
-> > To minimize the allocation size, this can be
-> > sizeof(*lost) + session->machines.host.id_hdr_size
-> > instead of PERF_SAMPLE_MAX_SIZE.
->
-> Sounds good, should probably be a follow up. The current size is
-> PERF_SAMPLE_MAX_SIZE.
+Hello,
 
-Yep, I'm ok with having it as a follow-up.
+On Fri, Dec 1, 2023 at 6:33=E2=80=AFPM Yanteng Si <siyanteng@loongson.cn> w=
+rote:
+>
+> From: Sun Haiyong <sunhaiyong@loongson.cn>
+>
+> GCC 14 introduces a new -Walloc-size included in -Wextra which errors out
+> like:
+> ```
+> builtin-top.c: In function =E2=80=98prompt_integer=E2=80=99:
+> builtin-top.c:360:21: error: allocation of insufficient size =E2=80=980=
+=E2=80=99 for
+> type =E2=80=98char=E2=80=99 with size =E2=80=981=E2=80=99 [-Werror=3Dallo=
+c-size]
+>   360 |         char *buf =3D malloc(0), *p;
+>       |                     ^~~~~~
+>
+> ```
+>
+> So, just cast type to char, silence this error.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+No, please do not.  I'm not sure if it silences the error.
+The buf is to be passed to getline() so you can set it to
+NULL instead.
+
+  char *buf =3D NULL, *p;
 
 Thanks,
 Namhyung
+
+>
+> Signed-off-by: Sun Haiyong <sunhaiyong@loongson.cn>
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> ---
+>  tools/perf/builtin-top.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index ea8c7eca5eee..29191d966522 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -357,7 +357,7 @@ static void perf_top__print_sym_table(struct perf_top=
+ *top)
+>
+>  static void prompt_integer(int *target, const char *msg)
+>  {
+> -       char *buf =3D malloc(0), *p;
+> +       char *buf =3D (char *)malloc(0), *p;
+>         size_t dummy =3D 0;
+>         int tmp;
+>
+> --
+> 2.42.1
+>
