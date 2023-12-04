@@ -1,65 +1,371 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="JdCDOZG/"
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6670DFE;
-	Mon,  4 Dec 2023 06:36:05 -0800 (PST)
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EzHSSCfB"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C9CE6;
+	Mon,  4 Dec 2023 07:19:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701703186; x=1733239186;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7duCvxJohwRFrL2D1Xhx97UgdpUXIrQ+3gjQUf4KpDU=;
+  b=EzHSSCfBrGLaeYxU3Z570GQL1sa41ww1B+9PJEBtzVPVzcJlrnHCQbQX
+   9iDQSqH72wBShznTcs17F5EiwZaTMu5xLZ6uIOaLnJJZFixEZ2WwNKZVu
+   +PBGYYlkusQDxHbUolP1sYJCn0h220DHk5QQDdN71aAXzNqbITFI3Ia8Y
+   zi+IlejSyvBQlUQ0Yor1ExiiD4yL5drwAa0sC5nxfoxI770jyTA1tsO+s
+   3sBu+F6H8MnZqSOr57pny+N/12UaY0Bx6D1IIzWp+dPeFcA1zg1HN6KOK
+   1vfFD0KbLC1gC7rvc0oWyeZb3gjCg0iXpN07llo+8+CLO/WNqvzclyPDb
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="458069427"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="458069427"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 07:19:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="1017890041"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="1017890041"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 07:19:39 -0800
+Received: from [10.212.98.74] (ssatyana-mobl2.amr.corp.intel.com [10.212.98.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id EB68B2C5;
-	Mon,  4 Dec 2023 14:36:04 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net EB68B2C5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1701700565; bh=f0Yupj2ffJkFfSQu1LkFmAj29K/A4z7XLIh5uvmaoSU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=JdCDOZG/EPrMlKDDKR6CSHU28p9XJy2B85GDso7BOW2Zs93Yin54yfma27//zNsvi
-	 z3P1hN41DdKYieJjFI+HZkkJHWMz4y8xt5orjfZWlCOKmKBEW+B+gTZ6ph71FZgQgK
-	 YZuJJQIs4d7vju/s4BcT58hLysn6r8jzCPjr0cfvS6q8nXUxETn4V97Lpr2kGBc9t9
-	 pXsIWtmLl3E/r2U6AkO8Vq8T4ItV9/gMTLMq9CA3eCkstJlEJgMCxrqhfX6/SooArw
-	 q1hVt4B7Tp40/y1xbgHef0LyVtRobrmLnXHavzDA4ns30Ij2V+JDLHGVvBFvNICuGV
-	 Fbl2NZoloXxtA==
-From: Jonathan Corbet <corbet@lwn.net>
-To: Dimitri John Ledkov <dimitri.ledkov@canonical.com>,
- linux-doc@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: Converting manpages from asciidoc to rst2man ?
-In-Reply-To: <CADWks+Z=kLTohq_3pk_PdXs54B6tLn25u6avn_Q1FyXN2-sVDQ@mail.gmail.com>
-References: <CADWks+Z=kLTohq_3pk_PdXs54B6tLn25u6avn_Q1FyXN2-sVDQ@mail.gmail.com>
-Date: Mon, 04 Dec 2023 07:36:04 -0700
-Message-ID: <87fs0iujaj.fsf@meer.lwn.net>
+	by linux.intel.com (Postfix) with ESMTPS id 3925C580D4F;
+	Mon,  4 Dec 2023 07:19:38 -0800 (PST)
+Message-ID: <b4e39ac2-df3f-4ea4-bd12-62d61532f02f@linux.intel.com>
+Date: Mon, 4 Dec 2023 10:19:36 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: x86/pmu: Prevent any host user from enabling PEBS
+ for profiling guest
+To: Like Xu <like.xu.linux@gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>
+References: <20231129095055.88060-1-likexu@tencent.com>
+ <6c4bd247-1f81-4b43-9e21-012f831d26b8@linux.intel.com>
+ <fd847e77-0510-48db-ad0b-5946458e2fb3@gmail.com>
+ <84903edf-96a7-40da-8bbb-52511b4ec893@linux.intel.com>
+ <df0b75de-a984-46fe-80e9-3c19b651883f@gmail.com>
+ <444c0244-e377-4b4d-b3f0-a9404f013b87@linux.intel.com>
+ <812822c4-8f24-4fc5-81eb-335abe46baa5@gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <812822c4-8f24-4fc5-81eb-335abe46baa5@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Dimitri John Ledkov <dimitri.ledkov@canonical.com> writes:
 
-> Hi all,
+
+On 2023-12-04 3:32 a.m., Like Xu wrote:
+> 
+> 
+> On 1/12/2023 10:38 pm, Liang, Kan wrote:
+>>
+>>
+>> On 2023-11-30 10:59 p.m., Like Xu wrote:
+>>> On 30/11/2023 11:49 pm, Liang, Kan wrote:
+>>>>
+>>>>
+>>>> On 2023-11-30 2:29 a.m., Like Xu wrote:
+>>>>> On 29/11/2023 10:38 pm, Liang, Kan wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2023-11-29 4:50 a.m., Like Xu wrote:
+>>>>>>> From: Like Xu <likexu@tencent.com>
+>>>>>>>
+>>>>>>> Stop using PEBS counters on host to profiling guest. Limit the
+>>>>>>> range of
+>>>>>>> enabled PEBS counters to only those counters enabled from the guest
+>>>>>>> PEBS
+>>>>>>> emulation perspective.
+>>>>>>>
+>>>>>>> If there is a perf-record agent on host that uses perf-tools events
+>>>>>>> like
+>>>>>>> "cpu-cycles:GP" (G for attr.exclude_host, P for max precise event
+>>>>>>> counter)
+>>>>>>> to capture guest performance events, then the guest will be hanged.
+>>>>>>> This is
+>>>>>>> because Intel DS-based PEBS buffer is addressed using the 64-bit
+>>>>>>> linear
+>>>>>>> address of the current {p/v}CPU context based on MSR_IA32_DS_AREA.
+>>>>>>>
+>>>>>>> Any perf user using PEBS counters to profile guest on host is, in
+>>>>>>> perf/core
+>>>>>>> implementation details, trying to set bits on
+>>>>>>> cpuc->intel_ctrl_guest_mask
+>>>>>>> and arr[pebs_enable].guest, much like the guest PEBS emulation
+>>>>>>> behaviour.
+>>>>>>> But the subsequent PEBS memory write, regardless of whether guest
+>>>>>>> PEBS is
+>>>>>>> enabled, can overshoot guest entry and corrupt guest memory.
+>>>>>>>
+>>>>>>> Profiling guest via PEBS-DS buffer on host is not supported at this
+>>>>>>> time.
+>>>>>>> Fix this by filtering the real configured value of
+>>>>>>> arr[pebs_enable].guest
+>>>>>>> with the emulated state of guest enabled PEBS counters, under the
+>>>>>>> condition
+>>>>>>> of none cross-mapped PEBS counters.
+>>>>>>
+>>>>>> So the counter will be silently disabled. The user never knows why
+>>>>>> nothing is sampled.
+>>>>>> Since we don't support the case, profiling guest via PEBS-DS
+>>>>>> buffer on
+>>>>>> host. Maybe we should error out when creating the event. For example
+>>>>>> (not tested),
+>>>>>
+>>>>> Test failed.
+>>>>>
+>>>>>>
+>>>>>> diff --git a/arch/x86/events/intel/core.c
+>>>>>> b/arch/x86/events/intel/core.c
+>>>>>> index 3871267d3237..24b90c70737f 100644
+>>>>>> --- a/arch/x86/events/intel/core.c
+>>>>>> +++ b/arch/x86/events/intel/core.c
+>>>>>> @@ -3958,6 +3958,10 @@ static int intel_pmu_hw_config(struct
+>>>>>> perf_event
+>>>>>> *event)
+>>>>>>             if ((event->attr.config & INTEL_ARCH_EVENT_MASK) ==
+>>>>>> INTEL_FIXED_VLBR_EVENT)
+>>>>>>                 return -EINVAL;
+>>>>>>
+>>>>>> +        /* Profiling guest via PEBS-DS buffer on host is not
+>>>>>> supported. */
+>>>>>> +        if (event->attr.exclude_host)
+>>>>>> +            return -EINVAL;
+>>>>>> +
+>>>>>
+>>>>> Guest PEBS emulation also sets this bit, a typical call stack looks
+>>>>> like:
+>>>>>
+>>>>>       intel_pmu_hw_config+0x441/0x4d0
+>>>>>       hsw_hw_config+0x12/0xa0
+>>>>>       x86_pmu_event_init+0x98/0x370
+>>>>>       perf_try_init_event+0x47/0x130
+>>>>>       perf_event_alloc+0x446/0xeb0
+>>>>>       perf_event_create_kernel_counter+0x38/0x190
+>>>>>       pmc_reprogram_counter.constprop.17+0xd9/0x230 [kvm]
+>>>>>       kvm_pmu_handle_event+0x1a6/0x310 [kvm]
+>>>>>       vcpu_enter_guest+0x1388/0x19b0 [kvm]
+>>>>>       vcpu_run+0x117/0x6c0 [kvm]
+>>>>>       kvm_arch_vcpu_ioctl_run+0x13d/0x4d0 [kvm]
+>>>>>       kvm_vcpu_ioctl+0x301/0x6e0 [kvm]
+>>>>>
+>>>>
+>>>> Oh right, the event from the KVM guest is also exclude_host.
+>>>> So we should only error out with the non-KVM exclude_host PEBS event.
+>>>>
+>>>>> Alternatively, this path is taken when using PEBS-via-PT to profile
+>>>>> guests on host.
+>>>>
+>>>> There is a is_pebs_pt(event), so we can skip the PEBS-via-PT.
+>>>>
+>>>> Seems we just need to distinguish a KVM event and a normal host event.
+>>>> I don't have a better way to do it except using
+>>>> event->overflow_handler_context, which is NULL for a normal host event.
+>>>
+>>> The assumption that event->overflow_handler_context == NULL is unsafe,
+>>> considering .overflow_handler_context hook has its acclaimed generality.
+>>>
+>>
+>> Yes, I agree it's very hacky.
+>>
+>> What we need here is a way to distinguish the KVM guest request from the
+>> others. How about the PF_VCPU flag?
+>>
+>>       if (event->attr.exclude_host &&
+>>           !is_pebs_pt(event) &&
+>>           (!(event->attach_state & PERF_ATTACH_TASK) ||
+>> !(current->flags &
+>> PF_VCPU))
+>>               return -EINVAL;
+> 
+> Unfortunately, the tests are not passed w/ the above diff.
+
+What's the exact failed perf command?
+
+Is it because that the KVM guest is mistakenly killed or the host
+command is not detected?
+
+> But it's good to know that there is PF_VCPU and more things to play
+> around with.
+> 
+> The AMD IBS also takes the precise path, but it puts the recorded values
+> on group of MSRs instead of the linear address-based memory.
+
+The check is in the intel_pmu_hw_config(). So AMD isn't impacted.
+
+> 
+> The root cause of this issue is the hardware limitation, just like what
+> we did
+> in the commit 26a4f3c08de4 ("perf/x86: disable PEBS on a guest entry"),
+> a similar fix should also belong in the context of directly configuring
+> VMX-switch related hardware configuration values.
 >
-> I was going through build-depends on linux kernel in Ubuntu and I
-> noticed that whilst most documentation and man-pages are written in
-> Rst format, there are a few that require asciidoc.
->
-> $ git grep -l asciidoc -- '*Makefile*'
-> tools/kvm/kvm_stat/Makefile
-> tools/lib/perf/Documentation/Makefile
-> tools/perf/Documentation/Makefile
-> tools/perf/Makefile.perf
 
-Interesting...I was unaware of those...
+The above fix is different than this case. IIRC, It's caused by a ucode
+issue. So once there is a guest, SW has to explicitly disable the PEBS.
+Otherwise, the guest crashes even the host doesn't intend to profile the
+guest.
 
-> Are both Rst and asciidoc preferred in the kernel Documentation? Or
-> should we upgrade kvm_stat & perf manpages from asciidoc to rst2man?
-
-In general we don't have a lot of man pages in the kernel, so it's not
-something we've put a lot of thought into.  Ideally, I suppose, it would
-be nice to get all of those man pages integrated into the RST docs
-build, but it's not something that is likely to inspire any great sense
-of urgency.
+While the case in the patch is apparently a violation of the current
+rules. I think it's better to detect it and error out early.
 
 Thanks,
+Kan
 
-jon
+> I haven't find a better location than intel_guest_get_msrs().
+> 
+>>
+>>
+>>> I understand your motivation very well, but this is not the right move
+>>> (based on my previous history of being sprayed by Peter). For perf/core,
+>>> in-kernel perf_events should be treated equally, and the semantics of
+>>> kvm_pmu should only be accounted when a perf/core API is only used for
+>>> guest-only path. In this case for KVM perf_events,
+>>> intel_guest_get_msrs()
+>>> and x86_pmu_handle_guest_pebs() have this context.
+>>>
+>>>>
+>>>> diff --git a/arch/x86/events/intel/core.c
+>>>> b/arch/x86/events/intel/core.c
+>>>> index a968708ed1fb..c93a2aaff7c3 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -3958,6 +3958,16 @@ static int intel_pmu_hw_config(struct perf_event
+>>>> *event)
+>>>>            if ((event->attr.config & INTEL_ARCH_EVENT_MASK) ==
+>>>> INTEL_FIXED_VLBR_EVENT)
+>>>>                return -EINVAL;
+>>>>
+>>>> +        /*
+>>>> +         * Profiling guest via PEBS-DS buffer on host is not
+>>>> supported.
+>>>> +         * The event->overflow_handler_context is to distinguish a KVM
+>>>> +         * event and a normal host event.
+>>>> +         */
+>>>> +        if (event->attr.exclude_host &&
+>>>> +            !is_pebs_pt(event) &&
+>>>> +            !event->overflow_handler_context)
+>>>> +            return -EINVAL;
+>>>> +
+>>>>            if (!(event->attr.freq || (event->attr.wakeup_events &&
+>>>> !event->attr.watermark))) {
+>>>>                event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+>>>>                if (!(event->attr.sample_type &
+>>>>
+>>>>>
+>>>>> The status of the guest can only be queried in the NMI handler and
+>>>>> the func
+>>>>> intel_guest_get_msrs() in the perf/core context, where it's easier
+>>>>> and more
+>>>>> centrally to review this part of changes that affects vPMU for corner
+>>>>> cases.
+>>>>>
+>>>>> Maybe adding print info on the perf-tool side would help.
+>>>>>
+>>>>> For perf-tool users, it will get 0 number of sample for
+>>>>> "cpu-cycles:GP"
+>>>>> events,
+>>>>> just like other uncounted perf-tool events.
+>>>>
+>>>> perf-tool would never know such details, e.g., whether the platform
+>>>> supports PEBS-DS or other PEBS method. It's hard to tell if the 0 is
+>>>> because of an unsupported hardware or nothing sampled in the guest.
+>>>
+>>> It kind of looks like this use case to me:
+>>>
+>>>      perf record -e cycles -e cpu/event=0xf4,umask=0x10/ ./workload #
+>>> ICX
+>>>
+>>> # Total Lost Samples: 0
+>>> #
+>>> # Samples: 0  of event 'cpu/event=0xf4,umask=0x10/'
+>>> # Event count (approx.): 0
+>>>
+>>> A end-user has to check if the event-umask combination is supported
+>>> or not,
+>>> or nothing sampled for the workload. Is there any room for
+>>> improvement in
+>>> perf-tool to reduce the pain of this part ? If any, the same thing could
+>>> be applied
+>>> to cpu-cycles:GP, isn't it ?
+>>
+>> I don't think we can expect the end user knows such details. Most of
+>> them may even don't know what's PEBS-via-DS.
+> 
+> Maybe the following generic reminder helps:
+> 
+> # Total Lost Samples: 0
+> # Note: the event is not counted or unsupported.
+> #
+> # Samples: 0  of event 'cpu/event=0xf4,umask=0x10/'
+> # Event count (approx.): 0
+> 
+>>
+>> Thanks,
+>> Kan
+>>
+>>>
+>>>>
+>>>> Thanks,
+>>>> Kan
+>>>>>
+>>>>>>             if (!(event->attr.freq || (event->attr.wakeup_events &&
+>>>>>> !event->attr.watermark))) {
+>>>>>>                 event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+>>>>>>                 if (!(event->attr.sample_type &
+>>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Kan
+>>>>>>
+>>>>>>>
+>>>>>>> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>>>>>> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR
+>>>>>>> emulation for extended PEBS")
+>>>>>>> Signed-off-by: Like Xu <likexu@tencent.com>
+>>>>>>> ---
+>>>>>>>     arch/x86/events/intel/core.c | 8 +++++++-
+>>>>>>>     1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/x86/events/intel/core.c
+>>>>>>> b/arch/x86/events/intel/core.c
+>>>>>>> index a08f794a0e79..17afd504c35b 100644
+>>>>>>> --- a/arch/x86/events/intel/core.c
+>>>>>>> +++ b/arch/x86/events/intel/core.c
+>>>>>>> @@ -4103,13 +4103,19 @@ static struct perf_guest_switch_msr
+>>>>>>> *intel_guest_get_msrs(int *nr, void *data)
+>>>>>>>             .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
+>>>>>>>         };
+>>>>>>>     +    /* In any case, clear guest PEBS bits first. */
+>>>>>>> +    arr[global_ctrl].guest &= ~arr[pebs_enable].guest;
+>>>>>>> +
+>>>>>>>         if (arr[pebs_enable].host) {
+>>>>>>>             /* Disable guest PEBS if host PEBS is enabled. */
+>>>>>>>             arr[pebs_enable].guest = 0;
+>>>>>>>         } else {
+>>>>>>>             /* Disable guest PEBS thoroughly for cross-mapped PEBS
+>>>>>>> counters. */
+>>>>>>>             arr[pebs_enable].guest &=
+>>>>>>> ~kvm_pmu->host_cross_mapped_mask;
+>>>>>>> -        arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
+>>>>>>> +
+>>>>>>> +        /* Prevent any host user from enabling PEBS for profiling
+>>>>>>> guest. */
+>>>>>>> +        arr[pebs_enable].guest &= (kvm_pmu->pebs_enable &
+>>>>>>> kvm_pmu->global_ctrl);
+>>>>>>> +
+>>>>>>>             /* Set hw GLOBAL_CTRL bits for PEBS counter when it runs
+>>>>>>> for guest */
+>>>>>>>             arr[global_ctrl].guest |= arr[pebs_enable].guest;
+>>>>>>>         }
+>>>>>>>
+>>>>>>> base-commit: 6803fb00772cc50cd59a66bd8caaee5c84b13fcf
+> 
