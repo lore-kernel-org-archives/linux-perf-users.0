@@ -1,34 +1,14 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ct2yt0LB"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1105ED5;
-	Sun,  3 Dec 2023 22:55:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701672901; x=1733208901;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=DkI6Gqdi3oM5F1BCGG/SyVaLLGeuLY9c6+WsMZZX+HU=;
-  b=ct2yt0LBod7DpN68pdzMxw7R/apgJ/tUkjHyv8brE7hBcNr2rnftldnl
-   jb3JCP7nF2Okc9z3FV/Glvp9P5TCxMBYT5U/RzIz9d3SsQrPBkddyhMpn
-   xKuyjZhay6i9xahY9NAfdUzSqHYgXHO2mSggqn2FLql2TuAkKUo4/tr2w
-   VFCBWai5alOIxlF3co8l4aiQ2szSYHeQBF56/ckMMcYtzNMT55Y8+Qgcm
-   KpBuTQ7JfsEq1yW7Hvtk3wqmEUndC0Erewlh/P6ZxRn1PA9MBKY0SwLtc
-   Jd+74YmeTuhXFSJQ2wHSCnhUd5rasnwocxt8/sMCxb/YK2OpelWkPD034
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10913"; a="573866"
-X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
-   d="scan'208";a="573866"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2023 22:55:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10913"; a="888430244"
-X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
-   d="scan'208";a="888430244"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.211])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2023 22:54:55 -0800
-Message-ID: <cc1f77b9-6a3f-4574-8d45-8c2ded43b589@intel.com>
-Date: Mon, 4 Dec 2023 08:54:54 +0200
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4BE95F3
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 00:05:26 -0800 (PST)
+Received: from loongson.cn (unknown [112.20.112.120])
+	by gateway (Coremail) with SMTP id _____8CxtPBDiG1lbbE+AA--.60598S3;
+	Mon, 04 Dec 2023 16:05:23 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.112.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxH91BiG1lbQ5UAA--.56868S3;
+	Mon, 04 Dec 2023 16:05:22 +0800 (CST)
+Message-ID: <330725e4-cc4e-49f4-bf8c-f12da92beff5@loongson.cn>
+Date: Mon, 4 Dec 2023 16:05:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -36,52 +16,95 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/9] perf tests: Avoid fork in perf_has_symbol test
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>,
- Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20231201235031.475293-1-irogers@google.com>
- <20231201235031.475293-3-irogers@google.com>
+Subject: Re: [PATCH] objtool/perf: Fix malloc call for new -Walloc-size
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, mark.rutland@arm.com,
+ adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+ Sun Haiyong <sunhaiyong@loongson.cn>
+References: <20231202023256.3398906-1-siyanteng@loongson.cn>
+ <CAM9d7cjFhVag8nTjtkJvz63vgm+-NbKRhf1Z7OVRWUfgLWCgVA@mail.gmail.com>
 Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20231201235031.475293-3-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <CAM9d7cjFhVag8nTjtkJvz63vgm+-NbKRhf1Z7OVRWUfgLWCgVA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxH91BiG1lbQ5UAA--.56868S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4rKr4UZry5Ar4DGryrXwc_yoW8Xr4fpF
+	s7Ca4Yya15JF1UAa1IyFZaqF1UW397WF9Yv3y0qw1q9rsrWwnrtasIqFyY9FyxZr48Ka10
+	kFyvgr45AF4rAFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
-On 2/12/23 01:50, Ian Rogers wrote:
-> perf test -vv Symbols is used to indentify symbols within the perf
-> binary. Add the -F flag so that the test command doesn't fork the test
-> before running. This removes a little overhead.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+在 2023/12/3 08:56, Namhyung Kim 写道:
+> Hello,
+>
+> On Fri, Dec 1, 2023 at 6:33 PM Yanteng Si <siyanteng@loongson.cn> wrote:
+>> From: Sun Haiyong <sunhaiyong@loongson.cn>
+>>
+>> GCC 14 introduces a new -Walloc-size included in -Wextra which errors out
+>> like:
+>> ```
+>> builtin-top.c: In function ‘prompt_integer’:
+>> builtin-top.c:360:21: error: allocation of insufficient size ‘0’ for
+>> type ‘char’ with size ‘1’ [-Werror=alloc-size]
+>>    360 |         char *buf = malloc(0), *p;
+>>        |                     ^~~~~~
+>>
+>> ```
+>>
+>> So, just cast type to char, silence this error.
+> No, please do not.  I'm not sure if it silences the error.
+> The buf is to be passed to getline() so you can set it to
+> NULL instead.
+>
+>    char *buf = NULL, *p;
 
-> ---
->  tools/perf/tests/shell/lib/perf_has_symbol.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/shell/lib/perf_has_symbol.sh b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-> index 5d59c32ae3e7..561c93b75d77 100644
-> --- a/tools/perf/tests/shell/lib/perf_has_symbol.sh
-> +++ b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-> @@ -3,7 +3,7 @@
->  
->  perf_has_symbol()
->  {
-> -	if perf test -vv "Symbols" 2>&1 | grep "[[:space:]]$1$"; then
-> +	if perf test -vv -F "Symbols" 2>&1 | grep "[[:space:]]$1$"; then
->  		echo "perf does have symbol '$1'"
->  		return 0
->  	fi
+OK!
+
+
+Thanks,
+
+Yanteng
+
+>
+> Thanks,
+> Namhyung
+>
+>> Signed-off-by: Sun Haiyong <sunhaiyong@loongson.cn>
+>> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+>> ---
+>>   tools/perf/builtin-top.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+>> index ea8c7eca5eee..29191d966522 100644
+>> --- a/tools/perf/builtin-top.c
+>> +++ b/tools/perf/builtin-top.c
+>> @@ -357,7 +357,7 @@ static void perf_top__print_sym_table(struct perf_top *top)
+>>
+>>   static void prompt_integer(int *target, const char *msg)
+>>   {
+>> -       char *buf = malloc(0), *p;
+>> +       char *buf = (char *)malloc(0), *p;
+>>          size_t dummy = 0;
+>>          int tmp;
+>>
+>> --
+>> 2.42.1
+>>
 
