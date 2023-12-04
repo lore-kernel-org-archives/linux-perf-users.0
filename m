@@ -1,228 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1214EEAD8;
-	Mon,  4 Dec 2023 08:42:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0JS+DS0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A2BC433C8;
-	Mon,  4 Dec 2023 08:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701679370;
-	bh=2hI21E5d7yISQiEU7qyNrku3/qKcokHOmhNwgh0+Zzk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=J0JS+DS0T/xYERSJvf7SVSu3t8FBddNgtC8ZdvbhLYQGdcePXwU5pma2oVAZQuGNN
-	 YB0JTppJ0yo50otMkg0tCS+dofexu50Gu4WLrsnNhvRgxDNCFztSRrG3IrU4me8GPb
-	 EWRKQR9pukbBtu1lwKtj/u0i1vxVjMgf6QDqwXK8w0xxFhhixUmNHUZ4gnLkznt1ny
-	 R8xed3hXpLbYtFXyh95K7BEefzRIeheVXR/3Y24tPLoc44+ODZSFQ84Y1f4Py3rpb3
-	 x/EGmonseney/DAi0d4AN1VZhJLSeyM01YksyRDpYa0bHpvY4VPc3P/ZlGCdInfC/c
-	 U5urf+24tTnzQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rA4XP-001962-VH;
-	Mon, 04 Dec 2023 08:42:48 +0000
-Date: Mon, 04 Dec 2023 08:42:47 +0000
-Message-ID: <86ttoybbp4.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH V15 5/8] KVM: arm64: nvhe: Disable branch generation in nVHE guests
-In-Reply-To: <20231201053906.1261704-6-anshuman.khandual@arm.com>
-References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
-	<20231201053906.1261704-6-anshuman.khandual@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IBWh+Ga2"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8093A1A1
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 01:40:11 -0800 (PST)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B49MaBn025648;
+	Mon, 4 Dec 2023 09:40:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=agzCCl5B1arkwdoCgtJLCiFTJNEGyadtNBtY70FaHjk=;
+ b=IBWh+Ga2/eGE6urfuUTcA5J1YCmWeVwWaIMSTz6FJegAeQI/KBSBEyxYaaEejFq9fd6O
+ P0QyteC2UKT8HPcsF9BgdgscKj9alU7jtyY/EIkFthTN4R3Kg1ixnHfxkvIABLKU7fM+
+ KiJu7nOIUPOFS+Hja5zlrhHq/i4dsd6xyEw+r4JrTwyA+sGuzSFFm/cZhOu65LzpNNAl
+ XQHx+k5eCblpiZNFbZaQmumQA5eDJKmNRqvdW4FMn+BEBzdkH3/eEp/s7d63ZgbN2iyQ
+ ShyPTVFs68SG0q1XUXgmmE6PlGR5jnOu/reCBkYnYNUc5sb65aYZASPa05qvOnRX1QSy oA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3usc2urkgn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 09:40:08 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B49OKU6030096;
+	Mon, 4 Dec 2023 09:40:08 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3usc2urkfy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 09:40:08 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B474W6K030402;
+	Mon, 4 Dec 2023 09:40:07 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3urv8dm3me-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 09:40:06 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B49e36q18809102
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 4 Dec 2023 09:40:03 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 30F402004D;
+	Mon,  4 Dec 2023 09:40:03 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 199D720040;
+	Mon,  4 Dec 2023 09:40:01 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.171.12.32])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  4 Dec 2023 09:40:00 +0000 (GMT)
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH v8 0/4] Introduce perf check subcommand
+Date: Mon,  4 Dec 2023 15:09:50 +0530
+Message-ID: <20231204093954.304030-1-adityag@linux.ibm.com>
+X-Mailer: git-send-email 2.42.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9ZeBdRvQ2X89TAJQYHYr_scPr33ie2bj
+X-Proofpoint-GUID: vQ3CjlF8eAWNp0nZVaT-QBlhkzshrq-B
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-04_06,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 spamscore=0
+ phishscore=0 clxscore=1015 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2312040072
 
-On Fri, 01 Dec 2023 05:39:03 +0000,
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> 
-> Disable the BRBE before we enter the guest, saving the status and enable it
-> back once we get out of the guest. This is just to avoid capturing records
-> in the guest kernel/userspace, which would be confusing the samples.
+The Problem
+===========
 
-Why does it have to be limited to non-VHE? What protects host EL0
-records from guest's EL0 execution when the host is VHE?
+Currently the presence of a feature is checked with a combination of
+perf version --build-options and greps, such as:
 
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: kvmarm@lists.linux.dev
-> Cc: linux-arm-kernel@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> Changes in V15:
-> 
-> - Dropped runtime BRBE enable for setting DEBUG_STATE_SAVE_BRBE
-> - Dropped BRBFCR_EL1 from __debug_save_brbe()/__debug_restore_brbe()
-> - Always save the live SYS_BRBCR_EL1 in host context and then check if
->   BRBE was enabled before resetting SYS_BRBCR_EL1 for the host
-> 
->  arch/arm64/include/asm/kvm_host.h  |  4 ++++
->  arch/arm64/kvm/debug.c             |  5 +++++
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
->  3 files changed, 42 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 68421c74283a..1faa0430d8dd 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -449,6 +449,8 @@ enum vcpu_sysreg {
->  	CNTHV_CVAL_EL2,
->  	PMSCR_EL1,	/* Statistical profiling extension */
->  	TRFCR_EL1,	/* Self-hosted trace filters */
-> +	BRBCR_EL1,	/* Branch Record Buffer Control Register */
-> +	BRBFCR_EL1,	/* Branch Record Buffer Function Control Register */
+    perf version --build-options | grep " on .* HAVE_FEATURE"
 
-Whose state is this? If this is limited to the host, it has no purpose
-in this enum. Once you add guest support, then it will make sense.
+Proposed solution
+=================
 
->
->  	NR_SYS_REGS	/* Nothing after this line! */
->  };
-> @@ -753,6 +755,8 @@ struct kvm_vcpu_arch {
->  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
->  /* Save trace filter controls */
->  #define DEBUG_STATE_SAVE_TRFCR	__vcpu_single_flag(iflags, BIT(8))
-> +/* Save BRBE context if active  */
-> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(9))
->  
->  /* SVE enabled for host EL0 */
->  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index 2ab41b954512..fa46a70a9503 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -354,6 +354,10 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
->  		    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
->  			vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
->  	}
-> +
-> +	/* Check if we have BRBE implemented and available at the host */
-> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
-> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->  }
->  
->  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
-> @@ -361,6 +365,7 @@ void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
-> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->  }
->  
->  void kvm_etm_set_guest_trfcr(u64 trfcr_guest)
-> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> index 6174f710948e..1994fc48b57c 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> @@ -93,6 +93,33 @@ static void __debug_restore_trace(struct kvm_cpu_context *host_ctxt,
->  		write_sysreg_s(ctxt_sys_reg(host_ctxt, TRFCR_EL1), SYS_TRFCR_EL1);
->  }
->  
-> +static void __debug_save_brbe(struct kvm_cpu_context *host_ctxt)
-> +{
-> +	ctxt_sys_reg(host_ctxt, BRBCR_EL1) = read_sysreg_s(SYS_BRBCR_EL1);
-> +
-> +	/* Check if the BRBE is enabled */
-> +	if (!(ctxt_sys_reg(host_ctxt, BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
-> +		return;
+As suggested by contributors in:
+https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
 
-Why save BRBCR_EL1 if there is nothing enabled? It isn't like it can
-change behind your back, can it?
+Introduce a subcommand "perf check --feature", with which
+scripts can test for presence of a feature or multiple features, such as:
 
-> +
-> +	/*
-> +	 * Prohibit branch record generation while we are in guest.
-> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
-> +	 * modify the filtering set by the host.
-> +	 */
-> +	write_sysreg_s(0, SYS_BRBCR_EL1);
-> +	isb();
+    perf check --feature HAVE_LIBTRACEEVENT
 
-What is the point of this ISB? We're at EL2, and this only affects
-EL1.
+    or
 
-> +}
-> +
-> +static void __debug_restore_brbe(struct kvm_cpu_context *host_ctxt)
-> +{
-> +	if (!ctxt_sys_reg(host_ctxt, BRBCR_EL1))
-> +		return;
+    perf check --feature libtraceevent
 
-So on one side you're using a flag, and on the other you're using the
-*value*. You need some consistency.
+    or
 
-> +
-> +	/* Restore BRBE controls */
-> +	write_sysreg_s(ctxt_sys_reg(host_ctxt, BRBCR_EL1), SYS_BRBCR_EL1);
-> +	isb();
+    perf check --feature libtraceevent,bpf
 
-Same question.
+The usage of "perf version --build-options | grep" has been replaced in two
+tests, with "perf check --feature" command
 
-> +}
-> +
->  void __debug_save_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
->  				    struct kvm_cpu_context *guest_ctxt)
->  {
-> @@ -102,6 +129,10 @@ void __debug_save_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
->  
->  	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_TRFCR))
->  		__debug_save_trace(host_ctxt, guest_ctxt);
-> +
-> +	/* Disable BRBE branch records */
-> +	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_BRBE))
-> +		__debug_save_brbe(host_ctxt);
->  }
->  
->  void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
-> @@ -116,6 +147,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
->  		__debug_restore_spe(host_ctxt);
->  	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_TRFCR))
->  		__debug_restore_trace(host_ctxt, guest_ctxt);
-> +	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_BRBE))
-> +		__debug_restore_brbe(host_ctxt);
->  }
->  
->  void __debug_switch_to_host(struct kvm_vcpu *vcpu)
+Also, to not duplicate the same feature list at multiple places, a new global
+'supported_features' array has been introduced in builtin.h, so both commands
+'perf check --feature' and 'perf version --build-options' use the same array
 
-The lifetime of this flag seems bogus, specially when there is nothing
-to do, which will always be the arch-majority of the executions.
+'supported_features' feature is an array of 'struct feature_support', which
+also has the name of the feature, macro used to test it's presence, and a
+is_builtin member, which will be 0 if feature not built-in, and 1 if built-in
 
-	M.
+Architectures Tested
+====================
+* x86_64
+* ppc64le
+
+Git tree
+========
+
+Git tree with this patch series applied for testing:
+https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v8
+
+Changelog
+=========
+V8
++ handle return value of 'malloc' in patch #1
++ fix error due to strncpy depending on source string's length
+
+V7
++ modified patch #1 to fix compile issue, and add feature to allow
+  multiple comma-separated features
+
+V6
++ rebased to perf-tools-next/perf-tools-next
++ modified patch #1 to include FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL)
+
+V5
++ invert return value of 'has_support', but return value of perf check --feature
+according to shell convention
+
+V4
++ invert return value of perf check --feature
+
+V3
++ simplified has_support code in builtin-check.c (patch #1)
++ modified patch #3 and patch #4 according to change in return value in patch #1
+
+V2
++ improved the patch series with suggestions from Namhyung
++ fix incorrect return value, added -q option, and moved array definition to
+  perf-check.c
+
+V1
++ changed subcommand name to 'perf check --feature'
++ added documentation for perf check
++ support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceevent) as
+  input to 'perf check --feature'
++ change subject and descriptions of all patch mentioning perf check instead of
+  perf build
+
+V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230825061125.24312-1-adityag@linux.ibm.com/
+
+Aditya Gupta (3):
+  perf check: introduce check subcommand
+  perf version: update --build-options to use 'supported_features' array
+  perf tests task_analyzer: use perf check for libtraceevent support
+
+Athira Rajeev (1):
+  tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
+    --feature
+
+ tools/perf/Build                              |   1 +
+ tools/perf/Documentation/perf-check.txt       |  59 +++++++++
+ tools/perf/builtin-check.c                    | 122 ++++++++++++++++++
+ tools/perf/builtin-version.c                  |  39 ++----
+ tools/perf/builtin.h                          |  18 +++
+ tools/perf/perf.c                             |   1 +
+ .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
+ .../shell/record+probe_libc_inet_pton.sh      |   5 +-
+ .../shell/record+script_probe_vfs_getname.sh  |   5 +-
+ tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
+ 10 files changed, 221 insertions(+), 37 deletions(-)
+ create mode 100644 tools/perf/Documentation/perf-check.txt
+ create mode 100644 tools/perf/builtin-check.c
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.41.0
+
