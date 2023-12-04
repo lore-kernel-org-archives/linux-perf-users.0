@@ -1,89 +1,74 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF412E847
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 19:33:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LcC4xhGr"
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39AFCCA
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 11:11:08 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-50beed2a46eso448e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Dec 2023 11:11:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701717066; x=1702321866; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NVSNr1Qot00fXFMvviV2konhIWgpkJd6arMvwOKUXZQ=;
-        b=LcC4xhGrxScAfPw759dioNUG3N8Py6uN5JUzcJS7LHSxtKuEDd66x+MKFLdmw1qOL7
-         PiellQUqT/Ty1qcIvth/a3kS50L73LJYAuyOmAfiv9uIpmYN8VvLioQJkXT/RpSKK5mU
-         kQ6EczhzP6DPAf6ffJqHDntAvcA/eYiTvGZQ+XdrzNI74fS/7SrlXpokxAUxjQ88wkIx
-         g4peC04WLqqbxcYy6GlVoxoLbw3imUExgxvw/sYGqZk1hfpTEEGzxKcOdXNRplqoZSse
-         h7ENQNG1q+ZuJZv2f4lhK8d/RaA9lvfHhPg38xdiL3lCUB9VyOCkxdpVQv6QtTnnRFmq
-         uKDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701717066; x=1702321866;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NVSNr1Qot00fXFMvviV2konhIWgpkJd6arMvwOKUXZQ=;
-        b=DgPVAzbVIF5Qhse/+aewE1MXWxuB6Sv/LYXFEr10vETmEABDbDbBDuOZ5sfaQyvP3s
-         qgPj2BEHNQdWkcaoJrjflthCa74OgAF5CYFbfWSxU1ora8SbyL1woUOjydVFvYlAh0Ua
-         nqDGuWbOaz2ockXY8NicutsmZB9oDPMs8TpnBRIbWwy5N3LdBQNIAGRyctT4s+z/VR0F
-         RJTl+XeVuDbxRK/6HZjJf4ITi2KKYH0yDhagUVTGOkWpSi136IKtzuW22nlze51jw7b/
-         s0EFY9MIGx2kkbUVzqXZvHyFlbPfgpvK07MgVpiZHDT7jD6Ms5D3ADn5KxVOhFylbxs2
-         sDqg==
-X-Gm-Message-State: AOJu0YxFaXcrhqCcqTPC+RLJsei7KRmQAdRZd38Y31824izioxCeht9z
-	oWzY3/OvT8QkS6KjfItRZNQAVfK93zesraKcQ+DnLA==
-X-Google-Smtp-Source: AGHT+IFbZXqoGl/WdTMR7T1nW5A9qFR+v28+geM54U7dMEdA4nWpaQuSsrDolKMUo4O6BUGaMsu/bSyVe8dHQBeIMJE=
-X-Received: by 2002:a05:6512:12c4:b0:50b:fc76:42c with SMTP id
- p4-20020a05651212c400b0050bfc76042cmr75442lfg.2.1701717066213; Mon, 04 Dec
- 2023 11:11:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTtDjzAx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8262BC433C9;
+	Mon,  4 Dec 2023 19:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701718419;
+	bh=Bbi2AEe0ruXNva1PBZVs8s56Jfw968QWn2BVVWXCTEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TTtDjzAxWDHClc/AvrJCC0tDnUqT0G1rFB24jjbyp9RBzbixNzzdC8n7bpo3fJFiu
+	 gepzPEyyHb0qTs52XpFfcv+qSR96Vk+Hwie2Fu+jI40CO12lgZSysRfmDgjuCT9jZ5
+	 Nf4A29gZhRe8Ui/x73fR4L4+MqZmvOvEREYS7FkS0XgURcJ10PNOgKTV1o36JgpJM3
+	 ZaMLnz71ixHy77Vfhs4fEE/7zPKPi6nY/7GJWZSb6TGTg8/ai0MgnR6bPQNn3ddG88
+	 yi1uKHC70CY/0hPRR0WJwU+0IhlthtufD6IUOaA8qaOK2YAgY59HP5Pa23ATEcKqMa
+	 yxZ6//0006m1Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 05F4C40094; Mon,  4 Dec 2023 16:33:36 -0300 (-03)
+Date: Mon, 4 Dec 2023 16:33:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Leo Yan <leo.yan@linaro.org>
+Cc: vmolnaro@redhat.com, linux-perf-users@vger.kernel.org, acme@redhat.com,
+	mpetlan@redhat.com, james.clark@arm.com
+Subject: Re: [PATCH] perf test record user-regs: Fix mask for vg register
+Message-ID: <ZW4pkLRGgfA7zotm@kernel.org>
+References: <20231201194617.13012-1-vmolnaro@redhat.com>
+ <20231203061353.GA19079@leoy-huanghe>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231201203046.486596-1-acme@kernel.org>
-In-Reply-To: <20231201203046.486596-1-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 4 Dec 2023 11:10:54 -0800
-Message-ID: <CAP-5=fWJMcJb0+Nmkd1=HoOc5j7LEzGkJmqyAgdpfekOJtjybg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Cache the arch specific stderrno routine
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, 
-	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231203061353.GA19079@leoy-huanghe>
+X-Url: http://acmel.wordpress.com
 
-On Fri, Dec 1, 2023 at 12:30=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> Hi,
->
->         Please take a look,
->
-> - Arnaldo
->
-> Arnaldo Carvalho de Melo (2):
->   perf env: Introduce perf_env__arch_strerrno()
->   perf env: Cache the arch specific strerrno function in perf_env__arch_s=
-trerrno()
+Em Sun, Dec 03, 2023 at 02:13:53PM +0800, Leo Yan escreveu:
+> On Fri, Dec 01, 2023 at 08:46:17PM +0100, vmolnaro@redhat.com wrote:
+> > From: Veronika Molnarova <vmolnaro@redhat.com>
+> > 
+> > The 'vg' register for arm64 shows up in --user_regs as available when
+> > masking the variable AT_HWCAP with 1 << 22 returns '1' as done in
+> > perf_regs.c. However, in subtests for support of SVE, the check for
+> > the 'vg' register is done by masking the variable AT_HWCAP with the value
+> > 0x200000 which is equals to 1 << 21 instead of 1 << 22. This results in
+> > inconsistencies on certain systems where the test expects that the 'vg'
+> > register is not operational when it is, and vice-versa.
+> > 
+> > During the testing on a machine that the test expected not to have the
+> > 'vg' register available, the perf record with option --user-regs showed
+> > records for the 'vg' register together with all of the others, which
+> > means that the mask for the subtest of perf_event_attr is off by one.
+> > Change the value of the mask from 0x200000 to 0x400000 to correct it.
+> > 
+> > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> 
+> LGTM, except I think it's good to add fix tag:
+> 
+>   Fixes: 9440ebdc333d ("perf test arm64: Add attr tests for new VG register")
+> 
+> With above fix tag:
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+b4 even collected the fixes, that I checked and is in tree, etc.
 
-Thanks,
-Ian
+Thanks, applied.
 
->  tools/perf/builtin-trace.c                  | 6 ++----
->  tools/perf/trace/beauty/arch_errno_names.sh | 6 +++---
->  tools/perf/trace/beauty/beauty.h            | 2 --
->  tools/perf/util/env.c                       | 9 +++++++++
->  tools/perf/util/env.h                       | 6 ++++++
->  5 files changed, 20 insertions(+), 9 deletions(-)
->
-> --
-> 2.41.0
->
+- Arnaldo
