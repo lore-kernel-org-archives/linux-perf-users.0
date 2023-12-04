@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F033175D
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 19:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE062C1AB
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 20:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGXRVCA0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37DAC433C7;
-	Mon,  4 Dec 2023 19:45:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkN+KIYE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E37C433C8;
+	Mon,  4 Dec 2023 20:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701719112;
-	bh=cmGhT0rNZ8LRt6ST5YFsV1NE54yYUY00lCLWNdQsFgo=;
+	s=k20201202; t=1701720043;
+	bh=wl30XAUkpa2pw6wKx+oaNQPx6pqNHEJ1mH0tMi3TDP0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gGXRVCA0+iQuobeTpTbatvmMNWDlV2ejifzBvETIsWwdTTjvnmZNpjC5Omy4HGaC7
-	 lDCafimFWTXVKXtt94KdMYS8y5mw1VZIpPtS5vYwhBs6ccqVZQwuBoZXbIhfQdd5TB
-	 11+Jj9jvM9675zlKJYG4w2NZrsHQKSx5qzBqOOauJEKZKS0yRkkLR3w3fjhgSc3J0F
-	 SvhJAnmrX3n2o1cL5jEb8vnbgDtTvFJnCQvKub/KIibBdAq2b7/ziqu8x08M0zPM6S
-	 ypkKdF78WRzolsLYaYGZe7ZdFX8JfGO4rZcluZOD9cLJ2aYTZq8ICyWaqEbgeZSSgR
-	 1ulzzNB5V7U+g==
+	b=NkN+KIYEfqZlby3k70htcyJEW+wz3qRaaIIG/9jFqO/IQK6UBjEh5OiAEYxNOr7+1
+	 ZC7aESnNoYL3tQYhztlBDKSX3/tUk/iRmddx3uQD5cxctWI4mU/ynLndvIlCXowxZp
+	 Yul0nHP82EEnsleheDPujc4YDH7RKoI8jI6D0n9Z1lTKlgD2+Zpm8tbd4QxbZ3F/H3
+	 dnEQ0FXzUSH7dHHHhTY3y3fBPv6Lyyud0pC8dZLJy6mObyBUMgAPIDfVz/RMAuH8OT
+	 VKyhupE1fd1YZqhPjkEqR9ju/RDS9XV02lDVrrC0Iw8/QP5pJC3kJ4hLnH784QLde7
+	 7kvTmaUNPe07A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 1567A40094; Mon,  4 Dec 2023 16:45:09 -0300 (-03)
-Date: Mon, 4 Dec 2023 16:45:08 -0300
+	id 5B20040094; Mon,  4 Dec 2023 17:00:40 -0300 (-03)
+Date: Mon, 4 Dec 2023 17:00:40 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Cc: Disha Goel <disgoel@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] perf build: Shellcheck support for OUTPUT
- directory
-Message-ID: <ZW4sRL0vPofcoS43@kernel.org>
-References: <20231129213428.2227448-1-irogers@google.com>
- <CE3EBC99-B6B0-4DD5-A88E-26B28B1A4A46@linux.vnet.ibm.com>
+	linux-perf-users <linux-perf-users@vger.kernel.org>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	Disha Goel <disgoel@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf vendor events: Update datasource event name to fix
+ duplicate events
+Message-ID: <ZW4v6OpQKGC7bHi2@kernel.org>
+References: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
+ <92bbba90-c7e4-43de-98dc-497ca323eacc@linux.ibm.com>
+ <5293CFEC-6578-477B-86C2-40A50EBA144B@linux.vnet.ibm.com>
+ <87E3CA3F-77D0-4A99-8575-C85544D207E1@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,43 +47,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CE3EBC99-B6B0-4DD5-A88E-26B28B1A4A46@linux.vnet.ibm.com>
+In-Reply-To: <87E3CA3F-77D0-4A99-8575-C85544D207E1@linux.vnet.ibm.com>
 X-Url: http://acmel.wordpress.com
 
-Em Fri, Dec 01, 2023 at 11:49:59AM +0530, Athira Rajeev escreveu:
-> 
-> 
-> > On 30-Nov-2023, at 3:04 AM, Ian Rogers <irogers@google.com> wrote:
-> > 
-> > Migrate Makefile.tests to Build so that variables like rule_mkdir are
-> > defined via Makefile.build (needed so the output directory can be
-> > created). This requires SHELLCHECK being exported and the clean rule
-> > tweaking to remove the files in find.
-> > 
-> > Change find "-perm -o=x" as it was failing on my Debian based Linux
-> > kernel tree, switch to using "-executable".
-> > 
-> > Adding a filename prefix of "." to the shellcheck log files is a pain
-> > and error prone in make, remove this prefix and just add the
-> > shellcheck log files to .gitignore.
-> > 
-> > Fix the command echo so that running the test is displayed.
-> > 
-> > Fixes: 1638b11ef815 ("perf tools: Add perf binary dependent rule for shellcheck log in Makefile.perf")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Hi Ian,
-> 
-> Changes looks good to me.
-> Tested with make, make clean, make with shellcheck error, make with NO_SHELLCHECK
-> 
-> Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Em Sun, Dec 03, 2023 at 09:27:25PM +0530, Athira Rajeev escreveu:
+> > On 29-Nov-2023, at 10:51 AM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> wrote:
+> >> On 27-Nov-2023, at 5:32 PM, Disha Goel <disgoel@linux.ibm.com> wrote:
+> >>> Fixes: fc1435807533 ("perf vendor events power10: Update JSON/events")
+> >>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-Next time please reply with your Reviewed-by to the cover letter, so
-that b4 stamps your reviewed-by to all the patches and not just to the
-patch that you replied to.
+> >> I have tested the patch on Power10 machine. Perf list works correctly without any segfault now.
 
-This time I'll take the plural in "Changes look good to me" to signify
-that you reviewed the whole series, ok?
+> >> # ./perf list
+
+> >> List of pre-defined events (to be used in -e or -M):
+
+> >>  branch-instructions OR branches                    [Hardware event]
+> >>  branch-misses                                      [Hardware event]
+
+> >> Tested-by: Disha Goel <disgoel@linux.ibm.com>
+
+> > Thanks Disha for testing
+
+> Hi Arnaldo,
+ 
+> Can we get this pulled in if the patch looks good ?
+
+Thanks, applied to perf-tools-next.
 
 - Arnaldo
+
