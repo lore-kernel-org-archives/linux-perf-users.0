@@ -1,338 +1,228 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1214EEAD8;
+	Mon,  4 Dec 2023 08:42:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKN8PGBX"
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D429CB;
-	Mon,  4 Dec 2023 00:33:02 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-5bdf5a025c1so1315721a12.0;
-        Mon, 04 Dec 2023 00:33:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701678781; x=1702283581; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Advb7V7bj8dm13r6lPZP6Jts0Sh9p9KagVsoPO4PQVE=;
-        b=CKN8PGBXpMUZ0ytWn9old+DLFDleRgExn7WOiY8NbOsFMEcsH35PPMQ2HSxtqKs9Zl
-         BRPjOey/rswDAppIy8KhFib90uv8maLrpdpiXBy++1VW8G/pGG1qs8DRSeP1Rwg5eKJY
-         G56kvWZC4wFsCiw0O9xQKJ5jpcrPry3Kdpd+dmiwHVtkZQBma2f8Ftp4/jStt4DMW5ig
-         wR0EWSEDhqE5ZnxkCTDWi6i6HWyIZ/fv0SJacqKERO599Bh+OgYNm0+NC0L4cbLIFt2q
-         jFuK78WXaR3rFb3ZymCwCKWgRHWcYzx8LzrMqoOUC/2aP53AkNQt+bnqpHd14Yd51Bap
-         KDcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701678781; x=1702283581;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Advb7V7bj8dm13r6lPZP6Jts0Sh9p9KagVsoPO4PQVE=;
-        b=KN6db8e/cdIPbz2zhMbCg0PjBQ/FjtB13u3HtGCk/ZkI0F3N+2o3KZpbEATCgSf89p
-         HOkzJZaSdJ6L3nkZz7oo6hHHA1KpXnOHAXILOgZ78k28oHz0rj+5VR9cYa2t+ciHIxwy
-         qF12FJ9YoKZAlGRHAJoZFah4ya1lJend8k7Jjle1FlQUgkFlwoNkuc14joz56e857uuu
-         PhTYqhvWNWMdOvJRn7VrX10HbOGTEcoRV0x1DAv+fnusXLv3IEHjJ1d+PRtPsHf69Rkc
-         oaV0BX8P+d7M/rz3iqIN54FPqnBt6SAjsip5TqdGTCSoBDeGHg34VH8LT5tXdzxLImgi
-         DllQ==
-X-Gm-Message-State: AOJu0YzCwvSBZTHjjxOuUPet077mEC9Ep9rRsbI3tNabJc/EkIy6Q5Ld
-	Os5PEuUSVvg3UPAKJhsoTRI=
-X-Google-Smtp-Source: AGHT+IHWFOozyvFUgBNvi6yWKfp9T/b7egs+hPp6lsgZX7YZHydYfBNk7Xp+tt6E+q1GhY/aRW8kpA==
-X-Received: by 2002:a05:6a20:ce4d:b0:187:96e0:33c with SMTP id id13-20020a056a20ce4d00b0018796e0033cmr1947281pzb.45.1701678781390;
-        Mon, 04 Dec 2023 00:33:01 -0800 (PST)
-Received: from [192.168.255.10] ([43.132.98.41])
-        by smtp.gmail.com with ESMTPSA id j8-20020aa783c8000000b006c320b9897fsm7110104pfn.126.2023.12.04.00.32.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Dec 2023 00:33:00 -0800 (PST)
-Message-ID: <812822c4-8f24-4fc5-81eb-335abe46baa5@gmail.com>
-Date: Mon, 4 Dec 2023 16:32:57 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0JS+DS0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A2BC433C8;
+	Mon,  4 Dec 2023 08:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701679370;
+	bh=2hI21E5d7yISQiEU7qyNrku3/qKcokHOmhNwgh0+Zzk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J0JS+DS0T/xYERSJvf7SVSu3t8FBddNgtC8ZdvbhLYQGdcePXwU5pma2oVAZQuGNN
+	 YB0JTppJ0yo50otMkg0tCS+dofexu50Gu4WLrsnNhvRgxDNCFztSRrG3IrU4me8GPb
+	 EWRKQR9pukbBtu1lwKtj/u0i1vxVjMgf6QDqwXK8w0xxFhhixUmNHUZ4gnLkznt1ny
+	 R8xed3hXpLbYtFXyh95K7BEefzRIeheVXR/3Y24tPLoc44+ODZSFQ84Y1f4Py3rpb3
+	 x/EGmonseney/DAi0d4AN1VZhJLSeyM01YksyRDpYa0bHpvY4VPc3P/ZlGCdInfC/c
+	 U5urf+24tTnzQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rA4XP-001962-VH;
+	Mon, 04 Dec 2023 08:42:48 +0000
+Date: Mon, 04 Dec 2023 08:42:47 +0000
+Message-ID: <86ttoybbp4.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH V15 5/8] KVM: arm64: nvhe: Disable branch generation in nVHE guests
+In-Reply-To: <20231201053906.1261704-6-anshuman.khandual@arm.com>
+References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
+	<20231201053906.1261704-6-anshuman.khandual@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: x86/pmu: Prevent any host user from enabling PEBS
- for profiling guest
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>
-References: <20231129095055.88060-1-likexu@tencent.com>
- <6c4bd247-1f81-4b43-9e21-012f831d26b8@linux.intel.com>
- <fd847e77-0510-48db-ad0b-5946458e2fb3@gmail.com>
- <84903edf-96a7-40da-8bbb-52511b4ec893@linux.intel.com>
- <df0b75de-a984-46fe-80e9-3c19b651883f@gmail.com>
- <444c0244-e377-4b4d-b3f0-a9404f013b87@linux.intel.com>
-Content-Language: en-US
-From: Like Xu <like.xu.linux@gmail.com>
-In-Reply-To: <444c0244-e377-4b4d-b3f0-a9404f013b87@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-
-
-On 1/12/2023 10:38 pm, Liang, Kan wrote:
+On Fri, 01 Dec 2023 05:39:03 +0000,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 > 
-> 
-> On 2023-11-30 10:59 p.m., Like Xu wrote:
->> On 30/11/2023 11:49 pm, Liang, Kan wrote:
->>>
->>>
->>> On 2023-11-30 2:29 a.m., Like Xu wrote:
->>>> On 29/11/2023 10:38 pm, Liang, Kan wrote:
->>>>>
->>>>>
->>>>> On 2023-11-29 4:50 a.m., Like Xu wrote:
->>>>>> From: Like Xu <likexu@tencent.com>
->>>>>>
->>>>>> Stop using PEBS counters on host to profiling guest. Limit the
->>>>>> range of
->>>>>> enabled PEBS counters to only those counters enabled from the guest
->>>>>> PEBS
->>>>>> emulation perspective.
->>>>>>
->>>>>> If there is a perf-record agent on host that uses perf-tools events
->>>>>> like
->>>>>> "cpu-cycles:GP" (G for attr.exclude_host, P for max precise event
->>>>>> counter)
->>>>>> to capture guest performance events, then the guest will be hanged.
->>>>>> This is
->>>>>> because Intel DS-based PEBS buffer is addressed using the 64-bit
->>>>>> linear
->>>>>> address of the current {p/v}CPU context based on MSR_IA32_DS_AREA.
->>>>>>
->>>>>> Any perf user using PEBS counters to profile guest on host is, in
->>>>>> perf/core
->>>>>> implementation details, trying to set bits on
->>>>>> cpuc->intel_ctrl_guest_mask
->>>>>> and arr[pebs_enable].guest, much like the guest PEBS emulation
->>>>>> behaviour.
->>>>>> But the subsequent PEBS memory write, regardless of whether guest
->>>>>> PEBS is
->>>>>> enabled, can overshoot guest entry and corrupt guest memory.
->>>>>>
->>>>>> Profiling guest via PEBS-DS buffer on host is not supported at this
->>>>>> time.
->>>>>> Fix this by filtering the real configured value of
->>>>>> arr[pebs_enable].guest
->>>>>> with the emulated state of guest enabled PEBS counters, under the
->>>>>> condition
->>>>>> of none cross-mapped PEBS counters.
->>>>>
->>>>> So the counter will be silently disabled. The user never knows why
->>>>> nothing is sampled.
->>>>> Since we don't support the case, profiling guest via PEBS-DS buffer on
->>>>> host. Maybe we should error out when creating the event. For example
->>>>> (not tested),
->>>>
->>>> Test failed.
->>>>
->>>>>
->>>>> diff --git a/arch/x86/events/intel/core.c
->>>>> b/arch/x86/events/intel/core.c
->>>>> index 3871267d3237..24b90c70737f 100644
->>>>> --- a/arch/x86/events/intel/core.c
->>>>> +++ b/arch/x86/events/intel/core.c
->>>>> @@ -3958,6 +3958,10 @@ static int intel_pmu_hw_config(struct perf_event
->>>>> *event)
->>>>>             if ((event->attr.config & INTEL_ARCH_EVENT_MASK) ==
->>>>> INTEL_FIXED_VLBR_EVENT)
->>>>>                 return -EINVAL;
->>>>>
->>>>> +        /* Profiling guest via PEBS-DS buffer on host is not
->>>>> supported. */
->>>>> +        if (event->attr.exclude_host)
->>>>> +            return -EINVAL;
->>>>> +
->>>>
->>>> Guest PEBS emulation also sets this bit, a typical call stack looks
->>>> like:
->>>>
->>>>       intel_pmu_hw_config+0x441/0x4d0
->>>>       hsw_hw_config+0x12/0xa0
->>>>       x86_pmu_event_init+0x98/0x370
->>>>       perf_try_init_event+0x47/0x130
->>>>       perf_event_alloc+0x446/0xeb0
->>>>       perf_event_create_kernel_counter+0x38/0x190
->>>>       pmc_reprogram_counter.constprop.17+0xd9/0x230 [kvm]
->>>>       kvm_pmu_handle_event+0x1a6/0x310 [kvm]
->>>>       vcpu_enter_guest+0x1388/0x19b0 [kvm]
->>>>       vcpu_run+0x117/0x6c0 [kvm]
->>>>       kvm_arch_vcpu_ioctl_run+0x13d/0x4d0 [kvm]
->>>>       kvm_vcpu_ioctl+0x301/0x6e0 [kvm]
->>>>
->>>
->>> Oh right, the event from the KVM guest is also exclude_host.
->>> So we should only error out with the non-KVM exclude_host PEBS event.
->>>
->>>> Alternatively, this path is taken when using PEBS-via-PT to profile
->>>> guests on host.
->>>
->>> There is a is_pebs_pt(event), so we can skip the PEBS-via-PT.
->>>
->>> Seems we just need to distinguish a KVM event and a normal host event.
->>> I don't have a better way to do it except using
->>> event->overflow_handler_context, which is NULL for a normal host event.
->>
->> The assumption that event->overflow_handler_context == NULL is unsafe,
->> considering .overflow_handler_context hook has its acclaimed generality.
->>
-> 
-> Yes, I agree it's very hacky.
-> 
-> What we need here is a way to distinguish the KVM guest request from the
-> others. How about the PF_VCPU flag?
-> 
->   	if (event->attr.exclude_host &&
->   		!is_pebs_pt(event) &&
->   		(!(event->attach_state & PERF_ATTACH_TASK) || !(current->flags &
-> PF_VCPU))
->   			return -EINVAL;
+> Disable the BRBE before we enter the guest, saving the status and enable it
+> back once we get out of the guest. This is just to avoid capturing records
+> in the guest kernel/userspace, which would be confusing the samples.
 
-Unfortunately, the tests are not passed w/ the above diff.
-But it's good to know that there is PF_VCPU and more things to play around with.
-
-The AMD IBS also takes the precise path, but it puts the recorded values
-on group of MSRs instead of the linear address-based memory.
-
-The root cause of this issue is the hardware limitation, just like what we did
-in the commit 26a4f3c08de4 ("perf/x86: disable PEBS on a guest entry"),
-a similar fix should also belong in the context of directly configuring
-VMX-switch related hardware configuration values.
-
-I haven't find a better location than intel_guest_get_msrs().
+Why does it have to be limited to non-VHE? What protects host EL0
+records from guest's EL0 execution when the host is VHE?
 
 > 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Changes in V15:
 > 
->> I understand your motivation very well, but this is not the right move
->> (based on my previous history of being sprayed by Peter). For perf/core,
->> in-kernel perf_events should be treated equally, and the semantics of
->> kvm_pmu should only be accounted when a perf/core API is only used for
->> guest-only path. In this case for KVM perf_events, intel_guest_get_msrs()
->> and x86_pmu_handle_guest_pebs() have this context.
->>
->>>
->>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>> index a968708ed1fb..c93a2aaff7c3 100644
->>> --- a/arch/x86/events/intel/core.c
->>> +++ b/arch/x86/events/intel/core.c
->>> @@ -3958,6 +3958,16 @@ static int intel_pmu_hw_config(struct perf_event
->>> *event)
->>>            if ((event->attr.config & INTEL_ARCH_EVENT_MASK) ==
->>> INTEL_FIXED_VLBR_EVENT)
->>>                return -EINVAL;
->>>
->>> +        /*
->>> +         * Profiling guest via PEBS-DS buffer on host is not supported.
->>> +         * The event->overflow_handler_context is to distinguish a KVM
->>> +         * event and a normal host event.
->>> +         */
->>> +        if (event->attr.exclude_host &&
->>> +            !is_pebs_pt(event) &&
->>> +            !event->overflow_handler_context)
->>> +            return -EINVAL;
->>> +
->>>            if (!(event->attr.freq || (event->attr.wakeup_events &&
->>> !event->attr.watermark))) {
->>>                event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
->>>                if (!(event->attr.sample_type &
->>>
->>>>
->>>> The status of the guest can only be queried in the NMI handler and
->>>> the func
->>>> intel_guest_get_msrs() in the perf/core context, where it's easier
->>>> and more
->>>> centrally to review this part of changes that affects vPMU for corner
->>>> cases.
->>>>
->>>> Maybe adding print info on the perf-tool side would help.
->>>>
->>>> For perf-tool users, it will get 0 number of sample for "cpu-cycles:GP"
->>>> events,
->>>> just like other uncounted perf-tool events.
->>>
->>> perf-tool would never know such details, e.g., whether the platform
->>> supports PEBS-DS or other PEBS method. It's hard to tell if the 0 is
->>> because of an unsupported hardware or nothing sampled in the guest.
->>
->> It kind of looks like this use case to me:
->>
->>      perf record -e cycles -e cpu/event=0xf4,umask=0x10/ ./workload # ICX
->>
->> # Total Lost Samples: 0
->> #
->> # Samples: 0  of event 'cpu/event=0xf4,umask=0x10/'
->> # Event count (approx.): 0
->>
->> A end-user has to check if the event-umask combination is supported or not,
->> or nothing sampled for the workload. Is there any room for improvement in
->> perf-tool to reduce the pain of this part ? If any, the same thing could
->> be applied
->> to cpu-cycles:GP, isn't it ?
+> - Dropped runtime BRBE enable for setting DEBUG_STATE_SAVE_BRBE
+> - Dropped BRBFCR_EL1 from __debug_save_brbe()/__debug_restore_brbe()
+> - Always save the live SYS_BRBCR_EL1 in host context and then check if
+>   BRBE was enabled before resetting SYS_BRBCR_EL1 for the host
 > 
-> I don't think we can expect the end user knows such details. Most of
-> them may even don't know what's PEBS-via-DS.
+>  arch/arm64/include/asm/kvm_host.h  |  4 ++++
+>  arch/arm64/kvm/debug.c             |  5 +++++
+>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
+>  3 files changed, 42 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 68421c74283a..1faa0430d8dd 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -449,6 +449,8 @@ enum vcpu_sysreg {
+>  	CNTHV_CVAL_EL2,
+>  	PMSCR_EL1,	/* Statistical profiling extension */
+>  	TRFCR_EL1,	/* Self-hosted trace filters */
+> +	BRBCR_EL1,	/* Branch Record Buffer Control Register */
+> +	BRBFCR_EL1,	/* Branch Record Buffer Function Control Register */
 
-Maybe the following generic reminder helps:
+Whose state is this? If this is limited to the host, it has no purpose
+in this enum. Once you add guest support, then it will make sense.
 
-# Total Lost Samples: 0
-# Note: the event is not counted or unsupported.
-#
-# Samples: 0  of event 'cpu/event=0xf4,umask=0x10/'
-# Event count (approx.): 0
+>
+>  	NR_SYS_REGS	/* Nothing after this line! */
+>  };
+> @@ -753,6 +755,8 @@ struct kvm_vcpu_arch {
+>  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
+>  /* Save trace filter controls */
+>  #define DEBUG_STATE_SAVE_TRFCR	__vcpu_single_flag(iflags, BIT(8))
+> +/* Save BRBE context if active  */
+> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(9))
+>  
+>  /* SVE enabled for host EL0 */
+>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+> index 2ab41b954512..fa46a70a9503 100644
+> --- a/arch/arm64/kvm/debug.c
+> +++ b/arch/arm64/kvm/debug.c
+> @@ -354,6 +354,10 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>  		    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>  			vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>  	}
+> +
+> +	/* Check if we have BRBE implemented and available at the host */
+> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
+> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+>  
+>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+> @@ -361,6 +365,7 @@ void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
+> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+>  
+>  void kvm_etm_set_guest_trfcr(u64 trfcr_guest)
+> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> index 6174f710948e..1994fc48b57c 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> @@ -93,6 +93,33 @@ static void __debug_restore_trace(struct kvm_cpu_context *host_ctxt,
+>  		write_sysreg_s(ctxt_sys_reg(host_ctxt, TRFCR_EL1), SYS_TRFCR_EL1);
+>  }
+>  
+> +static void __debug_save_brbe(struct kvm_cpu_context *host_ctxt)
+> +{
+> +	ctxt_sys_reg(host_ctxt, BRBCR_EL1) = read_sysreg_s(SYS_BRBCR_EL1);
+> +
+> +	/* Check if the BRBE is enabled */
+> +	if (!(ctxt_sys_reg(host_ctxt, BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+> +		return;
 
-> 
-> Thanks,
-> Kan
-> 
->>
->>>
->>> Thanks,
->>> Kan
->>>>
->>>>>             if (!(event->attr.freq || (event->attr.wakeup_events &&
->>>>> !event->attr.watermark))) {
->>>>>                 event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
->>>>>                 if (!(event->attr.sample_type &
->>>>>
->>>>>
->>>>> Thanks,
->>>>> Kan
->>>>>
->>>>>>
->>>>>> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
->>>>>> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR
->>>>>> emulation for extended PEBS")
->>>>>> Signed-off-by: Like Xu <likexu@tencent.com>
->>>>>> ---
->>>>>>     arch/x86/events/intel/core.c | 8 +++++++-
->>>>>>     1 file changed, 7 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/arch/x86/events/intel/core.c
->>>>>> b/arch/x86/events/intel/core.c
->>>>>> index a08f794a0e79..17afd504c35b 100644
->>>>>> --- a/arch/x86/events/intel/core.c
->>>>>> +++ b/arch/x86/events/intel/core.c
->>>>>> @@ -4103,13 +4103,19 @@ static struct perf_guest_switch_msr
->>>>>> *intel_guest_get_msrs(int *nr, void *data)
->>>>>>             .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
->>>>>>         };
->>>>>>     +    /* In any case, clear guest PEBS bits first. */
->>>>>> +    arr[global_ctrl].guest &= ~arr[pebs_enable].guest;
->>>>>> +
->>>>>>         if (arr[pebs_enable].host) {
->>>>>>             /* Disable guest PEBS if host PEBS is enabled. */
->>>>>>             arr[pebs_enable].guest = 0;
->>>>>>         } else {
->>>>>>             /* Disable guest PEBS thoroughly for cross-mapped PEBS
->>>>>> counters. */
->>>>>>             arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
->>>>>> -        arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
->>>>>> +
->>>>>> +        /* Prevent any host user from enabling PEBS for profiling
->>>>>> guest. */
->>>>>> +        arr[pebs_enable].guest &= (kvm_pmu->pebs_enable &
->>>>>> kvm_pmu->global_ctrl);
->>>>>> +
->>>>>>             /* Set hw GLOBAL_CTRL bits for PEBS counter when it runs
->>>>>> for guest */
->>>>>>             arr[global_ctrl].guest |= arr[pebs_enable].guest;
->>>>>>         }
->>>>>>
->>>>>> base-commit: 6803fb00772cc50cd59a66bd8caaee5c84b13fcf
+Why save BRBCR_EL1 if there is nothing enabled? It isn't like it can
+change behind your back, can it?
+
+> +
+> +	/*
+> +	 * Prohibit branch record generation while we are in guest.
+> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
+> +	 * modify the filtering set by the host.
+> +	 */
+> +	write_sysreg_s(0, SYS_BRBCR_EL1);
+> +	isb();
+
+What is the point of this ISB? We're at EL2, and this only affects
+EL1.
+
+> +}
+> +
+> +static void __debug_restore_brbe(struct kvm_cpu_context *host_ctxt)
+> +{
+> +	if (!ctxt_sys_reg(host_ctxt, BRBCR_EL1))
+> +		return;
+
+So on one side you're using a flag, and on the other you're using the
+*value*. You need some consistency.
+
+> +
+> +	/* Restore BRBE controls */
+> +	write_sysreg_s(ctxt_sys_reg(host_ctxt, BRBCR_EL1), SYS_BRBCR_EL1);
+> +	isb();
+
+Same question.
+
+> +}
+> +
+>  void __debug_save_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>  				    struct kvm_cpu_context *guest_ctxt)
+>  {
+> @@ -102,6 +129,10 @@ void __debug_save_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>  
+>  	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_TRFCR))
+>  		__debug_save_trace(host_ctxt, guest_ctxt);
+> +
+> +	/* Disable BRBE branch records */
+> +	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_BRBE))
+> +		__debug_save_brbe(host_ctxt);
+>  }
+>  
+>  void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
+> @@ -116,6 +147,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_cpu_context *host_ctxt,
+>  		__debug_restore_spe(host_ctxt);
+>  	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_TRFCR))
+>  		__debug_restore_trace(host_ctxt, guest_ctxt);
+> +	if (vcpu_get_flag(host_ctxt->__hyp_running_vcpu, DEBUG_STATE_SAVE_BRBE))
+> +		__debug_restore_brbe(host_ctxt);
+>  }
+>  
+>  void __debug_switch_to_host(struct kvm_vcpu *vcpu)
+
+The lifetime of this flag seems bogus, specially when there is nothing
+to do, which will always be the arch-majority of the executions.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
