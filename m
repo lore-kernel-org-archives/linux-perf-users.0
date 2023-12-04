@@ -1,79 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE062C1AB
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 20:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkN+KIYE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E37C433C8;
-	Mon,  4 Dec 2023 20:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701720043;
-	bh=wl30XAUkpa2pw6wKx+oaNQPx6pqNHEJ1mH0tMi3TDP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NkN+KIYEfqZlby3k70htcyJEW+wz3qRaaIIG/9jFqO/IQK6UBjEh5OiAEYxNOr7+1
-	 ZC7aESnNoYL3tQYhztlBDKSX3/tUk/iRmddx3uQD5cxctWI4mU/ynLndvIlCXowxZp
-	 Yul0nHP82EEnsleheDPujc4YDH7RKoI8jI6D0n9Z1lTKlgD2+Zpm8tbd4QxbZ3F/H3
-	 dnEQ0FXzUSH7dHHHhTY3y3fBPv6Lyyud0pC8dZLJy6mObyBUMgAPIDfVz/RMAuH8OT
-	 VKyhupE1fd1YZqhPjkEqR9ju/RDS9XV02lDVrrC0Iw8/QP5pJC3kJ4hLnH784QLde7
-	 7kvTmaUNPe07A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 5B20040094; Mon,  4 Dec 2023 17:00:40 -0300 (-03)
-Date: Mon, 4 Dec 2023 17:00:40 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Disha Goel <disgoel@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	Disha Goel <disgoel@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf vendor events: Update datasource event name to fix
- duplicate events
-Message-ID: <ZW4v6OpQKGC7bHi2@kernel.org>
-References: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
- <92bbba90-c7e4-43de-98dc-497ca323eacc@linux.ibm.com>
- <5293CFEC-6578-477B-86C2-40A50EBA144B@linux.vnet.ibm.com>
- <87E3CA3F-77D0-4A99-8575-C85544D207E1@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aFBhUIu0"
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB95D2
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 12:13:07 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-50bf09be81bso555e87.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Dec 2023 12:13:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701720786; x=1702325586; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+9kGZqvqwnAsTmmtCc59WM+PziDt3Qkd7uQA+xA4AAo=;
+        b=aFBhUIu0xKirXnUqGlqydjhbVw8N4DoS3WTRzox1BZ+jQ5YLrcd43JkL9mVkXPTkQU
+         RbTKCD8AuzKRqpTfa4xx+1HcmYOSw1qRfnFjLdWl8gc5OzmYmIJTd4v6POqi8gJsJ78R
+         xC89l+3IlVMJcMan2kZfCwTy/1uqVLFJoEo6Bz/pHpMhdS8pk4VJleORmG3ygxRptpu+
+         4YiewIA2TIyETK/AfkyFCiTmBewa5TdbI4EkJyWZ/mjf2jGMBAF6hwhZKSy2zUbF/S8v
+         OOsO4Jly5h8PmZhzY5Y3nqG/c5m8rW2Q6d15Qwt0BtWT5FTDvX61DD2KqS6vf1aHWJOF
+         Kqqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701720786; x=1702325586;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+9kGZqvqwnAsTmmtCc59WM+PziDt3Qkd7uQA+xA4AAo=;
+        b=BadJqp3vBaBn9LJhMyNREUlagozgIJ2Uhv6XmwSC+spdq1ZmMUGapAfvxtDCYYV5qA
+         dBCgfK+o74B+QgSyZDrjC78joPGQzDfEz1y6+0gQ9RQBe4uNQ68I5ajvmAWuybE43LSI
+         GMwl7rWWZCobuBWL6X7ilHbyRnADnnzRstGrxN262HNsUV16fDaowzzOsgEoyJ5TNiuN
+         Ead/XDcUKY0+16+SOg5yuW/SbRJOHsgfiAbNZzdxHz+OJ1owvZNFCeCXo2TsEhEze4Ot
+         Ngh5H6DvCSmHk5xQx7RlXAEbRT+Xmxs3o2i//8T7Xk4lryE9frrRD+oE2qZFw0KdRADQ
+         qa/Q==
+X-Gm-Message-State: AOJu0YwO4vH16KNRFri+JtnFEj+Oag2SnmQDWtUqS3QgQQKgbk4clBkH
+	Auz+UaMLBcBU0gpH6VfcbRnDgl0brm6jaGe7I0+lAQ==
+X-Google-Smtp-Source: AGHT+IHF8bG8tbqf9FFq+JJHa/Dth4bjMhx7Y0kGbSLDJNQXgYURe7388W7P4mZSqcttbSOuxqa4cWvGazhi7p3o3k8=
+X-Received: by 2002:a05:6512:b9f:b0:50b:cdd5:b54a with SMTP id
+ b31-20020a0565120b9f00b0050bcdd5b54amr300836lfv.3.1701720785882; Mon, 04 Dec
+ 2023 12:13:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87E3CA3F-77D0-4A99-8575-C85544D207E1@linux.vnet.ibm.com>
-X-Url: http://acmel.wordpress.com
+References: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 4 Dec 2023 12:12:54 -0800
+Message-ID: <CAP-5=fWtLHCyZh_6hBkCg16ekOXfwSGAVT9xvgKcUsMcu=Ou9w@mail.gmail.com>
+Subject: Re: [PATCH] perf vendor events: Update datasource event name to fix
+ duplicate events
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+	james.clark@arm.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, kjain@linux.ibm.com, 
+	disgoel@linux.vnet.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Sun, Dec 03, 2023 at 09:27:25PM +0530, Athira Rajeev escreveu:
-> > On 29-Nov-2023, at 10:51 AM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> wrote:
-> >> On 27-Nov-2023, at 5:32 PM, Disha Goel <disgoel@linux.ibm.com> wrote:
-> >>> Fixes: fc1435807533 ("perf vendor events power10: Update JSON/events")
-> >>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+On Thu, Nov 23, 2023 at 8:01=E2=80=AFAM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
+>
+> Running "perf list" on powerpc fails with segfault
+> as below:
+>
+>    ./perf list
+>    Segmentation fault (core dumped)
+>
+> This happens because of duplicate events in the json list.
+> The powerpc Json event list contains some event with same
+> event name, but different event code. They are:
+> - PM_INST_FROM_L3MISS (Present in datasource and frontend)
+> - PM_MRK_DATA_FROM_L2MISS (Present in datasource and marked)
+> - PM_MRK_INST_FROM_L3MISS (Present in datasource and marked)
+> - PM_MRK_DATA_FROM_L3MISS (Present in datasource and marked)
+>
+> pmu_events_table__num_events uses the value from
+> table_pmu->num_entries which includes duplicate events as
+> well. This causes issue during "perf list" and results in
+> segmentation fault.
+>
+> Since both event codes are valid, append _DSRC to the Data
+> Source events (datasource.json), so that they would have a
+> unique name. Also add PM_DATA_FROM_L2MISS_DSRC and
+> PM_DATA_FROM_L3MISS_DSRC events. With the fix, perf list
+> works as expected.
+>
+> Fixes: fc1435807533 ("perf vendor events power10: Update JSON/events")
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-> >> I have tested the patch on Power10 machine. Perf list works correctly without any segfault now.
+Given duplicate events creates broken pmu-events.c we should capture
+that as an exception in jevents.py. That way a JEVENTS_ARCH=3Dall build
+will fail if any vendor/architecture would break in this way. We
+should also add JEVENTS_ARCH=3Dall to tools/perf/tests/make. Athira, do
+you want to look at doing this?
 
-> >> # ./perf list
+Thanks,
+Ian
 
-> >> List of pre-defined events (to be used in -e or -M):
-
-> >>  branch-instructions OR branches                    [Hardware event]
-> >>  branch-misses                                      [Hardware event]
-
-> >> Tested-by: Disha Goel <disgoel@linux.ibm.com>
-
-> > Thanks Disha for testing
-
-> Hi Arnaldo,
- 
-> Can we get this pulled in if the patch looks good ?
-
-Thanks, applied to perf-tools-next.
-
-- Arnaldo
-
+> ---
+>  .../arch/powerpc/power10/datasource.json       | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json b=
+/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+> index 6b0356f2d301..0eeaaf1a95b8 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
+> @@ -99,6 +99,11 @@
+>      "EventName": "PM_INST_FROM_L2MISS",
+>      "BriefDescription": "The processor's instruction cache was reloaded =
+from a source beyond the local core's L2 due to a demand miss."
+>    },
+> +  {
+> +    "EventCode": "0x0003C0000000C040",
+> +    "EventName": "PM_DATA_FROM_L2MISS_DSRC",
+> +    "BriefDescription": "The processor's L1 data cache was reloaded from=
+ a source beyond the local core's L2 due to a demand miss."
+> +  },
+>    {
+>      "EventCode": "0x000380000010C040",
+>      "EventName": "PM_INST_FROM_L2MISS_ALL",
+> @@ -161,9 +166,14 @@
+>    },
+>    {
+>      "EventCode": "0x000780000000C040",
+> -    "EventName": "PM_INST_FROM_L3MISS",
+> +    "EventName": "PM_INST_FROM_L3MISS_DSRC",
+>      "BriefDescription": "The processor's instruction cache was reloaded =
+from beyond the local core's L3 due to a demand miss."
+>    },
+> +  {
+> +    "EventCode": "0x0007C0000000C040",
+> +    "EventName": "PM_DATA_FROM_L3MISS_DSRC",
+> +    "BriefDescription": "The processor's L1 data cache was reloaded from=
+ beyond the local core's L3 due to a demand miss."
+> +  },
+>    {
+>      "EventCode": "0x000780000010C040",
+>      "EventName": "PM_INST_FROM_L3MISS_ALL",
+> @@ -981,7 +991,7 @@
+>    },
+>    {
+>      "EventCode": "0x0003C0000000C142",
+> -    "EventName": "PM_MRK_DATA_FROM_L2MISS",
+> +    "EventName": "PM_MRK_DATA_FROM_L2MISS_DSRC",
+>      "BriefDescription": "The processor's L1 data cache was reloaded from=
+ a source beyond the local core's L2 due to a demand miss for a marked inst=
+ruction."
+>    },
+>    {
+> @@ -1046,12 +1056,12 @@
+>    },
+>    {
+>      "EventCode": "0x000780000000C142",
+> -    "EventName": "PM_MRK_INST_FROM_L3MISS",
+> +    "EventName": "PM_MRK_INST_FROM_L3MISS_DSRC",
+>      "BriefDescription": "The processor's instruction cache was reloaded =
+from beyond the local core's L3 due to a demand miss for a marked instructi=
+on."
+>    },
+>    {
+>      "EventCode": "0x0007C0000000C142",
+> -    "EventName": "PM_MRK_DATA_FROM_L3MISS",
+> +    "EventName": "PM_MRK_DATA_FROM_L3MISS_DSRC",
+>      "BriefDescription": "The processor's L1 data cache was reloaded from=
+ beyond the local core's L3 due to a demand miss for a marked instruction."
+>    },
+>    {
+> --
+> 2.39.3
+>
