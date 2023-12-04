@@ -1,38 +1,39 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E445E109;
-	Mon,  4 Dec 2023 15:41:53 -0800 (PST)
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-286d6c95b8cso461309a91.0;
-        Mon, 04 Dec 2023 15:41:53 -0800 (PST)
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19890109;
+	Mon,  4 Dec 2023 15:46:20 -0800 (PST)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6cdd214bce1so5372979b3a.3;
+        Mon, 04 Dec 2023 15:46:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701733313; x=1702338113;
+        d=1e100.net; s=20230601; t=1701733579; x=1702338379;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xsivNpyhvKBjOi0cttxLeFHb89rKI5lSMUTbQhmQ2io=;
-        b=ngv9gIh/YFdMyyqhj7TbFR5yRGYyRKtr5/DjhhtKf37asWLgp+1Yv7aycqYMd0obBx
-         MhjZ4ApIRnqLFOdkVWT1UROLP9ADpPwAlrACO+UQLu7t81CJF8hKaCaqWdvBtSoqke6z
-         olW9R/OyhKpXbA91AgoZ/G8UKFQIRdkVlXB6wczYeMyTrqkOY1M6foINsjwWqi86zxTc
-         M07f/aBfCNhWUUPEDsy674NdCQM/bv5+y9E3+XfSHmJdHCK0zZGMGX071MFGx0ezWdYc
-         315EwC5SLX41lEOV03DlKjZ6zLAWIFxle9efedKaufDNfbz1rN/UQkTXKbc3pcqu6JeR
-         vS+A==
-X-Gm-Message-State: AOJu0YwrnZ/50CKK0+L24Lm/K6Dh061ak4rlApL14034OeBSOeE7pMdt
-	EnnjJejBQiLpa/lhfzUp7P0jHWX7obm/evB8J38=
-X-Google-Smtp-Source: AGHT+IFR7+Ts/jYhVDpr3SYBHbOWhXQq6XQFg6NbA2gxpr7J9usPQAUNfmk2B0GzEi2lF5w2rtazusketNQw/ZmQL8A=
-X-Received: by 2002:a17:90a:3ec2:b0:286:54d3:3a1b with SMTP id
- k60-20020a17090a3ec200b0028654d33a1bmr390567pjc.35.1701733313096; Mon, 04 Dec
- 2023 15:41:53 -0800 (PST)
+        bh=J2jpvdls81A8CJqvJTCgXPJeqzKz6GPCtnOBOaW0I9c=;
+        b=U3xpB5HZ9VRwnQs/y1l18Fgw8ZdLEQX+0ux/rSSfGZbL/s3tXPtnlcXtHzge4zdCaA
+         hKW3y2xzQr1z/pLvh+Sh5W3RMBINymJtlo9BwaVjWuUL07q9ZlUX49vpQtac7VN0J2p/
+         r2quHohRWynPW74Plus2yNj/W4o1pvXuMYAMZMjKA1chOt0hkkC//6lvueI+KAgC0AlD
+         i0us4muQ44/pIMuXEIN2mmysSxJS2ApqJwfU16DkumlqP+P0HqqURNnyLDLOhM4p08RY
+         gpsmapSv5TOu2GZ+Gmkw/LVA61re2lNMwwYyvfbvFE5LsFN2PfIwp3aoyYE2WPnthhWn
+         Tv6Q==
+X-Gm-Message-State: AOJu0YzpaHROHNrQmEIdiOo3h0nBGQNEwG+6d/sAy+xhGiFGlpqO+WYX
+	RV+KblDbS9HQFiGHwQO2mMm5pq72ayQw3/HxfGY=
+X-Google-Smtp-Source: AGHT+IGrrLXyiZjXe4Pl0rOGsKW6DmdZ5CRCvto0thB4cDvFtnMo9OV3aiTxPA0hOox4lo7b4i+E6zDR9qYIaUUKWo8=
+X-Received: by 2002:a05:6a20:b928:b0:18f:97c:8a44 with SMTP id
+ fe40-20020a056a20b92800b0018f097c8a44mr4748532pzb.111.1701733579462; Mon, 04
+ Dec 2023 15:46:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-15-irogers@google.com>
-In-Reply-To: <20231127220902.1315692-15-irogers@google.com>
+References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-16-irogers@google.com>
+In-Reply-To: <20231127220902.1315692-16-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 4 Dec 2023 15:41:42 -0800
-Message-ID: <CAM9d7cjbZgKHJ472Gwz=6C-htWDiPQGWbq7how0zcUuwYxxQmQ@mail.gmail.com>
-Subject: Re: [PATCH v5 14/50] perf thread: Add missing RC_CHK_EQUAL
+Date: Mon, 4 Dec 2023 15:46:08 -0800
+Message-ID: <CAM9d7cgC1TXRF8d0VGt-qE4eKACTHA+JLNt95GLRSSWkZMwA2g@mail.gmail.com>
+Subject: Re: [PATCH v5 15/50] perf maps: Add maps__for_each_map to call a
+ function on each entry
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -55,14 +56,19 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+On Mon, Nov 27, 2023 at 2:10=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
 te:
 >
-> Comparing pointers without RC_CHK_ACCESS means the indirect object
-> will be compared rather than the underlying maps when REFCNT_CHECKING
-> is enabled. Fix by adding missing RC_CHK_EQUAL.
+> Most current uses of maps don't take the rwsem introducing a risk that
+> the maps will change during iteration. Introduce maps__for_each_map
+> that iterates the entries under the read lock of the rwsem. This
+> replaces the maps__for_each_entry macro that is moved into
+> maps.c. maps__for_each_entry_safe will be replaced in a later change.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
+
+At first, I wanted to have each conversion in a separate commit.
+But it's all mechanical changes so probably ok to go together.
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
