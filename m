@@ -1,444 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7B735EEA;
-	Mon,  4 Dec 2023 20:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lRAK3Tz3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 221A8C433C7;
-	Mon,  4 Dec 2023 20:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701721812;
-	bh=FQnnXIcrmsJS0CQ/ECI8/TSOUdlLjKhnOuMqg9sGnJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lRAK3Tz33QVfZJMFSoNYCSqOP5RcGx8ztV1YRZ3c9aT3o5hsNrKVEWAD1h3JOO/JJ
-	 0/s3eSe37+9ryWpU5t0Ky7xUm/ERiPfwth637djONo7tf8U42D732J+PEpq67XuCkr
-	 LU/lFAYFv0edTFWXMwNjdkZHXYlSujAOYrl3PeJ3eDP28jRiNgJmyxvnNO1f7ke4R+
-	 jc7iR+bq2qpm/RsRgU8QsEmM27ZvDqyQrGBuuPu3i0QcbQzcPMEnq8thhKvuDEPJNg
-	 K6RiUi0j+Dz7pUpqEZAh3nfjlIhnvMDgwfbRIOASc0y6sZJgHArSh9l/r800y7P23Y
-	 DRZb8X30CkBWA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 62D7440094; Mon,  4 Dec 2023 17:30:09 -0300 (-03)
-Date: Mon, 4 Dec 2023 17:30:09 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
-	James Clark <james.clark@arm.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 9/9] perf tests: Add option to run tests in parallel
-Message-ID: <ZW420ecpaSjwykny@kernel.org>
-References: <20231201235031.475293-1-irogers@google.com>
- <20231201235031.475293-9-irogers@google.com>
- <CAP-5=fUtoi7ynQ-x_7rrv_vYoTZfS_14COA1MskOFVXJ_jCDew@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WJprBs+a"
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C04FF
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 13:13:19 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40b367a0a12so1865e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Dec 2023 13:13:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701724397; x=1702329197; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P+Dl1d6P4p90dv5VdxYZbL5mNMDqiGBE2uSVy6Yzsvc=;
+        b=WJprBs+aqu8xNEqIOcVtfs5SUOmnlVOtXqTDZdRtt5aviR1DQ0DtpogmYeObuwNm01
+         jiFHou3uryvnBGGd7YUA115Qwblh/+eKIgJtNwdwjRLGJBy88sQEHAqP4jGnqAOkalo7
+         WX0xuq4qZ/h1JjIu/YKyoLIs9gERWoFwM3GhhrfSMxuqnfhsA+X6i887W3SNa/MWSDgn
+         MOa/FrwHP5qXbswPs9kGCDr5WAnj4RWTfGp+4eQrXXAu7mA3WSyq70aMJHgowlaw2MoE
+         AdOdC2PrMmrk4jmY2bOXoLQnJkEjb8UHl7y7aFr6bw+7o29QJg1TLNXlliCFq/vFO3l/
+         o8qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701724397; x=1702329197;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P+Dl1d6P4p90dv5VdxYZbL5mNMDqiGBE2uSVy6Yzsvc=;
+        b=Z1xZZbGIDp8cikYILmB8BzC/J5oBqypc4sHimxRi6r+Glh6mpfeZwqWC+Nxtwga0lU
+         BuWW0RhJh0OSU2M2A7BBhAToTPD6p98tC7UV5/maEooU/pXoGOTvvd/rz00rCY4dpHNi
+         FXpKZwhVQve8pNB1iJKH9AAO0yfiPfVynM4x9JTpYkcxnvrx5EBrPw7vWO0whB6fxXxS
+         7oUjS/ThhMv/Mgp3W9gC/UWP7TOsLKbm0RLlOjgZfX4/BJ9qludvNkHSdAPmuPwhBb8D
+         GsiJp0XPt/9XmMKGsyiSvYo2VN0kTPyOKf+7PKuq6/8DAhRVUFIio1pUDxBEcM20r5R5
+         S+YA==
+X-Gm-Message-State: AOJu0YwSD0mNsTQ3wPql2HtWwTh29V3eK1m+D1MFEZKYCV/Jc7m42/HK
+	w4tCBmgY2rS8hlwJ1vcvMN/hxcdScFhkx6NgHGEHQe4Ed/NnuqHbHyXe+Q==
+X-Google-Smtp-Source: AGHT+IFUGQiCVonpkjbD3G1w6HtwBrOXendCflfcgWfkve4cy1akFBvaxLgjGfoGqJUsaDbzDhEerx/X5MBOk5g+gUc=
+X-Received: by 2002:a7b:cb59:0:b0:40b:4221:4085 with SMTP id
+ v25-20020a7bcb59000000b0040b42214085mr433700wmj.1.1701724397294; Mon, 04 Dec
+ 2023 13:13:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUtoi7ynQ-x_7rrv_vYoTZfS_14COA1MskOFVXJ_jCDew@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+References: <20231123160110.94090-1-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fWtLHCyZh_6hBkCg16ekOXfwSGAVT9xvgKcUsMcu=Ou9w@mail.gmail.com>
+ <ZW40nstmGUeV9Fie@kernel.org> <ZW406O38z3DmVwOX@kernel.org>
+In-Reply-To: <ZW406O38z3DmVwOX@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 4 Dec 2023 13:13:05 -0800
+Message-ID: <CAP-5=fXWm_ZZjQ-36eTJTuWQsQwwCEXer22Oid7X-PSe8=WY1Q@mail.gmail.com>
+Subject: Re: [PATCH] perf vendor events: Update datasource event name to fix
+ duplicate events
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org, adrian.hunter@intel.com, 
+	james.clark@arm.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, kjain@linux.ibm.com, 
+	disgoel@linux.vnet.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Fri, Dec 01, 2023 at 06:06:12PM -0800, Ian Rogers escreveu:
-> On Fri, Dec 1, 2023 at 3:50 PM Ian Rogers <irogers@google.com> wrote:
+On Mon, Dec 4, 2023 at 12:22=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Dec 04, 2023 at 05:20:46PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+> > Em Mon, Dec 04, 2023 at 12:12:54PM -0800, Ian Rogers escreveu:
+> > > On Thu, Nov 23, 2023 at 8:01=E2=80=AFAM Athira Rajeev
+> > > <atrajeev@linux.vnet.ibm.com> wrote:
+> > > >
+> > > > Running "perf list" on powerpc fails with segfault
+> > > > as below:
+> > > >
+> > > >    ./perf list
+> > > >    Segmentation fault (core dumped)
+> > > >
+> > > > This happens because of duplicate events in the json list.
+> > > > The powerpc Json event list contains some event with same
+> > > > event name, but different event code. They are:
+> > > > - PM_INST_FROM_L3MISS (Present in datasource and frontend)
+> > > > - PM_MRK_DATA_FROM_L2MISS (Present in datasource and marked)
+> > > > - PM_MRK_INST_FROM_L3MISS (Present in datasource and marked)
+> > > > - PM_MRK_DATA_FROM_L3MISS (Present in datasource and marked)
+> > > >
+> > > > pmu_events_table__num_events uses the value from
+> > > > table_pmu->num_entries which includes duplicate events as
+> > > > well. This causes issue during "perf list" and results in
+> > > > segmentation fault.
+> > > >
+> > > > Since both event codes are valid, append _DSRC to the Data
+> > > > Source events (datasource.json), so that they would have a
+> > > > unique name. Also add PM_DATA_FROM_L2MISS_DSRC and
+> > > > PM_DATA_FROM_L3MISS_DSRC events. With the fix, perf list
+> > > > works as expected.
+> > > >
+> > > > Fixes: fc1435807533 ("perf vendor events power10: Update JSON/event=
+s")
+> > > > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> > >
+> > > Given duplicate events creates broken pmu-events.c we should capture
+> > > that as an exception in jevents.py. That way a JEVENTS_ARCH=3Dall bui=
+ld
+> > > will fail if any vendor/architecture would break in this way. We
+> > > should also add JEVENTS_ARCH=3Dall to tools/perf/tests/make. Athira, =
+do
+> > > you want to look at doing this?
 > >
-> > By default tests are forked, add an option (-p or --parallel) so that
-> > the forked tests are all started in parallel and then their output
-> > gathered serially. This is opt-in as running in parallel can cause
-> > test flakes.
-> >
-> > Rather than fork within the code, the start_command/finish_command
-> > from libsubcmd are used. This changes how stderr and stdout are
-> > handled.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Actually, I think this patch needs more work. The verbose output is
-> degraded and missing in some cases. Suggestions on how to fix welcome.
+> > Should I go ahead and remove this patch till this is sorted out?
+>
+> I'll keep it, its already in tmp.perf-tools-next, we can go from there
+> and improve this with follow up patches,
 
-I'll think about, but to make progress I think the first 8 patches in
-this series can be considered now?
+Agreed. I could look to do the follow up but likely won't have a
+chance for a while. If others could help out it would be great. I'd
+like to have the jevents and json be robust enough that we don't trip
+over problems like this and the somewhat similar AmpereOne issue.
 
-- Arnaldo
+Thanks,
+Ian
 
-> It'd be nice to fix up the tests and allow parallel to be the default.
-> The first patch in this series is 1 such fix. Another is needed to
-> make "Couldn't resolve comm name for pid" silent in the cases where it
-> is racy. I was also noticing hangs on things like the lock contention
-> test. The good news is the tests are doing their job of finding bugs.
-> 
-> Thanks,
-> Ian
-> 
-> 
-> > ---
-> >  tools/perf/tests/builtin-test.c | 261 +++++++++++++++++++++-----------
-> >  1 file changed, 169 insertions(+), 92 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> > index 54b11c23e863..91c32b477cbb 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -21,6 +21,7 @@
-> >  #include "debug.h"
-> >  #include "color.h"
-> >  #include <subcmd/parse-options.h>
-> > +#include <subcmd/run-command.h>
-> >  #include "string2.h"
-> >  #include "symbol.h"
-> >  #include "util/rlimit.h"
-> > @@ -31,7 +32,13 @@
-> >
-> >  #include "tests-scripts.h"
-> >
-> > +/*
-> > + * Command line option to not fork the test running in the same process and
-> > + * making them easier to debug.
-> > + */
-> >  static bool dont_fork;
-> > +/* Fork the tests in parallel and then wait for their completion. */
-> > +static bool parallel;
-> >  const char *dso_to_test;
-> >  const char *test_objdump_path = "objdump";
-> >
-> > @@ -211,76 +218,36 @@ static bool perf_test__matches(const char *desc, int curr, int argc, const char
-> >         return false;
-> >  }
-> >
-> > -static int run_test(struct test_suite *test, int subtest)
-> > -{
-> > -       int status, err = -1, child = dont_fork ? 0 : fork();
-> > -       char sbuf[STRERR_BUFSIZE];
-> > -
-> > -       if (child < 0) {
-> > -               pr_err("failed to fork test: %s\n",
-> > -                       str_error_r(errno, sbuf, sizeof(sbuf)));
-> > -               return -1;
-> > -       }
-> > -
-> > -       if (!child) {
-> > -               if (!dont_fork) {
-> > -                       pr_debug("test child forked, pid %d\n", getpid());
-> > -
-> > -                       if (verbose <= 0) {
-> > -                               int nullfd = open("/dev/null", O_WRONLY);
-> > -
-> > -                               if (nullfd >= 0) {
-> > -                                       close(STDERR_FILENO);
-> > -                                       close(STDOUT_FILENO);
-> > -
-> > -                                       dup2(nullfd, STDOUT_FILENO);
-> > -                                       dup2(STDOUT_FILENO, STDERR_FILENO);
-> > -                                       close(nullfd);
-> > -                               }
-> > -                       } else {
-> > -                               signal(SIGSEGV, sighandler_dump_stack);
-> > -                               signal(SIGFPE, sighandler_dump_stack);
-> > -                       }
-> > -               }
-> > -
-> > -               err = test_function(test, subtest)(test, subtest);
-> > -               if (!dont_fork)
-> > -                       exit(err);
-> > -       }
-> > -
-> > -       if (!dont_fork) {
-> > -               wait(&status);
-> > +struct child_test {
-> > +       struct child_process process;
-> > +       struct test_suite *test;
-> > +       int test_num;
-> > +       int subtest;
-> > +};
-> >
-> > -               if (WIFEXITED(status)) {
-> > -                       err = (signed char)WEXITSTATUS(status);
-> > -                       pr_debug("test child finished with %d\n", err);
-> > -               } else if (WIFSIGNALED(status)) {
-> > -                       err = -1;
-> > -                       pr_debug("test child interrupted\n");
-> > -               }
-> > -       }
-> > +static int run_test_child(struct child_process *process)
-> > +{
-> > +       struct child_test *child = container_of(process, struct child_test, process);
-> > +       int err;
-> >
-> > -       return err;
-> > +       pr_debug("--- start ---\n");
-> > +       pr_debug("test child forked, pid %d\n", getpid());
-> > +       err = test_function(child->test, child->subtest)(child->test, child->subtest);
-> > +       pr_debug("---- end(%d) ----\n", err);
-> > +       fflush(NULL);
-> > +       return -err;
-> >  }
-> >
-> > -#define for_each_test(j, k, t)                 \
-> > -       for (j = 0, k = 0; j < ARRAY_SIZE(tests); j++, k = 0)   \
-> > -               while ((t = tests[j][k++]) != NULL)
-> > -
-> > -static int test_and_print(struct test_suite *t, int subtest)
-> > +static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width)
-> >  {
-> > -       int err;
-> > -
-> > -       pr_debug("\n--- start ---\n");
-> > -       err = run_test(t, subtest);
-> > -       pr_debug("---- end ----\n");
-> > +       if (has_subtests(t)) {
-> > +               int subw = width > 2 ? width - 2 : width;
-> >
-> > -       if (!has_subtests(t))
-> > -               pr_debug("%s:", t->desc);
-> > -       else
-> > -               pr_debug("%s subtest %d:", t->desc, subtest + 1);
-> > +               pr_info("%3d.%1d: %-*s:", i + 1, subtest + 1, subw, test_description(t, subtest));
-> > +       } else
-> > +               pr_info("%3d: %-*s:", i + 1, width, test_description(t, subtest));
-> >
-> > -       switch (err) {
-> > +       switch (result) {
-> >         case TEST_OK:
-> >                 pr_info(" Ok\n");
-> >                 break;
-> > @@ -299,22 +266,135 @@ static int test_and_print(struct test_suite *t, int subtest)
-> >                 break;
-> >         }
-> >
-> > -       return err;
-> > +       return 0;
-> > +}
-> > +
-> > +static int finish_test(struct child_test *child_test, int width)
-> > +{
-> > +       struct test_suite *t = child_test->test;
-> > +       int i = child_test->test_num;
-> > +       int subi = child_test->subtest;
-> > +       int out = child_test->process.out;
-> > +       int err = child_test->process.err;
-> > +       int ret;
-> > +
-> > +       if (verbose) {
-> > +               bool out_done = false, err_done = false;
-> > +
-> > +               fcntl(out, F_SETFL, O_NONBLOCK);
-> > +               fcntl(err, F_SETFL, O_NONBLOCK);
-> > +               if (has_subtests(t))
-> > +                       pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_description(t, subi));
-> > +               else
-> > +                       pr_info("%3d: %s:\n", i + 1, test_description(t, -1));
-> > +
-> > +               while (!out_done && !err_done) {
-> > +                       char buf[512];
-> > +                       ssize_t len;
-> > +
-> > +                       if (!out_done) {
-> > +                               errno = 0;
-> > +                               len = read(out, buf, sizeof(buf) - 1);
-> > +
-> > +                               if (len <= 0)
-> > +                                       err_done = errno != EAGAIN;
-> > +                               else {
-> > +                                       buf[len] = '\0';
-> > +                                       fprintf(stdout, "%s", buf);
-> > +                               }
-> > +                       }
-> > +                       if (!err_done) {
-> > +                               errno = 0;
-> > +                               len = read(err, buf, sizeof(buf) - 1);
-> > +
-> > +                               if (len <= 0)
-> > +                                       err_done = errno != EAGAIN;
-> > +                               else {
-> > +                                       buf[len] = '\0';
-> > +                                       fprintf(stderr, "%s", buf);
-> > +                               }
-> > +                       }
-> > +               }
-> > +       }
-> > +       ret = finish_command(&child_test->process);
-> > +       print_test_result(t, i, subi, ret, width);
-> > +       if (out >= 0)
-> > +               close(out);
-> > +       if (err >= 0)
-> > +               close(err);
-> > +       return 0;
-> > +}
-> > +
-> > +static int start_test(struct test_suite *test, int i, int subi, struct child_test **child,
-> > +                     int width)
-> > +{
-> > +       int err;
-> > +
-> > +       *child = NULL;
-> > +       if (dont_fork) {
-> > +               pr_debug("--- start ---\n");
-> > +               err = test_function(test, subi)(test, subi);
-> > +               pr_debug("---- end ----\n");
-> > +               print_test_result(test, i, subi, err, width);
-> > +               return 0;
-> > +       }
-> > +
-> > +       *child = zalloc(sizeof(**child));
-> > +       if (!*child)
-> > +               return -ENOMEM;
-> > +
-> > +       (*child)->test = test;
-> > +       (*child)->test_num = i;
-> > +       (*child)->subtest = subi;
-> > +       (*child)->process.pid = -1;
-> > +       (*child)->process.no_stdin = 1;
-> > +       if (verbose <= 0) {
-> > +               (*child)->process.no_stdout = 1;
-> > +               (*child)->process.no_stderr = 1;
-> > +       } else {
-> > +               (*child)->process.out = -1;
-> > +               (*child)->process.err = -1;
-> > +       }
-> > +       (*child)->process.no_exec_cmd = run_test_child;
-> > +       err = start_command(&(*child)->process);
-> > +       if (err || parallel)
-> > +               return  err;
-> > +       return finish_test(*child, width);
-> >  }
-> >
-> > +#define for_each_test(j, k, t)                                 \
-> > +       for (j = 0, k = 0; j < ARRAY_SIZE(tests); j++, k = 0)   \
-> > +               while ((t = tests[j][k++]) != NULL)
-> > +
-> >  static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
-> >  {
-> >         struct test_suite *t;
-> >         unsigned int j, k;
-> >         int i = 0;
-> >         int width = 0;
-> > +       size_t num_tests = 0;
-> > +       struct child_test **child_tests;
-> > +       int child_test_num = 0;
-> >
-> >         for_each_test(j, k, t) {
-> >                 int len = strlen(test_description(t, -1));
-> >
-> >                 if (width < len)
-> >                         width = len;
-> > +
-> > +               if (has_subtests(t)) {
-> > +                       for (int l = 0, subn = num_subtests(t); l < subn; l++) {
-> > +                               len = strlen(test_description(t, -1));
-> > +                               if (width < len)
-> > +                                       width = len;
-> > +                               num_tests++;
-> > +                       }
-> > +               } else
-> > +                       num_tests++;
-> >         }
-> > +       child_tests = calloc(num_tests, sizeof(*child_tests));
-> > +       if (!child_tests)
-> > +               return -ENOMEM;
-> >
-> >         for_each_test(j, k, t) {
-> >                 int curr = i++;
-> > @@ -336,52 +416,47 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
-> >                                 continue;
-> >                 }
-> >
-> > -               pr_info("%3d: %-*s:", i, width, test_description(t, -1));
-> > -
-> >                 if (intlist__find(skiplist, i)) {
-> > +                       pr_info("%3d: %-*s:", curr + 1, width, test_description(t, -1));
-> >                         color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
-> >                         continue;
-> >                 }
-> >
-> >                 if (!has_subtests(t)) {
-> > -                       test_and_print(t, -1);
-> > +                       int err = start_test(t, curr, -1, &child_tests[child_test_num++], width);
-> > +
-> > +                       if (err) {
-> > +                               /* TODO: if parallel waitpid the already forked children. */
-> > +                               free(child_tests);
-> > +                               return err;
-> > +                       }
-> >                 } else {
-> >                         int subn = num_subtests(t);
-> > -                       /*
-> > -                        * minus 2 to align with normal testcases.
-> > -                        * For subtest we print additional '.x' in number.
-> > -                        * for example:
-> > -                        *
-> > -                        * 35: Test LLVM searching and compiling                        :
-> > -                        * 35.1: Basic BPF llvm compiling test                          : Ok
-> > -                        */
-> > -                       int subw = width > 2 ? width - 2 : width;
-> > -
-> > -                       if (subn <= 0) {
-> > -                               color_fprintf(stderr, PERF_COLOR_YELLOW,
-> > -                                             " Skip (not compiled in)\n");
-> > -                               continue;
-> > -                       }
-> > -                       pr_info("\n");
-> >
-> >                         for (subi = 0; subi < subn; subi++) {
-> > -                               int len = strlen(test_description(t, subi));
-> > -
-> > -                               if (subw < len)
-> > -                                       subw = len;
-> > -                       }
-> > +                               int err;
-> >
-> > -                       for (subi = 0; subi < subn; subi++) {
-> >                                 if (!perf_test__matches(test_description(t, subi),
-> >                                                         curr, argc, argv))
-> >                                         continue;
-> >
-> > -                               pr_info("%3d.%1d: %-*s:", i, subi + 1, subw,
-> > -                                       test_description(t, subi));
-> > -                               test_and_print(t, subi);
-> > +                               err = start_test(t, curr, subi, &child_tests[child_test_num++],
-> > +                                                width);
-> > +                               if (err)
-> > +                                       return err;
-> >                         }
-> >                 }
-> >         }
-> > +       for (i = 0; i < child_test_num; i++) {
-> > +               if (parallel) {
-> > +                       int ret  = finish_test(child_tests[i], width);
-> > +
-> > +                       if (ret)
-> > +                               return ret;
-> > +               }
-> > +               free(child_tests[i]);
-> > +       }
-> > +       free(child_tests);
-> >         return 0;
-> >  }
-> >
-> > @@ -449,6 +524,8 @@ int cmd_test(int argc, const char **argv)
-> >                     "be more verbose (show symbol address, etc)"),
-> >         OPT_BOOLEAN('F', "dont-fork", &dont_fork,
-> >                     "Do not fork for testcase"),
-> > +       OPT_BOOLEAN('p', "parallel", &parallel,
-> > +                   "Run the tests altogether in parallel"),
-> >         OPT_STRING('w', "workload", &workload, "work", "workload to run for testing"),
-> >         OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
-> >         OPT_STRING(0, "objdump", &test_objdump_path, "path",
-> > --
-> > 2.43.0.rc2.451.g8631bc7472-goog
-> >
-
--- 
-
-- Arnaldo
+> - Arnaldo
