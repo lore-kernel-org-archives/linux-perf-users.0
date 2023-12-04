@@ -1,354 +1,155 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pDUMcq4Q"
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543A5A1
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 14:36:48 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-50be58a751cso3163471e87.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Dec 2023 14:36:48 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="oX/eDsKk"
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2119.outbound.protection.outlook.com [40.107.223.119])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2BE79B;
+	Mon,  4 Dec 2023 14:45:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I2GcGVTUy7Rran3MeffMBZv65/ddAXBN6AnwpEaZt4axT2xKph6Pjk+ujKo2xWrs5p33vPaVOSl+ruSLrrHDExylxsXMh2hC57cK+wLqnLasSlnnOMQIBL3jjHONkR8QLCzT4EjKv6fMbRpvoaQg/eJ0FMBxxIWzVYecy1gPr3uPMmXIxcBbR1kj565CAm5U+13iubixEtXmpWlqs5JiolNYUPNQlnjz1Tus2+dGTSlPb4NED5RehAba55j/ppvX0oarPjolxsbQkePUha709RGKVJ+wHiCUB6En7p8ERbe0KUeXeYvdLoDHehoSFQCxb9I5tpWM0LM/TGEV8UqTgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WhCVamRV+53hLBG1mG3wlCOZF33LLPkV09hqn+QHwZo=;
+ b=EowWszPyn/PK4yRBwNWQI1z10JvS4Sdrat2X3btIEnO4sLECymX03V0yeI91TT6ioPcgc+kis8mvQahUsmhlMmgiEa0KRFztjjmdxLFWNyoTnlNXX8wQ6nZ3hev9YItnXzJxG8QiXydNlukRpat8SUMr4IxM74u9uhyrkHlpW68izqFESsfmuibxpjveicR4mIuTXFcGLEcjy9Xst2nPq0EPe5NRHr316VlHUeysvdJKQ4rPZrqUFsixt9Djeo/+2ZiDmRWtOKOWONWkl7Lhm/OONIxutRkucqOu2M/vhiaB5J05B+plcsy4hIApUQoDd0v+PA47rxpiZ+E0Jsk8aA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701729406; x=1702334206; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MXRsF9t9WxpNYx8iwPX9SpMv9AfC4OC4Qoc43qQSXTU=;
-        b=pDUMcq4Q5zPtUh0zMEnDOrq0/vNdW8YRD1+dvEKswTf00SXHCDgmHHPgDZZKvl5xXP
-         h/5TRsvaPgmAQCb5ziWdVZFixvcx9fgRma0g8HrCl8kMRZtPb/4U4UlRaOEnwhX0xmIN
-         USPgQgQP9zVbHeC9OOs3AFv/oZqADSqSkT1Nhi5GWOF4XgwIylanZzUaB2MG4kMFAQVl
-         3dyQ2KI9+RuKWQLj3kXqbriCJV3l2oM5WgBQbKw+sjX52duccVjFKZG4lDw+8ShQR9j0
-         MmuzIdjJ/Q2h8OI0uaNK7qCr+cQy/2RZAkjofhwd5PNkNlXsu0rHLIfZ0/D1fl39KNRm
-         2Jxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701729406; x=1702334206;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MXRsF9t9WxpNYx8iwPX9SpMv9AfC4OC4Qoc43qQSXTU=;
-        b=P8JihnvL9RYM7YvQEkAo6eQ8TCGRFKOrqp1XIMDa+zjLfagZ/GUfRacYOtAJ5OhxY5
-         tC5yl12Q1x+btV8Jac3QEJdbCilBQgS6j/WcV07pwSnitlWWYkt2XHAB3iMCyTbnCzos
-         yn8Afb/o1Ncg//EKQC8IzuXY51jMQJBsNsHvfyQfWvIV26aHTXUY7vlmIPMKEOf5QwPJ
-         DwzyhzExCY8lsAkN0xly++lLl+PuUzJ8Xbo1OudHrdoG9khSH1RhiCMdZ1/PXsFmud/g
-         okTqycC1o1mYFXN+6sT0T6N3gO8FPziDfdjltpf/nAjwzY0vlX7BZBQs+0yY8jUOVTqU
-         AkDA==
-X-Gm-Message-State: AOJu0YzitJlghxFv/WMKetRrOK8oRONgcI2VFvsBJPMFh0rqHTpnEge0
-	zAGvqjPa2/qfqfYmQTTSRpzYgg==
-X-Google-Smtp-Source: AGHT+IGX2BESouknOQ3oAhirEA5Q7rmzfSwRs2EUdzcg8STznCdnSBsfFocSyEEucu7SIYSEhTBkYg==
-X-Received: by 2002:a19:7612:0:b0:50b:e750:dd99 with SMTP id c18-20020a197612000000b0050be750dd99mr1571997lff.38.1701729406508;
-        Mon, 04 Dec 2023 14:36:46 -0800 (PST)
-Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id k15-20020a0565123d8f00b0050be986ba1esm804044lfv.108.2023.12.04.14.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Dec 2023 14:36:45 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 04 Dec 2023 23:36:44 +0100
-Subject: [PATCH] ARM: Delete ARM11MPCore (ARM11 ARMv6K SMP) support
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WhCVamRV+53hLBG1mG3wlCOZF33LLPkV09hqn+QHwZo=;
+ b=oX/eDsKkt12YkFzOoBiKKdJKr0AChbsVcc0Vd/LXzdr0nSo0v9niRZgtQRAG2Yxww2njvkIfc1ooVYEWm0xVnePJGnY5vJf4G/z8XN1rUEDFMj6UsYgds3SsOQyWf4ri+9FXFd6eVLiUP4FpBDERCTd+3/OO66bhIqHaMSDggLQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
+ SN7PR01MB8116.prod.exchangelabs.com (2603:10b6:806:357::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7046.34; Mon, 4 Dec 2023 22:45:17 +0000
+Received: from DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::49fa:8dc0:6fd1:72e6]) by DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::49fa:8dc0:6fd1:72e6%4]) with mapi id 15.20.7046.033; Mon, 4 Dec 2023
+ 22:45:16 +0000
+Date: Mon, 4 Dec 2023 14:44:54 -0800 (PST)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Ian Rogers <irogers@google.com>
+cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+    James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+    Leo Yan <leo.yan@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+    Adrian Hunter <adrian.hunter@intel.com>, 
+    Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+    Kan Liang <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
+    linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf metrics: Avoid segv if default metricgroup
+ isn't set
+In-Reply-To: <20231204182330.654255-1-irogers@google.com>
+Message-ID: <bea4ad79-297e-9737-8af1-2286192d26f4@os.amperecomputing.com>
+References: <20231204182330.654255-1-irogers@google.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-ClientProxiedBy: CH2PR05CA0058.namprd05.prod.outlook.com
+ (2603:10b6:610:38::35) To DM5PR0102MB3590.prod.exchangelabs.com
+ (2603:10b6:4:a4::25)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231204-drop-11mpcore-v1-1-f96cd3938cf1@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAHtUbmUC/x2MQQqAIBAAvyJ7TkjDwr4SHULX2kMqK0Qg/j3pM
- jCHmQoFmbDAKiowPlQoxS5qEOCuI54oyXcHPepJdUjPKUul7uwSo/TGzM6ZsHhroTeZMdD7/7a
- 9tQ9j/4dzXwAAAA==
-To: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
- Russell King <linux@armlinux.org.uk>, Liviu Dudau <liviu.dudau@arm.com>, 
- Sudeep Holla <sudeep.holla@arm.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>, 
- Arnd Bergmann <arnd@arndb.de>
-Cc: linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.4
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|SN7PR01MB8116:EE_
+X-MS-Office365-Filtering-Correlation-Id: 916ec6fa-26e3-4e0c-3f7f-08dbf51aaf8a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Y3//THX1Zgk6QKSWh2GqWNgZalVbJWOVRArFboXjrImrbA5qMKZGoIomYM0QcDHxN4ZcZAJX9uEMbamyFZE47rvhVUpvHOOcsI6U5Rc4PSKvMFNlpCTs718ggqM53qcZ8thDTGJYGbFUUoLnZrRQ80H8cCfGX6yj4fh88gG6G0BsD2qpi26qDFawQYCwVSUqu78jQc21Q7x0EcxmksyXVohuyTG2Uj43ZA/0ZoAlzilaDCyuoBjP41iJrsTExkwoywYvEOYuLgz7r3p25zD2XfNZLzaSCLWOoLSFLf8V1hw51yOliay1kox5FzNlNoaMHjzC4768fMff9F9lCxCqPiFaprAI7E1a4hIu9lVUq+vtO7QQXKqXQLKXe9UHPdeqve53L43dGZBGugEuzbHrztLf168oYqzBl5sf9v6nD9TVALt3vzWAznhgXXCPoxE0CucFCq0osSN/gD6OPmpvxsA4bJbxOMGmho2cu++47eQhcGVdC4PRwV1lgFQQWmJKwkYLMUhRy3BSNHG6e71SHxFzpKg5vwGZMyvilQppA8knL7JFT2S7fXIkfkxniJ1TsI0bRY31W2Zvj031bpnN2Otsd11KzfPQNtpnUwrrNPt9TBed3jcLlwxU0Lsle/iB
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(136003)(366004)(39850400004)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(26005)(478600001)(6486002)(83380400001)(52116002)(6666004)(6506007)(6512007)(2616005)(316002)(66476007)(6916009)(54906003)(66946007)(66556008)(31686004)(38100700002)(5660300002)(4326008)(86362001)(2906002)(8936002)(8676002)(7416002)(31696002)(38350700005)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?K7HtSOay6ufLi8ZoKldM/bPHuFLucsugpcSfmV2M6EP+l0sm7mUqYPRPIBXi?=
+ =?us-ascii?Q?ER7E/Zg8oF9EABRG4cjFOsYkQE2CwIkWgN/4UfN5GMpGOAyhxLnqs+bjrq4A?=
+ =?us-ascii?Q?5q/i/9baoSVh5PG0dXQVmnvZ5MZGmUdMBoedR8hCk1Hf9CbbQWBE9zGTJv0z?=
+ =?us-ascii?Q?dTeVXDDmP6A32ntyVSbCBPZAdL7qsMYsNEj6g/0uWyxOhHViW1gBMhnr1+rI?=
+ =?us-ascii?Q?mUJvfHlO7xkUL+UKNfwGLk1YCCacr4UPFi/ybp2Uocf4653jj8e8niYRQiqE?=
+ =?us-ascii?Q?G9dH7tlZKw4IMMnQmD9OYkM4keKWfbLy/a+hE9Ei8BAWklO2x0PWr5DVL5tL?=
+ =?us-ascii?Q?HBhGaW6As+mu1FRph8gVst8lsxP+8+1Kf7fzAktHHclNFBc3fZxWScJTMf7d?=
+ =?us-ascii?Q?Dk8MPURh15uZHwWTPXmD6OujcvSY0LuqN9wiSJBttISs8XblsIyNqamdZ0EJ?=
+ =?us-ascii?Q?pdQW7VL3Og4V2fYs6QBpPjFKPUtPBv0mwX8Rtv+ih21tus0uUzM8ccCw4tRG?=
+ =?us-ascii?Q?PCY1zSo3z6k9Ys4Jb3BO2gwZzj3nBsoBvQMRcLJ2TeSJldfGZFF/FWiGKXmP?=
+ =?us-ascii?Q?5mSU9S06M36Kx22B1PMhmT8G853Cr+NfQtpvriDXFbElih1snz04iVMsy2cs?=
+ =?us-ascii?Q?fyEVbv/0rz0+/I1WicJsKJjFmZhg+MtRas7NZSiTKd3pmu2CypOqgZLP2VVk?=
+ =?us-ascii?Q?VoIr2zq+2h4whrUxmfoMUZ+DspcMKLWJJ1NChH+FgjISFM2NOCR3p1f7/e43?=
+ =?us-ascii?Q?MzxAOH0GnoUR2otOwlNPLqFgH6xjymL83ccP+1MonwYTO/lGjsXLgiCGxEVV?=
+ =?us-ascii?Q?e7RxuIoyqLgol1aB3E47x3JsACQwjaOCHDnjFOCWdCVMhr0Mig+v9/ZxyQwR?=
+ =?us-ascii?Q?O4IX8PlqeZsD7j2xJR/rpFmlvhOyWvNlQjLH1QWXDPPQbdinfCPJLF6SjCQH?=
+ =?us-ascii?Q?X2my4LoGMlSzZPt3rVTt15LBRFu66ZgdoNbCGntG7ryYnV93+9swmfMY6ChB?=
+ =?us-ascii?Q?NmBut6pRmQTNxt1Qkhv0LFLy2cBLqUF5e27J+LNJPw4vS1DYtk0Cg/bHqLC6?=
+ =?us-ascii?Q?CxRYTl4/rEDYYcLIaZpSA8GGpbSh1osej5BrJ+fDDJNbNhSmjeYYayNZ3gUT?=
+ =?us-ascii?Q?/bgpjy+3m6neICtKB7s9VPONbRATgWcg2shqiqvzt/TbaAoB2yAtfUGc1Leo?=
+ =?us-ascii?Q?NSCqdG04ocuPNKh/9jPiIgPpD4bKeeAdneazDlAgFz7Sx9kC+9q5XUUvaJ+o?=
+ =?us-ascii?Q?tbW9L0xBD0gPuHNE7ntnC7GZ4S7+VdECziIGjkRVrv7og+PZFSUDSEnpLsQF?=
+ =?us-ascii?Q?bYtX29MDP1P4j3dR07xGMiK3JJ3tFslWvCNj/s5qJSUnzIt9YYEXPZksjHg7?=
+ =?us-ascii?Q?8GpHyNvgLo+wNTDZb6mO0LafySViuXahLpDxc+eeK7WWmHWliVllD/HU8562?=
+ =?us-ascii?Q?YEFevZfq+WXKFuGFtkfGLYgSyClvUxYzBW7zRUfpIxu0RQ1SNwLKx01Yh4+h?=
+ =?us-ascii?Q?/vLVd/oORDBYaoXGFOcyISzqc1rDzqEyTYW8OyBNn9MI7gjEq4quksdTCibB?=
+ =?us-ascii?Q?G/fDd3xqLMFXpFtLfp9vNClh9tEd6w6xom1QQU6C0vdaZZEy8TNwgJilVZ3D?=
+ =?us-ascii?Q?7QoFmipYQIuU4uHIqtmWeZQ=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 916ec6fa-26e3-4e0c-3f7f-08dbf51aaf8a
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2023 22:45:16.8382
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ph4yiv1lpWugDtHbFC2cIf97z9yqrG0mY6K86dR9COnlPz+4uLZv0ICotFxdmo0QODfx+evmE6p/ChQW4ni7Onb29cA0XiK8AAXLvWHuMmVQSmHpAsr0NN88QLyC6sjd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR01MB8116
 
-This ARM11 SMP configuration was one of the first SMP configurations
-the ARM kernel supported, but it has the downside of odd DMA handling,
-odd cache tagging, and often (as of recent) completely broken cache
-handling on the ARM RealView PB11MPCore test chips. To boot the
-platform it was necessary to completely disable the cache.
-When it comes to the EB 11MPCore it is unclear if this ever worked.
 
-These reference designs are now the only ARMv6K SMP platforms.
 
-As only reference designs of purely academic interest remain, and
-since the special-cased DMA and PMU code is hard to maintain and
-doesn't really work, it is not really worth our time.
+On Mon, 4 Dec 2023, Ian Rogers wrote:
+> A metric is default by having "Default" within its groups. The default
+> metricgroup name needn't be set and this can result in segv in
+> default_metricgroup_cmp and perf_stat__print_shadow_stats_metricgroup
+> that assume it has a value when there is a Default metric group. To
+> avoid the segv initialize the value to "".
+>
+> Fixes: 1c0e47956a8e ("perf metrics: Sort the Default metricgroup")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Delete the ARM11MPCore support along with:
+Thanks! I was going to look for the bug but got pulled to other 
+tasks. The patch looks good to me and I tested it successfully on 
+AmpereOne.
 
-- The special DMA quirk CONFIG_DMA_CACHE_RWFO that is only used
-  on ARMv6K SMP, and we are the last ARMV6K system leaving the
-  building and the cache handling is awkward, so good-bye.
+   Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 
-- The special PMU handling that was only used by ARM11MPCore.
 
-The following is left behind:
+Cheers, Ilkka
 
-- TIMER_OF_DECLARE(arm_twd_11mp, "arm,arm11mp-twd-timer", ...)
-  in arch/arm/kernel/smp_twd.c, this is still in use by Marvell MMP3
-  arch/arm/boot/dts/marvell/mmp3.dtsi
-
-- IRQCHIP_DECLARE(arm11mp_gic, "arm,arm11mp-gic", ...)
-  in drivers/irqchip/irq-gic.c, this is still in use by Marvell MMP3
-  arch/arm/boot/dts/marvell/mmp3.dtsi
-
-These are unfortunate but will need to be kept around for
-compatibility. New Marvell-specific compatibles should however probably
-be added.
-
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/kernel/perf_event_v6.c            | 34 ------------------------------
- arch/arm/mach-versatile/Kconfig            | 17 ---------------
- arch/arm/mach-versatile/platsmp-realview.c |  2 --
- arch/arm/mach-versatile/realview.c         |  1 -
- arch/arm/mm/Kconfig                        | 18 ----------------
- arch/arm/mm/cache-v6.S                     | 31 ---------------------------
- 6 files changed, 103 deletions(-)
-
-diff --git a/arch/arm/kernel/perf_event_v6.c b/arch/arm/kernel/perf_event_v6.c
-index 1ae99deeec54..3115077f6abc 100644
---- a/arch/arm/kernel/perf_event_v6.c
-+++ b/arch/arm/kernel/perf_event_v6.c
-@@ -525,40 +525,7 @@ static int armv6_1176_pmu_init(struct arm_pmu *cpu_pmu)
- 	return 0;
- }
- 
--/*
-- * ARMv6mpcore is almost identical to single core ARMv6 with the exception
-- * that some of the events have different enumerations and that there is no
-- * *hack* to stop the programmable counters. To stop the counters we simply
-- * disable the interrupt reporting and update the event. When unthrottling we
-- * reset the period and enable the interrupt reporting.
-- */
--
--static int armv6mpcore_map_event(struct perf_event *event)
--{
--	return armpmu_map_event(event, &armv6mpcore_perf_map,
--				&armv6mpcore_perf_cache_map, 0xFF);
--}
--
--static int armv6mpcore_pmu_init(struct arm_pmu *cpu_pmu)
--{
--	cpu_pmu->name		= "armv6_11mpcore";
--	cpu_pmu->handle_irq	= armv6pmu_handle_irq;
--	cpu_pmu->enable		= armv6pmu_enable_event;
--	cpu_pmu->disable	= armv6mpcore_pmu_disable_event;
--	cpu_pmu->read_counter	= armv6pmu_read_counter;
--	cpu_pmu->write_counter	= armv6pmu_write_counter;
--	cpu_pmu->get_event_idx	= armv6pmu_get_event_idx;
--	cpu_pmu->clear_event_idx = armv6pmu_clear_event_idx;
--	cpu_pmu->start		= armv6pmu_start;
--	cpu_pmu->stop		= armv6pmu_stop;
--	cpu_pmu->map_event	= armv6mpcore_map_event;
--	cpu_pmu->num_events	= 3;
--
--	return 0;
--}
--
- static const struct of_device_id armv6_pmu_of_device_ids[] = {
--	{.compatible = "arm,arm11mpcore-pmu",	.data = armv6mpcore_pmu_init},
- 	{.compatible = "arm,arm1176-pmu",	.data = armv6_1176_pmu_init},
- 	{.compatible = "arm,arm1136-pmu",	.data = armv6_1136_pmu_init},
- 	{ /* sentinel value */ }
-@@ -568,7 +535,6 @@ static const struct pmu_probe_info armv6_pmu_probe_table[] = {
- 	ARM_PMU_PROBE(ARM_CPU_PART_ARM1136, armv6_1136_pmu_init),
- 	ARM_PMU_PROBE(ARM_CPU_PART_ARM1156, armv6_1156_pmu_init),
- 	ARM_PMU_PROBE(ARM_CPU_PART_ARM1176, armv6_1176_pmu_init),
--	ARM_PMU_PROBE(ARM_CPU_PART_ARM11MPCORE, armv6mpcore_pmu_init),
- 	{ /* sentinel value */ }
- };
- 
-diff --git a/arch/arm/mach-versatile/Kconfig b/arch/arm/mach-versatile/Kconfig
-index b1519b4dc03a..e029270c2687 100644
---- a/arch/arm/mach-versatile/Kconfig
-+++ b/arch/arm/mach-versatile/Kconfig
-@@ -201,23 +201,6 @@ config REALVIEW_EB_A9MP
- 	  Enable support for the Cortex-A9MPCore tile fitted to the
- 	  Realview(R) Emulation Baseboard platform.
- 
--config REALVIEW_EB_ARM11MP
--	bool "Support ARM11MPCore Tile"
--	depends on MACH_REALVIEW_EB && ARCH_MULTI_V6
--	select HAVE_SMP
--	help
--	  Enable support for the ARM11MPCore tile fitted to the Realview(R)
--	  Emulation Baseboard platform.
--
--config MACH_REALVIEW_PB11MP
--	bool "Support RealView(R) Platform Baseboard for ARM11MPCore"
--	depends on ARCH_MULTI_V6
--	select HAVE_SMP
--	help
--	  Include support for the ARM(R) RealView(R) Platform Baseboard for
--	  the ARM11MPCore.  This platform has an on-board ARM11MPCore and has
--	  support for PCI-E and Compact Flash.
--
- # ARMv6 CPU without K extensions, but does have the new exclusive ops
- config MACH_REALVIEW_PB1176
- 	bool "Support RealView(R) Platform Baseboard for ARM1176JZF-S"
-diff --git a/arch/arm/mach-versatile/platsmp-realview.c b/arch/arm/mach-versatile/platsmp-realview.c
-index 5d363385c801..4c3e089ac686 100644
---- a/arch/arm/mach-versatile/platsmp-realview.c
-+++ b/arch/arm/mach-versatile/platsmp-realview.c
-@@ -18,7 +18,6 @@
- #define REALVIEW_SYS_FLAGSSET_OFFSET	0x30
- 
- static const struct of_device_id realview_scu_match[] = {
--	{ .compatible = "arm,arm11mp-scu", },
- 	{ .compatible = "arm,cortex-a9-scu", },
- 	{ .compatible = "arm,cortex-a5-scu", },
- 	{ }
-@@ -27,7 +26,6 @@ static const struct of_device_id realview_scu_match[] = {
- static const struct of_device_id realview_syscon_match[] = {
-         { .compatible = "arm,core-module-integrator", },
-         { .compatible = "arm,realview-eb-syscon", },
--        { .compatible = "arm,realview-pb11mp-syscon", },
-         { .compatible = "arm,realview-pbx-syscon", },
-         { },
- };
-diff --git a/arch/arm/mach-versatile/realview.c b/arch/arm/mach-versatile/realview.c
-index a3933e2373d5..36a6f6bc4fdd 100644
---- a/arch/arm/mach-versatile/realview.c
-+++ b/arch/arm/mach-versatile/realview.c
-@@ -9,7 +9,6 @@
- static const char *const realview_dt_platform_compat[] __initconst = {
- 	"arm,realview-eb",
- 	"arm,realview-pb1176",
--	"arm,realview-pb11mp",
- 	"arm,realview-pba8",
- 	"arm,realview-pbx",
- 	NULL,
-diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-index c164cde50243..2b6f50dd5478 100644
---- a/arch/arm/mm/Kconfig
-+++ b/arch/arm/mm/Kconfig
-@@ -937,24 +937,6 @@ config VDSO
- 	  You must have glibc 2.22 or later for programs to seamlessly
- 	  take advantage of this.
- 
--config DMA_CACHE_RWFO
--	bool "Enable read/write for ownership DMA cache maintenance"
--	depends on CPU_V6K && SMP
--	default y
--	help
--	  The Snoop Control Unit on ARM11MPCore does not detect the
--	  cache maintenance operations and the dma_{map,unmap}_area()
--	  functions may leave stale cache entries on other CPUs. By
--	  enabling this option, Read or Write For Ownership in the ARMv6
--	  DMA cache maintenance functions is performed. These LDR/STR
--	  instructions change the cache line state to shared or modified
--	  so that the cache operation has the desired effect.
--
--	  Note that the workaround is only valid on processors that do
--	  not perform speculative loads into the D-cache. For such
--	  processors, if cache maintenance operations are not broadcast
--	  in hardware, other workarounds are needed (e.g. cache
--	  maintenance broadcasting in software via FIQ).
- 
- config OUTER_CACHE
- 	bool
-diff --git a/arch/arm/mm/cache-v6.S b/arch/arm/mm/cache-v6.S
-index 250c83bf7158..44211d8a296f 100644
---- a/arch/arm/mm/cache-v6.S
-+++ b/arch/arm/mm/cache-v6.S
-@@ -201,10 +201,6 @@ ENTRY(v6_flush_kern_dcache_area)
-  *	- end     - virtual end address of region
-  */
- v6_dma_inv_range:
--#ifdef CONFIG_DMA_CACHE_RWFO
--	ldrb	r2, [r0]			@ read for ownership
--	strb	r2, [r0]			@ write for ownership
--#endif
- 	tst	r0, #D_CACHE_LINE_SIZE - 1
- 	bic	r0, r0, #D_CACHE_LINE_SIZE - 1
- #ifdef HARVARD_CACHE
-@@ -213,10 +209,6 @@ v6_dma_inv_range:
- 	mcrne	p15, 0, r0, c7, c11, 1		@ clean unified line
- #endif
- 	tst	r1, #D_CACHE_LINE_SIZE - 1
--#ifdef CONFIG_DMA_CACHE_RWFO
--	ldrbne	r2, [r1, #-1]			@ read for ownership
--	strbne	r2, [r1, #-1]			@ write for ownership
--#endif
- 	bic	r1, r1, #D_CACHE_LINE_SIZE - 1
- #ifdef HARVARD_CACHE
- 	mcrne	p15, 0, r1, c7, c14, 1		@ clean & invalidate D line
-@@ -231,10 +223,6 @@ v6_dma_inv_range:
- #endif
- 	add	r0, r0, #D_CACHE_LINE_SIZE
- 	cmp	r0, r1
--#ifdef CONFIG_DMA_CACHE_RWFO
--	ldrlo	r2, [r0]			@ read for ownership
--	strlo	r2, [r0]			@ write for ownership
--#endif
- 	blo	1b
- 	mov	r0, #0
- 	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
-@@ -248,9 +236,6 @@ v6_dma_inv_range:
- v6_dma_clean_range:
- 	bic	r0, r0, #D_CACHE_LINE_SIZE - 1
- 1:
--#ifdef CONFIG_DMA_CACHE_RWFO
--	ldr	r2, [r0]			@ read for ownership
--#endif
- #ifdef HARVARD_CACHE
- 	mcr	p15, 0, r0, c7, c10, 1		@ clean D line
- #else
-@@ -269,10 +254,6 @@ v6_dma_clean_range:
-  *	- end     - virtual end address of region
-  */
- ENTRY(v6_dma_flush_range)
--#ifdef CONFIG_DMA_CACHE_RWFO
--	ldrb	r2, [r0]		@ read for ownership
--	strb	r2, [r0]		@ write for ownership
--#endif
- 	bic	r0, r0, #D_CACHE_LINE_SIZE - 1
- 1:
- #ifdef HARVARD_CACHE
-@@ -282,10 +263,6 @@ ENTRY(v6_dma_flush_range)
- #endif
- 	add	r0, r0, #D_CACHE_LINE_SIZE
- 	cmp	r0, r1
--#ifdef CONFIG_DMA_CACHE_RWFO
--	ldrblo	r2, [r0]			@ read for ownership
--	strblo	r2, [r0]			@ write for ownership
--#endif
- 	blo	1b
- 	mov	r0, #0
- 	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
-@@ -301,13 +278,7 @@ ENTRY(v6_dma_map_area)
- 	add	r1, r1, r0
- 	teq	r2, #DMA_FROM_DEVICE
- 	beq	v6_dma_inv_range
--#ifndef CONFIG_DMA_CACHE_RWFO
- 	b	v6_dma_clean_range
--#else
--	teq	r2, #DMA_TO_DEVICE
--	beq	v6_dma_clean_range
--	b	v6_dma_flush_range
--#endif
- ENDPROC(v6_dma_map_area)
- 
- /*
-@@ -317,11 +288,9 @@ ENDPROC(v6_dma_map_area)
-  *	- dir	- DMA direction
-  */
- ENTRY(v6_dma_unmap_area)
--#ifndef CONFIG_DMA_CACHE_RWFO
- 	add	r1, r1, r0
- 	teq	r2, #DMA_TO_DEVICE
- 	bne	v6_dma_inv_range
--#endif
- 	ret	lr
- ENDPROC(v6_dma_unmap_area)
- 
-
----
-base-commit: d570fe67df85c84be7cc33ca9e9568d9601b494f
-change-id: 20231202-drop-11mpcore-d556cc5f7d99
-
-Best regards,
--- 
-Linus Walleij <linus.walleij@linaro.org>
-
+> ---
+> tools/perf/util/metricgroup.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 0484736d9fe4..ca3e0404f187 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -225,7 +225,7 @@ static struct metric *metric__new(const struct pmu_metric *pm,
+>
+> 	m->pmu = pm->pmu ?: "cpu";
+> 	m->metric_name = pm->metric_name;
+> -	m->default_metricgroup_name = pm->default_metricgroup_name;
+> +	m->default_metricgroup_name = pm->default_metricgroup_name ?: "";
+> 	m->modifier = NULL;
+> 	if (modifier) {
+> 		m->modifier = strdup(modifier);
+> -- 
+> 2.43.0.rc2.451.g8631bc7472-goog
+>
+>
