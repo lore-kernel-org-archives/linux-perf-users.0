@@ -1,94 +1,134 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6B582113
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 00:21:02 -0800 (PST)
-Received: from loongson.cn (unknown [112.20.112.120])
-	by gateway (Coremail) with SMTP id _____8AxDOvsi21lc7I+AA--.54643S3;
-	Mon, 04 Dec 2023 16:21:01 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.112.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxzdzri21loxJUAA--.54592S2;
-	Mon, 04 Dec 2023 16:20:59 +0800 (CST)
-From: Yanteng Si <siyanteng@loongson.cn>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org
-Cc: alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DCCC8E7;
+	Mon,  4 Dec 2023 08:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLvzMSTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A425BC433C7;
+	Mon,  4 Dec 2023 08:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701678148;
+	bh=d5xd1DNNe8JHTchZ1N0VUvsvu4Wgsp0ilZmuF8NZBgQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gLvzMSTejitY38rVbVjqGTXEH+MOT+PcFUG93c0YgGr336/kcmHuZtMyWAJUur9dj
+	 ylPSMIrRC6wrFF6JH8llfP4lnxofw9JWIRKnnRbtGCKoUGUmv+BvE3zqzIXchLcyIJ
+	 mN17ecVhBQKZ+dWBJT03lM6eIzrvq3+6DCrCLjqF0YaafhQ/cwUi5brHnGaFs86F8I
+	 4b4iOCkO3HIr/O4KlY6DcVzLuCyIZfchlvHG3+jOPQHbJfDpNjrPmWxRBahk/mvnEW
+	 MFOGWM7jIeEf4pzDdJPtfQVNnDvtINBdxCPnCpYJn/bidcPDKIQxzXDyMbQL9ojseN
+	 70ErEzj5WRZbw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rA4Di-0018lj-9m;
+	Mon, 04 Dec 2023 08:22:26 +0000
+Date: Mon, 04 Dec 2023 08:22:25 +0000
+Message-ID: <86v89ebcn2.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	catalin.marinas@arm.com,
 	mark.rutland@arm.com,
-	namhyung@kernel.org,
-	adrian.hunter@intel.com,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Yanteng Si <siyanteng@loongson.cn>
-Subject: [PATCH v2] tools/perf: Fix malloc call for new -Walloc-size
-Date: Mon,  4 Dec 2023 16:20:55 +0800
-Message-Id: <20231204082055.91877-1-siyanteng@loongson.cn>
-X-Mailer: git-send-email 2.31.4
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH V15 2/8] KVM: arm64: Prevent guest accesses into BRBE system registers/instructions
+In-Reply-To: <20231201053906.1261704-3-anshuman.khandual@arm.com>
+References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
+	<20231201053906.1261704-3-anshuman.khandual@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxzdzri21loxJUAA--.54592S2
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruFW3Kr1xWrW7XFy3AryUXFc_yoWkJFb_ua
-	1Iqrn7AryUCr9FyrWDua95Xr1Fga1fuan09FnIq3WfJrn8t3Z09as8ZF9rZF45Gr4qkrZ7
-	Zws3Gry5Zr42kosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDUUUU
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Sun Haiyong <sunhaiyong@loongson.cn>
+On Fri, 01 Dec 2023 05:39:00 +0000,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> Currently BRBE feature is not supported in a guest environment. This hides
+> BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field. This also
+> blocks guest accesses into BRBE system registers and instructions as if the
+> underlying hardware never implemented FEAT_BRBE feature.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/kvm/sys_regs.c | 130 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 130 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 4735e1b37fb3..42701065b3cd 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1583,6 +1583,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+>  	/* Hide SPE from guests */
+>  	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+>  
+> +	/* Hide BRBE from guests */
+> +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+> +
+>  	return val;
+>  }
+>  
+> @@ -2042,6 +2045,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>  	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
+>  	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
+>  	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
+> +	{ SYS_DESC(OP_BRB_IALL), undef_access },
+> +	{ SYS_DESC(OP_BRB_INJ), undef_access },
+>  
+>  	DBG_BCR_BVR_WCR_WVR_EL1(0),
+>  	DBG_BCR_BVR_WCR_WVR_EL1(1),
+> @@ -2072,6 +2077,131 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>  	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
+>  	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
+>  
+> +	/*
+> +	 * BRBE branch record sysreg address space is interleaved between
+> +	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
+> +	 */
+> +	{ SYS_DESC(SYS_BRBINF0_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBSRC0_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBTGT0_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBINF16_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBSRC16_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBTGT16_EL1), undef_access },
 
-GCC 14 introduces a new -Walloc-size included in -Wextra which errors out
-like:
-```
-builtin-top.c: In function ‘prompt_integer’:
-builtin-top.c:360:21: error: allocation of insufficient size ‘0’ for
-type ‘char’ with size ‘1’ [-Werror=alloc-size]
-  360 |         char *buf = malloc(0), *p;
-      |                     ^~~~~~
+Surely we can do better than this wall of text. Please look at what we
+do for the debug registers, and adopt a similar pattern. This should
+result in one line per group of 3 registers.
 
-```
+What is the plan for KVM support beyond this?
 
-So, just set it to NULL, silence this error.
+	M.
 
-Signed-off-by: Sun Haiyong <sunhaiyong@loongson.cn>
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
----
-v2:
-
-* Refer to Namhyung's comment and set it to NULL.
-
- tools/perf/builtin-top.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index ea8c7eca5eee..3960c4d15eff 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -357,7 +357,7 @@ static void perf_top__print_sym_table(struct perf_top *top)
- 
- static void prompt_integer(int *target, const char *msg)
- {
--	char *buf = malloc(0), *p;
-+	char *buf = NULL, *p;
- 	size_t dummy = 0;
- 	int tmp;
- 
 -- 
-2.31.4
-
+Without deviation from the norm, progress is not possible.
