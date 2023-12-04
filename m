@@ -1,98 +1,72 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F21230CFB
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 20:17:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="k1eHOOIj"
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E482F0
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 12:14:25 -0800 (PST)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-58d08497aa1so3571907eaf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Dec 2023 12:14:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1701720865; x=1702325665; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6c7W+Z0n44cx31K9z6TknZvQ8WpPWuGgMuK2rK3kYgI=;
-        b=k1eHOOIjZWC+jz6H4eR7N1oP4jhctprLaO+KIUwjlmlkiW7c0V7YZ6v+8vvTxr2EwE
-         rxcZCCbSwXtjG4jfE8Uf2CnCgieuULs0EO3NpvVuk6txOJKidgJqbk7lFfKOWC9dDdQ9
-         k09hV2lQyDPTzDKG7iVSEwTpNbHVIDtV09U6BfIszxtybx+fhNiL7IjWoQSDDFkA1/pW
-         IiabBMclV/iwW41PR9S8vz1KyzXgCZlyaAPHnK0d846aoMlVFhgV7pOT/9tB3UEJRpb7
-         ItOl2w5LmspBJc/rKJbsrh+dD90S9LeYZ5qmRF/i19hGu0uMybS16/wy0Ct5giulVX9Q
-         JyDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701720865; x=1702325665;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6c7W+Z0n44cx31K9z6TknZvQ8WpPWuGgMuK2rK3kYgI=;
-        b=a6w2Hty1bDGfbiY1n4oG/m7bUoFSMrN0jwfTAPpmlOnx/HF+7NpjdMbqn1jmd8vxn2
-         nFmweN/Zn5cyyjmRNsMJXO2Ri2ty8nO54TsGnBnAc43Y/geVlSGge0QHR3So2YzT01uB
-         hGVcHjz1I7t4z/ZqZgm4yf3Llqa4qOrhufMSf25rdYQY3Ya+XJ6jbg512Prt45/5FQmU
-         Y+eqm423sTdN57q0G4/K/Mp/PsmieHI5tvIKPbqIl+KCdI4E2YypzyJXNeceeXS8osoG
-         yYAAtGmXnL3OwZ/JYdqhF/AaoTTtmnjE1s8rgN+gRhMvo4DKulrT184GRWcGXTJW/Me6
-         5RAQ==
-X-Gm-Message-State: AOJu0YwkSHn8NaewQSuVHBoiJtiljEouacsiYuD6wHwDSITjUwDXfBls
-	ZchALyfUtSaw0QcjMxGX9l4THw==
-X-Google-Smtp-Source: AGHT+IG/K86ebDBCHf8O0u2HkrIeBkifZWBUyzEDU/F2m0TUx1B/C3gGG8NPHiawXlUugm7PuLe5pQ==
-X-Received: by 2002:a05:6358:5208:b0:170:40b1:88ac with SMTP id b8-20020a056358520800b0017040b188acmr992899rwa.65.1701720864819;
-        Mon, 04 Dec 2023 12:14:24 -0800 (PST)
-Received: from zhadum.home.kylehuey.com (c-76-126-33-191.hsd1.ca.comcast.net. [76.126.33.191])
-        by smtp.gmail.com with ESMTPSA id n7-20020a63f807000000b005b529d633b7sm7894060pgh.14.2023.12.04.12.14.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Dec 2023 12:14:24 -0800 (PST)
-From: Kyle Huey <me@kylehuey.com>
-X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
-To: Kyle Huey <khuey@kylehuey.com>,
-	linux-kernel@vger.kernel.org
-Cc: Robert O'Callahan <robert@ocallahan.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH 1/2] perf/bpf: Allow a bpf program to suppress I/O signals.
-Date: Mon,  4 Dec 2023 12:14:05 -0800
-Message-Id: <20231204201406.341074-2-khuey@kylehuey.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231204201406.341074-1-khuey@kylehuey.com>
-References: <20231204201406.341074-1-khuey@kylehuey.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4O3MZ4z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54494C433C8;
+	Mon,  4 Dec 2023 20:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701721025;
+	bh=0UrX2iBVuIergkZq8gZnOx8mwnXEDjVYpx4+esY98GU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f4O3MZ4z0dRtwiB0/ZvjjwMFvPnFXrN6dAEeKSDBJ3T0hTbOmn184Vs9B3YZNRCV1
+	 5RiEt6BWASfQvlyx0qJsX7J1SlR1EYqdpx7bKoVBB+pYzN491YUiBSSTs3shyCfDp4
+	 qfE2JzPjGUW4lzU/3gpLPhK8jLk8E+uIz0yqALstD6OwCgyAN5vpLSP0MXlP1trO4q
+	 vVklbt2/xkhTpJZiAGsMdPlmP96CgtRrJgW2nVPm79LxuxU0/734pnIWcPciyDR9Tj
+	 h0SCgDjyEaAC11WRizXjiQjQcq0XfVDAlOxhi0dkSgEFJPAj7fvG7ZfYye8lU5ghzq
+	 QRJTZz9Yi3I3w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id A0C9F40094; Mon,  4 Dec 2023 17:17:02 -0300 (-03)
+Date: Mon, 4 Dec 2023 17:17:02 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>, mingo@redhat.com,
+	peterz@infradead.org, mark.rutland@arm.com, namhyung@kernel.org,
+	jolsa@kernel.org, adrian.hunter@intel.com, ravi.bangoria@amd.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Ammy Yi <ammy.yi@intel.com>
+Subject: Re: [PATCH] perf mem: Fix perf mem error on hybrid
+Message-ID: <ZW4zvk2ZUnLuFgFK@kernel.org>
+References: <20231128203940.3964287-1-kan.liang@linux.intel.com>
+ <CAP-5=fUdEgnwk_FNHb-Ju3wCYE2PLLrPHqwZoyBGyURXQhBeSA@mail.gmail.com>
+ <083bfe11-6f6e-487f-ac28-aec22e6b6b06@linux.intel.com>
+ <CAP-5=fXTYX6_QdR4RCBu9yh+k1VwhsTjabKdseVP9Cvi6PE=sA@mail.gmail.com>
+ <f5112f5e-c77c-4a9a-ac3b-66772adba471@linux.intel.com>
+ <CAP-5=fU6EXenN9uU1DZ3X=L+k6Y-4a-XESfY9gL9ZCowhSazWA@mail.gmail.com>
+ <afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com>
+ <CAP-5=fW=b7KmiJKgFOxWd4ayG9A+f4E6QuTKCV0bZmf=SWSQ4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW=b7KmiJKgFOxWd4ayG9A+f4E6QuTKCV0bZmf=SWSQ4Q@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-Returning zero from a bpf program attached to a perf event already
-suppresses any data output. This allows it to suppress I/O availability
-signals too.
+Em Fri, Dec 01, 2023 at 06:08:13PM -0800, Ian Rogers escreveu:
+> On Fri, Dec 1, 2023 at 1:43 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> > On 2023-11-30 3:36 p.m., Ian Rogers wrote:
+> > > On Wed, Nov 29, 2023 at 1:15 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> > > Anyway, if you don't feel like the refactor we can move forward with
+> > > this or a v2, let me know.
 
-Signed-off-by: Kyle Huey <khuey@kylehuey.com>
----
- kernel/events/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index b704d83a28b2..34d7b19d45eb 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10417,8 +10417,10 @@ static void bpf_overflow_handler(struct perf_event *event,
- 	rcu_read_unlock();
- out:
- 	__this_cpu_dec(bpf_prog_active);
--	if (!ret)
-+	if (!ret) {
-+		event->pending_kill = 0;
- 		return;
-+	}
+> > I think the refactor is doable. I will work on it next week.
+> > But I think it should be on top of this fix.
+> > If you are OK with the fix, I think it's better to have it merged first.
+> > So everything would work properly. The validation work will not be blocked.
+> > Then I can send a patch set to cleanup the perf mem events separately.
  
- 	event->orig_overflow_handler(event, data, regs);
- }
--- 
-2.34.1
+> Thanks Kan.
+ 
+> Acked-by: Ian Rogers <irogers@google.com>
+
+Thanks, applied to perf-tools-next.
+
+- Arnaldo
 
