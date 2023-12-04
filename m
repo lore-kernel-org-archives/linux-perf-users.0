@@ -1,110 +1,83 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4BE95F3
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 00:05:26 -0800 (PST)
-Received: from loongson.cn (unknown [112.20.112.120])
-	by gateway (Coremail) with SMTP id _____8CxtPBDiG1lbbE+AA--.60598S3;
-	Mon, 04 Dec 2023 16:05:23 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.112.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxH91BiG1lbQ5UAA--.56868S3;
-	Mon, 04 Dec 2023 16:05:22 +0800 (CST)
-Message-ID: <330725e4-cc4e-49f4-bf8c-f12da92beff5@loongson.cn>
-Date: Mon, 4 Dec 2023 16:05:21 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C88BD2F4
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 08:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukbJh7RK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E40DC433C8;
+	Mon,  4 Dec 2023 08:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701677730;
+	bh=qlDPIouXtWpmNJTQRrNp5a7BzTLkGsjxWnsfCsot124=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ukbJh7RKh8jV3uXnw2cPJn4mHHl275D6hZRIzpf6ucpeLMeCV6+ibZpJIxmS5Urwj
+	 HOttwV4v4zWqMb1tDTDsPtdPJFmgyI8Fvjmo1cMAc5aMAVgXOudp6YebcI+fc3QlZk
+	 qI8pqvwFcfn1FQRVN/3bnfw2pYyewmqFsHalqI/TLRNnwzoeYJ9pK5RtO4puz8Psvv
+	 ccVeJrEmQtdTxzOJtlURCCyeaWQ3+MOrkegLZD80pCMohjz7CDXkdNJzD17dmIj9RT
+	 J+EFw1digyqjHUZ/NdKhqTuo1lvZmpHHDUGAM8t4pGJ3/0rLwB9bPizhjMu3zTKW5j
+	 Fqj5Ebv5X+TRA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rA46y-0018f1-14;
+	Mon, 04 Dec 2023 08:15:28 +0000
+Date: Mon, 04 Dec 2023 08:15:27 +0000
+Message-ID: <86wmtubcyo.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V15 0/8] arm64/perf: Enable branch stack sampling
+In-Reply-To: <20231201053906.1261704-1-anshuman.khandual@arm.com>
+References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] objtool/perf: Fix malloc call for new -Walloc-size
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, mark.rutland@arm.com,
- adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
- Sun Haiyong <sunhaiyong@loongson.cn>
-References: <20231202023256.3398906-1-siyanteng@loongson.cn>
- <CAM9d7cjFhVag8nTjtkJvz63vgm+-NbKRhf1Z7OVRWUfgLWCgVA@mail.gmail.com>
-Content-Language: en-US
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <CAM9d7cjFhVag8nTjtkJvz63vgm+-NbKRhf1Z7OVRWUfgLWCgVA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxH91BiG1lbQ5UAA--.56868S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4rKr4UZry5Ar4DGryrXwc_yoW8Xr4fpF
-	s7Ca4Yya15JF1UAa1IyFZaqF1UW397WF9Yv3y0qw1q9rsrWwnrtasIqFyY9FyxZr48Ka10
-	kFyvgr45AF4rAFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Fri, 01 Dec 2023 05:38:58 +0000,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> This series enables perf branch stack sampling support on arm64 platform
+> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+> the relevant register definitions could be accessed here.
+> 
+> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
+> 
+> This series applies on 6.7-rc3 after the following series from James Clark.
+> 
+> https://lore.kernel.org/all/20231019165510.1966367-1-james.clark@arm.com/
 
-在 2023/12/3 08:56, Namhyung Kim 写道:
-> Hello,
->
-> On Fri, Dec 1, 2023 at 6:33 PM Yanteng Si <siyanteng@loongson.cn> wrote:
->> From: Sun Haiyong <sunhaiyong@loongson.cn>
->>
->> GCC 14 introduces a new -Walloc-size included in -Wextra which errors out
->> like:
->> ```
->> builtin-top.c: In function ‘prompt_integer’:
->> builtin-top.c:360:21: error: allocation of insufficient size ‘0’ for
->> type ‘char’ with size ‘1’ [-Werror=alloc-size]
->>    360 |         char *buf = malloc(0), *p;
->>        |                     ^~~~~~
->>
->> ```
->>
->> So, just cast type to char, silence this error.
-> No, please do not.  I'm not sure if it silences the error.
-> The buf is to be passed to getline() so you can set it to
-> NULL instead.
->
->    char *buf = NULL, *p;
+Please don't base a series on another one. I haven't looked at James
+series yet, and dealing with conflict is my business.
 
-OK!
+You should base it on -rc3, full stop. If there is a dependency, make
+it explicit and include a prefix of the other series you depend on.
 
+	M.
 
-Thanks,
-
-Yanteng
-
->
-> Thanks,
-> Namhyung
->
->> Signed-off-by: Sun Haiyong <sunhaiyong@loongson.cn>
->> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
->> ---
->>   tools/perf/builtin-top.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
->> index ea8c7eca5eee..29191d966522 100644
->> --- a/tools/perf/builtin-top.c
->> +++ b/tools/perf/builtin-top.c
->> @@ -357,7 +357,7 @@ static void perf_top__print_sym_table(struct perf_top *top)
->>
->>   static void prompt_integer(int *target, const char *msg)
->>   {
->> -       char *buf = malloc(0), *p;
->> +       char *buf = (char *)malloc(0), *p;
->>          size_t dummy = 0;
->>          int tmp;
->>
->> --
->> 2.42.1
->>
-
+-- 
+Without deviation from the norm, progress is not possible.
