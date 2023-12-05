@@ -1,96 +1,166 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE9A196;
-	Tue,  5 Dec 2023 09:24:55 -0800 (PST)
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-286bba96e94so1786604a91.1;
-        Tue, 05 Dec 2023 09:24:55 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mUFzuW2j"
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5631FDB
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 09:59:15 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-50beed2a46eso173e87.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Dec 2023 09:59:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701799154; x=1702403954; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9gc6EPrb7sJMi5FLo8PEKP3q9XU/ASOLnpitI/EDUi8=;
+        b=mUFzuW2j4i5cHGKoIsxLhbYUhdPktzcy0ai1owCSBP+8qPTrxPivhBwn4bmdUquMYm
+         aidNDWfKUBMPlg1hX8NmQpjjiZLRlPP1OXLbFOGDr7C/Ceg3uLDuZ1EsIC6alU4LHCM8
+         IVx9Hsk1VNuLByjJfbxBc/JmYqLqe45IQA2UqhsWezV6fNJcZEboRSLmkqLU+tSyf9uO
+         Mhv6V/2LNhvW6zuA7/0I2tm6ZfUr0AETm4q7vspZJIaklTjk0htDJZgQibcZ9czCbWbu
+         CWOGzBUd0lDl4HFmeZgc5DnHuIaRvteohM6UT9tKDEjswT8fYyvg7IW7q0e6+MNU8tDW
+         XO5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701797094; x=1702401894;
+        d=1e100.net; s=20230601; t=1701799154; x=1702403954;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IFVQTC1s169ecyWHJH7Eki7EkWCVJgaihSXzOtW52Qk=;
-        b=IQ6QW81W+btWJ4CuWapgToo8617vyESK+A3kffvwmtCme1Ib9gpGgpC7P/KHskyodr
-         fmDoAWlVoqROFvHr979T2n8eI0hK/+w+Yk4a7qi2NYbzJHOwk4t/A90wPFOCq0jAquTX
-         LDLt3QnR08oTzWpIpI5nN+biT58si5WjtIYNcDendnwBCvhzXzsxBmRAGabWy5Mo51rX
-         S3hijp098Q2nNqNYWgSiVmmCLwrBlYog4f+1J0c3mxyN0TdDEwkv0S27OUNM1GnWOu+v
-         aR4wsuPeN5y7/wG0SaBP1NxXPT5z1UKSXryO/D4SqzhllCzJE18V4qtaCow1WxxDTkTt
-         8JsA==
-X-Gm-Message-State: AOJu0Yyxbd4JQknhvqQkXtDM1Lq8Ly0xO/yqyRhd7bKQ07asgB+atz50
-	nyQvyetRZciegzu7yVIC/KTbN968zlZVQD2qv1g=
-X-Google-Smtp-Source: AGHT+IEZpTYw7fSgKbd9dYpxAUnuXkfHH2ctd+T9rSy9hSil2VcNkkGUakgj/GtS6xBfGjTynW4UXwkLl4UxUY1w2pY=
-X-Received: by 2002:a17:90a:f00a:b0:286:6cc1:8653 with SMTP id
- bt10-20020a17090af00a00b002866cc18653mr1371402pjb.56.1701797094150; Tue, 05
- Dec 2023 09:24:54 -0800 (PST)
+        bh=9gc6EPrb7sJMi5FLo8PEKP3q9XU/ASOLnpitI/EDUi8=;
+        b=n6r1ycNd/5xSt8aPYiV6W0XmfXTQKyKbMzuCGHXlh9P8haAWwTZwjbxh2EQJfXI+09
+         iMtPe3SFLzrLO/mm89rddWc5q0zS1QXkU71Gu7Xxxd6ML4nyVMwEVjAHxjDp50DFmwy5
+         5tA47dw7uBzI6WFk9YkyCjQDUGLdqJmhIdXL3fOM2A0nJYEbEepfDPdBXGbtVwdt5bOH
+         TXtM3uUW3xJvjz9eymxPFekg/rANIAVe6VMbe+/myhv7tRND/+yz+5Lv479DPASz8G49
+         QNFMnAx55iJVBxJC5lyjB9fV/rInpSpQgxHARfDaK4sPMb74OyypCzk2Vwnliv/Yn5Un
+         KeZw==
+X-Gm-Message-State: AOJu0Yz1mr1lk5HoRGWotaUBz+yz9w5gWnlN6oBZBoVweBxbtvnMa564
+	jG4h29W8L4vMGWQltb27o6Tb8RW0TLAHDbgP+mnwQg==
+X-Google-Smtp-Source: AGHT+IEreAhwBUj3VoXijNV76YGN0BLzvw/1/zLgkxdshVRnOF58QsEUVJChSnIlSNqThA+x+IZWBAr9X6ybdnnCvE4=
+X-Received: by 2002:a19:7418:0:b0:50b:fa8d:f28b with SMTP id
+ v24-20020a197418000000b0050bfa8df28bmr149957lfe.1.1701799153760; Tue, 05 Dec
+ 2023 09:59:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231204182330.654255-1-irogers@google.com> <bea4ad79-297e-9737-8af1-2286192d26f4@os.amperecomputing.com>
- <CAM9d7ci=Tk845H3x3KMDu-hTdP-u0O6a8D3iAa8EnFLLjOO6OQ@mail.gmail.com> <ZW9G8Clxwl6bd0H6@kernel.org>
-In-Reply-To: <ZW9G8Clxwl6bd0H6@kernel.org>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 5 Dec 2023 09:24:42 -0800
-Message-ID: <CAM9d7ciOp_O5N1TDX0HyKavykirByAYrqzcmM-_6ZWjMv-47WQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf metrics: Avoid segv if default metricgroup
- isn't set
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, Ian Rogers <irogers@google.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231128175441.721579-1-namhyung@kernel.org> <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
+ <CAM9d7chKmDETK6Ea2wyR8L21jyHWcPHbKavarnq-JmNA-AoUnQ@mail.gmail.com>
+ <CAP-5=fUf6R=bsfg7i8atFApJBY-=zWUBMq7inFsCPZhB+w2==Q@mail.gmail.com> <CAM9d7cjDiu=dksnhboJFT4uPQJcvGMB-vBt96v3i7Kqy5LKRMw@mail.gmail.com>
+In-Reply-To: <CAM9d7cjDiu=dksnhboJFT4uPQJcvGMB-vBt96v3i7Kqy5LKRMw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 5 Dec 2023 09:59:02 -0800
+Message-ID: <CAP-5=fXKbi3DYoOKrJvNKLNU=fJEY9aDAOQhH+Vh+XWxHzGjwA@mail.gmail.com>
+Subject: Re: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Arnaldo,
+On Mon, Dec 4, 2023 at 2:46=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Thu, Nov 30, 2023 at 10:37=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > On Wed, Nov 29, 2023 at 3:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Tue, Nov 28, 2023 at 11:14=E2=80=AFAM Ian Rogers <irogers@google.c=
+om> wrote:
+> > > >
+> > > > On Tue, Nov 28, 2023 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > Hello,
+> > > > >
+> > > > > It used to have annotation_options for each command separately (f=
+or
+> > > > > example, perf report, annotate, and top), but we can make it glob=
+al as
+> > > > > they never used together (with different settings).  This would s=
+ave
+> > > > > some memory for each symbol when annotation is enabled.
+> > > > >
+> > > > > This code is available at 'perf/annotate-option-v1' branch in
+> > > > >
+> > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-pe=
+rf.git
+> > > > >
+> > > > > Thanks,
+> > > > > Namhyung
+> > > >
+> > > > Thanks for doing this and I think it is progress. I think there is =
+a
+> > > > common problem with having things be an option rather than say part=
+ of
+> > > > session. Having a global variable seems unfortunate but I'm not sur=
+e
+> > > > if in all locations we have easy access to the session.
+> > >
+> > > That's not the case when you deal with hist entry or TUI browser.
+> > > I think that's the reason we have the option in the annotation.
+> > >
+> > >
+> > > > The rough
+> > > > structure with annotations as I understand it is:
+> > > >
+> > > > session has machines
+> > > > a machine has dsos
+> > > > a dso has symbols
+> > > > a symbol has an annotation
+> > >
+> > > That's true.  But the annotation struct is used only if
+> > > symbol__annotation_init() is called.
+> >
+> > Right. I find this approach likely to lead to errors, such as a symbol
+> > created globally before symbol__annotation_init() was called breaking
+> > the container_of assumptions.
+>
+> Sure, but that's a different issue.  Maybe we can add a hash table
+> to map a symbol to annotation or annotated_source directly.  But
+> I don't think we need annotation_option for each symbol/annotation.
 
-On Tue, Dec 5, 2023 at 7:51=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> Em Mon, Dec 04, 2023 at 07:33:18PM -0800, Namhyung Kim escreveu:
-> > On Mon, Dec 4, 2023 at 2:45=E2=80=AFPM Ilkka Koskinen <ilkka@os.amperec=
-omputing.com> wrote:
-> > > On Mon, 4 Dec 2023, Ian Rogers wrote:
-> > > > A metric is default by having "Default" within its groups. The defa=
-ult
-> > > > metricgroup name needn't be set and this can result in segv in
-> > > > default_metricgroup_cmp and perf_stat__print_shadow_stats_metricgro=
-up
-> > > > that assume it has a value when there is a Default metric group. To
-> > > > avoid the segv initialize the value to "".
->
-> > > > Fixes: 1c0e47956a8e ("perf metrics: Sort the Default metricgroup")
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> > > Thanks! I was going to look for the bug but got pulled to other
-> > > tasks. The patch looks good to me and I tested it successfully on
-> > > AmpereOne.
->
-> > >    Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.c=
-om>
->
-> > Looks like it needs to go through perf-tools for v6.7.
-> > Ian, do you think this one is enough?
->
-> So I had this on my local perf-tools-next, removed now, I also have some
-> other fixes by Ian on the tmp.perf-tools-next, please let me know what
-> you guys decide to have in perf-tools for v6.7 so that I can remove it
-> from there.
+Agreed.
 
-I think we need this one and the Ampere default-metric-group fix.
+> >
+> > > >
+> > > > Annotation is something of unfortunate abstraction as it covers thi=
+ngs
+> > > > like an IPC per symbol (why hard code to just IPC?) and things like
+> > > > source files and line numbers.
+> > >
+> > > Right, that's why I splitted the struct annotated_branch.
+> > >
+> > > >
+> > > > A recent success story where we got rid of a configuration variable
+> > > > was by switching to lazy allocation with sorting by name for symbol=
+s
+> > > > within a dso. If we could have a lazy allocation model with
+> > > > annotations then maybe we can do away with large hammers like globa=
+l
+> > > > options.
+> > >
+> > > Maybe I can move the pointer to option into the annotated_source
+> > > which is allocated lazily.  But I don't think it needs to keep the op=
+tion
+> > > for each symbol or annotation.  It's usually to control some display
+> > > behaviors in the disasm output globally.  So I think it's better to h=
+ave
+> > > a global variable.
+> >
+> > Sgtm. My point wasn't to criticize, I think this is a good change, I
+> > was just trying to imagine doing things in a way that could overall
+> > reduce complexity
+>
+> Yep, thanks for your review.  Can I get your ACKs? :)
 
-https://lore.kernel.org/r/20231201021550.1109196-2-ilkka@os.amperecomputing=
-.com/
-
-Also perf list JSON fix can go to v6.7.
-
-https://lore.kernel.org/r/20231129213428.2227448-2-irogers@google.com/
+For the series:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Namhyung
+Ian
+
+> Namhyung
