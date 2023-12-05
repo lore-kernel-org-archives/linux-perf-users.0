@@ -1,84 +1,104 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="cI9NHSlZ"
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82AD5D5
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 20:01:37 -0800 (PST)
-Received: from cwcc.thunk.org (pool-173-48-111-98.bstnma.fios.verizon.net [173.48.111.98])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 3B541QQg005624
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 4 Dec 2023 23:01:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1701748888; bh=iMt6plIOdydoTjRUmeuSfjGpniL3yUwo2Kv3zO9lBqU=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=cI9NHSlZxtu7EhzJVbO/rLOm6G+OYSj6FJD/S0zeHe4QSb1VfXx9nudPtv+xKxla3
-	 UvrN/V8Czn3WOCdLuxG8SlVFODPln3FspDTpwx4h6SbVhX/XQJn7KQagRXdCyO9lPf
-	 8pc+I+cqWxQV79MO1+JFt0buw5/3Jcf5mRoZTNIkTIJlJNRQZn2+dPt0KRxvxvqnKT
-	 BQV/Eh2MgJ441OBCfGvQPRW0R4IeYj3vNDCi4zetzoTe5Q8kyfKY0vEMyhWJ8XxuXK
-	 pm+IIFNk0Irb9dLc2orgGAINsadwKm9/FeTS790cV4maUxkVesTMo8uDMb51aguxfj
-	 wH9rp7jPgd0vw==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 24DA915C02E0; Mon,  4 Dec 2023 23:01:26 -0500 (EST)
-Date: Mon, 4 Dec 2023 23:01:26 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Dimitri John Ledkov <dimitri.ledkov@canonical.com>,
-        linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: Converting manpages from asciidoc to rst2man ?
-Message-ID: <20231205040126.GF509422@mit.edu>
-References: <CADWks+Z=kLTohq_3pk_PdXs54B6tLn25u6avn_Q1FyXN2-sVDQ@mail.gmail.com>
- <87fs0iujaj.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YT2hWwDk"
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563459C
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 20:25:34 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-54744e66d27so7444a12.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Dec 2023 20:25:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701750333; x=1702355133; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KgAMRXqQYaDBV6wyGUZmXuMtTS9bHHBbShJFrMu8R94=;
+        b=YT2hWwDkCsSBKNE+L3cHL3odpQ/ysz3p1n0KHksRmx0c9wisK0f2kffYTjeEN3GFVx
+         PxEbsOQAZWIVRsnkFU2xu1XfjGTL/6uPsJmrE60HZD8tx0PRA3EZjSgt7oJXLI8XfFId
+         +pa365/hEKGsdndv7dYaU4677e3dK1WEfrMZnKHXlLM+50ssxj7OFKhC47JiWfJijUTe
+         ZYeRFNo4WFUAdjuPgtGWjFCs004vB0zLHi2IZ4uIwsbO5+frcCg+H9V4EeKY+qDOVCcg
+         hXkfpXdqzFUtbL387dvLw68Iv8NLk9AZ94G+7QTob0mnQHWUIkHEZaKtbDpySBB0+sgh
+         H2Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701750333; x=1702355133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KgAMRXqQYaDBV6wyGUZmXuMtTS9bHHBbShJFrMu8R94=;
+        b=rJTFJ4J0Bm4Hs9c6jVJWO+vBoQEcypo2RCERdlQMsDvC0ETW4ZmnEpVnmo5WtX0nmT
+         +TUhQ37/7auKAagRncqcAlrM0qfDPrC3Su8hbMlREIUxxILTMQeEfC3uLPNvXjp6Iq0B
+         BatM0vq7vCs5+h7dhzxDDjufbYeF9HE/MvwqylhWgm2NapAM9hVyOkKndm+4HGKgJyGq
+         M6uOkyUi4iihLfDbm6OAC3tv5N2gddqluZa14pe0E3oMkHPeNEZIsiFn1cGT4xMdljvi
+         U1dmQ9foP4UEZAhlqpHAa/i6iE2ABBecmYua/IHTnQsD7qcUR++SaIKbr8cCnWlP/YVm
+         GNOA==
+X-Gm-Message-State: AOJu0YzQN+BwdYYVbegT/I5/Qwx9OV+aI+iwhEyY8pRYSE3HeEAA9Gn/
+	Mgn6pMh+xYUD1QTkiPKWeNvLYhC+dKQwjtoUa6sBag==
+X-Google-Smtp-Source: AGHT+IG1Y+SWJHsHsHJOwW1bKr3R8/Za5N4Jl0wjRHmEmgTElx2KScn7AGso+1h60y3mkkHPPuEMnYtymTYPk0maEV8=
+X-Received: by 2002:a50:cc82:0:b0:54b:8f42:e3dc with SMTP id
+ q2-20020a50cc82000000b0054b8f42e3dcmr490832edi.2.1701750332278; Mon, 04 Dec
+ 2023 20:25:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87fs0iujaj.fsf@meer.lwn.net>
+References: <20231204182330.654255-1-irogers@google.com> <bea4ad79-297e-9737-8af1-2286192d26f4@os.amperecomputing.com>
+ <CAM9d7ci=Tk845H3x3KMDu-hTdP-u0O6a8D3iAa8EnFLLjOO6OQ@mail.gmail.com>
+In-Reply-To: <CAM9d7ci=Tk845H3x3KMDu-hTdP-u0O6a8D3iAa8EnFLLjOO6OQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 4 Dec 2023 20:25:20 -0800
+Message-ID: <CAP-5=fUBGLPdFn4EfwoAamQ=5nX3LOM1v8LZk2ExEDckm+6fhw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf metrics: Avoid segv if default metricgroup
+ isn't set
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 04, 2023 at 07:36:04AM -0700, Jonathan Corbet wrote:
-> 
-> In general we don't have a lot of man pages in the kernel, so it's not
-> something we've put a lot of thought into.  Ideally, I suppose, it would
-> be nice to get all of those man pages integrated into the RST docs
-> build, but it's not something that is likely to inspire any great sense
-> of urgency.
+On Mon, Dec 4, 2023 at 7:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hello,
+>
+> On Mon, Dec 4, 2023 at 2:45=E2=80=AFPM Ilkka Koskinen
+> <ilkka@os.amperecomputing.com> wrote:
+> >
+> >
+> >
+> > On Mon, 4 Dec 2023, Ian Rogers wrote:
+> > > A metric is default by having "Default" within its groups. The defaul=
+t
+> > > metricgroup name needn't be set and this can result in segv in
+> > > default_metricgroup_cmp and perf_stat__print_shadow_stats_metricgroup
+> > > that assume it has a value when there is a Default metric group. To
+> > > avoid the segv initialize the value to "".
+> > >
+> > > Fixes: 1c0e47956a8e ("perf metrics: Sort the Default metricgroup")
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > Thanks! I was going to look for the bug but got pulled to other
+> > tasks. The patch looks good to me and I tested it successfully on
+> > AmpereOne.
+> >
+> >    Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com=
+>
+>
+> Looks like it needs to go through perf-tools for v6.7.
+> Ian, do you think this one is enough?
 
-These manpages (at least the perf ones) are actually translated into
-nroff/troff's -man macro format using asciidoctor so that things like
-"man perf": For example, from Debian testing's "linux-perf" package:
+From a user's pov the json fix is nicer as otherwise perf stat output
+for the relevant metrics lacks a heading on the left. This fix is
+smaller. I'm easy about which to take :-)
 
-% gunzip < /usr/share/man/man1/perf.1.gz | head
-'\" t
-.\"     Title: perf
-.\"    Author: [see the "AUTHOR(S)" section]
-.\" Generator: Asciidoctor 2.0.20
-.\"      Date: 2023-11-03
-.\"    Manual: perf Manual
-.\"    Source: perf
-.\"  Language: English
-.\"
-.TH "PERF" "1" "2023-11-03" "perf" "perf Manual"
+Thanks,
+Ian
 
-% dpkg -S /usr/share/man/man1/perf.1.gz
-diversion by linux-perf from: /usr/share/man/man1/perf.1.gz
-diversion by linux-perf to: /usr/share/man/man1/perf.wrapper.1.gz
-linux-perf: /usr/share/man/man1/perf.1.gz
-
-I guess we could try to use rst2man to do the same thing, but it's a
-lot more than just "make it look nice" when rendered into HTML and pdf
-when processfing the .rst file.  We need to make sure that after the
-rst file is turned into a -man text file, that it looks good when
-postsprocess via "groff -man -T utf8" *and* "groff -man -T pdf".
-
-It would also mean that python3-docutils would have to be installed
-when building kernel docs (to provide the rst2man command), but then
-again, it would remove the need to have asciidoctor installed....
-
-Cheers,
-
-					- Ted
+> Thanks,
+> Namhyung
