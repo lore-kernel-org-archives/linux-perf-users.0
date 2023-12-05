@@ -1,119 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uq7Qf1Rb"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C699192;
-	Tue,  5 Dec 2023 00:13:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701763991; x=1733299991;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   mime-version:in-reply-to;
-  bh=+5S4F3T/FBDoxciqj9rGoi4n0Xagz4XSh13nmg+mktk=;
-  b=Uq7Qf1RbDBwdNnTRTyDazhTfI+I00U9aGN9VEs78OrzmCyPdfYHl5vxM
-   MTawhsKgMtu3zDeNbo535aisirfXVmPZKnCf2Zt03zNA6nylwV8yYXJvt
-   SyiAAOSQ+cJbKW4wmFGZVCBKC8l3b9urYUrl55CH87WOAiZs5dn9ov7IE
-   3/NonXjDERdSzbeLT1wsre2IEbZVLz+vHm22/xsl3gaboE0WToAaaFgvn
-   192iVHEyGJ8VqG3lFOiJCrQWnLtZeI4IHro//O46yM/b3l/Fjq/GGfQYH
-   6jykj6I/s6KAzum8MgU+N/6mfZGyTrkta9KTwygmQhS2g5VzSQ9d/43dS
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="425020290"
-X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="asc'?scan'208";a="425020290"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 00:13:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="1102374087"
-X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="asc'?scan'208";a="1102374087"
-Received: from debian-skl.sh.intel.com (HELO debian-skl) ([10.239.160.45])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Dec 2023 00:13:06 -0800
-Date: Tue, 5 Dec 2023 16:12:08 +0800
-From: Zhenyu Wang <zhenyuw@linux.intel.com>
-To: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
+X-Greylist: delayed 18583 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Dec 2023 00:47:22 PST
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 053E4C0;
+	Tue,  5 Dec 2023 00:47:21 -0800 (PST)
+Received: from dinghao.liu$zju.edu.cn ( [10.190.70.5] ) by
+ ajax-webmail-mail-app4 (Coremail) ; Tue, 5 Dec 2023 16:44:48 +0800
+ (GMT+08:00)
+Date: Tue, 5 Dec 2023 16:44:48 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: dinghao.liu@zju.edu.cn
+To: "Zhenyu Wang" <zhenyuw@linux.intel.com>
+Cc: "Peter Zijlstra" <peterz@infradead.org>, 
+	"Ingo Molnar" <mingo@redhat.com>, 
+	"Arnaldo Carvalho de Melo" <acme@kernel.org>, 
+	"Mark Rutland" <mark.rutland@arm.com>, 
+	"Alexander Shishkin" <alexander.shishkin@linux.intel.com>, 
+	"Jiri Olsa" <jolsa@kernel.org>, "Namhyung Kim" <namhyung@kernel.org>, 
+	"Ian Rogers" <irogers@google.com>, 
+	"Adrian Hunter" <adrian.hunter@intel.com>, 
+	"Thomas Gleixner" <tglx@linutronix.de>, 
+	"Borislav Petkov" <bp@alien8.de>, 
+	"Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, 
+	"Colin Ian King" <colin.i.king@gmail.com>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] perf/x86/uncore: fix a potential double-free in
  uncore_type_init
-Message-ID: <ZW7bWGy+ZhcBUo73@debian-scheme>
-Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2023.2-cmXT5 build
+ 20230825(e13b6a3b) Copyright (c) 2002-2023 www.mailtech.cn
+ mispb-4df6dc2c-e274-4d1c-b502-72c5c3dfa9ce-zj.edu.cn
+In-Reply-To: <ZW7bWGy+ZhcBUo73@debian-scheme>
 References: <20231205032709.9525-1-dinghao.liu@zju.edu.cn>
+ <ZW7bWGy+ZhcBUo73@debian-scheme>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/cosUcUmE3dfT48V"
-Content-Disposition: inline
-In-Reply-To: <20231205032709.9525-1-dinghao.liu@zju.edu.cn>
+Message-ID: <4e1e710a.1d65f.18c3926bb7d.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:cS_KCgDHhtQA425l1FJOAA--.15055W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoTBmVsUQg4xgASsh
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW7Jw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-
---/cosUcUmE3dfT48V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2023.12.05 11:27:09 +0800, Dinghao Liu wrote:
-> When kzalloc for pmus[i].boxes fails, we should clean up pmus
-> to prevent memleak. However, when kzalloc for attr_group fails,
-> pmus has been assigned to type->pmus, and freeing will be done
-> later on by the callers. The chain is: uncore_type_init ->
-> uncore_types_init -> uncore_pci_init -> uncore_types_exit ->
-> uncore_type_exit. Therefore, freeing pmus in uncore_type_init
-> may cause a double-free. Fix this by setting type->pmus to
-> NULL after kfree.
-
-Change is ok but the call trace you wrote here is reversed or malformed??
-With that fixed or cleared.
-
-Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-
->=20
-> Fixes: 629eb703d3e4 ("perf/x86/intel/uncore: Fix memory leaks on allocati=
-on failures")
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  arch/x86/events/intel/uncore.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
-e.c
-> index 01023aa5125b..d80445a24011 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -1041,6 +1041,7 @@ static int __init uncore_type_init(struct intel_unc=
-ore_type *type, bool setid)
->  	for (i =3D 0; i < type->num_boxes; i++)
->  		kfree(pmus[i].boxes);
->  	kfree(pmus);
-> +	type->pmus =3D NULL;
-> =20
->  	return -ENOMEM;
->  }
-> --=20
-> 2.17.1
->=20
-
---/cosUcUmE3dfT48V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCZW7bUwAKCRCxBBozTXgY
-J/bDAKCOA0aNY/nPoT08vmvKOA1I+3JF7QCgi4vd8mjY23YX1OMaIspmA7NwJLI=
-=n/Bj
------END PGP SIGNATURE-----
-
---/cosUcUmE3dfT48V--
+PiBPbiAyMDIzLjEyLjA1IDExOjI3OjA5ICswODAwLCBEaW5naGFvIExpdSB3cm90ZToKPiA+IFdo
+ZW4ga3phbGxvYyBmb3IgcG11c1tpXS5ib3hlcyBmYWlscywgd2Ugc2hvdWxkIGNsZWFuIHVwIHBt
+dXMKPiA+IHRvIHByZXZlbnQgbWVtbGVhay4gSG93ZXZlciwgd2hlbiBremFsbG9jIGZvciBhdHRy
+X2dyb3VwIGZhaWxzLAo+ID4gcG11cyBoYXMgYmVlbiBhc3NpZ25lZCB0byB0eXBlLT5wbXVzLCBh
+bmQgZnJlZWluZyB3aWxsIGJlIGRvbmUKPiA+IGxhdGVyIG9uIGJ5IHRoZSBjYWxsZXJzLiBUaGUg
+Y2hhaW4gaXM6IHVuY29yZV90eXBlX2luaXQgLT4KPiA+IHVuY29yZV90eXBlc19pbml0IC0+IHVu
+Y29yZV9wY2lfaW5pdCAtPiB1bmNvcmVfdHlwZXNfZXhpdCAtPgo+ID4gdW5jb3JlX3R5cGVfZXhp
+dC4gVGhlcmVmb3JlLCBmcmVlaW5nIHBtdXMgaW4gdW5jb3JlX3R5cGVfaW5pdAo+ID4gbWF5IGNh
+dXNlIGEgZG91YmxlLWZyZWUuIEZpeCB0aGlzIGJ5IHNldHRpbmcgdHlwZS0+cG11cyB0bwo+ID4g
+TlVMTCBhZnRlciBrZnJlZS4KPiAKPiBDaGFuZ2UgaXMgb2sgYnV0IHRoZSBjYWxsIHRyYWNlIHlv
+dSB3cm90ZSBoZXJlIGlzIHJldmVyc2VkIG9yIG1hbGZvcm1lZD8/Cj4gV2l0aCB0aGF0IGZpeGVk
+IG9yIGNsZWFyZWQuCj4gCgpUaGFua3MgZm9yIHlvdXIgYWR2aWNlLiBJIHdpbGwgZml4IGl0IGFu
+ZCByZXNlbmQgYSBuZXcgcGF0Y2ggc29vbi4KClJlZ2FyZHMsCkRpbmdoYW8K
