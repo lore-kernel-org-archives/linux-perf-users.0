@@ -1,83 +1,84 @@
-Received: from zg8tndyumtaxlji0oc4xnzya.icoremail.net (zg8tndyumtaxlji0oc4xnzya.icoremail.net [46.101.248.176])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76B2AB4
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 19:37:49 -0800 (PST)
-Received: from localhost.localdomain (unknown [10.190.70.5])
-	by mail-app2 (Coremail) with SMTP id by_KCgBHvdS4mG5l3TBKAA--.35678S4;
-	Tue, 05 Dec 2023 11:28:00 +0800 (CST)
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
-To: dinghao.liu@zju.edu.cn
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86/uncore: fix a potential double-free in uncore_type_init
-Date: Tue,  5 Dec 2023 11:27:09 +0800
-Message-Id: <20231205032709.9525-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:by_KCgBHvdS4mG5l3TBKAA--.35678S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFWfGr13Aw17Aw47AryrJFb_yoWkArX_WF
-	1UJaykJr4Ska95W348AFW5Grn7Kw48Z3yrGr1FqF4kAry5tF1DCFs7Gr9ayw4xWrWDZFW8
-	ArZxKr1jvw18AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbskFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-	vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
-	0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoTBmVsUQg4xgAMs-
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="cI9NHSlZ"
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82AD5D5
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 20:01:37 -0800 (PST)
+Received: from cwcc.thunk.org (pool-173-48-111-98.bstnma.fios.verizon.net [173.48.111.98])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 3B541QQg005624
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 4 Dec 2023 23:01:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1701748888; bh=iMt6plIOdydoTjRUmeuSfjGpniL3yUwo2Kv3zO9lBqU=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=cI9NHSlZxtu7EhzJVbO/rLOm6G+OYSj6FJD/S0zeHe4QSb1VfXx9nudPtv+xKxla3
+	 UvrN/V8Czn3WOCdLuxG8SlVFODPln3FspDTpwx4h6SbVhX/XQJn7KQagRXdCyO9lPf
+	 8pc+I+cqWxQV79MO1+JFt0buw5/3Jcf5mRoZTNIkTIJlJNRQZn2+dPt0KRxvxvqnKT
+	 BQV/Eh2MgJ441OBCfGvQPRW0R4IeYj3vNDCi4zetzoTe5Q8kyfKY0vEMyhWJ8XxuXK
+	 pm+IIFNk0Irb9dLc2orgGAINsadwKm9/FeTS790cV4maUxkVesTMo8uDMb51aguxfj
+	 wH9rp7jPgd0vw==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 24DA915C02E0; Mon,  4 Dec 2023 23:01:26 -0500 (EST)
+Date: Mon, 4 Dec 2023 23:01:26 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Dimitri John Ledkov <dimitri.ledkov@canonical.com>,
+        linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: Converting manpages from asciidoc to rst2man ?
+Message-ID: <20231205040126.GF509422@mit.edu>
+References: <CADWks+Z=kLTohq_3pk_PdXs54B6tLn25u6avn_Q1FyXN2-sVDQ@mail.gmail.com>
+ <87fs0iujaj.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87fs0iujaj.fsf@meer.lwn.net>
 
-When kzalloc for pmus[i].boxes fails, we should clean up pmus
-to prevent memleak. However, when kzalloc for attr_group fails,
-pmus has been assigned to type->pmus, and freeing will be done
-later on by the callers. The chain is: uncore_type_init ->
-uncore_types_init -> uncore_pci_init -> uncore_types_exit ->
-uncore_type_exit. Therefore, freeing pmus in uncore_type_init
-may cause a double-free. Fix this by setting type->pmus to
-NULL after kfree.
+On Mon, Dec 04, 2023 at 07:36:04AM -0700, Jonathan Corbet wrote:
+> 
+> In general we don't have a lot of man pages in the kernel, so it's not
+> something we've put a lot of thought into.  Ideally, I suppose, it would
+> be nice to get all of those man pages integrated into the RST docs
+> build, but it's not something that is likely to inspire any great sense
+> of urgency.
 
-Fixes: 629eb703d3e4 ("perf/x86/intel/uncore: Fix memory leaks on allocation failures")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- arch/x86/events/intel/uncore.c | 1 +
- 1 file changed, 1 insertion(+)
+These manpages (at least the perf ones) are actually translated into
+nroff/troff's -man macro format using asciidoctor so that things like
+"man perf": For example, from Debian testing's "linux-perf" package:
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 01023aa5125b..d80445a24011 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1041,6 +1041,7 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
- 	for (i = 0; i < type->num_boxes; i++)
- 		kfree(pmus[i].boxes);
- 	kfree(pmus);
-+	type->pmus = NULL;
- 
- 	return -ENOMEM;
- }
--- 
-2.17.1
+% gunzip < /usr/share/man/man1/perf.1.gz | head
+'\" t
+.\"     Title: perf
+.\"    Author: [see the "AUTHOR(S)" section]
+.\" Generator: Asciidoctor 2.0.20
+.\"      Date: 2023-11-03
+.\"    Manual: perf Manual
+.\"    Source: perf
+.\"  Language: English
+.\"
+.TH "PERF" "1" "2023-11-03" "perf" "perf Manual"
 
+% dpkg -S /usr/share/man/man1/perf.1.gz
+diversion by linux-perf from: /usr/share/man/man1/perf.1.gz
+diversion by linux-perf to: /usr/share/man/man1/perf.wrapper.1.gz
+linux-perf: /usr/share/man/man1/perf.1.gz
+
+I guess we could try to use rst2man to do the same thing, but it's a
+lot more than just "make it look nice" when rendered into HTML and pdf
+when processfing the .rst file.  We need to make sure that after the
+rst file is turned into a -man text file, that it looks good when
+postsprocess via "groff -man -T utf8" *and* "groff -man -T pdf".
+
+It would also mean that python3-docutils would have to be installed
+when building kernel docs (to provide the rst2man command), but then
+again, it would remove the need to have asciidoctor installed....
+
+Cheers,
+
+					- Ted
