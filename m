@@ -1,77 +1,83 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB7BB4;
-	Mon,  4 Dec 2023 19:33:31 -0800 (PST)
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-286d8dae2dbso380468a91.1;
-        Mon, 04 Dec 2023 19:33:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701747211; x=1702352011;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nMw9Nvv8QLfxV8cCUDbNc+UabXDMv0YVSrH/IrafvLo=;
-        b=tD676X0MztpgP2n4kIQ3RrK7VWabXgvrewrGP5MRb11tOR8ulgcGL2wTaGxZZ6SbsM
-         mn46HkrV1rboXGrwNqehmcUaLXH0P5XHTAatZd1u+nCJjZq0Ompu4bKTkgbQQTBJvy1X
-         QyxrrbaIH+83vh2rIfQ1kAL0JcwF3PU1Cu8tDQZnQKoA5Loxr4yq3WVjYXYhS8IvQnwC
-         DsCYuNLQl6j1uExXubL9sUdYaxskXpJT/vmmiAyiD/eBH8M8uTZTk/Uv3PTq75qt0mnu
-         c+TwC9gSSgTkG/9kYQxxg6LUGF0y7szmoUlCESpd7PczwXa87IiS6iekdOLy08gDlGqV
-         Lr0Q==
-X-Gm-Message-State: AOJu0YzLo2+ZYJwmMmjV7GZnrimfDhicIRqKDEYvKCM09IlISwMeE7BR
-	9nfS8w6XokyOz9kaTqGx+8GNkFxUi3ojn2zLfZs=
-X-Google-Smtp-Source: AGHT+IF0FTyYf3LDF6VI38nVTZYSMM5HcQIp90bTAAgmPWxbi4G0S4OHra3Cy6H94F5jgxVkWxFl3zLpr1hFuZZr2PQ=
-X-Received: by 2002:a17:90a:d801:b0:286:79b7:e86b with SMTP id
- a1-20020a17090ad80100b0028679b7e86bmr661326pjv.14.1701747210743; Mon, 04 Dec
- 2023 19:33:30 -0800 (PST)
+Received: from zg8tndyumtaxlji0oc4xnzya.icoremail.net (zg8tndyumtaxlji0oc4xnzya.icoremail.net [46.101.248.176])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76B2AB4
+	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 19:37:49 -0800 (PST)
+Received: from localhost.localdomain (unknown [10.190.70.5])
+	by mail-app2 (Coremail) with SMTP id by_KCgBHvdS4mG5l3TBKAA--.35678S4;
+	Tue, 05 Dec 2023 11:28:00 +0800 (CST)
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+To: dinghao.liu@zju.edu.cn
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/x86/uncore: fix a potential double-free in uncore_type_init
+Date: Tue,  5 Dec 2023 11:27:09 +0800
+Message-Id: <20231205032709.9525-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:by_KCgBHvdS4mG5l3TBKAA--.35678S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFWfGr13Aw17Aw47AryrJFb_yoWkArX_WF
+	1UJaykJr4Ska95W348AFW5Grn7Kw48Z3yrGr1FqF4kAry5tF1DCFs7Gr9ayw4xWrWDZFW8
+	ArZxKr1jvw18AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbskFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+	vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
+	0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoTBmVsUQg4xgAMs-
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231204182330.654255-1-irogers@google.com> <bea4ad79-297e-9737-8af1-2286192d26f4@os.amperecomputing.com>
-In-Reply-To: <bea4ad79-297e-9737-8af1-2286192d26f4@os.amperecomputing.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 4 Dec 2023 19:33:18 -0800
-Message-ID: <CAM9d7ci=Tk845H3x3KMDu-hTdP-u0O6a8D3iAa8EnFLLjOO6OQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf metrics: Avoid segv if default metricgroup
- isn't set
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc: Ian Rogers <irogers@google.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
+When kzalloc for pmus[i].boxes fails, we should clean up pmus
+to prevent memleak. However, when kzalloc for attr_group fails,
+pmus has been assigned to type->pmus, and freeing will be done
+later on by the callers. The chain is: uncore_type_init ->
+uncore_types_init -> uncore_pci_init -> uncore_types_exit ->
+uncore_type_exit. Therefore, freeing pmus in uncore_type_init
+may cause a double-free. Fix this by setting type->pmus to
+NULL after kfree.
 
-On Mon, Dec 4, 2023 at 2:45=E2=80=AFPM Ilkka Koskinen
-<ilkka@os.amperecomputing.com> wrote:
->
->
->
-> On Mon, 4 Dec 2023, Ian Rogers wrote:
-> > A metric is default by having "Default" within its groups. The default
-> > metricgroup name needn't be set and this can result in segv in
-> > default_metricgroup_cmp and perf_stat__print_shadow_stats_metricgroup
-> > that assume it has a value when there is a Default metric group. To
-> > avoid the segv initialize the value to "".
-> >
-> > Fixes: 1c0e47956a8e ("perf metrics: Sort the Default metricgroup")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> Thanks! I was going to look for the bug but got pulled to other
-> tasks. The patch looks good to me and I tested it successfully on
-> AmpereOne.
->
->    Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Fixes: 629eb703d3e4 ("perf/x86/intel/uncore: Fix memory leaks on allocation failures")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ arch/x86/events/intel/uncore.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Looks like it needs to go through perf-tools for v6.7.
-Ian, do you think this one is enough?
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 01023aa5125b..d80445a24011 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1041,6 +1041,7 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
+ 	for (i = 0; i < type->num_boxes; i++)
+ 		kfree(pmus[i].boxes);
+ 	kfree(pmus);
++	type->pmus = NULL;
+ 
+ 	return -ENOMEM;
+ }
+-- 
+2.17.1
 
-Thanks,
-Namhyung
