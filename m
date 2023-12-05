@@ -1,141 +1,67 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347BA6FCC6
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 21:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fsd1KBlS"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BDE2D4D;
-	Tue,  5 Dec 2023 11:22:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701804149; x=1733340149;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=pzyZMQAeOzsTgEO8GOSM7n0lSMGXAXy5xmTZZbwfqRs=;
-  b=fsd1KBlSKTG8fyyQJP9IiQHu8A7ngFSWF5XdEKQ/bAxnEoRHdwf+pKhV
-   Cm7Dci6PiugGqyzK/XhHbDvj2Q/bumRkBmDFZGTpMBwEFraDGGOWTJb1w
-   SlzU+7t/Umranimnk3ntovIacSpaVJz1jXboJX5qwm3LeEiGh70koQlHd
-   ejeV00OirzwcRHY3t9BL0GPResyl8Wfo4kzICiJmQmnrz5QM7oZfQQyrL
-   NTiRMsvt0+vEq4WdqcNcVaWOCWVBjGhMWZ3aOiWnkC/hmD4qxVQHaQWly
-   3fitKm4s86cVJPNmg9L3nTF/Buqljs25IldyXaMEWIYhWdI7wNRe6gKUh
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="785701"
-X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="785701"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 11:22:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="805382148"
-X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="805382148"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.46.77])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 11:22:19 -0800
-Message-ID: <b72ee8f2-1dae-49a4-b89e-4d5453c8834f@intel.com>
-Date: Tue, 5 Dec 2023 21:22:14 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="famdhsM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B1F9C433C7;
+	Tue,  5 Dec 2023 21:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701813026;
+	bh=VLI7kPveWbWwPgk7uPRYKi16eKz1FOlaDzT1BH/sKiY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=famdhsM1YLcq2pCSZLqtoXfVPUfHCbzVp2dG801ncktsbcUY6cYXCOwvvjFSg1XaG
+	 OrZqZuJ2e3ueGZWgmxhMjQW/vpFSO8rEUHERJws713+qCZ+m3n82ZPECtKdWJ+UVg+
+	 Uv1S9q5Pk4OUU91lnSMfTm67o2cewixMQg7WB7GcALL7oSLifrO8aqU+UhjXIU1t4Z
+	 I5chfcIJoP3ivgwiFDr9BFhpAI8UcHIh0zl5xx5MrmF/BYKKRNTkLvlcsjvbO+d3vj
+	 /CV6+kOqLuUFcAZpPJcl+v+5bitQOil14M/WF43Zr37MOOXDqYcehnY+cOn0X1n0Ea
+	 tQYfKnONW8Y2w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 18C6F40094; Tue,  5 Dec 2023 18:50:24 -0300 (-03)
+Date: Tue, 5 Dec 2023 18:50:24 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@arm.com>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
+	adrian.hunter@intel.com, irogers@google.com, namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	maddy@linux.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH V4] tools/perf: Add perf binary dependent rule for
+ shellcheck log in Makefile.perf
+Message-ID: <ZW+bIGC3r2dcTQUO@kernel.org>
+References: <20231123160232.94253-1-atrajeev@linux.vnet.ibm.com>
+ <e8143e4d-d3ca-88c5-f1c8-b79f70ee5ffa@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf test: Skip diff test if test_loop is missing
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231205164924.835682-1-irogers@google.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20231205164924.835682-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8143e4d-d3ca-88c5-f1c8-b79f70ee5ffa@arm.com>
+X-Url: http://acmel.wordpress.com
 
-On 5/12/23 18:49, Ian Rogers wrote:
-> The diff test depends on finding the symbol test_loop in perf and will
-> fail if perf has been stripped and no debug object is available. In
-> that case, skip the test instead.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/shell/diff.sh | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/diff.sh b/tools/perf/tests/shell/diff.sh
-> index 213185763688..14b87af88703 100755
-> --- a/tools/perf/tests/shell/diff.sh
-> +++ b/tools/perf/tests/shell/diff.sh
-> @@ -9,8 +9,15 @@ perfdata1=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->  perfdata2=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->  perfdata3=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->  testprog="perf test -w thloop"
-> +
-> +shelldir=$(dirname "$0")
-> +# shellcheck source=lib/perf_has_symbol.sh
-> +. "${shelldir}"/lib/perf_has_symbol.sh
-> +
->  testsym="test_loop"
->  
-> +skip_test_missing_symbol ${testsym}
-> +
->  cleanup() {
->    rm -rf "${perfdata1}"
->    rm -rf "${perfdata1}".old
+Em Mon, Nov 27, 2023 at 11:12:57AM +0000, James Clark escreveu:
+> On 23/11/2023 16:02, Athira Rajeev wrote:
+> > --- a/tools/perf/Makefile.perf
+> > @@ -1134,6 +1152,7 @@ bpf-skel-clean:
+> >  	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+> >  
+> >  clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+> > +	$(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
+> >  	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+> >  	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+> >  	$(Q)$(RM) $(OUTPUT).config-detected
 
-The verbose output in the error case could also
-be tweaked.
+While merging perf-tools-next with torvalds/master I noticed that maybe
+we better have the above added line as:
 
-Before patch:
++   $(call QUIET_CLEAN, tests) $(Q)$(MAKE) -f $(srctree)/tools/perf/tests/Makefile.tests clean
 
- $ strip tools/perf/perf
- $ tools/perf/perf buildid-cache -p $(realpath tools/perf/perf)
- $ tools/perf/perf test -v 'diff test'
-  85: perf diff tests                                                 :
- --- start ---
- test child forked, pid 8621
- Basic two file diff test
- ./tools/perf/tests/shell/diff.sh: 51: [: Workload: unexpected operator
- ./tools/perf/tests/shell/diff.sh: 56: [: Workload: unexpected operator
- Basic two file diff test [Failed diff]
- Basic three file diff test
- ./tools/perf/tests/shell/diff.sh: 73: [: Workload: unexpected operator
- ./tools/perf/tests/shell/diff.sh: 78: [: Workload: unexpected operator
- ./tools/perf/tests/shell/diff.sh: 83: [: Workload: unexpected operator
- Basic three file diff test [Failed diff]
- test child finished with -1
- ---- end ----
- perf diff tests: FAILED!
+No?
 
-After patch:
+Anyway I'm merging as-is, but it just hit my eye while merging,
 
- $ tools/perf/perf test -v 'diff test'
-  85: perf diff tests                                                 :
- --- start ---
- test child forked, pid 8853
- perf does not have symbol 'test_loop'
- perf is missing symbols - skipping test
- test child finished with -2
- ---- end ----
- perf diff tests: Skip
-
- and with symbols:
-
- $ tools/perf/perf test -v 'diff test'
-  85: perf diff tests                                                 :
- --- start ---
- test child forked, pid 10122
-  103e20-103e60 g test_loop
- perf does have symbol 'test_loop'
- Basic two file diff test
- Basic two file diff test [Success]
- Basic three file diff test
- Basic three file diff test [Success]
- test child finished with 0
- ---- end ----
- perf diff tests: Ok
-
-
-
-Tested-by: Adrian Hunter <adrian.hunter@intel.com>
-
+- Arnaldo
