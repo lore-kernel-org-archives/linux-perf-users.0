@@ -1,147 +1,119 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dnmFgDZZ"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6046CB;
-	Mon,  4 Dec 2023 23:33:41 -0800 (PST)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B57Jwba025175;
-	Tue, 5 Dec 2023 07:33:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=88QIzSmoE77AlK3/7os4EVND1aLypF6I6TOzuGTEaL4=;
- b=dnmFgDZZLCv2rxJy7y3kH9DD1dvbonl2XzQA4A3/o1Cb8HRNUqAWEAqEMnPdDNI8Wb9Q
- KhHCynceumu7WtGkLL6XIGitv+7nyhtnKsV4XjZnF/mPW/hi6h7Jl51oJW6irlpNfH+s
- InXGfaCNpAB/VXkjWdRdzKQrnwvC6sTk3DQZTlkC55AWRyMwFuwoAiJczefpRZ+hyf8G
- jZHiorBroMnT2FCTiGWa7rCcMvEEp9oLnL3Wo0jq/1H3xx3NhDGoI3wUTP8n0o7QYwAi
- 3Md31vOtseXhNYMYIzPmdhQdFkzF7IyH8ONLa02dHmj2Lh8PULtzu1Sp22LBGtQujIYW CA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3usycegcvt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 07:33:22 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B57K2AL025418;
-	Tue, 5 Dec 2023 07:33:22 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3usycegcuf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 07:33:22 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B57IllY011345;
-	Tue, 5 Dec 2023 07:33:20 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3urv8b208d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 07:33:20 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B57XIm912190418
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Dec 2023 07:33:18 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C23F320040;
-	Tue,  5 Dec 2023 07:33:18 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B9C8220043;
-	Tue,  5 Dec 2023 07:33:16 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.215.218])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  5 Dec 2023 07:33:16 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uq7Qf1Rb"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C699192;
+	Tue,  5 Dec 2023 00:13:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701763991; x=1733299991;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   mime-version:in-reply-to;
+  bh=+5S4F3T/FBDoxciqj9rGoi4n0Xagz4XSh13nmg+mktk=;
+  b=Uq7Qf1RbDBwdNnTRTyDazhTfI+I00U9aGN9VEs78OrzmCyPdfYHl5vxM
+   MTawhsKgMtu3zDeNbo535aisirfXVmPZKnCf2Zt03zNA6nylwV8yYXJvt
+   SyiAAOSQ+cJbKW4wmFGZVCBKC8l3b9urYUrl55CH87WOAiZs5dn9ov7IE
+   3/NonXjDERdSzbeLT1wsre2IEbZVLz+vHm22/xsl3gaboE0WToAaaFgvn
+   192iVHEyGJ8VqG3lFOiJCrQWnLtZeI4IHro//O46yM/b3l/Fjq/GGfQYH
+   6jykj6I/s6KAzum8MgU+N/6mfZGyTrkta9KTwygmQhS2g5VzSQ9d/43dS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="425020290"
+X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
+   d="asc'?scan'208";a="425020290"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 00:13:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="1102374087"
+X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
+   d="asc'?scan'208";a="1102374087"
+Received: from debian-skl.sh.intel.com (HELO debian-skl) ([10.239.160.45])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Dec 2023 00:13:06 -0800
+Date: Tue, 5 Dec 2023 16:12:08 +0800
+From: Zhenyu Wang <zhenyuw@linux.intel.com>
+To: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/uncore: fix a potential double-free in
+ uncore_type_init
+Message-ID: <ZW7bWGy+ZhcBUo73@debian-scheme>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20231205032709.9525-1-dinghao.liu@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
-Subject: Re: [PATCH v2 1/4] perf build: Shellcheck support for OUTPUT
- directory
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZW4sRL0vPofcoS43@kernel.org>
-Date: Tue, 5 Dec 2023 13:03:05 +0530
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/cosUcUmE3dfT48V"
+Content-Disposition: inline
+In-Reply-To: <20231205032709.9525-1-dinghao.liu@zju.edu.cn>
+
+
+--/cosUcUmE3dfT48V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <9C33887F-8A88-4973-8593-7936E36AFCE1@linux.vnet.ibm.com>
-References: <20231129213428.2227448-1-irogers@google.com>
- <CE3EBC99-B6B0-4DD5-A88E-26B28B1A4A46@linux.vnet.ibm.com>
- <ZW4sRL0vPofcoS43@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: aGMfh_fzvvUVcN1N3kJzHcwFydMzWulY
-X-Proofpoint-GUID: FV6jQcUfDmHHQgY13Rcu_O6VJQUTbMhH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-05_03,2023-12-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- impostorscore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- spamscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2312050060
 
+On 2023.12.05 11:27:09 +0800, Dinghao Liu wrote:
+> When kzalloc for pmus[i].boxes fails, we should clean up pmus
+> to prevent memleak. However, when kzalloc for attr_group fails,
+> pmus has been assigned to type->pmus, and freeing will be done
+> later on by the callers. The chain is: uncore_type_init ->
+> uncore_types_init -> uncore_pci_init -> uncore_types_exit ->
+> uncore_type_exit. Therefore, freeing pmus in uncore_type_init
+> may cause a double-free. Fix this by setting type->pmus to
+> NULL after kfree.
 
+Change is ok but the call trace you wrote here is reversed or malformed??
+With that fixed or cleared.
 
-> On 05-Dec-2023, at 1:15=E2=80=AFAM, Arnaldo Carvalho de Melo =
-<acme@kernel.org> wrote:
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+
 >=20
-> Em Fri, Dec 01, 2023 at 11:49:59AM +0530, Athira Rajeev escreveu:
->>=20
->>=20
->>> On 30-Nov-2023, at 3:04=E2=80=AFAM, Ian Rogers <irogers@google.com> =
-wrote:
->>>=20
->>> Migrate Makefile.tests to Build so that variables like rule_mkdir =
-are
->>> defined via Makefile.build (needed so the output directory can be
->>> created). This requires SHELLCHECK being exported and the clean rule
->>> tweaking to remove the files in find.
->>>=20
->>> Change find "-perm -o=3Dx" as it was failing on my Debian based =
-Linux
->>> kernel tree, switch to using "-executable".
->>>=20
->>> Adding a filename prefix of "." to the shellcheck log files is a =
-pain
->>> and error prone in make, remove this prefix and just add the
->>> shellcheck log files to .gitignore.
->>>=20
->>> Fix the command echo so that running the test is displayed.
->>>=20
->>> Fixes: 1638b11ef815 ("perf tools: Add perf binary dependent rule for =
-shellcheck log in Makefile.perf")
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>=20
->> Hi Ian,
->>=20
->> Changes looks good to me.
->> Tested with make, make clean, make with shellcheck error, make with =
-NO_SHELLCHECK
->>=20
->> Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Fixes: 629eb703d3e4 ("perf/x86/intel/uncore: Fix memory leaks on allocati=
+on failures")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  arch/x86/events/intel/uncore.c | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
-> Next time please reply with your Reviewed-by to the cover letter, so
-> that b4 stamps your reviewed-by to all the patches and not just to the
-> patch that you replied to.
-Hi Arnaldo,
-
-Ok Sure.
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
+e.c
+> index 01023aa5125b..d80445a24011 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1041,6 +1041,7 @@ static int __init uncore_type_init(struct intel_unc=
+ore_type *type, bool setid)
+>  	for (i =3D 0; i < type->num_boxes; i++)
+>  		kfree(pmus[i].boxes);
+>  	kfree(pmus);
+> +	type->pmus =3D NULL;
+> =20
+>  	return -ENOMEM;
+>  }
+> --=20
+> 2.17.1
 >=20
-> This time I'll take the plural in "Changes look good to me" to signify
-> that you reviewed the whole series, ok?
 
-Yes, please add my Reviewed-by for the whole series.
+--/cosUcUmE3dfT48V
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks
-Athira
->=20
-> - Arnaldo
+-----BEGIN PGP SIGNATURE-----
 
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCZW7bUwAKCRCxBBozTXgY
+J/bDAKCOA0aNY/nPoT08vmvKOA1I+3JF7QCgi4vd8mjY23YX1OMaIspmA7NwJLI=
+=n/Bj
+-----END PGP SIGNATURE-----
 
+--/cosUcUmE3dfT48V--
