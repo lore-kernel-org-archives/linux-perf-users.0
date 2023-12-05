@@ -1,331 +1,123 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 53E37135
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 03:11:57 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C51D139F;
-	Tue,  5 Dec 2023 03:12:43 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.42.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7331E3F5A1;
-	Tue,  5 Dec 2023 03:11:55 -0800 (PST)
-Date: Tue, 5 Dec 2023 11:11:52 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Lubomir Rintel <lkundrak@v3.sk>, Arnd Bergmann <arnd@arndb.de>,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: Delete ARM11MPCore (ARM11 ARMv6K SMP) support
-Message-ID: <ZW8FeHURhRDGUEWn@FVFF77S0Q05N>
-References: <20231204-drop-11mpcore-v1-1-f96cd3938cf1@linaro.org>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQrS/Mt0"
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4121A1;
+	Tue,  5 Dec 2023 03:16:31 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-a1c890f9b55so54542266b.1;
+        Tue, 05 Dec 2023 03:16:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701774990; x=1702379790; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ti0EygLrXL1ybJV+2IwmkNvjqyvD5l8XhA94fC+ez5I=;
+        b=IQrS/Mt0jalyQNPuEp2OHaRHpB+o3D5drxbQ6PP53lztG2e5uxf8MsVeDS8D7+7PMn
+         8RkYZuwcad3Zup11PLM40MxhZOu8TFn9ysQgTePyFlajE0GR7pwgLzzxcpNRGDkbitwR
+         DFYLhBtBbb0Xm4L3rrZXgB9xwz0KkOXRwVdT+ijQvLHVh9zc7irbpVAPvitlUG5Qs7vW
+         VIskrv2HQpxj8GqfyZqoagKiIqshdz5Zwq8o70x5X9633myNWRvmbCizrLyGWZRE/Zdo
+         CBR2t4MrAizAT7E3ScKhKlpI1xK84/9hIFJiZFYmFA6J0bwG00adoTGKYus83Fa1mKkn
+         72+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701774990; x=1702379790;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ti0EygLrXL1ybJV+2IwmkNvjqyvD5l8XhA94fC+ez5I=;
+        b=NRcqOpYH8QpYbB0OPfVvzMa81SoTTvUmvMsdYmVs9rk319j7YrIv+UGd3GdrS4oLls
+         MvBuDZb9f87FB8CK6Dd4o0S23PyrJtmiaktOdDwOK9m3yapGdHFAX6V/5xhWfUnC4jjz
+         dXF5cjDVbU8j6jWXRjaN6+cWKhzPFmyvWyHQaexeEUFg8BPb1B8hG4KEQqL9dwjNb9R9
+         AmZ2FnTrrDXiPxPh13PagHXKFSMtRfeN2H83HOD0rvobpsFCZtpVsQXtvI5cZOYtXIw+
+         6WJd7fNYxxY9ejhjLCQ38YE88EI2h1c6QkApkGeuKPK4DN1hCfqOpk/8jRMVnQA8QDmI
+         vEWg==
+X-Gm-Message-State: AOJu0Yxvqt9Ze4jWmzsIcgB+8l0h06gqjqkuEMQAgbPi3jwXoOchJS1Y
+	nULef01jJGpzyO79r8eBD1Q=
+X-Google-Smtp-Source: AGHT+IF3d9WCZ91k4YmR1hipO6U/99Y2ij76ZhU4TAQ7trpVtzdBDgNbaHMOf5TbJRmoNAyGVk54Zg==
+X-Received: by 2002:a17:906:dc:b0:a01:9d8b:db17 with SMTP id 28-20020a17090600dc00b00a019d8bdb17mr4727373eji.15.1701774990161;
+        Tue, 05 Dec 2023 03:16:30 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id b6-20020a170906194600b00a1712cbddebsm1761143eje.187.2023.12.05.03.16.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Dec 2023 03:16:29 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 5 Dec 2023 12:16:27 +0100
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Kyle Huey <me@kylehuey.com>, Kyle Huey <khuey@kylehuey.com>,
+	linux-kernel@vger.kernel.org,
+	Robert O'Callahan <robert@ocallahan.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf/bpf: Allow a bpf program to suppress I/O
+ signals.
+Message-ID: <ZW8Gi2QI5ceAJfab@krava>
+References: <20231204201406.341074-1-khuey@kylehuey.com>
+ <20231204201406.341074-2-khuey@kylehuey.com>
+ <CAEf4BzYtSXtgdO9C2w9OOKni68H-7UOExFJRBEij3HG2Qwn1Rg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231204-drop-11mpcore-v1-1-f96cd3938cf1@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYtSXtgdO9C2w9OOKni68H-7UOExFJRBEij3HG2Qwn1Rg@mail.gmail.com>
 
-On Mon, Dec 04, 2023 at 11:36:44PM +0100, Linus Walleij wrote:
-> This ARM11 SMP configuration was one of the first SMP configurations
-> the ARM kernel supported, but it has the downside of odd DMA handling,
-> odd cache tagging, and often (as of recent) completely broken cache
-> handling on the ARM RealView PB11MPCore test chips. To boot the
-> platform it was necessary to completely disable the cache.
-> When it comes to the EB 11MPCore it is unclear if this ever worked.
+On Mon, Dec 04, 2023 at 02:18:49PM -0800, Andrii Nakryiko wrote:
+> On Mon, Dec 4, 2023 at 12:14 PM Kyle Huey <me@kylehuey.com> wrote:
+> >
+> > Returning zero from a bpf program attached to a perf event already
+> > suppresses any data output. This allows it to suppress I/O availability
+> > signals too.
 > 
-> These reference designs are now the only ARMv6K SMP platforms.
+> make sense, just one question below
 > 
-> As only reference designs of purely academic interest remain, and
-> since the special-cased DMA and PMU code is hard to maintain and
-> doesn't really work, it is not really worth our time.
-> 
-> Delete the ARM11MPCore support along with:
-> 
-> - The special DMA quirk CONFIG_DMA_CACHE_RWFO that is only used
->   on ARMv6K SMP, and we are the last ARMV6K system leaving the
->   building and the cache handling is awkward, so good-bye.
-> 
-> - The special PMU handling that was only used by ARM11MPCore.
-> 
-> The following is left behind:
-> 
-> - TIMER_OF_DECLARE(arm_twd_11mp, "arm,arm11mp-twd-timer", ...)
->   in arch/arm/kernel/smp_twd.c, this is still in use by Marvell MMP3
->   arch/arm/boot/dts/marvell/mmp3.dtsi
-> 
-> - IRQCHIP_DECLARE(arm11mp_gic, "arm,arm11mp-gic", ...)
->   in drivers/irqchip/irq-gic.c, this is still in use by Marvell MMP3
->   arch/arm/boot/dts/marvell/mmp3.dtsi
-> 
-> These are unfortunate but will need to be kept around for
-> compatibility. New Marvell-specific compatibles should however probably
-> be added.
-> 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  arch/arm/kernel/perf_event_v6.c            | 34 ------------------------------
->  arch/arm/mach-versatile/Kconfig            | 17 ---------------
->  arch/arm/mach-versatile/platsmp-realview.c |  2 --
->  arch/arm/mach-versatile/realview.c         |  1 -
->  arch/arm/mm/Kconfig                        | 18 ----------------
->  arch/arm/mm/cache-v6.S                     | 31 ---------------------------
->  6 files changed, 103 deletions(-)
+> >
+> > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
 
-This looks good to me, so FWIW:
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+> > ---
+> >  kernel/events/core.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index b704d83a28b2..34d7b19d45eb 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -10417,8 +10417,10 @@ static void bpf_overflow_handler(struct perf_event *event,
+> >         rcu_read_unlock();
+> >  out:
+> >         __this_cpu_dec(bpf_prog_active);
+> > -       if (!ret)
+> > +       if (!ret) {
+> > +               event->pending_kill = 0;
+> >                 return;
+> > +       }
+> 
+> What's the distinction between event->pending_kill and
+> event->pending_wakeup? Should we do something about pending_wakeup?
+> Asking out of complete ignorance of all these perf specifics.
+> 
 
-Mark.
+I think zeroing pending_kill is enough.. when it's set the perf code
+sets pending_wakeup to call perf_event_wakeup in irq code that wakes
+up event's ring buffer readers and sends sigio if pending_kill is set
+
+jirka
 
 > 
-> diff --git a/arch/arm/kernel/perf_event_v6.c b/arch/arm/kernel/perf_event_v6.c
-> index 1ae99deeec54..3115077f6abc 100644
-> --- a/arch/arm/kernel/perf_event_v6.c
-> +++ b/arch/arm/kernel/perf_event_v6.c
-> @@ -525,40 +525,7 @@ static int armv6_1176_pmu_init(struct arm_pmu *cpu_pmu)
->  	return 0;
->  }
->  
-> -/*
-> - * ARMv6mpcore is almost identical to single core ARMv6 with the exception
-> - * that some of the events have different enumerations and that there is no
-> - * *hack* to stop the programmable counters. To stop the counters we simply
-> - * disable the interrupt reporting and update the event. When unthrottling we
-> - * reset the period and enable the interrupt reporting.
-> - */
-> -
-> -static int armv6mpcore_map_event(struct perf_event *event)
-> -{
-> -	return armpmu_map_event(event, &armv6mpcore_perf_map,
-> -				&armv6mpcore_perf_cache_map, 0xFF);
-> -}
-> -
-> -static int armv6mpcore_pmu_init(struct arm_pmu *cpu_pmu)
-> -{
-> -	cpu_pmu->name		= "armv6_11mpcore";
-> -	cpu_pmu->handle_irq	= armv6pmu_handle_irq;
-> -	cpu_pmu->enable		= armv6pmu_enable_event;
-> -	cpu_pmu->disable	= armv6mpcore_pmu_disable_event;
-> -	cpu_pmu->read_counter	= armv6pmu_read_counter;
-> -	cpu_pmu->write_counter	= armv6pmu_write_counter;
-> -	cpu_pmu->get_event_idx	= armv6pmu_get_event_idx;
-> -	cpu_pmu->clear_event_idx = armv6pmu_clear_event_idx;
-> -	cpu_pmu->start		= armv6pmu_start;
-> -	cpu_pmu->stop		= armv6pmu_stop;
-> -	cpu_pmu->map_event	= armv6mpcore_map_event;
-> -	cpu_pmu->num_events	= 3;
-> -
-> -	return 0;
-> -}
-> -
->  static const struct of_device_id armv6_pmu_of_device_ids[] = {
-> -	{.compatible = "arm,arm11mpcore-pmu",	.data = armv6mpcore_pmu_init},
->  	{.compatible = "arm,arm1176-pmu",	.data = armv6_1176_pmu_init},
->  	{.compatible = "arm,arm1136-pmu",	.data = armv6_1136_pmu_init},
->  	{ /* sentinel value */ }
-> @@ -568,7 +535,6 @@ static const struct pmu_probe_info armv6_pmu_probe_table[] = {
->  	ARM_PMU_PROBE(ARM_CPU_PART_ARM1136, armv6_1136_pmu_init),
->  	ARM_PMU_PROBE(ARM_CPU_PART_ARM1156, armv6_1156_pmu_init),
->  	ARM_PMU_PROBE(ARM_CPU_PART_ARM1176, armv6_1176_pmu_init),
-> -	ARM_PMU_PROBE(ARM_CPU_PART_ARM11MPCORE, armv6mpcore_pmu_init),
->  	{ /* sentinel value */ }
->  };
->  
-> diff --git a/arch/arm/mach-versatile/Kconfig b/arch/arm/mach-versatile/Kconfig
-> index b1519b4dc03a..e029270c2687 100644
-> --- a/arch/arm/mach-versatile/Kconfig
-> +++ b/arch/arm/mach-versatile/Kconfig
-> @@ -201,23 +201,6 @@ config REALVIEW_EB_A9MP
->  	  Enable support for the Cortex-A9MPCore tile fitted to the
->  	  Realview(R) Emulation Baseboard platform.
->  
-> -config REALVIEW_EB_ARM11MP
-> -	bool "Support ARM11MPCore Tile"
-> -	depends on MACH_REALVIEW_EB && ARCH_MULTI_V6
-> -	select HAVE_SMP
-> -	help
-> -	  Enable support for the ARM11MPCore tile fitted to the Realview(R)
-> -	  Emulation Baseboard platform.
-> -
-> -config MACH_REALVIEW_PB11MP
-> -	bool "Support RealView(R) Platform Baseboard for ARM11MPCore"
-> -	depends on ARCH_MULTI_V6
-> -	select HAVE_SMP
-> -	help
-> -	  Include support for the ARM(R) RealView(R) Platform Baseboard for
-> -	  the ARM11MPCore.  This platform has an on-board ARM11MPCore and has
-> -	  support for PCI-E and Compact Flash.
-> -
->  # ARMv6 CPU without K extensions, but does have the new exclusive ops
->  config MACH_REALVIEW_PB1176
->  	bool "Support RealView(R) Platform Baseboard for ARM1176JZF-S"
-> diff --git a/arch/arm/mach-versatile/platsmp-realview.c b/arch/arm/mach-versatile/platsmp-realview.c
-> index 5d363385c801..4c3e089ac686 100644
-> --- a/arch/arm/mach-versatile/platsmp-realview.c
-> +++ b/arch/arm/mach-versatile/platsmp-realview.c
-> @@ -18,7 +18,6 @@
->  #define REALVIEW_SYS_FLAGSSET_OFFSET	0x30
->  
->  static const struct of_device_id realview_scu_match[] = {
-> -	{ .compatible = "arm,arm11mp-scu", },
->  	{ .compatible = "arm,cortex-a9-scu", },
->  	{ .compatible = "arm,cortex-a5-scu", },
->  	{ }
-> @@ -27,7 +26,6 @@ static const struct of_device_id realview_scu_match[] = {
->  static const struct of_device_id realview_syscon_match[] = {
->          { .compatible = "arm,core-module-integrator", },
->          { .compatible = "arm,realview-eb-syscon", },
-> -        { .compatible = "arm,realview-pb11mp-syscon", },
->          { .compatible = "arm,realview-pbx-syscon", },
->          { },
->  };
-> diff --git a/arch/arm/mach-versatile/realview.c b/arch/arm/mach-versatile/realview.c
-> index a3933e2373d5..36a6f6bc4fdd 100644
-> --- a/arch/arm/mach-versatile/realview.c
-> +++ b/arch/arm/mach-versatile/realview.c
-> @@ -9,7 +9,6 @@
->  static const char *const realview_dt_platform_compat[] __initconst = {
->  	"arm,realview-eb",
->  	"arm,realview-pb1176",
-> -	"arm,realview-pb11mp",
->  	"arm,realview-pba8",
->  	"arm,realview-pbx",
->  	NULL,
-> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-> index c164cde50243..2b6f50dd5478 100644
-> --- a/arch/arm/mm/Kconfig
-> +++ b/arch/arm/mm/Kconfig
-> @@ -937,24 +937,6 @@ config VDSO
->  	  You must have glibc 2.22 or later for programs to seamlessly
->  	  take advantage of this.
->  
-> -config DMA_CACHE_RWFO
-> -	bool "Enable read/write for ownership DMA cache maintenance"
-> -	depends on CPU_V6K && SMP
-> -	default y
-> -	help
-> -	  The Snoop Control Unit on ARM11MPCore does not detect the
-> -	  cache maintenance operations and the dma_{map,unmap}_area()
-> -	  functions may leave stale cache entries on other CPUs. By
-> -	  enabling this option, Read or Write For Ownership in the ARMv6
-> -	  DMA cache maintenance functions is performed. These LDR/STR
-> -	  instructions change the cache line state to shared or modified
-> -	  so that the cache operation has the desired effect.
-> -
-> -	  Note that the workaround is only valid on processors that do
-> -	  not perform speculative loads into the D-cache. For such
-> -	  processors, if cache maintenance operations are not broadcast
-> -	  in hardware, other workarounds are needed (e.g. cache
-> -	  maintenance broadcasting in software via FIQ).
->  
->  config OUTER_CACHE
->  	bool
-> diff --git a/arch/arm/mm/cache-v6.S b/arch/arm/mm/cache-v6.S
-> index 250c83bf7158..44211d8a296f 100644
-> --- a/arch/arm/mm/cache-v6.S
-> +++ b/arch/arm/mm/cache-v6.S
-> @@ -201,10 +201,6 @@ ENTRY(v6_flush_kern_dcache_area)
->   *	- end     - virtual end address of region
->   */
->  v6_dma_inv_range:
-> -#ifdef CONFIG_DMA_CACHE_RWFO
-> -	ldrb	r2, [r0]			@ read for ownership
-> -	strb	r2, [r0]			@ write for ownership
-> -#endif
->  	tst	r0, #D_CACHE_LINE_SIZE - 1
->  	bic	r0, r0, #D_CACHE_LINE_SIZE - 1
->  #ifdef HARVARD_CACHE
-> @@ -213,10 +209,6 @@ v6_dma_inv_range:
->  	mcrne	p15, 0, r0, c7, c11, 1		@ clean unified line
->  #endif
->  	tst	r1, #D_CACHE_LINE_SIZE - 1
-> -#ifdef CONFIG_DMA_CACHE_RWFO
-> -	ldrbne	r2, [r1, #-1]			@ read for ownership
-> -	strbne	r2, [r1, #-1]			@ write for ownership
-> -#endif
->  	bic	r1, r1, #D_CACHE_LINE_SIZE - 1
->  #ifdef HARVARD_CACHE
->  	mcrne	p15, 0, r1, c7, c14, 1		@ clean & invalidate D line
-> @@ -231,10 +223,6 @@ v6_dma_inv_range:
->  #endif
->  	add	r0, r0, #D_CACHE_LINE_SIZE
->  	cmp	r0, r1
-> -#ifdef CONFIG_DMA_CACHE_RWFO
-> -	ldrlo	r2, [r0]			@ read for ownership
-> -	strlo	r2, [r0]			@ write for ownership
-> -#endif
->  	blo	1b
->  	mov	r0, #0
->  	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
-> @@ -248,9 +236,6 @@ v6_dma_inv_range:
->  v6_dma_clean_range:
->  	bic	r0, r0, #D_CACHE_LINE_SIZE - 1
->  1:
-> -#ifdef CONFIG_DMA_CACHE_RWFO
-> -	ldr	r2, [r0]			@ read for ownership
-> -#endif
->  #ifdef HARVARD_CACHE
->  	mcr	p15, 0, r0, c7, c10, 1		@ clean D line
->  #else
-> @@ -269,10 +254,6 @@ v6_dma_clean_range:
->   *	- end     - virtual end address of region
->   */
->  ENTRY(v6_dma_flush_range)
-> -#ifdef CONFIG_DMA_CACHE_RWFO
-> -	ldrb	r2, [r0]		@ read for ownership
-> -	strb	r2, [r0]		@ write for ownership
-> -#endif
->  	bic	r0, r0, #D_CACHE_LINE_SIZE - 1
->  1:
->  #ifdef HARVARD_CACHE
-> @@ -282,10 +263,6 @@ ENTRY(v6_dma_flush_range)
->  #endif
->  	add	r0, r0, #D_CACHE_LINE_SIZE
->  	cmp	r0, r1
-> -#ifdef CONFIG_DMA_CACHE_RWFO
-> -	ldrblo	r2, [r0]			@ read for ownership
-> -	strblo	r2, [r0]			@ write for ownership
-> -#endif
->  	blo	1b
->  	mov	r0, #0
->  	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
-> @@ -301,13 +278,7 @@ ENTRY(v6_dma_map_area)
->  	add	r1, r1, r0
->  	teq	r2, #DMA_FROM_DEVICE
->  	beq	v6_dma_inv_range
-> -#ifndef CONFIG_DMA_CACHE_RWFO
->  	b	v6_dma_clean_range
-> -#else
-> -	teq	r2, #DMA_TO_DEVICE
-> -	beq	v6_dma_clean_range
-> -	b	v6_dma_flush_range
-> -#endif
->  ENDPROC(v6_dma_map_area)
->  
->  /*
-> @@ -317,11 +288,9 @@ ENDPROC(v6_dma_map_area)
->   *	- dir	- DMA direction
->   */
->  ENTRY(v6_dma_unmap_area)
-> -#ifndef CONFIG_DMA_CACHE_RWFO
->  	add	r1, r1, r0
->  	teq	r2, #DMA_TO_DEVICE
->  	bne	v6_dma_inv_range
-> -#endif
->  	ret	lr
->  ENDPROC(v6_dma_unmap_area)
->  
-> 
-> ---
-> base-commit: d570fe67df85c84be7cc33ca9e9568d9601b494f
-> change-id: 20231202-drop-11mpcore-d556cc5f7d99
-> 
-> Best regards,
-> -- 
-> Linus Walleij <linus.walleij@linaro.org>
-> 
+> >
+> >         event->orig_overflow_handler(event, data, regs);
+> >  }
+> > --
+> > 2.34.1
+> >
+> >
