@@ -1,104 +1,211 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YT2hWwDk"
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563459C
-	for <linux-perf-users@vger.kernel.org>; Mon,  4 Dec 2023 20:25:34 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-54744e66d27so7444a12.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Dec 2023 20:25:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701750333; x=1702355133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KgAMRXqQYaDBV6wyGUZmXuMtTS9bHHBbShJFrMu8R94=;
-        b=YT2hWwDkCsSBKNE+L3cHL3odpQ/ysz3p1n0KHksRmx0c9wisK0f2kffYTjeEN3GFVx
-         PxEbsOQAZWIVRsnkFU2xu1XfjGTL/6uPsJmrE60HZD8tx0PRA3EZjSgt7oJXLI8XfFId
-         +pa365/hEKGsdndv7dYaU4677e3dK1WEfrMZnKHXlLM+50ssxj7OFKhC47JiWfJijUTe
-         ZYeRFNo4WFUAdjuPgtGWjFCs004vB0zLHi2IZ4uIwsbO5+frcCg+H9V4EeKY+qDOVCcg
-         hXkfpXdqzFUtbL387dvLw68Iv8NLk9AZ94G+7QTob0mnQHWUIkHEZaKtbDpySBB0+sgh
-         H2Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701750333; x=1702355133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KgAMRXqQYaDBV6wyGUZmXuMtTS9bHHBbShJFrMu8R94=;
-        b=rJTFJ4J0Bm4Hs9c6jVJWO+vBoQEcypo2RCERdlQMsDvC0ETW4ZmnEpVnmo5WtX0nmT
-         +TUhQ37/7auKAagRncqcAlrM0qfDPrC3Su8hbMlREIUxxILTMQeEfC3uLPNvXjp6Iq0B
-         BatM0vq7vCs5+h7dhzxDDjufbYeF9HE/MvwqylhWgm2NapAM9hVyOkKndm+4HGKgJyGq
-         M6uOkyUi4iihLfDbm6OAC3tv5N2gddqluZa14pe0E3oMkHPeNEZIsiFn1cGT4xMdljvi
-         U1dmQ9foP4UEZAhlqpHAa/i6iE2ABBecmYua/IHTnQsD7qcUR++SaIKbr8cCnWlP/YVm
-         GNOA==
-X-Gm-Message-State: AOJu0YzQN+BwdYYVbegT/I5/Qwx9OV+aI+iwhEyY8pRYSE3HeEAA9Gn/
-	Mgn6pMh+xYUD1QTkiPKWeNvLYhC+dKQwjtoUa6sBag==
-X-Google-Smtp-Source: AGHT+IG1Y+SWJHsHsHJOwW1bKr3R8/Za5N4Jl0wjRHmEmgTElx2KScn7AGso+1h60y3mkkHPPuEMnYtymTYPk0maEV8=
-X-Received: by 2002:a50:cc82:0:b0:54b:8f42:e3dc with SMTP id
- q2-20020a50cc82000000b0054b8f42e3dcmr490832edi.2.1701750332278; Mon, 04 Dec
- 2023 20:25:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HChMDOs8"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D908109;
+	Mon,  4 Dec 2023 21:36:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701754597; x=1733290597;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=s9iJZ4aU/3bJDsghmcJJacZ2miAs6QvIU5XNThfx3Zs=;
+  b=HChMDOs8hpkuuZdPwNrajX5hDpciIdF+uP/4yDmkIqNoe7QIsfjKlZXU
+   ai09mQpMl3BmUk5jkGp1TpLH+yeZka1IL+gqJggtXdCSHwjnrZ4YbawBr
+   NaRD1L1t9GZNVHKoYzu//P9uCWkiA+Xr8+OpPqf3RUrIInXMyLaO/Lo5r
+   zvC2W1U2+hjgr2Qsnsi1GfAJGw/mYPo7nB8aCbQSgu5GdB7IAJNK46sQS
+   gLHW+9NW8/UXu1CPuvM9d6TpUU+Uek3rdlbCA3Q7JNNdA9DwYrnoGYANG
+   jkU+eRGcKHOZTqolHNK/v6aeTrBbGvnNOtOitRYKL3cu7eKcEd8dcny+Q
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="723361"
+X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
+   d="scan'208";a="723361"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 21:36:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="805165992"
+X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
+   d="scan'208";a="805165992"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.46.77])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 21:36:30 -0800
+Message-ID: <d60c3bed-2280-4305-948a-cbb63674060b@intel.com>
+Date: Tue, 5 Dec 2023 07:36:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231204182330.654255-1-irogers@google.com> <bea4ad79-297e-9737-8af1-2286192d26f4@os.amperecomputing.com>
- <CAM9d7ci=Tk845H3x3KMDu-hTdP-u0O6a8D3iAa8EnFLLjOO6OQ@mail.gmail.com>
-In-Reply-To: <CAM9d7ci=Tk845H3x3KMDu-hTdP-u0O6a8D3iAa8EnFLLjOO6OQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 4 Dec 2023 20:25:20 -0800
-Message-ID: <CAP-5=fUBGLPdFn4EfwoAamQ=5nX3LOM1v8LZk2ExEDckm+6fhw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf metrics: Avoid segv if default metricgroup
- isn't set
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH RFC 2/3] perf/x86/intel/pt: Add support for pause_resume()
+To: James Clark <james.clark@arm.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, Yicong Yang
+ <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20231123121851.10826-1-adrian.hunter@intel.com>
+ <20231123121851.10826-3-adrian.hunter@intel.com>
+ <c63808b2-2049-da18-f0af-5dff2bc87cd2@arm.com>
+ <20231129105836.GF30650@noisy.programming.kicks-ass.net>
+ <842ce784-fbd2-4667-a5f7-aaa10a1108dc@intel.com>
+ <20231129122320.GH30650@noisy.programming.kicks-ass.net>
+ <07c9b3be-676a-f7f8-d1d2-94ce3abcb61b@arm.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <07c9b3be-676a-f7f8-d1d2-94ce3abcb61b@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 4, 2023 at 7:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hello,
->
-> On Mon, Dec 4, 2023 at 2:45=E2=80=AFPM Ilkka Koskinen
-> <ilkka@os.amperecomputing.com> wrote:
-> >
-> >
-> >
-> > On Mon, 4 Dec 2023, Ian Rogers wrote:
-> > > A metric is default by having "Default" within its groups. The defaul=
-t
-> > > metricgroup name needn't be set and this can result in segv in
-> > > default_metricgroup_cmp and perf_stat__print_shadow_stats_metricgroup
-> > > that assume it has a value when there is a Default metric group. To
-> > > avoid the segv initialize the value to "".
-> > >
-> > > Fixes: 1c0e47956a8e ("perf metrics: Sort the Default metricgroup")
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > Thanks! I was going to look for the bug but got pulled to other
-> > tasks. The patch looks good to me and I tested it successfully on
-> > AmpereOne.
-> >
-> >    Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com=
->
->
-> Looks like it needs to go through perf-tools for v6.7.
-> Ian, do you think this one is enough?
+On 30/11/23 12:07, James Clark wrote:
+> 
+> 
+> On 29/11/2023 12:23, Peter Zijlstra wrote:
+>> On Wed, Nov 29, 2023 at 01:15:43PM +0200, Adrian Hunter wrote:
+>>> On 29/11/23 12:58, Peter Zijlstra wrote:
+>>>> On Wed, Nov 29, 2023 at 09:53:39AM +0000, James Clark wrote:
+>>>>> On 23/11/2023 12:18, Adrian Hunter wrote:
+>>>>
+>>>>>> +static void pt_event_pause_resume(struct perf_event *event)
+>>>>>> +{
+>>>>>> +	if (event->aux_paused)
+>>>>>> +		pt_config_stop(event);
+>>>>>> +	else if (!event->hw.state)
+>>>>>> +		pt_config_start(event);
+>>>>>> +}
+>>>>>
+>>>>> It seems like having a single pause/resume callback rather than separate
+>>>>> pause and resume ones pushes some of the event state management into the
+>>>>> individual drivers and would be prone to code duplication and divergent
+>>>>> behavior.
+>>>>>
+>>>>> Would it be possible to move the conditions from here into the core code
+>>>>> and call separate functions instead?
+>>>>>
+>>>>>> +
+>>>>>>  static void pt_event_start(struct perf_event *event, int mode)
+>>>>>>  {
+>>>>>>  	struct hw_perf_event *hwc = &event->hw;
+>>>>>> @@ -1798,6 +1809,7 @@ static __init int pt_init(void)
+>>>>>>  	pt_pmu.pmu.del			 = pt_event_del;
+>>>>>>  	pt_pmu.pmu.start		 = pt_event_start;
+>>>>>>  	pt_pmu.pmu.stop			 = pt_event_stop;
+>>>>>> +	pt_pmu.pmu.pause_resume		 = pt_event_pause_resume;
+>>>>>
+>>>>> The general idea seems ok to me. Is there a reason to not use the
+>>>>> existing start() stop() callbacks, rather than adding a new one?
+>>>>>
+>>>>> I assume it's intended to be something like an optimisation where you
+>>>>> can turn it on and off without having to do the full setup, teardown and
+>>>>> emit an AUX record because you know the process being traced never gets
+>>>>> switched out?
+>>>>
+>>>> So the actual scheduling uses ->add() / ->del(), the ->start() /
+>>>> ->stop() methods are something that can be used after ->add() and before
+>>>> ->del() to 'temporarily' pause things.
+>>>>
+>>>> Pretty much exactly what is required here I think. We currently use this
+>>>> for PMI throttling and adaptive frequency stuff, but there is no reason
+>>>> it could not also be used for this.
+>>>>
+>>>> As is, we don't track the paused state across ->del() / ->add(), but
+>>>> perhaps that can be fixed. We can easily add more PERF_EF_ / PERF_HES_
+>>>> bits to manage things.
+>>>>
+>>>>
+>>>
+>>> I am not sure stop / start play nice with NMI's from other events e.g.
+>>>
+>>> PMC NMI wants to pause or resume AUX but what if AUX event is currently
+>>> being processed in ->stop() or ->start()?  Or maybe that can't happen?
+>>
+>> I think that can happen, and pt_event_stop() can actually handle some of
+>> that, while your pause_resume() thing, which uses pt_config_stop() does
+>> not.
+>>
+>> But yes, I think that if you add pt_event_{stop,start}() calls from
+>> *other* events their PMI, then you get to deal with more 'fun'.
+>>
+>> Something like:
+>>
+>>   perf_addr_filters_adjust()
+>>     __perf_addr_filters_adjust()
+>>       perf_event_stop()
+>>         __perf_event_stop()
+>> 	  event->pmu->stop()
+>> 	  <NMI>
+>> 	    ...
+>> 	    perf_event_overflow()
+>> 	      pt_event->pmu->stop()
+>> 	  </NMI>
+>> 	  event->pmu->start() // whoopsie!
+>>
+>> Should now be possible.
+>>
+>> I think what you want to do is rename pt->handle_nmi into pt->stop_count
+>> and make it a counter, then ->stop() increments it, and ->start()
+>> decrements it and everybody ensures the thing doesn't get restart while
+>> !0 etc..
+>>
+>> I suspect you need to guard the generic part of this feature with a new
+>> PERF_PMU_CAP_ flag and then have the coresight/etc. people opt-in once
+>> they've audited things.
+>>
+>> James, does that work for you?
+>>
+> 
+> Yep I think that would work.
+> 
+> If I understand it with the stop_count counter, to be able to support
+> the new CAP, every device would basically have to implement a similar
+> counter?
+> 
+> Would it be possible to do that reference counting on the outside of
+> start() and stop() in the core code? So that a device only ever sees one
+> call to start and one call to stop and doesn't need to do any extra
+> tracking?
 
-From a user's pov the json fix is nicer as otherwise perf stat output
-for the relevant metrics lacks a heading on the left. This fix is
-smaller. I'm easy about which to take :-)
+stop_counter does not seem right for pauses and resumes because they
+should not accumulate.  We want:
 
-Thanks,
-Ian
+	pause	stop
+	pause
+	resume	start
+	resume
 
-> Thanks,
-> Namhyung
+not:
+
+	pause	stop
+	pause
+	resume
+	resume	start
+
+Also stop_counter has issues like:
+
+	stop_counter 0 -> 1
+	<NMI>
+		stop_counter 1 -> 0
+		start()
+	</NMI>
+	stop()	<- stop_counter is now out of sync
+
+or:
+
+	stop_counter 1 -> 0
+	<NMI>
+		stop_counter 0 -> 1
+		stop()
+	</NMI>
+	start()	<- stop_counter is now out of sync
+
+Also Intel PT implementation uses low-level start / stop
+for pause / resume, which can be made not to conflict with
+regular start / stop because they only toggle TRACEEN bit.
