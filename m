@@ -1,144 +1,108 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7277F5F1FC
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 18:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="eEX6M8cA"
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B975E194;
-	Tue,  5 Dec 2023 10:33:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1701801239; x=1733337239;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=l5dYmSdgZTcuJYxDAGdS1l6x9ZwcH2iY36cljlVc9vE=;
-  b=eEX6M8cAxOcgQx8k3GW+CgxaqeUNd1/4oDH+RzDSiiCZe7hgNsIwMJBv
-   94mO0VSXmh24E8P1i/Uj48WU1OM9VA9NUnXfDKrVZ8LPsduRROG1KgQ3U
-   QZD8irSDKw/knSwGZdrhFp7k2x1PEKMccKPyQM27QaBuiVXn7Juuo+HAz
-   E=;
-X-IronPort-AV: E=Sophos;i="6.04,253,1695686400"; 
-   d="scan'208";a="366713875"
-Subject: Re: armv8pmu: Pending overflow interrupt is discarded when perf event is
- disabled
-Thread-Topic: armv8pmu: Pending overflow interrupt is discarded when perf event is disabled
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1box-1dm6-7f722725.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 18:33:58 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
-	by email-inbound-relay-iad-1box-1dm6-7f722725.us-east-1.amazon.com (Postfix) with ESMTPS id F13B99CBE7;
-	Tue,  5 Dec 2023 18:33:55 +0000 (UTC)
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:45440]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.6.101:2525] with esmtp (Farcaster)
- id 1e3f6716-8593-42a2-bfa4-90021eccbedf; Tue, 5 Dec 2023 18:33:55 +0000 (UTC)
-X-Farcaster-Flow-ID: 1e3f6716-8593-42a2-bfa4-90021eccbedf
-Received: from EX19D012UWC002.ant.amazon.com (10.13.138.165) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 5 Dec 2023 18:33:55 +0000
-Received: from EX19D012UWC002.ant.amazon.com (10.13.138.165) by
- EX19D012UWC002.ant.amazon.com (10.13.138.165) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 5 Dec 2023 18:33:54 +0000
-Received: from EX19D012UWC002.ant.amazon.com ([fe80::afb2:a509:3c85:23c6]) by
- EX19D012UWC002.ant.amazon.com ([fe80::afb2:a509:3c85:23c6%5]) with mapi id
- 15.02.1118.040; Tue, 5 Dec 2023 18:33:54 +0000
-From: "Ashley, William" <wash@amazon.com>
-To: Mark Rutland <mark.rutland@arm.com>
-CC: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "will@kernel.org" <will@kernel.org>
-Thread-Index: AQHaG+B2preRGLMobEe2ogRfnSWcUrCDZnWAgA4lyYCAAUJkAIAACZaAgAg97oD//6C1gA==
-Date: Tue, 5 Dec 2023 18:33:54 +0000
-Message-ID: <891FE9D7-E036-4EA8-8D77-CF90C1CD54D1@amazon.com>
-References: <950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com>
- <EBAF38AB-2BE5-425F-8A52-DDCB0B390309@amazon.com>
- <ZWdoNWps4izj5WJy@FVFF77S0Q05N.cambridge.arm.com>
- <ZWh2pnR_Z5-CKuZb@FVFF77S0Q05N> <ZWh-sbrHJu2b-BU6@FVFF77S0Q05N>
- <ZW9ooVL32WB8U4YB@FVFF77S0Q05N>
-In-Reply-To: <ZW9ooVL32WB8U4YB@FVFF77S0Q05N>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3A46CDC404FCB54F9BBC89AFE58161A7@amazon.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZKjDzvk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16059C433C8;
+	Tue,  5 Dec 2023 18:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701802121;
+	bh=5KqBzScuuu0YI5DInZYG3ftxv+0rWvUyxh+PzEZeATI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QZKjDzvkJSQBXK8TntRGXYf2rczkwCY4sVeQFHovoP2DyA2ysnAM4Gy/c055Iz9I0
+	 FsrwMI1YY4txcLFV93Eiowat8OUq62y0GCxEQjR6EFbysWa518vbGByXwdFioCbLE5
+	 PpelimSqY+EyUYZkFOccUDaoWdL4IkSqH3UDdxeHoulCpUo9JrMHkejsGm2lxCkdgN
+	 xwVVh+Q7iZDMt+bv/dBfM0Np37JNAC/vQ2e1mYpqPCvnVzkZejyUfrXHRN1elk5ECw
+	 ewPxsQtXXWkyBK9dUjeBClATbpE/VLUSM5/IzywmpSrJJDbRrBP5KK/YvsYqWMIWOh
+	 nhDV9V8ve4/9w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 3CE7F40094; Tue,  5 Dec 2023 15:48:38 -0300 (-03)
+Date: Tue, 5 Dec 2023 15:48:38 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ian Rogers <irogers@google.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf metrics: Avoid segv if default metricgroup
+ isn't set
+Message-ID: <ZW9whqUEILWMdcmi@kernel.org>
+References: <20231204182330.654255-1-irogers@google.com>
+ <bea4ad79-297e-9737-8af1-2286192d26f4@os.amperecomputing.com>
+ <CAM9d7ci=Tk845H3x3KMDu-hTdP-u0O6a8D3iAa8EnFLLjOO6OQ@mail.gmail.com>
+ <ZW9G8Clxwl6bd0H6@kernel.org>
+ <CAM9d7ciOp_O5N1TDX0HyKavykirByAYrqzcmM-_6ZWjMv-47WQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7ciOp_O5N1TDX0HyKavykirByAYrqzcmM-_6ZWjMv-47WQ@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-TWFyaywNClRoYW5rcyBmb3IgeW91ciB0aW1lIG9uIHRoaXMuIElzIHRoZXJlIChhbnkgbW9yZSBv
-ZikgYSBjaGFuY2Ugb2YgZ2V0dGluZyBhIGZhbHNlIHNlY29uZCBvdmVyZmxvdyBzaWduYWwgd2l0
-aCB0aGVzZSBjaGFuZ2VzPyBFc3BlY2lhbGx5IGZvciBleGFtcGxlIHdoZW4gdGhlIGNvdW50ZXIg
-aXMgY291bnRpbmcgRUwxLCBvciB3aGVuIHBzZXVkby1ubWkgaXMgZW5hYmxlZD8NCg0KDQrvu79P
-biAxMi81LzIzLCAxMjoxNSBQTSwgIk1hcmsgUnV0bGFuZCIgPG1hcmsucnV0bGFuZEBhcm0uY29t
-IDxtYWlsdG86bWFyay5ydXRsYW5kQGFybS5jb20+PiB3cm90ZToNCg0KDQpDQVVUSU9OOiBUaGlz
-IGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBvcmdhbml6YXRpb24uIERvIG5v
-dCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgY2FuIGNvbmZpcm0g
-dGhlIHNlbmRlciBhbmQga25vdyB0aGUgY29udGVudCBpcyBzYWZlLg0KDQoNCg0KDQoNCg0KT24g
-VGh1LCBOb3YgMzAsIDIwMjMgYXQgMTI6MjM6MTNQTSArMDAwMCwgTWFyayBSdXRsYW5kIHdyb3Rl
-Og0KPiBPbiBUaHUsIE5vdiAzMCwgMjAyMyBhdCAxMTo0ODo1NEFNICswMDAwLCBNYXJrIFJ1dGxh
-bmQgd3JvdGU6DQo+ID4gT24gV2VkLCBOb3YgMjksIDIwMjMgYXQgMDQ6MzU6MDFQTSArMDAwMCwg
-TWFyayBSdXRsYW5kIHdyb3RlOg0KPiA+ID4gRG9lcyBSUiBzZXQgYW55IG9mIHRoZSBwZXJmX2V2
-ZW50X2F0dHI6OmV4Y2x1ZGVfKiBiaXRzPyBJZiBub3QsIGRvZXMgUlINCj4gPiA+IGludGVudGlv
-bmFsbHkgY291bnQgZXZlbnRzIHRoYXQgb2NjdXIgd2l0aGluIHRoZSBrZXJuZWw/DQo+ID4NCj4g
-PiBMb29raW5nIGF0IHRoZSB0ZXN0LCBJIHNlZSBpdCBzZXRzIHBlcmZfZXZlbnRfYXR0cjo6ZXhj
-bHVkZV9rZXJuZWwgdG8gMSwgYnV0DQo+ID4gZG9lc24ndCBzZXQgcGVyZl9ldmVudF9hdHRyOjpl
-eGNsdWRlX2hvc3Qgb3IgcGVyZl9ldmVudF9hdHRyOjpleGNsdWRlX2h2LiBJDQo+ID4gdGhpbmsg
-dGhlIHBvb3JseS1kZWZpbmVkIGV4Y2x1ZGVfKiBiaXRzIGFyZSBwYXJ0IG9mIHRoZSBwcm9ibGVt
-IGhlcmUuDQo+ID4NCj4gPiBVc2luZyB5b3VyIHRlc3QgYXMtaXMgb24gbXkgVGh1bmRlclgyLCBJ
-IGNhbiByZXByb2R1Y2UgdGhlIHBlcmlvZCBiZWluZyBsb25nZXINCj4gPiB0aGFuIGV4cGVjdGVk
-IGJ5IGNvbmN1cnJlbnRseSBydW5uaW5nIHRoZSBmb2xsb3dpbmcgaW4gYSBzaGVsbDoNCj4gPg0K
-PiA+IHdoaWxlIHRydWU7IGRvDQo+ID4gZm9yIEMgaW4gJChzZXEgMCA2Myk7IGRvDQo+ID4gdGFz
-a3NldCAtYyAtcCAkQyAke1RFU1RfUElEX0hFUkV9Ow0KPiA+IGRvbmU7DQo+ID4gZG9uZSA+IC9k
-ZXYvbnVsbA0KPiA+DQo+ID4gLi4uIHJlc3VsdGluZyBpbjoNCj4gPg0KPiA+IHwgW21hcmtAZ3Jh
-dmFkbGFrczp+XSUgLi9jb3VudGVyLW92ZXJmbG93DQo+ID4gfCBQaWQgMjAwNjAgcnVubmluZyB3
-aXRoIHBlcmlvZCAxMDAwMCB0b2xlcmFuY2UgMTAwMA0KPiA+IHwgU2lnbmFsICMxOiBsYXN0OiAw
-LCBjdXI6IDEwMjkyLCBtYXggZGlmZjogMA0KPiA+IHwgU2lnbmFsICM0MTUzMzA6IGRlbHRhIG9m
-IDE5OTk5IGlzIG91dHNpZGUgMTAwMDAgKy8tIDEwMDANCj4gPiB8IFNpZ25hbCAjNDE1MzMwOiBs
-YXN0OiA0MTUzMjkwMTg3LCBjdXI6IDQxNTMzMTAxODYsIG1heCBkaWZmOiAxMDI5Mg0KPiA+IHwg
-U2lnbmFsICM0ODk4Nzk6IGRlbHRhIG9mIDE5OTk4IGlzIG91dHNpZGUgMTAwMDAgKy8tIDEwMDAN
-Cj4gPiB8IFNpZ25hbCAjNTExODQyOiBkZWx0YSBvZiAyMDA1OCBpcyBvdXRzaWRlIDEwMDAwICsv
-LSAxMDAwDQo+ID4gfCBTaWduYWwgIzUxMTg0MjogbGFzdDogNTExODQzMDEzMCwgY3VyOiA1MTE4
-NDUwMTg4LCBtYXggZGlmZjogMTk5OTkNCj4gPg0KPiA+IEhvd2V2ZXIsIGlmIEkgbW9kaWZ5IHRo
-ZSB0ZXN0IHRvIGFsc28gc2V0IHBlcmZfZXZlbnRfYXR0cjo6ZXhjbHVkZV9ob3N0PTEsIEkgZG8N
-Cj4gPiBub3Qgc2VlIGFueSBsb3N0IG92ZXJmbG93cyBhZnRlciBtYW55IG1pbnV0ZXMuIE9uIFZI
-RSBob3N0cyAobGlrZSB0aGUNCj4gPiBUaHVuZGVyWDIpLCB0aGUgaG9zdCBrZXJuZWwgZ2V0cyBj
-b3VudGVkIHdoZW4gcGVyZl9ldmVudF9hdHRyOjpleGNsdWRlX2hvc3Q9MCwNCj4gPiBldmVuIGlm
-IHBlcmZfZXZlbnRfYXR0cjo6ZXhjbHVkZV9rZXJuZWw9MSAod2hpY2ggSSBhZ3JlZSBpcyBzdXJw
-cmlzaW5nKSwgc28gSQ0KPiA+IHRoaW5rIHdoYXQncyBoYXBwZW5pbmcgaXMgdGhlIGNvdW50ZXJz
-IGFyZSBjb3VudGluZyBpbiB0aGUgaG9zdCBrZXJuZWwsIHdoaWNoDQo+ID4gaXNuJ3Qgd2hhdCBS
-UiBhY3R1YWxseSB3YW50cyByZWdhcmRsZXNzLg0KPg0KPiA+IEknbGwgY29udGludWUgdG8gbG9v
-ayBhdCB3aGF0IHdlIGNhbiBkbyBrZXJuZWwtc2lkZSwgYnV0IEkgcmVja29uIGl0J3Mgd29ydGgN
-Cj4gPiBoYXZpbmcgUlIgdHJ5IHRoZSBvdGhlciBleGNsdWRlIGJpdHMgcmVnYXJkbGVzcywgaWYg
-dGhhdCdzIHBvc3NpYmxlPyBJdCB3b3VsZA0KPiA+IGJlIGludGVyZXN0aW5nIHRvIGtub3cgd2hl
-dGhlciB0aGF0IGhlbHBzIHlvdSB1bmRlciBhIGh5cGVydmlzb3IuDQo+DQo+IFNvcnJ5LCB0aGUg
-YWJvdmUgaXMgd3JvbmcsIGFuZCBJIGRvIG5vdCByZWNvbW1lbmQgUlIgZ29lcyBhbmQgY2hhbmdl
-cyBpdHMNCj4gZXhjbHVkZV8qIHNldHRpbmdzLg0KPg0KPiBJIGhhZCBtaXNyZWFkIHRoZSBsb2dp
-YyBpbiBhcm12OHBtdV9zZXRfZXZlbnRfZmlsdGVyKCksIGJ1dCBsb29raW5nIGFnYWluDQo+IHRo
-YXQncyBzYW5lciB0aGFuIEkgdGhvdWdodCBpdCB3YXMsIGFuZCB3aGF0IHdhcyBhY3R1YWxseSBo
-YXBwZW5pbmcgaW4gbXkNCj4gdGVzdGluZyBpcyB0aGF0IGV4Y2x1ZGVfaG9zdCBhbHNvIGZpbHRl
-cmVkIGhvc3QgRUwwICh1c2Vyc3BhY2UpLCBhbmQgc28gdGhlDQo+IHRlc3QgcmVjZWl2ZWQgKm5v
-KiBvdmVyZmxvdyBzaWduYWxzLg0KPg0KPiBJJ2xsIGdldCBiYWNrIHRvIGxvb2tpbmcgYXQgaG93
-IHdlIGNhbiBiZXR0ZXIgY2FwdHVyZSB0aGUgb3ZlcmZsb3cgd2hlbg0KPiByZW1vdmluZyBhbiBl
-dmVudC4NCg0KDQpJJ3ZlIHNwZW50IGEgY291cGxlIG9mIGRheXMgb24gdGhpcywgYW5kIEkgaGF2
-ZSBhIHByb3RvdHlwZSBhdDoNCg0KDQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGlu
-dXgva2VybmVsL2dpdC9tYXJrL2xpbnV4LmdpdC9sb2cvP2g9cGVyZi9vdmVyZmxvdyA8aHR0cHM6
-Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbWFyay9saW51eC5naXQv
-bG9nLz9oPXBlcmYvb3ZlcmZsb3c+DQoNCg0KVGhlIGdpc3Qgb2YgdGhhdCBpczoNCg0KDQoqIEl0
-J3Mgbm90IHZpYWJsZSB0byBzYW1wbGUgYXQgc3RhcnQvc3RvcCB0aW1lIHNpbmNlIHdlIGRvbid0
-IGhhdmUgYWxsIHRoZQ0KdXN1YWwgc2FtcGxlIHN0YXRlIChlLmcuIHB0X3JlZ3MpLCB3aGljaCBt
-ZWFucyB0aGF0IHdlIGhhdmUgdG8gc2F2ZS9yZXN0b3JlDQp0aGUgb3ZlcmZsb3cgc3RhdHVzIGFu
-ZCByZWx5IG9uIHRoZSByZWd1bGFyIGludGVycnVwdCBoYW5kbGVyIHRvIGFjdHVhbGx5DQpzYW1w
-bGUgYWZ0ZXIgdGhpcyBpcyByZXN0b3JlZC4NCg0KDQoqIFNhdmluZy9yZXN0b3JpbmcgdGhlIG92
-ZXJmbG93IHN0YXR1cyByZXF1aXJlcyByZXdvcmtpbmcgdGhlIHdheSB3ZSBtYW5hZ2UgdGhlDQpz
-YW1wbGUgcGVyaW9kLCBzZXBhcmF0aW5nIHRoZSBzYW1wbGUgcGVyaW9kIGZyb20gdGhlIHBlcmlv
-ZCB3ZSBwcm9ncmFtIGludG8NCkhXLiBUaGlzIHBhcnQgbG9va3MgZmFpcmx5IHNhbmUsIGJ1dCBy
-ZXF1aXJlcyBzb21lIHJld29yayBvZiBhbGwgdGhlIGFybV9wbXUNCmRyaXZlcnMuDQoNCg0KKiBX
-ZSBtaWdodCBuZWVkIGEgY291cGxlIG9mIHNtYWxsIGNoYW5nZXMgdG8gdGhlIHBlcmYgY29yZSBj
-b2RlIChlLmcuIGZvciB0aGUNCklPQ1RMcyB0aGF0IG1lc3Mgd2l0aCB0aGUgcGVyaW9kKSwgYW5k
-IHRoaXMgY2hhbmdlIGlzIGxpYWJsZSB0byBhZmZlY3Qgb3RoZXINCmFyY2hpdGVjdHVyZXMsIHNv
-IHdlJ2QgbmVlZCBvdCBnbyBhdWRpdCB0aGF0Lg0KDQoNCkkgcmVja29uIGl0J3MgcG9zc2libGUg
-KHdpdGggc29tZSB0ZXN0aW5nIGFuZCByZXZpZXcpIHRvIGdldCBzb21ldGhpbmcgbGlrZQ0KdGhp
-cyBzZXJpZXMgbWVyZ2VkLCBidXQgSSBzdXNwZWN0IGl0J3MgdG9vIGJpZyBmb3IgYSBzdGFibGUg
-YmFja3BvcnQuDQoNCg0KTWFyay4NCg0KDQoNCg==
+Em Tue, Dec 05, 2023 at 09:24:42AM -0800, Namhyung Kim escreveu:
+> Hi Arnaldo,
+> 
+> On Tue, Dec 5, 2023 at 7:51 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > Em Mon, Dec 04, 2023 at 07:33:18PM -0800, Namhyung Kim escreveu:
+> > > On Mon, Dec 4, 2023 at 2:45 PM Ilkka Koskinen <ilkka@os.amperecomputing.com> wrote:
+> > > > On Mon, 4 Dec 2023, Ian Rogers wrote:
+> > > > > A metric is default by having "Default" within its groups. The default
+> > > > > metricgroup name needn't be set and this can result in segv in
+> > > > > default_metricgroup_cmp and perf_stat__print_shadow_stats_metricgroup
+> > > > > that assume it has a value when there is a Default metric group. To
+> > > > > avoid the segv initialize the value to "".
+> >
+> > > > > Fixes: 1c0e47956a8e ("perf metrics: Sort the Default metricgroup")
+> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > > > Thanks! I was going to look for the bug but got pulled to other
+> > > > tasks. The patch looks good to me and I tested it successfully on
+> > > > AmpereOne.
+> >
+> > > >    Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+> >
+> > > Looks like it needs to go through perf-tools for v6.7.
+> > > Ian, do you think this one is enough?
+> >
+> > So I had this on my local perf-tools-next, removed now, I also have some
+> > other fixes by Ian on the tmp.perf-tools-next, please let me know what
+> > you guys decide to have in perf-tools for v6.7 so that I can remove it
+> > from there.
+> 
+> I think we need this one and the Ampere default-metric-group fix.
+> 
+> https://lore.kernel.org/r/20231201021550.1109196-2-ilkka@os.amperecomputing.com/
+> 
+> Also perf list JSON fix can go to v6.7.
+> 
+> https://lore.kernel.org/r/20231129213428.2227448-2-irogers@google.com/
+
+Ok, removed both, please augment the later description to:
+
+"perf list: Fix JSON segfault by setting the used skip_fuplicate_pmus callback"
+
+The original description was vague, improving it a bit like that helps
+when just looking at the output of "git log --oneline".
+
+Thanks,
+
+- Arnaldo
+
