@@ -1,96 +1,98 @@
-X-Greylist: delayed 19918 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Dec 2023 01:09:37 PST
-Received: from zg8tmty3ljk5ljewns4xndka.icoremail.net (zg8tmty3ljk5ljewns4xndka.icoremail.net [167.99.105.149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 07B53D3
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 01:09:37 -0800 (PST)
-Received: from localhost.localdomain (unknown [10.190.70.5])
-	by mail-app3 (Coremail) with SMTP id cC_KCgDnXXGo6G5lrSx1AA--.843S4;
-	Tue, 05 Dec 2023 17:09:04 +0800 (CST)
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
-To: dinghao.liu@zju.edu.cn
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] perf/x86/uncore: fix a potential double-free in uncore_type_init
-Date: Tue,  5 Dec 2023 17:08:35 +0800
-Message-Id: <20231205090835.1652-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:cC_KCgDnXXGo6G5lrSx1AA--.843S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kry5XFyktw15CFWrCFWUCFg_yoW8JFyfpr
-	WUJr1fKF18uan2grZ8G3WfXr4Ykws7Gr95Wr4Uu34xKF13Xw13tF4Ikr4Y9w1kCrW0yFyr
-	JFyFvr4UJa4UXa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvv1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-	IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2
-	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
-	0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoTBmVsUQg4xgATsg
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaMvLDy9"
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76301FD5
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 01:47:55 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-d9caf5cc948so3726808276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Dec 2023 01:47:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701769675; x=1702374475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j4OIORyF5AiO6J56QFameLO9C9jQkM/m+E8MEQMLkaE=;
+        b=KaMvLDy9yiQ3ggUcQTiA9hDn0LaMCSKy+5u9hgjsavV+tn8z0KE6DukTTv8/qqI8Cw
+         g5mN1Jd1B0gFRPRDCVRF7WQ3lDmDhDuThfrAo3Zza9fYRy2Vs4A368nmf1Xzqo0ehQS0
+         jckXpQpFhDwA2yL1HiM6GuXlF88pZtzwFQw9tjXClFcZH8JaRFfwillJtVcl5gAsGI2Z
+         Clg2S5Xf5CMzcPnEeA7v7EWd0XhvXHhaRrwEuL+LfGxCUdkQ/Jl5IHFYbhRzxPLzD3Ag
+         +RqjdvrQ/GEqMysXKd46jGPqfN4Ecy+au0dOaX9dpl8cAucgOpFo/n4YmqLBUun5HzBb
+         eOEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701769675; x=1702374475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j4OIORyF5AiO6J56QFameLO9C9jQkM/m+E8MEQMLkaE=;
+        b=HnNTrQL+AshqIlJ2j/lhFatHa/PRUqT1G8UB/ViHYNjjjpCerY56DLfsKEWJiBReF2
+         DpZ94dGlV+2FpWXrHAUljnwFbOpxZ0TcEQepJCDbBtmH+qj3DJfMnBCexnWWcHDfI4+z
+         jYwgRKvajuBSX2569o7+VP/ygTdkXWg4leRDd2cBlw6jU9mo0S/Ozcg0ruMYOXtES9Z5
+         BXNGIJNsrNCsPDlMfT/TJF90ehtZc3EiC37zAMmO/xIsE/mYZzVQrZH9uh+QgUac9lt/
+         gmRk2ACCefHj+20sSLXS2jv5A9Cu5ehEbLCoJ17DVfCUnKeobBpjCSwHZxN50ab8/Yim
+         oaMQ==
+X-Gm-Message-State: AOJu0YwoLpgD5FUgmxOqlwERfMuZLuuacGkr4p5yCSKpRaicWncHCewj
+	mQ4hUC5F+KILPn6N0vgLCwdPsD8HBowKcouTaDaTvA==
+X-Google-Smtp-Source: AGHT+IGLKV5WrEKu2Peckp8WnZLZ4p71MmEZ/yB7cIiIFKWxkfmDK61lxlmTj0F1X7OQOf1DIkrt+bUusOcTQ8qR7Ec=
+X-Received: by 2002:a25:3290:0:b0:db5:9004:cf5b with SMTP id
+ y138-20020a253290000000b00db59004cf5bmr3526873yby.64.1701769674682; Tue, 05
+ Dec 2023 01:47:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20231204-drop-11mpcore-v1-1-f96cd3938cf1@linaro.org> <93cc5193-aa1b-4df8-8d00-c3149c33b7e7@app.fastmail.com>
+In-Reply-To: <93cc5193-aa1b-4df8-8d00-c3149c33b7e7@app.fastmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 5 Dec 2023 10:47:43 +0100
+Message-ID: <CACRpkdYcCh8TNBW-UJ1WhH-7sQMAw6xjx1FV6+bWGi2VmsTQHA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: Delete ARM11MPCore (ARM11 ARMv6K SMP) support
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Lubomir Rintel <lkundrak@v3.sk>, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When kzalloc for pmus[i].boxes fails, we should clean up pmus
-to prevent memleak. However, when kzalloc for attr_group fails,
-pmus has been assigned to type->pmus, and freeing will be done
-later on by the callers. The chain is:
+On Tue, Dec 5, 2023 at 8:00=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote:
 
-uncore_pci_init
-  |->uncore_types_init
-  |    |->uncore_type_init (first free)
-  |
-  |->uncore_types_exit
-       |->uncore_type_exit (second free)
+>  static const struct of_device_id realview_scu_match[] =3D {
+> -       { .compatible =3D "arm,arm11mp-scu", },
+>         { .compatible =3D "arm,cortex-a9-scu", },
+>         { .compatible =3D "arm,cortex-a5-scu", },
+>         { }
+>
+> I see that the arm,arm11mp-scu device is provided by
+> arm-realview-eb-mp.dtsi, which in turn gets included
+> by both arm-realview-eb-11mp.dts and arm-realview-eb-a9mp.dts,
+> so the Cortex-A9 dtb ends up with the wrong compatible
+> string at the moment.
 
-Therefore, freeing pmus in uncore_type_init may cause a
-double-free. Fix this by setting type->pmus to NULL after kfree.
+Aha I need to make a separate DTS patch for that.
 
-Fixes: 629eb703d3e4 ("perf/x86/intel/uncore: Fix memory leaks on allocation failures")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
----
+As stated in the commit message I don't know if RealView EB
+is working very well on real hardware, I have only ever tested
+it in QEMU.
 
-Changelog:
+> The driver doesn't care either way, and we can easily
+> change the dtsi file use the Cortex-A9 compatibles
+> later, but I think we probably want to leave the
+> platsmp code to match the old string as well for
+> compatibility with old dtb files.
 
-v2: Improving the call trace description.
----
- arch/x86/events/intel/uncore.c | 1 +
- 1 file changed, 1 insertion(+)
+The patch deletes the support for RealView EB ARM11MPCore
+Kconfig as well so it should go I think? Or am I missing
+something?
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 01023aa5125b..d80445a24011 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1041,6 +1041,7 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
- 	for (i = 0; i < type->num_boxes; i++)
- 		kfree(pmus[i].boxes);
- 	kfree(pmus);
-+	type->pmus = NULL;
- 
- 	return -ENOMEM;
- }
--- 
-2.17.1
+The Marvell MMP3 is also defining the "arm,arm11mp-scu"
+but it's not using it for anything so I think it's just some bogus
+copypaste error (Lubomir can maybe fill in) and should have its
+own compatible.
 
+BTW is the Marvell PJ4B a descendant of the XScale PXA? I
+never manage to follow the lineage of these things.
+
+Yours,
+Linus Walleij
