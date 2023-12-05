@@ -1,166 +1,112 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mUFzuW2j"
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5631FDB
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 09:59:15 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-50beed2a46eso173e87.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Dec 2023 09:59:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701799154; x=1702403954; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9gc6EPrb7sJMi5FLo8PEKP3q9XU/ASOLnpitI/EDUi8=;
-        b=mUFzuW2j4i5cHGKoIsxLhbYUhdPktzcy0ai1owCSBP+8qPTrxPivhBwn4bmdUquMYm
-         aidNDWfKUBMPlg1hX8NmQpjjiZLRlPP1OXLbFOGDr7C/Ceg3uLDuZ1EsIC6alU4LHCM8
-         IVx9Hsk1VNuLByjJfbxBc/JmYqLqe45IQA2UqhsWezV6fNJcZEboRSLmkqLU+tSyf9uO
-         Mhv6V/2LNhvW6zuA7/0I2tm6ZfUr0AETm4q7vspZJIaklTjk0htDJZgQibcZ9czCbWbu
-         CWOGzBUd0lDl4HFmeZgc5DnHuIaRvteohM6UT9tKDEjswT8fYyvg7IW7q0e6+MNU8tDW
-         XO5w==
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340F1B2;
+	Tue,  5 Dec 2023 10:07:54 -0800 (PST)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-28659348677so42503a91.0;
+        Tue, 05 Dec 2023 10:07:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701799154; x=1702403954;
+        d=1e100.net; s=20230601; t=1701799673; x=1702404473;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9gc6EPrb7sJMi5FLo8PEKP3q9XU/ASOLnpitI/EDUi8=;
-        b=n6r1ycNd/5xSt8aPYiV6W0XmfXTQKyKbMzuCGHXlh9P8haAWwTZwjbxh2EQJfXI+09
-         iMtPe3SFLzrLO/mm89rddWc5q0zS1QXkU71Gu7Xxxd6ML4nyVMwEVjAHxjDp50DFmwy5
-         5tA47dw7uBzI6WFk9YkyCjQDUGLdqJmhIdXL3fOM2A0nJYEbEepfDPdBXGbtVwdt5bOH
-         TXtM3uUW3xJvjz9eymxPFekg/rANIAVe6VMbe+/myhv7tRND/+yz+5Lv479DPASz8G49
-         QNFMnAx55iJVBxJC5lyjB9fV/rInpSpQgxHARfDaK4sPMb74OyypCzk2Vwnliv/Yn5Un
-         KeZw==
-X-Gm-Message-State: AOJu0Yz1mr1lk5HoRGWotaUBz+yz9w5gWnlN6oBZBoVweBxbtvnMa564
-	jG4h29W8L4vMGWQltb27o6Tb8RW0TLAHDbgP+mnwQg==
-X-Google-Smtp-Source: AGHT+IEreAhwBUj3VoXijNV76YGN0BLzvw/1/zLgkxdshVRnOF58QsEUVJChSnIlSNqThA+x+IZWBAr9X6ybdnnCvE4=
-X-Received: by 2002:a19:7418:0:b0:50b:fa8d:f28b with SMTP id
- v24-20020a197418000000b0050bfa8df28bmr149957lfe.1.1701799153760; Tue, 05 Dec
- 2023 09:59:13 -0800 (PST)
+        bh=eNlzMFur71ZQLLM8yVbvG7H8ZNU7xWznyiwruW2zco0=;
+        b=mmpoplhQu5uU/XSuuWP/AqZ8VpkAKj5UQwW7THhA8AUjNqnjE16Xc1Z13cI5HcQUlS
+         JhAkQt7b4jSEUjH8ondLXyM64q6MnYaLfFhFn1f57pww8Guh7wjzt0I27dXkjldJSOIS
+         ML53Ydc4wt09wtjhaEgjrTBFymmNmJ7ADTQHVWTTvfdgLqoxHdUlKTexwM9xfzUVY8Vl
+         v4UV9moer2GAJzslTjtrB4hMMssifMK1F6Aub0UIh64xbePDukSavbJUXW+78T0eRoiI
+         g4vMGjt3drqWBGFxqWRoc1FWLH8YPixAnViCX7vyyeZgf5RBTJYCHHtp10vh4Ys2Aw67
+         cYKg==
+X-Gm-Message-State: AOJu0YzT5jZn00jLY3thcs/QSy0hE2wCz7g4olUqF8HMWe3DvD5q8a+3
+	ULKve4jgBhQv7SS9mrXhSNZEo0N6w6FX/JAOyrQ=
+X-Google-Smtp-Source: AGHT+IHGLbi5nmB/0juEOSLMahSlJHYu1FGow8cvsSJNx3cCdYCI6tX17VGnnmPmUgMoA0doL5dZ4OEouXFjdhP676I=
+X-Received: by 2002:a17:90b:1c0b:b0:286:bda8:9633 with SMTP id
+ oc11-20020a17090b1c0b00b00286bda89633mr1926839pjb.25.1701799673408; Tue, 05
+ Dec 2023 10:07:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231128175441.721579-1-namhyung@kernel.org> <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
- <CAM9d7chKmDETK6Ea2wyR8L21jyHWcPHbKavarnq-JmNA-AoUnQ@mail.gmail.com>
- <CAP-5=fUf6R=bsfg7i8atFApJBY-=zWUBMq7inFsCPZhB+w2==Q@mail.gmail.com> <CAM9d7cjDiu=dksnhboJFT4uPQJcvGMB-vBt96v3i7Kqy5LKRMw@mail.gmail.com>
-In-Reply-To: <CAM9d7cjDiu=dksnhboJFT4uPQJcvGMB-vBt96v3i7Kqy5LKRMw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 5 Dec 2023 09:59:02 -0800
-Message-ID: <CAP-5=fXKbi3DYoOKrJvNKLNU=fJEY9aDAOQhH+Vh+XWxHzGjwA@mail.gmail.com>
-Subject: Re: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+References: <20231204201406.341074-1-khuey@kylehuey.com> <20231204201406.341074-2-khuey@kylehuey.com>
+ <CAEf4BzYtSXtgdO9C2w9OOKni68H-7UOExFJRBEij3HG2Qwn1Rg@mail.gmail.com> <ZW8Gi2QI5ceAJfab@krava>
+In-Reply-To: <ZW8Gi2QI5ceAJfab@krava>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 5 Dec 2023 10:07:42 -0800
+Message-ID: <CAM9d7chztaCfDsxfyJ2q_UmD=y20BFikCUQhs=LR8wsNV6pMjg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf/bpf: Allow a bpf program to suppress I/O signals.
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Kyle Huey <me@kylehuey.com>, 
+	Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org, 
+	"Robert O'Callahan" <robert@ocallahan.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org, Marco Elver <elver@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 4, 2023 at 2:46=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Thu, Nov 30, 2023 at 10:37=E2=80=AFAM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > On Wed, Nov 29, 2023 at 3:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Tue, Nov 28, 2023 at 11:14=E2=80=AFAM Ian Rogers <irogers@google.c=
-om> wrote:
-> > > >
-> > > > On Tue, Nov 28, 2023 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kern=
-el.org> wrote:
-> > > > >
-> > > > > Hello,
-> > > > >
-> > > > > It used to have annotation_options for each command separately (f=
-or
-> > > > > example, perf report, annotate, and top), but we can make it glob=
-al as
-> > > > > they never used together (with different settings).  This would s=
-ave
-> > > > > some memory for each symbol when annotation is enabled.
-> > > > >
-> > > > > This code is available at 'perf/annotate-option-v1' branch in
-> > > > >
-> > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-pe=
-rf.git
-> > > > >
-> > > > > Thanks,
-> > > > > Namhyung
-> > > >
-> > > > Thanks for doing this and I think it is progress. I think there is =
-a
-> > > > common problem with having things be an option rather than say part=
- of
-> > > > session. Having a global variable seems unfortunate but I'm not sur=
-e
-> > > > if in all locations we have easy access to the session.
-> > >
-> > > That's not the case when you deal with hist entry or TUI browser.
-> > > I think that's the reason we have the option in the annotation.
-> > >
-> > >
-> > > > The rough
-> > > > structure with annotations as I understand it is:
-> > > >
-> > > > session has machines
-> > > > a machine has dsos
-> > > > a dso has symbols
-> > > > a symbol has an annotation
-> > >
-> > > That's true.  But the annotation struct is used only if
-> > > symbol__annotation_init() is called.
-> >
-> > Right. I find this approach likely to lead to errors, such as a symbol
-> > created globally before symbol__annotation_init() was called breaking
-> > the container_of assumptions.
->
-> Sure, but that's a different issue.  Maybe we can add a hash table
-> to map a symbol to annotation or annotated_source directly.  But
-> I don't think we need annotation_option for each symbol/annotation.
+Hello,
 
-Agreed.
+Add Marco Elver to CC.
 
-> >
-> > > >
-> > > > Annotation is something of unfortunate abstraction as it covers thi=
-ngs
-> > > > like an IPC per symbol (why hard code to just IPC?) and things like
-> > > > source files and line numbers.
-> > >
-> > > Right, that's why I splitted the struct annotated_branch.
-> > >
-> > > >
-> > > > A recent success story where we got rid of a configuration variable
-> > > > was by switching to lazy allocation with sorting by name for symbol=
-s
-> > > > within a dso. If we could have a lazy allocation model with
-> > > > annotations then maybe we can do away with large hammers like globa=
-l
-> > > > options.
-> > >
-> > > Maybe I can move the pointer to option into the annotated_source
-> > > which is allocated lazily.  But I don't think it needs to keep the op=
-tion
-> > > for each symbol or annotation.  It's usually to control some display
-> > > behaviors in the disasm output globally.  So I think it's better to h=
-ave
-> > > a global variable.
-> >
-> > Sgtm. My point wasn't to criticize, I think this is a good change, I
-> > was just trying to imagine doing things in a way that could overall
-> > reduce complexity
+On Tue, Dec 5, 2023 at 3:16=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
+:
 >
-> Yep, thanks for your review.  Can I get your ACKs? :)
+> On Mon, Dec 04, 2023 at 02:18:49PM -0800, Andrii Nakryiko wrote:
+> > On Mon, Dec 4, 2023 at 12:14=E2=80=AFPM Kyle Huey <me@kylehuey.com> wro=
+te:
+> > >
+> > > Returning zero from a bpf program attached to a perf event already
+> > > suppresses any data output. This allows it to suppress I/O availabili=
+ty
+> > > signals too.
+> >
+> > make sense, just one question below
+> >
+> > >
+> > > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+>
+> > > ---
+> > >  kernel/events/core.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index b704d83a28b2..34d7b19d45eb 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -10417,8 +10417,10 @@ static void bpf_overflow_handler(struct perf=
+_event *event,
+> > >         rcu_read_unlock();
+> > >  out:
+> > >         __this_cpu_dec(bpf_prog_active);
+> > > -       if (!ret)
+> > > +       if (!ret) {
+> > > +               event->pending_kill =3D 0;
+> > >                 return;
+> > > +       }
+> >
+> > What's the distinction between event->pending_kill and
+> > event->pending_wakeup? Should we do something about pending_wakeup?
+> > Asking out of complete ignorance of all these perf specifics.
+> >
+>
+> I think zeroing pending_kill is enough.. when it's set the perf code
+> sets pending_wakeup to call perf_event_wakeup in irq code that wakes
+> up event's ring buffer readers and sends sigio if pending_kill is set
 
-For the series:
-Reviewed-by: Ian Rogers <irogers@google.com>
+Right, IIUC pending_wakeup is set by the ring buffer code when
+a task is waiting for events and it gets enough events (watermark).
+So I think it's good for ring buffer to manage the pending_wakeup.
+
+And pending_kill is set when a task wants a signal delivery even
+without getting enough events.  Clearing pending_kill looks ok
+to suppress normal signals but I'm not sure if it's ok for SIGTRAP.
+
+If we want to handle returning 0 from bpf as if the event didn't
+happen, I think SIGTRAP and event_limit logic should be done
+after the overflow handler depending on pending_kill or something.
 
 Thanks,
-Ian
-
-> Namhyung
+Namhyung
