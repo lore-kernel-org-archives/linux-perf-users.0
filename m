@@ -1,98 +1,144 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaMvLDy9"
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76301FD5
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 01:47:55 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-d9caf5cc948so3726808276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Dec 2023 01:47:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701769675; x=1702374475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j4OIORyF5AiO6J56QFameLO9C9jQkM/m+E8MEQMLkaE=;
-        b=KaMvLDy9yiQ3ggUcQTiA9hDn0LaMCSKy+5u9hgjsavV+tn8z0KE6DukTTv8/qqI8Cw
-         g5mN1Jd1B0gFRPRDCVRF7WQ3lDmDhDuThfrAo3Zza9fYRy2Vs4A368nmf1Xzqo0ehQS0
-         jckXpQpFhDwA2yL1HiM6GuXlF88pZtzwFQw9tjXClFcZH8JaRFfwillJtVcl5gAsGI2Z
-         Clg2S5Xf5CMzcPnEeA7v7EWd0XhvXHhaRrwEuL+LfGxCUdkQ/Jl5IHFYbhRzxPLzD3Ag
-         +RqjdvrQ/GEqMysXKd46jGPqfN4Ecy+au0dOaX9dpl8cAucgOpFo/n4YmqLBUun5HzBb
-         eOEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701769675; x=1702374475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j4OIORyF5AiO6J56QFameLO9C9jQkM/m+E8MEQMLkaE=;
-        b=HnNTrQL+AshqIlJ2j/lhFatHa/PRUqT1G8UB/ViHYNjjjpCerY56DLfsKEWJiBReF2
-         DpZ94dGlV+2FpWXrHAUljnwFbOpxZ0TcEQepJCDbBtmH+qj3DJfMnBCexnWWcHDfI4+z
-         jYwgRKvajuBSX2569o7+VP/ygTdkXWg4leRDd2cBlw6jU9mo0S/Ozcg0ruMYOXtES9Z5
-         BXNGIJNsrNCsPDlMfT/TJF90ehtZc3EiC37zAMmO/xIsE/mYZzVQrZH9uh+QgUac9lt/
-         gmRk2ACCefHj+20sSLXS2jv5A9Cu5ehEbLCoJ17DVfCUnKeobBpjCSwHZxN50ab8/Yim
-         oaMQ==
-X-Gm-Message-State: AOJu0YwoLpgD5FUgmxOqlwERfMuZLuuacGkr4p5yCSKpRaicWncHCewj
-	mQ4hUC5F+KILPn6N0vgLCwdPsD8HBowKcouTaDaTvA==
-X-Google-Smtp-Source: AGHT+IGLKV5WrEKu2Peckp8WnZLZ4p71MmEZ/yB7cIiIFKWxkfmDK61lxlmTj0F1X7OQOf1DIkrt+bUusOcTQ8qR7Ec=
-X-Received: by 2002:a25:3290:0:b0:db5:9004:cf5b with SMTP id
- y138-20020a253290000000b00db59004cf5bmr3526873yby.64.1701769674682; Tue, 05
- Dec 2023 01:47:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="aSgVg5oK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cifsw1w+"
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04BDEAF
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 02:32:30 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 8DE903200C5D;
+	Tue,  5 Dec 2023 05:32:26 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 05 Dec 2023 05:32:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+	1701772346; x=1701858746; bh=nvGWOwshOBazt+opmOLCQliDBsmwN3Z+bJQ
+	Tzgce/dc=; b=aSgVg5oKfM4NPK33MpCaTFI95UNEkHut3aZ2MNaEC/GnkYgmxIf
+	5jAIS9A2qQj5T5oWNX9ynaV8OuuxJyjzOuckhzQwowd0KVAQsQ60pJBC3UkFTw07
+	sfrqSh/SCU7S2eGJhbXyXq8ywCLn5pUk+pivulY/hgbM163tZgp9uW3f71zL2Qta
+	un7L97k+QZhk5BixG24//tRrIPrn2iG4jij3jfRUb68DvVHl71QddocGuS+KHORb
+	pQ3rt2wkXPI/TYRcF5lJfu0AtL/iFsRf+fFarg1JZ57gDrddfot19rzhpha7qh4K
+	T5SBGQkrbmuStT+JJqny1q6U9ipA5SjJXTw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1701772346; x=1701858746; bh=nvGWOwshOBazt+opmOLCQliDBsmwN3Z+bJQ
+	Tzgce/dc=; b=cifsw1w+ehJM2ogAcMQ/hC4nEkatBo+t7fRhcf6qbwerwgFcBMK
+	rSoq+vrPhM8hIwj/qcnypvoIdKesq+chj5BdLZJLzW1lDMr97VH9WKyqTGWk+B6w
+	vPRNtOhXaKjBQ5Lu2MOuc78NIwbxNRu2Xc8fVVclvD6Lgeknf1bOOI8uY4lznZR9
+	6uEKr7iHp1ZjojvbVI0KdZQvUG1uv3EIHMS6TLzglyc0LMDdxL39ISfj3B0Kp0vg
+	xJNov38RdF4KxqqsmezgpqxQ1CabpTOimbpasnvwF8PpFZbOGbzKY6K0U9ea0BgY
+	JjzH1Lp5aQQ5MrqlWlI5VbI4jEGcV8Ec0bQ==
+X-ME-Sender: <xms:OfxuZTUkPuE3pXk3X_vAZ7UZGeG1d8YkoES2hUgbck6JO2LR3tRGuw>
+    <xme:OfxuZbkkz1qmEwxO2vb29LsfGJ26hvDXkA5ckiABX2hjehfLLY4B9uLA50Tz-i3N4
+    5iZN2CTnayXp9IkIt4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudejkedgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:OfxuZfYwHQVh3KyLBxNayG77PIdi90lG1BOYqw3S-x_LQ-F2_EKJ-g>
+    <xmx:OfxuZeVIFiOcoyogTPM6cCUC2ThMA2WTkgINYxi8MDYPJCduhLdlqw>
+    <xmx:OfxuZdmLWvuvBft2569j0LEEMA1LIb6GyT4kTNBzbc0pRysQu_Uy8A>
+    <xmx:OvxuZTVPH6P7pciU-ZRJZi4fpAYyMrZCJ_iJFdUuYL3H1_RFNHfSXA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 7096FB60089; Tue,  5 Dec 2023 05:32:25 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231204-drop-11mpcore-v1-1-f96cd3938cf1@linaro.org> <93cc5193-aa1b-4df8-8d00-c3149c33b7e7@app.fastmail.com>
-In-Reply-To: <93cc5193-aa1b-4df8-8d00-c3149c33b7e7@app.fastmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 5 Dec 2023 10:47:43 +0100
-Message-ID: <CACRpkdYcCh8TNBW-UJ1WhH-7sQMAw6xjx1FV6+bWGi2VmsTQHA@mail.gmail.com>
+Message-Id: <5b0eb64c-fb0c-4bb1-a10e-733d496ac2be@app.fastmail.com>
+In-Reply-To: 
+ <CACRpkdYcCh8TNBW-UJ1WhH-7sQMAw6xjx1FV6+bWGi2VmsTQHA@mail.gmail.com>
+References: <20231204-drop-11mpcore-v1-1-f96cd3938cf1@linaro.org>
+ <93cc5193-aa1b-4df8-8d00-c3149c33b7e7@app.fastmail.com>
+ <CACRpkdYcCh8TNBW-UJ1WhH-7sQMAw6xjx1FV6+bWGi2VmsTQHA@mail.gmail.com>
+Date: Tue, 05 Dec 2023 11:32:03 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Walleij" <linus.walleij@linaro.org>
+Cc: "Mark Rutland" <mark.rutland@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Russell King" <linux@armlinux.org.uk>, "Liviu Dudau" <liviu.dudau@arm.com>,
+ "Sudeep Holla" <sudeep.holla@arm.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ "Lubomir Rintel" <lkundrak@v3.sk>, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH] ARM: Delete ARM11MPCore (ARM11 ARMv6K SMP) support
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Lubomir Rintel <lkundrak@v3.sk>, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 5, 2023 at 8:00=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote:
-
->  static const struct of_device_id realview_scu_match[] =3D {
-> -       { .compatible =3D "arm,arm11mp-scu", },
->         { .compatible =3D "arm,cortex-a9-scu", },
->         { .compatible =3D "arm,cortex-a5-scu", },
->         { }
+On Tue, Dec 5, 2023, at 10:47, Linus Walleij wrote:
+> On Tue, Dec 5, 2023 at 8:00=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> w=
+rote:
 >
-> I see that the arm,arm11mp-scu device is provided by
-> arm-realview-eb-mp.dtsi, which in turn gets included
-> by both arm-realview-eb-11mp.dts and arm-realview-eb-a9mp.dts,
-> so the Cortex-A9 dtb ends up with the wrong compatible
-> string at the moment.
+>>  static const struct of_device_id realview_scu_match[] =3D {
+>> -       { .compatible =3D "arm,arm11mp-scu", },
+>>         { .compatible =3D "arm,cortex-a9-scu", },
+>>         { .compatible =3D "arm,cortex-a5-scu", },
+>>         { }
+>>
+>> I see that the arm,arm11mp-scu device is provided by
+>> arm-realview-eb-mp.dtsi, which in turn gets included
+>> by both arm-realview-eb-11mp.dts and arm-realview-eb-a9mp.dts,
+>> so the Cortex-A9 dtb ends up with the wrong compatible
+>> string at the moment.
+>
+> Aha I need to make a separate DTS patch for that.
+>
+> As stated in the commit message I don't know if RealView EB
+> is working very well on real hardware, I have only ever tested
+> it in QEMU.
 
-Aha I need to make a separate DTS patch for that.
+I think that is true for most users, and I see that
+the Cortex-A9 variant of RealView EB doesn't even
+have a separate qemu model other than possibly
+"qemu-system-arm -M realview-eb-mpcore -cpu cortex-a9".
 
-As stated in the commit message I don't know if RealView EB
-is working very well on real hardware, I have only ever tested
-it in QEMU.
+In this case, the easiest solution is probably to
+kill off CONFIG_REALVIEW_EB_A9MP and its dts file
+as well, since that is even less likely to have any
+users.
 
-> The driver doesn't care either way, and we can easily
-> change the dtsi file use the Cortex-A9 compatibles
-> later, but I think we probably want to leave the
-> platsmp code to match the old string as well for
-> compatibility with old dtb files.
+>> The driver doesn't care either way, and we can easily
+>> change the dtsi file use the Cortex-A9 compatibles
+>> later, but I think we probably want to leave the
+>> platsmp code to match the old string as well for
+>> compatibility with old dtb files.
+>
+> The patch deletes the support for RealView EB ARM11MPCore
+> Kconfig as well so it should go I think? Or am I missing
+> something?
 
-The patch deletes the support for RealView EB ARM11MPCore
-Kconfig as well so it should go I think? Or am I missing
-something?
+I was talking about EB_A9MP, not EB_ARM11MP here.
 
-The Marvell MMP3 is also defining the "arm,arm11mp-scu"
-but it's not using it for anything so I think it's just some bogus
-copypaste error (Lubomir can maybe fill in) and should have its
-own compatible.
+> The Marvell MMP3 is also defining the "arm,arm11mp-scu"
+> but it's not using it for anything so I think it's just some bogus
+> copypaste error (Lubomir can maybe fill in) and should have its
+> own compatible.
 
-BTW is the Marvell PJ4B a descendant of the XScale PXA? I
-never manage to follow the lineage of these things.
+Right, my impression is that these bits of MMP3
+are all copied from realview.
 
-Yours,
-Linus Walleij
+> BTW is the Marvell PJ4B a descendant of the XScale PXA? I
+> never manage to follow the lineage of these things.
+
+Not really: while the MMP SoC design is a follow-up to
+Intel PXA (using XScale), the later Marvell PXA and MMP
+switched over the Sheeva line of CPU cores that
+originally came from Marvell Orion/Kirkwood. The earlier
+cores were ARMv5 and some even supported Intel's iWMMXt
+FPU, the later PJ4 ones were ARMv7 with VFP but were
+based on the same microarchitecture.
+
+     Arnd
