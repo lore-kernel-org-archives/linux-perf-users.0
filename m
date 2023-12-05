@@ -1,109 +1,117 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="scXw0st0"
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2B8181
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 11:07:16 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-50beed2a46eso444e87.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Dec 2023 11:07:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701803234; x=1702408034; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ej3kQBx3EFuPWQzAG+dXMq1q7o7L2rJhMK8Ry3wRpZA=;
-        b=scXw0st09jwZ2T7+fncZ6sGore8YnmQY+WYcgghtWT3frvotV6UwiIaJf0yti/KJxH
-         InjMX9UKHYjaiyGYRscYW4AoXxfYr2cA9UKTt4DLqfAmwrHEanA+jzO2ixR1uCByBzaA
-         wUyoZqm40y4ZfdUsxHqVr3Q9wq/gM6vQGPRnMed5oR0ZIgfxiL50hYBHXWyutg23c6Ox
-         uyfNsaq4K5dEN3IToZrmZfrA9xC/mmXuSWLJJCN032T6vRKroUxr/l0tuvzcZUVUC0WR
-         pLB2JtAnb07cEfS6s1QE2b25aqH8wUX928HZwzMcepVB/IYTWk+E7EruRcA0S9sVBEDh
-         xMVg==
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9552CB0;
+	Tue,  5 Dec 2023 11:11:02 -0800 (PST)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ce32821a53so1895979b3a.0;
+        Tue, 05 Dec 2023 11:11:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701803234; x=1702408034;
+        d=1e100.net; s=20230601; t=1701803462; x=1702408262;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ej3kQBx3EFuPWQzAG+dXMq1q7o7L2rJhMK8Ry3wRpZA=;
-        b=HZV/nnVD+Ly1I9+qsv6wITxpVH37exbGmCr7DKrq6WM63L4gVMITF/ENdwnj+zZENG
-         lUr/8pczW3IobjmmnfrzOU4yerNWxAvv6epEhN0anaDCSYvmCKnkY/0jHXw5Y3YK/+Fn
-         jjFRGRYtv8RKav/9h5wXzLjEUId1w0E7vAuBfneBBMrjz1z+ulAygLjhHuj+lplUAnYl
-         lXzhgnF+JHCd5SRkWISqkXCPRGI70NnXqy5V0CFTXDI4KLkP25MP4quJw05Qv1DXYQty
-         1FgyprlK8pE3Q+cczhX72WRL1W8viq9XRRtnY+KL2zblinQmZ7+bSjONpmLWD9YptlLH
-         DQMA==
-X-Gm-Message-State: AOJu0Yx5i1U7YKcygpnX1DWz095RybjqftTyC79MDSy5kPXfLVagjT2l
-	H8o+4NDrT7gikaxr/u8NYiG70DQWAIDaQoixS8zLIrxPRkE3Af9V2QRwgESV
-X-Google-Smtp-Source: AGHT+IH50AP4nKcixs6NdUxZaj4WXJIkkIhTylwjFhT080e92ZvW1/jl8FFHyq9FpKrgYFIU7JgqUmosoeODSfx+9Oc=
-X-Received: by 2002:a05:6512:ba1:b0:50b:fa8d:f28b with SMTP id
- b33-20020a0565120ba100b0050bfa8df28bmr3399lfv.1.1701803234217; Tue, 05 Dec
- 2023 11:07:14 -0800 (PST)
+        bh=uODkYjBD6L0Z6eIxrtu/7Xfvr3I8XjBfQSMhqHB6Qbw=;
+        b=ipe2IdNbsqbFBPAZEezWOtAtTDCKwS/xhqdqpGJlIfwOo35s/DUureXEgUUk6Mq+Q6
+         Bbb0rj0KiiY6KruDLlE2bGzEiaNqW9NafxRTrKAYsVBhgb6H5zZAECV18jKe9cpbfL8l
+         pyLSq6L9dbf5Ny6lgo6c7DsAfRbe0gNrIM5PJPs7pVkTIAo3Z9+skGSxFhz2hR+Jwo/7
+         1EDLjTf5QUioDXaA5q4pAWsmYOuLkiDUM992CzBcfC0Axr559M86QqEywCuu6YVutg4Q
+         fyCrRwD7VLQ43fVILXmQBKO4BbYYJWNKTt/5Hey0xUQw//27iE/Y0PJ3/FWX7bkVSe+9
+         rLNg==
+X-Gm-Message-State: AOJu0Yws2aaJir4fEp/I//hRgg+NMje1buhwOqoFg2ZCx6taHPQRQdKY
+	m2CbsUUqdo7GMSXC0nDc/XJE7s4ddDArDsemLsM=
+X-Google-Smtp-Source: AGHT+IFqj9cVd8zrZNQfWXXCe3xl8Op65upOReYUkBSiCVHHvew18D33Nj7SFdsH0mn6xxyPNznBBsC4GddYdRTqbbs=
+X-Received: by 2002:a05:6a21:998e:b0:18c:a9d3:4f96 with SMTP id
+ ve14-20020a056a21998e00b0018ca9d34f96mr3828901pzb.32.1701803461868; Tue, 05
+ Dec 2023 11:11:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3ac77391.1d70f.18c3ab61090.Coremail.chang-liu22@mails.tsinghua.edu.cn>
-In-Reply-To: <3ac77391.1d70f.18c3ab61090.Coremail.chang-liu22@mails.tsinghua.edu.cn>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 5 Dec 2023 11:07:02 -0800
-Message-ID: <CAP-5=fXRFOpbqe-z_aQC4xhuS3-Mp6cKNJ8o53fr8UBVboctQQ@mail.gmail.com>
-Subject: Re: Can I create and read perf counters in the kernel?
-To: chang-liu22@mails.tsinghua.edu.cn
-Cc: linux-perf-users@vger.kernel.org
+References: <20231204182330.654255-1-irogers@google.com> <bea4ad79-297e-9737-8af1-2286192d26f4@os.amperecomputing.com>
+ <CAM9d7ci=Tk845H3x3KMDu-hTdP-u0O6a8D3iAa8EnFLLjOO6OQ@mail.gmail.com>
+ <ZW9G8Clxwl6bd0H6@kernel.org> <CAM9d7ciOp_O5N1TDX0HyKavykirByAYrqzcmM-_6ZWjMv-47WQ@mail.gmail.com>
+ <ZW9whqUEILWMdcmi@kernel.org>
+In-Reply-To: <ZW9whqUEILWMdcmi@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 5 Dec 2023 11:10:50 -0800
+Message-ID: <CAM9d7ciqm2NLt5kxjVdOP2y-KV30_CRsSjHpcQgntvNGWukx9g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf metrics: Avoid segv if default metricgroup
+ isn't set
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, Ian Rogers <irogers@google.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 5, 2023 at 8:01=E2=80=AFAM <chang-liu22@mails.tsinghua.edu.cn> =
-wrote:
+On Tue, Dec 5, 2023 at 10:48=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Hi all,
+> Em Tue, Dec 05, 2023 at 09:24:42AM -0800, Namhyung Kim escreveu:
+> > Hi Arnaldo,
+> >
+> > On Tue, Dec 5, 2023 at 7:51=E2=80=AFAM Arnaldo Carvalho de Melo <acme@k=
+ernel.org> wrote:
+> > >
+> > > Em Mon, Dec 04, 2023 at 07:33:18PM -0800, Namhyung Kim escreveu:
+> > > > On Mon, Dec 4, 2023 at 2:45=E2=80=AFPM Ilkka Koskinen <ilkka@os.amp=
+erecomputing.com> wrote:
+> > > > > On Mon, 4 Dec 2023, Ian Rogers wrote:
+> > > > > > A metric is default by having "Default" within its groups. The =
+default
+> > > > > > metricgroup name needn't be set and this can result in segv in
+> > > > > > default_metricgroup_cmp and perf_stat__print_shadow_stats_metri=
+cgroup
+> > > > > > that assume it has a value when there is a Default metric group=
+. To
+> > > > > > avoid the segv initialize the value to "".
+> > >
+> > > > > > Fixes: 1c0e47956a8e ("perf metrics: Sort the Default metricgrou=
+p")
+> > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > >
+> > > > > Thanks! I was going to look for the bug but got pulled to other
+> > > > > tasks. The patch looks good to me and I tested it successfully on
+> > > > > AmpereOne.
+> > >
+> > > > >    Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputi=
+ng.com>
+> > >
+> > > > Looks like it needs to go through perf-tools for v6.7.
+> > > > Ian, do you think this one is enough?
+> > >
+> > > So I had this on my local perf-tools-next, removed now, I also have s=
+ome
+> > > other fixes by Ian on the tmp.perf-tools-next, please let me know wha=
+t
+> > > you guys decide to have in perf-tools for v6.7 so that I can remove i=
+t
+> > > from there.
+> >
+> > I think we need this one and the Ampere default-metric-group fix.
+> >
+> > https://lore.kernel.org/r/20231201021550.1109196-2-ilkka@os.amperecompu=
+ting.com/
+> >
+> > Also perf list JSON fix can go to v6.7.
+> >
+> > https://lore.kernel.org/r/20231129213428.2227448-2-irogers@google.com/
 >
-> I'm doing a research project in which I implement a new functionality in =
-the kernel. Now I want to benchmark the code that I write, e.g., I want to =
-measure the number of cache misses of my code with different workloads. I w=
-onder if I could create perf counters and read them in kernel just like usi=
-ng perf_event_open() + read() in user space to implement the following logi=
-c:
-> -------------------------------
-> crate_perf_counter()
+> Ok, removed both, please augment the later description to:
 >
-> reset_and_start_counter()
-> run some kernel code
-> read_counter()
-> -------------------------------
-> If I can, what kernel API should I use? Is there any document that I can =
-refer?
+> "perf list: Fix JSON segfault by setting the used skip_fuplicate_pmus cal=
+lback"
+>
+> The original description was vague, improving it a bit like that helps
+> when just looking at the output of "git log --oneline".
 
-Not directly answering your question, but perf events can filter
-between user and kernel, e.g. cycles:u and cycles:k. You can use
-filters like:
-
-$ perf record -e cycles:k --filter "ip >=3D 0xffffffff99e036b0, ip <
-0xffffffff99e036c0" -a sleep 1
-
-To limit what samples are recorded (the magic numbers are addresses
-for a function in the kernel that you can find in things like
-/proc/kallsyms).
-
-In general perf events are managed by user land, the NMI watchdog is
-an example of a perf event opened in the kernel. You can use BPF to
-inject in behaviors with perf events and this is what the perf command
-is doing above. The perf event filtering is a feature built into the
-kernel, but you are recording sample globally and just discarding the
-ones you don't care about. To match the behavior you describe you may
-want to use bpftrace or write a BPF program, but I don't believe there
-is a BPF helper currently to enable/disable perf events. You may want
-to explore BPF kfuncs. In general enabling/disabling events has some
-cost as the kernel's perf subsystem will do things like considering
-other events to schedule when a counter is used/freed. PMUs like Intel
-PT and ARM CoreSight have filtering built in, you may want to explore
-these.
+Done and pushed to tmp.perf-tools!
 
 Thanks,
-Ian
-
->
-> I'd be very grateful if anyone can help :)
->
-> Kind regards,
->
-> Chang Liu
+Namhyung
