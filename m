@@ -1,268 +1,87 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AnMEu6Uw"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B08191;
-	Tue,  5 Dec 2023 03:21:50 -0800 (PST)
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B5B7P3o025760;
-	Tue, 5 Dec 2023 11:21:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=k3AnvZmH8JookOF1Ep2XVz5VowNTY/XJSZw/im3u2Rc=;
- b=AnMEu6Uw2+bN+ZYGGM9KY7lkmts1BwzCAOJIXHnSBGIC3ySDjmFp2+//aLHEY5TEcci1
- KF4p8jSfMEdAxa+1whq8cm2NNr93NUpmd2HesP1OLQh5qD09un4BXIJ6+Hi5ILEhAUIm
- TuwRY3nrRCzCzoi4p2ivID3Ngnq3hh2Q5NfGYS7LGB6c4FK/guHNe4kJCsce05o3UcK9
- TIXINsSPtE3pIdSlj56v8pH9BviPcs0jlKj9x+PRSbyVQ4yCibIN10G+QDZB3Oj5NQ8s
- a004hJ9/oWspShpNs/my1RR1KamYPNAsJXQtdX3F7Tg6TFoUHSN46Bs8Z2BH7E2FPwpp aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ut2q50cug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 11:21:20 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B5B8Ydw029997;
-	Tue, 5 Dec 2023 11:21:20 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ut2q50cty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 11:21:20 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B5AqJvx009153;
-	Tue, 5 Dec 2023 11:21:18 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3urgdkx4pm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 11:21:18 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B5BLGKC1180160
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Dec 2023 11:21:16 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 559FA2004B;
-	Tue,  5 Dec 2023 11:21:16 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6C29A20040;
-	Tue,  5 Dec 2023 11:21:13 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.215.218])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  5 Dec 2023 11:21:13 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [RFC PATCH v2] perf evsel: Fallback to task-clock when not system
- wide
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20231121000420.368075-1-irogers@google.com>
-Date: Tue, 5 Dec 2023 16:51:01 +0530
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>, Leo Yan <leo.yan@linaro.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Ajay Kaher <akaher@vmware.com>,
-        Alexey Makhalov <amakhalov@vmware.com>
-Message-Id: <CFCEDA00-D3CB-450A-B9E5-AA5D7CEEA1CE@linux.vnet.ibm.com>
-References: <20231121000420.368075-1-irogers@google.com>
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Y94NZ3bwejvBGxk6-bnDNEEew4rlaNAB
-X-Proofpoint-GUID: xDp52yQioe6nfnYThBJWS5jVoswwbaK3
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Op6XujnI"
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27769A8;
+	Tue,  5 Dec 2023 03:57:45 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-33330a5617fso3536822f8f.2;
+        Tue, 05 Dec 2023 03:57:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701777463; x=1702382263; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=juHNWQkjsGClIEG2iYdwYJ3MncD2wvBN8yrVUxA8Tfc=;
+        b=Op6XujnIAolRZugFIlEgSo5vO2TpN3kiJ1u/vIkHK2t1zkdIMMC+o2+hp6cRP/09aG
+         BbDFDBJcZ1wacCgR5y+ST2XmOaf7RmcQpOhpNSEp5R5iVEnyLYzmZbsG1DcGiphSwBCQ
+         iGFneFS6zRN9Ha2UeEa6GhGFKgr/epVauLCnxtGLJXlPRUpuwMbALImzz5asSZ77H3D0
+         7pq5EcO98BUe83JVIHrd5PJWbgx4K9r0clhGc2QcLUXBV3vIKaNbSCO3XkJhTLaIHz8q
+         lQSTJm3+clLOkZzSzlflkrvof5U49s7b0MvUNLsokSWTI9lAiPHFrkqd1imDfiJK5rLo
+         LI4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701777463; x=1702382263;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=juHNWQkjsGClIEG2iYdwYJ3MncD2wvBN8yrVUxA8Tfc=;
+        b=JOpqkC3sAeseWSAc5prL8YtMsPTdtn1t8sFMPG6Tz6kt+Mp2tVXfUUCI9LV0szkjjJ
+         6SkzAixN/7L9OWQfkko3Jces8osj0tve+L07FbMHGK1yXDUJOKbPD/r7CeBlbOaXN+wZ
+         hhgFsgVcho3NhYkmnS+dcf+/rYm+mKOBd601Fqf9kBQjZZwgL7MrUE68/8dCrbJkZi+7
+         YtQQdx4y3oD9iNreXfqcynJRzr4VC0SZR53dcKN0ssYhLIWCyVNcc43Pbf5QQCyW0/Sl
+         6tXyG5J34S3OYbhrXXlytM0TzDPoI6EgwRkv2Aiparopjwjp0eXmABbb/Nts04Qkvm5R
+         De+g==
+X-Gm-Message-State: AOJu0Yx8/d+/yVNrPL56dmGf+OJ0/u5n7ARpg6zeozMgqdzslhBd38yx
+	A+IAXmvD4k9o9dXfnzJt2Y73CT3zOy6qrkHa3Kc=
+X-Google-Smtp-Source: AGHT+IF504eiqyRwC18dGlZ0WyusZeV5rKYbClTfcBwRLfk7NZtSodduOTWf3HgANvG6zFMGSqFDGO1uCc+8agAEIOY=
+X-Received: by 2002:adf:f706:0:b0:333:2fd2:5d3d with SMTP id
+ r6-20020adff706000000b003332fd25d3dmr3898006wrp.111.1701777463315; Tue, 05
+ Dec 2023 03:57:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-05_06,2023-12-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=0 adultscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=999 clxscore=1011 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2312050089
+References: <CAOOPZo5oFZAs3sMcEgmTEZy3ef4jg630xL3mUBx3bvV6tQcdQg@mail.gmail.com>
+ <20231129103233.GD30650@noisy.programming.kicks-ass.net>
+In-Reply-To: <20231129103233.GD30650@noisy.programming.kicks-ass.net>
+From: Zhengyuan Liu <liuzhengyuang521@gmail.com>
+Date: Tue, 5 Dec 2023 19:57:28 +0800
+Message-ID: <CAOOPZo6wV9yrBvHN9uHiQXxG=LxsWjz5K10AZGdHrV9oESbORw@mail.gmail.com>
+Subject: Re: Question about perf sibling_list race problem
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, linux-perf-users@vger.kernel.org, stable@vger.kernel.org, 
+	=?UTF-8?B?6IOh5rW3?= <huhai@kylinos.cn>, =?UTF-8?B?5YiY5LqR?= <liuyun01@kylinos.cn>, 
+	huangjinhui@kylinos.cn, Zhengyuan Liu <liuzhengyuan@kylinos.cn>, acme@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 29, 2023 at 6:32=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Wed, Nov 29, 2023 at 05:33:33PM +0800, Zhengyuan Liu wrote:
+> > Hi, all
+> >
+> > We are encountering a perf related soft lockup as shown below:
+> >
+> > [25023823.265138] watchdog: BUG: soft lockup - CPU#29 stuck for 45s!
+> > [YD:3284696]
+> > [25023823.275772]  net_failover virtio_scsi failover
+> > [25023823.276750] CPU: 29 PID: 3284696 Comm: YD Kdump: loaded Not
+> > tainted 4.19.90-23.18.v2101.ky10.aarch64 #1
+>           ^^^^^^^^^^^^^^^^^^^
+>
+> That is some unholy ancient kernel. Please see if you can reproduce on
+> something recent.
 
+Sorry for the late reply since my company mail server has some trouble.
 
-> On 21-Nov-2023, at 5:34=E2=80=AFAM, Ian Rogers <irogers@google.com> wrote:
->=20
-> When the cycles event isn't available evsel will fallback to the
-> cpu-clock software event. task-clock is similar to cpu-clock but only
-> runs when the process is running. Falling back to cpu-clock when not
-> system wide leads to confusion, by falling back to task-clock it is
-> hoped the confusion is less.
->=20
-> Pass the target to determine if task-clock is more appropriate. Update
-> a nearby comment and debug string for the change.
->=20
-> ---
-> v2. Use target__has_cpu as suggested by Namhyung.
-> https://lpc.events/event/17/contributions/1556/
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> tools/perf/builtin-record.c |  2 +-
-> tools/perf/builtin-stat.c   |  2 +-
-> tools/perf/builtin-top.c    |  2 +-
-> tools/perf/util/evsel.c     | 18 ++++++++++--------
-> tools/perf/util/evsel.h     |  3 ++-
-> 5 files changed, 15 insertions(+), 12 deletions(-)
->=20
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 8ec818568662..d8bb59511fdd 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1350,7 +1350,7 @@ static int record__open(struct record *rec)
-> evlist__for_each_entry(evlist, pos) {
-> try_again:
-> if (evsel__open(pos, pos->core.cpus, pos->core.threads) < 0) {
-> - if (evsel__fallback(pos, errno, msg, sizeof(msg))) {
-> + if (evsel__fallback(pos, &opts->target, errno, msg, sizeof(msg))) {
+I don't have a reproducer,  It's an online server and happens once
+every few months.
+From our analysis, the recent kernel shouldn't have this problem after comm=
+it
+bd27568117664=EF=BC=88=E2=80=9Cperf: Rewrite core context handling=E2=80=9D=
+).  But LTS  branches such as
+v4.19 and v5.4 will be used for a long time, so I think it's worth
+fixing this problem.
 
-Hi Ian
-
-Tested this with perf record and I could find the code fallback to using ta=
-sk-clock
-
-./perf record -v ls
-Warning:
-The cycles event is not supported, trying to fall back to task-clock
-
-But in case of =E2=80=9Cperf stat=E2=80=9D, in my environment, found that t=
-he code path won't invoke =E2=80=9Cevsel__fallback=E2=80=9D.
-
-Snippet for builtin-stat.c
-            if (errno =3D=3D EINVAL || errno =3D=3D ENOSYS ||
-            errno =3D=3D ENOENT || errno =3D=3D EOPNOTSUPP ||
-            errno =3D=3D ENXIO) {
-                if (verbose > 0)
-                        ui__warning("%s event is not supported by the kerne=
-l.\n",
-                                    evsel__name(counter));
-                counter->supported =3D false;
-                /*
-                 * errored is a sticky flag that means one of the counter's
-                 * cpu event had a problem and needs to be reexamined.
-                 */
-                counter->errored =3D true;
-
-                if ((evsel__leader(counter) !=3D counter) ||
-                    !(counter->core.leader->nr_members > 1))
-                        return COUNTER_SKIP;
-        } else if (evsel__fallback(counter, &target, errno, msg, sizeof(msg=
-))) {
-                if (verbose > 0)
-                        ui__warning("%s\n", msg);
-                return COUNTER_RETRY;
-
-So if the perf_event_open returns ENOENT, we won=E2=80=99t do a fallback in=
- builtin-stat.c
-Should we address cycles differently here ? Any comments ?
-
-Thanks
-Athira
->=20=20=20
-> if (verbose > 0)
-> ui__warning("%s\n", msg);
-> goto try_again;
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index a3af805a1d57..d8e5d6f7a87a 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -653,7 +653,7 @@ static enum counter_recovery stat_handle_error(struct=
- evsel *counter)
-> if ((evsel__leader(counter) !=3D counter) ||
->    !(counter->core.leader->nr_members > 1))
-> return COUNTER_SKIP;
-> - } else if (evsel__fallback(counter, errno, msg, sizeof(msg))) {
-> + } else if (evsel__fallback(counter, &target, errno, msg, sizeof(msg))) {
-> if (verbose > 0)
-> ui__warning("%s\n", msg);
-> return COUNTER_RETRY;
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index ea8c7eca5eee..1e42bd1c7d5a 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1044,7 +1044,7 @@ static int perf_top__start_counters(struct perf_top=
- *top)
->    perf_top_overwrite_fallback(top, counter))
-> goto try_again;
->=20
-> - if (evsel__fallback(counter, errno, msg, sizeof(msg))) {
-> + if (evsel__fallback(counter, &opts->target, errno, msg, sizeof(msg))) {
-> if (verbose > 0)
-> ui__warning("%s\n", msg);
-> goto try_again;
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index a5da74e3a517..532f34d9fcb5 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2853,7 +2853,8 @@ u64 evsel__intval_common(struct evsel *evsel, struc=
-t perf_sample *sample, const
->=20
-> #endif
->=20
-> -bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t msg=
-size)
-> +bool evsel__fallback(struct evsel *evsel, struct target *target, int err,
-> +     char *msg, size_t msgsize)
-> {
-> int paranoid;
->=20
-> @@ -2861,18 +2862,19 @@ bool evsel__fallback(struct evsel *evsel, int err=
-, char *msg, size_t msgsize)
->    evsel->core.attr.type   =3D=3D PERF_TYPE_HARDWARE &&
->    evsel->core.attr.config =3D=3D PERF_COUNT_HW_CPU_CYCLES) {
-> /*
-> - * If it's cycles then fall back to hrtimer based
-> - * cpu-clock-tick sw counter, which is always available even if
-> - * no PMU support.
-> + * If it's cycles then fall back to hrtimer based cpu-clock sw
-> + * counter, which is always available even if no PMU support.
-> *
-> * PPC returns ENXIO until 2.6.37 (behavior changed with commit
-> * b0a873e).
-> */
-> - scnprintf(msg, msgsize, "%s",
-> -"The cycles event is not supported, trying to fall back to cpu-clock-tic=
-ks");
-> -
-> evsel->core.attr.type   =3D PERF_TYPE_SOFTWARE;
-> - evsel->core.attr.config =3D PERF_COUNT_SW_CPU_CLOCK;
-> + evsel->core.attr.config =3D target__has_cpu(target)
-> + ? PERF_COUNT_SW_CPU_CLOCK
-> + : PERF_COUNT_SW_TASK_CLOCK;
-> + scnprintf(msg, msgsize,
-> + "The cycles event is not supported, trying to fall back to %s",
-> + target__has_cpu(target) ? "cpu-clock" : "task-clock");
->=20
-> zfree(&evsel->name);
-> return true;
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index f19ac9f027ef..efbb6e848287 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -460,7 +460,8 @@ static inline bool evsel__is_clock(const struct evsel=
- *evsel)
->       evsel__match(evsel, SOFTWARE, SW_TASK_CLOCK);
-> }
->=20
-> -bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t msg=
-size);
-> +bool evsel__fallback(struct evsel *evsel, struct target *target, int err,
-> +     char *msg, size_t msgsize);
-> int evsel__open_strerror(struct evsel *evsel, struct target *target,
-> int err, char *msg, size_t size);
->=20
-> --=20
-> 2.43.0.rc1.413.gea7ed67945-goog
->=20
-
+Thanks,
