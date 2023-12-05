@@ -1,110 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0EFBAAF;
-	Tue,  5 Dec 2023 10:15:04 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B006139F;
-	Tue,  5 Dec 2023 10:15:50 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.42.213])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A63293F5A1;
-	Tue,  5 Dec 2023 10:15:02 -0800 (PST)
-Date: Tue, 5 Dec 2023 18:14:57 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Ashley, William" <wash@amazon.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	will@kernel.org
-Subject: Re: armv8pmu: Pending overflow interrupt is discarded when perf
- event is disabled
-Message-ID: <ZW9ooVL32WB8U4YB@FVFF77S0Q05N>
-References: <950001BD-490C-4BAC-8EEA-CDB9F7C4ADFC@amazon.com>
- <EBAF38AB-2BE5-425F-8A52-DDCB0B390309@amazon.com>
- <ZWdoNWps4izj5WJy@FVFF77S0Q05N.cambridge.arm.com>
- <ZWh2pnR_Z5-CKuZb@FVFF77S0Q05N>
- <ZWh-sbrHJu2b-BU6@FVFF77S0Q05N>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T5zedPar"
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D86E9AC
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 10:17:17 -0800 (PST)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1fb06f38df0so2974927fac.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Dec 2023 10:17:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701800237; x=1702405037; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rDi8w67oLrCVnWUnDYFdDwzLTH62p8zVTFKrJGR7vTA=;
+        b=T5zedPartWcsSubHoFT0v9EkdqfSoBTx4JJjvCaW6LJyr1VJGToiDW5yiki1CiuIqk
+         rp+3A3RN+mULd1/avj0jZ/h9a31Ekl2Jnd1SRladgxSe6eMJHqc757INfvoj4WcYK47H
+         fIcoSBSrNlTpVInIYRwpQ+NJQwTXyHltRdJ60EScLgGPYQ+gL8DKAYZUl9qanLJ1gR86
+         eHywPwoOCGh3ncpyH7/SBS7xSkVSqRjfrWQoyxnKGq8OJhZr6K/W4uWysims260yfa+h
+         tocvC57EMWZoIYxaPqGXq5eQQkKU3HvaDcZ9+S6BLjiwBHj1NzFHXAmKOILZ4jwz9kmk
+         CvrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701800237; x=1702405037;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rDi8w67oLrCVnWUnDYFdDwzLTH62p8zVTFKrJGR7vTA=;
+        b=nbVKVQK3IDpNiZI5tynVySIkVFvZ1ujlPKYoO5KVEf3F4yWxeHABwSHbTthG+prq+/
+         VQyd3A1WHZwXGZwNrSYTS7ClKY1DLWIltBsmXiTBVDLGDM1Zrz+9KJ20kz7T2YkOpx2p
+         iqGCJQC4ACkw0WrBrauaLQIfVoidKBHPPiSUx0L/AJxT7af0V+oRWSZgJiNMhO69ovPd
+         rXbNCRFPhaaHWFtPimsmRAnEjViC94LMbsF/fkvT8dTCGojiA3+ZDVXjuoIyfPuANLUi
+         jERP/FzJXPXfjfqRlIc54yGw+NLzGnCSWVajJyNwweNvywGQSZXDyXZIyYZfwyHRApFJ
+         hTcA==
+X-Gm-Message-State: AOJu0Yz+PyF6RruK4sCFebZioGarjqtvDjR/R+pm/STygNMlhZuZB1I4
+	h4GONNBMGQ1A8rHGCOpefh2Ot9HrEeCmpxz0eOi+3Q==
+X-Google-Smtp-Source: AGHT+IFVPtycg0dL10C+0thiptzxicQhELMBG95r/Ap4aYVMCRYNBG6hTGKCzlb6QEEknzdZvnI7OFwLD7ptlaTRwLc=
+X-Received: by 2002:a05:6870:9d9b:b0:1fa:1355:da45 with SMTP id
+ pv27-20020a0568709d9b00b001fa1355da45mr7508586oab.11.1701800236823; Tue, 05
+ Dec 2023 10:17:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZWh-sbrHJu2b-BU6@FVFF77S0Q05N>
+References: <20231204201406.341074-1-khuey@kylehuey.com> <20231204201406.341074-2-khuey@kylehuey.com>
+ <CAEf4BzYtSXtgdO9C2w9OOKni68H-7UOExFJRBEij3HG2Qwn1Rg@mail.gmail.com>
+ <ZW8Gi2QI5ceAJfab@krava> <CAM9d7chztaCfDsxfyJ2q_UmD=y20BFikCUQhs=LR8wsNV6pMjg@mail.gmail.com>
+In-Reply-To: <CAM9d7chztaCfDsxfyJ2q_UmD=y20BFikCUQhs=LR8wsNV6pMjg@mail.gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Tue, 5 Dec 2023 19:16:38 +0100
+Message-ID: <CANpmjNPfoLX=HPy0MhbGqMmGT4jE0Ky29cx5QP_8tJ2u=1ju_Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf/bpf: Allow a bpf program to suppress I/O signals.
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	Kyle Huey <me@kylehuey.com>, Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org, 
+	"Robert O'Callahan" <robert@ocallahan.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 30, 2023 at 12:23:13PM +0000, Mark Rutland wrote:
-> On Thu, Nov 30, 2023 at 11:48:54AM +0000, Mark Rutland wrote:
-> > On Wed, Nov 29, 2023 at 04:35:01PM +0000, Mark Rutland wrote:
-> > > Does RR set any of the perf_event_attr::exclude_* bits? If not, does RR
-> > > intentionally count events that occur within the kernel?
-> > 
-> > Looking at the test, I see it sets perf_event_attr::exclude_kernel to 1, but
-> > doesn't set perf_event_attr::exclude_host or perf_event_attr::exclude_hv. I
-> > think the poorly-defined exclude_* bits are part of the problem here.
-> > 
-> > Using your test as-is on my ThunderX2, I can reproduce the period being longer
-> > than expected by concurrently running the following in a shell:
-> > 
-> >   while true; do
-> >     for C in $(seq 0 63); do
-> >       taskset -c -p $C ${TEST_PID_HERE};
-> >     done; 
-> >   done > /dev/null
-> > 
-> > ... resulting in:
-> > 
-> > | [mark@gravadlaks:~]% ./counter-overflow                                     
-> > | Pid 20060 running with period 10000 tolerance 1000
-> > | Signal #1: last: 0, cur: 10292, max diff: 0
-> > | Signal #415330: delta of 19999 is outside 10000 +/- 1000
-> > | Signal #415330: last: 4153290187, cur: 4153310186, max diff: 10292
-> > | Signal #489879: delta of 19998 is outside 10000 +/- 1000
-> > | Signal #511842: delta of 20058 is outside 10000 +/- 1000
-> > | Signal #511842: last: 5118430130, cur: 5118450188, max diff: 19999
-> > 
-> > However, if I modify the test to also set perf_event_attr::exclude_host=1, I do
-> > not see any lost overflows after many minutes. On VHE hosts (like the
-> > ThunderX2), the host kernel gets counted when perf_event_attr::exclude_host=0,
-> > even if perf_event_attr::exclude_kernel=1 (which I agree is surprising), so I
-> > think what's happening is the counters are counting in the host kernel, which
-> > isn't what RR actually wants regardless.
-> 
-> > I'll continue to look at what we can do kernel-side, but I reckon it's worth
-> > having RR try the other exclude bits regardless, if that's possible? It would
-> > be interesting to know whether that helps you under a hypervisor.
-> 
-> Sorry, the above is wrong, and I do not recommend RR goes and changes its
-> exclude_* settings.
-> 
-> I had misread the logic in armv8pmu_set_event_filter(), but looking again
-> that's saner than I thought it was, and what was actually happening in my
-> testing is that exclude_host also filtered host EL0 (userspace), and so the
-> test received *no* overflow signals.
-> 
-> I'll get back to looking at how we can better capture the overflow when
-> removing an event.
+On Tue, 5 Dec 2023 at 19:07, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> Add Marco Elver to CC.
+>
+> On Tue, Dec 5, 2023 at 3:16=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
+te:
+> >
+> > On Mon, Dec 04, 2023 at 02:18:49PM -0800, Andrii Nakryiko wrote:
+> > > On Mon, Dec 4, 2023 at 12:14=E2=80=AFPM Kyle Huey <me@kylehuey.com> w=
+rote:
+> > > >
+> > > > Returning zero from a bpf program attached to a perf event already
+> > > > suppresses any data output. This allows it to suppress I/O availabi=
+lity
+> > > > signals too.
+> > >
+> > > make sense, just one question below
+> > >
+> > > >
+> > > > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> >
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> >
+> > > > ---
+> > > >  kernel/events/core.c | 4 +++-
+> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > > index b704d83a28b2..34d7b19d45eb 100644
+> > > > --- a/kernel/events/core.c
+> > > > +++ b/kernel/events/core.c
+> > > > @@ -10417,8 +10417,10 @@ static void bpf_overflow_handler(struct pe=
+rf_event *event,
+> > > >         rcu_read_unlock();
+> > > >  out:
+> > > >         __this_cpu_dec(bpf_prog_active);
+> > > > -       if (!ret)
+> > > > +       if (!ret) {
+> > > > +               event->pending_kill =3D 0;
+> > > >                 return;
+> > > > +       }
+> > >
+> > > What's the distinction between event->pending_kill and
+> > > event->pending_wakeup? Should we do something about pending_wakeup?
+> > > Asking out of complete ignorance of all these perf specifics.
+> > >
+> >
+> > I think zeroing pending_kill is enough.. when it's set the perf code
+> > sets pending_wakeup to call perf_event_wakeup in irq code that wakes
+> > up event's ring buffer readers and sends sigio if pending_kill is set
+>
+> Right, IIUC pending_wakeup is set by the ring buffer code when
+> a task is waiting for events and it gets enough events (watermark).
+> So I think it's good for ring buffer to manage the pending_wakeup.
+>
+> And pending_kill is set when a task wants a signal delivery even
+> without getting enough events.  Clearing pending_kill looks ok
+> to suppress normal signals but I'm not sure if it's ok for SIGTRAP.
+>
+> If we want to handle returning 0 from bpf as if the event didn't
+> happen, I think SIGTRAP and event_limit logic should be done
+> after the overflow handler depending on pending_kill or something.
 
-I've spent a couple of days on this, and I have a prototype at:
+I'm not sure which kernel version this is for, but in recent kernels,
+the SIGTRAP logic was changed to no longer "abuse" event_limit, and
+uses its own "pending_sigtrap" + "pending_work" (on reschedule
+transitions).
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=perf/overflow
-
-The gist of that is:
-
-* It's not viable to sample at start/stop time since we don't have all the
-  usual sample state (e.g. pt_regs), which means that we have to save/restore
-  the overflow status and rely on the regular interrupt handler to actually
-  sample after this is restored.
-
-* Saving/restoring the overflow status requires reworking the way we manage the
-  sample period, separating the sample period from the period we program into
-  HW. This part looks fairly sane, but requires some rework of all the arm_pmu
-  drivers.
-
-* We might need a couple of small changes to the perf core code (e.g. for the
-  IOCTLs that mess with the period), and this change is liable to affect other
-  architectures, so we'd need ot go audit that.
-
-I reckon it's possible (with some testing and review) to get something like
-this series merged, but I suspect it's too big for a stable backport.
-
-Mark.
+Thanks,
+-- Marco
