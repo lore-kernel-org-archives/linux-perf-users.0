@@ -1,269 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id A573312C;
-	Tue,  5 Dec 2023 08:34:55 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 753F0139F;
-	Tue,  5 Dec 2023 08:35:41 -0800 (PST)
-Received: from [10.57.43.244] (unknown [10.57.43.244])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DC363F6C4;
-	Tue,  5 Dec 2023 08:34:53 -0800 (PST)
-Message-ID: <0c423476-3126-4bc5-a6df-03c37f107717@arm.com>
-Date: Tue, 5 Dec 2023 16:34:52 +0000
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MmthDo4G"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF221A4
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 08:49:30 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-db54e86b2d1so3769602276.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Dec 2023 08:49:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701794969; x=1702399769; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=il/zOOk1ULaSp4c3ZKjwASqI7JmWGklotUwSmWlNxts=;
+        b=MmthDo4GyoBmUhvDHGw72G01MDqlIvODa/hQIJaBYO9hgqqG53xzEtqM7gWzDs8U4N
+         VdXtcO7F5Bm4sWPPbsXjwi85nRkOqiy4X7W5o4hXuksGEWZvuab5ApIi0lg3dllLzM3y
+         /pFJ0yFA6vcJldgWu8d/Er50IQWisih7fMxW04E1+gA6tr9Dz6wRbfX7auCF1L+P5rWL
+         ArWdVjJA1EfOlHQ/r8DQ/Zq/QFwvnQFOt9ROehJpW0P9D3dw0kSzhY6b/dwUYb62jQGj
+         rLG/dcxCrKSO9vUodXOiOjhR1KdWQIlK5SeNWFSIbLMYlOUChqL3m1z24CEEM8/gI1jQ
+         QF9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701794969; x=1702399769;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=il/zOOk1ULaSp4c3ZKjwASqI7JmWGklotUwSmWlNxts=;
+        b=N+V9GeWf1VMHtOiaqTfGj6Et103xKrqzyGl2XxR7YYpomhqSer8kIZAP5E099Ewgep
+         5Ij5oogs3LU1tvGcp6o5/YXKDaLKuXJbV6tFCCIxM042kRQwWE5ohpf0CFbSWJEyZcnK
+         VT/bHTUYrR7sT4cz32Ap+QFGor2rgWXqTu6Xj00MDOzQzP+5045vIbFiXNPsk/hwYe64
+         MvETskx5K8XcjyF7jSkgKlJGbVViR42AxvkHRzK9Dijnmwp3ZlW3GfWrG1cmemVzuCph
+         M4YCRLeZWHKIemG9UoLWgoZOxiEMjWncBWEaI5G+wxuMkSSVZnJ3nbdk2LU9jizCZRLX
+         AZIg==
+X-Gm-Message-State: AOJu0Yy+urlbeAsYBo4/444WWLlJzb36UUjpXjFint0P01xBpJG3XQQl
+	fZB6ogcdZDjMlTYGTREjPgk4qG1TQlEL
+X-Google-Smtp-Source: AGHT+IGoDtCBJ0f3p67GriPcyTyEC/v0B8VEJ3bmRMBIBhC7lrA/02mGuUcOOfRJOYzn2EGGrDTf4e+ilDDN
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:48b6:2578:1ca7:5287])
+ (user=irogers job=sendgmr) by 2002:a05:6902:51:b0:da3:b467:af07 with SMTP id
+ m17-20020a056902005100b00da3b467af07mr60835ybh.2.1701794969538; Tue, 05 Dec
+ 2023 08:49:29 -0800 (PST)
+Date: Tue,  5 Dec 2023 08:49:24 -0800
+Message-Id: <20231205164924.835682-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/3] arm64: perf: Add support for event counting
- threshold
-Content-Language: en-GB
-To: James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- mark.rutland@arm.com, anshuman.khandual@arm.com, namhyung@gmail.com,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231124102857.1106453-1-james.clark@arm.com>
- <20231124102857.1106453-3-james.clark@arm.com>
- <20231205131414.GA18119@willie-the-truck>
- <1a74fef6-7f51-a518-4258-5f693b56add9@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <1a74fef6-7f51-a518-4258-5f693b56add9@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
+Subject: [PATCH v1] perf test: Skip diff test if test_loop is missing
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 05/12/2023 15:05, James Clark wrote:
-> 
-> 
-> On 05/12/2023 13:14, Will Deacon wrote:
->> On Fri, Nov 24, 2023 at 10:28:56AM +0000, James Clark wrote:
->>> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
->>> index 1d40d794f5e4..eb1ef84e1dbb 100644
->>> --- a/drivers/perf/arm_pmuv3.c
->>> +++ b/drivers/perf/arm_pmuv3.c
->>> @@ -15,6 +15,7 @@
->>>   #include <clocksource/arm_arch_timer.h>
->>>   
->>>   #include <linux/acpi.h>
->>> +#include <linux/bitfield.h>
->>>   #include <linux/clocksource.h>
->>>   #include <linux/of.h>
->>>   #include <linux/perf/arm_pmu.h>
->>> @@ -294,9 +295,20 @@ static const struct attribute_group armv8_pmuv3_events_attr_group = {
->>>   	.is_visible = armv8pmu_event_attr_is_visible,
->>>   };
->>>   
->>> +#define THRESHOLD_LOW		2
->>> +#define THRESHOLD_HIGH		13
->>> +#define THRESHOLD_CNT		14
->>> +#define THRESHOLD_CMP_LO	15
->>> +#define THRESHOLD_CMP_HI	16
->>
->> Do you think THWIDTH might extend beyond 12 bits in future? If so, it might
->> be worth juggling these bits around a bit so it's not sandwiched between
->> 'rdpmc' and 'threshold_compare'. I defer to your judgement, however.
->>
-> 
-> It's possible, both PMMIR.THWIDTH and PMEVTYPER.TH currently have unused
-> bits above them. I can easily move threshold to the end, I suppose that
-> covers us at least until someone adds a new field above that.
-> 
->>>   PMU_FORMAT_ATTR(event, "config:0-15");
->>>   PMU_FORMAT_ATTR(long, "config1:0");
->>>   PMU_FORMAT_ATTR(rdpmc, "config1:1");
->>> +PMU_FORMAT_ATTR(threshold, "config1:" __stringify(THRESHOLD_LOW) "-"
->>> +				      __stringify(THRESHOLD_HIGH));
->>> +PMU_FORMAT_ATTR(threshold_compare, "config1:" __stringify(THRESHOLD_CMP_LO) "-"
->>> +					      __stringify(THRESHOLD_CMP_HI));
->>> +PMU_FORMAT_ATTR(threshold_count, "config1:" __stringify(THRESHOLD_CNT));
->>>   
->>>   static int sysctl_perf_user_access __read_mostly;
->>>   
->>> @@ -310,10 +322,33 @@ static inline bool armv8pmu_event_want_user_access(struct perf_event *event)
->>>   	return event->attr.config1 & 0x2;
->>>   }
->>>   
->>> +static inline u32 armv8pmu_event_threshold(struct perf_event_attr *attr)
->>> +{
->>> +	return FIELD_GET(GENMASK(THRESHOLD_HIGH, THRESHOLD_LOW), attr->config1);
->>> +}
->>> +
->>> +static inline u8 armv8pmu_event_threshold_control(struct perf_event_attr *attr)
->>
->> You can drop the 'inline's for these functions (and, in fact, this whole
->> file could do with that cleanup :)
->>
-> 
-> Will do.
-> 
->>> +{
->>> +	u8 th_compare = FIELD_GET(GENMASK(THRESHOLD_CMP_HI, THRESHOLD_CMP_LO),
->>> +				  attr->config1);
->>> +	u8 th_count = FIELD_GET(BIT(THRESHOLD_CNT), attr->config1);
->>
->> I think this is correct, but you might want to look at how we handle this
->> in the SPE driver as I think it ends up looking cleaner and makes it pretty
->> obvious which bits correspond to the user ABI (i.e. config fields) and which
->> bits are part of architectural registers. I'm not saying you have to do it
->> that way, but please take a look if you haven't already.
->>
-> 
-> Yeah I could take the GEN_PMU_FORMAT_ATTR() etc macros out of there and
-> re-use them here too. And also for the other existing configs in
-> arm_pmuv3.c.
-> 
->>> +	/*
->>> +	 * The count bit is always the bottom bit of the full control field, and
->>> +	 * the comparison is the upper two bits, but it's not explicitly
->>> +	 * labelled in the Arm ARM. For the Perf interface we split it into two
->>> +	 * fields, so reconstruct it here.
->>> +	 */
->>> +	return (th_compare << 1) | th_count;
->>> +}
->>> +
->>>   static struct attribute *armv8_pmuv3_format_attrs[] = {
->>>   	&format_attr_event.attr,
->>>   	&format_attr_long.attr,
->>>   	&format_attr_rdpmc.attr,
->>> +	&format_attr_threshold.attr,
->>> +	&format_attr_threshold_compare.attr,
->>> +	&format_attr_threshold_count.attr,
->>>   	NULL,
->>>   };
->>>   
->>> @@ -365,10 +400,38 @@ static ssize_t bus_width_show(struct device *dev, struct device_attribute *attr,
->>>   
->>>   static DEVICE_ATTR_RO(bus_width);
->>>   
->>> +static u32 threshold_max(struct arm_pmu *cpu_pmu)
->>> +{
->>> +	/*
->>> +	 * PMMIR.THWIDTH is readable and non-zero on aarch32, but it would be
->>> +	 * impossible to write the threshold in the upper 32 bits of PMEVTYPER.
->>> +	 */
->>> +	if (IS_ENABLED(CONFIG_ARM))
->>> +		return 0;
->>> +
->>> +	/*
->>> +	 * The largest value that can be written to PMEVTYPER<n>_EL0.TH is
->>> +	 * (2 ^ PMMIR.THWIDTH) - 1.
->>> +	 */
->>> +	return (1 << FIELD_GET(ARMV8_PMU_THWIDTH, cpu_pmu->reg_pmmir)) - 1;
->>> +}
->>> +
->>> +static ssize_t threshold_max_show(struct device *dev,
->>> +				  struct device_attribute *attr, char *page)
->>> +{
->>> +	struct pmu *pmu = dev_get_drvdata(dev);
->>> +	struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
->>> +
->>> +	return sysfs_emit(page, "0x%08x\n", threshold_max(cpu_pmu));
->>> +}
->>> +
->>> +static DEVICE_ATTR_RO(threshold_max);
->>> +
->>>   static struct attribute *armv8_pmuv3_caps_attrs[] = {
->>>   	&dev_attr_slots.attr,
->>>   	&dev_attr_bus_slots.attr,
->>>   	&dev_attr_bus_width.attr,
->>> +	&dev_attr_threshold_max.attr,
->>>   	NULL,
->>>   };
->>>   
->>> @@ -552,7 +615,7 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
->>>   		armv8pmu_write_hw_counter(event, value);
->>>   }
->>>   
->>> -static inline void armv8pmu_write_evtype(int idx, u32 val)
->>> +static inline void armv8pmu_write_evtype(int idx, unsigned long val)
->>>   {
->>>   	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
->>>   	unsigned long mask = ARMV8_PMU_EVTYPE_EVENT |
->>> @@ -921,6 +984,10 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
->>>   				     struct perf_event_attr *attr)
->>>   {
->>>   	unsigned long config_base = 0;
->>> +	struct perf_event *perf_event = container_of(attr, struct perf_event,
->>> +						     attr);
->>> +	struct arm_pmu *cpu_pmu = to_arm_pmu(perf_event->pmu);
->>> +	u32 th, th_max;
->>>   
->>>   	if (attr->exclude_idle)
->>>   		return -EPERM;
->>> @@ -952,6 +1019,21 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
->>>   	if (attr->exclude_user)
->>>   		config_base |= ARMV8_PMU_EXCLUDE_EL0;
->>>   
->>> +	/*
->>> +	 * Insert event counting threshold (FEAT_PMUv3_TH) values. If
->>> +	 * FEAT_PMUv3_TH isn't implemented, then THWIDTH (threshold_max) will be
->>> +	 * 0 and no values will be written.
->>> +	 */
->>> +	th_max = threshold_max(cpu_pmu);
->>> +	if (IS_ENABLED(CONFIG_ARM64) && th_max) {
->>
->> Why is the IS_ENABLED() check needed here?
->>
-> 
-> The FIELD_PREP() below would cause a compilation error on arm32 because
-> TH and TC are above 32 bits. I can add a comment.
-> 
->>> +		th = min(armv8pmu_event_threshold(attr), th_max);
->>> +		if (th) {
->>
->> Why is it useful to take the minimum here? If userspace asks for a value
->> bigger than the maximum support threshold, shouldn't we return an error
->> rather than silently clamp it?
->>
-> 
-> I think it probably was just so I didn't have to think about what would
-> happen when the value varied between cores.
-> 
-> But you're right, it looks like I can add a validation function to
-> struct arm_pmu and call it from armpmu_event_init(). armpmu->map_event()
-> and armpmu->set_event_filter() are already called from there so I think
-> the validation could technically be added to one of those, but that's
-> probably a bit hacky. I don't know if you have any preference for where
-> the threshold validation should happen?
+The diff test depends on finding the symbol test_loop in perf and will
+fail if perf has been stripped and no debug object is available. In
+that case, skip the test instead.
 
-I think the other reason was to make sure we never set those fields for
-something that doesn't support the feature ? (Given th_max is set to 0
-in that case). But I agree that validation is a better approach than
-silently masking it.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/diff.sh | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Suzuki
-
-
-
-> 
->>> +			config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TH, th);
->>> +			config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TC,
->>> +						  armv8pmu_event_threshold_control(attr));
->>> +		}
->>> +	}
->>> +
->>>   	/*
->>>   	 * Install the filter into config_base as this is used to
->>>   	 * construct the event type.
->>> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
->>> index ddd1fec86739..ccbc0f9a74d8 100644
->>> --- a/include/linux/perf/arm_pmuv3.h
->>> +++ b/include/linux/perf/arm_pmuv3.h
->>> @@ -258,6 +258,7 @@
->>>   #define ARMV8_PMU_BUS_SLOTS_MASK 0xff
->>>   #define ARMV8_PMU_BUS_WIDTH_SHIFT 16
->>>   #define ARMV8_PMU_BUS_WIDTH_MASK 0xf
->>> +#define ARMV8_PMU_THWIDTH GENMASK(23, 20)
->>
->> It's a bit messy having a mixture of GENMASK and MASK/SHIFT pairs. Please
->> can you either update what's there to use GENMASK, or use SHIFT/MASK for the
->> new addition?
->>
->> Will
->>
-> 
-> Yep will do. Thanks for the review.
-> 
-> James
+diff --git a/tools/perf/tests/shell/diff.sh b/tools/perf/tests/shell/diff.sh
+index 213185763688..14b87af88703 100755
+--- a/tools/perf/tests/shell/diff.sh
++++ b/tools/perf/tests/shell/diff.sh
+@@ -9,8 +9,15 @@ perfdata1=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ perfdata2=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ perfdata3=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ testprog="perf test -w thloop"
++
++shelldir=$(dirname "$0")
++# shellcheck source=lib/perf_has_symbol.sh
++. "${shelldir}"/lib/perf_has_symbol.sh
++
+ testsym="test_loop"
+ 
++skip_test_missing_symbol ${testsym}
++
+ cleanup() {
+   rm -rf "${perfdata1}"
+   rm -rf "${perfdata1}".old
+-- 
+2.43.0.rc2.451.g8631bc7472-goog
 
