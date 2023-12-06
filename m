@@ -1,212 +1,145 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CQ1/Dmfu"
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6E4D6F
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 10:50:52 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-50beed2a46eso336e87.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 10:50:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701888651; x=1702493451; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MiEVffTns7PIqQ/RAadvgn3sb/RobCrYF2AQlXdHHDA=;
-        b=CQ1/DmfurmbzdEo7Xg/Y72BzCXhXjbnZuLRy9f/R5ZsmXwT3crBN9sMU93OTxkMgxK
-         QXhAzJjvuj+Fmj4LYXx5lOviOoXpZ6cQhJ8CIsaKG+ZziLMcGYqzP4Niv6PQJ3ID1GFJ
-         GiFS9sKXuj1pVp8PxKr+fJTjRHi/uxM3bGV55g6E6S07aX0RnXJAIUgyAiJTBb9ymNAB
-         GMqkh2rxrJJqNNIxCSJThN+0iQgyTo7UCSL06AyZZVq6pUH/QvFqGny1bMzt+wHY+RcW
-         GpGuOCe77BgGfMx9Wuzf0fZCUFNnU2aKg2cI32K+j4Ys8OQ3/3MunKVg+cfqW701r66U
-         r3qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701888651; x=1702493451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MiEVffTns7PIqQ/RAadvgn3sb/RobCrYF2AQlXdHHDA=;
-        b=ZoZBZX0DOsys/P4vIfn4fKHVC5dPda1IUcprzCB64GT4dYeTAqGUhS0vYE9HkyXKla
-         lWZqMQ9fVayHNWUxObdqqF5kLZu16Og39BLGngUv4ElRtJAcnSxdTf4B9eBU6gkMOjzI
-         qyrZVDB+Kfy3fIoqhJ/QfDJKIsvw2IeJpAxoNkUoPiTP0Iaqpj4tOh7GF2R6s/V73E6s
-         8WwKFhiNIDv5U7wDSHsPxDM3bW0iEX7c8I+wvFYhSrcs2cC7bPIWr7riuRN7prB+Dvkr
-         ZRRNeTAqHkRkgXCZOk7aJ8Z9EVSgB7VvL5T1m9Vkc9eoa3MDHZYH9gsIgnn4gkfBo4os
-         TkUQ==
-X-Gm-Message-State: AOJu0YzLWNraYkx0eU8Hou6JLRVdxiczTlTuNqehhXUXguoDYOSugxrN
-	MzRzTV3kLR5DnMOdiOYoSBDgmJpvxYEm7rEMw2GpUQ==
-X-Google-Smtp-Source: AGHT+IF1NKwWhmuZPkZcFo+RgjaoJj8x930q4YdMfIeeSSthD+3IZUr3jkeZx0WAFgBi7l4yz1zEFi145oH2+YCDCv0=
-X-Received: by 2002:a05:6512:3452:b0:50b:f51a:2999 with SMTP id
- j18-20020a056512345200b0050bf51a2999mr74435lfr.4.1701888650850; Wed, 06 Dec
- 2023 10:50:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YoGugz8N"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA3D31A5;
+	Wed,  6 Dec 2023 12:13:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701893612; x=1733429612;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NtWRySGhr0Bbdk5ZktY4nQZC/k3j2mpJylW2qfJns3c=;
+  b=YoGugz8Nfv7j+dlCh7/G5wv/6nUUjUjGOTdNs57RfVfGIt/4FbTfbm3Z
+   DoI606tmad9aNqdqyO4lhe9Vz3T8hNQOAgqnKOZkklqk6nvJmTwvgQhDU
+   3KIVSNrJ1Id7i8p6KBNI653zgyOHL80cln/pHY161bPukPZkLRJ7/nAzT
+   Np3OtSGy3O+zsWkpjxatshvMA/l1w0cwNkH3JSzd6g1e1kzw3uu1fdrTs
+   c9plU6lITlM1bpafrJF1BCh0wx9etyMr6tDnI4Su4k4OnOCDtqrtzl98M
+   dNoYWFBlMoYS4NZzhUY/kF1mhYYFCj1Lxip8u3bIV4VL0cfZZJiGNLUzZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="458445527"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="458445527"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 12:13:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="944766664"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="944766664"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orsmga005.jf.intel.com with ESMTP; 06 Dec 2023 12:13:31 -0800
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	irogers@google.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	john.g.garry@oracle.com,
+	will@kernel.org,
+	james.clark@arm.com,
+	mike.leach@linaro.org,
+	leo.yan@linaro.org,
+	yuhaixin.yhx@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com,
+	tmricht@linux.ibm.com,
+	ravi.bangoria@amd.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 0/6] Clean up perf mem
+Date: Wed,  6 Dec 2023 12:13:18 -0800
+Message-Id: <20231206201324.184059-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230614090710.680330-1-sandipan.das@amd.com> <1320e6e3-c029-2a8c-e8b7-2cfbb781518a@amd.com>
- <ZXByT1K6enTh2EHT@kernel.org> <CAP-5=fUoD=s9yyVPgV7tqGwZsJVQMSmHKd8MV_vJW438AcK9qQ@mail.gmail.com>
- <ZXC1U8y4JAUaQ6lm@kernel.org>
-In-Reply-To: <ZXC1U8y4JAUaQ6lm@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 6 Dec 2023 10:50:39 -0800
-Message-ID: <CAP-5=fW_2iWEyOKao8MpMZWu7AQNX6-UKN1nEhr=mMxk0fUJKg@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Retry without grouping for all metrics test
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ayush Jain <ayush.jain3@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	peterz@infradead.org, Ingo Molnar <mingo@kernel.org>, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, kjain@linux.ibm.com, 
-	atrajeev@linux.vnet.ibm.com, barnali@linux.ibm.com, ananth.narayan@amd.com, 
-	ravi.bangoria@amd.com, santosh.shukla@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 6, 2023 at 9:54=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> Em Wed, Dec 06, 2023 at 08:35:23AM -0800, Ian Rogers escreveu:
-> > On Wed, Dec 6, 2023 at 5:08=E2=80=AFAM Arnaldo Carvalho de Melo <acme@k=
-ernel.org> wrote:
-> > > Humm, I'm not being able to reproduce here the problem, before applyi=
-ng
-> > > this patch:
->
-> > Please don't apply the patch. The patch masks a bug in metrics/PMUs
->
-> I didn't
->
-> > and the proper fix was:
-> > 8d40f74ebf21 perf vendor events amd: Fix large metrics
-> > https://lore.kernel.org/r/20230706063440.54189-1-sandipan.das@amd.com
->
-> that is upstream:
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ git log tools/perf/pmu-events/ar=
-ch/x86/amdzen1/recommended.json
-> commit 8d40f74ebf217d3b9e9b7481721e6236b857cc55
-> Author: Sandipan Das <sandipan.das@amd.com>
-> Date:   Thu Jul 6 12:04:40 2023 +0530
->
->     perf vendor events amd: Fix large metrics
->
->     There are cases where a metric requires more events than the number o=
-f
->     available counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have fou=
-r
->     data fabric counters but the "nps1_die_to_dram" metric has eight even=
-ts.
->
->     By default, the constituent events are placed in a group and since th=
-e
->     events cannot be scheduled at the same time, the metric is not comput=
-ed.
->     The "all metrics" test also fails because of this.
->
->     Use the NO_GROUP_EVENTS constraint for such metrics which anyway expe=
-ct
->     the user to run perf with "--metric-no-group".
->
->     E.g.
->
->       $ sudo perf test -v 101
->
->     Before:
->
->       101: perf all metrics test                                         =
-  :
->       --- start ---
->       test child forked, pid 37131
->       Testing branch_misprediction_ratio
->       Testing all_remote_links_outbound
->       Testing nps1_die_to_dram
->       Metric 'nps1_die_to_dram' not printed in:
->       Error:
->       Invalid event (dram_channel_data_controller_4) in per-thread mode, =
-enable system wide with '-a'.
->       Testing macro_ops_dispatched
->       Testing all_l2_cache_accesses
->       Testing all_l2_cache_hits
->       Testing all_l2_cache_misses
->       Testing ic_fetch_miss_ratio
->       Testing l2_cache_accesses_from_l2_hwpf
->       Testing l2_cache_misses_from_l2_hwpf
->       Testing op_cache_fetch_miss_ratio
->       Testing l3_read_miss_latency
->       Testing l1_itlb_misses
->       test child finished with -1
->       ---- end ----
->       perf all metrics test: FAILED!
->
->     After:
->
->       101: perf all metrics test                                         =
-  :
->       --- start ---
->       test child forked, pid 43766
->       Testing branch_misprediction_ratio
->       Testing all_remote_links_outbound
->       Testing nps1_die_to_dram
->       Testing macro_ops_dispatched
->       Testing all_l2_cache_accesses
->       Testing all_l2_cache_hits
->       Testing all_l2_cache_misses
->       Testing ic_fetch_miss_ratio
->       Testing l2_cache_accesses_from_l2_hwpf
->       Testing l2_cache_misses_from_l2_hwpf
->       Testing op_cache_fetch_miss_ratio
->       Testing l3_read_miss_latency
->       Testing l1_itlb_misses
->       test child finished with 0
->       ---- end ----
->       perf all metrics test: Ok
->
->     Reported-by: Ayush Jain <ayush.jain3@amd.com>
->     Suggested-by: Ian Rogers <irogers@google.com>
->     Signed-off-by: Sandipan Das <sandipan.das@amd.com>
->     Acked-by: Ian Rogers <irogers@google.com>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Ananth Narayan <ananth.narayan@amd.com>
->     Cc: Ingo Molnar <mingo@redhat.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: Mark Rutland <mark.rutland@arm.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Ravi Bangoria <ravi.bangoria@amd.com>
->     Cc: Santosh Shukla <santosh.shukla@amd.com>
->     Link: https://lore.kernel.org/r/20230706063440.54189-1-sandipan.das@a=
-md.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com
->
-> > > Ian, I also stumbled on this:
->
-> > > [root@five ~]# perf stat -M dram_channel_data_controller_4
-> > > Cannot find metric or group `dram_channel_data_controller_4'
-> > > ^C
-> > >  Performance counter stats for 'system wide':
->
-> > >         284,908.91 msec cpu-clock                        #   32.002 C=
-PUs utilized
-> > >          6,485,456      context-switches                 #   22.763 K=
-/sec
-> > >                719      cpu-migrations                   #    2.524 /=
-sec
-> > >             32,800      page-faults                      #  115.125 /=
-sec
->
-> <SNIP>
->
-> > > I.e. -M should bail out at that point (Cannot find metric or group `d=
-ram_channel_data_controller_4'), no?
->
-> > We could. I suspect the code has always just not bailed out. I'll put
-> > together a patch adding the bail out.
->
-> Great, thanks,
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Sent:
-https://lore.kernel.org/lkml/20231206183533.972028-1-irogers@google.com/
+As discussed in the below thread, the patch set is to clean up perf mem.
+https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com/
 
-Thanks,
-Ian
+Introduce generic functions perf_mem_events__ptr(),
+perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+ARCH specific ones.
+Simplify the perf_mem_event__supported().
 
-> - Arnaldo
+Only keeps the ARCH-specific perf_mem_events array in the corresponding
+mem-events.c for each ARCH.
+
+There is no functional change.
+
+The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+etc. But I can only test it on two Intel platforms.
+Please give it try, if you have machines with other ARCHs.
+
+Here are the test results:
+Intel hybrid machine:
+
+$perf mem record -e list
+ldlat-loads  : available
+ldlat-stores : available
+
+$perf mem record -e ldlat-loads -v --ldlat 50
+calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
+
+$perf mem record -v
+calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
+
+$perf mem record -t store -v
+calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+
+
+Intel SPR:
+$perf mem record -e list
+ldlat-loads  : available
+ldlat-stores : available
+
+$perf mem record -e ldlat-loads -v --ldlat 50
+calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
+
+$perf mem record -v
+calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
+
+$perf mem record -t store -v
+calling: record -e cpu/mem-stores/P
+
+Kan Liang (6):
+  perf mem: Add mem_events into the supported perf_pmu
+  perf mem: Clean up perf_mem_events__ptr()
+  perf mem: Clean up perf_mem_events__name()
+  perf mem: Clean up perf_mem_event__supported()
+  perf mem: Clean up is_mem_loads_aux_event()
+  perf mem: Remove useless header files for X86
+
+ tools/perf/arch/arm64/util/mem-events.c   |  36 +----
+ tools/perf/arch/arm64/util/mem-events.h   |   7 +
+ tools/perf/arch/arm64/util/pmu.c          |   6 +
+ tools/perf/arch/powerpc/util/mem-events.c |  13 +-
+ tools/perf/arch/powerpc/util/mem-events.h |   7 +
+ tools/perf/arch/powerpc/util/pmu.c        |  11 ++
+ tools/perf/arch/s390/util/pmu.c           |   3 +
+ tools/perf/arch/x86/util/mem-events.c     |  99 +++---------
+ tools/perf/arch/x86/util/mem-events.h     |  10 ++
+ tools/perf/arch/x86/util/pmu.c            |  11 ++
+ tools/perf/builtin-c2c.c                  |  28 +++-
+ tools/perf/builtin-mem.c                  |  28 +++-
+ tools/perf/util/mem-events.c              | 177 +++++++++++++---------
+ tools/perf/util/mem-events.h              |  15 +-
+ tools/perf/util/pmu.c                     |   4 +-
+ tools/perf/util/pmu.h                     |   7 +
+ 16 files changed, 248 insertions(+), 214 deletions(-)
+ create mode 100644 tools/perf/arch/arm64/util/mem-events.h
+ create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
+ create mode 100644 tools/perf/arch/powerpc/util/pmu.c
+ create mode 100644 tools/perf/arch/x86/util/mem-events.h
+
+-- 
+2.35.1
+
