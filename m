@@ -1,408 +1,174 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAF3364B2
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:54:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SdOs6O0o"
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7246FD4D
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 08:35:37 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40b367a0a12so73905e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 08:35:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701880536; x=1702485336; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZwXChD+JHtHoNewTIq7HYYHZALw78wtpVyKJu1FT1Lk=;
-        b=SdOs6O0osffINaMxi8LnooBm4HilVcu/sNKWgg0rPlSNpajM1yxb6tzdSyfit2oujM
-         P4rzVyXLZ1LDUcMQC+DZeKpi+bXbVembUJeiGvAB3XS35j9INSUe7xWldDLkRiolXFI5
-         ajCeVZ7R8IaQt5OJADd+ag0CGZuYXLw7DuFrD++9rfOjyX2+dkVWDNTRN2wXVpeREa8V
-         nn9gMGrT/LYoAmHkd0GiLV64axFSh5rTfsE64Pwd6s7hIoa/A125fgd2b43cmCPBuGtT
-         vIxP5vFsK6ahW2/m91/kxYCCIfybcB7yTdM0PJmd3GqNuRG50y3a5paHg1vTyNV59WBX
-         +Utg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701880536; x=1702485336;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZwXChD+JHtHoNewTIq7HYYHZALw78wtpVyKJu1FT1Lk=;
-        b=nWYL7DTqqJyLFyFvKK3gvypuElDDpFDFkTLHMFHt12EZHBwjQi4iFnkIWM9sgHIBCD
-         zftHG0K1nww3/d/2sJdQDdZEMunTgOQlcIatTVAGaNrOCnMOA6jsQ/KxwhMZEIc18h+W
-         bFur0MVAf3l/hIkOlWY9mwbypa1ZjUE8lWFnM+gLk7ckmgdo2q0FUgw4vC0241GjW1KS
-         cNf3dhJIQ2Pc6nuHuAGdP3L53ZXNY48UjJ81beoMKaM1vm8kqsPgVR+n8sDN/0UeMUD7
-         ew26LqyzCDaw1iDntyvmT/m9gDFTobcOJZlakpXIaCCClV6Ijk+UhXgkDdXug17wTd24
-         Ssog==
-X-Gm-Message-State: AOJu0YxBwq6B4LGA2uDZhwH85yH07Z526ebb5AlCeOHuEkDiBmCeoDn2
-	1BkjoTpexz4dkor8mXHjGARAJR6/U/B2fA/5ym6IQA==
-X-Google-Smtp-Source: AGHT+IEasvFjjpDTNupV2KZHiyAZK/rOGxC1f33ZRbIA7wVMo6yktInLqOLX0shy4Qu6vYRpuxVZtqoJm9BwaRJf29k=
-X-Received: by 2002:a05:600c:231a:b0:405:320a:44f9 with SMTP id
- 26-20020a05600c231a00b00405320a44f9mr80482wmo.5.1701880535614; Wed, 06 Dec
- 2023 08:35:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y/BIu5Ah"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD1DC433C7;
+	Wed,  6 Dec 2023 17:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701885270;
+	bh=2tDbHUTnzhDqadtqq25zkKFvVdsHBy1BabMsSbHH1NM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y/BIu5AhIWQu8lordRw4GUGC6QE/Qmhc85FS1bDfJXIZzFp3Ael8yQcVmw6B7nruV
+	 7XgMQnmAiQdcNGHUldQ+Ao9W5GIgS956FnPuvgbFfc3BvxQxTFqYqmiKZAXl/8JyQJ
+	 y2mz3ncsM0x/c42uxQXZ+p9chQEacmRpt3EEq3aN5b1i8vpsbZklVB9ZPd8x8tvulK
+	 qXa3L0CymewN1R4Zv71fKHhSYT3Ar8f5P93mCaPwFP3CF9kfWpfZESWIUqXVnzwEum
+	 FN6ViiLpeDgURjoEdfYZZBU01GuPnIOZA7oo626plAnjCvnoodMupBbK9ORoVRRRbc
+	 b34ZbL86mkZ6A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id A81E8403EF; Wed,  6 Dec 2023 14:54:27 -0300 (-03)
+Date: Wed, 6 Dec 2023 14:54:27 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Ayush Jain <ayush.jain3@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	peterz@infradead.org, Ingo Molnar <mingo@kernel.org>,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>, kjain@linux.ibm.com,
+	atrajeev@linux.vnet.ibm.com, barnali@linux.ibm.com,
+	ananth.narayan@amd.com, ravi.bangoria@amd.com,
+	santosh.shukla@amd.com
+Subject: Re: [PATCH] perf test: Retry without grouping for all metrics test
+Message-ID: <ZXC1U8y4JAUaQ6lm@kernel.org>
+References: <20230614090710.680330-1-sandipan.das@amd.com>
+ <1320e6e3-c029-2a8c-e8b7-2cfbb781518a@amd.com>
+ <ZXByT1K6enTh2EHT@kernel.org>
+ <CAP-5=fUoD=s9yyVPgV7tqGwZsJVQMSmHKd8MV_vJW438AcK9qQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230614090710.680330-1-sandipan.das@amd.com> <1320e6e3-c029-2a8c-e8b7-2cfbb781518a@amd.com>
- <ZXByT1K6enTh2EHT@kernel.org>
-In-Reply-To: <ZXByT1K6enTh2EHT@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 6 Dec 2023 08:35:23 -0800
-Message-ID: <CAP-5=fUoD=s9yyVPgV7tqGwZsJVQMSmHKd8MV_vJW438AcK9qQ@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Retry without grouping for all metrics test
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ayush Jain <ayush.jain3@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	peterz@infradead.org, Ingo Molnar <mingo@kernel.org>, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, kjain@linux.ibm.com, 
-	atrajeev@linux.vnet.ibm.com, barnali@linux.ibm.com, ananth.narayan@amd.com, 
-	ravi.bangoria@amd.com, santosh.shukla@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUoD=s9yyVPgV7tqGwZsJVQMSmHKd8MV_vJW438AcK9qQ@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-On Wed, Dec 6, 2023 at 5:08=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> Em Wed, Jun 14, 2023 at 05:08:21PM +0530, Ayush Jain escreveu:
-> > On 6/14/2023 2:37 PM, Sandipan Das wrote:
-> > > There are cases where a metric uses more events than the number of
-> > > counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four data fab=
-ric
-> > > counters but the "nps1_die_to_dram" metric has eight events. By defau=
-lt,
-> > > the constituent events are placed in a group. Since the events cannot=
- be
-> > > scheduled at the same time, the metric is not computed. The all metri=
-cs
-> > > test also fails because of this.
->
-> Humm, I'm not being able to reproduce here the problem, before applying
-> this patch:
->
-> [root@five ~]# grep -m1 "model name" /proc/cpuinfo
-> model name      : AMD Ryzen 9 5950X 16-Core Processor
-> [root@five ~]# perf test -vvv "perf all metrics test"
-> 104: perf all metrics test                                           :
-> --- start ---
-> test child forked, pid 1379713
-> Testing branch_misprediction_ratio
-> Testing all_remote_links_outbound
-> Testing nps1_die_to_dram
-> Testing macro_ops_dispatched
-> Testing all_l2_cache_accesses
-> Testing all_l2_cache_hits
-> Testing all_l2_cache_misses
-> Testing ic_fetch_miss_ratio
-> Testing l2_cache_accesses_from_l2_hwpf
-> Testing l2_cache_misses_from_l2_hwpf
-> Testing op_cache_fetch_miss_ratio
-> Testing l3_read_miss_latency
-> Testing l1_itlb_misses
-> test child finished with 0
-> ---- end ----
-> perf all metrics test: Ok
-> [root@five ~]#
+Em Wed, Dec 06, 2023 at 08:35:23AM -0800, Ian Rogers escreveu:
+> On Wed, Dec 6, 2023 at 5:08 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > Humm, I'm not being able to reproduce here the problem, before applying
+> > this patch:
+ 
+> Please don't apply the patch. The patch masks a bug in metrics/PMUs
 
-Please don't apply the patch. The patch masks a bug in metrics/PMUs
-and the proper fix was:
-8d40f74ebf21 perf vendor events amd: Fix large metrics
-https://lore.kernel.org/r/20230706063440.54189-1-sandipan.das@amd.com
+I didn't
 
-> [root@five ~]# perf stat -M nps1_die_to_dram -a sleep 2
->
->  Performance counter stats for 'system wide':
->
->                  0      dram_channel_data_controller_4   #  10885.3 MiB  =
-nps1_die_to_dram       (49.96%)
->         31,334,338      dram_channel_data_controller_1                   =
-                       (50.01%)
->                  0      dram_channel_data_controller_6                   =
-                       (50.04%)
->         54,679,601      dram_channel_data_controller_3                   =
-                       (50.04%)
->         38,420,402      dram_channel_data_controller_0                   =
-                       (50.04%)
->                  0      dram_channel_data_controller_5                   =
-                       (49.99%)
->         54,012,661      dram_channel_data_controller_2                   =
-                       (49.96%)
->                  0      dram_channel_data_controller_7                   =
-                       (49.96%)
->
->        2.001465439 seconds time elapsed
->
-> [root@five ~]#
->
-> [root@five ~]# perf stat -v -M nps1_die_to_dram -a sleep 2
-> Using CPUID AuthenticAMD-25-21-0
-> metric expr dram_channel_data_controller_0 + dram_channel_data_controller=
-_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram=
-_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_=
-data_controller_6 + dram_channel_data_controller_7 for nps1_die_to_dram
-> found event dram_channel_data_controller_4
-> found event dram_channel_data_controller_1
-> found event dram_channel_data_controller_6
-> found event dram_channel_data_controller_3
-> found event dram_channel_data_controller_0
-> found event dram_channel_data_controller_5
-> found event dram_channel_data_controller_2
-> found event dram_channel_data_controller_7
-> Parsing metric events 'dram_channel_data_controller_4/metric-id=3Ddram_ch=
-annel_data_controller_4/,dram_channel_data_controller_1/metric-id=3Ddram_ch=
-annel_data_controller_1/,dram_channel_data_controller_6/metric-id=3Ddram_ch=
-annel_data_controller_6/,dram_channel_data_controller_3/metric-id=3Ddram_ch=
-annel_data_controller_3/,dram_channel_data_controller_0/metric-id=3Ddram_ch=
-annel_data_controller_0/,dram_channel_data_controller_5/metric-id=3Ddram_ch=
-annel_data_controller_5/,dram_channel_data_controller_2/metric-id=3Ddram_ch=
-annel_data_controller_2/,dram_channel_data_controller_7/metric-id=3Ddram_ch=
-annel_data_controller_7/'
-> dram_channel_data_controller_4 -> amd_df/metric-id=3Ddram_channel_data_co=
-ntroller_4,dram_channel_data_controller_4/
-> dram_channel_data_controller_1 -> amd_df/metric-id=3Ddram_channel_data_co=
-ntroller_1,dram_channel_data_controller_1/
-> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
-roller_1'. Missing kernel support? (<no help>)
-> dram_channel_data_controller_6 -> amd_df/metric-id=3Ddram_channel_data_co=
-ntroller_6,dram_channel_data_controller_6/
-> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
-roller_6'. Missing kernel support? (<no help>)
-> dram_channel_data_controller_3 -> amd_df/metric-id=3Ddram_channel_data_co=
-ntroller_3,dram_channel_data_controller_3/
-> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
-roller_3'. Missing kernel support? (<no help>)
-> dram_channel_data_controller_0 -> amd_df/metric-id=3Ddram_channel_data_co=
-ntroller_0,dram_channel_data_controller_0/
-> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
-roller_0'. Missing kernel support? (<no help>)
-> dram_channel_data_controller_5 -> amd_df/metric-id=3Ddram_channel_data_co=
-ntroller_5,dram_channel_data_controller_5/
-> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
-roller_5'. Missing kernel support? (<no help>)
-> dram_channel_data_controller_2 -> amd_df/metric-id=3Ddram_channel_data_co=
-ntroller_2,dram_channel_data_controller_2/
-> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
-roller_2'. Missing kernel support? (<no help>)
-> dram_channel_data_controller_7 -> amd_df/metric-id=3Ddram_channel_data_co=
-ntroller_7,dram_channel_data_controller_7/
-> Matched metric-id dram_channel_data_controller_4 to dram_channel_data_con=
-troller_4
-> Matched metric-id dram_channel_data_controller_1 to dram_channel_data_con=
-troller_1
-> Matched metric-id dram_channel_data_controller_6 to dram_channel_data_con=
-troller_6
-> Matched metric-id dram_channel_data_controller_3 to dram_channel_data_con=
-troller_3
-> Matched metric-id dram_channel_data_controller_0 to dram_channel_data_con=
-troller_0
-> Matched metric-id dram_channel_data_controller_5 to dram_channel_data_con=
-troller_5
-> Matched metric-id dram_channel_data_controller_2 to dram_channel_data_con=
-troller_2
-> Matched metric-id dram_channel_data_controller_7 to dram_channel_data_con=
-troller_7
-> Control descriptor is not initialized
-> dram_channel_data_controller_4: 0 2001175127 999996394
-> dram_channel_data_controller_1: 32346663 2001169897 1000709803
-> dram_channel_data_controller_6: 0 2001168377 1001193443
-> dram_channel_data_controller_3: 47551247 2001166947 1001198122
-> dram_channel_data_controller_0: 38975242 2001165217 1001182923
-> dram_channel_data_controller_5: 0 2001163067 1000464054
-> dram_channel_data_controller_2: 49934162 2001160907 999974934
-> dram_channel_data_controller_7: 0 2001150317 999968825
->
->  Performance counter stats for 'system wide':
->
->                  0      dram_channel_data_controller_4   #  10297.2 MiB  =
-nps1_die_to_dram       (49.97%)
->         32,346,663      dram_channel_data_controller_1                   =
-                       (50.01%)
->                  0      dram_channel_data_controller_6                   =
-                       (50.03%)
->         47,551,247      dram_channel_data_controller_3                   =
-                       (50.03%)
->         38,975,242      dram_channel_data_controller_0                   =
-                       (50.03%)
->                  0      dram_channel_data_controller_5                   =
-                       (49.99%)
->         49,934,162      dram_channel_data_controller_2                   =
-                       (49.97%)
->                  0      dram_channel_data_controller_7                   =
-                       (49.97%)
->
->        2.001196512 seconds time elapsed
->
-> [root@five ~]#
->
-> What am I missing?
->
-> Ian, I also stumbled on this:
->
-> [root@five ~]# perf stat -M dram_channel_data_controller_4
-> Cannot find metric or group `dram_channel_data_controller_4'
-> ^C
->  Performance counter stats for 'system wide':
->
->         284,908.91 msec cpu-clock                        #   32.002 CPUs =
-utilized
->          6,485,456      context-switches                 #   22.763 K/sec
->                719      cpu-migrations                   #    2.524 /sec
->             32,800      page-faults                      #  115.125 /sec
->    189,779,273,552      cycles                           #    0.666 GHz  =
-                       (83.33%)
->      2,893,165,259      stalled-cycles-frontend          #    1.52% front=
-end cycles idle        (83.33%)
->     24,807,157,349      stalled-cycles-backend           #   13.07% backe=
-nd cycles idle         (83.33%)
->     99,286,488,807      instructions                     #    0.52  insn =
-per cycle
->                                                   #    0.25  stalled cycl=
-es per insn     (83.33%)
->     24,120,737,678      branches                         #   84.661 M/sec=
-                       (83.33%)
->      1,907,540,278      branch-misses                    #    7.91% of al=
-l branches             (83.34%)
->
->        8.902784776 seconds time elapsed
->
->
-> [root@five ~]#
-> [root@five ~]# perf stat -e dram_channel_data_controller_4
-> ^C
->  Performance counter stats for 'system wide':
->
->                  0      dram_channel_data_controller_4
->
->        1.189638741 seconds time elapsed
->
->
-> [root@five ~]#
->
-> I.e. -M should bail out at that point (Cannot find metric or group `dram_=
-channel_data_controller_4'), no?
+> and the proper fix was:
+> 8d40f74ebf21 perf vendor events amd: Fix large metrics
+> https://lore.kernel.org/r/20230706063440.54189-1-sandipan.das@amd.com
 
-We could. I suspect the code has always just not bailed out. I'll put
-together a patch adding the bail out.
+that is upstream:
 
-Thanks,
-Ian
+⬢[acme@toolbox perf-tools-next]$ git log tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
+commit 8d40f74ebf217d3b9e9b7481721e6236b857cc55
+Author: Sandipan Das <sandipan.das@amd.com>
+Date:   Thu Jul 6 12:04:40 2023 +0530
 
-> - Arnaldo
->
-> > > Before announcing failure, the test can try multiple options for each
-> > > available metric. After system-wide mode fails, retry once again with
-> > > the "--metric-no-group" option.
-> > >
-> > > E.g.
-> > >
-> > >    $ sudo perf test -v 100
-> > >
-> > > Before:
-> > >
-> > >    100: perf all metrics test                                        =
-   :
-> > >    --- start ---
-> > >    test child forked, pid 672731
-> > >    Testing branch_misprediction_ratio
-> > >    Testing all_remote_links_outbound
-> > >    Testing nps1_die_to_dram
-> > >    Metric 'nps1_die_to_dram' not printed in:
-> > >    Error:
-> > >    Invalid event (dram_channel_data_controller_4) in per-thread mode,=
- enable system wide with '-a'.
-> > >    Testing macro_ops_dispatched
-> > >    Testing all_l2_cache_accesses
-> > >    Testing all_l2_cache_hits
-> > >    Testing all_l2_cache_misses
-> > >    Testing ic_fetch_miss_ratio
-> > >    Testing l2_cache_accesses_from_l2_hwpf
-> > >    Testing l2_cache_misses_from_l2_hwpf
-> > >    Testing op_cache_fetch_miss_ratio
-> > >    Testing l3_read_miss_latency
-> > >    Testing l1_itlb_misses
-> > >    test child finished with -1
-> > >    ---- end ----
-> > >    perf all metrics test: FAILED!
-> > >
-> > > After:
-> > >
-> > >    100: perf all metrics test                                        =
-   :
-> > >    --- start ---
-> > >    test child forked, pid 672887
-> > >    Testing branch_misprediction_ratio
-> > >    Testing all_remote_links_outbound
-> > >    Testing nps1_die_to_dram
-> > >    Testing macro_ops_dispatched
-> > >    Testing all_l2_cache_accesses
-> > >    Testing all_l2_cache_hits
-> > >    Testing all_l2_cache_misses
-> > >    Testing ic_fetch_miss_ratio
-> > >    Testing l2_cache_accesses_from_l2_hwpf
-> > >    Testing l2_cache_misses_from_l2_hwpf
-> > >    Testing op_cache_fetch_miss_ratio
-> > >    Testing l3_read_miss_latency
-> > >    Testing l1_itlb_misses
-> > >    test child finished with 0
-> > >    ---- end ----
-> > >    perf all metrics test: Ok
-> > >
-> >
-> > Issue gets resolved after applying this patch
-> >
-> >   $ ./perf test 102 -vvv
-> >   $102: perf all metrics test                                          =
- :
-> >   $--- start ---
-> >   $test child forked, pid 244991
-> >   $Testing branch_misprediction_ratio
-> >   $Testing all_remote_links_outbound
-> >   $Testing nps1_die_to_dram
-> >   $Testing all_l2_cache_accesses
-> >   $Testing all_l2_cache_hits
-> >   $Testing all_l2_cache_misses
-> >   $Testing ic_fetch_miss_ratio
-> >   $Testing l2_cache_accesses_from_l2_hwpf
-> >   $Testing l2_cache_misses_from_l2_hwpf
-> >   $Testing l3_read_miss_latency
-> >   $Testing l1_itlb_misses
-> >   $test child finished with 0
-> >   $---- end ----
-> >   $perf all metrics test: Ok
-> >
-> > > Reported-by: Ayush Jain <ayush.jain3@amd.com>
-> > > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> >
-> > Tested-by: Ayush Jain <ayush.jain3@amd.com>
-> >
-> > > ---
-> > >   tools/perf/tests/shell/stat_all_metrics.sh | 7 +++++++
-> > >   1 file changed, 7 insertions(+)
-> > >
-> > > diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/=
-tests/shell/stat_all_metrics.sh
-> > > index 54774525e18a..1e88ea8c5677 100755
-> > > --- a/tools/perf/tests/shell/stat_all_metrics.sh
-> > > +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> > > @@ -16,6 +16,13 @@ for m in $(perf list --raw-dump metrics); do
-> > >     then
-> > >       continue
-> > >     fi
-> > > +  # Failed again, possibly there are not enough counters so retry sy=
-stem wide
-> > > +  # mode but without event grouping.
-> > > +  result=3D$(perf stat -M "$m" --metric-no-group -a sleep 0.01 2>&1)
-> > > +  if [[ "$result" =3D~ ${m:0:50} ]]
-> > > +  then
-> > > +    continue
-> > > +  fi
-> > >     # Failed again, possibly the workload was too small so retry with=
- something
-> > >     # longer.
-> > >     result=3D$(perf stat -M "$m" perf bench internals synthesize 2>&1=
-)
-> >
-> > Thanks & Regards,
-> > Ayush Jain
->
-> --
->
-> - Arnaldo
+    perf vendor events amd: Fix large metrics
+
+    There are cases where a metric requires more events than the number of
+    available counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four
+    data fabric counters but the "nps1_die_to_dram" metric has eight events.
+
+    By default, the constituent events are placed in a group and since the
+    events cannot be scheduled at the same time, the metric is not computed.
+    The "all metrics" test also fails because of this.
+
+    Use the NO_GROUP_EVENTS constraint for such metrics which anyway expect
+    the user to run perf with "--metric-no-group".
+
+    E.g.
+
+      $ sudo perf test -v 101
+
+    Before:
+
+      101: perf all metrics test                                           :
+      --- start ---
+      test child forked, pid 37131
+      Testing branch_misprediction_ratio
+      Testing all_remote_links_outbound
+      Testing nps1_die_to_dram
+      Metric 'nps1_die_to_dram' not printed in:
+      Error:
+      Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
+      Testing macro_ops_dispatched
+      Testing all_l2_cache_accesses
+      Testing all_l2_cache_hits
+      Testing all_l2_cache_misses
+      Testing ic_fetch_miss_ratio
+      Testing l2_cache_accesses_from_l2_hwpf
+      Testing l2_cache_misses_from_l2_hwpf
+      Testing op_cache_fetch_miss_ratio
+      Testing l3_read_miss_latency
+      Testing l1_itlb_misses
+      test child finished with -1
+      ---- end ----
+      perf all metrics test: FAILED!
+
+    After:
+
+      101: perf all metrics test                                           :
+      --- start ---
+      test child forked, pid 43766
+      Testing branch_misprediction_ratio
+      Testing all_remote_links_outbound
+      Testing nps1_die_to_dram
+      Testing macro_ops_dispatched
+      Testing all_l2_cache_accesses
+      Testing all_l2_cache_hits
+      Testing all_l2_cache_misses
+      Testing ic_fetch_miss_ratio
+      Testing l2_cache_accesses_from_l2_hwpf
+      Testing l2_cache_misses_from_l2_hwpf
+      Testing op_cache_fetch_miss_ratio
+      Testing l3_read_miss_latency
+      Testing l1_itlb_misses
+      test child finished with 0
+      ---- end ----
+      perf all metrics test: Ok
+
+    Reported-by: Ayush Jain <ayush.jain3@amd.com>
+    Suggested-by: Ian Rogers <irogers@google.com>
+    Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+    Acked-by: Ian Rogers <irogers@google.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Ananth Narayan <ananth.narayan@amd.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+    Cc: Santosh Shukla <santosh.shukla@amd.com>
+    Link: https://lore.kernel.org/r/20230706063440.54189-1-sandipan.das@amd.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com
+ 
+> > Ian, I also stumbled on this:
+
+> > [root@five ~]# perf stat -M dram_channel_data_controller_4
+> > Cannot find metric or group `dram_channel_data_controller_4'
+> > ^C
+> >  Performance counter stats for 'system wide':
+
+> >         284,908.91 msec cpu-clock                        #   32.002 CPUs utilized
+> >          6,485,456      context-switches                 #   22.763 K/sec
+> >                719      cpu-migrations                   #    2.524 /sec
+> >             32,800      page-faults                      #  115.125 /sec
+
+<SNIP>
+
+> > I.e. -M should bail out at that point (Cannot find metric or group `dram_channel_data_controller_4'), no?
+
+> We could. I suspect the code has always just not bailed out. I'll put
+> together a patch adding the bail out.
+
+Great, thanks,
+
+- Arnaldo
