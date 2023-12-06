@@ -1,123 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mails.tsinghua.edu.cn header.i=@mails.tsinghua.edu.cn header.b="OxsTFzQF"
-Received: from zg8tndyumtaxlji0oc4xnzya.icoremail.net (zg8tndyumtaxlji0oc4xnzya.icoremail.net [46.101.248.176])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 196901B6
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 00:30:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mails.tsinghua.edu.cn; s=dkim; h=Received:Date:From:To:Cc:
-	Subject:In-Reply-To:References:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID; bh=7imtB27PLcyLLbs/xEhKS0T
-	KMs9T35sBtIerKljrEXc=; b=OxsTFzQFPzMBDt5bJlfCL6/eILWHs6VMXMc+Rc+
-	Z1PsziTZyG7burTvM58hopGhWatNPEuJDQbDVhVccc/yIoUY+trtZV1IHLcWcJBe
-	7Dn0LNoBm1ypK5wUpiCcA0TZ2FLJBmVYqnX33gs+u7CiPN5lr+IlJNFxC/zBmSW/
-	Lxyo=
-Received: from chang-liu22$mails.tsinghua.edu.cn ( [138.68.168.7] ) by
- ajax-webmail-web4 (Coremail) ; Wed, 6 Dec 2023 16:30:07 +0800 (GMT+08:00)
-Date: Wed, 6 Dec 2023 16:30:07 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: chang-liu22@mails.tsinghua.edu.cn
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Reply: Re: Can I create and read perf counters in the kernel?
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.2-cmXT5 build
- 20230915(bf90896b) Copyright (c) 2002-2023 www.mailtech.cn
- mispb-4df55a87-4b50-4a66-85a0-70f79cb6c8b5-tsinghua.edu.cn
-In-Reply-To: <CAP-5=fXRFOpbqe-z_aQC4xhuS3-Mp6cKNJ8o53fr8UBVboctQQ@mail.gmail.com>
-References: <3ac77391.1d70f.18c3ab61090.Coremail.chang-liu22@mails.tsinghua.edu.cn>
- <CAP-5=fXRFOpbqe-z_aQC4xhuS3-Mp6cKNJ8o53fr8UBVboctQQ@mail.gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BFCA5;
+	Wed,  6 Dec 2023 04:09:42 -0800 (PST)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rAqii-0003FX-Qw; Wed, 06 Dec 2023 13:09:40 +0100
+Message-ID: <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
+Date: Wed, 6 Dec 2023 13:09:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <817a188.1bb2b.18c3e3fa344.Coremail.chang-liu22@mails.tsinghua.edu.cn>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:ywQGZQB3LpQPMXBlngCJAQ--.47656W
-X-CM-SenderInfo: xfkd0wonol3j2s6ptxtovo32xlqjx3vdohv3gofq/1tbiAgERAGVv
-	+Zk1ZgAAsr
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since
+ v6.5
+Content-Language: en-US, de-DE
+To: Linux perf Profiling <linux-perf-users@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
+ <ZV1AnNB2CSbAUFVg@archie.me>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <ZV1AnNB2CSbAUFVg@archie.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701864582;e01a8d62;
+X-HE-SMSGID: 1rAqii-0003FX-Qw
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiSWFuIFJvZ2VycyIgPGlyb2dl
-cnNAZ29vZ2xlLmNvbT4KPiBTZW5kIHRpbWU6V2VkbmVzZGF5LCAxMi8wNi8yMDIzIDAzOjA3OjAy
-Cj4gVG86IGNoYW5nLWxpdTIyQG1haWxzLnRzaW5naHVhLmVkdS5jbgo+IENjOiBsaW51eC1wZXJm
-LXVzZXJzQHZnZXIua2VybmVsLm9yZwo+IFN1YmplY3Q6IFJlOiBDYW4gSSBjcmVhdGUgYW5kIHJl
-YWQgcGVyZiBjb3VudGVycyBpbiB0aGUga2VybmVsPwo+IAo+IE9uIFR1ZSwgRGVjIDUsIDIwMjMg
-YXQgODowMeKAr0FNIDxjaGFuZy1saXUyMkBtYWlscy50c2luZ2h1YS5lZHUuY24+IHdyb3RlOgo+
-ID4KPiA+IEhpIGFsbCwKPiA+Cj4gPiBJJ20gZG9pbmcgYSByZXNlYXJjaCBwcm9qZWN0IGluIHdo
-aWNoIEkgaW1wbGVtZW50IGEgbmV3IGZ1bmN0aW9uYWxpdHkgaW4gdGhlIGtlcm5lbC4gTm93IEkg
-d2FudCB0byBiZW5jaG1hcmsgdGhlIGNvZGUgdGhhdCBJIHdyaXRlLCBlLmcuLCBJIHdhbnQgdG8g
-bWVhc3VyZSB0aGUgbnVtYmVyIG9mIGNhY2hlIG1pc3NlcyBvZiBteSBjb2RlIHdpdGggZGlmZmVy
-ZW50IHdvcmtsb2Fkcy4gSSB3b25kZXIgaWYgSSBjb3VsZCBjcmVhdGUgcGVyZiBjb3VudGVycyBh
-bmQgcmVhZCB0aGVtIGluIGtlcm5lbCBqdXN0IGxpa2UgdXNpbmcgcGVyZl9ldmVudF9vcGVuKCkg
-KyByZWFkKCkgaW4gdXNlciBzcGFjZSB0byBpbXBsZW1lbnQgdGhlIGZvbGxvd2luZyBsb2dpYzoK
-PiA+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+IGNyYXRlX3BlcmZfY291bnRl
-cigpCj4gPgo+ID4gcmVzZXRfYW5kX3N0YXJ0X2NvdW50ZXIoKQo+ID4gcnVuIHNvbWUga2VybmVs
-IGNvZGUKPiA+IHJlYWRfY291bnRlcigpCj4gPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tCj4gPiBJZiBJIGNhbiwgd2hhdCBrZXJuZWwgQVBJIHNob3VsZCBJIHVzZT8gSXMgdGhlcmUg
-YW55IGRvY3VtZW50IHRoYXQgSSBjYW4gcmVmZXI/Cj4gCj4gTm90IGRpcmVjdGx5IGFuc3dlcmlu
-ZyB5b3VyIHF1ZXN0aW9uLCBidXQgcGVyZiBldmVudHMgY2FuIGZpbHRlcgo+IGJldHdlZW4gdXNl
-ciBhbmQga2VybmVsLCBlLmcuIGN5Y2xlczp1IGFuZCBjeWNsZXM6ay4gWW91IGNhbiB1c2UKPiBm
-aWx0ZXJzIGxpa2U6Cj4gCj4gJCBwZXJmIHJlY29yZCAtZSBjeWNsZXM6ayAtLWZpbHRlciAiaXAg
-Pj0gMHhmZmZmZmZmZjk5ZTAzNmIwLCBpcCA8Cj4gMHhmZmZmZmZmZjk5ZTAzNmMwIiAtYSBzbGVl
-cCAxCj4gCj4gVG8gbGltaXQgd2hhdCBzYW1wbGVzIGFyZSByZWNvcmRlZCAodGhlIG1hZ2ljIG51
-bWJlcnMgYXJlIGFkZHJlc3Nlcwo+IGZvciBhIGZ1bmN0aW9uIGluIHRoZSBrZXJuZWwgdGhhdCB5
-b3UgY2FuIGZpbmQgaW4gdGhpbmdzIGxpa2UKPiAvcHJvYy9rYWxsc3ltcykuCj4gCj4gSW4gZ2Vu
-ZXJhbCBwZXJmIGV2ZW50cyBhcmUgbWFuYWdlZCBieSB1c2VyIGxhbmQsIHRoZSBOTUkgd2F0Y2hk
-b2cgaXMKPiBhbiBleGFtcGxlIG9mIGEgcGVyZiBldmVudCBvcGVuZWQgaW4gdGhlIGtlcm5lbC4g
-WW91IGNhbiB1c2UgQlBGIHRvCj4gaW5qZWN0IGluIGJlaGF2aW9ycyB3aXRoIHBlcmYgZXZlbnRz
-IGFuZCB0aGlzIGlzIHdoYXQgdGhlIHBlcmYgY29tbWFuZAo+IGlzIGRvaW5nIGFib3ZlLiBUaGUg
-cGVyZiBldmVudCBmaWx0ZXJpbmcgaXMgYSBmZWF0dXJlIGJ1aWx0IGludG8gdGhlCj4ga2VybmVs
-LCBidXQgeW91IGFyZSByZWNvcmRpbmcgc2FtcGxlIGdsb2JhbGx5IGFuZCBqdXN0IGRpc2NhcmRp
-bmcgdGhlCj4gb25lcyB5b3UgZG9uJ3QgY2FyZSBhYm91dC4gVG8gbWF0Y2ggdGhlIGJlaGF2aW9y
-IHlvdSBkZXNjcmliZSB5b3UgbWF5Cj4gd2FudCB0byB1c2UgYnBmdHJhY2Ugb3Igd3JpdGUgYSBC
-UEYgcHJvZ3JhbSwgYnV0IEkgZG9uJ3QgYmVsaWV2ZSB0aGVyZQo+IGlzIGEgQlBGIGhlbHBlciBj
-dXJyZW50bHkgdG8gZW5hYmxlL2Rpc2FibGUgcGVyZiBldmVudHMuIFlvdSBtYXkgd2FudAo+IHRv
-IGV4cGxvcmUgQlBGIGtmdW5jcy4gSW4gZ2VuZXJhbCBlbmFibGluZy9kaXNhYmxpbmcgZXZlbnRz
-IGhhcyBzb21lCj4gY29zdCBhcyB0aGUga2VybmVsJ3MgcGVyZiBzdWJzeXN0ZW0gd2lsbCBkbyB0
-aGluZ3MgbGlrZSBjb25zaWRlcmluZwo+IG90aGVyIGV2ZW50cyB0byBzY2hlZHVsZSB3aGVuIGEg
-Y291bnRlciBpcyB1c2VkL2ZyZWVkLiBQTVVzIGxpa2UgSW50ZWwKPiBQVCBhbmQgQVJNIENvcmVT
-aWdodCBoYXZlIGZpbHRlcmluZyBidWlsdCBpbiwgeW91IG1heSB3YW50IHRvIGV4cGxvcmUKPiB0
-aGVzZS4KPiAKPiBUaGFua3MsCj4gSWFuCgpIaSBJYW4sCgpUaGFuayB5b3UgZm9yIHlvdXIgaGVs
-cC4gRm9sbG93aW5nIHlvdXIgYWR2aWNlLCBJIHJlYWQgc29tZSBkb2N1bWVudHMgb24gQlBGLAph
-bmQgSSB0aGluayBJIGNhbiB1c2UgdGhlIGZvbGxvd2luZyB3YXkgdG8gaW1wbGVtZW50IHdoYXQg
-SSBuZWVkOiAKCgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHVzZXIgc3BhY2UgcHJvZ3JhbSAKdXNlciBzcGFjZSAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAKLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0tCmtlcm5l
-bCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwKICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSAgIGJwZl9wZXJmX2V2ZW50X3JlYWQoKSAg
-ICAgICAgICAgfCBpbnNlcnQgcGVyZiBldmVudHMKICAgfCAgIGVudHJ5IEJQRiBwcm9ncmFtICAg
-fCAtLS0tLS0tLS0tLS0tLS0tLS0gICAgICAgICAgICAgICAgfCB1c2luZyBicGYoKQogICAtLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICB8
-IAogICB8ICAgICAgICAgICAgICAgICAgICAgICB8ICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQogICB8ICAgICAgYmVuY2htYXJrZWQgICAgICB8ICAgfCAgICAgICAg
-ICBwZXJmIGV2ZW50IEJQRiBtYXAgICAgICAgICAgfCAgICAgICAgICAgCiAgIHwgICAgICBrZXJu
-ZWwgY29kZSAgICAgIHwgICB8IChCUEZfTUFQX1RZUEVfUEVSRl9FVkVOVF9BUlJBWSB0eXBlKSB8
-CiAgIHwgICAgICAgICAgICAgICAgICAgICAgIHwgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tCiAgIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gICAgICAgICAgICAg
-ICAgICB8CiAgIHwgICBleGl0IEJQRiBwcm9ncmFtICAgIHwtLS0tLS0tLS0tLS0tLS0tLS0tCiAg
-IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gICBicGZfcGVyZl9ldmVudF9yZWFkKCkKCjEuIFdy
-aXRlIGEgdXNlciBzcGFjZSBwcm9ncmFtIHdoaWNoCiAgIDEuMSBjcmVhdGVzIGFuZCBsb2FkcyBh
-IEJQRl9NQVBfVFlQRV9QRVJGX0VWRU5UX0FSUkFZIG1hcAogICAxLjIgY3JlYXRlcyB0aGUgcGVy
-ZiBldmVudCB0aGF0IEkgd2FudCB0byByZWFkIGluIGtlcm5lbAogICAxLjMgaW5zZXJ0cyB0aGUg
-cGVyZiBldmVudCBpbnRvIHRoZSBCUEYgbWFwCiAgIDEuNCBjcmVhdGVzIGFuZCBhdHRhY2hlcyB0
-d28gQlBGIHByb2dyYW1zIGF0IHRoZSBlbnRyeSBwb2ludAogICBhbmQgdGhlIGV4aXQgcG9pbnQg
-b2YgdGhlIGtlcm5lbCBjb2RlIHRvIGJlIGJlbmNobWFya2VkCgoyLiBCZWZvcmUgdGhlIHRhcmdl
-dCBrZXJuZWwgY29kZSBpcyBleGVjdXRlZCwgdGhlIGVudHJ5IEJQRgpwcm9ncmFtIGlzIHRyaWdn
-ZXJlZCBhbmQgaW52b2tlcyB0aGUgYnBmX3BlcmZfZXZlbnRfcmVhZCgpIHRvIApnZXQgdGhlIHZh
-bHVlIG9mIHRoZSBwZXJmIGV2ZW50LgoKMy4gQWZ0ZXIgdGhlIHRhcmdldCBrZXJuZWwgY29kZSBp
-cyBleGVjdXRlZCwgdGhlIGV4aXQgQlBGIApwcm9ncmFtIGlzIHRyaWdnZXJlZCBhbmQgaW52b2tl
-cyB0aGUgYnBmX3BlcmZfZXZlbnRfcmVhZCgpIHRvIApnZXQgdGhlIHZhbHVlIG9mIHRoZSBwZXJm
-IGV2ZW50LgoKNC4gQ2FsY3VsYXRlIHRoZSBkZWx0YSBvZiB0aGUgdHdvIGNvdW50ZXIgdmFsdWVz
-IHJldHJpdmVkIGluCnN0ZXAgMiBhbmQgMyBhcyB0aGUgZmluYWwgcmVzdWx0LgoKRG8geW91IGhh
-dmUgYW55IGNvbW1lbnRzIG9uIHRoZSBhZm9yZW1lbnRpb25lZCBtZXRob2Q/IElmIHlvdQp0aGlu
-ayBpdCB3b3JrcywgSSdsbCB0cnkgdG8gaW1wbGVtZW50IGl0LgoKWW91ciBhbnN3ZXIgcmVhbGx5
-IGhlbHBzLCB0aGFua3MgYSBsb3QhCgpDaGFuZwoKPiAKPiA+Cj4gPiBJJ2QgYmUgdmVyeSBncmF0
-ZWZ1bCBpZiBhbnlvbmUgY2FuIGhlbHAgOikKPiA+Cj4gPiBLaW5kIHJlZ2FyZHMsCj4gPgo+ID4g
-Q2hhbmcgTGl1Cg==
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
+
+On 22.11.23 00:43, Bagas Sanjaya wrote:
+> On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
+>> Perf broke on all Apple ARM64 systems (tested almost everything), and
+>> according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
+
+#regzbot fix: perf parse-events: Make legacy events lower priority than
+sysfs/JSON
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
