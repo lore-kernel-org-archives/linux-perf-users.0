@@ -1,104 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF0F37156
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 13:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7923FF5;
+	Wed,  6 Dec 2023 13:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaBtu7yk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3CB4C433C7;
-	Wed,  6 Dec 2023 13:26:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QycYwDeE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A860DC433C8;
+	Wed,  6 Dec 2023 13:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701869170;
-	bh=kY88AoLa3ot5oNZ2xunTh93/qoZpoRK13BhBUv2JbLM=;
+	s=k20201202; t=1701870356;
+	bh=o60Oft731GDlPA7XOV56bwxMYcQyff+R3jG4W2ccIdM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oaBtu7ykS3bebpcM/l82Q0Ed1Cz+UbZbBJop+Z4dY/WMjGyu0MwOHg3k7VkIwXtXW
-	 3f3Y0rNE3DApL2F+IMTJslYub2smDvJoT2xq5SC5B6V7xSNPV6TADRmyaAE0ilsAkj
-	 GwqPNKytF54L6R4f6e0Z3PbsG/9WwdVDzheGvFEWenroxDalPm2CjA4SihZEKpW5TI
-	 f8+eduyfRYOmB8CwXoCUK3zgtlusG/UNyokxhkmBHiMY2bmJN7T3xACidHBZ4rbbc0
-	 stK0nhgErVd6pqbYyhRlru/2W8UX+0Rb4mCzbQfW01Ts2zE7YXK4lzIlxpSZuKgz0x
-	 OlpqmpXByvPsA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 99789403EF; Wed,  6 Dec 2023 10:26:07 -0300 (-03)
-Date: Wed, 6 Dec 2023 10:26:07 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	b=QycYwDeEO+hyNopx5ULqCTQl1DrbXyObDcvORW+tf+GnRwDgMe0uMPuk1bgtSfJAa
+	 KxyVa98cBOMUtJo+LdzjqImkqyOiVUOxY3K8OQYoHk8Eoj/crA7I4vOdV6lWKxaips
+	 9sN4WP54z+bpD/88mOt5haSwnqf7VsHF85u11S31GqC5o2EvpaSYvMnjOT+G2Ypwte
+	 5D83QarI1hYxpD8xJ6GDfLPRM/6f5XFUPj8DR+X3IyhzibA/snYPr6JhLyipqVYg6y
+	 TM8Z13piESaIerJGyU88Id5IUGirzWE8GO5yNMTJmBimqB8YJyHh590R7rk6PPY5eI
+	 FYF73kOXcu9vA==
+Date: Wed, 6 Dec 2023 13:45:49 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	atrajeev@linux.vnet.ibm.com
-Subject: Re: [PATCH v1] perf test: Add basic perf diff test
-Message-ID: <ZXB2bxcWjzLosY7L@kernel.org>
-References: <20231120190408.281826-1-irogers@google.com>
- <CAP-5=fWvADeeHVQObwk-eVNeOSC=eTTv2q8Rz4j3UtL5-6Getw@mail.gmail.com>
- <ee68f32d-72a2-4e9f-aee1-7c195ad44765@intel.com>
- <CAP-5=fVo+YVAc44Pkes-bXp4Tm605x6RuRi=EdFJeGEEE4iwkQ@mail.gmail.com>
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Marc Zyngier <maz@kernel.org>, torvalds@linux-foundation.org
+Subject: Re: [PATCH 2/2] perf build: Ensure sysreg-defs Makefile respects
+ output dir
+Message-ID: <80ff02a5-8355-437d-b844-3de9fe182518@sirena.org.uk>
+References: <20231121192956.919380-1-oliver.upton@linux.dev>
+ <20231121192956.919380-3-oliver.upton@linux.dev>
+ <c701bf6b-0ff0-44a0-9d1d-84e8515d077c@sirena.org.uk>
+ <ZWui3KxloT5tcIsJ@thinky-boi>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/TeW1QSbBaDFi117"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVo+YVAc44Pkes-bXp4Tm605x6RuRi=EdFJeGEEE4iwkQ@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+In-Reply-To: <ZWui3KxloT5tcIsJ@thinky-boi>
+X-Cookie: From concentrate.
 
-Em Tue, Dec 05, 2023 at 08:52:04AM -0800, Ian Rogers escreveu:
-> On Mon, Dec 4, 2023 at 9:44 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >
-> > On 4/12/23 18:00, Ian Rogers wrote:
-> > > On Mon, Nov 20, 2023 at 11:04 AM Ian Rogers <irogers@google.com> wrote:
-> > >>
-> > >> There are some old bug reports on perf diff crashing:
-> > >> https://rhaas.blogspot.com/2012/06/perf-good-bad-ugly.html
-> > >>
-> > >> Happening across them I was prompted to add two very basic tests that
-> > >> will give some perf diff coverage.
-> > >>
-> > >> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Ping.
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > >> ---
-> > >>  tools/perf/tests/shell/diff.sh | 101 +++++++++++++++++++++++++++++++++
-> > >>  1 file changed, 101 insertions(+)
-> > >>  create mode 100755 tools/perf/tests/shell/diff.sh
-> > >>
-> > >> diff --git a/tools/perf/tests/shell/diff.sh b/tools/perf/tests/shell/diff.sh
-> > >> new file mode 100755
-> > >> index 000000000000..213185763688
-> > >> --- /dev/null
-> > >> +++ b/tools/perf/tests/shell/diff.sh
-> > >> @@ -0,0 +1,101 @@
-> > >> +#!/bin/sh
-> > >> +# perf diff tests
-> > >> +# SPDX-License-Identifier: GPL-2.0
-> > >> +
-> > >> +set -e
-> > >> +
-> > >> +err=0
-> > >> +perfdata1=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> > >> +perfdata2=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> > >> +perfdata3=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> > >> +testprog="perf test -w thloop"
-> > >> +testsym="test_loop"
-> >
-> > Could it benefit from skip_test_missing_symbol
-> 
-> Good idea, sent:
-> https://lore.kernel.org/lkml/20231205164924.835682-1-irogers@google.com/
 
-Applied, and added this:
+--/TeW1QSbBaDFi117
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+On Sat, Dec 02, 2023 at 01:34:20PM -0800, Oliver Upton wrote:
+> Thanks for the bug report. Apologies for the latency on my end, I've had
+> a mountain of non-upstream stuff to wade through.
 
-Thanks,
+> On Wed, Nov 29, 2023 at 04:27:01PM +0000, Mark Brown wrote:
+> > On Tue, Nov 21, 2023 at 07:29:56PM +0000, Oliver Upton wrote:
 
-- Arnaldo
+> > > Currently the sysreg-defs are written out to the source tree
+> > > unconditionally, ignoring the specified output directory. Correct the
+> > > build rule to emit the header to the output directory. Opportunistically
+> > > reorganize the rules to avoid interleaving with the set of beauty make
+> > > rules.
+
+> > This breaks some build configurations:
+
+> > make[4]: Entering directory '/home/broonie/git/bisect/tools/testing/selftests/kvm'
+> > Makefile:270: warning: overriding recipe for target '/home/broonie/.cache/tuxmake/builds/16/build/kselftest/kvm/get-reg-list'
+> > Makefile:265: warning: ignoring old recipe for target '/home/broonie/.cache/tuxmake/builds/16/build/kselftest/kvm/get-reg-list'
+> > make -C ../../../../tools/arch/arm64/tools/ O=../../../../tools
+> > make[5]: Entering directory '/home/broonie/git/bisect/tools/arch/arm64/tools'
+> > /home/broonie/git/bisect/tools/scripts/Makefile.include:4: *** O=../../../../tools does not exist.  Stop.
+
+> Looks like its because $(PWD) is tools/testing/selftests/ when building
+> from the top level makefile. I'll get a fix out in the next couple days
+> after I find my Make dunce cap :)
+
+This issue is now in Linus' tree.
+
+--/TeW1QSbBaDFi117
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVwew0ACgkQJNaLcl1U
+h9BwZQf+MW73pdSRu957upgido7PqkFuckEEkq3GeUe10nElFaTybG6lb9NpMfPP
+T9d0yc1idw3fiEf/IIYVcImkZ+MXFJlSIYlhG2zXl45px2VH1LZL6/Nyek38erXe
+iLFi10eNreV3v86sUP4jd0lrbojzFbJp6gnm1vMb/D60bUiaZTa8lT2Y1fZjtvS2
+IYQbnTBgmBwS8DdJYfMz2HRswL0DIQAkHWY/6Ke5bhmlgyhwGQ02SAhe+oY6LxrZ
+29oRVWGxtdSyclwtyJPRYBP0094/0g9lKGg/mRot5gVula4tBgoELStW6l9GyUkl
+kAYbW2ef0u0tGWdTU14Bs7TWgiFjgw==
+=yyfo
+-----END PGP SIGNATURE-----
+
+--/TeW1QSbBaDFi117--
