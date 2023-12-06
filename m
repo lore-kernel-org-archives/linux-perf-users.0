@@ -1,80 +1,65 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AEAXEstk"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pBXCMEcI"
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34051B5;
-	Tue,  5 Dec 2023 22:12:07 -0800 (PST)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B667Ri3025053;
-	Wed, 6 Dec 2023 06:11:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=YbMaWMRv3RgqtSpbZm6Gav0quQCuy2aQXHWSRSAziqY=;
- b=AEAXEstk28cnvGaGdAqUHTFOU1E034TzcWnW2Fo4qoeuowcevw4Ufkhv8YtoMO1mbfNa
- sQy6JNsu+YsIXjrMrxHEG1XiWWYKJwUOaJZOm2lidGkxCod2TfzPoUT3eFtdXE8Wsynh
- LznKY2FyFAG9CJEn5v3adz9hcxQ2DB8UsB61HIrtgw1Fw6sdaHulFC4DBGHeveL18GUt
- GGJXsli55goONbA8xiYpTkYkCWwP3j7gOHH+W4e9MFAEtdrg75JaFZ82NYZ2gJ1t05ts
- OKdDubUp3DdPGbQJ8uB5p1LSwCkOL3EWSRbtzMq4eiV9fr8u6uwsMIPEuHqqx+txaOzh 3g== 
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FCB31B5
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Dec 2023 22:12:13 -0800 (PST)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B65sWSq010891;
+	Wed, 6 Dec 2023 06:12:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=omkJlwVK+crpZx443G7hAXS6QozQyd6T86GZllhcUUA=;
+ b=pBXCMEcIV7QFnHcZBcuq1fcH2S7pSIjZmbg3OnPBTe3WIW5iXEdQQ4RL80SW54kLyZGE
+ 9jtCxWViDL9v3w8dGakiLtmMs9+3B789ImDzxXcNO1o6/Ga92sgnEeP3434+oqPQ6PmZ
+ RZ3DpXQnZTeJt0cNER79xqJxq1053TPMgvFffLrh+qGGGurmaqpRYYG8ezuPQrQeo2jM
+ kj9NcwcWFmP9A9EQHxA2ZcmFCcCFS0h1svoRu6WGPl5VSS3a37X3QuUXq4JmPhf/UmFu
+ ykJL+5kqzw0jdDLANFzo/h4BEFDroLh/mPE2spkRrtRHTE9kXusszOj6PoyWgeN7e7/P Lw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3utkdj033v-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3utk7mrcbc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Dec 2023 06:11:45 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B6681KY026307;
-	Wed, 6 Dec 2023 06:11:45 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3utkdj0338-1
+	Wed, 06 Dec 2023 06:12:10 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B665gUf010089;
+	Wed, 6 Dec 2023 06:12:10 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3utk7mrcat-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Dec 2023 06:11:45 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B65KHjd020923;
-	Wed, 6 Dec 2023 06:11:44 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3utav4ahvq-1
+	Wed, 06 Dec 2023 06:12:10 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B65K4To031463;
+	Wed, 6 Dec 2023 06:12:09 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3utavkahng-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Dec 2023 06:11:43 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B66Bg0L19857920
+	Wed, 06 Dec 2023 06:12:09 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B66C6g346203308
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Dec 2023 06:11:42 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 337FF2004F;
-	Wed,  6 Dec 2023 06:11:42 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 26D0F2004E;
-	Wed,  6 Dec 2023 06:11:39 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.215.218])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  6 Dec 2023 06:11:38 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [RFC PATCH v2] perf evsel: Fallback to task-clock when not system
- wide
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZW9A/jpVNdeNZYnh@kernel.org>
-Date: Wed, 6 Dec 2023 11:41:27 +0530
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>, Leo Yan <leo.yan@linaro.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Ajay Kaher <akaher@vmware.com>,
-        Alexey Makhalov <amakhalov@vmware.com>
-Message-Id: <91BC506D-5F55-409E-9379-2A209959ED83@linux.vnet.ibm.com>
-References: <20231121000420.368075-1-irogers@google.com>
- <CFCEDA00-D3CB-450A-B9E5-AA5D7CEEA1CE@linux.vnet.ibm.com>
- <ZW9A/jpVNdeNZYnh@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
+	Wed, 6 Dec 2023 06:12:06 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5F43120040;
+	Wed,  6 Dec 2023 06:12:06 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 09EE02004D;
+	Wed,  6 Dec 2023 06:12:04 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  6 Dec 2023 06:12:03 +0000 (GMT)
+Date: Wed, 6 Dec 2023 11:42:01 +0530
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH v8 0/4] Introduce perf check subcommand
+Message-ID: <h5dyqz55bcbrrcykdrherwpioclnmbr4egccsr4qb5n7zky747@brkblmk7vazt>
+References: <20231204093954.304030-1-adityag@linux.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231204093954.304030-1-adityag@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 1KVbuJxeLLMpqMQNOekt3gKch1aGI_Dd
-X-Proofpoint-GUID: 3oB_CT5z0plYeQhdz4ep2-EBntJiT3DX
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-GUID: Fz9Hcul4gSzuBZTQ2W5kfByVqg_ddNHU
+X-Proofpoint-ORIG-GUID: UB3sOY63Fwf58NF3hqNtXauItaqQtv9Z
 X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -85,224 +70,130 @@ MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-06_04,2023-12-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- malwarescore=0 adultscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0
- spamscore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 malwarescore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 spamscore=0 lowpriorityscore=0 mlxscore=0
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311290000 definitions=main-2312060049
 
+Hi Arnaldo, just a ping for this series, this should also fix the error in v7.
 
+Thanks,
+Aditya
 
-> On 05-Dec-2023, at 8:55=E2=80=AFPM, Arnaldo Carvalho de Melo <acme@kernel=
-.org> wrote:
->=20
-> Em Tue, Dec 05, 2023 at 04:51:01PM +0530, Athira Rajeev escreveu:
->>=20
->>=20
->>> On 21-Nov-2023, at 5:34=E2=80=AFAM, Ian Rogers <irogers@google.com> wro=
-te:
->>>=20
->>> When the cycles event isn't available evsel will fallback to the
->>> cpu-clock software event. task-clock is similar to cpu-clock but only
->>> runs when the process is running. Falling back to cpu-clock when not
->>> system wide leads to confusion, by falling back to task-clock it is
->>> hoped the confusion is less.
->>>=20
->>> Pass the target to determine if task-clock is more appropriate. Update
->>> a nearby comment and debug string for the change.
->>>=20
->>> ---
->>> v2. Use target__has_cpu as suggested by Namhyung.
->>> https://lpc.events/event/17/contributions/1556/
->>>=20
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>> tools/perf/builtin-record.c |  2 +-
->>> tools/perf/builtin-stat.c   |  2 +-
->>> tools/perf/builtin-top.c    |  2 +-
->>> tools/perf/util/evsel.c     | 18 ++++++++++--------
->>> tools/perf/util/evsel.h     |  3 ++-
->>> 5 files changed, 15 insertions(+), 12 deletions(-)
->>>=20
->>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->>> index 8ec818568662..d8bb59511fdd 100644
->>> --- a/tools/perf/builtin-record.c
->>> +++ b/tools/perf/builtin-record.c
->>> @@ -1350,7 +1350,7 @@ static int record__open(struct record *rec)
->>> evlist__for_each_entry(evlist, pos) {
->>> try_again:
->>> if (evsel__open(pos, pos->core.cpus, pos->core.threads) < 0) {
->>> - if (evsel__fallback(pos, errno, msg, sizeof(msg))) {
->>> + if (evsel__fallback(pos, &opts->target, errno, msg, sizeof(msg))) {
->>=20
->> Hi Ian
->>=20
->> Tested this with perf record and I could find the code fallback to using=
- task-clock
->>=20
->> ./perf record -v ls
->> Warning:
->> The cycles event is not supported, trying to fall back to task-clock
->=20
-> Ok, so I'll take that as a Tested-by: you, ok?
-
-Hi Arnaldo,
-
-Please add my Tested-by.
-
-Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-
->=20
-> The "perf stat" part can be addressed in a follow up patch, when that
-> error handling is researched to remember why we have that ->supported,
-> ->errored thing.
-
-Sure, I will take a look at why we have that difference in =E2=80=9Cperf st=
-at=E2=80=9D
-
-Thanks
-Athira
->=20
-> - Arnaldo
->=20
->> But in case of =E2=80=9Cperf stat=E2=80=9D, in my environment, found tha=
-t the code path won't invoke =E2=80=9Cevsel__fallback=E2=80=9D.
->>=20
->> Snippet for builtin-stat.c
->>            if (errno =3D=3D EINVAL || errno =3D=3D ENOSYS ||
->>            errno =3D=3D ENOENT || errno =3D=3D EOPNOTSUPP ||
->>            errno =3D=3D ENXIO) {
->>                if (verbose > 0)
->>                        ui__warning("%s event is not supported by the ker=
-nel.\n",
->>                                    evsel__name(counter));
->>                counter->supported =3D false;
->>                /*
->>                 * errored is a sticky flag that means one of the counter=
-'s
->>                 * cpu event had a problem and needs to be reexamined.
->>                 */
->>                counter->errored =3D true;
->>=20
->>                if ((evsel__leader(counter) !=3D counter) ||
->>                    !(counter->core.leader->nr_members > 1))
->>                        return COUNTER_SKIP;
->>        } else if (evsel__fallback(counter, &target, errno, msg, sizeof(m=
-sg))) {
->>                if (verbose > 0)
->>                        ui__warning("%s\n", msg);
->>                return COUNTER_RETRY;
->>=20
->> So if the perf_event_open returns ENOENT, we won=E2=80=99t do a fallback=
- in builtin-stat.c
->> Should we address cycles differently here ? Any comments ?
->>=20
->> Thanks
->> Athira
->>>=20
->>> if (verbose > 0)
->>> ui__warning("%s\n", msg);
->>> goto try_again;
->>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->>> index a3af805a1d57..d8e5d6f7a87a 100644
->>> --- a/tools/perf/builtin-stat.c
->>> +++ b/tools/perf/builtin-stat.c
->>> @@ -653,7 +653,7 @@ static enum counter_recovery stat_handle_error(stru=
-ct evsel *counter)
->>> if ((evsel__leader(counter) !=3D counter) ||
->>>   !(counter->core.leader->nr_members > 1))
->>> return COUNTER_SKIP;
->>> - } else if (evsel__fallback(counter, errno, msg, sizeof(msg))) {
->>> + } else if (evsel__fallback(counter, &target, errno, msg, sizeof(msg))=
-) {
->>> if (verbose > 0)
->>> ui__warning("%s\n", msg);
->>> return COUNTER_RETRY;
->>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
->>> index ea8c7eca5eee..1e42bd1c7d5a 100644
->>> --- a/tools/perf/builtin-top.c
->>> +++ b/tools/perf/builtin-top.c
->>> @@ -1044,7 +1044,7 @@ static int perf_top__start_counters(struct perf_t=
-op *top)
->>>   perf_top_overwrite_fallback(top, counter))
->>> goto try_again;
->>>=20
->>> - if (evsel__fallback(counter, errno, msg, sizeof(msg))) {
->>> + if (evsel__fallback(counter, &opts->target, errno, msg, sizeof(msg)))=
- {
->>> if (verbose > 0)
->>> ui__warning("%s\n", msg);
->>> goto try_again;
->>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->>> index a5da74e3a517..532f34d9fcb5 100644
->>> --- a/tools/perf/util/evsel.c
->>> +++ b/tools/perf/util/evsel.c
->>> @@ -2853,7 +2853,8 @@ u64 evsel__intval_common(struct evsel *evsel, str=
-uct perf_sample *sample, const
->>>=20
->>> #endif
->>>=20
->>> -bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t m=
-sgsize)
->>> +bool evsel__fallback(struct evsel *evsel, struct target *target, int e=
-rr,
->>> +     char *msg, size_t msgsize)
->>> {
->>> int paranoid;
->>>=20
->>> @@ -2861,18 +2862,19 @@ bool evsel__fallback(struct evsel *evsel, int e=
-rr, char *msg, size_t msgsize)
->>>   evsel->core.attr.type   =3D=3D PERF_TYPE_HARDWARE &&
->>>   evsel->core.attr.config =3D=3D PERF_COUNT_HW_CPU_CYCLES) {
->>> /*
->>> - * If it's cycles then fall back to hrtimer based
->>> - * cpu-clock-tick sw counter, which is always available even if
->>> - * no PMU support.
->>> + * If it's cycles then fall back to hrtimer based cpu-clock sw
->>> + * counter, which is always available even if no PMU support.
->>> *
->>> * PPC returns ENXIO until 2.6.37 (behavior changed with commit
->>> * b0a873e).
->>> */
->>> - scnprintf(msg, msgsize, "%s",
->>> -"The cycles event is not supported, trying to fall back to cpu-clock-t=
-icks");
->>> -
->>> evsel->core.attr.type   =3D PERF_TYPE_SOFTWARE;
->>> - evsel->core.attr.config =3D PERF_COUNT_SW_CPU_CLOCK;
->>> + evsel->core.attr.config =3D target__has_cpu(target)
->>> + ? PERF_COUNT_SW_CPU_CLOCK
->>> + : PERF_COUNT_SW_TASK_CLOCK;
->>> + scnprintf(msg, msgsize,
->>> + "The cycles event is not supported, trying to fall back to %s",
->>> + target__has_cpu(target) ? "cpu-clock" : "task-clock");
->>>=20
->>> zfree(&evsel->name);
->>> return true;
->>> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
->>> index f19ac9f027ef..efbb6e848287 100644
->>> --- a/tools/perf/util/evsel.h
->>> +++ b/tools/perf/util/evsel.h
->>> @@ -460,7 +460,8 @@ static inline bool evsel__is_clock(const struct evs=
-el *evsel)
->>>      evsel__match(evsel, SOFTWARE, SW_TASK_CLOCK);
->>> }
->>>=20
->>> -bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t m=
-sgsize);
->>> +bool evsel__fallback(struct evsel *evsel, struct target *target, int e=
-rr,
->>> +     char *msg, size_t msgsize);
->>> int evsel__open_strerror(struct evsel *evsel, struct target *target,
->>> int err, char *msg, size_t size);
->>>=20
->>> --=20
->>> 2.43.0.rc1.413.gea7ed67945-goog
->>>=20
->>=20
->=20
-> --=20
->=20
-> - Arnaldo
-
-
+On Mon, Dec 04, 2023 at 03:09:50PM +0530, Aditya Gupta wrote:
+> The Problem
+> ===========
+> 
+> Currently the presence of a feature is checked with a combination of
+> perf version --build-options and greps, such as:
+> 
+>     perf version --build-options | grep " on .* HAVE_FEATURE"
+> 
+> Proposed solution
+> =================
+> 
+> As suggested by contributors in:
+> https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
+> 
+> Introduce a subcommand "perf check --feature", with which
+> scripts can test for presence of a feature or multiple features, such as:
+> 
+>     perf check --feature HAVE_LIBTRACEEVENT
+> 
+>     or
+> 
+>     perf check --feature libtraceevent
+> 
+>     or
+> 
+>     perf check --feature libtraceevent,bpf
+> 
+> The usage of "perf version --build-options | grep" has been replaced in two
+> tests, with "perf check --feature" command
+> 
+> Also, to not duplicate the same feature list at multiple places, a new global
+> 'supported_features' array has been introduced in builtin.h, so both commands
+> 'perf check --feature' and 'perf version --build-options' use the same array
+> 
+> 'supported_features' feature is an array of 'struct feature_support', which
+> also has the name of the feature, macro used to test it's presence, and a
+> is_builtin member, which will be 0 if feature not built-in, and 1 if built-in
+> 
+> Architectures Tested
+> ====================
+> * x86_64
+> * ppc64le
+> 
+> Git tree
+> ========
+> 
+> Git tree with this patch series applied for testing:
+> https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v8
+> 
+> Changelog
+> =========
+> V8
+> + handle return value of 'malloc' in patch #1
+> + fix error due to strncpy depending on source string's length
+> 
+> V7
+> + modified patch #1 to fix compile issue, and add feature to allow
+>   multiple comma-separated features
+> 
+> V6
+> + rebased to perf-tools-next/perf-tools-next
+> + modified patch #1 to include FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL)
+> 
+> V5
+> + invert return value of 'has_support', but return value of perf check --feature
+> according to shell convention
+> 
+> V4
+> + invert return value of perf check --feature
+> 
+> V3
+> + simplified has_support code in builtin-check.c (patch #1)
+> + modified patch #3 and patch #4 according to change in return value in patch #1
+> 
+> V2
+> + improved the patch series with suggestions from Namhyung
+> + fix incorrect return value, added -q option, and moved array definition to
+>   perf-check.c
+> 
+> V1
+> + changed subcommand name to 'perf check --feature'
+> + added documentation for perf check
+> + support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceevent) as
+>   input to 'perf check --feature'
+> + change subject and descriptions of all patch mentioning perf check instead of
+>   perf build
+> 
+> V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230825061125.24312-1-adityag@linux.ibm.com/
+> 
+> Aditya Gupta (3):
+>   perf check: introduce check subcommand
+>   perf version: update --build-options to use 'supported_features' array
+>   perf tests task_analyzer: use perf check for libtraceevent support
+> 
+> Athira Rajeev (1):
+>   tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
+>     --feature
+> 
+>  tools/perf/Build                              |   1 +
+>  tools/perf/Documentation/perf-check.txt       |  59 +++++++++
+>  tools/perf/builtin-check.c                    | 122 ++++++++++++++++++
+>  tools/perf/builtin-version.c                  |  39 ++----
+>  tools/perf/builtin.h                          |  18 +++
+>  tools/perf/perf.c                             |   1 +
+>  .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
+>  .../shell/record+probe_libc_inet_pton.sh      |   5 +-
+>  .../shell/record+script_probe_vfs_getname.sh  |   5 +-
+>  tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
+>  10 files changed, 221 insertions(+), 37 deletions(-)
+>  create mode 100644 tools/perf/Documentation/perf-check.txt
+>  create mode 100644 tools/perf/builtin-check.c
+> 
+> -- 
+> 2.41.0
+> 
