@@ -1,487 +1,407 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X2R18QKP"
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B881318D
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 08:20:11 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-548ae9a5eeaso11351a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 08:20:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SdOs6O0o"
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7246FD4D
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 08:35:37 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40b367a0a12so73905e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 08:35:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701879610; x=1702484410; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701880536; x=1702485336; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/ohk1NigG1siEm2bhRosTQx5GQPGROk7jnoQwA25Duw=;
-        b=X2R18QKP1ZZXw/e0bE6uZGrGTf3/+5XitcdVkzlsWn4uWzkKAVHP6ygEvFwErxc4Yr
-         mrdEgMyiuk8a+W2ehu0pO9mPZDn3Hk/W5L8I5ro/pLtonKRlGmUg7GX8nw43ZAEIV3an
-         BKZMinLPovFMQKEFUFOz7RDlOziSs3FOwKut3Lw5i550XxkTxz61LTfvQ4oTgqziBtKx
-         j3zUF6SUr3/bfmB1DBd9mYh5G5bLU5orYPpGmH/Y7ooIcLMvvuODNPEXb4pQgUvDoJ1E
-         KyAE5KoMNJBvKl1YK0Yn6/rmvgzdpzVPLGCTfcpe0EO+fx6UFNqii9VlvmmOmt8RRvkc
-         GyDQ==
+        bh=ZwXChD+JHtHoNewTIq7HYYHZALw78wtpVyKJu1FT1Lk=;
+        b=SdOs6O0osffINaMxi8LnooBm4HilVcu/sNKWgg0rPlSNpajM1yxb6tzdSyfit2oujM
+         P4rzVyXLZ1LDUcMQC+DZeKpi+bXbVembUJeiGvAB3XS35j9INSUe7xWldDLkRiolXFI5
+         ajCeVZ7R8IaQt5OJADd+ag0CGZuYXLw7DuFrD++9rfOjyX2+dkVWDNTRN2wXVpeREa8V
+         nn9gMGrT/LYoAmHkd0GiLV64axFSh5rTfsE64Pwd6s7hIoa/A125fgd2b43cmCPBuGtT
+         vIxP5vFsK6ahW2/m91/kxYCCIfybcB7yTdM0PJmd3GqNuRG50y3a5paHg1vTyNV59WBX
+         +Utg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701879610; x=1702484410;
+        d=1e100.net; s=20230601; t=1701880536; x=1702485336;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/ohk1NigG1siEm2bhRosTQx5GQPGROk7jnoQwA25Duw=;
-        b=UWkj997hCe39v7NgxirYgy5VSzO8sO9pnApAPwvhqKAY1Zxwnj5Ax8GW+K6eJqdei3
-         /F1mXM2UPh5bdAey/7vNA0a4DgolPaB/CZi8D0PKE2ZdsKpmOuW2y3jKk+EA/T33QbXr
-         BumuD4aKxqTo7t7qz0YzSVTpjrmExpZ58emcd5r+w3aZJUSSAus0LFc+QzEnoN+t4eFx
-         9RDQSqJKDgoEA+FuCw449zkytVlV5705sq0pmlwaW69Vfs7l4OHztrdNbUk7RS1heaMX
-         HjwPzwc/gr0Gt38Sr0aJ7qE+GH3RRStMBZjaPpAkyJClwW35QdNx9hvKb+sIeUsAGud1
-         acjQ==
-X-Gm-Message-State: AOJu0YxUk9WT5MD1bzriNKgKQV/n8jPmk+b8hB48G0SbswR3UY1Rw2kG
-	ETZVbq//zJ+NNjnFh3XuNP6eJaWJIBcSSoC3to425w==
-X-Google-Smtp-Source: AGHT+IGTR/Rk+eOsjAdKc1agrSCsE5xPkHKd6gTfwrG6riHWP49IsYvaaux9AO7Qyi40m4a7Pk+nLdJ2VsGpVbtnkNk=
-X-Received: by 2002:a50:cc8b:0:b0:54b:8f42:e3dc with SMTP id
- q11-20020a50cc8b000000b0054b8f42e3dcmr100950edi.2.1701879609815; Wed, 06 Dec
- 2023 08:20:09 -0800 (PST)
+        bh=ZwXChD+JHtHoNewTIq7HYYHZALw78wtpVyKJu1FT1Lk=;
+        b=nWYL7DTqqJyLFyFvKK3gvypuElDDpFDFkTLHMFHt12EZHBwjQi4iFnkIWM9sgHIBCD
+         zftHG0K1nww3/d/2sJdQDdZEMunTgOQlcIatTVAGaNrOCnMOA6jsQ/KxwhMZEIc18h+W
+         bFur0MVAf3l/hIkOlWY9mwbypa1ZjUE8lWFnM+gLk7ckmgdo2q0FUgw4vC0241GjW1KS
+         cNf3dhJIQ2Pc6nuHuAGdP3L53ZXNY48UjJ81beoMKaM1vm8kqsPgVR+n8sDN/0UeMUD7
+         ew26LqyzCDaw1iDntyvmT/m9gDFTobcOJZlakpXIaCCClV6Ijk+UhXgkDdXug17wTd24
+         Ssog==
+X-Gm-Message-State: AOJu0YxBwq6B4LGA2uDZhwH85yH07Z526ebb5AlCeOHuEkDiBmCeoDn2
+	1BkjoTpexz4dkor8mXHjGARAJR6/U/B2fA/5ym6IQA==
+X-Google-Smtp-Source: AGHT+IEasvFjjpDTNupV2KZHiyAZK/rOGxC1f33ZRbIA7wVMo6yktInLqOLX0shy4Qu6vYRpuxVZtqoJm9BwaRJf29k=
+X-Received: by 2002:a05:600c:231a:b0:405:320a:44f9 with SMTP id
+ 26-20020a05600c231a00b00405320a44f9mr80482wmo.5.1701880535614; Wed, 06 Dec
+ 2023 08:35:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-13-irogers@google.com>
- <CAM9d7cgrx7vjLtnSt6Y4q+vtok=kSy6V83xe0c6cT6BVY2m-oA@mail.gmail.com> <ZXB7z8ff0J0IDW1m@kernel.org>
-In-Reply-To: <ZXB7z8ff0J0IDW1m@kernel.org>
+References: <20230614090710.680330-1-sandipan.das@amd.com> <1320e6e3-c029-2a8c-e8b7-2cfbb781518a@amd.com>
+ <ZXByT1K6enTh2EHT@kernel.org>
+In-Reply-To: <ZXByT1K6enTh2EHT@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 6 Dec 2023 08:19:58 -0800
-Message-ID: <CAP-5=fV0=XLLBq6x+hpBSAqBEpQ2H72eyyoS3xEv7CzY1YMFLQ@mail.gmail.com>
-Subject: Re: [PATCH v5 12/50] perf map: Simplify map_ip/unmap_ip and make map
- size smaller
+Date: Wed, 6 Dec 2023 08:35:23 -0800
+Message-ID: <CAP-5=fUoD=s9yyVPgV7tqGwZsJVQMSmHKd8MV_vJW438AcK9qQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Retry without grouping for all metrics test
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
-	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
+Cc: Ayush Jain <ayush.jain3@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Guilherme Amadio <amadio@gentoo.org>
+	peterz@infradead.org, Ingo Molnar <mingo@kernel.org>, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, kjain@linux.ibm.com, 
+	atrajeev@linux.vnet.ibm.com, barnali@linux.ibm.com, ananth.narayan@amd.com, 
+	ravi.bangoria@amd.com, santosh.shukla@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 6, 2023 at 5:49=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+On Wed, Dec 6, 2023 at 5:08=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
 l.org> wrote:
 >
-> Em Mon, Dec 04, 2023 at 03:39:08PM -0800, Namhyung Kim escreveu:
-> > Hi Ian,
-> >
-> > On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > When mapping an IP it is either an identity mapping or a DSO relative
-> > > mapping, so a single bit is required in the struct to identify
-> > > this. The current code uses function pointers, adding 2 pointers per
-> > > map and also pushing the size of a map beyond 1 cache line. Switch to
-> > > using a byte to identify the mapping type (as well as priv and
-> > > erange_warned), to avoid any masking. Change struct maps's layout to
-> > > avoid holes.
-> > >
-> > > Before:
-> > > ```
-> > > struct map {
-> > >         u64                        start;                /*     0    =
- 8 */
-> > >         u64                        end;                  /*     8    =
- 8 */
-> > >         _Bool                      erange_warned:1;      /*    16: 0 =
- 1 */
-> > >         _Bool                      priv:1;               /*    16: 1 =
- 1 */
-> > >
-> > >         /* XXX 6 bits hole, try to pack */
-> > >         /* XXX 3 bytes hole, try to pack */
-> > >
-> > >         u32                        prot;                 /*    20    =
- 4 */
-> > >         u64                        pgoff;                /*    24    =
- 8 */
-> > >         u64                        reloc;                /*    32    =
- 8 */
-> > >         u64                        (*map_ip)(const struct map  *, u64=
-); /*    40     8 */
-> > >         u64                        (*unmap_ip)(const struct map  *, u=
-64); /*    48     8 */
-> > >         struct dso *               dso;                  /*    56    =
- 8 */
-> > >         /* --- cacheline 1 boundary (64 bytes) --- */
-> > >         refcount_t                 refcnt;               /*    64    =
- 4 */
-> > >         u32                        flags;                /*    68    =
- 4 */
-> > >
-> > >         /* size: 72, cachelines: 2, members: 12 */
-> > >         /* sum members: 68, holes: 1, sum holes: 3 */
-> > >         /* sum bitfield members: 2 bits, bit holes: 1, sum bit holes:=
- 6 bits */
-> > >         /* last cacheline: 8 bytes */
-> > > };
-> > > ```
-> > >
-> > > After:
-> > > ```
-> > > struct map {
-> > >         u64                        start;                /*     0    =
- 8 */
-> > >         u64                        end;                  /*     8    =
- 8 */
-> > >         u64                        pgoff;                /*    16    =
- 8 */
-> > >         u64                        reloc;                /*    24    =
- 8 */
-> > >         struct dso *               dso;                  /*    32    =
- 8 */
-> > >         refcount_t                 refcnt;               /*    40    =
- 4 */
-> > >         u32                        prot;                 /*    44    =
- 4 */
-> > >         u32                        flags;                /*    48    =
- 4 */
-> > >         enum mapping_type          mapping_type:8;       /*    52: 0 =
- 4 */
-> > >
-> > >         /* Bitfield combined with next fields */
-> > >
-> > >         _Bool                      erange_warned;        /*    53    =
- 1 */
-> > >         _Bool                      priv;                 /*    54    =
- 1 */
-> > >
-> > >         /* size: 56, cachelines: 1, members: 11 */
-> > >         /* padding: 1 */
-> > >         /* last cacheline: 56 bytes */
-> > > };
-> > > ```
-> >
-> > Thanks for doing this!  I really wanted to clean up the map
-> > code and to make it more intuitive.
-> >
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Em Wed, Jun 14, 2023 at 05:08:21PM +0530, Ayush Jain escreveu:
+> > On 6/14/2023 2:37 PM, Sandipan Das wrote:
+> > > There are cases where a metric uses more events than the number of
+> > > counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four data fab=
+ric
+> > > counters but the "nps1_die_to_dram" metric has eight events. By defau=
+lt,
+> > > the constituent events are placed in a group. Since the events cannot=
+ be
+> > > scheduled at the same time, the metric is not computed. The all metri=
+cs
+> > > test also fails because of this.
 >
-> Applied
+> Humm, I'm not being able to reproduce here the problem, before applying
+> this patch:
 >
-> > A few nitpicks below.
->
-> Ian, please consider those for a follow up clarifying patch.
+> [root@five ~]# grep -m1 "model name" /proc/cpuinfo
+> model name      : AMD Ryzen 9 5950X 16-Core Processor
+> [root@five ~]# perf test -vvv "perf all metrics test"
+> 104: perf all metrics test                                           :
+> --- start ---
+> test child forked, pid 1379713
+> Testing branch_misprediction_ratio
+> Testing all_remote_links_outbound
+> Testing nps1_die_to_dram
+> Testing macro_ops_dispatched
+> Testing all_l2_cache_accesses
+> Testing all_l2_cache_hits
+> Testing all_l2_cache_misses
+> Testing ic_fetch_miss_ratio
+> Testing l2_cache_accesses_from_l2_hwpf
+> Testing l2_cache_misses_from_l2_hwpf
+> Testing op_cache_fetch_miss_ratio
+> Testing l3_read_miss_latency
+> Testing l1_itlb_misses
+> test child finished with 0
+> ---- end ----
+> perf all metrics test: Ok
+> [root@five ~]#
 
-Thanks, I think the variable name should be done. The PIC vs DSO, I
-think there is a bit more cognitive load recognizing PIC means an
-offset within the DSO than just using DSO. The existing naming used
-dso so I think there is some consistency in using it here. I also
-think PIC as a term is used to mean the code within an object is PC or
-otherwise relative, enabling it to be loaded anywhere. We could have a
-static object which isn't position independent but be using DSO
-relative offsets for it, in which case PIC would be misleading. But I
-think it is a minor issue.
+Please don't apply the patch. The patch masks a bug in metrics/PMUs
+and the proper fix was:
+8d40f74ebf21 perf vendor events amd: Fix large metrics
+https://lore.kernel.org/r/20230706063440.54189-1-sandipan.das@amd.com
 
+> [root@five ~]# perf stat -M nps1_die_to_dram -a sleep 2
+>
+>  Performance counter stats for 'system wide':
+>
+>                  0      dram_channel_data_controller_4   #  10885.3 MiB  =
+nps1_die_to_dram       (49.96%)
+>         31,334,338      dram_channel_data_controller_1                   =
+                       (50.01%)
+>                  0      dram_channel_data_controller_6                   =
+                       (50.04%)
+>         54,679,601      dram_channel_data_controller_3                   =
+                       (50.04%)
+>         38,420,402      dram_channel_data_controller_0                   =
+                       (50.04%)
+>                  0      dram_channel_data_controller_5                   =
+                       (49.99%)
+>         54,012,661      dram_channel_data_controller_2                   =
+                       (49.96%)
+>                  0      dram_channel_data_controller_7                   =
+                       (49.96%)
+>
+>        2.001465439 seconds time elapsed
+>
+> [root@five ~]#
+>
+> [root@five ~]# perf stat -v -M nps1_die_to_dram -a sleep 2
+> Using CPUID AuthenticAMD-25-21-0
+> metric expr dram_channel_data_controller_0 + dram_channel_data_controller=
+_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram=
+_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_=
+data_controller_6 + dram_channel_data_controller_7 for nps1_die_to_dram
+> found event dram_channel_data_controller_4
+> found event dram_channel_data_controller_1
+> found event dram_channel_data_controller_6
+> found event dram_channel_data_controller_3
+> found event dram_channel_data_controller_0
+> found event dram_channel_data_controller_5
+> found event dram_channel_data_controller_2
+> found event dram_channel_data_controller_7
+> Parsing metric events 'dram_channel_data_controller_4/metric-id=3Ddram_ch=
+annel_data_controller_4/,dram_channel_data_controller_1/metric-id=3Ddram_ch=
+annel_data_controller_1/,dram_channel_data_controller_6/metric-id=3Ddram_ch=
+annel_data_controller_6/,dram_channel_data_controller_3/metric-id=3Ddram_ch=
+annel_data_controller_3/,dram_channel_data_controller_0/metric-id=3Ddram_ch=
+annel_data_controller_0/,dram_channel_data_controller_5/metric-id=3Ddram_ch=
+annel_data_controller_5/,dram_channel_data_controller_2/metric-id=3Ddram_ch=
+annel_data_controller_2/,dram_channel_data_controller_7/metric-id=3Ddram_ch=
+annel_data_controller_7/'
+> dram_channel_data_controller_4 -> amd_df/metric-id=3Ddram_channel_data_co=
+ntroller_4,dram_channel_data_controller_4/
+> dram_channel_data_controller_1 -> amd_df/metric-id=3Ddram_channel_data_co=
+ntroller_1,dram_channel_data_controller_1/
+> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
+roller_1'. Missing kernel support? (<no help>)
+> dram_channel_data_controller_6 -> amd_df/metric-id=3Ddram_channel_data_co=
+ntroller_6,dram_channel_data_controller_6/
+> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
+roller_6'. Missing kernel support? (<no help>)
+> dram_channel_data_controller_3 -> amd_df/metric-id=3Ddram_channel_data_co=
+ntroller_3,dram_channel_data_controller_3/
+> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
+roller_3'. Missing kernel support? (<no help>)
+> dram_channel_data_controller_0 -> amd_df/metric-id=3Ddram_channel_data_co=
+ntroller_0,dram_channel_data_controller_0/
+> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
+roller_0'. Missing kernel support? (<no help>)
+> dram_channel_data_controller_5 -> amd_df/metric-id=3Ddram_channel_data_co=
+ntroller_5,dram_channel_data_controller_5/
+> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
+roller_5'. Missing kernel support? (<no help>)
+> dram_channel_data_controller_2 -> amd_df/metric-id=3Ddram_channel_data_co=
+ntroller_2,dram_channel_data_controller_2/
+> Multiple errors dropping message: Cannot find PMU `dram_channel_data_cont=
+roller_2'. Missing kernel support? (<no help>)
+> dram_channel_data_controller_7 -> amd_df/metric-id=3Ddram_channel_data_co=
+ntroller_7,dram_channel_data_controller_7/
+> Matched metric-id dram_channel_data_controller_4 to dram_channel_data_con=
+troller_4
+> Matched metric-id dram_channel_data_controller_1 to dram_channel_data_con=
+troller_1
+> Matched metric-id dram_channel_data_controller_6 to dram_channel_data_con=
+troller_6
+> Matched metric-id dram_channel_data_controller_3 to dram_channel_data_con=
+troller_3
+> Matched metric-id dram_channel_data_controller_0 to dram_channel_data_con=
+troller_0
+> Matched metric-id dram_channel_data_controller_5 to dram_channel_data_con=
+troller_5
+> Matched metric-id dram_channel_data_controller_2 to dram_channel_data_con=
+troller_2
+> Matched metric-id dram_channel_data_controller_7 to dram_channel_data_con=
+troller_7
+> Control descriptor is not initialized
+> dram_channel_data_controller_4: 0 2001175127 999996394
+> dram_channel_data_controller_1: 32346663 2001169897 1000709803
+> dram_channel_data_controller_6: 0 2001168377 1001193443
+> dram_channel_data_controller_3: 47551247 2001166947 1001198122
+> dram_channel_data_controller_0: 38975242 2001165217 1001182923
+> dram_channel_data_controller_5: 0 2001163067 1000464054
+> dram_channel_data_controller_2: 49934162 2001160907 999974934
+> dram_channel_data_controller_7: 0 2001150317 999968825
+>
+>  Performance counter stats for 'system wide':
+>
+>                  0      dram_channel_data_controller_4   #  10297.2 MiB  =
+nps1_die_to_dram       (49.97%)
+>         32,346,663      dram_channel_data_controller_1                   =
+                       (50.01%)
+>                  0      dram_channel_data_controller_6                   =
+                       (50.03%)
+>         47,551,247      dram_channel_data_controller_3                   =
+                       (50.03%)
+>         38,975,242      dram_channel_data_controller_0                   =
+                       (50.03%)
+>                  0      dram_channel_data_controller_5                   =
+                       (49.99%)
+>         49,934,162      dram_channel_data_controller_2                   =
+                       (49.97%)
+>                  0      dram_channel_data_controller_7                   =
+                       (49.97%)
+>
+>        2.001196512 seconds time elapsed
+>
+> [root@five ~]#
+>
+> What am I missing?
+>
+> Ian, I also stumbled on this:
+>
+> [root@five ~]# perf stat -M dram_channel_data_controller_4
+> Cannot find metric or group `dram_channel_data_controller_4'
+> ^C
+>  Performance counter stats for 'system wide':
+>
+>         284,908.91 msec cpu-clock                        #   32.002 CPUs =
+utilized
+>          6,485,456      context-switches                 #   22.763 K/sec
+>                719      cpu-migrations                   #    2.524 /sec
+>             32,800      page-faults                      #  115.125 /sec
+>    189,779,273,552      cycles                           #    0.666 GHz  =
+                       (83.33%)
+>      2,893,165,259      stalled-cycles-frontend          #    1.52% front=
+end cycles idle        (83.33%)
+>     24,807,157,349      stalled-cycles-backend           #   13.07% backe=
+nd cycles idle         (83.33%)
+>     99,286,488,807      instructions                     #    0.52  insn =
+per cycle
+>                                                   #    0.25  stalled cycl=
+es per insn     (83.33%)
+>     24,120,737,678      branches                         #   84.661 M/sec=
+                       (83.33%)
+>      1,907,540,278      branch-misses                    #    7.91% of al=
+l branches             (83.34%)
+>
+>        8.902784776 seconds time elapsed
+>
+>
+> [root@five ~]#
+> [root@five ~]# perf stat -e dram_channel_data_controller_4
+> ^C
+>  Performance counter stats for 'system wide':
+>
+>                  0      dram_channel_data_controller_4
+>
+>        1.189638741 seconds time elapsed
+>
+>
+> [root@five ~]#
+>
+> I.e. -M should bail out at that point (Cannot find metric or group `dram_=
+channel_data_controller_4'), no?
+
+We could. I suspect the code has always just not bailed out. I'll put
+together a patch adding the bail out.
+
+Thanks,
 Ian
 
 > - Arnaldo
 >
+> > > Before announcing failure, the test can try multiple options for each
+> > > available metric. After system-wide mode fails, retry once again with
+> > > the "--metric-no-group" option.
+> > >
+> > > E.g.
+> > >
+> > >    $ sudo perf test -v 100
+> > >
+> > > Before:
+> > >
+> > >    100: perf all metrics test                                        =
+   :
+> > >    --- start ---
+> > >    test child forked, pid 672731
+> > >    Testing branch_misprediction_ratio
+> > >    Testing all_remote_links_outbound
+> > >    Testing nps1_die_to_dram
+> > >    Metric 'nps1_die_to_dram' not printed in:
+> > >    Error:
+> > >    Invalid event (dram_channel_data_controller_4) in per-thread mode,=
+ enable system wide with '-a'.
+> > >    Testing macro_ops_dispatched
+> > >    Testing all_l2_cache_accesses
+> > >    Testing all_l2_cache_hits
+> > >    Testing all_l2_cache_misses
+> > >    Testing ic_fetch_miss_ratio
+> > >    Testing l2_cache_accesses_from_l2_hwpf
+> > >    Testing l2_cache_misses_from_l2_hwpf
+> > >    Testing op_cache_fetch_miss_ratio
+> > >    Testing l3_read_miss_latency
+> > >    Testing l1_itlb_misses
+> > >    test child finished with -1
+> > >    ---- end ----
+> > >    perf all metrics test: FAILED!
+> > >
+> > > After:
+> > >
+> > >    100: perf all metrics test                                        =
+   :
+> > >    --- start ---
+> > >    test child forked, pid 672887
+> > >    Testing branch_misprediction_ratio
+> > >    Testing all_remote_links_outbound
+> > >    Testing nps1_die_to_dram
+> > >    Testing macro_ops_dispatched
+> > >    Testing all_l2_cache_accesses
+> > >    Testing all_l2_cache_hits
+> > >    Testing all_l2_cache_misses
+> > >    Testing ic_fetch_miss_ratio
+> > >    Testing l2_cache_accesses_from_l2_hwpf
+> > >    Testing l2_cache_misses_from_l2_hwpf
+> > >    Testing op_cache_fetch_miss_ratio
+> > >    Testing l3_read_miss_latency
+> > >    Testing l1_itlb_misses
+> > >    test child finished with 0
+> > >    ---- end ----
+> > >    perf all metrics test: Ok
+> > >
+> >
+> > Issue gets resolved after applying this patch
+> >
+> >   $ ./perf test 102 -vvv
+> >   $102: perf all metrics test                                          =
+ :
+> >   $--- start ---
+> >   $test child forked, pid 244991
+> >   $Testing branch_misprediction_ratio
+> >   $Testing all_remote_links_outbound
+> >   $Testing nps1_die_to_dram
+> >   $Testing all_l2_cache_accesses
+> >   $Testing all_l2_cache_hits
+> >   $Testing all_l2_cache_misses
+> >   $Testing ic_fetch_miss_ratio
+> >   $Testing l2_cache_accesses_from_l2_hwpf
+> >   $Testing l2_cache_misses_from_l2_hwpf
+> >   $Testing l3_read_miss_latency
+> >   $Testing l1_itlb_misses
+> >   $test child finished with 0
+> >   $---- end ----
+> >   $perf all metrics test: Ok
+> >
+> > > Reported-by: Ayush Jain <ayush.jain3@amd.com>
+> > > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> >
+> > Tested-by: Ayush Jain <ayush.jain3@amd.com>
+> >
 > > > ---
-> > >  tools/perf/util/machine.c    |  3 +-
-> > >  tools/perf/util/map.c        | 20 +--------
-> > >  tools/perf/util/map.h        | 83 +++++++++++++++++++---------------=
---
-> > >  tools/perf/util/symbol-elf.c |  6 +--
-> > >  tools/perf/util/symbol.c     |  6 +--
-> > >  5 files changed, 50 insertions(+), 68 deletions(-)
+> > >   tools/perf/tests/shell/stat_all_metrics.sh | 7 +++++++
+> > >   1 file changed, 7 insertions(+)
 > > >
-> > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > > index be3dab9d5253..b6831a1f909d 100644
-> > > --- a/tools/perf/util/machine.c
-> > > +++ b/tools/perf/util/machine.c
-> > > @@ -1360,8 +1360,7 @@ __machine__create_kernel_maps(struct machine *m=
-achine, struct dso *kernel)
-> > >         if (machine->vmlinux_map =3D=3D NULL)
-> > >                 return -ENOMEM;
-> > >
-> > > -       map__set_map_ip(machine->vmlinux_map, identity__map_ip);
-> > > -       map__set_unmap_ip(machine->vmlinux_map, identity__map_ip);
-> > > +       map__set_mapping_type(machine->vmlinux_map, MAPPING_TYPE__IDE=
-NTITY);
-> > >         return maps__insert(machine__kernel_maps(machine), machine->v=
-mlinux_map);
-> > >  }
-> > >
-> > > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> > > index f64b83004421..54c67cb7ecef 100644
-> > > --- a/tools/perf/util/map.c
-> > > +++ b/tools/perf/util/map.c
-> > > @@ -109,8 +109,7 @@ void map__init(struct map *map, u64 start, u64 en=
-d, u64 pgoff, struct dso *dso)
-> > >         map__set_pgoff(map, pgoff);
-> > >         map__set_reloc(map, 0);
-> > >         map__set_dso(map, dso__get(dso));
-> > > -       map__set_map_ip(map, map__dso_map_ip);
-> > > -       map__set_unmap_ip(map, map__dso_unmap_ip);
-> > > +       map__set_mapping_type(map, MAPPING_TYPE__DSO);
-> > >         map__set_erange_warned(map, false);
-> > >         refcount_set(map__refcnt(map), 1);
-> > >  }
-> > > @@ -172,7 +171,7 @@ struct map *map__new(struct machine *machine, u64=
- start, u64 len,
-> > >                 map__init(result, start, start + len, pgoff, dso);
-> > >
-> > >                 if (anon || no_dso) {
-> > > -                       map->map_ip =3D map->unmap_ip =3D identity__m=
-ap_ip;
-> > > +                       map->mapping_type =3D MAPPING_TYPE__IDENTITY;
-> > >
-> > >                         /*
-> > >                          * Set memory without DSO as loaded. All map_=
-_find_*
-> > > @@ -630,18 +629,3 @@ struct maps *map__kmaps(struct map *map)
-> > >         }
-> > >         return kmap->kmaps;
-> > >  }
-> > > -
-> > > -u64 map__dso_map_ip(const struct map *map, u64 ip)
-> > > -{
-> > > -       return ip - map__start(map) + map__pgoff(map);
-> > > -}
-> > > -
-> > > -u64 map__dso_unmap_ip(const struct map *map, u64 ip)
-> > > -{
-> > > -       return ip + map__start(map) - map__pgoff(map);
-> > > -}
-> > > -
-> > > -u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip)
-> > > -{
-> > > -       return ip;
-> > > -}
-> > > diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> > > index 1b53d53adc86..3a3b7757da5f 100644
-> > > --- a/tools/perf/util/map.h
-> > > +++ b/tools/perf/util/map.h
-> > > @@ -16,23 +16,25 @@ struct dso;
-> > >  struct maps;
-> > >  struct machine;
-> > >
-> > > +enum mapping_type {
-> > > +       /* map__map_ip/map__unmap_ip are given as offsets in the DSO.=
- */
-> > > +       MAPPING_TYPE__DSO,
+> > > diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/=
+tests/shell/stat_all_metrics.sh
+> > > index 54774525e18a..1e88ea8c5677 100755
+> > > --- a/tools/perf/tests/shell/stat_all_metrics.sh
+> > > +++ b/tools/perf/tests/shell/stat_all_metrics.sh
+> > > @@ -16,6 +16,13 @@ for m in $(perf list --raw-dump metrics); do
+> > >     then
+> > >       continue
+> > >     fi
+> > > +  # Failed again, possibly there are not enough counters so retry sy=
+stem wide
+> > > +  # mode but without event grouping.
+> > > +  result=3D$(perf stat -M "$m" --metric-no-group -a sleep 0.01 2>&1)
+> > > +  if [[ "$result" =3D~ ${m:0:50} ]]
+> > > +  then
+> > > +    continue
+> > > +  fi
+> > >     # Failed again, possibly the workload was too small so retry with=
+ something
+> > >     # longer.
+> > >     result=3D$(perf stat -M "$m" perf bench internals synthesize 2>&1=
+)
 > >
-> > I slightly prefer __PIC than __DSO, but won't argue. :)
-> >
-> > > +       /* map__map_ip/map__unmap_ip are just the given ip value. */
-> > > +       MAPPING_TYPE__IDENTITY,
-> > > +};
-> > > +
-> > >  DECLARE_RC_STRUCT(map) {
-> > >         u64                     start;
-> > >         u64                     end;
-> > > -       bool                    erange_warned:1;
-> > > -       bool                    priv:1;
-> > > -       u32                     prot;
-> > >         u64                     pgoff;
-> > >         u64                     reloc;
-> > > -
-> > > -       /* ip -> dso rip */
-> > > -       u64                     (*map_ip)(const struct map *, u64);
-> > > -       /* dso rip -> ip */
-> > > -       u64                     (*unmap_ip)(const struct map *, u64);
-> > > -
-> > >         struct dso              *dso;
-> > >         refcount_t              refcnt;
-> > > +       u32                     prot;
-> > >         u32                     flags;
-> > > +       enum mapping_type       mapping_type:8;
-> > > +       bool                    erange_warned;
-> > > +       bool                    priv;
-> > >  };
-> > >
-> > >  struct kmap;
-> > > @@ -41,38 +43,11 @@ struct kmap *__map__kmap(struct map *map);
-> > >  struct kmap *map__kmap(struct map *map);
-> > >  struct maps *map__kmaps(struct map *map);
-> > >
-> > > -/* ip -> dso rip */
-> > > -u64 map__dso_map_ip(const struct map *map, u64 ip);
-> > > -/* dso rip -> ip */
-> > > -u64 map__dso_unmap_ip(const struct map *map, u64 ip);
-> > > -/* Returns ip */
-> > > -u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip);
-> > > -
-> > >  static inline struct dso *map__dso(const struct map *map)
-> > >  {
-> > >         return RC_CHK_ACCESS(map)->dso;
-> > >  }
-> > >
-> > > -static inline u64 map__map_ip(const struct map *map, u64 ip)
-> > > -{
-> > > -       return RC_CHK_ACCESS(map)->map_ip(map, ip);
-> > > -}
-> > > -
-> > > -static inline u64 map__unmap_ip(const struct map *map, u64 ip)
-> > > -{
-> > > -       return RC_CHK_ACCESS(map)->unmap_ip(map, ip);
-> > > -}
-> > > -
-> > > -static inline void *map__map_ip_ptr(struct map *map)
-> > > -{
-> > > -       return RC_CHK_ACCESS(map)->map_ip;
-> > > -}
-> > > -
-> > > -static inline void* map__unmap_ip_ptr(struct map *map)
-> > > -{
-> > > -       return RC_CHK_ACCESS(map)->unmap_ip;
-> > > -}
-> > > -
-> > >  static inline u64 map__start(const struct map *map)
-> > >  {
-> > >         return RC_CHK_ACCESS(map)->start;
-> > > @@ -123,6 +98,34 @@ static inline size_t map__size(const struct map *=
-map)
-> > >         return map__end(map) - map__start(map);
-> > >  }
-> > >
-> > > +/* ip -> dso rip */
-> > > +static inline u64 map__dso_map_ip(const struct map *map, u64 ip)
-> > > +{
-> > > +       return ip - map__start(map) + map__pgoff(map);
-> > > +}
-> > > +
-> > > +/* dso rip -> ip */
-> > > +static inline u64 map__dso_unmap_ip(const struct map *map, u64 ip)
-> >
-> > I think it's better to use 'rip' consistently in the variable name
-> > if possible.
-> >
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > > +{
-> > > +       return ip + map__start(map) - map__pgoff(map);
-> > > +}
-> > > +
-> > > +static inline u64 map__map_ip(const struct map *map, u64 ip)
-> > > +{
-> > > +       if ((RC_CHK_ACCESS(map)->mapping_type) =3D=3D MAPPING_TYPE__D=
-SO)
-> > > +               return map__dso_map_ip(map, ip);
-> > > +       else
-> > > +               return ip;
-> > > +}
-> > > +
-> > > +static inline u64 map__unmap_ip(const struct map *map, u64 ip)
-> > > +{
-> > > +       if ((RC_CHK_ACCESS(map)->mapping_type) =3D=3D MAPPING_TYPE__D=
-SO)
-> > > +               return map__dso_unmap_ip(map, ip);
-> > > +       else
-> > > +               return ip;
-> > > +}
-> > > +
-> > >  /* rip/ip <-> addr suitable for passing to `objdump --start-address=
-=3D` */
-> > >  u64 map__rip_2objdump(struct map *map, u64 rip);
-> > >
-> > > @@ -294,13 +297,13 @@ static inline void map__set_dso(struct map *map=
-, struct dso *dso)
-> > >         RC_CHK_ACCESS(map)->dso =3D dso;
-> > >  }
-> > >
-> > > -static inline void map__set_map_ip(struct map *map, u64 (*map_ip)(co=
-nst struct map *map, u64 ip))
-> > > +static inline void map__set_mapping_type(struct map *map, enum mappi=
-ng_type type)
-> > >  {
-> > > -       RC_CHK_ACCESS(map)->map_ip =3D map_ip;
-> > > +       RC_CHK_ACCESS(map)->mapping_type =3D type;
-> > >  }
-> > >
-> > > -static inline void map__set_unmap_ip(struct map *map, u64 (*unmap_ip=
-)(const struct map *map, u64 rip))
-> > > +static inline enum mapping_type map__mapping_type(struct map *map)
-> > >  {
-> > > -       RC_CHK_ACCESS(map)->unmap_ip =3D unmap_ip;
-> > > +       return RC_CHK_ACCESS(map)->mapping_type;
-> > >  }
-> > >  #endif /* __PERF_MAP_H */
-> > > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-el=
-f.c
-> > > index 9e7eeaf616b8..4b934ed3bfd1 100644
-> > > --- a/tools/perf/util/symbol-elf.c
-> > > +++ b/tools/perf/util/symbol-elf.c
-> > > @@ -1392,8 +1392,7 @@ static int dso__process_kernel_symbol(struct ds=
-o *dso, struct map *map,
-> > >                         map__set_start(map, shdr->sh_addr + ref_reloc=
-(kmap));
-> > >                         map__set_end(map, map__start(map) + shdr->sh_=
-size);
-> > >                         map__set_pgoff(map, shdr->sh_offset);
-> > > -                       map__set_map_ip(map, map__dso_map_ip);
-> > > -                       map__set_unmap_ip(map, map__dso_unmap_ip);
-> > > +                       map__set_mapping_type(map, MAPPING_TYPE__DSO)=
-;
-> > >                         /* Ensure maps are correctly ordered */
-> > >                         if (kmaps) {
-> > >                                 int err;
-> > > @@ -1455,8 +1454,7 @@ static int dso__process_kernel_symbol(struct ds=
-o *dso, struct map *map,
-> > >                         map__set_end(curr_map, map__start(curr_map) +=
- shdr->sh_size);
-> > >                         map__set_pgoff(curr_map, shdr->sh_offset);
-> > >                 } else {
-> > > -                       map__set_map_ip(curr_map, identity__map_ip);
-> > > -                       map__set_unmap_ip(curr_map, identity__map_ip)=
-;
-> > > +                       map__set_mapping_type(curr_map, MAPPING_TYPE_=
-_IDENTITY);
-> > >                 }
-> > >                 curr_dso->symtab_type =3D dso->symtab_type;
-> > >                 if (maps__insert(kmaps, curr_map))
-> > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > > index 82cc74b9358e..314c0263bf3c 100644
-> > > --- a/tools/perf/util/symbol.c
-> > > +++ b/tools/perf/util/symbol.c
-> > > @@ -956,8 +956,7 @@ static int maps__split_kallsyms(struct maps *kmap=
-s, struct dso *dso, u64 delta,
-> > >                                 return -1;
-> > >                         }
-> > >
-> > > -                       map__set_map_ip(curr_map, identity__map_ip);
-> > > -                       map__set_unmap_ip(curr_map, identity__map_ip)=
-;
-> > > +                       map__set_mapping_type(curr_map, MAPPING_TYPE_=
-_IDENTITY);
-> > >                         if (maps__insert(kmaps, curr_map)) {
-> > >                                 dso__put(ndso);
-> > >                                 return -1;
-> > > @@ -1475,8 +1474,7 @@ static int dso__load_kcore(struct dso *dso, str=
-uct map *map,
-> > >                         map__set_start(map, map__start(new_map));
-> > >                         map__set_end(map, map__end(new_map));
-> > >                         map__set_pgoff(map, map__pgoff(new_map));
-> > > -                       map__set_map_ip(map, map__map_ip_ptr(new_map)=
-);
-> > > -                       map__set_unmap_ip(map, map__unmap_ip_ptr(new_=
-map));
-> > > +                       map__set_mapping_type(map, map__mapping_type(=
-new_map));
-> > >                         /* Ensure maps are correctly ordered */
-> > >                         map_ref =3D map__get(map);
-> > >                         maps__remove(kmaps, map_ref);
-> > > --
-> > > 2.43.0.rc1.413.gea7ed67945-goog
-> > >
+> > Thanks & Regards,
+> > Ayush Jain
 >
 > --
 >
