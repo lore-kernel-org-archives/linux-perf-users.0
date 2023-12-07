@@ -1,144 +1,117 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076E11BDA;
-	Thu,  7 Dec 2023 12:34:34 -0800 (PST)
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5bdb0be3591so1104523a12.2;
-        Thu, 07 Dec 2023 12:34:34 -0800 (PST)
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6651727;
+	Thu,  7 Dec 2023 12:41:26 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d048d38881so10401735ad.2;
+        Thu, 07 Dec 2023 12:41:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701981273; x=1702586073;
+        d=1e100.net; s=20230601; t=1701981686; x=1702586486;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6eK7GmkC+MOlgnAqTreiUYrmfw87lLVr1vlz5i4mdHs=;
-        b=TeP2gVpD4syeKBQ21b4/nUP3tT/OhylW2otHS7NNKwOIZeDrBBFixQXAsUwjy2zZlS
-         tazf/rDlUi96RcjnUNnfaC1LsTPA/0AD+ttA/Jdyd5Auf7u11HL385My4hQvMowNh1Ns
-         ItHLYLP51UZ/qeTD9I77djlZtBbogPpvFX1Wf/QqTUSTWdbzPUBnkyI6une3/CkMf+0K
-         SRFXKtOuUnY9urGpQTD5/eQYfNK1NasRs5eEiYS3xYkJh70CUUd03UUDmfvXjq71dOa2
-         xvpth4dQK9+FJbGHqtGHfcxoMZ302U94s1t5SleytAGNbdjJGQzaEqjFIIVek3sAe446
-         Wz8w==
-X-Gm-Message-State: AOJu0YwDUWbKRmxjxpQvYw0k6oxffhsBBvhXsi/tAtxZayvvCKGb6uZL
-	k7SEDfI/rBNHIa+ko4Iqcu6kRrV5gRvkhEEBpHg=
-X-Google-Smtp-Source: AGHT+IHmEL8krtJsjXUO7c7ScOqGojZcZI20DcGgMy7M3cpewmpq6sVH0ytC82O5lueQ2qt9BVL7nQ3jHALMxQoXWRw=
-X-Received: by 2002:a05:6a20:4ba9:b0:18f:97c:8a50 with SMTP id
- fu41-20020a056a204ba900b0018f097c8a50mr2705672pzb.123.1701981273120; Thu, 07
- Dec 2023 12:34:33 -0800 (PST)
+        bh=ertAQ/XyfkeiqVhWFyijagBt3DCkqglpo69jMsd5dTk=;
+        b=ItEK50E1AKumUVx5BcQZMqxloiP/7Vx0fZgFc4HawyywdmN1eDf/MbPnulaRCOurQb
+         8/lCRDmsT3h9x5/6+TeZTEymDJRsOiEsnwuEJ+QhueXZ4muev2q3AvVN6WABm+lSVNN4
+         Rg6j6/SKWb9krRiYc4A/kYDd4dshi0YRCHOxFPFWyzja7eGEZL3LaJTBGw3JNbzY4L4s
+         gipFiSbilfgDApEzoE6F+I/FJmd+0boBk87+VAVEOMU2QVV7Y/sbAap9DgA0KOmWEWEt
+         9Om+OeymCd/i9Sizf6atrmKf/QIE9tBsgkdAFX58029l2+/WubwC+2poFrfNW/s/DesH
+         DfjA==
+X-Gm-Message-State: AOJu0Yx2hqhD0/b7oyi/HxAaZXesdsrmK6GEKOIIx25AorCS0kMkJJNP
+	LDJG/GJmNhbmHKHfbMKQPrCWdIecCD6XfmR2lx2hc5RBv8U=
+X-Google-Smtp-Source: AGHT+IETK/ZIBBWSnej2AHVaDXTSJyrSjWXTCLalDqzjnurbXAmTOaTyPYadjSwdrWBVBxwyYVL23HN0QA+OfUT2Av8=
+X-Received: by 2002:a17:902:ea86:b0:1d0:8d57:47c with SMTP id
+ x6-20020a170902ea8600b001d08d57047cmr2943727plb.25.1701981685734; Thu, 07 Dec
+ 2023 12:41:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231128175441.721579-1-namhyung@kernel.org> <20231128175441.721579-5-namhyung@kernel.org>
- <ZXIoRDWBPEjUpYuP@kernel.org>
-In-Reply-To: <ZXIoRDWBPEjUpYuP@kernel.org>
+References: <20231128175441.721579-1-namhyung@kernel.org> <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
+ <CAM9d7chKmDETK6Ea2wyR8L21jyHWcPHbKavarnq-JmNA-AoUnQ@mail.gmail.com>
+ <CAP-5=fUf6R=bsfg7i8atFApJBY-=zWUBMq7inFsCPZhB+w2==Q@mail.gmail.com>
+ <CAM9d7cjDiu=dksnhboJFT4uPQJcvGMB-vBt96v3i7Kqy5LKRMw@mail.gmail.com>
+ <CAP-5=fXKbi3DYoOKrJvNKLNU=fJEY9aDAOQhH+Vh+XWxHzGjwA@mail.gmail.com>
+ <ZXIiBp-rvdvSI-ZY@kernel.org> <ZXIicbe9K5KYGSV4@kernel.org> <CAP-5=fWN5Jwsf5dxqw0BJxpdu89FM54A-AtQpEqxeE7XLDx3mA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWN5Jwsf5dxqw0BJxpdu89FM54A-AtQpEqxeE7XLDx3mA@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 7 Dec 2023 12:34:21 -0800
-Message-ID: <CAM9d7ch6BRTYoES2atnM8G_qpS6B6Z-oVWD04ZHBBOB9ND11zw@mail.gmail.com>
-Subject: Re: [PATCH 4/8] perf annotate: Use global annotation_options
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+Date: Thu, 7 Dec 2023 12:41:14 -0800
+Message-ID: <CAM9d7chXf7F9T+ToKXG+p+37-noMRtOmUr9sttBzEDOw8uJGgw@mail.gmail.com>
+Subject: Re: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 7, 2023 at 12:17=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Thu, Dec 7, 2023 at 12:14=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Em Tue, Nov 28, 2023 at 09:54:37AM -0800, Namhyung Kim escreveu:
-> > Now it can directly use the global options and no need to pass it as an
-> > argument.
+> On Thu, Dec 7, 2023 at 11:52=E2=80=AFAM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Thu, Dec 07, 2023 at 04:50:30PM -0300, Arnaldo Carvalho de Melo escr=
+eveu:
+> > > Em Tue, Dec 05, 2023 at 09:59:02AM -0800, Ian Rogers escreveu:
+> > > > On Mon, Dec 4, 2023 at 2:46=E2=80=AFPM Namhyung Kim <namhyung@kerne=
+l.org> wrote:
+> > > > > On Thu, Nov 30, 2023 at 10:37=E2=80=AFAM Ian Rogers <irogers@goog=
+le.com> wrote:
+> > > > > > Sgtm. My point wasn't to criticize, I think this is a good chan=
+ge, I
+> > > > > > was just trying to imagine doing things in a way that could ove=
+rall
+> > > > > > reduce complexity
+> > >
+> > > > > Yep, thanks for your review.  Can I get your ACKs? :)
+> > >
+> > > > For the series:
+> > > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > >
+> > > Thanks, applied to perf-tools-next.
+> >
+> >
+> > Now trying to fix this:
+> >
+> >   CC      bench/numa.o
+> >   CC      tests/hists_cumulate.o
+> > ui/gtk/annotate.c: In function =E2=80=98symbol__gtk_annotate=E2=80=99:
+> > ui/gtk/annotate.c:179:43: error: passing argument 3 of =E2=80=98symbol_=
+_annotate=E2=80=99 from incompatible pointer type [-Werror=3Dincompatible-p=
+ointer-types]
+> >   179 |         err =3D symbol__annotate(ms, evsel, options, NULL);
+> >       |                                           ^~~~~~~
+> >       |                                           |
+> >       |                                           struct annotation_opt=
+ions *
+> > In file included from ui/gtk/annotate.c:5:
+> > /home/acme/git/perf-tools-next/tools/perf/util/annotate.h:376:36: note:=
+ expected =E2=80=98struct arch **=E2=80=99 but argument is of type =E2=80=
+=98struct annotation_options *=E2=80=99
+> >   376 |                      struct arch **parch);
+> >       |                      ~~~~~~~~~~~~~~^~~~~
+> > ui/gtk/annotate.c:179:15: error: too many arguments to function =E2=80=
+=98symbol__annotate=E2=80=99
+> >   179 |         err =3D symbol__annotate(ms, evsel, options, NULL);
+> >       |               ^~~~~~~~~~~~~~~~
+> > /home/acme/git/perf-tools-next/tools/perf/util/annotate.h:374:5: note: =
+declared here
+> >   374 | int symbol__annotate(struct map_symbol *ms,
+> >       |     ^~~~~~~~~~~~~~~~
+> > cc1: all warnings being treated as errors
+> >   CC      tests/python-use.o
+> >   CC      trace/beauty/sockaddr.o
+> >   CC      arch/x86/util/topdown.o
+> > make[6]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build=
+:105: ui/gtk/annotate.o] Error 1
+> > make[6]: *** Waiting for unfinished jobs....
+> >   CC      arch/x86/util/machine.o
 >
-> At this point the build breaks when using GTK2=3D1 on the make command
-> line, as done in 'make -C tools/perf build-test', so I had to add the
-> following patch on top of this 4/8 patch:
+> Maybe a signal to remove the gtk support :-)
 
-Oops, I forgot to test with it.  Thanks for fixing this!
++1
 
 Thanks,
 Namhyung
-
->
->
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.=
-c
-> index a53a4e711899f20d..9c1e2b2b5bc0b730 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -365,7 +365,6 @@ static void hists__find_annotations(struct hists *his=
-ts,
->                         int ret;
->                         int (*annotate)(struct hist_entry *he,
->                                         struct evsel *evsel,
-> -                                       struct annotation_options *option=
-s,
->                                         struct hist_browser_timer *hbt);
->
->                         annotate =3D dlsym(perf_gtk_handle,
-> @@ -375,7 +374,7 @@ static void hists__find_annotations(struct hists *his=
-ts,
->                                 return;
->                         }
->
-> -                       ret =3D annotate(he, evsel, &annotate_opts, NULL)=
-;
-> +                       ret =3D annotate(he, evsel, NULL);
->                         if (!ret || !ann->skip_missing)
->                                 return;
->
-> diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-> index 2effac77ca8c6742..394861245fd3e48f 100644
-> --- a/tools/perf/ui/gtk/annotate.c
-> +++ b/tools/perf/ui/gtk/annotate.c
-> @@ -162,7 +162,6 @@ static int perf_gtk__annotate_symbol(GtkWidget *windo=
-w, struct map_symbol *ms,
->  }
->
->  static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evs=
-el,
-> -                               struct annotation_options *options,
->                                 struct hist_browser_timer *hbt)
->  {
->         struct dso *dso =3D map__dso(ms->map);
-> @@ -176,7 +175,7 @@ static int symbol__gtk_annotate(struct map_symbol *ms=
-, struct evsel *evsel,
->         if (dso->annotate_warned)
->                 return -1;
->
-> -       err =3D symbol__annotate(ms, evsel, options, NULL);
-> +       err =3D symbol__annotate(ms, evsel, NULL);
->         if (err) {
->                 char msg[BUFSIZ];
->                 dso->annotate_warned =3D true;
-> @@ -244,10 +243,9 @@ static int symbol__gtk_annotate(struct map_symbol *m=
-s, struct evsel *evsel,
->
->  int hist_entry__gtk_annotate(struct hist_entry *he,
->                              struct evsel *evsel,
-> -                            struct annotation_options *options,
->                              struct hist_browser_timer *hbt)
->  {
-> -       return symbol__gtk_annotate(&he->ms, evsel, options, hbt);
-> +       return symbol__gtk_annotate(&he->ms, evsel, hbt);
->  }
->
->  void perf_gtk__show_annotations(void)
-> diff --git a/tools/perf/ui/gtk/gtk.h b/tools/perf/ui/gtk/gtk.h
-> index 1e84dceb52671385..a2b497f03fd6e478 100644
-> --- a/tools/perf/ui/gtk/gtk.h
-> +++ b/tools/perf/ui/gtk/gtk.h
-> @@ -56,13 +56,11 @@ struct evsel;
->  struct evlist;
->  struct hist_entry;
->  struct hist_browser_timer;
-> -struct annotation_options;
->
->  int evlist__gtk_browse_hists(struct evlist *evlist, const char *help,
->                              struct hist_browser_timer *hbt, float min_pc=
-nt);
->  int hist_entry__gtk_annotate(struct hist_entry *he,
->                              struct evsel *evsel,
-> -                            struct annotation_options *options,
->                              struct hist_browser_timer *hbt);
->  void perf_gtk__show_annotations(void);
->
