@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zgutos3x"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1DEE10F5
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:17:47 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-db547d41413so448172276.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:17:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tuX7o+t7"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2BBB1709
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:17:49 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d67fc68a82so1627907b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:17:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701911866; x=1702516666; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701911869; x=1702516669; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AO9qbVdz92aeOF04iN3sGAA+G8iEwxSn4ALkZn1Ljr4=;
-        b=Zgutos3xtH5+U2/BS+FcOeiKpwHPGi2oOXAFzwDqk4105+AxXsU/AymCQlaNemjyK1
-         IvwbHyf/okcc0jTHW5WFtHu0jJeUQPRZxfIrvzSm8ZlJxwMfM+Mja/NmO0af+i9Yb/5U
-         sz32+03aMZSqt+YeP416/mt3fS3uWtZDKkCZXwrWJkA59KCtIbwwf6PaK6CiSjx4fiV4
-         hEanIFEPEp65UStVNGdcLT4MVfCrJutdRljADCh6nGuG7hUYZbPQoHWOBY6ZI5sQeNX6
-         cBEuhJYpkAufuLXqNvR3uoZueLEI+oRFCfMzz1870vQr8P7XX6LaFJUx6ajZr1K7QAMI
-         k5xw==
+        bh=3o96R63h4tW+QyyZZjx6MH+ZM3C6AiBinWxkS0w0I9s=;
+        b=tuX7o+t72YJGCKVUcUGeCW35uDhnwPXNbY23vmltyo64hrqXI3iu3kK5Mmbp6F2A+6
+         7eX+YTw5x6TmjAPj9x7XFm3me7K9P2LwWIq7hc9LOjCxViyElwIAO+YkfhGB+XQe4qPa
+         GUhTQ2J5CSIjaUl6tTDC8snSjwuEVa1EoxGNI/hsL687epJyFvKaWy/iIGQXmKBLnKMz
+         xuO7QDvUZfUjxmf7JTNFH+piSzYmsxA8/JzYS11MCQnSI25a0ecu2ksKvhLHb2YeAWbe
+         /PTL7a/LS2VWt8AvQK5ho1DCI76LpkVVn3Vhhm5qtObMjzlKDudwR0k6U5cUNVpcygMO
+         7l+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701911866; x=1702516666;
+        d=1e100.net; s=20230601; t=1701911869; x=1702516669;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AO9qbVdz92aeOF04iN3sGAA+G8iEwxSn4ALkZn1Ljr4=;
-        b=mb2LVh1iiJOIwgLL3P4q/aovyvFBmuUT7iyYZ2OkrLGm5ErxxsARmCPUGiOPM2ht18
-         aZKxhBEgAMWnpU5+pnPNa3BAdpn5dgZyTJwLUS7GskculKUb/5VwfPKSG0TRjwhAKO/E
-         +Jr+sy1ziVJyEG0XEL7lj65zhmtXMTZDrA8fxTAWs+ZRsLqkjxfD062ZLXUXvoFgHU0a
-         iTvq1yYoOCQU+ocz39Va+B+sUlv3oNJZ67K0aatOzEZddQ9LuViEP1IQouG1Q+/XQooQ
-         ph3sfLktZbxIOF0pAW74eB/aIQhpeCI/x9RGpJII49P07yE+Y2RwrokOwIsZ0fKLkfML
-         rIyA==
-X-Gm-Message-State: AOJu0Yzm3I7+XtTgdzA25XqRs80cPtJEfWnvxyIEntDPPS7Kl7TnoHGz
-	RnZtUobzPJ9EDpd5fLO2zjYgEFjCncrp
-X-Google-Smtp-Source: AGHT+IFZShnoES+NZiyREpT/gFpeijKkhzAYIhu+beyX8tCaB7kyYLyiBn92ban+fdsdihdux7Lj+fuWL7yd
+        bh=3o96R63h4tW+QyyZZjx6MH+ZM3C6AiBinWxkS0w0I9s=;
+        b=vYgYlo0RwXZJLRKtso6VUVia5pNwBVJLW7lifzCsLxUkns6It8Ux/s0XQLLZmTHrIp
+         7eeZrDtLEOjFSQZahGxO1dM0a8Ytj4URUS3GLzkanTH7JG6Xo2ot+1aXuG8B5nB+jMUe
+         4n3CneJPgThE8+aU88ISFtjLo3a/P615li1uPVV+U5vxUmLwUzJjF12cjW92J2NgTtA4
+         u5uy7i4AxWTsiXk/Uu0vU5ZScoBqG2ZqKaGxOWnGuFmyqervO5fUs/k59m0fbbihFu03
+         CAUSpzJZkxfLldLZjoVO4o1Narsv/1S8DVJh0QvtHBjiTHfyB26/APYhIpVnQOLLqUCY
+         86yQ==
+X-Gm-Message-State: AOJu0YzzxiSgdJ56NeFMLC2nkwIhv1wFm4utmbjBaLhEIrKKPbCIHOj9
+	aO3m+Hy8waKLBSU1lshtbo3kuXXb3xsQ
+X-Google-Smtp-Source: AGHT+IEldmR3/X81EpZlxZMbgINR4XFgb3uPK8wJLVSwf1670CHlBeFUHwbRDDtLnNjPUaqRivWe4dYfxrO5
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
- (user=irogers job=sendgmr) by 2002:a25:3144:0:b0:db5:4a00:a153 with SMTP id
- x65-20020a253144000000b00db54a00a153mr42999ybx.4.1701911866495; Wed, 06 Dec
- 2023 17:17:46 -0800 (PST)
-Date: Wed,  6 Dec 2023 17:16:42 -0800
+ (user=irogers job=sendgmr) by 2002:a81:be16:0:b0:5ca:20f3:ca21 with SMTP id
+ i22-20020a81be16000000b005ca20f3ca21mr31031ywn.1.1701911868933; Wed, 06 Dec
+ 2023 17:17:48 -0800 (PST)
+Date: Wed,  6 Dec 2023 17:16:43 -0800
 In-Reply-To: <20231207011722.1220634-1-irogers@google.com>
-Message-Id: <20231207011722.1220634-9-irogers@google.com>
+Message-Id: <20231207011722.1220634-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231207011722.1220634-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v6 08/47] perf symbol: Use function to add missing maps lock
+Subject: [PATCH v6 09/47] perf synthetic-events: Use function to add missing
+ maps lock
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,72 +69,160 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Switch do_validate_kcore_modules from loop macro maps__for_each_entry to
-maps__for_each_map function that takes a callback. The function holds
-the maps lock, which should be held during iteration.
+Switch perf_event__synthesize_modules from loop macro
+maps__for_each_entry to maps__for_each_map function that takes
+a callback. The function holds the maps lock, which should be
+held during iteration.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ tools/perf/util/synthetic-events.c | 118 ++++++++++++++++-------------
+ 1 file changed, 67 insertions(+), 51 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 1cc42b8d8afb..72f03b875478 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1114,33 +1114,35 @@ int compare_proc_modules(const char *from, const char *to)
- 	return ret;
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index a0579c7d7b9e..3712186353fb 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -665,18 +665,74 @@ int perf_event__synthesize_cgroups(struct perf_tool *tool __maybe_unused,
  }
+ #endif
  
-+static int do_validate_kcore_modules_cb(struct map *old_map, void *data)
-+{
-+	struct rb_root *modules = data;
-+	struct module_info *mi;
-+	struct dso *dso;
++struct perf_event__synthesize_modules_maps_cb_args {
++	struct perf_tool *tool;
++	perf_event__handler_t process;
++	struct machine *machine;
++	union perf_event *event;
++};
 +
-+	if (!__map__is_kmodule(old_map))
++static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
++{
++	struct perf_event__synthesize_modules_maps_cb_args *args = data;
++	union perf_event *event = args->event;
++	struct dso *dso;
++	size_t size;
++
++	if (!__map__is_kmodule(map))
 +		return 0;
 +
-+	dso = map__dso(old_map);
-+	/* Module must be in memory at the same address */
-+	mi = find_module(dso->short_name, modules);
-+	if (!mi || mi->start != map__start(old_map))
-+		return -EINVAL;
++	dso = map__dso(map);
++	if (symbol_conf.buildid_mmap2) {
++		size = PERF_ALIGN(dso->long_name_len + 1, sizeof(u64));
++		event->mmap2.header.type = PERF_RECORD_MMAP2;
++		event->mmap2.header.size = (sizeof(event->mmap2) -
++					(sizeof(event->mmap2.filename) - size));
++		memset(event->mmap2.filename + size, 0, args->machine->id_hdr_size);
++		event->mmap2.header.size += args->machine->id_hdr_size;
++		event->mmap2.start = map__start(map);
++		event->mmap2.len   = map__size(map);
++		event->mmap2.pid   = args->machine->pid;
++
++		memcpy(event->mmap2.filename, dso->long_name, dso->long_name_len + 1);
++
++		perf_record_mmap2__read_build_id(&event->mmap2, args->machine, false);
++	} else {
++		size = PERF_ALIGN(dso->long_name_len + 1, sizeof(u64));
++		event->mmap.header.type = PERF_RECORD_MMAP;
++		event->mmap.header.size = (sizeof(event->mmap) -
++					(sizeof(event->mmap.filename) - size));
++		memset(event->mmap.filename + size, 0, args->machine->id_hdr_size);
++		event->mmap.header.size += args->machine->id_hdr_size;
++		event->mmap.start = map__start(map);
++		event->mmap.len   = map__size(map);
++		event->mmap.pid   = args->machine->pid;
++
++		memcpy(event->mmap.filename, dso->long_name, dso->long_name_len + 1);
++	}
++
++	if (perf_tool__process_synth_event(args->tool, event, args->machine, args->process) != 0)
++		return -1;
 +
 +	return 0;
 +}
 +
- static int do_validate_kcore_modules(const char *filename, struct maps *kmaps)
+ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t process,
+ 				   struct machine *machine)
  {
- 	struct rb_root modules = RB_ROOT;
--	struct map_rb_node *old_node;
- 	int err;
+-	int rc = 0;
+-	struct map_rb_node *pos;
++	int rc;
+ 	struct maps *maps = machine__kernel_maps(machine);
+-	union perf_event *event;
+-	size_t size = symbol_conf.buildid_mmap2 ?
+-			sizeof(event->mmap2) : sizeof(event->mmap);
++	struct perf_event__synthesize_modules_maps_cb_args args = {
++		.tool = tool,
++		.process = process,
++		.machine = machine,
++	};
++	size_t size = symbol_conf.buildid_mmap2
++		? sizeof(args.event->mmap2)
++		: sizeof(args.event->mmap);
  
- 	err = read_proc_modules(filename, &modules);
- 	if (err)
- 		return err;
- 
--	maps__for_each_entry(kmaps, old_node) {
--		struct map *old_map = old_node->map;
--		struct module_info *mi;
+-	event = zalloc(size + machine->id_hdr_size);
+-	if (event == NULL) {
++	args.event = zalloc(size + machine->id_hdr_size);
++	if (args.event == NULL) {
+ 		pr_debug("Not enough memory synthesizing mmap event "
+ 			 "for kernel modules\n");
+ 		return -1;
+@@ -687,53 +743,13 @@ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t
+ 	 * __perf_event_mmap
+ 	 */
+ 	if (machine__is_host(machine))
+-		event->header.misc = PERF_RECORD_MISC_KERNEL;
++		args.event->header.misc = PERF_RECORD_MISC_KERNEL;
+ 	else
+-		event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
+-
+-	maps__for_each_entry(maps, pos) {
+-		struct map *map = pos->map;
 -		struct dso *dso;
-+	err = maps__for_each_map(kmaps, do_validate_kcore_modules_cb, &modules);
++		args.event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
  
--		if (!__map__is_kmodule(old_map)) {
+-		if (!__map__is_kmodule(map))
 -			continue;
++	rc = maps__for_each_map(maps, perf_event__synthesize_modules_maps_cb, &args);
+ 
+-		dso = map__dso(map);
+-		if (symbol_conf.buildid_mmap2) {
+-			size = PERF_ALIGN(dso->long_name_len + 1, sizeof(u64));
+-			event->mmap2.header.type = PERF_RECORD_MMAP2;
+-			event->mmap2.header.size = (sizeof(event->mmap2) -
+-						(sizeof(event->mmap2.filename) - size));
+-			memset(event->mmap2.filename + size, 0, machine->id_hdr_size);
+-			event->mmap2.header.size += machine->id_hdr_size;
+-			event->mmap2.start = map__start(map);
+-			event->mmap2.len   = map__size(map);
+-			event->mmap2.pid   = machine->pid;
+-
+-			memcpy(event->mmap2.filename, dso->long_name, dso->long_name_len + 1);
+-
+-			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
+-		} else {
+-			size = PERF_ALIGN(dso->long_name_len + 1, sizeof(u64));
+-			event->mmap.header.type = PERF_RECORD_MMAP;
+-			event->mmap.header.size = (sizeof(event->mmap) -
+-						(sizeof(event->mmap.filename) - size));
+-			memset(event->mmap.filename + size, 0, machine->id_hdr_size);
+-			event->mmap.header.size += machine->id_hdr_size;
+-			event->mmap.start = map__start(map);
+-			event->mmap.len   = map__size(map);
+-			event->mmap.pid   = machine->pid;
+-
+-			memcpy(event->mmap.filename, dso->long_name, dso->long_name_len + 1);
 -		}
--		dso = map__dso(old_map);
--		/* Module must be in memory at the same address */
--		mi = find_module(dso->short_name, &modules);
--		if (!mi || mi->start != map__start(old_map)) {
--			err = -EINVAL;
--			goto out;
+-
+-		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
+-			rc = -1;
+-			break;
 -		}
 -	}
--out:
- 	delete_modules(&modules);
- 	return err;
+-
+-	free(event);
++	free(args.event);
+ 	return rc;
  }
+ 
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
