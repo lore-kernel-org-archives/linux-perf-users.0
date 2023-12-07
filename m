@@ -1,105 +1,127 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mqfvnj+j"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC69DAC;
-	Thu,  7 Dec 2023 06:42:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701960125; x=1733496125;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vLqATef+nIbcTZFucleeWysxy0TTQdwHZ88h8SHZ8vg=;
-  b=mqfvnj+jw3dk/Sxem+YgKIQsyE83XLyes+fJ4+W889D4mmM3hXhVU9QA
-   Bc8ltNfcbctUN4o2vtpePqIsQRNE96tsMMATngfq9BuJeRZrzD7iOJpXC
-   PSQ5TLv/gAGFy0Ke1MncpMw1x13cNjS434pJol9qh94VokiwvZPmLcpa5
-   DI5lDFwJEKuLTdd0sEKNKW+nUjVMr9blqhdi8vvs/AB8n37fNg5MNBmTw
-   4CRNJ20JgNKrm8LgzvggETE9sbZ2x7Hjz+JuSzA+kenrVcVvbKzWaiody
-   vUvPn7R9nDhGfpJ7mbgh6v+05e7rmtYeLqSiz5Y2X7tTKYNv/oHsIbt2P
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="397031013"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="397031013"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 06:42:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="13128488"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 06:42:06 -0800
-Received: from [10.212.103.45] (kliang2-mobl1.ccr.corp.intel.com [10.212.103.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id EA7D0580201;
-	Thu,  7 Dec 2023 06:42:02 -0800 (PST)
-Message-ID: <b4e6f20c-9845-4114-8f48-ef1f46869a09@linux.intel.com>
-Date: Thu, 7 Dec 2023 09:42:01 -0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2zAT9YY4"
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E63C3;
+	Thu,  7 Dec 2023 06:44:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MJ13j8xDIaAf3D/8s2dXvtz8epDkQQ/CdoLYAICiAM3PlAr6ov1ZViuXrVonJRevaf6pm4TnPN59nxSVFz3r2DySeFkjGLs61KEoUxGy2cwR62hYjTqnqwp98EjSG1OM3d+XQFZTaJDpL1eBBf+RxwD9ZldC3LUTTw2DIrSwT/0hHDQZdU1zpQtMgROfQ7CU4bw4eB4IOzEVrw2CBT7nYH44uydStY41CjIkqC3FlQwbuVQL2cV4hsRlWpx9/ACRXKFhhyWxGSPpiNUwQpYb63SSd6UZim7W5i6Lg7f4qLQ6maprmxKkRe+iRxdsTbgJIE9f63klFkHycjVK4udEOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jfCywKyh3g/ME3b8Tqtnoznm2qf6miFOaa9XsbN4viY=;
+ b=brhpXuTHdfh2Eb3fkxLVxG16qZio0lO/ta/R+Z6UskUcj/kpQLsvr+fS0anN8XfzD4nJdtRyIvLw0Qtc0gCnxnYzBsaSYQU3R+kEqhd6mCQFnwhpDi48iKZ2dODCHDkmGupX1nB8qx8U1xK53mopaIwb0LvyR4PT9Q+MnY6DaQnpgE/s5LXLiObGL/4yhp+l/5jYmScqbJabUXV/qD2vcYxS60jyhS6LJSCd6odeoKQMgkyWD6LvmXinDFV4K1AlJAbzRrC1tYIUL7YXMRVySzZmFbx8siUfJARTBtGBR3JhTm1TwiKGqSadsDJJyL0APSlkh9SaM4rBpqEULgx+2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jfCywKyh3g/ME3b8Tqtnoznm2qf6miFOaa9XsbN4viY=;
+ b=2zAT9YY4Tdo8T37XBNeKCKitjAtVXE1xZpXi5VLVGe4sdVdnlawEyHfXJZmhvR8D6wzNefzpN9cyAmHce+8DUOToy7MEqKZ+8clNCdnWG0lGtgXMTWPgxr69c/VJV4A9O7hBhK5YeYdtlIbykAxt0P+BKQ0fy9ewMzbhbKHvw38=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by DS0PR12MB9348.namprd12.prod.outlook.com (2603:10b6:8:1a0::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.25; Thu, 7 Dec
+ 2023 14:44:24 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::cd68:8823:38b3:65bc]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::cd68:8823:38b3:65bc%3]) with mapi id 15.20.7068.027; Thu, 7 Dec 2023
+ 14:44:24 +0000
+Message-ID: <0597b44c-226d-1180-d55d-bcf9bbd2e03f@amd.com>
+Date: Thu, 7 Dec 2023 20:14:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 0/6] Clean up perf mem
+Content-Language: en-US
+To: kan.liang@linux.intel.com, acme@kernel.org, irogers@google.com,
+ peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ jolsa@kernel.org, adrian.hunter@intel.com, john.g.garry@oracle.com,
+ will@kernel.org, james.clark@arm.com, mike.leach@linaro.org,
+ leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com,
+ renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20231206201324.184059-1-kan.liang@linux.intel.com>
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20231206201324.184059-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR01CA0144.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::14) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] perf mem: Clean up perf_mem_events__ptr()
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
- namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
- john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
- mike.leach@linaro.org, leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com,
- renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com, ravi.bangoria@amd.com,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20231206201324.184059-1-kan.liang@linux.intel.com>
- <20231206201324.184059-3-kan.liang@linux.intel.com>
- <CAP-5=fUhaOgMZuhhsmjkTL6QqEQzcjq9GjJyteLG5RTWuBQ0gg@mail.gmail.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fUhaOgMZuhhsmjkTL6QqEQzcjq9GjJyteLG5RTWuBQ0gg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DS0PR12MB9348:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9cca6f57-e4b3-495c-5af1-08dbf7330173
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	eQYbLhz6OfWRYjmg1yyQI2v1+HZ3KShnPjj9M6MfooK7IDMrEPP5t2+5jCf1+0uZ5Km7Y7GTN+lILSZzAecUV8NhW2iPZJl1w11tbOaO2aH9W+j7iUNI5DNGnxa9R5WbLbGFr2qaKvc9I3SS6jmDzXRL/1gOKWMT5/Pr8GOmQPWOa6Wo9gathvEe7+L7viCGKy3kQwXBri6UicJ9p5Xi8b6JYaAeCfyvzR7rO+KUk9Tm4DwR3gukepn8UNY6i0e840NlwsOu/HweQYkzVHBzB8nnASn/+H1ZeOLxDf0NbSi2fNkBc7wmlyE/cpUZAK79U/2jHwgv6oJfvOpTLv8Hb/qBMRBhmWlVbwdjgIGtPputQFFpwyIznWIF3Q4mtr8Llkot6qqRqRobvPTttgvVX+s6bFViFvs+fX6hJF5ygEelCMnrzS74ueuMtE7Nhvx36Q8dRPHq8T9flsMk7zBdACunHDDbPP/VwtGqf7ZTCVRxgxTG8zrJQmi9kmjI7ZVeVQIEl4BxWxXBp3QYPPjb/lludThT2U8CTgUKzEZL53TDQ0itOfeEf0fb0zAiol6ZqFEffnAQ8rRxEE6tn3p/ogzVneRnLmW39SHKxCKrbzZ1CVvxSg39MoHnvETnGE7+lJzjEyVSOy6VU3uq1jrwD8R5Rt1SzAnMRhCeLYRXDkc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(396003)(366004)(39860400002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(83380400001)(6666004)(6512007)(2616005)(6506007)(26005)(316002)(66946007)(37006003)(66556008)(66476007)(921008)(5660300002)(2906002)(6862004)(7416002)(4744005)(6200100001)(8676002)(31686004)(86362001)(8936002)(36756003)(44832011)(41300700001)(38100700002)(31696002)(6486002)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WVFnMDVzSTRScGo1ZmVYNUpGN0hyNk9rMWEwV0c1dHdPeFlqWHl2VW5lbjF2?=
+ =?utf-8?B?MjhrRDFFQVZPOWJjR05TUHlZNEpDV25KSGJ5L0NGWjV4ZEtlRGJkOUo1bldD?=
+ =?utf-8?B?Zm01eW52WFVVbnEzSER4eUl2N0VjVW0vcUZ2TklQRlNMY1ZBM0J1QkJHT1B2?=
+ =?utf-8?B?d1RxZlVMVFhnbGp3WEJTcVhEeHB3WVFUT1FibVFDTUphY3UxSnNzQVNQTXVR?=
+ =?utf-8?B?cWh4dnRNc2ZEdGhwZ1JhV0xWWmhHQ1Y0WEhva2VES0tuaTRXbXdIZGhKclRu?=
+ =?utf-8?B?WXR5dTNKWjVFVStsOGEvdnNqUEdKUGFnR21ORjYzVXdzRExRbVYyazdLVnRZ?=
+ =?utf-8?B?c1FUVUxZN29naWlmS3N4QmZZRjZRS1pQdUwyZXhzSmdpTjZFZzRzOWkwWnAx?=
+ =?utf-8?B?MkpLSnQ0eStJWG40NUhQUjQ4bXNoQ0ExVWdmZ05IbVJaVDgyc1NJWXU5Z205?=
+ =?utf-8?B?dnJhdlNaVGRMK283UjhiOXRoakNZbE05alc0dWNDOUpSUXI1c0s5ck9tVFZl?=
+ =?utf-8?B?MUNVUXJ5NTFSZ1hCZGIrRXdYMENmSUQwUWVjUFRVdlhyd0RzVXhuYU9FZXd2?=
+ =?utf-8?B?WjE2MEhsdVp1bFMwendDeG5PR1o4Zmh3azJXNWVrdEJTUmV3YnhZM3RxalpH?=
+ =?utf-8?B?Q1RQTzlLYkpFc0Vud2dxUTVEM1ZXMjB6QkZSYmc5OWQwMDhQb2xHeWxYMlZG?=
+ =?utf-8?B?ek9pVExEMmROWko4K2VwYjFmVXdQU0lZbzQzRGl4anF2WFAyWXNkMGdyR09T?=
+ =?utf-8?B?ekJTdmYxbTVpRjBoQVl6Nk1vL3BHeUkyTEZNeXpWOUhwZit5MUFSTWF3Mndv?=
+ =?utf-8?B?Wm9FUkZBVFFXc0d4Y0xGY1hJVEEwRWFUQXptVVZYS2lGald2alJCRjVPaGt1?=
+ =?utf-8?B?L2ttNVNPaEtlTXdEWUN5RnA2TzliQTVCOVdDQmhkSzE0K3J1ay8wV3JValFG?=
+ =?utf-8?B?ZngyZXQ1MHFRZCsxd1JHSG5qTTVYdDNHM1pSdnlrNlloVFpPbkFMN1pmL0ZB?=
+ =?utf-8?B?RXFMVm04SGcyUlhvU0ZMZGdHaTdJZEp2NFB3S0FFSStWdGt1T3Q3L3YvWllq?=
+ =?utf-8?B?QzJaRXJMMW5vOWgwUGJRTmhNcHJkcjEyTlFQNGlsQUtzcmJ3bklUQUx0Sysv?=
+ =?utf-8?B?NHVkQlZhUldYaTlCNklaL0ZrWFlJb1IzcHNNUTBMbXpvWFV3aUpKN3R2djc0?=
+ =?utf-8?B?T0s4NVBaQ21wV2RsbjRITVA0OHJnSWxvNEk2Z09nZFlvdjZaQ1FaQUVweGpF?=
+ =?utf-8?B?eWJvS21UKzhsNnZ4Q05XVUZ0Yi9VTU0yb3ozYkFNZUIzVjViTkh1QlFRMVRI?=
+ =?utf-8?B?RmtRUk8ySkNJRkw3eGtJUktDWTc4UVBSc01QOHlvcnRmOGt2TkZOOE1iQ25P?=
+ =?utf-8?B?ejBDL2dab3BpZnVFSENCMmMzSU04NGJnbmcvRy9najF3YzZFc1RORllQMU5T?=
+ =?utf-8?B?MFFlMGJ4cmEremVKQ2M2WE1YRkVtT3ROYmJBWXcySXBMSmVMcUlMV2pLNDk2?=
+ =?utf-8?B?MlRNR1pKdENhZVlleTdtREZDTnNZSlBzcUd6aXFyMUoybnBaVHZveURMVFFs?=
+ =?utf-8?B?dGNCSVpraldyT1pXT0NheE9SeXVicDRkNFhNbDNZWGhtNUF3b2UwdHI1aEM1?=
+ =?utf-8?B?eHluSjE0alNoOUVFWUJORnBvM1NIVlRoR1BscW9ZWGZqcVprczlIY2ZzM0py?=
+ =?utf-8?B?c3lHTGJ1LzR4QmZzaXVIZGtSdlYvQ3l2Ni9HaE9uY2tsMGZSTG9iQ25UY3ll?=
+ =?utf-8?B?ZTJOYzdrRFpBSEhkUVgxMEJpN0NwK0ZMZ0tTMjJaYjBYbFlob2hpTHlFN0lk?=
+ =?utf-8?B?UG84T1VLdjZ4S0hzTmIzSXZ6RWZpTmh1VThmNVl2V2QrN0kxdlU5eUFqdXZl?=
+ =?utf-8?B?ejZYVjBjK3FWbHpGUncwdVlIQ0U4bkxoeFl2ZXVzQmxlNmo3WDgrNkRwc255?=
+ =?utf-8?B?TStvUlRTdkZVYjZ2NWh1T01sTEt2cGpkSzJaalN6RXdKSWVHZ1RMNXVuTWUw?=
+ =?utf-8?B?V0JRNVAvOEQ0VndwTjN5UWdrNS9sQStRUW1WbHJOYWR4Y011Y2dFQWtvdkZC?=
+ =?utf-8?B?bVY2TmdkdUVNeWpyMktvNmg4czEyakdFRmR3REtkR0FRamw3NWR4UEt0elB6?=
+ =?utf-8?Q?2izXLMltKleg6Mp3HLdAGTnFI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cca6f57-e4b3-495c-5af1-08dbf7330173
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2023 14:44:24.5942
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xs8/27ME9Fq26cIhbI7qgoJPq54eCaGeczYTF2AWSiIGO/HlRlVQXMZgToE+IMfyEV1kj8AGb5p+Qhh1FTGxEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9348
 
+> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+> etc. But I can only test it on two Intel platforms.
+> Please give it try, if you have machines with other ARCHs.
 
+I did a quick perf mem and perf c2c test, with the fix I suggested
+in patch #1, and things seems to be working fine.
 
-On 2023-12-06 4:04 p.m., Ian Rogers wrote:
->>                  * The load and store operations are required, use the event
->>                  * PERF_MEM_EVENTS__LOAD_STORE if it is supported.
->> @@ -3289,15 +3303,15 @@ static int perf_c2c__record(int argc, const char **argv)
->>                         e->record = true;
->>                         rec_argv[i++] = "-W";
->>                 } else {
->> -                       e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
->> +                       e = perf_mem_events__ptr(pmu, PERF_MEM_EVENTS__LOAD);
-> Fwiw, it seems strange in cases like this that the function isn't:
-> perf_pmu__mem_events_ptr(pmu, PERF_MEM_EVENTS__LOAD)
-
-Not just this one. The PMU is also added into other functions.
-I will change the name for all of them in V2.
-
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 8c5694b2d0b0..0ad301a2e424 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -36,14 +36,15 @@ enum {
- extern unsigned int perf_mem_events__loads_ldlat;
- extern struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX];
-
--int perf_mem_events__parse(const char *str);
--int perf_mem_events__init(void);
-+int perf_pmu__mem_events_parse(struct perf_pmu *pmu, const char *str);
-+int perf_pmu__mem_events_init(struct perf_pmu *pmu);
-
- const char *perf_mem_events__name(int i, const char *pmu_name);
--struct perf_mem_event *perf_mem_events__ptr(int i);
-+struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu,
-int i);
-+struct perf_pmu *perf_mem_events_find_pmu(void);
- bool is_mem_loads_aux_event(struct evsel *leader);
-
--void perf_mem_events__list(void);
-+void perf_pmu__mem_events_list(struct perf_pmu *pmu);
- int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-                                 char **rec_tmp, int *tmp_nr);
-
-Thanks,
-Kan
-
+[For AMD specific changes]
+Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
