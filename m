@@ -1,314 +1,313 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aB73OfPX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="enIuM9wn"
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5B2A30DD
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:19:17 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5c5daf2baccso1789087b3.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:19:17 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171EED51
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:47:00 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5ca2a6f07b6so2028967b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:47:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701911956; x=1702516756; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7SRkcK7YAl4LH00sD9sEJMrq3LxdxsWdOTiNYWMZDjY=;
-        b=aB73OfPXmEVgtNavdhZJDGx1bhUBWfOHiKkt8I2rNIXSN8fWXkeXVi9Hbp6WGQDt9j
-         SZ+h+Z8p7j3btOtRo1JoVw5whG9mGut9hNcseAUsKNJDrrBaS6fYN6mc8h+MUYvVrpx1
-         WF43EnIHoft1rasSazreP4uxhu1OtxYtb5jcVcK1RyFQYC+gkIVl4uDsBOf1ExdrojE9
-         Wdra5CNhuwGL9+1Q/cA+MsLi9U5LlTMCcoKsQ1ALVECu32tIZUBJgeXMqIfH7onSUz58
-         QQoBPbtL156SwRSIppbBpY3/s8iJFTMUgECWBzNGMDy1FkYrrDZt8O2Y7bo6c7VYwURK
-         +O4Q==
+        d=google.com; s=20230601; t=1701913619; x=1702518419; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mhFfuQwYJMUx0Y0TtkV7gyw+ZTlie2ofJkVeioffDkg=;
+        b=enIuM9wnFydiqseNlpfJiHcPRlrzxC11aWokEvNEvESERTbGwul/A3Am+NRDCHI0Ax
+         Zkw3n0zgVc4mAhzKjGjE/iKaDLLB6VHoMMoNkisUxCdW4kdLPyHV+Oi5/KACvCaE4xkF
+         6lrpFcYw6Rsyf07tuWsp292nUZPm3mLSn9ZF6mhvfXOwoimO35RuJzpeZRk6Lvw4VgFA
+         Rx+W02GCOA8xTf0rcn3oAwk1+h2o8XKPJcEN3o42+EJAMSU2WzrEQGASy4pZmV4NsaKh
+         2ibrvMdrrFEi4mCSwTUSAW+58Z+WNqmjfv4/P+9p4Nv65DxGk1yOvunH2NoVdp+CPDVr
+         V0rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701911956; x=1702516756;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7SRkcK7YAl4LH00sD9sEJMrq3LxdxsWdOTiNYWMZDjY=;
-        b=ZOzKzX6B3T+hgOOxKbB6d2Y1SfhnZpP5X43KxVvkBOujIkXAmcogq9sopsYp3+ekgc
-         SCACkg0zeTru6BusaIzlZyaK8j4Fuhqu8ckL6Zx5QcTYHhEY3j9Nr1fpGrrkEFJs02mE
-         StZlGpIKVd+Ko3ffv7Gvbwy4cM6bWt4AbPebcYQMcdew89lpU+POZki7w1VuzGaTchFl
-         WefwJ0NMdvxiaylizt6dmDw2BH82sBK4mfNwYIgFLyulC8uU3rxGtASV6+YbjwHVx+Mm
-         X0qqDUIr+eIv6jrqQLTH/1aYaYtj05NDW0sjikb8t3c/UfCGRC9XqEucn48S2CKXx+wm
-         gKxg==
-X-Gm-Message-State: AOJu0Ywzym4bE0NLgR1EInTUZqRZFfYI7rtXqBF/XIE06EJA59Tusn0+
-	9VQbYf3dpy3MgTM/h5FM2OkALGpa0nET
-X-Google-Smtp-Source: AGHT+IESKq3UJ9uYEYHMLyxTNqPA2Fs2jXPW49r5dwsfXQf7IBPAP08Amh/tvkCuEUQoCI65uFWnsV+Lry/G
+        d=1e100.net; s=20230601; t=1701913619; x=1702518419;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mhFfuQwYJMUx0Y0TtkV7gyw+ZTlie2ofJkVeioffDkg=;
+        b=nfumV2bgNvgXRqljcqxIQAQiTNfcoEfJ6g4W2nu4v0Jv0bh4aYvKWb4CeQSZBlKxvP
+         Dw66Hn+6psO3SHAA9WeZfH86m+jBMTNJvo7bE1LWZcKc9lBMaqF8HsImDhwLw/3K2RXZ
+         KDvo7kEMAvNkJvF3A4ws6MeY1jwyJiA/xENlmx5iMJKduoRnI+p2NPEqFrkk8tGxNNOB
+         qeKyJdCfJn7ISOBAI0CVJ6ddsQFOmSDxA63WjozjIPoFKT2c5wxJOUWkz3vp+pvdFGDp
+         iSIFMcotJ0qHWOiD1NfhTDsFeQO+606tOBLJ64bIYsZ1meA7I04otqG913DyXcOY6Qij
+         U5oQ==
+X-Gm-Message-State: AOJu0YwsuQo4KL7l+gRJsUMID/UCkhJldyMPLNqYOxPS+2X82Qq0V680
+	pCBAmipIn1f/vz2obOPXfOqJon/rZOxZ
+X-Google-Smtp-Source: AGHT+IG9KpMTYzzaqe/x0vlLtIZT1sWmkKld593a1HFjOVfiTtGjfMw4X66u7MHITkjIAWFRtn8Cxl3zL8Gg
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
- (user=irogers job=sendgmr) by 2002:a05:690c:2d8a:b0:5d7:a8b2:327 with SMTP id
- er10-20020a05690c2d8a00b005d7a8b20327mr26772ywb.7.1701911956447; Wed, 06 Dec
- 2023 17:19:16 -0800 (PST)
-Date: Wed,  6 Dec 2023 17:17:21 -0800
-In-Reply-To: <20231207011722.1220634-1-irogers@google.com>
-Message-Id: <20231207011722.1220634-48-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:be18:0:b0:5d0:a744:719d with SMTP id
+ i24-20020a81be18000000b005d0a744719dmr30456ywn.1.1701913619019; Wed, 06 Dec
+ 2023 17:46:59 -0800 (PST)
+Date: Wed,  6 Dec 2023 17:46:55 -0800
+Message-Id: <20231207014655.1252484-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20231207011722.1220634-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v6 47/47] perf dso: Use container_of to avoid a pointer in dso_data
+Subject: [PATCH v1] perf env: Avoid recursively taking env->bpf_progs.lock
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
-	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Guilherme Amadio <amadio@gentoo.org>
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Ming Wang <wangming01@loongson.cn>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The dso pointer in dso_data is necessary for reference count checking
-to account for the dso_data forming a global list of open dso's with
-references to the dso. The dso pointer also allows for the indirection
-that reference count checking needs. Outside of reference count
-checking the indirection isn't needed and container_of is more
-efficient and saves space.
-
-The reference count won't be increased by placing items onto the
-global list, matching how things were before the reference count
-checking change, but we assert the dso is in dsos holding it live (and
-that the set of open dsos is a subset of all dsos for the
-machine). Update the DSO data tests so that they use a dsos struct to
-make the invariant true.
+Add variants of perf_env__insert_bpf_prog_info, perf_env__insert_btf
+and perf_env__find_btf prefixed with __ to indicate the
+env->bpf_progs.lock is assumed held. Call these variants when the lock
+is held to avoid recursively taking it and potentially having a thread
+deadlock with itself.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/dso-data.c | 60 ++++++++++++++++++-------------------
- tools/perf/util/dso.c       | 16 +++++++++-
- tools/perf/util/dso.h       |  2 ++
- 3 files changed, 46 insertions(+), 32 deletions(-)
+Previously this patch was part of a larger set:
+https://lore.kernel.org/lkml/20231127220902.1315692-51-irogers@google.com/
+---
+ tools/perf/util/bpf-event.c |  8 +++---
+ tools/perf/util/bpf-event.h | 12 ++++-----
+ tools/perf/util/env.c       | 53 +++++++++++++++++++++++--------------
+ tools/perf/util/env.h       |  4 +++
+ tools/perf/util/header.c    |  8 +++---
+ 5 files changed, 51 insertions(+), 34 deletions(-)
 
-diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-index 625dbb2ffe8a..deaefcdd8f09 100644
---- a/tools/perf/tests/dso-data.c
-+++ b/tools/perf/tests/dso-data.c
-@@ -10,6 +10,7 @@
- #include <sys/resource.h>
- #include <api/fs/fs.h>
- #include "dso.h"
-+#include "dsos.h"
- #include "machine.h"
- #include "symbol.h"
- #include "tests.h"
-@@ -123,9 +124,10 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
- 	TEST_ASSERT_VAL("No test file", file);
- 
- 	memset(&machine, 0, sizeof(machine));
-+	dsos__init(&machine.dsos);
- 
--	dso = dso__new((const char *)file);
--
-+	dso = dso__new(file);
-+	TEST_ASSERT_VAL("Failed to add dso", !dsos__add(&machine.dsos, dso));
- 	TEST_ASSERT_VAL("Failed to access to dso",
- 			dso__data_fd(dso, &machine) >= 0);
- 
-@@ -170,6 +172,7 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
- 	}
- 
- 	dso__put(dso);
-+	dsos__exit(&machine.dsos);
- 	unlink(file);
- 	return 0;
- }
-@@ -199,41 +202,35 @@ static long open_files_cnt(void)
- 	return nr - 1;
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 830711cae30d..3573e0b7ef3e 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -545,9 +545,9 @@ int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env)
+ 	return evlist__add_sb_event(evlist, &attr, bpf_event__sb_cb, env);
  }
  
--static struct dso **dsos;
--
--static int dsos__create(int cnt, int size)
-+static int dsos__create(int cnt, int size, struct dsos *dsos)
+-void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+-				    struct perf_env *env,
+-				    FILE *fp)
++void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
++				      struct perf_env *env,
++				      FILE *fp)
  {
- 	int i;
+ 	__u32 *prog_lens = (__u32 *)(uintptr_t)(info->jited_func_lens);
+ 	__u64 *prog_addrs = (__u64 *)(uintptr_t)(info->jited_ksyms);
+@@ -563,7 +563,7 @@ void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+ 	if (info->btf_id) {
+ 		struct btf_node *node;
  
--	dsos = malloc(sizeof(*dsos) * cnt);
--	TEST_ASSERT_VAL("failed to alloc dsos array", dsos);
-+	dsos__init(dsos);
- 
- 	for (i = 0; i < cnt; i++) {
--		char *file;
-+		struct dso *dso;
-+		char *file = test_file(size);
- 
--		file = test_file(size);
- 		TEST_ASSERT_VAL("failed to get dso file", file);
--
--		dsos[i] = dso__new(file);
--		TEST_ASSERT_VAL("failed to get dso", dsos[i]);
-+		dso = dso__new(file);
-+		TEST_ASSERT_VAL("failed to get dso", dso);
-+		TEST_ASSERT_VAL("failed to add dso", !dsos__add(dsos, dso));
-+		dso__put(dso);
- 	}
- 
+-		node = perf_env__find_btf(env, info->btf_id);
++		node = __perf_env__find_btf(env, info->btf_id);
+ 		if (node)
+ 			btf = btf__new((__u8 *)(node->data),
+ 				       node->data_size);
+diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+index 1bcbd4fb6c66..e2f0420905f5 100644
+--- a/tools/perf/util/bpf-event.h
++++ b/tools/perf/util/bpf-event.h
+@@ -33,9 +33,9 @@ struct btf_node {
+ int machine__process_bpf(struct machine *machine, union perf_event *event,
+ 			 struct perf_sample *sample);
+ int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
+-void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+-				    struct perf_env *env,
+-				    FILE *fp);
++void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
++				      struct perf_env *env,
++				      FILE *fp);
+ #else
+ static inline int machine__process_bpf(struct machine *machine __maybe_unused,
+ 				       union perf_event *event __maybe_unused,
+@@ -50,9 +50,9 @@ static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
  	return 0;
  }
  
--static void dsos__delete(int cnt)
-+static void dsos__delete(struct dsos *dsos)
+-static inline void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info __maybe_unused,
+-						  struct perf_env *env __maybe_unused,
+-						  FILE *fp __maybe_unused)
++static inline void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info __maybe_unused,
++						    struct perf_env *env __maybe_unused,
++						    FILE *fp __maybe_unused)
  {
--	int i;
+ 
+ }
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index c68b7a004f29..cfdacbf29456 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -22,15 +22,20 @@ struct perf_env perf_env;
+ #include "bpf-utils.h"
+ #include <bpf/libbpf.h>
+ 
+-void perf_env__insert_bpf_prog_info(struct perf_env *env,
+-				    struct bpf_prog_info_node *info_node)
++void perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
++{
++	down_write(&env->bpf_progs.lock);
++	__perf_env__insert_bpf_prog_info(env, info_node);
++	up_write(&env->bpf_progs.lock);
++}
++
++void __perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
+ {
+ 	__u32 prog_id = info_node->info_linear->info.id;
+ 	struct bpf_prog_info_node *node;
+ 	struct rb_node *parent = NULL;
+ 	struct rb_node **p;
+ 
+-	down_write(&env->bpf_progs.lock);
+ 	p = &env->bpf_progs.infos.rb_node;
+ 
+ 	while (*p != NULL) {
+@@ -42,15 +47,13 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
+ 			p = &(*p)->rb_right;
+ 		} else {
+ 			pr_debug("duplicated bpf prog info %u\n", prog_id);
+-			goto out;
++			return;
+ 		}
+ 	}
+ 
+ 	rb_link_node(&info_node->rb_node, parent, p);
+ 	rb_insert_color(&info_node->rb_node, &env->bpf_progs.infos);
+ 	env->bpf_progs.infos_cnt++;
+-out:
+-	up_write(&env->bpf_progs.lock);
+ }
+ 
+ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+@@ -79,14 +82,22 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+ }
+ 
+ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
++{
++	bool ret;
++
++	down_write(&env->bpf_progs.lock);
++	ret = __perf_env__insert_btf(env, btf_node);
++	up_write(&env->bpf_progs.lock);
++	return ret;
++}
++
++bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+ {
+ 	struct rb_node *parent = NULL;
+ 	__u32 btf_id = btf_node->id;
+ 	struct btf_node *node;
+ 	struct rb_node **p;
+-	bool ret = true;
+ 
+-	down_write(&env->bpf_progs.lock);
+ 	p = &env->bpf_progs.btfs.rb_node;
+ 
+ 	while (*p != NULL) {
+@@ -98,25 +109,31 @@ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+ 			p = &(*p)->rb_right;
+ 		} else {
+ 			pr_debug("duplicated btf %u\n", btf_id);
+-			ret = false;
+-			goto out;
++			return false;
+ 		}
+ 	}
+ 
+ 	rb_link_node(&btf_node->rb_node, parent, p);
+ 	rb_insert_color(&btf_node->rb_node, &env->bpf_progs.btfs);
+ 	env->bpf_progs.btfs_cnt++;
+-out:
+-	up_write(&env->bpf_progs.lock);
+-	return ret;
++	return true;
+ }
+ 
+ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
++{
++	struct btf_node *res;
++
++	down_read(&env->bpf_progs.lock);
++	res = __perf_env__find_btf(env, btf_id);
++	up_read(&env->bpf_progs.lock);
++	return res;
++}
++
++struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+ {
+ 	struct btf_node *node = NULL;
+ 	struct rb_node *n;
+ 
+-	down_read(&env->bpf_progs.lock);
+ 	n = env->bpf_progs.btfs.rb_node;
+ 
+ 	while (n) {
+@@ -126,13 +143,9 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+ 		else if (btf_id > node->id)
+ 			n = n->rb_right;
+ 		else
+-			goto out;
++			return node;
+ 	}
+-	node = NULL;
 -
--	for (i = 0; i < cnt; i++) {
--		struct dso *dso = dsos[i];
-+	for (unsigned int i = 0; i < dsos->cnt; i++) {
-+		struct dso *dso = dsos->dsos[i];
+-out:
+-	up_read(&env->bpf_progs.lock);
+-	return node;
++	return NULL;
+ }
  
- 		dso__data_close(dso);
- 		unlink(dso__name(dso));
--		dso__put(dso);
+ /* purge data in bpf_progs.infos tree */
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index bf7e3c4c211f..7c527e65c186 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -175,12 +175,16 @@ const char *perf_env__raw_arch(struct perf_env *env);
+ int perf_env__nr_cpus_avail(struct perf_env *env);
+ 
+ void perf_env__init(struct perf_env *env);
++void __perf_env__insert_bpf_prog_info(struct perf_env *env,
++				      struct bpf_prog_info_node *info_node);
+ void perf_env__insert_bpf_prog_info(struct perf_env *env,
+ 				    struct bpf_prog_info_node *info_node);
+ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+ 							__u32 prog_id);
+ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
++bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
++struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+ 
+ int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
+ char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 08cc2febabde..02bf9d8b5f74 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1849,8 +1849,8 @@ static void print_bpf_prog_info(struct feat_fd *ff, FILE *fp)
+ 		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
+ 		next = rb_next(&node->rb_node);
+ 
+-		bpf_event__print_bpf_prog_info(&node->info_linear->info,
+-					       env, fp);
++		__bpf_event__print_bpf_prog_info(&node->info_linear->info,
++						 env, fp);
  	}
--
--	free(dsos);
-+	dsos__exit(dsos);
- }
  
- static int set_fd_limit(int n)
-@@ -267,10 +264,10 @@ static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subt
- 	/* and this is now our dso open FDs limit */
- 	dso_cnt = limit / 2;
- 	TEST_ASSERT_VAL("failed to create dsos\n",
--		!dsos__create(dso_cnt, TEST_FILE_SIZE));
-+			!dsos__create(dso_cnt, TEST_FILE_SIZE, &machine.dsos));
- 
- 	for (i = 0; i < (dso_cnt - 1); i++) {
--		struct dso *dso = dsos[i];
-+		struct dso *dso = machine.dsos.dsos[i];
- 
- 		/*
- 		 * Open dsos via dso__data_fd(), it opens the data
-@@ -290,17 +287,17 @@ static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subt
+ 	up_read(&env->bpf_progs.lock);
+@@ -3188,7 +3188,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
+ 		/* after reading from file, translate offset to address */
+ 		bpil_offs_to_addr(info_linear);
+ 		info_node->info_linear = info_linear;
+-		perf_env__insert_bpf_prog_info(env, info_node);
++		__perf_env__insert_bpf_prog_info(env, info_node);
  	}
  
- 	/* verify the first one is already open */
--	TEST_ASSERT_VAL("dsos[0] is not open", dso__data(dsos[0])->fd != -1);
-+	TEST_ASSERT_VAL("dsos[0] is not open", dso__data(machine.dsos.dsos[0])->fd != -1);
+ 	up_write(&env->bpf_progs.lock);
+@@ -3235,7 +3235,7 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+ 		if (__do_read(ff, node->data, data_size))
+ 			goto out;
  
- 	/* open +1 dso to reach the allowed limit */
--	fd = dso__data_fd(dsos[i], &machine);
-+	fd = dso__data_fd(machine.dsos.dsos[i], &machine);
- 	TEST_ASSERT_VAL("failed to get fd", fd > 0);
- 
- 	/* should force the first one to be closed */
--	TEST_ASSERT_VAL("failed to close dsos[0]", dso__data(dsos[0])->fd == -1);
-+	TEST_ASSERT_VAL("failed to close dsos[0]", dso__data(machine.dsos.dsos[0])->fd == -1);
- 
- 	/* cleanup everything */
--	dsos__delete(dso_cnt);
-+	dsos__delete(&machine.dsos);
- 
- 	/* Make sure we did not leak any file descriptor. */
- 	nr_end = open_files_cnt();
-@@ -325,9 +322,9 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
- 	long nr_end, nr = open_files_cnt(), lim = new_limit(3);
- 	int fd, fd_extra;
- 
--#define dso_0 (dsos[0])
--#define dso_1 (dsos[1])
--#define dso_2 (dsos[2])
-+#define dso_0 (machine.dsos.dsos[0])
-+#define dso_1 (machine.dsos.dsos[1])
-+#define dso_2 (machine.dsos.dsos[2])
- 
- 	/* Rest the internal dso open counter limit. */
- 	reset_fd_limit();
-@@ -347,7 +344,8 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
- 	TEST_ASSERT_VAL("failed to set file limit",
- 			!set_fd_limit((lim)));
- 
--	TEST_ASSERT_VAL("failed to create dsos\n", !dsos__create(3, TEST_FILE_SIZE));
-+	TEST_ASSERT_VAL("failed to create dsos\n",
-+			!dsos__create(3, TEST_FILE_SIZE, &machine.dsos));
- 
- 	/* open dso_0 */
- 	fd = dso__data_fd(dso_0, &machine);
-@@ -386,7 +384,7 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
- 
- 	/* cleanup everything */
- 	close(fd_extra);
--	dsos__delete(3);
-+	dsos__delete(&machine.dsos);
- 
- 	/* Make sure we did not leak any file descriptor. */
- 	nr_end = open_files_cnt();
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 0fef597725c7..4f20dac89b77 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -496,14 +496,20 @@ static pthread_mutex_t dso__data_open_lock = PTHREAD_MUTEX_INITIALIZER;
- static void dso__list_add(struct dso *dso)
- {
- 	list_add_tail(&dso__data(dso)->open_entry, &dso__data_open);
-+#ifdef REFCNT_CHECKING
- 	dso__data(dso)->dso = dso__get(dso);
-+#endif
-+	/* Assume the dso is part of dsos, hence the optional reference count above. */
-+	assert(dso__dsos(dso));
- 	dso__data_open_cnt++;
- }
- 
- static void dso__list_del(struct dso *dso)
- {
- 	list_del_init(&dso__data(dso)->open_entry);
-+#ifdef REFCNT_CHECKING
- 	dso__put(dso__data(dso)->dso);
-+#endif
- 	WARN_ONCE(dso__data_open_cnt <= 0,
- 		  "DSO data fd counter out of bounds.");
- 	dso__data_open_cnt--;
-@@ -653,9 +659,15 @@ static void close_dso(struct dso *dso)
- static void close_first_dso(void)
- {
- 	struct dso_data *dso_data;
-+	struct dso *dso;
- 
- 	dso_data = list_first_entry(&dso__data_open, struct dso_data, open_entry);
--	close_dso(dso_data->dso);
-+#ifdef REFCNT_CHECKING
-+	dso = dso_data->dso;
-+#else
-+	dso = container_of(dso_data, struct dso, data);
-+#endif
-+	close_dso(dso);
- }
- 
- static rlim_t get_fd_limit(void)
-@@ -1444,7 +1456,9 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
- 		data->fd = -1;
- 		data->status = DSO_DATA_STATUS_UNKNOWN;
- 		INIT_LIST_HEAD(&data->open_entry);
-+#ifdef REFCNT_CHECKING
- 		data->dso = NULL; /* Set when on the open_entry list. */
-+#endif
+-		perf_env__insert_btf(env, node);
++		__perf_env__insert_btf(env, node);
+ 		node = NULL;
  	}
- 	return res;
- }
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index fa311ffd2538..e02a4718f1f8 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -147,7 +147,9 @@ struct dso_cache {
- struct dso_data {
- 	struct rb_root	 cache;
- 	struct list_head open_entry;
-+#ifdef REFCNT_CHECKING
- 	struct dso	 *dso;
-+#endif
- 	int		 fd;
- 	int		 status;
- 	u32		 status_seen;
+ 
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
