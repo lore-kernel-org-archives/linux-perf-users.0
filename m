@@ -1,36 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178F14E61E
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 20:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF9F57312
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 20:31:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jvc78Xf4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A60C433C7;
-	Thu,  7 Dec 2023 20:17:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gW8hi2v+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D3A8C433C8;
+	Thu,  7 Dec 2023 20:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701980231;
-	bh=YVfqxd0zx/fv0cFbJkxcuU4zrXFaSan10Z7fzxNA38Q=;
+	s=k20201202; t=1701981112;
+	bh=Pz3fIHmphmYWdAiauPzUciG6N7OeXMTXmvPgnZGRLHo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jvc78Xf4QdFvfgvGmqOQP1WBBPmyUDKCGIutfVkfPOpLp9M9xPxNVsOjdcXRYb5s1
-	 zkehq1fXf6jPly/Gs6Nlc5DeLtxYztycXGAVC0JU7P51GG0TeqIbzGTe0XQ6uD6FYC
-	 150PWDzb9/aNTXb1ih6q2DpJvsAFXRXmfmwA1AhN8Qo4DsLbz9u94RRdC8vTB8Vpqn
-	 jOK8zuxTazQTNKTS35X7y9NtkVghUceB2r/dPx8hcKmjAudxvZMcNERudJgN5+SWch
-	 xu7dY04oygbps/WyAtLcQpcq0pJvpeprKJcAxBM0fL2wHU8tpLql1EUmE13LoFSauH
-	 H6mQRg3KWVYig==
+	b=gW8hi2v+aBgORmpOJC4OZrDlEYEBRWIJaEsNdRzVlr/r71a/QL+0uDWmtUtqxAjsr
+	 ++j2JJ9IwUvDeDbjj7hxMrb2v1eNS891YuE5Ps4DlFLK+afg7KuMmydhPr7xl8PzfF
+	 uAAJFUfxREBKm2YYLKdDa7Aog+fLbVrSu8VlX7/EDx5dH8RRIv3+ikaTY1MFGqmbtZ
+	 WqjGJtkYTzlto25xpRTiuayz7wUNJ/oWgx61MfthqgDYOd+EW+9x2tYRYxWlpaHEou
+	 uruOpxblZAlqCIC0JJicyWj7tM4xh3rV077ibP6CEv0Rm7XojSVU+9K1mOFF//5aNm
+	 VdvRO+5BiKJxw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 43B24403EF; Thu,  7 Dec 2023 17:17:08 -0300 (-03)
-Date: Thu, 7 Dec 2023 17:17:08 -0300
+	id 6A9F2403EF; Thu,  7 Dec 2023 17:31:49 -0300 (-03)
+Date: Thu, 7 Dec 2023 17:31:49 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/8] perf annotate: Use global annotation_options
-Message-ID: <ZXIoRDWBPEjUpYuP@kernel.org>
-References: <20231128175441.721579-1-namhyung@kernel.org>
- <20231128175441.721579-5-namhyung@kernel.org>
+To: kan.liang@linux.intel.com, ravi.bangoria@amd.com
+Cc: irogers@google.com, peterz@infradead.org, mingo@redhat.com,
+	namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
+	mike.leach@linaro.org, leo.yan@linaro.org,
+	yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	tmricht@linux.ibm.com, ravi.bangoria@amd.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V2 0/5] Clean up perf mem
+Message-ID: <ZXIrtcYkvpA8Uwj1@kernel.org>
+References: <20231207192338.400336-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,87 +41,108 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231128175441.721579-5-namhyung@kernel.org>
+In-Reply-To: <20231207192338.400336-1-kan.liang@linux.intel.com>
 X-Url: http://acmel.wordpress.com
 
-Em Tue, Nov 28, 2023 at 09:54:37AM -0800, Namhyung Kim escreveu:
-> Now it can directly use the global options and no need to pass it as an
-> argument.
+Em Thu, Dec 07, 2023 at 11:23:33AM -0800, kan.liang@linux.intel.com escreveu:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Changes since V1:
+> - Fix strcmp of PMU name checking (Ravi)
+> - Fix "/," typo (Ian)
+> - Rename several functions with perf_pmu__mem_events prefix. (Ian)
+> - Fold the header removal patch into the patch where the cleanups made.
+>   (Arnaldo)
+> - Add reviewed-by and tested-by from Ian and Ravi
 
-At this point the build breaks when using GTK2=1 on the make command
-line, as done in 'make -C tools/perf build-test', so I had to add the
-following patch on top of this 4/8 patch:
+It would be good to have a Tested-by from people working in all the
+architectures affectes, like we got from Ravi for AMD, can we get those?
 
+I'm applying it locally for test building, will push to
+perf-tools-next/tmp.perf-tools-next for a while, so there is some time
+to test.
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index a53a4e711899f20d..9c1e2b2b5bc0b730 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -365,7 +365,6 @@ static void hists__find_annotations(struct hists *hists,
- 			int ret;
- 			int (*annotate)(struct hist_entry *he,
- 					struct evsel *evsel,
--					struct annotation_options *options,
- 					struct hist_browser_timer *hbt);
+ARM64 (Leo?) and ppc, for PPC... humm Ravi did it, who could test it now?
+
+- Arnaldo
  
- 			annotate = dlsym(perf_gtk_handle,
-@@ -375,7 +374,7 @@ static void hists__find_annotations(struct hists *hists,
- 				return;
- 			}
- 
--			ret = annotate(he, evsel, &annotate_opts, NULL);
-+			ret = annotate(he, evsel, NULL);
- 			if (!ret || !ann->skip_missing)
- 				return;
- 
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index 2effac77ca8c6742..394861245fd3e48f 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -162,7 +162,6 @@ static int perf_gtk__annotate_symbol(GtkWidget *window, struct map_symbol *ms,
- }
- 
- static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
--				struct annotation_options *options,
- 				struct hist_browser_timer *hbt)
- {
- 	struct dso *dso = map__dso(ms->map);
-@@ -176,7 +175,7 @@ static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	if (dso->annotate_warned)
- 		return -1;
- 
--	err = symbol__annotate(ms, evsel, options, NULL);
-+	err = symbol__annotate(ms, evsel, NULL);
- 	if (err) {
- 		char msg[BUFSIZ];
- 		dso->annotate_warned = true;
-@@ -244,10 +243,9 @@ static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
- 
- int hist_entry__gtk_annotate(struct hist_entry *he,
- 			     struct evsel *evsel,
--			     struct annotation_options *options,
- 			     struct hist_browser_timer *hbt)
- {
--	return symbol__gtk_annotate(&he->ms, evsel, options, hbt);
-+	return symbol__gtk_annotate(&he->ms, evsel, hbt);
- }
- 
- void perf_gtk__show_annotations(void)
-diff --git a/tools/perf/ui/gtk/gtk.h b/tools/perf/ui/gtk/gtk.h
-index 1e84dceb52671385..a2b497f03fd6e478 100644
---- a/tools/perf/ui/gtk/gtk.h
-+++ b/tools/perf/ui/gtk/gtk.h
-@@ -56,13 +56,11 @@ struct evsel;
- struct evlist;
- struct hist_entry;
- struct hist_browser_timer;
--struct annotation_options;
- 
- int evlist__gtk_browse_hists(struct evlist *evlist, const char *help,
- 			     struct hist_browser_timer *hbt, float min_pcnt);
- int hist_entry__gtk_annotate(struct hist_entry *he,
- 			     struct evsel *evsel,
--			     struct annotation_options *options,
- 			     struct hist_browser_timer *hbt);
- void perf_gtk__show_annotations(void);
- 
+> As discussed in the below thread, the patch set is to clean up perf mem.
+> https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com/
+> 
+> Introduce generic functions perf_mem_events__ptr(),
+> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+> ARCH specific ones.
+> Simplify the perf_mem_event__supported().
+> 
+> Only keeps the ARCH-specific perf_mem_events array in the corresponding
+> mem-events.c for each ARCH.
+> 
+> There is no functional change.
+> 
+> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+> etc. But I can only test it on two Intel platforms.
+> Please give it try, if you have machines with other ARCHs.
+> 
+> Here are the test results:
+> Intel hybrid machine:
+> 
+> $perf mem record -e list
+> ldlat-loads  : available
+> ldlat-stores : available
+> 
+> $perf mem record -e ldlat-loads -v --ldlat 50
+> calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
+> 
+> $perf mem record -v
+> calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
+> 
+> $perf mem record -t store -v
+> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+> 
+> 
+> Intel SPR:
+> $perf mem record -e list
+> ldlat-loads  : available
+> ldlat-stores : available
+> 
+> $perf mem record -e ldlat-loads -v --ldlat 50
+> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
+> 
+> $perf mem record -v
+> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
+> 
+> $perf mem record -t store -v
+> calling: record -e cpu/mem-stores/P
+> 
+> Kan Liang (5):
+>   perf mem: Add mem_events into the supported perf_pmu
+>   perf mem: Clean up perf_mem_events__ptr()
+>   perf mem: Clean up perf_mem_events__name()
+>   perf mem: Clean up perf_mem_event__supported()
+>   perf mem: Clean up is_mem_loads_aux_event()
+> 
+>  tools/perf/arch/arm64/util/mem-events.c   |  36 +----
+>  tools/perf/arch/arm64/util/pmu.c          |   6 +
+>  tools/perf/arch/powerpc/util/mem-events.c |  13 +-
+>  tools/perf/arch/powerpc/util/mem-events.h |   7 +
+>  tools/perf/arch/powerpc/util/pmu.c        |  11 ++
+>  tools/perf/arch/s390/util/pmu.c           |   3 +
+>  tools/perf/arch/x86/util/mem-events.c     |  99 ++----------
+>  tools/perf/arch/x86/util/pmu.c            |  11 ++
+>  tools/perf/builtin-c2c.c                  |  28 +++-
+>  tools/perf/builtin-mem.c                  |  28 +++-
+>  tools/perf/util/mem-events.c              | 181 +++++++++++++---------
+>  tools/perf/util/mem-events.h              |  15 +-
+>  tools/perf/util/pmu.c                     |   4 +-
+>  tools/perf/util/pmu.h                     |   7 +
+>  14 files changed, 233 insertions(+), 216 deletions(-)
+>  create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
+>  create mode 100644 tools/perf/arch/powerpc/util/pmu.c
+> 
+> -- 
+> 2.35.1
+> 
+
+-- 
+
+- Arnaldo
