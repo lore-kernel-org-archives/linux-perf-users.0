@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aKrqV2LL"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F5A1BFF
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:18:12 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5ca2e530041so1850797b3.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:18:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ekr3+Tv0"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B36D46
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:18:17 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5d33b70fce8so2036707b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:18:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701911891; x=1702516691; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701911896; x=1702516696; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zhWv5XH2QIvBBYa/R05A/SafwPCuOWvAm4FZ/Ek/rFM=;
-        b=aKrqV2LLaveEeNRG0k5c6Fa2OyEtZKKkinL9NWdjtQ7YQLJxH9WnGGvfKZkZR1nKbV
-         AXU6HylhZeuOeDI6fTq5bNOSs4XQRk84D8coYKv5jbRo3shOuq8VUvTLW16YP9RKvDft
-         OHApy0W9NqJjcthFbVLptVN7dMeRW7sl6vvJ5FYRiMxTb1gIfKYi9nyjWn9sW3eHVBuQ
-         8mtZjMM081V9zYHnYbsvKNc6mRoENbV2EB4sxsFEQ9USJrGqW9+tSmaG2v9AOXao1m19
-         IJraUtqlPvbJwmIpP7R4yTUvngdG3eN+LdNKqjANPh0akZklpUFxc1L8kjUGd8lR9IOy
-         ptfg==
+        bh=k20rx+ZSolEwd6uRLeEItUH88wwnYG7dQShCzZDbuAA=;
+        b=ekr3+Tv0E04Xt/8hj2w+UkByYojQhPS4C3CYi2zjQsNuOBQk8+Ro0k7Hq+JZjW7Pi9
+         CbxEPyU3Dfw5G31k1FXKCM7Ni89ZLwo/cqfF+Q/62k35mQ/jVqXBtQtXgfjjGXWFVg2k
+         r1j183utltt05Jj41Ed5lFaInAlI+7UhCjmWJ0GDonZaAFd5+y4aBd/szwKhz3YeXT/k
+         ft9xVyKXzazbyT4d6xT35z8oMFig9C1BkXAgc61wH9kcXi0EyMtFBTRP2Jt4Ba3u6feB
+         tidvCZhGM40SkNckXXhEte8xnlSkXIsNPkxZN1ZCFjF1qq1g1nlBzQpeUvXlN6ZvS/W9
+         ROBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701911891; x=1702516691;
+        d=1e100.net; s=20230601; t=1701911896; x=1702516696;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zhWv5XH2QIvBBYa/R05A/SafwPCuOWvAm4FZ/Ek/rFM=;
-        b=hgAVh4MXKmY6ph5itg7W8EZfJYsUtovw+eRuh9KIFgtaJb4wmpB/648BNP5FAjBYfW
-         lbNb5T7Xed8UcqFmr9RB5Q0+h+TNvla/9GDWPVHCu6+X7AAawvhKYQV7D1t9GoDkhZMt
-         0Bk0cxCyMfg8sKMgcq8sScIH9bA9/ulH3+eyhVH1KLuDggut5QLcX5DK5Sq8J7+m6+bD
-         kNwioFZOEPCm7PDqm8Dv6/tScGe9MQRCHNQ1L1Lqn9WSpgMeDMWeziIPvGkLEvkEQFkk
-         Muo+iCsFEiMmHP5+0bsuUzdSbZS2ZFg5Anaj4N8zS2AOk28U5hz3+3aWxJkJ3PAGp7gM
-         uDSg==
-X-Gm-Message-State: AOJu0Yzk4JYoTb9iEVYJsXv9xCUMLEUcTCnyip+9IbgG1layXQfRwQFu
-	raERNo6Lh1ACK/CWwyRuAWF6dMN1aDk1
-X-Google-Smtp-Source: AGHT+IEWcnmiKEOyMIE+2aNgl2GxOpZtGE8TuU2QEQKPQlYZwpHrrMBjKS7T0LXoVJ/omdKDaVXSGMunSkJj
+        bh=k20rx+ZSolEwd6uRLeEItUH88wwnYG7dQShCzZDbuAA=;
+        b=rc8yb4n4XcCi7O1gngTLLydYYiTugNb9dd97h+gSISQVvF9nBtwoDByY5HdD+rIyRZ
+         ErPA/mvCWYDqcrWLF6ht+FruFaDvnZo/aMjRwi0PlGY0OfGf1C8HsP1zA+uaaSeJdJzr
+         X9/EvXy4+3VmBJ786xPmj0bu3CvyWeJxoodmbxdRaBa94MuP/NIzWLcXevJ0d31QjhIk
+         ueotFRblgAfZWuP4vOIO7VO0UXdUQuSK0VkE3OaArnwZDIxsLVWM2f/tVIIBgRu2Za0b
+         jt7fmQQsqY/D8flvez0P0ikRiOOH91M0WKKNlAJI7oZL3g2+Yy0Zkgk+MXZ0MzV4CKM6
+         cE8A==
+X-Gm-Message-State: AOJu0Yy5jV3kBQd8ZcwyT79lWTXlo9cNsBU1/1Thzw8uk30gw2h6GMd6
+	0fgHXrtCoTj33SEPQ98nIcDX0foQAP0K
+X-Google-Smtp-Source: AGHT+IFLmjVl2JTSrbF+AcloIm9xGK1+nQ7UM9Q2USjrkXsrjEjnLsMAuzFAeAyNMPyL+RQtNph6K8uMrHx3
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
- (user=irogers job=sendgmr) by 2002:a81:be14:0:b0:5d1:7706:b886 with SMTP id
- i20-20020a81be14000000b005d17706b886mr31238ywn.0.1701911891461; Wed, 06 Dec
- 2023 17:18:11 -0800 (PST)
-Date: Wed,  6 Dec 2023 17:16:53 -0800
+ (user=irogers job=sendgmr) by 2002:a81:ac62:0:b0:5da:efd:10c9 with SMTP id
+ z34-20020a81ac62000000b005da0efd10c9mr25388ywj.9.1701911896241; Wed, 06 Dec
+ 2023 17:18:16 -0800 (PST)
+Date: Wed,  6 Dec 2023 17:16:55 -0800
 In-Reply-To: <20231207011722.1220634-1-irogers@google.com>
-Message-Id: <20231207011722.1220634-20-irogers@google.com>
+Message-Id: <20231207011722.1220634-22-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231207011722.1220634-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v6 19/47] perf maps: Add maps__load_first
+Subject: [PATCH v6 21/47] perf maps: Reduce scope of map_rb_node and maps internals
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,62 +68,190 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid bpf_lock_contention_touching the internal maps data structure by
-adding a helper function. As access is done directly on the map in
-maps, hold the read lock to stop it being removed.
+Avoid exposing the implementation of maps so that the internals can be
+refactored.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf_lock_contention.c |  2 +-
- tools/perf/util/maps.c                | 13 +++++++++++++
- tools/perf/util/maps.h                |  2 ++
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ tools/perf/util/maps.c | 90 ++++++++++++++++++++++++++----------------
+ tools/perf/util/maps.h | 23 -----------
+ 2 files changed, 55 insertions(+), 58 deletions(-)
 
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index f1716c089c99..31ff19afc20c 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -318,7 +318,7 @@ int lock_contention_read(struct lock_contention *con)
- 	}
- 
- 	/* make sure it loads the kernel map */
--	map__load(maps__first(machine->kmaps)->map);
-+	maps__load_first(machine->kmaps);
- 
- 	prev_key = NULL;
- 	while (!bpf_map_get_next_key(fd, prev_key, &key)) {
 diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 986daa1b0497..024a6c9f72c4 100644
+index 5b898a0e97b2..dcd67384d877 100644
 --- a/tools/perf/util/maps.c
 +++ b/tools/perf/util/maps.c
-@@ -793,3 +793,16 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
- 	}
+@@ -10,6 +10,11 @@
+ #include "ui/ui.h"
+ #include "unwind.h"
+ 
++struct map_rb_node {
++	struct rb_node rb_node;
++	struct map *map;
++};
++
+ #define maps__for_each_entry(maps, map) \
+ 	for (map = maps__first(maps); map; map = map_rb_node__next(map))
+ 
+@@ -17,6 +22,56 @@
+ 	for (map = maps__first(maps), next = map_rb_node__next(map); map; \
+ 	     map = next, next = map_rb_node__next(map))
+ 
++static struct rb_root *maps__entries(struct maps *maps)
++{
++	return &RC_CHK_ACCESS(maps)->entries;
++}
++
++static struct rw_semaphore *maps__lock(struct maps *maps)
++{
++	return &RC_CHK_ACCESS(maps)->lock;
++}
++
++static struct map **maps__maps_by_name(struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->maps_by_name;
++}
++
++static struct map_rb_node *maps__first(struct maps *maps)
++{
++	struct rb_node *first = rb_first(maps__entries(maps));
++
++	if (first)
++		return rb_entry(first, struct map_rb_node, rb_node);
++	return NULL;
++}
++
++static struct map_rb_node *map_rb_node__next(struct map_rb_node *node)
++{
++	struct rb_node *next;
++
++	if (!node)
++		return NULL;
++
++	next = rb_next(&node->rb_node);
++
++	if (!next)
++		return NULL;
++
++	return rb_entry(next, struct map_rb_node, rb_node);
++}
++
++static struct map_rb_node *maps__find_node(struct maps *maps, struct map *map)
++{
++	struct map_rb_node *rb_node;
++
++	maps__for_each_entry(maps, rb_node) {
++		if (rb_node->RC_CHK_ACCESS(map) == RC_CHK_ACCESS(map))
++			return rb_node;
++	}
++	return NULL;
++}
++
+ static void maps__init(struct maps *maps, struct machine *machine)
+ {
+ 	refcount_set(maps__refcnt(maps), 1);
+@@ -485,17 +540,6 @@ int maps__copy_from(struct maps *maps, struct maps *parent)
  	return err;
  }
-+
-+void maps__load_first(struct maps *maps)
-+{
-+	struct map_rb_node *first;
-+
-+	down_read(maps__lock(maps));
-+
-+	first = maps__first(maps);
-+	if (first)
-+		map__load(first->map);
-+
-+	up_read(maps__lock(maps));
-+}
+ 
+-struct map_rb_node *maps__find_node(struct maps *maps, struct map *map)
+-{
+-	struct map_rb_node *rb_node;
+-
+-	maps__for_each_entry(maps, rb_node) {
+-		if (rb_node->RC_CHK_ACCESS(map) == RC_CHK_ACCESS(map))
+-			return rb_node;
+-	}
+-	return NULL;
+-}
+-
+ struct map *maps__find(struct maps *maps, u64 ip)
+ {
+ 	struct rb_node *p;
+@@ -521,30 +565,6 @@ struct map *maps__find(struct maps *maps, u64 ip)
+ 	return m ? m->map : NULL;
+ }
+ 
+-struct map_rb_node *maps__first(struct maps *maps)
+-{
+-	struct rb_node *first = rb_first(maps__entries(maps));
+-
+-	if (first)
+-		return rb_entry(first, struct map_rb_node, rb_node);
+-	return NULL;
+-}
+-
+-struct map_rb_node *map_rb_node__next(struct map_rb_node *node)
+-{
+-	struct rb_node *next;
+-
+-	if (!node)
+-		return NULL;
+-
+-	next = rb_next(&node->rb_node);
+-
+-	if (!next)
+-		return NULL;
+-
+-	return rb_entry(next, struct map_rb_node, rb_node);
+-}
+-
+ static int map__strcmp(const void *a, const void *b)
+ {
+ 	const struct map *map_a = *(const struct map **)a;
 diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index e4a49d6ff5cf..b7ab3ec61b7c 100644
+index 84b42c8456e8..d836d04c9402 100644
 --- a/tools/perf/util/maps.h
 +++ b/tools/perf/util/maps.h
-@@ -142,4 +142,6 @@ void __maps__sort_by_name(struct maps *maps);
+@@ -15,11 +15,6 @@ struct machine;
+ struct map;
+ struct maps;
  
- void maps__fixup_end(struct maps *maps);
+-struct map_rb_node {
+-	struct rb_node rb_node;
+-	struct map *map;
+-};
+-
+ struct map_list_node {
+ 	struct list_head node;
+ 	struct map *map;
+@@ -30,9 +25,6 @@ static inline struct map_list_node *map_list_node__new(void)
+ 	return malloc(sizeof(struct map_list_node));
+ }
  
-+void maps__load_first(struct maps *maps);
-+
- #endif // __PERF_MAPS_H
+-struct map_rb_node *maps__first(struct maps *maps);
+-struct map_rb_node *map_rb_node__next(struct map_rb_node *node);
+-struct map_rb_node *maps__find_node(struct maps *maps, struct map *map);
+ struct map *maps__find(struct maps *maps, u64 addr);
+ 
+ DECLARE_RC_STRUCT(maps) {
+@@ -78,26 +70,11 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
+ /* Iterate over map removing an entry if cb returns true. */
+ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
+ 
+-static inline struct rb_root *maps__entries(struct maps *maps)
+-{
+-	return &RC_CHK_ACCESS(maps)->entries;
+-}
+-
+ static inline struct machine *maps__machine(struct maps *maps)
+ {
+ 	return RC_CHK_ACCESS(maps)->machine;
+ }
+ 
+-static inline struct rw_semaphore *maps__lock(struct maps *maps)
+-{
+-	return &RC_CHK_ACCESS(maps)->lock;
+-}
+-
+-static inline struct map **maps__maps_by_name(struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->maps_by_name;
+-}
+-
+ static inline unsigned int maps__nr_maps(const struct maps *maps)
+ {
+ 	return RC_CHK_ACCESS(maps)->nr_maps;
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
