@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fRUXJ7b1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lPWCAere"
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E901C10E2
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:17:54 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d8da78a5fbso1678857b3.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:17:54 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 696DA1999
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:17:59 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d3bdbf1fb5so1797947b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:17:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701911873; x=1702516673; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701911875; x=1702516675; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=w2/fI4UKQGbXPKpixoT4A6YY7YN3DKvkLzQPho85kC4=;
-        b=fRUXJ7b1rScZjQawpLsDkXqYkoCesK1ay2Cb3Uuqx7sFh3E8GqaDMQOg4m8AxChBKA
-         fDVnwgz5MFsMpXSVuAhHi7FdKUr8N2BfHtzAtjhDM8vsgEQOhhdzGfqF8mJElcWzoPv5
-         m45f2MNX7sVdYlm1HLl2DMVm9t36d59ntu09vM6AO/nlPOu9Edy4/emzPURDDPrFnXoe
-         t+CB0yaYnEFG96jGHAxj7AyuPdh57gZMdnwtxyTQHn24OURM0AEyaw8hxtwEJ9lNZ5Ly
-         fIFvZ15JOaS7Tnt3BJ+UpidFkM6uKNY0VvRIsBN+fgAFxaTh5p+5EeF4ByedjTEPZLV0
-         irdA==
+        bh=/sHbkqXu1fUVSCDOGBtyBTb/TcjN5e6RYI3KdCcTGvc=;
+        b=lPWCAere9A/tqQJb4Z5l4LaSTTwqTXgknJXo8BgtDlT7+pjrDMQuOtG9EKofMJkg1t
+         CtpCTbGz+ViPywB2P82f9qcxD0LG+NQD7/OT2Dkbxqv3+GaoRZ59zUuIIWmiC9kRyLjO
+         TJHlWjqI9UhaCg4VbqqPVqc29zm2Fffa7c1+UjKWqm4er5Xm2WioYzMNKph/AA4BfhoW
+         3vEyzvguY9SWNLsRJxK+3ApHLIvJ09yWKxX0rrpi8MlGj5Lcvx6GkcxDiO27doaJiN39
+         yCAj3yQgXayfT5jwXN5dlKJLTSYJOELXp2yZlS7nKzsMgivrB2dpfrvI0YXG5fQrMUcY
+         wtJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701911873; x=1702516673;
+        d=1e100.net; s=20230601; t=1701911875; x=1702516675;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w2/fI4UKQGbXPKpixoT4A6YY7YN3DKvkLzQPho85kC4=;
-        b=cTA2sS9FH0u+NRdyI3DVfKDwDxcXtVQ+cx/cUS+bpjFOovL1fkRiDrhY8mTWVxb5VG
-         zLQTyIOye4KnTgt0BSLlxTzqUZqjQvnlySBKLqnK8F26sMcM+1njovLTq7GfvxKUDqkC
-         FZKTeaB6z0MWEj0rOFq+cpIsKdeDIh7eGEuNr8elu3xMV1Ox1eiXjMM+wjb20S9Z0aCk
-         LP9sIwxyM7RB3VUEpBONN4521Q+/UR09eaQ/BAK5bacravG4aIWoKL04ruVzRHjdBQg6
-         ixnLE1xzqXPLEaKRVYIsKbc1cSshVv6D9TLCrZa4DPrlqBcDz4qi1hBxqGI0e7CaMKDu
-         Zqng==
-X-Gm-Message-State: AOJu0YwRGUTyWSIYWjJb+80AGhOZa2Ad5SZNQdzupmT0Q7ZLh93G3NWz
-	cDqbNo5zjaF9AoZPTYP07OYPW5pvPS0m
-X-Google-Smtp-Source: AGHT+IG3crwuUKA1k1nPZvH9yQllxEOrTpihvd5crtorXk3VOdB7gfg55UWxCR08/ajjSZBH4vJiir/HQEG2
+        bh=/sHbkqXu1fUVSCDOGBtyBTb/TcjN5e6RYI3KdCcTGvc=;
+        b=OgwP1Kxk1uKSCKduuGfQSHTSMp8f7mjuT87JhXRylQ11bAIctiIbstbfdh3A9fOLbG
+         j5NK9V5ki0u1Rlcr3O377gvEAVFiZXFCgWCL25soRw7F1OriRjEs5dyogh8uWgqzdwBa
+         +BDTAgt2NzjZ0ZmKp4Aiqe7o+EUa2i2PnuR9+DpHyfkYRx/vX95QNRPBezUOD14sOWdP
+         CfjcLTuk8iNQdEMEKSXByxS/OpAviNq1oYw2YnhD16BzKEte8NQK13u+sa3LxmPSCLyB
+         GPTfJzhlmP6xFyJhAujRUHxoeon5nRKDbGRMcLTVd/dzVxaJjC07CJAcbOwCrIs7qmKL
+         EBxQ==
+X-Gm-Message-State: AOJu0YwT6IhkOZ9D4yImjY55r3GlT++xqmuSmgmSd7UFIo7Cx1akIO2L
+	wi+VilHgtm9fxjUebVA7UxyRmJNex1ip
+X-Google-Smtp-Source: AGHT+IEumQPe3/vz/fQO4LUDE4GZ7qAE8fCJL7nIDamWMCjWVHBn0oHchNObH1MJsGJSoyiQUyF0/NKazFtE
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
- (user=irogers job=sendgmr) by 2002:a81:b70b:0:b0:5d3:bf64:5e20 with SMTP id
- v11-20020a81b70b000000b005d3bf645e20mr25066ywh.9.1701911873370; Wed, 06 Dec
- 2023 17:17:53 -0800 (PST)
-Date: Wed,  6 Dec 2023 17:16:45 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:2f89:b0:5d4:263e:c819 with SMTP
+ id ew9-20020a05690c2f8900b005d4263ec819mr25058ywb.8.1701911875437; Wed, 06
+ Dec 2023 17:17:55 -0800 (PST)
+Date: Wed,  6 Dec 2023 17:16:46 -0800
 In-Reply-To: <20231207011722.1220634-1-irogers@google.com>
-Message-Id: <20231207011722.1220634-12-irogers@google.com>
+Message-Id: <20231207011722.1220634-13-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231207011722.1220634-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v6 11/47] perf unwind: Use function to add missing maps lock
+Subject: [PATCH v6 12/47] perf vdso: Use function to add missing maps lock
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,73 +68,66 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Switch read_unwind_spec_eh_frame from loop macro maps__for_each_entry
+Switch machine__thread_dso_type from loop macro maps__for_each_entry
 to maps__for_each_map function that takes a callback. The function
 holds the maps lock, which should be held during iteration.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/unwind-libunwind-local.c | 34 +++++++++++++++++-------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ tools/perf/util/vdso.c | 35 +++++++++++++++++++++++------------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index c0641882fd2f..228f1565bd0b 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -302,12 +302,31 @@ static int unwind_spec_ehframe(struct dso *dso, struct machine *machine,
- 	return 0;
+diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
+index ae3eee69b659..df8963796187 100644
+--- a/tools/perf/util/vdso.c
++++ b/tools/perf/util/vdso.c
+@@ -140,23 +140,34 @@ static struct dso *__machine__addnew_vdso(struct machine *machine, const char *s
+ 	return dso;
  }
  
-+struct read_unwind_spec_eh_frame_maps_cb_args {
-+	struct dso *dso;
-+	u64 base_addr;
++struct machine__thread_dso_type_maps_cb_args {
++	struct machine *machine;
++	enum dso_type dso_type;
 +};
 +
-+static int read_unwind_spec_eh_frame_maps_cb(struct map *map, void *data)
++static int machine__thread_dso_type_maps_cb(struct map *map, void *data)
 +{
++	struct machine__thread_dso_type_maps_cb_args *args = data;
++	struct dso *dso = map__dso(map);
 +
-+	struct read_unwind_spec_eh_frame_maps_cb_args *args = data;
++	if (!dso || dso->long_name[0] != '/')
++		return 0;
 +
-+	if (map__dso(map) == args->dso && map__start(map) < args->base_addr)
-+		args->base_addr = map__start(map);
-+
-+	return 0;
++	args->dso_type = dso__type(dso, args->machine);
++	return (args->dso_type != DSO__TYPE_UNKNOWN) ? 1 : 0;
 +}
 +
-+
- static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
- 				     u64 *table_data, u64 *segbase,
- 				     u64 *fde_count)
+ static enum dso_type machine__thread_dso_type(struct machine *machine,
+ 					      struct thread *thread)
  {
--	struct map_rb_node *map_node;
--	u64 base_addr = UINT64_MAX;
-+	struct read_unwind_spec_eh_frame_maps_cb_args args = {
-+		.dso = dso,
-+		.base_addr = UINT64_MAX,
+-	enum dso_type dso_type = DSO__TYPE_UNKNOWN;
+-	struct map_rb_node *rb_node;
+-
+-	maps__for_each_entry(thread__maps(thread), rb_node) {
+-		struct dso *dso = map__dso(rb_node->map);
++	struct machine__thread_dso_type_maps_cb_args args = {
++		.machine = machine,
++		.dso_type = DSO__TYPE_UNKNOWN,
 +	};
- 	int ret, fd;
  
- 	if (dso->data.eh_frame_hdr_offset == 0) {
-@@ -325,16 +344,11 @@ static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
- 			return -EINVAL;
- 	}
- 
--	maps__for_each_entry(thread__maps(ui->thread), map_node) {
--		struct map *map = map_node->map;
--		u64 start = map__start(map);
-+	maps__for_each_map(thread__maps(ui->thread), read_unwind_spec_eh_frame_maps_cb, &args);
- 
--		if (map__dso(map) == dso && start < base_addr)
--			base_addr = start;
+-		if (!dso || dso->long_name[0] != '/')
+-			continue;
+-		dso_type = dso__type(dso, machine);
+-		if (dso_type != DSO__TYPE_UNKNOWN)
+-			break;
 -	}
--	base_addr -= dso->data.elf_base_addr;
-+	args.base_addr -= dso->data.elf_base_addr;
- 	/* Address of .eh_frame_hdr */
--	*segbase = base_addr + dso->data.eh_frame_hdr_addr;
-+	*segbase = args.base_addr + dso->data.eh_frame_hdr_addr;
- 	ret = unwind_spec_ehframe(dso, ui->machine, dso->data.eh_frame_hdr_offset,
- 				   table_data, fde_count);
- 	if (ret)
++	maps__for_each_map(thread__maps(thread), machine__thread_dso_type_maps_cb, &args);
+ 
+-	return dso_type;
++	return args.dso_type;
+ }
+ 
+ #if BITS_PER_LONG == 64
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
