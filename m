@@ -1,98 +1,112 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N/nxXtBZ"
-Received: from mail-oo1-xc2e.google.com (mail-oo1-xc2e.google.com [IPv6:2607:f8b0:4864:20::c2e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12114D1
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 09:05:50 -0800 (PST)
-Received: by mail-oo1-xc2e.google.com with SMTP id 006d021491bc7-58a7d13b00bso476224eaf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 09:05:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NKgI3tKa"
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F3710CA
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 09:33:24 -0800 (PST)
+Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-50bed6c1716so33e87.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 09:33:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701968749; x=1702573549; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/gQwCYDHPBBWnGreQGj5kMmktVS56VhncbMZUIjTkxA=;
-        b=N/nxXtBZdALdkfa05rASSt+SKtNvnIxvZ9lp2fYxAANLa2BIwY3Uy5QkBvcimzBTjS
-         2+ukcvhC6xj0NLeLo7Ae2/MiIiIVs8lttDZK3rTY7nTSwCXvAY0Oa9dWfuxgnhJgRUoN
-         rPNpCOnFwDgw16ZpMxxQL3/8P93M3A+DgBuLAS7aKY7NTx7dgMBODbwkx9BRlQvEYoch
-         l/vTd9SCrh/30LFxRA8KZo4vembEIafl63CEWfjKG+9X2Iyg2M/g8ONleNv39jtZ0N3+
-         5q3wZtzRYEe/y/7DVLc3lt4r5IgrHTrWtyWU1s0otBK75Ckbl6Qtvdwktk00wBBBnSh+
-         4p3Q==
+        d=google.com; s=20230601; t=1701970402; x=1702575202; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EWvwuPiuxUQVO7BNeeDLUjAMj48JOZs+v7lie10kAzI=;
+        b=NKgI3tKakb4aMkrzwQiaSWgp+L7RjlHKIHIAmp4tKektL8EWkuxjAQghl9ah32HrwB
+         sbnLDgEIebwwQ4E37BAxnoFA3BH/tpoXStMTkV5CkjnlF/xnN8lBve8BO2WFenSwq+rX
+         dEwC6GF9szaUomVqgGEDNxlJXEihrV2VBXDqEpDXYO22ajgLz5TsQFWeerU+aK9eq3h2
+         ++uj27YnIqZhyUYbVdTXTn/WMIhO7qG/h2Vwh58V1ri7QcvGy9yG+Uemhni+S06xhdEn
+         SJuuk0js8bwb7BYRe8QUs2G4hvqc2azoz3iYiJj/jzDKFOnCEX72x/sGbPDm6c3n0dIK
+         ZUOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701968749; x=1702573549;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/gQwCYDHPBBWnGreQGj5kMmktVS56VhncbMZUIjTkxA=;
-        b=aw4QTicHhIKfIPtiZ/mf1tw667VaZ+mxaWRcVxSKqp+L8/4Fyt+z08Zvh5kDjhSkwY
-         5elWvAbO4vY6wqnyL4IHlwqTooxoJ6dnzibebRuHZ0ObbjFEWXal3l0rF280mlTn6voP
-         hjj+IPYM3EOya0BwrdlcIzx1uBmLfNAVDxgSnR1h9kozxiE/LCHJPGbQ6FC/CaUiceWw
-         hPd7IwLePlB/r9QCsXwSy1rRGyEeT9JQLryym8o4HhxfSuGHM/AzZZffhQU8xag+CY+2
-         Yg1Nv0psVBW9y0hJhPA2RrKBlZy71NNZNA/R5CCyHPAiwVho5NFyA6gxZTrpbCZGSQrq
-         yIqQ==
-X-Gm-Message-State: AOJu0YxQoPmUNiqWgY1FuEVM6h5rYNYEtTjPZmxGDfkEcQCgAVGUsLWZ
-	mAdDT69iDnEgIxpvAUaQNB+uCr2GWrqBq1MnfLXXGg==
-X-Google-Smtp-Source: AGHT+IF4nJjAccTc+VF4SuAKFW4kIPR8iNtdeRIf4Ey84+2bpA53GJ5Bnp23SGyiRFLX1R/TpK0sBvk/IlcMGvxka3U=
-X-Received: by 2002:a05:6358:5e14:b0:16d:f743:4107 with SMTP id
- q20-20020a0563585e1400b0016df7434107mr2967267rwn.3.1701968748863; Thu, 07 Dec
- 2023 09:05:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701970402; x=1702575202;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EWvwuPiuxUQVO7BNeeDLUjAMj48JOZs+v7lie10kAzI=;
+        b=cDNuMxnAQVw8bD9Q0zkRnDRNA3iZbcYcXal5iMEEBcm6p/ci98CgR3j6Gli/fduXVI
+         j7kA4n0x8gmblSet85lrX4NGqx1Ar6kNt8ojcdNSOQmJiXxEgV+cB6qKGEGpxMSjLcpf
+         MHFGgCzTTMmExHDPDRDGSr/x3fZbeHDDV60//kzO+lmhc1rsX2yzgNpfI6G9KTpXKkLn
+         GodbLKKeoeEAQJC1ABQtQ70LSwfjNY+ifSES/Qy+C8Gy/RS4z47CZUNhXHotYRmjwY2V
+         WsMnJ81rPWQZtM6WP4JYnrtaa5nHwXp+45hXVtjbUSZ6PgVwx/zpZeAEbsQqueh3hJeg
+         F15Q==
+X-Gm-Message-State: AOJu0YwbqBhtwXyuqTc7pWrMwXsaeqH+33qCaoPw1k3qV+jYZqrox8ah
+	neC0BZtow8y3n9Cs9wjHNWown8NiTtCKJC1RyNKKm5kYFXTxchlLbUOF5A==
+X-Google-Smtp-Source: AGHT+IG86lhLOte31MJRo1RVauOPUItQYNe9SDrSLhX2ANv5CukXoO4oocdicuGr5OZ2LbUL3IzKp5kjXgmUqFVrCR8=
+X-Received: by 2002:ac2:5f56:0:b0:50b:cdd5:b54a with SMTP id
+ 22-20020ac25f56000000b0050bcdd5b54amr101794lfz.3.1701970402185; Thu, 07 Dec
+ 2023 09:33:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207163458.5554-1-khuey@kylehuey.com> <20231207163458.5554-2-khuey@kylehuey.com>
-In-Reply-To: <20231207163458.5554-2-khuey@kylehuey.com>
-From: Marco Elver <elver@google.com>
-Date: Thu, 7 Dec 2023 18:05:10 +0100
-Message-ID: <CANpmjNNi1WoE0gsq5TSv8ys68YcF2o+LtWiDj+=bZ3Y46oP7Jw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] perf: Reorder overflow handler ahead of event_limit/sigtrap
-To: Kyle Huey <me@kylehuey.com>
-Cc: Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	"Robert O'Callahan" <robert@ocallahan.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org
+References: <20231207140911.3240408-1-ben.gainey@arm.com>
+In-Reply-To: <20231207140911.3240408-1-ben.gainey@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 7 Dec 2023 09:33:10 -0800
+Message-ID: <CAP-5=fVM7cdrcOKL1nRcusBZpg_6Sg5NZA6PKYWcMgeOwHjf3w@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf: Fix missing reference count get in call_path_from_sample
+To: Ben Gainey <ben.gainey@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, 
+	adrian.hunter@intel.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 7 Dec 2023 at 17:35, Kyle Huey <me@kylehuey.com> wrote:
+On Thu, Dec 7, 2023 at 6:09=E2=80=AFAM Ben Gainey <ben.gainey@arm.com> wrot=
+e:
 >
-> The perf subsystem already allows an overflow handler to clear pending_kill
-> to suppress a fasync signal (although nobody currently does this). Allow an
-> overflow handler to suppress the other visible side effects of an overflow,
-> namely event_limit accounting and SIGTRAP generation.
+> The addr_location map and maps fields in the inner loop were missing
+> calls to map__get/maps__get. The subsequent addr_location__exit call in
+> each loop puts the map/maps fields causing use-after-free aborts.
 >
-> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> This issue reproduces on at least arm64 and x86_64 with something
+> simple like `perf record -g ls` followed by `perf script -s script.py`
+> with the following script:
+>
+>     perf_db_export_mode =3D True
+>     perf_db_export_calls =3D False
+>     perf_db_export_callchains =3D True
+>
+>     def sample_table(*args):
+>         print(f'sample_table({args})')
+>
+>     def call_path_table(*args):
+>         print(f'call_path_table({args}')
+
+Thanks for this, I've had a go at turning this into a perf test and
+will send it out shortly.
+
+> Fixes: 0dd5041c9a0ea ("perf addr_location: Add init/exit/copy functions")
+> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+
+Tested-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
 > ---
->  kernel/events/core.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+>  tools/perf/util/db-export.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index b704d83a28b2..19fddfc27a4a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9541,6 +9541,12 @@ static int __perf_event_overflow(struct perf_event *event,
->          */
+> diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+> index b9fb71ab7a73..106429155c2e 100644
+> --- a/tools/perf/util/db-export.c
+> +++ b/tools/perf/util/db-export.c
+> @@ -253,8 +253,8 @@ static struct call_path *call_path_from_sample(struct=
+ db_export *dbe,
+>                  */
+>                 addr_location__init(&al);
+>                 al.sym =3D node->ms.sym;
+> -               al.map =3D node->ms.map;
+> -               al.maps =3D thread__maps(thread);
+> +               al.map =3D map__get(node->ms.map);
+> +               al.maps =3D maps__get(thread__maps(thread));
+>                 al.addr =3D node->ip;
 >
->         event->pending_kill = POLL_IN;
-> +
-> +       READ_ONCE(event->overflow_handler)(event, data, regs);
-> +
-> +       if (!event->pending_kill)
-> +               return ret;
-
-It's not at all intuitive that resetting pending_kill to 0 will
-suppress everything else, too. There is no relationship between the
-fasync signals and SIGTRAP. pending_kill is for the former and
-pending_sigtrap is for the latter. One should not affect the other.
-
-A nicer solution would be to properly undo the various pending_*
-states (in the case of pending_sigtrap being set it should be enough
-to reset pending_sigtrap to 0, and also decrement
-event->ctx->nr_pending).
-
-Although I can see why this solution is simpler. Perhaps with enough
-comments it might be clearer.
-
-Preferences?
+>                 if (al.map && !al.sym)
+> --
+> 2.43.0
+>
