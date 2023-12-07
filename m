@@ -1,76 +1,113 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NqXNXEEL"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC6CD10D8;
-	Thu,  7 Dec 2023 07:07:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701961639; x=1733497639;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=+GVLoJDm5SxtMSOy2cOPpF18a6NRQbOqGZnFwXI0CXM=;
-  b=NqXNXEELO6Prwo1mMqQCes/Xt+rZlNLEmy4lkeTEMF9D4XcCQXGCQNSX
-   qYKtUihRfI0UJTsDcKaVnLnZP64Mk054lxjBqpFBeIscvcdvEI+DKnxyO
-   RGJuyo0gY7YH+DreAa8Pt9VNVAiWbAtgx3c8wBVSML/edHubFVVihfCht
-   IL++lAdDig9sB6bV//b/5uQQyWwCY45uLzS6vbLJn4mgI136+V/kmc3M0
-   rZ+NIc57+ef2hlaaMLHqAF3V/ZRwZ1tnZ/Vvo2xMD6iKev7kpB48mL3gf
-   obttnbWxdyLifU/tvSZu1E+Hm6LWrlAdnm1JmNfEeVp6/da9Mt1PMVRc8
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1123841"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="1123841"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 07:05:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="837755629"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="837755629"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 07:05:58 -0800
-Received: from [10.212.103.45] (kliang2-mobl1.ccr.corp.intel.com [10.212.103.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C5AC1580D4F;
-	Thu,  7 Dec 2023 07:05:55 -0800 (PST)
-Message-ID: <a22be949-56fb-4e18-bd5a-5db441fd53df@linux.intel.com>
-Date: Thu, 7 Dec 2023 10:05:54 -0500
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="DMpiC/Ho"
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB55B10F5
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 08:35:12 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1d0a5422c80so9623605ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 08:35:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google; t=1701966912; x=1702571712; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IXhJZgRGOB5Sycf3QWqHrD17iXmXG1N3cpy0e+e8qfo=;
+        b=DMpiC/Hon0R+3JwN8VGCqbuqzpnpWSu5pqBmcD9KUHVsbS11Mi8u5NBERxWWg/lGEq
+         wwplDbbfBd7ZotHqL9Hg5bQRfd6wrwiak0rirXKR3XiFEcaoYP4EjjynBVYyxq0N1wLR
+         A8EfFRf8m1mZG2VjVsuGib2P1Kx6T69q3Yzi8xvS/rO4eg95ANSkwLA1RVEhyKp8pIao
+         gXbWsYjentZeJ0hY7C3HjXFFTEr4Mn548jUcNbQFpvxrDYNkNH/Za0pFvlYD8cG63SAt
+         G7QwGBh5XBhmGHtgp7Vs38ha4HQHOxbF8QCBHHTfcyyGLN/MZrYEHTJWyQc7/vy9mxr/
+         GbKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701966912; x=1702571712;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IXhJZgRGOB5Sycf3QWqHrD17iXmXG1N3cpy0e+e8qfo=;
+        b=GKlVXURB89AUoNIl7QME8MdxnTn2ZFTsVraoODjBSBrEzq36W+Wbmw8EGIUU3gpPIs
+         H2Q2IeHkwJ2hDHHVQN7lnZQ1mZDNaTwPqIid44TEteHFVdz7IXDelGatRh7hRP+jP42z
+         FigTMA/F0JAzMrYU6MjaOe+tLY/eFB+n4RhrdDMFoNO2JTE8wMw09zG0MGoP0MJply65
+         RyT6+6krkec7Rp6IohMspSFfZhqV8e1+OaqsCMqVSKXdUpze/l2XGZvJ9Y2IzUl1noYc
+         CyDwpnRsfyqkle/i9eZo8OtLYhVyMxaLbqOJsF6Cz83VWEAIwDVRtS1bIKI88zihGcIB
+         XsSg==
+X-Gm-Message-State: AOJu0YxQv7jYvOs2dK/bRLQRXmDm+SUFLvM5CRbS/zonYJggeUj8VoTx
+	C9wjzXH7m2HBdSjhtJjjqKJaMg==
+X-Google-Smtp-Source: AGHT+IHwJu6hYJPY1MxRyAcC09H7E2C4OK2vcYFScd3fqXrSpb+ZHHISC7s17+15XDaXO2CMHBPIPw==
+X-Received: by 2002:a17:902:dacf:b0:1cf:c42c:cfbd with SMTP id q15-20020a170902dacf00b001cfc42ccfbdmr3656529plx.0.1701966912115;
+        Thu, 07 Dec 2023 08:35:12 -0800 (PST)
+Received: from zhadum.home.kylehuey.com (c-76-126-33-191.hsd1.ca.comcast.net. [76.126.33.191])
+        by smtp.gmail.com with ESMTPSA id iw15-20020a170903044f00b001d1cd7e4acfsm6143plb.201.2023.12.07.08.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Dec 2023 08:35:11 -0800 (PST)
+From: Kyle Huey <me@kylehuey.com>
+X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
+To: Kyle Huey <khuey@kylehuey.com>,
+	linux-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>
+Cc: Robert O'Callahan <robert@ocallahan.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 1/3] perf: Reorder overflow handler ahead of event_limit/sigtrap
+Date: Thu,  7 Dec 2023 08:34:56 -0800
+Message-Id: <20231207163458.5554-2-khuey@kylehuey.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231207163458.5554-1-khuey@kylehuey.com>
+References: <20231207163458.5554-1-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] Clean up perf mem
-Content-Language: en-US
-To: Ravi Bangoria <ravi.bangoria@amd.com>, acme@kernel.org,
- irogers@google.com, peterz@infradead.org, mingo@redhat.com,
- namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
- john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
- mike.leach@linaro.org, leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com,
- renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20231206201324.184059-1-kan.liang@linux.intel.com>
- <0597b44c-226d-1180-d55d-bcf9bbd2e03f@amd.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <0597b44c-226d-1180-d55d-bcf9bbd2e03f@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The perf subsystem already allows an overflow handler to clear pending_kill
+to suppress a fasync signal (although nobody currently does this). Allow an
+overflow handler to suppress the other visible side effects of an overflow,
+namely event_limit accounting and SIGTRAP generation.
 
+Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+---
+ kernel/events/core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-On 2023-12-07 9:44 a.m., Ravi Bangoria wrote:
->> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
->> etc. But I can only test it on two Intel platforms.
->> Please give it try, if you have machines with other ARCHs.
-> 
-> I did a quick perf mem and perf c2c test, with the fix I suggested
-> in patch #1, and things seems to be working fine.
-> 
-> [For AMD specific changes]
-> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index b704d83a28b2..19fddfc27a4a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9541,6 +9541,12 @@ static int __perf_event_overflow(struct perf_event *event,
+ 	 */
+ 
+ 	event->pending_kill = POLL_IN;
++
++	READ_ONCE(event->overflow_handler)(event, data, regs);
++
++	if (!event->pending_kill)
++		return ret;
++
+ 	if (events && atomic_dec_and_test(&event->event_limit)) {
+ 		ret = 1;
+ 		event->pending_kill = POLL_HUP;
+@@ -9584,9 +9590,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ 		irq_work_queue(&event->pending_irq);
+ 	}
+ 
+-	READ_ONCE(event->overflow_handler)(event, data, regs);
+-
+-	if (*perf_event_fasync(event) && event->pending_kill) {
++	if (*perf_event_fasync(event)) {
+ 		event->pending_wakeup = 1;
+ 		irq_work_queue(&event->pending_irq);
+ 	}
+-- 
+2.34.1
 
-Thanks Ravi.
-
-Kan
