@@ -1,56 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rT+rO/bX"
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974FDD3
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 16:10:59 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-50beed2a46eso1545e87.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 16:10:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wwFL3TAB"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCD4D51
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:17:28 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d3a1f612b3so1801457b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:17:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701907858; x=1702512658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pbCbrg3j+n6hw5FDSN3XVi+GFi+VbZZ8w/r4cs8ioZQ=;
-        b=rT+rO/bXh2nN64lz61CjjPbjxKDpz24iGdjty9mzXty5XJX+Bglm8i7kNV5hcN1yVr
-         NLE5+Srm1TbbkcxH7pWnixlGccADMiKmiKffW+RwA87ODtmA3WQj2bADhTxnANBguLOh
-         5SNu+1sKH6Z75YIfcoIOLW5GoqIuwV4Q/EG0ZReQ+JS2wItsmXoQGljhxbjkSweMfqou
-         uKr8FJ3xzg6f91vjp6Cmf2w9jHN1X9EGwQBtSViORW1hvMeceIIRRlnSXgyY09crQ2+g
-         Hjgkdqkp1wJ7+pIkrNrJYhvhfKDz1LBaK/aS9jI/rZrcvTlTxnklp1JYZjPQiJzSIh2U
-         tSXQ==
+        d=google.com; s=20230601; t=1701911847; x=1702516647; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Rho6A4K2pyLdXHAMEZCam07lp+rs55oaZJC5aHTkgLM=;
+        b=wwFL3TABgZy8RfMkJuAMHXEItXtf5LPPFodTX1w5TT1jBdlb3ycvNw8M+4ZavGzGhh
+         zDS334EQoyubupL4YMum0U8W/fknJa928CRXWAH73fGNSRDvDtPiHFo3mnFvvb00S+B6
+         +K/TlX9jlB146f0hmtxO7lrRqXyr0JoUEDxL38S+UHyZiYo/NVzK6luSQot6A2DF/4C9
+         H5wjiisOU3mAkHJ3bCposZBn4vDA/5eYpq3jDOGh6I8HBV9s2BPZDgg48LqzA3NDEBAh
+         091sRLMC6gOHXpYxmbtRHNVhN717gil+9e/QfA7zw0z/crFxIoJmr3HlaqYcYJ6tHYig
+         JOvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701907858; x=1702512658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pbCbrg3j+n6hw5FDSN3XVi+GFi+VbZZ8w/r4cs8ioZQ=;
-        b=fw8E7KTVIGg/nIbi+PWddyUL6qhA3cUakCHHT8WIBRnqVhPum1pKhIS7Fuvp1JB3pH
-         tECsTmoYWiLNNg19zC7lvLodHuCVbYCz8jHtwilliIrhG+uNFpm0VajrR7TZ2Z7S2Yox
-         IQweiCHsDn+cMpb9yQ73qp/qyGEWrRyV8+3R/ITCVqoza3mZ1tsUBH6pr7EWrJpzzPiU
-         +ChrrYKW0oXN5PA1hT10C8MwUL44hznW91ELNAEdVSWd06FZdIDwtW70H6Vgfs8IBgdE
-         fx8zLDIFSwMe8nEv8CCXACtemOCXFOy3H5mSh+WfoZpZoBh3hG+WUbSgvAdzVDDRGyfW
-         BpnA==
-X-Gm-Message-State: AOJu0Yz3K8F9kk1i9xBZ4Dr0ji9lm21TZplKSUyGyHeOntcMW15dZQjh
-	IDfLi/enj3mTczAa40QX5sg7ZPCxfniJ87A+chy/Ig==
-X-Google-Smtp-Source: AGHT+IFg1ac9j2r6/2y83W0CvJi1XAwztyQwncd0PTTzJmU5zazDspM8OtPA7mjIAyAPYJI0IttDjqTgjSLhmWcLtnw=
-X-Received: by 2002:ac2:4c8b:0:b0:50b:fa8d:f28b with SMTP id
- d11-20020ac24c8b000000b0050bfa8df28bmr76181lfl.1.1701907857604; Wed, 06 Dec
- 2023 16:10:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701911847; x=1702516647;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Rho6A4K2pyLdXHAMEZCam07lp+rs55oaZJC5aHTkgLM=;
+        b=p5NcQbNtIFf7xa4AXtix+CcqyUNftV7o0yuIPKhZ1xk106udsUuqq7PuQZIZzCefox
+         iWB4JWrCGLzmAXaFQe5GtSb70FvF7EroECl/chANWhwx8HnpVFRLXI9BYYLQpmjcvlqr
+         MRHoamh2xEchiHb2C+nOQzzdFIrstZFwGCQer0hgMOQTq9YIqUMZKKfcR0YJzAzES0LE
+         TpWbGTi6JcWOuLqD+8sGrCr1hik4pUTJb4vZArMfaIqQYOi7rrwcGfQkCI20p0Wfe1H5
+         FbMx5RKcS0DySS0qd54zI/f6YGZ0pdQcB7VEUM1Tv5SytfGnP3bezAMuTU0m1lBnCky/
+         f3bg==
+X-Gm-Message-State: AOJu0YwjYzWIwLsMjL0UByEaVQZbaEUNgvpQeFMj1SdOdGEzWcT+lc3F
+	IprlzLX8xdfnd6HvF/Q39hDqiFVFg5QG
+X-Google-Smtp-Source: AGHT+IE9ptO7yfyuuXpEHzpl5xABXicnoVsRc1ruVk5cVrWZLqT6sSjYZTkAh7KqMbdYErWJIAv4hRh7eh+v
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
+ (user=irogers job=sendgmr) by 2002:a81:b70b:0:b0:5d3:bf64:5e20 with SMTP id
+ v11-20020a81b70b000000b005d3bf645e20mr25057ywh.9.1701911847572; Wed, 06 Dec
+ 2023 17:17:27 -0800 (PST)
+Date: Wed,  6 Dec 2023 17:16:34 -0800
+Message-Id: <20231207011722.1220634-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <CAM9d7cj=ojxxdbT095UiwaP+WCRCHMGCU_JYQCWBD-vGiKScjA@mail.gmail.com>
-In-Reply-To: <CAM9d7cj=ojxxdbT095UiwaP+WCRCHMGCU_JYQCWBD-vGiKScjA@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
+Subject: [PATCH v6 00/47] maps/threads/dsos memory improvements and fixes
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 6 Dec 2023 16:10:46 -0800
-Message-ID: <CAP-5=fWbsCaQi1XAzCqr0Rr1AtMZUBaECE+BgZsqzcRneBsegw@mail.gmail.com>
-Subject: Re: [PATCH v5 00/50] Improvements to memory use
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
 	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
 	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
@@ -67,276 +65,158 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 5:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > Fix memory leaks detected by address/leak sanitizer affecting LBR
-> > call-graphs, perf mem and BPF offcpu.
-> >
-> > Make branch_type_stat in callchain_list optional as it is large and
-> > not always necessary - in particular it isn't used by perf top.
-> >
-> > Make the allocations of zstd streams, kernel symbols and event copies
-> > lazier in order to save memory in cases like perf record.
-> >
-> > Handle the thread exit event and have it remove the thread from the
-> > threads set in machine. Don't do this for perf report as it causes a
-> > regression for task lists, which assume threads are never removed from
-> > the machine's set, and offcpu events, that may sythensize samples for
-> > threads that have exited.
-> >
-> > Avoid using 8kb buffers for filename__read_str which is excessive for
-> > reading CPU maps. Add io_dir as an allocation free readdir
-> > replacement, opendir allocating 32kb by default and the code uses it
-> > recursively.
-> >
-> > Shrink perf map using a two value byte to replace two function
-> > pointers. Modify the implementation of maps to not use an rbtree as
-> > the container for maps, instead use a sorted array. Improve locking
-> > and reference counting issues.
-> >
-> > Similar to maps separate out and reimplement threads to use a hashmap
-> > for lower memory consumption and faster look up. The fixes a
-> > regression in memory usage where reference count checking switched to
-> > using non-invasive tree nodes.  Reduce its default size by 32 times
-> > and improve locking discipline. Also, fix regressions where tids had
-> > become unordered to make `perf report --tasks` and
-> > `perf trace --summary` output easier to read.
-> >
-> > Better encapsulate the dsos abstraction. Remove the linked list and
-> > rbtree used for faster iteration and log(n) lookup to a sorted array
-> > for similar performance but half the memory usage per dso. Improve
-> > reference counting and locking discipline, adding reference count
-> > checking to dso. Experimented with, but abandoned, a hashmap
-> > implementation due to the need for extra storage and the keys not
-> > being stable.
-> >
-> > The overall effect is to reduce memory consumption significantly for
-> > perf top - with call graphs enabled running longer before 1GB of
-> > memory is consumed. For a perf record of 'true', the memory
-> > consumption goes from 39912kb max resident to 20096kb max resident -
-> > nearly halved. perf inject with -b of a system wide perf record of
-> > 'true' reduces the max resident by roughly 4.5% (3.4% in v4 due to
-> > branch_type_stat changes being merged). This is while improving
-> > correctness with locking discipline and reference count checking.
-> >
-> > Patch organization (v5):
-> >  - 50 patches is a lot, the patches aren't divided as they merge confli=
-ct and
-> >    later patches, for example in dsos, rely on the changes and fixes to=
- maps.
->
-> You don't need to do it all at once.  AFAIK the io_dir changes are indepe=
-ndent
-> and you can separate map/maps changes from others.  Maybe you can wait
-> for map changes merged before working on the dso changes.  I know it'd ta=
-ke
-> more time but it'd be easier to deal with smaller patches focusing on a s=
-ingle
-> factor both for you and the reviewers.
+Modify the implementation of maps to not use an rbtree as the
+container for maps, instead use a sorted array. Improve locking and
+reference counting issues.
 
-Agreed on the io_dir changes, they were intentionally first so they
-were easy to take, but I can make them their own series.
-The dsos changes are only asan clean with the maps changes, so I
-prefer to keep these two longer series together.
+Similar to maps separate out and reimplement threads to use a hashmap
+for lower memory consumption and faster look up. The fixes a
+regression in memory usage where reference count checking switched to
+using non-invasive tree nodes.  Reduce its default size by 32 times
+and improve locking discipline. Also, fix regressions where tids had
+become unordered to make `perf report --tasks` and
+`perf trace --summary` output easier to read.
 
-Thanks,
-Ian
+Better encapsulate the dsos abstraction. Remove the linked list and
+rbtree used for faster iteration and log(n) lookup to a sorted array
+for similar performance but half the memory usage per dso. Improve
+reference counting and locking discipline, adding reference count
+checking to dso.
 
-> p.s. I know I also have a set of ~50 patches and feel sorry about saying
-> like this. ;-p  Maybe I need to split the data type profiling series too.
->
-> Thanks,
-> Namhyung
->
->
-> >  - the dso reference count checking patch is larger due to switch use o=
-f dso to
-> >    be by accessors, to encapsulate the reference count checker macros. =
-The
-> >    reference count checking changes within this largely mechanical chan=
-ge amount
-> >    to a few lines and so weren't separated.
-> >  - the first patch contains a build fix if the rwsem error checking is
-> >    enabled missed from v3.
-> >  - the next patches are an assortment of memory size fixes.
-> >  - the next patches are the refactoring of maps.
-> >  - the next patches are the refactoring of threads.
-> >  - the next patches are the refactoring of dsos.
-> >  - finally reference count checking is added to dso and some lock/refer=
-ence
-> >    count issues are resolved. This is done after changing the data stru=
-ctures,
-> >    for example, as the single pointer on an array is easier to add refe=
-rence
-> >    count checking to compared to the 5 previous pointers.
-> >
-> > v5: 3 patches were merged. 2nd patch addressed feedback from
-> >     namhyung@kernel.org and Guilherme Amadio <amadio@gentoo.org>. 4th
-> >     patch rename function to getdelim as suggested by
-> >     namhyung@kernel.org. 5 patch adds the missing sysfs mountpoint as
-> >     suggested by namhyung@kernel.org. 49th patch fix a missed put in
-> >     the dso_data tests.
-> > v4: Rebased as 11 changes moved to perf-tools-next. Address comments
-> >     from v3 such as error checking on zstd streams. Improve the
-> >     dsos/dso in ways similar to threads and maps, with the addition of
-> >     reference count checking on dso.
-> > v3: Additional memory/speed improvements, in particular for maps and
-> >     threads. Address review comments from namhyung@kernel.org and
-> >     adrian.hunter@intel.com.
-> > v2: Add additional memory fixes on top of initial LBR and rc check
-> >     fixes.
-> >
-> > Ian Rogers (50):
-> >   perf comm: Use regular mutex
-> >   libperf: Lazily allocate/size mmap event copy
-> >   perf mmap: Lazily initialize zstd streams
-> >   tools api fs: Switch filename__read_str to use io.h
-> >   tools api fs: Avoid reading whole file for a 1 byte bool
-> >   tools lib api: Add io_dir an allocation free readdir alternative
-> >   perf maps: Switch modules tree walk to io_dir__readdir
-> >   perf record: Be lazier in allocating lost samples buffer
-> >   perf pmu: Switch to io_dir__readdir
-> >   perf header: Switch mem topology to io_dir__readdir
-> >   perf events: Remove scandir in thread synthesis
-> >   perf map: Simplify map_ip/unmap_ip and make map size smaller
-> >   perf maps: Move symbol maps functions to maps.c
-> >   perf thread: Add missing RC_CHK_EQUAL
-> >   perf maps: Add maps__for_each_map to call a function on each entry
-> >   perf maps: Add remove maps function to remove a map based on callback
-> >   perf debug: Expose debug file
-> >   perf maps: Refactor maps__fixup_overlappings
-> >   perf maps: Do simple merge if given map doesn't overlap
-> >   perf maps: Rename clone to copy from
-> >   perf maps: Add maps__load_first
-> >   perf maps: Add find next entry to give entry after the given map
-> >   perf maps: Reduce scope of map_rb_node and maps internals
-> >   perf maps: Fix up overlaps during fixup_end
-> >   perf maps: Switch from rbtree to lazily sorted array for addresses
-> >   perf maps: Get map before returning in maps__find
-> >   perf maps: Get map before returning in maps__find_by_name
-> >   perf maps: Get map before returning in maps__find_next_entry
-> >   perf maps: Hide maps internals
-> >   perf maps: Locking tidy up of nr_maps
-> >   perf dso: Reorder variables to save space in struct dso
-> >   perf report: Sort child tasks by tid
-> >   perf trace: Ignore thread hashing in summary
-> >   perf machine: Move fprintf to for_each loop and a callback
-> >   perf threads: Move threads to its own files
-> >   perf threads: Switch from rbtree to hashmap
-> >   perf threads: Reduce table size from 256 to 8
-> >   perf dsos: Attempt to better abstract dsos internals
-> >   perf dsos: Tidy reference counting and locking
-> >   perf dsos: Add dsos__for_each_dso
-> >   perf dso: Move dso functions out of dsos
-> >   perf dsos: Switch more loops to dsos__for_each_dso
-> >   perf dsos: Switch backing storage to array from rbtree/list
-> >   perf dsos: Remove __dsos__addnew
-> >   perf dsos: Remove __dsos__findnew_link_by_longname_id
-> >   perf dsos: Switch hand code to bsearch
-> >   perf dso: Add reference count checking and accessor functions
-> >   perf dso: Reference counting related fixes
-> >   perf dso: Use container_of to avoid a pointer in dso_data
-> >   perf env: Avoid recursively taking env->bpf_progs.lock
-> >
-> >  tools/lib/api/Makefile                        |    2 +-
-> >  tools/lib/api/fs/fs.c                         |   80 +-
-> >  tools/lib/api/io.h                            |   11 +-
-> >  tools/lib/api/io_dir.h                        |   75 +
-> >  tools/lib/perf/include/internal/mmap.h        |    3 +-
-> >  tools/lib/perf/mmap.c                         |   21 +-
-> >  tools/perf/arch/x86/tests/dwarf-unwind.c      |    1 +
-> >  tools/perf/arch/x86/util/event.c              |  103 +-
-> >  tools/perf/builtin-annotate.c                 |    6 +-
-> >  tools/perf/builtin-buildid-cache.c            |    2 +-
-> >  tools/perf/builtin-buildid-list.c             |   18 +-
-> >  tools/perf/builtin-inject.c                   |   96 +-
-> >  tools/perf/builtin-kallsyms.c                 |    2 +-
-> >  tools/perf/builtin-mem.c                      |    4 +-
-> >  tools/perf/builtin-record.c                   |   57 +-
-> >  tools/perf/builtin-report.c                   |  243 ++--
-> >  tools/perf/builtin-script.c                   |    8 +-
-> >  tools/perf/builtin-top.c                      |    4 +-
-> >  tools/perf/builtin-trace.c                    |   41 +-
-> >  tools/perf/tests/code-reading.c               |    8 +-
-> >  tools/perf/tests/dso-data.c                   |   67 +-
-> >  tools/perf/tests/hists_common.c               |    6 +-
-> >  tools/perf/tests/hists_cumulate.c             |    4 +-
-> >  tools/perf/tests/hists_output.c               |    2 +-
-> >  tools/perf/tests/maps.c                       |   64 +-
-> >  tools/perf/tests/symbols.c                    |    2 +-
-> >  tools/perf/tests/thread-maps-share.c          |    8 +-
-> >  tools/perf/tests/vmlinux-kallsyms.c           |  181 +--
-> >  tools/perf/ui/browsers/annotate.c             |    6 +-
-> >  tools/perf/ui/browsers/hists.c                |    8 +-
-> >  tools/perf/ui/browsers/map.c                  |    4 +-
-> >  tools/perf/util/Build                         |    1 +
-> >  tools/perf/util/annotate.c                    |   44 +-
-> >  tools/perf/util/auxtrace.c                    |    2 +-
-> >  tools/perf/util/block-info.c                  |    2 +-
-> >  tools/perf/util/bpf-event.c                   |   17 +-
-> >  tools/perf/util/bpf-event.h                   |   12 +-
-> >  tools/perf/util/bpf_lock_contention.c         |   10 +-
-> >  tools/perf/util/build-id.c                    |  136 +-
-> >  tools/perf/util/build-id.h                    |    2 -
-> >  tools/perf/util/callchain.c                   |    4 +-
-> >  tools/perf/util/comm.c                        |   10 +-
-> >  tools/perf/util/compress.h                    |    6 +-
-> >  tools/perf/util/data-convert-json.c           |    2 +-
-> >  tools/perf/util/db-export.c                   |    6 +-
-> >  tools/perf/util/debug.c                       |   22 +-
-> >  tools/perf/util/debug.h                       |    1 +
-> >  tools/perf/util/dlfilter.c                    |   12 +-
-> >  tools/perf/util/dso.c                         |  468 ++++---
-> >  tools/perf/util/dso.h                         |  544 ++++++--
-> >  tools/perf/util/dsos.c                        |  529 ++++---
-> >  tools/perf/util/dsos.h                        |   40 +-
-> >  tools/perf/util/env.c                         |   53 +-
-> >  tools/perf/util/env.h                         |    4 +
-> >  tools/perf/util/event.c                       |   12 +-
-> >  tools/perf/util/header.c                      |   47 +-
-> >  tools/perf/util/hist.c                        |    4 +-
-> >  tools/perf/util/intel-pt.c                    |   22 +-
-> >  tools/perf/util/machine.c                     |  652 +++------
-> >  tools/perf/util/machine.h                     |   32 +-
-> >  tools/perf/util/map.c                         |   93 +-
-> >  tools/perf/util/map.h                         |   83 +-
-> >  tools/perf/util/maps.c                        | 1239 +++++++++++++----
-> >  tools/perf/util/maps.h                        |   95 +-
-> >  tools/perf/util/mmap.c                        |    5 +-
-> >  tools/perf/util/mmap.h                        |    1 -
-> >  tools/perf/util/pmu.c                         |   48 +-
-> >  tools/perf/util/pmus.c                        |   30 +-
-> >  tools/perf/util/probe-event.c                 |   62 +-
-> >  tools/perf/util/rb_resort.h                   |    5 -
-> >  .../scripting-engines/trace-event-python.c    |   21 +-
-> >  tools/perf/util/session.c                     |   21 +
-> >  tools/perf/util/session.h                     |    2 +
-> >  tools/perf/util/sort.c                        |   19 +-
-> >  tools/perf/util/srcline.c                     |   65 +-
-> >  tools/perf/util/symbol-elf.c                  |  138 +-
-> >  tools/perf/util/symbol.c                      |  521 ++-----
-> >  tools/perf/util/symbol.h                      |    1 -
-> >  tools/perf/util/symbol_fprintf.c              |    4 +-
-> >  tools/perf/util/synthetic-events.c            |  156 ++-
-> >  tools/perf/util/thread.c                      |   48 +-
-> >  tools/perf/util/thread.h                      |    6 -
-> >  tools/perf/util/threads.c                     |  186 +++
-> >  tools/perf/util/threads.h                     |   35 +
-> >  tools/perf/util/unwind-libunwind-local.c      |   50 +-
-> >  tools/perf/util/unwind-libunwind.c            |    9 +-
-> >  tools/perf/util/vdso.c                        |   89 +-
-> >  tools/perf/util/zstd.c                        |   63 +-
-> >  88 files changed, 4101 insertions(+), 2827 deletions(-)
-> >  create mode 100644 tools/lib/api/io_dir.h
-> >  create mode 100644 tools/perf/util/threads.c
-> >  create mode 100644 tools/perf/util/threads.h
-> >
-> > --
-> > 2.43.0.rc1.413.gea7ed67945-goog
-> >
+v6:
+ - Patch 1 is a parameter name fix requested by Namhyung.
+ - Patches 2 to 13 split apart a macro to function callback refactor
+   requested by Arnaldo.
+ - Add fixes and acked-by to later patches from Namhyung.
+
+v5 series is here:
+https://lore.kernel.org/lkml/20231127220902.1315692-1-irogers@google.com/
+
+Ian Rogers (47):
+  perf map: Improve map/unmap parameter names
+  perf maps: Add maps__for_each_map to iterate maps holding the lock
+  perf events x86: Use function to add missing lock
+  perf report: Use function to add missing maps lock
+  perf tests: Use function to add missing maps lock
+  perf machine: Use function to add missing maps lock
+  perf probe-event: Use function to add missing maps lock
+  perf symbol: Use function to add missing maps lock
+  perf synthetic-events: Use function to add missing maps lock
+  perf thread: Use function to add missing maps lock
+  perf unwind: Use function to add missing maps lock
+  perf vdso: Use function to add missing maps lock
+  perf maps: Reduce scope of maps__for_each_entry
+  perf maps: Add remove maps function to remove a map based on callback
+  perf debug: Expose debug file
+  perf maps: Refactor maps__fixup_overlappings
+  perf maps: Do simple merge if given map doesn't overlap
+  perf maps: Rename clone to copy from
+  perf maps: Add maps__load_first
+  perf maps: Add find next entry to give entry after the given map
+  perf maps: Reduce scope of map_rb_node and maps internals
+  perf maps: Fix up overlaps during fixup_end
+  perf maps: Switch from rbtree to lazily sorted array for addresses
+  perf maps: Get map before returning in maps__find
+  perf maps: Get map before returning in maps__find_by_name
+  perf maps: Get map before returning in maps__find_next_entry
+  perf maps: Hide maps internals
+  perf maps: Locking tidy up of nr_maps
+  perf dso: Reorder variables to save space in struct dso
+  perf report: Sort child tasks by tid
+  perf trace: Ignore thread hashing in summary
+  perf machine: Move fprintf to for_each loop and a callback
+  perf threads: Move threads to its own files
+  perf threads: Switch from rbtree to hashmap
+  perf threads: Reduce table size from 256 to 8
+  perf dsos: Attempt to better abstract dsos internals
+  perf dsos: Tidy reference counting and locking
+  perf dsos: Add dsos__for_each_dso
+  perf dso: Move dso functions out of dsos
+  perf dsos: Switch more loops to dsos__for_each_dso
+  perf dsos: Switch backing storage to array from rbtree/list
+  perf dsos: Remove __dsos__addnew
+  perf dsos: Remove __dsos__findnew_link_by_longname_id
+  perf dsos: Switch hand code to bsearch
+  perf dso: Add reference count checking and accessor functions
+  perf dso: Reference counting related fixes
+  perf dso: Use container_of to avoid a pointer in dso_data
+
+ tools/perf/arch/x86/tests/dwarf-unwind.c      |    1 +
+ tools/perf/arch/x86/util/event.c              |  103 +-
+ tools/perf/builtin-annotate.c                 |    6 +-
+ tools/perf/builtin-buildid-cache.c            |    2 +-
+ tools/perf/builtin-buildid-list.c             |   18 +-
+ tools/perf/builtin-inject.c                   |   96 +-
+ tools/perf/builtin-kallsyms.c                 |    2 +-
+ tools/perf/builtin-mem.c                      |    4 +-
+ tools/perf/builtin-record.c                   |    2 +-
+ tools/perf/builtin-report.c                   |  243 +--
+ tools/perf/builtin-script.c                   |    8 +-
+ tools/perf/builtin-top.c                      |    4 +-
+ tools/perf/builtin-trace.c                    |   41 +-
+ tools/perf/tests/code-reading.c               |    8 +-
+ tools/perf/tests/dso-data.c                   |   67 +-
+ tools/perf/tests/hists_common.c               |    6 +-
+ tools/perf/tests/hists_cumulate.c             |    4 +-
+ tools/perf/tests/hists_output.c               |    2 +-
+ tools/perf/tests/maps.c                       |   64 +-
+ tools/perf/tests/symbols.c                    |    2 +-
+ tools/perf/tests/thread-maps-share.c          |    8 +-
+ tools/perf/tests/vmlinux-kallsyms.c           |  181 ++-
+ tools/perf/ui/browsers/annotate.c             |    6 +-
+ tools/perf/ui/browsers/hists.c                |    8 +-
+ tools/perf/ui/browsers/map.c                  |    4 +-
+ tools/perf/util/Build                         |    1 +
+ tools/perf/util/annotate.c                    |   44 +-
+ tools/perf/util/auxtrace.c                    |    2 +-
+ tools/perf/util/block-info.c                  |    2 +-
+ tools/perf/util/bpf-event.c                   |    9 +-
+ tools/perf/util/bpf_lock_contention.c         |   10 +-
+ tools/perf/util/build-id.c                    |  136 +-
+ tools/perf/util/build-id.h                    |    2 -
+ tools/perf/util/callchain.c                   |    4 +-
+ tools/perf/util/data-convert-json.c           |    2 +-
+ tools/perf/util/db-export.c                   |    6 +-
+ tools/perf/util/debug.c                       |   22 +-
+ tools/perf/util/debug.h                       |    1 +
+ tools/perf/util/dlfilter.c                    |   12 +-
+ tools/perf/util/dso.c                         |  468 +++---
+ tools/perf/util/dso.h                         |  544 ++++++-
+ tools/perf/util/dsos.c                        |  529 ++++---
+ tools/perf/util/dsos.h                        |   40 +-
+ tools/perf/util/event.c                       |   12 +-
+ tools/perf/util/header.c                      |    8 +-
+ tools/perf/util/hist.c                        |    4 +-
+ tools/perf/util/intel-pt.c                    |   22 +-
+ tools/perf/util/machine.c                     |  630 +++-----
+ tools/perf/util/machine.h                     |   32 +-
+ tools/perf/util/map.c                         |   73 +-
+ tools/perf/util/map.h                         |   16 +-
+ tools/perf/util/maps.c                        | 1398 +++++++++++------
+ tools/perf/util/maps.h                        |  105 +-
+ tools/perf/util/probe-event.c                 |   62 +-
+ tools/perf/util/rb_resort.h                   |    5 -
+ .../scripting-engines/trace-event-python.c    |   21 +-
+ tools/perf/util/session.c                     |   21 +
+ tools/perf/util/session.h                     |    2 +
+ tools/perf/util/sort.c                        |   19 +-
+ tools/perf/util/srcline.c                     |   65 +-
+ tools/perf/util/symbol-elf.c                  |  132 +-
+ tools/perf/util/symbol.c                      |  275 ++--
+ tools/perf/util/symbol_fprintf.c              |    4 +-
+ tools/perf/util/synthetic-events.c            |  134 +-
+ tools/perf/util/thread.c                      |   48 +-
+ tools/perf/util/thread.h                      |    6 -
+ tools/perf/util/threads.c                     |  186 +++
+ tools/perf/util/threads.h                     |   35 +
+ tools/perf/util/unwind-libunwind-local.c      |   50 +-
+ tools/perf/util/unwind-libunwind.c            |    9 +-
+ tools/perf/util/vdso.c                        |   89 +-
+ 71 files changed, 3691 insertions(+), 2496 deletions(-)
+ create mode 100644 tools/perf/util/threads.c
+ create mode 100644 tools/perf/util/threads.h
+
+-- 
+2.43.0.rc2.451.g8631bc7472-goog
+
