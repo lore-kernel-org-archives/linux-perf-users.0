@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HdmeoYzK"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4B52737
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:19:01 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-db548aff7baso573798276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:19:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QHS954VV"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F336A1987
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:18:37 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5c941936f7fso1179287b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:18:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701911940; x=1702516740; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701911917; x=1702516717; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cS+AmDTKja5LvYFJyP3dgfLWAWJafAe5Gb0ueWGCHXY=;
-        b=HdmeoYzKTWYw5KfBVi48VZsudmbfJfQXDP6fInvW4ckRdWLn2gYEMw5ZBb6nl9C9K4
-         SUzh8Gz3TMgQrVRN4Nyw9hBWamm2a9Jg+qYY1y3/e0xcIK5mf0UQUvmIwd+xQ/+2b4wS
-         a/VcydwdN2hphdNMUqste5/iLr76GiW8CgTTsjkGtSEU2xuXaZ/xi+CpIVIOETpERz0r
-         VWS87yKkjspmKHgV4hSPKz6zub74uAeaPJOWw6Obkqss3e8/j3vn+5tlJz863Gi4Og5S
-         tfjjs/hYkyTIrTEMqSiQZZAuEp8uOVk6pe2qOs7qiUPvvLx/G7UpedRsKHxiggJbau15
-         Th4Q==
+        bh=jV4LGHaY9H3j3380I04Xu68Zhzy7PBkiJyA/shXm3PU=;
+        b=QHS954VV88KEl6wyOw5OWTx2YCoCkElPfp165DkpFXeAZ2s1IGVi+WptAZwsxU719c
+         NtSRSkVZegGYwz+WQOcOoql5ldoEtDNxUdDyli9WBEImmRQUCUiOg89Mdqg8BzuSEpp2
+         VUpYEgGrmBRUelPBn6kodF8RwDmw2A8hGSGfACi7r829OpChY0IPVeTJfk5140JQPkW2
+         X1zrrOa104LmwnwZROGrY9QmaFrxiVeQ4EbHEjwqUyn36VAS/pMq1JjKEYYsnUTRqcML
+         lp4H/d7QyyYp76QSzHqbkWPrrBylEmC4MsW2+kXsWdUOYfTFzWfARD+rfhlQabSwwdZv
+         jW9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701911940; x=1702516740;
+        d=1e100.net; s=20230601; t=1701911917; x=1702516717;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cS+AmDTKja5LvYFJyP3dgfLWAWJafAe5Gb0ueWGCHXY=;
-        b=vP6dDYMY8PqukQ5vyxjaN8Yyx3AkxCM4v7z4m1w76CQCbPaoLZaH7Jkqq6R4iHLuBg
-         yF6DmQekDtkLPGtYi7Fwj9jYpzE3PhvZnE4x3+9aFaF/UPLaHA+HwbezE6nOwQ3KdaAB
-         8JNoyhle3InbAD4YO+f9kcgObmxe9dttQlKyrIXGRioLzUUDteTz9ZqmjZl2FXz06hlm
-         o4P3sgnEvCEsr/h7PufVJg3yABMZZaeOOPrbRZ+MbJ3M+43FaUhx8qf8NJNnxLVwnQNo
-         1D6YX2Peawj5rq8nOA5SDF0bIhV5jXSgKdTpF+3qhgVGI24akhbPxxfQ+YWLjxjNUbSQ
-         pU9g==
-X-Gm-Message-State: AOJu0YxD5FMlIe4WaL4BUnDFO1wOq1ULE20OF+UlHaKAiJZ45PPesC73
-	3ZM3eEZyFp7Mcb1phmiPS8WCWh9ffchS
-X-Google-Smtp-Source: AGHT+IGBF1MPfpfuqWpbJzAsNX3yKm8yNumxr5ackCrpsHKOavyCWcgKg1U6PW9IXcJ8CeGnVh69DRovv2Ac
+        bh=jV4LGHaY9H3j3380I04Xu68Zhzy7PBkiJyA/shXm3PU=;
+        b=hzTh2E32YpB8Xed8J0JoZY45kPW75GsIW6UbwcIm+fK/AvTxgpq0jYeOu5CqZNUYDQ
+         8BvGgQd8RTmx0Pr0L7ultM7emH7oLxLKjI3QiTR7t0cdDf0uPjOGosXMy7j9Y9vO52gc
+         veSVATCwEBjmMDEsBvl6qp3VszGNcoaw3xjfZf3qFENU7G0heYKBJB42D7qg6CyifwTP
+         mzEkXY3XTOqlE5UeYDe7Uvx9HabvPDbrUWzT/07RKGkENMaKDjswrqFGwsyBvPZhdlAV
+         i/I/k5uCMKkfi3sk35kkK+9Kg8wsFFoEb7j/QPiJw9Lpx679lOGGQbTi2Lwq3vw4tlkV
+         JKww==
+X-Gm-Message-State: AOJu0Yzka2QZOtYw4wiZVFdSDGuSLGgWYa1A3wWJgm62IMvjapS7crAm
+	8iteIsU7/Kpfmb7f1Pv0MYa+y7QkN1Yu
+X-Google-Smtp-Source: AGHT+IFAuSI/v52atfEs0Q7tqvTGgOiK4sQP/bIg8+KP5ZvKs5TQDNh/uDIx2xWyxFwwVqDBw085HdFelJTU
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
- (user=irogers job=sendgmr) by 2002:a25:d414:0:b0:db7:d4fb:3ecf with SMTP id
- m20-20020a25d414000000b00db7d4fb3ecfmr24394ybf.1.1701911940221; Wed, 06 Dec
- 2023 17:19:00 -0800 (PST)
-Date: Wed,  6 Dec 2023 17:17:14 -0800
+ (user=irogers job=sendgmr) by 2002:a25:bc46:0:b0:db5:378f:1824 with SMTP id
+ d6-20020a25bc46000000b00db5378f1824mr40272ybk.1.1701911916940; Wed, 06 Dec
+ 2023 17:18:36 -0800 (PST)
+Date: Wed,  6 Dec 2023 17:17:04 -0800
 In-Reply-To: <20231207011722.1220634-1-irogers@google.com>
-Message-Id: <20231207011722.1220634-41-irogers@google.com>
+Message-Id: <20231207011722.1220634-31-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231207011722.1220634-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v6 40/47] perf dsos: Switch more loops to dsos__for_each_dso
+Subject: [PATCH v6 30/47] perf report: Sort child tasks by tid
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,421 +68,368 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Switch loops within dsos.c, add a version that isn't locked. Switch
-some unlocked loops to hold the read lock.
+Commit 91e467bc568f ("perf machine: Use hashtable for machine
+threads") made the iteration of thread tids unordered. The perf report
+--tasks output now shows child threads in an order determined by the
+hashing. For example, in this snippet tid 3 appears after tid 256 even
+though they have the same ppid 2:
+
+```
+$ perf report --tasks
+%      pid      tid     ppid  comm
+         0        0       -1 |swapper
+         2        2        0 | kthreadd
+       256      256        2 |  kworker/12:1H-k
+    693761   693761        2 |  kworker/10:1-mm
+   1301762  1301762        2 |  kworker/1:1-mm_
+   1302530  1302530        2 |  kworker/u32:0-k
+         3        3        2 |  rcu_gp
+...
+```
+
+The output is easier to read if threads appear numerically
+increasing. To allow for this, read all threads into a list then sort
+with a comparator that orders by the child task's of the first common
+parent. The list creation and deletion are created as utilities on
+machine.  The indentation is possible by counting the number of
+parents a child has.
+
+With this change the output for the same data file is now like:
+```
+$ perf report --tasks
+%      pid      tid     ppid  comm
+         0        0       -1 |swapper
+         1        1        0 | systemd
+       823      823        1 |  systemd-journal
+       853      853        1 |  systemd-udevd
+      3230     3230        1 |  systemd-timesyn
+      3236     3236        1 |  auditd
+      3239     3239     3236 |   audisp-syslog
+      3321     3321        1 |  accounts-daemon
+...
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/build-id.c |   2 +-
- tools/perf/util/dsos.c     | 258 ++++++++++++++++++++++++-------------
- tools/perf/util/dsos.h     |   8 +-
- tools/perf/util/machine.c  |   8 +-
- 4 files changed, 174 insertions(+), 102 deletions(-)
+ tools/perf/builtin-report.c | 203 ++++++++++++++++++++----------------
+ tools/perf/util/machine.c   |  30 ++++++
+ tools/perf/util/machine.h   |  10 ++
+ 3 files changed, 155 insertions(+), 88 deletions(-)
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index a6d3c253f19f..864bc26b6b46 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -964,7 +964,7 @@ int perf_session__cache_build_ids(struct perf_session *session)
- 
- static bool machine__read_build_ids(struct machine *machine, bool with_hits)
- {
--	return __dsos__read_build_ids(&machine->dsos, with_hits);
-+	return dsos__read_build_ids(&machine->dsos, with_hits);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index a5d7bc5b843f..f5b95d45f6da 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -59,6 +59,7 @@
+ #include <linux/ctype.h>
+ #include <signal.h>
+ #include <linux/bitmap.h>
++#include <linux/list_sort.h>
+ #include <linux/string.h>
+ #include <linux/stringify.h>
+ #include <linux/time64.h>
+@@ -830,35 +831,6 @@ static void tasks_setup(struct report *rep)
+ 	rep->tool.no_warn = true;
  }
  
- bool perf_session__read_build_ids(struct perf_session *session, bool with_hits)
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index f816927a21ff..b7fbfb877ae3 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -41,38 +41,65 @@ void dsos__exit(struct dsos *dsos)
- 	exit_rwsem(&dsos->lock);
- }
- 
--bool __dsos__read_build_ids(struct dsos *dsos, bool with_hits)
-+
-+static int __dsos__for_each_dso(struct dsos *dsos,
-+				int (*cb)(struct dso *dso, void *data),
-+				void *data)
-+{
-+	struct dso *dso;
-+
-+	list_for_each_entry(dso, &dsos->head, node) {
-+		int err;
-+
-+		err = cb(dso, data);
-+		if (err)
-+			return err;
-+	}
-+	return 0;
-+}
-+
-+struct dsos__read_build_ids_cb_args {
-+	bool with_hits;
-+	bool have_build_id;
-+};
-+
-+static int dsos__read_build_ids_cb(struct dso *dso, void *data)
- {
--	struct list_head *head = &dsos->head;
--	bool have_build_id = false;
--	struct dso *pos;
-+	struct dsos__read_build_ids_cb_args *args = data;
- 	struct nscookie nsc;
- 
--	list_for_each_entry(pos, head, node) {
--		if (with_hits && !pos->hit && !dso__is_vdso(pos))
--			continue;
--		if (pos->has_build_id) {
--			have_build_id = true;
--			continue;
--		}
--		nsinfo__mountns_enter(pos->nsinfo, &nsc);
--		if (filename__read_build_id(pos->long_name, &pos->bid) > 0) {
--			have_build_id	  = true;
--			pos->has_build_id = true;
--		} else if (errno == ENOENT && pos->nsinfo) {
--			char *new_name = dso__filename_with_chroot(pos, pos->long_name);
+-struct task {
+-	struct thread		*thread;
+-	struct list_head	 list;
+-	struct list_head	 children;
+-};
 -
--			if (new_name && filename__read_build_id(new_name,
--								&pos->bid) > 0) {
--				have_build_id = true;
--				pos->has_build_id = true;
--			}
--			free(new_name);
-+	if (args->with_hits && !dso->hit && !dso__is_vdso(dso))
-+		return 0;
-+	if (dso->has_build_id) {
-+		args->have_build_id = true;
-+		return 0;
-+	}
-+	nsinfo__mountns_enter(dso->nsinfo, &nsc);
-+	if (filename__read_build_id(dso->long_name, &dso->bid) > 0) {
-+		args->have_build_id = true;
-+		dso->has_build_id = true;
-+	} else if (errno == ENOENT && dso->nsinfo) {
-+		char *new_name = dso__filename_with_chroot(dso, dso->long_name);
-+
-+		if (new_name && filename__read_build_id(new_name, &dso->bid) > 0) {
-+			args->have_build_id = true;
-+			dso->has_build_id = true;
- 		}
--		nsinfo__mountns_exit(&nsc);
-+		free(new_name);
- 	}
-+	nsinfo__mountns_exit(&nsc);
-+	return 0;
-+}
- 
--	return have_build_id;
-+bool dsos__read_build_ids(struct dsos *dsos, bool with_hits)
-+{
-+	struct dsos__read_build_ids_cb_args args = {
-+		.with_hits = with_hits,
-+		.have_build_id = false,
-+	};
-+
-+	dsos__for_each_dso(dsos, dsos__read_build_ids_cb, &args);
-+	return args.have_build_id;
- }
- 
- static int __dso__cmp_long_name(const char *long_name, struct dso_id *id, struct dso *b)
-@@ -105,6 +132,7 @@ struct dso *__dsos__findnew_link_by_longname_id(struct rb_root *root, struct dso
- 
- 	if (!name)
- 		name = dso->long_name;
-+
- 	/*
- 	 * Find node with the matching name
- 	 */
-@@ -185,17 +213,40 @@ static struct dso *__dsos__findnew_by_longname_id(struct rb_root *root, const ch
- 	return __dsos__findnew_link_by_longname_id(root, NULL, name, id);
- }
- 
-+struct dsos__find_id_cb_args {
-+	const char *name;
-+	struct dso_id *id;
-+	struct dso *res;
-+};
-+
-+static int dsos__find_id_cb(struct dso *dso, void *data)
-+{
-+	struct dsos__find_id_cb_args *args = data;
-+
-+	if (__dso__cmp_short_name(args->name, args->id, dso) == 0) {
-+		args->res = dso__get(dso);
-+		return 1;
-+	}
-+	return 0;
-+
-+}
-+
- static struct dso *__dsos__find_id(struct dsos *dsos, const char *name, struct dso_id *id, bool cmp_short)
- {
--	struct dso *pos;
-+	struct dso *res;
- 
- 	if (cmp_short) {
--		list_for_each_entry(pos, &dsos->head, node)
--			if (__dso__cmp_short_name(name, id, pos) == 0)
--				return dso__get(pos);
+-static struct task *tasks_list(struct task *task, struct machine *machine)
+-{
+-	struct thread *parent_thread, *thread = task->thread;
+-	struct task   *parent_task;
+-
+-	/* Already listed. */
+-	if (!list_empty(&task->list))
 -		return NULL;
-+		struct dsos__find_id_cb_args args = {
-+			.name = name,
-+			.id = id,
-+			.res = NULL,
-+		};
-+
-+		__dsos__for_each_dso(dsos, dsos__find_id_cb, &args);
-+		return args.res;
+-
+-	/* Last one in the chain. */
+-	if (thread__ppid(thread) == -1)
+-		return task;
+-
+-	parent_thread = machine__find_thread(machine, -1, thread__ppid(thread));
+-	if (!parent_thread)
+-		return ERR_PTR(-ENOENT);
+-
+-	parent_task = thread__priv(parent_thread);
+-	thread__put(parent_thread);
+-	list_add_tail(&task->list, &parent_task->children);
+-	return tasks_list(parent_task, machine);
+-}
+-
+ struct maps__fprintf_task_args {
+ 	int indent;
+ 	FILE *fp;
+@@ -902,89 +874,144 @@ static size_t maps__fprintf_task(struct maps *maps, int indent, FILE *fp)
+ 	return args.printed;
+ }
+ 
+-static void task__print_level(struct task *task, FILE *fp, int level)
++static int thread_level(struct machine *machine, const struct thread *thread)
+ {
+-	struct thread *thread = task->thread;
+-	struct task *child;
+-	int comm_indent = fprintf(fp, "  %8d %8d %8d |%*s",
+-				  thread__pid(thread), thread__tid(thread),
+-				  thread__ppid(thread), level, "");
++	struct thread *parent_thread;
++	int res;
+ 
+-	fprintf(fp, "%s\n", thread__comm_str(thread));
++	if (thread__tid(thread) <= 0)
++		return 0;
+ 
+-	maps__fprintf_task(thread__maps(thread), comm_indent, fp);
++	if (thread__ppid(thread) <= 0)
++		return 1;
+ 
+-	if (!list_empty(&task->children)) {
+-		list_for_each_entry(child, &task->children, list)
+-			task__print_level(child, fp, level + 1);
++	parent_thread = machine__find_thread(machine, -1, thread__ppid(thread));
++	if (!parent_thread) {
++		pr_err("Missing parent thread of %d\n", thread__tid(thread));
++		return 0;
  	}
--	return __dsos__findnew_by_longname_id(&dsos->root, name, id);
-+	res = __dsos__findnew_by_longname_id(&dsos->root, name, id);
++	res = 1 + thread_level(machine, parent_thread);
++	thread__put(parent_thread);
 +	return res;
  }
  
- struct dso *dsos__find(struct dsos *dsos, const char *name, bool cmp_short)
-@@ -275,48 +326,74 @@ struct dso *dsos__findnew_id(struct dsos *dsos, const char *name, struct dso_id
- 	return dso;
- }
- 
--size_t __dsos__fprintf_buildid(struct dsos *dsos, FILE *fp,
--			       bool (skip)(struct dso *dso, int parm), int parm)
--{
--	struct list_head *head = &dsos->head;
--	struct dso *pos;
--	size_t ret = 0;
-+struct dsos__fprintf_buildid_cb_args {
-+	FILE *fp;
-+	bool (*skip)(struct dso *dso, int parm);
-+	int parm;
-+	size_t ret;
-+};
- 
--	list_for_each_entry(pos, head, node) {
--		char sbuild_id[SBUILD_ID_SIZE];
-+static int dsos__fprintf_buildid_cb(struct dso *dso, void *data)
-+{
-+	struct dsos__fprintf_buildid_cb_args *args = data;
-+	char sbuild_id[SBUILD_ID_SIZE];
- 
--		if (skip && skip(pos, parm))
--			continue;
--		build_id__sprintf(&pos->bid, sbuild_id);
--		ret += fprintf(fp, "%-40s %s\n", sbuild_id, pos->long_name);
--	}
--	return ret;
-+	if (args->skip && args->skip(dso, args->parm))
-+		return 0;
-+	build_id__sprintf(&dso->bid, sbuild_id);
-+	args->ret += fprintf(args->fp, "%-40s %s\n", sbuild_id, dso->long_name);
-+	return 0;
- }
- 
--size_t __dsos__fprintf(struct dsos *dsos, FILE *fp)
-+size_t dsos__fprintf_buildid(struct dsos *dsos, FILE *fp,
-+			       bool (*skip)(struct dso *dso, int parm), int parm)
+-static int tasks_print(struct report *rep, FILE *fp)
++static void task__print_level(struct machine *machine, struct thread *thread, FILE *fp)
  {
--	struct list_head *head = &dsos->head;
--	struct dso *pos;
--	size_t ret = 0;
-+	struct dsos__fprintf_buildid_cb_args args = {
-+		.fp = fp,
-+		.skip = skip,
-+		.parm = parm,
-+		.ret = 0,
-+	};
-+
-+	dsos__for_each_dso(dsos, dsos__fprintf_buildid_cb, &args);
-+	return args.ret;
+-	struct perf_session *session = rep->session;
+-	struct machine      *machine = &session->machines.host;
+-	struct task *tasks, *task;
+-	unsigned int nr = 0, itask = 0, i;
+-	struct rb_node *nd;
+-	LIST_HEAD(list);
++	int level = thread_level(machine, thread);
++	int comm_indent = fprintf(fp, "  %8d %8d %8d |%*s",
++				  thread__pid(thread), thread__tid(thread),
++				  thread__ppid(thread), level, "");
+ 
+-	/*
+-	 * No locking needed while accessing machine->threads,
+-	 * because --tasks is single threaded command.
+-	 */
++	fprintf(fp, "%s\n", thread__comm_str(thread));
+ 
+-	/* Count all the threads. */
+-	for (i = 0; i < THREADS__TABLE_SIZE; i++)
+-		nr += machine->threads[i].nr;
++	maps__fprintf_task(thread__maps(thread), comm_indent, fp);
 +}
  
--	list_for_each_entry(pos, head, node) {
--		ret += dso__fprintf(pos, fp);
--	}
-+struct dsos__fprintf_cb_args {
-+	FILE *fp;
-+	size_t ret;
-+};
- 
--	return ret;
-+static int dsos__fprintf_cb(struct dso *dso, void *data)
+-	tasks = malloc(sizeof(*tasks) * nr);
+-	if (!tasks)
+-		return -ENOMEM;
++static int task_list_cmp(void *priv, const struct list_head *la, const struct list_head *lb)
 +{
-+	struct dsos__fprintf_cb_args *args = data;
++	struct machine *machine = priv;
++	struct thread_list *task_a = list_entry(la, struct thread_list, list);
++	struct thread_list *task_b = list_entry(lb, struct thread_list, list);
++	struct thread *a = task_a->thread;
++	struct thread *b = task_b->thread;
++	int level_a, level_b, res;
 +
-+	args->ret += dso__fprintf(dso, args->fp);
-+	return 0;
- }
- 
--int __dsos__hit_all(struct dsos *dsos)
-+size_t dsos__fprintf(struct dsos *dsos, FILE *fp)
- {
--	struct list_head *head = &dsos->head;
--	struct dso *pos;
-+	struct dsos__fprintf_cb_args args = {
-+		.fp = fp,
-+		.ret = 0,
-+	};
- 
--	list_for_each_entry(pos, head, node)
--		pos->hit = true;
-+	dsos__for_each_dso(dsos, dsos__fprintf_cb, &args);
-+	return args.ret;
-+}
- 
-+static int dsos__hit_all_cb(struct dso *dso, void *data __maybe_unused)
-+{
-+	dso->hit = true;
- 	return 0;
- }
- 
-+int dsos__hit_all(struct dsos *dsos)
-+{
-+	return dsos__for_each_dso(dsos, dsos__hit_all_cb, NULL);
-+}
-+
- struct dso *dsos__findnew_module_dso(struct dsos *dsos,
- 				     struct machine *machine,
- 				     struct kmod_path *m,
-@@ -342,49 +419,44 @@ struct dso *dsos__findnew_module_dso(struct dsos *dsos,
- 	return dso;
- }
- 
--struct dso *dsos__find_kernel_dso(struct dsos *dsos)
-+static int dsos__find_kernel_dso_cb(struct dso *dso, void *data)
- {
--	struct dso *dso, *res = NULL;
-+	struct dso **res = data;
-+	/*
-+	 * The cpumode passed to is_kernel_module is not the cpumode of *this*
-+	 * event. If we insist on passing correct cpumode to is_kernel_module,
-+	 * we should record the cpumode when we adding this dso to the linked
-+	 * list.
-+	 *
-+	 * However we don't really need passing correct cpumode.  We know the
-+	 * correct cpumode must be kernel mode (if not, we should not link it
-+	 * onto kernel_dsos list).
-+	 *
-+	 * Therefore, we pass PERF_RECORD_MISC_CPUMODE_UNKNOWN.
-+	 * is_kernel_module() treats it as a kernel cpumode.
-+	 */
-+	if (!dso->kernel ||
-+	    is_kernel_module(dso->long_name, PERF_RECORD_MISC_CPUMODE_UNKNOWN))
++	/* Compare a and b to root. */
++	if (thread__tid(a) == thread__tid(b))
 +		return 0;
  
--	down_read(&dsos->lock);
--	list_for_each_entry(dso, &dsos->head, node) {
--		/*
--		 * The cpumode passed to is_kernel_module is not the cpumode of
--		 * *this* event. If we insist on passing correct cpumode to
--		 * is_kernel_module, we should record the cpumode when we adding
--		 * this dso to the linked list.
--		 *
--		 * However we don't really need passing correct cpumode.  We
--		 * know the correct cpumode must be kernel mode (if not, we
--		 * should not link it onto kernel_dsos list).
--		 *
--		 * Therefore, we pass PERF_RECORD_MISC_CPUMODE_UNKNOWN.
--		 * is_kernel_module() treats it as a kernel cpumode.
--		 */
--		if (!dso->kernel ||
--		    is_kernel_module(dso->long_name,
--				     PERF_RECORD_MISC_CPUMODE_UNKNOWN))
--			continue;
-+	*res = dso__get(dso);
-+	return 1;
-+}
+-	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
+-		struct threads *threads = &machine->threads[i];
++	if (thread__tid(a) == 0)
++		return -1;
  
--		res = dso__get(dso);
--		break;
--	}
--	up_read(&dsos->lock);
-+struct dso *dsos__find_kernel_dso(struct dsos *dsos)
-+{
-+	struct dso *res = NULL;
-+
-+	dsos__for_each_dso(dsos, dsos__find_kernel_dso_cb, &res);
- 	return res;
- }
+-		for (nd = rb_first_cached(&threads->entries); nd;
+-		     nd = rb_next(nd)) {
+-			task = tasks + itask++;
++	if (thread__tid(b) == 0)
++		return 1;
  
- int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data), void *data)
- {
--	struct dso *dso;
-+	int err;
- 
- 	down_read(&dsos->lock);
--	list_for_each_entry(dso, &dsos->head, node) {
--		int err;
--
--		err = cb(dso, data);
--		if (err)
--			return err;
--	}
-+	err = __dsos__for_each_dso(dsos, cb, data);
- 	up_read(&dsos->lock);
--	return 0;
-+	return err;
- }
-diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
-index 317a263f0e37..50bd51523475 100644
---- a/tools/perf/util/dsos.h
-+++ b/tools/perf/util/dsos.h
-@@ -33,16 +33,16 @@ struct dso *dsos__find(struct dsos *dsos, const char *name, bool cmp_short);
- 
- struct dso *dsos__findnew_id(struct dsos *dsos, const char *name, struct dso_id *id);
-  
--bool __dsos__read_build_ids(struct dsos *dsos, bool with_hits);
-+bool dsos__read_build_ids(struct dsos *dsos, bool with_hits);
- 
- struct dso *__dsos__findnew_link_by_longname_id(struct rb_root *root, struct dso *dso,
- 						const char *name, struct dso_id *id);
- 
--size_t __dsos__fprintf_buildid(struct dsos *dsos, FILE *fp,
-+size_t dsos__fprintf_buildid(struct dsos *dsos, FILE *fp,
- 			       bool (skip)(struct dso *dso, int parm), int parm);
--size_t __dsos__fprintf(struct dsos *dsos, FILE *fp);
-+size_t dsos__fprintf(struct dsos *dsos, FILE *fp);
- 
--int __dsos__hit_all(struct dsos *dsos);
-+int dsos__hit_all(struct dsos *dsos);
- 
- struct dso *dsos__findnew_module_dso(struct dsos *dsos, struct machine *machine,
- 				     struct kmod_path *m, const char *filename);
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index f1186a5bb73c..0210c10e616b 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -852,11 +852,11 @@ static struct map *machine__addnew_module_map(struct machine *machine, u64 start
- size_t machines__fprintf_dsos(struct machines *machines, FILE *fp)
- {
- 	struct rb_node *nd;
--	size_t ret = __dsos__fprintf(&machines->host.dsos, fp);
-+	size_t ret = dsos__fprintf(&machines->host.dsos, fp);
- 
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *pos = rb_entry(nd, struct machine, rb_node);
--		ret += __dsos__fprintf(&pos->dsos, fp);
-+		ret += dsos__fprintf(&pos->dsos, fp);
+-			task->thread = rb_entry(nd, struct thread_rb_node, rb_node)->thread;
+-			INIT_LIST_HEAD(&task->children);
+-			INIT_LIST_HEAD(&task->list);
+-			thread__set_priv(task->thread, task);
+-		}
++	/* If parents match sort by tid. */
++	if (thread__ppid(a) == thread__ppid(b)) {
++		return thread__tid(a) < thread__tid(b)
++			? -1
++			: (thread__tid(a) > thread__tid(b) ? 1 : 0);
  	}
  
- 	return ret;
-@@ -865,7 +865,7 @@ size_t machines__fprintf_dsos(struct machines *machines, FILE *fp)
- size_t machine__fprintf_dsos_buildid(struct machine *m, FILE *fp,
- 				     bool (skip)(struct dso *dso, int parm), int parm)
- {
--	return __dsos__fprintf_buildid(&m->dsos, fp, skip, parm);
-+	return dsos__fprintf_buildid(&m->dsos, fp, skip, parm);
+ 	/*
+-	 * Iterate every task down to the unprocessed parent
+-	 * and link all in task children list. Task with no
+-	 * parent is added into 'list'.
++	 * Find a and b such that if they are a child of each other a and b's
++	 * tid's match, otherwise a and b have a common parent and distinct
++	 * tid's to sort by. First make the depths of the threads match.
+ 	 */
+-	for (itask = 0; itask < nr; itask++) {
+-		task = tasks + itask;
+-
+-		if (!list_empty(&task->list))
+-			continue;
+-
+-		task = tasks_list(task, machine);
+-		if (IS_ERR(task)) {
+-			pr_err("Error: failed to process tasks\n");
+-			free(tasks);
+-			return PTR_ERR(task);
++	level_a = thread_level(machine, a);
++	level_b = thread_level(machine, b);
++	a = thread__get(a);
++	b = thread__get(b);
++	for (int i = level_a; i > level_b; i--) {
++		struct thread *parent = machine__find_thread(machine, -1, thread__ppid(a));
++
++		thread__put(a);
++		if (!parent) {
++			pr_err("Missing parent thread of %d\n", thread__tid(a));
++			thread__put(b);
++			return -1;
+ 		}
++		a = parent;
++	}
++	for (int i = level_b; i > level_a; i--) {
++		struct thread *parent = machine__find_thread(machine, -1, thread__ppid(b));
+ 
+-		if (task)
+-			list_add_tail(&task->list, &list);
++		thread__put(b);
++		if (!parent) {
++			pr_err("Missing parent thread of %d\n", thread__tid(b));
++			thread__put(a);
++			return 1;
++		}
++		b = parent;
++	}
++	/* Search up to a common parent. */
++	while (thread__ppid(a) != thread__ppid(b)) {
++		struct thread *parent;
++
++		parent = machine__find_thread(machine, -1, thread__ppid(a));
++		thread__put(a);
++		if (!parent)
++			pr_err("Missing parent thread of %d\n", thread__tid(a));
++		a = parent;
++		parent = machine__find_thread(machine, -1, thread__ppid(b));
++		thread__put(b);
++		if (!parent)
++			pr_err("Missing parent thread of %d\n", thread__tid(b));
++		b = parent;
++		if (!a || !b)
++			return !a && !b ? 0 : (!a ? -1 : 1);
++	}
++	if (thread__tid(a) == thread__tid(b)) {
++		/* a is a child of b or vice-versa, deeper levels appear later. */
++		res = level_a < level_b ? -1 : (level_a > level_b ? 1 : 0);
++	} else {
++		/* Sort by tid now the parent is the same. */
++		res = thread__tid(a) < thread__tid(b) ? -1 : 1;
+ 	}
++	thread__put(a);
++	thread__put(b);
++	return res;
++}
++
++static int tasks_print(struct report *rep, FILE *fp)
++{
++	struct machine *machine = &rep->session->machines.host;
++	LIST_HEAD(tasks);
++	int ret;
+ 
+-	fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", "comm");
++	ret = machine__thread_list(machine, &tasks);
++	if (!ret) {
++		struct thread_list *task;
+ 
+-	list_for_each_entry(task, &list, list)
+-		task__print_level(task, fp, 0);
++		list_sort(machine, &tasks, task_list_cmp);
+ 
+-	free(tasks);
+-	return 0;
++		fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", "comm");
++
++		list_for_each_entry(task, &tasks, list)
++			task__print_level(machine, task->thread, fp);
++	}
++	thread_list__delete(&tasks);
++	return ret;
  }
  
- size_t machines__fprintf_dsos_buildid(struct machines *machines, FILE *fp,
-@@ -3207,5 +3207,5 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
- 
- int machine__hit_all_dsos(struct machine *machine)
- {
--	return __dsos__hit_all(&machine->dsos);
-+	return dsos__hit_all(&machine->dsos);
+ static int __cmd_report(struct report *rep)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 3da92f18814a..7872ce92c9fc 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -3261,6 +3261,36 @@ int machines__for_each_thread(struct machines *machines,
+ 	return rc;
  }
+ 
++
++static int thread_list_cb(struct thread *thread, void *data)
++{
++	struct list_head *list = data;
++	struct thread_list *entry = malloc(sizeof(*entry));
++
++	if (!entry)
++		return -ENOMEM;
++
++	entry->thread = thread__get(thread);
++	list_add_tail(&entry->list, list);
++	return 0;
++}
++
++int machine__thread_list(struct machine *machine, struct list_head *list)
++{
++	return machine__for_each_thread(machine, thread_list_cb, list);
++}
++
++void thread_list__delete(struct list_head *list)
++{
++	struct thread_list *pos, *next;
++
++	list_for_each_entry_safe(pos, next, list, list) {
++		thread__zput(pos->thread);
++		list_del(&pos->list);
++		free(pos);
++	}
++}
++
+ pid_t machine__get_current_tid(struct machine *machine, int cpu)
+ {
+ 	if (cpu < 0 || (size_t)cpu >= machine->current_tid_sz)
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 1279acda6a8a..b738ce84817b 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -280,6 +280,16 @@ int machines__for_each_thread(struct machines *machines,
+ 			      int (*fn)(struct thread *thread, void *p),
+ 			      void *priv);
+ 
++struct thread_list {
++	struct list_head	 list;
++	struct thread		*thread;
++};
++
++/* Make a list of struct thread_list based on threads in the machine. */
++int machine__thread_list(struct machine *machine, struct list_head *list);
++/* Free up the nodes within the thread_list list. */
++void thread_list__delete(struct list_head *list);
++
+ pid_t machine__get_current_tid(struct machine *machine, int cpu);
+ int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
+ 			     pid_t tid);
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
