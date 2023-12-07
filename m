@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MsxW6DNP"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 908EA10FE
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:18:10 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5caf86963ecso1804377b3.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:18:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MX0w+v6l"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5051E1723
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:18:31 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d3bdbf1fb5so1802467b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:18:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701911889; x=1702516689; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701911910; x=1702516710; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fa0yzbvjGhr4NhEJ4udLP0p51ZFXxXnD3jAPwBOmSuU=;
-        b=MsxW6DNPjcm5lXhgrPs/F1kqrwe0yhpO3eU89Vd4QfVJDe7pnuSHMcJjSvNzpjn9fo
-         ht3jV4NZ1hl9iqeyggKHTlN6v2jRjIKoMfgjNl1eSdPlkkDNiz+T5n856tr0wMSr4lzY
-         /kLKEWH4Z7weuLpkCtBH1gKJchp4PI6OYP4uU9dnUfOxHOEQfXFOUgk2qp36YODGYL4N
-         3BxCHIKIJh7jQ1qkr9gAbm/mUDzM7Et0yshdYsH4F2lQrXyOB1LucdtQAwoV6FR5D2je
-         IvL07YVtdJHhJcMUOdr6PolnBW6fVBB+YCkA1XkNYoJY6E2eAXr2h4O7ZwnB+gLKCsP3
-         Tykg==
+        bh=6kz2oL9dDwNcBq6v0QnywleLTyISwSzEpRE/HF57DiU=;
+        b=MX0w+v6lRRowcuisVEbg8t5tZ9CB9vFlluiBFkr8KeexxRn4MqQfStQT/ZM4PCVKPC
+         P5Jzkc2FmTxA2v0toTwnw2ZhLzUe7stiCRp2DeHx19nIIuf5xfHTejh3x8fBJqvWkirT
+         wBiG6ebBCcSsS5H/F0kG37Od9fcfdroy+XJGxftW7xOLO7GWhowcN5HlcUx+a6MjapLH
+         dTftrquQLCMc81vMkCfnjU9waMcaeujMIzs30bL60GOfX8xg6tuQihka6I0osYmTXHaZ
+         Yg+12I/Y+km1lbVGFwSR/XR83ZTrRODqex5i5WYqsiB8pxz5QnNOVI+CAeNYBs3R2E5Q
+         zLug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701911889; x=1702516689;
+        d=1e100.net; s=20230601; t=1701911910; x=1702516710;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fa0yzbvjGhr4NhEJ4udLP0p51ZFXxXnD3jAPwBOmSuU=;
-        b=N0mih6f5o3Z6EBOgAghv1sy+x2verFEDP+A7OBprnEqU+Yp864f6+QtEHrxZviGai3
-         kNN6wXFIzk8LFE+bQxDeNLLRCqSCLcUF1D4YJlh6Qjd05BUNeS7ON5ynnMC665pM8qmN
-         6hggemYwMnC9fcul5d9FDsuE4k44jv5qc0+Sk3MEBJdmeWrOVD2eHimBU1KLing+mnF+
-         sUUM0mD0M0D1nTLDuIRdhDZ/j2+fheEHa0V0Mgf36eDgoR9wg7+V4aSiVQ/5Q3o1lCl2
-         6GzwkxciT7baegvExqG63+ur0HY/pdOCUR8PS4ZwwcvYeu9/D9LjZQwf7g2hFFYL8Zo7
-         mLMA==
-X-Gm-Message-State: AOJu0Yzt0r3e6gfs693+GrI4trQxzlqiosTwKoZLy7MbKevsFH3YlP3d
-	nUEnxWmFM3c2tnUy5t2MWh8kVv0hgUav
-X-Google-Smtp-Source: AGHT+IFSmlUZ6GOZ35fZlj7BKZUnlQnekneA05Dz/Ida9kK02qCYXH/cLzPKYy/LVYUYGoyg6zeSdu7kf4/S
+        bh=6kz2oL9dDwNcBq6v0QnywleLTyISwSzEpRE/HF57DiU=;
+        b=Ps3BqRB3g/UUTH4hIUaCv2nK8UTGrZz97tLxr5d/ho6LWtQQWBtmKswBDuc44+O7cX
+         dEW3uq7lumaqAGEZsnw4Ort/0XgeOm1+KgmytG3TY/QnywQF19ai3KuSf4KIXcWHaFFV
+         N3xLAbeesu9AyzDU8yeBH7FAnHSCjJzTI3Xux/lO5JQr31nSqJA6hJWsoqiSkOsfqfe3
+         VT49YMXyk2oDv5XeuKN27U/UHL6ErKZdmuX/xw4FnFsRO+qZNIcwscz4xNtrHJTGU/42
+         QdqwQw/uLVf3SYgw2B/hNraAoPP2rPaVpm/kIG0vmcnGcO3HzFScrceMQuogM4G71/9d
+         ZWYA==
+X-Gm-Message-State: AOJu0YzyhHmcxdAffUxZslkelDK2q95WN5Hy2c6Dd4x11Bey5VMv4K2T
+	HO14lAafusJ0xPL2Xw+Qk6x26Dav5EG1
+X-Google-Smtp-Source: AGHT+IF9sFhKVp/pUh3Bfw1uRAglh295FMqZmp3OubGiaoImXt/kaAQjK4rlo13V72G3wsKpcOAKhV67iMpW
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
- (user=irogers job=sendgmr) by 2002:a05:690c:250b:b0:5d3:9222:a83e with SMTP
- id dt11-20020a05690c250b00b005d39222a83emr31358ywb.10.1701911888965; Wed, 06
- Dec 2023 17:18:08 -0800 (PST)
-Date: Wed,  6 Dec 2023 17:16:52 -0800
+ (user=irogers job=sendgmr) by 2002:a81:d304:0:b0:5d3:472b:3427 with SMTP id
+ y4-20020a81d304000000b005d3472b3427mr34217ywi.6.1701911910246; Wed, 06 Dec
+ 2023 17:18:30 -0800 (PST)
+Date: Wed,  6 Dec 2023 17:17:01 -0800
 In-Reply-To: <20231207011722.1220634-1-irogers@google.com>
-Message-Id: <20231207011722.1220634-19-irogers@google.com>
+Message-Id: <20231207011722.1220634-28-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231207011722.1220634-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v6 18/47] perf maps: Rename clone to copy from
+Subject: [PATCH v6 27/47] perf maps: Hide maps internals
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,83 +68,389 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Rename maps__clone to maps__copy_from to be more intention revealing
-of its behavior. Pass the underlying maps rather than the thread.
+Move the struct into the C file. Add maps__equal to work around
+exposing the struct for reference count checking. Add accessors for
+the unwind_libunwind_ops. Move maps_list_node to its only use in
+symbol.c.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c | 2 +-
- tools/perf/util/maps.c    | 6 +-----
- tools/perf/util/maps.h    | 3 +--
- tools/perf/util/thread.c  | 2 +-
- 4 files changed, 4 insertions(+), 9 deletions(-)
+ tools/perf/tests/thread-maps-share.c     |  8 +-
+ tools/perf/util/callchain.c              |  2 +-
+ tools/perf/util/maps.c                   | 96 +++++++++++++++++++++++
+ tools/perf/util/maps.h                   | 97 +++---------------------
+ tools/perf/util/symbol.c                 | 10 +++
+ tools/perf/util/thread.c                 |  2 +-
+ tools/perf/util/unwind-libunwind-local.c |  2 +-
+ tools/perf/util/unwind-libunwind.c       |  7 +-
+ 8 files changed, 123 insertions(+), 101 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index ca855fc435ac..38bf7108821d 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -453,7 +453,7 @@ static struct thread *findnew_guest_code(struct machine *machine,
- 	 * Guest code can be found in hypervisor process at the same address
- 	 * so copy host maps.
- 	 */
--	err = maps__clone(thread, thread__maps(host_thread));
-+	err = maps__copy_from(thread__maps(thread), thread__maps(host_thread));
- 	thread__put(host_thread);
- 	if (err)
- 		goto out_err;
+diff --git a/tools/perf/tests/thread-maps-share.c b/tools/perf/tests/thread-maps-share.c
+index 7fa6f7c568e2..e9ecd30a5c05 100644
+--- a/tools/perf/tests/thread-maps-share.c
++++ b/tools/perf/tests/thread-maps-share.c
+@@ -46,9 +46,9 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
+ 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(maps)), 4);
+ 
+ 	/* test the maps pointer is shared */
+-	TEST_ASSERT_VAL("maps don't match", RC_CHK_EQUAL(maps, thread__maps(t1)));
+-	TEST_ASSERT_VAL("maps don't match", RC_CHK_EQUAL(maps, thread__maps(t2)));
+-	TEST_ASSERT_VAL("maps don't match", RC_CHK_EQUAL(maps, thread__maps(t3)));
++	TEST_ASSERT_VAL("maps don't match", maps__equal(maps, thread__maps(t1)));
++	TEST_ASSERT_VAL("maps don't match", maps__equal(maps, thread__maps(t2)));
++	TEST_ASSERT_VAL("maps don't match", maps__equal(maps, thread__maps(t3)));
+ 
+ 	/*
+ 	 * Verify the other leader was created by previous call.
+@@ -73,7 +73,7 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
+ 	other_maps = thread__maps(other);
+ 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(other_maps)), 2);
+ 
+-	TEST_ASSERT_VAL("maps don't match", RC_CHK_EQUAL(other_maps, thread__maps(other_leader)));
++	TEST_ASSERT_VAL("maps don't match", maps__equal(other_maps, thread__maps(other_leader)));
+ 
+ 	/* release thread group */
+ 	thread__put(t3);
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 8262f69118db..7517d16c02ec 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -1157,7 +1157,7 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
+ 		if (al->map == NULL)
+ 			goto out;
+ 	}
+-	if (RC_CHK_EQUAL(al->maps, machine__kernel_maps(machine))) {
++	if (maps__equal(al->maps, machine__kernel_maps(machine))) {
+ 		if (machine__is_host(machine)) {
+ 			al->cpumode = PERF_RECORD_MISC_KERNEL;
+ 			al->level = 'k';
 diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index f305a4834cf0..986daa1b0497 100644
+index 0438c417ee44..c08e412a4313 100644
 --- a/tools/perf/util/maps.c
 +++ b/tools/perf/util/maps.c
-@@ -453,12 +453,8 @@ int maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 	return err;
+@@ -6,9 +6,63 @@
+ #include "dso.h"
+ #include "map.h"
+ #include "maps.h"
++#include "rwsem.h"
+ #include "thread.h"
+ #include "ui/ui.h"
+ #include "unwind.h"
++#include <internal/rc_check.h>
++
++/*
++ * Locking/sorting note:
++ *
++ * Sorting is done with the write lock, iteration and binary searching happens
++ * under the read lock requiring being sorted. There is a race between sorting
++ * releasing the write lock and acquiring the read lock for iteration/searching
++ * where another thread could insert and break the sorting of the maps. In
++ * practice inserting maps should be rare meaning that the race shouldn't lead
++ * to live lock. Removal of maps doesn't break being sorted.
++ */
++
++DECLARE_RC_STRUCT(maps) {
++	struct rw_semaphore lock;
++	/**
++	 * @maps_by_address: array of maps sorted by their starting address if
++	 * maps_by_address_sorted is true.
++	 */
++	struct map	 **maps_by_address;
++	/**
++	 * @maps_by_name: optional array of maps sorted by their dso name if
++	 * maps_by_name_sorted is true.
++	 */
++	struct map	 **maps_by_name;
++	struct machine	 *machine;
++#ifdef HAVE_LIBUNWIND_SUPPORT
++	void		*addr_space;
++	const struct unwind_libunwind_ops *unwind_libunwind_ops;
++#endif
++	refcount_t	 refcnt;
++	/**
++	 * @nr_maps: number of maps_by_address, and possibly maps_by_name,
++	 * entries that contain maps.
++	 */
++	unsigned int	 nr_maps;
++	/**
++	 * @nr_maps_allocated: number of entries in maps_by_address and possibly
++	 * maps_by_name.
++	 */
++	unsigned int	 nr_maps_allocated;
++	/**
++	 * @last_search_by_name_idx: cache of last found by name entry's index
++	 * as frequent searches for the same dso name are common.
++	 */
++	unsigned int	 last_search_by_name_idx;
++	/** @maps_by_address_sorted: is maps_by_address sorted. */
++	bool		 maps_by_address_sorted;
++	/** @maps_by_name_sorted: is maps_by_name sorted. */
++	bool		 maps_by_name_sorted;
++	/** @ends_broken: does the map contain a map where end values are unset/unsorted? */
++	bool		 ends_broken;
++};
+ 
+ static void check_invariants(const struct maps *maps __maybe_unused)
+ {
+@@ -103,6 +157,43 @@ static void maps__set_maps_by_name_sorted(struct maps *maps, bool value)
+ 	RC_CHK_ACCESS(maps)->maps_by_name_sorted = value;
  }
  
--/*
-- * XXX This should not really _copy_ te maps, but refcount them.
-- */
--int maps__clone(struct thread *thread, struct maps *parent)
-+int maps__copy_from(struct maps *maps, struct maps *parent)
++struct machine *maps__machine(const struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->machine;
++}
++
++unsigned int maps__nr_maps(const struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->nr_maps;
++}
++
++refcount_t *maps__refcnt(struct maps *maps)
++{
++	return &RC_CHK_ACCESS(maps)->refcnt;
++}
++
++#ifdef HAVE_LIBUNWIND_SUPPORT
++void *maps__addr_space(const struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->addr_space;
++}
++
++void maps__set_addr_space(struct maps *maps, void *addr_space)
++{
++	RC_CHK_ACCESS(maps)->addr_space = addr_space;
++}
++
++const struct unwind_libunwind_ops *maps__unwind_libunwind_ops(const struct maps *maps)
++{
++	return RC_CHK_ACCESS(maps)->unwind_libunwind_ops;
++}
++
++void maps__set_unwind_libunwind_ops(struct maps *maps, const struct unwind_libunwind_ops *ops)
++{
++	RC_CHK_ACCESS(maps)->unwind_libunwind_ops = ops;
++}
++#endif
++
+ static struct rw_semaphore *maps__lock(struct maps *maps)
  {
--	struct maps *maps = thread__maps(thread);
- 	int err;
- 	struct map_rb_node *rb_node;
+ 	/*
+@@ -440,6 +531,11 @@ bool maps__empty(struct maps *maps)
+ 	return maps__nr_maps(maps) == 0;
+ }
  
++bool maps__equal(struct maps *a, struct maps *b)
++{
++	return RC_CHK_EQUAL(a, b);
++}
++
+ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data), void *data)
+ {
+ 	bool done = false;
 diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index 62e94d443c02..e4a49d6ff5cf 100644
+index df9dd5a0e3c0..4bcba136ffe5 100644
 --- a/tools/perf/util/maps.h
 +++ b/tools/perf/util/maps.h
-@@ -14,7 +14,6 @@ struct ref_reloc_sym;
+@@ -3,80 +3,15 @@
+ #define __PERF_MAPS_H
+ 
+ #include <linux/refcount.h>
+-#include <linux/rbtree.h>
+ #include <stdio.h>
+ #include <stdbool.h>
+ #include <linux/types.h>
+-#include "rwsem.h"
+-#include <internal/rc_check.h>
+ 
+ struct ref_reloc_sym;
  struct machine;
  struct map;
  struct maps;
--struct thread;
  
- struct map_rb_node {
- 	struct rb_node rb_node;
-@@ -61,7 +60,7 @@ struct kmap {
+-struct map_list_node {
+-	struct list_head node;
+-	struct map *map;
+-};
+-
+-static inline struct map_list_node *map_list_node__new(void)
+-{
+-	return malloc(sizeof(struct map_list_node));
+-}
+-
+-/*
+- * Locking/sorting note:
+- *
+- * Sorting is done with the write lock, iteration and binary searching happens
+- * under the read lock requiring being sorted. There is a race between sorting
+- * releasing the write lock and acquiring the read lock for iteration/searching
+- * where another thread could insert and break the sorting of the maps. In
+- * practice inserting maps should be rare meaning that the race shouldn't lead
+- * to live lock. Removal of maps doesn't break being sorted.
+- */
+-
+-DECLARE_RC_STRUCT(maps) {
+-	struct rw_semaphore lock;
+-	/**
+-	 * @maps_by_address: array of maps sorted by their starting address if
+-	 * maps_by_address_sorted is true.
+-	 */
+-	struct map	 **maps_by_address;
+-	/**
+-	 * @maps_by_name: optional array of maps sorted by their dso name if
+-	 * maps_by_name_sorted is true.
+-	 */
+-	struct map	 **maps_by_name;
+-	struct machine	 *machine;
+-#ifdef HAVE_LIBUNWIND_SUPPORT
+-	void		*addr_space;
+-	const struct unwind_libunwind_ops *unwind_libunwind_ops;
+-#endif
+-	refcount_t	 refcnt;
+-	/**
+-	 * @nr_maps: number of maps_by_address, and possibly maps_by_name,
+-	 * entries that contain maps.
+-	 */
+-	unsigned int	 nr_maps;
+-	/**
+-	 * @nr_maps_allocated: number of entries in maps_by_address and possibly
+-	 * maps_by_name.
+-	 */
+-	unsigned int	 nr_maps_allocated;
+-	/**
+-	 * @last_search_by_name_idx: cache of last found by name entry's index
+-	 * as frequent searches for the same dso name are common.
+-	 */
+-	unsigned int	 last_search_by_name_idx;
+-	/** @maps_by_address_sorted: is maps_by_address sorted. */
+-	bool		 maps_by_address_sorted;
+-	/** @maps_by_name_sorted: is maps_by_name sorted. */
+-	bool		 maps_by_name_sorted;
+-	/** @ends_broken: does the map contain a map where end values are unset/unsorted? */
+-	bool		 ends_broken;
+-};
+-
+ #define KMAP_NAME_LEN 256
  
- struct maps *maps__new(struct machine *machine);
- bool maps__empty(struct maps *maps);
--int maps__clone(struct thread *thread, struct maps *parent);
-+int maps__copy_from(struct maps *maps, struct maps *parent);
+ struct kmap {
+@@ -100,36 +35,22 @@ static inline void __maps__zput(struct maps **map)
  
- struct maps *maps__get(struct maps *maps);
- void maps__put(struct maps *maps);
+ #define maps__zput(map) __maps__zput(&map)
+ 
++bool maps__equal(struct maps *a, struct maps *b);
++
+ /* Iterate over map calling cb for each entry. */
+ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data), void *data);
+ /* Iterate over map removing an entry if cb returns true. */
+ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
+ 
+-static inline struct machine *maps__machine(struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->machine;
+-}
+-
+-static inline unsigned int maps__nr_maps(const struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->nr_maps;
+-}
+-
+-static inline refcount_t *maps__refcnt(struct maps *maps)
+-{
+-	return &RC_CHK_ACCESS(maps)->refcnt;
+-}
++struct machine *maps__machine(const struct maps *maps);
++unsigned int maps__nr_maps(const struct maps *maps);
++refcount_t *maps__refcnt(struct maps *maps);
+ 
+ #ifdef HAVE_LIBUNWIND_SUPPORT
+-static inline void *maps__addr_space(struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->addr_space;
+-}
+-
+-static inline const struct unwind_libunwind_ops *maps__unwind_libunwind_ops(const struct maps *maps)
+-{
+-	return RC_CHK_ACCESS(maps)->unwind_libunwind_ops;
+-}
++void *maps__addr_space(const struct maps *maps);
++void maps__set_addr_space(struct maps *maps, void *addr_space);
++const struct unwind_libunwind_ops *maps__unwind_libunwind_ops(const struct maps *maps);
++void maps__set_unwind_libunwind_ops(struct maps *maps, const struct unwind_libunwind_ops *ops);
+ #endif
+ 
+ size_t maps__fprintf(struct maps *maps, FILE *fp);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 0785a54e832e..35975189999b 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -63,6 +63,16 @@ struct symbol_conf symbol_conf = {
+ 	.res_sample		= 0,
+ };
+ 
++struct map_list_node {
++	struct list_head node;
++	struct map *map;
++};
++
++static struct map_list_node *map_list_node__new(void)
++{
++	return malloc(sizeof(struct map_list_node));
++}
++
+ static enum dso_binary_type binary_type_symtab[] = {
+ 	DSO_BINARY_TYPE__KALLSYMS,
+ 	DSO_BINARY_TYPE__GUEST_KALLSYMS,
 diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 3d47b5c5528b..89c47a5098e2 100644
+index 89c47a5098e2..c59ab4d79163 100644
 --- a/tools/perf/util/thread.c
 +++ b/tools/perf/util/thread.c
-@@ -390,7 +390,7 @@ static int thread__clone_maps(struct thread *thread, struct thread *parent, bool
+@@ -383,7 +383,7 @@ static int thread__clone_maps(struct thread *thread, struct thread *parent, bool
+ 	if (thread__pid(thread) == thread__pid(parent))
+ 		return thread__prepare_access(thread);
+ 
+-	if (RC_CHK_EQUAL(thread__maps(thread), thread__maps(parent))) {
++	if (maps__equal(thread__maps(thread), thread__maps(parent))) {
+ 		pr_debug("broken map groups on thread %d/%d parent %d/%d\n",
+ 			 thread__pid(thread), thread__tid(thread),
+ 			 thread__pid(parent), thread__tid(parent));
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 228f1565bd0b..b69dc3a447db 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -706,7 +706,7 @@ static int _unwind__prepare_access(struct maps *maps)
+ {
+ 	void *addr_space = unw_create_addr_space(&accessors, 0);
+ 
+-	RC_CHK_ACCESS(maps)->addr_space = addr_space;
++	maps__set_addr_space(maps, addr_space);
+ 	if (!addr_space) {
+ 		pr_err("unwind: Can't create unwind address space.\n");
+ 		return -ENOMEM;
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index 76cd63de80a8..2728eb4f13ea 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -12,11 +12,6 @@ struct unwind_libunwind_ops __weak *local_unwind_libunwind_ops;
+ struct unwind_libunwind_ops __weak *x86_32_unwind_libunwind_ops;
+ struct unwind_libunwind_ops __weak *arm64_unwind_libunwind_ops;
+ 
+-static void unwind__register_ops(struct maps *maps, struct unwind_libunwind_ops *ops)
+-{
+-	RC_CHK_ACCESS(maps)->unwind_libunwind_ops = ops;
+-}
+-
+ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized)
+ {
+ 	const char *arch;
+@@ -60,7 +55,7 @@ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized
  		return 0;
  	}
- 	/* But this one is new process, copy maps. */
--	return do_maps_clone ? maps__clone(thread, thread__maps(parent)) : 0;
-+	return do_maps_clone ? maps__copy_from(thread__maps(thread), thread__maps(parent)) : 0;
- }
+ out_register:
+-	unwind__register_ops(maps, ops);
++	maps__set_unwind_libunwind_ops(maps, ops);
  
- int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bool do_maps_clone)
+ 	err = maps__unwind_libunwind_ops(maps)->prepare_access(maps);
+ 	if (initialized)
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
