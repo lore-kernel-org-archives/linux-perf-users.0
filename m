@@ -1,117 +1,257 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6651727;
-	Thu,  7 Dec 2023 12:41:26 -0800 (PST)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d048d38881so10401735ad.2;
-        Thu, 07 Dec 2023 12:41:26 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhCLg9jK"
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AAEB170F;
+	Thu,  7 Dec 2023 14:38:39 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-2866951b6e0so1464953a91.2;
+        Thu, 07 Dec 2023 14:38:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701988719; x=1702593519; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=26/GlUsu1cFJgj1Tg+JnHuO4HSzDZlYdi/Z+MXwW2YA=;
+        b=GhCLg9jKCgxpkfX+nMAFq12VS58Ibu30l5m4P9131O/X7njH/Zf2uHRQTvSb7mosNc
+         0EV/axqqqknMlhoiJpN7FnPnNDjUEeq4SkgV3oo6Wi+Myw3EOKF1BzdqsSIPq5+D20HI
+         npA9WtNIFTJFGAUGNMrOSvKWLll2ZPKYn4yK48GiuqCMI1DFKtYvnQlMEcxosUfWCbvT
+         svqpuZksWC4AnzCTWCe3Z+V7Kr0sHJMsrkdR32lFu5PPP5AidB9pRt74dHQGV8ykurWs
+         s+QvxkWtklD0O+NAJxmIHWR3cQRZ/gV/eyLA8kqtYbVMHyoqurYJy7zXR7YPbkCSWinV
+         NQ9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701981686; x=1702586486;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ertAQ/XyfkeiqVhWFyijagBt3DCkqglpo69jMsd5dTk=;
-        b=ItEK50E1AKumUVx5BcQZMqxloiP/7Vx0fZgFc4HawyywdmN1eDf/MbPnulaRCOurQb
-         8/lCRDmsT3h9x5/6+TeZTEymDJRsOiEsnwuEJ+QhueXZ4muev2q3AvVN6WABm+lSVNN4
-         Rg6j6/SKWb9krRiYc4A/kYDd4dshi0YRCHOxFPFWyzja7eGEZL3LaJTBGw3JNbzY4L4s
-         gipFiSbilfgDApEzoE6F+I/FJmd+0boBk87+VAVEOMU2QVV7Y/sbAap9DgA0KOmWEWEt
-         9Om+OeymCd/i9Sizf6atrmKf/QIE9tBsgkdAFX58029l2+/WubwC+2poFrfNW/s/DesH
-         DfjA==
-X-Gm-Message-State: AOJu0Yx2hqhD0/b7oyi/HxAaZXesdsrmK6GEKOIIx25AorCS0kMkJJNP
-	LDJG/GJmNhbmHKHfbMKQPrCWdIecCD6XfmR2lx2hc5RBv8U=
-X-Google-Smtp-Source: AGHT+IETK/ZIBBWSnej2AHVaDXTSJyrSjWXTCLalDqzjnurbXAmTOaTyPYadjSwdrWBVBxwyYVL23HN0QA+OfUT2Av8=
-X-Received: by 2002:a17:902:ea86:b0:1d0:8d57:47c with SMTP id
- x6-20020a170902ea8600b001d08d57047cmr2943727plb.25.1701981685734; Thu, 07 Dec
- 2023 12:41:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701988719; x=1702593519;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=26/GlUsu1cFJgj1Tg+JnHuO4HSzDZlYdi/Z+MXwW2YA=;
+        b=JGlKvoas38O+HyejzDR97ts03fnL7jlAe9zWX8j0qSa1hOxReElQQwsyuyOz2Bv75b
+         Mntzsu9SzlcFHdmhwphzpypypc5vr5jxUopnLfhXcNBsfQfUlX28FhQ3JpmR9o1s5rt/
+         6H1BShXR8AkjoPyESQixLhSPp0SceH+WPkfFD7iJhm/oTet6j73XOC8PkahmSnZpCG7e
+         bAnC2FQTdegEptpejIhgMq+NhndUCHD5xfzHWzmqrxxOCAKsLmzyU82uqigUcl5zGnWH
+         y5r125kKbd+/PSNHCEU1zS0xQXiJ/mroiwHRUEArQYfPbDCk2E6GluKILzdZGBaeurFy
+         HpvA==
+X-Gm-Message-State: AOJu0YyejJHu0jnbcR9u+kCCXDUyLzcpirtS3BfLh88BiaxqVnuPmVYs
+	Don9KBwh83lJKWDZQHt5L7o=
+X-Google-Smtp-Source: AGHT+IFPqKQFqUPSIHmtUKJfelWiArNRR3kqFRT/2EdGOw64n3uX7VW0PR6PGxDS6JcDl3b7oKuUAw==
+X-Received: by 2002:a17:90b:4c4f:b0:285:fc67:6164 with SMTP id np15-20020a17090b4c4f00b00285fc676164mr3307923pjb.5.1701988718605;
+        Thu, 07 Dec 2023 14:38:38 -0800 (PST)
+Received: from google.com ([2620:15c:2c0:5:3280:1779:f8f1:9d5a])
+        by smtp.gmail.com with ESMTPSA id hi16-20020a17090b30d000b00286bd821426sm1945215pjb.26.2023.12.07.14.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Dec 2023 14:38:37 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+Date: Thu, 7 Dec 2023 14:38:35 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: Kyle Huey <me@kylehuey.com>, Kyle Huey <khuey@kylehuey.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Robert O'Callahan <robert@ocallahan.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] perf: Reorder overflow handler ahead of
+ event_limit/sigtrap
+Message-ID: <ZXJJa5re536_e7c1@google.com>
+References: <20231207163458.5554-1-khuey@kylehuey.com>
+ <20231207163458.5554-2-khuey@kylehuey.com>
+ <CANpmjNNi1WoE0gsq5TSv8ys68YcF2o+LtWiDj+=bZ3Y46oP7Jw@mail.gmail.com>
+ <CAP045Ap8z0qUpuYtbf9hpBqfnngNU7wVT0HM0XwQMrYYt9CAkg@mail.gmail.com>
+ <CANpmjNOCFz43zhJm1mS5Ai1XTQiZ_-BW2K3z8vJEV4CyfoZtCA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231128175441.721579-1-namhyung@kernel.org> <CAP-5=fWfKqgT60TFRALw8vTDQT7VFV+0+eo1rFSSH3eVrjzPmA@mail.gmail.com>
- <CAM9d7chKmDETK6Ea2wyR8L21jyHWcPHbKavarnq-JmNA-AoUnQ@mail.gmail.com>
- <CAP-5=fUf6R=bsfg7i8atFApJBY-=zWUBMq7inFsCPZhB+w2==Q@mail.gmail.com>
- <CAM9d7cjDiu=dksnhboJFT4uPQJcvGMB-vBt96v3i7Kqy5LKRMw@mail.gmail.com>
- <CAP-5=fXKbi3DYoOKrJvNKLNU=fJEY9aDAOQhH+Vh+XWxHzGjwA@mail.gmail.com>
- <ZXIiBp-rvdvSI-ZY@kernel.org> <ZXIicbe9K5KYGSV4@kernel.org> <CAP-5=fWN5Jwsf5dxqw0BJxpdu89FM54A-AtQpEqxeE7XLDx3mA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWN5Jwsf5dxqw0BJxpdu89FM54A-AtQpEqxeE7XLDx3mA@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 7 Dec 2023 12:41:14 -0800
-Message-ID: <CAM9d7chXf7F9T+ToKXG+p+37-noMRtOmUr9sttBzEDOw8uJGgw@mail.gmail.com>
-Subject: Re: [PATCHSET 0/8] perf annotate: Make annotation_options global (v1)
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANpmjNOCFz43zhJm1mS5Ai1XTQiZ_-BW2K3z8vJEV4CyfoZtCA@mail.gmail.com>
 
-On Thu, Dec 7, 2023 at 12:14=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Thu, Dec 7, 2023 at 11:52=E2=80=AFAM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Thu, Dec 07, 2023 at 04:50:30PM -0300, Arnaldo Carvalho de Melo escr=
-eveu:
-> > > Em Tue, Dec 05, 2023 at 09:59:02AM -0800, Ian Rogers escreveu:
-> > > > On Mon, Dec 4, 2023 at 2:46=E2=80=AFPM Namhyung Kim <namhyung@kerne=
-l.org> wrote:
-> > > > > On Thu, Nov 30, 2023 at 10:37=E2=80=AFAM Ian Rogers <irogers@goog=
-le.com> wrote:
-> > > > > > Sgtm. My point wasn't to criticize, I think this is a good chan=
-ge, I
-> > > > > > was just trying to imagine doing things in a way that could ove=
-rall
-> > > > > > reduce complexity
-> > >
-> > > > > Yep, thanks for your review.  Can I get your ACKs? :)
-> > >
-> > > > For the series:
-> > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Thanks, applied to perf-tools-next.
-> >
-> >
-> > Now trying to fix this:
-> >
-> >   CC      bench/numa.o
-> >   CC      tests/hists_cumulate.o
-> > ui/gtk/annotate.c: In function =E2=80=98symbol__gtk_annotate=E2=80=99:
-> > ui/gtk/annotate.c:179:43: error: passing argument 3 of =E2=80=98symbol_=
-_annotate=E2=80=99 from incompatible pointer type [-Werror=3Dincompatible-p=
-ointer-types]
-> >   179 |         err =3D symbol__annotate(ms, evsel, options, NULL);
-> >       |                                           ^~~~~~~
-> >       |                                           |
-> >       |                                           struct annotation_opt=
-ions *
-> > In file included from ui/gtk/annotate.c:5:
-> > /home/acme/git/perf-tools-next/tools/perf/util/annotate.h:376:36: note:=
- expected =E2=80=98struct arch **=E2=80=99 but argument is of type =E2=80=
-=98struct annotation_options *=E2=80=99
-> >   376 |                      struct arch **parch);
-> >       |                      ~~~~~~~~~~~~~~^~~~~
-> > ui/gtk/annotate.c:179:15: error: too many arguments to function =E2=80=
-=98symbol__annotate=E2=80=99
-> >   179 |         err =3D symbol__annotate(ms, evsel, options, NULL);
-> >       |               ^~~~~~~~~~~~~~~~
-> > /home/acme/git/perf-tools-next/tools/perf/util/annotate.h:374:5: note: =
-declared here
-> >   374 | int symbol__annotate(struct map_symbol *ms,
-> >       |     ^~~~~~~~~~~~~~~~
-> > cc1: all warnings being treated as errors
-> >   CC      tests/python-use.o
-> >   CC      trace/beauty/sockaddr.o
-> >   CC      arch/x86/util/topdown.o
-> > make[6]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build=
-:105: ui/gtk/annotate.o] Error 1
-> > make[6]: *** Waiting for unfinished jobs....
-> >   CC      arch/x86/util/machine.o
->
-> Maybe a signal to remove the gtk support :-)
+Hello,
 
-+1
+On Thu, Dec 07, 2023 at 06:53:58PM +0100, Marco Elver wrote:
+> On Thu, 7 Dec 2023 at 18:47, Kyle Huey <me@kylehuey.com> wrote:
+> >
+> >
+> >
+> > On Thu, Dec 7, 2023, 9:05 AM Marco Elver <elver@google.com> wrote:
+> >>
+> >> On Thu, 7 Dec 2023 at 17:35, Kyle Huey <me@kylehuey.com> wrote:
+> >> >
+> >> > The perf subsystem already allows an overflow handler to clear pending_kill
+> >> > to suppress a fasync signal (although nobody currently does this). Allow an
+> >> > overflow handler to suppress the other visible side effects of an overflow,
+> >> > namely event_limit accounting and SIGTRAP generation.
+
+Well, I think it can still hit the throttling logic and generate
+a PERF_RECORD_THROTTLE.  But it should be rare..
+
+> >> >
+> >> > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> >> > ---
+> >> >  kernel/events/core.c | 10 +++++++---
+> >> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >> >
+> >> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> >> > index b704d83a28b2..19fddfc27a4a 100644
+> >> > --- a/kernel/events/core.c
+> >> > +++ b/kernel/events/core.c
+> >> > @@ -9541,6 +9541,12 @@ static int __perf_event_overflow(struct perf_event *event,
+> >> >          */
+> >> >
+> >> >         event->pending_kill = POLL_IN;
+> >> > +
+> >> > +       READ_ONCE(event->overflow_handler)(event, data, regs);
+> >> > +
+> >> > +       if (!event->pending_kill)
+> >> > +               return ret;
+> >>
+> >> It's not at all intuitive that resetting pending_kill to 0 will
+> >> suppress everything else, too. There is no relationship between the
+> >> fasync signals and SIGTRAP. pending_kill is for the former and
+> >> pending_sigtrap is for the latter. One should not affect the other.
+> >>
+> >> A nicer solution would be to properly undo the various pending_*
+> >> states (in the case of pending_sigtrap being set it should be enough
+> >> to reset pending_sigtrap to 0, and also decrement
+> >> event->ctx->nr_pending).
+> >
+> >
+> > I don't believe it's possible to correctly undo the event_limit decrement after the fact (if it's e.g. racing with the ioctl that adds to the event limit).
+> >
+> >> Although I can see why this solution is simpler. Perhaps with enough
+> >> comments it might be clearer.
+> >>
+> >> Preferences?
+> >
+> >
+> > The cleanest way would probably be to add a return value to the overflow handler function that controls this. It requires changing a bunch of arch specific code on arches I don't have access to though.
+> 
+> Hmm.
+> 
+> Maybe wait for perf maintainers to say what is preferrable. (I could
+> live with just making sure this has no other weird side effects and
+> more comments.)
+
+What if we can call bpf handler directly and check the return value?
+Then I think we can also get rid of the original overflow handler.
+
+Something like this (untested..)
 
 Thanks,
 Namhyung
+
+
+---8<---
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index e85cd1c0eaf3..1eba6f5bb70b 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -809,7 +809,6 @@ struct perf_event {
+ 	perf_overflow_handler_t		overflow_handler;
+ 	void				*overflow_handler_context;
+ #ifdef CONFIG_BPF_SYSCALL
+-	perf_overflow_handler_t		orig_overflow_handler;
+ 	struct bpf_prog			*prog;
+ 	u64				bpf_cookie;
+ #endif
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4c72a41f11af..e1a00646dbbe 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9471,6 +9471,12 @@ static inline bool sample_is_allowed(struct perf_event *event, struct pt_regs *r
+  * Generic event overflow handling, sampling.
+  */
+ 
++#ifdef CONFIG_BPF_SYSCALL
++static int bpf_overflow_handler(struct perf_event *event,
++				struct perf_sample_data *data,
++				struct pt_regs *regs);
++#endif
++
+ static int __perf_event_overflow(struct perf_event *event,
+ 				 int throttle, struct perf_sample_data *data,
+ 				 struct pt_regs *regs)
+@@ -9487,6 +9493,11 @@ static int __perf_event_overflow(struct perf_event *event,
+ 
+ 	ret = __perf_event_account_interrupt(event, throttle);
+ 
++#ifdef CONFIG_BPF_SYSCALL
++	if (event->prog && bpf_overflow_handler(event, data, regs) == 0)
++		return ret;
++#endif
++
+ 	/*
+ 	 * XXX event_limit might not quite work as expected on inherited
+ 	 * events
+@@ -10346,7 +10357,7 @@ static void perf_event_free_filter(struct perf_event *event)
+ }
+ 
+ #ifdef CONFIG_BPF_SYSCALL
+-static void bpf_overflow_handler(struct perf_event *event,
++static int bpf_overflow_handler(struct perf_event *event,
+ 				 struct perf_sample_data *data,
+ 				 struct pt_regs *regs)
+ {
+@@ -10355,7 +10366,7 @@ static void bpf_overflow_handler(struct perf_event *event,
+ 		.event = event,
+ 	};
+ 	struct bpf_prog *prog;
+-	int ret = 0;
++	int ret = 1;
+ 
+ 	ctx.regs = perf_arch_bpf_user_pt_regs(regs);
+ 	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1))
+@@ -10369,10 +10380,7 @@ static void bpf_overflow_handler(struct perf_event *event,
+ 	rcu_read_unlock();
+ out:
+ 	__this_cpu_dec(bpf_prog_active);
+-	if (!ret)
+-		return;
+-
+-	event->orig_overflow_handler(event, data, regs);
++	return ret;
+ }
+ 
+ static int perf_event_set_bpf_handler(struct perf_event *event,
+@@ -10408,8 +10416,6 @@ static int perf_event_set_bpf_handler(struct perf_event *event,
+ 
+ 	event->prog = prog;
+ 	event->bpf_cookie = bpf_cookie;
+-	event->orig_overflow_handler = READ_ONCE(event->overflow_handler);
+-	WRITE_ONCE(event->overflow_handler, bpf_overflow_handler);
+ 	return 0;
+ }
+ 
+@@ -10420,7 +10426,6 @@ static void perf_event_free_bpf_handler(struct perf_event *event)
+ 	if (!prog)
+ 		return;
+ 
+-	WRITE_ONCE(event->overflow_handler, event->orig_overflow_handler);
+ 	event->prog = NULL;
+ 	bpf_prog_put(prog);
+ }
+@@ -11880,13 +11885,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		overflow_handler = parent_event->overflow_handler;
+ 		context = parent_event->overflow_handler_context;
+ #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
+-		if (overflow_handler == bpf_overflow_handler) {
++		if (parent_event->prog) {
+ 			struct bpf_prog *prog = parent_event->prog;
+ 
+ 			bpf_prog_inc(prog);
+ 			event->prog = prog;
+-			event->orig_overflow_handler =
+-				parent_event->orig_overflow_handler;
+ 		}
+ #endif
+ 	}
