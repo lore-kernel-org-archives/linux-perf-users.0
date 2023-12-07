@@ -1,112 +1,141 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NKgI3tKa"
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F3710CA
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 09:33:24 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-50bed6c1716so33e87.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 09:33:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="csTA5Sv8"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131111709
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 09:41:03 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-db54a19c7d6so1434983276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 09:41:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701970402; x=1702575202; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EWvwuPiuxUQVO7BNeeDLUjAMj48JOZs+v7lie10kAzI=;
-        b=NKgI3tKakb4aMkrzwQiaSWgp+L7RjlHKIHIAmp4tKektL8EWkuxjAQghl9ah32HrwB
-         sbnLDgEIebwwQ4E37BAxnoFA3BH/tpoXStMTkV5CkjnlF/xnN8lBve8BO2WFenSwq+rX
-         dEwC6GF9szaUomVqgGEDNxlJXEihrV2VBXDqEpDXYO22ajgLz5TsQFWeerU+aK9eq3h2
-         ++uj27YnIqZhyUYbVdTXTn/WMIhO7qG/h2Vwh58V1ri7QcvGy9yG+Uemhni+S06xhdEn
-         SJuuk0js8bwb7BYRe8QUs2G4hvqc2azoz3iYiJj/jzDKFOnCEX72x/sGbPDm6c3n0dIK
-         ZUOw==
+        d=google.com; s=20230601; t=1701970862; x=1702575662; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=niYg5A4Vl8wxZvl0dW0Aqla8QlNk079TUHdjvbyyS3A=;
+        b=csTA5Sv80llF1L+RpndLQs6eQOSGNQQAPW/I60QLdwD7sxMVJ57OpaGkJkWUR6yroI
+         2qRXjppG1hB/F54bppq/sZKLXEjpDPEjdmA00Ckl5S6dVjs8FOn6+Lb5OrS2SkkUruhE
+         GbaXCeM5gyG/pwDWTw95hLKGx7ga5dJLApG/Vbpp3uFXmD7AlHY4aK0gdVxkbyeGuPAH
+         /M0FJOHhzg8bK/dHVJgiw1l60I0snKbGAiDuWKBksoUwQugdoh7kJ9FAzRIbNzWCATAO
+         JCszczlpqqq1dHOCir6p6t2xz/KQbi36ZgfkvgN5XeP5yshjJ1/UUiiXfu/0k3QcIpxH
+         26tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701970402; x=1702575202;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EWvwuPiuxUQVO7BNeeDLUjAMj48JOZs+v7lie10kAzI=;
-        b=cDNuMxnAQVw8bD9Q0zkRnDRNA3iZbcYcXal5iMEEBcm6p/ci98CgR3j6Gli/fduXVI
-         j7kA4n0x8gmblSet85lrX4NGqx1Ar6kNt8ojcdNSOQmJiXxEgV+cB6qKGEGpxMSjLcpf
-         MHFGgCzTTMmExHDPDRDGSr/x3fZbeHDDV60//kzO+lmhc1rsX2yzgNpfI6G9KTpXKkLn
-         GodbLKKeoeEAQJC1ABQtQ70LSwfjNY+ifSES/Qy+C8Gy/RS4z47CZUNhXHotYRmjwY2V
-         WsMnJ81rPWQZtM6WP4JYnrtaa5nHwXp+45hXVtjbUSZ6PgVwx/zpZeAEbsQqueh3hJeg
-         F15Q==
-X-Gm-Message-State: AOJu0YwbqBhtwXyuqTc7pWrMwXsaeqH+33qCaoPw1k3qV+jYZqrox8ah
-	neC0BZtow8y3n9Cs9wjHNWown8NiTtCKJC1RyNKKm5kYFXTxchlLbUOF5A==
-X-Google-Smtp-Source: AGHT+IG86lhLOte31MJRo1RVauOPUItQYNe9SDrSLhX2ANv5CukXoO4oocdicuGr5OZ2LbUL3IzKp5kjXgmUqFVrCR8=
-X-Received: by 2002:ac2:5f56:0:b0:50b:cdd5:b54a with SMTP id
- 22-20020ac25f56000000b0050bcdd5b54amr101794lfz.3.1701970402185; Thu, 07 Dec
- 2023 09:33:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701970862; x=1702575662;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=niYg5A4Vl8wxZvl0dW0Aqla8QlNk079TUHdjvbyyS3A=;
+        b=jb+e5aX7RBsftCibK6aNeBL3hgc1MiDbRSi9Jt8nvoOEOTSeH/bFl0mee2phWZd6Xd
+         UH3hSlrmdxpr2+tEdZKuCzZOE12pwjzTAp0GjxwXbvgAMxpYgOwizYYzlpI2a7vf8jXe
+         otryu3NRKjeEu62ZfgD0IqdJLU9V71zRo+YiGUUCWVncBRJCp9gxw7sDiw3U7MpoFAEx
+         7eKRas0IIikBAar5cZyi7/pgbRlCiu7HrVZlt3ANX+aEhV6tzxQxbL7tzy8C0wzXaIE2
+         QS9TlM5R3UjlfqCju7QgYivfmI4JkBfoe6MqBovUvHIGTjRExgYfwd1akI9qKtiw0Lhi
+         jnBA==
+X-Gm-Message-State: AOJu0YxFE/s7ziioWmwhBrpIv9i1+1tPMqLe7zQXjru0O64pgtWLMLZU
+	HgA9JpRxk3SMjuCDu8Z2QmilcgImnd2C
+X-Google-Smtp-Source: AGHT+IG1uUHscqr78fzFiaNu9Xova/+Jee3jNfzWA/gZC7ueT8il/DECGiuPKk9ckx8PFtV46AStdGhgQHLV
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
+ (user=irogers job=sendgmr) by 2002:a25:df06:0:b0:d9a:520f:1988 with SMTP id
+ w6-20020a25df06000000b00d9a520f1988mr35484ybg.4.1701970862296; Thu, 07 Dec
+ 2023 09:41:02 -0800 (PST)
+Date: Thu,  7 Dec 2023 09:40:57 -0800
+Message-Id: <20231207174057.1482161-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231207140911.3240408-1-ben.gainey@arm.com>
-In-Reply-To: <20231207140911.3240408-1-ben.gainey@arm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
+Subject: [PATCH v1] perf tests: Add perf script test
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 7 Dec 2023 09:33:10 -0800
-Message-ID: <CAP-5=fVM7cdrcOKL1nRcusBZpg_6Sg5NZA6PKYWcMgeOwHjf3w@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf: Fix missing reference count get in call_path_from_sample
-To: Ben Gainey <ben.gainey@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, 
-	adrian.hunter@intel.com
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Ben Gainey <ben.gainey@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 7, 2023 at 6:09=E2=80=AFAM Ben Gainey <ben.gainey@arm.com> wrot=
-e:
->
-> The addr_location map and maps fields in the inner loop were missing
-> calls to map__get/maps__get. The subsequent addr_location__exit call in
-> each loop puts the map/maps fields causing use-after-free aborts.
->
-> This issue reproduces on at least arm64 and x86_64 with something
-> simple like `perf record -g ls` followed by `perf script -s script.py`
-> with the following script:
->
->     perf_db_export_mode =3D True
->     perf_db_export_calls =3D False
->     perf_db_export_callchains =3D True
->
->     def sample_table(*args):
->         print(f'sample_table({args})')
->
->     def call_path_table(*args):
->         print(f'call_path_table({args}')
+Start a new set of shell tests for testing perf script. The initial
+contribution is checking that some perf db-export functionality works
+as reported in this regression by Ben Gainey <ben.gainey@arm.com>:
+https://lore.kernel.org/lkml/20231207140911.3240408-1-ben.gainey@arm.com/
 
-Thanks for this, I've had a go at turning this into a perf test and
-will send it out shortly.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/script.sh | 66 ++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+ create mode 100755 tools/perf/tests/shell/script.sh
 
-> Fixes: 0dd5041c9a0ea ("perf addr_location: Add init/exit/copy functions")
-> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+new file mode 100755
+index 000000000000..5ae7bd0031a8
+--- /dev/null
++++ b/tools/perf/tests/shell/script.sh
+@@ -0,0 +1,66 @@
++#!/bin/sh
++# perf script tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++temp_dir=$(mktemp -d /tmp/perf-test-script.XXXXXXXXXX)
++
++perfdatafile="${temp_dir}/perf.data"
++db_test="${temp_dir}/db_test.py"
++
++err=0
++
++cleanup()
++{
++	trap - EXIT TERM INT
++	sane=$(echo "${temp_dir}" | cut -b 1-21)
++	if [ "${sane}" = "/tmp/perf-test-script" ] ; then
++		echo "--- Cleaning up ---"
++		rm -f "${temp_dir}/"*
++		rmdir "${temp_dir}"
++	fi
++}
++
++trap_cleanup()
++{
++	cleanup
++	exit 1
++}
++
++trap trap_cleanup EXIT TERM INT
++
++
++test_db()
++{
++	echo "DB test"
++
++	# Check if python script is supported
++	libpython=$(perf version --build-options | grep python | grep -cv OFF)
++	if [ "${libpython}" != "1" ] ; then
++		echo "SKIP: python scripting is not supported"
++		err=2
++		return
++	fi
++
++	cat << "_end_of_file_" > "${db_test}"
++perf_db_export_mode = True
++perf_db_export_calls = False
++perf_db_export_callchains = True
++
++def sample_table(*args):
++    print(f'sample_table({args})')
++
++def call_path_table(*args):
++    print(f'call_path_table({args}')
++_end_of_file_
++	perf record -g -o "${perfdatafile}" true
++	perf script -i "${perfdatafile}" -s "${db_test}"
++	echo "DB test [Success]"
++}
++
++test_db
++
++cleanup
++
++exit $err
+-- 
+2.43.0.rc2.451.g8631bc7472-goog
 
-Tested-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> ---
->  tools/perf/util/db-export.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-> index b9fb71ab7a73..106429155c2e 100644
-> --- a/tools/perf/util/db-export.c
-> +++ b/tools/perf/util/db-export.c
-> @@ -253,8 +253,8 @@ static struct call_path *call_path_from_sample(struct=
- db_export *dbe,
->                  */
->                 addr_location__init(&al);
->                 al.sym =3D node->ms.sym;
-> -               al.map =3D node->ms.map;
-> -               al.maps =3D thread__maps(thread);
-> +               al.map =3D map__get(node->ms.map);
-> +               al.maps =3D maps__get(thread__maps(thread));
->                 al.addr =3D node->ip;
->
->                 if (al.map && !al.sym)
-> --
-> 2.43.0
->
