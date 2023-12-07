@@ -1,53 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kiTSkIrk"
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 127D0181
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 15:52:13 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-50bf1de91c6so696e87.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 15:52:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z96xXkvk"
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3802F10F5
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 16:05:52 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-50bed6c1716so1559e87.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 16:05:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701906731; x=1702511531; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701907550; x=1702512350; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9JRy9QKnZQ2wD2vqqNpyfc7KXoHKfLLWhWrukAC+2vc=;
-        b=kiTSkIrk08zMvTsY/u2jWGsb4ACBmhuqNYJ7P+bt3sZZ+9tBDbPdNXE0diGUi9w1Rd
-         iImQV5tpwooNDJCrsbZG9t6eBglaDPHwKupm7Jw1oOiRMq+MRrqFRcj8Uf2STpPOOqU7
-         RFbWnquS6wxX8cOe/0DntUN9vDfcEVdEM+Mquo8IdnK0fY8ordq1O4CnAb6esq+SbnKe
-         q+pKqGbjdyQREF3RmJgnsCo7cpTsOHpYHaiLECl8l+bTp+wdbu0wjP4jt4a3SDIj7Ddp
-         C+238cze1wKBTGdGGMJGDWKzPWLh3gwWfgbXdzxWDZTQ+hEx+0Ecg6e4JmJbqpNh27bD
-         w9+Q==
+        bh=/k2IKvmRw3JV6Mu9BGLsJLEfNzigcqLo+aqtqyuGelw=;
+        b=z96xXkvkiWFV1Yd+AeDWXio5WKTfYnVpdhNAJ1Iv/BinHENhd0b++pcO7pdujm8jL6
+         6tsI9Qha3B1iUPzyXG8hrTv41H6X0zU/j0i9lH2UmEcp6rhUMHZhJhlXc5O4nVPyn3YM
+         NKtX9Wj+xBgXeddjZDyfGTGp09jKlj5FsndtgiBwjvKwCEJ+epSTOdav6ggfCpsc6SWg
+         wPXQ8jzc3mJkPJsW41kfaseM6grKK4bIdnSjRnrmPG4a9xSnmA1LYvJIP264q3Vqsbvt
+         C9d0gZ/cm6TztaS1G+0CwXdyIYMkWGKGAOyx8nWLH7CT80ygJo8LgMokcmSdftGcEpsl
+         /T5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701906731; x=1702511531;
+        d=1e100.net; s=20230601; t=1701907550; x=1702512350;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9JRy9QKnZQ2wD2vqqNpyfc7KXoHKfLLWhWrukAC+2vc=;
-        b=RbTr7GLLyHnkuGm9AtxhOuhCoyaDPE7bn7CQEi/bplFtH/CNQc9/jNDjjn2hBUKPpM
-         NhEFixmPqlvRrKe3n0QMONRK9lZELJksaFRO2BBkrG41cRTfSbOJhT5vT4QzvJwizZ8P
-         JPvHoshpEgKLxxVC+C74yBDKhjLoSqpZvThW0FTlUDhdVjY5EORQasMQoB+KuaItlOge
-         006oIVRmRLPtbv+bsTqHZtx2M0C43QUcimWi1Bpe7VR2mDwOwBUtlj2Ad0WtGBUz4X+u
-         5PZO17ZyjcfVgntr5PDoucJGKunbNGZqHqj1H9YI4xj5+QdyvNK+vPC6NvmcT0DPyTPE
-         14wg==
-X-Gm-Message-State: AOJu0YzfFhBU9tff6cMxnDUWYUs8nMzhs6XgrPVi8vIWudGcS6bJTol5
-	S9ShAv9JHM3yuRmimzaErywQeQCVcGjsbiKAWrcYag==
-X-Google-Smtp-Source: AGHT+IEDRey9U3du+bRBThK7i4w3wyFbH5lEV2nlrBpZjYOyRO7V6GBFwWiWjqpwqCClU0Z30ZTp7oVV/W1E4MOwO/Y=
-X-Received: by 2002:a05:6512:90e:b0:50b:e8ea:ad with SMTP id
- e14-20020a056512090e00b0050be8ea00admr93855lft.0.1701906731080; Wed, 06 Dec
- 2023 15:52:11 -0800 (PST)
+        bh=/k2IKvmRw3JV6Mu9BGLsJLEfNzigcqLo+aqtqyuGelw=;
+        b=uyMo0wZR8JYiOV+iIHXgAk+H5isdfFEOIRBsKf3CDKkEyGoVoGJp55btymoNcd68+8
+         sR1AhSi964yKop5YjytMSsCOqw6rGn1RTjW3bsITjz1fYJYj8WM/yXfW2ThQsMC8izAe
+         8Mh1A991sah3lXkg2AmKTr8UkoA8M5CoolrTj0b/pE7+gi2ToUMw/7yW2kMXfgR1YWuZ
+         1AvAOWYKVAVjj+ejQ8HD/hIfNp3MuEZA9VU4Lq3mdNXOt54JWBTIRzWuBilQmEj+fQRD
+         feDRjMBCSse40Nz8fhgvaeZV2kF3fWclG2gdYtkfQ01vFQ9Vh6q9W6nOtnTK5CGb7seI
+         H+4Q==
+X-Gm-Message-State: AOJu0YyaES9cFZS9kTPk1tkvuLk+swt8nyLrzCl0luj47+HeiYBLxXU4
+	ZQEaWn6rarj19Nw4xaPxEcXH/a+LS5YJyZCGtvexow==
+X-Google-Smtp-Source: AGHT+IFYYRTtLVRu5chVfy5+omY29a3FcQ6VToXuO3fc0ReQiXuE180fajnw3qWX/Fd5ecO6WJAxyfN6b/eOQoR3ufM=
+X-Received: by 2002:a05:6512:2314:b0:50c:e19:b658 with SMTP id
+ o20-20020a056512231400b0050c0e19b658mr87546lfu.1.1701907550214; Wed, 06 Dec
+ 2023 16:05:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-20-irogers@google.com>
- <CAM9d7chpynqmnGpi+wpn0f3XvEtDNSisgdQcXQu_2LuHcLNuVA@mail.gmail.com>
-In-Reply-To: <CAM9d7chpynqmnGpi+wpn0f3XvEtDNSisgdQcXQu_2LuHcLNuVA@mail.gmail.com>
+References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-2-irogers@google.com>
+ <CAM9d7cjCO8e7nbrtrcy4rsbexemQ94=XK+b5byMFFTDDgoJ2eg@mail.gmail.com>
+ <CAP-5=fUBr60o22P4Op-J=TPkdfnby9vLetHQZ4UqjuX+nvbG9w@mail.gmail.com> <CAM9d7cjO2vxa_bvKFrVpX2PViHqZy_dtyf28EaSACwKv6BEHiw@mail.gmail.com>
+In-Reply-To: <CAM9d7cjO2vxa_bvKFrVpX2PViHqZy_dtyf28EaSACwKv6BEHiw@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 6 Dec 2023 15:51:58 -0800
-Message-ID: <CAP-5=fWGGmQWf7hH8Qqe01YNO3dc0DCDSqa3bHbKMSGioJnyTw@mail.gmail.com>
-Subject: Re: [PATCH v5 19/50] perf maps: Do simple merge if given map doesn't overlap
+Date: Wed, 6 Dec 2023 16:05:38 -0800
+Message-ID: <CAP-5=fUBf41b=p7iVwoANZtRifR8ftuE00zQqLWz54KZ-9VWtw@mail.gmail.com>
+Subject: Re: [PATCH v5 01/50] perf comm: Use regular mutex
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -70,64 +71,82 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 4, 2023 at 4:06=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+On Sat, Dec 2, 2023 at 3:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
 rote:
 >
-> On Mon, Nov 27, 2023 at 2:10=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
+> On Thu, Nov 30, 2023 at 10:28=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
 > >
-> > Simplify merge in for the simple case of a non-overlapping map.
+> > On Wed, Nov 29, 2023 at 4:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
+> > > >
+> > > > The rwsem is only after used for writing so switch to a mutex that =
+has
+> > > > better error checking.
+> > > >
+> > > > Fixes: 7a8f349e9d14 ("perf rwsem: Add debug mode that uses a mutex"=
+)
+> > >
+> > > I think we talked about fixing this separately, no?
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Sorry, I'm unclear on an action to do. Currently changing the
+> > RWS_ERRORCHECK in tools/perf/util/rwsem.h will break the build without
+> > this change.
 >
-> A nitpick below.
+> Can it be like this?
 >
-> > ---
-> >  tools/perf/util/maps.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
+> #ifdef RWS_ERRORCHECK
+> #define RWSEM_INITIALIZER  { .lock =3D PTHREAD_MUTEX_INITIALIZER, }
+> #else
+> #define RWSEM_INITIALIZER  { .lock =3D PTHREAD_RWLOCK_INITIALIZER, }
+> #endif
+>
 > >
-> > diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> > index 40df08dd9bf3..14e1a169433d 100644
-> > --- a/tools/perf/util/maps.c
-> > +++ b/tools/perf/util/maps.c
-> > @@ -696,9 +696,20 @@ void maps__fixup_end(struct maps *maps)
-> >  int maps__merge_in(struct maps *kmaps, struct map *new_map)
-> >  {
-> >         struct map_rb_node *rb_node;
-> > +       struct rb_node *first;
-> > +       bool overlaps;
-> >         LIST_HEAD(merged);
-> >         int err =3D 0;
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  tools/perf/util/comm.c | 10 +++++-----
+> > > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+> > > > index afb8d4fd2644..4ae7bc2aa9a6 100644
+> > > > --- a/tools/perf/util/comm.c
+> > > > +++ b/tools/perf/util/comm.c
+> > > > @@ -17,7 +17,7 @@ struct comm_str {
+> > > >
+> > > >  /* Should perhaps be moved to struct machine */
+> > > >  static struct rb_root comm_str_root;
+> > > > -static struct rw_semaphore comm_str_lock =3D {.lock =3D PTHREAD_RW=
+LOCK_INITIALIZER,};
+> > > > +static struct mutex comm_str_lock =3D {.lock =3D PTHREAD_ERRORCHEC=
+K_MUTEX_INITIALIZER_NP,};
+> > >
+> > > IIUC it has a problem with musl libc.  Actually I think it's better t=
+o
+> > > hide the field and the pthread initializer under some macro like
+> > > MUTEX_INITIALIZER or DEFINE_MUTEX() like in the kernel.
 > >
-> > +       down_read(maps__lock(kmaps));
-> > +       first =3D first_ending_after(kmaps, new_map);
-> > +       overlaps =3D first &&
-> > +               map__start(rb_entry(first, struct map_rb_node, rb_node)=
-->map) < map__end(new_map);
+> > Will there be enough use to justify this? I think ideally we'd not be
+> > having global locks needing global initializers as we run into
+> > problems like we see in metrics needing to mix counting and sampling.
 >
-> Can you please break this like below?
->
->     rb_node =3D first ? rb_entry(first, struct map_rb_node, rb_node) : NU=
-LL;
->     overlap =3D rb_node && map__start(rb_node->map) < map_end(new_map);
+> I don't know but there might be a reason to use global locks.
+> Then we need to support the initialization and it'd be better
+> to make it easier to handle internal changes like this.
 
-Done in v6.
+Right. So you are suggesting I make a macro for initialization but
+when this change is applied it will remove the only user of the macro.
+The macro would clearly be redundant which is why I didn't do a
+separate fix for that before doing this change - to use a mutex as the
+rwsem here is only ever used as a write lock. If we're looking to
+improve rwsem I don't think adding unused macros is the best thing,
+for example, we could remove references to perf_singlethreaded which
+is an idea that has had its day.
 
 Thanks,
 Ian
 
 > Thanks,
 > Namhyung
->
->
-> > +       up_read(maps__lock(kmaps));
-> > +
-> > +       if (!overlaps)
-> > +               return maps__insert(kmaps, new_map);
-> > +
-> >         maps__for_each_entry(kmaps, rb_node) {
-> >                 struct map *old_map =3D rb_node->map;
-> >
-> > --
-> > 2.43.0.rc1.413.gea7ed67945-goog
-> >
