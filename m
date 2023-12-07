@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G7AUBGvy"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E61ED2D78
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:19:06 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-db4004a8aa9so528876276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:19:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kYujtUve"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DA611FD8
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 17:19:15 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d12853cb89so1992377b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 17:19:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701911945; x=1702516745; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701911954; x=1702516754; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/eUnOiwv/1uHn3VWkJ5mr8e8+hlMGBYfKCz2gV1d9s0=;
-        b=G7AUBGvydcBZWw82+5MfyfcDdlGM++5NXq+dgB4/ozfc9eGoKiI8mv9CSS7PybwQ2p
-         ARbv2uK5eozQ7qzg3L+NNCbMTSXH4yRxCaFAQM87zv86wJ6YOOygmsuQPMlS+4CmekAO
-         8LUq79oF6Hx7zG1GUsgUhD4uwqGofWsoCsINGA++Vd7VjLHiTlCCt/nsAFO1uKJ8nxAe
-         JGZ6oG6gLKrlULvs/wgn4AtvqQC8ws0ikRpxosfNeh6liUeleY1T3b7TPMZlIIRWUhgI
-         eVieg3+X2gYwcWH/DPCo8Ft8NqlXs3W505L8EF1TdPXgp7vbo5VLRewOPkjKYREaesKC
-         I2TA==
+        bh=OzW9gw1wLwt1D+Yf5/7QICBkkvIkKtfUPJZy4LZ3/Aw=;
+        b=kYujtUvepvrKtjDWwj4pi14RNMa47L/WxdWCTnksmSW5bjc5zsFMgCn9ESEBixsHp8
+         Him0g8DqBI96eCCCxAActoiTgyfTSnn0atSTRY9MixLzEEsDAva26Tm07WSgLoBtSnl6
+         4p0AD7BUH/SsgTJg0DgFrFTQLH7NBTRzNbqmFQkbNjE+wUSMwvj3NjhFuuT8rURi9QaG
+         X0NKNyuMx1accmwQor2ItTF2jC3Zw+1WIp/lX4zlvCJNosl20Ub92fiRCt+CCuHaEMk/
+         rL6fsQfueSImikdeSfhnUQWOpi+Ovs36l2AMWRcX6lmb16Y/u6uQGY2j/g2Vk4YV6Z9X
+         j8HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701911945; x=1702516745;
+        d=1e100.net; s=20230601; t=1701911954; x=1702516754;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/eUnOiwv/1uHn3VWkJ5mr8e8+hlMGBYfKCz2gV1d9s0=;
-        b=RlGpL4HsvxU/8B5o8gosZ48g+f+MTFo+8DdjRTr0bsnjiswQh3j9S0++PHZ9tvg76H
-         gjA3fpAkKzbH/q9TJmwYiHK8Usl0CI024WTUxLtG8oT1kPSvgFjMMvRBNOQKLlzBc9gP
-         mw/BcvvZksvtTyK64vQF7lqD6dFUbHEVnz5GmmBWmlVON+N5aDRMw3D6QIQ7JFPkAL6B
-         B4Dq0rVKA4Q8v6955PltF1dr6jpEIrXV9MQSBrtl/Xppt/JjimmeCBr8AadzdtYAn3ig
-         P0CUEPTpIR+EhBPmiO4f0LYFUVmaLqcSamT5MhF6XFwaAx1bGswJRI4TR7vFZ7hWDPFB
-         I+Ig==
-X-Gm-Message-State: AOJu0YzuCSdptxKWRjKHcEnvimvuKeiQk+YM6/aqAnSGBnQ2kDkffDfH
-	GoyDwImek7Gr9OiREq+vmpWiMyI3a/1j
-X-Google-Smtp-Source: AGHT+IHdR+71Tx/Rcf4rmQHuKEHpJpeXZeLxD/kcp9lxi6wxZSlljDG6ekbcBR+PnqOsuzLWfndE34N57YSF
+        bh=OzW9gw1wLwt1D+Yf5/7QICBkkvIkKtfUPJZy4LZ3/Aw=;
+        b=qqhwJDhMz1V9FOcOuZdz8qky86KqmldEvFST6Zjrw4GHuqDaVGzlnbWhR/R+6x5uV8
+         83i5rRfQHJBkAwDN0TBObd5zMEaQtChFMuJZSE/WsvAOZ8/8syIwH8FHsCrrE0f46I/B
+         mT/6VVMjirSfW3GnxKlr5OILHTgoyRdMkVWAGy4NsYPYKBUHpzW6JUJ6dPY40LI91Gir
+         pwXF0Br32OYZLLZffWB929Uy5iFZyJYjUbDtJ0kG2m3OwnceYDHfGj1Em5mUgUGgPJNu
+         wsuG+bevNac1eSdxP86Il6ld73gfzMnWL318lTpCUwL4pn7rzm2M5uJe7Z3DF3NXnnz4
+         zjFg==
+X-Gm-Message-State: AOJu0YxmOzUv06U6SluF1nhOczmGwcklj/1EbqTbZQRI5/avn3vosG0Z
+	XP0w2W8EfMfne0a2H/TdNDXdp9KdyTbY
+X-Google-Smtp-Source: AGHT+IFiTyQLXULMsZzmut5l0rXn9ARlZ50csNRiNGcXML5avZ1xuvOQfZ6Dgy188NbIrjypRYO6iBJBPNdj
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
- (user=irogers job=sendgmr) by 2002:a25:3144:0:b0:db3:f436:5714 with SMTP id
- x65-20020a253144000000b00db3f4365714mr27107ybx.0.1701911944884; Wed, 06 Dec
- 2023 17:19:04 -0800 (PST)
-Date: Wed,  6 Dec 2023 17:17:16 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:2886:b0:5d3:40f3:56bf with SMTP
+ id ee6-20020a05690c288600b005d340f356bfmr27527ywb.1.1701911954096; Wed, 06
+ Dec 2023 17:19:14 -0800 (PST)
+Date: Wed,  6 Dec 2023 17:17:20 -0800
 In-Reply-To: <20231207011722.1220634-1-irogers@google.com>
-Message-Id: <20231207011722.1220634-43-irogers@google.com>
+Message-Id: <20231207011722.1220634-47-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231207011722.1220634-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v6 42/47] perf dsos: Remove __dsos__addnew
+Subject: [PATCH v6 46/47] perf dso: Reference counting related fixes
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -68,42 +68,161 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Function no longer used so remove.
+Ensure gets and puts are better aligned fixing reference couting
+checking problems.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dsos.c | 5 -----
- tools/perf/util/dsos.h | 1 -
- 2 files changed, 6 deletions(-)
+ tools/perf/util/machine.c    |  4 ++--
+ tools/perf/util/map.c        |  1 +
+ tools/perf/util/symbol-elf.c | 38 +++++++++++++++++-------------------
+ 3 files changed, 21 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index cfc10e1a6802..1495ab1cd7a0 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -341,11 +341,6 @@ static struct dso *__dsos__addnew_id(struct dsos *dsos, const char *name, struct
- 	return dso;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 49b8ccd5affe..2dbb7b06b117 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -682,7 +682,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 					     struct perf_sample *sample __maybe_unused)
+ {
+ 	struct symbol *sym;
+-	struct dso *dso;
++	struct dso *dso = NULL;
+ 	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+ 	int err = 0;
+ 
+@@ -695,7 +695,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 		}
+ 		dso__set_kernel(dso, DSO_SPACE__KERNEL);
+ 		map = map__new2(0, dso);
+-		dso__put(dso);
+ 		if (!map) {
+ 			err = -ENOMEM;
+ 			goto out;
+@@ -734,6 +733,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	dso__insert_symbol(dso, sym);
+ out:
+ 	map__put(map);
++	dso__put(dso);
+ 	return err;
  }
  
--struct dso *__dsos__addnew(struct dsos *dsos, const char *name)
--{
--	return __dsos__addnew_id(dsos, name, NULL);
--}
--
- static struct dso *__dsos__findnew_id(struct dsos *dsos, const char *name, struct dso_id *id)
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 14fb8cf65b13..4480134ef4ea 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -200,6 +200,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+ 				dso__set_build_id(dso, dso__bid(header_bid_dso));
+ 				dso__set_header_build_id(dso, 1);
+ 			}
++			dso__put(header_bid_dso);
+ 		}
+ 		dso__put(dso);
+ 	}
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index de73f9fb3fe4..4c00463abb7e 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1366,7 +1366,7 @@ void __weak arch__sym_update(struct symbol *s __maybe_unused,
+ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 				      GElf_Sym *sym, GElf_Shdr *shdr,
+ 				      struct maps *kmaps, struct kmap *kmap,
+-				      struct dso **curr_dsop, struct map **curr_mapp,
++				      struct dso **curr_dsop,
+ 				      const char *section_name,
+ 				      bool adjust_kernel_syms, bool kmodule, bool *remap_kernel)
  {
- 	struct dso *dso = __dsos__find_id(dsos, name, id, false, /*write_locked=*/true);
-diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
-index c1b3979ad4bd..d1497b11d64c 100644
---- a/tools/perf/util/dsos.h
-+++ b/tools/perf/util/dsos.h
-@@ -30,7 +30,6 @@ void dsos__exit(struct dsos *dsos);
+@@ -1416,8 +1416,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 			map__set_pgoff(map, shdr->sh_offset);
+ 		}
  
- int __dsos__add(struct dsos *dsos, struct dso *dso);
- int dsos__add(struct dsos *dsos, struct dso *dso);
--struct dso *__dsos__addnew(struct dsos *dsos, const char *name);
- struct dso *dsos__find(struct dsos *dsos, const char *name, bool cmp_short);
+-		*curr_mapp = map;
+-		*curr_dsop = dso;
++		dso__put(*curr_dsop);
++		*curr_dsop = dso__get(dso);
+ 		return 0;
+ 	}
  
- struct dso *dsos__findnew_id(struct dsos *dsos, const char *name, struct dso_id *id);
+@@ -1442,10 +1442,10 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		dso__set_binary_type(curr_dso, dso__binary_type(dso));
+ 		dso__set_adjust_symbols(curr_dso, dso__adjust_symbols(dso));
+ 		curr_map = map__new2(start, curr_dso);
+-		dso__put(curr_dso);
+-		if (curr_map == NULL)
++		if (curr_map == NULL) {
++			dso__put(curr_dso);
+ 			return -1;
+-
++		}
+ 		if (dso__kernel(curr_dso))
+ 			map__kmap(curr_map)->kmaps = kmaps;
+ 
+@@ -1459,21 +1459,15 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		dso__set_symtab_type(curr_dso, dso__symtab_type(dso));
+ 		if (maps__insert(kmaps, curr_map))
+ 			return -1;
+-		/*
+-		 * Add it before we drop the reference to curr_map, i.e. while
+-		 * we still are sure to have a reference to this DSO via
+-		 * *curr_map->dso.
+-		 */
+ 		dsos__add(&maps__machine(kmaps)->dsos, curr_dso);
+-		/* kmaps already got it */
+-		map__put(curr_map);
+ 		dso__set_loaded(curr_dso);
+-		*curr_mapp = curr_map;
++		dso__put(*curr_dsop);
+ 		*curr_dsop = curr_dso;
+ 	} else {
+-		*curr_dsop = map__dso(curr_map);
+-		map__put(curr_map);
++		dso__put(*curr_dsop);
++		*curr_dsop = dso__get(map__dso(curr_map));
+ 	}
++	map__put(curr_map);
+ 
+ 	return 0;
+ }
+@@ -1484,8 +1478,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ {
+ 	struct kmap *kmap = dso__kernel(dso) ? map__kmap(map) : NULL;
+ 	struct maps *kmaps = kmap ? map__kmaps(map) : NULL;
+-	struct map *curr_map = map;
+-	struct dso *curr_dso = dso;
++	struct dso *curr_dso;
+ 	Elf_Data *symstrs, *secstrs, *secstrs_run, *secstrs_sym;
+ 	uint32_t nr_syms;
+ 	int err = -1;
+@@ -1586,6 +1579,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		remap_kernel = true;
+ 		adjust_kernel_syms = dso__adjust_symbols(dso);
+ 	}
++	curr_dso = dso__get(dso);
+ 	elf_symtab__for_each_symbol(syms, nr_syms, idx, sym) {
+ 		struct symbol *f;
+ 		const char *elf_name = elf_sym__name(&sym, symstrs);
+@@ -1674,8 +1668,11 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 			--sym.st_value;
+ 
+ 		if (dso__kernel(dso)) {
+-			if (dso__process_kernel_symbol(dso, map, &sym, &shdr, kmaps, kmap, &curr_dso, &curr_map,
+-						       section_name, adjust_kernel_syms, kmodule, &remap_kernel))
++			if (dso__process_kernel_symbol(dso, map, &sym, &shdr,
++						       kmaps, kmap, &curr_dso,
++						       section_name,
++						       adjust_kernel_syms,
++						       kmodule, &remap_kernel))
+ 				goto out_elf_end;
+ 		} else if ((used_opd && runtime_ss->adjust_symbols) ||
+ 			   (!used_opd && syms_ss->adjust_symbols)) {
+@@ -1724,6 +1721,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		__symbols__insert(dso__symbols(curr_dso), f, dso__kernel(dso));
+ 		nr++;
+ 	}
++	dso__put(curr_dso);
+ 
+ 	/*
+ 	 * For misannotated, zeroed, ASM function sizes.
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
