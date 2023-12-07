@@ -1,100 +1,148 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQgnC7tV"
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A0058E;
-	Thu,  7 Dec 2023 11:12:53 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-54cdef4c913so4992206a12.1;
-        Thu, 07 Dec 2023 11:12:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701976371; x=1702581171; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FBcbek6gttfppERWG6d3/hToWIBrJs6uRJTnr+Awj6E=;
-        b=dQgnC7tV+Fpu5/5QqiQWj1jHqWtZe89H3xPDeXbIzL+fqcP4pk68pHeiiOdVSbJkg8
-         mJdkWNmxmgQtkUG+gPHuhr5FFiljy9v+GuwK6wnc0Ar9a3WUHNWkXmur2SMAVzCxgk6k
-         bPfj0c03laCraaK2YNu7j0aJWaZabOXttSPM3yhCWqXiWAUIMjR6SNYYisWGp4Xm4m6O
-         0UVKsrzPqtSuOCxqcarcS3WdM4qpyLgua+62lYKYTLQE4+17gxZsHT9nV/ykC0+KwpbG
-         0lW3guGBKiEtNy1OIb5LXsW7r7S/dJn4ms82NAbnj6YJPtcPtzB2n7o+0nuJNHmCFkKp
-         NqOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701976371; x=1702581171;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FBcbek6gttfppERWG6d3/hToWIBrJs6uRJTnr+Awj6E=;
-        b=DXOjEvFiTVkd5rfv1Y+w3kADj+PE95iQvJ4nALnbGuGZDvC5GtpU8MD8svELCwOIEs
-         33GPy30tmG4zWrq9L0x9kJi/5FjZKzdq65RqU+K9ZQxdnH3PA8S37PUvS4bqkEnTvNh2
-         HuN+A2d8uUsoBcevM2d6yVIJ40De1i5HPAeb/m+zgX5Kdcyexm62cXxZRWJKm/EIdqHo
-         +7AsYPA7SkPv8jjcYqHGkv/NoU/XdiGFaKBBbEPhJx5GS48bnVnISLfB5cukKcRVcHwD
-         IUjyIQeHYXKMR3UcFqKaf/9jiw2732lNeqycbkubDOcSk1R5s+xEebRfKuW081gVNmud
-         YDHA==
-X-Gm-Message-State: AOJu0YyUx/lVlnv6GGmZFQFldfYGZiTEBiY+Yue27b7YtS9m3++yD0mI
-	Q3SW9uBiar4L5wAYSjU4uty01ynmUflEEI4GTolPQtMdBGE=
-X-Google-Smtp-Source: AGHT+IHlWG5bKii7MvV2efsGC4HKRhhsZ5maBOhBSV/8S5dfwK9hpNSZOGn/4a9pAHw3z3+goSCLDK5cRl3DzSO6/SU=
-X-Received: by 2002:a17:906:c10d:b0:9fa:7c87:b10a with SMTP id
- do13-20020a170906c10d00b009fa7c87b10amr6266158ejc.10.1701976371192; Thu, 07
- Dec 2023 11:12:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NBX3YbFv"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B48910EF;
+	Thu,  7 Dec 2023 11:23:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701977037; x=1733513037;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Xwx4rRdSKQImronKlBDekXzVZf//CVGQYIZHr07oJ6I=;
+  b=NBX3YbFv6CB7ezc6M1LC4XFhBLm6DV/NfnEUSVdL6bqHUjNFkMJZUbJA
+   HC+1RZ4u2SG21EaR0UbO5y/STQJBQS2djlhloyypSLwTdf4Oh2IwE5nwd
+   CuModD40Ipx3cFVZztlQCxp9N3Yvjybj07BtBRS3xH9NpTSVi475HZwgz
+   4W0ICnC33aJ34KwtD5NANlBmznAOUYAHHMfW4MfVtK1yuYiNDdpITxrww
+   p+FQaq3oVq0CPu33GZvNknBkoANjV7lqEACThNwkyQ7vdhwTAteizb5JF
+   S6C0I8mqBUveICRnq5rfBVXqMrDc3o1N7lOwqpsSu7cv9DrT+ltVveYo2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="425431716"
+X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
+   d="scan'208";a="425431716"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 11:23:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="721589151"
+X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
+   d="scan'208";a="721589151"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orsmga003.jf.intel.com with ESMTP; 07 Dec 2023 11:23:56 -0800
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	irogers@google.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	john.g.garry@oracle.com,
+	will@kernel.org,
+	james.clark@arm.com,
+	mike.leach@linaro.org,
+	leo.yan@linaro.org,
+	yuhaixin.yhx@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com,
+	tmricht@linux.ibm.com,
+	ravi.bangoria@amd.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2 0/5] Clean up perf mem
+Date: Thu,  7 Dec 2023 11:23:33 -0800
+Message-Id: <20231207192338.400336-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207163458.5554-1-khuey@kylehuey.com> <20231207163458.5554-3-khuey@kylehuey.com>
-In-Reply-To: <20231207163458.5554-3-khuey@kylehuey.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 7 Dec 2023 11:12:38 -0800
-Message-ID: <CAEf4Bza5LWs8nQhJ78QRAU78PU8DOjs5aZkbsgdggr_a+GdEjQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] perf/bpf: Allow a bpf program to suppress all
- sample side effects.
-To: Kyle Huey <me@kylehuey.com>
-Cc: Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, "Robert O'Callahan" <robert@ocallahan.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 7, 2023 at 8:35=E2=80=AFAM Kyle Huey <me@kylehuey.com> wrote:
->
-> Returning zero from a bpf program attached to a perf event already
-> suppresses any data output. By clearing pending_kill, returning zero from=
- a
-> bpf program will effectively pretend the sample never happened for all
-> userspace purposes.
->
-> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-> ---
->  kernel/events/core.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
+From: Kan Liang <kan.liang@linux.intel.com>
 
-LGTM
+Changes since V1:
+- Fix strcmp of PMU name checking (Ravi)
+- Fix "/," typo (Ian)
+- Rename several functions with perf_pmu__mem_events prefix. (Ian)
+- Fold the header removal patch into the patch where the cleanups made.
+  (Arnaldo)
+- Add reviewed-by and tested-by from Ian and Ravi
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+As discussed in the below thread, the patch set is to clean up perf mem.
+https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com/
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 19fddfc27a4a..6cda05a4969d 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10421,8 +10421,10 @@ static void bpf_overflow_handler(struct perf_eve=
-nt *event,
->         rcu_read_unlock();
->  out:
->         __this_cpu_dec(bpf_prog_active);
-> -       if (!ret)
-> +       if (!ret) {
-> +               event->pending_kill =3D 0;
->                 return;
-> +       }
->
->         event->orig_overflow_handler(event, data, regs);
->  }
-> --
-> 2.34.1
->
+Introduce generic functions perf_mem_events__ptr(),
+perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+ARCH specific ones.
+Simplify the perf_mem_event__supported().
+
+Only keeps the ARCH-specific perf_mem_events array in the corresponding
+mem-events.c for each ARCH.
+
+There is no functional change.
+
+The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+etc. But I can only test it on two Intel platforms.
+Please give it try, if you have machines with other ARCHs.
+
+Here are the test results:
+Intel hybrid machine:
+
+$perf mem record -e list
+ldlat-loads  : available
+ldlat-stores : available
+
+$perf mem record -e ldlat-loads -v --ldlat 50
+calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
+
+$perf mem record -v
+calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
+
+$perf mem record -t store -v
+calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+
+
+Intel SPR:
+$perf mem record -e list
+ldlat-loads  : available
+ldlat-stores : available
+
+$perf mem record -e ldlat-loads -v --ldlat 50
+calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
+
+$perf mem record -v
+calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
+
+$perf mem record -t store -v
+calling: record -e cpu/mem-stores/P
+
+Kan Liang (5):
+  perf mem: Add mem_events into the supported perf_pmu
+  perf mem: Clean up perf_mem_events__ptr()
+  perf mem: Clean up perf_mem_events__name()
+  perf mem: Clean up perf_mem_event__supported()
+  perf mem: Clean up is_mem_loads_aux_event()
+
+ tools/perf/arch/arm64/util/mem-events.c   |  36 +----
+ tools/perf/arch/arm64/util/pmu.c          |   6 +
+ tools/perf/arch/powerpc/util/mem-events.c |  13 +-
+ tools/perf/arch/powerpc/util/mem-events.h |   7 +
+ tools/perf/arch/powerpc/util/pmu.c        |  11 ++
+ tools/perf/arch/s390/util/pmu.c           |   3 +
+ tools/perf/arch/x86/util/mem-events.c     |  99 ++----------
+ tools/perf/arch/x86/util/pmu.c            |  11 ++
+ tools/perf/builtin-c2c.c                  |  28 +++-
+ tools/perf/builtin-mem.c                  |  28 +++-
+ tools/perf/util/mem-events.c              | 181 +++++++++++++---------
+ tools/perf/util/mem-events.h              |  15 +-
+ tools/perf/util/pmu.c                     |   4 +-
+ tools/perf/util/pmu.h                     |   7 +
+ 14 files changed, 233 insertions(+), 216 deletions(-)
+ create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
+ create mode 100644 tools/perf/arch/powerpc/util/pmu.c
+
+-- 
+2.35.1
+
