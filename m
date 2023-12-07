@@ -1,49 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KhmO9gzr"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482E0A4
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 21:04:46 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5d7e7e10231so2027577b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 21:04:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ljFipjXP"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C70D51
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Dec 2023 21:04:48 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-db9612b8997so724957276.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Dec 2023 21:04:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701925485; x=1702530285; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=R9RMTJtlPt1jfAFH/k4xNYuBt8CVOB8J0dneg0Xx2oQ=;
-        b=KhmO9gzrB0D3xNmF7OcjIEoKLAtShQcKGG5G6Y/OoTVeTdFN3xj1Lr/KEN+SQoMeP2
-         NU5QyM3ScFY+L/A4BGmnVhZxNltwnUUf/UtzNTWzdezsOjFUHdb3+zpQqkRvMN9lXqsp
-         7zI0PHQXMRXlI73BBM6W5GJFNPC734o7Hfy3aVNDty/47ptfJ5tFQhjNL/I0bjc5pDtZ
-         TZMVjzPxvigm6tIfAUrGgqwQ45av1uebT/RDUCmSLL9h6rO10zEzxrqGbqHfmBTuFDCs
-         6jpfoHXbwk6qWdpI1PDMOdK6JlJULpu3d9TzIlpKAM8jMUwQICxCquywushclaLjJd0W
-         ZAxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701925485; x=1702530285;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1701925487; x=1702530287; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=R9RMTJtlPt1jfAFH/k4xNYuBt8CVOB8J0dneg0Xx2oQ=;
-        b=Vnr2uPtP6nKfybEgzp8Pf2r0wWH7JkdL0tjpQG+tRDwPnUcQaZwSldiR9u9qR8EdWQ
-         t1xMWMvyX36IiH65/TU/RhvgOaS25T0JgK2hxacVDQjx7VHtA5ZKmzwUQYgslbzDWOnr
-         cekK0Zj6FOzt5sJMOxs9+rewgMvg2mkKHiHBsCughXU3uCQA1G9F/IhpdSAuP6TmT9GB
-         ezVCj3mvon1nZYLlwrIKSq3bGIB+tnPPdDWN9pjKKpUXgNewMtDUfSuaKO+BpcnjzwLI
-         mqMMI/1UesMdVhJWnWM347KZI5ggifLAe+g2P60GTZu61NWsXTlt6U65yFNAjm05PHNn
-         B8Yg==
-X-Gm-Message-State: AOJu0YwJkTwegfFKOoulWr3nN/+33jX1oCsZvZxdYeZA4Q/JwjMv1+m3
-	Hh+OkLcoSoTbX36sG766AKrs9PWOh9QX
-X-Google-Smtp-Source: AGHT+IFlYcSaTvvG5Jhy92MCs2tHiMPKJjjuwWzlUJDLK62l2h3mHEbfMkMgGUSXwdUpVOUuVYJBOgORd2NT
+        bh=gJ09ILS0FKw69nllEGHZTddJyQyifMD6obVQZgpi4Qw=;
+        b=ljFipjXPu2ocEJjGS5+bo4ZvUR5mU9WkFW6EY0cXddnbdqCN7uxP4VpZYVQaSh+bN2
+         CZUTGz6UU5H0lp1cXq91jVlmEXpsne41KYWUCiZDhNp2Mr8XyAxdrUqY8R1lMeOAe6ae
+         O+XT+QLgm5NShAQcqAdRq8fhTOrhiDufhvsM7lIfHKdZQ09xG6APHhuyotWzh2SkGZDs
+         tonIxluC68vbr8xowwfdA3vDmRmPp9/K/ZOZcFGI6QZnFoqirJdEQQYHb7HEZZxvnT5w
+         GIP2XIRqHKCSLDzZDX/8XYAt9pIF+8bLljLI/UmMB0YDm0NZaBbB2tWrtLXzQH9+G475
+         vhEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701925487; x=1702530287;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gJ09ILS0FKw69nllEGHZTddJyQyifMD6obVQZgpi4Qw=;
+        b=NCKIq99nv2aPsR+2GpWC0C+Fj28hWxKTePfYUi6zXTN0zRMGOJM/aTYgApsCmBY68Z
+         E6jMgrpV3koam1uUoF5YM+GqZUXodYkBaIV2fmfk2xTpqMmGzMQ0avX9lzwObfz2nO78
+         GQBVEK9TZH+85rZgdGLmtNUYMjOANlOf8uM9I84FOATzNffMJ7hhyKDBxn8k8uWRe3mK
+         VjDrlBKHt84akiGj8YqZItsuEky9JqCJZ9+YlFFq4MbYXy+E28kAolOr94Oad6VIUQl4
+         FAe94vmxvWKxvx8VC/QuGcxQAoPJE6w5WYJqlCCyNLIZGq4xCGlh14eM2uRMgcB3HcKz
+         /HSg==
+X-Gm-Message-State: AOJu0Ywoo4OC4AqWLUlnbBUp+81ZEJ1bcVuZInn3o4pRVzzN1bFoKL7I
+	uuobKaad7E7jx9yuC3N4ZSmHoClo2LEI
+X-Google-Smtp-Source: AGHT+IE25ICHr+L0rrthsfiMJT9vor7826Id8YRj/BihCnqEuwJ+wuOTJjyX1ATd/qisp8dd7xqJkTPlrH7E
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:35bf:293e:7696:34e9])
- (user=irogers job=sendgmr) by 2002:a81:be14:0:b0:5d3:56a4:9073 with SMTP id
- i20-20020a81be14000000b005d356a49073mr54099ywn.2.1701925485235; Wed, 06 Dec
- 2023 21:04:45 -0800 (PST)
-Date: Wed,  6 Dec 2023 21:04:27 -0800
-Message-Id: <20231207050433.1426834-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:d144:0:b0:db7:dce9:76cd with SMTP id
+ i65-20020a25d144000000b00db7dce976cdmr24086ybg.9.1701925487528; Wed, 06 Dec
+ 2023 21:04:47 -0800 (PST)
+Date: Wed,  6 Dec 2023 21:04:28 -0800
+In-Reply-To: <20231207050433.1426834-1-irogers@google.com>
+Message-Id: <20231207050433.1426834-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20231207050433.1426834-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-Subject: [PATCH v1 0/6] Add io_dir to avoid memory overhead from opendir
+Subject: [PATCH v1 1/6] tools build: Add a feature test for getdents64
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -58,40 +60,93 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-glibc's opendir allocates a minimum of 32kb, when called recursively
-for a directory tree the memory consumption can add up - nearly 300kb
-during perf start-up when processing modules. Add a stack allocated
-variant of readdir sized a little more than 1kb
+getdents64 may be missing from certain libcs, add a feature test to
+determine when such a libc is being used.
 
-This was previously part of the memory saving change set:
-https://lore.kernel.org/lkml/20231127220902.1315692-1-irogers@google.com/
-It is separated here and a feature check and syscall workaround for
-missing getdents64 added.
-
-Ian Rogers (6):
-  tools build: Add a feature test for getdents64
-  tools lib api: Add io_dir an allocation free readdir alternative
-  perf maps: Switch modules tree walk to io_dir__readdir
-  perf pmu: Switch to io_dir__readdir
-  perf header: Switch mem topology to io_dir__readdir
-  perf events: Remove scandir in thread synthesis
-
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
  tools/build/Makefile.feature          |  1 +
- tools/build/feature/Makefile          |  4 ++
- tools/build/feature/test-all.c        |  5 ++
- tools/build/feature/test-getdents64.c | 12 ++++
- tools/lib/api/Makefile                |  2 +-
- tools/lib/api/io_dir.h                | 84 +++++++++++++++++++++++++++
- tools/perf/Makefile.config            |  4 ++
- tools/perf/util/header.c              | 31 +++++-----
- tools/perf/util/machine.c             | 19 +++---
- tools/perf/util/pmu.c                 | 48 ++++++---------
- tools/perf/util/pmus.c                | 30 ++++------
- tools/perf/util/synthetic-events.c    | 22 +++----
- 12 files changed, 177 insertions(+), 85 deletions(-)
+ tools/build/feature/Makefile          |  4 ++++
+ tools/build/feature/test-all.c        |  5 +++++
+ tools/build/feature/test-getdents64.c | 12 ++++++++++++
+ 4 files changed, 22 insertions(+)
  create mode 100644 tools/build/feature/test-getdents64.c
- create mode 100644 tools/lib/api/io_dir.h
 
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 64df118376df..f051d4d8c71c 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -58,6 +58,7 @@ FEATURE_TESTS_BASIC :=                  \
+         pthread-attr-setaffinity-np     \
+         pthread-barrier     		\
+         reallocarray                    \
++        getdents64                      \
+         stackprotector-all              \
+         timerfd                         \
+         libdw-dwarf-unwind              \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 37722e509eb9..5efe89c3b0a6 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -21,6 +21,7 @@ FILES=                                          \
+          test-disassembler-four-args.bin        \
+          test-disassembler-init-styled.bin	\
+          test-reallocarray.bin			\
++         test-getdents64.bin			\
+          test-libbfd-liberty.bin                \
+          test-libbfd-liberty-z.bin              \
+          test-cplus-demangle.bin                \
+@@ -262,6 +263,9 @@ $(OUTPUT)test-disassembler-init-styled.bin:
+ $(OUTPUT)test-reallocarray.bin:
+ 	$(BUILD)
+ 
++$(OUTPUT)test-getdents64.bin:
++	$(BUILD)
++
+ $(OUTPUT)test-libbfd-liberty.bin:
+ 	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty
+ 
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index 6f4bf386a3b5..c65096f75032 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -166,6 +166,10 @@
+ # include "test-reallocarray.c"
+ #undef main
+ 
++#define main main_test_getdents64
++# include "test-getdents64.c"
++#undef main
++
+ #define main main_test_disassembler_four_args
+ # include "test-disassembler-four-args.c"
+ #undef main
+@@ -216,6 +220,7 @@ int main(int argc, char *argv[])
+ 	main_test_setns();
+ 	main_test_libaio();
+ 	main_test_reallocarray();
++	main_test_getdents64();
+ 	main_test_disassembler_four_args();
+ 	main_test_libzstd();
+ 
+diff --git a/tools/build/feature/test-getdents64.c b/tools/build/feature/test-getdents64.c
+new file mode 100644
+index 000000000000..f7c9df1e2f05
+--- /dev/null
++++ b/tools/build/feature/test-getdents64.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stddef.h>
++#define _GNU_SOURCE
++#include <dirent.h>
++
++int main(void)
++{
++	char buf[128];
++	return (int)getdents64(0, buf, sizeof(buf));
++}
++
++#undef _GNU_SOURCE
 -- 
 2.43.0.rc2.451.g8631bc7472-goog
 
