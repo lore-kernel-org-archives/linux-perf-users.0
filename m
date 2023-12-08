@@ -1,49 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zk+ZQK6m"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 850F91718
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 16:05:25 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5d340a9cf07so18091147b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 16:05:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kv6RQLIe"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD6FF170F
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 16:05:27 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d04540d5aaso19244477b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 16:05:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701993925; x=1702598725; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=R7VAKwLUWVywjDo2dEK6wuoDMXw70DBGya721KiihN0=;
-        b=zk+ZQK6mfuXD8rwusqq6/iZLf88yIvrSr7z+pQN1LBu7Ry5t8uJSCmbzOjFdJQz2vw
-         ngv3+RCm16WGwNxa/4jLNueonxJ9g42GPRWa/lZgoSRHBpzwscaAGaq912opu6z2Uqgr
-         YZeBjOa6WNUFVQjZmCqjSHgiyS3dhEUo25EF48eCNbFCipwifW5Kq+49bUDDB9llv9IT
-         ury7cuHLAVFSeLfxi2fa0U1GSxl8FL6A2y9gRMwCcvjykHEC07voPe6U4RVz5KhuWTeV
-         nhdSpXV20fYNK4jYgHXUOhCnoLAFgJrZdM5iNOPr5W5DokPb9aqNJu/LQ5dOqZOJExyI
-         xIYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701993925; x=1702598725;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1701993927; x=1702598727; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=R7VAKwLUWVywjDo2dEK6wuoDMXw70DBGya721KiihN0=;
-        b=kk71/JDc0UJoSlUJ78zKYxBoLVvy8bOP3KanWAd1lXKaOjeMi5Rz5m1H7o3ovSerKo
-         PhmqHbghDIWnCqZE2itqzc6zBjclk3oMkOhOc8jDniJcLEzoq+yUKj0gTYjEWoMQpeg7
-         mrn4Z/jiw8msWsL7RRx/jpMIKfnXOeCmkv9cU8ByPySDxdqDbUz6ZHWms6sL7FVSAaud
-         7knzHzETg3JHc+ki/OA2j6tbagEi9h3mRlvQ4MZ/Zn2UST8BaAsz7lbrrXmAhaB9yh02
-         BjchuZVTnbNxjsCCka6+Jd5D7VDcBB4/z1fuD4ijb5uMm4Y3MGNCOl525WCZolp2cNe3
-         YioQ==
-X-Gm-Message-State: AOJu0Yzkzn7aFmwAc3GwLaYeNnDR1c5tFy+/CiFsvn4jlnBi3btzoo4I
-	ZlSk4n6BKmFO3gW314FJHNFwFDqXM6yc
-X-Google-Smtp-Source: AGHT+IHu9T2Gy2CB3/Hupo7gAYRgMRacMV5kSjT6ATlNY2CuCYfwMUaXFiD8Fs/UWATBZndJDix8xNo+IImI
+        bh=Xf5gnEGQIoXazSeiXhfMb12CybARggvMyxZM26gKG4Q=;
+        b=kv6RQLIeqqQgCftrGdYe9u8RB45ZC9g4uHSOLndZz6pwpZtis87Dwxrlzebn+HLSa6
+         rLCM2SBKNEYVcdK2S5LyAOTmau7yeJMQDr10JtalD2nNnWyQlbDfbQT0k6GMyHwzeQXU
+         fE6/BqMgPbRxR2JQyS5MNTaQQCQOg3Kq0aHRhIqtQLrsKtuhoXkuEscLbL64sd6FoLof
+         Z5JK6IeBEZpNNYWqX89SFKqTpB//Gt1sGXfMh1QUzEbVQGATXLw7j/MKvKmD5Il5eDH2
+         sbih2vcRYFCYnyw8L+aKZjh2vN1w/3aP32P//vyASDXJqp7DXV0/6HYLfZ4oLUWwmfD4
+         OJ9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701993927; x=1702598727;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xf5gnEGQIoXazSeiXhfMb12CybARggvMyxZM26gKG4Q=;
+        b=Zbu+AbsNC0T8JcVClDjYU+zzTMFzxstcRdJD93AUFOqT62JVIArR1OeN65sU9WpNjf
+         FjvjUPJbpzLt2ZXkErF5tvcmKdusItroXyv9qCXwt8jwrdadNVVftzoLdU9GLathcffb
+         Y/8iAbfOktu9Z6PMJBusMZ2LQBlT0wUyApB4o/hBJkpm1Yc7GE1/cMfly8rfaTxETHPt
+         UBHtjrmzn6rbYLNHXwZWtQsKZnMWWaMQa+NMbji2Km8xIhuH+gfOxzhh+Nz0AgNwn0WP
+         aHE5/gB91E4t7anuXRIfoqs46nmXVzZYy8jFVyF2idlMIUpgcc7yhrqCrQihMOd7czK9
+         hTtw==
+X-Gm-Message-State: AOJu0Yx8YbNgaWlMDvNNOG/+OtORO90QydsJobDlAcnLXhDtdSExOzco
+	PK3gBTGwhOym6LUkbdGSuaL8oX2b+mTS
+X-Google-Smtp-Source: AGHT+IGkk6tmDRZSDzkUEEDm+lkMYS+lFIUbPXflkEU4krTvsf/mz9zYtbA+Z0XDSnxtsd1nMc041ivFa+Xg
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:aa27:6848:76cc:141c])
- (user=irogers job=sendgmr) by 2002:a05:690c:4607:b0:5d3:9513:4aad with SMTP
- id gw7-20020a05690c460700b005d395134aadmr53065ywb.3.1701993924731; Thu, 07
- Dec 2023 16:05:24 -0800 (PST)
-Date: Thu,  7 Dec 2023 16:05:13 -0800
-Message-Id: <20231208000515.1693746-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:5509:0:b0:dbc:1b46:9aeb with SMTP id
+ j9-20020a255509000000b00dbc1b469aebmr40703ybb.2.1701993926977; Thu, 07 Dec
+ 2023 16:05:26 -0800 (PST)
+Date: Thu,  7 Dec 2023 16:05:14 -0800
+In-Reply-To: <20231208000515.1693746-1-irogers@google.com>
+Message-Id: <20231208000515.1693746-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20231208000515.1693746-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-Subject: [PATCH v1 1/3] lib subcmd: Fix memory leak in uniq
+Subject: [PATCH v1 2/3] perf: Suggest inbuilt commands for unknown command
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -53,45 +55,187 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-uniq will write one command name over another causing the overwritten
-string to be leaked. Fix by doing a pass that removes duplicates and a
-second that removes the holes.
+The existing unknown command code looks for perf scripts like
+perf-archive.sh and perf-iostat.sh, however, inbuilt commands aren't
+suggested. Add the inbuilt commands so they may be suggested too.
+
+Before:
+```
+$ perf reccord
+perf: 'reccord' is not a perf-command. See 'perf --help'.
+```
+
+After:
+```
+$ perf reccord
+perf: 'reccord' is not a perf-command. See 'perf --help'.
+
+Did you mean this?
+        record
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/subcmd/help.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ tools/perf/builtin.h               |  4 ++-
+ tools/perf/perf.c                  | 21 +++++++++++---
+ tools/perf/util/help-unknown-cmd.c | 45 ++++++++++++++----------------
+ 3 files changed, 41 insertions(+), 29 deletions(-)
 
-diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
-index adfbae27dc36..8561b0f01a24 100644
---- a/tools/lib/subcmd/help.c
-+++ b/tools/lib/subcmd/help.c
-@@ -52,11 +52,21 @@ void uniq(struct cmdnames *cmds)
- 	if (!cmds->cnt)
- 		return;
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index f2ab5bae2150..f4375deabfa3 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -2,8 +2,10 @@
+ #ifndef BUILTIN_H
+ #define BUILTIN_H
  
--	for (i = j = 1; i < cmds->cnt; i++)
--		if (strcmp(cmds->names[i]->name, cmds->names[i-1]->name))
--			cmds->names[j++] = cmds->names[i];
--
-+	for (i = 1; i < cmds->cnt; i++) {
-+		if (!strcmp(cmds->names[i]->name, cmds->names[i-1]->name))
-+			zfree(&cmds->names[i - 1]);
++struct cmdnames;
++
+ void list_common_cmds_help(void);
+-const char *help_unknown_cmd(const char *cmd);
++const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds);
+ 
+ int cmd_annotate(int argc, const char **argv);
+ int cmd_bench(int argc, const char **argv);
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index 921bee0a6437..c719e6ccd9e2 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -18,6 +18,7 @@
+ #include <subcmd/run-command.h>
+ #include "util/parse-events.h"
+ #include <subcmd/parse-options.h>
++#include <subcmd/help.h>
+ #include "util/debug.h"
+ #include "util/event.h"
+ #include "util/util.h" // usage()
+@@ -557,7 +558,7 @@ int main(int argc, const char **argv)
+ 	pthread__block_sigwinch();
+ 
+ 	while (1) {
+-		static int done_help;
++		int done_help;
+ 
+ 		run_argv(&argc, &argv);
+ 
+@@ -565,14 +566,26 @@ int main(int argc, const char **argv)
+ 			break;
+ 
+ 		if (!done_help) {
+-			cmd = argv[0] = help_unknown_cmd(cmd);
++			struct cmdnames main_cmds;
++
++			for (unsigned int i = 0; i < ARRAY_SIZE(commands); i++) {
++				add_cmdname(&main_cmds,
++					    commands[i].cmd,
++					    strlen(commands[i].cmd));
++			}
++			cmd = argv[0] = help_unknown_cmd(cmd, &main_cmds);
++			clean_cmdnames(&main_cmds);
+ 			done_help = 1;
++			if (!cmd)
++				break;
+ 		} else
+ 			break;
+ 	}
+ 
+-	fprintf(stderr, "Failed to run command '%s': %s\n",
+-		cmd, str_error_r(errno, sbuf, sizeof(sbuf)));
++	if (cmd) {
++		fprintf(stderr, "Failed to run command '%s': %s\n",
++			cmd, str_error_r(errno, sbuf, sizeof(sbuf)));
 +	}
-+	for (i = 0, j = 0; i < cmds->cnt; i++) {
-+		if (cmds->names[i]) {
-+			if (i == j)
-+				j++;
-+			else
-+				cmds->names[j++] = cmds->names[i];
-+		}
-+	}
- 	cmds->cnt = j;
-+	while (j < i)
-+		cmds->names[j++] = NULL;
+ out:
+ 	if (debug_fp)
+ 		fclose(debug_fp);
+diff --git a/tools/perf/util/help-unknown-cmd.c b/tools/perf/util/help-unknown-cmd.c
+index eab99ea6ac01..2ba3369f1620 100644
+--- a/tools/perf/util/help-unknown-cmd.c
++++ b/tools/perf/util/help-unknown-cmd.c
+@@ -52,46 +52,44 @@ static int add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
+ 	return 0;
  }
  
- void exclude_cmds(struct cmdnames *cmds, struct cmdnames *excludes)
+-const char *help_unknown_cmd(const char *cmd)
++const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds)
+ {
+ 	unsigned int i, n = 0, best_similarity = 0;
+-	struct cmdnames main_cmds, other_cmds;
++	struct cmdnames other_cmds;
+ 
+-	memset(&main_cmds, 0, sizeof(main_cmds));
+-	memset(&other_cmds, 0, sizeof(main_cmds));
++	memset(&other_cmds, 0, sizeof(other_cmds));
+ 
+ 	perf_config(perf_unknown_cmd_config, NULL);
+ 
+-	load_command_list("perf-", &main_cmds, &other_cmds);
++	load_command_list("perf-", main_cmds, &other_cmds);
+ 
+-	if (add_cmd_list(&main_cmds, &other_cmds) < 0) {
++	if (add_cmd_list(main_cmds, &other_cmds) < 0) {
+ 		fprintf(stderr, "ERROR: Failed to allocate command list for unknown command.\n");
+ 		goto end;
+ 	}
+-	qsort(main_cmds.names, main_cmds.cnt,
+-	      sizeof(main_cmds.names), cmdname_compare);
+-	uniq(&main_cmds);
++	qsort(main_cmds->names, main_cmds->cnt,
++	      sizeof(main_cmds->names), cmdname_compare);
++	uniq(main_cmds);
+ 
+-	if (main_cmds.cnt) {
++	if (main_cmds->cnt) {
+ 		/* This reuses cmdname->len for similarity index */
+-		for (i = 0; i < main_cmds.cnt; ++i)
+-			main_cmds.names[i]->len =
+-				levenshtein(cmd, main_cmds.names[i]->name, 0, 2, 1, 4);
++		for (i = 0; i < main_cmds->cnt; ++i)
++			main_cmds->names[i]->len =
++				levenshtein(cmd, main_cmds->names[i]->name, 0, 2, 1, 4);
+ 
+-		qsort(main_cmds.names, main_cmds.cnt,
+-		      sizeof(*main_cmds.names), levenshtein_compare);
++		qsort(main_cmds->names, main_cmds->cnt,
++		      sizeof(*main_cmds->names), levenshtein_compare);
+ 
+-		best_similarity = main_cmds.names[0]->len;
++		best_similarity = main_cmds->names[0]->len;
+ 		n = 1;
+-		while (n < main_cmds.cnt && best_similarity == main_cmds.names[n]->len)
++		while (n < main_cmds->cnt && best_similarity == main_cmds->names[n]->len)
+ 			++n;
+ 	}
+ 
+ 	if (autocorrect && n == 1) {
+-		const char *assumed = main_cmds.names[0]->name;
++		const char *assumed = main_cmds->names[0]->name;
+ 
+-		main_cmds.names[0] = NULL;
+-		clean_cmdnames(&main_cmds);
++		main_cmds->names[0] = NULL;
+ 		clean_cmdnames(&other_cmds);
+ 		fprintf(stderr, "WARNING: You called a perf program named '%s', "
+ 			"which does not exist.\n"
+@@ -107,15 +105,14 @@ const char *help_unknown_cmd(const char *cmd)
+ 
+ 	fprintf(stderr, "perf: '%s' is not a perf-command. See 'perf --help'.\n", cmd);
+ 
+-	if (main_cmds.cnt && best_similarity < 6) {
++	if (main_cmds->cnt && best_similarity < 6) {
+ 		fprintf(stderr, "\nDid you mean %s?\n",
+ 			n < 2 ? "this": "one of these");
+ 
+ 		for (i = 0; i < n; i++)
+-			fprintf(stderr, "\t%s\n", main_cmds.names[i]->name);
++			fprintf(stderr, "\t%s\n", main_cmds->names[i]->name);
+ 	}
+ end:
+-	clean_cmdnames(&main_cmds);
+ 	clean_cmdnames(&other_cmds);
+-	exit(1);
++	return NULL;
+ }
 -- 
 2.43.0.472.g3155946c3a-goog
 
