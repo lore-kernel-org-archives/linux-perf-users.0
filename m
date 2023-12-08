@@ -1,46 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N/9O9tL/"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4494A193;
-	Fri,  8 Dec 2023 13:09:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702069754; x=1733605754;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/SGOKoA+Swz5M7d9MFKFLrftb660oNkZR5QqizVC2Sk=;
-  b=N/9O9tL/walmMZXDf8xP9cXNMH5vAy8Cb5YB5Ts7Plecqb/AcKxeZiLh
-   4j0Ob6wllnMjmZ51yDdpdEUlCyHr0caqFEZ+PekikWcznDZKXkdrjaNfP
-   wvah0O9IAzcNadby7bVw8m3tKEmkpAoJRE/LZ4/mSkkZbIw8hl4XPpvSF
-   7Yr3QVmOEBxe4qR+nUBoVRrVfxdhBcKBHYS4wnTBWtqHx3y/GGoHBliPm
-   +7pCRBB4MKFCGNWaH7SxNK9U7PYT36boEBhSgLloVBDX+lytcdYmcOdNR
-   31h4YrVR0YX50l6brVKNLFIwvRfGcC5OFMjRUrruegC/YuWXkRRR8ddfv
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10918"; a="7791999"
-X-IronPort-AV: E=Sophos;i="6.04,261,1695711600"; 
-   d="scan'208";a="7791999"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 13:09:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10918"; a="772261155"
-X-IronPort-AV: E=Sophos;i="6.04,261,1695711600"; 
-   d="scan'208";a="772261155"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orsmga002.jf.intel.com with ESMTP; 08 Dec 2023 13:09:13 -0800
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	irogers@google.com
-Cc: namhyung@kernel.org,
-	mark.rutland@arm.com,
-	maz@kernel.org,
-	marcan@marcan.st,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
-Date: Fri,  8 Dec 2023 13:08:55 -0800
-Message-Id: <20231208210855.407580-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8psMDph"
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3259171D;
+	Fri,  8 Dec 2023 14:33:04 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-5c6b9583dcbso2203321a12.2;
+        Fri, 08 Dec 2023 14:33:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702074784; x=1702679584; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=7/WtxgUAWS6Tp08MVlyJfenFT48ukqZMUj0ickzAyfY=;
+        b=Z8psMDphgG7ou0YNxlFVX43rVHmyfli2Aai+HmEWZQuOxfhijfhcObF1Hy3cs2q8Xs
+         8Vv93g4Vivh87bLKjs2XgeaB4SyRyIGc63CEUqyv8OpBzPgtU+BqNrJmumdwpJWk/6YN
+         pgDG0xDHPj9tBM8BudnRpLXfhWI3qgqpAsc6xfASQZ1PG2MNjt/KtfZkn3EmWyRv4IZS
+         c98UFtgK/q7SLEi6j+jwKE44StTKeOv5tlZwmtrcBDQz8ZhVM3A4A+SICwo5io7V93cw
+         lK04+t2ndbUnBdXFOschRdx2ibmXuJv1cXIfduElChjKkNSifUXvXnROuAmiT3m9sTza
+         0+Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702074784; x=1702679584;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7/WtxgUAWS6Tp08MVlyJfenFT48ukqZMUj0ickzAyfY=;
+        b=va73gwHbn7pQiS1eFv9QuRkkhEig0NTRXoTiappbVKbdeZKPJBoq8IMZT2ob168rzc
+         VOzc1ULLVnEtKQaBatIjIOxSdvGmRkwxKpqWQZjsfwTraXQ+t99qq6NYnVUVupv/1dtJ
+         +VpHfqIXZhzK5cHte6cb3JUhTTR7Fe7AOBElGDl5cZ9g0b9CjFNZxWUJ3Lbn/xCCKBLd
+         3lyqKtL0CCpiIg0RVa8MC4RndXDqDD97CwNwSNDf8/azktS5Wd1L2dFw55+Y0EJUD74B
+         URoF0V7TxmrqK8zKA/FV1D7fIO+G9YNZEVWUgFa7/CLyY/7orcFyYXBEb+DPJDTSyZiJ
+         FtnA==
+X-Gm-Message-State: AOJu0Ywp1RMAUyZmdbxHLITXD4IxLxL2FsC4adKApdNupO6xxAqzPCcp
+	H5dMYi0VS/T7xYCxRSD7co0=
+X-Google-Smtp-Source: AGHT+IFVc692Bvw+Q0cSJPBmNMR6eyUAxX79wkgrwu2XgMRDR12eeYbcwdv1ouQwdnV1lxpGLq1xVA==
+X-Received: by 2002:a05:6a20:3942:b0:18d:b43:78ea with SMTP id r2-20020a056a20394200b0018d0b4378eamr975811pzg.43.1702074784032;
+        Fri, 08 Dec 2023 14:33:04 -0800 (PST)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:e1f1:b259:a950:f2ac])
+        by smtp.gmail.com with ESMTPSA id ey2-20020a056a0038c200b006cbb75d87d2sm2101165pfb.6.2023.12.08.14.33.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Dec 2023 14:33:02 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [GIT PULL] perf tools fixes for v6.7: 2nd batch
+Date: Fri,  8 Dec 2023 14:33:00 -0800
+Message-ID: <20231208223300.3877553-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,47 +60,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Hi Linus,
 
-perf top errors out on a hybrid machine
- $perf top
+Please consider pulling the perf tools fixes.
 
- Error:
- The cycles:P event is not supported.
+Thanks,
+Namhyung
 
-The user_requested_cpus may contain CPUs that are invalid for a hybrid
-PMU. It causes perf_event_open to fail.
 
-The commit ef91871c960e ("perf evlist: Propagate user CPU maps
-intersecting core PMU maps") already intersect the requested CPU map
-with the CPU map of the PMU. Use the evsel's cpus to replace
-user_requested_cpus.
+The following changes since commit 57686a72da08ae555d93148aa8756b16417a6aff:
 
-The evlist's threads is also propagated to evsel's threads in
-__perf_evlist__propagate_maps(). Replace it as well.
+  tools: Disable __packed attribute compiler warning due to -Werror=attributes (2023-11-22 12:23:27 -0800)
 
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@kernel.org/
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/builtin-top.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+are available in the Git repository at:
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index ea8c7eca5eee..cce9350177e2 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1027,8 +1027,8 @@ static int perf_top__start_counters(struct perf_top *top)
- 
- 	evlist__for_each_entry(evlist, counter) {
- try_again:
--		if (evsel__open(counter, top->evlist->core.user_requested_cpus,
--				     top->evlist->core.threads) < 0) {
-+		if (evsel__open(counter, counter->core.cpus,
-+				counter->core.threads) < 0) {
- 
- 			/*
- 			 * Specially handle overwrite fall back.
--- 
-2.35.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.7-2-2023-12-08
 
+for you to fetch changes up to b1693747487442984050eb0f462b83a3a8307525:
+
+  perf list: Fix JSON segfault by setting the used skip_duplicate_pmus callback (2023-12-05 11:16:00 -0800)
+
+----------------------------------------------------------------
+perf tools fixes for v6.7: 2nd batch
+
+A random set of small bug fixes including:
+
+ * Fix segfault on AmpereOne due to missing default metricgroup name.
+ * Fix segfault on `perf list --json` due to NULL pointer.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+----------------------------------------------------------------
+Ian Rogers (2):
+      perf metrics: Avoid segv if default metricgroup isn't set
+      perf list: Fix JSON segfault by setting the used skip_duplicate_pmus callback
+
+Ilkka Koskinen (1):
+      perf vendor events arm64: AmpereOne: Add missing DefaultMetricgroupName fields
+
+ tools/perf/builtin-list.c                                      | 6 ++++++
+ tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json | 2 ++
+ tools/perf/util/metricgroup.c                                  | 2 +-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
