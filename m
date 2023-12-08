@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kv6RQLIe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mMbnETiZ"
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD6FF170F
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 16:05:27 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d04540d5aaso19244477b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 16:05:27 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A701713
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Dec 2023 16:05:30 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d7e7e10231so9720287b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Dec 2023 16:05:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701993927; x=1702598727; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701993929; x=1702598729; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xf5gnEGQIoXazSeiXhfMb12CybARggvMyxZM26gKG4Q=;
-        b=kv6RQLIeqqQgCftrGdYe9u8RB45ZC9g4uHSOLndZz6pwpZtis87Dwxrlzebn+HLSa6
-         rLCM2SBKNEYVcdK2S5LyAOTmau7yeJMQDr10JtalD2nNnWyQlbDfbQT0k6GMyHwzeQXU
-         fE6/BqMgPbRxR2JQyS5MNTaQQCQOg3Kq0aHRhIqtQLrsKtuhoXkuEscLbL64sd6FoLof
-         Z5JK6IeBEZpNNYWqX89SFKqTpB//Gt1sGXfMh1QUzEbVQGATXLw7j/MKvKmD5Il5eDH2
-         sbih2vcRYFCYnyw8L+aKZjh2vN1w/3aP32P//vyASDXJqp7DXV0/6HYLfZ4oLUWwmfD4
-         OJ9A==
+        bh=jgzdmxyD187mlNLpFJ4WQcDthQqtT591zShxv4oxXeo=;
+        b=mMbnETiZ+g50JfUFRBSzXe0iTlPVlEtdQH9KjOBgOe2a8MDht5H2v5Bb87/ynA61uC
+         TjBkNVLQIy3S8s5SfK+izTfVZXDHU2npS2K5ftbIAVDyVgOln2nt8lEuNe8p35SDfjRe
+         n116DEtsfGUBxKLIkLDWpQLaix10XVKIu+5PO0xeCW7F5YH1u1kWJyVgGRZGHQEyfkaf
+         8fqWP5OuGhpkYuSF7ZELFJJvUIw12xezt8xJVFe+VBhpED9IT/Wt62HVY4vmdFWLoAkv
+         edVDk/cvu5b/NCsW5msCzd4vdkz9d7MMJEMyvVQ1XW+cGBT6Lb5uIPjBIv6iKNV+3uj1
+         gJYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701993927; x=1702598727;
+        d=1e100.net; s=20230601; t=1701993929; x=1702598729;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xf5gnEGQIoXazSeiXhfMb12CybARggvMyxZM26gKG4Q=;
-        b=Zbu+AbsNC0T8JcVClDjYU+zzTMFzxstcRdJD93AUFOqT62JVIArR1OeN65sU9WpNjf
-         FjvjUPJbpzLt2ZXkErF5tvcmKdusItroXyv9qCXwt8jwrdadNVVftzoLdU9GLathcffb
-         Y/8iAbfOktu9Z6PMJBusMZ2LQBlT0wUyApB4o/hBJkpm1Yc7GE1/cMfly8rfaTxETHPt
-         UBHtjrmzn6rbYLNHXwZWtQsKZnMWWaMQa+NMbji2Km8xIhuH+gfOxzhh+Nz0AgNwn0WP
-         aHE5/gB91E4t7anuXRIfoqs46nmXVzZYy8jFVyF2idlMIUpgcc7yhrqCrQihMOd7czK9
-         hTtw==
-X-Gm-Message-State: AOJu0Yx8YbNgaWlMDvNNOG/+OtORO90QydsJobDlAcnLXhDtdSExOzco
-	PK3gBTGwhOym6LUkbdGSuaL8oX2b+mTS
-X-Google-Smtp-Source: AGHT+IGkk6tmDRZSDzkUEEDm+lkMYS+lFIUbPXflkEU4krTvsf/mz9zYtbA+Z0XDSnxtsd1nMc041ivFa+Xg
+        bh=jgzdmxyD187mlNLpFJ4WQcDthQqtT591zShxv4oxXeo=;
+        b=JS8TF7uW8M0+qKlo7QsxBmmjxtk/eBM9wVLBUgqbZHOJl90HnmOzcNaqmy8iRVfQbC
+         an6gSWFHDtvNR6R6e6mld4usAHYdrGmN5wWJKHzF8zweIEzGomFu2Btwi3Ay1Ni5Iflb
+         fXqFRk623e1x0POcQgMFK3DqPNT0XmI7ZoQmGOaycUjdGXGPDxslXwOzJedtFynlQcMx
+         XAKlPRBOm7KCz0keIaQSvX/Kl2rV7msmFW0DLz3M5svErqeUp3reuBO2H/hlYoCXPv3J
+         fs37skqfG3TxG8h22GX6B+eOeWcy9DRbOAlY6gTWbbb3ZkI9pPW9M2UAqrYIZ5nN5z8E
+         Ij2A==
+X-Gm-Message-State: AOJu0Ywnx6Rqbjg58jmBXgCEz3lbiMkt1Mf+mAze7hjLReQiNlLDqy9V
+	xjfAqkcVpXxZK9YDPMLhSlSGW1i2Il7v
+X-Google-Smtp-Source: AGHT+IEIhcIw8xy4mXcVlIVgYRmYedq9Rmvq6nH9O224FYrn8Hf8qx3kHxCVC9QjDwyjRtuRxHCGVJ0OgJF6
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:aa27:6848:76cc:141c])
- (user=irogers job=sendgmr) by 2002:a25:5509:0:b0:dbc:1b46:9aeb with SMTP id
- j9-20020a255509000000b00dbc1b469aebmr40703ybb.2.1701993926977; Thu, 07 Dec
- 2023 16:05:26 -0800 (PST)
-Date: Thu,  7 Dec 2023 16:05:14 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:2882:b0:5d3:985c:800c with SMTP
+ id ee2-20020a05690c288200b005d3985c800cmr869ywb.3.1701993929362; Thu, 07 Dec
+ 2023 16:05:29 -0800 (PST)
+Date: Thu,  7 Dec 2023 16:05:15 -0800
 In-Reply-To: <20231208000515.1693746-1-irogers@google.com>
-Message-Id: <20231208000515.1693746-2-irogers@google.com>
+Message-Id: <20231208000515.1693746-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231208000515.1693746-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-Subject: [PATCH v1 2/3] perf: Suggest inbuilt commands for unknown command
+Subject: [PATCH v1 3/3] perf help: Lower levenshtein penality for deleting character
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -55,20 +55,20 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The existing unknown command code looks for perf scripts like
-perf-archive.sh and perf-iostat.sh, however, inbuilt commands aren't
-suggested. Add the inbuilt commands so they may be suggested too.
+The levenshtein penalty for deleting a character was far higher than
+subsituting or inserting a character. Lower the penalty to match that
+of inserting a character.
 
 Before:
 ```
-$ perf reccord
-perf: 'reccord' is not a perf-command. See 'perf --help'.
+$ perf recccord
+perf: 'recccord' is not a perf-command. See 'perf --help'.
 ```
 
 After:
 ```
-$ perf reccord
-perf: 'reccord' is not a perf-command. See 'perf --help'.
+$ perf recccord
+perf: 'recccord' is not a perf-command. See 'perf --help'.
 
 Did you mean this?
         record
@@ -76,166 +76,31 @@ Did you mean this?
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin.h               |  4 ++-
- tools/perf/perf.c                  | 21 +++++++++++---
- tools/perf/util/help-unknown-cmd.c | 45 ++++++++++++++----------------
- 3 files changed, 41 insertions(+), 29 deletions(-)
+ tools/perf/util/help-unknown-cmd.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-index f2ab5bae2150..f4375deabfa3 100644
---- a/tools/perf/builtin.h
-+++ b/tools/perf/builtin.h
-@@ -2,8 +2,10 @@
- #ifndef BUILTIN_H
- #define BUILTIN_H
- 
-+struct cmdnames;
-+
- void list_common_cmds_help(void);
--const char *help_unknown_cmd(const char *cmd);
-+const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds);
- 
- int cmd_annotate(int argc, const char **argv);
- int cmd_bench(int argc, const char **argv);
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index 921bee0a6437..c719e6ccd9e2 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -18,6 +18,7 @@
- #include <subcmd/run-command.h>
- #include "util/parse-events.h"
- #include <subcmd/parse-options.h>
-+#include <subcmd/help.h>
- #include "util/debug.h"
- #include "util/event.h"
- #include "util/util.h" // usage()
-@@ -557,7 +558,7 @@ int main(int argc, const char **argv)
- 	pthread__block_sigwinch();
- 
- 	while (1) {
--		static int done_help;
-+		int done_help;
- 
- 		run_argv(&argc, &argv);
- 
-@@ -565,14 +566,26 @@ int main(int argc, const char **argv)
- 			break;
- 
- 		if (!done_help) {
--			cmd = argv[0] = help_unknown_cmd(cmd);
-+			struct cmdnames main_cmds;
-+
-+			for (unsigned int i = 0; i < ARRAY_SIZE(commands); i++) {
-+				add_cmdname(&main_cmds,
-+					    commands[i].cmd,
-+					    strlen(commands[i].cmd));
-+			}
-+			cmd = argv[0] = help_unknown_cmd(cmd, &main_cmds);
-+			clean_cmdnames(&main_cmds);
- 			done_help = 1;
-+			if (!cmd)
-+				break;
- 		} else
- 			break;
- 	}
- 
--	fprintf(stderr, "Failed to run command '%s': %s\n",
--		cmd, str_error_r(errno, sbuf, sizeof(sbuf)));
-+	if (cmd) {
-+		fprintf(stderr, "Failed to run command '%s': %s\n",
-+			cmd, str_error_r(errno, sbuf, sizeof(sbuf)));
-+	}
- out:
- 	if (debug_fp)
- 		fclose(debug_fp);
 diff --git a/tools/perf/util/help-unknown-cmd.c b/tools/perf/util/help-unknown-cmd.c
-index eab99ea6ac01..2ba3369f1620 100644
+index 2ba3369f1620..a0a46e34f8d1 100644
 --- a/tools/perf/util/help-unknown-cmd.c
 +++ b/tools/perf/util/help-unknown-cmd.c
-@@ -52,46 +52,44 @@ static int add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
- 	return 0;
- }
+@@ -73,10 +73,14 @@ const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds)
  
--const char *help_unknown_cmd(const char *cmd)
-+const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds)
- {
- 	unsigned int i, n = 0, best_similarity = 0;
--	struct cmdnames main_cmds, other_cmds;
-+	struct cmdnames other_cmds;
- 
--	memset(&main_cmds, 0, sizeof(main_cmds));
--	memset(&other_cmds, 0, sizeof(main_cmds));
-+	memset(&other_cmds, 0, sizeof(other_cmds));
- 
- 	perf_config(perf_unknown_cmd_config, NULL);
- 
--	load_command_list("perf-", &main_cmds, &other_cmds);
-+	load_command_list("perf-", main_cmds, &other_cmds);
- 
--	if (add_cmd_list(&main_cmds, &other_cmds) < 0) {
-+	if (add_cmd_list(main_cmds, &other_cmds) < 0) {
- 		fprintf(stderr, "ERROR: Failed to allocate command list for unknown command.\n");
- 		goto end;
- 	}
--	qsort(main_cmds.names, main_cmds.cnt,
--	      sizeof(main_cmds.names), cmdname_compare);
--	uniq(&main_cmds);
-+	qsort(main_cmds->names, main_cmds->cnt,
-+	      sizeof(main_cmds->names), cmdname_compare);
-+	uniq(main_cmds);
- 
--	if (main_cmds.cnt) {
-+	if (main_cmds->cnt) {
+ 	if (main_cmds->cnt) {
  		/* This reuses cmdname->len for similarity index */
--		for (i = 0; i < main_cmds.cnt; ++i)
--			main_cmds.names[i]->len =
--				levenshtein(cmd, main_cmds.names[i]->name, 0, 2, 1, 4);
-+		for (i = 0; i < main_cmds->cnt; ++i)
-+			main_cmds->names[i]->len =
-+				levenshtein(cmd, main_cmds->names[i]->name, 0, 2, 1, 4);
+-		for (i = 0; i < main_cmds->cnt; ++i)
++		for (i = 0; i < main_cmds->cnt; ++i) {
+ 			main_cmds->names[i]->len =
+-				levenshtein(cmd, main_cmds->names[i]->name, 0, 2, 1, 4);
+-
++				levenshtein(cmd, main_cmds->names[i]->name,
++					/*swap_penalty=*/0,
++					/*substition_penality=*/2,
++					/*insertion_penality=*/1,
++					/*deletion_penalty=*/1);
++		}
+ 		qsort(main_cmds->names, main_cmds->cnt,
+ 		      sizeof(*main_cmds->names), levenshtein_compare);
  
--		qsort(main_cmds.names, main_cmds.cnt,
--		      sizeof(*main_cmds.names), levenshtein_compare);
-+		qsort(main_cmds->names, main_cmds->cnt,
-+		      sizeof(*main_cmds->names), levenshtein_compare);
- 
--		best_similarity = main_cmds.names[0]->len;
-+		best_similarity = main_cmds->names[0]->len;
- 		n = 1;
--		while (n < main_cmds.cnt && best_similarity == main_cmds.names[n]->len)
-+		while (n < main_cmds->cnt && best_similarity == main_cmds->names[n]->len)
- 			++n;
- 	}
- 
- 	if (autocorrect && n == 1) {
--		const char *assumed = main_cmds.names[0]->name;
-+		const char *assumed = main_cmds->names[0]->name;
- 
--		main_cmds.names[0] = NULL;
--		clean_cmdnames(&main_cmds);
-+		main_cmds->names[0] = NULL;
- 		clean_cmdnames(&other_cmds);
- 		fprintf(stderr, "WARNING: You called a perf program named '%s', "
- 			"which does not exist.\n"
-@@ -107,15 +105,14 @@ const char *help_unknown_cmd(const char *cmd)
- 
- 	fprintf(stderr, "perf: '%s' is not a perf-command. See 'perf --help'.\n", cmd);
- 
--	if (main_cmds.cnt && best_similarity < 6) {
-+	if (main_cmds->cnt && best_similarity < 6) {
- 		fprintf(stderr, "\nDid you mean %s?\n",
- 			n < 2 ? "this": "one of these");
- 
- 		for (i = 0; i < n; i++)
--			fprintf(stderr, "\t%s\n", main_cmds.names[i]->name);
-+			fprintf(stderr, "\t%s\n", main_cmds->names[i]->name);
- 	}
- end:
--	clean_cmdnames(&main_cmds);
- 	clean_cmdnames(&other_cmds);
--	exit(1);
-+	return NULL;
- }
 -- 
 2.43.0.472.g3155946c3a-goog
 
