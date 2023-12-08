@@ -1,135 +1,109 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD47419BAA;
+	Fri,  8 Dec 2023 14:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="q/IFnqm6"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF06310FC;
-	Fri,  8 Dec 2023 03:30:05 -0800 (PST)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B8BCgXq006707;
-	Fri, 8 Dec 2023 11:29:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : from : to : cc : references : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=H2NsPvcybphcX4wW35K0YOfsE3eKKcWCxuFaCU1L90s=;
- b=q/IFnqm6kLqEVqIVmYaPwEw4WWcSsytxMw3rgfTxcI716sWBH5jkdR0I8By+jqE1xKxf
- /dahZoqb/5pfwRUkkVb5ksuY5YdU9q+lbK37MkEwE2waxAT3RnPrhNQvgeMTuDY9Ydv2
- cHL73bwpHkiGn59dDE5g9S5eIOUzMGkX7TKnSmvWwRLNLi4OAkF2gquKmhhi+x607RFe
- T5vDbS3gbhqrs0QJKEXoFya41Rr8vBz2aTOYhYdUPz7j8/OvB/y+gZCI6Qk26moLfvec
- LAWNf3TDbXn98PiaNx6N/TSaPtA1Ss/19hx+Ohu++zFxXgDuJXguSaSYkI8HIVbfr+pb 2Q== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uv22p8h3b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Dec 2023 11:29:56 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B89mvjj015459;
-	Fri, 8 Dec 2023 11:29:55 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3utavks8s4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Dec 2023 11:29:55 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B8BTq7u11928292
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 8 Dec 2023 11:29:52 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 694142004D;
-	Fri,  8 Dec 2023 11:29:52 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 205BE20040;
-	Fri,  8 Dec 2023 11:29:52 +0000 (GMT)
-Received: from [9.171.29.29] (unknown [9.171.29.29])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  8 Dec 2023 11:29:52 +0000 (GMT)
-Message-ID: <7451a263-82e8-4daa-a7f6-009d5560445e@linux.ibm.com>
-Date: Fri, 8 Dec 2023 12:29:51 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lH58aO3T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB662C433C8;
+	Fri,  8 Dec 2023 14:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702047462;
+	bh=TsgOtp2pOsKJASjSL0SpYDC+/IYiO1HmXSSM+vE4NQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lH58aO3TmPy8xCYgxgboVNeStd0484h5tzJsVgdEcgqG7LNN2lxHtitjBhWBoM54f
+	 hmPl7nRZJXx0KRS8fnIpaLKfpKNqN7Ytl5OmIym6CUcefeVkhOEVEI89SOd/+D+Eat
+	 vlBS1ytUJ3t7F3LHtclec0QhFt4ZVMKeUNpIQyiB4895xmiiWiNq3T0QWd65KINoV4
+	 fe9QFTQrmr+L/WBiWy4/yTK9k/N6LztqJbV+5HrUaZJs4H5D1D8TL8rRA3jng5Dn0R
+	 ckJt4oQg0lCEr1KpCeWhO4oFzp9q+UOsC5s2kHaSEO6IxKfemFGLLCMKVBPpBFGJos
+	 QkYs+5Y3jfjnA==
+Date: Fri, 8 Dec 2023 14:57:35 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: Frank.li@nxp.com, will@kernel.org, mark.rutland@arm.com,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com, john.g.garry@oracle.com,
+	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+	linux-imx@nxp.com, mike.leach@linaro.org, leo.yan@linaro.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: perf: fsl-imx-ddr: Add i.MX95
+ compatible
+Message-ID: <20231208-depress-smuggler-f3069487a067@spud>
+References: <20231208085402.2106904-1-xu.yang_2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test: Fix fails of perf stat --bpf-counters
- --for-each-cgroup on s390
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
-References: <20231207125716.1947860-1-tmricht@linux.ibm.com>
- <CAM9d7cgJUgVGpQJ=KgH+3RzAJ8Ce50Acr=gSZh_ZLuiTa3-sEg@mail.gmail.com>
- <de0dd86a-4c49-49ed-a90b-4890c82a7b2d@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <de0dd86a-4c49-49ed-a90b-4890c82a7b2d@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: gadYk7MrfdohAf8bNu0U9IebSsD0hYwy
-X-Proofpoint-ORIG-GUID: gadYk7MrfdohAf8bNu0U9IebSsD0hYwy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-08_06,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 adultscore=0
- suspectscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312080095
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="g6Ugyjd58i/GxHWU"
+Content-Disposition: inline
+In-Reply-To: <20231208085402.2106904-1-xu.yang_2@nxp.com>
 
-On 12/8/23 12:07, Thomas Richter wrote:
-> On 12/8/23 00:26, Namhyung Kim wrote:
-> 
->> Thanks for the patch.  But I think it should support
->> machines without systemd (or maybe with old versions).
->>
->> Also probably you want to reset the behavior after
->> the test.  I think we can just run some built-in test
->> workload like `perf test -w thloop`.
->>
->> Thanks,
->> Namhyung
-> 
-> Thanks for our feedback.
-> Well regarding the use of systemd daemon-reexec the manual says
-> this command restarts the systemd triggered processes.
-> There is nothing to reset. All ports stay active while the command
-> is processed.
-> 
-> I tried your 'perf test -w thloop`, but that did not trigger
-> anything on system.slice.
-> 
-> I do not understand enough about cgroups and system.slice, but I am
-> under the impression, that the system.slice just increment counters
-> when executed by processes under systemd control. Maybe I am wrong.
-> 
-> The only other workload which always incremented system.slice counters
-> was 'ssh localhost ls -l', which involves local login and a running sshd.
-> 
-> Thanks for your advice on how to continue on this.
-> 
-> 
 
-I have done some reading and found this:
-Special Slice Units
-There are four ".slice" units which form the basis of the hierarchy for assignment of 
-resources for services, users, and virtual machines or containers. 
-See systemd.slice(7) for details about slice units.
+--g6Ugyjd58i/GxHWU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--.slice
-The root slice is the root of the slice hierarchy. It usually does not contain units directly,
-but may be used to set defaults for the whole tree.
-Added in version 206.
+On Fri, Dec 08, 2023 at 04:53:59PM +0800, Xu Yang wrote:
+> i.MX95 has a DDR pmu. This will add a compatible for it.
 
-system.slice
-By default, all system services started by systemd are found in this slice.
-Added in version 206.
+On v1 we had a discussion because the commit message wasn't clear about
+whether or not the device was compatible with existing ones. For some
+reason, the v2 patch _removes_ information from the commit message
+rather than tries to explain.
+This [1] message of yours, that I didn't get a chance to reply to before
+you sent this new version, seems to say that there should be an
+imx93-ddr-pmu fallback.
 
-So it looks like system.slice attached counters get only incremented
-when systemd controlled processes do some work,
+Cheers,
+Conor.
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+1 - https://lore.kernel.org/all/DB7PR04MB514668A8B172CD1A2187BC408C84A@DB7P=
+R04MB5146.eurprd04.prod.outlook.com/
 
+>=20
+> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+>=20
+> ---
+> Changes in v2:
+>  - no changes
+> ---
+>  Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Do=
+cumentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+> index e9fad4b3de68..1bc7bf1c8368 100644
+> --- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+> +++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+> @@ -20,6 +20,7 @@ properties:
+>            - fsl,imx8mn-ddr-pmu
+>            - fsl,imx8mp-ddr-pmu
+>            - fsl,imx93-ddr-pmu
+> +          - fsl,imx95-ddr-pmu
+>        - items:
+>            - enum:
+>                - fsl,imx8mm-ddr-pmu
+> --=20
+> 2.34.1
+>=20
+
+--g6Ugyjd58i/GxHWU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZXMu3wAKCRB4tDGHoIJi
+0msHAQC3ZQYeL0gyA31spxo+JvqFwsg3GtH4mMo1cFUHmUqmVwEA0tMX5BLYVvc5
+WhrU5Nmr3kIsKe82lqZtqJQ2tPHXOQ4=
+=wrTE
+-----END PGP SIGNATURE-----
+
+--g6Ugyjd58i/GxHWU--
