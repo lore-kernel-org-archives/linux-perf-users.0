@@ -1,157 +1,117 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F6b04T2c";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/Egalgir"
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D070B1732;
-	Fri,  8 Dec 2023 08:01:38 -0800 (PST)
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1702051297;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qvRAzOC1s8CTEnsQtk9rLB7j6MoLVbJs1vS74413VOI=;
-	b=F6b04T2civNLQw/P6s4AjzqPlLxejEuPzBLrsl+3EDPegBJH2cSw9MQ1smQ5Sw29sgPJQu
-	ITzGSWkzHF9HDteBgxCvuKiCROwKwUayT0g5XTT0TV2meAB/hQMDJfPOy5+E6qhvuVdcxz
-	F5h4rv9IjyTf01PH68AhJNVMolCVgX+T9+lF4iqo2ogmyFISaR7ZE58c/FEgr0Ldvm88wA
-	fuJ03avfwq9fqVlsu1VqdbvDFc5IfzeriRwuH5YnME0j4+rgIUvo8xzAw6YYf6aCuz5A6R
-	svKmtinn9ugY0gdh0PrRE0i22zRIx+ijyF9odKxUwrPUGDVK2RqBrnq/aSrTlg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1702051297;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qvRAzOC1s8CTEnsQtk9rLB7j6MoLVbJs1vS74413VOI=;
-	b=/EgalgirjNm9ep45ZEQnecmn1UAJ6YqdDBfC+cG20lSeVMQLVO8XCGc5FYnuScjwlSzGAe
-	kBHD3v0GQNt+fqCQ==
-To: Yu Chien Peter Lin <peterlin@andestech.com>, acme@kernel.org,
- adrian.hunter@intel.com, ajones@ventanamicro.com,
- alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
- anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
- conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org,
- devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com,
- geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de,
- irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org,
- jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
- locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com,
- mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org,
- palmer@dabbelt.com, paul.walmsley@sifive.com, peterlin@andestech.com,
- peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
- rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org,
- sunilvl@ventanamicro.com, tim609@andestech.com, uwu@icenowy.me,
- wens@csie.org, will@kernel.org, ycliang@andestech.com,
- inochiama@outlook.com
-Subject: Re: [PATCH v4 03/13] irqchip/riscv-intc: Introduce Andes hart-level
- interrupt controller
-In-Reply-To: <20231122121235.827122-4-peterlin@andestech.com>
-References: <20231122121235.827122-1-peterlin@andestech.com>
- <20231122121235.827122-4-peterlin@andestech.com>
-Date: Fri, 08 Dec 2023 17:01:36 +0100
-Message-ID: <87y1e4r8db.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yb5s4ke7"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B1C137;
+	Fri,  8 Dec 2023 09:25:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702056313; x=1733592313;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HS9B5laS4FVE8LbmCpzPPPQI/CT1mCILRKewwhWMU8E=;
+  b=Yb5s4ke7Myoo3PJ9FcgyFccWloEr1oshSFKaFolYD4SqSyLzh9s8NCvf
+   OAoqYkrwKoncrE8ZESmfWn2dUm24Qcj1yxWie5DIGKMklZltyTaBiEKkX
+   fgurYVS703WfoUzQ1mb8tjb/wjdvyesfkbLfZDVak7pIjAAX9JLeBfGaL
+   pbfxA+TNWP5QzFpSndMVlFXMrW63QMb977GsoWaAblp3vQpWzmocl5gIx
+   nUc+O5ThtzzzlVSj3gtOCEicO6Xi+Wr7igmpcmc2W8KlmEeEw0YwHvIBo
+   1K46d1wklkWImIKJPBGxYchrDq/oesFT7cwkpdtJep3RXllgKPhN4G99y
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10918"; a="379432363"
+X-IronPort-AV: E=Sophos;i="6.04,261,1695711600"; 
+   d="scan'208";a="379432363"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 09:25:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10918"; a="772201553"
+X-IronPort-AV: E=Sophos;i="6.04,261,1695711600"; 
+   d="scan'208";a="772201553"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.249.34.218])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 09:25:01 -0800
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH RFC V2 0/4] perf/core: Add ability for an event to "pause" or "resume" AUX area tracing
+Date: Fri,  8 Dec 2023 19:24:45 +0200
+Message-Id: <20231208172449.35444-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 22 2023 at 20:12, Yu Chien Peter Lin wrote:
-> To share the riscv_intc_domain_map() with the generic RISC-V INTC and
-> ACPI, we add a chip parameter to riscv_intc_init_common(), so it can be
+Hi
 
-s/we//
+Hardware traces, such as instruction traces, can produce a vast amount of
+trace data, so being able to reduce tracing to more specific circumstances
+can be useful.
 
-See: Documentation/process/
+The ability to pause or resume tracing when another event happens, can do
+that.
 
-> passed to the irq_domain_set_info() as private data.
-> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
-> index 2fdd40f2a791..30f0036c8978 100644
-> --- a/drivers/irqchip/irq-riscv-intc.c
-> +++ b/drivers/irqchip/irq-riscv-intc.c
-> @@ -17,6 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/smp.h>
-> +#include <linux/soc/andes/irq.h>
->  
->  static struct irq_domain *intc_domain;
->  
-> @@ -46,6 +47,31 @@ static void riscv_intc_irq_unmask(struct irq_data *d)
->  	csr_set(CSR_IE, BIT(d->hwirq));
->  }
->  
-> +static void andes_intc_irq_mask(struct irq_data *d)
-> +{
-> +	/*
-> +	 * Andes specific S-mode local interrupt causes (hwirq)
-> +	 * are defined as (256 + n) and controlled by n-th bit
-> +	 * of SLIE.
-> +	 */
-> +	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
+These patches add such a facilty and show how it would work for Intel
+Processor Trace.
 
-How is this supposed to be correct with BITS_PER_LONG == 64?
+Maintainers of other AUX area tracing implementations are requested to
+consider if this is something they might employ and then whether or not
+the ABI would work for them.
 
-> +
-> +	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
-> +		csr_clear(CSR_IE, mask);
-> +	else
-> +		csr_clear(ANDES_CSR_SLIE, mask);
-> +}
-> +
-> +static void andes_intc_irq_unmask(struct irq_data *d)
-> +{
-> +	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
+Changes to perf tools are not fleshed out yet.
 
-Ditto.
 
-> +	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
-> +		csr_set(CSR_IE, mask);
-> +	else
-> +		csr_set(ANDES_CSR_SLIE, mask);
-> +}
+Changes in RFC V2:
 
->  static int riscv_intc_domain_map(struct irq_domain *d, unsigned int irq,
->  				 irq_hw_number_t hwirq)
->  {
-> +	struct irq_chip *chip = d->host_data;
-> +
->  	irq_set_percpu_devid(irq);
-> -	irq_domain_set_info(d, irq, hwirq, &riscv_intc_chip, d->host_data,
-> +	irq_domain_set_info(d, irq, hwirq, chip, d->host_data,
+      Use ->stop() / ->start() instead of ->pause_resume()
+      Move aux_start_paused bit into aux_output_cfg
+      Tighten up when Intel PT pause / resume is allowed
+      Add an example of how it might work for CoreSight
 
-So this sets 'chip_data' to the chip itself. What's the point? Just set
-it to NULL as the chip obviously does not need chip_data at all.
 
->  			    handle_percpu_devid_irq, NULL, NULL);
->  
->  	return 0;
-> @@ -112,11 +147,12 @@ static struct fwnode_handle *riscv_intc_hwnode(void)
->  	return intc_domain->fwnode;
->  }
->  
-> -static int __init riscv_intc_init_common(struct fwnode_handle *fn)
-> +static int __init riscv_intc_init_common(struct fwnode_handle *fn,
-> +					 struct irq_chip *chip)
->  {
->  	int rc;
->  
-> -	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, NULL);
-> +	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, chip);
->  	if (!intc_domain) {
->  		pr_err("unable to add IRQ domain\n");
->  		return -ENXIO;
-> @@ -138,6 +174,7 @@ static int __init riscv_intc_init(struct device_node *node,
->  {
->  	int rc;
->  	unsigned long hartid;
-> +	struct irq_chip *chip = &riscv_intc_chip;
+Adrian Hunter (4):
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+      perf/x86/intel/pt: Add support for pause / resume
+      perf tools: Add support for AUX area pause / resume
+      coresight: Have a stab at support for pause / resume
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
+ arch/x86/events/intel/pt.c                       | 63 ++++++++++++++++++++-
+ arch/x86/events/intel/pt.h                       |  4 ++
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 29 ++++++++--
+ include/linux/perf_event.h                       | 15 +++++
+ include/uapi/linux/perf_event.h                  | 11 +++-
+ kernel/events/core.c                             | 72 +++++++++++++++++++++++-
+ kernel/events/internal.h                         |  1 +
+ tools/include/uapi/linux/perf_event.h            | 11 +++-
+ tools/perf/util/auxtrace.c                       |  4 ++
+ tools/perf/util/evsel.c                          |  9 +++
+ tools/perf/util/evsel_config.h                   |  6 ++
+ tools/perf/util/parse-events.c                   | 33 +++++++++++
+ tools/perf/util/parse-events.h                   |  3 +
+ tools/perf/util/parse-events.l                   |  3 +
+ tools/perf/util/perf_event_attr_fprintf.c        |  3 +
+ 15 files changed, 255 insertions(+), 12 deletions(-)
 
-Thanks
 
-        tglx
+Regards
+Adrian
