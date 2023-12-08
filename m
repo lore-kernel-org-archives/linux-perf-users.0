@@ -1,104 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8psMDph"
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3259171D;
-	Fri,  8 Dec 2023 14:33:04 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-5c6b9583dcbso2203321a12.2;
-        Fri, 08 Dec 2023 14:33:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702074784; x=1702679584; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=7/WtxgUAWS6Tp08MVlyJfenFT48ukqZMUj0ickzAyfY=;
-        b=Z8psMDphgG7ou0YNxlFVX43rVHmyfli2Aai+HmEWZQuOxfhijfhcObF1Hy3cs2q8Xs
-         8Vv93g4Vivh87bLKjs2XgeaB4SyRyIGc63CEUqyv8OpBzPgtU+BqNrJmumdwpJWk/6YN
-         pgDG0xDHPj9tBM8BudnRpLXfhWI3qgqpAsc6xfASQZ1PG2MNjt/KtfZkn3EmWyRv4IZS
-         c98UFtgK/q7SLEi6j+jwKE44StTKeOv5tlZwmtrcBDQz8ZhVM3A4A+SICwo5io7V93cw
-         lK04+t2ndbUnBdXFOschRdx2ibmXuJv1cXIfduElChjKkNSifUXvXnROuAmiT3m9sTza
-         0+Rw==
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C8F137;
+	Fri,  8 Dec 2023 15:33:39 -0800 (PST)
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-28694702c18so2622843a91.3;
+        Fri, 08 Dec 2023 15:33:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702074784; x=1702679584;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7/WtxgUAWS6Tp08MVlyJfenFT48ukqZMUj0ickzAyfY=;
-        b=va73gwHbn7pQiS1eFv9QuRkkhEig0NTRXoTiappbVKbdeZKPJBoq8IMZT2ob168rzc
-         VOzc1ULLVnEtKQaBatIjIOxSdvGmRkwxKpqWQZjsfwTraXQ+t99qq6NYnVUVupv/1dtJ
-         +VpHfqIXZhzK5cHte6cb3JUhTTR7Fe7AOBElGDl5cZ9g0b9CjFNZxWUJ3Lbn/xCCKBLd
-         3lyqKtL0CCpiIg0RVa8MC4RndXDqDD97CwNwSNDf8/azktS5Wd1L2dFw55+Y0EJUD74B
-         URoF0V7TxmrqK8zKA/FV1D7fIO+G9YNZEVWUgFa7/CLyY/7orcFyYXBEb+DPJDTSyZiJ
-         FtnA==
-X-Gm-Message-State: AOJu0Ywp1RMAUyZmdbxHLITXD4IxLxL2FsC4adKApdNupO6xxAqzPCcp
-	H5dMYi0VS/T7xYCxRSD7co0=
-X-Google-Smtp-Source: AGHT+IFVc692Bvw+Q0cSJPBmNMR6eyUAxX79wkgrwu2XgMRDR12eeYbcwdv1ouQwdnV1lxpGLq1xVA==
-X-Received: by 2002:a05:6a20:3942:b0:18d:b43:78ea with SMTP id r2-20020a056a20394200b0018d0b4378eamr975811pzg.43.1702074784032;
-        Fri, 08 Dec 2023 14:33:04 -0800 (PST)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:e1f1:b259:a950:f2ac])
-        by smtp.gmail.com with ESMTPSA id ey2-20020a056a0038c200b006cbb75d87d2sm2101165pfb.6.2023.12.08.14.33.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Dec 2023 14:33:02 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] perf tools fixes for v6.7: 2nd batch
-Date: Fri,  8 Dec 2023 14:33:00 -0800
-Message-ID: <20231208223300.3877553-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+        d=1e100.net; s=20230601; t=1702078418; x=1702683218;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eEXP4rqwUrtF27vNtvXQpGVAmBWWtDoL7HKm4QVLjsU=;
+        b=KgLCyzCDV0gLuN4SFy+phz5Qd5Z/O2eOPlereqq/t8BfYJJoQGUJqsUI4knHE5Ij/R
+         sFQsy60gijQJUyuyvxm9xIJ+dGKZylCQmBfNlKDNn1jiTgfRgyOgHp3V3IFTnHCXQjQw
+         9YtO6F+fc9mRi3w0MRzXdM/+1xOB7EhI6sF3SkLoc7qC3ct5W32jPc0tiPR/veDXIjEc
+         A6O9N9lUN2chMAaCZG5uuIalSQzZGZwCttLXDBQd7vo9wV51GzrdgA7vuybJ5USDSN5s
+         bbLrF09KOMWs1MT4IdOI9lof9N/Pp6kdwuBjM5gChftIBPYamxB/c9/lZR0ixOjpxt1v
+         1tBg==
+X-Gm-Message-State: AOJu0YwAeOJv4zH+bCDH90oGkj8w9Y0r0x96JO/9CFQUH3VX3PJjHzOX
+	Sxugeeu9dJPiJrCu8iYRJMHmq7XkBs9az6d9g0I=
+X-Google-Smtp-Source: AGHT+IE3J5k86IaDJ1H6zfZyV8Gj1OTLhdT+R9Z9bMT3Y7WROpINtLwegjkBogj7Elu3rWnk3neZp2ooTNhoTm0WFE4=
+X-Received: by 2002:a17:90a:e50e:b0:286:ca3e:be8c with SMTP id
+ t14-20020a17090ae50e00b00286ca3ebe8cmr815098pjy.90.1702078417649; Fri, 08 Dec
+ 2023 15:33:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231107083331.901-1-ravi.bangoria@amd.com> <CAM9d7cgs9Wk0OFoea4jOote-drHjvCimJyt7GWdO2Giw=d7Jog@mail.gmail.com>
+ <f42bf6b7-75b8-124b-c79e-ad7a9b706990@amd.com>
+In-Reply-To: <f42bf6b7-75b8-124b-c79e-ad7a9b706990@amd.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 8 Dec 2023 15:33:26 -0800
+Message-ID: <CAM9d7cijrZzp=5m+BcQ77WFOSHT7e5vO-RCUTUp5Pevmz2wbtg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf tool AMD: Use non-precise cycles as default
+ event on certain Zen2 processors
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: acme@kernel.org, kim.phillips@amd.com, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, changbin.du@huawei.com, yangjihong1@huawei.com, 
+	zwisler@chromium.org, wangming01@loongson.cn, chenhuacai@kernel.org, 
+	kprateek.nayak@amd.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sandipan.das@amd.com, ananth.narayan@amd.com, 
+	santosh.shukla@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+Hi Ravi,
 
-Please consider pulling the perf tools fixes.
+On Fri, Nov 10, 2023 at 1:46=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.co=
+m> wrote:
+>
+> Hi Namhyung,
+>
+> >> By default, Perf uses precise cycles event when no explicit event is
+> >> specified by user. Precise cycles event is forwarded to ibs_op// pmu
+> >> on AMD. However, IBS has hw issue on certain Zen2 processors where
+> >> it might raise NMI without sample_valid bit set, which causes Unknown
+> >> NMI warnings. (Erratum #1215: IBS (Instruction Based Sampling) Counter
+> >> Valid Value May be Incorrect After Exit From Core C6 (CC6) State.) So,
+> >> use non-precise cycles as default event on affected processors.
+> >
+> > It seems like a kernel issue, do we have a kernel patch not to forward
+> > precise cycles or instructions events to IBS on the affected CPUs?
+>
+> I'm not sure how it's a kernel issue. User can use ibs_op// pmu directly
+> and might hit the hw bug.
+
+Sorry for the late reply.  I know it's the user's fault when using ibs_op//
+directly but I think the kernel should not forward cycles:pp to IBS.
 
 Thanks,
 Namhyung
-
-
-The following changes since commit 57686a72da08ae555d93148aa8756b16417a6aff:
-
-  tools: Disable __packed attribute compiler warning due to -Werror=attributes (2023-11-22 12:23:27 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.7-2-2023-12-08
-
-for you to fetch changes up to b1693747487442984050eb0f462b83a3a8307525:
-
-  perf list: Fix JSON segfault by setting the used skip_duplicate_pmus callback (2023-12-05 11:16:00 -0800)
-
-----------------------------------------------------------------
-perf tools fixes for v6.7: 2nd batch
-
-A random set of small bug fixes including:
-
- * Fix segfault on AmpereOne due to missing default metricgroup name.
- * Fix segfault on `perf list --json` due to NULL pointer.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-----------------------------------------------------------------
-Ian Rogers (2):
-      perf metrics: Avoid segv if default metricgroup isn't set
-      perf list: Fix JSON segfault by setting the used skip_duplicate_pmus callback
-
-Ilkka Koskinen (1):
-      perf vendor events arm64: AmpereOne: Add missing DefaultMetricgroupName fields
-
- tools/perf/builtin-list.c                                      | 6 ++++++
- tools/perf/pmu-events/arch/arm64/ampere/ampereone/metrics.json | 2 ++
- tools/perf/util/metricgroup.c                                  | 2 +-
- 3 files changed, 9 insertions(+), 1 deletion(-)
