@@ -1,59 +1,55 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA0A137;
-	Sat,  9 Dec 2023 09:14:12 -0800 (PST)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40c2308faedso33585175e9.1;
-        Sat, 09 Dec 2023 09:14:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702142051; x=1702746851;
-        h=mime-version:message-id:date:user-agent:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mFZwViJ6f92+SPClRElHJp1Vv2gXoHKsUhjNztqGxkM=;
-        b=WyV34mXammQ6zC1ftc8wXNvhx56Q8pRm8jVFASYo66X+1rO9DeHYXEQn3QVhsCtdbw
-         4arybAk+IjkJbXe38563ul+K02qCpXF39Y0pmnWzHtOzkcDYpMwrpjYWar/K8cAxJFx3
-         BdpPxL/7yMU1/6IUfam5xXIrjJy6bHA75/ikyWnPw1Sv4zMCtCP3HwRal8i0Nb5SeCZ8
-         o8TWkPW/i8az6wLPgUvjhF2vyfuT2mmIvHW6BdnXq449Hrfek7NAjGGx9XP8D67aBdfF
-         lasOH+lKLPZ5ZSVDcxaWQKcVnmHjmBTvlh2RASAZGRXhfqQES3EW944m3aRNUkBKwJsU
-         vJTA==
-X-Gm-Message-State: AOJu0Yy4v2gXVdumMdwbZ03rZwR4Gbr1oQx/TivUcwZqLRaGVdTqHN+T
-	or7H94pfUZ3BlUbONrZpaB4QXUhyzfo=
-X-Google-Smtp-Source: AGHT+IHVrDKM++LQZkN2LzSg6WcdOfxRMOAFY6kT/hLKwIiCJ9XCnT8oB2PxKUWgTuoC0TyN+6+Phg==
-X-Received: by 2002:a05:600c:1c1f:b0:3fe:4cbc:c345 with SMTP id j31-20020a05600c1c1f00b003fe4cbcc345mr953979wms.41.1702142050834;
-        Sat, 09 Dec 2023 09:14:10 -0800 (PST)
-Received: from hera.home.vuxu.org (i5C75CC70.versanet.de. [92.117.204.112])
-        by smtp.gmail.com with ESMTPSA id g12-20020adfa48c000000b003335eded7f5sm4760454wrb.68.2023.12.09.09.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Dec 2023 09:14:10 -0800 (PST)
-Received: from localhost (hera.home.vuxu.org [local])
-	by hera.home.vuxu.org (OpenSMTPD) with ESMTPA id 9b41eab0;
-	Sat, 9 Dec 2023 17:14:10 +0000 (UTC)
-From: Leah Neukirchen <leah@vuxu.org>
-To: kan.liang@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,linux-perf-users@vger.kernel.org
-Subject: Re: 'perf top' broken on intel hybrid systems
-In-Reply-To: <3a8c66ec-537d-4e29-bf08-226dd41b08aa@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-Date: Sat, 09 Dec 2023 18:14:10 +0100
-Message-ID: <877clnz4bh.fsf@vuxu.org>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A341A5B5
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Dec 2023 20:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ma9sA9bS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A0720C433C7;
+	Sat,  9 Dec 2023 20:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702154057;
+	bh=n4Noo3TNmFi2eadYJMP1OwzH4KbtU2Qygx907mfkC3U=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ma9sA9bSkqmecxJGGQfIHcovHv2DgVEX65ggcjKVr2yNRhxivlRk5zm0/bV9PksZ/
+	 2q9qj2WLc835GfTtTJDLAJwurU20x5qS7iC6xHisZTbhaCJtTgEpJSu2K7sFLippJn
+	 cwQOiYTyAKVYnrRlJz6ocUVv0eTdOG6Ehd0V6qcNXrmKDT82PwAqxVOVyhW3KfNNEB
+	 x0P/NGqWIyGIety/bWrYIdeDhz9ACwE5KTvz9O9KVLbVmruLbu01Fd1Kk+MvpbCaEq
+	 F5VDqj25BA8iqQVCO4Wa5Gl/GjoZvX03/Om6+UbE81IfesDxFag4+sR92PBEO9V6rC
+	 W95poZOArjmlw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8AEE1C595C5;
+	Sat,  9 Dec 2023 20:34:17 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.7: 2nd batch
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20231208223300.3877553-1-namhyung@kernel.org>
+References: <20231208223300.3877553-1-namhyung@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20231208223300.3877553-1-namhyung@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.7-2-2023-12-08
+X-PR-Tracked-Commit-Id: b1693747487442984050eb0f462b83a3a8307525
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9d3bc457a24f837604e45729285e9ceba757b508
+Message-Id: <170215405756.1707.10818997570099428534.pr-tracker-bot@kernel.org>
+Date: Sat, 09 Dec 2023 20:34:17 +0000
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
+The pull request you sent on Fri,  8 Dec 2023 14:33:00 -0800:
 
-> The error is because the perf top always tries to open an event on the
-> user_requested_cpus, which are all CPUs by default.
-> 
-> Something as below should fix it. For hybrid, open a PMU event on an
-> unsupported CPU should be error out.
-> 
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.7-2-2023-12-08
 
-This fixes "perf top" on my i7-1355U.  It would be great if you could
-get this patch into upstream and stable branches.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9d3bc457a24f837604e45729285e9ceba757b508
 
-Thanks,
+Thank you!
+
 -- 
-Leah Neukirchen  <leah@vuxu.org>  https://leahneukirchen.org/
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
