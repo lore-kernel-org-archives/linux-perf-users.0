@@ -1,75 +1,258 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C8F137;
-	Fri,  8 Dec 2023 15:33:39 -0800 (PST)
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-28694702c18so2622843a91.3;
-        Fri, 08 Dec 2023 15:33:39 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZfvM0mZ"
+Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AD3411D
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 Dec 2023 20:31:45 -0800 (PST)
+Received: by mail-ot1-x32c.google.com with SMTP id 46e09a7af769-6d9f4eed60eso677152a34.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Dec 2023 20:31:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702096304; x=1702701104; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b28s6vv0C6uA+s6bqFv7bzXxV6zMmtReGr1ej9rkon4=;
+        b=jZfvM0mZcGNHwBW6YP/dPsD6oIlBGPxsVWI7TKxwqV0fN2sV63loJ+0hlcFvVkpWtV
+         vyYEhncsnsnesmbqwO7RLCvWNvBJ8OGBzZqoGwcivMnKw8aSoJoXI+Wt9N6YhDUBZiZw
+         P1zSe+Ru0McsAD7LtVfXUd22ELqoHjMlCevfCuQJNoT3vMZql55jHkj78IThI5CfITbv
+         IrDw6qsfU+jwPH8gR0BkSFFegfyKNUganPtR08In0YD8yw1VrMD+zwrEdPNG1BdQ5dbw
+         l8HAzH0Af5WRj/GOHbOTbel+LeTr/JIKAwDbp8qj3zK8L0QreRGENkEiCupRelTemrEJ
+         XKbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702078418; x=1702683218;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eEXP4rqwUrtF27vNtvXQpGVAmBWWtDoL7HKm4QVLjsU=;
-        b=KgLCyzCDV0gLuN4SFy+phz5Qd5Z/O2eOPlereqq/t8BfYJJoQGUJqsUI4knHE5Ij/R
-         sFQsy60gijQJUyuyvxm9xIJ+dGKZylCQmBfNlKDNn1jiTgfRgyOgHp3V3IFTnHCXQjQw
-         9YtO6F+fc9mRi3w0MRzXdM/+1xOB7EhI6sF3SkLoc7qC3ct5W32jPc0tiPR/veDXIjEc
-         A6O9N9lUN2chMAaCZG5uuIalSQzZGZwCttLXDBQd7vo9wV51GzrdgA7vuybJ5USDSN5s
-         bbLrF09KOMWs1MT4IdOI9lof9N/Pp6kdwuBjM5gChftIBPYamxB/c9/lZR0ixOjpxt1v
-         1tBg==
-X-Gm-Message-State: AOJu0YwAeOJv4zH+bCDH90oGkj8w9Y0r0x96JO/9CFQUH3VX3PJjHzOX
-	Sxugeeu9dJPiJrCu8iYRJMHmq7XkBs9az6d9g0I=
-X-Google-Smtp-Source: AGHT+IE3J5k86IaDJ1H6zfZyV8Gj1OTLhdT+R9Z9bMT3Y7WROpINtLwegjkBogj7Elu3rWnk3neZp2ooTNhoTm0WFE4=
-X-Received: by 2002:a17:90a:e50e:b0:286:ca3e:be8c with SMTP id
- t14-20020a17090ae50e00b00286ca3ebe8cmr815098pjy.90.1702078417649; Fri, 08 Dec
- 2023 15:33:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702096304; x=1702701104;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b28s6vv0C6uA+s6bqFv7bzXxV6zMmtReGr1ej9rkon4=;
+        b=KtlnNHpP3pCHdT58Ja62UFu3DRDk4dMztfsPY/ty0InpD5NFCIdQ/eNSj17OfVhEBy
+         33xJw1oLRlnTZtyAeMYpXO0OWOHRGf6MP3geEpEPQyLIyJdyBsHZIFnGHG4+9pLGq+GN
+         jnLw+pAosg1X8eCl4N1EdOcInr3t4PfokOCNEsPyoacWWOfMEudqc6CjSyZ7W3csalZf
+         a4b0ATfaNvPF369IbVR4SaLGKndkNk/ldA/fpxTzZZVt6D/79C2Vc0HA0TebkBnMsiUm
+         wl0+kp/AHerLKhkmQl+ShrD91Bh5dHRxmmUitSNM2J9DkxjKEZgSJq+nvGBp+NCr1NZF
+         G7cQ==
+X-Gm-Message-State: AOJu0YzNvJhVxMLNOiAfbyLrrHVdSBtZfrDqhVN2SjKDQ/90I9DB2NNG
+	d4AdNyarUWLoW4wEmOSs5z0EPw==
+X-Google-Smtp-Source: AGHT+IG1xXzgrl8rimNnszJL2tNvTXi3FkysmV4QIH0mkuflgmihdw2q2ipRC/ctaNhztcrvNQCBug==
+X-Received: by 2002:a05:6808:2f12:b0:3b9:fbfd:4f04 with SMTP id gu18-20020a0568082f1200b003b9fbfd4f04mr28153oib.57.1702096304584;
+        Fri, 08 Dec 2023 20:31:44 -0800 (PST)
+Received: from leoy-yangtze.lan ([94.177.131.71])
+        by smtp.gmail.com with ESMTPSA id gu6-20020a056a004e4600b006ce93ff8c7esm2375116pfb.104.2023.12.08.20.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Dec 2023 20:31:43 -0800 (PST)
+Date: Sat, 9 Dec 2023 12:31:35 +0800
+From: Leo Yan <leo.yan@linaro.org>
+To: kan.liang@linux.intel.com
+Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
+	mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
+	adrian.hunter@intel.com, john.g.garry@oracle.com, will@kernel.org,
+	james.clark@arm.com, mike.leach@linaro.org,
+	yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	tmricht@linux.ibm.com, ravi.bangoria@amd.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V2 2/5] perf mem: Clean up perf_mem_events__ptr()
+Message-ID: <20231209043135.GA2116834@leoy-yangtze.lan>
+References: <20231207192338.400336-1-kan.liang@linux.intel.com>
+ <20231207192338.400336-3-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231107083331.901-1-ravi.bangoria@amd.com> <CAM9d7cgs9Wk0OFoea4jOote-drHjvCimJyt7GWdO2Giw=d7Jog@mail.gmail.com>
- <f42bf6b7-75b8-124b-c79e-ad7a9b706990@amd.com>
-In-Reply-To: <f42bf6b7-75b8-124b-c79e-ad7a9b706990@amd.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 8 Dec 2023 15:33:26 -0800
-Message-ID: <CAM9d7cijrZzp=5m+BcQ77WFOSHT7e5vO-RCUTUp5Pevmz2wbtg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf tool AMD: Use non-precise cycles as default
- event on certain Zen2 processors
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: acme@kernel.org, kim.phillips@amd.com, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, changbin.du@huawei.com, yangjihong1@huawei.com, 
-	zwisler@chromium.org, wangming01@loongson.cn, chenhuacai@kernel.org, 
-	kprateek.nayak@amd.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sandipan.das@amd.com, ananth.narayan@amd.com, 
-	santosh.shukla@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231207192338.400336-3-kan.liang@linux.intel.com>
 
-Hi Ravi,
+On Thu, Dec 07, 2023 at 11:23:35AM -0800, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The mem_events can be retrieved from the struct perf_pmu now. An ARCH
+> specific perf_mem_events__ptr() is not required anymore. Remove all of
+> them.
+> 
+> The Intel hybrid has multiple mem-events-supported PMUs. But they share
+> the same mem_events. Other ARCHs only support one mem-events-supported
+> PMU. In the configuration, it's good enough to only configure the
+> mem_events for one PMU. Add perf_mem_events_find_pmu() which returns the
+> first mem-events-supported PMU.
+> 
+> In the perf_mem_events__init(), the perf_pmus__scan() is not required
+> anymore. It avoids checking the sysfs for every PMU on the system.
+> 
+> Make the perf_mem_events__record_args() more generic. Remove the
+> perf_mem_events__print_unsupport_hybrid().
+> 
+> Since pmu is added as a new parameter, rename perf_mem_events__ptr() to
+> perf_pmu__mem_events_ptr(). Several other functions also do a similar
+> rename.
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  tools/perf/arch/arm64/util/mem-events.c |  10 +--
+>  tools/perf/arch/x86/util/mem-events.c   |  18 ++---
+>  tools/perf/builtin-c2c.c                |  28 +++++--
+>  tools/perf/builtin-mem.c                |  28 +++++--
+>  tools/perf/util/mem-events.c            | 103 ++++++++++++------------
+>  tools/perf/util/mem-events.h            |   9 ++-
+>  6 files changed, 104 insertions(+), 92 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm64/util/mem-events.c b/tools/perf/arch/arm64/util/mem-events.c
+> index aaa4804922b4..2602e8688727 100644
+> --- a/tools/perf/arch/arm64/util/mem-events.c
+> +++ b/tools/perf/arch/arm64/util/mem-events.c
+> @@ -12,17 +12,9 @@ struct perf_mem_event perf_mem_events_arm[PERF_MEM_EVENTS__MAX] = {
+>  
+>  static char mem_ev_name[100];
+>  
+> -struct perf_mem_event *perf_mem_events__ptr(int i)
+> -{
+> -	if (i >= PERF_MEM_EVENTS__MAX)
+> -		return NULL;
+> -
+> -	return &perf_mem_events_arm[i];
+> -}
+> -
+>  const char *perf_mem_events__name(int i, const char *pmu_name __maybe_unused)
+>  {
+> -	struct perf_mem_event *e = perf_mem_events__ptr(i);
+> +	struct perf_mem_event *e = &perf_mem_events_arm[i];
+>  
+>  	if (i >= PERF_MEM_EVENTS__MAX)
+>  		return NULL;
 
-On Fri, Nov 10, 2023 at 1:46=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.co=
-m> wrote:
->
-> Hi Namhyung,
->
-> >> By default, Perf uses precise cycles event when no explicit event is
-> >> specified by user. Precise cycles event is forwarded to ibs_op// pmu
-> >> on AMD. However, IBS has hw issue on certain Zen2 processors where
-> >> it might raise NMI without sample_valid bit set, which causes Unknown
-> >> NMI warnings. (Erratum #1215: IBS (Instruction Based Sampling) Counter
-> >> Valid Value May be Incorrect After Exit From Core C6 (CC6) State.) So,
-> >> use non-precise cycles as default event on affected processors.
-> >
-> > It seems like a kernel issue, do we have a kernel patch not to forward
-> > precise cycles or instructions events to IBS on the affected CPUs?
->
-> I'm not sure how it's a kernel issue. User can use ibs_op// pmu directly
-> and might hit the hw bug.
+Nitpick: it's good to check if 'i' is a valid value and then access the
+array with a valid index.
 
-Sorry for the late reply.  I know it's the user's fault when using ibs_op//
-directly but I think the kernel should not forward cycles:pp to IBS.
+        if (i >= PERF_MEM_EVENTS__MAX)
+                return NULL;
+
+        e = &perf_mem_events_arm[i];
+
+> diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
+> index 2b81d229982c..5fb41d50118d 100644
+> --- a/tools/perf/arch/x86/util/mem-events.c
+> +++ b/tools/perf/arch/x86/util/mem-events.c
+> @@ -28,17 +28,6 @@ struct perf_mem_event perf_mem_events_amd[PERF_MEM_EVENTS__MAX] = {
+>  	E("mem-ldst",	"ibs_op//",	"ibs_op"),
+>  };
+>  
+> -struct perf_mem_event *perf_mem_events__ptr(int i)
+> -{
+> -	if (i >= PERF_MEM_EVENTS__MAX)
+> -		return NULL;
+> -
+> -	if (x86__is_amd_cpu())
+> -		return &perf_mem_events_amd[i];
+> -
+> -	return &perf_mem_events_intel[i];
+> -}
+> -
+>  bool is_mem_loads_aux_event(struct evsel *leader)
+>  {
+>  	struct perf_pmu *pmu = perf_pmus__find("cpu");
+> @@ -54,7 +43,12 @@ bool is_mem_loads_aux_event(struct evsel *leader)
+>  
+>  const char *perf_mem_events__name(int i, const char *pmu_name)
+>  {
+> -	struct perf_mem_event *e = perf_mem_events__ptr(i);
+> +	struct perf_mem_event *e;
+
+A nitpick as well:
+
+Given perf's mem/c2c, callers will almostly invoke a valid index via the
+argument 'i', but I still think here is a best place to return NULL
+pointer for an invalid index rather than returning a wild pointer.
+
+Thus I suggest to apply checking for x86 and other archs:
+
+        if (i >= PERF_MEM_EVENTS__MAX)
+                return NULL;
+
+> +
+> +	if (x86__is_amd_cpu())
+> +		e = &perf_mem_events_amd[i];
+> +	else
+> +		e = &perf_mem_events_intel[i];
+>  
+>  	if (!e)
+>  		return NULL;
+
+[...]
+
+>  int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
+>  				 char **rec_tmp, int *tmp_nr)
+>  {
+>  	const char *mnt = sysfs__mount();
+> +	struct perf_pmu *pmu = NULL;
+>  	int i = *argv_nr, k = 0;
+>  	struct perf_mem_event *e;
+>  
+> -	for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+> -		e = perf_mem_events__ptr(j);
+> -		if (!e->record)
+> -			continue;
+>  
+> -		if (perf_pmus__num_mem_pmus() == 1) {
+> -			if (!e->supported) {
+> -				pr_err("failed: event '%s' not supported\n",
+> -				       perf_mem_events__name(j, NULL));
+> -				return -1;
+> -			}
+> +	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL) {
+> +		for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+> +			e = perf_pmu__mem_events_ptr(pmu, j);
+>  
+> -			rec_argv[i++] = "-e";
+> -			rec_argv[i++] = perf_mem_events__name(j, NULL);
+> -		} else {
+> -			struct perf_pmu *pmu = NULL;
+> +			if (!e->record)
+> +				continue;
+>  
+>  			if (!e->supported) {
+> -				perf_mem_events__print_unsupport_hybrid(e, j);
+> +				pr_err("failed: event '%s' not supported\n",
+> +					perf_mem_events__name(j, pmu->name));
+>  				return -1;
+>  			}
+>  
+> -			while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+> +			if (perf_pmus__num_mem_pmus() == 1) {
+> +				rec_argv[i++] = "-e";
+> +				rec_argv[i++] = perf_mem_events__name(j, NULL);
+> +			} else {
+>  				const char *s = perf_mem_events__name(j, pmu->name);
+>  
+>  				if (!perf_mem_event__supported(mnt, pmu, e))
+
+I think we can improve a bit for this part.
+
+Current implementation uses perf_pmus__num_mem_pmus() to decide if
+system has only one memory PMU or multiple PMUs, and multiple PMUs
+the tool iterates all memory PMUs to synthesize event options.
+
+In this patch, it has changed to iterate all memory PMUs, no matter the
+system has only one memory PMU or multiple PMUs. Thus, I don't see the
+point for the condition checking for "perf_pmus__num_mem_pmus() == 1".
+We can consolidate into the unified code like:
+
+        char *copy;
+        const char *s = perf_pmu__mem_events_name(j, pmu);
+
+        if (!s)
+                continue;
+
+        if (!perf_pmu__mem_events_supported(mnt, pmu, e))
+                continue;
+
+        copy = strdup(s);
+        if (!copy)
+                return -1;
+
+        rec_argv[i++] = "-e";
+        rec_argv[i++] = copy;
+        rec_tmp[k++] = copy;
 
 Thanks,
-Namhyung
+Leo
