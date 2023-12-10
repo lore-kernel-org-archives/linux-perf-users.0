@@ -1,168 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DB9290C;
-	Sun, 10 Dec 2023 12:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19B4C8E1;
+	Sun, 10 Dec 2023 13:39:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNGPxpqM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF365C433C9;
-	Sun, 10 Dec 2023 12:16:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVhomcV5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943E1C433C7;
+	Sun, 10 Dec 2023 13:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702210596;
-	bh=zI/jeFRyjHplsqmull7ZiNDfoFDcHnPQwoXdDnLIe58=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XNGPxpqMpKbxiZDIIwqaAP4vnfVrNqeUImkpUgaTvVibWyF+2Td6NYdBTgGCG8ACy
-	 eXA05rq0mJvnlQ7bT6gFshJKSrDZ4rRxoaTWphSdn0dyipzHpkw3agwiO4oRHtBnD7
-	 XdrNR6lyCoQZdaOWT6KN330vSSuhzLMDIw7VHQVZNG1PW9RPfHNniNnkap6e+aI6M5
-	 sUdbMPxuS88tY+Ql086/6F63E7KcTUMRyDs0Kxi7qFZyt46iJ4X5z5zftq1SAiXQyX
-	 CwA9Nh7Xs5MLIRJvzRv+zGsx2zYl5k+gNoRbrnoZgDDskHAaZyCWViXyAjstMkwJJ4
-	 2EEHczNzYYg+g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rCIja-002tai-3P;
-	Sun, 10 Dec 2023 12:16:34 +0000
-Date: Sun, 10 Dec 2023 12:16:32 +0000
-Message-ID: <865y16b6cf.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Tianyi Liu <i.pear@outlook.com>
-Cc: seanjc@google.com,
-	pbonzini@redhat.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	kvm@vger.kernel.org,
-	x86@kernel.org,
-	mark.rutland@arm.com,
-	mlevitsk@redhat.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com
-Subject: Re: [PATCH v3 1/5] KVM: Add arch specific interfaces for sampling guest callchains
-In-Reply-To: <SYBPR01MB6870FDFBB88F879C735198F39D88A@SYBPR01MB6870.ausprd01.prod.outlook.com>
-References: <SYBPR01MB687069BFC9744585B4EEF8C49D88A@SYBPR01MB6870.ausprd01.prod.outlook.com>
-	<SYBPR01MB6870FDFBB88F879C735198F39D88A@SYBPR01MB6870.ausprd01.prod.outlook.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1702215559;
+	bh=fTm7ITxHWlDMbWerH/cRI+Ai9WLiPVmOtrotE0lLvnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HVhomcV5xU0ZXA9qvXYGKxiMFdS6MgqOgBH8yVcI/wMrxQ7aUz//+rvpXYNlw07hm
+	 P9NAJs6tPMENLr+CI1h6JdOynsfnysMgdiZuu4zORGoSaM9iHLx7SdGP44mJ7+wb0T
+	 0q/uQgMO2k/WLbkNfC92nhuv51HjZk2N//+TkzuwPgTT6xWTQpv3m2pKHgdGjoaQa1
+	 xYVU9AEaFVTZLSmqS54YhEJMq6RR/MdtE2fc8b+wS7cX8/oYlgPeMB7rpn+kCOo/Db
+	 xXLcjoliKR7pQd8Zwzb8q3aJ2zPk3t3DmczpDmldyi1Ymw3r25d5XOUoKHO5cl7e7e
+	 mQf4jAAx+CFdA==
+Date: Sun, 10 Dec 2023 13:39:12 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: Frank Li <frank.li@nxp.com>, "will@kernel.org" <will@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"john.g.garry@oracle.com" <john.g.garry@oracle.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"namhyung@kernel.org" <namhyung@kernel.org>,
+	"irogers@google.com" <irogers@google.com>,
+	dl-linux-imx <linux-imx@nxp.com>,
+	"mike.leach@linaro.org" <mike.leach@linaro.org>,
+	"leo.yan@linaro.org" <leo.yan@linaro.org>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"acme@kernel.org" <acme@kernel.org>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH v2 1/4] dt-bindings: perf: fsl-imx-ddr: Add
+ i.MX95 compatible
+Message-ID: <20231210-scrap-backdrop-8bae1acc07fd@spud>
+References: <20231208085402.2106904-1-xu.yang_2@nxp.com>
+ <20231208-depress-smuggler-f3069487a067@spud>
+ <DB7PR04MB51468DB108F3003AF52CDDDA8C88A@DB7PR04MB5146.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: i.pear@outlook.com, seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org, mark.rutland@arm.com, mlevitsk@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6Y73PFULRu5w7Pr1"
+Content-Disposition: inline
+In-Reply-To: <DB7PR04MB51468DB108F3003AF52CDDDA8C88A@DB7PR04MB5146.eurprd04.prod.outlook.com>
 
-On Sun, 10 Dec 2023 08:12:18 +0000,
-Tianyi Liu <i.pear@outlook.com> wrote:
-> 
-> This patch adds two architecture specific interfaces used by `perf kvm`:
-> 
-> - kvm_arch_vcpu_get_unwind_info: Return required data for unwinding
->   at once; including ip address, frame pointer, whether the guest vCPU
->   is running in 32 or 64 bits, and possibly the base addresses of
->   the segments.
-> 
-> - kvm_arch_vcpu_read_virt: Read data from a virtual address of the
->   guest vm.
-> 
-> `perf_kvm.h` has been added to the `include/linux/` directory to store
-> the interface structures between the perf events subsystem and the KVM
-> subsystem.
-> 
-> Since arm64 hasn't provided some foundational infrastructure, stub the
-> arm64 implementation for now because it's a bit complex.
 
-It's not complex. It is *unsafe*. Do you see the difference?
+--6Y73PFULRu5w7Pr1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> The above interfaces require architecture support for
-> `CONFIG_GUEST_PERF_EVENTS`, which is only implemented by x86 and arm64
-> currently. For more architectures, they need to implement these interfaces
-> when enabling `CONFIG_GUEST_PERF_EVENTS`.
-> 
-> In terms of safety, guests are designed to be read-only in this feature,
-> and we will never inject page faults into the guests, ensuring that the
-> guests are not interfered by profiling. In extremely rare cases, if the
-> guest is modifying the page table, there is a possibility of reading
-> incorrect data. Additionally, if certain programs running in the guest OS
-> do not support frame pointers, it may also result in some erroneous data.
-> These erroneous data will eventually appear as `[unknown]` entries in the
-> report. It is sufficient as long as most of the records are correct for
-> profiling.
-> 
-> Signed-off-by: Tianyi Liu <i.pear@outlook.com>
-> ---
->  MAINTAINERS              |  1 +
->  arch/arm64/kvm/arm.c     | 12 ++++++++++++
->  arch/x86/kvm/x86.c       | 24 ++++++++++++++++++++++++
->  include/linux/kvm_host.h |  5 +++++
->  include/linux/perf_kvm.h | 18 ++++++++++++++++++
->  5 files changed, 60 insertions(+)
->  create mode 100644 include/linux/perf_kvm.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 788be9ab5b73..5ee36b4a9701 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16976,6 +16976,7 @@ F:	arch/*/kernel/*/perf_event*.c
->  F:	arch/*/kernel/perf_callchain.c
->  F:	arch/*/kernel/perf_event*.c
->  F:	include/linux/perf_event.h
-> +F:	include/linux/perf_kvm.h
->  F:	include/uapi/linux/perf_event.h
->  F:	kernel/events/*
->  F:	tools/lib/perf/
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index e5f75f1f1085..5ae74b5c263a 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -574,6 +574,18 @@ unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu)
->  {
->  	return *vcpu_pc(vcpu);
->  }
-> +
-> +bool kvm_arch_vcpu_get_unwind_info(struct kvm_vcpu *vcpu, struct perf_kvm_guest_unwind_info *info)
-> +{
-> +	/* TODO: implement */
-> +	return false;
-> +}
-> +
-> +bool kvm_arch_vcpu_read_virt(struct kvm_vcpu *vcpu, gva_t addr, void *dest, unsigned int length)
-> +{
-> +	/* TODO: implement */
-> +	return false;
-> +}
+On Sun, Dec 10, 2023 at 04:27:16AM +0000, Xu Yang wrote:
+> Hi Conor,
+>=20
+> > On Fri, Dec 08, 2023 at 04:53:59PM +0800, Xu Yang wrote:
+> > > i.MX95 has a DDR pmu. This will add a compatible for it.
+> >=20
+> > On v1 we had a discussion because the commit message wasn't clear about
+> > whether or not the device was compatible with existing ones. For some
+> > reason, the v2 patch _removes_ information from the commit message
+> > rather than tries to explain.
+> > This [1] message of yours, that I didn't get a chance to reply to before
+> > you sent this new version, seems to say that there should be an
+> > imx93-ddr-pmu fallback.
+>=20
+> Thanks for your comments.=20
+>=20
+> Just read my previous comment in [1] and found I made a mistake.
+> Now I'll try to clarify it here.
+>=20
+> Imx95 and imx93 have different AXI filter configuration. I need a=20
+> compatible for imx95 since the driver cannot differentiate them.=20
+>=20
+> Then I need to consider below two options:
+> 1. compatible =3D "fsl,imx95-ddr-pmu", "fsl,imx93-ddr-pmu"
+> 2. compatible =3D "fsl,imx95-ddr-pmu"
+>=20
+> Both of them work correctly on imx95. When I make changes in
+> driver for imx95, imx93 is not affected.
+>=20
+> For basic functions, imx95 is compatible with imx93. I select the 2rd
+> form for simplicity. If the first form is optimal, I can change it in next
+> version.
 
-I don't do it very often, but the only thing I can say about this is
-*NAK*.
+The first form is preferred, yes.
 
-You have decided to ignore the previous review comments, which is your
-prerogative. However, I absolutely refuse to add half baked and
-*dangerous* stuff to the arm64's version of KVM.
+--6Y73PFULRu5w7Pr1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If you can convince the x86 folks that they absolutely want this, fine
-by me. But this need to be a buy-in interface, not something that is
-required for each and every architecture to have stubs, wrongly
-suggesting that extra work is needed.
+-----BEGIN PGP SIGNATURE-----
 
-For arm64, the way to go is to have this in userspace. Which is both
-easy to implement and safe. And until we have such a userspace
-implementation as a baseline, I will not consider a kernel
-version.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZXW/fAAKCRB4tDGHoIJi
+0tsaAP48qhr4ANSJHCm2QzJHQ7OffzfDNhkrzRw0fj/ODk7Q2AD8CjVcf8ACaciH
+Z9eIvtEKnMZ8bKAW+0NtJBxGnoeK+wQ=
+=zAEX
+-----END PGP SIGNATURE-----
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+--6Y73PFULRu5w7Pr1--
