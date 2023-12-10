@@ -1,196 +1,207 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Db78pJd3"
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2041.outbound.protection.outlook.com [40.107.15.41])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4C8ED;
-	Sat,  9 Dec 2023 20:27:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="OZ8aMSRP"
+Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2150.outbound.protection.outlook.com [40.92.62.150])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3369D;
+	Sun, 10 Dec 2023 00:08:55 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BCA3041fGUlAMXkNQCdfsefNwJ/+bJ+oF1pr++Zegr0hK/GQZKGFpaHfhQ0zm58CWhE8f+0LcneZ4YwhnpbavuQOjIMK7YB32XrdGXwKMLG3Et3gBbbjRlXNSsS32ft2h7w1KpUFkIs3RJ53mJneXa2PvV3cY2XDGZ1RofosyAvac/dxcTaS6wrh0NYoqL1u1tKSClz+W0xg67/BvHg+eCSnqEWbNBlsRLTBWZk32ihGjze0A3semsWm3d4jzvWwS/NHEW59Se4Z0b3eqjozA0zGBQjDLYS3/OPaRI651pytkKrIXDUdSddATYlMSjIPG8SmDdoQeZ0Mp9mpim6JLA==
+ b=ivq+NRXjxGDwnKnLRZGXu/whyyqDohuGgc9DHRz/N+8kdS2qwgRx6tXeYiUZsCP4CspfnSLaytb2crBkUMURY84KRfHktzBUlyKtRp2axx7moGbpr/I2+AYNceeMpEw17O7qzSkn+JETGbJHVCcs+Hg6OfAnUIMGYAyYQ09zpQeJtigxpjf/Rc/Fuxxbg90ckylqyMxUsdotknmvOsFJBhH0MdLj/dFlfj8r/fqv8gjqf92aL3GBh7IQgYA3rRa4PW7Gf+BGQdhBFYUoZmzgQahTeN0+Pc10IDGKCikp/uiYsfO735bN0MhhsuJHv4XB5WjQPpUIJBI7GFdAtIKxBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dhxP/+YfK1EojN3WvQpqzj+3bWaV3MAugyGXQ+zOAqI=;
- b=SDi2KmQGPD7ECB0gRW2HAtcr8tVo7CBIXCzpSggv9Ug/p4SA2pxiCzQIIDe7HV8ggkh17ne5ET2m9S0i3mthJ8TOuJ99N3SprLqL93rGO6T8XIWmsNAzeRThUq4E/rev3nqHAaKIA1wlvp1U1QFXnjq2waG7B77Uafu9OcwpipK8IAZEgdLyC87CchwmL4RNAHT2LUusJ928+CLyFgkyp2Ipy5FobD/K44eXZDB08QYGrZSolJAvp9t8r791HEISAvvr+RVL8IM40UAoIyn6vceaLvXmwXLqTrMlLssxZUVcefLRO6+aoZcuR9YXYq7DHfX/Z0Xb/zfZxCLWdO2tOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=fzAcBBC3/Qh5JHV4M83f1kBaLFDSVNfSmRZxxUCxyog=;
+ b=efli0bupdNhVgqjnwi18WmWOk8a5DPWcd1w1edMLvYh0Ujm2yxD5juHOK30nk0OJRRMvxmNPtfxXggYFbV0r6QrhsD6vMHO0wQs58Us8EE+K2t41B1LPBQxr9ok6T1QRYtbs3wzsJoNDjQde4QgA2xnm5HY6yMwaHDYGf9KGqQJfF/B64TQ0m8St6VA+lFToi3KwhJNiyZfzqwARMC3uMq1TXi9t7FIkXNKEjOHRpKQa5sym1blKtFciyHO7TXhwD4YsEDAiYegaM5eZWXOyRoqvrYX1Qc/YwajyuDUafv/NTWjc0xX+UBYmDC3ONBU4AdmHoqEV3ZDeZHJO0L2btw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dhxP/+YfK1EojN3WvQpqzj+3bWaV3MAugyGXQ+zOAqI=;
- b=Db78pJd3PkOgAT1rjC9wtvU2F+2OcyJU5A+xDLnJgB5lA8UYa0+0OKhk4CGICaVwfG0o86VEx1od97vDM8VdeBZk472sjDvXdfpC3EVb/Mz4rQcHlMT7++H+VZny8N99MS93leVh1XQ4kqlpMrSImxPZw2vdaFMD9qpTugza6ys=
-Received: from DB7PR04MB5146.eurprd04.prod.outlook.com (2603:10a6:10:23::16)
- by PA4PR04MB7917.eurprd04.prod.outlook.com (2603:10a6:102:cd::20) with
+ bh=fzAcBBC3/Qh5JHV4M83f1kBaLFDSVNfSmRZxxUCxyog=;
+ b=OZ8aMSRPVUpn99S1lKPRGQWg7meUP76wavfBqFXDlh381lzEeFAA4hgb1JlOj46LcyizVdNsJp7o1qz+BECP7P7qMFPWNhD+/S3OMTAw8R8ff+PNIf1NsawHs5/22gssjQ5JB21vvdnsgTxXPSwS/N5oqNd4mBprA5hxDLZKgMoi1WVDPrlqxMJmw78mUyMzl7gRJB+cHpk+hz9DGWsQDxLF3dr4fPOHbQzeuMO/4zt8T+SJVXjuCrbPfjaM8rRTePfYfd5A56Js8mb3qwknKxT9x08We0j/R1xMpgKRHKKU1NUKLAEWBFOFHjTMwiJs/1z9jm77b4q+e4wF8Igw5g==
+Received: from SYBPR01MB6870.ausprd01.prod.outlook.com (2603:10c6:10:13d::10)
+ by MEYPR01MB7339.ausprd01.prod.outlook.com (2603:10c6:220:15f::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.30; Sun, 10 Dec
- 2023 04:27:17 +0000
-Received: from DB7PR04MB5146.eurprd04.prod.outlook.com
- ([fe80::709e:6876:7df0:fc30]) by DB7PR04MB5146.eurprd04.prod.outlook.com
- ([fe80::709e:6876:7df0:fc30%7]) with mapi id 15.20.7068.030; Sun, 10 Dec 2023
- 04:27:17 +0000
-From: Xu Yang <xu.yang_2@nxp.com>
-To: Conor Dooley <conor@kernel.org>
-CC: Frank Li <frank.li@nxp.com>, "will@kernel.org" <will@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org"
-	<robh+dt@kernel.org>, "krzysztof.kozlowski+dt@linaro.org"
-	<krzysztof.kozlowski+dt@linaro.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de"
-	<kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>,
-	"john.g.garry@oracle.com" <john.g.garry@oracle.com>, "jolsa@kernel.org"
-	<jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>,
-	"irogers@google.com" <irogers@google.com>, dl-linux-imx <linux-imx@nxp.com>,
-	"mike.leach@linaro.org" <mike.leach@linaro.org>, "leo.yan@linaro.org"
-	<leo.yan@linaro.org>, "peterz@infradead.org" <peterz@infradead.org>,
-	"mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH v2 1/4] dt-bindings: perf: fsl-imx-ddr: Add
- i.MX95 compatible
-Thread-Topic: [EXT] Re: [PATCH v2 1/4] dt-bindings: perf: fsl-imx-ddr: Add
- i.MX95 compatible
-Thread-Index: AQHaKbNLbV9si+3atU615KFz+VRTyrCfelqAgAJ0bsA=
-Date: Sun, 10 Dec 2023 04:27:16 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.31; Sun, 10 Dec
+ 2023 08:08:49 +0000
+Received: from SYBPR01MB6870.ausprd01.prod.outlook.com
+ ([fe80::be5a:160f:5418:9deb]) by SYBPR01MB6870.ausprd01.prod.outlook.com
+ ([fe80::be5a:160f:5418:9deb%5]) with mapi id 15.20.7068.030; Sun, 10 Dec 2023
+ 08:08:49 +0000
+From: Tianyi Liu <i.pear@outlook.com>
+To: seanjc@google.com,
+	pbonzini@redhat.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org,
+	x86@kernel.org,
+	mark.rutland@arm.com,
+	mlevitsk@redhat.com,
+	maz@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	Tianyi Liu <i.pear@outlook.com>
+Subject: [PATCH v3 0/5] perf: KVM: Enable callchains for guests
+Date: Sun, 10 Dec 2023 16:07:42 +0800
 Message-ID:
- <DB7PR04MB51468DB108F3003AF52CDDDA8C88A@DB7PR04MB5146.eurprd04.prod.outlook.com>
-References: <20231208085402.2106904-1-xu.yang_2@nxp.com>
- <20231208-depress-smuggler-f3069487a067@spud>
-In-Reply-To: <20231208-depress-smuggler-f3069487a067@spud>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB7PR04MB5146:EE_|PA4PR04MB7917:EE_
-x-ms-office365-filtering-correlation-id: bea4020b-3a59-4b7c-ad84-08dbf9384aa7
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- LkKoEydtrOJq+F0270yeBqvRt3HuXimhHCGS/ZY/dB+fEQXBS83v5qszDg3hvqljYDb31Qp4QBail+t90i6HH+ZZdNLco19UySQHqlGQvm7iBl04ee1MeS9hOTL0ffkwetKe8GEBqxiPZ82lzuuLzlIMwrCktTt/3HQyvF2ixsFoJPBRaZOwBtycgt0v39GHm6ah0p2qltBlDRuz0AYVkc7eKNwOhqMe2DLU9gW2Pq1wP3uXiCsfulkYSmrJqCZ1DwPn5uEC60v4Vf/FevPpFbWgo2j6U2cJ9tqSwtODsQm5rt1nlFXAZqZFm4hL5EYP3L8UDMq/WyxywXNE4E67qp3uljuNREyHia3ykDlMPc8Mb2WXAYnu9rnW6knjm3/qIdzUzTXmsoBLvwPQG5IsTA1UUKW5ZV7d83IzMJZgAhgg1f3z7cOeJVVmwj3YLaDna8Nw6ri8stFDraKuPYwn9Fucw/gIXo4xPlhNxGyGwEiLTQXwGye5kHTLfAT+bb6jxpp4BAwE3XZWFCHF4bbNl0yJW/+OHwiP1l8oGl3wHWuUkwtz9epv3+ngpbxuRdce+z/4ScRQZEGuVCg8GR9S74Bg4MbXV56NtbmlJx0QZ38=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5146.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(346002)(396003)(136003)(366004)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(9686003)(26005)(45080400002)(966005)(478600001)(6506007)(71200400001)(7696005)(83380400001)(7416002)(2906002)(5660300002)(41300700001)(6916009)(54906003)(64756008)(66446008)(66476007)(66556008)(66946007)(76116006)(4326008)(8676002)(8936002)(52536014)(316002)(38100700002)(122000001)(38070700009)(86362001)(33656002)(55016003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?g3OtttApcfnc/iyeZZE4n3E0rE2HkdSQRUCFXXDZUgtvetcEPcs9RtV++Oru?=
- =?us-ascii?Q?eBgNXel0z2lxonycxJxJn4ZT4ALglyP8htCCbir+rm4B1Vx8XbUzesvVxXqI?=
- =?us-ascii?Q?jN5+QDBkr8XCH7ahaaL7FPQif3zbgXpoI1YKHQaoDGcRK5pZpXg6MUSAZVOk?=
- =?us-ascii?Q?jnZqqI7sykzCMJxGd1HDHeRW6YLYdPs3lMjDGF9WyZsaxLaxD1HpnXm8zW1T?=
- =?us-ascii?Q?LIfU1aQwJEGmb8DdGuqmUS13+q1HNRnfCu1SS43jGBPO5PPNS5crnn7BjO9+?=
- =?us-ascii?Q?C9UaGUEzy3aNqxXnAUJRuuJX27D7eoXUGQy6Iw9jU4RAuUc11MTPEgVGVM4r?=
- =?us-ascii?Q?6MTAojS2zjJC85nayLioR9JRx21bznWX6tirV4Ue6haXMkU49WUEKfGIhWaD?=
- =?us-ascii?Q?YVZ/l2FqEY4Sl3/AjflvybG9BYMPKwq3Azu/iT1FkTBPz4h3W4f7NAq9ZpEe?=
- =?us-ascii?Q?2wULkg/9RIzCQwrDeVwr7y+JRNrQcfHcT3sRNY76/8cIyVMcES+oIV2kfLnq?=
- =?us-ascii?Q?skGrOyoZuxOySkrBgiafmT1iNnA9S8jDRc8s8Jqvd5H4Nl6rlZHKSzlZskwp?=
- =?us-ascii?Q?c4xVZOrunAg17FD+lI/G7U7HKCjirL2oYxGcmjsouGoLzrsUgkCaCAEACUTK?=
- =?us-ascii?Q?9qjl+Xj3hpb2TJbrNNFdbdbvkeBTbruj0SdOg92AUDmjfJGi44eGKcDi4IH6?=
- =?us-ascii?Q?xJHu9+fqcZJn5bUtK8ZZzlK4urj5YwqJJYRBIdiAoM5xU0FwzSCylGVKVDyU?=
- =?us-ascii?Q?5LvgCZBA9BdEhSBLGdP6Z6ff4OiJ+aYBdgRenwzd4/eE3m+8eXraGugtexur?=
- =?us-ascii?Q?eLJBPt33ZXaA+xBan/Y75CkRJGd60CgmoQWHI0dVZ0kmEL5/i7WlRFO+RVOo?=
- =?us-ascii?Q?T2fpPpo0Ci9gl348W/k+MBbzh8LAGrTpZ+Tep2WFiBDGB/OUs9TaUZ5g+9Be?=
- =?us-ascii?Q?E5W7n2UOuxt+TDVyuc7zJ4ZUcFCQlG3imHU4nhW2526vebOFtfNUyoZ/f7Ae?=
- =?us-ascii?Q?8dlClAjh8Y2/POCa8F0cQaNdzK2DXJoih0euWmlQoPUZ5pqvBqniWhsQqnuo?=
- =?us-ascii?Q?8L9br6qGGaEeobafqFh+qM+80dPCe3hFiGtWjE4gIQ/8kIvnAOlKkLkpPra3?=
- =?us-ascii?Q?cBI8HN9o0y4MQhrNxRwUHqbyZ1CX2EDEx3i/XUvxXFpfymAWRQWplZXArvtQ?=
- =?us-ascii?Q?t0FSmEyr9ZGqnWagq+hH1x/q3OPrj6Y5HzzcNQRstanmi7MWHYxWZmmwr5qT?=
- =?us-ascii?Q?z52WiLtZsdTVs+t8j3s1/7KrZfn99z2WBF6D8CmVSoPbBMp56VPrbPQXfXPY?=
- =?us-ascii?Q?tr2lH4rGo7y6li2+floL2xiUobHPOKK4J3UWMfxZw6G+ThjDA15mBo44+iUA?=
- =?us-ascii?Q?NygfkLjHrXbRTX62RYhDnvC73pOJYXt13DH/ez2OdyQE9HQGHOsYeIvM5qpJ?=
- =?us-ascii?Q?ThsT6JgiH90PgavkEhcRz8hSKyEn85MrCwNYyqe2m6R71F/rEO5x/wjvRmU9?=
- =?us-ascii?Q?mMM9I5Bv/qElGQuDufs7WgGQkOzrXV2DvjbgVIdeJctOPBijZCo5/CHIdRRl?=
- =?us-ascii?Q?mSFJ0esieugt7/uwzwc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ <SYBPR01MB687069BFC9744585B4EEF8C49D88A@SYBPR01MB6870.ausprd01.prod.outlook.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [5hP5SFsKOSJHZzIDoL6ixfHLgGiQ2S0WroETPYou9oYzvUMOQ2+dyQ==]
+X-ClientProxiedBy: SG2PR01CA0189.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:189::15) To SYBPR01MB6870.ausprd01.prod.outlook.com
+ (2603:10c6:10:13d::10)
+X-Microsoft-Original-Message-ID: <20231210080742.2135-1-i.pear@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SYBPR01MB6870:EE_|MEYPR01MB7339:EE_
+X-MS-Office365-Filtering-Correlation-Id: bfc982f2-5ffa-4a9b-075e-08dbf9573bf5
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Z1xFtd/ebhKIquqP+AniVhqEOR5bQv6zvqqrZrQEiWkLDkudW76b3dS0SsnxRSN4Hd8/rd9kqY3hrraBts6vKj04KqNo1hYV8pt49wRx9UJ2Yyxd0xnh+PZP/VSwsJvaPxcUt9UcmNssbrvBX8VfNAqu3LuV1udXL0lel3fYGlYedfgqj8GCUZE8haVvHkUPyY/h4By/Mxyy49T4TH5tscrKw6IH5tryo+aO+ebXHm3Dd4oU6//THlfmYcKbDdvnizO4YspBPoDff2v1X5X0sR8yDay3cIRpBHv+u2ULBpCHc9iCd0IXGF1F8mK8fd9HB7f7/P25onZ6kRybCEogoJE5NeEkkZUEqeNqW9jUIltjaAQomi7ajZxBSM6jg5knxDvLny2g74B/27EtP8cFV1l3s6pPv726B7K8qGeRPxh9sGYX+EJJSKw495/jFBvR3mXBQCA37E+OCcWJs/nAyXyigOtBUjuHPl0iBNxXrVAKb3qKMqu/31aoEu+qK+v1yV57RwdyHkWA1BSDKknRdU778lKQcKE1ji+G9XWB7wvXlZyo9wpd9Onobeq+7qefUHSd/NnU2vFdw/bOpQSAV5xzO609drhfzhpPXuXI69Y2poSVMwjYAG9UPwbHB7LqhM71CxsjCQ0W8DHiswNFHWL9Em+N/nsAdOA95dg0aa8=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?qtlAwsuqlHla7xOFiLSX6LBYfVNyLYKnfieGED40ASZkLRpm48NqaEvy1Gzn?=
+ =?us-ascii?Q?KEYDZIxEIp6aLSVglZEZSz/9ABY5AvYy8ymwGnVX48RFAROpPf7skfDBLEk9?=
+ =?us-ascii?Q?pAnd4hUs2StSdZT5oBFEygDXOiZJrDNFsB2h6jfbxGBPbi92RPz41gtAGP2R?=
+ =?us-ascii?Q?tuu/NSkGEEeHnIFHUNvs8YLZdPgJyCAbFwGWT+7oNinI2i9Q7p29jJ9q7WHA?=
+ =?us-ascii?Q?D99DqUzTPsuyK93ZQpFjjE9m8UAng/aiZkaBf8E+KRnH8oMrsUc4j2iWDzYA?=
+ =?us-ascii?Q?hxSk7E7ktnEBhuM6ZGZpa7J7xgkEgCK+TdCxSEpMW0KjEfk+ZBW8Ji2/yDu9?=
+ =?us-ascii?Q?uv8xLMDzXhQkk3EFeuksT9H5jdKzaAtwzsiFSSLDxfEj/7nqVsLauRdF4mK7?=
+ =?us-ascii?Q?HOqNwrh0Z95Lz3FQlqnU42Jq4HU1hmA7HFJnzQK8yFyV/1dYAx/HZNPFEjCp?=
+ =?us-ascii?Q?wkX/cgIzfDqbaNeLAOqIJb/jluldTsi3kdc7TZ+zpPpZhuMU2tUhv2kkKS3w?=
+ =?us-ascii?Q?mPROzsOv1YMFmtHXThsJESAI7RY8L3PRooXB8Ou0t57OSN3NVmqT2Hnfog8e?=
+ =?us-ascii?Q?Zbo/vivWQci28E0XrdgkN08wE1iG6eoXw5P5aCtR/fZ6QK6JUdGtr855GTJl?=
+ =?us-ascii?Q?ypoE4E/rzeL3S3hqfYZUIor72gka/MZX7ZXIgQCO/XsrFsiH45iuhUNblnVP?=
+ =?us-ascii?Q?ynTxRipAPY24Gd3p4oVy7TXWU3dsjF+hJfcGHRzeYlvz8YrpKTn03ckQj5T0?=
+ =?us-ascii?Q?ZING7SVnvvLLps0Ev2mF26fbjggEN77COpzpJUF8NYwmu/TDvh8/qDBFfw+o?=
+ =?us-ascii?Q?yIklzw48/pcz8vhdxOrAKvNsqf6U+5uDwhHv4f3YsUCBFDoIoovB3AhQpbrT?=
+ =?us-ascii?Q?HQQ2bbpKV2mNIrPlokdenJY2owPzxSObNz+xR1vgPuKeeHI0ErQgQR0fPt5p?=
+ =?us-ascii?Q?NB3AbBVkWk7IaplOlTy1/XOLJ1pPRiyLJ5MQBHtIfop/TvoXlB90FYKzjgDL?=
+ =?us-ascii?Q?QpM3ebECAkJZuXPzCGMzGdrTDoCk4JEY30IqZqwyozUtp41+tyMyWLrcM0SK?=
+ =?us-ascii?Q?+ZNIqdWfIsPtK1fQV0LU9MwG5YjaMWGgPrzm8tzCLx9VWXs+a2f5sewXGKsl?=
+ =?us-ascii?Q?qVtlsRsTsIo09W2kRsYSz2sBsfwfQ0xd7JV+q+oo8guvIW4P32EoXpV3w8WY?=
+ =?us-ascii?Q?FyLx7qZK9JDMdPO52Rpy6s+dCbwH7mA29J+IbV/T8+Ew4Hidw2jvPCBLIICB?=
+ =?us-ascii?Q?7/gIWUfqxvcum83cbRLz?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfc982f2-5ffa-4a9b-075e-08dbf9573bf5
+X-MS-Exchange-CrossTenant-AuthSource: SYBPR01MB6870.ausprd01.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5146.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bea4020b-3a59-4b7c-ad84-08dbf9384aa7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2023 04:27:16.8988
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2023 08:08:48.8734
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eXZ+Wyb9KCVPM2yetNqEJO/MdLyu6ASBHHaiTGssm8kZXLVmFZG9/UBp6WWczNxfqcToevYfvItcP9wU2iRDHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7917
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MEYPR01MB7339
 
-Hi Conor,
+This series of patches enables callchains for guests (used by `perf kvm`),
+which holds the top spot on the perf wiki TODO list [1]. This allows users
+to perform guest OS callchain or performance analysis from external
+using PMU events. This is also useful for guests like unikernels that
+lack performance event subsystems.
 
-> On Fri, Dec 08, 2023 at 04:53:59PM +0800, Xu Yang wrote:
-> > i.MX95 has a DDR pmu. This will add a compatible for it.
->=20
-> On v1 we had a discussion because the commit message wasn't clear about
-> whether or not the device was compatible with existing ones. For some
-> reason, the v2 patch _removes_ information from the commit message
-> rather than tries to explain.
-> This [1] message of yours, that I didn't get a chance to reply to before
-> you sent this new version, seems to say that there should be an
-> imx93-ddr-pmu fallback.
+The event processing flow is as follows (shown as backtrace):
+@0 kvm_arch_vcpu_get_unwind_info / kvm_arch_vcpu_read_virt (per arch impl)
+@1 kvm_guest_get_unwind_info / kvm_guest_read_virt
+   <callback function pointers in `struct perf_guest_info_callbacks`>
+@2 perf_guest_get_unwind_info / perf_guest_read_virt
+@3 perf_callchain_guest
+@4 get_perf_callchain
+@5 perf_callchain
 
-Thanks for your comments.=20
+Between @0 and @1 is the interface between KVM and the arch-specific
+impl, while between @1 and @2 is the interface between Perf and KVM.
+The 1st patch implements @0. The 2nd patch extends interfaces between @1
+and @2, while the 3rd patch implements @1. The 4th patch implements @3
+and modifies @4 @5. The last patch is for userspace tools.
 
-Just read my previous comment in [1] and found I made a mistake.
-Now I'll try to clarify it here.
+Since arm64 hasn't provided some foundational infrastructure (interface
+for reading from a virtual address of guest), the arm64 implementation
+is stubbed for now because it's a bit complex, and will be implemented
+later.
 
-Imx95 and imx93 have different AXI filter configuration. I need a=20
-compatible for imx95 since the driver cannot differentiate them.=20
+For safety, guests are designed to be read-only in this feature,
+and we will never inject page faults into the guests, ensuring that the
+guests are not interfered by profiling. In extremely rare cases, if the
+guest is modifying the page table, there is a possibility of reading
+incorrect data. Additionally, if certain programs running in the guest OS
+do not support frame pointers, it may also result in some erroneous data.
+These erroneous data will eventually appear as `[unknown]` entries in the
+report. It is sufficient as long as most of the records are correct for
+profiling.
 
-Then I need to consider below two options:
-1. compatible =3D "fsl,imx95-ddr-pmu", "fsl,imx93-ddr-pmu"
-2. compatible =3D "fsl,imx95-ddr-pmu"
+Regarding the necessity of implementing in the kernel:
+Indeed, we could implement this in userspace and access the guest vm
+through the KVM APIs, to interrupt the guest and perform unwinding.
+However, this approach will introduce higher latency, and the overhead of
+syscalls could limit the sampling frequency. Moreover, it appears that
+user space can only interrupt the VCPU at a certain frequency, without
+fully leveraging the richness of the PMU's performance events. On the
+other hand, if we incorporate the logic into kernel, `perf kvm` can bind
+to various PMU events and achieve faster performance in PMU interrupts.
 
-Both of them work correctly on imx95. When I make changes in
-driver for imx95, imx93 is not affected.
+Tested with both Linux and unikernels as guests, the `perf script` command
+could correctly show the callchains.
+FlameGraphs could also be generated with this series of patches and [2].
 
-For basic functions, imx95 is compatible with imx93. I select the 2rd
-form for simplicity. If the first form is optimal, I can change it in next
-version.
+[1] https://perf.wiki.kernel.org/index.php/Todo
+[2] https://github.com/brendangregg/FlameGraph
 
-Thanks,
-Xu Yang
+v1:
+https://lore.kernel.org/kvm/SYYP282MB108686A73C0F896D90D246569DE5A@SYYP282MB1086.AUSP282.PROD.OUTLOOK.COM/
 
->=20
-> Cheers,
-> Conor.
->=20
-> 1 -
-> https://lore.kernel.org/all/DB7PR04MB514668A8B172CD1A2187BC408C84A@DB7PR0=
-4MB5146.eurprd04.prod.outlook.com/
->=20
-> >
-> > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> >
-> > ---
-> > Changes in v2:
-> >  - no changes
-> > ---
-> >  Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/=
-Documentation/devicetree/bindings/perf/fsl-imx-
-> ddr.yaml
-> > index e9fad4b3de68..1bc7bf1c8368 100644
-> > --- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-> > +++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-> > @@ -20,6 +20,7 @@ properties:
-> >            - fsl,imx8mn-ddr-pmu
-> >            - fsl,imx8mp-ddr-pmu
-> >            - fsl,imx93-ddr-pmu
-> > +          - fsl,imx95-ddr-pmu
-> >        - items:
-> >            - enum:
-> >                - fsl,imx8mm-ddr-pmu
-> > --
-> > 2.34.1
-> >
+Changes since v1:
+Post the complete implementation, also updated some code based on
+Sean's feedback.
+
+v2:
+https://lore.kernel.org/kvm/SY4P282MB1084ECBCC1B176153B9E2A009DCFA@SY4P282MB1084.AUSP282.PROD.OUTLOOK.COM/
+
+Changes since v2:
+Refactored interface, packaged the info required by unwinding into
+a struct; Resolved some type mismatches; Provided more explanations
+based on the feedback from v2; more tests were performed.
+
+Tianyi Liu (5):
+  KVM: Add arch specific interfaces for sampling guest callchains
+  perf kvm: Introduce guest interfaces for sampling callchains
+  KVM: implement new perf callback interfaces
+  perf kvm: Support sampling guest callchains
+  perf tools: Support PERF_CONTEXT_GUEST_* flags
+
+ MAINTAINERS                         |  1 +
+ arch/arm64/kvm/arm.c                | 12 ++++++
+ arch/x86/events/core.c              | 63 ++++++++++++++++++++++++-----
+ arch/x86/kvm/x86.c                  | 24 +++++++++++
+ include/linux/kvm_host.h            |  5 +++
+ include/linux/perf_event.h          | 20 ++++++++-
+ include/linux/perf_kvm.h            | 18 +++++++++
+ kernel/bpf/stackmap.c               |  8 ++--
+ kernel/events/callchain.c           | 27 ++++++++++++-
+ kernel/events/core.c                | 17 +++++++-
+ tools/perf/builtin-timechart.c      |  6 +++
+ tools/perf/util/data-convert-json.c |  6 +++
+ tools/perf/util/machine.c           |  6 +++
+ virt/kvm/kvm_main.c                 | 22 ++++++++++
+ 14 files changed, 218 insertions(+), 17 deletions(-)
+ create mode 100644 include/linux/perf_kvm.h
+
+
+base-commit: 33cc938e65a98f1d29d0a18403dbbee050dcad9a
+-- 
+2.34.1
+
