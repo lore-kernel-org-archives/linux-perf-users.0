@@ -1,38 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eL8/Tcd5"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B076AC;
-	Mon, 11 Dec 2023 10:45:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ef/Rd3hO"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE039B;
+	Mon, 11 Dec 2023 11:02:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702320328; x=1733856328;
+  t=1702321323; x=1733857323;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=cptjvy+NwHQ+E4fcpou4LlAyfaL5P8r20mk0Sn0DCJE=;
-  b=eL8/Tcd55lk0XubJyzHlS8nqGG/539RXEANx1cMzfDNzS2Pcm5RFsgu1
-   A+mXBiiCzRd+NZhmOHUFN9bEq8puFdD6b5u0f1gE24GarO9DXHYUjcyRH
-   I8BbAM3XtfG+mMhBIMWld0XQEaAKqg4gXPeNe9MoKPmmLh1/wIa7fJnkW
-   XW/c78J8I38m5Ufd74zs4RTaN2Kc950HrGSxiuI2fwzT29H6doeKme+CJ
-   uSVBajhVfxP1C3hOt7tfvwGj1qvy2kY/7IlbNSQkIrSkizBB4s3qSsjqy
-   K+POEuLUYqKPmqE4EO7llzJn2Zzu9H1pUg0c84BXrh1FNP6Cxi8qCT9rC
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="1509693"
+  bh=eGvwdv2hlcRULZdN4mk89Q6qzKrSqlPJ5370hlJU+rg=;
+  b=ef/Rd3hORUjH6FrWjy7mSRaThxoV2i5zr9VTwywZI+QT50i1AhJqwI+m
+   btzrmjnjYzZQRAW7w8Qr7f7967ZrUOTZKIlXd7LKeoL10fC4bZSiQW8IT
+   ePAW5x5DSC0C0sIgjrdcX5Zyqusk96yrgxIWKXYJb1pzbFsTfh2MuRGiO
+   74k88IfuxNfxAtHWkW4/aguGRYk8OYTu16n28RozWHi+FvG2oJodLwJ32
+   HDfcC6j2Hp6nqPZk2li8fPttwCduOVYCexyEbojugsedjUBcC2C0JMIV3
+   +SgQRm1AqbYAk2YGSC2JhEJHkSko8yKzsbkd+zKCHx3cYcwJxbScRyRrB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="1840438"
 X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
-   d="scan'208";a="1509693"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 10:45:28 -0800
+   d="scan'208";a="1840438"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 11:01:44 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="1020352399"
 X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
-   d="scan'208";a="21191879"
+   d="scan'208";a="1020352399"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 10:45:28 -0800
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 11:01:42 -0800
 Received: from [10.212.109.181] (kliang2-mobl1.ccr.corp.intel.com [10.212.109.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 8A7E4580DA9;
-	Mon, 11 Dec 2023 10:45:24 -0800 (PST)
-Message-ID: <ab399f36-bef6-4ff7-92b9-95ed873ce822@linux.intel.com>
-Date: Mon, 11 Dec 2023 13:45:24 -0500
+	by linux.intel.com (Postfix) with ESMTPS id 3C0E0580DA9;
+	Mon, 11 Dec 2023 11:01:39 -0800 (PST)
+Message-ID: <ee9db34a-2b3d-46b3-ba36-22a22b080d70@linux.intel.com>
+Date: Mon, 11 Dec 2023 14:01:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,7 +41,9 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 5/5] perf mem: Clean up is_mem_loads_aux_event()
+Subject: Re: [PATCH V2 1/5] perf mem: Add mem_events into the supported
+ perf_pmu
+Content-Language: en-US
 To: Leo Yan <leo.yan@linaro.org>
 Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
  mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
@@ -50,122 +53,50 @@ Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org
 References: <20231207192338.400336-1-kan.liang@linux.intel.com>
- <20231207192338.400336-6-kan.liang@linux.intel.com>
- <20231209062709.GD2116834@leoy-yangtze.lan>
-Content-Language: en-US
+ <20231207192338.400336-2-kan.liang@linux.intel.com>
+ <20231208102922.GB769184@leoy-huanghe.lan>
+ <98863f44-4a35-4910-8db0-dbbf0474f6ae@linux.intel.com>
+ <20231209063440.GE2116834@leoy-yangtze.lan>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20231209062709.GD2116834@leoy-yangtze.lan>
+In-Reply-To: <20231209063440.GE2116834@leoy-yangtze.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2023-12-09 1:27 a.m., Leo Yan wrote:
-> On Thu, Dec 07, 2023 at 11:23:38AM -0800, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
+On 2023-12-09 1:34 a.m., Leo Yan wrote:
+> Hi Kan,
+> 
+> On Fri, Dec 08, 2023 at 01:14:28PM -0500, Liang, Kan wrote:
+> 
+> [...]
+> 
+>>> Now I cannot access a machine for testing Arm SPE, but I will play
+>>> a bit for this patch set to ensure it can pass compilation.  After
+>>> that, I will seek Arm maintainers/reviewers help for the test.
 >>
->> The aux_event can be retrieved from the perf_pmu now. Implement a
->> generic support.
->>
->> Reviewed-by: Ian Rogers <irogers@google.com>
->> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>  tools/perf/arch/x86/util/mem-events.c | 23 ++++-------------------
->>  tools/perf/util/mem-events.c          | 14 ++++++++++++--
->>  2 files changed, 16 insertions(+), 21 deletions(-)
->>
->> diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
->> index b776d849fc64..62df03e91c7e 100644
->> --- a/tools/perf/arch/x86/util/mem-events.c
->> +++ b/tools/perf/arch/x86/util/mem-events.c
->> @@ -1,11 +1,9 @@
->>  // SPDX-License-Identifier: GPL-2.0
->> -#include "util/pmu.h"
->> -#include "util/pmus.h"
->> -#include "util/env.h"
->> -#include "map_symbol.h"
->> -#include "mem-events.h"
->>  #include "linux/string.h"
->> -#include "env.h"
->> +#include "util/map_symbol.h"
->> +#include "util/mem-events.h"
->> +#include "mem-events.h"
->> +
->>  
->>  #define MEM_LOADS_AUX		0x8203
->>  
->> @@ -28,16 +26,3 @@ struct perf_mem_event perf_mem_events_amd[PERF_MEM_EVENTS__MAX] = {
->>  	E(NULL,		NULL,		NULL,	false,	0),
->>  	E("mem-ldst",	"%s//",		NULL,	false,	0),
->>  };
->> -
->> -bool is_mem_loads_aux_event(struct evsel *leader)
->> -{
->> -	struct perf_pmu *pmu = perf_pmus__find("cpu");
->> -
->> -	if (!pmu)
->> -		pmu = perf_pmus__find("cpu_core");
->> -
->> -	if (pmu && !perf_pmu__have_event(pmu, "mem-loads-aux"))
->> -		return false;
->> -
->> -	return leader->core.attr.config == MEM_LOADS_AUX;
->> -}
->> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
->> index 0d174f161034..d418320e52e3 100644
->> --- a/tools/perf/util/mem-events.c
->> +++ b/tools/perf/util/mem-events.c
->> @@ -103,9 +103,19 @@ static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
->>  	return NULL;
->>  }
->>  
->> -__weak bool is_mem_loads_aux_event(struct evsel *leader __maybe_unused)
->> +bool is_mem_loads_aux_event(struct evsel *leader)
->>  {
->> -	return false;
->> +	struct perf_pmu *pmu = leader->pmu;
->> +	struct perf_mem_event *e;
->> +
->> +	if (!pmu || !pmu->mem_events)
->> +		return false;
->> +
->> +	e = &pmu->mem_events[PERF_MEM_EVENTS__LOAD];
->> +	if (!e->aux_event)
->> +		return false;
->> +
->> +	return leader->core.attr.config == e->aux_event;
->>  }
+>> Thanks. I guess I will hold the v3 until the test is done in case there
+>> are other issues found in ARM.
 > 
-> I am wandering if we need to set the field 'aux_event' for Arm SPE.
-> 
-> So a quesiton maybe is not relevant with this patch actually, we can
-> see is_mem_loads_aux_event() is invoked in the file util/record.c:
-> 
->   static struct evsel *evsel__read_sampler(struct evsel *evsel, struct evlist *evlist)
->   {
->           struct evsel *leader = evsel__leader(evsel);
-> 
->           if (evsel__is_aux_event(leader) || arch_topdown_sample_read(leader) ||
->               is_mem_loads_aux_event(leader)) {
->               ...
->           }
->   
->           return leader;
->   }
-> 
-> Has evsel__is_aux_event() covered the memory load aux event?  If it's,
-> then is_mem_loads_aux_event() is not needed anymore.
+> I will hold on a bit for the test until this patch set addresses the
+> concern for the breakage issues on Arm64. Please check my review in
+> other replies.
 
-They are two different things. The evsel__is_aux_event() should means an
-event requires AUX area, like intel_pt.
+The reviews in the other replies don't look like break any current usage
+on Arm64. I think the breakage issue is what you described in this
+patch, right?
 
-While the aux event for the mem_loads event is an extra event which has
-to be scheduled together with the mem_loads event when sampling. It's
-only available for some Intel platforms, e.g., SPR.
+If we move the check of "arm_spe_0" to arch/arm/util/pmu.c, it seems we
+have to move the perf_mem_events_arm[] into arch/arm/util/mem-events.c
+as well. Is it OK?
+
+I'm not familiar with ARM and have no idea how those events are
+organized under arm64 and arm. Could you please send a fix for the
+building failure on aarch64? I will fold it into the V3.
 
 Thanks,
 Kan
 > 
 > Thanks,
 > Leo
+> 
