@@ -1,231 +1,165 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="RY1eRm8+"
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB28FE4
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 07:20:36 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-40c32df9174so37731345e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 07:20:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1702308035; x=1702912835; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VXq0VuhHzYxA6UAxnYuyS+zdAc9dBPWzD9GOe+4oeHk=;
-        b=RY1eRm8+zt5il4Lrxc2Fd6Cj5eZlT/uylGa/sZ3aWLsKZVVpqWCreiLCt39RUnHb1v
-         P1fUyNhf7aVJ605BNvjyeFtd5zTauz6yX0NBBLZi2VS7PF99XmPc/XAwFRy+bGNCExz4
-         V5RTEWsknenqoUh4DEZtG0wehdxYtpLBcgXe6FF6QEc3+DWdyO6qJ5tNCIctNrR7QPVF
-         zDuEpca9OpXx5KmUMc+J5STTmwYUMZSqDFtsMvthJxtl4vqG2mECk7OIm4fM5FfNQEUG
-         GXrKxIAV8V8EKy4006Uy6ggu16iMQ4qOWefXMiBlFN/As15kyQUxx/AH8qmZr/9mDOCe
-         dddg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702308035; x=1702912835;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VXq0VuhHzYxA6UAxnYuyS+zdAc9dBPWzD9GOe+4oeHk=;
-        b=EpqS92oB7y0htZQqGppbJRuwhZx/wMEIVdz4pMqxgUwUVGDg/UZUl8wSBBUki4fh6v
-         lwPp7u+dvlgoXfJEqXfPVX0trTrpMDrlGUO6FxtcLJncTGJ/zrJ6InmpOLJpyNCCyIw8
-         DpMUPjPe76HJrJ9cbtayfze5DtvgZScZERDayfq7t93/EYI1AGdiM+ZI5qG1WwNf938+
-         3XmIxhQFJL+EdxJFmMqf+yY5Dj/6QrOAlnm1QXq49K6G02EWHpF9ZRFOw4MkOX7e6PqV
-         dnMmx3bNdzjKgWs/GWJKgyDFbp+/go7FF2LT0RbvENUuRSltxNHqsOic5Zig8DfnZy1S
-         vAfw==
-X-Gm-Message-State: AOJu0YzIJSnXAa+pnizFEd/608fahbN0wcra6J8BViwO5q8aBW2rUjcx
-	iVVzD1bzCm4f3fgntOOorTJINv5r5U6OK5+zJ5vB/Q==
-X-Google-Smtp-Source: AGHT+IHKxhKUy/Hd/JeWLyWCd8g3I6OWQ1WkdT4sbr1/e4YI+eOJefXfCW2XHjN04eKK1NFBokhRrvRhgT/Z423EJAc=
-X-Received: by 2002:a1c:770c:0:b0:40c:38dd:1b1a with SMTP id
- t12-20020a1c770c000000b0040c38dd1b1amr1555163wmi.211.1702308034950; Mon, 11
- Dec 2023 07:20:34 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A647F3;
+	Mon, 11 Dec 2023 08:13:53 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 782621007;
+	Mon, 11 Dec 2023 08:14:39 -0800 (PST)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 053963F738;
+	Mon, 11 Dec 2023 08:13:48 -0800 (PST)
+From: James Clark <james.clark@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	suzuki.poulose@arm.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	anshuman.khandual@arm.com
+Cc: namhyung@gmail.com,
+	James Clark <james.clark@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Zaid Al-Bassam <zalbassam@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v7 00/11] arm64: perf: Add support for event counting threshold
+Date: Mon, 11 Dec 2023 16:13:12 +0000
+Message-Id: <20231211161331.1277825-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231211045543.31741-1-khuey@kylehuey.com> <20231211045543.31741-2-khuey@kylehuey.com>
- <CANpmjNPvZ=S5Afn9DR7nG2UFstqz5t1gBznTh4yezVv7k1+m9w@mail.gmail.com>
-In-Reply-To: <CANpmjNPvZ=S5Afn9DR7nG2UFstqz5t1gBznTh4yezVv7k1+m9w@mail.gmail.com>
-From: Kyle Huey <me@kylehuey.com>
-Date: Mon, 11 Dec 2023 07:20:22 -0800
-Message-ID: <CAP045ApSQWLouDd65-M4+TFiKFjDF1aMPnPW-Ue+e63NhQnUwQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] perf/bpf: Call bpf handler directly, not through
- overflow machinery
-To: Marco Elver <elver@google.com>
-Cc: Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	"Robert O'Callahan" <robert@ocallahan.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 11, 2023 at 6:20=E2=80=AFAM Marco Elver <elver@google.com> wrot=
-e:
->
-> On Mon, 11 Dec 2023 at 05:55, Kyle Huey <me@kylehuey.com> wrote:
-> >
-> > To ultimately allow bpf programs attached to perf events to completely
-> > suppress all of the effects of a perf event overflow (rather than just =
-the
-> > sample output, as they do today), call bpf_overflow_handler() from
-> > __perf_event_overflow() directly rather than modifying struct perf_even=
-t's
-> > overflow_handler. Return the bpf program's return value from
-> > bpf_overflow_handler() so that __perf_event_overflow() knows how to
-> > proceed. Remove the now unnecessary orig_overflow_handler from struct
-> > perf_event.
-> >
-> > This patch is solely a refactoring and results in no behavior change.
-> >
-> > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  include/linux/perf_event.h |  6 +-----
-> >  kernel/events/core.c       | 28 +++++++++++++++-------------
-> >  2 files changed, 16 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > index 5547ba68e6e4..312b9f31442c 100644
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -810,7 +810,6 @@ struct perf_event {
-> >         perf_overflow_handler_t         overflow_handler;
-> >         void                            *overflow_handler_context;
-> >  #ifdef CONFIG_BPF_SYSCALL
-> > -       perf_overflow_handler_t         orig_overflow_handler;
-> >         struct bpf_prog                 *prog;
-> >         u64                             bpf_cookie;
-> >  #endif
-> > @@ -1337,10 +1336,7 @@ __is_default_overflow_handler(perf_overflow_hand=
-ler_t overflow_handler)
-> >  #ifdef CONFIG_BPF_SYSCALL
-> >  static inline bool uses_default_overflow_handler(struct perf_event *ev=
-ent)
-> >  {
-> > -       if (likely(is_default_overflow_handler(event)))
-> > -               return true;
-> > -
-> > -       return __is_default_overflow_handler(event->orig_overflow_handl=
-er);
-> > +       return is_default_overflow_handler(event);
-> >  }
-> >  #else
-> >  #define uses_default_overflow_handler(event) \
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index b704d83a28b2..54f6372d2634 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -9515,6 +9515,12 @@ static inline bool sample_is_allowed(struct perf=
-_event *event, struct pt_regs *r
-> >         return true;
-> >  }
-> >
-> > +#ifdef CONFIG_BPF_SYSCALL
-> > +static int bpf_overflow_handler(struct perf_event *event,
-> > +                               struct perf_sample_data *data,
-> > +                               struct pt_regs *regs);
-> > +#endif
->
-> To avoid more #ifdefs we usually add a stub, something like:
->
-> #ifdef ...
-> static int bpf_overflow_handler(...);
-> #else
-> static inline int bpf_overflow_handler(...) { return 0; }
-> #endif
->
-> Then you can avoid more #ifdefs below, esp. when it surrounds an
-> if-statement it easily leads to confusion or subtle bugs in future
-> changes. The compiler will optimize out the constants and the
-> generated code will be the same.
+Changes since v6:
 
-This would not allow removing any #ifdefs because event->prog is only
-present if CONFIG_BPF_SYSCALL is defined.
+  * Remove inlines from arm_pmuv3.c
+  * Use format attribute mechanism from SPE
+  * Re-arrange attributes so that threshold comes last and can
+    potentially be extended
+  * Emit an error if the max threshold is exceeded rather than clamping
+  * Convert all register fields to GENMASK
 
-- Kyle
+Changes since v5:
+  * Restructure the docs and add some more explanations
+  * PMMIR.WIDTH -> PMMIR.THWIDTH in one comment
+  * Don't write EVTYPER.TC if TH is 0. Doesn't have any functional
+    effect but it might be a bit easier to understand the code.
+  * Expand the format field #define names
 
-> >  /*
-> >   * Generic event overflow handling, sampling.
-> >   */
-> > @@ -9584,7 +9590,10 @@ static int __perf_event_overflow(struct perf_eve=
-nt *event,
-> >                 irq_work_queue(&event->pending_irq);
-> >         }
-> >
-> > -       READ_ONCE(event->overflow_handler)(event, data, regs);
-> > +#ifdef CONFIG_BPF_SYSCALL
-> > +       if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
-> > +#endif
-> > +               READ_ONCE(event->overflow_handler)(event, data, regs);
-> >
-> >         if (*perf_event_fasync(event) && event->pending_kill) {
-> >                 event->pending_wakeup =3D 1;
-> > @@ -10394,9 +10403,9 @@ static void perf_event_free_filter(struct perf_=
-event *event)
-> >  }
-> >
-> >  #ifdef CONFIG_BPF_SYSCALL
-> > -static void bpf_overflow_handler(struct perf_event *event,
-> > -                                struct perf_sample_data *data,
-> > -                                struct pt_regs *regs)
-> > +static int bpf_overflow_handler(struct perf_event *event,
-> > +                               struct perf_sample_data *data,
-> > +                               struct pt_regs *regs)
-> >  {
-> >         struct bpf_perf_event_data_kern ctx =3D {
-> >                 .data =3D data,
-> > @@ -10417,10 +10426,8 @@ static void bpf_overflow_handler(struct perf_e=
-vent *event,
-> >         rcu_read_unlock();
-> >  out:
-> >         __this_cpu_dec(bpf_prog_active);
-> > -       if (!ret)
-> > -               return;
-> >
-> > -       event->orig_overflow_handler(event, data, regs);
-> > +       return ret;
-> >  }
-> >
-> >  static int perf_event_set_bpf_handler(struct perf_event *event,
-> > @@ -10456,8 +10463,6 @@ static int perf_event_set_bpf_handler(struct pe=
-rf_event *event,
-> >
-> >         event->prog =3D prog;
-> >         event->bpf_cookie =3D bpf_cookie;
-> > -       event->orig_overflow_handler =3D READ_ONCE(event->overflow_hand=
-ler);
-> > -       WRITE_ONCE(event->overflow_handler, bpf_overflow_handler);
-> >         return 0;
-> >  }
-> >
-> > @@ -10468,7 +10473,6 @@ static void perf_event_free_bpf_handler(struct =
-perf_event *event)
-> >         if (!prog)
-> >                 return;
-> >
-> > -       WRITE_ONCE(event->overflow_handler, event->orig_overflow_handle=
-r);
-> >         event->prog =3D NULL;
-> >         bpf_prog_put(prog);
-> >  }
-> > @@ -11928,13 +11932,11 @@ perf_event_alloc(struct perf_event_attr *attr=
-, int cpu,
-> >                 overflow_handler =3D parent_event->overflow_handler;
-> >                 context =3D parent_event->overflow_handler_context;
-> >  #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
-> > -               if (overflow_handler =3D=3D bpf_overflow_handler) {
-> > +               if (parent_event->prog) {
-> >                         struct bpf_prog *prog =3D parent_event->prog;
-> >
-> >                         bpf_prog_inc(prog);
-> >                         event->prog =3D prog;
-> > -                       event->orig_overflow_handler =3D
-> > -                               parent_event->orig_overflow_handler;
-> >                 }
-> >  #endif
-> >         }
-> > --
-> > 2.34.1
-> >
+Changes since v4:
+
+  * Rebase onto v6.7-rc1, it no longer depends on kvmarm/next
+  * Remove change that moved ARMV8_PMU_EVTYPE_MASK to the asm files.
+    This actually depended on those files being included in a certain
+    order with arm_pmuv3.h to avoid circular includes. Now the
+    definition is done programmatically in arm_pmuv3.c instead.
+
+Changes since v3:
+
+  * Drop #include changes to KVM source files because since
+    commit bc512d6a9b92 ("KVM: arm64: Make PMEVTYPER<n>_EL0.NSH RES0 if
+    EL2 isn't advertised"), KVM doesn't use ARMV8_PMU_EVTYPE_MASK
+    anymore
+
+Changes since v2:
+
+  * Split threshold_control attribute into two, threshold_compare and
+    threshold_count so that it's easier to use
+  * Add some notes to the first commit message and the cover letter
+    about the behavior in KVM
+  * Update the docs commit with regards to the split attribute
+ 
+Changes since v1:
+
+  * Fix build on aarch32 by disabling FEAT_PMUv3_TH and splitting event
+    type mask between the platforms
+  * Change armv8pmu_write_evtype() to take unsigned long instead of u64
+    so it isn't unnecessarily wide on aarch32
+  * Add UL suffix to aarch64 event type mask definition
+
+----
+
+FEAT_PMUv3_TH (Armv8.8) is a new feature that allows conditional
+counting of PMU events depending on how much the event increments on
+a single cycle. Two new config fields for perf_event_open have been
+added, and a PMU cap file for reading the max_threshold. See the second
+commit message and the docs in the last commit for more details.
+
+The feature is not currently supported on KVM guests, and PMMIR is set
+to read as zero, so it's not advertised as available. But it can be
+added at a later time. Writes to PMEVTYPER.TC and TH from guests are
+already RES0.
+
+The change has been validated on the Arm FVP model:
+
+  # Zero values, works as expected (as before).
+  $ perf stat -e dtlb_walk/threshold=0,threshold_compare=0/ -- true
+
+    5962      dtlb_walk/threshold=0,threshold_compare=0/
+
+  # Threshold >= 255 causes count to be 0 because dtlb_walk doesn't
+  # increase by more than 1 per cycle.
+  $ perf stat -e dtlb_walk/threshold=255,threshold_compare=2/ -- true
+
+    0      dtlb_walk/threshold=255,threshold_compare=2/
+  
+  # Keeping comparison as >= but lowering the threshold to 1 makes the
+  # count return.
+  $ perf stat -e dtlb_walk/threshold=1,threshold_compare=2/ -- true
+
+    6329      dtlb_walk/threshold=1,threshold_compare=2/
+
+James Clark (11):
+  arm: perf: Remove inlines from arm_pmuv3.c
+  arm: perf/kvm: Use GENMASK for ARMV8_PMU_PMCR_N
+  arm: perf: Use GENMASK for PMMIR fields
+  arm: perf: Convert remaining fields to use GENMASK
+  arm64: perf: Include threshold control fields in PMEVTYPER mask
+  arm: pmu: Share user ABI format mechanism with SPE
+  perf/arm_dmc620: Remove duplicate format attribute #defines
+  KVM: selftests: aarch64: Update tools copy of arm_pmuv3.h
+  arm: pmu: Move error message and -EOPNOTSUPP to individual PMUs
+  arm64: perf: Add support for event counting threshold
+  Documentation: arm64: Document the PMU event counting threshold
+    feature
+
+ Documentation/arch/arm64/perf.rst             |  72 +++++++
+ arch/arm/kernel/perf_event_v7.c               |   6 +-
+ arch/arm64/kvm/pmu-emul.c                     |   8 +-
+ arch/arm64/kvm/sys_regs.c                     |   4 +-
+ drivers/perf/apple_m1_cpu_pmu.c               |   6 +-
+ drivers/perf/arm_dmc620_pmu.c                 |  22 +--
+ drivers/perf/arm_pmu.c                        |  11 +-
+ drivers/perf/arm_pmuv3.c                      | 175 ++++++++++++++----
+ drivers/perf/arm_spe_pmu.c                    |  22 ---
+ include/linux/perf/arm_pmu.h                  |  22 +++
+ include/linux/perf/arm_pmuv3.h                |  34 ++--
+ tools/include/perf/arm_pmuv3.h                |  43 +++--
+ .../kvm/aarch64/vpmu_counter_access.c         |   5 +-
+ 13 files changed, 296 insertions(+), 134 deletions(-)
+
+-- 
+2.34.1
+
