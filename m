@@ -1,272 +1,81 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="amz4IF/b"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8570999;
-	Mon, 11 Dec 2023 10:09:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702318181; x=1733854181;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ghjTfbSH+fXK6Gs9YVXjvfTHrHTvBn/enjq1gPsZCAE=;
-  b=amz4IF/bG74OltUaqDkL0y2xQ9DPlyn57/22xoH0I7qW54Ju77kGc9a5
-   MDl/y24yb8LbSo1z7qDOf9m7C0EeppjexdVscpKNR9UIhV++EXSlqe6Kl
-   uHLJ2vjFFql8FZK010hwSU3VJ0yKbZjKUSkc6g0V5Yi6AArxS53W/AU36
-   thXnEkZmiPvwUMu8cDbv3jJwmAe7rmf/v8b9ENGOry508fatBkhXDY6a3
-   3oJwqXVcJlFPGSMP1AMOf5ojXVcLAw5Gt1QlP+ph9B61DaHIEzcWc5TKR
-   7Q9iuHW5pzXWVsSgmXW1l4GsJtiNW/f09R8NERModyza9Fz5Yz+jnU46L
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="398538690"
-X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
-   d="scan'208";a="398538690"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 10:09:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="1020337252"
-X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
-   d="scan'208";a="1020337252"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 10:09:40 -0800
-Received: from [10.212.109.181] (unknown [10.212.109.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 785D9580DA9;
-	Mon, 11 Dec 2023 10:09:36 -0800 (PST)
-Message-ID: <2a3caf68-3a84-4963-aa61-3063d12c4c2a@linux.intel.com>
-Date: Mon, 11 Dec 2023 13:09:34 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qkYC/+W6"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CED99
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 10:13:02 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5caf61210e3so53678967b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 10:13:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702318382; x=1702923182; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=q3zU0Mza8xelLsIrsnPiZI1psCs6jGW5zuolURJTG2A=;
+        b=qkYC/+W6fAj6/EytOdsO61Mf2TH19e+VrAuC1bTyYHA4e49Fnea4tI5JkTEXVAfZqu
+         A3IU0TFs6TCcChAoHnI1lTf12zG2mM+/R264rSykA2Wg1qTJos8gk6C3xd8RjuqBl496
+         GruzQ8ScYweLw0sDzKoAKsaSlQRrLjXoWlHrAbiAs4nHXH0/ifZYkQFiVHSjJdr6hbFr
+         HBflecuFmovXV7Q7txoVIHTJ7nH5Lg9JOJBGRK+7P8fJ/dyZT9uUKynLdJzlQmaiS2XC
+         gtfxjNJstDSeXEwAG9bImWO88uwSMAojul7q+tnr9EPej3h5X4N0PsYFKY+ZvXgB8Jy0
+         O6Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702318382; x=1702923182;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q3zU0Mza8xelLsIrsnPiZI1psCs6jGW5zuolURJTG2A=;
+        b=uwVb0DNTyp0NH2C/qRhKy/OF5kbZEVmnkSlwbt21c4/lQOw9tjlIAqAAhTH1ubwR/m
+         buLg+MGdYtRbOHeLUEbl5i3U5ijjdlDu91+KXpcXo+MBuy3ydVs/emp7jganqEH61cGt
+         J5ftBmhoNtmVATv/3cin5NSB11psUO1jMgl45CC00vniojEgLkPyGrDEtHM6aNDX7l8N
+         btg9RHXUvvaXsS5XM4ZbLkbrAa6jSmgMsagM9dgBByUtDYZP8AFKzIa4za7JJPGABuha
+         6AqDuNywdNw+Yy9SFq+fkTj8zE960xfjsE2u9JOqxBpLZwlXmsIsh6fxzcNCorO2S6RW
+         33gA==
+X-Gm-Message-State: AOJu0YzgMI+b3QR8mhrQETVGvVgRGxvr4dmzPjclhHqp/qDiWa2XgTHi
+	jf8L58bpmxM1q+/ai3pHmp3X+kl13N2G
+X-Google-Smtp-Source: AGHT+IGVlhrck8yldxsx8dzUPl5v/hDJwqs4ANNzPwmrRmXJdkTzkOSefZMYaoKPX7fG+zB0OzOPNJxTw47L
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7997:94ef:ba9a:d2b6])
+ (user=irogers job=sendgmr) by 2002:a81:fe04:0:b0:5d2:735c:b9f4 with SMTP id
+ j4-20020a81fe04000000b005d2735cb9f4mr40965ywn.1.1702318382095; Mon, 11 Dec
+ 2023 10:13:02 -0800 (PST)
+Date: Mon, 11 Dec 2023 10:12:41 -0800
+Message-Id: <20231211181242.1721059-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/5] perf mem: Clean up perf_mem_events__ptr()
-Content-Language: en-US
-To: Leo Yan <leo.yan@linaro.org>
-Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
- mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
- adrian.hunter@intel.com, john.g.garry@oracle.com, will@kernel.org,
- james.clark@arm.com, mike.leach@linaro.org, yuhaixin.yhx@linux.alibaba.com,
- renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com, ravi.bangoria@amd.com,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20231207192338.400336-1-kan.liang@linux.intel.com>
- <20231207192338.400336-3-kan.liang@linux.intel.com>
- <20231209043135.GA2116834@leoy-yangtze.lan>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20231209043135.GA2116834@leoy-yangtze.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+Subject: [PATCH v1] perf stat: Fix hard coded ll miss units
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Guillaume Endignoux <guillaumee@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Copy-paste error where LL cache misses are reported as l1i.
 
+Suggested-by: Guillaume Endignoux <guillaumee@google.com>
+Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/stat-shadow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2023-12-08 11:31 p.m., Leo Yan wrote:
-> On Thu, Dec 07, 2023 at 11:23:35AM -0800, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The mem_events can be retrieved from the struct perf_pmu now. An ARCH
->> specific perf_mem_events__ptr() is not required anymore. Remove all of
->> them.
->>
->> The Intel hybrid has multiple mem-events-supported PMUs. But they share
->> the same mem_events. Other ARCHs only support one mem-events-supported
->> PMU. In the configuration, it's good enough to only configure the
->> mem_events for one PMU. Add perf_mem_events_find_pmu() which returns the
->> first mem-events-supported PMU.
->>
->> In the perf_mem_events__init(), the perf_pmus__scan() is not required
->> anymore. It avoids checking the sysfs for every PMU on the system.
->>
->> Make the perf_mem_events__record_args() more generic. Remove the
->> perf_mem_events__print_unsupport_hybrid().
->>
->> Since pmu is added as a new parameter, rename perf_mem_events__ptr() to
->> perf_pmu__mem_events_ptr(). Several other functions also do a similar
->> rename.
->>
->> Reviewed-by: Ian Rogers <irogers@google.com>
->> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>  tools/perf/arch/arm64/util/mem-events.c |  10 +--
->>  tools/perf/arch/x86/util/mem-events.c   |  18 ++---
->>  tools/perf/builtin-c2c.c                |  28 +++++--
->>  tools/perf/builtin-mem.c                |  28 +++++--
->>  tools/perf/util/mem-events.c            | 103 ++++++++++++------------
->>  tools/perf/util/mem-events.h            |   9 ++-
->>  6 files changed, 104 insertions(+), 92 deletions(-)
->>
->> diff --git a/tools/perf/arch/arm64/util/mem-events.c b/tools/perf/arch/arm64/util/mem-events.c
->> index aaa4804922b4..2602e8688727 100644
->> --- a/tools/perf/arch/arm64/util/mem-events.c
->> +++ b/tools/perf/arch/arm64/util/mem-events.c
->> @@ -12,17 +12,9 @@ struct perf_mem_event perf_mem_events_arm[PERF_MEM_EVENTS__MAX] = {
->>  
->>  static char mem_ev_name[100];
->>  
->> -struct perf_mem_event *perf_mem_events__ptr(int i)
->> -{
->> -	if (i >= PERF_MEM_EVENTS__MAX)
->> -		return NULL;
->> -
->> -	return &perf_mem_events_arm[i];
->> -}
->> -
->>  const char *perf_mem_events__name(int i, const char *pmu_name __maybe_unused)
->>  {
->> -	struct perf_mem_event *e = perf_mem_events__ptr(i);
->> +	struct perf_mem_event *e = &perf_mem_events_arm[i];
->>  
->>  	if (i >= PERF_MEM_EVENTS__MAX)
->>  		return NULL;
-> 
-> Nitpick: it's good to check if 'i' is a valid value and then access the
-> array with a valid index.
-> 
->         if (i >= PERF_MEM_EVENTS__MAX)
->                 return NULL;
-> 
->         e = &perf_mem_events_arm[i];
-> 
->> diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
->> index 2b81d229982c..5fb41d50118d 100644
->> --- a/tools/perf/arch/x86/util/mem-events.c
->> +++ b/tools/perf/arch/x86/util/mem-events.c
->> @@ -28,17 +28,6 @@ struct perf_mem_event perf_mem_events_amd[PERF_MEM_EVENTS__MAX] = {
->>  	E("mem-ldst",	"ibs_op//",	"ibs_op"),
->>  };
->>  
->> -struct perf_mem_event *perf_mem_events__ptr(int i)
->> -{
->> -	if (i >= PERF_MEM_EVENTS__MAX)
->> -		return NULL;
->> -
->> -	if (x86__is_amd_cpu())
->> -		return &perf_mem_events_amd[i];
->> -
->> -	return &perf_mem_events_intel[i];
->> -}
->> -
->>  bool is_mem_loads_aux_event(struct evsel *leader)
->>  {
->>  	struct perf_pmu *pmu = perf_pmus__find("cpu");
->> @@ -54,7 +43,12 @@ bool is_mem_loads_aux_event(struct evsel *leader)
->>  
->>  const char *perf_mem_events__name(int i, const char *pmu_name)
->>  {
->> -	struct perf_mem_event *e = perf_mem_events__ptr(i);
->> +	struct perf_mem_event *e;
-> 
-> A nitpick as well:
-> 
-> Given perf's mem/c2c, callers will almostly invoke a valid index via the
-> argument 'i', but I still think here is a best place to return NULL
-> pointer for an invalid index rather than returning a wild pointer.
-> 
-> Thus I suggest to apply checking for x86 and other archs:
-> 
->         if (i >= PERF_MEM_EVENTS__MAX)
->                 return NULL;
-> 
->> +
->> +	if (x86__is_amd_cpu())
->> +		e = &perf_mem_events_amd[i];
->> +	else
->> +		e = &perf_mem_events_intel[i];
->>  
->>  	if (!e)
->>  		return NULL;
-> 
-> [...]
-> 
->>  int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
->>  				 char **rec_tmp, int *tmp_nr)
->>  {
->>  	const char *mnt = sysfs__mount();
->> +	struct perf_pmu *pmu = NULL;
->>  	int i = *argv_nr, k = 0;
->>  	struct perf_mem_event *e;
->>  
->> -	for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
->> -		e = perf_mem_events__ptr(j);
->> -		if (!e->record)
->> -			continue;
->>  
->> -		if (perf_pmus__num_mem_pmus() == 1) {
->> -			if (!e->supported) {
->> -				pr_err("failed: event '%s' not supported\n",
->> -				       perf_mem_events__name(j, NULL));
->> -				return -1;
->> -			}
->> +	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL) {
->> +		for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
->> +			e = perf_pmu__mem_events_ptr(pmu, j);
->>  
->> -			rec_argv[i++] = "-e";
->> -			rec_argv[i++] = perf_mem_events__name(j, NULL);
->> -		} else {
->> -			struct perf_pmu *pmu = NULL;
->> +			if (!e->record)
->> +				continue;
->>  
->>  			if (!e->supported) {
->> -				perf_mem_events__print_unsupport_hybrid(e, j);
->> +				pr_err("failed: event '%s' not supported\n",
->> +					perf_mem_events__name(j, pmu->name));
->>  				return -1;
->>  			}
->>  
->> -			while ((pmu = perf_pmus__scan(pmu)) != NULL) {
->> +			if (perf_pmus__num_mem_pmus() == 1) {
->> +				rec_argv[i++] = "-e";
->> +				rec_argv[i++] = perf_mem_events__name(j, NULL);
->> +			} else {
->>  				const char *s = perf_mem_events__name(j, pmu->name);
->>  
->>  				if (!perf_mem_event__supported(mnt, pmu, e))
-> 
-> I think we can improve a bit for this part.
-> 
-> Current implementation uses perf_pmus__num_mem_pmus() to decide if
-> system has only one memory PMU or multiple PMUs, and multiple PMUs
-> the tool iterates all memory PMUs to synthesize event options.
-> 
-> In this patch, it has changed to iterate all memory PMUs, no matter the
-> system has only one memory PMU or multiple PMUs. Thus, I don't see the
-> point for the condition checking for "perf_pmus__num_mem_pmus() == 1".
-> We can consolidate into the unified code like:
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 1c5c3eeba4cf..e31426167852 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -264,7 +264,7 @@ static void print_ll_miss(struct perf_stat_config *config,
+ 	static const double color_ratios[3] = {20.0, 10.0, 5.0};
+ 
+ 	print_ratio(config, evsel, aggr_idx, misses, out, STAT_LL_CACHE, color_ratios,
+-		    "of all L1-icache accesses");
++		    "of all LL-cache accesses");
+ }
+ 
+ static void print_dtlb_miss(struct perf_stat_config *config,
+-- 
+2.43.0.472.g3155946c3a-goog
 
-Yep, I think it's doable. Also, it seems we can further clean up the
-perf_pmus__num_mem_pmus(), which is a __weak function now.
-
-It seems we just need to change the perf_mem_events_find_pmu() a little
-bit and let it give both the first mem_events_pmu and the number of
-mem_pmus.
-> 
->         char *copy;
->         const char *s = perf_pmu__mem_events_name(j, pmu);
-> 
->         if (!s)
->                 continue;
-> 
->         if (!perf_pmu__mem_events_supported(mnt, pmu, e))
->                 continue;
-> 
->         copy = strdup(s);
->         if (!copy)
->                 return -1;
-> 
->         rec_argv[i++] = "-e";
->         rec_argv[i++] = copy;
->         rec_tmp[k++] = copy;
-
-Not sure what's the rec_tmp for. It seems no one use it.
-I will try if it can be removed.
-
-Thanks,
-Kan
-
-> 
-> Thanks,
-> Leo
