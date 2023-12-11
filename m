@@ -1,95 +1,90 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96619A;
-	Mon, 11 Dec 2023 15:02:07 -0800 (PST)
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-58d18c224c7so2644818eaf.2;
-        Mon, 11 Dec 2023 15:02:07 -0800 (PST)
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C718CCB;
+	Mon, 11 Dec 2023 15:13:19 -0800 (PST)
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5c1a75a4b6cso2602026a12.2;
+        Mon, 11 Dec 2023 15:13:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702335727; x=1702940527;
+        d=1e100.net; s=20230601; t=1702336399; x=1702941199;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZzAtMvelZEhbKh45bRc76zp7HAJfBcphLeBiuFGz8KE=;
-        b=kdnwIZMoLWSUtx9MK2XxYNTE/kpzkUED8UPdL5KVAguznnYThi/PAuDhwBTpAiw8RC
-         ZH11+sqrL4Q0vtYnIWHu7GF+lLy8Q0wZDShHITYt6ejOdsyl8SjEx2LYgAr0ULwOZIj6
-         hpblz31PvCONHGShDAYz2UNH1UBwdy8Y7hnrBX8/rz0QlQnwT/Mgn9miej43MBOwGyZR
-         8/kUaNfK6f2cSOwsejqCsWRxHl11pOkL6LXt/cuo+kRKf2+m4OEgEzJJ/K633pH8Pa0G
-         prISvDM4DK5RrtZVZOp99cr77XodNYDh2687n9lbRsgQ60RWvmOmtSVNa7pjhiC6MlsN
-         ar8w==
-X-Gm-Message-State: AOJu0YwedWa+g3sF9JyhJqUY4E1tR+WXHGsZGMNFDb82W/2FNyETBpiB
-	M6vnCczKhvvsSRITdq0gNuoQpFUitAvtd82Ar0c=
-X-Google-Smtp-Source: AGHT+IEZv+C9XGXi4ZZ+IS1I5twWj3QQ9yafN7rmJezcHw0HUxmUGG+4usD+b6G7sld4rHVbriSH4uwcAUQ9mY35EqQ=
-X-Received: by 2002:a05:6358:248b:b0:170:6ed7:3148 with SMTP id
- m11-20020a056358248b00b001706ed73148mr2916226rwc.22.1702335726809; Mon, 11
- Dec 2023 15:02:06 -0800 (PST)
+        bh=Cqid22gVYH094dKsNq0+eWukD9v01nP4LAhWHajwYxo=;
+        b=o2bRTkKwfrzWT6OkJeKYtq9OprxDeD5/YUxCkdMB3WPo5/vo9th6xElrdwdYaGgK+5
+         WN0zf/BkQL70h9sig2ySnyutSCtltRSxcff6pf2hAU7xgfp8x5MMwcmkJMx7Z1VYle+X
+         S1V6Ij5ynIbt5qdfF+9tJaB83gzFq8Wi/FeKqI+6LDwl8hhsFqbh20NbPMR55FxiCZBe
+         q1WCbEtWwK8i8MqQmP22OHfMrO7QcKILFPDscRd7MzW9GhU1fGVZ22CrWFMHR/LxoMSd
+         VA7rSN2gkeIuBImGxpkK2avGJOea1lyELHZRiWCQTB3GqebZlL20RhrFaAUfWGWcdIHA
+         eOZA==
+X-Gm-Message-State: AOJu0YwtmfmmKDzAK5/1JBeoIy1f7onm2P0egAqviLNjR1UTkNZcL9xp
+	2rcUqxS+c5A5a923DoiUJMPoWdmVdtxsIlNdXjJCUkUwZps=
+X-Google-Smtp-Source: AGHT+IFs5STX4S2N0jTA70Ngwh3RK7N00wUSIIOBD/HENzpB5AKMNG20w7x0dKREB9ZbHLlL0xHkT6kxXiptoR/Kei0=
+X-Received: by 2002:a17:90a:24b:b0:28a:7a82:53b6 with SMTP id
+ t11-20020a17090a024b00b0028a7a8253b6mr1507629pje.28.1702336398933; Mon, 11
+ Dec 2023 15:13:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231107083331.901-1-ravi.bangoria@amd.com> <CAM9d7cgs9Wk0OFoea4jOote-drHjvCimJyt7GWdO2Giw=d7Jog@mail.gmail.com>
- <f42bf6b7-75b8-124b-c79e-ad7a9b706990@amd.com> <CAM9d7cijrZzp=5m+BcQ77WFOSHT7e5vO-RCUTUp5Pevmz2wbtg@mail.gmail.com>
- <53374e41-d1e0-aa8f-d001-5e89783b962c@amd.com>
-In-Reply-To: <53374e41-d1e0-aa8f-d001-5e89783b962c@amd.com>
+References: <20231207125716.1947860-1-tmricht@linux.ibm.com>
+ <CAM9d7cgJUgVGpQJ=KgH+3RzAJ8Ce50Acr=gSZh_ZLuiTa3-sEg@mail.gmail.com>
+ <de0dd86a-4c49-49ed-a90b-4890c82a7b2d@linux.ibm.com> <7451a263-82e8-4daa-a7f6-009d5560445e@linux.ibm.com>
+In-Reply-To: <7451a263-82e8-4daa-a7f6-009d5560445e@linux.ibm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Dec 2023 15:01:55 -0800
-Message-ID: <CAM9d7cgNsXVpFDsUt01TwxF3B=7G9TWZWoNU2dP_RGtQdQAJPQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf tool AMD: Use non-precise cycles as default
- event on certain Zen2 processors
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: acme@kernel.org, kim.phillips@amd.com, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, changbin.du@huawei.com, yangjihong1@huawei.com, 
-	zwisler@chromium.org, wangming01@loongson.cn, chenhuacai@kernel.org, 
-	kprateek.nayak@amd.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sandipan.das@amd.com, ananth.narayan@amd.com, 
-	santosh.shukla@amd.com
+Date: Mon, 11 Dec 2023 15:13:07 -0800
+Message-ID: <CAM9d7cheZG+4PYf2xT0kykHW2LRt_d2GHG-mLWqvLBD3fJWFOQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Fix fails of perf stat --bpf-counters
+ --for-each-cgroup on s390
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 11, 2023 at 5:54=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.co=
+On Fri, Dec 8, 2023 at 3:30=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
 m> wrote:
 >
-> Hi Namhyung,
->
-> >>>> By default, Perf uses precise cycles event when no explicit event is
-> >>>> specified by user. Precise cycles event is forwarded to ibs_op// pmu
-> >>>> on AMD. However, IBS has hw issue on certain Zen2 processors where
-> >>>> it might raise NMI without sample_valid bit set, which causes Unknow=
-n
-> >>>> NMI warnings. (Erratum #1215: IBS (Instruction Based Sampling) Count=
-er
-> >>>> Valid Value May be Incorrect After Exit From Core C6 (CC6) State.) S=
-o,
-> >>>> use non-precise cycles as default event on affected processors.
-> >>>
-> >>> It seems like a kernel issue, do we have a kernel patch not to forwar=
-d
-> >>> precise cycles or instructions events to IBS on the affected CPUs?
-> >>
-> >> I'm not sure how it's a kernel issue. User can use ibs_op// pmu direct=
-ly
-> >> and might hit the hw bug.
+> On 12/8/23 12:07, Thomas Richter wrote:
+> > On 12/8/23 00:26, Namhyung Kim wrote:
 > >
-> > Sorry for the late reply.  I know it's the user's fault when using ibs_=
-op//
-> > directly but I think the kernel should not forward cycles:pp to IBS.
->
-> For all AMD zen uarchs, cycles:p is same as ibs_op// (man perf-list has
-> more detail). It's confusing if ibs_op// works but cycles:p fails on the
-> same machine.
+> >> Thanks for the patch.  But I think it should support
+> >> machines without systemd (or maybe with old versions).
+> >>
+> >> Also probably you want to reset the behavior after
+> >> the test.  I think we can just run some built-in test
+> >> workload like `perf test -w thloop`.
+> >>
+> >> Thanks,
+> >> Namhyung
+> >
+> > Thanks for our feedback.
+> > Well regarding the use of systemd daemon-reexec the manual says
+> > this command restarts the systemd triggered processes.
+> > There is nothing to reset. All ports stay active while the command
+> > is processed.
+> >
+> > I tried your 'perf test -w thloop`, but that did not trigger
+> > anything on system.slice.
+> >
+> > I do not understand enough about cgroups and system.slice, but I am
+> > under the impression, that the system.slice just increment counters
+> > when executed by processes under systemd control. Maybe I am wrong.
 
-Make sense.  Probably perf tools can provide a more detailed message
-about the situation.
+Ah, you're right.  It needs to run the task somewhere in the system.slice.
+Then it'd be hard to get a proper cgroup name generally. Hmm..
 
->
-> No strong opinion though. I can prepare a kernel patch, if you want.
+My concern was it'd bind system daemons on the CPU 0 and 1 after the
+test.  Probably you could run it at the end of the test again without tasks=
+et.
 
-I have a report that these unknown NMI messages caused some
-performance issues.  So maybe we need to be safe by not using
-IBS automatically.  I've also posted a patch to rate-limit the message
-itself.
+> >
+> > The only other workload which always incremented system.slice counters
+> > was 'ssh localhost ls -l', which involves local login and a running ssh=
+d.
+
+But it won't work if the system doesn't have sshd.
 
 Thanks,
 Namhyung
