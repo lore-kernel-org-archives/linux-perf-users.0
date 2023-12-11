@@ -1,90 +1,212 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C718CCB;
-	Mon, 11 Dec 2023 15:13:19 -0800 (PST)
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5c1a75a4b6cso2602026a12.2;
-        Mon, 11 Dec 2023 15:13:19 -0800 (PST)
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF3ECB;
+	Mon, 11 Dec 2023 15:25:08 -0800 (PST)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-28abb389323so46025a91.2;
+        Mon, 11 Dec 2023 15:25:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702336399; x=1702941199;
+        d=1e100.net; s=20230601; t=1702337107; x=1702941907;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Cqid22gVYH094dKsNq0+eWukD9v01nP4LAhWHajwYxo=;
-        b=o2bRTkKwfrzWT6OkJeKYtq9OprxDeD5/YUxCkdMB3WPo5/vo9th6xElrdwdYaGgK+5
-         WN0zf/BkQL70h9sig2ySnyutSCtltRSxcff6pf2hAU7xgfp8x5MMwcmkJMx7Z1VYle+X
-         S1V6Ij5ynIbt5qdfF+9tJaB83gzFq8Wi/FeKqI+6LDwl8hhsFqbh20NbPMR55FxiCZBe
-         q1WCbEtWwK8i8MqQmP22OHfMrO7QcKILFPDscRd7MzW9GhU1fGVZ22CrWFMHR/LxoMSd
-         VA7rSN2gkeIuBImGxpkK2avGJOea1lyELHZRiWCQTB3GqebZlL20RhrFaAUfWGWcdIHA
-         eOZA==
-X-Gm-Message-State: AOJu0YwtmfmmKDzAK5/1JBeoIy1f7onm2P0egAqviLNjR1UTkNZcL9xp
-	2rcUqxS+c5A5a923DoiUJMPoWdmVdtxsIlNdXjJCUkUwZps=
-X-Google-Smtp-Source: AGHT+IFs5STX4S2N0jTA70Ngwh3RK7N00wUSIIOBD/HENzpB5AKMNG20w7x0dKREB9ZbHLlL0xHkT6kxXiptoR/Kei0=
-X-Received: by 2002:a17:90a:24b:b0:28a:7a82:53b6 with SMTP id
- t11-20020a17090a024b00b0028a7a8253b6mr1507629pje.28.1702336398933; Mon, 11
- Dec 2023 15:13:18 -0800 (PST)
+        bh=9Ho6u7NxirxlqwmCKHqrmmg+mYP2l9JT9kgSjmqZWLw=;
+        b=sd1UACZypw4oVt1q66MjSPPSfYyZPHjSP+bn4z4/d+sxZutu/PH9Xl7gzX90AeV4rt
+         UGhqO4DJRIAsQ6G/zTF7x6z8Ne72rL0JeemEUvp8h95nkEL/mivvZ3HrnJACpIXpRXtT
+         ej/zkC6OIiFyiQELnmP3SjvSDeFrBM1qZBPoO0DUftplrPgO0YROcR4LdBKRhoAlT1LS
+         Fr08SKWqmamrsB2P7kG/W9CLPlcarSHxSFFq+3z3xUcGXuPjjx2uSdWRRt4ybqUQEy7O
+         +BZCF3Xk56h82izluZ5xT/Rvg6pb++zv19WywvYQ89/RfXzUwxujkGX13ATn+Lf3iHa3
+         +8fA==
+X-Gm-Message-State: AOJu0Yzj5tVD2MpoMrffUdeO/ypZxVnggxSncYxzYYpK68BetK+lHy4g
+	4M1WGYUU6ZFiPXeJvIMk3/wSHMz8Kr1rqH8A/Fw=
+X-Google-Smtp-Source: AGHT+IGfbVWVShsxeV+kZarUAHAg135tUUyWMOGsbLnbSDBAOq1jtb3sSQdDSfOGYmMeLBKTfja5tiqgI9f+EaroVo4=
+X-Received: by 2002:a17:90a:d994:b0:286:6cc1:5fd0 with SMTP id
+ d20-20020a17090ad99400b002866cc15fd0mr2387175pjv.83.1702337107352; Mon, 11
+ Dec 2023 15:25:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207125716.1947860-1-tmricht@linux.ibm.com>
- <CAM9d7cgJUgVGpQJ=KgH+3RzAJ8Ce50Acr=gSZh_ZLuiTa3-sEg@mail.gmail.com>
- <de0dd86a-4c49-49ed-a90b-4890c82a7b2d@linux.ibm.com> <7451a263-82e8-4daa-a7f6-009d5560445e@linux.ibm.com>
-In-Reply-To: <7451a263-82e8-4daa-a7f6-009d5560445e@linux.ibm.com>
+References: <20231207050433.1426834-1-irogers@google.com> <20231207050433.1426834-3-irogers@google.com>
+In-Reply-To: <20231207050433.1426834-3-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Dec 2023 15:13:07 -0800
-Message-ID: <CAM9d7cheZG+4PYf2xT0kykHW2LRt_d2GHG-mLWqvLBD3fJWFOQ@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix fails of perf stat --bpf-counters
- --for-each-cgroup on s390
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com
+Date: Mon, 11 Dec 2023 15:24:56 -0800
+Message-ID: <CAM9d7cgRZp3PieHDvsdFXG+pNG0TTKoAaH6ZxC1XAnrvRLE1Pw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/6] tools lib api: Add io_dir an allocation free
+ readdir alternative
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Quentin Monnet <quentin@isovalent.com>, 
+	Fangrui Song <maskray@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yanteng Si <siyanteng@loongson.cn>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, James Clark <james.clark@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 8, 2023 at 3:30=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
-m> wrote:
+On Wed, Dec 6, 2023 at 9:04=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> On 12/8/23 12:07, Thomas Richter wrote:
-> > On 12/8/23 00:26, Namhyung Kim wrote:
-> >
-> >> Thanks for the patch.  But I think it should support
-> >> machines without systemd (or maybe with old versions).
-> >>
-> >> Also probably you want to reset the behavior after
-> >> the test.  I think we can just run some built-in test
-> >> workload like `perf test -w thloop`.
-> >>
-> >> Thanks,
-> >> Namhyung
-> >
-> > Thanks for our feedback.
-> > Well regarding the use of systemd daemon-reexec the manual says
-> > this command restarts the systemd triggered processes.
-> > There is nothing to reset. All ports stay active while the command
-> > is processed.
-> >
-> > I tried your 'perf test -w thloop`, but that did not trigger
-> > anything on system.slice.
-> >
-> > I do not understand enough about cgroups and system.slice, but I am
-> > under the impression, that the system.slice just increment counters
-> > when executed by processes under systemd control. Maybe I am wrong.
+> glibc's opendir allocates a minimum of 32kb, when called recursively
+> for a directory tree the memory consumption can add up - nearly 300kb
+> during perf start-up when processing modules. Add a stack allocated
+> variant of readdir sized a little more than 1kb.
+>
+> As getdents64 may be missing from libc, add support using syscall.
 
-Ah, you're right.  It needs to run the task somewhere in the system.slice.
-Then it'd be hard to get a proper cgroup name generally. Hmm..
+Unfortunately my alpine build has:
 
-My concern was it'd bind system daemons on the CPU 0 and 1 after the
-test.  Probably you could run it at the end of the test again without tasks=
-et.
-
-> >
-> > The only other workload which always incremented system.slice counters
-> > was 'ssh localhost ls -l', which involves local login and a running ssh=
-d.
-
-But it won't work if the system doesn't have sshd.
+In file included from util/machine.c:2:
+/build/libapi/include/api/io_dir.h:17:23: error: conflicting types for
+'getdents'; have 'ssize_t(int,  void *, size_t)' {aka 'long int(int,
+void *, long unsigned int)'}
+   17 | static inline ssize_t getdents64(int fd, void *dirp, size_t count)
+      |                       ^~~~~~~~~~
+/usr/include/dirent.h:52:5: note: previous declaration of 'getdents'
+with type 'int(int,  struct dirent *, size_t)' {aka 'int(int,  struct
+dirent *, long unsigned int)'}
+   52 | int getdents(int, struct dirent *, size_t);
+      |     ^~~~~~~~
 
 Thanks,
 Namhyung
+
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/api/Makefile     |  2 +-
+>  tools/lib/api/io_dir.h     | 84 ++++++++++++++++++++++++++++++++++++++
+>  tools/perf/Makefile.config |  4 ++
+>  3 files changed, 89 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/lib/api/io_dir.h
+>
+> diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
+> index 044860ac1ed1..186aa407de8c 100644
+> --- a/tools/lib/api/Makefile
+> +++ b/tools/lib/api/Makefile
+> @@ -99,7 +99,7 @@ install_lib: $(LIBFILE)
+>                 $(call do_install_mkdir,$(libdir_SQ)); \
+>                 cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
+>
+> -HDRS :=3D cpu.h debug.h io.h
+> +HDRS :=3D cpu.h debug.h io.h io_dir.h
+>  FD_HDRS :=3D fd/array.h
+>  FS_HDRS :=3D fs/fs.h fs/tracing_path.h
+>  INSTALL_HDRS_PFX :=3D $(DESTDIR)$(prefix)/include/api
+> diff --git a/tools/lib/api/io_dir.h b/tools/lib/api/io_dir.h
+> new file mode 100644
+> index 000000000000..9b702497e05c
+> --- /dev/null
+> +++ b/tools/lib/api/io_dir.h
+> @@ -0,0 +1,84 @@
+> +/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
+> +/*
+> + * Lightweight directory reading library.
+> + */
+> +#ifndef __API_IO_DIR__
+> +#define __API_IO_DIR__
+> +
+> +#include <dirent.h>
+> +#include <fcntl.h>
+> +#include <stdlib.h>
+> +#include <unistd.h>
+> +#include <sys/stat.h>
+> +
+> +#ifndef HAVE_GETDENTS64
+> +#include <sys/syscall.h>
+> +
+> +static inline ssize_t getdents64(int fd, void *dirp, size_t count)
+> +{
+> +       return syscall(SYS_getdents64, fd, dirp, count);
+> +}
+> +#endif
+> +
+> +struct io_dirent64 {
+> +       ino64_t        d_ino;    /* 64-bit inode number */
+> +       off64_t        d_off;    /* 64-bit offset to next structure */
+> +       unsigned short d_reclen; /* Size of this dirent */
+> +       unsigned char  d_type;   /* File type */
+> +       char           d_name[NAME_MAX + 1]; /* Filename (null-terminated=
+) */
+> +};
+> +
+> +struct io_dir {
+> +       int dirfd;
+> +       ssize_t available_bytes;
+> +       struct io_dirent64 *next;
+> +       struct io_dirent64 buff[4];
+> +};
+> +
+> +static inline void io_dir__init(struct io_dir *iod, int dirfd)
+> +{
+> +       iod->dirfd =3D dirfd;
+> +       iod->available_bytes =3D 0;
+> +}
+> +
+> +static inline void io_dir__rewinddir(struct io_dir *iod)
+> +{
+> +       lseek(iod->dirfd, 0, SEEK_SET);
+> +       iod->available_bytes =3D 0;
+> +}
+> +
+> +static inline struct io_dirent64 *io_dir__readdir(struct io_dir *iod)
+> +{
+> +       struct io_dirent64 *entry;
+> +
+> +       if (iod->available_bytes <=3D 0) {
+> +               ssize_t rc =3D getdents64(iod->dirfd, iod->buff, sizeof(i=
+od->buff));
+> +
+> +               if (rc <=3D 0)
+> +                       return NULL;
+> +               iod->available_bytes =3D rc;
+> +               iod->next =3D iod->buff;
+> +       }
+> +       entry =3D iod->next;
+> +       iod->next =3D (struct io_dirent64 *)((char *)entry + entry->d_rec=
+len);
+> +       iod->available_bytes -=3D entry->d_reclen;
+> +       return entry;
+> +}
+> +
+> +static inline bool io_dir__is_dir(const struct io_dir *iod, struct io_di=
+rent64 *dent)
+> +{
+> +       if (dent->d_type =3D=3D DT_UNKNOWN) {
+> +               struct stat st;
+> +
+> +               if (fstatat(iod->dirfd, dent->d_name, &st, /*flags=3D*/0)=
+)
+> +                       return false;
+> +
+> +               if (S_ISDIR(st.st_mode)) {
+> +                       dent->d_type =3D DT_DIR;
+> +                       return true;
+> +               }
+> +       }
+> +       return dent->d_type =3D=3D DT_DIR;
+> +}
+> +
+> +#endif
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index aa55850fbc21..1cef1ab4ddb7 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -357,6 +357,10 @@ ifeq ($(feature-stackprotector-all), 1)
+>    CORE_CFLAGS +=3D -fstack-protector-all
+>  endif
+>
+> +ifeq ($(feature-getdents64), 1)
+> +  CFLAGS +=3D -DHAVE_GETDENTS64
+> +endif
+> +
+>  ifeq ($(DEBUG),0)
+>    ifeq ($(feature-fortify-source), 1)
+>      CORE_CFLAGS +=3D -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3D2
+> --
+> 2.43.0.rc2.451.g8631bc7472-goog
+>
