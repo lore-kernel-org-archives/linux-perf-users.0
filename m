@@ -1,166 +1,76 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="OQ4aFPun";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="OQ4aFPun"
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2087.outbound.protection.outlook.com [40.107.21.87])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA1E6C3;
-	Mon, 11 Dec 2023 09:46:40 -0800 (PST)
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
- b=BUgY3qtVL1XVNPkoZxpGYWvsrAxWM2ZWOvgl/LJ3YOtbhk1p8CZyKTvj+FKTz2UdCI7iGk4MPRXamYNKmj7XJZxqTbmRy5+bzUrlYb/7RQ8ehiIMkPYUhhsbWOWJpwLxQnoMlApvJtsP/Go6b+GEeFjNrHr/7VrIgkxsXGEj2QHd4SF8OAOUIGcjT0z5QbIFcYEjGgN34iaXkXnma/GJwZigbC+E4FGkwadeInyGQsI6y+tACSSSnWVUtW5+lPrf1+jkTatXo9THHwD0H/kW4qe4h3n+7xmbJJdLXq1tSjqZb4fu1iK57uie+unMSUjos5Dv9A7cz09SJamvvgIs9w==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xd1hwlEtG1W2t8J9aVgRhuNjoF8ywFjyTb6Z7hd8jOU=;
- b=dtZjU/anKPJmoFVyJ1fU83TZG21ExH7LoQUQ8KXa2WtoMQ/Vj/HxrEvAhj9DbIm31Gh8eYjvBXXsl1xq1ylUpk4d8uVTantjPM/XfWzeQdcYn8GDYzrhNyLrzLoYOJ35GuHDR/4plkR5uEqEOcUvApmZKXfMFux44rAqk58tnB+YmpYlvXRLA68QZeYuNSXHZEAf1iXJBc0GHE/b1AMPpHJ0Gc77fxh9eyj31aB8WEaj84O4kacB+Vi1/TkMPv7mp42YtiR2y39uB9ophQL+TP1nIZXNzGTPGFS3Ku/ZXvRakE+cYI7Cy0uP0LR5uc3FngL9dHqTx/CmVBd4SMYS2Q==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=armh.onmicrosoft.com; arc=pass (0
- oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xd1hwlEtG1W2t8J9aVgRhuNjoF8ywFjyTb6Z7hd8jOU=;
- b=OQ4aFPunZ6D012y1OcdYfrulhHnat+QX5rVUXJeLBdimAkc4xCcWrvSroIrbMi3XDFdGiQL4EZvOrL/LrpGBT4q0ccA09WhR7ZH24sqfJgC52PipNSyuZRnZoL/dZM99l7NxKOu7HEi0CXT7hKmrQA3vminUZIddQ86rtJpj0NQ=
-Received: from AM6PR10CA0032.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:89::45)
- by AS8PR08MB8420.eurprd08.prod.outlook.com (2603:10a6:20b:566::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.28; Mon, 11 Dec
- 2023 17:46:36 +0000
-Received: from AM2PEPF0001C714.eurprd05.prod.outlook.com
- (2603:10a6:209:89:cafe::99) by AM6PR10CA0032.outlook.office365.com
- (2603:10a6:209:89::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.32 via Frontend
- Transport; Mon, 11 Dec 2023 17:46:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM2PEPF0001C714.mail.protection.outlook.com (10.167.16.184) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7091.18 via Frontend Transport; Mon, 11 Dec 2023 17:46:36 +0000
-Received: ("Tessian outbound 7671e7ddc218:v228"); Mon, 11 Dec 2023 17:46:36 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: e38cb1925a5edd6d
-X-CR-MTA-TID: 64aa7808
-Received: from a809d27c7474.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 07829BAA-2B14-4939-9C6A-5C4C3BD194EE.1;
-	Mon, 11 Dec 2023 17:46:25 +0000
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a809d27c7474.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 11 Dec 2023 17:46:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TSYvDixkeb33DDT5bSOBpTCopWA415u+TDOj1Y9RSewcG7+EBviqJfaAvwgXSfFRGKwvt7ec+UdyvFYvwZvB2dlud+ee9j/iGmmqIVRHISveH1Zy8M6YmGNR9mqtKl+83Isg9Fk9ts7mHWSUzxzwQci5rR/FdPhPRb5yKjE7XTkDukH5CkuLqOS8r7WfKqLir+jLHWumop99Ow3sxvwlfrpGePLNm+l1H65+pzILTK4BSNoYghKWU8VcM1K7OUCIREPpfwPcoebpf3xoRFqCFGmYVVapFrY2CYQpJeWTGfpruqqebCaLCNNjpDYPfMbKUN+f6wQb2dYJokiRdnsJKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xd1hwlEtG1W2t8J9aVgRhuNjoF8ywFjyTb6Z7hd8jOU=;
- b=Aa1Y8Gsh/8UQ41ezbWvQ8LfERfksaM40EzqxZacvocV0WQMFYWLrFfn6VZlAruBZdnSKpjmFhrQgosSmVdv0ZvmjGfDhJjrH4ahH8MAn69KUjFt2kSm8fH6QjCSSowy5Faj5243WvJ6q0k3rwddBXwpf/k/i/fHOoTNDB5nDTm59BmuNJjk4cTDn67QEj3In2C6X7UvrGJla5z01GphnKjl4SM8jmSegTVrO/7oR07SACgjzXpj+RVdkWjQiW/iLjmkyJ7PddsZ8ONTsQ0NwBA2dHLCZGzzC7VY613y3GMzNWfVGPUteY3p5GtxntbAt/CeokEZ/ugk7wXhWD1v4nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xd1hwlEtG1W2t8J9aVgRhuNjoF8ywFjyTb6Z7hd8jOU=;
- b=OQ4aFPunZ6D012y1OcdYfrulhHnat+QX5rVUXJeLBdimAkc4xCcWrvSroIrbMi3XDFdGiQL4EZvOrL/LrpGBT4q0ccA09WhR7ZH24sqfJgC52PipNSyuZRnZoL/dZM99l7NxKOu7HEi0CXT7hKmrQA3vminUZIddQ86rtJpj0NQ=
-Received: from AS8PR08MB6646.eurprd08.prod.outlook.com (2603:10a6:20b:350::15)
- by GV1PR08MB7988.eurprd08.prod.outlook.com (2603:10a6:150:9c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.33; Mon, 11 Dec
- 2023 17:46:20 +0000
-Received: from AS8PR08MB6646.eurprd08.prod.outlook.com
- ([fe80::bfb6:4b42:707:fed6]) by AS8PR08MB6646.eurprd08.prod.outlook.com
- ([fe80::bfb6:4b42:707:fed6%4]) with mapi id 15.20.7068.031; Mon, 11 Dec 2023
- 17:46:20 +0000
-From: Ben Gainey <Ben.Gainey@arm.com>
-To: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org"
-	<acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, Mark Rutland
-	<Mark.Rutland@arm.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"namhyung@kernel.org" <namhyung@kernel.org>, "jolsa@kernel.org"
-	<jolsa@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "irogers@google.com" <irogers@google.com>
-Subject: Re: [PATCH v1] perf tests: Add perf script test
-Thread-Topic: [PATCH v1] perf tests: Add perf script test
-Thread-Index: AQHaKTSSMSQMuSRe6kSA2XUpgTX3G7CkYX2A
-Date: Mon, 11 Dec 2023 17:46:20 +0000
-Message-ID: <1ba595108f13fbe9e062b92e2c717f37e6a5ca93.camel@arm.com>
-References: <20231207174057.1482161-1-irogers@google.com>
-In-Reply-To: <20231207174057.1482161-1-irogers@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-x-ms-traffictypediagnostic:
-	AS8PR08MB6646:EE_|GV1PR08MB7988:EE_|AM2PEPF0001C714:EE_|AS8PR08MB8420:EE_
-X-MS-Office365-Filtering-Correlation-Id: 363d90ad-04ac-4910-b934-08dbfa711f6b
-x-checkrecipientrouted: true
-nodisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original:
- 0X3MU6+5nl3/8/IgXgA2i4XB+ZfUZR1nPDsgF9pvQ9+iT4KMJqN74N7tFv3K06ehO6SN6eZncT3E2HEFyVT8xnRRVaUL9zT3YlRCpk332lc7NMDwAk5ugv3zVkaaCBW1XUrMFIU68reSZJjzmvuwJJqXf+tPbbQfYWjRjoBy08+mR7AJwj1nlbMN0yi3IJtZYel26nFvGV3wb++LgCKFPNkF6o5IOXG5g7c1wgvH+jfSN+JQlXNWjZfMgc+rf44vEWhzSlj17h3eyk//rHdQKrGb424yCEOt/Xv+S8PNbqsfXUNE2BMU2jkQcMWY/khLBDRztSdHVLHO1awxQAqGYCRxqBeLzLU03eGZtgkWQWEsA9RJ+WrrNElyvF3rsBrcEB/f4iWpKr4kY2khr/IB8/fX5sogOgghx0FjbMil8GDmWGT5nQAt9j69/AMaVXLda7GyNm+GkyipjemwyZ8nEVjp3G8C6RCWprrQnECjwslotVHL0EKtw5JmNeDeaqPQ/dPdihq+4gpKLA7J/uuqwbX3NL/JYP5v3DHrqtNHAh50+arC0KT29sO90WscC5BZKQCHEAyk8VqFQ2QySGy+tWMGfcur1rA40bqeNyEQXNdehU54RMZflkwExLYTXccP
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR08MB6646.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(136003)(346002)(376002)(39860400002)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(6512007)(6506007)(26005)(2616005)(478600001)(6486002)(966005)(71200400001)(83380400001)(4744005)(7416002)(2906002)(5660300002)(41300700001)(76116006)(91956017)(66446008)(64756008)(66476007)(66556008)(110136005)(316002)(8936002)(8676002)(66946007)(38100700002)(921008)(86362001)(122000001)(36756003)(38070700009);DIR:OUT;SFP:1101;
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ABEA31FE50F38C45B61C7BAEEE2BAF99@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcCjBPdl"
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E9698
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 10:01:27 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1d2eea4af93so7055185ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 10:01:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702317687; x=1702922487; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m8ov5rUuh1DCcAbVaXZE62Q7sBBAz9vzZxmSXeBpC6w=;
+        b=hcCjBPdlANuU5YOO8fam9M+zzDf3pli0LqAgQrT0HXCfjgO/sqUVM53h0VITrWQzxt
+         MXyBWcmc5TuEZKPQz+sKqduFDMh7EaBfAvAD5mFGx/PjoljQpAcpWeif0tW8689yyXpJ
+         RteDQKdTw79gUe83ZsLe+bqsBtyYsaevS6bEMACSihA3GRY8+0OitXS4UN1H8iPhDaFI
+         TEbkNuoscfno9XpVlw/J99k+qsYjSo+m4pJBTfndXCVcS05f/70rhfqHB/mdHrEm1J6y
+         e2NCzTnEd1poklWBKhoCr8Iolh7jggFCdkR0SuKcJVejq5uscmJH3trUETN3Y/ikbc5+
+         4rLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702317687; x=1702922487;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m8ov5rUuh1DCcAbVaXZE62Q7sBBAz9vzZxmSXeBpC6w=;
+        b=nrw1n6S5EZGl+xRfWSoAqroogo7+ujcdjAhfZvXSDcCIK2rZGTPbs4BOc0fUuEJZVb
+         AWZZUWv9GTDtYYjlxFaypPrgzEfvzcB7iK06NiFrd6tv4989GovMfA0L3up/Gd2IvwvQ
+         B8CDkVext1gRfHRXbFYqETTgq5EkoNWi5delOMIfVLdKlEBGSHprpQGFv8eGSxtALg5a
+         t5uItcE7QsRIll/2Sx8SnS7L1SjCuq7Yyx5LGSVhBtJ7ZNsADc0t2Q7beAO3ytslLXBJ
+         VqcFDQDCv2IAdaRvHeIAmBxepYJBJ5z1n7ATuHFU2tFWwtQoeNv2Dgmzf/27Mg+OlXPM
+         jZ9w==
+X-Gm-Message-State: AOJu0Yy2L3AX6pbrVGqE3ORsrHiZjc5+pClX3Leo630fLrY0oIpfEkwx
+	AgccLoef/bRkJtLfYfVvJwzPZCiWZFCiS9JF2+oqfQ5W+VY=
+X-Google-Smtp-Source: AGHT+IFOH8zja7KL8AUwuj/hEmOLoMxJj1VhNWodowvmcCVgvmeqKKF4cMfeIXMZD6U7Vd2wNWjNja/GR+oQ7IfR13U=
+X-Received: by 2002:a17:90a:d794:b0:286:f1b8:da7b with SMTP id
+ z20-20020a17090ad79400b00286f1b8da7bmr8174099pju.0.1702317687077; Mon, 11 Dec
+ 2023 10:01:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB7988
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM2PEPF0001C714.eurprd05.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	0d2fde85-c7c1-4080-1b88-08dbfa7115ba
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	RDL8q9JHEU2LYRt7OShSezpRMLjIahrifKv59TnuOQRcRmdLrXlqGAxELnrQhcKTld9CpVwHAMch7v3Ml6V1LRkjYsawSbz7UhWvEEZco273MrKn5Wm+9Wg/2D/bEqPgfIgte9UNlp1yDSlOpwDJIJXcD9/9c8VfgYNKFRcYfTn81PXoXaVgRbetdP1VSZn6/6ipvt2cHVT6JgdEtTzv6EttIhzXkQhTaySGumz1nwBlpfxPJrbFILQHeyef8tfXTTkH6XTRAZ8ot2QfIgwOzg/3uSn3Y6aOK2z10cYv38nNbAI5YkThXFZ3fYzx0J8QNprBVeyPbeYtJJqo7BzHw6eN1vI+H3346ZepvHPhdPjjej/BUDq0SlzwBY1/aRZxiXlYv4X0CXlrIg2JYGXejSXNI9mVrHN8eshpdfQlZ8tPTBsaDzLSIBIH/kUrV5Ty0F3uQINWNl6g2JkH+yBcepABUWLi1R5e2WJ6sTKdehdStRm02x6N31WCwrWRILf3lySaxB6NHXRxFrGDPZmPK4Zdtz+vL9s6r/mq1JO2Cvd0iDiVuciJgOna7ZWHHg1nrrGftwWkoWHGz/qAw7TaqUNuvWpo6Gf6yHDqUn+xtiVovKb3oy4CthH9BMjbjiLlJKtexlcZkw2oKk9L6rgI25XtA8nPM7CxvwfiYXt6/YGfa8HZvNdyN05z49WZpOObTvFYgHcRm+mBhxJYSHJa1eY0f6uLBIK452i+7qOtUwLEzOvxP6NTDaX76Lv1Q0A/
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(396003)(39860400002)(376002)(230922051799003)(82310400011)(451199024)(1800799012)(64100799003)(186009)(36840700001)(46966006)(40470700004)(26005)(2616005)(40460700003)(83380400001)(336012)(478600001)(6506007)(921008)(82740400003)(966005)(6486002)(6512007)(5660300002)(41300700001)(356005)(36756003)(81166007)(8936002)(450100002)(86362001)(36860700001)(8676002)(110136005)(2906002)(4744005)(70586007)(47076005)(40480700001)(70206006)(316002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2023 17:46:36.7834
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 363d90ad-04ac-4910-b934-08dbfa711f6b
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM2PEPF0001C714.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB8420
+From: trinity pointard <trinity.pointard@gmail.com>
+Date: Mon, 11 Dec 2023 19:00:51 +0100
+Message-ID: <CANiTRwdm56EJkY=HN+OnD1y++MT6zxEpX3dqoThELMRsUyFTEw@mail.gmail.com>
+Subject: possible regression in perf
+To: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-T24gVGh1LCAyMDIzLTEyLTA3IGF0IDA5OjQwIC0wODAwLCBJYW4gUm9nZXJzIHdyb3RlOg0KPiBT
-dGFydCBhIG5ldyBzZXQgb2Ygc2hlbGwgdGVzdHMgZm9yIHRlc3RpbmcgcGVyZiBzY3JpcHQuIFRo
-ZSBpbml0aWFsDQo+IGNvbnRyaWJ1dGlvbiBpcyBjaGVja2luZyB0aGF0IHNvbWUgcGVyZiBkYi1l
-eHBvcnQgZnVuY3Rpb25hbGl0eSB3b3Jrcw0KPiBhcyByZXBvcnRlZCBpbiB0aGlzIHJlZ3Jlc3Np
-b24gYnkgQmVuIEdhaW5leSA8YmVuLmdhaW5leUBhcm0uY29tPjoNCj4gaHR0cHM6Ly9sb3JlLmtl
-cm5lbC5vcmcvbGttbC8yMDIzMTIwNzE0MDkxMS4zMjQwNDA4LTEtYmVuLmdhaW5leUBhcm0uY29t
-Lw0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBJYW4gUm9nZXJzIDxpcm9nZXJzQGdvb2dsZS5jb20+DQo+
-IC0tLQ0KDQpUaGFua3MgSWFuLiBJJ3ZlIHJ1biB0aGUgdGVzdCBzY3JpcHQgYmVmb3JlIGFuZCBh
-ZnRlciBteSBwYXRjaC4gTG9va3MNCmdvb2QgdG8gbWUuIFBsZWFzZSBmZWVsIGZyZWUgdG86DQoN
-ClRlc3RlZC1CeTogQmVuIEdhaW5leSA8YmVuLmdhaW5leUBhcm0uY29tPg0KSU1QT1JUQU5UIE5P
-VElDRTogVGhlIGNvbnRlbnRzIG9mIHRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUg
-Y29uZmlkZW50aWFsIGFuZCBtYXkgYWxzbyBiZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0
-aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRl
-bHkgYW5kIGRvIG5vdCBkaXNjbG9zZSB0aGUgY29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwg
-dXNlIGl0IGZvciBhbnkgcHVycG9zZSwgb3Igc3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24g
-aW4gYW55IG1lZGl1bS4gVGhhbmsgeW91Lg0K
+Hi,
+
+I think I found a regression in perf related to the control fd.
+At its introduction (bee328cb71eb0b38ab128d7c475209d973a13f92), it
+looks like enabling or disabling counters would print the current
+counters. However when `enable/disable <counter>` was introduced
+(991ae4eb36911fe9a99bef1c22b9578ceec3896a), it changed what
+`evlist__ctlfd_process()` would return on a successful enable/disable,
+which made the call to `process_interval()` in `process_evlist()`
+essentially dead code.
+
+I was in the process of patching perf so that `snapshot` would print
+current counters (in which case I would send enable, sleep a bit, and
+send disable+snapshot, to do my measurements). But given what I saw, I
+think just sending enable and disable was enough at one point.
+
+Is this a known issue? Would a patch which makes
+`evlist__ctlfd_enable()` return 1 on success be an acceptable fix?
+It's somewhat more verbose than what I wanted initially (printing both
+on enable and disable, printing on enable isn't useful to me), but
+that's reasonably easy to post-process (or enable could be made to not
+print current counters).
+
+Regards,
+trinity-1686a/trinity Pointard
+
+P.S.: this is my first time posting to LKML, please tell me if I did
+anything wrong :-)
