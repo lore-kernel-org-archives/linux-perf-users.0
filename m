@@ -1,117 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19B4C8E1;
-	Sun, 10 Dec 2023 13:39:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVhomcV5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943E1C433C7;
-	Sun, 10 Dec 2023 13:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702215559;
-	bh=fTm7ITxHWlDMbWerH/cRI+Ai9WLiPVmOtrotE0lLvnY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HVhomcV5xU0ZXA9qvXYGKxiMFdS6MgqOgBH8yVcI/wMrxQ7aUz//+rvpXYNlw07hm
-	 P9NAJs6tPMENLr+CI1h6JdOynsfnysMgdiZuu4zORGoSaM9iHLx7SdGP44mJ7+wb0T
-	 0q/uQgMO2k/WLbkNfC92nhuv51HjZk2N//+TkzuwPgTT6xWTQpv3m2pKHgdGjoaQa1
-	 xYVU9AEaFVTZLSmqS54YhEJMq6RR/MdtE2fc8b+wS7cX8/oYlgPeMB7rpn+kCOo/Db
-	 xXLcjoliKR7pQd8Zwzb8q3aJ2zPk3t3DmczpDmldyi1Ymw3r25d5XOUoKHO5cl7e7e
-	 mQf4jAAx+CFdA==
-Date: Sun, 10 Dec 2023 13:39:12 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>, "will@kernel.org" <will@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"john.g.garry@oracle.com" <john.g.garry@oracle.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	"irogers@google.com" <irogers@google.com>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	"mike.leach@linaro.org" <mike.leach@linaro.org>,
-	"leo.yan@linaro.org" <leo.yan@linaro.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH v2 1/4] dt-bindings: perf: fsl-imx-ddr: Add
- i.MX95 compatible
-Message-ID: <20231210-scrap-backdrop-8bae1acc07fd@spud>
-References: <20231208085402.2106904-1-xu.yang_2@nxp.com>
- <20231208-depress-smuggler-f3069487a067@spud>
- <DB7PR04MB51468DB108F3003AF52CDDDA8C88A@DB7PR04MB5146.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="M3R04DG+"
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C10EA
+	for <linux-perf-users@vger.kernel.org>; Sun, 10 Dec 2023 20:55:54 -0800 (PST)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-5d2d0661a8dso39518867b3.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 10 Dec 2023 20:55:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google; t=1702270554; x=1702875354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4LaOcUMKpaO4TscNM+bwybPG9qx56qSeDWtKT8IysKk=;
+        b=M3R04DG+k5gvzaElC3f8cfdbgyW2SN0/jlAMkC9xioLyoYthHoXeq0o/70HRyD/hC9
+         mMCNPvjyAeIofw0hVH+aEMqMNDjLManpbBClzlJrbP8KwIlvVyFLGWn7HMfeIWYd79mQ
+         Ir6P+rdfe1ruTQHr1XrqVjcTEq199D/RXum+K+DYNL95xxEGM9sj+bBdtFI5VeUI1gJa
+         obiMRMwdcYuAFLc34LMY7KE4HQqOQdZEcwbiqtOnJGLpfL1/9n8ESaiZ7dIlxKNgFzZD
+         tDvxBLU/cssGK6CxDnS64XwHRGS0J4yn4K3aSxVJ8a8o1+S0jZ0oFvVV/wBZ6I9r8zOH
+         Pviw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702270554; x=1702875354;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4LaOcUMKpaO4TscNM+bwybPG9qx56qSeDWtKT8IysKk=;
+        b=QQ68S6bPYUORtNMv+YxUfbp+vCJIrBCuoj5elMXvjOdCVvfkgtFNLYry2jMphX7h3j
+         gHdwPjQAL4Y3rhdVH2S38bF7BrhwAYBbxahoClVtBYQvDWlIOnhL7XZwPYCBR+7vvRXQ
+         5AMZCI6jAllyV4a3JLwQtMOwClXTQ8/cSZ6v2aB35265D+rY41srWpAfcIEWdnY5vCVT
+         IYI+B0pMuq0gy96I+bBtvUUliudupd+nkntdvzBbjB0qz5ZKucvX2tcuUsS9gVk8c8tn
+         PpvdtCJMkccBZE/eReG144kmgcOBGU4YfXA1ZOQRuGAgy+3hNUtD6NaVcI/BKqd2qhDW
+         f67g==
+X-Gm-Message-State: AOJu0Yy/PWsaxNuqB7ig3Sb4h34VnXkrXBVrA8YFgCpC4B6Fq97urn/z
+	8fHt0yUsvPO/qrZAmfWgvhcYNg==
+X-Google-Smtp-Source: AGHT+IHAF2s56Q3cvUDcAQsGiDW8PGeDXKlIoMtqxBQkR5BpVaFZyDHs+/DYtQpzmLR2hm7B1UnyWw==
+X-Received: by 2002:a0d:d5cd:0:b0:5d7:1940:b36c with SMTP id x196-20020a0dd5cd000000b005d71940b36cmr3212062ywd.56.1702270554159;
+        Sun, 10 Dec 2023 20:55:54 -0800 (PST)
+Received: from zhadum.home.kylehuey.com (c-76-126-33-191.hsd1.ca.comcast.net. [76.126.33.191])
+        by smtp.gmail.com with ESMTPSA id e11-20020a170902b78b00b001d2ffeac9d3sm3300623pls.186.2023.12.10.20.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Dec 2023 20:55:53 -0800 (PST)
+From: Kyle Huey <me@kylehuey.com>
+X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
+To: Kyle Huey <khuey@kylehuey.com>,
+	linux-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>
+Cc: Robert O'Callahan <robert@ocallahan.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v3 1/4] perf/bpf: Call bpf handler directly, not through overflow machinery
+Date: Sun, 10 Dec 2023 20:55:40 -0800
+Message-Id: <20231211045543.31741-2-khuey@kylehuey.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231211045543.31741-1-khuey@kylehuey.com>
+References: <20231211045543.31741-1-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6Y73PFULRu5w7Pr1"
-Content-Disposition: inline
-In-Reply-To: <DB7PR04MB51468DB108F3003AF52CDDDA8C88A@DB7PR04MB5146.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
+To ultimately allow bpf programs attached to perf events to completely
+suppress all of the effects of a perf event overflow (rather than just the
+sample output, as they do today), call bpf_overflow_handler() from
+__perf_event_overflow() directly rather than modifying struct perf_event's
+overflow_handler. Return the bpf program's return value from
+bpf_overflow_handler() so that __perf_event_overflow() knows how to
+proceed. Remove the now unnecessary orig_overflow_handler from struct
+perf_event.
 
---6Y73PFULRu5w7Pr1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch is solely a refactoring and results in no behavior change.
 
-On Sun, Dec 10, 2023 at 04:27:16AM +0000, Xu Yang wrote:
-> Hi Conor,
->=20
-> > On Fri, Dec 08, 2023 at 04:53:59PM +0800, Xu Yang wrote:
-> > > i.MX95 has a DDR pmu. This will add a compatible for it.
-> >=20
-> > On v1 we had a discussion because the commit message wasn't clear about
-> > whether or not the device was compatible with existing ones. For some
-> > reason, the v2 patch _removes_ information from the commit message
-> > rather than tries to explain.
-> > This [1] message of yours, that I didn't get a chance to reply to before
-> > you sent this new version, seems to say that there should be an
-> > imx93-ddr-pmu fallback.
->=20
-> Thanks for your comments.=20
->=20
-> Just read my previous comment in [1] and found I made a mistake.
-> Now I'll try to clarify it here.
->=20
-> Imx95 and imx93 have different AXI filter configuration. I need a=20
-> compatible for imx95 since the driver cannot differentiate them.=20
->=20
-> Then I need to consider below two options:
-> 1. compatible =3D "fsl,imx95-ddr-pmu", "fsl,imx93-ddr-pmu"
-> 2. compatible =3D "fsl,imx95-ddr-pmu"
->=20
-> Both of them work correctly on imx95. When I make changes in
-> driver for imx95, imx93 is not affected.
->=20
-> For basic functions, imx95 is compatible with imx93. I select the 2rd
-> form for simplicity. If the first form is optimal, I can change it in next
-> version.
+Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+---
+ include/linux/perf_event.h |  6 +-----
+ kernel/events/core.c       | 28 +++++++++++++++-------------
+ 2 files changed, 16 insertions(+), 18 deletions(-)
 
-The first form is preferred, yes.
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 5547ba68e6e4..312b9f31442c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -810,7 +810,6 @@ struct perf_event {
+ 	perf_overflow_handler_t		overflow_handler;
+ 	void				*overflow_handler_context;
+ #ifdef CONFIG_BPF_SYSCALL
+-	perf_overflow_handler_t		orig_overflow_handler;
+ 	struct bpf_prog			*prog;
+ 	u64				bpf_cookie;
+ #endif
+@@ -1337,10 +1336,7 @@ __is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
+ #ifdef CONFIG_BPF_SYSCALL
+ static inline bool uses_default_overflow_handler(struct perf_event *event)
+ {
+-	if (likely(is_default_overflow_handler(event)))
+-		return true;
+-
+-	return __is_default_overflow_handler(event->orig_overflow_handler);
++	return is_default_overflow_handler(event);
+ }
+ #else
+ #define uses_default_overflow_handler(event) \
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index b704d83a28b2..54f6372d2634 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9515,6 +9515,12 @@ static inline bool sample_is_allowed(struct perf_event *event, struct pt_regs *r
+ 	return true;
+ }
+ 
++#ifdef CONFIG_BPF_SYSCALL
++static int bpf_overflow_handler(struct perf_event *event,
++				struct perf_sample_data *data,
++				struct pt_regs *regs);
++#endif
++
+ /*
+  * Generic event overflow handling, sampling.
+  */
+@@ -9584,7 +9590,10 @@ static int __perf_event_overflow(struct perf_event *event,
+ 		irq_work_queue(&event->pending_irq);
+ 	}
+ 
+-	READ_ONCE(event->overflow_handler)(event, data, regs);
++#ifdef CONFIG_BPF_SYSCALL
++	if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
++#endif
++		READ_ONCE(event->overflow_handler)(event, data, regs);
+ 
+ 	if (*perf_event_fasync(event) && event->pending_kill) {
+ 		event->pending_wakeup = 1;
+@@ -10394,9 +10403,9 @@ static void perf_event_free_filter(struct perf_event *event)
+ }
+ 
+ #ifdef CONFIG_BPF_SYSCALL
+-static void bpf_overflow_handler(struct perf_event *event,
+-				 struct perf_sample_data *data,
+-				 struct pt_regs *regs)
++static int bpf_overflow_handler(struct perf_event *event,
++				struct perf_sample_data *data,
++				struct pt_regs *regs)
+ {
+ 	struct bpf_perf_event_data_kern ctx = {
+ 		.data = data,
+@@ -10417,10 +10426,8 @@ static void bpf_overflow_handler(struct perf_event *event,
+ 	rcu_read_unlock();
+ out:
+ 	__this_cpu_dec(bpf_prog_active);
+-	if (!ret)
+-		return;
+ 
+-	event->orig_overflow_handler(event, data, regs);
++	return ret;
+ }
+ 
+ static int perf_event_set_bpf_handler(struct perf_event *event,
+@@ -10456,8 +10463,6 @@ static int perf_event_set_bpf_handler(struct perf_event *event,
+ 
+ 	event->prog = prog;
+ 	event->bpf_cookie = bpf_cookie;
+-	event->orig_overflow_handler = READ_ONCE(event->overflow_handler);
+-	WRITE_ONCE(event->overflow_handler, bpf_overflow_handler);
+ 	return 0;
+ }
+ 
+@@ -10468,7 +10473,6 @@ static void perf_event_free_bpf_handler(struct perf_event *event)
+ 	if (!prog)
+ 		return;
+ 
+-	WRITE_ONCE(event->overflow_handler, event->orig_overflow_handler);
+ 	event->prog = NULL;
+ 	bpf_prog_put(prog);
+ }
+@@ -11928,13 +11932,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		overflow_handler = parent_event->overflow_handler;
+ 		context = parent_event->overflow_handler_context;
+ #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
+-		if (overflow_handler == bpf_overflow_handler) {
++		if (parent_event->prog) {
+ 			struct bpf_prog *prog = parent_event->prog;
+ 
+ 			bpf_prog_inc(prog);
+ 			event->prog = prog;
+-			event->orig_overflow_handler =
+-				parent_event->orig_overflow_handler;
+ 		}
+ #endif
+ 	}
+-- 
+2.34.1
 
---6Y73PFULRu5w7Pr1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZXW/fAAKCRB4tDGHoIJi
-0tsaAP48qhr4ANSJHCm2QzJHQ7OffzfDNhkrzRw0fj/ODk7Q2AD8CjVcf8ACaciH
-Z9eIvtEKnMZ8bKAW+0NtJBxGnoeK+wQ=
-=zAEX
------END PGP SIGNATURE-----
-
---6Y73PFULRu5w7Pr1--
