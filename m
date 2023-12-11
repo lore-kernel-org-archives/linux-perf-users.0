@@ -1,64 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB8954F9A
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 21:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpfnzWkI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99DB4C433C8;
-	Mon, 11 Dec 2023 21:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702330379;
-	bh=SOhK9Lq2M03sHZRGNtRe2gM1uwO43Dw3Vsd4hkpKqeI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QpfnzWkI9kltgIjchkhkVBWL5Ymd8PEmkFsAPYhKAONsoVGCqAkGBM/z97al55l+o
-	 jUeuKhRn8eefNEYz9ol+IKkYG1hFgVSzrCMLzVLu9h1omUt2/Ji3uVOoyEvzuYF+SZ
-	 VD4v87Pzhr3uMwltGLzV8YWTBqQm72f8A6eON+nGWpuD1qBPfqCRlLiB7M7nU8roVQ
-	 JJAFCATWC/ppt9Q1p1C+JlAPYGxM8lzmSbOtgPsJ6zekHBVr3DHmi5GPnpeCotGOxa
-	 PWloC1wSyDfMsruZxObMUMxaTWLsGalnuEylqXOH6rzRF2yFV5s6U+0LoJfrSHpnug
-	 kgeDwlpRvY59Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id C30FD403EF; Mon, 11 Dec 2023 18:32:56 -0300 (-03)
-Date: Mon, 11 Dec 2023 18:32:56 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1] perf stat: Fix help message for --metric-no-threshold
- option
-Message-ID: <ZXeACPegTbAHqkHh@kernel.org>
-References: <20231129223540.2247030-1-irogers@google.com>
- <CAP-5=fXeZpOg7cHDZmTLvQh=FTamvpdw+=q9vcqrUBd9v7ifLQ@mail.gmail.com>
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB0A120
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 14:48:00 -0800 (PST)
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5906e03a7a4so2701604eaf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 14:48:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702334880; x=1702939680;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k4H6aTdYE8tqOr/rhjfIkIGsF0cSzu4dWTqXBe8lHAQ=;
+        b=NpWM9Y0Zyqy9fUwFuIZYGLSqKKz9n9ayabcvKvJzgP+0n+JHOYRvwcBIlh2uTOYQ+8
+         zqgQCy6fF+z8tvlA2JoadrE+0P2tHhncClqXRcRfgcMLFrx7uDxI86BEyzxyM6QIj1oT
+         pxnRRf4xiIZMFvH6t2IPagITEQFXSiTdmUnkuVfO8qcMaAAUTCTuL6w5ntdWRXu837ue
+         3HcsiQc6b9Z1Je9AhHHYbDkpHFfSChO2JkvXCvTJT97+wcAFV/SfJ2gIaNmTxg8wT/T6
+         GnRg9HE355UTK9X0lmsya1obkfs6OL7vg+8KRyvpef4L6ne71qKXciDfCUZnLHc5hOIB
+         LFzw==
+X-Gm-Message-State: AOJu0YxiXF+AL1r7AzdVKTXk6HUNJw8bLQijb1tc8aLhAGtSmJn3DE9n
+	k1tPCk5HrLADJQLnxzFpkq6C11vh//RbkOnhmlk=
+X-Google-Smtp-Source: AGHT+IF31Mg+zAriK3Z8TrEy05W4kntJoJ4yBtpYQzWGNS2VD5tmT/nhYRq+mn0O9RBa0jUyCvS3Hi31NDsPEFoKSeU=
+X-Received: by 2002:a05:6359:4114:b0:170:bfb9:fb41 with SMTP id
+ kh20-20020a056359411400b00170bfb9fb41mr2885853rwc.28.1702334879711; Mon, 11
+ Dec 2023 14:47:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXeZpOg7cHDZmTLvQh=FTamvpdw+=q9vcqrUBd9v7ifLQ@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+References: <20231121192956.919380-1-oliver.upton@linux.dev>
+ <20231121192956.919380-3-oliver.upton@linux.dev> <c701bf6b-0ff0-44a0-9d1d-84e8515d077c@sirena.org.uk>
+ <ZWui3KxloT5tcIsJ@thinky-boi> <80ff02a5-8355-437d-b844-3de9fe182518@sirena.org.uk>
+ <bec12895-38d0-46d3-8031-53c55f88f3a7@sirena.org.uk>
+In-Reply-To: <bec12895-38d0-46d3-8031-53c55f88f3a7@sirena.org.uk>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 11 Dec 2023 14:47:48 -0800
+Message-ID: <CAM9d7cirVU1sGPKT9SfmjPpFKJ2PiZ-Md52bWB=Ormbkiwvgkw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf build: Ensure sysreg-defs Makefile respects
+ output dir
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Mark Brown <broonie@kernel.org>, linux-perf-users@vger.kernel.org, 
+	kvmarm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Marc Zyngier <maz@kernel.org>, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Mon, Dec 11, 2023 at 11:39:02AM -0800, Ian Rogers escreveu:
-> On Wed, Nov 29, 2023 at 2:36 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Copy-paste error led to help message for metric-no-threshold repeating
-> > that of metric-no-merge.
-> >
-> > Reported-by: Stephane Eranian <eranian@google.com>
-> > Fixes: 1fd09e299bdd ("perf metric: Add --metric-no-threshold option")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Ping. Thanks,
+Hello Oliver,
 
-Thanks, applied to perf-tools-next.
+On Mon, Dec 11, 2023 at 5:19=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> On Wed, Dec 06, 2023 at 01:45:56PM +0000, Mark Brown wrote:
+> > On Sat, Dec 02, 2023 at 01:34:20PM -0800, Oliver Upton wrote:
+> > > Thanks for the bug report. Apologies for the latency on my end, I've =
+had
+> > > a mountain of non-upstream stuff to wade through.
+> > > On Wed, Nov 29, 2023 at 04:27:01PM +0000, Mark Brown wrote:
+>
+> > > > This breaks some build configurations:
+>
+> > > > make[5]: Entering directory '/home/broonie/git/bisect/tools/arch/ar=
+m64/tools'
+> > > > /home/broonie/git/bisect/tools/scripts/Makefile.include:4: *** O=3D=
+../../../../tools does not exist.  Stop.
+>
+> > > Looks like its because $(PWD) is tools/testing/selftests/ when buildi=
+ng
+> > > from the top level makefile. I'll get a fix out in the next couple da=
+ys
+> > > after I find my Make dunce cap :)
+>
+> > This issue is now in Linus' tree.
+>
+> Any news on this, the problem remains in -rc5?
 
-- Arnaldo
+Have you found some time to work on it?
 
+Thanks,
+Namhyung
