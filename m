@@ -1,14 +1,14 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id F367BE3;
-	Tue, 12 Dec 2023 07:06:48 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61D64EB;
+	Tue, 12 Dec 2023 07:10:41 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED55C143D;
-	Tue, 12 Dec 2023 07:07:34 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DFBB143D;
+	Tue, 12 Dec 2023 07:11:27 -0800 (PST)
 Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9F9B3F738;
-	Tue, 12 Dec 2023 07:06:43 -0800 (PST)
-Message-ID: <94e3745c-8c2b-bdf3-f331-1cbe56574d48@arm.com>
-Date: Tue, 12 Dec 2023 15:06:39 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB6293F738;
+	Tue, 12 Dec 2023 07:10:35 -0800 (PST)
+Message-ID: <b9165c97-1097-6bc8-751a-2bc2ac464edb@arm.com>
+Date: Tue, 12 Dec 2023 15:10:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -17,11 +17,12 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH v1 06/14] libperf cpumap: Add any, empty and min helpers
+Subject: Re: [PATCH v1 09/14] perf cpumap: Clean up use of
+ perf_cpu_map__has_any_cpu_or_is_empty
 Content-Language: en-US
 To: Ian Rogers <irogers@google.com>
 References: <20231129060211.1890454-1-irogers@google.com>
- <20231129060211.1890454-7-irogers@google.com>
+ <20231129060211.1890454-10-irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
@@ -50,122 +51,128 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  bpf@vger.kernel.org
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231129060211.1890454-7-irogers@google.com>
+In-Reply-To: <20231129060211.1890454-10-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 29/11/2023 06:02, Ian Rogers wrote:
-> Additional helpers to better replace
-> perf_cpu_map__has_any_cpu_or_is_empty.
+> Most uses of what was perf_cpu_map__empty but is now
+> perf_cpu_map__has_any_cpu_or_is_empty want to do something with the
+> CPU map if it contains CPUs. Replace uses of
+> perf_cpu_map__has_any_cpu_or_is_empty with other helpers so that CPUs
+> within the map can be handled.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
 > ---
->  tools/lib/perf/cpumap.c              | 27 +++++++++++++++++++++++++++
->  tools/lib/perf/include/perf/cpumap.h | 16 ++++++++++++++++
->  tools/lib/perf/libperf.map           |  4 ++++
->  3 files changed, 47 insertions(+)
+>  tools/perf/builtin-c2c.c   | 6 +-----
+>  tools/perf/builtin-stat.c  | 9 ++++-----
+>  tools/perf/util/auxtrace.c | 4 ++--
+>  tools/perf/util/record.c   | 2 +-
+>  tools/perf/util/stat.c     | 2 +-
+>  5 files changed, 9 insertions(+), 14 deletions(-)
 > 
-> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> index 49fc98e16514..7403819da8fd 100644
-> --- a/tools/lib/perf/cpumap.c
-> +++ b/tools/lib/perf/cpumap.c
-> @@ -316,6 +316,19 @@ bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map)
->  	return map ? __perf_cpu_map__cpu(map, 0).cpu == -1 : true;
->  }
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index f78eea9e2153..ef7ed53a4b4e 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -2319,11 +2319,7 @@ static int setup_nodes(struct perf_session *session)
 >  
-> +bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map)
-> +{
-> +	if (!map)
-> +		return true;
-> +
-> +	return __perf_cpu_map__nr(map) == 1 && __perf_cpu_map__cpu(map, 0).cpu == -1;
-> +}
-
-I'm struggling to understand the relevance of the difference between
-has_any and is_any I see that there is a slight difference, but could it
-not be refactored out so we only need one?
-
-Do you ever get an 'any' map that has more than 1 entry? It's quite a
-subtle difference that is_any returns false if the first one is 'any'
-but then there are subsequent entries. Whereas has_any would return
-true. I'm not sure if future readers would be able to appreciate that.
-
-I see has_any is only used twice, both on evlist->all_cpus. Is there
-something about that member that means it could have a map that has an
-'any' mixed with CPUs? Wouldn't that have the same result as a normal
-'any' anyway?
-
-> +
-> +bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
-> +{
-> +	return map == NULL;
-> +}
-> +
->  int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
->  {
->  	int low, high;
-> @@ -372,6 +385,20 @@ bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map)
->  	return map && __perf_cpu_map__cpu(map, 0).cpu == -1;
->  }
+>  		nodes[node] = set;
 >  
-> +struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map)
-> +{
-> +	struct perf_cpu cpu, result = {
-> +		.cpu = -1
-> +	};
-> +	int idx;
-> +
-> +	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, map) {
-> +		result = cpu;
-> +		break;
-> +	}
-> +	return result;
-> +}
-> +
->  struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
+> -		/* empty node, skip */
+> -		if (perf_cpu_map__has_any_cpu_or_is_empty(map))
+> -			continue;
+> -
+> -		perf_cpu_map__for_each_cpu(cpu, idx, map) {
+> +		perf_cpu_map__for_each_cpu_skip_any(cpu, idx, map) {
+>  			__set_bit(cpu.cpu, set);
+>  
+>  			if (WARN_ONCE(cpu2node[cpu.cpu] != -1, "node/cpu topology bug"))
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 3303aa20f326..f583027a0639 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1316,10 +1316,9 @@ static int cpu__get_cache_id_from_map(struct perf_cpu cpu, char *map)
+>  	 * be the first online CPU in the cache domain else use the
+>  	 * first online CPU of the cache domain as the ID.
+>  	 */
+> -	if (perf_cpu_map__has_any_cpu_or_is_empty(cpu_map))
+> +	id = perf_cpu_map__min(cpu_map).cpu;
+> +	if (id == -1)
+>  		id = cpu.cpu;
+> -	else
+> -		id = perf_cpu_map__cpu(cpu_map, 0).cpu;
+>  
+>  	/* Free the perf_cpu_map used to find the cache ID */
+>  	perf_cpu_map__put(cpu_map);
+> @@ -1622,7 +1621,7 @@ static int perf_stat_init_aggr_mode(void)
+>  	 * taking the highest cpu number to be the size of
+>  	 * the aggregation translate cpumap.
+>  	 */
+> -	if (!perf_cpu_map__has_any_cpu_or_is_empty(evsel_list->core.user_requested_cpus))
+> +	if (!perf_cpu_map__is_any_cpu_or_is_empty(evsel_list->core.user_requested_cpus))
+>  		nr = perf_cpu_map__max(evsel_list->core.user_requested_cpus).cpu;
+>  	else
+>  		nr = 0;
+> @@ -2289,7 +2288,7 @@ int process_stat_config_event(struct perf_session *session,
+>  
+>  	perf_event__read_stat_config(&stat_config, &event->stat_config);
+>  
+> -	if (perf_cpu_map__has_any_cpu_or_is_empty(st->cpus)) {
+> +	if (perf_cpu_map__is_empty(st->cpus)) {
+>  		if (st->aggr_mode != AGGR_UNSET)
+>  			pr_warning("warning: processing task data, aggregation mode not set\n");
+>  	} else if (st->aggr_mode != AGGR_UNSET) {
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 3684e6009b63..6b1d4bafad59 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -174,7 +174,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+>  				   struct evlist *evlist,
+>  				   struct evsel *evsel, int idx)
 >  {
->  	struct perf_cpu result = {
-> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-> index dbe0a7352b64..523e4348fc96 100644
-> --- a/tools/lib/perf/include/perf/cpumap.h
-> +++ b/tools/lib/perf/include/perf/cpumap.h
-> @@ -50,6 +50,22 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
->   * perf_cpu_map__has_any_cpu_or_is_empty - is map either empty or has the "any CPU"/dummy value.
->   */
->  LIBPERF_API bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map);
-> +/**
-> + * perf_cpu_map__is_any_cpu_or_is_empty - is map either empty or the "any CPU"/dummy value.
-> + */
-> +LIBPERF_API bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map);
-> +/**
-> + * perf_cpu_map__is_empty - does the map contain no values and it doesn't
-> + *                          contain the special "any CPU"/dummy value.
-> + */
-> +LIBPERF_API bool perf_cpu_map__is_empty(const struct perf_cpu_map *map);
-> +/**
-> + * perf_cpu_map__min - the minimum CPU value or -1 if empty or just the "any CPU"/dummy value.
-> + */
-> +LIBPERF_API struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map);
-> +/**
-> + * perf_cpu_map__max - the maximum CPU value or -1 if empty or just the "any CPU"/dummy value.
-> + */
->  LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
->  LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
->  LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
-> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-> index 10b3f3722642..2aa79b696032 100644
-> --- a/tools/lib/perf/libperf.map
-> +++ b/tools/lib/perf/libperf.map
-> @@ -10,6 +10,10 @@ LIBPERF_0.0.1 {
->  		perf_cpu_map__nr;
->  		perf_cpu_map__cpu;
->  		perf_cpu_map__has_any_cpu_or_is_empty;
-> +		perf_cpu_map__is_any_cpu_or_is_empty;
-> +		perf_cpu_map__is_empty;
-> +		perf_cpu_map__has_any_cpu;
-> +		perf_cpu_map__min;
->  		perf_cpu_map__max;
->  		perf_cpu_map__has;
->  		perf_thread_map__new_array;
+> -	bool per_cpu = !perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus);
+> +	bool per_cpu = !perf_cpu_map__has_any_cpu(evlist->core.user_requested_cpus);
+>  
+>  	mp->mmap_needed = evsel->needs_auxtrace_mmap;
+>  
+> @@ -648,7 +648,7 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+>  
+>  static int evlist__enable_event_idx(struct evlist *evlist, struct evsel *evsel, int idx)
+>  {
+> -	bool per_cpu_mmaps = !perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus);
+> +	bool per_cpu_mmaps = !perf_cpu_map__has_any_cpu(evlist->core.user_requested_cpus);
+>  
+>  	if (per_cpu_mmaps) {
+>  		struct perf_cpu evlist_cpu = perf_cpu_map__cpu(evlist->core.all_cpus, idx);
+> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+> index 87e817b3cf7e..e867de8ddaaa 100644
+> --- a/tools/perf/util/record.c
+> +++ b/tools/perf/util/record.c
+> @@ -237,7 +237,7 @@ bool evlist__can_select_event(struct evlist *evlist, const char *str)
+>  
+>  	evsel = evlist__last(temp_evlist);
+>  
+> -	if (!evlist || perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus)) {
+> +	if (!evlist || perf_cpu_map__is_any_cpu_or_is_empty(evlist->core.user_requested_cpus)) {
+>  		struct perf_cpu_map *cpus = perf_cpu_map__new_online_cpus();
+>  
+>  		if (cpus)
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 012c4946b9c4..915808a6211a 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -315,7 +315,7 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
+>  	if (!counter->per_pkg)
+>  		return 0;
+>  
+> -	if (perf_cpu_map__has_any_cpu_or_is_empty(cpus))
+> +	if (perf_cpu_map__is_any_cpu_or_is_empty(cpus))
+>  		return 0;
+>  
+>  	if (!mask) {
