@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ypYS/NC"
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1BC5A6
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 10:07:15 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-50d11bd3144so212e87.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 10:07:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WuDYgIxE"
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94E19AB
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 10:08:12 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40c32bea30dso4185e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 10:08:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702404434; x=1703009234; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702404491; x=1703009291; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=14KyAFs5GhfjaUdeyaHsNjUFEO7kE0hEjwmeNGQaN4E=;
-        b=4ypYS/NCw76YAGeK4JyfqNS7lxtJyErCDQBQZKyi2yGwh4Hw/8tWk6xi64OzPlEuIU
-         3ieAB6Oa/5LLwhZGN4ZDIeIvI4z5yJW2Nr0RIWhkmnWYZcImfrCYJ3m0stxqADgEPW/C
-         zTF88rUYPL+VpyFMtGICDNUaWU/Q0/RapNdpjpojjDTCbHjttvyuMx8KF0MaAsWsshyC
-         wArqvrRu3QWKtyYi2CstFtoY++df5+wteb4t5nnuJtP/PsooVKwFgTxLQWzBMk6agKJT
-         lDXPTeiKh2hmfT1rmm0nwBnDTtXGkSiCoEI2Td1uXyZE1XxlUELgXNElrS9/6nJ92gC2
-         7q/w==
+        bh=VhYdf+8cQfQ3MBTe94vw2YkuW7rtXoDUvtiEUFEToaQ=;
+        b=WuDYgIxEwZyV86F+YyWEX3X8tT0gogswv5nuOtTCuS+TCMheELgY9+CrcDV2A++ptJ
+         XhFBSApt1S1BPbvn872zL1+PXMPwyFpgrw/7sWt9uB37qdK+tI1g1f2IKbOisvogtzXV
+         4hG3yLHHvHMNbqRAOrGdkAYY8EwrHKxpUHG59Ka+XB6XT9Gx6kLQ8n1WcQL2SJ6S9nmP
+         JhDAaS379pfjHMlRjti8wdUYlE/hoIITOlidzrUJp4hqWzTSnjtERAdZy6t++BHV98dm
+         dU0slBlQgl6L8MTlpXwF2iD/u/17wfRGgB8/nkp/+hVNfMGyKsBMvrkaDBYnj1JvFVqa
+         2AMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702404434; x=1703009234;
+        d=1e100.net; s=20230601; t=1702404491; x=1703009291;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=14KyAFs5GhfjaUdeyaHsNjUFEO7kE0hEjwmeNGQaN4E=;
-        b=v6JhPqm9kKxBPH4oVphR5SCVEggSy1JKvtxGqMMrEYX9qEhhM4bFy/PQ33gn6C9e1A
-         1TVVrHpoAihyBECHAj+B202qEtx2JIJlvfygQkNq1HfY7pqfsPg6Efg6J8H/46uQroMK
-         TVA7/1rlRWkq6OLenWgMgZKgJY/ub/ha3SZ5+TMY3IkPmiowDO40hVSV5IIh2RrNWPNi
-         2iL1M+wz4UJR8t91XIYdxlHwTvREvCS+I4wnGUUYdy9USQkPaj6goq8oDme12QfMYOYQ
-         qyBqSbRuVPm+Jdem/L/uvUSc8IUCv/ee21FjFI+thu0moddEygk4kKyH/WBHMJlBeOLX
-         NybA==
-X-Gm-Message-State: AOJu0Ywzu1j1oh/dws2osNLGpD67Su8Z1Kx7dHiKSAJ8xu7WEDwOj2Gu
-	JMWfm06mRHbNpm04zCuhF1h4WYfaHA+ugo8SOnROfQ==
-X-Google-Smtp-Source: AGHT+IG5jBaKQ2Zoa4+iRqZCyXfj8awh5fb219w1XF2NyRum9tD6zQvtArJM7ZQJz5KCD50JQF8l0RLxq2WXKK8yKh0=
-X-Received: by 2002:a19:5e41:0:b0:50a:519d:5a8a with SMTP id
- z1-20020a195e41000000b0050a519d5a8amr278545lfi.5.1702404433671; Tue, 12 Dec
- 2023 10:07:13 -0800 (PST)
+        bh=VhYdf+8cQfQ3MBTe94vw2YkuW7rtXoDUvtiEUFEToaQ=;
+        b=AG8pZJ9l7Kl4lsyhdO5hItbX1oCx0mh0tjdKdN2OKRfpoZDABKY0BaN3wbPvda6Zrn
+         kDqpnw6X0CPFkJtBD32Us1AXR+2FRAB99DMNt3+RE9RSy089Kwd4Ko8Av/TmbAmaXDYX
+         aF7EBKLRt3fDkwTFYo8B5Q7we7SQVYVLSS4JUCr+HL4IdFLMqQi3yG0rLkqFslZc2dTL
+         Q9//V84vFY0fO2zesiPA/7WGKBVpuBwdySXAE9yGDAvxHO//w7UPpsrFM6y+/WzTZoPo
+         0Fi3qTX0gThoFzNYROwvYo1haB1Kq1+NdvjG0GbTdT1gh3tZbtkW+K7ZaFPoZm+BU0+k
+         FhDw==
+X-Gm-Message-State: AOJu0Yz1hA8buaShioUJM9WjZDYKhTehvLFJdrsN8yhj9Mn8+2KxA59u
+	LEHfAgcmb5E1yqzeXULLtCT4Xib1GlTrurrbBqsebw==
+X-Google-Smtp-Source: AGHT+IEY9JpTUZMLV0vKfFqIa+W0hU/BLMoseO7ZQoy1ydLtjF1Ozffn/lu+j4tpuI19zVLxcHQ6IJKe8IEo2dyMPyE=
+X-Received: by 2002:a05:600c:3648:b0:3f7:3e85:36a with SMTP id
+ y8-20020a05600c364800b003f73e85036amr324700wmq.7.1702404490911; Tue, 12 Dec
+ 2023 10:08:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212070547.612536-1-namhyung@kernel.org> <20231212070547.612536-3-namhyung@kernel.org>
-In-Reply-To: <20231212070547.612536-3-namhyung@kernel.org>
+References: <20231212070547.612536-1-namhyung@kernel.org> <20231212070547.612536-2-namhyung@kernel.org>
+In-Reply-To: <20231212070547.612536-2-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 12 Dec 2023 10:07:02 -0800
-Message-ID: <CAP-5=fWH=Nt4Dr7-rHqqfPSHPQUP=Bof2iGWEZEpsz5NC+wZiA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf unwind-libdw: Handle JIT-generated DSOs properly
+Date: Tue, 12 Dec 2023 10:07:59 -0800
+Message-ID: <CAP-5=fUsVd-ZAL0yBeKpQ5RvQVWs+ujXZj679sYQAwPLmzrCXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf genelf: Set ELF program header addresses properly
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -59,96 +59,39 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Dec 11, 2023 at 11:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> Usually DSOs are mapped from the beginning of the file, so the base
-> address of the DSO can be calculated by map->start - map->pgoff.
+> The text section starts after the ELF headers so PHDR.p_vaddr and
+> others should have the correct addresses.
 >
-> However, JIT DSOs which are generated by `perf inject -j`, are mapped
-> only the code segment.  This makes unwind-libdw code confusing and
-> rejects processing unwinds in the JIT DSOs.  It should use the map
-> start address as base for them to fix the confusion.
->
-> Fixes: 1fe627da3033 ("perf unwind: Take pgoff into account when reporting=
- elf to libdwfl")
+> Fixes: babd04386b1d ("perf jit: Include program header in ELF files")
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/unwind-libdw.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libd=
-w.c
-> index 8554db3fc0d7..6013335a8dae 100644
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-> @@ -46,6 +46,7 @@ static int __report_module(struct addr_location *al, u6=
-4 ip,
->  {
->         Dwfl_Module *mod;
->         struct dso *dso =3D NULL;
-> +       Dwarf_Addr base;
->         /*
->          * Some callers will use al->sym, so we can't just use the
->          * cheaper thread__find_map() here.
-> @@ -58,13 +59,25 @@ static int __report_module(struct addr_location *al, =
-u64 ip,
->         if (!dso)
->                 return 0;
->
-> +       /*
-> +        * The generated JIT DSO files only map the code segment without
-> +        * ELF headers.  Since JIT codes used to be packed in a memory
-> +        * segment, calculating the base address using pgoff falls into
-> +        * a different code in another DSO.  So just use the map->start
-> +        * directly to pick the correct one.
-> +        */
-> +       if (!strncmp(dso->long_name, "/tmp/jitted-", 12))
 
-Perhaps it would be better to test:
-dso->symtab_type =3D=3D DSO_BINARY_TYPE__JAVA_JIT
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> +               base =3D map__start(al->map);
-> +       else
-> +               base =3D map__start(al->map) - map__pgoff(al->map);
-> +
->         mod =3D dwfl_addrmodule(ui->dwfl, ip);
->         if (mod) {
->                 Dwarf_Addr s;
+> ---
+>  tools/perf/util/genelf.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
->                 dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, N=
-ULL);
-> -               if (s !=3D map__start(al->map) - map__pgoff(al->map))
-> -                       mod =3D 0;
-> +               if (s !=3D base)
-> +                       mod =3D NULL;
->         }
->
->         if (!mod) {
-> @@ -72,14 +85,14 @@ static int __report_module(struct addr_location *al, =
-u64 ip,
->
->                 __symbol__join_symfs(filename, sizeof(filename), dso->lon=
-g_name);
->                 mod =3D dwfl_report_elf(ui->dwfl, dso->short_name, filena=
-me, -1,
-> -                                     map__start(al->map) - map__pgoff(al=
-->map), false);
-> +                                     base, false);
->         }
->         if (!mod) {
->                 char filename[PATH_MAX];
->
->                 if (dso__build_id_filename(dso, filename, sizeof(filename=
-), false))
->                         mod =3D dwfl_report_elf(ui->dwfl, dso->short_name=
-, filename, -1,
-> -                                             map__start(al->map) - map__=
-pgoff(al->map), false);
-> +                                             base, false);
->         }
->
->         if (mod) {
+> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+> index fefc72066c4e..ac17a3cb59dc 100644
+> --- a/tools/perf/util/genelf.c
+> +++ b/tools/perf/util/genelf.c
+> @@ -293,9 +293,9 @@ jit_write_elf(int fd, uint64_t load_addr, const char =
+*sym,
+>          */
+>         phdr =3D elf_newphdr(e, 1);
+>         phdr[0].p_type =3D PT_LOAD;
+> -       phdr[0].p_offset =3D 0;
+> -       phdr[0].p_vaddr =3D 0;
+> -       phdr[0].p_paddr =3D 0;
+> +       phdr[0].p_offset =3D GEN_ELF_TEXT_OFFSET;
+> +       phdr[0].p_vaddr =3D GEN_ELF_TEXT_OFFSET;
+> +       phdr[0].p_paddr =3D GEN_ELF_TEXT_OFFSET;
+>         phdr[0].p_filesz =3D csize;
+>         phdr[0].p_memsz =3D csize;
+>         phdr[0].p_flags =3D PF_X | PF_R;
 > --
 > 2.43.0.472.g3155946c3a-goog
 >
