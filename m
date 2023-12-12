@@ -1,84 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qJEWx6Sv"
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [IPv6:2001:41d0:203:375::b1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3157BF
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 23:07:10 -0800 (PST)
-Date: Tue, 12 Dec 2023 07:07:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702364828;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q6Z44FDt8R0+dMpUCBszFPBqGtxSLmgo/e5SgiCoAWE=;
-	b=qJEWx6Svn1TLMl93UN8HpWOwT9dNiYGbVb7BmhNJaYDipXXc60AYPXwXpBqLOuEGLlbFh1
-	im9f3qo/p+rUM8wTyqZlxv5TA5hGU7h51Z2s8VZ1FkLE1ws0OjdVftzeDwNudlPWBVesQn
-	HrxgnU4zh0E9CZa4Tev41qS/g5oB9oI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-perf-users@vger.kernel.org,
-	kvmarm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
+X-Greylist: delayed 147 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 12 Dec 2023 00:35:43 PST
+Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.155.80.173])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDC712E;
+	Tue, 12 Dec 2023 00:35:43 -0800 (PST)
+X-QQ-mid: bizesmtp76t1702369740tggbgcmn
+Received: from HX01040022.powercore.com.cn ( [223.112.234.130])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 12 Dec 2023 16:28:58 +0800 (CST)
+X-QQ-SSF: 01400000000000B0B000000A0000000
+X-QQ-FEAT: aBJFcW+uBGZOIRSRO8DCOUwTInVzTYjBETeL0cf/Z9l32nz/XJIwpk4Ia+x8O
+	qSoY3kzIRnkTKft/UdrEKONsHv8i0Or+bOURHFN64urNRvsmkUYiTstYB9WkGUc0H4AyiI/
+	y5Rh/py1UY9vdgNj/u5P3AFZgvoZtTCBpUVdu8n191TWAQL6ipsp+/41OS5ss3hFNkDZVvw
+	jUrNNFgxXp4FwK3YNa75dPjYtn/G4vA/xXaHiEZNoEgaqzTqdBRqfEPxMgSYYQT+FgXWyOR
+	DX/rV+c55mDOnrzKDhMZmW49m5O2Y4kEod61nM1ZxfBK6UJsJZTSwEzO0ju9ZemGsREAAq8
+	sw5F3Gy2xGw/BNf1LHTTInBq+TG0/dHuHBFTLfPanexCat+VxxwF2G9MMomGnsaw6/O5wa3
+	60+RSDEeRCdPjtAel6CVXQ==
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 2540312450627616497
+From: "JiaLong.Yang" <jialong.yang@shingroup.cn>
+To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Marc Zyngier <maz@kernel.org>, torvalds@linux-foundation.org
-Subject: Re: [PATCH 2/2] perf build: Ensure sysreg-defs Makefile respects
- output dir
-Message-ID: <ZXgGlxh1iNX52pLU@linux.dev>
-References: <20231121192956.919380-1-oliver.upton@linux.dev>
- <20231121192956.919380-3-oliver.upton@linux.dev>
- <c701bf6b-0ff0-44a0-9d1d-84e8515d077c@sirena.org.uk>
- <ZWui3KxloT5tcIsJ@thinky-boi>
- <80ff02a5-8355-437d-b844-3de9fe182518@sirena.org.uk>
- <bec12895-38d0-46d3-8031-53c55f88f3a7@sirena.org.uk>
- <CAM9d7cirVU1sGPKT9SfmjPpFKJ2PiZ-Md52bWB=Ormbkiwvgkw@mail.gmail.com>
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: "JiaLong.Yang" <jialong.yang@shingroup.cn>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/perf: PVN for HX-C2000 CPU with Power8 Architecture
+Date: Tue, 12 Dec 2023 16:28:43 +0800
+Message-Id: <20231212082843.9664-1-jialong.yang@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cirVU1sGPKT9SfmjPpFKJ2PiZ-Md52bWB=Ormbkiwvgkw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-On Mon, Dec 11, 2023 at 02:47:48PM -0800, Namhyung Kim wrote:
-> Hello Oliver,
-> 
-> On Mon, Dec 11, 2023 at 5:19 AM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Wed, Dec 06, 2023 at 01:45:56PM +0000, Mark Brown wrote:
-> > > On Sat, Dec 02, 2023 at 01:34:20PM -0800, Oliver Upton wrote:
-> > > > Thanks for the bug report. Apologies for the latency on my end, I've had
-> > > > a mountain of non-upstream stuff to wade through.
-> > > > On Wed, Nov 29, 2023 at 04:27:01PM +0000, Mark Brown wrote:
-> >
-> > > > > This breaks some build configurations:
-> >
-> > > > > make[5]: Entering directory '/home/broonie/git/bisect/tools/arch/arm64/tools'
-> > > > > /home/broonie/git/bisect/tools/scripts/Makefile.include:4: *** O=../../../../tools does not exist.  Stop.
-> >
-> > > > Looks like its because $(PWD) is tools/testing/selftests/ when building
-> > > > from the top level makefile. I'll get a fix out in the next couple days
-> > > > after I find my Make dunce cap :)
-> >
-> > > This issue is now in Linus' tree.
-> >
-> > Any news on this, the problem remains in -rc5?
-> 
-> Have you found some time to work on it?
+HX-C2000 is a new CPU made by HEXIN Technologies Co., Ltd. And a new
+PVN 0x0066 has been applied from the OpenPower Community for this CPU. Here is
+a patch to make perf tool run in the CPU.
 
-Thanks for the double-nudge, just sent the fix out. I'll take it
-through the kvmarm tree as it only affects KVM selftests at this point.
+Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
+Link: https://lore.kernel.org/all/20231129075845.57976-1-ke.zhao@shingroup.cn/
+---
+ tools/perf/pmu-events/arch/powerpc/mapfile.csv | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-https://lore.kernel.org/kvmarm/20231212070431.145544-2-oliver.upton@linux.dev/
-
+diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+index f4908af7ad66..599a588dbeb4 100644
+--- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
++++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+@@ -11,8 +11,7 @@
+ #
+ # Multiple PVRs could map to a single JSON file.
+ #
+-
+-# Power8 entries
+ 0x004[bcd][[:xdigit:]]{4},1,power8,core
++0x0066[[:xdigit:]]{4},1,power8,core
+ 0x004e[[:xdigit:]]{4},1,power9,core
+ 0x0080[[:xdigit:]]{4},1,power10,core
 -- 
-Thanks,
-Oliver
+2.25.1
+
