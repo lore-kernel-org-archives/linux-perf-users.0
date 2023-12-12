@@ -1,170 +1,114 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D5huDsJ9"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1DEE9
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 08:59:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702400383;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hEC3aDhEoU9EMT2oopEX7BwsTShFyMjNkk2ug3eltyc=;
-	b=D5huDsJ9ZiqYQb+t9XIb4rM3wf3ajznju5tcgf80DE+dehgyonSBEsuSPnhEKl4ss5Rh+q
-	EvV/fXJVqpNmxG4XMKdZGcf5bhacxZLHDdO572XrFYeLoAguuS0+/KT5yIHM7IEI7jLFWV
-	ZzXS5jToBfS6qnXdrKUooyjkAC8x2Us=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-496-u8jc4j1cMqanOHuhbr_tnQ-1; Tue, 12 Dec 2023 11:59:42 -0500
-X-MC-Unique: u8jc4j1cMqanOHuhbr_tnQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 15F71863010;
-	Tue, 12 Dec 2023 16:59:42 +0000 (UTC)
-Received: from dhcp131-130.brq.redhat.com (dhcp131-130.brq.redhat.com [10.34.131.130])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 480831C060AF;
-	Tue, 12 Dec 2023 16:59:41 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com,
-	vmolnaro@redhat.com
-Cc: mpetlan@redhat.com
-Subject: [PATCH 2/2] perf archive: Add new option '--unpack'
-Date: Tue, 12 Dec 2023 17:59:09 +0100
-Message-ID: <20231212165909.14459-2-vmolnaro@redhat.com>
-In-Reply-To: <20231212165909.14459-1-vmolnaro@redhat.com>
-References: <20231212165909.14459-1-vmolnaro@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAF37B3D9;
+	Tue, 12 Dec 2023 17:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quWq7NFA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955A4C433C9;
+	Tue, 12 Dec 2023 17:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702401677;
+	bh=NjEv9qEr/oYVM+wHeeNDWCRv65KfnIhhpX8bgvPrnAA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=quWq7NFAtXTBXufHjGAQPZuAXrlWxIJ4Rn3ITaI13bZesQeatjNFR7raywE3BfBn7
+	 Pitan+DMqBcCL58QZwCgz3Lh/6jidDw46o+sSHdw2XNETPNFha4R9ntZwxgldpxfvd
+	 ThUunTfPwVTXTNhOAsJ9W9/N6z4PG1M3beyPew54n2U5AZrjlyDMmXs2L7Toa+G5kj
+	 jyTED6ks2sSuPvCG+6dEMiYHKakPG+EvMGSSnpSABMjq1R1ugTLDeB0n3JnFi9LuSS
+	 cUuBfE0LIKezRTEQ8AUTFsdnAhfeVJygPdgHWAaZ27aCb30nqIqsyQPesJMXA3vzFc
+	 vN+/g3oSMdIBg==
+From: Will Deacon <will@kernel.org>
+To: anshuman.khandual@arm.com,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	James Clark <james.clark@arm.com>,
+	suzuki.poulose@arm.com,
+	linux-perf-users@vger.kernel.org
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	Zaid Al-Bassam <zalbassam@google.com>,
+	linux-kselftest@vger.kernel.org,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	namhyung@gmail.com,
+	Jonathan Corbet <corbet@lwn.net>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Shuah Khan <shuah@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	kvmarm@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	kvm@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v7 00/11] arm64: perf: Add support for event counting threshold
+Date: Tue, 12 Dec 2023 17:20:53 +0000
+Message-Id: <170237438420.1648654.4727808470285684911.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20231211161331.1277825-1-james.clark@arm.com>
+References: <20231211161331.1277825-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+On Mon, 11 Dec 2023 16:13:12 +0000, James Clark wrote:
+> Changes since v6:
+> 
+>   * Remove inlines from arm_pmuv3.c
+>   * Use format attribute mechanism from SPE
+>   * Re-arrange attributes so that threshold comes last and can
+>     potentially be extended
+>   * Emit an error if the max threshold is exceeded rather than clamping
+>   * Convert all register fields to GENMASK
+> 
+> [...]
 
-Archives generated by the command 'perf archive' have to be unpacked
-manually. Following the addition of option '--all' now there also exist
-a nested structure of tars, and after further discussion with Red Hat
-Global Support Services, they found a feature correctly unpacking
-archives of 'perf archive' convenient.
+Thanks for respinning, James. This looks really good now.
 
-Option '--unpack' of 'perf archive' unpacks archives generated by the
-command 'perf archive' as well as archives generated when used with
-option '--all'. File 'perf.data' is placed in the current directory,
-while debug symbols are unpacked in '~/.debug' directory. A tar filename
-can be passed as an argument, and if not provided the command tries to
-find a viable perf.tar file for unpacking.
+Applied to will (for-next/perf), thanks!
 
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
- tools/perf/perf-archive.sh | 66 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 58 insertions(+), 8 deletions(-)
+[01/11] arm: perf: Remove inlines from arm_pmuv3.c
+        https://git.kernel.org/will/c/9343c790e6de
+[02/11] arm: perf/kvm: Use GENMASK for ARMV8_PMU_PMCR_N
+        https://git.kernel.org/will/c/62e1f212e5fe
+[03/11] arm: perf: Use GENMASK for PMMIR fields
+        https://git.kernel.org/will/c/2f6a00f30600
+[04/11] arm: perf: Convert remaining fields to use GENMASK
+        https://git.kernel.org/will/c/d30f09b6d7de
+[05/11] arm64: perf: Include threshold control fields in PMEVTYPER mask
+        https://git.kernel.org/will/c/3115ee021bfb
+[06/11] arm: pmu: Share user ABI format mechanism with SPE
+        https://git.kernel.org/will/c/f6da86969a3c
+[07/11] perf/arm_dmc620: Remove duplicate format attribute #defines
+        https://git.kernel.org/will/c/a5f4ca68f348
+[08/11] KVM: selftests: aarch64: Update tools copy of arm_pmuv3.h
+        https://git.kernel.org/will/c/c7b98bf0fc79
+[09/11] arm: pmu: Move error message and -EOPNOTSUPP to individual PMUs
+        https://git.kernel.org/will/c/186c91aaf549
+[10/11] arm64: perf: Add support for event counting threshold
+        https://git.kernel.org/will/c/816c26754447
+[11/11] Documentation: arm64: Document the PMU event counting threshold feature
+        https://git.kernel.org/will/c/bd690638e2c2
 
-diff --git a/tools/perf/perf-archive.sh b/tools/perf/perf-archive.sh
-index a92042eae95a..f94795794b36 100755
---- a/tools/perf/perf-archive.sh
-+++ b/tools/perf/perf-archive.sh
-@@ -7,17 +7,72 @@ PERF_DATA=perf.data
- PERF_SYMBOLS=perf.symbols
- PERF_ALL=perf.all
- ALL=0
-+UNPACK=0
- 
- while [ $# -gt 0 ] ; do
- 	if [ $1 == "--all" ]; then
- 		ALL=1
- 		shift
-+	elif [ $1 == "--unpack" ]; then
-+		UNPACK=1
-+		shift
- 	else
- 		PERF_DATA=$1
-+		UNPACK_TAR=$1
- 		shift
- 	fi
- done
- 
-+if [ $UNPACK -eq 1 ]; then
-+	if [ ! -z "$UNPACK_TAR" ]; then					# tar given as an argument
-+		if [ ! -e "$UNPACK_TAR" ]; then
-+			echo "Provided file $UNPACK_TAR does not exist"
-+			exit 1
-+		fi
-+		TARGET="$UNPACK_TAR"
-+	else																# search for perf tar in the current directory
-+		TARGET=`find . -regex "\./perf.*\.tar\.bz2"`
-+		TARGET_NUM=`echo -n "$TARGET" | grep -c '^'`
-+
-+		if [ -z "$TARGET" -o $TARGET_NUM -gt 1 ]; then
-+			echo -e "Error: $TARGET_NUM files found for unpacking:\n$TARGET"
-+			echo "Provide the requested file as an argument"
-+			exit 1
-+		else
-+			echo "Found target file for unpacking: $TARGET"
-+		fi
-+	fi
-+
-+	if [[ "$TARGET" =~ (\./)?$PERF_ALL.*.tar.bz2 ]]; then				# perf tar generated by --all option
-+		TAR_CONTENTS=`tar tvf "$TARGET" | tr -s " " | cut -d " " -f 6`
-+		VALID_TAR=`echo "$TAR_CONTENTS" | grep "$PERF_SYMBOLS.tar.bz2" | wc -l`		# check if it contains a sub-tar perf.symbols
-+		if [ $VALID_TAR -ne 1 ]; then
-+			echo "Error: $TARGET file is not valid (contains zero or multiple sub-tar files with debug symbols)"
-+			exit 1
-+		fi
-+
-+		INTERSECT=`comm -12 <(ls) <(echo "$TAR_CONTENTS") | tr "\n" " "`	# check for overwriting
-+		if [ ! -z "$INTERSECT" ]; then										# prompt if file(s) already exist in the current directory
-+			echo "File(s) ${INTERSECT::-1} already exist in the current directory."
-+			while true; do
-+				read -p 'Do you wish to overwrite them? ' yn
-+				case $yn in
-+					[Yy]* ) break;;
-+					[Nn]* ) exit 1;;
-+					* ) echo "Please answer yes or no.";;
-+				esac
-+			done
-+		fi
-+
-+		# unzip the perf.data file in the current working directory	and debug symbols in ~/.debug directory
-+		tar xvf $TARGET && tar xvf $PERF_SYMBOLS.tar.bz2 -C ~/.debug
-+
-+	else																# perf tar generated by perf archive (contains only debug symbols)
-+		tar xvf $TARGET -C ~/.debug
-+	fi
-+	exit 0
-+fi
-+
- #
- # PERF_BUILDID_DIR environment variable set by perf
- # path to buildid directory, default to $HOME/.debug
-@@ -55,17 +110,12 @@ if [ $ALL -eq 1 ]; then						# pack perf.data file together with tar containing
- 	tar cjf $PERF_SYMBOLS.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
- 	tar cjf	$PERF_ALL-$HOSTNAME-$DATE.tar.bz2 $PERF_DATA $PERF_SYMBOLS.tar.bz2
- 	rm $PERF_SYMBOLS.tar.bz2 $MANIFEST $BUILDIDS || true
--
--	echo -e "Now please run:\n"
--	echo -e "$ tar xvf $PERF_ALL-$HOSTNAME-$DATE.tar.bz2 && tar xvf $PERF_SYMBOLS.tar.bz2 -C ~/.debug\n"
--	echo "wherever you need to run 'perf report' on."
- else										# pack only the debug symbols
- 	tar cjf $PERF_DATA.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
- 	rm $MANIFEST $BUILDIDS || true
--
--	echo -e "Now please run:\n"
--	echo -e "$ tar xvf $PERF_DATA.tar.bz2 -C ~/.debug\n"
--	echo "wherever you need to run 'perf report' on."
- fi
- 
-+echo -e "Now please run:\n"
-+echo -e "$ perf archive --unpack\n"
-+echo "or unpack the tar manually wherever you need to run 'perf report' on."
- exit 0
+Cheers,
 -- 
-2.43.0
+Will
 
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
