@@ -1,245 +1,127 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XeI+ATa+"
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAD7BC
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 12:27:25 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-50bf1de91c6so779e87.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 12:27:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QCXTyOQP"
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E9F99
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 12:37:25 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-551d5cd1c42so2940a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 12:37:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702412843; x=1703017643; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702413444; x=1703018244; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1r0l9UDH82X/QRijiq/v0dYWas+IVhPxoge2Q6dptEs=;
-        b=XeI+ATa+LdAkHqn1BjFTeJsitxU1zxpjBgkEu8WDKbZNjPhNQtcp57vQoaVKy0kVg8
-         EkFa9fjlHwGU3mvHzRftpGIcAG1ucOaUu6a3rukDYzYIQzBotRmViaGf5Dh2UmLcxSKZ
-         HS38soueUWtlavoqmdkkl+Zm1h8x7D5LwKO5GCgp18xmtIBK7BtJxvYb0oxLzkLYQNXb
-         ZdpeUxBGOA2uS6BrvctKMJKTMR9RVgx5qGmoZ/cN/9yEc3RjxC4KCSqyF2E6Q6z7tmKT
-         ntSzFy0YlgAvbTSZ9SYl8Qqf5cyC1AzJGURXdWDOPnA0JP6FywFNJ4JWkdJ7MQtUU9LH
-         dncg==
+        bh=FjwnVjtTzFRWKXsN9FzDur1MXPjRS32HCf9tyhW8ATU=;
+        b=QCXTyOQPRJaY1JrdLO1gyz9slC8tHQb3f5KiBbz141zyCDx23JetABTbDFe9KRKXg+
+         pq4GQZlO/FRYqiUN+X2zMdebrb6tZMKDQWrkSjwgBxtQwt+A1SVewGfJVx/g8yDwtzo5
+         v0a0B9OCYeFpnjSpkKhnRT06J67A0upoReEvw8UgVBGrEzcJtCMoohsApZkT5+vNOe2a
+         miK20Zj9/uMPOY+HIxTWsWCyficRnN8aN79p3/0K9xMKXAyfQxCRSzER2elJ7TEDMLae
+         cv6CHixv64SsGIWaMdznBrQlkgUQaUulDeYC6hz3hZ+b6qqLetFYLSfMrXoyJwbJzy2u
+         XrLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702412843; x=1703017643;
+        d=1e100.net; s=20230601; t=1702413444; x=1703018244;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1r0l9UDH82X/QRijiq/v0dYWas+IVhPxoge2Q6dptEs=;
-        b=w2Ef3wli4OPff1Szd4ztM1ZqMmVkclm3ztNsLgTTuKO4B/C6Sbkj2m/zDfqNCShQG3
-         YV6y9gr3EKgQTZpkcXFliI7Q+FXjHWdwDo/yR6uDBppEjh9R34y/dRRSGT4p5XGUFR3j
-         SlwWgSgESWLeq9vj0L0UbmNfuGDQ4Iz96oe+Mh5yoMtRUeOqhKdyCkXbbVKVMoo5nWEv
-         lkOd/FX2607PngwHwJRIJz5A+y1eckRt7H6YRRE9xFrCzQJ3o4G8e/ff7Gspz3qb8B39
-         uf62apPlpuNG3Jx4fpx6dJRJgcKF5zuvM84dbJt8y6i+dzGIhPJ3Yb0wwRx0eWp55Zyh
-         jvYw==
-X-Gm-Message-State: AOJu0YytSDVSZFPZaC44A0kOTGTyu3vXAA5IACMOt1Cv3oPeM4FLQCzH
-	hsiw9B3QMWDGLMUkoYtOl+4bAT5fxw+Lv2xAj7bzvQ==
-X-Google-Smtp-Source: AGHT+IFoY3ALLkdAR2gE36RzhwyUHqDnvxbMLYh3kdlzIKhmBLpUUVJzQp4hNvBUkf9+POe7DeKZkWl1v5OD3OMGjW0=
-X-Received: by 2002:a19:4f07:0:b0:50b:fcb7:15af with SMTP id
- d7-20020a194f07000000b0050bfcb715afmr233274lfb.3.1702412843308; Tue, 12 Dec
- 2023 12:27:23 -0800 (PST)
+        bh=FjwnVjtTzFRWKXsN9FzDur1MXPjRS32HCf9tyhW8ATU=;
+        b=ZhWepViJPQH/OJ70BtuA04RSEqrumBYky+DdtN9IIRAunnQ5Vbs031uyq8mdfxA2+h
+         VJZIaGpt0hqpJbKw8ZVah/D9zg2x2gvzDW73HtguXjEiM/n+fSsiqJJH5fy/ndByyK/v
+         wATlHtaWCz+zkdNdB64clDn9D8Z5Q52pj4NWkmnpRmZNVKLSm2MK7VELCS5kZ8A7zXY2
+         pM2uFOPUhkYrHe4XGSDOlDaJYTCNKaucgJMtDLIG3rGtlOgHCR6zbKQceozyOOmMHaC9
+         CAuwAbmnGrNeWh6p7BKnUW5m4WnxjQbKCeBFPVDcEx/4RU/bYnGq4GTqXvnM50iYMT5d
+         K3LA==
+X-Gm-Message-State: AOJu0YxVTLJprj+iHDVEXH6SnE20gwNqys91BW8Jl4Z6zq5GFe0MB2Wd
+	F/uK2s2EtInWByTYoZnXf1vnIS6dPZrZ2RG2xOKhiw==
+X-Google-Smtp-Source: AGHT+IFJe6nel00LC/HauBXLcY3hPU9gaAIBWQs48bsWJQm23voEFrKK8ZBXNEYB3PpPu+M7d8I+RcPcyhIt3tMAhwc=
+X-Received: by 2002:a50:d7c3:0:b0:54a:ee8b:7a99 with SMTP id
+ m3-20020a50d7c3000000b0054aee8b7a99mr395116edj.0.1702413444029; Tue, 12 Dec
+ 2023 12:37:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231129060211.1890454-1-irogers@google.com> <20231129060211.1890454-7-irogers@google.com>
- <94e3745c-8c2b-bdf3-f331-1cbe56574d48@arm.com>
-In-Reply-To: <94e3745c-8c2b-bdf3-f331-1cbe56574d48@arm.com>
+References: <20231212193833.415110-1-kan.liang@linux.intel.com>
+In-Reply-To: <20231212193833.415110-1-kan.liang@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 12 Dec 2023 12:27:11 -0800
-Message-ID: <CAP-5=fUWtgNMGWowN2+qnV5FV3viHd=kPqiwXUeEtkQAzabLGw@mail.gmail.com>
-Subject: Re: [PATCH v1 06/14] libperf cpumap: Add any, empty and min helpers
-To: James Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
-	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Date: Tue, 12 Dec 2023 12:37:12 -0800
+Message-ID: <CAP-5=fWCgjCC-DHHx+HJCuYk6vNn9Lf9EKcnBBZQ+xmnyYnmPg@mail.gmail.com>
+Subject: Re: [PATCH V2] perf top: Use evsel's cpus to replace user_requested_cpus
+To: kan.liang@linux.intel.com
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, maz@kernel.org, 
+	marcan@marcan.st, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 7:06=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
+On Tue, Dec 12, 2023 at 11:39=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
 >
+> From: Kan Liang <kan.liang@linux.intel.com>
 >
+> perf top errors out on a hybrid machine
+>  $perf top
 >
-> On 29/11/2023 06:02, Ian Rogers wrote:
-> > Additional helpers to better replace
-> > perf_cpu_map__has_any_cpu_or_is_empty.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/perf/cpumap.c              | 27 +++++++++++++++++++++++++++
-> >  tools/lib/perf/include/perf/cpumap.h | 16 ++++++++++++++++
-> >  tools/lib/perf/libperf.map           |  4 ++++
-> >  3 files changed, 47 insertions(+)
-> >
-> > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > index 49fc98e16514..7403819da8fd 100644
-> > --- a/tools/lib/perf/cpumap.c
-> > +++ b/tools/lib/perf/cpumap.c
-> > @@ -316,6 +316,19 @@ bool perf_cpu_map__has_any_cpu_or_is_empty(const s=
-truct perf_cpu_map *map)
-> >       return map ? __perf_cpu_map__cpu(map, 0).cpu =3D=3D -1 : true;
-> >  }
-> >
-> > +bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *m=
-ap)
-> > +{
-> > +     if (!map)
-> > +             return true;
-> > +
-> > +     return __perf_cpu_map__nr(map) =3D=3D 1 && __perf_cpu_map__cpu(ma=
-p, 0).cpu =3D=3D -1;
-> > +}
+>  Error:
+>  The cycles:P event is not supported.
 >
-> I'm struggling to understand the relevance of the difference between
-> has_any and is_any I see that there is a slight difference, but could it
-> not be refactored out so we only need one?
+> The perf top expects that the "cycles" is collected on all CPUs in the
+> system. But for hybrid there is no single "cycles" event which can cover
+> all CPUs. Perf has to split it into two cycles events, e.g.,
+> cpu_core/cycles/ and cpu_atom/cycles/. Each event has its own CPU mask.
+> If a event is opened on the unsupported CPU. The open fails. That's the
+> reason of the above error out.
+>
+> Perf should only open the cycles event on the corresponding CPU. The
+> commit ef91871c960e ("perf evlist: Propagate user CPU maps intersecting
+> core PMU maps") intersect the requested CPU map with the CPU map of the
+> PMU. Use the evsel's cpus to replace user_requested_cpus.
+>
+> The evlist's threads are also propagated to the evsel's threads in
+> __perf_evlist__propagate_maps(). For a system-wide event, perf appends
+> a dummy event and assign it to the evsel's threads. For a per-thread
+> event, the evlist's thread_map is assigned to the evsel's threads. The
+> same as the other tools, e.g., perf record, using the evsel's threads
+> when opening an event.
+>
+> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@kernel.=
+org/
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>
+> Changes since V1:
+> - Update the description
+> - Add Reviewed-by from Ian
 
-Yep, that's what these changes are working toward. For has any the set
-{-1, 0, 1} would return true while is any will return false.
-Previously the has any behavior was called "empty" which I think is
-actively misleading.
-
-> Do you ever get an 'any' map that has more than 1 entry? It's quite a
-> subtle difference that is_any returns false if the first one is 'any'
-> but then there are subsequent entries. Whereas has_any would return
-> true. I'm not sure if future readers would be able to appreciate that.
->
-> I see has_any is only used twice, both on evlist->all_cpus. Is there
-> something about that member that means it could have a map that has an
-> 'any' mixed with CPUs? Wouldn't that have the same result as a normal
-> 'any' anyway?
-
-The dummy event may be opened on any CPU but then a particular event
-may be opened on certain CPUs. We merge CPU maps in places like evlist
-so that we can iterate the appropriate CPUs for events and
-open/enable/disable/close all events on a certain CPU at the same time
-(we also set the affinity to that CPU to avoid IPIs). What I'm hoping
-to do in these changes is reduce the ambiguity, the corner cases are
-by their nature unusual.
-
-An example of a corner case is, uncore events often get opened just on
-CPU 0 but on a multi-socket system you may have a CPU 32 that also
-needs to open the event. Previous code treated the CPU map index and
-value it contained pretty interchangeably. This is often fine for the
-core PMU but is clearly wrong in this uncore case, {0, 32} has indexes
-0 and 1 but those indexes don't match the CPU numbers. The case of -1
-has often previously been called dummy but I'm trying to call it the
-"any CPU" case to match the perf_event_open man page (I'm hoping it
-also makes it less ambiguous with any CPU being used with a particular
-event like cycles, calling it dummy makes the event sound like it may
-have sideband data). The difference between "all CPUs" and "any CPU"
-is that an evsel for all CPUs would need the event opening
-individually on each CPU, while any CPU events are a single open call.
-Any CPU is only valid to perf_event_open if a PID is specified.
-Depending on the set up there could be overlaps in what they count but
-hopefully it is clearer what the distinction is. I believe the case of
-"any CPU" and specific CPU numbers is more common with aux buffers and
-Adrian has mentioned needing it for intel-pt.
+Thanks Kan, quick question. Does "perf top" on hybrid ask the user to
+select between the cycles event on cpu_atom and cpu_core? I'm
+wondering if there is some kind of missing "hybrid-merge"
+functionality like we have for perf stat.
 
 Thanks,
 Ian
 
-> > +
-> > +bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
-> > +{
-> > +     return map =3D=3D NULL;
-> > +}
-> > +
-> >  int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu=
- cpu)
-> >  {
-> >       int low, high;
-> > @@ -372,6 +385,20 @@ bool perf_cpu_map__has_any_cpu(const struct perf_c=
-pu_map *map)
-> >       return map && __perf_cpu_map__cpu(map, 0).cpu =3D=3D -1;
-> >  }
-> >
-> > +struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map)
-> > +{
-> > +     struct perf_cpu cpu, result =3D {
-> > +             .cpu =3D -1
-> > +     };
-> > +     int idx;
-> > +
-> > +     perf_cpu_map__for_each_cpu_skip_any(cpu, idx, map) {
-> > +             result =3D cpu;
-> > +             break;
-> > +     }
-> > +     return result;
-> > +}
-> > +
-> >  struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
-> >  {
-> >       struct perf_cpu result =3D {
-> > diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/incl=
-ude/perf/cpumap.h
-> > index dbe0a7352b64..523e4348fc96 100644
-> > --- a/tools/lib/perf/include/perf/cpumap.h
-> > +++ b/tools/lib/perf/include/perf/cpumap.h
-> > @@ -50,6 +50,22 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_c=
-pu_map *cpus);
-> >   * perf_cpu_map__has_any_cpu_or_is_empty - is map either empty or has =
-the "any CPU"/dummy value.
-> >   */
-> >  LIBPERF_API bool perf_cpu_map__has_any_cpu_or_is_empty(const struct pe=
-rf_cpu_map *map);
-> > +/**
-> > + * perf_cpu_map__is_any_cpu_or_is_empty - is map either empty or the "=
-any CPU"/dummy value.
-> > + */
-> > +LIBPERF_API bool perf_cpu_map__is_any_cpu_or_is_empty(const struct per=
-f_cpu_map *map);
-> > +/**
-> > + * perf_cpu_map__is_empty - does the map contain no values and it does=
-n't
-> > + *                          contain the special "any CPU"/dummy value.
-> > + */
-> > +LIBPERF_API bool perf_cpu_map__is_empty(const struct perf_cpu_map *map=
-);
-> > +/**
-> > + * perf_cpu_map__min - the minimum CPU value or -1 if empty or just th=
-e "any CPU"/dummy value.
-> > + */
-> > +LIBPERF_API struct perf_cpu perf_cpu_map__min(const struct perf_cpu_ma=
-p *map);
-> > +/**
-> > + * perf_cpu_map__max - the maximum CPU value or -1 if empty or just th=
-e "any CPU"/dummy value.
-> > + */
-> >  LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_ma=
-p *map);
-> >  LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, str=
-uct perf_cpu cpu);
-> >  LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
-> > diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-> > index 10b3f3722642..2aa79b696032 100644
-> > --- a/tools/lib/perf/libperf.map
-> > +++ b/tools/lib/perf/libperf.map
-> > @@ -10,6 +10,10 @@ LIBPERF_0.0.1 {
-> >               perf_cpu_map__nr;
-> >               perf_cpu_map__cpu;
-> >               perf_cpu_map__has_any_cpu_or_is_empty;
-> > +             perf_cpu_map__is_any_cpu_or_is_empty;
-> > +             perf_cpu_map__is_empty;
-> > +             perf_cpu_map__has_any_cpu;
-> > +             perf_cpu_map__min;
-> >               perf_cpu_map__max;
-> >               perf_cpu_map__has;
-> >               perf_thread_map__new_array;
+>  tools/perf/builtin-top.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index ea8c7eca5eee..cce9350177e2 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1027,8 +1027,8 @@ static int perf_top__start_counters(struct perf_top=
+ *top)
+>
+>         evlist__for_each_entry(evlist, counter) {
+>  try_again:
+> -               if (evsel__open(counter, top->evlist->core.user_requested=
+_cpus,
+> -                                    top->evlist->core.threads) < 0) {
+> +               if (evsel__open(counter, counter->core.cpus,
+> +                               counter->core.threads) < 0) {
+>
+>                         /*
+>                          * Specially handle overwrite fall back.
+> --
+> 2.35.1
+>
