@@ -1,95 +1,84 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCK+ZX0P"
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28ADAD0;
-	Mon, 11 Dec 2023 23:05:54 -0800 (PST)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-590b3337d2bso2037220eaf.2;
-        Mon, 11 Dec 2023 23:05:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702364753; x=1702969553; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h7MmpZWXIj03M3uDOilYQIEOcQY8xZL0V5IuLXoT63s=;
-        b=eCK+ZX0PffaP0WcIiHc9Jm86gljP3ACMk8PVUnJTt7QLmLm1iZvRF64/QQwZrhVJcP
-         nKe8+Vwuf813a/zN8l5PyFaA7N0UUiQjJn7QMQMZlEcg3pEmyphLT257V6SGUUNxQQ/k
-         mbN09+shBo2YpUH8LdIFJa3NyBzEAgXtQbEi5b7Ix76x7dHCEXG8A/3qPPeY/iZ1+BQH
-         hfoz9hxKhgBS6bu2Vzet3mt+ZH6Xx13wSGty8ZpuZaiMRhVN3vUgEAiD3N47zNfmrBxv
-         YN8lY61SkrYRWN92zNiJRrumEiPxqsYeB4PdxsKXiM/a4IwaSFrqtGuJ0fomZRy00hHR
-         W20w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702364753; x=1702969553;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=h7MmpZWXIj03M3uDOilYQIEOcQY8xZL0V5IuLXoT63s=;
-        b=W3HwC3nrbUO+FQbsY9jJa1Q8R4LQIxnv5PuCuUWc8IAYraLJGDMhER4Yw1U2kcCigy
-         IpSJY2BK/+uzve+wD++yfxul86S/uVsYToOVXDz/s5h0LkofSKNW9nXWJgV6Gk2ruHUs
-         tDgxPE+CglonJn26K1uih9hSNV6QpYv71H/SCYU6BWbURBZuGgyY9js9yL0SYw3VdTjK
-         TbPFGCOxY9hGti5vVra609Ue+1oBOwsimRMVmPg+4dLBqovpnhAgX8ofgnK8qSI6WOXz
-         9o36BdZ4TFeAFe2/1jmIfke0pQI38LtdOmvjIJWm0k9XlWM+KY21schujeGjKlpBEYY1
-         9NTg==
-X-Gm-Message-State: AOJu0YzGgHjtgde3pM3ymt/W1UnMOb54TvTjF2CvaQHj25q+FyefthsZ
-	r1e2o0FCd4JebmH0tVzO33w=
-X-Google-Smtp-Source: AGHT+IEKK1PG3Igx/3v5NKBHwbQVvC92wq1g1r492iiziO6sUZtoxHvt/SdfwNUyWjAgDxKZUvhquw==
-X-Received: by 2002:a05:6358:6f93:b0:170:f1ab:9612 with SMTP id s19-20020a0563586f9300b00170f1ab9612mr7264rwn.65.1702364753280;
-        Mon, 11 Dec 2023 23:05:53 -0800 (PST)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:7da0:5ec4:de63:3cf4])
-        by smtp.gmail.com with ESMTPSA id g17-20020a056a0023d100b006cb6e83bf7fsm7397491pfc.192.2023.12.11.23.05.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Dec 2023 23:05:53 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qJEWx6Sv"
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [IPv6:2001:41d0:203:375::b1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3157BF
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 23:07:10 -0800 (PST)
+Date: Tue, 12 Dec 2023 07:07:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1702364828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q6Z44FDt8R0+dMpUCBszFPBqGtxSLmgo/e5SgiCoAWE=;
+	b=qJEWx6Svn1TLMl93UN8HpWOwT9dNiYGbVb7BmhNJaYDipXXc60AYPXwXpBqLOuEGLlbFh1
+	im9f3qo/p+rUM8wTyqZlxv5TA5hGU7h51Z2s8VZ1FkLE1ws0OjdVftzeDwNudlPWBVesQn
+	HrxgnU4zh0E9CZa4Tev41qS/g5oB9oI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-perf-users@vger.kernel.org,
+	kvmarm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Milian Wolff <milian.wolff@kdab.com>,
-	Pablo Galindo <pablogsal@gmail.com>,
-	Fangrui Song <maskray@google.com>
-Subject: [PATCH 3/3] perf unwind-libunwind: Fix base address for .eh_frame
-Date: Mon, 11 Dec 2023 23:05:46 -0800
-Message-ID: <20231212070547.612536-4-namhyung@kernel.org>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-In-Reply-To: <20231212070547.612536-1-namhyung@kernel.org>
-References: <20231212070547.612536-1-namhyung@kernel.org>
+	Marc Zyngier <maz@kernel.org>, torvalds@linux-foundation.org
+Subject: Re: [PATCH 2/2] perf build: Ensure sysreg-defs Makefile respects
+ output dir
+Message-ID: <ZXgGlxh1iNX52pLU@linux.dev>
+References: <20231121192956.919380-1-oliver.upton@linux.dev>
+ <20231121192956.919380-3-oliver.upton@linux.dev>
+ <c701bf6b-0ff0-44a0-9d1d-84e8515d077c@sirena.org.uk>
+ <ZWui3KxloT5tcIsJ@thinky-boi>
+ <80ff02a5-8355-437d-b844-3de9fe182518@sirena.org.uk>
+ <bec12895-38d0-46d3-8031-53c55f88f3a7@sirena.org.uk>
+ <CAM9d7cirVU1sGPKT9SfmjPpFKJ2PiZ-Md52bWB=Ormbkiwvgkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cirVU1sGPKT9SfmjPpFKJ2PiZ-Md52bWB=Ormbkiwvgkw@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-The base address of a DSO mapping should start at the start of the file.
-Usually DSOs are mapped from the pgoff 0 so it doesn't matter when it
-uses the start of the map address.  But generated DSOs for JIT codes
-doesn't start from the 0 so it should subtract the offset to calculate
-the .eh_frame table offsets correctly.
+On Mon, Dec 11, 2023 at 02:47:48PM -0800, Namhyung Kim wrote:
+> Hello Oliver,
+> 
+> On Mon, Dec 11, 2023 at 5:19 AM Mark Brown <broonie@kernel.org> wrote:
+> >
+> > On Wed, Dec 06, 2023 at 01:45:56PM +0000, Mark Brown wrote:
+> > > On Sat, Dec 02, 2023 at 01:34:20PM -0800, Oliver Upton wrote:
+> > > > Thanks for the bug report. Apologies for the latency on my end, I've had
+> > > > a mountain of non-upstream stuff to wade through.
+> > > > On Wed, Nov 29, 2023 at 04:27:01PM +0000, Mark Brown wrote:
+> >
+> > > > > This breaks some build configurations:
+> >
+> > > > > make[5]: Entering directory '/home/broonie/git/bisect/tools/arch/arm64/tools'
+> > > > > /home/broonie/git/bisect/tools/scripts/Makefile.include:4: *** O=../../../../tools does not exist.  Stop.
+> >
+> > > > Looks like its because $(PWD) is tools/testing/selftests/ when building
+> > > > from the top level makefile. I'll get a fix out in the next couple days
+> > > > after I find my Make dunce cap :)
+> >
+> > > This issue is now in Linus' tree.
+> >
+> > Any news on this, the problem remains in -rc5?
+> 
+> Have you found some time to work on it?
 
-Fixes: dc2cf4ca866f ("perf unwind: Fix segbase for ld.lld linked objects")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/unwind-libunwind-local.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the double-nudge, just sent the fix out. I'll take it
+through the kvmarm tree as it only affects KVM selftests at this point.
 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index c0641882fd2f..5e5c3395a499 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -327,7 +327,7 @@ static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
- 
- 	maps__for_each_entry(thread__maps(ui->thread), map_node) {
- 		struct map *map = map_node->map;
--		u64 start = map__start(map);
-+		u64 start = map__start(map) - map__pgoff(map);
- 
- 		if (map__dso(map) == dso && start < base_addr)
- 			base_addr = start;
+https://lore.kernel.org/kvmarm/20231212070431.145544-2-oliver.upton@linux.dev/
+
 -- 
-2.43.0.472.g3155946c3a-goog
-
+Thanks,
+Oliver
