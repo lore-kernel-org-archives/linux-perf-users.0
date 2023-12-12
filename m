@@ -1,71 +1,72 @@
-X-Greylist: delayed 147 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 12 Dec 2023 00:35:43 PST
-Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.155.80.173])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDC712E;
-	Tue, 12 Dec 2023 00:35:43 -0800 (PST)
-X-QQ-mid: bizesmtp76t1702369740tggbgcmn
-Received: from HX01040022.powercore.com.cn ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 12 Dec 2023 16:28:58 +0800 (CST)
-X-QQ-SSF: 01400000000000B0B000000A0000000
-X-QQ-FEAT: aBJFcW+uBGZOIRSRO8DCOUwTInVzTYjBETeL0cf/Z9l32nz/XJIwpk4Ia+x8O
-	qSoY3kzIRnkTKft/UdrEKONsHv8i0Or+bOURHFN64urNRvsmkUYiTstYB9WkGUc0H4AyiI/
-	y5Rh/py1UY9vdgNj/u5P3AFZgvoZtTCBpUVdu8n191TWAQL6ipsp+/41OS5ss3hFNkDZVvw
-	jUrNNFgxXp4FwK3YNa75dPjYtn/G4vA/xXaHiEZNoEgaqzTqdBRqfEPxMgSYYQT+FgXWyOR
-	DX/rV+c55mDOnrzKDhMZmW49m5O2Y4kEod61nM1ZxfBK6UJsJZTSwEzO0ju9ZemGsREAAq8
-	sw5F3Gy2xGw/BNf1LHTTInBq+TG0/dHuHBFTLfPanexCat+VxxwF2G9MMomGnsaw6/O5wa3
-	60+RSDEeRCdPjtAel6CVXQ==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 2540312450627616497
-From: "JiaLong.Yang" <jialong.yang@shingroup.cn>
-To: Peter Zijlstra <peterz@infradead.org>,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530EF58137;
+	Tue, 12 Dec 2023 09:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/psbpJY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031C3C433C9;
+	Tue, 12 Dec 2023 09:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702372948;
+	bh=y2xsGb6RdvYsGGAGFOAQIzQJ6okr5i37jR6Lpnt+43M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c/psbpJYEtYuZTuyXHJYvdka47RF94LB1JwEiJqaCq8YO02yaAkQwWAA6h6sm65Lv
+	 uwGeEhiMRXz+lJNZeFdSCV76zkKw7BPgKub/g+75bZp4L80iJt+p8M+b0Ob24tCD6R
+	 aXxO3B6ajO10HKbB8POwK6y7BybkjlF/eYo6HrJ8WZTz7OjSMKig1CISScmJrtO4fp
+	 wyha1ZLLOrlVb1fjkO+06DypQiRhFyVNNHC22SXwNsN4wWn4rJyUcxyx8tmzbYXOtf
+	 3/nU8Kq9P3sNAFejXy1tEzei4kSSVvIfd10FYKemXQxLDeqJFd3vzh3/2zr6kjER9q
+	 U8PY9Ra9FA2WA==
+Date: Tue, 12 Dec 2023 09:22:21 +0000
+From: Will Deacon <will@kernel.org>
+To: Kyle Huey <me@kylehuey.com>
+Cc: Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Robert O'Callahan <robert@ocallahan.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: "JiaLong.Yang" <jialong.yang@shingroup.cn>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/perf: PVN for HX-C2000 CPU with Power8 Architecture
-Date: Tue, 12 Dec 2023 16:28:43 +0800
-Message-Id: <20231212082843.9664-1-jialong.yang@shingroup.cn>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] perf/bpf: Remove unneeded
+ uses_default_overflow_handler.
+Message-ID: <20231212092221.GB28174@willie-the-truck>
+References: <20231211045543.31741-1-khuey@kylehuey.com>
+ <20231211045543.31741-3-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231211045543.31741-3-khuey@kylehuey.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-HX-C2000 is a new CPU made by HEXIN Technologies Co., Ltd. And a new
-PVN 0x0066 has been applied from the OpenPower Community for this CPU. Here is
-a patch to make perf tool run in the CPU.
+On Sun, Dec 10, 2023 at 08:55:41PM -0800, Kyle Huey wrote:
+> Now that struct perf_event's orig_overflow_handler is gone, there's no need
+> for the functions and macros to support looking past overflow_handler to
+> orig_overflow_handler.
+> 
+> This patch is solely a refactoring and results in no behavior change.
+> 
+> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> ---
+>  arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
+>  arch/arm64/kernel/hw_breakpoint.c |  4 ++--
+>  include/linux/perf_event.h        | 16 ++--------------
+>  3 files changed, 8 insertions(+), 20 deletions(-)
 
-Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
-Link: https://lore.kernel.org/all/20231129075845.57976-1-ke.zhao@shingroup.cn/
----
- tools/perf/pmu-events/arch/powerpc/mapfile.csv | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Acked-by: Will Deacon <will@kernel.org>
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-index f4908af7ad66..599a588dbeb4 100644
---- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-@@ -11,8 +11,7 @@
- #
- # Multiple PVRs could map to a single JSON file.
- #
--
--# Power8 entries
- 0x004[bcd][[:xdigit:]]{4},1,power8,core
-+0x0066[[:xdigit:]]{4},1,power8,core
- 0x004e[[:xdigit:]]{4},1,power9,core
- 0x0080[[:xdigit:]]{4},1,power10,core
--- 
-2.25.1
-
+Will
