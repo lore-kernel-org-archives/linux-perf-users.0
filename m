@@ -1,129 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556E07D8AD
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 18:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1vVQmu4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D9FDC433C8;
-	Tue, 12 Dec 2023 18:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702404410;
-	bh=cDFySboCHmgRX3Hzcfrph6aaK8Yk+cyns8x2rRA4VHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P1vVQmu4R5dsCZj6MTIc5bPwi6iN78DOiEzf/E2Wd/5Ixe3n1PDaJ/5C/O/RxdNSX
-	 0POKuvDnlL7O6gkWWrqVMGvZWsbXDEje7njX0IOHLwXU/HpNp4bOYrOM1n49SjfW9y
-	 WvdaZOKcXolSHOIZWpiRgiV4R2M4x9rLaJXjIBcvlYAGX3M5CZluRI8IzJNF1JjMUi
-	 7RKso8j+JSJ2Jxj5tWmwp/6F2zFM4lqZJo4UOOP4YKD/KdnGjEooa3RkveWtAVemfR
-	 C5u1lnStlWsaHy8z6Lf4d9F3CmIo3XMSx92yUcpLA+wVWXOpS0Q5pvQ5+7huMLyQ89
-	 s2aG5gY1h5XzQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 7E39C403EF; Tue, 12 Dec 2023 15:06:47 -0300 (-03)
-Date: Tue, 12 Dec 2023 15:06:47 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: vmolnaro@redhat.com
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com
-Subject: Re: [PATCH 1/2] perf archive: Add new option '--all'
-Message-ID: <ZXihN3th3qbo6L8Z@kernel.org>
-References: <20231212165909.14459-1-vmolnaro@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ypYS/NC"
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1BC5A6
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 10:07:15 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-50d11bd3144so212e87.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 10:07:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702404434; x=1703009234; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=14KyAFs5GhfjaUdeyaHsNjUFEO7kE0hEjwmeNGQaN4E=;
+        b=4ypYS/NCw76YAGeK4JyfqNS7lxtJyErCDQBQZKyi2yGwh4Hw/8tWk6xi64OzPlEuIU
+         3ieAB6Oa/5LLwhZGN4ZDIeIvI4z5yJW2Nr0RIWhkmnWYZcImfrCYJ3m0stxqADgEPW/C
+         zTF88rUYPL+VpyFMtGICDNUaWU/Q0/RapNdpjpojjDTCbHjttvyuMx8KF0MaAsWsshyC
+         wArqvrRu3QWKtyYi2CstFtoY++df5+wteb4t5nnuJtP/PsooVKwFgTxLQWzBMk6agKJT
+         lDXPTeiKh2hmfT1rmm0nwBnDTtXGkSiCoEI2Td1uXyZE1XxlUELgXNElrS9/6nJ92gC2
+         7q/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702404434; x=1703009234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=14KyAFs5GhfjaUdeyaHsNjUFEO7kE0hEjwmeNGQaN4E=;
+        b=v6JhPqm9kKxBPH4oVphR5SCVEggSy1JKvtxGqMMrEYX9qEhhM4bFy/PQ33gn6C9e1A
+         1TVVrHpoAihyBECHAj+B202qEtx2JIJlvfygQkNq1HfY7pqfsPg6Efg6J8H/46uQroMK
+         TVA7/1rlRWkq6OLenWgMgZKgJY/ub/ha3SZ5+TMY3IkPmiowDO40hVSV5IIh2RrNWPNi
+         2iL1M+wz4UJR8t91XIYdxlHwTvREvCS+I4wnGUUYdy9USQkPaj6goq8oDme12QfMYOYQ
+         qyBqSbRuVPm+Jdem/L/uvUSc8IUCv/ee21FjFI+thu0moddEygk4kKyH/WBHMJlBeOLX
+         NybA==
+X-Gm-Message-State: AOJu0Ywzu1j1oh/dws2osNLGpD67Su8Z1Kx7dHiKSAJ8xu7WEDwOj2Gu
+	JMWfm06mRHbNpm04zCuhF1h4WYfaHA+ugo8SOnROfQ==
+X-Google-Smtp-Source: AGHT+IG5jBaKQ2Zoa4+iRqZCyXfj8awh5fb219w1XF2NyRum9tD6zQvtArJM7ZQJz5KCD50JQF8l0RLxq2WXKK8yKh0=
+X-Received: by 2002:a19:5e41:0:b0:50a:519d:5a8a with SMTP id
+ z1-20020a195e41000000b0050a519d5a8amr278545lfi.5.1702404433671; Tue, 12 Dec
+ 2023 10:07:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212165909.14459-1-vmolnaro@redhat.com>
-X-Url: http://acmel.wordpress.com
+References: <20231212070547.612536-1-namhyung@kernel.org> <20231212070547.612536-3-namhyung@kernel.org>
+In-Reply-To: <20231212070547.612536-3-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 12 Dec 2023 10:07:02 -0800
+Message-ID: <CAP-5=fWH=Nt4Dr7-rHqqfPSHPQUP=Bof2iGWEZEpsz5NC+wZiA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf unwind-libdw: Handle JIT-generated DSOs properly
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, 
+	Pablo Galindo <pablogsal@gmail.com>, Fangrui Song <maskray@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Tue, Dec 12, 2023 at 05:59:08PM +0100, vmolnaro@redhat.com escreveu:
-> From: Veronika Molnarova <vmolnaro@redhat.com>
-> 
-> Perf archive has limited functionality and people from Red Hat Global
-> Support Services sent a request for a new feature that would pack
-> perf.data file together with an archive with debug symbols created by
-> the command 'perf archive' as customers were being confused and often
-> would forget to send perf.data file with the debug symbols.
-> 
-> Perf archive now accepts an option '--all' that generates archive
-> 'perf.all-hostname-date-time.tar.bz2' that holds file 'perf.data' and
-> a sub-tar 'perf.symbols.tar.bz2' with debug symbols. The functionality of
-> the command 'perf archive' was not changed.
-
-Thanks for working on this, I'll do some testing and apply, probably
-tomorrow.
-
-- Arnaldo
- 
-> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+On Mon, Dec 11, 2023 at 11:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Usually DSOs are mapped from the beginning of the file, so the base
+> address of the DSO can be calculated by map->start - map->pgoff.
+>
+> However, JIT DSOs which are generated by `perf inject -j`, are mapped
+> only the code segment.  This makes unwind-libdw code confusing and
+> rejects processing unwinds in the JIT DSOs.  It should use the map
+> start address as base for them to fix the confusion.
+>
+> Fixes: 1fe627da3033 ("perf unwind: Take pgoff into account when reporting=
+ elf to libdwfl")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/perf-archive.sh | 40 ++++++++++++++++++++++++++++++--------
->  1 file changed, 32 insertions(+), 8 deletions(-)
->  mode change 100644 => 100755 tools/perf/perf-archive.sh
-> 
-> diff --git a/tools/perf/perf-archive.sh b/tools/perf/perf-archive.sh
-> old mode 100644
-> new mode 100755
-> index 133f0eddbcc4..a92042eae95a
-> --- a/tools/perf/perf-archive.sh
-> +++ b/tools/perf/perf-archive.sh
-> @@ -4,9 +4,19 @@
->  # Arnaldo Carvalho de Melo <acme@redhat.com>
->  
->  PERF_DATA=perf.data
-> -if [ $# -ne 0 ] ; then
-> -	PERF_DATA=$1
-> -fi
-> +PERF_SYMBOLS=perf.symbols
-> +PERF_ALL=perf.all
-> +ALL=0
-> +
-> +while [ $# -gt 0 ] ; do
-> +	if [ $1 == "--all" ]; then
-> +		ALL=1
-> +		shift
-> +	else
-> +		PERF_DATA=$1
-> +		shift
-> +	fi
-> +done
->  
->  #
->  # PERF_BUILDID_DIR environment variable set by perf
-> @@ -39,9 +49,23 @@ while read build_id ; do
->  	echo ${filename#$PERF_BUILDID_LINKDIR} >> $MANIFEST
->  done
->  
-> -tar cjf $PERF_DATA.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
-> -rm $MANIFEST $BUILDIDS || true
-> -echo -e "Now please run:\n"
-> -echo -e "$ tar xvf $PERF_DATA.tar.bz2 -C ~/.debug\n"
-> -echo "wherever you need to run 'perf report' on."
-> +if [ $ALL -eq 1 ]; then						# pack perf.data file together with tar containing debug symbols
-> +	HOSTNAME=$(hostname)
-> +	DATE=$(date '+%Y%m%d-%H%M%S')
-> +	tar cjf $PERF_SYMBOLS.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
-> +	tar cjf	$PERF_ALL-$HOSTNAME-$DATE.tar.bz2 $PERF_DATA $PERF_SYMBOLS.tar.bz2
-> +	rm $PERF_SYMBOLS.tar.bz2 $MANIFEST $BUILDIDS || true
-> +
-> +	echo -e "Now please run:\n"
-> +	echo -e "$ tar xvf $PERF_ALL-$HOSTNAME-$DATE.tar.bz2 && tar xvf $PERF_SYMBOLS.tar.bz2 -C ~/.debug\n"
-> +	echo "wherever you need to run 'perf report' on."
-> +else										# pack only the debug symbols
-> +	tar cjf $PERF_DATA.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
-> +	rm $MANIFEST $BUILDIDS || true
-> +
-> +	echo -e "Now please run:\n"
-> +	echo -e "$ tar xvf $PERF_DATA.tar.bz2 -C ~/.debug\n"
-> +	echo "wherever you need to run 'perf report' on."
-> +fi
-> +
->  exit 0
-> -- 
-> 2.43.0
-> 
+>  tools/perf/util/unwind-libdw.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libd=
+w.c
+> index 8554db3fc0d7..6013335a8dae 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+> @@ -46,6 +46,7 @@ static int __report_module(struct addr_location *al, u6=
+4 ip,
+>  {
+>         Dwfl_Module *mod;
+>         struct dso *dso =3D NULL;
+> +       Dwarf_Addr base;
+>         /*
+>          * Some callers will use al->sym, so we can't just use the
+>          * cheaper thread__find_map() here.
+> @@ -58,13 +59,25 @@ static int __report_module(struct addr_location *al, =
+u64 ip,
+>         if (!dso)
+>                 return 0;
+>
+> +       /*
+> +        * The generated JIT DSO files only map the code segment without
+> +        * ELF headers.  Since JIT codes used to be packed in a memory
+> +        * segment, calculating the base address using pgoff falls into
+> +        * a different code in another DSO.  So just use the map->start
+> +        * directly to pick the correct one.
+> +        */
+> +       if (!strncmp(dso->long_name, "/tmp/jitted-", 12))
 
--- 
+Perhaps it would be better to test:
+dso->symtab_type =3D=3D DSO_BINARY_TYPE__JAVA_JIT
 
-- Arnaldo
+Thanks,
+Ian
+
+> +               base =3D map__start(al->map);
+> +       else
+> +               base =3D map__start(al->map) - map__pgoff(al->map);
+> +
+>         mod =3D dwfl_addrmodule(ui->dwfl, ip);
+>         if (mod) {
+>                 Dwarf_Addr s;
+>
+>                 dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, N=
+ULL);
+> -               if (s !=3D map__start(al->map) - map__pgoff(al->map))
+> -                       mod =3D 0;
+> +               if (s !=3D base)
+> +                       mod =3D NULL;
+>         }
+>
+>         if (!mod) {
+> @@ -72,14 +85,14 @@ static int __report_module(struct addr_location *al, =
+u64 ip,
+>
+>                 __symbol__join_symfs(filename, sizeof(filename), dso->lon=
+g_name);
+>                 mod =3D dwfl_report_elf(ui->dwfl, dso->short_name, filena=
+me, -1,
+> -                                     map__start(al->map) - map__pgoff(al=
+->map), false);
+> +                                     base, false);
+>         }
+>         if (!mod) {
+>                 char filename[PATH_MAX];
+>
+>                 if (dso__build_id_filename(dso, filename, sizeof(filename=
+), false))
+>                         mod =3D dwfl_report_elf(ui->dwfl, dso->short_name=
+, filename, -1,
+> -                                             map__start(al->map) - map__=
+pgoff(al->map), false);
+> +                                             base, false);
+>         }
+>
+>         if (mod) {
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
