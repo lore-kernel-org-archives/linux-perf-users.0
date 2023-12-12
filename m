@@ -1,92 +1,105 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7xZKCyu"
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6434AAF
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 04:11:46 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-40c339d2b88so42048215e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 04:11:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702383105; x=1702987905; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vvX/7Y3iddJPyfypuEZXnIiZpYWEQ7CUvnOeW0zgN7I=;
-        b=M7xZKCyuZAbPmMSJoBNIFr90oc699iG26kEN9wzMF6hMSob8irmS/2UsLwD3Yvp9x9
-         SmtcSR8HixMr1jmgkvCbgE00UAxrWXpPSzyPDW8mJI+ZlEDdTVvXJ3Ag1m/8BE2NX2ys
-         wwJ04qiCJccbMSjGOG2DKKo+sE4E6fjBiXTAkjRSBr2Rnw2z3jDJqZXnIi/Ze505tcWm
-         DfQGiktGJA1XKSTUr6jo8uutiNTLwtujP///rt6VvUN/NXM6/T5Bc2sDn5nq4T39ANLJ
-         n7/NxjK+62YXfNlUUUtYrx1RdVkRmBRWKToI/oPBrY4jVf3ziCxnLmNZra5bQZeUJknh
-         DZ4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702383105; x=1702987905;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vvX/7Y3iddJPyfypuEZXnIiZpYWEQ7CUvnOeW0zgN7I=;
-        b=RUWfRMpDBoCClk/0hje4+Zzc2+Lb1PobFoRl81qCjLa0tpR9rulG5cRg0ilrWSszWv
-         DTaXhDWggu2h6p+uRB0p/wBy5jL4L7Y0jIuYcn3tqGxr7MS/0kA8MsZkfzxG9j/tonYf
-         M8BJSMjvGxCZxr8voHwpC4j6Eh/OO6767WZ4iySeBGuRv5A+zzRvSQbPc/yFt7XtbHcX
-         6mU7ZXxkf7za07Kn3MQlHzLEKtUrapu8Zyc4RKCwsv/O6D4ODRxJ4dBCz4Iz4tOhfccG
-         BW99CJma6IlcCEow7GsskgQVg26qZknHArINMyF5g2LJQQVeA3lckep+Ok7Ty57ubxFd
-         vMGQ==
-X-Gm-Message-State: AOJu0YyEmFdnDNO+xrv/A2RpyFEK++yU8CknjmtF0FLg1RovIjPpkauB
-	QlbLl/Ue19zA/YmqHKj+2QS7Ru7LsrU=
-X-Google-Smtp-Source: AGHT+IGpn85MjCdEVJ3q5O2h564s2WHZin9K6QlUzQUZ8K9tMctCCvzoWUnffWqCIqP48I/UQnj/1w==
-X-Received: by 2002:a05:600c:1913:b0:40c:366a:598a with SMTP id j19-20020a05600c191300b0040c366a598amr3412196wmq.107.1702383104464;
-        Tue, 12 Dec 2023 04:11:44 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id r20-20020a05600c459400b0040b349c91acsm18504231wmo.16.2023.12.12.04.11.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 04:11:44 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 12 Dec 2023 13:11:42 +0100
-To: trinity pointard <trinity.pointard@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: possible regression in perf
-Message-ID: <ZXhN_j8UShp1JAlf@krava>
-References: <CANiTRwdm56EJkY=HN+OnD1y++MT6zxEpX3dqoThELMRsUyFTEw@mail.gmail.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9CC0283;
+	Tue, 12 Dec 2023 05:54:30 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92A02143D;
+	Tue, 12 Dec 2023 05:55:16 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65A483F738;
+	Tue, 12 Dec 2023 05:54:25 -0800 (PST)
+Message-ID: <bfb1936a-7f91-089e-c8c4-f27824779fde@arm.com>
+Date: Tue, 12 Dec 2023 13:54:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiTRwdm56EJkY=HN+OnD1y++MT6zxEpX3dqoThELMRsUyFTEw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1 05/14] libperf cpumap: Add for_each_cpu that skips the
+ "any CPU" case
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>
+References: <20231129060211.1890454-1-irogers@google.com>
+ <20231129060211.1890454-6-irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=c3=a9_Almeida?=
+ <andrealmeid@igalia.com>, Kan Liang <kan.liang@linux.intel.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Andrew Jones <ajones@ventanamicro.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>,
+ "Steinar H. Gunderson" <sesse@google.com>,
+ Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>,
+ Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ bpf@vger.kernel.org
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20231129060211.1890454-6-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 11, 2023 at 07:00:51PM +0100, trinity pointard wrote:
-> Hi,
-> 
-> I think I found a regression in perf related to the control fd.
-> At its introduction (bee328cb71eb0b38ab128d7c475209d973a13f92), it
-> looks like enabling or disabling counters would print the current
-> counters. However when `enable/disable <counter>` was introduced
-> (991ae4eb36911fe9a99bef1c22b9578ceec3896a), it changed what
-> `evlist__ctlfd_process()` would return on a successful enable/disable,
-> which made the call to `process_interval()` in `process_evlist()`
-> essentially dead code.
-> 
-> I was in the process of patching perf so that `snapshot` would print
-> current counters (in which case I would send enable, sleep a bit, and
-> send disable+snapshot, to do my measurements). But given what I saw, I
-> think just sending enable and disable was enough at one point.
-> 
-> Is this a known issue? Would a patch which makes
-> `evlist__ctlfd_enable()` return 1 on success be an acceptable fix?
-> It's somewhat more verbose than what I wanted initially (printing both
-> on enable and disable, printing on enable isn't useful to me), but
-> that's reasonably easy to post-process (or enable could be made to not
-> print current counters).
-> 
-> Regards,
-> trinity-1686a/trinity Pointard
-> 
-> P.S.: this is my first time posting to LKML, please tell me if I did
-> anything wrong :-)
 
-hi,
-thanks for the report, could you please send proposed change as patch
-and steps to reproduce the issue?
 
-jirka
+On 29/11/2023 06:02, Ian Rogers wrote:
+> When iterating CPUs in a CPU map it is often desirable to skip the
+> "any CPU" (aka dummy) case. Add a helper for this and use in
+> builtin-record.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
+> ---
+>  tools/lib/perf/include/perf/cpumap.h | 6 ++++++
+>  tools/perf/builtin-record.c          | 4 +---
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+> index 9cf361fc5edc..dbe0a7352b64 100644
+> --- a/tools/lib/perf/include/perf/cpumap.h
+> +++ b/tools/lib/perf/include/perf/cpumap.h
+> @@ -64,6 +64,12 @@ LIBPERF_API bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map);
+>  	     (idx) < perf_cpu_map__nr(cpus);			\
+>  	     (idx)++, (cpu) = perf_cpu_map__cpu(cpus, idx))
+>  
+> +#define perf_cpu_map__for_each_cpu_skip_any(_cpu, idx, cpus)	\
+> +	for ((idx) = 0, (_cpu) = perf_cpu_map__cpu(cpus, idx);	\
+> +	     (idx) < perf_cpu_map__nr(cpus);			\
+> +	     (idx)++, (_cpu) = perf_cpu_map__cpu(cpus, idx))	\
+> +		if ((_cpu).cpu != -1)
+> +
+>  #define perf_cpu_map__for_each_idx(idx, cpus)				\
+>  	for ((idx) = 0; (idx) < perf_cpu_map__nr(cpus); (idx)++)
+>  
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 8ec818568662..066f9232e947 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -3580,9 +3580,7 @@ static int record__mmap_cpu_mask_init(struct mmap_cpu_mask *mask, struct perf_cp
+>  	if (cpu_map__is_dummy(cpus))
+>  		return 0;
+>  
+> -	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+> -		if (cpu.cpu == -1)
+> -			continue;
+> +	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, cpus) {
+>  		/* Return ENODEV is input cpu is greater than max cpu */
+>  		if ((unsigned long)cpu.cpu > mask->nbits)
+>  			return -ENODEV;
