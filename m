@@ -1,32 +1,32 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QKI526ws"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Odt6MTcD"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C992CAD;
-	Tue, 12 Dec 2023 15:02:43 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23145B2;
+	Tue, 12 Dec 2023 15:02:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702422163; x=1733958163;
+  t=1702422164; x=1733958164;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AhaXI3MZnz5gokKhwvkVI3COpItUdfRy/sRFsVs14+0=;
-  b=QKI526ws/XCx9D2w9HpjMiHaniyDaLQptQ1ShAVMFnRBTV3Kw6XcEmyA
-   Ux6Q3q/su0uOo+Jtr85RyHiEMXDXi1HMRXIaBd4hyGGgLqhc9esxyqYcs
-   y+Lr53lf5LRARc0iGIkT+cHvK6alqSdy4Qf05GiyWqh6DE13QGChMQrWU
-   TiSWZ7AYE92dJVbq7l8E3fPpUOMSfNyIn6fjwVxNSNbHrxD0LeCfrum39
-   zeXVo9cScBxsbmGcnwkmWRV1NJgR0U6xqhJVFYCm0NbvPfNiFzqxYEEIb
-   8n55nmGmJVNMRJZaxddLG2UjeAIWtWpUibhHuh9T9DdbXCubUeLn0Brd/
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="392055881"
+  bh=iu38UN4mzyt8FPw4e1GPzXUYjNeQwCPMA4Vfk8L0sHQ=;
+  b=Odt6MTcDSHY4mfRYm0w3noCfK+SVWCb8PzCy9605doIk2p9fZBZz5JDI
+   aZS+NxpZRwV4kwdoyNKh4WKOeySVX7wBJVGELIrrn15q+5C4gQTGv70GX
+   SEOPMr6l5srBBCBFEvrNKGjcIRbwlVAYTdJ0rHvlvdYQLngfrDmUlS8yO
+   URcpq6gumtJEC0V8n4aoCT5RCVJPg3xvsoNjY/a3+OehPMLmyJod7DzOA
+   ZQk2B5Re10H/v95k9vbFoIB6vCVKuUAbamv7QM1qL+rbChdAwWnm5SBjl
+   19SF96vWzUkjyWh3Plbnu8cFOq7+FizZ+nCSQCk0KV6LCSE08sAmBb3Sn
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="392055890"
 X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
-   d="scan'208";a="392055881"
+   d="scan'208";a="392055890"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 15:02:42 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 15:02:43 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864391950"
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864391958"
 X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
-   d="scan'208";a="864391950"
+   d="scan'208";a="864391958"
 Received: from node-10329.jf.intel.com ([10.54.34.22])
-  by FMSMGA003.fm.intel.com with ESMTP; 12 Dec 2023 15:02:41 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Dec 2023 15:02:42 -0800
 From: weilin.wang@intel.com
 To: weilin.wang@intel.com,
 	Ian Rogers <irogers@google.com>,
@@ -45,9 +45,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Caleb Biggers <caleb.biggers@intel.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Yang Jihong <yangjihong1@huawei.com>
-Subject: [RFC PATCH v3 02/18] perf stat: Add basic functions for the hardware aware grouping
-Date: Tue, 12 Dec 2023 15:02:07 -0800
-Message-Id: <20231212230224.1473300-3-weilin.wang@intel.com>
+Subject: [RFC PATCH v3 02/18] perf stat: Add basic functions for the hardware-grouping stat cmd option
+Date: Tue, 12 Dec 2023 15:02:08 -0800
+Message-Id: <20231212230224.1473300-4-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20231212230224.1473300-1-weilin.wang@intel.com>
 References: <20231212230224.1473300-1-weilin.wang@intel.com>
@@ -61,11 +61,12 @@ Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-Add the first set of functions for the hardware aware grouping method. Function
-hw_awre_parse_groups() is the entry point of this metric grouping method.  It
-does metric grouping on a combined list of events and will create a list of
-grouping strings as final results of the grouping method. These grouping strings
-will be used in the same mannor as existing metric grouping process.
+Add the first set of functions for the hardware-grouping method. Function
+hw_awre_parse_groups() is the entry point of this metric grouping method.
+It does metric grouping on a combined list of events and will create a list
+of grouping strings as final results of the grouping method. These grouping
+strings will be used in the same mannor as existing metric grouping
+process.
 
 This method will fall back to normal grouping when hardware aware grouping
 return with err so that perf stat still executes and returns with correct
