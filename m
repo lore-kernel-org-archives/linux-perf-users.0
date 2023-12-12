@@ -1,76 +1,278 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F4E9F;
-	Tue, 12 Dec 2023 09:23:14 -0800 (PST)
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5c66bbb3d77so3358750a12.0;
-        Tue, 12 Dec 2023 09:23:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702401794; x=1703006594;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MRd+wrGx+k+oAJrYQSPEsfD9HTn2kU5M5FOxDmNsBgY=;
-        b=O7z1lIgfPX48Vdt4fsfEJWkCmz4oFY73H1URp+LEz2nOwwCZYH1v90TRpJiRpekXnG
-         alxovRFc53K+ZQd913RZrrdshVWfDm4vtpCZkbprlB3lFr99KdHAJAgRfBjZYxj4NSIJ
-         m5qJrzHJPa4hB4I8Katn5C7kaSE8+T3MSusytF8mMUygu//hnlbL71Fi4NetxeN6eBf4
-         PmcW3G044cSdAX1LtSDbpsJlr9OpQnxBhoU37dB7FH/M5IRmMsf/mtcmLI6uQ4y9SsrZ
-         EzWvl56SYa6cChUGoX2KSJsj0lL9lnE6xPUdoHy1+uIsEYR4rA4aIQEJU7VbxErFt19p
-         E2Ng==
-X-Gm-Message-State: AOJu0Yymjz8m40qk5mNpArABBdu6vlpOKk2SpE/YtnyhYVcXoRUmdVPm
-	rSWJEGapF7MPT3IdrHjI29B6ibrx/Yywa9Ybthk=
-X-Google-Smtp-Source: AGHT+IExbrs5lqY7fnplXxqrzF+7Vs19tgpgAqWbiPeO70uFzyG2Qj1UA/Wz+HXmu5f88stuTXz/85XmTnW7AbGmd34=
-X-Received: by 2002:a17:90a:71c3:b0:286:6cc1:2cac with SMTP id
- m3-20020a17090a71c300b002866cc12cacmr3610905pjs.54.1702401793553; Tue, 12 Dec
- 2023 09:23:13 -0800 (PST)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDCD1C687;
+	Tue, 12 Dec 2023 17:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3NIGmnQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB0BC433C7;
+	Tue, 12 Dec 2023 17:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702402749;
+	bh=3O4MKMSJdcyJ+24RyslOoDD0BR9w2BLkDCO5dQ0GLyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q3NIGmnQXCbRmAhjc6JJ9yBgHrlAeV5Ad9Ny111D3FtGouOkZuReV2gmfVL9mKy5j
+	 PrOq+Cstwxnd3HpQ0oYBt+L52EiLOX1g2YdOT8SLI3hjXZkiwE7UMhq1f4zmFTIvZQ
+	 ZIrWye/chg5bI9DPrJl71p/AcO6Kg7XnTxrug5GcH6yrHhC4zZMffo5HaqhGUl7ZZ0
+	 QSvU5FnIGTKzZqgrqXpok7qkQV5g3V7ajv54kTxpMsg7eiESC1q3pito2NBubgRYLj
+	 Y2WyMutZBxgTXolnWTKm5/1GWfJ+2LV0wkMe82xHJxC6jJ1rBQ0ZGmmKTAJCRK3NFZ
+	 0dpQXfvdqnEgw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 5576F403EF; Tue, 12 Dec 2023 14:39:05 -0300 (-03)
+Date: Tue, 12 Dec 2023 14:39:05 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Atish Patra <atishp@rivosinc.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Paran Lee <p4ranlee@gmail.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v1 02/14] libperf cpumap: Rename and prefer sysfs for
+ perf_cpu_map__default_new
+Message-ID: <ZXiauao3bIbc0ZCo@kernel.org>
+References: <20231129060211.1890454-1-irogers@google.com>
+ <20231129060211.1890454-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231208210855.407580-1-kan.liang@linux.intel.com>
- <ZXd7ZuxbNNsjAyqm@kernel.org> <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
-In-Reply-To: <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 12 Dec 2023 09:23:01 -0800
-Message-ID: <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
-Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, irogers@google.com, mark.rutland@arm.com, 
-	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231129060211.1890454-3-irogers@google.com>
+X-Url: http://acmel.wordpress.com
 
-On Tue, Dec 12, 2023 at 7:56=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2023-12-11 4:13 p.m., Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Dec 08, 2023 at 01:08:55PM -0800, kan.liang@linux.intel.com esc=
-reveu:
-> >> From: Kan Liang <kan.liang@linux.intel.com>
-> >>
-> >> perf top errors out on a hybrid machine
-> >>  $perf top
-> >>
-> >>  Error:
-> >>  The cycles:P event is not supported.
-> >>
-> >> The user_requested_cpus may contain CPUs that are invalid for a hybrid
-> >> PMU. It causes perf_event_open to fail.
-> >
-> > ?
-> >
-> > All perf top expects is that the "cycles", the most basic one, be
-> > collected, on all CPUs in the system.
-> >
->
-> Yes, but for hybrid there is no single "cycles" event which can cover
-> all CPUs.
+Em Tue, Nov 28, 2023 at 10:01:59PM -0800, Ian Rogers escreveu:
+> Rename perf_cpu_map__default_new to perf_cpu_map__new_online_cpus to
+> better indicate what the implementation does. Read the online CPUs
+> from /sys/devices/system/cpu/online first before using sysconf as
+> sysconf can't accurately configure holes in the CPU map. If sysconf is
+> used, warn when the configured and online processors disagree.
+> 
+> When reading from a file, if the read doesn't yield a CPU map then
+> return an empty map rather than the default online. This avoids
+> recursion but also better yields being able to detect failures.
+> 
+> Add more comments.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/cpumap.c              | 59 +++++++++++++++++-----------
+>  tools/lib/perf/include/perf/cpumap.h | 15 ++++++-
+>  tools/lib/perf/libperf.map           |  2 +-
+>  tools/lib/perf/tests/test-cpumap.c   |  2 +-
+>  4 files changed, 51 insertions(+), 27 deletions(-)
+> 
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index 2bd6aba3d8c9..463ca8b37d45 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -9,6 +9,7 @@
+>  #include <unistd.h>
+>  #include <ctype.h>
+>  #include <limits.h>
+> +#include "internal.h"
+>  
+>  void perf_cpu_map__set_nr(struct perf_cpu_map *map, int nr_cpus)
+>  {
+> @@ -66,15 +67,21 @@ void perf_cpu_map__put(struct perf_cpu_map *map)
+>  	}
+>  }
+>  
+> -static struct perf_cpu_map *cpu_map__default_new(void)
+> +static struct perf_cpu_map *cpu_map__new_sysconf(void)
+>  {
+>  	struct perf_cpu_map *cpus;
+> -	int nr_cpus;
+> +	int nr_cpus, nr_cpus_conf;
+>  
+>  	nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
+>  	if (nr_cpus < 0)
+>  		return NULL;
+>  
+> +	nr_cpus_conf = sysconf(_SC_NPROCESSORS_CONF);
+> +	if (nr_cpus != nr_cpus_conf) {
+> +		pr_warning("Number of online CPUs (%d) differs from the number configured (%d) the CPU map will only cover the first %d CPUs.",
+> +			nr_cpus, nr_cpus_conf, nr_cpus);
+> +	}
+> +
+>  	cpus = perf_cpu_map__alloc(nr_cpus);
+>  	if (cpus != NULL) {
+>  		int i;
+> @@ -86,9 +93,27 @@ static struct perf_cpu_map *cpu_map__default_new(void)
+>  	return cpus;
+>  }
+>  
+> -struct perf_cpu_map *perf_cpu_map__default_new(void)
+> +static struct perf_cpu_map *cpu_map__new_syfs_online(void)
 
-Does that mean the kernel would reject the legacy "cycles" event
-on hybrid CPUs?
+I'm renaming this to cpu_map__new_sysfs_online(), ok?
 
-Thanks,
-Namhyung
+- Arnaldo
+
+>  {
+> -	return cpu_map__default_new();
+> +	struct perf_cpu_map *cpus = NULL;
+> +	FILE *onlnf;
+> +
+> +	onlnf = fopen("/sys/devices/system/cpu/online", "r");
+> +	if (onlnf) {
+> +		cpus = perf_cpu_map__read(onlnf);
+> +		fclose(onlnf);
+> +	}
+> +	return cpus;
+> +}
+> +
+> +struct perf_cpu_map *perf_cpu_map__new_online_cpus(void)
+> +{
+> +	struct perf_cpu_map *cpus = cpu_map__new_syfs_online();
+> +
+> +	if (cpus)
+> +		return cpus;
+> +
+> +	return cpu_map__new_sysconf();
+>  }
+>  
+>  
+> @@ -180,27 +205,11 @@ struct perf_cpu_map *perf_cpu_map__read(FILE *file)
+>  
+>  	if (nr_cpus > 0)
+>  		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
+> -	else
+> -		cpus = cpu_map__default_new();
+>  out_free_tmp:
+>  	free(tmp_cpus);
+>  	return cpus;
+>  }
+>  
+> -static struct perf_cpu_map *cpu_map__read_all_cpu_map(void)
+> -{
+> -	struct perf_cpu_map *cpus = NULL;
+> -	FILE *onlnf;
+> -
+> -	onlnf = fopen("/sys/devices/system/cpu/online", "r");
+> -	if (!onlnf)
+> -		return cpu_map__default_new();
+> -
+> -	cpus = perf_cpu_map__read(onlnf);
+> -	fclose(onlnf);
+> -	return cpus;
+> -}
+> -
+>  struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+>  {
+>  	struct perf_cpu_map *cpus = NULL;
+> @@ -211,7 +220,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+>  	int max_entries = 0;
+>  
+>  	if (!cpu_list)
+> -		return cpu_map__read_all_cpu_map();
+> +		return perf_cpu_map__new_online_cpus();
+>  
+>  	/*
+>  	 * must handle the case of empty cpumap to cover
+> @@ -268,9 +277,11 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+>  
+>  	if (nr_cpus > 0)
+>  		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
+> -	else if (*cpu_list != '\0')
+> -		cpus = cpu_map__default_new();
+> -	else
+> +	else if (*cpu_list != '\0') {
+> +		pr_warning("Unexpected characters at end of cpu list ('%s'), using online CPUs.",
+> +			   cpu_list);
+> +		cpus = perf_cpu_map__new_online_cpus();
+> +	} else
+>  		cpus = perf_cpu_map__new_any_cpu();
+>  invalid:
+>  	free(tmp_cpus);
+> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+> index d0bf218ada11..b24bd8b8f34e 100644
+> --- a/tools/lib/perf/include/perf/cpumap.h
+> +++ b/tools/lib/perf/include/perf/cpumap.h
+> @@ -22,7 +22,20 @@ struct perf_cpu_map;
+>   * perf_cpu_map__new_any_cpu - a map with a singular "any CPU"/dummy -1 value.
+>   */
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_any_cpu(void);
+> -LIBPERF_API struct perf_cpu_map *perf_cpu_map__default_new(void);
+> +/**
+> + * perf_cpu_map__new_online_cpus - a map read from
+> + *                                 /sys/devices/system/cpu/online if
+> + *                                 available. If reading wasn't possible a map
+> + *                                 is created using the online processors
+> + *                                 assuming the first 'n' processors are all
+> + *                                 online.
+> + */
+> +LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_online_cpus(void);
+> +/**
+> + * perf_cpu_map__new - create a map from the given cpu_list such as "0-7". If no
+> + *                     cpu_list argument is provided then
+> + *                     perf_cpu_map__new_online_cpus is returned.
+> + */
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
+> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+> index a8ff64baea3e..8a71f841498e 100644
+> --- a/tools/lib/perf/libperf.map
+> +++ b/tools/lib/perf/libperf.map
+> @@ -2,7 +2,7 @@ LIBPERF_0.0.1 {
+>  	global:
+>  		libperf_init;
+>  		perf_cpu_map__new_any_cpu;
+> -		perf_cpu_map__default_new;
+> +		perf_cpu_map__new_online_cpus;
+>  		perf_cpu_map__get;
+>  		perf_cpu_map__put;
+>  		perf_cpu_map__new;
+> diff --git a/tools/lib/perf/tests/test-cpumap.c b/tools/lib/perf/tests/test-cpumap.c
+> index 2c359bdb951e..c998b1dae863 100644
+> --- a/tools/lib/perf/tests/test-cpumap.c
+> +++ b/tools/lib/perf/tests/test-cpumap.c
+> @@ -29,7 +29,7 @@ int test_cpumap(int argc, char **argv)
+>  	perf_cpu_map__put(cpus);
+>  	perf_cpu_map__put(cpus);
+>  
+> -	cpus = perf_cpu_map__default_new();
+> +	cpus = perf_cpu_map__new_online_cpus();
+>  	if (!cpus)
+>  		return -1;
+>  
+> -- 
+> 2.43.0.rc1.413.gea7ed67945-goog
+> 
+
+-- 
+
+- Arnaldo
