@@ -1,237 +1,122 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="suB2ivVY"
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ACFE9B
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 15:54:18 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-50d11bd3144so1416e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 15:54:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rppBubB+"
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E939AAD
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 16:02:50 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-50d11bd3144so1439e87.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Dec 2023 16:02:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702338856; x=1702943656; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702339369; x=1702944169; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BZ7j+yIdTJRyXFdhEKM+ZLZA7awoAwqre77RM7G9Wrs=;
-        b=suB2ivVYlsaZIYmO2V5cbStZE+6uZ64Zvix9EyqcPES8ecp9Nz8HygVLbcK1Cdzas3
-         l77K4Eajz9l/+L95zCSu0ydXAdGkY9BkWiHc5ChvU61v4tFlvSDn9ZS04ZPVwZsgUEEY
-         IvT6+OzVO30fUx6u0QLViotfl1DzeK9aL+kh0btIxnRmuLGC/WKwbez7O1jdqYxBdqMN
-         6RMiPWd32+O5Chq2XDP67yNyYBlsA6zzPT8sNQG7ZXdKmxJBcvOMVyTL8jdM91qHw3CB
-         fqcb/3j+EjrTu9/fZ/1zgOxs+MPArSyQ8mPBGSiEeQ52o4dccHtdlUGVz7M1wKfUoo39
-         TeaQ==
+        bh=TCwQNpqZrXvaI88937wdWL6JeEYRSB0xftnhNA8w9QY=;
+        b=rppBubB+vlXIEBJ/2FSZ6guPqgsw/qF/wohWUFDkAFMDRVvam5Y5CDyY9n6H6LaC+K
+         gln4lgDa5S1vPDVtb+FBTGK1xEfceR6v2TkgEOtxFmsRvz+bjQfOTvXzdfe/s/3fJqVt
+         nBTjuX4Q03GD8gimwR3flcox1Ckm2Eiqdh7RBtchmFlRZTizHprOrf/VmXWCbxzAgpXj
+         y0skzmS4Hh2NhQm5DuYS7FtFDqwRCIcfiEoRNgjvKvdqgXKh8CqyqieZdyex8m4zF8Yr
+         F7jv0B6WzJIduZU7smQbz56gxFGD/XbcjSTz2hTrdO+X7ceWTzBTO02ZASSgwv8NGJxh
+         rKSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702338856; x=1702943656;
+        d=1e100.net; s=20230601; t=1702339369; x=1702944169;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BZ7j+yIdTJRyXFdhEKM+ZLZA7awoAwqre77RM7G9Wrs=;
-        b=HNc2/7mEqRjGonChX92maREBJtbygvvwm/Dqw9esw+r/HM24GZM2uAUUqQIbGKmImx
-         oaPfntYP+HoTCuZJlr1y2KieC2zVMI/aqAKN8LssD+a6dOOwM9AHU8k0y/k1pAc6KeCX
-         sTE2X3jtZ4Cd4FZXTxRrgHRtYQTowlM7c2yU5l4fVmqjDH9ObreLb/cMQ3AjO5NpVv9N
-         q6LRAdTdzuvgGAI1CgFt52yKuqCq0VFUJsnD8l4J2AVtxlgZkI3ltx+c4G5IXcy9O9GZ
-         26kV3MitJinkAPRcAxQl6yzTMk/xoDlmiJ6fo2YfAyinXYaoPaqWflXSyu//T8E3crap
-         /O/A==
-X-Gm-Message-State: AOJu0YyJlQB8Gxcqp0EX9PRLruTk9X3SC4ACPSgg9VoIOKNR96iJO/5x
-	vKZuLExr3PDnfbUGR2cS/3czo0h3sIdL5jGNDMAIQQ==
-X-Google-Smtp-Source: AGHT+IEmEIpdMnovcBjeELo+iAnrH5adstoKW9gIppDFr+tLk3kphnfLFiT7ncA8CWwyMA2rs7ttZnRXVoqOY8E+LKI=
-X-Received: by 2002:a05:6512:292:b0:50b:fe63:f06 with SMTP id
- j18-20020a056512029200b0050bfe630f06mr187376lfp.4.1702338856097; Mon, 11 Dec
- 2023 15:54:16 -0800 (PST)
+        bh=TCwQNpqZrXvaI88937wdWL6JeEYRSB0xftnhNA8w9QY=;
+        b=YBpMfUXyVRR+BRLC1LX79sP0wsFYNgwY+R3CVpyUDW3ReCnH5wQcFGTlB/WWjigUT4
+         L9/mQdEBr7W+YPouAdKBTbvjLm3KtBRcAHKQN7/ZM80nQUooXUF9PI+Z/jSIumgSGFSr
+         Gn+VDR8eHyffHBbK4JGrT8530OukU7iBR2N89ydeUha1BpE8T+zK02DH1owgoCXKFDnG
+         P8PO3yxxBxgs0xFv0xoCdZOe+42AlLhQLRlqJPZ/Z9fC8QnesjRto/PyqcdAawxpSqjd
+         Zh92T+zTExoZNqBDp2583wB28j9gHs8oARTGrUusGPSAl3KTO+5lfTSD5N707PJtclxb
+         VNTA==
+X-Gm-Message-State: AOJu0Yx7uw+J5R9ZIPJWn1vE0azsQ4mCldCYy2XgxCXNw1s38PenfJKQ
+	PnP5XHayJpU4XIKD3EdVA4waSAwuKjigO8cdHyn/6g==
+X-Google-Smtp-Source: AGHT+IEFPi/YPXkyOUwUvNngrnFwm/fy1efsJXMtqz89IJ4IFpU1HMqaGwOahPUhLCrAmspv2/LYPzyvqtjpieaeNbY=
+X-Received: by 2002:a05:6512:539:b0:50c:e19:b658 with SMTP id
+ o25-20020a056512053900b0050c0e19b658mr220203lfc.1.1702339368975; Mon, 11 Dec
+ 2023 16:02:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207050433.1426834-1-irogers@google.com> <20231207050433.1426834-3-irogers@google.com>
- <CAM9d7cgRZp3PieHDvsdFXG+pNG0TTKoAaH6ZxC1XAnrvRLE1Pw@mail.gmail.com>
-In-Reply-To: <CAM9d7cgRZp3PieHDvsdFXG+pNG0TTKoAaH6ZxC1XAnrvRLE1Pw@mail.gmail.com>
+References: <20231208210855.407580-1-kan.liang@linux.intel.com>
+In-Reply-To: <20231208210855.407580-1-kan.liang@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Dec 2023 15:54:04 -0800
-Message-ID: <CAP-5=fXuZCkbAU0wakLyu3svpvUjzugAOjZzeGg9jZyJRXpoDA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] tools lib api: Add io_dir an allocation free
- readdir alternative
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Quentin Monnet <quentin@isovalent.com>, 
-	Fangrui Song <maskray@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Yanteng Si <siyanteng@loongson.cn>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Artem Savkov <asavkov@redhat.com>, James Clark <james.clark@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, 
+Date: Mon, 11 Dec 2023 16:02:37 -0800
+Message-ID: <CAP-5=fWmy7+iNRpMAZ_So0ki8oOD_4RSn9Mx+gGroWZH6_7Sdw@mail.gmail.com>
+Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
+To: kan.liang@linux.intel.com
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, maz@kernel.org, 
+	marcan@marcan.st, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 11, 2023 at 3:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Fri, Dec 8, 2023 at 1:09=E2=80=AFPM <kan.liang@linux.intel.com> wrote:
 >
-> On Wed, Dec 6, 2023 at 9:04=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > glibc's opendir allocates a minimum of 32kb, when called recursively
-> > for a directory tree the memory consumption can add up - nearly 300kb
-> > during perf start-up when processing modules. Add a stack allocated
-> > variant of readdir sized a little more than 1kb.
-> >
-> > As getdents64 may be missing from libc, add support using syscall.
+> From: Kan Liang <kan.liang@linux.intel.com>
 >
-> Unfortunately my alpine build has:
+> perf top errors out on a hybrid machine
+>  $perf top
 >
-> In file included from util/machine.c:2:
-> /build/libapi/include/api/io_dir.h:17:23: error: conflicting types for
-> 'getdents'; have 'ssize_t(int,  void *, size_t)' {aka 'long int(int,
-> void *, long unsigned int)'}
->    17 | static inline ssize_t getdents64(int fd, void *dirp, size_t count=
-)
->       |                       ^~~~~~~~~~
-> /usr/include/dirent.h:52:5: note: previous declaration of 'getdents'
-> with type 'int(int,  struct dirent *, size_t)' {aka 'int(int,  struct
-> dirent *, long unsigned int)'}
->    52 | int getdents(int, struct dirent *, size_t);
->       |     ^~~~~~~~
+>  Error:
+>  The cycles:P event is not supported.
+>
+> The user_requested_cpus may contain CPUs that are invalid for a hybrid
+> PMU. It causes perf_event_open to fail.
+>
+> The commit ef91871c960e ("perf evlist: Propagate user CPU maps
+> intersecting core PMU maps") already intersect the requested CPU map
+> with the CPU map of the PMU. Use the evsel's cpus to replace
+> user_requested_cpus.
+>
+> The evlist's threads is also propagated to evsel's threads in
+> __perf_evlist__propagate_maps(). Replace it as well.
+>
+> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@kernel.=
+org/
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-Presumably there is a #define getdents64 getdents .. Could we stop
-caring about this version of Alpine linux?
+Sorry I missed top doing the evlist__create_maps calls:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/builtin-top.c?h=3Dperf-tools-next#n1761
+so it is right that the only divergence from record:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/builtin-record.c?h=3Dperf-tools-next#n1362
+and stat:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/stat.c?h=3Dperf-tools-next#n797
+So this is the right fix I believe.
+
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Thanks,
-> Namhyung
+> ---
+>  tools/perf/builtin-top.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/api/Makefile     |  2 +-
-> >  tools/lib/api/io_dir.h     | 84 ++++++++++++++++++++++++++++++++++++++
-> >  tools/perf/Makefile.config |  4 ++
-> >  3 files changed, 89 insertions(+), 1 deletion(-)
-> >  create mode 100644 tools/lib/api/io_dir.h
-> >
-> > diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
-> > index 044860ac1ed1..186aa407de8c 100644
-> > --- a/tools/lib/api/Makefile
-> > +++ b/tools/lib/api/Makefile
-> > @@ -99,7 +99,7 @@ install_lib: $(LIBFILE)
-> >                 $(call do_install_mkdir,$(libdir_SQ)); \
-> >                 cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
-> >
-> > -HDRS :=3D cpu.h debug.h io.h
-> > +HDRS :=3D cpu.h debug.h io.h io_dir.h
-> >  FD_HDRS :=3D fd/array.h
-> >  FS_HDRS :=3D fs/fs.h fs/tracing_path.h
-> >  INSTALL_HDRS_PFX :=3D $(DESTDIR)$(prefix)/include/api
-> > diff --git a/tools/lib/api/io_dir.h b/tools/lib/api/io_dir.h
-> > new file mode 100644
-> > index 000000000000..9b702497e05c
-> > --- /dev/null
-> > +++ b/tools/lib/api/io_dir.h
-> > @@ -0,0 +1,84 @@
-> > +/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-> > +/*
-> > + * Lightweight directory reading library.
-> > + */
-> > +#ifndef __API_IO_DIR__
-> > +#define __API_IO_DIR__
-> > +
-> > +#include <dirent.h>
-> > +#include <fcntl.h>
-> > +#include <stdlib.h>
-> > +#include <unistd.h>
-> > +#include <sys/stat.h>
-> > +
-> > +#ifndef HAVE_GETDENTS64
-> > +#include <sys/syscall.h>
-> > +
-> > +static inline ssize_t getdents64(int fd, void *dirp, size_t count)
-> > +{
-> > +       return syscall(SYS_getdents64, fd, dirp, count);
-> > +}
-> > +#endif
-> > +
-> > +struct io_dirent64 {
-> > +       ino64_t        d_ino;    /* 64-bit inode number */
-> > +       off64_t        d_off;    /* 64-bit offset to next structure */
-> > +       unsigned short d_reclen; /* Size of this dirent */
-> > +       unsigned char  d_type;   /* File type */
-> > +       char           d_name[NAME_MAX + 1]; /* Filename (null-terminat=
-ed) */
-> > +};
-> > +
-> > +struct io_dir {
-> > +       int dirfd;
-> > +       ssize_t available_bytes;
-> > +       struct io_dirent64 *next;
-> > +       struct io_dirent64 buff[4];
-> > +};
-> > +
-> > +static inline void io_dir__init(struct io_dir *iod, int dirfd)
-> > +{
-> > +       iod->dirfd =3D dirfd;
-> > +       iod->available_bytes =3D 0;
-> > +}
-> > +
-> > +static inline void io_dir__rewinddir(struct io_dir *iod)
-> > +{
-> > +       lseek(iod->dirfd, 0, SEEK_SET);
-> > +       iod->available_bytes =3D 0;
-> > +}
-> > +
-> > +static inline struct io_dirent64 *io_dir__readdir(struct io_dir *iod)
-> > +{
-> > +       struct io_dirent64 *entry;
-> > +
-> > +       if (iod->available_bytes <=3D 0) {
-> > +               ssize_t rc =3D getdents64(iod->dirfd, iod->buff, sizeof=
-(iod->buff));
-> > +
-> > +               if (rc <=3D 0)
-> > +                       return NULL;
-> > +               iod->available_bytes =3D rc;
-> > +               iod->next =3D iod->buff;
-> > +       }
-> > +       entry =3D iod->next;
-> > +       iod->next =3D (struct io_dirent64 *)((char *)entry + entry->d_r=
-eclen);
-> > +       iod->available_bytes -=3D entry->d_reclen;
-> > +       return entry;
-> > +}
-> > +
-> > +static inline bool io_dir__is_dir(const struct io_dir *iod, struct io_=
-dirent64 *dent)
-> > +{
-> > +       if (dent->d_type =3D=3D DT_UNKNOWN) {
-> > +               struct stat st;
-> > +
-> > +               if (fstatat(iod->dirfd, dent->d_name, &st, /*flags=3D*/=
-0))
-> > +                       return false;
-> > +
-> > +               if (S_ISDIR(st.st_mode)) {
-> > +                       dent->d_type =3D DT_DIR;
-> > +                       return true;
-> > +               }
-> > +       }
-> > +       return dent->d_type =3D=3D DT_DIR;
-> > +}
-> > +
-> > +#endif
-> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > index aa55850fbc21..1cef1ab4ddb7 100644
-> > --- a/tools/perf/Makefile.config
-> > +++ b/tools/perf/Makefile.config
-> > @@ -357,6 +357,10 @@ ifeq ($(feature-stackprotector-all), 1)
-> >    CORE_CFLAGS +=3D -fstack-protector-all
-> >  endif
-> >
-> > +ifeq ($(feature-getdents64), 1)
-> > +  CFLAGS +=3D -DHAVE_GETDENTS64
-> > +endif
-> > +
-> >  ifeq ($(DEBUG),0)
-> >    ifeq ($(feature-fortify-source), 1)
-> >      CORE_CFLAGS +=3D -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3D2
-> > --
-> > 2.43.0.rc2.451.g8631bc7472-goog
-> >
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index ea8c7eca5eee..cce9350177e2 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1027,8 +1027,8 @@ static int perf_top__start_counters(struct perf_top=
+ *top)
+>
+>         evlist__for_each_entry(evlist, counter) {
+>  try_again:
+> -               if (evsel__open(counter, top->evlist->core.user_requested=
+_cpus,
+> -                                    top->evlist->core.threads) < 0) {
+> +               if (evsel__open(counter, counter->core.cpus,
+> +                               counter->core.threads) < 0) {
+>
+>                         /*
+>                          * Specially handle overwrite fall back.
+> --
+> 2.35.1
+>
