@@ -1,40 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pyckuVxS"
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F2CCBC
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 12:03:06 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-54c77d011acso2307a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 12:03:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XeI+ATa+"
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAD7BC
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 12:27:25 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-50bf1de91c6so779e87.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 12:27:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702411385; x=1703016185; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702412843; x=1703017643; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Bv1+Mtk2Gb5EiPRPIvE+IzzrHt4kY36IyFcki/03XAg=;
-        b=pyckuVxSGecRhBW9HIe9B8rp6NrnsOwV4DDB8LNceZWMHogrcGXxQTWuJjerUOqc0Q
-         tCqoPToq+D1uL65l7XQdi83jdVvi7NueSUmUdeucH9cfdcgBQoEUgji4uDvcDwi34xuR
-         kC9L9NDtuAiIiSAsZ1BcTNW1auJVLgnSHR/SCkDnE/toVVbMDS0ZSD4xNDaUjD2cwsN5
-         P6GhB+DjndYh9dErMWPiCJd236iaKXb2dL03Xo8MXNZwYUW8K7kX9LANlosG/oxZVIxW
-         9lDV0LXJR9h1wboxzRGWXzvP4ylHl7OjW3h/u+bH9L3UArbkEH4ypVIwLZkEEZAf5CVs
-         WvPw==
+        bh=1r0l9UDH82X/QRijiq/v0dYWas+IVhPxoge2Q6dptEs=;
+        b=XeI+ATa+LdAkHqn1BjFTeJsitxU1zxpjBgkEu8WDKbZNjPhNQtcp57vQoaVKy0kVg8
+         EkFa9fjlHwGU3mvHzRftpGIcAG1ucOaUu6a3rukDYzYIQzBotRmViaGf5Dh2UmLcxSKZ
+         HS38soueUWtlavoqmdkkl+Zm1h8x7D5LwKO5GCgp18xmtIBK7BtJxvYb0oxLzkLYQNXb
+         ZdpeUxBGOA2uS6BrvctKMJKTMR9RVgx5qGmoZ/cN/9yEc3RjxC4KCSqyF2E6Q6z7tmKT
+         ntSzFy0YlgAvbTSZ9SYl8Qqf5cyC1AzJGURXdWDOPnA0JP6FywFNJ4JWkdJ7MQtUU9LH
+         dncg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702411385; x=1703016185;
+        d=1e100.net; s=20230601; t=1702412843; x=1703017643;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Bv1+Mtk2Gb5EiPRPIvE+IzzrHt4kY36IyFcki/03XAg=;
-        b=K/8YbOKEtLW7crZOxraaozsZ6tMiCp3kqQHGNiWRyY8xa4HkgFs1J2TOUzvJkd1fdv
-         H4e4Dws4lvKdm7jfl3LKkm+4hmdOPspWxk/8y5lFpopru7ie53oZkfmzJUspiSiu0TtE
-         TIQpF1PWDwtmW00H8UsqAm8JgTpZwQ2qUxZe9zH9gWyyHb15SUdfoswj/NGBtvoiowgI
-         Ii7/5WD/0Xv0LC9yMKN6KAonsn1zfu28D9LNnX+EBS0xTpyI+fh/rMlQwupEqtWosEdX
-         6k+mHhopCJeqTVaPtKa0awBmawqrpvdgxFdtU7AQc7wOAquxCWHExJdJ7wCIOeSoBquQ
-         Tc1w==
-X-Gm-Message-State: AOJu0YzjLmtrmCliQkGW7suQuYXRizU9ve0+Pw+xFSmBH5jrKaWfAeHg
-	7oFL4yemarujKPaNZA952ZMlpb38NzdDmH2JJ+SbBA==
-X-Google-Smtp-Source: AGHT+IFxty5Rwnq+BtDPrniM4NJu3mhBKPuQvOaZ2F5HMTUvDhuTrhmlfn2DE5f/6qdWo9MdtqjM8mJL+S15eFV00h4=
-X-Received: by 2002:a50:d7c3:0:b0:54a:ee8b:7a99 with SMTP id
- m3-20020a50d7c3000000b0054aee8b7a99mr392000edj.0.1702411384344; Tue, 12 Dec
- 2023 12:03:04 -0800 (PST)
+        bh=1r0l9UDH82X/QRijiq/v0dYWas+IVhPxoge2Q6dptEs=;
+        b=w2Ef3wli4OPff1Szd4ztM1ZqMmVkclm3ztNsLgTTuKO4B/C6Sbkj2m/zDfqNCShQG3
+         YV6y9gr3EKgQTZpkcXFliI7Q+FXjHWdwDo/yR6uDBppEjh9R34y/dRRSGT4p5XGUFR3j
+         SlwWgSgESWLeq9vj0L0UbmNfuGDQ4Iz96oe+Mh5yoMtRUeOqhKdyCkXbbVKVMoo5nWEv
+         lkOd/FX2607PngwHwJRIJz5A+y1eckRt7H6YRRE9xFrCzQJ3o4G8e/ff7Gspz3qb8B39
+         uf62apPlpuNG3Jx4fpx6dJRJgcKF5zuvM84dbJt8y6i+dzGIhPJ3Yb0wwRx0eWp55Zyh
+         jvYw==
+X-Gm-Message-State: AOJu0YytSDVSZFPZaC44A0kOTGTyu3vXAA5IACMOt1Cv3oPeM4FLQCzH
+	hsiw9B3QMWDGLMUkoYtOl+4bAT5fxw+Lv2xAj7bzvQ==
+X-Google-Smtp-Source: AGHT+IFoY3ALLkdAR2gE36RzhwyUHqDnvxbMLYh3kdlzIKhmBLpUUVJzQp4hNvBUkf9+POe7DeKZkWl1v5OD3OMGjW0=
+X-Received: by 2002:a19:4f07:0:b0:50b:fcb7:15af with SMTP id
+ d7-20020a194f07000000b0050bfcb715afmr233274lfb.3.1702412843308; Tue, 12 Dec
+ 2023 12:27:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,11 +42,11 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20231129060211.1890454-1-irogers@google.com> <20231129060211.1890454-7-irogers@google.com>
- <63d7fe55-719e-43f8-531c-eb7fa30c473a@arm.com>
-In-Reply-To: <63d7fe55-719e-43f8-531c-eb7fa30c473a@arm.com>
+ <94e3745c-8c2b-bdf3-f331-1cbe56574d48@arm.com>
+In-Reply-To: <94e3745c-8c2b-bdf3-f331-1cbe56574d48@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 12 Dec 2023 12:02:52 -0800
-Message-ID: <CAP-5=fXenjeSDcOiQPq0xUyZSpb9PiQ_W7=FVx5oYNYd--RqCA@mail.gmail.com>
+Date: Tue, 12 Dec 2023 12:27:11 -0800
+Message-ID: <CAP-5=fUWtgNMGWowN2+qnV5FV3viHd=kPqiwXUeEtkQAzabLGw@mail.gmail.com>
 Subject: Re: [PATCH v1 06/14] libperf cpumap: Add any, empty and min helpers
 To: James Clark <james.clark@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -72,7 +72,7 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 6:01=E2=80=AFAM James Clark <james.clark@arm.com> w=
+On Tue, Dec 12, 2023 at 7:06=E2=80=AFAM James Clark <james.clark@arm.com> w=
 rote:
 >
 >
@@ -106,28 +106,62 @@ ap)
 > > +     return __perf_cpu_map__nr(map) =3D=3D 1 && __perf_cpu_map__cpu(ma=
 p, 0).cpu =3D=3D -1;
 > > +}
+>
+> I'm struggling to understand the relevance of the difference between
+> has_any and is_any I see that there is a slight difference, but could it
+> not be refactored out so we only need one?
+
+Yep, that's what these changes are working toward. For has any the set
+{-1, 0, 1} would return true while is any will return false.
+Previously the has any behavior was called "empty" which I think is
+actively misleading.
+
+> Do you ever get an 'any' map that has more than 1 entry? It's quite a
+> subtle difference that is_any returns false if the first one is 'any'
+> but then there are subsequent entries. Whereas has_any would return
+> true. I'm not sure if future readers would be able to appreciate that.
+>
+> I see has_any is only used twice, both on evlist->all_cpus. Is there
+> something about that member that means it could have a map that has an
+> 'any' mixed with CPUs? Wouldn't that have the same result as a normal
+> 'any' anyway?
+
+The dummy event may be opened on any CPU but then a particular event
+may be opened on certain CPUs. We merge CPU maps in places like evlist
+so that we can iterate the appropriate CPUs for events and
+open/enable/disable/close all events on a certain CPU at the same time
+(we also set the affinity to that CPU to avoid IPIs). What I'm hoping
+to do in these changes is reduce the ambiguity, the corner cases are
+by their nature unusual.
+
+An example of a corner case is, uncore events often get opened just on
+CPU 0 but on a multi-socket system you may have a CPU 32 that also
+needs to open the event. Previous code treated the CPU map index and
+value it contained pretty interchangeably. This is often fine for the
+core PMU but is clearly wrong in this uncore case, {0, 32} has indexes
+0 and 1 but those indexes don't match the CPU numbers. The case of -1
+has often previously been called dummy but I'm trying to call it the
+"any CPU" case to match the perf_event_open man page (I'm hoping it
+also makes it less ambiguous with any CPU being used with a particular
+event like cycles, calling it dummy makes the event sound like it may
+have sideband data). The difference between "all CPUs" and "any CPU"
+is that an evsel for all CPUs would need the event opening
+individually on each CPU, while any CPU events are a single open call.
+Any CPU is only valid to perf_event_open if a PID is specified.
+Depending on the set up there could be overlaps in what they count but
+hopefully it is clearer what the distinction is. I believe the case of
+"any CPU" and specific CPU numbers is more common with aux buffers and
+Adrian has mentioned needing it for intel-pt.
+
+Thanks,
+Ian
+
 > > +
 > > +bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
 > > +{
 > > +     return map =3D=3D NULL;
 > > +}
 > > +
->
-> Maybe it doesn't currently happen, but it seems a bit weird that the
-> 'new' function can create a map of length 0 which would return empty =3D=
-=3D
-> false here.
->
-> Could we either make this check also return true for maps with length 0,
-> or prevent the new function from returning a map of 0 length?
-
-We can add an assert or return NULL for size 0 in alloc. I think I
-prefer the return NULL option. It should never happen but it feels the
-right defensive thing to do.
-
-Thanks,
-Ian
-
 > >  int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu=
  cpu)
 > >  {
