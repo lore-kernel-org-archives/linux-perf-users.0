@@ -1,160 +1,250 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3635FAC;
-	Tue, 12 Dec 2023 02:30:34 -0800 (PST)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BCASoWD093073;
-	Tue, 12 Dec 2023 18:28:50 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Tue, 12 Dec 2023 18:28:47 +0800
-Date: Tue, 12 Dec 2023 18:28:47 +0800
-From: Yu-Chien Peter Lin <peterlin@andestech.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
-        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
-        <conor.dooley@microchip.com>, <conor@kernel.org>,
-        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
-        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
-        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
-        <jolsa@kernel.org>, <jszhang@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
-        <robh+dt@kernel.org>, <samuel@sholland.org>,
-        <sunilvl@ventanamicro.com>, <tim609@andestech.com>, <uwu@icenowy.me>,
-        <wens@csie.org>, <will@kernel.org>, <ycliang@andestech.com>,
-        <inochiama@outlook.com>
-Subject: Re: [PATCH v4 03/13] irqchip/riscv-intc: Introduce Andes hart-level
- interrupt controller
-Message-ID: <ZXg130SN3AOUmx_v@APC323>
-References: <20231122121235.827122-1-peterlin@andestech.com>
- <20231122121235.827122-4-peterlin@andestech.com>
- <87y1e4r8db.ffs@tglx>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 78F64D3;
+	Tue, 12 Dec 2023 03:20:54 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 830C6143D;
+	Tue, 12 Dec 2023 03:21:40 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A8BA3F762;
+	Tue, 12 Dec 2023 03:20:49 -0800 (PST)
+Message-ID: <8b398a96-8c75-93fb-b315-2da4b016c9c3@arm.com>
+Date: Tue, 12 Dec 2023 11:20:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87y1e4r8db.ffs@tglx>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BCASoWD093073
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1 01/14] libperf cpumap: Rename perf_cpu_map__dummy_new
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>
+References: <20231129060211.1890454-1-irogers@google.com>
+ <20231129060211.1890454-2-irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=c3=a9_Almeida?=
+ <andrealmeid@igalia.com>, Kan Liang <kan.liang@linux.intel.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Andrew Jones <ajones@ventanamicro.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>,
+ "Steinar H. Gunderson" <sesse@google.com>,
+ Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>,
+ Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ bpf@vger.kernel.org
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20231129060211.1890454-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Thomas,
 
-On Fri, Dec 08, 2023 at 05:01:36PM +0100, Thomas Gleixner wrote:
-> On Wed, Nov 22 2023 at 20:12, Yu Chien Peter Lin wrote:
-> > To share the riscv_intc_domain_map() with the generic RISC-V INTC and
-> > ACPI, we add a chip parameter to riscv_intc_init_common(), so it can be
-> 
-> s/we//
-> 
-> See: Documentation/process/
-> 
-> > passed to the irq_domain_set_info() as private data.
-> > diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
-> > index 2fdd40f2a791..30f0036c8978 100644
-> > --- a/drivers/irqchip/irq-riscv-intc.c
-> > +++ b/drivers/irqchip/irq-riscv-intc.c
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/smp.h>
-> > +#include <linux/soc/andes/irq.h>
-> >  
-> >  static struct irq_domain *intc_domain;
-> >  
-> > @@ -46,6 +47,31 @@ static void riscv_intc_irq_unmask(struct irq_data *d)
-> >  	csr_set(CSR_IE, BIT(d->hwirq));
-> >  }
-> >  
-> > +static void andes_intc_irq_mask(struct irq_data *d)
-> > +{
-> > +	/*
-> > +	 * Andes specific S-mode local interrupt causes (hwirq)
-> > +	 * are defined as (256 + n) and controlled by n-th bit
-> > +	 * of SLIE.
-> > +	 */
-> > +	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
-> 
-> How is this supposed to be correct with BITS_PER_LONG == 64?
 
-Yes, I should subtract ANDES_SLI_CAUSE_BASE directly here.
+On 29/11/2023 06:01, Ian Rogers wrote:
+> Rename perf_cpu_map__dummy_new to perf_cpu_map__new_any_cpu to better
+> indicate this is creating a CPU map for the perf_event_open "any" CPU
+> case.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-> > +
-> > +	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
-> > +		csr_clear(CSR_IE, mask);
-> > +	else
-> > +		csr_clear(ANDES_CSR_SLIE, mask);
-> > +}
-> > +
-> > +static void andes_intc_irq_unmask(struct irq_data *d)
-> > +{
-> > +	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
-> 
-> Ditto.
-> 
-> > +	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
-> > +		csr_set(CSR_IE, mask);
-> > +	else
-> > +		csr_set(ANDES_CSR_SLIE, mask);
-> > +}
-> 
-> >  static int riscv_intc_domain_map(struct irq_domain *d, unsigned int irq,
-> >  				 irq_hw_number_t hwirq)
-> >  {
-> > +	struct irq_chip *chip = d->host_data;
-> > +
-> >  	irq_set_percpu_devid(irq);
-> > -	irq_domain_set_info(d, irq, hwirq, &riscv_intc_chip, d->host_data,
-> > +	irq_domain_set_info(d, irq, hwirq, chip, d->host_data,
-> 
-> So this sets 'chip_data' to the chip itself. What's the point? Just set
-> it to NULL as the chip obviously does not need chip_data at all.
+Reviewed-by: James Clark <james.clark@arm.com>
 
-Will fix. Thanks.
-
-Best regards,
-Peter Lin
-
-> >  			    handle_percpu_devid_irq, NULL, NULL);
-> >  
-> >  	return 0;
-> > @@ -112,11 +147,12 @@ static struct fwnode_handle *riscv_intc_hwnode(void)
-> >  	return intc_domain->fwnode;
-> >  }
-> >  
-> > -static int __init riscv_intc_init_common(struct fwnode_handle *fn)
-> > +static int __init riscv_intc_init_common(struct fwnode_handle *fn,
-> > +					 struct irq_chip *chip)
-> >  {
-> >  	int rc;
-> >  
-> > -	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, NULL);
-> > +	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, chip);
-> >  	if (!intc_domain) {
-> >  		pr_err("unable to add IRQ domain\n");
-> >  		return -ENXIO;
-> > @@ -138,6 +174,7 @@ static int __init riscv_intc_init(struct device_node *node,
-> >  {
-> >  	int rc;
-> >  	unsigned long hartid;
-> > +	struct irq_chip *chip = &riscv_intc_chip;
+> ---
+>  tools/lib/perf/Documentation/libperf.txt | 2 +-
+>  tools/lib/perf/cpumap.c                  | 4 ++--
+>  tools/lib/perf/evsel.c                   | 2 +-
+>  tools/lib/perf/include/perf/cpumap.h     | 4 ++--
+>  tools/lib/perf/libperf.map               | 2 +-
+>  tools/lib/perf/tests/test-cpumap.c       | 2 +-
+>  tools/lib/perf/tests/test-evlist.c       | 2 +-
+>  tools/perf/tests/cpumap.c                | 2 +-
+>  tools/perf/tests/sw-clock.c              | 2 +-
+>  tools/perf/tests/task-exit.c             | 2 +-
+>  tools/perf/util/evlist.c                 | 2 +-
+>  tools/perf/util/evsel.c                  | 2 +-
+>  12 files changed, 14 insertions(+), 14 deletions(-)
 > 
-> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
-> 
-> Thanks
-> 
->         tglx
+> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+> index a8f1a237931b..a256a26598b0 100644
+> --- a/tools/lib/perf/Documentation/libperf.txt
+> +++ b/tools/lib/perf/Documentation/libperf.txt
+> @@ -37,7 +37,7 @@ SYNOPSIS
+>  
+>    struct perf_cpu_map;
+>  
+> -  struct perf_cpu_map *perf_cpu_map__dummy_new(void);
+> +  struct perf_cpu_map *perf_cpu_map__new_any_cpu(void);
+>    struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+>    struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+>    struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index 2a5a29217374..2bd6aba3d8c9 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -27,7 +27,7 @@ struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
+>  	return result;
+>  }
+>  
+> -struct perf_cpu_map *perf_cpu_map__dummy_new(void)
+> +struct perf_cpu_map *perf_cpu_map__new_any_cpu(void)
+>  {
+>  	struct perf_cpu_map *cpus = perf_cpu_map__alloc(1);
+>  
+> @@ -271,7 +271,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+>  	else if (*cpu_list != '\0')
+>  		cpus = cpu_map__default_new();
+>  	else
+> -		cpus = perf_cpu_map__dummy_new();
+> +		cpus = perf_cpu_map__new_any_cpu();
+>  invalid:
+>  	free(tmp_cpus);
+>  out:
+> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+> index 8b51b008a81f..c07160953224 100644
+> --- a/tools/lib/perf/evsel.c
+> +++ b/tools/lib/perf/evsel.c
+> @@ -120,7 +120,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+>  		static struct perf_cpu_map *empty_cpu_map;
+>  
+>  		if (empty_cpu_map == NULL) {
+> -			empty_cpu_map = perf_cpu_map__dummy_new();
+> +			empty_cpu_map = perf_cpu_map__new_any_cpu();
+>  			if (empty_cpu_map == NULL)
+>  				return -ENOMEM;
+>  		}
+> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+> index e38d859a384d..d0bf218ada11 100644
+> --- a/tools/lib/perf/include/perf/cpumap.h
+> +++ b/tools/lib/perf/include/perf/cpumap.h
+> @@ -19,9 +19,9 @@ struct perf_cache {
+>  struct perf_cpu_map;
+>  
+>  /**
+> - * perf_cpu_map__dummy_new - a map with a singular "any CPU"/dummy -1 value.
+> + * perf_cpu_map__new_any_cpu - a map with a singular "any CPU"/dummy -1 value.
+>   */
+> -LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
+> +LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_any_cpu(void);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__default_new(void);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+> index 190b56ae923a..a8ff64baea3e 100644
+> --- a/tools/lib/perf/libperf.map
+> +++ b/tools/lib/perf/libperf.map
+> @@ -1,7 +1,7 @@
+>  LIBPERF_0.0.1 {
+>  	global:
+>  		libperf_init;
+> -		perf_cpu_map__dummy_new;
+> +		perf_cpu_map__new_any_cpu;
+>  		perf_cpu_map__default_new;
+>  		perf_cpu_map__get;
+>  		perf_cpu_map__put;
+> diff --git a/tools/lib/perf/tests/test-cpumap.c b/tools/lib/perf/tests/test-cpumap.c
+> index 87b0510a556f..2c359bdb951e 100644
+> --- a/tools/lib/perf/tests/test-cpumap.c
+> +++ b/tools/lib/perf/tests/test-cpumap.c
+> @@ -21,7 +21,7 @@ int test_cpumap(int argc, char **argv)
+>  
+>  	libperf_init(libperf_print);
+>  
+> -	cpus = perf_cpu_map__dummy_new();
+> +	cpus = perf_cpu_map__new_any_cpu();
+>  	if (!cpus)
+>  		return -1;
+>  
+> diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
+> index ed616fc19b4f..ab63878bacb9 100644
+> --- a/tools/lib/perf/tests/test-evlist.c
+> +++ b/tools/lib/perf/tests/test-evlist.c
+> @@ -261,7 +261,7 @@ static int test_mmap_thread(void)
+>  	threads = perf_thread_map__new_dummy();
+>  	__T("failed to create threads", threads);
+>  
+> -	cpus = perf_cpu_map__dummy_new();
+> +	cpus = perf_cpu_map__new_any_cpu();
+>  	__T("failed to create cpus", cpus);
+>  
+>  	perf_thread_map__set_pid(threads, 0, pid);
+> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+> index 7730fc2ab40b..bd8e396f3e57 100644
+> --- a/tools/perf/tests/cpumap.c
+> +++ b/tools/perf/tests/cpumap.c
+> @@ -213,7 +213,7 @@ static int test__cpu_map_intersect(struct test_suite *test __maybe_unused,
+>  
+>  static int test__cpu_map_equal(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+>  {
+> -	struct perf_cpu_map *any = perf_cpu_map__dummy_new();
+> +	struct perf_cpu_map *any = perf_cpu_map__new_any_cpu();
+>  	struct perf_cpu_map *one = perf_cpu_map__new("1");
+>  	struct perf_cpu_map *two = perf_cpu_map__new("2");
+>  	struct perf_cpu_map *empty = perf_cpu_map__intersect(one, two);
+> diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
+> index 4d7493fa0105..290716783ac6 100644
+> --- a/tools/perf/tests/sw-clock.c
+> +++ b/tools/perf/tests/sw-clock.c
+> @@ -62,7 +62,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+>  	}
+>  	evlist__add(evlist, evsel);
+>  
+> -	cpus = perf_cpu_map__dummy_new();
+> +	cpus = perf_cpu_map__new_any_cpu();
+>  	threads = thread_map__new_by_tid(getpid());
+>  	if (!cpus || !threads) {
+>  		err = -ENOMEM;
+> diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+> index 968dddde6dda..d33d0952025c 100644
+> --- a/tools/perf/tests/task-exit.c
+> +++ b/tools/perf/tests/task-exit.c
+> @@ -70,7 +70,7 @@ static int test__task_exit(struct test_suite *test __maybe_unused, int subtest _
+>  	 * evlist__prepare_workload we'll fill in the only thread
+>  	 * we're monitoring, the one forked there.
+>  	 */
+> -	cpus = perf_cpu_map__dummy_new();
+> +	cpus = perf_cpu_map__new_any_cpu();
+>  	threads = thread_map__new_by_tid(-1);
+>  	if (!cpus || !threads) {
+>  		err = -ENOMEM;
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index e36da58522ef..ff7f85ded89d 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -1056,7 +1056,7 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
+>  		return -1;
+>  
+>  	if (target__uses_dummy_map(target))
+> -		cpus = perf_cpu_map__dummy_new();
+> +		cpus = perf_cpu_map__new_any_cpu();
+>  	else
+>  		cpus = perf_cpu_map__new(target->cpu_list);
+>  
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a5da74e3a517..76ef3ab488a2 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1801,7 +1801,7 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  
+>  	if (cpus == NULL) {
+>  		if (empty_cpu_map == NULL) {
+> -			empty_cpu_map = perf_cpu_map__dummy_new();
+> +			empty_cpu_map = perf_cpu_map__new_any_cpu();
+>  			if (empty_cpu_map == NULL)
+>  				return -ENOMEM;
+>  		}
