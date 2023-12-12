@@ -1,172 +1,160 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="19ngTHNV"
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9D9BD
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 14:12:41 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-54c77d011acso1487a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 14:12:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702419160; x=1703023960; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cks51YM0UKyckZloGW9xq/gv3l7nlcfYyHgSc2Hh0TE=;
-        b=19ngTHNVv8mlYeA4Op3uITxGKXA3b1tmg9K/fTu7VFQeWrtIah7eKriskXtW/PaxiV
-         bYt8iIe9GOsFRRsQm5gkR72R9m5EmoL8VXT45hQABqXXqbfMiukcHl8fXlLcIpQpO0wa
-         PepR3cJbjkL80mThin/3d9yOPGdDmJqLYsiGtjB5FpoMjtw2UcfaMCOxaIrgIdLVs5pa
-         rxSPzq+rTknwbOiTYC9mPsvJ8isznQgQ/6HmOHHkQH906RVfQWP5qurIY7DmxwbQNRn8
-         B52DJfxzoID7A+PjWYNMJXfB/I0ZrlFkvXHfxvVVE4k0dyyG8xxBrRTQ/EOowP2maeA0
-         7o6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702419160; x=1703023960;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cks51YM0UKyckZloGW9xq/gv3l7nlcfYyHgSc2Hh0TE=;
-        b=orvhsAU1L9jMxBs3MZ3cVvDrdFUiSB/qcSLAjZeQ0RXHIUik2CGh6/Fwv8iwRcsBCm
-         wi74mDdfNZdxcLnk+9iOc7Tf4WLkwP34Z+elI6+6EvCZjsfBZOgvvNiVAsaZzCVPT2KK
-         3yADHzQXCqotO41jGaYKxX0ryzlrCzlZSfGzVL95/Q65676ulYj68kPznzxl7NBy0wnu
-         bmPkVI02wgicQPKCspc7pyRgjvHV5dlXJ5J4CStafgcYrz8w7gbjGwKQu8nUENx4atJS
-         e6cf+AHJas9hN/h/mmwM1L4CsAj+yn/ubB0LRCLoMSBMAYnfhDsDVKDuE7If174mquLp
-         3+sQ==
-X-Gm-Message-State: AOJu0YzcIi/HBPMW9wIi6sRWQrBHcLOc3YE3A7cd3KQl7af+4x1JTy9E
-	l4+z7pxwCqHT8OIYhoDEVUgmNuMOWe5+4X7uip+ynw==
-X-Google-Smtp-Source: AGHT+IF3yLnso16rdyhcMLLN9D0e3Wjogglt21LQD5Hss1z5ysbNndCPVrF7FCR53v1hYWLvdC1D9AEWOUEiGoK+COk=
-X-Received: by 2002:aa7:d4d6:0:b0:551:d490:2748 with SMTP id
- t22-20020aa7d4d6000000b00551d4902748mr78706edr.5.1702419159394; Tue, 12 Dec
- 2023 14:12:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xcouywp4"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C4A98;
+	Tue, 12 Dec 2023 15:02:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702422161; x=1733958161;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Wy+I6W7fxpeKZmWP0/XW0hwkCjvSZETHygBMlm6vFU4=;
+  b=Xcouywp4tD989wjpTqMbmqmELtYi2qgcbfUtxyAUSKzUBLMf6Ia0NyEB
+   n92O+WhmXcSKwbvSO6ijGhwWbBIcB40qI2Jy0dhmmTS2TWD1Q2nYSThFn
+   n/XUNfJRE74/8nnBYyJgZOP2GrZo6W4lmOQ3/Sxp+ERHCuuELZB2KcryF
+   FCoZ1ws3xZEkrBbV2sSnC0/s44ma7OowdhXkHpp/msf7oVWM7eWEbSSoa
+   gpxd/H2UIppcRoqOzPUfmM1+2zsWHzaChfcpGwmlnm/5b8Q9kDVaBMR2e
+   fqJxp5w4hg7ZGf/PEvFszX6lRTmdgEpdOXegrZYupVZ85K97L9jrWGhIk
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="392055859"
+X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
+   d="scan'208";a="392055859"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 15:02:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864391939"
+X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
+   d="scan'208";a="864391939"
+Received: from node-10329.jf.intel.com ([10.54.34.22])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Dec 2023 15:02:40 -0800
+From: weilin.wang@intel.com
+To: weilin.wang@intel.com,
+	Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Yang Jihong <yangjihong1@huawei.com>
+Subject: [RFC PATCH v3 00/18] Perf stat metric grouping with hardware information
+Date: Tue, 12 Dec 2023 15:02:05 -0800
+Message-Id: <20231212230224.1473300-1-weilin.wang@intel.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212193833.415110-1-kan.liang@linux.intel.com>
- <CAP-5=fWCgjCC-DHHx+HJCuYk6vNn9Lf9EKcnBBZQ+xmnyYnmPg@mail.gmail.com> <996ec30b-2bcf-4739-bec0-728c7f7af2ac@linux.intel.com>
-In-Reply-To: <996ec30b-2bcf-4739-bec0-728c7f7af2ac@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 12 Dec 2023 14:12:27 -0800
-Message-ID: <CAP-5=fVnH0eTEvvNbKLF9xYye5Pu8hvDL4ruoxh5xG76+B8WFQ@mail.gmail.com>
-Subject: Re: [PATCH V2] perf top: Use evsel's cpus to replace user_requested_cpus
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, maz@kernel.org, 
-	marcan@marcan.st, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 12, 2023 at 1:25=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2023-12-12 3:37 p.m., Ian Rogers wrote:
-> > On Tue, Dec 12, 2023 at 11:39=E2=80=AFAM <kan.liang@linux.intel.com> wr=
-ote:
-> >>
-> >> From: Kan Liang <kan.liang@linux.intel.com>
-> >>
-> >> perf top errors out on a hybrid machine
-> >>  $perf top
-> >>
-> >>  Error:
-> >>  The cycles:P event is not supported.
-> >>
-> >> The perf top expects that the "cycles" is collected on all CPUs in the
-> >> system. But for hybrid there is no single "cycles" event which can cov=
-er
-> >> all CPUs. Perf has to split it into two cycles events, e.g.,
-> >> cpu_core/cycles/ and cpu_atom/cycles/. Each event has its own CPU mask=
-.
-> >> If a event is opened on the unsupported CPU. The open fails. That's th=
-e
-> >> reason of the above error out.
-> >>
-> >> Perf should only open the cycles event on the corresponding CPU. The
-> >> commit ef91871c960e ("perf evlist: Propagate user CPU maps intersectin=
-g
-> >> core PMU maps") intersect the requested CPU map with the CPU map of th=
-e
-> >> PMU. Use the evsel's cpus to replace user_requested_cpus.
-> >>
-> >> The evlist's threads are also propagated to the evsel's threads in
-> >> __perf_evlist__propagate_maps(). For a system-wide event, perf appends
-> >> a dummy event and assign it to the evsel's threads. For a per-thread
-> >> event, the evlist's thread_map is assigned to the evsel's threads. The
-> >> same as the other tools, e.g., perf record, using the evsel's threads
-> >> when opening an event.
-> >>
-> >> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> >> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@kern=
-el.org/
-> >> Reviewed-by: Ian Rogers <irogers@google.com>
-> >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> >> ---
-> >>
-> >> Changes since V1:
-> >> - Update the description
-> >> - Add Reviewed-by from Ian
-> >
-> > Thanks Kan, quick question. Does "perf top" on hybrid ask the user to
-> > select between the cycles event on cpu_atom and cpu_core?
->
-> Yes, but the event doesn't include the PMU information.
-> We probably need a follow up patch to append the PMU name.
->
-> Available samples
-> 385 cycles:P
->
-> 903 cycles:P
+From: Weilin Wang <weilin.wang@intel.com>
 
-Thanks and agreed, it isn't possible to tell which is which PMU/CPU
-type at the moment. I tried the patch with perf top --stdio, there
-wasn't a choice of event  and I can't tell what counter is being
-displayed. When I quit I also see:
-```
-exiting.
-corrupted double-linked list
-Aborted (core dumped)
-```
-but I wasn't able to repro this on a debuggable binary/system.
+Changes in v3:
+ - Updated the ordering of patches to add --hardware-grouping cmd option after
+ completely enable this feature [Kan]
+ - Resolved merge conflict [Ian]
 
-If my memory serves there was a patch where perf top was showing >1
-event. It would be nice here to do some kind of hybrid merging rather
-than having to view each PMU's top separately.
+ v2: https://lore.kernel.org/all/20231014015202.1175377-1-weilin.wang@intel.com/
 
-Thanks,
-Ian
+Weilin Wang (18):
+  perf stat: Add new field in stat_config to enable hardware aware
+    grouping.
+  perf stat: Add basic functions for the hardware aware grouping
+  perf pmu-events: Add functions in jevent.py to parse counter and event
+    info for hardware aware grouping
+  perf pmu-events: Add counter info into JSON files for SapphireRapids
+  perf pmu-events: Add event counter data for Cascadelakex
+  perf pmu-events: Add event counter data for Icelakex
+  perf stat: Add functions to set counter bitmaps for hardware-grouping
+    method
+  perf stat: Add functions to get counter info
+  perf stat: Add functions to create new group and assign events into
+    groups for hardware-grouping method
+  perf stat: Add build string function and topdown events handling in
+    hardware-grouping
+  perf stat: Add function to handle special events in hardware-grouping
+  perf stat: Add function to combine metrics for hardware-grouping
+  perf stat: Handle taken alone in hardware-grouping
+  perf stat: Handle NMI in hardware-grouping
+  perf stat: Code refactoring in hardware-grouping
+  perf stat: Add tool events support in hardware-grouping
+  perf pmu-events: Add event counter data for Tigerlake
+  perf stat: Add hardware-grouping cmd option to perf stat
 
+ tools/lib/bitmap.c                            |   20 +
+ tools/perf/builtin-stat.c                     |    7 +
+ .../arch/x86/cascadelakex/cache.json          | 1237 ++++++++++++
+ .../arch/x86/cascadelakex/counter.json        |   16 +
+ .../arch/x86/cascadelakex/floating-point.json |   16 +
+ .../arch/x86/cascadelakex/frontend.json       |   68 +
+ .../arch/x86/cascadelakex/memory.json         |  751 ++++++++
+ .../arch/x86/cascadelakex/other.json          |  168 ++
+ .../arch/x86/cascadelakex/pipeline.json       |  102 +
+ .../arch/x86/cascadelakex/uncore-cache.json   | 1138 +++++++++++
+ .../x86/cascadelakex/uncore-interconnect.json | 1272 +++++++++++++
+ .../arch/x86/cascadelakex/uncore-io.json      |  394 ++++
+ .../arch/x86/cascadelakex/uncore-memory.json  |  509 +++++
+ .../arch/x86/cascadelakex/uncore-power.json   |   25 +
+ .../arch/x86/cascadelakex/virtual-memory.json |   28 +
+ .../pmu-events/arch/x86/icelakex/cache.json   |   98 +
+ .../pmu-events/arch/x86/icelakex/counter.json |   16 +
+ .../arch/x86/icelakex/floating-point.json     |   13 +
+ .../arch/x86/icelakex/frontend.json           |   55 +
+ .../pmu-events/arch/x86/icelakex/memory.json  |   53 +
+ .../pmu-events/arch/x86/icelakex/other.json   |   52 +
+ .../arch/x86/icelakex/pipeline.json           |   92 +
+ .../arch/x86/icelakex/uncore-cache.json       |  965 ++++++++++
+ .../x86/icelakex/uncore-interconnect.json     | 1667 +++++++++++++++++
+ .../arch/x86/icelakex/uncore-io.json          |  966 ++++++++++
+ .../arch/x86/icelakex/uncore-memory.json      |  186 ++
+ .../arch/x86/icelakex/uncore-power.json       |   26 +
+ .../arch/x86/icelakex/virtual-memory.json     |   22 +
+ .../arch/x86/sapphirerapids/cache.json        |  104 +
+ .../arch/x86/sapphirerapids/counter.json      |   16 +
+ .../x86/sapphirerapids/floating-point.json    |   25 +
+ .../arch/x86/sapphirerapids/frontend.json     |   59 +
+ .../arch/x86/sapphirerapids/memory.json       |   44 +
+ .../arch/x86/sapphirerapids/other.json        |   40 +
+ .../arch/x86/sapphirerapids/pipeline.json     |  118 ++
+ .../arch/x86/sapphirerapids/uncore-cache.json |  514 +++++
+ .../arch/x86/sapphirerapids/uncore-cxl.json   |   56 +
+ .../sapphirerapids/uncore-interconnect.json   |  476 +++++
+ .../arch/x86/sapphirerapids/uncore-io.json    |  373 ++++
+ .../x86/sapphirerapids/uncore-memory.json     |  391 ++++
+ .../arch/x86/sapphirerapids/uncore-power.json |   24 +
+ .../x86/sapphirerapids/virtual-memory.json    |   20 +
+ .../pmu-events/arch/x86/tigerlake/cache.json  |   65 +
+ .../arch/x86/tigerlake/counter.json           |    6 +
+ .../arch/x86/tigerlake/floating-point.json    |   13 +
+ .../arch/x86/tigerlake/frontend.json          |   56 +
+ .../pmu-events/arch/x86/tigerlake/memory.json |   31 +
+ .../pmu-events/arch/x86/tigerlake/other.json  |    4 +
+ .../arch/x86/tigerlake/pipeline.json          |   96 +
+ .../x86/tigerlake/uncore-interconnect.json    |   11 +
+ .../arch/x86/tigerlake/uncore-memory.json     |    6 +
+ .../arch/x86/tigerlake/uncore-other.json      |    1 +
+ .../arch/x86/tigerlake/virtual-memory.json    |   20 +
+ tools/perf/pmu-events/jevents.py              |  176 +-
+ tools/perf/pmu-events/pmu-events.h            |   26 +-
+ tools/perf/util/metricgroup.c                 |  947 ++++++++++
+ tools/perf/util/metricgroup.h                 |  106 ++
+ tools/perf/util/stat.h                        |    1 +
+ 58 files changed, 13778 insertions(+), 9 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/counter.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/counter.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/counter.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/counter.json
 
-> Thanks,
-> Kan
->
-> > I'm
-> > wondering if there is some kind of missing "hybrid-merge"
-> > functionality like we have for perf stat.
-> >
-> > Thanks,
-> > Ian
-> >
-> >>  tools/perf/builtin-top.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> >> index ea8c7eca5eee..cce9350177e2 100644
-> >> --- a/tools/perf/builtin-top.c
-> >> +++ b/tools/perf/builtin-top.c
-> >> @@ -1027,8 +1027,8 @@ static int perf_top__start_counters(struct perf_=
-top *top)
-> >>
-> >>         evlist__for_each_entry(evlist, counter) {
-> >>  try_again:
-> >> -               if (evsel__open(counter, top->evlist->core.user_reques=
-ted_cpus,
-> >> -                                    top->evlist->core.threads) < 0) {
-> >> +               if (evsel__open(counter, counter->core.cpus,
-> >> +                               counter->core.threads) < 0) {
-> >>
-> >>                         /*
-> >>                          * Specially handle overwrite fall back.
-> >> --
-> >> 2.35.1
-> >>
+--
+2.39.3
+
