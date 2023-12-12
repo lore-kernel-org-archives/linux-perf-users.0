@@ -1,162 +1,96 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AwzwyX8F"
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2043.outbound.protection.outlook.com [40.107.100.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E40094;
-	Mon, 11 Dec 2023 20:19:04 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dafd0DpWrjrThulRP7kdzAXGePPrVYjjUtHgzYsFtYGIgwhsP4ITw8THKQ6NaC0lbWc+JNZv5EbaftYAlhXCzU0ON7ZGvHMP9H90hHIFIqpqdirdB0XNv45gy1YHAqMi8+ujo1iaU5vtrBi5kC0Dr7LbxLjT2PrqsPunbPGSiUd9n1c5y4RGSDDXRTQbo/5sNVyurKxS+yroOLQsAUxZTNkVGiJDPK+oLCKC+tCej5Jhxp7Fk8mv5td3ccFHjv1c7hz30jL4MqIJ+veLZFL2B2huj2uvq0358xDExTor5pRsNwD9p271tIm77rDDcKbNahvBJ3UHsoEO1Ykg0qEr3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a5Gb83GnOQsWDcA477snbXRNV9mDykuISnnQaeHjgY0=;
- b=j+d2oVfwkU1N52lMaGHYuHscEEZcp3UUGfuY7TOm8tRpcKNs0cuOHhQlsT4alNKBFttjtNOe+jAvfLCvMRXU37ZY735cVJxCQCKNDLXMcTTsPDQa42Jabj8P2JBDtKTU/4jiezakKPTrINGV2jzTLlWb/ARZ5J4iY6X3/xf8rP4hM+HmfqCnGJaP05tHaa6z+Gth+ALEXYrmze3IklGxJLk1wU8ueIvKMFJunktIU/hwFs/6MattzZfbLkTVankVT0wpA1Xx5bluzvXs3yFZy5h9iHtk4oHHpDae/U8KUxSVlG7e4HbXPgVgtz1UG5m9Eiu0nFLsjTJLvf6pDjzopw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a5Gb83GnOQsWDcA477snbXRNV9mDykuISnnQaeHjgY0=;
- b=AwzwyX8Fl3Xo90IZSG+Yc7EMwyyLiX6ebm9p5tDKCTQEdqoFBUuWpe7nR537ihgbEVgX12bbjJvAgERSHVTJ9MsUFOveI1EgOqQ8VP6nvcwFQ3t3oLzaOALwt+Zo6WMzDiupXD46Bvq1as0OJDDAn0yAvdCpPJxTxs3p3TdTBo8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by MW4PR12MB7438.namprd12.prod.outlook.com (2603:10b6:303:219::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.33; Tue, 12 Dec
- 2023 04:19:01 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::cd68:8823:38b3:65bc]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::cd68:8823:38b3:65bc%3]) with mapi id 15.20.7068.031; Tue, 12 Dec 2023
- 04:19:01 +0000
-Message-ID: <15bf097a-1863-ce32-cac7-d91df3c73215@amd.com>
-Date: Tue, 12 Dec 2023 09:48:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 1/2] perf tool AMD: Use non-precise cycles as default
- event on certain Zen2 processors
-Content-Language: en-US
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, kim.phillips@amd.com, peterz@infradead.org,
- mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
- kan.liang@linux.intel.com, changbin.du@huawei.com, yangjihong1@huawei.com,
- zwisler@chromium.org, wangming01@loongson.cn, chenhuacai@kernel.org,
- kprateek.nayak@amd.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, sandipan.das@amd.com, ananth.narayan@amd.com,
- santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20231107083331.901-1-ravi.bangoria@amd.com>
- <CAM9d7cgs9Wk0OFoea4jOote-drHjvCimJyt7GWdO2Giw=d7Jog@mail.gmail.com>
- <f42bf6b7-75b8-124b-c79e-ad7a9b706990@amd.com>
- <CAM9d7cijrZzp=5m+BcQ77WFOSHT7e5vO-RCUTUp5Pevmz2wbtg@mail.gmail.com>
- <53374e41-d1e0-aa8f-d001-5e89783b962c@amd.com>
- <CAM9d7cgNsXVpFDsUt01TwxF3B=7G9TWZWoNU2dP_RGtQdQAJPQ@mail.gmail.com>
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CAM9d7cgNsXVpFDsUt01TwxF3B=7G9TWZWoNU2dP_RGtQdQAJPQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0191.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::15) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxFcJjjY"
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D4C5D0;
+	Mon, 11 Dec 2023 23:05:50 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-6cda22140f2so4626996b3a.1;
+        Mon, 11 Dec 2023 23:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702364750; x=1702969550; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=cSrzQ4FDDeqPwfBNWP1LcLTFq/yFZjcBCmoTNQG3Jbc=;
+        b=QxFcJjjYIDnXD8IUvnNAiAfryIkdOrPDGo0qH2/XA9/Fnk9ktbHEQ+njmVDnumjcab
+         TtKaubL530F80z7dq8mYxVe6lfP6I+OZmZvtfjNstC7WjYxYdoDQxR/rTV5zJokyxTUe
+         e6P2zoKRTNkzvu33ppDiLZd/+dur8eUzzMuZBcsVGoQ0ZN3o1wjYabqDqi1G98BtwhW5
+         idKXyHgw/4GdNuGwQxUssfLHlWMvHu7Vd96VehhjoCD8gs5EibeEURkl/SXzTMfFS7Ds
+         2oqBeZLiXP76zUYNdpvIRTYYUW+s/DUE+q7wExubnxOS2hFFe01VWhtFkQ/bZHs6Lv/q
+         VZ9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702364750; x=1702969550;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cSrzQ4FDDeqPwfBNWP1LcLTFq/yFZjcBCmoTNQG3Jbc=;
+        b=xSrCCpDKykl9PoyjOhkhWVC2McA7MZu7ofRpwdKegZIvll1ih1IaPAFccFINVT0ill
+         w0l0DGwOah/gDAS3Y5DyDMlw1XCPgAptwnTslOTjHKhpx8q9zYuIP63jYdb08fgnkH6A
+         L73uCMfiBbz384PhNuCmWXqsIfKmAziErzezO/06//6zYj9WxavHcg3b4zmMWv6pSt7c
+         wyeSmWi4IlWSuI8mUX1OozZfx4zhkTvZZ/eSYW6C52Lhq14uWABRflfxfFYmDNlPwCRs
+         FzYDTcm19tWUIg9IiH51yULWalxaj0Goh7xJmueomtFwa4jkxngqozcBEyYuIwbdNTTX
+         iYTA==
+X-Gm-Message-State: AOJu0YySjKOYrVxZMQrGXxL+PVIBOxy/cUoWqMOAndUVWJ0gokwOBiVL
+	cccBhYZNdWDnS5lUga9I4wkbDYpO+KmO6w==
+X-Google-Smtp-Source: AGHT+IECAOXD/0B+W79A1JJLZZXjjM6ziU0kkw9o9WVVRBBXjx1IEv5o3dwdJSk4XvSkOKpIiVt8zg==
+X-Received: by 2002:a05:6a20:7d86:b0:18f:f86f:bcdb with SMTP id v6-20020a056a207d8600b0018ff86fbcdbmr6978625pzj.93.1702364749630;
+        Mon, 11 Dec 2023 23:05:49 -0800 (PST)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:42e0:7da0:5ec4:de63:3cf4])
+        by smtp.gmail.com with ESMTPSA id g17-20020a056a0023d100b006cb6e83bf7fsm7397491pfc.192.2023.12.11.23.05.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Dec 2023 23:05:49 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Milian Wolff <milian.wolff@kdab.com>,
+	Pablo Galindo <pablogsal@gmail.com>,
+	Fangrui Song <maskray@google.com>
+Subject: [PATCH 0/3] perf tools: Random fixes for DWARF unwind
+Date: Mon, 11 Dec 2023 23:05:43 -0800
+Message-ID: <20231212070547.612536-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MW4PR12MB7438:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6bf97bab-3b24-4cca-ce99-08dbfac977f0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Zqj86Z7Cg7KnDaYjCw6neHO02gp1yr5xs1/W2XxM1Q8sgPK4FNFDrTK+jHk1kt+Ly6EjbZzzga31mklTIknfgtlvNM4lkbbXg+kNneUKKMEDLNRxOSmPF/7tzdLANjpzk5l3Qj3SxyiaOdLVKfMFr8kdlfYiBgVaf78oD4Z9/X/gujTECc0qTaLrY5w/A9atjdcY/wmckfZcudLlmUt+78v0FPBs19UkVq3rABb+wel9jMU3789I1/z2V4HR8yF/8FRXbXbUKJDM+ctlKu+6O+8WU5H/BTbIwf8zrEhKQtjv9XjKh/N5rWx1h+LY1gdLYHWv/KhIL9/mSEfoPrY1IX9CcSpnqCCAJM46ZP46Bbyt+WrBcmM75dbL/h6TRstI8V8gtezo7OtzEYne14D6JmYTDqPGrojs83cmxxqjAUWn2+fbuhj5GvO/r+NB3ri62TAZR61HLILsz68QEixfjLbNLQ+MqHTr1FW6cG57CwmWciCfOdZT8KoAWabtd3UjuQozxyGiMY+9x2HRg/v5zO280foJmRMT3eZUSAQz9eO/1205fyTfNAQmju/yCWZ4O3LJoPASr7gsyFeN+UXCLq0UV5npbfZfvl8GlXuQVdS0QAzyQkXNK7V4ifa3HWxOINZudg5JrL9H7K+uPc6YZ2wSKGA3SDZVHeW0Vf+0/QQcDtV6jiqQ7+0BfHZ/dcSe
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(39860400002)(346002)(136003)(396003)(230173577357003)(230922051799003)(230273577357003)(186009)(64100799003)(451199024)(1800799012)(41300700001)(31686004)(2906002)(44832011)(4326008)(6512007)(6506007)(6666004)(8676002)(8936002)(6916009)(5660300002)(7416002)(316002)(36756003)(6486002)(66946007)(2616005)(26005)(478600001)(66556008)(66476007)(86362001)(31696002)(38100700002)(83380400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cGVuQTlXMngzbzhSQnd6QWdWdDhBZ2pSbXpXeFE0ZXdLRzFkM2hNdTJjS0hv?=
- =?utf-8?B?TmkxUkpLbytxTXVNR1BDbkFpT095c1RrRU9NSnZqVXcvallHdVpndEZ3dVh6?=
- =?utf-8?B?OTVTU3dIWVRWek1pVEMxb1E2VTJ6YVF5SDVQVXFVLzhzcGNmdUZwZjZTeHdO?=
- =?utf-8?B?bExLaW9BWmtiY0VMbER1VmtSb0VxcGg2Nkh1RWNwVmY2a1Q4NDA5M0xBS016?=
- =?utf-8?B?OG42d2dNNFBsaTczaVpSeUlEcGg3SlkxT1JFUVlVbFloNCtsbEptM2xBZElw?=
- =?utf-8?B?RmZLUU8yZ2l1eVAwMWpkMlpIMk9wTHBBYkZLd2lCRVVMWVVkeHNWTzVPb3Iv?=
- =?utf-8?B?b2ZrT1cxOWlJZm1OUzhJMVpCV0U4THlBOFEzRXJmV0lRbjJVZklQdVZSV3dw?=
- =?utf-8?B?UHdtaGJrMER6dnpxNFplQ09hUkxUMXJEbGsyT1RHNDNsTnFBRlY0QjA2andi?=
- =?utf-8?B?MGFaajVrMXZ5bFVDZXU2azUxdk5KeTVKTm1Lb3k3MGNISG5qcW4zeG0wV2ll?=
- =?utf-8?B?dmV6RTlYWW42d0xaa214aEwrUmhTL2kwY1ZoVVBFaU5XVDlXTlUvYXlNZE4z?=
- =?utf-8?B?ZUdBMm5GdWRGOVJkTVJBbXRvQzNsaHFVN3hUdVdQZGE3Yy91aitpbkhXUFRX?=
- =?utf-8?B?aVF4cTEvbXd4dExKUThOVUhhWXg3U29ZSnd1WXNFbmM4dHl2WTJEMzRwOWNQ?=
- =?utf-8?B?bCtnR2tXWkk3d3FIVXJoOCtSLzlMZ1ExRXRrY3B2T3libFU5RmFxblcxbWVL?=
- =?utf-8?B?NWlRbFVKQ3hyNU82RVhPZnZVaXRaNWdIc2JMSmJpS1JoMjZmeU9HaDBzbzJE?=
- =?utf-8?B?bjhTbWh5M2hPeWgwMHFBdFRUZkg5K1BBbm1ZVUlpZVhEczAwUklPTDgzNUxu?=
- =?utf-8?B?T2pwei96eHVCYXRzMmhnZmlpcm1zdDB6ZE9qNVhhdzhhT3ZLcDdpK1pabkhD?=
- =?utf-8?B?Y01NRVdxYlNEMFZUY09uV0hpcFdCSUhmT0xucE11MFRET1BxT05wK0FDOGZB?=
- =?utf-8?B?STZMaThqczhXT0dxR3dyUWgvUDY2djBnTkdMeFlHdUtMYjUvbXBlVXZFcUV5?=
- =?utf-8?B?SWs4bFVJR0xMa2NhZ25iUCtlSDAxcXRybnJVNWNKa3VvdmQ4OXpMWGRod2Zq?=
- =?utf-8?B?QXlubE1QUlhGbGkwUjhVblZjdzQ1WFdObU51a09KN1YzSk81MzJ5MUsxRWg5?=
- =?utf-8?B?RkY3eHBlY1BjdEwzSHhReFhvZTRRdlJPREdzK1hvalppWjJCR0ptRGozSFoy?=
- =?utf-8?B?R21Qc0I3dkREME5pREt3YVhGeHFzVlFXUWVKK3lraWJtR09kQmtzWU9wSXht?=
- =?utf-8?B?WFZGdzZFL0hDNVp4YTRFQVI2eUdqUEtNSm1JUkhmTlVlRWF3QXprckVmcXRK?=
- =?utf-8?B?bkEwbXFHK3dWTGdSUjNOaHJTSkhyT2ZWZDU3aXVYejJxNFZHZVZ2Qk1jcksx?=
- =?utf-8?B?TUkrL1ZYU0s4UU9kNWE5TUhmS3ZieThGMURSSUFTQituaEd2UnZwdmdMZjI3?=
- =?utf-8?B?TWNYNWVHOXVnRmZsZUJGYmZqWGpmUU5HT3NNclR0SzI3Qm91TzVzZTkyeVk4?=
- =?utf-8?B?cDN3OXVpOXlmamVoTlZxYTB5RTJPK01hb3dCa1hkRm00dVJSUUhrTU5kbkw0?=
- =?utf-8?B?Q2NzN2cvRmswQU1zNE4rbXJsbEFaZ2VmdkUwcHA1NHVQY1JNTU5haVNjbnVw?=
- =?utf-8?B?QzNXWkVlZXo5MVg0SFFsVW9OQzJNeVFOclltaVlGNjYzbERyMkVMT1JUa2dn?=
- =?utf-8?B?YXZ3V0U5MURwQy8yZi9LWTRSamZGNjBOam9jbytQVXZGNExzNHJkT2Vmb1Vs?=
- =?utf-8?B?dzRGZFZOTTR3ZFNTbHBzRWtURUpEVndObjZiZUJBTlQ5SEl5TkJJUW1BLzl2?=
- =?utf-8?B?TlNpMlZiY0k2Rk9KRTNWMENvVWc3NkFlQTFsakZLUm5NUGdVVzRHdXZnUjhJ?=
- =?utf-8?B?dSt2end4VnFnZTVKYTE4U3NKeTN4UHM2SWROS0oyQXdWOU1mMDI4dXlSQklp?=
- =?utf-8?B?YzVPK3B6dUZIaGVJUDNFcGQzdjhBU0pxWWV0TUgyTUNoT1JoMStUVXgzWk9w?=
- =?utf-8?B?cVBVeVF3ak93clN4REhKMXY2ekgzUmRtalpVekluV2VGYXlvQ2xxcC9PRXNV?=
- =?utf-8?Q?sXYVoO4LLdDhAt05zr77w38QD?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bf97bab-3b24-4cca-ce99-08dbfac977f0
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2023 04:19:01.4075
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CVT2rGy90xnjSQ9kodyQ5cnu9UMT+2yJRDtXR1XuiTE6WPbPAk/LN9Y1ys0XOWgJU5XVNuWIaWxTG4W7LjnW4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7438
+Content-Transfer-Encoding: 8bit
 
->>>>>> By default, Perf uses precise cycles event when no explicit event is
->>>>>> specified by user. Precise cycles event is forwarded to ibs_op// pmu
->>>>>> on AMD. However, IBS has hw issue on certain Zen2 processors where
->>>>>> it might raise NMI without sample_valid bit set, which causes Unknown
->>>>>> NMI warnings. (Erratum #1215: IBS (Instruction Based Sampling) Counter
->>>>>> Valid Value May be Incorrect After Exit From Core C6 (CC6) State.) So,
->>>>>> use non-precise cycles as default event on affected processors.
->>>>>
->>>>> It seems like a kernel issue, do we have a kernel patch not to forward
->>>>> precise cycles or instructions events to IBS on the affected CPUs?
->>>>
->>>> I'm not sure how it's a kernel issue. User can use ibs_op// pmu directly
->>>> and might hit the hw bug.
->>>
->>> Sorry for the late reply.  I know it's the user's fault when using ibs_op//
->>> directly but I think the kernel should not forward cycles:pp to IBS.
->>
->> For all AMD zen uarchs, cycles:p is same as ibs_op// (man perf-list has
->> more detail). It's confusing if ibs_op// works but cycles:p fails on the
->> same machine.
-> 
-> Make sense.  Probably perf tools can provide a more detailed message
-> about the situation.
+Hello,
 
-+1
+I've found a couple of issues on the unwind code while I'm playing with
+the JIT-dump code for the CPython.  The code assumes normal DSOs mapped
+from the beginning of the file and aligned to the page size.  But it's
+not true for the JIT-dumped DSOs which are generated for each function.
 
->> No strong opinion though. I can prepare a kernel patch, if you want.
-> 
-> I have a report that these unknown NMI messages caused some
-> performance issues.  So maybe we need to be safe by not using
-> IBS automatically.  I've also posted a patch to rate-limit the message
-> itself.
+Depending on the JIT implementation, the code address and accompanied
+ELF info (like ELF file headers and unwind info) can be overlapped to
+adjacent (JIT-dumped) DSOs.  So it should take more care when it
+calculates the mapping address for the DSO.
 
-Sure. Will prepare and post the patch.
+It seems these changes need to go to the stable trees but they are
+changed a lot since then so I'm not sure.
 
 Thanks,
-Ravi
+Namhyung
+
+
+Namhyung Kim (3):
+  perf genelf: Set ELF program header addresses properly
+  perf unwind-libdw: Handle JIT-generated DSOs properly
+  perf unwind-libunwind: Fix base address for .eh_frame
+
+ tools/perf/util/genelf.c                 |  6 +++---
+ tools/perf/util/unwind-libdw.c           | 21 +++++++++++++++++----
+ tools/perf/util/unwind-libunwind-local.c |  2 +-
+ 3 files changed, 21 insertions(+), 8 deletions(-)
+
+-- 
+2.43.0.472.g3155946c3a-goog
+
