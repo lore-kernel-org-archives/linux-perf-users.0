@@ -1,88 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E9E7D8AD
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 18:04:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556E07D8AD
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 18:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oW+oYDoE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DBEC433C8;
-	Tue, 12 Dec 2023 18:04:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1vVQmu4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D9FDC433C8;
+	Tue, 12 Dec 2023 18:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702404288;
-	bh=nk//IozMK5UtGAQ/gn7b/tWhhxOCqLkulLRTpbFg1zQ=;
+	s=k20201202; t=1702404410;
+	bh=cDFySboCHmgRX3Hzcfrph6aaK8Yk+cyns8x2rRA4VHY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oW+oYDoEzayjqebiyy/C7FhsvKbOlDvGllnGrDnx6jqmjPnx63vvu9RHSIaPJ5qYs
-	 pG8djXTEAmorTUJFzOi4mft4v07TwgfHvHEpLX5VDbT/p8QkeFe9EBxWlfzparAUz/
-	 OofwMCMIbZgd88mr/MmmADAaV5bPBadPQGqmPNIRj3D/q7kZVIFPE4BISJUHGOE/Rc
-	 LX5MFFEklOfJipYZI70Xyp3s4C5eGMog4vH+VatH1C/g59YmJ+9WZJzKUudmijFU9A
-	 ca3Lee5jIqjBhhDuP7mQcUw5LqfPep6MLc1kLL+W/qlOw2pjishkzUQiCODmHQjOLT
-	 yNmos7nQPwCwQ==
+	b=P1vVQmu4R5dsCZj6MTIc5bPwi6iN78DOiEzf/E2Wd/5Ixe3n1PDaJ/5C/O/RxdNSX
+	 0POKuvDnlL7O6gkWWrqVMGvZWsbXDEje7njX0IOHLwXU/HpNp4bOYrOM1n49SjfW9y
+	 WvdaZOKcXolSHOIZWpiRgiV4R2M4x9rLaJXjIBcvlYAGX3M5CZluRI8IzJNF1JjMUi
+	 7RKso8j+JSJ2Jxj5tWmwp/6F2zFM4lqZJo4UOOP4YKD/KdnGjEooa3RkveWtAVemfR
+	 C5u1lnStlWsaHy8z6Lf4d9F3CmIo3XMSx92yUcpLA+wVWXOpS0Q5pvQ5+7huMLyQ89
+	 s2aG5gY1h5XzQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id C5850403EF; Tue, 12 Dec 2023 15:04:43 -0300 (-03)
-Date: Tue, 12 Dec 2023 15:04:43 -0300
+	id 7E39C403EF; Tue, 12 Dec 2023 15:06:47 -0300 (-03)
+Date: Tue, 12 Dec 2023 15:06:47 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1] perf stat: Fix help message for --metric-no-threshold
- option
-Message-ID: <ZXigu8c0ee0u4uI/@kernel.org>
-References: <20231129223540.2247030-1-irogers@google.com>
- <CAP-5=fXeZpOg7cHDZmTLvQh=FTamvpdw+=q9vcqrUBd9v7ifLQ@mail.gmail.com>
+To: vmolnaro@redhat.com
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com
+Subject: Re: [PATCH 1/2] perf archive: Add new option '--all'
+Message-ID: <ZXihN3th3qbo6L8Z@kernel.org>
+References: <20231212165909.14459-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXeZpOg7cHDZmTLvQh=FTamvpdw+=q9vcqrUBd9v7ifLQ@mail.gmail.com>
+In-Reply-To: <20231212165909.14459-1-vmolnaro@redhat.com>
 X-Url: http://acmel.wordpress.com
 
-Em Mon, Dec 11, 2023 at 11:39:02AM -0800, Ian Rogers escreveu:
-> On Wed, Nov 29, 2023 at 2:36 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Copy-paste error led to help message for metric-no-threshold repeating
-> > that of metric-no-merge.
-> >
-> > Reported-by: Stephane Eranian <eranian@google.com>
-> > Fixes: 1fd09e299bdd ("perf metric: Add --metric-no-threshold option")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+Em Tue, Dec 12, 2023 at 05:59:08PM +0100, vmolnaro@redhat.com escreveu:
+> From: Veronika Molnarova <vmolnaro@redhat.com>
 > 
-> Ping. Thanks,
-> Ian
+> Perf archive has limited functionality and people from Red Hat Global
+> Support Services sent a request for a new feature that would pack
+> perf.data file together with an archive with debug symbols created by
+> the command 'perf archive' as customers were being confused and often
+> would forget to send perf.data file with the debug symbols.
+> 
+> Perf archive now accepts an option '--all' that generates archive
+> 'perf.all-hostname-date-time.tar.bz2' that holds file 'perf.data' and
+> a sub-tar 'perf.symbols.tar.bz2' with debug symbols. The functionality of
+> the command 'perf archive' was not changed.
 
-This is in perf-tools-next now.
+Thanks for working on this, I'll do some testing and apply, probably
+tomorrow.
 
 - Arnaldo
  
-> > ---
-> >  tools/perf/builtin-stat.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index a3af805a1d57..c77a3308d3fb 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -1255,7 +1255,7 @@ static struct option stat_options[] = {
-> >         OPT_BOOLEAN(0, "metric-no-merge", &stat_config.metric_no_merge,
-> >                        "don't try to share events between metrics in a group"),
-> >         OPT_BOOLEAN(0, "metric-no-threshold", &stat_config.metric_no_threshold,
-> > -                      "don't try to share events between metrics in a group  "),
-> > +                      "disable adding events for the metric threshold calculation"),
-> >         OPT_BOOLEAN(0, "topdown", &topdown_run,
-> >                         "measure top-down statistics"),
-> >         OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
-> > --
-> > 2.43.0.rc1.413.gea7ed67945-goog
-> >
+> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> ---
+>  tools/perf/perf-archive.sh | 40 ++++++++++++++++++++++++++++++--------
+>  1 file changed, 32 insertions(+), 8 deletions(-)
+>  mode change 100644 => 100755 tools/perf/perf-archive.sh
+> 
+> diff --git a/tools/perf/perf-archive.sh b/tools/perf/perf-archive.sh
+> old mode 100644
+> new mode 100755
+> index 133f0eddbcc4..a92042eae95a
+> --- a/tools/perf/perf-archive.sh
+> +++ b/tools/perf/perf-archive.sh
+> @@ -4,9 +4,19 @@
+>  # Arnaldo Carvalho de Melo <acme@redhat.com>
+>  
+>  PERF_DATA=perf.data
+> -if [ $# -ne 0 ] ; then
+> -	PERF_DATA=$1
+> -fi
+> +PERF_SYMBOLS=perf.symbols
+> +PERF_ALL=perf.all
+> +ALL=0
+> +
+> +while [ $# -gt 0 ] ; do
+> +	if [ $1 == "--all" ]; then
+> +		ALL=1
+> +		shift
+> +	else
+> +		PERF_DATA=$1
+> +		shift
+> +	fi
+> +done
+>  
+>  #
+>  # PERF_BUILDID_DIR environment variable set by perf
+> @@ -39,9 +49,23 @@ while read build_id ; do
+>  	echo ${filename#$PERF_BUILDID_LINKDIR} >> $MANIFEST
+>  done
+>  
+> -tar cjf $PERF_DATA.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
+> -rm $MANIFEST $BUILDIDS || true
+> -echo -e "Now please run:\n"
+> -echo -e "$ tar xvf $PERF_DATA.tar.bz2 -C ~/.debug\n"
+> -echo "wherever you need to run 'perf report' on."
+> +if [ $ALL -eq 1 ]; then						# pack perf.data file together with tar containing debug symbols
+> +	HOSTNAME=$(hostname)
+> +	DATE=$(date '+%Y%m%d-%H%M%S')
+> +	tar cjf $PERF_SYMBOLS.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
+> +	tar cjf	$PERF_ALL-$HOSTNAME-$DATE.tar.bz2 $PERF_DATA $PERF_SYMBOLS.tar.bz2
+> +	rm $PERF_SYMBOLS.tar.bz2 $MANIFEST $BUILDIDS || true
+> +
+> +	echo -e "Now please run:\n"
+> +	echo -e "$ tar xvf $PERF_ALL-$HOSTNAME-$DATE.tar.bz2 && tar xvf $PERF_SYMBOLS.tar.bz2 -C ~/.debug\n"
+> +	echo "wherever you need to run 'perf report' on."
+> +else										# pack only the debug symbols
+> +	tar cjf $PERF_DATA.tar.bz2 -C $PERF_BUILDID_DIR -T $MANIFEST
+> +	rm $MANIFEST $BUILDIDS || true
+> +
+> +	echo -e "Now please run:\n"
+> +	echo -e "$ tar xvf $PERF_DATA.tar.bz2 -C ~/.debug\n"
+> +	echo "wherever you need to run 'perf report' on."
+> +fi
+> +
+>  exit 0
+> -- 
+> 2.43.0
+> 
 
 -- 
 
