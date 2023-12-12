@@ -1,13 +1,13 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD49A6;
-	Tue, 12 Dec 2023 02:20:15 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3635FAC;
+	Tue, 12 Dec 2023 02:30:34 -0800 (PST)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BCAHkwA089046;
-	Tue, 12 Dec 2023 18:17:46 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3BCASoWD093073;
+	Tue, 12 Dec 2023 18:28:50 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Tue, 12 Dec 2023 18:17:45 +0800
-Date: Tue, 12 Dec 2023 18:17:41 +0800
+ Microsoft SMTP Server id 14.3.498.0; Tue, 12 Dec 2023 18:28:47 +0800
+Date: Tue, 12 Dec 2023 18:28:47 +0800
 From: Yu-Chien Peter Lin <peterlin@andestech.com>
 To: Thomas Gleixner <tglx@linutronix.de>
 CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
@@ -32,12 +32,12 @@ CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <sunilvl@ventanamicro.com>, <tim609@andestech.com>, <uwu@icenowy.me>,
         <wens@csie.org>, <will@kernel.org>, <ycliang@andestech.com>,
         <inochiama@outlook.com>
-Subject: Re: [PATCH v4 02/13] irqchip/riscv-intc: Allow large non-standard
- interrupt number
-Message-ID: <ZXgzRZK8uqgmY84L@APC323>
+Subject: Re: [PATCH v4 03/13] irqchip/riscv-intc: Introduce Andes hart-level
+ interrupt controller
+Message-ID: <ZXg130SN3AOUmx_v@APC323>
 References: <20231122121235.827122-1-peterlin@andestech.com>
- <20231122121235.827122-3-peterlin@andestech.com>
- <871qbwsn9h.ffs@tglx>
+ <20231122121235.827122-4-peterlin@andestech.com>
+ <87y1e4r8db.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,31 +46,115 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <871qbwsn9h.ffs@tglx>
+In-Reply-To: <87y1e4r8db.ffs@tglx>
 User-Agent: Mutt/2.2.10 (2023-03-25)
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BCAHkwA089046
+X-MAIL:Atcsqr.andestech.com 3BCASoWD093073
 
 Hi Thomas,
 
-On Fri, Dec 08, 2023 at 04:54:34PM +0100, Thomas Gleixner wrote:
+On Fri, Dec 08, 2023 at 05:01:36PM +0100, Thomas Gleixner wrote:
 > On Wed, Nov 22 2023 at 20:12, Yu Chien Peter Lin wrote:
-> > Currently, the implementation of the RISC-V INTC driver uses the
-> > interrupt cause as hwirq and has a limitation of supporting a
+> > To share the riscv_intc_domain_map() with the generic RISC-V INTC and
+> > ACPI, we add a chip parameter to riscv_intc_init_common(), so it can be
 > 
-> s/hwirq/hardware interrupt/
+> s/we//
 > 
-> Please spell things out. We are not on Xitter here.
+> See: Documentation/process/
 > 
-> > maximum of 64 hwirqs. However, according to the privileged spec,
-> > interrupt causes >= 16 are defined for platform use.
-> >
-> > This limitation prevents us from fully utilizing the available
+> > passed to the irq_domain_set_info() as private data.
+> > diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+> > index 2fdd40f2a791..30f0036c8978 100644
+> > --- a/drivers/irqchip/irq-riscv-intc.c
+> > +++ b/drivers/irqchip/irq-riscv-intc.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/smp.h>
+> > +#include <linux/soc/andes/irq.h>
+> >  
+> >  static struct irq_domain *intc_domain;
+> >  
+> > @@ -46,6 +47,31 @@ static void riscv_intc_irq_unmask(struct irq_data *d)
+> >  	csr_set(CSR_IE, BIT(d->hwirq));
+> >  }
+> >  
+> > +static void andes_intc_irq_mask(struct irq_data *d)
+> > +{
+> > +	/*
+> > +	 * Andes specific S-mode local interrupt causes (hwirq)
+> > +	 * are defined as (256 + n) and controlled by n-th bit
+> > +	 * of SLIE.
+> > +	 */
+> > +	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
 > 
-> This limitation prevents to fully utilize the ... 
+> How is this supposed to be correct with BITS_PER_LONG == 64?
 
-Okay, will fix.
+Yes, I should subtract ANDES_SLI_CAUSE_BASE directly here.
 
-Thanks,
+> > +
+> > +	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
+> > +		csr_clear(CSR_IE, mask);
+> > +	else
+> > +		csr_clear(ANDES_CSR_SLIE, mask);
+> > +}
+> > +
+> > +static void andes_intc_irq_unmask(struct irq_data *d)
+> > +{
+> > +	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
+> 
+> Ditto.
+> 
+> > +	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
+> > +		csr_set(CSR_IE, mask);
+> > +	else
+> > +		csr_set(ANDES_CSR_SLIE, mask);
+> > +}
+> 
+> >  static int riscv_intc_domain_map(struct irq_domain *d, unsigned int irq,
+> >  				 irq_hw_number_t hwirq)
+> >  {
+> > +	struct irq_chip *chip = d->host_data;
+> > +
+> >  	irq_set_percpu_devid(irq);
+> > -	irq_domain_set_info(d, irq, hwirq, &riscv_intc_chip, d->host_data,
+> > +	irq_domain_set_info(d, irq, hwirq, chip, d->host_data,
+> 
+> So this sets 'chip_data' to the chip itself. What's the point? Just set
+> it to NULL as the chip obviously does not need chip_data at all.
+
+Will fix. Thanks.
+
+Best regards,
 Peter Lin
+
+> >  			    handle_percpu_devid_irq, NULL, NULL);
+> >  
+> >  	return 0;
+> > @@ -112,11 +147,12 @@ static struct fwnode_handle *riscv_intc_hwnode(void)
+> >  	return intc_domain->fwnode;
+> >  }
+> >  
+> > -static int __init riscv_intc_init_common(struct fwnode_handle *fn)
+> > +static int __init riscv_intc_init_common(struct fwnode_handle *fn,
+> > +					 struct irq_chip *chip)
+> >  {
+> >  	int rc;
+> >  
+> > -	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, NULL);
+> > +	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, chip);
+> >  	if (!intc_domain) {
+> >  		pr_err("unable to add IRQ domain\n");
+> >  		return -ENXIO;
+> > @@ -138,6 +174,7 @@ static int __init riscv_intc_init(struct device_node *node,
+> >  {
+> >  	int rc;
+> >  	unsigned long hartid;
+> > +	struct irq_chip *chip = &riscv_intc_chip;
+> 
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
+> 
+> Thanks
+> 
+>         tglx
