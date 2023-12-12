@@ -1,72 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530EF58137;
-	Tue, 12 Dec 2023 09:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/psbpJY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031C3C433C9;
-	Tue, 12 Dec 2023 09:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702372948;
-	bh=y2xsGb6RdvYsGGAGFOAQIzQJ6okr5i37jR6Lpnt+43M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c/psbpJYEtYuZTuyXHJYvdka47RF94LB1JwEiJqaCq8YO02yaAkQwWAA6h6sm65Lv
-	 uwGeEhiMRXz+lJNZeFdSCV76zkKw7BPgKub/g+75bZp4L80iJt+p8M+b0Ob24tCD6R
-	 aXxO3B6ajO10HKbB8POwK6y7BybkjlF/eYo6HrJ8WZTz7OjSMKig1CISScmJrtO4fp
-	 wyha1ZLLOrlVb1fjkO+06DypQiRhFyVNNHC22SXwNsN4wWn4rJyUcxyx8tmzbYXOtf
-	 3/nU8Kq9P3sNAFejXy1tEzei4kSSVvIfd10FYKemXQxLDeqJFd3vzh3/2zr6kjER9q
-	 U8PY9Ra9FA2WA==
-Date: Tue, 12 Dec 2023 09:22:21 +0000
-From: Will Deacon <will@kernel.org>
-To: Kyle Huey <me@kylehuey.com>
-Cc: Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Robert O'Callahan <robert@ocallahan.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] perf/bpf: Remove unneeded
- uses_default_overflow_handler.
-Message-ID: <20231212092221.GB28174@willie-the-truck>
-References: <20231211045543.31741-1-khuey@kylehuey.com>
- <20231211045543.31741-3-khuey@kylehuey.com>
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD49A6;
+	Tue, 12 Dec 2023 02:20:15 -0800 (PST)
+Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
+	by Atcsqr.andestech.com with ESMTP id 3BCAHkwA089046;
+	Tue, 12 Dec 2023 18:17:46 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
+ Microsoft SMTP Server id 14.3.498.0; Tue, 12 Dec 2023 18:17:45 +0800
+Date: Tue, 12 Dec 2023 18:17:41 +0800
+From: Yu-Chien Peter Lin <peterlin@andestech.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
+        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
+        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
+        <conor.dooley@microchip.com>, <conor@kernel.org>,
+        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
+        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
+        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
+        <jolsa@kernel.org>, <jszhang@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
+        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
+        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
+        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
+        <robh+dt@kernel.org>, <samuel@sholland.org>,
+        <sunilvl@ventanamicro.com>, <tim609@andestech.com>, <uwu@icenowy.me>,
+        <wens@csie.org>, <will@kernel.org>, <ycliang@andestech.com>,
+        <inochiama@outlook.com>
+Subject: Re: [PATCH v4 02/13] irqchip/riscv-intc: Allow large non-standard
+ interrupt number
+Message-ID: <ZXgzRZK8uqgmY84L@APC323>
+References: <20231122121235.827122-1-peterlin@andestech.com>
+ <20231122121235.827122-3-peterlin@andestech.com>
+ <871qbwsn9h.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20231211045543.31741-3-khuey@kylehuey.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <871qbwsn9h.ffs@tglx>
+User-Agent: Mutt/2.2.10 (2023-03-25)
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 3BCAHkwA089046
 
-On Sun, Dec 10, 2023 at 08:55:41PM -0800, Kyle Huey wrote:
-> Now that struct perf_event's orig_overflow_handler is gone, there's no need
-> for the functions and macros to support looking past overflow_handler to
-> orig_overflow_handler.
+Hi Thomas,
+
+On Fri, Dec 08, 2023 at 04:54:34PM +0100, Thomas Gleixner wrote:
+> On Wed, Nov 22 2023 at 20:12, Yu Chien Peter Lin wrote:
+> > Currently, the implementation of the RISC-V INTC driver uses the
+> > interrupt cause as hwirq and has a limitation of supporting a
 > 
-> This patch is solely a refactoring and results in no behavior change.
+> s/hwirq/hardware interrupt/
 > 
-> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-> ---
->  arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
->  arch/arm64/kernel/hw_breakpoint.c |  4 ++--
->  include/linux/perf_event.h        | 16 ++--------------
->  3 files changed, 8 insertions(+), 20 deletions(-)
+> Please spell things out. We are not on Xitter here.
+> 
+> > maximum of 64 hwirqs. However, according to the privileged spec,
+> > interrupt causes >= 16 are defined for platform use.
+> >
+> > This limitation prevents us from fully utilizing the available
+> 
+> This limitation prevents to fully utilize the ... 
 
-Acked-by: Will Deacon <will@kernel.org>
+Okay, will fix.
 
-Will
+Thanks,
+Peter Lin
