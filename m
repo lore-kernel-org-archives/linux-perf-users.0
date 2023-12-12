@@ -1,14 +1,14 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 808608E;
-	Tue, 12 Dec 2023 06:36:26 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 44938D3;
+	Tue, 12 Dec 2023 06:51:39 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55E94143D;
-	Tue, 12 Dec 2023 06:37:12 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44BCF143D;
+	Tue, 12 Dec 2023 06:52:25 -0800 (PST)
 Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BB023F738;
-	Tue, 12 Dec 2023 06:36:21 -0800 (PST)
-Message-ID: <2adf8e9c-e08d-a772-bfe2-378d6759721f@arm.com>
-Date: Tue, 12 Dec 2023 14:36:21 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 200183F738;
+	Tue, 12 Dec 2023 06:51:34 -0800 (PST)
+Message-ID: <2cd09e7c-eb88-6726-6169-647dcd0a8101@arm.com>
+Date: Tue, 12 Dec 2023 14:51:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -17,7 +17,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH v1 07/14] perf arm-spe/cs-etm: Directly iterate CPU maps
+Subject: Re: [PATCH v1 06/14] libperf cpumap: Add any, empty and min helpers
 Content-Language: en-US
 From: James Clark <james.clark@arm.com>
 To: Ian Rogers <irogers@google.com>
@@ -28,11 +28,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
  Adrian Hunter <adrian.hunter@intel.com>,
  Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
- Kan Liang <kan.liang@linux.intel.com>,
+ <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=c3=a9_Almeida?=
+ <andrealmeid@igalia.com>, Kan Liang <kan.liang@linux.intel.com>,
  K Prateek Nayak <kprateek.nayak@amd.com>,
  Sean Christopherson <seanjc@google.com>, Paolo Bonzini
  <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
@@ -47,218 +47,133 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- bpf@vger.kernel.org, Leo Yan <leo.yan@linaro.org>
+ bpf@vger.kernel.org
 References: <20231129060211.1890454-1-irogers@google.com>
- <20231129060211.1890454-8-irogers@google.com>
- <e3a01313-ed03-bc54-0260-5445fb2c15ee@arm.com>
-In-Reply-To: <e3a01313-ed03-bc54-0260-5445fb2c15ee@arm.com>
+ <20231129060211.1890454-7-irogers@google.com>
+ <63d7fe55-719e-43f8-531c-eb7fa30c473a@arm.com>
+In-Reply-To: <63d7fe55-719e-43f8-531c-eb7fa30c473a@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 12/12/2023 14:17, James Clark wrote:
+On 12/12/2023 14:00, James Clark wrote:
 > 
 > 
 > On 29/11/2023 06:02, Ian Rogers wrote:
->> Rather than iterate all CPUs and see if they are in CPU maps, directly
->> iterate the CPU map. Similarly make use of the intersect
->> function. Switch perf_cpu_map__has_any_cpu_or_is_empty to more
->> appropriate alternatives.
+>> Additional helpers to better replace
+>> perf_cpu_map__has_any_cpu_or_is_empty.
 >>
 >> Signed-off-by: Ian Rogers <irogers@google.com>
 >> ---
->>  tools/perf/arch/arm/util/cs-etm.c    | 77 ++++++++++++----------------
->>  tools/perf/arch/arm64/util/arm-spe.c |  4 +-
->>  2 files changed, 34 insertions(+), 47 deletions(-)
+>>  tools/lib/perf/cpumap.c              | 27 +++++++++++++++++++++++++++
+>>  tools/lib/perf/include/perf/cpumap.h | 16 ++++++++++++++++
+>>  tools/lib/perf/libperf.map           |  4 ++++
+>>  3 files changed, 47 insertions(+)
 >>
->> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
->> index 77e6663c1703..a68a72f2f668 100644
->> --- a/tools/perf/arch/arm/util/cs-etm.c
->> +++ b/tools/perf/arch/arm/util/cs-etm.c
->> @@ -197,38 +197,32 @@ static int cs_etm_validate_timestamp(struct auxtrace_record *itr,
->>  static int cs_etm_validate_config(struct auxtrace_record *itr,
->>  				  struct evsel *evsel)
->>  {
->> -	int i, err = -EINVAL;
->> +	int idx, err = -EINVAL;
->>  	struct perf_cpu_map *event_cpus = evsel->evlist->core.user_requested_cpus;
->>  	struct perf_cpu_map *online_cpus = perf_cpu_map__new_online_cpus();
->> +	struct perf_cpu_map *intersect_cpus = perf_cpu_map__intersect(event_cpus, online_cpus);
->> +	struct perf_cpu cpu;
->>  
->> -	/* Set option of each CPU we have */
->> -	for (i = 0; i < cpu__max_cpu().cpu; i++) {
->> -		struct perf_cpu cpu = { .cpu = i, };
->> -
->> -		/*
->> -		 * In per-cpu case, do the validation for CPUs to work with.
->> -		 * In per-thread case, the CPU map is empty.  Since the traced
->> -		 * program can run on any CPUs in this case, thus don't skip
->> -		 * validation.
->> -		 */
->> -		if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus) &&
->> -		    !perf_cpu_map__has(event_cpus, cpu))
->> -			continue;
-> 
-> This has broken validation for per-thread sessions.
-> perf_cpu_map__intersect() doesn't seem to be able to handle the case
-> where an 'any' map intersected with an online map should return the
-> online map. Or at least it should for this to work, and it seems to make
-> sense for it to work that way.
-> 
-> At least that was my initial impression, but I only debugged it and saw
-> that the loop is now skipped entirely.
-> 
->> -
->> -		if (!perf_cpu_map__has(online_cpus, cpu))
->> -			continue;
->> +	perf_cpu_map__put(online_cpus);
->>  
->> -		err = cs_etm_validate_context_id(itr, evsel, i);
->> +	/*
->> +	 * Set option of each CPU we have. In per-cpu case, do the validation
->> +	 * for CPUs to work with.  In per-thread case, the CPU map is empty.
->> +	 * Since the traced program can run on any CPUs in this case, thus don't
->> +	 * skip validation.
->> +	 */
->> +	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
->> +		err = cs_etm_validate_context_id(itr, evsel, cpu.cpu);
->>  		if (err)
->>  			goto out;
->> -		err = cs_etm_validate_timestamp(itr, evsel, i);
->> +		err = cs_etm_validate_timestamp(itr, evsel, idx);
->>  		if (err)
->>  			goto out;
->>  	}
->>  
->>  	err = 0;
->>  out:
->> -	perf_cpu_map__put(online_cpus);
->> +	perf_cpu_map__put(intersect_cpus);
->>  	return err;
+>> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+>> index 49fc98e16514..7403819da8fd 100644
+>> --- a/tools/lib/perf/cpumap.c
+>> +++ b/tools/lib/perf/cpumap.c
+>> @@ -316,6 +316,19 @@ bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map)
+>>  	return map ? __perf_cpu_map__cpu(map, 0).cpu == -1 : true;
 >>  }
 >>  
->> @@ -435,7 +429,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->>  	 * Also the case of per-cpu mmaps, need the contextID in order to be notified
->>  	 * when a context switch happened.
->>  	 */
->> -	if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
->> +	if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
->>  		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
->>  					   "timestamp", 1);
->>  		evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
->> @@ -461,7 +455,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->>  	evsel->core.attr.sample_period = 1;
->>  
->>  	/* In per-cpu case, always need the time of mmap events etc */
->> -	if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
->> +	if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
->>  		evsel__set_sample_bit(evsel, TIME);
->>  
->>  	err = cs_etm_validate_config(itr, cs_etm_evsel);
->> @@ -533,38 +527,32 @@ static size_t
->>  cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
->>  		      struct evlist *evlist __maybe_unused)
+>> +bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map)
+>> +{
+>> +	if (!map)
+>> +		return true;
+>> +
+>> +	return __perf_cpu_map__nr(map) == 1 && __perf_cpu_map__cpu(map, 0).cpu == -1;
+>> +}
+>> +
+>> +bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
+>> +{
+>> +	return map == NULL;
+>> +}
+>> +
+> 
+> Maybe it doesn't currently happen, but it seems a bit weird that the
+> 'new' function can create a map of length 0 which would return empty ==
+> false here.
+> 
+> Could we either make this check also return true for maps with length 0,
+> or prevent the new function from returning a map of 0 length?
+> 
+
+By 'new' I actually meant perf_cpu_map__alloc(). I see
+perf_cpu_map__new() actually takes a string, and returns all online CPUs
+if the string is null, but similarly I don't see a use case where that
+string is NULL.
+
+Having something return either the parsed string, or all online CPUs if
+the string was null seems like unnecessary hidden behaviour so it would
+be good to remove that one too.
+
+>>  int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
 >>  {
->> -	int i;
+>>  	int low, high;
+>> @@ -372,6 +385,20 @@ bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map)
+>>  	return map && __perf_cpu_map__cpu(map, 0).cpu == -1;
+>>  }
+>>  
+>> +struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map)
+>> +{
+>> +	struct perf_cpu cpu, result = {
+>> +		.cpu = -1
+>> +	};
 >> +	int idx;
->>  	int etmv3 = 0, etmv4 = 0, ete = 0;
->>  	struct perf_cpu_map *event_cpus = evlist->core.user_requested_cpus;
->>  	struct perf_cpu_map *online_cpus = perf_cpu_map__new_online_cpus();
->> +	struct perf_cpu cpu;
->>  
->>  	/* cpu map is not empty, we have specific CPUs to work with */
->> -	if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
->> -		for (i = 0; i < cpu__max_cpu().cpu; i++) {
->> -			struct perf_cpu cpu = { .cpu = i, };
->> -
->> -			if (!perf_cpu_map__has(event_cpus, cpu) ||
->> -			    !perf_cpu_map__has(online_cpus, cpu))
->> -				continue;
->> +	if (!perf_cpu_map__is_empty(event_cpus)) {
->> +		struct perf_cpu_map *intersect_cpus =
->> +			perf_cpu_map__intersect(event_cpus, online_cpus);
->>  
->> -			if (cs_etm_is_ete(itr, i))
->> +		perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
->> +			if (cs_etm_is_ete(itr, cpu.cpu))
-
-Similar problem here. For a per-thread session, the CPU map is not empty
-(it's an 'any' map, presumably length 1), so it comes into this first
-if, rather than the else below which is for the 'any' scenario.
-
-Then the intersect with online CPUs results in an empty map, so no CPU
-metadata is recorded, then the session fails.
-
-If you made the intersect work in the way I mentioned above we could
-also delete the else below, because that's just another way to convert
-from 'any' to 'all online'.
-
->>  				ete++;
->> -			else if (cs_etm_is_etmv4(itr, i))
->> +			else if (cs_etm_is_etmv4(itr, cpu.cpu))
->>  				etmv4++;
->>  			else
->>  				etmv3++;
->>  		}
->> +		perf_cpu_map__put(intersect_cpus);
->>  	} else {
->>  		/* get configuration for all CPUs in the system */
->> -		for (i = 0; i < cpu__max_cpu().cpu; i++) {
->> -			struct perf_cpu cpu = { .cpu = i, };
->> -
->> -			if (!perf_cpu_map__has(online_cpus, cpu))
->> -				continue;
->> -
->> -			if (cs_etm_is_ete(itr, i))
->> +		perf_cpu_map__for_each_cpu(cpu, idx, online_cpus) {
->> +			if (cs_etm_is_ete(itr, cpu.cpu))
->>  				ete++;
->> -			else if (cs_etm_is_etmv4(itr, i))
->> +			else if (cs_etm_is_etmv4(itr, cpu.cpu))
->>  				etmv4++;
->>  			else
->>  				etmv3++;
->> @@ -814,15 +802,14 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
->>  		return -EINVAL;
->>  
->>  	/* If the cpu_map is empty all online CPUs are involved */
->> -	if (perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
->> +	if (perf_cpu_map__is_empty(event_cpus)) {
->>  		cpu_map = online_cpus;
->>  	} else {
->>  		/* Make sure all specified CPUs are online */
->> -		for (i = 0; i < perf_cpu_map__nr(event_cpus); i++) {
->> -			struct perf_cpu cpu = { .cpu = i, };
->> +		struct perf_cpu cpu;
->>  
->> -			if (perf_cpu_map__has(event_cpus, cpu) &&
->> -			    !perf_cpu_map__has(online_cpus, cpu))
->> +		perf_cpu_map__for_each_cpu(cpu, i, event_cpus) {
->> +			if (!perf_cpu_map__has(online_cpus, cpu))
->>  				return -EINVAL;
->>  		}
->>  
->> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
->> index 51ccbfd3d246..0b52e67edb3b 100644
->> --- a/tools/perf/arch/arm64/util/arm-spe.c
->> +++ b/tools/perf/arch/arm64/util/arm-spe.c
->> @@ -232,7 +232,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->>  	 * In the case of per-cpu mmaps, sample CPU for AUX event;
->>  	 * also enable the timestamp tracing for samples correlation.
->>  	 */
->> -	if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
->> +	if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
->>  		evsel__set_sample_bit(arm_spe_evsel, CPU);
->>  		evsel__set_config_if_unset(arm_spe_pmu, arm_spe_evsel,
->>  					   "ts_enable", 1);
->> @@ -265,7 +265,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->>  	tracking_evsel->core.attr.sample_period = 1;
->>  
->>  	/* In per-cpu case, always need the time of mmap events etc */
->> -	if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
->> +	if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
->>  		evsel__set_sample_bit(tracking_evsel, TIME);
->>  		evsel__set_sample_bit(tracking_evsel, CPU);
->>  
+>> +
+>> +	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, map) {
+>> +		result = cpu;
+>> +		break;
+>> +	}
+>> +	return result;
+>> +}
+>> +
+>>  struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
+>>  {
+>>  	struct perf_cpu result = {
+>> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+>> index dbe0a7352b64..523e4348fc96 100644
+>> --- a/tools/lib/perf/include/perf/cpumap.h
+>> +++ b/tools/lib/perf/include/perf/cpumap.h
+>> @@ -50,6 +50,22 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
+>>   * perf_cpu_map__has_any_cpu_or_is_empty - is map either empty or has the "any CPU"/dummy value.
+>>   */
+>>  LIBPERF_API bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map);
+>> +/**
+>> + * perf_cpu_map__is_any_cpu_or_is_empty - is map either empty or the "any CPU"/dummy value.
+>> + */
+>> +LIBPERF_API bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map);
+>> +/**
+>> + * perf_cpu_map__is_empty - does the map contain no values and it doesn't
+>> + *                          contain the special "any CPU"/dummy value.
+>> + */
+>> +LIBPERF_API bool perf_cpu_map__is_empty(const struct perf_cpu_map *map);
+>> +/**
+>> + * perf_cpu_map__min - the minimum CPU value or -1 if empty or just the "any CPU"/dummy value.
+>> + */
+>> +LIBPERF_API struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map);
+>> +/**
+>> + * perf_cpu_map__max - the maximum CPU value or -1 if empty or just the "any CPU"/dummy value.
+>> + */
+>>  LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
+>>  LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
+>>  LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
+>> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+>> index 10b3f3722642..2aa79b696032 100644
+>> --- a/tools/lib/perf/libperf.map
+>> +++ b/tools/lib/perf/libperf.map
+>> @@ -10,6 +10,10 @@ LIBPERF_0.0.1 {
+>>  		perf_cpu_map__nr;
+>>  		perf_cpu_map__cpu;
+>>  		perf_cpu_map__has_any_cpu_or_is_empty;
+>> +		perf_cpu_map__is_any_cpu_or_is_empty;
+>> +		perf_cpu_map__is_empty;
+>> +		perf_cpu_map__has_any_cpu;
+>> +		perf_cpu_map__min;
+>>  		perf_cpu_map__max;
+>>  		perf_cpu_map__has;
+>>  		perf_thread_map__new_array;
+> 
