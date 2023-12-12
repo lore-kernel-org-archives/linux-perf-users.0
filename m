@@ -1,139 +1,134 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jgsCkjFV"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51BDED3
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 07:39:31 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-dbc68661060so3382818276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 07:39:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702395570; x=1703000370; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p54hpe335w06rR0ZHj0lKwXGwdjAp5UI+KSbZqm/9GM=;
-        b=jgsCkjFVqbsbHCnXGh9IbrKmspOTx+9FeN06ZTRWhWczMQdewb7PtS0juKhjjLDn2Y
-         0NzpSepbjmWKC6dTm+YuReARncZDhtPjImCDmS26zrNCkBg2PsToOMcE7HPb8H1qHsJh
-         +HKvdcI10BQpy5/ohlm1R9ShoePrRJvR0QgM2fVSNbx7f9G8HRvEoeDudhQEDydgUB7i
-         rtp91LDhKvgf0ZZIKsj26l5esHIydD5snGxepSp6mjMX66VvvU4RaTuYRVVfhZPaYWj+
-         IpSutVlbqUf+/Xxxkd8WHQAndFARaPc9Uj4o1hXOTjntlzTREVLzX6WSzUwdjiWgoIeM
-         Ih/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702395570; x=1703000370;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p54hpe335w06rR0ZHj0lKwXGwdjAp5UI+KSbZqm/9GM=;
-        b=HTC+/Uiq4l4F1f12n9xlZ0bvboJSFU8ChHjIvLqgOO0NvaxbRXvEgF1+Yz3IkZh+yF
-         CPty8JLRsGnRBvwQ7xtE1v7Yn70x05kRszVn3Sux71VWu6Vw1r+6DJjrUfP+Ynp9w9c1
-         PV2kAK7YQxu5MWkRvMDUza3F2/GPLI8849aUemyV0zDSPt068BbjMu1Ha5/a4vlEw5x8
-         UGVDF/WKFJOkmmETn+yC9MIlTZnScjP4tvrxAxo5UyfTM3mOFZbDurK8YAjpElu9u5wW
-         YDc+exh6SzbFUaS6TN1ul3pWQZvtW3d8PdpUSvNyjwepahj/XYfMdOK9WT89B56DkAzy
-         dyYg==
-X-Gm-Message-State: AOJu0YwIv0FcicFtS5jYRfEa0ABD56W9+sWhIOy2nLnyl5rIv4dR12Cn
-	Hk4A7orhxFY0XXpzcsPXk07XqBanclc=
-X-Google-Smtp-Source: AGHT+IFKi0uRKRa7W+9Uw7FzkHJJ2V/r3TZFyxuh8FHz/g4bsH12mqF/muLdnvbE4DOmcwVLfCIoEGZHJ34=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a5b:783:0:b0:db5:4766:e363 with SMTP id
- b3-20020a5b0783000000b00db54766e363mr45369ybq.6.1702395570470; Tue, 12 Dec
- 2023 07:39:30 -0800 (PST)
-Date: Tue, 12 Dec 2023 07:39:29 -0800
-In-Reply-To: <SYBPR01MB687083237B0E5C03B63EDAB99D88A@SYBPR01MB6870.ausprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y98T/mHq"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0B410C;
+	Tue, 12 Dec 2023 07:56:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702396578; x=1733932578;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=10Oi9jUazqpFfUsl4OZ7fFWWPlRIeJ/3mXU2j9410Iw=;
+  b=Y98T/mHqfnV4fKaQkzlblHrG1pEj+GufdfrwGvhrX+NJZGHKyHhb8gLy
+   gYRCtXHe2lDXD3SF6hnATHfNR09jXCUIz8H3dcg0cI6POpe9pJOi8PNOI
+   lif0PAb7rCmXzH1HFPSymiDuUHkuimZNkMqy9rpC8ju4hkBmYLT7t8Ptj
+   kmnrqBotKPtw6yyVk2qAcuXZA22/vjnR1FGEbG5JNnIcRelDpemjBnJht
+   bKFsZyfn2zAZxBBn72Js3UHvi1WWytTwu7ASxttO0TjFnIVm9ol1DWBzp
+   ej5vU2iVvqUKC27akiXN1ucKIQtOEWuilbAjQqqQpHPnszWaOk8KxX4Aj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="459143082"
+X-IronPort-AV: E=Sophos;i="6.04,270,1695711600"; 
+   d="scan'208";a="459143082"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 07:56:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="766864623"
+X-IronPort-AV: E=Sophos;i="6.04,270,1695711600"; 
+   d="scan'208";a="766864623"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 07:56:17 -0800
+Received: from [10.209.138.122] (kliang2-mobl1.ccr.corp.intel.com [10.209.138.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 6AB91580DC5;
+	Tue, 12 Dec 2023 07:56:16 -0800 (PST)
+Message-ID: <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
+Date: Tue, 12 Dec 2023 10:56:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <SYBPR01MB687069BFC9744585B4EEF8C49D88A@SYBPR01MB6870.ausprd01.prod.outlook.com>
- <SYBPR01MB687083237B0E5C03B63EDAB99D88A@SYBPR01MB6870.ausprd01.prod.outlook.com>
-Message-ID: <ZXh-sRZQWvJYn0uJ@google.com>
-Subject: Re: [PATCH v3 4/5] perf kvm: Support sampling guest callchains
-From: Sean Christopherson <seanjc@google.com>
-To: Tianyi Liu <i.pear@outlook.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	kvm@vger.kernel.org, x86@kernel.org, mark.rutland@arm.com, 
-	mlevitsk@redhat.com, maz@kernel.org, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: irogers@google.com, namhyung@kernel.org, mark.rutland@arm.com,
+ maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20231208210855.407580-1-kan.liang@linux.intel.com>
+ <ZXd7ZuxbNNsjAyqm@kernel.org>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <ZXd7ZuxbNNsjAyqm@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Dec 10, 2023, Tianyi Liu wrote:
-> This patch provides support for sampling guests' callchains.
+
+
+On 2023-12-11 4:13 p.m., Arnaldo Carvalho de Melo wrote:
+> Em Fri, Dec 08, 2023 at 01:08:55PM -0800, kan.liang@linux.intel.com escreveu:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> perf top errors out on a hybrid machine
+>>  $perf top
+>>
+>>  Error:
+>>  The cycles:P event is not supported.
+>>
+>> The user_requested_cpus may contain CPUs that are invalid for a hybrid
+>> PMU. It causes perf_event_open to fail.
 > 
-> The signature of `get_perf_callchain` has been modified to explicitly
-> specify whether it needs to sample the host or guest callchain. Based on
-> the context, `get_perf_callchain` will distribute each sampling request
-> to one of `perf_callchain_user`, `perf_callchain_kernel`,
-> or `perf_callchain_guest`.
+> ?
 > 
-> The reason for separately implementing `perf_callchain_user` and
-> `perf_callchain_kernel` is that the kernel may utilize special unwinders
-> like `ORC`. However, for the guest, we only support stackframe-based
-> unwinding, so the implementation is generic and only needs to be
-> separately implemented for 32-bit and 64-bit.
-> 
-> Signed-off-by: Tianyi Liu <i.pear@outlook.com>
-> ---
->  arch/x86/events/core.c     | 63 ++++++++++++++++++++++++++++++++------
->  include/linux/perf_event.h |  3 +-
->  kernel/bpf/stackmap.c      |  8 ++---
->  kernel/events/callchain.c  | 27 +++++++++++++++-
->  kernel/events/core.c       |  7 ++++-
->  5 files changed, 91 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 40ad1425ffa2..4ff412225217 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2758,11 +2758,6 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->  	struct unwind_state state;
->  	unsigned long addr;
+> All perf top expects is that the "cycles", the most basic one, be
+> collected, on all CPUs in the system.
+>
+
+Yes, but for hybrid there is no single "cycles" event which can cover
+all CPUs. Perf has to split it into two cycles events, cpu_core/cycles/
+and cpu_atom/cycles/. Each event has its own CPU mask. If a event is
+opened on the unsupported CPU. The open fails. That's the reason perf
+top fails. So perf should only open the cycles event on the
+corresponding CPU.
+
+>> The commit ef91871c960e ("perf evlist: Propagate user CPU maps
+>> intersecting core PMU maps") already intersect the requested CPU map
+>> with the CPU map of the PMU. Use the evsel's cpus to replace
+>> user_requested_cpus.
 >  
-> -	if (perf_guest_state()) {
-> -		/* TODO: We don't support guest os callchain now */
-> -		return;
-> -	}
-> -
->  	if (perf_callchain_store(entry, regs->ip))
->  		return;
+>> The evlist's threads is also propagated to evsel's threads in
+>> __perf_evlist__propagate_maps(). Replace it as well.
+> 
+> Thanks, but please try to add more detail to the fix so as to help
+> others to consider looking at the patch.
+
+OK. For the threads, the same as other tools, e.g., perf record, perf
+appends a dummy for the system wide event. For a per-thread event, the
+evlist's thread_map is assigned to the evsel. So using the evsel's
+threads is appropriate and also be consistent with other tools.
+
+I will update the description and send a V2.
+
+Thanks,
+Kan
+
+> 
+> - Arnaldo
 >  
-> @@ -2778,6 +2773,59 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->  	}
->  }
->  
-> +static inline void
-> +perf_callchain_guest32(struct perf_callchain_entry_ctx *entry,
-> +		       const struct perf_kvm_guest_unwind_info *unwind_info)
-> +{
-> +	unsigned long ss_base, cs_base;
-> +	struct stack_frame_ia32 frame;
-> +	const struct stack_frame_ia32 *fp;
-> +
-> +	cs_base = unwind_info->segment_cs_base;
-> +	ss_base = unwind_info->segment_ss_base;
-> +
-> +	fp = (void *)(ss_base + unwind_info->frame_pointer);
-> +	while (fp && entry->nr < entry->max_stack) {
-> +		if (!perf_guest_read_virt((unsigned long)&fp->next_frame,
-
-This is extremely confusing and potentially dangerous.  ss_base and
-unwind_info->frame_pointer are *guest* SS:RBP, i.e. this is referencing a guest
-virtual address.  It works, but it _looks_ like the code is fully dereferencing
-a guest virtual address in the hose kernel.  And I can only imagine what type of
-speculative accesses this generates.
-
-*If* we want to support guest callchains, I think it would make more sense to
-have a single hook for KVM/virtualization to fill perf_callchain_entry_ctx.  Then
-there's no need for "struct perf_kvm_guest_unwind_info", perf doesn't need a hook
-to read guest memory, and KVM can decide/control what to do with respect to
-mitigating speculatiion issues. 
-
-> +					  &frame.next_frame, sizeof(frame.next_frame)))
-> +			break;
-> +		if (!perf_guest_read_virt((unsigned long)&fp->return_address,
-> +					  &frame.return_address, sizeof(frame.return_address)))
-> +			break;
-> +		perf_callchain_store(entry, cs_base + frame.return_address);
-> +		fp = (void *)(ss_base + frame.next_frame);
-> +	}
-> +}
+>> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@kernel.org/
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>  tools/perf/builtin-top.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+>> index ea8c7eca5eee..cce9350177e2 100644
+>> --- a/tools/perf/builtin-top.c
+>> +++ b/tools/perf/builtin-top.c
+>> @@ -1027,8 +1027,8 @@ static int perf_top__start_counters(struct perf_top *top)
+>>  
+>>  	evlist__for_each_entry(evlist, counter) {
+>>  try_again:
+>> -		if (evsel__open(counter, top->evlist->core.user_requested_cpus,
+>> -				     top->evlist->core.threads) < 0) {
+>> +		if (evsel__open(counter, counter->core.cpus,
+>> +				counter->core.threads) < 0) {
+>>  
+>>  			/*
+>>  			 * Specially handle overwrite fall back.
+>> -- 
+>> 2.35.1
+>>
+> 
