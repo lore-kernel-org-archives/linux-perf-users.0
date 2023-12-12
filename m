@@ -1,114 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAF37B3D9;
-	Tue, 12 Dec 2023 17:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quWq7NFA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955A4C433C9;
-	Tue, 12 Dec 2023 17:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702401677;
-	bh=NjEv9qEr/oYVM+wHeeNDWCRv65KfnIhhpX8bgvPrnAA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=quWq7NFAtXTBXufHjGAQPZuAXrlWxIJ4Rn3ITaI13bZesQeatjNFR7raywE3BfBn7
-	 Pitan+DMqBcCL58QZwCgz3Lh/6jidDw46o+sSHdw2XNETPNFha4R9ntZwxgldpxfvd
-	 ThUunTfPwVTXTNhOAsJ9W9/N6z4PG1M3beyPew54n2U5AZrjlyDMmXs2L7Toa+G5kj
-	 jyTED6ks2sSuPvCG+6dEMiYHKakPG+EvMGSSnpSABMjq1R1ugTLDeB0n3JnFi9LuSS
-	 cUuBfE0LIKezRTEQ8AUTFsdnAhfeVJygPdgHWAaZ27aCb30nqIqsyQPesJMXA3vzFc
-	 vN+/g3oSMdIBg==
-From: Will Deacon <will@kernel.org>
-To: anshuman.khandual@arm.com,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	James Clark <james.clark@arm.com>,
-	suzuki.poulose@arm.com,
-	linux-perf-users@vger.kernel.org
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	Zaid Al-Bassam <zalbassam@google.com>,
-	linux-kselftest@vger.kernel.org,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	namhyung@gmail.com,
-	Jonathan Corbet <corbet@lwn.net>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Shuah Khan <shuah@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	kvmarm@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kvm@vger.kernel.org,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v7 00/11] arm64: perf: Add support for event counting threshold
-Date: Tue, 12 Dec 2023 17:20:53 +0000
-Message-Id: <170237438420.1648654.4727808470285684911.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20231211161331.1277825-1-james.clark@arm.com>
-References: <20231211161331.1277825-1-james.clark@arm.com>
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F4E9F;
+	Tue, 12 Dec 2023 09:23:14 -0800 (PST)
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5c66bbb3d77so3358750a12.0;
+        Tue, 12 Dec 2023 09:23:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702401794; x=1703006594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MRd+wrGx+k+oAJrYQSPEsfD9HTn2kU5M5FOxDmNsBgY=;
+        b=O7z1lIgfPX48Vdt4fsfEJWkCmz4oFY73H1URp+LEz2nOwwCZYH1v90TRpJiRpekXnG
+         alxovRFc53K+ZQd913RZrrdshVWfDm4vtpCZkbprlB3lFr99KdHAJAgRfBjZYxj4NSIJ
+         m5qJrzHJPa4hB4I8Katn5C7kaSE8+T3MSusytF8mMUygu//hnlbL71Fi4NetxeN6eBf4
+         PmcW3G044cSdAX1LtSDbpsJlr9OpQnxBhoU37dB7FH/M5IRmMsf/mtcmLI6uQ4y9SsrZ
+         EzWvl56SYa6cChUGoX2KSJsj0lL9lnE6xPUdoHy1+uIsEYR4rA4aIQEJU7VbxErFt19p
+         E2Ng==
+X-Gm-Message-State: AOJu0Yymjz8m40qk5mNpArABBdu6vlpOKk2SpE/YtnyhYVcXoRUmdVPm
+	rSWJEGapF7MPT3IdrHjI29B6ibrx/Yywa9Ybthk=
+X-Google-Smtp-Source: AGHT+IExbrs5lqY7fnplXxqrzF+7Vs19tgpgAqWbiPeO70uFzyG2Qj1UA/Wz+HXmu5f88stuTXz/85XmTnW7AbGmd34=
+X-Received: by 2002:a17:90a:71c3:b0:286:6cc1:2cac with SMTP id
+ m3-20020a17090a71c300b002866cc12cacmr3610905pjs.54.1702401793553; Tue, 12 Dec
+ 2023 09:23:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20231208210855.407580-1-kan.liang@linux.intel.com>
+ <ZXd7ZuxbNNsjAyqm@kernel.org> <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
+In-Reply-To: <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 12 Dec 2023 09:23:01 -0800
+Message-ID: <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
+Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, irogers@google.com, mark.rutland@arm.com, 
+	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 11 Dec 2023 16:13:12 +0000, James Clark wrote:
-> Changes since v6:
-> 
->   * Remove inlines from arm_pmuv3.c
->   * Use format attribute mechanism from SPE
->   * Re-arrange attributes so that threshold comes last and can
->     potentially be extended
->   * Emit an error if the max threshold is exceeded rather than clamping
->   * Convert all register fields to GENMASK
-> 
-> [...]
+On Tue, Dec 12, 2023 at 7:56=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2023-12-11 4:13 p.m., Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Dec 08, 2023 at 01:08:55PM -0800, kan.liang@linux.intel.com esc=
+reveu:
+> >> From: Kan Liang <kan.liang@linux.intel.com>
+> >>
+> >> perf top errors out on a hybrid machine
+> >>  $perf top
+> >>
+> >>  Error:
+> >>  The cycles:P event is not supported.
+> >>
+> >> The user_requested_cpus may contain CPUs that are invalid for a hybrid
+> >> PMU. It causes perf_event_open to fail.
+> >
+> > ?
+> >
+> > All perf top expects is that the "cycles", the most basic one, be
+> > collected, on all CPUs in the system.
+> >
+>
+> Yes, but for hybrid there is no single "cycles" event which can cover
+> all CPUs.
 
-Thanks for respinning, James. This looks really good now.
+Does that mean the kernel would reject the legacy "cycles" event
+on hybrid CPUs?
 
-Applied to will (for-next/perf), thanks!
-
-[01/11] arm: perf: Remove inlines from arm_pmuv3.c
-        https://git.kernel.org/will/c/9343c790e6de
-[02/11] arm: perf/kvm: Use GENMASK for ARMV8_PMU_PMCR_N
-        https://git.kernel.org/will/c/62e1f212e5fe
-[03/11] arm: perf: Use GENMASK for PMMIR fields
-        https://git.kernel.org/will/c/2f6a00f30600
-[04/11] arm: perf: Convert remaining fields to use GENMASK
-        https://git.kernel.org/will/c/d30f09b6d7de
-[05/11] arm64: perf: Include threshold control fields in PMEVTYPER mask
-        https://git.kernel.org/will/c/3115ee021bfb
-[06/11] arm: pmu: Share user ABI format mechanism with SPE
-        https://git.kernel.org/will/c/f6da86969a3c
-[07/11] perf/arm_dmc620: Remove duplicate format attribute #defines
-        https://git.kernel.org/will/c/a5f4ca68f348
-[08/11] KVM: selftests: aarch64: Update tools copy of arm_pmuv3.h
-        https://git.kernel.org/will/c/c7b98bf0fc79
-[09/11] arm: pmu: Move error message and -EOPNOTSUPP to individual PMUs
-        https://git.kernel.org/will/c/186c91aaf549
-[10/11] arm64: perf: Add support for event counting threshold
-        https://git.kernel.org/will/c/816c26754447
-[11/11] Documentation: arm64: Document the PMU event counting threshold feature
-        https://git.kernel.org/will/c/bd690638e2c2
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Thanks,
+Namhyung
