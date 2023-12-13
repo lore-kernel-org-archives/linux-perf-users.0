@@ -1,94 +1,104 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A02FB7;
-	Tue, 12 Dec 2023 17:34:01 -0800 (PST)
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6ceb93fb381so4657121b3a.0;
-        Tue, 12 Dec 2023 17:34:01 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JgIXZoDt"
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28367185
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 18:22:02 -0800 (PST)
+Received: by mail-pj1-x1049.google.com with SMTP id 98e67ed59e1d1-28ae055169eso111582a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 18:22:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702434121; x=1703038921; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H3dbLwG3pwrVNc+flPqWL0ROEahdeYkxOItBObS2igQ=;
+        b=JgIXZoDtL3tsFLv7qXcdYmyIY4JX6Us/RJNjjPcsYQgoVqqPtWXuTdGM9ZM9epPRzL
+         JCF0opJNtwOo9BeYMrPCVpoqRclCy0FykrgMtLYWTLnC0vAy7WAqSkqYF3O5Tg2Kqusi
+         O/7Vsng5r+NqZ2Yi0yT3nnOnRWRUXV9P7P2qtPvOKmkgB0r2mik7SMgBkA7wFkvq4w1G
+         h4EvY4rkTAzycB9gODo5QcqoH3NBJXYU/Kq0orHH9ATUmJFQoJOeg1H4zO3r32R1vVxM
+         deZJfzg/fgVegdjMrBmw3nfKcNZOZ+UXuq81MVLAWMM0wVyCl94UDcWbT0lC4dcX+OtN
+         98Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702431241; x=1703036041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nL8WQ6XQifHuAl5/6bibXSmjCD6Q0OYVm2RrMW20160=;
-        b=Dj9xxVLGyJ/Ein3/G6+yxCuYRH9f8Koi2yNVSXQQDby3iEYadeA4hwiQmBs3N59/M4
-         VLiiJ9TKhqKdTLLyZkQPXxCsg+XTDobHkBtuBZ6LNjLJVOMYDCEsI5hwsFgZvtpVBTvt
-         prcTFRRDdHufRGOM8fQqBhMEv7B2AOMu5yE99ysBT6CcJkax2Ylc4pMHH6cZyLup7BkB
-         vSXpSEUvTFljQTOBUuZU8L+53XM9xup4245/ZkW71QeEoyfL4Lr4aKf9/jBEHsYkKEm+
-         cXyHEUfpuwOf9xeYPpwTTbtKeH/w7bJBqoRRUUtCBT8rTy8kixAV/9jBv76ZOSoxhAng
-         7Y/A==
-X-Gm-Message-State: AOJu0YzyZJwP70yxyG8YSAo19PqpbsJt2QnxnPK7jBAnuJEi8TdBfu/i
-	nksalzl/QERBx6Os+AGmVSItm6ZFq+HPFEO+m3I=
-X-Google-Smtp-Source: AGHT+IEhmNLmhGxrtCgZOy7pCkCFeOrqo6QXJpKEFM9cw7GkYQJG+xBQkr1qR4/tejyjGGUgs3t5wUdovowNAca85qM=
-X-Received: by 2002:a05:6a00:2301:b0:6c3:4bf2:7486 with SMTP id
- h1-20020a056a00230100b006c34bf27486mr9484517pfh.7.1702431240694; Tue, 12 Dec
- 2023 17:34:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702434121; x=1703038921;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H3dbLwG3pwrVNc+flPqWL0ROEahdeYkxOItBObS2igQ=;
+        b=MDEZpE+pxRzWH/mrWJdI9hGyuBwP/o9LE43bBZxaofj+CuhWtNzxF2QmIzWPJMBifu
+         cP9S+Xmg37YrZJbHdbKXWrRtjdnSGiBYhRprxdhZewwICPIPayiTotSFt5TNsfd3OmN8
+         h8cCVgO9fejwMRsdjnqiPMdufwaLJypOL4lrKikcM6bu1ty6DqGYExeAOdy5dem3ogTz
+         cmBp63LEFEu4DZ2eQ1xW/odeKhKW29aQZFCk7JuDjkFl+WTrIpYdoXvmF94KVuPCljpt
+         DejZi02ClZOGjWjwYrt7I45cyRaKbd+RtnIWYOYnv4DPIBoRIF4+xA4MEx7iHzEZi1Et
+         +ARg==
+X-Gm-Message-State: AOJu0YwoREXmPdSK+b2Jsb8bke0HZGzxzc0JeY3dcMC4ikQ2zPuXZbHS
+	+/VdnN/6p+RiTFIyahWkUCbvq7Z/qYI=
+X-Google-Smtp-Source: AGHT+IEMdNbXZWy9ISUMeWXjYiRzXRSqXuBEtLtB2quA6rPLGk41btEuk2vriof3H/B+MEphfzV6B3hdgbQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:903:41c9:b0:1d0:cd87:64dd with SMTP id
+ u9-20020a17090341c900b001d0cd8764ddmr52067ple.3.1702434121579; Tue, 12 Dec
+ 2023 18:22:01 -0800 (PST)
+Date: Tue, 12 Dec 2023 18:22:00 -0800
+In-Reply-To: <20231203140756.GI1489931@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231207050433.1426834-1-irogers@google.com> <20231207050433.1426834-3-irogers@google.com>
- <CAM9d7cgRZp3PieHDvsdFXG+pNG0TTKoAaH6ZxC1XAnrvRLE1Pw@mail.gmail.com> <CAP-5=fXuZCkbAU0wakLyu3svpvUjzugAOjZzeGg9jZyJRXpoDA@mail.gmail.com>
-In-Reply-To: <CAP-5=fXuZCkbAU0wakLyu3svpvUjzugAOjZzeGg9jZyJRXpoDA@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 12 Dec 2023 17:33:49 -0800
-Message-ID: <CAM9d7cjcuz1ifeHUC=kqNsZVHn_jUsM-XWQRoXD1MVzRcoZ-kQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] tools lib api: Add io_dir an allocation free
- readdir alternative
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Quentin Monnet <quentin@isovalent.com>, 
-	Fangrui Song <maskray@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Yanteng Si <siyanteng@loongson.cn>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Artem Savkov <asavkov@redhat.com>, James Clark <james.clark@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20230916003118.2540661-1-seanjc@google.com> <20230916003118.2540661-6-seanjc@google.com>
+ <20230918152110.GI13795@ziepe.ca> <ZQhxpesyXeG+qbS6@google.com>
+ <20230918160258.GL13795@ziepe.ca> <ZWp_q1w01NCZi8KX@google.com> <20231203140756.GI1489931@ziepe.ca>
+Message-ID: <ZXkVSKULLivrMkBl@google.com>
+Subject: Re: [PATCH 05/26] vfio: KVM: Pass get/put helpers from KVM to VFIO,
+ don't do circular lookup
+From: Sean Christopherson <seanjc@google.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Tony Krowiak <akrowiak@linux.ibm.com>, 
+	Halil Pasic <pasic@linux.ibm.com>, Jason Herne <jjherne@linux.ibm.com>, 
+	Harald Freudenberger <freude@linux.ibm.com>, Alex Williamson <alex.williamson@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-mips@vger.kernel.org, kvm@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Anish Ghulati <aghulati@google.com>, Venkatesh Srinivas <venkateshs@chromium.org>, 
+	Andrew Thornton <andrewth@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Dec 11, 2023 at 3:54=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Mon, Dec 11, 2023 at 3:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > On Wed, Dec 6, 2023 at 9:04=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> > >
-> > > glibc's opendir allocates a minimum of 32kb, when called recursively
-> > > for a directory tree the memory consumption can add up - nearly 300kb
-> > > during perf start-up when processing modules. Add a stack allocated
-> > > variant of readdir sized a little more than 1kb.
-> > >
-> > > As getdents64 may be missing from libc, add support using syscall.
-> >
-> > Unfortunately my alpine build has:
-> >
-> > In file included from util/machine.c:2:
-> > /build/libapi/include/api/io_dir.h:17:23: error: conflicting types for
-> > 'getdents'; have 'ssize_t(int,  void *, size_t)' {aka 'long int(int,
-> > void *, long unsigned int)'}
-> >    17 | static inline ssize_t getdents64(int fd, void *dirp, size_t cou=
-nt)
-> >       |                       ^~~~~~~~~~
-> > /usr/include/dirent.h:52:5: note: previous declaration of 'getdents'
-> > with type 'int(int,  struct dirent *, size_t)' {aka 'int(int,  struct
-> > dirent *, long unsigned int)'}
-> >    52 | int getdents(int, struct dirent *, size_t);
-> >       |     ^~~~~~~~
->
-> Presumably there is a #define getdents64 getdents .. Could we stop
-> caring about this version of Alpine linux?
+On Sun, Dec 03, 2023, Jason Gunthorpe wrote:
+> On Fri, Dec 01, 2023 at 04:51:55PM -0800, Sean Christopherson wrote:
+> 
+> > There's one more wrinkle: this patch is buggy in that it doesn't ensure the liveliness
+> > of KVM-the-module, i.e. nothing prevents userspace from unloading kvm.ko while VFIO
+> > still holds a reference to a kvm structure, and so invoking ->put_kvm() could jump
+> > into freed code.  To fix that, KVM would also need to pass along a module pointer :-(
+> 
+> Maybe we should be refcounting the struct file not the struct kvm?
+> 
+> Then we don't need special helpers and it keeps the module alive correctly.
 
-Right, there's a #define:
+Huh.  It took my brain a while to catch up, but this seems comically obvious in
+hindsight.  I *love* this approach, both conceptually and from a code perspective.
 
-https://git.musl-libc.org/cgit/musl/tree/include/dirent.h#n68
+Handing VFIO (and any other external entities) a file makes it so that KVM effectively
+interacts with users via files, regardless of whether the user lives in userspace
+or the kernel.  That makes it easier to reason about the safety of operations,
+e.g. in addition to ensuring KVM-the-module is pinned, having a file pointer allows
+KVM to verify that the incoming pointer does indeed represent a VM.  Which isn't
+necessary by any means, but it's a nice sanity check.
 
-But I'm not sure ignoring Alpine linux is a good idea.
-Maybe we can add a #undef right before?
+From a code perspective, it's far cleaner than manually grabbing module references,
+and having only a file pointers makes it a wee bit harder for non-KVM code to
+poke into KVM, e.g. keeps us honest.
 
-Thanks,
-Namhyung
+Assuming nothing blows up in testing, I'll go this route for v2.
+
+Thanks!
