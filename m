@@ -1,292 +1,78 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Agj/ICxb"
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABD110E0
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:45:41 -0800 (PST)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2c9efa1ab7fso88186271fa.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:45:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="SzZPap/1"
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE65E8
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:54:16 -0800 (PST)
+Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-77f35009e78so408709885a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:54:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1702478740; x=1703083540; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bmqPFkPuxnmZl6SJeiaZQfpiU27tLb3tsOrQMJyrLD4=;
-        b=Agj/ICxbfAA8gikFbPx/aYaV00RAZ2/uHfd3qjMezPv/8CVFLw+cbJYimZ1O40ohsP
-         rZ9Gj2UzkHdWDgDoiZmUYI2KIilTYFiGctNS2YoiiOHrvuP3Xwoo6wQqGAXks/muW/6V
-         PKFviEYgBqizGlGgqLql0LXEdRga5Lqg0bDm1yeb07Tl2A5gUG3VxmRR2/Vz5UXtwDLk
-         kodHD46XLQNxHgeg16tlIEcwlPZmepIzRl+6msJymXWeCitozjzVSUt//nHBv8wYJ1Pd
-         kyVuEflKcYQUz/w3GqZIuIDliqfRCRwaWrInB6Etxtpo1nVks9FdOsRYZaNke7Kxb/oE
-         FU/w==
+        d=maine.edu; s=google; t=1702479255; x=1703084055; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sYhZKTO+n/Hy770LjqTnEQ/mbZOGO/ntqNbsrj+NvGk=;
+        b=SzZPap/1VBkTdxomNGlMOzALXK62v3vANuZSl5XzIoYOLak5aJbE3cdTSmiHYjcE+Q
+         JFd8eIHTrXRzO2OY7HHeqP1XL8zjNegG7RWAFah/+bECQlpUVfv9cksKW6yIAz54KWc5
+         yB/zo9usXOvw0CKeHlpaBSaMIJcYtaS+p3XqU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702478740; x=1703083540;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bmqPFkPuxnmZl6SJeiaZQfpiU27tLb3tsOrQMJyrLD4=;
-        b=SvQq4rgt62/IyBl0mk5gvw6uG8oxZwVYWzFEVcYcTk4vlImewZtPFS+nwmLuifJUzi
-         EGdYirjM5dza1O4L/X+4MshYI9hQZ4kkfyoSSxPAmEMzFocVNpWPQi5XOeIAvP9j9G1K
-         ViV+qbyM1Osw2zx2aKZYFQvQiJG8fRU2eN2iyO1FyxmEQmD8mKqMv5nQAmA6O8vwnRDh
-         2l5TcFhcAbLR3k50b5xqOYvxadpCQNNqJk7Gdv8Gwz7mvYRlaiZghIBIB2XZKJ2Nn0uR
-         V3Fl3j3xD4x0oQ1cXj7Ra5LEpVuUMbCc+CH/WqmMS/4Xk/1MKjOswyaZsFNO986iZMJ+
-         lGLw==
-X-Gm-Message-State: AOJu0Yx44sU/MVGVMjQ9XD+GuypYIp9Z3SkgxmI2S8FVaTzpQrx+q85B
-	ET0c/7nGh+ZWScowF8CiAld+TFrgZuouhPrVy/U0ag==
-X-Google-Smtp-Source: AGHT+IG6FMOgiaHfoGJ4CXnfRM137eDjGlMeCoh6XEgb1O0XWDa1v6SeRcYd9d9XNsMFoYiywjezVdEKzupnFGgO6Xc=
-X-Received: by 2002:a2e:9f51:0:b0:2c9:fece:5be6 with SMTP id
- v17-20020a2e9f51000000b002c9fece5be6mr1427130ljk.54.1702478740068; Wed, 13
- Dec 2023 06:45:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702479255; x=1703084055;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sYhZKTO+n/Hy770LjqTnEQ/mbZOGO/ntqNbsrj+NvGk=;
+        b=Nkgf+qKpybdnuDzPkbPGrzeG1gbI2X+78VHYsRPoF8gy/9nmitZXJf2rq45JRw0RDm
+         crQ1vR8pym/gz3KoYeD+SXbWkYcFR8fAOqvtDhUER1Fg/NczPNofzCD7XnMRKRIVr0GE
+         DzMFtK4DuniBZiS66a1H0Gfw0X7BcNdxVS3vAr5hxtQT93zsJOQvaAqnOfw8JZgx1k4x
+         gLcE70WhBOjiLkSLbSboaE3M3ibXhKJ8TCb0CW79PS7zLvGTLlH0cRbiCkUv3pLVRwKl
+         n0n1zNL8tRO7xRf9cnetai2lZh76X5yxBSnDPS0s7p8HvUqjp6NwekrlUnTLJio7HdGk
+         JIEw==
+X-Gm-Message-State: AOJu0YxtgipvhMGx6aAGE+79ooy4pjupBDTxjzdv7p7C6Vrq07vEl7cK
+	hp58w32ODdCIy4H7JRiZHDAzSw==
+X-Google-Smtp-Source: AGHT+IH0o9dvc/q99ZcvvS/TE42YBHUKs3xa0xzfNMF3FDuCvAzTxzCANGs7FzeNBNzX67Oh34TgTQ==
+X-Received: by 2002:a05:620a:4496:b0:77f:8c7a:8a94 with SMTP id x22-20020a05620a449600b0077f8c7a8a94mr3011201qkp.72.1702479255429;
+        Wed, 13 Dec 2023 06:54:15 -0800 (PST)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id re19-20020a05620a8e1300b0077f13650cb7sm4556860qkn.2.2023.12.13.06.54.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Dec 2023 06:54:15 -0800 (PST)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Wed, 13 Dec 2023 09:54:09 -0500 (EST)
+To: xingwei lee <xrivendell7@gmail.com>
+cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+    mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+    namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: possible deadlock in down_trylock/perf_event_open
+In-Reply-To: <CABOYnLxoG=YsE1XyOjfF0O+2UrdTyK1JMir3xPapGsRzh-XFAA@mail.gmail.com>
+Message-ID: <227eb61b-8068-001e-47fa-b65104b3b226@maine.edu>
+References: <CABOYnLxoG=YsE1XyOjfF0O+2UrdTyK1JMir3xPapGsRzh-XFAA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231213070301.1684751-1-peterlin@andestech.com> <20231213070301.1684751-4-peterlin@andestech.com>
-In-Reply-To: <20231213070301.1684751-4-peterlin@andestech.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Wed, 13 Dec 2023 20:15:28 +0530
-Message-ID: <CAK9=C2WC2i7XkjDgbjccVn03BYfnE_YS4YiA6ZWMj6GDyTjJKA@mail.gmail.com>
-Subject: Re: [PATCH v5 03/16] irqchip/riscv-intc: Introduce Andes hart-level
- interrupt controller
-To: Yu Chien Peter Lin <peterlin@andestech.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
-	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org, 
-	conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org, 
-	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com, 
-	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de, 
-	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org, 
-	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com, 
-	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org, palmer@dabbelt.com, 
-	paul.walmsley@sifive.com, peterz@infradead.org, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org, 
-	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com, 
-	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me, wens@csie.org, 
-	will@kernel.org, ycliang@andestech.com, inochiama@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Dec 13, 2023 at 12:35=E2=80=AFPM Yu Chien Peter Lin
-<peterlin@andestech.com> wrote:
->
-> Add support for the Andes hart-level interrupt controller. This
-> controller provides interrupt mask/unmask functions to access the
-> custom register (SLIE) where the non-standard S-mode local interrupt
-> enable bits are located.
->
-> To share the riscv_intc_domain_map() with the generic RISC-V INTC and
-> ACPI, add a chip parameter to riscv_intc_init_common(), so it can be
-> passed to the irq_domain_set_info() as private data.
->
-> Andes hart-level interrupt controller requires the "andestech,cpu-intc"
-> compatible string to be present in interrupt-controller of cpu node.
-> e.g.,
->
->   cpu0: cpu@0 {
->       compatible =3D "andestech,ax45mp", "riscv";
->       ...
->       cpu0-intc: interrupt-controller {
->           #interrupt-cells =3D <0x01>;
->           compatible =3D "andestech,cpu-intc", "riscv,cpu-intc";
->           interrupt-controller;
->       };
->   };
->
-> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
-> ---
-> Changes v1 -> v2:
->   - New patch
-> Changes v2 -> v3:
->   - Return -ENXIO if no valid compatible INTC found
->   - Allow falling back to generic RISC-V INTC
-> Changes v3 -> v4: (Suggested by Thomas [1])
->   - Add comment to andes irq chip function
->   - Refine code flow to share with generic RISC-V INTC and ACPI
->   - Move Andes specific definitions to include/linux/soc/andes/irq.h
-> Changes v4 -> v5: (Suggested by Thomas)
->   - Fix commit message
->   - Subtract ANDES_SLI_CAUSE_BASE from d->hwirq to calculate the value of=
- mask
->   - Do not set chip_data to the chip itself with irq_domain_set_info()
->   - Follow reverse fir tree order variable declarations
->
-> [1] https://patchwork.kernel.org/project/linux-riscv/patch/20231019135723=
-.3657156-1-peterlin@andestech.com/
-> ---
->  drivers/irqchip/irq-riscv-intc.c | 53 ++++++++++++++++++++++++++++----
->  include/linux/soc/andes/irq.h    | 17 ++++++++++
->  2 files changed, 64 insertions(+), 6 deletions(-)
->  create mode 100644 include/linux/soc/andes/irq.h
->
-> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
--intc.c
-> index 2fdd40f2a791..0b6bf3fb1dba 100644
-> --- a/drivers/irqchip/irq-riscv-intc.c
-> +++ b/drivers/irqchip/irq-riscv-intc.c
-> @@ -17,6 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/smp.h>
-> +#include <linux/soc/andes/irq.h>
->
->  static struct irq_domain *intc_domain;
->
-> @@ -46,6 +47,31 @@ static void riscv_intc_irq_unmask(struct irq_data *d)
->         csr_set(CSR_IE, BIT(d->hwirq));
->  }
->
-> +static void andes_intc_irq_mask(struct irq_data *d)
-> +{
-> +       /*
-> +        * Andes specific S-mode local interrupt causes (hwirq)
-> +        * are defined as (256 + n) and controlled by n-th bit
-> +        * of SLIE.
-> +        */
-> +       unsigned int mask =3D BIT(d->hwirq - ANDES_SLI_CAUSE_BASE);
-> +
-> +       if (d->hwirq < ANDES_SLI_CAUSE_BASE)
-> +               csr_clear(CSR_IE, mask);
-> +       else
-> +               csr_clear(ANDES_CSR_SLIE, mask);
-> +}
-> +
-> +static void andes_intc_irq_unmask(struct irq_data *d)
-> +{
-> +       unsigned int mask =3D BIT(d->hwirq - ANDES_SLI_CAUSE_BASE);
-> +
-> +       if (d->hwirq < ANDES_SLI_CAUSE_BASE)
-> +               csr_set(CSR_IE, mask);
-> +       else
-> +               csr_set(ANDES_CSR_SLIE, mask);
+On Mon, 11 Dec 2023, xingwei lee wrote:
 
-Clearly, Andes does not have any CSR for:
-XLEN <=3D local interrupt <ANDES_SLI_CAUSE_BASE
-and
-ANDES_SLI_CAUSE_BASE + XLEN <=3D local interrupt
+> Hello I found a bug in kernel/perf in the lastest upstream linux 6.7.rc5
+> possible deadlock in down_trylock/perf_event_open
+> 
+> If you fix this issue, please add the following tag to the commit:
+> Reported-by: xingwei Lee <xrivendell7@gmail.com>
+> 
 
-Regards,
-Anup
+> 
+> syzkaller login: root
+> Linux syzkaller 6.7.0-rc5 #3 SMP PREEMPT_DYNAMIC Mon Dec 11 17:02:24
+> HKT 2023 x86_64
+> root@syzkaller:~# ./572
+> [  113.795108][ T8266] ------------[ cut here ]------------
+> [  113.795707][ T8266] WARNING: CPU: 1 PID: 8266 at
+> kernel/events/core.c:1950 __do_sys_perf_event_open0
 
-> +}
-> +
->  static void riscv_intc_irq_eoi(struct irq_data *d)
->  {
->         /*
-> @@ -69,11 +95,20 @@ static struct irq_chip riscv_intc_chip =3D {
->         .irq_eoi =3D riscv_intc_irq_eoi,
->  };
->
-> +static struct irq_chip andes_intc_chip =3D {
-> +       .name       =3D "RISC-V INTC",
-> +       .irq_mask   =3D andes_intc_irq_mask,
-> +       .irq_unmask =3D andes_intc_irq_unmask,
-> +       .irq_eoi    =3D riscv_intc_irq_eoi,
-> +};
-> +
->  static int riscv_intc_domain_map(struct irq_domain *d, unsigned int irq,
->                                  irq_hw_number_t hwirq)
->  {
-> +       struct irq_chip *chip =3D d->host_data;
-> +
->         irq_set_percpu_devid(irq);
-> -       irq_domain_set_info(d, irq, hwirq, &riscv_intc_chip, d->host_data=
-,
-> +       irq_domain_set_info(d, irq, hwirq, chip, NULL,
->                             handle_percpu_devid_irq, NULL, NULL);
->
->         return 0;
-> @@ -112,11 +147,12 @@ static struct fwnode_handle *riscv_intc_hwnode(void=
-)
->         return intc_domain->fwnode;
->  }
->
-> -static int __init riscv_intc_init_common(struct fwnode_handle *fn)
-> +static int __init riscv_intc_init_common(struct fwnode_handle *fn,
-> +                                        struct irq_chip *chip)
->  {
->         int rc;
->
-> -       intc_domain =3D irq_domain_create_tree(fn, &riscv_intc_domain_ops=
-, NULL);
-> +       intc_domain =3D irq_domain_create_tree(fn, &riscv_intc_domain_ops=
-, chip);
->         if (!intc_domain) {
->                 pr_err("unable to add IRQ domain\n");
->                 return -ENXIO;
-> @@ -136,8 +172,9 @@ static int __init riscv_intc_init_common(struct fwnod=
-e_handle *fn)
->  static int __init riscv_intc_init(struct device_node *node,
->                                   struct device_node *parent)
->  {
-> -       int rc;
-> +       struct irq_chip *chip =3D &riscv_intc_chip;
->         unsigned long hartid;
-> +       int rc;
->
->         rc =3D riscv_of_parent_hartid(node, &hartid);
->         if (rc < 0) {
-> @@ -162,10 +199,14 @@ static int __init riscv_intc_init(struct device_nod=
-e *node,
->                 return 0;
->         }
->
-> -       return riscv_intc_init_common(of_node_to_fwnode(node));
-> +       if (of_device_is_compatible(node, "andestech,cpu-intc"))
-> +               chip =3D &andes_intc_chip;
-> +
-> +       return riscv_intc_init_common(of_node_to_fwnode(node), chip);
->  }
->
->  IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
-> +IRQCHIP_DECLARE(andes, "andestech,cpu-intc", riscv_intc_init);
->
->  #ifdef CONFIG_ACPI
->
-> @@ -192,7 +233,7 @@ static int __init riscv_intc_acpi_init(union acpi_sub=
-table_headers *header,
->                 return -ENOMEM;
->         }
->
-> -       return riscv_intc_init_common(fn);
-> +       return riscv_intc_init_common(fn, &riscv_intc_chip);
->  }
->
->  IRQCHIP_ACPI_DECLARE(riscv_intc, ACPI_MADT_TYPE_RINTC, NULL,
-> diff --git a/include/linux/soc/andes/irq.h b/include/linux/soc/andes/irq.=
-h
-> new file mode 100644
-> index 000000000000..f03e68fea261
-> --- /dev/null
-> +++ b/include/linux/soc/andes/irq.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2023 Andes Technology Corporation
-> + */
-> +#ifndef __ANDES_IRQ_H
-> +#define __ANDES_IRQ_H
-> +
-> +/* Andes PMU irq number */
-> +#define ANDES_RV_IRQ_PMU               18
-> +#define ANDES_SLI_CAUSE_BASE           256
-> +
-> +/* Andes PMU related registers */
-> +#define ANDES_CSR_SLIE                 0x9c4
-> +#define ANDES_CSR_SLIP                 0x9c5
-> +#define ANDES_CSR_SCOUNTEROF           0x9d4
-> +
-> +#endif /* __ANDES_IRQ_H */
-> --
-> 2.34.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+Just wanted to add that the perf_fuzzer will trigger this warning more or 
+less immediately as well.
+
+Vince
