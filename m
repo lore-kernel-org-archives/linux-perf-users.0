@@ -1,85 +1,243 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 40F929A;
-	Tue, 12 Dec 2023 20:56:26 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F41A9C15;
-	Tue, 12 Dec 2023 20:57:11 -0800 (PST)
-Received: from [10.162.41.8] (a077893.blr.arm.com [10.162.41.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 905483F5A1;
-	Tue, 12 Dec 2023 20:56:19 -0800 (PST)
-Message-ID: <26ab1190-f437-477b-b09c-6522a1d3fe1d@arm.com>
-Date: Wed, 13 Dec 2023 10:26:16 +0530
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87CE0AD;
+	Tue, 12 Dec 2023 23:05:02 -0800 (PST)
+Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
+	by Atcsqr.andestech.com with ESMTP id 3BD73MKo032193;
+	Wed, 13 Dec 2023 15:03:22 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Wed, 13 Dec 2023
+ 15:03:18 +0800
+From: Yu Chien Peter Lin <peterlin@andestech.com>
+To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
+        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
+        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
+        <conor.dooley@microchip.com>, <conor@kernel.org>,
+        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
+        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
+        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
+        <jolsa@kernel.org>, <jszhang@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
+        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
+        <paul.walmsley@sifive.com>, <peterlin@andestech.com>,
+        <peterz@infradead.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <rdunlap@infradead.org>, <robh+dt@kernel.org>, <samuel@sholland.org>,
+        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
+        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
+        <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>
+Subject: [PATCH v5 03/16] irqchip/riscv-intc: Introduce Andes hart-level interrupt controller
+Date: Wed, 13 Dec 2023 15:02:48 +0800
+Message-ID: <20231213070301.1684751-4-peterlin@andestech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231213070301.1684751-1-peterlin@andestech.com>
+References: <20231213070301.1684751-1-peterlin@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V15 5/8] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
- Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
- Rob Herring <robh@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
-References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
- <20231201053906.1261704-6-anshuman.khandual@arm.com>
- <86ttoybbp4.wl-maz@kernel.org> <e48f5cdc-2711-4a03-a074-da87d84b3caf@arm.com>
-In-Reply-To: <e48f5cdc-2711-4a03-a074-da87d84b3caf@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 3BD73MKo032193
 
+Add support for the Andes hart-level interrupt controller. This
+controller provides interrupt mask/unmask functions to access the
+custom register (SLIE) where the non-standard S-mode local interrupt
+enable bits are located.
 
+To share the riscv_intc_domain_map() with the generic RISC-V INTC and
+ACPI, add a chip parameter to riscv_intc_init_common(), so it can be
+passed to the irq_domain_set_info() as private data.
 
-On 12/11/23 11:30, Anshuman Khandual wrote:
-> On 12/4/23 14:12, Marc Zyngier wrote:
->> On Fri, 01 Dec 2023 05:39:03 +0000,
->> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->>> Disable the BRBE before we enter the guest, saving the status and enable it
->>> back once we get out of the guest. This is just to avoid capturing records
->>> in the guest kernel/userspace, which would be confusing the samples.
->> Why does it have to be limited to non-VHE? What protects host EL0
->> records from guest's EL0 execution when the host is VHE?
-> In a scenario when running the host in VHE mode
->  
-> - The host might have enabled branch records for host EL0 through BRBCR_EL2.E0HBRE
->   indirectly via accessing BRBCR_EL1.E0BRE
-> 
-> - But after the guest switches in on the cpu - BRBCR_EL2.E0HBRE will still remain
->   set and enable branch records in guest EL0 as well because BRBCR_EL1.E0BRE will
->   not have any effect when EL2 is implemented and HCR_EL2.TGE == 1. The guest EL0
->   execution branch records will find their way into branch records being captured
->   for host EL0
-> 
-> You are right. The host EL0 branch records too need to be protected from guest EL0
-> execution. A similar BRBCR_EL1 save/restore mechanism is needed for VHE as well ?
+Andes hart-level interrupt controller requires the "andestech,cpu-intc"
+compatible string to be present in interrupt-controller of cpu node.
+e.g.,
 
-Looking at this again, seems like host EL0 records will be protected from
-guest EL0 execution as HCR_EL2.TGE toggles when th guest switches in thus
-enforcing BRBCR_EL1.E0BRE (which is clear) requirement for capturing guest
-EL0 branch records.
+  cpu0: cpu@0 {
+      compatible = "andestech,ax45mp", "riscv";
+      ...
+      cpu0-intc: interrupt-controller {
+          #interrupt-cells = <0x01>;
+          compatible = "andestech,cpu-intc", "riscv,cpu-intc";
+          interrupt-controller;
+      };
+  };
 
-arch/arm64/kvm/hyp/vhe/tlb.c
+Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+---
+Changes v1 -> v2:
+  - New patch
+Changes v2 -> v3:
+  - Return -ENXIO if no valid compatible INTC found
+  - Allow falling back to generic RISC-V INTC
+Changes v3 -> v4: (Suggested by Thomas [1])
+  - Add comment to andes irq chip function
+  - Refine code flow to share with generic RISC-V INTC and ACPI
+  - Move Andes specific definitions to include/linux/soc/andes/irq.h
+Changes v4 -> v5: (Suggested by Thomas)
+  - Fix commit message
+  - Subtract ANDES_SLI_CAUSE_BASE from d->hwirq to calculate the value of mask
+  - Do not set chip_data to the chip itself with irq_domain_set_info()
+  - Follow reverse fir tree order variable declarations
 
-__tlb_switch_to_guest() {
-	....
-	val = read_sysreg(hcr_el2);
-        val &= ~HCR_TGE;
-        write_sysreg(val, hcr_el2);
-	isb();
-}
+[1] https://patchwork.kernel.org/project/linux-riscv/patch/20231019135723.3657156-1-peterlin@andestech.com/
+---
+ drivers/irqchip/irq-riscv-intc.c | 53 ++++++++++++++++++++++++++++----
+ include/linux/soc/andes/irq.h    | 17 ++++++++++
+ 2 files changed, 64 insertions(+), 6 deletions(-)
+ create mode 100644 include/linux/soc/andes/irq.h
 
-HCR_TGE comes back via HCR_HOST_VHE_FLAGS when the host switches back in.
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index 2fdd40f2a791..0b6bf3fb1dba 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -17,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/smp.h>
++#include <linux/soc/andes/irq.h>
+ 
+ static struct irq_domain *intc_domain;
+ 
+@@ -46,6 +47,31 @@ static void riscv_intc_irq_unmask(struct irq_data *d)
+ 	csr_set(CSR_IE, BIT(d->hwirq));
+ }
+ 
++static void andes_intc_irq_mask(struct irq_data *d)
++{
++	/*
++	 * Andes specific S-mode local interrupt causes (hwirq)
++	 * are defined as (256 + n) and controlled by n-th bit
++	 * of SLIE.
++	 */
++	unsigned int mask = BIT(d->hwirq - ANDES_SLI_CAUSE_BASE);
++
++	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
++		csr_clear(CSR_IE, mask);
++	else
++		csr_clear(ANDES_CSR_SLIE, mask);
++}
++
++static void andes_intc_irq_unmask(struct irq_data *d)
++{
++	unsigned int mask = BIT(d->hwirq - ANDES_SLI_CAUSE_BASE);
++
++	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
++		csr_set(CSR_IE, mask);
++	else
++		csr_set(ANDES_CSR_SLIE, mask);
++}
++
+ static void riscv_intc_irq_eoi(struct irq_data *d)
+ {
+ 	/*
+@@ -69,11 +95,20 @@ static struct irq_chip riscv_intc_chip = {
+ 	.irq_eoi = riscv_intc_irq_eoi,
+ };
+ 
++static struct irq_chip andes_intc_chip = {
++	.name       = "RISC-V INTC",
++	.irq_mask   = andes_intc_irq_mask,
++	.irq_unmask = andes_intc_irq_unmask,
++	.irq_eoi    = riscv_intc_irq_eoi,
++};
++
+ static int riscv_intc_domain_map(struct irq_domain *d, unsigned int irq,
+ 				 irq_hw_number_t hwirq)
+ {
++	struct irq_chip *chip = d->host_data;
++
+ 	irq_set_percpu_devid(irq);
+-	irq_domain_set_info(d, irq, hwirq, &riscv_intc_chip, d->host_data,
++	irq_domain_set_info(d, irq, hwirq, chip, NULL,
+ 			    handle_percpu_devid_irq, NULL, NULL);
+ 
+ 	return 0;
+@@ -112,11 +147,12 @@ static struct fwnode_handle *riscv_intc_hwnode(void)
+ 	return intc_domain->fwnode;
+ }
+ 
+-static int __init riscv_intc_init_common(struct fwnode_handle *fn)
++static int __init riscv_intc_init_common(struct fwnode_handle *fn,
++					 struct irq_chip *chip)
+ {
+ 	int rc;
+ 
+-	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, NULL);
++	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, chip);
+ 	if (!intc_domain) {
+ 		pr_err("unable to add IRQ domain\n");
+ 		return -ENXIO;
+@@ -136,8 +172,9 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
+ static int __init riscv_intc_init(struct device_node *node,
+ 				  struct device_node *parent)
+ {
+-	int rc;
++	struct irq_chip *chip = &riscv_intc_chip;
+ 	unsigned long hartid;
++	int rc;
+ 
+ 	rc = riscv_of_parent_hartid(node, &hartid);
+ 	if (rc < 0) {
+@@ -162,10 +199,14 @@ static int __init riscv_intc_init(struct device_node *node,
+ 		return 0;
+ 	}
+ 
+-	return riscv_intc_init_common(of_node_to_fwnode(node));
++	if (of_device_is_compatible(node, "andestech,cpu-intc"))
++		chip = &andes_intc_chip;
++
++	return riscv_intc_init_common(of_node_to_fwnode(node), chip);
+ }
+ 
+ IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
++IRQCHIP_DECLARE(andes, "andestech,cpu-intc", riscv_intc_init);
+ 
+ #ifdef CONFIG_ACPI
+ 
+@@ -192,7 +233,7 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
+ 		return -ENOMEM;
+ 	}
+ 
+-	return riscv_intc_init_common(fn);
++	return riscv_intc_init_common(fn, &riscv_intc_chip);
+ }
+ 
+ IRQCHIP_ACPI_DECLARE(riscv_intc, ACPI_MADT_TYPE_RINTC, NULL,
+diff --git a/include/linux/soc/andes/irq.h b/include/linux/soc/andes/irq.h
+new file mode 100644
+index 000000000000..f03e68fea261
+--- /dev/null
++++ b/include/linux/soc/andes/irq.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2023 Andes Technology Corporation
++ */
++#ifndef __ANDES_IRQ_H
++#define __ANDES_IRQ_H
++
++/* Andes PMU irq number */
++#define ANDES_RV_IRQ_PMU		18
++#define ANDES_SLI_CAUSE_BASE		256
++
++/* Andes PMU related registers */
++#define ANDES_CSR_SLIE			0x9c4
++#define ANDES_CSR_SLIP			0x9c5
++#define ANDES_CSR_SCOUNTEROF		0x9d4
++
++#endif /* __ANDES_IRQ_H */
+-- 
+2.34.1
 
-__tlb_switch_to_host() {
-	write_sysreg(HCR_HOST_VHE_FLAGS, hcr_el2);
-        isb();
-	....
-}
