@@ -1,39 +1,38 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gK19i7CL"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3332C19B3;
-	Wed, 13 Dec 2023 11:54:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bElGwLql"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A1A9A;
+	Wed, 13 Dec 2023 13:11:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702497281; x=1734033281;
+  t=1702501864; x=1734037864;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=+nbyDHhgJ8++zxeQX/mgFJIqBXvnO0Gvfr2EtoiwJl0=;
-  b=gK19i7CL2hq5/m+XZTo7SDNqKnZzffTMN6cTzkt6vbJJjNJlEOCzlRpx
-   Gia0JQu+ZAg1RG9ZRqT/VzH6q6OC6CzVjjvnLsdspt5qt5EMZ9k7yy1VM
-   U1rbplZlivT+GTh/U6TTmtCWzNGU6QD50jdNkriwL7T2yamlYItkemMj7
-   O0VJqNgPfaMu9xGm/8vr7+mxYyvM1549W0FwCsKC6oyP7PBr2mHXPQYg+
-   RN/X1yJ72ZAmJ6IymZwipPHv0kOyXg+hnKLuoPDSqssbuhJXrFjYQGFNv
-   yxJnlFfcWbcz3/ZntoniO9Tb0ac8Ym3fjfxdUnxRkE1eb+rfrdjypFbiQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="397802475"
+  bh=hueJ+Wb7TnVxcE3IGOjRy11SfymJEZ0zP/QL+9LdPf8=;
+  b=bElGwLqlaqXCOkxJ4xXylGc2LMCOtcmpSmyIj8IgyhquTJGizUXAJqcB
+   RNxtJZzaSspMgTsrKXYxCiy0SoCzWh2t1AqCYi6wvfpTVTapGsls1GypT
+   qVnOj1SE7Q9iaPDOYazWiEvMgNcqPBV7QX6uWcLISiPdHuBaExoPMEi2C
+   mcWba4xGAZPe0udgFZtoFobptrUCp+T4HCvHXZTzQsMjY2Be1KSnW0JlC
+   6vdQ6qe+S/wclDYRWeujeEoDVbMg2gjkUQrXC19vrc3+q5I/cnTsyXQpa
+   OxgIBkuU2xzlAhTjtIxIF4siOn0Fu7yLCDeJrKGYyfU6ARj8Qd0TfSw4r
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="374533648"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="397802475"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:54:40 -0800
+   d="scan'208";a="374533648"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 13:11:03 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="774065511"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="774065511"
+   d="scan'208";a="15581492"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:54:40 -0800
-Received: from [10.212.117.13] (kliang2-mobl1.ccr.corp.intel.com [10.212.117.13])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 13:11:04 -0800
+Received: from [10.212.97.3] (kliang2-mobl1.ccr.corp.intel.com [10.212.97.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 92A81580DA9;
-	Wed, 13 Dec 2023 11:54:37 -0800 (PST)
-Message-ID: <ab50cc75-2273-47a3-a0c3-fa2d8f1d2fd3@linux.intel.com>
-Date: Wed, 13 Dec 2023 14:54:36 -0500
+	by linux.intel.com (Postfix) with ESMTPS id 4AF85580DA9;
+	Wed, 13 Dec 2023 13:11:02 -0800 (PST)
+Message-ID: <e9383607-1e43-4c1a-9512-29f27784d035@linux.intel.com>
+Date: Wed, 13 Dec 2023 16:11:00 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,152 +40,122 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 0/5] Clean up perf mem
+Subject: Re: [PATCH V2] perf top: Use evsel's cpus to replace
+ user_requested_cpus
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, acme@kernel.org,
+ mark.rutland@arm.com, maz@kernel.org, marcan@marcan.st,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20231212193833.415110-1-kan.liang@linux.intel.com>
+ <CAP-5=fWCgjCC-DHHx+HJCuYk6vNn9Lf9EKcnBBZQ+xmnyYnmPg@mail.gmail.com>
+ <996ec30b-2bcf-4739-bec0-728c7f7af2ac@linux.intel.com>
+ <CAP-5=fVnH0eTEvvNbKLF9xYye5Pu8hvDL4ruoxh5xG76+B8WFQ@mail.gmail.com>
+ <CAM9d7chQ4NbbcmumQSMRaGm987nxxh6_QbbJr7+GYgL_WAmaNw@mail.gmail.com>
+ <43e57041-fe13-452a-af6e-db2ed451f93a@linux.intel.com>
+ <CAP-5=fXHadLYuRkY2Z=kymWJkB63dBWfCibQJnwgt0wkSuVVsg@mail.gmail.com>
 Content-Language: en-US
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- john.g.garry@oracle.com, Will Deacon <will@kernel.org>,
- James Clark <james.clark@arm.com>, mike.leach@linaro.org,
- Leo Yan <leo.yan@linaro.org>, yuhaixin.yhx@linux.alibaba.com,
- renyu.zj@linux.alibaba.com, Thomas Richter <tmricht@linux.ibm.com>,
- LKML <linux-kernel@vger.kernel.org>,
- linux-perf-users <linux-perf-users@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org
-References: <20231207192338.400336-1-kan.liang@linux.intel.com>
- <ZXIrtcYkvpA8Uwj1@kernel.org>
- <DC029166-B60F-4E90-833D-F43818A3C54B@linux.vnet.ibm.com>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <DC029166-B60F-4E90-833D-F43818A3C54B@linux.vnet.ibm.com>
+In-Reply-To: <CAP-5=fXHadLYuRkY2Z=kymWJkB63dBWfCibQJnwgt0wkSuVVsg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-On 2023-12-13 4:51 a.m., Athira Rajeev wrote:
-> 
-> 
->> On 08-Dec-2023, at 2:01 AM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On 2023-12-13 12:42 p.m., Ian Rogers wrote:
+> On Wed, Dec 13, 2023 at 7:45 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
 >>
->> Em Thu, Dec 07, 2023 at 11:23:33AM -0800, kan.liang@linux.intel.com escreveu:
->>> From: Kan Liang <kan.liang@linux.intel.com>
->>>
->>> Changes since V1:
->>> - Fix strcmp of PMU name checking (Ravi)
->>> - Fix "/," typo (Ian)
->>> - Rename several functions with perf_pmu__mem_events prefix. (Ian)
->>> - Fold the header removal patch into the patch where the cleanups made.
->>>  (Arnaldo)
->>> - Add reviewed-by and tested-by from Ian and Ravi
 >>
->> It would be good to have a Tested-by from people working in all the
->> architectures affectes, like we got from Ravi for AMD, can we get those?
+>> On 2023-12-12 8:06 p.m., Namhyung Kim wrote:
+>>> On Tue, Dec 12, 2023 at 2:12 PM Ian Rogers <irogers@google.com> wrote:
+>>>> On Tue, Dec 12, 2023 at 1:25 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>
+>>>>>
+>>>>> On 2023-12-12 3:37 p.m., Ian Rogers wrote:
+>>>>>> On Tue, Dec 12, 2023 at 11:39 AM <kan.liang@linux.intel.com> wrote:
+>>>>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>>>>
+>>>>>>> perf top errors out on a hybrid machine
+>>>>>>>  $perf top
+>>>>>>>
+>>>>>>>  Error:
+>>>>>>>  The cycles:P event is not supported.
+>>>>>>>
+>>>>>>> The perf top expects that the "cycles" is collected on all CPUs in the
+>>>>>>> system. But for hybrid there is no single "cycles" event which can cover
+>>>>>>> all CPUs. Perf has to split it into two cycles events, e.g.,
+>>>>>>> cpu_core/cycles/ and cpu_atom/cycles/. Each event has its own CPU mask.
+>>>>>>> If a event is opened on the unsupported CPU. The open fails. That's the
+>>>>>>> reason of the above error out.
+>>>>>>>
+>>>>>>> Perf should only open the cycles event on the corresponding CPU. The
+>>>>>>> commit ef91871c960e ("perf evlist: Propagate user CPU maps intersecting
+>>>>>>> core PMU maps") intersect the requested CPU map with the CPU map of the
+>>>>>>> PMU. Use the evsel's cpus to replace user_requested_cpus.
+>>>>>>>
+>>>>>>> The evlist's threads are also propagated to the evsel's threads in
+>>>>>>> __perf_evlist__propagate_maps(). For a system-wide event, perf appends
+>>>>>>> a dummy event and assign it to the evsel's threads. For a per-thread
+>>>>>>> event, the evlist's thread_map is assigned to the evsel's threads. The
+>>>>>>> same as the other tools, e.g., perf record, using the evsel's threads
+>>>>>>> when opening an event.
+>>>>>>>
+>>>>>>> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+>>>>>>> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@kernel.org/
+>>>>>>> Reviewed-by: Ian Rogers <irogers@google.com>
+>>>>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>>>>>> ---
+>>>>>>>
+>>>>>>> Changes since V1:
+>>>>>>> - Update the description
+>>>>>>> - Add Reviewed-by from Ian
+>>>>>> Thanks Kan, quick question. Does "perf top" on hybrid ask the user to
+>>>>>> select between the cycles event on cpu_atom and cpu_core?
+>>>>> Yes, but the event doesn't include the PMU information.
+>>>>> We probably need a follow up patch to append the PMU name.
+>>>>>
+>>>>> Available samples
+>>>>> 385 cycles:P
+>>>>>
+>>>>> 903 cycles:P
+>>>> Thanks and agreed, it isn't possible to tell which is which PMU/CPU
+>>>> type at the moment. I tried the patch with perf top --stdio, there
+>>>> wasn't a choice of event
+>> The perf top --stdio uses a dedicated display function, see
+>> perf_top__header_snprintf() in util/top.c
 >>
->> I'm applying it locally for test building, will push to
->> perf-tools-next/tmp.perf-tools-next for a while, so there is some time
->> to test.
+>> It only shows one event at a time. "E" is used to switch the event.
 >>
->> ARM64 (Leo?) and ppc, for PPC... humm Ravi did it, who could test it now?
-> Hi Arnaldo, Ravi
-> 
-> Looking into this for testing on powerpc. Will update back.
->
+>>>> and I can't tell what counter is being
+>>>> displayed.
+>> For the hybrid case, I think we may display both PMU name and event
+>> name. For example,
+>>
+>> Available samples
+>> 656 cycles:P cpu_atom
+>>
+>> 701 cycles:P cpu_core
+> I think there would be more uniformity if we could do:
+> cpu/cycles/P
+> I'm just reminded of the stat output where sometimes you can get things like:
+> cpu/cycles/
+> or sometimes:
+> cycles [cpu]
+> It seems the slash style approach is the most uniform given it looks
+> like what is written on the command line. Perhaps we need some kind of
+> helper function to do this as reformatting the modifier is a pain.
 
-Thanks Athira. I've sent out the latest V3. Please give it a try.
+Actually, we already have a helper in the perf record,
+record__uniquify_name().
+I can move it to the util/record.c and let's perf top invoke it before
+the open as well. Then we can get this in the perf top.
 
-https://lore.kernel.org/lkml/20231213195154.1085945-1-kan.liang@linux.intel.com/
+Available samples
+148 cpu_atom/cycles:P/
+
+1K cpu_core/cycles:P/
+
+It should be good enough to distinguish the events.
+I will send a patch to support it.
 
 Thanks,
 Kan
-
-> Thanks
-> Athira
->>
->> - Arnaldo
->>
->>> As discussed in the below thread, the patch set is to clean up perf mem.
->>> https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com/
->>>
->>> Introduce generic functions perf_mem_events__ptr(),
->>> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
->>> ARCH specific ones.
->>> Simplify the perf_mem_event__supported().
->>>
->>> Only keeps the ARCH-specific perf_mem_events array in the corresponding
->>> mem-events.c for each ARCH.
->>>
->>> There is no functional change.
->>>
->>> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
->>> etc. But I can only test it on two Intel platforms.
->>> Please give it try, if you have machines with other ARCHs.
->>>
->>> Here are the test results:
->>> Intel hybrid machine:
->>>
->>> $perf mem record -e list
->>> ldlat-loads  : available
->>> ldlat-stores : available
->>>
->>> $perf mem record -e ldlat-loads -v --ldlat 50
->>> calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
->>>
->>> $perf mem record -v
->>> calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
->>>
->>> $perf mem record -t store -v
->>> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
->>>
->>>
->>> Intel SPR:
->>> $perf mem record -e list
->>> ldlat-loads  : available
->>> ldlat-stores : available
->>>
->>> $perf mem record -e ldlat-loads -v --ldlat 50
->>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
->>>
->>> $perf mem record -v
->>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
->>>
->>> $perf mem record -t store -v
->>> calling: record -e cpu/mem-stores/P
->>>
->>> Kan Liang (5):
->>>  perf mem: Add mem_events into the supported perf_pmu
->>>  perf mem: Clean up perf_mem_events__ptr()
->>>  perf mem: Clean up perf_mem_events__name()
->>>  perf mem: Clean up perf_mem_event__supported()
->>>  perf mem: Clean up is_mem_loads_aux_event()
->>>
->>> tools/perf/arch/arm64/util/mem-events.c   |  36 +----
->>> tools/perf/arch/arm64/util/pmu.c          |   6 +
->>> tools/perf/arch/powerpc/util/mem-events.c |  13 +-
->>> tools/perf/arch/powerpc/util/mem-events.h |   7 +
->>> tools/perf/arch/powerpc/util/pmu.c        |  11 ++
->>> tools/perf/arch/s390/util/pmu.c           |   3 +
->>> tools/perf/arch/x86/util/mem-events.c     |  99 ++----------
->>> tools/perf/arch/x86/util/pmu.c            |  11 ++
->>> tools/perf/builtin-c2c.c                  |  28 +++-
->>> tools/perf/builtin-mem.c                  |  28 +++-
->>> tools/perf/util/mem-events.c              | 181 +++++++++++++---------
->>> tools/perf/util/mem-events.h              |  15 +-
->>> tools/perf/util/pmu.c                     |   4 +-
->>> tools/perf/util/pmu.h                     |   7 +
->>> 14 files changed, 233 insertions(+), 216 deletions(-)
->>> create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
->>> create mode 100644 tools/perf/arch/powerpc/util/pmu.c
->>>
->>> -- 
->>> 2.35.1
->>>
->>
->> -- 
->>
->> - Arnaldo
-> 
-> 
-> 
