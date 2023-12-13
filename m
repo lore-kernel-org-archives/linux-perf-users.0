@@ -1,227 +1,237 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CurjT7jD"
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915AC99
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 09:33:38 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-40c2db0ca48so73175e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 09:33:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LFmT1avq"
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DCF116
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 09:42:53 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-55263acefc1so363a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 09:42:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702488817; x=1703093617; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702489371; x=1703094171; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6rexuqcFwHqdlHAnmzezB75k11Vu6IciAHqCQRg1EFk=;
-        b=CurjT7jDfTVe+G0k7CfdsQmaen7h6lllpozBU28ev3Ff8MRfkzIKZbZC6UXdSX4DvY
-         an42q/aDvIJKG8zqt3Namf4dgztJ0oxZijs4RFFkZgvIAfDYpEWMF8G+TowMfIYCocCQ
-         7YPRXhU8a3VhQYD7bt8+oUTY6UfsXBzWAPbx02SPE1AwutMafayBMyZl/zV8IJuIRI6h
-         ji+Q0EfWsrTO6SMPVA9hqVng4qtehbK5hL3zMpLrcUaRvfZGlj85CMJ+MTXfWy+Ood9j
-         457Gtf9u2GIaDKem419rTKX6Oz1lFvT0CJ0G5/EAZMwpShpyKbTPVUs3y/H88jU5ibhU
-         Gb9w==
+        bh=8c1vfO/xiQwL2KaPxAY2duOQ0VAaarCuPQeeypzuUqU=;
+        b=LFmT1avq7ovak0O+8q+vYPHDKH/H1sfe694dhfNTWQcIoAwhHhu6jJNsoSDEPOYLjK
+         uZ/7LPm3IN49T8zW5++ely471Bf9pqRSNbp/bVgswatol+ORorH3bmFfpesHb1AQISvI
+         s4KfbQDmsyIZiSOqItnPF71jDohae0iexUUnz42A36ZK6GflXDFlbBrAklR1Xb2Gjr/X
+         I9NwQBEqwbqv2ONve/zHHzZuljKtPUAUa4+snAt07oGqaS0ezIKSVvhkZrOffLi3xJsw
+         PA22YXZzt5EPu9cZ2x4heJU82R00ZlTXyeCqiupYdVgtyF2ObXfXQVaGVwfdllRjehit
+         3+Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702488817; x=1703093617;
+        d=1e100.net; s=20230601; t=1702489371; x=1703094171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6rexuqcFwHqdlHAnmzezB75k11Vu6IciAHqCQRg1EFk=;
-        b=uwTad1qZ2Ipq/rYghUiFeRErE+uMDIM8+/djGPbxar6j3H4kZ6FboaSyQHvQk6/jsi
-         jeKtR1MZswZK7+SV57dUSJruAdcRpVHS9ULzjx0JuuxLemEEOtpcg4cVI6ba65CcCOhn
-         22JomNZjt1ndnrbZ0CTPppfUumgLI/otyjGXP1ETbmIlqsF68lnZ5Z4/HAbKPXVUfRz5
-         piwF9AVdT/Ae1eNqrfidSd0dm72zGrXGwocU0QANZnoW/svCY9FI/imseXtM6JLgTI1T
-         c6FAyiMzDCx3L+VfHt3OARPJuDm0tw1ZIk8dLUedmF6yPgtRUWqm4QQKjvKjG4oEqmac
-         l9MA==
-X-Gm-Message-State: AOJu0YzlSqnQRbEB6cRKfW/eX5IyU+wqa1I0rtXad5FvKhbQ8Y+wX6n9
-	keWM1qRFr6F3KHCKew7/azA0+IFDG/bzmOQz7E3qBA==
-X-Google-Smtp-Source: AGHT+IHHO3CXr1c91zGReoiMKH9pniwJIgiRdy/zD2AGfZaLjQ3Cmk9FTHeR9ohgHH7KGCUIJxY+WYj6AJzQMH9dMGs=
-X-Received: by 2002:a05:600c:4f4b:b0:40c:4ed3:8d1f with SMTP id
- m11-20020a05600c4f4b00b0040c4ed38d1fmr202857wmq.7.1702488816749; Wed, 13 Dec
- 2023 09:33:36 -0800 (PST)
+        bh=8c1vfO/xiQwL2KaPxAY2duOQ0VAaarCuPQeeypzuUqU=;
+        b=BH6dQXMgGPHQaeuIz0zYYW1G/KJT0ayupNjJmY/JLOVrNC1G9MbMfp7A79/HlQxc7D
+         5Uy0kxF+ZxMsdl7IEMAGCgPRdv8YkFo/PM+tk551cO8HGNdSPBxFjtYnIMm5/5YYycUF
+         kLCykQQ39l35YtTr4PrrAzNkeWBXp0M1R9o8FltUC+2xWHLUID7GsYyTyzChwIZoDLuj
+         Kz0LFZRjpxXRORTRrknSRCK+UHG4hL+30fVjutNN07qLo2Nu6WDI8l+570fkd3P76tNj
+         gPjqsGgW7D5y5B3zprNCUBQRNZ6uUB0o4GME9z8xtG9N+ca3Qs+Imp/OFh5MMIBXpZaN
+         hhkg==
+X-Gm-Message-State: AOJu0YwofgrPeY10iy8wr/aJvQdZfs9WHLZwWiTA5jitH8BzrxqpsKyC
+	tCvVJd6IZ0xWwG17VxhorjoAaVj+d3V6/VA6is7Tkw==
+X-Google-Smtp-Source: AGHT+IEkooHYz6uTYfPKHTIZNMmFByCMi4JYabmYLfQyKyG5iUWbUNYGfzwzd5BekQa2oXCTyUaMnLVEDwkj+U8w5sg=
+X-Received: by 2002:a50:c192:0:b0:54c:f4fd:3427 with SMTP id
+ m18-20020a50c192000000b0054cf4fd3427mr530375edf.7.1702489371342; Wed, 13 Dec
+ 2023 09:42:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207192338.400336-1-kan.liang@linux.intel.com>
- <20231207192338.400336-4-kan.liang@linux.intel.com> <20231209054809.GB2116834@leoy-yangtze.lan>
- <3b67c2de-741d-4d5e-8c8f-87b8b9e08825@linux.intel.com> <20231213133336.GA3895246@leoy-yangtze.lan>
-In-Reply-To: <20231213133336.GA3895246@leoy-yangtze.lan>
+References: <20231212193833.415110-1-kan.liang@linux.intel.com>
+ <CAP-5=fWCgjCC-DHHx+HJCuYk6vNn9Lf9EKcnBBZQ+xmnyYnmPg@mail.gmail.com>
+ <996ec30b-2bcf-4739-bec0-728c7f7af2ac@linux.intel.com> <CAP-5=fVnH0eTEvvNbKLF9xYye5Pu8hvDL4ruoxh5xG76+B8WFQ@mail.gmail.com>
+ <CAM9d7chQ4NbbcmumQSMRaGm987nxxh6_QbbJr7+GYgL_WAmaNw@mail.gmail.com> <43e57041-fe13-452a-af6e-db2ed451f93a@linux.intel.com>
+In-Reply-To: <43e57041-fe13-452a-af6e-db2ed451f93a@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 13 Dec 2023 09:33:24 -0800
-Message-ID: <CAP-5=fVGoQbaUmDqr8CmoRT3Wx=Pp7TtmWuwvXrvEeGw5eannA@mail.gmail.com>
-Subject: Re: [PATCH V2 3/5] perf mem: Clean up perf_mem_events__name()
-To: Leo Yan <leo.yan@linaro.org>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, acme@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org, 
-	adrian.hunter@intel.com, john.g.garry@oracle.com, will@kernel.org, 
-	james.clark@arm.com, mike.leach@linaro.org, yuhaixin.yhx@linux.alibaba.com, 
-	renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com, ravi.bangoria@amd.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
+Date: Wed, 13 Dec 2023 09:42:39 -0800
+Message-ID: <CAP-5=fXHadLYuRkY2Z=kymWJkB63dBWfCibQJnwgt0wkSuVVsg@mail.gmail.com>
+Subject: Re: [PATCH V2] perf top: Use evsel's cpus to replace user_requested_cpus
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, mark.rutland@arm.com, 
+	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 13, 2023 at 5:33=E2=80=AFAM Leo Yan <leo.yan@linaro.org> wrote:
+On Wed, Dec 13, 2023 at 7:45=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
 >
-> On Mon, Dec 11, 2023 at 01:39:36PM -0500, Liang, Kan wrote:
-> > On 2023-12-09 12:48 a.m., Leo Yan wrote:
-> > > On Thu, Dec 07, 2023 at 11:23:36AM -0800, kan.liang@linux.intel.com w=
-rote:
-> > >> From: Kan Liang <kan.liang@linux.intel.com>
-> > >>
-> > >> Introduce a generic perf_mem_events__name(). Remove the ARCH-specifi=
-c
-> > >> one.
-> > >
-> > > Now memory event naming is arch dependent, this is because every arch
-> > > has different memory PMU names, and it appends specific configuration=
-s
-> > > (e.g. aarch64 appends 'ts_enable=3D1,...,min_latency=3D%u', and x86_6=
-4
-> > > appends 'ldlat=3D%u', etc).  This is not friendly for extension, e.g.=
- it's
-> > > impossible for users to specify any extra attributes for memory event=
-s.
-> > >
-> > > This patch tries to consolidate in a central place for generating mem=
-ory
-> > > event names, its approach is to add more flags to meet special usage
-> > > cases, which means the code gets more complex (and more difficult for
-> > > later's maintenance).
-> > >
-> > > I think we need to distinguish the event naming into two levels: in
-> > > util/mem-events.c, we can consider it as a common layer, and we maint=
-ain
-> > > common options in it, e.g. 'latency', 'all-user', 'all-kernel',
-> > > 'timestamp', 'physical_address', etc.  In every arch's mem-events.c
-> > > file, it converts the common options to arch specific configurations.
-> > >
-> > > In the end, this can avoid to add more and more flags into the
-> > > structure perf_mem_event.
+>
+>
+> On 2023-12-12 8:06 p.m., Namhyung Kim wrote:
+> > On Tue, Dec 12, 2023 at 2:12=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> >>
+> >> On Tue, Dec 12, 2023 at 1:25=E2=80=AFPM Liang, Kan <kan.liang@linux.in=
+tel.com> wrote:
+> >>>
+> >>>
+> >>>
+> >>> On 2023-12-12 3:37 p.m., Ian Rogers wrote:
+> >>>> On Tue, Dec 12, 2023 at 11:39=E2=80=AFAM <kan.liang@linux.intel.com>=
+ wrote:
+> >>>>>
+> >>>>> From: Kan Liang <kan.liang@linux.intel.com>
+> >>>>>
+> >>>>> perf top errors out on a hybrid machine
+> >>>>>  $perf top
+> >>>>>
+> >>>>>  Error:
+> >>>>>  The cycles:P event is not supported.
+> >>>>>
+> >>>>> The perf top expects that the "cycles" is collected on all CPUs in =
+the
+> >>>>> system. But for hybrid there is no single "cycles" event which can =
+cover
+> >>>>> all CPUs. Perf has to split it into two cycles events, e.g.,
+> >>>>> cpu_core/cycles/ and cpu_atom/cycles/. Each event has its own CPU m=
+ask.
+> >>>>> If a event is opened on the unsupported CPU. The open fails. That's=
+ the
+> >>>>> reason of the above error out.
+> >>>>>
+> >>>>> Perf should only open the cycles event on the corresponding CPU. Th=
+e
+> >>>>> commit ef91871c960e ("perf evlist: Propagate user CPU maps intersec=
+ting
+> >>>>> core PMU maps") intersect the requested CPU map with the CPU map of=
+ the
+> >>>>> PMU. Use the evsel's cpus to replace user_requested_cpus.
+> >>>>>
+> >>>>> The evlist's threads are also propagated to the evsel's threads in
+> >>>>> __perf_evlist__propagate_maps(). For a system-wide event, perf appe=
+nds
+> >>>>> a dummy event and assign it to the evsel's threads. For a per-threa=
+d
+> >>>>> event, the evlist's thread_map is assigned to the evsel's threads. =
+The
+> >>>>> same as the other tools, e.g., perf record, using the evsel's threa=
+ds
+> >>>>> when opening an event.
+> >>>>>
+> >>>>> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> >>>>> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@k=
+ernel.org/
+> >>>>> Reviewed-by: Ian Rogers <irogers@google.com>
+> >>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> >>>>> ---
+> >>>>>
+> >>>>> Changes since V1:
+> >>>>> - Update the description
+> >>>>> - Add Reviewed-by from Ian
+> >>>>
+> >>>> Thanks Kan, quick question. Does "perf top" on hybrid ask the user t=
+o
+> >>>> select between the cycles event on cpu_atom and cpu_core?
+> >>>
+> >>> Yes, but the event doesn't include the PMU information.
+> >>> We probably need a follow up patch to append the PMU name.
+> >>>
+> >>> Available samples
+> >>> 385 cycles:P
+> >>>
+> >>> 903 cycles:P
+> >>
+> >> Thanks and agreed, it isn't possible to tell which is which PMU/CPU
+> >> type at the moment. I tried the patch with perf top --stdio, there
+> >> wasn't a choice of event
+>
+> The perf top --stdio uses a dedicated display function, see
+> perf_top__header_snprintf() in util/top.c
+>
+> It only shows one event at a time. "E" is used to switch the event.
+>
+> >> and I can't tell what counter is being
+> >> displayed.
+>
+> For the hybrid case, I think we may display both PMU name and event
+> name. For example,
+>
+> Available samples
+> 656 cycles:P cpu_atom
+>
+> 701 cycles:P cpu_core
+
+I think there would be more uniformity if we could do:
+cpu/cycles/P
+I'm just reminded of the stat output where sometimes you can get things lik=
+e:
+cpu/cycles/
+or sometimes:
+cycles [cpu]
+It seems the slash style approach is the most uniform given it looks
+like what is written on the command line. Perhaps we need some kind of
+helper function to do this as reformatting the modifier is a pain.
+
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
+s.c
+> index f4812b226818..afc7a1d54fe4 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -3433,8 +3433,10 @@ static void perf_evsel_menu__write(struct
+> ui_browser *browser,
+>         }
+>
+>         nr_events =3D convert_unit(nr_events, &unit);
+> -       printed =3D scnprintf(bf, sizeof(bf), "%lu%c%s%s", nr_events,
+> -                          unit, unit =3D=3D ' ' ? "" : " ", ev_name);
+> +       printed =3D scnprintf(bf, sizeof(bf), "%lu%c%s%s %s", nr_events,
+> +                          unit, unit =3D=3D ' ' ? "" : " ", ev_name,
+> +                          evsel->pmu ? evsel->pmu_name : "");
+> +
+>         ui_browser__printf(browser, "%s", bf);
+>
+>         nr_events =3D evsel->evlist->stats.nr_events[PERF_RECORD_LOST];
+>
+>
+> >> When I quit I also see:
+> >> ```
+> >> exiting.
+> >> corrupted double-linked list
+> >> Aborted (core dumped)
+> >> ```
+> >> but I wasn't able to repro this on a debuggable binary/system.
+>
+> I haven't see the issue yet.
+>
+> >>
+> >> If my memory serves there was a patch where perf top was showing >1
+> >> event. It would be nice here to do some kind of hybrid merging rather
+> >> than having to view each PMU's top separately.
+>
+> The current perf top doesn't merge when there are >1 event.
+> sudo ./perf top -e "cycles,instructions"
+>
+> Available samples
+> 2K cycles
+>
+> 2K instructions
+>
+> For now, I think we may just append a PMU name to distinguish the hybrid
+> case.
+>
+> We may implement the merging feature which impacts both hybrid and
+> non-hybrid cases later separately.
+>
 > >
-> > The purpose of this cleanup patch set is to remove the unnecessary
-> > __weak functions, and try to make the code more generic.
+> > Using event groups, but I noticed you removed the --group option.
+> > Maybe perf top can just use `{ ... }` notation for explicit grouping,
+> > but it might be implicit like in the hybrid case.
+> >
 >
-> I understand weak functions are not very good practice.  The point is
-> weak functions are used for some archs have implemented a feature but
-> other archs have not.
->
-> I can think a potential case to use a central place to maintain the
-> code for all archs - when we want to support cross analysis.  But this
-> patch series is for supporting cross analysis, to be honest, I still
-> don't see benefit for this series, though I know you might try to
-> support hybrid modes.
+> Yes, if the events are from different PMUs, the perf tool will
+> implicitly de-group the hybrid events. "{ ... }" may not help here.
 
-So thanks to Kan for doing this series and trying to clean the code
-up. My complaint about the code is that it was overly hard wired.
-Heck, we have event strings to parse that hard code PMU and event
-names. In fixing hybrid my complaint was that we were adding yet more
-complexity and as a lot of this was resting on printf format strings
-it was hard to check that these were being used correctly. The
-direction of this patch series I agree with.
-
-Imo we should avoid weak definitions. Weak definitions are outside of
-the C specification and have introduced bugs into the code base -
-specifically a weak const array was having its size propagated into
-code but then the linker later replaced that weak array. An
-architecture #ifdef is better than a weak definition as the behavior
-is defined and things blow up early rather than suffering from subtle
-corruptions.
-
-The Linux kernel device driver is abstracting what the hardware is
-doing and since the more recent changes the PMU abstraction in the
-perf tool is trying to match that. If we need to interface with PMUs
-differently on each architecture then something is wrong. It happens
-that things are wrong and we need to work with that. For example, on
-intel there are topdown events that introduce ordering issues. We have
-default initialization functions for different PMUs. The perf_pmu
-struct is created in perf_pmu__lookup and that always calls an
-perf_pmu__arch_init where the name of the PMU is already set. In the
-weak perf_pmu__arch_init we tweak the perf_pmu struct so that it will
-behave correctly elsewhere in the code. These changes are paralleling
-that. That said, the Intel perf_pmu__arch_init does strcmps against
-"intel_pt" and "intel_bts", does it really need to be arch specific
-given it is already PMU specific? A situation we see in testing is
-people trying to run user space ISA emulators like qemu, say ARM on
-x86, should the PMU set up for intel_pt and intel_bts be broken in
-this environment? I think that as the names are very specific I'd
-prefer if the code were outside of the tools/perf/arch directory.
-There are cases with PMU names like "cpu" where we're probably going
-to need ifdefs or runtime is_intel() calls.
-
-Anyway, my point is that I think we should be moving away from arch
-specific stuff, as this patch series tries, and that way we have the
-best chance of changes benefitting users regardless of hardware. It
-may be that to make all of this work properly we need to modify PMUs,
-but that all seems good, such as adding the extended type support for
-legacy events on ARM PMUs so that legacy events can work without a
-fixed CPU. We haven't got core PMUs working properly, see the recent
-perf top hybrid problem. There are obviously issues with uncore as,
-for example, most memory controllers are replicated PMUs but some
-kernel perf drivers select a memory controller via a config value. We
-either need to change the drivers for some kind of uniformity or do
-some kind of abstracting in the perf tool. I think we'll probably need
-to do it in the tool and when doing that we really shouldn't be doing
-it in an arch specific or weak function way.
+I think grouping may have been the situation where I saw >1 event
+displayed but I agree with Kan, we implicitly de-group events on
+different PMUs so it won't help here.
 
 Thanks,
 Ian
 
-> > The two flags has already covered all the current usage.
-> > For now, it's good enough.
-> >
-> > I agree that if there are more flags, it should not be a perfect
-> > solution. But we don't have the third flag right now. Could we clean up
-> > it later e.g., when introducing the third flag?
-> >
-> > I just don't want to make the patch bigger and bigger. Also, I don't
-> > think we usually implement something just for future possibilities.
->
-> Fine for me, but please address two main concerns in next spin:
->
-> - Fix building failure in patch 01;
-> - Fix the concerned regression on Arm64/AMD archs in patch 04.  I will
->   give a bit more explanation in another reply.
->
->
-> [...]
->
-> > >> -#define E(t, n, s) { .tag =3D t, .name =3D n, .sysfs_name =3D s }
-> > >> +#define E(t, n, s, l, a) { .tag =3D t, .name =3D n, .sysfs_name =3D=
- s, .ldlat =3D l, .aux_event =3D a }
-> > >>
-> > >>  struct perf_mem_event perf_mem_events_arm[PERF_MEM_EVENTS__MAX] =3D=
- {
-> > >> -  E("spe-load",   "arm_spe_0/ts_enable=3D1,pa_enable=3D1,load_filte=
-r=3D1,store_filter=3D0,min_latency=3D%u/",       "arm_spe_0"),
-> > >> -  E("spe-store",  "arm_spe_0/ts_enable=3D1,pa_enable=3D1,load_filte=
-r=3D0,store_filter=3D1/",                      "arm_spe_0"),
-> > >> -  E("spe-ldst",   "arm_spe_0/ts_enable=3D1,pa_enable=3D1,load_filte=
-r=3D1,store_filter=3D1,min_latency=3D%u/",       "arm_spe_0"),
-> > >> +  E("spe-load",   "%s/ts_enable=3D1,pa_enable=3D1,load_filter=3D1,s=
-tore_filter=3D0,min_latency=3D%u/",      "arm_spe_0",    true,   0),
-> > >> +  E("spe-store",  "%s/ts_enable=3D1,pa_enable=3D1,load_filter=3D0,s=
-tore_filter=3D1/",                     "arm_spe_0",    false,  0),
-> > >> +  E("spe-ldst",   "%s/ts_enable=3D1,pa_enable=3D1,load_filter=3D1,s=
-tore_filter=3D1,min_latency=3D%u/",      "arm_spe_0",    true,   0),
-> > >
-> > > Arm SPE is AUX event, should set '1' to the field '.aux_event'.
-> >
-> > It actually means whether an extra event is required with a mem_loads
-> > event.  I guess for ARM the answer is no.
->
-> Thanks for confirmation.
->
-> > > I am a bit suspect if we really need the field '.aux_event', the
-> > > '.aux_event' field is only used for generating event string.
-> >
-> > No, it stores the event encoding for the extra event.
-> > ARM doesn't need it, so it's 0.
->
-> I searched a bit and confirmed '.aux_event' is only used in
-> util/mem-events.c and for 'perf record'.
->
-> I failed to connect the code with "it stores the event encoding for the
-> extra event".  Could you elaborate a bit for this?
->
 > Thanks,
-> Leo
+> Kan
