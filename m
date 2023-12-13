@@ -1,104 +1,91 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 856A9AC;
-	Wed, 13 Dec 2023 14:14:08 -0800 (PST)
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-28b0071ae32so547620a91.0;
-        Wed, 13 Dec 2023 14:14:08 -0800 (PST)
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5992A3;
+	Wed, 13 Dec 2023 15:29:35 -0800 (PST)
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6da3a585c29so588655a34.1;
+        Wed, 13 Dec 2023 15:29:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702505648; x=1703110448;
+        d=1e100.net; s=20230601; t=1702510175; x=1703114975;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PrPkyaX0AG7+dG5o0kCvLphBtxW3qZUWNIeyMgltZ2k=;
-        b=tWatdAZAyUZqXvJ/JZ9Ieo0c6eQD2x8BxciznFEcQFU+9MYwP2VjuQFhRbTfJwdDVo
-         HH62xrm9BDpIoDa1pcWnXMYMAs38ujNmpViGGLgvpzfP/t+nzrdc2mL9YQNNc+5oJaoh
-         o1qn3HuT5x1BMxCZyqhxEUrygdUaqWhRHrHqSbvLrEp17QY+NW0HFN9v9rTmITbOlOZZ
-         ol/Pa2gozDO9tpbhm9SyfncXcwz0D6/ikoXps1a0ln43667LEJ3tH75bGIJqEcvpTo7J
-         D+pd+EQpawUL3+CbTg9z0Dnc+6LUKT4mZgLkINNpWl4M+Psh1F6k573ei6XBaPt0mrUe
-         5vzA==
-X-Gm-Message-State: AOJu0Yyd+aMpk5VTs/DuP72xfoDO776ndZUYpTFrdfDtiIYSPdVo118i
-	SdSdtJFqlrE7avoZI3hH+oqjOjyvrBZVxRvzPlU=
-X-Google-Smtp-Source: AGHT+IFzysZucKQnuzF1P2AfQ1XThSqn5haRfHgHeRKl6p1tfABu5GEmr/4tmyo87GzdBiPVxvBCbsqjqSQqWGjQ56Q=
-X-Received: by 2002:a17:90a:6d26:b0:28a:cf4f:dad9 with SMTP id
- z35-20020a17090a6d2600b0028acf4fdad9mr1520579pjj.28.1702505647865; Wed, 13
- Dec 2023 14:14:07 -0800 (PST)
+        bh=PFIP83rhoE54Gnfznyg7yyjOyDv3wFcoz+vENWGRUZI=;
+        b=bf3PeOrEXQwMs0p2nrdyAyG/Focu5z5f2vhlBFivL95ukXkxMfkqUQoKZEEPATPbfo
+         0qwKibD7ZzWDCKeYtEruE7gzKzv7H5jnu623pBrvcLcoh6ow4bVQoUN0u3EHd1SHIYdj
+         yqlfpcVmpppEZ/D0zuo3cCe2wHKBPsGG/K+tZjQ/kbMiKrSFyzotVh2qFq4vDbTd03w1
+         ElU4F//LPTWLPvCnRgkMjSCLVon1ImyR1XUWFieGNqblVDFv7dhCO+nBP21W0glvPsIL
+         aDIFf3+gxLZAaSgskyXhg3fIUoq5Opu5LFnKdLWzhyb03DjODk+8zbMGdQg8koSITnsY
+         rnqQ==
+X-Gm-Message-State: AOJu0YxLAnHvK48EAYD+NRjmY5cN90GA/iZSLvcGXf4putmKOdbAx9Bq
+	SrN0edskYDI26EO1XEybCyLDEpYfulrAMFr7JIo=
+X-Google-Smtp-Source: AGHT+IHYXoKUY8HypDLCxFSc4JvpVA0U4rkGcaFt5Oi3aDkjeXkr1M1Z1rZLnA3oUB/rtZ4u71yp8AlNVdV6J9c19Jg=
+X-Received: by 2002:a05:6830:1e38:b0:6d8:7ded:6cc5 with SMTP id
+ t24-20020a0568301e3800b006d87ded6cc5mr9225960otr.41.1702510174811; Wed, 13
+ Dec 2023 15:29:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212070547.612536-1-namhyung@kernel.org> <20231212070547.612536-3-namhyung@kernel.org>
- <CAP-5=fWH=Nt4Dr7-rHqqfPSHPQUP=Bof2iGWEZEpsz5NC+wZiA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWH=Nt4Dr7-rHqqfPSHPQUP=Bof2iGWEZEpsz5NC+wZiA@mail.gmail.com>
+References: <20231129060211.1890454-1-irogers@google.com>
+In-Reply-To: <20231129060211.1890454-1-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 13 Dec 2023 14:13:57 -0800
-Message-ID: <CAM9d7chc9uyj-gZT0_a6aca6UMqjiXGNiSB8MGUXchg5VGrKrw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf unwind-libdw: Handle JIT-generated DSOs properly
+Date: Wed, 13 Dec 2023 15:29:23 -0800
+Message-ID: <CAM9d7civJ00iRmJ3CFfFcKteOLDaBY9tFkMTLi8vgjHipuBB1g@mail.gmail.com>
+Subject: Re: [PATCH v1 00/14] Clean up libperf cpumap's empty function
 To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, 
-	Pablo Galindo <pablogsal@gmail.com>, Fangrui Song <maskray@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
+	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
+	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 10:07=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+On Tue, Nov 28, 2023 at 10:02=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
 ote:
 >
-> On Mon, Dec 11, 2023 at 11:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> >
-> > Usually DSOs are mapped from the beginning of the file, so the base
-> > address of the DSO can be calculated by map->start - map->pgoff.
-> >
-> > However, JIT DSOs which are generated by `perf inject -j`, are mapped
-> > only the code segment.  This makes unwind-libdw code confusing and
-> > rejects processing unwinds in the JIT DSOs.  It should use the map
-> > start address as base for them to fix the confusion.
-> >
-> > Fixes: 1fe627da3033 ("perf unwind: Take pgoff into account when reporti=
-ng elf to libdwfl")
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/unwind-libdw.c | 21 +++++++++++++++++----
-> >  1 file changed, 17 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-li=
-bdw.c
-> > index 8554db3fc0d7..6013335a8dae 100644
-> > --- a/tools/perf/util/unwind-libdw.c
-> > +++ b/tools/perf/util/unwind-libdw.c
-> > @@ -46,6 +46,7 @@ static int __report_module(struct addr_location *al, =
-u64 ip,
-> >  {
-> >         Dwfl_Module *mod;
-> >         struct dso *dso =3D NULL;
-> > +       Dwarf_Addr base;
-> >         /*
-> >          * Some callers will use al->sym, so we can't just use the
-> >          * cheaper thread__find_map() here.
-> > @@ -58,13 +59,25 @@ static int __report_module(struct addr_location *al=
-, u64 ip,
-> >         if (!dso)
-> >                 return 0;
-> >
-> > +       /*
-> > +        * The generated JIT DSO files only map the code segment withou=
-t
-> > +        * ELF headers.  Since JIT codes used to be packed in a memory
-> > +        * segment, calculating the base address using pgoff falls into
-> > +        * a different code in another DSO.  So just use the map->start
-> > +        * directly to pick the correct one.
-> > +        */
-> > +       if (!strncmp(dso->long_name, "/tmp/jitted-", 12))
+> Rename and clean up the use of libperf CPU map functions particularly
+> focussing on perf_cpu_map__empty that may return true for maps
+> containing CPUs but also with an "any CPU"/dummy value.
 >
-> Perhaps it would be better to test:
-> dso->symtab_type =3D=3D DSO_BINARY_TYPE__JAVA_JIT
+> perf_cpu_map__nr is also troubling in that iterating an empty CPU map
+> will yield the "any CPU"/dummy value. Reduce the appearance of some
+> calls to this by using the perf_cpu_map__for_each_cpu macro.
+>
+> Ian Rogers (14):
+>   libperf cpumap: Rename perf_cpu_map__dummy_new
+>   libperf cpumap: Rename and prefer sysfs for perf_cpu_map__default_new
+>   libperf cpumap: Rename perf_cpu_map__empty
+>   libperf cpumap: Replace usage of perf_cpu_map__new(NULL)
+>   libperf cpumap: Add for_each_cpu that skips the "any CPU" case
+>   libperf cpumap: Add any, empty and min helpers
+>   perf arm-spe/cs-etm: Directly iterate CPU maps
+>   perf intel-pt/intel-bts: Switch perf_cpu_map__has_any_cpu_or_is_empty
+>     use
+>   perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_empty
+>   perf top: Avoid repeated function calls
+>   perf arm64 header: Remove unnecessary CPU map get and put
+>   perf stat: Remove duplicate cpus_map_matched function
+>   perf cpumap: Use perf_cpu_map__for_each_cpu when possible
+>   libperf cpumap: Document perf_cpu_map__nr's behavior
 
-Well.. it's a little different.  The JAVA_JIT type files have
-"/tmp/perf-" prefix and it's a plain text file (for symbols).
-While this is an ELF file generated by `perf inject -j`.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
