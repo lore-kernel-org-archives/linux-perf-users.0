@@ -1,39 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k8aKKpX9"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FEE4D0;
-	Wed, 13 Dec 2023 08:17:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eNYeBoL6"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857E7125;
+	Wed, 13 Dec 2023 08:19:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702484273; x=1734020273;
+  t=1702484387; x=1734020387;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=7B2DphUlGbzEdI7JKraMwKjte3e4u4RUHtQDmI5dL+g=;
-  b=k8aKKpX9liLK7PKx+uytSVoed39nKMl5doB3Yj/pQgYo9o4x4BSEHpeG
-   h5y0PO6gIiSgHqgUvsvsFbGw3hLDhrqR8y+Q+UtryXw/SZcITnwLBIfDW
-   R6oWPpkRew7w68A9aTzGfHLRgESKLczlGSOyvibmdliilEswYeI1hp5eK
-   C905rwi+3r26eRWxH20JAzSUf8XKMTPxFy9haIYJ2pemzCBT2EMyPiZaL
-   rfv9Ezts6cJ/LAmm+CzgmRYyyBaZDk55W6P4aBRoi1Dzfk/LbciCHTB4C
-   JGep+S9wPc8bGARJHHf1zzV+n+Z5ykD54JSB4CBH/SD/p7glw3I5lMjDu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="16539013"
+  bh=nJbcLZdnM2KSRyn7dXwITr56gBVjXirpwEpDYUFkjA4=;
+  b=eNYeBoL6NKic5kdZc1b3H83zF0JkS8rCAJt18QJtYmPmtyP7ZVSJKWjz
+   aGiN5oeqMK7zYyQ5PlCaEVrDIDhwtPop2CzaL19FmEDENh9Z6XH2cMuOX
+   lori9Qj5LcVmnTEgk0oCyN3/zHI+pbJpY2ZeLCjgDrDrJ6914UhMoko4S
+   KfDLGGJW4yfVey6GCgCp+DDH3/Y83kWf022AbywAKcQxT2883R7tvXfPB
+   qWpv2Vk15TCRFVxrI+bUCz1Sy+QK80Vlb/qXIElma29eJL0AAmJNJzjwm
+   1DW9sdA2KCZIQBtA/uffXKwYpWIE/tEP8UAKXaVhACWJGEzpi5UjSffI2
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="426112098"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="16539013"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:17:53 -0800
+   d="scan'208";a="426112098"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:19:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="839933861"
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="1021166835"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="839933861"
+   d="scan'208";a="1021166835"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:17:50 -0800
-Received: from [10.212.117.13] (kliang2-mobl1.ccr.corp.intel.com [10.212.117.13])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 08:19:46 -0800
+Received: from [10.212.117.13] (unknown [10.212.117.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 65E1C580BF0;
-	Wed, 13 Dec 2023 08:17:48 -0800 (PST)
-Message-ID: <64c2808e-ac2b-41c0-9e98-61b22e3031c1@linux.intel.com>
-Date: Wed, 13 Dec 2023 11:17:47 -0500
+	by linux.intel.com (Postfix) with ESMTPS id 785BD580DAA;
+	Wed, 13 Dec 2023 08:19:43 -0800 (PST)
+Message-ID: <95fee418-27bc-4a0c-b438-8d6d770dbefc@linux.intel.com>
+Date: Wed, 13 Dec 2023 11:19:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,7 +41,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 3/5] perf mem: Clean up perf_mem_events__name()
+Subject: Re: [PATCH V2 1/5] perf mem: Add mem_events into the supported
+ perf_pmu
 Content-Language: en-US
 To: Leo Yan <leo.yan@linaro.org>
 Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
@@ -52,45 +53,56 @@ Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org
 References: <20231207192338.400336-1-kan.liang@linux.intel.com>
- <20231207192338.400336-4-kan.liang@linux.intel.com>
- <20231209054809.GB2116834@leoy-yangtze.lan>
- <3b67c2de-741d-4d5e-8c8f-87b8b9e08825@linux.intel.com>
- <20231213133336.GA3895246@leoy-yangtze.lan>
+ <20231207192338.400336-2-kan.liang@linux.intel.com>
+ <20231208102922.GB769184@leoy-huanghe.lan>
+ <98863f44-4a35-4910-8db0-dbbf0474f6ae@linux.intel.com>
+ <20231209063440.GE2116834@leoy-yangtze.lan>
+ <ee9db34a-2b3d-46b3-ba36-22a22b080d70@linux.intel.com>
+ <20231213142414.GH86143@leoy-huanghe.lan>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20231213133336.GA3895246@leoy-yangtze.lan>
+In-Reply-To: <20231213142414.GH86143@leoy-huanghe.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2023-12-13 8:33 a.m., Leo Yan wrote:
->>> I am a bit suspect if we really need the field '.aux_event', the
->>> '.aux_event' field is only used for generating event string.
->> No, it stores the event encoding for the extra event.
->> ARM doesn't need it, so it's 0.
-> I searched a bit and confirmed '.aux_event' is only used in
-> util/mem-events.c and for 'perf record'.
+On 2023-12-13 9:24 a.m., Leo Yan wrote:
+> On Mon, Dec 11, 2023 at 02:01:37PM -0500, Liang, Kan wrote:
 > 
-> I failed to connect the code with "it stores the event encoding for the
-> extra event".  Could you elaborate a bit for this?
+> [...]
+> 
+>>> I will hold on a bit for the test until this patch set addresses the
+>>> concern for the breakage issues on Arm64. Please check my review in
+>>> other replies.
+>>
+>> The reviews in the other replies don't look like break any current usage
+>> on Arm64. I think the breakage issue is what you described in this
+>> patch, right?
+> 
+> I mentioned the breakage is in the patch 04, but I think the concern
+> is dismissed.
+> 
+>> If we move the check of "arm_spe_0" to arch/arm/util/pmu.c, it seems we
+>> have to move the perf_mem_events_arm[] into arch/arm/util/mem-events.c
+>> as well. Is it OK?
+> 
+> No.  For fixing Arm64 building, please refer:
+> 
+> https://termbin.com/0dkn
 
-The details of the reason of introducing the mem_load aux event can be
-found here.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=61b985e3e775a3a75fda04ce7ef1b1aefc4758bc
 
-A mem_load_aux event is a new requirement for SPR. For the other Intel
-platforms, a single mem_load event is good enough to collect the data
-source information. But for SPR, we have to group both the mem_load
-event and the mem_load_aux event when collecting the data source
-information. In the group, the mem_load_aux event must be the leader
-event. But for the sample read case, only the sampling of the mem_load
-make sense. So the is_mem_loads_aux_event() is introduced to switch the
-sampling event to the mem_load event. Here is the perf tool patch.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2a57d40832dc8366bc517bcbbfdb1d7fb583735b
+That's great! Thanks a lot!
 
-The .aux_event is to store the event encoding of the mem_load_aux event.
-If it's the leader of a sampling read group, we should use the second
-event as a sampling event.
+> 
+>> I'm not familiar with ARM and have no idea how those events are
+>> organized under arm64 and arm. Could you please send a fix for the
+>> building failure on aarch64? I will fold it into the V3.
+> 
+> After apply the change in above link on the top of your patch set,
+> it can build successfully at my side. Hope it's helpful.
+> 
+
+Yes, that's help a lot. I will send the V3 shortly.
 
 Thanks,
 Kan
