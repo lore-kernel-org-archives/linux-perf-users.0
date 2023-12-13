@@ -1,13 +1,13 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4386213A;
-	Tue, 12 Dec 2023 23:05:20 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A346D5D;
+	Tue, 12 Dec 2023 23:05:29 -0800 (PST)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BD73wCq032352;
-	Wed, 13 Dec 2023 15:03:58 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3BD73RVh032220;
+	Wed, 13 Dec 2023 15:03:27 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Wed, 13 Dec 2023
- 15:03:54 +0800
+ 15:03:23 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -31,9 +31,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>
-Subject: [PATCH v5 10/16] dt-bindings: riscv: Add Andes PMU extension description
-Date: Wed, 13 Dec 2023 15:02:55 +0800
-Message-ID: <20231213070301.1684751-11-peterlin@andestech.com>
+Subject: [PATCH v5 04/16] dt-bindings: riscv: Add Andes interrupt controller compatible string
+Date: Wed, 13 Dec 2023 15:02:49 +0800
+Message-ID: <20231213070301.1684751-5-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231213070301.1684751-1-peterlin@andestech.com>
 References: <20231213070301.1684751-1-peterlin@andestech.com>
@@ -47,44 +47,55 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BD73wCq032352
+X-MAIL:Atcsqr.andestech.com 3BD73RVh032220
 
-Document the ISA string for Andes Technology performance monitor
-extension which provides counter overflow interrupt and mode
-filtering mechanisms.
+Add "andestech,cpu-intc" compatible string to indicate that
+Andes specific local interrupt is supported on the core,
+e.g. AX45MP cores have 3 types of non-standard local interrupt
+can be handled in supervisor mode:
+
+- Slave port ECC error interrupt
+- Bus write transaction error interrupt
+- Performance monitor overflow interrupt
+
+These interrupts are enabled/disabled via a custom register
+SLIE instead of the standard interrupt enable register SIE.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
-Changes v2 -> v3:
+Changes v1 -> v2:
   - New patch
+Changes v2 -> v3:
+  - Updated commit message
+  - Fixed possible compatibles for Andes INTC
 Changes v3 -> v4:
-  - Include Conor's Acked-by
+  - Add const entry instead of enum (Suggested by Conor)
 Changes v4 -> v5:
+  - Include Conor's Acked-by
   - Include Prabhakar's Reviewed-by
 ---
- Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/riscv/cpus.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index b5cb8ac7ac80..daef6c3b1580 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -258,6 +258,13 @@ properties:
-             in commit 2e5236 ("Ztso is now ratified.") of the
-             riscv-isa-manual.
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+index f392e367d673..50307554478f 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.yaml
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -100,7 +100,11 @@ properties:
+         const: 1
  
-+        - const: xandespmu
-+          description:
-+            The Andes Technology performance monitor extension for counter overflow
-+            and privilege mode filtering. For more details, see Counter Related
-+            Registers in the AX45MP datasheet.
-+            https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
-+
-         - const: xtheadpmu
-           description:
-             The T-Head performance monitor extension for counter overflow, as ratified
+       compatible:
+-        const: riscv,cpu-intc
++        oneOf:
++          - items:
++              - const: andestech,cpu-intc
++              - const: riscv,cpu-intc
++          - const: riscv,cpu-intc
+ 
+       interrupt-controller: true
+ 
 -- 
 2.34.1
 
