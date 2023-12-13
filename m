@@ -1,199 +1,161 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aEGyjfKW"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D16A19E;
-	Wed, 13 Dec 2023 07:45:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702482327; x=1734018327;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6bYoCbaQIuVKd2XkyTBgwU+GNniTOSyr+Y+GORha3VA=;
-  b=aEGyjfKWBI+qAYOYgJvYHll3jymL40OEhXTzAv6qdzZ3S5v0KQNeDCpr
-   2GC0atp+omoRKNUdQ2yjnFJJdwSHGBwvVE+EhCxWIVNvLDGQXv0nHvRkJ
-   FZTA+GCk/BSwTsbhKaaOJ7xtWIQZ8Tc+8ONi9hIP2NBfEJZGytIzHpBt9
-   495UlXQ3VlBpeBOHtJnPaOmItmIw5ophpffVMuP+LQ7JeNqgjcsdAa8aW
-   ZdN4bzkJ6IL14Xd07BHXW7YYW4RtF2GigN7SeiOAfTjyRlPMcSsO2MkFC
-   PmqQ6yGHBTqGgtONOoVCtqPB+2BJywZGqs+N3GIjV7GzlMewmWj3cZPfK
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="2158905"
-X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="2158905"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 07:45:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="1021154988"
-X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="1021154988"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 07:45:26 -0800
-Received: from [10.212.117.13] (unknown [10.212.117.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 050B4580BF0;
-	Wed, 13 Dec 2023 07:45:23 -0800 (PST)
-Message-ID: <43e57041-fe13-452a-af6e-db2ed451f93a@linux.intel.com>
-Date: Wed, 13 Dec 2023 10:45:22 -0500
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB42F2;
+	Wed, 13 Dec 2023 07:47:42 -0800 (PST)
+Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
+	by Atcsqr.andestech.com with ESMTP id 3BDFis7u072509;
+	Wed, 13 Dec 2023 23:44:54 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
+ Microsoft SMTP Server id 14.3.498.0; Wed, 13 Dec 2023 23:44:53 +0800
+Date: Wed, 13 Dec 2023 23:44:49 +0800
+From: Yu-Chien Peter Lin <peterlin@andestech.com>
+To: Anup Patel <apatel@ventanamicro.com>
+CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
+        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
+        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
+        <conor.dooley@microchip.com>, <conor@kernel.org>,
+        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
+        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
+        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
+        <jolsa@kernel.org>, <jszhang@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
+        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
+        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
+        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
+        <robh+dt@kernel.org>, <samuel@sholland.org>,
+        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
+        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
+        <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>
+Subject: Re: [PATCH v5 03/16] irqchip/riscv-intc: Introduce Andes hart-level
+ interrupt controller
+Message-ID: <ZXnRcfuvQBo6UDCx@APC323>
+References: <20231213070301.1684751-1-peterlin@andestech.com>
+ <20231213070301.1684751-4-peterlin@andestech.com>
+ <CAK9=C2WC2i7XkjDgbjccVn03BYfnE_YS4YiA6ZWMj6GDyTjJKA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] perf top: Use evsel's cpus to replace
- user_requested_cpus
-Content-Language: en-US
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mark.rutland@arm.com, maz@kernel.org, marcan@marcan.st,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20231212193833.415110-1-kan.liang@linux.intel.com>
- <CAP-5=fWCgjCC-DHHx+HJCuYk6vNn9Lf9EKcnBBZQ+xmnyYnmPg@mail.gmail.com>
- <996ec30b-2bcf-4739-bec0-728c7f7af2ac@linux.intel.com>
- <CAP-5=fVnH0eTEvvNbKLF9xYye5Pu8hvDL4ruoxh5xG76+B8WFQ@mail.gmail.com>
- <CAM9d7chQ4NbbcmumQSMRaGm987nxxh6_QbbJr7+GYgL_WAmaNw@mail.gmail.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAM9d7chQ4NbbcmumQSMRaGm987nxxh6_QbbJr7+GYgL_WAmaNw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK9=C2WC2i7XkjDgbjccVn03BYfnE_YS4YiA6ZWMj6GDyTjJKA@mail.gmail.com>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 3BDFis7u072509
 
-
-
-On 2023-12-12 8:06 p.m., Namhyung Kim wrote:
-> On Tue, Dec 12, 2023 at 2:12 PM Ian Rogers <irogers@google.com> wrote:
->>
->> On Tue, Dec 12, 2023 at 1:25 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>
->>>
->>>
->>> On 2023-12-12 3:37 p.m., Ian Rogers wrote:
->>>> On Tue, Dec 12, 2023 at 11:39 AM <kan.liang@linux.intel.com> wrote:
->>>>>
->>>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>>
->>>>> perf top errors out on a hybrid machine
->>>>>  $perf top
->>>>>
->>>>>  Error:
->>>>>  The cycles:P event is not supported.
->>>>>
->>>>> The perf top expects that the "cycles" is collected on all CPUs in the
->>>>> system. But for hybrid there is no single "cycles" event which can cover
->>>>> all CPUs. Perf has to split it into two cycles events, e.g.,
->>>>> cpu_core/cycles/ and cpu_atom/cycles/. Each event has its own CPU mask.
->>>>> If a event is opened on the unsupported CPU. The open fails. That's the
->>>>> reason of the above error out.
->>>>>
->>>>> Perf should only open the cycles event on the corresponding CPU. The
->>>>> commit ef91871c960e ("perf evlist: Propagate user CPU maps intersecting
->>>>> core PMU maps") intersect the requested CPU map with the CPU map of the
->>>>> PMU. Use the evsel's cpus to replace user_requested_cpus.
->>>>>
->>>>> The evlist's threads are also propagated to the evsel's threads in
->>>>> __perf_evlist__propagate_maps(). For a system-wide event, perf appends
->>>>> a dummy event and assign it to the evsel's threads. For a per-thread
->>>>> event, the evlist's thread_map is assigned to the evsel's threads. The
->>>>> same as the other tools, e.g., perf record, using the evsel's threads
->>>>> when opening an event.
->>>>>
->>>>> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
->>>>> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@kernel.org/
->>>>> Reviewed-by: Ian Rogers <irogers@google.com>
->>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>>>> ---
->>>>>
->>>>> Changes since V1:
->>>>> - Update the description
->>>>> - Add Reviewed-by from Ian
->>>>
->>>> Thanks Kan, quick question. Does "perf top" on hybrid ask the user to
->>>> select between the cycles event on cpu_atom and cpu_core?
->>>
->>> Yes, but the event doesn't include the PMU information.
->>> We probably need a follow up patch to append the PMU name.
->>>
->>> Available samples
->>> 385 cycles:P
->>>
->>> 903 cycles:P
->>
->> Thanks and agreed, it isn't possible to tell which is which PMU/CPU
->> type at the moment. I tried the patch with perf top --stdio, there
->> wasn't a choice of event  
-
-The perf top --stdio uses a dedicated display function, see
-perf_top__header_snprintf() in util/top.c
-
-It only shows one event at a time. "E" is used to switch the event.
-
->> and I can't tell what counter is being
->> displayed. 
-
-For the hybrid case, I think we may display both PMU name and event
-name. For example,
-
-Available samples
-656 cycles:P cpu_atom
-
-701 cycles:P cpu_core
-
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index f4812b226818..afc7a1d54fe4 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -3433,8 +3433,10 @@ static void perf_evsel_menu__write(struct
-ui_browser *browser,
-        }
-
-        nr_events = convert_unit(nr_events, &unit);
--       printed = scnprintf(bf, sizeof(bf), "%lu%c%s%s", nr_events,
--                          unit, unit == ' ' ? "" : " ", ev_name);
-+       printed = scnprintf(bf, sizeof(bf), "%lu%c%s%s %s", nr_events,
-+                          unit, unit == ' ' ? "" : " ", ev_name,
-+                          evsel->pmu ? evsel->pmu_name : "");
-+
-        ui_browser__printf(browser, "%s", bf);
-
-        nr_events = evsel->evlist->stats.nr_events[PERF_RECORD_LOST];
-
-
->> When I quit I also see:
->> ```
->> exiting.
->> corrupted double-linked list
->> Aborted (core dumped)
->> ```
->> but I wasn't able to repro this on a debuggable binary/system.
-
-I haven't see the issue yet.
-
->>
->> If my memory serves there was a patch where perf top was showing >1
->> event. It would be nice here to do some kind of hybrid merging rather
->> than having to view each PMU's top separately.
-
-The current perf top doesn't merge when there are >1 event.
-sudo ./perf top -e "cycles,instructions"
-
-Available samples
-2K cycles
-
-2K instructions
-
-For now, I think we may just append a PMU name to distinguish the hybrid
-case.
-
-We may implement the merging feature which impacts both hybrid and
-non-hybrid cases later separately.
-
+On Wed, Dec 13, 2023 at 08:15:28PM +0530, Anup Patel wrote:
+> On Wed, Dec 13, 2023 at 12:35 PM Yu Chien Peter Lin
+> <peterlin@andestech.com> wrote:
+> >
+> > Add support for the Andes hart-level interrupt controller. This
+> > controller provides interrupt mask/unmask functions to access the
+> > custom register (SLIE) where the non-standard S-mode local interrupt
+> > enable bits are located.
+> >
+> > To share the riscv_intc_domain_map() with the generic RISC-V INTC and
+> > ACPI, add a chip parameter to riscv_intc_init_common(), so it can be
+> > passed to the irq_domain_set_info() as private data.
+> >
+> > Andes hart-level interrupt controller requires the "andestech,cpu-intc"
+> > compatible string to be present in interrupt-controller of cpu node.
+> > e.g.,
+> >
+> >   cpu0: cpu@0 {
+> >       compatible = "andestech,ax45mp", "riscv";
+> >       ...
+> >       cpu0-intc: interrupt-controller {
+> >           #interrupt-cells = <0x01>;
+> >           compatible = "andestech,cpu-intc", "riscv,cpu-intc";
+> >           interrupt-controller;
+> >       };
+> >   };
+> >
+> > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> > Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> > Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+> > ---
+> > Changes v1 -> v2:
+> >   - New patch
+> > Changes v2 -> v3:
+> >   - Return -ENXIO if no valid compatible INTC found
+> >   - Allow falling back to generic RISC-V INTC
+> > Changes v3 -> v4: (Suggested by Thomas [1])
+> >   - Add comment to andes irq chip function
+> >   - Refine code flow to share with generic RISC-V INTC and ACPI
+> >   - Move Andes specific definitions to include/linux/soc/andes/irq.h
+> > Changes v4 -> v5: (Suggested by Thomas)
+> >   - Fix commit message
+> >   - Subtract ANDES_SLI_CAUSE_BASE from d->hwirq to calculate the value of mask
+> >   - Do not set chip_data to the chip itself with irq_domain_set_info()
+> >   - Follow reverse fir tree order variable declarations
+> >
+> > [1] https://patchwork.kernel.org/project/linux-riscv/patch/20231019135723.3657156-1-peterlin@andestech.com/
+> > ---
+> >  drivers/irqchip/irq-riscv-intc.c | 53 ++++++++++++++++++++++++++++----
+> >  include/linux/soc/andes/irq.h    | 17 ++++++++++
+> >  2 files changed, 64 insertions(+), 6 deletions(-)
+> >  create mode 100644 include/linux/soc/andes/irq.h
+> >
+> > diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+> > index 2fdd40f2a791..0b6bf3fb1dba 100644
+> > --- a/drivers/irqchip/irq-riscv-intc.c
+> > +++ b/drivers/irqchip/irq-riscv-intc.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/smp.h>
+> > +#include <linux/soc/andes/irq.h>
+> >
+> >  static struct irq_domain *intc_domain;
+> >
+> > @@ -46,6 +47,31 @@ static void riscv_intc_irq_unmask(struct irq_data *d)
+> >         csr_set(CSR_IE, BIT(d->hwirq));
+> >  }
+> >
+> > +static void andes_intc_irq_mask(struct irq_data *d)
+> > +{
+> > +       /*
+> > +        * Andes specific S-mode local interrupt causes (hwirq)
+> > +        * are defined as (256 + n) and controlled by n-th bit
+> > +        * of SLIE.
+> > +        */
+> > +       unsigned int mask = BIT(d->hwirq - ANDES_SLI_CAUSE_BASE);
+> > +
+> > +       if (d->hwirq < ANDES_SLI_CAUSE_BASE)
+> > +               csr_clear(CSR_IE, mask);
+> > +       else
+> > +               csr_clear(ANDES_CSR_SLIE, mask);
+> > +}
+> > +
+> > +static void andes_intc_irq_unmask(struct irq_data *d)
+> > +{
+> > +       unsigned int mask = BIT(d->hwirq - ANDES_SLI_CAUSE_BASE);
+> > +
+> > +       if (d->hwirq < ANDES_SLI_CAUSE_BASE)
+> > +               csr_set(CSR_IE, mask);
+> > +       else
+> > +               csr_set(ANDES_CSR_SLIE, mask);
 > 
-> Using event groups, but I noticed you removed the --group option.
-> Maybe perf top can just use `{ ... }` notation for explicit grouping,
-> but it might be implicit like in the hybrid case.
-> 
+> Clearly, Andes does not have any CSR for:
+> XLEN <= local interrupt <ANDES_SLI_CAUSE_BASE
+> and
+> ANDES_SLI_CAUSE_BASE + XLEN <= local interrupt
 
-Yes, if the events are from different PMUs, the perf tool will
-implicitly de-group the hybrid events. "{ ... }" may not help here.
+Ah, what am I doing here.
+sorry for that silly patch.
 
-Thanks,
-Kan
+Regards,
+Peter Lin
+
+> Regards,
+> Anup
