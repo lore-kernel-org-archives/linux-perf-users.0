@@ -1,237 +1,133 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LFmT1avq"
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DCF116
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 09:42:53 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-55263acefc1so363a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 09:42:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702489371; x=1703094171; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8c1vfO/xiQwL2KaPxAY2duOQ0VAaarCuPQeeypzuUqU=;
-        b=LFmT1avq7ovak0O+8q+vYPHDKH/H1sfe694dhfNTWQcIoAwhHhu6jJNsoSDEPOYLjK
-         uZ/7LPm3IN49T8zW5++ely471Bf9pqRSNbp/bVgswatol+ORorH3bmFfpesHb1AQISvI
-         s4KfbQDmsyIZiSOqItnPF71jDohae0iexUUnz42A36ZK6GflXDFlbBrAklR1Xb2Gjr/X
-         I9NwQBEqwbqv2ONve/zHHzZuljKtPUAUa4+snAt07oGqaS0ezIKSVvhkZrOffLi3xJsw
-         PA22YXZzt5EPu9cZ2x4heJU82R00ZlTXyeCqiupYdVgtyF2ObXfXQVaGVwfdllRjehit
-         3+Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702489371; x=1703094171;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8c1vfO/xiQwL2KaPxAY2duOQ0VAaarCuPQeeypzuUqU=;
-        b=BH6dQXMgGPHQaeuIz0zYYW1G/KJT0ayupNjJmY/JLOVrNC1G9MbMfp7A79/HlQxc7D
-         5Uy0kxF+ZxMsdl7IEMAGCgPRdv8YkFo/PM+tk551cO8HGNdSPBxFjtYnIMm5/5YYycUF
-         kLCykQQ39l35YtTr4PrrAzNkeWBXp0M1R9o8FltUC+2xWHLUID7GsYyTyzChwIZoDLuj
-         Kz0LFZRjpxXRORTRrknSRCK+UHG4hL+30fVjutNN07qLo2Nu6WDI8l+570fkd3P76tNj
-         gPjqsGgW7D5y5B3zprNCUBQRNZ6uUB0o4GME9z8xtG9N+ca3Qs+Imp/OFh5MMIBXpZaN
-         hhkg==
-X-Gm-Message-State: AOJu0YwofgrPeY10iy8wr/aJvQdZfs9WHLZwWiTA5jitH8BzrxqpsKyC
-	tCvVJd6IZ0xWwG17VxhorjoAaVj+d3V6/VA6is7Tkw==
-X-Google-Smtp-Source: AGHT+IEkooHYz6uTYfPKHTIZNMmFByCMi4JYabmYLfQyKyG5iUWbUNYGfzwzd5BekQa2oXCTyUaMnLVEDwkj+U8w5sg=
-X-Received: by 2002:a50:c192:0:b0:54c:f4fd:3427 with SMTP id
- m18-20020a50c192000000b0054cf4fd3427mr530375edf.7.1702489371342; Wed, 13 Dec
- 2023 09:42:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kBHD0CVZ"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B644B9C;
+	Wed, 13 Dec 2023 11:26:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702495606; x=1734031606;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+LZTfv2T9voStSpL88ZlvYWw4h0ys5iznUuZFHt1Ioo=;
+  b=kBHD0CVZzo5Xzjj8b10PXLiAqnjr/TRv0W6N5sjHcNNEfFZxrrY9+BFy
+   nLoreI6zxIpJyfAelBvO3kirq2rSOCROeIRa2YS72zutURbUClw1qRzHQ
+   1elc+qionYEEPCT2NTd/VrPW2LGaIeuL61AaWJCyxsF//K623O/TuFp5R
+   9yG9Gcajvjvqt6IzZlY1cVOt6hOX+91qLERzzfRbhZ2Ty0nJLjSGpiDbC
+   /tzeIA++zwcs9ru1QO/pE88ENxCbZsmTb/BNb/r0acEyyEPqv8Lw2sLZH
+   5soEKKGBZiF5C2bES9TQEMDOK0WU890PoxOa9p7i4L4KK9HKTFxPUedaW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="392191201"
+X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
+   d="scan'208";a="392191201"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:26:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="1021231609"
+X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
+   d="scan'208";a="1021231609"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.13])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:26:43 -0800
+Message-ID: <f50149fb-967c-4987-8d08-d6bb2a69bcf3@intel.com>
+Date: Wed, 13 Dec 2023 21:26:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212193833.415110-1-kan.liang@linux.intel.com>
- <CAP-5=fWCgjCC-DHHx+HJCuYk6vNn9Lf9EKcnBBZQ+xmnyYnmPg@mail.gmail.com>
- <996ec30b-2bcf-4739-bec0-728c7f7af2ac@linux.intel.com> <CAP-5=fVnH0eTEvvNbKLF9xYye5Pu8hvDL4ruoxh5xG76+B8WFQ@mail.gmail.com>
- <CAM9d7chQ4NbbcmumQSMRaGm987nxxh6_QbbJr7+GYgL_WAmaNw@mail.gmail.com> <43e57041-fe13-452a-af6e-db2ed451f93a@linux.intel.com>
-In-Reply-To: <43e57041-fe13-452a-af6e-db2ed451f93a@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 13 Dec 2023 09:42:39 -0800
-Message-ID: <CAP-5=fXHadLYuRkY2Z=kymWJkB63dBWfCibQJnwgt0wkSuVVsg@mail.gmail.com>
-Subject: Re: [PATCH V2] perf top: Use evsel's cpus to replace user_requested_cpus
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, mark.rutland@arm.com, 
-	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf header: Set proper symbol name for vdso when
+ build-id event found
+Content-Language: en-US
+To: Like Xu <like.xu.linux@gmail.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231201111506.37155-1-likexu@tencent.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20231201111506.37155-1-likexu@tencent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 13, 2023 at 7:45=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2023-12-12 8:06 p.m., Namhyung Kim wrote:
-> > On Tue, Dec 12, 2023 at 2:12=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> >>
-> >> On Tue, Dec 12, 2023 at 1:25=E2=80=AFPM Liang, Kan <kan.liang@linux.in=
-tel.com> wrote:
-> >>>
-> >>>
-> >>>
-> >>> On 2023-12-12 3:37 p.m., Ian Rogers wrote:
-> >>>> On Tue, Dec 12, 2023 at 11:39=E2=80=AFAM <kan.liang@linux.intel.com>=
- wrote:
-> >>>>>
-> >>>>> From: Kan Liang <kan.liang@linux.intel.com>
-> >>>>>
-> >>>>> perf top errors out on a hybrid machine
-> >>>>>  $perf top
-> >>>>>
-> >>>>>  Error:
-> >>>>>  The cycles:P event is not supported.
-> >>>>>
-> >>>>> The perf top expects that the "cycles" is collected on all CPUs in =
-the
-> >>>>> system. But for hybrid there is no single "cycles" event which can =
-cover
-> >>>>> all CPUs. Perf has to split it into two cycles events, e.g.,
-> >>>>> cpu_core/cycles/ and cpu_atom/cycles/. Each event has its own CPU m=
-ask.
-> >>>>> If a event is opened on the unsupported CPU. The open fails. That's=
- the
-> >>>>> reason of the above error out.
-> >>>>>
-> >>>>> Perf should only open the cycles event on the corresponding CPU. Th=
-e
-> >>>>> commit ef91871c960e ("perf evlist: Propagate user CPU maps intersec=
-ting
-> >>>>> core PMU maps") intersect the requested CPU map with the CPU map of=
- the
-> >>>>> PMU. Use the evsel's cpus to replace user_requested_cpus.
-> >>>>>
-> >>>>> The evlist's threads are also propagated to the evsel's threads in
-> >>>>> __perf_evlist__propagate_maps(). For a system-wide event, perf appe=
-nds
-> >>>>> a dummy event and assign it to the evsel's threads. For a per-threa=
-d
-> >>>>> event, the evlist's thread_map is assigned to the evsel's threads. =
-The
-> >>>>> same as the other tools, e.g., perf record, using the evsel's threa=
-ds
-> >>>>> when opening an event.
-> >>>>>
-> >>>>> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> >>>>> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@k=
-ernel.org/
-> >>>>> Reviewed-by: Ian Rogers <irogers@google.com>
-> >>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> >>>>> ---
-> >>>>>
-> >>>>> Changes since V1:
-> >>>>> - Update the description
-> >>>>> - Add Reviewed-by from Ian
-> >>>>
-> >>>> Thanks Kan, quick question. Does "perf top" on hybrid ask the user t=
-o
-> >>>> select between the cycles event on cpu_atom and cpu_core?
-> >>>
-> >>> Yes, but the event doesn't include the PMU information.
-> >>> We probably need a follow up patch to append the PMU name.
-> >>>
-> >>> Available samples
-> >>> 385 cycles:P
-> >>>
-> >>> 903 cycles:P
-> >>
-> >> Thanks and agreed, it isn't possible to tell which is which PMU/CPU
-> >> type at the moment. I tried the patch with perf top --stdio, there
-> >> wasn't a choice of event
->
-> The perf top --stdio uses a dedicated display function, see
-> perf_top__header_snprintf() in util/top.c
->
-> It only shows one event at a time. "E" is used to switch the event.
->
-> >> and I can't tell what counter is being
-> >> displayed.
->
-> For the hybrid case, I think we may display both PMU name and event
-> name. For example,
->
-> Available samples
-> 656 cycles:P cpu_atom
->
-> 701 cycles:P cpu_core
+On 1/12/23 13:15, Like Xu wrote:
+> From: Like Xu <likexu@tencent.com>
+> 
+> If using perf-record to sample a cpu-cycles:P event on a hypervisor process
+> when '--kcore' is not enabled, user may find some surprise in perf-report:
+> 
+> # perf report -i perf.data -v:
+> # Overhead Command   Shared Object            	Symbol
+>     99.71%  vcpu0    arch/x86/kvm/kvm-intel.ko  0xffffffffa10d1e30 B [k] 0x0000000000034ed0
+> 
+> build id event received for vmlinux: d12116149f511f7dbd0b21c45d38d3d2ec09b87f [20]
+> build id event received for kvm-intel.ko: a8fc0213abbafd97b10ce58ce84bec8519f9abce [20]
+> build id event received for [vdso]: 4d56e381df8d2c051f6bc1ef69c0118c59d5c49f [20]
+> 
+> # perf report:
+> # Overhead  Command  Shared Object     Symbol
+> # ........  .......  ................  .......................................
+> #
+>     99.71%  vcpu0    [kvm_intel]       [k] 0x0000000000034ed0
+>      0.10%  vcpu0    [kernel.vmlinux]  [k] __lock_acquire.isra.29
+> 
+> Users may be curious as to how 0x34ed0 was generated and wondered if this
+> RIP came from the guest application but perf-script-D does not point to any
+> samples of this address.
+> 
+> Based on perf/tool implementation, this is actually an offset pointing to
+> the vdso object (in this case it is the assembly __vmx_vcpu_run defined
+> in arch/x86/kvm/vmx/vmenter.S). The pattern is not reproduced on perf-tool
+> of some distributions, and git-bisect quickly identified the possible root
+> cause, which leds to this straightforward fix and after this change:
+> 
+> # perf report -i perf.data -v:
+> # Overhead Command   Shared Object            	Symbol
+>     99.71%  vcpu0    arch/x86/kvm/kvm-intel.ko  0x34ed0            B [k] __vmx_vcpu_run
+> 
+> # perf report:
+> # Overhead  Command  Shared Object     Symbol
+> # ........  .......  ................  .......................................
+> #
+>     99.71%  vcpu0    [kvm_intel]       [k] __vmx_vcpu_run
+> 
+> The fix also gets commit 1deec1bd96cc ("perf header: Set proper module name
+> when build-id event found") lit again.
+> 
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Fixes: b2fe96a350de ("perf tools: Fix module symbol processing")
+> Signed-off-by: Like Xu <likexu@tencent.com>
+> ---
+>  tools/perf/util/header.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index e86b9439ffee..a33d589511ff 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -2305,8 +2305,8 @@ static int __event_process_build_id(struct perf_record_header_build_id *bev,
+>  
+>  			if (!kmod_path__parse_name(&m, filename) && m.kmod)
+>  				dso__set_module_info(dso, &m, machine);
+> -
+> -			dso->kernel = dso_space;
+> +			else
+> +				dso->kernel = dso_space;
 
-I think there would be more uniformity if we could do:
-cpu/cycles/P
-I'm just reminded of the stat output where sometimes you can get things lik=
-e:
-cpu/cycles/
-or sometimes:
-cycles [cpu]
-It seems the slash style approach is the most uniform given it looks
-like what is written on the command line. Perhaps we need some kind of
-helper function to do this as reformatting the modifier is a pain.
+This is undoing some of b2fe96a350de ("perf tools: Fix module
+symbol processing") without explanation.
 
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
-s.c
-> index f4812b226818..afc7a1d54fe4 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -3433,8 +3433,10 @@ static void perf_evsel_menu__write(struct
-> ui_browser *browser,
->         }
->
->         nr_events =3D convert_unit(nr_events, &unit);
-> -       printed =3D scnprintf(bf, sizeof(bf), "%lu%c%s%s", nr_events,
-> -                          unit, unit =3D=3D ' ' ? "" : " ", ev_name);
-> +       printed =3D scnprintf(bf, sizeof(bf), "%lu%c%s%s %s", nr_events,
-> +                          unit, unit =3D=3D ' ' ? "" : " ", ev_name,
-> +                          evsel->pmu ? evsel->pmu_name : "");
-> +
->         ui_browser__printf(browser, "%s", bf);
->
->         nr_events =3D evsel->evlist->stats.nr_events[PERF_RECORD_LOST];
->
->
-> >> When I quit I also see:
-> >> ```
-> >> exiting.
-> >> corrupted double-linked list
-> >> Aborted (core dumped)
-> >> ```
-> >> but I wasn't able to repro this on a debuggable binary/system.
->
-> I haven't see the issue yet.
->
-> >>
-> >> If my memory serves there was a patch where perf top was showing >1
-> >> event. It would be nice here to do some kind of hybrid merging rather
-> >> than having to view each PMU's top separately.
->
-> The current perf top doesn't merge when there are >1 event.
-> sudo ./perf top -e "cycles,instructions"
->
-> Available samples
-> 2K cycles
->
-> 2K instructions
->
-> For now, I think we may just append a PMU name to distinguish the hybrid
-> case.
->
-> We may implement the merging feature which impacts both hybrid and
-> non-hybrid cases later separately.
->
-> >
-> > Using event groups, but I noticed you removed the --group option.
-> > Maybe perf top can just use `{ ... }` notation for explicit grouping,
-> > but it might be implicit like in the hybrid case.
-> >
->
-> Yes, if the events are from different PMUs, the perf tool will
-> implicitly de-group the hybrid events. "{ ... }" may not help here.
+Symbols in the .noinstr.text section don't seem to be
+being resolved, so that could be the issue.  perf synthesizes
+an MMAP record from /proc/modules, which works for .text
+but perhaps not for .noinstr.text
 
-I think grouping may have been the situation where I saw >1 event
-displayed but I agree with Kan, we implicitly de-group events on
-different PMUs so it won't help here.
+>  			free(m.name);
+>  		}
+>  
 
-Thanks,
-Ian
-
-> Thanks,
-> Kan
