@@ -1,135 +1,94 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A179AA5;
-	Tue, 12 Dec 2023 17:06:49 -0800 (PST)
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-58df5988172so4013153eaf.0;
-        Tue, 12 Dec 2023 17:06:49 -0800 (PST)
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE4199;
+	Tue, 12 Dec 2023 17:18:00 -0800 (PST)
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-58dd3528497so3908034eaf.3;
+        Tue, 12 Dec 2023 17:18:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702429609; x=1703034409;
+        d=1e100.net; s=20230601; t=1702430280; x=1703035080;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5CURLE9aVy/LylBUfiOnMqulpgDjUBj54GEYP7CuHeA=;
-        b=rOfDozuO8/M0yKAKnDqBteFGsumeaE55fKpVQAU1HrwtOB//BWgBajHNq+6FoHf9o/
-         xBLLdV+cqAtsqN7+RGD5CMurLkkbOP99p1HjkXYQ3tqEz3RmUDiWcu82Afzz2SxrpNBz
-         q7yfZE/Ec+b1SNiS9RakKfYcAd+a/HHcaF4l7YbqQlyHnqstJXmHU+67/+wsVSAd8BOt
-         cNh+6nLAdJf3tG38MuibcWlm+y/Pnwl1R2fzbIdYNrUgAoF2g1F3EhIeHj5TJmeE+XI1
-         lQC7LM58ugUFxew08Z8HxjbLikpGJuB0+IBaSwEP4fr3ceCgg85JXlr760ciE4G4wWjS
-         cZvA==
-X-Gm-Message-State: AOJu0YxXynK4uJR/DSO011+AuYC/jeTaWrM051MkKnGpIpy78A7Ib4K5
-	78czXucGouQTQZVjIboRffN0N5Ny59SSufHE8G8=
-X-Google-Smtp-Source: AGHT+IE7SBK+DZdO/+3cOIsJqAyd0WaC8xeeraYpk1X7WJLebVKqXZowSpA+uZTHSWFKZFr830tnYgr9ctNJZfyBR5s=
-X-Received: by 2002:a05:6359:4c25:b0:170:c921:fed9 with SMTP id
- kj37-20020a0563594c2500b00170c921fed9mr8130076rwc.60.1702429608712; Tue, 12
- Dec 2023 17:06:48 -0800 (PST)
+        bh=qrBztKR7DBFWjHGGF4oqW3fatxTjNIhtib1nUgBnZG0=;
+        b=k3FjPQ64/J4SrhOq0pOTnes1t1AqjbLgEAtli7UpsPiRbRbVCv9ckIMmEdZgpwLG+8
+         Xh7ULH1975WhC9TWrbtu3pZ+1uOgb6KokSaX6cZrb4kPRKHE7JGPt0AXKtxmZXaIQIab
+         HENmgmORsSF226sKdGCJkWADcg4Rtqe7vaYJHURRU0z3LyIg3CIcS9pvuLZ0ZCF8zeeG
+         TZfW/PvI41JpeNqiya+KhXX8WNsruOfyYkHLolaolyl0/QL6U2W7ZF7HTr1uQwPtmxpd
+         ElFW4PFZRaC5xvn0y0K42b5b31EGoR2OKa1KEZcle8zaYYbrLdRk1k27Pw/pr0lWFFSu
+         /tkw==
+X-Gm-Message-State: AOJu0Yy6JxjYs/1/NLMUKTOdiXFo8oUqQg3ix3EMu8/f5AdB/8XNlsPx
+	phgtbxJwMLNod6BGoQTzc5Vih0d+u+ex/e1dw/g=
+X-Google-Smtp-Source: AGHT+IGLl2RaiPS+JDWzHTX1nc4PK06yrw1EpdlQ9nDdu0JL4PGUSDocs0deDQImGZM0/It/b+1jan8KJcbEsFaEjGA=
+X-Received: by 2002:a05:6358:4194:b0:170:ee27:bfa1 with SMTP id
+ w20-20020a056358419400b00170ee27bfa1mr2326149rwc.5.1702430280044; Tue, 12 Dec
+ 2023 17:18:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212193833.415110-1-kan.liang@linux.intel.com>
- <CAP-5=fWCgjCC-DHHx+HJCuYk6vNn9Lf9EKcnBBZQ+xmnyYnmPg@mail.gmail.com>
- <996ec30b-2bcf-4739-bec0-728c7f7af2ac@linux.intel.com> <CAP-5=fVnH0eTEvvNbKLF9xYye5Pu8hvDL4ruoxh5xG76+B8WFQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fVnH0eTEvvNbKLF9xYye5Pu8hvDL4ruoxh5xG76+B8WFQ@mail.gmail.com>
+References: <20231207081635.8427-1-yangyicong@huawei.com> <20231207081635.8427-2-yangyicong@huawei.com>
+In-Reply-To: <20231207081635.8427-2-yangyicong@huawei.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 12 Dec 2023 17:06:37 -0800
-Message-ID: <CAM9d7chQ4NbbcmumQSMRaGm987nxxh6_QbbJr7+GYgL_WAmaNw@mail.gmail.com>
-Subject: Re: [PATCH V2] perf top: Use evsel's cpus to replace user_requested_cpus
-To: Ian Rogers <irogers@google.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, acme@kernel.org, mark.rutland@arm.com, 
-	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Tue, 12 Dec 2023 17:17:49 -0800
+Message-ID: <CAM9d7cgW9YaS7+2Y0zPszbkSZpu2XgJjW3GP+yig4C-++vJ4-g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf header: Fix one memory leakage in perf_event__fprintf_event_update()
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jonathan.cameron@huawei.com, 
+	hejunhao3@huawei.com, yangyicong@hisilicon.com, linuxarm@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 2:12=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Tue, Dec 12, 2023 at 1:25=E2=80=AFPM Liang, Kan <kan.liang@linux.intel=
-.com> wrote:
-> >
-> >
-> >
-> > On 2023-12-12 3:37 p.m., Ian Rogers wrote:
-> > > On Tue, Dec 12, 2023 at 11:39=E2=80=AFAM <kan.liang@linux.intel.com> =
-wrote:
-> > >>
-> > >> From: Kan Liang <kan.liang@linux.intel.com>
-> > >>
-> > >> perf top errors out on a hybrid machine
-> > >>  $perf top
-> > >>
-> > >>  Error:
-> > >>  The cycles:P event is not supported.
-> > >>
-> > >> The perf top expects that the "cycles" is collected on all CPUs in t=
-he
-> > >> system. But for hybrid there is no single "cycles" event which can c=
-over
-> > >> all CPUs. Perf has to split it into two cycles events, e.g.,
-> > >> cpu_core/cycles/ and cpu_atom/cycles/. Each event has its own CPU ma=
-sk.
-> > >> If a event is opened on the unsupported CPU. The open fails. That's =
-the
-> > >> reason of the above error out.
-> > >>
-> > >> Perf should only open the cycles event on the corresponding CPU. The
-> > >> commit ef91871c960e ("perf evlist: Propagate user CPU maps intersect=
-ing
-> > >> core PMU maps") intersect the requested CPU map with the CPU map of =
-the
-> > >> PMU. Use the evsel's cpus to replace user_requested_cpus.
-> > >>
-> > >> The evlist's threads are also propagated to the evsel's threads in
-> > >> __perf_evlist__propagate_maps(). For a system-wide event, perf appen=
-ds
-> > >> a dummy event and assign it to the evsel's threads. For a per-thread
-> > >> event, the evlist's thread_map is assigned to the evsel's threads. T=
-he
-> > >> same as the other tools, e.g., perf record, using the evsel's thread=
-s
-> > >> when opening an event.
-> > >>
-> > >> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > >> Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@ke=
-rnel.org/
-> > >> Reviewed-by: Ian Rogers <irogers@google.com>
-> > >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> > >> ---
-> > >>
-> > >> Changes since V1:
-> > >> - Update the description
-> > >> - Add Reviewed-by from Ian
-> > >
-> > > Thanks Kan, quick question. Does "perf top" on hybrid ask the user to
-> > > select between the cycles event on cpu_atom and cpu_core?
-> >
-> > Yes, but the event doesn't include the PMU information.
-> > We probably need a follow up patch to append the PMU name.
-> >
-> > Available samples
-> > 385 cycles:P
-> >
-> > 903 cycles:P
->
-> Thanks and agreed, it isn't possible to tell which is which PMU/CPU
-> type at the moment. I tried the patch with perf top --stdio, there
-> wasn't a choice of event  and I can't tell what counter is being
-> displayed. When I quit I also see:
-> ```
-> exiting.
-> corrupted double-linked list
-> Aborted (core dumped)
-> ```
-> but I wasn't able to repro this on a debuggable binary/system.
->
-> If my memory serves there was a patch where perf top was showing >1
-> event. It would be nice here to do some kind of hybrid merging rather
-> than having to view each PMU's top separately.
+Hello,
 
-Using event groups, but I noticed you removed the --group option.
-Maybe perf top can just use `{ ... }` notation for explicit grouping,
-but it might be implicit like in the hybrid case.
+On Thu, Dec 7, 2023 at 12:20=E2=80=AFAM Yicong Yang <yangyicong@huawei.com>=
+ wrote:
+>
+> From: Yicong Yang <yangyicong@hisilicon.com>
+>
+> When dump the raw trace by `perf report -D` ASan reports a memory
+> leakage in perf_event__fprintf_event_update(). It shows that we
+> allocated a temporary cpumap for dumping the CPUs but doesn't
+> release it and it's not used elsewhere. Fix this by free the
+> cpumap after the dumping.
+>
+> Fixes: c853f9394b7b ("perf tools: Add perf_event__fprintf_event_update fu=
+nction")
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
+
+
+> ---
+>  tools/perf/util/header.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index e86b9439ffee..7190f39ccd13 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -4369,9 +4369,10 @@ size_t perf_event__fprintf_event_update(union perf=
+_event *event, FILE *fp)
+>                 ret +=3D fprintf(fp, "... ");
+>
+>                 map =3D cpu_map__new_data(&ev->cpus.cpus);
+> -               if (map)
+> +               if (map) {
+>                         ret +=3D cpu_map__fprintf(map, fp);
+> -               else
+> +                       perf_cpu_map__put(map);
+> +               } else
+>                         ret +=3D fprintf(fp, "failed to get cpus\n");
+>                 break;
+>         default:
+> --
+> 2.24.0
+>
+>
