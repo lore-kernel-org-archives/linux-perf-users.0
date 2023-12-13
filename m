@@ -1,211 +1,133 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wlbb+ioh"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086E083;
-	Wed, 13 Dec 2023 01:52:40 -0800 (PST)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BD7h5SR015245;
-	Wed, 13 Dec 2023 09:52:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=0pyNFVC6WcNT2p2h6XzxKodMSyrGQykAB7x097ed/aE=;
- b=Wlbb+iohROWx+HuQgvHBUwCz6Zl2/ax7aaR+jnqWHPLXfKqWl00HiJichhcWJO8Af4i9
- +48DtUu2Pif8URzrAW4qoFq29qrwYeBxerZmuT4z/fFLn3q19PrIJgJOSbGWCdiDcmcx
- vivY9P1sjeBzBQ2KM/rOOo6XGGcdXxTEHHXEjFqIXnBIFg8jqBgpNHXC4P7uBOIbomFc
- OknLfJyKkI8EtqgVC/DHT+lskGqGG1Uk56/766+CIGB1WLdjA0FAKd16vLnmrl8Bc5zC
- wGFc63edqkv/RUBbWu3xSopFr86VnTzqNBI327dVI/mj/B0KLQiIb7mlr9XjTxU7TrD+ PA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uy8f8bmmb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 09:52:15 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BD8kLkQ010855;
-	Wed, 13 Dec 2023 09:52:14 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uy8f8bmkv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 09:52:14 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BD92Kle028248;
-	Wed, 13 Dec 2023 09:52:13 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw2xyqyeq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 09:52:13 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BD9qBDV13501046
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Dec 2023 09:52:11 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4262E2004D;
-	Wed, 13 Dec 2023 09:52:11 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 314E720040;
-	Wed, 13 Dec 2023 09:52:08 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.215.218])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 13 Dec 2023 09:52:08 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [PATCH V2 0/5] Clean up perf mem
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZXIrtcYkvpA8Uwj1@kernel.org>
-Date: Wed, 13 Dec 2023 15:21:56 +0530
-Cc: Kan Liang <kan.liang@linux.intel.com>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>, john.g.garry@oracle.com,
-        Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        mike.leach@linaro.org, Leo Yan <leo.yan@linaro.org>,
-        yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Message-Id: <DC029166-B60F-4E90-833D-F43818A3C54B@linux.vnet.ibm.com>
-References: <20231207192338.400336-1-kan.liang@linux.intel.com>
- <ZXIrtcYkvpA8Uwj1@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: xpxXoDffwPPHUhMBRFQsaBP1J-1Nki4W
-X-Proofpoint-ORIG-GUID: TQZQL8IMVmt3wO2plg2NGOajuTE47EVS
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 260C6EA;
+	Wed, 13 Dec 2023 04:06:03 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB33AC15;
+	Wed, 13 Dec 2023 04:06:48 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.44.219])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A3F43F762;
+	Wed, 13 Dec 2023 04:06:01 -0800 (PST)
+Date: Wed, 13 Dec 2023 12:05:58 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, maz@kernel.org,
+	marcan@marcan.st, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
+Message-ID: <ZXmeJmt-I65Quww3@FVFF77S0Q05N>
+References: <20231208210855.407580-1-kan.liang@linux.intel.com>
+ <ZXd7ZuxbNNsjAyqm@kernel.org>
+ <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
+ <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
+ <CAP-5=fVd-0aSovYVsOmTo2dfKb5_PHz1KV7ePipi35_JbfJ6qQ@mail.gmail.com>
+ <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
+ <CAM9d7cgxCg0bgWRUg2rkR1dFfpTEUX6AZdw-Od5yALiL33ymQg@mail.gmail.com>
+ <56f4ba32-a0c6-4ae4-8bf9-c00aaed65fc5@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-13_02,2023-12-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 malwarescore=0 impostorscore=0 clxscore=1011
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312130071
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <56f4ba32-a0c6-4ae4-8bf9-c00aaed65fc5@linux.intel.com>
 
+On Tue, Dec 12, 2023 at 02:22:49PM -0500, Liang, Kan wrote:
+> 
+> 
+> On 2023-12-12 1:49 p.m., Namhyung Kim wrote:
+> > On Tue, Dec 12, 2023 at 10:31 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> >>
+> >> On Tue, Dec 12, 2023 at 10:00:16AM -0800, Ian Rogers wrote:
+> >>> On Tue, Dec 12, 2023 at 9:23 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >>>>
+> >>>> On Tue, Dec 12, 2023 at 7:56 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>> On 2023-12-11 4:13 p.m., Arnaldo Carvalho de Melo wrote:
+> >>>>>> Em Fri, Dec 08, 2023 at 01:08:55PM -0800, kan.liang@linux.intel.com escreveu:
+> >>>>>>> From: Kan Liang <kan.liang@linux.intel.com>
+> >>>>>>>
+> >>>>>>> perf top errors out on a hybrid machine
+> >>>>>>>  $perf top
+> >>>>>>>
+> >>>>>>>  Error:
+> >>>>>>>  The cycles:P event is not supported.
+> >>>>>>>
+> >>>>>>> The user_requested_cpus may contain CPUs that are invalid for a hybrid
+> >>>>>>> PMU. It causes perf_event_open to fail.
+> >>>>>>
+> >>>>>> ?
+> >>>>>>
+> >>>>>> All perf top expects is that the "cycles", the most basic one, be
+> >>>>>> collected, on all CPUs in the system.
+> >>>>>>
+> >>>>>
+> >>>>> Yes, but for hybrid there is no single "cycles" event which can cover
+> >>>>> all CPUs.
+> >>>>
+> >>>> Does that mean the kernel would reject the legacy "cycles" event
+> >>>> on hybrid CPUs?
+> >>>
+> >>> I believe not. When the extended type isn't set on legacy cycles we
+> >>> often have the CPU and from that can determine the PMU. The issue is
+> >>> with the -1 any CPU perf_event_open option. As I was told, the PMU the
+> >>> event is opened on in this case is the first one registered in the
+> >>> kernel, on Intel hybrid this could be cpu_core or cpu_atom.. but IIRC
+> >>> it'll probably be cpu_core. On ARM ¯\_(ツ)_/¯.
+> >>
+> >> On ARM it'll be essentially the same as on x86: if you open an event with
+> >> type==PERF_EVENT_TYPE_HARDWARE (without the extended HW type pointing to a
+> >> specific PMU), and with cpu==-1, it'll go to an arbitrary CPU PMU, whichever
+> >> happens to be found by perf_init_event() when iterating over the 'pmus' list.
+> >>
+> >> If you open an event with type==PERF_EVENT_TYPE_HARDWARE and cpu!=-1, the event
+> >> will opened on the appropriate CPU PMU, by virtue of being rejected by others
+> >> when perf_init_event() iterates over the 'pmus' list.
+> > 
+> > Ok, that means "cycles" with cpu == -1 would not work well.
+> 
+> Unless a PMU is specified.
+> 
+> > I'm curious if it's possible to do some basic work at the event_init()
+> > like to preserve (common) resource and to do some other work at
+> > sched to config PMU on the current CPU.  So that users can simply
+> > use "cycles" or "instructions" for their processes.
+> 
+> The current code treats the hybrid as two standalone PMUs. To preserve
+> the common resource in the other PMU, I think the only way is to create
+> an event on the other PMU. It's what perf tool does now. I don't think
+> we want to move the logic to the kernel.
 
+Agreed.
 
-> On 08-Dec-2023, at 2:01=E2=80=AFAM, Arnaldo Carvalho de Melo <acme@kernel=
-.org> wrote:
->=20
-> Em Thu, Dec 07, 2023 at 11:23:33AM -0800, kan.liang@linux.intel.com escre=
-veu:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>=20
->> Changes since V1:
->> - Fix strcmp of PMU name checking (Ravi)
->> - Fix "/," typo (Ian)
->> - Rename several functions with perf_pmu__mem_events prefix. (Ian)
->> - Fold the header removal patch into the patch where the cleanups made.
->>  (Arnaldo)
->> - Add reviewed-by and tested-by from Ian and Ravi
->=20
-> It would be good to have a Tested-by from people working in all the
-> architectures affectes, like we got from Ravi for AMD, can we get those?
->=20
-> I'm applying it locally for test building, will push to
-> perf-tools-next/tmp.perf-tools-next for a while, so there is some time
-> to test.
->=20
-> ARM64 (Leo?) and ppc, for PPC... humm Ravi did it, who could test it now?
-Hi Arnaldo, Ravi
+> I think a possible way is to abstract a common PMU (cpu) which only
+> includes common PMU features. It should be doable, because without the
+> enabling code of hybrid, the default PMU is the common PMU. But I don't
+> know how does it coexist with the other hybrid PMUs if we have both
+> common PMU and hybrid PMUs available? It may just bring more complexity.
 
-Looking into this for testing on powerpc. Will update back.
+I think that brings a surprising amount of complexity, and I'm not entirely
+sure if that's practical (since you'd effectively end up with a logical PMU
+being dependent on multiple other logical PMUs).
 
-Thanks
-Athira
->=20
-> - Arnaldo
->=20
->> As discussed in the below thread, the patch set is to clean up perf mem.
->> https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.=
-intel.com/
->>=20
->> Introduce generic functions perf_mem_events__ptr(),
->> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
->> ARCH specific ones.
->> Simplify the perf_mem_event__supported().
->>=20
->> Only keeps the ARCH-specific perf_mem_events array in the corresponding
->> mem-events.c for each ARCH.
->>=20
->> There is no functional change.
->>=20
->> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
->> etc. But I can only test it on two Intel platforms.
->> Please give it try, if you have machines with other ARCHs.
->>=20
->> Here are the test results:
->> Intel hybrid machine:
->>=20
->> $perf mem record -e list
->> ldlat-loads  : available
->> ldlat-stores : available
->>=20
->> $perf mem record -e ldlat-loads -v --ldlat 50
->> calling: record -e cpu_atom/mem-loads,ldlat=3D50/P -e cpu_core/mem-loads=
-,ldlat=3D50/P
->>=20
->> $perf mem record -v
->> calling: record -e cpu_atom/mem-loads,ldlat=3D30/P -e cpu_atom/mem-store=
-s/P -e cpu_core/mem-loads,ldlat=3D30/P -e cpu_core/mem-stores/P
->>=20
->> $perf mem record -t store -v
->> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
->>=20
->>=20
->> Intel SPR:
->> $perf mem record -e list
->> ldlat-loads  : available
->> ldlat-stores : available
->>=20
->> $perf mem record -e ldlat-loads -v --ldlat 50
->> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=3D50/}:P
->>=20
->> $perf mem record -v
->> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=3D30/}:P -e c=
-pu/mem-stores/P
->>=20
->> $perf mem record -t store -v
->> calling: record -e cpu/mem-stores/P
->>=20
->> Kan Liang (5):
->>  perf mem: Add mem_events into the supported perf_pmu
->>  perf mem: Clean up perf_mem_events__ptr()
->>  perf mem: Clean up perf_mem_events__name()
->>  perf mem: Clean up perf_mem_event__supported()
->>  perf mem: Clean up is_mem_loads_aux_event()
->>=20
->> tools/perf/arch/arm64/util/mem-events.c   |  36 +----
->> tools/perf/arch/arm64/util/pmu.c          |   6 +
->> tools/perf/arch/powerpc/util/mem-events.c |  13 +-
->> tools/perf/arch/powerpc/util/mem-events.h |   7 +
->> tools/perf/arch/powerpc/util/pmu.c        |  11 ++
->> tools/perf/arch/s390/util/pmu.c           |   3 +
->> tools/perf/arch/x86/util/mem-events.c     |  99 ++----------
->> tools/perf/arch/x86/util/pmu.c            |  11 ++
->> tools/perf/builtin-c2c.c                  |  28 +++-
->> tools/perf/builtin-mem.c                  |  28 +++-
->> tools/perf/util/mem-events.c              | 181 +++++++++++++---------
->> tools/perf/util/mem-events.h              |  15 +-
->> tools/perf/util/pmu.c                     |   4 +-
->> tools/perf/util/pmu.h                     |   7 +
->> 14 files changed, 233 insertions(+), 216 deletions(-)
->> create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
->> create mode 100644 tools/perf/arch/powerpc/util/pmu.c
->>=20
->> --=20
->> 2.35.1
->>=20
->=20
-> --=20
->=20
-> - Arnaldo
+I also think that it's practically necessary to expose the counts to the user
+separately, even for common events. For example, the 'instructions' event may
+count differently (speculative vs architectural execution), and 'cycles' can be
+wildly different across microarchitectures due to realizable IPC, and blindly
+adding those up across PMUs is liable to produce a misleading figure (and/or
+one with massive variation).
 
+While it is ugly, I think that it's necessary for userspace to discover the set
+of CPU PMUs and open seperate events on them in order to produce useful data.
 
+Specifically for perf top, if one is monitoring all CPUs, it'd be fine to open
+a PERF_TYPE_HARDWARE event for each CPU; so long as cpu!=-1 it would go to the
+relevant PMU and be counted as expected.
+
+Thanks,
+Mark.
