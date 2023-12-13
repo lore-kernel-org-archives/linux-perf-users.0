@@ -1,217 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id E88E8EA;
-	Wed, 13 Dec 2023 05:48:32 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92B8FC15;
-	Wed, 13 Dec 2023 05:49:18 -0800 (PST)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E8DE3F738;
-	Wed, 13 Dec 2023 05:48:27 -0800 (PST)
-Message-ID: <ef228b62-c39f-5155-f012-6ed81508e99a@arm.com>
-Date: Wed, 13 Dec 2023 13:48:22 +0000
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZHR3vdgD"
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF3319AB
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 05:51:27 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1d3536cd414so4003375ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 05:51:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702475487; x=1703080287; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HFL9Q8QzauxiWuAYIkvIszXQXc3FR7WIblGrI+LLQgk=;
+        b=ZHR3vdgDqC30dLSxVCwBYtaUj1vupWXEC+qokSLG7tpEaMAm8GdbQ8Dp/xm4mmrg6c
+         +dbWgeymIeRhKEPMXaQ21LvaPaxV4ehMWBADAclVbEwrDwxTmm0wscn3A0+lIbano/HB
+         Quk3cvR1H7r98titrJVZJ9htskJXYHh5dlHGuE9HJEwycrw/nshQTgydoXyDtfeSsAei
+         ZGBNQ/ZjdklFM0nToQUTm3rLKmljBrvUD9SJmOd1Yq7KZ7szACu4AUZ8aLJHiIMGIupA
+         kRiziURYWypsrkalbv+tKA1R/zk9BjZNCZdfaSFM3g/Q4rdk3Yc/AEOfLAEcrp8e7cMe
+         6ufg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702475487; x=1703080287;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HFL9Q8QzauxiWuAYIkvIszXQXc3FR7WIblGrI+LLQgk=;
+        b=Cis7ojgfC/I2dUdDcuYBW7LtIsXxI4CdWEg32RcQ+deTiVjvDQlIZe1LpzyLi6wpWb
+         999BAEjVyhUF+jVGQDGa29NFf8U5dllgburrYORpUHq8ZFAyMHx0KUIkOsYR2+8d1rl3
+         cL0pNFu6GHUbY2U/CVKuTfgf/RJM5bBQ6+w0FHrBkcxi5SZqZB/uTCdNoV2vMBfm6eCM
+         6dkV5Iku9aWNzzXi4JComT+cV8r81kwq6y8+nW1WPB4ALNBn7SSXRdOYt+umzCtYD00m
+         uKodsTx3xdcXruqqozLqQ6FKjocLsjO5OPF+14VSeCmMsj4DUzx3MPNbzU8fP7FmrCWh
+         yJSQ==
+X-Gm-Message-State: AOJu0YwQc5l86N9TEin2HA1Ve1YeVllWZJXxn52jvjP14NHAM/GlPHzb
+	mzNpA/uYBs5Ab6X6Sxft8//8Dg==
+X-Google-Smtp-Source: AGHT+IHiVudgJ8w2j94doVUAeUrPN3IQZZONJ1H0nTCdQmnfLcj1Y9/u4v+/r2IXJzbGgIB0D0PAAg==
+X-Received: by 2002:a17:902:be17:b0:1d0:9a64:e511 with SMTP id r23-20020a170902be1700b001d09a64e511mr6891352pls.73.1702475486604;
+        Wed, 13 Dec 2023 05:51:26 -0800 (PST)
+Received: from leoy-yangtze.lan (211-75-219-200.hinet-ip.hinet.net. [211.75.219.200])
+        by smtp.gmail.com with ESMTPSA id q5-20020a170902bd8500b001c9d011581dsm10531995pls.164.2023.12.13.05.51.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Dec 2023 05:51:26 -0800 (PST)
+Date: Wed, 13 Dec 2023 21:51:19 +0800
+From: Leo Yan <leo.yan@linaro.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
+	mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
+	adrian.hunter@intel.com, john.g.garry@oracle.com, will@kernel.org,
+	james.clark@arm.com, mike.leach@linaro.org,
+	yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	tmricht@linux.ibm.com, ravi.bangoria@amd.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V2 4/5] perf mem: Clean up perf_mem_event__supported()
+Message-ID: <20231213134911.GB3895246@leoy-yangtze.lan>
+References: <20231207192338.400336-1-kan.liang@linux.intel.com>
+ <20231207192338.400336-5-kan.liang@linux.intel.com>
+ <20231209061723.GC2116834@leoy-yangtze.lan>
+ <2865c1b4-a003-44df-a734-1e1c90bfa14d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v1 06/14] libperf cpumap: Add any, empty and min helpers
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=c3=a9_Almeida?=
- <andrealmeid@igalia.com>, Kan Liang <kan.liang@linux.intel.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Andrew Jones <ajones@ventanamicro.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>,
- "Steinar H. Gunderson" <sesse@google.com>,
- Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>,
- Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- bpf@vger.kernel.org
-References: <20231129060211.1890454-1-irogers@google.com>
- <20231129060211.1890454-7-irogers@google.com>
- <94e3745c-8c2b-bdf3-f331-1cbe56574d48@arm.com>
- <CAP-5=fUWtgNMGWowN2+qnV5FV3viHd=kPqiwXUeEtkQAzabLGw@mail.gmail.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fUWtgNMGWowN2+qnV5FV3viHd=kPqiwXUeEtkQAzabLGw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2865c1b4-a003-44df-a734-1e1c90bfa14d@linux.intel.com>
 
+On Mon, Dec 11, 2023 at 01:44:54PM -0500, Liang, Kan wrote:
+> 
+> 
+> On 2023-12-09 1:17 a.m., Leo Yan wrote:
+> > On Thu, Dec 07, 2023 at 11:23:37AM -0800, kan.liang@linux.intel.com wrote:
+> >> From: Kan Liang <kan.liang@linux.intel.com>
+> >>
+> >> For some ARCHs, e.g., ARM and AMD, to get the availability of the
+> >> mem-events, perf checks the existence of a specific PMU. For the other
+> >> ARCHs, e.g., Intel and Power, perf has to check the existence of some
+> >> specific events.
+> >>
+> >> The current perf only iterates the mem-events-supported PMUs. It's not
+> >> required to check the existence of a specific PMU anymore.
+> > 
+> > With this change, both Arm and AMD archs have no chance to detect if the
+> > hardware (or the device driver) is supported and the tool will always
+> > take the memory events are exited on the system, right?
+> 
+> Currently, the Arm and AMD only check the specific PMU. If the PMU is
+> detected, the memory events are supported. The patch set doesn't change
+> it. It just moves the check to perf_pmu__arch_init(). When the specific
+> PMU is initialized, the mem_events is assigned. You don't need to do
+> runtime sysfs check. It should be an improvement for ARM and AMD.
 
+Okay, I understand now.  For Arm SPE, it has a dedicated PMU so if the
+PMU is detected, then we can assume the memory events are supported.
 
-On 12/12/2023 20:27, Ian Rogers wrote:
-> On Tue, Dec 12, 2023 at 7:06 AM James Clark <james.clark@arm.com> wrote:
->>
->>
->>
->> On 29/11/2023 06:02, Ian Rogers wrote:
->>> Additional helpers to better replace
->>> perf_cpu_map__has_any_cpu_or_is_empty.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/lib/perf/cpumap.c              | 27 +++++++++++++++++++++++++++
->>>  tools/lib/perf/include/perf/cpumap.h | 16 ++++++++++++++++
->>>  tools/lib/perf/libperf.map           |  4 ++++
->>>  3 files changed, 47 insertions(+)
->>>
->>> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
->>> index 49fc98e16514..7403819da8fd 100644
->>> --- a/tools/lib/perf/cpumap.c
->>> +++ b/tools/lib/perf/cpumap.c
->>> @@ -316,6 +316,19 @@ bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map)
->>>       return map ? __perf_cpu_map__cpu(map, 0).cpu == -1 : true;
->>>  }
->>>
->>> +bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map)
->>> +{
->>> +     if (!map)
->>> +             return true;
->>> +
->>> +     return __perf_cpu_map__nr(map) == 1 && __perf_cpu_map__cpu(map, 0).cpu == -1;
->>> +}
->>
->> I'm struggling to understand the relevance of the difference between
->> has_any and is_any I see that there is a slight difference, but could it
->> not be refactored out so we only need one?
-> 
-> Yep, that's what these changes are working toward. For has any the set
-> {-1, 0, 1} would return true while is any will return false.
-> Previously the has any behavior was called "empty" which I think is
-> actively misleading.
-> 
->> Do you ever get an 'any' map that has more than 1 entry? It's quite a
->> subtle difference that is_any returns false if the first one is 'any'
->> but then there are subsequent entries. Whereas has_any would return
->> true. I'm not sure if future readers would be able to appreciate that.
->>
->> I see has_any is only used twice, both on evlist->all_cpus. Is there
->> something about that member that means it could have a map that has an
->> 'any' mixed with CPUs? Wouldn't that have the same result as a normal
->> 'any' anyway?
-> 
-> The dummy event may be opened on any CPU but then a particular event
-> may be opened on certain CPUs. We merge CPU maps in places like evlist
-> so that we can iterate the appropriate CPUs for events and
-> open/enable/disable/close all events on a certain CPU at the same time
-> (we also set the affinity to that CPU to avoid IPIs). What I'm hoping
-> to do in these changes is reduce the ambiguity, the corner cases are
-> by their nature unusual.
-> 
-> An example of a corner case is, uncore events often get opened just on
-> CPU 0 but on a multi-socket system you may have a CPU 32 that also
-> needs to open the event. Previous code treated the CPU map index and
-> value it contained pretty interchangeably. This is often fine for the
-> core PMU but is clearly wrong in this uncore case, {0, 32} has indexes
-> 0 and 1 but those indexes don't match the CPU numbers. The case of -1
-> has often previously been called dummy but I'm trying to call it the
-> "any CPU" case to match the perf_event_open man page (I'm hoping it
-> also makes it less ambiguous with any CPU being used with a particular
-> event like cycles, calling it dummy makes the event sound like it may
-> have sideband data). The difference between "all CPUs" and "any CPU"
-> is that an evsel for all CPUs would need the event opening
-> individually on each CPU, while any CPU events are a single open call.
-> Any CPU is only valid to perf_event_open if a PID is specified.
-> Depending on the set up there could be overlaps in what they count but
-> hopefully it is clearer what the distinction is. I believe the case of
-> "any CPU" and specific CPU numbers is more common with aux buffers and
-> Adrian has mentioned needing it for intel-pt.
-> 
-> Thanks,
-> Ian
-> 
+For other cases, you need to check furthermore if PMU has supported
+specific memory events.
 
-Thanks for explaining. I suppose I didn't realise that 'any' could be
-merged with per-cpu maps, but it makes sense.
+This patch is fine for me, you could ignore my comment for the
+regression caused by this patch.
 
->>> +
->>> +bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
->>> +{
->>> +     return map == NULL;
->>> +}
->>> +
->>>  int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
->>>  {
->>>       int low, high;
->>> @@ -372,6 +385,20 @@ bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map)
->>>       return map && __perf_cpu_map__cpu(map, 0).cpu == -1;
->>>  }
->>>
->>> +struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map)
->>> +{
->>> +     struct perf_cpu cpu, result = {
->>> +             .cpu = -1
->>> +     };
->>> +     int idx;
->>> +
->>> +     perf_cpu_map__for_each_cpu_skip_any(cpu, idx, map) {
->>> +             result = cpu;
->>> +             break;
->>> +     }
->>> +     return result;
->>> +}
->>> +
->>>  struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
->>>  {
->>>       struct perf_cpu result = {
->>> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
->>> index dbe0a7352b64..523e4348fc96 100644
->>> --- a/tools/lib/perf/include/perf/cpumap.h
->>> +++ b/tools/lib/perf/include/perf/cpumap.h
->>> @@ -50,6 +50,22 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
->>>   * perf_cpu_map__has_any_cpu_or_is_empty - is map either empty or has the "any CPU"/dummy value.
->>>   */
->>>  LIBPERF_API bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map);
->>> +/**
->>> + * perf_cpu_map__is_any_cpu_or_is_empty - is map either empty or the "any CPU"/dummy value.
->>> + */
->>> +LIBPERF_API bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map);
->>> +/**
->>> + * perf_cpu_map__is_empty - does the map contain no values and it doesn't
->>> + *                          contain the special "any CPU"/dummy value.
->>> + */
->>> +LIBPERF_API bool perf_cpu_map__is_empty(const struct perf_cpu_map *map);
->>> +/**
->>> + * perf_cpu_map__min - the minimum CPU value or -1 if empty or just the "any CPU"/dummy value.
->>> + */
->>> +LIBPERF_API struct perf_cpu perf_cpu_map__min(const struct perf_cpu_map *map);
->>> +/**
->>> + * perf_cpu_map__max - the maximum CPU value or -1 if empty or just the "any CPU"/dummy value.
->>> + */
->>>  LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
->>>  LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
->>>  LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
->>> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
->>> index 10b3f3722642..2aa79b696032 100644
->>> --- a/tools/lib/perf/libperf.map
->>> +++ b/tools/lib/perf/libperf.map
->>> @@ -10,6 +10,10 @@ LIBPERF_0.0.1 {
->>>               perf_cpu_map__nr;
->>>               perf_cpu_map__cpu;
->>>               perf_cpu_map__has_any_cpu_or_is_empty;
->>> +             perf_cpu_map__is_any_cpu_or_is_empty;
->>> +             perf_cpu_map__is_empty;
->>> +             perf_cpu_map__has_any_cpu;
->>> +             perf_cpu_map__min;
->>>               perf_cpu_map__max;
->>>               perf_cpu_map__has;
->>>               perf_thread_map__new_array;
+Thanks,
+Leo
