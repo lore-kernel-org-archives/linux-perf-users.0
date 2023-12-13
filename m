@@ -1,59 +1,104 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE6CF5;
-	Wed, 13 Dec 2023 14:07:15 -0800 (PST)
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ce831cbba6so4346445b3a.2;
-        Wed, 13 Dec 2023 14:07:15 -0800 (PST)
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 856A9AC;
+	Wed, 13 Dec 2023 14:14:08 -0800 (PST)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-28b0071ae32so547620a91.0;
+        Wed, 13 Dec 2023 14:14:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702505235; x=1703110035;
+        d=1e100.net; s=20230601; t=1702505648; x=1703110448;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yF84qvQF+jKoq1M1NI49RnbH9CqQ4Hru8EABSTtyapU=;
-        b=nbhSKYymGhY3JvL5kKAyYrILxLMp7tNndtTFSOdQO800+XhmBfqHfcZ/+nfhNXD5d3
-         qBvNGMykcrpQKwciEh7G9bCSRtrOWcqkMmuU2NbwYg9WjUtu3FKNViAXhEALeZEaehpN
-         adfJbI3lTQQtePdYsDbggr1PnF+CUfpBBIKNQwqKStf54bVNoeQiQWk57LbjYMQH+KnI
-         juZv/jxWHgRIaFjuK8rHhY2JFzJkbNNblEa/Wipvu+CgBr5XoET7V1X/ikvSsWZVKpye
-         KHI19+5+cLQDSv0fmwXRFgvz/hvES7POhi51nUnjIOMRM0WYqa/sr/xYVYdmopH7DjBM
-         N/dg==
-X-Gm-Message-State: AOJu0YwfhR4dMIq5S0JmjAOUC7MDeHV+unwfIT7ppNYQBavNlDtIMn6R
-	frGpodRJ3dYhSmVMLwVKknxVrXcnFd2Za99dg5g=
-X-Google-Smtp-Source: AGHT+IE4fpAh5MRfkBwR4G2EsuGiPpoQeclq+TFz1vKJ79Qrtc1dEmQiSBBHzIFIDWUev4rbxa1zoee6r87xm0H/Q7g=
-X-Received: by 2002:a05:6a20:7a81:b0:187:b14f:a2a with SMTP id
- u1-20020a056a207a8100b00187b14f0a2amr4572950pzh.20.1702505234919; Wed, 13 Dec
- 2023 14:07:14 -0800 (PST)
+        bh=PrPkyaX0AG7+dG5o0kCvLphBtxW3qZUWNIeyMgltZ2k=;
+        b=tWatdAZAyUZqXvJ/JZ9Ieo0c6eQD2x8BxciznFEcQFU+9MYwP2VjuQFhRbTfJwdDVo
+         HH62xrm9BDpIoDa1pcWnXMYMAs38ujNmpViGGLgvpzfP/t+nzrdc2mL9YQNNc+5oJaoh
+         o1qn3HuT5x1BMxCZyqhxEUrygdUaqWhRHrHqSbvLrEp17QY+NW0HFN9v9rTmITbOlOZZ
+         ol/Pa2gozDO9tpbhm9SyfncXcwz0D6/ikoXps1a0ln43667LEJ3tH75bGIJqEcvpTo7J
+         D+pd+EQpawUL3+CbTg9z0Dnc+6LUKT4mZgLkINNpWl4M+Psh1F6k573ei6XBaPt0mrUe
+         5vzA==
+X-Gm-Message-State: AOJu0Yyd+aMpk5VTs/DuP72xfoDO776ndZUYpTFrdfDtiIYSPdVo118i
+	SdSdtJFqlrE7avoZI3hH+oqjOjyvrBZVxRvzPlU=
+X-Google-Smtp-Source: AGHT+IFzysZucKQnuzF1P2AfQ1XThSqn5haRfHgHeRKl6p1tfABu5GEmr/4tmyo87GzdBiPVxvBCbsqjqSQqWGjQ56Q=
+X-Received: by 2002:a17:90a:6d26:b0:28a:cf4f:dad9 with SMTP id
+ z35-20020a17090a6d2600b0028acf4fdad9mr1520579pjj.28.1702505647865; Wed, 13
+ Dec 2023 14:14:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212070547.612536-1-namhyung@kernel.org> <CAP-5=fV5sA1ga5UfvHW_=Ep25b-TzsLJ8Atqk3KePKOx-fk9TQ@mail.gmail.com>
- <CAFjbc8Gt1GpLWjDf1jdhnb6fhVx246Tik+_TFXarGEqiZUY5BQ@mail.gmail.com>
-In-Reply-To: <CAFjbc8Gt1GpLWjDf1jdhnb6fhVx246Tik+_TFXarGEqiZUY5BQ@mail.gmail.com>
+References: <20231212070547.612536-1-namhyung@kernel.org> <20231212070547.612536-3-namhyung@kernel.org>
+ <CAP-5=fWH=Nt4Dr7-rHqqfPSHPQUP=Bof2iGWEZEpsz5NC+wZiA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWH=Nt4Dr7-rHqqfPSHPQUP=Bof2iGWEZEpsz5NC+wZiA@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 13 Dec 2023 14:07:03 -0800
-Message-ID: <CAM9d7chSAJS+ro65eG9-A6G5xdgt0JTzJkYAnzqrW28EQ-zGug@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf tools: Random fixes for DWARF unwind
-To: Pablo Galindo Salgado <pablogsal@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+Date: Wed, 13 Dec 2023 14:13:57 -0800
+Message-ID: <CAM9d7chc9uyj-gZT0_a6aca6UMqjiXGNiSB8MGUXchg5VGrKrw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf unwind-libdw: Handle JIT-generated DSOs properly
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
 	linux-perf-users@vger.kernel.org, Milian Wolff <milian.wolff@kdab.com>, 
-	Fangrui Song <maskray@google.com>
+	Pablo Galindo <pablogsal@gmail.com>, Fangrui Song <maskray@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 4:54=E2=80=AFPM Pablo Galindo Salgado
-<pablogsal@gmail.com> wrote:
+On Tue, Dec 12, 2023 at 10:07=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> > It'd be great if we could do similar for CPython.
+> On Mon, Dec 11, 2023 at 11:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> >
+> > Usually DSOs are mapped from the beginning of the file, so the base
+> > address of the DSO can be calculated by map->start - map->pgoff.
+> >
+> > However, JIT DSOs which are generated by `perf inject -j`, are mapped
+> > only the code segment.  This makes unwind-libdw code confusing and
+> > rejects processing unwinds in the JIT DSOs.  It should use the map
+> > start address as base for them to fix the confusion.
+> >
+> > Fixes: 1fe627da3033 ("perf unwind: Take pgoff into account when reporti=
+ng elf to libdwfl")
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/unwind-libdw.c | 21 +++++++++++++++++----
+> >  1 file changed, 17 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-li=
+bdw.c
+> > index 8554db3fc0d7..6013335a8dae 100644
+> > --- a/tools/perf/util/unwind-libdw.c
+> > +++ b/tools/perf/util/unwind-libdw.c
+> > @@ -46,6 +46,7 @@ static int __report_module(struct addr_location *al, =
+u64 ip,
+> >  {
+> >         Dwfl_Module *mod;
+> >         struct dso *dso =3D NULL;
+> > +       Dwarf_Addr base;
+> >         /*
+> >          * Some callers will use al->sym, so we can't just use the
+> >          * cheaper thread__find_map() here.
+> > @@ -58,13 +59,25 @@ static int __report_module(struct addr_location *al=
+, u64 ip,
+> >         if (!dso)
+> >                 return 0;
+> >
+> > +       /*
+> > +        * The generated JIT DSO files only map the code segment withou=
+t
+> > +        * ELF headers.  Since JIT codes used to be packed in a memory
+> > +        * segment, calculating the base address using pgoff falls into
+> > +        * a different code in another DSO.  So just use the map->start
+> > +        * directly to pick the correct one.
+> > +        */
+> > +       if (!strncmp(dso->long_name, "/tmp/jitted-", 12))
 >
-> We (the CPython team) plan to release the perf jitdump support for
-> Python 3.13 (around next October) so you will need to build from
-> source or wait until is officially released for that test.
+> Perhaps it would be better to test:
+> dso->symtab_type =3D=3D DSO_BINARY_TYPE__JAVA_JIT
 
-Okay, I hope we can have all the fixes asap and most distros ship
-the latest version by then.
+Well.. it's a little different.  The JAVA_JIT type files have
+"/tmp/perf-" prefix and it's a plain text file (for symbols).
+While this is an ELF file generated by `perf inject -j`.
 
 Thanks,
 Namhyung
