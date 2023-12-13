@@ -1,13 +1,13 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A09012A;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D3C12D;
 	Tue, 12 Dec 2023 23:05:16 -0800 (PST)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BD73buI032263;
-	Wed, 13 Dec 2023 15:03:37 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3BD73rxS032328;
+	Wed, 13 Dec 2023 15:03:53 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Wed, 13 Dec 2023
- 15:03:33 +0800
+ 15:03:49 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -31,9 +31,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>
-Subject: [PATCH v5 06/16] perf: RISC-V: Eliminate redundant interrupt enable/disable operations
-Date: Wed, 13 Dec 2023 15:02:51 +0800
-Message-ID: <20231213070301.1684751-7-peterlin@andestech.com>
+Subject: [PATCH v5 09/16] dt-bindings: riscv: Add T-Head PMU extension description
+Date: Wed, 13 Dec 2023 15:02:54 +0800
+Message-ID: <20231213070301.1684751-10-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231213070301.1684751-1-peterlin@andestech.com>
 References: <20231213070301.1684751-1-peterlin@andestech.com>
@@ -47,51 +47,43 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BD73buI032263
+X-MAIL:Atcsqr.andestech.com 3BD73rxS032328
 
-The interrupt enable/disable operations are already performed by the
-IRQ chip functions riscv_intc_irq_unmask()/riscv_intc_irq_mask() during
-enable_percpu_irq()/disable_percpu_irq(). It can be done only once.
+Document the ISA string for T-Head performance monitor extension
+which provides counter overflow interrupt mechanism.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Reviewed-by: Guo Ren <guoren@kernel.org>
+Reviewed-by: Inochi Amaoto <inochiama@outlook.com>
 ---
-This patch allows us to drop unnecessary ALT_SBI_PMU_OVF_{DISABLE,ENABLE}
-in the initial PATCH3 [1].
-
-[1] https://patchwork.kernel.org/project/linux-riscv/patch/20230907021635.1002738-4-peterlin@andestech.com/
-
-Changes v1 -> v2:
-  - New patch
 Changes v2 -> v3:
-  - No change
+  - New patch
 Changes v3 -> v4:
   - No change
 Changes v4 -> v5:
-  - No change
+  - Include Guo's Reviewed-by
+  - Include Inochi's Reviewed-by
+  - Update to C910 documentation with its commit hash
 ---
- drivers/perf/riscv_pmu_sbi.c | 2 --
- 1 file changed, 2 deletions(-)
+ Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 16acd4dcdb96..2edbc37abadf 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -781,7 +781,6 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
- 	if (riscv_pmu_use_irq) {
- 		cpu_hw_evt->irq = riscv_pmu_irq;
- 		csr_clear(CSR_IP, BIT(riscv_pmu_irq_num));
--		csr_set(CSR_IE, BIT(riscv_pmu_irq_num));
- 		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
- 	}
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index c91ab0e46648..b5cb8ac7ac80 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -258,5 +258,11 @@ properties:
+             in commit 2e5236 ("Ztso is now ratified.") of the
+             riscv-isa-manual.
  
-@@ -792,7 +791,6 @@ static int pmu_sbi_dying_cpu(unsigned int cpu, struct hlist_node *node)
- {
- 	if (riscv_pmu_use_irq) {
- 		disable_percpu_irq(riscv_pmu_irq);
--		csr_clear(CSR_IE, BIT(riscv_pmu_irq_num));
- 	}
- 
- 	/* Disable all counters access for user mode now */
++        - const: xtheadpmu
++          description:
++            The T-Head performance monitor extension for counter overflow, as ratified
++            in commit 4c4981 ("Initial commit") of Xuantie C910 user manual.
++            https://github.com/T-head-Semi/openc910/tree/main/doc
++
+ additionalProperties: true
+ ...
 -- 
 2.34.1
 
