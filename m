@@ -1,38 +1,38 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE4199;
-	Tue, 12 Dec 2023 17:18:00 -0800 (PST)
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-58dd3528497so3908034eaf.3;
-        Tue, 12 Dec 2023 17:18:00 -0800 (PST)
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CACE109;
+	Tue, 12 Dec 2023 17:20:30 -0800 (PST)
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3b9e2a014e8so4383934b6e.2;
+        Tue, 12 Dec 2023 17:20:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702430280; x=1703035080;
+        d=1e100.net; s=20230601; t=1702430429; x=1703035229;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qrBztKR7DBFWjHGGF4oqW3fatxTjNIhtib1nUgBnZG0=;
-        b=k3FjPQ64/J4SrhOq0pOTnes1t1AqjbLgEAtli7UpsPiRbRbVCv9ckIMmEdZgpwLG+8
-         Xh7ULH1975WhC9TWrbtu3pZ+1uOgb6KokSaX6cZrb4kPRKHE7JGPt0AXKtxmZXaIQIab
-         HENmgmORsSF226sKdGCJkWADcg4Rtqe7vaYJHURRU0z3LyIg3CIcS9pvuLZ0ZCF8zeeG
-         TZfW/PvI41JpeNqiya+KhXX8WNsruOfyYkHLolaolyl0/QL6U2W7ZF7HTr1uQwPtmxpd
-         ElFW4PFZRaC5xvn0y0K42b5b31EGoR2OKa1KEZcle8zaYYbrLdRk1k27Pw/pr0lWFFSu
-         /tkw==
-X-Gm-Message-State: AOJu0Yy6JxjYs/1/NLMUKTOdiXFo8oUqQg3ix3EMu8/f5AdB/8XNlsPx
-	phgtbxJwMLNod6BGoQTzc5Vih0d+u+ex/e1dw/g=
-X-Google-Smtp-Source: AGHT+IGLl2RaiPS+JDWzHTX1nc4PK06yrw1EpdlQ9nDdu0JL4PGUSDocs0deDQImGZM0/It/b+1jan8KJcbEsFaEjGA=
-X-Received: by 2002:a05:6358:4194:b0:170:ee27:bfa1 with SMTP id
- w20-20020a056358419400b00170ee27bfa1mr2326149rwc.5.1702430280044; Tue, 12 Dec
- 2023 17:18:00 -0800 (PST)
+        bh=oDV23UfQcsiX7X38F3L5/gMcpwEJh9Y0+V7g6hM71gc=;
+        b=KLW+zhVLY4+XptpS1QhwOpzlNjHSZj2vNTOr+PIgNgPi3iZb5UI2k9KQNxm54c+H2u
+         vF6G2UpfGlekBBBzdS2bKMu68dSgkpH9/0Vvij4X3Tz8XpdUegNekFFUPt8tdVhK9iDI
+         MLoXoOVBOUrmrTlME9S0CY0KlltysEliQPUvwGi/lVXUylVVtF0LPbxKAvk+bUVmFBNE
+         9ZorXGIHsLwKBPvxqUSzYUzWKtt5vgJLDKVJjczxsCMcw0C4dDfSni/Rbh4l00OgxC9e
+         YGonWLN8RI2JRy5NayWLXHiA9FcQIoN/PdYYDxVfEsHhc8Im8QcKwqJ/1972Mqs5f4N9
+         oELg==
+X-Gm-Message-State: AOJu0YzBLWJIHfaZ01JuYQdPoC/XDhToLuE2LdbrVxbEqaqwqaA+Qtg7
+	P8p7BwwLjP/FcbMU6hoM8rL1gyD4XWIa0jvpF24=
+X-Google-Smtp-Source: AGHT+IEmB8ZiGiwrSCCoseXLOaGUQiS/8jpIC2lF/0Ti3OWOHpRo3txtpbpT5bK0l0OFcTPwC+dDxsWivJf3tyH+0s8=
+X-Received: by 2002:a05:6808:2186:b0:3b8:b063:6ba7 with SMTP id
+ be6-20020a056808218600b003b8b0636ba7mr10146976oib.86.1702430429500; Tue, 12
+ Dec 2023 17:20:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207081635.8427-1-yangyicong@huawei.com> <20231207081635.8427-2-yangyicong@huawei.com>
-In-Reply-To: <20231207081635.8427-2-yangyicong@huawei.com>
+References: <20231207081635.8427-1-yangyicong@huawei.com> <20231207081635.8427-3-yangyicong@huawei.com>
+In-Reply-To: <20231207081635.8427-3-yangyicong@huawei.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 12 Dec 2023 17:17:49 -0800
-Message-ID: <CAM9d7cgW9YaS7+2Y0zPszbkSZpu2XgJjW3GP+yig4C-++vJ4-g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf header: Fix one memory leakage in perf_event__fprintf_event_update()
+Date: Tue, 12 Dec 2023 17:20:18 -0800
+Message-ID: <CAM9d7cjmgFEXsHOfkryZRdypEdxb48JCrH-T70KYwsDXsZvWFg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf hisi-ptt: Fix one memory leakage in hisi_ptt_process_auxtrace_event()
 To: Yicong Yang <yangyicong@huawei.com>
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
 	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
@@ -42,52 +42,42 @@ Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
 On Thu, Dec 7, 2023 at 12:20=E2=80=AFAM Yicong Yang <yangyicong@huawei.com>=
  wrote:
 >
 > From: Yicong Yang <yangyicong@hisilicon.com>
 >
-> When dump the raw trace by `perf report -D` ASan reports a memory
-> leakage in perf_event__fprintf_event_update(). It shows that we
-> allocated a temporary cpumap for dumping the CPUs but doesn't
-> release it and it's not used elsewhere. Fix this by free the
-> cpumap after the dumping.
+> ASan complains a memory leakage in hisi_ptt_process_auxtrace_event()
+> that the data buffer is not freed. Since currently we only support
+> the raw dump trace mode, the data buffer is used only within this
+> function. So fix this by freeing the data buffer before going out.
 >
-> Fixes: c853f9394b7b ("perf tools: Add perf_event__fprintf_event_update fu=
-nction")
-> Cc: Jiri Olsa <jolsa@kernel.org>
+> Fixes: 5e91e57e6809 ("perf auxtrace arm64: Add support for parsing HiSili=
+con PCIe Trace packet")
 > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Acked-by: Namhyung Kim <Namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
 > ---
->  tools/perf/util/header.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  tools/perf/util/hisi-ptt.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index e86b9439ffee..7190f39ccd13 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -4369,9 +4369,10 @@ size_t perf_event__fprintf_event_update(union perf=
-_event *event, FILE *fp)
->                 ret +=3D fprintf(fp, "... ");
+> diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
+> index 43bd1ca62d58..52d0ce302ca0 100644
+> --- a/tools/perf/util/hisi-ptt.c
+> +++ b/tools/perf/util/hisi-ptt.c
+> @@ -123,6 +123,7 @@ static int hisi_ptt_process_auxtrace_event(struct per=
+f_session *session,
+>         if (dump_trace)
+>                 hisi_ptt_dump_event(ptt, data, size);
 >
->                 map =3D cpu_map__new_data(&ev->cpus.cpus);
-> -               if (map)
-> +               if (map) {
->                         ret +=3D cpu_map__fprintf(map, fp);
-> -               else
-> +                       perf_cpu_map__put(map);
-> +               } else
->                         ret +=3D fprintf(fp, "failed to get cpus\n");
->                 break;
->         default:
+> +       free(data);
+>         return 0;
+>  }
+>
 > --
 > 2.24.0
 >
