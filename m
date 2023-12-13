@@ -1,78 +1,241 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="SzZPap/1"
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE65E8
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:54:16 -0800 (PST)
-Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-77f35009e78so408709885a.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:54:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="c05HngJr"
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0609107
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 07:19:37 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c9ea37ac87so97667891fa.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 07:19:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1702479255; x=1703084055; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sYhZKTO+n/Hy770LjqTnEQ/mbZOGO/ntqNbsrj+NvGk=;
-        b=SzZPap/1VBkTdxomNGlMOzALXK62v3vANuZSl5XzIoYOLak5aJbE3cdTSmiHYjcE+Q
-         JFd8eIHTrXRzO2OY7HHeqP1XL8zjNegG7RWAFah/+bECQlpUVfv9cksKW6yIAz54KWc5
-         yB/zo9usXOvw0CKeHlpaBSaMIJcYtaS+p3XqU=
+        d=ventanamicro.com; s=google; t=1702480775; x=1703085575; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZNtewRvKdkPKx/kufVZXHodSPMmaednXpW/7XMndJ0U=;
+        b=c05HngJrSXOs9nZxeSDrJfluvJDmtKxclnkEnS5QHlDp8yv+or4WwYBBxUh1NalyW8
+         FDMXUPhHN9tDbMGKyr8vG9X2qVB83jjynz4zR1wEw4MdhoQ/4U2ffd1HBPJklP+Oyroz
+         RTHsYzleZ8DxnXQwxGjSUeUPuin1XYpXmgaIHfHBJ0HwKuFcsbUAsW7KtFF3ioYJWGdO
+         gJALSsPqCjcCADXWqHLYaHS0NkEFg0lRk1LU4SJR4Qw9voRm3Vreft6hz2ywxtHSkeMQ
+         Jx4CaIGTreXntZXZNtUbmaPGqrZnddgp4m3RWPA0FpV6NLyLK7CT9T5YGeXH62QK1c29
+         fZtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702479255; x=1703084055;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sYhZKTO+n/Hy770LjqTnEQ/mbZOGO/ntqNbsrj+NvGk=;
-        b=Nkgf+qKpybdnuDzPkbPGrzeG1gbI2X+78VHYsRPoF8gy/9nmitZXJf2rq45JRw0RDm
-         crQ1vR8pym/gz3KoYeD+SXbWkYcFR8fAOqvtDhUER1Fg/NczPNofzCD7XnMRKRIVr0GE
-         DzMFtK4DuniBZiS66a1H0Gfw0X7BcNdxVS3vAr5hxtQT93zsJOQvaAqnOfw8JZgx1k4x
-         gLcE70WhBOjiLkSLbSboaE3M3ibXhKJ8TCb0CW79PS7zLvGTLlH0cRbiCkUv3pLVRwKl
-         n0n1zNL8tRO7xRf9cnetai2lZh76X5yxBSnDPS0s7p8HvUqjp6NwekrlUnTLJio7HdGk
-         JIEw==
-X-Gm-Message-State: AOJu0YxtgipvhMGx6aAGE+79ooy4pjupBDTxjzdv7p7C6Vrq07vEl7cK
-	hp58w32ODdCIy4H7JRiZHDAzSw==
-X-Google-Smtp-Source: AGHT+IH0o9dvc/q99ZcvvS/TE42YBHUKs3xa0xzfNMF3FDuCvAzTxzCANGs7FzeNBNzX67Oh34TgTQ==
-X-Received: by 2002:a05:620a:4496:b0:77f:8c7a:8a94 with SMTP id x22-20020a05620a449600b0077f8c7a8a94mr3011201qkp.72.1702479255429;
-        Wed, 13 Dec 2023 06:54:15 -0800 (PST)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id re19-20020a05620a8e1300b0077f13650cb7sm4556860qkn.2.2023.12.13.06.54.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 06:54:15 -0800 (PST)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Wed, 13 Dec 2023 09:54:09 -0500 (EST)
-To: xingwei lee <xrivendell7@gmail.com>
-cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-    mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-    namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: possible deadlock in down_trylock/perf_event_open
-In-Reply-To: <CABOYnLxoG=YsE1XyOjfF0O+2UrdTyK1JMir3xPapGsRzh-XFAA@mail.gmail.com>
-Message-ID: <227eb61b-8068-001e-47fa-b65104b3b226@maine.edu>
-References: <CABOYnLxoG=YsE1XyOjfF0O+2UrdTyK1JMir3xPapGsRzh-XFAA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1702480775; x=1703085575;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZNtewRvKdkPKx/kufVZXHodSPMmaednXpW/7XMndJ0U=;
+        b=LkBm8MTPHgnPPk4kAXJMag+Sf+mBsSb7N1rfgroMuLy5H+ya19ntKjuJ6YSX2Dm0mr
+         NX3CRq7MWu50Qef0w6tELeuh4FX84oIS+1WYVvP40W8N8QmF0mHLAsCweFWdb30AiXTU
+         hqKYUqq9kq/LCowzyxtbE7CKUr/R2GoGNgAFmntof9sMxHhogVKVOky7ZSwQhUyX0VB2
+         cMVAkZrYplrEAamCQQ7JcCz4qQLhsd2N0kAdgfiBMWIIVsCWm3x8suxqYZSIKOoeW/Al
+         auAr7KFqjtTOqU2yjAG8J4UOUS2bltNMVjrbznMoHbINy9sy6KoJdvimvUxThboXpeCB
+         B55Q==
+X-Gm-Message-State: AOJu0Yzdn3QNhdm3cZWPrvx4G4Pz093IaCerWBVKXTiGyI9ctytXttg+
+	JYcLDaGdqsZj0+SpdloaEUqv0VSEw39pUov2f0aOQw==
+X-Google-Smtp-Source: AGHT+IEWCau9dWkDM8W8lF/KIFyXrgUvkYmScfqjpzvs5KS7ZHA07igo81qn4oh9bMosVxgpVkuKuvBsoM9ShBq/11s=
+X-Received: by 2002:a05:651c:1186:b0:2cc:321c:d8dd with SMTP id
+ w6-20020a05651c118600b002cc321cd8ddmr706657ljo.82.1702480775254; Wed, 13 Dec
+ 2023 07:19:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20231213070301.1684751-1-peterlin@andestech.com>
+ <20231213070301.1684751-3-peterlin@andestech.com> <CAK9=C2WuuYQD8ydrHP16hUXVk6RuKLbfvUe_GpUGw9ppe3Rd8Q@mail.gmail.com>
+In-Reply-To: <CAK9=C2WuuYQD8ydrHP16hUXVk6RuKLbfvUe_GpUGw9ppe3Rd8Q@mail.gmail.com>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Wed, 13 Dec 2023 20:49:23 +0530
+Message-ID: <CAK9=C2U+rSP8YMahPmTHLYZ+ZBfwwY5y52JeU_=R+VL1frR1Uw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/16] irqchip/riscv-intc: Allow large non-standard
+ interrupt number
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org, 
+	conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org, 
+	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com, 
+	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de, 
+	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org, 
+	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com, 
+	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org, palmer@dabbelt.com, 
+	paul.walmsley@sifive.com, peterz@infradead.org, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org, 
+	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com, 
+	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me, wens@csie.org, 
+	will@kernel.org, ycliang@andestech.com, inochiama@outlook.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 11 Dec 2023, xingwei lee wrote:
+On Wed, Dec 13, 2023 at 7:58=E2=80=AFPM Anup Patel <apatel@ventanamicro.com=
+> wrote:
+>
+> On Wed, Dec 13, 2023 at 12:34=E2=80=AFPM Yu Chien Peter Lin
+> <peterlin@andestech.com> wrote:
+> >
+> > Currently, the implementation of the RISC-V INTC driver uses the
+> > interrupt cause as hardware interrupt number and has a limitation of
+> > supporting a maximum of 64 interrupts. However, according to the
+> > privileged spec, interrupt causes >=3D 16 are defined for platform use.
+>
+> I disagree with this patch.
+>
+> Even though RISC-V priv sepc allows interrupt causes >=3D 16, we
+> still need CSRs to manage arbitrary local interrupts
+>
+> Currently, we have following standard CSRs:
+> 1) [m|s]ie and [m|s]ip which are XLEN wide
+> 2) With AIA, we have [m|s]ieh and [m|s]iph for RV32
+>
+> Clearly, we can only have a XLEN number of standard local
+> interrupts without AIA and 64 local interrupts with AIA.
+>
+> Now for implementations with custom CSRs (such as Andes),
+> we still can't assume infinite local interrupts because HW will
+> have a finite number of custom CSRs.
+>
+> >
+> > This limitation prevents to fully utilize the available local interrupt
+> > sources. Additionally, the interrupt number used on RISC-V are sparse,
+> > with only interrupt numbers 1, 5 and 9 (plus Sscofpmf or T-Head's PMU
+> > interrupt) being currently used for supervisor mode.
+> >
+> > Switch to using irq_domain_create_tree() to create the radix tree
+> > map, so a larger number of hardware interrupts can be handled.
+> >
+> > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> > Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> > Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+> > ---
+> > Changes v1 -> v2:
+> >   - Fixed irq mapping failure checking (suggested by Cl=C3=A9ment and A=
+nup)
+> > Changes v2 -> v3:
+> >   - No change
+> > Changes v3 -> v4: (Suggested by Thomas [1])
+> >   - Use pr_warn_ratelimited instead
+> >   - Fix coding style and commit message
+> > Changes v4 -> v5: (Suggested by Thomas)
+> >   - Fix commit message
+> >
+> > [1] https://patchwork.kernel.org/project/linux-riscv/patch/202310230041=
+00.2663486-3-peterlin@andestech.com/#25573085
+> > ---
+> >  drivers/irqchip/irq-riscv-intc.c | 12 ++++--------
+> >  1 file changed, 4 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-ris=
+cv-intc.c
+> > index e8d01b14ccdd..2fdd40f2a791 100644
+> > --- a/drivers/irqchip/irq-riscv-intc.c
+> > +++ b/drivers/irqchip/irq-riscv-intc.c
+> > @@ -24,10 +24,9 @@ static asmlinkage void riscv_intc_irq(struct pt_regs=
+ *regs)
+> >  {
+> >         unsigned long cause =3D regs->cause & ~CAUSE_IRQ_FLAG;
+> >
+> > -       if (unlikely(cause >=3D BITS_PER_LONG))
+> > -               panic("unexpected interrupt cause");
+> > -
+> > -       generic_handle_domain_irq(intc_domain, cause);
+> > +       if (generic_handle_domain_irq(intc_domain, cause))
+> > +               pr_warn_ratelimited("Failed to handle interrupt (cause:=
+ %ld)\n",
+> > +                                   cause);
+> >  }
+> >
+> >  /*
+> > @@ -117,8 +116,7 @@ static int __init riscv_intc_init_common(struct fwn=
+ode_handle *fn)
+> >  {
+> >         int rc;
+> >
+> > -       intc_domain =3D irq_domain_create_linear(fn, BITS_PER_LONG,
+> > -                                              &riscv_intc_domain_ops, =
+NULL);
+> > +       intc_domain =3D irq_domain_create_tree(fn, &riscv_intc_domain_o=
+ps, NULL);
+>
+> I disagree with this change based on the reasoning above.
+>
+> Instead of this, we should determine the number of local interrupts
+> based on the type of RISC-V intc:
+> 1) For standard INTC without AIA, we have XLEN (or BITS_PER_LONG)
+>     local interrupts
+> 2) For standart INTC with AIA, we have 64 local interrupts
+> 3) For custom INTC (such as Andes), the number of local interrupt
+>     should be custom (Andes specific) which can be determined based
+>     on compatible string.
+>
+> Also, creating a linear domain with a fixed number of local interrupts
+> ensures that drivers can't map a local interrupt beyond the availability
+> of CSRs to manage it.
 
-> Hello I found a bug in kernel/perf in the lastest upstream linux 6.7.rc5
-> possible deadlock in down_trylock/perf_event_open
-> 
-> If you fix this issue, please add the following tag to the commit:
-> Reported-by: xingwei Lee <xrivendell7@gmail.com>
-> 
+Thinking about this more. We do have a problem because Andes local
+interrupts are really sparse which is not the case for standard local
+interrupts
 
-> 
-> syzkaller login: root
-> Linux syzkaller 6.7.0-rc5 #3 SMP PREEMPT_DYNAMIC Mon Dec 11 17:02:24
-> HKT 2023 x86_64
-> root@syzkaller:~# ./572
-> [  113.795108][ T8266] ------------[ cut here ]------------
-> [  113.795707][ T8266] WARNING: CPU: 1 PID: 8266 at
-> kernel/events/core.c:1950 __do_sys_perf_event_open0
+I have an alternate suggestion which goes as follows ...
 
+We use irq_domain_create_tree() in-place of irq_domain_create_linear()
+and enforce checks on hwirq in riscv_intc_domain_alloc() to ensure that
+we only allow hwirq for which we have corresponding standard or custom
+CSR.
 
-Just wanted to add that the perf_fuzzer will trigger this warning more or 
-less immediately as well.
+To achieve this, riscv_intc_init_common() will have to save the following
+as static global variables:
+1) riscv_intc_nr_irqs: Number of standard local interrupts
+2) riscv_intc_custom_base and riscv_intc_custom_nr_irqs: Base and
+    number of custom local interrupts.
 
-Vince
+Using the above static global variables, the riscv_intc_domain_alloc()
+can return error if one of the following conditions are met:
+1) riscv_intc_nr_irqs<=3D hwirq && hwirq < riscv_intc_custom_base
+2) (riscv_intc_custom_base + riscv_intc_custom_nr_irqs) <=3D hwirq
+
+For standard INTC, we can set the static global variable as follows:
+riscv_intc_nr_irqs =3D XLEN or BITS_PER_LONG
+riscv_intc_custom_base =3D riscv_intc_nr_irqs
+riscv_intc_custom_nr_irqs =3D 0
+
+For Andes INTC, we can set the static global variables as follows:
+riscv_intc_nr_irqs =3D XLEN or BITS_PER_LONG
+riscv_intc_custom_base =3D 256
+riscv_intc_custom_nr_irqs =3D XLEN or BITS_PER_LONG
+
+Regards,
+Anup
+
+>
+> >         if (!intc_domain) {
+> >                 pr_err("unable to add IRQ domain\n");
+> >                 return -ENXIO;
+> > @@ -132,8 +130,6 @@ static int __init riscv_intc_init_common(struct fwn=
+ode_handle *fn)
+> >
+> >         riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
+> >
+> > -       pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
+> > -
+>
+> Same as above, we should definitely advertise the type of INTC and
+> number of local interrupts mapped.
+>
+> Regards,
+> Anup
+>
+> >         return 0;
+> >  }
+> >
+> > --
+> > 2.34.1
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
