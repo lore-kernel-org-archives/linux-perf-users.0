@@ -1,110 +1,201 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gIkx7oNz"
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A517E3
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:24:23 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-6ce7c1b07e1so5990055b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:24:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="oq/scHkN"
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C07ADD
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:28:14 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c9f413d6b2so88202641fa.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Dec 2023 06:28:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702477462; x=1703082262; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=omVCJTcadojwMs4cotPLuLe245QnocRQoPFqqhmcrRo=;
-        b=gIkx7oNzAJDSQ1ualEoP+hNNiDL2eywxRkA3p+lrAYb5RmS6MTiCXCRDWI2hFeHYsz
-         hYrNhsiuC3lN5da4s/jx2aFul33bcTHbupDqsy1YRbdLXrbZSUlD7aG8sX9kuDtbfvKF
-         MuuFxrZots320r6Q4qy49nmRXD4PnhdvF6w4yU2S9xBf5yXq5NMmg5Nsms6MYp2wv23u
-         sXA8AWP2Ef9dbrDvNKFXYm/w4GxTddFT5+Ona31ebXJBnqUmcOWJKj9vHW6R8hLdKBV+
-         ST73HiAKnXsR2RaC7C9HVRxLPc1ArA6UL3DVDPTWp5UVv5KbpII0kbHvbfm6L+22kIxh
-         UbHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702477462; x=1703082262;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1702477693; x=1703082493; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=omVCJTcadojwMs4cotPLuLe245QnocRQoPFqqhmcrRo=;
-        b=SmE1PPmhI8Phz1J6rvNJRx+ln/yhGg+PQ3ReIH5iw/bBhUVx55TXxSEW8u1fEeAAV4
-         u7v79J6ooeGCZhM/cfydWBuyKPwGibDKvm8lCc6mKJuOOtJz/KsnlHAE/pOYxV+fesLB
-         P4g94Bo8dB6vDqPecxZJozZ75R8kFCapEc+kZnUG2Ndg4eTXni3S07UmVZ9hjZwNi3+x
-         8WiL06OBfZLZ8AZNO0m/hZue23wbWgSizkGmm1wXB+4WtYTfG2kL1C3OT/XrtxZrGdde
-         GYzkEXOT2xogyCvxnUTOQeBRSiixRl2Sy2z5ihBZOn9/uIyZfTzUprzCcd99eWIAwiL4
-         D3TA==
-X-Gm-Message-State: AOJu0YzIvBMI1aa8No7fdB4hNC10KmVeyA5iSS22DwKs0imttEtXpuEj
-	eKTuVmxhnNOljx5jXtBz+J25Gg==
-X-Google-Smtp-Source: AGHT+IEokrztG2NalxBWDVh3WZZbmZHm92HATaoA6DvdnHp2D8etNOA2/Q/wsQln/1NOEu7stvbvOA==
-X-Received: by 2002:aa7:8706:0:b0:6ce:2732:590 with SMTP id b6-20020aa78706000000b006ce27320590mr6836022pfo.65.1702477462485;
-        Wed, 13 Dec 2023 06:24:22 -0800 (PST)
-Received: from leoy-huanghe.lan (211-75-219-200.hinet-ip.hinet.net. [211.75.219.200])
-        by smtp.gmail.com with ESMTPSA id g17-20020a056a0023d100b006cb6e83bf7fsm9973836pfc.192.2023.12.13.06.24.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 06:24:21 -0800 (PST)
-Date: Wed, 13 Dec 2023 22:24:14 +0800
-From: Leo Yan <leo.yan@linaro.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
-	mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
-	adrian.hunter@intel.com, john.g.garry@oracle.com, will@kernel.org,
-	james.clark@arm.com, mike.leach@linaro.org,
-	yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	tmricht@linux.ibm.com, ravi.bangoria@amd.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 1/5] perf mem: Add mem_events into the supported
- perf_pmu
-Message-ID: <20231213142414.GH86143@leoy-huanghe.lan>
-References: <20231207192338.400336-1-kan.liang@linux.intel.com>
- <20231207192338.400336-2-kan.liang@linux.intel.com>
- <20231208102922.GB769184@leoy-huanghe.lan>
- <98863f44-4a35-4910-8db0-dbbf0474f6ae@linux.intel.com>
- <20231209063440.GE2116834@leoy-yangtze.lan>
- <ee9db34a-2b3d-46b3-ba36-22a22b080d70@linux.intel.com>
+        bh=wYCVDEfmEpAAq2joADzIDjMSoQFlP/Ou+pXsJQt/qSE=;
+        b=oq/scHkNx7fOA8XZwUVSe0s77KmLIdLcNCVMczA00Zl1Da29XfUGnRWh1mxmScuZKo
+         MgSyAh1eFMMbQg+wF8OBDc9uvdh1I8Uv/MNhwRlq7b4jexm4/Vt9kvPq3wiyaqo/pfDg
+         nQLzvRixvQCKS4Ax3i3Zsk+w/91XFe4LE7UxbhFTe3yagwsHn4rrlTrY1rw/aqJf/vi4
+         g4D1Hv8EmdSgAkq/eVGWtlmSEh5oazd2T5d588snXb7BQo9OtNYnM8WZXvwqLDdDqPZm
+         EOQmDZhMZPsvUqq6Md1OwhQPCxhjEEBf81CRxdt1E/okAhNIJSBNGEm5AUFUbEoKDo4p
+         FyLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702477693; x=1703082493;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wYCVDEfmEpAAq2joADzIDjMSoQFlP/Ou+pXsJQt/qSE=;
+        b=wbdJn14FLpjJmNgwgD4IxlKYAUMLM67xJjWeOxxX5TwaK4B/0PmNl8g5GMqLkbiq/m
+         mFWYq+nBNcFM0zm2xAzvgKJL2wvxyQZ1ThobiOTYDb7QbmWoUl2tuX+qFlbA2yLzscUK
+         9jz8JbV+Ymn2VrGVmEYEz34QXq2Cesl98XgZJtLGdLfQecfRBoQJitaRfiwBuQ859d8R
+         4S97ZNd1N8OmM53qIGl5NEIEH+wBO5s+e/MoE39+F+6Y2xnXG8jZBNlBTdBrGlqvpTyB
+         UgN/lb9OO5wOUaQykh7H+GblTYm1vUdPDnXBPDyPqT0+C9a9ipvrLfYXURIxx89jmINq
+         f7hg==
+X-Gm-Message-State: AOJu0YxuR8yzMcCrUNAXyfhVBe1RabTatmrfkeJv2+g1InlmNVEy7A4A
+	dAcu3RbIVjFoAVuIIzTWwE9nqEngROmzU7yRIbTa8g==
+X-Google-Smtp-Source: AGHT+IHDmlLtTkFMLJW7VNJT8SlVJHCzmvG4k5wsYrRIgEpE6i0fDa0/acLJ4JdcgtstAE4LD4tfwFQKOdBlv8mM9Vw=
+X-Received: by 2002:a2e:bea7:0:b0:2cb:2b04:cf92 with SMTP id
+ a39-20020a2ebea7000000b002cb2b04cf92mr2250407ljr.11.1702477692628; Wed, 13
+ Dec 2023 06:28:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee9db34a-2b3d-46b3-ba36-22a22b080d70@linux.intel.com>
+References: <20231213070301.1684751-1-peterlin@andestech.com> <20231213070301.1684751-3-peterlin@andestech.com>
+In-Reply-To: <20231213070301.1684751-3-peterlin@andestech.com>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Wed, 13 Dec 2023 19:58:00 +0530
+Message-ID: <CAK9=C2WuuYQD8ydrHP16hUXVk6RuKLbfvUe_GpUGw9ppe3Rd8Q@mail.gmail.com>
+Subject: Re: [PATCH v5 02/16] irqchip/riscv-intc: Allow large non-standard
+ interrupt number
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org, 
+	conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org, 
+	devicetree@vger.kernel.org, dminus@andestech.com, evan@rivosinc.com, 
+	geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de, 
+	irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org, 
+	jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	locus84@andestech.com, magnus.damm@gmail.com, mark.rutland@arm.com, 
+	mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org, palmer@dabbelt.com, 
+	paul.walmsley@sifive.com, peterz@infradead.org, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org, 
+	robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com, 
+	tglx@linutronix.de, tim609@andestech.com, uwu@icenowy.me, wens@csie.org, 
+	will@kernel.org, ycliang@andestech.com, inochiama@outlook.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 11, 2023 at 02:01:37PM -0500, Liang, Kan wrote:
+On Wed, Dec 13, 2023 at 12:34=E2=80=AFPM Yu Chien Peter Lin
+<peterlin@andestech.com> wrote:
+>
+> Currently, the implementation of the RISC-V INTC driver uses the
+> interrupt cause as hardware interrupt number and has a limitation of
+> supporting a maximum of 64 interrupts. However, according to the
+> privileged spec, interrupt causes >=3D 16 are defined for platform use.
 
-[...]
+I disagree with this patch.
 
-> > I will hold on a bit for the test until this patch set addresses the
-> > concern for the breakage issues on Arm64. Please check my review in
-> > other replies.
-> 
-> The reviews in the other replies don't look like break any current usage
-> on Arm64. I think the breakage issue is what you described in this
-> patch, right?
+Even though RISC-V priv sepc allows interrupt causes >=3D 16, we
+still need CSRs to manage arbitrary local interrupts
 
-I mentioned the breakage is in the patch 04, but I think the concern
-is dismissed.
+Currently, we have following standard CSRs:
+1) [m|s]ie and [m|s]ip which are XLEN wide
+2) With AIA, we have [m|s]ieh and [m|s]iph for RV32
 
-> If we move the check of "arm_spe_0" to arch/arm/util/pmu.c, it seems we
-> have to move the perf_mem_events_arm[] into arch/arm/util/mem-events.c
-> as well. Is it OK?
+Clearly, we can only have a XLEN number of standard local
+interrupts without AIA and 64 local interrupts with AIA.
 
-No.  For fixing Arm64 building, please refer:
+Now for implementations with custom CSRs (such as Andes),
+we still can't assume infinite local interrupts because HW will
+have a finite number of custom CSRs.
 
-https://termbin.com/0dkn
+>
+> This limitation prevents to fully utilize the available local interrupt
+> sources. Additionally, the interrupt number used on RISC-V are sparse,
+> with only interrupt numbers 1, 5 and 9 (plus Sscofpmf or T-Head's PMU
+> interrupt) being currently used for supervisor mode.
+>
+> Switch to using irq_domain_create_tree() to create the radix tree
+> map, so a larger number of hardware interrupts can be handled.
+>
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+> ---
+> Changes v1 -> v2:
+>   - Fixed irq mapping failure checking (suggested by Cl=C3=A9ment and Anu=
+p)
+> Changes v2 -> v3:
+>   - No change
+> Changes v3 -> v4: (Suggested by Thomas [1])
+>   - Use pr_warn_ratelimited instead
+>   - Fix coding style and commit message
+> Changes v4 -> v5: (Suggested by Thomas)
+>   - Fix commit message
+>
+> [1] https://patchwork.kernel.org/project/linux-riscv/patch/20231023004100=
+.2663486-3-peterlin@andestech.com/#25573085
+> ---
+>  drivers/irqchip/irq-riscv-intc.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
+-intc.c
+> index e8d01b14ccdd..2fdd40f2a791 100644
+> --- a/drivers/irqchip/irq-riscv-intc.c
+> +++ b/drivers/irqchip/irq-riscv-intc.c
+> @@ -24,10 +24,9 @@ static asmlinkage void riscv_intc_irq(struct pt_regs *=
+regs)
+>  {
+>         unsigned long cause =3D regs->cause & ~CAUSE_IRQ_FLAG;
+>
+> -       if (unlikely(cause >=3D BITS_PER_LONG))
+> -               panic("unexpected interrupt cause");
+> -
+> -       generic_handle_domain_irq(intc_domain, cause);
+> +       if (generic_handle_domain_irq(intc_domain, cause))
+> +               pr_warn_ratelimited("Failed to handle interrupt (cause: %=
+ld)\n",
+> +                                   cause);
+>  }
+>
+>  /*
+> @@ -117,8 +116,7 @@ static int __init riscv_intc_init_common(struct fwnod=
+e_handle *fn)
+>  {
+>         int rc;
+>
+> -       intc_domain =3D irq_domain_create_linear(fn, BITS_PER_LONG,
+> -                                              &riscv_intc_domain_ops, NU=
+LL);
+> +       intc_domain =3D irq_domain_create_tree(fn, &riscv_intc_domain_ops=
+, NULL);
 
-> I'm not familiar with ARM and have no idea how those events are
-> organized under arm64 and arm. Could you please send a fix for the
-> building failure on aarch64? I will fold it into the V3.
+I disagree with this change based on the reasoning above.
 
-After apply the change in above link on the top of your patch set,
-it can build successfully at my side. Hope it's helpful.
+Instead of this, we should determine the number of local interrupts
+based on the type of RISC-V intc:
+1) For standard INTC without AIA, we have XLEN (or BITS_PER_LONG)
+    local interrupts
+2) For standart INTC with AIA, we have 64 local interrupts
+3) For custom INTC (such as Andes), the number of local interrupt
+    should be custom (Andes specific) which can be determined based
+    on compatible string.
 
-Thanks,
-Leo
+Also, creating a linear domain with a fixed number of local interrupts
+ensures that drivers can't map a local interrupt beyond the availability
+of CSRs to manage it.
 
+>         if (!intc_domain) {
+>                 pr_err("unable to add IRQ domain\n");
+>                 return -ENXIO;
+> @@ -132,8 +130,6 @@ static int __init riscv_intc_init_common(struct fwnod=
+e_handle *fn)
+>
+>         riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
+>
+> -       pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
+> -
 
-> 
-> Thanks,
-> Kan
-> > 
-> > Thanks,
-> > Leo
-> > 
+Same as above, we should definitely advertise the type of INTC and
+number of local interrupts mapped.
+
+Regards,
+Anup
+
+>         return 0;
+>  }
+>
+> --
+> 2.34.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
