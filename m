@@ -1,196 +1,192 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLFmTrC+"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC9E4D68;
-	Wed, 13 Dec 2023 11:52:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gK19i7CL"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3332C19B3;
+	Wed, 13 Dec 2023 11:54:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702497166; x=1734033166;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3r6W+znWevT5zm8hTkKoHcQtnIrf5IlOIeTi31U9+ic=;
-  b=gLFmTrC+/MA7Lsoe5yXIVGJpqhpSJ4elHE4INGah4ungTjNqAjJwYr19
-   EHn96zjf/f3sYYXObKLeA/0RPq/lzouTRHDLnChEdZoysxCs5ClZdk8Oo
-   RPwFRUKcIdsxYMZJsY7fUYuehRZosmDJ3S+SX1AFhSbARIJTAqhDI0AY9
-   +i8sfswH1qGK8gGK43EAVpSrsORyqgR86heFb7I+pG/ECru6DSAbtbTw6
-   G+0xozuyhH36KrXGHUF3UULxdmsG22WQ0ZUwL2oXWpTkozkxs8FGoyCM6
-   uA4b9R0sJPIt65rVo3gFfHjVK9IfxqNdrM8lQKSr5YFfIHerG0CT4hxIA
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="8412963"
+  t=1702497281; x=1734033281;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+nbyDHhgJ8++zxeQX/mgFJIqBXvnO0Gvfr2EtoiwJl0=;
+  b=gK19i7CL2hq5/m+XZTo7SDNqKnZzffTMN6cTzkt6vbJJjNJlEOCzlRpx
+   Gia0JQu+ZAg1RG9ZRqT/VzH6q6OC6CzVjjvnLsdspt5qt5EMZ9k7yy1VM
+   U1rbplZlivT+GTh/U6TTmtCWzNGU6QD50jdNkriwL7T2yamlYItkemMj7
+   O0VJqNgPfaMu9xGm/8vr7+mxYyvM1549W0FwCsKC6oyP7PBr2mHXPQYg+
+   RN/X1yJ72ZAmJ6IymZwipPHv0kOyXg+hnKLuoPDSqssbuhJXrFjYQGFNv
+   yxJnlFfcWbcz3/ZntoniO9Tb0ac8Ym3fjfxdUnxRkE1eb+rfrdjypFbiQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="397802475"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="8412963"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:52:10 -0800
+   d="scan'208";a="397802475"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:54:40 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="917772584"
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="774065511"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="917772584"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Dec 2023 11:52:09 -0800
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	irogers@google.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	john.g.garry@oracle.com,
-	will@kernel.org,
-	james.clark@arm.com,
-	mike.leach@linaro.org,
-	leo.yan@linaro.org,
-	yuhaixin.yhx@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	tmricht@linux.ibm.com,
-	ravi.bangoria@amd.com,
-	atrajeev@linux.vnet.ibm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 7/7] perf mem: Clean up perf_pmus__num_mem_pmus()
-Date: Wed, 13 Dec 2023 11:51:54 -0800
-Message-Id: <20231213195154.1085945-8-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20231213195154.1085945-1-kan.liang@linux.intel.com>
-References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+   d="scan'208";a="774065511"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:54:40 -0800
+Received: from [10.212.117.13] (kliang2-mobl1.ccr.corp.intel.com [10.212.117.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 92A81580DA9;
+	Wed, 13 Dec 2023 11:54:37 -0800 (PST)
+Message-ID: <ab50cc75-2273-47a3-a0c3-fa2d8f1d2fd3@linux.intel.com>
+Date: Wed, 13 Dec 2023 14:54:36 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/5] Clean up perf mem
+Content-Language: en-US
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ john.g.garry@oracle.com, Will Deacon <will@kernel.org>,
+ James Clark <james.clark@arm.com>, mike.leach@linaro.org,
+ Leo Yan <leo.yan@linaro.org>, yuhaixin.yhx@linux.alibaba.com,
+ renyu.zj@linux.alibaba.com, Thomas Richter <tmricht@linux.ibm.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users <linux-perf-users@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org
+References: <20231207192338.400336-1-kan.liang@linux.intel.com>
+ <ZXIrtcYkvpA8Uwj1@kernel.org>
+ <DC029166-B60F-4E90-833D-F43818A3C54B@linux.vnet.ibm.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <DC029166-B60F-4E90-833D-F43818A3C54B@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-The number of mem PMUs can be calculated by searching the
-perf_pmus__scan_mem().
 
-Remove the ARCH specific perf_pmus__num_mem_pmus()
+On 2023-12-13 4:51 a.m., Athira Rajeev wrote:
+> 
+> 
+>> On 08-Dec-2023, at 2:01 AM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>>
+>> Em Thu, Dec 07, 2023 at 11:23:33AM -0800, kan.liang@linux.intel.com escreveu:
+>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>
+>>> Changes since V1:
+>>> - Fix strcmp of PMU name checking (Ravi)
+>>> - Fix "/," typo (Ian)
+>>> - Rename several functions with perf_pmu__mem_events prefix. (Ian)
+>>> - Fold the header removal patch into the patch where the cleanups made.
+>>>  (Arnaldo)
+>>> - Add reviewed-by and tested-by from Ian and Ravi
+>>
+>> It would be good to have a Tested-by from people working in all the
+>> architectures affectes, like we got from Ravi for AMD, can we get those?
+>>
+>> I'm applying it locally for test building, will push to
+>> perf-tools-next/tmp.perf-tools-next for a while, so there is some time
+>> to test.
+>>
+>> ARM64 (Leo?) and ppc, for PPC... humm Ravi did it, who could test it now?
+> Hi Arnaldo, Ravi
+> 
+> Looking into this for testing on powerpc. Will update back.
+>
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/arch/x86/util/pmu.c | 10 ----------
- tools/perf/builtin-c2c.c       |  2 +-
- tools/perf/builtin-mem.c       |  2 +-
- tools/perf/util/mem-events.c   | 14 ++++++++++++++
- tools/perf/util/mem-events.h   |  1 +
- tools/perf/util/pmus.c         |  6 ------
- tools/perf/util/pmus.h         |  1 -
- 7 files changed, 17 insertions(+), 19 deletions(-)
+Thanks Athira. I've sent out the latest V3. Please give it a try.
 
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index 0f49ff13cfe2..c3d89d6ba1bf 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -42,13 +42,3 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
- 			pmu->mem_events = perf_mem_events_intel;
- 	}
- }
--
--int perf_pmus__num_mem_pmus(void)
--{
--	/* AMD uses IBS OP pmu and not a core PMU for perf mem/c2c */
--	if (x86__is_amd_cpu())
--		return 1;
--
--	/* Intel uses core pmus for perf mem/c2c */
--	return perf_pmus__num_core_pmus();
--}
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 3bcb903b6b38..16b40f5d43db 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -3278,7 +3278,7 @@ static int perf_c2c__record(int argc, const char **argv)
- 			     PARSE_OPT_KEEP_UNKNOWN);
- 
- 	/* Max number of arguments multiplied by number of PMUs that can support them. */
--	rec_argc = argc + 11 * perf_pmus__num_mem_pmus();
-+	rec_argc = argc + 11 * (perf_pmu__mem_events_num_mem_pmus(pmu) + 1);
- 
- 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
- 	if (!rec_argv)
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 1d92e309c97c..5b851e64e4a1 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -106,7 +106,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
- 			     PARSE_OPT_KEEP_UNKNOWN);
- 
- 	/* Max number of arguments multiplied by number of PMUs that can support them. */
--	rec_argc = argc + 9 * perf_pmus__num_mem_pmus();
-+	rec_argc = argc + 9 * (perf_pmu__mem_events_num_mem_pmus(pmu) + 1);
- 
- 	if (mem->cpu_list)
- 		rec_argc += 2;
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index a20611b4fb1b..637cbd4a7bfb 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -62,6 +62,20 @@ struct perf_pmu *perf_mem_events_find_pmu(void)
- 	return perf_pmus__scan_mem(NULL);
- }
- 
-+/**
-+ * perf_pmu__mem_events_num_mem_pmus - Get the number of mem PMUs since the given pmu
-+ * @pmu: Start pmu. If it's NULL, search the entire PMU list.
-+ */
-+int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu)
-+{
-+	int num = 0;
-+
-+	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL)
-+		num++;
-+
-+	return num;
-+}
-+
- static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
- {
- 	struct perf_mem_event *e;
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index c97cd3caa766..15d5f0320d27 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -43,6 +43,7 @@ int perf_pmu__mem_events_init(struct perf_pmu *pmu);
- 
- struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, int i);
- struct perf_pmu *perf_mem_events_find_pmu(void);
-+int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu);
- bool is_mem_loads_aux_event(struct evsel *leader);
- 
- void perf_pmu__mem_events_list(struct perf_pmu *pmu);
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index ce4931461741..16505071d362 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -345,12 +345,6 @@ const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
- 	return NULL;
- }
- 
--int __weak perf_pmus__num_mem_pmus(void)
--{
--	/* All core PMUs are for mem events. */
--	return perf_pmus__num_core_pmus();
--}
--
- /** Struct for ordering events as output in perf list. */
- struct sevent {
- 	/** PMU for event. */
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 4c67153ac257..94d2a08d894b 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -17,7 +17,6 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
- 
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
- 
--int perf_pmus__num_mem_pmus(void);
- void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state);
- bool perf_pmus__have_event(const char *pname, const char *name);
- int perf_pmus__num_core_pmus(void);
--- 
-2.35.1
+https://lore.kernel.org/lkml/20231213195154.1085945-1-kan.liang@linux.intel.com/
 
+Thanks,
+Kan
+
+> Thanks
+> Athira
+>>
+>> - Arnaldo
+>>
+>>> As discussed in the below thread, the patch set is to clean up perf mem.
+>>> https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com/
+>>>
+>>> Introduce generic functions perf_mem_events__ptr(),
+>>> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+>>> ARCH specific ones.
+>>> Simplify the perf_mem_event__supported().
+>>>
+>>> Only keeps the ARCH-specific perf_mem_events array in the corresponding
+>>> mem-events.c for each ARCH.
+>>>
+>>> There is no functional change.
+>>>
+>>> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+>>> etc. But I can only test it on two Intel platforms.
+>>> Please give it try, if you have machines with other ARCHs.
+>>>
+>>> Here are the test results:
+>>> Intel hybrid machine:
+>>>
+>>> $perf mem record -e list
+>>> ldlat-loads  : available
+>>> ldlat-stores : available
+>>>
+>>> $perf mem record -e ldlat-loads -v --ldlat 50
+>>> calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
+>>>
+>>> $perf mem record -v
+>>> calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
+>>>
+>>> $perf mem record -t store -v
+>>> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+>>>
+>>>
+>>> Intel SPR:
+>>> $perf mem record -e list
+>>> ldlat-loads  : available
+>>> ldlat-stores : available
+>>>
+>>> $perf mem record -e ldlat-loads -v --ldlat 50
+>>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
+>>>
+>>> $perf mem record -v
+>>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
+>>>
+>>> $perf mem record -t store -v
+>>> calling: record -e cpu/mem-stores/P
+>>>
+>>> Kan Liang (5):
+>>>  perf mem: Add mem_events into the supported perf_pmu
+>>>  perf mem: Clean up perf_mem_events__ptr()
+>>>  perf mem: Clean up perf_mem_events__name()
+>>>  perf mem: Clean up perf_mem_event__supported()
+>>>  perf mem: Clean up is_mem_loads_aux_event()
+>>>
+>>> tools/perf/arch/arm64/util/mem-events.c   |  36 +----
+>>> tools/perf/arch/arm64/util/pmu.c          |   6 +
+>>> tools/perf/arch/powerpc/util/mem-events.c |  13 +-
+>>> tools/perf/arch/powerpc/util/mem-events.h |   7 +
+>>> tools/perf/arch/powerpc/util/pmu.c        |  11 ++
+>>> tools/perf/arch/s390/util/pmu.c           |   3 +
+>>> tools/perf/arch/x86/util/mem-events.c     |  99 ++----------
+>>> tools/perf/arch/x86/util/pmu.c            |  11 ++
+>>> tools/perf/builtin-c2c.c                  |  28 +++-
+>>> tools/perf/builtin-mem.c                  |  28 +++-
+>>> tools/perf/util/mem-events.c              | 181 +++++++++++++---------
+>>> tools/perf/util/mem-events.h              |  15 +-
+>>> tools/perf/util/pmu.c                     |   4 +-
+>>> tools/perf/util/pmu.h                     |   7 +
+>>> 14 files changed, 233 insertions(+), 216 deletions(-)
+>>> create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
+>>> create mode 100644 tools/perf/arch/powerpc/util/pmu.c
+>>>
+>>> -- 
+>>> 2.35.1
+>>>
+>>
+>> -- 
+>>
+>> - Arnaldo
+> 
+> 
+> 
