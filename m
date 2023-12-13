@@ -1,104 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JgIXZoDt"
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28367185
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 18:22:02 -0800 (PST)
-Received: by mail-pj1-x1049.google.com with SMTP id 98e67ed59e1d1-28ae055169eso111582a91.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Dec 2023 18:22:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702434121; x=1703038921; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H3dbLwG3pwrVNc+flPqWL0ROEahdeYkxOItBObS2igQ=;
-        b=JgIXZoDtL3tsFLv7qXcdYmyIY4JX6Us/RJNjjPcsYQgoVqqPtWXuTdGM9ZM9epPRzL
-         JCF0opJNtwOo9BeYMrPCVpoqRclCy0FykrgMtLYWTLnC0vAy7WAqSkqYF3O5Tg2Kqusi
-         O/7Vsng5r+NqZ2Yi0yT3nnOnRWRUXV9P7P2qtPvOKmkgB0r2mik7SMgBkA7wFkvq4w1G
-         h4EvY4rkTAzycB9gODo5QcqoH3NBJXYU/Kq0orHH9ATUmJFQoJOeg1H4zO3r32R1vVxM
-         deZJfzg/fgVegdjMrBmw3nfKcNZOZ+UXuq81MVLAWMM0wVyCl94UDcWbT0lC4dcX+OtN
-         98Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702434121; x=1703038921;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H3dbLwG3pwrVNc+flPqWL0ROEahdeYkxOItBObS2igQ=;
-        b=MDEZpE+pxRzWH/mrWJdI9hGyuBwP/o9LE43bBZxaofj+CuhWtNzxF2QmIzWPJMBifu
-         cP9S+Xmg37YrZJbHdbKXWrRtjdnSGiBYhRprxdhZewwICPIPayiTotSFt5TNsfd3OmN8
-         h8cCVgO9fejwMRsdjnqiPMdufwaLJypOL4lrKikcM6bu1ty6DqGYExeAOdy5dem3ogTz
-         cmBp63LEFEu4DZ2eQ1xW/odeKhKW29aQZFCk7JuDjkFl+WTrIpYdoXvmF94KVuPCljpt
-         DejZi02ClZOGjWjwYrt7I45cyRaKbd+RtnIWYOYnv4DPIBoRIF4+xA4MEx7iHzEZi1Et
-         +ARg==
-X-Gm-Message-State: AOJu0YwoREXmPdSK+b2Jsb8bke0HZGzxzc0JeY3dcMC4ikQ2zPuXZbHS
-	+/VdnN/6p+RiTFIyahWkUCbvq7Z/qYI=
-X-Google-Smtp-Source: AGHT+IEMdNbXZWy9ISUMeWXjYiRzXRSqXuBEtLtB2quA6rPLGk41btEuk2vriof3H/B+MEphfzV6B3hdgbQ=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:41c9:b0:1d0:cd87:64dd with SMTP id
- u9-20020a17090341c900b001d0cd8764ddmr52067ple.3.1702434121579; Tue, 12 Dec
- 2023 18:22:01 -0800 (PST)
-Date: Tue, 12 Dec 2023 18:22:00 -0800
-In-Reply-To: <20231203140756.GI1489931@ziepe.ca>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1041E99;
+	Tue, 12 Dec 2023 19:56:02 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D25A6C15;
+	Tue, 12 Dec 2023 19:56:47 -0800 (PST)
+Received: from [10.162.41.8] (a077893.blr.arm.com [10.162.41.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEADB3F5A1;
+	Tue, 12 Dec 2023 19:55:55 -0800 (PST)
+Message-ID: <b319f8ed-5848-4663-bc1b-7afe160bbcd3@arm.com>
+Date: Wed, 13 Dec 2023 09:25:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20230916003118.2540661-1-seanjc@google.com> <20230916003118.2540661-6-seanjc@google.com>
- <20230918152110.GI13795@ziepe.ca> <ZQhxpesyXeG+qbS6@google.com>
- <20230918160258.GL13795@ziepe.ca> <ZWp_q1w01NCZi8KX@google.com> <20231203140756.GI1489931@ziepe.ca>
-Message-ID: <ZXkVSKULLivrMkBl@google.com>
-Subject: Re: [PATCH 05/26] vfio: KVM: Pass get/put helpers from KVM to VFIO,
- don't do circular lookup
-From: Sean Christopherson <seanjc@google.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Tony Krowiak <akrowiak@linux.ibm.com>, 
-	Halil Pasic <pasic@linux.ibm.com>, Jason Herne <jjherne@linux.ibm.com>, 
-	Harald Freudenberger <freude@linux.ibm.com>, Alex Williamson <alex.williamson@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-mips@vger.kernel.org, kvm@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Anish Ghulati <aghulati@google.com>, Venkatesh Srinivas <venkateshs@chromium.org>, 
-	Andrew Thornton <andrewth@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V15 2/8] KVM: arm64: Prevent guest accesses into BRBE
+ system registers/instructions
+Content-Language: en-US
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+ Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+ Rob Herring <robh@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+References: <20231201053906.1261704-1-anshuman.khandual@arm.com>
+ <20231201053906.1261704-3-anshuman.khandual@arm.com>
+ <86v89ebcn2.wl-maz@kernel.org>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <86v89ebcn2.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Dec 03, 2023, Jason Gunthorpe wrote:
-> On Fri, Dec 01, 2023 at 04:51:55PM -0800, Sean Christopherson wrote:
+
+
+On 12/4/23 13:52, Marc Zyngier wrote:
+> On Fri, 01 Dec 2023 05:39:00 +0000,
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>> Currently BRBE feature is not supported in a guest environment. This hides
+>> BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field. This also
+>> blocks guest accesses into BRBE system registers and instructions as if the
+>> underlying hardware never implemented FEAT_BRBE feature.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Oliver Upton <oliver.upton@linux.dev>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: kvmarm@lists.linux.dev
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/kvm/sys_regs.c | 130 ++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 130 insertions(+)
+>>
+>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>> index 4735e1b37fb3..42701065b3cd 100644
+>> --- a/arch/arm64/kvm/sys_regs.c
+>> +++ b/arch/arm64/kvm/sys_regs.c
+>> @@ -1583,6 +1583,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+>>  	/* Hide SPE from guests */
+>>  	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+>>  
+>> +	/* Hide BRBE from guests */
+>> +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+>> +
+>>  	return val;
+>>  }
+>>  
+>> @@ -2042,6 +2045,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>>  	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
+>>  	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
+>>  	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
+>> +	{ SYS_DESC(OP_BRB_IALL), undef_access },
+>> +	{ SYS_DESC(OP_BRB_INJ), undef_access },
+>>  
+>>  	DBG_BCR_BVR_WCR_WVR_EL1(0),
+>>  	DBG_BCR_BVR_WCR_WVR_EL1(1),
+>> @@ -2072,6 +2077,131 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>>  	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
+>>  	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
+>>  
+>> +	/*
+>> +	 * BRBE branch record sysreg address space is interleaved between
+>> +	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
+>> +	 */
+>> +	{ SYS_DESC(SYS_BRBINF0_EL1), undef_access },
+>> +	{ SYS_DESC(SYS_BRBSRC0_EL1), undef_access },
+>> +	{ SYS_DESC(SYS_BRBTGT0_EL1), undef_access },
+>> +	{ SYS_DESC(SYS_BRBINF16_EL1), undef_access },
+>> +	{ SYS_DESC(SYS_BRBSRC16_EL1), undef_access },
+>> +	{ SYS_DESC(SYS_BRBTGT16_EL1), undef_access },
+> Surely we can do better than this wall of text. Please look at what we
+> do for the debug registers, and adopt a similar pattern. This should
+> result in one line per group of 3 registers.
 > 
-> > There's one more wrinkle: this patch is buggy in that it doesn't ensure the liveliness
-> > of KVM-the-module, i.e. nothing prevents userspace from unloading kvm.ko while VFIO
-> > still holds a reference to a kvm structure, and so invoking ->put_kvm() could jump
-> > into freed code.  To fix that, KVM would also need to pass along a module pointer :-(
-> 
-> Maybe we should be refcounting the struct file not the struct kvm?
-> 
-> Then we don't need special helpers and it keeps the module alive correctly.
-
-Huh.  It took my brain a while to catch up, but this seems comically obvious in
-hindsight.  I *love* this approach, both conceptually and from a code perspective.
-
-Handing VFIO (and any other external entities) a file makes it so that KVM effectively
-interacts with users via files, regardless of whether the user lives in userspace
-or the kernel.  That makes it easier to reason about the safety of operations,
-e.g. in addition to ensuring KVM-the-module is pinned, having a file pointer allows
-KVM to verify that the incoming pointer does indeed represent a VM.  Which isn't
-necessary by any means, but it's a nice sanity check.
-
-From a code perspective, it's far cleaner than manually grabbing module references,
-and having only a file pointers makes it a wee bit harder for non-KVM code to
-poke into KVM, e.g. keeps us honest.
-
-Assuming nothing blows up in testing, I'll go this route for v2.
-
-Thanks!
+> What is the plan for KVM support beyond this?
+We are planning to add support for simultaneous and independent branch record
+tracing via perf branch stack sampling inside the guest and the host. But will
+prevent tracing of the guest execution from the host.
