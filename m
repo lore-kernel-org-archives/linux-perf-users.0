@@ -1,225 +1,106 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X4DSX0yq"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8D512B;
-	Thu, 14 Dec 2023 06:44:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTFX2+/k"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9415F11D;
+	Thu, 14 Dec 2023 06:46:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702565059; x=1734101059;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FICAqgrBMjAmlIFhUkbff+egjDTpSE5fRShduafzR/4=;
-  b=X4DSX0yqwGpJg7xNjBQgCAEv7qod0ngpn4w3tEeLrgHvF9GAjh5yKUjz
-   1AxFbIENqInvrtcceJejPJml1p/3ldIlLN1qvZ1t0zmXR/QJnXfBtD77I
-   1jOdE0qA0kM2ohBauy3VLX7888Pn6TOLg7vyYkwHOymKyPmq6bM3GsO20
-   VVl3HLUUmDgIsVXtCmw1YcyWj//6E/EUiqiV/RRbsirWJe1eehRwtikdS
-   Fqj7ywOidS2GztP62HT9+y9gw8g69hchDiclvN9/63jek/NSXx6bxBevf
-   TZZ2ITg3MPTPzqIjYHgSpsYjX/8l+GIpJTEnzuNB51Tv+svWkPzNxQtGE
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="1963052"
+  t=1702565209; x=1734101209;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yNDl1AIWfRrLV+Gwxh9D4+zILF9whC0/B0msILdny9c=;
+  b=OTFX2+/kwNA7oLgae0X1dxrrhj+m8T4ihA04GYgpa2RoXpRK4jdMZBlq
+   QYnwWZcd4cXiILjpUxtGe5al5z6704UKZ12D2nZL6so62yeVKol871F0Y
+   5hao1C3UWWb3MKyQjMGaBrfqoQUs7n1hK2Aid7JMZlWzoGfbpjDGfTA9F
+   ywg15vvVWhvsfRx42V+WglYrrGGA2POa2iiW7aQpaM81MYyB67Hdzhbny
+   PG2SPDY6q0pPWYkZtyF23qmIdRW6H74LvXLKh58ODKXASNmBUdZNORKZo
+   7cnf1NWrKt70FvUk2noLLTbkbhH0aileoMXB5bRIT+eBGn5udSq8KXiZy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="16676490"
 X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
-   d="scan'208";a="1963052"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:44:19 -0800
+   d="scan'208";a="16676490"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:46:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="808606240"
 X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
-   d="scan'208";a="808606240"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:44:18 -0800
-Received: from [10.213.191.138] (kliang2-mobl1.ccr.corp.intel.com [10.213.191.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 719F6580CD0;
-	Thu, 14 Dec 2023 06:44:17 -0800 (PST)
-Message-ID: <23a3de90-6740-4fde-9771-4f25681f6a2d@linux.intel.com>
-Date: Thu, 14 Dec 2023 09:44:15 -0500
+   d="scan'208";a="22434527"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orviesa001.jf.intel.com with ESMTP; 14 Dec 2023 06:46:45 -0800
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	irogers@google.com
+Cc: namhyung@kernel.org,
+	mark.rutland@arm.com,
+	maz@kernel.org,
+	marcan@marcan.st,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V4 1/2] perf top: Use evsel's cpus to replace user_requested_cpus
+Date: Thu, 14 Dec 2023 06:46:11 -0800
+Message-Id: <20231214144612.1092028-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/2] perf top: Uniform the event name for the hybrid
- machine
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, irogers@google.com, mark.rutland@arm.com,
- maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20231213213633.1088026-1-kan.liang@linux.intel.com>
- <20231213213633.1088026-2-kan.liang@linux.intel.com>
- <CAM9d7ch+rHDp3E40QvBu+PGs8N+5iOP3i=HmYXKshcohs05MaQ@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAM9d7ch+rHDp3E40QvBu+PGs8N+5iOP3i=HmYXKshcohs05MaQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+From: Kan Liang <kan.liang@linux.intel.com>
 
+perf top errors out on a hybrid machine
+ $perf top
 
-On 2023-12-13 4:57 p.m., Namhyung Kim wrote:
-> On Wed, Dec 13, 2023 at 1:36 PM <kan.liang@linux.intel.com> wrote:
->>
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> It's hard to distinguish the default cycles events among hybrid PMUs.
->> For example,
->>
->>  $perf top
->> Available samples
->> 385 cycles:P
->> 903 cycles:P
->>
->> The other tool, e.g., perf record, uniforms the event name and adds the
->> hybrid PMU name before opening the event. So the events can be easily
->> distinguished. Apply the same methodology for the perf top as well.
->>
->> The record__uniquify_name() will be invoked by both record and top.
->> Move it to util/record.c
-> 
-> Maybe better to rename it to evlist__uniquify_name() and move it
-> to util/evlist.c.
+ Error:
+ The cycles:P event is not supported.
 
-Sure, I will change it in V4.
+The perf top expects that the "cycles" is collected on all CPUs in the
+system. But for hybrid there is no single "cycles" event which can cover
+all CPUs. Perf has to split it into two cycles events, e.g.,
+cpu_core/cycles/ and cpu_atom/cycles/. Each event has its own CPU mask.
+If a event is opened on the unsupported CPU. The open fails. That's the
+reason of the above error out.
 
-Thanks,
-Kan
+Perf should only open the cycles event on the corresponding CPU. The
+commit ef91871c960e ("perf evlist: Propagate user CPU maps intersecting
+core PMU maps") intersect the requested CPU map with the CPU map of the
+PMU. Use the evsel's cpus to replace user_requested_cpus.
 
-> 
-> Thanks,
-> Namhyung
-> 
->>
->> With the patch
->>  $perf top
->> Available samples
->> 148 cpu_atom/cycles:P/
->> 1K cpu_core/cycles:P/
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>
->> New patch to address the display concern
->> https://lore.kernel.org/lkml/e9383607-1e43-4c1a-9512-29f27784d035@linux.intel.com/
->>
->>  tools/perf/builtin-record.c | 28 +---------------------------
->>  tools/perf/builtin-top.c    |  1 +
->>  tools/perf/util/record.c    | 25 +++++++++++++++++++++++++
->>  tools/perf/util/record.h    |  2 ++
->>  4 files changed, 29 insertions(+), 27 deletions(-)
->>
->> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->> index dcf288a4fb9a..a096422a4a14 100644
->> --- a/tools/perf/builtin-record.c
->> +++ b/tools/perf/builtin-record.c
->> @@ -2216,32 +2216,6 @@ static void hit_auxtrace_snapshot_trigger(struct record *rec)
->>         }
->>  }
->>
->> -static void record__uniquify_name(struct record *rec)
->> -{
->> -       struct evsel *pos;
->> -       struct evlist *evlist = rec->evlist;
->> -       char *new_name;
->> -       int ret;
->> -
->> -       if (perf_pmus__num_core_pmus() == 1)
->> -               return;
->> -
->> -       evlist__for_each_entry(evlist, pos) {
->> -               if (!evsel__is_hybrid(pos))
->> -                       continue;
->> -
->> -               if (strchr(pos->name, '/'))
->> -                       continue;
->> -
->> -               ret = asprintf(&new_name, "%s/%s/",
->> -                              pos->pmu_name, pos->name);
->> -               if (ret) {
->> -                       free(pos->name);
->> -                       pos->name = new_name;
->> -               }
->> -       }
->> -}
->> -
->>  static int record__terminate_thread(struct record_thread *thread_data)
->>  {
->>         int err;
->> @@ -2475,7 +2449,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->>         if (data->is_pipe && rec->evlist->core.nr_entries == 1)
->>                 rec->opts.sample_id = true;
->>
->> -       record__uniquify_name(rec);
->> +       record__uniquify_name(rec->evlist);
->>
->>         /* Debug message used by test scripts */
->>         pr_debug3("perf record opening and mmapping events\n");
->> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
->> index cce9350177e2..4e8296654280 100644
->> --- a/tools/perf/builtin-top.c
->> +++ b/tools/perf/builtin-top.c
->> @@ -1299,6 +1299,7 @@ static int __cmd_top(struct perf_top *top)
->>                 }
->>         }
->>
->> +       record__uniquify_name(top->evlist);
->>         ret = perf_top__start_counters(top);
->>         if (ret)
->>                 return ret;
->> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
->> index 9eb5c6a08999..5b4be3c72cbc 100644
->> --- a/tools/perf/util/record.c
->> +++ b/tools/perf/util/record.c
->> @@ -289,3 +289,28 @@ int record__parse_freq(const struct option *opt, const char *str, int unset __ma
->>         opts->user_freq = freq;
->>         return 0;
->>  }
->> +
->> +void record__uniquify_name(struct evlist *evlist)
->> +{
->> +       struct evsel *pos;
->> +       char *new_name;
->> +       int ret;
->> +
->> +       if (perf_pmus__num_core_pmus() == 1)
->> +               return;
->> +
->> +       evlist__for_each_entry(evlist, pos) {
->> +               if (!evsel__is_hybrid(pos))
->> +                       continue;
->> +
->> +               if (strchr(pos->name, '/'))
->> +                       continue;
->> +
->> +               ret = asprintf(&new_name, "%s/%s/",
->> +                              pos->pmu_name, pos->name);
->> +               if (ret) {
->> +                       free(pos->name);
->> +                       pos->name = new_name;
->> +               }
->> +       }
->> +}
->> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
->> index a6566134e09e..9b520ab784bc 100644
->> --- a/tools/perf/util/record.h
->> +++ b/tools/perf/util/record.h
->> @@ -8,6 +8,7 @@
->>  #include <linux/stddef.h>
->>  #include <linux/perf_event.h>
->>  #include "util/target.h"
->> +#include "util/evlist.h"
->>
->>  struct option;
->>
->> @@ -85,6 +86,7 @@ extern const char * const *record_usage;
->>  extern struct option *record_options;
->>
->>  int record__parse_freq(const struct option *opt, const char *str, int unset);
->> +void record__uniquify_name(struct evlist *evlist);
->>
->>  static inline bool record_opts__no_switch_events(const struct record_opts *opts)
->>  {
->> --
->> 2.35.1
->>
+The evlist's threads are also propagated to the evsel's threads in
+__perf_evlist__propagate_maps(). For a system-wide event, perf appends
+a dummy event and assign it to the evsel's threads. For a per-thread
+event, the evlist's thread_map is assigned to the evsel's threads. The
+same as the other tools, e.g., perf record, using the evsel's threads
+when opening an event.
+
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Closes: https://lore.kernel.org/linux-perf-users/ZXNnDrGKXbEELMXV@kernel.org/
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+
+No changes since V2
+
+ tools/perf/builtin-top.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index ea8c7eca5eee..cce9350177e2 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1027,8 +1027,8 @@ static int perf_top__start_counters(struct perf_top *top)
+ 
+ 	evlist__for_each_entry(evlist, counter) {
+ try_again:
+-		if (evsel__open(counter, top->evlist->core.user_requested_cpus,
+-				     top->evlist->core.threads) < 0) {
++		if (evsel__open(counter, counter->core.cpus,
++				counter->core.threads) < 0) {
+ 
+ 			/*
+ 			 * Specially handle overwrite fall back.
+-- 
+2.35.1
+
