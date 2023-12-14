@@ -1,271 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F2F56B7D;
-	Thu, 14 Dec 2023 13:49:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuXKCk6+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA13DC433C7;
-	Thu, 14 Dec 2023 13:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702561757;
-	bh=+YaP//k66yYn7P7wEQDb5TW+zpn9I0lJ4Asbfy7dees=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HuXKCk6+Sjijr2Oaj9DQy7ryY55jHeUtaosd+PrOvL2Gkbp55JwXqanRLNcfzzIyU
-	 6097ZavOI0gNXTXj1+iF0pqakOnJ0n+y3jsT5BilJQzl1y0Q2oINBHGs0gQ6OgYZR4
-	 3p6YeAHBLeuu+A8BqXKnlZzvXONBwj5H8WvvrArVKxi9b06uWC383CHPeTLP6L62xV
-	 JFCUhuW0Q0xh7FoPN92Eh0GqoOA+PmXJ9mlkmf2idbnIV2oQWzBZ5w+PybKy4pAmlp
-	 CsurFIBYSBRooKI5wGbiEM0ajGTU5wLMmpfwTnmQ7PvjO26Hi2v06NEnDcLi/p9xTC
-	 uKakxdxaQvRGw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 23C82403EF; Thu, 14 Dec 2023 10:49:14 -0300 (-03)
-Date: Thu, 14 Dec 2023 10:49:14 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Paran Lee <p4ranlee@gmail.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v1 00/14] Clean up libperf cpumap's empty function
-Message-ID: <ZXsH2rragIC7YmCS@kernel.org>
-References: <20231129060211.1890454-1-irogers@google.com>
- <ZXifiVytVbebYE3U@kernel.org>
- <84755553-3a79-4693-9396-084e9ae41235@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X4DSX0yq"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8D512B;
+	Thu, 14 Dec 2023 06:44:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702565059; x=1734101059;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FICAqgrBMjAmlIFhUkbff+egjDTpSE5fRShduafzR/4=;
+  b=X4DSX0yqwGpJg7xNjBQgCAEv7qod0ngpn4w3tEeLrgHvF9GAjh5yKUjz
+   1AxFbIENqInvrtcceJejPJml1p/3ldIlLN1qvZ1t0zmXR/QJnXfBtD77I
+   1jOdE0qA0kM2ohBauy3VLX7888Pn6TOLg7vyYkwHOymKyPmq6bM3GsO20
+   VVl3HLUUmDgIsVXtCmw1YcyWj//6E/EUiqiV/RRbsirWJe1eehRwtikdS
+   Fqj7ywOidS2GztP62HT9+y9gw8g69hchDiclvN9/63jek/NSXx6bxBevf
+   TZZ2ITg3MPTPzqIjYHgSpsYjX/8l+GIpJTEnzuNB51Tv+svWkPzNxQtGE
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="1963052"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="1963052"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:44:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="808606240"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="808606240"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:44:18 -0800
+Received: from [10.213.191.138] (kliang2-mobl1.ccr.corp.intel.com [10.213.191.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 719F6580CD0;
+	Thu, 14 Dec 2023 06:44:17 -0800 (PST)
+Message-ID: <23a3de90-6740-4fde-9771-4f25681f6a2d@linux.intel.com>
+Date: Thu, 14 Dec 2023 09:44:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84755553-3a79-4693-9396-084e9ae41235@intel.com>
-X-Url: http://acmel.wordpress.com
-
-Em Wed, Dec 13, 2023 at 02:48:15PM +0200, Adrian Hunter escreveu:
-> On 12/12/23 19:59, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Nov 28, 2023 at 10:01:57PM -0800, Ian Rogers escreveu:
-> >> Rename and clean up the use of libperf CPU map functions particularly
-> >> focussing on perf_cpu_map__empty that may return true for maps
-> >> containing CPUs but also with an "any CPU"/dummy value.
-> >>
-> >> perf_cpu_map__nr is also troubling in that iterating an empty CPU map
-> >> will yield the "any CPU"/dummy value. Reduce the appearance of some
-> >> calls to this by using the perf_cpu_map__for_each_cpu macro.
-> >>
-> >> Ian Rogers (14):
-> >>   libperf cpumap: Rename perf_cpu_map__dummy_new
-> >>   libperf cpumap: Rename and prefer sysfs for perf_cpu_map__default_new
-> >>   libperf cpumap: Rename perf_cpu_map__empty
-> >>   libperf cpumap: Replace usage of perf_cpu_map__new(NULL)
-> >>   libperf cpumap: Add for_each_cpu that skips the "any CPU" case
-> > 
-> > Applied 1-6, with James Reviewed-by tags, would be good to have Adrian
-> > check the PT and BTS parts, testing the end result if he things its all
-> > ok.
-
-Ian,
-
-	1-6 is in perf-tools-next now, can you please consider Adrian's
-suggestion to reduce patch size and rebase the remaining patches?
-
-- Arnaldo
- 
-> Changing the same lines of code twice in the same patch set is not
-> really kernel style.
-> 
-> Some of the churn could be reduced by applying and rebasing on the
-> patch below.
-> 
-> Ideally the patches should be reordered so that the lines only
-> change once i.e.
-> 
-> 	perf_cpu_map__empty -> <replacement>
-> 
-> instead of
-> 
-> 	perf_cpu_map__empty -> <rename> -> <replacement>
-> 
-> If that is too much trouble, please accept my ack instead:
-> 
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 2/2] perf top: Uniform the event name for the hybrid
+ machine
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, irogers@google.com, mark.rutland@arm.com,
+ maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20231213213633.1088026-1-kan.liang@linux.intel.com>
+ <20231213213633.1088026-2-kan.liang@linux.intel.com>
+ <CAM9d7ch+rHDp3E40QvBu+PGs8N+5iOP3i=HmYXKshcohs05MaQ@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAM9d7ch+rHDp3E40QvBu+PGs8N+5iOP3i=HmYXKshcohs05MaQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
- 
-> 
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> Factor out perf_cpu_map__empty() use to reduce the occurrences and make
-> the code more readable.
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/arch/x86/util/intel-bts.c | 11 ++++++++---
->  tools/perf/arch/x86/util/intel-pt.c  | 21 ++++++++++++---------
->  2 files changed, 20 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-> index d2c8cac11470..cebe994eb9db 100644
-> --- a/tools/perf/arch/x86/util/intel-bts.c
-> +++ b/tools/perf/arch/x86/util/intel-bts.c
-> @@ -59,6 +59,11 @@ intel_bts_info_priv_size(struct auxtrace_record *itr __maybe_unused,
->  	return INTEL_BTS_AUXTRACE_PRIV_SIZE;
->  }
->  
-> +static bool intel_bts_per_cpu(struct evlist *evlist)
-> +{
-> +	return !perf_cpu_map__empty(evlist->core.user_requested_cpus);
-> +}
-> +
->  static int intel_bts_info_fill(struct auxtrace_record *itr,
->  			       struct perf_session *session,
->  			       struct perf_record_auxtrace_info *auxtrace_info,
-> @@ -109,8 +114,8 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
->  	struct intel_bts_recording *btsr =
->  			container_of(itr, struct intel_bts_recording, itr);
->  	struct perf_pmu *intel_bts_pmu = btsr->intel_bts_pmu;
-> +	bool per_cpu_mmaps = intel_bts_per_cpu(evlist);
->  	struct evsel *evsel, *intel_bts_evsel = NULL;
-> -	const struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
->  	bool privileged = perf_event_paranoid_check(-1);
->  
->  	if (opts->auxtrace_sample_mode) {
-> @@ -143,7 +148,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
->  	if (!opts->full_auxtrace)
->  		return 0;
->  
-> -	if (opts->full_auxtrace && !perf_cpu_map__empty(cpus)) {
-> +	if (opts->full_auxtrace && per_cpu_mmaps) {
->  		pr_err(INTEL_BTS_PMU_NAME " does not support per-cpu recording\n");
->  		return -EINVAL;
->  	}
-> @@ -224,7 +229,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
->  		 * In the case of per-cpu mmaps, we need the CPU on the
->  		 * AUX event.
->  		 */
-> -		if (!perf_cpu_map__empty(cpus))
-> +		if (per_cpu_mmaps)
->  			evsel__set_sample_bit(intel_bts_evsel, CPU);
->  	}
->  
-> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-> index fa0c718b9e72..0ff9147c75da 100644
-> --- a/tools/perf/arch/x86/util/intel-pt.c
-> +++ b/tools/perf/arch/x86/util/intel-pt.c
-> @@ -312,6 +312,11 @@ static void intel_pt_tsc_ctc_ratio(u32 *n, u32 *d)
->  	*d = eax;
->  }
->  
-> +static bool intel_pt_per_cpu(struct evlist *evlist)
-> +{
-> +	return !perf_cpu_map__empty(evlist->core.user_requested_cpus);
-> +}
-> +
->  static int intel_pt_info_fill(struct auxtrace_record *itr,
->  			      struct perf_session *session,
->  			      struct perf_record_auxtrace_info *auxtrace_info,
-> @@ -322,7 +327,8 @@ static int intel_pt_info_fill(struct auxtrace_record *itr,
->  	struct perf_pmu *intel_pt_pmu = ptr->intel_pt_pmu;
->  	struct perf_event_mmap_page *pc;
->  	struct perf_tsc_conversion tc = { .time_mult = 0, };
-> -	bool cap_user_time_zero = false, per_cpu_mmaps;
-> +	bool per_cpu_mmaps = intel_pt_per_cpu(session->evlist);
-> +	bool cap_user_time_zero = false;
->  	u64 tsc_bit, mtc_bit, mtc_freq_bits, cyc_bit, noretcomp_bit;
->  	u32 tsc_ctc_ratio_n, tsc_ctc_ratio_d;
->  	unsigned long max_non_turbo_ratio;
-> @@ -369,8 +375,6 @@ static int intel_pt_info_fill(struct auxtrace_record *itr,
->  			ui__warning("Intel Processor Trace: TSC not available\n");
->  	}
->  
-> -	per_cpu_mmaps = !perf_cpu_map__empty(session->evlist->core.user_requested_cpus);
-> -
->  	auxtrace_info->type = PERF_AUXTRACE_INTEL_PT;
->  	auxtrace_info->priv[INTEL_PT_PMU_TYPE] = intel_pt_pmu->type;
->  	auxtrace_info->priv[INTEL_PT_TIME_SHIFT] = tc.time_shift;
-> @@ -604,8 +608,8 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
->  	struct perf_pmu *intel_pt_pmu = ptr->intel_pt_pmu;
->  	bool have_timing_info, need_immediate = false;
->  	struct evsel *evsel, *intel_pt_evsel = NULL;
-> -	const struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
->  	bool privileged = perf_event_paranoid_check(-1);
-> +	bool per_cpu_mmaps = intel_pt_per_cpu(evlist);
->  	u64 tsc_bit;
->  	int err;
->  
-> @@ -774,8 +778,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
->  	 * Per-cpu recording needs sched_switch events to distinguish different
->  	 * threads.
->  	 */
-> -	if (have_timing_info && !perf_cpu_map__empty(cpus) &&
-> -	    !record_opts__no_switch_events(opts)) {
-> +	if (have_timing_info && per_cpu_mmaps && !record_opts__no_switch_events(opts)) {
->  		if (perf_can_record_switch_events()) {
->  			bool cpu_wide = !target__none(&opts->target) &&
->  					!target__has_task(&opts->target);
-> @@ -832,7 +835,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
->  		 * In the case of per-cpu mmaps, we need the CPU on the
->  		 * AUX event.
->  		 */
-> -		if (!perf_cpu_map__empty(cpus))
-> +		if (per_cpu_mmaps)
->  			evsel__set_sample_bit(intel_pt_evsel, CPU);
->  	}
->  
-> @@ -858,7 +861,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
->  			tracking_evsel->immediate = true;
->  
->  		/* In per-cpu case, always need the time of mmap events etc */
-> -		if (!perf_cpu_map__empty(cpus)) {
-> +		if (per_cpu_mmaps) {
->  			evsel__set_sample_bit(tracking_evsel, TIME);
->  			/* And the CPU for switch events */
->  			evsel__set_sample_bit(tracking_evsel, CPU);
-> @@ -870,7 +873,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
->  	 * Warn the user when we do not have enough information to decode i.e.
->  	 * per-cpu with no sched_switch (except workload-only).
->  	 */
-> -	if (!ptr->have_sched_switch && !perf_cpu_map__empty(cpus) &&
-> +	if (!ptr->have_sched_switch && per_cpu_mmaps &&
->  	    !target__none(&opts->target) &&
->  	    !intel_pt_evsel->core.attr.exclude_user)
->  		ui__warning("Intel Processor Trace decoding will not be possible except for kernel tracing!\n");
-> -- 
-> 2.34.1
-> 
-> 
-> 
 
--- 
+On 2023-12-13 4:57 p.m., Namhyung Kim wrote:
+> On Wed, Dec 13, 2023 at 1:36 PM <kan.liang@linux.intel.com> wrote:
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> It's hard to distinguish the default cycles events among hybrid PMUs.
+>> For example,
+>>
+>>  $perf top
+>> Available samples
+>> 385 cycles:P
+>> 903 cycles:P
+>>
+>> The other tool, e.g., perf record, uniforms the event name and adds the
+>> hybrid PMU name before opening the event. So the events can be easily
+>> distinguished. Apply the same methodology for the perf top as well.
+>>
+>> The record__uniquify_name() will be invoked by both record and top.
+>> Move it to util/record.c
+> 
+> Maybe better to rename it to evlist__uniquify_name() and move it
+> to util/evlist.c.
 
-- Arnaldo
+Sure, I will change it in V4.
+
+Thanks,
+Kan
+
+> 
+> Thanks,
+> Namhyung
+> 
+>>
+>> With the patch
+>>  $perf top
+>> Available samples
+>> 148 cpu_atom/cycles:P/
+>> 1K cpu_core/cycles:P/
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>
+>> New patch to address the display concern
+>> https://lore.kernel.org/lkml/e9383607-1e43-4c1a-9512-29f27784d035@linux.intel.com/
+>>
+>>  tools/perf/builtin-record.c | 28 +---------------------------
+>>  tools/perf/builtin-top.c    |  1 +
+>>  tools/perf/util/record.c    | 25 +++++++++++++++++++++++++
+>>  tools/perf/util/record.h    |  2 ++
+>>  4 files changed, 29 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index dcf288a4fb9a..a096422a4a14 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -2216,32 +2216,6 @@ static void hit_auxtrace_snapshot_trigger(struct record *rec)
+>>         }
+>>  }
+>>
+>> -static void record__uniquify_name(struct record *rec)
+>> -{
+>> -       struct evsel *pos;
+>> -       struct evlist *evlist = rec->evlist;
+>> -       char *new_name;
+>> -       int ret;
+>> -
+>> -       if (perf_pmus__num_core_pmus() == 1)
+>> -               return;
+>> -
+>> -       evlist__for_each_entry(evlist, pos) {
+>> -               if (!evsel__is_hybrid(pos))
+>> -                       continue;
+>> -
+>> -               if (strchr(pos->name, '/'))
+>> -                       continue;
+>> -
+>> -               ret = asprintf(&new_name, "%s/%s/",
+>> -                              pos->pmu_name, pos->name);
+>> -               if (ret) {
+>> -                       free(pos->name);
+>> -                       pos->name = new_name;
+>> -               }
+>> -       }
+>> -}
+>> -
+>>  static int record__terminate_thread(struct record_thread *thread_data)
+>>  {
+>>         int err;
+>> @@ -2475,7 +2449,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>>         if (data->is_pipe && rec->evlist->core.nr_entries == 1)
+>>                 rec->opts.sample_id = true;
+>>
+>> -       record__uniquify_name(rec);
+>> +       record__uniquify_name(rec->evlist);
+>>
+>>         /* Debug message used by test scripts */
+>>         pr_debug3("perf record opening and mmapping events\n");
+>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+>> index cce9350177e2..4e8296654280 100644
+>> --- a/tools/perf/builtin-top.c
+>> +++ b/tools/perf/builtin-top.c
+>> @@ -1299,6 +1299,7 @@ static int __cmd_top(struct perf_top *top)
+>>                 }
+>>         }
+>>
+>> +       record__uniquify_name(top->evlist);
+>>         ret = perf_top__start_counters(top);
+>>         if (ret)
+>>                 return ret;
+>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+>> index 9eb5c6a08999..5b4be3c72cbc 100644
+>> --- a/tools/perf/util/record.c
+>> +++ b/tools/perf/util/record.c
+>> @@ -289,3 +289,28 @@ int record__parse_freq(const struct option *opt, const char *str, int unset __ma
+>>         opts->user_freq = freq;
+>>         return 0;
+>>  }
+>> +
+>> +void record__uniquify_name(struct evlist *evlist)
+>> +{
+>> +       struct evsel *pos;
+>> +       char *new_name;
+>> +       int ret;
+>> +
+>> +       if (perf_pmus__num_core_pmus() == 1)
+>> +               return;
+>> +
+>> +       evlist__for_each_entry(evlist, pos) {
+>> +               if (!evsel__is_hybrid(pos))
+>> +                       continue;
+>> +
+>> +               if (strchr(pos->name, '/'))
+>> +                       continue;
+>> +
+>> +               ret = asprintf(&new_name, "%s/%s/",
+>> +                              pos->pmu_name, pos->name);
+>> +               if (ret) {
+>> +                       free(pos->name);
+>> +                       pos->name = new_name;
+>> +               }
+>> +       }
+>> +}
+>> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+>> index a6566134e09e..9b520ab784bc 100644
+>> --- a/tools/perf/util/record.h
+>> +++ b/tools/perf/util/record.h
+>> @@ -8,6 +8,7 @@
+>>  #include <linux/stddef.h>
+>>  #include <linux/perf_event.h>
+>>  #include "util/target.h"
+>> +#include "util/evlist.h"
+>>
+>>  struct option;
+>>
+>> @@ -85,6 +86,7 @@ extern const char * const *record_usage;
+>>  extern struct option *record_options;
+>>
+>>  int record__parse_freq(const struct option *opt, const char *str, int unset);
+>> +void record__uniquify_name(struct evlist *evlist);
+>>
+>>  static inline bool record_opts__no_switch_events(const struct record_opts *opts)
+>>  {
+>> --
+>> 2.35.1
+>>
