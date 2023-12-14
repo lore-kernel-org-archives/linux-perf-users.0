@@ -1,44 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69D066ABD;
-	Thu, 14 Dec 2023 21:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41307671EC;
+	Thu, 14 Dec 2023 22:07:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1pKB0rn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B10C433C7;
-	Thu, 14 Dec 2023 21:43:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhzCUriS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725ADC433C8;
+	Thu, 14 Dec 2023 22:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702590219;
-	bh=dVr1opMNzahny809YaACJXD2nWH5MTKZJF752YtWN68=;
+	s=k20201202; t=1702591677;
+	bh=PfvvUQcPkoMq76dDtugLfLFSSY2BCZuxvN2noD+Kfek=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q1pKB0rnHNPMqUYX+nQety9sEH6VUohSb0VNY+IKBndbMlEHgRluudAY8QRCABRVN
-	 4EbI2Th5yP+jNEi/NTvAIcY6bklgvECAh+ds/a2xKgX0gISkh/5oCtA8QZKy1pnVFA
-	 udQ9jjlZA87pdWrI7cug1yMvTlBwnqY+CVA7kDd6ZbCGO6JMqyIzOZiAom1n8uSgve
-	 +g0tS6FPWAT54qppft8gjbwdAPXeYHU/LBnFEUe/uDHfobySbIIVCx+E8/VaAcnYIK
-	 j4gKQRSeaFdTM01jzEP57bogMDJDOrCBK7j4MEAHOplodhQeZEDPjzYSQgEM9DOyxx
-	 oJYNT+Swe3E1Q==
+	b=rhzCUriSOEIxbvRYmeccDeFGMavoNL2oMRIXkePkOyWu5ruRL8/EDNG1MX81XhQ8O
+	 t5bIuRow/ZcvLrtuEQiFCtKkKWn8Qbq8/q0wz9x1GihfZQb7JTm3e6sbcFGo/iDAnV
+	 wu7bXLWsiFGGVHDQv6oKHHXxo79U5jcot/y5fvn1r+i5idDxPDyKUWYV8v52JDnIWm
+	 Mub+uVlJNxwIU2Ji9bDRxfgH3KUX3KU+qqfQ1NsorKACFZUJGXydWh7H66nk8oNK3Y
+	 7DfhZEENvzROY8PEm0TXu8CEjL2xwqbIU9mjdjD4wQ4dCuzs5vEmc3Xr9ZQHO7D+Gq
+	 4iMze3mH33ZrA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id F39B1403EF; Thu, 14 Dec 2023 18:43:35 -0300 (-03)
-Date: Thu, 14 Dec 2023 18:43:35 -0300
+	id C5307403EF; Thu, 14 Dec 2023 19:07:54 -0300 (-03)
+Date: Thu, 14 Dec 2023 19:07:54 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kaige Ye <ye@kaige.org>, James Clark <james.clark@arm.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	John Garry <john.g.garry@oracle.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf stat: Combine the -A/--no-aggr and --no-merge
- options
-Message-ID: <ZXt3B_BoGj2LThiI@kernel.org>
-References: <20231214060256.2094017-1-irogers@google.com>
- <cd3c9e63-1ae8-4106-b4ed-e1332b29a4ce@linux.intel.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Milian Wolff <milian.wolff@kdab.com>,
+	Pablo Galindo <pablogsal@gmail.com>,
+	Fangrui Song <maskray@google.com>
+Subject: Re: [PATCH 0/3] perf tools: Random fixes for DWARF unwind
+Message-ID: <ZXt8uuLf2UqGw_io@kernel.org>
+References: <20231212070547.612536-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,24 +41,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd3c9e63-1ae8-4106-b4ed-e1332b29a4ce@linux.intel.com>
+In-Reply-To: <20231212070547.612536-1-namhyung@kernel.org>
 X-Url: http://acmel.wordpress.com
 
-Em Thu, Dec 14, 2023 at 10:10:57AM -0500, Liang, Kan escreveu:
-> On 2023-12-14 1:02 a.m., Ian Rogers wrote:
-> > The -A or --no-aggr option disables aggregation of core events:
-<SNIP>
-> > The --no-merge option disables the aggregation of uncore events:
-<SNIP>
-> > Having two options confuses users who generally don't appreciate the
-> > difference in PMUs. Keep all the options but make it so they all
-> > disable aggregation both of core and uncore events:
-
-> > Update the relevant perf-stat man page information.
- 
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Em Mon, Dec 11, 2023 at 11:05:43PM -0800, Namhyung Kim escreveu:
+> Hello,
+> 
+> I've found a couple of issues on the unwind code while I'm playing with
+> the JIT-dump code for the CPython.  The code assumes normal DSOs mapped
+> from the beginning of the file and aligned to the page size.  But it's
+> not true for the JIT-dumped DSOs which are generated for each function.
+> 
+> Depending on the JIT implementation, the code address and accompanied
+> ELF info (like ELF file headers and unwind info) can be overlapped to
+> adjacent (JIT-dumped) DSOs.  So it should take more care when it
+> calculates the mapping address for the DSO.
+> 
+> It seems these changes need to go to the stable trees but they are
+> changed a lot since then so I'm not sure.
+> 
 
 Thanks, applied to perf-tools-next.
 
 - Arnaldo
 
+ 
+> 
+> Namhyung Kim (3):
+>   perf genelf: Set ELF program header addresses properly
+>   perf unwind-libdw: Handle JIT-generated DSOs properly
+>   perf unwind-libunwind: Fix base address for .eh_frame
+> 
+>  tools/perf/util/genelf.c                 |  6 +++---
+>  tools/perf/util/unwind-libdw.c           | 21 +++++++++++++++++----
+>  tools/perf/util/unwind-libunwind-local.c |  2 +-
+>  3 files changed, 21 insertions(+), 8 deletions(-)
+> 
+> -- 
+> 2.43.0.472.g3155946c3a-goog
+> 
+
+-- 
+
+- Arnaldo
