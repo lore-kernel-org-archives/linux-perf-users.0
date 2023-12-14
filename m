@@ -1,224 +1,152 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cG7xGXUd"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C28685;
-	Wed, 13 Dec 2023 16:06:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702512410; x=1734048410;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Owews0mavJ2oaLDoKrToW+g5JiUDjY4k3yPVLHroirc=;
-  b=cG7xGXUdGMvh8mQ8PjR+ZCJhPwUm044oSvDTUEMu20aQNzs+QbUmMgAr
-   mL8PrmK1bPbCpbqD5nN1Uij58V1FiHjfNISdZ3iBEO5ciq/6BKr78JX6t
-   XVlkhOL6R4bMsPtjpctAW8rL48sGMBoWkIE2rIGcou7Za4dQ04iqMXfk6
-   5sVga9eKcrChHlZnre+x2xMg56agPIMNW7MWJ7zpDZOw0vV4kqFo0UMbW
-   xz33EA8Ze8FDZi2wKudygIyOBKS9XkeW0aiNhPcpXyZa+MizN1jhlJWrd
-   +iMVQaBqvN9pqQFxYFeSJ6sLZklw7MLFgEGq5RuwnmasRGwy6O144bilo
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="375198800"
-X-IronPort-AV: E=Sophos;i="6.04,274,1695711600"; 
-   d="scan'208";a="375198800"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 16:06:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="844506787"
-X-IronPort-AV: E=Sophos;i="6.04,274,1695711600"; 
-   d="scan'208";a="844506787"
-Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 16:06:44 -0800
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: [PATCH] Revert "perf: Fix perf_event_validate_size()"
-Date: Wed, 13 Dec 2023 16:06:20 -0800
-Message-Id: <20231214000620.3081018-1-lucas.demarchi@intel.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0u43h5g"
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77ED18D;
+	Wed, 13 Dec 2023 18:48:50 -0800 (PST)
+Received: by mail-io1-xd31.google.com with SMTP id ca18e2360f4ac-7b45ab9e084so319168939f.2;
+        Wed, 13 Dec 2023 18:48:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702522130; x=1703126930; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sN1Y7WcSaLQMLijDMl3xv5IoXDMoGtBRoqudyg9OXAI=;
+        b=N0u43h5gYkRtQAMyjdzgZm2YXSZn8zUkGmkEnqg4PXqXB//kV2VHje4AYkgbPIWymb
+         3i9S6RbCvWnrDQYWS5RAalvrWMAtH9XTg3+EDrCACMpXEsD3N4mahrcsY3ii+Uvba6C0
+         FWCrmuQ/MQEGTSvDSotqDrlnczpbv7+jV2KzlM8McTKHV/iOUBZwX2sDrGiU0tiLBzKS
+         aRYbUGB8EoDKOt2F5CZwGpfLx84WsZZm0uHi0uWHBMIFRS6kaEoIZ+l8IZz6ARx33Y08
+         uKhGdfLJQ9t/4B7V6tuNQhl4cc7Dy4pw8NnkGZDBteUR+jn6unixKrI47CqXpD5p7K6v
+         GHcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702522130; x=1703126930;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sN1Y7WcSaLQMLijDMl3xv5IoXDMoGtBRoqudyg9OXAI=;
+        b=sxTjaHWqYkcb4owNAhYBxkyGEC11RsfEtzm4ni4wSIFpaHHFISYxrB63OSkn74GzKD
+         92lA4xojLfBBG6n7AZ8TUqD17Brk1f7oFR92KbsBM1SElTsPkG1KWtYTTlS4DXY/qAGN
+         EGqXznH2k85YW7UXlLybqNRngc9JEPwiNbnxmCAGP4C3gMaKao23VB96t3cbFx2s3EQu
+         WEmDbH0m5Eh319bKkIfYT2kzRooj9oZjdmuZ3HXYA6kpDHYdqMvLmQpilJ1hpWC1pa4w
+         RshjATiisI2uZ3Qrk36aZsAecCf4iZZqE5hOx9SbVWPyba6ShmtrQ1ZLxf7h9Z6IV5CL
+         aPKw==
+X-Gm-Message-State: AOJu0Yw8FKNUxrTIjn4SLUPyZIgV4e3Ysa9sK6Krrf4nMF4Cplb+LsUU
+	gWaVVYfVAo19wfZB0+8g7X0=
+X-Google-Smtp-Source: AGHT+IEXRG3V6shfxHFbYX2s3HftithXAitcUvLKtpPf95bYI57mWEOBIF148K4iNNfK2UfX1O2Zuw==
+X-Received: by 2002:a05:6e02:1be1:b0:35d:65e0:a433 with SMTP id y1-20020a056e021be100b0035d65e0a433mr13284653ilv.2.1702522130052;
+        Wed, 13 Dec 2023 18:48:50 -0800 (PST)
+Received: from [192.168.255.10] ([203.205.141.87])
+        by smtp.gmail.com with ESMTPSA id i18-20020a17090332d200b001d076ebf328sm11285033plr.8.2023.12.13.18.48.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Dec 2023 18:48:49 -0800 (PST)
+Message-ID: <9d8c8900-699e-4879-8aca-d9371e77f097@gmail.com>
+Date: Thu, 14 Dec 2023 10:48:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf header: Set proper symbol name for vdso when
+ build-id event found
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+References: <20231201111506.37155-1-likexu@tencent.com>
+ <f50149fb-967c-4987-8d08-d6bb2a69bcf3@intel.com>
+Content-Language: en-US
+From: Like Xu <like.xu.linux@gmail.com>
+In-Reply-To: <f50149fb-967c-4987-8d08-d6bb2a69bcf3@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This reverts commit 382c27f4ed28f803b1f1473ac2d8db0afc795a1b.
+On 14/12/2023 3:26 am, Adrian Hunter wrote:
+> On 1/12/23 13:15, Like Xu wrote:
+>> From: Like Xu <likexu@tencent.com>
+>>
+>> If using perf-record to sample a cpu-cycles:P event on a hypervisor process
+>> when '--kcore' is not enabled, user may find some surprise in perf-report:
+>>
+>> # perf report -i perf.data -v:
+>> # Overhead Command   Shared Object            	Symbol
+>>      99.71%  vcpu0    arch/x86/kvm/kvm-intel.ko  0xffffffffa10d1e30 B [k] 0x0000000000034ed0
+>>
+>> build id event received for vmlinux: d12116149f511f7dbd0b21c45d38d3d2ec09b87f [20]
+>> build id event received for kvm-intel.ko: a8fc0213abbafd97b10ce58ce84bec8519f9abce [20]
+>> build id event received for [vdso]: 4d56e381df8d2c051f6bc1ef69c0118c59d5c49f [20]
+>>
+>> # perf report:
+>> # Overhead  Command  Shared Object     Symbol
+>> # ........  .......  ................  .......................................
+>> #
+>>      99.71%  vcpu0    [kvm_intel]       [k] 0x0000000000034ed0
+>>       0.10%  vcpu0    [kernel.vmlinux]  [k] __lock_acquire.isra.29
+>>
+>> Users may be curious as to how 0x34ed0 was generated and wondered if this
+>> RIP came from the guest application but perf-script-D does not point to any
+>> samples of this address.
+>>
+>> Based on perf/tool implementation, this is actually an offset pointing to
+>> the vdso object (in this case it is the assembly __vmx_vcpu_run defined
+>> in arch/x86/kvm/vmx/vmenter.S). The pattern is not reproduced on perf-tool
+>> of some distributions, and git-bisect quickly identified the possible root
+>> cause, which leds to this straightforward fix and after this change:
+>>
+>> # perf report -i perf.data -v:
+>> # Overhead Command   Shared Object            	Symbol
+>>      99.71%  vcpu0    arch/x86/kvm/kvm-intel.ko  0x34ed0            B [k] __vmx_vcpu_run
+>>
+>> # perf report:
+>> # Overhead  Command  Shared Object     Symbol
+>> # ........  .......  ................  .......................................
+>> #
+>>      99.71%  vcpu0    [kvm_intel]       [k] __vmx_vcpu_run
+>>
+>> The fix also gets commit 1deec1bd96cc ("perf header: Set proper module name
+>> when build-id event found") lit again.
+>>
+>> Cc: Jiri Olsa <jolsa@kernel.org>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Ian Rogers <irogers@google.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Fixes: b2fe96a350de ("perf tools: Fix module symbol processing")
+>> Signed-off-by: Like Xu <likexu@tencent.com>
+>> ---
+>>   tools/perf/util/header.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+>> index e86b9439ffee..a33d589511ff 100644
+>> --- a/tools/perf/util/header.c
+>> +++ b/tools/perf/util/header.c
+>> @@ -2305,8 +2305,8 @@ static int __event_process_build_id(struct perf_record_header_build_id *bev,
+>>   
+>>   			if (!kmod_path__parse_name(&m, filename) && m.kmod)
+>>   				dso__set_module_info(dso, &m, machine);
+>> -
+>> -			dso->kernel = dso_space;
+>> +			else
+>> +				dso->kernel = dso_space;
+> 
+> This is undoing some of b2fe96a350de ("perf tools: Fix module
+> symbol processing") without explanation.
 
-When using for_each_sibling_event() lockdep complains on
+Thanks for your comments.
+W/ this fix, "perf test -v object" looks OK.
 
-        WARN_ON_ONCE(__lockdep_enabled &&                       \
-                     (this_cpu_read(hardirqs_enabled) &&        \
-                      lockdep_is_held(&(event)->ctx->mutex) != LOCK_STATE_HELD))
+> 
+> Symbols in the .noinstr.text section don't seem to be
+> being resolved, so that could be the issue.  perf synthesizes
+> an MMAP record from /proc/modules, which works for .text
+> but perhaps not for .noinstr.text
 
-after a simple `perf stat -e instructions sleep 1`:
+Not sure if it covers the potentially broken features you mentioned above,
+would you be willing to provide a more detailed test command ?
 
-	WARNING: CPU: 8 PID: 1471 at kernel/events/core.c:1950 __do_sys_perf_event_open+0xf37/0x1080
-	Modules linked in: x86_pkg_temp_thermal coretemp kvm_intel kvm e1000e igc irqbypass mei_pxp mei_hdcp crct10dif_pclmul wmi_bmof crc32_pclmul ghash_clmulni_intel i2c_i801 ptp mei_me i2c_smbus pps_core mei intel_lpss_pci video wmi fuse
-	CPU: 8 PID: 1471 Comm: perf Not tainted 6.7.0-rc5-linus-demarchi+ #8
-	Hardware name: Intel Corporation Rocket Lake Client Platform/RocketLake S UDIMM 4L ERB, BIOS RKLSFWI1.R00.2022.A00.2101052151 01/05/2021
-	RIP: 0010:__do_sys_perf_event_open+0xf37/0x1080
-	Code: ff e8 ed 30 ab 00 48 8b 81 28 02 00 00 83 ce ff 48 8d b8 a8 00 00 00 e8 67 38 ab 00 48 8b 4c 24 08 83 e8 01 0f 84 56 f9 ff ff <0f> 0b e9 4f f9 ff ff be 03 00 00 00 e8 d8 74 40 00 e9 54 fa ff ff
-	RSP: 0018:ffffc90001d6be40 EFLAGS: 00010297
-	RAX: 00000000ffffffff RBX: ffff888112bc8040 RCX: ffff888100c34568
-	RDX: 0000000080000000 RSI: ffffffff823e2806 RDI: ffffffff824023cb
-	RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-	R10: 0000000000000001 R11: 0000000000000000 R12: ffff888106560800
-	R13: 0000000000000000 R14: 0000000000080002 R15: ffff888100c34568
-	FS:  00007f723d196c00(0000) GS:ffff888450800000(0000) knlGS:0000000000000000
-	CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-	CR2: 00005624c0efdaa0 CR3: 00000001199de002 CR4: 0000000000770ef0
-	PKRU: 55555554
-	Call Trace:
-	 <TASK>
-	 ? __do_sys_perf_event_open+0xf37/0x1080
-	 ? __warn+0x80/0x170
-	 ? __do_sys_perf_event_open+0xf37/0x1080
-	 ? report_bug+0x191/0x1c0
-	 ? handle_bug+0x3c/0x70
-	 ? exc_invalid_op+0x17/0x70
-	 ? asm_exc_invalid_op+0x1a/0x20
-	 ? __do_sys_perf_event_open+0xf37/0x1080
-	 do_syscall_64+0x42/0xf0
-	 entry_SYSCALL_64_after_hwframe+0x6e/0x76
-	RIP: 0033:0x7f723bf1ea7d
-	Code: 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 83 a3 0f 00 f7 d8 64 89 01 48
-	RSP: 002b:00007ffc7118ba68 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-	RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007f723bf1ea7d
-	RDX: 00000000ffffffff RSI: 00000000000005c0 RDI: 00005624c0efb0c0
-	RBP: 00007ffc7118bb20 R08: 0000000000000008 R09: 0000000000000000
-	R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000000
-	R13: 0000000000000008 R14: 00005624c0efb0b0 R15: 00005624c0efb0b0
-	 </TASK>
-	irq event stamp: 45697
-	hardirqs last  enabled at (45703): [<ffffffff81173dca>] console_unlock+0x10a/0x160
-	hardirqs last disabled at (45708): [<ffffffff81173daf>] console_unlock+0xef/0x160
-	softirqs last  enabled at (45276): [<ffffffff810dab0e>] irq_exit_rcu+0x8e/0xf0
-	softirqs last disabled at (45267): [<ffffffff810dab0e>] irq_exit_rcu+0x8e/0xf0
-
-References: https://gitlab.freedesktop.org/drm/intel/-/issues/9847
-Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
----
-
-Not sure about a proper fix for this. At first I thought it was indeed
-because previously it was not validating the the size correctly. However
-then I noticed the warning is actually due to for_each_sibling_event().
-
-
- kernel/events/core.c | 61 +++++++++++++++++---------------------------
- 1 file changed, 23 insertions(+), 38 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index c9d123e13b57..b704d83a28b2 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1814,34 +1814,31 @@ static inline void perf_event__state_init(struct perf_event *event)
- 					      PERF_EVENT_STATE_INACTIVE;
- }
- 
--static int __perf_event_read_size(u64 read_format, int nr_siblings)
-+static void __perf_event_read_size(struct perf_event *event, int nr_siblings)
- {
- 	int entry = sizeof(u64); /* value */
- 	int size = 0;
- 	int nr = 1;
- 
--	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-+	if (event->attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
- 		size += sizeof(u64);
- 
--	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-+	if (event->attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
- 		size += sizeof(u64);
- 
--	if (read_format & PERF_FORMAT_ID)
-+	if (event->attr.read_format & PERF_FORMAT_ID)
- 		entry += sizeof(u64);
- 
--	if (read_format & PERF_FORMAT_LOST)
-+	if (event->attr.read_format & PERF_FORMAT_LOST)
- 		entry += sizeof(u64);
- 
--	if (read_format & PERF_FORMAT_GROUP) {
-+	if (event->attr.read_format & PERF_FORMAT_GROUP) {
- 		nr += nr_siblings;
- 		size += sizeof(u64);
- 	}
- 
--	/*
--	 * Since perf_event_validate_size() limits this to 16k and inhibits
--	 * adding more siblings, this will never overflow.
--	 */
--	return size + nr * entry;
-+	size += entry * nr;
-+	event->read_size = size;
- }
- 
- static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
-@@ -1891,9 +1888,8 @@ static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
-  */
- static void perf_event__header_size(struct perf_event *event)
- {
--	event->read_size =
--		__perf_event_read_size(event->attr.read_format,
--				       event->group_leader->nr_siblings);
-+	__perf_event_read_size(event,
-+			       event->group_leader->nr_siblings);
- 	__perf_event_header_size(event, event->attr.sample_type);
- }
- 
-@@ -1924,35 +1920,24 @@ static void perf_event__id_header_size(struct perf_event *event)
- 	event->id_header_size = size;
- }
- 
--/*
-- * Check that adding an event to the group does not result in anybody
-- * overflowing the 64k event limit imposed by the output buffer.
-- *
-- * Specifically, check that the read_size for the event does not exceed 16k,
-- * read_size being the one term that grows with groups size. Since read_size
-- * depends on per-event read_format, also (re)check the existing events.
-- *
-- * This leaves 48k for the constant size fields and things like callchains,
-- * branch stacks and register sets.
-- */
- static bool perf_event_validate_size(struct perf_event *event)
- {
--	struct perf_event *sibling, *group_leader = event->group_leader;
--
--	if (__perf_event_read_size(event->attr.read_format,
--				   group_leader->nr_siblings + 1) > 16*1024)
--		return false;
-+	/*
-+	 * The values computed here will be over-written when we actually
-+	 * attach the event.
-+	 */
-+	__perf_event_read_size(event, event->group_leader->nr_siblings + 1);
-+	__perf_event_header_size(event, event->attr.sample_type & ~PERF_SAMPLE_READ);
-+	perf_event__id_header_size(event);
- 
--	if (__perf_event_read_size(group_leader->attr.read_format,
--				   group_leader->nr_siblings + 1) > 16*1024)
-+	/*
-+	 * Sum the lot; should not exceed the 64k limit we have on records.
-+	 * Conservative limit to allow for callchains and other variable fields.
-+	 */
-+	if (event->read_size + event->header_size +
-+	    event->id_header_size + sizeof(struct perf_event_header) >= 16*1024)
- 		return false;
- 
--	for_each_sibling_event(sibling, group_leader) {
--		if (__perf_event_read_size(sibling->attr.read_format,
--					   group_leader->nr_siblings + 1) > 16*1024)
--			return false;
--	}
--
- 	return true;
- }
- 
--- 
-2.40.1
-
+> 
+>>   			free(m.name);
+>>   		}
+>>   
+> 
