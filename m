@@ -1,38 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41307671EC;
-	Thu, 14 Dec 2023 22:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D7C671E8;
+	Thu, 14 Dec 2023 22:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhzCUriS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725ADC433C8;
-	Thu, 14 Dec 2023 22:07:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzPXYpZ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC013C433C7;
+	Thu, 14 Dec 2023 22:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702591677;
-	bh=PfvvUQcPkoMq76dDtugLfLFSSY2BCZuxvN2noD+Kfek=;
+	s=k20201202; t=1702592083;
+	bh=VkYO4gSpPkcgoHfoSAk4eG5D22N+fu0QJulY8XPIfiI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rhzCUriSOEIxbvRYmeccDeFGMavoNL2oMRIXkePkOyWu5ruRL8/EDNG1MX81XhQ8O
-	 t5bIuRow/ZcvLrtuEQiFCtKkKWn8Qbq8/q0wz9x1GihfZQb7JTm3e6sbcFGo/iDAnV
-	 wu7bXLWsiFGGVHDQv6oKHHXxo79U5jcot/y5fvn1r+i5idDxPDyKUWYV8v52JDnIWm
-	 Mub+uVlJNxwIU2Ji9bDRxfgH3KUX3KU+qqfQ1NsorKACFZUJGXydWh7H66nk8oNK3Y
-	 7DfhZEENvzROY8PEm0TXu8CEjL2xwqbIU9mjdjD4wQ4dCuzs5vEmc3Xr9ZQHO7D+Gq
-	 4iMze3mH33ZrA==
+	b=pzPXYpZ9mpmimQtq/lSM0iXgShNzjcjTKHytOruVvKTy/TJb7YSQowxiFNw7nYtpy
+	 j9m2/hm5TIXE/OMLBI8sAm0nbr80Oowf1i1lmHzQ85DUvWPph0BfZv8P+805l4GjGO
+	 pQPDc0yZER53NwvnmuTrXjWbGRGWEnUMcWYdmLto+UguXhTzpi7/p56JhXucn5KWu4
+	 BkD4yBGGFlc7JX6yP772dAg5uWgjtxICUNtqhw/JZD6GiaCFepjbZXavSxA4uwWZEj
+	 LyOw1fqdwVlKnfgXzvv2dTecXj6FBGvGwoMZOTAHyEEd+OQh2U95n9YmkIOFHwFueY
+	 4+VjQt3VFPbZA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id C5307403EF; Thu, 14 Dec 2023 19:07:54 -0300 (-03)
-Date: Thu, 14 Dec 2023 19:07:54 -0300
+	id 70430403EF; Thu, 14 Dec 2023 19:14:40 -0300 (-03)
+Date: Thu, 14 Dec 2023 19:14:40 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Milian Wolff <milian.wolff@kdab.com>,
-	Pablo Galindo <pablogsal@gmail.com>,
-	Fangrui Song <maskray@google.com>
-Subject: Re: [PATCH 0/3] perf tools: Random fixes for DWARF unwind
-Message-ID: <ZXt8uuLf2UqGw_io@kernel.org>
-References: <20231212070547.612536-1-namhyung@kernel.org>
+To: kan.liang@linux.intel.com
+Cc: irogers@google.com, namhyung@kernel.org, mark.rutland@arm.com,
+	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V4 2/2] perf top: Uniform the event name for the hybrid
+ machine
+Message-ID: <ZXt-UC-gkFPQofza@kernel.org>
+References: <20231214144612.1092028-1-kan.liang@linux.intel.com>
+ <20231214144612.1092028-2-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,46 +38,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231212070547.612536-1-namhyung@kernel.org>
+In-Reply-To: <20231214144612.1092028-2-kan.liang@linux.intel.com>
 X-Url: http://acmel.wordpress.com
 
-Em Mon, Dec 11, 2023 at 11:05:43PM -0800, Namhyung Kim escreveu:
-> Hello,
+Em Thu, Dec 14, 2023 at 06:46:12AM -0800, kan.liang@linux.intel.com escreveu:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> I've found a couple of issues on the unwind code while I'm playing with
-> the JIT-dump code for the CPython.  The code assumes normal DSOs mapped
-> from the beginning of the file and aligned to the page size.  But it's
-> not true for the JIT-dumped DSOs which are generated for each function.
+> It's hard to distinguish the default cycles events among hybrid PMUs.
+> For example,
 > 
-> Depending on the JIT implementation, the code address and accompanied
-> ELF info (like ELF file headers and unwind info) can be overlapped to
-> adjacent (JIT-dumped) DSOs.  So it should take more care when it
-> calculates the mapping address for the DSO.
-> 
-> It seems these changes need to go to the stable trees but they are
-> changed a lot since then so I'm not sure.
-> 
+>  $perf top
+> Available samples
+> 385 cycles:P
+> 903 cycles:P
 
-Thanks, applied to perf-tools-next.
+Thanks, tested and applied both patches to perf-tools-next.
 
-- Arnaldo
 
- 
-> 
-> Namhyung Kim (3):
->   perf genelf: Set ELF program header addresses properly
->   perf unwind-libdw: Handle JIT-generated DSOs properly
->   perf unwind-libunwind: Fix base address for .eh_frame
-> 
->  tools/perf/util/genelf.c                 |  6 +++---
->  tools/perf/util/unwind-libdw.c           | 21 +++++++++++++++++----
->  tools/perf/util/unwind-libunwind-local.c |  2 +-
->  3 files changed, 21 insertions(+), 8 deletions(-)
-> 
-> -- 
-> 2.43.0.472.g3155946c3a-goog
-> 
-
--- 
-
-- Arnaldo
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
