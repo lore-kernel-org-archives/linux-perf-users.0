@@ -1,103 +1,97 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA3036B10
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Dec 2023 15:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rE9xk-0003J2-Du; Fri, 15 Dec 2023 16:18:52 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rE9xj-00G3c1-Nm; Fri, 15 Dec 2023 16:18:51 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rE9xj-003enb-EM; Fri, 15 Dec 2023 16:18:51 +0100
-Date: Fri, 15 Dec 2023 16:18:51 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: James Clark <james.clark@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	linux-next@vger.kernel.org, will@kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 1/2] arm: perf: Fix ARCH=arm build with GCC in
- armv8pmu_write_evtype()
-Message-ID: <20231215151851.24wwciobjy5ritoe@pengutronix.de>
-References: <20231215150040.3342183-1-james.clark@arm.com>
- <20231215150040.3342183-2-james.clark@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF62320F;
+	Fri, 15 Dec 2023 15:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EbvWMx9j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF33C433C8;
+	Fri, 15 Dec 2023 15:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702654574;
+	bh=QkGYnpI7VkJ6ZnApbfPGjqcENeC9oxa/+M+iQlRNTew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EbvWMx9j+qVNefKJn+Tr/6Z/qq08iInLITOqy0GNB2BK7LRoYq/VbHLGCxWh34XOu
+	 hHgO1q5YeGHFdHw3T9N8ra22CZbt7QVjrdax1BmOz6H+qRhexQWu1H6jBiVMOig5Dk
+	 U0bARE8E1aunSOR3F6K4vdv1dYodmm164F//QhohX8VQlNKMfSDY8bNnnwQA//hp2l
+	 I1NBq4qLGDXjnktrRtA5+UAxMAKO7UBa+iWKBdwjbRXDst33bPxtYR2yhuXfMvKIrb
+	 0UenvZqev54cr74MWAghqpnjC2ZX+b1UWPPUh+GGQO2q187B7NZK0Mzbtlifb5mK1N
+	 m5lVdS0QFzrdA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id B4F8A403EF; Fri, 15 Dec 2023 12:36:10 -0300 (-03)
+Date: Fri, 15 Dec 2023 12:36:10 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
+Message-ID: <ZXxyanyZgWBTOnoK@kernel.org>
+References: <20231208210855.407580-1-kan.liang@linux.intel.com>
+ <ZXd7ZuxbNNsjAyqm@kernel.org>
+ <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
+ <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
+ <CAP-5=fVd-0aSovYVsOmTo2dfKb5_PHz1KV7ePipi35_JbfJ6qQ@mail.gmail.com>
+ <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vcdax2erkxxsbf2h"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231215150040.3342183-2-james.clark@arm.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
+X-Url: http://acmel.wordpress.com
 
+Em Tue, Dec 12, 2023 at 06:31:05PM +0000, Mark Rutland escreveu:
+> On ARM it'll be essentially the same as on x86: if you open an event with
+> type==PERF_EVENT_TYPE_HARDWARE (without the extended HW type pointing to a
+> specific PMU), and with cpu==-1, it'll go to an arbitrary CPU PMU, whichever
+> happens to be found by perf_init_event() when iterating over the 'pmus' list.
+ 
+> If you open an event with type==PERF_EVENT_TYPE_HARDWARE and cpu!=-1, the event
+> will opened on the appropriate CPU PMU, by virtue of being rejected by others
+> when perf_init_event() iterates over the 'pmus' list.
 
---vcdax2erkxxsbf2h
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The way that it is working non on my intel hybrid system, with Kan's
+patch, is equivalent to using this on the RK3399pc board I have:
 
-Hello,
+root@roc-rk3399-pc:~# perf top -e armv8_cortex_a72/cycles/P,armv8_cortex_a53/cycles/P
 
-On Fri, Dec 15, 2023 at 03:00:38PM +0000, James Clark wrote:
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index 23fa6c5da82c..3ed2086cefc3 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -631,8 +631,9 @@ static void armv8pmu_write_evtype(int idx, unsigned l=
-ong val)
->  			     ARMV8_PMU_EXCLUDE_EL0 |
->  			     ARMV8_PMU_EXCLUDE_EL1;
-> =20
-> -	if (IS_ENABLED(CONFIG_ARM64))
-> -		mask |=3D ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
-> +#if IS_ENABLED(CONFIG_ARM64)
-> +	mask |=3D ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
-> +#endif
+Wouldn't be better to make 'perf top' on ARM work the way is being done
+in x86 now, i.e. default to opening the two events, one per PMU and
+allow the user to switch back and forth using the TUI/stdio?
 
-maybe add a comment about why you used an #if here, to prevent the
-people sending patches that revert your change?
+Kan, I also noticed that the name of the event is:
 
-Best regards
-Uwe
+1K cpu_atom/cycles:P/                                                                                                                                                                         ◆
+11K cpu_core/cycles:P/
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+If I try to use that on the command line:
 
---vcdax2erkxxsbf2h
-Content-Type: application/pgp-signature; name="signature.asc"
+root@number:~# perf top -e cpu_atom/cycles:P/
+event syntax error: 'cpu_atom/cycles:P/'
+                              \___ Bad event or PMU
 
------BEGIN PGP SIGNATURE-----
+Unable to find PMU or event on a PMU of 'cpu_atom'
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV8bloACgkQj4D7WH0S
-/k5b/wf+MEL3zkiZL0BMTR7yyXPKpsqbEG64vTZcxWV48jxm51wX+huoGcM3aSQj
-CbCT6/uFb6IrWF299Ed7zuLDV38aTvrB3PV9L7GBxhvAedqEMMaSrpBTxDlyTNNq
-4LFwOnj0h8Cl2l3GTwgrUgBkzc5rIOh4RGr9f/tsXzcjHQ2GUNxdJQfg0UvoGcxx
-0Qhlff3eZpuNcX6mWH3f5QGRaqGpV4pxYL3b2Ik9tSLA1tDqWlpv2CXCVAJk6ZLD
-hKd96oJY4DVjs7skS4ouBOiUtEvqtcs87iuLUbLNGBzpjPAQ78cNLoV761PkjEBT
-df7m1XwzDzVnjQrOkhjLOy3K4BV7Jw==
-=ojPK
------END PGP SIGNATURE-----
+Initial error:
+event syntax error: 'cpu_atom/cycles:P/'
+                              \___ unknown term 'cycles:P' for pmu 'cpu_atom'
 
---vcdax2erkxxsbf2h--
+valid terms: event,pc,edge,offcore_rsp,ldlat,inv,umask,cmask,config,config1,config2,config3,name,period,freq,branch_type,time,call-graph,stack-size,no-inherit,inherit,max-stack,nr,no-overwrite,overwrite,driver-config,percore,aux-output,aux-sample-size,metric-id,raw,legacy-cache,hardware
+Run 'perf list' for a list of valid events
+
+ Usage: perf top [<options>]
+
+    -e, --event <event>   event selector. use 'perf list' to list available events
+root@number:~#
+
+It should be:
+
+  "cpu_atom/cycles/P"
+
+- Arnaldo
