@@ -1,108 +1,182 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342986C6CB
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Dec 2023 23:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3505E101F4;
+	Fri, 15 Dec 2023 06:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YLnQ3exC"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40c32e205fcso166955e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Dec 2023 15:15:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702595756; x=1703200556; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jxVgHS7yw3Ew3Lu3ar2phPbL95KmoT+h72FxnQQxGgI=;
-        b=YLnQ3exCD63EaJ+/TafrRELRNJVxvOdjJXp/U0D7mACGCl5v2+LETWXL0FaQmzRYF+
-         RWKz6WcxMSvVqGr9U8rr+fkHxtMp6d+wfGV3+NlK0895PhskI7GmMSuaoP+oMPHf8bSa
-         KGJDvv/ienHgcBoNwgUrXh64RuS9rHNa6b/v6cM81Ebv25JblrNBtSL21kkeF0roDjxR
-         TA8cjPyhOZSnnq276WYVO8OJ+D8ZZ+Lt+bjMcLiglA5G4e8aYqWEAcLgBu9hWf4M9k9e
-         iR4bzduoROI0WWwZp6KTmfo9u25OA+W5CK0gkmmRsT5dF2LBRgKgNxyHHaodfadsI0J+
-         UUfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702595756; x=1703200556;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jxVgHS7yw3Ew3Lu3ar2phPbL95KmoT+h72FxnQQxGgI=;
-        b=F5IjsibmHtIzInS3zP9na41Zvmd7XHITsN3J/fdfcYFvLJue8XyJRNQ23FQtRfUZtU
-         QNQmY3cNIL7EJzjqDSv6rQ/WhSxZc67hzWK+c4DnLHUo+KItviUjaNyjGa3ADUxwI9K9
-         OSC+vz/hQHPPFoNzfZUhJGyl/2+KA6hWGBHtpnk5DINhXwzye64duV6Mp2I3t59H5Qmm
-         r51IVbVDQEMiMYhdFwb6EgT8WH/MbDEDl8NA5waLBZ7PxM2USSb6khO+Bd+j6YNPNWSn
-         g5a6D4u2GSK97e3hydLvl20rr/FXA8Os1Cprss7o8PpRMHmej8//eWqvnNA80JCDvYtw
-         EkfA==
-X-Gm-Message-State: AOJu0Yz3QIg8HyZfgDFj2h3FYHT5x16wRDtSpms18pRpG5Nu4pYR0kKl
-	hsjoTREDIsKZLV5Q/S/KN1FSkn0kjLRnkg==
-X-Google-Smtp-Source: AGHT+IFXYofH6TZODDPI+fxxXDwc289cWs/qo3qyY/WuRqp2260mZKsbSKV8qdi1MXOmhNov6VkMxw==
-X-Received: by 2002:a05:600c:1da1:b0:40c:3820:eff8 with SMTP id p33-20020a05600c1da100b0040c3820eff8mr12806552wms.3.1702595756310;
-        Thu, 14 Dec 2023 15:15:56 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:5e4:1d0:6752:3cf9:29c4:bcfe])
-        by smtp.gmail.com with ESMTPSA id z20-20020a05600c0a1400b004064e3b94afsm29163901wmp.4.2023.12.14.15.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 15:15:55 -0800 (PST)
-From: trinity Pointard <trinity.pointard@gmail.com>
-X-Google-Original-From: trinity Pointard <trinity@deuxfleurs.fr>
-To: linux-perf-users@vger.kernel.org,
-	olsajiri@gmail.com
-Cc: trinity Pointard <trinity@deuxfleurs.fr>
-Subject: [PATCH] fix perf-stat regression printing stat on enable/disable
-Date: Fri, 15 Dec 2023 00:14:35 +0100
-Message-ID: <20231214231435.508126-1-trinity@deuxfleurs.fr>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ZXhN_j8UShp1JAlf@krava>
-References: <ZXhN_j8UShp1JAlf@krava>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OUS8xTWE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702622578; x=1734158578;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vt+1DwgW+rzaz0jNrx2kPMTsg3reh+AyiCKnuS2Fk7I=;
+  b=OUS8xTWEsHuq7meWFJq/1LCzksDqMIUB/bePlqkSQMmlfm9rIaVzIOM9
+   G17hQauOzVMTRKMv7ATGUTXly54F8fGa3hkSST1bJYyzr2erj6UkuBl5u
+   jJldyRIcShQgcgTrRFZnP/OTCsfkT2epQCDKBjWZp+WZC+Rl/f/B2Pdr9
+   eB4wIETFde9uy+B23rys9aLJisxLDuRMtY96tP5kxmkyrQ7oHu5ptgWQg
+   3MREZ2zsWrfH8wtDeWBEeVf9NIrf/sVfZP33yNiPhdqrOcSzQ4AzyQx3/
+   jo7uj3M0izMV1rhpEACUbqpkw42iS7ut8m1htKprhDdYfGb+sVkP/gzyW
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="2058154"
+X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
+   d="scan'208";a="2058154"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 22:42:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
+   d="scan'208";a="17739889"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.32.93])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 22:42:52 -0800
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH RFC V3 4/4] coresight: Have a stab at support for pause / resume
+Date: Fri, 15 Dec 2023 08:42:42 +0200
+Message-Id: <20231215064242.36251-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231208172449.35444-5-adrian.hunter@intel.com>
+References: <20231208172449.35444-5-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-It's possible to reproduce the issue with this script:
-```
-ctl_fifo=perf_ctl.fifo
-mkfifo ${ctl_fifo}
-exec {ctl_fd}<>${ctl_fifo}
-perf stat -I 10000 --control fd:${ctl_fd} sleep 3 &
-sleep 1 && echo 'disable' >&${ctl_fd}
-sleep 1 && echo 'enable' >&${ctl_fd}
-exec {ctl_fd}>&-
-unlink ${ctl_fifo}
-wait
-```
+For discussion only, un-tested...
 
-Testing with 27e9769aad3c435993a2e0cd91f5d868294145d0 (perf stat:
-Introduce --control fd:ctl-fd[,ack-fd] options), it prints stats 3
-times. On disable, on enable (stats are mostly zeroes though), and on
-end of execution.
-Testing with a39b6ac3781d46ba18193c9dbb2110f31e9bffe9 (v6.7-rc5), it
-prints only one time, at the end of execution.
-
-My idea of a fix is to modify evlist__ctlfd_enable such that it and
-evlist__ctlfd_process return a positive value on success, restoring
-its previous behaviour.
-
-Signed-off-by: trinity Pointard <trinity@deuxfleurs.fr>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/evlist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index e36da58522ef..ed7e2dec365d 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -2111,7 +2111,7 @@ static int evlist__ctlfd_enable(struct evlist *evlist, char *cmd_data, bool enab
- 		}
- 	}
+
+Changes in V3:
+
+	'mode' -> 'flags' so it at least compiles
+
+
+ .../hwtracing/coresight/coresight-etm-perf.c  | 29 ++++++++++++++++---
+ 1 file changed, 25 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 5ca6278baff4..7a69e6417ed4 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -45,6 +45,7 @@ static bool etm_perf_up;
+ struct etm_ctxt {
+ 	struct perf_output_handle handle;
+ 	struct etm_event_data *event_data;
++	int pr_allowed;
+ };
  
--	return 0;
-+	return 1;
+ static DEFINE_PER_CPU(struct etm_ctxt, etm_ctxt);
+@@ -452,6 +453,13 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	struct list_head *path;
+ 	u64 hw_id;
+ 
++	if (flags & PERF_EF_RESUME) {
++		if (!READ_ONCE(ctxt->pr_allowed))
++			return;
++	} else if (READ_ONCE(event->aux_paused)) {
++		goto out_pr_allowed;
++	}
++
+ 	if (!csdev)
+ 		goto fail;
+ 
+@@ -514,6 +522,8 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	event->hw.state = 0;
+ 	/* Save the event_data for this ETM */
+ 	ctxt->event_data = event_data;
++out_pr_allowed:
++	WRITE_ONCE(ctxt->pr_allowed, 1);
+ 	return;
+ 
+ fail_disable_path:
+@@ -530,6 +540,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	}
+ fail:
+ 	event->hw.state = PERF_HES_STOPPED;
++	WRITE_ONCE(ctxt->pr_allowed, 0);
+ 	return;
  }
  
- static int evlist__ctlfd_list(struct evlist *evlist, char *cmd_data)
+@@ -543,6 +554,11 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	struct etm_event_data *event_data;
+ 	struct list_head *path;
+ 
++	if (mode & PERF_EF_PAUSE && !READ_ONCE(ctxt->pr_allowed))
++		return;
++
++	WRITE_ONCE(ctxt->pr_allowed, 0);
++
+ 	/*
+ 	 * If we still have access to the event_data via handle,
+ 	 * confirm that we haven't messed up the tracking.
+@@ -556,7 +572,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	ctxt->event_data = NULL;
+ 
+ 	if (event->hw.state == PERF_HES_STOPPED)
+-		return;
++		goto out_pr_allowed;
+ 
+ 	/* We must have a valid event_data for a running event */
+ 	if (WARN_ON(!event_data))
+@@ -627,6 +643,10 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 
+ 	/* Disabling the path make its elements available to other sessions */
+ 	coresight_disable_path(path);
++
++out_pr_allowed:
++	if (mode & PERF_EF_PAUSE)
++		WRITE_ONCE(ctxt->pr_allowed, 1);
+ }
+ 
+ static int etm_event_add(struct perf_event *event, int mode)
+@@ -634,7 +654,7 @@ static int etm_event_add(struct perf_event *event, int mode)
+ 	int ret = 0;
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	if (mode & PERF_EF_START) {
++	if (mode & PERF_EF_START && !READ_ONCE(event->aux_paused)) {
+ 		etm_event_start(event, 0);
+ 		if (hwc->state & PERF_HES_STOPPED)
+ 			ret = -EINVAL;
+@@ -886,8 +906,9 @@ int __init etm_perf_init(void)
+ {
+ 	int ret;
+ 
+-	etm_pmu.capabilities		= (PERF_PMU_CAP_EXCLUSIVE |
+-					   PERF_PMU_CAP_ITRACE);
++	etm_pmu.capabilities		= PERF_PMU_CAP_EXCLUSIVE |
++					  PERF_PMU_CAP_ITRACE |
++					  PERF_PMU_CAP_AUX_PAUSE;
+ 
+ 	etm_pmu.attr_groups		= etm_pmu_attr_groups;
+ 	etm_pmu.task_ctx_nr		= perf_sw_context;
 -- 
-2.43.0
+2.34.1
 
