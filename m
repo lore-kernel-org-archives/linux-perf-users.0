@@ -1,109 +1,149 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5114282ED4;
-	Fri, 15 Dec 2023 17:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E005C15;
-	Fri, 15 Dec 2023 09:43:38 -0800 (PST)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3404A3F5A1;
-	Fri, 15 Dec 2023 09:42:51 -0800 (PST)
-Message-ID: <d335905e-38bb-1994-57f6-533852b7a560@arm.com>
-Date: Fri, 15 Dec 2023 17:42:50 +0000
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D904644A;
+	Fri, 15 Dec 2023 17:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLtWMrtl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444E7C433C8;
+	Fri, 15 Dec 2023 17:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702662557;
+	bh=+Ep5e1H59jFa0yRaMrGEHbeluIJ1lWpMHvMsd/izxKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vLtWMrtlNqv4BvN5zLDprh7kls92+HXbFjEaHGy9ehZ05DmFTXcpYVw7lHwdK/H/J
+	 /tt5xo3wiTRj6ToeQITNFCEOlOrY5q3jTuAXZEL4Q1dedG8bgj6k379WKQh+7jwQZA
+	 AP/uayvCjdy0LpTufze0+ocEXauRUhUQoisutfund9/gXdfvDY9kqA7yLV27UnDQ4Q
+	 M1MqFbVDEMrO+7O7StyAtyYGxpl55QoHp/UHqFHq2jItDfCP1mL5ilA0rU2yQjPeOl
+	 P/P8zMbNFTU3ahRWScdTSkL+WN22mviodKfxybKl1HbNH5VArwIiBSlwBGzZ+pq+3o
+	 sQgw6xv/o4Zdg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 705E2403EF; Fri, 15 Dec 2023 14:49:14 -0300 (-03)
+Date: Fri, 15 Dec 2023 14:49:14 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
+Message-ID: <ZXyRmpyzNGd3gKwV@kernel.org>
+References: <20231208210855.407580-1-kan.liang@linux.intel.com>
+ <ZXd7ZuxbNNsjAyqm@kernel.org>
+ <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
+ <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
+ <CAP-5=fVd-0aSovYVsOmTo2dfKb5_PHz1KV7ePipi35_JbfJ6qQ@mail.gmail.com>
+ <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
+ <ZXxyanyZgWBTOnoK@kernel.org>
+ <ZXyEJYXVNn2i06ro@FVFF77S0Q05N>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 1/2] arm: perf: Fix ARCH=arm build with GCC in
- armv8pmu_write_evtype()
-Content-Language: en-US
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-next@vger.kernel.org, will@kernel.org, u.kleine-koenig@pengutronix.de,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20231215150040.3342183-1-james.clark@arm.com>
- <20231215150040.3342183-2-james.clark@arm.com>
- <ZXx9GW1onSy4eBEB@FVFF77S0Q05N>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <ZXx9GW1onSy4eBEB@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZXyEJYXVNn2i06ro@FVFF77S0Q05N>
+X-Url: http://acmel.wordpress.com
 
+Em Fri, Dec 15, 2023 at 04:51:49PM +0000, Mark Rutland escreveu:
+> On Fri, Dec 15, 2023 at 12:36:10PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Dec 12, 2023 at 06:31:05PM +0000, Mark Rutland escreveu:
+> > > On ARM it'll be essentially the same as on x86: if you open an event with
+> > > type==PERF_EVENT_TYPE_HARDWARE (without the extended HW type pointing to a
+> > > specific PMU), and with cpu==-1, it'll go to an arbitrary CPU PMU, whichever
+> > > happens to be found by perf_init_event() when iterating over the 'pmus' list.
 
+> > > If you open an event with type==PERF_EVENT_TYPE_HARDWARE and cpu!=-1, the event
+> > > will opened on the appropriate CPU PMU, by virtue of being rejected by others
+> > > when perf_init_event() iterates over the 'pmus' list.
 
-On 15/12/2023 16:21, Mark Rutland wrote:
-> On Fri, Dec 15, 2023 at 03:00:38PM +0000, James Clark wrote:
->> LLVM ignores everything inside the if statement and doesn't generate
->> errors, but GCC doesn't ignore it, resulting in the following error:
->>
->>   drivers/perf/arm_pmuv3.c: In function 'armv8pmu_write_evtype':
->>   include/linux/bits.h:34:29: error: left shift count >= width of type [-Werror=shift-count-overflow]
->>   	34 |         (((~UL(0)) - (UL(1) << (l)) + 1) & \
->>
->> Fix it by changing the if to #if.
-> 
-> I reckon it'd be cleaner to use GENMASK_ULL for the TH and TC fields, in
-> include/linux/perf/arm_pmu.h have:
-> 
-> | /*
-> |  * PMXEVTYPER: Event selection reg
-> |  */
-> | #define ARMV8_PMU_EVTYPE_EVENT GENMASK(15, 0)          /* Mask for EVENT bits */
-> | #define ARMV8_PMU_EVTYPE_TH    GENMASK_ULL(43, 32)     /* arm64 only */
-> | #define ARMV8_PMU_EVTYPE_TC    GENMASK_ULL(63, 61)     /* arm64 only */
-> 
-> IIUC that should silence this warning, and it'd remove the need for the
-> ifdeffery and other changes in patch 2.
-> 
-> Does that work, or am I missing something?
+> > The way that it is working non on my intel hybrid system, with Kan's
+> > patch, is equivalent to using this on the RK3399pc board I have:
+
+> > root@roc-rk3399-pc:~# perf top -e armv8_cortex_a72/cycles/P,armv8_cortex_a53/cycles/P
+
+> > Wouldn't be better to make 'perf top' on ARM work the way is being done
+> > in x86 now, i.e. default to opening the two events, one per PMU and
+> > allow the user to switch back and forth using the TUI/stdio?
+ 
+> TBH, for perf top I don't know *which* behaviour is preferable, but I agree
+> that it'd be good for x86 and arm to work in the same way.
+
+Right, reducing the difference in the user experience accross arches.
+ 
+> For design-cleanliness and consistency with other commands I can see that
+> opening those separately is probably for the best, but for typical usage of
+> perf top it's really nice to have those presented together without having to
+> tab back-and-forth between the distinct PMUs, and so the existing behaviour of
+
+Humm, so you would want two histogram viewers, one for each PMU, side by
+side?
+
+> using CPU-bound PERF_EVENT_TYPE_HARDWARE events is arguably nicer for the user.
+
+So, on ARM64, start the following 'perf trace' session, then run the
+stock 'perf top':
+
+root@roc-rk3399-pc:~# perf trace -e perf_event_open
+<SNIP calls doing capability queries and setting up sideband stuff>
+   535.764 ( 0.015 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, group_fd: -1, flags: FD_CLOEXEC) = 19
+   535.783 ( 0.067 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 1, group_fd: -1, flags: FD_CLOEXEC) = 28
+   535.854 ( 0.063 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 2, group_fd: -1, flags: FD_CLOEXEC) = 29
+   535.920 ( 0.015 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 3, group_fd: -1, flags: FD_CLOEXEC) = 30
+   535.939 ( 0.016 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 4, group_fd: -1, flags: FD_CLOEXEC) = 31
+   535.959 ( 0.011 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 5, group_fd: -1, flags: FD_CLOEXEC) = 32
+
+root@roc-rk3399-pc:~# grep "CPU part" /proc/cpuinfo  | uniq -c
+      4 CPU part	: 0xd03
+      2 CPU part	: 0xd08
+root@roc-rk3399-pc:~#
+
+It is already doing what you suggest, right? PERF_TYPE_HARDWARE, one
+counter per CPU, maps to armv8_cortex_a72/cycles/P and
+armv8_cortex_a53/cycles/P.
+
+One thing I'm thinking is that we should split this per PMU at the
+hist_entry, so that we could show how many samples/events came from each
+of them...
+
+- Arnaldo
+ 
+> I don't have a strong feeling either way; I'm personally happy so long as
+> explicit pmu_name/event/ events don't get silently converted into
+> PERF_EVENT_TYPE_HARDWARE events, and as long as we correctly set the extended
+> HW type when we decide to use that.
 > 
 > Thanks,
 > Mark.
 > 
-
-You're right that does work. For some reason I thought there was some
-component of writing it to the mask that was the issue as well.
-
-I'll send another version with that fix instead.
-
-Thanks
-James
-
->>
->> Fixes: 3115ee021bfb ("arm64: perf: Include threshold control fields in PMEVTYPER mask")
->> Reported-by: Uwe Kleine-K"onig <u.kleine-koenig@pengutronix.de>
->> Closes: https://lore.kernel.org/linux-arm-kernel/20231215120817.h2f3akgv72zhrtqo@pengutronix.de/
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  drivers/perf/arm_pmuv3.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
->> index 23fa6c5da82c..3ed2086cefc3 100644
->> --- a/drivers/perf/arm_pmuv3.c
->> +++ b/drivers/perf/arm_pmuv3.c
->> @@ -631,8 +631,9 @@ static void armv8pmu_write_evtype(int idx, unsigned long val)
->>  			     ARMV8_PMU_EXCLUDE_EL0 |
->>  			     ARMV8_PMU_EXCLUDE_EL1;
->>  
->> -	if (IS_ENABLED(CONFIG_ARM64))
->> -		mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
->> +#if IS_ENABLED(CONFIG_ARM64)
->> +	mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
->> +#endif
->>  
->>  	val &= mask;
->>  	write_pmevtypern(counter, val);
->> -- 
->> 2.34.1
->>
+> > Kan, I also noticed that the name of the event is:
+> > 
+> > 1K cpu_atom/cycles:P/                                                                                                                                                                         ◆
+> > 11K cpu_core/cycles:P/
+> > 
+> > If I try to use that on the command line:
+> > 
+> > root@number:~# perf top -e cpu_atom/cycles:P/
+> > event syntax error: 'cpu_atom/cycles:P/'
+> >                               \___ Bad event or PMU
+> > 
+> > Unable to find PMU or event on a PMU of 'cpu_atom'
+> > 
+> > Initial error:
+> > event syntax error: 'cpu_atom/cycles:P/'
+> >                               \___ unknown term 'cycles:P' for pmu 'cpu_atom'
+> > 
+> > valid terms: event,pc,edge,offcore_rsp,ldlat,inv,umask,cmask,config,config1,config2,config3,name,period,freq,branch_type,time,call-graph,stack-size,no-inherit,inherit,max-stack,nr,no-overwrite,overwrite,driver-config,percore,aux-output,aux-sample-size,metric-id,raw,legacy-cache,hardware
+> > Run 'perf list' for a list of valid events
+> > 
+> >  Usage: perf top [<options>]
+> > 
+> >     -e, --event <event>   event selector. use 'perf list' to list available events
+> > root@number:~#
+> > 
+> > It should be:
+> > 
+> >   "cpu_atom/cycles/P"
