@@ -1,97 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF62320F;
-	Fri, 15 Dec 2023 15:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EbvWMx9j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF33C433C8;
-	Fri, 15 Dec 2023 15:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702654574;
-	bh=QkGYnpI7VkJ6ZnApbfPGjqcENeC9oxa/+M+iQlRNTew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EbvWMx9j+qVNefKJn+Tr/6Z/qq08iInLITOqy0GNB2BK7LRoYq/VbHLGCxWh34XOu
-	 hHgO1q5YeGHFdHw3T9N8ra22CZbt7QVjrdax1BmOz6H+qRhexQWu1H6jBiVMOig5Dk
-	 U0bARE8E1aunSOR3F6K4vdv1dYodmm164F//QhohX8VQlNKMfSDY8bNnnwQA//hp2l
-	 I1NBq4qLGDXjnktrRtA5+UAxMAKO7UBa+iWKBdwjbRXDst33bPxtYR2yhuXfMvKIrb
-	 0UenvZqev54cr74MWAghqpnjC2ZX+b1UWPPUh+GGQO2q187B7NZK0Mzbtlifb5mK1N
-	 m5lVdS0QFzrdA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id B4F8A403EF; Fri, 15 Dec 2023 12:36:10 -0300 (-03)
-Date: Fri, 15 Dec 2023 12:36:10 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
-Message-ID: <ZXxyanyZgWBTOnoK@kernel.org>
-References: <20231208210855.407580-1-kan.liang@linux.intel.com>
- <ZXd7ZuxbNNsjAyqm@kernel.org>
- <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
- <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
- <CAP-5=fVd-0aSovYVsOmTo2dfKb5_PHz1KV7ePipi35_JbfJ6qQ@mail.gmail.com>
- <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0EAE3BB25;
+	Fri, 15 Dec 2023 16:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D2BFC15;
+	Fri, 15 Dec 2023 08:22:40 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.45.203])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1150B3F5A1;
+	Fri, 15 Dec 2023 08:21:52 -0800 (PST)
+Date: Fri, 15 Dec 2023 16:21:45 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: James Clark <james.clark@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	linux-next@vger.kernel.org, will@kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 1/2] arm: perf: Fix ARCH=arm build with GCC in
+ armv8pmu_write_evtype()
+Message-ID: <ZXx9GW1onSy4eBEB@FVFF77S0Q05N>
+References: <20231215150040.3342183-1-james.clark@arm.com>
+ <20231215150040.3342183-2-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
-X-Url: http://acmel.wordpress.com
+In-Reply-To: <20231215150040.3342183-2-james.clark@arm.com>
 
-Em Tue, Dec 12, 2023 at 06:31:05PM +0000, Mark Rutland escreveu:
-> On ARM it'll be essentially the same as on x86: if you open an event with
-> type==PERF_EVENT_TYPE_HARDWARE (without the extended HW type pointing to a
-> specific PMU), and with cpu==-1, it'll go to an arbitrary CPU PMU, whichever
-> happens to be found by perf_init_event() when iterating over the 'pmus' list.
- 
-> If you open an event with type==PERF_EVENT_TYPE_HARDWARE and cpu!=-1, the event
-> will opened on the appropriate CPU PMU, by virtue of being rejected by others
-> when perf_init_event() iterates over the 'pmus' list.
+On Fri, Dec 15, 2023 at 03:00:38PM +0000, James Clark wrote:
+> LLVM ignores everything inside the if statement and doesn't generate
+> errors, but GCC doesn't ignore it, resulting in the following error:
+> 
+>   drivers/perf/arm_pmuv3.c: In function 'armv8pmu_write_evtype':
+>   include/linux/bits.h:34:29: error: left shift count >= width of type [-Werror=shift-count-overflow]
+>   	34 |         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+> 
+> Fix it by changing the if to #if.
 
-The way that it is working non on my intel hybrid system, with Kan's
-patch, is equivalent to using this on the RK3399pc board I have:
+I reckon it'd be cleaner to use GENMASK_ULL for the TH and TC fields, in
+include/linux/perf/arm_pmu.h have:
 
-root@roc-rk3399-pc:~# perf top -e armv8_cortex_a72/cycles/P,armv8_cortex_a53/cycles/P
+| /*
+|  * PMXEVTYPER: Event selection reg
+|  */
+| #define ARMV8_PMU_EVTYPE_EVENT GENMASK(15, 0)          /* Mask for EVENT bits */
+| #define ARMV8_PMU_EVTYPE_TH    GENMASK_ULL(43, 32)     /* arm64 only */
+| #define ARMV8_PMU_EVTYPE_TC    GENMASK_ULL(63, 61)     /* arm64 only */
 
-Wouldn't be better to make 'perf top' on ARM work the way is being done
-in x86 now, i.e. default to opening the two events, one per PMU and
-allow the user to switch back and forth using the TUI/stdio?
+IIUC that should silence this warning, and it'd remove the need for the
+ifdeffery and other changes in patch 2.
 
-Kan, I also noticed that the name of the event is:
+Does that work, or am I missing something?
 
-1K cpu_atom/cycles:P/                                                                                                                                                                         ◆
-11K cpu_core/cycles:P/
+Thanks,
+Mark.
 
-If I try to use that on the command line:
-
-root@number:~# perf top -e cpu_atom/cycles:P/
-event syntax error: 'cpu_atom/cycles:P/'
-                              \___ Bad event or PMU
-
-Unable to find PMU or event on a PMU of 'cpu_atom'
-
-Initial error:
-event syntax error: 'cpu_atom/cycles:P/'
-                              \___ unknown term 'cycles:P' for pmu 'cpu_atom'
-
-valid terms: event,pc,edge,offcore_rsp,ldlat,inv,umask,cmask,config,config1,config2,config3,name,period,freq,branch_type,time,call-graph,stack-size,no-inherit,inherit,max-stack,nr,no-overwrite,overwrite,driver-config,percore,aux-output,aux-sample-size,metric-id,raw,legacy-cache,hardware
-Run 'perf list' for a list of valid events
-
- Usage: perf top [<options>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-root@number:~#
-
-It should be:
-
-  "cpu_atom/cycles/P"
-
-- Arnaldo
+> 
+> Fixes: 3115ee021bfb ("arm64: perf: Include threshold control fields in PMEVTYPER mask")
+> Reported-by: Uwe Kleine-K"onig <u.kleine-koenig@pengutronix.de>
+> Closes: https://lore.kernel.org/linux-arm-kernel/20231215120817.h2f3akgv72zhrtqo@pengutronix.de/
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  drivers/perf/arm_pmuv3.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index 23fa6c5da82c..3ed2086cefc3 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -631,8 +631,9 @@ static void armv8pmu_write_evtype(int idx, unsigned long val)
+>  			     ARMV8_PMU_EXCLUDE_EL0 |
+>  			     ARMV8_PMU_EXCLUDE_EL1;
+>  
+> -	if (IS_ENABLED(CONFIG_ARM64))
+> -		mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
+> +#if IS_ENABLED(CONFIG_ARM64)
+> +	mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
+> +#endif
+>  
+>  	val &= mask;
+>  	write_pmevtypern(counter, val);
+> -- 
+> 2.34.1
+> 
