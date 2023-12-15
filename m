@@ -1,133 +1,198 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB6831A704;
-	Fri, 15 Dec 2023 10:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E9ACC15;
-	Fri, 15 Dec 2023 02:46:56 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.45.203])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10DD63F5A1;
-	Fri, 15 Dec 2023 02:46:09 -0800 (PST)
-Date: Fri, 15 Dec 2023 10:46:04 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB48419469
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 Dec 2023 12:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rE6zO-0001Th-VU; Fri, 15 Dec 2023 13:08:22 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rE6zK-00G18H-0I; Fri, 15 Dec 2023 13:08:18 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rE6zJ-003Wy8-ML; Fri, 15 Dec 2023 13:08:17 +0100
+Date: Fri, 15 Dec 2023 13:08:17 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: James Clark <james.clark@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	suzuki.poulose@arm.com, will@kernel.org, mark.rutland@arm.com,
+	anshuman.khandual@arm.com, namhyung@gmail.com,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "perf: Fix perf_event_validate_size()"
-Message-ID: <ZXwubNIxKH9s7DWt@FVFF77S0Q05N>
-References: <20231214000620.3081018-1-lucas.demarchi@intel.com>
- <ZXsbHQOWkp4D6mXI@FVFF77S0Q05N.cambridge.arm.com>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	Zaid Al-Bassam <zalbassam@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 05/11] arm64: perf: Include threshold control fields
+ in PMEVTYPER mask
+Message-ID: <20231215120817.h2f3akgv72zhrtqo@pengutronix.de>
+References: <20231211161331.1277825-1-james.clark@arm.com>
+ <20231211161331.1277825-6-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ngsobzumwfjdiywd"
 Content-Disposition: inline
-In-Reply-To: <ZXsbHQOWkp4D6mXI@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <20231211161331.1277825-6-james.clark@arm.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
 
-On Thu, Dec 14, 2023 at 03:11:25PM +0000, Mark Rutland wrote:
-> On Wed, Dec 13, 2023 at 04:06:20PM -0800, Lucas De Marchi wrote:
-> > This reverts commit 382c27f4ed28f803b1f1473ac2d8db0afc795a1b.
-> > 
-> > When using for_each_sibling_event() lockdep complains on
-> > 
-> >         WARN_ON_ONCE(__lockdep_enabled &&                       \
-> >                      (this_cpu_read(hardirqs_enabled) &&        \
-> >                       lockdep_is_held(&(event)->ctx->mutex) != LOCK_STATE_HELD))
-> > 
-> > after a simple `perf stat -e instructions sleep 1`:
-> > 
-> > 	WARNING: CPU: 8 PID: 1471 at kernel/events/core.c:1950 __do_sys_perf_event_open+0xf37/0x1080
-> > 	Modules linked in: x86_pkg_temp_thermal coretemp kvm_intel kvm e1000e igc irqbypass mei_pxp mei_hdcp crct10dif_pclmul wmi_bmof crc32_pclmul ghash_clmulni_intel i2c_i801 ptp mei_me i2c_smbus pps_core mei intel_lpss_pci video wmi fuse
-> > 	CPU: 8 PID: 1471 Comm: perf Not tainted 6.7.0-rc5-linus-demarchi+ #8
-> > 	Hardware name: Intel Corporation Rocket Lake Client Platform/RocketLake S UDIMM 4L ERB, BIOS RKLSFWI1.R00.2022.A00.2101052151 01/05/2021
-> > 	RIP: 0010:__do_sys_perf_event_open+0xf37/0x1080
-> > 	Code: ff e8 ed 30 ab 00 48 8b 81 28 02 00 00 83 ce ff 48 8d b8 a8 00 00 00 e8 67 38 ab 00 48 8b 4c 24 08 83 e8 01 0f 84 56 f9 ff ff <0f> 0b e9 4f f9 ff ff be 03 00 00 00 e8 d8 74 40 00 e9 54 fa ff ff
-> > 	RSP: 0018:ffffc90001d6be40 EFLAGS: 00010297
-> > 	RAX: 00000000ffffffff RBX: ffff888112bc8040 RCX: ffff888100c34568
-> > 	RDX: 0000000080000000 RSI: ffffffff823e2806 RDI: ffffffff824023cb
-> > 	RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-> > 	R10: 0000000000000001 R11: 0000000000000000 R12: ffff888106560800
-> > 	R13: 0000000000000000 R14: 0000000000080002 R15: ffff888100c34568
-> > 	FS:  00007f723d196c00(0000) GS:ffff888450800000(0000) knlGS:0000000000000000
-> > 	CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > 	CR2: 00005624c0efdaa0 CR3: 00000001199de002 CR4: 0000000000770ef0
-> > 	PKRU: 55555554
-> > 	Call Trace:
-> > 	 <TASK>
-> > 	 ? __do_sys_perf_event_open+0xf37/0x1080
-> > 	 ? __warn+0x80/0x170
-> > 	 ? __do_sys_perf_event_open+0xf37/0x1080
-> > 	 ? report_bug+0x191/0x1c0
-> > 	 ? handle_bug+0x3c/0x70
-> > 	 ? exc_invalid_op+0x17/0x70
-> > 	 ? asm_exc_invalid_op+0x1a/0x20
-> > 	 ? __do_sys_perf_event_open+0xf37/0x1080
-> > 	 do_syscall_64+0x42/0xf0
-> > 	 entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> > 	RIP: 0033:0x7f723bf1ea7d
-> > 	Code: 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 83 a3 0f 00 f7 d8 64 89 01 48
-> > 	RSP: 002b:00007ffc7118ba68 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-> > 	RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007f723bf1ea7d
-> > 	RDX: 00000000ffffffff RSI: 00000000000005c0 RDI: 00005624c0efb0c0
-> > 	RBP: 00007ffc7118bb20 R08: 0000000000000008 R09: 0000000000000000
-> > 	R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000000
-> > 	R13: 0000000000000008 R14: 00005624c0efb0b0 R15: 00005624c0efb0b0
-> > 	 </TASK>
-> > 	irq event stamp: 45697
-> > 	hardirqs last  enabled at (45703): [<ffffffff81173dca>] console_unlock+0x10a/0x160
-> > 	hardirqs last disabled at (45708): [<ffffffff81173daf>] console_unlock+0xef/0x160
-> > 	softirqs last  enabled at (45276): [<ffffffff810dab0e>] irq_exit_rcu+0x8e/0xf0
-> > 	softirqs last disabled at (45267): [<ffffffff810dab0e>] irq_exit_rcu+0x8e/0xf0
-> > 
-> > References: https://gitlab.freedesktop.org/drm/intel/-/issues/9847
-> > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> > ---
-> > 
-> > Not sure about a proper fix for this. At first I thought it was indeed
-> > because previously it was not validating the the size correctly. However
-> > then I noticed the warning is actually due to for_each_sibling_event().
-> 
-> I think what's happening here is that at the point we call
-> perf_event_validate_size(), we've found and locked the relevant
-> perf_event_context, but haven't set event->ctx yet via
-> perf_install_in_context().
-> 
-> Thanks to earlier checks, we know that group_leader->ctx == ctx, so we have
-> actually locked the relevant context, but for_each_sibling_event() doesn't have
-> access to the context to discover that.
-> 
-> The diff below worked for me, though it's a bit ugly.
 
-Thinking a bit more, it'd be cleaner to just special-case this within
-perf_event_validate_size(), as below.
+--ngsobzumwfjdiywd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll go turn that into a proper patch and send it out shortly.
+Hello,
 
-Mark.
----->8----
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index c9d123e13b57..9efd0d7775e7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1947,6 +1947,16 @@ static bool perf_event_validate_size(struct perf_event *event)
-                                   group_leader->nr_siblings + 1) > 16*1024)
-                return false;
- 
-+       /*
-+        * When creating a new group leader, group_leader->ctx is initialized
-+        * after the size has been validated, but we cannot safely use
-+        * for_each_sibling_event() until group_leader->ctx is set. A new group
-+        * leader cannot have any siblings yet, so we can safely skip checking
-+        * the non-existent siblings.
-+        */
-+       if (event == group_leader)
-+               return true;
-+
-        for_each_sibling_event(sibling, group_leader) {
-                if (__perf_event_read_size(sibling->attr.read_format,
-                                           group_leader->nr_siblings + 1) > 16*1024)
+On Mon, Dec 11, 2023 at 04:13:17PM +0000, James Clark wrote:
+> FEAT_PMUv3_TH (Armv8.8) adds two new fields to PMEVTYPER, so include
+> them in the mask. These aren't writable on 32 bit kernels as they are in
+> the high part of the register, so only include them for arm64.
+>=20
+> It would be difficult to do this statically in the asm header files for
+> each platform without resulting in circular includes or #ifdefs inline
+> in the code. For that reason the ARMV8_PMU_EVTYPE_MASK definition has
+> been removed and the mask is constructed programmatically.
+>=20
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: James Clark <james.clark@arm.com>
+
+This change is in today's next as commit
+3115ee021bfb04efde2e96507bfcc1330261a6a1. this breaks allmodconfig
+building on ARCH=3Darm:
+
+	In file included from include/linux/ratelimit_types.h:5,
+			 from include/linux/printk.h:9,
+			 from include/asm-generic/bug.h:22,
+			 from arch/arm/include/asm/bug.h:60,
+			 from include/linux/bug.h:5,
+			 from include/linux/mmdebug.h:5,
+			 from include/linux/percpu.h:5,
+			 from include/asm-generic/irq_regs.h:11,
+			 from ./arch/arm/include/generated/asm/irq_regs.h:1,
+			 from drivers/perf/arm_pmuv3.c:11:
+	drivers/perf/arm_pmuv3.c: In function =E2=80=98armv8pmu_write_evtype=E2=80=
+=99:
+	include/linux/bits.h:34:29: error: left shift count >=3D width of type [-W=
+error=3Dshift-count-overflow]
+	   34 |         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+	      |                             ^~
+	include/linux/bits.h:37:38: note: in expansion of macro =E2=80=98__GENMASK=
+=E2=80=99
+	   37 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+	      |                                      ^~~~~~~~~
+	include/linux/perf/arm_pmuv3.h:238:33: note: in expansion of macro =E2=80=
+=98GENMASK=E2=80=99
+	  238 | #define ARMV8_PMU_EVTYPE_TC     GENMASK(63, 61)
+	      |                                 ^~~~~~~
+	drivers/perf/arm_pmuv3.c:567:25: note: in expansion of macro =E2=80=98ARMV=
+8_PMU_EVTYPE_TC=E2=80=99
+	  567 |                 mask |=3D ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_T=
+H;
+	      |                         ^~~~~~~~~~~~~~~~~~~
+	include/linux/bits.h:35:18: error: right shift count is negative [-Werror=
+=3Dshift-count-negative]
+	   35 |          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+	      |                  ^~
+	include/linux/bits.h:37:38: note: in expansion of macro =E2=80=98__GENMASK=
+=E2=80=99
+	   37 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+	      |                                      ^~~~~~~~~
+	include/linux/perf/arm_pmuv3.h:238:33: note: in expansion of macro =E2=80=
+=98GENMASK=E2=80=99
+	  238 | #define ARMV8_PMU_EVTYPE_TC     GENMASK(63, 61)
+	      |                                 ^~~~~~~
+	drivers/perf/arm_pmuv3.c:567:25: note: in expansion of macro =E2=80=98ARMV=
+8_PMU_EVTYPE_TC=E2=80=99
+	  567 |                 mask |=3D ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_T=
+H;
+	      |                         ^~~~~~~~~~~~~~~~~~~
+	include/linux/bits.h:34:29: error: left shift count >=3D width of type [-W=
+error=3Dshift-count-overflow]
+	   34 |         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+	      |                             ^~
+	include/linux/bits.h:37:38: note: in expansion of macro =E2=80=98__GENMASK=
+=E2=80=99
+	   37 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+	      |                                      ^~~~~~~~~
+	include/linux/perf/arm_pmuv3.h:237:33: note: in expansion of macro =E2=80=
+=98GENMASK=E2=80=99
+	  237 | #define ARMV8_PMU_EVTYPE_TH     GENMASK(43, 32)
+	      |                                 ^~~~~~~
+	drivers/perf/arm_pmuv3.c:567:47: note: in expansion of macro =E2=80=98ARMV=
+8_PMU_EVTYPE_TH=E2=80=99
+	  567 |                 mask |=3D ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_T=
+H;
+	      |                                               ^~~~~~~~~~~~~~~~~~~
+	include/linux/bits.h:35:18: error: right shift count is negative [-Werror=
+=3Dshift-count-negative]
+	   35 |          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+	      |                  ^~
+	include/linux/bits.h:37:38: note: in expansion of macro =E2=80=98__GENMASK=
+=E2=80=99
+	   37 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+	      |                                      ^~~~~~~~~
+	include/linux/perf/arm_pmuv3.h:237:33: note: in expansion of macro =E2=80=
+=98GENMASK=E2=80=99
+	  237 | #define ARMV8_PMU_EVTYPE_TH     GENMASK(43, 32)
+	      |                                 ^~~~~~~
+	drivers/perf/arm_pmuv3.c:567:47: note: in expansion of macro =E2=80=98ARMV=
+8_PMU_EVTYPE_TH=E2=80=99
+	  567 |                 mask |=3D ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_T=
+H;
+	      |                                               ^~~~~~~~~~~~~~~~~~~
+
+I guess that's easy to fix but I didn't look into that.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ngsobzumwfjdiywd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV8QbAACgkQj4D7WH0S
+/k7AiQf+P2oUWv7SoB0VqSdzaQDZiVP5cLTAQNAUd2/KvKLHcynNocmMBs36c3pg
+o+x8tw5H8hmrOREyHLMq2dFVFQOzDjUpzVl/UtvewEwJ/wer59fr31E2+O4d3RzB
+HbLD/OuVTL88TWye1hyv+43iSoG4gfff9n9SBsr/423tBmEqnCkIv/A7CMzawZMi
+Nr4oV5P03hNhNXEFy4OxIVfuLmAVxIlK4EtUtMErE/+UHeJL6gs+nhOW38UwNR+c
++9uau7zzuYGeBWLmiDYGPteZWs0/DB9/WO5xm+U4eA10oQSho6Tjd8DS4ls2katc
+cDqpu8z3U3vqJXktpE5/swkSxSAuWQ==
+=wXB9
+-----END PGP SIGNATURE-----
+
+--ngsobzumwfjdiywd--
