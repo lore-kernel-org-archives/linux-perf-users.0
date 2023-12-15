@@ -1,14 +1,14 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7460358A2;
-	Fri, 15 Dec 2023 15:01:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C7CE35F16;
+	Fri, 15 Dec 2023 15:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45B6BC15;
-	Fri, 15 Dec 2023 07:01:45 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D1BB1063;
+	Fri, 15 Dec 2023 07:01:49 -0800 (PST)
 Received: from e127643.broadband (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 658113F5A1;
-	Fri, 15 Dec 2023 07:00:56 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3393F3F5A1;
+	Fri, 15 Dec 2023 07:01:00 -0800 (PST)
 From: James Clark <james.clark@arm.com>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
@@ -25,10 +25,12 @@ Cc: James Clark <james.clark@arm.com>,
 	Suzuki K Poulose <suzuki.poulose@arm.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH 0/2] arm: perf: Fix ARCH=arm build with GCC
-Date: Fri, 15 Dec 2023 15:00:37 +0000
-Message-Id: <20231215150040.3342183-1-james.clark@arm.com>
+Subject: [PATCH 1/2] arm: perf: Fix ARCH=arm build with GCC in armv8pmu_write_evtype()
+Date: Fri, 15 Dec 2023 15:00:38 +0000
+Message-Id: <20231215150040.3342183-2-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231215150040.3342183-1-james.clark@arm.com>
+References: <20231215150040.3342183-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,16 +40,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Two fixes for the broken build withh GCC currently in linux-next
-(next-20231214)
+LLVM ignores everything inside the if statement and doesn't generate
+errors, but GCC doesn't ignore it, resulting in the following error:
 
-James Clark (2):
-  arm: perf: Fix ARCH=arm build with GCC in armv8pmu_write_evtype()
-  arm: perf: Fix ARCH=arm build with GCC in armv8pmu_set_event_filter()
+  drivers/perf/arm_pmuv3.c: In function ‘armv8pmu_write_evtype’:
+  include/linux/bits.h:34:29: error: left shift count >= width of type [-Werror=shift-count-overflow]
+  	34 |         (((~UL(0)) - (UL(1) << (l)) + 1) & \
 
- drivers/perf/arm_pmuv3.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Fix it by changing the if to #if.
 
+Fixes: 3115ee021bfb ("arm64: perf: Include threshold control fields in PMEVTYPER mask")
+Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Closes: https://lore.kernel.org/linux-arm-kernel/20231215120817.h2f3akgv72zhrtqo@pengutronix.de/
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ drivers/perf/arm_pmuv3.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 23fa6c5da82c..3ed2086cefc3 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -631,8 +631,9 @@ static void armv8pmu_write_evtype(int idx, unsigned long val)
+ 			     ARMV8_PMU_EXCLUDE_EL0 |
+ 			     ARMV8_PMU_EXCLUDE_EL1;
+ 
+-	if (IS_ENABLED(CONFIG_ARM64))
+-		mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
++#if IS_ENABLED(CONFIG_ARM64)
++	mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
++#endif
+ 
+ 	val &= mask;
+ 	write_pmevtypern(counter, val);
 -- 
 2.34.1
 
