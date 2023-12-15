@@ -1,123 +1,120 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3AB3FB28
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Dec 2023 18:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rECna-0005Cl-42; Fri, 15 Dec 2023 19:20:34 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rECnZ-00G5Nx-Bc; Fri, 15 Dec 2023 19:20:33 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rECnZ-003kV5-2H; Fri, 15 Dec 2023 19:20:33 +0100
-Date: Fri, 15 Dec 2023 19:20:32 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: James Clark <james.clark@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	linux-next@vger.kernel.org, will@kernel.org, mark.rutland@arm.com,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] arm: perf: Fix ARCH=arm build with GCC
-Message-ID: <20231215182032.yainbyffntkqpkye@pengutronix.de>
-References: <20231215175648.3397170-1-james.clark@arm.com>
- <20231215175648.3397170-2-james.clark@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F3730130;
+	Fri, 15 Dec 2023 18:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyKhJrsi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1178DC433C8;
+	Fri, 15 Dec 2023 18:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702664809;
+	bh=Uxm+Ld+49+IKhlPh3+Lb8jzwdKp8zlKxeU1rGQh+uUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PyKhJrsiRdLEraV527cDOWhQbObcRjmIiegnkMgjULdaB9RzGb1HQkGRM+Lm7TaU3
+	 Vd2dNC1zrVz/PzMIrXykUKke7H9RrYz9YFA1DNmU+m4fMQsq9jDV8li1Zq/wY8LeqC
+	 pvzYyEOUF+BF14YGXPZOhrG2XnTjzVq0Jl34g6rC9jHAvCep/zilYrFVY7VPybFNWI
+	 RONJmn9L9AtfqemjvL87HZiR8bGD4h7Wdsv3hQBgkUNU59nVuaDwDSr7lyfnueujQN
+	 gWhDD1rmFg8806u2BzFSf4ldI1i1/judHa1Kr6Ql5wAoFbF6mhK3IHPN4Zpxcyz5T+
+	 VwduapuXXn36w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 5A65F403EF; Fri, 15 Dec 2023 15:26:46 -0300 (-03)
+Date: Fri, 15 Dec 2023 15:26:46 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>, maz@kernel.org,
+	marcan@marcan.st, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
+Message-ID: <ZXyaZjwrpy6toGf6@kernel.org>
+References: <20231208210855.407580-1-kan.liang@linux.intel.com>
+ <ZXd7ZuxbNNsjAyqm@kernel.org>
+ <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
+ <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
+ <CAP-5=fVd-0aSovYVsOmTo2dfKb5_PHz1KV7ePipi35_JbfJ6qQ@mail.gmail.com>
+ <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
+ <ZXxyanyZgWBTOnoK@kernel.org>
+ <4658ca16-9749-434e-9296-3893aa2a34da@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="itsdxshq7bgb2hps"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231215175648.3397170-2-james.clark@arm.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
+In-Reply-To: <4658ca16-9749-434e-9296-3893aa2a34da@linux.intel.com>
+X-Url: http://acmel.wordpress.com
 
+Em Fri, Dec 15, 2023 at 12:59:22PM -0500, Liang, Kan escreveu:
+> On 2023-12-15 10:36 a.m., Arnaldo Carvalho de Melo wrote:
+> 
+> #perf report --header-only | grep event
+> # event : name = cpu_atom/cycles:P/, , id = { 7360, 7361, 7362, 7363,
+> 7364, 7365, 7366, 7367, 7368, 7369 }, type = 0 (PERF_TYPE_HARDWARE),
+> size = 136, config = 0xa00000000, { sample_period, sample_freq } = 3000,
+> sample_type = IP|TID|TIME|PERIOD|IDENTIFIER, read_format = ID|LOST,
+> disabled = 1, inherit = 1, freq = 1, enable_on_exec = 1, precise_ip = 3,
+> sample_id_all = 1
+> # event : name = cpu_core/cycles:P/, , id = { 7370, 7371, 7372, 7373,
+> 7374, 7375, 7376, 7377, 7378, 7379, 7380, 7381 }, type = 0
+> (PERF_TYPE_HARDWARE), size = 136, config = 0x400000000, { sample_period,
+> sample_freq } = 3000, sample_type = IP|TID|TIME|PERIOD|IDENTIFIER,
+> read_format = ID|LOST, disabled = 1, inherit = 1, freq = 1,
+> enable_on_exec = 1, precise_ip = 3, sample_id_all = 1
+> 
+> I think we should move all the modifiers after the "/". The below patch
+> can fix it.
+> 
+> https://lore.kernel.org/lkml/20231215175455.1300261-1-kan.liang@linux.intel.com/
 
---itsdxshq7bgb2hps
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right, I implemented it in a slightly different way, but end result
+should be the same:
 
-On Fri, Dec 15, 2023 at 05:56:48PM +0000, James Clark wrote:
-> LLVM ignores everything inside the if statement and doesn't generate
-> errors, but GCC doesn't ignore it, resulting in the following error:
->=20
->   drivers/perf/arm_pmuv3.c: In function =E2=80=98armv8pmu_write_evtype=E2=
-=80=99:
->   include/linux/bits.h:34:29: error: left shift count >=3D width of type =
-[-Werror=3Dshift-count-overflow]
->   34 |         (((~UL(0)) - (UL(1) << (l)) + 1) & \
->=20
-> Fix it by using GENMASK_ULL which doesn't overflow on arm32 (even though
-> the value is never used there).
->=20
-> Fixes: 3115ee021bfb ("arm64: perf: Include threshold control fields in PM=
-EVTYPER mask")
-> Reported-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> Closes: https://lore.kernel.org/linux-arm-kernel/20231215120817.h2f3akgv7=
-2zhrtqo@pengutronix.de/
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  include/linux/perf/arm_pmuv3.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv=
-3.h
-> index 0f4d62ef3a9a..46377e134d67 100644
-> --- a/include/linux/perf/arm_pmuv3.h
-> +++ b/include/linux/perf/arm_pmuv3.h
-> @@ -234,8 +234,8 @@
->   * PMXEVTYPER: Event selection reg
->   */
->  #define ARMV8_PMU_EVTYPE_EVENT	GENMASK(15, 0)	/* Mask for EVENT bits */
-> -#define ARMV8_PMU_EVTYPE_TH	GENMASK(43, 32)
-> -#define ARMV8_PMU_EVTYPE_TC	GENMASK(63, 61)
-> +#define ARMV8_PMU_EVTYPE_TH	GENMASK_ULL(43, 32) /* arm64 only */
-> +#define ARMV8_PMU_EVTYPE_TC	GENMASK_ULL(63, 61) /* arm64 only */
+From 5dd1b7ab1ba69ebb8e070923dcc214b7b489ffc2 Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Fri, 15 Dec 2023 15:23:30 -0300
+Subject: [PATCH 1/1] perf evlist: Move event attributes to after the / when
+ uniquefying using the PMU name
 
-As expected this fixes compilation on my end, too and it's nicer than
-v1.
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evlist.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 6f0892803c2249af..3a9505c99490b372 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -2522,7 +2522,7 @@ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_lis
+ void evlist__uniquify_name(struct evlist *evlist)
+ {
+ 	struct evsel *pos;
+-	char *new_name;
++	char *new_name, *attributes;
+ 	int ret;
+ 
+ 	if (perf_pmus__num_core_pmus() == 1)
+@@ -2535,8 +2535,16 @@ void evlist__uniquify_name(struct evlist *evlist)
+ 		if (strchr(pos->name, '/'))
+ 			continue;
+ 
+-		ret = asprintf(&new_name, "%s/%s/",
+-			       pos->pmu_name, pos->name);
++		attributes = strchr(pos->name, ':');
++		if (attributes)
++			*attributes = '\0';
++
++		ret = asprintf(&new_name, "%s/%s/%s",
++			       pos->pmu_name, pos->name, attributes ? attributes + 1 : "");
++
++		if (attributes)
++			*attributes = ':';
++
+ 		if (ret) {
+ 			free(pos->name);
+ 			pos->name = new_name;
+-- 
+2.43.0
 
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---itsdxshq7bgb2hps
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV8mPAACgkQj4D7WH0S
-/k70Nwf/RKlhvu5kU7OLm1mwdjKU6aYfvAZkSBnFv1UIDqNO8kUiqQ1LNc7dYKYT
-+fmz88BDDkzJF8QYG73bLrwtn9paSrbPxc6kg24tdp2mH4Fq8FuDH7FuMK1Dd8CW
-L9zcHcVt1ymmRmY86UgGxSihpmeXFbqg+dt0R67TiWE/4fGMe2ilVFHtaYpZfE1s
-cw0fN2tiFUqbpWu50lokbStcsxkwhZ4RF1OCodVW4vPYUDnYyvLc/P//GS3Er6vn
-aVCFZT9WoUom77pG9L0q2f5CmZeUHC0ra2qAnguUvCIja3goldOYe0LKgetBcpK6
-PunHLJ35H+n7OoDkZiBm9fedtquNmw==
-=E8iy
------END PGP SIGNATURE-----
-
---itsdxshq7bgb2hps--
