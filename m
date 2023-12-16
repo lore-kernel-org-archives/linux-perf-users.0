@@ -1,61 +1,31 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF5EDDB0
-	for <linux-perf-users@vger.kernel.org>; Sat, 16 Dec 2023 03:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qIFSSaBi"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6d099d316a8so1261450b3a.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Dec 2023 19:30:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702697402; x=1703302202; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aEQ/QfzWe41WSMz22CzSA9GVF90SoiyHigHSMZ63aNY=;
-        b=qIFSSaBiVlGzzW+MAdxf0MggRhjZuUQFJBAm6M58NqiakE2F8ytOoaUfCloR7YICi+
-         q9Vh/AiPjCNgOXf2NmiRUqS0huaepZCEh/GBbYoG99Iz4nVdRU6r/DJrZ7S8fCNQkUJu
-         WgZxDyYMBAtAlmRWSRwndyhDEFWzqb4j73Hqks8tN1jaOhJaTrbnp3KotYS05kTv+wCe
-         aMJxHq+6CUBEUUJnlxtEw8A+/mu2QOX3eC9McpTOVWcEREI/dkJ80wkEtu2Ge0aifDOz
-         FFKFSqpthYXsplK6RGq4hG8VWOJPhAjrQH8rZ6P0NuCecYc3asVXZW7tosWBSibH4tFK
-         Hmeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702697402; x=1703302202;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aEQ/QfzWe41WSMz22CzSA9GVF90SoiyHigHSMZ63aNY=;
-        b=VcJhyfudvGi57POaKZrSoY/2puHir4VwmK7rjK3jRSZnYlZvp5GUeHDvP1QV2TD5bs
-         f9bricOpG32TDWpBOPkd5+nDCLbGbDsqlnAMyNsnhLFpAOkoFl5WPCBdJMrY2jAdn+98
-         B7qEq+oBTbQowqdDYZNfxcontJ/qPPhLu7Fd5iJR09mqHvRfG1U0knSqMqItBK8B2c8/
-         Lwu9PgOuVTBVsjmQVNccL/HUy7Vd03db+/xu5VJNB11Ay5fsJYdH4Ama9gygt9q/oZUR
-         KrLlh5vGN5EbI5td/ibnT7jxb07aTxjVTlzOxeeRlKMF2j47WbmXh97fEqY5QtohIuyX
-         JkFw==
-X-Gm-Message-State: AOJu0YxpsLZ3ZJVX/4gmdL3J9rX0ZUNCUqL0f92HnDhydXjrieCRkLwD
-	ppUYw79oJqVU+fg/wvHRPPmjVA==
-X-Google-Smtp-Source: AGHT+IEl2J7pM1Qh9sp6NPxUr5WaJa3P0C78F3ejomKp1x8C9xuYtUsi/ZiqYLm1IKDdbio3BaCGxA==
-X-Received: by 2002:a05:6a20:b2a3:b0:193:fc0b:deb4 with SMTP id ei35-20020a056a20b2a300b00193fc0bdeb4mr1239813pzb.32.1702697401801;
-        Fri, 15 Dec 2023 19:30:01 -0800 (PST)
-Received: from leoy-huanghe.lan (211-75-219-200.hinet-ip.hinet.net. [211.75.219.200])
-        by smtp.gmail.com with ESMTPSA id t20-20020a056a00139400b006cd88728572sm14165680pfg.211.2023.12.15.19.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 19:30:01 -0800 (PST)
-Date: Sat, 16 Dec 2023 11:29:52 +0800
-From: Leo Yan <leo.yan@linaro.org>
-To: kan.liang@linux.intel.com
-Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
-	mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
-	adrian.hunter@intel.com, john.g.garry@oracle.com, will@kernel.org,
-	james.clark@arm.com, mike.leach@linaro.org,
-	yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	tmricht@linux.ibm.com, ravi.bangoria@amd.com,
-	atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V3 0/7] Clean up perf mem
-Message-ID: <20231216032952.GI86143@leoy-huanghe.lan>
-References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80D6B154BA;
+	Sat, 16 Dec 2023 12:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D20E2F4;
+	Sat, 16 Dec 2023 04:45:29 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78DC73F762;
+	Sat, 16 Dec 2023 04:44:42 -0800 (PST)
+Date: Sat, 16 Dec 2023 12:44:33 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: James Clark <james.clark@arm.com>, will@kernel.org,
+	catalin.marinas@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	linux-next@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 1/1] arm: perf: Fix ARCH=arm build with GCC
+Message-ID: <ZX2bsYEdWVxTCiTi@FVFF77S0Q05N>
+References: <20231215175648.3397170-1-james.clark@arm.com>
+ <20231215175648.3397170-2-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,62 +34,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+In-Reply-To: <20231215175648.3397170-2-james.clark@arm.com>
 
-On Wed, Dec 13, 2023 at 11:51:47AM -0800, kan.liang@linux.intel.com wrote:
+On Fri, Dec 15, 2023 at 05:56:48PM +0000, James Clark wrote:
+> LLVM ignores everything inside the if statement and doesn't generate
+> errors, but GCC doesn't ignore it, resulting in the following error:
+> 
+>   drivers/perf/arm_pmuv3.c: In function 'armv8pmu_write_evtype':
+>   include/linux/bits.h:34:29: error: left shift count >= width of type [-Werror=shift-count-overflow]
+>   34 |         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+> 
+> Fix it by using GENMASK_ULL which doesn't overflow on arm32 (even though
+> the value is never used there).
 
-[...]
+It would be nice if this could explain the overflow problem, i.e.
 
-> Introduce generic functions perf_mem_events__ptr(),
-> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
-> ARCH specific ones.
-> Simplify the perf_mem_event__supported().
-> 
-> Only keeps the ARCH-specific perf_mem_events array in the corresponding
-> mem-events.c for each ARCH.
-> 
-> There is no functional change.
-> 
-> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
-> etc. But I can only test it on two Intel platforms.
-> Please give it try, if you have machines with other ARCHs.
+| The GENMASK() macro creates masks of type unsigned long, and we use this to
+| geenrate the ARMV8_PMU_EVTYPE_TH and ARMV8_PMU_EVTYPE_TC constants. These
+| include bits above bit 31, and generating these requires shifting more than the
+| size of unsigned long on 32-bit ARM.
+| 
+| Consequently when building for 32-bit arm, GCC warns about their use:
+| 
+|   drivers/perf/arm_pmuv3.c: In function 'armv8pmu_write_evtype':
+|   include/linux/bits.h:34:29: error: left shift count >= width of type [-Werror=shift-count-overflow]
+|   34 |         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+| 
+| ... though LLVM does not warn as the actual usage is not reachable on 32-bit
+| ARM due to `if (IS_ENABLED(...)` checks.
+| 
+| Avoid the warning by using GENMACK_ULL(), which doesn't overflow on 32-bit arm.
 
-This patch series is fine for me:
+> Fixes: 3115ee021bfb ("arm64: perf: Include threshold control fields in PMEVTYPER mask")
+> Reported-by: Uwe Kleine-K"onig <u.kleine-koenig@pengutronix.de>
+> Closes: https://lore.kernel.org/linux-arm-kernel/20231215120817.h2f3akgv72zhrtqo@pengutronix.de/
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Thanks for this!
 
-I only compiled successfully it on my Arm64 machine but don't test
-it due to I have no chance to access a machine with Arm SPE.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-James, could you test it?  Thanks a lot!
+Will, Catalin, the broken commit is queued in the arm64 for-next/perf branch
+(and merged into for-next/core); is this something we can easily fold in?
 
-> Here are the test results:
-> Intel hybrid machine:
+Mark.
+
+> ---
+>  include/linux/perf/arm_pmuv3.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> $perf mem record -e list
-> ldlat-loads  : available
-> ldlat-stores : available
+> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+> index 0f4d62ef3a9a..46377e134d67 100644
+> --- a/include/linux/perf/arm_pmuv3.h
+> +++ b/include/linux/perf/arm_pmuv3.h
+> @@ -234,8 +234,8 @@
+>   * PMXEVTYPER: Event selection reg
+>   */
+>  #define ARMV8_PMU_EVTYPE_EVENT	GENMASK(15, 0)	/* Mask for EVENT bits */
+> -#define ARMV8_PMU_EVTYPE_TH	GENMASK(43, 32)
+> -#define ARMV8_PMU_EVTYPE_TC	GENMASK(63, 61)
+> +#define ARMV8_PMU_EVTYPE_TH	GENMASK_ULL(43, 32) /* arm64 only */
+> +#define ARMV8_PMU_EVTYPE_TC	GENMASK_ULL(63, 61) /* arm64 only */
+>  
+>  /*
+>   * Event filters for PMUv3
+> -- 
+> 2.34.1
 > 
-> $perf mem record -e ldlat-loads -v --ldlat 50
-> calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
-> 
-> $perf mem record -v
-> calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
-> 
-> $perf mem record -t store -v
-> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
-> 
-> 
-> Intel SPR:
-> $perf mem record -e list
-> ldlat-loads  : available
-> ldlat-stores : available
-> 
-> $perf mem record -e ldlat-loads -v --ldlat 50
-> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
-> 
-> $perf mem record -v
-> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
-> 
-> $perf mem record -t store -v
-> calling: record -e cpu/mem-stores/P
