@@ -1,93 +1,376 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDCD15A0;
-	Tue, 19 Dec 2023 01:27:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E199B1FDE
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Dec 2023 02:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JjLATARU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E98C433C8;
-	Tue, 19 Dec 2023 01:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702949240;
-	bh=U6CRHB4KiIImU5dE5S2JB7dUNvgh3VXjcaMLM7Wcv6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JjLATARUOmlTeY6mwXr36+jrAC18vPzi2MO9VdFWrVZXe9hAREbnRumq7jVJCUJuM
-	 E7J6GvnfWa4gTGNVOgJHOvbbY8H4XFdjDUiEBg0PX+ELmx9UXtLf1nKjMszC+MyRWo
-	 AnXoA9wN+IEcbnAcGEYNkqs8p/bmQh9FbSQlyu5si/c06Fj0mOhKhQWowp5Ba2cY41
-	 IzKWyyOazZst0NrK7fKn1XOVT2eRbmQft0U9uxx3IooZZxw+rElGIJ3k2qx6VyzF0S
-	 2MrpZH0Br9UCHt9vWqcQZ/15uhZwishRn9azPXR/h1XU23gRjd4XNRkSIY20wH4th3
-	 0QRwoa4CGuDHA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id D9EEF403EF; Mon, 18 Dec 2023 22:27:16 -0300 (-03)
-Date: Mon, 18 Dec 2023 22:27:16 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nick Terrell <terrelln@fb.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Vincent Whitchurch <vincent.whitchurch@axis.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Liam Howlett <liam.howlett@oracle.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Ming Wang <wangming01@loongson.cn>,
-	James Clark <james.clark@arm.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Leo Yan <leo.yan@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
-	German Gomez <german.gomez@arm.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O99j8a51"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso3063119a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Dec 2023 18:22:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702952555; x=1703557355; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9p0315uqpc+n1pOToNiw0hz0iRBomEp4zEeHMgnV+bg=;
+        b=O99j8a51X5+hF+FpQuMVGxhFhZm4XbJX0Ef9qOB0SV1Zr+mC4LWoAzTM6R/PEQnbrv
+         xouwDccY/zDXkudG0XswFz7lXYWp0a86NbTIBBI0HmvypONUooUFmFBRuR6EQBzAbvSr
+         pcR8u5lIBeOHkbggeKfp5d4WD/TpPX1uE62329nR2BvKlIFYS/Iw7dtCnidgEzGNOHlV
+         gkUheBML5H3wFYd6f5XI5yE2YMqPC0f9uuzAx7XA6DDBTJDref++X13eu8TcSIhn5ITa
+         W6lrQXvUXwnoDcwmDbz5ihSu0A8yJLrlRZoOsduvL9FzqO8p3IfThQaFPiNsqnk8H5Y2
+         qBxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702952555; x=1703557355;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9p0315uqpc+n1pOToNiw0hz0iRBomEp4zEeHMgnV+bg=;
+        b=Zt5fVIXpLBQj0IZTcxomJ69zRPF9zgBBxT1WmmfW2488iHBojbwNYV0qsDWNhaiKuB
+         hREzn+iFJw5DzzSxwda1haf0r3Ibpp8TDEUFPpuL0UDDlKiJ4zHjqKJuzsgGYju2EWRW
+         Nn7Q5Rwu5s8Ab3GAYz7M2JNtl5WzgZD5o+tTQOqq0S8vcDK1rVceRb+2GNlkxj9Omh4t
+         oFjWiImYIJkHj73wlZKGEip319mWzmultXMFMVE7yz/8RCxEYE1WFLlo9nu0NMjHSG9g
+         RAeK2uQVnVcMzhYfwxyXwkSHck7bJtXmdVwaf3WoarjJgdPYKtARnxrql6lQv2YTezkA
+         lqKw==
+X-Gm-Message-State: AOJu0Yz1XKvrFk0a6TINxhS+a+LDmFUW7Q1hznwJd0IikNCqS6b4eHzk
+	9e0kyClzyVDXGSJx7yhJt0Y=
+X-Google-Smtp-Source: AGHT+IEsWG1wWSv2Bht8XTIBKQwnu8RaFftFhLMdkyvRSBMXzm3jAmCm4ziRmR77h7OPqQigyVXDNg==
+X-Received: by 2002:a05:6a20:72a0:b0:191:3733:ebaa with SMTP id o32-20020a056a2072a000b001913733ebaamr15853829pzk.50.1702952554945;
+        Mon, 18 Dec 2023 18:22:34 -0800 (PST)
+Received: from localhost ([107.155.12.245])
+        by smtp.gmail.com with ESMTPSA id q26-20020a62ae1a000000b006d36b6c6591sm4827946pff.39.2023.12.18.18.22.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Dec 2023 18:22:34 -0800 (PST)
+From: chenqiwu <qiwuchen55@gmail.com>
+X-Google-Original-From: chenqiwu <qiwu.chen@transsion.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kaleshsingh@google.com,
+	ardb@kernel.org
+Cc: alexander.shishkin@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	Guilherme Amadio <amadio@gentoo.org>
-Subject: Re: [PATCH v6 00/47] maps/threads/dsos memory improvements and fixes
-Message-ID: <ZYDxdD_BsHbntVvz@kernel.org>
-References: <20231207011722.1220634-1-irogers@google.com>
- <ZYCxURwlu7Rld-IW@kernel.org>
+	chenqiwu <qiwu.chen@transsion.com>
+Subject: [RESEND v3] arm64: Add USER_STACKTRACE support
+Date: Tue, 19 Dec 2023 10:22:29 +0800
+Message-Id: <20231219022229.10230-1-qiwu.chen@transsion.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZYCxURwlu7Rld-IW@kernel.org>
-X-Url: http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 
-Em Mon, Dec 18, 2023 at 05:53:37PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Dec 06, 2023 at 05:16:34PM -0800, Ian Rogers escreveu:
-> > v6:
-> >  - Patch 1 is a parameter name fix requested by Namhyung.
-> >  - Patches 2 to 13 split apart a macro to function callback refactor
-> >    requested by Arnaldo.
-> >  - Add fixes and acked-by to later patches from Namhyung.
-> 
-> Applied 1-10, 11 is failing, I'll try to resolve if you don't do it
-> first.
-> 
-> This should be in tmp.perf-tools-next soon
+Currently, userstacktrace is unsupported for ftrace and uprobe
+tracers on arm64. This patch uses the perf_callchain_user() code
+as blueprint to implement the arch_stack_walk_user() which add
+userstacktrace support on arm64.
+Meanwhile, we can use arch_stack_walk_user() to simplify the
+implementation of perf_callchain_user().
+This patch is tested pass with ftrace, uprobe and perf tracers
+profiling userstacktrace cases.
 
-This is all in perf-tools-next/perf-tools-next, merged with
-torvalds/master, which made some of the tests (e.g. "perf list" IIRC) to
-stop failing, something that went via perf-tools for v6.7.
+changes in v3:
+  - update perf_callchain_user() to use arch_stack_walk_user()
+    and delete the redundant code as Mark's suggestion in v2.
+  - update the commit message.
 
-Please refresh this series and any other that you may have outstanding
-on top of that.
+Tested-by: chenqiwu <qiwu.chen@transsion.com>
+Signed-off-by: chenqiwu <qiwu.chen@transsion.com>
+---
+ arch/arm64/Kconfig                 |   1 +
+ arch/arm64/kernel/perf_callchain.c | 118 +---------------------------
+ arch/arm64/kernel/stacktrace.c     | 120 +++++++++++++++++++++++++++++
+ 3 files changed, 125 insertions(+), 114 deletions(-)
 
-I'll continue processing patches and will try to help with refreshing as
-soon as I can.
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 7b071a00425d..4c5066f88dd2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -255,6 +255,7 @@ config ARM64
+ 	select TRACE_IRQFLAGS_SUPPORT
+ 	select TRACE_IRQFLAGS_NMI_SUPPORT
+ 	select HAVE_SOFTIRQ_ON_OWN_STACK
++	select USER_STACKTRACE_SUPPORT
+ 	help
+ 	  ARM 64-bit (AArch64) Linux support.
+ 
+diff --git a/arch/arm64/kernel/perf_callchain.c b/arch/arm64/kernel/perf_callchain.c
+index 6d157f32187b..e8ed5673f481 100644
+--- a/arch/arm64/kernel/perf_callchain.c
++++ b/arch/arm64/kernel/perf_callchain.c
+@@ -10,94 +10,12 @@
+ 
+ #include <asm/pointer_auth.h>
+ 
+-struct frame_tail {
+-	struct frame_tail	__user *fp;
+-	unsigned long		lr;
+-} __attribute__((packed));
+-
+-/*
+- * Get the return address for a single stackframe and return a pointer to the
+- * next frame tail.
+- */
+-static struct frame_tail __user *
+-user_backtrace(struct frame_tail __user *tail,
+-	       struct perf_callchain_entry_ctx *entry)
+-{
+-	struct frame_tail buftail;
+-	unsigned long err;
+-	unsigned long lr;
+-
+-	/* Also check accessibility of one struct frame_tail beyond */
+-	if (!access_ok(tail, sizeof(buftail)))
+-		return NULL;
+-
+-	pagefault_disable();
+-	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
+-	pagefault_enable();
+-
+-	if (err)
+-		return NULL;
+-
+-	lr = ptrauth_strip_user_insn_pac(buftail.lr);
+-
+-	perf_callchain_store(entry, lr);
+-
+-	/*
+-	 * Frame pointers should strictly progress back up the stack
+-	 * (towards higher addresses).
+-	 */
+-	if (tail >= buftail.fp)
+-		return NULL;
+-
+-	return buftail.fp;
+-}
+-
+-#ifdef CONFIG_COMPAT
+-/*
+- * The registers we're interested in are at the end of the variable
+- * length saved register structure. The fp points at the end of this
+- * structure so the address of this struct is:
+- * (struct compat_frame_tail *)(xxx->fp)-1
+- *
+- * This code has been adapted from the ARM OProfile support.
+- */
+-struct compat_frame_tail {
+-	compat_uptr_t	fp; /* a (struct compat_frame_tail *) in compat mode */
+-	u32		sp;
+-	u32		lr;
+-} __attribute__((packed));
+-
+-static struct compat_frame_tail __user *
+-compat_user_backtrace(struct compat_frame_tail __user *tail,
+-		      struct perf_callchain_entry_ctx *entry)
++static bool callchain_trace(void *data, unsigned long pc)
+ {
+-	struct compat_frame_tail buftail;
+-	unsigned long err;
+-
+-	/* Also check accessibility of one struct frame_tail beyond */
+-	if (!access_ok(tail, sizeof(buftail)))
+-		return NULL;
+-
+-	pagefault_disable();
+-	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
+-	pagefault_enable();
+-
+-	if (err)
+-		return NULL;
+-
+-	perf_callchain_store(entry, buftail.lr);
+-
+-	/*
+-	 * Frame pointers should strictly progress back up the stack
+-	 * (towards higher addresses).
+-	 */
+-	if (tail + 1 >= (struct compat_frame_tail __user *)
+-			compat_ptr(buftail.fp))
+-		return NULL;
++	struct perf_callchain_entry_ctx *entry = data;
+ 
+-	return (struct compat_frame_tail __user *)compat_ptr(buftail.fp) - 1;
++	return perf_callchain_store(entry, pc) == 0;
+ }
+-#endif /* CONFIG_COMPAT */
+ 
+ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+ 			 struct pt_regs *regs)
+@@ -107,35 +25,7 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+ 		return;
+ 	}
+ 
+-	perf_callchain_store(entry, regs->pc);
+-
+-	if (!compat_user_mode(regs)) {
+-		/* AARCH64 mode */
+-		struct frame_tail __user *tail;
+-
+-		tail = (struct frame_tail __user *)regs->regs[29];
+-
+-		while (entry->nr < entry->max_stack &&
+-		       tail && !((unsigned long)tail & 0x7))
+-			tail = user_backtrace(tail, entry);
+-	} else {
+-#ifdef CONFIG_COMPAT
+-		/* AARCH32 compat mode */
+-		struct compat_frame_tail __user *tail;
+-
+-		tail = (struct compat_frame_tail __user *)regs->compat_fp - 1;
+-
+-		while ((entry->nr < entry->max_stack) &&
+-			tail && !((unsigned long)tail & 0x3))
+-			tail = compat_user_backtrace(tail, entry);
+-#endif
+-	}
+-}
+-
+-static bool callchain_trace(void *data, unsigned long pc)
+-{
+-	struct perf_callchain_entry_ctx *entry = data;
+-	return perf_callchain_store(entry, pc) == 0;
++	arch_stack_walk_user(callchain_trace, entry, regs);
+ }
+ 
+ void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
+index 17f66a74c745..7f9ab5a37096 100644
+--- a/arch/arm64/kernel/stacktrace.c
++++ b/arch/arm64/kernel/stacktrace.c
+@@ -240,3 +240,123 @@ void show_stack(struct task_struct *tsk, unsigned long *sp, const char *loglvl)
+ 	dump_backtrace(NULL, tsk, loglvl);
+ 	barrier();
+ }
++
++/*
++ * The struct defined for userspace stack frame in AARCH64 mode.
++ */
++struct frame_tail {
++	struct frame_tail	__user *fp;
++	unsigned long		lr;
++} __attribute__((packed));
++
++/*
++ * Get the return address for a single stackframe and return a pointer to the
++ * next frame tail.
++ */
++static struct frame_tail __user *
++unwind_user_frame(struct frame_tail __user *tail, void *cookie,
++	       stack_trace_consume_fn consume_entry)
++{
++	struct frame_tail buftail;
++	unsigned long err;
++	unsigned long lr;
++
++	/* Also check accessibility of one struct frame_tail beyond */
++	if (!access_ok(tail, sizeof(buftail)))
++		return NULL;
++
++	pagefault_disable();
++	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
++	pagefault_enable();
++
++	if (err)
++		return NULL;
++
++	lr = ptrauth_strip_user_insn_pac(buftail.lr);
++
++	if (!consume_entry(cookie, lr))
++		return NULL;
++
++	/*
++	 * Frame pointers should strictly progress back up the stack
++	 * (towards higher addresses).
++	 */
++	if (tail >= buftail.fp)
++		return NULL;
++
++	return buftail.fp;
++}
++
++#ifdef CONFIG_COMPAT
++/*
++ * The registers we're interested in are at the end of the variable
++ * length saved register structure. The fp points at the end of this
++ * structure so the address of this struct is:
++ * (struct compat_frame_tail *)(xxx->fp)-1
++ *
++ * This code has been adapted from the ARM OProfile support.
++ */
++struct compat_frame_tail {
++	compat_uptr_t	fp; /* a (struct compat_frame_tail *) in compat mode */
++	u32		sp;
++	u32		lr;
++} __attribute__((packed));
++
++static struct compat_frame_tail __user *
++unwind_compat_user_frame(struct compat_frame_tail __user *tail, void *cookie,
++				stack_trace_consume_fn consume_entry)
++{
++	struct compat_frame_tail buftail;
++	unsigned long err;
++
++	/* Also check accessibility of one struct frame_tail beyond */
++	if (!access_ok(tail, sizeof(buftail)))
++		return NULL;
++
++	pagefault_disable();
++	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
++	pagefault_enable();
++
++	if (err)
++		return NULL;
++
++	if (!consume_entry(cookie, buftail.lr))
++		return NULL;
++
++	/*
++	 * Frame pointers should strictly progress back up the stack
++	 * (towards higher addresses).
++	 */
++	if (tail + 1 >= (struct compat_frame_tail __user *)
++			compat_ptr(buftail.fp))
++		return NULL;
++
++	return (struct compat_frame_tail __user *)compat_ptr(buftail.fp) - 1;
++}
++#endif /* CONFIG_COMPAT */
++
++
++void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
++					const struct pt_regs *regs)
++{
++	if (!consume_entry(cookie, regs->pc))
++		return;
++
++	if (!compat_user_mode(regs)) {
++		/* AARCH64 mode */
++		struct frame_tail __user *tail;
++
++		tail = (struct frame_tail __user *)regs->regs[29];
++		while (tail && !((unsigned long)tail & 0x7))
++			tail = unwind_user_frame(tail, cookie, consume_entry);
++	} else {
++#ifdef CONFIG_COMPAT
++		/* AARCH32 compat mode */
++		struct compat_frame_tail __user *tail;
++
++		tail = (struct compat_frame_tail __user *)regs->compat_fp - 1;
++		while (tail && !((unsigned long)tail & 0x3))
++			tail = unwind_compat_user_frame(tail, cookie, consume_entry);
++#endif
++	}
++}
+-- 
+2.25.1
 
-- Arnaldo
