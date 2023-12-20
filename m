@@ -1,89 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2E538F9D;
-	Wed, 20 Dec 2023 13:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCdhlTlo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4AAC433C9;
-	Wed, 20 Dec 2023 13:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703080776;
-	bh=3DzpkFz+DOeDrNrZbMR42pmfhVx7KleuGlObv9MGS4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dCdhlTloZsKa6+Y+Ztdmp6v/gKEtI/6Lzy1FYV+gxIu6R+rRSdMoI6x+1O5NkLS1J
-	 B11EUjAHzYiTxi45yZEt1fYZtCIMIhyo5kkFRoz9mcXtwgjW/+Mp64IayVkQg6hWaw
-	 w1Yo6sQfjLgkq/nlPhE0pLUlmVZ13m0xbrWBzCPmCn0u7xn0SUj1MXF3fgFthvi3bh
-	 YxipUS1GRfINVpuGamryuhnkyAaCl7yPOxcnISODay5GccI5KUzf4VN1Y5jZSlawXS
-	 JfhifRcUIibArPWB/kJY/MXe5+ma2qi9jeic7bR8J6Xws1EmPdzlx+2LqVgYAWaauu
-	 R+aCK+EWsNUig==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 495E2403EF; Wed, 20 Dec 2023 10:59:33 -0300 (-03)
-Date: Wed, 20 Dec 2023 10:59:33 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: vmolnaro@redhat.com
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] perf archive: Add new option '--all'
-Message-ID: <ZYLzRV2MY33fBtuS@kernel.org>
-References: <20231212165909.14459-1-vmolnaro@redhat.com>
- <ZXihN3th3qbo6L8Z@kernel.org>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EB8041862;
+	Wed, 20 Dec 2023 15:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA68A1FB;
+	Wed, 20 Dec 2023 07:54:53 -0800 (PST)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61DEF3F64C;
+	Wed, 20 Dec 2023 07:54:06 -0800 (PST)
+Message-ID: <0bbbcdb5-41eb-dd07-660a-2e5e4a0d59f0@arm.com>
+Date: Wed, 20 Dec 2023 15:54:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZXihN3th3qbo6L8Z@kernel.org>
-X-Url: http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH RFC V2 1/4] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+Content-Language: en-US
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, Yicong Yang
+ <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20231208172449.35444-1-adrian.hunter@intel.com>
+ <20231208172449.35444-2-adrian.hunter@intel.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20231208172449.35444-2-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Em Tue, Dec 12, 2023 at 03:06:47PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Dec 12, 2023 at 05:59:08PM +0100, vmolnaro@redhat.com escreveu:
-> > From: Veronika Molnarova <vmolnaro@redhat.com>
-> > 
-> > Perf archive has limited functionality and people from Red Hat Global
-> > Support Services sent a request for a new feature that would pack
-> > perf.data file together with an archive with debug symbols created by
-> > the command 'perf archive' as customers were being confused and often
-> > would forget to send perf.data file with the debug symbols.
-> > 
-> > Perf archive now accepts an option '--all' that generates archive
-> > 'perf.all-hostname-date-time.tar.bz2' that holds file 'perf.data' and
-> > a sub-tar 'perf.symbols.tar.bz2' with debug symbols. The functionality of
-> > the command 'perf archive' was not changed.
+
+
+On 08/12/2023 17:24, Adrian Hunter wrote:
+> Hardware traces, such as instruction traces, can produce a vast amount of
+> trace data, so being able to reduce tracing to more specific circumstances
+> can be useful.
 > 
-> Thanks for working on this, I'll do some testing and apply, probably
-> tomorrow.
+> The ability to pause or resume tracing when another event happens, can do
+> that.
+> 
+> Add ability for an event to "pause" or "resume" AUX area tracing.
+> 
+> Add aux_pause bit to perf_event_attr to indicate that, if the event
+> happens, the associated AUX area tracing should be paused. Ditto
+> aux_resume. Do not allow aux_pause and aux_resume to be set together.
+> 
+> Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
+> event that it should start in a "paused" state.
+> 
+> Add aux_paused to struct perf_event for AUX area events to keep track of
+> the "paused" state. aux_paused is initialized to aux_start_paused.
+> 
+> Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
+> callbacks. Call as needed, during __perf_event_output(). Add
+> aux_in_pause_resume to struct perf_buffer to prevent races with the NMI
+> handler. Pause/resume in NMI context will miss out if it coincides with
+> another pause/resume.
+> 
+> To use aux_pause or aux_resume, an event must be in a group with the AUX
+> area event as the group leader.
+> 
+> Example (requires Intel PT and tools patches also):
+> 
+>  $ perf record --kcore -e '{intel_pt/aux-start-paused/k,syscalls:sys_enter_newuname/aux-resume/,syscalls:sys_exit_newuname/aux-pause/}' uname
 
-I applied it, tested by doing a 'perf record' on an hybrid Intel Machine
-(14700k) and then using --unpack on an hybrid ARM64 machine (rk3399-pc),
-all working as expected:
+I think it might be useful to have an aux-toggle option as well, and
+then you could do sampling if you put it on a PMU counter with an
+interval. Unless you can make two events for the same counter with
+different intervals, and one does resume and the other does pause? I'm
+not sure if that would work?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=tmp.perf-tools-next&id=624dda101e03c3a3a155d51e37a7bb7607cb760b
+Other than that it looks ok. I got Coresight working with a couple of
+changes to what you posted on here, but that can always be done more
+thoroughly later if we leave PERF_PMU_CAP_AUX_PAUSE off Coresight for now.
 
-Some suggestions for further improvements:
-
-acme@roc-rk3399-pc:~$ perf archive --unpack
-Found target file for unpacking: ./perf.all-number-20231219-104854.tar.bz2
-perf.data
-perf.symbols.tar.bz2
-tar: /home/acme/.debug: Cannot open: No such file or directory
-tar: Error is not recoverable: exiting now
-acme@roc-rk3399-pc:~$
-
-Check if the ~/.debug directory is present, if not, create it.
-
-Also maybe use:
-
-   Informative output
-       --checkpoint[=N]
-              Display progress messages every Nth record (default 10).
-
-       --checkpoint-action=ACTION
-              Run ACTION on each checkpoint.
-
-with 'tar' to show some progress in decompressing the tarball.
-
-- Arnaldo
+Thanks
+James
