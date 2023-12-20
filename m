@@ -1,16 +1,16 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90F63210F3;
-	Wed, 20 Dec 2023 11:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70BE122303;
+	Wed, 20 Dec 2023 12:07:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2D781FB;
-	Wed, 20 Dec 2023 03:16:28 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B19171FB;
+	Wed, 20 Dec 2023 04:07:46 -0800 (PST)
 Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 475643F5A1;
-	Wed, 20 Dec 2023 03:15:42 -0800 (PST)
-Message-ID: <f9be9348-52e7-7a35-1a4b-f37d4f3cd1ef@arm.com>
-Date: Wed, 20 Dec 2023 11:15:37 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40BF53F5A1;
+	Wed, 20 Dec 2023 04:07:00 -0800 (PST)
+Message-ID: <a3ae638f-8efc-70d9-75fd-9473db3de24d@arm.com>
+Date: Wed, 20 Dec 2023 12:06:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -19,8 +19,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH 3/3] perf scripts python: arm-cs-trace-disasm.py: do not
- ignore disam first sample
+Subject: Re: [PATCH 2/3] perf scripts python: arm-cs-trace-disasm.py: set
+ start vm addr of exectable file to 0
 Content-Language: en-US
 To: Ruidong Tian <tianruidong@linux.alibaba.com>, linux-kernel@vger.kernel.org
 Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com,
@@ -29,94 +29,47 @@ Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com,
  linux-perf-users@vger.kernel.org, leo.yan@linaro.org, al.grant@arm.com,
  mathieu.poirier@linaro.org, tor@ti.com, acme@redhat.com
 References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
- <20231214123304.34087-4-tianruidong@linux.alibaba.com>
+ <20231214123304.34087-3-tianruidong@linux.alibaba.com>
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231214123304.34087-4-tianruidong@linux.alibaba.com>
+In-Reply-To: <20231214123304.34087-3-tianruidong@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 14/12/2023 12:33, Ruidong Tian wrote:
-> arm-cs-trace-disasm ignore disam the first branch sample, For example as
-> follow, the instructions beteween 0x0000ffffae878750 and
-> 0x0000ffffae878754 is lose:
-> 
->   ARM CoreSight Trace Data Assembler Dump
->   Event type: branches:uH
->   Sample = { cpu: 0000 addr: 0x0000ffffae878750 phys_addr: 0x0000000000000000 ip: 0x0000000000000000 pid: 4003489 tid: 4003489 period: 1 time: 26765151766034 }
->   Event type: branches:uH
->   Sample = { cpu: 0000 addr: 0x0000000000000000 phys_addr: 0x0000000000000000 ip: 0x0000ffffae878754 pid: 4003489 tid: 4003489 period: 1 time: 26765151766034 }
-> 
-> Initialize cpu_data earlier to fix it:
-> 
->   ARM CoreSight Trace Data Assembler Dump
->   Event type: branches:uH
->   Sample = { cpu: 0000 addr: 0x0000000000000000 phys_addr: 0x0000000000000000 ip: 0x0000ffffae878754 pid: 4003489 tid: 4003489 period: 1 time: 26765151766034 }
->         0000000000028740 <ioctl>: (base address is 0x0000ffffae850000)
->            28750: b13ffc1f      cmn     x0, #4095
->            28754: 54000042      b.hs    0x2875c <ioctl+0x1c>
->             test 4003489/4003489 [0000]     26765.151766034  __GI___ioctl+0x14                        /usr/lib64/libc-2.32.so
->   Event type: branches:uH
->   Sample = { cpu: 0000 addr: 0x0000ffffa67535ac phys_addr: 0x0000000000000000 ip: 0x0000000000000000 pid: 4003489 tid: 4003489 period: 1 time: 26765151766034 }
+> For exectable ELF file, which e_type is ET_EXEC, dso start address is a
+> absolute address other than offset. Just set vm_start to zero when dso
+> start is 0x400000, which means it is a exectable file.
 > 
 > Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
-
-I noticed that this is for the missing second branch sample. Technically
-the first one is also still missing, but it doesn't have the origin set,
-only the destination, so I'm not sure if we need to do anything with it,
-but the first one always looks like this:
-
-  0 [unknown] ([unknown]) =>     ffff8a3b9100 _start+0x0
-
-Followed by this one which you now generate the disassembly for:
-
-  ffff8a3b9104 _start+0x4 (ld-2.31.so) => ffff8a3b9b80 _dl_start+0x0
-
-Either way:
-
-Reviewed-by: James Clark <james.clark@arm.com>
-
 > ---
->  .../scripts/python/arm-cs-trace-disasm.py     | 21 ++++++++++---------
->  1 file changed, 11 insertions(+), 10 deletions(-)
+>  tools/perf/scripts/python/arm-cs-trace-disasm.py | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> index c9e14af5b58c..b1eb4293cbef 100755
+> index 46bf6b02eea1..c9e14af5b58c 100755
 > --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
 > +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> @@ -190,6 +190,17 @@ def process_event(param_dict):
->  	dso_end = get_optional(param_dict, "dso_map_end")
->  	symbol = get_optional(param_dict, "symbol")
+> @@ -260,8 +260,9 @@ def process_event(param_dict):
 >  
-> +	cpu = sample["cpu"]
-> +	ip = sample["ip"]
-> +	addr = sample["addr"]
-> +
-> +	# Initialize CPU data if it's empty, and directly return back
-> +	# if this is the first tracing event for this CPU.
-> +	if (cpu_data.get(str(cpu) + 'addr') == None):
-> +		cpu_data[str(cpu) + 'addr'] = addr
-> +		return
-> +
-> +
->  	if (options.verbose == True):
->  		print("Event type: %s" % name)
->  		print_sample(sample)
-> @@ -211,16 +222,6 @@ def process_event(param_dict):
->  	if (name[0:8] != "branches"):
->  		return
->  
-> -	cpu = sample["cpu"]
-> -	ip = sample["ip"]
-> -	addr = sample["addr"]
-> -
-> -	# Initialize CPU data if it's empty, and directly return back
-> -	# if this is the first tracing event for this CPU.
-> -	if (cpu_data.get(str(cpu) + 'addr') == None):
-> -		cpu_data[str(cpu) + 'addr'] = addr
-> -		return
-> -
->  	# The format for packet is:
->  	#
->  	#		  +------------+------------+------------+
+>  	if (options.objdump_name != None):
+>  		# It doesn't need to decrease virtual memory offset for disassembly
+> -		# for kernel dso, so in this case we set vm_start to zero.
+> -		if (dso == "[kernel.kallsyms]"):
+> +		# for kernel dso and executable file dso, so in this case we set
+> +		# vm_start to zero.
+> +		if (dso == "[kernel.kallsyms]" or dso_start == 0x400000):
+>  			dso_vm_start = 0
+>  		else:
+>  			dso_vm_start = int(dso_start)
+
+I confirmed that this fixes the disassembly for static binaries. It
+would have been nice to check the type of the file rather than using a
+magic number, but it's not that easy and I don't really see a chance of
+the number having a false positive.
+
+I wonder if it's worth putting a fixes tag on this one? For the other
+ones I'd say no tag as they have a chance of breaking things.
+
+Reviewed-by: James Clark <james.clark@arm.com>
