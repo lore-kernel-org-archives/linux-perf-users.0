@@ -1,89 +1,283 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEF5920B0B;
-	Wed, 20 Dec 2023 10:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1A9D1FB;
-	Wed, 20 Dec 2023 02:45:36 -0800 (PST)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 779FD3F5A1;
-	Wed, 20 Dec 2023 02:44:50 -0800 (PST)
-Message-ID: <912a39f4-025e-26a1-7786-091fa211f293@arm.com>
-Date: Wed, 20 Dec 2023 10:44:49 +0000
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E4220DE9;
+	Wed, 20 Dec 2023 10:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hdb/oMG9"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cd8879ce18so1627257a12.1;
+        Wed, 20 Dec 2023 02:49:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703069381; x=1703674181; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fNe7/7PjZgY15q6Jp1KOAZsdGe4j9dnjuvT94arAU8E=;
+        b=Hdb/oMG9GjziivLfcuYWqcBsHdbnnWx1Gz0GdUh4I1NSl6Hq4xQ7jF7y0vbRGJzxRs
+         A01TL7b3SYZYPjJ8aLj4sewhbdy3xT4qu49txss1OspRiDRNsvrxI63fUH7iaqNpfOKt
+         fpPLrcGQeJioM5VgOjS20wxX7t7j6DKgW3K8zgASfT8eWt7+o1d+dutymzW6+X6BTlI7
+         e/4vQQTF8+T9rGV1CxHZMWGyfyraMaxgOxrRYOGzJ9bHqR8v+L3pH8u3NF90BXW50nme
+         zerNvji+BTPdNSfFs510J63/Uq+YLDJsLTlEHYT2eVoDEGxpa+1jZDLRAw5SJ/tBu98K
+         ee1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703069381; x=1703674181;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fNe7/7PjZgY15q6Jp1KOAZsdGe4j9dnjuvT94arAU8E=;
+        b=tH75ICfZf/QhQiNDPLaTkc9MCPd5n0sCvQwYDAFp2ijnOYQibwZgNI3xSRkrpsRSeR
+         2I7tiOjhsA8dL46NCNtqSwxEJ0mpCOMA4GznOv7KYkF4Vl4CucZoRyrQd6MHDPnKa0dM
+         Lo/V3dMIs0vlnI0aYJoGVJnJu3pkpdsXmAr1qGlvSG4NvcNais0N626VBKtSH3uhvkQY
+         wbwkJqdt5wubj+C6bGq9iB+LXDRWMvvMk+ChfoW70X3advaOCt9PgWk/dLJZmXaL6bmS
+         Yt2nZVyhG/wg2ThtGoadcgDymnYpW6kkzMMi5Ie1ZNU7mjYeVyST75y/dmRwUwOhzpT6
+         ASSg==
+X-Gm-Message-State: AOJu0Yx4VDu8J+f+rTvl7NDKCt9J2NA0P1oAaIAadyT0PCwM3ZwggBIS
+	vtuuyU22sztpKNca7u2jDDd/5mp72BHGqdRWgjs=
+X-Google-Smtp-Source: AGHT+IE85wPJVB1skRf3yOzFc3+Ajr56AWG+z2Ot2LGrho/y90qhWZBo1I6L3mQ2PmxZtgkl4a2gTjDsMRncXiauCNc=
+X-Received: by 2002:a05:6a20:13cc:b0:190:2c2f:7df9 with SMTP id
+ ho12-20020a056a2013cc00b001902c2f7df9mr8991819pzc.64.1703069380595; Wed, 20
+ Dec 2023 02:49:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 1/3] perf scripts python: arm-cs-trace-disasm.py: print
- dso base address
-To: Ruidong Tian <tianruidong@linux.alibaba.com>, linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com,
- mike.leach@linaro.org, alexander.shishkin@linux.intel.com,
- linux-arm-kernel@lists.infradead.org, adrian.hunter@intel.com,
- linux-perf-users@vger.kernel.org, leo.yan@linaro.org, al.grant@arm.com,
- mathieu.poirier@linaro.org, tor@ti.com, acme@redhat.com
-References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
- <20231214123304.34087-2-tianruidong@linux.alibaba.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20231214123304.34087-2-tianruidong@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: xingwei lee <xrivendell7@gmail.com>
+Date: Wed, 20 Dec 2023 18:49:29 +0800
+Message-ID: <CABOYnLzNFD_mf5cY1h8iLnVcTz9Bx14Z6t=9+nbQCPSsTC-5ag@mail.gmail.com>
+Subject: Re: [syzbot] [perf?] WARNING in perf_event_open
+To: syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello, I reproduced this bug with repro.c and repro.txt with the same
+configure in syzbot and comfiled this bug in the lastest
+mainline/net/bpf
 
+bpd-next kernel: 441c725ed592cb22f2a82f2827dccd045356cc81
+kernel config: https://syzkaller.appspot.com/x/.config?x=8f565e10f0b1e1fc
+compiler: gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+and I also notice it maybe the same bug as
+https://lore.kernel.org/all/ZXpm6gQ%2Fd59jGsuW@xpf.sh.intel.com/
 
-On 14/12/2023 12:33, Ruidong Tian wrote:
-> arm-cs-trace-disasm just print offset for library dso:
-> 
-> 	0000000000002200 <memcpy>:
->             2200: d503201f      nop
->             2204: 8b020024      add     x4, x1, x2
->             2208: 8b020005      add     x5, x0, x2
-> 
-> This print DSO base address to get complete virtual address for
-> userspace application:
-> 
-> 	0000000000002200 <memcpy>: (base address is 0x0000ffffb4c21000)
->             2200: d503201f      nop
->             2204: 8b020024      add     x4, x1, x2
->             2208: 8b020005      add     x5, x0, x2
-> 
+Anyway
 
-I believe the output format without the base address is consistent with
-objdump. For compatibility I would say that it's better to keep it that way.
+=* repro.c =*
+// autogenerated by syzkaller (https://github.com/google/syzkaller)
 
-We could add this as an option, but have it disabled by default. I
-suppose it depends how likely that someone is using this output in a
-tool and processing it further whether an option is needed or not.
+#define _GNU_SOURCE
 
-Although it's also not that clear what this is useful for, given that
-all the other output is relative too? Maybe you could add an example to
-the commit message, even if it's just for debugging. Would an option
-that turned _all_ the output into virtual addresses not be more useful?
+#include <dirent.h>
+#include <endian.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/prctl.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
 
-Thanks
-James
+static void sleep_ms(uint64_t ms) { usleep(ms * 1000); }
 
-> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
-> ---
->  tools/perf/scripts/python/arm-cs-trace-disasm.py | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> index d59ff53f1d94..46bf6b02eea1 100755
-> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> @@ -108,6 +108,8 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
->  			m = disasm_re.search(line)
->  			if m is None:
->  				continue
-> +		else:
-> +			line += " (base address is 0x%016x)" % dso_start
->  		print("\t" + line)
->  
->  def print_sample(sample):
+static uint64_t current_time_ms(void) {
+ struct timespec ts;
+ if (clock_gettime(CLOCK_MONOTONIC, &ts)) exit(1);
+ return (uint64_t)ts.tv_sec * 1000 + (uint64_t)ts.tv_nsec / 1000000;
+}
+
+#define BITMASK(bf_off, bf_len) (((1ull << (bf_len)) - 1) << (bf_off))
+#define STORE_BY_BITMASK(type, htobe, addr, val, bf_off, bf_len)     \
+ *(type*)(addr) =                                                   \
+     htobe((htobe(*(type*)(addr)) & ~BITMASK((bf_off), (bf_len))) | \
+           (((type)(val) << (bf_off)) & BITMASK((bf_off), (bf_len))))
+
+static bool write_file(const char* file, const char* what, ...) {
+ char buf[1024];
+ va_list args;
+ va_start(args, what);
+ vsnprintf(buf, sizeof(buf), what, args);
+ va_end(args);
+ buf[sizeof(buf) - 1] = 0;
+ int len = strlen(buf);
+ int fd = open(file, O_WRONLY | O_CLOEXEC);
+ if (fd == -1) return false;
+ if (write(fd, buf, len) != len) {
+   int err = errno;
+   close(fd);
+   errno = err;
+   return false;
+ }
+ close(fd);
+ return true;
+}
+
+static void kill_and_wait(int pid, int* status) {
+ kill(-pid, SIGKILL);
+ kill(pid, SIGKILL);
+ for (int i = 0; i < 100; i++) {
+   if (waitpid(-1, status, WNOHANG | __WALL) == pid) return;
+   usleep(1000);
+ }
+ DIR* dir = opendir("/sys/fs/fuse/connections");
+ if (dir) {
+   for (;;) {
+     struct dirent* ent = readdir(dir);
+     if (!ent) break;
+     if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
+       continue;
+     char abort[300];
+     snprintf(abort, sizeof(abort), "/sys/fs/fuse/connections/%s/abort",
+              ent->d_name);
+     int fd = open(abort, O_WRONLY);
+     if (fd == -1) {
+       continue;
+     }
+     if (write(fd, abort, 1) < 0) {
+     }
+     close(fd);
+   }
+   closedir(dir);
+ } else {
+ }
+ while (waitpid(-1, status, __WALL) != pid) {
+ }
+}
+
+static void setup_test() {
+ prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
+ setpgrp();
+ write_file("/proc/self/oom_score_adj", "1000");
+}
+
+static void execute_one(void);
+
+#define WAIT_FLAGS __WALL
+
+static void loop(void) {
+ int iter = 0;
+ for (;; iter++) {
+   int pid = fork();
+   if (pid < 0) exit(1);
+   if (pid == 0) {
+     setup_test();
+     execute_one();
+     exit(0);
+   }
+   int status = 0;
+   uint64_t start = current_time_ms();
+   for (;;) {
+     if (waitpid(-1, &status, WNOHANG | WAIT_FLAGS) == pid) break;
+     sleep_ms(1);
+     if (current_time_ms() - start < 5000) continue;
+     kill_and_wait(pid, &status);
+     break;
+   }
+ }
+}
+
+void execute_one(void) {
+ *(uint32_t*)0x2001d000 = 1;
+ *(uint32_t*)0x2001d004 = 0x80;
+ *(uint8_t*)0x2001d008 = 0;
+ *(uint8_t*)0x2001d009 = 0;
+ *(uint8_t*)0x2001d00a = 0;
+ *(uint8_t*)0x2001d00b = 0;
+ *(uint32_t*)0x2001d00c = 0;
+ *(uint64_t*)0x2001d010 = 0x7f;
+ *(uint64_t*)0x2001d018 = 0;
+ *(uint64_t*)0x2001d020 = 0;
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 0, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 1, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 2, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 3, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 4, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 5, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 6, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 7, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 8, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 9, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 10, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 11, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 12, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 13, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 14, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 15, 2);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 17, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 18, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 19, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 20, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 21, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 22, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 23, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 24, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 25, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 26, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 27, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 28, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 29, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 30, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 31, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 32, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 33, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 34, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 35, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 36, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 37, 1);
+ STORE_BY_BITMASK(uint64_t, , 0x2001d028, 0, 38, 26);
+ *(uint32_t*)0x2001d030 = 0;
+ *(uint32_t*)0x2001d034 = 0;
+ *(uint64_t*)0x2001d038 = 0;
+ *(uint64_t*)0x2001d040 = 0;
+ *(uint64_t*)0x2001d048 = 0;
+ *(uint64_t*)0x2001d050 = 0;
+ *(uint32_t*)0x2001d058 = 0;
+ *(uint32_t*)0x2001d05c = 0;
+ *(uint64_t*)0x2001d060 = 0;
+ *(uint32_t*)0x2001d068 = 0;
+ *(uint16_t*)0x2001d06c = 0;
+ *(uint16_t*)0x2001d06e = 0;
+ *(uint32_t*)0x2001d070 = 0;
+ *(uint32_t*)0x2001d074 = 0;
+ *(uint64_t*)0x2001d078 = 0;
+ syscall(__NR_perf_event_open, /*attr=*/0x2001d000ul, /*pid=*/0, /*cpu=*/-1,
+         /*group=*/-1, /*flags=*/0ul);
+}
+int main(void) {
+ syscall(__NR_mmap, /*addr=*/0x1ffff000ul, /*len=*/0x1000ul, /*prot=*/0ul,
+         /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
+ syscall(__NR_mmap, /*addr=*/0x20000000ul, /*len=*/0x1000000ul, /*prot=*/7ul,
+         /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
+ syscall(__NR_mmap, /*addr=*/0x21000000ul, /*len=*/0x1000ul, /*prot=*/0ul,
+         /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
+ loop();
+ return 0;
+}
+
+=* repro.txt =*
+perf_event_open(&(0x7f000001d000)={0x1, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0,
+0x7f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+0x0, @perf_bp={0x0}}, 0x0, 0xffffffffffffffff, 0xffffffffffffffff,
+0x0)
+
+and also https://gist.github.com/xrivendell7/128e198d8ff27d003998b4f0cc19bb74
+
+I hope it helps.
+Thanks!
+Best regards.
+xingwei Lee
