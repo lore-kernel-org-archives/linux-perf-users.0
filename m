@@ -1,25 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC9547A7B;
-	Wed, 20 Dec 2023 17:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99277481B0;
+	Wed, 20 Dec 2023 18:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CKbAcoGz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC888C433C7;
-	Wed, 20 Dec 2023 17:46:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aY21/BNr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5002C433C8;
+	Wed, 20 Dec 2023 18:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703094417;
-	bh=opcchTdVvorA43TVftLO5IxlAfT039kjEflnPjuH/yE=;
+	s=k20201202; t=1703095675;
+	bh=2K0Vk/aHwTr1UIR4EyDGZvUHGt2peKc8TKVMqrd/yQ0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CKbAcoGzRC50Hp/RgtXRUXMlRMStCloK1hAcMHh75iRxASUIxiS/X3s0gxNfh6rH6
-	 9ub0fySkawyBE8bpCA0MHSibwrCdQFHhdfk7uJSQr4VoFfTrhYJlSvsMBZB7aOGD8s
-	 Kot7VPF7udwrybq81cRD3BqlcUGcgA4eEwh/1A0/fX58vBWlNujnISbxP3/9vRmXzT
-	 ELVXMX3QUVrATkW4MW6aKBKvMuv2i5w1seH2K2uStNLQqVL/6pEcHiikxoAJECJyB8
-	 wSOqAekGo+BUIghGKAMAo9WeE7s+t0ay3rHLZU/BU62z+KCA35ALcKIWXeoeQOfoIY
-	 simuxCDDhll3g==
+	b=aY21/BNrQSxz5xRBgl9iifwLMI9tPSHeG2H3+G5NoVZSl+S5QBcyKkdR+1NPtKn2+
+	 Rrxzar+Y9lb2Ahak17saiDfGP19AdL2fT/uQyIAGRtOAwoGYCKQVQH7ogEUu4Rbb0N
+	 wPkn18upIviEXj0a8oNhlaM4WJDkgaHdshZA6hGIzvs9ANc601Tz54XMKmxW6qzyCv
+	 YU+QczfHJxIZrWp0/4UuxrHc0IqTHIS17JPYxZKYVeO9jQBsDHo2Fc3gPxauxMcvUE
+	 jrBmXXMcjxJ4egOhYG3YVuPo87kBsYlHAd76ArnIO9dP7rrr3uGBxTZ3sBioHmZqf9
+	 pkGkIPIsnKxFA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 2DCFF403EF; Wed, 20 Dec 2023 14:46:54 -0300 (-03)
-Date: Wed, 20 Dec 2023 14:46:54 -0300
+	id 9ED42403EF; Wed, 20 Dec 2023 15:07:52 -0300 (-03)
+Date: Wed, 20 Dec 2023 15:07:52 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -53,10 +53,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	Guilherme Amadio <amadio@gentoo.org>
 Subject: Re: [PATCH v6 00/47] maps/threads/dsos memory improvements and fixes
-Message-ID: <ZYMojok9x1DpbWUE@kernel.org>
+Message-ID: <ZYMteNzcRzNml5Qg@kernel.org>
 References: <20231207011722.1220634-1-irogers@google.com>
  <ZYCxURwlu7Rld-IW@kernel.org>
  <ZYDxdD_BsHbntVvz@kernel.org>
+ <ZYMojok9x1DpbWUE@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,39 +66,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZYDxdD_BsHbntVvz@kernel.org>
+In-Reply-To: <ZYMojok9x1DpbWUE@kernel.org>
 X-Url: http://acmel.wordpress.com
 
-Em Mon, Dec 18, 2023 at 10:27:16PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Dec 18, 2023 at 05:53:37PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, Dec 06, 2023 at 05:16:34PM -0800, Ian Rogers escreveu:
-> > > v6:
-> > >  - Patch 1 is a parameter name fix requested by Namhyung.
-> > >  - Patches 2 to 13 split apart a macro to function callback refactor
-> > >    requested by Arnaldo.
-> > >  - Add fixes and acked-by to later patches from Namhyung.
-> > 
-> > Applied 1-10, 11 is failing, I'll try to resolve if you don't do it
-> > first.
-> > 
-> > This should be in tmp.perf-tools-next soon
-> 
-> This is all in perf-tools-next/perf-tools-next, merged with
-> torvalds/master, which made some of the tests (e.g. "perf list" IIRC) to
-> stop failing, something that went via perf-tools for v6.7.
-> 
-> Please refresh this series and any other that you may have outstanding
-> on top of that.
-> 
-> I'll continue processing patches and will try to help with refreshing as
-> soon as I can.
+Em Wed, Dec 20, 2023 at 02:46:54PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, Dec 18, 2023 at 10:27:16PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > This is all in perf-tools-next/perf-tools-next, merged with
+> > torvalds/master, which made some of the tests (e.g. "perf list" IIRC) to
+> > stop failing, something that went via perf-tools for v6.7.
 
+> > Please refresh this series and any other that you may have outstanding
+> > on top of that.
 
+> > I'll continue processing patches and will try to help with refreshing as
+> > soon as I can.
 
-11/47 was failing due to a trivial conflict with:
+> 11/47 was failing due to a trivial conflict with:
 
-4fb54994b2360ab5 ("perf unwind-libunwind: Fix base address for .eh_frame")
+> 4fb54994b2360ab5 ("perf unwind-libunwind: Fix base address for .eh_frame")
 
-Fixed up, continuing...
+> Fixed up, continuing...
+
+applied up to 22/47, will review from them on later, after what has been
+merged so far has some time in linux-next.
 
 - Arnaldo
