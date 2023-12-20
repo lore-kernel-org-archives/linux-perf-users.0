@@ -1,75 +1,122 @@
-Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.154.197.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A97125DA;
-	Wed, 20 Dec 2023 06:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp80t1703054733t6c8lpb8
-Received: from HX01040022.powercore.com.cn ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 20 Dec 2023 14:45:31 +0800 (CST)
-X-QQ-SSF: A1400000000000B0B000000A0000000
-X-QQ-FEAT: 4g9JbZ7lBbHk//+iFLQFeZT7naV0p2I3/OTu2SuW+MEM2i23F4cj5uzQ6v9NH
-	ONfSW+jaJuU/YsDFttbpPfosiGMkuHDbhGRH77alkM6iRj5390UDG/tNlhN5JC9fEQ5a18h
-	bhrHc34X6RKFmagfpyMKH5sY3NG/lqVu/6+c5hNuDU/EfpGk+00gIZ7nfMGt4SYtBr7DpgC
-	kS4IiR7b1KEnSpHRtoBvN7YXFxxr9R+PqLU8h2BDS6nVfvdt4I8+mfE4CjlvBdlmMP3MRG0
-	wLuS/i18dspWhnu7byy6DIJqFMUZ/bTIcgxRihlAKBc4zNl9zcirZslWA2ZZia64b3/Y/pb
-	9lo8gkrwRXPDBUKxnwq19QVhfU0h9tc5whuNGmnPqXiFk6ZDlPx0bqevlOakZIUgZ4kcEaF
-	x/yAXMtJA0V5PzXNtKOM1w==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 4118759023636609196
-From: "JiaLong.Yang" <jialong.yang@shingroup.cn>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: 2738078698@qq.com,
-	"JiaLong.Yang" <jialong.yang@shingroup.cn>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/perf: PVN for HX-C2000 CPU with Power8 Architecture
-Date: Wed, 20 Dec 2023 14:45:17 +0800
-Message-Id: <20231220064518.16285-1-jialong.yang@shingroup.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FACA20DD2
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Dec 2023 10:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-35f49926297so81443865ab.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Dec 2023 02:01:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703066485; x=1703671285;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OsQ6ErNzgNNrVVuDT54IjGEFY8eRo6Uqt7+OdHX/zF0=;
+        b=EKw8CJKd/nj99njLMzOJn3NN3yOAwC7/os+ReTFInHVigUEcMRDYiLjDd7ZWgopwJE
+         9l1dNpB6+WhETuoY2pqZBkk0L6deSN92Ntdi+RgvinGPN35pKihYbWI/+zetTh1hGaW7
+         t4GgUdz9cJWobLsxwMCUhFT73p8H8PijuVoXz/GhpRos9v8BlOzxHmtb+QdFPWfwq+8n
+         cv6iz4b4abxcBhrHl1qB1H2KFPsW72K0R7dPjr5et4RpsFZpvq7YMy6WpzSUMBjhaQ3x
+         vVKZlXpU0e9DckqtpUIdcfIDb2XGLJw6WCGHZXQcZoBMuBqbgMfuckhw+jWFvE1HURpZ
+         tazw==
+X-Gm-Message-State: AOJu0YwHmyRuOx0IXkWDySjFWuo2f09JcNB/8kBq5LYE04lXU6OsiEex
+	BOq1/jpueYQPJWhpKylitur09DoiQSpWvYYf49BwMFccj/a+
+X-Google-Smtp-Source: AGHT+IG5g/6KURzc6dFEf5ixBSIkefT2Gbyw+fETSPEut4fNx188Ul+HE7C8F3B6y0dOdUcHltKzpMy0WwrKcApz9TFBoTUVfUxG
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+X-Received: by 2002:a92:1e06:0:b0:35f:4dfd:c224 with SMTP id
+ e6-20020a921e06000000b0035f4dfdc224mr1156581ile.0.1703066485653; Wed, 20 Dec
+ 2023 02:01:25 -0800 (PST)
+Date: Wed, 20 Dec 2023 02:01:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e8099a060cee1003@google.com>
+Subject: [syzbot] [perf?] WARNING in perf_event_open
+From: syzbot <syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-HX-C2000 is a new CPU made by HEXIN Technologies Co., Ltd. And a new
-PVN 0x0066 has been applied from the OpenPower Community for this CPU. Here is
-a patch to make perf tool run in the CPU.
+Hello,
 
-Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
-Link: https://lore.kernel.org/all/20231129075845.57976-1-ke.zhao@shingroup.cn/
+syzbot found the following issue on:
+
+HEAD commit:    441c725ed592 selftests/bpf: Close cgrp fd before calling c..
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1444d11ae80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f565e10f0b1e1fc
+dashboard link: https://syzkaller.appspot.com/bug?extid=07144c543a5c002c7305
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/8b0f45da11b1/disk-441c725e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2a5034980240/vmlinux-441c725e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2daadb549a4c/bzImage-441c725e.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5193 at kernel/events/core.c:1950 perf_event_validate_size kernel/events/core.c:1950 [inline]
+WARNING: CPU: 1 PID: 5193 at kernel/events/core.c:1950 __do_sys_perf_event_open+0x2748/0x2c70 kernel/events/core.c:12655
+Modules linked in:
+CPU: 1 PID: 5193 Comm: syz-executor.5 Not tainted 6.7.0-rc5-syzkaller-01532-g441c725ed592 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+RIP: 0010:perf_event_validate_size kernel/events/core.c:1950 [inline]
+RIP: 0010:__do_sys_perf_event_open+0x2748/0x2c70 kernel/events/core.c:12655
+Code: ff 48 8d b8 a8 00 00 00 e8 85 0a cf 08 bf 01 00 00 00 89 c3 89 c6 e8 77 74 d5 ff 83 eb 01 0f 84 2d ed ff ff e8 f9 78 d5 ff 90 <0f> 0b 90 e9 1f ed ff ff e8 eb 78 d5 ff be 03 00 00 00 48 89 ef e8
+RSP: 0018:ffffc90005187d90 EFLAGS: 00010246
+RAX: 0000000000040000 RBX: 00000000ffffffff RCX: ffffc90003d11000
+RDX: 0000000000040000 RSI: ffffffff81b224a7 RDI: 0000000000000005
+RBP: ffff888077570000 R08: 0000000000000005 R09: 0000000000000001
+R10: 0000000000000000 R11: ffffffff915e51d0 R12: ffff8880291ffb00
+R13: 1ffff92000a30fbd R14: ffff88807a94d940 R15: ffff888077570000
+FS:  00007fa10795c6c0(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000002a097000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+RIP: 0033:0x7fa106c7cbe9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fa10795c0c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00007fa106d9bf80 RCX: 00007fa106c7cbe9
+RDX: ffffffffffffffff RSI: 0000000000000000 RDI: 0000000020000000
+RBP: 00007fa106cc847a R08: 0000000000000001 R09: 0000000000000000
+R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007fa106d9bf80 R15: 00007fff36da3b98
+ </TASK>
+
+
 ---
- tools/perf/pmu-events/arch/powerpc/mapfile.csv | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-index f4908af7ad66..599a588dbeb4 100644
---- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-@@ -11,8 +11,7 @@
- #
- # Multiple PVRs could map to a single JSON file.
- #
--
--# Power8 entries
- 0x004[bcd][[:xdigit:]]{4},1,power8,core
-+0x0066[[:xdigit:]]{4},1,power8,core
- 0x004e[[:xdigit:]]{4},1,power9,core
- 0x0080[[:xdigit:]]{4},1,power10,core
--- 
-2.25.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
