@@ -1,93 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99277481B0;
-	Wed, 20 Dec 2023 18:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aY21/BNr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5002C433C8;
-	Wed, 20 Dec 2023 18:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703095675;
-	bh=2K0Vk/aHwTr1UIR4EyDGZvUHGt2peKc8TKVMqrd/yQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aY21/BNrQSxz5xRBgl9iifwLMI9tPSHeG2H3+G5NoVZSl+S5QBcyKkdR+1NPtKn2+
-	 Rrxzar+Y9lb2Ahak17saiDfGP19AdL2fT/uQyIAGRtOAwoGYCKQVQH7ogEUu4Rbb0N
-	 wPkn18upIviEXj0a8oNhlaM4WJDkgaHdshZA6hGIzvs9ANc601Tz54XMKmxW6qzyCv
-	 YU+QczfHJxIZrWp0/4UuxrHc0IqTHIS17JPYxZKYVeO9jQBsDHo2Fc3gPxauxMcvUE
-	 jrBmXXMcjxJ4egOhYG3YVuPo87kBsYlHAd76ArnIO9dP7rrr3uGBxTZ3sBioHmZqf9
-	 pkGkIPIsnKxFA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 9ED42403EF; Wed, 20 Dec 2023 15:07:52 -0300 (-03)
-Date: Wed, 20 Dec 2023 15:07:52 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D544DBA29;
+	Thu, 21 Dec 2023 06:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp89t1703138658te87spac
+Received: from HX01040022.powercore.com.cn ( [223.112.234.130])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 21 Dec 2023 14:04:16 +0800 (CST)
+X-QQ-SSF: 01400000000000B0B000000A0000000
+X-QQ-FEAT: J5JfekO1Wsjz5NyORLhPTRxZaCE3ofmeLpw7waOCn0XanAKdVpbp6hjumU7+6
+	9tm+uoKbGjbWvocQsCJQqDgCb6NdSwtUoXMRpF0EUIhsTAekCAhL43wbcyg11T6OLZFBJWy
+	7LFfKCTEAFaCKUdAxRVtF8Rg3D00GuLvJvCbFeG1pQTebdrOBp3RRKEUibkaMx1JtQaMGhI
+	L5kNuPOoBudZBpYBfWj7mXMQN+dYU77jMzQjTn5rSRyTG1jrGEdDq9hQODtoX1v/oRauH5L
+	8DWsXqbDttDtBfccK3cGTpqKd36Mag8FRuqGWA+J3cQXBNcNB9rtJKX9Qi3fxCE3QYuub9B
+	c4O8w/eGUdq/ZIrtVbstgRJ9OSnEtx8qggpf5zB7FxrplQVnAyI/pgwd4oskx4QuAiz99w/
+	FcaZnt1NLoeDIQvLrrB4fQ==
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 4835634459533132483
+From: "JiaLong.Yang" <jialong.yang@shingroup.cn>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nick Terrell <terrelln@fb.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Vincent Whitchurch <vincent.whitchurch@axis.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Liam Howlett <liam.howlett@oracle.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Ming Wang <wangming01@loongson.cn>,
-	James Clark <james.clark@arm.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Leo Yan <leo.yan@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
-	German Gomez <german.gomez@arm.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	liuwenyu <liuwenyu7@huawei.com>, linux-kernel@vger.kernel.org,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: shenghui.qu@shingroup.cn,
+	ke.zhao@shingroup.cn,
+	zhijie.ren@shingroup.cn,
+	"JiaLong.Yang" <jialong.yang@shingroup.cn>,
 	linux-perf-users@vger.kernel.org,
-	Guilherme Amadio <amadio@gentoo.org>
-Subject: Re: [PATCH v6 00/47] maps/threads/dsos memory improvements and fixes
-Message-ID: <ZYMteNzcRzNml5Qg@kernel.org>
-References: <20231207011722.1220634-1-irogers@google.com>
- <ZYCxURwlu7Rld-IW@kernel.org>
- <ZYDxdD_BsHbntVvz@kernel.org>
- <ZYMojok9x1DpbWUE@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V0 RESEND] tools/perf: Add PVN for HX-C2000 CPU with Power8 Architecture
+Date: Thu, 21 Dec 2023 14:02:41 +0800
+Message-Id: <20231221060242.4532-1-jialong.yang@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZYMojok9x1DpbWUE@kernel.org>
-X-Url: http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-Em Wed, Dec 20, 2023 at 02:46:54PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Dec 18, 2023 at 10:27:16PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > This is all in perf-tools-next/perf-tools-next, merged with
-> > torvalds/master, which made some of the tests (e.g. "perf list" IIRC) to
-> > stop failing, something that went via perf-tools for v6.7.
+HX-C2000 is a new CPU made by HEXIN Technologies Co., Ltd. And a new
+PVN 0x0066 has been applied from the OpenPower Community for this CPU. Here is
+a patch to make perf tool run in the CPU.
 
-> > Please refresh this series and any other that you may have outstanding
-> > on top of that.
+Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
+---
+Here tells detail info.
+Link: https://lore.kernel.org/all/20231129075845.57976-1-ke.zhao@shingroup.cn/
 
-> > I'll continue processing patches and will try to help with refreshing as
-> > soon as I can.
+ tools/perf/pmu-events/arch/powerpc/mapfile.csv | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> 11/47 was failing due to a trivial conflict with:
+diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+index f4908af7ad66..599a588dbeb4 100644
+--- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
++++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+@@ -11,8 +11,7 @@
+ #
+ # Multiple PVRs could map to a single JSON file.
+ #
+-
+-# Power8 entries
+ 0x004[bcd][[:xdigit:]]{4},1,power8,core
++0x0066[[:xdigit:]]{4},1,power8,core
+ 0x004e[[:xdigit:]]{4},1,power9,core
+ 0x0080[[:xdigit:]]{4},1,power10,core
+-- 
+2.25.1
 
-> 4fb54994b2360ab5 ("perf unwind-libunwind: Fix base address for .eh_frame")
-
-> Fixed up, continuing...
-
-applied up to 22/47, will review from them on later, after what has been
-merged so far has some time in linux-next.
-
-- Arnaldo
