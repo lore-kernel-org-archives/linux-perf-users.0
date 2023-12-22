@@ -1,73 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152D976DC7;
-	Thu, 21 Dec 2023 20:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qnVf6Zcc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC38C433C8;
-	Thu, 21 Dec 2023 20:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703190767;
-	bh=SWGQ3MvJU+mQrrOMqKF9T8oXRlNV4a/s4URQh77R0iY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qnVf6ZccmMRLDXiuXjxoUqdQGEQAOt/UZDgfzk3uw/fWvORsbwnBN4sc93SICdqOm
-	 j4a9ZAxBkVXiX0bLsU9mcoZ2Xt22s2gTRBPVDkxW/xcna2HpumyG60AuLilw4f/koB
-	 8i7eAPIkeLGMDBx1sVXZOKErx9TVHAueMVUkmiznKXobyk5rljxV5gzx+fB9TFZC98
-	 bgwYfJN6fvYAlFb9ypFreSQe7OCQptqkthdR5Kkja/feNIMb50OVnd/djidvPAteVr
-	 bpd6kQ/1WPy3KjbYuUNJv0OIJ2xFGZisL4c1uWFTuj66Z8V7YtRWqoyZQSF33wrJZr
-	 nF7Yy6aHv2LBA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id AB28D403EF; Thu, 21 Dec 2023 17:32:44 -0300 (-03)
-Date: Thu, 21 Dec 2023 17:32:44 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andi Kleen <ak@linux.intel.com>, linux-trace-devel@vger.kernel.org,
-	linux-toolchains@vger.kernel.org
-Subject: Re: [PATCH 13/52] perf annotate-data: Add dso->data_types tree
-Message-ID: <ZYSg7EO0j4y2z5LB@kernel.org>
-References: <20231110000012.3538610-1-namhyung@kernel.org>
- <20231110000012.3538610-14-namhyung@kernel.org>
- <ZYSbzZv-Y-j0_feZ@kernel.org>
- <ZYScVwzbviHyVFHb@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB068F7A;
+	Fri, 22 Dec 2023 07:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vz-.EL1_1703230160;
+Received: from 30.221.133.134(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0Vz-.EL1_1703230160)
+          by smtp.aliyun-inc.com;
+          Fri, 22 Dec 2023 15:29:22 +0800
+Message-ID: <6177beec-f140-44aa-b534-182cd4b0a988@linux.alibaba.com>
+Date: Fri, 22 Dec 2023 15:29:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZYScVwzbviHyVFHb@kernel.org>
-X-Url: http://acmel.wordpress.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] perf scripts python: arm-cs-trace-disasm.py: print
+ dso base address
+Content-Language: en-US
+To: James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
+Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com,
+ mike.leach@linaro.org, alexander.shishkin@linux.intel.com,
+ linux-arm-kernel@lists.infradead.org, adrian.hunter@intel.com,
+ linux-perf-users@vger.kernel.org, leo.yan@linaro.org, al.grant@arm.com,
+ mathieu.poirier@linaro.org, tor@ti.com, acme@redhat.com
+References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
+ <20231214123304.34087-2-tianruidong@linux.alibaba.com>
+ <912a39f4-025e-26a1-7786-091fa211f293@arm.com>
+From: Ruidong Tian <tianruidong@linux.alibaba.com>
+In-Reply-To: <912a39f4-025e-26a1-7786-091fa211f293@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Em Thu, Dec 21, 2023 at 05:13:11PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > At some point we need to make these feature specific members to be
-> > associated on demand, maybe thru some hash table, etc.
+Hi James
 
-> > I.e. the most basic workflow, what everybody needs should be in 'struct
-> > dso', something one _may_ want, like data profiling, should be in
-> > associated with that DSO thru some other way.
-
-> > I'm applying this now as this is a super cool feature, but think about
-> > it.
-
-> I think I have this series applied up to this patch, the next one is not
-> applying cleanly, so I'll do the usual set of build tests so that I can
-> push this for linux-next consumption.
-
-> This should be on tmp.perf-tools-next in a few jiffies, in
-> perf-tools-next a bit later.
-
-Ok, as discussed on google chat, I got v3, all is in my local tree,
-build testing while I review.
-
-- Arnaldo
+在 2023/12/20 18:44, James Clark 写道:
+>
+> On 14/12/2023 12:33, Ruidong Tian wrote:
+>> arm-cs-trace-disasm just print offset for library dso:
+>>
+>> 	0000000000002200 <memcpy>:
+>>              2200: d503201f      nop
+>>              2204: 8b020024      add     x4, x1, x2
+>>              2208: 8b020005      add     x5, x0, x2
+>>
+>> This print DSO base address to get complete virtual address for
+>> userspace application:
+>>
+>> 	0000000000002200 <memcpy>: (base address is 0x0000ffffb4c21000)
+>>              2200: d503201f      nop
+>>              2204: 8b020024      add     x4, x1, x2
+>>              2208: 8b020005      add     x5, x0, x2
+>>
+> I believe the output format without the base address is consistent with
+> objdump. For compatibility I would say that it's better to keep it that way.
+Sure, the output is totally corrected, i just print the base address 
+rather than modify the output address, i don't think this change is 
+incompatible.
+>
+> We could add this as an option, but have it disabled by default. I
+> suppose it depends how likely that someone is using this output in a
+> tool and processing it further whether an option is needed or not.
+I want to get the runtime trace flow with virtual address, i can get the 
+trace information with virtual address in `perf report` and `perf 
+script` by default, so i think it is more reasonable to print virtual 
+address in arm-cs-trace-disasm script by default.
+>
+> Although it's also not that clear what this is useful for, given that
+> all the other output is relative too? Maybe you could add an example to
+> the commit message, even if it's just for debugging. Would an option
+> that turned _all_ the output into virtual addresses not be more useful?
+I want to use arm-cs-trace-disasm.py output associate with PMU and SPE 
+data to explore more CPU performance info, all the PMU/SPE/Coresight 
+informations generated by `perf report` and `perf script` include 
+virtual address, so i want this script do the same thing.
+>
+> Thanks
+> James
+>
+>> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+>> ---
+>>   tools/perf/scripts/python/arm-cs-trace-disasm.py | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+>> index d59ff53f1d94..46bf6b02eea1 100755
+>> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
+>> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+>> @@ -108,6 +108,8 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
+>>   			m = disasm_re.search(line)
+>>   			if m is None:
+>>   				continue
+>> +		else:
+>> +			line += " (base address is 0x%016x)" % dso_start
+>>   		print("\t" + line)
+>>   
+>>   def print_sample(sample):
