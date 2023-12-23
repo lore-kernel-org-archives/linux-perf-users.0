@@ -1,197 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39B1DDB3;
-	Sat, 23 Dec 2023 14:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BE912E5F;
+	Sat, 23 Dec 2023 20:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8mgeZ5D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B93C433C7;
-	Sat, 23 Dec 2023 14:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703341787;
-	bh=DbsDC/W/kofPp9X/IeVozQ/JB6ecrQRtPmYHSZ05PAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C8mgeZ5DTuEot8BxbXcHyxxyk9wfoftyDDd1+PqExMQQaxOrCk7hQKwWsdrIaxVi5
-	 Xct76Pk2Fmjq/I8eElZoT95CS//s7eH8/bxwBM/09SUGGNJDeRFM0HaeZiiujgwwCr
-	 d8LnIKTzGIKtTZf/otVio+bLbUNt0z0BPVgWCDoQ7u7CvizEr2uzVLcXzPTok5Rzui
-	 CZw5S7gee0JZ5dY8ldUxWTxiAUIV6X/CkWRnLknlFtHefHqQsrgKd3KA/ROQ1fWW6U
-	 pjNbWjIB8R4O8l4f+OyjtW5yUXpd6NOth1J+M5QrlJ+5XTQuMPFMoDJ82LOEyF8Gw8
-	 EusnVRYYDWipw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id C3B3E403EF; Sat, 23 Dec 2023 11:29:43 -0300 (-03)
-Date: Sat, 23 Dec 2023 11:29:43 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andi Kleen <ak@linux.intel.com>, linux-trace-devel@vger.kernel.org,
-	linux-toolchains@vger.kernel.org
-Subject: Re: [PATCH 23/52] perf report: Add 'symoff' sort key
-Message-ID: <ZYbu1xf1G3VTfo8s@kernel.org>
-References: <20231110000012.3538610-1-namhyung@kernel.org>
- <20231110000012.3538610-24-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="kJHR+ZFF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703363420; x=1703968220; i=markus.elfring@web.de;
+	bh=CkiadlJnceiWb4wDxQjgDyAYKO3sigBrvSKQufUjwtQ=;
+	h=X-UI-Sender-Class:Date:To:From:Subject:Cc;
+	b=kJHR+ZFFUvcx4ZXEZHizmsrOcZkY5mcHXI8p0rI2tz7HBYkMqUwrIRIB9MXmQ6XV
+	 QML7/ikykymwmL5EbkL00RHOffech4O1Qd2GI1pvQPya1fTxmERvBHZMpyJ2QsG0y
+	 r0VtsG/7YnT5RwuUxByv/eWydQyHlXtlwgYSleVYoNRC0L/Ps/1cH90DROk6Freiy
+	 biOx7SiOiA8lXquf6lIxSzRm+YRcEAm/zS5ScCMkiz1jYolRHy/CZxDfCOvePuxue
+	 2CpFuWsfMr+p6psAlhtvsbS3g/b+mUN7cF4qnTAhcJC+EOVv6WauuNz/lnPNs7hQJ
+	 a5hdZq+Ryy70YE31xQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MnX17-1qpXar1c0L-00j9SN; Sat, 23
+ Dec 2023 21:30:20 +0100
+Message-ID: <5b38ce71-3c76-4efc-a688-6f2651f93b6d@web.de>
+Date: Sat, 23 Dec 2023 21:30:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231110000012.3538610-24-namhyung@kernel.org>
-X-Url: http://acmel.wordpress.com
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB
+To: linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] perf/x86/intel/pt: Return an error code only as a constant in
+ pt_pmu_hw_init()
+Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xPGwYXpbcPGu2+M0VdwPQ7SUF0a7M37z16ssBjvgoCPi+x9tAoO
+ NvQZ1g4SjMgDz4Ava3z+cL6tjUVRgCTDRTWYi5SO6+wiAmHZX6EnbAjVGCH7dW7IHiaSj3z
+ ixLweZnePPhXebrte08ntjAtgJYFTck9lLBDVlGoQyqQeDOytPBAfzQr5wchziJY2dljghN
+ iSuUCfIOO6P7BP0buSvRA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+SMfoYLuucE=;c/mPHW8OJcA3zTVCoyoYFJeALSM
+ ZvfjHlnns9cYViZmfJpVMKTY31aF2ERQpa5xEcvlV45JG935oc58SmkfMKKfoEOgbC1ZY4IXh
+ LQO16NkMeGI3PgGc5EG0LxvJYCOkTmXyYDpxVMGZlNFYdckX8gdwWjvFtGkWtyTqvskLO6aYA
+ DAwQ8+fWP/4qBps6HdOXn8LoN+cDy6b1ipjdoXby3ElBvS+i2PRnqFlqLn4VSDOmyfohWgTS0
+ 8ZaUF+RhAVQbtiUfSnz6B7kvTO9WlJMOkEYIhUxRm09UeBPJ/Tq5c0HYBdTvkrU7g+S4SOO8H
+ EnHiihcnVCSEpNjtVd+aI00BGqip06aI2lVLW+lamYW+tUkb00gKUrwF+GFhvBOPNJIMOHHmU
+ 1YFIEKC8g95QAtiEDfjGcedkQK4Gevf+jYk5owwhdtVqiOCwvp/rusG9W/oPehAUyGG10tkf0
+ +FcSKqVbrTzX6WiViXoYgY1AqVTQcww/aLc+p8fQTg4VHh6KOih94YSz5jW0674dYIiaSfxEG
+ n758oBn8MkCPcj2Wp64mbx3gYKY+B5bwHsmPXtYCvUcKC7LKu/EZEkLs5oZJEfd3NJEgj7lFi
+ aODCc5JoltK2rrHuywY4nGKA5JgNq/JVYxjnM7wr9FV0vxPER4SCo19FOBBll8nAzge1HNmhd
+ UYppXorGtr//W1AAuerUj2Hx1Ha6Lj7ECEueWLhIlxV6PU8z8AqpCxC9HtAf69G2CHSqC5ASx
+ nc47PsRqx/Vza6Sj99uXUyxqr63NC6i1JaAphwL+xq1kP1V+KkozWQdpEIe/4J5CgbHEym6YN
+ qpMjL/kccAFya8Ma+017jgPKT5Tk4i9rJa33XNWwwNdpNRrxooeoCAxvITQnfH586G2cCFYRq
+ 1R4VNboquWKAwpxhYn2OB00+VJF3E/rYx64TTh3MSZNi1xo0Zv8Yqla8/it+3MycVEsuwx9XT
+ T57zjQ==
 
-Em Thu, Nov 09, 2023 at 03:59:42PM -0800, Namhyung Kim escreveu:
-> The symoff sort key is to print symbol and offset of sample.  This is
-> useful for data type profiling to show exact instruction in the function
-> which refers the data.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 23 Dec 2023 21:06:27 +0100
 
-Cool, perhaps we can add a "symoffexcerpt" that would print a few lines
-of assembly/source before and after that offset so that we save having
-to go from there to the annotate view, or even jump to the annotate view
-when pressing 'A' (annotate) on top of that line in the TUI.
+Return an error code without storing it in an intermediate variable.
 
-- Arnaldo
- 
->   $ perf report -s type,sym,typeoff,symoff --hierarchy
->   ...
->   #       Overhead  Data Type / Symbol / Data Type Offset / Symbol Offset
->   # ..............  .....................................................
->   #
->       1.23%         struct cfs_rq
->         0.84%         update_blocked_averages
->           0.19%         struct cfs_rq +336 (leaf_cfs_rq_list.next)
->              0.19%         [k] update_blocked_averages+0x96
->           0.19%         struct cfs_rq +0 (load.weight)
->              0.14%         [k] update_blocked_averages+0x104
->              0.04%         [k] update_blocked_averages+0x31c
->           0.17%         struct cfs_rq +404 (throttle_count)
->              0.12%         [k] update_blocked_averages+0x9d
->              0.05%         [k] update_blocked_averages+0x1f9
->           0.08%         struct cfs_rq +272 (propagate)
->              0.07%         [k] update_blocked_averages+0x3d3
->              0.02%         [k] update_blocked_averages+0x45b
->   ...
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Documentation/perf-report.txt |  1 +
->  tools/perf/util/hist.h                   |  1 +
->  tools/perf/util/sort.c                   | 47 ++++++++++++++++++++++++
->  tools/perf/util/sort.h                   |  1 +
->  4 files changed, 50 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> index b57eb51b47aa..38f59ac064f7 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -120,6 +120,7 @@ OPTIONS
->  	- simd: Flags describing a SIMD operation. "e" for empty Arm SVE predicate. "p" for partial Arm SVE predicate
->  	- type: Data type of sample memory access.
->  	- typeoff: Offset in the data type of sample memory access.
-> +	- symoff: Offset in the symbol.
->  
->  	By default, comm, dso and symbol keys are used.
->  	(i.e. --sort comm,dso,symbol)
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index 941176afcebc..1ce0ee262abe 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -84,6 +84,7 @@ enum hist_column {
->  	HISTC_SIMD,
->  	HISTC_TYPE,
->  	HISTC_TYPE_OFFSET,
-> +	HISTC_SYMBOL_OFFSET,
->  	HISTC_NR_COLS, /* Last entry */
->  };
->  
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index d78e680d3988..0cbbd5ba8175 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -419,6 +419,52 @@ struct sort_entry sort_sym = {
->  	.se_width_idx	= HISTC_SYMBOL,
->  };
->  
-> +/* --sort symoff */
-> +
-> +static int64_t
-> +sort__symoff_cmp(struct hist_entry *left, struct hist_entry *right)
-> +{
-> +	int64_t ret;
-> +
-> +	ret = sort__sym_cmp(left, right);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return left->ip - right->ip;
-> +}
-> +
-> +static int64_t
-> +sort__symoff_sort(struct hist_entry *left, struct hist_entry *right)
-> +{
-> +	int64_t ret;
-> +
-> +	ret = sort__sym_sort(left, right);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return left->ip - right->ip;
-> +}
-> +
-> +static int
-> +hist_entry__symoff_snprintf(struct hist_entry *he, char *bf, size_t size, unsigned int width)
-> +{
-> +	struct symbol *sym = he->ms.sym;
-> +
-> +	if (sym == NULL)
-> +		return repsep_snprintf(bf, size, "[%c] %-#.*llx", he->level, width - 4, he->ip);
-> +
-> +	return repsep_snprintf(bf, size, "[%c] %s+0x%llx", he->level, sym->name, he->ip - sym->start);
-> +}
-> +
-> +struct sort_entry sort_sym_offset = {
-> +	.se_header	= "Symbol Offset",
-> +	.se_cmp		= sort__symoff_cmp,
-> +	.se_sort	= sort__symoff_sort,
-> +	.se_snprintf	= hist_entry__symoff_snprintf,
-> +	.se_filter	= hist_entry__sym_filter,
-> +	.se_width_idx	= HISTC_SYMBOL_OFFSET,
-> +};
-> +
->  /* --sort srcline */
->  
->  char *hist_entry__srcline(struct hist_entry *he)
-> @@ -2335,6 +2381,7 @@ static struct sort_dimension common_sort_dimensions[] = {
->  	DIM(SORT_SIMD, "simd", sort_simd),
->  	DIM(SORT_ANNOTATE_DATA_TYPE, "type", sort_type),
->  	DIM(SORT_ANNOTATE_DATA_TYPE_OFFSET, "typeoff", sort_type_offset),
-> +	DIM(SORT_SYM_OFFSET, "symoff", sort_sym_offset),
->  };
->  
->  #undef DIM
-> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> index d806adcc1e1e..6f6b4189a389 100644
-> --- a/tools/perf/util/sort.h
-> +++ b/tools/perf/util/sort.h
-> @@ -249,6 +249,7 @@ enum sort_type {
->  	SORT_SIMD,
->  	SORT_ANNOTATE_DATA_TYPE,
->  	SORT_ANNOTATE_DATA_TYPE_OFFSET,
-> +	SORT_SYM_OFFSET,
->  
->  	/* branch stack specific sort keys */
->  	__SORT_BRANCH_STACK,
-> -- 
-> 2.42.0.869.gea05f2083d-goog
-> 
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ arch/x86/events/intel/pt.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
--- 
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 8e2a12235e62..24fd18e2da34 100644
+=2D-- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -190,7 +190,6 @@ static int __init pt_pmu_hw_init(void)
+ 	struct attribute **attrs;
+ 	size_t size;
+ 	u64 reg;
+-	int ret;
+ 	long i;
 
-- Arnaldo
+ 	rdmsrl(MSR_PLATFORM_INFO, reg);
+@@ -242,11 +241,10 @@ static int __init pt_pmu_hw_init(void)
+ 			    &pt_pmu.caps[CPUID_EDX + i*PT_CPUID_REGS_NUM]);
+ 	}
+
+-	ret =3D -ENOMEM;
+ 	size =3D sizeof(struct attribute *) * (ARRAY_SIZE(pt_caps)+1);
+ 	attrs =3D kzalloc(size, GFP_KERNEL);
+ 	if (!attrs)
+-		goto fail;
++		return -ENOMEM;
+
+ 	size =3D sizeof(struct dev_ext_attribute) * (ARRAY_SIZE(pt_caps)+1);
+ 	de_attrs =3D kzalloc(size, GFP_KERNEL);
+@@ -273,8 +271,7 @@ static int __init pt_pmu_hw_init(void)
+
+ fail:
+ 	kfree(attrs);
+-
+-	return ret;
++	return -ENOMEM;
+ }
+
+ #define RTIT_CTL_CYC_PSB (RTIT_CTL_CYCLEACC	| \
+=2D-
+2.43.0
+
