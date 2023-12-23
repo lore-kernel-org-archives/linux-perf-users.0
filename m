@@ -1,101 +1,153 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB068F7A;
-	Fri, 22 Dec 2023 07:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vz-.EL1_1703230160;
-Received: from 30.221.133.134(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0Vz-.EL1_1703230160)
-          by smtp.aliyun-inc.com;
-          Fri, 22 Dec 2023 15:29:22 +0800
-Message-ID: <6177beec-f140-44aa-b534-182cd4b0a988@linux.alibaba.com>
-Date: Fri, 22 Dec 2023 15:29:18 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61310D50F;
+	Sat, 23 Dec 2023 13:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhQueJ9B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78228C433C7;
+	Sat, 23 Dec 2023 13:55:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703339751;
+	bh=0mLuBLrBHAiW0ELmlviQtOxKG1lFb2q4zh910zddwv8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=lhQueJ9BdTUXSG7DigPOrwmFPUKbPB8cDoUHtbdp5z3XUanUDAMjqa22Bih/RSzYZ
+	 C5RoFUPjHHc2egs9+xUeL9Du8CPh6tADT9xjn4B8WUjZqdiUsCy+ydy8NDpGuKEGAN
+	 zl9ph4FuqQeiUKFx6O+y4/uhOT2nr2SHHKPiJymM2VTPE3FVRzXI2KYJbit6a7VFDx
+	 z+utsJo90Zn6oSf+D8lKxnCNixJWRWuEHIx/riZrlqxDVWoZOoOPvWW9jdEy431uU8
+	 Ucr7/zlxu1dzL5amfmA7iGdNcdq7cEAVWT3MGNGn8z+ebXRbP6055nA9T3KCzndYR7
+	 wSlzZKa1JBj8w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 3D48C403EF; Sat, 23 Dec 2023 10:55:48 -0300 (-03)
+Date: Sat, 23 Dec 2023 10:55:48 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Kan Liang <kan.liang@intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: perf test hybrid failing on 14700K
+Message-ID: <ZYbm5L7tw7bdpDpE@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] perf scripts python: arm-cs-trace-disasm.py: print
- dso base address
-Content-Language: en-US
-To: James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com,
- mike.leach@linaro.org, alexander.shishkin@linux.intel.com,
- linux-arm-kernel@lists.infradead.org, adrian.hunter@intel.com,
- linux-perf-users@vger.kernel.org, leo.yan@linaro.org, al.grant@arm.com,
- mathieu.poirier@linaro.org, tor@ti.com, acme@redhat.com
-References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
- <20231214123304.34087-2-tianruidong@linux.alibaba.com>
- <912a39f4-025e-26a1-7786-091fa211f293@arm.com>
-From: Ruidong Tian <tianruidong@linux.alibaba.com>
-In-Reply-To: <912a39f4-025e-26a1-7786-091fa211f293@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url: http://acmel.wordpress.com
 
-Hi James
+Hi Kan,
 
-在 2023/12/20 18:44, James Clark 写道:
->
-> On 14/12/2023 12:33, Ruidong Tian wrote:
->> arm-cs-trace-disasm just print offset for library dso:
->>
->> 	0000000000002200 <memcpy>:
->>              2200: d503201f      nop
->>              2204: 8b020024      add     x4, x1, x2
->>              2208: 8b020005      add     x5, x0, x2
->>
->> This print DSO base address to get complete virtual address for
->> userspace application:
->>
->> 	0000000000002200 <memcpy>: (base address is 0x0000ffffb4c21000)
->>              2200: d503201f      nop
->>              2204: 8b020024      add     x4, x1, x2
->>              2208: 8b020005      add     x5, x0, x2
->>
-> I believe the output format without the base address is consistent with
-> objdump. For compatibility I would say that it's better to keep it that way.
-Sure, the output is totally corrected, i just print the base address 
-rather than modify the output address, i don't think this change is 
-incompatible.
->
-> We could add this as an option, but have it disabled by default. I
-> suppose it depends how likely that someone is using this output in a
-> tool and processing it further whether an option is needed or not.
-I want to get the runtime trace flow with virtual address, i can get the 
-trace information with virtual address in `perf report` and `perf 
-script` by default, so i think it is more reasonable to print virtual 
-address in arm-cs-trace-disasm script by default.
->
-> Although it's also not that clear what this is useful for, given that
-> all the other output is relative too? Maybe you could add an example to
-> the commit message, even if it's just for debugging. Would an option
-> that turned _all_ the output into virtual addresses not be more useful?
-I want to use arm-cs-trace-disasm.py output associate with PMU and SPE 
-data to explore more CPU performance info, all the PMU/SPE/Coresight 
-informations generated by `perf report` and `perf script` include 
-virtual address, so i want this script do the same thing.
->
-> Thanks
-> James
->
->> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
->> ---
->>   tools/perf/scripts/python/arm-cs-trace-disasm.py | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
->> index d59ff53f1d94..46bf6b02eea1 100755
->> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
->> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
->> @@ -108,6 +108,8 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
->>   			m = disasm_re.search(line)
->>   			if m is None:
->>   				continue
->> +		else:
->> +			line += " (base address is 0x%016x)" % dso_start
->>   		print("\t" + line)
->>   
->>   def print_sample(sample):
+I noticed the following problem, are you able to reproduce it?
+
+Happy solstice!
+
+- Arnaldo
+
+root@number:/home/acme/Downloads# grep "model name" -m1 /proc/cpuinfo
+model name	: Intel(R) Core(TM) i7-14700K
+root@number:/home/acme/Downloads# uname -a
+Linux number 6.6.4-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Dec  3 18:13:11 UTC 2023 x86_64 GNU/Linux
+root@number:/home/acme/Downloads# perf -vv
+perf version 6.7.rc6.g63daba4e2861
+                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
+            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+               libpfm4: [ on  ]  # HAVE_LIBPFM
+         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+root@number:/home/acme/Downloads# perf test 75
+ 75: x86 hybrid                                                      : FAILED!
+root@number:/home/acme/Downloads# perf test -v 75
+ 75: x86 hybrid                                                      :
+--- start ---
+test child forked, pid 4111587
+Using CPUID GenuineIntel-6-B7-1
+running test 0 'cpu_core/cpu-cycles/'
+FAILED arch/x86/tests/hybrid.c:30 wrong type
+Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
+FAILED arch/x86/tests/hybrid.c:42 wrong type
+Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
+FAILED arch/x86/tests/hybrid.c:65 wrong type
+Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
+FAILED arch/x86/tests/hybrid.c:78 wrong type
+Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
+FAILED arch/x86/tests/hybrid.c:95 wrong type
+Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
+running test 6 'cpu_core/r1a/'
+running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
+WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
+running test 8 'cpu_core/LLC-loads/'
+test child finished with -1
+---- end ----
+x86 hybrid: FAILED!
+root@number:/home/acme/Downloads#
+
+root@number:/home/acme/Downloads# perf trace -e perf_event_open perf test -F -v 75
+ 75: x86 hybrid                                                      :
+--- start ---
+Using CPUID GenuineIntel-6-B7-1
+running test 0 'cpu_core/cpu-cycles/'
+FAILED arch/x86/tests/hybrid.c:30 wrong type
+Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
+FAILED arch/x86/tests/hybrid.c:42 wrong type
+Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
+FAILED arch/x86/tests/hybrid.c:65 wrong type
+Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
+FAILED arch/x86/tests/hybrid.c:78 wrong type
+Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
+FAILED arch/x86/tests/hybrid.c:95 wrong type
+Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
+running test 6 'cpu_core/r1a/'
+running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
+WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
+running test 8 'cpu_core/LLC-loads/'
+---- end ----
+x86 hybrid: FAILED!
+     0.000 ( 0.008 ms): :4115165/4115165 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), config: 0xa00000000, disabled: 1, { bp_len, config2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: 0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925535355, sample_regs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
+     0.010 ( 0.002 ms): :4115165/4115165 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), config: 0x400000000, disabled: 1, { bp_len, config2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: 0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925538919, sample_regs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 4
+root@number:/home/acme/Downloads# strace -e perf_event_open perf test -F -v 75
+ 75: x86 hybrid                                                      :
+--- start ---
+Using CPUID GenuineIntel-6-B7-1
+running test 0 'cpu_core/cpu-cycles/'
+FAILED arch/x86/tests/hybrid.c:30 wrong type
+Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
+FAILED arch/x86/tests/hybrid.c:42 wrong type
+Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
+FAILED arch/x86/tests/hybrid.c:65 wrong type
+Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
+FAILED arch/x86/tests/hybrid.c:78 wrong type
+Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
+FAILED arch/x86/tests/hybrid.c:95 wrong type
+Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
+running test 6 'cpu_core/r1a/'
+running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
+WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
+running test 8 'cpu_core/LLC-loads/'
+perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0xa<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = 3
+perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0x4<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = 4
+---- end ----
+x86 hybrid: FAILED!
++++ exited with 0 +++
+root@number:/home/acme/Downloads#
