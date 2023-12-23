@@ -1,34 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61310D50F;
-	Sat, 23 Dec 2023 13:55:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F07FBF0;
+	Sat, 23 Dec 2023 14:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhQueJ9B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78228C433C7;
-	Sat, 23 Dec 2023 13:55:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uemhbo1J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 678D8C433C7;
+	Sat, 23 Dec 2023 14:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703339751;
-	bh=0mLuBLrBHAiW0ELmlviQtOxKG1lFb2q4zh910zddwv8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=lhQueJ9BdTUXSG7DigPOrwmFPUKbPB8cDoUHtbdp5z3XUanUDAMjqa22Bih/RSzYZ
-	 C5RoFUPjHHc2egs9+xUeL9Du8CPh6tADT9xjn4B8WUjZqdiUsCy+ydy8NDpGuKEGAN
-	 zl9ph4FuqQeiUKFx6O+y4/uhOT2nr2SHHKPiJymM2VTPE3FVRzXI2KYJbit6a7VFDx
-	 z+utsJo90Zn6oSf+D8lKxnCNixJWRWuEHIx/riZrlqxDVWoZOoOPvWW9jdEy431uU8
-	 Ucr7/zlxu1dzL5amfmA7iGdNcdq7cEAVWT3MGNGn8z+ebXRbP6055nA9T3KCzndYR7
-	 wSlzZKa1JBj8w==
+	s=k20201202; t=1703340853;
+	bh=CCUY08WIoSNK3muI170K6tB7kfEZyLKChs54gEUAiCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Uemhbo1J1/FdgrBx7ZkNjSPyTPmothSmJ9sSKkcjmaXsVxw8Y0RaLp2dJIZJIc7uI
+	 POy6n17lxoepqNJmYhjbXlx0JCJiR2AFW1i2BGBDxFKWi6XHfWP5m4Oso3I/z1qcfg
+	 wWepBWMFpCbHAA9kG/QuWZ+6KjToTxOs69IjRI7fz2MymSj09rCkcSziQRKJjI1Q/7
+	 zqB/f7scOCkmyZwpfdEiiRHqi5Yoe9PC69T3TiKXzLiLZWUX0UlLw212kETgcQy4wr
+	 4hQEqbFoxlcPZQwxAV9esLFpVa3lhkMCkSux9ebZNmX+1TX70mLdhb6JeafsI1nCTu
+	 7efifSAmVKpoQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 3D48C403EF; Sat, 23 Dec 2023 10:55:48 -0300 (-03)
-Date: Sat, 23 Dec 2023 10:55:48 -0300
+	id 01F41403EF; Sat, 23 Dec 2023 11:14:10 -0300 (-03)
+Date: Sat, 23 Dec 2023 11:14:10 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Kan Liang <kan.liang@intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: perf test hybrid failing on 14700K
-Message-ID: <ZYbm5L7tw7bdpDpE@kernel.org>
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Stephane Eranian <eranian@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andi Kleen <ak@linux.intel.com>, linux-trace-devel@vger.kernel.org,
+	linux-toolchains@vger.kernel.org
+Subject: Re: [PATCH 14/52] perf annotate: Factor out evsel__get_arch()
+Message-ID: <ZYbrMqdkmf2uT6Tm@kernel.org>
+References: <20231110000012.3538610-1-namhyung@kernel.org>
+ <20231110000012.3538610-15-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,117 +44,128 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20231110000012.3538610-15-namhyung@kernel.org>
 X-Url: http://acmel.wordpress.com
 
-Hi Kan,
+Em Thu, Nov 09, 2023 at 03:59:33PM -0800, Namhyung Kim escreveu:
+> The evsel__get_arch() is to get architecture info from the environ.
+> It'll be used by other places later so let's factor it out.
 
-I noticed the following problem, are you able to reproduce it?
+evsel__get_arch():
 
-Happy solstice!
+  The "get" is mostly associated with refcounts, so at some point we
+should rename it to some better name, not a reason to delay processing
+this patch right now, so I'm applying it as is.
+ 
+> Also add arch__is() to check the arch info by name.
+
+cool
+ 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/annotate.c | 44 +++++++++++++++++++++++++++-----------
+>  tools/perf/util/annotate.h |  2 ++
+>  2 files changed, 33 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 3364edf30f50..83e0996992af 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -804,6 +804,11 @@ static struct arch *arch__find(const char *name)
+>  	return bsearch(name, architectures, nmemb, sizeof(struct arch), arch__key_cmp);
+>  }
+>  
+> +bool arch__is(struct arch *arch, const char *name)
+> +{
+> +	return !strcmp(arch->name, name);
+> +}
+> +
+>  static struct annotated_source *annotated_source__new(void)
+>  {
+>  	struct annotated_source *src = zalloc(sizeof(*src));
+> @@ -2340,15 +2345,8 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
+>  	annotation__calc_percent(notes, evsel, symbol__size(sym));
+>  }
+>  
+> -int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+> -		     struct annotation_options *options, struct arch **parch)
+> +static int evsel__get_arch(struct evsel *evsel, struct arch **parch)
+>  {
+> -	struct symbol *sym = ms->sym;
+> -	struct annotation *notes = symbol__annotation(sym);
+> -	struct annotate_args args = {
+> -		.evsel		= evsel,
+> -		.options	= options,
+> -	};
+>  	struct perf_env *env = evsel__env(evsel);
+>  	const char *arch_name = perf_env__arch(env);
+>  	struct arch *arch;
+> @@ -2357,23 +2355,43 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+>  	if (!arch_name)
+>  		return errno;
+>  
+> -	args.arch = arch = arch__find(arch_name);
+> +	*parch = arch = arch__find(arch_name);
+>  	if (arch == NULL) {
+>  		pr_err("%s: unsupported arch %s\n", __func__, arch_name);
+>  		return ENOTSUP;
+>  	}
+>  
+> -	if (parch)
+> -		*parch = arch;
+> -
+>  	if (arch->init) {
+>  		err = arch->init(arch, env ? env->cpuid : NULL);
+>  		if (err) {
+> -			pr_err("%s: failed to initialize %s arch priv area\n", __func__, arch->name);
+> +			pr_err("%s: failed to initialize %s arch priv area\n",
+> +			       __func__, arch->name);
+>  			return err;
+>  		}
+>  	}
+> +	return 0;
+> +}
+> +
+> +int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+> +		     struct annotation_options *options, struct arch **parch)
+> +{
+> +	struct symbol *sym = ms->sym;
+> +	struct annotation *notes = symbol__annotation(sym);
+> +	struct annotate_args args = {
+> +		.evsel		= evsel,
+> +		.options	= options,
+> +	};
+> +	struct arch *arch = NULL;
+> +	int err;
+> +
+> +	err = evsel__get_arch(evsel, &arch);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	if (parch)
+> +		*parch = arch;
+>  
+> +	args.arch = arch;
+>  	args.ms = *ms;
+>  	if (notes->options && notes->options->full_addr)
+>  		notes->start = map__objdump_2mem(ms->map, ms->sym->start);
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index bc8b95e8b1be..e8b0173f5f00 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -59,6 +59,8 @@ struct ins_operands {
+>  
+>  struct arch;
+>  
+> +bool arch__is(struct arch *arch, const char *name);
+> +
+>  struct ins_ops {
+>  	void (*free)(struct ins_operands *ops);
+>  	int (*parse)(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms);
+> -- 
+> 2.42.0.869.gea05f2083d-goog
+> 
+
+-- 
 
 - Arnaldo
-
-root@number:/home/acme/Downloads# grep "model name" -m1 /proc/cpuinfo
-model name	: Intel(R) Core(TM) i7-14700K
-root@number:/home/acme/Downloads# uname -a
-Linux number 6.6.4-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Dec  3 18:13:11 UTC 2023 x86_64 GNU/Linux
-root@number:/home/acme/Downloads# perf -vv
-perf version 6.7.rc6.g63daba4e2861
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-               libpfm4: [ on  ]  # HAVE_LIBPFM
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-root@number:/home/acme/Downloads# perf test 75
- 75: x86 hybrid                                                      : FAILED!
-root@number:/home/acme/Downloads# perf test -v 75
- 75: x86 hybrid                                                      :
---- start ---
-test child forked, pid 4111587
-Using CPUID GenuineIntel-6-B7-1
-running test 0 'cpu_core/cpu-cycles/'
-FAILED arch/x86/tests/hybrid.c:30 wrong type
-Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
-FAILED arch/x86/tests/hybrid.c:42 wrong type
-Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-FAILED arch/x86/tests/hybrid.c:65 wrong type
-Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-FAILED arch/x86/tests/hybrid.c:78 wrong type
-Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-FAILED arch/x86/tests/hybrid.c:95 wrong type
-Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
-running test 6 'cpu_core/r1a/'
-running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
-WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
-running test 8 'cpu_core/LLC-loads/'
-test child finished with -1
----- end ----
-x86 hybrid: FAILED!
-root@number:/home/acme/Downloads#
-
-root@number:/home/acme/Downloads# perf trace -e perf_event_open perf test -F -v 75
- 75: x86 hybrid                                                      :
---- start ---
-Using CPUID GenuineIntel-6-B7-1
-running test 0 'cpu_core/cpu-cycles/'
-FAILED arch/x86/tests/hybrid.c:30 wrong type
-Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
-FAILED arch/x86/tests/hybrid.c:42 wrong type
-Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-FAILED arch/x86/tests/hybrid.c:65 wrong type
-Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-FAILED arch/x86/tests/hybrid.c:78 wrong type
-Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-FAILED arch/x86/tests/hybrid.c:95 wrong type
-Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
-running test 6 'cpu_core/r1a/'
-running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
-WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
-running test 8 'cpu_core/LLC-loads/'
----- end ----
-x86 hybrid: FAILED!
-     0.000 ( 0.008 ms): :4115165/4115165 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), config: 0xa00000000, disabled: 1, { bp_len, config2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: 0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925535355, sample_regs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
-     0.010 ( 0.002 ms): :4115165/4115165 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), config: 0x400000000, disabled: 1, { bp_len, config2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: 0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925538919, sample_regs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 4
-root@number:/home/acme/Downloads# strace -e perf_event_open perf test -F -v 75
- 75: x86 hybrid                                                      :
---- start ---
-Using CPUID GenuineIntel-6-B7-1
-running test 0 'cpu_core/cpu-cycles/'
-FAILED arch/x86/tests/hybrid.c:30 wrong type
-Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
-FAILED arch/x86/tests/hybrid.c:42 wrong type
-Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-FAILED arch/x86/tests/hybrid.c:65 wrong type
-Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-FAILED arch/x86/tests/hybrid.c:78 wrong type
-Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-FAILED arch/x86/tests/hybrid.c:95 wrong type
-Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
-running test 6 'cpu_core/r1a/'
-running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
-WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
-running test 8 'cpu_core/LLC-loads/'
-perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0xa<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = 3
-perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0x4<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = 4
----- end ----
-x86 hybrid: FAILED!
-+++ exited with 0 +++
-root@number:/home/acme/Downloads#
