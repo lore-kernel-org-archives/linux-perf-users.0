@@ -1,117 +1,124 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BE912E5F;
-	Sat, 23 Dec 2023 20:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F0620E0
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 Dec 2023 08:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="kJHR+ZFF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703363420; x=1703968220; i=markus.elfring@web.de;
-	bh=CkiadlJnceiWb4wDxQjgDyAYKO3sigBrvSKQufUjwtQ=;
-	h=X-UI-Sender-Class:Date:To:From:Subject:Cc;
-	b=kJHR+ZFFUvcx4ZXEZHizmsrOcZkY5mcHXI8p0rI2tz7HBYkMqUwrIRIB9MXmQ6XV
-	 QML7/ikykymwmL5EbkL00RHOffech4O1Qd2GI1pvQPya1fTxmERvBHZMpyJ2QsG0y
-	 r0VtsG/7YnT5RwuUxByv/eWydQyHlXtlwgYSleVYoNRC0L/Ps/1cH90DROk6Freiy
-	 biOx7SiOiA8lXquf6lIxSzRm+YRcEAm/zS5ScCMkiz1jYolRHy/CZxDfCOvePuxue
-	 2CpFuWsfMr+p6psAlhtvsbS3g/b+mUN7cF4qnTAhcJC+EOVv6WauuNz/lnPNs7hQJ
-	 a5hdZq+Ryy70YE31xQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MnX17-1qpXar1c0L-00j9SN; Sat, 23
- Dec 2023 21:30:20 +0100
-Message-ID: <5b38ce71-3c76-4efc-a688-6f2651f93b6d@web.de>
-Date: Sat, 23 Dec 2023 21:30:17 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="olUzveYL"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7ba903342c2so198504939f.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 24 Dec 2023 00:33:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703406819; x=1704011619; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rO7WgIPdNcnqWQpaudC4tS6W5dWb0hVk4elNmQeiAV8=;
+        b=olUzveYL3r35YTE26G3Zj4/GB0nt+zCYqwDBpxnT+5Joi+YfHAG7ssEvTo9cG9DA1H
+         GqpDefuyAVrM9t9ZUHImei/9ETq3olMIQLDWXnLCJ/INmWSmMgFR2eBm3ArNY2oPAyOL
+         /hPCL5mhYvgjFMant+OsWR1vf9tzZ4DM8uxPhcxk1o0ohxhOpomjjfSVS0AwHRYHzxE3
+         Uicbx7wSngIIjOn7ybjkcaxH/NCtbtelsSPz9cYblospIka3ZtUX5N/hq27p7AywuTmR
+         LeU678AXrPbqzR1nlzL5O7itSmMQI9DjTgLnWOOM+u4SZf3tdvtDsQnVLsMbkD9zX81T
+         Z55Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703406819; x=1704011619;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rO7WgIPdNcnqWQpaudC4tS6W5dWb0hVk4elNmQeiAV8=;
+        b=VTn6vP3xOchkVRJr7H0YdA/DYWD2UsIn0JZgSJDzv9klWBV7cOeMl1KLVCmBufkiIJ
+         yd5j/gIzbbPKaOxA5CMnA5J/goKzhOVOEn86BknS2F93yKm+5ZUFPMuGYVkHQ97hIhFA
+         QGeKFvS4wbyxtKNbBqYy1v5HrU1FUYjX5NeC+1aGeh/QP3LvLQQAYLa27RUU1u95ksnj
+         PXQkMWo8Ff9nWUWEF7XgGKqwWBRxsPM6SrHMS4UtGyaQMV8quNNRKTs6z/j3uccsKcUa
+         1p+JKflR8uuUH2mlAkvsc/v+Dh5gzZr3DYW/xkIXr7sWzlrhWPE3Ng08up98vp+zlKDH
+         5Wxg==
+X-Gm-Message-State: AOJu0YyMS6+ljhESqVclNdXaCD0D2Pqz8FVy0GjdtiQJvuFKu2omuf0V
+	n3dMoqqEbv2xLfkYtWfYwu3cRH0A3BBeEA==
+X-Google-Smtp-Source: AGHT+IF8QP7yXui7EAHR1MbphUykeltelj4BQc2aY1WH7AjvwFE/uixP6mcbTfC2JZo3iDMfZxNieg==
+X-Received: by 2002:a05:6e02:19cd:b0:35f:ee15:688d with SMTP id r13-20020a056e0219cd00b0035fee15688dmr3742373ill.104.1703406818815;
+        Sun, 24 Dec 2023 00:33:38 -0800 (PST)
+Received: from leoy-huanghe.lan (211-75-219-200.hinet-ip.hinet.net. [211.75.219.200])
+        by smtp.gmail.com with ESMTPSA id b17-20020a170902ed1100b001d3d8c04331sm6154915pld.64.2023.12.24.00.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Dec 2023 00:33:38 -0800 (PST)
+Date: Sun, 24 Dec 2023 16:33:32 +0800
+From: Leo Yan <leo.yan@linaro.org>
+To: Ruidong Tian <tianruidong@linux.alibaba.com>
+Cc: James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org, suzuki.poulose@arm.com,
+	mike.leach@linaro.org, alexander.shishkin@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, al.grant@arm.com,
+	mathieu.poirier@linaro.org, tor@ti.com, acme@redhat.com
+Subject: Re: [PATCH 1/3] perf scripts python: arm-cs-trace-disasm.py: print
+ dso base address
+Message-ID: <20231224083332.GB13521@leoy-huanghe.lan>
+References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
+ <20231214123304.34087-2-tianruidong@linux.alibaba.com>
+ <912a39f4-025e-26a1-7786-091fa211f293@arm.com>
+ <6177beec-f140-44aa-b534-182cd4b0a988@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
- Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] perf/x86/intel/pt: Return an error code only as a constant in
- pt_pmu_hw_init()
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xPGwYXpbcPGu2+M0VdwPQ7SUF0a7M37z16ssBjvgoCPi+x9tAoO
- NvQZ1g4SjMgDz4Ava3z+cL6tjUVRgCTDRTWYi5SO6+wiAmHZX6EnbAjVGCH7dW7IHiaSj3z
- ixLweZnePPhXebrte08ntjAtgJYFTck9lLBDVlGoQyqQeDOytPBAfzQr5wchziJY2dljghN
- iSuUCfIOO6P7BP0buSvRA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+SMfoYLuucE=;c/mPHW8OJcA3zTVCoyoYFJeALSM
- ZvfjHlnns9cYViZmfJpVMKTY31aF2ERQpa5xEcvlV45JG935oc58SmkfMKKfoEOgbC1ZY4IXh
- LQO16NkMeGI3PgGc5EG0LxvJYCOkTmXyYDpxVMGZlNFYdckX8gdwWjvFtGkWtyTqvskLO6aYA
- DAwQ8+fWP/4qBps6HdOXn8LoN+cDy6b1ipjdoXby3ElBvS+i2PRnqFlqLn4VSDOmyfohWgTS0
- 8ZaUF+RhAVQbtiUfSnz6B7kvTO9WlJMOkEYIhUxRm09UeBPJ/Tq5c0HYBdTvkrU7g+S4SOO8H
- EnHiihcnVCSEpNjtVd+aI00BGqip06aI2lVLW+lamYW+tUkb00gKUrwF+GFhvBOPNJIMOHHmU
- 1YFIEKC8g95QAtiEDfjGcedkQK4Gevf+jYk5owwhdtVqiOCwvp/rusG9W/oPehAUyGG10tkf0
- +FcSKqVbrTzX6WiViXoYgY1AqVTQcww/aLc+p8fQTg4VHh6KOih94YSz5jW0674dYIiaSfxEG
- n758oBn8MkCPcj2Wp64mbx3gYKY+B5bwHsmPXtYCvUcKC7LKu/EZEkLs5oZJEfd3NJEgj7lFi
- aODCc5JoltK2rrHuywY4nGKA5JgNq/JVYxjnM7wr9FV0vxPER4SCo19FOBBll8nAzge1HNmhd
- UYppXorGtr//W1AAuerUj2Hx1Ha6Lj7ECEueWLhIlxV6PU8z8AqpCxC9HtAf69G2CHSqC5ASx
- nc47PsRqx/Vza6Sj99uXUyxqr63NC6i1JaAphwL+xq1kP1V+KkozWQdpEIe/4J5CgbHEym6YN
- qpMjL/kccAFya8Ma+017jgPKT5Tk4i9rJa33XNWwwNdpNRrxooeoCAxvITQnfH586G2cCFYRq
- 1R4VNboquWKAwpxhYn2OB00+VJF3E/rYx64TTh3MSZNi1xo0Zv8Yqla8/it+3MycVEsuwx9XT
- T57zjQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6177beec-f140-44aa-b534-182cd4b0a988@linux.alibaba.com>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 23 Dec 2023 21:06:27 +0100
+Hi Ruidong,
 
-Return an error code without storing it in an intermediate variable.
+On Fri, Dec 22, 2023 at 03:29:18PM +0800, Ruidong Tian wrote:
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- arch/x86/events/intel/pt.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+[...]
 
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 8e2a12235e62..24fd18e2da34 100644
-=2D-- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -190,7 +190,6 @@ static int __init pt_pmu_hw_init(void)
- 	struct attribute **attrs;
- 	size_t size;
- 	u64 reg;
--	int ret;
- 	long i;
+> > Although it's also not that clear what this is useful for, given that
+> > all the other output is relative too? Maybe you could add an example to
+> > the commit message, even if it's just for debugging. Would an option
+> > that turned _all_ the output into virtual addresses not be more useful?
+>
+> I want to use arm-cs-trace-disasm.py output associate with PMU and SPE data
+> to explore more CPU performance info, all the PMU/SPE/Coresight informations
+> generated by `perf report` and `perf script` include virtual address, so i
+> want this script do the same thing.
 
- 	rdmsrl(MSR_PLATFORM_INFO, reg);
-@@ -242,11 +241,10 @@ static int __init pt_pmu_hw_init(void)
- 			    &pt_pmu.caps[CPUID_EDX + i*PT_CPUID_REGS_NUM]);
- 	}
+I think James' suggestion is valid for replacing all offsets with
+virtual addresses, in addition to introducing a new option.
 
--	ret =3D -ENOMEM;
- 	size =3D sizeof(struct attribute *) * (ARRAY_SIZE(pt_caps)+1);
- 	attrs =3D kzalloc(size, GFP_KERNEL);
- 	if (!attrs)
--		goto fail;
-+		return -ENOMEM;
+Below change works well at my side. Hope this is helpful.
 
- 	size =3D sizeof(struct dev_ext_attribute) * (ARRAY_SIZE(pt_caps)+1);
- 	de_attrs =3D kzalloc(size, GFP_KERNEL);
-@@ -273,8 +271,7 @@ static int __init pt_pmu_hw_init(void)
+  diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+  index de58991c78bb..6c94ff2287cd 100755
+  --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
+  +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+  @@ -36,7 +36,10 @@ option_list = [
+                      help="Set path to objdump executable file"),
+          make_option("-v", "--verbose", dest="verbose",
+                      action="store_true", default=False,
+  -                   help="Enable debugging log")
+  +                   help="Enable debugging log"),
+  +       make_option("-a", "--vaddr", dest="vaddr",
+  +                   action="store_true", default=False,
+  +                   help="Enable virtual address")
+   ]
+  
+   parser = OptionParser(option_list=option_list)
+  @@ -108,6 +111,14 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
+                          m = disasm_re.search(line)
+                          if m is None:
+                                  continue
+  +
+  +               # Replace offset with virtual address
+  +               if (options.vaddr == True):
+  +                       offset = re.search(r"^\s*([0-9a-fA-F]+)", line).group()
+  +                       if offset:
+  +                               virt_addr = dso_start + int(offset, 16)
+  +                               line = line.replace(offset.lstrip(), "0x%016x" % virt_addr)
+  +
+                  print("\t" + line)
+  
+   def print_sample(sample):
 
- fail:
- 	kfree(attrs);
--
--	return ret;
-+	return -ENOMEM;
- }
-
- #define RTIT_CTL_CYC_PSB (RTIT_CTL_CYCLEACC	| \
-=2D-
-2.43.0
-
+Thanks,
+Leo
