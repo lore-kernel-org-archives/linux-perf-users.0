@@ -1,21 +1,21 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290DE51017;
-	Mon, 25 Dec 2023 10:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C09951C29;
+	Mon, 25 Dec 2023 10:48:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 3BPAZeG9094760;
+	by Atcsqr.andestech.com with ESMTP id 3BPAZeao094771;
 	Mon, 25 Dec 2023 18:35:40 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BPAXH63093078;
-	Mon, 25 Dec 2023 18:33:17 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3BPAY3Y6093300;
+	Mon, 25 Dec 2023 18:34:03 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Mon, 25 Dec 2023
- 18:33:14 +0800
+ 18:34:00 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -40,9 +40,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>,
         <chao.wei@sophgo.com>, <unicorn_wang@outlook.com>, <wefu@redhat.com>
-Subject: [PATCH v6 01/16] riscv: errata: Rename defines for Andes
-Date: Mon, 25 Dec 2023 18:32:53 +0800
-Message-ID: <20231225103308.1557548-2-peterlin@andestech.com>
+Subject: [PATCH v6 10/16] dt-bindings: riscv: Add Andes PMU extension description
+Date: Mon, 25 Dec 2023 18:33:02 +0800
+Message-ID: <20231225103308.1557548-11-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231225103308.1557548-1-peterlin@andestech.com>
 References: <20231225103308.1557548-1-peterlin@andestech.com>
@@ -56,111 +56,46 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BPAZeG9094760
+X-MAIL:Atcsqr.andestech.com 3BPAZeao094771
 
-Use "ANDES" rather than "ANDESTECH" to unify the naming
-convention with directory, file names, Kconfig options
-and other definitions.
+Document the ISA string for Andes Technology performance monitor
+extension which provides counter overflow interrupt and mode
+filtering mechanisms.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
-Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
-Changes v1 -> v2:
-  - No change
 Changes v2 -> v3:
-  - Rewrite commit message (suggested by Conor)
+  - New patch
 Changes v3 -> v4:
-  - Include Conor's Acked-by tag
+  - Include Conor's Acked-by
 Changes v4 -> v5:
-  - Include Prabhakar's RB tag
+  - Include Prabhakar's Reviewed-by
 Changes v5 -> v6:
   - No change
 ---
- arch/riscv/errata/andes/errata.c       | 10 +++++-----
- arch/riscv/include/asm/errata_list.h   |  4 ++--
- arch/riscv/include/asm/vendorid_list.h |  2 +-
- arch/riscv/kernel/alternative.c        |  2 +-
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/riscv/errata/andes/errata.c b/arch/riscv/errata/andes/errata.c
-index 17a904869724..f2708a9494a1 100644
---- a/arch/riscv/errata/andes/errata.c
-+++ b/arch/riscv/errata/andes/errata.c
-@@ -18,9 +18,9 @@
- #include <asm/sbi.h>
- #include <asm/vendorid_list.h>
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index b5cb8ac7ac80..daef6c3b1580 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -258,6 +258,13 @@ properties:
+             in commit 2e5236 ("Ztso is now ratified.") of the
+             riscv-isa-manual.
  
--#define ANDESTECH_AX45MP_MARCHID	0x8000000000008a45UL
--#define ANDESTECH_AX45MP_MIMPID		0x500UL
--#define ANDESTECH_SBI_EXT_ANDES		0x0900031E
-+#define ANDES_AX45MP_MARCHID		0x8000000000008a45UL
-+#define ANDES_AX45MP_MIMPID		0x500UL
-+#define ANDES_SBI_EXT_ANDES		0x0900031E
- 
- #define ANDES_SBI_EXT_IOCP_SW_WORKAROUND	1
- 
-@@ -32,7 +32,7 @@ static long ax45mp_iocp_sw_workaround(void)
- 	 * ANDES_SBI_EXT_IOCP_SW_WORKAROUND SBI EXT checks if the IOCP is missing and
- 	 * cache is controllable only then CMO will be applied to the platform.
- 	 */
--	ret = sbi_ecall(ANDESTECH_SBI_EXT_ANDES, ANDES_SBI_EXT_IOCP_SW_WORKAROUND,
-+	ret = sbi_ecall(ANDES_SBI_EXT_ANDES, ANDES_SBI_EXT_IOCP_SW_WORKAROUND,
- 			0, 0, 0, 0, 0, 0);
- 
- 	return ret.error ? 0 : ret.value;
-@@ -50,7 +50,7 @@ static void errata_probe_iocp(unsigned int stage, unsigned long arch_id, unsigne
- 
- 	done = true;
- 
--	if (arch_id != ANDESTECH_AX45MP_MARCHID || impid != ANDESTECH_AX45MP_MIMPID)
-+	if (arch_id != ANDES_AX45MP_MARCHID || impid != ANDES_AX45MP_MIMPID)
- 		return;
- 
- 	if (!ax45mp_iocp_sw_workaround())
-diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/include/asm/errata_list.h
-index 83ed25e43553..4ed21a62158c 100644
---- a/arch/riscv/include/asm/errata_list.h
-+++ b/arch/riscv/include/asm/errata_list.h
-@@ -12,8 +12,8 @@
- #include <asm/vendorid_list.h>
- 
- #ifdef CONFIG_ERRATA_ANDES
--#define ERRATA_ANDESTECH_NO_IOCP	0
--#define ERRATA_ANDESTECH_NUMBER		1
-+#define ERRATA_ANDES_NO_IOCP 0
-+#define ERRATA_ANDES_NUMBER 1
- #endif
- 
- #ifdef CONFIG_ERRATA_SIFIVE
-diff --git a/arch/riscv/include/asm/vendorid_list.h b/arch/riscv/include/asm/vendorid_list.h
-index e55407ace0c3..2f2bb0c84f9a 100644
---- a/arch/riscv/include/asm/vendorid_list.h
-+++ b/arch/riscv/include/asm/vendorid_list.h
-@@ -5,7 +5,7 @@
- #ifndef ASM_VENDOR_LIST_H
- #define ASM_VENDOR_LIST_H
- 
--#define ANDESTECH_VENDOR_ID	0x31e
-+#define ANDES_VENDOR_ID		0x31e
- #define SIFIVE_VENDOR_ID	0x489
- #define THEAD_VENDOR_ID		0x5b7
- 
-diff --git a/arch/riscv/kernel/alternative.c b/arch/riscv/kernel/alternative.c
-index 319a1da0358b..0128b161bfda 100644
---- a/arch/riscv/kernel/alternative.c
-+++ b/arch/riscv/kernel/alternative.c
-@@ -43,7 +43,7 @@ static void riscv_fill_cpu_mfr_info(struct cpu_manufacturer_info_t *cpu_mfr_info
- 
- 	switch (cpu_mfr_info->vendor_id) {
- #ifdef CONFIG_ERRATA_ANDES
--	case ANDESTECH_VENDOR_ID:
-+	case ANDES_VENDOR_ID:
- 		cpu_mfr_info->patch_func = andes_errata_patch_func;
- 		break;
- #endif
++        - const: xandespmu
++          description:
++            The Andes Technology performance monitor extension for counter overflow
++            and privilege mode filtering. For more details, see Counter Related
++            Registers in the AX45MP datasheet.
++            https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
++
+         - const: xtheadpmu
+           description:
+             The T-Head performance monitor extension for counter overflow, as ratified
 -- 
 2.34.1
 
