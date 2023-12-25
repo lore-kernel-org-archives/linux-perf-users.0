@@ -1,21 +1,21 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6FE524B1;
-	Mon, 25 Dec 2023 10:48:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AEC524B1;
+	Mon, 25 Dec 2023 10:49:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 3BPAZfLO094816;
+	by Atcsqr.andestech.com with ESMTP id 3BPAZf5q094817;
 	Mon, 25 Dec 2023 18:35:41 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BPAXhhR093193;
-	Mon, 25 Dec 2023 18:33:43 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3BPAXMQH093103;
+	Mon, 25 Dec 2023 18:33:22 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Mon, 25 Dec 2023
- 18:33:39 +0800
+ 18:33:19 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -40,9 +40,10 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>,
         <chao.wei@sophgo.com>, <unicorn_wang@outlook.com>, <wefu@redhat.com>
-Subject: [PATCH v6 06/16] perf: RISC-V: Eliminate redundant interrupt enable/disable operations
-Date: Mon, 25 Dec 2023 18:32:58 +0800
-Message-ID: <20231225103308.1557548-7-peterlin@andestech.com>
+CC: Randolph <randolph@andestech.com>
+Subject: [PATCH v6 02/16] irqchip/riscv-intc: Allow large non-standard interrupt number
+Date: Mon, 25 Dec 2023 18:32:54 +0800
+Message-ID: <20231225103308.1557548-3-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231225103308.1557548-1-peterlin@andestech.com>
 References: <20231225103308.1557548-1-peterlin@andestech.com>
@@ -52,57 +53,120 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BPAZfLO094816
+X-MAIL:Atcsqr.andestech.com 3BPAZf5q094817
 
-The interrupt enable/disable operations are already performed by the
-IRQ chip functions riscv_intc_irq_unmask()/riscv_intc_irq_mask() during
-enable_percpu_irq()/disable_percpu_irq(). It can be done only once.
+Currently, the implementation of the RISC-V INTC driver uses the
+interrupt cause as the hardware interrupt number, with a maximum of
+64 interrupts. However, the platform can expand the interrupt number
+further for custom local interrupts.
+
+To fully utilize the available local interrupt sources, switch
+to using irq_domain_create_tree() that creates the radix tree
+map, add global variables (riscv_intc_nr_irqs, riscv_intc_custom_base
+and riscv_intc_custom_nr_irqs) to determine the valid range of local
+interrupt number (hwirq).
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Reviewed-by: Randolph <randolph@andestech.com>
 ---
-This patch allows us to drop unnecessary ALT_SBI_PMU_OVF_{DISABLE,ENABLE}
-in the initial PATCH3 [1].
-
-[1] https://patchwork.kernel.org/project/linux-riscv/patch/20230907021635.1002738-4-peterlin@andestech.com/
-
 Changes v1 -> v2:
-  - New patch
+  - Fixed irq mapping failure checking (suggested by Clément and Anup)
 Changes v2 -> v3:
   - No change
-Changes v3 -> v4:
-  - No change
-Changes v4 -> v5:
-  - No change
-Changes v5 -> v6:
-  - No change
----
- drivers/perf/riscv_pmu_sbi.c | 2 --
- 1 file changed, 2 deletions(-)
+Changes v3 -> v4: (Suggested by Thomas [1])
+  - Use pr_warn_ratelimited instead
+  - Fix coding style and commit message
+Changes v4 -> v5: (Suggested by Thomas)
+  - Fix commit message
+Changes v5 -> v6: (Suggested by Anup [2])
+  - Add riscv_intc_* global variables for checking range in riscv_intc_domain_alloc()
+  - Advertise the number of interrupts allowed
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 16acd4dcdb96..2edbc37abadf 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -781,7 +781,6 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
- 	if (riscv_pmu_use_irq) {
- 		cpu_hw_evt->irq = riscv_pmu_irq;
- 		csr_clear(CSR_IP, BIT(riscv_pmu_irq_num));
--		csr_set(CSR_IE, BIT(riscv_pmu_irq_num));
- 		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
- 	}
+[1] https://patchwork.kernel.org/project/linux-riscv/patch/20231023004100.2663486-3-peterlin@andestech.com/#25573085
+[2] https://patchwork.kernel.org/project/linux-riscv/patch/20231213070301.1684751-3-peterlin@andestech.com/#25636589
+---
+ drivers/irqchip/irq-riscv-intc.c | 31 ++++++++++++++++++++++++-------
+ 1 file changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index e8d01b14ccdd..e1d80cb0020e 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -19,15 +19,17 @@
+ #include <linux/smp.h>
  
-@@ -792,7 +791,6 @@ static int pmu_sbi_dying_cpu(unsigned int cpu, struct hlist_node *node)
+ static struct irq_domain *intc_domain;
++static unsigned int riscv_intc_nr_irqs __ro_after_init;
++static unsigned int riscv_intc_custom_base __ro_after_init;
++static unsigned int riscv_intc_custom_nr_irqs __ro_after_init;
+ 
+ static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
  {
- 	if (riscv_pmu_use_irq) {
- 		disable_percpu_irq(riscv_pmu_irq);
--		csr_clear(CSR_IE, BIT(riscv_pmu_irq_num));
+ 	unsigned long cause = regs->cause & ~CAUSE_IRQ_FLAG;
+ 
+-	if (unlikely(cause >= BITS_PER_LONG))
+-		panic("unexpected interrupt cause");
+-
+-	generic_handle_domain_irq(intc_domain, cause);
++	if (generic_handle_domain_irq(intc_domain, cause))
++		pr_warn_ratelimited("Failed to handle interrupt (cause: %ld)\n",
++				    cause);
+ }
+ 
+ /*
+@@ -93,6 +95,14 @@ static int riscv_intc_domain_alloc(struct irq_domain *domain,
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * Only allow hwirq for which we have corresponding standard or
++	 * custom interrupt enable register.
++	 */
++	if ((riscv_intc_nr_irqs <= hwirq && hwirq < riscv_intc_custom_base) ||
++	    (riscv_intc_custom_base + riscv_intc_custom_nr_irqs) <= hwirq)
++		return -EINVAL;
++
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		ret = riscv_intc_domain_map(domain, virq + i, hwirq + i);
+ 		if (ret)
+@@ -117,8 +127,7 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
+ {
+ 	int rc;
+ 
+-	intc_domain = irq_domain_create_linear(fn, BITS_PER_LONG,
+-					       &riscv_intc_domain_ops, NULL);
++	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, NULL);
+ 	if (!intc_domain) {
+ 		pr_err("unable to add IRQ domain\n");
+ 		return -ENXIO;
+@@ -132,7 +141,11 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
+ 
+ 	riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
+ 
+-	pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
++	pr_info("%d local interrupts mapped\n", riscv_intc_nr_irqs);
++	if (riscv_intc_custom_nr_irqs)
++		pr_info("%d (%d - %d) custom local interrupts mapped\n",
++			riscv_intc_custom_nr_irqs, riscv_intc_custom_base,
++			riscv_intc_custom_base + riscv_intc_custom_nr_irqs);
+ 
+ 	return 0;
+ }
+@@ -166,6 +179,10 @@ static int __init riscv_intc_init(struct device_node *node,
+ 		return 0;
  	}
  
- 	/* Disable all counters access for user mode now */
++	riscv_intc_nr_irqs = BITS_PER_LONG;
++	riscv_intc_custom_base = riscv_intc_nr_irqs;
++	riscv_intc_custom_nr_irqs = 0;
++
+ 	return riscv_intc_init_common(of_node_to_fwnode(node));
+ }
+ 
 -- 
 2.34.1
 
