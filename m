@@ -1,21 +1,21 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E355381E;
-	Mon, 25 Dec 2023 10:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FF353E17;
+	Mon, 25 Dec 2023 10:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 3BPAZhoT094821;
+	by Atcsqr.andestech.com with ESMTP id 3BPAZhJ6094822;
 	Mon, 25 Dec 2023 18:35:43 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BPAXCXq093056;
-	Mon, 25 Dec 2023 18:33:12 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3BPAXcE2093172;
+	Mon, 25 Dec 2023 18:33:38 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Mon, 25 Dec 2023
- 18:33:12 +0800
+ 18:33:34 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -40,10 +40,12 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>,
         <chao.wei@sophgo.com>, <unicorn_wang@outlook.com>, <wefu@redhat.com>
-Subject: [PATCH v6 00/16] Support Andes PMU extension
-Date: Mon, 25 Dec 2023 18:32:52 +0800
-Message-ID: <20231225103308.1557548-1-peterlin@andestech.com>
+Subject: [PATCH v6 05/16] riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes INTC
+Date: Mon, 25 Dec 2023 18:32:57 +0800
+Message-ID: <20231225103308.1557548-6-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231225103308.1557548-1-peterlin@andestech.com>
+References: <20231225103308.1557548-1-peterlin@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,80 +56,45 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BPAZhoT094821
+X-MAIL:Atcsqr.andestech.com 3BPAZhJ6094822
 
-Hi All,
+The Andes hart-level interrupt controller (Andes INTC) allows AX45MP
+cores to handle custom local interrupts, such as the performance
+counter overflow interrupt.
 
-This patch series introduces the Andes PMU extension, which serves
-the same purpose as Sscofpmf. To use FDT-based probing for hardware
-support of the PMU extensions, we first convert T-Head's PMU to CPU
-feature alternative, then add Andes PMU alternatives.
+Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+Changes v1 -> v2:
+  - New patch
+Changes v2 -> v3:
+  - Fixed possible compatibles for Andes INTC
+Changes v3 -> v4:
+  - No change
+Changes v4 -> v5:
+  - Include Geert's Reviewed-by
+  - Include Prabhakar's Reviewed/Tested-by
+Changes v5 -> v6:
+  - No change
+---
+ arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Its non-standard local interrupt is assigned to bit 18 in the
-custom S-mode local interrupt enable/pending registers (slie/slip),
-while the interrupt cause is (256 + 18).
-
-Mainline OpenSBI has supported Andes PMU extension:
-- https://github.com/riscv-software-src/opensbi/tree/master
-Linux patches (based on v6.7-rc7) can be found on Andes Technology GitHub
-- https://github.com/andestech/linux/commits/andes-pmu-support-v6
-
-The PMU device tree node used on AX45MP:
-- https://github.com/riscv-software-src/opensbi/blob/master/docs/pmu_support.md#example-3
-
-Locus Wei-Han Chen (1):
-  riscv: andes: Support specifying symbolic firmware and hardware raw
-    events
-
-Yu Chien Peter Lin (15):
-  riscv: errata: Rename defines for Andes
-  irqchip/riscv-intc: Allow large non-standard interrupt number
-  irqchip/riscv-intc: Introduce Andes hart-level interrupt controller
-  dt-bindings: riscv: Add Andes interrupt controller compatible string
-  riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes
-    INTC
-  perf: RISC-V: Eliminate redundant interrupt enable/disable operations
-  RISC-V: Move T-Head PMU to CPU feature alternative framework
-  perf: RISC-V: Introduce Andes PMU for perf event sampling
-  dt-bindings: riscv: Add T-Head PMU extension description
-  dt-bindings: riscv: Add Andes PMU extension description
-  riscv: dts: allwinner: Add T-Head PMU extension for sun20i-d1s
-  riscv: dts: sophgo: Add T-Head PMU extension for cv1800b
-  riscv: dts: sophgo: Add T-Head PMU extension for sg2042
-  riscv: dts: thead: Add T-Head PMU extension for th1520
-  riscv: dts: renesas: Add Andes PMU extension for r9a07g043f
-
- .../devicetree/bindings/riscv/cpus.yaml       |   6 +-
- .../devicetree/bindings/riscv/extensions.yaml |  13 ++
- arch/riscv/Kconfig.errata                     |  13 --
- arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi |   2 +-
- arch/riscv/boot/dts/renesas/r9a07g043f.dtsi   |   4 +-
- arch/riscv/boot/dts/sophgo/cv1800b.dtsi       |   2 +-
- arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi   | 128 +++++++++---------
- arch/riscv/boot/dts/thead/th1520.dtsi         |   8 +-
- arch/riscv/errata/andes/errata.c              |  10 +-
- arch/riscv/errata/thead/errata.c              |  19 ---
- arch/riscv/include/asm/errata_list.h          |  19 +--
- arch/riscv/include/asm/hwcap.h                |   2 +
- arch/riscv/include/asm/vendorid_list.h        |   2 +-
- arch/riscv/kernel/alternative.c               |   2 +-
- arch/riscv/kernel/cpufeature.c                |   2 +
- drivers/irqchip/irq-riscv-intc.c              |  89 ++++++++++--
- drivers/perf/Kconfig                          |  27 ++++
- drivers/perf/riscv_pmu_sbi.c                  |  47 +++++--
- include/linux/soc/andes/irq.h                 |  18 +++
- .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
- .../arch/riscv/andes/ax45/instructions.json   | 127 +++++++++++++++++
- .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
- .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
- 24 files changed, 592 insertions(+), 151 deletions(-)
- create mode 100644 include/linux/soc/andes/irq.h
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-
+diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+index eb301d8eb2b0..78072e80793d 100644
+--- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
++++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+@@ -38,7 +38,7 @@ cpu0: cpu@0 {
+ 
+ 			cpu0_intc: interrupt-controller {
+ 				#interrupt-cells = <1>;
+-				compatible = "riscv,cpu-intc";
++				compatible = "andestech,cpu-intc", "riscv,cpu-intc";
+ 				interrupt-controller;
+ 			};
+ 		};
 -- 
 2.34.1
 
