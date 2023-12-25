@@ -1,21 +1,21 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD2C5027F;
-	Mon, 25 Dec 2023 10:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6FE524B1;
+	Mon, 25 Dec 2023 10:48:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 3BPAZecO094773;
-	Mon, 25 Dec 2023 18:35:40 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3BPAZfLO094816;
+	Mon, 25 Dec 2023 18:35:41 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BPAXXO4093151;
-	Mon, 25 Dec 2023 18:33:33 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 3BPAXhhR093193;
+	Mon, 25 Dec 2023 18:33:43 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Mon, 25 Dec 2023
- 18:33:29 +0800
+ 18:33:39 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -40,9 +40,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>,
         <chao.wei@sophgo.com>, <unicorn_wang@outlook.com>, <wefu@redhat.com>
-Subject: [PATCH v6 04/16] dt-bindings: riscv: Add Andes interrupt controller compatible string
-Date: Mon, 25 Dec 2023 18:32:56 +0800
-Message-ID: <20231225103308.1557548-5-peterlin@andestech.com>
+Subject: [PATCH v6 06/16] perf: RISC-V: Eliminate redundant interrupt enable/disable operations
+Date: Mon, 25 Dec 2023 18:32:58 +0800
+Message-ID: <20231225103308.1557548-7-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231225103308.1557548-1-peterlin@andestech.com>
 References: <20231225103308.1557548-1-peterlin@andestech.com>
@@ -56,57 +56,53 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BPAZecO094773
+X-MAIL:Atcsqr.andestech.com 3BPAZfLO094816
 
-Add "andestech,cpu-intc" compatible string to indicate that
-Andes specific local interrupt is supported on the core,
-e.g. AX45MP cores have 3 types of non-standard local interrupt
-can be handled in supervisor mode:
-
-- Slave port ECC error interrupt
-- Bus write transaction error interrupt
-- Performance monitor overflow interrupt
-
-These interrupts are enabled/disabled via a custom register
-SLIE instead of the standard interrupt enable register SIE.
+The interrupt enable/disable operations are already performed by the
+IRQ chip functions riscv_intc_irq_unmask()/riscv_intc_irq_mask() during
+enable_percpu_irq()/disable_percpu_irq(). It can be done only once.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
+This patch allows us to drop unnecessary ALT_SBI_PMU_OVF_{DISABLE,ENABLE}
+in the initial PATCH3 [1].
+
+[1] https://patchwork.kernel.org/project/linux-riscv/patch/20230907021635.1002738-4-peterlin@andestech.com/
+
 Changes v1 -> v2:
   - New patch
 Changes v2 -> v3:
-  - Updated commit message
-  - Fixed possible compatibles for Andes INTC
+  - No change
 Changes v3 -> v4:
-  - Add const entry instead of enum (Suggested by Conor)
+  - No change
 Changes v4 -> v5:
-  - Include Conor's Acked-by
-  - Include Prabhakar's Reviewed-by
+  - No change
 Changes v5 -> v6:
   - No change
 ---
- Documentation/devicetree/bindings/riscv/cpus.yaml | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/perf/riscv_pmu_sbi.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index f392e367d673..50307554478f 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -100,7 +100,11 @@ properties:
-         const: 1
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 16acd4dcdb96..2edbc37abadf 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -781,7 +781,6 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
+ 	if (riscv_pmu_use_irq) {
+ 		cpu_hw_evt->irq = riscv_pmu_irq;
+ 		csr_clear(CSR_IP, BIT(riscv_pmu_irq_num));
+-		csr_set(CSR_IE, BIT(riscv_pmu_irq_num));
+ 		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
+ 	}
  
-       compatible:
--        const: riscv,cpu-intc
-+        oneOf:
-+          - items:
-+              - const: andestech,cpu-intc
-+              - const: riscv,cpu-intc
-+          - const: riscv,cpu-intc
+@@ -792,7 +791,6 @@ static int pmu_sbi_dying_cpu(unsigned int cpu, struct hlist_node *node)
+ {
+ 	if (riscv_pmu_use_irq) {
+ 		disable_percpu_irq(riscv_pmu_irq);
+-		csr_clear(CSR_IE, BIT(riscv_pmu_irq_num));
+ 	}
  
-       interrupt-controller: true
- 
+ 	/* Disable all counters access for user mode now */
 -- 
 2.34.1
 
