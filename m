@@ -1,40 +1,40 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F7651027
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Dec 2023 11:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B6452F71
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Dec 2023 17:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-35ff5a2fb06so19675295ab.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Dec 2023 03:44:23 -0800 (PST)
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-35fd902c677so39594925ab.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Dec 2023 09:31:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703504662; x=1704109462;
+        d=1e100.net; s=20230601; t=1703525467; x=1704130267;
         h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+4B/Y7Xktu4R9H20QOxdF1wSqBgogP+skocSpp48Db4=;
-        b=R9mSghaLnHt9VMyPfn/S9pulyFFiGYaQxCSkof7rt4zRbz/uQzpMa8Ir3DjIAu+99p
-         1aC+dKul84vm95mbrkBmqS5kuWUMtmSu1TznycDqW4DhL7TBTH0SO7bPRYt9UEHtdtyj
-         OzSQ9LDVN8BpW9QmaBU/fvdoBKgvrvpoawROq+4NNVeLf9anzm1pfwyhsLlcpWQW6ggd
-         edwQtJyk9HRYUpRU5REFoOQwzGpNwKhF0hFfL6fc02Cff7NwjWENwIu1RzorgStvi5s3
-         ZVVU1eneJufQ7C/48cY9NZQn9yOBwGsI+CUMQWvQerjRx8spSKqtF9Gc13qdClmRpelx
-         hIIg==
-X-Gm-Message-State: AOJu0YxwcLJGqqveTYBgRU8kk9gi+d8zG8gOpoZYqxo/wAZzLSG10vat
-	QXztknL6bBZhrXu400yV3oe9cRa1uK0l4UuuGXgz2I2Ogdru
-X-Google-Smtp-Source: AGHT+IHaveJWoksd6OmAz16IH8OBR507StI7t0n1so1emX0Df7n/TSZQvXgA7VDePMLu/+1gNd9nHstYYdygCbudf4IrpUP+2Mr4
+        bh=LFqI58q7VNYJmMslCgc+pTUxt4F8ra7+YSzIXJuw1CI=;
+        b=o3UpZa+joB9TXD3k+eP9RHwRk6nMmhmsD/Qd3vDdLoP7MjH/NiYI358GngDFCF5aH1
+         QADfM9Ue2O5jGiywjBOluOr5S01iTGlKtOTx3twBOAO3Oi/u5o6jlCBpnvM39cZTmW1c
+         jAaLBctUUI+62shhkYdzSDgzg2O72tYLeDDEMb5MaeUvef6E1mZjE+1V2WIeW/4yyJ6A
+         paqmN/P5DJzuLkXuaNRyD8eWok4BWzQ09pPOuYOgC7W2V0+nFO2vru3Gj4V/1Pwjfuln
+         9rZMjuEQgrYwQ4RhAKcS4bjASgD7cl8zCrQIiMawsvTc/F3QiuiwBbtEk+jvoLeuPDN4
+         9wbA==
+X-Gm-Message-State: AOJu0YwEwNfrQ2I2/qc3WRuK6xlNyILoHHlJjQKU6TafcKZd+19HwdU7
+	mTsg6WOGDiQUfWO9/wgU6jIwBgA6o5zlqOWjQL+ttjEbWqbq
+X-Google-Smtp-Source: AGHT+IG150p2eMqab1PfIi2zECmHDFBS0UnssC+uKVBgIAlE5EIKxdwzS9Wj1PI8eSGg+CAuQ8PyuEKXFEI4yjrkYGt1uF1mvnCE
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c28:b0:35f:9ada:73a8 with SMTP id
- m8-20020a056e021c2800b0035f9ada73a8mr779075ilh.2.1703504662539; Mon, 25 Dec
- 2023 03:44:22 -0800 (PST)
-Date: Mon, 25 Dec 2023 03:44:22 -0800
+X-Received: by 2002:a92:c243:0:b0:35f:e976:3283 with SMTP id
+ k3-20020a92c243000000b0035fe9763283mr613348ilo.2.1703525467494; Mon, 25 Dec
+ 2023 09:31:07 -0800 (PST)
+Date: Mon, 25 Dec 2023 09:31:07 -0800
 In-Reply-To: <000000000000e8099a060cee1003@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000048b478060d541670@google.com>
+Message-ID: <0000000000005b23dc060d58ee7a@google.com>
 Subject: Re: [syzbot] [perf?] WARNING in perf_event_open
 From: syzbot <syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com>
 To: acme@kernel.org, adrian.hunter@intel.com, 
@@ -45,62 +45,25 @@ To: acme@kernel.org, adrian.hunter@intel.com,
 	xrivendell7@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 
-syzbot has found a reproducer for the following issue on:
+syzbot has bisected this issue to:
 
-HEAD commit:    5abde6246522 bpf: Avoid unnecessary use of comma operator ..
+commit 382c27f4ed28f803b1f1473ac2d8db0afc795a1b
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Wed Nov 29 14:24:52 2023 +0000
+
+    perf: Fix perf_event_validate_size()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=170e70cee80000
+start commit:   5abde6246522 bpf: Avoid unnecessary use of comma operator ..
 git tree:       bpf-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=122f1609e80000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=148e70cee80000
+console output: https://syzkaller.appspot.com/x/log.txt?x=108e70cee80000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=8f565e10f0b1e1fc
 dashboard link: https://syzkaller.appspot.com/bug?extid=07144c543a5c002c7305
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14857e81e80000
 C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1126ac36e80000
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a270020a37dc/disk-5abde624.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6b0eb142c0ea/vmlinux-5abde624.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d6ceb3e9bf6a/bzImage-5abde624.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
 Reported-by: syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com
+Fixes: 382c27f4ed28 ("perf: Fix perf_event_validate_size()")
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5061 at kernel/events/core.c:1950 perf_event_validate_size kernel/events/core.c:1950 [inline]
-WARNING: CPU: 0 PID: 5061 at kernel/events/core.c:1950 __do_sys_perf_event_open+0x2748/0x2c70 kernel/events/core.c:12655
-Modules linked in:
-CPU: 0 PID: 5061 Comm: syz-executor128 Not tainted 6.7.0-rc5-syzkaller-01540-g5abde6246522 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-RIP: 0010:perf_event_validate_size kernel/events/core.c:1950 [inline]
-RIP: 0010:__do_sys_perf_event_open+0x2748/0x2c70 kernel/events/core.c:12655
-Code: ff 48 8d b8 a8 00 00 00 e8 55 07 cf 08 bf 01 00 00 00 89 c3 89 c6 e8 47 71 d5 ff 83 eb 01 0f 84 2d ed ff ff e8 c9 75 d5 ff 90 <0f> 0b 90 e9 1f ed ff ff e8 bb 75 d5 ff be 03 00 00 00 48 89 ef e8
-RSP: 0018:ffffc9000398fd90 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 00000000ffffffff RCX: ffffffff81b227c9
-RDX: ffff8880794c3b80 RSI: ffffffff81b227d7 RDI: 0000000000000005
-RBP: ffff888017e68608 R08: 0000000000000005 R09: 0000000000000001
-R10: 0000000000000000 R11: ffffffff915ec900 R12: ffff888024db5800
-R13: 1ffff92000731fbd R14: ffff8880794c3b80 R15: ffff888017e68608
-FS:  0000555555ca6380(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000002000006c CR3: 0000000059a59000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-RIP: 0033:0x7fddcf7ef369
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffc7c42b4a8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007ffc7c42b688 RCX: 00007fddcf7ef369
-RDX: 00000000ffffffff RSI: 0000000000000000 RDI: 0000000020000000
-RBP: 00007fddcf862610 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffc7c42b678 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
