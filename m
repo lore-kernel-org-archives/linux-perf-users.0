@@ -1,163 +1,102 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3C9F4F5;
-	Tue, 26 Dec 2023 03:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 3BQ301qO075346;
-	Tue, 26 Dec 2023 11:00:01 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Tue, 26 Dec 2023 11:00:00 +0800
-Date: Tue, 26 Dec 2023 10:59:55 +0800
-From: Yu-Chien Peter Lin <peterlin@andestech.com>
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
-        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
-        <conor.dooley@microchip.com>, <conor@kernel.org>,
-        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
-        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
-        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
-        <jolsa@kernel.org>, <jszhang@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
-        <robh+dt@kernel.org>, <samuel@sholland.org>,
-        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
-        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
-        <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>,
-        <chao.wei@sophgo.com>, <unicorn_wang@outlook.com>, <wefu@redhat.com>
-Subject: Re: [PATCH v6 00/16] Support Andes PMU extension
-Message-ID: <ZYpBqwbI8vMwIpXH@APC323>
-References: <20231225103308.1557548-1-peterlin@andestech.com>
- <CA+V-a8t7g8ctPQrwdB9tgtmgtGfqQ-k2N-1sSwnjB-b1F71-AQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51E24CB43;
+	Tue, 26 Dec 2023 07:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="AoLUqkTH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1703575928; bh=CiicMmIx0APWzq6sNOUP+NQF+kg54apWQ0fTN/fttXc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=AoLUqkTHYSAge4AfA5cQbKzDTHtaStVQvfFIZWJ/nACwi98T0PqAvgox5obMsYcN8
+	 pJ22eST0TFKEwWMXzSxG9HRaUWDEpElegZUb2dm/CNzQIdb7msQdcks196dfrcCiD1
+	 6MbstCQwTaOv79YcpQNvLXq3OXwbAk/edQTd5eR8=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 64E8CC40; Tue, 26 Dec 2023 15:25:14 +0800
+X-QQ-mid: xmsmtpt1703575514tsxp5k6n6
+Message-ID: <tencent_7FC26D7C2FA56EF89584E89EEE52CD20790A@qq.com>
+X-QQ-XMAILINFO: NwU0tZNR0OQKsClGszGJVX9Rjo5blKzGqKDnOV5SkKMRy4VN9VhkjIu+mXbw8W
+	 FX+XSHxr2/SDVG691khsJHCKA56/nsS+QkgG6J2OcUzftNUwn4b9ejq/TMZNP80wBwqdrorNerwQ
+	 iFfHHmOrEOjvtw4lUfU6j4u5VoMAKMadlGveGt2tUxlZTodAY+WSin2vTIV3I5qWoNHI7U6ES2CO
+	 DGZk15Br/SYn8s9O/UMCfuxzGcFm3EwzGyR2J1cm0aCWqz/rfCB5+B5wZ2SJXzzLCLQTk+2zp32+
+	 tQaG9dBGsyikSJq+grCPeikeJdt6NkaKSr1IUkEkEXYhX87WHao1iMoyJlgsUG6/i2sBbuJ9jmwT
+	 g2wBbuSEE9HOeYChW3qe7peuzPuKOBENW0MHdtS1VtUBxt2pWmUYXzkQmQvVz2p0QmuSWdy/U0ig
+	 Okn8ql0rNwdwOAYBx+MZUoRk7fPOMejguUtks8OkmdYguNRyzGx7EUCZVPHBzd+iKg92R+oQH2pc
+	 YLrqkUAlAW0ueNizDulGsqvmsOGwCZ0q8QFKmKPCFCyLWGpBRuFTaip6LLdDmm9sQjV3IXULI5Vc
+	 GEEuM31DPVQQ/U1PoSefhjd/PckVLGyMlMfHjhYNKLNTbHWW7x3po8uc2pWwNnUC2xHTkCcsgMjN
+	 t0arJuflRZa3PANqr8r4JxUA3qhkrHUwBYedLLZMrB1iyCPbNxYRdodXEdBiJ+5gurPDBnek+/lf
+	 EBSzV3q688fNcOCHxMQarhwGjHTK89gnbCbGoPSK2nVFB5ywGNiXaQ0fiZ/+vGtZgF8ROcdX55pB
+	 X06ys8Dz7dzCQaj5mIRhW12YwFd5gDXPewwBsVI5zK1HfbxDkKHi0sAUfO5W1AG9KKa+y1ZWFPD6
+	 Y5h5tYm/h59AXtZ3ih8VRnZqqFgh97Hs50CTJ03zmNRCMhFh96d4Pkg8SF+7fs6KvJIvxsaSY+Hu
+	 CnNI9r7mJBz6PN4H6fzLhlrIRe9KrBH6ReCL2SY1RMwlf9uL1fLw==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com
+Cc: acme@kernel.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	netdev@vger.kernel.org,
+	peterz@infradead.org,
+	syzkaller-bugs@googlegroups.com,
+	xrivendell7@gmail.com
+Subject: [PATCH] perf: fix WARNING in perf_event_open
+Date: Tue, 26 Dec 2023 15:25:15 +0800
+X-OQ-MSGID: <20231226072514.1272529-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <0000000000005b23dc060d58ee7a@google.com>
+References: <0000000000005b23dc060d58ee7a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+V-a8t7g8ctPQrwdB9tgtmgtGfqQ-k2N-1sSwnjB-b1F71-AQ@mail.gmail.com>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 3BQ301qO075346
 
-Hi Prabhakar,
+The new version of __perf_event_read_size() only has a read action and does not
+require a mutex, so the mutex assertion in the original loop is removed.
 
-On Mon, Dec 25, 2023 at 09:06:04PM +0000, Lad, Prabhakar wrote:
-> Hi Lin-san,
-> 
-> On Mon, Dec 25, 2023 at 10:37 AM Yu Chien Peter Lin
-> <peterlin@andestech.com> wrote:
-> >
-> > Hi All,
-> >
-> > This patch series introduces the Andes PMU extension, which serves
-> > the same purpose as Sscofpmf. To use FDT-based probing for hardware
-> > support of the PMU extensions, we first convert T-Head's PMU to CPU
-> > feature alternative, then add Andes PMU alternatives.
-> >
-> > Its non-standard local interrupt is assigned to bit 18 in the
-> > custom S-mode local interrupt enable/pending registers (slie/slip),
-> > while the interrupt cause is (256 + 18).
-> >
-> > Mainline OpenSBI has supported Andes PMU extension:
-> > - https://github.com/riscv-software-src/opensbi/tree/master
-> > Linux patches (based on v6.7-rc7) can be found on Andes Technology GitHub
-> > - https://github.com/andestech/linux/commits/andes-pmu-support-v6
-> >
-> > The PMU device tree node used on AX45MP:
-> > - https://github.com/riscv-software-src/opensbi/blob/master/docs/pmu_support.md#example-3
-> >
-> > Locus Wei-Han Chen (1):
-> >   riscv: andes: Support specifying symbolic firmware and hardware raw
-> >     events
-> >
-> > Yu Chien Peter Lin (15):
-> >   riscv: errata: Rename defines for Andes
-> >   irqchip/riscv-intc: Allow large non-standard interrupt number
-> >   irqchip/riscv-intc: Introduce Andes hart-level interrupt controller
-> >   dt-bindings: riscv: Add Andes interrupt controller compatible string
-> >   riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes
-> >     INTC
-> >   perf: RISC-V: Eliminate redundant interrupt enable/disable operations
-> >   RISC-V: Move T-Head PMU to CPU feature alternative framework
-> >   perf: RISC-V: Introduce Andes PMU for perf event sampling
-> >   dt-bindings: riscv: Add T-Head PMU extension description
-> >   dt-bindings: riscv: Add Andes PMU extension description
-> >   riscv: dts: allwinner: Add T-Head PMU extension for sun20i-d1s
-> >   riscv: dts: sophgo: Add T-Head PMU extension for cv1800b
-> >   riscv: dts: sophgo: Add T-Head PMU extension for sg2042
-> >   riscv: dts: thead: Add T-Head PMU extension for th1520
-> >   riscv: dts: renesas: Add Andes PMU extension for r9a07g043f
-> >
-> The above patches dont apply cleanly on top of below branches. Can you
-> please rebase and re-send.
+Fixes: 382c27f4ed28 ("perf: Fix perf_event_validate_size()")
+Reported-and-tested-by: syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ kernel/events/core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Sure, will do.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 9efd0d7775e7..e71e61b46416 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1924,6 +1924,10 @@ static void perf_event__id_header_size(struct perf_event *event)
+ 	event->id_header_size = size;
+ }
+ 
++#define read_for_each_sibling_event(sibling, event)		\
++	if ((event)->group_leader == (event))			\
++		list_for_each_entry((sibling), &(event)->sibling_list, sibling_list)
++
+ /*
+  * Check that adding an event to the group does not result in anybody
+  * overflowing the 64k event limit imposed by the output buffer.
+@@ -1957,7 +1961,7 @@ static bool perf_event_validate_size(struct perf_event *event)
+ 	if (event == group_leader)
+ 		return true;
+ 
+-	for_each_sibling_event(sibling, group_leader) {
++	read_for_each_sibling_event(sibling, group_leader) {
+ 		if (__perf_event_read_size(sibling->attr.read_format,
+ 					   group_leader->nr_siblings + 1) > 16*1024)
+ 			return false;
+-- 
+2.43.0
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git/log/?h=fixes
-> https://git.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git/log/?h=for-next
-> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git/log/?h=renesas-dts-for-v6.8
-
-Thanks for the pointers.
-
-Best regards,
-Peter Lin
-
-> Cheers,
-> Prabhakar
-> 
-> >  .../devicetree/bindings/riscv/cpus.yaml       |   6 +-
-> >  .../devicetree/bindings/riscv/extensions.yaml |  13 ++
-> >  arch/riscv/Kconfig.errata                     |  13 --
-> >  arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi |   2 +-
-> >  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi   |   4 +-
-> >  arch/riscv/boot/dts/sophgo/cv1800b.dtsi       |   2 +-
-> >  arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi   | 128 +++++++++---------
-> >  arch/riscv/boot/dts/thead/th1520.dtsi         |   8 +-
-> >  arch/riscv/errata/andes/errata.c              |  10 +-
-> >  arch/riscv/errata/thead/errata.c              |  19 ---
-> >  arch/riscv/include/asm/errata_list.h          |  19 +--
-> >  arch/riscv/include/asm/hwcap.h                |   2 +
-> >  arch/riscv/include/asm/vendorid_list.h        |   2 +-
-> >  arch/riscv/kernel/alternative.c               |   2 +-
-> >  arch/riscv/kernel/cpufeature.c                |   2 +
-> >  drivers/irqchip/irq-riscv-intc.c              |  89 ++++++++++--
-> >  drivers/perf/Kconfig                          |  27 ++++
-> >  drivers/perf/riscv_pmu_sbi.c                  |  47 +++++--
-> >  include/linux/soc/andes/irq.h                 |  18 +++
-> >  .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
-> >  .../arch/riscv/andes/ax45/instructions.json   | 127 +++++++++++++++++
-> >  .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
-> >  .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
-> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
-> >  24 files changed, 592 insertions(+), 151 deletions(-)
-> >  create mode 100644 include/linux/soc/andes/irq.h
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-> >
-> > --
-> > 2.34.1
-> >
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
