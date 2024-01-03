@@ -1,45 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657E31D54E;
-	Wed,  3 Jan 2024 20:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3420F1D696;
+	Wed,  3 Jan 2024 21:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5Hh2//e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4342C433C7;
-	Wed,  3 Jan 2024 20:55:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIwBTq+F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB75C433C7;
+	Wed,  3 Jan 2024 21:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704315332;
-	bh=AeTKh3wRabFnQ1yuK+vyl+Mc6+9kDxEh7vO32+RO5Dw=;
+	s=k20201202; t=1704316791;
+	bh=pECIEIb28EtEOiDFQMWcUuOJdfm106t6mJYZ646MxwY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j5Hh2//e7rRibhQAqELfRdXJ8t5GJI43thG2563X9Z65lUWLC/4445nICOSZmhcsp
-	 AjYUL/xmOm1BrAfesT3Q1yKO96Y97obfWM6o72WpyyVAOol0/oKLOPiNY1mxukdB8Y
-	 eDiTiJVbhpIuIzQnhj/8ui3yXl/eTDrNOyqI+gM9/i/9YVrQhlfVj3Oq5fy/Ch6UK+
-	 w48pUxJXvaFFnB+jfAOxSWQ5m0WFhx5AS0Gx0+8uAsdEr1yChBmcuu1XtSPHTAve7I
-	 8KpSMJAGBXhEImItfgF2rDIWlwyBz3csh5TMDAyGrdF6U9zr3B8rnNEVB1h8ifeY25
-	 tNK4CS3wVZeZA==
+	b=fIwBTq+Fat5ri3bGo7Y8PJD1wtV1IVfRaoQCX8PUkdWwu/aabUhBW3okHAVp/Sa34
+	 C6BV6MTWQxSXK0Vf4VrJVol5n5QonJcO0NXCbgMgX61gFWPGlthlFO+r56GIgF+dXr
+	 JLgVnCRYXIpox7fwpWcoR46cUaYTrb97MeGbWGC/dFXgFHFdAxvq5XUhExnl+ReWZt
+	 xKaWuXtKAjlkdewIIoMuq/GqwSH9l9OvkrHZjQvkW7+ZKfIfQhgxI3OHDJrcQo7Xrt
+	 HkMGXSvTivWrwCYeWmhsbS4zGWwFaW+XXbBqjJOxp/mjIJ0c0sNRNuvuOMC7jhh3Kd
+	 ByPuu+TmZpJlA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 49369403EF; Wed,  3 Jan 2024 17:55:30 -0300 (-03)
-Date: Wed, 3 Jan 2024 17:55:30 -0300
+	id 3133F403EF; Wed,  3 Jan 2024 18:19:49 -0300 (-03)
+Date: Wed, 3 Jan 2024 18:19:49 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ming Wang <wangming01@loongson.cn>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v1] perf env: Avoid recursively taking env->bpf_progs.lock
-Message-ID: <ZZXJwsYlGxYoQOeP@kernel.org>
-References: <20231207014655.1252484-1-irogers@google.com>
- <CAP-5=fWdAouBb7us44HOdd+ZfBj5fLFTuLCokbG8w3jVuQgTxw@mail.gmail.com>
- <ZZWK43OPvGcd-BAR@kernel.org>
- <CAPhsuW6EZ-FoZFbCuxs7gAa0OaQGw0zMLDaeEsNoU31vjXijnQ@mail.gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: baomingtong001@208suo.com, peterz@infradead.org, mingo@redhat.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
+	anshuman.khandual@arm.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools:remove unneeded variable from
+ perf_event_attr__fprintf()
+Message-ID: <ZZXPdSo38DRTUVj_@kernel.org>
+References: <20230614062234.24149-1-luojianhong@cdjrlc.com>
+ <329a5b1b6e2c9061467ed6ef82247b8d@208suo.com>
+ <CAP-5=fW_tgXjWpevy+y4gY5XxpYq27zHahPZ8fv5L3+LdjaFnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,21 +42,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6EZ-FoZFbCuxs7gAa0OaQGw0zMLDaeEsNoU31vjXijnQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fW_tgXjWpevy+y4gY5XxpYq27zHahPZ8fv5L3+LdjaFnQ@mail.gmail.com>
 X-Url: http://acmel.wordpress.com
 
-Em Wed, Jan 03, 2024 at 09:40:26AM -0800, Song Liu escreveu:
-> On Wed, Jan 3, 2024 at 8:27 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > Applied, with that minor patch reduction hunk and this:
+Em Wed, Jul 12, 2023 at 06:20:12PM -0700, Ian Rogers escreveu:
+> On Tue, Jun 13, 2023 at 11:25 PM <baomingtong001@208suo.com> wrote:
+> >
+> > fix the following coccicheck warning:
+> >
+> > tools/perf/util/perf_event_attr_fprintf.c:97:5-8: Unneeded variable:
+> > "ret". Return "0".
+> >
+> > Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
 
-> > Fixes: f8dfeae009effc0b ("perf bpf: Show more BPF program info in print_bpf_prog_info()")
+util/perf_event_attr_fprintf.c: In function ‘perf_event_attr__fprintf’:
+util/perf_event_attr_fprintf.c:256:17: error: ‘ret’ undeclared (first use in this function)
+  256 |                 ret += attr__fprintf(fp, _n, buf, priv);\
+      |                 ^~~
+util/perf_event_attr_fprintf.c:267:9: note: in expansion of macro ‘PRINT_ATTRn’
+  267 |         PRINT_ATTRn("type", type, p_type_id, true);
+      |         ^~~~~~~~~~~
 
-> > Song, can I have your Acked-by?
+All those PRINT_ATTRf use that ret variable:
 
-> LGTM. Thanks for the fix!
+#define PRINT_ATTRn(_n, _f, _p, _a)                     \
+do {                                                    \
+        if (_a || attr->_f) {                           \
+                _p(attr->_f);                           \
+                ret += attr__fprintf(fp, _n, buf, priv);\
+        }                                               \
+} while (0)
 
-> Acked-by: Song Liu <song@kernel.org>
+#define PRINT_ATTRf(_f, _p)     PRINT_ATTRn(#_f, _f, _p, false
 
-Thanks! Added to the cset.
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
+> > ---
+> >   tools/perf/util/perf_event_attr_fprintf.c | 3 +--
+> >   1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/perf_event_attr_fprintf.c
+> > b/tools/perf/util/perf_event_attr_fprintf.c
+> > index 7e5e7b30510d..4a8f625b80c7 100644
+> > --- a/tools/perf/util/perf_event_attr_fprintf.c
+> > +++ b/tools/perf/util/perf_event_attr_fprintf.c
+> > @@ -94,7 +94,6 @@ int perf_event_attr__fprintf(FILE *fp, struct
+> > perf_event_attr *attr,
+> >                    attr__fprintf_f attr__fprintf, void *priv)
+> >   {
+> >       char buf[BUF_SIZE];
+> > -    int ret = 0;
+> >
+> >       PRINT_ATTRf(type, p_unsigned);
+> >       PRINT_ATTRf(size, p_unsigned);
+> > @@ -155,5 +154,5 @@ int perf_event_attr__fprintf(FILE *fp, struct
+> > perf_event_attr *attr,
+> >       PRINT_ATTRf(aux_sample_size, p_unsigned);
+> >       PRINT_ATTRf(sig_data, p_unsigned);
+> >
+> > -    return ret;
+> > +    return 0;
+> >   }
+
+-- 
 
 - Arnaldo
