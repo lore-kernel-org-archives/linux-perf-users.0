@@ -1,82 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3271C2A9;
-	Wed,  3 Jan 2024 17:40:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B727A1C687;
+	Wed,  3 Jan 2024 17:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilbW+Awq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF93C4339A;
-	Wed,  3 Jan 2024 17:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704303640;
-	bh=kif2bw2FG7EZZYJYjHsYnB9iHshx00TE2vdHkS1MAQc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ilbW+AwqPODlsLi6kVkZGWBFz009dwCrrxcslPjVrBoRceZIJsooVkOlLImYht5P5
-	 rqWKdYGGPXfwrRpbS1caw8QdZCW57ZUFXWlLUqR8i+hIcq18J7wG3Ukz/6jnz1J8As
-	 IkGbSsmGVaYCRgYvUObucDbZ71j7kDDW+veLmKuNwpQ9Dp+lejSTuRdGefwXY/hry3
-	 UiThckl4BtqxBEe1vS6/6IKQE/l7B7Hz4M9iwx8QB1gk0cLHtwYSJxgE7BTABizevP
-	 j6lkaF+eY33jod2g4DXZM1k+/4S/005F+zNHI3y6E7vmalL58VJbRMmuvUOLprzc28
-	 p/CKsSYaJ29Gw==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e7d6565b5so7848001e87.0;
-        Wed, 03 Jan 2024 09:40:40 -0800 (PST)
-X-Gm-Message-State: AOJu0YymhJz58QV2p9ZN3uTGLiaMVJGVliR+y0aADoC0s5aDJkxrHnAu
-	JCGlw0UcSyPMJDZuz+kH8nEP21L/DTFWpASSEF4=
-X-Google-Smtp-Source: AGHT+IHdcNf0HfRTjmT03rv2Safr/oCgAw2zpuyFkm9Oqtmhg7Heu5bStB0iVwFNN5dxsxUCNitrH6m18fCdNYCQNbg=
-X-Received: by 2002:ac2:5b9b:0:b0:50e:71d4:c76d with SMTP id
- o27-20020ac25b9b000000b0050e71d4c76dmr6922016lfn.109.1704303638367; Wed, 03
- Jan 2024 09:40:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kcEU1fhC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704303897; x=1735839897;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=FsxTGWvVPI/NoBF8Xammjod/CJ+T7B04tNBazndfAto=;
+  b=kcEU1fhC/geX/kjl1fIHQ05wumPK2OM0TCNkuRnMkawWyJOQhMPEa9hi
+   clDL5A2yKF+OWtLFyrCEwFyU11GBmi1mS4eXYniscrjiG/MlBMndjOc8J
+   A6Je16CTh/IfjoNX7YtzxkbGQ4xEuown46qAVq7DWWeOMOdJgW6JxYCbw
+   WrQZKOej8icQnV0qFraPG1LdzIuqQ7CbI26C8u+nCbqQgUCrKdYE55/tR
+   dHzFLEk2JwSsRipMQyVvbvehNhi5xoREJo8wyOHPKRB2okkwEu2JZ/PJE
+   uMpldA66Zq2/VCN+7zFvS/hLqQHHy5Cy+bWvxoyg571DWyRzAPbD0chah
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="394187368"
+X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
+   d="scan'208";a="394187368"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 09:44:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="780045017"
+X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
+   d="scan'208";a="780045017"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 09:44:56 -0800
+Received: from [10.213.174.222] (kliang2-mobl1.ccr.corp.intel.com [10.213.174.222])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 14138580DC7;
+	Wed,  3 Jan 2024 09:44:54 -0800 (PST)
+Message-ID: <555f8096-619c-46cf-bff8-0e49f03eac2a@linux.intel.com>
+Date: Wed, 3 Jan 2024 12:44:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207014655.1252484-1-irogers@google.com> <CAP-5=fWdAouBb7us44HOdd+ZfBj5fLFTuLCokbG8w3jVuQgTxw@mail.gmail.com>
- <ZZWK43OPvGcd-BAR@kernel.org>
-In-Reply-To: <ZZWK43OPvGcd-BAR@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Wed, 3 Jan 2024 09:40:26 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW6EZ-FoZFbCuxs7gAa0OaQGw0zMLDaeEsNoU31vjXijnQ@mail.gmail.com>
-Message-ID: <CAPhsuW6EZ-FoZFbCuxs7gAa0OaQGw0zMLDaeEsNoU31vjXijnQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf env: Avoid recursively taking env->bpf_progs.lock
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ming Wang <wangming01@loongson.cn>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] perf x86 test: Update hybrid expectations
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240103170159.1435753-1-irogers@google.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240103170159.1435753-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 3, 2024 at 8:27=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> Em Tue, Jan 02, 2024 at 07:00:53PM -0800, Ian Rogers escreveu:
-> > On Wed, Dec 6, 2023 at 5:46=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> > >
-> > > Add variants of perf_env__insert_bpf_prog_info, perf_env__insert_btf
-> > > and perf_env__find_btf prefixed with __ to indicate the
-> > > env->bpf_progs.lock is assumed held. Call these variants when the loc=
-k
-> > > is held to avoid recursively taking it and potentially having a threa=
-d
-> > > deadlock with itself.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > Ping.
->
-> Applied, with that minor patch reduction hunk and this:
->
-> Fixes: f8dfeae009effc0b ("perf bpf: Show more BPF program info in print_b=
-pf_prog_info()")
->
-> Song, can I have your Acked-by?
 
-LGTM. Thanks for the fix!
 
-Acked-by: Song Liu <song@kernel.org>
+On 2024-01-03 12:01 p.m., Ian Rogers wrote:
+> The legacy events cpu-cycles and instructions have sysfs event
+> equivalents on x86 (see /sys/devices/cpu_core/events). As sysfs/JSON
+> events are now higher in priority than legacy events this causes the
+> hybrid test expectations not to be met. To fix this switch to legacy
+> events that don't have sysfs versions, namely cpu-cycles becomes
+> cycles and instructions becomes branches.
+> 
+> Fixes: a24d9d9dc096 ("perf parse-events: Make legacy events lower priority than sysfs/JSON")
+> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Closes: https://lore.kernel.org/lkml/ZYbm5L7tw7bdpDpE@kernel.org/
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+
+Thanks Ian. For the series,
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+>  tools/perf/arch/x86/tests/hybrid.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/tests/hybrid.c b/tools/perf/arch/x86/tests/hybrid.c
+> index eb152770f148..05a5f81e8167 100644
+> --- a/tools/perf/arch/x86/tests/hybrid.c
+> +++ b/tools/perf/arch/x86/tests/hybrid.c
+> @@ -47,7 +47,7 @@ static int test__hybrid_hw_group_event(struct evlist *evlist)
+>  	evsel = evsel__next(evsel);
+>  	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+>  	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_BRANCH_INSTRUCTIONS));
+>  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
+>  	return TEST_OK;
+>  }
+> @@ -102,7 +102,7 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
+>  	evsel = evsel__next(evsel);
+>  	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+>  	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_BRANCH_INSTRUCTIONS));
+>  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
+>  	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+>  	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+> @@ -171,27 +171,27 @@ struct evlist_test {
+>  
+>  static const struct evlist_test test__hybrid_events[] = {
+>  	{
+> -		.name  = "cpu_core/cpu-cycles/",
+> +		.name  = "cpu_core/cycles/",
+>  		.check = test__hybrid_hw_event_with_pmu,
+>  		/* 0 */
+>  	},
+>  	{
+> -		.name  = "{cpu_core/cpu-cycles/,cpu_core/instructions/}",
+> +		.name  = "{cpu_core/cycles/,cpu_core/branches/}",
+>  		.check = test__hybrid_hw_group_event,
+>  		/* 1 */
+>  	},
+>  	{
+> -		.name  = "{cpu-clock,cpu_core/cpu-cycles/}",
+> +		.name  = "{cpu-clock,cpu_core/cycles/}",
+>  		.check = test__hybrid_sw_hw_group_event,
+>  		/* 2 */
+>  	},
+>  	{
+> -		.name  = "{cpu_core/cpu-cycles/,cpu-clock}",
+> +		.name  = "{cpu_core/cycles/,cpu-clock}",
+>  		.check = test__hybrid_hw_sw_group_event,
+>  		/* 3 */
+>  	},
+>  	{
+> -		.name  = "{cpu_core/cpu-cycles/k,cpu_core/instructions/u}",
+> +		.name  = "{cpu_core/cycles/k,cpu_core/branches/u}",
+>  		.check = test__hybrid_group_modifier1,
+>  		/* 4 */
+>  	},
