@@ -1,302 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8B01C281;
-	Wed,  3 Jan 2024 16:52:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3951C281
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jan 2024 17:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oB7r6Sxb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A51C433C8;
-	Wed,  3 Jan 2024 16:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704300749;
-	bh=VtXoDttPy1wmHFZ3VGVNPiIcXXUrQfZPdt9duGyvrxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oB7r6SxbtD3RNXZuECMcwk3KMEM6n32jzuVuyRW8u4oZsmnx9goaqA0Ko2s9fK3Vw
-	 w9Pl2FcmeQdvluyonLv+zvnip5ma1ntvPVH+DGFPb5VX/Hf/SyB+DVoAjI7neYDn8R
-	 LB/kdh42xDRRFZUMRPxi8j3ctCVBx74hwjs66OQ7Pa1wfa5nfqEa2pt9cJIbewldFN
-	 ljEvAFJJHVoIV/T0yafnN4g4NTFmmF335zVD5N+Y8c7FYfL/s1lBK4sfKrt/OHaWNs
-	 3WNmE+YUGeyQJcGr3SxEODc0k/x3scxZvWs7Muv9wxv+2AEvCFFON3LpsdikLHac3e
-	 hi2SgYZHSxLEw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id E8FD1403EF; Wed,  3 Jan 2024 13:52:26 -0300 (-03)
-Date: Wed, 3 Jan 2024 13:52:26 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	namhyung@kernel.org, adrian.hunter@intel.com, eranian@google.com,
-	irogers@google.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
-Subject: Re: [PATCH v3] perf vendor events amd: Add Zen 4 memory controller
- events
-Message-ID: <ZZWQygNA4ez-ikE8@kernel.org>
-References: <e0d8a7e8ca8ee3e378d8029e80b456ac327d6419.1701238314.git.sandipan.das@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AMrS1hVs"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5f325796097so37397427b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jan 2024 09:02:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704301345; x=1704906145; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DZnRxlTdDAoebH3N02PoiIrttaLFmicjC7EGKLpzd7g=;
+        b=AMrS1hVsypUT4Ur9rJ4iDeSscL+0S7gzu60dJKIDWV1Pe6GWaCsVj6RY/ubhKUBIBl
+         SwdLCHJfbG9KVKMKAwbgcU/Q8T1LEa91xWtBp/3gzUNYHeKXCfDgjdOrffaH5QZwEyRd
+         +nX/YqFNo1qOOtB41gvl2kIUUAoAkRhFEwSXmlXHyLo4Lo5E54T3e6U/Al86SkPRGXCh
+         D/io7/+Gr6IXAI7XO7us7Ef/wi330nzx8ZuEeXSZGqMnHsYZ+6asrdZlagDFPXlMLaw/
+         121Vm5b5adCcIrUbupXHBxQ7Bray5BTI7auO2gvwu9zCs3GFvePsUqiUNdrQNQOkcUSo
+         Dc6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704301345; x=1704906145;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DZnRxlTdDAoebH3N02PoiIrttaLFmicjC7EGKLpzd7g=;
+        b=CHenRzJHQ6xIuUEmiuxvd54wYSTx3jn3GxZb9hoZwrzANdIgwn5u/B3v6kB1F4Gm5c
+         HERMeo/ZygNrjgCG5KlAlRgxIFqUqqYheZ6LIDgwy+s8vSIYdIJCNDNCy9DxgmjRvWBL
+         PfMx8q3hBtIP26BIiZs/DfsdCEzONWBrzwDM6YnzsXZfPbqRikjBrrvDX6MjtqSfzi/S
+         /UJi4EiM6YeANV+LEJvZe/nPgIJhL1MsyESu2oCrI3Ql9sHYHNyGrktsXWhGbGSjkSSs
+         uKHKamsrP4nK45J5ZH8lAtu2vCelAaIsHM9emiPj/7Z6NUoyXX3TO/v6gpGSjcasU77A
+         gBKw==
+X-Gm-Message-State: AOJu0YyGSdT2kEj9LJ1+NFAlZHVQ6NU/QcUU3Tns3O99T6DgPET86Aq+
+	U/Hmu24dEiGkNCCa6JTycR2rMQh4qmPjKk7NhVY=
+X-Google-Smtp-Source: AGHT+IGwptcaetFy/hbwadjuFRa4NZpFOy+Sv6NfGbNOUZm9VNYtBhhcQA6COEuTLEhoTUEDYMB4aGRar62h
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f607:7105:a86e:433f])
+ (user=irogers job=sendgmr) by 2002:a05:690c:4443:b0:5d3:a348:b0c0 with SMTP
+ id gq3-20020a05690c444300b005d3a348b0c0mr10000295ywb.5.1704301345330; Wed, 03
+ Jan 2024 09:02:25 -0800 (PST)
+Date: Wed,  3 Jan 2024 09:01:58 -0800
+Message-Id: <20240103170159.1435753-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0d8a7e8ca8ee3e378d8029e80b456ac327d6419.1701238314.git.sandipan.das@amd.com>
-X-Url: http://acmel.wordpress.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+Subject: [PATCH v2 1/2] perf x86 test: Update hybrid expectations
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Em Wed, Nov 29, 2023 at 11:55:04AM +0530, Sandipan Das escreveu:
-> Make the jevents parser aware of the Unified Memory Controller (UMC) PMU
-> and add events taken from Section 8.2.1 "UMC Performance Monitor Events"
-> of the Processor Programming Reference (PPR) for AMD Family 19h Model 11h
-> processors. The events capture UMC command activity such as CAS, ACTIVATE,
-> PRECHARGE etc. while the metrics derive data bus utilization and memory
-> bandwidth out of these events.
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> ---
+The legacy events cpu-cycles and instructions have sysfs event
+equivalents on x86 (see /sys/devices/cpu_core/events). As sysfs/JSON
+events are now higher in priority than legacy events this causes the
+hybrid test expectations not to be met. To fix this switch to legacy
+events that don't have sysfs versions, namely cpu-cycles becomes
+cycles and instructions becomes branches.
 
-Thanks, applied to perf-tools-next.
+Fixes: a24d9d9dc096 ("perf parse-events: Make legacy events lower priority than sysfs/JSON")
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Closes: https://lore.kernel.org/lkml/ZYbm5L7tw7bdpDpE@kernel.org/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/arch/x86/tests/hybrid.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-- Arnaldo
-
+diff --git a/tools/perf/arch/x86/tests/hybrid.c b/tools/perf/arch/x86/tests/hybrid.c
+index eb152770f148..05a5f81e8167 100644
+--- a/tools/perf/arch/x86/tests/hybrid.c
++++ b/tools/perf/arch/x86/tests/hybrid.c
+@@ -47,7 +47,7 @@ static int test__hybrid_hw_group_event(struct evlist *evlist)
+ 	evsel = evsel__next(evsel);
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+ 	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+-	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
++	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_BRANCH_INSTRUCTIONS));
+ 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
+ 	return TEST_OK;
+ }
+@@ -102,7 +102,7 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
+ 	evsel = evsel__next(evsel);
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
+ 	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+-	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
++	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_BRANCH_INSTRUCTIONS));
+ 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
+ 	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+@@ -171,27 +171,27 @@ struct evlist_test {
  
-> v3:
->  - Rebase on top of latest perf-tools-next branch.
-> 
-> v2: https://lore.kernel.org/all/3a7245598265737ae4296fa6b0ab03a51708c502.1696425185.git.sandipan.das@amd.com/
-> v1: https://lore.kernel.org/all/a70b1ef6ab427b768f21401af280d235dd095412.1689748843.git.sandipan.das@amd.com/
-> 
-> ---
->  .../arch/x86/amdzen4/memory-controller.json   | 101 ++++++++++++++++++
->  .../arch/x86/amdzen4/recommended.json         |  84 +++++++++++++++
->  tools/perf/pmu-events/jevents.py              |   2 +
->  3 files changed, 187 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
-> 
-> diff --git a/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json b/tools/perf/pmu-events/arch/x86/a.mdzen4/memory-controller.json
-> new file mode 100644
-> index 000000000000..55263e5e4f69
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen4/memory-controller.json
-> @@ -0,0 +1,101 @@
-> +[
-> +  {
-> +    "EventName": "umc_mem_clk",
-> +    "PublicDescription": "Number of memory clock cycles.",
-> +    "EventCode": "0x00",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_act_cmd.all",
-> +    "PublicDescription": "Number of ACTIVATE commands sent.",
-> +    "EventCode": "0x05",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_act_cmd.rd",
-> +    "PublicDescription": "Number of ACTIVATE commands sent for reads.",
-> +    "EventCode": "0x05",
-> +    "RdWrMask": "0x1",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_act_cmd.wr",
-> +    "PublicDescription": "Number of ACTIVATE commands sent for writes.",
-> +    "EventCode": "0x05",
-> +    "RdWrMask": "0x2",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_pchg_cmd.all",
-> +    "PublicDescription": "Number of PRECHARGE commands sent.",
-> +    "EventCode": "0x06",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_pchg_cmd.rd",
-> +    "PublicDescription": "Number of PRECHARGE commands sent for reads.",
-> +    "EventCode": "0x06",
-> +    "RdWrMask": "0x1",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_pchg_cmd.wr",
-> +    "PublicDescription": "Number of PRECHARGE commands sent for writes.",
-> +    "EventCode": "0x06",
-> +    "RdWrMask": "0x2",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_cas_cmd.all",
-> +    "PublicDescription": "Number of CAS commands sent.",
-> +    "EventCode": "0x0a",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_cas_cmd.rd",
-> +    "PublicDescription": "Number of CAS commands sent for reads.",
-> +    "EventCode": "0x0a",
-> +    "RdWrMask": "0x1",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_cas_cmd.wr",
-> +    "PublicDescription": "Number of CAS commands sent for writes.",
-> +    "EventCode": "0x0a",
-> +    "RdWrMask": "0x2",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_data_slot_clks.all",
-> +    "PublicDescription": "Number of clocks used by the data bus.",
-> +    "EventCode": "0x14",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_data_slot_clks.rd",
-> +    "PublicDescription": "Number of clocks used by the data bus for reads.",
-> +    "EventCode": "0x14",
-> +    "RdWrMask": "0x1",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  },
-> +  {
-> +    "EventName": "umc_data_slot_clks.wr",
-> +    "PublicDescription": "Number of clocks used by the data bus for writes.",
-> +    "EventCode": "0x14",
-> +    "RdWrMask": "0x2",
-> +    "PerPkg": "1",
-> +    "Unit": "UMCPMC"
-> +  }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
-> index 5e6a793acf7b..96e06401c6cb 100644
-> --- a/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
-> @@ -330,5 +330,89 @@
->      "MetricGroup": "data_fabric",
->      "PerPkg": "1",
->      "ScaleUnit": "6.103515625e-5MiB"
-> +  },
-> +  {
-> +    "MetricName": "umc_data_bus_utilization",
-> +    "BriefDescription": "Memory controller data bus utilization.",
-> +    "MetricExpr": "d_ratio(umc_data_slot_clks.all / 2, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_rate",
-> +    "BriefDescription": "Memory controller CAS command rate.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_read_ratio",
-> +    "BriefDescription": "Ratio of memory controller CAS commands for reads.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_write_ratio",
-> +    "BriefDescription": "Ratio of memory controller CAS commands for writes.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.wr, umc_cas_cmd.all)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "umc_mem_read_bandwidth",
-> +    "BriefDescription": "Estimated memory read bandwidth.",
-> +    "MetricExpr": "(umc_cas_cmd.rd * 64) / 1e6 / duration_time",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "umc_mem_write_bandwidth",
-> +    "BriefDescription": "Estimated memory write bandwidth.",
-> +    "MetricExpr": "(umc_cas_cmd.wr * 64) / 1e6 / duration_time",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "umc_mem_bandwidth",
-> +    "BriefDescription": "Estimated combined memory bandwidth.",
-> +    "MetricExpr": "(umc_cas_cmd.all * 64) / 1e6 / duration_time",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_read_ratio",
-> +    "BriefDescription": "Ratio of memory controller CAS commands for reads.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_rate",
-> +    "BriefDescription": "Memory controller CAS command rate.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1"
-> +  },
-> +  {
-> +    "MetricName": "umc_activate_cmd_rate",
-> +    "BriefDescription": "Memory controller ACTIVATE command rate.",
-> +    "MetricExpr": "d_ratio(umc_act_cmd.all * 1000, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1"
-> +  },
-> +  {
-> +    "MetricName": "umc_precharge_cmd_rate",
-> +    "BriefDescription": "Memory controller PRECHARGE command rate.",
-> +    "MetricExpr": "d_ratio(umc_pchg_cmd.all * 1000, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1"
->    }
->  ]
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index 0093c998cb6e..53ab050c8fa4 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -286,6 +286,7 @@ class JsonEvent:
->            'imx8_ddr': 'imx8_ddr',
->            'L3PMC': 'amd_l3',
->            'DFPMC': 'amd_df',
-> +          'UMCPMC': 'amd_umc',
->            'cpu_core': 'cpu_core',
->            'cpu_atom': 'cpu_atom',
->            'ali_drw': 'ali_drw',
-> @@ -354,6 +355,7 @@ class JsonEvent:
->          ('SampleAfterValue', 'period='),
->          ('UMask', 'umask='),
->          ('NodeType', 'type='),
-> +        ('RdWrMask', 'rdwrmask='),
->      ]
->      for key, value in event_fields:
->        if key in jd and jd[key] != '0':
-> -- 
-> 2.34.1
-> 
-
+ static const struct evlist_test test__hybrid_events[] = {
+ 	{
+-		.name  = "cpu_core/cpu-cycles/",
++		.name  = "cpu_core/cycles/",
+ 		.check = test__hybrid_hw_event_with_pmu,
+ 		/* 0 */
+ 	},
+ 	{
+-		.name  = "{cpu_core/cpu-cycles/,cpu_core/instructions/}",
++		.name  = "{cpu_core/cycles/,cpu_core/branches/}",
+ 		.check = test__hybrid_hw_group_event,
+ 		/* 1 */
+ 	},
+ 	{
+-		.name  = "{cpu-clock,cpu_core/cpu-cycles/}",
++		.name  = "{cpu-clock,cpu_core/cycles/}",
+ 		.check = test__hybrid_sw_hw_group_event,
+ 		/* 2 */
+ 	},
+ 	{
+-		.name  = "{cpu_core/cpu-cycles/,cpu-clock}",
++		.name  = "{cpu_core/cycles/,cpu-clock}",
+ 		.check = test__hybrid_hw_sw_group_event,
+ 		/* 3 */
+ 	},
+ 	{
+-		.name  = "{cpu_core/cpu-cycles/k,cpu_core/instructions/u}",
++		.name  = "{cpu_core/cycles/k,cpu_core/branches/u}",
+ 		.check = test__hybrid_group_modifier1,
+ 		/* 4 */
+ 	},
 -- 
+2.43.0.472.g3155946c3a-goog
 
-- Arnaldo
