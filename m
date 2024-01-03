@@ -1,126 +1,333 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4281B26F;
-	Wed,  3 Jan 2024 15:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CDF1B272;
+	Wed,  3 Jan 2024 16:09:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SaPq019C"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 403FGJ7L029054;
-	Wed, 3 Jan 2024 15:48:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pp1; bh=uQLMlCJImNqCHsdbyH1uNuuD/pxgp8sfzr8iuTucLj4=;
- b=SaPq019CclnrxcZOGHlF+y6KfWti90rmKVzvbF7iSOaygDdMV4C+apw+qFZtrY1RNxEE
- azNFRKbrx1MDw1lN1QXghgcREekBTO8GIQq+BeyJYWGnZid+2QH4cWGKQwb7ti5bKVpT
- x9va9tyLWLut38cu5YYqylbF6VXaY/2AFwc4sZJzc9sjyScbMK0zGZtcxIHCuI/0yc7t
- GtJAJNh84g3Ec5KwrO0mAoh5Hu1cfn2VzmmDzv7wer3fiqRUWd3nyB/fxGJ2U8cT3MfD
- +Lvd7EGW9j3bZZEgtVCBdpV0Iiv3T5bCuw0BbKQtnPZ/fFaOj39AyyA8LL80Yre+2IPu Wg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vd8bjn4bs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jan 2024 15:48:12 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 403FHb6r001646;
-	Wed, 3 Jan 2024 15:48:11 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vd8bjn4a2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jan 2024 15:48:11 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 403ERgVb019397;
-	Wed, 3 Jan 2024 15:48:09 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vc30sjyrw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jan 2024 15:48:09 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 403Fm5rj41484920
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Jan 2024 15:48:06 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D0B7420040;
-	Wed,  3 Jan 2024 15:48:05 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 44A2820043;
-	Wed,  3 Jan 2024 15:48:05 +0000 (GMT)
-Received: from osiris (unknown [9.171.19.62])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  3 Jan 2024 15:48:05 +0000 (GMT)
-Date: Wed, 3 Jan 2024 16:48:03 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Daan De Meyer <daan.j.demeyer@gmail.com>
-Cc: Neal Gompa <ngompa@fedoraproject.org>, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Davide Cavalca <dcavalca@meta.com>
-Subject: Re: s390x stack unwinding with perf?
-Message-ID: <20240103154803.24509-B-hca@linux.ibm.com>
-References: <CAO8sHcn3+_qrnvp0580aK7jN0Wion5F7KYeBAa4MnCY4mqABPA@mail.gmail.com>
- <20231026145659.7063-A-hca@linux.ibm.com>
- <CAO8sHckF_D+SjvGySsGHOpOcdy6y7pwQEF9SfV3sw4Ye4_sCKA@mail.gmail.com>
- <20231027100925.9071-B-hca@linux.ibm.com>
- <CAEg-Je9+UnVsC9e_yDQmXTLNfZy+b42Smj3xobhTE5DiQjk_hA@mail.gmail.com>
- <20231030123558.10816-A-hca@linux.ibm.com>
- <CAEg-Je_eyVRFmtCtAH+BLvqfPut3LtZQL7NFASzv7Er=iJjqAw@mail.gmail.com>
- <20231109144834.11754-B-hca@linux.ibm.com>
- <CAO8sHcnqPojEJ7YVPzRWow5D9ELWpCaHG7kPeNoZzJb0QOOYXg@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAO8sHcnqPojEJ7YVPzRWow5D9ELWpCaHG7kPeNoZzJb0QOOYXg@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: I8B9p3M-V9y9rzxav69pC59uLNxqKohi
-X-Proofpoint-GUID: -Lrt3L_-QDatHjlAjuxCDV9UhQ8VI-54
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWVz1l5J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C54CC433C7;
+	Wed,  3 Jan 2024 16:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704298154;
+	bh=lGmN0wrRuGDJdYZbuAeGfH/5xd4gu2xMwykDg7Rwxrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SWVz1l5JvumJN02FTr6UwA84RzEmW8akZ2iLYZKED3D8c4u2jlTWUW9Bh5joRKJ5Q
+	 JCA488Vv0ijYjtNJYzJ4JkToeL9hf4WX/FCkryWnj0n1m+BmYkM8liIE6yjjOqXNyi
+	 y+aVE83X/Yqf1u6tReebJJIuXUHj7Ea080RLOJ/EyB17mgpRD0rCDuP/tXUagSPjPF
+	 U2iMEJrS4zDALJurbI8zS1lnhAcWV6+/3lmjA0v9+Wpsgi6r9V8NB/K3XVC+N+euHd
+	 NZ9cHTgmGpKx3izoa9DAFsvWGaV8LKBs4R6h1xM+BPxJ3lB+80Ea5z5v+ezHbiRsfJ
+	 nrxHieVfT+Ksw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 43DCA403EF; Wed,  3 Jan 2024 13:09:11 -0300 (-03)
+Date: Wed, 3 Jan 2024 13:09:11 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>,
+	Ming Wang <wangming01@loongson.cn>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v1] perf env: Avoid recursively taking env->bpf_progs.lock
+Message-ID: <ZZWGp9i-ZovCimfD@kernel.org>
+References: <20231207014655.1252484-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-03_08,2024-01-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
- bulkscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 phishscore=0
- suspectscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401030129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231207014655.1252484-1-irogers@google.com>
+X-Url: http://acmel.wordpress.com
 
-On Wed, Dec 20, 2023 at 01:58:36PM +0100, Daan De Meyer wrote:
-> > FWIW, this is now upstream and will land in 6.7, together with a similar
-> > patch which adds user stacktrace support:
+Em Wed, Dec 06, 2023 at 05:46:55PM -0800, Ian Rogers escreveu:
+> Add variants of perf_env__insert_bpf_prog_info, perf_env__insert_btf
+> and perf_env__find_btf prefixed with __ to indicate the
+> env->bpf_progs.lock is assumed held. Call these variants when the lock
+> is held to avoid recursively taking it and potentially having a thread
+> deadlock with itself.
 > 
-> > 504b73d00a55 ("s390/perf: implement perf_callchain_user()")
-> > aa44433ac4ee ("s390: add USER_STACKTRACE support")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> Previously this patch was part of a larger set:
+> https://lore.kernel.org/lkml/20231127220902.1315692-51-irogers@google.com/
+> ---
+>  tools/perf/util/bpf-event.c |  8 +++---
+>  tools/perf/util/bpf-event.h | 12 ++++-----
+>  tools/perf/util/env.c       | 53 +++++++++++++++++++++++--------------
+>  tools/perf/util/env.h       |  4 +++
+>  tools/perf/util/header.c    |  8 +++---
+>  5 files changed, 51 insertions(+), 34 deletions(-)
 > 
-> > Please let us know if there are any problems.
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 830711cae30d..3573e0b7ef3e 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -545,9 +545,9 @@ int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env)
+>  	return evlist__add_sb_event(evlist, &attr, bpf_event__sb_cb, env);
+>  }
+>  
+> -void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> -				    struct perf_env *env,
+> -				    FILE *fp)
+> +void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> +				      struct perf_env *env,
+> +				      FILE *fp)
+>  {
+>  	__u32 *prog_lens = (__u32 *)(uintptr_t)(info->jited_func_lens);
+>  	__u64 *prog_addrs = (__u64 *)(uintptr_t)(info->jited_ksyms);
+> @@ -563,7 +563,7 @@ void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+>  	if (info->btf_id) {
+>  		struct btf_node *node;
+>  
+> -		node = perf_env__find_btf(env, info->btf_id);
+> +		node = __perf_env__find_btf(env, info->btf_id);
+>  		if (node)
+>  			btf = btf__new((__u8 *)(node->data),
+>  				       node->data_size);
+> diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+> index 1bcbd4fb6c66..e2f0420905f5 100644
+> --- a/tools/perf/util/bpf-event.h
+> +++ b/tools/perf/util/bpf-event.h
+> @@ -33,9 +33,9 @@ struct btf_node {
+>  int machine__process_bpf(struct machine *machine, union perf_event *event,
+>  			 struct perf_sample *sample);
+>  int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
+> -void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> -				    struct perf_env *env,
+> -				    FILE *fp);
+> +void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> +				      struct perf_env *env,
+> +				      FILE *fp);
+>  #else
+>  static inline int machine__process_bpf(struct machine *machine __maybe_unused,
+>  				       union perf_event *event __maybe_unused,
+> @@ -50,9 +50,9 @@ static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
+>  	return 0;
+>  }
+>  
+> -static inline void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info __maybe_unused,
+> -						  struct perf_env *env __maybe_unused,
+> -						  FILE *fp __maybe_unused)
+> +static inline void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info __maybe_unused,
+> +						    struct perf_env *env __maybe_unused,
+> +						    FILE *fp __maybe_unused)
+>  {
+>  
+>  }
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index c68b7a004f29..cfdacbf29456 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -22,15 +22,20 @@ struct perf_env perf_env;
+>  #include "bpf-utils.h"
+>  #include <bpf/libbpf.h>
+>  
+> -void perf_env__insert_bpf_prog_info(struct perf_env *env,
+> -				    struct bpf_prog_info_node *info_node)
+> +void perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
+> +{
+> +	down_write(&env->bpf_progs.lock);
+> +	__perf_env__insert_bpf_prog_info(env, info_node);
+> +	up_write(&env->bpf_progs.lock);
+> +}
+
+Minor nit/modification:
+
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index cfdacbf294566c33..a459374d0a1a1dc8 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -22,7 +22,8 @@ struct perf_env perf_env;
+ #include "bpf-utils.h"
+ #include <bpf/libbpf.h>
+ 
+-void perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
++void perf_env__insert_bpf_prog_info(struct perf_env *env,
++				    struct bpf_prog_info_node *info_node)
+ {
+ 	down_write(&env->bpf_progs.lock);
+ 	__perf_env__insert_bpf_prog_info(env, info_node);
+
+Just to reduce patch size a bit, just like happened with
+perf_env__insert_btf() further down, where its body was changed  to call
+the __ variant but the non __ function got just the body modified.
+
+- Arnaldo
+
+> +void __perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
+>  {
+>  	__u32 prog_id = info_node->info_linear->info.id;
+>  	struct bpf_prog_info_node *node;
+>  	struct rb_node *parent = NULL;
+>  	struct rb_node **p;
+>  
+> -	down_write(&env->bpf_progs.lock);
+>  	p = &env->bpf_progs.infos.rb_node;
+>  
+>  	while (*p != NULL) {
+> @@ -42,15 +47,13 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
+>  			p = &(*p)->rb_right;
+>  		} else {
+>  			pr_debug("duplicated bpf prog info %u\n", prog_id);
+> -			goto out;
+> +			return;
+>  		}
+>  	}
+>  
+>  	rb_link_node(&info_node->rb_node, parent, p);
+>  	rb_insert_color(&info_node->rb_node, &env->bpf_progs.infos);
+>  	env->bpf_progs.infos_cnt++;
+> -out:
+> -	up_write(&env->bpf_progs.lock);
+>  }
+>  
+>  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+> @@ -79,14 +82,22 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+>  }
+>  
+>  bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+> +{
+> +	bool ret;
+> +
+> +	down_write(&env->bpf_progs.lock);
+> +	ret = __perf_env__insert_btf(env, btf_node);
+> +	up_write(&env->bpf_progs.lock);
+> +	return ret;
+> +}
+> +
+> +bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+>  {
+>  	struct rb_node *parent = NULL;
+>  	__u32 btf_id = btf_node->id;
+>  	struct btf_node *node;
+>  	struct rb_node **p;
+> -	bool ret = true;
+>  
+> -	down_write(&env->bpf_progs.lock);
+>  	p = &env->bpf_progs.btfs.rb_node;
+>  
+>  	while (*p != NULL) {
+> @@ -98,25 +109,31 @@ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+>  			p = &(*p)->rb_right;
+>  		} else {
+>  			pr_debug("duplicated btf %u\n", btf_id);
+> -			ret = false;
+> -			goto out;
+> +			return false;
+>  		}
+>  	}
+>  
+>  	rb_link_node(&btf_node->rb_node, parent, p);
+>  	rb_insert_color(&btf_node->rb_node, &env->bpf_progs.btfs);
+>  	env->bpf_progs.btfs_cnt++;
+> -out:
+> -	up_write(&env->bpf_progs.lock);
+> -	return ret;
+> +	return true;
+>  }
+>  
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+> +{
+> +	struct btf_node *res;
+> +
+> +	down_read(&env->bpf_progs.lock);
+> +	res = __perf_env__find_btf(env, btf_id);
+> +	up_read(&env->bpf_progs.lock);
+> +	return res;
+> +}
+> +
+> +struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+>  {
+>  	struct btf_node *node = NULL;
+>  	struct rb_node *n;
+>  
+> -	down_read(&env->bpf_progs.lock);
+>  	n = env->bpf_progs.btfs.rb_node;
+>  
+>  	while (n) {
+> @@ -126,13 +143,9 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+>  		else if (btf_id > node->id)
+>  			n = n->rb_right;
+>  		else
+> -			goto out;
+> +			return node;
+>  	}
+> -	node = NULL;
+> -
+> -out:
+> -	up_read(&env->bpf_progs.lock);
+> -	return node;
+> +	return NULL;
+>  }
+>  
+>  /* purge data in bpf_progs.infos tree */
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index bf7e3c4c211f..7c527e65c186 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -175,12 +175,16 @@ const char *perf_env__raw_arch(struct perf_env *env);
+>  int perf_env__nr_cpus_avail(struct perf_env *env);
+>  
+>  void perf_env__init(struct perf_env *env);
+> +void __perf_env__insert_bpf_prog_info(struct perf_env *env,
+> +				      struct bpf_prog_info_node *info_node);
+>  void perf_env__insert_bpf_prog_info(struct perf_env *env,
+>  				    struct bpf_prog_info_node *info_node);
+>  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+>  							__u32 prog_id);
+>  bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+> +bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+> +struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+>  
+>  int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
+>  char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 08cc2febabde..02bf9d8b5f74 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1849,8 +1849,8 @@ static void print_bpf_prog_info(struct feat_fd *ff, FILE *fp)
+>  		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
+>  		next = rb_next(&node->rb_node);
+>  
+> -		bpf_event__print_bpf_prog_info(&node->info_linear->info,
+> -					       env, fp);
+> +		__bpf_event__print_bpf_prog_info(&node->info_linear->info,
+> +						 env, fp);
+>  	}
+>  
+>  	up_read(&env->bpf_progs.lock);
+> @@ -3188,7 +3188,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
+>  		/* after reading from file, translate offset to address */
+>  		bpil_offs_to_addr(info_linear);
+>  		info_node->info_linear = info_linear;
+> -		perf_env__insert_bpf_prog_info(env, info_node);
+> +		__perf_env__insert_bpf_prog_info(env, info_node);
+>  	}
+>  
+>  	up_write(&env->bpf_progs.lock);
+> @@ -3235,7 +3235,7 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+>  		if (__do_read(ff, node->data, data_size))
+>  			goto out;
+>  
+> -		perf_env__insert_btf(env, node);
+> +		__perf_env__insert_btf(env, node);
+>  		node = NULL;
+>  	}
+>  
+> -- 
+> 2.43.0.rc2.451.g8631bc7472-goog
 > 
-> I've been trying out the new userspace stacktrace support on Fedora
-> Rawhide but I'm having some problems getting it to work. I rebuilt
-> systemd and all of its dependencies (specifically, glibc) with
-> -mbackchain using copr
-> (https://copr.fedorainfracloud.org/coprs/daandemeyer/fno-omit-frame-pointer/builds/),
-> built a Fedora Rawhide image with the rebuilt packages and perf using
-> mkosi, started an s390x virtual machine and ran "perf record -g
-> journalctl --verify" followed by "perf report -g 'graph,0.5,caller'".
-> On x86, this gives me a sensible perf report. On s390x, it seems a lot
-> of information is still missing.
-...
-> To reproduce (from a s390x host system):
-...
-> - bin/mkosi -f qemu"
 
-This fails with "bootctl not found".
+-- 
 
-Looking at the binaries in the copr repo it looks like the generated
-code does create backchains. So in theory walking backchains should
-work.
-
-Could you please give examples what does not work, and what you would
-expect? Right now I don't know what to look at.
+- Arnaldo
