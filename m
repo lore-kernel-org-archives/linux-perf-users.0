@@ -1,95 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9117B1BDC3;
-	Wed,  3 Jan 2024 16:45:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B4F1BDDD;
+	Wed,  3 Jan 2024 16:47:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODiwPOZ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D987DC433C8;
-	Wed,  3 Jan 2024 16:45:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUK7oC2f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CC2C433C8;
+	Wed,  3 Jan 2024 16:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704300341;
-	bh=M8pBSNIiUdoYN2rEiciHsGiO/2XHvrJs3DnNI6IvZDI=;
+	s=k20201202; t=1704300476;
+	bh=g0nBuXXj57nubgtYR0YmrNxPgO3LEIFTUI56xOZHs5w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ODiwPOZ08n19KjW2aZVnjQInr3/wNnvBJAnE1xDPYagSDgM9Ntc5FQSFDbG9/0zUb
-	 qclbRs1sjQH7YSCgvdqabyx8UrBv3cCIFzFekBcWAubfAyUHF8RMTUIsccPh61UHzv
-	 5iDfnHL4bwnYteEAiW/hjq4APbyDlYBWueHJs38tQSfhLDbix5r8z8kRgMSnqQHMna
-	 ngO79mG/jOTga+ME3torw2g/dDGbbk5mZUm69cUjWpJhQtwB/XakDvUkCsTLMr10xH
-	 4jtEPi+tnfuRwin2v3ApzhMQDFQbFTBBok8cIObh2c30BtfKt1JhrpdEHWu6RiB3Tb
-	 5tspqKtLHJvaA==
+	b=bUK7oC2fzZg5egB/2IYhH45yOvK2l4dYVSEol6A2mrfyfTJEEoQtvWQfUQRwCjmrW
+	 o6cwSgoqq9oV0Z1f8kKINMj1Wa/Ui35IztvltF5iHpvObTg3z+7UUThKSFZRb37jiv
+	 UCSlyQpp4JykD2zvJUm9kzzQWXOp7NR1/WMthSJu2hH9roqSe2cSDUyGh2QU/oxRef
+	 dqlLF6OdaOHXpjx3nweOQT9ZTKsZv9E0F1riq/O1qURpL3pI/xqPnod0QsALeFFkPg
+	 7vGi3CFIPVdPCT/6p1BEN1SZN0yG+BgPyg/9qRE+O9+8oTgKwR+VcdS2wdhMjOdrqU
+	 oZ8xtGx3+CsIw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 89D9F403EF; Wed,  3 Jan 2024 13:45:38 -0300 (-03)
-Date: Wed, 3 Jan 2024 13:45:38 -0300
+	id DDB3D403EF; Wed,  3 Jan 2024 13:47:52 -0300 (-03)
+Date: Wed, 3 Jan 2024 13:47:52 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf record: Reduce memory for recording lost samples
- event
-Message-ID: <ZZWPMsSm3JwAu7_R@kernel.org>
-References: <20231207021627.1322884-1-irogers@google.com>
+	John Garry <john.g.garry@oracle.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Guillaume Endignoux <guillaumee@google.com>
+Subject: Re: [PATCH v1] perf stat: Fix hard coded ll miss units
+Message-ID: <ZZWPuIjp0xklrcGy@kernel.org>
+References: <20231211181242.1721059-1-irogers@google.com>
+ <CAP-5=fVWZ7etZq7YBU1HGMnyJ6wsZ3zok9JuS7eWQsTKuqzrAA@mail.gmail.com>
+ <cbc91c86-e6ea-4a97-8b61-5594d3cdbc81@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231207021627.1322884-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cbc91c86-e6ea-4a97-8b61-5594d3cdbc81@linux.intel.com>
 X-Url: http://acmel.wordpress.com
 
-Em Wed, Dec 06, 2023 at 06:16:27PM -0800, Ian Rogers escreveu:
-> Reduce from PERF_SAMPLE_MAX_SIZE to "sizeof(*lost) +
-> session->machines.host.id_hdr_size".
+Em Tue, Jan 02, 2024 at 03:01:55PM -0500, Liang, Kan escreveu:
 > 
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-
+> 
+> On 2024-01-02 2:34 p.m., Ian Rogers wrote:
+> > On Mon, Dec 11, 2023 at 10:13 AM Ian Rogers <irogers@google.com> wrote:
+> >>
+> >> Copy-paste error where LL cache misses are reported as l1i.
+> >>
+> >> Suggested-by: Guillaume Endignoux <guillaumee@google.com>
+> >> Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks, applied to perf-tools-next.
 
 - Arnaldo
 
-
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> Suggested in:
-> https://lore.kernel.org/lkml/CAM9d7cjpYHN_Q63sW70vTCisdW=-SzjsrryUUJjgtZ3+9jdxfA@mail.gmail.com/
-> ---
->  tools/perf/builtin-record.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+ 
+> Thanks,
+> Kan
 > 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index eb5a398ddb1d..206110fc2799 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1954,7 +1954,8 @@ static void record__read_lost_samples(struct record *rec)
->  
->  				if (count.lost) {
->  					if (!lost) {
-> -						lost = zalloc(PERF_SAMPLE_MAX_SIZE);
-> +						lost = zalloc(sizeof(*lost) +
-> +							      session->machines.host.id_hdr_size);
->  						if (!lost) {
->  							pr_debug("Memory allocation failed\n");
->  							return;
-> @@ -1970,7 +1971,8 @@ static void record__read_lost_samples(struct record *rec)
->  		lost_count = perf_bpf_filter__lost_count(evsel);
->  		if (lost_count) {
->  			if (!lost) {
-> -				lost = zalloc(PERF_SAMPLE_MAX_SIZE);
-> +				lost = zalloc(sizeof(*lost) +
-> +					      session->machines.host.id_hdr_size);
->  				if (!lost) {
->  					pr_debug("Memory allocation failed\n");
->  					return;
-> -- 
-> 2.43.0.rc2.451.g8631bc7472-goog
-> 
+> > Ping. Trivial 1 character fix but no reviews :-(
+> > 
+> > Thanks,
+> > Ian
+> > 
+> >> ---
+> >>  tools/perf/util/stat-shadow.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> >> index 1c5c3eeba4cf..e31426167852 100644
+> >> --- a/tools/perf/util/stat-shadow.c
+> >> +++ b/tools/perf/util/stat-shadow.c
+> >> @@ -264,7 +264,7 @@ static void print_ll_miss(struct perf_stat_config *config,
+> >>         static const double color_ratios[3] = {20.0, 10.0, 5.0};
+> >>
+> >>         print_ratio(config, evsel, aggr_idx, misses, out, STAT_LL_CACHE, color_ratios,
+> >> -                   "of all L1-icache accesses");
+> >> +                   "of all LL-cache accesses");
+> >>  }
+> >>
+> >>  static void print_dtlb_miss(struct perf_stat_config *config,
+> >> --
+> >> 2.43.0.472.g3155946c3a-goog
+> >>
+> > 
 
 -- 
 
