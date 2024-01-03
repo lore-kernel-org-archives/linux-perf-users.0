@@ -1,114 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3420F1D696;
-	Wed,  3 Jan 2024 21:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D801F617;
+	Wed,  3 Jan 2024 22:22:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIwBTq+F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB75C433C7;
-	Wed,  3 Jan 2024 21:19:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfSg7HGf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64094C433C8;
+	Wed,  3 Jan 2024 22:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704316791;
-	bh=pECIEIb28EtEOiDFQMWcUuOJdfm106t6mJYZ646MxwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fIwBTq+Fat5ri3bGo7Y8PJD1wtV1IVfRaoQCX8PUkdWwu/aabUhBW3okHAVp/Sa34
-	 C6BV6MTWQxSXK0Vf4VrJVol5n5QonJcO0NXCbgMgX61gFWPGlthlFO+r56GIgF+dXr
-	 JLgVnCRYXIpox7fwpWcoR46cUaYTrb97MeGbWGC/dFXgFHFdAxvq5XUhExnl+ReWZt
-	 xKaWuXtKAjlkdewIIoMuq/GqwSH9l9OvkrHZjQvkW7+ZKfIfQhgxI3OHDJrcQo7Xrt
-	 HkMGXSvTivWrwCYeWmhsbS4zGWwFaW+XXbBqjJOxp/mjIJ0c0sNRNuvuOMC7jhh3Kd
-	 ByPuu+TmZpJlA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 3133F403EF; Wed,  3 Jan 2024 18:19:49 -0300 (-03)
-Date: Wed, 3 Jan 2024 18:19:49 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: baomingtong001@208suo.com, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
-	anshuman.khandual@arm.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools:remove unneeded variable from
- perf_event_attr__fprintf()
-Message-ID: <ZZXPdSo38DRTUVj_@kernel.org>
-References: <20230614062234.24149-1-luojianhong@cdjrlc.com>
- <329a5b1b6e2c9061467ed6ef82247b8d@208suo.com>
- <CAP-5=fW_tgXjWpevy+y4gY5XxpYq27zHahPZ8fv5L3+LdjaFnQ@mail.gmail.com>
+	s=k20201202; t=1704320544;
+	bh=Xqh8mRMTZjVBQ4W72hW9xL1GK2MfD1+kMbsRptHMHmE=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=MfSg7HGffmUNqmVb8SnoYQnRUSfHRKdvaTVTmVyXSK4o2Ph8l3qk20AmyjZzYXIAJ
+	 kDelRQbE0X6pkFnKmcISSLMIfyItVAVHGeXNUnxKTzIjGzBTUERVwNZP0qioZYBp8d
+	 hWTCXsXiNJBNtRmfUB4T7iSIEO1ZTp0wm5GXpZMHvV06+a5wOt+j0v4VcfuLMVcI2w
+	 hBpSdndVY79I3RwvYd/KxwBOGc1HiyEcByxUH3LkmeXFEUvoz4WFxd8vYbu4i26iK+
+	 7UWQHVgGW5ygPdbDrCT9F7/dRmAW4vcDiLqkSu+JeM3IMEe85o6Gb2dWpvFvh3yVQ7
+	 LiY46smhkmW7g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id F1E49CE08F4; Wed,  3 Jan 2024 14:22:23 -0800 (PST)
+Date: Wed, 3 Jan 2024 14:22:23 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Like Xu <like.xu@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Luwei Kang <luwei.kang@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Breno Leitao <leitao@debian.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>
+Subject: [BUG] Guest OSes die simultaneously (bisected)
+Message-ID: <3d8f5987-e09c-4dd2-a9c0-8ba22c9e948a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW_tgXjWpevy+y4gY5XxpYq27zHahPZ8fv5L3+LdjaFnQ@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
 
-Em Wed, Jul 12, 2023 at 06:20:12PM -0700, Ian Rogers escreveu:
-> On Tue, Jun 13, 2023 at 11:25 PM <baomingtong001@208suo.com> wrote:
-> >
-> > fix the following coccicheck warning:
-> >
-> > tools/perf/util/perf_event_attr_fprintf.c:97:5-8: Unneeded variable:
-> > "ret". Return "0".
-> >
-> > Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+Hello!
 
-util/perf_event_attr_fprintf.c: In function ‘perf_event_attr__fprintf’:
-util/perf_event_attr_fprintf.c:256:17: error: ‘ret’ undeclared (first use in this function)
-  256 |                 ret += attr__fprintf(fp, _n, buf, priv);\
-      |                 ^~~
-util/perf_event_attr_fprintf.c:267:9: note: in expansion of macro ‘PRINT_ATTRn’
-  267 |         PRINT_ATTRn("type", type, p_type_id, true);
-      |         ^~~~~~~~~~~
+Since some time between v5.19 and v6.4, long-running rcutorture tests
+would (rarely but intolerably often) have all guests on a given host die
+simultaneously with something like an instruction fault or a segmentation
+violation.
 
-All those PRINT_ATTRf use that ret variable:
+Each bisection step required 20 hosts running 10 hours each, and
+this eventually fingered commit c59a1f106f5c ("KVM: x86/pmu: Add
+IA32_PEBS_ENABLE MSR emulation for extended PEBS").  Although this commit
+is certainly messing with things that could possibly cause all manner
+of mischief, I don't immediately see a smoking gun.  Except that the
+commit prior to this one is rock solid.
 
-#define PRINT_ATTRn(_n, _f, _p, _a)                     \
-do {                                                    \
-        if (_a || attr->_f) {                           \
-                _p(attr->_f);                           \
-                ret += attr__fprintf(fp, _n, buf, priv);\
-        }                                               \
-} while (0)
+Just to make things a bit more exciting, bisection in mainline proved
+to be problematic due to bugs of various kinds that hid this one.  I was
+therefore forced to bisect among the commits backported to the internal
+v5.19-based kernel, which fingered the backported version of the patch
+called out above.
 
-#define PRINT_ATTRf(_f, _p)     PRINT_ATTRn(#_f, _f, _p, false
+Please note that this is not (yet) an emergency.  I will just continue
+to run rcutorture on v5.19-based hypervisors in the meantime.
 
-- Arnaldo
- 
-> Thanks,
-> Ian
-> 
-> > ---
-> >   tools/perf/util/perf_event_attr_fprintf.c | 3 +--
-> >   1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/util/perf_event_attr_fprintf.c
-> > b/tools/perf/util/perf_event_attr_fprintf.c
-> > index 7e5e7b30510d..4a8f625b80c7 100644
-> > --- a/tools/perf/util/perf_event_attr_fprintf.c
-> > +++ b/tools/perf/util/perf_event_attr_fprintf.c
-> > @@ -94,7 +94,6 @@ int perf_event_attr__fprintf(FILE *fp, struct
-> > perf_event_attr *attr,
-> >                    attr__fprintf_f attr__fprintf, void *priv)
-> >   {
-> >       char buf[BUF_SIZE];
-> > -    int ret = 0;
-> >
-> >       PRINT_ATTRf(type, p_unsigned);
-> >       PRINT_ATTRf(size, p_unsigned);
-> > @@ -155,5 +154,5 @@ int perf_event_attr__fprintf(FILE *fp, struct
-> > perf_event_attr *attr,
-> >       PRINT_ATTRf(aux_sample_size, p_unsigned);
-> >       PRINT_ATTRf(sig_data, p_unsigned);
-> >
-> > -    return ret;
-> > +    return 0;
-> >   }
+Any suggestions for debugging or fixing?
 
--- 
-
-- Arnaldo
+							Thanx, Paul
