@@ -1,336 +1,278 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7DF1A28F;
+	Wed,  3 Jan 2024 14:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BBvMapRx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704291363; x=1735827363;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/yyUwLA7odtgB81d026qZSQDwkuDgWVHXDG0DGGa+i4=;
+  b=BBvMapRxySXsAW6dc+l7kD2upqbjlQHE8Ak2yFgMIxAvleaTe2P4CA1y
+   Urubp82xRAh52g8+M4vFStXaXn+ZoOS2Cgdzt8XBpK1Nk2Nbcx+EPGhtF
+   sk0mxfA0z1Zfv66mljILEKLGlnDN9u+aSvd+xQfi7jSQMjc42xqJuUKAn
+   LFCi9lNz+vRevWA5MRmn4rxjsYORcU3hBmPRe2oxFWmEExwZdBGWft6AF
+   ovGfBf1/ie242IpZUZ/BHOyrZ0i+zJyglH+UD2ozXI2+nkmO3hr+x4+lf
+   8ffQFSVDj4J28fg1TKGonrOdOAZp2vnIX1Yg2GIVa1fMdfsvLACTuO8ta
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="3814304"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="3814304"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 06:16:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="953238907"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="953238907"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 06:16:02 -0800
+Received: from [10.213.174.222] (kliang2-mobl1.ccr.corp.intel.com [10.213.174.222])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAD6182B9;
-	Wed,  3 Jan 2024 09:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQ413z/4"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-555f95cc2e4so3445887a12.3;
-        Wed, 03 Jan 2024 01:26:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704273960; x=1704878760; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h8w1Q5f5g/GWHpE9GUXzfWWs0nx0LlPNNZuECXHO52A=;
-        b=BQ413z/4ZVWzdJRBkREEyAt3sBTlQmNUD6Fid0mKDMe5RsHAqQcNV2riL+s720LFIO
-         GLP/X7nssVUhBHrOLa1wVBnvkUPvb0m7lZAh6hHznz1XJIHgSK1QvK4CnaFRr3crEiDc
-         08Dh+jTAaDrca34OxpJIKHh2+8ayTOpYL71haSgsUK/bf/zaMayj1InPFpVGc+R9TJBk
-         5dwFjODaHOfVsWZLzGH/UFjIPPUIT1Nevf3Py/p0hB95fbq0xFHfPb8OzyqjjYGf4QlD
-         CM9s+wGIBmmYRFETErb+qeSCeTr9SLqdekz+l0I/IVooKR8JCxADCLEq8NDqV1nSruCg
-         8p0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704273960; x=1704878760;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h8w1Q5f5g/GWHpE9GUXzfWWs0nx0LlPNNZuECXHO52A=;
-        b=H6iAAAhmQoaucYKVXt2CK3HvKddQaySytPy0iLfIZTMfZQFFla5/iAMXZZgXYBxgRv
-         PtMeLMSV0vq++eps/6KB9x6v7AOMKhOSbsK9EsbK+YeBBTHII9f/cQTGP/8ZcpB0/kjT
-         rZAXnTaUUqbUrtSX7FlbyBL6AnhmuohCok4wPxYUZYiucny1OcTOXRsU7+K+ALGoYv3U
-         5azUFTAcGEk3L6DVVlyRZeY9p9xas+cgGIVfeHw5d505ioWrFsmm0teLlYE1l53RUvNi
-         E3OF52xFkOVLwUS0MzVD8n5T+BtY7zy0LR5KXh4q9gTRRH3TU6ACouxK2655vFdTg2up
-         o4YA==
-X-Gm-Message-State: AOJu0YxMvD7zvPF14qOe7cGnzKvo8DYPii0IZXVEe9Tuaz1uGuzx3zSE
-	UFHxyVi9NSgsTwaDDNGme18=
-X-Google-Smtp-Source: AGHT+IEi4vBme5w7ooMnLQkVjHMZvgsKZSFJ9Vn4H2n0BNfxYWC501Umg+sHPRLC/y3Qre6a0+3Cug==
-X-Received: by 2002:a17:906:5303:b0:a1d:932f:9098 with SMTP id h3-20020a170906530300b00a1d932f9098mr4214645ejo.97.1704273960001;
-        Wed, 03 Jan 2024 01:26:00 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id ex1-20020a170907954100b00a26f22dca5asm8590760ejc.0.2024.01.03.01.25.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 01:25:59 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 3 Jan 2024 10:25:57 +0100
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>,
-	Ming Wang <wangming01@loongson.cn>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v1] perf env: Avoid recursively taking env->bpf_progs.lock
-Message-ID: <ZZUoJfGbPwLcFCnb@krava>
-References: <20231207014655.1252484-1-irogers@google.com>
+	by linux.intel.com (Postfix) with ESMTPS id 39C8F580B99;
+	Wed,  3 Jan 2024 06:16:01 -0800 (PST)
+Message-ID: <48f8d7ff-1ea4-45f1-af74-d4256a64bded@linux.intel.com>
+Date: Wed, 3 Jan 2024 09:15:59 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231207014655.1252484-1-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: perf test hybrid failing on 14700K
+To: Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <ZYbm5L7tw7bdpDpE@kernel.org>
+ <4d86f3b6-eaee-4673-bdf5-3b97c1c1ad17@linux.intel.com>
+ <CAP-5=fUfJ-VBGS1D2+WM_eBu4uPGvxJ2KyD4WXzgKRCfGKHTQQ@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fUfJ-VBGS1D2+WM_eBu4uPGvxJ2KyD4WXzgKRCfGKHTQQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 06, 2023 at 05:46:55PM -0800, Ian Rogers wrote:
-> Add variants of perf_env__insert_bpf_prog_info, perf_env__insert_btf
-> and perf_env__find_btf prefixed with __ to indicate the
-> env->bpf_progs.lock is assumed held. Call these variants when the lock
-> is held to avoid recursively taking it and potentially having a thread
-> deadlock with itself.
+
+
+On 2024-01-02 5:41 p.m., Ian Rogers wrote:
+> On Tue, Jan 2, 2024 at 7:43 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2023-12-23 8:55 a.m., Arnaldo Carvalho de Melo wrote:
+>>> Hi Kan,
+>>>
+>>> I noticed the following problem, are you able to reproduce it?
+>>>
+>>> Happy solstice!
+>>
+>> Happy new year!
+>>
+>>>
+>>> - Arnaldo
+>>>
+>>> root@number:/home/acme/Downloads# grep "model name" -m1 /proc/cpuinfo
+>>> model name    : Intel(R) Core(TM) i7-14700K
+>>> root@number:/home/acme/Downloads# uname -a
+>>> Linux number 6.6.4-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Dec  3 18:13:11 UTC 2023 x86_64 GNU/Linux
+>>> root@number:/home/acme/Downloads# perf -vv
+>>> perf version 6.7.rc6.g63daba4e2861
+>>>                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+>>>     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+>>>          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+>>>                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
+>>>             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+>>>                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+>>>                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+>>> numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+>>>                libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+>>>              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+>>>               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+>>>              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+>>>              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+>>>     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+>>>                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+>>>                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+>>>              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+>>>                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+>>>                    aio: [ on  ]  # HAVE_AIO_SUPPORT
+>>>                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+>>>                libpfm4: [ on  ]  # HAVE_LIBPFM
+>>>          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+>>>          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+>>> root@number:/home/acme/Downloads# perf test 75
+>>>  75: x86 hybrid                                                      : FAILED!
+>>
+>> The failure should be a regression caused by the a24d9d9dc096 ("perf
+>> parse-events: Make legacy events lower priority than sysfs/JSON")
+>>
+>> @@ -1004,10 +1012,19 @@ static int config_term_pmu(struct
+>> perf_event_attr *attr,
+>>                                                            err_str, /*help=*/NULL);
+>>                         return -EINVAL;
+>>                 }
+>> -               attr->type = PERF_TYPE_HARDWARE;
+>> -               attr->config = term->val.num;
+>> -               if (perf_pmus__supports_extended_type())
+>> -                       attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+>> +               /*
+>> +                * If the PMU has a sysfs or json event prefer it over
+>> +                * legacy. ARM requires this.
+>> +                */
+>> +               if (perf_pmu__have_event(pmu, term->config))
+>> For Intel hybrid, the perf_pmu__have_event() should be always true for
+>> all hw events and hw cache events. So the patch will mistakenly update
+>> the type to TYPE_USER. However, On Intel platforms, the type of the hw
+>> events should be TYPE_HARDWARE.
+>>
+>> Seems ARM needs to find another way to distinguish the case.
+>>
+>> Ian, any suggestions?
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> Previously this patch was part of a larger set:
-> https://lore.kernel.org/lkml/20231127220902.1315692-51-irogers@google.com/
-> ---
->  tools/perf/util/bpf-event.c |  8 +++---
->  tools/perf/util/bpf-event.h | 12 ++++-----
->  tools/perf/util/env.c       | 53 +++++++++++++++++++++++--------------
->  tools/perf/util/env.h       |  4 +++
->  tools/perf/util/header.c    |  8 +++---
->  5 files changed, 51 insertions(+), 34 deletions(-)
+> Hi Kan/Mark,
 > 
+> Firstly, the perf_pmu__have_event is a test of whether
+> /sys/devices/<pmu>/events or the equivalent json events have the
+> specified event string like "inst_retired.any" - ie it isn't a test of
+> whether the event is supported by the kernel. Mark was quite insistent
+> that the behavior be changed so that if a legacy event is specified
+> with a PMU, the PMU's sysfs/json event is the priority which is a big
+> behavior change on x86.
+> 
+> To get the test passing again I've sent out a test update:
+> https://lore.kernel.org/lkml/20240102215732.1125997-1-irogers@google.com/
+> This switches the legacy events in the test to ones which don't have
+> sysfs or json equivalents. The test is somewhat brittle as an x86 PMU
+> change could decide to add /sys/devices/cpu/events/cycles alongside
+> /sys/devices/cpu/events/cpu-cycles. 
 
-lgtm
+I think the cycles, cpu-cycles, and instructions are treated as
+architectural events in both Linux and X86. I don't think there is a
+plan to change the behavior of the architectural events.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Ideally we'd be testing all events
+> on core PMUs, for legacy events they may have a sysfs/json override
+> and the test expectation should expect this and assert that the type
+> isn't PERF_TYPE_HARDWARE, etc. For now what I sent out is sufficient
+> to get the "x86 hybrid" test passing. 
 
-jirka
+Before the a24d9d9dc096, the "cpu-cycles" and the "cycles" are
+identical. It should be fine to verify either of them.
 
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index 830711cae30d..3573e0b7ef3e 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-> @@ -545,9 +545,9 @@ int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env)
->  	return evlist__add_sb_event(evlist, &attr, bpf_event__sb_cb, env);
->  }
->  
-> -void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
-> -				    struct perf_env *env,
-> -				    FILE *fp)
-> +void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
-> +				      struct perf_env *env,
-> +				      FILE *fp)
->  {
->  	__u32 *prog_lens = (__u32 *)(uintptr_t)(info->jited_func_lens);
->  	__u64 *prog_addrs = (__u64 *)(uintptr_t)(info->jited_ksyms);
-> @@ -563,7 +563,7 @@ void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
->  	if (info->btf_id) {
->  		struct btf_node *node;
->  
-> -		node = perf_env__find_btf(env, info->btf_id);
-> +		node = __perf_env__find_btf(env, info->btf_id);
->  		if (node)
->  			btf = btf__new((__u8 *)(node->data),
->  				       node->data_size);
-> diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-> index 1bcbd4fb6c66..e2f0420905f5 100644
-> --- a/tools/perf/util/bpf-event.h
-> +++ b/tools/perf/util/bpf-event.h
-> @@ -33,9 +33,9 @@ struct btf_node {
->  int machine__process_bpf(struct machine *machine, union perf_event *event,
->  			 struct perf_sample *sample);
->  int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
-> -void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
-> -				    struct perf_env *env,
-> -				    FILE *fp);
-> +void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
-> +				      struct perf_env *env,
-> +				      FILE *fp);
->  #else
->  static inline int machine__process_bpf(struct machine *machine __maybe_unused,
->  				       union perf_event *event __maybe_unused,
-> @@ -50,9 +50,9 @@ static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
->  	return 0;
->  }
->  
-> -static inline void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info __maybe_unused,
-> -						  struct perf_env *env __maybe_unused,
-> -						  FILE *fp __maybe_unused)
-> +static inline void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info __maybe_unused,
-> +						    struct perf_env *env __maybe_unused,
-> +						    FILE *fp __maybe_unused)
->  {
->  
->  }
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index c68b7a004f29..cfdacbf29456 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -22,15 +22,20 @@ struct perf_env perf_env;
->  #include "bpf-utils.h"
->  #include <bpf/libbpf.h>
->  
-> -void perf_env__insert_bpf_prog_info(struct perf_env *env,
-> -				    struct bpf_prog_info_node *info_node)
-> +void perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
-> +{
-> +	down_write(&env->bpf_progs.lock);
-> +	__perf_env__insert_bpf_prog_info(env, info_node);
-> +	up_write(&env->bpf_progs.lock);
-> +}
-> +
-> +void __perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_prog_info_node *info_node)
->  {
->  	__u32 prog_id = info_node->info_linear->info.id;
->  	struct bpf_prog_info_node *node;
->  	struct rb_node *parent = NULL;
->  	struct rb_node **p;
->  
-> -	down_write(&env->bpf_progs.lock);
->  	p = &env->bpf_progs.infos.rb_node;
->  
->  	while (*p != NULL) {
-> @@ -42,15 +47,13 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
->  			p = &(*p)->rb_right;
->  		} else {
->  			pr_debug("duplicated bpf prog info %u\n", prog_id);
-> -			goto out;
-> +			return;
->  		}
->  	}
->  
->  	rb_link_node(&info_node->rb_node, parent, p);
->  	rb_insert_color(&info_node->rb_node, &env->bpf_progs.infos);
->  	env->bpf_progs.infos_cnt++;
-> -out:
-> -	up_write(&env->bpf_progs.lock);
->  }
->  
->  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
-> @@ -79,14 +82,22 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
->  }
->  
->  bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
-> +{
-> +	bool ret;
-> +
-> +	down_write(&env->bpf_progs.lock);
-> +	ret = __perf_env__insert_btf(env, btf_node);
-> +	up_write(&env->bpf_progs.lock);
-> +	return ret;
-> +}
-> +
-> +bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
->  {
->  	struct rb_node *parent = NULL;
->  	__u32 btf_id = btf_node->id;
->  	struct btf_node *node;
->  	struct rb_node **p;
-> -	bool ret = true;
->  
-> -	down_write(&env->bpf_progs.lock);
->  	p = &env->bpf_progs.btfs.rb_node;
->  
->  	while (*p != NULL) {
-> @@ -98,25 +109,31 @@ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
->  			p = &(*p)->rb_right;
->  		} else {
->  			pr_debug("duplicated btf %u\n", btf_id);
-> -			ret = false;
-> -			goto out;
-> +			return false;
->  		}
->  	}
->  
->  	rb_link_node(&btf_node->rb_node, parent, p);
->  	rb_insert_color(&btf_node->rb_node, &env->bpf_progs.btfs);
->  	env->bpf_progs.btfs_cnt++;
-> -out:
-> -	up_write(&env->bpf_progs.lock);
-> -	return ret;
-> +	return true;
->  }
->  
->  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
-> +{
-> +	struct btf_node *res;
-> +
-> +	down_read(&env->bpf_progs.lock);
-> +	res = __perf_env__find_btf(env, btf_id);
-> +	up_read(&env->bpf_progs.lock);
-> +	return res;
-> +}
-> +
-> +struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id)
->  {
->  	struct btf_node *node = NULL;
->  	struct rb_node *n;
->  
-> -	down_read(&env->bpf_progs.lock);
->  	n = env->bpf_progs.btfs.rb_node;
->  
->  	while (n) {
-> @@ -126,13 +143,9 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
->  		else if (btf_id > node->id)
->  			n = n->rb_right;
->  		else
-> -			goto out;
-> +			return node;
->  	}
-> -	node = NULL;
-> -
-> -out:
-> -	up_read(&env->bpf_progs.lock);
-> -	return node;
-> +	return NULL;
->  }
->  
->  /* purge data in bpf_progs.infos tree */
-> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> index bf7e3c4c211f..7c527e65c186 100644
-> --- a/tools/perf/util/env.h
-> +++ b/tools/perf/util/env.h
-> @@ -175,12 +175,16 @@ const char *perf_env__raw_arch(struct perf_env *env);
->  int perf_env__nr_cpus_avail(struct perf_env *env);
->  
->  void perf_env__init(struct perf_env *env);
-> +void __perf_env__insert_bpf_prog_info(struct perf_env *env,
-> +				      struct bpf_prog_info_node *info_node);
->  void perf_env__insert_bpf_prog_info(struct perf_env *env,
->  				    struct bpf_prog_info_node *info_node);
->  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
->  							__u32 prog_id);
->  bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
-> +bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
->  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
-> +struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id);
->  
->  int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
->  char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 08cc2febabde..02bf9d8b5f74 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -1849,8 +1849,8 @@ static void print_bpf_prog_info(struct feat_fd *ff, FILE *fp)
->  		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
->  		next = rb_next(&node->rb_node);
->  
-> -		bpf_event__print_bpf_prog_info(&node->info_linear->info,
-> -					       env, fp);
-> +		__bpf_event__print_bpf_prog_info(&node->info_linear->info,
-> +						 env, fp);
->  	}
->  
->  	up_read(&env->bpf_progs.lock);
-> @@ -3188,7 +3188,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
->  		/* after reading from file, translate offset to address */
->  		bpil_offs_to_addr(info_linear);
->  		info_node->info_linear = info_linear;
-> -		perf_env__insert_bpf_prog_info(env, info_node);
-> +		__perf_env__insert_bpf_prog_info(env, info_node);
->  	}
->  
->  	up_write(&env->bpf_progs.lock);
-> @@ -3235,7 +3235,7 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
->  		if (__do_read(ff, node->data, data_size))
->  			goto out;
->  
-> -		perf_env__insert_btf(env, node);
-> +		__perf_env__insert_btf(env, node);
->  		node = NULL;
->  	}
->  
-> -- 
-> 2.43.0.rc2.451.g8631bc7472-goog
+But after the a24d9d9dc096, the code path is different. So maybe it's
+better to verify both of the "cpu-cycles" and the "cycles" in the x86
+hybrid test. Adding a new case something as below should be enough.
+
+	{
+		.name  = "{cpu_core/cpu-cycles/,cpu_core/cycles/}",
+		.check = test__hybrid_hw_group_2_event,
+	},
+
+Thanks,
+Kan
+
+> I should probably have done the
+> whole Reported-by.. thing, sorry for missing that.
+> 
+> Thanks,
+> Ian
+> 
+>>
+>> +                       term->type_term = PARSE_EVENTS__TERM_TYPE_USER;
+>> +                       term->no_value = true;
+>> +               } else {
+>> +                       attr->type = PERF_TYPE_HARDWARE;
+>> +                       attr->config = term->val.num;
+>> +                       if (perf_pmus__supports_extended_type())
+>> +                               attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+>> +               }
+>>                 return 0;
+>>         }
+>>         if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER ||
+>>
+>>
+>> Thanks,
+>> Kan
+>>> root@number:/home/acme/Downloads# perf test -v 75
+>>>  75: x86 hybrid                                                      :
+>>> --- start ---
+>>> test child forked, pid 4111587
+>>> Using CPUID GenuineIntel-6-B7-1
+>>> running test 0 'cpu_core/cpu-cycles/'
+>>> FAILED arch/x86/tests/hybrid.c:30 wrong type
+>>> Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
+>>> FAILED arch/x86/tests/hybrid.c:42 wrong type
+>>> Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
+>>> FAILED arch/x86/tests/hybrid.c:65 wrong type
+>>> Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
+>>> FAILED arch/x86/tests/hybrid.c:78 wrong type
+>>> Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
+>>> FAILED arch/x86/tests/hybrid.c:95 wrong type
+>>> Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
+>>> running test 6 'cpu_core/r1a/'
+>>> running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
+>>> WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
+>>> running test 8 'cpu_core/LLC-loads/'
+>>> test child finished with -1
+>>> ---- end ----
+>>> x86 hybrid: FAILED!
+>>> root@number:/home/acme/Downloads#
+>>>
+>>> root@number:/home/acme/Downloads# perf trace -e perf_event_open perf test -F -v 75
+>>>  75: x86 hybrid                                                      :
+>>> --- start ---
+>>> Using CPUID GenuineIntel-6-B7-1
+>>> running test 0 'cpu_core/cpu-cycles/'
+>>> FAILED arch/x86/tests/hybrid.c:30 wrong type
+>>> Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
+>>> FAILED arch/x86/tests/hybrid.c:42 wrong type
+>>> Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
+>>> FAILED arch/x86/tests/hybrid.c:65 wrong type
+>>> Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
+>>> FAILED arch/x86/tests/hybrid.c:78 wrong type
+>>> Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
+>>> FAILED arch/x86/tests/hybrid.c:95 wrong type
+>>> Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
+>>> running test 6 'cpu_core/r1a/'
+>>> running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
+>>> WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
+>>> running test 8 'cpu_core/LLC-loads/'
+>>> ---- end ----
+>>> x86 hybrid: FAILED!
+>>>      0.000 ( 0.008 ms): :4115165/4115165 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), config: 0xa00000000, disabled: 1, { bp_len, config2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: 0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925535355, sample_regs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
+>>>      0.010 ( 0.002 ms): :4115165/4115165 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), config: 0x400000000, disabled: 1, { bp_len, config2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: 0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925538919, sample_regs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 4
+>>> root@number:/home/acme/Downloads# strace -e perf_event_open perf test -F -v 75
+>>>  75: x86 hybrid                                                      :
+>>> --- start ---
+>>> Using CPUID GenuineIntel-6-B7-1
+>>> running test 0 'cpu_core/cpu-cycles/'
+>>> FAILED arch/x86/tests/hybrid.c:30 wrong type
+>>> Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
+>>> FAILED arch/x86/tests/hybrid.c:42 wrong type
+>>> Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
+>>> FAILED arch/x86/tests/hybrid.c:65 wrong type
+>>> Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
+>>> FAILED arch/x86/tests/hybrid.c:78 wrong type
+>>> Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
+>>> FAILED arch/x86/tests/hybrid.c:95 wrong type
+>>> Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
+>>> running test 6 'cpu_core/r1a/'
+>>> running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
+>>> WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
+>>> running test 8 'cpu_core/LLC-loads/'
+>>> perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0xa<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = 3
+>>> perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0x4<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = 4
+>>> ---- end ----
+>>> x86 hybrid: FAILED!
+>>> +++ exited with 0 +++
+>>> root@number:/home/acme/Downloads#
+>>>
 > 
