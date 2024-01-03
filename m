@@ -1,72 +1,77 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815A44A13
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jan 2024 02:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A88917988
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jan 2024 03:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LuldBrQE"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-54744e66d27so7138a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jan 2024 18:59:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aHYirBzc"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50e70d8273fso1323e87.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jan 2024 19:01:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704250755; x=1704855555; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1704250865; x=1704855665; darn=vger.kernel.org;
         h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VCq1Lfb8MiGC7Na0tk2+xuLDB2WWLfolpfiM5LugPs0=;
-        b=LuldBrQE2Rmx6pPs9YcvJNagTFVOPGbbDVUAE4RkBxO3t+FfIMdO9Dgu3xn/iavF4A
-         kzsOTl4/ekYcWXG6cwc7JGAi1VyXINluwAapM1rBEyRkEN3lzE7mWFtQe0LOQuQi4d4r
-         rD5q51XPkGEbep0q5eEAIGSgTSNXMXpIyAE6M4TOI/v3F9xBuQO3ja1DzK7yab3HTs9D
-         YBU6xaPR5MvVZ6kwSKfHZ16tyNQS0tBojF4fsUEyrBkd1HBOWYHCvWgwEzaYJ0ufWqQN
-         RrReWrQo7R30D2ML6cH4k0vL3gJRkWiFlFXX0Or1U/vVnLlTNxKoPgMPO3TlZ7KXOTYD
-         Quqg==
+        bh=wEqAS6lUOK244Og0QhQ14SjtB7KhQXvIvbYkplos8Zw=;
+        b=aHYirBzcvnLrtWBFeX4Fv7MTP+tuQvvzHudbBsZ3RyBhHSbQXY1v50t/5/gJ9aNapP
+         AjCCQKkqAU/OnwKv5TGl/ansfR+n9eO753guKBiLDxDCwX8rZ7a0izIg+pW5B0SFbM9s
+         /OSYRzmja+/EEOvi26KRJl6YKm8NNbWy4CsluAALsYniKKBwIWcAJODqPNpVWSQsYSbe
+         Y/VTwZRtstGhMtcsGsmdfawMec5LSv8d4iaxyA73Nibl31C2R62HTBcCGvfw8Su7U9rY
+         BxLtCDLJ4vy0sttJT4SWUamawrZ19e2lQyNHkH5uaeSXJ3dN+CdDBzS4qRLwctpU+w3x
+         2wkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704250755; x=1704855555;
+        d=1e100.net; s=20230601; t=1704250865; x=1704855665;
         h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VCq1Lfb8MiGC7Na0tk2+xuLDB2WWLfolpfiM5LugPs0=;
-        b=XFGGglbJwjUoR20Y8K52si6Wi50S+C2CImHEOJQ6ANKQvkJ2F6U6WH86oZTuu+KWYU
-         wJc7e8f4CLtzx075v7YsmJhrjKrXCnz6HYSgpD/bkgjMaC6MRJhAZu/Zo727QgZAblU0
-         6HkRT8m5u1R6YlOCoT2rBjz2OAIBzxXOrvNHCfu6PukrPqby+dWjcjXnByIWrytfxI/B
-         HbYBZnJ/n649hiHm7nq2XpQiA/5g9i8bJzjOgST+pr8JZbA+D4f5kqc83eA8fb2r0dFT
-         n5F7OovtiFVYm9lvNf7jP/hhN9SnTeUkLzVuDKLta9gCRoJQ7cYv4aDMFPpq+w53pO1S
-         UIQQ==
-X-Gm-Message-State: AOJu0YweVKv6x4rNjoHceISFD4WQOL4L2db0IdOdi0FQVYRIaaVL4AOu
-	KqZa9srQEpJlx91QUVZFkxQS4q7XmroZFLb+qhqZw5337cgb
-X-Google-Smtp-Source: AGHT+IHoREibGnYniTB05gP+Ptytz72pRY8BioD0lJCU/ju3PsY3jfGNtDuaQyvnSB6buBlsCSN/MexnFlRKt4BgKN8=
-X-Received: by 2002:a50:9e6c:0:b0:554:53d0:23f1 with SMTP id
- z99-20020a509e6c000000b0055453d023f1mr79550ede.0.1704250754578; Tue, 02 Jan
- 2024 18:59:14 -0800 (PST)
+        bh=wEqAS6lUOK244Og0QhQ14SjtB7KhQXvIvbYkplos8Zw=;
+        b=YD8anrgEtFa6ensmqlEVNLRPQtyqH8yZnscrzKlp120a/fh2CkSp/36Azoks0tQ88Z
+         b8go2vQgbO0S/VpjzGZEoo18uHXo5NS7e4LlNEHfZ/HY+AMOaZ5Pe6dYGofCpMTUJlyZ
+         OADWdSzHAglmP8fssuVhqVmznaGFu0N+Vq6Kzr9rzJI9XzBp4WPDuBF9gF+kGt3Wzgvs
+         vQ2LDFmyvwMhTlAMygi8gXtxb5Vh2hN3jn/qUtXr1259eJ4YXRQLFmS2qAmfeV0YoQCC
+         dW4RljytBLggv8AOOQZjwXTOWKRnOeRggbi3C5jIQLjEVRyb+XdQipNtRB8EFEdaGeJU
+         OMRg==
+X-Gm-Message-State: AOJu0Yxfhsl9hik7/tQaZwfSEgLHL5jibbcSKMdc0ORwXg8Bj8TFNEtn
+	qgifAyLAVXzsgjlZUJrBD+o0UQ2VCSFOSxw3aLhjsJJBIZ/y
+X-Google-Smtp-Source: AGHT+IEJZ1VMcut2KcGDICtAiq2m/b5KuDKPjbOqlCDVqVrIpmNBGvInCj8UOT4HhcLmWIAV+X3NqHezcvrzzkNXcJo=
+X-Received: by 2002:ac2:4e65:0:b0:50e:a747:917 with SMTP id
+ y5-20020ac24e65000000b0050ea7470917mr13180lfs.5.1704250865081; Tue, 02 Jan
+ 2024 19:01:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207021627.1322884-1-irogers@google.com>
-In-Reply-To: <20231207021627.1322884-1-irogers@google.com>
+References: <20231207014655.1252484-1-irogers@google.com>
+In-Reply-To: <20231207014655.1252484-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 2 Jan 2024 18:59:03 -0800
-Message-ID: <CAP-5=fVfddHzk_pUramFdUKACDw_buHAFt_B0y1VLY6yn9G72A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf record: Reduce memory for recording lost samples event
+Date: Tue, 2 Jan 2024 19:00:53 -0800
+Message-ID: <CAP-5=fWdAouBb7us44HOdd+ZfBj5fLFTuLCokbG8w3jVuQgTxw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf env: Avoid recursively taking env->bpf_progs.lock
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Ming Wang <wangming01@loongson.cn>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 6, 2023 at 6:16=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+On Wed, Dec 6, 2023 at 5:46=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
 e:
 >
-> Reduce from PERF_SAMPLE_MAX_SIZE to "sizeof(*lost) +
-> session->machines.host.id_hdr_size".
+> Add variants of perf_env__insert_bpf_prog_info, perf_env__insert_btf
+> and perf_env__find_btf prefixed with __ to indicate the
+> env->bpf_progs.lock is assumed held. Call these variants when the lock
+> is held to avoid recursively taking it and potentially having a thread
+> deadlock with itself.
 >
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Ping.
@@ -75,45 +80,289 @@ Thanks,
 Ian
 
 > ---
-> Suggested in:
-> https://lore.kernel.org/lkml/CAM9d7cjpYHN_Q63sW70vTCisdW=3D-SzjsrryUUJjgt=
-Z3+9jdxfA@mail.gmail.com/
+> Previously this patch was part of a larger set:
+> https://lore.kernel.org/lkml/20231127220902.1315692-51-irogers@google.com=
+/
 > ---
->  tools/perf/builtin-record.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  tools/perf/util/bpf-event.c |  8 +++---
+>  tools/perf/util/bpf-event.h | 12 ++++-----
+>  tools/perf/util/env.c       | 53 +++++++++++++++++++++++--------------
+>  tools/perf/util/env.h       |  4 +++
+>  tools/perf/util/header.c    |  8 +++---
+>  5 files changed, 51 insertions(+), 34 deletions(-)
 >
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index eb5a398ddb1d..206110fc2799 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1954,7 +1954,8 @@ static void record__read_lost_samples(struct record=
- *rec)
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 830711cae30d..3573e0b7ef3e 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -545,9 +545,9 @@ int evlist__add_bpf_sb_event(struct evlist *evlist, s=
+truct perf_env *env)
+>         return evlist__add_sb_event(evlist, &attr, bpf_event__sb_cb, env)=
+;
+>  }
 >
->                                 if (count.lost) {
->                                         if (!lost) {
-> -                                               lost =3D zalloc(PERF_SAMP=
-LE_MAX_SIZE);
-> +                                               lost =3D zalloc(sizeof(*l=
-ost) +
-> +                                                             session->ma=
-chines.host.id_hdr_size);
->                                                 if (!lost) {
->                                                         pr_debug("Memory =
-allocation failed\n");
->                                                         return;
-> @@ -1970,7 +1971,8 @@ static void record__read_lost_samples(struct record=
- *rec)
->                 lost_count =3D perf_bpf_filter__lost_count(evsel);
->                 if (lost_count) {
->                         if (!lost) {
-> -                               lost =3D zalloc(PERF_SAMPLE_MAX_SIZE);
-> +                               lost =3D zalloc(sizeof(*lost) +
-> +                                             session->machines.host.id_h=
-dr_size);
->                                 if (!lost) {
->                                         pr_debug("Memory allocation faile=
-d\n");
->                                         return;
+> -void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> -                                   struct perf_env *env,
+> -                                   FILE *fp)
+> +void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> +                                     struct perf_env *env,
+> +                                     FILE *fp)
+>  {
+>         __u32 *prog_lens =3D (__u32 *)(uintptr_t)(info->jited_func_lens);
+>         __u64 *prog_addrs =3D (__u64 *)(uintptr_t)(info->jited_ksyms);
+> @@ -563,7 +563,7 @@ void bpf_event__print_bpf_prog_info(struct bpf_prog_i=
+nfo *info,
+>         if (info->btf_id) {
+>                 struct btf_node *node;
+>
+> -               node =3D perf_env__find_btf(env, info->btf_id);
+> +               node =3D __perf_env__find_btf(env, info->btf_id);
+>                 if (node)
+>                         btf =3D btf__new((__u8 *)(node->data),
+>                                        node->data_size);
+> diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+> index 1bcbd4fb6c66..e2f0420905f5 100644
+> --- a/tools/perf/util/bpf-event.h
+> +++ b/tools/perf/util/bpf-event.h
+> @@ -33,9 +33,9 @@ struct btf_node {
+>  int machine__process_bpf(struct machine *machine, union perf_event *even=
+t,
+>                          struct perf_sample *sample);
+>  int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env=
+);
+> -void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> -                                   struct perf_env *env,
+> -                                   FILE *fp);
+> +void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> +                                     struct perf_env *env,
+> +                                     FILE *fp);
+>  #else
+>  static inline int machine__process_bpf(struct machine *machine __maybe_u=
+nused,
+>                                        union perf_event *event __maybe_un=
+used,
+> @@ -50,9 +50,9 @@ static inline int evlist__add_bpf_sb_event(struct evlis=
+t *evlist __maybe_unused,
+>         return 0;
+>  }
+>
+> -static inline void bpf_event__print_bpf_prog_info(struct bpf_prog_info *=
+info __maybe_unused,
+> -                                                 struct perf_env *env __=
+maybe_unused,
+> -                                                 FILE *fp __maybe_unused=
+)
+> +static inline void __bpf_event__print_bpf_prog_info(struct bpf_prog_info=
+ *info __maybe_unused,
+> +                                                   struct perf_env *env =
+__maybe_unused,
+> +                                                   FILE *fp __maybe_unus=
+ed)
+>  {
+>
+>  }
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index c68b7a004f29..cfdacbf29456 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -22,15 +22,20 @@ struct perf_env perf_env;
+>  #include "bpf-utils.h"
+>  #include <bpf/libbpf.h>
+>
+> -void perf_env__insert_bpf_prog_info(struct perf_env *env,
+> -                                   struct bpf_prog_info_node *info_node)
+> +void perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_pro=
+g_info_node *info_node)
+> +{
+> +       down_write(&env->bpf_progs.lock);
+> +       __perf_env__insert_bpf_prog_info(env, info_node);
+> +       up_write(&env->bpf_progs.lock);
+> +}
+> +
+> +void __perf_env__insert_bpf_prog_info(struct perf_env *env, struct bpf_p=
+rog_info_node *info_node)
+>  {
+>         __u32 prog_id =3D info_node->info_linear->info.id;
+>         struct bpf_prog_info_node *node;
+>         struct rb_node *parent =3D NULL;
+>         struct rb_node **p;
+>
+> -       down_write(&env->bpf_progs.lock);
+>         p =3D &env->bpf_progs.infos.rb_node;
+>
+>         while (*p !=3D NULL) {
+> @@ -42,15 +47,13 @@ void perf_env__insert_bpf_prog_info(struct perf_env *=
+env,
+>                         p =3D &(*p)->rb_right;
+>                 } else {
+>                         pr_debug("duplicated bpf prog info %u\n", prog_id=
+);
+> -                       goto out;
+> +                       return;
+>                 }
+>         }
+>
+>         rb_link_node(&info_node->rb_node, parent, p);
+>         rb_insert_color(&info_node->rb_node, &env->bpf_progs.infos);
+>         env->bpf_progs.infos_cnt++;
+> -out:
+> -       up_write(&env->bpf_progs.lock);
+>  }
+>
+>  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env =
+*env,
+> @@ -79,14 +82,22 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_in=
+fo(struct perf_env *env,
+>  }
+>
+>  bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_nod=
+e)
+> +{
+> +       bool ret;
+> +
+> +       down_write(&env->bpf_progs.lock);
+> +       ret =3D __perf_env__insert_btf(env, btf_node);
+> +       up_write(&env->bpf_progs.lock);
+> +       return ret;
+> +}
+> +
+> +bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_n=
+ode)
+>  {
+>         struct rb_node *parent =3D NULL;
+>         __u32 btf_id =3D btf_node->id;
+>         struct btf_node *node;
+>         struct rb_node **p;
+> -       bool ret =3D true;
+>
+> -       down_write(&env->bpf_progs.lock);
+>         p =3D &env->bpf_progs.btfs.rb_node;
+>
+>         while (*p !=3D NULL) {
+> @@ -98,25 +109,31 @@ bool perf_env__insert_btf(struct perf_env *env, stru=
+ct btf_node *btf_node)
+>                         p =3D &(*p)->rb_right;
+>                 } else {
+>                         pr_debug("duplicated btf %u\n", btf_id);
+> -                       ret =3D false;
+> -                       goto out;
+> +                       return false;
+>                 }
+>         }
+>
+>         rb_link_node(&btf_node->rb_node, parent, p);
+>         rb_insert_color(&btf_node->rb_node, &env->bpf_progs.btfs);
+>         env->bpf_progs.btfs_cnt++;
+> -out:
+> -       up_write(&env->bpf_progs.lock);
+> -       return ret;
+> +       return true;
+>  }
+>
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+> +{
+> +       struct btf_node *res;
+> +
+> +       down_read(&env->bpf_progs.lock);
+> +       res =3D __perf_env__find_btf(env, btf_id);
+> +       up_read(&env->bpf_progs.lock);
+> +       return res;
+> +}
+> +
+> +struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id=
+)
+>  {
+>         struct btf_node *node =3D NULL;
+>         struct rb_node *n;
+>
+> -       down_read(&env->bpf_progs.lock);
+>         n =3D env->bpf_progs.btfs.rb_node;
+>
+>         while (n) {
+> @@ -126,13 +143,9 @@ struct btf_node *perf_env__find_btf(struct perf_env =
+*env, __u32 btf_id)
+>                 else if (btf_id > node->id)
+>                         n =3D n->rb_right;
+>                 else
+> -                       goto out;
+> +                       return node;
+>         }
+> -       node =3D NULL;
+> -
+> -out:
+> -       up_read(&env->bpf_progs.lock);
+> -       return node;
+> +       return NULL;
+>  }
+>
+>  /* purge data in bpf_progs.infos tree */
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index bf7e3c4c211f..7c527e65c186 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -175,12 +175,16 @@ const char *perf_env__raw_arch(struct perf_env *env=
+);
+>  int perf_env__nr_cpus_avail(struct perf_env *env);
+>
+>  void perf_env__init(struct perf_env *env);
+> +void __perf_env__insert_bpf_prog_info(struct perf_env *env,
+> +                                     struct bpf_prog_info_node *info_nod=
+e);
+>  void perf_env__insert_bpf_prog_info(struct perf_env *env,
+>                                     struct bpf_prog_info_node *info_node)=
+;
+>  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env =
+*env,
+>                                                         __u32 prog_id);
+>  bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_nod=
+e);
+> +bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_n=
+ode);
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+> +struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id=
+);
+>
+>  int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
+>  char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 08cc2febabde..02bf9d8b5f74 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1849,8 +1849,8 @@ static void print_bpf_prog_info(struct feat_fd *ff,=
+ FILE *fp)
+>                 node =3D rb_entry(next, struct bpf_prog_info_node, rb_nod=
+e);
+>                 next =3D rb_next(&node->rb_node);
+>
+> -               bpf_event__print_bpf_prog_info(&node->info_linear->info,
+> -                                              env, fp);
+> +               __bpf_event__print_bpf_prog_info(&node->info_linear->info=
+,
+> +                                                env, fp);
+>         }
+>
+>         up_read(&env->bpf_progs.lock);
+> @@ -3188,7 +3188,7 @@ static int process_bpf_prog_info(struct feat_fd *ff=
+, void *data __maybe_unused)
+>                 /* after reading from file, translate offset to address *=
+/
+>                 bpil_offs_to_addr(info_linear);
+>                 info_node->info_linear =3D info_linear;
+> -               perf_env__insert_bpf_prog_info(env, info_node);
+> +               __perf_env__insert_bpf_prog_info(env, info_node);
+>         }
+>
+>         up_write(&env->bpf_progs.lock);
+> @@ -3235,7 +3235,7 @@ static int process_bpf_btf(struct feat_fd *ff, void=
+ *data __maybe_unused)
+>                 if (__do_read(ff, node->data, data_size))
+>                         goto out;
+>
+> -               perf_env__insert_btf(env, node);
+> +               __perf_env__insert_btf(env, node);
+>                 node =3D NULL;
+>         }
+>
 > --
 > 2.43.0.rc2.451.g8631bc7472-goog
 >
