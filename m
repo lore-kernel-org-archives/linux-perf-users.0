@@ -1,270 +1,70 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CEA2030E
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jan 2024 07:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ZfAnRCH"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe47a05516so371320276.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jan 2024 23:43:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704354214; x=1704959014; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xrARqRcEzdmT9hKY4SsQfbqr52MIo3gXN0CckjNla4U=;
-        b=4ZfAnRCH2xOvaT2/VKFSGTMx6kwzrRNIb8nAfjJZRgVbtE00gquUrKuQ8soTAbm022
-         PhoiGQdlBwwN6jvNyoSxmIOlhgIPBSg/CV/ZNFpnntAd69Oh0ZMa97inHY9thVH9oIkF
-         fLCCUP8K4cYYXppYCpo6lkTylxB0o/qKOwffffajb/v6eH96TOCEvlb/XFAvKXZYhP2G
-         bltUvat4vimbMlzPge49UkiycfQpeZKpgnV9YTgyo6JrtGDcZmwbYj8gvnxj9lNXmgtX
-         088Pp4n6pqTAn52SWmo3FtbrhHEMdblCqrWwLBh9N86zYFgaBRAIaw4+HXeulfXJ2h9q
-         5gQQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8261B28D;
+	Thu,  4 Jan 2024 10:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5570f246310so140588a12.0;
+        Thu, 04 Jan 2024 02:01:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704354214; x=1704959014;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xrARqRcEzdmT9hKY4SsQfbqr52MIo3gXN0CckjNla4U=;
-        b=UC+e3GKxA9S3cjeFFz/tF+cOHGB2JE6NJAP3pR+a/MkIq8TLdlXAP8M9mHnWyVZXgf
-         iDuEIaXgCpTlyMqnUGSt0HNZLjNFlY+EbGuMmG8wFbTMteGwQxxZZgIre22mXGKkF7Ke
-         ibymWidINHoM30DBuxrGR5VgTjozhkyoHewgiXunk4iSF6XVLa/PT44OSnsKuTKQTSBF
-         y2wkEolHzcLinb0+mu71Z/4rCWVxjXlGmIXvanrT6B2Z/BbwInddKkwg/uijynd1poz7
-         imjcJD4eEX/YqCQyQ7L9jSfXHz13fMH2Dqddkb/b5DI6TCJneW3FtC0sPoOTUL2hpR0u
-         UnkA==
-X-Gm-Message-State: AOJu0Yw/34EjS0nS/Cqbdh2jo9UqWmZBnSxs885qeKRPi1HCkmgP0PNZ
-	eb0fjztsLM4jWUzWOZurtvYo9MaaXTxicF9+rp4=
-X-Google-Smtp-Source: AGHT+IEITqazmrSJyheUy7O7abTyIkWrsUX/xegl+/80jTxZR/SW+TB1jaX48bCHr23xsw9NXQe5Yao81lue
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f607:7105:a86e:433f])
- (user=irogers job=sendgmr) by 2002:a05:6902:542:b0:dbe:9f60:c72f with SMTP id
- z2-20020a056902054200b00dbe9f60c72fmr69462ybs.4.1704354214534; Wed, 03 Jan
- 2024 23:43:34 -0800 (PST)
-Date: Wed,  3 Jan 2024 23:42:59 -0800
-In-Reply-To: <20240104074259.653219-1-irogers@google.com>
-Message-Id: <20240104074259.653219-4-irogers@google.com>
+        d=1e100.net; s=20230601; t=1704362463; x=1704967263;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8GB0K6qZx0zrh4wOwO3cUota9tes49aEfXI/3BFUe2E=;
+        b=uhU/Mg8ZLGkhbQTzU6+UNwY6B97HIdyuAKs6Osxi+CishHgdLZUpY/s/Kc64vPNndX
+         S1kh01MlKSJgOsBrouvdYEqefaOk15KT6Dg/AZOAi5CoULYLhkEJyWLa7nnOtjBXiSTw
+         SS6RjRvBGi0JqmGwsjidI3B4ZBojrkFSCPf3Da92j76ELq4it1UCSKu8u+RbLHSeoqsa
+         cSRB1+YaaU0zVT5x3HBRkjYvidp5RQqPm6ObP4I1bY7zarDLUdsid/AHXwrwAs3qSRCE
+         XL1LRYH5PwvGF/8Dy3BA7Q1kfQdYrprp9iDLy3LD0jOzOmP3crhoJwITBElhjgRopgtd
+         Tdog==
+X-Gm-Message-State: AOJu0YyBEQocbWLti5+8+PMJVkZe0ENjzsyy5fU2qpMJgi+8/Pt5PM6c
+	NTXroHy1ePJcEpJZo6fqJEQ=
+X-Google-Smtp-Source: AGHT+IGjvlrpvxpGdqvKI6pU/xED0gs/zrXJ0SXIPkeujhOLk1Fr2e+e4PJdp/oh+sQSJFRciaazqw==
+X-Received: by 2002:a50:a45b:0:b0:553:2b8:c9ff with SMTP id v27-20020a50a45b000000b0055302b8c9ffmr218889edb.76.1704362462773;
+        Thu, 04 Jan 2024 02:01:02 -0800 (PST)
+Received: from gmail.com (fwdproxy-cln-120.fbsv.net. [2a03:2880:31ff:78::face:b00c])
+        by smtp.gmail.com with ESMTPSA id en22-20020a056402529600b00553830eb2fcsm18446438edb.64.2024.01.04.02.01.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 02:01:02 -0800 (PST)
+Date: Thu, 4 Jan 2024 02:01:00 -0800
+From: Breno Leitao <leitao@debian.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Like Xu <like.xu@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Luwei Kang <luwei.kang@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, rbc@meta.com
+Subject: Re: [BUG] Guest OSes die simultaneously (bisected)
+Message-ID: <ZZaB3CMiqkUU6qpG@gmail.com>
+References: <3d8f5987-e09c-4dd2-a9c0-8ba22c9e948a@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240104074259.653219-1-irogers@google.com>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-Subject: [PATCH v1 4/4] perf vendor events intel: Update sapphirerapids events
- to v1.17
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Edward Baker <edward.baker@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d8f5987-e09c-4dd2-a9c0-8ba22c9e948a@paulmck-laptop>
 
-Update to v1.17 released in:
-https://github.com/intel/perfmon/pull/123
+On Wed, Jan 03, 2024 at 02:22:23PM -0800, Paul E. McKenney wrote:
+> I was
+> therefore forced to bisect among the commits backported to the internal
+> v5.19-based kernel, which fingered the backported version of the patch
+> called out above.
 
-Add events FP_ARITH_DISPATCHED.V0, FP_ARITH_DISPATCHED.V1,
-FP_ARITH_DISPATCHED.V2, UNC_IIO_IOMMU0.1G_HITS, UNC_IIO_IOMMU0.2M_HITS
-and UNC_IIO_IOMMU0.4K_HITS. Description updates.
+Just to add some context to these backport, this commit (c59a1f106f5c)
+was backported to the internal v5.19-based kernel in order to easily
+backport these two fixes.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- .../x86/sapphirerapids/floating-point.json    | 27 +++++++++++++++--
- .../arch/x86/sapphirerapids/pipeline.json     |  2 +-
- .../sapphirerapids/uncore-interconnect.json   |  8 ++---
- .../arch/x86/sapphirerapids/uncore-io.json    | 30 +++++++++++++++++++
- 5 files changed, 60 insertions(+), 9 deletions(-)
+	a16eb25b09c02a54c ("KVM: x86: Mask LVTPC when handling a PMI")
+	73554b29bd70546c1 ("KVM: x86/pmu: Synthesize at most one PMI per VM-exit")
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index c1820eb16a19..4d1deed4437a 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -26,7 +26,7 @@ GenuineIntel-6-1[AEF],v4,nehalemep,core
- GenuineIntel-6-2E,v4,nehalemex,core
- GenuineIntel-6-A7,v1.01,rocketlake,core
- GenuineIntel-6-2A,v19,sandybridge,core
--GenuineIntel-6-8F,v1.16,sapphirerapids,core
-+GenuineIntel-6-8F,v1.17,sapphirerapids,core
- GenuineIntel-6-AF,v1.00,sierraforest,core
- GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v57,skylake,core
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.j=
-son b/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
-index 4a9d211e9d4f..1bdefaf96287 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
-@@ -23,26 +23,47 @@
-         "UMask": "0x10"
-     },
-     {
--        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_0",
-+        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_0 [This event is ali=
-as to FP_ARITH_DISPATCHED.V0]",
-         "EventCode": "0xb3",
-         "EventName": "FP_ARITH_DISPATCHED.PORT_0",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_1",
-+        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_1 [This event is ali=
-as to FP_ARITH_DISPATCHED.V1]",
-         "EventCode": "0xb3",
-         "EventName": "FP_ARITH_DISPATCHED.PORT_1",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x2"
-     },
-     {
--        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_5",
-+        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_5 [This event is ali=
-as to FP_ARITH_DISPATCHED.V2]",
-         "EventCode": "0xb3",
-         "EventName": "FP_ARITH_DISPATCHED.PORT_5",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x4"
-     },
-+    {
-+        "BriefDescription": "FP_ARITH_DISPATCHED.V0 [This event is alias t=
-o FP_ARITH_DISPATCHED.PORT_0]",
-+        "EventCode": "0xb3",
-+        "EventName": "FP_ARITH_DISPATCHED.V0",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "FP_ARITH_DISPATCHED.V1 [This event is alias t=
-o FP_ARITH_DISPATCHED.PORT_1]",
-+        "EventCode": "0xb3",
-+        "EventName": "FP_ARITH_DISPATCHED.V1",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "FP_ARITH_DISPATCHED.V2 [This event is alias t=
-o FP_ARITH_DISPATCHED.PORT_5]",
-+        "EventCode": "0xb3",
-+        "EventName": "FP_ARITH_DISPATCHED.V2",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x4"
-+    },
-     {
-         "BriefDescription": "Counts number of SSE/AVX computational 128-bi=
-t packed double precision floating-point instructions retired; some instruc=
-tions will count twice as noted below.  Each count represents 2 computation=
- operations, one for each element.  Applies to SSE* and AVX* packed double =
-precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN=
- MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice =
-as they perform 2 calculations per element.",
-         "EventCode": "0xc7",
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json b/=
-tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
-index 6dcf3b763af4..2cfe814d2015 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
-@@ -505,7 +505,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "INT_MISC.UNKNOWN_BRANCH_CYCLES",
-+        "BriefDescription": "Bubble cycles of BAClear (Unknown Branch).",
-         "EventCode": "0xad",
-         "EventName": "INT_MISC.UNKNOWN_BRANCH_CYCLES",
-         "MSRIndex": "0x3F7",
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconn=
-ect.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnec=
-t.json
-index 09d840c7da4c..65d088556bae 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.jso=
-n
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.jso=
-n
-@@ -4825,11 +4825,11 @@
-         "Unit": "M3UPI"
-     },
-     {
--        "BriefDescription": "Number of allocations into the CRS Egress  us=
-ed to queue up requests destined to the mesh (AD Bouncable)",
-+        "BriefDescription": "Number of allocations into the CRS Egress  us=
-ed to queue up requests destined to the mesh (AD Bounceable)",
-         "EventCode": "0x47",
-         "EventName": "UNC_MDF_CRS_TxR_INSERTS.AD_BNC",
-         "PerPkg": "1",
--        "PublicDescription": "AD Bouncable : Number of allocations into th=
-e CRS Egress",
-+        "PublicDescription": "AD Bounceable : Number of allocations into t=
-he CRS Egress",
-         "UMask": "0x1",
-         "Unit": "MDF"
-     },
-@@ -4861,11 +4861,11 @@
-         "Unit": "MDF"
-     },
-     {
--        "BriefDescription": "Number of allocations into the CRS Egress  us=
-ed to queue up requests destined to the mesh (BL Bouncable)",
-+        "BriefDescription": "Number of allocations into the CRS Egress  us=
-ed to queue up requests destined to the mesh (BL Bounceable)",
-         "EventCode": "0x47",
-         "EventName": "UNC_MDF_CRS_TxR_INSERTS.BL_BNC",
-         "PerPkg": "1",
--        "PublicDescription": "BL Bouncable : Number of allocations into th=
-e CRS Egress",
-+        "PublicDescription": "BL Bounceable : Number of allocations into t=
-he CRS Egress",
-         "UMask": "0x4",
-         "Unit": "MDF"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json b=
-/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
-index 8b5f54fed103..03596db87710 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
-@@ -1249,6 +1249,36 @@
-         "UMask": "0x70ff010",
-         "Unit": "IIO"
-     },
-+    {
-+        "BriefDescription": ": IOTLB Hits to a 1G Page",
-+        "EventCode": "0x40",
-+        "EventName": "UNC_IIO_IOMMU0.1G_HITS",
-+        "PerPkg": "1",
-+        "PortMask": "0x0000",
-+        "PublicDescription": ": IOTLB Hits to a 1G Page : Counts if a tran=
-saction to a 1G page, on its first lookup, hits the IOTLB.",
-+        "UMask": "0x10",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": ": IOTLB Hits to a 2M Page",
-+        "EventCode": "0x40",
-+        "EventName": "UNC_IIO_IOMMU0.2M_HITS",
-+        "PerPkg": "1",
-+        "PortMask": "0x0000",
-+        "PublicDescription": ": IOTLB Hits to a 2M Page : Counts if a tran=
-saction to a 2M page, on its first lookup, hits the IOTLB.",
-+        "UMask": "0x8",
-+        "Unit": "IIO"
-+    },
-+    {
-+        "BriefDescription": ": IOTLB Hits to a 4K Page",
-+        "EventCode": "0x40",
-+        "EventName": "UNC_IIO_IOMMU0.4K_HITS",
-+        "PerPkg": "1",
-+        "PortMask": "0x0000",
-+        "PublicDescription": ": IOTLB Hits to a 4K Page : Counts if a tran=
-saction to a 4K page, on its first lookup, hits the IOTLB.",
-+        "UMask": "0x4",
-+        "Unit": "IIO"
-+    },
-     {
-         "BriefDescription": ": Context cache hits",
-         "EventCode": "0x40",
---=20
-2.43.0.472.g3155946c3a-goog
+They are required to solve the softlockup problem reported here:
 
+	https://lore.kernel.org/all/ZRwcpki67uhpAUKi@gmail.com/
