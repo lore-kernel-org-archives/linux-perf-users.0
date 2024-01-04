@@ -1,128 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE62225CA;
-	Thu,  4 Jan 2024 14:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C15623749;
+	Thu,  4 Jan 2024 14:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NO05R/69"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704378627; x=1735914627;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Qx+BndH/usws2a2ca7Hh6V4vOx+5kTp8i9e8jSCqEcM=;
-  b=NO05R/69sV5/Jxp0cnN7i7bm/ngDzEOrjWlq0h9V4dkNiDwP36mei+02
-   HejFbtuIjzelm7fz6E1+5gUT+kytMgsYD/qppYg+2IVKU1Q07VUA2J16f
-   towwQmNMfdP3WmiNvb7y3y09FvSqZmxCEdNzG2JSHL3Qk0KC13Lfs2dky
-   +bPYPVg1/sPhBZwQFvxpa2kIz0Y+POiSwLIjkblRFTP34WVfpY+wzAlUF
-   mT8sU6THh0kCakR+n9TDDfw/8SpJqHS9qyNIh7Kh4EHFr2eC6vBozbqaF
-   u16Jhe1bhqnbqlC8bSd2o0PjX2axMYK4FKUKNAaPP/IbzPQ78Tb0PI95W
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="18775046"
-X-IronPort-AV: E=Sophos;i="6.04,330,1695711600"; 
-   d="scan'208";a="18775046"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 06:30:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="903834477"
-X-IronPort-AV: E=Sophos;i="6.04,330,1695711600"; 
-   d="scan'208";a="903834477"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 06:30:25 -0800
-Received: from [10.209.154.172] (carsonde-mobl1.amr.corp.intel.com [10.209.154.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id D9B35580BF8;
-	Thu,  4 Jan 2024 06:30:23 -0800 (PST)
-Message-ID: <8af821dc-d173-483d-8b69-b8e041538561@linux.intel.com>
-Date: Thu, 4 Jan 2024 09:30:22 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iOadmwT/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AAA0C433C8;
+	Thu,  4 Jan 2024 14:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704379852;
+	bh=3JTuWT5QZksFXhz5QlHD6DJDpXXaLdQf2WuuHegnM8A=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=iOadmwT/HEsQjg0LSG4fy90jJHIrFTXlh+6JLqLrgEm0BT14qS1vxK8nJSiKdEz11
+	 WG0kEqPRDLeB9AXm5GHsOqFv/ltEUZk7uVUqn4YO9QUbcjpCDTzrMMzBv6AOxzKt3d
+	 EqejQbHVDr3vZa2fa7Ycz6tLADN0hM+6NMo9k3L5568ctdp1NNvzHH9Oejf0CSEBuH
+	 2WK+RsMDpbQuiJ01GlC3MIg2nGdRru3QeUZROJjPMYTleknVFPTxIx0aTNkrO6bcWN
+	 HW8iZHsXwQL/599bXvx1K4tzIUiUZmAxJoFYJ0qLys1D5b4V6/sY2QnlAFOWMt/Bs2
+	 vubs2tI5+akwA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 3C6A5CE130C; Thu,  4 Jan 2024 06:50:52 -0800 (PST)
+Date: Thu, 4 Jan 2024 06:50:52 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Like Xu <like.xu@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Luwei Kang <luwei.kang@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Breno Leitao <leitao@debian.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>
+Subject: Re: [BUG] Guest OSes die simultaneously (bisected)
+Message-ID: <c6d5dd6e-2dec-423c-af39-213f17b1a9db@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <3d8f5987-e09c-4dd2-a9c0-8ba22c9e948a@paulmck-laptop>
+ <88f49775-2b56-48cc-81b8-651a940b7d6b@paulmck-laptop>
+ <ZZX6pkHnZP777DVi@google.com>
+ <77d7a3e3-f35e-4507-82c2-488405b25fa4@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/4] perf vendor events intel: Alderlake/rocketlake
- metric fixes
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Edward Baker <edward.baker@intel.com>
-References: <20240104074259.653219-1-irogers@google.com>
- <ZZam-EG-UepcXtWw@kernel.org>
- <CAP-5=fV+U4qSwU8nqHJMgAZTwtWs9jEm3i9yDQSVtq9Fbos5HA@mail.gmail.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fV+U4qSwU8nqHJMgAZTwtWs9jEm3i9yDQSVtq9Fbos5HA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77d7a3e3-f35e-4507-82c2-488405b25fa4@paulmck-laptop>
 
+On Wed, Jan 03, 2024 at 05:00:35PM -0800, Paul E. McKenney wrote:
+> On Wed, Jan 03, 2024 at 04:24:06PM -0800, Sean Christopherson wrote:
+> > On Wed, Jan 03, 2024, Paul E. McKenney wrote:
+> > > On Wed, Jan 03, 2024 at 02:22:23PM -0800, Paul E. McKenney wrote:
+> > > > Hello!
+> > > > 
+> > > > Since some time between v5.19 and v6.4, long-running rcutorture tests
+> > > > would (rarely but intolerably often) have all guests on a given host die
+> > > > simultaneously with something like an instruction fault or a segmentation
+> > > > violation.
+> > > > 
+> > > > Each bisection step required 20 hosts running 10 hours each, and
+> > > > this eventually fingered commit c59a1f106f5c ("KVM: x86/pmu: Add
+> > > > IA32_PEBS_ENABLE MSR emulation for extended PEBS").  Although this commit
+> > > > is certainly messing with things that could possibly cause all manner
+> > > > of mischief, I don't immediately see a smoking gun.  Except that the
+> > > > commit prior to this one is rock solid.
+> > > > Just to make things a bit more exciting, bisection in mainline proved
+> > > > to be problematic due to bugs of various kinds that hid this one.  I was
+> > > > therefore forced to bisect among the commits backported to the internal
+> > > > v5.19-based kernel, which fingered the backported version of the patch
+> > > > called out above.
+> > > 
+> > > Ah, and so why do I believe that this is a problem in mainline rather
+> > > than just (say) a backporting mistake?
+> > > 
+> > > Because this issue was first located in v6.4, which already has this
+> > > commit included.
+> > > 
+> > > 							Thanx, Paul
+> > > 
+> > > > Please note that this is not (yet) an emergency.  I will just continue
+> > > > to run rcutorture on v5.19-based hypervisors in the meantime.
+> > > > 
+> > > > Any suggestions for debugging or fixing?
+> > 
+> > This looks suspect:
+> > 
+> > +       u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
+> > +       int global_ctrl, pebs_enable;
+> >  
+> > -       arr[0].msr = MSR_CORE_PERF_GLOBAL_CTRL;
+> > -       arr[0].host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask;
+> > -       arr[0].guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask;
+> > -       arr[0].guest &= ~(cpuc->pebs_enabled & x86_pmu.pebs_capable);
+> > -       *nr = 1;
+> > +       *nr = 0;
+> > +       global_ctrl = (*nr)++;
+> > +       arr[global_ctrl] = (struct perf_guest_switch_msr){
+> > +               .msr = MSR_CORE_PERF_GLOBAL_CTRL,
+> > +               .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+> > +               .guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
+> > +       };
+> > 
+> > 
+> > IIUC (always a big if with this code), the intent is that the guest's version of
+> > PERF_GLOBAL_CTRL gets bits that are (a) not exclusive to the host and (b) not
+> > being used for PEBS.  (b) is necessary because PEBS generates records in memory
+> > using virtual addresses, i.e. the CPU will write to memory using a virtual address
+> > that is valid for the host but not the guest.  And so PMU counters that are
+> > configured to generate PEBS records need to be disabled while running the guest.
+> > 
+> > Before that commit, the logic was:
+> > 
+> >   guest[PERF_GLOBAL_CTRL] = ctrl & ~host;
+> >   guest[PERF_GLOBAL_CTRL] &= ~pebs;
+> > 
+> > But after, it's now:
+> > 
+> >   guest[PERF_GLOBAL_CTRL] = ctrl & (~host | ~pebs);
+> > 
+> > I.e. the kernel is enabled counters in the guest that are not host-only OR not
+> > PEBS.  E.g. if only counter 0 is in use, it's using PEBS, but it's not exclusive
+> > to the host, then the new code will yield (truncated to a single byte for sanity)
+> > 
+> >   1 = 1 & (0xf | 0xe)
+> > 
+> > and thus keep counter 0 enabled, whereas the old code would yield
+> > 
+> >   1 = 1 & 0xf
+> >   0 = 1 & 0xe
+> > 
+> > A bit of a shot in the dark and completed untested, but I think this is the correct
+> > fix?
+> 
+> I am firing off some tests, and either way, thank you very much!!!
 
+Woo-hoo!!!  ;-)
 
-On 2024-01-04 8:56 a.m., Ian Rogers wrote:
->> Testing tma_slow_pause
->> Metric 'tma_slow_pause' not printed in:
->> # Running 'internals/synthesize' benchmark:
->> Computing performance of single threaded perf event synthesis by
->> synthesizing events on the perf process itself:
->>   Average synthesis took: 49.987 usec (+- 0.049 usec)
->>   Average num. events: 47.000 (+- 0.000)
->>   Average time per event 1.064 usec
->>   Average data synthesis took: 53.490 usec (+- 0.033 usec)
->>   Average num. events: 245.000 (+- 0.000)
->>   Average time per event 0.218 usec
->>
->>  Performance counter stats for 'perf bench internals synthesize':
->>
->>      <not counted>      cpu_core/TOPDOWN.SLOTS/                                                 (0.00%)
->>      <not counted>      cpu_core/topdown-retiring/                                              (0.00%)
->>      <not counted>      cpu_core/topdown-mem-bound/                                             (0.00%)
->>      <not counted>      cpu_core/topdown-bad-spec/                                              (0.00%)
->>      <not counted>      cpu_core/topdown-fe-bound/                                              (0.00%)
->>      <not counted>      cpu_core/topdown-be-bound/                                              (0.00%)
->>      <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/                                        (0.00%)
->>      <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (0.00%)
->>      <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (0.00%)
->>      <not counted>      cpu_core/CPU_CLK_UNHALTED.PAUSE/                                        (0.00%)
->>      <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (0.00%)
->>      <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/                                        (0.00%)
->>      <not counted>      cpu_core/ARITH.DIV_ACTIVE/                                              (0.00%)
->>      <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=0xc/                                        (0.00%)
->>      <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (0.00%)
->>
->>        1.186254766 seconds time elapsed
->>
->>        0.427220000 seconds user
->>        0.752217000 seconds sys
->> Testing smi_cycles
->> Testing smi_num
->> Testing tsx_aborted_cycles
->> Testing tsx_cycles_per_elision
->> Testing tsx_cycles_per_transaction
->> Testing tsx_transactional_cycles
->> test child finished with -1
->> ---- end ----
->> perf all metrics test: FAILED!
->> root@number:~#
-> Have a try disabling the NMI watchdog. Agreed that there is more to
-> fix here but I think the PMU driver is in part to blame because
-> manually breaking the weak group of events is a fix. 
+Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
-I think we have a NO_GROUP_EVENTS_NMI metric constraint to mark a group
-which require disabling of the NMI watchdog.
-Maybe we should mark the group a NO_GROUP_EVENTS_NMI metric.
+Will you be sending a proper patch, or would you prefer that I do so?
+In the latter case, I would need your Signed-off-by.
 
-Thanks,
-Kan
+And again, thank you very much!!!
 
-> Fwiw, if we
-> switch to the buddy watchdog mechanism then we'll no longer need to
-> disable the NMI watchdog:
-> https://lore.kernel.org/lkml/20230421155255.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid/
+							Thanx, Paul
+
+> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> > index a08f794a0e79..92d5a3464cb2 100644
+> > --- a/arch/x86/events/intel/core.c
+> > +++ b/arch/x86/events/intel/core.c
+> > @@ -4056,7 +4056,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+> >         arr[global_ctrl] = (struct perf_guest_switch_msr){
+> >                 .msr = MSR_CORE_PERF_GLOBAL_CTRL,
+> >                 .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+> > -               .guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
+> > +               .guest = intel_ctrl & ~(cpuc->intel_ctrl_host_mask | pebs_mask),
+> >         };
+> >  
+> >         if (!x86_pmu.pebs)
+> > 
