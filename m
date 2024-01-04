@@ -1,43 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C38B22EE6;
-	Thu,  4 Jan 2024 14:23:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE62225CA;
+	Thu,  4 Jan 2024 14:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NOwET88z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NO05R/69"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704378225; x=1735914225;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=kbyW7cxpuIZDLuW3Os9I8ZKDILbXz5KCKp00rYx8VTA=;
-  b=NOwET88z+51QWrf35FMQGfoHlPBGI65N7rpbcDLWBlxtdW8K3ZnqqCny
-   g3wIMHDKjCVQZjjNjrQr6PIh7ukvdHY4Rr9i5R1uWMPiBns9ZhayKXqvL
-   FYwqtA+4S0QtELJnuLCKQyc9Gb2oaaOqD5EvZqwYhLCIQZ/D2hS6WuvAf
-   1chfCJOpY7jUMSMX3O2cAEz7xkG69wQLhnVeSZs4M7AsMwEnuhnEx9Naw
-   yaisNk5Liif3LSd6MxR6l0vjBgp8s+QYJj3glDTcve6sf0lffkniepFwp
-   SRN2iyUEjBD5dQB0Z2/M6Lllw3uJlrLGsGlagFOf+KpgSckk6tCYUHGTE
+  t=1704378627; x=1735914627;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Qx+BndH/usws2a2ca7Hh6V4vOx+5kTp8i9e8jSCqEcM=;
+  b=NO05R/69sV5/Jxp0cnN7i7bm/ngDzEOrjWlq0h9V4dkNiDwP36mei+02
+   HejFbtuIjzelm7fz6E1+5gUT+kytMgsYD/qppYg+2IVKU1Q07VUA2J16f
+   towwQmNMfdP3WmiNvb7y3y09FvSqZmxCEdNzG2JSHL3Qk0KC13Lfs2dky
+   +bPYPVg1/sPhBZwQFvxpa2kIz0Y+POiSwLIjkblRFTP34WVfpY+wzAlUF
+   mT8sU6THh0kCakR+n9TDDfw/8SpJqHS9qyNIh7Kh4EHFr2eC6vBozbqaF
+   u16Jhe1bhqnbqlC8bSd2o0PjX2axMYK4FKUKNAaPP/IbzPQ78Tb0PI95W
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="382230328"
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="18775046"
 X-IronPort-AV: E=Sophos;i="6.04,330,1695711600"; 
-   d="scan'208";a="382230328"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 06:23:44 -0800
+   d="scan'208";a="18775046"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 06:30:26 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="783886663"
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="903834477"
 X-IronPort-AV: E=Sophos;i="6.04,330,1695711600"; 
-   d="scan'208";a="783886663"
+   d="scan'208";a="903834477"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 06:23:43 -0800
-Received: from [10.209.154.172] (kliang2-mobl1.ccr.corp.intel.com [10.209.154.172])
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 06:30:25 -0800
+Received: from [10.209.154.172] (carsonde-mobl1.amr.corp.intel.com [10.209.154.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id DDE79580D4E;
-	Thu,  4 Jan 2024 06:23:41 -0800 (PST)
-Message-ID: <59bbc646-b1ef-4ef0-9880-79856849a760@linux.intel.com>
-Date: Thu, 4 Jan 2024 09:23:40 -0500
+	by linux.intel.com (Postfix) with ESMTPS id D9B35580BF8;
+	Thu,  4 Jan 2024 06:30:23 -0800 (PST)
+Message-ID: <8af821dc-d173-483d-8b69-b8e041538561@linux.intel.com>
+Date: Thu, 4 Jan 2024 09:30:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,95 +47,82 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1 1/4] perf vendor events intel: Alderlake/rocketlake
  metric fixes
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
  Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, Edward Baker <edward.baker@intel.com>
 References: <20240104074259.653219-1-irogers@google.com>
-Content-Language: en-US
+ <ZZam-EG-UepcXtWw@kernel.org>
+ <CAP-5=fV+U4qSwU8nqHJMgAZTwtWs9jEm3i9yDQSVtq9Fbos5HA@mail.gmail.com>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240104074259.653219-1-irogers@google.com>
+In-Reply-To: <CAP-5=fV+U4qSwU8nqHJMgAZTwtWs9jEm3i9yDQSVtq9Fbos5HA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2024-01-04 2:42 a.m., Ian Rogers wrote:
-> Fix that the core PMU is being specified for 2 uncore events. Specify
-> a PMU for the alderlake UNCORE_FREQ metric.
-> 
-> Conversion script updated in:
-> https://github.com/intel/perfmon/pull/126
-> 
-> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Closes: https://lore.kernel.org/lkml/ZZWOdHXJJ_oecWwm@kernel.org/
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On 2024-01-04 8:56 a.m., Ian Rogers wrote:
+>> Testing tma_slow_pause
+>> Metric 'tma_slow_pause' not printed in:
+>> # Running 'internals/synthesize' benchmark:
+>> Computing performance of single threaded perf event synthesis by
+>> synthesizing events on the perf process itself:
+>>   Average synthesis took: 49.987 usec (+- 0.049 usec)
+>>   Average num. events: 47.000 (+- 0.000)
+>>   Average time per event 1.064 usec
+>>   Average data synthesis took: 53.490 usec (+- 0.033 usec)
+>>   Average num. events: 245.000 (+- 0.000)
+>>   Average time per event 0.218 usec
+>>
+>>  Performance counter stats for 'perf bench internals synthesize':
+>>
+>>      <not counted>      cpu_core/TOPDOWN.SLOTS/                                                 (0.00%)
+>>      <not counted>      cpu_core/topdown-retiring/                                              (0.00%)
+>>      <not counted>      cpu_core/topdown-mem-bound/                                             (0.00%)
+>>      <not counted>      cpu_core/topdown-bad-spec/                                              (0.00%)
+>>      <not counted>      cpu_core/topdown-fe-bound/                                              (0.00%)
+>>      <not counted>      cpu_core/topdown-be-bound/                                              (0.00%)
+>>      <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/                                        (0.00%)
+>>      <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (0.00%)
+>>      <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (0.00%)
+>>      <not counted>      cpu_core/CPU_CLK_UNHALTED.PAUSE/                                        (0.00%)
+>>      <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (0.00%)
+>>      <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/                                        (0.00%)
+>>      <not counted>      cpu_core/ARITH.DIV_ACTIVE/                                              (0.00%)
+>>      <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=0xc/                                        (0.00%)
+>>      <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (0.00%)
+>>
+>>        1.186254766 seconds time elapsed
+>>
+>>        0.427220000 seconds user
+>>        0.752217000 seconds sys
+>> Testing smi_cycles
+>> Testing smi_num
+>> Testing tsx_aborted_cycles
+>> Testing tsx_cycles_per_elision
+>> Testing tsx_cycles_per_transaction
+>> Testing tsx_transactional_cycles
+>> test child finished with -1
+>> ---- end ----
+>> perf all metrics test: FAILED!
+>> root@number:~#
+> Have a try disabling the NMI watchdog. Agreed that there is more to
+> fix here but I think the PMU driver is in part to blame because
+> manually breaking the weak group of events is a fix. 
 
-Thanks Ian. For the series,
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+I think we have a NO_GROUP_EVENTS_NMI metric constraint to mark a group
+which require disabling of the NMI watchdog.
+Maybe we should mark the group a NO_GROUP_EVENTS_NMI metric.
 
 Thanks,
 Kan
 
-> ---
->  .../arch/x86/alderlake/adl-metrics.json           | 15 ++++++++-------
->  .../arch/x86/rocketlake/rkl-metrics.json          |  2 +-
->  2 files changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-> index 3388b58b8f1a..35124a4ddcb2 100644
-> --- a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-> @@ -69,12 +69,6 @@
->          "MetricName": "C9_Pkg_Residency",
->          "ScaleUnit": "100%"
->      },
-> -    {
-> -        "BriefDescription": "Uncore frequency per die [GHZ]",
-> -        "MetricExpr": "tma_info_system_socket_clks / #num_dies / duration_time / 1e9",
-> -        "MetricGroup": "SoC",
-> -        "MetricName": "UNCORE_FREQ"
-> -    },
->      {
->          "BriefDescription": "Percentage of cycles spent in System Management Interrupts.",
->          "MetricExpr": "((msr@aperf@ - cycles) / msr@aperf@ if msr@smi@ > 0 else 0)",
-> @@ -809,6 +803,13 @@
->          "ScaleUnit": "100%",
->          "Unit": "cpu_atom"
->      },
-> +    {
-> +        "BriefDescription": "Uncore frequency per die [GHZ]",
-> +        "MetricExpr": "tma_info_system_socket_clks / #num_dies / duration_time / 1e9",
-> +        "MetricGroup": "SoC",
-> +        "MetricName": "UNCORE_FREQ",
-> +        "Unit": "cpu_core"
-> +    },
->      {
->          "BriefDescription": "This metric represents Core fraction of cycles CPU dispatched uops on execution ports for ALU operations.",
->          "MetricExpr": "(cpu_core@UOPS_DISPATCHED.PORT_0@ + cpu_core@UOPS_DISPATCHED.PORT_1@ + cpu_core@UOPS_DISPATCHED.PORT_5_11@ + cpu_core@UOPS_DISPATCHED.PORT_6@) / (5 * tma_info_core_core_clks)",
-> @@ -1838,7 +1839,7 @@
->      },
->      {
->          "BriefDescription": "Average number of parallel data read requests to external memory",
-> -        "MetricExpr": "UNC_ARB_DAT_OCCUPANCY.RD / cpu_core@UNC_ARB_DAT_OCCUPANCY.RD\\,cmask\\=1@",
-> +        "MetricExpr": "UNC_ARB_DAT_OCCUPANCY.RD / UNC_ARB_DAT_OCCUPANCY.RD@cmask\\=1@",
->          "MetricGroup": "Mem;MemoryBW;SoC",
->          "MetricName": "tma_info_system_mem_parallel_reads",
->          "PublicDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
-> diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json b/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
-> index 0c880e415669..27433fc15ede 100644
-> --- a/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
-> @@ -985,7 +985,7 @@
->      },
->      {
->          "BriefDescription": "Average number of parallel data read requests to external memory",
-> -        "MetricExpr": "UNC_ARB_DAT_OCCUPANCY.RD / cpu@UNC_ARB_DAT_OCCUPANCY.RD\\,cmask\\=1@",
-> +        "MetricExpr": "UNC_ARB_DAT_OCCUPANCY.RD / UNC_ARB_DAT_OCCUPANCY.RD@cmask\\=1@",
->          "MetricGroup": "Mem;MemoryBW;SoC",
->          "MetricName": "tma_info_system_mem_parallel_reads",
->          "PublicDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches"
+> Fwiw, if we
+> switch to the buddy watchdog mechanism then we'll no longer need to
+> disable the NMI watchdog:
+> https://lore.kernel.org/lkml/20230421155255.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid/
