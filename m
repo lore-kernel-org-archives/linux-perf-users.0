@@ -1,48 +1,48 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529C91F926
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jan 2024 07:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CEA2030E
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jan 2024 07:43:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QxkaFWoA"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5e8e0c7f9a8so2161837b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jan 2024 23:43:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ZfAnRCH"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe47a05516so371320276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jan 2024 23:43:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704354212; x=1704959012; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1704354214; x=1704959014; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2/2tuLKGnXP/VBMG7KDv1Ce5GK1oOvMtuCNcueHPkkg=;
-        b=QxkaFWoADocjuFBxZDc0+CVd+D8Dbj9UFF+95lfmpwGYCwuBbf8CfiMeLduKIXQFBq
-         IhYQxUyWIuKymuh1BVSqL/E05y0LEMSHC7IGLb1p1v3G1e5tdY17HVqe+wMrt8aei7B3
-         qmC2LBKpX9SkWBhCnD22UNBywtm+Ldf8BZhCNxZbJO8l4CRjA0pAIThgzDfhfq5XPi6k
-         clf/VTEcEObL4yunztQoctwSjE9gScW9hTXWc+uM3untLFdO31Y29r2vD6cY3n2HTgcV
-         L5DpqVSnvIiRkKhoNgdXvRM2KLfjuizLSAp7Gqf4+jF0LsweLsGBXVaT/4FXnZcYP2lK
-         Caeg==
+        bh=xrARqRcEzdmT9hKY4SsQfbqr52MIo3gXN0CckjNla4U=;
+        b=4ZfAnRCH2xOvaT2/VKFSGTMx6kwzrRNIb8nAfjJZRgVbtE00gquUrKuQ8soTAbm022
+         PhoiGQdlBwwN6jvNyoSxmIOlhgIPBSg/CV/ZNFpnntAd69Oh0ZMa97inHY9thVH9oIkF
+         fLCCUP8K4cYYXppYCpo6lkTylxB0o/qKOwffffajb/v6eH96TOCEvlb/XFAvKXZYhP2G
+         bltUvat4vimbMlzPge49UkiycfQpeZKpgnV9YTgyo6JrtGDcZmwbYj8gvnxj9lNXmgtX
+         088Pp4n6pqTAn52SWmo3FtbrhHEMdblCqrWwLBh9N86zYFgaBRAIaw4+HXeulfXJ2h9q
+         5gQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704354212; x=1704959012;
+        d=1e100.net; s=20230601; t=1704354214; x=1704959014;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=2/2tuLKGnXP/VBMG7KDv1Ce5GK1oOvMtuCNcueHPkkg=;
-        b=V2yEKTBLcqsTDU3YRYxQ6lfUdHV9Dc6tMynX4/6tgAlRcdwULqLvN9uElX6T/iqqb3
-         MgnXtlnzxV9ooIEY41xBbeIyPWSqw5hioWW4GJkWx1bU4GFQGk/E/kUml4Ty3y+FTJdq
-         btUaJbYpgDHLMP46wvVRenzyffJDDSfgbetKjI9MrgjRkYZ5vvlaXtfUFBriWMI3SvSF
-         0uYok+ISRM+i/Ti8kV9CI2JY0GxXqaCGbYpOAntdnqfEP9V5sOoFe4YLMZq0Kf+GxJIQ
-         FIQ9eF9VILV7jwDnft0BWJJLYkNQN5+lcz+M4auCkX6EZtKzBw6iO7/4zOgrVsuchZd6
-         ykmA==
-X-Gm-Message-State: AOJu0YwGL2IKV/NlJdLPTJMQq1c00EhP3gRclxkI2PgW4Kx1Ur4yQeYR
-	MemdDCZUhPeM5v9LPoLD0u4E0AQAOmrrIuQ/X4Q=
-X-Google-Smtp-Source: AGHT+IGTqO5dRA9KRnCdC8Au8zJHDXDGujRo5mWSvsMsUeFmpur+WJb1SoyBk0cbQvJRIufPKvvGgV7YaS+q
+        bh=xrARqRcEzdmT9hKY4SsQfbqr52MIo3gXN0CckjNla4U=;
+        b=UC+e3GKxA9S3cjeFFz/tF+cOHGB2JE6NJAP3pR+a/MkIq8TLdlXAP8M9mHnWyVZXgf
+         iDuEIaXgCpTlyMqnUGSt0HNZLjNFlY+EbGuMmG8wFbTMteGwQxxZZgIre22mXGKkF7Ke
+         ibymWidINHoM30DBuxrGR5VgTjozhkyoHewgiXunk4iSF6XVLa/PT44OSnsKuTKQTSBF
+         y2wkEolHzcLinb0+mu71Z/4rCWVxjXlGmIXvanrT6B2Z/BbwInddKkwg/uijynd1poz7
+         imjcJD4eEX/YqCQyQ7L9jSfXHz13fMH2Dqddkb/b5DI6TCJneW3FtC0sPoOTUL2hpR0u
+         UnkA==
+X-Gm-Message-State: AOJu0Yw/34EjS0nS/Cqbdh2jo9UqWmZBnSxs885qeKRPi1HCkmgP0PNZ
+	eb0fjztsLM4jWUzWOZurtvYo9MaaXTxicF9+rp4=
+X-Google-Smtp-Source: AGHT+IEITqazmrSJyheUy7O7abTyIkWrsUX/xegl+/80jTxZR/SW+TB1jaX48bCHr23xsw9NXQe5Yao81lue
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f607:7105:a86e:433f])
- (user=irogers job=sendgmr) by 2002:a05:690c:b1d:b0:5e6:f5a:bf71 with SMTP id
- cj29-20020a05690c0b1d00b005e60f5abf71mr41819ywb.3.1704354212358; Wed, 03 Jan
- 2024 23:43:32 -0800 (PST)
-Date: Wed,  3 Jan 2024 23:42:58 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:542:b0:dbe:9f60:c72f with SMTP id
+ z2-20020a056902054200b00dbe9f60c72fmr69462ybs.4.1704354214534; Wed, 03 Jan
+ 2024 23:43:34 -0800 (PST)
+Date: Wed,  3 Jan 2024 23:42:59 -0800
 In-Reply-To: <20240104074259.653219-1-irogers@google.com>
-Message-Id: <20240104074259.653219-3-irogers@google.com>
+Message-Id: <20240104074259.653219-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,7 +51,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240104074259.653219-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-Subject: [PATCH v1 3/4] perf vendor events intel: Update icelakex events to v1.23
+Subject: [PATCH v1 4/4] perf vendor events intel: Update sapphirerapids events
+ to v1.17
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -63,125 +64,207 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update to v1.23 released in:
+Update to v1.17 released in:
 https://github.com/intel/perfmon/pull/123
 
-Updates to event descriptions.
+Add events FP_ARITH_DISPATCHED.V0, FP_ARITH_DISPATCHED.V1,
+FP_ARITH_DISPATCHED.V2, UNC_IIO_IOMMU0.1G_HITS, UNC_IIO_IOMMU0.2M_HITS
+and UNC_IIO_IOMMU0.4K_HITS. Description updates.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/icelakex/other.json          | 2 +-
- tools/perf/pmu-events/arch/x86/icelakex/pipeline.json       | 2 +-
- .../pmu-events/arch/x86/icelakex/uncore-interconnect.json   | 6 +++---
- tools/perf/pmu-events/arch/x86/mapfile.csv                  | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+ .../x86/sapphirerapids/floating-point.json    | 27 +++++++++++++++--
+ .../arch/x86/sapphirerapids/pipeline.json     |  2 +-
+ .../sapphirerapids/uncore-interconnect.json   |  8 ++---
+ .../arch/x86/sapphirerapids/uncore-io.json    | 30 +++++++++++++++++++
+ 5 files changed, 60 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/other.json b/tools/per=
-f/pmu-events/arch/x86/icelakex/other.json
-index 63d5faf2fc43..11810daaf150 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/other.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/other.json
-@@ -19,7 +19,7 @@
-         "BriefDescription": "Core cycles where the core was running in a m=
-anner where Turbo may be clipped to the AVX512 turbo schedule.",
-         "EventCode": "0x28",
-         "EventName": "CORE_POWER.LVL2_TURBO_LICENSE",
--        "PublicDescription": "Core cycles where the core was running with =
-power-delivery for license level 2 (introduced in Skylake Server microarcht=
-ecture).  This includes high current AVX 512-bit instructions.",
-+        "PublicDescription": "Core cycles where the core was running with =
-power-delivery for license level 2 (introduced in Skylake Server microarchi=
-tecture).  This includes high current AVX 512-bit instructions.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x20"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json b/tools/=
-perf/pmu-events/arch/x86/icelakex/pipeline.json
-index 176e5ef2a24a..45ee6bceba7f 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
-@@ -519,7 +519,7 @@
-         "BriefDescription": "Cycles when Reservation Station (RS) is empty=
- for the thread",
-         "EventCode": "0x5e",
-         "EventName": "RS_EVENTS.EMPTY_CYCLES",
--        "PublicDescription": "Counts cycles during which the reservation s=
-tation (RS) is empty for this logical processor. This is usually caused whe=
-n the front-end pipeline runs into stravation periods (e.g. branch mispredi=
-ctions or i-cache misses)",
-+        "PublicDescription": "Counts cycles during which the reservation s=
-tation (RS) is empty for this logical processor. This is usually caused whe=
-n the front-end pipeline runs into starvation periods (e.g. branch mispredi=
-ctions or i-cache misses)",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.js=
-on b/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-index f87ea3f66d1b..a066a009c511 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-@@ -38,7 +38,7 @@
-         "EventCode": "0x10",
-         "EventName": "UNC_I_COHERENT_OPS.CLFLUSH",
-         "PerPkg": "1",
--        "PublicDescription": "Coherent Ops : CLFlush : Counts the number o=
-f coherency related operations servied by the IRP",
-+        "PublicDescription": "Coherent Ops : CLFlush : Counts the number o=
-f coherency related operations serviced by the IRP",
-         "UMask": "0x80",
-         "Unit": "IRP"
-     },
-@@ -65,7 +65,7 @@
-         "EventCode": "0x10",
-         "EventName": "UNC_I_COHERENT_OPS.WBMTOI",
-         "PerPkg": "1",
--        "PublicDescription": "Coherent Ops : WbMtoI : Counts the number of=
- coherency related operations servied by the IRP",
-+        "PublicDescription": "Coherent Ops : WbMtoI : Counts the number of=
- coherency related operations serviced by the IRP",
-         "UMask": "0x40",
-         "Unit": "IRP"
-     },
-@@ -454,7 +454,7 @@
-         "EventCode": "0x11",
-         "EventName": "UNC_I_TRANSACTIONS.WRITES",
-         "PerPkg": "1",
--        "PublicDescription": "Inbound Transaction Count : Writes : Counts =
-the number of Inbound transactions from the IRP to the Uncore.  This can be=
- filtered based on request type in addition to the source queue.  Note the =
-special filtering equation.  We do OR-reduction on the request type.  If th=
-e SOURCE bit is set, then we also do AND qualification based on the source =
-portID. : Trackes only write requests.  Each write request should have a pr=
-efetch, so there is no need to explicitly track these requests.  For writes=
- that are tickled and have to retry, the counter will be incremented for ea=
-ch retry.",
-+        "PublicDescription": "Inbound Transaction Count : Writes : Counts =
-the number of Inbound transactions from the IRP to the Uncore.  This can be=
- filtered based on request type in addition to the source queue.  Note the =
-special filtering equation.  We do OR-reduction on the request type.  If th=
-e SOURCE bit is set, then we also do AND qualification based on the source =
-portID. : Tracks only write requests.  Each write request should have a pre=
-fetch, so there is no need to explicitly track these requests.  For writes =
-that are tickled and have to retry, the counter will be incremented for eac=
-h retry.",
-         "UMask": "0x2",
-         "Unit": "IRP"
-     },
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index fd38c516c048..c1820eb16a19 100644
+index c1820eb16a19..4d1deed4437a 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -15,7 +15,7 @@ GenuineIntel-6-A[DE],v1.01,graniterapids,core
- GenuineIntel-6-(3C|45|46),v33,haswell,core
- GenuineIntel-6-3F,v28,haswellx,core
- GenuineIntel-6-7[DE],v1.19,icelake,core
--GenuineIntel-6-6[AC],v1.21,icelakex,core
-+GenuineIntel-6-6[AC],v1.23,icelakex,core
- GenuineIntel-6-3A,v24,ivybridge,core
- GenuineIntel-6-3E,v24,ivytown,core
- GenuineIntel-6-2D,v24,jaketown,core
+@@ -26,7 +26,7 @@ GenuineIntel-6-1[AEF],v4,nehalemep,core
+ GenuineIntel-6-2E,v4,nehalemex,core
+ GenuineIntel-6-A7,v1.01,rocketlake,core
+ GenuineIntel-6-2A,v19,sandybridge,core
+-GenuineIntel-6-8F,v1.16,sapphirerapids,core
++GenuineIntel-6-8F,v1.17,sapphirerapids,core
+ GenuineIntel-6-AF,v1.00,sierraforest,core
+ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v57,skylake,core
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.j=
+son b/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
+index 4a9d211e9d4f..1bdefaf96287 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
+@@ -23,26 +23,47 @@
+         "UMask": "0x10"
+     },
+     {
+-        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_0",
++        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_0 [This event is ali=
+as to FP_ARITH_DISPATCHED.V0]",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.PORT_0",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_1",
++        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_1 [This event is ali=
+as to FP_ARITH_DISPATCHED.V1]",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.PORT_1",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x2"
+     },
+     {
+-        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_5",
++        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_5 [This event is ali=
+as to FP_ARITH_DISPATCHED.V2]",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.PORT_5",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x4"
+     },
++    {
++        "BriefDescription": "FP_ARITH_DISPATCHED.V0 [This event is alias t=
+o FP_ARITH_DISPATCHED.PORT_0]",
++        "EventCode": "0xb3",
++        "EventName": "FP_ARITH_DISPATCHED.V0",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "FP_ARITH_DISPATCHED.V1 [This event is alias t=
+o FP_ARITH_DISPATCHED.PORT_1]",
++        "EventCode": "0xb3",
++        "EventName": "FP_ARITH_DISPATCHED.V1",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "FP_ARITH_DISPATCHED.V2 [This event is alias t=
+o FP_ARITH_DISPATCHED.PORT_5]",
++        "EventCode": "0xb3",
++        "EventName": "FP_ARITH_DISPATCHED.V2",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x4"
++    },
+     {
+         "BriefDescription": "Counts number of SSE/AVX computational 128-bi=
+t packed double precision floating-point instructions retired; some instruc=
+tions will count twice as noted below.  Each count represents 2 computation=
+ operations, one for each element.  Applies to SSE* and AVX* packed double =
+precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN=
+ MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice =
+as they perform 2 calculations per element.",
+         "EventCode": "0xc7",
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json b/=
+tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
+index 6dcf3b763af4..2cfe814d2015 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
+@@ -505,7 +505,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "INT_MISC.UNKNOWN_BRANCH_CYCLES",
++        "BriefDescription": "Bubble cycles of BAClear (Unknown Branch).",
+         "EventCode": "0xad",
+         "EventName": "INT_MISC.UNKNOWN_BRANCH_CYCLES",
+         "MSRIndex": "0x3F7",
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconn=
+ect.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnec=
+t.json
+index 09d840c7da4c..65d088556bae 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.jso=
+n
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.jso=
+n
+@@ -4825,11 +4825,11 @@
+         "Unit": "M3UPI"
+     },
+     {
+-        "BriefDescription": "Number of allocations into the CRS Egress  us=
+ed to queue up requests destined to the mesh (AD Bouncable)",
++        "BriefDescription": "Number of allocations into the CRS Egress  us=
+ed to queue up requests destined to the mesh (AD Bounceable)",
+         "EventCode": "0x47",
+         "EventName": "UNC_MDF_CRS_TxR_INSERTS.AD_BNC",
+         "PerPkg": "1",
+-        "PublicDescription": "AD Bouncable : Number of allocations into th=
+e CRS Egress",
++        "PublicDescription": "AD Bounceable : Number of allocations into t=
+he CRS Egress",
+         "UMask": "0x1",
+         "Unit": "MDF"
+     },
+@@ -4861,11 +4861,11 @@
+         "Unit": "MDF"
+     },
+     {
+-        "BriefDescription": "Number of allocations into the CRS Egress  us=
+ed to queue up requests destined to the mesh (BL Bouncable)",
++        "BriefDescription": "Number of allocations into the CRS Egress  us=
+ed to queue up requests destined to the mesh (BL Bounceable)",
+         "EventCode": "0x47",
+         "EventName": "UNC_MDF_CRS_TxR_INSERTS.BL_BNC",
+         "PerPkg": "1",
+-        "PublicDescription": "BL Bouncable : Number of allocations into th=
+e CRS Egress",
++        "PublicDescription": "BL Bounceable : Number of allocations into t=
+he CRS Egress",
+         "UMask": "0x4",
+         "Unit": "MDF"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json b=
+/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
+index 8b5f54fed103..03596db87710 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
+@@ -1249,6 +1249,36 @@
+         "UMask": "0x70ff010",
+         "Unit": "IIO"
+     },
++    {
++        "BriefDescription": ": IOTLB Hits to a 1G Page",
++        "EventCode": "0x40",
++        "EventName": "UNC_IIO_IOMMU0.1G_HITS",
++        "PerPkg": "1",
++        "PortMask": "0x0000",
++        "PublicDescription": ": IOTLB Hits to a 1G Page : Counts if a tran=
+saction to a 1G page, on its first lookup, hits the IOTLB.",
++        "UMask": "0x10",
++        "Unit": "IIO"
++    },
++    {
++        "BriefDescription": ": IOTLB Hits to a 2M Page",
++        "EventCode": "0x40",
++        "EventName": "UNC_IIO_IOMMU0.2M_HITS",
++        "PerPkg": "1",
++        "PortMask": "0x0000",
++        "PublicDescription": ": IOTLB Hits to a 2M Page : Counts if a tran=
+saction to a 2M page, on its first lookup, hits the IOTLB.",
++        "UMask": "0x8",
++        "Unit": "IIO"
++    },
++    {
++        "BriefDescription": ": IOTLB Hits to a 4K Page",
++        "EventCode": "0x40",
++        "EventName": "UNC_IIO_IOMMU0.4K_HITS",
++        "PerPkg": "1",
++        "PortMask": "0x0000",
++        "PublicDescription": ": IOTLB Hits to a 4K Page : Counts if a tran=
+saction to a 4K page, on its first lookup, hits the IOTLB.",
++        "UMask": "0x4",
++        "Unit": "IIO"
++    },
+     {
+         "BriefDescription": ": Context cache hits",
+         "EventCode": "0x40",
 --=20
 2.43.0.472.g3155946c3a-goog
 
