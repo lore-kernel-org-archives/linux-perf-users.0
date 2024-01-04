@@ -1,70 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6422C84C;
-	Thu,  4 Jan 2024 21:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671302C68F;
+	Thu,  4 Jan 2024 21:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8qTJxD7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA521C433C7;
-	Thu,  4 Jan 2024 21:09:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7spoNeU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68EF1C433C7;
+	Thu,  4 Jan 2024 21:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704402552;
-	bh=ObH3DlocG48BYzArBAyMEYR9Rz30FGvO+EmCKp+LRmM=;
+	s=k20201202; t=1704403422;
+	bh=VIyfw1phAScaI5WARkugbBS2lpSOHPiAcwls60APFyE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i8qTJxD7LoQ0ryKDG/LxO7Wbn58Atrdr4SP0nyhcm7KmKSFCR0dQDvwt11ljEe9Y7
-	 kJ0hr0tSZc66cSbCBG0sNbC768N/xPUGu3/SSql5rBdap4FZwkcHVwzPbhB5aSTerl
-	 dwr9mRExPKuc8HYffcg01B7tcDybbupnbZj0CacF+BtoLzm7UEU5wtA0I/NsIMn+u0
-	 u1aAMzpEjZDc8kpImPFRsIJeuFkYGsYeV/vEo3gzr4nlA9lVqSyH4Tx1WtVPERg7pb
-	 01kW/nJst1GgKPwsz3W9mGhXE3BRk38lEr10VbJdvTlBw6f72y1KtHCgTYaJ/LIeYs
-	 cj96y6Ernm35Q==
+	b=L7spoNeUr1nz8XL4sUh4IHmD2fbM4mKlo8ftu+ClxUISgXAJeOHY7guKDbwskXTAm
+	 i9xl2Y74i0AZablyNMllAmfK9pvfjFLPL0NvQ6tu/E5RMrX3gCeBWxZIyUAwFnSfT6
+	 FWBKW4Bx8uAyRVv3A/NNVfaPUPv3iDGRr8IqN9L4Fc1uneP1AMm5c6t5sYW0MQa0ov
+	 VYD8BbCLzEAPgo2bMMoO4pd5Lu0E70CDqhdanmO4iBXrift4XSmJAfck6b14szlJnv
+	 WbSk08cnvdp1uq9EOykKT126BfddGDLXqJuAA6j0c+M95lUKX5058W9ccgjSV3XQP1
+	 a48iqovgmzjJQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 5BCFB403EF; Thu,  4 Jan 2024 18:09:09 -0300 (-03)
-Date: Thu, 4 Jan 2024 18:09:09 -0300
+	id ED74F403EF; Thu,  4 Jan 2024 18:23:39 -0300 (-03)
+Date: Thu, 4 Jan 2024 18:23:39 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ben Gainey <Ben.Gainey@arm.com>
-Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	Mark Rutland <Mark.Rutland@arm.com>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"irogers@google.com" <irogers@google.com>
-Subject: Re: [PATCH v1] perf tests: Add perf script test
-Message-ID: <ZZcedb1ScQ45LrT9@kernel.org>
-References: <20231207174057.1482161-1-irogers@google.com>
- <1ba595108f13fbe9e062b92e2c717f37e6a5ca93.camel@arm.com>
+To: Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, yaowenbin <yaowenbin1@huawei.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf tui: don't ignore job control
+Message-ID: <ZZch2_ceYO-UI71B@kernel.org>
+References: <CAM9d7ciuh1H2Mfx5ToYGT1fOm8E3jrQhkzg304JKDd7BhT=h5g@mail.gmail.com>
+ <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1ba595108f13fbe9e062b92e2c717f37e6a5ca93.camel@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
 X-Url: http://acmel.wordpress.com
 
-Em Mon, Dec 11, 2023 at 05:46:20PM +0000, Ben Gainey escreveu:
-> On Thu, 2023-12-07 at 09:40 -0800, Ian Rogers wrote:
-> > Start a new set of shell tests for testing perf script. The initial
-> > contribution is checking that some perf db-export functionality works
-> > as reported in this regression by Ben Gainey <ben.gainey@arm.com>:
-> > https://lore.kernel.org/lkml/20231207140911.3240408-1-ben.gainey@arm.com/
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
+Em Tue, Dec 27, 2022 at 09:57:40PM +0100, Ahelenia Ziemiańska escreveu:
+> In its infinite wisdom, by default, SLang sets susp undef,
+> and this can only be un-done by calling SLtty_set_suspend_state(true).
+> After every SLang_init_tty().
 > 
-> Thanks Ian. I've run the test script before and after my patch. Looks
-> good to me. Please feel free to:
+> Additionally, no provisions are made for maintaining the teletype
+> attributes across suspend/continue (outside of curses emulation mode(?!),
+> which provides full support, naturally), so we need to save and restore
+> the flags ourselves, as well as reset the text colours when going under.
+> We need to also re-draw the screen, and raising SIGWINCH, shockingly,
+> Just Works.
 > 
-> Tested-By: Ben Gainey <ben.gainey@arm.com>
+> The correct solution would be to Not Use SLang, but as a stop-gap,
+> this makes TUI perf report usable.
 
-Thanks, applied this patch, then Ben's and ran 'perf test "perf script
-tests"' before/after, with the expected results.
+This was in the compost pile for a long time, but I got to it, indeed
+'perf report' works, the refresh after returning to it, etc.
 
-Thanks everybody!
+'perf top' needs some care, but we can do it later.
+
+About not using slang, perf started with newt, I moved to slang, there
+are people suggesting we move to some more modern thing, maybe
+notcurses?
+
+- Arnaldo
+ 
+> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
+> ---
+> Yeah, somehow I didn't hit that in my tests, but it was relatively easy
+> to trigger when I tried. A full partial write retry loop is an overkill
+> here, I think, and few other places in perf actually try to resubmit
+> partial writes, so.
+> 
+>  tools/perf/ui/browsers/annotate.c |  1 +
+>  tools/perf/ui/browsers/hists.c    |  2 ++
+>  tools/perf/ui/browsers/scripts.c  |  1 +
+>  tools/perf/ui/tui/setup.c         | 22 ++++++++++++++++++++++
+>  4 files changed, 26 insertions(+)
+> 
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> index c03fa76c02ff..6a4ffbf66c7f 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -942,6 +942,7 @@ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+>  	/* reset abort key so that it can get Ctrl-C as a key */
+>  	SLang_reset_tty();
+>  	SLang_init_tty(0, 0, 0);
+> +	SLtty_set_suspend_state(true);
+>  
+>  	return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
+>  }
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> index b72ee6822222..2479e6d42e7c 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -3010,6 +3010,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+>  	/* reset abort key so that it can get Ctrl-C as a key */
+>  	SLang_reset_tty();
+>  	SLang_init_tty(0, 0, 0);
+> +	SLtty_set_suspend_state(true);
+>  
+>  	if (min_pcnt)
+>  		browser->min_pcnt = min_pcnt;
+> @@ -3682,6 +3683,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+>  	/* reset abort key so that it can get Ctrl-C as a key */
+>  	SLang_reset_tty();
+>  	SLang_init_tty(0, 0, 0);
+> +	SLtty_set_suspend_state(true);
+>  
+>  	memset(&action, 0, sizeof(action));
+>  
+> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+> index 47d2c7a8cbe1..50d45054ed6c 100644
+> --- a/tools/perf/ui/browsers/scripts.c
+> +++ b/tools/perf/ui/browsers/scripts.c
+> @@ -166,6 +166,7 @@ void run_script(char *cmd)
+>  	printf("\033[c\033[H\033[J");
+>  	fflush(stdout);
+>  	SLang_init_tty(0, 0, 0);
+> +	SLtty_set_suspend_state(true);
+>  	SLsmg_refresh();
+>  }
+>  
+> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+> index a3b8c397c24d..09524ba04975 100644
+> --- a/tools/perf/ui/tui/setup.c
+> +++ b/tools/perf/ui/tui/setup.c
+> @@ -2,12 +2,14 @@
+>  #include <signal.h>
+>  #include <stdbool.h>
+>  #include <stdlib.h>
+> +#include <termios.h>
+>  #include <unistd.h>
+>  #include <linux/kernel.h>
+>  #ifdef HAVE_BACKTRACE_SUPPORT
+>  #include <execinfo.h>
+>  #endif
+>  
+> +#include "../../util/color.h"
+>  #include "../../util/debug.h"
+>  #include "../../perf.h"
+>  #include "../browser.h"
+> @@ -122,6 +124,23 @@ static void ui__signal(int sig)
+>  	exit(0);
+>  }
+>  
+> +static void ui__sigcont(int sig)
+> +{
+> +	static struct termios tty;
+> +
+> +	if (sig == SIGTSTP) {
+> +		while (tcgetattr(SLang_TT_Read_FD, &tty) == -1 && errno == EINTR)
+> +			;
+> +		while (write(SLang_TT_Read_FD, PERF_COLOR_RESET, sizeof(PERF_COLOR_RESET) - 1) == -1 && errno == EINTR)
+> +			;
+> +		raise(SIGSTOP);
+> +	} else {
+> +		while (tcsetattr(SLang_TT_Read_FD, TCSADRAIN, &tty) == -1 && errno == EINTR)
+> +			;
+> +		raise(SIGWINCH);
+> +	}
+> +}
+> +
+>  int ui__init(void)
+>  {
+>  	int err;
+> @@ -136,6 +155,7 @@ int ui__init(void)
+>  	err = SLang_init_tty(-1, 0, 0);
+>  	if (err < 0)
+>  		goto out;
+> +	SLtty_set_suspend_state(true);
+>  
+>  	err = SLkp_init();
+>  	if (err < 0) {
+> @@ -150,6 +170,8 @@ int ui__init(void)
+>  	signal(SIGINT, ui__signal);
+>  	signal(SIGQUIT, ui__signal);
+>  	signal(SIGTERM, ui__signal);
+> +	signal(SIGTSTP, ui__sigcont);
+> +	signal(SIGCONT, ui__sigcont);
+>  
+>  	perf_error__register(&perf_tui_eops);
+>  
+> -- 
+> 2.30.2
+> 
+
+
+
+-- 
 
 - Arnaldo
