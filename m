@@ -1,150 +1,342 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9E3286B3;
-	Thu,  4 Jan 2024 17:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VAVOj3qk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704389921; x=1735925921;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3udya00K0HYS8sw10m47vAtCLMcEtftTF6aI4a13CZA=;
-  b=VAVOj3qkc58j39ZI7yc7iHNBLIhn578HeILANvRb4sXLNgU2FR8a2gbN
-   9/fVnkhSLaTQW3r/9bGKAA3myE8edsZ2q6DQVXgz61PxAZH+XtMMNvK71
-   sgaL5LnPWnV5Q6dmBSsuYdjlf7DRPb1aFSTVrDtwjXhjLU/leHmYgFuFq
-   1bJXCawVxNxBmqmZDJcR9Qlm+KwCETHJopkyp53N8006cMMfZjzsjZpmW
-   XOMHJJ+8Q6dmtTm3fCb4jGzs1utuT72fbU8PIUhu9RTIxQKQi628FW0qU
-   EtdJNCTlmx1O4gYZcZ53VB1gZ5MTxkokTkD6J55iSLYFlUEEnoScrnveD
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="401101398"
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="401101398"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 09:38:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="14972645"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 09:38:40 -0800
-Received: from [10.209.154.172] (kliang2-mobl1.ccr.corp.intel.com [10.209.154.172])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id CD27B580BF8;
-	Thu,  4 Jan 2024 09:38:37 -0800 (PST)
-Message-ID: <a327286a-36a6-4cdc-92bd-777fb763d88a@linux.intel.com>
-Date: Thu, 4 Jan 2024 12:38:36 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3C128DA9
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jan 2024 17:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dSl2ffrD"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5534180f0e9so206a12.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jan 2024 09:51:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704390716; x=1704995516; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B74JqfZyQlvHE8okDbReQQjqktg4m15F066ZG6l5Rrw=;
+        b=dSl2ffrD1Zc6qV1nU7fkxfFrSzWNQNHiuxpU7JoYLlkeZer7asXYAfF2/6ksCYJBnQ
+         M5IXWDgcNER2hrDLCbvJb3QiegNVBqYHqk6qNA21Z1X4wrLtSJmaGMlCFN4Jh9S2n+4v
+         OYFp99+ma8bTIV/iiJhtG2CAH4j+Ro3PQNpPA4UsLLUhdAQQj+wx8JQpnxPLc8vGaPxk
+         Gxu9oNyTgv79kIx0vuNM00d65LrbwLWz3XB4O/Gz7nmiUud2hk0Yh1pCfaeATeHQ3JZD
+         gGK0HVAPiTHD8oO2RxjYPlGfp6KoqA1lBa9ITFhXYiJZl/S6S+whIf6UyNIhyqoKvvr2
+         Ss+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704390716; x=1704995516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B74JqfZyQlvHE8okDbReQQjqktg4m15F066ZG6l5Rrw=;
+        b=gjpPHu60Mv4xDHmtV9HryU6JYGm+XpwlLKZb6eDX60/UgeLhqW/VlwjNHSaG5FjNlb
+         NWUcruNAjMOBpkCzv0MIJZBmK67XomEBhQn1zvnojEFZ8g/+dMuDVeANWXMmjXuesSTj
+         wamspbC0E3GT+q9D5TL/x600BcRF1ZADwT4mmG+chggl7FzoC3GdTqANks5VMeyI3sag
+         qvgdWfoTpKrqwUflU1N161Fx/VW6/vc4A85opz4boDf0nT8M/CBluP40SqR86lJ5PXoV
+         9Pjl5zOdZR/mGzITRkprL9DMxF0iA+mMcdYq6ioMWh2nFX9wLtsHyn5n6sthtsPX3tPn
+         q5Xg==
+X-Gm-Message-State: AOJu0Yzs8PD27OyH8iIBdKzL1iGHN8mM/tKlWOuUp6zAt+QcQxMOlHKs
+	RZPhWytuutlljSHcrX6UeRfNIXUR6Qa1FpIPhs2zVOKq0Opx
+X-Google-Smtp-Source: AGHT+IFEAPvvuFWx88JngOw4Y9x/ZbIkJrHBt25yhvCdNyPzK4HGYk53JY9+vHuiXlAQeDwGwei73oXLhSnEOfRInXc=
+X-Received: by 2002:a50:d4d2:0:b0:557:1142:d5bb with SMTP id
+ e18-20020a50d4d2000000b005571142d5bbmr4311edj.4.1704390716226; Thu, 04 Jan
+ 2024 09:51:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: x86/pmu: fix masking logic for
- MSR_CORE_PERF_GLOBAL_CTRL
-Content-Language: en-US
-To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: peterz@infradead.org, linux-perf-users@vger.kernel.org,
- leitao@debian.org, acme@kernel.org, mingo@redhat.com,
- "Paul E . McKenney" <paulmck@kernel.org>,
- Sean Christopherson <seanjc@google.com>, stable@vger.kernel.org,
- Like Xu <like.xu.linux@gmail.com>
-References: <20240104153939.129179-1-pbonzini@redhat.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240104153939.129179-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240104074259.653219-1-irogers@google.com> <ZZam-EG-UepcXtWw@kernel.org>
+ <CAP-5=fV+U4qSwU8nqHJMgAZTwtWs9jEm3i9yDQSVtq9Fbos5HA@mail.gmail.com> <8af821dc-d173-483d-8b69-b8e041538561@linux.intel.com>
+In-Reply-To: <8af821dc-d173-483d-8b69-b8e041538561@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 4 Jan 2024 09:51:44 -0800
+Message-ID: <CAP-5=fVTEcbJdG6_L+GH5RGCtpFhpjWyyhYu0Fhx5CRRqZcqDg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] perf vendor events intel: Alderlake/rocketlake
+ metric fixes
+To: "Liang, Kan" <kan.liang@linux.intel.com>, "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Edward Baker <edward.baker@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jan 4, 2024 at 6:30=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+>
+>
+> On 2024-01-04 8:56 a.m., Ian Rogers wrote:
+> >> Testing tma_slow_pause
+> >> Metric 'tma_slow_pause' not printed in:
+> >> # Running 'internals/synthesize' benchmark:
+> >> Computing performance of single threaded perf event synthesis by
+> >> synthesizing events on the perf process itself:
+> >>   Average synthesis took: 49.987 usec (+- 0.049 usec)
+> >>   Average num. events: 47.000 (+- 0.000)
+> >>   Average time per event 1.064 usec
+> >>   Average data synthesis took: 53.490 usec (+- 0.033 usec)
+> >>   Average num. events: 245.000 (+- 0.000)
+> >>   Average time per event 0.218 usec
+> >>
+> >>  Performance counter stats for 'perf bench internals synthesize':
+> >>
+> >>      <not counted>      cpu_core/TOPDOWN.SLOTS/                       =
+                          (0.00%)
+> >>      <not counted>      cpu_core/topdown-retiring/                    =
+                          (0.00%)
+> >>      <not counted>      cpu_core/topdown-mem-bound/                   =
+                          (0.00%)
+> >>      <not counted>      cpu_core/topdown-bad-spec/                    =
+                          (0.00%)
+> >>      <not counted>      cpu_core/topdown-fe-bound/                    =
+                          (0.00%)
+> >>      <not counted>      cpu_core/topdown-be-bound/                    =
+                          (0.00%)
+> >>      <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/          =
+                              (0.00%)
+> >>      <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/           =
+                             (0.00%)
+> >>      <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/         =
+                               (0.00%)
+> >>      <not counted>      cpu_core/CPU_CLK_UNHALTED.PAUSE/              =
+                          (0.00%)
+> >>      <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/         =
+                               (0.00%)
+> >>      <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/             =
+                           (0.00%)
+> >>      <not counted>      cpu_core/ARITH.DIV_ACTIVE/                    =
+                          (0.00%)
+> >>      <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=3D0xc=
+/                                        (0.00%)
+> >>      <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x8=
+0/                                        (0.00%)
+> >>
+> >>        1.186254766 seconds time elapsed
+> >>
+> >>        0.427220000 seconds user
+> >>        0.752217000 seconds sys
+> >> Testing smi_cycles
+> >> Testing smi_num
+> >> Testing tsx_aborted_cycles
+> >> Testing tsx_cycles_per_elision
+> >> Testing tsx_cycles_per_transaction
+> >> Testing tsx_transactional_cycles
+> >> test child finished with -1
+> >> ---- end ----
+> >> perf all metrics test: FAILED!
+> >> root@number:~#
+> > Have a try disabling the NMI watchdog. Agreed that there is more to
+> > fix here but I think the PMU driver is in part to blame because
+> > manually breaking the weak group of events is a fix.
+>
+> I think we have a NO_GROUP_EVENTS_NMI metric constraint to mark a group
+> which require disabling of the NMI watchdog.
+> Maybe we should mark the group a NO_GROUP_EVENTS_NMI metric.
 
++Weilin due to the affects of event grouping.
 
-On 2024-01-04 10:39 a.m., Paolo Bonzini wrote:
-> When commit c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE
-> MSR emulation for extended PEBS") switched the initialization of
-> cpuc->guest_switch_msrs to use compound literals, it screwed up
-> the boolean logic:
-> 
-> +	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
-> ...
-> -	arr[0].guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask;
-> -	arr[0].guest &= ~(cpuc->pebs_enabled & x86_pmu.pebs_capable);
-> +               .guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
-> 
-> Before the patch, the value of arr[0].guest would have been intel_ctrl &
-> ~cpuc->intel_ctrl_host_mask & ~pebs_mask.  The intent is to always treat
-> PEBS events as host-only because, while the guest runs, there is no way
-> to tell the processor about the virtual address where to put PEBS records
-> intended for the host.
-> 
-> Unfortunately, the new expression can be expanded to
-> 
-> 	(intel_ctrl & ~cpuc->intel_ctrl_host_mask) | (intel_ctrl & ~pebs_mask)
-> 
-> which makes no sense; it includes any bit that isn't *both* marked as
-> exclude_guest and using PEBS.  So, reinstate the old logic.  
+Thanks Kan, NO_GROUP_EVENTS_NMI would be good. Something I see for
+tma_ports_utilized_1 that may be worsening things is:
 
-I think the old logic will completely disable the PEBS in guest
-capability. Because the counter which is assigned to a guest PEBS event
-will also be set in the pebs_mask. The old logic disable the counter in
-GLOBAL_CTRL in guest. Nothing will be counted.
+```
+Testing tma_ports_utilized_1
+Metric 'tma_ports_utilized_1' not printed in:
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 49.581 usec (+- 0.030 usec)
+  Average num. events: 47.000 (+- 0.000)
+  Average time per event 1.055 usec
+  Average data synthesis took: 53.367 usec (+- 0.032 usec)
+  Average num. events: 246.000 (+- 0.000)
+  Average time per event 0.217 usec
 
-Like once proposed a fix in the intel_guest_get_msrs().
-https://lore.kernel.org/lkml/20231129095055.88060-1-likexu@tencent.com/
-It should work for the issue.
+ Performance counter stats for 'perf bench internals synthesize':
 
-Ideally, we should prevent the host PEBS from profiling a guest via
-rejecting the event creation in the perf. But I couldn't find a good way
-to distinguish host-created PEBS and guest-created PEBS. So Like's
-proposal should be a good alternative so far.
+     <not counted>      cpu_core/TOPDOWN.SLOTS/
+                         (0.00%)
+     <not counted>      cpu_core/topdown-retiring/
+                         (0.00%)
+     <not counted>      cpu_core/topdown-mem-bound/
+                         (0.00%)
+     <not counted>      cpu_core/topdown-bad-spec/
+                         (0.00%)
+     <not counted>      cpu_core/topdown-fe-bound/
+                         (0.00%)
+     <not counted>      cpu_core/topdown-be-bound/
+                         (0.00%)
+     <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/
+                             (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/
+                            (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/
+                              (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/
+                            (0.00%)
+     <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/
+                              (0.00%)
+     <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/
+                          (0.00%)
+     <not counted>      cpu_core/ARITH.DIV_ACTIVE/
+                         (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=3D0xc/
+                                      (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x80/
+                                       (0.00%)
+
+       1.180394056 seconds time elapsed
+
+       0.409881000 seconds user
+       0.764134000 seconds sys
+```
+
+The event EXE_ACTIVITY.1_PORTS_UTIL is repeated, this is because the
+metric code deduplicates events based purely on their name and so
+doesn't realize EXE_ACTIVITY.1_PORTS_UTIL is the same as
+cpu_core@EXE_ACTIVITY.1_PORTS_UTIL@. This is a hybrid only glitch as
+we only prefix with a PMU for hybrid metrics, and I should find and
+remove why there's no PMU for the 1 case of EXE_ACTIVITY.1_PORTS_UTIL.
+
+This problem doesn't occur for tma_slow_pause and I wondered if you
+could give insight. That metric has the counters below:
+```
+$ perf stat -M tma_slow_pause -a sleep 0.1
+
+Performance counter stats for 'system wide':
+
+    <not counted>      cpu_core/TOPDOWN.SLOTS/
+                        (0.00%)
+    <not counted>      cpu_core/topdown-retiring/
+                        (0.00%)
+    <not counted>      cpu_core/topdown-mem-bound/
+                        (0.00%)
+    <not counted>      cpu_core/topdown-bad-spec/
+                        (0.00%)
+    <not counted>      cpu_core/topdown-fe-bound/
+                        (0.00%)
+    <not counted>      cpu_core/topdown-be-bound/
+                        (0.00%)
+    <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/
+                            (0.00%)
+    <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/
+                           (0.00%)
+    <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/
+                             (0.00%)
+    <not counted>      cpu_core/CPU_CLK_UNHALTED.PAUSE/
+                        (0.00%)
+    <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/
+                             (0.00%)
+    <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/
+                         (0.00%)
+    <not counted>      cpu_core/ARITH.DIV_ACTIVE/
+                        (0.00%)
+    <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=3D0xc/
+                                     (0.00%)
+    <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x80/
+                                      (0.00%)
+
+      0.102074888 seconds time elapsed
+```
+
+With -vv I see the event string is:
+'{RESOURCE_STALLS.SCOREBOARD/metric-id=3DRESOURCE_STALLS.SCOREBOARD/,cpu_co=
+re/EXE_ACTIVITY.1_PORTS_UTIL,metric-id=3Dcpu_core!3EXE_ACTIVITY.1_PORTS_UTI=
+L!3/,cpu_core/TOPDOWN.SLOTS,metric-id=3Dcpu_core!3TOPDOWN.SLOTS!3/,cpu_core=
+/EXE_ACTIVITY.BOUND_ON_LOADS,metric-id=3Dcpu_core!3EXE_ACTIVITY.BOUND_ON_LO=
+ADS!3/,cpu_core/topdown-retiring,metric-id=3Dcpu_core!3topdown!1retiring!3/=
+,cpu_core/topdown-mem-bound,metric-id=3Dcpu_core!3topdown!1mem!1bound!3/,cp=
+u_core/topdown-bad-spec,metric-id=3Dcpu_core!3topdown!1bad!1spec!3/,CPU_CLK=
+_UNHALTED.PAUSE/metric-id=3DCPU_CLK_UNHALTED.PAUSE/,cpu_core/CYCLE_ACTIVITY=
+.STALLS_TOTAL,metric-id=3Dcpu_core!3CYCLE_ACTIVITY.STALLS_TOTAL!3/,cpu_core=
+/CPU_CLK_UNHALTED.THREAD,metric-id=3Dcpu_core!3CPU_CLK_UNHALTED.THREAD!3/,c=
+pu_core/ARITH.DIV_ACTIVE,metric-id=3Dcpu_core!3ARITH.DIV_ACTIVE!3/,cpu_core=
+/topdown-fe-bound,metric-id=3Dcpu_core!3topdown!1fe!1bound!3/,cpu_core/EXE_=
+ACTIVITY.2_PORTS_UTIL,umask=3D0xc,metric-id=3Dcpu_core!3EXE_ACTIVITY.2_PORT=
+S_UTIL!0umask!20xc!3/,cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x80,metri=
+c-id=3Dcpu_core!3EXE_ACTIVITY.3_PORTS_UTIL!0umask!20x80!3/,cpu_core/topdown=
+-be-bound,metric-id=3Dcpu_core!3topdown!1be!1bound!3/}:W'
+
+which without the metric-ids becomes:
+'{RESOURCE_STALLS.SCOREBOARD,cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/,cpu_core/T=
+OPDOWN.SLOTS/,cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/,cpu_core/topdown-retiri=
+ng/,cpu_core/topdown-mem-bound/,cpu_core/topdown-bad-spec/,CPU_CLK_UNHALTED=
+.PAUSE,cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/,cpu_core/CPU_CLK_UNHALTED.THRE=
+AD/,cpu_core/ARITH.DIV_ACTIVE/,cpu_core/topdown-fe-bound/,cpu_core/EXE_ACTI=
+VITY.2_PORTS_UTIL,umask=3D0xc/,cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0=
+x80/,cpu_core/topdown-be-bound/}:W'
+
+I count 9 none slots/top-down counters there, but I see
+CPU_CLK_UNHALTED.THREAD can use fixed counter 1. Should
+perf_event_open fail for a CPU that has a pinned use of a fixed
+counter and the group needs the fixed counter? I'm guessing you don't
+want this as CPU_CLK_UNHALTED.THREAD can also go on a generic counter
+and the driver doesn't want to count counter usage, it seems feasible
+to add it though. I guess we need a NO_GROUP_EVENTS_NMI whenever
+CPU_CLK_UNHALTED.THREAD is an event and 8 generic counters are in use.
+
+Checking on Tigerlake I see:
+```
+$ perf stat -M tma_slow_pause -a sleep 0.1
+
+Performance counter stats for 'system wide':
+
+      105,210,913      TOPDOWN.SLOTS                    #      0.1 %
+tma_slow_pause           (72.65%)
+        6,701,129      topdown-retiring
+                        (72.65%)
+       52,359,712      topdown-fe-bound
+                        (72.65%)
+       32,904,532      topdown-be-bound
+                        (72.65%)
+       14,117,814      topdown-bad-spec
+                        (72.65%)
+        6,602,391      RESOURCE_STALLS.SCOREBOARD
+                        (76.17%)
+        4,220,773      cpu/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x80/
+                                 (76.73%)
+          421,812      EXE_ACTIVITY.BOUND_ON_STORES
+                        (76.69%)
+        5,164,088      EXE_ACTIVITY.1_PORTS_UTIL
+                        (76.70%)
+          299,681      cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
+                                  (76.69%)
+              245      MISC_RETIRED.PAUSE_INST
+                        (76.67%)
+       58,403,687      CPU_CLK_UNHALTED.THREAD
+                        (76.72%)
+       25,297,841      CYCLE_ACTIVITY.STALLS_MEM_ANY
+                        (76.67%)
+        3,788,772      EXE_ACTIVITY.2_PORTS_UTIL
+                        (62.69%)
+       20,973,875      CYCLE_ACTIVITY.STALLS_TOTAL
+                        (62.16%)
+           68,053      ARITH.DIVIDER_ACTIVE
+                        (62.18%)
+
+      0.102624327 seconds time elapsed
+```
+so 10 generic counters which would never fit and the weak group is
+broken - the difference in the metric explaining why I've not been
+seeing the issue. I think I need to add alderlake/sapphirerapids
+constraints here:
+https://github.com/captain5050/perfmon/blob/main/scripts/create_perf_json.p=
+y#L1382
+Ideally we'd automate the constraint generation (or the PMU driver
+would help us out by failing to open the weak group).
 
 Thanks,
-Kan
+Ian
 
-> Another
-> way to write it could be "intel_ctrl & ~(cpuc->intel_ctrl_host_mask |
-> pebs_mask)", presumably the intention of the author of the faulty.
-> However, I personally find the repeated application of A AND NOT B to
-> be a bit more readable.
-> 
-> This shows up as guest failures when running concurrent long-running
-> perf workloads on the host, and was reported to happen with rcutorture.
-> All guests on a given host would die simultaneously with something like an
-> instruction fault or a segmentation violation.
-> 
-> Reported-by: Paul E. McKenney <paulmck@kernel.org>
-> Analyzed-by: Sean Christopherson <seanjc@google.com>
-> Tested-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: stable@vger.kernel.org
-> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/events/intel/core.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index ce1c777227b4..0f2786d4e405 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4051,12 +4051,17 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
->  	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
->  	int global_ctrl, pebs_enable;
->  
-> +	/*
-> +	 * In addition to obeying exclude_guest/exclude_host, remove bits being
-> +	 * used for PEBS when running a guest, because PEBS writes to virtual
-> +	 * addresses (not physical addresses).
-> +	 */
->  	*nr = 0;
->  	global_ctrl = (*nr)++;
->  	arr[global_ctrl] = (struct perf_guest_switch_msr){
->  		.msr = MSR_CORE_PERF_GLOBAL_CTRL,
->  		.host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
-> -		.guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
-> +		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
->  	};
->  
->  	if (!x86_pmu.pebs)
+
+> Thanks,
+> Kan
+>
+> > Fwiw, if we
+> > switch to the buddy watchdog mechanism then we'll no longer need to
+> > disable the NMI watchdog:
+> > https://lore.kernel.org/lkml/20230421155255.1.I6bf789d21d0c3d75d382e7e5=
+1a804a7a51315f2c@changeid/
+>
