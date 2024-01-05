@@ -1,154 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26E9E2D042;
-	Fri,  5 Jan 2024 12:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89753C15;
-	Fri,  5 Jan 2024 04:32:28 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.86.44])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD6D23F64C;
-	Fri,  5 Jan 2024 04:31:40 -0800 (PST)
-Date: Fri, 5 Jan 2024 12:31:38 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
-Message-ID: <ZZf2qmQx_l9KY1Id@FVFF77S0Q05N>
-References: <20231208210855.407580-1-kan.liang@linux.intel.com>
- <ZXd7ZuxbNNsjAyqm@kernel.org>
- <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
- <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
- <CAP-5=fVd-0aSovYVsOmTo2dfKb5_PHz1KV7ePipi35_JbfJ6qQ@mail.gmail.com>
- <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
- <ZXxyanyZgWBTOnoK@kernel.org>
- <ZXyEJYXVNn2i06ro@FVFF77S0Q05N>
- <ZXyRmpyzNGd3gKwV@kernel.org>
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A537E2D602;
+	Fri,  5 Jan 2024 12:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MftBFbOI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704459409; x=1735995409;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IxLjQtYUtIj21vmc1L6JRNZs1Wlol7RrvhIuj03dwkk=;
+  b=MftBFbOI4Ig6WfkNOJqcra5NA6Q9kPo8DYPxl0RGs2VVVsHROeFLyiGx
+   mdeO/9U7lUnhSjqXvJzGfFLA0Ug8sICSIVBNmaAnyhi8gnUjWNvMk9VrI
+   fW8of3QNnNPD15ydS4jm1/hOnPgYWDN7FqtyX3lGFPnVLy+3JG51HkSI2
+   faXmZEMs5CnXYm+XjbNF8OgcZuoCi782DwpvJgKxOLgL5Pom5HYFGvONj
+   OSW5zEWent/WLwg5U1ngeSnN6UXkmjIMnSKh+V3vqLJostlAntpQ5LVtj
+   xft3OyZM8rCNd6y2zxj3s5fuTMbAmjTb+Pdwqwj/CJiOideJzfpP48XmR
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="16118576"
+X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
+   d="scan'208";a="16118576"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 04:56:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="851134361"
+X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
+   d="scan'208";a="851134361"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.83])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 04:56:42 -0800
+Message-ID: <ce87308f-1b9b-41b1-8282-04c81d316c58@intel.com>
+Date: Fri, 5 Jan 2024 14:56:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZXyRmpyzNGd3gKwV@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC V3 4/4] coresight: Have a stab at support for pause /
+ resume
+Content-Language: en-US
+To: James Clark <james.clark@arm.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, Yicong Yang
+ <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+References: <20231208172449.35444-5-adrian.hunter@intel.com>
+ <20231215064242.36251-1-adrian.hunter@intel.com>
+ <e80f75ea-99e9-e4d2-6477-443e521ef90a@arm.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <e80f75ea-99e9-e4d2-6477-443e521ef90a@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 15, 2023 at 02:49:14PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Dec 15, 2023 at 04:51:49PM +0000, Mark Rutland escreveu:
-> > On Fri, Dec 15, 2023 at 12:36:10PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Tue, Dec 12, 2023 at 06:31:05PM +0000, Mark Rutland escreveu:
-> > > > On ARM it'll be essentially the same as on x86: if you open an event with
-> > > > type==PERF_EVENT_TYPE_HARDWARE (without the extended HW type pointing to a
-> > > > specific PMU), and with cpu==-1, it'll go to an arbitrary CPU PMU, whichever
-> > > > happens to be found by perf_init_event() when iterating over the 'pmus' list.
+On 20/12/23 17:59, James Clark wrote:
 > 
-> > > > If you open an event with type==PERF_EVENT_TYPE_HARDWARE and cpu!=-1, the event
-> > > > will opened on the appropriate CPU PMU, by virtue of being rejected by others
-> > > > when perf_init_event() iterates over the 'pmus' list.
 > 
-> > > The way that it is working non on my intel hybrid system, with Kan's
-> > > patch, is equivalent to using this on the RK3399pc board I have:
+> On 15/12/2023 06:42, Adrian Hunter wrote:
+>> For discussion only, un-tested...
+>>
 > 
-> > > root@roc-rk3399-pc:~# perf top -e armv8_cortex_a72/cycles/P,armv8_cortex_a53/cycles/P
+> If anyone wants to test Coresight, the diff below is required to get the
+> most basic use case working. It also probably needs more thought and
+> some edge case handling:
+
+Makes sense to me
+
 > 
-> > > Wouldn't be better to make 'perf top' on ARM work the way is being done
-> > > in x86 now, i.e. default to opening the two events, one per PMU and
-> > > allow the user to switch back and forth using the TUI/stdio?
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index 596c01e37624..bd0767356277 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -556,7 +556,8 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>  	struct etm_event_data *event_data;
+>  	struct list_head *path;
 >  
-> > TBH, for perf top I don't know *which* behaviour is preferable, but I agree
-> > that it'd be good for x86 and arm to work in the same way.
-> 
-> Right, reducing the difference in the user experience accross arches.
+> -	if (mode & PERF_EF_PAUSE && !READ_ONCE(ctxt->pr_allowed))
+> +	if ((mode & PERF_EF_PAUSE && !READ_ONCE(ctxt->pr_allowed)) ||
+> +	    event->hw.state == PERF_HES_STOPPED)
+>  		return;
 >  
-> > For design-cleanliness and consistency with other commands I can see that
-> > opening those separately is probably for the best, but for typical usage of
-> > perf top it's really nice to have those presented together without having to
-> > tab back-and-forth between the distinct PMUs, and so the existing behaviour of
-> 
-> Humm, so you would want two histogram viewers, one for each PMU, side by
-> side?
-
-I had meant as an aggregated view (the same as what you'd get if you opened one
-plain PERF_TYPE_HARDWARE event per cpu); I hadn't considered side-by-side views.
-
-To be clear, I'm personally happy to tab between per-pmu views, and if that's
-how x86 works today for heterogeneous PMUs, I'm fine with the same for
-arm/arm64. I was trying to say that I didn't have a strong preference.
-
-> > using CPU-bound PERF_EVENT_TYPE_HARDWARE events is arguably nicer for the user.
-> 
-> So, on ARM64, start the following 'perf trace' session, then run the
-> stock 'perf top':
-> 
-> root@roc-rk3399-pc:~# perf trace -e perf_event_open
-> <SNIP calls doing capability queries and setting up sideband stuff>
->    535.764 ( 0.015 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, group_fd: -1, flags: FD_CLOEXEC) = 19
->    535.783 ( 0.067 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 1, group_fd: -1, flags: FD_CLOEXEC) = 28
->    535.854 ( 0.063 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 2, group_fd: -1, flags: FD_CLOEXEC) = 29
->    535.920 ( 0.015 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 3, group_fd: -1, flags: FD_CLOEXEC) = 30
->    535.939 ( 0.016 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 4, group_fd: -1, flags: FD_CLOEXEC) = 31
->    535.959 ( 0.011 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 5, group_fd: -1, flags: FD_CLOEXEC) = 32
-> 
-> root@roc-rk3399-pc:~# grep "CPU part" /proc/cpuinfo  | uniq -c
->       4 CPU part	: 0xd03
->       2 CPU part	: 0xd08
-> root@roc-rk3399-pc:~#
-> 
-> It is already doing what you suggest, right? PERF_TYPE_HARDWARE, one
-> counter per CPU, maps to armv8_cortex_a72/cycles/P and
-> armv8_cortex_a53/cycles/P.
-
-Sounds like it; as above I'm happy for that to change to per-PMU views.
-
-> One thing I'm thinking is that we should split this per PMU at the
-> hist_entry, so that we could show how many samples/events came from each
-> of them...
-
-That sounds sensible to me.
-
-Mark.
-
-> 
-> - Arnaldo
+>  	WRITE_ONCE(ctxt->pr_allowed, 0);
+> @@ -573,9 +574,6 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>  	/* Clear the event_data as this ETM is stopping the trace. */
+>  	ctxt->event_data = NULL;
 >  
-> > I don't have a strong feeling either way; I'm personally happy so long as
-> > explicit pmu_name/event/ events don't get silently converted into
-> > PERF_EVENT_TYPE_HARDWARE events, and as long as we correctly set the extended
-> > HW type when we decide to use that.
-> > 
-> > Thanks,
-> > Mark.
-> > 
-> > > Kan, I also noticed that the name of the event is:
-> > > 
-> > > 1K cpu_atom/cycles:P/                                                                                                                                                                         ◆
-> > > 11K cpu_core/cycles:P/
-> > > 
-> > > If I try to use that on the command line:
-> > > 
-> > > root@number:~# perf top -e cpu_atom/cycles:P/
-> > > event syntax error: 'cpu_atom/cycles:P/'
-> > >                               \___ Bad event or PMU
-> > > 
-> > > Unable to find PMU or event on a PMU of 'cpu_atom'
-> > > 
-> > > Initial error:
-> > > event syntax error: 'cpu_atom/cycles:P/'
-> > >                               \___ unknown term 'cycles:P' for pmu 'cpu_atom'
-> > > 
-> > > valid terms: event,pc,edge,offcore_rsp,ldlat,inv,umask,cmask,config,config1,config2,config3,name,period,freq,branch_type,time,call-graph,stack-size,no-inherit,inherit,max-stack,nr,no-overwrite,overwrite,driver-config,percore,aux-output,aux-sample-size,metric-id,raw,legacy-cache,hardware
-> > > Run 'perf list' for a list of valid events
-> > > 
-> > >  Usage: perf top [<options>]
-> > > 
-> > >     -e, --event <event>   event selector. use 'perf list' to list available events
-> > > root@number:~#
-> > > 
-> > > It should be:
-> > > 
-> > >   "cpu_atom/cycles/P"
+> -	if (event->hw.state == PERF_HES_STOPPED)
+> -		goto out_pr_allowed;
+> -
+>  	/* We must have a valid event_data for a running event */
+>  	if (WARN_ON(!event_data))
+>  		return;
+> @@ -586,7 +584,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>  	 * nothing needs to be torn down other than outputting a
+>  	 * zero sized record.
+>  	 */
+> -	if (handle->event && (mode & PERF_EF_UPDATE) &&
+> +	if (handle->event && (mode & (PERF_EF_UPDATE | PERF_EF_PAUSE)) &&
+>  	    !cpumask_test_cpu(cpu, &event_data->mask)) {
+>  		event->hw.state = PERF_HES_STOPPED;
+>  		perf_aux_output_end(handle, 0);
+> @@ -616,7 +614,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>  	 * handle due to lack of buffer space), we don't
+>  	 * have to do anything here.
+>  	 */
+> -	if (handle->event && (mode & PERF_EF_UPDATE)) {
+> +	if (handle->event && (mode & (PERF_EF_UPDATE | PERF_EF_PAUSE))) {
+>  		if (WARN_ON_ONCE(handle->event != event))
+>  			return;
+>  
+> @@ -646,7 +644,6 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>  	/* Disabling the path make its elements available to other sessions */
+>  	coresight_disable_path(path);
+>  
+> -out_pr_allowed:
+>  	if (mode & PERF_EF_PAUSE)
+>  		WRITE_ONCE(ctxt->pr_allowed, 1);
+>  }
+> @@ -656,7 +653,7 @@ static int etm_event_add(struct perf_event *event, int mode)
+>  	int ret = 0;
+>  	struct hw_perf_event *hwc = &event->hw;
+>  
+> -	if (mode & PERF_EF_START && !READ_ONCE(event->aux_paused)) {
+> +	if (mode & PERF_EF_START) {
+>  		etm_event_start(event, 0);
+>  		if (hwc->state & PERF_HES_STOPPED)
+>  			ret = -EINVAL;
+
