@@ -1,374 +1,284 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9186C2D051
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jan 2024 23:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4DB1D68C;
+	Fri,  5 Jan 2024 06:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0DlEk5x/"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-50eaf2f00d1so481e87.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jan 2024 15:31:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704411112; x=1705015912; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PcASixsB7BFIPFkuKcN5rAoAX3CspDiIf53x6Iq94JA=;
-        b=0DlEk5x/k2w63Wa680xv0e574KSt4EOSYyqD/iGV5ERVJu8URUmZ51nMuZ52JCMzOt
-         BkRbY4iqtvmsPLdT+tCbR0EF5JXeP4s0o9M6PO8+ZFzpmOWiYcCEv1j1Yk4CMhNob1Me
-         ndPVNLFdIIy5NxhyaiCHSRZcQEhWkUJM2o1Pv8Ypb7uNx9OeVjfUWhsjzOgkhjGY6F+4
-         6rip1kjKLCO3TNuZPyiSCbCBmHhPYVoz+yEBGOaHxCY1JfrtFrN+/WYqWY8Cnza2Q4b2
-         hOMg3g0791u4RLbLznkDRLp7Pm6KO4L+Ate3THQC2ls8311EA8+1L57+RsPgQOxpTL38
-         KD3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704411112; x=1705015912;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PcASixsB7BFIPFkuKcN5rAoAX3CspDiIf53x6Iq94JA=;
-        b=dm1Hsw5X8odSPpElHMshMyD5Lx3cJFyYWmnv8ObOzPGugAW1GhC1oxe7dyeIth5qFc
-         KP7mM62b3kXS13gCvMBJgli/U9UNTVR5J7lKF7jR4Z58OlHPg0ukNHwP/NevgU9rA0kx
-         nof/c84Mcqr+NN7CpSueZrTn6HE+ej9XScnVVp2j8xDH/9NOmfQQ7UTQJTNRxhESB3Ow
-         lzrsn5ojYOAoUmTPDkod+LWrEpCFHa5rgBbNwQOnliEtY4dB623BC6p5glSODtDOjbXh
-         /jHGo3kghuU8zZheQWKBUJQzmSPsxmNfoC/8tHbSzE+cqpS5nByBKm9uf/t2B92bzEEF
-         7UsA==
-X-Gm-Message-State: AOJu0Yw3CxI6wt34IPwZGS+a+yxcXL31gbKgZncAJjzCYzyNUbEftlo5
-	PkTE36uAd8SVILnkxswVpT4bNygwSF0W80t6FQPWCbZAiNA+
-X-Google-Smtp-Source: AGHT+IHbk85Mt0BbensBvLrxlnCrHQMRbzk+Cc9kSzekzGPmmGxORZDjCXcgziwd2vb/CSx26/GiQxArMAnlkFnhht0=
-X-Received: by 2002:a05:6512:b9a:b0:50e:a70c:d0da with SMTP id
- b26-20020a0565120b9a00b0050ea70cd0damr57229lfv.0.1704411112345; Thu, 04 Jan
- 2024 15:31:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lng2EOyV"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4054qwcj000752;
+	Fri, 5 Jan 2024 06:39:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=UQcabtasED6YyQRtlveON93kfKhc0NA+dGnblGjUnDo=;
+ b=lng2EOyViyLi0kiWyZDvrGQu7AA0o46p3ryMnCLCkB1PgjUXT1HibVeX6ui0qYPamz5B
+ hpo++OiN7OIAwHKCrmKN7b8DQ9DFZXv1uE+T5aj2AV0ha6+lKicG5U/+1LCRZv2V1/8n
+ QVxmDn3zgGQrGAVAQacv5fdaKct2xjRcuNxn6+zoFG8pfoG7dOzq9HUJ7vPuf5ShXfVw
+ H6ws+iaKAg3Rmr0zKjSfTqkfhqJ8uF4epWwFSOkN94LjSwoF0IYLxqRj0vbJVPm5HIbr
+ FbHZmJP8V1xHVj3yWJJvSxMkiL2yaVoL7gRPy7A+oHOQwIJ701IAXZvB45yxt8WUp3vB gQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ve75sf58p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jan 2024 06:39:01 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4055pt4e016297;
+	Fri, 5 Jan 2024 06:39:01 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ve75sf57x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jan 2024 06:39:01 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4056SBbV019327;
+	Fri, 5 Jan 2024 06:39:00 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vc30sw54r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jan 2024 06:38:59 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4056cp3g32833808
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 5 Jan 2024 06:38:51 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1863E20063;
+	Fri,  5 Jan 2024 06:38:51 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D663D2005A;
+	Fri,  5 Jan 2024 06:38:46 +0000 (GMT)
+Received: from [9.171.46.159] (unknown [9.171.46.159])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  5 Jan 2024 06:38:46 +0000 (GMT)
+Message-ID: <057a1c19-3117-1aec-41d6-4950c599b862@linux.ibm.com>
+Date: Fri, 5 Jan 2024 12:08:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH V3 0/7] Clean up perf mem
+To: "Liang, Kan" <kan.liang@linux.intel.com>, acme@kernel.org,
+        irogers@google.com, peterz@infradead.org, mingo@redhat.com,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+        tmricht@linux.ibm.com, ravi.bangoria@amd.com,
+        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+ <a0abfee5-4dcd-3eb5-82fe-1a0dcdade038@linux.ibm.com>
+ <befb6acd-86be-4255-af96-38865affc56c@linux.intel.com>
+ <8bfadc86-e137-4a9f-a9ce-0bc62464c195@linux.intel.com>
+Content-Language: en-US
+From: kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <8bfadc86-e137-4a9f-a9ce-0bc62464c195@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ZRmdHNq2a3gw6YD3VOZoBLN-MIHgfhiV
+X-Proofpoint-GUID: btOFsyXGbKqO4PCdzXLTmz6TwPeRSz-c
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104074259.653219-1-irogers@google.com> <ZZam-EG-UepcXtWw@kernel.org>
- <CAP-5=fV+U4qSwU8nqHJMgAZTwtWs9jEm3i9yDQSVtq9Fbos5HA@mail.gmail.com>
- <8af821dc-d173-483d-8b69-b8e041538561@linux.intel.com> <CAP-5=fVTEcbJdG6_L+GH5RGCtpFhpjWyyhYu0Fhx5CRRqZcqDg@mail.gmail.com>
- <550563df-f8ac-4aa7-99de-ccf94cea8513@linux.intel.com>
-In-Reply-To: <550563df-f8ac-4aa7-99de-ccf94cea8513@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 4 Jan 2024 15:31:40 -0800
-Message-ID: <CAP-5=fUTyNkndZMKROLMVYh=C-oNRxjWPVaS=B2MsV6+Bvktmg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] perf vendor events intel: Alderlake/rocketlake
- metric fixes
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: "Wang, Weilin" <weilin.wang@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Edward Baker <edward.baker@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_02,2024-01-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 adultscore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ suspectscore=0 clxscore=1011 mlxlogscore=999 impostorscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401050055
 
-On Thu, Jan 4, 2024 at 11:30=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2024-01-04 12:51 p.m., Ian Rogers wrote:
-> > On Thu, Jan 4, 2024 at 6:30=E2=80=AFAM Liang, Kan <kan.liang@linux.inte=
-l.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2024-01-04 8:56 a.m., Ian Rogers wrote:
-> >>>> Testing tma_slow_pause
-> >>>> Metric 'tma_slow_pause' not printed in:
-> >>>> # Running 'internals/synthesize' benchmark:
-> >>>> Computing performance of single threaded perf event synthesis by
-> >>>> synthesizing events on the perf process itself:
-> >>>>   Average synthesis took: 49.987 usec (+- 0.049 usec)
-> >>>>   Average num. events: 47.000 (+- 0.000)
-> >>>>   Average time per event 1.064 usec
-> >>>>   Average data synthesis took: 53.490 usec (+- 0.033 usec)
-> >>>>   Average num. events: 245.000 (+- 0.000)
-> >>>>   Average time per event 0.218 usec
-> >>>>
-> >>>>  Performance counter stats for 'perf bench internals synthesize':
-> >>>>
-> >>>>      <not counted>      cpu_core/TOPDOWN.SLOTS/                     =
-                            (0.00%)
-> >>>>      <not counted>      cpu_core/topdown-retiring/                  =
-                            (0.00%)
-> >>>>      <not counted>      cpu_core/topdown-mem-bound/                 =
-                            (0.00%)
-> >>>>      <not counted>      cpu_core/topdown-bad-spec/                  =
-                            (0.00%)
-> >>>>      <not counted>      cpu_core/topdown-fe-bound/                  =
-                            (0.00%)
-> >>>>      <not counted>      cpu_core/topdown-be-bound/                  =
-                            (0.00%)
-> >>>>      <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/        =
-                                (0.00%)
-> >>>>      <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/         =
-                               (0.00%)
-> >>>>      <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/       =
-                                 (0.00%)
-> >>>>      <not counted>      cpu_core/CPU_CLK_UNHALTED.PAUSE/            =
-                            (0.00%)
-> >>>>      <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/       =
-                                 (0.00%)
-> >>>>      <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/           =
-                             (0.00%)
-> >>>>      <not counted>      cpu_core/ARITH.DIV_ACTIVE/                  =
-                            (0.00%)
-> >>>>      <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=3D0=
-xc/                                        (0.00%)
-> >>>>      <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0=
-x80/                                        (0.00%)
-> >>>>
-> >>>>        1.186254766 seconds time elapsed
-> >>>>
-> >>>>        0.427220000 seconds user
-> >>>>        0.752217000 seconds sys
-> >>>> Testing smi_cycles
-> >>>> Testing smi_num
-> >>>> Testing tsx_aborted_cycles
-> >>>> Testing tsx_cycles_per_elision
-> >>>> Testing tsx_cycles_per_transaction
-> >>>> Testing tsx_transactional_cycles
-> >>>> test child finished with -1
-> >>>> ---- end ----
-> >>>> perf all metrics test: FAILED!
-> >>>> root@number:~#
-> >>> Have a try disabling the NMI watchdog. Agreed that there is more to
-> >>> fix here but I think the PMU driver is in part to blame because
-> >>> manually breaking the weak group of events is a fix.
-> >>
-> >> I think we have a NO_GROUP_EVENTS_NMI metric constraint to mark a grou=
-p
-> >> which require disabling of the NMI watchdog.
-> >> Maybe we should mark the group a NO_GROUP_EVENTS_NMI metric.
-> >
-> > +Weilin due to the affects of event grouping.
-> >
-> > Thanks Kan, NO_GROUP_EVENTS_NMI would be good. Something I see for
-> > tma_ports_utilized_1 that may be worsening things is:
-> >
-> > ```
-> > Testing tma_ports_utilized_1
-> > Metric 'tma_ports_utilized_1' not printed in:
-> > # Running 'internals/synthesize' benchmark:
-> > Computing performance of single threaded perf event synthesis by
-> > synthesizing events on the perf process itself:
-> >   Average synthesis took: 49.581 usec (+- 0.030 usec)
-> >   Average num. events: 47.000 (+- 0.000)
-> >   Average time per event 1.055 usec
-> >   Average data synthesis took: 53.367 usec (+- 0.032 usec)
-> >   Average num. events: 246.000 (+- 0.000)
-> >   Average time per event 0.217 usec
-> >
-> >  Performance counter stats for 'perf bench internals synthesize':
-> >
-> >      <not counted>      cpu_core/TOPDOWN.SLOTS/
-> >                          (0.00%)
-> >      <not counted>      cpu_core/topdown-retiring/
-> >                          (0.00%)
-> >      <not counted>      cpu_core/topdown-mem-bound/
-> >                          (0.00%)
-> >      <not counted>      cpu_core/topdown-bad-spec/
-> >                          (0.00%)
-> >      <not counted>      cpu_core/topdown-fe-bound/
-> >                          (0.00%)
-> >      <not counted>      cpu_core/topdown-be-bound/
-> >                          (0.00%)
-> >      <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/
-> >                              (0.00%)
-> >      <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/
-> >                             (0.00%)
-> >      <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/
-> >                               (0.00%)
-> >      <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/
-> >                             (0.00%)
-> >      <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/
-> >                               (0.00%)
-> >      <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/
-> >                           (0.00%)
-> >      <not counted>      cpu_core/ARITH.DIV_ACTIVE/
-> >                          (0.00%)
-> >      <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=3D0xc/
-> >                                       (0.00%)
-> >      <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x80=
-/
-> >                                        (0.00%)
-> >
-> >        1.180394056 seconds time elapsed
-> >
-> >        0.409881000 seconds user
-> >        0.764134000 seconds sys
-> > ```
-> >
-> > The event EXE_ACTIVITY.1_PORTS_UTIL is repeated, this is because the
-> > metric code deduplicates events based purely on their name and so
-> > doesn't realize EXE_ACTIVITY.1_PORTS_UTIL is the same as
-> > cpu_core@EXE_ACTIVITY.1_PORTS_UTIL@. This is a hybrid only glitch as
-> > we only prefix with a PMU for hybrid metrics, and I should find and
-> > remove why there's no PMU for the 1 case of EXE_ACTIVITY.1_PORTS_UTIL.
-> >
-> > This problem doesn't occur for tma_slow_pause and I wondered if you
-> > could give insight. That metric has the counters below:
-> > ```
-> > $ perf stat -M tma_slow_pause -a sleep 0.1
-> >
-> > Performance counter stats for 'system wide':
-> >
-> >     <not counted>      cpu_core/TOPDOWN.SLOTS/
-> >                         (0.00%)
-> >     <not counted>      cpu_core/topdown-retiring/
-> >                         (0.00%)
-> >     <not counted>      cpu_core/topdown-mem-bound/
-> >                         (0.00%)
-> >     <not counted>      cpu_core/topdown-bad-spec/
-> >                         (0.00%)
-> >     <not counted>      cpu_core/topdown-fe-bound/
-> >                         (0.00%)
-> >     <not counted>      cpu_core/topdown-be-bound/
-> >                         (0.00%)
-> >     <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/
-> >                             (0.00%)
-> >     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/
-> >                            (0.00%)
-> >     <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/
-> >                              (0.00%)
-> >     <not counted>      cpu_core/CPU_CLK_UNHALTED.PAUSE/
-> >                         (0.00%)
-> >     <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/
-> >                              (0.00%)
-> >     <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/
-> >                          (0.00%)
-> >     <not counted>      cpu_core/ARITH.DIV_ACTIVE/
-> >                         (0.00%)
-> >     <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=3D0xc/
-> >                                      (0.00%)
-> >     <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x80/
-> >                                       (0.00%)
-> >
-> >       0.102074888 seconds time elapsed
-> > ```
-> >
-> > With -vv I see the event string is:
-> > '{RESOURCE_STALLS.SCOREBOARD/metric-id=3DRESOURCE_STALLS.SCOREBOARD/,cp=
-u_core/EXE_ACTIVITY.1_PORTS_UTIL,metric-id=3Dcpu_core!3EXE_ACTIVITY.1_PORTS=
-_UTIL!3/,cpu_core/TOPDOWN.SLOTS,metric-id=3Dcpu_core!3TOPDOWN.SLOTS!3/,cpu_=
-core/EXE_ACTIVITY.BOUND_ON_LOADS,metric-id=3Dcpu_core!3EXE_ACTIVITY.BOUND_O=
-N_LOADS!3/,cpu_core/topdown-retiring,metric-id=3Dcpu_core!3topdown!1retirin=
-g!3/,cpu_core/topdown-mem-bound,metric-id=3Dcpu_core!3topdown!1mem!1bound!3=
-/,cpu_core/topdown-bad-spec,metric-id=3Dcpu_core!3topdown!1bad!1spec!3/,CPU=
-_CLK_UNHALTED.PAUSE/metric-id=3DCPU_CLK_UNHALTED.PAUSE/,cpu_core/CYCLE_ACTI=
-VITY.STALLS_TOTAL,metric-id=3Dcpu_core!3CYCLE_ACTIVITY.STALLS_TOTAL!3/,cpu_=
-core/CPU_CLK_UNHALTED.THREAD,metric-id=3Dcpu_core!3CPU_CLK_UNHALTED.THREAD!=
-3/,cpu_core/ARITH.DIV_ACTIVE,metric-id=3Dcpu_core!3ARITH.DIV_ACTIVE!3/,cpu_=
-core/topdown-fe-bound,metric-id=3Dcpu_core!3topdown!1fe!1bound!3/,cpu_core/=
-EXE_ACTIVITY.2_PORTS_UTIL,umask=3D0xc,metric-id=3Dcpu_core!3EXE_ACTIVITY.2_=
-PORTS_UTIL!0umask!20xc!3/,cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x80,m=
-etric-id=3Dcpu_core!3EXE_ACTIVITY.3_PORTS_UTIL!0umask!20x80!3/,cpu_core/top=
-down-be-bound,metric-id=3Dcpu_core!3topdown!1be!1bound!3/}:W'
-> >
-> > which without the metric-ids becomes:
-> > '{RESOURCE_STALLS.SCOREBOARD,cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/,cpu_co=
-re/TOPDOWN.SLOTS/,cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/,cpu_core/topdown-re=
-tiring/,cpu_core/topdown-mem-bound/,cpu_core/topdown-bad-spec/,CPU_CLK_UNHA=
-LTED.PAUSE,cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/,cpu_core/CPU_CLK_UNHALTED.=
-THREAD/,cpu_core/ARITH.DIV_ACTIVE/,cpu_core/topdown-fe-bound/,cpu_core/EXE_=
-ACTIVITY.2_PORTS_UTIL,umask=3D0xc/,cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=
-=3D0x80/,cpu_core/topdown-be-bound/}:W'
-> >
-> > I count 9 none slots/top-down counters there, but I see
-> > CPU_CLK_UNHALTED.THREAD can use fixed counter 1. Should
-> > perf_event_open fail for a CPU that has a pinned use of a fixed
-> > counter and the group needs the fixed counter?
->
-> I tried, but the idea was rejected.
->
-> > I'm guessing you don't
-> > want this as CPU_CLK_UNHALTED.THREAD can also go on a generic counter
-> > and the driver doesn't want to count counter usage, it seems feasible
-> > to add it though. I guess we need a NO_GROUP_EVENTS_NMI whenever
-> > CPU_CLK_UNHALTED.THREAD is an event and 8 generic counters are in use.
->
-> Yes, it looks good to me.
 
-Fixes all sent out, see and its links:
-https://lore.kernel.org/lkml/20240104231903.775717-1-irogers@google.com/
+
+On 1/3/24 01:38, Liang, Kan wrote:
+> Hi Kajol Jain
+> 
+> On 2023-12-19 9:15 a.m., Liang, Kan wrote:
+>>
+>>
+>> On 2023-12-19 4:26 a.m., kajoljain wrote:
+>>> Hi,
+>>>   I was trying to test this patchset on powerpc.
+>>>
+>>> After applying it on top of acme's perf-tools-next branch, I am getting
+>>> below error:
+>>>
+>>>   INSTALL libsubcmd_headers
+>>>   INSTALL libperf_headers
+>>>   INSTALL libsymbol_headers
+>>>   INSTALL libapi_headers
+>>>   INSTALL libbpf_headers
+>>>   CC      arch/powerpc/util/mem-events.o
+>>> In file included from arch/powerpc/util/mem-events.c:3:
+>>> arch/powerpc/util/mem-events.h:5:52: error: ‘PERF_MEM_EVENTS__MAX’
+>>> undeclared here (not in a function)
+>>>     5 | extern struct perf_mem_event
+>>> perf_mem_events_power[PERF_MEM_EVENTS__MAX];
+>>>       |
+>>> ^~~~~~~~~~~~~~~~~~~~
+>>> make[6]: *** [/home/kajol/linux/tools/build/Makefile.build:105:
+>>> arch/powerpc/util/mem-events.o] Error 1
+>>> make[5]: *** [/home/kajol/linux/tools/build/Makefile.build:158: util]
+>>> Error 2
+>>> make[4]: *** [/home/kajol/linux/tools/build/Makefile.build:158: powerpc]
+>>> Error 2
+>>> make[3]: *** [/home/kajol/linux/tools/build/Makefile.build:158: arch]
+>>> Error 2
+>>> make[3]: *** Waiting for unfinished jobs....
+>>> make[2]: *** [Makefile.perf:693: perf-in.o] Error 2
+>>> make[1]: *** [Makefile.perf:251: sub-make] Error 2
+>>> make: *** [Makefile:70: all] Error 2
+>>>
+>>> It seems some headerfiles are missing from arch/powerpc/util/mem-
+>>> events.c
+>>>
+>>
+>> Leo updated the headerfiles for ARM. https://termbin.com/0dkn
+>>
+>> I guess powerpc has to do the same thing. Could you please try the below
+>> patch?
+> 
+> 
+> Does the patch work on powerpc?
+
+Hi Kan,
+   Sorry I went for vacation so couldn't update. Yes this fix works. But
+we have another issue, actually this patch set changes uses ldlat
+attribute. But ldlat is not supported in powerpc because of which perf
+mem is failing in powerpc.
+
+I am looking into a work around to fix this issue. I will update the fix.
 
 Thanks,
-Ian
+Kajol Jain
 
-> >
-> > Checking on Tigerlake I see:
-> > ```
-> > $ perf stat -M tma_slow_pause -a sleep 0.1
-> >
-> > Performance counter stats for 'system wide':
-> >
-> >       105,210,913      TOPDOWN.SLOTS                    #      0.1 %
-> > tma_slow_pause           (72.65%)
-> >         6,701,129      topdown-retiring
-> >                         (72.65%)
-> >        52,359,712      topdown-fe-bound
-> >                         (72.65%)
-> >        32,904,532      topdown-be-bound
-> >                         (72.65%)
-> >        14,117,814      topdown-bad-spec
-> >                         (72.65%)
-> >         6,602,391      RESOURCE_STALLS.SCOREBOARD
-> >                         (76.17%)
-> >         4,220,773      cpu/EXE_ACTIVITY.3_PORTS_UTIL,umask=3D0x80/
-> >                                  (76.73%)
-> >           421,812      EXE_ACTIVITY.BOUND_ON_STORES
-> >                         (76.69%)
-> >         5,164,088      EXE_ACTIVITY.1_PORTS_UTIL
-> >                         (76.70%)
-> >           299,681      cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> >                                   (76.69%)
-> >               245      MISC_RETIRED.PAUSE_INST
-> >                         (76.67%)
-> >        58,403,687      CPU_CLK_UNHALTED.THREAD
-> >                         (76.72%)
-> >        25,297,841      CYCLE_ACTIVITY.STALLS_MEM_ANY
-> >                         (76.67%)
-> >         3,788,772      EXE_ACTIVITY.2_PORTS_UTIL
-> >                         (62.69%)
-> >        20,973,875      CYCLE_ACTIVITY.STALLS_TOTAL
-> >                         (62.16%)
-> >            68,053      ARITH.DIVIDER_ACTIVE
-> >                         (62.18%)
-> >
-> >       0.102624327 seconds time elapsed
-> > ```
-> > so 10 generic counters which would never fit and the weak group is
-> > broken - the difference in the metric explaining why I've not been
-> > seeing the issue. I think I need to add alderlake/sapphirerapids
-> > constraints here:
-> > https://github.com/captain5050/perfmon/blob/main/scripts/create_perf_js=
-on.py#L1382
-> > Ideally we'd automate the constraint generation (or the PMU driver
-> > would help us out by failing to open the weak group).
->
-> Yes, an automation will be great. The NO_GROUP_EVENTS_NMI can be set for
-> a group which has CPU_CLK_UNHALTED.THREAD and the number of core events
-> (expect topdown) =3D=3D the max number of GP counters + 1.
->
+
+> 
+> 
 > Thanks,
 > Kan
-> >
-> > Thanks,
-> > Ian
-> >
-> >
-> >> Thanks,
-> >> Kan
-> >>
-> >>> Fwiw, if we
-> >>> switch to the buddy watchdog mechanism then we'll no longer need to
-> >>> disable the NMI watchdog:
-> >>> https://lore.kernel.org/lkml/20230421155255.1.I6bf789d21d0c3d75d382e7=
-e51a804a7a51315f2c@changeid/
-> >>
-> >
+>>
+>> diff --git a/tools/perf/arch/powerpc/util/mem-events.c
+>> b/tools/perf/arch/powerpc/util/mem-events.c
+>> index 72a6ac2b52f5..765d4a054b0a 100644
+>> --- a/tools/perf/arch/powerpc/util/mem-events.c
+>> +++ b/tools/perf/arch/powerpc/util/mem-events.c
+>> @@ -1,5 +1,6 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>> -#include "map_symbol.h"
+>> +#include "util/map_symbol.h"
+>> +#include "util/mem-events.h"
+>>  #include "mem-events.h"
+>>
+>>  #define E(t, n, s, l, a) { .tag = t, .name = n, .event_name = s, .ldlat
+>> = l, .aux_event = a }
+>>
+>> Thanks,
+>> Kan
+>>
+>>> Thanks,
+>>> Kajol Jain
+>>>
+>>> On 12/14/23 01:21, kan.liang@linux.intel.com wrote:
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> Changes since V2:
+>>>> - Fix the Arm64 building error (Leo)
+>>>> - Add two new patches to clean up perf_mem_events__record_args()
+>>>>   and perf_pmus__num_mem_pmus() (Leo)
+>>>>
+>>>> Changes since V1:
+>>>> - Fix strcmp of PMU name checking (Ravi)
+>>>> - Fix "/," typo (Ian)
+>>>> - Rename several functions with perf_pmu__mem_events prefix. (Ian)
+>>>> - Fold the header removal patch into the patch where the cleanups made.
+>>>>   (Arnaldo)
+>>>> - Add reviewed-by and tested-by from Ian and Ravi
+>>>>
+>>>> As discussed in the below thread, the patch set is to clean up perf mem.
+>>>> https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com/
+>>>>
+>>>> Introduce generic functions perf_mem_events__ptr(),
+>>>> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+>>>> ARCH specific ones.
+>>>> Simplify the perf_mem_event__supported().
+>>>>
+>>>> Only keeps the ARCH-specific perf_mem_events array in the corresponding
+>>>> mem-events.c for each ARCH.
+>>>>
+>>>> There is no functional change.
+>>>>
+>>>> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+>>>> etc. But I can only test it on two Intel platforms.
+>>>> Please give it try, if you have machines with other ARCHs.
+>>>>
+>>>> Here are the test results:
+>>>> Intel hybrid machine:
+>>>>
+>>>> $perf mem record -e list
+>>>> ldlat-loads  : available
+>>>> ldlat-stores : available
+>>>>
+>>>> $perf mem record -e ldlat-loads -v --ldlat 50
+>>>> calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
+>>>>
+>>>> $perf mem record -v
+>>>> calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
+>>>>
+>>>> $perf mem record -t store -v
+>>>> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+>>>>
+>>>>
+>>>> Intel SPR:
+>>>> $perf mem record -e list
+>>>> ldlat-loads  : available
+>>>> ldlat-stores : available
+>>>>
+>>>> $perf mem record -e ldlat-loads -v --ldlat 50
+>>>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
+>>>>
+>>>> $perf mem record -v
+>>>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
+>>>>
+>>>> $perf mem record -t store -v
+>>>> calling: record -e cpu/mem-stores/P
+>>>>
+>>>> Kan Liang (7):
+>>>>   perf mem: Add mem_events into the supported perf_pmu
+>>>>   perf mem: Clean up perf_mem_events__ptr()
+>>>>   perf mem: Clean up perf_mem_events__name()
+>>>>   perf mem: Clean up perf_mem_event__supported()
+>>>>   perf mem: Clean up is_mem_loads_aux_event()
+>>>>   perf mem: Clean up perf_mem_events__record_args()
+>>>>   perf mem: Clean up perf_pmus__num_mem_pmus()
+>>>>
+>>>>  tools/perf/arch/arm/util/pmu.c            |   3 +
+>>>>  tools/perf/arch/arm64/util/mem-events.c   |  39 +---
+>>>>  tools/perf/arch/arm64/util/mem-events.h   |   7 +
+>>>>  tools/perf/arch/powerpc/util/mem-events.c |  13 +-
+>>>>  tools/perf/arch/powerpc/util/mem-events.h |   7 +
+>>>>  tools/perf/arch/powerpc/util/pmu.c        |  11 ++
+>>>>  tools/perf/arch/s390/util/pmu.c           |   3 +
+>>>>  tools/perf/arch/x86/util/mem-events.c     |  99 ++--------
+>>>>  tools/perf/arch/x86/util/mem-events.h     |  10 +
+>>>>  tools/perf/arch/x86/util/pmu.c            |  19 +-
+>>>>  tools/perf/builtin-c2c.c                  |  45 ++---
+>>>>  tools/perf/builtin-mem.c                  |  48 ++---
+>>>>  tools/perf/util/mem-events.c              | 217 +++++++++++++---------
+>>>>  tools/perf/util/mem-events.h              |  19 +-
+>>>>  tools/perf/util/pmu.c                     |   4 +-
+>>>>  tools/perf/util/pmu.h                     |   7 +
+>>>>  tools/perf/util/pmus.c                    |   6 -
+>>>>  tools/perf/util/pmus.h                    |   1 -
+>>>>  18 files changed, 278 insertions(+), 280 deletions(-)
+>>>>  create mode 100644 tools/perf/arch/arm64/util/mem-events.h
+>>>>  create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
+>>>>  create mode 100644 tools/perf/arch/powerpc/util/pmu.c
+>>>>  create mode 100644 tools/perf/arch/x86/util/mem-events.h
+>>>>
+>>>
+>>
