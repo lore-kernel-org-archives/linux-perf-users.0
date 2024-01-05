@@ -1,29 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68F122CCBB;
-	Fri,  5 Jan 2024 12:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26E9E2D042;
+	Fri,  5 Jan 2024 12:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E41DDFEC;
-	Fri,  5 Jan 2024 04:06:22 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89753C15;
+	Fri,  5 Jan 2024 04:32:28 -0800 (PST)
 Received: from FVFF77S0Q05N (unknown [10.57.86.44])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D8173F64C;
-	Fri,  5 Jan 2024 04:05:35 -0800 (PST)
-Date: Fri, 5 Jan 2024 12:05:32 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD6D23F64C;
+	Fri,  5 Jan 2024 04:31:40 -0800 (PST)
+Date: Fri, 5 Jan 2024 12:31:38 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-To: Ian Rogers <irogers@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: perf test hybrid failing on 14700K
-Message-ID: <ZZfwjG-HL5yOEh6z@FVFF77S0Q05N>
-References: <ZYbm5L7tw7bdpDpE@kernel.org>
- <4d86f3b6-eaee-4673-bdf5-3b97c1c1ad17@linux.intel.com>
- <CAP-5=fUfJ-VBGS1D2+WM_eBu4uPGvxJ2KyD4WXzgKRCfGKHTQQ@mail.gmail.com>
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	maz@kernel.org, marcan@marcan.st, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf top: Use evsel's cpus to replace user_requested_cpus
+Message-ID: <ZZf2qmQx_l9KY1Id@FVFF77S0Q05N>
+References: <20231208210855.407580-1-kan.liang@linux.intel.com>
+ <ZXd7ZuxbNNsjAyqm@kernel.org>
+ <07677ab2-c29b-499b-b473-f7535fb27a8c@linux.intel.com>
+ <CAM9d7ci-VVhubefMqkSQgK-B2e2z4QU1=TLJtC49wbWW=VNc8g@mail.gmail.com>
+ <CAP-5=fVd-0aSovYVsOmTo2dfKb5_PHz1KV7ePipi35_JbfJ6qQ@mail.gmail.com>
+ <ZXim6U5251q0_bB2@FVFF77S0Q05N.cambridge.arm.com>
+ <ZXxyanyZgWBTOnoK@kernel.org>
+ <ZXyEJYXVNn2i06ro@FVFF77S0Q05N>
+ <ZXyRmpyzNGd3gKwV@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -33,213 +36,119 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUfJ-VBGS1D2+WM_eBu4uPGvxJ2KyD4WXzgKRCfGKHTQQ@mail.gmail.com>
+In-Reply-To: <ZXyRmpyzNGd3gKwV@kernel.org>
 
-On Tue, Jan 02, 2024 at 02:41:07PM -0800, Ian Rogers wrote:
-> On Tue, Jan 2, 2024 at 7:43 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
-> > On 2023-12-23 8:55 a.m., Arnaldo Carvalho de Melo wrote:
-> > > Hi Kan,
-> > >
-> > > I noticed the following problem, are you able to reproduce it?
-> > >
-> > > Happy solstice!
-> >
-> > Happy new year!
-
-Godt nytår!
-
-> > > - Arnaldo
-> > >
-> > > root@number:/home/acme/Downloads# grep "model name" -m1 /proc/cpuinfo
-> > > model name    : Intel(R) Core(TM) i7-14700K
-> > > root@number:/home/acme/Downloads# uname -a
-> > > Linux number 6.6.4-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Dec  3 18:13:11 UTC 2023 x86_64 GNU/Linux
-> > > root@number:/home/acme/Downloads# perf -vv
-> > > perf version 6.7.rc6.g63daba4e2861
-> > >                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-> > >     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-> > >          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-> > >                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-> > >             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-> > >                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-> > >                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> > > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> > >                libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-> > >              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-> > >               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-> > >              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-> > >              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-> > >     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-> > >                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-> > >                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-> > >              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-> > >                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> > >                    aio: [ on  ]  # HAVE_AIO_SUPPORT
-> > >                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-> > >                libpfm4: [ on  ]  # HAVE_LIBPFM
-> > >          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-> > >          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-> > > root@number:/home/acme/Downloads# perf test 75
-> > >  75: x86 hybrid                                                      : FAILED!
-> >
-> > The failure should be a regression caused by the a24d9d9dc096 ("perf
-> > parse-events: Make legacy events lower priority than sysfs/JSON")
-> >
-> > @@ -1004,10 +1012,19 @@ static int config_term_pmu(struct
-> > perf_event_attr *attr,
-> >                                                            err_str, /*help=*/NULL);
-> >                         return -EINVAL;
-> >                 }
-> > -               attr->type = PERF_TYPE_HARDWARE;
-> > -               attr->config = term->val.num;
-> > -               if (perf_pmus__supports_extended_type())
-> > -                       attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
-> > +               /*
-> > +                * If the PMU has a sysfs or json event prefer it over
-> > +                * legacy. ARM requires this.
-> > +                */
-> > +               if (perf_pmu__have_event(pmu, term->config))
-> > For Intel hybrid, the perf_pmu__have_event() should be always true for
-> > all hw events and hw cache events. So the patch will mistakenly update
-> > the type to TYPE_USER. However, On Intel platforms, the type of the hw
-> > events should be TYPE_HARDWARE.
-> >
-> > Seems ARM needs to find another way to distinguish the case.
-> >
-> > Ian, any suggestions?
+On Fri, Dec 15, 2023 at 02:49:14PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Dec 15, 2023 at 04:51:49PM +0000, Mark Rutland escreveu:
+> > On Fri, Dec 15, 2023 at 12:36:10PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > Em Tue, Dec 12, 2023 at 06:31:05PM +0000, Mark Rutland escreveu:
+> > > > On ARM it'll be essentially the same as on x86: if you open an event with
+> > > > type==PERF_EVENT_TYPE_HARDWARE (without the extended HW type pointing to a
+> > > > specific PMU), and with cpu==-1, it'll go to an arbitrary CPU PMU, whichever
+> > > > happens to be found by perf_init_event() when iterating over the 'pmus' list.
 > 
-> Hi Kan/Mark,
+> > > > If you open an event with type==PERF_EVENT_TYPE_HARDWARE and cpu!=-1, the event
+> > > > will opened on the appropriate CPU PMU, by virtue of being rejected by others
+> > > > when perf_init_event() iterates over the 'pmus' list.
 > 
-> Firstly, the perf_pmu__have_event is a test of whether
-> /sys/devices/<pmu>/events or the equivalent json events have the
-> specified event string like "inst_retired.any" - ie it isn't a test of
-> whether the event is supported by the kernel. Mark was quite insistent
-> that the behavior be changed so that if a legacy event is specified
-> with a PMU, the PMU's sysfs/json event is the priority which is a big
-> behavior change on x86.
+> > > The way that it is working non on my intel hybrid system, with Kan's
+> > > patch, is equivalent to using this on the RK3399pc board I have:
+> 
+> > > root@roc-rk3399-pc:~# perf top -e armv8_cortex_a72/cycles/P,armv8_cortex_a53/cycles/P
+> 
+> > > Wouldn't be better to make 'perf top' on ARM work the way is being done
+> > > in x86 now, i.e. default to opening the two events, one per PMU and
+> > > allow the user to switch back and forth using the TUI/stdio?
+>  
+> > TBH, for perf top I don't know *which* behaviour is preferable, but I agree
+> > that it'd be good for x86 and arm to work in the same way.
+> 
+> Right, reducing the difference in the user experience accross arches.
+>  
+> > For design-cleanliness and consistency with other commands I can see that
+> > opening those separately is probably for the best, but for typical usage of
+> > perf top it's really nice to have those presented together without having to
+> > tab back-and-forth between the distinct PMUs, and so the existing behaviour of
+> 
+> Humm, so you would want two histogram viewers, one for each PMU, side by
+> side?
 
-For the record, I was insistent that the behaviour was *restored*; that was the
-existing behaivour prior to commit:
+I had meant as an aggregated view (the same as what you'd get if you opened one
+plain PERF_TYPE_HARDWARE event per cpu); I hadn't considered side-by-side views.
 
- 5ea8f2ccffb23983 ("perf parse-events: Support hardware events as terms")
+To be clear, I'm personally happy to tab between per-pmu views, and if that's
+how x86 works today for heterogeneous PMUs, I'm fine with the same for
+arm/arm64. I was trying to say that I didn't have a strong preference.
 
-... which was itself a big behaviour change for all architectures, in part led
-to the issue that Hector and Martin were hitting on arm/arm64, and provided no
-recourse to get the prior behaviour when desired.
+> > using CPU-bound PERF_EVENT_TYPE_HARDWARE events is arguably nicer for the user.
+> 
+> So, on ARM64, start the following 'perf trace' session, then run the
+> stock 'perf top':
+> 
+> root@roc-rk3399-pc:~# perf trace -e perf_event_open
+> <SNIP calls doing capability queries and setting up sideband stuff>
+>    535.764 ( 0.015 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, group_fd: -1, flags: FD_CLOEXEC) = 19
+>    535.783 ( 0.067 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 1, group_fd: -1, flags: FD_CLOEXEC) = 28
+>    535.854 ( 0.063 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 2, group_fd: -1, flags: FD_CLOEXEC) = 29
+>    535.920 ( 0.015 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 3, group_fd: -1, flags: FD_CLOEXEC) = 30
+>    535.939 ( 0.016 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 4, group_fd: -1, flags: FD_CLOEXEC) = 31
+>    535.959 ( 0.011 ms): perf/15627 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1 }, pid: -1, cpu: 5, group_fd: -1, flags: FD_CLOEXEC) = 32
+> 
+> root@roc-rk3399-pc:~# grep "CPU part" /proc/cpuinfo  | uniq -c
+>       4 CPU part	: 0xd03
+>       2 CPU part	: 0xd08
+> root@roc-rk3399-pc:~#
+> 
+> It is already doing what you suggest, right? PERF_TYPE_HARDWARE, one
+> counter per CPU, maps to armv8_cortex_a72/cycles/P and
+> armv8_cortex_a53/cycles/P.
 
-I appreciate that the change I requested was a big behaviour change on x86
-relative to v6.5, but the change above in v6.5 was a big behaviour change on
-arm/arm64 relative to the behaviour established many years prior. I'm sorry
-that I did not catch this earlier at the review stage.
+Sounds like it; as above I'm happy for that to change to per-PMU views.
 
-> To get the test passing again I've sent out a test update:
-> https://lore.kernel.org/lkml/20240102215732.1125997-1-irogers@google.com/
+> One thing I'm thinking is that we should split this per PMU at the
+> hist_entry, so that we could show how many samples/events came from each
+> of them...
 
-FWIW that looks good to me; I've given my Ack there.
+That sounds sensible to me.
 
-Thanks,
 Mark.
 
-> This switches the legacy events in the test to ones which don't have
-> sysfs or json equivalents. The test is somewhat brittle as an x86 PMU
-> change could decide to add /sys/devices/cpu/events/cycles alongside
-> /sys/devices/cpu/events/cpu-cycles. Ideally we'd be testing all events
-> on core PMUs, for legacy events they may have a sysfs/json override
-> and the test expectation should expect this and assert that the type
-> isn't PERF_TYPE_HARDWARE, etc. For now what I sent out is sufficient
-> to get the "x86 hybrid" test passing. I should probably have done the
-> whole Reported-by.. thing, sorry for missing that.
 > 
-> Thanks,
-> Ian
-> 
-> >
-> > +                       term->type_term = PARSE_EVENTS__TERM_TYPE_USER;
-> > +                       term->no_value = true;
-> > +               } else {
-> > +                       attr->type = PERF_TYPE_HARDWARE;
-> > +                       attr->config = term->val.num;
-> > +                       if (perf_pmus__supports_extended_type())
-> > +                               attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
-> > +               }
-> >                 return 0;
-> >         }
-> >         if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER ||
-> >
-> >
+> - Arnaldo
+>  
+> > I don't have a strong feeling either way; I'm personally happy so long as
+> > explicit pmu_name/event/ events don't get silently converted into
+> > PERF_EVENT_TYPE_HARDWARE events, and as long as we correctly set the extended
+> > HW type when we decide to use that.
+> > 
 > > Thanks,
-> > Kan
-> > > root@number:/home/acme/Downloads# perf test -v 75
-> > >  75: x86 hybrid                                                      :
-> > > --- start ---
-> > > test child forked, pid 4111587
-> > > Using CPUID GenuineIntel-6-B7-1
-> > > running test 0 'cpu_core/cpu-cycles/'
-> > > FAILED arch/x86/tests/hybrid.c:30 wrong type
-> > > Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
-> > > FAILED arch/x86/tests/hybrid.c:42 wrong type
-> > > Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-> > > FAILED arch/x86/tests/hybrid.c:65 wrong type
-> > > Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-> > > FAILED arch/x86/tests/hybrid.c:78 wrong type
-> > > Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-> > > FAILED arch/x86/tests/hybrid.c:95 wrong type
-> > > Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
-> > > running test 6 'cpu_core/r1a/'
-> > > running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
-> > > WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
-> > > running test 8 'cpu_core/LLC-loads/'
-> > > test child finished with -1
-> > > ---- end ----
-> > > x86 hybrid: FAILED!
-> > > root@number:/home/acme/Downloads#
-> > >
-> > > root@number:/home/acme/Downloads# perf trace -e perf_event_open perf test -F -v 75
-> > >  75: x86 hybrid                                                      :
-> > > --- start ---
-> > > Using CPUID GenuineIntel-6-B7-1
-> > > running test 0 'cpu_core/cpu-cycles/'
-> > > FAILED arch/x86/tests/hybrid.c:30 wrong type
-> > > Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
-> > > FAILED arch/x86/tests/hybrid.c:42 wrong type
-> > > Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-> > > FAILED arch/x86/tests/hybrid.c:65 wrong type
-> > > Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-> > > FAILED arch/x86/tests/hybrid.c:78 wrong type
-> > > Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-> > > FAILED arch/x86/tests/hybrid.c:95 wrong type
-> > > Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
-> > > running test 6 'cpu_core/r1a/'
-> > > running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
-> > > WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
-> > > running test 8 'cpu_core/LLC-loads/'
-> > > ---- end ----
-> > > x86 hybrid: FAILED!
-> > >      0.000 ( 0.008 ms): :4115165/4115165 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), config: 0xa00000000, disabled: 1, { bp_len, config2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: 0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925535355, sample_regs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
-> > >      0.010 ( 0.002 ms): :4115165/4115165 perf_event_open(attr_uptr: { type: 0 (PERF_TYPE_HARDWARE), config: 0x400000000, disabled: 1, { bp_len, config2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: 0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925538919, sample_regs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 4
-> > > root@number:/home/acme/Downloads# strace -e perf_event_open perf test -F -v 75
-> > >  75: x86 hybrid                                                      :
-> > > --- start ---
-> > > Using CPUID GenuineIntel-6-B7-1
-> > > running test 0 'cpu_core/cpu-cycles/'
-> > > FAILED arch/x86/tests/hybrid.c:30 wrong type
-> > > Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'
-> > > FAILED arch/x86/tests/hybrid.c:42 wrong type
-> > > Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-> > > FAILED arch/x86/tests/hybrid.c:65 wrong type
-> > > Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running test 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-> > > FAILED arch/x86/tests/hybrid.c:78 wrong type
-> > > Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-> > > FAILED arch/x86/tests/hybrid.c:95 wrong type
-> > > Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'running test 5 'r1a'
-> > > running test 6 'cpu_core/r1a/'
-> > > running test 7 'cpu_core/config=10,config1,config2=3,period=1000/u'
-> > > WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
-> > > running test 8 'cpu_core/LLC-loads/'
-> > > perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0xa<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = 3
-> > > perf_event_open({type=PERF_TYPE_HARDWARE, size=0 /* PERF_ATTR_SIZE_??? */, config=0x4<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=0, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) = 4
-> > > ---- end ----
-> > > x86 hybrid: FAILED!
-> > > +++ exited with 0 +++
-> > > root@number:/home/acme/Downloads#
-> > >
+> > Mark.
+> > 
+> > > Kan, I also noticed that the name of the event is:
+> > > 
+> > > 1K cpu_atom/cycles:P/                                                                                                                                                                         ◆
+> > > 11K cpu_core/cycles:P/
+> > > 
+> > > If I try to use that on the command line:
+> > > 
+> > > root@number:~# perf top -e cpu_atom/cycles:P/
+> > > event syntax error: 'cpu_atom/cycles:P/'
+> > >                               \___ Bad event or PMU
+> > > 
+> > > Unable to find PMU or event on a PMU of 'cpu_atom'
+> > > 
+> > > Initial error:
+> > > event syntax error: 'cpu_atom/cycles:P/'
+> > >                               \___ unknown term 'cycles:P' for pmu 'cpu_atom'
+> > > 
+> > > valid terms: event,pc,edge,offcore_rsp,ldlat,inv,umask,cmask,config,config1,config2,config3,name,period,freq,branch_type,time,call-graph,stack-size,no-inherit,inherit,max-stack,nr,no-overwrite,overwrite,driver-config,percore,aux-output,aux-sample-size,metric-id,raw,legacy-cache,hardware
+> > > Run 'perf list' for a list of valid events
+> > > 
+> > >  Usage: perf top [<options>]
+> > > 
+> > >     -e, --event <event>   event selector. use 'perf list' to list available events
+> > > root@number:~#
+> > > 
+> > > It should be:
+> > > 
+> > >   "cpu_atom/cycles/P"
