@@ -1,38 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB1A2D602;
-	Fri,  5 Jan 2024 12:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B597C2D051;
+	Fri,  5 Jan 2024 14:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D2Fvg8e/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bEKgchZb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704459472; x=1735995472;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/ONlmIj+I+ON03UVYVmeBsOko0ziG2wBt1EFzW6p0No=;
-  b=D2Fvg8e/AmVXAOKQ89M59R5xh6K4ZnSBy4InYU0iDqkg/cKrBnlZWEeB
-   +w2Op/zBnoXNfpsAofUBmrOw7X7SonyUDTHTBlWXZtehSDbHJd2Msz8La
-   7mJSIXNpezkCkgTFzFSm+KGsJTmw110zLwITi0oaz80yrY8bkdJM+oQyk
-   SruQVq4EgQGfEwRRuNmAqgiTtMPuNjVOJX5kdhaXugMS/7GXs5akWV0Z4
-   2xyKzOQH1ctMOxRU9VxetxCBBjtnnimOgWnTDtu2SNC/ZYsgIcfqNQvkc
-   ONtAWWH3anS8YTDqFsOvzOhTPaBx/yRd1ROq1mW/TGaQp6a+2AbpEXQWQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="16118660"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="16118660"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 04:57:51 -0800
+  t=1704465494; x=1736001494;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=YSFQbND0a5XHp3w2R3jjRw9deEhCemu4BH2VtgO1wcM=;
+  b=bEKgchZbr8yxOTV0cNTk0S3DKv4w4IlDXWPYiwrlsrg+il4aKVeSkvow
+   tOC/8vJZ5xozww4X9DFViCc4Dx+Csm8p8hhjBiqeN9s2cmk1WvDCWcnhI
+   ifpI5bF2cmk1pjsR3gG5kOr6sypitRasSeNHOZfNNgeEriDU6icCmbrb9
+   GAKudVJ8UcT+tg5Sf0OZyASyNPYkJr1ekuUdsPIdqCmWiO9laXztNwtfd
+   IysAbDx3s3VFkVnJbSEkcbjxjk2kYCB6P6ORfeI/zDnUIToEqSUBc83P6
+   VybID3qizd8uH2FDgOMcMgGUy74YppWwG8Vx/+DmyFSpb5A12cnOuU6Hb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="397236835"
+X-IronPort-AV: E=Sophos;i="6.04,334,1695711600"; 
+   d="scan'208";a="397236835"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 06:38:13 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="851134406"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="851134406"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.83])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 04:57:45 -0800
-Message-ID: <4ca142a7-f46e-4bf0-b32d-99b7955fc012@intel.com>
-Date: Fri, 5 Jan 2024 14:57:42 +0200
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="924233638"
+X-IronPort-AV: E=Sophos;i="6.04,334,1695711600"; 
+   d="scan'208";a="924233638"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 06:38:12 -0800
+Received: from [10.212.120.196] (kliang2-mobl1.ccr.corp.intel.com [10.212.120.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 12F7E580D25;
+	Fri,  5 Jan 2024 06:38:09 -0800 (PST)
+Message-ID: <692e16f9-062c-4b3c-bd66-a16bac68216c@linux.intel.com>
+Date: Fri, 5 Jan 2024 09:38:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,176 +45,230 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC V2 1/4] perf/core: Add aux_pause, aux_resume,
- aux_start_paused
+Subject: Re: [PATCH V3 0/7] Clean up perf mem
+To: kajoljain <kjain@linux.ibm.com>, acme@kernel.org, irogers@google.com,
+ peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ jolsa@kernel.org, adrian.hunter@intel.com, john.g.garry@oracle.com,
+ will@kernel.org, james.clark@arm.com, mike.leach@linaro.org,
+ leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com,
+ renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com, ravi.bangoria@amd.com,
+ atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+ <a0abfee5-4dcd-3eb5-82fe-1a0dcdade038@linux.ibm.com>
+ <befb6acd-86be-4255-af96-38865affc56c@linux.intel.com>
+ <8bfadc86-e137-4a9f-a9ce-0bc62464c195@linux.intel.com>
+ <057a1c19-3117-1aec-41d6-4950c599b862@linux.ibm.com>
 Content-Language: en-US
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
- <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-References: <20231208172449.35444-1-adrian.hunter@intel.com>
- <20231208172449.35444-2-adrian.hunter@intel.com>
- <7023e9fb-0bde-4a17-aa9e-e29e6b8b4bf1@arm.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <7023e9fb-0bde-4a17-aa9e-e29e6b8b4bf1@arm.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <057a1c19-3117-1aec-41d6-4950c599b862@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 20/12/23 19:41, Suzuki K Poulose wrote:
-> On 08/12/2023 17:24, Adrian Hunter wrote:
->> Hardware traces, such as instruction traces, can produce a vast amount of
->> trace data, so being able to reduce tracing to more specific circumstances
->> can be useful.
->>
->> The ability to pause or resume tracing when another event happens, can do
->> that.
->>
->> Add ability for an event to "pause" or "resume" AUX area tracing.
->>
->> Add aux_pause bit to perf_event_attr to indicate that, if the event
->> happens, the associated AUX area tracing should be paused. Ditto
->> aux_resume. Do not allow aux_pause and aux_resume to be set together.
->>
->> Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
->> event that it should start in a "paused" state.
->>
->> Add aux_paused to struct perf_event for AUX area events to keep track of
->> the "paused" state. aux_paused is initialized to aux_start_paused.
->>
->> Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
->> callbacks. Call as needed, during __perf_event_output(). Add
->> aux_in_pause_resume to struct perf_buffer to prevent races with the NMI
->> handler. Pause/resume in NMI context will miss out if it coincides with
->> another pause/resume.
->>
->> To use aux_pause or aux_resume, an event must be in a group with the AUX
->> area event as the group leader.
->>
->> Example (requires Intel PT and tools patches also):
->>
->>   $ perf record --kcore -e '{intel_pt/aux-start-paused/k,syscalls:sys_enter_newuname/aux-resume/,syscalls:sys_exit_newuname/aux-pause/}' uname
->>   Linux
->>   [ perf record: Woken up 1 times to write data ]
->>   [ perf record: Captured and wrote 0.041 MB perf.data ]
->>   $ perf script --call-trace
->>   uname    5712 [007]    83.855580930: name: 0x7ffd9dcebec0
->>   uname    5712 [007]    83.855582518:  psb offs: 0
->>   uname    5712 [007]    83.855582518:  cbr: 42 freq: 4205 MHz (150%)
->>   uname    5712 [007]    83.855582723: ([kernel.kallsyms])    debug_smp_processor_id
->>   uname    5712 [007]    83.855582723: ([kernel.kallsyms])    __x64_sys_newuname
->>   uname    5712 [007]    83.855582723: ([kernel.kallsyms])        down_read
->>   uname    5712 [007]    83.855582723: ([kernel.kallsyms])            __cond_resched
->>   uname    5712 [007]    83.855582932: ([kernel.kallsyms])            preempt_count_add
->>   uname    5712 [007]    83.855582932: ([kernel.kallsyms])                in_lock_functions
->>   uname    5712 [007]    83.855582932: ([kernel.kallsyms])            preempt_count_sub
->>   uname    5712 [007]    83.855582932: ([kernel.kallsyms])        up_read
->>   uname    5712 [007]    83.855582932: ([kernel.kallsyms])            preempt_count_add
->>   uname    5712 [007]    83.855583348: ([kernel.kallsyms])                in_lock_functions
->>   uname    5712 [007]    83.855583348: ([kernel.kallsyms])            preempt_count_sub
->>   uname    5712 [007]    83.855583348: ([kernel.kallsyms])        _copy_to_user
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])    syscall_exit_to_user_mode
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])        syscall_exit_work
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])            perf_syscall_exit
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                debug_smp_processor_id
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                perf_trace_buf_alloc
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                    perf_swevent_get_recursion_context
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                        debug_smp_processor_id
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                    debug_smp_processor_id
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                perf_tp_event
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                    perf_trace_buf_update
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                        tracing_gen_ctx_irq_test
->>   uname    5712 [007]    83.855583557: ([kernel.kallsyms])                    perf_swevent_event
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                        __perf_event_account_interrupt
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                            __this_cpu_preempt_check
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                        perf_event_output_forward
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                            perf_event_aux_pause
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                                ring_buffer_get
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                                    __rcu_read_lock
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                                    __rcu_read_unlock
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                                pt_event_stop
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                                    debug_smp_processor_id
->>   uname    5712 [007]    83.855583765: ([kernel.kallsyms])                                    debug_smp_processor_id
->>   uname    5712 [007]    83.855583973: ([kernel.kallsyms])                                    native_write_msr
->>   uname    5712 [007]    83.855583973: ([kernel.kallsyms])                                    native_write_msr
->>   uname    5712 [007]    83.855584175: 0x0
->>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>   include/linux/perf_event.h      | 15 +++++++
->>   include/uapi/linux/perf_event.h | 11 ++++-
->>   kernel/events/core.c            | 72 +++++++++++++++++++++++++++++++--
->>   kernel/events/internal.h        |  1 +
->>   4 files changed, 95 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index e85cd1c0eaf3..252c4aac3b79 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -291,6 +291,7 @@ struct perf_event_pmu_context;
->>   #define PERF_PMU_CAP_NO_EXCLUDE            0x0040
->>   #define PERF_PMU_CAP_AUX_OUTPUT            0x0080
->>   #define PERF_PMU_CAP_EXTENDED_HW_TYPE        0x0100
->> +#define PERF_PMU_CAP_AUX_PAUSE            0x0200
->>     struct perf_output_handle;
->>   @@ -363,6 +364,8 @@ struct pmu {
->>   #define PERF_EF_START    0x01        /* start the counter when adding    */
->>   #define PERF_EF_RELOAD    0x02        /* reload the counter when starting */
->>   #define PERF_EF_UPDATE    0x04        /* update the counter when stopping */
->> +#define PERF_EF_PAUSE    0x08        /* AUX area event, pause tracing */
->> +#define PERF_EF_RESUME    0x10        /* AUX area event, resume tracing */
->>         /*
->>        * Adds/Removes a counter to/from the PMU, can be done inside a
->> @@ -402,6 +405,15 @@ struct pmu {
->>        *
->>        * ->start() with PERF_EF_RELOAD will reprogram the counter
->>        *  value, must be preceded by a ->stop() with PERF_EF_UPDATE.
->> +     *
->> +     * ->stop() with PERF_EF_PAUSE will stop as simply as possible. Will not
->> +     * overlap another ->stop() with PERF_EF_PAUSE nor ->start() with
->> +     * PERF_EF_RESUME.
->> +     *
->> +     * ->start() with PERF_EF_RESUME will start as simply as possible but
->> +     * only if the counter is not otherwise stopped. Will not overlap
->> +     * another ->start() with PERF_EF_RESUME nor ->stop() with
->> +     * PERF_EF_PAUSE.
->>        */
->>       void (*start)            (struct perf_event *event, int flags);
->>       void (*stop)            (struct perf_event *event, int flags);
->> @@ -797,6 +809,9 @@ struct perf_event {
->>       /* for aux_output events */
->>       struct perf_event        *aux_event;
->>   +    /* for AUX area events */
->> +    unsigned int            aux_paused;
->> +
->>       void (*destroy)(struct perf_event *);
->>       struct rcu_head            rcu_head;
->>   diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
->> index 39c6a250dd1b..437bc2a8d50c 100644
->> --- a/include/uapi/linux/perf_event.h
->> +++ b/include/uapi/linux/perf_event.h
->> @@ -507,7 +507,16 @@ struct perf_event_attr {
->>       __u16    sample_max_stack;
->>       __u16    __reserved_2;
->>       __u32    aux_sample_size;
->> -    __u32    __reserved_3;
->> +
->> +    union {
->> +        __u32    aux_output_cfg;
->> +        struct {
->> +            __u64    aux_pause        :  1, /* on overflow, pause AUX area tracing */
+
+
+On 2024-01-05 1:38 a.m., kajoljain wrote:
 > 
-> Did you mean __u32 ? Otherwise look good to me.
+> 
+> On 1/3/24 01:38, Liang, Kan wrote:
+>> Hi Kajol Jain
+>>
+>> On 2023-12-19 9:15 a.m., Liang, Kan wrote:
+>>>
+>>>
+>>> On 2023-12-19 4:26 a.m., kajoljain wrote:
+>>>> Hi,
+>>>>   I was trying to test this patchset on powerpc.
+>>>>
+>>>> After applying it on top of acme's perf-tools-next branch, I am getting
+>>>> below error:
+>>>>
+>>>>   INSTALL libsubcmd_headers
+>>>>   INSTALL libperf_headers
+>>>>   INSTALL libsymbol_headers
+>>>>   INSTALL libapi_headers
+>>>>   INSTALL libbpf_headers
+>>>>   CC      arch/powerpc/util/mem-events.o
+>>>> In file included from arch/powerpc/util/mem-events.c:3:
+>>>> arch/powerpc/util/mem-events.h:5:52: error: ‘PERF_MEM_EVENTS__MAX’
+>>>> undeclared here (not in a function)
+>>>>     5 | extern struct perf_mem_event
+>>>> perf_mem_events_power[PERF_MEM_EVENTS__MAX];
+>>>>       |
+>>>> ^~~~~~~~~~~~~~~~~~~~
+>>>> make[6]: *** [/home/kajol/linux/tools/build/Makefile.build:105:
+>>>> arch/powerpc/util/mem-events.o] Error 1
+>>>> make[5]: *** [/home/kajol/linux/tools/build/Makefile.build:158: util]
+>>>> Error 2
+>>>> make[4]: *** [/home/kajol/linux/tools/build/Makefile.build:158: powerpc]
+>>>> Error 2
+>>>> make[3]: *** [/home/kajol/linux/tools/build/Makefile.build:158: arch]
+>>>> Error 2
+>>>> make[3]: *** Waiting for unfinished jobs....
+>>>> make[2]: *** [Makefile.perf:693: perf-in.o] Error 2
+>>>> make[1]: *** [Makefile.perf:251: sub-make] Error 2
+>>>> make: *** [Makefile:70: all] Error 2
+>>>>
+>>>> It seems some headerfiles are missing from arch/powerpc/util/mem-
+>>>> events.c
+>>>>
+>>>
+>>> Leo updated the headerfiles for ARM. https://termbin.com/0dkn
+>>>
+>>> I guess powerpc has to do the same thing. Could you please try the below
+>>> patch?
+>>
+>>
+>> Does the patch work on powerpc?
+> 
+> Hi Kan,
+>    Sorry I went for vacation so couldn't update. Yes this fix works. 
 
-True, thanks!
+Thanks for the update.
 
+> But
+> we have another issue, actually this patch set changes uses ldlat
+> attribute. But ldlat is not supported in powerpc because of which perf
+> mem is failing in powerpc.
+
+For powerpc, the patch 3 introduced a perf_mem_events_power, which
+doesn't have ldlat. But it only be assigned to the pmu->is_core. I'm not
+sure if it's the problem.
+Also, S390 still uses the default perf_mem_events, which includes ldlat.
+I'm not sure if S390 supports the ldlat.
+
+Thanks,
+Kan
+> 
+> I am looking into a work around to fix this issue. I will update the fix.
+> 
+> Thanks,
+> Kajol Jain
+> 
+> 
+>>
+>>
+>> Thanks,
+>> Kan
+>>>
+>>> diff --git a/tools/perf/arch/powerpc/util/mem-events.c
+>>> b/tools/perf/arch/powerpc/util/mem-events.c
+>>> index 72a6ac2b52f5..765d4a054b0a 100644
+>>> --- a/tools/perf/arch/powerpc/util/mem-events.c
+>>> +++ b/tools/perf/arch/powerpc/util/mem-events.c
+>>> @@ -1,5 +1,6 @@
+>>>  // SPDX-License-Identifier: GPL-2.0
+>>> -#include "map_symbol.h"
+>>> +#include "util/map_symbol.h"
+>>> +#include "util/mem-events.h"
+>>>  #include "mem-events.h"
+>>>
+>>>  #define E(t, n, s, l, a) { .tag = t, .name = n, .event_name = s, .ldlat
+>>> = l, .aux_event = a }
+>>>
+>>> Thanks,
+>>> Kan
+>>>
+>>>> Thanks,
+>>>> Kajol Jain
+>>>>
+>>>> On 12/14/23 01:21, kan.liang@linux.intel.com wrote:
+>>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>>
+>>>>> Changes since V2:
+>>>>> - Fix the Arm64 building error (Leo)
+>>>>> - Add two new patches to clean up perf_mem_events__record_args()
+>>>>>   and perf_pmus__num_mem_pmus() (Leo)
+>>>>>
+>>>>> Changes since V1:
+>>>>> - Fix strcmp of PMU name checking (Ravi)
+>>>>> - Fix "/," typo (Ian)
+>>>>> - Rename several functions with perf_pmu__mem_events prefix. (Ian)
+>>>>> - Fold the header removal patch into the patch where the cleanups made.
+>>>>>   (Arnaldo)
+>>>>> - Add reviewed-by and tested-by from Ian and Ravi
+>>>>>
+>>>>> As discussed in the below thread, the patch set is to clean up perf mem.
+>>>>> https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com/
+>>>>>
+>>>>> Introduce generic functions perf_mem_events__ptr(),
+>>>>> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+>>>>> ARCH specific ones.
+>>>>> Simplify the perf_mem_event__supported().
+>>>>>
+>>>>> Only keeps the ARCH-specific perf_mem_events array in the corresponding
+>>>>> mem-events.c for each ARCH.
+>>>>>
+>>>>> There is no functional change.
+>>>>>
+>>>>> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+>>>>> etc. But I can only test it on two Intel platforms.
+>>>>> Please give it try, if you have machines with other ARCHs.
+>>>>>
+>>>>> Here are the test results:
+>>>>> Intel hybrid machine:
+>>>>>
+>>>>> $perf mem record -e list
+>>>>> ldlat-loads  : available
+>>>>> ldlat-stores : available
+>>>>>
+>>>>> $perf mem record -e ldlat-loads -v --ldlat 50
+>>>>> calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
+>>>>>
+>>>>> $perf mem record -v
+>>>>> calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
+>>>>>
+>>>>> $perf mem record -t store -v
+>>>>> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+>>>>>
+>>>>>
+>>>>> Intel SPR:
+>>>>> $perf mem record -e list
+>>>>> ldlat-loads  : available
+>>>>> ldlat-stores : available
+>>>>>
+>>>>> $perf mem record -e ldlat-loads -v --ldlat 50
+>>>>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
+>>>>>
+>>>>> $perf mem record -v
+>>>>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
+>>>>>
+>>>>> $perf mem record -t store -v
+>>>>> calling: record -e cpu/mem-stores/P
+>>>>>
+>>>>> Kan Liang (7):
+>>>>>   perf mem: Add mem_events into the supported perf_pmu
+>>>>>   perf mem: Clean up perf_mem_events__ptr()
+>>>>>   perf mem: Clean up perf_mem_events__name()
+>>>>>   perf mem: Clean up perf_mem_event__supported()
+>>>>>   perf mem: Clean up is_mem_loads_aux_event()
+>>>>>   perf mem: Clean up perf_mem_events__record_args()
+>>>>>   perf mem: Clean up perf_pmus__num_mem_pmus()
+>>>>>
+>>>>>  tools/perf/arch/arm/util/pmu.c            |   3 +
+>>>>>  tools/perf/arch/arm64/util/mem-events.c   |  39 +---
+>>>>>  tools/perf/arch/arm64/util/mem-events.h   |   7 +
+>>>>>  tools/perf/arch/powerpc/util/mem-events.c |  13 +-
+>>>>>  tools/perf/arch/powerpc/util/mem-events.h |   7 +
+>>>>>  tools/perf/arch/powerpc/util/pmu.c        |  11 ++
+>>>>>  tools/perf/arch/s390/util/pmu.c           |   3 +
+>>>>>  tools/perf/arch/x86/util/mem-events.c     |  99 ++--------
+>>>>>  tools/perf/arch/x86/util/mem-events.h     |  10 +
+>>>>>  tools/perf/arch/x86/util/pmu.c            |  19 +-
+>>>>>  tools/perf/builtin-c2c.c                  |  45 ++---
+>>>>>  tools/perf/builtin-mem.c                  |  48 ++---
+>>>>>  tools/perf/util/mem-events.c              | 217 +++++++++++++---------
+>>>>>  tools/perf/util/mem-events.h              |  19 +-
+>>>>>  tools/perf/util/pmu.c                     |   4 +-
+>>>>>  tools/perf/util/pmu.h                     |   7 +
+>>>>>  tools/perf/util/pmus.c                    |   6 -
+>>>>>  tools/perf/util/pmus.h                    |   1 -
+>>>>>  18 files changed, 278 insertions(+), 280 deletions(-)
+>>>>>  create mode 100644 tools/perf/arch/arm64/util/mem-events.h
+>>>>>  create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
+>>>>>  create mode 100644 tools/perf/arch/powerpc/util/pmu.c
+>>>>>  create mode 100644 tools/perf/arch/x86/util/mem-events.h
+>>>>>
+>>>>
+>>>
+> 
