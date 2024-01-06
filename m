@@ -1,282 +1,228 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C73B63AA
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jan 2024 05:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834181FAE
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jan 2024 05:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bWH2dge5"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e70d8273fso1219e87.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jan 2024 21:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704519913; x=1705124713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1noNVxrj4EENUNumxv0YPRHXclTxNJstpxnAMkzn0t4=;
-        b=bWH2dge53qnZnXIoK761VPjbYS+9UWOeJs1pnEECUnLnENrhPovJl53M6r4S2MIAf6
-         9cUx5w1t1sYlNkYp1PGd0gakNjtrv3FMK1kmjHv3C12nXWwzR2qBOrc/IAmAgwGj70Rs
-         r706kFPEhi6/jgAnftIQFUPI/WFgElqmLdWWyYM74ZDGFsYFCNaQfFN/lVXsJrxoxQnY
-         IlUd63kcJBRrHJUhlOlFvD5AQHqZ5V0x9CzPpszpSHKdgZiRoUsC7rbhQoh/yDbKxdyU
-         LuSh3gX3RxUJCNldAGIiKNiq11A11iVZu6Z4sp0zss5THcJtPVcDsZc62IC5DoVbqdmG
-         slbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704519913; x=1705124713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1noNVxrj4EENUNumxv0YPRHXclTxNJstpxnAMkzn0t4=;
-        b=c3EABND6PDL3hKxC3LVKNYNQNQvCJV4oRGbS0OxeaYxbiSia9ADAqMTJiIvpPuCcb9
-         83WB5JJLoreenyUD4nPhYfK6hBbntw5axmCYc27ZsblDC2f6pWgqyvR6XUAJdfWIqkKH
-         k07ZHDlXyk/4o9bh26xAPlwIzZKKe7udnZfS4iBjBp9itccR4DllxmMEZZ/HtfDgUUKQ
-         wU+cMiAneMKmkHEfs4fMNi/cWq7e7oZkHZ/udvOxWnGrhxYEbm+sXhFUbFUys+FKSafG
-         sDTR6yKK8Xw43ZhXcOqj/72m6oDqxYMf4HGYvMe/r5U9KrYAc1xkiUah0ZmO9ttQK2Dm
-         31VA==
-X-Gm-Message-State: AOJu0YzP7W7uO36GRkyaLut9cz59FRM4i6hMuK+9+CyNznwcH/zpPPhb
-	PEkMfFwsxKacIoCQgaSMQRkuoXb/Lv350duxfST9k/J9f9ho
-X-Google-Smtp-Source: AGHT+IH3Hg4xauXrzKHj5+s4dCYwB/s8mvGn8oT3ukJXan098RJcKAbj/XSq93CKTDGzyVWyb/P3MHj/7qo1Tif4tnE=
-X-Received: by 2002:a19:f503:0:b0:50e:9f94:1c37 with SMTP id
- j3-20020a19f503000000b0050e9f941c37mr30389lfb.7.1704519912976; Fri, 05 Jan
- 2024 21:45:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kdtEAHFU"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4064VBl8030639;
+	Sat, 6 Jan 2024 05:49:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=WFlI4j5WdOa6HImbIH7Ben3j8qNMvsK/L4TsQqGQfis=;
+ b=kdtEAHFU9FnrgMHcYnVKHnLqNl2+Qk5OpB8fRjb9f30SDzquXmK1RI/HC4XZz75nhpCj
+ PAlYGSpxoxfmvulCKdf3V2G0WdPEtsFzi0CfggKxwZXdHruWHS6RtvbtAlnmxaur1xDL
+ GzdFhW9+v2zTV0EZazSMTPkldPEx0lXoUoEo3ksgsraSgXOuVPWdjRIvGBFqtKbxujRL
+ eVKRC1w+z6FVPZsFVqSxYVwEEurxVGcqEwgg/xi4Iw5d9jeBh434EM0w4H9anp4xx2J5
+ DcqnTmm630tROu532f/ejrIFBxUmiTw+OTjRvPOT2+0lDxG2gIX7YAmVkntXOYMtDkj/ 7g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vexj0je8d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 06 Jan 2024 05:49:02 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4065UTR7002574;
+	Sat, 6 Jan 2024 05:49:02 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vexj0je8a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 06 Jan 2024 05:49:02 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4064XxSF022289;
+	Sat, 6 Jan 2024 05:49:01 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vb082ugnp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 06 Jan 2024 05:49:01 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4065mwF152232584
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 6 Jan 2024 05:48:58 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8787120043;
+	Sat,  6 Jan 2024 05:48:58 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1462F20040;
+	Sat,  6 Jan 2024 05:48:56 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.171.64.160])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sat,  6 Jan 2024 05:48:55 +0000 (GMT)
+Date: Sat, 6 Jan 2024 11:18:54 +0530
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: Re: Re: [PATCH v8 0/4] Introduce perf check subcommand
+Message-ID: <lzgtr2q7iqmip6k4kfxui3dnay3iff7u2rjwwtzjdjkbkxqp4n@pk7owbl45apa>
+References: <20231204093954.304030-1-adityag@linux.ibm.com>
+ <h5dyqz55bcbrrcykdrherwpioclnmbr4egccsr4qb5n7zky747@brkblmk7vazt>
+ <3bgpdf5ha4go7xpxtgfa2ophxokoyiu2hjjumlwmtioi3bgjmv@bah667fiqp7x>
+ <ZZgbifOT9Xgr-1Wo@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZgbifOT9Xgr-1Wo@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: dt6XB-3KrxZrd4jj9HVJTlNKN-tWmgUt
+X-Proofpoint-ORIG-GUID: FsxW9s31vMwnP2t3UuhOgmg15XYULt51
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231208000515.1693746-1-irogers@google.com> <CAP-5=fVQfqS6gu9Ua3Exijc_ZaBzrt2=1PMopgdoyC_6R_cnaQ@mail.gmail.com>
- <ZZcdDyyADG8dP8LM@kernel.org> <CAP-5=fVfCnPG0O51rRXVqkGRU4eW7n0B1YGr9pL8CbwxG+V8jQ@mail.gmail.com>
- <ZZgYBRxSMw_T5EE1@kernel.org>
-In-Reply-To: <ZZgYBRxSMw_T5EE1@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 5 Jan 2024 21:44:59 -0800
-Message-ID: <CAP-5=fURZ7bEvZYLSzrCM_+cVAZhRd1DU_QD7tc-rgOs2W5ucw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] lib subcmd: Fix memory leak in uniq
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Chenyuan Mi <cymi20@fudan.edu.cn>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ phishscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 mlxlogscore=999
+ adultscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401060038
 
-On Fri, Jan 5, 2024 at 6:54=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> Em Thu, Jan 04, 2024 at 03:29:34PM -0800, Ian Rogers escreveu:
-> > On Thu, Jan 4, 2024 at 1:03=E2=80=AFPM Arnaldo Carvalho de Melo <acme@k=
-ernel.org> wrote:
-> > > Em Tue, Jan 02, 2024 at 11:30:39AM -0800, Ian Rogers escreveu:
-> > > > On Thu, Dec 7, 2023 at 4:05=E2=80=AFPM Ian Rogers <irogers@google.c=
-om> wrote:
-> > > > > uniq will write one command name over another causing the overwri=
-tten
-> > > > > string to be leaked. Fix by doing a pass that removes duplicates =
-and a
-> > > > > second that removes the holes.
->
-> > > I applied the first one, the fix for uniq(), but somehow the second
-> > > didn't work for me as in your examples, nor the third, the output is =
-the
-> > > same as before.
->
-> > I tried to repro the failure with a rebase but couldn't. I suspected
-> > libsubcmd wasn't being rebuilt or something like that. I suspect now
-> > that you have ~/.perfconfig with help.autocorrect set, which means the
-> > output will vary as it will automatically try to run the autocorrected
-> > command. Could you check for me?
->
-> [acme@quaco perf-tools-next]$ perf reccord
-> Failed to run command 'reccord': No such file or directory
-> [acme@quaco perf-tools-next]$ perf -v
-> perf version 6.7.rc6.gcd1e3ef8bfe8
-> [acme@quaco perf-tools-next]$ git log --oneline -5
-> cd1e3ef8bfe8f827 (HEAD -> perf-tools-next) perf help: Lower levenshtein p=
-enality for deleting character
-> c5c7365af812728e perf: Suggest inbuilt commands for unknown command
-> b6d8b858dbbbd832 (perf-tools-next.korg/tmp.perf-tools-next, perf-tools-ne=
-xt.korg/perf-tools-next, number/perf-tools-next, five/perf-tools-next, acme=
-.korg/tmp.perf-tools-next, acme.korg/perf-tools-next) perf test: test case =
-'Setup struct perf_event_attr' fails on s390 on z/vm
-> 1e24ce402c97dc3c (perf-tools-next/tmp.perf-tools-next, acme/tmp.perf-tool=
-s-next) perf db-export: Fix missing reference count get in call_path_from_s=
-ample()
-> bb177a85e82b37d3 perf tests: Add perf script test
-> [acme@quaco perf-tools-next]$ perf reccord
-> Failed to run command 'reccord': No such file or directory
-> [acme@quaco perf-tools-next]$ cat ~/.perfconfig
-> [acme@quaco perf-tools-next]$ sudo cat /etc/perfconfig
-> [sudo] password for acme:
-> cat: /etc/perfconfig: No such file or directory
-> [acme@quaco perf-tools-next]$
-> [acme@quaco perf-tools-next]$
-> [acme@quaco perf-tools-next]$ sudo su -
-> [root@quaco ~]# perf -v
-> perf version 6.7.rc6.gcd1e3ef8bfe8
-> [root@quaco ~]# perf reccord
-> Failed to run command 'reccord': No such file or directory
-> [root@quaco ~]# cat ~/.perfconfig
-> [root@quaco ~]# perf trace -e open*,access* perf reccord
->      0.000 ( 0.006 ms): perf/10791 access(filename: "/etc/ld.so.preload",=
- mode: R)                       =3D -1 ENOENT (No such file or directory)
->      0.012 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/etc/ld.so=
-.cache", flags: RDONLY|CLOEXEC) =3D 3
->      0.035 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-unwind-x86_64.so.8", flags: RDONLY|CLOEXEC) =3D 3
->      0.084 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-unwind.so.8", flags: RDONLY|CLOEXEC) =3D 3
->      0.128 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-lzma.so.5", flags: RDONLY|CLOEXEC) =3D 3
->      0.170 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-m.so.6", flags: RDONLY|CLOEXEC) =3D 3
->      0.221 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-opencsd_c_api.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.264 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-z.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.305 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-elf.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.348 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-debuginfod.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.386 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-dw.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.428 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-crypto.so.3", flags: RDONLY|CLOEXEC) =3D 3
->      0.480 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-slang.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      0.526 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-perl.so.5.36", flags: RDONLY|CLOEXEC) =3D 3
->      0.575 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-c.so.6", flags: RDONLY|CLOEXEC) =3D 3
->      0.628 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-python3.11.so.1.0", flags: RDONLY|CLOEXEC) =3D 3
->      0.675 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-stdc++.so.6", flags: RDONLY|CLOEXEC) =3D 3
->      0.729 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-zstd.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.772 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-cap.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      0.811 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-numa.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.849 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-babeltrace-ctf.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.895 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-pfm.so.4", flags: RDONLY|CLOEXEC) =3D 3
->      0.940 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-traceevent.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      0.976 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-gcc_s.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      1.023 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-opencsd.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      1.071 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-curl.so.4", flags: RDONLY|CLOEXEC) =3D 3
->      1.116 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-bz2.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      1.157 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-crypt.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      1.216 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-babeltrace.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      1.260 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-popt.so.0", flags: RDONLY|CLOEXEC) =3D 3
->      1.299 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-uuid.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      1.341 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-gmodule-2.0.so.0", flags: RDONLY|CLOEXEC) =3D 3
->      1.382 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-glib-2.0.so.0", flags: RDONLY|CLOEXEC) =3D 3
->      1.438 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-nghttp2.so.14", flags: RDONLY|CLOEXEC) =3D 3
->      1.478 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-idn2.so.0", flags: RDONLY|CLOEXEC) =3D 3
->      1.525 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-ssh.so.4", flags: RDONLY|CLOEXEC) =3D 3
->      1.576 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-psl.so.5", flags: RDONLY|CLOEXEC) =3D 3
->      1.621 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-ssl.so.3", flags: RDONLY|CLOEXEC) =3D 3
->      1.663 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-gssapi_krb5.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      1.707 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-ldap.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      1.755 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-lber.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      1.795 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-brotlidec.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      1.852 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-pcre2-8.so.0", flags: RDONLY|CLOEXEC) =3D 3
->      1.899 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-unistring.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      1.948 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-krb5.so.3", flags: RDONLY|CLOEXEC) =3D 3
->      1.997 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-k5crypto.so.3", flags: RDONLY|CLOEXEC) =3D 3
->      2.040 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-com_err.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      2.089 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-krb5support.so.0", flags: RDONLY|CLOEXEC) =3D 3
->      2.132 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-keyutils.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      2.175 ( 0.004 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-resolv.so.2", flags: RDONLY|CLOEXEC) =3D 3
->      2.237 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-event-2.1.so.7", flags: RDONLY|CLOEXEC) =3D 3
->      2.288 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-sasl2.so.3", flags: RDONLY|CLOEXEC) =3D 3
->      2.337 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-brotlicommon.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      2.399 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/lib64/lib=
-selinux.so.1", flags: RDONLY|CLOEXEC) =3D 3
->      9.457 ( 0.006 ms): perf/10791 access(filename: "/etc/selinux/config"=
-)                               =3D 0
->      9.719 ( 0.014 ms): perf/10791 openat(dfd: CWD, filename: "/proc/self=
-/status")                       =3D 3
->      9.759 ( 0.007 ms): perf/10791 openat(dfd: CWD, filename: "/sys/devic=
-es/system/node", flags: RDONLY|CLOEXEC|DIRECTORY|NONBLOCK) =3D 3
->      9.786 ( 0.006 ms): perf/10791 openat(dfd: CWD, filename: "/sys/devic=
-es/system/node/node0/meminfo")  =3D 4
->      9.825 ( 0.006 ms): perf/10791 openat(dfd: CWD, filename: "/sys/devic=
-es/system/cpu/possible", flags: RDONLY|CLOEXEC) =3D 3
->      9.837 ( 0.005 ms): perf/10791 openat(dfd: CWD, filename: "/proc/self=
-/status")                       =3D 3
->      9.962 ( 0.005 ms): perf/10791 access(filename: "/home/acme/etc/perfc=
-onfig", mode: R)                =3D -1 ENOENT (No such file or directory)
-> Failed to run command 'reccord': No such file or directory
-> [root@quaco ~]#
-> [root@quaco ~]# perf -vv
-> perf version 6.7.rc6.gcd1e3ef8bfe8
->                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
->     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
->          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
->                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
->             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
->                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
->                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
->                libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
->              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
->               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
->              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
->              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
->     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
->                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
->                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
->              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
->                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
->                    aio: [ on  ]  # HAVE_AIO_SUPPORT
->                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
->                libpfm4: [ on  ]  # HAVE_LIBPFM
->          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
->          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-> [root@quaco ~]#
+On Fri, Jan 05, 2024 at 12:08:57PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jan 05, 2024 at 01:30:19PM +0530, Aditya Gupta escreveu:
+> > Hi Arnaldo,
+> > Any comments on the series ?
+> 
+> I'm trying now to finish the pull req for v6.8, trying to avoid adding
+> new features, Namhyung will take care for patches for v6.9, where he
+> will most likely consider your latest v8 kit.
 
-Thanks Arnaldo,
-
-I tried b4 am-ing the patches and repro-ing in a clean tree. I'm still
-not able to do it. Knowing what is going on in help_unknown_cmd in
-tools/perf/util/help-unknown-cmd.c would shed some light on the
-matter. I'll see if I can get other ideas.
+Sure, that's okay.
 
 Thanks,
-Ian
+Aditya Gupta
+
+> 
+> Thanks,
+> 
+> - Arnaldo
+>  
+> > Thanks,
+> > Aditya
+> > 
+> > > On Mon, Dec 04, 2023 at 03:09:50PM +0530, Aditya Gupta wrote:
+> > > > The Problem
+> > > > ===========
+> > > > 
+> > > > Currently the presence of a feature is checked with a combination of
+> > > > perf version --build-options and greps, such as:
+> > > > 
+> > > >     perf version --build-options | grep " on .* HAVE_FEATURE"
+> > > > 
+> > > > Proposed solution
+> > > > =================
+> > > > 
+> > > > As suggested by contributors in:
+> > > > https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
+> > > > 
+> > > > Introduce a subcommand "perf check --feature", with which
+> > > > scripts can test for presence of a feature or multiple features, such as:
+> > > > 
+> > > >     perf check --feature HAVE_LIBTRACEEVENT
+> > > > 
+> > > >     or
+> > > > 
+> > > >     perf check --feature libtraceevent
+> > > > 
+> > > >     or
+> > > > 
+> > > >     perf check --feature libtraceevent,bpf
+> > > > 
+> > > > The usage of "perf version --build-options | grep" has been replaced in two
+> > > > tests, with "perf check --feature" command
+> > > > 
+> > > > Also, to not duplicate the same feature list at multiple places, a new global
+> > > > 'supported_features' array has been introduced in builtin.h, so both commands
+> > > > 'perf check --feature' and 'perf version --build-options' use the same array
+> > > > 
+> > > > 'supported_features' feature is an array of 'struct feature_support', which
+> > > > also has the name of the feature, macro used to test it's presence, and a
+> > > > is_builtin member, which will be 0 if feature not built-in, and 1 if built-in
+> > > > 
+> > > > Architectures Tested
+> > > > ====================
+> > > > * x86_64
+> > > > * ppc64le
+> > > > 
+> > > > Git tree
+> > > > ========
+> > > > 
+> > > > Git tree with this patch series applied for testing:
+> > > > https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v8
+> > > > 
+> > > > Changelog
+> > > > =========
+> > > > V8
+> > > > + handle return value of 'malloc' in patch #1
+> > > > + fix error due to strncpy depending on source string's length
+> > > > 
+> > > > V7
+> > > > + modified patch #1 to fix compile issue, and add feature to allow
+> > > >   multiple comma-separated features
+> > > > 
+> > > > V6
+> > > > + rebased to perf-tools-next/perf-tools-next
+> > > > + modified patch #1 to include FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL)
+> > > > 
+> > > > V5
+> > > > + invert return value of 'has_support', but return value of perf check --feature
+> > > > according to shell convention
+> > > > 
+> > > > V4
+> > > > + invert return value of perf check --feature
+> > > > 
+> > > > V3
+> > > > + simplified has_support code in builtin-check.c (patch #1)
+> > > > + modified patch #3 and patch #4 according to change in return value in patch #1
+> > > > 
+> > > > V2
+> > > > + improved the patch series with suggestions from Namhyung
+> > > > + fix incorrect return value, added -q option, and moved array definition to
+> > > >   perf-check.c
+> > > > 
+> > > > V1
+> > > > + changed subcommand name to 'perf check --feature'
+> > > > + added documentation for perf check
+> > > > + support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceevent) as
+> > > >   input to 'perf check --feature'
+> > > > + change subject and descriptions of all patch mentioning perf check instead of
+> > > >   perf build
+> > > > 
+> > > > V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230825061125.24312-1-adityag@linux.ibm.com/
+> > > > 
+> > > > Aditya Gupta (3):
+> > > >   perf check: introduce check subcommand
+> > > >   perf version: update --build-options to use 'supported_features' array
+> > > >   perf tests task_analyzer: use perf check for libtraceevent support
+> > > > 
+> > > > Athira Rajeev (1):
+> > > >   tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
+> > > >     --feature
+> > > > 
+> > > >  tools/perf/Build                              |   1 +
+> > > >  tools/perf/Documentation/perf-check.txt       |  59 +++++++++
+> > > >  tools/perf/builtin-check.c                    | 122 ++++++++++++++++++
+> > > >  tools/perf/builtin-version.c                  |  39 ++----
+> > > >  tools/perf/builtin.h                          |  18 +++
+> > > >  tools/perf/perf.c                             |   1 +
+> > > >  .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
+> > > >  .../shell/record+probe_libc_inet_pton.sh      |   5 +-
+> > > >  .../shell/record+script_probe_vfs_getname.sh  |   5 +-
+> > > >  tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
+> > > >  10 files changed, 221 insertions(+), 37 deletions(-)
+> > > >  create mode 100644 tools/perf/Documentation/perf-check.txt
+> > > >  create mode 100644 tools/perf/builtin-check.c
+> > > > 
+> > > > -- 
+> > > > 2.41.0
+> > > > 
+> 
+> -- 
+> 
+> - Arnaldo
