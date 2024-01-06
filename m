@@ -1,139 +1,99 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30FD263AB
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jan 2024 09:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.110.252])
-	by gateway (Coremail) with SMTP id _____8AxzehSIJll4JkCAA--.832S3;
-	Sat, 06 Jan 2024 17:41:38 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.110.252])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxXNxPIJllFXEEAA--.11574S2;
-	Sat, 06 Jan 2024 17:41:36 +0800 (CST)
-From: Yanteng Si <siyanteng@loongson.cn>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Yanteng Si <siyanteng@loongson.cn>
-Subject: [PATCH] tools/perf: Fix compiler error when using gcc-14.
-Date: Sat,  6 Jan 2024 17:41:29 +0800
-Message-Id: <20240106094129.3337057-1-siyanteng@loongson.cn>
-X-Mailer: git-send-email 2.31.4
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666D16AA3
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jan 2024 10:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AePQdTEl"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-427d5bfe24cso4210511cf.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jan 2024 02:49:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704538152; x=1705142952; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MJ4vjnaD4z5NZlJmQvwi02ozljKuQZLjHFWLktX0LKY=;
+        b=AePQdTEliwaN+/oKhdjmACdpC+tttHBrmniqHyYXa5B+jX6kfYeO4Bxop7XA9zUdly
+         GLn5VMOYpk/efkNZgieMMUc3o5i2f3XJ9DoUouIem64yvg1ek8d16EK5pv0GLTbHN9Kr
+         6w7dCMCs3ypzCApdZJq2O/SZnZtfptFNj1hQBzg9jxvu/yk01V4E3X2ssVDxMjIjUCTu
+         fJCkUOnRZv6qMsn92v+T4gguecdmR1/eprGN3G5ts0M0Gg4Qst1mzDHRXAoumeMw5B+R
+         O2o/9RcX6P0fuyJzxx7h6Np4V9kyw7UsBlWuyOAIg4KnVF8CFU+rLjfa4fvce5KlIbxI
+         RSYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704538152; x=1705142952;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MJ4vjnaD4z5NZlJmQvwi02ozljKuQZLjHFWLktX0LKY=;
+        b=APmPx7zCtMSQ5NUN8XbotIPEG7IcuFv9bW/68bIYqxnXYrhYgijuaus3Vk1kRFn5IN
+         zaS7oeIVMtimyyay2DTq/d8rzyNQR15QE6/zWIfKpuiGcb/V94VdRqLLyOYM7Mx9YNKZ
+         PttslI/rBFc+av6MBR0r0kz8x/aDa963BnEO4bFPaDXwMdkwUPhTwdlA+I4Fclkm/Iqq
+         TbCu78O1cZLjJkw70vc1bRTfQLO2EtSSfUJlS0C21/BNvziYvpyg7p1naT5iIYEKi+yQ
+         bYZ3umhUfpC/FaxW/RjRlxx1DNob4NujbAQ2tlfRRl7HCj+PXp7MeMmHY/w3RDZOcrL5
+         ys8Q==
+X-Gm-Message-State: AOJu0Yz7Z8077cM5ZtMRYuug/H2qyczIRQ+A5dsMzFFlTuMPbeSiQJZa
+	v9O1ag5wlmWoRgvQ7W96Kihd1S07KgX+1w==
+X-Google-Smtp-Source: AGHT+IHicQhMr6weKF9THMnWJyEvLQy7U8b9IyxJb5yOjwnU7WjONraGjFX3PHYA7T7/8Og5D4UjIA==
+X-Received: by 2002:ac8:5fcc:0:b0:427:a58d:6a0e with SMTP id k12-20020ac85fcc000000b00427a58d6a0emr1002417qta.17.1704538152269;
+        Sat, 06 Jan 2024 02:49:12 -0800 (PST)
+Received: from leoy-huanghe ([98.98.115.250])
+        by smtp.gmail.com with ESMTPSA id nk4-20020a17090b194400b0028ac1112124sm2811627pjb.30.2024.01.06.02.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jan 2024 02:49:11 -0800 (PST)
+Date: Sat, 6 Jan 2024 18:48:56 +0800
+From: Leo Yan <leo.yan@linaro.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3] perf doc: Document ring buffer mechanism
+Message-ID: <20240106104856.GA172473@leoy-huanghe>
+References: <20230803114613.1786849-1-leo.yan@linaro.org>
+ <ZRvda2QwdFYCp1F1@gmail.com>
+ <ZRvjTW4PACGaU2h+@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxXNxPIJllFXEEAA--.11574S2
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJF48Ar45ZF4xAF43Aw17twc_yoW5Cr4fpr
-	WkC3srtr1YqF1YywnFyF4jvFW7uws7ZFW5G34Fva1kZw1Skw4xtrWxtFyY9FW7ZF4DJw1a
-	ywn5Wry8tw4kJFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZRvjTW4PACGaU2h+@gmail.com>
 
-From: Sun Haiyong <sunhaiyong@loongson.cn>
+Hi Ingo,
 
-the definition of calloc is as follows:
-    void *calloc(size_t nmemb, size_t size);
-number of members is in the first parameter and the size is in the second
-parameter.
+On Tue, Oct 03, 2023 at 11:47:57AM +0200, Ingo Molnar wrote:
 
-fixed error message on the gcc 14 20240102:
-error: 'calloc' sizes specified with 'sizeof' in the earlier argument and
-not in the later argument [-Werror=calloc-transposed-args]
+[...]
 
-Signed-off-by: Sun Haiyong <sunhaiyong@loongson.cn>
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
----
- tools/perf/builtin-record.c        | 4 ++--
- tools/perf/util/hist.c             | 4 ++--
- tools/perf/util/metricgroup.c      | 2 +-
- tools/perf/util/synthetic-events.c | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+> > >  tools/perf/Documentation/perf-ring-buffer.txt | 762 ++++++++++++++++++
+> > >  1 file changed, 762 insertions(+)
+> > >  create mode 100644 tools/perf/Documentation/perf-ring-buffer.txt
+> > 
+> > Nice addition!
+> > 
+> > If it hasn't been picked up yet:
+> > 
+> >   Acked-by: Ingo Molnar <mingo@kernel.org>
+> 
+> Note that my ack is conditional on the conversion to RST and moving to 
+> Documentation/ - this documents an important aspect of the primary perf 
+> ABI, it deserves to be on the kernel side.
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 91e6828c38cc..86c910125172 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -4080,8 +4080,8 @@ int cmd_record(int argc, const char **argv)
- 	}
- 
- 	if (rec->switch_output.num_files) {
--		rec->switch_output.filenames = calloc(sizeof(char *),
--						      rec->switch_output.num_files);
-+		rec->switch_output.filenames = calloc(rec->switch_output.num_files,
-+						      sizeof(char *));
- 		if (!rec->switch_output.filenames) {
- 			err = -EINVAL;
- 			goto out_opts;
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 0888b7163b7c..fa359180ebf8 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -491,8 +491,8 @@ static int hist_entry__init(struct hist_entry *he,
- 	}
- 
- 	if (symbol_conf.res_sample) {
--		he->res_samples = calloc(sizeof(struct res_sample),
--					symbol_conf.res_sample);
-+		he->res_samples = calloc(symbol_conf.res_sample,
-+					sizeof(struct res_sample));
- 		if (!he->res_samples)
- 			goto err_srcline;
- 	}
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index ca3e0404f187..966cca5a3e88 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -286,7 +286,7 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 	*out_metric_events = NULL;
- 	ids_size = hashmap__size(ids);
- 
--	metric_events = calloc(sizeof(void *), ids_size + 1);
-+	metric_events = calloc(ids_size + 1, sizeof(void *));
- 	if (!metric_events)
- 		return -ENOMEM;
- 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 3712186353fb..2a0289c14959 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1055,11 +1055,11 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
- 	if (thread_nr > n)
- 		thread_nr = n;
- 
--	synthesize_threads = calloc(sizeof(pthread_t), thread_nr);
-+	synthesize_threads = calloc(thread_nr, sizeof(pthread_t));
- 	if (synthesize_threads == NULL)
- 		goto free_dirent;
- 
--	args = calloc(sizeof(*args), thread_nr);
-+	args = calloc(thread_nr, sizeof(*args));
- 	if (args == NULL)
- 		goto free_threads;
- 
--- 
-2.31.4
+I sent patch v8 on the LKML [1], patch v8 has converted the doc to RST
+format and with other amending, this is why I didn't add your Acked tag
+in it.
 
+Anyway, thanks for review and sorry for my long delayed response.
+
+Leo
+
+[1] https://lore.kernel.org/lkml/20240102085001.228815-1-leo.yan@linaro.org/
