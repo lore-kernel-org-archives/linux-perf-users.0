@@ -1,114 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F31746426;
-	Mon,  8 Jan 2024 20:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FThsp3xN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9E33C433C7;
-	Mon,  8 Jan 2024 20:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704745741;
-	bh=9QqXExmB1PYiwPIr7Z0u96Dq7FC48cHdCEq9lA8r8Kk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=FThsp3xNuCDpVEfZLpPeoka2ZmIFgWhKhYpu+Iw41CN1ndtUcZUUsvbTCMmM64FxH
-	 ZfH7eBZDXOLXT4apKN+XTpRgJ1KyTnrFBVUNffY0dadKSf2D7DMhbEKIyE+5n0DrB+
-	 VvT5auZ+Q8K6ZHPgk4kAhtWdhBjP+tkepaOP9iTTmUzyCZ1rNUr58N/1eDMY0WvIXt
-	 E4vV6zlKuLYO2MzAkPLkfWDtFMjKhiTTkhU9Q3MMn6cP53FGbzkpUaVW7yu7otEsv7
-	 DL0SYBeHQtdGZX1+84QATjIIEYOy/OFZf6LnMGjg9Zjlcm/NItfBWP7RCq1FTTvTsU
-	 CVMacnoedZY7g==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id C1EEB403EF; Mon,  8 Jan 2024 17:28:57 -0300 (-03)
-Date: Mon, 8 Jan 2024 17:28:57 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	Kate Carcia Poulin <kcarcia@redhat.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: FYI: perf tools co-maintainer
-Message-ID: <ZZxbCeVPnOjShbMQ@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4435674A
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jan 2024 22:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cdf76cde78so765101a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jan 2024 14:09:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704751798; x=1705356598;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JbC+D584W0D0KSugGapjXBZmgIZVeoM2WZDjYENxdGs=;
+        b=I9lwUszx92I2LDLGTS7aC3VGmhfZQrII3oYUPCPFgJuHWdYr2SqnO8wS/QwhuDhW4V
+         9AV9HoSNwctHIy4K5Ihr8hGCZ2G2Vbu24CC4cnkr18RUsKatF15QikrtxTep/NrFv7jb
+         zk6X30i3UwbgPFsmFOfXcqIWSzBT051VneXLxh06DkDGGSk/zgH1x+eLRHy3D4Keq/TN
+         vL4UC5ET7uJ+/TjmBQfIVePYO996TLQGLTmWVzwai7wMpTucNwA/wgdVX2ZbvijaFUsV
+         TXmikkx3/I0PCeBGdKjQQHuXZlVFYlcOiLne2ofkHbD+HOLXci4/aQZgB7tk645aCR+j
+         Wg+Q==
+X-Gm-Message-State: AOJu0Yz8eNmMvKDW9B7h0e2aAdYGY37PJvEsBOGhoASYePUYl0gQWsUR
+	H4Yt14XcuaZ5gYfUExFUsix+bv0J5yfkVwwvoXs=
+X-Google-Smtp-Source: AGHT+IHJWWTI2kEhMaM5T+XfLJ+1liongkoQ4kXMbj9ECcYldMAaEJL5JfdOwAv//vWv+q0EWSDBybG9jbcTFz8ESsc=
+X-Received: by 2002:a17:90a:b318:b0:28c:fb01:a2d5 with SMTP id
+ d24-20020a17090ab31800b0028cfb01a2d5mr1625089pjr.67.1704751798329; Mon, 08
+ Jan 2024 14:09:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Url: http://acmel.wordpress.com
+References: <20240106094129.3337057-1-siyanteng@loongson.cn>
+In-Reply-To: <20240106094129.3337057-1-siyanteng@loongson.cn>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 8 Jan 2024 14:09:47 -0800
+Message-ID: <CAM9d7ciJ-H6+K_W02OsgV-LyJ_eBzH=5idDB9-TQ31Dv2_pFXA@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf: Fix compiler error when using gcc-14.
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, Sun Haiyong <sunhaiyong@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-	Just reflecting what has been happening lately: We're taking
-turns processing perf tools patches, for v6.8 I'm now preparing a pull
-request for the patches currently in the perf-tools-next branch and then
-will make it become the perf-tools branch, that will receive just fixes
-for v6.8, Namhyung will then collect new stuff into the new
-perf-tools-next for v6.9, we'll switch again for v6.10, etc.
+On Sat, Jan 6, 2024 at 1:41=E2=80=AFAM Yanteng Si <siyanteng@loongson.cn> w=
+rote:
+>
+> From: Sun Haiyong <sunhaiyong@loongson.cn>
+>
+> the definition of calloc is as follows:
+>     void *calloc(size_t nmemb, size_t size);
+> number of members is in the first parameter and the size is in the second
+> parameter.
+>
+> fixed error message on the gcc 14 20240102:
+> error: 'calloc' sizes specified with 'sizeof' in the earlier argument and
+> not in the later argument [-Werror=3Dcalloc-transposed-args]
+>
+> Signed-off-by: Sun Haiyong <sunhaiyong@loongson.cn>
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
 
-	Now I can go and get hit by a bus without worrying too much ;-)
-
-- Arnaldo
-
-From 05309c7bb7373fb9f1dcbb6abd8376c7bfbf17c1 Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Mon, 8 Jan 2024 17:11:13 -0300
-Subject: [PATCH 1/1] MAINTAINERS: Add Namhyung as tools/perf/ co-maintainer
-
-Acked-by: Ingo Molnar <mingo@elte.hu>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9104430e148e6d47..041ef848d7369a03 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16889,24 +16889,24 @@ F:	mm/percpu*.c
- PER-TASK DELAY ACCOUNTING
- M:	Balbir Singh <bsingharora@gmail.com>
- S:	Maintained
- F:	include/linux/delayacct.h
- F:	kernel/delayacct.c
- 
- PERFORMANCE EVENTS SUBSYSTEM
- M:	Peter Zijlstra <peterz@infradead.org>
- M:	Ingo Molnar <mingo@redhat.com>
- M:	Arnaldo Carvalho de Melo <acme@kernel.org>
-+M:	Namhyung Kim <namhyung@kernel.org>
- R:	Mark Rutland <mark.rutland@arm.com>
- R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
- R:	Jiri Olsa <jolsa@kernel.org>
--R:	Namhyung Kim <namhyung@kernel.org>
- R:	Ian Rogers <irogers@google.com>
- R:	Adrian Hunter <adrian.hunter@intel.com>
- L:	linux-perf-users@vger.kernel.org
- L:	linux-kernel@vger.kernel.org
- S:	Supported
- W:	https://perf.wiki.kernel.org/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
- F:	arch/*/events/*
--- 
-2.43.0
+Thanks,
+Namhyung
 
+> ---
+>  tools/perf/builtin-record.c        | 4 ++--
+>  tools/perf/util/hist.c             | 4 ++--
+>  tools/perf/util/metricgroup.c      | 2 +-
+>  tools/perf/util/synthetic-events.c | 4 ++--
+>  4 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 91e6828c38cc..86c910125172 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -4080,8 +4080,8 @@ int cmd_record(int argc, const char **argv)
+>         }
+>
+>         if (rec->switch_output.num_files) {
+> -               rec->switch_output.filenames =3D calloc(sizeof(char *),
+> -                                                     rec->switch_output.=
+num_files);
+> +               rec->switch_output.filenames =3D calloc(rec->switch_outpu=
+t.num_files,
+> +                                                     sizeof(char *));
+>                 if (!rec->switch_output.filenames) {
+>                         err =3D -EINVAL;
+>                         goto out_opts;
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 0888b7163b7c..fa359180ebf8 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -491,8 +491,8 @@ static int hist_entry__init(struct hist_entry *he,
+>         }
+>
+>         if (symbol_conf.res_sample) {
+> -               he->res_samples =3D calloc(sizeof(struct res_sample),
+> -                                       symbol_conf.res_sample);
+> +               he->res_samples =3D calloc(symbol_conf.res_sample,
+> +                                       sizeof(struct res_sample));
+>                 if (!he->res_samples)
+>                         goto err_srcline;
+>         }
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index ca3e0404f187..966cca5a3e88 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -286,7 +286,7 @@ static int setup_metric_events(const char *pmu, struc=
+t hashmap *ids,
+>         *out_metric_events =3D NULL;
+>         ids_size =3D hashmap__size(ids);
+>
+> -       metric_events =3D calloc(sizeof(void *), ids_size + 1);
+> +       metric_events =3D calloc(ids_size + 1, sizeof(void *));
+>         if (!metric_events)
+>                 return -ENOMEM;
+>
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
+ic-events.c
+> index 3712186353fb..2a0289c14959 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -1055,11 +1055,11 @@ int perf_event__synthesize_threads(struct perf_to=
+ol *tool,
+>         if (thread_nr > n)
+>                 thread_nr =3D n;
+>
+> -       synthesize_threads =3D calloc(sizeof(pthread_t), thread_nr);
+> +       synthesize_threads =3D calloc(thread_nr, sizeof(pthread_t));
+>         if (synthesize_threads =3D=3D NULL)
+>                 goto free_dirent;
+>
+> -       args =3D calloc(sizeof(*args), thread_nr);
+> +       args =3D calloc(thread_nr, sizeof(*args));
+>         if (args =3D=3D NULL)
+>                 goto free_threads;
+>
+> --
+> 2.31.4
+>
