@@ -1,112 +1,134 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176DC250F5
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jan 2024 07:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F344639FF9;
+	Tue,  9 Jan 2024 14:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jwUqrDO8"
-Date: Tue, 9 Jan 2024 16:50:05 +0900
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1704786616;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jC0LcHQAj5sU6xwMTRYWTxbuyexf66+yJ6ABxO0uBs8=;
-	b=jwUqrDO82RRuyPdvS0rbiSFrAaCsnr36tatZfwTSAjpYXF/JsXX4ArfR4ppv7ySIAWpAWJ
-	FVLMSBY8knAInm+HUW82uHpkXvVGvy6W3kgyNYyeKGazDmf+7NKAuNLfaYPmxbfgwEKX5M
-	McDblqfMjuevQgCN5Hz1rstUOV5CBuk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Zenghui Yu <yuzenghui@huawei.com>, Eric Auger <eauger@redhat.com>,
-	kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Jing Zhang <jingzhangos@google.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 5/5] KVM: arm64: selftests: Test for setting ID
- register from usersapce
-Message-ID: <ZZz6rfBKsN14GMaq@vm3>
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-6-oliver.upton@linux.dev>
- <e0facec9-8c50-10cb-fd02-1214f9a49571@redhat.com>
- <ab1337bc-d4a2-0afc-3e26-0d50dff4ea73@huawei.com>
- <ZZx5y_iy9kXg47SW@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="laJdzEYA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704808912; x=1736344912;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QRtm/mna3beZbvd3P0MsywkRDxcn22Ksxbb0Rs/W1hw=;
+  b=laJdzEYA/Kws7iwVoY5jCZC7EPi5DDiIR7Cf02PhK4kIrqppI5WKraHv
+   skeKcjliiRUCmenGhQswBuGJGuDNlViALWmLKnXlTc9AeyVZMpvRmmRyt
+   eeaaDWtMTMHzuwg9nHLsJYrb0md+kxEbe1AyTBx23hVCIWY6KzdB0Exoo
+   O/kueysFZy+cbUu4bWjIQcrhH8Stjm4Ft/XHx/OWDLqlvVjCo2MQnLUYo
+   PLvFW5JG1nmwTWCGndLH+yU1eJNXPTiy3+c865Snkx5zY3KLv2zomm57y
+   6LlsW2TaZ7mcN55k2IHm4zP9xvx2fCrTQNgww4+ATufsrMdyNploOEMvS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="5570616"
+X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
+   d="scan'208";a="5570616"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 06:01:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
+   d="scan'208";a="23577791"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 06:01:50 -0800
+Received: from [10.212.123.48] (unknown [10.212.123.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id B6C84580D28;
+	Tue,  9 Jan 2024 06:01:47 -0800 (PST)
+Message-ID: <1417fcb1-4d16-481b-b043-acf022de07fd@linux.intel.com>
+Date: Tue, 9 Jan 2024 09:01:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZx5y_iy9kXg47SW@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 0/7] Clean up perf mem
+To: Leo Yan <leo.yan@linaro.org>
+Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org,
+ mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
+ adrian.hunter@intel.com, john.g.garry@oracle.com, will@kernel.org,
+ james.clark@arm.com, mike.leach@linaro.org, yuhaixin.yhx@linux.alibaba.com,
+ renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com, ravi.bangoria@amd.com,
+ atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+ <20240107040740.GA888@debian-dev>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240107040740.GA888@debian-dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 08, 2024 at 10:40:11PM +0000, Oliver Upton wrote:
-> Hi Zenghui,
-> 
-> On Fri, Jan 05, 2024 at 05:07:08PM +0800, Zenghui Yu wrote:
-> > On 2023/10/19 16:38, Eric Auger wrote:
-> > 
-> > > > +static const struct reg_ftr_bits ftr_id_aa64dfr0_el1[] = {
-> > > > +	S_REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64DFR0_EL1, PMUVer, 0),
-> > >
-> > > Strictly speaking this is not always safe to have a lower value. For
-> > > instance: From Armv8.1, if FEAT_PMUv3 is implemented, the value 0b0001
-> > > is not permitted. But I guess this consistency is to be taken into
-> > > account by the user space. But may be wort a comment. Here and below
-> > > 
-> > > You may at least clarify what does mean 'safe'
-> > >
-> > > > +	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64DFR0_EL1, DebugVer, 0),
-> > 
-> > I've seen the following failure on Cortex A72 where
-> > ID_AA64DFR0_EL1.DebugVer is 6.
-> 
-> Ah, yes, the test is wrong. KVM enforces a minimum value of 0x6 on this
-> field, yet get_safe_value() returns 0x5 for the field.
 
-This is observed with the RevC AEM FVP as well.
 
-Thanks,
-Itaru.
+On 2024-01-06 11:08 p.m., Leo Yan wrote:
+> On Wed, Dec 13, 2023 at 11:51:47AM -0800, kan.liang@linux.intel.com wrote:
+> 
+> [...]
+> 
+>> Introduce generic functions perf_mem_events__ptr(),
+>> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+>> ARCH specific ones.
+>> Simplify the perf_mem_event__supported().
+>>
+>> Only keeps the ARCH-specific perf_mem_events array in the corresponding
+>> mem-events.c for each ARCH.
+>>
+>> There is no functional change.
+>>
+>> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+>> etc. But I can only test it on two Intel platforms.
+>> Please give it try, if you have machines with other ARCHs.
+>>
+>> Here are the test results:
+>> Intel hybrid machine:
+>>
+>> $perf mem record -e list
+>> ldlat-loads  : available
+>> ldlat-stores : available
+>>
+>> $perf mem record -e ldlat-loads -v --ldlat 50
+>> calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
+>>
+>> $perf mem record -v
+>> calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
+>>
+>> $perf mem record -t store -v
+>> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+>>
+>>
+>> Intel SPR:
+>> $perf mem record -e list
+>> ldlat-loads  : available
+>> ldlat-stores : available
+>>
+>> $perf mem record -e ldlat-loads -v --ldlat 50
+>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
+>>
+>> $perf mem record -v
+>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
+>>
+>> $perf mem record -t store -v
+>> calling: record -e cpu/mem-stores/P
+> 
+> After applying this series, below tests pass with Arm SPE:
+> 
+> # ./perf c2c record -- /home/leoy/false_sharing.exe 2
+> # ./perf c2c report
+> 
+> # ./perf mem record -e list
+> # ./perf mem record -e spe-load -v --ldlat 50
+> # ./perf mem record -v
+> # ./perf mem report
+> # ./perf mem record -t store -v
+> # ./perf mem report
+> 
+> Tested-by: Leo Yan <leo.yan@linaro.org>
+>
 
-> 
-> Jing, do you have time to check this test for similar failures and send
-> out a fix for Zenghui's observations?
-> 
-> > # ./aarch64/set_id_regs
-> > TAP version 13
-> > 1..79
-> > ok 1 ID_AA64DFR0_EL1_PMUVer
-> > ==== Test Assertion Failure ====
-> >   include/kvm_util_base.h:553: !ret
-> >   pid=2288505 tid=2288505 errno=22 - Invalid argument
-> >      1	0x0000000000402787: vcpu_set_reg at kvm_util_base.h:553
-> > (discriminator 6)
-> >      2	 (inlined by) test_reg_set_success at set_id_regs.c:342
-> > (discriminator 6)
-> >      3	 (inlined by) test_user_set_reg at set_id_regs.c:413 (discriminator
-> > 6)
-> >      4	0x0000000000401943: main at set_id_regs.c:475
-> >      5	0x0000ffffbdd5d03b: ?? ??:0
-> >      6	0x0000ffffbdd5d113: ?? ??:0
-> >      7	0x0000000000401a2f: _start at ??:?
-> >   KVM_SET_ONE_REG failed, rc: -1 errno: 22 (Invalid argument)
-> 
-> -- 
-> Thanks,
-> Oliver
+Thanks Leo.
+
+Kan
+
