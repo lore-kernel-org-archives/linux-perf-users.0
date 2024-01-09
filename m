@@ -1,55 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BE24699;
-	Tue,  9 Jan 2024 04:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176DC250F5
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jan 2024 07:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxLdx2By"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 21312C4166C;
-	Tue,  9 Jan 2024 04:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704773063;
-	bh=INq9N/RBO+BUMf0NvqNuU1L9ysliXo0RWPdyZpegPcU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=QxLdx2ByrUxIfDWfU65IH/rYRHI/dHvxAbBec4aZoxxYzIyi2VsIt5EyvuV3XSMnk
-	 NtKe5jXKJ2wYgW5SgkU9eTKecR03jpayCJWXDi/nDkQXbLV+Ua2lkLA4QN4y1pI+X7
-	 Xwqwwi8ojiqrO8u6VNgFy8Ui6VYxJSiRl22ZBn6jgN1qgJ12sUDCkIar6TK6nk/VkE
-	 sWeOcJzv7cayWmz3jlVo9z1f1mTr07LfqwHM6wgiR/VsJGp3Vcclzj98I9fk82GbVN
-	 uZQor5I1xe/dxbqE2bH3PV+61nfrSU0DzkPqKqsNS8ovChMVxIY2A0PEj3xVVPv9dP
-	 NYJByx0HYSZNA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 10107DFC690;
-	Tue,  9 Jan 2024 04:04:23 +0000 (UTC)
-Subject: Re: [GIT PULL] Performance events changes for v6.8
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZZvi/bFoxFRnS4vp@gmail.com>
-References: <ZZvi/bFoxFRnS4vp@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZZvi/bFoxFRnS4vp@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2024-01-08
-X-PR-Tracked-Commit-Id: fdd041028f2294228e10610b4fca6a1a83ac683d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aac4de465af08ccec90ef47bdcc13435e48a7223
-Message-Id: <170477306306.30368.17690485857633138463.pr-tracker-bot@kernel.org>
-Date: Tue, 09 Jan 2024 04:04:23 +0000
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jwUqrDO8"
+Date: Tue, 9 Jan 2024 16:50:05 +0900
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1704786616;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jC0LcHQAj5sU6xwMTRYWTxbuyexf66+yJ6ABxO0uBs8=;
+	b=jwUqrDO82RRuyPdvS0rbiSFrAaCsnr36tatZfwTSAjpYXF/JsXX4ArfR4ppv7ySIAWpAWJ
+	FVLMSBY8knAInm+HUW82uHpkXvVGvy6W3kgyNYyeKGazDmf+7NKAuNLfaYPmxbfgwEKX5M
+	McDblqfMjuevQgCN5Hz1rstUOV5CBuk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Zenghui Yu <yuzenghui@huawei.com>, Eric Auger <eauger@redhat.com>,
+	kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	Jing Zhang <jingzhangos@google.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 5/5] KVM: arm64: selftests: Test for setting ID
+ register from usersapce
+Message-ID: <ZZz6rfBKsN14GMaq@vm3>
+References: <20231011195740.3349631-1-oliver.upton@linux.dev>
+ <20231011195740.3349631-6-oliver.upton@linux.dev>
+ <e0facec9-8c50-10cb-fd02-1214f9a49571@redhat.com>
+ <ab1337bc-d4a2-0afc-3e26-0d50dff4ea73@huawei.com>
+ <ZZx5y_iy9kXg47SW@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZx5y_iy9kXg47SW@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-The pull request you sent on Mon, 8 Jan 2024 12:56:45 +0100:
+On Mon, Jan 08, 2024 at 10:40:11PM +0000, Oliver Upton wrote:
+> Hi Zenghui,
+> 
+> On Fri, Jan 05, 2024 at 05:07:08PM +0800, Zenghui Yu wrote:
+> > On 2023/10/19 16:38, Eric Auger wrote:
+> > 
+> > > > +static const struct reg_ftr_bits ftr_id_aa64dfr0_el1[] = {
+> > > > +	S_REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64DFR0_EL1, PMUVer, 0),
+> > >
+> > > Strictly speaking this is not always safe to have a lower value. For
+> > > instance: From Armv8.1, if FEAT_PMUv3 is implemented, the value 0b0001
+> > > is not permitted. But I guess this consistency is to be taken into
+> > > account by the user space. But may be wort a comment. Here and below
+> > > 
+> > > You may at least clarify what does mean 'safe'
+> > >
+> > > > +	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64DFR0_EL1, DebugVer, 0),
+> > 
+> > I've seen the following failure on Cortex A72 where
+> > ID_AA64DFR0_EL1.DebugVer is 6.
+> 
+> Ah, yes, the test is wrong. KVM enforces a minimum value of 0x6 on this
+> field, yet get_safe_value() returns 0x5 for the field.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2024-01-08
+This is observed with the RevC AEM FVP as well.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aac4de465af08ccec90ef47bdcc13435e48a7223
+Thanks,
+Itaru.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> 
+> Jing, do you have time to check this test for similar failures and send
+> out a fix for Zenghui's observations?
+> 
+> > # ./aarch64/set_id_regs
+> > TAP version 13
+> > 1..79
+> > ok 1 ID_AA64DFR0_EL1_PMUVer
+> > ==== Test Assertion Failure ====
+> >   include/kvm_util_base.h:553: !ret
+> >   pid=2288505 tid=2288505 errno=22 - Invalid argument
+> >      1	0x0000000000402787: vcpu_set_reg at kvm_util_base.h:553
+> > (discriminator 6)
+> >      2	 (inlined by) test_reg_set_success at set_id_regs.c:342
+> > (discriminator 6)
+> >      3	 (inlined by) test_user_set_reg at set_id_regs.c:413 (discriminator
+> > 6)
+> >      4	0x0000000000401943: main at set_id_regs.c:475
+> >      5	0x0000ffffbdd5d03b: ?? ??:0
+> >      6	0x0000ffffbdd5d113: ?? ??:0
+> >      7	0x0000000000401a2f: _start at ??:?
+> >   KVM_SET_ONE_REG failed, rc: -1 errno: 22 (Invalid argument)
+> 
+> -- 
+> Thanks,
+> Oliver
