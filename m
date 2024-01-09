@@ -1,189 +1,55 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E37186E
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jan 2024 01:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BE24699;
+	Tue,  9 Jan 2024 04:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cy2yPlAh"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cd04078ebeso30726361fa.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jan 2024 17:32:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704763925; x=1705368725; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wqux+LcaKelggaB3rDs9tXbehWCfqmUp+Vj6CP8n9ZU=;
-        b=Cy2yPlAhvhAP0DNAsIdnnXZS63uxtLybIt5tBsGwu4ydwegSCGNwINRetVHSiptP+T
-         iGs5nz3QZEiCngJpXajh+gahSnatQKHYQXlQCVCAYBfmR2nLmfNkLuoI0lSaYbXHlUeO
-         bsVihfvpgXG6eztcSyAuq4d8fVRjGLzzYK5v5E4D8nMaR+QJRi6eT/sd0gkEEZkI8xba
-         9+I9pMSrynJ7fQS7pW1H3jXJsxsyN3qc1RMA6+qsjnNpBjj7/0dUwOGMZ7/fTP/BMWD3
-         lKEuRAK9oYROvCG5aTtD7HSYzIhXZCo/oXGbeq6hdhx90fjOxicOiGUQYpI/7kcxCBcJ
-         cpng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704763925; x=1705368725;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wqux+LcaKelggaB3rDs9tXbehWCfqmUp+Vj6CP8n9ZU=;
-        b=h32OguKAbnXrZEfYewxYsJUP0KlPhneX8aItyGx2OGSIdegGzas0QFC7QXQnBEIiwy
-         SrmchCZuig+UyNNpTU7JJLDYGntrkN8epSfZVRMAPBOl6xEqy0pVaE7yWNGuJZ8BSCHk
-         WbWavwk3i/2VpS9zCbGgtYYw5n+gNfqOJoqT0fDaCK+E+VTM3TMGlptpAMQ6e8OVZws0
-         lT7ocC9XMdIelTwYkWAwaa6iY9VKTBMXGBhnQ3NQmFkY8z1M9Px+DSenhwX7MZh7RyuE
-         Qoabgp3ttJLhS1ln9BdeCgYyJnYlue1uv95BMlz8PUlxUe3guftWs6jpcydlEcu5BgO2
-         YWqg==
-X-Gm-Message-State: AOJu0YyB420x6IN5ZpPhymnOEx/ZggaL/s4HOjHGhxyKMx5oFquEwrOJ
-	EEthqkTQuFEI5xnxNDLWGsx0QBly5QsHW5FCSvtx3txCMZMo
-X-Google-Smtp-Source: AGHT+IHIcdGC5FwkPbRs/JX9n0WUrV1i17KlbKSwO8N8Qs5NlsKrwN/fJYPmZ9xelKa6ETaAV4o/PzMo6xcxLCfQlts=
-X-Received: by 2002:a2e:9950:0:b0:2cd:191a:c1bf with SMTP id
- r16-20020a2e9950000000b002cd191ac1bfmr4343ljj.14.1704763924662; Mon, 08 Jan
- 2024 17:32:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxLdx2By"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 21312C4166C;
+	Tue,  9 Jan 2024 04:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704773063;
+	bh=INq9N/RBO+BUMf0NvqNuU1L9ysliXo0RWPdyZpegPcU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=QxLdx2ByrUxIfDWfU65IH/rYRHI/dHvxAbBec4aZoxxYzIyi2VsIt5EyvuV3XSMnk
+	 NtKe5jXKJ2wYgW5SgkU9eTKecR03jpayCJWXDi/nDkQXbLV+Ua2lkLA4QN4y1pI+X7
+	 Xwqwwi8ojiqrO8u6VNgFy8Ui6VYxJSiRl22ZBn6jgN1qgJ12sUDCkIar6TK6nk/VkE
+	 sWeOcJzv7cayWmz3jlVo9z1f1mTr07LfqwHM6wgiR/VsJGp3Vcclzj98I9fk82GbVN
+	 uZQor5I1xe/dxbqE2bH3PV+61nfrSU0DzkPqKqsNS8ovChMVxIY2A0PEj3xVVPv9dP
+	 NYJByx0HYSZNA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 10107DFC690;
+	Tue,  9 Jan 2024 04:04:23 +0000 (UTC)
+Subject: Re: [GIT PULL] Performance events changes for v6.8
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZZvi/bFoxFRnS4vp@gmail.com>
+References: <ZZvi/bFoxFRnS4vp@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZZvi/bFoxFRnS4vp@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2024-01-08
+X-PR-Tracked-Commit-Id: fdd041028f2294228e10610b4fca6a1a83ac683d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: aac4de465af08ccec90ef47bdcc13435e48a7223
+Message-Id: <170477306306.30368.17690485857633138463.pr-tracker-bot@kernel.org>
+Date: Tue, 09 Jan 2024 04:04:23 +0000
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231011195740.3349631-1-oliver.upton@linux.dev>
- <20231011195740.3349631-6-oliver.upton@linux.dev> <e0facec9-8c50-10cb-fd02-1214f9a49571@redhat.com>
- <ab1337bc-d4a2-0afc-3e26-0d50dff4ea73@huawei.com> <ZZx5y_iy9kXg47SW@linux.dev>
-In-Reply-To: <ZZx5y_iy9kXg47SW@linux.dev>
-From: Jing Zhang <jingzhangos@google.com>
-Date: Mon, 8 Jan 2024 17:31:51 -0800
-Message-ID: <CAAdAUtie4GFKAPhk4wDWnEmSOzWF+X-6eHwS79169JRv_=hKdg@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] KVM: arm64: selftests: Test for setting ID
- register from usersapce
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Zenghui Yu <yuzenghui@huawei.com>, Eric Auger <eauger@redhat.com>, kvm@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, James Morse <james.morse@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Zenghui,
+The pull request you sent on Mon, 8 Jan 2024 12:56:45 +0100:
 
-I don't have a Cortex A72 to fully verify the fix. Could you help
-verify the following change?
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2024-01-08
 
-diff --git a/tools/testing/selftests/kvm/aarch64/set_id_regs.c
-b/tools/testing/selftests/kvm/aarch64/set_id_regs.c
-index bac05210b539..f17454dc6d9e 100644
---- a/tools/testing/selftests/kvm/aarch64/set_id_regs.c
-+++ b/tools/testing/selftests/kvm/aarch64/set_id_regs.c
-@@ -224,13 +224,20 @@ uint64_t get_safe_value(const struct
-reg_ftr_bits *ftr_bits, uint64_t ftr)
- {
-        uint64_t ftr_max =3D GENMASK_ULL(ARM64_FEATURE_FIELD_BITS - 1, 0);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/aac4de465af08ccec90ef47bdcc13435e48a7223
 
--       if (ftr_bits->type =3D=3D FTR_UNSIGNED) {
-+       if (ftr_bits->sign =3D=3D FTR_UNSIGNED) {
-                switch (ftr_bits->type) {
-                case FTR_EXACT:
-                        ftr =3D ftr_bits->safe_val;
-                        break;
-                case FTR_LOWER_SAFE:
--                       if (ftr > 0)
-+                       uint64_t min_safe =3D 0;
-+
-+                       if (!strcmp(ftr_bits->name, "ID_AA64DFR0_EL1_DebugV=
-er"))
-+                               min_safe =3D ID_AA64DFR0_EL1_DebugVer_IMP;
-+                       else if (!strcmp(ftr_bits->name, "ID_DFR0_EL1_CopDb=
-g"))
-+                               min_safe =3D ID_DFR0_EL1_CopDbg_Armv8;
-+
-+                       if (ftr > min_safe)
-                                ftr--;
-                        break;
-                case FTR_HIGHER_SAFE:
-@@ -252,7 +259,12 @@ uint64_t get_safe_value(const struct reg_ftr_bits
-*ftr_bits, uint64_t ftr)
-                        ftr =3D ftr_bits->safe_val;
-                        break;
-                case FTR_LOWER_SAFE:
--                       if (ftr > 0)
-+                       uint64_t min_safe =3D 0;
-+
-+                       if (!strcmp(ftr_bits->name, "ID_DFR0_EL1_PerfMon"))
-+                               min_safe =3D ID_DFR0_EL1_PerfMon_PMUv3;
-+
-+                       if (ftr > min_safe)
-                                ftr--;
-                        break;
-                case FTR_HIGHER_SAFE:
-@@ -276,7 +288,7 @@ uint64_t get_invalid_value(const struct
-reg_ftr_bits *ftr_bits, uint64_t ftr)
- {
-        uint64_t ftr_max =3D GENMASK_ULL(ARM64_FEATURE_FIELD_BITS - 1, 0);
+Thank you!
 
--       if (ftr_bits->type =3D=3D FTR_UNSIGNED) {
-+       if (ftr_bits->sign =3D=3D FTR_UNSIGNED) {
-                switch (ftr_bits->type) {
-                case FTR_EXACT:
-                        ftr =3D max((uint64_t)ftr_bits->safe_val + 1, ftr +=
- 1);
-
-On Mon, Jan 8, 2024 at 2:40=E2=80=AFPM Oliver Upton <oliver.upton@linux.dev=
-> wrote:
->
-> Hi Zenghui,
->
-> On Fri, Jan 05, 2024 at 05:07:08PM +0800, Zenghui Yu wrote:
-> > On 2023/10/19 16:38, Eric Auger wrote:
-> >
-> > > > +static const struct reg_ftr_bits ftr_id_aa64dfr0_el1[] =3D {
-> > > > + S_REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64DFR0_EL1, PMUVer, 0),
-> > >
-> > > Strictly speaking this is not always safe to have a lower value. For
-> > > instance: From Armv8.1, if FEAT_PMUv3 is implemented, the value 0b000=
-1
-> > > is not permitted. But I guess this consistency is to be taken into
-> > > account by the user space. But may be wort a comment. Here and below
-> > >
-> > > You may at least clarify what does mean 'safe'
-> > >
-> > > > + REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64DFR0_EL1, DebugVer, 0),
-> >
-> > I've seen the following failure on Cortex A72 where
-> > ID_AA64DFR0_EL1.DebugVer is 6.
->
-> Ah, yes, the test is wrong. KVM enforces a minimum value of 0x6 on this
-> field, yet get_safe_value() returns 0x5 for the field.
->
-> Jing, do you have time to check this test for similar failures and send
-> out a fix for Zenghui's observations?
->
-> > # ./aarch64/set_id_regs
-> > TAP version 13
-> > 1..79
-> > ok 1 ID_AA64DFR0_EL1_PMUVer
-> > =3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D
-> >   include/kvm_util_base.h:553: !ret
-> >   pid=3D2288505 tid=3D2288505 errno=3D22 - Invalid argument
-> >      1        0x0000000000402787: vcpu_set_reg at kvm_util_base.h:553
-> > (discriminator 6)
-> >      2         (inlined by) test_reg_set_success at set_id_regs.c:342
-> > (discriminator 6)
-> >      3         (inlined by) test_user_set_reg at set_id_regs.c:413 (dis=
-criminator
-> > 6)
-> >      4        0x0000000000401943: main at set_id_regs.c:475
-> >      5        0x0000ffffbdd5d03b: ?? ??:0
-> >      6        0x0000ffffbdd5d113: ?? ??:0
-> >      7        0x0000000000401a2f: _start at ??:?
-> >   KVM_SET_ONE_REG failed, rc: -1 errno: 22 (Invalid argument)
->
-> --
-> Thanks,
-> Oliver
-
-Thanks,
-Jing
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
