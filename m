@@ -1,67 +1,51 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E863EA82;
-	Wed, 10 Jan 2024 08:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVeMmdAa"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d3b84173feso7686205ad.1;
-        Wed, 10 Jan 2024 00:12:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704874349; x=1705479149; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iYaz82mYYzCwX1xxNWNg9eztYs/P62dbK5BPPUgSW7A=;
-        b=bVeMmdAa/ZnF9uxmuvX0BQN6P9WSbE46OShI8wg4e4R5wFZBJUyXohtUnHb5iks8/o
-         YbW8wxO9xnA5N+A6FhJK4OTtj6YQtX9VvfstnIJY+kli1XVUUCONHtPSrou7nqK3AyVO
-         xKotmeXzgWAvpX7rUO8E7exlnwAe5OIQLBzFUgifq5Cq6DSxd9Mw0gUv2u1fibB2ygw0
-         uLlUuHifuf+/anVaG4TrmGGdW/bQoawdVwi3ME+I+nKya+IWKjJgoJ6AJRHP3W6IGwzS
-         sIzbrU10XwkuOcLpa/Zv6EJIOeY2lQsQ9yXdDlYKkVwkcSzZwFUm/qKP5JD9ENCr2yN/
-         QOWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704874349; x=1705479149;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iYaz82mYYzCwX1xxNWNg9eztYs/P62dbK5BPPUgSW7A=;
-        b=RmShWWfO9gAz9ylv6DUkNVFS3SB9wSfyN11ZT/0Sx4Nqko6dWW64UJisU2eFSltSZe
-         KTjX4CMw0nOeEu4qRKrvXyr109AqcHVSaUANYpyqK7BdXKhmEKeMdALtCwAm2x84sPE0
-         x2TPmpmvaY0QHQmAauT7VAjvT1cZPBms73WC9Ccb3P1YzfE/+5srmHZEJHRdwN765avQ
-         bNdr8zSAjOJfMm+1PukPmiSWoZf+8hsg4N5gvR7dQsoMHyLMQTG63wJnCcnsJSdnMwvz
-         5dX4OQG2IfkXpFLC/HLPfQAESYvE+8hT3HN89QxQfJOYNghHbCAEJ6dCOeqWs6LUpMZl
-         ixAg==
-X-Gm-Message-State: AOJu0YzmIGf1nGOV0doTdS7PBh7L0u3idgat8J1FjGDFuOFlj6dBNZqM
-	nLF4N4YRheFfIylYWB91B20=
-X-Google-Smtp-Source: AGHT+IHpdXji4t0wxJVbSPH8Z2/slBHqUAFGgIFZITd1/McXsQZu63Yz4Pa307KIahaW3bvcuHPVrw==
-X-Received: by 2002:a17:902:9a90:b0:1d4:e308:d6fb with SMTP id w16-20020a1709029a9000b001d4e308d6fbmr1207351plp.5.1704874349630;
-        Wed, 10 Jan 2024 00:12:29 -0800 (PST)
-Received: from localhost.localdomain ([140.116.154.65])
-        by smtp.gmail.com with ESMTPSA id c12-20020a170902b68c00b001cf51972586sm3044243pls.292.2024.01.10.00.12.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 00:12:29 -0800 (PST)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: akpm@linux-foundation.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [RESEND PATCH v2 2/2] lib min_heap: Optimize number of comparisons in min_heapify()
-Date: Wed, 10 Jan 2024 16:12:13 +0800
-Message-Id: <20240110081213.2289636-3-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240110081213.2289636-1-visitorckw@gmail.com>
-References: <20240110081213.2289636-1-visitorckw@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F343D968;
+	Wed, 10 Jan 2024 08:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
+	by Atcsqr.andestech.com with ESMTP id 40A7fsA7088607;
+	Wed, 10 Jan 2024 15:41:54 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
+	by Atcsqr.andestech.com with ESMTP id 40A7eSD3086789;
+	Wed, 10 Jan 2024 15:40:28 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Wed, 10 Jan 2024
+ 15:40:23 +0800
+From: Yu Chien Peter Lin <peterlin@andestech.com>
+To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
+        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
+        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
+        <conor.dooley@microchip.com>, <conor@kernel.org>,
+        <devicetree@vger.kernel.org>, <dminus@andestech.com>,
+        <evan@rivosinc.com>, <geert+renesas@glider.be>, <guoren@kernel.org>,
+        <heiko@sntech.de>, <irogers@google.com>, <jernej.skrabec@gmail.com>,
+        <jolsa@kernel.org>, <jszhang@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
+        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
+        <paul.walmsley@sifive.com>, <peterlin@andestech.com>,
+        <peterz@infradead.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <rdunlap@infradead.org>, <robh+dt@kernel.org>, <samuel@sholland.org>,
+        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
+        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
+        <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>,
+        <chao.wei@sophgo.com>, <unicorn_wang@outlook.com>, <wefu@redhat.com>
+Subject: [PATCH v7 12/16] riscv: dts: sophgo: Add T-Head PMU extension for cv1800b
+Date: Wed, 10 Jan 2024 15:39:13 +0800
+Message-ID: <20240110073917.2398826-13-peterlin@andestech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240110073917.2398826-1-peterlin@andestech.com>
+References: <20240110073917.2398826-1-peterlin@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,85 +53,41 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 40A7fsA7088607
 
-Optimize the min_heapify() function, resulting in a significant
-reduction of approximately 50% in the number of comparisons for large
-random inputs, while maintaining identical results.
+xtheadpmu stands for T-Head Performance Monitor Unit extension.
+Based on the added T-Head PMU ISA string, the SBI PMU driver
+will make use of the non-standard irq source.
 
-The current implementation performs two comparisons per level to
-identify the minimum among three elements. In contrast, the proposed
-bottom-up variation uses only one comparison per level to assess two
-children until reaching the leaves. Then, it sifts up until the correct
-position is determined.
-
-Typically, the process of sifting down proceeds to the leaf level,
-resulting in O(1) secondary comparisons instead of log2(n). This
-optimization significantly reduces the number of costly indirect
-function calls and improves overall performance.
-
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- include/linux/min_heap.h | 42 +++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 20 deletions(-)
+Changes v4 -> v5:
+  - New patch
+Changes v5 -> v6:
+  - Include Conor's Acked-by
+Changes v6 -> v7:
+  - No change
+---
+ arch/riscv/boot/dts/sophgo/cv1800b.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
-index 18a581310eb3..d52daf45861b 100644
---- a/include/linux/min_heap.h
-+++ b/include/linux/min_heap.h
-@@ -35,31 +35,33 @@ static __always_inline
- void min_heapify(struct min_heap *heap, int pos,
- 		const struct min_heap_callbacks *func)
- {
--	void *left, *right, *parent, *smallest;
-+	void *left, *right;
- 	void *data = heap->data;
-+	void *root = data + pos * func->elem_size;
-+	int i = pos, j;
+diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+index df40e87ee063..74655ea45b28 100644
+--- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
++++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+@@ -29,7 +29,7 @@ cpu0: cpu@0 {
+ 			riscv,isa = "rv64imafdc";
+ 			riscv,isa-base = "rv64i";
+ 			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "zicntr", "zicsr",
+-					       "zifencei", "zihpm";
++					       "zifencei", "zihpm", "xtheadpmu";
  
-+	/* Find the sift-down path all the way to the leaves. */
- 	for (;;) {
--		if (pos * 2 + 1 >= heap->nr)
-+		if (i * 2 + 2 >= heap->nr)
- 			break;
-+		left = data + (i * 2 + 1) * func->elem_size;
-+		right = data + (i * 2 + 2) * func->elem_size;
-+		i = func->less(left, right) ? i * 2 + 1 : i * 2 + 2;
-+	}
- 
--		left = data + ((pos * 2 + 1) * func->elem_size);
--		parent = data + (pos * func->elem_size);
--		smallest = parent;
--		if (func->less(left, smallest))
--			smallest = left;
--
--		if (pos * 2 + 2 < heap->nr) {
--			right = data + ((pos * 2 + 2) * func->elem_size);
--			if (func->less(right, smallest))
--				smallest = right;
--		}
--		if (smallest == parent)
--			break;
--		func->swp(smallest, parent);
--		if (smallest == left)
--			pos = (pos * 2) + 1;
--		else
--			pos = (pos * 2) + 2;
-+	/* Special case for the last leaf with no sibling. */
-+	if (i * 2 + 2 == heap->nr)
-+		i = i * 2 + 1;
-+
-+	/* Backtrack to the correct location. */
-+	while (i != pos && func->less(root, data + i * func->elem_size))
-+		i = (i - 1) / 2;
-+
-+	/* Shift the element into its correct place. */
-+	j = i;
-+	while (i != pos) {
-+		i = (i - 1) / 2;
-+		func->swp(data + i * func->elem_size, data + j * func->elem_size);
- 	}
- }
- 
+ 			cpu0_intc: interrupt-controller {
+ 				compatible = "riscv,cpu-intc";
 -- 
-2.25.1
+2.34.1
 
