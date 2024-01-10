@@ -1,120 +1,215 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911F04CB21;
-	Wed, 10 Jan 2024 13:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W-MODhG_1704894525;
-Received: from 30.212.171.107(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0W-MODhG_1704894525)
-          by smtp.aliyun-inc.com;
-          Wed, 10 Jan 2024 21:48:47 +0800
-Message-ID: <cf0259fc-4a44-4507-97be-e7b38d693604@linux.alibaba.com>
-Date: Wed, 10 Jan 2024 21:48:44 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E43D4BA9B
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jan 2024 15:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="TklbYuii"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3606f133b1fso11763885ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jan 2024 07:11:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1704899488; x=1705504288; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u7dnx0armDk/+RvWWpSg/XyhmNCzgM7h7SgaiA/YSV0=;
+        b=TklbYuiioxlzjnWfAA24zNXJlHUJ8ZH1uZVbhZ696vnd2G3jJ8Ko9rhkdiyfh9xLgX
+         t/jTP9OI8Q2iBqKqYFYV1Znshpcsaic/1pHXVGjj7RKbjOiRGZoKch11IulXC4GIEpk5
+         5+rFCjENgBwniQJDhzFSIpRa6fHzcSNalGWibqv/H0xUxCMFJme3WZGxMg7exb3TCWvX
+         wk5Fw+/Cqv5IwmHFsuUVq26CrXMUvE99iaJGPNzPD4IHYo4GzU1n9MnHUIBGSXMzm5L0
+         nQW7v0rrntORL8uHR5hAF/mQ6odNs5Qh/ethdEEwtCbtHxgP6CX8uzZxE1PwvU50JFGM
+         eFgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704899488; x=1705504288;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u7dnx0armDk/+RvWWpSg/XyhmNCzgM7h7SgaiA/YSV0=;
+        b=Dsx32fqrxoLyW4dJis3i1K8gHcAd71MwHfhkmzymWu9b2d9AGtwDk90auy6c53Oec+
+         voeCeEc8MmPupbp3fPvyqxJnBATCEQTYe7EV7VnMtHm8KCNh26YEo9FSwwQy4SK1ERxI
+         84GzjGGzqcBRs8xZV+Z7p+gg1HUqUi7GaHsg3UmC0N/BRluNbu4pNwhnNmlAPpmv1GA3
+         c1lmfY6U9tCQ6QZFXfgONpiThirqdJ5e/ItqUfM2OZlRXWr9LbT2YXlc5+BuWd6CXvvk
+         inuqBBvUyd8WydsD/DG3s98mau0+m3UMHq8VUSe86ihkq/ltxUrwcThnR5Qc63XlkyeX
+         rx6w==
+X-Gm-Message-State: AOJu0Yy4A9MSyU0vzpiv8qLv+GBuZtw6Xp6kF+FLdyGrmIQJ/ZNTtdvo
+	4woo93mjtNF0Y7nO1ld91d/KN0mT+KLR9bYwu7sJ7akOQAjL6A==
+X-Google-Smtp-Source: AGHT+IEuq58zauZkEQ1xO5LVtDSLalCCv+/Jivx2TA3XmedpEjlVHqJRGlt6ZOsWmnTKoMBajwuUrebUCLahkbpfozk=
+X-Received: by 2002:a92:c56b:0:b0:360:8a0b:50dc with SMTP id
+ b11-20020a92c56b000000b003608a0b50dcmr143554ilj.10.1704899488291; Wed, 10 Jan
+ 2024 07:11:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] perf scripts python: arm-cs-trace-disasm.py: add
- option to print virtual address
-To: Leo Yan <leo.yan@linaro.org>
-Cc: linux-kernel@vger.kernel.org, james.clark@arm.com,
- coresight@lists.linaro.org, suzuki.poulose@arm.com, mike.leach@linaro.org,
- alexander.shishkin@linux.intel.com, linux-arm-kernel@lists.infradead.org,
- adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, al.grant@arm.com,
- mathieu.poirier@linaro.org, tor@ti.com, acme@redhat.com
-References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
- <20240110025617.66646-1-tianruidong@linux.alibaba.com>
- <20240110025617.66646-2-tianruidong@linux.alibaba.com>
- <20240110125544.GG44@debian-dev>
-Content-Language: en-US
-From: Ruidong Tian <tianruidong@linux.alibaba.com>
-In-Reply-To: <20240110125544.GG44@debian-dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240110073917.2398826-1-peterlin@andestech.com> <20240110073917.2398826-3-peterlin@andestech.com>
+In-Reply-To: <20240110073917.2398826-3-peterlin@andestech.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Wed, 10 Jan 2024 20:41:16 +0530
+Message-ID: <CAAhSdy1KLSFBA_vD+NX15wuiOsz5QadQWj4ZWOK11qfL1LuHqA@mail.gmail.com>
+Subject: Re: [PATCH v7 02/16] irqchip/riscv-intc: Allow large non-standard
+ interrupt number
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
+	aou@eecs.berkeley.edu, atishp@atishpatra.org, conor+dt@kernel.org, 
+	conor.dooley@microchip.com, conor@kernel.org, devicetree@vger.kernel.org, 
+	dminus@andestech.com, evan@rivosinc.com, geert+renesas@glider.be, 
+	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
+	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
+	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
+	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
+	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
+	uwu@icenowy.me, wens@csie.org, will@kernel.org, ycliang@andestech.com, 
+	inochiama@outlook.com, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
+	wefu@redhat.com, Randolph <randolph@andestech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Leo:
+On Wed, Jan 10, 2024 at 1:10=E2=80=AFPM Yu Chien Peter Lin
+<peterlin@andestech.com> wrote:
+>
+> Currently, the implementation of the RISC-V INTC driver uses the
+> interrupt cause as the hardware interrupt number, with a maximum of
+> 64 interrupts. However, the platform can expand the interrupt number
+> further for custom local interrupts.
+>
+> To fully utilize the available local interrupt sources, switch
+> to using irq_domain_create_tree() that creates the radix tree
+> map, add global variables (riscv_intc_nr_irqs, riscv_intc_custom_base
+> and riscv_intc_custom_nr_irqs) to determine the valid range of local
+> interrupt number (hwirq).
+>
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Reviewed-by: Randolph <randolph@andestech.com>
 
-Thank you very much for your advice. I will remove your SoB
-and add 02 and 03 patch in V3.
+Looks good to me.
 
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-在 2024/1/10 20:55, Leo Yan 写道:
-> Hi Ruidong,
+Regards,
+Anup
+
+> ---
+> Changes v1 -> v2:
+>   - Fixed irq mapping failure checking (suggested by Cl=C3=A9ment and Anu=
+p)
+> Changes v2 -> v3:
+>   - No change
+> Changes v3 -> v4: (Suggested by Thomas [1])
+>   - Use pr_warn_ratelimited instead
+>   - Fix coding style and commit message
+> Changes v4 -> v5: (Suggested by Thomas)
+>   - Fix commit message
+> Changes v5 -> v6: (Suggested by Anup [2])
+>   - Add riscv_intc_* global variables for checking range in riscv_intc_do=
+main_alloc()
+>   - Advertise the number of interrupts allowed
+> Changes v6 -> v7:
+>   - No functional change
 >
-> On Wed, Jan 10, 2024 at 10:56:17AM +0800, Ruidong Tian wrote:
->> arm-cs-trace-disasm just print offset for library dso now:
->>
->>      0000000000002200 <memcpy>:
->>          2200: d503201f      nop
->>          2204: 8b020024      add     x4, x1, x2
->>          2208: 8b020005      add     x5, x0, x2
->>
->> Add a option `-a` to print virtual offset other than offset:
->>
->>      # perf script -s scripts/python/arm-cs-trace-disasm.py -- -d llvm-objdump -a
->>      ...
->>      ffffb4c23200 <memcpy>:
->>          ffffb4c23200: d503201f      nop
->>          ffffb4c23204: 8b020024      add     x4, x1, x2
->>          ffffb4c23208: 8b020005      add     x5, x0, x2
->>      ...
->>
->> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
->> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> I only gave suggestion, it's no need to add my SoB and this might break
-> the SoB chain and rejected by maintainers.
+> [1] https://patchwork.kernel.org/project/linux-riscv/patch/20231023004100=
+.2663486-3-peterlin@andestech.com/#25573085
+> [2] https://patchwork.kernel.org/project/linux-riscv/patch/20231213070301=
+.1684751-3-peterlin@andestech.com/#25636589
+> ---
+>  drivers/irqchip/irq-riscv-intc.c | 30 +++++++++++++++++++++++-------
+>  1 file changed, 23 insertions(+), 7 deletions(-)
 >
-> So with removing my SoB, the patch is fine for me:
+> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
+-intc.c
+> index e8d01b14ccdd..b13a16b164c9 100644
+> --- a/drivers/irqchip/irq-riscv-intc.c
+> +++ b/drivers/irqchip/irq-riscv-intc.c
+> @@ -19,15 +19,17 @@
+>  #include <linux/smp.h>
 >
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+>  static struct irq_domain *intc_domain;
+> +static unsigned int riscv_intc_nr_irqs __ro_after_init;
+> +static unsigned int riscv_intc_custom_base __ro_after_init;
+> +static unsigned int riscv_intc_custom_nr_irqs __ro_after_init;
 >
-> I would like to suggest you to resend patch set v2 with all patches
-> - though patches 02 and 03 have no any change, but it would be easier
-> for maintainers to pick up the whole patches (especially this can save
-> time with b4 tool).
+>  static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
+>  {
+>         unsigned long cause =3D regs->cause & ~CAUSE_IRQ_FLAG;
 >
-> Thanks,
-> Leo
+> -       if (unlikely(cause >=3D BITS_PER_LONG))
+> -               panic("unexpected interrupt cause");
+> -
+> -       generic_handle_domain_irq(intc_domain, cause);
+> +       if (generic_handle_domain_irq(intc_domain, cause))
+> +               pr_warn_ratelimited("Failed to handle interrupt (cause: %=
+ld)\n",
+> +                                   cause);
+>  }
 >
->> ---
->>   tools/perf/scripts/python/arm-cs-trace-disasm.py | 13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
->> index d973c2baed1c..78419498237e 100755
->> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
->> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
->> @@ -36,7 +36,10 @@ option_list = [
->>   		    help="Set path to objdump executable file"),
->>   	make_option("-v", "--verbose", dest="verbose",
->>   		    action="store_true", default=False,
->> -		    help="Enable debugging log")
->> +		    help="Enable debugging log"),
->> +	make_option("-a", "--vaddr", dest="vaddr",
->> +			action="store_true", default=False,
->> +			help="Enable virtual address")
->>   ]
->>   
->>   parser = OptionParser(option_list=option_list)
->> @@ -108,6 +111,14 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
->>   			m = disasm_re.search(line)
->>   			if m is None:
->>   				continue
->> +
->> +		# Replace offset with virtual address
->> +		if (options.vaddr == True):
->> +			offset = re.search(r"^\s*([0-9a-fA-F]+)", line).group()
->> +			if offset:
->> +				virt_addr = dso_start + int(offset, 16)
->> +				line = line.replace(offset.lstrip(), "%x" % virt_addr)
->> +
->>   		print("\t" + line)
->>   
->>   def print_sample(sample):
->> -- 
->> 2.33.1
->>
+>  /*
+> @@ -93,6 +95,14 @@ static int riscv_intc_domain_alloc(struct irq_domain *=
+domain,
+>         if (ret)
+>                 return ret;
+>
+> +       /*
+> +        * Only allow hwirq for which we have corresponding standard or
+> +        * custom interrupt enable register.
+> +        */
+> +       if ((riscv_intc_nr_irqs <=3D hwirq && hwirq < riscv_intc_custom_b=
+ase) ||
+> +           (riscv_intc_custom_base + riscv_intc_custom_nr_irqs) <=3D hwi=
+rq)
+> +               return -EINVAL;
+> +
+>         for (i =3D 0; i < nr_irqs; i++) {
+>                 ret =3D riscv_intc_domain_map(domain, virq + i, hwirq + i=
+);
+>                 if (ret)
+> @@ -117,8 +127,7 @@ static int __init riscv_intc_init_common(struct fwnod=
+e_handle *fn)
+>  {
+>         int rc;
+>
+> -       intc_domain =3D irq_domain_create_linear(fn, BITS_PER_LONG,
+> -                                              &riscv_intc_domain_ops, NU=
+LL);
+> +       intc_domain =3D irq_domain_create_tree(fn, &riscv_intc_domain_ops=
+, NULL);
+>         if (!intc_domain) {
+>                 pr_err("unable to add IRQ domain\n");
+>                 return -ENXIO;
+> @@ -132,7 +141,10 @@ static int __init riscv_intc_init_common(struct fwno=
+de_handle *fn)
+>
+>         riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
+>
+> -       pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
+> +       pr_info("%d local interrupts mapped\n", riscv_intc_nr_irqs);
+> +       if (riscv_intc_custom_nr_irqs)
+> +               pr_info("%d custom local interrupts mapped\n",
+> +                       riscv_intc_custom_nr_irqs);
+>
+>         return 0;
+>  }
+> @@ -166,6 +178,10 @@ static int __init riscv_intc_init(struct device_node=
+ *node,
+>                 return 0;
+>         }
+>
+> +       riscv_intc_nr_irqs =3D BITS_PER_LONG;
+> +       riscv_intc_custom_base =3D riscv_intc_nr_irqs;
+> +       riscv_intc_custom_nr_irqs =3D 0;
+> +
+>         return riscv_intc_init_common(of_node_to_fwnode(node));
+>  }
+>
+> --
+> 2.34.1
+>
