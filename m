@@ -1,21 +1,21 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FE03EA9E;
-	Wed, 10 Jan 2024 08:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5EF3F8F4;
+	Wed, 10 Jan 2024 08:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 40A7ftAZ088622;
+	by Atcsqr.andestech.com with ESMTP id 40A7ftES088623;
 	Wed, 10 Jan 2024 15:41:55 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 40A7eIuE086741;
-	Wed, 10 Jan 2024 15:40:18 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 40A7dgAO086414;
+	Wed, 10 Jan 2024 15:39:42 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Wed, 10 Jan 2024
- 15:40:13 +0800
+ 15:39:38 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -40,9 +40,10 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>,
         <chao.wei@sophgo.com>, <unicorn_wang@outlook.com>, <wefu@redhat.com>
-Subject: [PATCH v7 10/16] dt-bindings: riscv: Add Andes PMU extension description
-Date: Wed, 10 Jan 2024 15:39:11 +0800
-Message-ID: <20240110073917.2398826-11-peterlin@andestech.com>
+CC: Randolph <randolph@andestech.com>
+Subject: [PATCH v7 03/16] irqchip/riscv-intc: Introduce Andes hart-level interrupt controller
+Date: Wed, 10 Jan 2024 15:39:04 +0800
+Message-ID: <20240110073917.2398826-4-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240110073917.2398826-1-peterlin@andestech.com>
 References: <20240110073917.2398826-1-peterlin@andestech.com>
@@ -56,48 +57,219 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 40A7ftAZ088622
+X-MAIL:Atcsqr.andestech.com 40A7ftES088623
 
-Document the ISA string for Andes Technology performance monitor
-extension which provides counter overflow interrupt and mode
-filtering mechanisms.
+Add support for the Andes hart-level interrupt controller. This
+controller provides interrupt mask/unmask functions to access the
+custom register (SLIE) where the non-standard S-mode local interrupt
+enable bits are located. The base of custom interrupt number is set
+to 256.
+
+To share the riscv_intc_domain_map() with the generic RISC-V INTC and
+ACPI, add a chip parameter to riscv_intc_init_common(), so it can be
+passed to the irq_domain_set_info() as a private data.
+
+Andes hart-level interrupt controller requires the "andestech,cpu-intc"
+compatible string to be present in interrupt-controller of cpu node to
+enable the use of custom local interrupt source.
+e.g.,
+
+  cpu0: cpu@0 {
+      compatible = "andestech,ax45mp", "riscv";
+      ...
+      cpu0-intc: interrupt-controller {
+          #interrupt-cells = <0x01>;
+          compatible = "andestech,cpu-intc", "riscv,cpu-intc";
+          interrupt-controller;
+      };
+  };
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Randolph <randolph@andestech.com>
 ---
-Changes v2 -> v3:
+Changes v1 -> v2:
   - New patch
-Changes v3 -> v4:
-  - Include Conor's Acked-by
-Changes v4 -> v5:
-  - Include Prabhakar's Reviewed-by
+Changes v2 -> v3:
+  - Return -ENXIO if no valid compatible INTC found
+  - Allow falling back to generic RISC-V INTC
+Changes v3 -> v4: (Suggested by Thomas [1])
+  - Add comment to andes irq chip function
+  - Refine code flow to share with generic RISC-V INTC and ACPI
+  - Move Andes specific definitions to include/linux/soc/andes/irq.h
+Changes v4 -> v5: (Suggested by Thomas)
+  - Fix commit message
+  - Subtract ANDES_SLI_CAUSE_BASE from d->hwirq to calculate the value of mask
+  - Do not set chip_data to the chip itself with irq_domain_set_info()
+  - Follow reverse fir tree order variable declarations
 Changes v5 -> v6:
-  - No change
+  - To follow the naming on datasheet, rename ANDES_RV_IRQ_PMU to ANDES_RV_IRQ_PMOVI
+  - Initialize the riscv_intc_* global variables for Andes INTC (Suggested by Anup)
+  - Use BITS_PER_LONG to compute the bit mask of SIE/SLIE as they are 64-bit registers (32-bit for RV32)
 Changes v6 -> v7:
   - No change
----
- Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index ee0747f29d6d..ecc7a105e7fc 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -477,6 +477,13 @@ properties:
-             latency, as ratified in commit 56ed795 ("Update
-             riscv-crypto-spec-vector.adoc") of riscv-crypto.
+[1] https://patchwork.kernel.org/project/linux-riscv/patch/20231019135723.3657156-1-peterlin@andestech.com/
+---
+ drivers/irqchip/irq-riscv-intc.c | 66 +++++++++++++++++++++++++++-----
+ include/linux/soc/andes/irq.h    | 18 +++++++++
+ 2 files changed, 74 insertions(+), 10 deletions(-)
+ create mode 100644 include/linux/soc/andes/irq.h
+
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index b13a16b164c9..7064857f1f1d 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -17,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/smp.h>
++#include <linux/soc/andes/irq.h>
  
-+        - const: xandespmu
-+          description:
-+            The Andes Technology performance monitor extension for counter overflow
-+            and privilege mode filtering. For more details, see Counter Related
-+            Registers in the AX45MP datasheet.
-+            https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
+ static struct irq_domain *intc_domain;
+ static unsigned int riscv_intc_nr_irqs __ro_after_init;
+@@ -49,6 +50,31 @@ static void riscv_intc_irq_unmask(struct irq_data *d)
+ 	csr_set(CSR_IE, BIT(d->hwirq));
+ }
+ 
++static void andes_intc_irq_mask(struct irq_data *d)
++{
++	/*
++	 * Andes specific S-mode local interrupt causes (hwirq)
++	 * are defined as (256 + n) and controlled by n-th bit
++	 * of SLIE.
++	 */
++	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
 +
-         - const: xtheadpmu
-           description:
-             The T-Head performance monitor extension for counter overflow, as ratified
++	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
++		csr_clear(CSR_IE, mask);
++	else
++		csr_clear(ANDES_CSR_SLIE, mask);
++}
++
++static void andes_intc_irq_unmask(struct irq_data *d)
++{
++	unsigned int mask = BIT(d->hwirq % BITS_PER_LONG);
++
++	if (d->hwirq < ANDES_SLI_CAUSE_BASE)
++		csr_set(CSR_IE, mask);
++	else
++		csr_set(ANDES_CSR_SLIE, mask);
++}
++
+ static void riscv_intc_irq_eoi(struct irq_data *d)
+ {
+ 	/*
+@@ -72,12 +98,21 @@ static struct irq_chip riscv_intc_chip = {
+ 	.irq_eoi = riscv_intc_irq_eoi,
+ };
+ 
++static struct irq_chip andes_intc_chip = {
++	.name		= "RISC-V INTC",
++	.irq_mask	= andes_intc_irq_mask,
++	.irq_unmask	= andes_intc_irq_unmask,
++	.irq_eoi	= riscv_intc_irq_eoi,
++};
++
+ static int riscv_intc_domain_map(struct irq_domain *d, unsigned int irq,
+ 				 irq_hw_number_t hwirq)
+ {
++	struct irq_chip *chip = d->host_data;
++
+ 	irq_set_percpu_devid(irq);
+-	irq_domain_set_info(d, irq, hwirq, &riscv_intc_chip, d->host_data,
+-			    handle_percpu_devid_irq, NULL, NULL);
++	irq_domain_set_info(d, irq, hwirq, chip, NULL, handle_percpu_devid_irq,
++			    NULL, NULL);
+ 
+ 	return 0;
+ }
+@@ -123,11 +158,12 @@ static struct fwnode_handle *riscv_intc_hwnode(void)
+ 	return intc_domain->fwnode;
+ }
+ 
+-static int __init riscv_intc_init_common(struct fwnode_handle *fn)
++static int __init riscv_intc_init_common(struct fwnode_handle *fn,
++					 struct irq_chip *chip)
+ {
+ 	int rc;
+ 
+-	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, NULL);
++	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, chip);
+ 	if (!intc_domain) {
+ 		pr_err("unable to add IRQ domain\n");
+ 		return -ENXIO;
+@@ -152,8 +188,9 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
+ static int __init riscv_intc_init(struct device_node *node,
+ 				  struct device_node *parent)
+ {
+-	int rc;
++	struct irq_chip *chip;
+ 	unsigned long hartid;
++	int rc;
+ 
+ 	rc = riscv_of_parent_hartid(node, &hartid);
+ 	if (rc < 0) {
+@@ -178,14 +215,23 @@ static int __init riscv_intc_init(struct device_node *node,
+ 		return 0;
+ 	}
+ 
+-	riscv_intc_nr_irqs = BITS_PER_LONG;
+-	riscv_intc_custom_base = riscv_intc_nr_irqs;
+-	riscv_intc_custom_nr_irqs = 0;
++	if (of_device_is_compatible(node, "andestech,cpu-intc")) {
++		riscv_intc_nr_irqs = BITS_PER_LONG;
++		riscv_intc_custom_base = ANDES_SLI_CAUSE_BASE;
++		riscv_intc_custom_nr_irqs = ANDES_RV_IRQ_LAST;
++		chip = &andes_intc_chip;
++	} else {
++		riscv_intc_nr_irqs = BITS_PER_LONG;
++		riscv_intc_custom_base = riscv_intc_nr_irqs;
++		riscv_intc_custom_nr_irqs = 0;
++		chip = &riscv_intc_chip;
++	}
+ 
+-	return riscv_intc_init_common(of_node_to_fwnode(node));
++	return riscv_intc_init_common(of_node_to_fwnode(node), chip);
+ }
+ 
+ IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
++IRQCHIP_DECLARE(andes, "andestech,cpu-intc", riscv_intc_init);
+ 
+ #ifdef CONFIG_ACPI
+ 
+@@ -212,7 +258,7 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
+ 		return -ENOMEM;
+ 	}
+ 
+-	return riscv_intc_init_common(fn);
++	return riscv_intc_init_common(fn, &riscv_intc_chip);
+ }
+ 
+ IRQCHIP_ACPI_DECLARE(riscv_intc, ACPI_MADT_TYPE_RINTC, NULL,
+diff --git a/include/linux/soc/andes/irq.h b/include/linux/soc/andes/irq.h
+new file mode 100644
+index 000000000000..edc3182d6e66
+--- /dev/null
++++ b/include/linux/soc/andes/irq.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2023 Andes Technology Corporation
++ */
++#ifndef __ANDES_IRQ_H
++#define __ANDES_IRQ_H
++
++/* Andes PMU irq number */
++#define ANDES_RV_IRQ_PMOVI		18
++#define ANDES_RV_IRQ_LAST		ANDES_RV_IRQ_PMOVI
++#define ANDES_SLI_CAUSE_BASE		256
++
++/* Andes PMU related registers */
++#define ANDES_CSR_SLIE			0x9c4
++#define ANDES_CSR_SLIP			0x9c5
++#define ANDES_CSR_SCOUNTEROF		0x9d4
++
++#endif /* __ANDES_IRQ_H */
 -- 
 2.34.1
 
