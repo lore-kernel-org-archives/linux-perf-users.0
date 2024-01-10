@@ -1,21 +1,21 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD1C4655F;
-	Wed, 10 Jan 2024 08:26:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA51A47A55;
+	Wed, 10 Jan 2024 08:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 40A7gCIK089223;
-	Wed, 10 Jan 2024 15:42:12 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 40A7gQ0W089486;
+	Wed, 10 Jan 2024 15:42:26 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 40A7dvTS086483;
-	Wed, 10 Jan 2024 15:39:57 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 40A7ehHk086871;
+	Wed, 10 Jan 2024 15:40:43 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Wed, 10 Jan 2024
- 15:39:53 +0800
+ 15:40:40 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -40,9 +40,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <ycliang@andestech.com>, <inochiama@outlook.com>,
         <chao.wei@sophgo.com>, <unicorn_wang@outlook.com>, <wefu@redhat.com>
-Subject: [PATCH v7 06/16] perf: RISC-V: Eliminate redundant interrupt enable/disable operations
-Date: Wed, 10 Jan 2024 15:39:07 +0800
-Message-ID: <20240110073917.2398826-7-peterlin@andestech.com>
+Subject: [PATCH v7 15/16] riscv: dts: renesas: Add Andes PMU extension for r9a07g043f
+Date: Wed, 10 Jan 2024 15:39:16 +0800
+Message-ID: <20240110073917.2398826-16-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240110073917.2398826-1-peterlin@andestech.com>
 References: <20240110073917.2398826-1-peterlin@andestech.com>
@@ -56,19 +56,18 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 40A7gCIK089223
+X-MAIL:Atcsqr.andestech.com 40A7gQ0W089486
 
-The interrupt enable/disable operations are already performed by the
-IRQ chip functions riscv_intc_irq_unmask()/riscv_intc_irq_mask() during
-enable_percpu_irq()/disable_percpu_irq(). It can be done only once.
+xandespmu stands for Andes Performance Monitor Unit extension.
+Based on the added Andes PMU ISA string, the SBI PMU driver
+will make use of the non-standard irq source.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
-This patch allows us to drop unnecessary ALT_SBI_PMU_OVF_{DISABLE,ENABLE}
-in the initial PATCH3 [1].
-
-[1] https://patchwork.kernel.org/project/linux-riscv/patch/20230907021635.1002738-4-peterlin@andestech.com/
-
 Changes v1 -> v2:
   - New patch
 Changes v2 -> v3:
@@ -76,35 +75,29 @@ Changes v2 -> v3:
 Changes v3 -> v4:
   - No change
 Changes v4 -> v5:
-  - No change
+  - Include Geert's Reviewed-by
+  - Include Prabhakar's Reviewed/Tested-by
 Changes v5 -> v6:
-  - No change
+  - Include Conor's Acked-by
 Changes v6 -> v7:
   - No change
 ---
- drivers/perf/riscv_pmu_sbi.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 16acd4dcdb96..2edbc37abadf 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -781,7 +781,6 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
- 	if (riscv_pmu_use_irq) {
- 		cpu_hw_evt->irq = riscv_pmu_irq;
- 		csr_clear(CSR_IP, BIT(riscv_pmu_irq_num));
--		csr_set(CSR_IE, BIT(riscv_pmu_irq_num));
- 		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
- 	}
- 
-@@ -792,7 +791,6 @@ static int pmu_sbi_dying_cpu(unsigned int cpu, struct hlist_node *node)
- {
- 	if (riscv_pmu_use_irq) {
- 		disable_percpu_irq(riscv_pmu_irq);
--		csr_clear(CSR_IE, BIT(riscv_pmu_irq_num));
- 	}
- 
- 	/* Disable all counters access for user mode now */
+diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+index 099f3df75b42..d7a66043f13b 100644
+--- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
++++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+@@ -27,7 +27,7 @@ cpu0: cpu@0 {
+ 			riscv,isa-base = "rv64i";
+ 			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
+ 					       "zicntr", "zicsr", "zifencei",
+-					       "zihpm";
++					       "zihpm", "xandespmu";
+ 			mmu-type = "riscv,sv39";
+ 			i-cache-size = <0x8000>;
+ 			i-cache-line-size = <0x40>;
 -- 
 2.34.1
 
