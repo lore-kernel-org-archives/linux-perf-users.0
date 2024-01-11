@@ -1,205 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2127.outbound.protection.outlook.com [40.107.223.127])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01785495FB
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jan 2024 15:53:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235DD5A0E1;
+	Thu, 11 Jan 2024 23:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwozLKfg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37CE0C433C7;
-	Thu, 11 Jan 2024 15:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704988408;
-	bh=scqdwrjRTf2KN7vabMEb+tsj5fbMIcldD0MhdeBn09U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VwozLKfgQp0yt0PPFrfdX1dsJSSy4A+7BSAXu7D7UQZZu21L2P73DZy7r+5beaAHU
-	 CL5dmaSpI+eAim4UBEHwM9xaizD5mrTVrAlOPMnNKBp+C5cEeXLj6CdXdlPURfmwun
-	 uyfLqL0u70RHdwVpPITnlUxfMoK9d5qlYSWYbKlhAmn3LA1k9YDyXp8EdJ+MmpYwGs
-	 xes3v+6bUxZuWMMtM4jDfSMSx+cZbM32dXKz143vdSPlG7noqnuRN6Dnq8o0kfBNpG
-	 zhYICSn4idEeKhF+u4sBRezSPtbCvIXz/O+N2H+dFj0vp4POLYC6t09UoFDzCuKfxE
-	 bSCpvAMS0Mo0A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id B7486403EF; Thu, 11 Jan 2024 12:53:25 -0300 (-03)
-Date: Thu, 11 Jan 2024 12:53:25 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: Getting PMU stats on specific syscalls
-Message-ID: <ZaAO9cKhjbmTM0tJ@kernel.org>
-References: <202401091452.B73E21B6C@keescook>
- <CA+JHD90kw0CX9=E18A7NBJrxdPDQuwrew355RV47oBhn_1s_QQ@mail.gmail.com>
- <01A077C8-95CA-4EBC-9504-CB971C284547@kernel.org>
- <ZZ32p0LRSt5-vFPX@kernel.org>
- <202401101640.21C835A8A@keescook>
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="iHwzdN2+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lc9FpCvTwLm76MHz3oGQOTx6xoZaFIxuQM4h8laIipnog86oWBXMH5IKYcyfIa/N3CE3aVGUvDjNSfCaD8h0ubqhjXl+s5qJ0zSOPI+7bXIr0b9SqtlSDJJZHpK5ItqMCm3fuFtIWoAtx378MxjF+tfHmel/HRo4D8ucS80dCpTETCQVbDOScoSIhIsRhU9knLYTooVpf4+IW3kHuqEQpBUC2zgbvOHBdFSPvH3Ku8fV5EeL/bA4/gzj0STy+yQVRmqKUMzirt3gowGxMbFjxnTcoFfCGnJ9JEVOQwlHD6pBMzdSUzqXmGZCP/IjuuXNLUZxNMSV7hOD58jNiL+E0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G5l2oJHVJEVTgfkSmfZDvgNoUGFAJDlrGmip4VsfC3M=;
+ b=PE70fQzGAfV7+RBLxCynYjFeUQKpGwC0McuyuuprVqqm7IKSZOMdNvcfrX+NPZ9t7wD700kcsr2BoGJ3M8IjyKZxo60cTg2DRgIMr9G0g0FIlmMp6FIP+culTl1xOOnLiHFQoFDIRfiJ+6GCLfIcO9IsnJ7ruFT55HMecVDeHHWthpDVn+OiDzw7ibATyDUfqksAosbaWivzfAl3+UnOPRcFs7sReaMQ8vmWUuSgl0OPghhvYhNREGRXmjE45BcBUtXCN363UNbPMCr/yq0DUUyqD+iD071v2v3CdIZK93tIy5ZBpzT0Go+QrQy8T7boy07sOVGjvzYBVOGi82e7Cg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G5l2oJHVJEVTgfkSmfZDvgNoUGFAJDlrGmip4VsfC3M=;
+ b=iHwzdN2+TO2LGqe3zpTOMydvTVVcz763oJe8caMAUnz2TRNeAaz0/zKMRIYNpYlWy5op1WJjxpFWTk9UKYb18VJ5q0hh1LVSlTHgGGL/NX6IANQ/1EEQuZym/3tjN1RFjMEkwlcX6pxdE73Vcan6l8gKfyBt2qtWhOpvuxq+mGM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from PH0PR01MB8166.prod.exchangelabs.com (2603:10b6:510:293::17) by
+ PH0PR01MB6375.prod.exchangelabs.com (2603:10b6:510:17::7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.21; Thu, 11 Jan 2024 23:29:54 +0000
+Received: from PH0PR01MB8166.prod.exchangelabs.com
+ ([fe80::5549:ab3d:70af:8693]) by PH0PR01MB8166.prod.exchangelabs.com
+ ([fe80::5549:ab3d:70af:8693%7]) with mapi id 15.20.7181.019; Thu, 11 Jan 2024
+ 23:29:53 +0000
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf data convert: Fix segfault when converting to json on arm64
+Date: Thu, 11 Jan 2024 15:29:23 -0800
+Message-ID: <20240111232923.8138-1-ilkka@os.amperecomputing.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH5P221CA0008.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:1f2::24) To PH0PR01MB8166.prod.exchangelabs.com
+ (2603:10b6:510:293::17)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202401101640.21C835A8A@keescook>
-X-Url: http://acmel.wordpress.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR01MB8166:EE_|PH0PR01MB6375:EE_
+X-MS-Office365-Filtering-Correlation-Id: 400567c1-9668-46e2-e4f8-08dc12fd36d6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	dxZns6xkB9+5iA9a4wD8QUJVpAp7ZJLcwj85xEn3EfAtkXA7UFzuV8rw+t7sYUEaOCqzZdBSr+LqEo1zWye56+Ybjj0KNhBypC2HFQ+MtC2ljrRuKi/4vXzcb5CWcmmcw9u9CvYi3mmRJfq6YdgIcM+lzZP5zZhxu9xEpcSmpGWseZrgdeqHBewxfdYBvxNxzK09+isd29n6Pzp6VgjIb//ZEgv4z2Kwwpx3ZurLy0rVkqzWUZxwLeK1VYUOI4PbZ/RqWrbm1c+G2x5UdlIzigERv3TizymDsQ+DcE+SUmQ3l87eMSfuTKdjIsC/yHyZ7/CeNlcGaYNXL+c2Q4Md85tN4yvoz553eGfkkAglWo1wRAwLkTR9RmseMk216SER4DbdNdDHnkrvREZ7z5zkwGOVhqlRup7oFZCFwAvPFFYV/+7ud5Kq91qY2Iwkon7cGEMIi+zidnCNoGzHXAGW2NxFX7ClgDlb85hajmAWxAjLTqzKWWssfYvc+3yar/njIjgDKUkGt9KQizXgsirfZYNEsLZBOmGtB2sCN4a66qhIHYhNhWd3ULnvjWX+pLUO6CbPSyXAb+9h+4PfZCkcZzoMgNOj6r2WD26YtInKn4u2DwsHran6VF5WhG4MRGEC
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB8166.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(346002)(39850400004)(366004)(136003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(4326008)(8676002)(8936002)(2906002)(4744005)(7416002)(5660300002)(86362001)(38350700005)(478600001)(83380400001)(1076003)(2616005)(26005)(6666004)(6512007)(6506007)(38100700002)(41300700001)(52116002)(316002)(66556008)(66476007)(66946007)(6486002)(110136005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?G4JydZ3o4TJquqA393XNaTq9KjmwNq+JWOhVS3B9M7FKqsiavjlddgYyOkpk?=
+ =?us-ascii?Q?YTvEQf+gziz28NNfMXkJRFvpGIFtbjgSyK1ILpeXdbg5RHW4+peXT3z67GAB?=
+ =?us-ascii?Q?1InQ+oIG3mG4mHDME51C0AJI3ZX/KJQU4pU8/mt1bL/liLdadGMKTr0dgafg?=
+ =?us-ascii?Q?yRJQ4+AK+w6zARUzj9eEmgYRxF2TXEBkXXjCN5jrbm4M55tQef/sWJpLCib7?=
+ =?us-ascii?Q?EpPsGCtQKBtz1AztVSbPG/4JQK8jeuz09xlU2j2kW78vnOtgflxE/ZkFE86H?=
+ =?us-ascii?Q?mJtLnR2flSqzftoi4oOPCSz/KkTuqE6mLZEP6HUbaW76Ix02gboG1fmjfVye?=
+ =?us-ascii?Q?Wzib1qtGvjJSj4pQhJXFV+Wg/i4W76x38DkcGx4m1ZEfIsZsYOsE4enofm0c?=
+ =?us-ascii?Q?0RBzSRjvR3P24wBsE9EJ2of3SX8Jr4VDROAVDi2sr0RtplHo0zhpe06om6By?=
+ =?us-ascii?Q?g5DSbX3YoAwhfsnejfpKyMZf33h1DoaA7uiC0qR1uhyjWtX67cVQeVnc0COm?=
+ =?us-ascii?Q?KOL9jVkSKLFqMqrg+C5sU1r7yo/6+aPwKsro1hmWx4gVzURSeQDfWPbUU9v6?=
+ =?us-ascii?Q?b6314XcEMC758zuBnChahaVegNz/e+EugZxU4zBj45g/pJPBhJGrD3MD9U88?=
+ =?us-ascii?Q?P6lqB74+P9/sP0+F9wMeXTIXX0Ap91tpo4Q6skW5QRhE/UR84q05bcOiA3Hk?=
+ =?us-ascii?Q?azOR4KOW313K/qg8FoZ9zBjAOOlKNioLf1toe+8Eda9vGrbodV5r6BAL4mZw?=
+ =?us-ascii?Q?k6DAQLv595x6NB7DjkIkBzWrAtG6zb7SgOqKO27RX56qTW5d7BXAM32UAtoH?=
+ =?us-ascii?Q?DHEGbOZiELvO8H/uCVFBnICWEr1JOK455U/Dkw2Zv7SJMW91fFzT+GhCqOA6?=
+ =?us-ascii?Q?daQYLB+8wKm+SP8f1Ulju2YutEtYQMT6Y0PtmqAHPhf4ZhF/uPMXDg1v59LP?=
+ =?us-ascii?Q?HoVXAxOoMFklpSI9MFnq6agyX1Wo/94lIiiGYnXwx48Ujv7NgjeTJzomXEpA?=
+ =?us-ascii?Q?cK7mk7c/3Sfq/4vg1pmYIuJNq/7rThr9sAZCqfWDk7PSrvG3iNV7sOv6thVs?=
+ =?us-ascii?Q?+qPy8q+s53EQJzUSRMoCxcHUePCTbyihx5dA1aOq2giy6Dgr6M5ojuubsK6P?=
+ =?us-ascii?Q?jm73VKRMbWyqJrG1VLa1+XDgbBaRVMWAdi+lFPBIgi3wWIsuiufGWzAvVSw7?=
+ =?us-ascii?Q?p3aI5zg9azKcax2pQnJtd0A6wfrMKOMFFhMeIXk0u8OUmLBvEe55v4qvyk05?=
+ =?us-ascii?Q?MXP9k592ghvrioIjVsgvcL40pYPJ13GymDlMU2NFBzUM1OMGA88m6cbhmbtX?=
+ =?us-ascii?Q?S/qt5B/IrxjSm1TpTLlTX/Pm8GnpZFjqdUdlXKA4D0wBGyzsTFqOSVk+d9TX?=
+ =?us-ascii?Q?rWZuOSRaKxE/C8Iugh2ZuyTeVJanSSjIGLokFa5DztAQBmELmetrdxfK3JD3?=
+ =?us-ascii?Q?9/YXZfQe+j8xcYM4B/mTKhuXMCqSkPVATokexXHBeCxQuEDAYeDw5xBmwan8?=
+ =?us-ascii?Q?s1ie6R0iyPmaK9AMjdV4rJ7wmM5KSvEvm84EhX7ZLoKvSX8kTU6bh6pLEdpj?=
+ =?us-ascii?Q?T2Az4aLg6AgSLF1ZyG4Y+nqnChGtt3vLchkaSMf/SKrAOjOyQw3b9V/hAs0R?=
+ =?us-ascii?Q?acNNEhWctvNd3CAf0eyUS+I=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 400567c1-9668-46e2-e4f8-08dc12fd36d6
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB8166.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 23:29:53.7921
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bJ/C7V2+2LuOjgCCDbb8OfPaLkFHMMdDtrj4u/sGhpkvkF6HVpj51Cv/WMaudHxSlkKvEiy0kQsK+vNBvC4DCMAXAaUyadSPiD+Nuyquqj1dod7XBD4g0W+tvd7OYIl5
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB6375
 
-Em Wed, Jan 10, 2024 at 04:40:57PM -0800, Kees Cook escreveu:
-> On Tue, Jan 09, 2024 at 10:45:11PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Jan 09, 2024 at 05:04:54PM -0800, Kees Cook escreveu:
-> > > On January 9, 2024 3:30:32 PM PST, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > > >On Tue, Jan 9, 2024, 7:55 PM Kees Cook <keescook@chromium.org> wrote:
-> > > >> I'd like to get PMU stats only on specific syscalls. I haven't been able
-> > > >> to figure this out. i.e. how do I run:
+Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't get
+assigned.
 
-> > > >>         perf stat -e some_syscall_name_here make -j128
+Running
+	$ perf data convert --to-json perf.data.json
 
-> > > >> Try with the technique described here:
+ends up calling output_json_string() with NULL pointer, which causes a
+segmentation fault.
 
-> > > >https://www.spinics.net/lists/linux-perf-users/msg09253.html
+Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+---
+ tools/perf/util/data-convert-json.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> > > >Using the syscalls:sys_enter_syscall_name and
-> > > >syscalls:sys_exit_syscall_name as on off switches.
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 5bb3c2ba95ca..5d6de1cef546 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -97,6 +97,11 @@ static void output_json_format(FILE *out, bool comma, int depth, const char *for
+ static void output_json_key_string(FILE *out, bool comma, int depth,
+ 		const char *key, const char *value)
+ {
++	if (!value) {
++		pr_info("No value set for key %s\n", key);
++		return;
++	}
++
+ 	output_json_delimiters(out, comma, depth);
+ 	output_json_string(out, key);
+ 	fputs(": ", out);
+-- 
+2.43.0
 
-> > > Yeah, I can get walk-clock time, but I'm trying to get much more
-> > > detailed stats (cache hits, cycle counts, etc).
-
-> > > It seems I can only get PMU counts from a whole process. I was hoping
-> > > to avoid creating a synthetic workload that only exercises the one
-> > > syscall and instead get a view of the PMU counters under a real load
-> > > but only for the duration of the syscall...
-> > 
-> > This is the sequence I thought would do what you want:
-> 
-> Oh cool! Thanks for the example. I will give this a shot.
-
-Hope it helps, but adding support for perf stat to run while some
-function runs seems like a great new feature to have, something like:
-
-  perf stat --function FOO make -j128
-
-That would enable the default events but would aggregate only when the
-kernel function FOO runs (for userspace one would do -x /path/to/binary
-as with 'perf probe') seems a great addition.
-
-Similar, in implementation to using BPF in the tool below, that may be
-of your interest as well
-
-Using the function graph tracer:
-
-root@number:~# perf ftrace latency -T schedule
-^C#   DURATION     |      COUNT | GRAPH                                          |
-     0 - 1    us |     318459 | ##########                                     |
-     1 - 2    us |     455298 | ###############                                |
-     2 - 4    us |     214732 | #######                                        |
-     4 - 8    us |     154981 | #####                                          |
-     8 - 16   us |     175314 | #####                                          |
-    16 - 32   us |      19021 |                                                |
-    32 - 64   us |       1066 |                                                |
-    64 - 128  us |        502 |                                                |
-   128 - 256  us |        435 |                                                |
-   256 - 512  us |        219 |                                                |
-   512 - 1024 us |       1188 |                                                |
-     1 - 2    ms |        172 |                                                |
-     2 - 4    ms |        262 |                                                |
-     4 - 8    ms |        535 |                                                |
-     8 - 16   ms |        788 |                                                |
-    16 - 32   ms |        513 |                                                |
-    32 - 64   ms |        379 |                                                |
-    64 - 128  ms |         82 |                                                |
-   128 - 256  ms |         65 |                                                |
-   256 - 512  ms |        111 |                                                |
-   512 - 1024 ms |         15 |                                                |
-     1 - ...   s |          0 |                                                |
-root@number:~#
-
-Aggregating using BPF:
-
-root@number:~# perf ftrace latency --use-bpf -T schedule
-^C#   DURATION     |      COUNT | GRAPH                                          |
-     0 - 1    us |      49377 | ###                                            |
-     1 - 2    us |     169563 | ############                                   |
-     2 - 4    us |     166872 | ############                                   |
-     4 - 8    us |      90711 | ######                                         |
-     8 - 16   us |      64548 | ####                                           |
-    16 - 32   us |      77211 | #####                                          |
-    32 - 64   us |       4567 |                                                |
-    64 - 128  us |        486 |                                                |
-   128 - 256  us |        339 |                                                |
-   256 - 512  us |        174 |                                                |
-   512 - 1024 us |        112 |                                                |
-     1 - 2    ms |        602 |                                                |
-     2 - 4    ms |         76 |                                                |
-     4 - 8    ms |         65 |                                                |
-     8 - 16   ms |        223 |                                                |
-    16 - 32   ms |        315 |                                                |
-    32 - 64   ms |        258 |                                                |
-    64 - 128  ms |        175 |                                                |
-   128 - 256  ms |         54 |                                                |
-   256 - 512  ms |         42 |                                                |
-   512 - 1024 ms |         63 |                                                |
-     1 - ...   s |         35 |                                                |
-root@number:~#
-
-With a syscall:
-
-root@number:~# perf ftrace latency -bT __x64_sys_write find /
-<BIG find / output SNIP>
-/var/www
-/var/www/cgi-bin
-/var/www/html
-/var/yp
-/var/.updated
-/wb
-#   DURATION     |      COUNT | GRAPH                                          |
-     0 - 1    us |    5286452 | #######################                        |
-     1 - 2    us |    5205312 | ######################                         |
-     2 - 4    us |      35561 |                                                |
-     4 - 8    us |       3852 |                                                |
-     8 - 16   us |        957 |                                                |
-    16 - 32   us |        281 |                                                |
-    32 - 64   us |         54 |                                                |
-    64 - 128  us |         37 |                                                |
-   128 - 256  us |         20 |                                                |
-   256 - 512  us |          6 |                                                |
-   512 - 1024 us |          5 |                                                |
-     1 - 2    ms |          4 |                                                |
-     2 - 4    ms |          3 |                                                |
-     4 - 8    ms |         44 |                                                |
-     8 - 16   ms |        226 |                                                |
-    16 - 32   ms |        742 |                                                |
-    32 - 64   ms |        229 |                                                |
-    64 - 128  ms |          9 |                                                |
-   128 - 256  ms |          0 |                                                |
-   256 - 512  ms |          0 |                                                |
-   512 - 1024 ms |          0 |                                                |
-     1 - ...   s |          0 |                                                |
-root@number:~#
-
-root@number:~# perf ftrace latency -h
-
- Usage: perf ftrace [<options>] [<command>]
-    or: perf ftrace [<options>] -- [<command>] [<options>]
-    or: perf ftrace {trace|latency} [<options>] [<command>]
-    or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
-
-    -b, --use-bpf         Use BPF to measure function latency
-    -n, --use-nsec        Use nano-second histogram
-    -T, --trace-funcs <func>
-                          Show latency of given function
-
-root@number:~#
-
-The BPF code basically puts a kprobe at function entry and a kretprobe
-at function exit, and goes on aggregating the time deltas, we would
-instead do deltas on free running perf counters and at the end provide
-it just like 'perf stat' does instead of the histogram above, the BPF is
-straightforward:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/bpf_skel/func_latency.bpf.c
-
-The userspace part just associates the function of interest to those the
-kprobe (function entry) and kretprobe (function exit) BPF programs in
-func_latency.bpf.c:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/bpf_ftrace.c#n86
-
-- Arnaldo
