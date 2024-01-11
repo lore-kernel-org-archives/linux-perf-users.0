@@ -1,127 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA9214A86;
-	Thu, 11 Jan 2024 08:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EFHXf8Q5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704961226; x=1736497226;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YF2mznNPxiYOY4eRx14gZJdV4+DolWzQx58W70hEjws=;
-  b=EFHXf8Q5AWH9uKnOXFRrSuabZtwfBGPisX80lGF1hpgnxlpwQ1aztlJs
-   rKzRG+ITWSwQcObEpvuLH5Ctnw0Tv0Xwgl3wH1jdP8jIcu5qpGCe8tB6V
-   QOkKivq7XxJlFB0DvxLBnRGgKazdmV+Y6tUivc81geYnolzEnzMxolT2V
-   gwjfuxtzKYXNZ6qh2nxLlpxFdAy9GNXQoLIWSyfjJ4irpt5rhVzfSZe80
-   11mjPxM3SNMGaYJA5IBDBhsY9Jse7bMcqnz78F0HQrRkQETShg7dfYL+S
-   urypokDOEQjHIjZpeRX2nucQTjz738p9KdD4isxO4PXeXan4QWRVmGrkK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="465166630"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="465166630"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 00:20:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="925923216"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="925923216"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.52.224])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 00:20:21 -0800
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH V4 11/11] perf intel-pt: Add a test for pause / resume
-Date: Thu, 11 Jan 2024 10:19:14 +0200
-Message-Id: <20240111081914.3123-12-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240111081914.3123-1-adrian.hunter@intel.com>
-References: <20240111081914.3123-1-adrian.hunter@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D2314F9E;
+	Thu, 11 Jan 2024 11:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4T9hpj0FN4zsVcd;
+	Thu, 11 Jan 2024 19:12:45 +0800 (CST)
+Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id DCDE818006E;
+	Thu, 11 Jan 2024 19:13:30 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Jan 2024 19:13:30 +0800
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+To: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
+CC: <willy@infradead.org>, <david@redhat.com>, <linux-s390@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH v2 1/8] mm: swap: introduce pfn_swap_entry_to_folio()
+Date: Thu, 11 Jan 2024 19:12:32 +0800
+Message-ID: <20240111111239.2453282-2-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240111111239.2453282-1-wangkefeng.wang@huawei.com>
+References: <20240111111239.2453282-1-wangkefeng.wang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
 
-Add a simple sub-test to the "Miscellaneous Intel PT testing" test to
-check pause / resume.
+Introduce a new pfn_swap_entry_to_folio(), it is similar to
+pfn_swap_entry_to_page(), but return a folio, which allow us
+to completely replace the struct page variables with struct
+folio variables.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- tools/perf/tests/shell/test_intel_pt.sh | 28 +++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ include/linux/swapops.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 723ec501f99a..e359db0d0ff2 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -644,6 +644,33 @@ test_pipe()
- 	return 0
+diff --git a/include/linux/swapops.h b/include/linux/swapops.h
+index bff1e8d97de0..85cb84e4be95 100644
+--- a/include/linux/swapops.h
++++ b/include/linux/swapops.h
+@@ -468,6 +468,19 @@ static inline struct page *pfn_swap_entry_to_page(swp_entry_t entry)
+ 	return p;
  }
  
-+test_pause_resume()
++static inline struct folio *pfn_swap_entry_to_folio(swp_entry_t entry)
 +{
-+	echo "--- Test with pause / resume ---"
-+	if ! perf_record_no_decode -o "${perfdatafile}" -e intel_pt/aux-action=start-paused/u uname ; then
-+		echo "SKIP: pause / resume is not supported"
-+		return 2
-+	fi
-+	if ! perf_record_no_bpf -o "${perfdatafile}" \
-+			-e intel_pt/aux-action=start-paused/u \
-+			-e instructions/period=50000,aux-action=resume,name=Resume/u \
-+			-e instructions/period=100000,aux-action=pause,name=Pause/u uname  ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	if ! perf script -i "${perfdatafile}" --itrace=b -Fperiod,event | \
-+			awk 'BEGIN {paused=1;branches=0}
-+			     /Resume/ {paused=0}
-+			     /branches/ {if (paused) exit 1;branches=1}
-+			     /Pause/ {paused=1}
-+			     END {if (!branches) exit 1}' ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	echo OK
-+	return 0
++	struct folio *folio = pfn_folio(swp_offset_pfn(entry));
++
++	/*
++	 * Any use of migration entries may only occur while the
++	 * corresponding folio is locked
++	 */
++	BUG_ON(is_migration_entry(entry) && !folio_test_locked(folio));
++
++	return folio;
 +}
 +
- count_result()
- {
- 	if [ "$1" -eq 2 ] ; then
-@@ -672,6 +699,7 @@ test_power_event			|| ret=$? ; count_result $ret ; ret=0
- test_no_tnt				|| ret=$? ; count_result $ret ; ret=0
- test_event_trace			|| ret=$? ; count_result $ret ; ret=0
- test_pipe				|| ret=$? ; count_result $ret ; ret=0
-+test_pause_resume			|| ret=$? ; count_result $ret ; ret=0
- 
- cleanup
- 
+ /*
+  * A pfn swap entry is a special type of swap entry that always has a pfn stored
+  * in the swap offset. They are used to represent unaddressable device memory
 -- 
-2.34.1
+2.27.0
 
