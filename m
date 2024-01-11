@@ -1,106 +1,91 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1214CDE8
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jan 2024 16:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5138E36A
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jan 2024 00:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nS/ZPVYt"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50e36375f91so2892e87.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jan 2024 08:29:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D9WPmE3I"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bb9d54575cso3782693b6e.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jan 2024 16:40:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704904170; x=1705508970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cYd13Zejpu03Q/f4ErgpB8c40cbt6HWQmYbgmsVrrrI=;
-        b=nS/ZPVYt/WFSBZS4JpFk2hobSuBW7l1mICI6a60EsxEqD8KcPpdA3RJ+dpwYytoDUZ
-         3nFVHGCbD3ryL9iGFESC8U4Ukx6hscao6wCvfllN0xgG4MB/TZ8vPbnTxsS+HJKtuf8E
-         aKVuuq3Faw4YfWCMAmpFLburaqKN8r2up6bHgxa/he9wZKz84bBCHMfRFFVvvWlIru/D
-         3FArvcuUVC8xWGFHcSei8PMAx70JOiNWjQHTO6tSEIfIXbMoCwDyrEk5v7iVzC9rCpYK
-         9wDrPJDesDSttlAvs8U/SK9xc8cGLfmJkmodLgpXXbVeSRSpyMw6YnsK+IZe4KbeYvIy
-         jkJw==
+        d=chromium.org; s=google; t=1704933658; x=1705538458; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SKK/tTRBuavRCO0tKyYQaf5jC4NMYGmrRaJwy6HVSPU=;
+        b=D9WPmE3IuUZw7zEKRYR6ioegSyHOy37Q4dv7s8umSrtPGlwq8NoPQyxWIZwvzRnuTW
+         Y0SYISjHRDSpOsC74mSX41LSvKaAzI9bZRRPk0ku762WP1TodDVNWB6eHy7NJcnMsXwh
+         znymz1MTwbCUbu+YdVc7rpySg5bBCzZ2ruFXk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704904170; x=1705508970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cYd13Zejpu03Q/f4ErgpB8c40cbt6HWQmYbgmsVrrrI=;
-        b=FCT0WdX1s/iMMLVLhjWLKfC4foDOgHNM9IIXoZSnW0s03AITuDLhbIcDwUXSKVpuQj
-         2HAfb2giB89DjT/pAeROJGmQrJr4IjyHF3lTeMl8UoCNXucLb2EOfeC6WWtrsyZC5RLQ
-         e59lcj5VdR94LjIaQ+H3YJ92UIJ93qG0FpCZfuwO0aTbopNsDAp9tujVhj9FjNecpR25
-         UvUnnZBAPChg9D+J746pZ6n/HT1dswLnbLvxPPE6Wwtq/j3k79vHL/IWc4s4WQ3tPklB
-         q2y9LshlML6rXT2xj86v9cjWSaWxG1uKvzWT0CtCqUp1WvwZFTIYIrQPP7WigTZQ1U8B
-         /4fQ==
-X-Gm-Message-State: AOJu0YzTKoPowrWVpRU2WYZRkSmMeGwUHheiTKJCaWib3hWetjmiQWXQ
-	DV2625YcI/o9y081RJEX+VpZao9X4CJtZj6hU4awde4/rL1n
-X-Google-Smtp-Source: AGHT+IF5vM4N157aKb2AtB6x57aJsQ++ajAOqzDCXdw5TMmo4troBe/GusuB30ksORNAUtvkL8aYJotylri36ah/+bs=
-X-Received: by 2002:a05:6512:2205:b0:50e:d1f8:461d with SMTP id
- h5-20020a056512220500b0050ed1f8461dmr44339lfu.4.1704904169658; Wed, 10 Jan
- 2024 08:29:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704933658; x=1705538458;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SKK/tTRBuavRCO0tKyYQaf5jC4NMYGmrRaJwy6HVSPU=;
+        b=ipW2/LzU0j6szSFP/fq/OOeu3+dxeqxHAC/G4DtGJ0cijgc8oRuEcHuPaBGzxrruAo
+         wps6TfsmcGpF1BHPUYudixFqPNTQJKpZAfN5fzIJXUYwx2O1J+jDfZ5xjSbLpGMBX3eI
+         F4bMuB91MSMCZ8apoPqaHXFKmTccnGc/Q5MGRNapPQPPzDmlnYHX15Sxp3POqPYNzlSG
+         zT82+rOsp7Lr83/KXhsABFALzzvVdYiBU7L7dLPHo4mcGKMiPF+aQ4DXOmioKwD4Os16
+         E+j4hKCfozYI2hIG3FBHJWprRfvD/euIcACqQyRJMNTqGD3HB/nwzRjQn409KDsewxVI
+         o3Ig==
+X-Gm-Message-State: AOJu0YypgzMTGP/VJMk26LJPNBv91+vWIMA/0QOO3OyYrXRkLsu7+DoL
+	5m4ahVUS256k24dSZDDO7XN4g4GCLqGO
+X-Google-Smtp-Source: AGHT+IFea6zB7vekca2ldHeaLHOrf/AQDt2v60co7YDN+g4mnu1e2KuafvusxljN2A/vCGkxTMKnyg==
+X-Received: by 2002:a05:6808:4489:b0:3bd:4c05:8744 with SMTP id eq9-20020a056808448900b003bd4c058744mr579102oib.99.1704933658467;
+        Wed, 10 Jan 2024 16:40:58 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i18-20020aa787d2000000b006dac8b80102sm4067264pfo.203.2024.01.10.16.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 16:40:57 -0800 (PST)
+Date: Wed, 10 Jan 2024 16:40:57 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: Getting PMU stats on specific syscalls
+Message-ID: <202401101640.21C835A8A@keescook>
+References: <202401091452.B73E21B6C@keescook>
+ <CA+JHD90kw0CX9=E18A7NBJrxdPDQuwrew355RV47oBhn_1s_QQ@mail.gmail.com>
+ <01A077C8-95CA-4EBC-9504-CB971C284547@kernel.org>
+ <ZZ32p0LRSt5-vFPX@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZYbm5L7tw7bdpDpE@kernel.org> <4d86f3b6-eaee-4673-bdf5-3b97c1c1ad17@linux.intel.com>
- <CAP-5=fUfJ-VBGS1D2+WM_eBu4uPGvxJ2KyD4WXzgKRCfGKHTQQ@mail.gmail.com>
- <ZZfwjG-HL5yOEh6z@FVFF77S0Q05N> <CAP-5=fUK+t1p0g3dKtgyP0g3oixM1G7Xm4BFneY5EMzRW_urdw@mail.gmail.com>
- <ZZ12PhUfA_wPAaRR@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <ZZ12PhUfA_wPAaRR@FVFF77S0Q05N.cambridge.arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 10 Jan 2024 08:29:18 -0800
-Message-ID: <CAP-5=fWCn88KchSdQg87FRY0cpH4tVqO0UEYMhE=ioANeRBdwg@mail.gmail.com>
-Subject: Re: perf test hybrid failing on 14700K
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Kan Liang <kan.liang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZ32p0LRSt5-vFPX@kernel.org>
 
-On Tue, Jan 9, 2024 at 8:37=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
-wrote:
->
-> On Fri, Jan 05, 2024 at 09:21:21AM -0800, Ian Rogers wrote:
-> > While much has been done in the perf tool to work around latent issues
-> > with ARM's PMU drivers and the behavior changes they have instigated,
-> > except for 5c816728651a ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE
-> > capability") where I wrote the original version, there doesn't seem to
-> > have been progress made on the ARM PMU driver nor on ARM testing -
-> > which was why such an issue could exist for so long, across numerous
-> > Linux releases and ultimately break Hector and Martin.
->
-> Ian, which latent issues in the PMU drivers are you referring to?
+On Tue, Jan 09, 2024 at 10:45:11PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jan 09, 2024 at 05:04:54PM -0800, Kees Cook escreveu:
+> > On January 9, 2024 3:30:32 PM PST, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > >On Tue, Jan 9, 2024, 7:55 PM Kees Cook <keescook@chromium.org> wrote:
+> > >> I'd like to get PMU stats only on specific syscalls. I haven't been able
+> > >> to figure this out. i.e. how do I run:
+> 
+> > >>         perf stat -e some_syscall_name_here make -j128
+> 
+> > >> Try with the technique described here:
+> 
+> > >https://www.spinics.net/lists/linux-perf-users/msg09253.html
+> 
+> > >Using the syscalls:sys_enter_syscall_name and
+> > >syscalls:sys_exit_syscall_name as on off switches.
+>  
+> > Yeah, I can get walk-clock time, but I'm trying to get much more
+> > detailed stats (cache hits, cycle counts, etc).
+>  
+> > It seems I can only get PMU counts from a whole process. I was hoping
+> > to avoid creating a synthetic workload that only exercises the one
+> > syscall and instead get a view of the PMU counters under a real load
+> > but only for the duration of the syscall...
+> 
+> This is the sequence I thought would do what you want:
 
-Core PMUs generally have a lookup from legacy to non-legacy event,
-from the past discussion this was missing on the problematic PMUs
-hence the sysfs versions.
+Oh cool! Thanks for the example. I will give this a shot.
 
-> I already pointed out that one of the problems you have claimed to be a d=
-river
-> bug is actually due to userspace incorrectly detecting support for the ex=
-tended
-> HW type, and I suggested some options which you have so far ignored:
->
->   https://lore.kernel.org/lkml/ZV-CUlQhlkdOzfFZ@FVFF77S0Q05N.cambridge.ar=
-m.com/
->   https://lore.kernel.org/lkml/ZV-ItX1eMeIdo_00@FVFF77S0Q05N.cambridge.ar=
-m.com/
-
-Those suggestions look fine but you seemed to be suggesting testing.
-Lacking hardware with the broken PMU(s) I'm not able to do this. Could
-you turn the suggestion into a patch and test on BIG.little? I can
-test on Intel Alderlake.
-
-Thanks,
-Ian
-
-> I agree that testing is a problem, and we need to do better from the arm =
-side.
->
-> Thanks,
-> Mark.
+-- 
+Kees Cook
