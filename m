@@ -1,91 +1,156 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5138E36A
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jan 2024 00:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FCCE544;
+	Thu, 11 Jan 2024 08:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D9WPmE3I"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bb9d54575cso3782693b6e.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jan 2024 16:40:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704933658; x=1705538458; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SKK/tTRBuavRCO0tKyYQaf5jC4NMYGmrRaJwy6HVSPU=;
-        b=D9WPmE3IuUZw7zEKRYR6ioegSyHOy37Q4dv7s8umSrtPGlwq8NoPQyxWIZwvzRnuTW
-         Y0SYISjHRDSpOsC74mSX41LSvKaAzI9bZRRPk0ku762WP1TodDVNWB6eHy7NJcnMsXwh
-         znymz1MTwbCUbu+YdVc7rpySg5bBCzZ2ruFXk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704933658; x=1705538458;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SKK/tTRBuavRCO0tKyYQaf5jC4NMYGmrRaJwy6HVSPU=;
-        b=ipW2/LzU0j6szSFP/fq/OOeu3+dxeqxHAC/G4DtGJ0cijgc8oRuEcHuPaBGzxrruAo
-         wps6TfsmcGpF1BHPUYudixFqPNTQJKpZAfN5fzIJXUYwx2O1J+jDfZ5xjSbLpGMBX3eI
-         F4bMuB91MSMCZ8apoPqaHXFKmTccnGc/Q5MGRNapPQPPzDmlnYHX15Sxp3POqPYNzlSG
-         zT82+rOsp7Lr83/KXhsABFALzzvVdYiBU7L7dLPHo4mcGKMiPF+aQ4DXOmioKwD4Os16
-         E+j4hKCfozYI2hIG3FBHJWprRfvD/euIcACqQyRJMNTqGD3HB/nwzRjQn409KDsewxVI
-         o3Ig==
-X-Gm-Message-State: AOJu0YypgzMTGP/VJMk26LJPNBv91+vWIMA/0QOO3OyYrXRkLsu7+DoL
-	5m4ahVUS256k24dSZDDO7XN4g4GCLqGO
-X-Google-Smtp-Source: AGHT+IFea6zB7vekca2ldHeaLHOrf/AQDt2v60co7YDN+g4mnu1e2KuafvusxljN2A/vCGkxTMKnyg==
-X-Received: by 2002:a05:6808:4489:b0:3bd:4c05:8744 with SMTP id eq9-20020a056808448900b003bd4c058744mr579102oib.99.1704933658467;
-        Wed, 10 Jan 2024 16:40:58 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i18-20020aa787d2000000b006dac8b80102sm4067264pfo.203.2024.01.10.16.40.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 16:40:57 -0800 (PST)
-Date: Wed, 10 Jan 2024 16:40:57 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: Getting PMU stats on specific syscalls
-Message-ID: <202401101640.21C835A8A@keescook>
-References: <202401091452.B73E21B6C@keescook>
- <CA+JHD90kw0CX9=E18A7NBJrxdPDQuwrew355RV47oBhn_1s_QQ@mail.gmail.com>
- <01A077C8-95CA-4EBC-9504-CB971C284547@kernel.org>
- <ZZ32p0LRSt5-vFPX@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tq2IixP3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704961171; x=1736497171;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bbcFhRoQMghAzNGhNxuNhvBNhm3SUfDuTtzO00WTbgU=;
+  b=Tq2IixP3OcO7L4odEv4CYm4mxiuPNP8f5HHucFoukRCTXr/IOdNu7sgf
+   +VQOC+LBYcIsMB7jvte+7Wnyul2TkX5nIGfcGREKL+dFtHRR8NtIOrUX4
+   fNICFMRpE89xKLKDnBAke5hnaOeWzWc1RC4KLCfK7IEOFgt6hB3L4LK7r
+   jhpNAFtf8k5gEooIMG4Jl2k5sG2zT/uhI3R3HspHNQI/GLT+AaVHTQvt+
+   e6Ecx3SPR1bx8dVYA+3apFhNdiDzFVFx9KSomBFoxcjg4UG4MXYg0C0RY
+   RBDA4QTYTRCpRl25lPMBi4F8kZSyIIYzZFudEll+o5Ns/PUHbp8BJ8jZr
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="465166282"
+X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
+   d="scan'208";a="465166282"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 00:19:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="925923001"
+X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
+   d="scan'208";a="925923001"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.52.224])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 00:19:25 -0800
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V4 00/11] perf/core: Add ability for an event to "pause" or "resume" AUX area tracing
+Date: Thu, 11 Jan 2024 10:19:03 +0200
+Message-Id: <20240111081914.3123-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZ32p0LRSt5-vFPX@kernel.org>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 09, 2024 at 10:45:11PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Jan 09, 2024 at 05:04:54PM -0800, Kees Cook escreveu:
-> > On January 9, 2024 3:30:32 PM PST, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > >On Tue, Jan 9, 2024, 7:55 PM Kees Cook <keescook@chromium.org> wrote:
-> > >> I'd like to get PMU stats only on specific syscalls. I haven't been able
-> > >> to figure this out. i.e. how do I run:
-> 
-> > >>         perf stat -e some_syscall_name_here make -j128
-> 
-> > >> Try with the technique described here:
-> 
-> > >https://www.spinics.net/lists/linux-perf-users/msg09253.html
-> 
-> > >Using the syscalls:sys_enter_syscall_name and
-> > >syscalls:sys_exit_syscall_name as on off switches.
->  
-> > Yeah, I can get walk-clock time, but I'm trying to get much more
-> > detailed stats (cache hits, cycle counts, etc).
->  
-> > It seems I can only get PMU counts from a whole process. I was hoping
-> > to avoid creating a synthetic workload that only exercises the one
-> > syscall and instead get a view of the PMU counters under a real load
-> > but only for the duration of the syscall...
-> 
-> This is the sequence I thought would do what you want:
+Hi
 
-Oh cool! Thanks for the example. I will give this a shot.
+Hardware traces, such as instruction traces, can produce a vast amount of
+trace data, so being able to reduce tracing to more specific circumstances
+can be useful.
 
--- 
-Kees Cook
+The ability to pause or resume tracing when another event happens, can do
+that.
+
+These patches add such a facilty and show how it would work for Intel
+Processor Trace.
+
+Maintainers of other AUX area tracing implementations are requested to
+consider if this is something they might employ and then whether or not
+the ABI would work for them.
+
+Changes to perf tools are now (since V4) fleshed out.
+
+
+Changes in V4:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Rename aux_output_cfg -> aux_action
+	Reorder aux_action bits from:
+		aux_pause, aux_resume, aux_start_paused
+	to:
+		aux_start_paused, aux_pause, aux_resume
+	Fix aux_action bits __u64 -> __u32
+
+    coresight: Have a stab at support for pause / resume
+	Dropped
+
+    perf tools
+	All new patches
+
+Changes in RFC V3:
+
+    coresight: Have a stab at support for pause / resume
+	'mode' -> 'flags' so it at least compiles
+
+Changes in RFC V2:
+
+	Use ->stop() / ->start() instead of ->pause_resume()
+	Move aux_start_paused bit into aux_output_cfg
+	Tighten up when Intel PT pause / resume is allowed
+	Add an example of how it might work for CoreSight
+
+
+Adrian Hunter (11):
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+      perf/x86/intel/pt: Add support for pause / resume
+      perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
+      perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
+      perf tools: Add aux_start_paused, aux_pause and aux_resume
+      perf tools: Add aux-action config term
+      perf tools: Parse aux-action
+      perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
+      perf intel-pt: Improve man page format
+      perf intel-pt: Add documentation for pause / resume
+      perf intel-pt: Add a test for pause / resume
+
+ arch/x86/events/intel/pt.c                 |  63 +++-
+ arch/x86/events/intel/pt.h                 |   4 +
+ include/linux/perf_event.h                 |  15 +
+ include/uapi/linux/perf_event.h            |  11 +-
+ kernel/events/core.c                       |  72 +++-
+ kernel/events/internal.h                   |   1 +
+ tools/include/uapi/linux/perf_event.h      |  11 +-
+ tools/perf/Documentation/perf-intel-pt.txt | 558 +++++++++++++++++------------
+ tools/perf/Documentation/perf-record.txt   |   4 +
+ tools/perf/arch/arm/util/pmu.c             |   3 +
+ tools/perf/builtin-record.c                |   4 +-
+ tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
+ tools/perf/util/auxtrace.c                 |  67 +++-
+ tools/perf/util/auxtrace.h                 |   6 +-
+ tools/perf/util/evsel.c                    |  13 +-
+ tools/perf/util/evsel.h                    |   1 +
+ tools/perf/util/evsel_config.h             |   1 +
+ tools/perf/util/parse-events.c             |  10 +
+ tools/perf/util/parse-events.h             |   1 +
+ tools/perf/util/parse-events.l             |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c  |   3 +
+ tools/perf/util/pmu.c                      |   6 +-
+ 22 files changed, 645 insertions(+), 238 deletions(-)
+
+
+Regards
+Adrian
