@@ -1,71 +1,84 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BA82574F;
-	Fri, 12 Jan 2024 04:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TB7WH5Qbhz29k9x;
-	Fri, 12 Jan 2024 12:15:55 +0800 (CST)
-Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 412421800D3;
-	Fri, 12 Jan 2024 12:17:29 +0800 (CST)
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Jan 2024 12:17:28 +0800
-Message-ID: <7da39683-9b33-4f4e-baa5-69e63962943b@huawei.com>
-Date: Fri, 12 Jan 2024 12:17:28 +0800
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 991AA67E92;
+	Fri, 12 Jan 2024 11:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28E771424;
+	Fri, 12 Jan 2024 03:36:16 -0800 (PST)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 679643F73F;
+	Fri, 12 Jan 2024 03:35:28 -0800 (PST)
+Message-ID: <2c9f5893-450c-012b-b748-a8fe8ddfae86@arm.com>
+Date: Fri, 12 Jan 2024 11:35:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] mm: swap: introduce pfn_swap_entry_to_folio()
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] perf data convert: Fix segfault when converting to json
+ on arm64
 Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>
-CC: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-	<david@redhat.com>, <linux-s390@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-References: <20240111111239.2453282-1-wangkefeng.wang@huawei.com>
- <20240111111239.2453282-2-wangkefeng.wang@huawei.com>
- <ZZ/9NZKf3X3TGDsa@casper.infradead.org>
- <ZZ/9n3gitoBnq8na@casper.infradead.org>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <ZZ/9n3gitoBnq8na@casper.infradead.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+References: <20240111232923.8138-1-ilkka@os.amperecomputing.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240111232923.8138-1-ilkka@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm100001.china.huawei.com (7.185.36.93)
 
 
 
-On 2024/1/11 22:39, Matthew Wilcox wrote:
-> On Thu, Jan 11, 2024 at 02:37:41PM +0000, Matthew Wilcox wrote:
->> On Thu, Jan 11, 2024 at 07:12:32PM +0800, Kefeng Wang wrote:
->>> Introduce a new pfn_swap_entry_to_folio(), it is similar to
->>> pfn_swap_entry_to_page(), but return a folio, which allow us
->>> to completely replace the struct page variables with struct
->>> folio variables.
->>
->> I have the exact same patch in my tree except I called it
->> pfn_swap_entry_folio().  I also noted:
->>
->>      Thanks to the compound_head() hidden inside PageLocked(), this saves a
->>      call to compound_head() over calling page_folio(pfn_swap_entry_to_page())
->>
->>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->>
->> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+On 11/01/2024 23:29, Ilkka Koskinen wrote:
+> Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't get
+> assigned.
 > 
-> Oh, and I converted a couple of callers ...
-> migration_entry_wait_on_locked and change_huge_pmd.  Those should
-> probably be added to this patch.
+> Running
+> 	$ perf data convert --to-json perf.data.json
 > 
+> ends up calling output_json_string() with NULL pointer, which causes a
+> segmentation fault.
+> 
+> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+> ---
+>  tools/perf/util/data-convert-json.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+> index 5bb3c2ba95ca..5d6de1cef546 100644
+> --- a/tools/perf/util/data-convert-json.c
+> +++ b/tools/perf/util/data-convert-json.c
+> @@ -97,6 +97,11 @@ static void output_json_format(FILE *out, bool comma, int depth, const char *for
+>  static void output_json_key_string(FILE *out, bool comma, int depth,
+>  		const char *key, const char *value)
+>  {
+> +	if (!value) {
+> +		pr_info("No value set for key %s\n", key);
+> +		return;
+> +	}
+> +
+>  	output_json_delimiters(out, comma, depth);
+>  	output_json_string(out, key);
+>  	fputs(": ", out);
 
-Thanks for your update, and all above conversion in your v3, and I check
-more callers,  eg, hugetlb_change_protection,break_ksm_pmd_entry could
-be converted too, but we could send separate patch.
+
+It looks like this would hide new errors on any of the other fields that
+output_json_key_string() is called on. Maybe it would be better to only
+wrap the call to output cpu_desc with the if? If that's the only one
+that we think is optional, and even better only do it for arm64.
+
+I mention this because the test for 'perf data convert' only checks for
+valid json syntax, but not any fields. So we might want to avoid others
+going missing.
+
+Thanks
+James
