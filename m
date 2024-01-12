@@ -1,242 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA4E1E529
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jan 2024 15:18:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321CA168BB
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jan 2024 20:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atishpatra.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tzb2QBrN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF56C433C7;
-	Fri, 12 Jan 2024 15:18:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705072701;
-	bh=cyoFKDJwKlwWfdVSC4UDlCsz5aFY6MIAyF8OoPAC1OE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tzb2QBrN1nlXWvKcxU6npNk3ZBcfz8gY0S0OGJZhBcYrKGCbyUJe8zsDkQTYahimM
-	 5YsQGruhbr4Kw3ZPuxgE9+A0HgpBOO7cCcTkVF9jmqgGwdTj1WfKnYQfgsB5fx9Rgw
-	 Mc4FPOlN9MedJx6JnwlJXxTjaCrd7kNcQuwE2KK4RHP58Fc+Tnu+XEWVYtKSSDd2t3
-	 05hzzRCfsb/5lEzOWE2QPvtMHi3igSNpS4yGouqSjYaIAMj7ysP+I0mWSXoDuQxQ77
-	 vmJg1canrYxG2nIuvpqHIkAepqC48V9gptoNWKFk64hhDQhjISODpw75Nb9pyd9QIt
-	 a+liLMRIvu/4g==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 95664403EF; Fri, 12 Jan 2024 12:18:18 -0300 (-03)
-Date: Fri, 12 Jan 2024 12:18:18 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Yuzhong Huang <yuzhongh@usc.edu>
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: Unable to run `perf stat` on Intel hybrid system with e-core
- (atom) disabled
-Message-ID: <ZaFYOt5Wz4UFpymW@kernel.org>
-References: <CAMRy72f0kF_8-BoJfb1_qmpgMLcNFmzPhYQaury_XeDnhPPXxA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="Fwq2AjHI"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2cceb5f0918so73410191fa.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jan 2024 12:17:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google; t=1705090655; x=1705695455; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pdPl62Kj42qLAAkF8TWMuSZ2lBBKNdyCgrrnQIbbjq8=;
+        b=Fwq2AjHIyFpG2IaJ27tSwuuZ/xbbtesbwdSGnd6CwtobljvZ7E0DFwPgUTdmYoexcY
+         Z+ec2BIYdtWmKXmDBYsEK641IaYWtWjiv0XK0gbiBAqk6yFbPGB/JmHpx3v8nGVx/nFl
+         7hS5P68rLMCdpLUCIAQ4QOp3xnKdIG8kL85Iw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705090655; x=1705695455;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pdPl62Kj42qLAAkF8TWMuSZ2lBBKNdyCgrrnQIbbjq8=;
+        b=Ch2SiEmJX3NlUXivj6YCDvpzD22XYykJ5/P6FQVsVralQJ6oo6bDENlfWdU9H9PuKL
+         CK+sHPKd4CRIljnUPO78opFIghAdDqEuRZcsBXpjljdnQraT5ACDznbiFV7KSZrWOcti
+         npVgZrb8wfVVB1W9Yx8CaIHnD5XAhS9eamkeJzPf8xAGAgiwNmfi8/UQ9O6+qh2N8UrN
+         dw4AOipDr0p7dXRPQJqkqdwg2h3y1YUQ67wd3FkFB6EcP/oJ0DjGllTaIKMrvnSVDv7s
+         IilfhbunjHFaEmSpYMFDHqh8lCytLWyungkbJwf/r2yVbiplK56voiQJdfqDedszHjdP
+         YOOA==
+X-Gm-Message-State: AOJu0YwCG4AQKHgynAS/gBY9J4foGHTNiwijZCJGZ193H0k9J11txvQ5
+	fxQAhMhMlHlt/48kRTcMEot8VDfS96ePyMeYXyQxhJbKsJzE
+X-Google-Smtp-Source: AGHT+IH9QK11T/Suh1c1OYYHTXmVh+no7GMm/AzsKYmS9El+CD8gOLnlidxHzce7VuVJ4ZtS2BQI67YGB4XrpVAbABo=
+X-Received: by 2002:a2e:740d:0:b0:2cd:900c:d5ff with SMTP id
+ p13-20020a2e740d000000b002cd900cd5ffmr665638ljc.0.1705090654991; Fri, 12 Jan
+ 2024 12:17:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRy72f0kF_8-BoJfb1_qmpgMLcNFmzPhYQaury_XeDnhPPXxA@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+References: <20240110073917.2398826-1-peterlin@andestech.com> <20240110073917.2398826-7-peterlin@andestech.com>
+In-Reply-To: <20240110073917.2398826-7-peterlin@andestech.com>
+From: Atish Patra <atishp@atishpatra.org>
+Date: Fri, 12 Jan 2024 12:17:23 -0800
+Message-ID: <CAOnJCUJuDk6euX_XKiQ3H=TSGU02fgGgqSq-WycDwurq1XkDHw@mail.gmail.com>
+Subject: Re: [PATCH v7 06/16] perf: RISC-V: Eliminate redundant interrupt
+ enable/disable operations
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, conor+dt@kernel.org, 
+	conor.dooley@microchip.com, conor@kernel.org, devicetree@vger.kernel.org, 
+	dminus@andestech.com, evan@rivosinc.com, geert+renesas@glider.be, 
+	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
+	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
+	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
+	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
+	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
+	uwu@icenowy.me, wens@csie.org, will@kernel.org, ycliang@andestech.com, 
+	inochiama@outlook.com, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
+	wefu@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Sat, Dec 30, 2023 at 02:25:55AM -0800, Yuzhong Huang escreveu:
-> Hi Linux Perf Users,
-> 
-> On my system (intel 12600k), if I disable the e-cores in bios, perf
-> stat command would fail:
-> > root@localhost:~# perf stat sleep 1
-> > Error:
-> > The sys_perf_event_open() syscall returned with 12 (Cannot allocate memory) for event (cpu_atom/cycles/).
-> > /bin/dmesg | grep -i perf may provide additional information.
-> 
-> Looks like it's trying to read some counters from the e-core (atom). I
-> have tried `perf stat --cputype=core  sleep 1`, still doesn't work.
-> 
-> I notice that if I do a system wide `perf stat`, it works as expected.
-> Other perf tools like `perf record`, `perf top` all work as expected.
-> 
-> I have run `perf list`, which does include all kinds of events from
-> e-core(atom), even though they have been disabled in the bios.
-> 
-> I wonder if there is a switch to get around this? For example to
-> override the list of events. Or if it has to be fixed somewhere in the
-> code, which file should I look at? I am happy to work on a patch.
+On Tue, Jan 9, 2024 at 11:40=E2=80=AFPM Yu Chien Peter Lin
+<peterlin@andestech.com> wrote:
+>
+> The interrupt enable/disable operations are already performed by the
+> IRQ chip functions riscv_intc_irq_unmask()/riscv_intc_irq_mask() during
+> enable_percpu_irq()/disable_percpu_irq(). It can be done only once.
+>
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> ---
+> This patch allows us to drop unnecessary ALT_SBI_PMU_OVF_{DISABLE,ENABLE}
+> in the initial PATCH3 [1].
+>
+> [1] https://patchwork.kernel.org/project/linux-riscv/patch/20230907021635=
+.1002738-4-peterlin@andestech.com/
+>
+> Changes v1 -> v2:
+>   - New patch
+> Changes v2 -> v3:
+>   - No change
+> Changes v3 -> v4:
+>   - No change
+> Changes v4 -> v5:
+>   - No change
+> Changes v5 -> v6:
+>   - No change
+> Changes v6 -> v7:
+>   - No change
+> ---
+>  drivers/perf/riscv_pmu_sbi.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 16acd4dcdb96..2edbc37abadf 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -781,7 +781,6 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, str=
+uct hlist_node *node)
+>         if (riscv_pmu_use_irq) {
+>                 cpu_hw_evt->irq =3D riscv_pmu_irq;
+>                 csr_clear(CSR_IP, BIT(riscv_pmu_irq_num));
+> -               csr_set(CSR_IE, BIT(riscv_pmu_irq_num));
+>                 enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
+>         }
+>
+> @@ -792,7 +791,6 @@ static int pmu_sbi_dying_cpu(unsigned int cpu, struct=
+ hlist_node *node)
+>  {
+>         if (riscv_pmu_use_irq) {
+>                 disable_percpu_irq(riscv_pmu_irq);
+> -               csr_clear(CSR_IE, BIT(riscv_pmu_irq_num));
+>         }
+>
+>         /* Disable all counters access for user mode now */
+> --
+> 2.34.1
+>
 
-Well, you can try asking explicitely for the events:
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
-root@number:~# cat /sys/devices/cpu_core/cpus 
-0-15
-root@number:~# taskset --cpu-list 0-15 perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cpu_core/cycles/,cpu_core/instructions/,cpu_core/branches/,cpu_core/branch-misses/ sleep 1
-
- Performance counter stats for 'sleep 1':
-
-              0.32 msec task-clock                       #    0.000 CPUs utilized             
-                 1      context-switches                 #    3.141 K/sec                     
-                 0      cpu-migrations                   #    0.000 /sec                      
-                70      page-faults                      #  219.852 K/sec                     
-         1,224,616      cpu_core/cycles/                 #    3.846 GHz                       
-         1,108,386      cpu_core/instructions/           #    3.481 G/sec                     
-           228,392      cpu_core/branches/               #  717.321 M/sec                     
-             6,995      cpu_core/branch-misses/          #   21.969 M/sec                     
-
-       1.000733944 seconds time elapsed
-
-       0.000568000 seconds user
-       0.000000000 seconds sys
-
-
-root@number:~#
-
-Or perhaps even:
-
-root@number:~# taskset --cpu-list 0-15 perf stat sleep 1
-
- Performance counter stats for 'sleep 1':
-
-              0.30 msec task-clock                       #    0.000 CPUs utilized             
-                 1      context-switches                 #    3.318 K/sec                     
-                 0      cpu-migrations                   #    0.000 /sec                      
-                69      page-faults                      #  228.948 K/sec                     
-     <not counted>      cpu_atom/cycles/                                                        (0.00%)
-         1,122,373      cpu_core/cycles/                 #    3.724 GHz                       
-     <not counted>      cpu_atom/instructions/                                                  (0.00%)
-         1,103,740      cpu_core/instructions/                                                
-     <not counted>      cpu_atom/branches/                                                      (0.00%)
-           225,963      cpu_core/branches/               #  749.764 M/sec                     
-     <not counted>      cpu_atom/branch-misses/                                                 (0.00%)
-             7,047      cpu_core/branch-misses/                                               
-             TopdownL1 (cpu_core)                 #     29.3 %  tma_backend_bound      
-                                                  #     11.5 %  tma_bad_speculation    
-                                                  #     40.4 %  tma_frontend_bound     
-                                                  #     18.8 %  tma_retiring           
-
-       1.000696289 seconds time elapsed
-
-       0.000570000 seconds user
-       0.000000000 seconds sys
-
-
-root@number:~#
-
-Or perhaps:
-
-root@number:~# taskset --cpu-list 0-15 perf stat -C 0-15 sleep 1
-WARNING: A requested CPU in '0-15' is not supported by PMU 'cpu_atom' (CPUs 16-27) for event 'cpu_atom/TOPDOWN_RETIRING.ALL/'
-WARNING: A requested CPU in '0-15' is not supported by PMU 'cpu_atom' (CPUs 16-27) for event 'TOPDOWN_FE_BOUND.ALL'
-WARNING: A requested CPU in '0-15' is not supported by PMU 'cpu_atom' (CPUs 16-27) for event 'TOPDOWN_BE_BOUND.ALL'
-WARNING: A requested CPU in '0-15' is not supported by PMU 'cpu_atom' (CPUs 16-27) for event 'cpu_atom/CPU_CLK_UNHALTED.CORE/'
-WARNING: A requested CPU in '0-15' is not supported by PMU 'cpu_atom' (CPUs 16-27) for event 'TOPDOWN_RETIRING.ALL'
-WARNING: A requested CPU in '0-15' is not supported by PMU 'cpu_atom' (CPUs 16-27) for event 'cpu_atom/TOPDOWN_FE_BOUND.ALL/'
-WARNING: A requested CPU in '0-15' is not supported by PMU 'cpu_atom' (CPUs 16-27) for event 'cpu_atom/TOPDOWN_BE_BOUND.ALL/'
-
- Performance counter stats for 'CPU(s) 0-15':
-
-         16,026.51 msec cpu-clock                        #   15.994 CPUs utilized
-               838      context-switches                 #   52.288 /sec
-                26      cpu-migrations                   #    1.622 /sec
-               860      page-faults                      #   53.661 /sec
-   <not supported>      cpu_atom/cycles/
-       262,965,507      cpu_core/cycles/                 #    0.016 GHz
-   <not supported>      cpu_atom/instructions/
-       237,584,876      cpu_core/instructions/
-   <not supported>      cpu_atom/branches/
-        45,808,011      cpu_core/branches/               #    2.858 M/sec
-   <not supported>      cpu_atom/branch-misses/
-         1,104,286      cpu_core/branch-misses/
-             TopdownL1 (cpu_core)                 #     42.8 %  tma_backend_bound
-                                                  #      7.5 %  tma_bad_speculation
-                                                  #     34.9 %  tma_frontend_bound
-                                                  #     14.9 %  tma_retiring
-
-       1.002034581 seconds time elapsed
-
-root@number:~#
-
-That WARNING doesn't seem to make sense, we're explicitely asking for
-just cpu_core ones :-\
-
-Ian?
-
-Also, is there a way to ask for metrics to be counted just on cpu_core?
-
-root@number:~# taskset --cpu-list 0-15 perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cpu_core/cycles/,cpu_core/instructions/,cpu_core/branches/,cpu_core/branch-misses/ -M TopdownL1 sleep 1
-
- Performance counter stats for 'sleep 1':
-
-              0.33 msec task-clock                       #    0.000 CPUs utilized
-                 1      context-switches                 #    3.057 K/sec
-                 0      cpu-migrations                   #    0.000 /sec
-                70      page-faults                      #  214.010 K/sec
-         1,245,532      cpu_core/cycles/                 #    3.808 GHz
-         1,117,650      cpu_core/instructions/           #    3.417 G/sec
-           229,211      cpu_core/branches/               #  700.765 M/sec
-             7,112      cpu_core/branch-misses/          #   21.743 M/sec
-         7,473,192      cpu_core/TOPDOWN.SLOTS/          #     32.2 %  tma_backend_bound
-                                                  #     10.4 %  tma_bad_speculation
-                                                  #     40.6 %  tma_frontend_bound
-                                                  #     16.9 %  tma_retiring
-         1,260,185      cpu_core/topdown-retiring/
-           761,972      cpu_core/topdown-bad-spec/
-           263,759      cpu_core/topdown-heavy-ops/
-         3,047,890      cpu_core/topdown-fe-bound/
-         2,403,144      cpu_core/topdown-be-bound/
-     <not counted>      cpu_atom/TOPDOWN_RETIRING.ALL/                                          (0.00%)
-     <not counted>      cpu_atom/TOPDOWN_FE_BOUND.ALL/                                          (0.00%)
-     <not counted>      cpu_atom/TOPDOWN_BE_BOUND.ALL/                                          (0.00%)
-     <not counted>      cpu_atom/CPU_CLK_UNHALTED.CORE/                                         (0.00%)
-     <not counted>      cpu_atom/TOPDOWN_RETIRING.ALL/                                          (0.00%)
-     <not counted>      cpu_atom/TOPDOWN_FE_BOUND.ALL/                                          (0.00%)
-            11,655      cpu_core/INT_MISC.UOP_DROPPING/  #   35.633 M/sec
-     <not counted>      cpu_atom/TOPDOWN_BE_BOUND.ALL/                                          (0.00%)
-
-       1.000732788 seconds time elapsed
-
-       0.000000000 seconds user
-       0.000606000 seconds sys
-
-
-root@number:~#
-
-Also would be interesting to provide some info on the output about
-thread mode being used for some of the counters used in metrics:
-
-root@number:~# taskset --cpu-list 0-15 perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cpu_core/cycles/,cpu_core/instructions/,cpu_core/branches/,cpu_core/branch-misses/,cpu_core/topdown-retiring/,cpu_core/topdown-bad-spec/,cpu_core/topdown-heavy-ops/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/,cpu_core/INT_MISC.UOP_DROPPING/ sleep 1
-WARNING: events were regrouped to match PMUs
-Error:
-Invalid event (cpu_core/topdown-retiring/) in per-thread mode, enable system wide with '-a'.
-root@number:~# taskset --cpu-list 0-15 perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cpu_core/cycles/,cpu_core/instructions/,cpu_core/branches/,cpu_core/branch-misses/,cpu_core/topdown-bad-spec/,cpu_core/topdown-heavy-ops/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/,cpu_core/INT_MISC.UOP_DROPPING/ sleep 1
-WARNING: events were regrouped to match PMUs
-Error:
-Invalid event (cpu_core/topdown-bad-spec/) in per-thread mode, enable system wide with '-a'.
-root@number:~# taskset --cpu-list 0-15 perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cpu_core/cycles/,cpu_core/instructions/,cpu_core/branches/,cpu_core/branch-misses/,cpu_core/topdown-heavy-ops/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/,cpu_core/INT_MISC.UOP_DROPPING/ sleep 1
-WARNING: events were regrouped to match PMUs
-Error:
-Invalid event (cpu_core/topdown-heavy-ops/) in per-thread mode, enable system wide with '-a'.
-root@number:~# taskset --cpu-list 0-15 perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cpu_core/cycles/,cpu_core/instructions/,cpu_core/branches/,cpu_core/branch-misses/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/,cpu_core/INT_MISC.UOP_DROPPING/ sleep 1
-WARNING: events were regrouped to match PMUs
-Error:
-Invalid event (cpu_core/topdown-fe-bound/) in per-thread mode, enable system wide with '-a'.
-root@number:~# taskset --cpu-list 0-15 perf stat -e task-clock,context-switches,cpu-migrations,page-faults,cpu_core/cycles/,cpu_core/instructions/,cpu_core/branches/,cpu_core/branch-misses/,cpu_core/topdown-be-bound/,cpu_core/INT_MISC.UOP_DROPPING/ sleep 1
-
- Performance counter stats for 'sleep 1':
-
-              0.33 msec task-clock                       #    0.000 CPUs utilized
-                 1      context-switches                 #    3.040 K/sec
-                 0      cpu-migrations                   #    0.000 /sec
-                69      page-faults                      #  209.746 K/sec
-         1,219,634      cpu_core/cycles/                 #    3.707 GHz
-         1,126,731      cpu_core/instructions/           #    3.425 G/sec
-           231,144      cpu_core/branches/               #  702.629 M/sec
-             6,999      cpu_core/branch-misses/          #   21.275 M/sec
-   <not supported>      cpu_core/topdown-be-bound/
-            11,832      cpu_core/INT_MISC.UOP_DROPPING/  #   35.967 M/sec
-
-       1.000772605 seconds time elapsed
-
-       0.000638000 seconds user
-       0.000000000 seconds sys
-
-
-root@number:~#
-
-- Arnaldo
+--=20
+Regards,
+Atish
