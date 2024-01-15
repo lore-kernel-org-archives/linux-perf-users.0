@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56E221A01;
-	Mon, 15 Jan 2024 23:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBB91B952;
+	Mon, 15 Jan 2024 23:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvaND2n0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 557ABC43399;
-	Mon, 15 Jan 2024 23:27:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNMYPzU2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15811C433C7;
+	Mon, 15 Jan 2024 23:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705361248;
-	bh=/mtGC3dAeGirAxx76w0zBinixbRGMNd/NfUpbG8wlkk=;
+	s=k20201202; t=1705361305;
+	bh=nRA6/zOt2XFjcIKDedy6Jy81KL9baOfv490eNKYrqFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uvaND2n01NQXbjcusfoOfiUXhaeN/6tjaYSFbmQe7fZhAvWX74gCml0UlfU/4TjFT
-	 CXUExBJFyevFjmOTgby2p7jKv8b3mtAHiisjvNFYX/xgC8Iv/p5WVJQAMHeZ8g3bBd
-	 MS2uU7PSU5EvaNUYIkMNVywFs5HwWizybohISHaJkpBnbLwRGoShN+1KI3jQrZzPVa
-	 ssnuMDZO7UJy1eNvpeQWxAWv4PFASWN81bChz0b4Jnfao6WpLxjE7SNB+s5rvKduur
-	 jcK7TOZeq+NIlftJQ7hDGpMSG74Hb9K785+W5kYtfHnWRe6EsVB42JgURh/Hn2sKFk
-	 7UlEz315KGACQ==
+	b=qNMYPzU2ni+n2XLPMwRXlFrs7Vho/KTl28Mmp3oC7suohWiHaWoIXyVXiIhPK30ur
+	 i0I2hI3pXOJUix9rACFHcV1VvLMuIeqK82VvX0iyZtOJwPWunpcyiZk0GiRZlyJ3go
+	 QAi7DhIIPdzkBwN8YsXasPqMvrjcQkmDc81tpXFOhtrpK6n7e/qDZE7tAmeIKDF04d
+	 N7SaWmf8US2xbothP7lmqBuoB4DrcRIoKmA+WMWriBf5IYe1sQ7X7z9GtujC3leXaQ
+	 jELarg0KmV4FsPyRcdMQQmN8c0ASMHCHVmD+cksr1fi6Fg3XKTtCUh0F7TuFXju9F3
+	 caxikNfLzs7Hw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -29,12 +29,12 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	catalin.marinas@arm.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 04/12] drivers/perf: pmuv3: don't expose SW_INCR event in sysfs
-Date: Mon, 15 Jan 2024 18:26:49 -0500
-Message-ID: <20240115232718.209642-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 03/10] drivers/perf: pmuv3: don't expose SW_INCR event in sysfs
+Date: Mon, 15 Jan 2024 18:27:52 -0500
+Message-ID: <20240115232818.210010-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240115232718.209642-1-sashal@kernel.org>
-References: <20240115232718.209642-1-sashal@kernel.org>
+In-Reply-To: <20240115232818.210010-1-sashal@kernel.org>
+References: <20240115232818.210010-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,7 +43,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.147
+X-stable-base: Linux 5.10.208
 Content-Transfer-Encoding: 8bit
 
 From: Mark Rutland <mark.rutland@arm.com>
@@ -77,11 +77,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index b4044469527e..c77b9460d63e 100644
+index cdb3d4549b3a..8e428f8dd108 100644
 --- a/arch/arm64/kernel/perf_event.c
 +++ b/arch/arm64/kernel/perf_event.c
-@@ -168,7 +168,11 @@ armv8pmu_events_sysfs_show(struct device *dev,
- 	PMU_EVENT_ATTR_ID(name, armv8pmu_events_sysfs_show, config)
+@@ -171,7 +171,11 @@ armv8pmu_events_sysfs_show(struct device *dev,
+ 	}).attr.attr)
  
  static struct attribute *armv8_pmuv3_event_attrs[] = {
 -	ARMV8_EVENT_ATTR(sw_incr, ARMV8_PMUV3_PERFCTR_SW_INCR),
