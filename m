@@ -1,164 +1,340 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBE11CD14;
-	Tue, 16 Jan 2024 18:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F149C28688
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jan 2024 20:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705428625; cv=none; b=ZSQF6qTzqD7QMGU1r1c6T2nr65qeogWwbfomUmuYnrH6cpiHfY/RpQodJ1YaNrMUg77X/uTdTlMGdsOdrO7jewMY4+xZPkqBQVVCef7zykkZnsDAGdVMOW2Q5JhSqXGcW9RiDxTsLVkbilFwYmKvTekinhTf6JB7JeupwzB59+o=
+	t=1705438557; cv=none; b=aovO55JJasKi4Yop+Upp22QEssodhFisGP1y/5B9PpIDEcF2J5WyVn6Fr9wNMl7+R1jyLqaM1ZLYSiUF1z6iCrIMQTUQUNtUZ3A3rHx/OFj1XITrNbWi2YvNxnSG5dsKCXKC0fJLd9vgJ9JQWZqghxyzE4GWuLuz190S1v4GHhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705428625; c=relaxed/simple;
-	bh=HKMeSq1CvvR0ifd7kUvkbyWIGnf9TiWo23dGO2t6Rfo=;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:
-	 Organization:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	b=MPoORMJYH0RGy7gu277Rw3I3FoUXmYn72sooQ+RP3/nfJEIgks3K504M6tb3tOfwq5Uysx9bGLnMqKEec1LYb27kPhDj2v7NxwrH8daMKKWPwuhCW4KM6zyI7s0CwwntM8ii/0J0yJVK/SMfK7ShCPGolc60hfDnuXZzry81h5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Q6zTZRse; arc=none smtp.client-ip=185.125.188.120
+	s=arc-20240116; t=1705438557; c=relaxed/simple;
+	bh=EDcdzIOhXQ/52ms8gzeDSrTpan3bCbvz3619AOQ1tBU=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=HKZ7AmWaRQNZaaaNriShueKKiG/ZvI3oHYdccMq4Ip+fvwLsIlHl3ZCS94QuXsn8a+aRus8yZM0BitBCgnT1QbSbmTFIlPAnFkQxqeZsvh3KMjZlGln0+d7a20D/mGyPphn944vkHrFgnEDGSVjo5Fqz1EyFn+2rQ9AhbXfhS/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org; spf=pass smtp.mailfrom=atishpatra.org; dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b=f6jxmEtM; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atishpatra.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Q6zTZRse"
-Received: from [192.168.192.85] (unknown [50.39.103.33])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 8B76D3F2D0;
-	Tue, 16 Jan 2024 18:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1705428614;
-	bh=fyzXUOOEL+zRBN6qGMyB6wL+dhZyv/h6QB3vjt39SE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=Q6zTZRseRHutC7xlc7sTWoVotqFPaJ+nTKa0Us8pWOCACIE6GJE7Y6tBUIV/9DS9y
-	 9g0hYGxsIrnFBl0yPlxAZOYqUJT3TOZ13VwbQWN6AOVtgQf16n+yKToRw5d5bXvToJ
-	 uHpf197MOKXmjdaW6KkVn7hiTmZzP0Gloz7iTFTW2jUNpwX06SN228nqF67ejCWgLx
-	 Tu90GgBlHEr6VT7Ru50+Ee2e/49lrwglJikniuldFXpucJpLVBm+egxlAQ4zpDZrC7
-	 tUc7N9RsSozlIVrfhhOEFynk7oYPZMSfDNu5SvacJ2SyPDBg7d4Y5l2fyMrEppsojo
-	 E3m6nIHb5nwag==
-Message-ID: <b26f06ee-9617-4ba2-aa4e-b431407acd7a@canonical.com>
-Date: Tue, 16 Jan 2024 10:10:03 -0800
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="f6jxmEtM"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cd0f4f306fso120666611fa.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Jan 2024 12:55:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google; t=1705438553; x=1706043353; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n7aeoNCGecPYipNdateEPrHUR8jipxighb0wJVc74QM=;
+        b=f6jxmEtM54r8oDuQFOwdHbMg+z9y4Mx2xlj8j/f4tae/HrtpLQA3PhPnK9GU28CEim
+         V1Mect/gAQQ3fP38vycuywdeUFP4qCMVZJk925B0u2KNYqP2IotPH1TI0DcZGSZBXKHv
+         YJSJZy64DlAjbK5pqL6xN+Ie69TxMzx4tx9pI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705438553; x=1706043353;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n7aeoNCGecPYipNdateEPrHUR8jipxighb0wJVc74QM=;
+        b=vTfXmMcr+kSJ5Tj7V4eSfE0va5ZpdNdpeYeHL3Y7YQdqQeslvOz33SV9dB4mgivJSe
+         6z8rtDtqjZjGuN0E7f9HqlKRRM0h8hc41C+rPl5SrX3OyIeh/IG/W7kM6KFtqbkdI0OE
+         xZ0YYEktK2Ut7VOHnjRbc8rUEwSjaYAV0Z3VV+qHBRhP/FgVrjxfedw4EhbDTlF5ddO9
+         tuVyFzZxpBvhuesGbmyGIv9dH5Yl082S8YQdhbuscxGQcVP5qcv89X2DEO67rXsnSywn
+         jwZrwkPXamctIKdujMnzZSPs7dvErGZlJVEznpsg9b1x7mNYFQTB6vjudl0DscDmJCEs
+         UG7w==
+X-Gm-Message-State: AOJu0Yy/eeZCu4vqfaYezojFTymRVcplsx80akutXSt7DfNklwQRkIrI
+	Fn1EWzfvOgvdgmEpFu4NVe/L538XVHPSnaulk5DANEBchdNH
+X-Google-Smtp-Source: AGHT+IG3hQqwOEAuQIEe26wVuEJZ0hqaSYghTTXqBTohi8bagHfjNbU3GhlWTUQwbqnDsE5lrjQe3fr3XFikPueYIHg=
+X-Received: by 2002:a2e:b0f2:0:b0:2cd:2ac6:9685 with SMTP id
+ h18-20020a2eb0f2000000b002cd2ac69685mr3760083ljl.92.1705438552740; Tue, 16
+ Jan 2024 12:55:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/57] apparmor: Free up __cleanup() name
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>, torvalds@linux-foundation.org,
- keescook@chromium.org, gregkh@linuxfoundation.org, pbonzini@redhat.com
-Cc: masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
- nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
- vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
- longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org, tj@kernel.org,
- cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
- vschneid@redhat.com, paulmck@kernel.org, frederic@kernel.org,
- quic_neeraju@quicinc.com, joel@joelfernandes.org, josh@joshtriplett.org,
- mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com, rientjes@google.com,
- vbabka@suse.cz, roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
- apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com,
- lukas.bulwahn@gmail.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
- llvm@lists.linux.dev, linux-perf-users@vger.kernel.org, rcu@vger.kernel.org,
- linux-security-module@vger.kernel.org, tglx@linutronix.de,
- ravi.bangoria@amd.com, error27@gmail.com, luc.vanoostenryck@gmail.com
-References: <20230612090713.652690195@infradead.org>
- <20230612093537.536441207@infradead.org>
-From: John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; keydata=
- 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 lT9Q
-Organization: Canonical
-In-Reply-To: <20230612093537.536441207@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240110073917.2398826-1-peterlin@andestech.com> <20240110073917.2398826-8-peterlin@andestech.com>
+In-Reply-To: <20240110073917.2398826-8-peterlin@andestech.com>
+From: Atish Patra <atishp@atishpatra.org>
+Date: Tue, 16 Jan 2024 12:55:41 -0800
+Message-ID: <CAOnJCUKY8H+pvgTWW5zkfm8O4WR-OWOKmyPTcMjUZBCC5RaLWQ@mail.gmail.com>
+Subject: Re: [PATCH v7 07/16] RISC-V: Move T-Head PMU to CPU feature
+ alternative framework
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, conor+dt@kernel.org, 
+	conor.dooley@microchip.com, conor@kernel.org, devicetree@vger.kernel.org, 
+	dminus@andestech.com, evan@rivosinc.com, geert+renesas@glider.be, 
+	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
+	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
+	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
+	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
+	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
+	uwu@icenowy.me, wens@csie.org, will@kernel.org, ycliang@andestech.com, 
+	inochiama@outlook.com, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
+	wefu@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/12/23 02:07, Peter Zijlstra wrote:
-> In order to use __cleanup for __attribute__((__cleanup__(func))) the
-> name must not be used for anything else. Avoid the conflict.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Tue, Jan 9, 2024 at 11:40=E2=80=AFPM Yu Chien Peter Lin
+<peterlin@andestech.com> wrote:
+>
+> The custom PMU extension aims to support perf event sampling prior
+> to the ratification of Sscofpmf. Instead of diverting the bits and
+> register reserved for future standard, a set of custom registers is
+> added.  Hence, we may consider it as a CPU feature rather than an
+> erratum.
+>
 
-Acked-by: John Johansen <john.johansen@canonical.com>
+I don't think we should do that. Any custom implementation that
+violates the standard RISC-V spec should
+be an errata not a feature.
+As per my understanding, a vendor can call an extension custom ISA
+extension if the same feature is not available
+in the standard ISA extensions or the mechanism is completely
+different. It must also not violate any standard spec as well.
 
+In this case, a standard sscofpmf is already available. Moreover, both
+Andes and T-head extensions violate the standard
+spec by reusing local interrupt numbers (17(Thead) & 18(Andes)) which
+are clearly specified as reserved for standard local interrupts
+in the AIA specification.
+
+Please implementation Andes PMU support as an errata as well similar to T-h=
+ead
+
+
+> T-Head cores need to append "xtheadpmu" to the riscv,isa-extensions
+> for each cpu node in device tree, and enable CONFIG_THEAD_CUSTOM_PMU
+> for proper functioning as of this commit.
+>
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Reviewed-by: Guo Ren <guoren@kernel.org>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 > ---
->   security/apparmor/include/lib.h |    6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> --- a/security/apparmor/include/lib.h
-> +++ b/security/apparmor/include/lib.h
-> @@ -232,7 +232,7 @@ void aa_policy_destroy(struct aa_policy
->    */
->   #define fn_label_build(L, P, GFP, FN)					\
->   ({									\
-> -	__label__ __cleanup, __done;					\
-> +	__label__ __do_cleanup, __done;					\
->   	struct aa_label *__new_;					\
->   									\
->   	if ((L)->size > 1) {						\
-> @@ -250,7 +250,7 @@ void aa_policy_destroy(struct aa_policy
->   			__new_ = (FN);					\
->   			AA_BUG(!__new_);				\
->   			if (IS_ERR(__new_))				\
-> -				goto __cleanup;				\
-> +				goto __do_cleanup;			\
->   			__lvec[__j++] = __new_;				\
->   		}							\
->   		for (__j = __count = 0; __j < (L)->size; __j++)		\
-> @@ -272,7 +272,7 @@ void aa_policy_destroy(struct aa_policy
->   			vec_cleanup(profile, __pvec, __count);		\
->   		} else							\
->   			__new_ = NULL;					\
-> -__cleanup:								\
-> +__do_cleanup:								\
->   		vec_cleanup(label, __lvec, (L)->size);			\
->   	} else {							\
->   		(P) = labels_profile(L);				\
-> 
-> 
+> Changes v1 -> v2:
+>   - New patch
+> Changes v2 -> v3:
+>   - Removed m{vendor/arch/imp}id checks in pmu_sbi_setup_irqs()
+> Changes v3 -> v4:
+>   - No change
+> Changes v4 -> v5:
+>   - Include Guo's Reviewed-by
+>   - Let THEAD_CUSTOM_PMU depend on ARCH_THEAD
+> Changes v5 -> v6:
+>   - Include Conor's Reviewed-by
+> Changes v6 -> v7:
+>   - No change
+> ---
+>  arch/riscv/Kconfig.errata            | 13 -------------
+>  arch/riscv/errata/thead/errata.c     | 19 -------------------
+>  arch/riscv/include/asm/errata_list.h | 15 +--------------
+>  arch/riscv/include/asm/hwcap.h       |  1 +
+>  arch/riscv/kernel/cpufeature.c       |  1 +
+>  drivers/perf/Kconfig                 | 13 +++++++++++++
+>  drivers/perf/riscv_pmu_sbi.c         | 19 ++++++++++++++-----
+>  7 files changed, 30 insertions(+), 51 deletions(-)
+>
+> diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
+> index e2c731cfed8c..0d19f47d1018 100644
+> --- a/arch/riscv/Kconfig.errata
+> +++ b/arch/riscv/Kconfig.errata
+> @@ -86,17 +86,4 @@ config ERRATA_THEAD_CMO
+>
+>           If you don't know what to do here, say "Y".
+>
+> -config ERRATA_THEAD_PMU
+> -       bool "Apply T-Head PMU errata"
+> -       depends on ERRATA_THEAD && RISCV_PMU_SBI
+> -       default y
+> -       help
+> -         The T-Head C9xx cores implement a PMU overflow extension very
+> -         similar to the core SSCOFPMF extension.
+> -
+> -         This will apply the overflow errata to handle the non-standard
+> -         behaviour via the regular SBI PMU driver and interface.
+> -
+> -         If you don't know what to do here, say "Y".
+> -
+>  endmenu # "CPU errata selection"
+> diff --git a/arch/riscv/errata/thead/errata.c b/arch/riscv/errata/thead/e=
+rrata.c
+> index 0554ed4bf087..5de5f7209132 100644
+> --- a/arch/riscv/errata/thead/errata.c
+> +++ b/arch/riscv/errata/thead/errata.c
+> @@ -53,22 +53,6 @@ static bool errata_probe_cmo(unsigned int stage,
+>         return true;
+>  }
+>
+> -static bool errata_probe_pmu(unsigned int stage,
+> -                            unsigned long arch_id, unsigned long impid)
+> -{
+> -       if (!IS_ENABLED(CONFIG_ERRATA_THEAD_PMU))
+> -               return false;
+> -
+> -       /* target-c9xx cores report arch_id and impid as 0 */
+> -       if (arch_id !=3D 0 || impid !=3D 0)
+> -               return false;
+> -
+> -       if (stage =3D=3D RISCV_ALTERNATIVES_EARLY_BOOT)
+> -               return false;
+> -
+> -       return true;
+> -}
+> -
+>  static u32 thead_errata_probe(unsigned int stage,
+>                               unsigned long archid, unsigned long impid)
+>  {
+> @@ -80,9 +64,6 @@ static u32 thead_errata_probe(unsigned int stage,
+>         if (errata_probe_cmo(stage, archid, impid))
+>                 cpu_req_errata |=3D BIT(ERRATA_THEAD_CMO);
+>
+> -       if (errata_probe_pmu(stage, archid, impid))
+> -               cpu_req_errata |=3D BIT(ERRATA_THEAD_PMU);
+> -
+>         return cpu_req_errata;
+>  }
+>
+> diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/include/as=
+m/errata_list.h
+> index 4ed21a62158c..9bccc2ba0eb5 100644
+> --- a/arch/riscv/include/asm/errata_list.h
+> +++ b/arch/riscv/include/asm/errata_list.h
+> @@ -25,8 +25,7 @@
+>  #ifdef CONFIG_ERRATA_THEAD
+>  #define        ERRATA_THEAD_PBMT 0
+>  #define        ERRATA_THEAD_CMO 1
+> -#define        ERRATA_THEAD_PMU 2
+> -#define        ERRATA_THEAD_NUMBER 3
+> +#define        ERRATA_THEAD_NUMBER 2
+>  #endif
+>
+>  #ifdef __ASSEMBLY__
+> @@ -147,18 +146,6 @@ asm volatile(ALTERNATIVE_2(                         =
+                       \
+>             "r"((unsigned long)(_start) + (_size))                      \
+>         : "a0")
+>
+> -#define THEAD_C9XX_RV_IRQ_PMU                  17
+> -#define THEAD_C9XX_CSR_SCOUNTEROF              0x5c5
+> -
+> -#define ALT_SBI_PMU_OVERFLOW(__ovl)                                    \
+> -asm volatile(ALTERNATIVE(                                              \
+> -       "csrr %0, " __stringify(CSR_SSCOUNTOVF),                        \
+> -       "csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),             \
+> -               THEAD_VENDOR_ID, ERRATA_THEAD_PMU,                      \
+> -               CONFIG_ERRATA_THEAD_PMU)                                \
+> -       : "=3Dr" (__ovl) :                                               =
+ \
+> -       : "memory")
+> -
+>  #endif /* __ASSEMBLY__ */
+>
+>  #endif
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwca=
+p.h
+> index 5340f818746b..480f9da7fba7 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -80,6 +80,7 @@
+>  #define RISCV_ISA_EXT_ZFA              71
+>  #define RISCV_ISA_EXT_ZTSO             72
+>  #define RISCV_ISA_EXT_ZACAS            73
+> +#define RISCV_ISA_EXT_XTHEADPMU                74
+>
+>  #define RISCV_ISA_EXT_MAX              128
+>  #define RISCV_ISA_EXT_INVALID          U32_MAX
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index e32591e9da90..4aded5bf8fc3 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -303,6 +303,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D {
+>         __RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
+>         __RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+>         __RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+> +       __RISCV_ISA_EXT_DATA(xtheadpmu, RISCV_ISA_EXT_XTHEADPMU),
+>  };
+>
+>  const size_t riscv_isa_ext_count =3D ARRAY_SIZE(riscv_isa_ext);
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index 273d67ecf6d2..6cef15ec7c25 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -86,6 +86,19 @@ config RISCV_PMU_SBI
+>           full perf feature support i.e. counter overflow, privilege mode
+>           filtering, counter configuration.
+>
+> +config THEAD_CUSTOM_PMU
+> +       bool "T-Head custom PMU support"
+> +       depends on ARCH_THEAD && RISCV_ALTERNATIVE && RISCV_PMU_SBI
+> +       default y
+> +       help
+> +         The T-Head C9xx cores implement a PMU overflow extension very
+> +         similar to the core SSCOFPMF extension.
+> +
+> +         This will patch the overflow CSR and handle the non-standard
+> +         behaviour via the regular SBI PMU driver and interface.
+> +
+> +         If you don't know what to do here, say "Y".
+> +
+>  config ARM_PMU_ACPI
+>         depends on ARM_PMU && ACPI
+>         def_bool y
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 2edbc37abadf..31ca79846399 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -20,10 +20,21 @@
+>  #include <linux/cpu_pm.h>
+>  #include <linux/sched/clock.h>
+>
+> -#include <asm/errata_list.h>
+>  #include <asm/sbi.h>
+>  #include <asm/cpufeature.h>
+>
+> +#define THEAD_C9XX_RV_IRQ_PMU          17
+> +#define THEAD_C9XX_CSR_SCOUNTEROF      0x5c5
+> +
+> +#define ALT_SBI_PMU_OVERFLOW(__ovl)                                    \
+> +asm volatile(ALTERNATIVE(                                              \
+> +       "csrr %0, " __stringify(CSR_SSCOUNTOVF),                        \
+> +       "csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),             \
+> +               0, RISCV_ISA_EXT_XTHEADPMU,                             \
+> +               CONFIG_THEAD_CUSTOM_PMU)                                \
+> +       : "=3Dr" (__ovl) :                                               =
+ \
+> +       : "memory")
+> +
+>  #define SYSCTL_NO_USER_ACCESS  0
+>  #define SYSCTL_USER_ACCESS     1
+>  #define SYSCTL_LEGACY          2
+> @@ -808,10 +819,8 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu,=
+ struct platform_device *pde
+>         if (riscv_isa_extension_available(NULL, SSCOFPMF)) {
+>                 riscv_pmu_irq_num =3D RV_IRQ_PMU;
+>                 riscv_pmu_use_irq =3D true;
+> -       } else if (IS_ENABLED(CONFIG_ERRATA_THEAD_PMU) &&
+> -                  riscv_cached_mvendorid(0) =3D=3D THEAD_VENDOR_ID &&
+> -                  riscv_cached_marchid(0) =3D=3D 0 &&
+> -                  riscv_cached_mimpid(0) =3D=3D 0) {
+> +       } else if (riscv_isa_extension_available(NULL, XTHEADPMU) &&
+> +                  IS_ENABLED(CONFIG_THEAD_CUSTOM_PMU)) {
+>                 riscv_pmu_irq_num =3D THEAD_C9XX_RV_IRQ_PMU;
+>                 riscv_pmu_use_irq =3D true;
+>         }
+> --
+> 2.34.1
+>
 
+
+--
+Regards,
+Atish
