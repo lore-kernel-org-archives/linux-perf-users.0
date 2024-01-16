@@ -1,103 +1,97 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1881A1B94D;
-	Tue, 16 Jan 2024 11:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TDn391dhMz1xmFr;
-	Tue, 16 Jan 2024 19:34:13 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 11B1A1A016B;
-	Tue, 16 Jan 2024 19:34:57 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Tue, 16 Jan 2024 19:34:55 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH 0/3] perf: script: Intro capstone disasm engine to show instruction trace
-Date: Tue, 16 Jan 2024 19:34:34 +0800
-Message-ID: <20240116113437.1507537-1-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF52B1B97C;
+	Tue, 16 Jan 2024 12:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h1oun1bk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705407753; x=1736943753;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=LzEFqIDkEf+pL1vSvs+eYDMky2CkT9z1U+TPoNwWcj0=;
+  b=h1oun1bkZ5uaQOirPhUVU93/8mQgFD08qJmGqnoIIt/5IngOtDCq9jO4
+   iSH7XC0brURoOQHSYpB+XJeTZpl4xPw86GFVkHKBVmgXv/KprqOqBVcA1
+   LEMc1bmkeslB27TSQJ7oYIQzLj6YxWbFTgNvLhdXgZj6ebm+DOBfwwKq0
+   0g1pUaPPtbxwJZyu4wKOQ5Dd+hBARxXZf5yqHd24a4EOJjbnFV7dDb8s7
+   i0gW67tHXoIsAz+cW7+YDUep+XCA4DbrTWNRcvzQC1I3qQeTC9l3xSO+G
+   GQvNQnwycnmkFCfwvB7klBE8PpqtnvQ53v6wibY/FH+SezRVUI69BaXSh
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="466227537"
+X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
+   d="scan'208";a="466227537"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 04:22:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="760164094"
+X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
+   d="scan'208";a="760164094"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.38.159])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 04:22:27 -0800
+Message-ID: <60cc9fa8-e714-41d0-a82d-9c8a54dfde4e@intel.com>
+Date: Tue, 16 Jan 2024 14:22:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 10/11] perf intel-pt: Add documentation for pause /
+ resume
+Content-Language: en-US
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
+ <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240111081914.3123-1-adrian.hunter@intel.com>
+ <20240111081914.3123-11-adrian.hunter@intel.com>
+ <87ply1lebh.fsf@linux.intel.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <87ply1lebh.fsf@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This series introduces capstone disassembler engine to print instructions of
-Intel PT trace, which was printed via the XED tool.
+On 16/01/24 13:15, Andi Kleen wrote:
+> Adrian Hunter <adrian.hunter@intel.com> writes:
+>> +
+>> +For example, to trace only the uname system call (sys_newuname) when running the
+>> +command line utility uname:
+>> +
+>> + $ perf record --kcore -e
+>> intel_pt/aux-action=start-paused/k,syscalls:sys_enter_newuname/aux-action=resume/,syscalls:sys_exit_newuname/aux-action=pause/
+>> uname
+> 
+> It's unclear if the syntax works for hardware break points, kprobes, uprobes too?
 
-The advantages compared to XED tool:
-    * Support arm, arm64, x86-32, x86_64 (more could be supported),
-      xed only for x86_64.
-    * More friendly to read. Immediate address operands are shown as symbol+offs.
+Yes, the perf tool syntax requires only that the group leader is
+an AUX area event like intel_pt.  Note that an attempt is made to
+automatically group AUX area events with events with aux-action,
+so grouping syntax like '{...}' is not always necessary.
 
-Before:
-    $ sudo perf record --event intel_pt//u -- ls
-    $ sudo perf script --insn-trace
-                perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
-                perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
-                perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
-                perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
-                perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
-                perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
-                perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
+Note the current kernel implementation is called from
+__perf_event_output() which is used in nearly all cases for the
+output of samples, the exceptions being Intel BTS (which we do not
+support at the same time as Intel PT, but wouldn't make much sense
+anyway) and S390 cpumsf_output_event_pid().
 
-After:
-    $ sudo perf script --insn-trace
-                perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: cmpq $-0xfff, %rax
-                perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: jae __GI___ioctl+0x10
-                perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: retq
-                perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: testl %eax, %eax
-                perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: jne perf_evsel__enable_cpu+0xad
-                perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: movq 0xa8(%r12), %rax
-                perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: movq 0x20(%rax), %rdx
-                perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf) insn: cmpl %edx, %ebx
-                perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf) insn: jl perf_evsel__enable_cpu+0x60
-                perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf) insn: xorl %eax, %eax
+> That would be most useful. If it works would be good to add examples for it.
 
-
-Changbin Du (3):
-  perf: build: introduce the libcapstone
-  perf: script: use capstone disasm engine to show assembly instructions
-  perf: script: deprecate the '--xed' option
-
- tools/build/Makefile.feature               |   2 +
- tools/build/feature/Makefile               |   4 +
- tools/build/feature/test-all.c             |   4 +
- tools/build/feature/test-libcapstone.c     |  11 ++
- tools/perf/Documentation/build-xed.txt     |  19 ----
- tools/perf/Documentation/perf-intel-pt.txt |  17 +--
- tools/perf/Documentation/perf-script.txt   |   5 +-
- tools/perf/Documentation/tips.txt          |   2 +-
- tools/perf/Makefile.config                 |  21 ++++
- tools/perf/Makefile.perf                   |   3 +
- tools/perf/builtin-script.c                |  15 +--
- tools/perf/ui/browsers/res_sample.c        |   2 +-
- tools/perf/ui/browsers/scripts.c           |   4 +-
- tools/perf/util/Build                      |   1 +
- tools/perf/util/print_insn.c               | 118 +++++++++++++++++++++
- tools/perf/util/print_insn.h               |  14 +++
- 16 files changed, 194 insertions(+), 48 deletions(-)
- create mode 100644 tools/build/feature/test-libcapstone.c
- delete mode 100644 tools/perf/Documentation/build-xed.txt
- create mode 100644 tools/perf/util/print_insn.c
- create mode 100644 tools/perf/util/print_insn.h
-
--- 
-2.25.1
+OK
 
