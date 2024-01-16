@@ -1,79 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0991B7ED;
-	Tue, 16 Jan 2024 11:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNWWAf/T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705403716; x=1736939716;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=KGj83XYIkXNIHgAxpE7C2tWJ2jS/Hwvrh3NCtwWmTmE=;
-  b=NNWWAf/TaCm1MF71uSKFnneZgyBVD3sLebhrmg99BpYLeefTOIKp31jD
-   cVJ7NtnOMHu+PRk7XfDnEWKrHqkQrk8DYhFlEAEggQK3Co2zURM3NkhCJ
-   R8+Tbojx92/Io7yIvHAW0KZva5+9p2o9IwS5k4FH2AjRuV3gOdBFXxNcz
-   tjMQpMS1rsI4Jy7BDmZe2gIQF7jkOJUgkHpdKEmEgRnv+g+EBdgByniz0
-   gndPMmH7XRCH7jeyfTL/WjFP6eLfc+sOGuhc9NScVPXlnV39L9qvKZjT2
-   PPoLjwfs60UFfKEHSe8VeJ7jFpgA9Gpc/u9lxgP7l7ERcfrvJQoydP5gV
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10954"; a="7214109"
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="scan'208";a="7214109"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 03:15:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,198,1695711600"; 
-   d="scan'208";a="32419003"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
-  by orviesa001.jf.intel.com with ESMTP; 16 Jan 2024 03:15:15 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-	id C1371301BD1; Tue, 16 Jan 2024 03:15:14 -0800 (PST)
-From: Andi Kleen <ak@linux.intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,
-  Mark Rutland <mark.rutland@arm.com>,  Alexander Shishkin
- <alexander.shishkin@linux.intel.com>,  Heiko Carstens <hca@linux.ibm.com>,
-  Thomas Richter <tmricht@linux.ibm.com>,  Hendrik Brueckner
- <brueckner@linux.ibm.com>,  Suzuki K Poulose <suzuki.poulose@arm.com>,
-  Mike Leach <mike.leach@linaro.org>,  James Clark <james.clark@arm.com>,
-  coresight@lists.linaro.org,  linux-arm-kernel@lists.infradead.org,
-  Yicong Yang <yangyicong@hisilicon.com>,  Jonathan Cameron
- <jonathan.cameron@huawei.com>,  Will Deacon <will@kernel.org>,  Arnaldo
- Carvalho de Melo <acme@kernel.org>,  Jiri Olsa <jolsa@kernel.org>,
-  Namhyung Kim <namhyung@kernel.org>,  Ian Rogers <irogers@google.com>,
-  linux-kernel@vger.kernel.org,  linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V4 10/11] perf intel-pt: Add documentation for pause /
- resume
-In-Reply-To: <20240111081914.3123-11-adrian.hunter@intel.com> (Adrian Hunter's
-	message of "Thu, 11 Jan 2024 10:19:13 +0200")
-References: <20240111081914.3123-1-adrian.hunter@intel.com>
-	<20240111081914.3123-11-adrian.hunter@intel.com>
-Date: Tue, 16 Jan 2024 03:15:14 -0800
-Message-ID: <87ply1lebh.fsf@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA581B94E;
+	Tue, 16 Jan 2024 11:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TDn2w6523zWmZY;
+	Tue, 16 Jan 2024 19:34:00 +0800 (CST)
+Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2AF8E18006E;
+	Tue, 16 Jan 2024 19:35:01 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1258.28; Tue, 16 Jan 2024 19:34:59 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH 1/3] perf: build: introduce the libcapstone
+Date: Tue, 16 Jan 2024 19:34:35 +0800
+Message-ID: <20240116113437.1507537-2-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240116113437.1507537-1-changbin.du@huawei.com>
+References: <20240116113437.1507537-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd100002.china.huawei.com (7.221.188.184)
 
-Adrian Hunter <adrian.hunter@intel.com> writes:
-> +
-> +For example, to trace only the uname system call (sys_newuname) when running the
-> +command line utility uname:
-> +
-> + $ perf record --kcore -e
-> intel_pt/aux-action=start-paused/k,syscalls:sys_enter_newuname/aux-action=resume/,syscalls:sys_exit_newuname/aux-action=pause/
-> uname
+Later we will use libcapstone to disassemble instructions of samples.
 
-It's unclear if the syntax works for hardware break points, kprobes, uprobes too?
-That would be most useful. If it works would be good to add examples for it.
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/build/Makefile.feature           |  2 ++
+ tools/build/feature/Makefile           |  4 ++++
+ tools/build/feature/test-all.c         |  4 ++++
+ tools/build/feature/test-libcapstone.c | 11 +++++++++++
+ tools/perf/Makefile.config             | 21 +++++++++++++++++++++
+ tools/perf/Makefile.perf               |  3 +++
+ 6 files changed, 45 insertions(+)
+ create mode 100644 tools/build/feature/test-libcapstone.c
 
--Andi
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 934e2777a2db..23bee50aeb0f 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -86,6 +86,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          gtk2-infobar                   \
+          hello                          \
+          libbabeltrace                  \
++         libcapstone                    \
+          libbfd-liberty                 \
+          libbfd-liberty-z               \
+          libopencsd                     \
+@@ -133,6 +134,7 @@ FEATURE_DISPLAY ?=              \
+          libcrypto              \
+          libunwind              \
+          libdw-dwarf-unwind     \
++         libcapstone            \
+          zlib                   \
+          lzma                   \
+          get_cpuid              \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index dad79ede4e0a..d6eaade09694 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -53,6 +53,7 @@ FILES=                                          \
+          test-timerfd.bin                       \
+          test-libdw-dwarf-unwind.bin            \
+          test-libbabeltrace.bin                 \
++         test-libcapstone.bin			\
+          test-compile-32.bin                    \
+          test-compile-x32.bin                   \
+          test-zlib.bin                          \
+@@ -282,6 +283,9 @@ $(OUTPUT)test-libdw-dwarf-unwind.bin:
+ $(OUTPUT)test-libbabeltrace.bin:
+ 	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
+ 
++$(OUTPUT)test-libcapstone.bin:
++	$(BUILD) # -lcapstone provided by $(FEATURE_CHECK_LDFLAGS-libcapstone)
++
+ $(OUTPUT)test-compile-32.bin:
+ 	$(CC) -m32 -o $@ test-compile.c
+ 
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index 6f4bf386a3b5..dd0a18c2ef8f 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -134,6 +134,10 @@
+ #undef main
+ #endif
+ 
++#define main main_test_libcapstone
++# include "test-libcapstone.c"
++#undef main
++
+ #define main main_test_lzma
+ # include "test-lzma.c"
+ #undef main
+diff --git a/tools/build/feature/test-libcapstone.c b/tools/build/feature/test-libcapstone.c
+new file mode 100644
+index 000000000000..fbe8dba189e9
+--- /dev/null
++++ b/tools/build/feature/test-libcapstone.c
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <capstone/capstone.h>
++
++int main(void)
++{
++	csh handle;
++
++	cs_open(CS_ARCH_X86, CS_MODE_64, &handle);
++	return 0;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index b3e6ed10f40c..7589725ad178 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -191,6 +191,15 @@ endif
+ FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
+ 
++# for linking with debug library, run like:
++# make DEBUG=1 LIBCAPSTONE_DIR=/opt/capstone/
++ifdef LIBCAPSTONE_DIR
++  LIBCAPSTONE_CFLAGS  := -I$(LIBCAPSTONE_DIR)/include
++  LIBCAPSTONE_LDFLAGS := -L$(LIBCAPSTONE_DIR)/
++endif
++FEATURE_CHECK_CFLAGS-libcapstone := $(LIBCAPSTONE_CFLAGS)
++FEATURE_CHECK_LDFLAGS-libcapstone := $(LIBCAPSTONE_LDFLAGS) -lcapstone
++
+ ifdef LIBZSTD_DIR
+   LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
+   LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
+@@ -1089,6 +1098,18 @@ ifndef NO_LIBBABELTRACE
+   endif
+ endif
+ 
++ifndef NO_CAPSTONE
++  $(call feature_check,libcapstone)
++  ifeq ($(feature-libcapstone), 1)
++    CFLAGS += -DHAVE_LIBCAPSTONE_SUPPORT $(LIBCAPSTONE_CFLAGS)
++    LDFLAGS += $(LICAPSTONE_LDFLAGS)
++    EXTLIBS += -lcapstone
++    $(call detected,CONFIG_LIBCAPSTONE)
++  else
++    msg := $(warning No libcapstone found, disables disasm engine support for 'perf script', please install libcapstone-dev/capstone-devel);
++  endif
++endif
++
+ ifndef NO_AUXTRACE
+   ifeq ($(SRCARCH),x86)
+     ifeq ($(feature-get_cpuid), 0)
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 058c9aecf608..236da4f39a63 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -84,6 +84,9 @@ include ../scripts/utilities.mak
+ # Define NO_LIBBABELTRACE if you do not want libbabeltrace support
+ # for CTF data format.
+ #
++# Define NO_CAPSTONE if you do not want libcapstone support
++# for disasm engine.
++#
+ # Define NO_LZMA if you do not want to support compressed (xz) kernel modules
+ #
+ # Define NO_AUXTRACE if you do not want AUX area tracing support
+-- 
+2.25.1
 
