@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55E111712;
-	Tue, 16 Jan 2024 00:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323A013FE9;
+	Tue, 16 Jan 2024 00:09:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVwYbxC1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DDEC433F1;
-	Tue, 16 Jan 2024 00:09:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3zy1S7F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9980C43394;
+	Tue, 16 Jan 2024 00:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705363752;
-	bh=PCj5ScMIKFbOTysrKjkcZwGU/ooHx+FIJK1qnEnLSHk=;
+	s=k20201202; t=1705363772;
+	bh=wUwrcFgdZKAw5vQdXsFRFC3WJb01sC1DeaFIPkJrp9Q=;
 	h=From:To:Cc:Subject:Date:From;
-	b=TVwYbxC1R5tkaKz5WQ0nFQpeNGJYp0cXognzbtNCNT7q6p7Itfw0+UIkO4LC/XiOw
-	 sO7CpnV2nxnuLf5Ib+zhaCZWBPD6K7JjduoG3WbH+pGNTyrgS+ZXKmoqV8rs01DZnQ
-	 /jycWLESEV2HjqJZwjt49DHhw+pFK23ml/rK/pl+qf3QYsqYSjDaVEb25Cfnikh4t8
-	 FX54cEHXvGVUmRJfK2T6yYqteRVjLwkROKQNVHXFWvkbN+X8uNW5zZSbSlR7eHmv+8
-	 mpLk8mVu53uD9Zro//B+KFvv/VPR/IV2X+srfe/RgbKvDhRs1Dnkqev8TqVhTxYrIh
-	 BUDwl/uagE8zw==
+	b=u3zy1S7FHcl+y2J5U19P2vjm1Dadc5BvZJsrsjqCBikaDT5bqAq0TWqtqtIwsErDy
+	 ZSQFUfTfEWp0yBTsDDvY0fCDyjKguolirOWiNOkrm6bi7ZEl5vsIXoECLVQj5JkaP1
+	 eeUJQ3PVpisfSla18Vvm+sPg+ru+LxhFQl6ztwXRy5tFGzzUNf2Vp7Q5LfASAOZeaU
+	 TCRz1qDpZHiD72VTmYYoht9rn3OXVpZ2M+kjRLbOM2W1z0e3V2APnVymOCsZCU+1VP
+	 VNnX8RmebhhQFuwAvq/MQQ0YfStmBJ0apZgmDVAJsfgaJuS7D8OmBgl2+KIkfN7EV8
+	 tkTjfARwKj7zA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -26,9 +26,9 @@ Cc: Greg KH <gregkh@linuxfoundation.org>,
 	mingo@redhat.com,
 	acme@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 1/6] perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
-Date: Mon, 15 Jan 2024 19:08:56 -0500
-Message-ID: <20240116000909.212520-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 1/2] perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
+Date: Mon, 15 Jan 2024 19:09:28 -0500
+Message-ID: <20240116000929.212677-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.12
+X-stable-base: Linux 6.1.73
 Content-Transfer-Encoding: 8bit
 
 From: Greg KH <gregkh@linuxfoundation.org>
@@ -54,10 +54,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 28 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 58ecb1c24387..f22c540350a1 100644
+index 8c7d2f4f5fba..1e4841ebc22e 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -11413,9 +11413,32 @@ static DEVICE_ATTR_RW(perf_event_mux_interval_ms);
+@@ -11223,9 +11223,32 @@ static DEVICE_ATTR_RW(perf_event_mux_interval_ms);
  static struct attribute *pmu_dev_attrs[] = {
  	&dev_attr_type.attr,
  	&dev_attr_perf_event_mux_interval_ms.attr,
@@ -91,7 +91,7 @@ index 58ecb1c24387..f22c540350a1 100644
  
  static int pmu_bus_running;
  static struct bus_type pmu_bus = {
-@@ -11452,18 +11475,11 @@ static int pmu_dev_alloc(struct pmu *pmu)
+@@ -11261,18 +11284,11 @@ static int pmu_dev_alloc(struct pmu *pmu)
  	if (ret)
  		goto free_dev;
  
