@@ -1,116 +1,131 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ABA1D6BD;
-	Tue, 16 Jan 2024 21:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937201D6BD;
+	Tue, 16 Jan 2024 21:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705442043; cv=none; b=s5OWPmiug9h4/vNIJtm/X+vRGzJMHf/OZnE4bzDIh76uBpPYupGHdgDHdw3j/JVB4/zseQgZEJ2bjyS/FIkzJ3LZMtH2hRZ0THHt1O9m1g/H6xWB5oGUhmcePIn3e+GUtnMK6/agVIz/SgUyBnGzGplS7dVspsPHbaqFOXC9VgA=
+	t=1705442108; cv=none; b=H3LL6eV99xZdc3p6xaoS4WzOXrZj5bkWJuP3qmSafP5zWDlPwxYWsuvPCP5C9EPpIA2x8TrNiew2cpey2tGLyl16lKA/43e782MjEEsqva5w94kZkh7NhbDa39lGLaOzOYRbUUgJG9gK7NThwVV1cvL+uv4yv0/wQ2C76L6N5r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705442043; c=relaxed/simple;
-	bh=etsIip4ervQ72CbIa+MN2P8hU3lpHAA1QXD3Z7KizAY=;
+	s=arc-20240116; t=1705442108; c=relaxed/simple;
+	bh=1OQ9ocuUq7f0RxHOajJIIjyI25WuDNYx8YfwH07MV3c=;
 	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
 	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
 	 In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:
-	 Content-Transfer-Encoding; b=aClxlfNpxeZ5d8BVVvMxGtECevkFuGAkbirb8EWRAKufumkVFLbFierq2g8KpqzNFbfr/UcoWyjc1qdqQASovdBf2bUxk3lFP3Rria4PiQdWv9Q4l6Epx4KPB4Ffvz4T7xQwWo9FHSYR2YegDHNasYOGAgFkTNlVs6lEvx7DQBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.178
+	 Content-Transfer-Encoding; b=kkNeDqo932DtB7HpLjaTcD26gbHUzHtNEfOc9kgH1rTXp1OgCyYWQ1uzlRAl0eotkgbPGUWPbPkpgigrkZ8+mMTOeqF9BvtsP1XKbmoBhfZSEknc+9qpgM1b4v4pTWh3Ou1lqIxF8Ro2Oxt5hfzCgHM3ZvGz88DmLwV7TooYNa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so4552897a12.0;
-        Tue, 16 Jan 2024 13:54:00 -0800 (PST)
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-28ff6445faaso74920a91.1;
+        Tue, 16 Jan 2024 13:55:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705442040; x=1706046840;
+        d=1e100.net; s=20230601; t=1705442107; x=1706046907;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P00sqh0pFFh48+YMUrZPqOjo0LVvWK+WBACLbeRVv8E=;
-        b=p10/bRIwETHbY+NFeTu5/inmdAaf7s6koXAQ/v0Y2YYV4SG8VG6PZ6LppWB6w5ddKY
-         WX6+YfbzcJmwnyBNtYGpLSjVo44ke4ghrVQKDZZ9lB4RrAfPw2lI7ynpynVXbcAD3ZjM
-         zQSeg4dMBPccHbqwHI/6OEzMcevwll82AWcVpl4QTtmjvULXqMIy3SV3ei5fKZL2ivW+
-         YoxqDMz6EMpMHHr7quFsNwetNW5lyQFB4ZVrabN7ogIzC6I0oe6n+pnj9oVoI4CpL0eC
-         uC47PlhH69racAWGFj8ogs+HEUM/7jTsfjHolFQaklaqSeVfYEdWvvAdTMOt3w/K+mux
-         K1RQ==
-X-Gm-Message-State: AOJu0Yxf1lkuoAZZ8IfW9/bfuBmiAbzVqJXziFBNQI4/aC6g8j8nq68P
-	onprHJQpmv7J6vgxnG8DYRMUxN8gUZqkMG0taog=
-X-Google-Smtp-Source: AGHT+IH2AaH6n80iEZ+QwdWC6xihpoOiv4ps2Jm+yyQE5NzmhytsqLldrZ2tFMJWbBrOiC0C4oywe8eL61aFBGhTl0k=
-X-Received: by 2002:a05:6a20:8418:b0:199:aeaf:cd3b with SMTP id
- c24-20020a056a20841800b00199aeafcd3bmr4230377pzd.42.1705442040272; Tue, 16
- Jan 2024 13:54:00 -0800 (PST)
+        bh=oIZzUXfeyB0JSREarHHCmZzOdwaXVpbV3/qdV2TmR9M=;
+        b=fuF47ZrkTV9lSdkXByWd4ze23W1bJwWLQlJw1BdfQNX0bCqGP0c+P/F4a3AhZl9q+5
+         eUHfT5e++XcOo5CFtkd0ZCsww9//QF3DBW2RZdv2tg/sD4wG3A1TM9ja8nSYylWqauCM
+         RDE7gfyqEQ81EowNtPNGtsUvud/qNkaijUjQzWC8mLi3sLay1nq95P2YaTnuAdQayRgW
+         RX8L9r1OOOb6SP7IR2Zc2IoVe3H7CMgPKUl0dhxvoqOsI79jwT1zuJ2ZWTJVywmwfX75
+         w5tpovumDi+gzYcCbD2a0RKNlZYIxYWPar55lcg3oPkjLYAcdnAwxNrIP8D/s+aZjzb9
+         76Pw==
+X-Gm-Message-State: AOJu0YzkzBO1inFZl3S9AjXZWtzZ/JPXE5c0TfVv5wb6MSRMw2ljlZN8
+	xDWo7blnacA4MVraPpfbp2mKuWA2tRdhaecj6L0=
+X-Google-Smtp-Source: AGHT+IHWox2bKBt1g7JKNDQQ4hF1U1tIzFNGVfikE8a/hzNtDSUeCSVd7E40obU/1Wz4LLybEUA64Ah5vxpb3zLCGg8=
+X-Received: by 2002:a17:90b:314a:b0:28c:91a5:1e33 with SMTP id
+ ip10-20020a17090b314a00b0028c91a51e33mr5272652pjb.12.1705442106929; Tue, 16
+ Jan 2024 13:55:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240111232923.8138-1-ilkka@os.amperecomputing.com> <2c9f5893-450c-012b-b748-a8fe8ddfae86@arm.com>
-In-Reply-To: <2c9f5893-450c-012b-b748-a8fe8ddfae86@arm.com>
+References: <20240112120737.1995575-1-james.clark@arm.com>
+In-Reply-To: <20240112120737.1995575-1-james.clark@arm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 16 Jan 2024 13:53:49 -0800
-Message-ID: <CAM9d7ch5b9XHzQ-Hb=kPu-6jLyESWqgizz6MRNWb0d-NnK9aqg@mail.gmail.com>
-Subject: Re: [PATCH] perf data convert: Fix segfault when converting to json
- on arm64
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Date: Tue, 16 Jan 2024 13:54:55 -0800
+Message-ID: <CAM9d7ciUkjeU1+vzb7ydKCcU=Pybu-qVWFG2Tr+QUPDjJbGNVw@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Fixed masked error condition in perf data
+ convert test
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, ilkka@os.amperecomputing.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Anup Sharma <anupnewsmail@gmail.com>, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Fri, Jan 12, 2024 at 3:35=E2=80=AFAM James Clark <james.clark@arm.com> w=
+On Fri, Jan 12, 2024 at 4:07=E2=80=AFAM James Clark <james.clark@arm.com> w=
 rote:
 >
+> The test does set -e, so any errors go straight to the exit handler,
+> where it returns err=3D0 (success). Fix it by leaving err=3D1 from the
+> beginning and only set the success code if it ran all the way to the end
+> without errors.
 >
+> Also remove the exit code argument from the last exit because it doesn't
+> do anything, it's always replaced by err in the exit handler.
 >
-> On 11/01/2024 23:29, Ilkka Koskinen wrote:
-> > Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't g=
-et
-> > assigned.
-> >
-> > Running
-> >       $ perf data convert --to-json perf.data.json
-> >
-> > ends up calling output_json_string() with NULL pointer, which causes a
-> > segmentation fault.
-> >
-> > Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> > ---
-> >  tools/perf/util/data-convert-json.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data=
--convert-json.c
-> > index 5bb3c2ba95ca..5d6de1cef546 100644
-> > --- a/tools/perf/util/data-convert-json.c
-> > +++ b/tools/perf/util/data-convert-json.c
-> > @@ -97,6 +97,11 @@ static void output_json_format(FILE *out, bool comma=
-, int depth, const char *for
-> >  static void output_json_key_string(FILE *out, bool comma, int depth,
-> >               const char *key, const char *value)
-> >  {
-> > +     if (!value) {
-> > +             pr_info("No value set for key %s\n", key);
-> > +             return;
-> > +     }
-> > +
-> >       output_json_delimiters(out, comma, depth);
-> >       output_json_string(out, key);
-> >       fputs(": ", out);
->
->
-> It looks like this would hide new errors on any of the other fields that
-> output_json_key_string() is called on. Maybe it would be better to only
-> wrap the call to output cpu_desc with the if? If that's the only one
-> that we think is optional, and even better only do it for arm64.
->
-> I mention this because the test for 'perf data convert' only checks for
-> valid json syntax, but not any fields. So we might want to avoid others
-> going missing.
+> Fixes: 68d124182610 ("perf test: Add test validating JSON generated by 'p=
+erf data convert --to-json'")
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Makes sense.  Ilkka, can you send v2 with this?
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
+
+
+> ---
+>  tools/perf/tests/shell/test_perf_data_converter_json.sh | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/test_perf_data_converter_json.sh b/to=
+ols/perf/tests/shell/test_perf_data_converter_json.sh
+> index c4f1b59d116f..1781b7215c11 100755
+> --- a/tools/perf/tests/shell/test_perf_data_converter_json.sh
+> +++ b/tools/perf/tests/shell/test_perf_data_converter_json.sh
+> @@ -4,7 +4,7 @@
+>
+>  set -e
+>
+> -err=3D0
+> +err=3D1
+>
+>  shelldir=3D$(dirname "$0")
+>  # shellcheck source=3Dlib/setup_python.sh
+> @@ -36,7 +36,6 @@ test_json_converter_command()
+>                 echo "Perf Data Converter Command to JSON [SUCCESS]"
+>         else
+>                 echo "Perf Data Converter Command to JSON [FAILED]"
+> -               err=3D1
+>                 exit
+>         fi
+>  }
+> @@ -49,7 +48,6 @@ validate_json_format()
+>                         echo "The file contains valid JSON format [SUCCES=
+S]"
+>                 else
+>                         echo "The file does not contain valid JSON format=
+ [FAILED]"
+> -                       err=3D1
+>                         exit
+>                 fi
+>         else
+> @@ -62,4 +60,7 @@ validate_json_format()
+>  test_json_converter_command
+>  validate_json_format
+>
+> -exit ${err}
+> +# Set -e is on, so it was only successful if it ran up to this point.
+> +# Therefore only set err=3D0 here.
+> +err=3D0
+> +exit
+> --
+> 2.34.1
+>
