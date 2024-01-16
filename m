@@ -1,340 +1,174 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F149C28688
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jan 2024 20:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30B22031D;
+	Tue, 16 Jan 2024 21:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705438557; cv=none; b=aovO55JJasKi4Yop+Upp22QEssodhFisGP1y/5B9PpIDEcF2J5WyVn6Fr9wNMl7+R1jyLqaM1ZLYSiUF1z6iCrIMQTUQUNtUZ3A3rHx/OFj1XITrNbWi2YvNxnSG5dsKCXKC0fJLd9vgJ9JQWZqghxyzE4GWuLuz190S1v4GHhM=
+	t=1705441115; cv=none; b=G39sbTwcO3vTggJGIaN39H1i8Ijp5KMWNYnYjA1Vgw8SODF/B7R6t0uJgcMxvVCKMBgnQ2iHvL8yIZwxKHO51QbfjWKxmUlB6+praVsV9+BPNF9lFKjQb7PM59Ani8bnbErOhOum8fIeCgGHFRonmN5lQz0MdhwrUx+1s6ITZDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705438557; c=relaxed/simple;
-	bh=EDcdzIOhXQ/52ms8gzeDSrTpan3bCbvz3619AOQ1tBU=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=HKZ7AmWaRQNZaaaNriShueKKiG/ZvI3oHYdccMq4Ip+fvwLsIlHl3ZCS94QuXsn8a+aRus8yZM0BitBCgnT1QbSbmTFIlPAnFkQxqeZsvh3KMjZlGln0+d7a20D/mGyPphn944vkHrFgnEDGSVjo5Fqz1EyFn+2rQ9AhbXfhS/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org; spf=pass smtp.mailfrom=atishpatra.org; dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b=f6jxmEtM; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atishpatra.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="f6jxmEtM"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cd0f4f306fso120666611fa.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Jan 2024 12:55:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google; t=1705438553; x=1706043353; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n7aeoNCGecPYipNdateEPrHUR8jipxighb0wJVc74QM=;
-        b=f6jxmEtM54r8oDuQFOwdHbMg+z9y4Mx2xlj8j/f4tae/HrtpLQA3PhPnK9GU28CEim
-         V1Mect/gAQQ3fP38vycuywdeUFP4qCMVZJk925B0u2KNYqP2IotPH1TI0DcZGSZBXKHv
-         YJSJZy64DlAjbK5pqL6xN+Ie69TxMzx4tx9pI=
+	s=arc-20240116; t=1705441115; c=relaxed/simple;
+	bh=0+B9f+SDQ7MNjWm/4XDd8U3BNj5wf0lOZ4O77VNib/o=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding; b=MsEsuFL9tbj2px4leklO0Mlh1l+4eoX4H6Aq6M/QGP5lzKxciHQ+aS+w69SkduC3Kqb0mQ2uAz2U/BK/JWW/TmtNFAePkb9vHGLOjgEHwOMq5yolbVtZU09alohuMPFDmaTi5VRA0MS8DU75AYmcWanvNWPnI2Oaa4XNTWnQ12M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dad22e13dcso6507272b3a.3;
+        Tue, 16 Jan 2024 13:38:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705438553; x=1706043353;
+        d=1e100.net; s=20230601; t=1705441113; x=1706045913;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n7aeoNCGecPYipNdateEPrHUR8jipxighb0wJVc74QM=;
-        b=vTfXmMcr+kSJ5Tj7V4eSfE0va5ZpdNdpeYeHL3Y7YQdqQeslvOz33SV9dB4mgivJSe
-         6z8rtDtqjZjGuN0E7f9HqlKRRM0h8hc41C+rPl5SrX3OyIeh/IG/W7kM6KFtqbkdI0OE
-         xZ0YYEktK2Ut7VOHnjRbc8rUEwSjaYAV0Z3VV+qHBRhP/FgVrjxfedw4EhbDTlF5ddO9
-         tuVyFzZxpBvhuesGbmyGIv9dH5Yl082S8YQdhbuscxGQcVP5qcv89X2DEO67rXsnSywn
-         jwZrwkPXamctIKdujMnzZSPs7dvErGZlJVEznpsg9b1x7mNYFQTB6vjudl0DscDmJCEs
-         UG7w==
-X-Gm-Message-State: AOJu0Yy/eeZCu4vqfaYezojFTymRVcplsx80akutXSt7DfNklwQRkIrI
-	Fn1EWzfvOgvdgmEpFu4NVe/L538XVHPSnaulk5DANEBchdNH
-X-Google-Smtp-Source: AGHT+IG3hQqwOEAuQIEe26wVuEJZ0hqaSYghTTXqBTohi8bagHfjNbU3GhlWTUQwbqnDsE5lrjQe3fr3XFikPueYIHg=
-X-Received: by 2002:a2e:b0f2:0:b0:2cd:2ac6:9685 with SMTP id
- h18-20020a2eb0f2000000b002cd2ac69685mr3760083ljl.92.1705438552740; Tue, 16
- Jan 2024 12:55:52 -0800 (PST)
+        bh=CS3/2X2nggEz5xQcw+haR7fO99OiHUdyAq+EW5k/HVg=;
+        b=pGUJvWwZCbDg1uwEOyEA4pTljZxFumLn8B7djXfDm1bbY9MnLsStRntZNC1+7ofZu5
+         ls9HhTtZxpNCqa5PElYVXPs5ECjNbNcZWUUqITsoOUFQK0EsrEvcQxq1n33TLcroLMbl
+         kh5Htaverf57HJol8Ey9me6cihDwrnRgjJua4MPAIaGTBNEyB6tnPnYLcWJxxc3YTFk1
+         EyYH+JkXBj1X2/rikXwgdSYS3xN3sIKzFvBSrmmUNzN3Fhv20fcF6TzvM41HTv4UNJva
+         5bZm58Z4ZtLC5iAK2U89MIXONx0/Im9lVR3IpHm7uka4k8ERudFX8QYG6CiWUryRSD21
+         gj1g==
+X-Gm-Message-State: AOJu0YxA7NZXZE29jNY+cOSpO5lbrPXlSluEDgUIIEsW87h3eQPLlr0/
+	a+Oc+Q//uv8PavMEOEyiynqHCnbsJSmJl5/gZnM=
+X-Google-Smtp-Source: AGHT+IFkQXg9vLFpGaAiphz/VKhWfCFU2OCPkVqdGN0YFWVKlYYU+8nDURTFF2PrpGk/SdJZYSfVdLSYD4s9dnUNQqQ=
+X-Received: by 2002:a05:6a20:ce4d:b0:19a:8556:8caa with SMTP id
+ id13-20020a056a20ce4d00b0019a85568caamr4805936pzb.13.1705441113058; Tue, 16
+ Jan 2024 13:38:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110073917.2398826-1-peterlin@andestech.com> <20240110073917.2398826-8-peterlin@andestech.com>
-In-Reply-To: <20240110073917.2398826-8-peterlin@andestech.com>
-From: Atish Patra <atishp@atishpatra.org>
-Date: Tue, 16 Jan 2024 12:55:41 -0800
-Message-ID: <CAOnJCUKY8H+pvgTWW5zkfm8O4WR-OWOKmyPTcMjUZBCC5RaLWQ@mail.gmail.com>
-Subject: Re: [PATCH v7 07/16] RISC-V: Move T-Head PMU to CPU feature
- alternative framework
-To: Yu Chien Peter Lin <peterlin@andestech.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
-	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, conor+dt@kernel.org, 
-	conor.dooley@microchip.com, conor@kernel.org, devicetree@vger.kernel.org, 
-	dminus@andestech.com, evan@rivosinc.com, geert+renesas@glider.be, 
-	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
-	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
-	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
-	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
-	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
-	uwu@icenowy.me, wens@csie.org, will@kernel.org, ycliang@andestech.com, 
-	inochiama@outlook.com, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
-	wefu@redhat.com
+References: <20240112034019.3558584-1-yangjihong1@huawei.com>
+In-Reply-To: <20240112034019.3558584-1-yangjihong1@huawei.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 16 Jan 2024 13:38:21 -0800
+Message-ID: <CAM9d7cgecXt=QsTpv-L2nF1w72_fwV4rZZGG0tZi-LwZS8P-jg@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Check whether pkg-config is installed when
+ libtraceevent is linked
+To: Yang Jihong <yangjihong1@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 9, 2024 at 11:40=E2=80=AFPM Yu Chien Peter Lin
-<peterlin@andestech.com> wrote:
+Hello,
+
+On Thu, Jan 11, 2024 at 7:44=E2=80=AFPM Yang Jihong <yangjihong1@huawei.com=
+> wrote:
 >
-> The custom PMU extension aims to support perf event sampling prior
-> to the ratification of Sscofpmf. Instead of diverting the bits and
-> register reserved for future standard, a set of custom registers is
-> added.  Hence, we may consider it as a CPU feature rather than an
-> erratum.
+> If pkg-config is not installed when libtraceevent is linked, the build fa=
+ils.
 >
-
-I don't think we should do that. Any custom implementation that
-violates the standard RISC-V spec should
-be an errata not a feature.
-As per my understanding, a vendor can call an extension custom ISA
-extension if the same feature is not available
-in the standard ISA extensions or the mechanism is completely
-different. It must also not violate any standard spec as well.
-
-In this case, a standard sscofpmf is already available. Moreover, both
-Andes and T-head extensions violate the standard
-spec by reusing local interrupt numbers (17(Thead) & 18(Andes)) which
-are clearly specified as reserved for standard local interrupts
-in the AIA specification.
-
-Please implementation Andes PMU support as an errata as well similar to T-h=
-ead
-
-
-> T-Head cores need to append "xtheadpmu" to the riscv,isa-extensions
-> for each cpu node in device tree, and enable CONFIG_THEAD_CUSTOM_PMU
-> for proper functioning as of this commit.
+> The error information is as follows:
 >
-> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> Reviewed-by: Guo Ren <guoren@kernel.org>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>   $ make
+>   <SNIP>
+>   In file included from /home/yjh/projects_linux/perf-tool-next/linux/too=
+ls/perf/util/evsel.c:43:
+>   /home/yjh/projects_linux/perf-tool-next/linux/tools/perf/util/trace-eve=
+nt.h:149:62: error: operator '&&' has no right operand
+>     149 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=
+=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>         |                                                              ^~
+>   error: command '/usr/bin/gcc' failed with exit code 1
+>   cp: cannot stat 'python_ext_build/lib/perf*.so': No such file or direct=
+ory
+>   make[2]: *** [Makefile.perf:668: python/perf.cpython-310-x86_64-linux-g=
+nu.so] Error 1
+>   make[2]: *** Waiting for unfinished jobs....
+>
+> Because pkg-config is not installed, fail to get libtraceevent version in
+> Makefile.config file. As a result, LIBTRACEEVENT_VERSION is empty.
+> However, the preceding error information is not user-friendly.
+>
+> Identify errors in advance by checking that pkg-config is installed at
+> compile time.
+
+Thanks for working on this.  I also think we can disable it when
+pkg-config is not installed and continue to build.  But I guess it's
+usual to have pkg-config on a build environment so it'd be better
+to stop the build and warn the user.
+
+>
+> The build results of various scenarios are as follows:
+>
+> 1. build successful when libtraceevent is not linked and pkg-config is no=
+t installed
+>
+>   $ pkg-config --version
+>   -bash: /usr/bin/pkg-config: No such file or directory
+>   $ make clean >/dev/null
+>   $ make NO_LIBTRACEEVENT=3D1 >/dev/null
+>   Makefile.config:1133: No alternatives command found, you need to set JD=
+IR=3D to point to the root of your Java directory
+>     PERF_VERSION =3D 6.7.rc6.gd988c9f511af
+>   $ echo $?
+>   0
+>
+> 2. dummy pkg-config is missing when libtraceevent is linked
+>
+>   $ pkg-config --version
+>   -bash: /usr/bin/pkg-config: No such file or directory
+>   $ make clean >/dev/null
+>   $ make >/dev/null
+>   Makefile.config:221: *** Error: pkg-config needed by libtraceevent is m=
+issing on this system, please install it.  Stop.
+>   make[1]: *** [Makefile.perf:251: sub-make] Error 2
+>   make: *** [Makefile:70: all] Error 2
+>   $ echo $?
+>   2
+>
+> 3. build successful when libtraceevent is linked and pkg-config is instal=
+led
+>
+>   $ pkg-config --version
+>   0.29.2
+>   $ make clean >/dev/null
+>   $ make >/dev/null
+>   Makefile.config:1133: No alternatives command found, you need to set JD=
+IR=3D to point to the root of your Java directory
+>     PERF_VERSION =3D 6.7.rc6.gd988c9f511af
+>   $ echo $?
+>   0
+>
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+
 > ---
-> Changes v1 -> v2:
->   - New patch
-> Changes v2 -> v3:
->   - Removed m{vendor/arch/imp}id checks in pmu_sbi_setup_irqs()
-> Changes v3 -> v4:
->   - No change
-> Changes v4 -> v5:
->   - Include Guo's Reviewed-by
->   - Let THEAD_CUSTOM_PMU depend on ARCH_THEAD
-> Changes v5 -> v6:
->   - Include Conor's Reviewed-by
-> Changes v6 -> v7:
->   - No change
-> ---
->  arch/riscv/Kconfig.errata            | 13 -------------
->  arch/riscv/errata/thead/errata.c     | 19 -------------------
->  arch/riscv/include/asm/errata_list.h | 15 +--------------
->  arch/riscv/include/asm/hwcap.h       |  1 +
->  arch/riscv/kernel/cpufeature.c       |  1 +
->  drivers/perf/Kconfig                 | 13 +++++++++++++
->  drivers/perf/riscv_pmu_sbi.c         | 19 ++++++++++++++-----
->  7 files changed, 30 insertions(+), 51 deletions(-)
+>  tools/perf/Makefile.config | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
-> index e2c731cfed8c..0d19f47d1018 100644
-> --- a/arch/riscv/Kconfig.errata
-> +++ b/arch/riscv/Kconfig.errata
-> @@ -86,17 +86,4 @@ config ERRATA_THEAD_CMO
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index aa55850fbc21..70c33c935a98 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -216,6 +216,12 @@ ifeq ($(call get-executable,$(BISON)),)
+>    dummy :=3D $(error Error: $(BISON) is missing on this system, please i=
+nstall it)
+>  endif
 >
->           If you don't know what to do here, say "Y".
->
-> -config ERRATA_THEAD_PMU
-> -       bool "Apply T-Head PMU errata"
-> -       depends on ERRATA_THEAD && RISCV_PMU_SBI
-> -       default y
-> -       help
-> -         The T-Head C9xx cores implement a PMU overflow extension very
-> -         similar to the core SSCOFPMF extension.
-> -
-> -         This will apply the overflow errata to handle the non-standard
-> -         behaviour via the regular SBI PMU driver and interface.
-> -
-> -         If you don't know what to do here, say "Y".
-> -
->  endmenu # "CPU errata selection"
-> diff --git a/arch/riscv/errata/thead/errata.c b/arch/riscv/errata/thead/e=
-rrata.c
-> index 0554ed4bf087..5de5f7209132 100644
-> --- a/arch/riscv/errata/thead/errata.c
-> +++ b/arch/riscv/errata/thead/errata.c
-> @@ -53,22 +53,6 @@ static bool errata_probe_cmo(unsigned int stage,
->         return true;
->  }
->
-> -static bool errata_probe_pmu(unsigned int stage,
-> -                            unsigned long arch_id, unsigned long impid)
-> -{
-> -       if (!IS_ENABLED(CONFIG_ERRATA_THEAD_PMU))
-> -               return false;
-> -
-> -       /* target-c9xx cores report arch_id and impid as 0 */
-> -       if (arch_id !=3D 0 || impid !=3D 0)
-> -               return false;
-> -
-> -       if (stage =3D=3D RISCV_ALTERNATIVES_EARLY_BOOT)
-> -               return false;
-> -
-> -       return true;
-> -}
-> -
->  static u32 thead_errata_probe(unsigned int stage,
->                               unsigned long archid, unsigned long impid)
->  {
-> @@ -80,9 +64,6 @@ static u32 thead_errata_probe(unsigned int stage,
->         if (errata_probe_cmo(stage, archid, impid))
->                 cpu_req_errata |=3D BIT(ERRATA_THEAD_CMO);
->
-> -       if (errata_probe_pmu(stage, archid, impid))
-> -               cpu_req_errata |=3D BIT(ERRATA_THEAD_PMU);
-> -
->         return cpu_req_errata;
->  }
->
-> diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/include/as=
-m/errata_list.h
-> index 4ed21a62158c..9bccc2ba0eb5 100644
-> --- a/arch/riscv/include/asm/errata_list.h
-> +++ b/arch/riscv/include/asm/errata_list.h
-> @@ -25,8 +25,7 @@
->  #ifdef CONFIG_ERRATA_THEAD
->  #define        ERRATA_THEAD_PBMT 0
->  #define        ERRATA_THEAD_CMO 1
-> -#define        ERRATA_THEAD_PMU 2
-> -#define        ERRATA_THEAD_NUMBER 3
-> +#define        ERRATA_THEAD_NUMBER 2
->  #endif
->
->  #ifdef __ASSEMBLY__
-> @@ -147,18 +146,6 @@ asm volatile(ALTERNATIVE_2(                         =
-                       \
->             "r"((unsigned long)(_start) + (_size))                      \
->         : "a0")
->
-> -#define THEAD_C9XX_RV_IRQ_PMU                  17
-> -#define THEAD_C9XX_CSR_SCOUNTEROF              0x5c5
-> -
-> -#define ALT_SBI_PMU_OVERFLOW(__ovl)                                    \
-> -asm volatile(ALTERNATIVE(                                              \
-> -       "csrr %0, " __stringify(CSR_SSCOUNTOVF),                        \
-> -       "csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),             \
-> -               THEAD_VENDOR_ID, ERRATA_THEAD_PMU,                      \
-> -               CONFIG_ERRATA_THEAD_PMU)                                \
-> -       : "=3Dr" (__ovl) :                                               =
- \
-> -       : "memory")
-> -
->  #endif /* __ASSEMBLY__ */
->
->  #endif
-> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwca=
-p.h
-> index 5340f818746b..480f9da7fba7 100644
-> --- a/arch/riscv/include/asm/hwcap.h
-> +++ b/arch/riscv/include/asm/hwcap.h
-> @@ -80,6 +80,7 @@
->  #define RISCV_ISA_EXT_ZFA              71
->  #define RISCV_ISA_EXT_ZTSO             72
->  #define RISCV_ISA_EXT_ZACAS            73
-> +#define RISCV_ISA_EXT_XTHEADPMU                74
->
->  #define RISCV_ISA_EXT_MAX              128
->  #define RISCV_ISA_EXT_INVALID          U32_MAX
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
-e.c
-> index e32591e9da90..4aded5bf8fc3 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -303,6 +303,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D {
->         __RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
->         __RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
->         __RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
-> +       __RISCV_ISA_EXT_DATA(xtheadpmu, RISCV_ISA_EXT_XTHEADPMU),
->  };
->
->  const size_t riscv_isa_ext_count =3D ARRAY_SIZE(riscv_isa_ext);
-> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> index 273d67ecf6d2..6cef15ec7c25 100644
-> --- a/drivers/perf/Kconfig
-> +++ b/drivers/perf/Kconfig
-> @@ -86,6 +86,19 @@ config RISCV_PMU_SBI
->           full perf feature support i.e. counter overflow, privilege mode
->           filtering, counter configuration.
->
-> +config THEAD_CUSTOM_PMU
-> +       bool "T-Head custom PMU support"
-> +       depends on ARCH_THEAD && RISCV_ALTERNATIVE && RISCV_PMU_SBI
-> +       default y
-> +       help
-> +         The T-Head C9xx cores implement a PMU overflow extension very
-> +         similar to the core SSCOFPMF extension.
+> +ifneq ($(NO_LIBTRACEEVENT),1)
+> +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
+> +  dummy :=3D $(error Error: $(PKG_CONFIG) needed by libtraceevent is mis=
+sing on this system, please install it)
+> +  endif
+> +endif
 > +
-> +         This will patch the overflow CSR and handle the non-standard
-> +         behaviour via the regular SBI PMU driver and interface.
-> +
-> +         If you don't know what to do here, say "Y".
-> +
->  config ARM_PMU_ACPI
->         depends on ARM_PMU && ACPI
->         def_bool y
-> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index 2edbc37abadf..31ca79846399 100644
-> --- a/drivers/perf/riscv_pmu_sbi.c
-> +++ b/drivers/perf/riscv_pmu_sbi.c
-> @@ -20,10 +20,21 @@
->  #include <linux/cpu_pm.h>
->  #include <linux/sched/clock.h>
->
-> -#include <asm/errata_list.h>
->  #include <asm/sbi.h>
->  #include <asm/cpufeature.h>
->
-> +#define THEAD_C9XX_RV_IRQ_PMU          17
-> +#define THEAD_C9XX_CSR_SCOUNTEROF      0x5c5
-> +
-> +#define ALT_SBI_PMU_OVERFLOW(__ovl)                                    \
-> +asm volatile(ALTERNATIVE(                                              \
-> +       "csrr %0, " __stringify(CSR_SSCOUNTOVF),                        \
-> +       "csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),             \
-> +               0, RISCV_ISA_EXT_XTHEADPMU,                             \
-> +               CONFIG_THEAD_CUSTOM_PMU)                                \
-> +       : "=3Dr" (__ovl) :                                               =
- \
-> +       : "memory")
-> +
->  #define SYSCTL_NO_USER_ACCESS  0
->  #define SYSCTL_USER_ACCESS     1
->  #define SYSCTL_LEGACY          2
-> @@ -808,10 +819,8 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu,=
- struct platform_device *pde
->         if (riscv_isa_extension_available(NULL, SSCOFPMF)) {
->                 riscv_pmu_irq_num =3D RV_IRQ_PMU;
->                 riscv_pmu_use_irq =3D true;
-> -       } else if (IS_ENABLED(CONFIG_ERRATA_THEAD_PMU) &&
-> -                  riscv_cached_mvendorid(0) =3D=3D THEAD_VENDOR_ID &&
-> -                  riscv_cached_marchid(0) =3D=3D 0 &&
-> -                  riscv_cached_mimpid(0) =3D=3D 0) {
-> +       } else if (riscv_isa_extension_available(NULL, XTHEADPMU) &&
-> +                  IS_ENABLED(CONFIG_THEAD_CUSTOM_PMU)) {
->                 riscv_pmu_irq_num =3D THEAD_C9XX_RV_IRQ_PMU;
->                 riscv_pmu_use_irq =3D true;
->         }
+>  ifneq ($(OUTPUT),)
+>    ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's=
+/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\=3D 371), 1)
+>      BISON_FILE_PREFIX_MAP :=3D --file-prefix-map=3D$(OUTPUT)=3D
 > --
 > 2.34.1
 >
-
-
---
-Regards,
-Atish
