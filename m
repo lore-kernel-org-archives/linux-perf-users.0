@@ -1,14 +1,14 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F5A29A9;
-	Tue, 16 Jan 2024 02:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1F7613C;
+	Tue, 16 Jan 2024 02:09:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R431e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W-kECw3_1705370936;
-Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0W-kECw3_1705370936)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W-kLked_1705370944;
+Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0W-kLked_1705370944)
           by smtp.aliyun-inc.com;
-          Tue, 16 Jan 2024 10:08:58 +0800
+          Tue, 16 Jan 2024 10:09:06 +0800
 From: Ruidong Tian <tianruidong@linux.alibaba.com>
 To: linux-kernel@vger.kernel.org
 Cc: james.clark@arm.com,
@@ -25,12 +25,13 @@ Cc: james.clark@arm.com,
 	tor@ti.com,
 	acme@redhat.com,
 	Ruidong Tian <tianruidong@linux.alibaba.com>
-Subject: [PATCH v3 0/1] perf scripts python: arm-cs-trace-disasm.py: print correct disasm info
-Date: Tue, 16 Jan 2024 10:08:51 +0800
-Message-Id: <20240116020854.56030-1-tianruidong@linux.alibaba.com>
+Subject: [PATCH v3 2/3] perf scripts python: arm-cs-trace-disasm.py: set start vm addr of exectable file to 0
+Date: Tue, 16 Jan 2024 10:08:53 +0800
+Message-Id: <20240116020854.56030-3-tianruidong@linux.alibaba.com>
 X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
+In-Reply-To: <20240116020854.56030-1-tianruidong@linux.alibaba.com>
 References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
+ <20240116020854.56030-1-tianruidong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,29 +40,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now the instruction flow disasmed by arm-cs-trace-disasm.py is
-ambiguous and uncorrect, fix them in one patch set. Please refer to
-each patch for details.
+For exectable ELF file, which e_type is ET_EXEC, dso start address is a
+absolute address other than offset. Just set vm_start to zero when dso
+start is 0x400000, which means it is a exectable file.
 
-Changes since v2:
+Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+---
+ tools/perf/scripts/python/arm-cs-trace-disasm.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Leo: Replace Leo's SoB with Reviewed-by, and resend 02 and 03 patches.
-https://lore.kernel.org/lkml/20240110125544.GG44@debian-dev/
-
-Changes since v1:
-
-Applied all the suggestions from James and Leo of v1.
-
-James: https://lore.kernel.org/lkml/912a39f4-025e-26a1-7786-091fa211f293@arm.com/
-Leo: https://lore.kernel.org/lkml/20231224083332.GB13521@leoy-huanghe.lan/
-
-Ruidong Tian (1):
-  perf scripts python: arm-cs-trace-disasm.py: add option to print
-    virtual address
-
- tools/perf/scripts/python/arm-cs-trace-disasm.py | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
+diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+index 46bf6b02eea1..c9e14af5b58c 100755
+--- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
++++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+@@ -260,8 +260,9 @@ def process_event(param_dict):
+ 
+ 	if (options.objdump_name != None):
+ 		# It doesn't need to decrease virtual memory offset for disassembly
+-		# for kernel dso, so in this case we set vm_start to zero.
+-		if (dso == "[kernel.kallsyms]"):
++		# for kernel dso and executable file dso, so in this case we set
++		# vm_start to zero.
++		if (dso == "[kernel.kallsyms]" or dso_start == 0x400000):
+ 			dso_vm_start = 0
+ 		else:
+ 			dso_vm_start = int(dso_start)
 -- 
 2.33.1
 
