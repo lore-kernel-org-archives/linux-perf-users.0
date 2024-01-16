@@ -1,319 +1,223 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6311BDDB;
-	Tue, 16 Jan 2024 14:05:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8861BF22;
+	Tue, 16 Jan 2024 14:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XXQUJzwq"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BtjL7S50"
 Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDcFPC021038;
-	Tue, 16 Jan 2024 14:05:34 GMT
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDcBnL020915;
+	Tue, 16 Jan 2024 14:26:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=3LfciJxaDqi1Y/XeM1vLxnB1bE5XKiIgTliyQXBwU0A=;
- b=XXQUJzwqXYFHoO3SXVqLTs6Xh6CwuJc5gkOje2dB+Pmb3B7ED/K9ZfNAbBZUz0QHZEKW
- ITAiivYorCWeFVMZTFwZQiassW8XkBfhTHLwej9DF1UwXQynXErKLDZqfC8yE7+dkPgE
- neu/y2OuWQ/vVAxq9MXEQe97cSYw9e4ufoxelYMrDaHyWA4tiirxl8UhD2tIF4iP2B2G
- IpNkbCj9BIqqPfq955KyWiuQZeYmUvR8hRkDD1HIyP7F/gcsr4q/eCuoXRPVnV5g988A
- lycs9rar0NH1Lkvg3g9MSIEjW9aBY4WXIeMqmiAxWcU4We77hmC9kT6KEEElWWASUCY9 dw== 
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=563hyhN6PruHR//yyU44tkKDZlemsjBJokIOuA8XpMA=;
+ b=BtjL7S50WEvXsNpcdzEbQUc1ivUL2sQFXg4WkrZQSI7WSFdhJa8JFvzVPq5ETXNKO7R2
+ dYvYk6AZjLfuJffgjzqyofmGovNATSgPKCJzhrUNo8sOXUgsWe6Uejxw3L+NPyig9ZJT
+ /7Zi0EM6s6q593SXRtNlQy2kmQCsWGFj0uz3DQkcE1Q/D4SlXbSvxXPTUi9nizn9fJ4B
+ olbsGXHj8W/ch6ArpjHUpjW2GJR6/2xagGA7Dod8/fLwgP/EO/lB/BD+H2+9GI910nZV
+ 3mm6cSMj8Zg/Jb7rgeJ1HFoZ/QG/Sy2HQxY51EphaF/xEqyQFVIhac0htg+ftkjZPU4+ 8Q== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vntuth1yd-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vntutht8d-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:05:33 +0000
+	Tue, 16 Jan 2024 14:26:57 +0000
 Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GDcJ8W021235;
-	Tue, 16 Jan 2024 14:05:33 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vntuth1w5-1
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GDcEPP021008;
+	Tue, 16 Jan 2024 14:26:56 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vntutht79-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:05:32 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDTLfW023367;
-	Tue, 16 Jan 2024 14:05:30 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm6bketrb-1
+	Tue, 16 Jan 2024 14:26:56 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDUd2P011053;
+	Tue, 16 Jan 2024 14:26:55 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm57yf7cf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:05:30 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GE5S3W14287450
+	Tue, 16 Jan 2024 14:26:55 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GEQrIK8520338
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 14:05:28 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C79C820043;
-	Tue, 16 Jan 2024 14:05:28 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE16B2004D;
-	Tue, 16 Jan 2024 14:05:23 +0000 (GMT)
-Received: from [9.171.45.131] (unknown [9.171.45.131])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Jan 2024 14:05:23 +0000 (GMT)
-Message-ID: <cd7dc93f-ade9-6403-a732-2daca8e6cff9@linux.ibm.com>
-Date: Tue, 16 Jan 2024 19:35:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH V3 0/7] Clean up perf mem
-Content-Language: en-US
-To: "Liang, Kan" <kan.liang@linux.intel.com>, acme@kernel.org,
-        irogers@google.com, peterz@infradead.org, mingo@redhat.com,
-        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
-        mike.leach@linaro.org, leo.yan@linaro.org,
-        yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-        tmricht@linux.ibm.com, ravi.bangoria@amd.com,
-        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
- <a0abfee5-4dcd-3eb5-82fe-1a0dcdade038@linux.ibm.com>
- <befb6acd-86be-4255-af96-38865affc56c@linux.intel.com>
- <8bfadc86-e137-4a9f-a9ce-0bc62464c195@linux.intel.com>
- <057a1c19-3117-1aec-41d6-4950c599b862@linux.ibm.com>
- <692e16f9-062c-4b3c-bd66-a16bac68216c@linux.intel.com>
-From: kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <692e16f9-062c-4b3c-bd66-a16bac68216c@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: jd1VtljHiyaZFggciqqSQImWHNyyjLzF
-X-Proofpoint-ORIG-GUID: oFftXAdlXOIEAJQtYOBjU5h5SpAKzqJj
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Tue, 16 Jan 2024 14:26:53 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E744220040;
+	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B08BA20049;
+	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
+Received: from [9.152.212.51] (unknown [9.152.212.51])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
+Message-ID: <f81cf759-d5a4-4b46-bd2c-2e11355447a8@linux.ibm.com>
+Date: Tue, 16 Jan 2024 15:26:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] perf: script: use capstone disasm engine to show
+ assembly instructions
+Content-Language: en-US
+To: Changbin Du <changbin.du@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20240116113437.1507537-1-changbin.du@huawei.com>
+ <20240116113437.1507537-3-changbin.du@huawei.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20240116113437.1507537-3-changbin.du@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Dmeu7BjrOZpCuXbYqStmWBaO4GpsXjVx
+X-Proofpoint-ORIG-GUID: XeZRs5Dnq8rPoViFwKzkFA_oD2NSIE7d
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-16_08,2024-01-16_01,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
  priorityscore=1501 mlxscore=0 suspectscore=0 adultscore=0 spamscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401160111
+ engine=8.12.0-2311290000 definitions=main-2401160113
 
-
-
-On 1/5/24 20:08, Liang, Kan wrote:
+On 1/16/24 12:34, Changbin Du wrote:
+> Currently, the instructions of samples are shown as raw hex strings
+> which are hard to read. x86 has a special option '--xed' to disassemble
+> the hex string via intel XED tool.
 > 
+> Here we use capstone as our disassembler engine to give more friendly
+> instructions. We select libcapstone because capstone can provide more
+> insn details. Perf will fallback to raw instructions if libcapstone is
+> not available.
 > 
-> On 2024-01-05 1:38 a.m., kajoljain wrote:
->>
->>
->> On 1/3/24 01:38, Liang, Kan wrote:
->>> Hi Kajol Jain
->>>
->>> On 2023-12-19 9:15 a.m., Liang, Kan wrote:
->>>>
->>>>
->>>> On 2023-12-19 4:26 a.m., kajoljain wrote:
->>>>> Hi,
->>>>>   I was trying to test this patchset on powerpc.
->>>>>
->>>>> After applying it on top of acme's perf-tools-next branch, I am getting
->>>>> below error:
->>>>>
->>>>>   INSTALL libsubcmd_headers
->>>>>   INSTALL libperf_headers
->>>>>   INSTALL libsymbol_headers
->>>>>   INSTALL libapi_headers
->>>>>   INSTALL libbpf_headers
->>>>>   CC      arch/powerpc/util/mem-events.o
->>>>> In file included from arch/powerpc/util/mem-events.c:3:
->>>>> arch/powerpc/util/mem-events.h:5:52: error: ‘PERF_MEM_EVENTS__MAX’
->>>>> undeclared here (not in a function)
->>>>>     5 | extern struct perf_mem_event
->>>>> perf_mem_events_power[PERF_MEM_EVENTS__MAX];
->>>>>       |
->>>>> ^~~~~~~~~~~~~~~~~~~~
->>>>> make[6]: *** [/home/kajol/linux/tools/build/Makefile.build:105:
->>>>> arch/powerpc/util/mem-events.o] Error 1
->>>>> make[5]: *** [/home/kajol/linux/tools/build/Makefile.build:158: util]
->>>>> Error 2
->>>>> make[4]: *** [/home/kajol/linux/tools/build/Makefile.build:158: powerpc]
->>>>> Error 2
->>>>> make[3]: *** [/home/kajol/linux/tools/build/Makefile.build:158: arch]
->>>>> Error 2
->>>>> make[3]: *** Waiting for unfinished jobs....
->>>>> make[2]: *** [Makefile.perf:693: perf-in.o] Error 2
->>>>> make[1]: *** [Makefile.perf:251: sub-make] Error 2
->>>>> make: *** [Makefile:70: all] Error 2
->>>>>
->>>>> It seems some headerfiles are missing from arch/powerpc/util/mem-
->>>>> events.c
->>>>>
->>>>
->>>> Leo updated the headerfiles for ARM. https://termbin.com/0dkn
->>>>
->>>> I guess powerpc has to do the same thing. Could you please try the below
->>>> patch?
->>>
->>>
->>> Does the patch work on powerpc?
->>
->> Hi Kan,
->>    Sorry I went for vacation so couldn't update. Yes this fix works. 
+> The advantages compared to XED tool:
+>  * Support arm, arm64, x86-32, x86_64 (more could be supported),
+>    xed only for x86_64.
+>  * Immediate address operands are shown as symbol+offs.
 > 
-> Thanks for the update.
+> Before:
+> $ sudo perf record --event intel_pt//u -- ls
+> $ sudo perf script --insn-trace
+>             perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
+>             perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
+>             perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
+>             perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
+>             perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
+>             perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
+>             perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
 > 
->> But
->> we have another issue, actually this patch set changes uses ldlat
->> attribute. But ldlat is not supported in powerpc because of which perf
->> mem is failing in powerpc.
+> After:
+> $ sudo perf script --insn-trace
+>             perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: cmpq $-0xfff, %rax
+>             perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: jae __GI___ioctl+0x10
+>             perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: retq
+>             perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: testl %eax, %eax
+>             perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: jne perf_evsel__enable_cpu+0xad
+>             perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: movq 0xa8(%r12), %rax
+>             perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: movq 0x20(%rax), %rdx
+>             perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf) insn: cmpl %edx, %ebx
+>             perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf) insn: jl perf_evsel__enable_cpu+0x60
+>             perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf) insn: xorl %eax, %eax
 > 
-> For powerpc, the patch 3 introduced a perf_mem_events_power, which
-> doesn't have ldlat. But it only be assigned to the pmu->is_core. I'm not
-> sure if it's the problem.
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> ---
 
-Hi Kan,
- Correct there were some small issues with patch 3, I added fix for that.
+....
 
-> Also, S390 still uses the default perf_mem_events, which includes ldlat.
-> I'm not sure if S390 supports the ldlat.
+> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+> new file mode 100644
+> index 000000000000..c8d9741748cd
+> --- /dev/null
+> +++ b/tools/perf/util/print_insn.c
+> @@ -0,0 +1,118 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Instruction binary disassembler based on capstone.
+> + *
+> + * Author(s): Changbin Du <changbin.du@huawei.com>
+> + */
+> +#include "print_insn.h"
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <stdbool.h>
+> +#include "util/debug.h"
+> +#include "util/symbol.h"
+> +#include "machine.h"
+> +
+> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+> +{
+> +	int printed = 0;
+> +
+> +	for (int i = 0; i < sample->insn_len; i++)
+> +		printed += fprintf(fp, "%02x ", (unsigned char)sample->insn[i]);
+> +	return printed;
+> +}
+> +
+> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> +#include <capstone/capstone.h>
+> +
+> +static int capstone_init(struct machine *machine, csh *cs_handle)
+> +{
+> +	cs_arch arch;
+> +	cs_mode mode;
+> +
+> +	if (machine__is(machine, "x86_64")) {
+> +		arch = CS_ARCH_X86;
+> +		mode = CS_MODE_64;
+> +	} else if (machine__normalized_is(machine, "x86")) {
+> +		arch = CS_ARCH_X86;
+> +		mode = CS_MODE_32;
+> +	} else if (machine__normalized_is(machine, "arm64")) {
+> +		arch = CS_ARCH_ARM64;
+> +		mode = CS_MODE_ARM;
+> +	} else if (machine__normalized_is(machine, "arm")) {
+> +		arch = CS_ARCH_ARM;
+> +		mode = CS_MODE_ARM + CS_MODE_V8;
+> +	} else {
+> +		return -1;
+> +	}
+> ...
 
-I checked it, I didn't find ldlat parameter defined in arch/s390
-directory. I think its better to make default ldlat value as false
-in tools/perf/util/mem-events.c file.
+Did you forgot to support s390? Or was it omitted on intention?
+Something along the lines will support s390:
 
-Thanks,
-Kajol Jain
+ # git diff util/print_insn.c
+diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+index c8d9741748cd..c5127910c75b 100644
+--- a/tools/perf/util/print_insn.c
++++ b/tools/perf/util/print_insn.c
+@@ -41,6 +41,9 @@ static int capstone_init(struct machine *machine, csh *cs_handle)
+        } else if (machine__normalized_is(machine, "arm")) {
+                arch = CS_ARCH_ARM;
+                mode = CS_MODE_ARM + CS_MODE_V8;
++       } else if (machine__normalized_is(machine, "s390x")) {
++               arch = CS_ARCH_SYSZ;
++               mode = CS_MODE_BIG_ENDIAN;
+        } else {
+                return -1;
+        }
+  #
 
-> 
-> Thanks,
-> Kan
->>
->> I am looking into a work around to fix this issue. I will update the fix.
->>
->> Thanks,
->> Kajol Jain
->>
->>
->>>
->>>
->>> Thanks,
->>> Kan
->>>>
->>>> diff --git a/tools/perf/arch/powerpc/util/mem-events.c
->>>> b/tools/perf/arch/powerpc/util/mem-events.c
->>>> index 72a6ac2b52f5..765d4a054b0a 100644
->>>> --- a/tools/perf/arch/powerpc/util/mem-events.c
->>>> +++ b/tools/perf/arch/powerpc/util/mem-events.c
->>>> @@ -1,5 +1,6 @@
->>>>  // SPDX-License-Identifier: GPL-2.0
->>>> -#include "map_symbol.h"
->>>> +#include "util/map_symbol.h"
->>>> +#include "util/mem-events.h"
->>>>  #include "mem-events.h"
->>>>
->>>>  #define E(t, n, s, l, a) { .tag = t, .name = n, .event_name = s, .ldlat
->>>> = l, .aux_event = a }
->>>>
->>>> Thanks,
->>>> Kan
->>>>
->>>>> Thanks,
->>>>> Kajol Jain
->>>>>
->>>>> On 12/14/23 01:21, kan.liang@linux.intel.com wrote:
->>>>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>>>
->>>>>> Changes since V2:
->>>>>> - Fix the Arm64 building error (Leo)
->>>>>> - Add two new patches to clean up perf_mem_events__record_args()
->>>>>>   and perf_pmus__num_mem_pmus() (Leo)
->>>>>>
->>>>>> Changes since V1:
->>>>>> - Fix strcmp of PMU name checking (Ravi)
->>>>>> - Fix "/," typo (Ian)
->>>>>> - Rename several functions with perf_pmu__mem_events prefix. (Ian)
->>>>>> - Fold the header removal patch into the patch where the cleanups made.
->>>>>>   (Arnaldo)
->>>>>> - Add reviewed-by and tested-by from Ian and Ravi
->>>>>>
->>>>>> As discussed in the below thread, the patch set is to clean up perf mem.
->>>>>> https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.intel.com/
->>>>>>
->>>>>> Introduce generic functions perf_mem_events__ptr(),
->>>>>> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
->>>>>> ARCH specific ones.
->>>>>> Simplify the perf_mem_event__supported().
->>>>>>
->>>>>> Only keeps the ARCH-specific perf_mem_events array in the corresponding
->>>>>> mem-events.c for each ARCH.
->>>>>>
->>>>>> There is no functional change.
->>>>>>
->>>>>> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
->>>>>> etc. But I can only test it on two Intel platforms.
->>>>>> Please give it try, if you have machines with other ARCHs.
->>>>>>
->>>>>> Here are the test results:
->>>>>> Intel hybrid machine:
->>>>>>
->>>>>> $perf mem record -e list
->>>>>> ldlat-loads  : available
->>>>>> ldlat-stores : available
->>>>>>
->>>>>> $perf mem record -e ldlat-loads -v --ldlat 50
->>>>>> calling: record -e cpu_atom/mem-loads,ldlat=50/P -e cpu_core/mem-loads,ldlat=50/P
->>>>>>
->>>>>> $perf mem record -v
->>>>>> calling: record -e cpu_atom/mem-loads,ldlat=30/P -e cpu_atom/mem-stores/P -e cpu_core/mem-loads,ldlat=30/P -e cpu_core/mem-stores/P
->>>>>>
->>>>>> $perf mem record -t store -v
->>>>>> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
->>>>>>
->>>>>>
->>>>>> Intel SPR:
->>>>>> $perf mem record -e list
->>>>>> ldlat-loads  : available
->>>>>> ldlat-stores : available
->>>>>>
->>>>>> $perf mem record -e ldlat-loads -v --ldlat 50
->>>>>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=50/}:P
->>>>>>
->>>>>> $perf mem record -v
->>>>>> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=30/}:P -e cpu/mem-stores/P
->>>>>>
->>>>>> $perf mem record -t store -v
->>>>>> calling: record -e cpu/mem-stores/P
->>>>>>
->>>>>> Kan Liang (7):
->>>>>>   perf mem: Add mem_events into the supported perf_pmu
->>>>>>   perf mem: Clean up perf_mem_events__ptr()
->>>>>>   perf mem: Clean up perf_mem_events__name()
->>>>>>   perf mem: Clean up perf_mem_event__supported()
->>>>>>   perf mem: Clean up is_mem_loads_aux_event()
->>>>>>   perf mem: Clean up perf_mem_events__record_args()
->>>>>>   perf mem: Clean up perf_pmus__num_mem_pmus()
->>>>>>
->>>>>>  tools/perf/arch/arm/util/pmu.c            |   3 +
->>>>>>  tools/perf/arch/arm64/util/mem-events.c   |  39 +---
->>>>>>  tools/perf/arch/arm64/util/mem-events.h   |   7 +
->>>>>>  tools/perf/arch/powerpc/util/mem-events.c |  13 +-
->>>>>>  tools/perf/arch/powerpc/util/mem-events.h |   7 +
->>>>>>  tools/perf/arch/powerpc/util/pmu.c        |  11 ++
->>>>>>  tools/perf/arch/s390/util/pmu.c           |   3 +
->>>>>>  tools/perf/arch/x86/util/mem-events.c     |  99 ++--------
->>>>>>  tools/perf/arch/x86/util/mem-events.h     |  10 +
->>>>>>  tools/perf/arch/x86/util/pmu.c            |  19 +-
->>>>>>  tools/perf/builtin-c2c.c                  |  45 ++---
->>>>>>  tools/perf/builtin-mem.c                  |  48 ++---
->>>>>>  tools/perf/util/mem-events.c              | 217 +++++++++++++---------
->>>>>>  tools/perf/util/mem-events.h              |  19 +-
->>>>>>  tools/perf/util/pmu.c                     |   4 +-
->>>>>>  tools/perf/util/pmu.h                     |   7 +
->>>>>>  tools/perf/util/pmus.c                    |   6 -
->>>>>>  tools/perf/util/pmus.h                    |   1 -
->>>>>>  18 files changed, 278 insertions(+), 280 deletions(-)
->>>>>>  create mode 100644 tools/perf/arch/arm64/util/mem-events.h
->>>>>>  create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
->>>>>>  create mode 100644 tools/perf/arch/powerpc/util/pmu.c
->>>>>>  create mode 100644 tools/perf/arch/x86/util/mem-events.h
->>>>>>
->>>>>
->>>>
->>
-> 
+Thanks a lot for including these line in your next version.
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
