@@ -1,174 +1,116 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30B22031D;
-	Tue, 16 Jan 2024 21:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ABA1D6BD;
+	Tue, 16 Jan 2024 21:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705441115; cv=none; b=G39sbTwcO3vTggJGIaN39H1i8Ijp5KMWNYnYjA1Vgw8SODF/B7R6t0uJgcMxvVCKMBgnQ2iHvL8yIZwxKHO51QbfjWKxmUlB6+praVsV9+BPNF9lFKjQb7PM59Ani8bnbErOhOum8fIeCgGHFRonmN5lQz0MdhwrUx+1s6ITZDY=
+	t=1705442043; cv=none; b=s5OWPmiug9h4/vNIJtm/X+vRGzJMHf/OZnE4bzDIh76uBpPYupGHdgDHdw3j/JVB4/zseQgZEJ2bjyS/FIkzJ3LZMtH2hRZ0THHt1O9m1g/H6xWB5oGUhmcePIn3e+GUtnMK6/agVIz/SgUyBnGzGplS7dVspsPHbaqFOXC9VgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705441115; c=relaxed/simple;
-	bh=0+B9f+SDQ7MNjWm/4XDd8U3BNj5wf0lOZ4O77VNib/o=;
+	s=arc-20240116; t=1705442043; c=relaxed/simple;
+	bh=etsIip4ervQ72CbIa+MN2P8hU3lpHAA1QXD3Z7KizAY=;
 	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
 	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
 	 In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:
-	 Content-Transfer-Encoding; b=MsEsuFL9tbj2px4leklO0Mlh1l+4eoX4H6Aq6M/QGP5lzKxciHQ+aS+w69SkduC3Kqb0mQ2uAz2U/BK/JWW/TmtNFAePkb9vHGLOjgEHwOMq5yolbVtZU09alohuMPFDmaTi5VRA0MS8DU75AYmcWanvNWPnI2Oaa4XNTWnQ12M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.181
+	 Content-Transfer-Encoding; b=aClxlfNpxeZ5d8BVVvMxGtECevkFuGAkbirb8EWRAKufumkVFLbFierq2g8KpqzNFbfr/UcoWyjc1qdqQASovdBf2bUxk3lFP3Rria4PiQdWv9Q4l6Epx4KPB4Ffvz4T7xQwWo9FHSYR2YegDHNasYOGAgFkTNlVs6lEvx7DQBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dad22e13dcso6507272b3a.3;
-        Tue, 16 Jan 2024 13:38:33 -0800 (PST)
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so4552897a12.0;
+        Tue, 16 Jan 2024 13:54:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705441113; x=1706045913;
+        d=1e100.net; s=20230601; t=1705442040; x=1706046840;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CS3/2X2nggEz5xQcw+haR7fO99OiHUdyAq+EW5k/HVg=;
-        b=pGUJvWwZCbDg1uwEOyEA4pTljZxFumLn8B7djXfDm1bbY9MnLsStRntZNC1+7ofZu5
-         ls9HhTtZxpNCqa5PElYVXPs5ECjNbNcZWUUqITsoOUFQK0EsrEvcQxq1n33TLcroLMbl
-         kh5Htaverf57HJol8Ey9me6cihDwrnRgjJua4MPAIaGTBNEyB6tnPnYLcWJxxc3YTFk1
-         EyYH+JkXBj1X2/rikXwgdSYS3xN3sIKzFvBSrmmUNzN3Fhv20fcF6TzvM41HTv4UNJva
-         5bZm58Z4ZtLC5iAK2U89MIXONx0/Im9lVR3IpHm7uka4k8ERudFX8QYG6CiWUryRSD21
-         gj1g==
-X-Gm-Message-State: AOJu0YxA7NZXZE29jNY+cOSpO5lbrPXlSluEDgUIIEsW87h3eQPLlr0/
-	a+Oc+Q//uv8PavMEOEyiynqHCnbsJSmJl5/gZnM=
-X-Google-Smtp-Source: AGHT+IFkQXg9vLFpGaAiphz/VKhWfCFU2OCPkVqdGN0YFWVKlYYU+8nDURTFF2PrpGk/SdJZYSfVdLSYD4s9dnUNQqQ=
-X-Received: by 2002:a05:6a20:ce4d:b0:19a:8556:8caa with SMTP id
- id13-20020a056a20ce4d00b0019a85568caamr4805936pzb.13.1705441113058; Tue, 16
- Jan 2024 13:38:33 -0800 (PST)
+        bh=P00sqh0pFFh48+YMUrZPqOjo0LVvWK+WBACLbeRVv8E=;
+        b=p10/bRIwETHbY+NFeTu5/inmdAaf7s6koXAQ/v0Y2YYV4SG8VG6PZ6LppWB6w5ddKY
+         WX6+YfbzcJmwnyBNtYGpLSjVo44ke4ghrVQKDZZ9lB4RrAfPw2lI7ynpynVXbcAD3ZjM
+         zQSeg4dMBPccHbqwHI/6OEzMcevwll82AWcVpl4QTtmjvULXqMIy3SV3ei5fKZL2ivW+
+         YoxqDMz6EMpMHHr7quFsNwetNW5lyQFB4ZVrabN7ogIzC6I0oe6n+pnj9oVoI4CpL0eC
+         uC47PlhH69racAWGFj8ogs+HEUM/7jTsfjHolFQaklaqSeVfYEdWvvAdTMOt3w/K+mux
+         K1RQ==
+X-Gm-Message-State: AOJu0Yxf1lkuoAZZ8IfW9/bfuBmiAbzVqJXziFBNQI4/aC6g8j8nq68P
+	onprHJQpmv7J6vgxnG8DYRMUxN8gUZqkMG0taog=
+X-Google-Smtp-Source: AGHT+IH2AaH6n80iEZ+QwdWC6xihpoOiv4ps2Jm+yyQE5NzmhytsqLldrZ2tFMJWbBrOiC0C4oywe8eL61aFBGhTl0k=
+X-Received: by 2002:a05:6a20:8418:b0:199:aeaf:cd3b with SMTP id
+ c24-20020a056a20841800b00199aeafcd3bmr4230377pzd.42.1705442040272; Tue, 16
+ Jan 2024 13:54:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112034019.3558584-1-yangjihong1@huawei.com>
-In-Reply-To: <20240112034019.3558584-1-yangjihong1@huawei.com>
+References: <20240111232923.8138-1-ilkka@os.amperecomputing.com> <2c9f5893-450c-012b-b748-a8fe8ddfae86@arm.com>
+In-Reply-To: <2c9f5893-450c-012b-b748-a8fe8ddfae86@arm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 16 Jan 2024 13:38:21 -0800
-Message-ID: <CAM9d7cgecXt=QsTpv-L2nF1w72_fwV4rZZGG0tZi-LwZS8P-jg@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Check whether pkg-config is installed when
- libtraceevent is linked
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Tue, 16 Jan 2024 13:53:49 -0800
+Message-ID: <CAM9d7ch5b9XHzQ-Hb=kPu-6jLyESWqgizz6MRNWb0d-NnK9aqg@mail.gmail.com>
+Subject: Re: [PATCH] perf data convert: Fix segfault when converting to json
+ on arm64
+To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Thu, Jan 11, 2024 at 7:44=E2=80=AFPM Yang Jihong <yangjihong1@huawei.com=
-> wrote:
+On Fri, Jan 12, 2024 at 3:35=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
 >
-> If pkg-config is not installed when libtraceevent is linked, the build fa=
-ils.
 >
-> The error information is as follows:
 >
->   $ make
->   <SNIP>
->   In file included from /home/yjh/projects_linux/perf-tool-next/linux/too=
-ls/perf/util/evsel.c:43:
->   /home/yjh/projects_linux/perf-tool-next/linux/tools/perf/util/trace-eve=
-nt.h:149:62: error: operator '&&' has no right operand
->     149 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=
-=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->         |                                                              ^~
->   error: command '/usr/bin/gcc' failed with exit code 1
->   cp: cannot stat 'python_ext_build/lib/perf*.so': No such file or direct=
-ory
->   make[2]: *** [Makefile.perf:668: python/perf.cpython-310-x86_64-linux-g=
-nu.so] Error 1
->   make[2]: *** Waiting for unfinished jobs....
+> On 11/01/2024 23:29, Ilkka Koskinen wrote:
+> > Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't g=
+et
+> > assigned.
+> >
+> > Running
+> >       $ perf data convert --to-json perf.data.json
+> >
+> > ends up calling output_json_string() with NULL pointer, which causes a
+> > segmentation fault.
+> >
+> > Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+> > ---
+> >  tools/perf/util/data-convert-json.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data=
+-convert-json.c
+> > index 5bb3c2ba95ca..5d6de1cef546 100644
+> > --- a/tools/perf/util/data-convert-json.c
+> > +++ b/tools/perf/util/data-convert-json.c
+> > @@ -97,6 +97,11 @@ static void output_json_format(FILE *out, bool comma=
+, int depth, const char *for
+> >  static void output_json_key_string(FILE *out, bool comma, int depth,
+> >               const char *key, const char *value)
+> >  {
+> > +     if (!value) {
+> > +             pr_info("No value set for key %s\n", key);
+> > +             return;
+> > +     }
+> > +
+> >       output_json_delimiters(out, comma, depth);
+> >       output_json_string(out, key);
+> >       fputs(": ", out);
 >
-> Because pkg-config is not installed, fail to get libtraceevent version in
-> Makefile.config file. As a result, LIBTRACEEVENT_VERSION is empty.
-> However, the preceding error information is not user-friendly.
 >
-> Identify errors in advance by checking that pkg-config is installed at
-> compile time.
+> It looks like this would hide new errors on any of the other fields that
+> output_json_key_string() is called on. Maybe it would be better to only
+> wrap the call to output cpu_desc with the if? If that's the only one
+> that we think is optional, and even better only do it for arm64.
+>
+> I mention this because the test for 'perf data convert' only checks for
+> valid json syntax, but not any fields. So we might want to avoid others
+> going missing.
 
-Thanks for working on this.  I also think we can disable it when
-pkg-config is not installed and continue to build.  But I guess it's
-usual to have pkg-config on a build environment so it'd be better
-to stop the build and warn the user.
-
->
-> The build results of various scenarios are as follows:
->
-> 1. build successful when libtraceevent is not linked and pkg-config is no=
-t installed
->
->   $ pkg-config --version
->   -bash: /usr/bin/pkg-config: No such file or directory
->   $ make clean >/dev/null
->   $ make NO_LIBTRACEEVENT=3D1 >/dev/null
->   Makefile.config:1133: No alternatives command found, you need to set JD=
-IR=3D to point to the root of your Java directory
->     PERF_VERSION =3D 6.7.rc6.gd988c9f511af
->   $ echo $?
->   0
->
-> 2. dummy pkg-config is missing when libtraceevent is linked
->
->   $ pkg-config --version
->   -bash: /usr/bin/pkg-config: No such file or directory
->   $ make clean >/dev/null
->   $ make >/dev/null
->   Makefile.config:221: *** Error: pkg-config needed by libtraceevent is m=
-issing on this system, please install it.  Stop.
->   make[1]: *** [Makefile.perf:251: sub-make] Error 2
->   make: *** [Makefile:70: all] Error 2
->   $ echo $?
->   2
->
-> 3. build successful when libtraceevent is linked and pkg-config is instal=
-led
->
->   $ pkg-config --version
->   0.29.2
->   $ make clean >/dev/null
->   $ make >/dev/null
->   Makefile.config:1133: No alternatives command found, you need to set JD=
-IR=3D to point to the root of your Java directory
->     PERF_VERSION =3D 6.7.rc6.gd988c9f511af
->   $ echo $?
->   0
->
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Makes sense.  Ilkka, can you send v2 with this?
 
 Thanks,
 Namhyung
-
-
-> ---
->  tools/perf/Makefile.config | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index aa55850fbc21..70c33c935a98 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -216,6 +216,12 @@ ifeq ($(call get-executable,$(BISON)),)
->    dummy :=3D $(error Error: $(BISON) is missing on this system, please i=
-nstall it)
->  endif
->
-> +ifneq ($(NO_LIBTRACEEVENT),1)
-> +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
-> +  dummy :=3D $(error Error: $(PKG_CONFIG) needed by libtraceevent is mis=
-sing on this system, please install it)
-> +  endif
-> +endif
-> +
->  ifneq ($(OUTPUT),)
->    ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's=
-/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\=3D 371), 1)
->      BISON_FILE_PREFIX_MAP :=3D --file-prefix-map=3D$(OUTPUT)=3D
-> --
-> 2.34.1
->
