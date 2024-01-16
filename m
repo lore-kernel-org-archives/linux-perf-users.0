@@ -1,45 +1,42 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AF17E1
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jan 2024 16:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854331C698;
+	Tue, 16 Jan 2024 16:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tAYAcu8C"
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
-	by cmsmtp with ESMTPS
-	id Pjzyr9eIMMVQiPmLSrpiQb; Tue, 16 Jan 2024 16:31:22 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id PmLRrA0xafs4hPmLRrCCXY; Tue, 16 Jan 2024 16:31:21 +0000
-X-Authority-Analysis: v=2.4 cv=Q6TBXq6a c=1 sm=1 tr=0 ts=65a6af59
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=6BFke60KTf7VZbaxHQkA:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Q4fmzkdIu+7QBXCoPwfWZgGgksUOdwKEo3LpI0mE/EE=; b=tAYAcu8CxItk8NfrbjkrFcaCNk
-	32GQE1PGncmEr2kKSewUhIziL3jvUCeAU0JdPMryHf00II+9eHLxidsYjx5Ikh17xjYazlRv936O5
-	064U0V7ZYA2gCL7YGARQmodKnlfchx+MGlAgg4Fyw7ExQWpofiCTkbIgckLr5b8x17ekFtCRlhSXv
-	KxMMaz1mnxkUTU/VfLDXEiTq4HsIGXqxzZR89rRhmQyHoI5Zb9NWlEmlJWb32B5+9MDmLsCNo5VQf
-	hoRYixvKayCu4Z4h7kjZeJudlOfCFZhEQA3LHp6Mk4RzX3ucraGovJ/FONpQV90uWrj+REee9GPtM
-	mMvuZ3yA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:47040 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rPmLN-00020A-35;
-	Tue, 16 Jan 2024 10:31:17 -0600
-Message-ID: <50c583d7-a6f2-450c-bbc9-965f65b91197@embeddedor.com>
-Date: Tue, 16 Jan 2024 10:30:53 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GUwSJJaj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705423028; x=1736959028;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=77nS54MaROJiIoDfFd+wUBsSSwYQIdsUnuLBX+XNu74=;
+  b=GUwSJJajJc3QBmaYrEmUpB9jm9Dd0svo7rR1uO1H4Di9Ldo6ioDRpwQM
+   6UZvTDLacbXSVxaHwyNXj2pzMXqsPUzkNO1ekI+kvUvh61ljoG1H3BtG8
+   4n4GdgCg/cjHt1noHrPdgtAePS+K1vLf+lyyhwY/sTtJmc2yV/RK9ccpt
+   IyXVKPTnuSitCJ+9StSCtlMJz79QAcaepdR0K6QRzbxZsbDUO4YuQIwcO
+   Oc7haUtgqJLW3zuRkE5WRMZuJn3a9RknDduyQAiO5/SI1DYOImmOkufXh
+   QlhzY6klnhZA9sHw7RQB9IUELwzefs8qNEEPFFegk8F6R68IZrsu/x8ur
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="6630183"
+X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
+   d="scan'208";a="6630183"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 08:37:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
+   d="scan'208";a="18530291"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 08:37:07 -0800
+Received: from [10.212.74.53] (kliang2-mobl1.ccr.corp.intel.com [10.212.74.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 3BFB2580DB4;
+	Tue, 16 Jan 2024 08:37:04 -0800 (PST)
+Message-ID: <a0540796-1933-4057-8282-aa219ddda4fe@linux.intel.com>
+Date: Tue, 16 Jan 2024 11:37:02 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,100 +44,83 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/amd/uncore: Use kcalloc*() instead of kzalloc*()
-To: Erick Archer <erick.archer@gmx.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240116125813.3754-1-erick.archer@gmx.com>
+Subject: Re: [PATCH V3 0/7] Clean up perf mem
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240116125813.3754-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: kajoljain <kjain@linux.ibm.com>, acme@kernel.org, irogers@google.com,
+ peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ jolsa@kernel.org, adrian.hunter@intel.com, john.g.garry@oracle.com,
+ will@kernel.org, james.clark@arm.com, mike.leach@linaro.org,
+ leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com,
+ renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com, ravi.bangoria@amd.com,
+ atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+ <a0abfee5-4dcd-3eb5-82fe-1a0dcdade038@linux.ibm.com>
+ <befb6acd-86be-4255-af96-38865affc56c@linux.intel.com>
+ <8bfadc86-e137-4a9f-a9ce-0bc62464c195@linux.intel.com>
+ <057a1c19-3117-1aec-41d6-4950c599b862@linux.ibm.com>
+ <692e16f9-062c-4b3c-bd66-a16bac68216c@linux.intel.com>
+ <cd7dc93f-ade9-6403-a732-2daca8e6cff9@linux.ibm.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <cd7dc93f-ade9-6403-a732-2daca8e6cff9@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rPmLN-00020A-35
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:47040
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNRor8MT2/sDWxmAd1qFu4IceEqPswbJimJVZzV1eG16u6rC+WdmtY3T+Cbii5ZlaKheoyvaiY4DLcj9rFbSzLS0g6fXJdg+shG8hE6xguoqY7Qd/Q36
- iZwjqvUFJfUti7skqOwZqXUDS5+HQGVwB0YVOb9xYjA98LpatF/QTQ5pdC89rq3q6HO3lPQjeCfJnkZY7Q4OV7Bqubb88cCLULEyV+YMWzqiwi03HkeIrHnX
 
 
 
-On 1/16/24 06:58, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the purpose specific kcalloc*() function instead of the argument
-> size * count in the kzalloc*() function.
-> 
-> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+On 2024-01-16 9:05 a.m., kajoljain wrote:
+>> For powerpc, the patch 3 introduced a perf_mem_events_power, which
+>> doesn't have ldlat. But it only be assigned to the pmu->is_core. I'm not
+>> sure if it's the problem.
+> Hi Kan,
+>  Correct there were some small issues with patch 3, I added fix for that.
+>
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Thanks Kajol Jain! I will fold your fix into V4.
 
-Thanks!
--- 
-Gustavo
+>> Also, S390 still uses the default perf_mem_events, which includes ldlat.
+>> I'm not sure if S390 supports the ldlat.
+> I checked it, I didn't find ldlat parameter defined in arch/s390
+> directory. I think its better to make default ldlat value as false
+> in tools/perf/util/mem-events.c file.
 
-> ---
->   arch/x86/events/amd/uncore.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-> index 5bf03c575812..9073eb0613cf 100644
-> --- a/arch/x86/events/amd/uncore.c
-> +++ b/arch/x86/events/amd/uncore.c
-> @@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
->   				goto fail;
-> 
->   			curr->cpu = cpu;
-> -			curr->events = kzalloc_node(sizeof(*curr->events) *
-> -						    pmu->num_counters,
-> +			curr->events = kcalloc_node(pmu->num_counters,
-> +						    sizeof(*curr->events),
->   						    GFP_KERNEL, node);
->   			if (!curr->events) {
->   				kfree(curr);
-> @@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
->   		uncore->num_pmus += group_num_pmus[gid];
->   	}
-> 
-> -	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
-> +	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
->   			       GFP_KERNEL);
->   	if (!uncore->pmus) {
->   		uncore->num_pmus = 0;
-> --
-> 2.25.1
-> 
-> 
+The s390 may not be the only user for the default perf_mem_events[] in
+the tools/perf/util/mem-events.c. We probably cannot change the default
+value.
+We may share the perf_mem_events_power[] between powerpc and s390. (We
+did the similar share for arm and arm64.)
+
+How about the below patch (not tested.)
+
+diff --git a/tools/perf/arch/s390/util/pmu.c
+b/tools/perf/arch/s390/util/pmu.c
+index 225d7dc2379c..411034c984bb 100644
+--- a/tools/perf/arch/s390/util/pmu.c
++++ b/tools/perf/arch/s390/util/pmu.c
+@@ -8,6 +8,7 @@
+ #include <string.h>
+
+ #include "../../../util/pmu.h"
++#include "../../powerpc/util/mem-events.h"
+
+ #define        S390_PMUPAI_CRYPTO      "pai_crypto"
+ #define        S390_PMUPAI_EXT         "pai_ext"
+@@ -21,5 +22,5 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+                pmu->selectable = true;
+
+        if (pmu->is_core)
+-               pmu->mem_events = perf_mem_events;
++               pmu->mem_events = perf_mem_events_power;
+ }
+
+
+
+However, the original s390 code doesn't include any s390 specific code
+for perf_mem. So I thought it uses the default perf_mem_events[].
+Is there something I missed?
+
+Or does the s390 even support mem events? If not, I may remove the
+mem_events from s390.
+
+Thanks,
+Kan
