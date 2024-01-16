@@ -1,119 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB3C1BC4A;
-	Tue, 16 Jan 2024 00:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMvDPUJm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8078C433F1;
-	Tue, 16 Jan 2024 00:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705363787;
-	bh=gWagrguswXDWje0pv3OUF6yrV6AExMl8KtkhLRmM+YE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=UMvDPUJmLohgbHAD7RJsAXG/QWS3TvUzjvvs+X5nmL2PM0A+PVd5G6gRBv+9jmQfz
-	 tnmSCPkRoAlYFq6bIN3Tx+GNR7sTaywopO9QDS9AP8MlZZYw+UJwgx8uVnFShxlAmj
-	 iEq3XIWPnkGijAUeQRyRO/oUWJlOD+HsXa55no5p0q7WefUnblefT00ERIDOuGKkmD
-	 3VB4Z2I685OlnyZErTPcrgCX0h53MRyrUmYTP3rx4qRfh0yvurDyTVGuYTPHMbp5Mj
-	 JTr8XHWiK244UPdk0uL3Ea/Lzcr5Rh8C9wC+E236KJYhR7XCVdUpXHZVdYSjNrxEEG
-	 hXDpQYQ+e3UUQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4] perf/core: Fix narrow startup race when creating the perf nr_addr_filters sysfs file
-Date: Mon, 15 Jan 2024 19:09:44 -0500
-Message-ID: <20240116000945.212842-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C4228F6;
+	Tue, 16 Jan 2024 02:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W-kJsPU_1705370940;
+Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0W-kJsPU_1705370940)
+          by smtp.aliyun-inc.com;
+          Tue, 16 Jan 2024 10:09:02 +0800
+From: Ruidong Tian <tianruidong@linux.alibaba.com>
+To: linux-kernel@vger.kernel.org
+Cc: james.clark@arm.com,
+	coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	mike.leach@linaro.org,
+	alexander.shishkin@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	leo.yan@linaro.org,
+	al.grant@arm.com,
+	mathieu.poirier@linaro.org,
+	tor@ti.com,
+	acme@redhat.com,
+	Ruidong Tian <tianruidong@linux.alibaba.com>
+Subject: [PATCH v3 1/1] perf scripts python: arm-cs-trace-disasm.py: add option to print virtual address
+Date: Tue, 16 Jan 2024 10:08:52 +0800
+Message-Id: <20240116020854.56030-2-tianruidong@linux.alibaba.com>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20240116020854.56030-1-tianruidong@linux.alibaba.com>
+References: <20231214123304.34087-1-tianruidong@linux.alibaba.com>
+ <20240116020854.56030-1-tianruidong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.267
 Content-Transfer-Encoding: 8bit
 
-From: Greg KH <gregkh@linuxfoundation.org>
+arm-cs-trace-disasm just print offset for library dso now:
 
-[ Upstream commit 652ffc2104ec1f69dd4a46313888c33527145ccf ]
+    0000000000002200 <memcpy>:
+        2200: d503201f      nop
+        2204: 8b020024      add     x4, x1, x2
+        2208: 8b020005      add     x5, x0, x2
 
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/2023061204-decal-flyable-6090@gregkh
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add a option `-a` to print virtual offset other than offset:
+
+    # perf script -s scripts/python/arm-cs-trace-disasm.py -- -d llvm-objdump -a
+    ...
+    ffffb4c23200 <memcpy>:
+        ffffb4c23200: d503201f      nop
+        ffffb4c23204: 8b020024      add     x4, x1, x2
+        ffffb4c23208: 8b020005      add     x5, x0, x2
+    ...
+
+Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 ---
- kernel/events/core.c | 40 ++++++++++++++++++++++++++++------------
- 1 file changed, 28 insertions(+), 12 deletions(-)
+ tools/perf/scripts/python/arm-cs-trace-disasm.py | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 1e62a567b0d7..3ec29a27d877 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10080,9 +10080,32 @@ static DEVICE_ATTR_RW(perf_event_mux_interval_ms);
- static struct attribute *pmu_dev_attrs[] = {
- 	&dev_attr_type.attr,
- 	&dev_attr_perf_event_mux_interval_ms.attr,
-+	&dev_attr_nr_addr_filters.attr,
-+	NULL,
-+};
-+
-+static umode_t pmu_dev_is_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pmu *pmu = dev_get_drvdata(dev);
-+
-+	if (!pmu->nr_addr_filters)
-+		return 0;
-+
-+	return a->mode;
-+
-+	return 0;
-+}
-+
-+static struct attribute_group pmu_dev_attr_group = {
-+	.is_visible = pmu_dev_is_visible,
-+	.attrs = pmu_dev_attrs,
-+};
-+
-+static const struct attribute_group *pmu_dev_groups[] = {
-+	&pmu_dev_attr_group,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(pmu_dev);
+diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+index d973c2baed1c..78419498237e 100755
+--- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
++++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+@@ -36,7 +36,10 @@ option_list = [
+ 		    help="Set path to objdump executable file"),
+ 	make_option("-v", "--verbose", dest="verbose",
+ 		    action="store_true", default=False,
+-		    help="Enable debugging log")
++		    help="Enable debugging log"),
++	make_option("-a", "--vaddr", dest="vaddr",
++			action="store_true", default=False,
++			help="Enable virtual address")
+ ]
  
- static int pmu_bus_running;
- static struct bus_type pmu_bus = {
-@@ -10118,18 +10141,11 @@ static int pmu_dev_alloc(struct pmu *pmu)
- 	if (ret)
- 		goto free_dev;
+ parser = OptionParser(option_list=option_list)
+@@ -108,6 +111,14 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
+ 			m = disasm_re.search(line)
+ 			if m is None:
+ 				continue
++
++		# Replace offset with virtual address
++		if (options.vaddr == True):
++			offset = re.search(r"^\s*([0-9a-fA-F]+)", line).group()
++			if offset:
++				virt_addr = dso_start + int(offset, 16)
++				line = line.replace(offset.lstrip(), "%x" % virt_addr)
++
+ 		print("\t" + line)
  
--	/* For PMUs with address filters, throw in an extra attribute: */
--	if (pmu->nr_addr_filters)
--		ret = device_create_file(pmu->dev, &dev_attr_nr_addr_filters);
--
--	if (ret)
--		goto del_dev;
--
--	if (pmu->attr_update)
-+	if (pmu->attr_update) {
- 		ret = sysfs_update_groups(&pmu->dev->kobj, pmu->attr_update);
--
--	if (ret)
--		goto del_dev;
-+		if (ret)
-+			goto del_dev;
-+	}
- 
- out:
- 	return ret;
+ def print_sample(sample):
 -- 
-2.43.0
+2.33.1
 
