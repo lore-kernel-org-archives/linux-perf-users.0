@@ -1,57 +1,45 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8861BF22;
-	Tue, 16 Jan 2024 14:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AF17E1
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jan 2024 16:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BtjL7S50"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDcBnL020915;
-	Tue, 16 Jan 2024 14:26:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=563hyhN6PruHR//yyU44tkKDZlemsjBJokIOuA8XpMA=;
- b=BtjL7S50WEvXsNpcdzEbQUc1ivUL2sQFXg4WkrZQSI7WSFdhJa8JFvzVPq5ETXNKO7R2
- dYvYk6AZjLfuJffgjzqyofmGovNATSgPKCJzhrUNo8sOXUgsWe6Uejxw3L+NPyig9ZJT
- /7Zi0EM6s6q593SXRtNlQy2kmQCsWGFj0uz3DQkcE1Q/D4SlXbSvxXPTUi9nizn9fJ4B
- olbsGXHj8W/ch6ArpjHUpjW2GJR6/2xagGA7Dod8/fLwgP/EO/lB/BD+H2+9GI910nZV
- 3mm6cSMj8Zg/Jb7rgeJ1HFoZ/QG/Sy2HQxY51EphaF/xEqyQFVIhac0htg+ftkjZPU4+ 8Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vntutht8d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:26:57 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GDcEPP021008;
-	Tue, 16 Jan 2024 14:26:56 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vntutht79-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:26:56 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GDUd2P011053;
-	Tue, 16 Jan 2024 14:26:55 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm57yf7cf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jan 2024 14:26:55 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GEQrIK8520338
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jan 2024 14:26:53 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E744220040;
-	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B08BA20049;
-	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
-Received: from [9.152.212.51] (unknown [9.152.212.51])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Jan 2024 14:26:52 +0000 (GMT)
-Message-ID: <f81cf759-d5a4-4b46-bd2c-2e11355447a8@linux.ibm.com>
-Date: Tue, 16 Jan 2024 15:26:52 +0100
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tAYAcu8C"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id Pjzyr9eIMMVQiPmLSrpiQb; Tue, 16 Jan 2024 16:31:22 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id PmLRrA0xafs4hPmLRrCCXY; Tue, 16 Jan 2024 16:31:21 +0000
+X-Authority-Analysis: v=2.4 cv=Q6TBXq6a c=1 sm=1 tr=0 ts=65a6af59
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=6BFke60KTf7VZbaxHQkA:9 a=QEXdDO2ut3YA:10
+ a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=SLz71HocmBbuEhFRYD3r:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Q4fmzkdIu+7QBXCoPwfWZgGgksUOdwKEo3LpI0mE/EE=; b=tAYAcu8CxItk8NfrbjkrFcaCNk
+	32GQE1PGncmEr2kKSewUhIziL3jvUCeAU0JdPMryHf00II+9eHLxidsYjx5Ikh17xjYazlRv936O5
+	064U0V7ZYA2gCL7YGARQmodKnlfchx+MGlAgg4Fyw7ExQWpofiCTkbIgckLr5b8x17ekFtCRlhSXv
+	KxMMaz1mnxkUTU/VfLDXEiTq4HsIGXqxzZR89rRhmQyHoI5Zb9NWlEmlJWb32B5+9MDmLsCNo5VQf
+	hoRYixvKayCu4Z4h7kjZeJudlOfCFZhEQA3LHp6Mk4RzX3ucraGovJ/FONpQV90uWrj+REee9GPtM
+	mMvuZ3yA==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:47040 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rPmLN-00020A-35;
+	Tue, 16 Jan 2024 10:31:17 -0600
+Message-ID: <50c583d7-a6f2-450c-bbc9-965f65b91197@embeddedor.com>
+Date: Tue, 16 Jan 2024 10:30:53 -0600
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,165 +47,100 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf: script: use capstone disasm engine to show
- assembly instructions
-Content-Language: en-US
-To: Changbin Du <changbin.du@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf/x86/amd/uncore: Use kcalloc*() instead of kzalloc*()
+To: Erick Archer <erick.archer@gmx.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org
 Cc: Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20240116113437.1507537-1-changbin.du@huawei.com>
- <20240116113437.1507537-3-changbin.du@huawei.com>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20240116113437.1507537-3-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Dmeu7BjrOZpCuXbYqStmWBaO4GpsXjVx
-X-Proofpoint-ORIG-GUID: XeZRs5Dnq8rPoViFwKzkFA_oD2NSIE7d
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-16_08,2024-01-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
- priorityscore=1501 mlxscore=0 suspectscore=0 adultscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401160113
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240116125813.3754-1-erick.archer@gmx.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240116125813.3754-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1rPmLN-00020A-35
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:47040
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNRor8MT2/sDWxmAd1qFu4IceEqPswbJimJVZzV1eG16u6rC+WdmtY3T+Cbii5ZlaKheoyvaiY4DLcj9rFbSzLS0g6fXJdg+shG8hE6xguoqY7Qd/Q36
+ iZwjqvUFJfUti7skqOwZqXUDS5+HQGVwB0YVOb9xYjA98LpatF/QTQ5pdC89rq3q6HO3lPQjeCfJnkZY7Q4OV7Bqubb88cCLULEyV+YMWzqiwi03HkeIrHnX
 
-On 1/16/24 12:34, Changbin Du wrote:
-> Currently, the instructions of samples are shown as raw hex strings
-> which are hard to read. x86 has a special option '--xed' to disassemble
-> the hex string via intel XED tool.
+
+
+On 1/16/24 06:58, Erick Archer wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
 > 
-> Here we use capstone as our disassembler engine to give more friendly
-> instructions. We select libcapstone because capstone can provide more
-> insn details. Perf will fallback to raw instructions if libcapstone is
-> not available.
+> So, use the purpose specific kcalloc*() function instead of the argument
+> size * count in the kzalloc*() function.
 > 
-> The advantages compared to XED tool:
->  * Support arm, arm64, x86-32, x86_64 (more could be supported),
->    xed only for x86_64.
->  * Immediate address operands are shown as symbol+offs.
+> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 > 
-> Before:
-> $ sudo perf record --event intel_pt//u -- ls
-> $ sudo perf script --insn-trace
->             perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
->             perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
->             perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
->             perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
->             perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
->             perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
->             perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
-> 
-> After:
-> $ sudo perf script --insn-trace
->             perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: cmpq $-0xfff, %rax
->             perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: jae __GI___ioctl+0x10
->             perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: retq
->             perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: testl %eax, %eax
->             perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: jne perf_evsel__enable_cpu+0xad
->             perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: movq 0xa8(%r12), %rax
->             perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: movq 0x20(%rax), %rdx
->             perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf) insn: cmpl %edx, %ebx
->             perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf) insn: jl perf_evsel__enable_cpu+0x60
->             perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf) insn: xorl %eax, %eax
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-....
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-> new file mode 100644
-> index 000000000000..c8d9741748cd
-> --- /dev/null
-> +++ b/tools/perf/util/print_insn.c
-> @@ -0,0 +1,118 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Instruction binary disassembler based on capstone.
-> + *
-> + * Author(s): Changbin Du <changbin.du@huawei.com>
-> + */
-> +#include "print_insn.h"
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <stdbool.h>
-> +#include "util/debug.h"
-> +#include "util/symbol.h"
-> +#include "machine.h"
-> +
-> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
-> +{
-> +	int printed = 0;
-> +
-> +	for (int i = 0; i < sample->insn_len; i++)
-> +		printed += fprintf(fp, "%02x ", (unsigned char)sample->insn[i]);
-> +	return printed;
-> +}
-> +
-> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
-> +#include <capstone/capstone.h>
-> +
-> +static int capstone_init(struct machine *machine, csh *cs_handle)
-> +{
-> +	cs_arch arch;
-> +	cs_mode mode;
-> +
-> +	if (machine__is(machine, "x86_64")) {
-> +		arch = CS_ARCH_X86;
-> +		mode = CS_MODE_64;
-> +	} else if (machine__normalized_is(machine, "x86")) {
-> +		arch = CS_ARCH_X86;
-> +		mode = CS_MODE_32;
-> +	} else if (machine__normalized_is(machine, "arm64")) {
-> +		arch = CS_ARCH_ARM64;
-> +		mode = CS_MODE_ARM;
-> +	} else if (machine__normalized_is(machine, "arm")) {
-> +		arch = CS_ARCH_ARM;
-> +		mode = CS_MODE_ARM + CS_MODE_V8;
-> +	} else {
-> +		return -1;
-> +	}
-> ...
-
-Did you forgot to support s390? Or was it omitted on intention?
-Something along the lines will support s390:
-
- # git diff util/print_insn.c
-diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-index c8d9741748cd..c5127910c75b 100644
---- a/tools/perf/util/print_insn.c
-+++ b/tools/perf/util/print_insn.c
-@@ -41,6 +41,9 @@ static int capstone_init(struct machine *machine, csh *cs_handle)
-        } else if (machine__normalized_is(machine, "arm")) {
-                arch = CS_ARCH_ARM;
-                mode = CS_MODE_ARM + CS_MODE_V8;
-+       } else if (machine__normalized_is(machine, "s390x")) {
-+               arch = CS_ARCH_SYSZ;
-+               mode = CS_MODE_BIG_ENDIAN;
-        } else {
-                return -1;
-        }
-  #
-
-Thanks a lot for including these line in your next version.
-
+Thanks!
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+Gustavo
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+> ---
+>   arch/x86/events/amd/uncore.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 5bf03c575812..9073eb0613cf 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>   				goto fail;
+> 
+>   			curr->cpu = cpu;
+> -			curr->events = kzalloc_node(sizeof(*curr->events) *
+> -						    pmu->num_counters,
+> +			curr->events = kcalloc_node(pmu->num_counters,
+> +						    sizeof(*curr->events),
+>   						    GFP_KERNEL, node);
+>   			if (!curr->events) {
+>   				kfree(curr);
+> @@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>   		uncore->num_pmus += group_num_pmus[gid];
+>   	}
+> 
+> -	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
+> +	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
+>   			       GFP_KERNEL);
+>   	if (!uncore->pmus) {
+>   		uncore->num_pmus = 0;
+> --
+> 2.25.1
+> 
+> 
