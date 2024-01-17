@@ -1,47 +1,60 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E26A611A;
-	Wed, 17 Jan 2024 05:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3B28F45;
+	Wed, 17 Jan 2024 06:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705468379; cv=none; b=hpyi2Cg2bEbVzcOaPF03ORngy1q6IiFQokYtig6XJNVhazEz2/J60hseKxMu7nqdIN+ydfdW/K3ErdEMrH7DjAgMlD2ag4mUJxyOlw/DwckUPKyikIyjvw+DTIa9bgijqkke96PAREI3eydso+lgwbBVvgiWbgWwRQFjHHSa0D4=
+	t=1705472819; cv=none; b=rJGKuJ32y5XdlBhvvpTJMSYx3v2YXf19VMumT1QWQApOFDF9+i8koJNTStQbHjDHqwFPwHXr9cpqTu7t2lHGuf1TuMBOm9zSlhKim3QsVD9AE59uZCFMMerdXH9IZrxO9xk5ZuBcSq+A4YorsNrKapp+Q74QpTUKqcbCiyUfKJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705468379; c=relaxed/simple;
-	bh=d9xUie5O6P+HxlRsBhIUu4jueb9/+PkF9GI2X2Xph3Y=;
-	h=Received:Received:Received:From:To:CC:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy; b=q8/PVMz+DKGi0v+YN9lcy45rh8w0D5+zF2/t9++p1Ri/6t4qrk+y6B0q/FUnFhBL1I2mgM7OIVhaCwNk2Y29Ni1DnrZSWoOgVn8uEMkRxr3EMCpOVlMYr+ncjity7Iin3UBRodtfPD3v89w8YJPCkByxqyD/+Sm6VSD6liy+bGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TFDXM5d3SzGpnc;
-	Wed, 17 Jan 2024 13:12:35 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 821F1140556;
-	Wed, 17 Jan 2024 13:12:40 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Wed, 17 Jan 2024 13:11:29 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
- Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
-	<changbin.du@huawei.com>
-Subject: [PATCH v2 5/5] perf: script: prefer capstone to XED
-Date: Wed, 17 Jan 2024 13:11:04 +0800
-Message-ID: <20240117051104.2147643-6-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240117051104.2147643-1-changbin.du@huawei.com>
-References: <20240117051104.2147643-1-changbin.du@huawei.com>
+	s=arc-20240116; t=1705472819; c=relaxed/simple;
+	bh=ACrg/7DLGZRD8QgGGTMtaPSKoz1b/3nJA3a7YJt6Lsc=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=UBo3gvQg0pas2tiKeSNa2dRiKlaiOVsonv+6ttQQV1wKTToG1+gBjmJ/ZPvJA+vmWh2obwp+G/z8iFAr/d54EK53NkyiUWY2KhKf6qvcWwGt3Fm+Mz2l5pRtYPVP0Pr/sLfQKdgyaI0LDSB6VZfEUOy3UtlAB02J3MSTMx1aJRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iuzmSA6e; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iuzmSA6e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28F86C433C7;
+	Wed, 17 Jan 2024 06:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705472819;
+	bh=ACrg/7DLGZRD8QgGGTMtaPSKoz1b/3nJA3a7YJt6Lsc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iuzmSA6em8xjjVPSo7lcvYHQ/zHzLwtwpDAMtrYt7FPpSVZxh8eVUqxqgxEdGiJWH
+	 nC/7ZxxXvkWAG37gCcuEVsMb3LD5PL82yjh2HGqzbi/iNZbTWA6rjGQl1nV2JWeUZy
+	 VM1kX8fFsB+qs5B7R4YUS12Q0hkCYcdKlaSAj2dRBlGrIAjt84+E6cThW8NaAgm3hQ
+	 soHF4u83qvfCx9wjU9W3Nstd2i946k+QFHg9ENXS3aTQ6lc/8FFtsZA0VL7KiT5ExH
+	 7bXNcgm05WCu2DbU2NqONQFlv0aGXMl72T0LFowq+BU23SuHD7TVIH1nCFgNnc758G
+	 vofww3mZHL+/Q==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Stephane Eranian <eranian@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-toolchains@vger.kernel.org,
+	linux-trace-devel@vger.kernel.org,
+	Ben Woodard <woodard@redhat.com>,
+	Joe Mario <jmario@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	David Blaikie <blaikie@google.com>,
+	Xu Liu <xliuprof@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Mark Wielaard <mark@klomp.org>,
+	Jason Merrill <jason@redhat.com>,
+	"Jose E . Marchesi" <jose.marchesi@oracle.com>,
+	William Huang <williamjhuang@google.com>
+Subject: [PATCHSET 0/9] perf tools: More updates on data type profiling (v4)
+Date: Tue, 16 Jan 2024 22:26:48 -0800
+Message-ID: <20240117062657.985479-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.43.0.381.gb435a96ce8-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,94 +62,84 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd100002.china.huawei.com (7.221.188.184)
 
-Now perf can show assembly instructions with libcapstone for x86, and the
-capstone is better in general.
+Hello,
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/perf-intel-pt.txt | 11 +++++------
- tools/perf/ui/browsers/res_sample.c        |  2 +-
- tools/perf/ui/browsers/scripts.c           |  2 +-
- 3 files changed, 7 insertions(+), 8 deletions(-)
+This is a continuation of the data type profiling series.  Now the basic
+part (v3) which uses pointer variables is merged to the perf-tools-next
+tree.  And this part is for memory accesses without pointers as well as
+small updates to handle some corner cases.  Still mores to come to
+complete the original series.
 
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 2109690b0d5f..13a02d568267 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -115,9 +115,8 @@ toggle respectively.
- 
- perf script also supports higher level ways to dump instruction traces:
- 
--	perf script --insn-trace --xed
-+	perf script --insn-trace=disam
- 
--Dump all instructions. This requires installing the xed tool (see XED below)
- Dumping all instructions in a long trace can be fairly slow. It is usually better
- to start with higher level decoding, like
- 
-@@ -130,12 +129,12 @@ or
- and then select a time range of interest. The time range can then be examined
- in detail with
- 
--	perf script --time starttime,stoptime --insn-trace --xed
-+	perf script --time starttime,stoptime --insn-trace=disam
- 
- While examining the trace it's also useful to filter on specific CPUs using
- the -C option
- 
--	perf script --time starttime,stoptime --insn-trace --xed -C 1
-+	perf script --time starttime,stoptime --insn-trace=disam -C 1
- 
- Dump all instructions in time range on CPU 1.
- 
-@@ -1306,7 +1305,7 @@ Without timestamps, --per-thread must be specified to distinguish threads.
- 
- perf script can be used to provide an instruction trace
- 
-- $ perf script --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script --guestkallsyms $KALLSYMS --insn-trace=disam -F+ipc | grep -C10 vmresume | head -21
-        CPU 0/KVM  1440  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                movq  0x48(%rax), %r9
-        CPU 0/KVM  1440  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                movq  0x50(%rax), %r10
-        CPU 0/KVM  1440  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                movq  0x58(%rax), %r11
-@@ -1407,7 +1406,7 @@ There were none.
- 
- 'perf script' can be used to provide an instruction trace showing timestamps
- 
-- $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace=disam -F+ipc | grep -C10 vmresume | head -21
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                 movq  0x48(%rax), %r9
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                 movq  0x50(%rax), %r10
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                 movq  0x58(%rax), %r11
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-index 7cb2d6678039..0eb2029014a0 100644
---- a/tools/perf/ui/browsers/res_sample.c
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -83,7 +83,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		     r->tid ? "--tid " : "",
- 		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
- 		     extra_format,
--		     rstype == A_ASM ? "-F +insn --xed" :
-+		     rstype == A_ASM ? "-F +insn_disam" :
- 		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
- 		     symbol_conf.inline_name ? "--inline" : "",
- 		     "--show-lost-events ",
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 47d2c7a8cbe1..a01b729f4ddc 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -107,7 +107,7 @@ static int list_scripts(char *script_name, bool *custom,
- 	if (evsel)
- 		attr_to_script(scriptc.extra_format, &evsel->core.attr);
- 	add_script_option("Show individual samples", "", &scriptc);
--	add_script_option("Show individual samples with assembler", "-F +insn --xed",
-+	add_script_option("Show individual samples with assembler", "-F +insn_disam",
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
+There's no change from the previous version.  For background and usages,
+pleaes refer the posting of previous version [1] and a LWN article [2].
+
+Basically most memory accesses happen with pointers, but there are cases
+don't use pointers - direct accesses to global and local variables.
+
+Global variables are located in a static memory at a specific address.
+So the DWARF location expression for the global vairable would also have
+the static address.  And it's common to access them using PC-relative
+addressing mode.  Thus it needs a special handling for global variables.
+
+On the other hand, local variables are located in the stack which varies
+as program executes.  So the local variables are accessed either by the
+(stack) frame pointer or (current) stack pointer.  But sometimes DWARF
+location expression uses a frame base address (CFA) to specify location
+of local variables.  So it may need to convert or normalize the location
+extracted from the instruction to match DWARF expression.
+
+Lastly, there are some cases DWARF location expressions end up having
+complex (or not straight-forward) location.  In that case, it cannot
+simply match just the first expression with the instruction location.
+It'd be safer to reject them.
+
+The code is available at 'perf/data-profile-update-v4' branch in the tree
+below.  The full version of the code is in 'perf/data-profile-v4' branch.
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+
+Cc: Ben Woodard <woodard@redhat.com> 
+Cc: Joe Mario <jmario@redhat.com>
+CC: Kees Cook <keescook@chromium.org>
+Cc: David Blaikie <blaikie@google.com>
+Cc: Xu Liu <xliuprof@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Mark Wielaard <mark@klomp.org>
+Cc: Jason Merrill <jason@redhat.com>
+Cc: Jose E. Marchesi <jose.marchesi@oracle.com>
+Cc: William Huang <williamjhuang@google.com>
+
+[1] https://lore.kernel.org/linux-perf-users/20231213001323.718046-1-namhyung@kernel.org/
+[2] https://lwn.net/Articles/955709/
+
+
+Namhyung Kim (9):
+  perf annotate-data: Parse 'lock' prefix from llvm-objdump
+  perf annotate-data: Handle macro fusion on x86
+  perf annotate-data: Handle array style accesses
+  perf annotate-data: Add stack operation pseudo type
+  perf annotate-data: Handle PC-relative addressing
+  perf annotate-data: Support global variables
+  perf dwarf-aux: Add die_get_cfa()
+  perf annotate-data: Support stack variables
+  perf dwarf-aux: Check allowed DWARF Ops
+
+ tools/perf/util/annotate-data.c | 119 ++++++++++++++++----
+ tools/perf/util/annotate-data.h |   8 +-
+ tools/perf/util/annotate.c      | 153 ++++++++++++++++++++++++--
+ tools/perf/util/annotate.h      |  12 +-
+ tools/perf/util/dwarf-aux.c     | 187 ++++++++++++++++++++++++++++----
+ tools/perf/util/dwarf-aux.h     |  18 +++
+ 6 files changed, 439 insertions(+), 58 deletions(-)
+
+
+base-commit: d988c9f511af71a3445b6a4f3a2c67208ff8e480
 -- 
-2.25.1
+2.43.0.381.gb435a96ce8-goog
 
