@@ -1,18 +1,18 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2101.outbound.protection.outlook.com [40.107.93.101])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2090.outbound.protection.outlook.com [40.107.220.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FFE063A5;
-	Wed, 17 Jan 2024 21:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E222556A;
+	Wed, 17 Jan 2024 21:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705527537; cv=fail; b=V2CchFBuFikiDM21d1EHO6wBXxCOi7zualslRNdSukHHmVo7fZufdsYaxdIDGNqEXLWOW8DbbJg0ZJgPFBe0udfJVKTYz2idby5HR5r+KIdCQE5XAUOIf/lz1ONG3dPiXUVaruJYGL+UkJtYxctffq6e4NBu5NAySWXmcgFMELk=
+	t=1705528291; cv=fail; b=UturpwfGTDOh+EXDXVayQsqZ65UKcmNXuc+II+OTf1yrO1BFHhv5zSU2ULanjF2Kkhiwkf9+Z+8ZqnQSFs6aJH87RhdlzHFdzWqB1YNw8d6jGWSotcnxSPeG2xxmy0e2unx+NFqFwjRZTjMzQ0jq3cwSN/i1fKthJ3+EmVHzoqI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705527537; c=relaxed/simple;
-	bh=wh00fxBG/Kx1ht8TWYj2EhqGHlm67X4WnIGJ1cSAG40=;
+	s=arc-20240116; t=1705528291; c=relaxed/simple;
+	bh=GQcy7fXBTTuz2mfvpUemgXWMNmfnLBREMsrp7fzk0is=;
 	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
-	 Received:Received:Date:From:To:cc:Subject:In-Reply-To:Message-ID:
-	 References:Content-Type:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 Received:Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 Content-Transfer-Encoding:Content-Type:X-ClientProxiedBy:
+	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
 	 X-MS-Office365-Filtering-Correlation-Id:
 	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
 	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
@@ -26,19 +26,19 @@ ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	 X-MS-Exchange-CrossTenant-FromEntityHeader:
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=j0dzN5HYHLTXhD+LdxXRTFqFIptuc0p7n7k9fhM+lpX3Wjub0ngd6gbE+7YhsC80paaIBAYFEIjNZLghqo2ulvGuoPw78O3iCzmn9OwYe25CGG2U/en129rKXvsiSwUHsc2o4C6vSX7HnIOCX7dBxXOvP3o2UZAK2ghlh9Vc5F4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=J8rGgR+u; arc=fail smtp.client-ip=40.107.93.101
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=N5m5/vTZAB1jiBd17ZCii3ZQxYHbk3WX5WzgD3NFrdVa6fOayUtOvM7ZsHFFl3pcEJpfNNzhtgblygKlO0IiQ/bdNQZV6xF9g5ulwH68vnean9lu0D1Axt35E7tbhlyAc6+9/63o6XBR/c2iyns6RSYLBxbUeBaeGgSPwFnxJWU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=WH46o9Sw; arc=fail smtp.client-ip=40.107.220.90
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="J8rGgR+u"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="WH46o9Sw"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bIbZSGdNZNCKXKNAo2kI7lc8KHYTGDls8TmktClYkCcJ80RTE5sxDO/PgUC8GWxLGswwO+yp/k9wmCIf+uAfgqDM+YLMAlsTx5J4DMkHjz3FKPFHANXy3y9KBuM8FNix9a14TGZ5flIiGdrv5bvtzpUVpBA1gkapu/Q7Oix6qsHSHWGQgHMfEWkY8OeXZYep9aJ9HNGNYPrurmYivEidoX9jPvlO9LSXXpGFLx+Hht1M4Lno7oUeiyKxyyiJxE+0+YUtgSovq3tcfFYZv2ZFchTIIGOIAb79wTJ591gSPnbXvI9BhMMOEgUYIIPA+tHJvMHxCHcks+iIz2/eb++I0w==
+ b=LHE8rRXOtEO0yuFHggOsO3Qlhb5/r5MviJLG55nqJddJObyN7+Kt+jXxp5972d6mj27gBgI2KUHBddoVIThDVQ4WPOyDu75Zgn3yl2ks6LwJNu5fqH+jbAxlojM3pbP7wRVsBPxpikvDkb0lOq5v2gQ3weERCAZw1q66O6NjkRQScXjbHQRa/LVUzYfZc6t7awam9ltPIjiFo0cq+6NuWBs442OgnDqRG9fqIkdgfyNAAg1auFBKI5En1QuKVWIKob0uQR+uJp2dxvjoKp9+YRlUQITnIfeFheCth7Sm61o01uux84drkXdROVtD7x8MoVoOYKE9/EWmEzO+RsOpZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F6xOSn5HHPZni32V7XGYGwCtMwu0uY7JZ0CUKoDQbQo=;
- b=NKz5BS/MbJ9mU7OfJ2L/f1+os8STxGPjsk7hjogLJtc5uwOGy5Wr9bQjo1EVhej2C1ACkQqfMcNeO4pMtl+hFJCniW/fcx5LFHAJ3oa3ljS3t4Lg7s0slqA5mG7M6gOsRsLdl6LResWt0daKVEHX8Zg+W9MSAVB86Mv12SXDUUvjL2OA9pgeg5nKiTG8SJ9/wrQgN1GBfdieK9RK0fmhhBe8uB3hRjYDlgjk63to83AeEGr2eTs9kAxmJZKd6OYJAj+oAtNcL+XSF9KNN3+yV6uQmPGUMJYZk5ewyEaSTvMgngd8Z/eunMLvluVN2tQ1mEgFRXf3wj3EcWWxwNaSew==
+ bh=dPAkaxhBIIxC64id3dS4Pt3wucoC52AkWTWmcR9gmYI=;
+ b=bgmOs4OlFnedxAJfWyqStR0qGMKbiU2kuZe/NteYmfR2Vf+oxU+/oiLfuLV6Per9hYzl0wVum9Ru4Eiip0hhXMl6Myx74F8sMvU4dbgfg/GGjNWalHdZUPOh03tGEFhMrcPPHNWDWmckqJNP0posSe+22jTbqRvZIBlLL0kvAgJ6Shthvw5lU5OTn2DqDbEiKPA0ufQTI+2n6ZNVqlkEk8zUhwYB/E1rvqX4EdDrJ+DQIMMZBcRTFDuq9JUi1EYHvMJFfZpESbeqoy6gaWF3y5u3czWBvbVrsaE9YP+N1CrPnNI5YNlFbM4Dx+kaE5Eh9W6zrcXjB/Cn4FCjw3Zszw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -46,37 +46,40 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F6xOSn5HHPZni32V7XGYGwCtMwu0uY7JZ0CUKoDQbQo=;
- b=J8rGgR+u9X+u7DqzH201cFXzTOHjIOss1locdcP1za1X9LxUIsw4qC++6AoR6seWEUTydhhE47SS5iYqf2+DLCpHWX7R6HOZPMjBYHJCoSMSvVLoZUJ8sMATO+i6Id3xlS4p/FL4yBfGQIksNC1jOdsi6Pz9ZTZvNmtDssG8arA=
+ bh=dPAkaxhBIIxC64id3dS4Pt3wucoC52AkWTWmcR9gmYI=;
+ b=WH46o9SwxGct1jatfTwmNFu418h+ETWMlzEFnjTSBKO7ZjS7NZj2/OCRBdfVcYKie1BF5WNCcLg8ADlakvbYRWpf3kmpwHrWCMSpFj5e2K1BdR8KNTqQUyKzgM7u4MEZ77csFHtFL1rhsHIe4gER+cta3JhWAiIe3UHrBJKbA4c=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from PH0PR01MB8166.prod.exchangelabs.com (2603:10b6:510:293::17) by
- BY3PR01MB6578.prod.exchangelabs.com (2603:10b6:a03:364::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.23; Wed, 17 Jan 2024 21:38:51 +0000
+ DM8PR01MB7029.prod.exchangelabs.com (2603:10b6:8:17::14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.24; Wed, 17 Jan 2024 21:51:24 +0000
 Received: from PH0PR01MB8166.prod.exchangelabs.com
  ([fe80::5549:ab3d:70af:8693]) by PH0PR01MB8166.prod.exchangelabs.com
  ([fe80::5549:ab3d:70af:8693%7]) with mapi id 15.20.7202.024; Wed, 17 Jan 2024
- 21:38:50 +0000
-Date: Wed, 17 Jan 2024 13:38:37 -0800 (PST)
+ 21:51:24 +0000
 From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: James Clark <james.clark@arm.com>
-cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-    Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2] perf data convert: Fix segfault when converting to
- json on arm64
-In-Reply-To: <19913e91-b055-d767-2cb8-c6bc53671728@arm.com>
-Message-ID: <afa5f15-1898-3731-c275-397e41b3c8f3@os.amperecomputing.com>
-References: <20240117071331.59725-1-ilkka@os.amperecomputing.com> <19913e91-b055-d767-2cb8-c6bc53671728@arm.com>
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-ClientProxiedBy: CH2PR20CA0002.namprd20.prod.outlook.com
- (2603:10b6:610:58::12) To PH0PR01MB8166.prod.exchangelabs.com
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@arm.com>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] perf data convert: Fix segfault when converting to json on arm64
+Date: Wed, 17 Jan 2024 13:51:01 -0800
+Message-ID: <20240117215101.77713-1-ilkka@os.amperecomputing.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH0PR08CA0007.namprd08.prod.outlook.com
+ (2603:10b6:610:33::12) To PH0PR01MB8166.prod.exchangelabs.com
  (2603:10b6:510:293::17)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -85,112 +88,98 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR01MB8166:EE_|BY3PR01MB6578:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1c357e33-e433-48aa-df53-08dc17a4b1dc
+X-MS-TrafficTypeDiagnostic: PH0PR01MB8166:EE_|DM8PR01MB7029:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b59f901-1704-428f-fded-08dc17a6734c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	4DKjAwM6L/poEpKqrS0BjQxyvDLd4RcKZio6RLyZiyCgDVQXDGKtq2UQi+kC55wdpJsZE1aSPxg8pHChsb2ixSbRqJgCPkIHRs7VWRY0Oy+SkItdJ1C0An6uF+1kjWK2Fe9PvvA3ZkQgQKPHJLg4WlLHy+3rF12GscqtaB/+Ij9GzSnJVNozlChNtmJn2x/FavHg4Zman2/3BvVQjcLqXoeSCR11n5I8e0c4SgPHbBIg3U9Y6sqOXZdOfelnYnGdpMvFy4RGMRh2Pw0jKUdJToxDfWwW37yyS/5BS0UlIb/Dju7EZ5JUfL8FPkJqM4o7P8Spd2RDcWZVqUpGzgiCNJczmKYrbx1Eps76PcSro5wMqIHQ6sDzD51SM86KUQgzzeRonznVXh2maLuqvYmDb49I43iJ1msVbgJlAjRTGGTV8eLGGLkVjX3wflW9BNjN7RfV4dSQ3pgC1NdMZhzOgqxXxMxI0PxDEy7b6/LfmT2b3WHMmIa1mo8CRcnnaEKepOlvHItJWs2cnUdPL8jB4imYoFwYQusjXlx9qalcKpAi1I0uqM5BnUPctyBSQFICnsKYVfJ+WW5DnFj9azY4mtB95nbocZy1Q1Z4MFruQaU=
+	1xSnAmfsQRYc7Mt9yXatpL6qVOejjnanlzlcZMb+eEo684FffgxNQjOmEQsPCFkXVIaulc7vunFy11BegpmMQhP8X2ZaxgPkH9vFn2aBAZfIGF8jLix8je36UCkTgfpQcauUzRIqUiMp5RgBmj54iELzkxMVRfiFPsETNgCRHO39i2cOoY+M0RRofyfxjKwkUpxLqtcjOXWLTXHAwuL27V21pP/sJcuclAoeChY2Dc/8CEtkA3n7Y0kvpFqCIhkzM/9Ds+FCFQwdgmSlEm1bC9/qIZ87YFF8xILGBUrH0CPIuMTYmDHiZvJd6AJkn/hAAG0H6JiZGSTdD+dAmG8l9h0/CRxAK0KBYGkeIs2pziOlXcAiVdvz3tY1NHJaysCoTuPprSKb2lPIhY/FF96axgvhZW/U17fmVJz4KuH/C+s0cYsS40gbrIA4qn2+udrFmglCLZkyspMD8xnCSDIw8c7VF0VSM6hHlmFFRJMXejH/yS6yc8RFqwdrmMqsYHj2C4PbQsqX7oMdbUR4OAIKh8FYLMx9N4xexhgjzWV/14vLI8TfZEglovPa5xeR9YO5BwhA7/jeDsVHIMkCv8cDwWO2DnZpzDhLMsj5ihW9cuHXFpC68o40UTiVx+HPl4k0
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB8166.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(346002)(366004)(39850400004)(136003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(6506007)(26005)(6666004)(6512007)(86362001)(2616005)(53546011)(52116002)(5660300002)(7416002)(8676002)(4326008)(41300700001)(83380400001)(8936002)(966005)(6486002)(66946007)(316002)(54906003)(6916009)(66476007)(66556008)(478600001)(2906002)(38100700002)(38350700005);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB8166.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(376002)(39850400004)(366004)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(83380400001)(921011)(86362001)(38350700005)(52116002)(8676002)(8936002)(4326008)(1076003)(2616005)(38100700002)(26005)(6666004)(6506007)(6486002)(6512007)(966005)(110136005)(66946007)(66556008)(66476007)(316002)(5660300002)(478600001)(2906002)(7416002)(41300700001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NG64OKRWe8ToW+b7o9RtmK7p1q9Rgxku9cQw0GXX1kste8MZDE3I3cdGiwnY?=
- =?us-ascii?Q?KzUc8bWAfkqfSW0EURp8i+JrLtSZUEWJTqiRvQJOyUKbZl/bti01uUbWtiIj?=
- =?us-ascii?Q?gKbWUXQ43A0I64KBDAeg9BkJi6gPqfse/jt3H1VqOfp9rZrI5JXqa0cgb9hi?=
- =?us-ascii?Q?N9UkSHG2UFLZ/1QhTn8uQwOCymzmSzwa5LyMaMUeQc2u+6poPe7Zemr+9bNX?=
- =?us-ascii?Q?XR1OZEaHVeKBe78TlRjL4S3BbLvmwHDNPauTmeXZ0jHTR+7KZR+2HgHoBt91?=
- =?us-ascii?Q?d4/Rmwq2aApygKUQ/XAUOOLO0r7wSSzsFymoswvs3QkwSa7JBjt3KKzhl1Dk?=
- =?us-ascii?Q?+9c7MriNl4piS7pkudyC6X6BMF1maibhMF8k2zTeHg+ntkjt5iM+NQ517Hjo?=
- =?us-ascii?Q?fWxbwch9YMO7SukqHHMeQxBiPPAue+ioIMpW5WEzgImmJ4FJ2wiMMkb8JVbz?=
- =?us-ascii?Q?M5LmSqwkFfT0WDvNqqPAufpgg8eFxbl65rG21HMV0ApPZRs+G5AuWPDdkjkR?=
- =?us-ascii?Q?66RENVWInOKW+lwtbIqzhEkvQBIkhEYCR53Bg15vH6mnhbfcIH0DMr6DOSEi?=
- =?us-ascii?Q?LlImaDA4FX5lmOdCPhYC7HuvxD26Jv5wTXsvAMhjldyP6zbJa7BDJw5uIu16?=
- =?us-ascii?Q?aOot9emZhv4dP7tQtkCBsOTqRONVEdQw3DQMUwamEwmvSwcHy6jvi821ma3j?=
- =?us-ascii?Q?vMKPXW5phu9wKLU36MSMpeALzyYQcGerhkB2uKxNS20ZTfc1Rdom4ptTiR9T?=
- =?us-ascii?Q?GKhP0bw87G7AyxDqZpZdtpUXVh3edP5NcMW4t8KLtiSNjDW44ijbVXPp6K0I?=
- =?us-ascii?Q?VyOdyAPJS9IvOuSTVRHGb/zubCXJDXSua/Xq7Tr1icO8+QX+010ksMVqEWuC?=
- =?us-ascii?Q?GmvCedkGCtoNNIjTiCGGVtkJaQYa51xYRhzx3JbNqr/kidzoponuAjx6EMZ9?=
- =?us-ascii?Q?UCoaW1VT+n5omiLnhAvE5DDjrHBGnLkxIHGoVwQskZqilxqgwkDbCkK2JTIa?=
- =?us-ascii?Q?xGb0OnVwzrnI4HVRzuGS+80YdRp+NT6+aWaEUd35+agOpo4x8vmTWyq6HI0M?=
- =?us-ascii?Q?MU1NyjDZ2qYUuk7G2HUw9smFSQV6vUByhIyCPr69IrtMlah2vMh781OxfLAf?=
- =?us-ascii?Q?3yWZb5FlBNLrAL6EDTWI36DUzupB1CNL88U8Du01wW5ZbgewI0/9AJKQVnTV?=
- =?us-ascii?Q?hscD65ilh872e8DDPs4L6BsRb9EwwFLNnVIhCu37E3y7P6ZbipRF0OSrB8i+?=
- =?us-ascii?Q?T0fWORq63drcXpSbKkgJlflN+bEEw6kP53y3pYwaxwigqpb144XsSoNHnTNQ?=
- =?us-ascii?Q?v8e702pdZ4WZ8F1TGSFZATlwxtFIJQY8n1FfOuu1gGEqbKQUc+yGw01ruWYj?=
- =?us-ascii?Q?kEr8MPMk0ejcNFyyLqiSQIv+9h8PsqsyXM5SU33DiC5NeA3Byff3BMvmSs1z?=
- =?us-ascii?Q?nE8Jd1264FeHXVovfS217a7yO/9Jj/kH0LxfeKheeuXaFKx47hXio+bK5kjs?=
- =?us-ascii?Q?dgrPY8zNjV74ukKfnZ6ujDMGe8CRjm9nnLC5TX6nBtLu1kPLfiMtVuo/5jaL?=
- =?us-ascii?Q?4b2iT6WPaKpBEDTfjrBFfniI9ZXOtfOcfG51AL1AgeafunIYSDQNcAn3RyEA?=
- =?us-ascii?Q?JJ+S4GlTHp+xQXTlZNLfMpU=3D?=
+	=?us-ascii?Q?7KyxE+UXQBptR/amvFt80vfj+FfdOaWnlR7mYzdaVb9TxI4dMAeJFB0U5K+w?=
+ =?us-ascii?Q?m85rGHNH7jWWIzIQdIb+Yi8/f+bNHH1YZMl3v+rubGhF2tUo+90DftK/UN6u?=
+ =?us-ascii?Q?vwtYhKjKlMOeF9A92bFGmN/SrrSNe1j53t6J/Kzmfkbv3qHjmhxgMf+BBBBb?=
+ =?us-ascii?Q?zTVQmZGsC29g7HtYZq5g73qFZ6epGgq0j7InnAtAa9fnAinylvJuPtEG3Gpw?=
+ =?us-ascii?Q?77d9wIHBEqQlX2u1jjQ4iI47Nd2+OPKZk4lJSmpWhWsdJUiT3YEwKTMi4PwE?=
+ =?us-ascii?Q?LKX86qUr7E6Uq9CXfe2mfPyV/p7Sl+FK4JnlYHEJ9u3rj7kwlXsBl1iI+pJj?=
+ =?us-ascii?Q?L4oi7rAiZh0BlLyhnFhyr69FaoMSwZZH5KzFxEVcfc1AHo6nH9q26/F5LfAx?=
+ =?us-ascii?Q?YAP58pNyPuwmpBBCHR7oRK7ctipW4PGUwmcXrR9ehH37E8OGzab6OHqmlFKH?=
+ =?us-ascii?Q?nCcyCc3IJBb491gINU1gU2l07LxLsyVVDEPJR36ZfElNcyNEsbGtAOJPC586?=
+ =?us-ascii?Q?QaJv6pS84PyDbQP6oIXf5lmqa5EaraJRVK/ojMBQHBGVOMEFZC/3WclPFehr?=
+ =?us-ascii?Q?7yKTbIRfW9lUAyVpEYG+O/FWBBFIJkr7CE1J/9l02JDVkVirD5xl4A/sjKbK?=
+ =?us-ascii?Q?xqoqVEtkv4BQB4oVQ4iY9m0fDwvURPvEiWFem5d6sFDVHSiHrz7uQBNLqowC?=
+ =?us-ascii?Q?QX4rT8HXaS02Jz5RJutEGrDfJvUiVrvc3TmoilOXcu9e+rm14WQOLppXTcw4?=
+ =?us-ascii?Q?zjddZ7x2knA0a9Ci1UVKe5rGlJKesKL+mkkbbEMxb2hD8S8o2HIwJ1MEgBIA?=
+ =?us-ascii?Q?fAeFickfG6szEPSLJ5Lt3OlUKTGCUmTdsa/HlVigAbpTmOLJb0BWG8ju39wE?=
+ =?us-ascii?Q?+ZguzUqAxNJeu1GRWR7pyJM93cC4qkA6xHdMOAW9/FgBZgmR7iTLGLm+6D4c?=
+ =?us-ascii?Q?v0s9cUpSjPMg/JbjdiNG9q0+eQMtNwoBCENlU4cSsl6Lo0cq9HZMz7Gd1iSG?=
+ =?us-ascii?Q?9lFQ0uxDw6lcX4yrXeqIcUsYtNneIDfcwsvCFXP//SryTbO7Jf0RZerJRIeO?=
+ =?us-ascii?Q?ZyCFxBw76XZ6ZCNnmQLCG+WEUBLC8oSrUaqBCOB8ImXE9EC2s3jgA6bU3Utb?=
+ =?us-ascii?Q?8rS8SBGXoU4dM/lnQ1RB6fthOuX5UUMC4ebeBaGD9QOsM8nWELmmHs+2Lm7V?=
+ =?us-ascii?Q?cc2HWmrseunR7bxne/UnmQF2zkCBj0wwLYnWEm4RNeqpDwLq6wIVJKvMGIQZ?=
+ =?us-ascii?Q?znT04atQE0Jwm+Jr2GwhBzadwsJbOo20kd3WGpGYb/ctarGOPT/aqxx9HDl3?=
+ =?us-ascii?Q?7xZgPk5TTCs2npvGtr0N29oRjd17Sa1Lcxi9owdwdMfSe6i1zI0t1tUn90fO?=
+ =?us-ascii?Q?3MAXDH66CF1C64Py7nDEG8HKmDZO7wiF4q+lohVoYCl2qQaeC6sVpdOBUs4I?=
+ =?us-ascii?Q?T6V2Cn/vt1Gpr0xCDGkeqICPV7gVibWtHSeM3AmACT2XPllmWI/zc344Mi41?=
+ =?us-ascii?Q?K+/rPe012NUTGnl3cUQJAbb3E9SwBeaq6pmqFIbTJ+anKcm43VBRhb81iELT?=
+ =?us-ascii?Q?rtErBPCBnz+vG7vmyyhrvf3MSn6Tm3fLs+i6MI3I/QiGUAS5O4fcfEOgujGF?=
+ =?us-ascii?Q?iUmkldEzyqGXx+V/pqFNQBA=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c357e33-e433-48aa-df53-08dc17a4b1dc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b59f901-1704-428f-fded-08dc17a6734c
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB8166.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 21:38:50.7520
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 21:51:24.7522
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HJCmqZd3irq9FNbbyPKAngoisMsveYbrRycvo2M7K51TBstJj4KmtYiBVdEG+LVQwss3EFy2ZiQiQg0Rl4J6LfWYggFE5LHjGTi0HlRnk2w6uqc+4rRAiUTxoSYlwp0R
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR01MB6578
+X-MS-Exchange-CrossTenant-UserPrincipalName: BnVCk7bZL07Mlsk0E8Z3/VtvLGnMCRGRi/pJW5wPkTL3wOUc6V29ODyXnjTFQYr+IOY1wZFJiqdNn1jleIH6sx3On7uxAUaG3uiuwQVJ+IAUHz4lD5eUhkiZK+VPZZUV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR01MB7029
 
+Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't get
+assigned.
 
+Running
+	$ perf data convert --to-json perf.data.json
 
-On Wed, 17 Jan 2024, James Clark wrote:
+ends up calling output_json_string() with NULL pointer, which causes a
+segmentation fault.
 
->
->
-> On 17/01/2024 07:13, Ilkka Koskinen wrote:
->> Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't get
->> assigned.
->>
->> Running
->> 	$ perf data convert --to-json perf.data.json
->>
->> ends up calling output_json_string() with NULL pointer, which causes a
->> segmentation fault.
->>
->> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
->> ---
->> v1:
->> 	- https://lore.kernel.org/all/20240111232923.8138-1-ilkka@os.amperecomputing.com/
->> v2:
->> 	- Changed the patch based on James's comments.
->> ---
->> tools/perf/util/data-convert-json.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
->> index 5bb3c2ba95ca..e8b006c3581f 100644
->> --- a/tools/perf/util/data-convert-json.c
->> +++ b/tools/perf/util/data-convert-json.c
->> @@ -284,7 +284,13 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
->>  	output_json_key_string(out, true, 2, "os-release", header->env.os_release);
->>  	output_json_key_string(out, true, 2, "arch", header->env.arch);
->>
->> +#if !defined(__aarch64__)
->
-> I think this needs to read from header->env.arch, otherwise it won't
-> work if you run data convert on another machine.
->
-> I'm assuming that perf data convert is one of the commands that runs on
-> a pre-recorded file, rather than a command that creates the perf.data
-> file to begin with?
+Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+---
+v1:
+    - https://lore.kernel.org/all/20240111232923.8138-1-ilkka@os.amperecomputing.com/
+v2:
+    - Changed the patch based on James's comments.
+v3:
+    - The architecture is checked from the actual data file to allow one to do
+      conversion on another system. (thanks to James for the feedback)
+---
+tools/perf/util/data-convert-json.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Oh, right. I'll fix it right away.
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 5bb3c2ba95ca..405c38371870 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -284,7 +284,13 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+ 	output_json_key_string(out, true, 2, "os-release", header->env.os_release);
+ 	output_json_key_string(out, true, 2, "arch", header->env.arch);
+ 
+-	output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
++	/*
++	 * Arm64 doesn't have Model section in /proc/cpuinfo and, thus, cpu-desc
++	 * is not set.
++	 */
++	if (strncmp(header->env.arch, "aarch64", 7))
++		output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
++
+ 	output_json_key_string(out, true, 2, "cpuid", header->env.cpuid);
+ 	output_json_key_format(out, true, 2, "nrcpus-online", "%u", header->env.nr_cpus_online);
+ 	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", header->env.nr_cpus_avail);
+-- 
+2.43.0
 
-Cheers, Ilkka
-
->
->> +	/*
->> +	 * arm64 doesn't have Model section in /proc/cpuinfo and, thus, cpu-desc
->> +	 * is not set.
->> +	 */
->>  	output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
->> +#endif
->>  	output_json_key_string(out, true, 2, "cpuid", header->env.cpuid);
->>  	output_json_key_format(out, true, 2, "nrcpus-online", "%u", header->env.nr_cpus_online);
->>  	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", header->env.nr_cpus_avail);
->
