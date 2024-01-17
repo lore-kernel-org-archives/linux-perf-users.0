@@ -1,37 +1,76 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 879AE1DFC7;
-	Wed, 17 Jan 2024 12:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3DF20310;
+	Wed, 17 Jan 2024 14:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705493532; cv=none; b=Bl21fF2189kTKR0FseF7aRmCjBtDQhHJyKS0/4Vk9uipW2b2t+2+zHqio8Wfb9r6orOc+L0h5LhXTg21bLycksBOJWFxnLopHx1cBZ55Vg9UfZZlCmElVIOftMP1EH9Hx7yDkAtvD6XXheBrFaDisW2ArqZjoq20OZlcUkB8lTg=
+	t=1705500146; cv=none; b=rII5FJbnbXh+vwZ0Gz4xPQ8DvdITFbwH6GwE1QDqnm7aeYqy09btaqgmWZqwPSw4928wCD10b9ZLTyiQDlzsp55e/ax7zkM2grtfAvS5GJFeUAWZav0JDiwTcXQ7vRNyLaNBrkR4SMLNIckHLgzFFlMl2/4M2dCiL+Z9HhQla4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705493532; c=relaxed/simple;
-	bh=+zNMd3dUbHss2EQOXbNle6Cu4g0DF1zxGNSVl8H+bjo=;
-	h=Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=MRjeZbnwkbEW1O1w5/oikGacWRXdqRt1OPmRaCEKUVBVyJPMXWkv8zQ3LKpX3Iwexu+CzXBzFDo7qYSvv/CwWBV2cExIVJBcjhENnGAk9UsuuEbbAPcHhRmhZ8ibcfpt3l3AYi2s8AHzncIHlMzj7WTK6tpwl0bm37ZThAjJUio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB1E611FB;
-	Wed, 17 Jan 2024 04:12:55 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.37.172])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC5503F766;
-	Wed, 17 Jan 2024 04:12:07 -0800 (PST)
-Date: Wed, 17 Jan 2024 12:12:05 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-	Ian Rogers <irogers@google.com>, acme@redhat.com,
-	james.clark@arm.com, john.g.garry@oracle.com, leo.yan@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
-	namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com,
-	will@kernel.org
-Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
-Message-ID: <ZafEFU7kwf6W0_Qx@FVFF77S0Q05N.cambridge.arm.com>
-References: <20240116170348.463479-1-mark.rutland@arm.com>
- <8734uwxrca.wl-maz@kernel.org>
+	s=arc-20240116; t=1705500146; c=relaxed/simple;
+	bh=vtpkyqMtotdPC2V3QrjFzYhU+aMye5ylP4D8sV1rPag=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
+	 X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=Y5jsBGo1eJr00CnBBmrvEz3BfUYD5HEFbW30N+GTuPuEo1o0QlBPwOZZ4VDVe7/PglxHdOnGToe7wuY/g7CJ66ao4YtkutsdboLgUpWEZeXCuEfm6YRQ4ccInknPL6fkzDfnb21VKBonEmO/a5ix4IlZKLlR4+cnprLcrWkOlJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XK/WUdrQ; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XK/WUdrQ"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-50e766937ddso12508282e87.3;
+        Wed, 17 Jan 2024 06:02:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705500143; x=1706104943; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rwS+kUbEj1CXgTKMF4Pii0I/Gobr3HpDHcwboK5dbsc=;
+        b=XK/WUdrQywnCR4yMVnitdfppyvDvpmGuQchqbbP/I6B/pqFmITsxM1+HXSzzeKVNyY
+         Oh9wtE7b1JJbw7SxZx5kFJJybQweonVyW2QSmTmJ4uR8OT3i/c8Z4OfQ8QnummSUiRaq
+         Jrj6xbSvULQ+yn/ND1NdSeSMsXB5ErlUdQ8xnCXKzaf1XdGgvZA3mrdUPn2RxD9JEfXv
+         30iojob8UkutPw0WCK/OCrdF1TvlAToblcWGR6L4Jo1uY2cMHWXTCxhqpc5obOl6eSiS
+         yU/Fy1iuq2jlI6VEF+LPK4A6JIqhu3lkaC4SpSfN4vm71L8u0FAl4MLvFOMYNCBTcVmy
+         H8lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705500143; x=1706104943;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rwS+kUbEj1CXgTKMF4Pii0I/Gobr3HpDHcwboK5dbsc=;
+        b=wZfAmZnolRoV2tEFldnHg2t2s4k4+YEXh7D5fuiBlDJBMlQkO8miSy+bZN3djypEte
+         PshOH/WGHpeQM1RXPHJ/B0BeKG26ps0V8t1zYf75sBBZmsx77ZwEuaZVzJ6PNpOlQFzl
+         ZT0LJTPJS9qJ2eiHPMDvo6RxQFa1UjMvNN3l42j+Vsg+OLZwGoptyMnvH5sKn3i1rggs
+         dYWwTaykUWa2VsQZqO5aNfrOILjqLZC+pYTW/P9UOo8Bw04z2G2Bf6/jI8IPktg1IhLF
+         oeP9BlvcP9i0ixSiYWNniBkevw8LHJNMXm9TJiat8qT81Mbt6opj5o3NrI++haeLLlVG
+         vE6w==
+X-Gm-Message-State: AOJu0YwnLi19tJcRGCHx02CfBIS94e0g6CG8CA9Q8VZjILUEq8xVYhGF
+	172m0jUgU0CSatq97WkI9Mk=
+X-Google-Smtp-Source: AGHT+IF/BBzzY9gEnN3f+YYZe5+56B7mSMR+czMogSauXjYzh53Ufl4NGtVeOgr/Ey+baAcGpKwEEQ==
+X-Received: by 2002:a05:6512:23aa:b0:50e:ab53:e3ce with SMTP id c42-20020a05651223aa00b0050eab53e3cemr5067948lfv.73.1705500142690;
+        Wed, 17 Jan 2024 06:02:22 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id z9-20020a1709060f0900b00a28f6294233sm7792207eji.76.2024.01.17.06.02.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 06:02:22 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 17 Jan 2024 15:02:20 +0100
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-perf-users@vger.kernel.org,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, bpf@vger.kernel.org
+Subject: Re: [PATCH v1] uprobes: use pagesize-aligned virtual address when
+ replacing pages
+Message-ID: <Zafd7FkFdts6Ikp-@krava>
+References: <20240115100731.91007-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,76 +79,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8734uwxrca.wl-maz@kernel.org>
+In-Reply-To: <20240115100731.91007-1-david@redhat.com>
 
-On Wed, Jan 17, 2024 at 09:05:25AM +0000, Marc Zyngier wrote:
-> Hi Mark,
-> 
-> On Tue, 16 Jan 2024 17:03:48 +0000,
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> > 
-> > Currently the perf tool doesn't deteect support for extneded event types
-> > on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
-> > hardware events into per-PMU events. This is due to the detection of
-> > extended event types not handling mandatory filters required by the
-> > M1/M2 PMU driver.
-> 
-> Thanks for looking into this.
-> 
-> I've given your patch a go on my M1 box, and it indeed makes things
-> substantially better:
-> 
-> $ sudo ./perf stat -e cycles ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.419
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    174,783,472,090      apple_firestorm_pmu/cycles/                                             (93.10%)
->     39,134,744,813      apple_icestorm_pmu/cycles/                                              (71.86%)
-> 
->        3.568145595 seconds time elapsed
-> 
->       12.203084000 seconds user
->       55.135271000 seconds sys
+cc-ing bpf list
 
-Thanks for giving that a spin!
+jirka
 
-> However, I'm seeing some slightly odd behaviours:
+On Mon, Jan 15, 2024 at 11:07:31AM +0100, David Hildenbrand wrote:
+> uprobes passes an unaligned page mapping address to
+> folio_add_new_anon_rmap(), which ends up triggering a VM_BUG_ON() we
+> recently extended in commit 372cbd4d5a066 ("mm: non-pmd-mappable, large
+> folios for folio_add_new_anon_rmap()").
 > 
-> $ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.313
+> Arguably, this is uprobes code doing something wrong; however,
+> for the time being it would have likely worked in rmap code because
+> __folio_set_anon() would set folio->index to the same value.
 > 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
+> Looking at __replace_page(), we'd also pass slightly wrong values to
+> mmu_notifier_range_init(), page_vma_mapped_walk(), flush_cache_page(),
+> ptep_clear_flush() and set_pte_at_notify(). I suspect most of them are
+> fine, but let's just mark the introducing commit as the one needed
+> fixing. I don't think CC stable is warranted.
 > 
->    <not supported>      apple_firestorm_pmu/cycles:k/                                         
->    <not supported>      apple_icestorm_pmu/cycles:k/                                          
+> We'll add more sanity checks in rmap code separately, to make sure that
+> we always get properly aligned addresses.
 > 
->        3.467568841 seconds time elapsed
+> Reported-by: Jiri Olsa <jolsa@kernel.org>
+> Closes: https://lkml.kernel.org/r/ZaMR2EWN-HvlCfUl@krava
+> Fixes: c517ee744b96 ("uprobes: __replace_page() should not use page_address_in_vma()")
+> Tested-by: Jiri Olsa <jolsa@kernel.org>
+> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  kernel/events/uprobes.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->       13.080111000 seconds user
->       53.162099000 seconds sys
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 485bb0389b488..929e98c629652 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -537,7 +537,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+>  		}
+>  	}
+>  
+> -	ret = __replace_page(vma, vaddr, old_page, new_page);
+> +	ret = __replace_page(vma, vaddr & PAGE_MASK, old_page, new_page);
+>  	if (new_page)
+>  		put_page(new_page);
+>  put_old:
+> -- 
+> 2.43.0
 > 
-> I would have expected it to count, but it didn't. For that to work, I
-> have to add the 'H' modifier:
-
-Ok, so that'll have something to do with the way the tool chooses which
-perf_evant_attr::exclude_* bits to set. I thought that was the same for plain
-events and pmu_name/event/ events, but I could be mistaken.
-
-Is that something you had tried prior to this patch, and did that "just work"
-with the explicit pmu_name/event/ syntax prior to this patch?
-
-e.g. did something like:
-
-	perf stat -e apple_firestorm_pmu/cycles/k -e apple_icestorm_pmu/cycles/k ./workload
-
-... happen to work withiout requiring the addition of 'H'?
-
-If so, does that behave the same before/after this patch?
-
-... and could you run that with '-vvv' and dump the output for comparison?
-
-Thanks,
-Mark.
+> 
