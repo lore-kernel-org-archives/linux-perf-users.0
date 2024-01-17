@@ -1,200 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2113.outbound.protection.outlook.com [40.107.243.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C041427F;
-	Wed, 17 Jan 2024 06:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705472825; cv=none; b=df6YEjFv1LN3Um3xpkciQQiybUGPo5BiA2heIfjqz46FqJodgwojr2NPvEEn5ddIJHHpkgVYu9CNM8Oy748Jx4Opcy7ukrqaXKWYvfhQxA8NuU9zPcpyPCNdNXCphbclZzyqgGt++vI5bWvqjE6hVwVFLdceSHs6syT8j2Nb0aQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705472825; c=relaxed/simple;
-	bh=kGeOYRx8qI0US6bRFjuYIEStLY+yQsBJ4RwEajsebjM=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=L8LiiKOX9mAPHk6VxdYqAyumt4I8p7u62GnnVdCk/QEK0UmOagOzvxh2Md2qSwyJXwzGvHl9c09tiiHwHoo9ewz2f8F9Gi4MUEL1u6D4EGD90B5ZRnH1xAMLftvlA6UnsTfrMFYeI5FSbUbsN2N8jLqIuzdsu31Pdgt4WWuPnvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcNDo9Gg; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCB78F47;
+	Wed, 17 Jan 2024 07:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705475638; cv=fail; b=dh78Hj5DHhQDUGqz9dCSor/h1St/5Dv4cQUZl0r2u3/3RtxRpOKbAQBCSr/TSoxVZMKa+bBgXitQlVxlrPA3ikwxAiUpswk5cwBBOtsr3TkWkIe3YJJUcgrg5auyR0SnDdLMJbngnZ25GSkLIHimWCgy0D/nm3oLAeM8QlhG9cU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705475638; c=relaxed/simple;
+	bh=PYHa70ARcX88SgF6xADOviVTR5Vo6ytYLbm6ZKSaFsk=;
+	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
+	 Received:Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 Content-Transfer-Encoding:Content-Type:X-ClientProxiedBy:
+	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=Fuhv5VfV94raxswjFXl0hxll7g0f+uGtDZDTUfHHxMweBrYmdNc35Oy/ko/Fp0qVz9yiyW2owO4csEAxBrV+JTiYl4QkDDLHmHqtfkXehxGWW3dOnYOpPXQrzQAXpo5TPVKSRgzjRfGnyCR/a1gQQoHkIrz8Mbs5E5zX++46pcw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=bLawHLaH; arc=fail smtp.client-ip=40.107.243.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcNDo9Gg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8346AC43390;
-	Wed, 17 Jan 2024 06:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705472825;
-	bh=kGeOYRx8qI0US6bRFjuYIEStLY+yQsBJ4RwEajsebjM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TcNDo9GgchQ6h3sAcUB3HGvOoDL1wvZMNA2FFGl3hJxhNvd8yoE4madZ0jJgsy2Mr
-	 ir4WWI25rX6R6/ZK0AQCJkEzHQa0MO1TpFAZbJCDgPksMII6V/d2P9HquXxjHJ+3Sv
-	 aJ/0dxnhTAzzP694bbIFEcVSRmQ1lZuq+tyVbEt5VdUjnCcrZqK0h1iJ90G4eE5JTu
-	 zK2hERqkYYyBMSJMTK2UkLJuvzN+MzaQkW4L1k6XWF2tpN+VPLBfoQmJjgTn7bLmyr
-	 ZOODXca52Ye8FdJVHY5fgm9dcElFIaSjY4uhYgKvvJ0jtHSuGRsahcEncXFXXzjlZv
-	 HPv3v9dNn4v0Q==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="bLawHLaH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aMTql2HB/msPBUpZqZJLkMZlCPr8wP/fjdZyzX5zuUmL8JvP3D2ATHlqo6whBNk446tBtqlTUERrrtMMYVPSOw+dKqi69RWC59EcyVBl3if61xRk7Gb/6aE/JUGcZThgzk5xT3d5aANOwhP9ZtkcyK/ib2+QVIfL5QzCpXQQhNzeH7Y4UE+vH215LMK/suzCkDU8IotfrLaCWz7mWoocVMF9km6uIeRNTzInT1LKNK0DwSTOOL82uNkBPOXht5vcn0+GR56uGtUC7QxCEsf0aT1vSleJZKqAw4838YqmHbw9y4o8DSUkOsl8onWHFb1BWX6eR2g1bfk48UlATNrGWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UFeg4CSmpubQEaLB17QJUwdrRdcUoTtqqlvVEYR/b8M=;
+ b=aOUQEEB01m0fq7hT6ztWK8ZaK8ADoUPxfMH+dDth0dghOKl3cQXr68t+Pn6O3NtbIfpzz/ap05d9XjQciLdmXK041XZMMhlvE5P3kZhHMo0K66qLMjtKKxGsmqLvDOWGeQXsLLPeA53UpMBvMaZOe6JeIMXB+dzlHl190HMu8Mq+mWZE8pAi8Z2BYLGsoIW/O7MG+jEwx10JZY8d2Skk1dfBgUbh9rvRPxD8a63irqLPyVEfYY1SLxwkETXSqZ1xcrLz89Yh5JDVDmLjIRuAHSQKtYDFS+PEqT4EXvCQ5TSOqpN6QYcx+uS9tvZLk6PysCABwUoYFyS4dq+AESZP1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UFeg4CSmpubQEaLB17QJUwdrRdcUoTtqqlvVEYR/b8M=;
+ b=bLawHLaH0VyEVpEf6RXTfxwOd0TowRG9rvakV1asvidt+pHb5R1cqRKmDerq9g2PXBIdUWyHFmk2XGJLPBsA/kqxGwmwrZohD/3UTDz56JNVXIZ3lpcsfMudS6WYUeuCalSEl016n1ygz1pezcNdAJfk3mzvEQD8gE8cQrx2YFo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from PH0PR01MB8166.prod.exchangelabs.com (2603:10b6:510:293::17) by
+ BL1PR01MB7580.prod.exchangelabs.com (2603:10b6:208:390::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.29; Wed, 17 Jan 2024 07:13:52 +0000
+Received: from PH0PR01MB8166.prod.exchangelabs.com
+ ([fe80::5549:ab3d:70af:8693]) by PH0PR01MB8166.prod.exchangelabs.com
+ ([fe80::5549:ab3d:70af:8693%7]) with mapi id 15.20.7181.019; Wed, 17 Jan 2024
+ 07:13:52 +0000
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
+	James Clark <james.clark@arm.com>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
 	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-toolchains@vger.kernel.org,
-	linux-trace-devel@vger.kernel.org
-Subject: [PATCH 9/9] perf dwarf-aux: Check allowed DWARF Ops
-Date: Tue, 16 Jan 2024 22:26:57 -0800
-Message-ID: <20240117062657.985479-10-namhyung@kernel.org>
-X-Mailer: git-send-email 2.43.0.381.gb435a96ce8-goog
-In-Reply-To: <20240117062657.985479-1-namhyung@kernel.org>
-References: <20240117062657.985479-1-namhyung@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf data convert: Fix segfault when converting to json on arm64
+Date: Tue, 16 Jan 2024 23:13:31 -0800
+Message-ID: <20240117071331.59725-1-ilkka@os.amperecomputing.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH2PR15CA0015.namprd15.prod.outlook.com
+ (2603:10b6:610:51::25) To PH0PR01MB8166.prod.exchangelabs.com
+ (2603:10b6:510:293::17)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR01MB8166:EE_|BL1PR01MB7580:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6932ff28-8426-41f3-26a0-08dc172bdc25
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	A9SHno+SOj91hGjkgfz+26VVvl2qRBXN7E+m7mEdpb66/TUGzQMnuJZt7Haa9I276Yk4SnWdpDXS0j8UbjW10jG2yvy4ot/XMVQvwfFIQGg9nVDLi+MJEl0OUnqFaspZN6dFmGRm0rWnxaNSLd3FYKWS6ghMz/64Ps+AMHOXAnwlamU6VH7WasW4hnCVUmiAYtqUjFSWtT9+dYbgF2qFL5uX3rwieClyQt8FzyRGlKT4IoOhR107fJSdyU4E9OgfxsEqYDb9Grrq6Uu94s9zoEsqSZgC+qvlOKwl3UPXICKNadnLF4twjBIeHCaYqrNPtWPnBKUSGbFVTisMtMysOmAjM/duEYqmP5WkJO9jKUycvxeQ2SCIl5sQ5xeJMR7yXDBcS1/K5rtKytplGisZb4H7pOidUfDUTkC5Q/8xuIpHSSuN2vmbh+3blonhAHvBDgLw8TIUeY9h5YnyPfXe/crfXrn5or25zG4/TtCr3TlFthsp8PGPIFlDB+tb5o/3SyP2reelGDwx5YAlNL8ydHeaQzdzhxlW2x6l6UjetgNOma1bVlAKgG0ZpNgzX7fGHPU9ifEjnmIn5Mbo4qvuqb4iUy2Al3wuiaC7iwJFF4MEZs6/wh9RzrV6SKP7O4w3
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB8166.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(396003)(376002)(136003)(39850400004)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(86362001)(921011)(6506007)(52116002)(6512007)(6486002)(38350700005)(966005)(2616005)(83380400001)(38100700002)(41300700001)(1076003)(26005)(7416002)(5660300002)(2906002)(478600001)(6666004)(4326008)(66946007)(316002)(8676002)(66476007)(66556008)(110136005)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?732PWs8pgCWCyBIb24KpPlfam6Efu0G9e/aioD/5eWXEu4klHT9mMuVg3iNg?=
+ =?us-ascii?Q?khsmPO8JP3AHRG7t/meEjodO9IIkTbfdIFhLWNaaT3EDolFU5aHol8JiZc5i?=
+ =?us-ascii?Q?Q3Gn3HFsSGSdWBBPdOxHVwuaVweabc+Nn0uz+0YyS15LWo368I2flfcIGtgc?=
+ =?us-ascii?Q?5QLGA4CTM2y/DsRPH5OH75fDHpI+fRvt0BBb3S3rHzbU5joKNIViW6PQkCcr?=
+ =?us-ascii?Q?WYrPouXl5WeQhTbNrz3ormb9PY/UUwiBsynCjVJQBohrTwt5S+uMjih8j/4r?=
+ =?us-ascii?Q?6OYjBjyRRsKMG0lTh/JxtLlVcGWcN/Uubh1JX/QqijQUeUAOm5hnO6G2KUUt?=
+ =?us-ascii?Q?p5dFzw7mwsLEr0PWEH+uxSiPeHINvcKO+YfaurQKeDWmoV1MAtz92sibXtt+?=
+ =?us-ascii?Q?5aEOrhikfu3F6EiQTotx1q9ExeGQjncZ2EUwkQnQhNjVw+zGEUyOlqsSRLwv?=
+ =?us-ascii?Q?bFt+cnDwvH1ZBr2b7LZHLwr4xzvgx9C1dhCIV1qRIq1SZ/g9nMFqhbiQurVx?=
+ =?us-ascii?Q?n4ZhQw0iK3eDhYSmxAMAzpfdG7tCSnJbFhwpHILNrTZ5eIFKKgL/KG/QYKEO?=
+ =?us-ascii?Q?KEOUayN0wM7k/UPSAncePBNv93/+IUb7CnijccDUYyTl3pcUUin/efq5Brk1?=
+ =?us-ascii?Q?E8Fxoy7VFthJe6iuYzP0UIS8fNBQVuRjmR1kfzzwaHbm8zTB34ktI8ulzFwq?=
+ =?us-ascii?Q?1r6h93MRkhTl6ElRVmpKR5iJ3jbosyGhIOMvYfvnTIrZOuNueMoaPWpvwv8u?=
+ =?us-ascii?Q?81Gx78sEe6aOHfuXLZbF2Zo5Bbr5+64qycQXywynyAU/y4hR4XKW6EsOVe34?=
+ =?us-ascii?Q?tRHNsMVNAvZ6FjzqOU65bQWxE/ZJl0t3Yir5vUcSBiPhg8yH/zHaEheUlSJY?=
+ =?us-ascii?Q?AoWQSbdao3aRth4PVHrfLMyA1dxJxRh8ZJQyMqGRj2BGbfRgxSO6q2uG4apX?=
+ =?us-ascii?Q?jEJuiCetHc4aY2JUD0pTGzfdDzt/uzNA9BB9e4QlU2H2mwhgQXkLyI+0DRVd?=
+ =?us-ascii?Q?sQamEtT24Yy66vFXZPYwGej2Xht7EMO7jYWUskLpUkCAJLhMjtvcXf6F9HQb?=
+ =?us-ascii?Q?pNatiiQlPDWMmqY+MqUbP351Arug9m2dnZFQuZjx3Mp1GucxJNwo5911Mu+G?=
+ =?us-ascii?Q?8b7jOezBHNO2X/8ObRuJ+dYVSSZ707xdoHleKkIBSeAaiaQvC7GeZsIh2tRt?=
+ =?us-ascii?Q?HA9Ym67N6Hre73BqXBpaVbYn8Vinndy28gXlxO/SIZtZMrHeuExrdEgpJKlV?=
+ =?us-ascii?Q?QLuHr+wbR49fqVGNrgNQIqYiAj2/6RBWaMdeVBAMoRcvIKoPcjACHMBDnOeK?=
+ =?us-ascii?Q?ei6wCTrOKMX+N92zxTKGkeBMzgltKD93+gnYFmU9GKGMSUJIAa9shqagoyl+?=
+ =?us-ascii?Q?VATBii+4iaEgwZ5dX9UxYry/cG1YQpkun8AAQuNTbEpQOgQb4SIoLtk3zXZq?=
+ =?us-ascii?Q?CeD6COwCBmxoPMH5oYEZbO0tI7gs6DB9u7vrNxHYkSLdc74WZ6H+lnOzIPgt?=
+ =?us-ascii?Q?Q48i/VD8O1RTHhV86mCiWOjADnCrTsu2TG2x+H+MTO+iLgR3P1YHNgUiA32k?=
+ =?us-ascii?Q?An4SeNIz1+cXjkJpvqLrvYS7SQmRkrMXiZ6BGbTzVyFiVHmxBFeyOccqOhuI?=
+ =?us-ascii?Q?S79/2rzTDwsHbT3JFpon9N4=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6932ff28-8426-41f3-26a0-08dc172bdc25
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB8166.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 07:13:52.5297
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +ktdQwX1QlEmNUowB2Lgfy65VdBRTcnKVSczHm2P5TqFEE6yG/SlTYFsr/vnfitPTtdL/mMWL34ZIcKrG4j+xr0amr5OPnl1JUgFlCAdUrYeNu8ydu8be7p1A/1eaz9R
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR01MB7580
 
-The DWARF location expression can be fairly complex and it'd be hard
-to match it with the condition correctly.  So let's be conservative
-and only allow simple expressions.  For now it just checks the first
-operation in the list.  The following operations looks ok:
+Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't get
+assigned.
 
- * DW_OP_stack_value
- * DW_OP_deref_size
- * DW_OP_deref
- * DW_OP_piece
+Running
+	$ perf data convert --to-json perf.data.json
 
-To refuse complex (and unsupported) location expressions, add
-check_allowed_ops() to compare the rest of the list.  It seems earlier
-result contained those unsupported expressions.  For example, I found
-some local struct variable is placed like below.
+ends up calling output_json_string() with NULL pointer, which causes a
+segmentation fault.
 
- <2><43d1517>: Abbrev Number: 62 (DW_TAG_variable)
-    <43d1518>   DW_AT_location    : 15 byte block: 91 50 93 8 91 78 93 4 93 84 8 91 68 93 4
-        (DW_OP_fbreg: -48; DW_OP_piece: 8;
-         DW_OP_fbreg: -8; DW_OP_piece: 4;
-         DW_OP_piece: 1028;
-         DW_OP_fbreg: -24; DW_OP_piece: 4)
-
-Another example is something like this.
-
-    0057c8be ffffffffffffffff ffffffff812109f0 (base address)
-    0057c8ce ffffffff812112b5 ffffffff812112c8 (DW_OP_breg3 (rbx): 0;
-                                                DW_OP_constu: 18446744073709551612;
-                                                DW_OP_and;
-                                                DW_OP_stack_value)
-
-It should refuse them.  After the change, the stat shows:
-
-  Annotate data type stats:
-  total 294, ok 158 (53.7%), bad 136 (46.3%)
-  -----------------------------------------------------------
-          30 : no_sym
-          32 : no_mem_ops
-          53 : no_var
-          14 : no_typeinfo
-           7 : bad_offset
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 ---
- tools/perf/util/dwarf-aux.c | 44 +++++++++++++++++++++++++++++++++----
- 1 file changed, 40 insertions(+), 4 deletions(-)
+v1:
+	- https://lore.kernel.org/all/20240111232923.8138-1-ilkka@os.amperecomputing.com/
+v2:
+	- Changed the patch based on James's comments.
+---
+tools/perf/util/data-convert-json.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 7caf52fdc255..2791126069b4 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1305,6 +1305,34 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
- 	return true;
- }
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 5bb3c2ba95ca..e8b006c3581f 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -284,7 +284,13 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+ 	output_json_key_string(out, true, 2, "os-release", header->env.os_release);
+ 	output_json_key_string(out, true, 2, "arch", header->env.arch);
  
-+static bool check_allowed_ops(Dwarf_Op *ops, size_t nops)
-+{
-+	/* The first op is checked separately */
-+	ops++;
-+	nops--;
-+
++#if !defined(__aarch64__)
 +	/*
-+	 * It needs to make sure if the location expression matches to the given
-+	 * register and offset exactly.  Thus it rejects any complex expressions
-+	 * and only allows a few of selected operators that doesn't change the
-+	 * location.
++	 * arm64 doesn't have Model section in /proc/cpuinfo and, thus, cpu-desc
++	 * is not set.
 +	 */
-+	while (nops) {
-+		switch (ops->atom) {
-+		case DW_OP_stack_value:
-+		case DW_OP_deref_size:
-+		case DW_OP_deref:
-+		case DW_OP_piece:
-+			break;
-+		default:
-+			return false;
-+		}
-+		ops++;
-+		nops--;
-+	}
-+	return true;
-+}
-+
- /* Only checks direct child DIEs in the given scope. */
- static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
- {
-@@ -1332,25 +1360,31 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
- 		/* Local variables accessed using frame base register */
- 		if (data->is_fbreg && ops->atom == DW_OP_fbreg &&
- 		    data->offset >= (int)ops->number &&
-+		    check_allowed_ops(ops, nops) &&
- 		    match_var_offset(die_mem, data, data->offset, ops->number))
- 			return DIE_FIND_CB_END;
- 
- 		/* Only match with a simple case */
- 		if (data->reg < DWARF_OP_DIRECT_REGS) {
--			if (ops->atom == (DW_OP_reg0 + data->reg) && nops == 1)
-+			/* pointer variables saved in a register 0 to 31 */
-+			if (ops->atom == (DW_OP_reg0 + data->reg) &&
-+			    check_allowed_ops(ops, nops))
- 				return DIE_FIND_CB_END;
- 
- 			/* Local variables accessed by a register + offset */
- 			if (ops->atom == (DW_OP_breg0 + data->reg) &&
-+			    check_allowed_ops(ops, nops) &&
- 			    match_var_offset(die_mem, data, data->offset, ops->number))
- 				return DIE_FIND_CB_END;
- 		} else {
-+			/* pointer variables saved in a register 32 or above */
- 			if (ops->atom == DW_OP_regx && ops->number == data->reg &&
--			    nops == 1)
-+			    check_allowed_ops(ops, nops))
- 				return DIE_FIND_CB_END;
- 
- 			/* Local variables accessed by a register + offset */
- 			if (ops->atom == DW_OP_bregx && data->reg == ops->number &&
-+			    check_allowed_ops(ops, nops) &&
- 			    match_var_offset(die_mem, data, data->offset, ops->number2))
- 				return DIE_FIND_CB_END;
- 		}
-@@ -1412,7 +1446,8 @@ static int __die_find_var_addr_cb(Dwarf_Die *die_mem, void *arg)
- 		if (data->addr < ops->number)
- 			continue;
- 
--		if (match_var_offset(die_mem, data, data->addr, ops->number))
-+		if (check_allowed_ops(ops, nops) &&
-+		    match_var_offset(die_mem, data, data->addr, ops->number))
- 			return DIE_FIND_CB_END;
- 	}
- 	return DIE_FIND_CB_SIBLING;
-@@ -1503,7 +1538,8 @@ int die_get_cfa(Dwarf *dwarf, u64 pc, int *preg, int *poffset)
- 		return -1;
- 
- 	if (!dwarf_cfi_addrframe(cfi, pc, &frame) &&
--	    !dwarf_frame_cfa(frame, &ops, &nops) && nops == 1) {
-+	    !dwarf_frame_cfa(frame, &ops, &nops) &&
-+	    check_allowed_ops(ops, nops)) {
- 		*preg = reg_from_dwarf_op(ops);
- 		*poffset = offset_from_dwarf_op(ops);
- 		return 0;
+ 	output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
++#endif
+ 	output_json_key_string(out, true, 2, "cpuid", header->env.cpuid);
+ 	output_json_key_format(out, true, 2, "nrcpus-online", "%u", header->env.nr_cpus_online);
+ 	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", header->env.nr_cpus_avail);
 -- 
-2.43.0.381.gb435a96ce8-goog
+2.43.0
 
