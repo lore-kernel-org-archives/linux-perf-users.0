@@ -1,185 +1,530 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2090.outbound.protection.outlook.com [40.107.220.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E222556A;
-	Wed, 17 Jan 2024 21:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705528291; cv=fail; b=UturpwfGTDOh+EXDXVayQsqZ65UKcmNXuc+II+OTf1yrO1BFHhv5zSU2ULanjF2Kkhiwkf9+Z+8ZqnQSFs6aJH87RhdlzHFdzWqB1YNw8d6jGWSotcnxSPeG2xxmy0e2unx+NFqFwjRZTjMzQ0jq3cwSN/i1fKthJ3+EmVHzoqI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705528291; c=relaxed/simple;
-	bh=GQcy7fXBTTuz2mfvpUemgXWMNmfnLBREMsrp7fzk0is=;
-	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
-	 Received:Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 Content-Transfer-Encoding:Content-Type:X-ClientProxiedBy:
-	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=N5m5/vTZAB1jiBd17ZCii3ZQxYHbk3WX5WzgD3NFrdVa6fOayUtOvM7ZsHFFl3pcEJpfNNzhtgblygKlO0IiQ/bdNQZV6xF9g5ulwH68vnean9lu0D1Axt35E7tbhlyAc6+9/63o6XBR/c2iyns6RSYLBxbUeBaeGgSPwFnxJWU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=WH46o9Sw; arc=fail smtp.client-ip=40.107.220.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A179C1E871
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jan 2024 22:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705530797; cv=none; b=hxSXXPZRRLhFivfLZhHeBjo4Tv6w9nWm+NC7+9ayl6MCZqTdghVicGvALRPIufWV358mGKYjiR6IbUeQ3tmNBFBa9eeFb8jy8cGn450Nvy+6CwBOki/y8Hcis3Pul16gHVED4iVSNPGWvCvXJd/tnZJ7O1ZPnPlcsUEeTtZ1AAI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705530797; c=relaxed/simple;
+	bh=T1r8sAZBD8/mFhKTSYPVOKNma4tMLQnztNS0pYwkf7w=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=rSaT4kxHpjMENHVe0FU0L5QazJlx6CXG6pdiRjJmCyACpGmhECZw0P7sC0Zn+KzsEhAkAsLwtE75QH6O5HkCr660++d/eJxs7FYRMkeK5T80QrYzLCE9k1M9IA1nojtKGwynYT3M2Xu4s+RTj/XrTu2/1ksVuUzLm997DFYa2yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org; spf=pass smtp.mailfrom=atishpatra.org; dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b=HkhDwWJQ; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atishpatra.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="WH46o9Sw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LHE8rRXOtEO0yuFHggOsO3Qlhb5/r5MviJLG55nqJddJObyN7+Kt+jXxp5972d6mj27gBgI2KUHBddoVIThDVQ4WPOyDu75Zgn3yl2ks6LwJNu5fqH+jbAxlojM3pbP7wRVsBPxpikvDkb0lOq5v2gQ3weERCAZw1q66O6NjkRQScXjbHQRa/LVUzYfZc6t7awam9ltPIjiFo0cq+6NuWBs442OgnDqRG9fqIkdgfyNAAg1auFBKI5En1QuKVWIKob0uQR+uJp2dxvjoKp9+YRlUQITnIfeFheCth7Sm61o01uux84drkXdROVtD7x8MoVoOYKE9/EWmEzO+RsOpZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dPAkaxhBIIxC64id3dS4Pt3wucoC52AkWTWmcR9gmYI=;
- b=bgmOs4OlFnedxAJfWyqStR0qGMKbiU2kuZe/NteYmfR2Vf+oxU+/oiLfuLV6Per9hYzl0wVum9Ru4Eiip0hhXMl6Myx74F8sMvU4dbgfg/GGjNWalHdZUPOh03tGEFhMrcPPHNWDWmckqJNP0posSe+22jTbqRvZIBlLL0kvAgJ6Shthvw5lU5OTn2DqDbEiKPA0ufQTI+2n6ZNVqlkEk8zUhwYB/E1rvqX4EdDrJ+DQIMMZBcRTFDuq9JUi1EYHvMJFfZpESbeqoy6gaWF3y5u3czWBvbVrsaE9YP+N1CrPnNI5YNlFbM4Dx+kaE5Eh9W6zrcXjB/Cn4FCjw3Zszw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="HkhDwWJQ"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e7f58c5fbso15838712e87.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jan 2024 14:33:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dPAkaxhBIIxC64id3dS4Pt3wucoC52AkWTWmcR9gmYI=;
- b=WH46o9SwxGct1jatfTwmNFu418h+ETWMlzEFnjTSBKO7ZjS7NZj2/OCRBdfVcYKie1BF5WNCcLg8ADlakvbYRWpf3kmpwHrWCMSpFj5e2K1BdR8KNTqQUyKzgM7u4MEZ77csFHtFL1rhsHIe4gER+cta3JhWAiIe3UHrBJKbA4c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from PH0PR01MB8166.prod.exchangelabs.com (2603:10b6:510:293::17) by
- DM8PR01MB7029.prod.exchangelabs.com (2603:10b6:8:17::14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.24; Wed, 17 Jan 2024 21:51:24 +0000
-Received: from PH0PR01MB8166.prod.exchangelabs.com
- ([fe80::5549:ab3d:70af:8693]) by PH0PR01MB8166.prod.exchangelabs.com
- ([fe80::5549:ab3d:70af:8693%7]) with mapi id 15.20.7202.024; Wed, 17 Jan 2024
- 21:51:24 +0000
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@arm.com>
-Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] perf data convert: Fix segfault when converting to json on arm64
-Date: Wed, 17 Jan 2024 13:51:01 -0800
-Message-ID: <20240117215101.77713-1-ilkka@os.amperecomputing.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH0PR08CA0007.namprd08.prod.outlook.com
- (2603:10b6:610:33::12) To PH0PR01MB8166.prod.exchangelabs.com
- (2603:10b6:510:293::17)
+        d=atishpatra.org; s=google; t=1705530791; x=1706135591; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vIfdl61SJ6z9bq48mNuk/DR3yn5mfK6MVTbusItVRxU=;
+        b=HkhDwWJQeQYKo3A7Km1qMP1jtwLIBXlsJOUaPijkLbTaXH5yLzh8/11dqPMst2cYO+
+         G2Gq0qzZS3mxVwwbQKgidFSM1Xm/rZuCFHnRyv506sNkEaCgoO2t4ahVRyP4//+yoGAY
+         viOblEB06VfLMNv/7j29qDou562lke8CUvh9w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705530791; x=1706135591;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vIfdl61SJ6z9bq48mNuk/DR3yn5mfK6MVTbusItVRxU=;
+        b=vmrd2geLXa1x6TZ4fw9OChAzP9HilVzb6heJqvQ4db3HY/tty/IVhAbp8DUmx3a7iR
+         vd2TwqZeoQNXw3egVuUeCxShV9ZbnX+D0wxYCSUm1Lgy4CHRk5pmCOI7cSNYtwr4PgeH
+         ayC69UoRagscTTWCaYpdv18B7lC2IKTuxNkQ0a5UmWbkiXhGlfoCVK9kADGQpMGZcsQj
+         DaznT+K+PA7+M1ox0XPrKhn20R+z+FJl96J+NbrAah5U7lBvYoyxfyYAM0FS3Hus5cxW
+         HedhQJXJYPmLFAKgVU+0x6UffrvZZwhQTHWMhB79SMFYJACi3vMmngXQCMFw95jTM7lJ
+         NzAQ==
+X-Gm-Message-State: AOJu0YyeXnP2ellEqitovJDZw4YdoOO8105SPXiIU3v4p+OBHOmjG1UM
+	8uUTFxOSXR3y0l68EniBMhg2WYuc4lxmp6AWwha2QvtViN78
+X-Google-Smtp-Source: AGHT+IGaqr9oR4oWkeFH1ZuP0Ny5mvN5iqn0wlmEdaMFn2ZLa9H3G8/sOFCbJGVrfO8jmD32ycqHh0r3+KQsKfoCBA0=
+X-Received: by 2002:a05:6512:368e:b0:50e:7410:d293 with SMTP id
+ d14-20020a056512368e00b0050e7410d293mr4344037lfs.135.1705530791402; Wed, 17
+ Jan 2024 14:33:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR01MB8166:EE_|DM8PR01MB7029:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b59f901-1704-428f-fded-08dc17a6734c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	1xSnAmfsQRYc7Mt9yXatpL6qVOejjnanlzlcZMb+eEo684FffgxNQjOmEQsPCFkXVIaulc7vunFy11BegpmMQhP8X2ZaxgPkH9vFn2aBAZfIGF8jLix8je36UCkTgfpQcauUzRIqUiMp5RgBmj54iELzkxMVRfiFPsETNgCRHO39i2cOoY+M0RRofyfxjKwkUpxLqtcjOXWLTXHAwuL27V21pP/sJcuclAoeChY2Dc/8CEtkA3n7Y0kvpFqCIhkzM/9Ds+FCFQwdgmSlEm1bC9/qIZ87YFF8xILGBUrH0CPIuMTYmDHiZvJd6AJkn/hAAG0H6JiZGSTdD+dAmG8l9h0/CRxAK0KBYGkeIs2pziOlXcAiVdvz3tY1NHJaysCoTuPprSKb2lPIhY/FF96axgvhZW/U17fmVJz4KuH/C+s0cYsS40gbrIA4qn2+udrFmglCLZkyspMD8xnCSDIw8c7VF0VSM6hHlmFFRJMXejH/yS6yc8RFqwdrmMqsYHj2C4PbQsqX7oMdbUR4OAIKh8FYLMx9N4xexhgjzWV/14vLI8TfZEglovPa5xeR9YO5BwhA7/jeDsVHIMkCv8cDwWO2DnZpzDhLMsj5ihW9cuHXFpC68o40UTiVx+HPl4k0
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB8166.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(376002)(39850400004)(366004)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(83380400001)(921011)(86362001)(38350700005)(52116002)(8676002)(8936002)(4326008)(1076003)(2616005)(38100700002)(26005)(6666004)(6506007)(6486002)(6512007)(966005)(110136005)(66946007)(66556008)(66476007)(316002)(5660300002)(478600001)(2906002)(7416002)(41300700001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7KyxE+UXQBptR/amvFt80vfj+FfdOaWnlR7mYzdaVb9TxI4dMAeJFB0U5K+w?=
- =?us-ascii?Q?m85rGHNH7jWWIzIQdIb+Yi8/f+bNHH1YZMl3v+rubGhF2tUo+90DftK/UN6u?=
- =?us-ascii?Q?vwtYhKjKlMOeF9A92bFGmN/SrrSNe1j53t6J/Kzmfkbv3qHjmhxgMf+BBBBb?=
- =?us-ascii?Q?zTVQmZGsC29g7HtYZq5g73qFZ6epGgq0j7InnAtAa9fnAinylvJuPtEG3Gpw?=
- =?us-ascii?Q?77d9wIHBEqQlX2u1jjQ4iI47Nd2+OPKZk4lJSmpWhWsdJUiT3YEwKTMi4PwE?=
- =?us-ascii?Q?LKX86qUr7E6Uq9CXfe2mfPyV/p7Sl+FK4JnlYHEJ9u3rj7kwlXsBl1iI+pJj?=
- =?us-ascii?Q?L4oi7rAiZh0BlLyhnFhyr69FaoMSwZZH5KzFxEVcfc1AHo6nH9q26/F5LfAx?=
- =?us-ascii?Q?YAP58pNyPuwmpBBCHR7oRK7ctipW4PGUwmcXrR9ehH37E8OGzab6OHqmlFKH?=
- =?us-ascii?Q?nCcyCc3IJBb491gINU1gU2l07LxLsyVVDEPJR36ZfElNcyNEsbGtAOJPC586?=
- =?us-ascii?Q?QaJv6pS84PyDbQP6oIXf5lmqa5EaraJRVK/ojMBQHBGVOMEFZC/3WclPFehr?=
- =?us-ascii?Q?7yKTbIRfW9lUAyVpEYG+O/FWBBFIJkr7CE1J/9l02JDVkVirD5xl4A/sjKbK?=
- =?us-ascii?Q?xqoqVEtkv4BQB4oVQ4iY9m0fDwvURPvEiWFem5d6sFDVHSiHrz7uQBNLqowC?=
- =?us-ascii?Q?QX4rT8HXaS02Jz5RJutEGrDfJvUiVrvc3TmoilOXcu9e+rm14WQOLppXTcw4?=
- =?us-ascii?Q?zjddZ7x2knA0a9Ci1UVKe5rGlJKesKL+mkkbbEMxb2hD8S8o2HIwJ1MEgBIA?=
- =?us-ascii?Q?fAeFickfG6szEPSLJ5Lt3OlUKTGCUmTdsa/HlVigAbpTmOLJb0BWG8ju39wE?=
- =?us-ascii?Q?+ZguzUqAxNJeu1GRWR7pyJM93cC4qkA6xHdMOAW9/FgBZgmR7iTLGLm+6D4c?=
- =?us-ascii?Q?v0s9cUpSjPMg/JbjdiNG9q0+eQMtNwoBCENlU4cSsl6Lo0cq9HZMz7Gd1iSG?=
- =?us-ascii?Q?9lFQ0uxDw6lcX4yrXeqIcUsYtNneIDfcwsvCFXP//SryTbO7Jf0RZerJRIeO?=
- =?us-ascii?Q?ZyCFxBw76XZ6ZCNnmQLCG+WEUBLC8oSrUaqBCOB8ImXE9EC2s3jgA6bU3Utb?=
- =?us-ascii?Q?8rS8SBGXoU4dM/lnQ1RB6fthOuX5UUMC4ebeBaGD9QOsM8nWELmmHs+2Lm7V?=
- =?us-ascii?Q?cc2HWmrseunR7bxne/UnmQF2zkCBj0wwLYnWEm4RNeqpDwLq6wIVJKvMGIQZ?=
- =?us-ascii?Q?znT04atQE0Jwm+Jr2GwhBzadwsJbOo20kd3WGpGYb/ctarGOPT/aqxx9HDl3?=
- =?us-ascii?Q?7xZgPk5TTCs2npvGtr0N29oRjd17Sa1Lcxi9owdwdMfSe6i1zI0t1tUn90fO?=
- =?us-ascii?Q?3MAXDH66CF1C64Py7nDEG8HKmDZO7wiF4q+lohVoYCl2qQaeC6sVpdOBUs4I?=
- =?us-ascii?Q?T6V2Cn/vt1Gpr0xCDGkeqICPV7gVibWtHSeM3AmACT2XPllmWI/zc344Mi41?=
- =?us-ascii?Q?K+/rPe012NUTGnl3cUQJAbb3E9SwBeaq6pmqFIbTJ+anKcm43VBRhb81iELT?=
- =?us-ascii?Q?rtErBPCBnz+vG7vmyyhrvf3MSn6Tm3fLs+i6MI3I/QiGUAS5O4fcfEOgujGF?=
- =?us-ascii?Q?iUmkldEzyqGXx+V/pqFNQBA=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b59f901-1704-428f-fded-08dc17a6734c
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB8166.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 21:51:24.7522
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BnVCk7bZL07Mlsk0E8Z3/VtvLGnMCRGRi/pJW5wPkTL3wOUc6V29ODyXnjTFQYr+IOY1wZFJiqdNn1jleIH6sx3On7uxAUaG3uiuwQVJ+IAUHz4lD5eUhkiZK+VPZZUV
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR01MB7029
+References: <20240110073917.2398826-1-peterlin@andestech.com>
+ <20240110073917.2398826-8-peterlin@andestech.com> <CAOnJCUKY8H+pvgTWW5zkfm8O4WR-OWOKmyPTcMjUZBCC5RaLWQ@mail.gmail.com>
+ <20240116-cherub-revival-5d32cc5f1fd0@spud> <CAOnJCU+DvoV08n5LLv-yrPOnUKNEQU9w344UBJ4Ou5-2LJwrrw@mail.gmail.com>
+ <20240117-coil-iphone-47988070aa6f@spud>
+In-Reply-To: <20240117-coil-iphone-47988070aa6f@spud>
+From: Atish Patra <atishp@atishpatra.org>
+Date: Wed, 17 Jan 2024 14:32:59 -0800
+Message-ID: <CAOnJCUKYa7P9tgKk4c=Xsoia1bGu+ZL9KrY3hL6DNiXz+EmGug@mail.gmail.com>
+Subject: Re: [PATCH v7 07/16] RISC-V: Move T-Head PMU to CPU feature
+ alternative framework
+To: Conor Dooley <conor@kernel.org>
+Cc: Yu Chien Peter Lin <peterlin@andestech.com>, acme@kernel.org, adrian.hunter@intel.com, 
+	ajones@ventanamicro.com, alexander.shishkin@linux.intel.com, 
+	andre.przywara@arm.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	conor+dt@kernel.org, conor.dooley@microchip.com, devicetree@vger.kernel.org, 
+	dminus@andestech.com, evan@rivosinc.com, geert+renesas@glider.be, 
+	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
+	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
+	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
+	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
+	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
+	uwu@icenowy.me, wens@csie.org, will@kernel.org, ycliang@andestech.com, 
+	inochiama@outlook.com, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
+	wefu@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't get
-assigned.
+On Wed, Jan 17, 2024 at 1:17=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Wed, Jan 17, 2024 at 12:58:21AM -0800, Atish Patra wrote:
+> > On Tue, Jan 16, 2024 at 4:16=E2=80=AFPM Conor Dooley <conor@kernel.org>=
+ wrote:
+> > >
+> > > On Tue, Jan 16, 2024 at 12:55:41PM -0800, Atish Patra wrote:
+> > > > On Tue, Jan 9, 2024 at 11:40=E2=80=AFPM Yu Chien Peter Lin
+> > > > <peterlin@andestech.com> wrote:
+> > > > >
+> > > > > The custom PMU extension aims to support perf event sampling prio=
+r
+> > > > > to the ratification of Sscofpmf. Instead of diverting the bits an=
+d
+> > > > > register reserved for future standard, a set of custom registers =
+is
+> > > > > added.  Hence, we may consider it as a CPU feature rather than an
+> > > > > erratum.
+> > > > >
+> > > >
+> > > > I don't think we should do that. Any custom implementation that
+> > > > violates the standard RISC-V spec should
+> > > > be an errata not a feature.
+> > > > As per my understanding, a vendor can call an extension custom ISA
+> > > > extension if the same feature is not available
+> > > > in the standard ISA extensions or the mechanism is completely
+> > > > different. It must also not violate any standard spec as well.
+> > > >
+> > > > In this case, a standard sscofpmf is already available. Moreover, b=
+oth
+> > > > Andes and T-head extensions violate the standard
+> > > > spec by reusing local interrupt numbers (17(Thead) & 18(Andes)) whi=
+ch
+> > > > are clearly specified as reserved for standard local interrupts
+> > > > in the AIA specification.
+> > >
+> > > I disagree with you here. The Andes implementation predated (IIRC tha=
+t
+> > > is what was said in replies to an earlier revision) the Sscofpmf
+> > > extension and certainly predates the AIA specification. I would be on
+> > > board with this line of thinking if someone comes along in 2030 with
+> > > "Zbb but with this one tweak" or where something flies entirely in th=
+e
+> > > face of the standard (like the IOCP cache stuff). The relevant sectio=
+n
+> > > in the AIA spec seems to say:
+> > > | Interrupt causes that are standardized by the Privileged Architectu=
+re
+> > > | have major identities in the range 0=E2=80=9315, while numbers 16 a=
+nd higher are
+> > > | officially available for platform standards or for custom use.
+> > > | The Advanced Interrupt Architecture claims further authority over
+> > > | identity numbers in the ranges 16=E2=80=9323 and 32=E2=80=9347, lea=
+ving numbers in the
+> > > | range 24=E2=80=9331 and all major identities 48 and higher still fr=
+ee for custom
+> > > | use.
+> > > I don't see how that can be problematic given the Andes implemtation
+> > > dates from before AIA was a thing. It would be silly to say that beca=
+use
+> > > an optional extension later came along and took over something previo=
+usly
+> > > allowed for indiscriminate custom use, that support for that custom
+> > > extension is not permitted.
+> > >
+> >
+> > AIA is not some optional extension. It defines the RISC-V interrupt
+> > architecture going forward and will be the default implementation
+> > in the future.
+>
+> I don't get you here. It is clearly optional - most (all?) existing
+> systems do not have it and certainly none did when this was designed.
 
-Running
-	$ perf data convert --to-json perf.data.json
+That's the current situation. I was saying AIA is not "some" optional exten=
+sion
+which most implementations will ignore in the future. In the future, I
+expect most platforms
+will implement AIA.
 
-ends up calling output_json_string() with NULL pointer, which causes a
-segmentation fault.
+> The wording above from the AIA spec implies that using 16 and above used
+> to be okay for platform specifics (and I think the relevant section of
+> the priv spec was "Machine Interrupt Registers" which says the same).
 
-Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
----
-v1:
-    - https://lore.kernel.org/all/20240111232923.8138-1-ilkka@os.amperecomputing.com/
-v2:
-    - Changed the patch based on James's comments.
-v3:
-    - The architecture is checked from the actual data file to allow one to do
-      conversion on another system. (thanks to James for the feedback)
----
-tools/perf/util/data-convert-json.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+As your quote also described above, AIA spec says (which overrides the
+priv spec)
 
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 5bb3c2ba95ca..405c38371870 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -284,7 +284,13 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
- 	output_json_key_string(out, true, 2, "os-release", header->env.os_release);
- 	output_json_key_string(out, true, 2, "arch", header->env.arch);
- 
--	output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
-+	/*
-+	 * Arm64 doesn't have Model section in /proc/cpuinfo and, thus, cpu-desc
-+	 * is not set.
-+	 */
-+	if (strncmp(header->env.arch, "aarch64", 7))
-+		output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
-+
- 	output_json_key_string(out, true, 2, "cpuid", header->env.cpuid);
- 	output_json_key_format(out, true, 2, "nrcpus-online", "%u", header->env.nr_cpus_online);
- 	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", header->env.nr_cpus_avail);
--- 
-2.43.0
+"The Advanced Interrupt Architecture claims further authority over
+identity numbers in the ranges 16=E2=80=9323 and 32=E2=80=9347,
+leaving numbers in the range 24=E2=80=9331 and all major identities 48 and
+higher still free for custom use."
 
+That means any implementation can be treated as custom (as per AIA
+spec) if they choose a local interrupt
+only in between 24-31 or > 48. Now if we choose to ignore the AIA spec
+and go with the old priv spec statement to
+decide if a custom implementation violated the standard encoding
+space, that's a different argument. That means we have
+to allow any future vendor implementation that violates as well as
+long as they claim that they designed their chip before
+AIA was ratified.
+
+> New extensions coming along should not be allowed to block kernel
+> support for platform specifics that predated their use of permitted
+> "resources".
+>
+> > IMO, this will be a slippery slope if we start
+> > supporting custom implementations to override interrupt ID definitions
+> > via custom cpu features. T-head implementation works perfectly fine as
+> > an errata and I don't understand why
+> > there is a push to make it a cpu feature.
+>
+> I don't mind leaving the existing implementation (T-Head) using this,
+> but I will NAK any additions.
+>
+
+That would be an ideal case where we won't require any additions
+because all RISC-V vendor implementations
+comply with the spec. In reality, we may not have that luxury ;)
+
+> > We should try to improve the
+> > ecosystem for future platforms rather than bending
+> > backwards to support older implementations.
+>
+> This is hardly "bending backwards".
+>
+> Thanks,
+> Conor.
+>
+> > I understand the push to brand this as a custom extension if current
+> > errata/alternative can't support it. But I don't think that's the case
+> > here though. Please correct me if I am wrong.
+> >
+> > > I may well be missing something here though, you clearly know these
+> > > specs better than I do, but from what I have read I disagree.
+> > >
+> > > > Please implementation Andes PMU support as an errata as well simila=
+r to T-head
+> > >
+> > > I certainly _do not_ want to see things like this detected via lookup
+> > > tables of marchid and co in the kernel unless it is absolutely requir=
+ed.
+> > > We have standard probing mechanisms for feature detection (because to=
+ me
+> > > this _is_ a feature) and they should be used. Additionally, we define=
+ what
+> > > entries in the DT properties mean, and if it is convenient to put
+> > > "psuedo" extensions into the DT, then we should do so. Getting away f=
+rom
+> > > being tied to what RVI decrees was one of the goals of the new
+> > > properties after all, so that we could use a standard mechanism of DT
+> > > probing for things like this.
+> > >
+> >
+> > Yes. That's a perfectly valid mechanism for actual custom/vendor ISA ex=
+tensions.
+> > I'm sure we'll have many of those, which will be leveraged via pseudo
+> > extensions in the DT.
+> > However, these shouldn't co-exist with standard ISA extensions in the
+> > namespace in riscv_isa_ext and/or hwprobe.
+> > The vendor-specific extensions should be defined under a
+> > vendor-specific namespace.
+> > This was another issue with this series as well. I didn't raise this
+> > topic earlier because I don't think overriding interrupt
+> > identities qualifies for a custom ISA extension
+> >
+
+Any thoughts on vendor specific namespace to avoid mixing standard ISA
+extensions with vendor specific ones ?
+
+> > > Thanks,
+> > > Conor.
+> > >
+> > > > > T-Head cores need to append "xtheadpmu" to the riscv,isa-extensio=
+ns
+> > > > > for each cpu node in device tree, and enable CONFIG_THEAD_CUSTOM_=
+PMU
+> > > > > for proper functioning as of this commit.
+> > > > >
+> > > > > Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> > > > > Reviewed-by: Guo Ren <guoren@kernel.org>
+> > > > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > > > > ---
+> > > > > Changes v1 -> v2:
+> > > > >   - New patch
+> > > > > Changes v2 -> v3:
+> > > > >   - Removed m{vendor/arch/imp}id checks in pmu_sbi_setup_irqs()
+> > > > > Changes v3 -> v4:
+> > > > >   - No change
+> > > > > Changes v4 -> v5:
+> > > > >   - Include Guo's Reviewed-by
+> > > > >   - Let THEAD_CUSTOM_PMU depend on ARCH_THEAD
+> > > > > Changes v5 -> v6:
+> > > > >   - Include Conor's Reviewed-by
+> > > > > Changes v6 -> v7:
+> > > > >   - No change
+> > > > > ---
+> > > > >  arch/riscv/Kconfig.errata            | 13 -------------
+> > > > >  arch/riscv/errata/thead/errata.c     | 19 -------------------
+> > > > >  arch/riscv/include/asm/errata_list.h | 15 +--------------
+> > > > >  arch/riscv/include/asm/hwcap.h       |  1 +
+> > > > >  arch/riscv/kernel/cpufeature.c       |  1 +
+> > > > >  drivers/perf/Kconfig                 | 13 +++++++++++++
+> > > > >  drivers/perf/riscv_pmu_sbi.c         | 19 ++++++++++++++-----
+> > > > >  7 files changed, 30 insertions(+), 51 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errat=
+a
+> > > > > index e2c731cfed8c..0d19f47d1018 100644
+> > > > > --- a/arch/riscv/Kconfig.errata
+> > > > > +++ b/arch/riscv/Kconfig.errata
+> > > > > @@ -86,17 +86,4 @@ config ERRATA_THEAD_CMO
+> > > > >
+> > > > >           If you don't know what to do here, say "Y".
+> > > > >
+> > > > > -config ERRATA_THEAD_PMU
+> > > > > -       bool "Apply T-Head PMU errata"
+> > > > > -       depends on ERRATA_THEAD && RISCV_PMU_SBI
+> > > > > -       default y
+> > > > > -       help
+> > > > > -         The T-Head C9xx cores implement a PMU overflow extensio=
+n very
+> > > > > -         similar to the core SSCOFPMF extension.
+> > > > > -
+> > > > > -         This will apply the overflow errata to handle the non-s=
+tandard
+> > > > > -         behaviour via the regular SBI PMU driver and interface.
+> > > > > -
+> > > > > -         If you don't know what to do here, say "Y".
+> > > > > -
+> > > > >  endmenu # "CPU errata selection"
+> > > > > diff --git a/arch/riscv/errata/thead/errata.c b/arch/riscv/errata=
+/thead/errata.c
+> > > > > index 0554ed4bf087..5de5f7209132 100644
+> > > > > --- a/arch/riscv/errata/thead/errata.c
+> > > > > +++ b/arch/riscv/errata/thead/errata.c
+> > > > > @@ -53,22 +53,6 @@ static bool errata_probe_cmo(unsigned int stag=
+e,
+> > > > >         return true;
+> > > > >  }
+> > > > >
+> > > > > -static bool errata_probe_pmu(unsigned int stage,
+> > > > > -                            unsigned long arch_id, unsigned long=
+ impid)
+> > > > > -{
+> > > > > -       if (!IS_ENABLED(CONFIG_ERRATA_THEAD_PMU))
+> > > > > -               return false;
+> > > > > -
+> > > > > -       /* target-c9xx cores report arch_id and impid as 0 */
+> > > > > -       if (arch_id !=3D 0 || impid !=3D 0)
+> > > > > -               return false;
+> > > > > -
+> > > > > -       if (stage =3D=3D RISCV_ALTERNATIVES_EARLY_BOOT)
+> > > > > -               return false;
+> > > > > -
+> > > > > -       return true;
+> > > > > -}
+> > > > > -
+> > > > >  static u32 thead_errata_probe(unsigned int stage,
+> > > > >                               unsigned long archid, unsigned long=
+ impid)
+> > > > >  {
+> > > > > @@ -80,9 +64,6 @@ static u32 thead_errata_probe(unsigned int stag=
+e,
+> > > > >         if (errata_probe_cmo(stage, archid, impid))
+> > > > >                 cpu_req_errata |=3D BIT(ERRATA_THEAD_CMO);
+> > > > >
+> > > > > -       if (errata_probe_pmu(stage, archid, impid))
+> > > > > -               cpu_req_errata |=3D BIT(ERRATA_THEAD_PMU);
+> > > > > -
+> > > > >         return cpu_req_errata;
+> > > > >  }
+> > > > >
+> > > > > diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/in=
+clude/asm/errata_list.h
+> > > > > index 4ed21a62158c..9bccc2ba0eb5 100644
+> > > > > --- a/arch/riscv/include/asm/errata_list.h
+> > > > > +++ b/arch/riscv/include/asm/errata_list.h
+> > > > > @@ -25,8 +25,7 @@
+> > > > >  #ifdef CONFIG_ERRATA_THEAD
+> > > > >  #define        ERRATA_THEAD_PBMT 0
+> > > > >  #define        ERRATA_THEAD_CMO 1
+> > > > > -#define        ERRATA_THEAD_PMU 2
+> > > > > -#define        ERRATA_THEAD_NUMBER 3
+> > > > > +#define        ERRATA_THEAD_NUMBER 2
+> > > > >  #endif
+> > > > >
+> > > > >  #ifdef __ASSEMBLY__
+> > > > > @@ -147,18 +146,6 @@ asm volatile(ALTERNATIVE_2(                 =
+                               \
+> > > > >             "r"((unsigned long)(_start) + (_size))               =
+       \
+> > > > >         : "a0")
+> > > > >
+> > > > > -#define THEAD_C9XX_RV_IRQ_PMU                  17
+> > > > > -#define THEAD_C9XX_CSR_SCOUNTEROF              0x5c5
+> > > > > -
+> > > > > -#define ALT_SBI_PMU_OVERFLOW(__ovl)                             =
+       \
+> > > > > -asm volatile(ALTERNATIVE(                                       =
+       \
+> > > > > -       "csrr %0, " __stringify(CSR_SSCOUNTOVF),                 =
+       \
+> > > > > -       "csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),      =
+       \
+> > > > > -               THEAD_VENDOR_ID, ERRATA_THEAD_PMU,               =
+       \
+> > > > > -               CONFIG_ERRATA_THEAD_PMU)                         =
+       \
+> > > > > -       : "=3Dr" (__ovl) :                                       =
+         \
+> > > > > -       : "memory")
+> > > > > -
+> > > > >  #endif /* __ASSEMBLY__ */
+> > > > >
+> > > > >  #endif
+> > > > > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/=
+asm/hwcap.h
+> > > > > index 5340f818746b..480f9da7fba7 100644
+> > > > > --- a/arch/riscv/include/asm/hwcap.h
+> > > > > +++ b/arch/riscv/include/asm/hwcap.h
+> > > > > @@ -80,6 +80,7 @@
+> > > > >  #define RISCV_ISA_EXT_ZFA              71
+> > > > >  #define RISCV_ISA_EXT_ZTSO             72
+> > > > >  #define RISCV_ISA_EXT_ZACAS            73
+> > > > > +#define RISCV_ISA_EXT_XTHEADPMU                74
+> > > > >
+> > > > >  #define RISCV_ISA_EXT_MAX              128
+> > > > >  #define RISCV_ISA_EXT_INVALID          U32_MAX
+> > > > > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/c=
+pufeature.c
+> > > > > index e32591e9da90..4aded5bf8fc3 100644
+> > > > > --- a/arch/riscv/kernel/cpufeature.c
+> > > > > +++ b/arch/riscv/kernel/cpufeature.c
+> > > > > @@ -303,6 +303,7 @@ const struct riscv_isa_ext_data riscv_isa_ext=
+[] =3D {
+> > > > >         __RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
+> > > > >         __RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+> > > > >         __RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+> > > > > +       __RISCV_ISA_EXT_DATA(xtheadpmu, RISCV_ISA_EXT_XTHEADPMU),
+> > > > >  };
+> > > > >
+> > > > >  const size_t riscv_isa_ext_count =3D ARRAY_SIZE(riscv_isa_ext);
+> > > > > diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> > > > > index 273d67ecf6d2..6cef15ec7c25 100644
+> > > > > --- a/drivers/perf/Kconfig
+> > > > > +++ b/drivers/perf/Kconfig
+> > > > > @@ -86,6 +86,19 @@ config RISCV_PMU_SBI
+> > > > >           full perf feature support i.e. counter overflow, privil=
+ege mode
+> > > > >           filtering, counter configuration.
+> > > > >
+> > > > > +config THEAD_CUSTOM_PMU
+> > > > > +       bool "T-Head custom PMU support"
+> > > > > +       depends on ARCH_THEAD && RISCV_ALTERNATIVE && RISCV_PMU_S=
+BI
+> > > > > +       default y
+> > > > > +       help
+> > > > > +         The T-Head C9xx cores implement a PMU overflow extensio=
+n very
+> > > > > +         similar to the core SSCOFPMF extension.
+> > > > > +
+> > > > > +         This will patch the overflow CSR and handle the non-sta=
+ndard
+> > > > > +         behaviour via the regular SBI PMU driver and interface.
+> > > > > +
+> > > > > +         If you don't know what to do here, say "Y".
+> > > > > +
+> > > > >  config ARM_PMU_ACPI
+> > > > >         depends on ARM_PMU && ACPI
+> > > > >         def_bool y
+> > > > > diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pm=
+u_sbi.c
+> > > > > index 2edbc37abadf..31ca79846399 100644
+> > > > > --- a/drivers/perf/riscv_pmu_sbi.c
+> > > > > +++ b/drivers/perf/riscv_pmu_sbi.c
+> > > > > @@ -20,10 +20,21 @@
+> > > > >  #include <linux/cpu_pm.h>
+> > > > >  #include <linux/sched/clock.h>
+> > > > >
+> > > > > -#include <asm/errata_list.h>
+> > > > >  #include <asm/sbi.h>
+> > > > >  #include <asm/cpufeature.h>
+> > > > >
+> > > > > +#define THEAD_C9XX_RV_IRQ_PMU          17
+> > > > > +#define THEAD_C9XX_CSR_SCOUNTEROF      0x5c5
+> > > > > +
+> > > > > +#define ALT_SBI_PMU_OVERFLOW(__ovl)                             =
+       \
+> > > > > +asm volatile(ALTERNATIVE(                                       =
+       \
+> > > > > +       "csrr %0, " __stringify(CSR_SSCOUNTOVF),                 =
+       \
+> > > > > +       "csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),      =
+       \
+> > > > > +               0, RISCV_ISA_EXT_XTHEADPMU,                      =
+       \
+> > > > > +               CONFIG_THEAD_CUSTOM_PMU)                         =
+       \
+> > > > > +       : "=3Dr" (__ovl) :                                       =
+         \
+> > > > > +       : "memory")
+> > > > > +
+> > > > >  #define SYSCTL_NO_USER_ACCESS  0
+> > > > >  #define SYSCTL_USER_ACCESS     1
+> > > > >  #define SYSCTL_LEGACY          2
+> > > > > @@ -808,10 +819,8 @@ static int pmu_sbi_setup_irqs(struct riscv_p=
+mu *pmu, struct platform_device *pde
+> > > > >         if (riscv_isa_extension_available(NULL, SSCOFPMF)) {
+> > > > >                 riscv_pmu_irq_num =3D RV_IRQ_PMU;
+> > > > >                 riscv_pmu_use_irq =3D true;
+> > > > > -       } else if (IS_ENABLED(CONFIG_ERRATA_THEAD_PMU) &&
+> > > > > -                  riscv_cached_mvendorid(0) =3D=3D THEAD_VENDOR_=
+ID &&
+> > > > > -                  riscv_cached_marchid(0) =3D=3D 0 &&
+> > > > > -                  riscv_cached_mimpid(0) =3D=3D 0) {
+> > > > > +       } else if (riscv_isa_extension_available(NULL, XTHEADPMU)=
+ &&
+> > > > > +                  IS_ENABLED(CONFIG_THEAD_CUSTOM_PMU)) {
+> > > > >                 riscv_pmu_irq_num =3D THEAD_C9XX_RV_IRQ_PMU;
+> > > > >                 riscv_pmu_use_irq =3D true;
+> > > > >         }
+> > > > > --
+> > > > > 2.34.1
+> > > > >
+> > > >
+> > > >
+> > > > --
+> > > > Regards,
+> > > > Atish
+> >
+> >
+> >
+> > --
+> > Regards,
+> > Atish
+
+
+
+--=20
+Regards,
+Atish
