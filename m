@@ -1,198 +1,171 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B65F8F59;
-	Thu, 18 Jan 2024 04:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AC81E4A3
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jan 2024 16:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705551177; cv=none; b=Ha9vN5nb0iOyN6Tbwf5i/Z4cdDkNIA908G1dz4plvp4bPYDlVreJguNGi3AmO8zDlITInS4FH+z4pSkMg95Cry4dPPPhFMSnYnq9Nv6M5yRlvdJP5gHdf4sq2leCdx2P5ABunSoiU+Jj15em6zcBueNTmz1gF0NAhQmfOHFMqlM=
+	t=1705595822; cv=none; b=a2bFk9pqlILcF+20PezmA9D6mklUFdPHEsfu1x83q99E2nnGwQaYth9x6gv4o7G0HEq9PekPqmxrxANr3kLTqJ7KxNjsetJeCpKuGTBbFQKsPTnFuMMUWPYkSgbnqPPW5E09dVTNNnSkMKvzQsolIn2wwrrPftwrRltzXVb2b5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705551177; c=relaxed/simple;
-	bh=YJUNtXUVAPJ0nQzYPDCse2byDQn2/XE1kHf+ZprkLBE=;
-	h=Received:Received:Received:From:To:CC:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy; b=QF9e4kX2d1+EOM+k9wGWMW+WuTMneN9ebU0ajVtcDPl+1bhAtdyI6TqDyL+jKMZorEvTQMuh6aePfoVfFETpiTFU7Iqg08M6wl777bxFJuli4xdF1+b1Eu4b3Q4nFAVDysEVNpMseq2QwDuqYDAxr/OI8O9NhhEK3ThWjX4weto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TFq8W6klBz1wn9g;
-	Thu, 18 Jan 2024 12:12:27 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4E7EF1400CC;
-	Thu, 18 Jan 2024 12:12:47 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Thu, 18 Jan 2024 12:12:45 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
- Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
-	<changbin.du@huawei.com>
-Subject: [PATCH v3 1/5] perf: build: introduce the libcapstone
-Date: Thu, 18 Jan 2024 12:12:20 +0800
-Message-ID: <20240118041224.2799393-2-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240118041224.2799393-1-changbin.du@huawei.com>
-References: <20240118041224.2799393-1-changbin.du@huawei.com>
+	s=arc-20240116; t=1705595822; c=relaxed/simple;
+	bh=QEi1bAcrixkAKE8mmHyxwQZeg4rqRgAAYgcOVq4gBHU=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=u/+7dbf2+AMi8MEajoW3vK3GBy0uOiT2z+FEBUbGhjbVyORou8V2gMZM/TrAkIUI2ttpQ8WBLI46Sjioa2eegtzDy6tuVobnMzX0nR2aSzoKM9Qy1dqcFQLSxiVdZtDPTS5HT5GvoUA9zf7cDmt9vHoys9jNEgAVOoqW7YFUltU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pqc6+6EY; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pqc6+6EY"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d5ce88b51cso141175ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jan 2024 08:36:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705595819; x=1706200619; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5KlwC1tfLnVHaIlb0kP7VhmulPfiXSyngFVbxChaHqs=;
+        b=pqc6+6EYQbiMxocEdczrDYyTAQyx2v2n/mtp19Y/tP3QfB7DuZ5UiVtomwvA3Itjmz
+         N5ZPvPRKLTP+qvmKnyHx8fWwzYC5GIUaVZ1LADJkPf7Pxu1dk4IdVga9xoPzT76uaLnC
+         cDJ9Jc+eWveRBgZLe2s2NAbomTWNjHoMxu+NOhuvpVifFXKbDGDa1yHhc2wiU+Dye1fU
+         JOPclBsn9ZMAfRMIhLsJledaTsin+SWgMikjm8iJ3B37Q+yZlDcL0tPyX/LI5UDhsZcO
+         lYeTf0wjTOuABOhxOZfKxk7JfdALmZPvkt9JiZCgDyObBJn8eH1evI4yL0TCcYP5itKL
+         psJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705595819; x=1706200619;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5KlwC1tfLnVHaIlb0kP7VhmulPfiXSyngFVbxChaHqs=;
+        b=ZHfBr1/3gBErLXTd78XXqBB7RG2fP6ItT/XoCkwY8PiK9GdYkMLm7r9f4BKhLhqhNi
+         xTd4FV+/0Z6byrEMzgtwjyHdNwK/yIH/W9F3h+yBBLTDItdJrOme4UQJxv0zYN1w/t4g
+         XZMbyvXm1Gj29cKnS7tqofqu5eKAhMntXTpa75aPP6pBpOvmp3xx/DHigD6OyM+pXZPm
+         +tw3IpVXce2FuI2utht7BVNYXGEbbUUYa1EvTCiZYjm66PZHUVIpprZdQSevqDWAPdhE
+         F5sX23jOkDWFhExARNQVMuluSfC6zCFBjanxHSTMGKor7+NFJJqaAKeaWVKiiVkLKF2j
+         ropA==
+X-Gm-Message-State: AOJu0YzR4aY9yoQq8tk8vkkcacCF4GTFWbrGfaIDqKP2FAzKfPrijBZo
+	N4etwNVJ4Isbt3q34ilrKObpDrBrwqfQTBTdfq1ZTf6QW/5wYhnlLKQ0NOJj8yWx/pTEjvHulT2
+	eSCVzmv8Q/q1JF5ns2eQSG/Qqd5A1fjr03xJr
+X-Google-Smtp-Source: AGHT+IGD/GqPBe8Ph0aRgX54BTNg+7Cx7Om23uKeYBKXXKyqAnh8rtc1TbLbq77oqgH5JOz/+4JdTGDixjXjdz17RFE=
+X-Received: by 2002:a17:903:2448:b0:1d6:fc45:d269 with SMTP id
+ l8-20020a170903244800b001d6fc45d269mr104204pls.23.1705595819130; Thu, 18 Jan
+ 2024 08:36:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+References: <20240117062657.985479-1-namhyung@kernel.org>
+In-Reply-To: <20240117062657.985479-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 18 Jan 2024 08:36:45 -0800
+Message-ID: <CAP-5=fVwPUBAXcGB=VYVVDPEkGm_W5qAFZSAWb4yuJ0msodu4w@mail.gmail.com>
+Subject: Re: [PATCHSET 0/9] perf tools: More updates on data type profiling (v4)
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org, Ben Woodard <woodard@redhat.com>, 
+	Joe Mario <jmario@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	David Blaikie <blaikie@google.com>, Xu Liu <xliuprof@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Mark Wielaard <mark@klomp.org>, Jason Merrill <jason@redhat.com>, 
+	"Jose E . Marchesi" <jose.marchesi@oracle.com>, William Huang <williamjhuang@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Later we will use libcapstone to disassemble instructions of samples.
+On Tue, Jan 16, 2024 at 10:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Hello,
+>
+> This is a continuation of the data type profiling series.  Now the basic
+> part (v3) which uses pointer variables is merged to the perf-tools-next
+> tree.  And this part is for memory accesses without pointers as well as
+> small updates to handle some corner cases.  Still mores to come to
+> complete the original series.
+>
+> There's no change from the previous version.  For background and usages,
+> pleaes refer the posting of previous version [1] and a LWN article [2].
+>
+> Basically most memory accesses happen with pointers, but there are cases
+> don't use pointers - direct accesses to global and local variables.
+>
+> Global variables are located in a static memory at a specific address.
+> So the DWARF location expression for the global vairable would also have
+> the static address.  And it's common to access them using PC-relative
+> addressing mode.  Thus it needs a special handling for global variables.
+>
+> On the other hand, local variables are located in the stack which varies
+> as program executes.  So the local variables are accessed either by the
+> (stack) frame pointer or (current) stack pointer.  But sometimes DWARF
+> location expression uses a frame base address (CFA) to specify location
+> of local variables.  So it may need to convert or normalize the location
+> extracted from the instruction to match DWARF expression.
+>
+> Lastly, there are some cases DWARF location expressions end up having
+> complex (or not straight-forward) location.  In that case, it cannot
+> simply match just the first expression with the instruction location.
+> It'd be safer to reject them.
+>
+> The code is available at 'perf/data-profile-update-v4' branch in the tree
+> below.  The full version of the code is in 'perf/data-profile-v4' branch.
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+> Thanks,
+> Namhyung
+>
+>
+> Cc: Ben Woodard <woodard@redhat.com>
+> Cc: Joe Mario <jmario@redhat.com>
+> CC: Kees Cook <keescook@chromium.org>
+> Cc: David Blaikie <blaikie@google.com>
+> Cc: Xu Liu <xliuprof@google.com>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+> Cc: Mark Wielaard <mark@klomp.org>
+> Cc: Jason Merrill <jason@redhat.com>
+> Cc: Jose E. Marchesi <jose.marchesi@oracle.com>
+> Cc: William Huang <williamjhuang@google.com>
+>
+> [1] https://lore.kernel.org/linux-perf-users/20231213001323.718046-1-namh=
+yung@kernel.org/
+> [2] https://lwn.net/Articles/955709/
+>
+>
+> Namhyung Kim (9):
+>   perf annotate-data: Parse 'lock' prefix from llvm-objdump
+>   perf annotate-data: Handle macro fusion on x86
+>   perf annotate-data: Handle array style accesses
+>   perf annotate-data: Add stack operation pseudo type
+>   perf annotate-data: Handle PC-relative addressing
+>   perf annotate-data: Support global variables
+>   perf dwarf-aux: Add die_get_cfa()
+>   perf annotate-data: Support stack variables
+>   perf dwarf-aux: Check allowed DWARF Ops
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/build/Makefile.feature           |  2 ++
- tools/build/feature/Makefile           |  4 ++++
- tools/build/feature/test-all.c         |  4 ++++
- tools/build/feature/test-libcapstone.c | 11 +++++++++++
- tools/perf/Makefile.config             | 21 +++++++++++++++++++++
- tools/perf/Makefile.perf               |  3 +++
- 6 files changed, 45 insertions(+)
- create mode 100644 tools/build/feature/test-libcapstone.c
+Series:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 934e2777a2db..23bee50aeb0f 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -86,6 +86,7 @@ FEATURE_TESTS_EXTRA :=                  \
-          gtk2-infobar                   \
-          hello                          \
-          libbabeltrace                  \
-+         libcapstone                    \
-          libbfd-liberty                 \
-          libbfd-liberty-z               \
-          libopencsd                     \
-@@ -133,6 +134,7 @@ FEATURE_DISPLAY ?=              \
-          libcrypto              \
-          libunwind              \
-          libdw-dwarf-unwind     \
-+         libcapstone            \
-          zlib                   \
-          lzma                   \
-          get_cpuid              \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index dad79ede4e0a..d6eaade09694 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -53,6 +53,7 @@ FILES=                                          \
-          test-timerfd.bin                       \
-          test-libdw-dwarf-unwind.bin            \
-          test-libbabeltrace.bin                 \
-+         test-libcapstone.bin			\
-          test-compile-32.bin                    \
-          test-compile-x32.bin                   \
-          test-zlib.bin                          \
-@@ -282,6 +283,9 @@ $(OUTPUT)test-libdw-dwarf-unwind.bin:
- $(OUTPUT)test-libbabeltrace.bin:
- 	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
- 
-+$(OUTPUT)test-libcapstone.bin:
-+	$(BUILD) # -lcapstone provided by $(FEATURE_CHECK_LDFLAGS-libcapstone)
-+
- $(OUTPUT)test-compile-32.bin:
- 	$(CC) -m32 -o $@ test-compile.c
- 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 6f4bf386a3b5..dd0a18c2ef8f 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -134,6 +134,10 @@
- #undef main
- #endif
- 
-+#define main main_test_libcapstone
-+# include "test-libcapstone.c"
-+#undef main
-+
- #define main main_test_lzma
- # include "test-lzma.c"
- #undef main
-diff --git a/tools/build/feature/test-libcapstone.c b/tools/build/feature/test-libcapstone.c
-new file mode 100644
-index 000000000000..fbe8dba189e9
---- /dev/null
-+++ b/tools/build/feature/test-libcapstone.c
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <capstone/capstone.h>
-+
-+int main(void)
-+{
-+	csh handle;
-+
-+	cs_open(CS_ARCH_X86, CS_MODE_64, &handle);
-+	return 0;
-+}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b3e6ed10f40c..7589725ad178 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -191,6 +191,15 @@ endif
- FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
- FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
- 
-+# for linking with debug library, run like:
-+# make DEBUG=1 LIBCAPSTONE_DIR=/opt/capstone/
-+ifdef LIBCAPSTONE_DIR
-+  LIBCAPSTONE_CFLAGS  := -I$(LIBCAPSTONE_DIR)/include
-+  LIBCAPSTONE_LDFLAGS := -L$(LIBCAPSTONE_DIR)/
-+endif
-+FEATURE_CHECK_CFLAGS-libcapstone := $(LIBCAPSTONE_CFLAGS)
-+FEATURE_CHECK_LDFLAGS-libcapstone := $(LIBCAPSTONE_LDFLAGS) -lcapstone
-+
- ifdef LIBZSTD_DIR
-   LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
-   LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
-@@ -1089,6 +1098,18 @@ ifndef NO_LIBBABELTRACE
-   endif
- endif
- 
-+ifndef NO_CAPSTONE
-+  $(call feature_check,libcapstone)
-+  ifeq ($(feature-libcapstone), 1)
-+    CFLAGS += -DHAVE_LIBCAPSTONE_SUPPORT $(LIBCAPSTONE_CFLAGS)
-+    LDFLAGS += $(LICAPSTONE_LDFLAGS)
-+    EXTLIBS += -lcapstone
-+    $(call detected,CONFIG_LIBCAPSTONE)
-+  else
-+    msg := $(warning No libcapstone found, disables disasm engine support for 'perf script', please install libcapstone-dev/capstone-devel);
-+  endif
-+endif
-+
- ifndef NO_AUXTRACE
-   ifeq ($(SRCARCH),x86)
-     ifeq ($(feature-get_cpuid), 0)
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 058c9aecf608..236da4f39a63 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -84,6 +84,9 @@ include ../scripts/utilities.mak
- # Define NO_LIBBABELTRACE if you do not want libbabeltrace support
- # for CTF data format.
- #
-+# Define NO_CAPSTONE if you do not want libcapstone support
-+# for disasm engine.
-+#
- # Define NO_LZMA if you do not want to support compressed (xz) kernel modules
- #
- # Define NO_AUXTRACE if you do not want AUX area tracing support
--- 
-2.25.1
+Thanks,
+Ian
 
+>  tools/perf/util/annotate-data.c | 119 ++++++++++++++++----
+>  tools/perf/util/annotate-data.h |   8 +-
+>  tools/perf/util/annotate.c      | 153 ++++++++++++++++++++++++--
+>  tools/perf/util/annotate.h      |  12 +-
+>  tools/perf/util/dwarf-aux.c     | 187 ++++++++++++++++++++++++++++----
+>  tools/perf/util/dwarf-aux.h     |  18 +++
+>  6 files changed, 439 insertions(+), 58 deletions(-)
+>
+>
+> base-commit: d988c9f511af71a3445b6a4f3a2c67208ff8e480
+> --
+> 2.43.0.381.gb435a96ce8-goog
+>
