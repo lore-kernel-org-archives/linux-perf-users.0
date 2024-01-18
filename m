@@ -1,31 +1,30 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB526132;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F19F8F51;
 	Thu, 18 Jan 2024 04:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705551176; cv=none; b=X8zkWh1r9OzbmXXIjQEL377jShquZDAxOgkr3IQAn6YL7/2RE60/xegtk8I8bJ/0yEm/DtBmRqShuFgr6OD3Mm7OX8vGiXSI/nldh0SzRpbQZob36+95AxwTygQOPGRl5MzNzPMYqNMoeR9LjPtGCSfsPvS7r4K/SUk+dSpKoxI=
+	t=1705551177; cv=none; b=GA+ZDGnecut+xvnaS7DZcQLYg1YRoSQq5j1WcpDJUcfztUkl0XQ7fGaYYQK+ba/zo7nQxf2Ng/iOISFg6pWgqWcy8pZF5/VNT3JDUbOhVaUPhvfmgQtzIqe1luy1L0L/Q1SCQLaP0lbIz4K5W04R8nzIgzbDadjAUJ42PezCUc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705551176; c=relaxed/simple;
-	bh=d9xUie5O6P+HxlRsBhIUu4jueb9/+PkF9GI2X2Xph3Y=;
+	s=arc-20240116; t=1705551177; c=relaxed/simple;
+	bh=9OqL/TnQaMU9t4z4GaJ8a2Rg3FBFuZEVi5+uJjAorUA=;
 	h=Received:Received:Received:From:To:CC:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy; b=UlXjm1RiMp4/XTLDXa2h7hPpaGlfAZTM66dwS4QylACtCcPRalt3NOCbWgIiH83Clm+MFIAD+RZ2UO38rPy/JJeBGSrCKv0Oy0JXSvbbcyKoI0aFE21lR6ibYYycOkjG2aZlm7+7HEh9tJ5vt+BUT9uD35Dq4INdggvkb2mct+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:Content-Type:
+	 X-Originating-IP:X-ClientProxiedBy; b=tJsWZodPBi3+ZveB4nJuD+z130P9rE/9tBKdTiWzR0wNazt5KaudILqRNHZleKzn2ZuxNyDFuWmTbey28ablkXsfHgGG+tZJu8A2LaTXq11r0+4pImx8EWE40MZjPHKuotU7vriN3s3wQPZWPcEjkbvwY0dm5EhU2nILXT/CTY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4TFq7x689jz1Q83Y;
-	Thu, 18 Jan 2024 12:11:57 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TFq7g1TQ7zWmhq;
+	Thu, 18 Jan 2024 12:11:43 +0800 (CST)
 Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5412B1402CA;
-	Thu, 18 Jan 2024 12:12:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1468A140499;
+	Thu, 18 Jan 2024 12:12:46 +0800 (CST)
 Received: from M910t.huawei.com (10.110.54.157) by
  kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Thu, 18 Jan 2024 12:12:50 +0800
+ 15.2.1258.28; Thu, 18 Jan 2024 12:12:44 +0800
 From: Changbin Du <changbin.du@huawei.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -36,12 +35,10 @@ CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
 	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
  Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
 	<changbin.du@huawei.com>
-Subject: [PATCH v3 5/5] perf: script: prefer capstone to XED
-Date: Thu, 18 Jan 2024 12:12:24 +0800
-Message-ID: <20240118041224.2799393-6-changbin.du@huawei.com>
+Subject: [PATCH v3 0/5] perf: script: Intro capstone disasm engine to show instruction trace
+Date: Thu, 18 Jan 2024 12:12:19 +0800
+Message-ID: <20240118041224.2799393-1-changbin.du@huawei.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240118041224.2799393-1-changbin.du@huawei.com>
-References: <20240118041224.2799393-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,90 +50,70 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemd100002.china.huawei.com (7.221.188.184)
 
-Now perf can show assembly instructions with libcapstone for x86, and the
-capstone is better in general.
+This series introduces capstone disassembler engine to print instructions of
+Intel PT trace, which was printed via the XED tool.
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/perf-intel-pt.txt | 11 +++++------
- tools/perf/ui/browsers/res_sample.c        |  2 +-
- tools/perf/ui/browsers/scripts.c           |  2 +-
- 3 files changed, 7 insertions(+), 8 deletions(-)
+The advantages compared to XED tool:
+    * Support arm, arm64, x86-32, x86_64, s390 (more could be supported),
+      xed only for x86_64.
+    * More friendly to read. Immediate address operands are shown as symbol+offs.
 
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 2109690b0d5f..13a02d568267 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -115,9 +115,8 @@ toggle respectively.
- 
- perf script also supports higher level ways to dump instruction traces:
- 
--	perf script --insn-trace --xed
-+	perf script --insn-trace=disam
- 
--Dump all instructions. This requires installing the xed tool (see XED below)
- Dumping all instructions in a long trace can be fairly slow. It is usually better
- to start with higher level decoding, like
- 
-@@ -130,12 +129,12 @@ or
- and then select a time range of interest. The time range can then be examined
- in detail with
- 
--	perf script --time starttime,stoptime --insn-trace --xed
-+	perf script --time starttime,stoptime --insn-trace=disam
- 
- While examining the trace it's also useful to filter on specific CPUs using
- the -C option
- 
--	perf script --time starttime,stoptime --insn-trace --xed -C 1
-+	perf script --time starttime,stoptime --insn-trace=disam -C 1
- 
- Dump all instructions in time range on CPU 1.
- 
-@@ -1306,7 +1305,7 @@ Without timestamps, --per-thread must be specified to distinguish threads.
- 
- perf script can be used to provide an instruction trace
- 
-- $ perf script --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script --guestkallsyms $KALLSYMS --insn-trace=disam -F+ipc | grep -C10 vmresume | head -21
-        CPU 0/KVM  1440  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                movq  0x48(%rax), %r9
-        CPU 0/KVM  1440  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                movq  0x50(%rax), %r10
-        CPU 0/KVM  1440  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                movq  0x58(%rax), %r11
-@@ -1407,7 +1406,7 @@ There were none.
- 
- 'perf script' can be used to provide an instruction trace showing timestamps
- 
-- $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace=disam -F+ipc | grep -C10 vmresume | head -21
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                 movq  0x48(%rax), %r9
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                 movq  0x50(%rax), %r10
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                 movq  0x58(%rax), %r11
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-index 7cb2d6678039..0eb2029014a0 100644
---- a/tools/perf/ui/browsers/res_sample.c
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -83,7 +83,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		     r->tid ? "--tid " : "",
- 		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
- 		     extra_format,
--		     rstype == A_ASM ? "-F +insn --xed" :
-+		     rstype == A_ASM ? "-F +insn_disam" :
- 		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
- 		     symbol_conf.inline_name ? "--inline" : "",
- 		     "--show-lost-events ",
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 47d2c7a8cbe1..a01b729f4ddc 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -107,7 +107,7 @@ static int list_scripts(char *script_name, bool *custom,
- 	if (evsel)
- 		attr_to_script(scriptc.extra_format, &evsel->core.attr);
- 	add_script_option("Show individual samples", "", &scriptc);
--	add_script_option("Show individual samples with assembler", "-F +insn --xed",
-+	add_script_option("Show individual samples with assembler", "-F +insn_disam",
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
+Display raw instructions:
+    $ sudo perf record --event intel_pt//u -- ls
+    $ sudo perf script --insn-trace
+                perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
+                perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
+                perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
+                perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
+                perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
+                perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
+                perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
+
+Display mnemonic instructions:
+    $ sudo perf script --insn-trace=disam
+                perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: cmpq $-0xfff, %rax
+                perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: jae __GI___ioctl+0x10
+                perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: retq
+                perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: testl %eax, %eax
+                perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: jne perf_evsel__enable_cpu+0xad
+                perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: movq 0xa8(%r12), %rax
+                perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: movq 0x20(%rax), %rdx
+                perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf) insn: cmpl %edx, %ebx
+                perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf) insn: jl perf_evsel__enable_cpu+0x60
+                perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf) insn: xorl %eax, %eax
+
+v3:
+  - fix s390 detection. (Thomas Richter)
+v2:
+  - add a new field 'insn_disam' instead of changing the default output.
+  - preserve the old --xed option.
+
+Changbin Du (5):
+  perf: build: introduce the libcapstone
+  perf: util: use capstone disasm engine to show assembly instructions
+  perf: script: add field 'insn_disam' to display mnemonic instructions
+  perf: script: add raw|disam arguments to --insn-trace option
+  perf: script: prefer capstone to XED
+
+ tools/build/Makefile.feature               |   2 +
+ tools/build/feature/Makefile               |   4 +
+ tools/build/feature/test-all.c             |   4 +
+ tools/build/feature/test-libcapstone.c     |  11 ++
+ tools/perf/Documentation/perf-intel-pt.txt |  11 +-
+ tools/perf/Documentation/perf-script.txt   |  13 ++-
+ tools/perf/Makefile.config                 |  21 ++++
+ tools/perf/Makefile.perf                   |   3 +
+ tools/perf/builtin-script.c                |  33 ++++--
+ tools/perf/ui/browsers/res_sample.c        |   2 +-
+ tools/perf/ui/browsers/scripts.c           |   2 +-
+ tools/perf/util/Build                      |   1 +
+ tools/perf/util/print_insn.c               | 122 +++++++++++++++++++++
+ tools/perf/util/print_insn.h               |  14 +++
+ 14 files changed, 219 insertions(+), 24 deletions(-)
+ create mode 100644 tools/build/feature/test-libcapstone.c
+ create mode 100644 tools/perf/util/print_insn.c
+ create mode 100644 tools/perf/util/print_insn.h
+
 -- 
 2.25.1
 
