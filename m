@@ -1,85 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E85155785;
-	Fri, 19 Jan 2024 16:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A270F55C05;
+	Fri, 19 Jan 2024 17:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705682396; cv=none; b=t99A5ywsr6Qo/P8SEzzI1znxozmMDmdOVMAAXB6TDRAMfveTtY7FlAKdmKbBXGVWocnZTKwNUftCMSCZ274RpDHy4UqLYc1U7akrryEFcVAGle6fD5wKTDawzCoR9NYq8VEJOCoyMn14YyiErPdyut07G9pRYdC/yB+3IXxeol0=
+	t=1705686347; cv=none; b=Hhv2TQUl1U1kZHPpOWnf9+wYGDJJGcvzFUpcecbfntYgVcSdxKukvfFWpI+W6T1LjHozYrOjIRULlM6cYNM7hvpNOr+RxiMtMbQFb1iaQkrw+3yuu+wmBEhfGJJ5rGYHs3l7em2PArLlDOaJTVNo6ojgpXvkTKrNovm9IXnAQlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705682396; c=relaxed/simple;
-	bh=lBmSUPtkwtCMjZIkdsZPZkuixbOXHdWTZ6M2mQb6yPM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JH2oJFuXL4kzx1N/HOuYXjF4+9hA34plqLH2p8aoElIB2z/nJZKeGtVkD1EFrdzTep//iaRwn8EXSQWyIlZqKsAMLhoeZGMKCrg9PG1sOyfJTstBVl/hbmSABhPx3yu9O6yZZdPB8q6znOkybrT/m2XauFy1JIa9WXZimleW2OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC8D311FB;
-	Fri, 19 Jan 2024 08:40:38 -0800 (PST)
-Received: from e126817.. (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 168413F73F;
-	Fri, 19 Jan 2024 08:39:49 -0800 (PST)
-From: Ben Gainey <ben.gainey@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@arm.com,
-	Ben Gainey <ben.gainey@arm.com>
-Subject: [PATCH 1/1] perf: Support PERF_SAMPLE_READ with inherit_stat
-Date: Fri, 19 Jan 2024 16:39:24 +0000
-Message-ID: <20240119163924.2801678-2-ben.gainey@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240119163924.2801678-1-ben.gainey@arm.com>
+	s=arc-20240116; t=1705686347; c=relaxed/simple;
+	bh=uCvIEcJYYf5AbGoFG22DmOZZXGKEe8WB1ncLOJnDZs8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VI5IKVhQsN1Eokp+3/DvPYWA1UUMapSHXAPglpsKMc365l/F6lM3BNMsuP97YcllCzpsjk8bMdtIbU8rwZ9ZEBtNXgYx3YK6pYx1NO8rDlRvsheNrCTFSQfmN3iW5F6TXC6kQwH0IpDRAeTByLYBuF1hjeVzptoLeQAqnpUSQU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OgpYOQSU; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OgpYOQSU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705686345; x=1737222345;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=uCvIEcJYYf5AbGoFG22DmOZZXGKEe8WB1ncLOJnDZs8=;
+  b=OgpYOQSUwAWCFxwegSueH5G21LHVZhGQuPbKVV1YHWawLZ7oj5VB2ArO
+   k71icSrF+nWsDKLQIHzM47KvytgRPdrb9FLjpAPr80aGLXo1jAkP5khWh
+   K8Vm/PMrz/n87HeT66WLHA5SVL+rBykCl+4QUZUSzy8fGJ3XL6s0uyevP
+   nE29kojJKRZI5b5aBXcbhy6cMgigDe7NQRpzE5FF+Kb1qEmTdeHV7iuph
+   ZJ/iC43bHgRi/F5QFVZpehmBXvt3TA5RlcGiRoOE+0zUW3wa5V3Tf3L61
+   9DG8vULwl3MJYs6HwmPSE4JW9pJSlaeB6kKVNoptNLT+xJ0jXwuGjnhGE
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="431969498"
+X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
+   d="scan'208";a="431969498"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 09:45:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="908371323"
+X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
+   d="scan'208";a="908371323"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
+  by orsmga004.jf.intel.com with ESMTP; 19 Jan 2024 09:45:44 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+	id 2C089302B79; Fri, 19 Jan 2024 09:45:44 -0800 (PST)
+From: Andi Kleen <ak@linux.intel.com>
+To: Ben Gainey <ben.gainey@arm.com>
+Cc: linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  peterz@infradead.org,  mingo@redhat.com,  acme@kernel.org,
+  mark.rutland@arm.com,  alexander.shishkin@linux.intel.com,
+  jolsa@kernel.org,  namhyung@kernel.org,  irogers@google.com,
+  adrian.hunter@intel.com,  james.clark@arm.com
+Subject: Re: [PATCH 0/1] Support PERF_SAMPLE_READ with inherit_stat
+In-Reply-To: <20240119163924.2801678-1-ben.gainey@arm.com> (Ben Gainey's
+	message of "Fri, 19 Jan 2024 16:39:23 +0000")
 References: <20240119163924.2801678-1-ben.gainey@arm.com>
+Date: Fri, 19 Jan 2024 09:45:44 -0800
+Message-ID: <87a5p1kyif.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-This change allows events to use PERF_SAMPLE READ with inherit
-so long as both inherit_stat and PERF_SAMPLE_TID are set.
+Ben Gainey <ben.gainey@arm.com> writes:
 
-In this configuration, and event will be inherited into any
-child processes / threads, allowing convenient profiling of a
-multi-process or multi-threaded application, whilst allowing
-profiling tools to collect per-thread samples, in particular
-of groups of counters.
+> In this configuration stream ids (such as may appear in the read_format 
+> field of a PERF_RECORD_SAMPLE) are no longer globally unique, rather 
+> the pair of (stream id, tid) uniquely identify each event. Tools that 
+> rely on this, for example to calculate a delta between samples, would 
+> need updating to take this into account. Previously valid event 
+> configurations (system-wide, no-inherit and so on) where each stream id 
+> is the identifier are unaffected.
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
----
- kernel/events/core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+So is this an ABI break? It might need an optin, if it breaks anything,
+which wouldn't surprise me. We do have a lot of different perf stream
+parsers around these days and we cannot break them.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 9efd0d7775e7c..4b603463d888f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11988,10 +11988,13 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	local64_set(&hwc->period_left, hwc->sample_period);
- 
- 	/*
--	 * We currently do not support PERF_SAMPLE_READ on inherited events.
-+	 * We do not support PERF_SAMPLE_READ on inherited events unless
-+	 * inherit_stat and PERF_SAMPLE_TID are also selected, which allows
-+	 * inherited events to collect per-thread samples.
- 	 * See perf_output_read().
- 	 */
--	if (attr->inherit && (attr->sample_type & PERF_SAMPLE_READ))
-+	if (attr->inherit && (attr->sample_type & PERF_SAMPLE_READ)
-+		&& !(attr->inherit_stat && (attr->sample_type & PERF_SAMPLE_TID)))
- 		goto err_ns;
- 
- 	if (!has_branch_stack(event))
--- 
-2.43.0
-
+-Andi
