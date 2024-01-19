@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF5326AF7;
-	Fri, 19 Jan 2024 18:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0330A56778;
+	Fri, 19 Jan 2024 18:39:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705689532; cv=none; b=bn+khviWy0lnAneOj4kwMk/NvtvM4HR4ZwUsUDp29FD0dza0d4YO3G42nTFZoevjoA5I/HtdkPg2RUpDv9QkBAZ40G2nQtcWO/RWZ9xtDqo1nfc31uERHROkODfURU/R33pzMO3vWMX1iHVxxms/BTLgRrpbCETS/rUIGDQUXJg=
+	t=1705689570; cv=none; b=sqwLoT010IrUzkwdkAfTMpMIzKH1i4ycgFMM8h0XSokL+OwrR/MMu37CAFB1SuBSmJ3lLKut20AkIxhr7bwiMS5Gih1oqEyoZ1vXglCznAIkm5jwTc/vS2kPSRloqzlpPKiBB+ruTuruh0A2m4ZhV8eh4QyY+ESnuPu7cdVkJmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705689532; c=relaxed/simple;
-	bh=EAecYnq6UDf33R57hZay3IKYojJLPNpFfbigLtJirRM=;
+	s=arc-20240116; t=1705689570; c=relaxed/simple;
+	bh=1Gn1OgtQ5ch+2QdJcArCviRv9vCtxy1FKMEYMeTXq4s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uCOLbcCWq08B//ZxNdaMpoaLARl0gBZ+R1xWPKXcIT5BjfqqXxTuzWwrc7HxVoFjUnNwailivgWgaqyURr7QmEu7rWLBw18pbSiWuNzj7BlHAYGZ+Wxo7JF1unfscOpg/VvPbzYQsxWBf8C3eGUwT3CW2dXqSbFHPqMsLIK7gQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kxdGrwgq; arc=none smtp.client-ip=134.134.136.65
+	 In-Reply-To:Content-Type; b=Ua2HrqWRGoYPasvYxUwGbhXrBS2x61LmN6gs/y6Il+balrCo7dz6U3PxnSu6tOJva4dZQDNymosx6HZ+E+9mYwnJVhWeidX7pRreOvIWAARz9nS5soRGhERSLaQDkQLaMRLq/TJH7K2FHG0JkxQG+sQpQMiPmNL2+BWypkfj2u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aeHqFEQu; arc=none smtp.client-ip=134.134.136.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kxdGrwgq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aeHqFEQu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705689531; x=1737225531;
+  t=1705689569; x=1737225569;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=EAecYnq6UDf33R57hZay3IKYojJLPNpFfbigLtJirRM=;
-  b=kxdGrwgq8FGI1ZQ+og1tmmpjVQ1eeBNldyuDEnml8Prhose2531QzV96
-   jObOx9MSBSV1FIRpJpwc6rB5wtmvB607RPpJ2CxHQHP8PicuAfbQ3tbAd
-   dcflWn19i8Bglo7pZJAox60SU+e+YI0YMXbdb164Q9cOqrSdryotrWyJ9
-   4QNrsE13+G+0y0DIAsTrc/0IsJ5ySTXbyXB0AdCp3dZEPF6AB+GQhFZSJ
-   UojbqaPn6bo4XXMpuYz2sgCh827KyeZSBvrr6Y9YWIdOZfKn+Q+VbkwIA
-   pGx4Xqtnv5nxId98XUYCseHFjNsjlKSVUMU2hRMhnnaEIVBbgpV4ScY5F
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="404578652"
+  bh=1Gn1OgtQ5ch+2QdJcArCviRv9vCtxy1FKMEYMeTXq4s=;
+  b=aeHqFEQuunkl9zsZaX1oR5eyu4LMkzEjRNQ/qsexY08jjC4SwWhQZh8b
+   nKXLtXKeOJD5fHzv7brSY9J14nNpYuyeSVOyK5eM8G4aaL7KmQOBfRGHb
+   N9IQuYAGuZSE6jxBX0eHbELL3WLEV/nalaQ5JMIH5uet0ny0JINgSlQTu
+   zkPs6zDJinIUb9EVLAYltvHxmf2u+iUMxZ1Xq4zKZUib9n+kMlTrrpKiY
+   HGy9ZXaHG5E46alh8eEm/vF7AymMY6Gg9QsqlbmhI8eryyOmws/agXHtY
+   XVuyPEpjqFJm8zhO3xWlQ4aYr3uY2VbPZ+fxZtCTzhS1MpH32PxD3lMQn
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="404578759"
 X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="404578652"
+   d="scan'208";a="404578759"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 10:38:50 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 10:39:27 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="778042392"
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="778042466"
 X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="778042392"
+   d="scan'208";a="778042466"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.39.208])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 10:38:46 -0800
-Message-ID: <029cd7e3-51f5-4d04-8f54-c6e478e052a3@intel.com>
-Date: Fri, 19 Jan 2024 20:38:40 +0200
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 10:39:23 -0800
+Message-ID: <e3463435-b879-4d72-9cab-c4bf951b9084@intel.com>
+Date: Fri, 19 Jan 2024 20:39:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,7 +49,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] perf: build: introduce the libcapstone
+Subject: Re: [PATCH v4 2/5] perf: util: use capstone disasm engine to show
+ assembly instructions
 Content-Language: en-US
 To: Changbin Du <changbin.du@huawei.com>
 Cc: Mark Rutland <mark.rutland@arm.com>,
@@ -61,156 +62,267 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
  Peter Zijlstra <peterz@infradead.org>,
  Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>
 References: <20240119104856.3617986-1-changbin.du@huawei.com>
- <20240119104856.3617986-2-changbin.du@huawei.com>
+ <20240119104856.3617986-3-changbin.du@huawei.com>
 From: Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240119104856.3617986-2-changbin.du@huawei.com>
+In-Reply-To: <20240119104856.3617986-3-changbin.du@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 19/01/24 12:48, Changbin Du wrote:
-> Later we will use libcapstone to disassemble instructions of samples.
+> Currently, the instructions of samples are shown as raw hex strings
+> which are hard to read. x86 has a special option '--xed' to disassemble
+> the hex string via intel XED tool.
+> 
+> Here we use capstone as our disassembler engine to give more friendly
+> instructions. We select libcapstone because capstone can provide more
+> insn details. Perf will fallback to raw instructions if libcapstone is
+> not available.
+> 
+> The advantages compared to XED tool:
+>  * Support arm, arm64, x86-32, x86_64 (more could be supported),
+>    xed only for x86_64.
+>  * Immediate address operands are shown as symbol+offs.
 > 
 > Signed-off-by: Changbin Du <changbin.du@huawei.com>
 > ---
->  tools/build/Makefile.feature           |  2 ++
->  tools/build/feature/Makefile           |  4 ++++
->  tools/build/feature/test-all.c         |  4 ++++
->  tools/build/feature/test-libcapstone.c | 11 +++++++++++
->  tools/perf/Makefile.config             | 21 +++++++++++++++++++++
->  tools/perf/Makefile.perf               |  3 +++
-
-tools/perf/tests/make needs updating also
-
->  6 files changed, 45 insertions(+)
->  create mode 100644 tools/build/feature/test-libcapstone.c
+>  tools/perf/builtin-script.c  |   8 +--
+>  tools/perf/util/Build        |   1 +
+>  tools/perf/util/print_insn.c | 122 +++++++++++++++++++++++++++++++++++
+>  tools/perf/util/print_insn.h |  14 ++++
+>  4 files changed, 140 insertions(+), 5 deletions(-)
+>  create mode 100644 tools/perf/util/print_insn.c
+>  create mode 100644 tools/perf/util/print_insn.h
 > 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 934e2777a2db..23bee50aeb0f 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -86,6 +86,7 @@ FEATURE_TESTS_EXTRA :=                  \
->           gtk2-infobar                   \
->           hello                          \
->           libbabeltrace                  \
-> +         libcapstone                    \
->           libbfd-liberty                 \
->           libbfd-liberty-z               \
->           libopencsd                     \
-> @@ -133,6 +134,7 @@ FEATURE_DISPLAY ?=              \
->           libcrypto              \
->           libunwind              \
->           libdw-dwarf-unwind     \
-> +         libcapstone            \
->           zlib                   \
->           lzma                   \
->           get_cpuid              \
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index dad79ede4e0a..d6eaade09694 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -53,6 +53,7 @@ FILES=                                          \
->           test-timerfd.bin                       \
->           test-libdw-dwarf-unwind.bin            \
->           test-libbabeltrace.bin                 \
-> +         test-libcapstone.bin			\
->           test-compile-32.bin                    \
->           test-compile-x32.bin                   \
->           test-zlib.bin                          \
-> @@ -282,6 +283,9 @@ $(OUTPUT)test-libdw-dwarf-unwind.bin:
->  $(OUTPUT)test-libbabeltrace.bin:
->  	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
->  
-> +$(OUTPUT)test-libcapstone.bin:
-> +	$(BUILD) # -lcapstone provided by $(FEATURE_CHECK_LDFLAGS-libcapstone)
-> +
->  $(OUTPUT)test-compile-32.bin:
->  	$(CC) -m32 -o $@ test-compile.c
->  
-> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-> index 6f4bf386a3b5..dd0a18c2ef8f 100644
-> --- a/tools/build/feature/test-all.c
-> +++ b/tools/build/feature/test-all.c
-> @@ -134,6 +134,10 @@
->  #undef main
->  #endif
->  
-> +#define main main_test_libcapstone
-> +# include "test-libcapstone.c"
-> +#undef main
-> +
->  #define main main_test_lzma
->  # include "test-lzma.c"
->  #undef main
-> diff --git a/tools/build/feature/test-libcapstone.c b/tools/build/feature/test-libcapstone.c
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index b1f57401ff23..4817a37f16e2 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -34,6 +34,7 @@
+>  #include "util/event.h"
+>  #include "ui/ui.h"
+>  #include "print_binary.h"
+> +#include "print_insn.h"
+>  #include "archinsn.h"
+>  #include <linux/bitmap.h>
+>  #include <linux/kernel.h>
+> @@ -1511,11 +1512,8 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>  	if (PRINT_FIELD(INSNLEN))
+>  		printed += fprintf(fp, " ilen: %d", sample->insn_len);
+>  	if (PRINT_FIELD(INSN) && sample->insn_len) {
+> -		int i;
+> -
+> -		printed += fprintf(fp, " insn:");
+> -		for (i = 0; i < sample->insn_len; i++)
+> -			printed += fprintf(fp, " %02x", (unsigned char)sample->insn[i]);
+> +		printed += fprintf(fp, " insn: ");
+
+"insn:" seems unnecessary.  Also xed prints 2 tabs, which
+helps line up the output.  Perhaps 1 tab and 2 spaces is
+enough.
+
+> +		printed += sample__fprintf_insn_raw(sample, fp);
+>  	}
+>  	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
+>  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 988473bf907a..c33aab53d8dd 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -32,6 +32,7 @@ perf-y += perf_regs.o
+>  perf-y += perf-regs-arch/
+>  perf-y += path.o
+>  perf-y += print_binary.o
+> +perf-y += print_insn.o
+>  perf-y += rlimit.o
+>  perf-y += argv_split.o
+>  perf-y += rbtree.o
+> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
 > new file mode 100644
-> index 000000000000..fbe8dba189e9
+> index 000000000000..162be4856f79
 > --- /dev/null
-> +++ b/tools/build/feature/test-libcapstone.c
-> @@ -0,0 +1,11 @@
+> +++ b/tools/perf/util/print_insn.c
+> @@ -0,0 +1,122 @@
 > +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Instruction binary disassembler based on capstone.
+> + *
+> + * Author(s): Changbin Du <changbin.du@huawei.com>
+> + */
+> +#include "print_insn.h"
+
+Please put with the other non-system includes
+
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <stdbool.h>
+> +#include "util/debug.h"
+
+util/ not needed
+
+> +#include "util/symbol.h"
+
+util/ not needed
+
+> +#include "machine.h"
 > +
+> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+> +{
+> +	int printed = 0;
+> +
+> +	for (int i = 0; i < sample->insn_len; i++)
+> +		printed += fprintf(fp, "%02x ", (unsigned char)sample->insn[i]);
+
+Why change this to put a space on the end?
+
+> +	return printed;
+> +}
+> +
+> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
 > +#include <capstone/capstone.h>
 > +
-> +int main(void)
+> +static int capstone_init(struct machine *machine, csh *cs_handle)
 > +{
-> +	csh handle;
+> +	cs_arch arch;
+> +	cs_mode mode;
 > +
-> +	cs_open(CS_ARCH_X86, CS_MODE_64, &handle);
+> +	if (machine__is(machine, "x86_64")) {
+> +		arch = CS_ARCH_X86;
+> +		mode = CS_MODE_64;
+> +	} else if (machine__normalized_is(machine, "x86")) {
+> +		arch = CS_ARCH_X86;
+> +		mode = CS_MODE_32;
+> +	} else if (machine__normalized_is(machine, "arm64")) {
+> +		arch = CS_ARCH_ARM64;
+> +		mode = CS_MODE_ARM;
+> +	} else if (machine__normalized_is(machine, "arm")) {
+> +		arch = CS_ARCH_ARM;
+> +		mode = CS_MODE_ARM + CS_MODE_V8;
+> +	} else if (machine__normalized_is(machine, "s390")) {
+> +		arch = CS_ARCH_SYSZ;
+> +		mode = CS_MODE_BIG_ENDIAN;
+> +	} else {
+> +		return -1;
+> +	}
+> +
+> +	if (cs_open(arch, mode, cs_handle) != CS_ERR_OK) {
+> +		pr_warning_once("cs_open failed\n");
+> +		return -1;
+> +	}
+> +
+> +	cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
+
+That's only needed for x86 isn't it
+
+> +	if (machine__normalized_is(machine, "x86"))
+> +		cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+
+Why? Could use a comment.
+
+> +
 > +	return 0;
 > +}
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index b3e6ed10f40c..7589725ad178 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -191,6 +191,15 @@ endif
->  FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
->  FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
->  
-> +# for linking with debug library, run like:
-> +# make DEBUG=1 LIBCAPSTONE_DIR=/opt/capstone/
-> +ifdef LIBCAPSTONE_DIR
-> +  LIBCAPSTONE_CFLAGS  := -I$(LIBCAPSTONE_DIR)/include
-> +  LIBCAPSTONE_LDFLAGS := -L$(LIBCAPSTONE_DIR)/
-> +endif
-> +FEATURE_CHECK_CFLAGS-libcapstone := $(LIBCAPSTONE_CFLAGS)
-> +FEATURE_CHECK_LDFLAGS-libcapstone := $(LIBCAPSTONE_LDFLAGS) -lcapstone
 > +
->  ifdef LIBZSTD_DIR
->    LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
->    LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
-> @@ -1089,6 +1098,18 @@ ifndef NO_LIBBABELTRACE
->    endif
->  endif
->  
-> +ifndef NO_CAPSTONE
-> +  $(call feature_check,libcapstone)
-> +  ifeq ($(feature-libcapstone), 1)
-> +    CFLAGS += -DHAVE_LIBCAPSTONE_SUPPORT $(LIBCAPSTONE_CFLAGS)
-> +    LDFLAGS += $(LICAPSTONE_LDFLAGS)
-> +    EXTLIBS += -lcapstone
-> +    $(call detected,CONFIG_LIBCAPSTONE)
-> +  else
-> +    msg := $(warning No libcapstone found, disables disasm engine support for 'perf script', please install libcapstone-dev/capstone-devel);
-> +  endif
-> +endif
+> +static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+> +			     cs_insn *insn, FILE *fp)
+> +{
+> +	struct addr_location al;
+> +	size_t printed = 0;
 > +
->  ifndef NO_AUXTRACE
->    ifeq ($(SRCARCH),x86)
->      ifeq ($(feature-get_cpuid), 0)
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 058c9aecf608..236da4f39a63 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -84,6 +84,9 @@ include ../scripts/utilities.mak
->  # Define NO_LIBBABELTRACE if you do not want libbabeltrace support
->  # for CTF data format.
->  #
-> +# Define NO_CAPSTONE if you do not want libcapstone support
-> +# for disasm engine.
-> +#
->  # Define NO_LZMA if you do not want to support compressed (xz) kernel modules
->  #
->  # Define NO_AUXTRACE if you do not want AUX area tracing support
+> +	if (insn->detail && insn->detail->x86.op_count == 1) {
+> +		cs_x86_op *op = &insn->detail->x86.operands[0];
+> +
+> +		addr_location__init(&al);
+
+Missing addr_location__exit()
+
+> +
+> +		if (op->type == X86_OP_IMM &&
+> +		    thread__find_symbol(thread, sample->cpumode, op->imm, &al)) {
+> +			printed += fprintf(fp, "%s ", insn[0].mnemonic);
+> +			printed += symbol__fprintf_symname_offs(al.sym, &al, fp);
+> +			return printed;
+> +		}
+> +	}
+> +
+> +	printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
+> +	return printed;
+> +}
+> +
+> +size_t sample__fprintf_insn(struct perf_sample *sample, struct thread *thread,
+> +			    struct machine *machine, FILE *fp)
+> +{
+> +	static csh cs_handle;
+
+Why static?
+
+> +	cs_insn *insn;
+> +	size_t count;
+> +	size_t printed = 0;
+> +	int ret;
+> +
+> +	ret = capstone_init(machine, &cs_handle);
+
+Does this really need to be done every time?
+
+> +	if (ret < 0) {
+> +		/* fallback */
+> +		return sample__fprintf_insn_raw(sample, fp);
+> +	}
+> +
+> +	count = cs_disasm(cs_handle, (uint8_t *)sample->insn, sample->insn_len,
+> +			  sample->ip, 1, &insn);
+> +	if (count > 0) {
+> +		if (machine__normalized_is(machine, "x86"))
+> +			printed += print_insn_x86(sample, thread, &insn[0], fp);
+> +		else
+> +			printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
+> +		cs_free(insn, count);
+> +	} else {
+> +		printed += fprintf(fp, "illegal instruction");
+> +	}
+> +
+> +	cs_close(&cs_handle);
+> +	return printed;
+> +}
+> +#else
+> +size_t sample__fprintf_insn(struct perf_sample *sample, struct thread *thread __maybe_unused,
+> +			    struct machine *machine __maybe_unused, FILE *fp)
+> +{
+> +	return sample__fprintf_insn_raw(sample, fp);
+> +}
+> +#endif
+> diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
+> new file mode 100644
+> index 000000000000..af8fa5d01fb7
+> --- /dev/null
+> +++ b/tools/perf/util/print_insn.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef PERF_PRINT_ISNS_H
+
+Here and elsewhere
+
+ISNS -> INSN
+
+> +#define PERF_PRINT_ISNS_H
+> +
+> +#include <stddef.h>
+> +#include <stdio.h>
+> +#include "event.h"
+> +#include "util/thread.h"
+
+Instead of including event.h and thread.h, just forward declare:
+
+struct perf_sample;
+struct thread;
+struct machine;
+
+> +
+> +size_t sample__fprintf_insn(struct perf_sample *sample, struct thread *thread,
+> +			    struct machine *machine, FILE *fp);
+> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
+> +
+> +#endif /* PERF_PRINT_ISNS_H */
 
