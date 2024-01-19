@@ -1,138 +1,160 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BE856475;
-	Fri, 19 Jan 2024 21:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6501058123;
+	Fri, 19 Jan 2024 22:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705700997; cv=none; b=letQU90pP/n7PzrsCHHlF0vpHFAV+IjkldKva/LWmAmok5W8yNbcMUY8pBtGl4nonfNkdqBxcNf0fAhNwDg4xZoV1qynfjiGanAHCoFhXrjL6W5MjZ6p/7Jwbz/yQf7GkopoUQVJmX4d8F9eOP5o3OGWuQVuw4zZbw9OE3Vyc2Y=
+	t=1705701654; cv=none; b=dffkENUpsEkuFTd0gmR49q/enfuMEGln0H1Xt9PpxPwRdKHSIlpIDm3yH9TlI4XAQO7zkpuwpGMGnVNA/VJ+I8vLL/T5J/tuAjmjWuQdmVrGYIu9LWQmWrDrcv/sGbsj38zp0rDl9Q5uhZmWi5o2F+dlUUo97eFmyhbHPpFXBhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705700997; c=relaxed/simple;
-	bh=koIw2S+oPoZlSQkpE/YFp4fyt/Afka0yTeTXeAzdT+8=;
+	s=arc-20240116; t=1705701654; c=relaxed/simple;
+	bh=Kse0PIpkp1eW761DnNoy1BgjfnS1ObybWXpfX+UXoFc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DIBllcqZvvOYKs5wjDV5SHK+nAKoywhT2FvlZdI4iQdBx1vQ+r7keoGNQ0RCt/VNjg6C2cP5WcT006ugmflQHH6Jv0lFsu/tKDM7klFn3/aTRFDamxf9U5t/GB/lv20y5IAmubkkLFtgk5ArlUrTgHkVeuKCOb67/zR9DDYvpUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h/VojE2L; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=C/fKBTtgM/8vIfiYdH2yL9JX/LB+ywhTBKosTsDV0UoCbRlQvT0Sixl8GbL59eQ2CYmMnLbB0V/y+0jgbpuqR+Sa4NKopjLemT6rZ5f000WTUsbLZfxZcO0tGDIkTiaJEWTdLMnjhPdberVlyNtPfOHPQcW+VrH5egNSfw4WBZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/VojE2L"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-28e8c930c01so772444a91.0;
-        Fri, 19 Jan 2024 13:49:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705700995; x=1706305795; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RjHUcTg8MND0WwJABplo3iwNyI2eRYawZwiqR4g8PDM=;
-        b=h/VojE2LdeKIK/quQZvI3gYmU5FhWY2VRBLSvusv3vRg15WKDWCaq1p9z32ARn0mN+
-         q+0D3X39/Wru2vQbU55jxKHNksqxyI4CiZYUQyhyMHZi7XLZtjugWM/aS5iACwf8Xctq
-         ONrGXuzxM/K2WO8Gv6krG+pJWuLeWcMLhjwgsBtWdT9qhKb+bRtAFfp5xnDGo/yfP8Ld
-         9KAxi9jGg6vJ2Edtf8aBXJ+VoRSs23n2NonQzMD9KgrQJg6BDiipfjyKWz9lQvHbMkH2
-         EdcXN0MixrOBWxSekLYcnADEGM2o+bj0xBjPPKD+nI5LPDj2aif+/TxENog9LczPLi1V
-         1I5w==
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-53fa455cd94so774703a12.2;
+        Fri, 19 Jan 2024 14:00:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705700995; x=1706305795;
+        d=1e100.net; s=20230601; t=1705701653; x=1706306453;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RjHUcTg8MND0WwJABplo3iwNyI2eRYawZwiqR4g8PDM=;
-        b=rEEA9Z8D6gTzZdWVR5pUZ6Z8x3ttlW8+U0VKNsWCqnZCLmzk8+krTu9juD7MA8wtsM
-         CM5NZzP221knWzPjGO5dzkCOc+aCeJPp8BqYkyoRMeumTVwHs83wkq0sTHF9d0lj5Hk8
-         de/n4V49gwDuDNjqTIdIrH5CCsAAqith17K3WNviYYnt7vYLeLL55PKNf5CEF9W159/c
-         srFv/BsRxiLY2a+d3MArmy4HmofX6kkR9QGx9Gfy5KHQNRnsxyAMMXDrkSGGZCR/05n6
-         9LP9PU9wgostFcmjQ+90GLWRVBzS/94lXHfIe9fsBL/ULDPNlQeXor/rthHWDn1vWAe2
-         nwdA==
-X-Gm-Message-State: AOJu0YygDvsPCRuwxYjNIklt1TFssyk21ns4XUmh9cXEAMXCk8wYzy9L
-	wZpkrwhWAHtKPKDdwh9y2rX/PIMQKU9nHI1irjQRO2xW0DzYANk9bqiFccXgsLHf21P/C1g4yjE
-	GgB6VolYp/tJ1kZLjX2adcZk2ki4=
-X-Google-Smtp-Source: AGHT+IE6wVpzveGTzO3CdgWIODW3G+6KTz/7Iq/DU+pLquW4T8Z0lu6TFZiCEXagGtDOXVwuWHp6HKUWflWTVEHHGYw=
-X-Received: by 2002:a17:90b:3649:b0:28d:290d:8d67 with SMTP id
- nh9-20020a17090b364900b0028d290d8d67mr459948pjb.29.1705700995564; Fri, 19 Jan
- 2024 13:49:55 -0800 (PST)
+        bh=12c2ARLo1DzPmVN8NnE58YkJlTXRWZ7lnCmUYNjTW2I=;
+        b=WR0tr6XATHj3kO3vA0nHt0iiRFsee4uGzN/EouyApYXs1wb7UkViwYKUs4TlNhZ3wo
+         gSZP2Lg130R1BQOv3PW3QK7Sc4A6p/mfLcGmrCQZZB8bvzJqVGaPdmZN8vYtYx8BLni/
+         yk7Avvg5Mx6b2xFKJXA7R9gJV+NPBeVAbn5+hXt3649himq0YPeTuyE0pYoV6o2dfrDz
+         dwURGB/TcYXCWOS5hlnoLmxLCpF8eM+svH09PhpR0HOYXx+QyF3uzJw/bKeWetp+sWx3
+         CzObE0tGI6vjqsMxipRdcuD6Bp6jCShxK4ljmhKjMBHeBbVOU7/DxMQ+H60dEIypvnpL
+         T8eQ==
+X-Gm-Message-State: AOJu0YwDKOc4YnSprCyMZS0EfubKRn1f5a98qvo3rKum+HK6u1yUPfIi
+	uCb5qMG82gb0FPSSacCAxhfzoPbQW/7L6b22aGSKmolBpKt+8EOzoRyu+E02kAr9VR5gvDbIJ2i
+	GlWCaMakT4qdhpwEP1sVFBh0+Khw=
+X-Google-Smtp-Source: AGHT+IHjdaVUHskCyMOUbNn6cvOvq8mmYxB4O6Xhj6CxkRtg4NlhYQc5lLCxfgB1l2SO3xq42x42tsux4CId48SeWD0=
+X-Received: by 2002:a17:90a:7562:b0:28c:8478:f4aa with SMTP id
+ q89-20020a17090a756200b0028c8478f4aamr455480pjk.66.1705701652722; Fri, 19 Jan
+ 2024 14:00:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115144727.499349-1-tmricht@linux.ibm.com>
-In-Reply-To: <20240115144727.499349-1-tmricht@linux.ibm.com>
-From: Namhyung Kim <namhyung@gmail.com>
-Date: Fri, 19 Jan 2024 13:49:44 -0800
-Message-ID: <CAM9d7cjCK-p1VL4Evt6ZwpYz_=wTS=8oAOvgSL3ejO9L5m24hQ@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix test case perf script tests on s390
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	acme@kernel.org, irogers@google.com, acme@redhat.com, svens@linux.ibm.com, 
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
+References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
+ <20240116045151.3940401-1-lizhijian@fujitsu.com> <20240116045151.3940401-3-lizhijian@fujitsu.com>
+In-Reply-To: <20240116045151.3940401-3-lizhijian@fujitsu.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 19 Jan 2024 14:00:41 -0800
+Message-ID: <CAM9d7cirhP65hMsgD7Kt+puferoJ76i+p6f7EGJsaoh4a2eLag@mail.gmail.com>
+Subject: Re: [PATCH 05/42] arch/x86/events/intel: Convert snprintf to sysfs_emit
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Mon, Jan 15, 2024 at 6:50=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Mon, Jan 15, 2024 at 8:53=E2=80=AFPM Li Zhijian <lizhijian@fujitsu.com> =
+wrote:
 >
-> In linux next repo, test case 'perf script tests' fails on s390.
-> The root case is a command line invocation of perf record with
-> call-graph information. On s390 only dwarf formatted call-graphs
-> are supported and only on software events.
+> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+> or sysfs_emit_at() when formatting the value to be returned to user space=
+.
 >
-> Change the command line parameters fors s390.
+> coccinelle complains that there are still a couple of functions that use
+> snprintf(). Convert them to sysfs_emit().
 >
-> Output before:
->  # perf test 89
->  89: perf script tests              : FAILED!
->  #
+> > ./arch/x86/events/intel/core.c:5496:8-16: WARNING: please use sysfs_emi=
+t
+> > ./arch/x86/events/intel/core.c:5530:8-16: WARNING: please use sysfs_emi=
+t
+> > ./arch/x86/events/intel/core.c:5546:8-16: WARNING: please use sysfs_emi=
+t
+> > ./arch/x86/events/intel/pt.c:99:8-16: WARNING: please use sysfs_emit
 >
-> Output after:
->  # perf test 89
->  89: perf script tests              : Ok
->  #
+> No functional change intended
 >
-> Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Ian Rogers <irogers@google.com>
+> CC: Peter Zijlstra <peterz@infradead.org>
+> CC: Ingo Molnar <mingo@redhat.com>
+> CC: Arnaldo Carvalho de Melo <acme@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> CC: Jiri Olsa <jolsa@kernel.org>
+> CC: Namhyung Kim <namhyung@kernel.org>
+> CC: Ian Rogers <irogers@google.com>
+> CC: Adrian Hunter <adrian.hunter@intel.com>
+> CC: Thomas Gleixner <tglx@linutronix.de>
+> CC: Borislav Petkov <bp@alien8.de>
+> CC: Dave Hansen <dave.hansen@linux.intel.com>
+> CC: x86@kernel.org
+> CC: "H. Peter Anvin" <hpa@zytor.com>
+> CC: linux-perf-users@vger.kernel.org
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 > ---
->  tools/perf/tests/shell/script.sh | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+>  arch/x86/events/intel/core.c | 6 +++---
+>  arch/x86/events/intel/pt.c   | 2 +-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 >
-> diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/sc=
-ript.sh
-> index 5ae7bd0031a8..a6a09ef16e06 100755
-> --- a/tools/perf/tests/shell/script.sh
-> +++ b/tools/perf/tests/shell/script.sh
-> @@ -54,7 +54,14 @@ def sample_table(*args):
->  def call_path_table(*args):
->      print(f'call_path_table({args}')
->  _end_of_file_
-> -       perf record -g -o "${perfdatafile}" true
-> +       case $(uname -m)
-> +       in s390x)
-> +               cmd_flags=3D"--call-graph dwarf -e cpu-clock"
-> +       ;; *)
-> +               cmd_flags=3D"-g"
-> +       esac
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 0f2786d4e405..aa5fa64a923b 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -5493,7 +5493,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
+>                               struct device_attribute *attr,
+>                               char *buf)
+>  {
+> -       return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
+> +       return sysfs_emit(buf, "%d\n", allow_tsx_force_abort);
 
-I think this is unusual.  Maybe something like this?
+I guess the size doesn't matter here..
 
-    case $(uname -m) in
-    s390x)
-        cmd_flags=3D"...";;
-    *)
-        cmd_flags=3D"...";;
-    esac
+Anyway there's freeze_on_smi_show() even uses sprintf().
 
 Thanks,
 Namhyung
 
-
-> +
-> +       perf record $cmd_flags -o "${perfdatafile}" true
->         perf script -i "${perfdatafile}" -s "${db_test}"
->         echo "DB test [Success]"
 >  }
-> --
-> 2.43.0
 >
+>  static ssize_t set_sysctl_tfa(struct device *cdev,
+> @@ -5527,7 +5527,7 @@ static ssize_t branches_show(struct device *cdev,
+>                              struct device_attribute *attr,
+>                              char *buf)
+>  {
+> -       return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
+> +       return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
+>  }
+>
+>  static DEVICE_ATTR_RO(branches);
+> @@ -5543,7 +5543,7 @@ static ssize_t pmu_name_show(struct device *cdev,
+>                              struct device_attribute *attr,
+>                              char *buf)
+>  {
+> -       return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
+> +       return sysfs_emit(buf, "%s\n", pmu_name_str);
+>  }
+>
+>  static DEVICE_ATTR_RO(pmu_name);
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index 8e2a12235e62..30bba5f3a840 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -96,7 +96,7 @@ static ssize_t pt_cap_show(struct device *cdev,
+>                 container_of(attr, struct dev_ext_attribute, attr);
+>         enum pt_capabilities cap =3D (long)ea->var;
+>
+> -       return snprintf(buf, PAGE_SIZE, "%x\n", intel_pt_validate_hw_cap(=
+cap));
+> +       return sysfs_emit(buf, "%x\n", intel_pt_validate_hw_cap(cap));
+>  }
+>
+>  static struct attribute_group pt_cap_group __ro_after_init =3D {
+> --
+> 2.29.2
 >
