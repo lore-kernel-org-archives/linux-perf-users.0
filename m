@@ -1,149 +1,91 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B921373;
-	Fri, 19 Jan 2024 15:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142654F1FA;
+	Fri, 19 Jan 2024 16:39:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705676470; cv=none; b=ZCNTToP48WdkpiHBFrUv0+Um/1QGdFOyK5OqeQSMgyCi5gMFYVHJJxA/0Hr5FsZFHELYJQFVnbbiY7D4frAupPVrFsGByyhACfjy5qIphTid0yTtagokjge2glhUfqp0DsnXgbf5LJTXp5qENAB5ug1Yy1Ttj6rujTm9NdzxtWw=
+	t=1705682393; cv=none; b=UuWEJTKuwZoUlQ6eYcLuBYFpfO4gLXEj+h0LUadFyS09+lwZ/6eTZX/1tiAwqRHjAmzRc1QCNlZZOnv8uQcgsY6TR/p6YdpxGQnKpDGIPHEDeOPO0RQcEt5XpsJ9jrvMX/qtiiZEZbDnka2lITExJcTQqQmVP7LptrC+KF7GGDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705676470; c=relaxed/simple;
-	bh=5g/VRBSyUa+iW1jKewPy3IzLvCgCQnd3Skn6qtgX0n8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r7ZRTNncrUkIwTkUKZatz7FurvqTRpIiUA2eFjs8DMYAiWB19j+HnQApYXc10u/hQ5JZ1mLwMFYm2hfhz2/HsJblpW3DdvvqYiQL0GdCKipWoVzfRS5HtOKUco0DCNlobX+3Zhsfj7pEEimEF7WmSqI+4t1Nh1Ispp30dUcnAfU=
+	s=arc-20240116; t=1705682393; c=relaxed/simple;
+	bh=hRwFxaLVM/9prIFMvwSX+LskTGsLe2VRFiqmVSZ/hW0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i9DA8hrPkO6j8sHQ1myn8tAw64qXKwivHbNIEYbnxTcq6sZ+8juyN0540bIEFkSQr7fTHLyPrbstNecRkeTq5i22bXflZ0HdtNBUEDtluD/QbFdXSeLuBxR31ooRWqKw0TBQUzWkSY9hDERJW4p6HnUqPRtfXk1snc4IPvY7oeI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7171ADA7;
-	Fri, 19 Jan 2024 07:01:50 -0800 (PST)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD0F83F5A1;
-	Fri, 19 Jan 2024 07:01:01 -0800 (PST)
-Message-ID: <2f9131e4-1fdb-f80a-3b52-b98360164b3b@arm.com>
-Date: Fri, 19 Jan 2024 15:00:45 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 933021042;
+	Fri, 19 Jan 2024 08:40:35 -0800 (PST)
+Received: from e126817.. (e126817.cambridge.arm.com [10.2.3.5])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C4CFD3F73F;
+	Fri, 19 Jan 2024 08:39:46 -0800 (PST)
+From: Ben Gainey <ben.gainey@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@arm.com,
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [PATCH 0/1] Support PERF_SAMPLE_READ with inherit_stat
+Date: Fri, 19 Jan 2024 16:39:23 +0000
+Message-ID: <20240119163924.2801678-1-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
-Content-Language: en-US
-To: Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>,
- Ian Rogers <irogers@google.com>, acme@redhat.com, john.g.garry@oracle.com,
- leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
- namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com,
- will@kernel.org
-References: <20240116170348.463479-1-mark.rutland@arm.com>
- <8734uwxrca.wl-maz@kernel.org>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <8734uwxrca.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+This change allows events to use PERF_SAMPLE READ with inherit so long 
+as both inherit_stat and PERF_SAMPLE_TID are set.
+
+Currently it is not possible to use PERF_SAMPLE_READ with inherit. This 
+restriction assumes the user is interested in collecting aggregate 
+statistics as per `perf stat`. It prevents a user from collecting 
+per-thread samples using counter groups from a multi-threaded or 
+multi-process application, as with `perf record -e '{....}:S'`. Instead 
+users must use system-wide mode, or forgo the ability to sample counter 
+groups. System-wide mode is often problematic as it requires specific 
+permissions (no CAP_PERFMON / root access), or may lead to capture of 
+significant amounts of extra data from other processes running on the 
+system. 
+
+Perf already supports the ability to collect per-thread counts with 
+`inherit` via the `inherit_stat` flag. This patch changes 
+`perf_event_alloc` relaxing the restriction to combine `inherit` with 
+`PERF_SAMPLE_READ` so that the combination will be allowed so long as 
+`inherit_stat` and `PERF_SAMPLE_TID` are enabled.
+
+In this configuration stream ids (such as may appear in the read_format 
+field of a PERF_RECORD_SAMPLE) are no longer globally unique, rather 
+the pair of (stream id, tid) uniquely identify each event. Tools that 
+rely on this, for example to calculate a delta between samples, would 
+need updating to take this into account. Previously valid event 
+configurations (system-wide, no-inherit and so on) where each stream id 
+is the identifier are unaffected.
+
+This patch has been tested on aarch64 both my manual inspection of the 
+output of `perf script -D` and through a modified version of Arm's 
+commercial profiling tools and the numbers appear to line up as one 
+would expect, but some further validation across other architectures 
+and/or edge cases would be welcome.
+
+This patch was developed and tested on top of v6.7.
 
 
+Ben Gainey (1):
+  perf: Support PERF_SAMPLE_READ with inherit_stat
 
-On 17/01/2024 09:05, Marc Zyngier wrote:
-> Hi Mark,
-> 
-> On Tue, 16 Jan 2024 17:03:48 +0000,
-> Mark Rutland <mark.rutland@arm.com> wrote:
->>
->> Currently the perf tool doesn't deteect support for extneded event types
->> on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
->> hardware events into per-PMU events. This is due to the detection of
->> extended event types not handling mandatory filters required by the
->> M1/M2 PMU driver.
-> 
-> Thanks for looking into this.
-> 
-> I've given your patch a go on my M1 box, and it indeed makes things
-> substantially better:
-> 
-> $ sudo ./perf stat -e cycles ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.419
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    174,783,472,090      apple_firestorm_pmu/cycles/                                             (93.10%)
->     39,134,744,813      apple_icestorm_pmu/cycles/                                              (71.86%)
-> 
->        3.568145595 seconds time elapsed
-> 
->       12.203084000 seconds user
->       55.135271000 seconds sys
-> 
-> However, I'm seeing some slightly odd behaviours:
-> 
-> $ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.313
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    <not supported>      apple_firestorm_pmu/cycles:k/                                         
->    <not supported>      apple_icestorm_pmu/cycles:k/                                          
-> 
->        3.467568841 seconds time elapsed
-> 
->       13.080111000 seconds user
->       53.162099000 seconds sys
-> 
-> I would have expected it to count, but it didn't. For that to work, I
-> have to add the 'H' modifier:
-> 
-> $ sudo ./perf stat -e cycles:Hk ~/hackbench 100 process 1000
-> Running with 100*40 (== 4000) tasks.
-> Time: 3.335
-> 
->  Performance counter stats for '/home/maz/hackbench 100 process 1000':
-> 
->    183,756,134,397      apple_firestorm_pmu/cycles:Hk/                                          (85.56%)
->     37,302,841,991      apple_icestorm_pmu/cycles:Hk/                                           (72.10%)
-> 
->        3.490138958 seconds time elapsed
-> 
->       13.376772000 seconds user
->       53.326289000 seconds sys
-> 
-> But my perf-foo is as basic as it gets, so it is likely that I'm
-> missing something.
-> 
-> Thanks,
-> 
-> 	M.
-> 
+ kernel/events/core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-The default for exclude_guest=1 is always set unless you use "perf kvm
-record". But unfortunately if you add _any_ modifier then all the
-default values get overwritten, which is why adding k stops it from working.
+-- 
+2.43.0
 
-It seems like a lot of the pain comes from the fact that the command
-line modifiers are includes, and the kernel options are excludes.
-Resulting in some complicated logic in get_event_modifier() to try to
-work out what you wanted, which I suppose it got it wrong in this scenario.
-
-Another thing is that evsel__detect_missing_features() only works to
-remove arguments, where as for M1/M2 you want to _add_ exclude_guest
-back in again. But maybe not if you started adding modifiers...
-
-I don't really have an answer or a solution, but I was wondering if
-there was a bug that could be fixed so I went to look.
-
-My first thought was maybe we could ignore exclude_guest=0 on M1/M2
-rather than returning an error. I don't think it would be too surprising
-that guest samples are missing if they are never supported. Maybe the
-exclude_guest argument is only useful if it actually has an effect,
-rather than having an argument that always needs to be on anyway.
-
-Or secondly maybe we could make get_event_modifier() interact with
-evsel__detect_missing_features() but I can't imagine it being very
-maintainable once we start adding a few interactions. And it's still
-hard to predict what the user really wants given a single letter and
-many exclude_* options.
-
-James
