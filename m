@@ -1,160 +1,138 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6501058123;
-	Fri, 19 Jan 2024 22:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445B7537EE;
+	Fri, 19 Jan 2024 22:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705701654; cv=none; b=dffkENUpsEkuFTd0gmR49q/enfuMEGln0H1Xt9PpxPwRdKHSIlpIDm3yH9TlI4XAQO7zkpuwpGMGnVNA/VJ+I8vLL/T5J/tuAjmjWuQdmVrGYIu9LWQmWrDrcv/sGbsj38zp0rDl9Q5uhZmWi5o2F+dlUUo97eFmyhbHPpFXBhs=
+	t=1705701985; cv=none; b=AiJShDfbUkhVqSpotRR6lT/bKBv0jrf7ysXk8Q6BVjgHvcfYgMm3A5FL7rCejB4iRAG0TVM7tAs9rFJpjfNO89N+R9YjAYNosTSCEdMYtJzlNb/2o+h76JBuIR24dube2kh3z3doNVt9cyg9QcK8PCJcmE2tn9jQz3ohPrpr9Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705701654; c=relaxed/simple;
-	bh=Kse0PIpkp1eW761DnNoy1BgjfnS1ObybWXpfX+UXoFc=;
+	s=arc-20240116; t=1705701985; c=relaxed/simple;
+	bh=zhaVfEhWynwbx7C9lDCvozKetdFXiOTJKUY5TMI0l54=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C/fKBTtgM/8vIfiYdH2yL9JX/LB+ywhTBKosTsDV0UoCbRlQvT0Sixl8GbL59eQ2CYmMnLbB0V/y+0jgbpuqR+Sa4NKopjLemT6rZ5f000WTUsbLZfxZcO0tGDIkTiaJEWTdLMnjhPdberVlyNtPfOHPQcW+VrH5egNSfw4WBZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
+	 To:Cc:Content-Type; b=KOBq1DNcPCQRfZzcYct6Qc0qDgSptOheHZW4HTGHoUdICLiAujTMvnzUOSCkqTh1FS7cNywVrDK7u/FiZGd3lDGSEO1TwvfgjRJixf+k3R4jdMeHKy8vp468Wl/CRhM5ihXb3vRywlA9At7g/aJI/R4G/60M50H6W01mhca7Few=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-53fa455cd94so774703a12.2;
-        Fri, 19 Jan 2024 14:00:53 -0800 (PST)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5cdfed46372so1177088a12.3;
+        Fri, 19 Jan 2024 14:06:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705701653; x=1706306453;
+        d=1e100.net; s=20230601; t=1705701984; x=1706306784;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=12c2ARLo1DzPmVN8NnE58YkJlTXRWZ7lnCmUYNjTW2I=;
-        b=WR0tr6XATHj3kO3vA0nHt0iiRFsee4uGzN/EouyApYXs1wb7UkViwYKUs4TlNhZ3wo
-         gSZP2Lg130R1BQOv3PW3QK7Sc4A6p/mfLcGmrCQZZB8bvzJqVGaPdmZN8vYtYx8BLni/
-         yk7Avvg5Mx6b2xFKJXA7R9gJV+NPBeVAbn5+hXt3649himq0YPeTuyE0pYoV6o2dfrDz
-         dwURGB/TcYXCWOS5hlnoLmxLCpF8eM+svH09PhpR0HOYXx+QyF3uzJw/bKeWetp+sWx3
-         CzObE0tGI6vjqsMxipRdcuD6Bp6jCShxK4ljmhKjMBHeBbVOU7/DxMQ+H60dEIypvnpL
-         T8eQ==
-X-Gm-Message-State: AOJu0YwDKOc4YnSprCyMZS0EfubKRn1f5a98qvo3rKum+HK6u1yUPfIi
-	uCb5qMG82gb0FPSSacCAxhfzoPbQW/7L6b22aGSKmolBpKt+8EOzoRyu+E02kAr9VR5gvDbIJ2i
-	GlWCaMakT4qdhpwEP1sVFBh0+Khw=
-X-Google-Smtp-Source: AGHT+IHjdaVUHskCyMOUbNn6cvOvq8mmYxB4O6Xhj6CxkRtg4NlhYQc5lLCxfgB1l2SO3xq42x42tsux4CId48SeWD0=
-X-Received: by 2002:a17:90a:7562:b0:28c:8478:f4aa with SMTP id
- q89-20020a17090a756200b0028c8478f4aamr455480pjk.66.1705701652722; Fri, 19 Jan
- 2024 14:00:52 -0800 (PST)
+        bh=OLiBau14xJmw6pibIF0iVnHj1duiVItI9rclo/jaOto=;
+        b=Hl/r23SHkxpdiMuW4lm1IRFUpDESDriaikc5ekGAtvu9MCBj3/MMYTFhG0YigPVqLH
+         zq8eeBq4FZxbjsNRPUAazgmFrtIS7O2HGanWpb13rovayfmKGXJtQF+mbgwxP2flU+l4
+         gs2t+IJaDQavxtglrOnuOlZ47GtYLHMaY9VI4Ca8o0z50kriVxIlmhCOas4ssels6uCz
+         i2NcZmyhH09OW2ud39VrIyeAQVpZBuO+4eRX7qNUQzwbBADP+Nnxa8r0B/SsR8hfOHrV
+         36iQS2iml7YvIn29YtaP6RHdUK2GpGXZs1sIXYUJIGLFttGC2fVZ95CUeMXPPyh5duA+
+         mJsw==
+X-Gm-Message-State: AOJu0Yxg0/A+c6jPA2Y/NFO9SP5SUMzLiAHn4AFw6xAXRC6c3SDc7cXT
+	W+aGyoVARgCJL5Ayx1mdhfqFjXnWrVw+a2k5J+cH7pUBB7/01dmzppELjdytj5M1tddLkn1aAc8
+	Ttro/KOkiYce/1ITJ4wP1JlRls0Q=
+X-Google-Smtp-Source: AGHT+IHaLWSOypnk8Bq3sMJzz8IOvtOQOu2TfZa97jph0NydtDD21Zq5X193ApaLI6YHkc1CIS+FISEp4Sw/EptNfSc=
+X-Received: by 2002:a05:6a21:9217:b0:19a:f684:cbc4 with SMTP id
+ tl23-20020a056a21921700b0019af684cbc4mr489615pzb.104.1705701983718; Fri, 19
+ Jan 2024 14:06:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
- <20240116045151.3940401-1-lizhijian@fujitsu.com> <20240116045151.3940401-3-lizhijian@fujitsu.com>
-In-Reply-To: <20240116045151.3940401-3-lizhijian@fujitsu.com>
+References: <20240119040304.3708522-1-yangjihong1@huawei.com>
+In-Reply-To: <20240119040304.3708522-1-yangjihong1@huawei.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 19 Jan 2024 14:00:41 -0800
-Message-ID: <CAM9d7cirhP65hMsgD7Kt+puferoJ76i+p6f7EGJsaoh4a2eLag@mail.gmail.com>
-Subject: Re: [PATCH 05/42] arch/x86/events/intel: Convert snprintf to sysfs_emit
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org
+Date: Fri, 19 Jan 2024 14:06:12 -0800
+Message-ID: <CAM9d7chheMq=J1kHCTD+2Vxh=iKA5Toe=DyWmvRRX_E6xdXNKA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] perf record: Fix segfault with '--timestamp-filename'
+ option and pipe mode
+To: Yang Jihong <yangjihong1@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Mon, Jan 15, 2024 at 8:53=E2=80=AFPM Li Zhijian <lizhijian@fujitsu.com> =
-wrote:
+On Thu, Jan 18, 2024 at 8:07=E2=80=AFPM Yang Jihong <yangjihong1@huawei.com=
+> wrote:
 >
-> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-> or sysfs_emit_at() when formatting the value to be returned to user space=
-.
+> When perf record uses '--timestamp-filename' option and pipe mode,
+> will occur segfault:
 >
-> coccinelle complains that there are still a couple of functions that use
-> snprintf(). Convert them to sysfs_emit().
+>   # perf record --timestamp-filename -o- true 1>/dev/null
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Dump -.2024011813361681 ]
+>   perf: Segmentation fault
+>   Segmentation fault (core dumped)
 >
-> > ./arch/x86/events/intel/core.c:5496:8-16: WARNING: please use sysfs_emi=
-t
-> > ./arch/x86/events/intel/core.c:5530:8-16: WARNING: please use sysfs_emi=
-t
-> > ./arch/x86/events/intel/core.c:5546:8-16: WARNING: please use sysfs_emi=
-t
-> > ./arch/x86/events/intel/pt.c:99:8-16: WARNING: please use sysfs_emit
+> Debug the core file by using the gdb:
 >
-> No functional change intended
+>   # gdb perf core.3706841
+>   <SNIP>
+>   [New LWP 3706841]
+>   [Thread debugging using libthread_db enabled]
+>   Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.=
+1".
+>   Core was generated by `perf record --timestamp-filename -o- true'.
+>   Program terminated with signal SIGSEGV, Segmentation fault.
+>   #0  evsel__free_stat_priv (evsel=3D0x555ea56197af) at util/stat.c:145
+>   145             struct perf_stat_evsel *ps =3D evsel->stats;
+>   (gdb) bt
+>   #0  evsel__free_stat_priv (evsel=3D0x555ea56197af) at util/stat.c:145
+>   #1  evlist__free_stats (evlist=3Devlist@entry=3D0x555bf0dad1b0) at util=
+/stat.c:215
+>   #2  0x0000555befd425e8 in evlist__delete (evlist=3D0x555bf0dad1b0) at u=
+til/evlist.c:175
+>   #3  0x0000555befd42785 in evlist__delete (evlist=3D<optimized out>) at =
+util/evlist.c:181
+>   #4  0x0000555befc7f547 in cmd_record (argc=3D<optimized out>, argv=3D<o=
+ptimized out>) at builtin-record.c:4252
+>   #5  0x0000555befd27700 in run_builtin (p=3Dp@entry=3D0x555bf05acf88 <co=
+mmands+264>, argc=3Dargc@entry=3D4, argv=3Dargv@entry=3D0x7ffc2696a920) at =
+perf.c:349
+>   #6  0x0000555befc68751 in handle_internal_command (argv=3D0x7ffc2696a92=
+0, argc=3D4) at perf.c:402
+>   #7  run_argv (argv=3D<synthetic pointer>, argcp=3D<synthetic pointer>) =
+at perf.c:446
+>   #8  main (argc=3D4, argv=3D0x7ffc2696a920) at perf.c:562
 >
-> CC: Peter Zijlstra <peterz@infradead.org>
-> CC: Ingo Molnar <mingo@redhat.com>
-> CC: Arnaldo Carvalho de Melo <acme@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> CC: Jiri Olsa <jolsa@kernel.org>
-> CC: Namhyung Kim <namhyung@kernel.org>
-> CC: Ian Rogers <irogers@google.com>
-> CC: Adrian Hunter <adrian.hunter@intel.com>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Borislav Petkov <bp@alien8.de>
-> CC: Dave Hansen <dave.hansen@linux.intel.com>
-> CC: x86@kernel.org
-> CC: "H. Peter Anvin" <hpa@zytor.com>
-> CC: linux-perf-users@vger.kernel.org
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
->  arch/x86/events/intel/core.c | 6 +++---
->  arch/x86/events/intel/pt.c   | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
+> It is found that the memory of the evsel is modified.
+> The reason is that perf_data__switch() not initialized 'new_filename',
+> as a result, it uses the on-stack variable. It happens that the evsel
+> address is stored here. 'new_filename' is freed later when uses
+> '--timestamp-filename' option. Therefore, segfault occurs in the evsel_de=
+lete().
 >
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 0f2786d4e405..aa5fa64a923b 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -5493,7 +5493,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
->                               struct device_attribute *attr,
->                               char *buf)
->  {
-> -       return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
-> +       return sysfs_emit(buf, "%d\n", allow_tsx_force_abort);
+>
+> 1. patch1 fixes this problem.
+> 2. patch2 to optimize the process, check conflict between
+>    '--timestamp-filename' option and the pipe mode before recording to
+>    avoid switch perf data.
+> 3. patch3 fixes the code style problem by the way.
+>
+>
+> Yang Jihong (3):
+>   perf record: Fix possible incorrect free in record__switch_output()
+>   perf record: Check conflict between '--timestamp-filename' option and
+>     pipe mode before recording
+>   perf data: Minor code style alignment cleanup
 
-I guess the size doesn't matter here..
-
-Anyway there's freeze_on_smi_show() even uses sprintf().
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
->  }
 >
->  static ssize_t set_sysctl_tfa(struct device *cdev,
-> @@ -5527,7 +5527,7 @@ static ssize_t branches_show(struct device *cdev,
->                              struct device_attribute *attr,
->                              char *buf)
->  {
-> -       return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
-> +       return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
->  }
+>  tools/perf/builtin-record.c | 14 ++++++++++----
+>  tools/perf/util/data.c      | 10 ++++------
+>  tools/perf/util/data.h      |  6 +++---
+>  3 files changed, 17 insertions(+), 13 deletions(-)
 >
->  static DEVICE_ATTR_RO(branches);
-> @@ -5543,7 +5543,7 @@ static ssize_t pmu_name_show(struct device *cdev,
->                              struct device_attribute *attr,
->                              char *buf)
->  {
-> -       return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
-> +       return sysfs_emit(buf, "%s\n", pmu_name_str);
->  }
->
->  static DEVICE_ATTR_RO(pmu_name);
-> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-> index 8e2a12235e62..30bba5f3a840 100644
-> --- a/arch/x86/events/intel/pt.c
-> +++ b/arch/x86/events/intel/pt.c
-> @@ -96,7 +96,7 @@ static ssize_t pt_cap_show(struct device *cdev,
->                 container_of(attr, struct dev_ext_attribute, attr);
->         enum pt_capabilities cap =3D (long)ea->var;
->
-> -       return snprintf(buf, PAGE_SIZE, "%x\n", intel_pt_validate_hw_cap(=
-cap));
-> +       return sysfs_emit(buf, "%x\n", intel_pt_validate_hw_cap(cap));
->  }
->
->  static struct attribute_group pt_cap_group __ro_after_init =3D {
 > --
-> 2.29.2
+> 2.34.1
 >
