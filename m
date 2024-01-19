@@ -1,129 +1,149 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E00A4D5A2;
-	Fri, 19 Jan 2024 10:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B921373;
+	Fri, 19 Jan 2024 15:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705661364; cv=none; b=cVWPksuFmfOrF46EwBgVPTcxDeY5WwN35qh6/s7jqp/i7981bUH8gd4mE1HJcel/SfuFJPnx3hftmEjYrUCQN9PoEIEnZm2Goo1AkdWRnUeeLazQbqg+odhMm29CmwGoNjeMNRyuqBA3lgnsEtfcq2pCxE7M6yze1iAViUDl1WA=
+	t=1705676470; cv=none; b=ZCNTToP48WdkpiHBFrUv0+Um/1QGdFOyK5OqeQSMgyCi5gMFYVHJJxA/0Hr5FsZFHELYJQFVnbbiY7D4frAupPVrFsGByyhACfjy5qIphTid0yTtagokjge2glhUfqp0DsnXgbf5LJTXp5qENAB5ug1Yy1Ttj6rujTm9NdzxtWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705661364; c=relaxed/simple;
-	bh=5OxkKbu58xs6nmHY43tH+C7ACBzyqJ5R5ryqzSRIpxU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q47+Zs3DYWIHilbVStEg5OJ9kFLvKtUFz+cJAcOhZcUa1onZiDMGzm9wahttiNzglQnZdhkmN71BbPl8IFYfQ9/8g6bvdL42SH0RUQe9GAg2AMbTXCUUWW15ANKTAxcdi6ocQdyktL6Wpucj++JqSXI7ypMZxXAI1tReCbsu3xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4TGbts1JWmz1Q7qj;
-	Fri, 19 Jan 2024 18:48:21 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 51F96140153;
-	Fri, 19 Jan 2024 18:49:17 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Fri, 19 Jan 2024 18:49:15 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
- Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
-	<changbin.du@huawei.com>
-Subject: [PATCH v4 3/5] perf: script: add field 'disasm' to display mnemonic instructions
-Date: Fri, 19 Jan 2024 18:48:54 +0800
-Message-ID: <20240119104856.3617986-4-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240119104856.3617986-1-changbin.du@huawei.com>
-References: <20240119104856.3617986-1-changbin.du@huawei.com>
+	s=arc-20240116; t=1705676470; c=relaxed/simple;
+	bh=5g/VRBSyUa+iW1jKewPy3IzLvCgCQnd3Skn6qtgX0n8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r7ZRTNncrUkIwTkUKZatz7FurvqTRpIiUA2eFjs8DMYAiWB19j+HnQApYXc10u/hQ5JZ1mLwMFYm2hfhz2/HsJblpW3DdvvqYiQL0GdCKipWoVzfRS5HtOKUco0DCNlobX+3Zhsfj7pEEimEF7WmSqI+4t1Nh1Ispp30dUcnAfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7171ADA7;
+	Fri, 19 Jan 2024 07:01:50 -0800 (PST)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD0F83F5A1;
+	Fri, 19 Jan 2024 07:01:01 -0800 (PST)
+Message-ID: <2f9131e4-1fdb-f80a-3b52-b98360164b3b@arm.com>
+Date: Fri, 19 Jan 2024 15:00:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
+Content-Language: en-US
+To: Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+ Ian Rogers <irogers@google.com>, acme@redhat.com, john.g.garry@oracle.com,
+ leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
+ namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com,
+ will@kernel.org
+References: <20240116170348.463479-1-mark.rutland@arm.com>
+ <8734uwxrca.wl-maz@kernel.org>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <8734uwxrca.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In addition to the 'insn' field, this adds a new field 'disasm' to
-display mnemonic instructions instead of the raw code.
 
-$ sudo perf script -F +disasm
-       perf-exec 1443864 [006] 2275506.209848:          psb:  psb offs: 0                                      0 [unknown] ([unknown])
-       perf-exec 1443864 [006] 2275506.209848:          cbr:  cbr: 41 freq: 4100 MHz (114%)                    0 [unknown] ([unknown])
-              ls 1443864 [006] 2275506.209905:          1  branches:uH:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: movq %rsp, %rdi
-              ls 1443864 [006] 2275506.209908:          1  branches:uH:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: callq _dl_start+0x0
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/perf-script.txt | 7 ++++---
- tools/perf/builtin-script.c              | 8 +++++++-
- 2 files changed, 11 insertions(+), 4 deletions(-)
+On 17/01/2024 09:05, Marc Zyngier wrote:
+> Hi Mark,
+> 
+> On Tue, 16 Jan 2024 17:03:48 +0000,
+> Mark Rutland <mark.rutland@arm.com> wrote:
+>>
+>> Currently the perf tool doesn't deteect support for extneded event types
+>> on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
+>> hardware events into per-PMU events. This is due to the detection of
+>> extended event types not handling mandatory filters required by the
+>> M1/M2 PMU driver.
+> 
+> Thanks for looking into this.
+> 
+> I've given your patch a go on my M1 box, and it indeed makes things
+> substantially better:
+> 
+> $ sudo ./perf stat -e cycles ~/hackbench 100 process 1000
+> Running with 100*40 (== 4000) tasks.
+> Time: 3.419
+> 
+>  Performance counter stats for '/home/maz/hackbench 100 process 1000':
+> 
+>    174,783,472,090      apple_firestorm_pmu/cycles/                                             (93.10%)
+>     39,134,744,813      apple_icestorm_pmu/cycles/                                              (71.86%)
+> 
+>        3.568145595 seconds time elapsed
+> 
+>       12.203084000 seconds user
+>       55.135271000 seconds sys
+> 
+> However, I'm seeing some slightly odd behaviours:
+> 
+> $ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
+> Running with 100*40 (== 4000) tasks.
+> Time: 3.313
+> 
+>  Performance counter stats for '/home/maz/hackbench 100 process 1000':
+> 
+>    <not supported>      apple_firestorm_pmu/cycles:k/                                         
+>    <not supported>      apple_icestorm_pmu/cycles:k/                                          
+> 
+>        3.467568841 seconds time elapsed
+> 
+>       13.080111000 seconds user
+>       53.162099000 seconds sys
+> 
+> I would have expected it to count, but it didn't. For that to work, I
+> have to add the 'H' modifier:
+> 
+> $ sudo ./perf stat -e cycles:Hk ~/hackbench 100 process 1000
+> Running with 100*40 (== 4000) tasks.
+> Time: 3.335
+> 
+>  Performance counter stats for '/home/maz/hackbench 100 process 1000':
+> 
+>    183,756,134,397      apple_firestorm_pmu/cycles:Hk/                                          (85.56%)
+>     37,302,841,991      apple_icestorm_pmu/cycles:Hk/                                           (72.10%)
+> 
+>        3.490138958 seconds time elapsed
+> 
+>       13.376772000 seconds user
+>       53.326289000 seconds sys
+> 
+> But my perf-foo is as basic as it gets, so it is likely that I'm
+> missing something.
+> 
+> Thanks,
+> 
+> 	M.
+> 
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index ff9a52e44688..fc79167c6bf8 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -132,9 +132,10 @@ OPTIONS
-         Comma separated list of fields to print. Options are:
-         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
--        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
--        phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
--        machine_pid, vcpu, cgroup, retire_lat.
-+        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-+        insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
-+        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-+
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-         e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 4817a37f16e2..12d886694f6c 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -135,6 +135,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_CGROUP          = 1ULL << 39,
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
- 	PERF_OUTPUT_DSOFF           = 1ULL << 41,
-+	PERF_OUTPUT_DISASM          = 1ULL << 42,
- };
- 
- struct perf_script {
-@@ -190,6 +191,7 @@ struct output_option {
- 	{.str = "bpf-output",   .field = PERF_OUTPUT_BPF_OUTPUT},
- 	{.str = "callindent", .field = PERF_OUTPUT_CALLINDENT},
- 	{.str = "insn", .field = PERF_OUTPUT_INSN},
-+	{.str = "disasm", .field = PERF_OUTPUT_DISASM},
- 	{.str = "insnlen", .field = PERF_OUTPUT_INSNLEN},
- 	{.str = "brstackinsn", .field = PERF_OUTPUT_BRSTACKINSN},
- 	{.str = "brstackoff", .field = PERF_OUTPUT_BRSTACKOFF},
-@@ -1515,6 +1517,10 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 		printed += fprintf(fp, " insn: ");
- 		printed += sample__fprintf_insn_raw(sample, fp);
- 	}
-+	if (PRINT_FIELD(DISASM) && sample->insn_len) {
-+		printed += fprintf(fp, " insn: ");
-+		printed += sample__fprintf_insn(sample, thread, machine, fp);
-+	}
- 	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
- 
-@@ -3900,7 +3906,7 @@ int cmd_script(int argc, const char **argv)
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
--		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
-+		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
- 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
- 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
- 		     parse_output_fields),
--- 
-2.25.1
+The default for exclude_guest=1 is always set unless you use "perf kvm
+record". But unfortunately if you add _any_ modifier then all the
+default values get overwritten, which is why adding k stops it from working.
 
+It seems like a lot of the pain comes from the fact that the command
+line modifiers are includes, and the kernel options are excludes.
+Resulting in some complicated logic in get_event_modifier() to try to
+work out what you wanted, which I suppose it got it wrong in this scenario.
+
+Another thing is that evsel__detect_missing_features() only works to
+remove arguments, where as for M1/M2 you want to _add_ exclude_guest
+back in again. But maybe not if you started adding modifiers...
+
+I don't really have an answer or a solution, but I was wondering if
+there was a bug that could be fixed so I went to look.
+
+My first thought was maybe we could ignore exclude_guest=0 on M1/M2
+rather than returning an error. I don't think it would be too surprising
+that guest samples are missing if they are never supported. Maybe the
+exclude_guest argument is only useful if it actually has an effect,
+rather than having an argument that always needs to be on anyway.
+
+Or secondly maybe we could make get_event_modifier() interact with
+evsel__detect_missing_features() but I can't imagine it being very
+maintainable once we start adding a few interactions. And it's still
+hard to predict what the user really wants given a single letter and
+many exclude_* options.
+
+James
