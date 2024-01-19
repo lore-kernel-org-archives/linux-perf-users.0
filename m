@@ -1,306 +1,108 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CC555E7D;
-	Fri, 19 Jan 2024 21:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0265822F;
+	Fri, 19 Jan 2024 21:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705699428; cv=none; b=tsUJ6GEGCcZhsv/ley+rdTzs69y0nOudqspsmnr9LlPRdqBmUdDMyU8a4AnzfmsfcneTJOBTE59/R6RoLfYu2Nv2BGE8PAPNM1sGoWdpPgpMlWUVJK6LAk7uMQXFdFYLN1opOlSaT1ICcPDEVpBxQm66mUdCgnQQBfc5BrgK5j4=
+	t=1705699740; cv=none; b=IPgxhz+N1muPrbLVrkvkSTqJSgEveGk9bvU/1shUnWByJtrpjAJtmNvwnO9amdzvJODQ4gIJj1YIsSuKSb2vXdUO/DnsmQIyIisFhi8Gbm0ycSudz5W2pXXad+Duxfk93VyQtr4ee1cAOB4gw3c906roA6AXYHeHGeWMeKwaY7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705699428; c=relaxed/simple;
-	bh=5pGOkAgL0BvnPNibzKD5liabxYpTjAX+9fUKzGRseNM=;
+	s=arc-20240116; t=1705699740; c=relaxed/simple;
+	bh=bkhrkchk6e5WhXZSlMcqDpSxsF/bbVQRA5gZJ/Q3Xj8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BEQveDomBxZ3jBg8M5+WCV35oRRZYV4yEKjaXdA/c28ECYZryM60jIL7Y7RddsvZ9fUXQ7yzieDB1ljlBmZxIu22a7baSXAbulbK3OWwXFf5t9/d0CNwmQr5J1Wna4nmr2M6utjO4QB53n2QwHNRryKFOJPEt25MY19T5rDxD40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
+	 To:Cc:Content-Type; b=YKTgbEB6erGwEXF/GaKwlDSyD66811W51qJIiM9iFzvk8pq0/W7CQLNMvbIRK+/AA/dmZQ+55oV2SxS4VMiw7mKrT8KcW3ZeRyocGkiYyMe8zV41KpC3v+M/0tlOvBRkqqMljAAMAKC/qbt7sqPERu6wJEHtN2XfmdnoKkCfjOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-29041136f73so937810a91.0;
-        Fri, 19 Jan 2024 13:23:47 -0800 (PST)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-28beb1d946fso1214589a91.0;
+        Fri, 19 Jan 2024 13:28:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705699427; x=1706304227;
+        d=1e100.net; s=20230601; t=1705699732; x=1706304532;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1EVXE7/8z8NJXJCCLOvAo4kEva6w42k4948H+6KUsEI=;
-        b=TmgTsO0NcMZqUEniQmrl5ksDoiXqwgfM+97l8cOOh2ZYAk3YU9MRjiT9D6UAszyxP8
-         3a9FsGEmG0wrrliq+InC9e+U1kQRjIlZuzj9517doCwT6diL15ZDhrw1/cf761fVBvcB
-         Ee83AceUtbClyx1+661ngJfHjrKD+o/Qi7hOYRvCt4Qw7Rt+rp0rQ+WsEZYZpmI6i9mj
-         dsISYLccvnnZu/VDKB1bqYV7LpN0oJ7t/lnF38RtgA1g8LAUnGhqgNwydqPDn/u//zSq
-         r4Uh6OsKRjM1aZNS8lNa7VyEM7TSdACvCgM6IMP6c+Qx03GUui5wsEqy+D27fwwTniR7
-         TmZQ==
-X-Gm-Message-State: AOJu0YyXlmhHc6B8m6gMmSKKW1iKFsV9dU/eG6j45i6IExaS1uGoH802
-	yDNilvMVJsGQtcb0eB4ViKXkPXg9fQjRXvWx6JN3WuR7nLGIs3o9L9a3tqV1LE3Fjwik11fGoXi
-	YxzOOIvefbADwrtO+gSoFykSMPwc=
-X-Google-Smtp-Source: AGHT+IGa0WZWAZyPnyBEd0clVtulCkhf1hHrqqBfieiTVMSs3+vSbI19UcWrHHb+p8VTlzql3gwCQH+4fUnE2FPvtec=
-X-Received: by 2002:a17:90a:bf13:b0:28e:7b98:b799 with SMTP id
- c19-20020a17090abf1300b0028e7b98b799mr361418pjs.93.1705699426518; Fri, 19 Jan
- 2024 13:23:46 -0800 (PST)
+        bh=J75bWmhp2Quw+RcG/QEGo3ztv3u8VxnZgR2K2QhevHg=;
+        b=mcfnX7cGubmvephtOaXPgMe8iou/53PxaM495WBTtUnh3PU8UcJEyORvWnEwWKtkLg
+         QHwBKP7P5LYnfdrsrM+h+3ZoyA+97uGLbaIfwFB3m9oUEsJP64sutcQ8ScUoHYHJ4Dl2
+         jqEKp7m14smvV3ftDAfGlyiIsW8WhsU4mbnZqOYdT4qKA5C4JbQ4uYmMInV9x/XLto+a
+         C2bTiopvcIJ92b9JC9b9WwR8+/u52mN9U2HEnmEpVbA0EHS4YvrQoq9K1KjsDnnGU1rn
+         Wk1nv9KdLx9Fur6EcE3GIW1LFljnLGjdwN/3/TI7e9Z093Wo0obziHir09Vik/6BPErI
+         wP/A==
+X-Gm-Message-State: AOJu0Yxjc+w2t9s8ZYFC24J7EuKx/Hf6doW+317HiWZ+7kNjApgDB5Hq
+	4UJKCet7/GADl4b3yW2lBaUvpiUfgsNB/RZFAJIRkKcdCkVM0p3Sv2L/X+q7xnnEZXqqoksaxKC
+	SfnaJXbd5JvghUO7tfWWW9JKNyKQ=
+X-Google-Smtp-Source: AGHT+IFb9qbUR5OmU+gqI+dATA2oLJsMVF/Ou6K6ihVjumyYOdueLOX++XoiOH3w1HnlqqvSxu5vdQHIfNYOVL1nC4k=
+X-Received: by 2002:a17:90b:3649:b0:28e:3b7f:a2a9 with SMTP id
+ nh9-20020a17090b364900b0028e3b7fa2a9mr353478pjb.48.1705699732267; Fri, 19 Jan
+ 2024 13:28:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231208022813.219673-1-namhyung@kernel.org>
-In-Reply-To: <20231208022813.219673-1-namhyung@kernel.org>
+References: <20240111081914.3123-1-adrian.hunter@intel.com>
+ <20240111081914.3123-11-adrian.hunter@intel.com> <87ply1lebh.fsf@linux.intel.com>
+ <60cc9fa8-e714-41d0-a82d-9c8a54dfde4e@intel.com>
+In-Reply-To: <60cc9fa8-e714-41d0-a82d-9c8a54dfde4e@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 19 Jan 2024 13:23:35 -0800
-Message-ID: <CAM9d7ciqM08uQx2-ahsOGhBR4S1RQwx4_vvL2MzMwz6oKGQVtQ@mail.gmail.com>
-Subject: Re: [PATCH] perf lock contention: Account contending locks too
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Song Liu <song@kernel.org>, Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Date: Fri, 19 Jan 2024 13:28:41 -0800
+Message-ID: <CAM9d7cg3T6DKoyDj4G7+9rQosqVKhCPpS0DZEXuLgbVwe+QM4w@mail.gmail.com>
+Subject: Re: [PATCH V4 10/11] perf intel-pt: Add documentation for pause / resume
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	James Clark <james.clark@arm.com>, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon <will@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Ping!
+Hello,
 
-On Thu, Dec 7, 2023 at 6:28=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
+On Tue, Jan 16, 2024 at 4:22=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
 >
-> Currently it accounts the contention using delta between timestamps in
-> lock:contention_begin and lock:contention_end tracepoints.  But it means
-> the lock should see the both events during the monitoring period.
+> On 16/01/24 13:15, Andi Kleen wrote:
+> > Adrian Hunter <adrian.hunter@intel.com> writes:
+> >> +
+> >> +For example, to trace only the uname system call (sys_newuname) when =
+running the
+> >> +command line utility uname:
+> >> +
+> >> + $ perf record --kcore -e
+> >> intel_pt/aux-action=3Dstart-paused/k,syscalls:sys_enter_newuname/aux-a=
+ction=3Dresume/,syscalls:sys_exit_newuname/aux-action=3Dpause/
+> >> uname
+> >
+> > It's unclear if the syntax works for hardware break points, kprobes, up=
+robes too?
 >
-> Actually there are 4 cases that happen with the monitoring:
+> Yes, the perf tool syntax requires only that the group leader is
+> an AUX area event like intel_pt.  Note that an attempt is made to
+> automatically group AUX area events with events with aux-action,
+> so grouping syntax like '{...}' is not always necessary.
+
+Depends on the position, right?  Maybe there can be other events
+without aux-action mixed with aux events.
+
+Thanks,
+Namhyung
+
 >
->                 monitoring period
->             /                       \
->             |                       |
->  1:  B------+-----------------------+--------E
->  2:    B----+-------------E         |
->  3:         |           B-----------+----E
->  4:         |     B-------------E   |
->             |                       |
->             t0                      t1
+> Note the current kernel implementation is called from
+> __perf_event_output() which is used in nearly all cases for the
+> output of samples, the exceptions being Intel BTS (which we do not
+> support at the same time as Intel PT, but wouldn't make much sense
+> anyway) and S390 cpumsf_output_event_pid().
 >
-> where B and E mean contention BEGIN and END, respectively.  So it only
-> accounts the case 4 for now.  It seems there's no way to handle the case
-> 1.  The case 2 might be handled if it saved the timestamp (t0), but it
-> lacks the information from the B notably the flags which shows the lock
-> types.  Also it could be a nested lock which it currently ignores.  So
-> I think we should ignore the case 2.
+> > That would be most useful. If it works would be good to add examples fo=
+r it.
 >
-> However we can handle the case 3 if we save the timestamp (t1) at the
-> end of the period.  And then it can iterate the map entries in the
-> userspace and update the lock stat accordinly.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/bpf_lock_contention.c         | 116 ++++++++++++++++++
->  .../perf/util/bpf_skel/lock_contention.bpf.c  |  16 +--
->  tools/perf/util/bpf_skel/lock_data.h          |   7 ++
->  3 files changed, 132 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
-lock_contention.c
-> index e105245eb905..2476459bf2ef 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -178,6 +178,119 @@ int lock_contention_prepare(struct lock_contention =
-*con)
->         return 0;
->  }
->
-> +static void mark_end_timestamp(void)
-> +{
-> +       DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
-> +               .flags =3D BPF_F_TEST_RUN_ON_CPU,
-> +       );
-> +       int prog_fd =3D bpf_program__fd(skel->progs.end_timestamp);
-> +
-> +       bpf_prog_test_run_opts(prog_fd, &opts);
-> +}
-> +
-> +static void update_lock_stat(int map_fd, int pid, u64 end_ts,
-> +                            enum lock_aggr_mode aggr_mode,
-> +                            struct tstamp_data *ts_data)
-> +{
-> +       u64 delta;
-> +       struct contention_key stat_key =3D {};
-> +       struct contention_data stat_data;
-> +
-> +       if (ts_data->timestamp >=3D end_ts)
-> +               return;
-> +
-> +       delta =3D end_ts - ts_data->timestamp;
-> +
-> +       switch (aggr_mode) {
-> +       case LOCK_AGGR_CALLER:
-> +               stat_key.stack_id =3D ts_data->stack_id;
-> +               break;
-> +       case LOCK_AGGR_TASK:
-> +               stat_key.pid =3D pid;
-> +               break;
-> +       case LOCK_AGGR_ADDR:
-> +               stat_key.lock_addr_or_cgroup =3D ts_data->lock;
-> +               break;
-> +       case LOCK_AGGR_CGROUP:
-> +               /* TODO */
-> +               return;
-> +       default:
-> +               return;
-> +       }
-> +
-> +       if (bpf_map_lookup_elem(map_fd, &stat_key, &stat_data) < 0)
-> +               return;
-> +
-> +       stat_data.total_time +=3D delta;
-> +       stat_data.count++;
-> +
-> +       if (delta > stat_data.max_time)
-> +               stat_data.max_time =3D delta;
-> +       if (delta < stat_data.min_time)
-> +               stat_data.min_time =3D delta;
-> +
-> +       bpf_map_update_elem(map_fd, &stat_key, &stat_data, BPF_EXIST);
-> +}
-> +
-> +/*
-> + * Account entries in the tstamp map (which didn't see the corresponding
-> + * lock:contention_end tracepoint) using end_ts.
-> + */
-> +static void account_end_timestamp(struct lock_contention *con)
-> +{
-> +       int ts_fd, stat_fd;
-> +       int *prev_key, key;
-> +       u64 end_ts =3D skel->bss->end_ts;
-> +       int total_cpus;
-> +       enum lock_aggr_mode aggr_mode =3D con->aggr_mode;
-> +       struct tstamp_data ts_data, *cpu_data;
-> +
-> +       /* Iterate per-task tstamp map (key =3D TID) */
-> +       ts_fd =3D bpf_map__fd(skel->maps.tstamp);
-> +       stat_fd =3D bpf_map__fd(skel->maps.lock_stat);
-> +
-> +       prev_key =3D NULL;
-> +       while (!bpf_map_get_next_key(ts_fd, prev_key, &key)) {
-> +               if (bpf_map_lookup_elem(ts_fd, &key, &ts_data) =3D=3D 0) =
-{
-> +                       int pid =3D key;
-> +
-> +                       if (aggr_mode =3D=3D LOCK_AGGR_TASK && con->owner=
-)
-> +                               pid =3D ts_data.flags;
-> +
-> +                       update_lock_stat(stat_fd, pid, end_ts, aggr_mode,
-> +                                        &ts_data);
-> +               }
-> +
-> +               prev_key =3D &key;
-> +       }
-> +
-> +       /* Now it'll check per-cpu tstamp map which doesn't have TID. */
-> +       if (aggr_mode =3D=3D LOCK_AGGR_TASK || aggr_mode =3D=3D LOCK_AGGR=
-_CGROUP)
-> +               return;
-> +
-> +       total_cpus =3D cpu__max_cpu().cpu;
-> +       ts_fd =3D bpf_map__fd(skel->maps.tstamp_cpu);
-> +
-> +       cpu_data =3D calloc(total_cpus, sizeof(*cpu_data));
-> +       if (cpu_data =3D=3D NULL)
-> +               return;
-> +
-> +       prev_key =3D NULL;
-> +       while (!bpf_map_get_next_key(ts_fd, prev_key, &key)) {
-> +               if (bpf_map_lookup_elem(ts_fd, &key, cpu_data) < 0)
-> +                       goto next;
-> +
-> +               for (int i =3D 0; i < total_cpus; i++) {
-> +                       update_lock_stat(stat_fd, -1, end_ts, aggr_mode,
-> +                                        &cpu_data[i]);
-> +               }
-> +
-> +next:
-> +               prev_key =3D &key;
-> +       }
-> +       free(cpu_data);
-> +}
-> +
->  int lock_contention_start(void)
->  {
->         skel->bss->enabled =3D 1;
-> @@ -187,6 +300,7 @@ int lock_contention_start(void)
->  int lock_contention_stop(void)
->  {
->         skel->bss->enabled =3D 0;
-> +       mark_end_timestamp();
->         return 0;
->  }
->
-> @@ -300,6 +414,8 @@ int lock_contention_read(struct lock_contention *con)
->         if (stack_trace =3D=3D NULL)
->                 return -1;
->
-> +       account_end_timestamp(con);
-> +
->         if (con->aggr_mode =3D=3D LOCK_AGGR_TASK) {
->                 struct thread *idle =3D __machine__findnew_thread(machine=
-,
->                                                                 /*pid=3D*=
-/0,
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
-util/bpf_skel/lock_contention.bpf.c
-> index 95cd8414f6ef..fb54bd38e7d0 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -19,13 +19,6 @@
->  #define LCB_F_PERCPU   (1U << 4)
->  #define LCB_F_MUTEX    (1U << 5)
->
-> -struct tstamp_data {
-> -       __u64 timestamp;
-> -       __u64 lock;
-> -       __u32 flags;
-> -       __s32 stack_id;
-> -};
-> -
->  /* callstack storage  */
->  struct {
->         __uint(type, BPF_MAP_TYPE_STACK_TRACE);
-> @@ -140,6 +133,8 @@ int perf_subsys_id =3D -1;
->  /* determine the key of lock stat */
->  int aggr_mode;
->
-> +__u64 end_ts;
-> +
->  /* error stat */
->  int task_fail;
->  int stack_fail;
-> @@ -559,4 +554,11 @@ int BPF_PROG(collect_lock_syms)
->         return 0;
->  }
->
-> +SEC("raw_tp/bpf_test_finish")
-> +int BPF_PROG(end_timestamp)
-> +{
-> +       end_ts =3D bpf_ktime_get_ns();
-> +       return 0;
-> +}
-> +
->  char LICENSE[] SEC("license") =3D "Dual BSD/GPL";
-> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_s=
-kel/lock_data.h
-> index 08482daf61be..36af11faad03 100644
-> --- a/tools/perf/util/bpf_skel/lock_data.h
-> +++ b/tools/perf/util/bpf_skel/lock_data.h
-> @@ -3,6 +3,13 @@
->  #ifndef UTIL_BPF_SKEL_LOCK_DATA_H
->  #define UTIL_BPF_SKEL_LOCK_DATA_H
->
-> +struct tstamp_data {
-> +       u64 timestamp;
-> +       u64 lock;
-> +       u32 flags;
-> +       u32 stack_id;
-> +};
-> +
->  struct contention_key {
->         u32 stack_id;
->         u32 pid;
-> --
-> 2.43.0.472.g3155946c3a-goog
+> OK
 >
