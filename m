@@ -1,139 +1,117 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664381871;
-	Fri, 19 Jan 2024 04:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DEA63DF;
+	Fri, 19 Jan 2024 05:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705637258; cv=none; b=rsxbQzlZ03drC0st5hFOACPWVwCYe3M4jECLV7FPKYFOpbP5uxSDSSkbayn8qsvcq+ZiSo6xTgaXXKW3ACt6R0U7KIk7QsXma9jwsE+hriV6wbnjQu4/Dcw5DCtw0Vgx5NHB62YaC3RdH8aygYkEIhgGh1FPEAw9xzjP0m1lSQ8=
+	t=1705641281; cv=none; b=tRnEaAWmuF7F3YW9SJKIRkarQ2+VPt5iMKWSItl2beUTCD3iVPmmRSOeFufwFGocKWbpU5LQEMEq2PX/Dr1jQ7lsPUbIwANK/ohKkIPVAf5piiUVzrUYQ7YKAavkjXGhTzav0aE3HZ5eK02Af0MfUBmiswsTzwQeWBXNkmol8vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705637258; c=relaxed/simple;
-	bh=qFcJAeGQC/MUYwBQAJZbuMyx6H16t+7Cin7A5eBF4Bw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FXkvqHRrnWHzJcWbMpHZE0dgRr+daxR64+6R3jIKgidn6y1z2BJYRYB7UWQXV1kqpWFkJfflOUlevCrThCT8A6Rhh+5OQTk5flA1AIM10NxCdFyLdGg6DQDXrTYh38uliVf1zYtWH/AHFO5/sz0nMkRLMKdulcZfU9F1lTAmPno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TGR004HJkzGpqC;
-	Fri, 19 Jan 2024 12:07:12 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id 34C6818005B;
-	Fri, 19 Jan 2024 12:07:33 +0800 (CST)
-Received: from ubuntu2204.huawei.com (10.67.174.22) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 19 Jan 2024 12:07:32 +0800
-From: Yang Jihong <yangjihong1@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <yangjihong1@huawei.com>
-Subject: [PATCH 2/3] perf record: Check conflict between '--timestamp-filename' option and pipe mode before recording
-Date: Fri, 19 Jan 2024 04:03:03 +0000
-Message-ID: <20240119040304.3708522-3-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240119040304.3708522-1-yangjihong1@huawei.com>
-References: <20240119040304.3708522-1-yangjihong1@huawei.com>
+	s=arc-20240116; t=1705641281; c=relaxed/simple;
+	bh=gxSzQTf6jmvbBw8nozGpd8UPCbitPnoQAkYe8hXwxzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j6FNoxrUUQyEDi8bPmDJzVglTei79cUkAbGIjnWO3AKtjFfNRFORcK3J27btLp0dSiS53CBrNxQrYTHQdqjJLYubsq67P7e3UlWH66+ThiggV1Mv0l+UtII9wT5fRgElFZqvvQBBaFnb/yLzptyG6Lna6ujvWv+rj3pEpFC++20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2904d8c29d2so107402a91.2;
+        Thu, 18 Jan 2024 21:14:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705641279; x=1706246079;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Heknx9B9Mq2DzjyZ9n1MXLrOGgOlHXA+fVx4XEJEn/0=;
+        b=CYbMyxcmXowrS52QWvD/8JevCnO7/i+Pbkz/42BPI+wM6YehzfX9dGmjK6y8HCCP6W
+         QG9ztqDB5lpqBHjz7UZJl+fIHLGLmTx3viNV0KrDRxmA55FlAicvG1aA5j2msJdztPH5
+         4kK+YYiamk1cmkh2u6aqcKkHKC6q6d0kpo5vpNssviA8Szq28gCjLhB+Rq656W/kW5yy
+         SfFZdTDZSyzZKnXaLGQHgM+TsX4/84O2Da2YqqdOegFc7meNAYWpAU48Bo9xRgxS2jzd
+         Oyhc4ee1yfanyEnuqr0rurE0Wz6ZASD4tsrfcsHuaGnT/z5eDBnfTfkcyFPwKss6ihjE
+         Ie/A==
+X-Gm-Message-State: AOJu0Yx5mBax5oksczVgQbVE0rSCb2AzoBpY1zSec5RJZm6P62FvUdxH
+	BCIdoH29b9UBIafnwSwYMf//PzRo+BOerwy/E8sxHgsAzhJD84m/sMKpL0Cc1FtRLsSbSmCAV1+
+	6xz2o4VWf79jS5kfruZJUskhdg7A=
+X-Google-Smtp-Source: AGHT+IEx04eW1wXaAKULD9Iv+dN8GjXTCGGwNL09a3nQ8jcBhD8NNbebPOh7vIxUq5iQSikVmgxSPzQvDqrlsxNVMhI=
+X-Received: by 2002:a17:90a:242:b0:28e:79cf:f1f1 with SMTP id
+ t2-20020a17090a024200b0028e79cff1f1mr1562868pje.80.1705641279389; Thu, 18 Jan
+ 2024 21:14:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+References: <20240119001352.9396-1-khuey@kylehuey.com> <20240119001352.9396-4-khuey@kylehuey.com>
+In-Reply-To: <20240119001352.9396-4-khuey@kylehuey.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 18 Jan 2024 21:14:27 -0800
+Message-ID: <CAM9d7cgK_uKtPk_pz6WTCUNdaQWdLg=e3oq6Ah3fG8=DzxN+0g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] perf/bpf: Allow a bpf program to suppress all
+ sample side effects
+To: Kyle Huey <me@kylehuey.com>
+Cc: Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org, 
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Marco Elver <elver@google.com>, Yonghong Song <yonghong.song@linux.dev>, Song Liu <song@kernel.org>, 
+	"Robert O'Callahan" <robert@ocallahan.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In pipe mode, no need to switch perf data output, therefore,
-'--timestamp-filename' option should not take effect.
-Check the conflict before recording and output WARNING.
-In this case, the check pipe mode in perf_data__switch() can be removed.
+Hello,
 
-Before:
+On Thu, Jan 18, 2024 at 4:14=E2=80=AFPM Kyle Huey <me@kylehuey.com> wrote:
+>
+> Returning zero from a bpf program attached to a perf event already
+> suppresses any data output. Return early from __perf_event_overflow() in
+> this case so it will also suppress event_limit accounting, SIGTRAP
+> generation, and F_ASYNC signalling.
+>
+> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> Acked-by: Song Liu <song@kernel.org>
 
-  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Dump -.2024011812110182 ]
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 4K of event 'cycles:P'
-  # Event count (approx.): 2176784359
-  #
-  # Overhead  Command  Shared Object         Symbol
-  # ........  .......  ....................  ......................................
-  #
-      97.83%  perf     perf                  [.] noploop
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-  #
-  # (Tip: Print event counts in CSV format with: perf stat -x,)
-  #
+Thanks,
+Namhyung
 
-After:
 
-  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
-  WARNING: --timestamp-filename option is not available in pipe mode.
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB - ]
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 4K of event 'cycles:P'
-  # Event count (approx.): 2185575421
-  #
-  # Overhead  Command  Shared Object          Symbol
-  # ........  .......  .....................  .............................................
-  #
-      97.75%  perf     perf                   [.] noploop
-
-  #
-  # (Tip: Profiling branch (mis)predictions with: perf record -b / perf report)
-  #
-
-Fixes: ecfd7a9c044e ("perf record: Add '--timestamp-filename' option to append timestamp to output file name")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/builtin-record.c | 5 +++++
- tools/perf/util/data.c      | 2 --
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index fb8d4067b76c..5e3ea5cf1429 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2472,6 +2472,11 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	if (data->is_pipe && rec->evlist->core.nr_entries == 1)
- 		rec->opts.sample_id = true;
- 
-+	if (rec->timestamp_filename && perf_data__is_pipe(data)) {
-+		rec->timestamp_filename = false;
-+		pr_warning("WARNING: --timestamp-filename option is not available in pipe mode.\n");
-+	}
-+
- 	evlist__uniquify_name(rec->evlist);
- 
- 	/* Debug message used by test scripts */
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index c29d8a382b19..550675ce0b78 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -430,8 +430,6 @@ int perf_data__switch(struct perf_data *data,
- {
- 	int ret;
- 
--	if (check_pipe(data))
--		return -EINVAL;
- 	if (perf_data__is_read(data))
- 		return -EINVAL;
- 
--- 
-2.34.1
-
+> ---
+>  kernel/events/core.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 24a718e7eb98..a329bec42c4d 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9574,6 +9574,11 @@ static int __perf_event_overflow(struct perf_event=
+ *event,
+>
+>         ret =3D __perf_event_account_interrupt(event, throttle);
+>
+> +#ifdef CONFIG_BPF_SYSCALL
+> +       if (event->prog && !bpf_overflow_handler(event, data, regs))
+> +               return ret;
+> +#endif
+> +
+>         /*
+>          * XXX event_limit might not quite work as expected on inherited
+>          * events
+> @@ -9623,10 +9628,7 @@ static int __perf_event_overflow(struct perf_event=
+ *event,
+>                 irq_work_queue(&event->pending_irq);
+>         }
+>
+> -#ifdef CONFIG_BPF_SYSCALL
+> -       if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
+> -#endif
+> -               READ_ONCE(event->overflow_handler)(event, data, regs);
+> +       READ_ONCE(event->overflow_handler)(event, data, regs);
+>
+>         if (*perf_event_fasync(event) && event->pending_kill) {
+>                 event->pending_wakeup =3D 1;
+> --
+> 2.34.1
+>
