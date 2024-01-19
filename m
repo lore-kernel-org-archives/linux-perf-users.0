@@ -1,171 +1,290 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29A82E3E1;
-	Fri, 19 Jan 2024 18:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A9357302;
+	Fri, 19 Jan 2024 21:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705689630; cv=none; b=obEEkLPDzW8h28J6U8n5KxuM3UwH6gwF9q/VXXaGRxUb10r29BWoVf1j8ETm40KHpZbKrpoDORnZufuTgx14Bd7FDyPdPbSy6EOCETIOFsG04DxTZaCKvJaxlQS5sIZCgKkV4VgvF8cUmqRQiXreFoAu4DAOt4i8aH2XUarqwvI=
+	t=1705698082; cv=none; b=AIZ2NhrKof8Rf98eZV3kRglrMMleiXBpRo2TSDG+OvpuUaSQ7VxNpMJzToiQbW5GZfebgED2VXlMqwfq35aBDcR2xThYg3euR4XxkUQG7ViDMvPc1onbCxZmi8KyRqtWtRVPQMVsB60ldJjArmaZ7GkGFCPZm18M6QB6eUJ9yQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705689630; c=relaxed/simple;
-	bh=5m8msFh7nqEp42yc2uI9YbR41y1ZDp/mYMLA7+pSIh4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N2JhTTBOLDByGP8VS0fv6J8MzGeKPPcSKu1n9XA3DTgBCGID2fDrwQsb5WlxnnIqyno6BpG7jCeFkECIAXS3TOo97K9mF3THM9n7s4T0XmZ93LGWq0U79kqSHdZ13MpTPjQuImI0SR9aksyUd76hL8tNIt88enETwKE9d5eJwxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VtCjUuuu; arc=none smtp.client-ip=134.134.136.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VtCjUuuu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705689628; x=1737225628;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5m8msFh7nqEp42yc2uI9YbR41y1ZDp/mYMLA7+pSIh4=;
-  b=VtCjUuuumnabo0D4sw76qB7bpKdMFSjra9SjHGj57YZs2SaCIz+0KbKj
-   uYXQBrV/SgM6zDWtR3HRg1g37CIAnUP6j3xs52+IJh92Y0KSCcvpiyTLv
-   8UNraakU/AM0SoHBOsyqkxXRJb1kLbPld4fvA2/h8FFvAddvUx8O7u8ll
-   lxIubM4TPb1PKpABpBk79emJLKeF+BDcKRrZ9Xs/6/Nrzc7lQivyxYNnh
-   H1fywR8Z2BOS3GoxO1PPp7MSAU1qllLzbxT6PNp8zg9X+nRIWN8zRNAYK
-   ioFsoSInPXKrlmD3mlli3CFPQIn2Km966MKY+62xB4qbv9Yh4sGfVg2el
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="404578946"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="404578946"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 10:40:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="778042862"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="778042862"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.39.208])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 10:40:23 -0800
-Message-ID: <adb07ef9-4609-4cb4-b5e4-8e0af00bac16@intel.com>
-Date: Fri, 19 Jan 2024 20:40:20 +0200
+	s=arc-20240116; t=1705698082; c=relaxed/simple;
+	bh=v4s0HXJ/I8JQ3heLTrKQMmV7i3OSZG42/QKaEOyi/lU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dH64xK5RSvWxa2UVx52IlK+NlBpbejlrnQcOzl5+mpA19mjdFEKPj1VM/cm6+8DWp/uMoDLUMgYfVSgOp3/zUN/4eE5XybdlFOmEUGzHcZJmZ5SNXtx4c9JwILsnxjYQZZ9irw3SmW0sA0LVLB+jy3DnbCvrJ9M3gGYzTW/xSjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6dbb003be79so1512271b3a.0;
+        Fri, 19 Jan 2024 13:01:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705698080; x=1706302880;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7lj50u8kXspOZzoOFdiIZuTON2LhOLKNsOg0lxXWMDQ=;
+        b=XMR0nlj8pGMXTRY5p7TtXTI2xTm4OvfDDRgpG0hba3OR2rBUqdI8o/h4Wthxf+S1lE
+         /tjAl9RSSl9Wcf5x4Miy+wGzmGef+BGNWU7CU/eIK8WXQWJzL+HTtaTBHk3c69ZhszBK
+         739NwAijX6zbp7M4BCZ+D8CUou7/wKXb5PbCM7hXCsWTcDNlI1zSTgx3p3NSKbbpxG6F
+         JlZV2bX9GNTrkf1HH3Ei6Qp3h12y14KRjyz+InRdgtdDGICXCkRrf2uuu5doTvpeHF4e
+         bmBGAH9VOq5kOw4qpGH7OAwyibZSVNET9OYa3Jul/PMfArpOSr7wenGM5dgLSJos4Fe8
+         xB/w==
+X-Gm-Message-State: AOJu0YzQuzOIf3yPM2Lbk3+LspOpSC1i+tjpF4+hv6za38O27/O7ltEG
+	oG/lmA2+E/NTAdSNVihXOc/FHGKYk7iw2OuYJvCYjxiNVpwIVPr7ADY954KwLNz0Ad+t32qEoiy
+	clo+/rwFoqp3xrqmCYkB9xbEyuRXGL7sM
+X-Google-Smtp-Source: AGHT+IE62CtDRQvCVg1v07ioRTxcJGM1k8mWFDMDqxbK7QUYh05SHUHWNFcXBpKg1rcDfhI2X+X04b436xuCavptkuw=
+X-Received: by 2002:a17:90b:3642:b0:28d:fd67:fa9c with SMTP id
+ nh2-20020a17090b364200b0028dfd67fa9cmr637793pjb.37.1705698079688; Fri, 19 Jan
+ 2024 13:01:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] perf: script: prefer capstone to XED
-Content-Language: en-US
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
- Thomas Richter <tmricht@linux.ibm.com>, changbin.du@gmail.com,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20240119104856.3617986-1-changbin.du@huawei.com>
- <20240119104856.3617986-6-changbin.du@huawei.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240119104856.3617986-6-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240111204348.669673-2-namhyung@kernel.org> <202401191023.d52a4ad4-oliver.sang@intel.com>
+In-Reply-To: <202401191023.d52a4ad4-oliver.sang@intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 19 Jan 2024 13:01:08 -0800
+Message-ID: <CAM9d7cjPAB5OpwgeBeuYkPbU6L+0+0FOJyBq=0HL+uOar275mQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf/core: Reduce PMU access to adjust sample freq
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mingwei Zhang <mizhang@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19/01/24 12:48, Changbin Du wrote:
-> Now perf can show assembly instructions with libcapstone for x86, and the
-> capstone is better in general.
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
->  tools/perf/Documentation/perf-intel-pt.txt | 11 +++++------
->  tools/perf/ui/browsers/res_sample.c        |  2 +-
->  tools/perf/ui/browsers/scripts.c           |  2 +-
->  3 files changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-> index 2109690b0d5f..8e62f23f7178 100644
-> --- a/tools/perf/Documentation/perf-intel-pt.txt
-> +++ b/tools/perf/Documentation/perf-intel-pt.txt
-> @@ -115,9 +115,8 @@ toggle respectively.
->  
->  perf script also supports higher level ways to dump instruction traces:
->  
-> -	perf script --insn-trace --xed
-> +	perf script --insn-trace=disasm
+Hello,
 
-Please add also:
+On Thu, Jan 18, 2024 at 6:41=E2=80=AFPM kernel test robot <oliver.sang@inte=
+l.com> wrote:
+>
+>
+>
+> Hello,
+>
+> kernel test robot noticed "WARNING:at_arch/x86/events/core.c:#x86_pmu_sta=
+rt" on:
+>
+> commit: d6da92786f901cc4ce3588f101182758da295dbb ("[PATCH v2 2/2] perf/co=
+re: Reduce PMU access to adjust sample freq")
+> url: https://github.com/intel-lab-lkp/linux/commits/namhyung-kernel-org/p=
+erf-core-Reduce-PMU-access-to-adjust-sample-freq/20240112-044505
+> base: https://git.kernel.org/cgit/linux/kernel/git/perf/perf-tools-next.g=
+it perf-tools-next
+> patch link: https://lore.kernel.org/all/20240111204348.669673-2-namhyung@=
+kernel.org/
+> patch subject: [PATCH v2 2/2] perf/core: Reduce PMU access to adjust samp=
+le freq
+>
+> in testcase: will-it-scale
+> version: will-it-scale-x86_64-75f66e4-1_20240111
+> with following parameters:
+>
+>         nr_task: 16
+>         mode: thread
+>         test: pipe1
+>         cpufreq_governor: performance
+>
+>
+>
+> compiler: gcc-12
+> test machine: 104 threads 2 sockets (Skylake) with 192G memory
+>
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
 
-or to use the xed disassembler, which requires installing the xed tool
-(see XED below):
+Thanks for the report.  It seems the code calls x86_pmu_stop() without
+PERF_EF_UPDATE so we cannot simply skip the stop callback for
+frequency events.  I'll update it in v3.
 
-	perf script --insn-trace --xed
+Thanks,
+Namhyung
 
->  
-> -Dump all instructions. This requires installing the xed tool (see XED below)
->  Dumping all instructions in a long trace can be fairly slow. It is usually better
->  to start with higher level decoding, like
->  
-> @@ -130,12 +129,12 @@ or
->  and then select a time range of interest. The time range can then be examined
->  in detail with
->  
-> -	perf script --time starttime,stoptime --insn-trace --xed
-> +	perf script --time starttime,stoptime --insn-trace=disasm
->  
->  While examining the trace it's also useful to filter on specific CPUs using
->  the -C option
->  
-> -	perf script --time starttime,stoptime --insn-trace --xed -C 1
-> +	perf script --time starttime,stoptime --insn-trace=disasm -C 1
->  
->  Dump all instructions in time range on CPU 1.
->  
-> @@ -1306,7 +1305,7 @@ Without timestamps, --per-thread must be specified to distinguish threads.
->  
->  perf script can be used to provide an instruction trace
->  
-> - $ perf script --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-> + $ perf script --guestkallsyms $KALLSYMS --insn-trace=disasm -F+ipc | grep -C10 vmresume | head -21
->         CPU 0/KVM  1440  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                movq  0x48(%rax), %r9
->         CPU 0/KVM  1440  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                movq  0x50(%rax), %r10
->         CPU 0/KVM  1440  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                movq  0x58(%rax), %r11
-> @@ -1407,7 +1406,7 @@ There were none.
->  
->  'perf script' can be used to provide an instruction trace showing timestamps
->  
-> - $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-> + $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace=disasm -F+ipc | grep -C10 vmresume | head -21
->         CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                 movq  0x48(%rax), %r9
->         CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                 movq  0x50(%rax), %r10
->         CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                 movq  0x58(%rax), %r11
-> diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-> index 7cb2d6678039..1022baefaf45 100644
-> --- a/tools/perf/ui/browsers/res_sample.c
-> +++ b/tools/perf/ui/browsers/res_sample.c
-> @@ -83,7 +83,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
->  		     r->tid ? "--tid " : "",
->  		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
->  		     extra_format,
-> -		     rstype == A_ASM ? "-F +insn --xed" :
-> +		     rstype == A_ASM ? "-F +insn_disasm" :
-
-insn_disasm -> disasm
-
->  		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
->  		     symbol_conf.inline_name ? "--inline" : "",
->  		     "--show-lost-events ",
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> index 47d2c7a8cbe1..3efc76c621c4 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -107,7 +107,7 @@ static int list_scripts(char *script_name, bool *custom,
->  	if (evsel)
->  		attr_to_script(scriptc.extra_format, &evsel->core.attr);
->  	add_script_option("Show individual samples", "", &scriptc);
-> -	add_script_option("Show individual samples with assembler", "-F +insn --xed",
-> +	add_script_option("Show individual samples with assembler", "-F +insn_disasm",
-
-insn_disasm -> disasm
-
->  			  &scriptc);
->  	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
->  			  &scriptc);
-
+>
+>
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202401191023.d52a4ad4-oliver.san=
+g@intel.com
+>
+>
+> [  102.087071][   C94] ------------[ cut here ]------------
+> [ 102.092623][ C94] WARNING: CPU: 94 PID: 0 at arch/x86/events/core.c:150=
+7 x86_pmu_start (arch/x86/events/core.c:1507 (discriminator 1))
+> [  102.101826][   C94] Modules linked in: intel_rapl_msr intel_rapl_commo=
+n skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp btrfs coret=
+emp blake2b_generic xor kvm_intel kvm raid6_pq libcrc32c irqbypass crct10di=
+f_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel sha512_ssse3 sd_mod =
+sg rapl ipmi_ssif nvme nvme_core ahci intel_cstate acpi_ipmi t10_pi libahci=
+ ast crc64_rocksoft_generic drm_shmem_helper mei_me ipmi_si crc64_rocksoft =
+i2c_i801 ioatdma libata intel_uncore drm_kms_helper joydev crc64 mei ipmi_d=
+evintf lpc_ich i2c_smbus intel_pch_thermal dca wmi ipmi_msghandler acpi_pad=
+ acpi_power_meter drm fuse ip_tables
+> [  102.158393][   C94] CPU: 94 PID: 0 Comm: swapper/94 Not tainted 6.7.0-=
+rc6-00192-gd6da92786f90 #1
+> [ 102.167472][ C94] RIP: 0010:x86_pmu_start (arch/x86/events/core.c:1507 =
+(discriminator 1))
+> [ 102.172832][ C94] Code: 00 00 4c 0f ab 65 00 48 89 df e8 16 08 01 00 48=
+ 89 df 5b 5d 41 5c e9 4a c6 33 00 0f 0b 5b 5d 41 5c c3 cc cc cc cc 0f 0b eb=
+ f3 <0f> 0b eb b6 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 2e 0f 1f 84 00
+> All code
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>    0:   00 00                   add    %al,(%rax)
+>    2:   4c 0f ab 65 00          bts    %r12,0x0(%rbp)
+>    7:   48 89 df                mov    %rbx,%rdi
+>    a:   e8 16 08 01 00          callq  0x10825
+>    f:   48 89 df                mov    %rbx,%rdi
+>   12:   5b                      pop    %rbx
+>   13:   5d                      pop    %rbp
+>   14:   41 5c                   pop    %r12
+>   16:   e9 4a c6 33 00          jmpq   0x33c665
+>   1b:   0f 0b                   ud2
+>   1d:   5b                      pop    %rbx
+>   1e:   5d                      pop    %rbp
+>   1f:   41 5c                   pop    %r12
+>   21:   c3                      retq
+>   22:   cc                      int3
+>   23:   cc                      int3
+>   24:   cc                      int3
+>   25:   cc                      int3
+>   26:   0f 0b                   ud2
+>   28:   eb f3                   jmp    0x1d
+>   2a:*  0f 0b                   ud2             <-- trapping instruction
+>   2c:   eb b6                   jmp    0xffffffffffffffe4
+>   2e:   66 66 2e 0f 1f 84 00    data16 nopw %cs:0x0(%rax,%rax,1)
+>   35:   00 00 00 00
+>   39:   66                      data16
+>   3a:   66                      data16
+>   3b:   2e                      cs
+>   3c:   0f                      .byte 0xf
+>   3d:   1f                      (bad)
+>   3e:   84 00                   test   %al,(%rax)
+>
+> Code starting with the faulting instruction
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>    0:   0f 0b                   ud2
+>    2:   eb b6                   jmp    0xffffffffffffffba
+>    4:   66 66 2e 0f 1f 84 00    data16 nopw %cs:0x0(%rax,%rax,1)
+>    b:   00 00 00 00
+>    f:   66                      data16
+>   10:   66                      data16
+>   11:   2e                      cs
+>   12:   0f                      .byte 0xf
+>   13:   1f                      (bad)
+>   14:   84 00                   test   %al,(%rax)
+> [  102.192917][   C94] RSP: 0018:ffffc9000ddb0e00 EFLAGS: 00010046
+> [  102.199175][   C94] RAX: 0000000000000001 RBX: ffff88b01d17a290 RCX: 0=
+000000000000349
+> [  102.207339][   C94] RDX: 0000000000002ff0 RSI: 0000000000000002 RDI: f=
+fff88b01d17a290
+> [  102.215509][   C94] RBP: ffff88afa149a220 R08: 0000000000000000 R09: 0=
+000000000000014
+> [  102.223684][   C94] R10: 000000000000000f R11: 00000000000f4240 R12: 0=
+000000000000003
+> [  102.231855][   C94] R13: 0000000000000001 R14: ffff88afa14b9680 R15: 0=
+00000000000005e
+> [  102.240038][   C94] FS:  0000000000000000(0000) GS:ffff88afa1480000(00=
+00) knlGS:0000000000000000
+> [  102.249178][   C94] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  102.255986][   C94] CR2: 00007f9cdf69ec98 CR3: 000000303e01c002 CR4: 0=
+0000000007706f0
+> [  102.264179][   C94] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0=
+000000000000000
+> [  102.272365][   C94] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0=
+000000000000400
+> [  102.280552][   C94] PKRU: 55555554
+> [  102.284322][   C94] Call Trace:
+> [  102.287830][   C94]  <IRQ>
+> [ 102.290895][ C94] ? x86_pmu_start (arch/x86/events/core.c:1507 (discrim=
+inator 1))
+> [ 102.295695][ C94] ? __warn (kernel/panic.c:677)
+> [ 102.299980][ C94] ? x86_pmu_start (arch/x86/events/core.c:1507 (discrim=
+inator 1))
+> [ 102.304768][ C94] ? report_bug (lib/bug.c:180 lib/bug.c:219)
+> [ 102.309473][ C94] ? handle_bug (arch/x86/kernel/traps.c:237)
+> [ 102.314006][ C94] ? exc_invalid_op (arch/x86/kernel/traps.c:258 (discri=
+minator 1))
+> [ 102.318879][ C94] ? asm_exc_invalid_op (arch/x86/include/asm/idtentry.h=
+:568)
+> [ 102.324101][ C94] ? x86_pmu_start (arch/x86/events/core.c:1507 (discrim=
+inator 1))
+> [ 102.328888][ C94] perf_adjust_freq_unthr_events (kernel/events/core.c:4=
+181 (discriminator 4))
+> [ 102.335069][ C94] perf_adjust_freq_unthr_context (kernel/events/core.c:=
+4216)
+> [ 102.341244][ C94] perf_event_task_tick (arch/x86/include/asm/current.h:=
+41 kernel/events/core.c:4363)
+> [ 102.346458][ C94] scheduler_tick (kernel/sched/core.c:5665)
+> [ 102.351240][ C94] update_process_times (kernel/time/timer.c:2079)
+> [ 102.356442][ C94] tick_sched_handle (kernel/time/tick-sched.c:256)
+> [ 102.361381][ C94] tick_nohz_highres_handler (kernel/time/tick-sched.c:1=
+525)
+> [ 102.367021][ C94] ? __pfx_tick_nohz_highres_handler (kernel/time/tick-s=
+ched.c:1503)
+> [ 102.373345][ C94] __hrtimer_run_queues (kernel/time/hrtimer.c:1688 kern=
+el/time/hrtimer.c:1752)
+> [ 102.378720][ C94] hrtimer_interrupt (kernel/time/hrtimer.c:1817)
+> [ 102.383748][ C94] __sysvec_apic_timer_interrupt (arch/x86/kernel/apic/a=
+pic.c:1065 arch/x86/kernel/apic/apic.c:1082)
+> [ 102.389818][ C94] sysvec_apic_timer_interrupt (arch/x86/kernel/apic/api=
+c.c:1076 (discriminator 14))
+> [  102.395636][   C94]  </IRQ>
+> [  102.398759][   C94]  <TASK>
+> [ 102.401872][ C94] asm_sysvec_apic_timer_interrupt (arch/x86/include/asm=
+/idtentry.h:649)
+> [ 102.408032][ C94] RIP: 0010:cpuidle_enter_state (drivers/cpuidle/cpuidl=
+e.c:291)
+> [ 102.414008][ C94] Code: 00 e8 9e 46 19 ff e8 d9 f1 ff ff 8b 53 04 49 89=
+ c5 0f 1f 44 00 00 31 ff e8 07 2e 18 ff 45 84 ff 0f 85 d2 00 00 00 fb 45 85=
+ f6 <0f> 88 83 01 00 00 49 63 d6 48 8d 04 52 48 8d 04 82 49 8d 0c c4 48
+> All code
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>    0:   00 e8                   add    %ch,%al
+>    2:   9e                      sahf
+>    3:   46 19 ff                rex.RX sbb %r15d,%edi
+>    6:   e8 d9 f1 ff ff          callq  0xfffffffffffff1e4
+>    b:   8b 53 04                mov    0x4(%rbx),%edx
+>    e:   49 89 c5                mov    %rax,%r13
+>   11:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+>   16:   31 ff                   xor    %edi,%edi
+>   18:   e8 07 2e 18 ff          callq  0xffffffffff182e24
+>   1d:   45 84 ff                test   %r15b,%r15b
+>   20:   0f 85 d2 00 00 00       jne    0xf8
+>   26:   fb                      sti
+>   27:   45 85 f6                test   %r14d,%r14d
+>   2a:*  0f 88 83 01 00 00       js     0x1b3            <-- trapping inst=
+ruction
+>   30:   49 63 d6                movslq %r14d,%rdx
+>   33:   48 8d 04 52             lea    (%rdx,%rdx,2),%rax
+>   37:   48 8d 04 82             lea    (%rdx,%rax,4),%rax
+>   3b:   49 8d 0c c4             lea    (%r12,%rax,8),%rcx
+>   3f:   48                      rex.W
+>
+> Code starting with the faulting instruction
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>    0:   0f 88 83 01 00 00       js     0x189
+>    6:   49 63 d6                movslq %r14d,%rdx
+>    9:   48 8d 04 52             lea    (%rdx,%rdx,2),%rax
+>    d:   48 8d 04 82             lea    (%rdx,%rax,4),%rax
+>   11:   49 8d 0c c4             lea    (%r12,%rax,8),%rcx
+>   15:   48                      rex.W
+>
+>
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20240119/202401191023.d52a4ad4-ol=
+iver.sang@intel.com
+>
+>
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+>
