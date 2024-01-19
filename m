@@ -1,94 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580FC57884;
-	Fri, 19 Jan 2024 22:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141C35A0E1
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2024 23:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705704906; cv=none; b=e91cnW/OynQTXKDN0RSvkKeYHg8NA3SIUQ74bOOa/axw24HPwkwiQuJ0XZaE8VZazbWFgABpnMMJaMB5OCQl5fKUiAQx5o8AfTfMBkv5fKSt4U8plNmMBoziFMLQIBkZKEM16cZWs4YvixyZF+32Lio5S5cQU/ylaIUp3Dwu8uE=
+	t=1705707597; cv=none; b=WmSGciGT+yioRtwAMKl+YHm+rQrKF9HN/ZRiYXgKDkJbQLV2ZgXNYUD1CFYL6UfwOpavqnNyMefXT5ED99ZbUZcZJ12v1gfX72JWfzZ/AK6QS9f+SQJOEg3AF3OdGbJQ0X/EgzaIf71emDYoU2Beb1xvUyeVpOT+oZ35hpn1czA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705704906; c=relaxed/simple;
-	bh=FCIf4jjmsCjm0WrvfocICE7muDXMamDKBfgKtLjKjoo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WDJlE7UuvY3dQSwif67J2bhfqmSl0MD93CPCvUBYktE2h4E3oMEcOZHTBwzk72hgawOMT/GVAWYFT+eTfhOKXfBNFbX6386o+BkPzHRuugo8gBDudgHmCZdGZGtpc8tpfF81XhjU9a8Mf0zgMx3YzUQIM9c8t1DvFx7Hc8+ufOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YJFzAItI; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705707597; c=relaxed/simple;
+	bh=Cc6fPUEO/L/oLNhK5EswA4t+hLsVCBaH/yErJyfGUP8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=qipOdtT9Cd5UdTruOPviTAQlTLj/HwIz/eKWoSNAtdP+p+HqlUMT1BjualMhPDE3i/FRB993UCkKZ1ytPcmJf6lWaK9sIKxEQJGmQoPxyiUWQG48JqJm0MAJXBJZrUicbQKVewZuH04c1z/wR5aC2AKH/qr7xaj05IYVhDT6Upw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dyw2wvCc; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YJFzAItI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705704904; x=1737240904;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FCIf4jjmsCjm0WrvfocICE7muDXMamDKBfgKtLjKjoo=;
-  b=YJFzAItI7X9yBUy/NKhHvf13iCjNWMBNUcBdBI8wnoCYYyAZQZ/v9ofl
-   +pYhObx2R/WL2n0sisfgIfaPlodtrKLLcfA4QEsMbzb5DYmdYQo5UkHp+
-   AczG+E0vRTnBwAU58oVSMYyagYH0w6cjJWGkZ5Vr/uwm/KwSCxd2MYlQ7
-   zdtSgRXQpFXjZv315Rukd9yZGazqp64FGIs7AHue5F3IHfyniF+frCoWF
-   38PcnLxlZorgVWbBldeFp77kerwykZ/kHMU23/W+KGVGs3hs7JweT5ASa
-   HDNQHh/TYoa40Wuftr+yZqpbqh38I0noMFk21Em8VN23nZ291HAh6F3JZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="14383183"
-X-IronPort-AV: E=Sophos;i="6.05,206,1701158400"; 
-   d="scan'208";a="14383183"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 14:55:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,206,1701158400"; 
-   d="scan'208";a="683998"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 14:55:03 -0800
-Date: Fri, 19 Jan 2024 14:55:01 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Ben Gainey <Ben.Gainey@arm.com>
-Cc: "irogers@google.com" <irogers@google.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	James Clark <James.Clark@arm.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	Mark Rutland <Mark.Rutland@arm.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>
-Subject: Re: [PATCH 0/1] Support PERF_SAMPLE_READ with inherit_stat
-Message-ID: <Zar9xXlPmCM2vtAk@tassilo>
-References: <20240119163924.2801678-1-ben.gainey@arm.com>
- <87a5p1kyif.fsf@linux.intel.com>
- <e69ffb457b761763c30e2d63ffd8a38606dbadd3.camel@arm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dyw2wvCc"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d72043fa06so18595ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2024 15:39:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705707595; x=1706312395; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Cc6fPUEO/L/oLNhK5EswA4t+hLsVCBaH/yErJyfGUP8=;
+        b=Dyw2wvCcDKMGByoIGzMnrCQK96MHPBlb1rzycHJpD9YoF1mTgrqjyVXfveUmXk7gDg
+         Qc3zWqC3sVt9NKz8CHJ9dszpmG1wqkn+jj9YWV6JrAmefwZdQNLE4UttBudyRyhAL6vS
+         8brMGkX4yBpKJezfZUmqt6jnmxEla4LX3nWZuQNdPhZZ6xtuk7VV9jDVMoiGqppmRVZJ
+         js9Q7QAYq8u2noFZSxI3ABqHBOTqy9QvI7IjBoWBM90G+WPtcHqzM9V4W+0YPSA8cv1d
+         9qCxhXa7qLEj/24sb0t3MG9MSHU13wNQRm4hpuo4F4jP38M8OEdevIsxiqctmsWkrnP1
+         8weQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705707595; x=1706312395;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Cc6fPUEO/L/oLNhK5EswA4t+hLsVCBaH/yErJyfGUP8=;
+        b=UKiIa6P12dMpZ5CxEDvic1uN6QeJBGsZ76Scn39IlAE1n9drDsuzg4kbf0WHwwh0h2
+         FN3nz7DoGkBU7On9RpxkKKnvOZ6K0CfjISA+br+hA4JKTYSi5YljtxK0o5CzczOE1IOm
+         bhw0vZw8+IU6xPoqOJkvLV3DkfedY85qJlANfUTLE4U3/V4f6ObERRty5hEiZmFdTBXu
+         E0kLZWVIACdEC1WTLfAPVjmU3s4N/RWGIwgX1a2TzT30JprgIOLd5NoBdSW030fgxXaA
+         H2HOXJqt1lMtxJSpObE09yiZ7OPJVy3Y0HaDa0bu+7irqQFgHk8RMpxC0Iqq4qwhodaU
+         xU2g==
+X-Gm-Message-State: AOJu0YzEfas5PU1tuLrh5B7rTe1ZqCkkjsEHIP3YQady3vCYGVOz/veb
+	KgB2dOlYDvhPE8mBX6b/Kglg0dg9Kk+Vo93IPODPZDbWp+8CIOdWzNBHf6bysSZgjoQ=
+X-Google-Smtp-Source: AGHT+IFHIk0NxLvuaH+T9N9vG7Khfg4f8EsAyyWUXerqkV0a5Cyj7iGn8eM36+yp1tCkq3soKsnNx/xuK/WQV3Rsmok=
+X-Received: by 2002:a17:902:7612:b0:1d7:23fe:7a12 with SMTP id
+ k18-20020a170902761200b001d723fe7a12mr7024pll.18.1705707594974; Fri, 19 Jan
+ 2024 15:39:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e69ffb457b761763c30e2d63ffd8a38606dbadd3.camel@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 19 Jan 2024 15:39:42 -0800
+Message-ID: <CAP-5=fUMrS+fiewxm3y4j=z4GucBVbOyDGcXNg8uDF3K+yPZ2Q@mail.gmail.com>
+Subject: Issues with Linux perf tool on Raspberry Pi 5
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-> I had considered that, but given currently this perf_event_attr
-> configuration is not allowed, I assumed that it would require existing
-> tools to add support which would in effect be an opt-in. Of course,
-> adding a new flag to be explicit would be trivial enough if required.
+Hi,
 
-That's fair. Makes sense.
+I thought I'd report the state of Linux perf tests on Raspberry Pi 5
+and so I opened a bug because of the number of failures. I'm happy for
+help resolving the issues. The bug is:
+https://bugzilla.kernel.org/show_bug.cgi?id=218401
 
-> That said, the binary format for the mmap records / read() etc does not
-> change so using an unmodified tool to parse the data file will give bad
-> results. Therefore any workflow where "modified recording tool" can be
-> combined with "older / unmodified parsing tool" will break. Not sure of
-> the best way to handle this... presumably whenever a change is made to
-> the perf record format, any workflow that allows old parsers to read
-> new format data without version checks could fail? Admittedly this is a
-> "looks the same but isn't" change so harder for tools devs to spot. Any
-> suggestions?
-
-For perf itself we can find something. It does a couple of checks, like
-reserved bits in the perf_event_attr. For the general case of other
-parsers it's unclear. I suppose could increment the magic identifier
-to PERFILE3
-
--Andi
+Thanks,
+Ian
