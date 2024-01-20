@@ -1,30 +1,30 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A6520E0;
-	Sat, 20 Jan 2024 07:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C156820F5;
+	Sat, 20 Jan 2024 07:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705735613; cv=none; b=ANKs0X0RovSSi+lntaRL82uIBTw+K0fb+G+vWxRgIX4iL3LRIasnixgq46cdT7FgEUjWIZ7HddBe8Dnp/cRiz/vT+2vb8O/Kk3y2dkMb45hfYKevpkk8HpEJgGbwILtBNuAIPrtQmAa3ZalZTpbV18GotnuB+ZLt22touB5w5TE=
+	t=1705735875; cv=none; b=GPCEsVk8Osct1/URTmuw3zIU92Qge3DGYZvvXiCW/jWjO4vL6cIGiQ/hINZhKNzmJdaX18pQ5+RiSN64MHHSs/HXA6W7XyYyJT36Nq5qaCGzZY2t8bKlLy9eaHU7DB+jN9BguxZpK4xvMKWMC8MH+1ID0MOGbeWippW/JMmY9xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705735613; c=relaxed/simple;
-	bh=fDiS5PJVy3c8YgT3PhH7ahy/iTnk+XRxlziL/RLR5Vs=;
+	s=arc-20240116; t=1705735875; c=relaxed/simple;
+	bh=7aCKjwQxFKN95nvYTWAtACTvKPEMQJL6jNispB1Uqbo=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bkxPOw4y83+Ejj9fv6gMAGKt79sOjen/tqzVjcfDt4aYNTEYF8Vf2zZUzwNAPYaITwqns7gEu3D0ASD50g4zuCkuhhhYxIp6DImOccbYvIxXq04HrsP/ZN1EhUl1vxugSWWCjIAIwTLSleN3SQUkSmjmO3wMzH/xV4pwJs7cGuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 Content-Type:Content-Disposition:In-Reply-To; b=KS+QPtN0MNUFQIEnQluMu3r6kJLA2rtPfFZblwdLQJLaEsSj1jCevY270l4qTFoVFUX4Frt5c5uJbcatKKXyFqf+OvHYAEa1XZ4s36Ry2Y8kWe2HhvNr3hlNRIiESpo494NXIHGJjAuOUl6dz8b5VRoowWqCC2VfyUgxSilVGYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TH7Lb157rzXgVq;
-	Sat, 20 Jan 2024 15:25:43 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TH7Ry14Jgz1xmQq;
+	Sat, 20 Jan 2024 15:30:22 +0800 (CST)
 Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 398FB18005D;
-	Sat, 20 Jan 2024 15:26:49 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1E85418001A;
+	Sat, 20 Jan 2024 15:31:10 +0800 (CST)
 Received: from M910t (10.110.54.157) by kwepemd100002.china.huawei.com
  (7.221.188.184) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Sat, 20 Jan
- 2024 15:26:47 +0800
-Date: Sat, 20 Jan 2024 15:26:37 +0800
+ 2024 15:31:08 +0800
+Date: Sat, 20 Jan 2024 15:30:58 +0800
 From: Changbin Du <changbin.du@huawei.com>
 To: Adrian Hunter <adrian.hunter@intel.com>
 CC: Changbin Du <changbin.du@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
@@ -35,11 +35,12 @@ CC: Changbin Du <changbin.du@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
  Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Peter Zijlstra
 	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
  Melo <acme@kernel.org>
-Subject: Re: [PATCH v4 5/5] perf: script: prefer capstone to XED
-Message-ID: <20240120072637.w6stvbdeynppnfa6@M910t>
+Subject: Re: [PATCH v4 4/5] perf: script: add raw|disasm arguments to
+ --insn-trace option
+Message-ID: <20240120073058.salpvxizmijojp7n@M910t>
 References: <20240119104856.3617986-1-changbin.du@huawei.com>
- <20240119104856.3617986-6-changbin.du@huawei.com>
- <adb07ef9-4609-4cb4-b5e4-8e0af00bac16@intel.com>
+ <20240119104856.3617986-5-changbin.du@huawei.com>
+ <dea4ffb9-9442-4b5a-bf1c-73a7fe6652d9@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,116 +49,97 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <adb07ef9-4609-4cb4-b5e4-8e0af00bac16@intel.com>
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+In-Reply-To: <dea4ffb9-9442-4b5a-bf1c-73a7fe6652d9@intel.com>
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemd100002.china.huawei.com (7.221.188.184)
 
-On Fri, Jan 19, 2024 at 08:40:20PM +0200, Adrian Hunter wrote:
+On Fri, Jan 19, 2024 at 08:39:50PM +0200, Adrian Hunter wrote:
 > On 19/01/24 12:48, Changbin Du wrote:
-> > Now perf can show assembly instructions with libcapstone for x86, and the
-> > capstone is better in general.
+> > Now '--insn-trace' accept a argument to specify the output format:
+> >   - raw: display raw instructions.
+> >   - disasm: display mnemonic instructions (if capstone is installed).
+> > 
+> > $ sudo perf script --insn-trace=raw
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: 48 89 e7
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: e8 e8 0c 00 00
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426df0 _dl_start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: f3 0f 1e fa
+> > 
+> > $ sudo perf script --insn-trace=disasm
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: movq %rsp, %rdi
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: callq _dl_start+0x0
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426df0 _dl_start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: illegal instruction
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426df4 _dl_start+0x4 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: pushq %rbp
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426df5 _dl_start+0x5 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: movq %rsp, %rbp
+> >               ls 1443864 [006] 2275506.209908875:      7f216b426df8 _dl_start+0x8 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: pushq %r15
 > > 
 > > Signed-off-by: Changbin Du <changbin.du@huawei.com>
 > > ---
-> >  tools/perf/Documentation/perf-intel-pt.txt | 11 +++++------
-> >  tools/perf/ui/browsers/res_sample.c        |  2 +-
-> >  tools/perf/ui/browsers/scripts.c           |  2 +-
-> >  3 files changed, 7 insertions(+), 8 deletions(-)
+> >  tools/perf/Documentation/perf-script.txt |  6 +++---
+> >  tools/perf/builtin-script.c              | 17 +++++++++++++----
+> >  2 files changed, 16 insertions(+), 7 deletions(-)
 > > 
-> > diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-> > index 2109690b0d5f..8e62f23f7178 100644
-> > --- a/tools/perf/Documentation/perf-intel-pt.txt
-> > +++ b/tools/perf/Documentation/perf-intel-pt.txt
-> > @@ -115,9 +115,8 @@ toggle respectively.
+> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> > index fc79167c6bf8..9ae54f5bcb4d 100644
+> > --- a/tools/perf/Documentation/perf-script.txt
+> > +++ b/tools/perf/Documentation/perf-script.txt
+> > @@ -442,9 +442,9 @@ include::itrace.txt[]
+> >  	will be printed. Each entry has function name and file/line. Enabled by
+> >  	default, disable with --no-inline.
 > >  
-> >  perf script also supports higher level ways to dump instruction traces:
-> >  
-> > -	perf script --insn-trace --xed
-> > +	perf script --insn-trace=disasm
+> > ---insn-trace::
+> > -	Show instruction stream for intel_pt traces. Combine with --xed to
+> > -	show disassembly.
+> > +--insn-trace[=<raw|disasm>]::
+> > +	Show raw or mnemonic instruction stream for intel_pt traces. You can
+> > +	also combine raw instructions with --xed to show disassembly.
 > 
-> Please add also:
+> Perhaps this is a bit clearer:
 > 
-> or to use the xed disassembler, which requires installing the xed tool
-> (see XED below):
-> 
-> 	perf script --insn-trace --xed
+> Show instruction stream in bytes (raw) or disassembled (disasm)
+> for intel_pt traces. The default is 'raw'. To use xed, combine
+> 'raw' with --xed to show disassembly done by xed.
 >
-Added, thanks.
+Updated, thanks.
 
 > >  
-> > -Dump all instructions. This requires installing the xed tool (see XED below)
-> >  Dumping all instructions in a long trace can be fairly slow. It is usually better
-> >  to start with higher level decoding, like
+> >  --xed::
+> >  	Run xed disassembler on output. Requires installing the xed disassembler.
+> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > index 12d886694f6c..2e3752b3b65a 100644
+> > --- a/tools/perf/builtin-script.c
+> > +++ b/tools/perf/builtin-script.c
+> > @@ -3769,10 +3769,19 @@ static int perf_script__process_auxtrace_info(struct perf_session *session,
+> >  #endif
 > >  
-> > @@ -130,12 +129,12 @@ or
-> >  and then select a time range of interest. The time range can then be examined
-> >  in detail with
-> >  
-> > -	perf script --time starttime,stoptime --insn-trace --xed
-> > +	perf script --time starttime,stoptime --insn-trace=disasm
-> >  
-> >  While examining the trace it's also useful to filter on specific CPUs using
-> >  the -C option
-> >  
-> > -	perf script --time starttime,stoptime --insn-trace --xed -C 1
-> > +	perf script --time starttime,stoptime --insn-trace=disasm -C 1
-> >  
-> >  Dump all instructions in time range on CPU 1.
-> >  
-> > @@ -1306,7 +1305,7 @@ Without timestamps, --per-thread must be specified to distinguish threads.
-> >  
-> >  perf script can be used to provide an instruction trace
-> >  
-> > - $ perf script --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-> > + $ perf script --guestkallsyms $KALLSYMS --insn-trace=disasm -F+ipc | grep -C10 vmresume | head -21
-> >         CPU 0/KVM  1440  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                movq  0x48(%rax), %r9
-> >         CPU 0/KVM  1440  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                movq  0x50(%rax), %r10
-> >         CPU 0/KVM  1440  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                movq  0x58(%rax), %r11
-> > @@ -1407,7 +1406,7 @@ There were none.
-> >  
-> >  'perf script' can be used to provide an instruction trace showing timestamps
-> >  
-> > - $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-> > + $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace=disasm -F+ipc | grep -C10 vmresume | head -21
-> >         CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                 movq  0x48(%rax), %r9
-> >         CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                 movq  0x50(%rax), %r10
-> >         CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                 movq  0x58(%rax), %r11
-> > diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-> > index 7cb2d6678039..1022baefaf45 100644
-> > --- a/tools/perf/ui/browsers/res_sample.c
-> > +++ b/tools/perf/ui/browsers/res_sample.c
-> > @@ -83,7 +83,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
-> >  		     r->tid ? "--tid " : "",
-> >  		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
-> >  		     extra_format,
-> > -		     rstype == A_ASM ? "-F +insn --xed" :
-> > +		     rstype == A_ASM ? "-F +insn_disasm" :
-> 
-> insn_disasm -> disasm
->
-Fixed. I forgot to commit this change for last version.
-
-> >  		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
-> >  		     symbol_conf.inline_name ? "--inline" : "",
-> >  		     "--show-lost-events ",
-> > diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> > index 47d2c7a8cbe1..3efc76c621c4 100644
-> > --- a/tools/perf/ui/browsers/scripts.c
-> > +++ b/tools/perf/ui/browsers/scripts.c
-> > @@ -107,7 +107,7 @@ static int list_scripts(char *script_name, bool *custom,
-> >  	if (evsel)
-> >  		attr_to_script(scriptc.extra_format, &evsel->core.attr);
-> >  	add_script_option("Show individual samples", "", &scriptc);
-> > -	add_script_option("Show individual samples with assembler", "-F +insn --xed",
-> > +	add_script_option("Show individual samples with assembler", "-F +insn_disasm",
-> 
-> insn_disasm -> disasm
->
-Fixed.
-
-> >  			  &scriptc);
-> >  	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
-> >  			  &scriptc);
+> >  static int parse_insn_trace(const struct option *opt __maybe_unused,
+> > -			    const char *str __maybe_unused,
+> > -			    int unset __maybe_unused)
+> > +			    const char *str, int unset __maybe_unused)
+> >  {
+> > -	parse_output_fields(NULL, "+insn,-event,-period", 0);
+> > +	const char *fields = "+insn,-event,-period";
+> > +
+> > +	if (str) {
+> > +		if (strcmp(str, "disasm") == 0)
+> > +			fields = "+disasm,-event,-period";
+> > +		else if (strlen(str) != 0 && strcmp(str, "raw") != 0) {
+> > +			fprintf(stderr, "Only accept raw|disasm\n");
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +	parse_output_fields(NULL, fields, 0);
+> >  	itrace_parse_synth_opts(opt, "i0ns", 0);
+> >  	symbol_conf.nanosecs = true;
+> >  	return 0;
+> > @@ -3918,7 +3927,7 @@ int cmd_script(int argc, const char **argv)
+> >  		   "only consider these symbols"),
+> >  	OPT_INTEGER(0, "addr-range", &symbol_conf.addr_range,
+> >  		    "Use with -S to list traced records within address range"),
+> > -	OPT_CALLBACK_OPTARG(0, "insn-trace", &itrace_synth_opts, NULL, NULL,
+> > +	OPT_CALLBACK_OPTARG(0, "insn-trace", &itrace_synth_opts, NULL, "raw|disasm",
+> >  			"Decode instructions from itrace", parse_insn_trace),
+> >  	OPT_CALLBACK_OPTARG(0, "xed", NULL, NULL, NULL,
+> >  			"Run xed disassembler on output", parse_xed),
 > 
 
 -- 
