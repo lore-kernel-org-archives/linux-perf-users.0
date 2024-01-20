@@ -1,110 +1,258 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73714EA3
-	for <linux-perf-users@vger.kernel.org>; Sat, 20 Jan 2024 06:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9BC5382;
+	Sat, 20 Jan 2024 07:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705732289; cv=none; b=g6k2sblLSnuIgaOzOt82PcUfyb/P48l6W12AsEGx9ssGqzinxvyjIxvZx0eVi669TEw3tJ05IwSWakhMGH36i7DCoB/4kCnEL88HP/XdwmESU3z2PiuxS7l9IfTpdN6+33EC6NPiFMJDBklRs+xKn6JVB8SepxqRl3BK2gSGl2o=
+	t=1705735321; cv=none; b=jTRQwIObpPyxrnCDtszMegH1S+0UsmpwMfkckvelo7fjtFNfFUDoRa1RALM4FFK1zeyj+eQUYoxMt/gcfvKSYaFyRIvwQlJlNNIVaSk2MmYIn8mjhO4VWIKkQFzXRSfPXkh9gMPLESDjfeaIuL5jPt3RyojzrJWl1Mx7k0yN68o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705732289; c=relaxed/simple;
-	bh=HQPG5CYuhZnVq2tw7DjnmORSE6UQJxygdXMEgyIzhPg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q79abc47imGol+v1MuhSOQJu9woe3dhfYTOYF/sojIuzyBhrG7yV0l5Nh34gMjLSizs3+3TOBC7jwe+SthAns6KgckVLjeA6px9IRVVEBjXwp5eMTzZjYWBtTB/grjDYrRnfnA1zVgtgTS821MMxutm7dU8MnxRAhsD/YBSWt5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uKK7tV8e; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uKK7tV8e"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-361b23b9328so56765ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2024 22:31:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705732287; x=1706337087; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XHKfgCsJrRpTNZ4Z1JCGgdfo83odYf4yZ8h8YSNbSyk=;
-        b=uKK7tV8eVCvj5wQRNnPAgiowh9EvzfWY4riOqC38tE9rVBk1+hQYpRNM75n3YWkxn/
-         qBjOsWE/egZTL/zqhSrf1m0IFVxgcwSh6HrKSp8hWlEEiqKlDCYxk5UE36dKO74PbVOI
-         aAn9SOALm5oxYuOMJ4ATklQ6iQVGz7eE//ZPIdZZwOiinE6vjUVa4utTnJ0s++XQ9ACg
-         PGEdN3xBkHLLN/o+Z3GB24CavqQhgbtE9UA+GgKY/fDLxsVqGByU47Fvsw+1LxbuvS6K
-         emdJWiPDktHnn/79QP+3TlBjiIgb+AYt1156Sofcfy5gbla7bqlkYswbHXWnp1nhHr9p
-         qowg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705732287; x=1706337087;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XHKfgCsJrRpTNZ4Z1JCGgdfo83odYf4yZ8h8YSNbSyk=;
-        b=oR4HHNplZcGHGwWYqWh+MpZMOpcVICHPsS93nVqopzvin2bdvfsTJmilWyc2+6naj+
-         DvaXt4NwSbOhJFGz7fpy/QoLu8sDGY1kYetkUlF8ISfSp/LT/4goVNZGBZ1RX54Yyhuq
-         +LcofwrPuQuL9Whe1MbbXnCWIoaPJG/8ZYmr81rWLvRTD/7yr7zhW0obpb556yQfm0G/
-         qY+QOJWdaf6p30QLktzUFq/Og/R8/hdgh8gCqBWeT/qscwBl8nvL6q+PthDh7gNnPMPn
-         W4xzw/Bbn1gPunAq736vTHMVqvTaCtcKF8DDeWWFTCACBbUtoG8fj+wzTznJklFZMjTA
-         MCHQ==
-X-Gm-Message-State: AOJu0Yys1CqUBiKqcEVb6D7CoYq7bQNzvYQFNwMcS3eUARHmk3NUnrxy
-	ioYBSGWLmMI4aPSe5v2kAGaXciD/bQn4ToV+ROZFIyXF2LcX
-X-Google-Smtp-Source: AGHT+IFLrR2I2qWq6jPWU/VUfmvu4fmiopvbw6UFrCxsVVwfkijPvAqxFiFMWs3DBunI2Z0RHVcsXJyeQPmemGmOyDI=
-X-Received: by 2002:a92:d3ca:0:b0:360:a34a:e589 with SMTP id
- c10-20020a92d3ca000000b00360a34ae589mr53379ilh.6.1705732287378; Fri, 19 Jan
- 2024 22:31:27 -0800 (PST)
+	s=arc-20240116; t=1705735321; c=relaxed/simple;
+	bh=/eBJiGEkA3mSsiCm5z/VMhJ9OA0Bpw+Qa9HPDflTNtc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tT19aYXeMIvvkRGisqb3SP9SkMdVa1qSLUBI9RgfOriZft/fjVgJQB+BggvbuYZbxPEmQjn7AAz1HSgAZ1LxtSQC/pu2ZonQaHRJ1fOyv+/yqz3OSk9XYhW36V+PybPICoRTlLdHbdPDSYGTrMkeHKADSy8Z/e+pAG29GINo1Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TH7DG0XBVz1gxct;
+	Sat, 20 Jan 2024 15:20:14 +0800 (CST)
+Received: from dggpemm500019.china.huawei.com (unknown [7.185.36.180])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8695A1400D3;
+	Sat, 20 Jan 2024 15:21:54 +0800 (CST)
+Received: from [10.67.108.244] (10.67.108.244) by
+ dggpemm500019.china.huawei.com (7.185.36.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sat, 20 Jan 2024 15:21:54 +0800
+Message-ID: <cc68c4f2-564a-4c42-942f-d45e71f3ef7f@huawei.com>
+Date: Sat, 20 Jan 2024 15:21:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fUMrS+fiewxm3y4j=z4GucBVbOyDGcXNg8uDF3K+yPZ2Q@mail.gmail.com>
- <CAM9d7cjgu=Ec0Hd83sn=LkHrHBGciCev=tE1vRKFMhzNo4xipg@mail.gmail.com> <CAP-5=fUA39pwG+RaL5ZN3gFzemvTEAnw8EgQAeHGGGBAOqNu6w@mail.gmail.com>
-In-Reply-To: <CAP-5=fUA39pwG+RaL5ZN3gFzemvTEAnw8EgQAeHGGGBAOqNu6w@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 19 Jan 2024 22:31:14 -0800
-Message-ID: <CAP-5=fWM5MWbqYUSEwzmY2MjKc2_3qvaAVUcz7s-M3v19YSFow@mail.gmail.com>
-Subject: Re: Issues with Linux perf tool on Raspberry Pi 5
-To: Namhyung Kim <namhyung@gmail.com>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/core: Fix small negative period being ignored
+To: Adrian Hunter <adrian.hunter@intel.com>
+CC: <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<namhyung@kernel.org>, <irogers@google.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<peterz@infradead.org>
+References: <20240116083915.2859302-1-luogengkun2@huawei.com>
+ <66cdc5f9-a09a-4841-8fca-252b7c78114b@intel.com>
+From: Luo Gengkun <luogengkun2@huawei.com>
+In-Reply-To: <66cdc5f9-a09a-4841-8fca-252b7c78114b@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500019.china.huawei.com (7.185.36.180)
 
-On Fri, Jan 19, 2024 at 8:27=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Fri, Jan 19, 2024 at 4:55=E2=80=AFPM Namhyung Kim <namhyung@gmail.com>=
- wrote:
-> >
-> > Hi Ian,
-> >
-> > On Fri, Jan 19, 2024 at 3:40=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > Hi,
-> > >
-> > > I thought I'd report the state of Linux perf tests on Raspberry Pi 5
-> > > and so I opened a bug because of the number of failures. I'm happy fo=
-r
-> > > help resolving the issues. The bug is:
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D218401
-> >
-> > Thanks for doing this.  I've looked at the error log and found
-> > it had a failure in loading BTF.  Maybe the system setup is
-> > more or less broken..?
->
-> I think so. Looks like the kernel was built with CONFIG_DEBUG_INFO_BTF di=
-sabled:
-> https://forums.raspberrypi.com/viewtopic.php?t=3D349411
-> They also package libbpf-tools and those tools fail in the same way.
->
-> I think the fix is to update the bcm2712_defconfig:
-> https://www.raspberrypi.com/documentation/computers/linux_kernel.html
-> https://github.com/raspberrypi/linux/blob/rpi-6.1.y/arch/arm64/configs/bc=
-m2712_defconfig
->
-> It is kind of a shame this option is opt-in rather than opt-out. I
-> wonder if there is something we should do to diagnose and help users
-> who may have a BTF disabled kernel.
 
-Rebuilding the kernel with CONFIG_DEBUG_INFO_BTF fixes kernel lock
-contention analysis and perf record offcpu profiling tests.
 
-Thanks,
-Ian
+在 2024/1/19 15:36, Adrian Hunter 写道:
+> On 16/01/24 10:39, Luo Gengkun wrote:
+>> In perf_adjust_period, we will first calculate period, and then use
+>> this period to calculate delta. However, when delta is less than 0,
+>> there will be a deviation compared to when delta is greater than or
+>> equal to 0. For example, when delta is in the range of [-14,-1], the
+>> range of delta = delta + 7 is between [-7,6], so the final value of
+>> delta/8 is 0. Therefore, the impact of -1 and -2 will be ignored.
+>> This is unacceptable when the target period is very short, because
+>> we will lose a lot of samples.
+>>
+>> Here are some tests and analyzes:
+>> before:
+>>    # perf record -e cs -F 1000  ./a.out
+>>    [ perf record: Woken up 1 times to write data ]
+>>    [ perf record: Captured and wrote 0.022 MB perf.data (518 samples) ]
+>>
+>>    # perf script
+>>    ...
+>>    a.out     396   257.956048:         23 cs:  ffffffff81f4eeec schedul>
+>>    a.out     396   257.957891:         23 cs:  ffffffff81f4eeec schedul>
+>>    a.out     396   257.959730:         23 cs:  ffffffff81f4eeec schedul>
+>>    a.out     396   257.961545:         23 cs:  ffffffff81f4eeec schedul>
+>>    a.out     396   257.963355:         23 cs:  ffffffff81f4eeec schedul>
+>>    a.out     396   257.965163:         23 cs:  ffffffff81f4eeec schedul>
+>>    a.out     396   257.966973:         23 cs:  ffffffff81f4eeec schedul>
+>>    a.out     396   257.968785:         23 cs:  ffffffff81f4eeec schedul>
+>>    a.out     396   257.970593:         23 cs:  ffffffff81f4eeec schedul>
+>>    ...
+>>
+>> after:
+>>    # perf record -e cs -F 1000  ./a.out
+>>    [ perf record: Woken up 1 times to write data ]
+>>    [ perf record: Captured and wrote 0.058 MB perf.data (1466 samples) ]
+>>
+>>    # perf script
+>>    ...
+>>    a.out     395    59.338813:         11 cs:  ffffffff81f4eeec schedul>
+>>    a.out     395    59.339707:         12 cs:  ffffffff81f4eeec schedul>
+>>    a.out     395    59.340682:         13 cs:  ffffffff81f4eeec schedul>
+>>    a.out     395    59.341751:         13 cs:  ffffffff81f4eeec schedul>
+>>    a.out     395    59.342799:         12 cs:  ffffffff81f4eeec schedul>
+>>    a.out     395    59.343765:         11 cs:  ffffffff81f4eeec schedul>
+>>    a.out     395    59.344651:         11 cs:  ffffffff81f4eeec schedul>
+>>    a.out     395    59.345539:         12 cs:  ffffffff81f4eeec schedul>
+>>    a.out     395    59.346502:         13 cs:  ffffffff81f4eeec schedul>
+>>    ...
+>>
+>> test.c
+>>
+>> int main() {
+>>          for (int i = 0; i < 20000; i++)
+>>                  usleep(10);
+>>
+>>          return 0;
+>> }
+>>
+>>    # time ./a.out
+>>    real    0m1.583s
+>>    user    0m0.040s
+>>    sys     0m0.298s
+>>
+>> The above results were tested on x86-64 qemu with KVM enabled using
+>> test.c as test program. Ideally, we should have around 1500 samples,
+>> but the previous algorithm had only about 500, whereas the modified
+>> algorithm now has about 1400. Further more, the new version shows 1
+>> sample per 0.001s, while the previous one is 1 sample per 0.002s.This
+>> indicates that the new algorithm is more sensitive to small negative
+>> values compared to old algorithm.
+>>
+>> Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment")
+>> Signed-off-by: Luo Gengkun <luogengkun2@huawei.com>
+> 
+> It seems better, and the maths makes sense, so:
+> 
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> 
+> 
+> But the test case still seems to give unexpected results. Usually:
+> 
+>    # time taskset --cpu 1 ./test
+>    real    0m 1.25s
+>    user    0m 0.03s
+>    sys     0m 0.00
+>    # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
+>    [ perf record: Woken up 1 times to write data ]
+>    [ perf record: Captured and wrote 0.051 MB perf.data (1290 samples) ]
+> 
+> But occasionally:
+> 
+>    # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
+>    [ perf record: Woken up 1 times to write data ]
+>    [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
+>    # perf script
+>    ...
+>    test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
+>    test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
+>    ...
+> 
+> 
+> 
+It seems that the unexpected results is caused by Timer Interrupts not 
+coming every TICK_NSEC.
+
+I guess this is due to system idleness. I tried the patch and it should 
+have fixed the issue.
+
+You can give it a try as well.
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h 
+index afb028c54f33..2708f1d0692c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -265,6 +265,7 @@ struct hw_perf_event {
+        * State for freq target events, see __perf_event_overflow() and
+        * perf_adjust_freq_unthr_context().
+        */
++    u64                freq_tick_stamp;
+       u64                freq_time_stamp;
+       u64                freq_count_stamp;
+   #endif
+diff --git a/kernel/events/core.c b/kernel/events/core.c index 
+cad50d3439f1..fe0d9b470365 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4112,7 +4112,7 @@ perf_adjust_freq_unthr_context(struct
+perf_event_context *ctx, bool unthrottle)
+   {
+       struct perf_event *event;
+       struct hw_perf_event *hwc;
+-    u64 now, period = TICK_NSEC;
++    u64 now, period, tick_stamp;
+       s64 delta;
+
+       /*
+@@ -4151,6 +4151,10 @@ perf_adjust_freq_unthr_context(struct
+perf_event_context *ctx, bool unthrottle)
+            */
+           event->pmu->stop(event, PERF_EF_UPDATE);
+
++        tick_stamp = perf_clock();
++        period = tick_stamp - hwc->freq_tick_stamp;
++        hwc->freq_tick_stamp = tick_stamp;
++
+           now = local64_read(&event->count);
+           delta = now - hwc->freq_count_stamp;
+           hwc->freq_count_stamp = now;
+@@ -4162,8 +4166,14 @@ perf_adjust_freq_unthr_context(struct
+perf_event_context *ctx, bool unthrottle)
+            * to perf_adjust_period() to avoid stopping it
+            * twice.
+            */
+-        if (delta > 0)
+-            perf_adjust_period(event, period, delta, false);
++        if (delta > 0) {
++            /*
++             * we skip first tick adjust period
++             */
++            if (likely(period != tick_stamp)) {
++                perf_adjust_period(event, period, delta, false);
++            }
++        }
+
+           event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
+       next:
+
+>> ---
+>>   kernel/events/core.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 683dc086ef10..cad50d3439f1 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -4078,7 +4078,11 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
+>>   	period = perf_calculate_period(event, nsec, count);
+>>   
+>>   	delta = (s64)(period - hwc->sample_period);
+>> -	delta = (delta + 7) / 8; /* low pass filter */
+>> +	if (delta >= 0)
+>> +		delta += 7;
+>> +	else
+>> +		delta -= 7;
+>> +	delta /= 8; /* low pass filter */
+>>   
+>>   	sample_period = hwc->sample_period + delta;
+>>   
+> 
