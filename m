@@ -1,69 +1,138 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141C35A0E1
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2024 23:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741BB642;
+	Sat, 20 Jan 2024 00:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705707597; cv=none; b=WmSGciGT+yioRtwAMKl+YHm+rQrKF9HN/ZRiYXgKDkJbQLV2ZgXNYUD1CFYL6UfwOpavqnNyMefXT5ED99ZbUZcZJ12v1gfX72JWfzZ/AK6QS9f+SQJOEg3AF3OdGbJQ0X/EgzaIf71emDYoU2Beb1xvUyeVpOT+oZ35hpn1czA=
+	t=1705711794; cv=none; b=hvFmaF5dDtUcVEJBfZl4xfiFUPPZSD3HrPevjxRGC7GwGe0BkJWRHZEAQJElTP9w4OIrRgqWsZasyVVvEwRl/aqoH5aVv5bqDNU5udQ/vZkpgYI6oeI76BKqhQk5gJfdxn+86xMW1cN1qf1xGPd7Cya4i+pGppEvO8s2DBQKgS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705707597; c=relaxed/simple;
-	bh=Cc6fPUEO/L/oLNhK5EswA4t+hLsVCBaH/yErJyfGUP8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=qipOdtT9Cd5UdTruOPviTAQlTLj/HwIz/eKWoSNAtdP+p+HqlUMT1BjualMhPDE3i/FRB993UCkKZ1ytPcmJf6lWaK9sIKxEQJGmQoPxyiUWQG48JqJm0MAJXBJZrUicbQKVewZuH04c1z/wR5aC2AKH/qr7xaj05IYVhDT6Upw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dyw2wvCc; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dyw2wvCc"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d72043fa06so18595ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2024 15:39:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705707595; x=1706312395; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Cc6fPUEO/L/oLNhK5EswA4t+hLsVCBaH/yErJyfGUP8=;
-        b=Dyw2wvCcDKMGByoIGzMnrCQK96MHPBlb1rzycHJpD9YoF1mTgrqjyVXfveUmXk7gDg
-         Qc3zWqC3sVt9NKz8CHJ9dszpmG1wqkn+jj9YWV6JrAmefwZdQNLE4UttBudyRyhAL6vS
-         8brMGkX4yBpKJezfZUmqt6jnmxEla4LX3nWZuQNdPhZZ6xtuk7VV9jDVMoiGqppmRVZJ
-         js9Q7QAYq8u2noFZSxI3ABqHBOTqy9QvI7IjBoWBM90G+WPtcHqzM9V4W+0YPSA8cv1d
-         9qCxhXa7qLEj/24sb0t3MG9MSHU13wNQRm4hpuo4F4jP38M8OEdevIsxiqctmsWkrnP1
-         8weQ==
+	s=arc-20240116; t=1705711794; c=relaxed/simple;
+	bh=2CyF9+z+T8PciXgm3k1a4ERDVw/8+aQtn1hEGW24CX4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cGOwbsHNX9NRl7YFUJ3PaBPbat8Nn1Rr7VPl3UFXA1UcQXGJOuC2xVazPidPTEma8XZlUeHEfqlLGxPNxTS3Wn2ODn4F9JNhClpTKmc6jQPQ9jkJRWqjYGZQPD8y0zxQi5YuhBxm3C6LiTRUZTSSRfbs/dBrq5rQ9I+PDKP40bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d5f388407bso9907835ad.0;
+        Fri, 19 Jan 2024 16:49:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705707595; x=1706312395;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Cc6fPUEO/L/oLNhK5EswA4t+hLsVCBaH/yErJyfGUP8=;
-        b=UKiIa6P12dMpZ5CxEDvic1uN6QeJBGsZ76Scn39IlAE1n9drDsuzg4kbf0WHwwh0h2
-         FN3nz7DoGkBU7On9RpxkKKnvOZ6K0CfjISA+br+hA4JKTYSi5YljtxK0o5CzczOE1IOm
-         bhw0vZw8+IU6xPoqOJkvLV3DkfedY85qJlANfUTLE4U3/V4f6ObERRty5hEiZmFdTBXu
-         E0kLZWVIACdEC1WTLfAPVjmU3s4N/RWGIwgX1a2TzT30JprgIOLd5NoBdSW030fgxXaA
-         H2HOXJqt1lMtxJSpObE09yiZ7OPJVy3Y0HaDa0bu+7irqQFgHk8RMpxC0Iqq4qwhodaU
-         xU2g==
-X-Gm-Message-State: AOJu0YzEfas5PU1tuLrh5B7rTe1ZqCkkjsEHIP3YQady3vCYGVOz/veb
-	KgB2dOlYDvhPE8mBX6b/Kglg0dg9Kk+Vo93IPODPZDbWp+8CIOdWzNBHf6bysSZgjoQ=
-X-Google-Smtp-Source: AGHT+IFHIk0NxLvuaH+T9N9vG7Khfg4f8EsAyyWUXerqkV0a5Cyj7iGn8eM36+yp1tCkq3soKsnNx/xuK/WQV3Rsmok=
-X-Received: by 2002:a17:902:7612:b0:1d7:23fe:7a12 with SMTP id
- k18-20020a170902761200b001d723fe7a12mr7024pll.18.1705707594974; Fri, 19 Jan
- 2024 15:39:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705711793; x=1706316593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FCXbLDU63kblVQW+umHhD1ON0m0heS0Hwmk/gcU5dVM=;
+        b=jinMEV2vzgn8o4yXWfMLkXd7x5J+PiToo7XTiVdWkTIkICypgOND8B7s/vrqy3qGDz
+         HcjMcdp1mITmEAC6NxhRwG7NgdeOB736wy965+9g4rVtOoxE0DHzhhmy5PE4F8kTzydQ
+         2QFf5AcZHxVgW0KjE4JZqCcAT8NB7JGynDDX6emZsPu3ds25rNP8mUkIVcyjOJsoUpwH
+         Oeluc5I1lQo00PpcL6CbB+Yi8+haHpf6NzT2oygP3Lqnvwms8NrIFbynuAPcP4oIL5nG
+         ISxMH6/E4E5tnFFFhCYuWDGXPl09Dx/xVqC4GkQj7MGH544Y9XLua/rIJujhW8jfY6UD
+         kimg==
+X-Gm-Message-State: AOJu0Yy5nCWRM7BZnNBcBjaXkCdrh195GGWLNicMKnfBQa9dnwXs2DFI
+	6zdeztn6s4enL3vbaIe06M6rutPEZ4RSk3Y3bumd4kVAr3MdXAaepotl/ZsFtafhtyk+qglh1ly
+	i5dSOeOzf0OYiKTfOwlskFNh3D24=
+X-Google-Smtp-Source: AGHT+IFvfWRA9P0J+5pETEoFsqVDu3l/PFCkh0dNwUHrZYypZVyhZNIPb42uWDbOPJ/BYuqczyBJm+J423sGJ/Gb090=
+X-Received: by 2002:a17:90a:f312:b0:28e:2975:dd7 with SMTP id
+ ca18-20020a17090af31200b0028e29750dd7mr443472pjb.5.1705711792719; Fri, 19 Jan
+ 2024 16:49:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 19 Jan 2024 15:39:42 -0800
-Message-ID: <CAP-5=fUMrS+fiewxm3y4j=z4GucBVbOyDGcXNg8uDF3K+yPZ2Q@mail.gmail.com>
-Subject: Issues with Linux perf tool on Raspberry Pi 5
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <20240119163924.2801678-1-ben.gainey@arm.com>
+In-Reply-To: <20240119163924.2801678-1-ben.gainey@arm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 19 Jan 2024 16:49:41 -0800
+Message-ID: <CAM9d7chcAVm8TyJz9iOoEom1g82O5hFD3M+DHYDrphUADATjgA@mail.gmail.com>
+Subject: Re: [PATCH 0/1] Support PERF_SAMPLE_READ with inherit_stat
+To: Ben Gainey <ben.gainey@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, james.clark@arm.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-I thought I'd report the state of Linux perf tests on Raspberry Pi 5
-and so I opened a bug because of the number of failures. I'm happy for
-help resolving the issues. The bug is:
-https://bugzilla.kernel.org/show_bug.cgi?id=218401
+On Fri, Jan 19, 2024 at 8:39=E2=80=AFAM Ben Gainey <ben.gainey@arm.com> wro=
+te:
+>
+> This change allows events to use PERF_SAMPLE READ with inherit so long
+> as both inherit_stat and PERF_SAMPLE_TID are set.
+>
+> Currently it is not possible to use PERF_SAMPLE_READ with inherit. This
+> restriction assumes the user is interested in collecting aggregate
+> statistics as per `perf stat`. It prevents a user from collecting
+> per-thread samples using counter groups from a multi-threaded or
+> multi-process application, as with `perf record -e '{....}:S'`. Instead
+> users must use system-wide mode, or forgo the ability to sample counter
+> groups. System-wide mode is often problematic as it requires specific
+> permissions (no CAP_PERFMON / root access), or may lead to capture of
+> significant amounts of extra data from other processes running on the
+> system.
+>
+> Perf already supports the ability to collect per-thread counts with
+> `inherit` via the `inherit_stat` flag. This patch changes
+> `perf_event_alloc` relaxing the restriction to combine `inherit` with
+> `PERF_SAMPLE_READ` so that the combination will be allowed so long as
+> `inherit_stat` and `PERF_SAMPLE_TID` are enabled.
+
+I'm not sure if it's correct.  Maybe I misunderstand inherit_stat but
+AFAIK it's just to use prev_task's events when next_task has the
+compatible event context.  So the event values it sees in samples
+would depend on the timing or scheduler behavior.
+
+Also event counts and time values PERF_SAMPLE_READ sees
+include child event's so the values of the parent event can be
+updated even if it's inactive.  And the values will vary for the
+next_task whether prev_task is the parent or not.  I think it
+would return consistent values only if it iterates all child events
+and sums up the values like it does for read(2).  But it cannot
+do that in the NMI handler.
+
+Frankly I don't understand how inherit_stat supports per-thread
+counts properly.  Also it doesn't seem to be used by default in
+the perf tools.  IIUC per-thread count is supported when you
+don't set the inherit bit and open separate events for each
+thread but I guess that's not what you want.
+
+Anyway, I'm ok with the idea of using PERF_SAMPLE_READ to
+improve per-thread profiling especially with event groups.
+But I think it should not use inherit_stat and it needs a way to
+not include child stats in the samples.
+
+What do you think?
 
 Thanks,
-Ian
+Namhyung
+
+>
+> In this configuration stream ids (such as may appear in the read_format
+> field of a PERF_RECORD_SAMPLE) are no longer globally unique, rather
+> the pair of (stream id, tid) uniquely identify each event. Tools that
+> rely on this, for example to calculate a delta between samples, would
+> need updating to take this into account. Previously valid event
+> configurations (system-wide, no-inherit and so on) where each stream id
+> is the identifier are unaffected.
+>
+> This patch has been tested on aarch64 both my manual inspection of the
+> output of `perf script -D` and through a modified version of Arm's
+> commercial profiling tools and the numbers appear to line up as one
+> would expect, but some further validation across other architectures
+> and/or edge cases would be welcome.
+>
+> This patch was developed and tested on top of v6.7.
+>
+>
+> Ben Gainey (1):
+>   perf: Support PERF_SAMPLE_READ with inherit_stat
+>
+>  kernel/events/core.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> --
+> 2.43.0
+>
