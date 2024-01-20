@@ -1,121 +1,110 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78C317E3
-	for <linux-perf-users@vger.kernel.org>; Sat, 20 Jan 2024 06:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73714EA3
+	for <linux-perf-users@vger.kernel.org>; Sat, 20 Jan 2024 06:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705730968; cv=none; b=CcAourztOjCI4/kreVKYp5I7pzGqf/VLUwx0hWkmVC/s5Iqul60HARvdrwynRpEHbA/Oh/jd45tAsK2mazcLKovePEb9pGF5oFZXl4jD46Lt26l8Q08ilX2y1p3BrYiH+cSoAn8UQsUSHyJLcRv03gTMpIdf+Jc3q71hyZGwsV8=
+	t=1705732289; cv=none; b=g6k2sblLSnuIgaOzOt82PcUfyb/P48l6W12AsEGx9ssGqzinxvyjIxvZx0eVi669TEw3tJ05IwSWakhMGH36i7DCoB/4kCnEL88HP/XdwmESU3z2PiuxS7l9IfTpdN6+33EC6NPiFMJDBklRs+xKn6JVB8SepxqRl3BK2gSGl2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705730968; c=relaxed/simple;
-	bh=/sFV2h+bdopGqXwAbHSprshDUjsvNBZLXaDaFOj36LE=;
+	s=arc-20240116; t=1705732289; c=relaxed/simple;
+	bh=HQPG5CYuhZnVq2tw7DjnmORSE6UQJxygdXMEgyIzhPg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HyDPyQVYkmlXDK1t5gCgXTWjJfLwSbOvihhrjWsBZOFaVovdYgoSUjMvHGiaWNd0MYq2WLj+MwvEQXassB+fSE7PrM/gZ1q7lKkFE0MjJ1e/wHbmhHxLXyc6cbKrfrd/q1F/nfZo+lQ4IMazFpqUWYpO4+IS5moDNRB1ZADdc1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0D+lB00v; arc=none smtp.client-ip=209.85.160.179
+	 To:Cc:Content-Type; b=Q79abc47imGol+v1MuhSOQJu9woe3dhfYTOYF/sojIuzyBhrG7yV0l5Nh34gMjLSizs3+3TOBC7jwe+SthAns6KgckVLjeA6px9IRVVEBjXwp5eMTzZjYWBtTB/grjDYrRnfnA1zVgtgTS821MMxutm7dU8MnxRAhsD/YBSWt5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uKK7tV8e; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0D+lB00v"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4298fa85baeso68011cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2024 22:09:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uKK7tV8e"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-361b23b9328so56765ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jan 2024 22:31:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705730964; x=1706335764; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1705732287; x=1706337087; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IhNlK+JQLQHesBMvW3n62OoJt8v0x6O0uKXTvgDlIjE=;
-        b=0D+lB00vuqIOlIFoJh7R3FVHcYGV3etGEwqPNXuyXiKBCBxS4lJUFDnOqrUrIV9muR
-         2CeSisSZoKESiFKbFWJ+MC0wSNoayOBcvLDdvMQfLM7fubXti6dj0r3F9sSiDGsreHzk
-         mm0xV/OFdtoDi77+XSaqefUgPisBrBeV8WpEocqLeUtLiWWm+ZieLs0wIZU1VxXZ9POL
-         vPxJHO+1DP+OIQPWebB6RowFTggA5Jk5sA5aKdvzpFAYemHwinQ1OctC76zcpTDEsKre
-         XI/pGcqMuKQT2OZpIBvDDkW2WplAOBbKpU4BuLsP1uitlv7wZF/AZOAWUpRtYkc8wXS/
-         Y+mQ==
+        bh=XHKfgCsJrRpTNZ4Z1JCGgdfo83odYf4yZ8h8YSNbSyk=;
+        b=uKK7tV8eVCvj5wQRNnPAgiowh9EvzfWY4riOqC38tE9rVBk1+hQYpRNM75n3YWkxn/
+         qBjOsWE/egZTL/zqhSrf1m0IFVxgcwSh6HrKSp8hWlEEiqKlDCYxk5UE36dKO74PbVOI
+         aAn9SOALm5oxYuOMJ4ATklQ6iQVGz7eE//ZPIdZZwOiinE6vjUVa4utTnJ0s++XQ9ACg
+         PGEdN3xBkHLLN/o+Z3GB24CavqQhgbtE9UA+GgKY/fDLxsVqGByU47Fvsw+1LxbuvS6K
+         emdJWiPDktHnn/79QP+3TlBjiIgb+AYt1156Sofcfy5gbla7bqlkYswbHXWnp1nhHr9p
+         qowg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705730964; x=1706335764;
+        d=1e100.net; s=20230601; t=1705732287; x=1706337087;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IhNlK+JQLQHesBMvW3n62OoJt8v0x6O0uKXTvgDlIjE=;
-        b=ugrD6QurCPxgma5bFrW7LAlzjovORxEH9pRbTMATYAHKlMwVN7+kJgwpQT3FPx/Xn3
-         BruXoLj0qRBrbSOhAhDqN9chAPYHWmd+ePmGyif93ZvwxSpB9D/sO/26Pmqk02ksKa5r
-         yHrGynaU+mIYpBxcJM4wzHmWTBIYuVFSloqdnDULXT0kelef79pd5Q2qCKf1OyxCVkKZ
-         qg+F/LVrntlUAnCcpMR2JeDNGG5Abc6SFB1qMrgR+dKH1x1W8HBCcbnFf5P/iuJcwvFD
-         TYzG7jdyDXp4Jtzykj1D4ZLUS19OzDDBvgJi/nY9JhlSQVnlccTSCNEcqRcKEUAarSO0
-         mh0A==
-X-Gm-Message-State: AOJu0YwE36XVgXgDab4G46bPX6rDUwOF1iGf4At5EfEKzUhdxw+oYM2d
-	0Xg5sU9ex3K3N11qe6X/VbNyCKeSSJTxwz9h3hWLGmcXvQGR
-X-Google-Smtp-Source: AGHT+IGnfOWpHiTvOFGye2heWhER/hXbZ1yM58x5lyWtxxBqB1kQm4vmyoxlBhmkye7BGdU0z4wFT2ODijVrgLCGSE0=
-X-Received: by 2002:a05:622a:6092:b0:42a:2e9a:2841 with SMTP id
- hf18-20020a05622a609200b0042a2e9a2841mr22012qtb.1.1705730964503; Fri, 19 Jan
- 2024 22:09:24 -0800 (PST)
+        bh=XHKfgCsJrRpTNZ4Z1JCGgdfo83odYf4yZ8h8YSNbSyk=;
+        b=oR4HHNplZcGHGwWYqWh+MpZMOpcVICHPsS93nVqopzvin2bdvfsTJmilWyc2+6naj+
+         DvaXt4NwSbOhJFGz7fpy/QoLu8sDGY1kYetkUlF8ISfSp/LT/4goVNZGBZ1RX54Yyhuq
+         +LcofwrPuQuL9Whe1MbbXnCWIoaPJG/8ZYmr81rWLvRTD/7yr7zhW0obpb556yQfm0G/
+         qY+QOJWdaf6p30QLktzUFq/Og/R8/hdgh8gCqBWeT/qscwBl8nvL6q+PthDh7gNnPMPn
+         W4xzw/Bbn1gPunAq736vTHMVqvTaCtcKF8DDeWWFTCACBbUtoG8fj+wzTznJklFZMjTA
+         MCHQ==
+X-Gm-Message-State: AOJu0Yys1CqUBiKqcEVb6D7CoYq7bQNzvYQFNwMcS3eUARHmk3NUnrxy
+	ioYBSGWLmMI4aPSe5v2kAGaXciD/bQn4ToV+ROZFIyXF2LcX
+X-Google-Smtp-Source: AGHT+IFLrR2I2qWq6jPWU/VUfmvu4fmiopvbw6UFrCxsVVwfkijPvAqxFiFMWs3DBunI2Z0RHVcsXJyeQPmemGmOyDI=
+X-Received: by 2002:a92:d3ca:0:b0:360:a34a:e589 with SMTP id
+ c10-20020a92d3ca000000b00360a34ae589mr53379ilh.6.1705732287378; Fri, 19 Jan
+ 2024 22:31:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZYbm5L7tw7bdpDpE@kernel.org>
-In-Reply-To: <ZYbm5L7tw7bdpDpE@kernel.org>
+References: <CAP-5=fUMrS+fiewxm3y4j=z4GucBVbOyDGcXNg8uDF3K+yPZ2Q@mail.gmail.com>
+ <CAM9d7cjgu=Ec0Hd83sn=LkHrHBGciCev=tE1vRKFMhzNo4xipg@mail.gmail.com> <CAP-5=fUA39pwG+RaL5ZN3gFzemvTEAnw8EgQAeHGGGBAOqNu6w@mail.gmail.com>
+In-Reply-To: <CAP-5=fUA39pwG+RaL5ZN3gFzemvTEAnw8EgQAeHGGGBAOqNu6w@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 19 Jan 2024 22:09:10 -0800
-Message-ID: <CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com>
-Subject: Re: perf test hybrid failing on 14700K
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Kan Liang <kan.liang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date: Fri, 19 Jan 2024 22:31:14 -0800
+Message-ID: <CAP-5=fWM5MWbqYUSEwzmY2MjKc2_3qvaAVUcz7s-M3v19YSFow@mail.gmail.com>
+Subject: Re: Issues with Linux perf tool on Raspberry Pi 5
+To: Namhyung Kim <namhyung@gmail.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 23, 2023 at 5:55=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, Jan 19, 2024 at 8:27=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Hi Kan,
+> On Fri, Jan 19, 2024 at 4:55=E2=80=AFPM Namhyung Kim <namhyung@gmail.com>=
+ wrote:
+> >
+> > Hi Ian,
+> >
+> > On Fri, Jan 19, 2024 at 3:40=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > Hi,
+> > >
+> > > I thought I'd report the state of Linux perf tests on Raspberry Pi 5
+> > > and so I opened a bug because of the number of failures. I'm happy fo=
+r
+> > > help resolving the issues. The bug is:
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D218401
+> >
+> > Thanks for doing this.  I've looked at the error log and found
+> > it had a failure in loading BTF.  Maybe the system setup is
+> > more or less broken..?
 >
-> I noticed the following problem, are you able to reproduce it?
+> I think so. Looks like the kernel was built with CONFIG_DEBUG_INFO_BTF di=
+sabled:
+> https://forums.raspberrypi.com/viewtopic.php?t=3D349411
+> They also package libbpf-tools and those tools fail in the same way.
 >
-> Happy solstice!
+> I think the fix is to update the bcm2712_defconfig:
+> https://www.raspberrypi.com/documentation/computers/linux_kernel.html
+> https://github.com/raspberrypi/linux/blob/rpi-6.1.y/arch/arm64/configs/bc=
+m2712_defconfig
 >
-> - Arnaldo
+> It is kind of a shame this option is opt-in rather than opt-out. I
+> wonder if there is something we should do to diagnose and help users
+> who may have a BTF disabled kernel.
 
-Hi Arnaldo,
-
-I'm seeing a test failure on Alderlake in perf-tools-next and wondered
-if it was on your radar:
-```
- 32: Session topology                                                :
---- start ---
-test child forked, pid 539222
-templ file: /tmp/perf-test-HMet21
-Using CPUID GenuineIntel-6-97-2
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- config                           0x800000000
- disabled                         1
-------------------------------------------------------------
-sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 4
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- config                           0x400000000
- disabled                         1
-------------------------------------------------------------
-sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 5
-non matching sample_type
-FAILED tests/topology.c:73 can't get session
-test child finished with -1
----- end ----
-Session topology: FAILED!
-```
-
-The code is hitting this line in evlist__valid_sample_type as
-core.nr_entries is 2 on hybrid not 1:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/evlist.c?h=3Dperf-tools-next#n1215
-this causes perf_session__open to fail:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/session.c?h=3Dperf-tools-next#n129
+Rebuilding the kernel with CONFIG_DEBUG_INFO_BTF fixes kernel lock
+contention analysis and perf record offcpu profiling tests.
 
 Thanks,
 Ian
