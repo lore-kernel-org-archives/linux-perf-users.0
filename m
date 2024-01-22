@@ -1,232 +1,83 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B8E17BD0
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 07:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53AA20DE8
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 08:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705910181; cv=none; b=LbaS/lo1GMOMZ1weMPmHqpRxEAkv9EJlVzaEeKHgMtFRc3SddV4xhKMbQGoPnTgCLQNMhHtsKx0BnHFDJVCstO8xiX7O9959dnhh2XH3Zn37RaZUAWhlZOlSy08/mGhTftLgZX4ODETcKiyy4M9HZ41MzvEb8RND78GF6Dbeha8=
+	t=1705910913; cv=none; b=rG98Wyvm9rEEygdCErpq2fOIrSj59awVRGmvujDRE8Gh3PhGGubjF08WGKeS7xzezJmJwQoBQx4E9yABTjoD0IIQvqiy3vvQDkNUjB7n/MeHMBMuD/OiE+HGotpUG/z1fnfRh2MqhdDeArbNtcnS19J7/f3fKf9ouGEaOlYrVeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705910181; c=relaxed/simple;
-	bh=lIkp4WS6tsZeLM/HOMKd7E5IP/q50HZVhoOHHjaOCZE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bwQr69iVJLn8jYWFeENVYyuVkpQ6I6z5f9jURogTGCAS+vc+WEa5XzX+4G2C4OAZ5VUJ/zsr/kEUulz2CcPYynveHNdPI+DqikvIYL61oMiSoW+55kLJo9BOf1sHuGh3r7mjzCa7KV9fMXsqX+rv+bc0SSN146GngUtl2UbnfIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3610073a306so25566855ab.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 21 Jan 2024 23:56:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705910179; x=1706514979;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Zplnq0PvF89EcZVIkc+zWSM0JISJ0UOuIUavi6LXGuQ=;
-        b=puOF4ldwwA1gBF6et4oUrSsqMB3cO7aUlgxYrF3VQRDDPR5Y5LtWHpFYIS9ueV/EwW
-         yMFMmM8wO9T5GcJVVLZgeZHcquifturrVJf4GNMyppR+qApLhSSMF2PFF1LG8W58EFM0
-         nuv///Iy0l9G7Ff70WCbtGZewNUgmZKZX+iO4xnoc8QbVqxJjw4i2pSHUMRgMfB1J72P
-         XxOmq1zcJ+OxWC3dbSLoHVNfKMKX2rPYjvy1HdgmOdWy8w/45FOcn1Cu0uPt0KL2A1nb
-         nKZfj2sJTcJVhIWA6U8keD71lcBvrEr27M3YZ6L4TrTUYAmrPWpfaqPPtBUf5J57cy0k
-         SLcA==
-X-Gm-Message-State: AOJu0Yy+W0fMo8h8Uew5VNSQPXkNUk+f5/f+33eBRB8FNWk8VUdQs+d6
-	tBxgRD3Qq09LbEUCycWI5ILdUO9u8kI58HemRXFnokqMp+J41fjD5RNJqrATHlXV9RssIAU91tE
-	Ir0iteydmi2Zbhc8Fc8PBGUU4ezZZJj+ltRjSSAmOA9rlqjBbnN0ITRA=
-X-Google-Smtp-Source: AGHT+IFrD5pUxmYmPjVk3EP68yHhTH5K0W8jCBZpcee0xdmOfkiw0lxRvFC6BTT0S2z60Yx9jKFSTeppiPxMQ3Lod1sso3tv7uRr
+	s=arc-20240116; t=1705910913; c=relaxed/simple;
+	bh=Vh8E3DZxmiDKvZseKvJCT2wSpgW/IY+P80/oK0T9oj4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AK/S7jU9hMYlJ0R/6l9ImvgZV7b1nc//7rpjupc3qa9Vg7ZZw1yRFjySEcuZcRsOBuCiOAng9UAocg70IGrA7DJG5Y7sibUqWs4+5HuByR8Ew4FFsZcBixByCHbX5ujXu8J0NpiPywOI+EZS11QZDttsyO+G/ikutXlGSxnoY6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TJNB21l2Lz1xmXD;
+	Mon, 22 Jan 2024 16:07:38 +0800 (CST)
+Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6A4A31A0176;
+	Mon, 22 Jan 2024 16:08:13 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 22 Jan 2024 16:08:04 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <acme@kernel.org>, <namhyung@kernel.org>, <peterz@infradead.org>,
+	<irogers@google.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+CC: <yangyicong@hisilicon.com>, <hejunhao3@huawei.com>, <linuxarm@huawei.com>
+Subject: [PATCH] perf build: Make minimal shellcheck version to v0.6.0
+Date: Mon, 22 Jan 2024 16:04:06 +0800
+Message-ID: <20240122080406.28678-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a25:b0:35f:d9cc:1c9b with SMTP id
- g5-20020a056e021a2500b0035fd9cc1c9bmr600668ile.0.1705910179369; Sun, 21 Jan
- 2024 23:56:19 -0800 (PST)
-Date: Sun, 21 Jan 2024 23:56:19 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000042993b060f842a0c@google.com>
-Subject: [syzbot] [perf?] WARNING in ctx_sched_in (2)
-From: syzbot <syzbot+4ac05c048fbcdd0e3444@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500009.china.huawei.com (7.192.105.203)
 
-Hello,
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-syzbot found the following issue on:
+perf build failed due to the shellcheck on my machine (v0.4.6 on Ubuntu
+18.04.1 LTS) doesn't support -a/--check-sourced and -S/--severity option.
+These two options are introduced in shellcheck v0.4.7 and v0.6.0
+respectively. So restrict the minimal version of shellcheck to v0.6.0.
 
-HEAD commit:    1b1934dbbdcf Merge tag 'docs-6.8-2' of git://git.lwn.net/l..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1275fc93e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=68ea41b98043e6e8
-dashboard link: https://syzkaller.appspot.com/bug?extid=4ac05c048fbcdd0e3444
-compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-1b1934db.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/00b728a4f3de/vmlinux-1b1934db.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/5a3fe8452d59/Image-1b1934db.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4ac05c048fbcdd0e3444@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 11671 at kernel/events/core.c:3923 ctx_sched_in+0xb0/0x14c kernel/events/core.c:3936
-Modules linked in:
-CPU: 1 PID: 11671 Comm: syz-executor.0 Not tainted 6.7.0-syzkaller-10085-g1b1934dbbdcf #0
-Hardware name: linux,dummy-virt (DT)
-pstate: 004000c9 (nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : ctx_sched_in+0xb0/0x14c kernel/events/core.c:3923
-lr : perf_event_sched_in kernel/events/core.c:2677 [inline]
-lr : perf_event_context_sched_in kernel/events/core.c:3983 [inline]
-lr : __perf_event_task_sched_in+0x11c/0x1d0 kernel/events/core.c:4012
-sp : ffff8000835e3940
-x29: ffff8000835e3940 x28: f2ff00002c4d7570 x27: 000000000000000e
-x26: 0000000000000001 x25: f5ff00004b7fbc78 x24: f5ff00004b7fb600
-x23: f9ff000002eab600 x22: 0000000000000002 x21: 0000000000000007
-x20: faff000014d8c900 x19: ffff00007f9d00b8 x18: ffff800083abbba8
-x17: ffff7ffffd514000 x16: ffff800080008000 x15: 0000000000000001
-x14: 000000000000006e x13: 0000000000000000 x12: ffff8000824dfe70
-x11: 0000000000000001 x10: 68221d39881c888f x9 : 9edf92a6ba7012f5
-x8 : f5ff00004b7fc7a8 x7 : 0000000000000004 x6 : 0000000000000001
-x5 : ffff7ffffd514000 x4 : 0000000000000000 x3 : ffff7ffffd514000
-x2 : f5ff00004b7fb600 x1 : 0000000000000002 x0 : 0000000000000000
-Call trace:
- ctx_sched_in+0xb0/0x14c kernel/events/core.c:3936
- perf_event_sched_in kernel/events/core.c:2677 [inline]
- perf_event_context_sched_in kernel/events/core.c:3983 [inline]
- __perf_event_task_sched_in+0x11c/0x1d0 kernel/events/core.c:4012
- perf_event_task_sched_in include/linux/perf_event.h:1484 [inline]
- finish_task_switch.isra.0+0x104/0x248 kernel/sched/core.c:5269
- context_switch kernel/sched/core.c:5403 [inline]
- __schedule+0x328/0x8a8 kernel/sched/core.c:6727
- preempt_schedule_common kernel/sched/core.c:6904 [inline]
- preempt_schedule+0x48/0x60 kernel/sched/core.c:6928
- __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
- _raw_spin_unlock_irqrestore+0x34/0x44 kernel/locking/spinlock.c:194
- spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
- unlock_page_lruvec_irqrestore include/linux/memcontrol.h:1672 [inline]
- release_pages+0xf4/0x530 mm/swap.c:1039
- free_pages_and_swap_cache+0x58/0x68 mm/swap_state.c:316
- tlb_batch_pages_flush+0x54/0x8c mm/mmu_gather.c:98
- tlb_flush_mmu_free mm/mmu_gather.c:293 [inline]
- tlb_flush_mmu mm/mmu_gather.c:300 [inline]
- tlb_finish_mmu+0x74/0x1c0 mm/mmu_gather.c:392
- exit_mmap+0x144/0x280 mm/mmap.c:3290
- __mmput+0x3c/0x170 kernel/fork.c:1343
- mmput+0x50/0x5c kernel/fork.c:1365
- exit_mm kernel/exit.c:569 [inline]
- do_exit+0x288/0x960 kernel/exit.c:858
- __do_sys_exit kernel/exit.c:987 [inline]
- __se_sys_exit kernel/exit.c:985 [inline]
- do_group_exit+0x0/0x90 kernel/exit.c:985
- __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
- invoke_syscall+0x48/0x114 arch/arm64/kernel/syscall.c:51
- el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:136
- do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:155
- el0_svc+0x34/0xd8 arch/arm64/kernel/entry-common.c:678
- el0t_64_sync_handler+0x100/0x12c arch/arm64/kernel/entry-common.c:696
- el0t_64_sync+0x19c/0x1a0 arch/arm64/kernel/entry.S:595
----[ end trace 0000000000000000 ]---
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000028
-Mem abort info:
-  ESR = 0x0000000096000005
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x05: level 1 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-user pgtable: 4k pages, 48-bit VAs, pgdp=0000000054ec7000
-[0000000000000028] pgd=0800000045bd1003, p4d=0800000045bd1003, pud=0000000000000000
-Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 1 PID: 11671 Comm: syz-executor.0 Tainted: G        W          6.7.0-syzkaller-10085-g1b1934dbbdcf #0
-Hardware name: linux,dummy-virt (DT)
-pstate: 004000c9 (nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : perf_ctx_sched_task_cb+0x14/0x80 kernel/events/core.c:3484
-lr : perf_event_context_sched_in kernel/events/core.c:3985 [inline]
-lr : __perf_event_task_sched_in+0x140/0x1d0 kernel/events/core.c:4012
-sp : ffff8000835e3950
-x29: ffff8000835e3950 x28: f2ff00002c4d7570 x27: 000000000000000e
-x26: 0000000000000001 x25: f5ff00004b7fbc78 x24: f5ff00004b7fb600
-x23: f9ff000002eab600 x22: f5ff00004b7fb600 x21: faff000014d8c900
-x20: 0000000000000000 x19: ffff8000824bc0b8 x18: ffff800083abbba8
-x17: ffff7ffffd514000 x16: ffff800080008000 x15: 0000000000000001
-x14: 000000000000006e x13: 0000000000000000 x12: ffff8000824dfe70
-x11: 0000000000000001 x10: 68221d39881c888f x9 : 9edf92a6ba7012f5
-x8 : f5ff00004b7fc7a8 x7 : 0000000000000004 x6 : 0000000000000001
-x5 : ffff7ffffd514000 x4 : 0000000000000000 x3 : ffff7ffffd514000
-x2 : f5ff00004b7fb600 x1 : 0000000000000001 x0 : 0000000000000000
-Call trace:
- perf_ctx_sched_task_cb+0x14/0x80 kernel/events/core.c:3484
- perf_event_context_sched_in kernel/events/core.c:3985 [inline]
- __perf_event_task_sched_in+0x140/0x1d0 kernel/events/core.c:4012
- perf_event_task_sched_in include/linux/perf_event.h:1484 [inline]
- finish_task_switch.isra.0+0x104/0x248 kernel/sched/core.c:5269
- context_switch kernel/sched/core.c:5403 [inline]
- __schedule+0x328/0x8a8 kernel/sched/core.c:6727
- preempt_schedule_common kernel/sched/core.c:6904 [inline]
- preempt_schedule+0x48/0x60 kernel/sched/core.c:6928
- __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
- _raw_spin_unlock_irqrestore+0x34/0x44 kernel/locking/spinlock.c:194
- spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
- unlock_page_lruvec_irqrestore include/linux/memcontrol.h:1672 [inline]
- release_pages+0xf4/0x530 mm/swap.c:1039
- free_pages_and_swap_cache+0x58/0x68 mm/swap_state.c:316
- tlb_batch_pages_flush+0x54/0x8c mm/mmu_gather.c:98
- tlb_flush_mmu_free mm/mmu_gather.c:293 [inline]
- tlb_flush_mmu mm/mmu_gather.c:300 [inline]
- tlb_finish_mmu+0x74/0x1c0 mm/mmu_gather.c:392
- exit_mmap+0x144/0x280 mm/mmap.c:3290
- __mmput+0x3c/0x170 kernel/fork.c:1343
- mmput+0x50/0x5c kernel/fork.c:1365
- exit_mm kernel/exit.c:569 [inline]
- do_exit+0x288/0x960 kernel/exit.c:858
- __do_sys_exit kernel/exit.c:987 [inline]
- __se_sys_exit kernel/exit.c:985 [inline]
- do_group_exit+0x0/0x90 kernel/exit.c:985
- __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
- invoke_syscall+0x48/0x114 arch/arm64/kernel/syscall.c:51
- el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:136
- do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:155
- el0_svc+0x34/0xd8 arch/arm64/kernel/entry-common.c:678
- el0t_64_sync_handler+0x100/0x12c arch/arm64/kernel/entry-common.c:696
- el0t_64_sync+0x19c/0x1a0 arch/arm64/kernel/entry.S:595
-Code: a9bd7bfd 910003fd a90153f3 aa0003f4 (f8428e80) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
-   4:	910003fd 	mov	x29, sp
-   8:	a90153f3 	stp	x19, x20, [sp, #16]
-   c:	aa0003f4 	mov	x20, x0
-* 10:	f8428e80 	ldr	x0, [x20, #40]! <-- trapping instruction
-
-
+Fixes: b809fc656e76 ("perf build: Shellcheck support for OUTPUT directory")
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ tools/perf/Makefile.perf | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 27e7c478880f..f8774a9b1377 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -236,6 +236,16 @@ else
+   SHELLCHECK := $(shell which shellcheck 2> /dev/null)
+ endif
+ 
++# shellcheck is using in tools/perf/tests/Build with option -a/--check-sourced (
++# introduced in v0.4.7) and -S/--severity (introduced in v0.6.0). So make the
++# minimal shellcheck version as v0.6.0.
++ifneq ($(SHELLCHECK),)
++  ifeq ($(shell expr $(shell $(SHELLCHECK) --version | grep version: | \
++        sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \< 060), 1)
++    SHELLCHECK :=
++  endif
++endif
++
+ export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
+ export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK
+ 
+-- 
+2.24.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
