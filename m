@@ -1,69 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB95E3A1A1
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 09:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C9A3A1A6;
+	Mon, 22 Jan 2024 10:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705917592; cv=none; b=I1btS+f8Y6s9/zCF76JjEkgqph340uH5pcsfLclKnK1z2Cs7FYGM/r5BmWIgl3qSc7SHOS54vs5QHS4Eh9O7ld1WdLFZvSLELTinNrFwLG1IY9tqhk0w3LOhFe9rH9TM58C0JbqXwPKCiI44DnkV6KaiKJGnKjWi3OGPrwc6i0g=
+	t=1705917625; cv=none; b=Z5qyoEXYGPytyTLVNyguX5GGw1gaiEskLkRQvMpN7v1ILS+FgSAS/vzrlTjlubrJEMe5GTdVQx7qF/ftrluz7dTPF6xxmmkkHYtHowJDgbzbiHTMR2FrALoyR6Kv5eQdkso9rDu4Cxz1neeoKPAUL3SaSQYbKFDOcblWamX6+3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705917592; c=relaxed/simple;
-	bh=ONXQ1npX869Rt4V5Pi121fyqvKBG/+2Bw49tl5QdZ/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=unR0gQVxSXZ8rOVwuGkj2qGFCrVrTYKttb7ogbxESc0GDvDo3DDt3Vihg6XzjBuWmR3V59A3fk4oTuCppdWrQLFjIpI+30l3uLOWJtobmLkU9L96tAkjktD9xeFBsuLzP4xZbBeG42vjCCMezS+EziFYwIigzTIPxRpNm0ewmL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73C292F4;
-	Mon, 22 Jan 2024 02:00:29 -0800 (PST)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 086153F5A1;
-	Mon, 22 Jan 2024 01:59:42 -0800 (PST)
-Message-ID: <fdeec5b3-693c-61ce-e8b0-94ff72188317@arm.com>
-Date: Mon, 22 Jan 2024 09:59:43 +0000
+	s=arc-20240116; t=1705917625; c=relaxed/simple;
+	bh=49AJX6VY7FPav/J8GIc6IM811dRWTTUZp5hEb+YsiPQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c8pgpwmwEJp/enjgD2xS0VK79w9uNJIQ3YzcUY3RTDBOatERhVlT2rLzoWqx1FeE0+oS66lU5emN3mnWTs8TeaAvZpgf25rrQdruEv2rDZTdhMILpUnEHMVmUU7IiIQG8s+QASKJmfX5jt07jv8ab8ZXPikGQhGyBxcQGSsbuV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bg9ZtpNZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bg9ZtpNZ"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40M9simF002469;
+	Mon, 22 Jan 2024 10:00:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=7kmzkWN5X0l8xbR7Pr6B24aKphmRnA8uemNbAU9NJo0=;
+ b=bg9ZtpNZzSbMf+tN/3Lgq9EsHWLE38BsE/7QAote1yCTvLTxGMNfulkY8xRAYwtxv6yQ
+ 4ommGWgTrDp4A3WQaP3o99ncr5ZnKpx6ramlfySTFOR+lhjMrXIa0OVrQJdFRYQlkA9i
+ 4JTzq0AkjgMxoyOaerQWdzdKlhxvbVV6OjTzDcvrtMnBp1i9phvg7JaJAROC0P5rjvTX
+ d9OrRFV+oBDjoVn15xovDcvjiam20ee09xXzAQrywc7zl1+H72KBZjyBas3l80qD0PgD
+ YoCBrUkI9CBSvsRF9hS0Q48F99qKFnpRBf9rEiIGxMcK2/dMdnUitPgU2QjGW3cPDvB1 Iw== 
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vrj31aa7j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 10:00:11 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40M9u550028287;
+	Mon, 22 Jan 2024 10:00:11 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vru7271m5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 10:00:11 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40MA08iW44892604
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 22 Jan 2024 10:00:08 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5F1292004F;
+	Mon, 22 Jan 2024 10:00:08 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 25B7720049;
+	Mon, 22 Jan 2024 10:00:08 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 22 Jan 2024 10:00:08 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, namhyung@kernel.org
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf test: Fix test case perf script tests on s390
+Date: Mon, 22 Jan 2024 10:59:55 +0100
+Message-Id: <20240122095955.2647989-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: Issues with Linux perf tool on Raspberry Pi 5
-To: Ian Rogers <irogers@google.com>,
- linux-perf-users <linux-perf-users@vger.kernel.org>,
- ChaitanyaS.Prakash@arm.com
-References: <CAP-5=fUMrS+fiewxm3y4j=z4GucBVbOyDGcXNg8uDF3K+yPZ2Q@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fUMrS+fiewxm3y4j=z4GucBVbOyDGcXNg8uDF3K+yPZ2Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: T3_BgMBRh7sdgEBunwKuIPBJ57eIwhvi
+X-Proofpoint-ORIG-GUID: T3_BgMBRh7sdgEBunwKuIPBJ57eIwhvi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-21_04,2024-01-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401220070
 
+In linux next repo, test case 'perf script tests' fails on s390.
+The root case is a command line invocation of perf record with
+call-graph information. On s390 only dwarf formatted call-graphs
+are supported and only on software events.
 
+Change the command line parameters fors s390.
 
-On 19/01/2024 23:39, Ian Rogers wrote:
-> Hi,
-> 
-> I thought I'd report the state of Linux perf tests on Raspberry Pi 5
-> and so I opened a bug because of the number of failures. I'm happy for
-> help resolving the issues. The bug is:
-> https://bugzilla.kernel.org/show_bug.cgi?id=218401
-> 
-> Thanks,
-> Ian
-> 
+Output before:
+ # perf test 89
+ 89: perf script tests              : FAILED!
+ #
 
-Hi Ian,
+Output after:
+ # perf test 89
+ 89: perf script tests              : Ok
+ #
 
-For "test perf probe of function from different CU", Chaitanya has a fix
-that she should be sending soon. I already planned to look at "Check
-Arm64 callgraphs are complete in fp mode" as I see that failing here so
-it's not related to Rpi5.
+Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/script.sh | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-The others as you mentioned do look to be config related. IMO that's
-usually the issue, or it's a build issue where Perf is missing a dependency.
+diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+index 5ae7bd0031a8..2973adab445d 100755
+--- a/tools/perf/tests/shell/script.sh
++++ b/tools/perf/tests/shell/script.sh
+@@ -54,7 +54,14 @@ def sample_table(*args):
+ def call_path_table(*args):
+     print(f'call_path_table({args}')
+ _end_of_file_
+-	perf record -g -o "${perfdatafile}" true
++	case $(uname -m)
++	in s390x)
++		cmd_flags="--call-graph dwarf -e cpu-clock";;
++	*)
++		cmd_flags="-g";;
++	esac
++
++	perf record $cmd_flags -o "${perfdatafile}" true
+ 	perf script -i "${perfdatafile}" -s "${db_test}"
+ 	echo "DB test [Success]"
+ }
+-- 
+2.43.0
 
-Although those should be a skip so technically there are still bugs.
-
-Thanks
-James
