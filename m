@@ -1,231 +1,204 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A56D1549F;
-	Mon, 22 Jan 2024 07:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3DFF9C4;
+	Mon, 22 Jan 2024 07:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705907463; cv=none; b=PurFz2/5y8f314VooCYT+Wbx2UAsQO4VJhdxQ9/PQVXrcHNu5dcDmgKEdlzu2Xc4EQK5EoI/ctA+plMNciCBILriQ0AhcY/L0t5/CSg7TWBUhR8mwZbV0+X1l1xsjcpnZkb4sIuHlvfekPdi4LhEIzaP95hOAZWaoUOKaYhDKkk=
+	t=1705907982; cv=none; b=BZJYTghhbVPd9M/OvbvlBrO82nNWZjiuqC4/Ak3Zg4bjxF8ZW12GU++SmSQjPJMfX0DiKctkValB78N9424zv01hd20CTqrk71cz+jixCD1o25JpoQUXdupervuPwGN5TgCZ8raeg5fMZ0qey+jxkqrY9u4lMjV1oo9lt4NanhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705907463; c=relaxed/simple;
-	bh=GiCGWYYpI/zBmzmXTbTU7hU/gSeRqY9wIRiNhNMugk0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lHvQVQ14lbgALzqDWbGGrmhm3yzfD7a9k8PZhe+FXjnN7XPNcFBAhUnqMMklKcBEpYvkGyKnveMMwi83mDYT3VmxrN5UyEoTtw+RIAnyFFD63zVtMV4xZmFb8xq4Rgp4K7pudjc4p7RupmzYGTRh6VHxbdAssnQbOR9m6bjeYD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2v3DQfn; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1705907982; c=relaxed/simple;
+	bh=dj/LJopYse2HUzcW6afWbr8br4SBQm9nhXp424JXXIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iYxW5DQ0TmxM36/oPLrg0fKzze/P2uBmn6B4UIu9nQAFLCj8y03DKDQosQO/fouqwFeRWr8cFGhXiVFg9bAuS/sFXIVNc2DMi0H5SzwsAu7yAQlHqZ8mjrGqsQtmnvrQUTYlO/NMEPxz2R3kOpM5NTiVsk2MMmupAvS6GJhhhMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dq+9PwEX; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2v3DQfn"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d51ba18e1bso25148275ad.0;
-        Sun, 21 Jan 2024 23:11:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dq+9PwEX"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55a90a0a1a1so1679624a12.0;
+        Sun, 21 Jan 2024 23:19:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705907461; x=1706512261; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1705907979; x=1706512779; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kZ5LQrtGOef2RhCQexh0DzGghwnp1zT6hJb7zIaDJYU=;
-        b=j2v3DQfn5mK8AoWP+TzKsd6QnToH0h7yJH88PMANbvIy+ZnxB1HnmiZHe/lK9FvS++
-         rxLMzyVNNb+bCDVjyAY4wiOCMnVZHM3efOSxeoWxCjkwAj4fUflqhH+0KbuDgsKHILWv
-         cNv85NtKBoIc2ci74HqzB4trpAF39wBZPz+4n4e/yaxFfgvfQGUy7D7UkV3PTh92az6X
-         qL1pJTlqs78SRV0SIqJVdGuvaV2s1VsWf/S8XfwXSor6kr3AnKVisXxXtLaMbILNgLSl
-         wzoVAjCnBfR2WKFQJByvFsWA2jWsExnoFfSu2SeKqbaOQOhQIrlDogVVeks2SNvK4Tht
-         FFwA==
+        bh=uHfxS5Ol5SGn5i9F3Z2DwGCA8DrLgQq4cMm5+V02usA=;
+        b=dq+9PwEXJh8f/vbcnocplDnKUncmLT2q9Fs2swPki0OWuGyk9bPp90xRft9ISxqGOI
+         op1L1d2NDsMeiXLtJIY8nFaLaGiJZdzTQsjSUE4hm031aCHT/0JLVCyJgjGKYnifX0nF
+         jujUBYsZo2Wzy+aO7ZWAYmQM+iLTTf5/tg5lotqwTJyO83mqKmo5t+Wkaa9Cv97qPOif
+         3IfkyVkHvDm1zxAQmlY584l9+sdR918vsrt2XkwPMuiKf+B+sxIAHuwN09lQGQq1Ncue
+         VgaBXXXPahgEzkkEto+10hRdh1BkxCZ8UwU9WzxkL8gzSQzoNlX+tZV2vu4ZM/gsEv1G
+         PFNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705907461; x=1706512261;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705907979; x=1706512779;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kZ5LQrtGOef2RhCQexh0DzGghwnp1zT6hJb7zIaDJYU=;
-        b=hLg5z8iXnZep8Gd4v4Pn1fG17Jrs6o1Fpl21Ol2z9+eaX/1q3PaPcZI74Zgc1kxuBX
-         /A5f1R3mFgmeNUeuYL1SoFCsOUbOVc+1VAqYo+If+ge1G2RUK3W0kL1zTNnWajvbxs4Q
-         pPZGtyfkRkEYRUJ07NLS68laXygt4Np64p1sV782iaaZVYZw7ugtf8duHFsker40kBHn
-         ofXnOzescvy00Qvf5wh/3wHT6dqEdgl8niS0npmeIQYsAnNe4NjuJ25FEuLY+ZNFZYAg
-         2uC0a0otLjGidndpVXVT+YNmRhomyWXOnKjE2eqdEUBcIarfnM7x6gI6uIo4yl7ENwog
-         Ow/g==
-X-Gm-Message-State: AOJu0YwEocY8rPhfsYqdMXWw9nI4xOmW2aeGaRbxnQs1+ckYACDlZ8g7
-	NmZy5J847kZmokIwrs6iOwM1DDani2xZTxnPTpxHrWO/C8LrsEyn
-X-Google-Smtp-Source: AGHT+IH8N/aRIYyc67Ff6jyaVTTxBKkJJGE87EtIPf5gzDu/V/a/IH1tcJTXnt029qA6gCu/mB7xrw==
-X-Received: by 2002:a17:902:e852:b0:1d7:41b7:332b with SMTP id t18-20020a170902e85200b001d741b7332bmr3187637plg.14.1705907461571;
-        Sun, 21 Jan 2024 23:11:01 -0800 (PST)
-Received: from localhost.localdomain ([43.132.98.45])
-        by smtp.googlemail.com with ESMTPSA id t10-20020a170902d28a00b001d72b3b0ee6sm3463365plc.248.2024.01.21.23.10.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jan 2024 23:11:01 -0800 (PST)
-From: Ze Gao <zegao2021@gmail.com>
-X-Google-Original-From: Ze Gao <zegao@tencent.com>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Ze Gao <zegao@tencent.com>
-Subject: [PATCH v2 4/4] perf sched: Commit to evsel__taskstate() to parse task state info
-Date: Mon, 22 Jan 2024 02:08:59 -0500
-Message-ID: <20240122070859.1394479-6-zegao@tencent.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240122070859.1394479-2-zegao@tencent.com>
-References: <20240122070859.1394479-2-zegao@tencent.com>
+        bh=uHfxS5Ol5SGn5i9F3Z2DwGCA8DrLgQq4cMm5+V02usA=;
+        b=v8x+Bhoh92aQLQb7kDRRqnM/FTLQ5KWyAbVDGmcwAT9UvF3HCzfe2aXR7AWVxqNIWw
+         QyI3LPp8Zq1KKbbY7su45IOo2k3cn40yj1QMbYTJdQtrjJtNFXUvTcQdOgRjYpFjBkIb
+         +WW8A9ZBcJ7S7pXPQbXTbB/+kjDAf5dFcWgJKCqxUZMblu6i9kbkIwiZLGx82UJ4S7jV
+         sYksGHjINEhn5f3UI+B49YolZKWsbxSLW+egwfsahU1eK4ZqIxWxH45RTCmrkxVqMdNA
+         L5I4soc/9qHQMBSvBjpGyhzRhR0Uy4UOcq96b4n2oPQQTtH4cVuTK6Z7RkrYQUPcdAhs
+         Pzdg==
+X-Gm-Message-State: AOJu0YwomEWou2Nr9ALcNaKADRCYyVLCKe6ohOga7YaOJsl5YHfIfq8q
+	FCCPfd8QQkn59mPfh9PjH2hllF9kHFbDHHn27Dui+wHw+0ES3XFifQQAf4gnTOs2XWDFZPSnHyJ
+	rdhY6ND75ELAvgQHQy4EeCnDEx04=
+X-Google-Smtp-Source: AGHT+IHFz/IZ8KDzNs86vVGSZGZizq2DiHBGzIcj/0rCXdm9V1odoIxmTR2rsuJ+ZDauzWaw+Gzj8XNxbF6HndhoGgs=
+X-Received: by 2002:a05:6402:35d4:b0:55c:381a:fafc with SMTP id
+ z20-20020a05640235d400b0055c381afafcmr369325edc.101.1705907978614; Sun, 21
+ Jan 2024 23:19:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240115072306.303993-1-zegao@tencent.com> <CAM9d7cgXKaKTnfx9YJae2qqv0pXtWLVQPBN=2H0WZkenBjHFnQ@mail.gmail.com>
+ <CAD8CoPA6xBT9hbGZoviyyQm1bwn2Oh=v8QCMjxkMMOSN2zfC-A@mail.gmail.com>
+ <CAD8CoPA0YgVHVW1Ya1O0-vhmpCbiw2h3i29ayzKmg4YTu-zeKQ@mail.gmail.com>
+ <CAM9d7ciiKeVJzCjNyJp8hDsMe2ZiVyOKT3ses_SQMfdEQnWiog@mail.gmail.com>
+ <CAD8CoPCSDcB+-qvwEZGOrdi01C3W8N3dYN3XQUQ2jrpn1mSf=Q@mail.gmail.com>
+ <CAM9d7cigWxAN_nmT2rO-o7YG0hkmPNjDPeLtsn=z1YqRSjMEjA@mail.gmail.com> <CAD8CoPChgx_h9KU4nBJ+0__g6J=LvTBuMdbc0-F0dHz4=kjY0g@mail.gmail.com>
+In-Reply-To: <CAD8CoPChgx_h9KU4nBJ+0__g6J=LvTBuMdbc0-F0dHz4=kjY0g@mail.gmail.com>
+From: Ze Gao <zegao2021@gmail.com>
+Date: Mon, 22 Jan 2024 15:19:27 +0800
+Message-ID: <CAD8CoPC1-AZd6vRKFT_w-0ov8Rtm0yLnbMPGnJ4B3hh5C8bMyQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf sched: Fix task state report
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that we have evsel__taskstate() which no longer relies on the
-hardcoded task state string and has good backward compatibility,
-we have a good reason to use it.
+On Mon, Jan 22, 2024 at 11:08=E2=80=AFAM Ze Gao <zegao2021@gmail.com> wrote=
+:
+>
+> On Sat, Jan 20, 2024 at 6:45=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > On Thu, Jan 18, 2024 at 5:54=E2=80=AFPM Ze Gao <zegao2021@gmail.com> wr=
+ote:
+> > >
+> > > On Fri, Jan 19, 2024 at 7:53=E2=80=AFAM Namhyung Kim <namhyung@kernel=
+.org> wrote:
+> > > >
+> > > > On Wed, Jan 17, 2024 at 7:15=E2=80=AFPM Ze Gao <zegao2021@gmail.com=
+> wrote:
+> > > > >
+> > > > > On Thu, Jan 18, 2024 at 11:00=E2=80=AFAM Ze Gao <zegao2021@gmail.=
+com> wrote:
+> > > > > >
+> > > > > > On Wed, Jan 17, 2024 at 9:35=E2=80=AFAM Namhyung Kim <namhyung@=
+kernel.org> wrote:
+> > > > > > >
+> > > > > > > Hello,
+> > > > > > >
+> > > > > > > On Sun, Jan 14, 2024 at 11:23=E2=80=AFPM Ze Gao <zegao2021@gm=
+ail.com> wrote:
+> > > > > > > >
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > The problems of task state report in both libtraceevent
+> > > > > > > > and perf sched has been reported in [1]. In short, they
+> > > > > > > > parsed the wrong state due to relying on the outdated
+> > > > > > > > hardcoded state string to interpret the raw bitmask
+> > > > > > > > from the record, which left the messes to maintain the
+> > > > > > > > backward compatibilities for both tools.
+> > > > > > > >
+> > > > > > > > [1] has not managed to make itself into the kernel, the
+> > > > > > > > problems and the solutions are well studied though.
+> > > > > > > >
+> > > > > > > > Luckily, as suggested by Steven, perf/libtraceevent
+> > > > > > > > records the print format, especially the __print_flags()
+> > > > > > > > part of the in-kernel tracepoint sched_switch in its
+> > > > > > > > metadata, and we have a chance to build the state str
+> > > > > > > > on the fly by parsing it.
+> > > > > > > >
+> > > > > > > > Now that libtraceevent has landed this solution in [2],
+> > > > > > > > we now apply the same idea to perf as well.
+> > > > > > >
+> > > > > > > Thanks for your work.  But perf links libtraceevent
+> > > > > > > conditionally so you need to make sure if it works without
+> > > > > > > that too.
+> > > > > >
+> > > > > > Yes, I've tested with NO_LIBTRACEEVENT=3D1, and it turns
+> > > > > > out perf removes perf sched subcmd without libtraceevent,
+> > > > >
+> > > > > FWIW,  commit 378ef0f5d9d7f4 ("perf build: Use libtraceevent
+> > > > > from the system") has proved this as well.
+> > > >
+> > > > Right, but I think we can enable perf sched without libtraceevent
+> > > > for minimal features like record only.  But that doesn't belong to
+> > > > this change set.
+> > > >
+> > > > >
+> > > > > > which explains why the compiler does not complain no
+> > > > > > evsel__intval() defined when !HAVE_LIBTRACEEVENT
+> > > > > > given the fact so many references of evsel__intval() in
+> > > > > > builtin-sched.c.
+> > > > > > Here evsel__taskstate() uses the exact assumption as
+> > > > > > evsel__intval(), so I put it next to it for clarity and it work=
+s
+> > > > > > without a doubt.
+> > > > > >
+> > > > > > > I think all libtraceevent related stuff should be in the
+> > > > > > > util/trace-event.c which is included only if the library is
+> > > > > > > available.  Maybe util/trace-event-parse.c is a better
+> > > > > > > place but then you need to tweak the python-ext-sources
+> > > > > > > and Makefile.perf for the case it's not available.
+> > > > > >
+> > > > > > Thanks for pointing this out. I will do the hack if you insist
+> > > > > > on this move :D. But I think the current version is clear
+> > > > > > enough, otherwise we need to move all the parts guarded
+> > > > > > by #ifdef HAVE_LIBTRACEEVENT out for complete decoupling.
+> > > > > > What do you think of it?
+> > > >
+> > > > Oh, I realized that all the affected codes are under the #ifdef
+> > > > properly then maybe it's ok for now.  But I prefer moving the
+> > > > code if you're ok.  Maybe I can accept this code as is and you
+> > >
+> > > Sounds great!
+> > >
+> > > > can work on the refactoring later.  Does that work for you?
+> > >
+> > > Absolutely! Will send the following refactoring patches soon. :D
+> >
+> > Thanks, but your patches don't apply cleanly.  Could you please
+> > rebase it onto the current perf-tools-next tree?
+>
+> Oops, that is kinda weird. I've tested and managed to cherry-picked all 4
+> patches onto branch perf-tools-next in [1], with no conflicts being
 
-Note TASK_STATE_TO_CHAR_STR and task bitmasks are useless now so
-we remove them for good. And now we pass the state info back and
-forth in a symbolic char which explains itself well instead.
+Please forget about this. Looks like git-cherry-pick is smarter to
+figure out where to
+apply when in the same repo ( or than git-am ?).
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
----
- tools/perf/builtin-sched.c | 46 +++++++++-----------------------------
- 1 file changed, 10 insertions(+), 36 deletions(-)
+Anyway I've resent a v2 series:
+    https://lore.kernel.org/all/20240122070859.1394479-2-zegao@tencent.com/
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index ced6fffe8110..f1d62f6b6cab 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -92,13 +92,6 @@ struct sched_atom {
- 	struct task_desc	*wakee;
- };
- 
--#define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
--
--/* task state bitmask, copied from include/linux/sched.h */
--#define TASK_RUNNING		0
--#define TASK_INTERRUPTIBLE	1
--#define TASK_UNINTERRUPTIBLE	2
--
- enum thread_state {
- 	THREAD_SLEEPING = 0,
- 	THREAD_WAIT_CPU,
-@@ -255,7 +248,7 @@ struct thread_runtime {
- 	u64 total_preempt_time;
- 	u64 total_delay_time;
- 
--	int last_state;
-+	char last_state;
- 
- 	char shortname[3];
- 	bool comm_changed;
-@@ -425,7 +418,7 @@ static void add_sched_event_wakeup(struct perf_sched *sched, struct task_desc *t
- }
- 
- static void add_sched_event_sleep(struct perf_sched *sched, struct task_desc *task,
--				  u64 timestamp, u64 task_state __maybe_unused)
-+				  u64 timestamp, const char task_state __maybe_unused)
- {
- 	struct sched_atom *event = get_new_event(task, timestamp);
- 
-@@ -849,7 +842,7 @@ static int replay_switch_event(struct perf_sched *sched,
- 		   *next_comm  = evsel__strval(evsel, sample, "next_comm");
- 	const u32 prev_pid = evsel__intval(evsel, sample, "prev_pid"),
- 		  next_pid = evsel__intval(evsel, sample, "next_pid");
--	const u64 prev_state = evsel__intval(evsel, sample, "prev_state");
-+	const char prev_state = evsel__taskstate(evsel, sample, "prev_state");
- 	struct task_desc *prev, __maybe_unused *next;
- 	u64 timestamp0, timestamp = sample->time;
- 	int cpu = sample->cpu;
-@@ -1039,13 +1032,6 @@ static int thread_atoms_insert(struct perf_sched *sched, struct thread *thread)
- 	return 0;
- }
- 
--static char sched_out_state(u64 prev_state)
--{
--	const char *str = TASK_STATE_TO_CHAR_STR;
--
--	return str[prev_state];
--}
--
- static int
- add_sched_out_event(struct work_atoms *atoms,
- 		    char run_state,
-@@ -1121,7 +1107,7 @@ static int latency_switch_event(struct perf_sched *sched,
- {
- 	const u32 prev_pid = evsel__intval(evsel, sample, "prev_pid"),
- 		  next_pid = evsel__intval(evsel, sample, "next_pid");
--	const u64 prev_state = evsel__intval(evsel, sample, "prev_state");
-+	const char prev_state = evsel__taskstate(evsel, sample, "prev_state");
- 	struct work_atoms *out_events, *in_events;
- 	struct thread *sched_out, *sched_in;
- 	u64 timestamp0, timestamp = sample->time;
-@@ -1157,7 +1143,7 @@ static int latency_switch_event(struct perf_sched *sched,
- 			goto out_put;
- 		}
- 	}
--	if (add_sched_out_event(out_events, sched_out_state(prev_state), timestamp))
-+	if (add_sched_out_event(out_events, prev_state, timestamp))
- 		return -1;
- 
- 	in_events = thread_atoms_search(&sched->atom_root, sched_in, &sched->cmp_pid);
-@@ -2022,24 +2008,12 @@ static void timehist_header(struct perf_sched *sched)
- 	printf("\n");
- }
- 
--static char task_state_char(struct thread *thread, int state)
--{
--	static const char state_to_char[] = TASK_STATE_TO_CHAR_STR;
--	unsigned bit = state ? ffs(state) : 0;
--
--	/* 'I' for idle */
--	if (thread__tid(thread) == 0)
--		return 'I';
--
--	return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?';
--}
--
- static void timehist_print_sample(struct perf_sched *sched,
- 				  struct evsel *evsel,
- 				  struct perf_sample *sample,
- 				  struct addr_location *al,
- 				  struct thread *thread,
--				  u64 t, int state)
-+				  u64 t, const char state)
- {
- 	struct thread_runtime *tr = thread__priv(thread);
- 	const char *next_comm = evsel__strval(evsel, sample, "next_comm");
-@@ -2080,7 +2054,7 @@ static void timehist_print_sample(struct perf_sched *sched,
- 	print_sched_time(tr->dt_run, 6);
- 
- 	if (sched->show_state)
--		printf(" %5c ", task_state_char(thread, state));
-+		printf(" %5c ", thread->tid == 0 ? 'I' : state);
- 
- 	if (sched->show_next) {
- 		snprintf(nstr, sizeof(nstr), "next: %s[%d]", next_comm, next_pid);
-@@ -2152,9 +2126,9 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
- 		else if (r->last_time) {
- 			u64 dt_wait = tprev - r->last_time;
- 
--			if (r->last_state == TASK_RUNNING)
-+			if (r->last_state == 'R')
- 				r->dt_preempt = dt_wait;
--			else if (r->last_state == TASK_UNINTERRUPTIBLE)
-+			else if (r->last_state == 'D')
- 				r->dt_iowait = dt_wait;
- 			else
- 				r->dt_sleep = dt_wait;
-@@ -2579,7 +2553,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
- 	struct thread_runtime *tr = NULL;
- 	u64 tprev, t = sample->time;
- 	int rc = 0;
--	int state = evsel__intval(evsel, sample, "prev_state");
-+	const char state = evsel__taskstate(evsel, sample, "prev_state");
- 
- 	addr_location__init(&al);
- 	if (machine__resolve(machine, &al, sample) < 0) {
--- 
-2.41.0
+Tested and verified. Hope this time i don't mess it up :)
 
+Thanks,
+        -- Ze
+
+> hit.  Maybe I used the wrong branch tip?
+>
+> FWIW:  the tip I rebase onto is
+>
+> d988c9f511af (perf/perf-tools-next) MAINTAINERS: Add Namhyung as
+> tools/perf/ co-maintainer
+>
+> [1]:  https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/
+>
+> Regards,
+>         -- Ze
+>
+> > Thanks,
+> > Namhyung
