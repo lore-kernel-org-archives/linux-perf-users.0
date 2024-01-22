@@ -1,204 +1,232 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3DFF9C4;
-	Mon, 22 Jan 2024 07:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B8E17BD0
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 07:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705907982; cv=none; b=BZJYTghhbVPd9M/OvbvlBrO82nNWZjiuqC4/Ak3Zg4bjxF8ZW12GU++SmSQjPJMfX0DiKctkValB78N9424zv01hd20CTqrk71cz+jixCD1o25JpoQUXdupervuPwGN5TgCZ8raeg5fMZ0qey+jxkqrY9u4lMjV1oo9lt4NanhY=
+	t=1705910181; cv=none; b=LbaS/lo1GMOMZ1weMPmHqpRxEAkv9EJlVzaEeKHgMtFRc3SddV4xhKMbQGoPnTgCLQNMhHtsKx0BnHFDJVCstO8xiX7O9959dnhh2XH3Zn37RaZUAWhlZOlSy08/mGhTftLgZX4ODETcKiyy4M9HZ41MzvEb8RND78GF6Dbeha8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705907982; c=relaxed/simple;
-	bh=dj/LJopYse2HUzcW6afWbr8br4SBQm9nhXp424JXXIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iYxW5DQ0TmxM36/oPLrg0fKzze/P2uBmn6B4UIu9nQAFLCj8y03DKDQosQO/fouqwFeRWr8cFGhXiVFg9bAuS/sFXIVNc2DMi0H5SzwsAu7yAQlHqZ8mjrGqsQtmnvrQUTYlO/NMEPxz2R3kOpM5NTiVsk2MMmupAvS6GJhhhMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dq+9PwEX; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dq+9PwEX"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55a90a0a1a1so1679624a12.0;
-        Sun, 21 Jan 2024 23:19:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705907979; x=1706512779; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uHfxS5Ol5SGn5i9F3Z2DwGCA8DrLgQq4cMm5+V02usA=;
-        b=dq+9PwEXJh8f/vbcnocplDnKUncmLT2q9Fs2swPki0OWuGyk9bPp90xRft9ISxqGOI
-         op1L1d2NDsMeiXLtJIY8nFaLaGiJZdzTQsjSUE4hm031aCHT/0JLVCyJgjGKYnifX0nF
-         jujUBYsZo2Wzy+aO7ZWAYmQM+iLTTf5/tg5lotqwTJyO83mqKmo5t+Wkaa9Cv97qPOif
-         3IfkyVkHvDm1zxAQmlY584l9+sdR918vsrt2XkwPMuiKf+B+sxIAHuwN09lQGQq1Ncue
-         VgaBXXXPahgEzkkEto+10hRdh1BkxCZ8UwU9WzxkL8gzSQzoNlX+tZV2vu4ZM/gsEv1G
-         PFNA==
+	s=arc-20240116; t=1705910181; c=relaxed/simple;
+	bh=lIkp4WS6tsZeLM/HOMKd7E5IP/q50HZVhoOHHjaOCZE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bwQr69iVJLn8jYWFeENVYyuVkpQ6I6z5f9jURogTGCAS+vc+WEa5XzX+4G2C4OAZ5VUJ/zsr/kEUulz2CcPYynveHNdPI+DqikvIYL61oMiSoW+55kLJo9BOf1sHuGh3r7mjzCa7KV9fMXsqX+rv+bc0SSN146GngUtl2UbnfIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3610073a306so25566855ab.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 21 Jan 2024 23:56:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705907979; x=1706512779;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uHfxS5Ol5SGn5i9F3Z2DwGCA8DrLgQq4cMm5+V02usA=;
-        b=v8x+Bhoh92aQLQb7kDRRqnM/FTLQ5KWyAbVDGmcwAT9UvF3HCzfe2aXR7AWVxqNIWw
-         QyI3LPp8Zq1KKbbY7su45IOo2k3cn40yj1QMbYTJdQtrjJtNFXUvTcQdOgRjYpFjBkIb
-         +WW8A9ZBcJ7S7pXPQbXTbB/+kjDAf5dFcWgJKCqxUZMblu6i9kbkIwiZLGx82UJ4S7jV
-         sYksGHjINEhn5f3UI+B49YolZKWsbxSLW+egwfsahU1eK4ZqIxWxH45RTCmrkxVqMdNA
-         L5I4soc/9qHQMBSvBjpGyhzRhR0Uy4UOcq96b4n2oPQQTtH4cVuTK6Z7RkrYQUPcdAhs
-         Pzdg==
-X-Gm-Message-State: AOJu0YwomEWou2Nr9ALcNaKADRCYyVLCKe6ohOga7YaOJsl5YHfIfq8q
-	FCCPfd8QQkn59mPfh9PjH2hllF9kHFbDHHn27Dui+wHw+0ES3XFifQQAf4gnTOs2XWDFZPSnHyJ
-	rdhY6ND75ELAvgQHQy4EeCnDEx04=
-X-Google-Smtp-Source: AGHT+IHFz/IZ8KDzNs86vVGSZGZizq2DiHBGzIcj/0rCXdm9V1odoIxmTR2rsuJ+ZDauzWaw+Gzj8XNxbF6HndhoGgs=
-X-Received: by 2002:a05:6402:35d4:b0:55c:381a:fafc with SMTP id
- z20-20020a05640235d400b0055c381afafcmr369325edc.101.1705907978614; Sun, 21
- Jan 2024 23:19:38 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705910179; x=1706514979;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zplnq0PvF89EcZVIkc+zWSM0JISJ0UOuIUavi6LXGuQ=;
+        b=puOF4ldwwA1gBF6et4oUrSsqMB3cO7aUlgxYrF3VQRDDPR5Y5LtWHpFYIS9ueV/EwW
+         yMFMmM8wO9T5GcJVVLZgeZHcquifturrVJf4GNMyppR+qApLhSSMF2PFF1LG8W58EFM0
+         nuv///Iy0l9G7Ff70WCbtGZewNUgmZKZX+iO4xnoc8QbVqxJjw4i2pSHUMRgMfB1J72P
+         XxOmq1zcJ+OxWC3dbSLoHVNfKMKX2rPYjvy1HdgmOdWy8w/45FOcn1Cu0uPt0KL2A1nb
+         nKZfj2sJTcJVhIWA6U8keD71lcBvrEr27M3YZ6L4TrTUYAmrPWpfaqPPtBUf5J57cy0k
+         SLcA==
+X-Gm-Message-State: AOJu0Yy+W0fMo8h8Uew5VNSQPXkNUk+f5/f+33eBRB8FNWk8VUdQs+d6
+	tBxgRD3Qq09LbEUCycWI5ILdUO9u8kI58HemRXFnokqMp+J41fjD5RNJqrATHlXV9RssIAU91tE
+	Ir0iteydmi2Zbhc8Fc8PBGUU4ezZZJj+ltRjSSAmOA9rlqjBbnN0ITRA=
+X-Google-Smtp-Source: AGHT+IFrD5pUxmYmPjVk3EP68yHhTH5K0W8jCBZpcee0xdmOfkiw0lxRvFC6BTT0S2z60Yx9jKFSTeppiPxMQ3Lod1sso3tv7uRr
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115072306.303993-1-zegao@tencent.com> <CAM9d7cgXKaKTnfx9YJae2qqv0pXtWLVQPBN=2H0WZkenBjHFnQ@mail.gmail.com>
- <CAD8CoPA6xBT9hbGZoviyyQm1bwn2Oh=v8QCMjxkMMOSN2zfC-A@mail.gmail.com>
- <CAD8CoPA0YgVHVW1Ya1O0-vhmpCbiw2h3i29ayzKmg4YTu-zeKQ@mail.gmail.com>
- <CAM9d7ciiKeVJzCjNyJp8hDsMe2ZiVyOKT3ses_SQMfdEQnWiog@mail.gmail.com>
- <CAD8CoPCSDcB+-qvwEZGOrdi01C3W8N3dYN3XQUQ2jrpn1mSf=Q@mail.gmail.com>
- <CAM9d7cigWxAN_nmT2rO-o7YG0hkmPNjDPeLtsn=z1YqRSjMEjA@mail.gmail.com> <CAD8CoPChgx_h9KU4nBJ+0__g6J=LvTBuMdbc0-F0dHz4=kjY0g@mail.gmail.com>
-In-Reply-To: <CAD8CoPChgx_h9KU4nBJ+0__g6J=LvTBuMdbc0-F0dHz4=kjY0g@mail.gmail.com>
-From: Ze Gao <zegao2021@gmail.com>
-Date: Mon, 22 Jan 2024 15:19:27 +0800
-Message-ID: <CAD8CoPC1-AZd6vRKFT_w-0ov8Rtm0yLnbMPGnJ4B3hh5C8bMyQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] perf sched: Fix task state report
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Ze Gao <zegao@tencent.com>
+X-Received: by 2002:a05:6e02:1a25:b0:35f:d9cc:1c9b with SMTP id
+ g5-20020a056e021a2500b0035fd9cc1c9bmr600668ile.0.1705910179369; Sun, 21 Jan
+ 2024 23:56:19 -0800 (PST)
+Date: Sun, 21 Jan 2024 23:56:19 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000042993b060f842a0c@google.com>
+Subject: [syzbot] [perf?] WARNING in ctx_sched_in (2)
+From: syzbot <syzbot+4ac05c048fbcdd0e3444@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 11:08=E2=80=AFAM Ze Gao <zegao2021@gmail.com> wrote=
-:
->
-> On Sat, Jan 20, 2024 at 6:45=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > On Thu, Jan 18, 2024 at 5:54=E2=80=AFPM Ze Gao <zegao2021@gmail.com> wr=
-ote:
-> > >
-> > > On Fri, Jan 19, 2024 at 7:53=E2=80=AFAM Namhyung Kim <namhyung@kernel=
-.org> wrote:
-> > > >
-> > > > On Wed, Jan 17, 2024 at 7:15=E2=80=AFPM Ze Gao <zegao2021@gmail.com=
-> wrote:
-> > > > >
-> > > > > On Thu, Jan 18, 2024 at 11:00=E2=80=AFAM Ze Gao <zegao2021@gmail.=
-com> wrote:
-> > > > > >
-> > > > > > On Wed, Jan 17, 2024 at 9:35=E2=80=AFAM Namhyung Kim <namhyung@=
-kernel.org> wrote:
-> > > > > > >
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > On Sun, Jan 14, 2024 at 11:23=E2=80=AFPM Ze Gao <zegao2021@gm=
-ail.com> wrote:
-> > > > > > > >
-> > > > > > > > Hi,
-> > > > > > > >
-> > > > > > > > The problems of task state report in both libtraceevent
-> > > > > > > > and perf sched has been reported in [1]. In short, they
-> > > > > > > > parsed the wrong state due to relying on the outdated
-> > > > > > > > hardcoded state string to interpret the raw bitmask
-> > > > > > > > from the record, which left the messes to maintain the
-> > > > > > > > backward compatibilities for both tools.
-> > > > > > > >
-> > > > > > > > [1] has not managed to make itself into the kernel, the
-> > > > > > > > problems and the solutions are well studied though.
-> > > > > > > >
-> > > > > > > > Luckily, as suggested by Steven, perf/libtraceevent
-> > > > > > > > records the print format, especially the __print_flags()
-> > > > > > > > part of the in-kernel tracepoint sched_switch in its
-> > > > > > > > metadata, and we have a chance to build the state str
-> > > > > > > > on the fly by parsing it.
-> > > > > > > >
-> > > > > > > > Now that libtraceevent has landed this solution in [2],
-> > > > > > > > we now apply the same idea to perf as well.
-> > > > > > >
-> > > > > > > Thanks for your work.  But perf links libtraceevent
-> > > > > > > conditionally so you need to make sure if it works without
-> > > > > > > that too.
-> > > > > >
-> > > > > > Yes, I've tested with NO_LIBTRACEEVENT=3D1, and it turns
-> > > > > > out perf removes perf sched subcmd without libtraceevent,
-> > > > >
-> > > > > FWIW,  commit 378ef0f5d9d7f4 ("perf build: Use libtraceevent
-> > > > > from the system") has proved this as well.
-> > > >
-> > > > Right, but I think we can enable perf sched without libtraceevent
-> > > > for minimal features like record only.  But that doesn't belong to
-> > > > this change set.
-> > > >
-> > > > >
-> > > > > > which explains why the compiler does not complain no
-> > > > > > evsel__intval() defined when !HAVE_LIBTRACEEVENT
-> > > > > > given the fact so many references of evsel__intval() in
-> > > > > > builtin-sched.c.
-> > > > > > Here evsel__taskstate() uses the exact assumption as
-> > > > > > evsel__intval(), so I put it next to it for clarity and it work=
-s
-> > > > > > without a doubt.
-> > > > > >
-> > > > > > > I think all libtraceevent related stuff should be in the
-> > > > > > > util/trace-event.c which is included only if the library is
-> > > > > > > available.  Maybe util/trace-event-parse.c is a better
-> > > > > > > place but then you need to tweak the python-ext-sources
-> > > > > > > and Makefile.perf for the case it's not available.
-> > > > > >
-> > > > > > Thanks for pointing this out. I will do the hack if you insist
-> > > > > > on this move :D. But I think the current version is clear
-> > > > > > enough, otherwise we need to move all the parts guarded
-> > > > > > by #ifdef HAVE_LIBTRACEEVENT out for complete decoupling.
-> > > > > > What do you think of it?
-> > > >
-> > > > Oh, I realized that all the affected codes are under the #ifdef
-> > > > properly then maybe it's ok for now.  But I prefer moving the
-> > > > code if you're ok.  Maybe I can accept this code as is and you
-> > >
-> > > Sounds great!
-> > >
-> > > > can work on the refactoring later.  Does that work for you?
-> > >
-> > > Absolutely! Will send the following refactoring patches soon. :D
-> >
-> > Thanks, but your patches don't apply cleanly.  Could you please
-> > rebase it onto the current perf-tools-next tree?
->
-> Oops, that is kinda weird. I've tested and managed to cherry-picked all 4
-> patches onto branch perf-tools-next in [1], with no conflicts being
+Hello,
 
-Please forget about this. Looks like git-cherry-pick is smarter to
-figure out where to
-apply when in the same repo ( or than git-am ?).
+syzbot found the following issue on:
 
-Anyway I've resent a v2 series:
-    https://lore.kernel.org/all/20240122070859.1394479-2-zegao@tencent.com/
+HEAD commit:    1b1934dbbdcf Merge tag 'docs-6.8-2' of git://git.lwn.net/l..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1275fc93e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=68ea41b98043e6e8
+dashboard link: https://syzkaller.appspot.com/bug?extid=4ac05c048fbcdd0e3444
+compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
 
-Tested and verified. Hope this time i don't mess it up :)
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Thanks,
-        -- Ze
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-1b1934db.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/00b728a4f3de/vmlinux-1b1934db.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/5a3fe8452d59/Image-1b1934db.gz.xz
 
-> hit.  Maybe I used the wrong branch tip?
->
-> FWIW:  the tip I rebase onto is
->
-> d988c9f511af (perf/perf-tools-next) MAINTAINERS: Add Namhyung as
-> tools/perf/ co-maintainer
->
-> [1]:  https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/
->
-> Regards,
->         -- Ze
->
-> > Thanks,
-> > Namhyung
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4ac05c048fbcdd0e3444@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 11671 at kernel/events/core.c:3923 ctx_sched_in+0xb0/0x14c kernel/events/core.c:3936
+Modules linked in:
+CPU: 1 PID: 11671 Comm: syz-executor.0 Not tainted 6.7.0-syzkaller-10085-g1b1934dbbdcf #0
+Hardware name: linux,dummy-virt (DT)
+pstate: 004000c9 (nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : ctx_sched_in+0xb0/0x14c kernel/events/core.c:3923
+lr : perf_event_sched_in kernel/events/core.c:2677 [inline]
+lr : perf_event_context_sched_in kernel/events/core.c:3983 [inline]
+lr : __perf_event_task_sched_in+0x11c/0x1d0 kernel/events/core.c:4012
+sp : ffff8000835e3940
+x29: ffff8000835e3940 x28: f2ff00002c4d7570 x27: 000000000000000e
+x26: 0000000000000001 x25: f5ff00004b7fbc78 x24: f5ff00004b7fb600
+x23: f9ff000002eab600 x22: 0000000000000002 x21: 0000000000000007
+x20: faff000014d8c900 x19: ffff00007f9d00b8 x18: ffff800083abbba8
+x17: ffff7ffffd514000 x16: ffff800080008000 x15: 0000000000000001
+x14: 000000000000006e x13: 0000000000000000 x12: ffff8000824dfe70
+x11: 0000000000000001 x10: 68221d39881c888f x9 : 9edf92a6ba7012f5
+x8 : f5ff00004b7fc7a8 x7 : 0000000000000004 x6 : 0000000000000001
+x5 : ffff7ffffd514000 x4 : 0000000000000000 x3 : ffff7ffffd514000
+x2 : f5ff00004b7fb600 x1 : 0000000000000002 x0 : 0000000000000000
+Call trace:
+ ctx_sched_in+0xb0/0x14c kernel/events/core.c:3936
+ perf_event_sched_in kernel/events/core.c:2677 [inline]
+ perf_event_context_sched_in kernel/events/core.c:3983 [inline]
+ __perf_event_task_sched_in+0x11c/0x1d0 kernel/events/core.c:4012
+ perf_event_task_sched_in include/linux/perf_event.h:1484 [inline]
+ finish_task_switch.isra.0+0x104/0x248 kernel/sched/core.c:5269
+ context_switch kernel/sched/core.c:5403 [inline]
+ __schedule+0x328/0x8a8 kernel/sched/core.c:6727
+ preempt_schedule_common kernel/sched/core.c:6904 [inline]
+ preempt_schedule+0x48/0x60 kernel/sched/core.c:6928
+ __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+ _raw_spin_unlock_irqrestore+0x34/0x44 kernel/locking/spinlock.c:194
+ spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+ unlock_page_lruvec_irqrestore include/linux/memcontrol.h:1672 [inline]
+ release_pages+0xf4/0x530 mm/swap.c:1039
+ free_pages_and_swap_cache+0x58/0x68 mm/swap_state.c:316
+ tlb_batch_pages_flush+0x54/0x8c mm/mmu_gather.c:98
+ tlb_flush_mmu_free mm/mmu_gather.c:293 [inline]
+ tlb_flush_mmu mm/mmu_gather.c:300 [inline]
+ tlb_finish_mmu+0x74/0x1c0 mm/mmu_gather.c:392
+ exit_mmap+0x144/0x280 mm/mmap.c:3290
+ __mmput+0x3c/0x170 kernel/fork.c:1343
+ mmput+0x50/0x5c kernel/fork.c:1365
+ exit_mm kernel/exit.c:569 [inline]
+ do_exit+0x288/0x960 kernel/exit.c:858
+ __do_sys_exit kernel/exit.c:987 [inline]
+ __se_sys_exit kernel/exit.c:985 [inline]
+ do_group_exit+0x0/0x90 kernel/exit.c:985
+ __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
+ invoke_syscall+0x48/0x114 arch/arm64/kernel/syscall.c:51
+ el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:136
+ do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:155
+ el0_svc+0x34/0xd8 arch/arm64/kernel/entry-common.c:678
+ el0t_64_sync_handler+0x100/0x12c arch/arm64/kernel/entry-common.c:696
+ el0t_64_sync+0x19c/0x1a0 arch/arm64/kernel/entry.S:595
+---[ end trace 0000000000000000 ]---
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000028
+Mem abort info:
+  ESR = 0x0000000096000005
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x05: level 1 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+user pgtable: 4k pages, 48-bit VAs, pgdp=0000000054ec7000
+[0000000000000028] pgd=0800000045bd1003, p4d=0800000045bd1003, pud=0000000000000000
+Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 1 PID: 11671 Comm: syz-executor.0 Tainted: G        W          6.7.0-syzkaller-10085-g1b1934dbbdcf #0
+Hardware name: linux,dummy-virt (DT)
+pstate: 004000c9 (nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : perf_ctx_sched_task_cb+0x14/0x80 kernel/events/core.c:3484
+lr : perf_event_context_sched_in kernel/events/core.c:3985 [inline]
+lr : __perf_event_task_sched_in+0x140/0x1d0 kernel/events/core.c:4012
+sp : ffff8000835e3950
+x29: ffff8000835e3950 x28: f2ff00002c4d7570 x27: 000000000000000e
+x26: 0000000000000001 x25: f5ff00004b7fbc78 x24: f5ff00004b7fb600
+x23: f9ff000002eab600 x22: f5ff00004b7fb600 x21: faff000014d8c900
+x20: 0000000000000000 x19: ffff8000824bc0b8 x18: ffff800083abbba8
+x17: ffff7ffffd514000 x16: ffff800080008000 x15: 0000000000000001
+x14: 000000000000006e x13: 0000000000000000 x12: ffff8000824dfe70
+x11: 0000000000000001 x10: 68221d39881c888f x9 : 9edf92a6ba7012f5
+x8 : f5ff00004b7fc7a8 x7 : 0000000000000004 x6 : 0000000000000001
+x5 : ffff7ffffd514000 x4 : 0000000000000000 x3 : ffff7ffffd514000
+x2 : f5ff00004b7fb600 x1 : 0000000000000001 x0 : 0000000000000000
+Call trace:
+ perf_ctx_sched_task_cb+0x14/0x80 kernel/events/core.c:3484
+ perf_event_context_sched_in kernel/events/core.c:3985 [inline]
+ __perf_event_task_sched_in+0x140/0x1d0 kernel/events/core.c:4012
+ perf_event_task_sched_in include/linux/perf_event.h:1484 [inline]
+ finish_task_switch.isra.0+0x104/0x248 kernel/sched/core.c:5269
+ context_switch kernel/sched/core.c:5403 [inline]
+ __schedule+0x328/0x8a8 kernel/sched/core.c:6727
+ preempt_schedule_common kernel/sched/core.c:6904 [inline]
+ preempt_schedule+0x48/0x60 kernel/sched/core.c:6928
+ __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+ _raw_spin_unlock_irqrestore+0x34/0x44 kernel/locking/spinlock.c:194
+ spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+ unlock_page_lruvec_irqrestore include/linux/memcontrol.h:1672 [inline]
+ release_pages+0xf4/0x530 mm/swap.c:1039
+ free_pages_and_swap_cache+0x58/0x68 mm/swap_state.c:316
+ tlb_batch_pages_flush+0x54/0x8c mm/mmu_gather.c:98
+ tlb_flush_mmu_free mm/mmu_gather.c:293 [inline]
+ tlb_flush_mmu mm/mmu_gather.c:300 [inline]
+ tlb_finish_mmu+0x74/0x1c0 mm/mmu_gather.c:392
+ exit_mmap+0x144/0x280 mm/mmap.c:3290
+ __mmput+0x3c/0x170 kernel/fork.c:1343
+ mmput+0x50/0x5c kernel/fork.c:1365
+ exit_mm kernel/exit.c:569 [inline]
+ do_exit+0x288/0x960 kernel/exit.c:858
+ __do_sys_exit kernel/exit.c:987 [inline]
+ __se_sys_exit kernel/exit.c:985 [inline]
+ do_group_exit+0x0/0x90 kernel/exit.c:985
+ __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
+ invoke_syscall+0x48/0x114 arch/arm64/kernel/syscall.c:51
+ el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:136
+ do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:155
+ el0_svc+0x34/0xd8 arch/arm64/kernel/entry-common.c:678
+ el0t_64_sync_handler+0x100/0x12c arch/arm64/kernel/entry-common.c:696
+ el0t_64_sync+0x19c/0x1a0 arch/arm64/kernel/entry.S:595
+Code: a9bd7bfd 910003fd a90153f3 aa0003f4 (f8428e80) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+   4:	910003fd 	mov	x29, sp
+   8:	a90153f3 	stp	x19, x20, [sp, #16]
+   c:	aa0003f4 	mov	x20, x0
+* 10:	f8428e80 	ldr	x0, [x20, #40]! <-- trapping instruction
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
