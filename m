@@ -1,47 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E8747A40;
-	Mon, 22 Jan 2024 20:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BEB47A74;
+	Mon, 22 Jan 2024 20:36:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705955715; cv=none; b=okI0R6pWgDx1cjmmFHA6dvwsZb9WwEJuoSbMERYNeodiKMciXxI79fa7XoaFqcuxdKPDXUhl5aGbOetUYmv28TwUt2XXqW5R0FrTis6RvnyQzTBBHJvAfylBA3RLCKdGHlf8GoEZQ1VzdniXZE6t29Dfe7s7N0ExqX+5MXVXnc0=
+	t=1705955801; cv=none; b=c5iJqBuHhyqv5M8mfQkVhYCoBq0X8gRG2L8q09aYV/F+RjKDvda//xBMQFW/ZiaCz7tqaN3/HzA5YPgKGSI+JfqqPEqNfXqrl6o+p5yFPvNvZK+ywA3INIAnWfKrB05v4aMk1UBXajrLPwboc4iQw1fwGzd8dk3olgS8geYmrUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705955715; c=relaxed/simple;
-	bh=ibfFotzuiwAZb47N/hapoyQ/3VMQ31E1CrfYpEAAork=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tVmtAPN7B3V9ww33qXm/koCDM3BwanLR/RmoM+C6uUdOkJ7bsUuGBA7CFFhcLhVYet5YQDvzYLkLvHnab5pD6l+ZRxoLIn7xUd+oxNyqbMGeEzbcf9bd5LMYnT1ea1Yks2s+R3ESHa0Onj0bE3MDEzZLF07wWuYIzxnZX/L9isY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oa1PL9oV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705955801; c=relaxed/simple;
+	bh=V7aPcu4hMxjz3kpTAdgkkBzbU5wD3Uw1gZMJ/eSZog0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qPu2lob2yJ1pZAz/Ob+XgWqD7DReizrXYaCOmCP4X3beLokU0UlWTeApgYzuJ2YnehOLaaoRXQ4Trn5MGeX7c/5j3diavJvmxZ2ZohLAczpjJyIRBducsv2/pcwifI6e7Z2xs3UvuxyMS0rj5XB5e1dwUrx/tAV1/VSifqOi+/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DlbHeWJg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oa1PL9oV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF5EC433F1;
-	Mon, 22 Jan 2024 20:35:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DlbHeWJg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A7C4C433F1;
+	Mon, 22 Jan 2024 20:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705955715;
-	bh=ibfFotzuiwAZb47N/hapoyQ/3VMQ31E1CrfYpEAAork=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oa1PL9oVcc6isCJv6ebZu/3r2vyaAFA5Jf3umRLCLYx86S6mJGKBYY3xEQl+6lp4A
-	 lFu1nNpceqglMiHgpxJwl3o4cfr5KIUSbG3S+QIFTbpGc+Q70VxmzwNcH60JX0Ce/R
-	 ZWfaltx8YQufnP6ki2eRoM0v8dDl9VQUrmshuMtzvHd/lA2I3wv1JBQw4pzAYWwW+5
-	 oxl+EYqQbw1nU0vZ0RKVfv4WXbQw9GPcIR6wZEzdif8xWWor/c66FOfzTsro5F4vQq
-	 Hvp0/Hp8xDmNZ8YzslFWgmk8mJ34HAjbXUcdRXX5fvKJVVzjgMdSXWSEbV/aLun5Ow
-	 YTMENW94oKWig==
+	s=k20201202; t=1705955801;
+	bh=V7aPcu4hMxjz3kpTAdgkkBzbU5wD3Uw1gZMJ/eSZog0=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=DlbHeWJgnVbaON1TUSeezUgY+Kv4h+x7cj9WVkEKEIK3VDdYBdzI3SQlnzdkM2yAp
+	 6uK+BXLgQPnvDqc4bXm2yD20L56Ssc7fWPZnmqpSCGCvQJ3RuPEYiq6MA8flEIEryR
+	 LJ0W0HWxhwNTV/sMjXnZegTlRRo+qM+Zb0hYWGKDqQCym2wqUBSLWBod3q6MxkYc1j
+	 UlJZ3aCTxgOIZFqYt8lw7vCEBddu5Rx6JMeFWElP40IDl6QsKfPa/gYsj0C/zA1SlN
+	 FjOz1qygcJ2BjWF2A4ZVS9P45p96o545ad+q51xU7eY4dgitEumQXTCC3pitTnBc1W
+	 QBSCoLPzJhK5g==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-kernel@vger.kernel.org,
+To: peterz@infradead.org,
+	mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org,
+	mingo@redhat.com,
 	linux-perf-users@vger.kernel.org,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	acme@redhat.com,
+	irogers@google.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	Yang Jihong <yangjihong1@huawei.com>,
+	adrian.hunter@intel.com,
 	acme@kernel.org
-Cc: hca@linux.ibm.com,
-	svens@linux.ibm.com,
-	gor@linux.ibm.com,
-	sumanthk@linux.ibm.com
-Subject: Re: [PING PATCH] perf test: raise limit to 20 percent for perf_stat_--bpf-counters_test
-Date: Mon, 22 Jan 2024 12:35:11 -0800
-Message-ID: <170595558508.377262.16864811982251292801.b4-ty@kernel.org>
+Subject: Re: [PATCH] perf build: Check whether pkg-config is installed when libtraceevent is linked
+Date: Mon, 22 Jan 2024 12:36:36 -0800
+Message-ID: <170595558511.377262.16675125413548801604.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-In-Reply-To: <20240108084009.3959211-1-tmricht@linux.ibm.com>
-References: <20240108084009.3959211-1-tmricht@linux.ibm.com>
+In-Reply-To: <20240112034019.3558584-1-yangjihong1@huawei.com>
+References: <20240112034019.3558584-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,13 +53,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Mon, 8 Jan 2024 09:40:09 +0100, Thomas Richter wrote:
-> This test case often fails on s390 (about 2 out of 10) because the
-> 10% percent limit on the difference between --bpf-counters event counting
-> and s390 hardware counting is more than 10% in all failure cases.
-> Raise the limit to 20% on s390 and the test case succeeds.
+On Fri, 12 Jan 2024 03:40:19 +0000, Yang Jihong wrote:
+> If pkg-config is not installed when libtraceevent is linked, the build fails.
 > 
+> The error information is as follows:
 > 
+>   $ make
+>   <SNIP>
+>   In file included from /home/yjh/projects_linux/perf-tool-next/linux/tools/perf/util/evsel.c:43:
+>   /home/yjh/projects_linux/perf-tool-next/linux/tools/perf/util/trace-event.h:149:62: error: operator '&&' has no right operand
+>     149 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>         |                                                              ^~
+>   error: command '/usr/bin/gcc' failed with exit code 1
+>   cp: cannot stat 'python_ext_build/lib/perf*.so': No such file or directory
+>   make[2]: *** [Makefile.perf:668: python/perf.cpython-310-x86_64-linux-gnu.so] Error 1
+>   make[2]: *** Waiting for unfinished jobs....
+> 
+> [...]
 
 Applied to perf-tools-next, thanks!
 
