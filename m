@@ -1,148 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 066563A8C3;
-	Mon, 22 Jan 2024 10:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7553A8CB;
+	Mon, 22 Jan 2024 10:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920212; cv=none; b=ZNdcB31xWfuKluBEwds2hyCCvWS3qm+U+Cz/xnDDjlai2983jjt8UdiP3FNrSuk/BnXcKKnRFZA6lmmLluwzdGcBGVqQy1apaBYVez1RmHBES2lreLB/R9k2XhKQSPV44QBB/pUBv+skUHR2BD5MlGsgyn2/1ZubrXjjtU0TztY=
+	t=1705920423; cv=none; b=A63WCMCsLQaTqFJAF4QA6rpBPhu0G67jEjZuOcZH2S2y/zIdppj95VOIm0Bwyies8P3iEkJjMq4+E+fjVoB6QcAoMfaTHwaR0DaQXiSrP6B4cyMAHf6x0cbCacz42OCaKnfv1sU61NcQzQ75CiV+05az3MmaWnDQrQhuxtRgXOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920212; c=relaxed/simple;
-	bh=fyYYCXjNr5cerSlDQuL1Kn4l9PWgvZZ50fR18b6YWSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TFZuF+Xy+byDRJAldPUsr/iH28zBY4Ij1K9F6oIMSldyISI+0BBAb96NtF6rZihxf9Saf/x4alOQ28k8O67RZ8a36ZqYQAkSIgYzuX3glnI93g1NuFTiawvc0lTh3HzzzTA2UAOlZxc+FWM+sxHqUll0PDI0bs7H/YXlhgZzayw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D8C71FB;
-	Mon, 22 Jan 2024 02:44:14 -0800 (PST)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B11C3F5A1;
-	Mon, 22 Jan 2024 02:43:26 -0800 (PST)
-Message-ID: <5236cd64-c0ca-6d0e-137f-06a44f03ebc7@arm.com>
-Date: Mon, 22 Jan 2024 10:43:27 +0000
+	s=arc-20240116; t=1705920423; c=relaxed/simple;
+	bh=fhaYFQB3dnbEhnIGIDw2KFqMrc6HBf6DGrphFIMQKhQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ITSdaBkU2YeKxnbMbHYPMv9/Xgnd9aD8TBniI1pvnxtTvqo3douBi2tglZceXlxXVzNkCa6gagEkXkkoqgRwdTWSVRXYYi+XnjT50j3GH3SnSWnT6WHR7K0zr/SYj+8p+054BVzmNgAX0RQeD6NR8InNbCyUw233UQbJtDL4Bl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TJRhg2sZpzsWLL;
+	Mon, 22 Jan 2024 18:45:55 +0800 (CST)
+Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9E1BA1400FD;
+	Mon, 22 Jan 2024 18:46:55 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemd100002.china.huawei.com
+ (7.221.188.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Mon, 22 Jan
+ 2024 18:46:54 +0800
+Date: Mon, 22 Jan 2024 18:46:46 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+CC: Changbin Du <changbin.du@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+	<irogers@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
+ Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Peter Zijlstra
+	<peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v4 3/5] perf: script: add field 'disasm' to display
+ mnemonic instructions
+Message-ID: <20240122104646.oqa7jnmd6ed2dzdw@M910t>
+References: <20240119104856.3617986-1-changbin.du@huawei.com>
+ <20240119104856.3617986-4-changbin.du@huawei.com>
+ <e840bd05-a9e0-4463-8597-b67c7627809b@intel.com>
+ <20240120074009.zmywqj6irtedivqk@M910t>
+ <e8e5ea25-326b-4565-b0e8-1583b09dba65@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
-Content-Language: en-US
-To: Mark Rutland <mark.rutland@arm.com>, Ian Rogers <irogers@google.com>
-Cc: acme@redhat.com, john.g.garry@oracle.com, leo.yan@linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- mike.leach@linaro.org, namhyung@kernel.org, suzuki.poulose@arm.com,
- tmricht@linux.ibm.com, will@kernel.org, linux-kernel@vger.kernel.org,
- Hector Martin <marcan@marcan.st>, Marc Zyngier <maz@kernel.org>
-References: <20240116170348.463479-1-mark.rutland@arm.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240116170348.463479-1-mark.rutland@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <e8e5ea25-326b-4565-b0e8-1583b09dba65@intel.com>
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd100002.china.huawei.com (7.221.188.184)
 
+On Mon, Jan 22, 2024 at 11:59:13AM +0200, Adrian Hunter wrote:
+> On 20/01/24 09:40, Changbin Du wrote:
+> > On Fri, Jan 19, 2024 at 08:39:36PM +0200, Adrian Hunter wrote:
+> >> On 19/01/24 12:48, Changbin Du wrote:
+> >>> In addition to the 'insn' field, this adds a new field 'disasm' to
+> >>> display mnemonic instructions instead of the raw code.
+> >>>
+> >>> $ sudo perf script -F +disasm
+> >>>        perf-exec 1443864 [006] 2275506.209848:          psb:  psb offs: 0                                      0 [unknown] ([unknown])
+> >>>        perf-exec 1443864 [006] 2275506.209848:          cbr:  cbr: 41 freq: 4100 MHz (114%)                    0 [unknown] ([unknown])
+> >>>               ls 1443864 [006] 2275506.209905:          1  branches:uH:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: movq %rsp, %rdi
+> >>>               ls 1443864 [006] 2275506.209908:          1  branches:uH:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: callq _dl_start+0x0
+> >>>
+> >>> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> >>> ---
+> >>>  tools/perf/Documentation/perf-script.txt | 7 ++++---
+> >>>  tools/perf/builtin-script.c              | 8 +++++++-
+> >>>  2 files changed, 11 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> >>> index ff9a52e44688..fc79167c6bf8 100644
+> >>> --- a/tools/perf/Documentation/perf-script.txt
+> >>> +++ b/tools/perf/Documentation/perf-script.txt
+> >>> @@ -132,9 +132,10 @@ OPTIONS
+> >>>          Comma separated list of fields to print. Options are:
+> >>>          comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
+> >>>          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
+> >>> -        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
+> >>> -        phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
+> >>> -        machine_pid, vcpu, cgroup, retire_lat.
+> >>> +        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
+> >>> +        insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
+> >>> +        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
+> >>> +
+> >>
+> >> Further down, there are explanations for insn and insnlen.  disasm
+> >> could be added there.
+> >>
+> > Updated as:
+> > 
+> > 	When doing instruction trace decoding, insn, disasm and insnlen give the
+> > 	instruction bytes, disassembled instructions and the instruction length
+> > 	of the current instruction respectively.
+> 
+> I wondered about mentioning that disasm needs perf to be compiled with
+> disassembler support, but with a permissive license it seems likely
+> that libcapstone support would generally be built into perf, so that
+> should be fine.
+> 
+Yes, libcapstone has a permissive license. It's available on most Linux distros.
 
+So, I updated as below:
 
-On 16/01/2024 17:03, Mark Rutland wrote:
-> Currently the perf tool doesn't deteect support for extneded event types
-> on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
-> hardware events into per-PMU events. This is due to the detection of
-> extended event types not handling mandatory filters required by the
-> M1/M2 PMU driver.
-> 
-> PMU drivers and the core perf_events code can require that
-> perf_event_attr::exclude_* filters are configured in a specific way and
-> may reject certain configurations of filters, for example:
-> 
-> (a) Many PMUs lack support for any event filtering, and require all
->     perf_event_attr::exclude_* bits to be clear. This includes Alpha's
->     CPU PMU, and ARM CPU PMUs prior to the introduction of PMUv2 in
->     ARMv7,
-> 
-> (b) When /proc/sys/kernel/perf_event_paranoid >= 2, the perf core
->     requires that perf_event_attr::exclude_kernel is set.
-> 
-> (c) The Apple M1/M2 PMU requires that perf_event_attr::exclude_guest is
->     set as the hardware PMU does not count while a guest is running (but
->     might be extended in future to do so).
-> 
-> In is_event_supported(), we try to account for cases (a) and (b), first
-> attempting to open an event without any filters, and if this fails,
-> retrying with perf_event_attr::exclude_kernel set. We do not account for
-> case (c), or any other filters that drivers could theoretically require
-> to be set.
-> 
-> Thus is_event_supported() will fail to detect support for any events
-> targetting an Apple M1/M2 PMU, even where events would be supported with
-> perf_event_attr:::exclude_guest set.
-> 
-> Since commit:
-> 
->   82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in perf_event_attr.type")
-> 
-> ... we use is_event_supported() to detect support for extended types,
-> with the PMU ID encoded into the perf_event_attr::type. As above, on an
-> Apple M1/M2 system this will always fail to detect that the event is
-> supported, and consequently we fail to detect support for extended types
-> even when these are supported, as they have been since commit:
-> 
->   5c816728651ae425 ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability")
-> 
-> Due to this, the perf tool will not automatically expand plain
-> PERF_TYPE_HARDWARE events into per-PMU events, even when all the
-> necessary kernel support is present.
-> 
-> This patch updates is_event_supported() to additionally try opening
-> events with perf_event_attr::exclude_guest set, allowing support for
-> events to be detected on Apple M1/M2 systems. I beleive that this is
-> sufficient for all contemporary CPU PMU drivers, though in future it may
-> be necessary to check for other combinations of filter bits.
-> 
-> I've deliberately changed the check to not expect a specific error code
-> for missing filters, as today ;the kernel may return a number of
-> different error codes for missing filters (e.g. -EACCESS, -EINVAL, or
-> -EOPNOTSUPP) depending on why and where the filter configuration is
-> rejected, and retrying for any error is more robust.
-> 
-> Note that this does not remove the need for commit:
-> 
->   a24d9d9dc096fc0d ("perf parse-events: Make legacy events lower priority than sysfs/JSON")
-> 
-> ... which is still necessary so that named-pmu/event/ events work on
-> kernels without extended type support, even if the event name happens to
-> be the same as a PERF_EVENT_TYPE_HARDWARE event (e.g. as is the case for
-> the M1/M2 PMU's 'cycles' and 'instructions' events).
-> 
-> Fixes: 82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in perf_event_attr.type")
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Hector Martin <marcan@marcan.st>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@arm.com>
-> Cc: John Garry <john.g.garry@oracle.com>
-> Cc: Leo Yan <leo.yan@linaro.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Will Deacon <will@kernel.org>
-> ---
->  tools/perf/util/print-events.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
-> 
+	When doing instruction trace decoding, insn, disasm and insnlen give the
+	instruction bytes, disassembled instructions (requires libcapstone support)
+	and the instruction length of the current instruction respectively.
 
-Tested-by: James Clark <james.clark@arm.com>
-
-Tested on Juno and N1SDP, although I wouldn't have expected it to make a
-difference on those platforms because they support exclude_guest=0.
-
-Although I do see an interaction with the test "Session topology" if I
-hack the driver to behave like M1. The test has been failing (on
-big.LITTLE) since commit 251aa040244a ("perf parse-events: Wildcard most
-"numeric" events") but the result is that the test actually starts
-passing with this change. I don't think that should really block this
-though, it's likely going to require a separate fix which I will look into.
-
-James
+-- 
+Cheers,
+Changbin Du
