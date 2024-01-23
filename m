@@ -1,121 +1,65 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6143C627FB
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 16:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5CA7664BE;
+	Tue, 23 Jan 2024 16:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706025909; cv=none; b=s2DbjD6OLreHA2c5/+NdIgBzbAYJVVv5lJ8v1vwFkfix9oeVwuiXhVvdIqS5TBG8/TKjGkFrYxV5EqQlBqC9nV7wMvhA3LWjxh5pWQ8ragGz9PBStgzv6E1vB4ezsgyN64CeCY4+IBt6HMBuV3v/f7J7p6T4AmMzR1tGqbRbvps=
+	t=1706027955; cv=none; b=JBmIm1881tjN2h9+EHMdYW96v0JvNlepvQm0BMlGkPbK5D9u37F8p3+8dVFOu60towmdmQniboSAew40MJDHwcLuvY5vycetLu1ccFPmmQznz74k+t7AYagzDjg2sygtr7qOEVspcIgDUjvemaW3BltNBdcSLmQIJA9j40bcc18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706025909; c=relaxed/simple;
-	bh=HyArpE4Bn9PmSQ1xAjgCKpN910ZJX5xeMSEjnvi+zrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GeQtb7GOfN7y/vzTZe1C/VjxPBiTpSeHC+n8jgPGwNJhjONE71MfYcNxOw/PbyVUCGy+dhdNtCEZlsUwVegr1e/XHT/1IhrWz545YXGgk5dGja6amtZ9C3u12ZLqQhWykwNckBL2sbsuYXMZuhS98zVmSYUhieG0K5jr/dy3bWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sfkfyETD; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sfkfyETD"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d76f1e3e85so102675ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 08:05:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706025907; x=1706630707; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CPRvhF7JVnUDF3h0V9XjA6y+vpgVj6b4pFLJNf18uYM=;
-        b=sfkfyETDC3ThnVAw7YbKhBCm2R8AgUSyKTeCQayraDKg3vYMYaHqLtQWG8VWIhai29
-         jwb3l185ppRAob1N/OkdpO1VF5brYYUY0Ppb550fEr2vbZlges9Ke63ov5eZvSPCeqHa
-         1CZAnuFYfke+Oa/DFQwZIDMs+bYTu7hj2Z3GOckM2PzTkb+Pxryh/qiBph+bnhmTNphe
-         nnupuJmqeeV1ovvKYSW3/a9Ww3y8TJirsugXhTom0M66he7MCo5bYUnaHBHdfhjOtB4H
-         CtQrrnF7JX6ad2beEeSjgcMlvtQ0RjiGHlT8KXIS61PsiPO6uAsX+IWXJISO1SIrljsX
-         EWjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706025907; x=1706630707;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CPRvhF7JVnUDF3h0V9XjA6y+vpgVj6b4pFLJNf18uYM=;
-        b=NqWUH+ATp4mMF0bd4nX/XL2cIrAPnvuigTu2xWAk9Q+ToEv5Wr2f75p8MdBXvJRS9O
-         Mwcvbzuoyfaw/inGxnLYShEJvbmHuhbIIEJnhmGxd5SrMX0LJQ1ZJRJ+NyNIpENHOtYg
-         tomWpKF+jVs46WBmiHLTBAMj3FgjNPFxxAJ853OO568CeG/k3FrMT/NkASoEjYW+ffGN
-         xmMdzj/ne5bPkz6OSkCL5EFwDxsrvkRPOYI6ooBtfhN+2L7vO66kQtdOvNXU19nIVoqf
-         ooZjDm4/9HiqQQjx3zpQ2F8DqyCSy21/PxUT8OP/Z7XyKpG4B7NlBLH5zdLXWox8Ah4z
-         oLdg==
-X-Gm-Message-State: AOJu0YxAvcO5tH7dNtlkw5RBjl99Uy+lDWGpgIDnXG2XlmgN6SlczeRz
-	ofasj/ABt0cyH/9bw6m6h20TgCMXKeqHlBIUvffSZPSQKAXoqxHT7Hsk3yquxbL+nt5evVipviC
-	lD09Y+/a0lTcGVFvUH1Wvo1pidRfVZBD1VvhJ
-X-Google-Smtp-Source: AGHT+IE9PtNgbAHEuzSwNjDkirjNG2rauUtARn4jMdSNNZxVvaY9aLkWNaMjBCD2H80Oc21iiMj3W21zbmEEemnmAkg=
-X-Received: by 2002:a17:902:db03:b0:1d6:ebf1:f8cf with SMTP id
- m3-20020a170902db0300b001d6ebf1f8cfmr6830plx.0.1706025907190; Tue, 23 Jan
- 2024 08:05:07 -0800 (PST)
+	s=arc-20240116; t=1706027955; c=relaxed/simple;
+	bh=Lm8UxP0Ihg2Yhl9xUM/e/4SltZxhEB3Wd7A7mATeNe0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qOfqhW2Bi4CIHCMI4CY3nlOYelOYBCsjWBDNSwiyX9OUObpEqLYeZBEmdeijZHZ6G0M7Ey4V7wwi2Q1aVD4JhbkNM6RUGiYQy+EuzeyiF6KdoCsDSmbmAonp56s/i4M8cOXfQv6b02Wrdrbna61EKFVsnY5JdNNTeoR0lAmbT54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9232E1FB;
+	Tue, 23 Jan 2024 08:39:57 -0800 (PST)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 391C13F5A1;
+	Tue, 23 Jan 2024 08:39:10 -0800 (PST)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com
+Cc: James Clark <james.clark@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Spoorthy S <spoorts2@in.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] perf test: Skip test_arm_callgraph_fp.sh if unwinding isn't built in
+Date: Tue, 23 Jan 2024 16:39:00 +0000
+Message-Id: <20240123163903.350306-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122080406.28678-1-yangyicong@huawei.com>
-In-Reply-To: <20240122080406.28678-1-yangyicong@huawei.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 23 Jan 2024 08:04:55 -0800
-Message-ID: <CAP-5=fVzaRycRX2+NNMRp423sU5qpBa8z8p-WmF5sX+ty1Xf8A@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Make minimal shellcheck version to v0.6.0
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: acme@kernel.org, namhyung@kernel.org, peterz@infradead.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	linux-perf-users@vger.kernel.org, yangyicong@hisilicon.com, 
-	hejunhao3@huawei.com, linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 22, 2024 at 12:08=E2=80=AFAM Yicong Yang <yangyicong@huawei.com=
-> wrote:
->
-> From: Yicong Yang <yangyicong@hisilicon.com>
->
-> perf build failed due to the shellcheck on my machine (v0.4.6 on Ubuntu
-> 18.04.1 LTS) doesn't support -a/--check-sourced and -S/--severity option.
-> These two options are introduced in shellcheck v0.4.7 and v0.6.0
-> respectively. So restrict the minimal version of shellcheck to v0.6.0.
->
-> Fixes: b809fc656e76 ("perf build: Shellcheck support for OUTPUT directory=
-")
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+The first commit outputs the unwinding feature definition in perf
+version so that the script can gate on it. And then skip the test if
+it's not present.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I didn't add any fixes tags because it's modifying the perf version
+output, requires both commits, and it's just for a test skip change so
+I don't think backporting makes sense.
 
-Thanks,
-Ian
+James Clark (2):
+  perf version: Display availability of HAVE_DWARF_UNWIND_SUPPORT
+  perf test: Skip test_arm_callgraph_fp.sh if unwinding isn't built in
 
-> ---
->  tools/perf/Makefile.perf | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 27e7c478880f..f8774a9b1377 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -236,6 +236,16 @@ else
->    SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null)
->  endif
->
-> +# shellcheck is using in tools/perf/tests/Build with option -a/--check-s=
-ourced (
-> +# introduced in v0.4.7) and -S/--severity (introduced in v0.6.0). So mak=
-e the
-> +# minimal shellcheck version as v0.6.0.
-> +ifneq ($(SHELLCHECK),)
-> +  ifeq ($(shell expr $(shell $(SHELLCHECK) --version | grep version: | \
-> +        sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \< =
-060), 1)
-> +    SHELLCHECK :=3D
-> +  endif
-> +endif
-> +
->  export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
->  export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK
->
-> --
-> 2.24.0
->
+ tools/perf/builtin-version.c                    | 1 +
+ tools/perf/tests/shell/test_arm_callgraph_fp.sh | 6 ++++++
+ 2 files changed, 7 insertions(+)
+
+-- 
+2.34.1
+
