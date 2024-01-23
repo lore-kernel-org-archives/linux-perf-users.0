@@ -1,209 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E705012839F;
-	Tue, 23 Jan 2024 18:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6581138F9E
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 21:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706035878; cv=none; b=j/QqgNKF7yhNtxYNisqQc5agr8x2ADtVSmRmcbJv5TL9BTv0Y0XO826nnRchyxv6+AVW6NvAaMUMS7z0dLJU3/bq+sSJ4aQR1OfbLKcANap8Aa/QgEJRFvDMwKwmu5BCVL6NVTnB14O2vJWnyaf7IT1iZa2FaI7KS2jO/TCklNw=
+	t=1706045474; cv=none; b=SFOTtzJ79w9M2WNT6wFYGxPUjBeiGr9EBMoj5skPx25/nYaVxDo+uFXmg1Cc5kflA5WgLonTQuFAJVtkOM7bszkW6oKekhgCiCL+iXS1u98BYx8v93zRCIPN+bM0QRAn1aiOMxBxNvqIn8c4zuVoSjup9/wHEvQb/5IFotnQgDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706035878; c=relaxed/simple;
-	bh=nSDXmDpIUCfqz1C9u2rQFplZpafkH1Vmp8Cu8FIf17g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e+qQEQuhhmlqj3NXbpqZ1ctsu3m+D3I/ZJrGBKh+UZySEYq3R2vGZxyOO1mMlR0VNJ9EZ7LR2WSsAunnvsWyW0LYr11XSTVh/UVpWik9p+zc9qKSkex+6mhDGFKSW8VR0SVwh4R1eIz8vwh30xwTnDpUpeuwTQl+ubkkAB9kdXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B0ijxKZ+; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706045474; c=relaxed/simple;
+	bh=jP2/IW9UNkEjSgAKZeY0ax+X34XlCZzhZYmXu4icG+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bt5u7gyag6PhZ4Q1trldtWqLo2iFa2ZV79Rf8flpGWtg0Xz9YmeZ4xSV8qY6d1HBzPwSeWeXCKBOtnS7ol+HZzy3jkEYS4XS2LnGFoVJ44/WJkTYQpQJrGELoW5KcAso7QvHCMobBhhFCr4LsKCKdCcY95h8hjS9Li3UBqUt3d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ad60CBuj; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B0ijxKZ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706035877; x=1737571877;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nSDXmDpIUCfqz1C9u2rQFplZpafkH1Vmp8Cu8FIf17g=;
-  b=B0ijxKZ+3rArlUG+PpnStCLPiq9fYxI/ke5rXfohjS/1tow8PLVr7Q9M
-   My+Av7hRbTK+K2j/8U4A7pwcJLltG0wsvMVO0AvLiUM3RPstxn/r3xWMU
-   j1zKfZTsoKgMO7MHmQWpdhC/iiVPMh3Zyr8yVda+uafBnCB1JvUPwiqnM
-   /LSspsIrnwdojPfEteyzQZcLSeZSuxiBgtxi0vVedCrnw9gk97Djw81EK
-   gYyZq79nXhF4KQdCpphu/vmpKmaDVxn0ZpImxR3NNaKz9vChW95UQeR7e
-   Tal3gB66N3H1GXUGsb0xVpb30tH7cFXdFgwYdI6rCuojMzw56OhfJayFs
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400487532"
-X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400487532"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 10:51:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1764096"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa004.fm.intel.com with ESMTP; 23 Jan 2024 10:51:16 -0800
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	john.g.garry@oracle.com,
-	will@kernel.org,
-	james.clark@arm.com,
-	mike.leach@linaro.org,
-	leo.yan@linaro.org,
-	yuhaixin.yhx@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	tmricht@linux.ibm.com,
-	ravi.bangoria@amd.com,
-	atrajeev@linux.vnet.ibm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 7/7] perf mem: Clean up perf_pmus__num_mem_pmus()
-Date: Tue, 23 Jan 2024 10:50:36 -0800
-Message-Id: <20240123185036.3461837-8-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240123185036.3461837-1-kan.liang@linux.intel.com>
-References: <20240123185036.3461837-1-kan.liang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ad60CBuj"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so465944a12.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 13:31:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706045472; x=1706650272; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cLSrHTqApY0rnoNDPNmTbGyM4UlT798vTtkhFOVuGO8=;
+        b=Ad60CBujlqu06M2IFBbPXvjYD8g/BEXRejYj+DNvOwe8wY8n5vBoew7hrTl/u+VcTX
+         Mw1Suq5x7dhwT8+Kg1UpTRVofpgjJnrHYr6gl+HBY//ZZHbqrNqMWfVbigTZJZHXagmU
+         rnCo70Rr5QxK6vUJfK1EJi4krFDpBRl+2UwKE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706045472; x=1706650272;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cLSrHTqApY0rnoNDPNmTbGyM4UlT798vTtkhFOVuGO8=;
+        b=msqLj4CW1KEiUrJfb1KhW6BaIexj2z+f80PCQ05bIdzJ0eCpZ6nmagBtqvacWi1agn
+         nZ8mnXKglq0r6DuYYVBihyqiPDywn+ZY8HBzHMY+QhRtNFfV8P3R3X/+0ZF4Wi8QTjIB
+         COY2iQolEkQQx3srJjWohQH4G6zZ9FgB/9AhIIxqiSroihmc/s4DvpsSIIiU9LeXS6hW
+         ydR40FqXcNAlerTSgIsVKfVIq+1r+ytYQEFq+7DA62auMUEU1rMhkQVwJX1tfQ/NtxOC
+         pnp5QOmN/6q8iHENhAnrtE5qtT1NS2gLY+VctwPQ50FUmI+z/psUeJyA0K2P11ZLeRcy
+         ot6g==
+X-Gm-Message-State: AOJu0YwoolOz8RY9TtyNbHDvnOMO1MF9Xh2Zq1oeWRU3lopXH8xWQPot
+	vR49iovX0mew4bRvGzjQ/o6MWj5gnCg3Fsev0KrQuUHSEX8W+30SBKx+ZIZpMw==
+X-Google-Smtp-Source: AGHT+IFZZEebKX2R0JqbRWEEh9em7MQ0hN72r+XKI76xsV+huWAf7uMifAtdFdhTI+U9kp5jq78zPg==
+X-Received: by 2002:a05:6a20:28a1:b0:19a:3a7f:63cd with SMTP id q33-20020a056a2028a100b0019a3a7f63cdmr3098127pzf.49.1706045472672;
+        Tue, 23 Jan 2024 13:31:12 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id kr8-20020a056a004b4800b006da73b90fe4sm12541675pfb.14.2024.01.23.13.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 13:31:12 -0800 (PST)
+Date: Tue, 23 Jan 2024 13:31:11 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-hardening@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, John Garry <john.garry@huawei.com>,
+	Fangrui Song <maskray@google.com>, linux-perf-users@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 69/82] perf tools: Refactor intentional wrap-around test
+Message-ID: <202401231330.C55D17922@keescook>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-69-keescook@chromium.org>
+ <dc3a7101-964b-46c5-a78b-374b68cd54fb@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc3a7101-964b-46c5-a78b-374b68cd54fb@intel.com>
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Tue, Jan 23, 2024 at 08:21:41AM +0200, Adrian Hunter wrote:
+> perf tools has separate includes to the kernel, so does not
+> seem to include add_would_overflow() in any of its include
+> files at this point.  Need to update
+> tools/include/linux/overflow.h first.
 
-The number of mem PMUs can be calculated by searching the
-perf_pmus__scan_mem().
+Oops, thank you! I will adjust this.
 
-Remove the ARCH specific perf_pmus__num_mem_pmus()
-
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/arch/x86/util/pmu.c | 10 ----------
- tools/perf/builtin-c2c.c       |  2 +-
- tools/perf/builtin-mem.c       |  2 +-
- tools/perf/util/mem-events.c   | 14 ++++++++++++++
- tools/perf/util/mem-events.h   |  1 +
- tools/perf/util/pmus.c         |  6 ------
- tools/perf/util/pmus.h         |  1 -
- 7 files changed, 17 insertions(+), 19 deletions(-)
-
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index 0f49ff13cfe2..c3d89d6ba1bf 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -42,13 +42,3 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
- 			pmu->mem_events = perf_mem_events_intel;
- 	}
- }
--
--int perf_pmus__num_mem_pmus(void)
--{
--	/* AMD uses IBS OP pmu and not a core PMU for perf mem/c2c */
--	if (x86__is_amd_cpu())
--		return 1;
--
--	/* Intel uses core pmus for perf mem/c2c */
--	return perf_pmus__num_core_pmus();
--}
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 3bcb903b6b38..16b40f5d43db 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -3278,7 +3278,7 @@ static int perf_c2c__record(int argc, const char **argv)
- 			     PARSE_OPT_KEEP_UNKNOWN);
- 
- 	/* Max number of arguments multiplied by number of PMUs that can support them. */
--	rec_argc = argc + 11 * perf_pmus__num_mem_pmus();
-+	rec_argc = argc + 11 * (perf_pmu__mem_events_num_mem_pmus(pmu) + 1);
- 
- 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
- 	if (!rec_argv)
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 1d92e309c97c..5b851e64e4a1 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -106,7 +106,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
- 			     PARSE_OPT_KEEP_UNKNOWN);
- 
- 	/* Max number of arguments multiplied by number of PMUs that can support them. */
--	rec_argc = argc + 9 * perf_pmus__num_mem_pmus();
-+	rec_argc = argc + 9 * (perf_pmu__mem_events_num_mem_pmus(pmu) + 1);
- 
- 	if (mem->cpu_list)
- 		rec_argc += 2;
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index a20611b4fb1b..637cbd4a7bfb 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -62,6 +62,20 @@ struct perf_pmu *perf_mem_events_find_pmu(void)
- 	return perf_pmus__scan_mem(NULL);
- }
- 
-+/**
-+ * perf_pmu__mem_events_num_mem_pmus - Get the number of mem PMUs since the given pmu
-+ * @pmu: Start pmu. If it's NULL, search the entire PMU list.
-+ */
-+int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu)
-+{
-+	int num = 0;
-+
-+	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL)
-+		num++;
-+
-+	return num;
-+}
-+
- static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
- {
- 	struct perf_mem_event *e;
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index c97cd3caa766..15d5f0320d27 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -43,6 +43,7 @@ int perf_pmu__mem_events_init(struct perf_pmu *pmu);
- 
- struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, int i);
- struct perf_pmu *perf_mem_events_find_pmu(void);
-+int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu);
- bool is_mem_loads_aux_event(struct evsel *leader);
- 
- void perf_pmu__mem_events_list(struct perf_pmu *pmu);
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index ce4931461741..16505071d362 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -345,12 +345,6 @@ const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
- 	return NULL;
- }
- 
--int __weak perf_pmus__num_mem_pmus(void)
--{
--	/* All core PMUs are for mem events. */
--	return perf_pmus__num_core_pmus();
--}
--
- /** Struct for ordering events as output in perf list. */
- struct sevent {
- 	/** PMU for event. */
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 4c67153ac257..94d2a08d894b 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -17,7 +17,6 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
- 
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
- 
--int perf_pmus__num_mem_pmus(void);
- void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state);
- bool perf_pmus__have_event(const char *pname, const char *name);
- int perf_pmus__num_core_pmus(void);
 -- 
-2.35.1
-
+Kees Cook
