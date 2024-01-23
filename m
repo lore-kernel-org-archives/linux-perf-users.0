@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9CBE5D749;
-	Tue, 23 Jan 2024 11:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27E55D8FE;
+	Tue, 23 Jan 2024 11:34:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706009682; cv=none; b=iFY1bT1xpVBygSCRctuJJDJWBlBqrb5Zak2Io0hXrcdKIk1Y6BR+KF3TEw1nDaOUXQo4bBdWvC2vMeSRmOSRln3rRWUTtUTpFfUutl656Fz0W/9krIpyaWq1BJKxE76vwFkDhi27pS+f5YF4OVt6p8+uhgrcGJDNKXHUt3qVwoA=
+	t=1706009684; cv=none; b=pJZLN9ahEWkzuim2h72HC/PcCdn1bizF7i9KtEqL8rHk78oA7IzMUHqnZWsXeUvLXF8pT612NUlYAss9K6fanQr82syg+0bd6iso4dBGzqtA1Zguc7O8x3asOdRfzmAFJBWHNCvcYeC5Uw8t7qWcooj+t8BjzfROA9ZmdSd5UGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706009682; c=relaxed/simple;
-	bh=Cc/p6EAOGiTANpj0L+SitTQEdRt/dqFYisZ1hnh761s=;
+	s=arc-20240116; t=1706009684; c=relaxed/simple;
+	bh=Ev/78lNrKeEn0GKrbVaNQkMKhQsuAjKk6QQf3ZBpTYE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qips+1bHNsmBaboPYl1YvGnc+skPw0CeMHBBWvPKgzQKvsGSVnnvxAJRmarWQaSzgq1f6schv4cfBEJxXtzn/zGXUMJgsbYBVWnDwsywiwBn3lIH7qvzuH0YTVCRC8o6bk17WHFk2H+qnQUl3oyvPj+1tcy7iiXEQ/R43X5GswI=
+	 MIME-Version; b=KPIrecwmKVn+60hgWVZ4zPvyEIyVTLpqi8FTsmdIDcGhXwQ8nlcDQdvrNHHt6MS8qdLfdBQpRWGr17iu2DZvGO4yIZVgcaGBELCkKoAUa46nGzjRRAiNCNpZxcT4cCGsyxiX3ROv+qbLLPhPUDbFNOc0sVpKvRIBPptcwWHMkyk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A9B6FEC;
-	Tue, 23 Jan 2024 03:35:25 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40622106F;
+	Tue, 23 Jan 2024 03:35:27 -0800 (PST)
 Received: from e126817.. (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0CE1C3F762;
-	Tue, 23 Jan 2024 03:34:37 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 130203F762;
+	Tue, 23 Jan 2024 03:34:39 -0800 (PST)
 From: Ben Gainey <ben.gainey@arm.com>
 To: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -33,9 +33,9 @@ Cc: peterz@infradead.org,
 	adrian.hunter@intel.com,
 	will@kernel.org,
 	Ben Gainey <ben.gainey@arm.com>
-Subject: [RFC PATCH 1/2] arm_pmu: Allow the PMU to alternate between two sample_period values.
-Date: Tue, 23 Jan 2024 11:34:19 +0000
-Message-ID: <20240123113420.1928154-2-ben.gainey@arm.com>
+Subject: [RFC PATCH 2/2] arm_pmuv3: Add config bits for sample period strobing
+Date: Tue, 23 Jan 2024 11:34:20 +0000
+Message-ID: <20240123113420.1928154-3-ben.gainey@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240123113420.1928154-1-ben.gainey@arm.com>
 References: <20240123113420.1928154-1-ben.gainey@arm.com>
@@ -47,181 +47,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The arm PMU does not provide any mechanism for decoupling the period over
-which counters are counted from the period between samples. This is
-problematic for building a tool to measure per-function metrics derived
-from a sampled counter group. Ideally such a tool wants a very small
-sample window in order to correctly attribute the metrics to a given
-function, but prefers a larger sample period that provides representative
-coverage without excessive probe effect, triggering throttling, or
-generating excessive amounts of data.
-
-By alternating between a long and short sample_period and subsequently
-discarding the long samples, tools may decouple the period between
-samples that the tool cares about from the window of time over which
-interesting counts are collected.
-
-It is expected that typically tools would use this feature with the
-cycles or instructions events as an approximation for time, but no
-restrictions are applied to which events this can be applied to.
+To expose the ability to alternate between sample periods to tools.
+The field `strobe_period` is defined for config2 to hold the alternate
+sample period. A non-zero value will enable strobing.
 
 Signed-off-by: Ben Gainey <ben.gainey@arm.com>
 ---
- drivers/perf/arm_pmu.c       | 74 +++++++++++++++++++++++++++++-------
- include/linux/perf/arm_pmu.h |  1 +
- include/linux/perf_event.h   | 10 ++++-
- 3 files changed, 70 insertions(+), 15 deletions(-)
+ drivers/perf/arm_pmuv3.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 8458fe2cebb4f..58e40dbabfc3f 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -99,6 +99,17 @@ static const struct pmu_irq_ops percpu_pmunmi_ops = {
- 	.free_pmuirq = armpmu_free_percpu_pmunmi
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 23fa6c5da82c4..66b0219111bb8 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -318,6 +318,9 @@ static const struct attribute_group armv8_pmuv3_events_attr_group = {
+ #define ATTR_CFG_FLD_threshold_CFG		config1 /* PMEVTYPER.TH */
+ #define ATTR_CFG_FLD_threshold_LO		5
+ #define ATTR_CFG_FLD_threshold_HI		16
++#define ATTR_CFG_FLD_strobe_period_CFG		config2
++#define ATTR_CFG_FLD_strobe_period_LO		0
++#define ATTR_CFG_FLD_strobe_period_HI		31
+ 
+ GEN_PMU_FORMAT_ATTR(event);
+ GEN_PMU_FORMAT_ATTR(long);
+@@ -325,6 +328,7 @@ GEN_PMU_FORMAT_ATTR(rdpmc);
+ GEN_PMU_FORMAT_ATTR(threshold_count);
+ GEN_PMU_FORMAT_ATTR(threshold_compare);
+ GEN_PMU_FORMAT_ATTR(threshold);
++GEN_PMU_FORMAT_ATTR(strobe_period);
+ 
+ static int sysctl_perf_user_access __read_mostly;
+ 
+@@ -352,6 +356,16 @@ static u8 armv8pmu_event_threshold_control(struct perf_event_attr *attr)
+ 	return (th_compare << 1) | th_count;
+ }
+ 
++static inline u32 armv8pmu_event_strobe_period(struct perf_event *event)
++{
++	return ATTR_CFG_GET_FLD(&event->attr, strobe_period);
++}
++
++static inline bool armv8pmu_event_want_strobe(struct perf_event *event)
++{
++	return armv8pmu_event_strobe_period(event) != 0;
++}
++
+ static struct attribute *armv8_pmuv3_format_attrs[] = {
+ 	&format_attr_event.attr,
+ 	&format_attr_long.attr,
+@@ -359,6 +373,7 @@ static struct attribute *armv8_pmuv3_format_attrs[] = {
+ 	&format_attr_threshold.attr,
+ 	&format_attr_threshold_compare.attr,
+ 	&format_attr_threshold_count.attr,
++	&format_attr_strobe_period.attr,
+ 	NULL,
  };
  
-+static inline bool armpmu_is_strobe_enabled(struct hw_perf_event *hwc)
-+{
-+	return hwc->strobe_period != 0;
-+}
-+
-+void armpmu_set_strobe_period(struct hw_perf_event *hwc, u32 period)
-+{
-+	hwc->strobe_period = period;
-+	hwc->strobe_active = false;
-+}
-+
- static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
- static DEFINE_PER_CPU(int, cpu_irq);
- static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
-@@ -202,22 +213,45 @@ int armpmu_event_set_period(struct perf_event *event)
- 	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 	s64 left = local64_read(&hwc->period_left);
--	s64 period = hwc->sample_period;
--	u64 max_period;
-+	s64 period_active = hwc->sample_period;
-+	u64 max_period = arm_pmu_event_max_period(event);
- 	int ret = 0;
+@@ -1125,6 +1140,16 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
+ 	if (armv8pmu_event_is_64bit(event))
+ 		event->hw.flags |= ARMPMU_EVT_64BIT;
  
--	max_period = arm_pmu_event_max_period(event);
--	if (unlikely(left <= -period)) {
--		left = period;
--		local64_set(&hwc->period_left, left);
--		hwc->last_period = period;
--		ret = 1;
--	}
-+	if (likely(!armpmu_is_strobe_enabled(hwc))) {
-+		if (unlikely(left <= -period_active)) {
-+			left = period_active;
-+			local64_set(&hwc->period_left, left);
-+			hwc->last_period = period_active;
-+			ret = 1;
-+		}
-+
-+		if (unlikely(left <= 0)) {
-+			left += period_active;
-+			local64_set(&hwc->period_left, left);
-+			hwc->last_period = period_active;
-+			ret = 1;
-+		}
-+	} else if (unlikely(left <= 0)) {
-+		s64 new_period;
-+		bool new_active;
-+
-+		/*
-+		 * When strobing is enabled, do not attempt to adjust the
-+		 * period based on the previous overflow, instead just
-+		 * alternate between the two periods
-+		 */
-+		if (hwc->strobe_active) {
-+			new_period = period_active;
-+			new_active = false;
-+		} else {
-+			new_period = hwc->strobe_period;
-+			new_active = true;
-+		}
- 
--	if (unlikely(left <= 0)) {
--		left += period;
-+		left = new_period;
- 		local64_set(&hwc->period_left, left);
--		hwc->last_period = period;
-+		hwc->last_period = new_period;
-+		hwc->strobe_active = new_active;
- 		ret = 1;
- 	}
- 
-@@ -448,6 +482,9 @@ __hw_perf_event_init(struct perf_event *event)
- 	int mapping, ret;
- 
- 	hwc->flags = 0;
-+	hwc->strobe_active = false;
-+	hwc->strobe_period = 0;
-+
- 	mapping = armpmu->map_event(event);
- 
- 	if (mapping < 0) {
-@@ -456,6 +493,15 @@ __hw_perf_event_init(struct perf_event *event)
- 		return mapping;
- 	}
- 
-+	if (armpmu_is_strobe_enabled(hwc)) {
-+		if (event->attr.freq)
-+			return -EINVAL;
-+		if (hwc->strobe_period == 0)
-+			return -EINVAL;
-+		if (hwc->strobe_period >= event->attr.sample_period)
-+			return -EINVAL;
++	/*
++	 * Support alternating between two sample periods
++	 */
++	if (armv8pmu_event_want_strobe(event)) {
++		u32 strobe_period = armv8pmu_event_strobe_period(event);
++		armpmu_set_strobe_period(&(event->hw), strobe_period);
++	} else {
++		armpmu_set_strobe_period(&(event->hw), 0);
 +	}
 +
  	/*
- 	 * We don't assign an index until we actually place the event onto
- 	 * hardware. Use -1 to signify that we haven't decided where to put it
-@@ -488,8 +534,8 @@ __hw_perf_event_init(struct perf_event *event)
- 		 * is far less likely to overtake the previous one unless
- 		 * you have some serious IRQ latency issues.
- 		 */
--		hwc->sample_period  = arm_pmu_event_max_period(event) >> 1;
--		hwc->last_period    = hwc->sample_period;
-+		hwc->sample_period = arm_pmu_event_max_period(event) >> 1;
-+		hwc->last_period = hwc->sample_period;
- 		local64_set(&hwc->period_left, hwc->sample_period);
- 	}
- 
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index b3b34f6670cfb..3ee74382e7a93 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -175,6 +175,7 @@ void armpmu_free(struct arm_pmu *pmu);
- int armpmu_register(struct arm_pmu *pmu);
- int armpmu_request_irq(int irq, int cpu);
- void armpmu_free_irq(int irq, int cpu);
-+void armpmu_set_strobe_period(struct hw_perf_event *hwc, u32 period);
- 
- #define ARMV8_PMU_PDEV_NAME "armv8-pmu"
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index d2a15c0c6f8a9..7ef3f39fe6171 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -157,7 +157,15 @@ struct hw_perf_event {
- 	union {
- 		struct { /* hardware */
- 			u64		config;
--			u64		last_tag;
-+			union {
-+				/* for s390 and x86 */
-+				u64	last_tag;
-+				/* for arm_pmu */
-+				struct {
-+					u32 strobe_period;
-+					bool strobe_active;
-+				};
-+			};
- 			unsigned long	config_base;
- 			unsigned long	event_base;
- 			int		event_base_rdpmc;
+ 	 * User events must be allocated into a single counter, and so
+ 	 * must not be chained.
 -- 
 2.43.0
 
