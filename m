@@ -1,231 +1,175 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BBD3FF4;
-	Tue, 23 Jan 2024 02:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E441123D2;
+	Tue, 23 Jan 2024 05:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705976686; cv=none; b=dmd8IKNZ9Bhmh9Mv5TfL+t/+TT0wMtzf8woLuPXN1Dd6ZwdD4Uy+NOAWjuZQeCTbX/snd8QO82dfLCz7vYRJoMzn1cryeADfUvG7R0Ax6we0y1IannhL00jVgU5OkXPkvSITBe/N2EHj3Zsc+gNTFcyx+7DohbcVYfu+uWeYeHg=
+	t=1705987855; cv=none; b=d9mx5DSWZllNUU5IbcCvTsiOg65rNWk7ryQssM/FBO4HrPAa6ugOmIvy9JK6kIJM3U80nNVdHdAP1qvpfhNRm+mRiCikKJ+dV3sgFYCj0x9mqgaHmX//OBZO8hI9Mtyy42cOTJlrhQ3sgIieFHHuer0o6h0atjQRJY+YovCNQWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705976686; c=relaxed/simple;
-	bh=P8IqwavDl4sxT3s7h3WPgX6/J+hWe6wTMjAMlNDEaAI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O7Yrzw2SV+qcdGf/pp7w7Bvfx1r2Ty/g9k1AokkVQZf5XWvDx/rtF94VlLytyzYnmyO9JpClUv9Ghw+dHqgMVn2HIfAydKr/+ApfIwgXBz16SjK2wFCnf3aCqKj8/GUjzXgizuP1SzYjBTl4pEdvwKPhA5Otpo217uuzZR23iq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m3HZPL1c; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705987855; c=relaxed/simple;
+	bh=JchXkml1pvgnzKfjVxkD4WAT9NFX+0B5qrQETYJtzuA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sBzQAjV/x8RwRgSFcTAeHhdcPFaSgZSI7U1i7aztq4+ET7W9W8hgC6M09Hf1792/gg/JaXwNAGbNFx9F0GMW1uT0bcyPIoYUHRKKcllgu+D4IVRdmc+Ra/j1DuOE3ccbNugj94Itvp5H0TZx4I7HlDscKSbUzf8PQLRoxquEK4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XmsY9em8; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3HZPL1c"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29041136f73so1837300a91.0;
-        Mon, 22 Jan 2024 18:24:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705976684; x=1706581484; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dJCK2M7LB9SyuCjZ6GojvA3LjnB/Kpgb+uEzSJT58cQ=;
-        b=m3HZPL1cyDC2hUDFaoX3oH8Sc/j1Bcp8O1izXu7pZtntdyQAgTqcpT3ZEX+RASUZ1H
-         7j4qfYZ6HHu2uh7Woe8lSprEaBnBc0QGvtOvj1r9mkzk9S4mJRWefQrHla5EaEoRZURs
-         C53ubGzZE6KZvkAT3nhPxiY/eaYEjFaBiFKOkk8AbVC9jzXyJxjAH5wWYiFYeDQmJY3t
-         0/zOCAymqaeibVChF/cglxECcso7ABvUieqIMSfJdV8IHGdZ2Ik/2Nt1gM0v73irVWre
-         ZkkUHUIPCCGHw23v7/tBql/zxxZGZUS+XsRVlNGV4KBvg7gnmdf+Jn/2D+RoKx3WEk9D
-         jdPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705976684; x=1706581484;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dJCK2M7LB9SyuCjZ6GojvA3LjnB/Kpgb+uEzSJT58cQ=;
-        b=dv4tkpncpjM2/5QsREN4SQV8RYCiKQ0q3EPs97du7CPsijlJol9PLbaYIJ9eP5pFLe
-         Gv0iEGAGVQhA9UoEyQQtOMQ40maUWc6a1JlA+3ZZIzPQGdolmVj4TQ2wgwK07NiRemyU
-         x5tTGNprWiFENauxXq3RtA/Nd28UXucvTsI/1DfMGjSWuE+WDlOutFZNxcnH3bJlplRh
-         2qYpIHs/goMcA2dMPLJZ0Hk8/Z3rVti3IrgH8fIZGMRKuAgpcrEkjMqkPWZ7y/CglGNX
-         gdM/WrvqP6xlH4gyM1qTDpHiOUiuqp980a65SBnP1IXZ4jvo9F0TzpsNQ9jAkPdK8DSw
-         bnaQ==
-X-Gm-Message-State: AOJu0YwGjx2Jsc0IP8BAYKpbeHLGGAk5fHWBoMks8EXw+cKGLuYbDM1c
-	7nGeQgZf/aorcd15xcAOpe0WnjZyhR5As6m53lIjY18eD7Su1S8jIUFA4J0rQXA2Lw==
-X-Google-Smtp-Source: AGHT+IHNwTH7hVAXMvIdGbk2ZtB4HKsveVuig8t+X/yCVowgs3/OqVWlZpcJuyJgFjMDDKXNHdTfcw==
-X-Received: by 2002:a17:90a:d705:b0:28c:374f:8028 with SMTP id y5-20020a17090ad70500b0028c374f8028mr1948530pju.27.1705976683721;
-        Mon, 22 Jan 2024 18:24:43 -0800 (PST)
-Received: from localhost.localdomain ([43.132.98.110])
-        by smtp.googlemail.com with ESMTPSA id g14-20020a17090a578e00b002903e629403sm265062pji.0.2024.01.22.18.24.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 18:24:43 -0800 (PST)
-From: Ze Gao <zegao2021@gmail.com>
-X-Google-Original-From: Ze Gao <zegao@tencent.com>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Ze Gao <zegao@tencent.com>
-Subject: [PATCH v2 4/4] perf sched: Commit to evsel__taskstate() to parse task state info
-Date: Mon, 22 Jan 2024 21:24:25 -0500
-Message-ID: <20240123022425.1611483-1-zegao@tencent.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <CAD8CoPAr_bGNmmxkQpb1V7TeGtRE5=epC+5n-B2QiCH4QZjfxA@mail.gmail.com>
-References: <CAD8CoPAr_bGNmmxkQpb1V7TeGtRE5=epC+5n-B2QiCH4QZjfxA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XmsY9em8"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40N4CQg8012977;
+	Tue, 23 Jan 2024 05:30:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=c3fY0fdNOtVS3dg71XW9+tcghfHsu7IinDH2uN6dRYI=;
+ b=XmsY9em8T1q335xq4B56u4f7ImfheH7WTKLFFHqxU+97e9+9D0dlyNapAR48iDTOdmy6
+ TQfMagMzdEQy1JQBdHWR3IlxzAMXiJdnQSOTnt9kDO7MNIRTmeEM3BNNK6SPFY5ZfVAx
+ 6MdB9KWCebQ0tdbI83EiVIJOQvv+eDSpV+fY8Dop8cFrJpgBUidfm0oE5YKOp2mNgsIV
+ KwzaVgGOKu/BqJwA2eg7NvK+wnHdBfxJCPvH4vK0GhTgo8iwU5vXI0J12SnYbLjRvqGk
+ neOS3EfqjANd8K7jr7e0uzNDjgDbTsBVEfmoq+f6aBGNq/sfRykCUGxYLAclesoQYNwx 2Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vt5bnjb8w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 05:30:29 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40N5USi9011993;
+	Tue, 23 Jan 2024 05:30:28 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vt5bnjb85-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 05:30:28 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40N5JqHo010841;
+	Tue, 23 Jan 2024 05:30:27 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vrrvynbgh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 05:30:27 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40N5UPYh14746114
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Jan 2024 05:30:25 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3CDC720049;
+	Tue, 23 Jan 2024 05:30:25 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0979B20040;
+	Tue, 23 Jan 2024 05:30:21 +0000 (GMT)
+Received: from [9.171.39.89] (unknown [9.171.39.89])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 23 Jan 2024 05:30:20 +0000 (GMT)
+Message-ID: <6ace2f9f-b073-e22b-0dd6-69c52814d49a@linux.ibm.com>
+Date: Tue, 23 Jan 2024 11:00:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH V3 0/7] Clean up perf mem
+To: "Liang, Kan" <kan.liang@linux.intel.com>, acme@kernel.org,
+        irogers@google.com, peterz@infradead.org, mingo@redhat.com,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        yuhaixin.yhx@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+        tmricht@linux.ibm.com, ravi.bangoria@amd.com,
+        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+ <a0abfee5-4dcd-3eb5-82fe-1a0dcdade038@linux.ibm.com>
+ <befb6acd-86be-4255-af96-38865affc56c@linux.intel.com>
+ <8bfadc86-e137-4a9f-a9ce-0bc62464c195@linux.intel.com>
+ <057a1c19-3117-1aec-41d6-4950c599b862@linux.ibm.com>
+ <692e16f9-062c-4b3c-bd66-a16bac68216c@linux.intel.com>
+ <cd7dc93f-ade9-6403-a732-2daca8e6cff9@linux.ibm.com>
+ <a0540796-1933-4057-8282-aa219ddda4fe@linux.intel.com>
+Content-Language: en-US
+From: kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <a0540796-1933-4057-8282-aa219ddda4fe@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: qRDAdeiGpe7JYugVvI7p3djwvBYyEjfA
+X-Proofpoint-GUID: o9agsxK2HZei6elcqPqL8Jq2C1rlcthN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_02,2024-01-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=0 priorityscore=1501 adultscore=0
+ impostorscore=0 mlxlogscore=999 spamscore=0 clxscore=1011 mlxscore=0
+ bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401230037
 
-Now that we have evsel__taskstate() which no longer relies on the
-hardcoded task state string and has good backward compatibility,
-we have a good reason to use it.
 
-Note TASK_STATE_TO_CHAR_STR and task bitmasks are useless now so
-we remove them for good. And now we pass the state info back and
-forth in a symbolic char which explains itself well instead.
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
----
- tools/perf/builtin-sched.c | 46 +++++++++-----------------------------
- 1 file changed, 10 insertions(+), 36 deletions(-)
+On 1/16/24 22:07, Liang, Kan wrote:
+> 
+> 
+> On 2024-01-16 9:05 a.m., kajoljain wrote:
+>>> For powerpc, the patch 3 introduced a perf_mem_events_power, which
+>>> doesn't have ldlat. But it only be assigned to the pmu->is_core. I'm not
+>>> sure if it's the problem.
+>> Hi Kan,
+>>  Correct there were some small issues with patch 3, I added fix for that.
+>>
+> 
+> Thanks Kajol Jain! I will fold your fix into V4.
+> 
+>>> Also, S390 still uses the default perf_mem_events, which includes ldlat.
+>>> I'm not sure if S390 supports the ldlat.
+>> I checked it, I didn't find ldlat parameter defined in arch/s390
+>> directory. I think its better to make default ldlat value as false
+>> in tools/perf/util/mem-events.c file.
+> 
+> The s390 may not be the only user for the default perf_mem_events[] in
+> the tools/perf/util/mem-events.c. We probably cannot change the default
+> value.
+> We may share the perf_mem_events_power[] between powerpc and s390. (We
+> did the similar share for arm and arm64.)
+> 
+> How about the below patch (not tested.)
+> 
+> diff --git a/tools/perf/arch/s390/util/pmu.c
+> b/tools/perf/arch/s390/util/pmu.c
+> index 225d7dc2379c..411034c984bb 100644
+> --- a/tools/perf/arch/s390/util/pmu.c
+> +++ b/tools/perf/arch/s390/util/pmu.c
+> @@ -8,6 +8,7 @@
+>  #include <string.h>
+> 
+>  #include "../../../util/pmu.h"
+> +#include "../../powerpc/util/mem-events.h"
+> 
+>  #define        S390_PMUPAI_CRYPTO      "pai_crypto"
+>  #define        S390_PMUPAI_EXT         "pai_ext"
+> @@ -21,5 +22,5 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+>                 pmu->selectable = true;
+> 
+>         if (pmu->is_core)
+> -               pmu->mem_events = perf_mem_events;
+> +               pmu->mem_events = perf_mem_events_power;
+>  }
+> 
+> 
+> 
+> However, the original s390 code doesn't include any s390 specific code
+> for perf_mem. So I thought it uses the default perf_mem_events[].
+> Is there something I missed?
+> 
+> Or does the s390 even support mem events? If not, I may remove the
+> mem_events from s390.
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index ced6fffe8110..42d5fc5d6b7b 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -92,13 +92,6 @@ struct sched_atom {
- 	struct task_desc	*wakee;
- };
- 
--#define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
--
--/* task state bitmask, copied from include/linux/sched.h */
--#define TASK_RUNNING		0
--#define TASK_INTERRUPTIBLE	1
--#define TASK_UNINTERRUPTIBLE	2
--
- enum thread_state {
- 	THREAD_SLEEPING = 0,
- 	THREAD_WAIT_CPU,
-@@ -255,7 +248,7 @@ struct thread_runtime {
- 	u64 total_preempt_time;
- 	u64 total_delay_time;
- 
--	int last_state;
-+	char last_state;
- 
- 	char shortname[3];
- 	bool comm_changed;
-@@ -425,7 +418,7 @@ static void add_sched_event_wakeup(struct perf_sched *sched, struct task_desc *t
- }
- 
- static void add_sched_event_sleep(struct perf_sched *sched, struct task_desc *task,
--				  u64 timestamp, u64 task_state __maybe_unused)
-+				  u64 timestamp, const char task_state __maybe_unused)
- {
- 	struct sched_atom *event = get_new_event(task, timestamp);
- 
-@@ -849,7 +842,7 @@ static int replay_switch_event(struct perf_sched *sched,
- 		   *next_comm  = evsel__strval(evsel, sample, "next_comm");
- 	const u32 prev_pid = evsel__intval(evsel, sample, "prev_pid"),
- 		  next_pid = evsel__intval(evsel, sample, "next_pid");
--	const u64 prev_state = evsel__intval(evsel, sample, "prev_state");
-+	const char prev_state = evsel__taskstate(evsel, sample, "prev_state");
- 	struct task_desc *prev, __maybe_unused *next;
- 	u64 timestamp0, timestamp = sample->time;
- 	int cpu = sample->cpu;
-@@ -1039,13 +1032,6 @@ static int thread_atoms_insert(struct perf_sched *sched, struct thread *thread)
- 	return 0;
- }
- 
--static char sched_out_state(u64 prev_state)
--{
--	const char *str = TASK_STATE_TO_CHAR_STR;
--
--	return str[prev_state];
--}
--
- static int
- add_sched_out_event(struct work_atoms *atoms,
- 		    char run_state,
-@@ -1121,7 +1107,7 @@ static int latency_switch_event(struct perf_sched *sched,
- {
- 	const u32 prev_pid = evsel__intval(evsel, sample, "prev_pid"),
- 		  next_pid = evsel__intval(evsel, sample, "next_pid");
--	const u64 prev_state = evsel__intval(evsel, sample, "prev_state");
-+	const char prev_state = evsel__taskstate(evsel, sample, "prev_state");
- 	struct work_atoms *out_events, *in_events;
- 	struct thread *sched_out, *sched_in;
- 	u64 timestamp0, timestamp = sample->time;
-@@ -1157,7 +1143,7 @@ static int latency_switch_event(struct perf_sched *sched,
- 			goto out_put;
- 		}
- 	}
--	if (add_sched_out_event(out_events, sched_out_state(prev_state), timestamp))
-+	if (add_sched_out_event(out_events, prev_state, timestamp))
- 		return -1;
- 
- 	in_events = thread_atoms_search(&sched->atom_root, sched_in, &sched->cmp_pid);
-@@ -2022,24 +2008,12 @@ static void timehist_header(struct perf_sched *sched)
- 	printf("\n");
- }
- 
--static char task_state_char(struct thread *thread, int state)
--{
--	static const char state_to_char[] = TASK_STATE_TO_CHAR_STR;
--	unsigned bit = state ? ffs(state) : 0;
--
--	/* 'I' for idle */
--	if (thread__tid(thread) == 0)
--		return 'I';
--
--	return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?';
--}
--
- static void timehist_print_sample(struct perf_sched *sched,
- 				  struct evsel *evsel,
- 				  struct perf_sample *sample,
- 				  struct addr_location *al,
- 				  struct thread *thread,
--				  u64 t, int state)
-+				  u64 t, const char state)
- {
- 	struct thread_runtime *tr = thread__priv(thread);
- 	const char *next_comm = evsel__strval(evsel, sample, "next_comm");
-@@ -2080,7 +2054,7 @@ static void timehist_print_sample(struct perf_sched *sched,
- 	print_sched_time(tr->dt_run, 6);
- 
- 	if (sched->show_state)
--		printf(" %5c ", task_state_char(thread, state));
-+		printf(" %5c ", thread__tid(thread) == 0 ? 'I' : state);
- 
- 	if (sched->show_next) {
- 		snprintf(nstr, sizeof(nstr), "next: %s[%d]", next_comm, next_pid);
-@@ -2152,9 +2126,9 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
- 		else if (r->last_time) {
- 			u64 dt_wait = tprev - r->last_time;
- 
--			if (r->last_state == TASK_RUNNING)
-+			if (r->last_state == 'R')
- 				r->dt_preempt = dt_wait;
--			else if (r->last_state == TASK_UNINTERRUPTIBLE)
-+			else if (r->last_state == 'D')
- 				r->dt_iowait = dt_wait;
- 			else
- 				r->dt_sleep = dt_wait;
-@@ -2579,7 +2553,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
- 	struct thread_runtime *tr = NULL;
- 	u64 tprev, t = sample->time;
- 	int rc = 0;
--	int state = evsel__intval(evsel, sample, "prev_state");
-+	const char state = evsel__taskstate(evsel, sample, "prev_state");
- 
- 	addr_location__init(&al);
- 	if (machine__resolve(machine, &al, sample) < 0) {
--- 
-2.41.0
+Hi Kan,
+   I don't have s390 system to do testing. But from my end I am fine
+with the changes.
 
+Thanks,
+Kajol Jain
+
+> 
+> Thanks,
+> Kan
