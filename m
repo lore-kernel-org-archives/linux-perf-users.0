@@ -1,108 +1,93 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559E3FC14
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 22:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C96145B1D
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 00:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705963186; cv=none; b=PKAhyrUttwLn32jjJwIw7U5llTsZENd4C3tJOP3cWdYpSqBWXaVI2SByg99Gme3yuKvpnIRADkVGG4uEbPk3Ouq3+8UFnfyveZEUbeshqCN8JUekKoRG8dcANLM3cSJFxUiIYBgk8CIxLvra5+hSK2Us+Wgx76kT+x367x4Safs=
+	t=1705968374; cv=none; b=mnjVgn2t11sIN2nU6Omvwf0bDcntvxCufCt6jw5hagBsCMAwa+7WvpDU52vN9sicAhp5II4GAb6TEuXDXQB7dSuZjjE5Oo28hFxZLVjnvkPJhB1lVR5QEDCdb1nKT5Ygiz6YXBsn1yRbBd0pvtmhcmOKjQv7P31s2Nvn8OY4WWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705963186; c=relaxed/simple;
-	bh=ZVmFSLgkoNjgxIco6IOLEXV0bYz1rKGdgxcfeqQjXwU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BjYcr9WuuAN8k77miJQKZVM+AkLJAOe4WpliKzT8vWsuxIOC+SuAZu1ODppOIc0lOGBHOMQNwCD/4VnrtZx3JmZqthvLmotAno7Yk+jgfsB8tdXqZFSdF8+vtHOVU+0v9bF7kim6CbETacB8oPnjzipsfqW0RhYVAw68A082iSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UHJpY+yb; arc=none smtp.client-ip=209.85.166.173
+	s=arc-20240116; t=1705968374; c=relaxed/simple;
+	bh=WyYDJ5I8crHfIjGKOEWsj+g+4ZRWKdyhFy1bp2Mbx4w=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=Mks/W/OqQmlHI1vXa5mgLLq2sgUG7Tx5lg2zrlNGA1szHwDp2hZ6GLDs4V+RdTCfBbY4JrytXZJvSuD6PyWPBjLogEXe/hvX2opSaaXp7pFmiiTKCVPJR68g1EKm4kB2VdZWtQ0/a2XIj4Dumjb+Fmt5YLyVOZnBrJ1rhRODib8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U3iOaORx; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UHJpY+yb"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-361b24d1a9eso40355ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 14:39:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U3iOaORx"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5f874219ff9so51675007b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 16:06:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705963184; x=1706567984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZVmFSLgkoNjgxIco6IOLEXV0bYz1rKGdgxcfeqQjXwU=;
-        b=UHJpY+ybagSEcBi+2w7v1lWuxQsIGWHlT3UgQiXPfN0rnTYgnM/ZTkLz9cSCp2wekl
-         j16loNyQOKjJg6cGyHB+HalfHpU0O98ew3QnpvydmEbK2iF/c11sxgxeVGxRAAaNIi3Q
-         y2z/UWTz01dxMRHIBmtkn98CiBo5fodO20pl27OcUYWidkh3tXJfxBtDLiiFqIlDyd8E
-         yUWYsE4p9SteND4jfYb23rQ8yNCfOFfXtJ7ugCDGvmoVTtCXVDyXhZAOHzQYm1KxhD7l
-         wQgpk4Ae5zUxpZ70I8hOqKeZ0MsN99wNRH/yvY+2ICgieN1hS/wft5DjybQC3JSnipuX
-         XEBQ==
+        d=google.com; s=20230601; t=1705968371; x=1706573171; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AXffGr7LphP1tXOOtskGblZIv2JUqybLVLOLn41CS90=;
+        b=U3iOaORxg3/OGMRqn8GRR6dNEf3KGq2XfoeM6hI+Dgt/4QnMHrHLluh/u0uzDreaBN
+         5WD8c3+ZrM/Q4a26qoSAB/je2+pY60/gsP/zV5tFNfBtUVJ8VKyRHfIX7KfjcWhylhSu
+         o5ztNWGqEeLBaSTRFbIGs26KYoXrMCaFVrelNetWfl3AaT/BIyb+yK3rdU8luQgTa3f2
+         KR9S7EL+idb7tlrUeq9L8ZicCAzrqMm71qtlRd12hWfsglyM2c2tHrutLTqIIjhs/vNf
+         I46E9ajucTzPf9OJLcC/bSlqQRIi/0WvQJE34diYel/vp12uMEfOahooKXpUY6Ot+bGa
+         0uxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705963184; x=1706567984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZVmFSLgkoNjgxIco6IOLEXV0bYz1rKGdgxcfeqQjXwU=;
-        b=f0+JKjtKTNW6ZWn7kKgUdybMl49n1GE3jib2cMRQBnn7lPLTUvk51bM7gvqSk4M78W
-         /VD0avewoa4As476L080slWsflHp/ilxQYdhXNVd8aApW1vADr2y+EpNbR9mnIDbrtKI
-         X1bLN8WBUirW1caFZZv96OxspBa1kAdnxnNIqzattAW5phUBtQXxCmsF8Q6SDvQQf+Jp
-         GHc+/XhNZ1DnDDAVammE4mzpZhto7Wf82WjPlNYPz6b/NKdA3cN+GaFWDGlBrmV7c/pc
-         8rTHdR9LVMpgMR03iRjMOOroXfGaulnvtLDf0aJ1CCm/qrNesqJA+tdaTemHAGZJMZFi
-         hxcg==
-X-Gm-Message-State: AOJu0YylUx13TPhRDTCzgCYKCi89/PK6ndkvS8i8aVN1VhZSR1n4JaZd
-	odoPX1mPgK7TsKn0fliuPqz4CazndxhN3eXeER/OTnSJ++8wAVxdI1qUzwBDpVCNcsBno8fOLuH
-	JyGzjxHD6U9a8h0/AnKxYRaxa+hm2sgmWHU/AltN/LVJKp35nI4fZ
-X-Google-Smtp-Source: AGHT+IHodE7Gn1dcsOiaZggAz0YjQ31miwedpRLtaNGpEgrNTjvanznuyPQ0kHjh+QdSTRnteaW9k7MDuYn4YSjRtvY=
-X-Received: by 2002:a92:c043:0:b0:360:6233:1377 with SMTP id
- o3-20020a92c043000000b0036062331377mr35649ilf.27.1705963184374; Mon, 22 Jan
- 2024 14:39:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705968371; x=1706573171;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AXffGr7LphP1tXOOtskGblZIv2JUqybLVLOLn41CS90=;
+        b=BHYsyTAzfMC8OHlMzwRjknWyzNX4NMeh5cl3w5COpghzWxg834DknRTLtRNq9zZxR/
+         aBRua+v8T8crRFTQ/Zr/x5UYLfXjYygFaE8TkVuFV3SVxheI3lhZEujenvLnZ/5vTjEg
+         De4EH7hzspSKMY20Sq76KNnRScgNMvGZg16dVyevUeU2GSVFUEEpMW/uwiEms11dmqnB
+         Oar+LF7gAT3jMmQNVDjeqSo923fwzWa488joHJOkNWOktaDddvxVPyAVC/k8ECA4Y59R
+         quVAKh3U5itufyyKcmPHxxAUOuZWOTjylsCwSMqYR1YYrIkF4JH109CUgnvSbLpJaock
+         WJYA==
+X-Gm-Message-State: AOJu0YziEWKKaNljSQ5vdPEStuSuGYbYZpJwSPavsO8ZrKorfoelo9Xp
+	JEu7m03C97gUjcL9MhDwnry5AVPa0LxPRREjENfPokksYDWZMNFlyA4eDBE01PHPyz3a6I5rr+V
+	+GXJJ+g==
+X-Google-Smtp-Source: AGHT+IGNt2kudlGiyydNX1G2X00S7qrLNufjPUdMK4crkJDKauSfJgzekImNEet6MZllxK70aQ7vXudeB552
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6aba:f97a:4dc7:7e92])
+ (user=irogers job=sendgmr) by 2002:a81:9805:0:b0:5fc:7f94:da64 with SMTP id
+ p5-20020a819805000000b005fc7f94da64mr2150138ywg.5.1705968371736; Mon, 22 Jan
+ 2024 16:06:11 -0800 (PST)
+Date: Mon, 22 Jan 2024 16:05:59 -0800
+Message-Id: <20240123000604.1211486-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAP-5=fUMrS+fiewxm3y4j=z4GucBVbOyDGcXNg8uDF3K+yPZ2Q@mail.gmail.com>
- <fdeec5b3-693c-61ce-e8b0-94ff72188317@arm.com>
-In-Reply-To: <fdeec5b3-693c-61ce-e8b0-94ff72188317@arm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Subject: [PATCH v1 0/5] Fixes for 6.8 PR1
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 22 Jan 2024 14:39:33 -0800
-Message-ID: <CAP-5=fXuduT--u5WThgi5RO1d8G5DuAUfn_AVjWTr6=VtZAUWQ@mail.gmail.com>
-Subject: Re: Issues with Linux perf tool on Raspberry Pi 5
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>, ChaitanyaS.Prakash@arm.com
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Ross Zwisler <zwisler@chromium.org>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Shirisha G <shirisha@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 1:59=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
-> On 19/01/2024 23:39, Ian Rogers wrote:
-> > Hi,
-> >
-> > I thought I'd report the state of Linux perf tests on Raspberry Pi 5
-> > and so I opened a bug because of the number of failures. I'm happy for
-> > help resolving the issues. The bug is:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=3D218401
-> >
-> > Thanks,
-> > Ian
-> >
->
-> Hi Ian,
->
-> For "test perf probe of function from different CU", Chaitanya has a fix
-> that she should be sending soon. I already planned to look at "Check
-> Arm64 callgraphs are complete in fp mode" as I see that failing here so
-> it's not related to Rpi5.
->
-> The others as you mentioned do look to be config related. IMO that's
-> usually the issue, or it's a build issue where Perf is missing a dependen=
-cy.
->
-> Although those should be a skip so technically there are still bugs.
+Discovered some testing issues around perf list, perf script and perf
+daemon based on Linux 6.8-rc1. Some of the issues were discovered in
+the context of an Alderlake system.
 
-Thanks James,
+Ian Rogers (5):
+  perf list: Switch error message to pr_err
+  perf list: Add output file option
+  perf test: Workaround debug output in list test
+  perf test: Fix script test for python being disabled
+  perf test: Make daemon signal test less racy
 
-agreed on the fails not being skips still being errors. I'm going to
-look to see if we can't at least make the BTF not found errors warn
-that the kernel probably wasn't compiled with BTF enabled. I look
-forward to testing the Rpi5 fixes :-)
+ tools/perf/Documentation/perf-list.txt |   4 +
+ tools/perf/builtin-list.c              | 211 +++++++++++++++----------
+ tools/perf/tests/shell/daemon.sh       |  34 ++--
+ tools/perf/tests/shell/list.sh         |  21 ++-
+ tools/perf/tests/shell/script.sh       |   3 +-
+ tools/perf/util/print-events.c         |   2 +-
+ 6 files changed, 177 insertions(+), 98 deletions(-)
 
-Ian
+-- 
+2.43.0.429.g432eaa2c6b-goog
 
-> Thanks
-> James
