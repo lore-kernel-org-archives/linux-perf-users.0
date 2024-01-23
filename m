@@ -1,45 +1,41 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31CC65C5E0;
-	Tue, 23 Jan 2024 10:27:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40575C5F8;
+	Tue, 23 Jan 2024 10:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706005660; cv=none; b=a1c1Hqigh79kiLydpUA8yOsST90MqJuLEFg9DOQiHKzugqGcT3ZHd76MuyQmMw44d8a25NMFH43bUpI6J9p//5WfjvYm4OQZ04WsFGlFcVZiMnbJq0qtD0ZJOpNt4wzG7ZGof/GD4dUFc+HLkNjUV5WN90u+xWGi1oQho/ZZyzw=
+	t=1706005928; cv=none; b=RdNQrP5RKwKOD5AaZ3oAKhZpWvIuildav0+ZVwjyDXdNRRgQOquAhu2PJSGp0NfksTxxMCcY8XZNJMoqC1sCoB/P85/TuRHtlwiymlBuTMIxf9HH/L0V+7u166Huo3oHZyDx7Zp3w4bhMqfGsPj/yExOQ5yJAjDa0HzP3Jfd1p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706005660; c=relaxed/simple;
-	bh=WHiIvVOL1WIlDzJWq+Wu1bVs6mBOGVTd3NVo6oCnJbQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ayLEICAnNgkCY1xc9W9PN/OTy47VwR4s3uwJUb2nch0hHwZ92n+2AclKarLJvNnaTfH8ktp+GsEamr7E/+frp7Ps4qOy8ufyl4D4RzfrGC7/cSMiDaandaZ1nBbH3dTtbhAuZKrzs3g+5D9cJheZuosb4LJqMWG8ajOjZJJW+Ts=
+	s=arc-20240116; t=1706005928; c=relaxed/simple;
+	bh=YGE1daHDtPYZs7zC99WV4cn2vlXjvAdbUjEsLpZJ46U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LEAsEZPgSu+VmFxZYdrZcPuZBiQRsvmrmD2GyE/yPk7WBIBgJcxepxxvVQV0Ofg7MAmO1egn4Srsl9WWz/V3ccDbum0JYj6qDEs43TI5ILjRNr/JtJNAuhochVr4LVniGPXzseqdxzi6piHSJeKqKmcSXBU5Ex3K6f/haI5bkSM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E10731FB;
-	Tue, 23 Jan 2024 02:28:22 -0800 (PST)
-Received: from e127643.broadband (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 745813F5A1;
-	Tue, 23 Jan 2024 02:27:35 -0800 (PST)
-From: James Clark <james.clark@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C656E1FB;
+	Tue, 23 Jan 2024 02:32:50 -0800 (PST)
+Received: from e126817.. (e126817.cambridge.arm.com [10.2.3.5])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8A1643F5A1;
+	Tue, 23 Jan 2024 02:32:03 -0800 (PST)
+From: Ben Gainey <ben.gainey@arm.com>
 To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
 	irogers@google.com,
-	kan.liang@linux.intel.com
-Cc: mark.rutland@arm.com,
-	James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf evlist: Fix evlist__new_default() for > 1 core PMU
-Date: Tue, 23 Jan 2024 10:27:27 +0000
-Message-Id: <20240123102728.239147-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240122155436.185089-1-james.clark@arm.com>
-References: <20240122155436.185089-1-james.clark@arm.com>
+	adrian.hunter@intel.com,
+	will@kernel.org,
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [PATCH 0/1] tools: perf: Expose sample ID / stream ID to python scripts
+Date: Tue, 23 Jan 2024 10:31:36 +0000
+Message-ID: <20240123103137.1890779-1-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,92 +44,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The 'Session topology' test currently fails with this message when
-evlist__new_default() opens more than one event:
+This patch modifies the perf python scripting engine so that the ID and
+STREAM_ID are exposed as part of the sample so that they may be
+correlated to the corresponding throttle/unthrottle event (for example).
 
-  32: Session topology                                                :
-  --- start ---
-  templ file: /tmp/perf-test-vv5YzZ
-  Using CPUID 0x00000000410fd070
-  Opening: unknown-hardware:HG
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             0 (PERF_TYPE_HARDWARE)
-    config                           0xb00000000
-    disabled                         1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 4
-  Opening: unknown-hardware:HG
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             0 (PERF_TYPE_HARDWARE)
-    config                           0xa00000000
-    disabled                         1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
-  non matching sample_type
-  FAILED tests/topology.c:73 can't get session
-  ---- end ----
-  Session topology: FAILED!
+NB: For scripts where perf_db_export_mode = True, this may be a breaking
+change depending on how the script is constructed. Each field is passed
+to `sample_table` as an argument so any script that is written as:
 
-This is because when re-opening the file and parsing the header, Perf
-expects that any file that has more than one event has the sample ID
-flag set. Perf record already sets the flag in a similar way when there
-is more than one event, so add the same logic to evlist__new_default().
+    def sample_table(db_id, evsel_id, machine_id, ..., cyc_cnt, flags)
 
-evlist__new_default() is only currently used in tests, so I don't
-expect this change to have any other side effects. The other tests that
-use it don't save and re-open the file so don't hit this issue.
+will now fail due to the changed number of arguments with:
 
-The session topology test has been failing on Arm big.LITTLE platforms
-since commit 251aa040244a ("perf parse-events: Wildcard most
-"numeric" events") when evlist__new_default() started opening multiple
-events for 'cycles'.
+    TypeError: sample_table() takes 25 positional arguments but 27 were given
 
-Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
-Closes: https://lore.kernel.org/lkml/CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com/
-Tested-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/evlist.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Scripts that use:
 
-Changes since v1:
+    def sample_table(*args)
 
-  * Reduce scope of evsel variable
-  * Add argument label
-  * Change summary to be less specific about the failing test
-  * Add the closes: tag
+or some variation thereof will not be affected.
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 56db37fac6f6..979a6053a84d 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -95,7 +95,6 @@ struct evlist *evlist__new_default(void)
- 	struct evlist *evlist = evlist__new();
- 	bool can_profile_kernel;
- 	int err;
--	struct evsel *evsel;
- 
- 	if (!evlist)
- 		return NULL;
-@@ -107,9 +106,12 @@ struct evlist *evlist__new_default(void)
- 		evlist = NULL;
- 	}
- 
--	if (evlist->core.nr_entries > 1)
-+	if (evlist->core.nr_entries > 1) {
-+		struct evsel *evsel;
-+
- 		evlist__for_each_entry(evlist, evsel)
--			evsel__set_sample_id(evsel, false);
-+			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
-+	}
- 
- 	return evlist;
- }
+When `perf_db_export_mode = False`, the script should be unaffected as
+all the arguments are inserted into a dictionary.
+
+The export-to-xxx.py scripts use the (..., *x) form so are not affected.
+
+
+Ben Gainey (1):
+  tools: perf: Expose sample ID / stream ID to python scripts
+
+ tools/perf/Documentation/perf-script-python.txt        | 4 ++--
+ tools/perf/util/scripting-engines/trace-event-python.c | 8 +++++++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
 -- 
-2.34.1
+2.43.0
 
