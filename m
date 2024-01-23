@@ -1,105 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA143D7B;
-	Tue, 23 Jan 2024 11:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 817325D73B;
+	Tue, 23 Jan 2024 11:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706009553; cv=none; b=meR5CNHbefbDgyBE89cHXbwuD8QzG7et5A4Pw0pHC2EkQFqFEmNanB0XVnxKa6Z3WWaiuosffnB8rNrbmV8ADpwno3Y2yil67933ElhHqD8O0nMJokMFn6a+DXeST3RUpD/Y4ka9BV8rFpGbn3t3a0v4bT+FW9WiB9op9cjF1G0=
+	t=1706009681; cv=none; b=tFVfdmybqNYViItE+wlI2jHwMtZMsoKyOEQOqJ2gDA9Xp/0BudfK1RldorLEYpsBaVkjEcrEonaHPQojL5UJW14pwvYfyE96aB17xm5B2/GytLoHtkGDR6GBodL4P3sxbZl/Gnf/Ja6ADR8PZ70uezDvsB78/D41sCRYCP+q7QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706009553; c=relaxed/simple;
-	bh=zouesPAIO0cDhcbx3mfu1OwAwsS4EMUtfV+8BsSAPX0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lQeOgsfRFrYaRsr72TOhTuZrNP+hRy2Z1ffe2AoiHrt5sbiPhsmC2vMCb6dokNS+EjuQksVWmvIymXfSjoAmiaeD/v9tyxjkYvLWb47+VbPw3YzvnaJ7Fy2/znCkp5XQwkPl9Hv5yCz10N0s3aSgTMt/Hthu0LFNW72Vwh1vRI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aA88Lxg9; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aA88Lxg9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706009551; x=1737545551;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zouesPAIO0cDhcbx3mfu1OwAwsS4EMUtfV+8BsSAPX0=;
-  b=aA88Lxg9cfc65zl2DaBXmPZV1UDVOC84T2M51j69rV03jBu7J+itpMDL
-   VMk/RMi8gcigVNgZhfMovqAwhp+597aKvONOH9TOalH6Rpfo4v8dLjOhS
-   b/sEtsigpA13wZwudcxDYCmeaLsEqK3c0doGkcT+NDbbMZg4j+XVCsm8L
-   FtuyaeTYdqb51c1i8Of73qbMdxbcabFebUyYR+dVke0jqSsMb9aW95uZi
-   vyUpL8PyOAjowMyJniIQKg0dPkxHogxaKkh2o/HmkajOG/6WNaNt/Hfzo
-   hLwXn/K/D+ogGuvUtMmmJeiopSWWP7V3zcb91SHwWGn24vLTx+NhOCHWp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400347730"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="400347730"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 03:32:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="1570277"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.4])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 03:32:26 -0800
-Message-ID: <089e43c5-1e0e-4c6e-9b91-827b01012b23@intel.com>
-Date: Tue, 23 Jan 2024 13:32:19 +0200
+	s=arc-20240116; t=1706009681; c=relaxed/simple;
+	bh=Itound2rhJr3CwxbHvsE9PKUkyqy43GCjIgaMwm/PK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rScickD49tKApugzhu+dugYSJW2pPG77DafhsHtfxSVdyIanpYIrO07akOudpP15tmdDDOjNXcsfZCs6N9bymN/F4d+TV5/Bvzy4+vSyF/tDFwOuNWJoYO0tFmNpeVCkv2KqzU9JsuNjNceksikI7r8RevX5n1lPwACPz++FMGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 353811FB;
+	Tue, 23 Jan 2024 03:35:23 -0800 (PST)
+Received: from e126817.. (e126817.cambridge.arm.com [10.2.3.5])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0623B3F762;
+	Tue, 23 Jan 2024 03:34:35 -0800 (PST)
+From: Ben Gainey <ben.gainey@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	will@kernel.org,
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [RFC PATCH 0/2] A mechanism for efficient support for per-function metrics
+Date: Tue, 23 Jan 2024 11:34:18 +0000
+Message-ID: <20240123113420.1928154-1-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] tools: perf: Expose sample ID / stream ID to python
- scripts
-Content-Language: en-US
-To: Ben Gainey <ben.gainey@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- namhyung@kernel.org, irogers@google.com, will@kernel.org
-References: <20240123103137.1890779-1-ben.gainey@arm.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240123103137.1890779-1-ben.gainey@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 23/01/24 12:31, Ben Gainey wrote:
-> This patch modifies the perf python scripting engine so that the ID and
-> STREAM_ID are exposed as part of the sample so that they may be
-> correlated to the corresponding throttle/unthrottle event (for example).
-> 
-> NB: For scripts where perf_db_export_mode = True, this may be a breaking
-> change depending on how the script is constructed. Each field is passed
-> to `sample_table` as an argument so any script that is written as:
-> 
->     def sample_table(db_id, evsel_id, machine_id, ..., cyc_cnt, flags)
-> 
-> will now fail due to the changed number of arguments with:
-> 
->     TypeError: sample_table() takes 25 positional arguments but 27 were given
-> 
-> Scripts that use:
-> 
->     def sample_table(*args)
-> 
-> or some variation thereof will not be affected.
+I've been working on an approach to supporting per-function metrics for
+aarch64 cores, which requires some changes to the arm_pmuv3 driver, and
+I'm wondering if this approach would make sense as a generic feature
+that could be used to enable the same on other architectures?
 
-That is documented in tools/perf/Documentation/db-export.txt.  It was
-anticipated that more arguments could be added, so that should be OK.
+The basic idea is as follows:
 
-> 
-> When `perf_db_export_mode = False`, the script should be unaffected as
-> all the arguments are inserted into a dictionary.
-> 
-> The export-to-xxx.py scripts use the (..., *x) form so are not affected.
-> 
-> 
-> Ben Gainey (1):
->   tools: perf: Expose sample ID / stream ID to python scripts
-> 
->  tools/perf/Documentation/perf-script-python.txt        | 4 ++--
->  tools/perf/util/scripting-engines/trace-event-python.c | 8 +++++++-
->  2 files changed, 9 insertions(+), 3 deletions(-)
-> 
+ * Periodically sample one or more counters as needed for the chosen
+   set of metrics.
+ * Record a sample count for each symbol so as to identify hot
+   functions.
+ * Accumulate counter totals for each of the counters in each of the
+   metrics *but* only do this where the previous sample's symbol
+   matches the current sample's symbol.
+
+Discarding the counter deltas for any given sample is important to
+ensure that couters are correctly attributed to a single function,
+without this step the resulting metrics trend towards some average
+value across the top 'n' functions. It is acknowledged that it is
+possible for this heuristic to fail, for example if samples to land
+either side of a nested call, so a sufficiently small sample window
+over which the counters are collected must be used to reduce the risk
+of misattribution.
+
+So far, this can be acheived without any further modifications to perf
+tools or the kernel. However as noted it requires the counter
+collection window to be sufficiently small; in testing on
+Neoverse-N1/-V1, a window of about 300 cycles gives good results. Using
+the cycle counter with a sample_period of 300 is possible, but such an
+approach generates significant amounts of capture data, and introduces
+a lot of overhead and probe effect. Whilst the kernel will throttle
+such a configuration, which helps to mitigate a large portion of the
+bandwidth and capture overhead, it is not something that can be
+controlled for on a per event basis, or for non-root users, and because
+throttling is controlled as a percentage of time its affects vary from
+machine to machine.
+
+For this to work efficiently, it is useful to provide a means to
+decouple the sample window (time over which events are counted) from
+the sample period (time between interesting samples). This patcheset
+modifies the Arm PMU driver to support alternating between two
+sample_period values, providing a simple and inexpensive way for tools
+to separate out the sample period and the sample window. It is expected
+to be used with the cycle counter event, alternating between a long and
+short period and subsequently discarding the counter data for samples
+with the long period. The combined long and short period gives the
+overall sampling period, and the short sample period gives the sample
+window. The symbol taken from the sample at the end of the long period
+can be used by tools to ensure correct attribution as described
+previously. The cycle counter is recommended as it provides fair
+temporal distribution of samples as would be required for the
+per-symbol sample count mentioned previously, and because the PMU can
+be programmed to overflow after a sufficiently short window; this may
+not be possible with software timer (for example). This patch does not
+restrict to only the cycle counter, it is possible there could be other
+novel uses based on different events.
+
+To test this I have developed a simple `perf script` based python
+script. For a limited set of Arm PMU events it will post process a
+`perf record`-ing and generate a table of metrics. Along side this I
+have developed a benchmark application that rotates through a sequence
+of different classes of behaviour that can be detected by the Arm PMU
+(eg. mispredics, cache misses, different instruction mixes). The path
+through the benchmark can be rotated after each iteration so as to
+ensure the results don't land on some lucky harmonic with the sample
+period. The script can be used with and without the strobing patch
+allowing comparison of the results. Testing was on Juno (A53+A57), 
+N1SDP, Gravaton 2 and 3. In addition this approach has been applied to
+a few of Arm's tools projects and has correctly identified improvements
+and regressions. 
+
+Headline results from testing indicate that ~300 cycles sample window
+gives good results with or without the strobing patch. When the
+strobing patch is used, the resulting `perf.data` files are typically
+25-50x smaller that without, and take ~25x less time for the python
+script to post-process. Without strobing, the test application's
+runtime was x20 slower when sampling every 300 cycles as compared to
+every 1000000 cycles. With strobing enabled such that the long period
+was 999700 cycles and the short period was 300 cycles, the test
+applications runtime was only x1.2 slower than every 1000000 cycles.
+Notably, without the patch, L1D cache miss rates are significantly
+higher than with the patch, which we attribute to increased impact on
+the cache that trapping into the kernel every 300 cycles has. These
+results are given with `perf_cpu_time_max_percent=25`. When tested
+with `perf_cpu_time_max_percent=100` the size and time comparisons are
+more significant. Disabling throttling did not lead to obvious
+improvements in the collected metrics, suggesting that the sampling
+approach is sufficient to collect representative metrics.
+
+Cursory testing on a Xeon(R) W-2145 sampling every 300 cycles (without
+the patch) suggests this approach would work for some counters.
+Calculating branch miss rates for example appears to be correct,
+likewise UOPS_EXECUTED.THREAD seems to give something like a sensible
+cycles-per-uop value. On the other hand the fixed function instructions
+counter does not appear to sample correctly (it seems to report either
+very small or very large numbers). No idea whats going on there, so any
+insight welcome...
+
+This patch modifies the arm_pmu and introduces an additional field in
+config2 to configure the behaviour. If we think there is broad
+applicability, would it make sense to move into perf_event_attr flags
+or field, and possibly pull up into core? If we don't think so, then
+some feedback around the core header and arm_pmu modifications would
+be appreciated.
+
+A copy of the post-processing script is available at 
+https://github.com/ARM-software/gator/blob/prototypes/strobing/prototypes/strobing-patches/test-script/generate-function-metrics.py
+note that the script its self has a dependency on
+https://lore.kernel.org/linux-perf-users/20240123103137.1890779-1-ben.gainey@arm.com/
+
+
+Ben Gainey (2):
+  arm_pmu: Allow the PMU to alternate between two sample_period values.
+  arm_pmuv3: Add config bits for sample period strobing
+
+ drivers/perf/arm_pmu.c       | 74 +++++++++++++++++++++++++++++-------
+ drivers/perf/arm_pmuv3.c     | 25 ++++++++++++
+ include/linux/perf/arm_pmu.h |  1 +
+ include/linux/perf_event.h   | 10 ++++-
+ 4 files changed, 95 insertions(+), 15 deletions(-)
+
+-- 
+2.43.0
 
