@@ -1,56 +1,56 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DF314690E
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 00:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C181474A7
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 00:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705968381; cv=none; b=Rt1QbiS9e4Sy6r4JJQ+p/e9kGOEPX2CM1w25WZrpfKWzIolDVyYRiIVkE4XAWt4HNjdNWbG1V78i4gfXBcIZlEK93SqVJvX7hgEqJUsFrKgeaPXYC2uRsI0F+42ZQ6mdhJpxPylQtuvckJfUc+7/EEV1U67tHFg/XhqvSvbB0ls=
+	t=1705968383; cv=none; b=mt8OMS4qssyLeVe6q9nQue70WlHb6NwwU0565vKaoRC7YQfXOPC1oDZuM/rtn4PALbzfwJm43ZqGtSA8Mj8IjsA9nyQoK9F12gKvxVAER8Jn7gWiWvc2XMEjIKkOD396HlZP7EhhUPtTbHbMogM4+3g7rQe1QeYrvi5bpqgetmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705968381; c=relaxed/simple;
-	bh=QSzzoS14vis9dIlzEyaQe1hPLIfMWnirr9zB3yUAZLk=;
+	s=arc-20240116; t=1705968383; c=relaxed/simple;
+	bh=IEvafp8noNqOSfOmOKDMTOQOH5/R9XopGqVio4nEPyc=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=TOTeG90p1qHdoPYZKv0OKHDsbu8UVk2ZdAzrGYP5R7Et4szxrZObTUDPcTbVun1Kb94idYYEo0Vqy1/aLHHsstnn6ELrl7eaTAsrFQAQFqOAHfDIKpPCi5XmxEXy10/oRIWhEd2vZE7OyQHsVb+8TN2iX6RftxCG1aed0Pq4Mwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UpPC+nHC; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=ZfiY1Rupx6uuqsUdpxS5P5H2V7YJ2ROvv+XT9uBz/ti66RJthhKX8mzdDKz1+DAY7I8bcn2RIGx4/zOC+SoUfndIs8i+MI1aZNKbiy15NtrqAfgwN5KmeHpjuyqxlLlVW4G3sAj2ks1z4/GHHuzoq/YlaPBv4JHZMznHMgp+tWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gmr27no4; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UpPC+nHC"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ff7eabfd94so53433287b3.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 16:06:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gmr27no4"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc265e7a67cso4125808276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 16:06:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705968378; x=1706573178; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1705968381; x=1706573181; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FbGGf59DA5QM5LIqtEUDehzpONrkGjjAENgF7jFRKl8=;
-        b=UpPC+nHCQdCOlLooBJLVq3GMj0wxnKG3qiQ6zlfCVZIFwzTFOSEW1bSV7kZYOttOK4
-         euGBwpgbe+ZzkNc6JImgQYqk+uQ837CIq75cqeU6EqmSkmVSnJZr/m+WxQn2KJr95KPB
-         xijjmiPBPiaz8Vp4jHeB/BRxgPcCq/CtCEqxl7wTJkFNMfoP+hJ4IlhzyzgIIkS7hQpz
-         g945mKYkZa+6DRZ+P+D17CiFlrzSvv0v89lEkA4KVJAcROd7CwZ+rQ4MPBV2w/2oCOsm
-         xpc+hPzL3Y3/0NTfTvV9vBb76Q/k09RZEItKDjRi31allhCr6uLu1M5dG6Ioo323tp3a
-         ddtQ==
+        bh=q79azOTXwSlimUfkUpJ2p/ZsQdIQmqJ7jFQrY/iqycY=;
+        b=gmr27no4HkxKA6Oy5axRfTVGcB5pDb4hJOHV1Xf8ZPXxlh2gEmoozDSJo40O/9tzpd
+         vg6ds6KjHZoVDxQgDs5sPUJnx5rWUxP11jck4JG9De9atfJo/8I+dX1InkRiVqFwFrzB
+         Bk+Fr0hm8AqexjBS8lXDvtn0v6tz5GnMWXcpd+COIv4+ySgMTOlq/7ElmVK/aiy19LgO
+         AxICSAwWVE/CycYPutxKp+p0gqhcIbNe4n8hWTW7Lr2+ikVoUd/ISM71i/gggjricoBB
+         spbs6sP62Quo5WdTumzJe6n9TbKrmYBbW9hGTgWZlLWk0uMuz4sn2FJoh+DvKiCR20DC
+         2sXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705968378; x=1706573178;
+        d=1e100.net; s=20230601; t=1705968381; x=1706573181;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FbGGf59DA5QM5LIqtEUDehzpONrkGjjAENgF7jFRKl8=;
-        b=a9wbxAK+NamBwpQwxe+kgcGnTik0kHCDwxtMuLyAfML4TmRLKS6En03/NLJocqlNpW
-         SVqZeAMfbsDwTPTqPnAV22q6g+3Y6JD3xszZtR15baSC0RrXLgQE/2cogRlY6LtSBUQC
-         vp+q7zlgG/4U+QApSzwOh+Cr7nYGnGCX69ywOHkfIF1ixVaWSmMm6TdFP2MNJ0w4SnBi
-         hcdwCUMWEpbj66FTYbATfq1jjCqVEqBaH7F61Q1c/JWosMo6odOOyt4abU2RaXw7AGSe
-         hZsjM50zc4WWWj8CcUi/qxFq4fs4zSm5a6uPL3yiDae6K5+MNLSZIIWfxiUEaHBUy9J8
-         5f4w==
-X-Gm-Message-State: AOJu0YyDULFsrkaP/i2q2rVGHZ83ZT5iWzdFX6CMMMq7RnEvmyFGCiNd
-	gkeLd/MUyI1TdVmoGux+WOrYWNbO9XSSk/GJkzPXMVhGnJ6G9mDwmRrZO9DeQ7h/wj797v6UEG4
-	uXeQKjg==
-X-Google-Smtp-Source: AGHT+IFI9v9ErrrriPidwIImxOgMDIe4nG5RZVJxqXZFbvLOe/Avzwb/T5Juc7eC1YqaDNWzCNVV6o+VlJkw
+        bh=q79azOTXwSlimUfkUpJ2p/ZsQdIQmqJ7jFQrY/iqycY=;
+        b=MtgaKhU/iK3UyoXARmN/LWq6eIB/dip6MiwWzo3VGjNAw7PowvcCa9I8k0zBYAcX/H
+         +rGWwON23p7iOnhJ0Aj+j55SOelMByt2iT8cI84ESmkL8ozHNOnj2QxxhD/9Cq11YwnA
+         v3qQn7OKZIEmViSkUiSqOd4URianCcfyBItpWGfWn+bG+dCIOxtcbJHtao8J6thAsiDZ
+         tI+1UP9IupwleUcadSXUq5E0nbzONHitjj7wlwT7YLuDZ7KSr/qM0jX696aHeW/4jfvH
+         0VcDu+lcfCphIUzedOXZNGFrScnDREJ+KRMwtYF+fXNwTt1JebwD7D997zY4aw+pPDzo
+         6OZg==
+X-Gm-Message-State: AOJu0Yy8pCftvedah85rFGSk4Wd50O+DKl8KtgHRN4qZguJoDJRUtn4Y
+	lWt1WSJ2TNZlEAaqQiXQmBYszYdg1KpysrIjGBk2t3HPgJTz8kQriu1EOBEz2J3/F89X3M9e5pP
+	6eehDwA==
+X-Google-Smtp-Source: AGHT+IE//rM3tBa89THOE9itYLd9DpILsWAlR+A+hD2lh5TpNO7nBlKg5HNk8uzlJAmXvKyC9a3AmpIdfUGW
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6aba:f97a:4dc7:7e92])
- (user=irogers job=sendgmr) by 2002:a81:5709:0:b0:5f8:bd56:176f with SMTP id
- l9-20020a815709000000b005f8bd56176fmr2362476ywb.2.1705968378456; Mon, 22 Jan
- 2024 16:06:18 -0800 (PST)
-Date: Mon, 22 Jan 2024 16:06:02 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:352:b0:dc3:696e:ffae with SMTP id
+ e18-20020a056902035200b00dc3696effaemr438504ybs.3.1705968380873; Mon, 22 Jan
+ 2024 16:06:20 -0800 (PST)
+Date: Mon, 22 Jan 2024 16:06:03 -0800
 In-Reply-To: <20240123000604.1211486-1-irogers@google.com>
-Message-Id: <20240123000604.1211486-4-irogers@google.com>
+Message-Id: <20240123000604.1211486-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240123000604.1211486-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Subject: [PATCH v1 3/5] perf test: Workaround debug output in list test
+Subject: [PATCH v1 4/5] perf test: Fix script test for python being disabled
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,54 +72,29 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Write the json output to a specific file to avoid debug output
-breaking it.
+"grep -cv" can exit with an error code that causes the "set -e" to
+abort the script. Switch to using the grep exit code in the if
+condition to avoid this.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/list.sh | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/script.sh | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
-index 22b004f2b23e..8a868ae64560 100755
---- a/tools/perf/tests/shell/list.sh
-+++ b/tools/perf/tests/shell/list.sh
-@@ -3,17 +3,32 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+index 5ae7bd0031a8..b43077dbaf98 100755
+--- a/tools/perf/tests/shell/script.sh
++++ b/tools/perf/tests/shell/script.sh
+@@ -36,8 +36,7 @@ test_db()
+ 	echo "DB test"
  
- set -e
--err=0
- 
- shelldir=$(dirname "$0")
- # shellcheck source=lib/setup_python.sh
- . "${shelldir}"/lib/setup_python.sh
- 
-+list_output=$(mktemp /tmp/__perf_test.list_output.json.XXXXX)
-+
-+cleanup() {
-+  rm -f "${list_output}"
-+
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
- test_list_json() {
-   echo "Json output test"
--  perf list -j | $PYTHON -m json.tool
-+  perf list -j -o "${list_output}"
-+  $PYTHON -m json.tool "${list_output}"
-   echo "Json output test [Success]"
- }
- 
- test_list_json
--exit $err
-+cleanup
-+exit 0
+ 	# Check if python script is supported
+-	libpython=$(perf version --build-options | grep python | grep -cv OFF)
+-	if [ "${libpython}" != "1" ] ; then
++        if perf version --build-options | grep python | grep -q OFF ; then
+ 		echo "SKIP: python scripting is not supported"
+ 		err=2
+ 		return
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
