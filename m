@@ -1,79 +1,79 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35F32811E2;
-	Tue, 23 Jan 2024 16:39:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38D667F7E2
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 16:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706027961; cv=none; b=JZOIdzk5i12qERiZG5ymHKFb4XexuJrQq9NcFCAmQ1etRo6IpyD6jWaS0G795gBjfl1oYlBp/nUpLmfWZPV0ApsNpcVThoeWFFuuDefeL9g2kHhUTWlmHgCxhAd3sDBUTZZ8Q5FF9Afky0Yg1JmcEJNAdvqfJgJPpxLVh0uCTiU=
+	t=1706028014; cv=none; b=fQcBKsN/qurR8+8LUB5W/wCwoMv8r8KIN9GqsJ1UqT8HGXLDUyL4UgoZ2tWbPdoCuowfo7C4tdvoc9pqu9r+nIbUYRQPt1Osa2HzItsVRf0JIwI66+ZjEVbLLxg3Y8MDyiKnek6F0r6NFQSncuHNtjK7JInQFsl3t14I3SsnM6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706027961; c=relaxed/simple;
-	bh=gXfhJCgLJhn8evK5zGZ/NOEXFQLLLjnuSt5Xs2hv2sg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=giX+dM011lhimwojUhF2jq5mKdLdlDaDvwn5n0DJ6mc/j7tXgFHDhAXPEIV0kniVQXlnefpe0ku6pQqFBLHzo4MZA1cn/72c1KgXEiCoOqw1n2KjV8ChRMiafVryUi1QcRrgKv8v/DJxheX4wv/yR7EBNWqZk75ybYfn1FwLNb8=
+	s=arc-20240116; t=1706028014; c=relaxed/simple;
+	bh=i2G/fL0Dfpxv/B/WuNUE14Slgs+4DSXgREwz8oOax00=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ayKoPtvW+NqVJR9lktl2jJ3N62oRbF6Lzh/hq6yjdCNGX+igTyS3CfafYny0eWU4hQ0glFH4UMi28TPtW+WaPqatzS21j4i33ZtUqJ9Fp4ERSNLCJB471pCpRoiyDM5YlsLbq1OCr+g44pWQA29ytoUxNOxeOtYFFzdjkqwtaCI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9641106F;
-	Tue, 23 Jan 2024 08:40:03 -0800 (PST)
-Received: from e127643.broadband (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 70BEF3F5A1;
-	Tue, 23 Jan 2024 08:39:16 -0800 (PST)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com
-Cc: James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Spoorthy S <spoorts2@in.ibm.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] perf test: Skip test_arm_callgraph_fp.sh if unwinding isn't built in
-Date: Tue, 23 Jan 2024 16:39:02 +0000
-Message-Id: <20240123163903.350306-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240123163903.350306-1-james.clark@arm.com>
-References: <20240123163903.350306-1-james.clark@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5E321FB;
+	Tue, 23 Jan 2024 08:40:57 -0800 (PST)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B6B43F5A1;
+	Tue, 23 Jan 2024 08:40:11 -0800 (PST)
+Message-ID: <c395aa13-c658-a807-bcb4-a6b31401ef4f@arm.com>
+Date: Tue, 23 Jan 2024 16:40:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: Issues with Linux perf tool on Raspberry Pi 5
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
+ ChaitanyaS.Prakash@arm.com
+References: <CAP-5=fUMrS+fiewxm3y4j=z4GucBVbOyDGcXNg8uDF3K+yPZ2Q@mail.gmail.com>
+ <fdeec5b3-693c-61ce-e8b0-94ff72188317@arm.com>
+ <CAP-5=fXuduT--u5WThgi5RO1d8G5DuAUfn_AVjWTr6=VtZAUWQ@mail.gmail.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fXuduT--u5WThgi5RO1d8G5DuAUfn_AVjWTr6=VtZAUWQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Even though this is a frame pointer unwind test, it's testing that a
-frame pointer stack can be augmented correctly with a partial
-Dwarf unwind. So add a feature check so that this test skips instead of
-fails if Dwarf unwinding isn't present.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/tests/shell/test_arm_callgraph_fp.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-index e342e6c8aa50..83b53591b1ea 100755
---- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-+++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-@@ -8,6 +8,12 @@ shelldir=$(dirname "$0")
- 
- lscpu | grep -q "aarch64" || exit 2
- 
-+if perf version --build-options | grep HAVE_DWARF_UNWIND_SUPPORT | grep -q OFF
-+then
-+  echo "Skipping, no dwarf unwind support"
-+  exit 2
-+fi
-+
- skip_test_missing_symbol leafloop
- 
- PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
--- 
-2.34.1
+On 22/01/2024 22:39, Ian Rogers wrote:
+> On Mon, Jan 22, 2024 at 1:59 AM James Clark <james.clark@arm.com> wrote:
+>>
+>> On 19/01/2024 23:39, Ian Rogers wrote:
+>>> Hi,
+>>>
+>>> I thought I'd report the state of Linux perf tests on Raspberry Pi 5
+>>> and so I opened a bug because of the number of failures. I'm happy for
+>>> help resolving the issues. The bug is:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=218401
+>>>
+>>> Thanks,
+>>> Ian
+>>>
+>>
+>> Hi Ian,
+>>
+>> For "test perf probe of function from different CU", Chaitanya has a fix
+>> that she should be sending soon. I already planned to look at "Check
+>> Arm64 callgraphs are complete in fp mode" as I see that failing here so
+>> it's not related to Rpi5.
+>>
+
+I see that "test dwarf unwind" is completely missing in your output, not
+even skipped. This suggests that libdwarf isn't linked in:
+
+#ifdef HAVE_DWARF_UNWIND_SUPPORT
+	&suite__dwarf_unwind,
+#endif
+
+"Check Arm64 callgraphs are complete in fp mode" relies on a Dwarf
+unwinder so I sent a patch to skip this test if one isn't linked in.
+
 
