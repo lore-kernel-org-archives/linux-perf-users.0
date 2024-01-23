@@ -1,56 +1,56 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442551468F4
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 00:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DF314690E
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 00:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705968380; cv=none; b=eKvToH8fOG8JyRxu+U1GGxoi+kBzk498poS97xH4BYM2ythjlYp3ojK1UQjutn5B1uVM7ua28UTTCR/O0rznPXUh6vvrXZ0QYINOJ4DK4rcmUe+i8KwlHDpQKYydKfvIzfjY9jUxfZ6ZM/iwxlpI8A65pR3fL6LCLMOGFzVy6SE=
+	t=1705968381; cv=none; b=Rt1QbiS9e4Sy6r4JJQ+p/e9kGOEPX2CM1w25WZrpfKWzIolDVyYRiIVkE4XAWt4HNjdNWbG1V78i4gfXBcIZlEK93SqVJvX7hgEqJUsFrKgeaPXYC2uRsI0F+42ZQ6mdhJpxPylQtuvckJfUc+7/EEV1U67tHFg/XhqvSvbB0ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705968380; c=relaxed/simple;
-	bh=0g/j+czwZZZV0jyeUsBRsvNrDyJWksVMiiivTFDmwII=;
+	s=arc-20240116; t=1705968381; c=relaxed/simple;
+	bh=QSzzoS14vis9dIlzEyaQe1hPLIfMWnirr9zB3yUAZLk=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=sAOpNB8wlHoLVYa7eRE8odQ4zeDqy8M3ohZ+N2SStkPMDigov815EaOWMyJfcog9buuczU/5XC7SfhfR7YdvIgi02MAp46PS7DKHFZeYJ3sp2T4CwGW2vWRHJblU4JuuLO2iYYKxWRUDbJap7OQ2HgAFCM5CSlP5tbHwpoFc+NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b4ubij68; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=TOTeG90p1qHdoPYZKv0OKHDsbu8UVk2ZdAzrGYP5R7Et4szxrZObTUDPcTbVun1Kb94idYYEo0Vqy1/aLHHsstnn6ELrl7eaTAsrFQAQFqOAHfDIKpPCi5XmxEXy10/oRIWhEd2vZE7OyQHsVb+8TN2iX6RftxCG1aed0Pq4Mwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UpPC+nHC; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b4ubij68"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc2358dce6bso4088383276.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 16:06:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UpPC+nHC"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ff7eabfd94so53433287b3.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 16:06:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705968376; x=1706573176; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1705968378; x=1706573178; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dwOTolb94//HSm3DPw2galb3SBW/iq3bnifLRUsxAiA=;
-        b=b4ubij68NPzkF6MY3Za9q5X3+bKIUGc18rpKpBTKKs+2COWOwBcVTNnXJShPNpQwMu
-         nyhgnpKyzIcMrr9fWTGKIYpRXy1lmzxV1foqyo54bZEkx8tX68+SDnpzwYIcdR3mVBfa
-         AvhN7gE4rra1om/Ql1NkDttHuhui7wXTWoYaKG5vLbuBInEmbSm7AWkKRuMPI/7kAFxl
-         rDzWpdPx7t1QpIBfGmwEP4PkJk7Q1IkHTGU5ytUFPMrZPYSnVvh6mHpoN1LDcfbRBFnn
-         oAo2zqjePkEa0lpZtuOzjJVHGRhriFtKX68f0rGzHNQaBEYnwzWTmi/hbdtRHuvtD6Lo
-         mJOg==
+        bh=FbGGf59DA5QM5LIqtEUDehzpONrkGjjAENgF7jFRKl8=;
+        b=UpPC+nHCQdCOlLooBJLVq3GMj0wxnKG3qiQ6zlfCVZIFwzTFOSEW1bSV7kZYOttOK4
+         euGBwpgbe+ZzkNc6JImgQYqk+uQ837CIq75cqeU6EqmSkmVSnJZr/m+WxQn2KJr95KPB
+         xijjmiPBPiaz8Vp4jHeB/BRxgPcCq/CtCEqxl7wTJkFNMfoP+hJ4IlhzyzgIIkS7hQpz
+         g945mKYkZa+6DRZ+P+D17CiFlrzSvv0v89lEkA4KVJAcROd7CwZ+rQ4MPBV2w/2oCOsm
+         xpc+hPzL3Y3/0NTfTvV9vBb76Q/k09RZEItKDjRi31allhCr6uLu1M5dG6Ioo323tp3a
+         ddtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705968376; x=1706573176;
+        d=1e100.net; s=20230601; t=1705968378; x=1706573178;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dwOTolb94//HSm3DPw2galb3SBW/iq3bnifLRUsxAiA=;
-        b=AO53PJI64BhGUZAvwudsAhA85eBx9AmQcaQ1VW7JUEEbFWInxC1s1lYGMfszBqE5VG
-         kQXP30SpAP73phxgmw2U4BaU3jU9ox8w1YO4KQXWC+tUgYz3lIZZ9nPJwPm6xhyxLkTF
-         de/4wR4uEEKatdt9+uwWMDRxqMRfOdhxqtucwIMg90XXge5jsB+zGjsm9mNKdDgiHH+l
-         46GuCCDp2Wg4cpaabbmj46iT4NHVmvt2qhKf+OcluO/IgBaVXuVNGiQ7mBOZxwVUDXDU
-         vSykk5WqIkn7DVNyFDXLLoOjkMi+H7KV377w2GT4gENUlkSODk8Cn5SNI8p7DYEOLAi2
-         tIiQ==
-X-Gm-Message-State: AOJu0Yz6JhvhteBee9bBG3seEY7+7u5BXMlhGWlt9CJqHrdoGnRmX/vu
-	sCEOzEomNzMrsz0ittKFCEXQRYnc8G+/vrlBadhSxBXmLNJhX9FRFqnmXkRkhR14/HqU8ifWrzN
-	QuxQLBg==
-X-Google-Smtp-Source: AGHT+IHjfcVREUikq2EhJOVMgG2aOJ8fkYgq/0NXCdElTxfM9ARVkN1aIBFVWXyZn7a7giRwrG2WqwFPaEKr
+        bh=FbGGf59DA5QM5LIqtEUDehzpONrkGjjAENgF7jFRKl8=;
+        b=a9wbxAK+NamBwpQwxe+kgcGnTik0kHCDwxtMuLyAfML4TmRLKS6En03/NLJocqlNpW
+         SVqZeAMfbsDwTPTqPnAV22q6g+3Y6JD3xszZtR15baSC0RrXLgQE/2cogRlY6LtSBUQC
+         vp+q7zlgG/4U+QApSzwOh+Cr7nYGnGCX69ywOHkfIF1ixVaWSmMm6TdFP2MNJ0w4SnBi
+         hcdwCUMWEpbj66FTYbATfq1jjCqVEqBaH7F61Q1c/JWosMo6odOOyt4abU2RaXw7AGSe
+         hZsjM50zc4WWWj8CcUi/qxFq4fs4zSm5a6uPL3yiDae6K5+MNLSZIIWfxiUEaHBUy9J8
+         5f4w==
+X-Gm-Message-State: AOJu0YyDULFsrkaP/i2q2rVGHZ83ZT5iWzdFX6CMMMq7RnEvmyFGCiNd
+	gkeLd/MUyI1TdVmoGux+WOrYWNbO9XSSk/GJkzPXMVhGnJ6G9mDwmRrZO9DeQ7h/wj797v6UEG4
+	uXeQKjg==
+X-Google-Smtp-Source: AGHT+IFI9v9ErrrriPidwIImxOgMDIe4nG5RZVJxqXZFbvLOe/Avzwb/T5Juc7eC1YqaDNWzCNVV6o+VlJkw
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6aba:f97a:4dc7:7e92])
- (user=irogers job=sendgmr) by 2002:a25:df84:0:b0:dc2:6605:f6ba with SMTP id
- w126-20020a25df84000000b00dc26605f6bamr370734ybg.2.1705968376320; Mon, 22 Jan
- 2024 16:06:16 -0800 (PST)
-Date: Mon, 22 Jan 2024 16:06:01 -0800
+ (user=irogers job=sendgmr) by 2002:a81:5709:0:b0:5f8:bd56:176f with SMTP id
+ l9-20020a815709000000b005f8bd56176fmr2362476ywb.2.1705968378456; Mon, 22 Jan
+ 2024 16:06:18 -0800 (PST)
+Date: Mon, 22 Jan 2024 16:06:02 -0800
 In-Reply-To: <20240123000604.1211486-1-irogers@google.com>
-Message-Id: <20240123000604.1211486-3-irogers@google.com>
+Message-Id: <20240123000604.1211486-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240123000604.1211486-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Subject: [PATCH v1 2/5] perf list: Add output file option
+Subject: [PATCH v1 3/5] perf test: Workaround debug output in list test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,495 +72,54 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add an option to write the perf list output to a specific file. This
-can avoid issues with debug output being written into the output
-stream.
+Write the json output to a specific file to avoid debug output
+breaking it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-list.txt |   4 +
- tools/perf/builtin-list.c              | 211 +++++++++++++++----------
- 2 files changed, 133 insertions(+), 82 deletions(-)
+ tools/perf/tests/shell/list.sh | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 1b90575ee3c8..3b12595193c9 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -47,6 +47,10 @@ Print PMU events and metrics limited to the specific PMU name.
- --json::
- Output in JSON format.
+diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
+index 22b004f2b23e..8a868ae64560 100755
+--- a/tools/perf/tests/shell/list.sh
++++ b/tools/perf/tests/shell/list.sh
+@@ -3,17 +3,32 @@
+ # SPDX-License-Identifier: GPL-2.0
  
-+-o::
-+--output=::
-+	Output file name. By default output is written to stdout.
+ set -e
+-err=0
+ 
+ shelldir=$(dirname "$0")
+ # shellcheck source=lib/setup_python.sh
+ . "${shelldir}"/lib/setup_python.sh
+ 
++list_output=$(mktemp /tmp/__perf_test.list_output.json.XXXXX)
 +
- [[EVENT_MODIFIERS]]
- EVENT MODIFIERS
- ---------------
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 61c2c96cc070..e27a1b1288c2 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -30,6 +30,8 @@
-  * functions.
-  */
- struct print_state {
-+	/** @fp: File to write output to. */
-+	FILE *fp;
- 	/**
- 	 * @pmu_glob: Optionally restrict PMU and metric matching to PMU or
- 	 * debugfs subsystem name.
-@@ -66,13 +68,15 @@ static void default_print_start(void *ps)
- {
- 	struct print_state *print_state = ps;
- 
--	if (!print_state->name_only && pager_in_use())
--		printf("\nList of pre-defined events (to be used in -e or -M):\n\n");
-+	if (!print_state->name_only && pager_in_use()) {
-+		fprintf(print_state->fp,
-+			"\nList of pre-defined events (to be used in -e or -M):\n\n");
-+	}
- }
- 
- static void default_print_end(void *print_state __maybe_unused) {}
- 
--static void wordwrap(const char *s, int start, int max, int corr)
-+static void wordwrap(FILE *fp, const char *s, int start, int max, int corr)
- {
- 	int column = start;
- 	int n;
-@@ -82,10 +86,10 @@ static void wordwrap(const char *s, int start, int max, int corr)
- 		int wlen = strcspn(s, " \t\n");
- 
- 		if ((column + wlen >= max && column > start) || saw_newline) {
--			printf("\n%*s", start, "");
-+			fprintf(fp, "\n%*s", start, "");
- 			column = start + corr;
- 		}
--		n = printf("%s%.*s", column > start ? " " : "", wlen, s);
-+		n = fprintf(fp, "%s%.*s", column > start ? " " : "", wlen, s);
- 		if (n <= 0)
- 			break;
- 		saw_newline = s[wlen] == '\n';
-@@ -104,6 +108,7 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- {
- 	struct print_state *print_state = ps;
- 	int pos;
-+	FILE *fp = print_state->fp;
- 
- 	if (deprecated && !print_state->deprecated)
- 		return;
-@@ -119,30 +124,30 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- 
- 	if (print_state->name_only) {
- 		if (event_alias && strlen(event_alias))
--			printf("%s ", event_alias);
-+			fprintf(fp, "%s ", event_alias);
- 		else
--			printf("%s ", event_name);
-+			fprintf(fp, "%s ", event_name);
- 		return;
- 	}
- 
- 	if (strcmp(print_state->last_topic, topic ?: "")) {
- 		if (topic)
--			printf("\n%s:\n", topic);
-+			fprintf(fp, "\n%s:\n", topic);
- 		zfree(&print_state->last_topic);
- 		print_state->last_topic = strdup(topic ?: "");
- 	}
- 
- 	if (event_alias && strlen(event_alias))
--		pos = printf("  %s OR %s", event_name, event_alias);
-+		pos = fprintf(fp, "  %s OR %s", event_name, event_alias);
- 	else
--		pos = printf("  %s", event_name);
-+		pos = fprintf(fp, "  %s", event_name);
- 
- 	if (!topic && event_type_desc) {
- 		for (; pos < 53; pos++)
--			putchar(' ');
--		printf("[%s]\n", event_type_desc);
-+			fputc(' ', fp);
-+		fprintf(fp, "[%s]\n", event_type_desc);
- 	} else
--		putchar('\n');
-+		fputc('\n', fp);
- 
- 	if (desc && print_state->desc) {
- 		char *desc_with_unit = NULL;
-@@ -155,22 +160,22 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- 					      ? "%s. Unit: %s" : "%s Unit: %s",
- 					    desc, pmu_name);
- 		}
--		printf("%*s", 8, "[");
--		wordwrap(desc_len > 0 ? desc_with_unit : desc, 8, pager_get_columns(), 0);
--		printf("]\n");
-+		fprintf(fp, "%*s", 8, "[");
-+		wordwrap(fp, desc_len > 0 ? desc_with_unit : desc, 8, pager_get_columns(), 0);
-+		fprintf(fp, "]\n");
- 		free(desc_with_unit);
- 	}
- 	long_desc = long_desc ?: desc;
- 	if (long_desc && print_state->long_desc) {
--		printf("%*s", 8, "[");
--		wordwrap(long_desc, 8, pager_get_columns(), 0);
--		printf("]\n");
-+		fprintf(fp, "%*s", 8, "[");
-+		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
-+		fprintf(fp, "]\n");
- 	}
- 
- 	if (print_state->detailed && encoding_desc) {
--		printf("%*s", 8, "");
--		wordwrap(encoding_desc, 8, pager_get_columns(), 0);
--		putchar('\n');
-+		fprintf(fp, "%*s", 8, "");
-+		wordwrap(fp, encoding_desc, 8, pager_get_columns(), 0);
-+		fputc('\n', fp);
- 	}
- }
- 
-@@ -184,6 +189,7 @@ static void default_print_metric(void *ps,
- 				const char *unit __maybe_unused)
- {
- 	struct print_state *print_state = ps;
-+	FILE *fp = print_state->fp;
- 
- 	if (print_state->event_glob &&
- 	    (!print_state->metrics || !name || !strglobmatch(name, print_state->event_glob)) &&
-@@ -192,27 +198,27 @@ static void default_print_metric(void *ps,
- 
- 	if (!print_state->name_only && !print_state->last_metricgroups) {
- 		if (print_state->metricgroups) {
--			printf("\nMetric Groups:\n");
-+			fprintf(fp, "\nMetric Groups:\n");
- 			if (!print_state->metrics)
--				putchar('\n');
-+				fputc('\n', fp);
- 		} else {
--			printf("\nMetrics:\n\n");
-+			fprintf(fp, "\nMetrics:\n\n");
- 		}
- 	}
- 	if (!print_state->last_metricgroups ||
- 	    strcmp(print_state->last_metricgroups, group ?: "")) {
- 		if (group && print_state->metricgroups) {
- 			if (print_state->name_only)
--				printf("%s ", group);
-+				fprintf(fp, "%s ", group);
- 			else if (print_state->metrics) {
- 				const char *gdesc = describe_metricgroup(group);
- 
- 				if (gdesc)
--					printf("\n%s: [%s]\n", group, gdesc);
-+					fprintf(fp, "\n%s: [%s]\n", group, gdesc);
- 				else
--					printf("\n%s:\n", group);
-+					fprintf(fp, "\n%s:\n", group);
- 			} else
--				printf("%s\n", group);
-+				fprintf(fp, "%s\n", group);
- 		}
- 		zfree(&print_state->last_metricgroups);
- 		print_state->last_metricgroups = strdup(group ?: "");
-@@ -223,53 +229,59 @@ static void default_print_metric(void *ps,
- 	if (print_state->name_only) {
- 		if (print_state->metrics &&
- 		    !strlist__has_entry(print_state->visited_metrics, name)) {
--			printf("%s ", name);
-+			fprintf(fp, "%s ", name);
- 			strlist__add(print_state->visited_metrics, name);
- 		}
- 		return;
- 	}
--	printf("  %s\n", name);
-+	fprintf(fp, "  %s\n", name);
- 
- 	if (desc && print_state->desc) {
--		printf("%*s", 8, "[");
--		wordwrap(desc, 8, pager_get_columns(), 0);
--		printf("]\n");
-+		fprintf(fp, "%*s", 8, "[");
-+		wordwrap(fp, desc, 8, pager_get_columns(), 0);
-+		fprintf(fp, "]\n");
- 	}
- 	if (long_desc && print_state->long_desc) {
--		printf("%*s", 8, "[");
--		wordwrap(long_desc, 8, pager_get_columns(), 0);
--		printf("]\n");
-+		fprintf(fp, "%*s", 8, "[");
-+		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
-+		fprintf(fp, "]\n");
- 	}
- 	if (expr && print_state->detailed) {
--		printf("%*s", 8, "[");
--		wordwrap(expr, 8, pager_get_columns(), 0);
--		printf("]\n");
-+		fprintf(fp, "%*s", 8, "[");
-+		wordwrap(fp, expr, 8, pager_get_columns(), 0);
-+		fprintf(fp, "]\n");
- 	}
- 	if (threshold && print_state->detailed) {
--		printf("%*s", 8, "[");
--		wordwrap(threshold, 8, pager_get_columns(), 0);
--		printf("]\n");
-+		fprintf(fp, "%*s", 8, "[");
-+		wordwrap(fp, threshold, 8, pager_get_columns(), 0);
-+		fprintf(fp, "]\n");
- 	}
- }
- 
- struct json_print_state {
-+	/** @fp: File to write output to. */
-+	FILE *fp;
- 	/** Should a separator be printed prior to the next item? */
- 	bool need_sep;
- };
- 
--static void json_print_start(void *print_state __maybe_unused)
-+static void json_print_start(void *ps)
- {
--	printf("[\n");
-+	struct json_print_state *print_state = ps;
-+	FILE *fp = print_state->fp;
++cleanup() {
++  rm -f "${list_output}"
 +
-+	fprintf(fp, "[\n");
- }
- 
- static void json_print_end(void *ps)
- {
- 	struct json_print_state *print_state = ps;
-+	FILE *fp = print_state->fp;
- 
--	printf("%s]\n", print_state->need_sep ? "\n" : "");
-+	fprintf(fp, "%s]\n", print_state->need_sep ? "\n" : "");
- }
- 
--static void fix_escape_printf(struct strbuf *buf, const char *fmt, ...)
-+static void fix_escape_fprintf(FILE *fp, struct strbuf *buf, const char *fmt, ...)
- {
- 	va_list args;
- 
-@@ -318,7 +330,7 @@ static void fix_escape_printf(struct strbuf *buf, const char *fmt, ...)
- 		}
- 	}
- 	va_end(args);
--	fputs(buf->buf, stdout);
-+	fputs(buf->buf, fp);
- }
- 
- static void json_print_event(void *ps, const char *pmu_name, const char *topic,
-@@ -330,60 +342,71 @@ static void json_print_event(void *ps, const char *pmu_name, const char *topic,
- {
- 	struct json_print_state *print_state = ps;
- 	bool need_sep = false;
-+	FILE *fp = print_state->fp;
- 	struct strbuf buf;
- 
- 	strbuf_init(&buf, 0);
--	printf("%s{\n", print_state->need_sep ? ",\n" : "");
-+	fprintf(fp, "%s{\n", print_state->need_sep ? ",\n" : "");
- 	print_state->need_sep = true;
- 	if (pmu_name) {
--		fix_escape_printf(&buf, "\t\"Unit\": \"%S\"", pmu_name);
-+		fix_escape_fprintf(fp, &buf, "\t\"Unit\": \"%S\"", pmu_name);
- 		need_sep = true;
- 	}
- 	if (topic) {
--		fix_escape_printf(&buf, "%s\t\"Topic\": \"%S\"", need_sep ? ",\n" : "", topic);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"Topic\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   topic);
- 		need_sep = true;
- 	}
- 	if (event_name) {
--		fix_escape_printf(&buf, "%s\t\"EventName\": \"%S\"", need_sep ? ",\n" : "",
--				  event_name);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"EventName\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   event_name);
- 		need_sep = true;
- 	}
- 	if (event_alias && strlen(event_alias)) {
--		fix_escape_printf(&buf, "%s\t\"EventAlias\": \"%S\"", need_sep ? ",\n" : "",
--				  event_alias);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"EventAlias\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   event_alias);
- 		need_sep = true;
- 	}
- 	if (scale_unit && strlen(scale_unit)) {
--		fix_escape_printf(&buf, "%s\t\"ScaleUnit\": \"%S\"", need_sep ? ",\n" : "",
--				  scale_unit);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"ScaleUnit\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   scale_unit);
- 		need_sep = true;
- 	}
- 	if (event_type_desc) {
--		fix_escape_printf(&buf, "%s\t\"EventType\": \"%S\"", need_sep ? ",\n" : "",
--				  event_type_desc);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"EventType\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   event_type_desc);
- 		need_sep = true;
- 	}
- 	if (deprecated) {
--		fix_escape_printf(&buf, "%s\t\"Deprecated\": \"%S\"", need_sep ? ",\n" : "",
--				  deprecated ? "1" : "0");
-+		fix_escape_fprintf(fp, &buf, "%s\t\"Deprecated\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   deprecated ? "1" : "0");
- 		need_sep = true;
- 	}
- 	if (desc) {
--		fix_escape_printf(&buf, "%s\t\"BriefDescription\": \"%S\"", need_sep ? ",\n" : "",
--				  desc);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"BriefDescription\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   desc);
- 		need_sep = true;
- 	}
- 	if (long_desc) {
--		fix_escape_printf(&buf, "%s\t\"PublicDescription\": \"%S\"", need_sep ? ",\n" : "",
--				  long_desc);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"PublicDescription\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   long_desc);
- 		need_sep = true;
- 	}
- 	if (encoding_desc) {
--		fix_escape_printf(&buf, "%s\t\"Encoding\": \"%S\"", need_sep ? ",\n" : "",
--				  encoding_desc);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"Encoding\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   encoding_desc);
- 		need_sep = true;
- 	}
--	printf("%s}", need_sep ? "\n" : "");
-+	fprintf(fp, "%s}", need_sep ? "\n" : "");
- 	strbuf_release(&buf);
- }
- 
-@@ -394,43 +417,53 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
- {
- 	struct json_print_state *print_state = ps;
- 	bool need_sep = false;
-+	FILE *fp = print_state->fp;
- 	struct strbuf buf;
- 
- 	strbuf_init(&buf, 0);
--	printf("%s{\n", print_state->need_sep ? ",\n" : "");
-+	fprintf(fp, "%s{\n", print_state->need_sep ? ",\n" : "");
- 	print_state->need_sep = true;
- 	if (group) {
--		fix_escape_printf(&buf, "\t\"MetricGroup\": \"%S\"", group);
-+		fix_escape_fprintf(fp, &buf, "\t\"MetricGroup\": \"%S\"", group);
- 		need_sep = true;
- 	}
- 	if (name) {
--		fix_escape_printf(&buf, "%s\t\"MetricName\": \"%S\"", need_sep ? ",\n" : "", name);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"MetricName\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   name);
- 		need_sep = true;
- 	}
- 	if (expr) {
--		fix_escape_printf(&buf, "%s\t\"MetricExpr\": \"%S\"", need_sep ? ",\n" : "", expr);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"MetricExpr\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   expr);
- 		need_sep = true;
- 	}
- 	if (threshold) {
--		fix_escape_printf(&buf, "%s\t\"MetricThreshold\": \"%S\"", need_sep ? ",\n" : "",
--				  threshold);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"MetricThreshold\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   threshold);
- 		need_sep = true;
- 	}
- 	if (unit) {
--		fix_escape_printf(&buf, "%s\t\"ScaleUnit\": \"%S\"", need_sep ? ",\n" : "", unit);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"ScaleUnit\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   unit);
- 		need_sep = true;
- 	}
- 	if (desc) {
--		fix_escape_printf(&buf, "%s\t\"BriefDescription\": \"%S\"", need_sep ? ",\n" : "",
--				  desc);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"BriefDescription\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   desc);
- 		need_sep = true;
- 	}
- 	if (long_desc) {
--		fix_escape_printf(&buf, "%s\t\"PublicDescription\": \"%S\"", need_sep ? ",\n" : "",
--				  long_desc);
-+		fix_escape_fprintf(fp, &buf, "%s\t\"PublicDescription\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   long_desc);
- 		need_sep = true;
- 	}
--	printf("%s}", need_sep ? "\n" : "");
-+	fprintf(fp, "%s}", need_sep ? "\n" : "");
- 	strbuf_release(&buf);
- }
- 
-@@ -449,8 +482,12 @@ static bool default_skip_duplicate_pmus(void *ps)
- int cmd_list(int argc, const char **argv)
- {
- 	int i, ret = 0;
--	struct print_state default_ps = {};
--	struct print_state json_ps = {};
-+	struct print_state default_ps = {
-+		.fp = stdout,
-+	};
-+	struct print_state json_ps = {
-+		.fp = stdout,
-+	};
- 	void *ps = &default_ps;
- 	struct print_callbacks print_cb = {
- 		.print_start = default_print_start,
-@@ -461,6 +498,7 @@ int cmd_list(int argc, const char **argv)
- 	};
- 	const char *cputype = NULL;
- 	const char *unit_name = NULL;
-+	const char *output_path = NULL;
- 	bool json = false;
- 	struct option list_options[] = {
- 		OPT_BOOLEAN(0, "raw-dump", &default_ps.name_only, "Dump raw events"),
-@@ -471,6 +509,7 @@ int cmd_list(int argc, const char **argv)
- 			    "Print longer event descriptions."),
- 		OPT_BOOLEAN(0, "details", &default_ps.detailed,
- 			    "Print information on the perf event names and expressions used internally by events."),
-+		OPT_STRING('o', "output", &output_path, "file", "output file name"),
- 		OPT_BOOLEAN(0, "deprecated", &default_ps.deprecated,
- 			    "Print deprecated events."),
- 		OPT_STRING(0, "cputype", &cputype, "cpu type",
-@@ -497,6 +536,11 @@ int cmd_list(int argc, const char **argv)
- 	argc = parse_options(argc, argv, list_options, list_usage,
- 			     PARSE_OPT_STOP_AT_NON_OPTION);
- 
-+	if (output_path) {
-+		default_ps.fp = fopen(output_path, "w");
-+		json_ps.fp = default_ps.fp;
-+	}
++  trap - EXIT TERM INT
++}
 +
- 	setup_pager();
- 
- 	if (!default_ps.name_only)
-@@ -618,5 +662,8 @@ int cmd_list(int argc, const char **argv)
- 	free(default_ps.last_topic);
- 	free(default_ps.last_metricgroups);
- 	strlist__delete(default_ps.visited_metrics);
-+	if (output_path)
-+		fclose(default_ps.fp);
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
 +
- 	return ret;
+ test_list_json() {
+   echo "Json output test"
+-  perf list -j | $PYTHON -m json.tool
++  perf list -j -o "${list_output}"
++  $PYTHON -m json.tool "${list_output}"
+   echo "Json output test [Success]"
  }
+ 
+ test_list_json
+-exit $err
++cleanup
++exit 0
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
