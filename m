@@ -1,195 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA26F57311;
-	Tue, 23 Jan 2024 10:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31CC65C5E0;
+	Tue, 23 Jan 2024 10:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706004566; cv=none; b=ITrHGs3cLEQyKfReS0JV02kyRTsX/AiVp93W/BMjjyJugxsuGsvf9W7dWRby8eApbdW2pw3Hrr3kBSXAeaGLNshgnk0DVJ9pcYdDbe1qqQjGcyE6AsMm4yVgh/Tc9UjC5YSOowPVP2vhRXo0d2r2jQymXW62H3aATbGcz7+Z1jI=
+	t=1706005660; cv=none; b=a1c1Hqigh79kiLydpUA8yOsST90MqJuLEFg9DOQiHKzugqGcT3ZHd76MuyQmMw44d8a25NMFH43bUpI6J9p//5WfjvYm4OQZ04WsFGlFcVZiMnbJq0qtD0ZJOpNt4wzG7ZGof/GD4dUFc+HLkNjUV5WN90u+xWGi1oQho/ZZyzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706004566; c=relaxed/simple;
-	bh=TCFdDzZ1US12cf3hVKANXZoZ8oTrIUTJBaYWeEq0Gbk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BQWGKhK3QMjyfiYJa3qSCnkHmNkmyUWYbluYxwgdKlWFJq8oG1zMPEHQPyqJoVg6sjhLYaag4oPDwjw/896EZOJih3o2fsYn22mAMK5ddZs0FfamRJ/o1/m23Fg/lOWjuEBPkY8sH5DOJZ4r5Q0LUkcrYl8/S6bpwUE7V/CYSaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hcWoL8am; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hcWoL8am"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706004565; x=1737540565;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TCFdDzZ1US12cf3hVKANXZoZ8oTrIUTJBaYWeEq0Gbk=;
-  b=hcWoL8am29p3l0UI27UMbBywRYReLzkqokuV8go2hVXLwr1VlQo4iYCC
-   DXBasNiHtQKCzWChoGxEFOq1dpB7p/17HYrg3geIvvHN1pxA5wBQcPamc
-   00LyGlc/rSkUsukmZj7vC/AsQQMwGhgRH7mXG8kzkWCnb/telDpMTyPhg
-   FcULmZW1M02GQFzn+SoMKL+K3sSNuC7u6Z2pgH7gJFf3pmlW7FQPkVd7J
-   ukVVv8tIZih7qBPp9Lxfs/D9g6R+FqQELZpvlj48CQAPoRLQX/DkEjjyB
-   k5pEQctmRmepFEWAw6pLJCWn4FE0U8JcUCatFGWe508fXFPbQKGe/vgpL
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8588455"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="8588455"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 02:09:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="929291718"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="929291718"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.4])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 02:09:18 -0800
-Message-ID: <1d0e2e26-723f-42bf-b4a5-8a56843d8dda@intel.com>
-Date: Tue, 23 Jan 2024 12:09:13 +0200
+	s=arc-20240116; t=1706005660; c=relaxed/simple;
+	bh=WHiIvVOL1WIlDzJWq+Wu1bVs6mBOGVTd3NVo6oCnJbQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ayLEICAnNgkCY1xc9W9PN/OTy47VwR4s3uwJUb2nch0hHwZ92n+2AclKarLJvNnaTfH8ktp+GsEamr7E/+frp7Ps4qOy8ufyl4D4RzfrGC7/cSMiDaandaZ1nBbH3dTtbhAuZKrzs3g+5D9cJheZuosb4LJqMWG8ajOjZJJW+Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E10731FB;
+	Tue, 23 Jan 2024 02:28:22 -0800 (PST)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 745813F5A1;
+	Tue, 23 Jan 2024 02:27:35 -0800 (PST)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	kan.liang@linux.intel.com
+Cc: mark.rutland@arm.com,
+	James Clark <james.clark@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf evlist: Fix evlist__new_default() for > 1 core PMU
+Date: Tue, 23 Jan 2024 10:27:27 +0000
+Message-Id: <20240123102728.239147-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240122155436.185089-1-james.clark@arm.com>
+References: <20240122155436.185089-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 01/11] perf/core: Add aux_pause, aux_resume,
- aux_start_paused
-Content-Language: en-US
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
- <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240111081914.3123-1-adrian.hunter@intel.com>
- <20240111081914.3123-2-adrian.hunter@intel.com>
- <CAM9d7cjOVuMdBjLBV0cKXAOMmp_6xQYBG7h2ecE=djEKZm8aNQ@mail.gmail.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAM9d7cjOVuMdBjLBV0cKXAOMmp_6xQYBG7h2ecE=djEKZm8aNQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 19/01/24 23:40, Namhyung Kim wrote:
-> On Thu, Jan 11, 2024 at 12:19 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> Hardware traces, such as instruction traces, can produce a vast amount of
->> trace data, so being able to reduce tracing to more specific circumstances
->> can be useful.
->>
->> The ability to pause or resume tracing when another event happens, can do
->> that.
->>
->> Add ability for an event to "pause" or "resume" AUX area tracing.
->>
->> Add aux_pause bit to perf_event_attr to indicate that, if the event
->> happens, the associated AUX area tracing should be paused. Ditto
->> aux_resume. Do not allow aux_pause and aux_resume to be set together.
->>
->> Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
->> event that it should start in a "paused" state.
->>
->> Add aux_paused to struct perf_event for AUX area events to keep track of
->> the "paused" state. aux_paused is initialized to aux_start_paused.
->>
->> Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
->> callbacks. Call as needed, during __perf_event_output(). Add
->> aux_in_pause_resume to struct perf_buffer to prevent races with the NMI
->> handler. Pause/resume in NMI context will miss out if it coincides with
->> another pause/resume.
->>
->> To use aux_pause or aux_resume, an event must be in a group with the AUX
->> area event as the group leader.
->>
->> Example (requires Intel PT and tools patches also):
->>
->>  $ perf record --kcore -e intel_pt/aux-action=start-paused/k,syscalls:sys_enter_newuname/aux-action=resume/,syscalls:sys_exit_newuname/aux-action=pause/ uname
->>  Linux
->>  [ perf record: Woken up 1 times to write data ]
->>  [ perf record: Captured and wrote 0.043 MB perf.data ]
->>  $ perf script --call-trace
->>  uname   30805 [000] 24001.058782799: name: 0x7ffc9c1865b0
->>  uname   30805 [000] 24001.058784424:  psb offs: 0
->>  uname   30805 [000] 24001.058784424:  cbr: 39 freq: 3904 MHz (139%)
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])        debug_smp_processor_id
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])        __x64_sys_newuname
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])            down_read
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                __cond_resched
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_add
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                    in_lock_functions
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_sub
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])            up_read
->>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_add
->>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                    in_lock_functions
->>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                preempt_count_sub
->>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])            _copy_to_user
->>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])        syscall_exit_to_user_mode
->>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])            syscall_exit_work
->>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                perf_syscall_exit
->>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                    debug_smp_processor_id
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                    perf_trace_buf_alloc
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_swevent_get_recursion_context
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            debug_smp_processor_id
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        debug_smp_processor_id
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                    perf_tp_event
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_trace_buf_update
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            tracing_gen_ctx_irq_test
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_swevent_event
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            __perf_event_account_interrupt
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                __this_cpu_preempt_check
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            perf_event_output_forward
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                perf_event_aux_pause
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                    ring_buffer_get
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                        __rcu_read_lock
->>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                        __rcu_read_unlock
->>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                    pt_event_stop
->>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        debug_smp_processor_id
->>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        debug_smp_processor_id
->>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        native_write_msr
->>  uname   30805 [000] 24001.058785463: ([kernel.kallsyms])                                        native_write_msr
->>  uname   30805 [000] 24001.058785639: 0x0
-> 
-> Looks great!  I think this is very similar to what Kees asked in
-> 
->   https://lore.kernel.org/linux-perf-users/202401091452.B73E21B6C@keescook/
+The 'Session topology' test currently fails with this message when
+evlist__new_default() opens more than one event:
 
-Sometimes a precisely-defined workload is needed, just so that
-running it repeatedly does not produce results that vary too much
-to tell whether one software version is better than another.
+  32: Session topology                                                :
+  --- start ---
+  templ file: /tmp/perf-test-vv5YzZ
+  Using CPUID 0x00000000410fd070
+  Opening: unknown-hardware:HG
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    config                           0xb00000000
+    disabled                         1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 4
+  Opening: unknown-hardware:HG
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    config                           0xa00000000
+    disabled                         1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
+  non matching sample_type
+  FAILED tests/topology.c:73 can't get session
+  ---- end ----
+  Session topology: FAILED!
 
-> 
-> I have a couple of basic questions:
->  * Can we do that for regular events too?
+This is because when re-opening the file and parsing the header, Perf
+expects that any file that has more than one event has the sample ID
+flag set. Perf record already sets the flag in a similar way when there
+is more than one event, so add the same logic to evlist__new_default().
 
-That would be much more complicated.  The current implementation
-can only pause / resume 1 event, the group leader, and it has to
-be supported by the PMU callbacks.
+evlist__new_default() is only currently used in tests, so I don't
+expect this change to have any other side effects. The other tests that
+use it don't save and re-open the file so don't hit this issue.
 
->  * What's the difference between start/stop and pause/resume?
->    (IOW can we do that just using start/stop callbacks?)
+The session topology test has been failing on Arm big.LITTLE platforms
+since commit 251aa040244a ("perf parse-events: Wildcard most
+"numeric" events") when evlist__new_default() started opening multiple
+events for 'cycles'.
 
-It is using start / stop callbacks, albeit with a different mode
-parameter.  However pause / resume is not allowed unless the event
-has been started and not stopped, so it is a different state.
+Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
+Closes: https://lore.kernel.org/lkml/CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com/
+Tested-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/evlist.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-> 
-> Actually I was thinking about dropping samples using a BPF filter
-> outside the target scope (e.g. a syscall) but it'd be nice if we can
-> have builtin support for that.
+Changes since v1:
 
-In general, I would have thought that capturing samples does not
-produce so much data that it cannot be filtered in post-processing.
-Looking at the email thread from above, that seems to be what
-Arnaldo has proposed.
+  * Reduce scope of evsel variable
+  * Add argument label
+  * Change summary to be less specific about the failing test
+  * Add the closes: tag
 
-AUX area tracing is different in this regard.  Intel PT can produce
-more trace data than can be written out in time, so data will be
-lost for large traces.  Also post-processing takes a long time, so
-less data captured helps a lot there also.
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 56db37fac6f6..979a6053a84d 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -95,7 +95,6 @@ struct evlist *evlist__new_default(void)
+ 	struct evlist *evlist = evlist__new();
+ 	bool can_profile_kernel;
+ 	int err;
+-	struct evsel *evsel;
+ 
+ 	if (!evlist)
+ 		return NULL;
+@@ -107,9 +106,12 @@ struct evlist *evlist__new_default(void)
+ 		evlist = NULL;
+ 	}
+ 
+-	if (evlist->core.nr_entries > 1)
++	if (evlist->core.nr_entries > 1) {
++		struct evsel *evsel;
++
+ 		evlist__for_each_entry(evlist, evsel)
+-			evsel__set_sample_id(evsel, false);
++			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
++	}
+ 
+ 	return evlist;
+ }
+-- 
+2.34.1
 
