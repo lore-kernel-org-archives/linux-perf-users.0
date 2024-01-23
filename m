@@ -1,56 +1,56 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C181474A7
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 00:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4EF1474CF
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 00:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705968383; cv=none; b=mt8OMS4qssyLeVe6q9nQue70WlHb6NwwU0565vKaoRC7YQfXOPC1oDZuM/rtn4PALbzfwJm43ZqGtSA8Mj8IjsA9nyQoK9F12gKvxVAER8Jn7gWiWvc2XMEjIKkOD396HlZP7EhhUPtTbHbMogM4+3g7rQe1QeYrvi5bpqgetmI=
+	t=1705968385; cv=none; b=Yo8n1r430W/CPArgNv4sTrrOKxtlMbHHHGZkzi1xlbqFCC3XlT3NGU5w435dWYBFFdPO7cN+5y/QSX0L10gIdUEaOrdt8dsTL6kfziwGjhH6C/QkDIb+sSu/P5oevLF9WfUodv6ExbrooxuWHcT3P8XriPMHiXe5OtbILQWvQwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705968383; c=relaxed/simple;
-	bh=IEvafp8noNqOSfOmOKDMTOQOH5/R9XopGqVio4nEPyc=;
+	s=arc-20240116; t=1705968385; c=relaxed/simple;
+	bh=FCUxXLEqX6wbauWA6R/m3LLJXqQAbHJBX+CMyQoYlc0=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=ZfiY1Rupx6uuqsUdpxS5P5H2V7YJ2ROvv+XT9uBz/ti66RJthhKX8mzdDKz1+DAY7I8bcn2RIGx4/zOC+SoUfndIs8i+MI1aZNKbiy15NtrqAfgwN5KmeHpjuyqxlLlVW4G3sAj2ks1z4/GHHuzoq/YlaPBv4JHZMznHMgp+tWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gmr27no4; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=PQvnfx+abIkwwt8q/+XDIZNozIfJ8GDGNuyooVModRQj7gWLLl9mkYftbMxJTqK0ZEvvdLekZOGCpmhg8jV1MGjMUivfnXLpG1Fm7+XAZEg3uzXrzpcWkMn4eotVNWiDRVZ7+WjaGH8f9btIiLv2jzYmCcLLEr2tCnItvtp+03E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nH3pPjWn; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gmr27no4"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc265e7a67cso4125808276.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 16:06:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nH3pPjWn"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ecfd153ccfso56594227b3.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jan 2024 16:06:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705968381; x=1706573181; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1705968383; x=1706573183; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=q79azOTXwSlimUfkUpJ2p/ZsQdIQmqJ7jFQrY/iqycY=;
-        b=gmr27no4HkxKA6Oy5axRfTVGcB5pDb4hJOHV1Xf8ZPXxlh2gEmoozDSJo40O/9tzpd
-         vg6ds6KjHZoVDxQgDs5sPUJnx5rWUxP11jck4JG9De9atfJo/8I+dX1InkRiVqFwFrzB
-         Bk+Fr0hm8AqexjBS8lXDvtn0v6tz5GnMWXcpd+COIv4+ySgMTOlq/7ElmVK/aiy19LgO
-         AxICSAwWVE/CycYPutxKp+p0gqhcIbNe4n8hWTW7Lr2+ikVoUd/ISM71i/gggjricoBB
-         spbs6sP62Quo5WdTumzJe6n9TbKrmYBbW9hGTgWZlLWk0uMuz4sn2FJoh+DvKiCR20DC
-         2sXQ==
+        bh=rdBgE5wIVLj6TuJkMA8Og1unwB8wxsizIZfcekxtMQI=;
+        b=nH3pPjWnwi6JgAGKa/p8fnkmY3+bZgE8U7E6wBrSOJqAivLHmyX05OjLpEHvmVEG5k
+         bl2iUPOlNsAbcYuOK2zY4cC3EdknIRdD7au0Re22vRhn0bo8xZS3R+u1EJM5zmzH1+Ej
+         J/A2NMoaUQQMPxudflVyR8xDV8UoDWiA3jgsdD+q76uwCRkyi5iXfr/d92WDK0cgnUT9
+         BEhnNXYla4pvLBqTPl0SsIwQ7c6/GU7aBQpvUVsZFr6lIQEtWnAazK+DVr1X31fkPGWg
+         ngOCy6O8jEE4g7iu+KlFsNs456iRmlC7Ri7CEEb3HiVA98w2ePzIt8VnyiP83/kHEEuZ
+         tGGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705968381; x=1706573181;
+        d=1e100.net; s=20230601; t=1705968383; x=1706573183;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q79azOTXwSlimUfkUpJ2p/ZsQdIQmqJ7jFQrY/iqycY=;
-        b=MtgaKhU/iK3UyoXARmN/LWq6eIB/dip6MiwWzo3VGjNAw7PowvcCa9I8k0zBYAcX/H
-         +rGWwON23p7iOnhJ0Aj+j55SOelMByt2iT8cI84ESmkL8ozHNOnj2QxxhD/9Cq11YwnA
-         v3qQn7OKZIEmViSkUiSqOd4URianCcfyBItpWGfWn+bG+dCIOxtcbJHtao8J6thAsiDZ
-         tI+1UP9IupwleUcadSXUq5E0nbzONHitjj7wlwT7YLuDZ7KSr/qM0jX696aHeW/4jfvH
-         0VcDu+lcfCphIUzedOXZNGFrScnDREJ+KRMwtYF+fXNwTt1JebwD7D997zY4aw+pPDzo
-         6OZg==
-X-Gm-Message-State: AOJu0Yy8pCftvedah85rFGSk4Wd50O+DKl8KtgHRN4qZguJoDJRUtn4Y
-	lWt1WSJ2TNZlEAaqQiXQmBYszYdg1KpysrIjGBk2t3HPgJTz8kQriu1EOBEz2J3/F89X3M9e5pP
-	6eehDwA==
-X-Google-Smtp-Source: AGHT+IE//rM3tBa89THOE9itYLd9DpILsWAlR+A+hD2lh5TpNO7nBlKg5HNk8uzlJAmXvKyC9a3AmpIdfUGW
+        bh=rdBgE5wIVLj6TuJkMA8Og1unwB8wxsizIZfcekxtMQI=;
+        b=lEEGtleZ5Fpvjk3+PtzYu2n1T8VBTlPTdnMo5cF2FRaUeGKgLht+AcHPzHp22GdMIF
+         4Z3ekD02hmgp/LZet82Yg6WtEr52FCTz+DiynfdVP7yYfJusOZvyiRoml0gSOmeWMXV+
+         Dmj68CmgxwDB6Lp/05Uq8WrPVQt77v2weztX8tn8oQVXfe02MncWfdOOY06s4JLWaYZQ
+         Rfw8441CRbA65ulCrLzcUKCyE0/ADC9WdsLa/uiBtOTQpf5S7l8QTbkN0zDwRI9mKHj5
+         WQf2IxBo8ggrIuMDp7wNrBq0TRC7FPr8oJODXmziSy3CBKPhKg166lnleVpBpUEylM1o
+         uPVw==
+X-Gm-Message-State: AOJu0YzhvAuQ0wTnGMMUqerlJrwHBI9zrBBINEyOvO+M+u9H0eNJyQWE
+	R5Zj5ckqBM/f4vh5UXe06n/VAyI/7I55nS1qJdMq3c0S5CDh1EnzjKVee5xyrF0WSLfn9ikCwkL
+	RsqQhJA==
+X-Google-Smtp-Source: AGHT+IF40DW7beEP6LTntZgRUa2pLjVbP44McWXuRjTan4RCDTY3XGmJ4cj9qSB8WXz9ayNmLE7L37EG0Uov
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6aba:f97a:4dc7:7e92])
- (user=irogers job=sendgmr) by 2002:a05:6902:352:b0:dc3:696e:ffae with SMTP id
- e18-20020a056902035200b00dc3696effaemr438504ybs.3.1705968380873; Mon, 22 Jan
- 2024 16:06:20 -0800 (PST)
-Date: Mon, 22 Jan 2024 16:06:03 -0800
+ (user=irogers job=sendgmr) by 2002:a0d:cc52:0:b0:5ff:a9fa:2722 with SMTP id
+ o79-20020a0dcc52000000b005ffa9fa2722mr2416222ywd.3.1705968383026; Mon, 22 Jan
+ 2024 16:06:23 -0800 (PST)
+Date: Mon, 22 Jan 2024 16:06:04 -0800
 In-Reply-To: <20240123000604.1211486-1-irogers@google.com>
-Message-Id: <20240123000604.1211486-5-irogers@google.com>
+Message-Id: <20240123000604.1211486-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240123000604.1211486-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Subject: [PATCH v1 4/5] perf test: Fix script test for python being disabled
+Subject: [PATCH v1 5/5] perf test: Make daemon signal test less racy
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,29 +72,63 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-"grep -cv" can exit with an error code that causes the "set -e" to
-abort the script. Switch to using the grep exit code in the if
-condition to avoid this.
+The daemon signal test sends signals and then expects files to be
+written. It was observed on an Intel Alderlake that the signals were
+sent too quickly leading to the 3 expected files not appearing. To
+avoid this send the next signal only after the expected previous file
+has appeared. To avoid an infinite loop the number of retries is
+limited.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/script.sh | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/tests/shell/daemon.sh | 34 ++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
-index 5ae7bd0031a8..b43077dbaf98 100755
---- a/tools/perf/tests/shell/script.sh
-+++ b/tools/perf/tests/shell/script.sh
-@@ -36,8 +36,7 @@ test_db()
- 	echo "DB test"
+diff --git a/tools/perf/tests/shell/daemon.sh b/tools/perf/tests/shell/daemon.sh
+index 4c598cfc5afa..de61e7898578 100755
+--- a/tools/perf/tests/shell/daemon.sh
++++ b/tools/perf/tests/shell/daemon.sh
+@@ -414,16 +414,30 @@ EOF
+ 	# start daemon
+ 	daemon_start ${config} test
  
- 	# Check if python script is supported
--	libpython=$(perf version --build-options | grep python | grep -cv OFF)
--	if [ "${libpython}" != "1" ] ; then
-+        if perf version --build-options | grep python | grep -q OFF ; then
- 		echo "SKIP: python scripting is not supported"
- 		err=2
- 		return
+-	# send 2 signals
+-	perf daemon signal --config ${config} --session test
+-	perf daemon signal --config ${config}
+-
+-	# stop daemon
+-	daemon_exit ${config}
+-
+-	# count is 2 perf.data for signals and 1 for perf record finished
+-	count=`ls ${base}/session-test/*perf.data* | wc -l`
+-	if [ ${count} -ne 3 ]; then
++        # send 2 signals then exit. Do this in a loop watching the number of
++        # files to avoid races. If the loop retries more than 600 times then
++        # give up.
++	local retries=0
++	local signals=0
++	local success=0
++	while [ ${retries} -lt 600 ] && [ ${success} -eq 0 ]; do
++		local files
++		files=`ls ${base}/session-test/*perf.data* | wc -l`
++		if [ ${signals} -eq 0 ]; then
++			perf daemon signal --config ${config} --session test
++			signals=1
++		elif [ ${signals} -eq 1 ] && [ $files -ge 1 ]; then
++			perf daemon signal --config ${config}
++			signals=2
++		elif [ ${signals} -eq 2 ] && [ $files -ge 2 ]; then
++			daemon_exit ${config}
++			signals=3
++		elif [ ${signals} -eq 3 ] && [ $files -ge 3 ]; then
++			success=1
++		fi
++		retries=$((${retries} +1))
++	done
++	if [ ${success} -eq 0 ]; then
+ 		error=1
+ 		echo "FAILED: perf data no generated"
+ 	fi
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
