@@ -1,125 +1,165 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27E55D8FE;
-	Tue, 23 Jan 2024 11:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9081212E5F;
+	Tue, 23 Jan 2024 14:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706009684; cv=none; b=pJZLN9ahEWkzuim2h72HC/PcCdn1bizF7i9KtEqL8rHk78oA7IzMUHqnZWsXeUvLXF8pT612NUlYAss9K6fanQr82syg+0bd6iso4dBGzqtA1Zguc7O8x3asOdRfzmAFJBWHNCvcYeC5Uw8t7qWcooj+t8BjzfROA9ZmdSd5UGc=
+	t=1706020604; cv=none; b=dknjkR3R95i3s2oD1x2sY+tWaT+6gXjuszFdWzT+4Md4JUBVZU8KgE9Z7tWpP1M2tb3WVn8zGY797+B4RxkVhk3QKzQY6834a8Pyv1iotoGdu3Eumv2uoPmJb+EXxZIJeQ9FP8gPpFPRNcncdl2lHzpo3+LuB5dB5awTK/S4OiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706009684; c=relaxed/simple;
-	bh=Ev/78lNrKeEn0GKrbVaNQkMKhQsuAjKk6QQf3ZBpTYE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KPIrecwmKVn+60hgWVZ4zPvyEIyVTLpqi8FTsmdIDcGhXwQ8nlcDQdvrNHHt6MS8qdLfdBQpRWGr17iu2DZvGO4yIZVgcaGBELCkKoAUa46nGzjRRAiNCNpZxcT4cCGsyxiX3ROv+qbLLPhPUDbFNOc0sVpKvRIBPptcwWHMkyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40622106F;
-	Tue, 23 Jan 2024 03:35:27 -0800 (PST)
-Received: from e126817.. (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 130203F762;
-	Tue, 23 Jan 2024 03:34:39 -0800 (PST)
-From: Ben Gainey <ben.gainey@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	will@kernel.org,
-	Ben Gainey <ben.gainey@arm.com>
-Subject: [RFC PATCH 2/2] arm_pmuv3: Add config bits for sample period strobing
-Date: Tue, 23 Jan 2024 11:34:20 +0000
-Message-ID: <20240123113420.1928154-3-ben.gainey@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240123113420.1928154-1-ben.gainey@arm.com>
-References: <20240123113420.1928154-1-ben.gainey@arm.com>
+	s=arc-20240116; t=1706020604; c=relaxed/simple;
+	bh=b5WsAWXcMZJ3oedYBhrg7imN/aUDHQ+7R2QdjuUQDzU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rpDMEHsm/ElNyn6/sgrPEr8rYQnATLQbLdTzg+RXEBqjQq0eeYHfTjpV/9UTNeBGV7jZkkAwtw7Spxf44DmGuXLVbESA0oC58v5b34pTMyIiZSmX41N2xmBrxPEcGv9m4OZNT0evoVen42fB94r6pUxDQDgTFnbV9Jp5LVvUL24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ks6Fdd+h; arc=none smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ks6Fdd+h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706020602; x=1737556602;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=b5WsAWXcMZJ3oedYBhrg7imN/aUDHQ+7R2QdjuUQDzU=;
+  b=Ks6Fdd+hiWQw3oKh6gdu62fpvKw00cGo5xg9DjpCa/ns0UXRKOXpDn5F
+   ULcBOZAhcE3MDQPhlZNvoBNpBu8kDSk1D01p/amYvnT3EG+qlLBJb+z6U
+   lXnW/YZ06qYh8i0AEK+1e14SGI6hqJmd6mXvlBGhvSlENossjLM9Rm+KD
+   CYmjTaH+9OUIKy+LEmZ9MGqiQipdTSwSuLh89tiUV/Z0LqOJH9sGOwSGC
+   3Idch6z/xUPRypuCBaJQTy14RB0KBMvF1+POUAB573B/KTvVmE3ghWvyZ
+   XB41R5Lrzsk7DwPDWo8n/6oc59lmnw3Xr2PxDY1pKAmbK1IEGRHIz+gZO
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="405295082"
+X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
+   d="scan'208";a="405295082"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 06:36:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
+   d="scan'208";a="34426302"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 06:36:42 -0800
+Received: from [10.212.112.252] (unknown [10.212.112.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id AE968580CA5;
+	Tue, 23 Jan 2024 06:36:38 -0800 (PST)
+Message-ID: <0d85e3f6-d857-4c62-8ad8-c20ac2665e91@linux.intel.com>
+Date: Tue, 23 Jan 2024 09:36:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 0/7] Clean up perf mem
+To: Thomas Richter <tmricht@linux.ibm.com>, kajoljain <kjain@linux.ibm.com>,
+ acme@kernel.org, irogers@google.com, peterz@infradead.org, mingo@redhat.com,
+ namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+ john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
+ mike.leach@linaro.org, leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com,
+ renyu.zj@linux.alibaba.com, ravi.bangoria@amd.com,
+ atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
+ <a0abfee5-4dcd-3eb5-82fe-1a0dcdade038@linux.ibm.com>
+ <befb6acd-86be-4255-af96-38865affc56c@linux.intel.com>
+ <8bfadc86-e137-4a9f-a9ce-0bc62464c195@linux.intel.com>
+ <057a1c19-3117-1aec-41d6-4950c599b862@linux.ibm.com>
+ <692e16f9-062c-4b3c-bd66-a16bac68216c@linux.intel.com>
+ <cd7dc93f-ade9-6403-a732-2daca8e6cff9@linux.ibm.com>
+ <a0540796-1933-4057-8282-aa219ddda4fe@linux.intel.com>
+ <6ace2f9f-b073-e22b-0dd6-69c52814d49a@linux.ibm.com>
+ <ceffdc69-982b-4909-95df-5b6a8a277f20@linux.ibm.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <ceffdc69-982b-4909-95df-5b6a8a277f20@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-To expose the ability to alternate between sample periods to tools.
-The field `strobe_period` is defined for config2 to hold the alternate
-sample period. A non-zero value will enable strobing.
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
----
- drivers/perf/arm_pmuv3.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 23fa6c5da82c4..66b0219111bb8 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -318,6 +318,9 @@ static const struct attribute_group armv8_pmuv3_events_attr_group = {
- #define ATTR_CFG_FLD_threshold_CFG		config1 /* PMEVTYPER.TH */
- #define ATTR_CFG_FLD_threshold_LO		5
- #define ATTR_CFG_FLD_threshold_HI		16
-+#define ATTR_CFG_FLD_strobe_period_CFG		config2
-+#define ATTR_CFG_FLD_strobe_period_LO		0
-+#define ATTR_CFG_FLD_strobe_period_HI		31
- 
- GEN_PMU_FORMAT_ATTR(event);
- GEN_PMU_FORMAT_ATTR(long);
-@@ -325,6 +328,7 @@ GEN_PMU_FORMAT_ATTR(rdpmc);
- GEN_PMU_FORMAT_ATTR(threshold_count);
- GEN_PMU_FORMAT_ATTR(threshold_compare);
- GEN_PMU_FORMAT_ATTR(threshold);
-+GEN_PMU_FORMAT_ATTR(strobe_period);
- 
- static int sysctl_perf_user_access __read_mostly;
- 
-@@ -352,6 +356,16 @@ static u8 armv8pmu_event_threshold_control(struct perf_event_attr *attr)
- 	return (th_compare << 1) | th_count;
- }
- 
-+static inline u32 armv8pmu_event_strobe_period(struct perf_event *event)
-+{
-+	return ATTR_CFG_GET_FLD(&event->attr, strobe_period);
-+}
-+
-+static inline bool armv8pmu_event_want_strobe(struct perf_event *event)
-+{
-+	return armv8pmu_event_strobe_period(event) != 0;
-+}
-+
- static struct attribute *armv8_pmuv3_format_attrs[] = {
- 	&format_attr_event.attr,
- 	&format_attr_long.attr,
-@@ -359,6 +373,7 @@ static struct attribute *armv8_pmuv3_format_attrs[] = {
- 	&format_attr_threshold.attr,
- 	&format_attr_threshold_compare.attr,
- 	&format_attr_threshold_count.attr,
-+	&format_attr_strobe_period.attr,
- 	NULL,
- };
- 
-@@ -1125,6 +1140,16 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
- 	if (armv8pmu_event_is_64bit(event))
- 		event->hw.flags |= ARMPMU_EVT_64BIT;
- 
-+	/*
-+	 * Support alternating between two sample periods
-+	 */
-+	if (armv8pmu_event_want_strobe(event)) {
-+		u32 strobe_period = armv8pmu_event_strobe_period(event);
-+		armpmu_set_strobe_period(&(event->hw), strobe_period);
-+	} else {
-+		armpmu_set_strobe_period(&(event->hw), 0);
-+	}
-+
- 	/*
- 	 * User events must be allocated into a single counter, and so
- 	 * must not be chained.
--- 
-2.43.0
+On 2024-01-23 12:56 a.m., Thomas Richter wrote:
+> On 1/23/24 06:30, kajoljain wrote:
+>>
+>>
+>> On 1/16/24 22:07, Liang, Kan wrote:
+>>>
+>>>
+>>> On 2024-01-16 9:05 a.m., kajoljain wrote:
+>>>>> For powerpc, the patch 3 introduced a perf_mem_events_power, which
+>>>>> doesn't have ldlat. But it only be assigned to the pmu->is_core. I'm not
+>>>>> sure if it's the problem.
+>>>> Hi Kan,
+>>>>  Correct there were some small issues with patch 3, I added fix for that.
+>>>>
+>>>
+>>> Thanks Kajol Jain! I will fold your fix into V4.
+>>>
+>>>>> Also, S390 still uses the default perf_mem_events, which includes ldlat.
+>>>>> I'm not sure if S390 supports the ldlat.
+>>>> I checked it, I didn't find ldlat parameter defined in arch/s390
+>>>> directory. I think its better to make default ldlat value as false
+>>>> in tools/perf/util/mem-events.c file.
+>>>
+>>> The s390 may not be the only user for the default perf_mem_events[] in
+>>> the tools/perf/util/mem-events.c. We probably cannot change the default
+>>> value.
+>>> We may share the perf_mem_events_power[] between powerpc and s390. (We
+>>> did the similar share for arm and arm64.)
+>>>
+>>> How about the below patch (not tested.)
+>>>
+>>> diff --git a/tools/perf/arch/s390/util/pmu.c
+>>> b/tools/perf/arch/s390/util/pmu.c
+>>> index 225d7dc2379c..411034c984bb 100644
+>>> --- a/tools/perf/arch/s390/util/pmu.c
+>>> +++ b/tools/perf/arch/s390/util/pmu.c
+>>> @@ -8,6 +8,7 @@
+>>>  #include <string.h>
+>>>
+>>>  #include "../../../util/pmu.h"
+>>> +#include "../../powerpc/util/mem-events.h"
+>>>
+>>>  #define        S390_PMUPAI_CRYPTO      "pai_crypto"
+>>>  #define        S390_PMUPAI_EXT         "pai_ext"
+>>> @@ -21,5 +22,5 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+>>>                 pmu->selectable = true;
+>>>
+>>>         if (pmu->is_core)
+>>> -               pmu->mem_events = perf_mem_events;
+>>> +               pmu->mem_events = perf_mem_events_power;
+>>>  }
+>>>
+>>>
+>>>
+>>> However, the original s390 code doesn't include any s390 specific code
+>>> for perf_mem. So I thought it uses the default perf_mem_events[].
+>>> Is there something I missed?
+>>>
+>>> Or does the s390 even support mem events? If not, I may remove the
+>>> mem_events from s390.
+>>
+>> Hi Kan,
+>>    I don't have s390 system to do testing. But from my end I am fine
+>> with the changes.
+>>
+>> Thanks,
+>> Kajol Jain
+>>
+> 
+> s390 does not support perf mem at all. Right now it is save to remove it from s390.
 
+Thanks for the confirmation!
+
+Thanks,
+Kan
+
+> Thanks
+> 
+>>>
+>>> Thanks,
+>>> Kan
+>>
+> 
