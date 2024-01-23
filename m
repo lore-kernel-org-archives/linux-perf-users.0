@@ -1,88 +1,96 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6581138F9E
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 21:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095D2ED8;
+	Wed, 24 Jan 2024 00:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706045474; cv=none; b=SFOTtzJ79w9M2WNT6wFYGxPUjBeiGr9EBMoj5skPx25/nYaVxDo+uFXmg1Cc5kflA5WgLonTQuFAJVtkOM7bszkW6oKekhgCiCL+iXS1u98BYx8v93zRCIPN+bM0QRAn1aiOMxBxNvqIn8c4zuVoSjup9/wHEvQb/5IFotnQgDA=
+	t=1706054410; cv=none; b=o5aVnBQEwubw1vmDe8+mZEmqFTWwRUeOt3ULAiPgXuMryL062ibdLTh64wzuzLOWdSVRBYFiN9qvJbIbTAsMlwaRtc3KYhUQ3PrQEuHvTPW/MlpoNT4cWkyNhZya1wf/qjQ6+/+2XDKEUB6IYfSqLsLm/Gc69MkW6/8tSjgVIqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706045474; c=relaxed/simple;
-	bh=jP2/IW9UNkEjSgAKZeY0ax+X34XlCZzhZYmXu4icG+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bt5u7gyag6PhZ4Q1trldtWqLo2iFa2ZV79Rf8flpGWtg0Xz9YmeZ4xSV8qY6d1HBzPwSeWeXCKBOtnS7ol+HZzy3jkEYS4XS2LnGFoVJ44/WJkTYQpQJrGELoW5KcAso7QvHCMobBhhFCr4LsKCKdCcY95h8hjS9Li3UBqUt3d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ad60CBuj; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ad60CBuj"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so465944a12.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 13:31:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706045472; x=1706650272; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cLSrHTqApY0rnoNDPNmTbGyM4UlT798vTtkhFOVuGO8=;
-        b=Ad60CBujlqu06M2IFBbPXvjYD8g/BEXRejYj+DNvOwe8wY8n5vBoew7hrTl/u+VcTX
-         Mw1Suq5x7dhwT8+Kg1UpTRVofpgjJnrHYr6gl+HBY//ZZHbqrNqMWfVbigTZJZHXagmU
-         rnCo70Rr5QxK6vUJfK1EJi4krFDpBRl+2UwKE=
+	s=arc-20240116; t=1706054410; c=relaxed/simple;
+	bh=U10nGEUE4cVQYUDnFu+7rOSFUdiJ6KYDfAxDrn8zcRI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pmc05QTeMEHH/SyKeN3qzGiwcai5CJCc81UwEfF6v5fLVmHOR036c8GEgoy4CNlWdZIuLDMrr+OSstYAm5tY09IO+EYb0HXgn/RpQTtq+FvbGX018dzNgfgURJhuDRZJIWjTi/DFsgKV9sjubKXGOJ4OeMMgzTfhuVv+bg8VvCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5d4a1e66750so230116a12.0;
+        Tue, 23 Jan 2024 16:00:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706045472; x=1706650272;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cLSrHTqApY0rnoNDPNmTbGyM4UlT798vTtkhFOVuGO8=;
-        b=msqLj4CW1KEiUrJfb1KhW6BaIexj2z+f80PCQ05bIdzJ0eCpZ6nmagBtqvacWi1agn
-         nZ8mnXKglq0r6DuYYVBihyqiPDywn+ZY8HBzHMY+QhRtNFfV8P3R3X/+0ZF4Wi8QTjIB
-         COY2iQolEkQQx3srJjWohQH4G6zZ9FgB/9AhIIxqiSroihmc/s4DvpsSIIiU9LeXS6hW
-         ydR40FqXcNAlerTSgIsVKfVIq+1r+ytYQEFq+7DA62auMUEU1rMhkQVwJX1tfQ/NtxOC
-         pnp5QOmN/6q8iHENhAnrtE5qtT1NS2gLY+VctwPQ50FUmI+z/psUeJyA0K2P11ZLeRcy
-         ot6g==
-X-Gm-Message-State: AOJu0YwoolOz8RY9TtyNbHDvnOMO1MF9Xh2Zq1oeWRU3lopXH8xWQPot
-	vR49iovX0mew4bRvGzjQ/o6MWj5gnCg3Fsev0KrQuUHSEX8W+30SBKx+ZIZpMw==
-X-Google-Smtp-Source: AGHT+IFZZEebKX2R0JqbRWEEh9em7MQ0hN72r+XKI76xsV+huWAf7uMifAtdFdhTI+U9kp5jq78zPg==
-X-Received: by 2002:a05:6a20:28a1:b0:19a:3a7f:63cd with SMTP id q33-20020a056a2028a100b0019a3a7f63cdmr3098127pzf.49.1706045472672;
-        Tue, 23 Jan 2024 13:31:12 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id kr8-20020a056a004b4800b006da73b90fe4sm12541675pfb.14.2024.01.23.13.31.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 13:31:12 -0800 (PST)
-Date: Tue, 23 Jan 2024 13:31:11 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-hardening@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, John Garry <john.garry@huawei.com>,
-	Fangrui Song <maskray@google.com>, linux-perf-users@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 69/82] perf tools: Refactor intentional wrap-around test
-Message-ID: <202401231330.C55D17922@keescook>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-69-keescook@chromium.org>
- <dc3a7101-964b-46c5-a78b-374b68cd54fb@intel.com>
+        d=1e100.net; s=20230601; t=1706054408; x=1706659208;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vQle4+CUBnZaj6W1Lf3jcAaTPV6tjOTH4uhcTRizJNY=;
+        b=gm6Bege4uOnEos7tTlEmcr7PRS1yCRIzRIawfc1ODKX/5U+KmEJPlvFvbuxLxEJqF2
+         +yUvVNoQQUpmiE4u1yVEkb7Lo0YHhpQa0VgLQPeosaQSQVV73GO4sbM/g1/mETGEWSUu
+         XDDpPjYLkS60ie6jBXfHWhDXgJKxr/PXsx662DMzK7VoA6NWq8zStc4isRTVH/+UYz/R
+         0hGdEHPRZU6y0Pu+MXF6v9Hqj4wqbcoH0+blMhX0v8cPROvU1LKp/2aGiEN7Ks1JT/bA
+         vVtuSR3AopjGc4VidEMoEzay4AonM2ggjNyJqiDMTGlrRy7OSKpy/fDrWCqcS2oxLM8a
+         KHWw==
+X-Gm-Message-State: AOJu0YzJL59ijFOfY3lxGBOrXNtg2zBcnb/q0HRkYJxaj/9UhSudk2Nq
+	LxHFTR50JvZo6RY+1kBpwG9wZxnR3Kdf+pgQ4djiQIyCAloirAzRNUc6JQiWbLDea4liLI57t8h
+	+xB3bZLv7vbnavjILo5cY8GiLjMn1cEgKSk8=
+X-Google-Smtp-Source: AGHT+IEtD8mxiz/f5RScsi5J+Vm2JRwvkAD2vJGFFS128YQLBdkaYD7uUgDBOBLSgqwRGxSdZJ6NPJduMv7wDfOBpM0=
+X-Received: by 2002:a05:6a21:3989:b0:19a:4f9b:3bf0 with SMTP id
+ ad9-20020a056a21398900b0019a4f9b3bf0mr19438pzc.0.1706054407846; Tue, 23 Jan
+ 2024 16:00:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc3a7101-964b-46c5-a78b-374b68cd54fb@intel.com>
+References: <20240123000604.1211486-1-irogers@google.com>
+In-Reply-To: <20240123000604.1211486-1-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 23 Jan 2024 15:59:56 -0800
+Message-ID: <CAM9d7cg2Sr5wjR7Nu8pwmdWzErRT4R5V=VnUnnZhw0w=06Resw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] Fixes for 6.8 PR1
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Ross Zwisler <zwisler@chromium.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Shirisha G <shirisha@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 23, 2024 at 08:21:41AM +0200, Adrian Hunter wrote:
-> perf tools has separate includes to the kernel, so does not
-> seem to include add_would_overflow() in any of its include
-> files at this point.  Need to update
-> tools/include/linux/overflow.h first.
+Hi Ian,
 
-Oops, thank you! I will adjust this.
+On Mon, Jan 22, 2024 at 4:06=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Discovered some testing issues around perf list, perf script and perf
+> daemon based on Linux 6.8-rc1. Some of the issues were discovered in
+> the context of an Alderlake system.
+>
+> Ian Rogers (5):
+>   perf list: Switch error message to pr_err
+>   perf list: Add output file option
+>   perf test: Workaround debug output in list test
+>   perf test: Fix script test for python being disabled
+>   perf test: Make daemon signal test less racy
 
--- 
-Kees Cook
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+I only have a nitpick on patch 5.
+
+Thanks,
+Namhyung
+
+>
+>  tools/perf/Documentation/perf-list.txt |   4 +
+>  tools/perf/builtin-list.c              | 211 +++++++++++++++----------
+>  tools/perf/tests/shell/daemon.sh       |  34 ++--
+>  tools/perf/tests/shell/list.sh         |  21 ++-
+>  tools/perf/tests/shell/script.sh       |   3 +-
+>  tools/perf/util/print-events.c         |   2 +-
+>  6 files changed, 177 insertions(+), 98 deletions(-)
+>
+> --
+> 2.43.0.429.g432eaa2c6b-goog
+>
