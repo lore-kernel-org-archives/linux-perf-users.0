@@ -1,44 +1,45 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D43D5C5EC;
-	Tue, 23 Jan 2024 10:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D4F45C8E0;
+	Tue, 23 Jan 2024 10:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706005929; cv=none; b=V3xLMn8klI8vzUFp33jk4TUqibO8NbnTbqC9IgeHbTWOaGyqVOn64M7d9LZ0t+QrDncWXU8v535vnyXmSOUF9RafU6QYTYoh6/Zp0is2mp5Z5Gta0W6qVndPPZFsXm9rnuGsaXP4W0WHrhKIu7HremlxiGMQyoGPtFzigqjPUXk=
+	t=1706006366; cv=none; b=aNOcIQxqQVw1yvD2q8QnUC0wLp7uDl317AWCstNOTSl9unIcaBgoZQZqKHTu2YFvfgksMT4FUixPtHQj2tDdm6fxTMqid9O8lslNsTEz4Rxvcdrfi1Jb0s1tyWDoYOIVhf2GwGgw+oVfOAyo4s6f6qqFgbgVXm51fWSlgduBMYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706005929; c=relaxed/simple;
-	bh=tGC1Q+uluHqWv6fRHLJmIy0XADSRJjB5ViL9dFWiGEU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TSqbazLJovXJI4TA368EIrfu5OvmYGHoBO6jINkiUllfIwLIUiGMOIyUktZqVQxCDsRvy0foKSo6tBxDkMJ6u5KW/+KqgyC4ROy2ZHZO5n1VnaxRCnyxCM6oqoOSLbad07R8aB2u5eRqAo3hY0PWTX/UbYBraAzZRKqeXwYT4SM=
+	s=arc-20240116; t=1706006366; c=relaxed/simple;
+	bh=GtIVveNSwGk3nEJMFxTwHhpJb0ze1IMkwFa/zOu6tus=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BVwdcDtBG5Wo2jIHeQUJI9DMXI3zazciWkV6yCT1DqQBlVxSlAvrpmxPjT+Si/5OeWw/TMFWg4mYRFLRoRU1W3ZhhhwFfFmeMNZFwSQ5vIgl7J8xUwv/8Hze8qJboB++FFTzHSp1+OfD4H2GLI5E0HmlRJLYn/VPe0UrCmA3rUM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB605FEC;
-	Tue, 23 Jan 2024 02:32:52 -0800 (PST)
-Received: from e126817.. (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9A1113F5A1;
-	Tue, 23 Jan 2024 02:32:05 -0800 (PST)
-From: Ben Gainey <ben.gainey@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9D2C1FB;
+	Tue, 23 Jan 2024 02:40:09 -0800 (PST)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4B07C3F5A1;
+	Tue, 23 Jan 2024 02:39:22 -0800 (PST)
+From: James Clark <james.clark@arm.com>
 To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
 	irogers@google.com,
-	adrian.hunter@intel.com,
-	will@kernel.org,
-	Ben Gainey <ben.gainey@arm.com>
-Subject: [PATCH 1/1] tools: perf: Expose sample ID / stream ID to python scripts
-Date: Tue, 23 Jan 2024 10:31:37 +0000
-Message-ID: <20240123103137.1890779-2-ben.gainey@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240123103137.1890779-1-ben.gainey@arm.com>
-References: <20240123103137.1890779-1-ben.gainey@arm.com>
+	kan.liang@linux.intel.com
+Cc: mark.rutland@arm.com,
+	James Clark <james.clark@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] perf evlist: Fix evlist__new_default() for > 1 core PMU
+Date: Tue, 23 Jan 2024 10:39:17 +0000
+Message-Id: <20240123103918.241423-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240123102728.239147-1-james.clark@arm.com>
+References: <20240123102728.239147-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,68 +48,88 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-perf script exposes the evsel_name to python scripts as part of the data
-passed to the sample or tracepoint handler function, and it passes the id and
-stream_id to the throttled/unthrottled handler functions. This makes matching
-throttle events and samples difficult.
+The 'Session topology' test currently fails with this message when
+evlist__new_default() opens more than one event:
 
-To make this possible, this change exposes the sample id and stream_id values
-to the script.
+  32: Session topology                                                :
+  --- start ---
+  templ file: /tmp/perf-test-vv5YzZ
+  Using CPUID 0x00000000410fd070
+  Opening: unknown-hardware:HG
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    config                           0xb00000000
+    disabled                         1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 4
+  Opening: unknown-hardware:HG
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    config                           0xa00000000
+    disabled                         1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
+  non matching sample_type
+  FAILED tests/topology.c:73 can't get session
+  ---- end ----
+  Session topology: FAILED!
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+This is because when re-opening the file and parsing the header, Perf
+expects that any file that has more than one event has the sample ID
+flag set. Perf record already sets the flag in a similar way when there
+is more than one event, so add the same logic to evlist__new_default().
+
+evlist__new_default() is only currently used in tests, so I don't
+expect this change to have any other side effects. The other tests that
+use it don't save and re-open the file so don't hit this issue.
+
+The session topology test has been failing on Arm big.LITTLE platforms
+since commit 251aa040244a ("perf parse-events: Wildcard most
+"numeric" events") when evlist__new_default() started opening multiple
+events for 'cycles'.
+
+Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
+Closes: https://lore.kernel.org/lkml/CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com/
+Tested-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/Documentation/perf-script-python.txt        | 4 ++--
- tools/perf/util/scripting-engines/trace-event-python.c | 8 +++++++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ tools/perf/util/evlist.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
-index 6a8581012e162..13e37e9385ee4 100644
---- a/tools/perf/Documentation/perf-script-python.txt
-+++ b/tools/perf/Documentation/perf-script-python.txt
-@@ -642,8 +642,8 @@ SUPPORTED FIELDS
+Changes since v2:
+
+   * Undo the fact that v2 was accidentally based on v1 instead of
+     perf-tools
+
+Changes since v1:
+
+  * Reduce scope of evsel variable
+  * Add argument label
+  * Change summary to be less specific about the failing test
+  * Add the closes: tag
+
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 95f25e9fb994..979a6053a84d 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -106,6 +106,13 @@ struct evlist *evlist__new_default(void)
+ 		evlist = NULL;
+ 	}
  
- Currently supported fields:
- 
--ev_name, comm, pid, tid, cpu, ip, time, period, phys_addr, addr,
--symbol, symoff, dso, time_enabled, time_running, values, callchain,
-+ev_name, comm, id, stream_id, pid, tid, cpu, ip, time, period, phys_addr,
-+addr, symbol, symoff, dso, time_enabled, time_running, values, callchain,
- brstack, brstacksym, datasrc, datasrc_decode, iregs, uregs,
- weight, transaction, raw_buf, attr, cpumode.
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 860e1837ba969..d88966645b2f4 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -858,6 +858,10 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(evsel__name(evsel)));
- 	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->core.attr, sizeof(evsel->core.attr)));
- 
-+	pydict_set_item_string_decref(dict_sample, "id",
-+			PyLong_FromUnsignedLongLong(sample->id));
-+	pydict_set_item_string_decref(dict_sample, "stream_id",
-+			PyLong_FromUnsignedLongLong(sample->stream_id));
- 	pydict_set_item_string_decref(dict_sample, "pid",
- 			_PyLong_FromLong(sample->pid));
- 	pydict_set_item_string_decref(dict_sample, "tid",
-@@ -1306,7 +1310,7 @@ static void python_export_sample_table(struct db_export *dbe,
- 	struct tables *tables = container_of(dbe, struct tables, dbe);
- 	PyObject *t;
- 
--	t = tuple_new(25);
-+	t = tuple_new(27);
- 
- 	tuple_set_d64(t, 0, es->db_id);
- 	tuple_set_d64(t, 1, es->evsel->db_id);
-@@ -1333,6 +1337,8 @@ static void python_export_sample_table(struct db_export *dbe,
- 	tuple_set_d64(t, 22, es->sample->insn_cnt);
- 	tuple_set_d64(t, 23, es->sample->cyc_cnt);
- 	tuple_set_s32(t, 24, es->sample->flags);
-+	tuple_set_d64(t, 25, es->sample->id);
-+	tuple_set_d64(t, 26, es->sample->stream_id);
- 
- 	call_object(tables->sample_handler, t, "sample_table");
++	if (evlist->core.nr_entries > 1) {
++		struct evsel *evsel;
++
++		evlist__for_each_entry(evlist, evsel)
++			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
++	}
++
+ 	return evlist;
+ }
  
 -- 
-2.43.0
+2.34.1
 
