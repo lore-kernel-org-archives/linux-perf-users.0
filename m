@@ -1,569 +1,226 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2092C51036
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 07:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705994185; cv=none; b=pjWxhGqwM9wuP4cecFkctMJIiIibBCkrHE+NpIFxisae+PBSZUyE2XaR6rH7bNQgLKySvEVg2scfGWGuP2nvU5wJ2kNaRZfbXitT1gTxA/HlEcAUCKyvHOLtOjfTvGQkRBFjAwPGNJ1gPoeTqL6kdmH06xGoyP4eNpzfbxzV5Y0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705994185; c=relaxed/simple;
-	bh=T4U94rhQacZ4bmgtsUFWLv0kMOdWPotTDbh6zvcfHqs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N3cfAY78kTT9VLFwagSik4hi89EuSvXjLA/0kPgbWxF4TOan5M/z87gXLgSFlWqNhl5ktKUUeIjJ+1OpyssZYER3XuDgTu4J4QnZVEONbRTgH8CvftA7RkDbZR1jbnG6ctQqxLRI3eUcGrFwB4zQpmMxoyOmfMjmMjEUT8B8IKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TJyyP41Dqz1gxwf;
-	Tue, 23 Jan 2024 15:14:37 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id A41781A016E;
-	Tue, 23 Jan 2024 15:16:05 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 23 Jan 2024 15:16:00 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <will@kernel.org>, <john.g.garry@oracle.com>, <james.clark@arm.com>,
-	<mike.leach@linaro.org>, <leo.yan@linaro.org>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
-CC: <jonathan.cameron@huawei.com>, <hejunhao3@huawei.com>,
-	<prime.zeng@hisilicon.com>, <yangyicong@hisilicon.com>, <linuxarm@huawei.com>
-Subject: [PATCH] perf stat: Enable iostat mode for HiSilicon PCIe PMU
-Date: Tue, 23 Jan 2024 15:12:01 +0800
-Message-ID: <20240123071201.30914-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29B858225;
+	Tue, 23 Jan 2024 09:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706002872; cv=fail; b=UPluudyTNjDMQXarcqg1o+adwdiL1VgvjY9qd8B0d2Zh4XEjjnuaAnpOpApe6RoeIVWJ/bsu6JAhrV+8krqzz157sZSQY8D4Njawnx3+3E5sWPTHDKn4GNkx1daKohxLWtm/2LX2DMJ5niiSNT3+kVqQC9FZhCCaeCLoDx8vA/M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706002872; c=relaxed/simple;
+	bh=jSKHJUK4js92WrLCmkVZfu1k8eM+VqX2oqILlt9dKRw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FeBQ1n6h8ukz2FKMTxd4Bz9lPjYPDi0iZF82Yc/bm6EzOLkOzC3JCk6/+yw12YgTppttUaVvx/hWdWK+xgnsco9NFAz+BXgK1f8fwa984x3MEObohk/SCHwDuIC5cNC6x2hLTlon5Z9oo1SlMm4McqvG62227swZ8QD13dCnElo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dI0orKOZ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Hemau2Jw; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dI0orKOZ";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Hemau2Jw"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40N6Yv6L013734;
+	Tue, 23 Jan 2024 09:41:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=12s/1PgbDHB+hnaLn3dRDyWjbe4VlHehWtBlhBZ6p1M=;
+ b=dI0orKOZHkUBArptMiJL1T59MJv5yAQ3DRGk3IrEa+YVR/I8foLEOPw09w+sLU7XIl8G
+ wQ8KkLzuq+TU1dyZpoJ4yjTJlqX33fOgZlF0gtDvORTlqRwXGsZn0th/GGh4gdjNESqR
+ GGwxuHyad4Gtn8gyApn9j9wE+1D7owwXKX35Fm1S2h6Ilm22KL29vJAYYg33KG5vFkq9
+ fnsMMkfQ6cbqlxdas0NBeJlFKGK+8LRJt6tU4lyGElQHQahBsWM/XECx5Qc7/JWjmtzo
+ SLeEU2Cck1pCefqPTd4agwcAxcyC1TeLhN2LOv2ycp0ZCKtYwSe9z4hbtKP2wMm77mO4 Xw== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7cxwqjn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Jan 2024 09:41:08 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40N8iKw3018715;
+	Tue, 23 Jan 2024 09:41:07 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3vs3150uaf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Jan 2024 09:41:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LlAPiQH7eSGDNnkOfV/VYab+xCFTO+Ygdbl9/9DfwtH/OhWMb6iR125ETLVwZasJbzQB8xJ04RQhaVhlHoeVd3u2W/KoljlQIq7RtIaWt3mBTD+lQZOS2IWuV5ROkwPvWbKFKgZOfcb0wsRvmA1rDa2zrDdx6CvyyYGX8tfPcM6XU3rOpV0elz4OclpgyjcFsWbsR2gPTfP/9Bu8HzFIOA0Z2lZQnz+jQLMU8ulqUORgWCxz2/sFNsFGndlTbOFDwAti88ocq8RiS2dQ8vG73eUdxR9E/vYYt5gumGsr1MJRWIHXPQGnf2jWtgsZt6Bhe8cv+4fWWhf6nk3UaCpTWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=12s/1PgbDHB+hnaLn3dRDyWjbe4VlHehWtBlhBZ6p1M=;
+ b=NW2xMgQJP3Y6jRPcMZadPJNCBvJnb3WsFwAcv6L8Gxo9QTcqxu5IaMiBFQ1xGjU5rhcOXm71o39h4dwAYbbGB4n/shfXK7XD1C9cGs4RnLQQc1u0fHa+WKsJRYi/gSzfzmwkFcP2nef+Gu/JbEcAjn3Lv+xc1rZXCfryg7iaXhr8qy2GXNLMx3fYxaflBHg5J+MWKWGKLMrTu1XyMk7CTGPmwpTMorjgVa78f4ZQpxlYQSWgeT2PPIfsKq5oCp9yi8wcso8EMhGUrHjTMErel1cceAu6ZXw+6p2Cb86OdYW0F/7cM+SF5Y6JEBHD/1hjPaWLwfxHzvObiZmP5kopZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=12s/1PgbDHB+hnaLn3dRDyWjbe4VlHehWtBlhBZ6p1M=;
+ b=Hemau2Jwf0kecDEMyQnB9FBgtcix1Lr+X0yxPgY29qMt8ca8/Bda+veMaJFoTDmchoBcw7uBx0jdv8K73eikXYBVejL5BEPK4eJ0BNgMwov5HH3TRHVbHN7dxHSbntXuTg7iBr0i8TQZRhIKcs0bXJQ1SOm1I6T70frbFrkSG9A=
+Received: from BLAPR10MB5267.namprd10.prod.outlook.com (2603:10b6:208:30e::22)
+ by PH0PR10MB5893.namprd10.prod.outlook.com (2603:10b6:510:149::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Tue, 23 Jan
+ 2024 09:41:05 +0000
+Received: from BLAPR10MB5267.namprd10.prod.outlook.com
+ ([fe80::b3b:c19f:bbba:7f70]) by BLAPR10MB5267.namprd10.prod.outlook.com
+ ([fe80::b3b:c19f:bbba:7f70%7]) with mapi id 15.20.7228.022; Tue, 23 Jan 2024
+ 09:41:05 +0000
+Message-ID: <f4d8296d-dc7a-509e-aba3-741d22f889dd@oracle.com>
+Date: Tue, 23 Jan 2024 09:40:56 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: Better error message for kernels not compiled with BTF
+Content-Language: en-GB
+To: Ian Rogers <irogers@google.com>, bpf <bpf@vger.kernel.org>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <CAP-5=fU+DN_+Y=Y4gtELUsJxKNDDCOvJzPHvjUVaUoeFAzNnig@mail.gmail.com>
+From: Alan Maguire <alan.maguire@oracle.com>
+In-Reply-To: <CAP-5=fU+DN_+Y=Y4gtELUsJxKNDDCOvJzPHvjUVaUoeFAzNnig@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2P153CA0004.APCP153.PROD.OUTLOOK.COM (2603:1096::14) To
+ BLAPR10MB5267.namprd10.prod.outlook.com (2603:10b6:208:30e::22)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500009.china.huawei.com (7.192.105.203)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BLAPR10MB5267:EE_|PH0PR10MB5893:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44797beb-1cba-408c-b8b8-08dc1bf76b0f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	lG+xzaUF8n5jW+uoUSS/QV7Tv6cSAOMbiERa5e4BYXLURfxP0TEp9/EOhFzR2MWBzHUuJ4phkqIBLgdZ7f5Wu4/v8agFHTpwXbL4Bcgu7GisyKbXE+NtbsFU2PttySkSay6HlrRxrEkqvWNrtsQAExmf4q6KM70v2Pgi9mqPYE5hxI5EQB/mDrHYDC/CvH43UGwlG+2sP49wifUrMSNYgz9bAsZhLW0IeYCP1h9/tqIQfCAw7pEodI2K63qsmu1/lv+sHc7+c2tueSOi/upjVG9jTfwkEYcy0431AxSycfJKn8POo2V4wTpl1tuvmFfoLq9/lwnLOLwkR7rQbxjrh0kyX36eYKo5XRrZ1Z7faIvjxGKl9EzknkzvuTPj7azGHjjy8eoECmoYF5UkWoKj7YAkcpKO15ovI5c4wj004sSZrr1a1C8NrhUucrUuogBMNVxfmdkSceRMOC5Obi4J8OiaT21ZQzJSIMZQw0J6YtG2o56ZbJdis3b/fJ0PxKx/tXpis8Pf2y3GJopqc2Le9UIe1BL3/Hd/AK0QF8xGqmP8mQ4UkJwc3ubZne2A8V1z9ADn5JUDdyFXMRspHQ6hpGCVY6QYpSX/ufc4VzrmW1r4s1GMbPk+NQu2dBbl0eULKUfyOjTO1v5rGM3sijph5g==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5267.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(136003)(39860400002)(396003)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(6666004)(478600001)(41300700001)(31696002)(86362001)(36756003)(38100700002)(83380400001)(5660300002)(6506007)(316002)(8936002)(4326008)(6512007)(8676002)(966005)(6486002)(110136005)(66476007)(15650500001)(66946007)(2906002)(66556008)(53546011)(2616005)(44832011)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?eFVjUU1wNER0V0lkc0FZY0c2SWgwZFFUTjJhNFlaR0tsTWo0NlkyWnluYVBU?=
+ =?utf-8?B?OHMyWFZKU0I0cnVRWUZUaVBnTCtSZlhJRk8vZWg2SXZlRngxTU1XRytORjZv?=
+ =?utf-8?B?K1BrZ1pURFZDZE9MVU1wNVByQjRSRDRreDQrNmpIaVRFa25rOXhqY0kwbHhP?=
+ =?utf-8?B?MlpFbWR1QjY2d2s0OTRrcWhZVjVzN05kd25GekZGUW5STTUrMEFkZE8xSDdv?=
+ =?utf-8?B?QkJDYU9RQjVzbXRFTDk1bWRtcDhCVlJwNDdWS3ZtUkphYTgwdFBPVlA0RzRo?=
+ =?utf-8?B?TnZsVkVKMWdya0Q4MUh1b0Ntd1lHMDlMZ2x5SHcreXJ6c2RXYWdQOExxelY3?=
+ =?utf-8?B?amJEaUpUdU9Ed1kwVHp1VUt5azZCMFZDSHIxZm1IdUxSTFVEbnNNVS9HVmVk?=
+ =?utf-8?B?ZTRyNGhsalBjaTJibmhpTHJDV0ZkR3ZWS1ZRZkl5Vk5WWmNFTmpCUmVlUGlU?=
+ =?utf-8?B?ZGoyZEpQdTdsUUtYWC90NU1Xa0VmQlRIMU9KdzIrbGRrZThGWFZxeDZXUmE3?=
+ =?utf-8?B?a1hJWjZHNEhlUzAxOW5jMGM5WWNFMmE3Yi8wRUdWdFpoTlVBcVcycjlUdHEv?=
+ =?utf-8?B?K3doYkdnVUVOdWdWaFVrZlVucTdEaFdPZldkL2RZeVU4R005TWpHYm82cUl3?=
+ =?utf-8?B?M2E2cVorV0UxOUl5TENyRGxQMnQwVm9xNERFbzhhN3FxTlhGN0I3TFBGY0Ez?=
+ =?utf-8?B?c2labGdoODBRM0Q0c1RzN0E5Q2haYXpKNWtDSUdZUGJrdVNMN3ZHWFU5c0JP?=
+ =?utf-8?B?eXpoRldtY0E3eFE5U0k0UWo3SEtnSlZDbGF6OHhjcjYwbVhpQ09BKzNNWEhG?=
+ =?utf-8?B?aHlENEs3RG5PK0xycjR0aHd0ZFoyN3ozdWNJSDFnVVp6RFV2ZWhYYkZ0SVJL?=
+ =?utf-8?B?dWZPK3UzUVh5Q0VsZFp2aUN3M0hCbjFiZmZJNTgydm9BUHdDZVlXdlJZMllW?=
+ =?utf-8?B?b1dsQ2VOT2VtSmk4bGJVaVEzZUsveGlweHBFVFU4ZDZ3WS9RU1hqOSs4MU1T?=
+ =?utf-8?B?dGsvYWtWeVMwWm1Kd043Y3BnUEdwQ0FXaXFEalJkM0pGUWJyczc3cGVHUUtT?=
+ =?utf-8?B?RnVDeVUrWVBoZlZ6cE5nYXJ6ZlRaZS9lV21xNFduRUV4Qm53cGxEN29VOG5m?=
+ =?utf-8?B?bnovUGJUaEEvWHRYZjNRRmlrcmJlSkU3V0VrcmdBR3N4L1R4ZHJDU3lIU3Y3?=
+ =?utf-8?B?eGM2aDhsT0s5K3JOc2FKZkd4UjMvSFpCbmN4VVhFR3YxVm8raXhCT0IvWVFi?=
+ =?utf-8?B?TFZvdjRYUHVwdHE0M2E5UjZlWENvZTJZU0ZwMjhZQ09vRWZiQ0h2RkNpOU10?=
+ =?utf-8?B?eDg1d3lneGNkcnZONm5RNGtIakdrOVlRK3NxYnNxY3RKdXZxSm5heGg5RTJK?=
+ =?utf-8?B?UTZ3VmdVZVRXQ3hKK05mVUNzYmZIUjVhU3FUQWcxYVV5b3FDTk9aUWpOTzRW?=
+ =?utf-8?B?L0dxRGdQWXJkY0NCNlE0SGRuaDdsaVVkWVk1QnU4ek5xWkZUSCtpNnFDbmsz?=
+ =?utf-8?B?dG1mejJiZ1RIN29zTEN4WEZyV2VvajNaaHJOYnZLQUpGUGQwS2pyMlVEbHhz?=
+ =?utf-8?B?YXEzNk9WYWNVejdoblZIMkhQbHdpa1RCWDJIWnZOTXhIdTNXVU9GNDZVMzMz?=
+ =?utf-8?B?Rk13amJ5N20wc1orTUJtK1hURU4rZDZRYjRxY0JlNkxxc0p5bGU4RktBbEFS?=
+ =?utf-8?B?TXFIdlVEcVhzSWVhN1hKNDhacWd1L3dWUjdtbWhLdlZkb0ZWamtpRTl4RERa?=
+ =?utf-8?B?UHAxUnF4YTBWYjdYcGZ0M05MLzNaNU92cWFPUXd3YWRuUnpwdXVOWE1VSVhs?=
+ =?utf-8?B?Nko4UXh4RHNyT3lodGsxSENIdnZKaFk2NlkzVnJUREtMbFZBd2RHNGEyRFZP?=
+ =?utf-8?B?aHNGei9tWFV3VGlER1A0Y0YzOFl3U3VtTFRJaFBTejhoWDFSamJTdmNCQlFK?=
+ =?utf-8?B?bXVpQzVOT3FxMGpJODhHV2ZraGNNUUx1MERlSG9wU1lFd2JuQ2JET3BpK2lD?=
+ =?utf-8?B?SG5nakJNSklKUGduZUE0QWNlTHNhT1NvYU5ZQk1pTndhTm1udWNNUUxwajV6?=
+ =?utf-8?B?TW9nalVVZU9XRmNqMTF0SUQ1YWZOWmJZODUzUWNNQzFQeVpxZnBZVncyU2ty?=
+ =?utf-8?B?Y0JkSGV1ZTJ0b2pRSG5OSklac3FjcGREdmpGNEdJYitKa01GdWk4SGxTRWxZ?=
+ =?utf-8?Q?9ceqSH1QkvDYzisDUi88dh8=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	uMwZt9zSKoo14ZpkU/sutgUySFPoDotXFAh9O6J6p+AEvLwarYeZHLXe8cm1U2L/apEkLyOgrPUzMSp0hjAqaQ3cpOKaLVciPsSwbrqlgQjJYbiAHzwWlkdHgkwDJW1q7Gc6DJERnKR6SeN+8YretFOE0VRONE8BeiCAU5nmu7xzlWbDrrXaywSmVmYcp+d24T4TO9hiiMbGkou0Iyx96TysG6nOfq5Owa3srrOonhv6A85XmxFkGLiypXsVU7EER+m21iqyf8TgnEayR+jTvC4i76LN6e3t/+g2KLb/GAQBVS5tFG+Grl2hcsy7+35Bw33OHU8UaPeLxN+HBMkofDPIWM3JFKvGUQUrH7SdLog4vwY1s3IiXkCn53wR1FYBAP729YNSbiGFC5DyTUSeUmkRWt13MNA0pnId61Tm6ucOy1RzDtwF8uiA8hE1SXnnqAao3R6Fk7SlgS2bfI1qefVwxoz+7N0XhfHEzYX0Jc98atq60rA9RLdp0yb/ULtlH44PpPo92U4VKtsQtBJ7APvFhLaryjG//BSDiTwA5ALXyo2VyWtvxr2/QArgSrsTM2G4etYCEN/fnd0InOniVKmsd0Gvj9yHDSlRFd5WkbE=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44797beb-1cba-408c-b8b8-08dc1bf76b0f
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5267.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 09:41:05.0103
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k5tBtOBRNgbd1uCESjbRbZ3wcyxGMxn7QwqNUrC/hwX+KcCXpxE29Fqf44237tVPxzf9jy6QfAd5rP89gUcUUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5893
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_04,2024-01-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401230069
+X-Proofpoint-ORIG-GUID: g3K886w1gFNNuCAcrAwCyyY9C0gq2BEx
+X-Proofpoint-GUID: g3K886w1gFNNuCAcrAwCyyY9C0gq2BEx
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On 23/01/2024 00:18, Ian Rogers wrote:
+> Hi,
+> 
+> if a kernel is compiled with CONFIG_DEBUG_INFO_BTF disabled then the
+> libbpf fails on perf lock contention with:
+> ```
+> libbpf: failed to find valid kernel BTF
+> libbpf: Error loading vmlinux BTF: -3
+> libbpf: failed to load object 'lock_contention_bpf'
+> libbpf: failed to load BPF skeleton 'lock_contention_bpf': -3
+> Failed to load lock-contention BPF skeleton
+> lock contention BPF setup failed
+> ```
+> The same error message is seen with BCC's libbpf-tools. I saw these
+> messages on default Rapberry Pi OS that is derived from Debian (more
+> context in https://bugzilla.kernel.org/show_bug.cgi?id=218401).
+> 
+> Given that distributions are shipping perf and libbpf-tools that
+> assume BTF is enabled, should CONFIG_DEBUG_INFO_BTF be enabled by
+> default in the kernel?
+>
 
-Some HiSilicon platforms provide PCIe PMU devices for monitoring the
-throughout and latency of PCIe traffic. With the support of PCIe PMU
-we can enable the perf iostat mode.
+That would be great, but if I remember one issue with this might be that
+CONFIG_DEBUG_INFO_BTF depends on DEBUG_INFO (for the DWARF generation
+that we construct BTF from), so I suspect enabling debug info by default
+might be an issue. There has been discussion in the past about
+supporting CONFIG_DEBUG_INFO_BTF in the non CONFIG_DEBUG_INFO case
+(by temporarily generating DWARF then stripping it or similar).
+What most distros usually do is strip the DWARF during packaging and
+create debuginfo packages, but I imagine users who build kernels
+themselves would want similar support if they were asking for
+DEBUG_INFO_BTF but not DEBUG_INFO.
 
-The HiSilicon PCIe PMU can support measuring the throughout of certain
-TLP types and of certian root port. Totally 6 metrics are provided in
-the unit of MB:
+> Perhaps:
+> ```
+> libbpf: Error loading vmlinux BTF: -3
+> ```
+> Would be better as (especially if the user is root):
+> ```
+> libbpf: Error loading vmlinux BTF: -3 (was the kernel compiled with
+> CONFIG_DEBUG_INFO_BTF?)
+>
 
-- Inbound MWR: The memory write TLPs from the devices downstream the root port
-- Inbound MRD: The memory read TLPs from the devices downstream the root port
-- Inbound CPL: The completion TLPs from the devices downstream the root port
-- Outbound MWR: The memory write TLPs from the CPU to the downstream devices
-- Outbound MRD: The memory read TLPs from the CPU to the downstream devices
-- Outbound CPL: The completions TLPs from the CPU to the downstream devices
+That would be great; one thing I think would really help users would be
+to distinguish two cases in error messaging
 
-Since the PMU measures the throughout with unit of DWords. So we need to
-calculate the throughout in MB like:
-  Count * 4B / 1024 / 1024
+1. /sys/kernel/btf/vmlinux is not there at all; for that case your above
+error message is great (-ESRCH case)
 
-Some of the display of the `perf iostat` will be like:
-[root@localhost tmp]# ./perf iostat list
-hisi_pcie0_core2<0000:40:00.0>
-hisi_pcie2_core2<0000:5f:00.0>
-hisi_pcie0_core1<0000:16:00.0>
-hisi_pcie0_core1<0000:16:04.0>
-[root@localhost tmp]# ./perf iostat --timeout 10000
+2. /sys/kernel/btf/vmlinux is there, but can't be parsed, likely due to
+it being built with newer BTF; the current libbpf being used to parse it
+cannot read it (-EINVAL case). For this case something like ("BTF is
+present, but cannot be read; it may be malformed, or the version of
+libbpf reading it (%s) may be too old", version).
 
- Performance counter stats for 'system wide':
+Having solution-oriented messaging for cases like this would really help
+users I think. Thanks!
 
-    port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
-0000:40:00.0                    0                    0                    0                    0                    0                    0
-0000:5f:00.0                    0                    0                    0                    0                    0                    0
-0000:16:00.0             16272.99               366.58                    0                15.09                    0             16156.85
-0000:16:04.0                    0                    0                    0                    0                    0                    0
+Alan
 
-      10.008227512 seconds time elapsed
 
-[root@localhost tmp]# ./perf iostat 0000:16:00.0 -- fio -name=read
--numjobs=30 -filename=/dev/nvme0n1 -rw=rw -iodepth=128 -direct=1 -sync=0
--norandommap -group_reporting -runtime=10 -time_based -bs=64k
-
- Performance counter stats for 'system wide':
-
-    port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
-0000:40:00.0                    0                    0                    0                    0                    0                    0
-0000:5f:00.0                    0                    0                    0                    0                    0                    0
-0000:16:00.0             16314.30               371.22                    0                15.21                    0             16362.20
-0000:16:04.0                    0                    0                    0                    0                    0                    0
-
-      10.168561767 seconds time elapsed
-
-       0.465373000 seconds user
-       1.952948000 seconds sys
-
-More information of the HiSilicon PCIe PMU can be found at
-Documentation/admin-guide/perf/hisi-pcie-pmu.rst.
-
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- tools/perf/arch/arm64/util/Build         |   1 +
- tools/perf/arch/arm64/util/hisi-iostat.c | 433 +++++++++++++++++++++++
- 2 files changed, 434 insertions(+)
- create mode 100644 tools/perf/arch/arm64/util/hisi-iostat.c
-
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 78ef7115be3d..4e8dabf98b29 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -3,6 +3,7 @@ perf-y += machine.o
- perf-y += perf_regs.o
- perf-y += tsc.o
- perf-y += pmu.o
-+perf-y += hisi-iostat.o
- perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
- perf-$(CONFIG_DWARF)     += dwarf-regs.o
- perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-diff --git a/tools/perf/arch/arm64/util/hisi-iostat.c b/tools/perf/arch/arm64/util/hisi-iostat.c
-new file mode 100644
-index 000000000000..418eebece184
---- /dev/null
-+++ b/tools/perf/arch/arm64/util/hisi-iostat.c
-@@ -0,0 +1,433 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * perf iostat support for HiSilicon PCIe PMU.
-+ * Partly derived from tools/perf/arch/x86/util/iostat.c.
-+ *
-+ * Copyright (c) 2024 HiSilicon Technologies Co., Ltd.
-+ * Author: Yicong Yang <yangyicong@hisilicon.com>
-+ */
-+
-+#include <api/fs/fs.h>
-+#include <linux/err.h>
-+#include <linux/zalloc.h>
-+#include <linux/limits.h>
-+#include <dirent.h>
-+#include <stdio.h>
-+#include <errno.h>
-+#include <stdlib.h>
-+
-+#include "util/counts.h"
-+#include "util/cpumap.h"
-+#include "util/debug.h"
-+#include "util/iostat.h"
-+#include "util/pmu.h"
-+
-+#define PCI_DEFAULT_DOMAIN		0
-+#define PCI_DEVICE_NAME_PATTERN		"%04x:%02hhx:%02hhx.%hhu"
-+#define PCI_ROOT_BUS_DEVICES_PATH	"bus/pci/devices"
-+
-+static const char * const hisi_iostat_metrics[] = {
-+	"Inbound MWR(MB)",
-+	"Inbound MRD(MB)",
-+	"Inbound CPL(MB)",
-+	"Outbound MWR(MB)",
-+	"Outbound MRD(MB)",
-+	"Outbound CPL(MB)",
-+};
-+
-+static const char * const hisi_iostat_cmd_template[] = {
-+	/* Inbound Memory Write */
-+	"hisi_pcie%hu_core%hu/event=0x0104,port=0x%hx/",
-+	/* Inbound Memory Read */
-+	"hisi_pcie%hu_core%hu/event=0x0804,port=0x%hx/",
-+	/* Inbound Memory Completion */
-+	"hisi_pcie%hu_core%hu/event=0x2004,port=0x%hx/",
-+	/* Outbound Memory Write */
-+	"hisi_pcie%hu_core%hu/event=0x0105,port=0x%hx/",
-+	/* Outbound Memory Read */
-+	"hisi_pcie%hu_core%hu/event=0x0405,port=0x%hx/",
-+	/* Outbound Memory Completion */
-+	"hisi_pcie%hu_core%hu/event=0x1005,port=0x%hx/",
-+};
-+
-+struct hisi_pcie_root_port {
-+	struct list_head list;
-+	/* Is this Root Port selected for monitoring */
-+	bool selected;
-+	/* IDs to locate the PMU */
-+	u16 sicl_id;
-+	u16 core_id;
-+	/* Filter mask for this Root Port */
-+	u16 mask;
-+	/* PCIe Root Port's <domain>:<bus>:<device>.<function> */
-+	u32 domain;
-+	u8 bus;
-+	u8 dev;
-+	u8 fn;
-+};
-+
-+LIST_HEAD(hisi_pcie_root_ports_list);
-+static int hisi_pcie_root_ports_num;
-+
-+static void hisi_pcie_init_root_port_mask(struct hisi_pcie_root_port *rp)
-+{
-+	rp->mask = BIT(rp->dev << 1);
-+}
-+
-+/*
-+ * Select specific Root Port to monitor. Return 0 if successfully find the
-+ * Root Port, Otherwise -EINVAL.
-+ */
-+static int hisi_pcie_root_ports_select_one(u32 domain, u8 bus, u8 dev, u8 fn)
-+{
-+	struct hisi_pcie_root_port *rp;
-+
-+	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list)
-+		if (domain == rp->domain && bus == rp->bus &&
-+		    dev == rp->dev && fn == rp->fn) {
-+			rp->selected = true;
-+			return 0;
-+		}
-+
-+	return -EINVAL;
-+}
-+
-+static void hisi_pcie_root_ports_select_all(void)
-+{
-+	struct hisi_pcie_root_port *rp;
-+
-+	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list)
-+		rp->selected = true;
-+}
-+
-+static void hisi_pcie_root_ports_add(u16 sicl_id, u16 core_id, u8 target_bus)
-+{
-+	const char *sysfs = sysfs__mountpoint();
-+	struct hisi_pcie_root_port *rp;
-+	struct dirent *dent;
-+	char path[PATH_MAX];
-+	u8 bus, dev, fn;
-+	u32 domain;
-+	DIR *dir;
-+	int ret;
-+
-+	snprintf(path, PATH_MAX, "%s/%s", sysfs, PCI_ROOT_BUS_DEVICES_PATH);
-+	dir = opendir(path);
-+	if (!dir)
-+		return;
-+
-+	/* Scan the PCI root bus to find the match root port on @target_bus */
-+	while ((dent = readdir(dir))) {
-+		ret = sscanf(dent->d_name, PCI_DEVICE_NAME_PATTERN,
-+			     &domain, &bus, &dev, &fn);
-+		if (ret != 4 || bus != target_bus)
-+			continue;
-+
-+		rp = zalloc(sizeof(*rp));
-+		if (!rp)
-+			continue;
-+
-+		rp->selected = false;
-+		rp->sicl_id = sicl_id;
-+		rp->core_id = core_id;
-+		rp->domain = domain;
-+		rp->bus = bus;
-+		rp->dev = dev;
-+		rp->fn = fn;
-+
-+		hisi_pcie_init_root_port_mask(rp);
-+
-+		list_add(&rp->list, &hisi_pcie_root_ports_list);
-+		hisi_pcie_root_ports_num++;
-+
-+		pr_debug3("Found root port %s\n", dent->d_name);
-+	}
-+
-+	closedir(dir);
-+}
-+
-+/* Scan the PMUs and build the mapping of the Root Ports to the PMU */
-+static int hisi_pcie_root_ports_init(void)
-+{
-+	char event_source[PATH_MAX], bus_path[PATH_MAX];
-+	unsigned long long bus;
-+	u16 sicl_id, core_id;
-+	struct dirent *dent;
-+	DIR *dir;
-+
-+	perf_pmu__event_source_devices_scnprintf(event_source, sizeof(event_source));
-+	dir = opendir(event_source);
-+	if (!dir)
-+		return -ENOENT;
-+
-+	while ((dent = readdir(dir))) {
-+		/*
-+		 * This HiSilicon PCIe PMU will be named as:
-+		 *   hisi_pcie<sicl_id>_core<core_id>
-+		 */
-+		if ((sscanf(dent->d_name, "hisi_pcie%hu_core%hu", &sicl_id, &core_id)) != 2)
-+			continue;
-+
-+		/*
-+		 * Driver will export the root port it can monitor through
-+		 * the "bus" sysfs attribute.
-+		 */
-+		scnprintf(bus_path, sizeof(bus_path), "%s/hisi_pcie%hu_core%hu/bus",
-+			  event_source, sicl_id, core_id);
-+
-+		/*
-+		 * Per PCIe spec the bus should be 8bit, use unsigned long long
-+		 * for the convience of the library function.
-+		 */
-+		if (filename__read_ull(bus_path, &bus))
-+			continue;
-+
-+		pr_debug3("Found pmu %s bus 0x%llx\n", dent->d_name, bus);
-+
-+		hisi_pcie_root_ports_add(sicl_id, core_id, (u8)bus);
-+	}
-+
-+	closedir(dir);
-+	return hisi_pcie_root_ports_num > 0 ? 0 : -ENOENT;
-+}
-+
-+static void hisi_pcie_root_ports_free(void)
-+{
-+	struct hisi_pcie_root_port *rp, *tmp;
-+
-+	if (hisi_pcie_root_ports_num == 0)
-+		return;
-+
-+	list_for_each_entry_safe(rp, tmp, &hisi_pcie_root_ports_list, list) {
-+		list_del(&rp->list);
-+		zfree(&rp);
-+		hisi_pcie_root_ports_num--;
-+	}
-+}
-+
-+static int hisi_iostat_add_events(struct evlist *evl)
-+{
-+	struct hisi_pcie_root_port *rp;
-+	struct evsel *evsel;
-+	unsigned int i, j;
-+	char *iostat_cmd;
-+	int pos = 0;
-+	int ret;
-+
-+	if (!hisi_pcie_root_ports_num)
-+		return -ENOENT;
-+
-+	iostat_cmd = zalloc(PATH_MAX);
-+	if (!iostat_cmd)
-+		return -ENOMEM;
-+
-+	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list) {
-+		if (!rp->selected)
-+			continue;
-+
-+		iostat_cmd[pos++] = '{';
-+		for (j = 0; j < ARRAY_SIZE(hisi_iostat_cmd_template); j++) {
-+			pos += snprintf(iostat_cmd + pos, ARG_MAX - pos - 1,
-+					hisi_iostat_cmd_template[j],
-+					rp->sicl_id, rp->core_id, rp->mask);
-+
-+			if (j == ARRAY_SIZE(hisi_iostat_cmd_template) - 1)
-+				iostat_cmd[pos++] = '}';
-+			else
-+				iostat_cmd[pos++] = ',';
-+		}
-+
-+		ret = parse_event(evl, iostat_cmd);
-+		if (ret)
-+			break;
-+
-+		i = 0;
-+		evlist__for_each_entry_reverse(evl, evsel) {
-+			if (i == ARRAY_SIZE(hisi_iostat_cmd_template))
-+				break;
-+
-+			evsel->priv = rp;
-+			i++;
-+		}
-+
-+		memset(iostat_cmd, 0, PATH_MAX);
-+		pos = 0;
-+	}
-+
-+	zfree(&iostat_cmd);
-+	return ret;
-+}
-+
-+int iostat_prepare(struct evlist *evlist,
-+		   struct perf_stat_config *config)
-+{
-+	if (evlist->core.nr_entries > 0) {
-+		pr_warning("The -e and -M options are not supported."
-+			   "All chosen events/metrics will be dropped\n");
-+		evlist__delete(evlist);
-+		evlist = evlist__new();
-+		if (!evlist)
-+			return -ENOMEM;
-+	}
-+
-+	config->metric_only = true;
-+	config->aggr_mode = AGGR_GLOBAL;
-+
-+	return hisi_iostat_add_events(evlist);
-+}
-+
-+static int hisi_pcie_root_ports_list_filter(const char *str)
-+{
-+	char *tok, *tmp, *copy = NULL;
-+	u8 bus, dev, fn;
-+	u32 domain;
-+	int ret;
-+
-+	copy = strdup(str);
-+	if (!copy)
-+		return -ENOMEM;
-+
-+	for (tok = strtok_r(copy, ",", &tmp); tok; tok = strtok_r(NULL, ",", &tmp)) {
-+		ret = sscanf(tok, PCI_DEVICE_NAME_PATTERN, &domain, &bus, &dev, &fn);
-+		if (ret != 4) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		ret = hisi_pcie_root_ports_select_one(domain, bus, dev, fn);
-+		if (ret)
-+			break;
-+	}
-+
-+	zfree(&copy);
-+	return ret;
-+}
-+
-+int iostat_parse(const struct option *opt, const char *str, int unset __maybe_unused)
-+{
-+	struct perf_stat_config *config = (struct perf_stat_config *)opt->data;
-+	int ret;
-+
-+	ret = hisi_pcie_root_ports_init();
-+	if (!ret) {
-+		config->iostat_run = true;
-+
-+		if (!str) {
-+			iostat_mode = IOSTAT_RUN;
-+			hisi_pcie_root_ports_select_all();
-+		} else if (!strcmp(str, "list")) {
-+			iostat_mode = IOSTAT_LIST;
-+			hisi_pcie_root_ports_select_all();
-+		} else {
-+			iostat_mode = IOSTAT_RUN;
-+			ret = hisi_pcie_root_ports_list_filter(str);
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static void hisi_pcie_root_port_show(FILE *output,
-+				     const struct hisi_pcie_root_port * const rp)
-+{
-+	if (output && rp)
-+		fprintf(output, "hisi_pcie%hu_core%hu<" PCI_DEVICE_NAME_PATTERN ">\n",
-+			rp->sicl_id, rp->core_id, rp->domain, rp->bus, rp->dev, rp->fn);
-+}
-+
-+void iostat_list(struct evlist *evlist __maybe_unused, struct perf_stat_config *config)
-+{
-+	struct hisi_pcie_root_port *rp = NULL;
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (rp != evsel->priv) {
-+			hisi_pcie_root_port_show(config->output, evsel->priv);
-+			rp = evsel->priv;
-+		}
-+	}
-+}
-+
-+void iostat_release(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		evsel->priv = NULL;
-+
-+	hisi_pcie_root_ports_free();
-+}
-+
-+void iostat_print_header_prefix(struct perf_stat_config *config)
-+{
-+	if (config->csv_output)
-+		fputs("port,", config->output);
-+	else if (config->interval)
-+		fprintf(config->output, "#          time    port         ");
-+	else
-+		fprintf(config->output, "   port         ");
-+}
-+
-+void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
-+			 struct perf_stat_output_ctx *out)
-+{
-+	struct perf_counts_values *count;
-+	const char *iostat_metric;
-+	double iostat_value;
-+
-+	iostat_metric = hisi_iostat_metrics[evsel->core.idx % ARRAY_SIZE(hisi_iostat_metrics)];
-+
-+	/* We're using AGGR_GLOBAL so there's only one aggr counts aggr[0]. */
-+	count = &evsel->stats->aggr[0].counts;
-+
-+	/* The counts has been scaled, we can use it directly. */
-+	iostat_value = (double)count->val;
-+
-+	/*
-+	 * Display two digits after decimal point for better accuracy if the
-+	 * value is non-zero.
-+	 */
-+	out->print_metric(config, out->ctx, NULL,
-+			  iostat_value > 0 ? "%8.2f" : "%8.0f",
-+			  iostat_metric, iostat_value / (256 * 1024));
-+}
-+
-+void iostat_prefix(struct evlist *evlist, struct perf_stat_config *config,
-+		   char *prefix, struct timespec *ts)
-+{
-+	struct hisi_pcie_root_port *rp = evlist->selected->priv;
-+
-+	if (rp) {
-+		if (ts)
-+			sprintf(prefix, "%6lu.%09lu%s" PCI_DEVICE_NAME_PATTERN "%s",
-+				ts->tv_sec, ts->tv_nsec, config->csv_sep,
-+				rp->domain, rp->bus, rp->dev, rp->fn,
-+				config->csv_sep);
-+		else
-+			sprintf(prefix, PCI_DEVICE_NAME_PATTERN "%s",
-+				rp->domain, rp->bus, rp->dev, rp->fn,
-+				config->csv_sep);
-+	}
-+}
-+
-+void iostat_print_counters(struct evlist *evlist, struct perf_stat_config *config,
-+			   struct timespec *ts, char *prefix,
-+			   iostat_print_counter_t print_cnt_cb, void *arg)
-+{
-+	struct evsel *counter = evlist__first(evlist);
-+	void *perf_device;
-+
-+	evlist__set_selected(evlist, counter);
-+	iostat_prefix(evlist, config, prefix, ts);
-+	fprintf(config->output, "%s", prefix);
-+	evlist__for_each_entry(evlist, counter) {
-+		perf_device = evlist->selected->priv;
-+		if (perf_device && perf_device != counter->priv) {
-+			evlist__set_selected(evlist, counter);
-+			iostat_prefix(evlist, config, prefix, ts);
-+			fprintf(config->output, "\n%s", prefix);
-+		}
-+		print_cnt_cb(config, counter, arg);
-+	}
-+	fputc('\n', config->output);
-+}
--- 
-2.24.0
-
+ ```
+> 
+> Thanks,
+> Ian
+> 
