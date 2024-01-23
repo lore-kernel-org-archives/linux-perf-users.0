@@ -1,165 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9081212E5F;
-	Tue, 23 Jan 2024 14:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706020604; cv=none; b=dknjkR3R95i3s2oD1x2sY+tWaT+6gXjuszFdWzT+4Md4JUBVZU8KgE9Z7tWpP1M2tb3WVn8zGY797+B4RxkVhk3QKzQY6834a8Pyv1iotoGdu3Eumv2uoPmJb+EXxZIJeQ9FP8gPpFPRNcncdl2lHzpo3+LuB5dB5awTK/S4OiM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706020604; c=relaxed/simple;
-	bh=b5WsAWXcMZJ3oedYBhrg7imN/aUDHQ+7R2QdjuUQDzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rpDMEHsm/ElNyn6/sgrPEr8rYQnATLQbLdTzg+RXEBqjQq0eeYHfTjpV/9UTNeBGV7jZkkAwtw7Spxf44DmGuXLVbESA0oC58v5b34pTMyIiZSmX41N2xmBrxPEcGv9m4OZNT0evoVen42fB94r6pUxDQDgTFnbV9Jp5LVvUL24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ks6Fdd+h; arc=none smtp.client-ip=134.134.136.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ks6Fdd+h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706020602; x=1737556602;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=b5WsAWXcMZJ3oedYBhrg7imN/aUDHQ+7R2QdjuUQDzU=;
-  b=Ks6Fdd+hiWQw3oKh6gdu62fpvKw00cGo5xg9DjpCa/ns0UXRKOXpDn5F
-   ULcBOZAhcE3MDQPhlZNvoBNpBu8kDSk1D01p/amYvnT3EG+qlLBJb+z6U
-   lXnW/YZ06qYh8i0AEK+1e14SGI6hqJmd6mXvlBGhvSlENossjLM9Rm+KD
-   CYmjTaH+9OUIKy+LEmZ9MGqiQipdTSwSuLh89tiUV/Z0LqOJH9sGOwSGC
-   3Idch6z/xUPRypuCBaJQTy14RB0KBMvF1+POUAB573B/KTvVmE3ghWvyZ
-   XB41R5Lrzsk7DwPDWo8n/6oc59lmnw3Xr2PxDY1pKAmbK1IEGRHIz+gZO
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="405295082"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="405295082"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 06:36:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="34426302"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 06:36:42 -0800
-Received: from [10.212.112.252] (unknown [10.212.112.252])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id AE968580CA5;
-	Tue, 23 Jan 2024 06:36:38 -0800 (PST)
-Message-ID: <0d85e3f6-d857-4c62-8ad8-c20ac2665e91@linux.intel.com>
-Date: Tue, 23 Jan 2024 09:36:37 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6143C627FB
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 16:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706025909; cv=none; b=s2DbjD6OLreHA2c5/+NdIgBzbAYJVVv5lJ8v1vwFkfix9oeVwuiXhVvdIqS5TBG8/TKjGkFrYxV5EqQlBqC9nV7wMvhA3LWjxh5pWQ8ragGz9PBStgzv6E1vB4ezsgyN64CeCY4+IBt6HMBuV3v/f7J7p6T4AmMzR1tGqbRbvps=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706025909; c=relaxed/simple;
+	bh=HyArpE4Bn9PmSQ1xAjgCKpN910ZJX5xeMSEjnvi+zrk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GeQtb7GOfN7y/vzTZe1C/VjxPBiTpSeHC+n8jgPGwNJhjONE71MfYcNxOw/PbyVUCGy+dhdNtCEZlsUwVegr1e/XHT/1IhrWz545YXGgk5dGja6amtZ9C3u12ZLqQhWykwNckBL2sbsuYXMZuhS98zVmSYUhieG0K5jr/dy3bWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sfkfyETD; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sfkfyETD"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d76f1e3e85so102675ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 08:05:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706025907; x=1706630707; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CPRvhF7JVnUDF3h0V9XjA6y+vpgVj6b4pFLJNf18uYM=;
+        b=sfkfyETDC3ThnVAw7YbKhBCm2R8AgUSyKTeCQayraDKg3vYMYaHqLtQWG8VWIhai29
+         jwb3l185ppRAob1N/OkdpO1VF5brYYUY0Ppb550fEr2vbZlges9Ke63ov5eZvSPCeqHa
+         1CZAnuFYfke+Oa/DFQwZIDMs+bYTu7hj2Z3GOckM2PzTkb+Pxryh/qiBph+bnhmTNphe
+         nnupuJmqeeV1ovvKYSW3/a9Ww3y8TJirsugXhTom0M66he7MCo5bYUnaHBHdfhjOtB4H
+         CtQrrnF7JX6ad2beEeSjgcMlvtQ0RjiGHlT8KXIS61PsiPO6uAsX+IWXJISO1SIrljsX
+         EWjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706025907; x=1706630707;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CPRvhF7JVnUDF3h0V9XjA6y+vpgVj6b4pFLJNf18uYM=;
+        b=NqWUH+ATp4mMF0bd4nX/XL2cIrAPnvuigTu2xWAk9Q+ToEv5Wr2f75p8MdBXvJRS9O
+         Mwcvbzuoyfaw/inGxnLYShEJvbmHuhbIIEJnhmGxd5SrMX0LJQ1ZJRJ+NyNIpENHOtYg
+         tomWpKF+jVs46WBmiHLTBAMj3FgjNPFxxAJ853OO568CeG/k3FrMT/NkASoEjYW+ffGN
+         xmMdzj/ne5bPkz6OSkCL5EFwDxsrvkRPOYI6ooBtfhN+2L7vO66kQtdOvNXU19nIVoqf
+         ooZjDm4/9HiqQQjx3zpQ2F8DqyCSy21/PxUT8OP/Z7XyKpG4B7NlBLH5zdLXWox8Ah4z
+         oLdg==
+X-Gm-Message-State: AOJu0YxAvcO5tH7dNtlkw5RBjl99Uy+lDWGpgIDnXG2XlmgN6SlczeRz
+	ofasj/ABt0cyH/9bw6m6h20TgCMXKeqHlBIUvffSZPSQKAXoqxHT7Hsk3yquxbL+nt5evVipviC
+	lD09Y+/a0lTcGVFvUH1Wvo1pidRfVZBD1VvhJ
+X-Google-Smtp-Source: AGHT+IE9PtNgbAHEuzSwNjDkirjNG2rauUtARn4jMdSNNZxVvaY9aLkWNaMjBCD2H80Oc21iiMj3W21zbmEEemnmAkg=
+X-Received: by 2002:a17:902:db03:b0:1d6:ebf1:f8cf with SMTP id
+ m3-20020a170902db0300b001d6ebf1f8cfmr6830plx.0.1706025907190; Tue, 23 Jan
+ 2024 08:05:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 0/7] Clean up perf mem
-To: Thomas Richter <tmricht@linux.ibm.com>, kajoljain <kjain@linux.ibm.com>,
- acme@kernel.org, irogers@google.com, peterz@infradead.org, mingo@redhat.com,
- namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
- john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
- mike.leach@linaro.org, leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com,
- renyu.zj@linux.alibaba.com, ravi.bangoria@amd.com,
- atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20231213195154.1085945-1-kan.liang@linux.intel.com>
- <a0abfee5-4dcd-3eb5-82fe-1a0dcdade038@linux.ibm.com>
- <befb6acd-86be-4255-af96-38865affc56c@linux.intel.com>
- <8bfadc86-e137-4a9f-a9ce-0bc62464c195@linux.intel.com>
- <057a1c19-3117-1aec-41d6-4950c599b862@linux.ibm.com>
- <692e16f9-062c-4b3c-bd66-a16bac68216c@linux.intel.com>
- <cd7dc93f-ade9-6403-a732-2daca8e6cff9@linux.ibm.com>
- <a0540796-1933-4057-8282-aa219ddda4fe@linux.intel.com>
- <6ace2f9f-b073-e22b-0dd6-69c52814d49a@linux.ibm.com>
- <ceffdc69-982b-4909-95df-5b6a8a277f20@linux.ibm.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <ceffdc69-982b-4909-95df-5b6a8a277f20@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240122080406.28678-1-yangyicong@huawei.com>
+In-Reply-To: <20240122080406.28678-1-yangyicong@huawei.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 23 Jan 2024 08:04:55 -0800
+Message-ID: <CAP-5=fVzaRycRX2+NNMRp423sU5qpBa8z8p-WmF5sX+ty1Xf8A@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Make minimal shellcheck version to v0.6.0
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: acme@kernel.org, namhyung@kernel.org, peterz@infradead.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	linux-perf-users@vger.kernel.org, yangyicong@hisilicon.com, 
+	hejunhao3@huawei.com, linuxarm@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jan 22, 2024 at 12:08=E2=80=AFAM Yicong Yang <yangyicong@huawei.com=
+> wrote:
+>
+> From: Yicong Yang <yangyicong@hisilicon.com>
+>
+> perf build failed due to the shellcheck on my machine (v0.4.6 on Ubuntu
+> 18.04.1 LTS) doesn't support -a/--check-sourced and -S/--severity option.
+> These two options are introduced in shellcheck v0.4.7 and v0.6.0
+> respectively. So restrict the minimal version of shellcheck to v0.6.0.
+>
+> Fixes: b809fc656e76 ("perf build: Shellcheck support for OUTPUT directory=
+")
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-
-On 2024-01-23 12:56 a.m., Thomas Richter wrote:
-> On 1/23/24 06:30, kajoljain wrote:
->>
->>
->> On 1/16/24 22:07, Liang, Kan wrote:
->>>
->>>
->>> On 2024-01-16 9:05 a.m., kajoljain wrote:
->>>>> For powerpc, the patch 3 introduced a perf_mem_events_power, which
->>>>> doesn't have ldlat. But it only be assigned to the pmu->is_core. I'm not
->>>>> sure if it's the problem.
->>>> Hi Kan,
->>>>  Correct there were some small issues with patch 3, I added fix for that.
->>>>
->>>
->>> Thanks Kajol Jain! I will fold your fix into V4.
->>>
->>>>> Also, S390 still uses the default perf_mem_events, which includes ldlat.
->>>>> I'm not sure if S390 supports the ldlat.
->>>> I checked it, I didn't find ldlat parameter defined in arch/s390
->>>> directory. I think its better to make default ldlat value as false
->>>> in tools/perf/util/mem-events.c file.
->>>
->>> The s390 may not be the only user for the default perf_mem_events[] in
->>> the tools/perf/util/mem-events.c. We probably cannot change the default
->>> value.
->>> We may share the perf_mem_events_power[] between powerpc and s390. (We
->>> did the similar share for arm and arm64.)
->>>
->>> How about the below patch (not tested.)
->>>
->>> diff --git a/tools/perf/arch/s390/util/pmu.c
->>> b/tools/perf/arch/s390/util/pmu.c
->>> index 225d7dc2379c..411034c984bb 100644
->>> --- a/tools/perf/arch/s390/util/pmu.c
->>> +++ b/tools/perf/arch/s390/util/pmu.c
->>> @@ -8,6 +8,7 @@
->>>  #include <string.h>
->>>
->>>  #include "../../../util/pmu.h"
->>> +#include "../../powerpc/util/mem-events.h"
->>>
->>>  #define        S390_PMUPAI_CRYPTO      "pai_crypto"
->>>  #define        S390_PMUPAI_EXT         "pai_ext"
->>> @@ -21,5 +22,5 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
->>>                 pmu->selectable = true;
->>>
->>>         if (pmu->is_core)
->>> -               pmu->mem_events = perf_mem_events;
->>> +               pmu->mem_events = perf_mem_events_power;
->>>  }
->>>
->>>
->>>
->>> However, the original s390 code doesn't include any s390 specific code
->>> for perf_mem. So I thought it uses the default perf_mem_events[].
->>> Is there something I missed?
->>>
->>> Or does the s390 even support mem events? If not, I may remove the
->>> mem_events from s390.
->>
->> Hi Kan,
->>    I don't have s390 system to do testing. But from my end I am fine
->> with the changes.
->>
->> Thanks,
->> Kajol Jain
->>
-> 
-> s390 does not support perf mem at all. Right now it is save to remove it from s390.
-
-Thanks for the confirmation!
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Kan
+Ian
 
-> Thanks
-> 
->>>
->>> Thanks,
->>> Kan
->>
-> 
+> ---
+>  tools/perf/Makefile.perf | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 27e7c478880f..f8774a9b1377 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -236,6 +236,16 @@ else
+>    SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null)
+>  endif
+>
+> +# shellcheck is using in tools/perf/tests/Build with option -a/--check-s=
+ourced (
+> +# introduced in v0.4.7) and -S/--severity (introduced in v0.6.0). So mak=
+e the
+> +# minimal shellcheck version as v0.6.0.
+> +ifneq ($(SHELLCHECK),)
+> +  ifeq ($(shell expr $(shell $(SHELLCHECK) --version | grep version: | \
+> +        sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \< =
+060), 1)
+> +    SHELLCHECK :=3D
+> +  endif
+> +endif
+> +
+>  export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
+>  export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK
+>
+> --
+> 2.24.0
+>
