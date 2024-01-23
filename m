@@ -1,226 +1,195 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29B858225;
-	Tue, 23 Jan 2024 09:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706002872; cv=fail; b=UPluudyTNjDMQXarcqg1o+adwdiL1VgvjY9qd8B0d2Zh4XEjjnuaAnpOpApe6RoeIVWJ/bsu6JAhrV+8krqzz157sZSQY8D4Njawnx3+3E5sWPTHDKn4GNkx1daKohxLWtm/2LX2DMJ5niiSNT3+kVqQC9FZhCCaeCLoDx8vA/M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706002872; c=relaxed/simple;
-	bh=jSKHJUK4js92WrLCmkVZfu1k8eM+VqX2oqILlt9dKRw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FeBQ1n6h8ukz2FKMTxd4Bz9lPjYPDi0iZF82Yc/bm6EzOLkOzC3JCk6/+yw12YgTppttUaVvx/hWdWK+xgnsco9NFAz+BXgK1f8fwa984x3MEObohk/SCHwDuIC5cNC6x2hLTlon5Z9oo1SlMm4McqvG62227swZ8QD13dCnElo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dI0orKOZ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Hemau2Jw; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA26F57311;
+	Tue, 23 Jan 2024 10:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706004566; cv=none; b=ITrHGs3cLEQyKfReS0JV02kyRTsX/AiVp93W/BMjjyJugxsuGsvf9W7dWRby8eApbdW2pw3Hrr3kBSXAeaGLNshgnk0DVJ9pcYdDbe1qqQjGcyE6AsMm4yVgh/Tc9UjC5YSOowPVP2vhRXo0d2r2jQymXW62H3aATbGcz7+Z1jI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706004566; c=relaxed/simple;
+	bh=TCFdDzZ1US12cf3hVKANXZoZ8oTrIUTJBaYWeEq0Gbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BQWGKhK3QMjyfiYJa3qSCnkHmNkmyUWYbluYxwgdKlWFJq8oG1zMPEHQPyqJoVg6sjhLYaag4oPDwjw/896EZOJih3o2fsYn22mAMK5ddZs0FfamRJ/o1/m23Fg/lOWjuEBPkY8sH5DOJZ4r5Q0LUkcrYl8/S6bpwUE7V/CYSaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hcWoL8am; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dI0orKOZ";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Hemau2Jw"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40N6Yv6L013734;
-	Tue, 23 Jan 2024 09:41:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=12s/1PgbDHB+hnaLn3dRDyWjbe4VlHehWtBlhBZ6p1M=;
- b=dI0orKOZHkUBArptMiJL1T59MJv5yAQ3DRGk3IrEa+YVR/I8foLEOPw09w+sLU7XIl8G
- wQ8KkLzuq+TU1dyZpoJ4yjTJlqX33fOgZlF0gtDvORTlqRwXGsZn0th/GGh4gdjNESqR
- GGwxuHyad4Gtn8gyApn9j9wE+1D7owwXKX35Fm1S2h6Ilm22KL29vJAYYg33KG5vFkq9
- fnsMMkfQ6cbqlxdas0NBeJlFKGK+8LRJt6tU4lyGElQHQahBsWM/XECx5Qc7/JWjmtzo
- SLeEU2Cck1pCefqPTd4agwcAxcyC1TeLhN2LOv2ycp0ZCKtYwSe9z4hbtKP2wMm77mO4 Xw== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7cxwqjn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jan 2024 09:41:08 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40N8iKw3018715;
-	Tue, 23 Jan 2024 09:41:07 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3vs3150uaf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jan 2024 09:41:07 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LlAPiQH7eSGDNnkOfV/VYab+xCFTO+Ygdbl9/9DfwtH/OhWMb6iR125ETLVwZasJbzQB8xJ04RQhaVhlHoeVd3u2W/KoljlQIq7RtIaWt3mBTD+lQZOS2IWuV5ROkwPvWbKFKgZOfcb0wsRvmA1rDa2zrDdx6CvyyYGX8tfPcM6XU3rOpV0elz4OclpgyjcFsWbsR2gPTfP/9Bu8HzFIOA0Z2lZQnz+jQLMU8ulqUORgWCxz2/sFNsFGndlTbOFDwAti88ocq8RiS2dQ8vG73eUdxR9E/vYYt5gumGsr1MJRWIHXPQGnf2jWtgsZt6Bhe8cv+4fWWhf6nk3UaCpTWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=12s/1PgbDHB+hnaLn3dRDyWjbe4VlHehWtBlhBZ6p1M=;
- b=NW2xMgQJP3Y6jRPcMZadPJNCBvJnb3WsFwAcv6L8Gxo9QTcqxu5IaMiBFQ1xGjU5rhcOXm71o39h4dwAYbbGB4n/shfXK7XD1C9cGs4RnLQQc1u0fHa+WKsJRYi/gSzfzmwkFcP2nef+Gu/JbEcAjn3Lv+xc1rZXCfryg7iaXhr8qy2GXNLMx3fYxaflBHg5J+MWKWGKLMrTu1XyMk7CTGPmwpTMorjgVa78f4ZQpxlYQSWgeT2PPIfsKq5oCp9yi8wcso8EMhGUrHjTMErel1cceAu6ZXw+6p2Cb86OdYW0F/7cM+SF5Y6JEBHD/1hjPaWLwfxHzvObiZmP5kopZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=12s/1PgbDHB+hnaLn3dRDyWjbe4VlHehWtBlhBZ6p1M=;
- b=Hemau2Jwf0kecDEMyQnB9FBgtcix1Lr+X0yxPgY29qMt8ca8/Bda+veMaJFoTDmchoBcw7uBx0jdv8K73eikXYBVejL5BEPK4eJ0BNgMwov5HH3TRHVbHN7dxHSbntXuTg7iBr0i8TQZRhIKcs0bXJQ1SOm1I6T70frbFrkSG9A=
-Received: from BLAPR10MB5267.namprd10.prod.outlook.com (2603:10b6:208:30e::22)
- by PH0PR10MB5893.namprd10.prod.outlook.com (2603:10b6:510:149::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Tue, 23 Jan
- 2024 09:41:05 +0000
-Received: from BLAPR10MB5267.namprd10.prod.outlook.com
- ([fe80::b3b:c19f:bbba:7f70]) by BLAPR10MB5267.namprd10.prod.outlook.com
- ([fe80::b3b:c19f:bbba:7f70%7]) with mapi id 15.20.7228.022; Tue, 23 Jan 2024
- 09:41:05 +0000
-Message-ID: <f4d8296d-dc7a-509e-aba3-741d22f889dd@oracle.com>
-Date: Tue, 23 Jan 2024 09:40:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: Better error message for kernels not compiled with BTF
-Content-Language: en-GB
-To: Ian Rogers <irogers@google.com>, bpf <bpf@vger.kernel.org>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
-References: <CAP-5=fU+DN_+Y=Y4gtELUsJxKNDDCOvJzPHvjUVaUoeFAzNnig@mail.gmail.com>
-From: Alan Maguire <alan.maguire@oracle.com>
-In-Reply-To: <CAP-5=fU+DN_+Y=Y4gtELUsJxKNDDCOvJzPHvjUVaUoeFAzNnig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2P153CA0004.APCP153.PROD.OUTLOOK.COM (2603:1096::14) To
- BLAPR10MB5267.namprd10.prod.outlook.com (2603:10b6:208:30e::22)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hcWoL8am"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706004565; x=1737540565;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=TCFdDzZ1US12cf3hVKANXZoZ8oTrIUTJBaYWeEq0Gbk=;
+  b=hcWoL8am29p3l0UI27UMbBywRYReLzkqokuV8go2hVXLwr1VlQo4iYCC
+   DXBasNiHtQKCzWChoGxEFOq1dpB7p/17HYrg3geIvvHN1pxA5wBQcPamc
+   00LyGlc/rSkUsukmZj7vC/AsQQMwGhgRH7mXG8kzkWCnb/telDpMTyPhg
+   FcULmZW1M02GQFzn+SoMKL+K3sSNuC7u6Z2pgH7gJFf3pmlW7FQPkVd7J
+   ukVVv8tIZih7qBPp9Lxfs/D9g6R+FqQELZpvlj48CQAPoRLQX/DkEjjyB
+   k5pEQctmRmepFEWAw6pLJCWn4FE0U8JcUCatFGWe508fXFPbQKGe/vgpL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8588455"
+X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
+   d="scan'208";a="8588455"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 02:09:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="929291718"
+X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
+   d="scan'208";a="929291718"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.4])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 02:09:18 -0800
+Message-ID: <1d0e2e26-723f-42bf-b4a5-8a56843d8dda@intel.com>
+Date: Tue, 23 Jan 2024 12:09:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BLAPR10MB5267:EE_|PH0PR10MB5893:EE_
-X-MS-Office365-Filtering-Correlation-Id: 44797beb-1cba-408c-b8b8-08dc1bf76b0f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	lG+xzaUF8n5jW+uoUSS/QV7Tv6cSAOMbiERa5e4BYXLURfxP0TEp9/EOhFzR2MWBzHUuJ4phkqIBLgdZ7f5Wu4/v8agFHTpwXbL4Bcgu7GisyKbXE+NtbsFU2PttySkSay6HlrRxrEkqvWNrtsQAExmf4q6KM70v2Pgi9mqPYE5hxI5EQB/mDrHYDC/CvH43UGwlG+2sP49wifUrMSNYgz9bAsZhLW0IeYCP1h9/tqIQfCAw7pEodI2K63qsmu1/lv+sHc7+c2tueSOi/upjVG9jTfwkEYcy0431AxSycfJKn8POo2V4wTpl1tuvmFfoLq9/lwnLOLwkR7rQbxjrh0kyX36eYKo5XRrZ1Z7faIvjxGKl9EzknkzvuTPj7azGHjjy8eoECmoYF5UkWoKj7YAkcpKO15ovI5c4wj004sSZrr1a1C8NrhUucrUuogBMNVxfmdkSceRMOC5Obi4J8OiaT21ZQzJSIMZQw0J6YtG2o56ZbJdis3b/fJ0PxKx/tXpis8Pf2y3GJopqc2Le9UIe1BL3/Hd/AK0QF8xGqmP8mQ4UkJwc3ubZne2A8V1z9ADn5JUDdyFXMRspHQ6hpGCVY6QYpSX/ufc4VzrmW1r4s1GMbPk+NQu2dBbl0eULKUfyOjTO1v5rGM3sijph5g==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5267.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(136003)(39860400002)(396003)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(6666004)(478600001)(41300700001)(31696002)(86362001)(36756003)(38100700002)(83380400001)(5660300002)(6506007)(316002)(8936002)(4326008)(6512007)(8676002)(966005)(6486002)(110136005)(66476007)(15650500001)(66946007)(2906002)(66556008)(53546011)(2616005)(44832011)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?eFVjUU1wNER0V0lkc0FZY0c2SWgwZFFUTjJhNFlaR0tsTWo0NlkyWnluYVBU?=
- =?utf-8?B?OHMyWFZKU0I0cnVRWUZUaVBnTCtSZlhJRk8vZWg2SXZlRngxTU1XRytORjZv?=
- =?utf-8?B?K1BrZ1pURFZDZE9MVU1wNVByQjRSRDRreDQrNmpIaVRFa25rOXhqY0kwbHhP?=
- =?utf-8?B?MlpFbWR1QjY2d2s0OTRrcWhZVjVzN05kd25GekZGUW5STTUrMEFkZE8xSDdv?=
- =?utf-8?B?QkJDYU9RQjVzbXRFTDk1bWRtcDhCVlJwNDdWS3ZtUkphYTgwdFBPVlA0RzRo?=
- =?utf-8?B?TnZsVkVKMWdya0Q4MUh1b0Ntd1lHMDlMZ2x5SHcreXJ6c2RXYWdQOExxelY3?=
- =?utf-8?B?amJEaUpUdU9Ed1kwVHp1VUt5azZCMFZDSHIxZm1IdUxSTFVEbnNNVS9HVmVk?=
- =?utf-8?B?ZTRyNGhsalBjaTJibmhpTHJDV0ZkR3ZWS1ZRZkl5Vk5WWmNFTmpCUmVlUGlU?=
- =?utf-8?B?ZGoyZEpQdTdsUUtYWC90NU1Xa0VmQlRIMU9KdzIrbGRrZThGWFZxeDZXUmE3?=
- =?utf-8?B?a1hJWjZHNEhlUzAxOW5jMGM5WWNFMmE3Yi8wRUdWdFpoTlVBcVcycjlUdHEv?=
- =?utf-8?B?K3doYkdnVUVOdWdWaFVrZlVucTdEaFdPZldkL2RZeVU4R005TWpHYm82cUl3?=
- =?utf-8?B?M2E2cVorV0UxOUl5TENyRGxQMnQwVm9xNERFbzhhN3FxTlhGN0I3TFBGY0Ez?=
- =?utf-8?B?c2labGdoODBRM0Q0c1RzN0E5Q2haYXpKNWtDSUdZUGJrdVNMN3ZHWFU5c0JP?=
- =?utf-8?B?eXpoRldtY0E3eFE5U0k0UWo3SEtnSlZDbGF6OHhjcjYwbVhpQ09BKzNNWEhG?=
- =?utf-8?B?aHlENEs3RG5PK0xycjR0aHd0ZFoyN3ozdWNJSDFnVVp6RFV2ZWhYYkZ0SVJL?=
- =?utf-8?B?dWZPK3UzUVh5Q0VsZFp2aUN3M0hCbjFiZmZJNTgydm9BUHdDZVlXdlJZMllW?=
- =?utf-8?B?b1dsQ2VOT2VtSmk4bGJVaVEzZUsveGlweHBFVFU4ZDZ3WS9RU1hqOSs4MU1T?=
- =?utf-8?B?dGsvYWtWeVMwWm1Kd043Y3BnUEdwQ0FXaXFEalJkM0pGUWJyczc3cGVHUUtT?=
- =?utf-8?B?RnVDeVUrWVBoZlZ6cE5nYXJ6ZlRaZS9lV21xNFduRUV4Qm53cGxEN29VOG5m?=
- =?utf-8?B?bnovUGJUaEEvWHRYZjNRRmlrcmJlSkU3V0VrcmdBR3N4L1R4ZHJDU3lIU3Y3?=
- =?utf-8?B?eGM2aDhsT0s5K3JOc2FKZkd4UjMvSFpCbmN4VVhFR3YxVm8raXhCT0IvWVFi?=
- =?utf-8?B?TFZvdjRYUHVwdHE0M2E5UjZlWENvZTJZU0ZwMjhZQ09vRWZiQ0h2RkNpOU10?=
- =?utf-8?B?eDg1d3lneGNkcnZONm5RNGtIakdrOVlRK3NxYnNxY3RKdXZxSm5heGg5RTJK?=
- =?utf-8?B?UTZ3VmdVZVRXQ3hKK05mVUNzYmZIUjVhU3FUQWcxYVV5b3FDTk9aUWpOTzRW?=
- =?utf-8?B?L0dxRGdQWXJkY0NCNlE0SGRuaDdsaVVkWVk1QnU4ek5xWkZUSCtpNnFDbmsz?=
- =?utf-8?B?dG1mejJiZ1RIN29zTEN4WEZyV2VvajNaaHJOYnZLQUpGUGQwS2pyMlVEbHhz?=
- =?utf-8?B?YXEzNk9WYWNVejdoblZIMkhQbHdpa1RCWDJIWnZOTXhIdTNXVU9GNDZVMzMz?=
- =?utf-8?B?Rk13amJ5N20wc1orTUJtK1hURU4rZDZRYjRxY0JlNkxxc0p5bGU4RktBbEFS?=
- =?utf-8?B?TXFIdlVEcVhzSWVhN1hKNDhacWd1L3dWUjdtbWhLdlZkb0ZWamtpRTl4RERa?=
- =?utf-8?B?UHAxUnF4YTBWYjdYcGZ0M05MLzNaNU92cWFPUXd3YWRuUnpwdXVOWE1VSVhs?=
- =?utf-8?B?Nko4UXh4RHNyT3lodGsxSENIdnZKaFk2NlkzVnJUREtMbFZBd2RHNGEyRFZP?=
- =?utf-8?B?aHNGei9tWFV3VGlER1A0Y0YzOFl3U3VtTFRJaFBTejhoWDFSamJTdmNCQlFK?=
- =?utf-8?B?bXVpQzVOT3FxMGpJODhHV2ZraGNNUUx1MERlSG9wU1lFd2JuQ2JET3BpK2lD?=
- =?utf-8?B?SG5nakJNSklKUGduZUE0QWNlTHNhT1NvYU5ZQk1pTndhTm1udWNNUUxwajV6?=
- =?utf-8?B?TW9nalVVZU9XRmNqMTF0SUQ1YWZOWmJZODUzUWNNQzFQeVpxZnBZVncyU2ty?=
- =?utf-8?B?Y0JkSGV1ZTJ0b2pRSG5OSklac3FjcGREdmpGNEdJYitKa01GdWk4SGxTRWxZ?=
- =?utf-8?Q?9ceqSH1QkvDYzisDUi88dh8=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	uMwZt9zSKoo14ZpkU/sutgUySFPoDotXFAh9O6J6p+AEvLwarYeZHLXe8cm1U2L/apEkLyOgrPUzMSp0hjAqaQ3cpOKaLVciPsSwbrqlgQjJYbiAHzwWlkdHgkwDJW1q7Gc6DJERnKR6SeN+8YretFOE0VRONE8BeiCAU5nmu7xzlWbDrrXaywSmVmYcp+d24T4TO9hiiMbGkou0Iyx96TysG6nOfq5Owa3srrOonhv6A85XmxFkGLiypXsVU7EER+m21iqyf8TgnEayR+jTvC4i76LN6e3t/+g2KLb/GAQBVS5tFG+Grl2hcsy7+35Bw33OHU8UaPeLxN+HBMkofDPIWM3JFKvGUQUrH7SdLog4vwY1s3IiXkCn53wR1FYBAP729YNSbiGFC5DyTUSeUmkRWt13MNA0pnId61Tm6ucOy1RzDtwF8uiA8hE1SXnnqAao3R6Fk7SlgS2bfI1qefVwxoz+7N0XhfHEzYX0Jc98atq60rA9RLdp0yb/ULtlH44PpPo92U4VKtsQtBJ7APvFhLaryjG//BSDiTwA5ALXyo2VyWtvxr2/QArgSrsTM2G4etYCEN/fnd0InOniVKmsd0Gvj9yHDSlRFd5WkbE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44797beb-1cba-408c-b8b8-08dc1bf76b0f
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5267.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 09:41:05.0103
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k5tBtOBRNgbd1uCESjbRbZ3wcyxGMxn7QwqNUrC/hwX+KcCXpxE29Fqf44237tVPxzf9jy6QfAd5rP89gUcUUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5893
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-23_04,2024-01-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401230069
-X-Proofpoint-ORIG-GUID: g3K886w1gFNNuCAcrAwCyyY9C0gq2BEx
-X-Proofpoint-GUID: g3K886w1gFNNuCAcrAwCyyY9C0gq2BEx
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 01/11] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+Content-Language: en-US
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
+ <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240111081914.3123-1-adrian.hunter@intel.com>
+ <20240111081914.3123-2-adrian.hunter@intel.com>
+ <CAM9d7cjOVuMdBjLBV0cKXAOMmp_6xQYBG7h2ecE=djEKZm8aNQ@mail.gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAM9d7cjOVuMdBjLBV0cKXAOMmp_6xQYBG7h2ecE=djEKZm8aNQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 23/01/2024 00:18, Ian Rogers wrote:
-> Hi,
+On 19/01/24 23:40, Namhyung Kim wrote:
+> On Thu, Jan 11, 2024 at 12:19 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> Hardware traces, such as instruction traces, can produce a vast amount of
+>> trace data, so being able to reduce tracing to more specific circumstances
+>> can be useful.
+>>
+>> The ability to pause or resume tracing when another event happens, can do
+>> that.
+>>
+>> Add ability for an event to "pause" or "resume" AUX area tracing.
+>>
+>> Add aux_pause bit to perf_event_attr to indicate that, if the event
+>> happens, the associated AUX area tracing should be paused. Ditto
+>> aux_resume. Do not allow aux_pause and aux_resume to be set together.
+>>
+>> Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
+>> event that it should start in a "paused" state.
+>>
+>> Add aux_paused to struct perf_event for AUX area events to keep track of
+>> the "paused" state. aux_paused is initialized to aux_start_paused.
+>>
+>> Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
+>> callbacks. Call as needed, during __perf_event_output(). Add
+>> aux_in_pause_resume to struct perf_buffer to prevent races with the NMI
+>> handler. Pause/resume in NMI context will miss out if it coincides with
+>> another pause/resume.
+>>
+>> To use aux_pause or aux_resume, an event must be in a group with the AUX
+>> area event as the group leader.
+>>
+>> Example (requires Intel PT and tools patches also):
+>>
+>>  $ perf record --kcore -e intel_pt/aux-action=start-paused/k,syscalls:sys_enter_newuname/aux-action=resume/,syscalls:sys_exit_newuname/aux-action=pause/ uname
+>>  Linux
+>>  [ perf record: Woken up 1 times to write data ]
+>>  [ perf record: Captured and wrote 0.043 MB perf.data ]
+>>  $ perf script --call-trace
+>>  uname   30805 [000] 24001.058782799: name: 0x7ffc9c1865b0
+>>  uname   30805 [000] 24001.058784424:  psb offs: 0
+>>  uname   30805 [000] 24001.058784424:  cbr: 39 freq: 3904 MHz (139%)
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])        debug_smp_processor_id
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])        __x64_sys_newuname
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])            down_read
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                __cond_resched
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_add
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                    in_lock_functions
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_sub
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])            up_read
+>>  uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_add
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                    in_lock_functions
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                preempt_count_sub
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])            _copy_to_user
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])        syscall_exit_to_user_mode
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])            syscall_exit_work
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                perf_syscall_exit
+>>  uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                    debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                    perf_trace_buf_alloc
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_swevent_get_recursion_context
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                    perf_tp_event
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_trace_buf_update
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            tracing_gen_ctx_irq_test
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_swevent_event
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            __perf_event_account_interrupt
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                __this_cpu_preempt_check
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            perf_event_output_forward
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                perf_event_aux_pause
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                    ring_buffer_get
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                        __rcu_read_lock
+>>  uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                        __rcu_read_unlock
+>>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                    pt_event_stop
+>>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        debug_smp_processor_id
+>>  uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        native_write_msr
+>>  uname   30805 [000] 24001.058785463: ([kernel.kallsyms])                                        native_write_msr
+>>  uname   30805 [000] 24001.058785639: 0x0
 > 
-> if a kernel is compiled with CONFIG_DEBUG_INFO_BTF disabled then the
-> libbpf fails on perf lock contention with:
-> ```
-> libbpf: failed to find valid kernel BTF
-> libbpf: Error loading vmlinux BTF: -3
-> libbpf: failed to load object 'lock_contention_bpf'
-> libbpf: failed to load BPF skeleton 'lock_contention_bpf': -3
-> Failed to load lock-contention BPF skeleton
-> lock contention BPF setup failed
-> ```
-> The same error message is seen with BCC's libbpf-tools. I saw these
-> messages on default Rapberry Pi OS that is derived from Debian (more
-> context in https://bugzilla.kernel.org/show_bug.cgi?id=218401).
+> Looks great!  I think this is very similar to what Kees asked in
 > 
-> Given that distributions are shipping perf and libbpf-tools that
-> assume BTF is enabled, should CONFIG_DEBUG_INFO_BTF be enabled by
-> default in the kernel?
->
+>   https://lore.kernel.org/linux-perf-users/202401091452.B73E21B6C@keescook/
 
-That would be great, but if I remember one issue with this might be that
-CONFIG_DEBUG_INFO_BTF depends on DEBUG_INFO (for the DWARF generation
-that we construct BTF from), so I suspect enabling debug info by default
-might be an issue. There has been discussion in the past about
-supporting CONFIG_DEBUG_INFO_BTF in the non CONFIG_DEBUG_INFO case
-(by temporarily generating DWARF then stripping it or similar).
-What most distros usually do is strip the DWARF during packaging and
-create debuginfo packages, but I imagine users who build kernels
-themselves would want similar support if they were asking for
-DEBUG_INFO_BTF but not DEBUG_INFO.
+Sometimes a precisely-defined workload is needed, just so that
+running it repeatedly does not produce results that vary too much
+to tell whether one software version is better than another.
 
-> Perhaps:
-> ```
-> libbpf: Error loading vmlinux BTF: -3
-> ```
-> Would be better as (especially if the user is root):
-> ```
-> libbpf: Error loading vmlinux BTF: -3 (was the kernel compiled with
-> CONFIG_DEBUG_INFO_BTF?)
->
-
-That would be great; one thing I think would really help users would be
-to distinguish two cases in error messaging
-
-1. /sys/kernel/btf/vmlinux is not there at all; for that case your above
-error message is great (-ESRCH case)
-
-2. /sys/kernel/btf/vmlinux is there, but can't be parsed, likely due to
-it being built with newer BTF; the current libbpf being used to parse it
-cannot read it (-EINVAL case). For this case something like ("BTF is
-present, but cannot be read; it may be malformed, or the version of
-libbpf reading it (%s) may be too old", version).
-
-Having solution-oriented messaging for cases like this would really help
-users I think. Thanks!
-
-Alan
-
-
- ```
 > 
-> Thanks,
-> Ian
+> I have a couple of basic questions:
+>  * Can we do that for regular events too?
+
+That would be much more complicated.  The current implementation
+can only pause / resume 1 event, the group leader, and it has to
+be supported by the PMU callbacks.
+
+>  * What's the difference between start/stop and pause/resume?
+>    (IOW can we do that just using start/stop callbacks?)
+
+It is using start / stop callbacks, albeit with a different mode
+parameter.  However pause / resume is not allowed unless the event
+has been started and not stopped, so it is a different state.
+
 > 
+> Actually I was thinking about dropping samples using a BPF filter
+> outside the target scope (e.g. a syscall) but it'd be nice if we can
+> have builtin support for that.
+
+In general, I would have thought that capturing samples does not
+produce so much data that it cannot be filtered in post-processing.
+Looking at the email thread from above, that seems to be what
+Arnaldo has proposed.
+
+AUX area tracing is different in this regard.  Intel PT can produce
+more trace data than can be written out in time, so data will be
+lost for large traces.  Also post-processing takes a long time, so
+less data captured helps a lot there also.
+
