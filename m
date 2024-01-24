@@ -1,24 +1,24 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AFD777F3E;
-	Wed, 24 Jan 2024 15:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFA4640C1B;
+	Wed, 24 Jan 2024 15:51:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706111331; cv=none; b=bQpds1k8Izu7V21CJlRCedpH0O53hf5vVkZ16W/M7LdnvqxLEKEU7qENn6Yhk+mEVb1cdTjJlCMc8mKDQ68Q1KvrKSBOUAyrkfCAKWNFrYoIzpbzVX6vdBbY2ZYmaeZ/dCpI6isPTgKLkRP/Lo894ce7bM7nxJkJiqWw294HZ9s=
+	t=1706111473; cv=none; b=WnD5oJp8BcGBY38ubjSTLty49EdS10bhcBBcsZy6tU1nUxSKxfb4an29lIE1M1vWHF5yNFia0Q45QfA3PbVCRjfYVs70vP93094izruBCV4eY9Jg2YQNSMvGmLauxi6owaquypRwdpK1SzVpAMYyUbuXYOvKpoFtvLZZ3UrI8Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706111331; c=relaxed/simple;
-	bh=aUNqEoEAYqI/8Lxk5111nq5eRH+q4dBA7OcQnIDAc7Y=;
+	s=arc-20240116; t=1706111473; c=relaxed/simple;
+	bh=IDco1jSbZDkfu0yOrE7OiSthlGxb7LFfyQTuQ5j9LLA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aMyaq/dvPcYTrKSIRz8k7dpLWpaizWCvOlalBq5cHj/oOAbyQwLjti5QBHpcYqOQAfEFOCkvdxHah6kW9KBZRI2OFnZpdMA1aLEqMUOfxL/FLGebssXXkFVIHPqAfBIdGMHLzymVklkTMXcEFJRHk96CoWSSu1uOk3/qicIAc/g=
+	 Content-Type:Content-Disposition:In-Reply-To; b=F0JY9UddYUOdgKtfytpX42NFTLaWZsRMXKSHdm01hQGzP+Pn916Fw0JWWbLsxOc7ZosRfXM+u+lw+2Dy1mnazvfzvEsSyhLxO8gFScB4JF/8wxmr7KhLAEHsHgvgeC/nQjvLKt4IF+oorYSGyiuNuHsC7o/KlTFLOjstFnR3ev0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 842341FB;
-	Wed, 24 Jan 2024 07:49:33 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F6B31FB;
+	Wed, 24 Jan 2024 07:51:55 -0800 (PST)
 Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.30.162])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A51303F762;
-	Wed, 24 Jan 2024 07:48:46 -0800 (PST)
-Date: Wed, 24 Jan 2024 15:48:38 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6547C3F762;
+	Wed, 24 Jan 2024 07:51:08 -0800 (PST)
+Date: Wed, 24 Jan 2024 15:51:05 +0000
 From: Mark Rutland <mark.rutland@arm.com>
 To: Ian Rogers <irogers@google.com>
 Cc: linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>,
@@ -29,9 +29,10 @@ Cc: linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>,
 	namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com,
 	will@kernel.org
 Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
-Message-ID: <ZbExVmM5902LuTnL@FVFF77S0Q05N.cambridge.arm.com>
+Message-ID: <ZbEx6f720aZ0XV_Q@FVFF77S0Q05N.cambridge.arm.com>
 References: <20240116170348.463479-1-mark.rutland@arm.com>
  <CAP-5=fVABSBZnsmtRn1uF-k-G1GWM-L5SgiinhPTfHbQsKXb_g@mail.gmail.com>
+ <CAP-5=fXtbhX8qx=B+8QTm00WhCPAQNxH-=NSrEfOVo8wz8yd6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,195 +42,115 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVABSBZnsmtRn1uF-k-G1GWM-L5SgiinhPTfHbQsKXb_g@mail.gmail.com>
+In-Reply-To: <CAP-5=fXtbhX8qx=B+8QTm00WhCPAQNxH-=NSrEfOVo8wz8yd6A@mail.gmail.com>
 
-On Sat, Jan 20, 2024 at 10:27:33AM -0800, Ian Rogers wrote:
-> On Tue, Jan 16, 2024 at 9:04 AM Mark Rutland <mark.rutland@arm.com> wrote:
+On Sat, Jan 20, 2024 at 10:29:54AM -0800, Ian Rogers wrote:
+> On Sat, Jan 20, 2024 at 10:27 AM Ian Rogers <irogers@google.com> wrote:
 > >
-> > Currently the perf tool doesn't deteect support for extneded event types
+> > On Tue, Jan 16, 2024 at 9:04 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > >
+> > > Currently the perf tool doesn't deteect support for extneded event types
+> >
+> > nit: s/deteect/detect/
+> > nit: s/extneded/extended/
+> >
+> > > on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
+> > > hardware events into per-PMU events. This is due to the detection of
+> > > extended event types not handling mandatory filters required by the
+> > > M1/M2 PMU driver.
+> > >
+> > > PMU drivers and the core perf_events code can require that
+> > > perf_event_attr::exclude_* filters are configured in a specific way and
+> > > may reject certain configurations of filters, for example:
+> > >
+> > > (a) Many PMUs lack support for any event filtering, and require all
+> > >     perf_event_attr::exclude_* bits to be clear. This includes Alpha's
+> > >     CPU PMU, and ARM CPU PMUs prior to the introduction of PMUv2 in
+> > >     ARMv7,
+> > >
+> > > (b) When /proc/sys/kernel/perf_event_paranoid >= 2, the perf core
+> > >     requires that perf_event_attr::exclude_kernel is set.
+> > >
+> > > (c) The Apple M1/M2 PMU requires that perf_event_attr::exclude_guest is
+> > >     set as the hardware PMU does not count while a guest is running (but
+> > >     might be extended in future to do so).
+> > >
+> > > In is_event_supported(), we try to account for cases (a) and (b), first
+> > > attempting to open an event without any filters, and if this fails,
+> > > retrying with perf_event_attr::exclude_kernel set. We do not account for
+> > > case (c), or any other filters that drivers could theoretically require
+> > > to be set.
+> > >
+> > > Thus is_event_supported() will fail to detect support for any events
+> > > targetting an Apple M1/M2 PMU, even where events would be supported with
+> >
+> > nit: s/targetting/targeting/
+> >
+> > > perf_event_attr:::exclude_guest set.
+> > >
+> > > Since commit:
+> > >
+> > >   82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in perf_event_attr.type")
+> > >
+> > > ... we use is_event_supported() to detect support for extended types,
+> > > with the PMU ID encoded into the perf_event_attr::type. As above, on an
+> > > Apple M1/M2 system this will always fail to detect that the event is
+> > > supported, and consequently we fail to detect support for extended types
+> > > even when these are supported, as they have been since commit:
+> > >
+> > >   5c816728651ae425 ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability")
+> > >
+> > > Due to this, the perf tool will not automatically expand plain
+> > > PERF_TYPE_HARDWARE events into per-PMU events, even when all the
+> > > necessary kernel support is present.
+> > >
+> > > This patch updates is_event_supported() to additionally try opening
+> > > events with perf_event_attr::exclude_guest set, allowing support for
+> > > events to be detected on Apple M1/M2 systems. I beleive that this is
+> >
+> > nit: s/beleive/believe/
+> >
+> > > sufficient for all contemporary CPU PMU drivers, though in future it may
+> > > be necessary to check for other combinations of filter bits.
+> > >
+> > > I've deliberately changed the check to not expect a specific error code
+> > > for missing filters, as today ;the kernel may return a number of
+> > > different error codes for missing filters (e.g. -EACCESS, -EINVAL, or
+> > > -EOPNOTSUPP) depending on why and where the filter configuration is
+> > > rejected, and retrying for any error is more robust.
+> > >
+> > > Note that this does not remove the need for commit:
+> > >
+> > >   a24d9d9dc096fc0d ("perf parse-events: Make legacy events lower priority than sysfs/JSON")
+> > >
+> > > ... which is still necessary so that named-pmu/event/ events work on
+> > > kernels without extended type support, even if the event name happens to
+> > > be the same as a PERF_EVENT_TYPE_HARDWARE event (e.g. as is the case for
+> > > the M1/M2 PMU's 'cycles' and 'instructions' events).
+> > >
+> > > Fixes: 82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in perf_event_attr.type")
+> > > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > Cc: Hector Martin <marcan@marcan.st>
+> > > Cc: Ian Rogers <irogers@google.com>
+> > > Cc: James Clark <james.clark@arm.com>
+> > > Cc: John Garry <john.g.garry@oracle.com>
+> > > Cc: Leo Yan <leo.yan@linaro.org>
+> > > Cc: Marc Zyngier <maz@kernel.org>
+> > > Cc: Mike Leach <mike.leach@linaro.org>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > Cc: Thomas Richter <tmricht@linux.ibm.com>
+> > > Cc: Will Deacon <will@kernel.org>
 > 
-> nit: s/deteect/detect/
-> nit: s/extneded/extended/
-
-> > Thus is_event_supported() will fail to detect support for any events
-> > targetting an Apple M1/M2 PMU, even where events would be supported with
+> Also:
+> Tested-by: Ian Rogers <irogers@google.com>
 > 
-> nit: s/targetting/targeting/
+> No regressions on Alderlake except a pre-existing problem I noted here:
+> https://lore.kernel.org/lkml/CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com/
 
-> > This patch updates is_event_supported() to additionally try opening
-> > events with perf_event_attr::exclude_guest set, allowing support for
-> > events to be detected on Apple M1/M2 systems. I beleive that this is
-> 
-> nit: s/beleive/believe/
+Cheers; I've folded that tag in along with the typo fixes.
 
-Whoops; I've fixed those in my local tree now.
-
-[...]
-
-> > Hector, Marc, I'd appreciate if either of you could give this a spin on
-> > your M1/M2 machines. I've given it local testing with the arm_pmuv3
-> > driver modified to behave the same as the apple_m1_pmu driver (requiring
-> > exclude_guest, having a 'cycles' event in sysfs), but that might not
-> > perfectly replicate your setup.
-> >
-> > The patch is based on the 'perf-tools-for-v6.8-1-2024-01-09' tag in the
-> > perf-tools tree:
-> >
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git/
-> >
-> > ... and I've pushed it out to the 'perf-tools/event-supported-filters'
-> > branch in my tree:
-> >
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/
-> >
-> > This patch *should* make it possible to do:
-> >
-> >         perf stat -e cycles ./workload
-> >         perf stat -e instructions ./workload
-> >
-> > ... with those 'cycles' and 'instructions' events being automatically
-> > expanded and reported as separate events per-PMU, which is a nice
-> > quality-of-life improvement.
-> >
-> > Comparing before and after this patch:
-> >
-> > | # ./perf-before stat -e cycles true
-> > |
-> > |  Performance counter stats for 'true':
-> > |
-> > |      <not counted>      cycles                                                                  (0.00%)
-> > |
-> > |        0.000990250 seconds time elapsed
-> > |
-> > |        0.000934000 seconds user
-> > |        0.000000000 seconds sys
-> > |
-> > | # ./perf-after stat -e cycles true
-> > |
-> > |  Performance counter stats for 'true':
-> > |
-> > |             965175      armv8_pmuv3_0/cycles/
-> > |      <not counted>      armv8_pmuv3_1/cycles/                                                   (0.00%)
-> > |      <not counted>      armv8_pmuv3_2/cycles/                                                   (0.00%)
-> > |      <not counted>      armv8_pmuv3_3/cycles/                                                   (0.00%)
-> > |
-> > |        0.000836555 seconds time elapsed
-> > |
-> > |        0.000884000 seconds user
-> > |        0.000000000 seconds sys
-> 
-> Just to check, this is the expected expansion of cycles? I'm unclear
-> why 4 core PMUs.
-
-Yep; I had a fake big.LITTLE setup with four distinct microarchitectures (one
-per CPU), so the expansion above is expected. I had meant to explain that in
-the notes along with the other driver modifications, but I forgot, sorry!
-
-> > This *shouldn't* change the interpetation of named-pmu events, e.g.
-> >
-> >         perf stat -e apple_whichever_pmu/cycles/ ./workload
-> >
-> > ... should behave the same as without this patch
-> >
-> > Comparing before and after this patch:
-> >
-> > | # ./perf-before stat -e armv8_pmuv3_0/cycles/ -e armv8_pmuv3_1/cycles/ -e armv8_pmuv3_2/cycles/ -e armv8_pmuv3_3/cycles/ true
-> > |
-> > |  Performance counter stats for 'true':
-> > |
-> > |      <not counted>      armv8_pmuv3_0/cycles/                                                   (0.00%)
-> > |      <not counted>      armv8_pmuv3_1/cycles/                                                   (0.00%)
-> > |      <not counted>      armv8_pmuv3_2/cycles/                                                   (0.00%)
-> > |             901415      armv8_pmuv3_3/cycles/
-> > |
-> > |        0.000756590 seconds time elapsed
-> > |
-> > |        0.000811000 seconds user
-> > |        0.000000000 seconds sys
-> > |
-> > | # ./perf-after stat -e armv8_pmuv3_0/cycles/ -e armv8_pmuv3_1/cycles/ -e armv8_pmuv3_2/cycles/ -e armv8_pmuv3_3/cycles/ true
-> > |
-> > |  Performance counter stats for 'true':
-> > |
-> > |             923314      armv8_pmuv3_0/cycles/
-> > |      <not counted>      armv8_pmuv3_1/cycles/                                                   (0.00%)
-> > |      <not counted>      armv8_pmuv3_2/cycles/                                                   (0.00%)
-> > |      <not counted>      armv8_pmuv3_3/cycles/                                                   (0.00%)
-> > |
-> > |        0.000782420 seconds time elapsed
-> > |
-> > |        0.000836000 seconds user
-> > |        0.000000000 seconds sys
-> >
-> > One thing I'm still looing into is that this doesn't seem to do anything
-> > for a default perf stat session, e.g.
-> >
-> >         perf stat ./workload
-> >
-> > ... doesn't automatically expand the implicitly-created events into per-pmu
-> > events.
-> 
-> Ugh, weak symbols. x86 has overridden the default adding of attributes
-> to do it for hybrid:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/x86/util/evlist.c?h=perf-tools-next#n36
-> I think we should lose the adding events via attributes and just go to
-> using parse events for everything. I'll see if I can do some cleanup
-> and that should resolve this - I also want to cleanup the default
-> events/metrics and the detailed ones as we can drop the unsupported
-> events, etc.
-
-Ok; so IIUC we can treat that as a separate problem? I'm happy to test/review
-patches there.
-
-> > Comparing before and after this patch:
-> >
-> > | # ./perf-before stat true
-> > |
-> > |  Performance counter stats for 'true':
-> > |
-> > |               0.42 msec task-clock                       #    0.569 CPUs utilized
-> > |                  0      context-switches                 #    0.000 /sec
-> > |                  0      cpu-migrations                   #    0.000 /sec
-> > |                 38      page-faults                      #   89.796 K/sec
-> > |      <not counted>      cycles                                                                  (0.00%)
-> > |      <not counted>      instructions                                                            (0.00%)
-> > |      <not counted>      branches                                                                (0.00%)
-> > |      <not counted>      branch-misses                                                           (0.00%)
-> > |
-> > |        0.000744185 seconds time elapsed
-> > |
-> > |        0.000795000 seconds user
-> > |        0.000000000 seconds sys
-> > |
-> > | # ./perf-after stat true
-> > |
-> > |  Performance counter stats for 'true':
-> > |
-> > |               0.43 msec task-clock                       #    0.582 CPUs utilized
-> > |                  0      context-switches                 #    0.000 /sec
-> > |                  0      cpu-migrations                   #    0.000 /sec
-> > |                 38      page-faults                      #   88.960 K/sec
-> > |      <not counted>      cycles                                                                  (0.00%)
-> > |      <not counted>      instructions                                                            (0.00%)
-> > |      <not counted>      branches                                                                (0.00%)
-> > |      <not counted>      branch-misses                                                           (0.00%)
-> > |
-> > |        0.000734120 seconds time elapsed
-> > |
-> > |        0.000786000 seconds user
-> > |        0.000000000 seconds sys
-> >
-> > Ian, how does that behave on x86? Is that the same, or do the default
-> > events get expanded?
-> 
-> The default events are expanded, the not counted is a feature of a
-> fast binary (true here). I'm trying to remove custom code paths so
-> that things like this don't happen, sorry that you've come across
-> another instance but at least I can fix it.
-
-Huh; I'm surprised that works with the named-pmu events, since that's the same
-'true' binary.
-
-Is there anything I should go look at for that?
+I'll send a v2 tomorrow assuming there's nothing else that crops up.
 
 Mark.
