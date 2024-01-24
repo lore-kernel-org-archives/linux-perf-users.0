@@ -1,165 +1,251 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7614912DDAE
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 18:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E174131728
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 18:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706121063; cv=none; b=aYQm8kJrqb86zm1pjIGfVtP/Z8MdEyR1rMY82I3MLkmWHnzRgSlWbMfVbToO6X8pOx5uFbUvw+sZAK3wNN3+KahM0SYyMfBt0/ECQ+KChOBP9W3Xpmq6WTO65yfVj8qTrcx8LCKRoM9/H7U2z6tbvd3T/xqvA01qQWNTvlPKfaY=
+	t=1706121428; cv=none; b=pK7T5Iak4i3KJfrc/HIXsxMJcKZAPGof4z4JFxWYTDITwqPfybuAp8jdn92WrFNb7DIHpcXjRwZaJH4JI60TBHROs/pwUQKLISTCknW0Md+9eOurURsgPHOHEmxk0FxkdOb7Z4Cm1q2AJ675VflwsWuKWBfNTy1fLXBrHBr6Yqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706121063; c=relaxed/simple;
-	bh=P0nzUp0PvO8mm5HPDJlWk9SceYUCT/eyYnvv5nDCvDg=;
+	s=arc-20240116; t=1706121428; c=relaxed/simple;
+	bh=T/o6Qsq0W2hymOaLp02g4fovPXgDUYeIHFNN8KhMRyQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZW8zELxChyHyrmqHrO6TKezxAT9ML/+daXTZC3c5EfEqQR0DJKqp5hasD6L7nL3PpQqmpJ/aIgIB3JQTkpj1KOSCkZsmakASnEpHNbPd/YlON80MR8NoHF8sa9mJhkB/QeqYUDPMYVMayTqAbO4JzqMuv+VmWJyUzf0eO3XNvMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3Eh03j/+; arc=none smtp.client-ip=209.85.166.178
+	 To:Cc:Content-Type; b=TVbInTWoU89SjpA7TEIcYA1PXSnndZNuiC0IYkzpGfg7reQf6c8iZ01Oe6tFAQFdKazOsI3nsI6+2FoZ6+xPOcfZUEgmP6XtPVayg22oOk6UYlr9DdksuBJ6AA1Oxu53Nkhih+rIZKZ0Fwd6fUkal3s12S7hyTBcwY/b1nPtFJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U7NLxADn; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3Eh03j/+"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3600b2c43a8so9355ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 10:30:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U7NLxADn"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-361b24d1a9eso9485ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 10:37:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706121043; x=1706725843; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706121426; x=1706726226; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=awu7x77B+bOCRQBjAJIZUBeYxB3ax7vYrRZ3HCTLFHA=;
-        b=3Eh03j/+t/viyE0uk9aMiRJsVjcFvBf0ElftPl98m6KT9HrEWdz7OjMaqTfYR8rBo8
-         DaGwlFtTdqMP3dBOcDEyiSTn7taXRYzCA7A1PVypzqrc8fFpHdHSvhEwckG2Wtcol3Fh
-         3feFxyBZcGfw414b7kn+WnNsZGha35PEj1hVJGiGSKjuuT6lTYmv4cQYMNd6YpDcSGfB
-         Ppp+V2/1HjwO0yM34bH7uFa+m/5y/O/ccm1cm63Ruyp48CijTDrpl8ptY+7BPc4Ml+G2
-         30uU5OXTg+lVJHhGZbEnUA8IHOK+j8x46deUvllxhjkVzixbuFKHGw5DheoW/SRL++DF
-         6roQ==
+        bh=Fp9O201GdAOPAy/wQ9YQYfW1NpxoLVvkuKvh+iJBzfY=;
+        b=U7NLxADnnCbla5M/UZGEGI0eHts+vxQp0++jEfrh5yGdcmwPLVOXV68UTSdSOa2TXL
+         aQOvDxXR+jEL+kU0tNtmDI36G17vjChYMqPFIWAHLqjz6TKkVBE8IFIg5M8iUPex0ews
+         VtNZz/DOSUAQN32ZpzqZrEHOcb2qlJXuVjAyLoNgOofw0t0A7dEGAmqftzX+LXk7Zqhk
+         KxM1gqPcJ7p6OWXHldFvRm/aFub9HtNMH4oZgfOmESLv18o3DxSO6KSa0mCjHMwei0bi
+         JMnfirZWs+aLGXmWXZGEJopoUK+g3+NEPSSiL5CsQVaxCu/cVrQj+BDUyD7WEyf9OY1k
+         btzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706121043; x=1706725843;
+        d=1e100.net; s=20230601; t=1706121426; x=1706726226;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=awu7x77B+bOCRQBjAJIZUBeYxB3ax7vYrRZ3HCTLFHA=;
-        b=PquQhz8X6RqIcW3IvsGK0HFxEWPwsZ3xyfXDT3+erEZe4tYTEVmai3VsW8p1KZt17i
-         2RGaFcfZk/2cmt4uWPrS1m/XVuW7B4NeWQ0EGAbW4iD/ztoE7I2wCc2MY5qQ4XfqZwrn
-         jUaRiAymAMpYv+7TGuBz79GoH613VsKiZZYNLZa3e+PUtn+dj0T80WQ2gFhgU6tYF2ir
-         cHUSzeWCiR9E3uCCbwKgw7Un5J1THpRJo4Qp+rx2cCfqnlVtuPPcCOTwXp8XftGftWEj
-         +a4dmoqZg131SKPbJsC3fCH/SQe3amSG/stexGBekTDtnNqJ12mfaGoPUAluGJm81H68
-         ZZ9g==
-X-Gm-Message-State: AOJu0YwxY0VwYaPei+FSdyYg4K6Lsq7zNCxZo/7AzKqFW9x4ATGJiyQI
-	DvxkODcEw+P6vAoC5xvgPuEgRlXkHYdLNSUrKybzKwEMs5FRsj+0Tgw/oquez2kFFAEix6dFQFD
-	oYXh/LqHctvu5wCJl/NlwpX0+D/tO0jSPg/OC
-X-Google-Smtp-Source: AGHT+IGreWbUhtTvW+9Ga/OKnLbooNk4a5Iwt7NwGJpE8zRFyvmFj3idijd5lXxo3w4ouUVDvMSVHo93vSPjfKgoMAM=
-X-Received: by 2002:a05:6e02:3207:b0:35f:dab8:1152 with SMTP id
- cd7-20020a056e02320700b0035fdab81152mr15036ilb.3.1706121043449; Wed, 24 Jan
- 2024 10:30:43 -0800 (PST)
+        bh=Fp9O201GdAOPAy/wQ9YQYfW1NpxoLVvkuKvh+iJBzfY=;
+        b=lMLJor64pDSKb9BdubL+0M15xNqK7a197b3tr/KVtfCS6NlaWr23W8PSdLZX36R2rW
+         EETxiPNoWK1ivOjDOQS5yX0YaKSJ0bYeyaXaWM4G2BRDO15Aa/7+Yyb99cGIFaTW6I0A
+         6sGodZ5mtV/+oSNHTnz5m2L3Ow+ITl4FcxMQ43V0tLy89CsGOzjQZDweW4yupi855ViG
+         BFj+ke6UiB0kJ5KwhVpERDE2p1hE/W/ydhs989eTNEHFn7YR5Z5D5P7u6ld3iEWejD2u
+         i7QwT+j8D9pX3J9FPq5WmUBqrDFgbic8tI5byO6iy0fvEPYWQnH9OrbartU9YArHZezs
+         Zp6w==
+X-Gm-Message-State: AOJu0YxQhz5kz6J+T9tF2uFDmJ0FQ4LUDF6JyiDYKIpnxsxmNMAE4QdQ
+	YGKZ2vPB0vvJMzXCdGt7qyTPB2PmEgxCVTxM8u+RcybeFRGXcoOmEW4RHepKh7VWfbvQ/vuWNuF
+	3KZtDJz31PnE5CTL7/NpgfMQOHKBx+VPlIN5U
+X-Google-Smtp-Source: AGHT+IGQPYi5CEBiSsdQwWfNVxRWBpiOM7bWVEh2LqkmqlKo/dlvOnYQ1qSpbhY82zyDnIPnWvyvjIArlyIRiauFzL4=
+X-Received: by 2002:a05:6e02:142:b0:360:61f5:91ed with SMTP id
+ j2-20020a056e02014200b0036061f591edmr16088ilr.28.1706121426245; Wed, 24 Jan
+ 2024 10:37:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123163903.350306-1-james.clark@arm.com> <20240123163903.350306-3-james.clark@arm.com>
- <CAP-5=fX4QQYNzEY7-6GyqWJTuH-RQxxc3jB5B1k8HZtDZCHmFw@mail.gmail.com> <faba2e97-7e88-9dcc-756d-f256a6304836@arm.com>
-In-Reply-To: <faba2e97-7e88-9dcc-756d-f256a6304836@arm.com>
+References: <20231212230224.1473300-1-weilin.wang@intel.com> <20231212230224.1473300-12-weilin.wang@intel.com>
+In-Reply-To: <20231212230224.1473300-12-weilin.wang@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 24 Jan 2024 10:30:32 -0800
-Message-ID: <CAP-5=fUfY0weHXpDaz-oABsspnUyUdaF8ZYDUBFwFOCyiH80sQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Skip test_arm_callgraph_fp.sh if unwinding
- isn't built in
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Spoorthy S <spoorts2@in.ibm.com>, linux-kernel@vger.kernel.org
+Date: Wed, 24 Jan 2024 10:36:54 -0800
+Message-ID: <CAP-5=fXncZ1eqSzsv6YFy1=6z4va_LJjAP9Zr2PVw6LJdp3x-w@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 10/18] perf stat: Add build string function and
+ topdown events handling in hardware-grouping
+To: weilin.wang@intel.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 24, 2024 at 1:24=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
+On Tue, Dec 12, 2023 at 3:03=E2=80=AFPM <weilin.wang@intel.com> wrote:
 >
+> From: Weilin Wang <weilin.wang@intel.com>
 >
+> Add the function to generate final grouping strings. This function is
+> very similar to the existing metricgroup__build_event_string() function.
+> The difference is that the input data includes a list of grouping lists.
 >
-> On 23/01/2024 17:41, Ian Rogers wrote:
-> > On Tue, Jan 23, 2024 at 8:39=E2=80=AFAM James Clark <james.clark@arm.co=
-m> wrote:
-> >>
-> >> Even though this is a frame pointer unwind test, it's testing that a
-> >> frame pointer stack can be augmented correctly with a partial
-> >> Dwarf unwind. So add a feature check so that this test skips instead o=
-f
-> >> fails if Dwarf unwinding isn't present.
-> >
-> > Hi James,
-> >
-> > Is there value in testing without the partial Dwarf unwind? Presumably
->
-> Yeah I think we could add a test for just --call-graph=3Dfp, I don't thin=
-k
-> there is one. But that would be separate to this test, and would be
-> redundant if the tests are run with a dwarf unwinder present because
-> this test already requires the frame pointer unwinder to be correct.
->
-> > that is covered by the existing dwarf unwind test?
->
-> There is no overlap, this test test is for --call-graph=3Dfp, and the
-> dwarf test is for --call-graph=3Ddwarf
->
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/dwarf-unwind.c?h=3Dperf-tools-next
-> > If the issue is inlined functions I'm surprised addr2line isn't doing
-> > the job properly. Is there an addr2line perf script issue here?
-> >
->
-> The issue isn't inlined functions, it's when the leaf frame doesn't
-> insert a frame pointer. In that case we use the link register to see
-> what the parent function of the leaf frame was and insert it into the
-> frame pointer stack.
->
-> Dwarf is only used in this case to confirm if the link register was
-> valid at that instruction.
->
-> See commit b9f6fbb for more info. Long story short this test was only
-> added for that feature and it requires a dwarf unwinder to pass despite
-> being called test_arm_callgraph_fp
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 
-Ok, not directly seeing b9f6fbb being dependent on
-HAVE_DWARF_UNWIND_SUPPORT. I'll assume I'm ignorant and the fix here
-is obviously a workaround.
-
-For the series:
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+> ---
+>  tools/perf/util/metricgroup.c | 96 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 93 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index 9d06fe4488dc..5d9ed22963be 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -1899,6 +1899,96 @@ static int assign_event_grouping(struct metricgrou=
+p__event_info *e,
+>         return ret;
+>  }
+>
+> +static int hw_aware_metricgroup__build_event_string(struct list_head *gr=
+oup_strs,
+> +                                          const char *modifier,
+> +                                          struct list_head *groups)
+> +{
+> +       struct metricgroup__pmu_group_list *p;
+> +       struct metricgroup__group *g;
+> +       struct metricgroup__group_events *ge;
+> +       bool no_group =3D true;
+> +       int ret =3D 0;
+> +
+> +#define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
+> +
+> +       list_for_each_entry(p, groups, nd) {
+> +               list_for_each_entry(g, &p->group_head, nd) {
+> +                       struct strbuf *events;
+> +                       struct metricgroup__group_strs *new_group_str =3D
+> +                               malloc(sizeof(struct metricgroup__group_s=
+trs));
+> +
+> +                       if (!new_group_str)
+> +                               return -ENOMEM;
+> +                       strbuf_init(&new_group_str->grouping_str, 0);
+> +                       events =3D &new_group_str->grouping_str;
+> +                       ret =3D strbuf_addch(events, '{');
+> +                       RETURN_IF_NON_ZERO(ret);
+> +                       no_group =3D true;
+> +                       list_for_each_entry(ge, &g->event_head, nd) {
+> +                               const char *sep, *rsep, *id =3D ge->event=
+_name;
+> +
+> +                               pr_debug("found event %s\n", id);
+> +
+> +                               /* Separate events with commas and open t=
+he group if necessary. */
+> +                               if (!no_group) {
+> +                                       ret =3D strbuf_addch(events, ',')=
+;
+> +                                       RETURN_IF_NON_ZERO(ret);
+> +                               }
+> +                               /*
+> +                                * Encode the ID as an event string. Add =
+a qualifier for
+> +                                * metric_id that is the original name ex=
+cept with characters
+> +                                * that parse-events can't parse replaced=
+. For example,
+> +                                * 'msr@tsc@' gets added as msr/tsc,metri=
+c-id=3Dmsr!3tsc!3/
+> +                                */
+> +                               sep =3D strchr(id, '@');
+> +                               if (sep) {
+> +                                       ret =3D strbuf_add(events, id, se=
+p - id);
+> +                                       RETURN_IF_NON_ZERO(ret);
+> +                                       ret =3D strbuf_addch(events, '/')=
+;
+> +                                       RETURN_IF_NON_ZERO(ret);
+> +                                       rsep =3D strrchr(sep, '@');
+> +                                       ret =3D strbuf_add(events, sep + =
+1, rsep - sep - 1);
+> +                                       RETURN_IF_NON_ZERO(ret);
+> +                                       ret =3D strbuf_addstr(events, ",m=
+etric-id=3D");
+> +                                       RETURN_IF_NON_ZERO(ret);
+> +                                       sep =3D rsep;
+> +                               } else {
+> +                                       sep =3D strchr(id, ':');
+> +                                       if (sep) {
+> +                                               ret =3D strbuf_add(events=
+, id, sep - id);
+> +                                               RETURN_IF_NON_ZERO(ret);
+> +                                       } else {
+> +                                               ret =3D strbuf_addstr(eve=
+nts, id);
+> +                                               RETURN_IF_NON_ZERO(ret);
+> +                                       }
+> +                                       ret =3D strbuf_addstr(events, "/m=
+etric-id=3D");
+> +                                       RETURN_IF_NON_ZERO(ret);
+> +                               }
+> +                               ret =3D encode_metric_id(events, id);
+> +                               RETURN_IF_NON_ZERO(ret);
+> +                               ret =3D strbuf_addstr(events, "/");
+> +                               RETURN_IF_NON_ZERO(ret);
+> +
+> +                               if (sep) {
+> +                                       ret =3D strbuf_addstr(events, sep=
+ + 1);
+> +                                       RETURN_IF_NON_ZERO(ret);
+> +                               }
+> +                               if (modifier) {
+> +                                       ret =3D strbuf_addstr(events, mod=
+ifier);
+> +                                       RETURN_IF_NON_ZERO(ret);
+> +                               }
+> +                               no_group =3D false;
+> +                       }
+> +                       ret =3D strbuf_addf(events, "}:W");
+> +                       RETURN_IF_NON_ZERO(ret);
+> +                       pr_debug("events-buf: %s\n", events->buf);
+> +                       list_add_tail(&new_group_str->nd, group_strs);
+> +               }
+> +       }
+> +       return ret;
+> +#undef RETURN_IF_NON_ZERO
+> +}
+> +
+>  /**
+>   * create_grouping - Create a list of groups and place all the events of
+>   * event_info_list into these groups.
+> @@ -1910,8 +2000,8 @@ static int assign_event_grouping(struct metricgroup=
+__event_info *e,
+>   */
+>  static int create_grouping(struct list_head *pmu_info_list,
+>                           struct list_head *event_info_list,
+> -                         struct list_head *groupings __maybe_unused,
+> -                         const char *modifier __maybe_unused)
+> +                         struct list_head *groupings,
+> +                         const char *modifier)
+>  {
+>         int ret =3D 0;
+>         struct metricgroup__event_info *e;
+> @@ -1927,6 +2017,7 @@ static int create_grouping(struct list_head *pmu_in=
+fo_list,
+>                 if (ret)
+>                         goto out;
+>         }
+> +       ret =3D hw_aware_metricgroup__build_event_string(groupings, modif=
+ier, &groups);
+>  out:
+>         metricgroup__free_group_list(&groups);
+>         return ret;
+> @@ -1957,7 +2048,6 @@ static int hw_aware_build_grouping(struct expr_pars=
+e_ctx *ctx __maybe_unused,
+>                 const char *id =3D cur->pkey;
+>
+>                 pr_debug("found event %s\n", id);
+> -
 
-> > Thanks,
-> > Ian
-> >
+nit: unnecessary whitespace change for the patch
+
+>                 ret =3D get_metricgroup_events(id, etable, &event_info_li=
+st);
+>                 if (ret)
+>                         goto err_out;
+> --
+> 2.39.3
 >
->
-> >> Signed-off-by: James Clark <james.clark@arm.com>
-> >> ---
-> >>  tools/perf/tests/shell/test_arm_callgraph_fp.sh | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/p=
-erf/tests/shell/test_arm_callgraph_fp.sh
-> >> index e342e6c8aa50..83b53591b1ea 100755
-> >> --- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> >> +++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> >> @@ -8,6 +8,12 @@ shelldir=3D$(dirname "$0")
-> >>
-> >>  lscpu | grep -q "aarch64" || exit 2
-> >>
-> >> +if perf version --build-options | grep HAVE_DWARF_UNWIND_SUPPORT | gr=
-ep -q OFF
-> >> +then
-> >> +  echo "Skipping, no dwarf unwind support"
-> >> +  exit 2
-> >> +fi
-> >> +
-> >>  skip_test_missing_symbol leafloop
-> >>
-> >>  PERF_DATA=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> >> --
-> >> 2.34.1
-> >>
