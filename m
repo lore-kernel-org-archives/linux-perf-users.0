@@ -1,412 +1,150 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003B3DDCE
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 05:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD0C1774E;
+	Wed, 24 Jan 2024 08:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706073476; cv=none; b=EYrW1xbbvavpGsmtoSppdylux4cEg3NQQNAebKy5sRipIdcmeFsXLEkBk+kzgvtFS+67REHNlNYDbDUvQ0sp2ILK4VFPWLih0IBMsonfbm6ueH/aAu0OQQWJZ+bwy5PH5AMXV6Rwure+hooKMIg+geVyi4q43v+YMx1GSKFOTIQ=
+	t=1706085544; cv=none; b=WvXeGfV4qlkAgGPiyv+2XhTuabIIgiVUSOSUPWZACdHl8R6kChGIyXEihn4JUs0On1lySCVexP1MI2yK9yCi8YwfAeJ3lV4zW3ZvoUPBbR3yS7JvP4ZFOwJbZl2UEe5CKM9h7nU3ML3NpSC9eCSw2pdNHvCUgFjjE+7rth8hmVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706073476; c=relaxed/simple;
-	bh=Fjcc+5N6u6Oo8RhwYUPXJcP7GR7I9RTOaFaqoVwvT/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VQtMlrsfZuoI8RJQSye+kbj56M95H1sNIOaANzlfwGSYRPAM/9kPXKB9Wq7fNZlLKnH14ojkqqTWXLrb9gqk+HZoUNDYC75fxH9XW6lLCgnsIw6oHjuem9KEZTJre8IXbhu4zXJh9iYDGrWUvV99BfSsMe6m4+hTfCyoEucJuAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xxdkHBGl; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706085544; c=relaxed/simple;
+	bh=ehSk/KOw6EwCI/rQd4tsmYaL42+ZGGoyWxxF44nf3mU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EuJyLLhSOts6bKQI91vhs8oltseDIvvGxUi6hIBJvp7iWRx5HwpJ/DTU8IPm1op/ouLP2l/lGq3NDgP4Iua995uj2XKvT3QjknmIztNAj1kDTdOOMfh6Hpu3L+z0fK6jjiGgZDY7MeGdrmFiwuN2iVwsvvqwHkNIAG+Jn3tW/Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asnp5vqX; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xxdkHBGl"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d72043fa06so48205ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 21:17:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asnp5vqX"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso35858905e9.1;
+        Wed, 24 Jan 2024 00:39:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706073473; x=1706678273; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0h1jgOr5+Xh2NY4AzoO8uEaBBEk7vdZMCpbgjfuhJWw=;
-        b=xxdkHBGlPToqELBtyeENx5xVAl8MmGbu3GZ/kCaW8cgUG3Ylmgd6vQRLCL4yIakqsb
-         V9x/gIicA7y2dX1u9YA8xc4Ul0Y0q2M6IZnSw4De7Xox/7DBfXpxebNVhVpLe6S6fgyn
-         EjtW1+VSmQ3svg3QduNcXRuiWznIrUSq9BhfToEmDVSwN0UNK+47g/V9/qwtHsJMeEKc
-         RNMgUk/n/CPqPMwx215jxnnY5HxAQUlv8JrGtltINj4N0HBE8FHqY4+VR+rq/QDQar6W
-         9mwjUTUTe/rQEyZUeSVruckDQatc/10eIfq9SO39tD25MbkLOlEO+4bUivx5NOmTDCS3
-         Jx0Q==
+        d=gmail.com; s=20230601; t=1706085541; x=1706690341; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZgawM6UIZB879asIllB4qg34rmAKLHEiPy/nkyJy3IA=;
+        b=asnp5vqXcqqFfTSGyyTeaiaHgoLFhQ3nwWqwvfkCh+0QrMFZkv4FszeF/qL1tkwpcq
+         8pwWdx6EP0l85N2RvEV5wSS3O8KnHVnsegecSwIhcPZ9tfgYLb8po70nXQAWFBHh4lfa
+         fr3Qm/zOlJAQYidCvijUwisJNr7SjHPfWLjcbVXIJCCwT0zfr1rUQprJ+pNJjFvkNd/F
+         n+HJuu0mVlNvNkst6MfCb4PmcIsslJl63VZwntRPG6480NgZBd0LNdekNNhSA+6u5+uk
+         PRfY70mN0FoZn3yRfdlRqRidbLKIDUGhiyX3aYbr5j6fQenu+d9aVdp+zlVbEdf/NnHV
+         xHAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706073473; x=1706678273;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0h1jgOr5+Xh2NY4AzoO8uEaBBEk7vdZMCpbgjfuhJWw=;
-        b=iYsDLFnzvEbR2HhoLvP8vH+I/8AtUY7xwFYwVoIiKcgvz2Ki6HG/5PtVKyRGra3RMy
-         OhWwNm05OxaGQn3hRVa/1s3oMYW7NHWbSb1qXooAGpsxvyiJNNadkpic5mkZlVA2LCkF
-         W66Kyd9o8GZRkY6C3JDSwFWlgeZzL11YePM9g914zQPNH/qMPyIdjYFd30O+8n5XsC03
-         8Y1GCk6Qm/up1YAlU4UeTlokMyTquKIFxM4YzzEg/dM0cIE866Q3Ea+XD6phr9CWT0LA
-         zDcWVp4E1fkONo634KweRp6SrWKi9zg5YXcy80phUKur8XBwgSin9HnfcsvE7kEUrdhz
-         bY7g==
-X-Gm-Message-State: AOJu0YzKf+U+Z8cOasVsaQitTHcfOq+/skDhiBOzs705ZyGE7D1RmtuO
-	tFWOZ0eEMk2NYxqMS0thygNb+shwTRPB3NWQrj+HReSVryBJKO1vtWSo6lVrYI03uB88DLS4QlX
-	RWkVLd/4ywFbWsffv1eyybPvxjfTyVUaenD6o
-X-Google-Smtp-Source: AGHT+IGeE4Xq7LjtEWLQrymxCAASnjq56PuhRhpkD8qBdhdsYIV77T2vf/igvxNrg5VX+9B/8CwmHxW7V11539xU8b4=
-X-Received: by 2002:a17:902:d185:b0:1d7:7a5a:61ab with SMTP id
- m5-20020a170902d18500b001d77a5a61abmr30640plb.3.1706073472952; Tue, 23 Jan
- 2024 21:17:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706085541; x=1706690341;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZgawM6UIZB879asIllB4qg34rmAKLHEiPy/nkyJy3IA=;
+        b=MgDFkKyHttaFTy9WnAcSJOHvFMfJjwZwMVhhkmIGnp/pChrSpX8441efo09GLRwrMP
+         VW6aEmSj3nVO9wLhmIwaHrILbEJ+zrVlOKPAH2RubhUGj/gqlfyO5CqMnKh2wZpZp/zO
+         FQExbSsCSmZgB2pS6WMCpwmt19YGt5sM/b7TucE4KkwYgdl+TicLL750Hd7c2I/nK1gA
+         ivvKyHcMXudf6r90o+wfyeHJmJH1MRhiH60BMMRQrAGq2b0S/P8vl01ukh18+bMykA78
+         fmDzrDS4zg78AKvC/xuGiLlEwcLYqoHgE9EVzyw9DyrGOi0oSttxgHoS16ZfVlCl7JHl
+         oLdg==
+X-Gm-Message-State: AOJu0Yz7wlX4TgrrC47gbBls8CLwBQ6L/1GcQSN5NA9/pUiD4VnevXPD
+	UlpAJEseTteKFSIiIK5R8AHJeRGhAyHN28AWwkdaLMCqCy8Rd+ex
+X-Google-Smtp-Source: AGHT+IEicp6kAZUWVsNFA2XQ0bSqFDDu68KUb3xWtsxsMyBwWLImjacQfs3cRCWXO6Vw/pr6lq5Tsg==
+X-Received: by 2002:a05:600c:56d3:b0:40d:8fcd:31aa with SMTP id ju19-20020a05600c56d300b0040d8fcd31aamr728892wmb.327.1706085541182;
+        Wed, 24 Jan 2024 00:39:01 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id n21-20020a05600c3b9500b0040eaebc4e8fsm8646371wms.1.2024.01.24.00.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 00:39:00 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 24 Jan 2024 09:38:58 +0100
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Ross Zwisler <zwisler@chromium.org>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Shirisha G <shirisha@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] perf test: Make daemon signal test less racy
+Message-ID: <ZbDMovjeAZBUSiMn@krava>
+References: <20240124043015.1388867-1-irogers@google.com>
+ <20240124043015.1388867-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212230224.1473300-1-weilin.wang@intel.com> <20231212230224.1473300-9-weilin.wang@intel.com>
-In-Reply-To: <20231212230224.1473300-9-weilin.wang@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 23 Jan 2024 21:17:41 -0800
-Message-ID: <CAP-5=fUK9YtvhiZjkkBAxHJ=jenrKMQJ-HdK+qj8k+3b7T6OqA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 07/18] perf stat: Add functions to set counter
- bitmaps for hardware-grouping method
-To: weilin.wang@intel.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Yang Jihong <yangjihong1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124043015.1388867-6-irogers@google.com>
 
-On Tue, Dec 12, 2023 at 3:03=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Add metricgroup__event_info data structure to represent an event in the
-> metric grouping context; the list of counters and the PMU name an event
-> should be collected with.
->
-> Add functions to parse event counter info from pmu-events and generate a
-> list of metricgroup__event_info data to prepare grouping.
->
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+On Tue, Jan 23, 2024 at 08:30:15PM -0800, Ian Rogers wrote:
+> The daemon signal test sends signals and then expects files to be
+> written. It was observed on an Intel Alderlake that the signals were
+> sent too quickly leading to the 3 expected files not appearing. To
+> avoid this send the next signal only after the expected previous file
+> has appeared. To avoid an infinite loop the number of retries is
+> limited.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+jirka
+
 > ---
->  tools/perf/util/metricgroup.c | 196 +++++++++++++++++++++++++++++++++-
->  tools/perf/util/metricgroup.h |  27 +++++
->  2 files changed, 220 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index 8d1143ee898c..24268882d355 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1432,6 +1432,182 @@ static int build_combined_expr_ctx(const struct l=
-ist_head *metric_list,
->         return ret;
->  }
->
-> +/**
-> + * set_counter_bitmap - The counter bit mapping: [8-15,0-7], e.g. the GP=
-0 is the
-> + * 8th bit and GP7 is the 1st bit in this 16-bits bitmap. It is helpful =
-for
-> + * assigning GP4-7 before GP0-3 because some events can be collected usi=
-ng GP0-3
-> + * only on some platforms.
-> + */
-> +static int set_counter_bitmap(int pos, unsigned long *bitmap)
-> +{
-> +       if (pos >=3D NR_COUNTERS || pos < 0)
-> +               return -EINVAL;
-> +       if (pos <=3D 7)
-> +               pos =3D TRANSFER_FIRST_BYTE(pos);
-> +       else
-> +               pos =3D TRANSFER_SEC_BYTE(pos);
-> +       *bitmap |=3D 1ul << pos;
-
-__set_bit may be more canonical here, in case we ever had more than 64 coun=
-ters.
-
-> +       return 0;
-> +}
-> +
-> +static int parse_fixed_counter(const char *counter,
-> +                             unsigned long *bitmap,
-> +                             bool *fixed)
-> +{
-> +       int ret =3D -ENOENT;
-> +       //TODO: this pattern is different on some other platforms
-> +       const char *pattern =3D "Fixed counter ";
-> +       int pos =3D 0;
-> +
-> +       if (!strncmp(counter, pattern, strlen(pattern))) {
-> +               pos =3D atoi(counter + strlen(pattern));
-> +               ret =3D set_counter_bitmap(pos, bitmap);
-> +               if (ret)
-> +                       return ret;
-> +               *fixed =3D true;
-> +               return 0;
-> +       }
-> +       return ret;
-> +}
-
-It'd be nice if the counter APIs that are specific to a PMU could be
-part of the struct pmu API.
-
-> +
-> +/**
-> + * parse_counter - Parse event counter info from pmu-events and set up b=
-itmap
-> + * accordingly.
-> + *
-> + * @counter: counter info string to be parsed.
-> + * @bitmap: bitmap to set based on counter info parsed.
-> + * @fixed: is set to true if the event uses fixed counter.
-> + */
-> +static int parse_counter(const char *counter,
-> +                       unsigned long *bitmap,
-> +                       bool *fixed)
-> +{
-> +       int ret =3D 0;
-> +       char *p;
-> +       char *tok;
-> +       int pos =3D 0;
-> +
-> +       ret =3D parse_fixed_counter(counter, bitmap, fixed);
-> +       // ret=3D=3D0 means matched with fixed counter
-> +       if (ret =3D=3D 0)
-> +               return ret;
-> +
-> +       p =3D strdup(counter);
-> +       tok =3D strtok(p, ",");
-> +       if (!tok)
-> +               return -ENOENT;
-> +
-> +       while (tok) {
-> +               pos =3D atoi(tok);
-> +               ret =3D set_counter_bitmap(pos, bitmap);
-> +               if (ret)
-> +                       return ret;
-> +               tok =3D strtok(NULL, ",");
-> +       }
-> +       return 0;
-> +}
-> +
-> +static struct metricgroup__event_info *event_info__new(const char *name,
-> +                                                     const char *pmu_nam=
-e,
-> +                                                     const char *counter=
-,
-> +                                                     bool free_counter)
-> +{
-> +       int ret =3D 0;
-> +       char *bit_buf =3D malloc(NR_COUNTERS);
-> +       bool fixed_counter =3D false;
-> +       struct metricgroup__event_info *e;
-> +
-> +       e =3D zalloc(sizeof(*e));
-> +       if (!e)
-> +               return NULL;
-> +       if (!pmu_name)
-> +               pmu_name =3D "core";
-> +
-> +       e->name =3D name;
-> +       e->free_counter =3D free_counter;
-> +       e->pmu_name =3D strdup(pmu_name);
-> +       if (free_counter) {
-> +               ret =3D set_counter_bitmap(0, e->counters);
-> +               if (ret)
-> +                       return NULL;
-> +       } else {
-> +               ret =3D parse_counter(counter, e->counters, &fixed_counte=
-r);
-> +               if (ret)
-> +                       return NULL;
-> +               e->fixed_counter =3D fixed_counter;
-> +       }
-> +
-> +       bitmap_scnprintf(e->counters, NR_COUNTERS, bit_buf, NR_COUNTERS);
-> +       pr_debug("Event %s requires pmu %s counter: %s bitmap %s, [pmu=3D=
-%s]\n",
-> +               e->name, e->pmu_name, counter, bit_buf, pmu_name);
-> +
-> +       return e;
-> +}
-> +
-> +struct metricgroup__add_metric_event_data {
-> +       struct list_head *list;
-> +       /* pure event name, exclude umask and other info*/
-> +       const char *event_name;
-> +       /* event name and umask if applicable*/
-> +       const char *event_id;
-> +};
-> +
-> +static int metricgroup__add_metric_event_callback(const struct pmu_event=
- *pe,
-> +                                                const struct pmu_events_=
-table *table __maybe_unused,
-> +                                                void *data)
-> +{
-> +       struct metricgroup__event_info *event;
-> +       struct metricgroup__add_metric_event_data *d =3D data;
-> +
-> +       if (!strcasecmp(pe->name, d->event_name)) {
-> +               event =3D event_info__new(d->event_id, pe->pmu, pe->count=
-er, /*free_counter=3D*/false);
-> +               if (!event)
-> +                       return -ENOMEM;
-> +               list_add(&event->nd, d->list);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * get_metricgroup_events - Find counter requirement of events from the
-> + * pmu_events table
-> + * @full_id: the full event identifiers.
-> + * @table: pmu_events table that is searched for event data.
-> + * @event_info_list: the list that the new event counter info added to.
-> + */
-> +static int get_metricgroup_events(const char *full_id,
-> +                                const struct pmu_events_table *table,
-> +                                struct list_head *event_info_list)
-> +{
-> +       LIST_HEAD(list);
-> +       int ret =3D 0;
-> +       const char *id;
-> +       const char *rsep, *sep =3D strchr(full_id, '@');
-> +
-> +       if (sep) {
-> +               rsep =3D strchr(full_id, ',');
-> +               id =3D strndup(sep + 1, rsep - sep - 1);
-> +               if (ret)
-> +                       goto out;
-> +       } else {
-> +               id =3D full_id;
-> +       }
-> +       {
-> +               struct metricgroup__add_metric_event_data data =3D {
-> +                       .list =3D &list,
-> +                       .event_name =3D id,
-> +                       .event_id =3D full_id,
-> +               };
-> +               ret =3D pmu_events_table_for_each_event(table,
-> +                               metricgroup__add_metric_event_callback, &=
-data);
-> +       }
-> +
-> +out:
-> +       list_splice(&list, event_info_list);
-> +       return ret;
-> +}
-> +
->  /**
->   * hw_aware_build_grouping - Build event groupings by reading counter
->   * requirement of the events and counter available on the system from
-> @@ -1445,9 +1621,25 @@ static int hw_aware_build_grouping(struct expr_par=
-se_ctx *ctx __maybe_unused,
->                                   const char *modifier __maybe_unused)
->  {
->         int ret =3D 0;
-> +       struct hashmap_entry *cur;
-> +       LIST_HEAD(pmu_info_list);
-> +       LIST_HEAD(event_info_list);
-> +       size_t bkt;
-> +       const struct pmu_events_table *etable =3D perf_pmu__find_events_t=
-able(NULL);
-> +
-> +#define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
-> +       hashmap__for_each_entry(ctx->ids, cur, bkt) {
-> +               const char *id =3D cur->pkey;
-> +
-> +               pr_debug("found event %s\n", id);
-> +
-> +               ret =3D get_metricgroup_events(id, etable, &event_info_li=
-st);
-> +               if (ret)
-> +                       return ret;
-> +       }
->
-> -       pr_debug("This is a placeholder\n");
->         return ret;
-> +#undef RETURN_IF_NON_ZERO
->  }
->
->  static void group_str_free(struct metricgroup__group_strs *g)
-> @@ -1521,8 +1713,6 @@ static int hw_aware_parse_ids(struct perf_pmu *fake=
-_pmu,
->         *out_evlist =3D parsed_evlist;
->         parsed_evlist =3D NULL;
->  err_out:
-> -       parse_events_error__exit(&parse_error);
-> -       evlist__delete(parsed_evlist);
->         metricgroup__free_grouping_strs(&groupings);
->         return ret;
->  }
-> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
-h
-> index 89809df85644..3704545c9a11 100644
-> --- a/tools/perf/util/metricgroup.h
-> +++ b/tools/perf/util/metricgroup.h
-> @@ -5,6 +5,7 @@
->  #include <linux/list.h>
->  #include <linux/rbtree.h>
->  #include <stdbool.h>
-> +#include <linux/bitmap.h>
->  #include "pmu-events/pmu-events.h"
->  #include "strbuf.h"
->
-> @@ -67,6 +68,32 @@ struct metric_expr {
->         int runtime;
->  };
->
-
-If this is just used in metricgroup.c then it'd be better to keep the
-definitions there for the sake of encapsulation.
-
-> +/* Maximum number of counters per PMU*/
-> +#define NR_COUNTERS    16
-
-Fixed and/or generic?
-
-> +/*
-> + * Transfer bit position in the bitmap to ensure start assigning counter=
- from
-> + * the last GP counter to the first.
-> + * bit15 <---> bit0
-> + * [GP8-GP15] [GP0-GP7]
-> + */
-> +#define TRANSFER_FIRST_BYTE(pos) (7 - pos)
-> +#define TRANSFER_SEC_BYTE(pos) (23 - pos)
-
-Not sure why this bit flipping is necessary, if fixed counters are
-separated out to their own bitmap does it help?
-
-> +
-> +/**
-> + * An event used in a metric. This info is for metric grouping.
-> + */
-> +struct metricgroup__event_info {
-> +       struct list_head nd;
-> +       /** The name of the event. */
-> +       const char *name;
-> +       /** The name of the pmu the event be collected on. */
-> +       const char *pmu_name;
-
-Could we use the "struct pmu*" here?
-
-> +       bool fixed_counter;
-> +       bool free_counter;
-
-Missing comment for *_counter.
-
-Thanks,
-Ian
-
-> +       /** The counters the event allowed to be collected on. */
-> +       DECLARE_BITMAP(counters, NR_COUNTERS);
-> +};
-> +
->  /**
->   * Each group is one node in the group string list.
->   */
-> --
-> 2.39.3
->
+>  tools/perf/tests/shell/daemon.sh | 34 ++++++++++++++++++++++----------
+>  1 file changed, 24 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/daemon.sh b/tools/perf/tests/shell/daemon.sh
+> index 4c598cfc5afa..e5fa8d6f9eb1 100755
+> --- a/tools/perf/tests/shell/daemon.sh
+> +++ b/tools/perf/tests/shell/daemon.sh
+> @@ -414,16 +414,30 @@ EOF
+>  	# start daemon
+>  	daemon_start ${config} test
+>  
+> -	# send 2 signals
+> -	perf daemon signal --config ${config} --session test
+> -	perf daemon signal --config ${config}
+> -
+> -	# stop daemon
+> -	daemon_exit ${config}
+> -
+> -	# count is 2 perf.data for signals and 1 for perf record finished
+> -	count=`ls ${base}/session-test/*perf.data* | wc -l`
+> -	if [ ${count} -ne 3 ]; then
+> +        # send 2 signals then exit. Do this in a loop watching the number of
+> +        # files to avoid races. If the loop retries more than 600 times then
+> +        # give up.
+> +	local retries=0
+> +	local signals=0
+> +	local success=0
+> +	while [ ${retries} -lt 600 ] && [ ${success} -eq 0 ]; do
+> +		local files
+> +		files=`ls ${base}/session-test/*perf.data* 2> /dev/null | wc -l`
+> +		if [ ${signals} -eq 0 ]; then
+> +			perf daemon signal --config ${config} --session test
+> +			signals=1
+> +		elif [ ${signals} -eq 1 ] && [ $files -ge 1 ]; then
+> +			perf daemon signal --config ${config}
+> +			signals=2
+> +		elif [ ${signals} -eq 2 ] && [ $files -ge 2 ]; then
+> +			daemon_exit ${config}
+> +			signals=3
+> +		elif [ ${signals} -eq 3 ] && [ $files -ge 3 ]; then
+> +			success=1
+> +		fi
+> +		retries=$((${retries} +1))
+> +	done
+> +	if [ ${success} -eq 0 ]; then
+>  		error=1
+>  		echo "FAILED: perf data no generated"
+>  	fi
+> -- 
+> 2.43.0.429.g432eaa2c6b-goog
+> 
