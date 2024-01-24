@@ -1,107 +1,93 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3147D5398
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 01:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED66517CD;
+	Wed, 24 Jan 2024 02:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706058094; cv=none; b=o6BeRdMcmrqBUcWDzvvd4oqrB2IVnFQ2UFqlza8oIIESQaIOw2lBkq/ODbZohE0VubK7DkOgBWntLpiNKUPIm2+0dRvabAsgkq6rMDB48W75JkmHyCMR4+QP64NuNxJNxTJsEyE5aVEKoO9xt17eSSY8k8GItd8wRM9VDPOK614=
+	t=1706062125; cv=none; b=Cb1k3BWCxZipCXlT9g/J2ibLIY6lKl8cA9cwIdgvXFCTI0nwjk221qZ2R+NFqOia9Xj0q8Mn9POUiRv42q98PGbe1lFv881T4wPh0r4NKkDPdbJO5bUx2RFRLelDcM5xxZd8sgcxOhB9kUZNnoq9M7dxorFtHyW9yMWYSsi9ImQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706058094; c=relaxed/simple;
-	bh=T/b+m9AyJemflQXshEC8U3/yAZhlAxWNJzC6mlUIrvQ=;
+	s=arc-20240116; t=1706062125; c=relaxed/simple;
+	bh=zBiYjjf2q3OfHbD35uOTj08nf+2UUl1vXChsWn5VrNU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fO8k79GhWM1vy19Q2Gin+SIFNBkVgPFof7ezjvIvf/ZzHtsp7EwRifo/jhgz6NEdwQglEBtaagnC5cawmG2rRXzjCbDcIyBa8hqmyfinTPN+LnnzvvMkho9pL3ZOQH/l+weVebJtr9Dh5NTcXK/ssB+NonGfHdBDHkd7BqJ0bPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 To:Cc:Content-Type; b=rZOKdJ4+HC5V2zPh0EP8PdSER7iwkvcssLYAU7U6zrxaFV23Z06VR4N3tbMfpi2i1LdOU0ydrPofnWantUmJtDhaZ6ree4TA1ai3zdDVtDTyeYEpSvK7aH9PuQwSAD6DtIVTslVZFL4xKTcy85hsHei2UUA4/NzEP98X2cxnSjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdkngYRS; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5ce10b5ee01so3463779a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 17:01:32 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdkngYRS"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so5886282a12.2;
+        Tue, 23 Jan 2024 18:08:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706062122; x=1706666922; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ym83Povf1qB4v5FV66FjmhcBPTFopuHN0I6c13NU0CE=;
+        b=BdkngYRSEJ4io3uSm4guMzBCjDdFnC/5RNf8z6EgCAsugYUw2LB+O9jx+tFHHTp1ch
+         JYT+jMYDpSVRFLihA2EilVWs5salqb2tWdtfk/6sOblvCKBqCk0Y20lfIU438+b84e7p
+         A9a8IAi74Ng/ZlUg+qMevnYGwQ+FX94+JgaHcAwcmoAQatZgGRxfvzm70Me+YUiXcmkY
+         d/z+LRiMYWIdci7Yzz1OIK4W7SiYIw0+5Gzs0leIwmufJUJTVZysedegi6mld9KetWCY
+         RDKRkjP6RH+4g6p/0wy9OenDll55zNLREcOAJt4a4Rn1RKSCIBarj+ZZ2+3KXnnyeWYp
+         z+Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706058092; x=1706662892;
+        d=1e100.net; s=20230601; t=1706062122; x=1706666922;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BH5DxrfA/dNc0QDkH5pltJtgMJqf+sOFB68d/beKYIE=;
-        b=IyO7XXdpvscSi05AasjYZL7Ka7Ah8UlQr7ijrvL+xCoCLzmEm45R/iomaQt1ZNN9DU
-         rpmTKZpq9Sq1Q2wRwTzm0IC2IoXuiQtTgUUnnwRiEADJZrZEtIpVYnAthlEV+ZnZKQbI
-         wYHDX9lkjTt1DZupUcSi2/ROPmITMo2eSzI6zLGaDc95rzyTtZCBr/Gp5s1kPEJydQBH
-         Jm7WbvsPjV7mfVRJAvopKKbi9QJaRfDBAcj7HNIh7y4PKQLTZbRyGZ3M/tj5JpNiNUq8
-         MUHG2j7Zn3af8AXljCkpxGzBbT6JXQVocSI5d4fg2ZuKQu2os49asV5/oNcE16rrl7IL
-         Hrcw==
-X-Gm-Message-State: AOJu0YxKbUiGtpG0JhbhFwI85Fp+A1h0Dh9EhUfPC9ihhjQIhvBdf2ei
-	kAheuqdi+6YuLoRLZtIfOwNsTdei72dJi/eX4D18tiFSLWL8l5PGjX/spgSqSBQvAzkyVDKUO7w
-	EgqJLiLH+nQnWTMWxpnlPFPHqBVU=
-X-Google-Smtp-Source: AGHT+IH9ZiY/wzm9h+eWKI6m2rVzPuPys202JY5rd97M7yCHvIhLVhXuuGyxpR+AvysZ6Y+WrKPmv4i+6gznnJjjbS0=
-X-Received: by 2002:a05:6a20:d38a:b0:19b:5b08:1f4b with SMTP id
- iq10-20020a056a20d38a00b0019b5b081f4bmr90983pzb.15.1706058091020; Tue, 23 Jan
- 2024 17:01:31 -0800 (PST)
+        bh=ym83Povf1qB4v5FV66FjmhcBPTFopuHN0I6c13NU0CE=;
+        b=TIbJm+nNK5C0ZbIXVOMYSpJpz05KrTk/GCC7rbWt3ZGofHA1OeAQlUkUf+RTwOkhkv
+         if7MpAFaYokhV+uI8CvShFISsFMUCED96G8Xr3MddWgbFmTrNKncUJrHvHC/bKi1v9bG
+         LP9XXM0xjnL6fYF+fQUhGW2N6mmfC5u5wl3azc6RlK4ZesYVB7jb/73zJ4e7ABkudVCK
+         GIjzO8QAJAOJ42r1/QhBAXZg80/us1XpMYZiR0E81C2IvTGAPcriA9dREaL9KRyct08+
+         TD5uu8Dt5NLq2jO+4GR9ejetZajkNF9fgisQs9oRDkc8ICLYbC3fUfdpvPl4Nz70oddO
+         DYRQ==
+X-Gm-Message-State: AOJu0Yxl6ahMPxHKeHMULoi5v8ozcCn67NqGWCGei4AgMewwaF91z+rS
+	9aMpXq4TOgBLDNpl8mHSvb85CqwtfQWXgjpE74kRSbgOg992H9goRGlWMw9VeyzO2mUFt66RP/g
+	e0Sr2m0kVH/bcD1kPmAz4m6HxU1k=
+X-Google-Smtp-Source: AGHT+IFZRgkgmatX2SA3VczEnCF4CxWB+fiZjJyeiUygAXeuyqQ05ihrooCCLc5yhGc/5kQoJXHGwajCZ/VH9hJfRmI=
+X-Received: by 2002:aa7:cfda:0:b0:55c:7ab7:d349 with SMTP id
+ r26-20020aa7cfda000000b0055c7ab7d349mr1015680edy.3.1706062121970; Tue, 23 Jan
+ 2024 18:08:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122080406.28678-1-yangyicong@huawei.com>
-In-Reply-To: <20240122080406.28678-1-yangyicong@huawei.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 23 Jan 2024 17:01:20 -0800
-Message-ID: <CAM9d7cjnQONuhh0B91p-rbu7g2of9q=OFH9Fipsit3GQCo8zBw@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Make minimal shellcheck version to v0.6.0
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: acme@kernel.org, peterz@infradead.org, irogers@google.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	linux-perf-users@vger.kernel.org, yangyicong@hisilicon.com, 
-	hejunhao3@huawei.com, linuxarm@huawei.com, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+References: <20240122070859.1394479-2-zegao@tencent.com> <170605662743.1691877.1586103440745721732.b4-ty@kernel.org>
+In-Reply-To: <170605662743.1691877.1586103440745721732.b4-ty@kernel.org>
+From: Ze Gao <zegao2021@gmail.com>
+Date: Wed, 24 Jan 2024 10:08:30 +0800
+Message-ID: <CAD8CoPBpkeSFcFv3Fs+0TkafmUY4x3NdtfqPfqei2f246xFYZA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf sched: Fix task state report
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
+	linux-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Adding Athira to CC.
+On Wed, Jan 24, 2024 at 8:38=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Mon, 22 Jan 2024 02:08:55 -0500, Ze Gao wrote:
+> > No functional changes introduced in v2, just got v1 rebased onto
+> > the tip of perf-tools-next for a clean apply.
+> >
+>
+> Applied to perf-tools-next except for the last refactoring one.
+> I'll test it separately.
+
+Awesome!
 
 Thanks,
-Namhyung
+        -- Ze
 
-On Mon, Jan 22, 2024 at 12:08=E2=80=AFAM Yicong Yang <yangyicong@huawei.com=
-> wrote:
->
-> From: Yicong Yang <yangyicong@hisilicon.com>
->
-> perf build failed due to the shellcheck on my machine (v0.4.6 on Ubuntu
-> 18.04.1 LTS) doesn't support -a/--check-sourced and -S/--severity option.
-> These two options are introduced in shellcheck v0.4.7 and v0.6.0
-> respectively. So restrict the minimal version of shellcheck to v0.6.0.
->
-> Fixes: b809fc656e76 ("perf build: Shellcheck support for OUTPUT directory=
-")
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
->  tools/perf/Makefile.perf | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 27e7c478880f..f8774a9b1377 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -236,6 +236,16 @@ else
->    SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null)
->  endif
->
-> +# shellcheck is using in tools/perf/tests/Build with option -a/--check-s=
-ourced (
-> +# introduced in v0.4.7) and -S/--severity (introduced in v0.6.0). So mak=
-e the
-> +# minimal shellcheck version as v0.6.0.
-> +ifneq ($(SHELLCHECK),)
-> +  ifeq ($(shell expr $(shell $(SHELLCHECK) --version | grep version: | \
-> +        sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \< =
-060), 1)
-> +    SHELLCHECK :=3D
-> +  endif
-> +endif
-> +
->  export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
->  export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK
->
+> Best regards,
 > --
-> 2.24.0
->
+> Namhyung Kim <namhyung@kernel.org>
