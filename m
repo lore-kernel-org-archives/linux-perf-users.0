@@ -1,159 +1,298 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A70F43154;
-	Wed, 24 Jan 2024 15:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70EF7C0B3
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 15:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706111628; cv=none; b=BKg1nIsXVs7FpUNBs/D9IgD03c8OQtdEDWbZCxJj3G2ymX0LT7MR7lr6y5QWpao8Do95z7rRpUWuAySstctpoMgVWsPSCkHY2vFuJS4w+056WO156WtxqD3wyhKDz/J7JPbT68cUReX5mwDPaHNBxASu4jEcFUC5IwFmEGDj6cs=
+	t=1706111852; cv=none; b=ValXMAOzTsE6ifxnqBwREvNuf/zlrLNccuFdyjMwPKk7A6AWvHGdD7VgWr6vEMEqUkFAq3pVFtiuwHXZMtnfGi8edYfxilMFVlwsGjnYE8uwb9aOT8XM7mHlRLcs2cKtw2Jw/nPbc+2zmCscSI8tYFmdsCYQw7Q3ScN+qgVMD28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706111628; c=relaxed/simple;
-	bh=dcCbF+oQLns+/Kp4ARJDoH2/E0G8EfELald1sVqSHzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CbhQJ466r0TayTjTXlWPbmoDooZ5g/RCxNyNsm0Ipeh4QGuqhtKZimcpjge+D2OIf9XCDRmC/I7ABJBNlzKW3eFMJrI00Vv1zLNIrWqSQSHQWZIyKggg/7SY/l8Fvvj3b3jfbOBcMI2A60rjIe11GjTI0YWO105MD7fYZuU44PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CCFE1FB;
-	Wed, 24 Jan 2024 07:54:30 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.30.162])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C85593F762;
-	Wed, 24 Jan 2024 07:53:43 -0800 (PST)
-Date: Wed, 24 Jan 2024 15:53:41 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: James Clark <james.clark@arm.com>
-Cc: Ian Rogers <irogers@google.com>, acme@redhat.com,
-	john.g.garry@oracle.com, leo.yan@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
-	namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com,
-	will@kernel.org, linux-kernel@vger.kernel.org,
-	Hector Martin <marcan@marcan.st>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
-Message-ID: <ZbEyhZScQ9spEE1I@FVFF77S0Q05N.cambridge.arm.com>
-References: <20240116170348.463479-1-mark.rutland@arm.com>
- <5236cd64-c0ca-6d0e-137f-06a44f03ebc7@arm.com>
+	s=arc-20240116; t=1706111852; c=relaxed/simple;
+	bh=59AdwdtgM5YTqYQccogZ5V6a4viQM3dqI7tLjQuTMpc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sYkiI9Pp7Q51rFO4OU8Qo0uTr3CyzCWEYxjajy7soIf0Ziyl3rwqTDuRpJQVcTXfuif8otQ2UaAhLUnvC+qcIJR5TEYnsubLHyjPs+VnL49FgIPVBlMyXcof27erLt0kDWzC1BCa0xASR3GsU3Q12gMbFaHQ4stpoYezdrmZoV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uccq1EsL; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uccq1EsL"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d76f1e3e85so180355ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 07:57:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706111850; x=1706716650; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0vHGUU7w7sxAywce6jeZBVR/SVXGvRMcD5jS2PLJAMw=;
+        b=Uccq1EsLyhB02nQ2ov6fbLGZCQFhguyeaC83XnAHiOF7o8TmHixKFyLxcKnH8rv/7T
+         29tAR77sQ2NMqpKX1J77dwhiVaJgjIil7tFqLHPIOWjmhRNNYzewtrmyoOW1/dXOvurz
+         XU/S1wAj91KxxUcjvCpFFmff4Y6G8ld1hVXTBpU2hibA9Py4+kqAKHUzCqNIAUvEIsrM
+         Tf5Y5G7gIPRLcA37+PPZpf34bWr4B/GrpxG8Y9xdua/1zRgmxE0xg3OMa5hcO6yAW1So
+         e0NaaJtn59zln/NHZAyftvuxGxEuzCcZxEE+bj5nRcfemB6v9dc77mIYBy1syFfWVpIU
+         jKOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706111850; x=1706716650;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0vHGUU7w7sxAywce6jeZBVR/SVXGvRMcD5jS2PLJAMw=;
+        b=b9X2GEGTw6hk1PAo5/Guc3MkCo1e0e4Hzpo4xhhsryIEUcD/43zC/OAaVz4o6a1RxC
+         DaMOh0LaRzOa3qjEHd89+vqkVTRVnZvP147bhOsbGTsU/SYEdB88CtHpeS8T9uX38iI0
+         6f/C/ToOc0cdEDA6+cADyyeGSkpdlIrHyXLHiyMocqNfYlxJPyKWw6s+k8zNzk+VRBcn
+         4arbAcao7sGwfZtywZxm42izVIlrEswFHu0KZBedw8juMrZeaEBAd1JVcZVbSCbE1yx/
+         eVSVF35TgJTde/MCYN5x3kyAkhBDBRYoTbA/Gk7m5kTZ8RfUknF87DZZfGpZeRu2egxu
+         L84g==
+X-Gm-Message-State: AOJu0YxlyVSatzz6z66MHeUSFJb2tlh/2K2NVqz2vMsuguzTYe0KlqTj
+	07EHyOQeDF3PwYrAsj5DdvA5mlaZ0dq2x1HJIFRPbd2NWOirhqJ9LtXRM7Mo2Gyit6dpSjtF0mJ
+	PFqYI2Mb222koMWu06YqVuc80RqgdiKNbUVzp
+X-Google-Smtp-Source: AGHT+IGdE9QIRm2sUO1r5wdqFl6c82ykxyOdQcNoIP/SVh28sPm5D/FWoe68WC9DpPiwFbAEBMRTDNRjmTdsr8yupuY=
+X-Received: by 2002:a17:902:d4c3:b0:1d4:d451:b439 with SMTP id
+ o3-20020a170902d4c300b001d4d451b439mr152655plg.5.1706111849630; Wed, 24 Jan
+ 2024 07:57:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5236cd64-c0ca-6d0e-137f-06a44f03ebc7@arm.com>
+References: <20231212230224.1473300-1-weilin.wang@intel.com> <20231212230224.1473300-10-weilin.wang@intel.com>
+In-Reply-To: <20231212230224.1473300-10-weilin.wang@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 24 Jan 2024 07:57:18 -0800
+Message-ID: <CAP-5=fVc6UwFKezDKQuwe7yLhL5vofSKWthwLRByTEeqoeUs9w@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 08/18] perf stat: Add functions to get counter info
+To: weilin.wang@intel.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 10:43:27AM +0000, James Clark wrote:
-> 
-> 
-> On 16/01/2024 17:03, Mark Rutland wrote:
-> > Currently the perf tool doesn't deteect support for extneded event types
-> > on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
-> > hardware events into per-PMU events. This is due to the detection of
-> > extended event types not handling mandatory filters required by the
-> > M1/M2 PMU driver.
-> > 
-> > PMU drivers and the core perf_events code can require that
-> > perf_event_attr::exclude_* filters are configured in a specific way and
-> > may reject certain configurations of filters, for example:
-> > 
-> > (a) Many PMUs lack support for any event filtering, and require all
-> >     perf_event_attr::exclude_* bits to be clear. This includes Alpha's
-> >     CPU PMU, and ARM CPU PMUs prior to the introduction of PMUv2 in
-> >     ARMv7,
-> > 
-> > (b) When /proc/sys/kernel/perf_event_paranoid >= 2, the perf core
-> >     requires that perf_event_attr::exclude_kernel is set.
-> > 
-> > (c) The Apple M1/M2 PMU requires that perf_event_attr::exclude_guest is
-> >     set as the hardware PMU does not count while a guest is running (but
-> >     might be extended in future to do so).
-> > 
-> > In is_event_supported(), we try to account for cases (a) and (b), first
-> > attempting to open an event without any filters, and if this fails,
-> > retrying with perf_event_attr::exclude_kernel set. We do not account for
-> > case (c), or any other filters that drivers could theoretically require
-> > to be set.
-> > 
-> > Thus is_event_supported() will fail to detect support for any events
-> > targetting an Apple M1/M2 PMU, even where events would be supported with
-> > perf_event_attr:::exclude_guest set.
-> > 
-> > Since commit:
-> > 
-> >   82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in perf_event_attr.type")
-> > 
-> > ... we use is_event_supported() to detect support for extended types,
-> > with the PMU ID encoded into the perf_event_attr::type. As above, on an
-> > Apple M1/M2 system this will always fail to detect that the event is
-> > supported, and consequently we fail to detect support for extended types
-> > even when these are supported, as they have been since commit:
-> > 
-> >   5c816728651ae425 ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability")
-> > 
-> > Due to this, the perf tool will not automatically expand plain
-> > PERF_TYPE_HARDWARE events into per-PMU events, even when all the
-> > necessary kernel support is present.
-> > 
-> > This patch updates is_event_supported() to additionally try opening
-> > events with perf_event_attr::exclude_guest set, allowing support for
-> > events to be detected on Apple M1/M2 systems. I beleive that this is
-> > sufficient for all contemporary CPU PMU drivers, though in future it may
-> > be necessary to check for other combinations of filter bits.
-> > 
-> > I've deliberately changed the check to not expect a specific error code
-> > for missing filters, as today ;the kernel may return a number of
-> > different error codes for missing filters (e.g. -EACCESS, -EINVAL, or
-> > -EOPNOTSUPP) depending on why and where the filter configuration is
-> > rejected, and retrying for any error is more robust.
-> > 
-> > Note that this does not remove the need for commit:
-> > 
-> >   a24d9d9dc096fc0d ("perf parse-events: Make legacy events lower priority than sysfs/JSON")
-> > 
-> > ... which is still necessary so that named-pmu/event/ events work on
-> > kernels without extended type support, even if the event name happens to
-> > be the same as a PERF_EVENT_TYPE_HARDWARE event (e.g. as is the case for
-> > the M1/M2 PMU's 'cycles' and 'instructions' events).
-> > 
-> > Fixes: 82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in perf_event_attr.type")
-> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Hector Martin <marcan@marcan.st>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: James Clark <james.clark@arm.com>
-> > Cc: John Garry <john.g.garry@oracle.com>
-> > Cc: Leo Yan <leo.yan@linaro.org>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: Mike Leach <mike.leach@linaro.org>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > Cc: Thomas Richter <tmricht@linux.ibm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > ---
-> >  tools/perf/util/print-events.c | 27 +++++++++++++++++++--------
-> >  1 file changed, 19 insertions(+), 8 deletions(-)
-> > 
-> 
-> Tested-by: James Clark <james.clark@arm.com>
-> 
-> Tested on Juno and N1SDP, although I wouldn't have expected it to make a
-> difference on those platforms because they support exclude_guest=0.
+On Tue, Dec 12, 2023 at 3:03=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> Add data structure metricgroup__pmu_counters to represent hardware counte=
+rs
+> available in the system.
+>
+> Add functions to parse pmu-events and create the list of pmu_info_list to
+> hold the counter information of the system.
+>
+> Add functions to free pmu_info_list and event_info_list before exit
+> grouping for hardware-grouping method
+>
+> This method would fall back to normal grouping when event json files do n=
+ot
+> support hardware aware grouping.
+>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  tools/perf/util/metricgroup.c | 85 +++++++++++++++++++++++++++++++++--
+>  tools/perf/util/metricgroup.h | 15 +++++++
+>  2 files changed, 97 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index 24268882d355..a393584c7a73 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -1507,6 +1507,27 @@ static int parse_counter(const char *counter,
+>         return 0;
+>  }
+>
+> +static void metricgroup__free_event_info(struct list_head
+> +                                       *event_info_list)
+> +{
+> +       struct metricgroup__event_info *e, *tmp;
+> +
+> +       list_for_each_entry_safe(e, tmp, event_info_list, nd) {
+> +               list_del_init(&e->nd);
+> +               free(e);
+> +       }
+> +}
+> +
+> +static void metricgroup__free_pmu_info(struct list_head *pmu_info_list)
+> +{
+> +       struct metricgroup__pmu_counters *p, *tmp;
+> +
+> +       list_for_each_entry_safe(p, tmp, pmu_info_list, nd) {
+> +               list_del_init(&p->nd);
+> +               free(p);
+> +       }
+> +}
+> +
+>  static struct metricgroup__event_info *event_info__new(const char *name,
+>                                                       const char *pmu_nam=
+e,
+>                                                       const char *counter=
+,
+> @@ -1525,7 +1546,7 @@ static struct metricgroup__event_info *event_info__=
+new(const char *name,
+>
+>         e->name =3D name;
+>         e->free_counter =3D free_counter;
+> -       e->pmu_name =3D strdup(pmu_name);
+> +       e->pmu_name =3D pmu_name;
+>         if (free_counter) {
+>                 ret =3D set_counter_bitmap(0, e->counters);
+>                 if (ret)
+> @@ -1560,6 +1581,8 @@ static int metricgroup__add_metric_event_callback(c=
+onst struct pmu_event *pe,
+>         struct metricgroup__add_metric_event_data *d =3D data;
+>
+>         if (!strcasecmp(pe->name, d->event_name)) {
+> +               if (!pe->counter)
+> +                       return -EINVAL;
+>                 event =3D event_info__new(d->event_id, pe->pmu, pe->count=
+er, /*free_counter=3D*/false);
+>                 if (!event)
+>                         return -ENOMEM;
+> @@ -1599,7 +1622,7 @@ static int get_metricgroup_events(const char *full_=
+id,
+>                         .event_name =3D id,
+>                         .event_id =3D full_id,
+>                 };
+> -               ret =3D pmu_events_table_for_each_event(table,
+> +               ret =3D pmu_events_table__for_each_event(table, /*pmu=3D*=
+/NULL,
+>                                 metricgroup__add_metric_event_callback, &=
+data);
+>         }
+>
+> @@ -1608,6 +1631,57 @@ static int get_metricgroup_events(const char *full=
+_id,
+>         return ret;
+>  }
+>
+> +static struct metricgroup__pmu_counters *pmu_layout__new(const struct pm=
+u_layout *pl)
+> +{
+> +       struct metricgroup__pmu_counters *l;
+> +
+> +       l =3D zalloc(sizeof(*l));
+> +
+> +       if (!l)
+> +               return NULL;
+> +
+> +       l->name =3D pl->pmu;
+> +       l->size =3D pl->size;
+> +       l->fixed_size =3D pl->fixed_size;
+> +       pr_debug("create new pmu_layout: [pmu]=3D%s, [gp_size]=3D%ld, [fi=
+xed_size]=3D%ld\n",
+> +               l->name, l->size, l->fixed_size);
+> +       return l;
+> +}
+> +
+> +static int metricgroup__add_pmu_layout_callback(const struct pmu_layout =
+*pl,
+> +                                               void *data)
+> +{
+> +       struct metricgroup__pmu_counters *pmu;
+> +       struct list_head *d =3D data;
+> +       int ret =3D 0;
+> +
+> +       pmu =3D pmu_layout__new(pl);
+> +       if (!pmu)
+> +               return -ENOMEM;
+> +       list_add(&pmu->nd, d);
+> +       return ret;
+> +}
+> +
+> +/**
+> + * get_pmu_counter_layouts - Find counter info of the architecture from
+> + * the pmu_layouts table
+> + * @pmu_info_list: the list that the new counter info of a pmu is added =
+to.
+> + * @table: pmu_layouts table that is searched for counter info.
+> + */
+> +static int get_pmu_counter_layouts(struct list_head *pmu_info_list,
+> +                                  const struct pmu_layouts_table
+> +                                  *table)
+> +{
+> +       LIST_HEAD(list);
+> +       int ret;
+> +
+> +       ret =3D pmu_layouts_table__for_each_layout(table,
+> +                                               metricgroup__add_pmu_layo=
+ut_callback, &list);
+> +
+> +       list_splice(&list, pmu_info_list);
+> +       return ret;
+> +}
+> +
+>  /**
+>   * hw_aware_build_grouping - Build event groupings by reading counter
+>   * requirement of the events and counter available on the system from
+> @@ -1626,6 +1700,7 @@ static int hw_aware_build_grouping(struct expr_pars=
+e_ctx *ctx __maybe_unused,
+>         LIST_HEAD(event_info_list);
+>         size_t bkt;
+>         const struct pmu_events_table *etable =3D perf_pmu__find_events_t=
+able(NULL);
+> +       const struct pmu_layouts_table *ltable =3D perf_pmu__find_layouts=
+_table(NULL);
+>
+>  #define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
+>         hashmap__for_each_entry(ctx->ids, cur, bkt) {
+> @@ -1635,9 +1710,13 @@ static int hw_aware_build_grouping(struct expr_par=
+se_ctx *ctx __maybe_unused,
+>
+>                 ret =3D get_metricgroup_events(id, etable, &event_info_li=
+st);
+>                 if (ret)
+> -                       return ret;
+> +                       goto err_out;
+>         }
+> +       ret =3D get_pmu_counter_layouts(&pmu_info_list, ltable);
+>
+> +err_out:
+> +       metricgroup__free_event_info(&event_info_list);
+> +       metricgroup__free_pmu_info(&pmu_info_list);
+>         return ret;
+>  #undef RETURN_IF_NON_ZERO
+>  }
+> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
+h
+> index 3704545c9a11..802ca15e7c6b 100644
+> --- a/tools/perf/util/metricgroup.h
+> +++ b/tools/perf/util/metricgroup.h
+> @@ -94,6 +94,21 @@ struct metricgroup__event_info {
+>         DECLARE_BITMAP(counters, NR_COUNTERS);
+>  };
+>
+> +/**
+> + * A node is the counter availability of a pmu.
+> + * This info is built up at the beginning from JSON file and
+> + * used as a reference in metric grouping process.
+> + */
+> +struct metricgroup__pmu_counters {
+> +       struct list_head nd;
+> +       /** The name of the pmu the event collected on. */
+> +       const char *name;
+> +       //DECLARE_BITMAP(counter_bits, NR_COUNTERS);
 
-It's good to be certain, anyhow!
+nit: this can go.
 
-I've folded that tag in for v2.
+> +       /** The number of gp counters in the pmu. */
+> +       size_t size;
+> +       size_t fixed_size;
 
-> Although I do see an interaction with the test "Session topology" if I
-> hack the driver to behave like M1. The test has been failing (on
-> big.LITTLE) since commit 251aa040244a ("perf parse-events: Wildcard most
-> "numeric" events") but the result is that the test actually starts
-> passing with this change. I don't think that should really block this
-> though, it's likely going to require a separate fix which I will look into.
+nit: same naming concern.
 
-IIUC that fix is:
+Thanks,
+Ian
 
-  https://lore.kernel.org/lkml/20240124094358.489372-1-james.clark@arm.com/
-
-... right?
-
-Mark.
+> +};
+> +
+>  /**
+>   * Each group is one node in the group string list.
+>   */
+> --
+> 2.39.3
+>
