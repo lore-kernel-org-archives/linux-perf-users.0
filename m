@@ -1,150 +1,152 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD0C1774E;
-	Wed, 24 Jan 2024 08:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA09917BA4;
+	Wed, 24 Jan 2024 09:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706085544; cv=none; b=WvXeGfV4qlkAgGPiyv+2XhTuabIIgiVUSOSUPWZACdHl8R6kChGIyXEihn4JUs0On1lySCVexP1MI2yK9yCi8YwfAeJ3lV4zW3ZvoUPBbR3yS7JvP4ZFOwJbZl2UEe5CKM9h7nU3ML3NpSC9eCSw2pdNHvCUgFjjE+7rth8hmVI=
+	t=1706087046; cv=none; b=AzhkaTmONo6xe+/lxDPeVN3pgUFr6T17tOa72RU341Dybdo2HkdrP8oS5eubtm9opDRrsFLlEZ3pc96etrMfgnOpZCPQDASOPpstLaxwyYTQJ+I2cnJV+qjnrMIFdKwMd07BcN2PxtreweS22REnksU81v6+iiuWMP+AnvjFg+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706085544; c=relaxed/simple;
-	bh=ehSk/KOw6EwCI/rQd4tsmYaL42+ZGGoyWxxF44nf3mU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EuJyLLhSOts6bKQI91vhs8oltseDIvvGxUi6hIBJvp7iWRx5HwpJ/DTU8IPm1op/ouLP2l/lGq3NDgP4Iua995uj2XKvT3QjknmIztNAj1kDTdOOMfh6Hpu3L+z0fK6jjiGgZDY7MeGdrmFiwuN2iVwsvvqwHkNIAG+Jn3tW/Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asnp5vqX; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asnp5vqX"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso35858905e9.1;
-        Wed, 24 Jan 2024 00:39:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706085541; x=1706690341; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZgawM6UIZB879asIllB4qg34rmAKLHEiPy/nkyJy3IA=;
-        b=asnp5vqXcqqFfTSGyyTeaiaHgoLFhQ3nwWqwvfkCh+0QrMFZkv4FszeF/qL1tkwpcq
-         8pwWdx6EP0l85N2RvEV5wSS3O8KnHVnsegecSwIhcPZ9tfgYLb8po70nXQAWFBHh4lfa
-         fr3Qm/zOlJAQYidCvijUwisJNr7SjHPfWLjcbVXIJCCwT0zfr1rUQprJ+pNJjFvkNd/F
-         n+HJuu0mVlNvNkst6MfCb4PmcIsslJl63VZwntRPG6480NgZBd0LNdekNNhSA+6u5+uk
-         PRfY70mN0FoZn3yRfdlRqRidbLKIDUGhiyX3aYbr5j6fQenu+d9aVdp+zlVbEdf/NnHV
-         xHAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706085541; x=1706690341;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZgawM6UIZB879asIllB4qg34rmAKLHEiPy/nkyJy3IA=;
-        b=MgDFkKyHttaFTy9WnAcSJOHvFMfJjwZwMVhhkmIGnp/pChrSpX8441efo09GLRwrMP
-         VW6aEmSj3nVO9wLhmIwaHrILbEJ+zrVlOKPAH2RubhUGj/gqlfyO5CqMnKh2wZpZp/zO
-         FQExbSsCSmZgB2pS6WMCpwmt19YGt5sM/b7TucE4KkwYgdl+TicLL750Hd7c2I/nK1gA
-         ivvKyHcMXudf6r90o+wfyeHJmJH1MRhiH60BMMRQrAGq2b0S/P8vl01ukh18+bMykA78
-         fmDzrDS4zg78AKvC/xuGiLlEwcLYqoHgE9EVzyw9DyrGOi0oSttxgHoS16ZfVlCl7JHl
-         oLdg==
-X-Gm-Message-State: AOJu0Yz7wlX4TgrrC47gbBls8CLwBQ6L/1GcQSN5NA9/pUiD4VnevXPD
-	UlpAJEseTteKFSIiIK5R8AHJeRGhAyHN28AWwkdaLMCqCy8Rd+ex
-X-Google-Smtp-Source: AGHT+IEicp6kAZUWVsNFA2XQ0bSqFDDu68KUb3xWtsxsMyBwWLImjacQfs3cRCWXO6Vw/pr6lq5Tsg==
-X-Received: by 2002:a05:600c:56d3:b0:40d:8fcd:31aa with SMTP id ju19-20020a05600c56d300b0040d8fcd31aamr728892wmb.327.1706085541182;
-        Wed, 24 Jan 2024 00:39:01 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id n21-20020a05600c3b9500b0040eaebc4e8fsm8646371wms.1.2024.01.24.00.39.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 00:39:00 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 24 Jan 2024 09:38:58 +0100
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Ross Zwisler <zwisler@chromium.org>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Shirisha G <shirisha@linux.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] perf test: Make daemon signal test less racy
-Message-ID: <ZbDMovjeAZBUSiMn@krava>
-References: <20240124043015.1388867-1-irogers@google.com>
- <20240124043015.1388867-6-irogers@google.com>
+	s=arc-20240116; t=1706087046; c=relaxed/simple;
+	bh=4FLO9HlQQlJv6Hs845TgL+okgrt3W85KJoDNho2nIIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RIa7ccIAujG2krhVsiBD49cQAUz6itVSWToTlZfu9Sedh/JjkMiUVdwGddHRX3kgVOzuMjFGhhyLamWLK6KLRcVnhdy9iLEv3mlM/BCGBFsdfuFSYxiWA+2ysZaiL1NDwaa3GcVFa156x1YbtTD9TmOI/H7aVaRCl454vjkzeyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCA411FB;
+	Wed, 24 Jan 2024 01:04:45 -0800 (PST)
+Received: from [10.57.86.221] (unknown [10.57.86.221])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D389E3F762;
+	Wed, 24 Jan 2024 01:03:58 -0800 (PST)
+Message-ID: <ea054381-6ba2-d2f6-8de4-978a78a2ed8b@arm.com>
+Date: Wed, 24 Jan 2024 09:03:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124043015.1388867-6-irogers@google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3] perf evlist: Fix evlist__new_default() for > 1 core
+ PMU
+Content-Language: en-US
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, irogers@google.com,
+ kan.liang@linux.intel.com, mark.rutland@arm.com,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Changbin Du <changbin.du@huawei.com>, Yang Jihong <yangjihong1@huawei.com>,
+ linux-kernel@vger.kernel.org
+References: <20240123102728.239147-1-james.clark@arm.com>
+ <20240123103918.241423-1-james.clark@arm.com>
+ <CAM9d7ciSY25Jf-MG24NWJu3aKJWXT2GN43qrV5WCuohLNZn1iw@mail.gmail.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAM9d7ciSY25Jf-MG24NWJu3aKJWXT2GN43qrV5WCuohLNZn1iw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 23, 2024 at 08:30:15PM -0800, Ian Rogers wrote:
-> The daemon signal test sends signals and then expects files to be
-> written. It was observed on an Intel Alderlake that the signals were
-> sent too quickly leading to the 3 expected files not appearing. To
-> avoid this send the next signal only after the expected previous file
-> has appeared. To avoid an infinite loop the number of retries is
-> limited.
+
+
+On 24/01/2024 00:46, Namhyung Kim wrote:
+> Hi James,
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-jirka
-
-> ---
->  tools/perf/tests/shell/daemon.sh | 34 ++++++++++++++++++++++----------
->  1 file changed, 24 insertions(+), 10 deletions(-)
+> On Tue, Jan 23, 2024 at 2:39 AM James Clark <james.clark@arm.com> wrote:
+>>
+>> The 'Session topology' test currently fails with this message when
+>> evlist__new_default() opens more than one event:
+>>
+>>   32: Session topology                                                :
+>>   --- start ---
+>>   templ file: /tmp/perf-test-vv5YzZ
+>>   Using CPUID 0x00000000410fd070
+>>   Opening: unknown-hardware:HG
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             0 (PERF_TYPE_HARDWARE)
+>>     config                           0xb00000000
+>>     disabled                         1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 4
+>>   Opening: unknown-hardware:HG
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             0 (PERF_TYPE_HARDWARE)
+>>     config                           0xa00000000
+>>     disabled                         1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
+>>   non matching sample_type
+>>   FAILED tests/topology.c:73 can't get session
+>>   ---- end ----
+>>   Session topology: FAILED!
+>>
+>> This is because when re-opening the file and parsing the header, Perf
+>> expects that any file that has more than one event has the sample ID
+>> flag set. Perf record already sets the flag in a similar way when there
+>> is more than one event, so add the same logic to evlist__new_default().
+>>
+>> evlist__new_default() is only currently used in tests, so I don't
+>> expect this change to have any other side effects. The other tests that
+>> use it don't save and re-open the file so don't hit this issue.
+>>
+>> The session topology test has been failing on Arm big.LITTLE platforms
+>> since commit 251aa040244a ("perf parse-events: Wildcard most
+>> "numeric" events") when evlist__new_default() started opening multiple
+>> events for 'cycles'.
+>>
+>> Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
+>> Closes: https://lore.kernel.org/lkml/CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com/
+>> Tested-by: Ian Rogers <irogers@google.com>
+>> Reviewed-by: Ian Rogers <irogers@google.com>
+>> Tested-by: Kan Liang <kan.liang@linux.intel.com>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/util/evlist.c | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> Changes since v2:
+>>
+>>    * Undo the fact that v2 was accidentally based on v1 instead of
+>>      perf-tools
+>>
+>> Changes since v1:
+>>
+>>   * Reduce scope of evsel variable
+>>   * Add argument label
+>>   * Change summary to be less specific about the failing test
+>>   * Add the closes: tag
+>>
+>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+>> index 95f25e9fb994..979a6053a84d 100644
+>> --- a/tools/perf/util/evlist.c
+>> +++ b/tools/perf/util/evlist.c
+>> @@ -106,6 +106,13 @@ struct evlist *evlist__new_default(void)
+>>                 evlist = NULL;
+>>         }
+>>
+>> +       if (evlist->core.nr_entries > 1) {
 > 
-> diff --git a/tools/perf/tests/shell/daemon.sh b/tools/perf/tests/shell/daemon.sh
-> index 4c598cfc5afa..e5fa8d6f9eb1 100755
-> --- a/tools/perf/tests/shell/daemon.sh
-> +++ b/tools/perf/tests/shell/daemon.sh
-> @@ -414,16 +414,30 @@ EOF
->  	# start daemon
->  	daemon_start ${config} test
->  
-> -	# send 2 signals
-> -	perf daemon signal --config ${config} --session test
-> -	perf daemon signal --config ${config}
-> -
-> -	# stop daemon
-> -	daemon_exit ${config}
-> -
-> -	# count is 2 perf.data for signals and 1 for perf record finished
-> -	count=`ls ${base}/session-test/*perf.data* | wc -l`
-> -	if [ ${count} -ne 3 ]; then
-> +        # send 2 signals then exit. Do this in a loop watching the number of
-> +        # files to avoid races. If the loop retries more than 600 times then
-> +        # give up.
-> +	local retries=0
-> +	local signals=0
-> +	local success=0
-> +	while [ ${retries} -lt 600 ] && [ ${success} -eq 0 ]; do
-> +		local files
-> +		files=`ls ${base}/session-test/*perf.data* 2> /dev/null | wc -l`
-> +		if [ ${signals} -eq 0 ]; then
-> +			perf daemon signal --config ${config} --session test
-> +			signals=1
-> +		elif [ ${signals} -eq 1 ] && [ $files -ge 1 ]; then
-> +			perf daemon signal --config ${config}
-> +			signals=2
-> +		elif [ ${signals} -eq 2 ] && [ $files -ge 2 ]; then
-> +			daemon_exit ${config}
-> +			signals=3
-> +		elif [ ${signals} -eq 3 ] && [ $files -ge 3 ]; then
-> +			success=1
-> +		fi
-> +		retries=$((${retries} +1))
-> +	done
-> +	if [ ${success} -eq 0 ]; then
->  		error=1
->  		echo "FAILED: perf data no generated"
->  	fi
-> -- 
-> 2.43.0.429.g432eaa2c6b-goog
+> I think you need a NULL check for evlist here.
 > 
+> Thanks,
+> Namhyung
+> 
+> 
+
+Oops yes. Or just return on the error above.
+
+>> +               struct evsel *evsel;
+>> +
+>> +               evlist__for_each_entry(evlist, evsel)
+>> +                       evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
+>> +       }
+>> +
+>>         return evlist;
+>>  }
+>>
+>> --
+>> 2.34.1
+>>
