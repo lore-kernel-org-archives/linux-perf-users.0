@@ -1,120 +1,138 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A629418E1A;
-	Wed, 24 Jan 2024 09:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0B317C6D;
+	Wed, 24 Jan 2024 09:44:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706088260; cv=none; b=VOpEUqTQR6cr1XQhZMvwrPrrGZoRyqWgN7IxH17wmFuAEx+kNbGX6FVl4Sxka6d4rtlvK64ji71cKQft+TbASkV+qFC3CcM53JOKFYf71h12Ppzh014svhhMwO9rXr3wXUfrRazNOnf55XBIqFiNyrSkrrNVcQ2k2swOMG/YqSU=
+	t=1706089474; cv=none; b=Ln37KZr8pBuvQ04zyZoiXH0c1quQ5mUG7ipnZc5VsPyvbvMg8pxIaJg9WAJVuErM/emZAxfP2cHmwmkQja0APFeLRQUnI8URbSgzYZYbqD/p8diVc+k40nNDtQvKHgNetV0BsKA7njJLH1QUZ3ROkqvUVdolHZbkdMEjzg0EP5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706088260; c=relaxed/simple;
-	bh=Q6a5FvIQhKrjJBTVn7WeECsxsSrv+lamt5P5SCz3wUk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YgEaHbxqKWxhCxDSHOc52XrRS/7nu2SIEc9xYuCYiCqP4ZryAxnnoGtGxgWjTOPkG2DMHA6UzY1R7HAxyXBWM8ZpUSQH4l3A2myceoUVVH/rx6pJ8BpdGPbNJjkTuPr1Dbnn3GJqXzjeNcBqonXn00qwRpaQo0NHPclKcv5HwSU=
+	s=arc-20240116; t=1706089474; c=relaxed/simple;
+	bh=lX0vTjJ1fC6yUMtsgabQ+KnmlSLeYfNY+C91khWlpzA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F286JCnlAiOenmZ4S2F3+IhQ/YUguM+bkm8I/gRvNHgv1tu2MWf7NA1m25mS0sg2YPs+gphcOSgKBM51dCDXY041UcDc1hD9aRfgze2NjJUXYhlQU5RpmV0uTLKZRYyvrKNELwZb0PM/2Ab/teSu3wbXNpc05ntRiDi5EAuxuy8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 310C0FEC;
-	Wed, 24 Jan 2024 01:25:03 -0800 (PST)
-Received: from [10.57.86.221] (unknown [10.57.86.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C8963F762;
-	Wed, 24 Jan 2024 01:24:16 -0800 (PST)
-Message-ID: <faba2e97-7e88-9dcc-756d-f256a6304836@arm.com>
-Date: Wed, 24 Jan 2024 09:24:14 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FB641FB;
+	Wed, 24 Jan 2024 01:45:16 -0800 (PST)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 47DCE3F762;
+	Wed, 24 Jan 2024 01:44:29 -0800 (PST)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	namhyung@kernel.org
+Cc: James Clark <james.clark@arm.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] perf evlist: Fix evlist__new_default() for > 1 core PMU
+Date: Wed, 24 Jan 2024 09:43:57 +0000
+Message-Id: <20240124094358.489372-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 2/2] perf test: Skip test_arm_callgraph_fp.sh if unwinding
- isn't built in
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kajol Jain <kjain@linux.ibm.com>, Spoorthy S <spoorts2@in.ibm.com>,
- linux-kernel@vger.kernel.org
-References: <20240123163903.350306-1-james.clark@arm.com>
- <20240123163903.350306-3-james.clark@arm.com>
- <CAP-5=fX4QQYNzEY7-6GyqWJTuH-RQxxc3jB5B1k8HZtDZCHmFw@mail.gmail.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fX4QQYNzEY7-6GyqWJTuH-RQxxc3jB5B1k8HZtDZCHmFw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+The 'Session topology' test currently fails with this message when
+evlist__new_default() opens more than one event:
 
+  32: Session topology                                                :
+  --- start ---
+  templ file: /tmp/perf-test-vv5YzZ
+  Using CPUID 0x00000000410fd070
+  Opening: unknown-hardware:HG
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    config                           0xb00000000
+    disabled                         1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 4
+  Opening: unknown-hardware:HG
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    config                           0xa00000000
+    disabled                         1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
+  non matching sample_type
+  FAILED tests/topology.c:73 can't get session
+  ---- end ----
+  Session topology: FAILED!
 
-On 23/01/2024 17:41, Ian Rogers wrote:
-> On Tue, Jan 23, 2024 at 8:39 AM James Clark <james.clark@arm.com> wrote:
->>
->> Even though this is a frame pointer unwind test, it's testing that a
->> frame pointer stack can be augmented correctly with a partial
->> Dwarf unwind. So add a feature check so that this test skips instead of
->> fails if Dwarf unwinding isn't present.
-> 
-> Hi James,
-> 
-> Is there value in testing without the partial Dwarf unwind? Presumably
+This is because when re-opening the file and parsing the header, Perf
+expects that any file that has more than one event has the sample ID
+flag set. Perf record already sets the flag in a similar way when there
+is more than one event, so add the same logic to evlist__new_default().
 
-Yeah I think we could add a test for just --call-graph=fp, I don't think
-there is one. But that would be separate to this test, and would be
-redundant if the tests are run with a dwarf unwinder present because
-this test already requires the frame pointer unwinder to be correct.
+evlist__new_default() is only currently used in tests, so I don't
+expect this change to have any other side effects. The other tests that
+use it don't save and re-open the file so don't hit this issue.
 
-> that is covered by the existing dwarf unwind test?
+The session topology test has been failing on Arm big.LITTLE platforms
+since commit 251aa040244a ("perf parse-events: Wildcard most
+"numeric" events") when evlist__new_default() started opening multiple
+events for 'cycles'.
 
-There is no overlap, this test test is for --call-graph=fp, and the
-dwarf test is for --call-graph=dwarf
+Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
+Closes: https://lore.kernel.org/lkml/CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com/
+Tested-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/evlist.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/dwarf-unwind.c?h=perf-tools-next
-> If the issue is inlined functions I'm surprised addr2line isn't doing
-> the job properly. Is there an addr2line perf script issue here?
-> 
+Changes since v3:
 
-The issue isn't inlined functions, it's when the leaf frame doesn't
-insert a frame pointer. In that case we use the link register to see
-what the parent function of the leaf frame was and insert it into the
-frame pointer stack.
+  * Return early if parsing fails, don't try to set the sample id.
 
-Dwarf is only used in this case to confirm if the link register was
-valid at that instruction.
+Changes since v2:
 
-See commit b9f6fbb for more info. Long story short this test was only
-added for that feature and it requires a dwarf unwinder to pass despite
-being called test_arm_callgraph_fp
+  * Undo the fact that v2 was accidentally based on v1 instead of
+    perf-tools
 
-> Thanks,
-> Ian
-> 
+Changes since v1:
 
+  * Reduce scope of evsel variable
+  * Add argument label
+  * Change summary to be less specific about the failing test
+  * Add the closes: tag
 
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  tools/perf/tests/shell/test_arm_callgraph_fp.sh | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
->> index e342e6c8aa50..83b53591b1ea 100755
->> --- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
->> +++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
->> @@ -8,6 +8,12 @@ shelldir=$(dirname "$0")
->>
->>  lscpu | grep -q "aarch64" || exit 2
->>
->> +if perf version --build-options | grep HAVE_DWARF_UNWIND_SUPPORT | grep -q OFF
->> +then
->> +  echo "Skipping, no dwarf unwind support"
->> +  exit 2
->> +fi
->> +
->>  skip_test_missing_symbol leafloop
->>
->>  PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->> --
->> 2.34.1
->>
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 95f25e9fb994..55a300a0977b 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -103,7 +103,14 @@ struct evlist *evlist__new_default(void)
+ 	err = parse_event(evlist, can_profile_kernel ? "cycles:P" : "cycles:Pu");
+ 	if (err) {
+ 		evlist__delete(evlist);
+-		evlist = NULL;
++		return NULL;
++	}
++
++	if (evlist->core.nr_entries > 1) {
++		struct evsel *evsel;
++
++		evlist__for_each_entry(evlist, evsel)
++			evsel__set_sample_id(evsel, /*can_sample_identifier=*/false);
+ 	}
+ 
+ 	return evlist;
+-- 
+2.34.1
+
