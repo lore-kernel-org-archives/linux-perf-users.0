@@ -1,591 +1,242 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC766179
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 00:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D840160;
+	Wed, 24 Jan 2024 00:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706054804; cv=none; b=d3cDN1KBKhN+PdsUE1HnJhKJ3gMjapqNhoH/QEmOCsdvDwApOm0qbWfAcZW4oYdDLR9XGg61mKWPy4MoT8fg4moa5TCYxxjaNPzJCsrtJHpGbWXhdhQVrX13BZ48klpD940By+nNvoLOUG96AfLpwZXcBg9TTDsH0YEoBAV00V4=
+	t=1706055458; cv=none; b=B3EStGHEc2ptazyyWd7dUGc4HFB8c65eO2Sd77O5WSXBwR2YBaPRq7Y+TnClB3ThfAOGqNB0fOcJGoq5SCV6WrGUgyJ7S3Rh8KTzQBlFECw3iT1D1iQxFsVNaawbH51ajT82TBHEd6QI70hr8HXAIxTKgZAFDuZw4LOgiTYm+y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706054804; c=relaxed/simple;
-	bh=rZHhqpdV09RBjct+8rohdICosWf10vRtUg9dySs5lK4=;
+	s=arc-20240116; t=1706055458; c=relaxed/simple;
+	bh=7S5gsebecCEWrzl2p5jH+A1M/fJoxrLb2LBCC2nJkMI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dHd0KQOTwHJT+zgq4G64x4eIJY3J/YmO9u1FbiTG9uYCLt/f2bMzVqWp1ysE4mM18fooUlGCtAOgb6GGknTQ5n+Fs0KTBW9UfNoV2XZnk1ifvsIqjph3Uh92L1G2cfNdofCPA1jJafWRFyr0hVjsfe+y9kpAv3ALCdwYZ6O9u1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZkeeWfLd; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZkeeWfLd"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d72043fa06so22925ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jan 2024 16:06:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706054802; x=1706659602; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4fOkr01HhQ29nbxmHtjOefyIBnz5o1KkvNEjSppqfdE=;
-        b=ZkeeWfLd0KCahbpHhKs3tmKmzbir7tmOoY6t2QNBU1z66Mu3U80ie59pghvaCJCGM3
-         yxLUv2qil5EjxH1H+SNg6nLdtZg1+DB/ydI1VCoDZbbZ4MVqc3I25KgeADOfmIJ8JmcC
-         rfZcjaF6KRQzWZE/b0bgKLKWvxZGliO0dtWCSQ5sJQRseWqp5ahqkYWDM7Ddnmoefz1b
-         ta4+Cwr4G9qULs4ln0PjgB0D7mVYdVAPWG41mgHqqL7+0lJbNFtny0DMsCIT8XtbfHTS
-         giKQlvvQR5QOQILH8xQmTplOm8JhAuR6HP2JHJEiTKfvvJbeh5tOlNE7lkZVfDRMTUS+
-         lA2Q==
+	 To:Cc:Content-Type; b=gaqrCd4Gmsxbqxjt0cVbldy6vNrA5nmETV3zCSFHhT7dBBNzzpp63IuCfnlmCBkG7cW0zt1GxtdGHVZ49eCtwhRyE+jUBT0RnFeUuIiWLqJuFS/prE7/dqMQ1018NGNhE3fECKDElgO5iMfR+mRPkrvx0bJfQNPja9hX64UZxZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3bd72353d9fso4006636b6e.3;
+        Tue, 23 Jan 2024 16:17:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706054802; x=1706659602;
+        d=1e100.net; s=20230601; t=1706055456; x=1706660256;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4fOkr01HhQ29nbxmHtjOefyIBnz5o1KkvNEjSppqfdE=;
-        b=gQdgXM204c9DE0H7h8HwHGkzWGpIy7+gxBfavpZz2qPmkAGqe36cN4MpeLuJqKY5uy
-         Vy5sWau3frSnpMyQhHvvz7Gv/fv8dpN21E9zXEDBbyJWtYEL12Y3+DXvqfxiVq+JeBQp
-         TT+TeqUEWnrEJ5+R1Fo3BhtCf8589QSvw9PA7F+Z9ZSckWs6Dg5TYONsE4NN9JGe+qIQ
-         iASy9OUxHCfNdZRx+/EnIZj53nXVjtNRjMWbos9BefhL0mCgI81aEI05IjisUnzwPmrL
-         /c84D1dwUTr1dl6cv548yDIbXSe2Zxz88s3KNelbraZtJE1vyJkLVQaA3ZBLYI6zEiit
-         HWZw==
-X-Gm-Message-State: AOJu0YwOxzf36Owg0fRoPuYMegc1znYfRIqsQkD1z5CgMzd0/lxOtr8Z
-	HNyBXhUNsZo1ATCaS+/6Wb/d6rbpXV5dHQXjEHI3BuH4Wk0mZ31Mttfi0jZNP9wKPudUPKC41q6
-	HLyWqoSXkx2HpMph+qVoYnmrEQ+t3dspA/gOB
-X-Google-Smtp-Source: AGHT+IE6dUzYilB/l8F+LR/PPKnPQlYXLpPxhwThU63K69TXLSurnGluE3q2YmTVbETmGowNPH7qrYX4RRU+spu5gLc=
-X-Received: by 2002:a17:902:ea06:b0:1d7:48ef:e239 with SMTP id
- s6-20020a170902ea0600b001d748efe239mr4514plg.18.1706054801641; Tue, 23 Jan
- 2024 16:06:41 -0800 (PST)
+        bh=uLqC1jIvMWI3cEp/YCvbp1WDnCj+e3OT+PtehIgxizk=;
+        b=WJMXv0uFFPeL2J5o/FqDzC/EHPdGofqS0EpDEtRMSkdzrVd73+V0tIdFpZnovFEucd
+         0YXCeN2luKSb/bAPx3n+YT6BWP2Ct5bKjUfap0DklXRSIJ0msBG+rmuC6bNptDsEPHNm
+         fZbGHSE/V2svmAyhEtwgGOiCguzShPtcdL5zhdpEcLVWrl39slbFBc9sfzNEsiHF2wUn
+         6kx+h2R4Kmk0ut+8OsNWX2rKUuZfy6vsC5oCXSaSZvyRZOoy8ujOVe9kpPUk5LFvMw31
+         ur+F9NVDgmK/d0l4DHXwygs//B7tpSi9MJYuQY6xg5mYM9bkqnfiAmhgaeznA92lqH5E
+         W3sg==
+X-Gm-Message-State: AOJu0YyxbYM1BCjRgEAP98YHgsPJYYcIQVAZGfn2c7nCKiSUhYBM1+He
+	IKJR7V12AliK4ccqh0k2JW81BJrEhZ1KNDk9ULWLWmm1OnhsPGWO0uPYJVUXSDYyiwD1EEweon+
+	iRIqm2eBlqOT0ozSPz1vdU9XgbUdcpLCiV0k=
+X-Google-Smtp-Source: AGHT+IEH2tTLbdxyXcpp6O17qio1Fb5OogJb9d5vLFTTq082EUe4OMFbqbp/epWgYE+atgK26KfLNLHj9wVCU+vWzaw=
+X-Received: by 2002:a05:6808:1201:b0:3bd:9dc0:d39e with SMTP id
+ a1-20020a056808120100b003bd9dc0d39emr793916oil.97.1706055456212; Tue, 23 Jan
+ 2024 16:17:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212230224.1473300-1-weilin.wang@intel.com> <20231212230224.1473300-5-weilin.wang@intel.com>
-In-Reply-To: <20231212230224.1473300-5-weilin.wang@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 23 Jan 2024 16:06:29 -0800
-Message-ID: <CAP-5=fWXWH+X_XFwFgRtX4X3zquHRCJ4BiHTktQNwJT6zGy8rA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 03/18] perf pmu-events: Add functions in jevent.py
- to parse counter and event info for hardware aware grouping
-To: weilin.wang@intel.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Yang Jihong <yangjihong1@huawei.com>
+References: <CAD8CoPAr_bGNmmxkQpb1V7TeGtRE5=epC+5n-B2QiCH4QZjfxA@mail.gmail.com>
+ <20240123022425.1611483-1-zegao@tencent.com>
+In-Reply-To: <20240123022425.1611483-1-zegao@tencent.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 23 Jan 2024 16:17:25 -0800
+Message-ID: <CAM9d7cjThFo=7x+vrqNz3LFfpdisbEEzWZUbJ5JGipH2vaJVjw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf sched: Commit to evsel__taskstate() to parse
+ task state info
+To: Ze Gao <zegao2021@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Ze Gao <zegao@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 3:02=E2=80=AFPM <weilin.wang@intel.com> wrote:
+On Mon, Jan 22, 2024 at 6:24=E2=80=AFPM Ze Gao <zegao2021@gmail.com> wrote:
 >
-> From: Weilin Wang <weilin.wang@intel.com>
+> Now that we have evsel__taskstate() which no longer relies on the
+> hardcoded task state string and has good backward compatibility,
+> we have a good reason to use it.
 >
-> These functions are added to parse event counter restrictions and counter
-> availability info from json files so that the metric grouping method coul=
-d
-> do grouping based on the counter restriction of events and the counters
-> that are available on the system.
+> Note TASK_STATE_TO_CHAR_STR and task bitmasks are useless now so
+> we remove them for good. And now we pass the state info back and
+> forth in a symbolic char which explains itself well instead.
 >
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> Signed-off-by: Ze Gao <zegao@tencent.com>
+
+Thanks for the update!
+Namhyung
+
+
 > ---
->  tools/perf/pmu-events/jevents.py   | 171 ++++++++++++++++++++++++++++-
->  tools/perf/pmu-events/pmu-events.h |  25 ++++-
->  2 files changed, 188 insertions(+), 8 deletions(-)
+>  tools/perf/builtin-sched.c | 46 +++++++++-----------------------------
+>  1 file changed, 10 insertions(+), 36 deletions(-)
 >
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 0093c998cb6e..16f17d335f8e 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -23,6 +23,8 @@ _metric_tables =3D []
->  _sys_metric_tables =3D []
->  # Mapping between sys event table names and sys metric table names.
->  _sys_event_table_to_metric_table_mapping =3D {}
-> +# List of regular PMU counter layout tables.
-> +_pmu_layouts_tables =3D []
->  # Map from an event name to an architecture standard
->  # JsonEvent. Architecture standard events are in json files in the top
->  # f'{_args.starting_dir}/{_args.arch}' directory.
-> @@ -31,6 +33,9 @@ _arch_std_events =3D {}
->  _pending_events =3D []
->  # Name of events table to be written out
->  _pending_events_tblname =3D None
-> +# PMU counter layout to write out when the table is closed
-
-nit: s/table/layout table/
-
-> +_pending_pmu_counts =3D [] # Name of PMU counter layout table to be writ=
-ten out
-> +_pending_pmu_counts_tblname =3D None
->  # Metrics to write out when the table is closed
->  _pending_metrics =3D []
->  # Name of metrics table to be written out
-> @@ -47,10 +52,17 @@ _json_event_attributes =3D [
->      'event',
->      # Short things in alphabetical order.
->      'compat', 'deprecated', 'perpkg', 'unit',
-> +    # Counter this event could use
-> +    'counter',
->      # Longer things (the last won't be iterated over during decompress).
->      'long_desc'
->  ]
->
-> +# Attributes that are in pmu_unit_layout.
-> +_json_layout_attributes =3D [
-> +    'pmu', 'desc', 'size', 'fixed_size'
-> +]
-> +
->  # Attributes that are in pmu_metric rather than pmu_event.
->  _json_metric_attributes =3D [
->      'metric_name', 'metric_group', 'metric_expr', 'metric_threshold',
-> @@ -58,7 +70,9 @@ _json_metric_attributes =3D [
->      'default_metricgroup_name', 'aggr_mode', 'event_grouping'
->  ]
->  # Attributes that are bools or enum int values, encoded as '0', '1',...
-> -_json_enum_attributes =3D ['aggr_mode', 'deprecated', 'event_grouping', =
-'perpkg']
-> +_json_enum_attributes =3D ['aggr_mode', 'deprecated', 'event_grouping', =
-'perpkg',
-> +    'size', 'fixed_size'
-> +]
->
->  def removesuffix(s: str, suffix: str) -> str:
->    """Remove the suffix from a string
-> @@ -316,6 +330,9 @@ class JsonEvent:
->      if 'Errata' in jd:
->        extra_desc +=3D '  Spec update: ' + jd['Errata']
->      self.pmu =3D unit_to_pmu(jd.get('Unit'))
-> +    self.counter =3D jd.get('Counter')
-> +    self.size =3D jd.get('Size')
-> +    self.fixed_size =3D jd.get('FixedSize')
-
-nit: I think it is less than clear what the counter, size and fixed
-size fields in JsonEvent are for. The code is derived from much older
-code by Andi Kleen, for new fields I think it would be preferable to
-document them.
-
->      filter =3D jd.get('Filter')
->      self.unit =3D jd.get('ScaleUnit')
->      self.perpkg =3D jd.get('PerPkg')
-> @@ -386,8 +403,16 @@ class JsonEvent:
->          s +=3D f'\t{attr} =3D {value},\n'
->      return s + '}'
->
-> -  def build_c_string(self, metric: bool) -> str:
-> +  def build_c_string(self, metric: bool, layout: bool =3D False) -> str:
->      s =3D ''
-> +    if layout:
-> +      for attr in _json_layout_attributes:
-> +        x =3D getattr(self, attr)
-> +        if attr in _json_enum_attributes:
-> +          s +=3D x if x else '0'
-> +        else:
-> +          s +=3D f'{x}\\000' if x else '\\000'
-> +      return s
->      for attr in _json_metric_attributes if metric else _json_event_attri=
-butes:
->        x =3D getattr(self, attr)
->        if metric and x and attr =3D=3D 'metric_expr':
-> @@ -402,10 +427,10 @@ class JsonEvent:
->          s +=3D f'{x}\\000' if x else '\\000'
->      return s
->
-> -  def to_c_string(self, metric: bool) -> str:
-> +  def to_c_string(self, metric: bool, layout: bool =3D False) -> str:
-
-nit: Removing the default argument would make the code less error prone.
-
->      """Representation of the event as a C struct initializer."""
->
-> -    s =3D self.build_c_string(metric)
-> +    s =3D self.build_c_string(metric, layout)
->      return f'{{ { _bcs.offsets[s] } }}, /* {s} */\n'
->
->
-> @@ -442,6 +467,8 @@ def preprocess_arch_std_files(archpath: str) -> None:
->            _arch_std_events[event.name.lower()] =3D event
->          if event.metric_name:
->            _arch_std_events[event.metric_name.lower()] =3D event
-> +        if event.size:
-> +          _arch_std_events[event.pmu.lower()] =3D event
->
->
->  def add_events_table_entries(item: os.DirEntry, topic: str) -> None:
-> @@ -451,6 +478,8 @@ def add_events_table_entries(item: os.DirEntry, topic=
-: str) -> None:
->        _pending_events.append(e)
->      if e.metric_name:
->        _pending_metrics.append(e)
-> +    if e.size:
-> +      _pending_pmu_counts.append(e)
->
->
->  def print_pending_events() -> None:
-> @@ -564,6 +593,33 @@ const struct pmu_table_entry {_pending_metrics_tblna=
-me}[] =3D {{
->  """)
->    _args.output_file.write('};\n\n')
->
-> +def print_pending_pmu_counts() -> None:
-
-nit: Perhaps "print_pending_pmu_counter_layout_tables" would be a
-better name? A function description comment would be nice.
-
-> +
-> +  def pmu_counts_cmp_key(j: JsonEvent) -> Tuple[bool, str, str]:
-> +    def fix_none(s: Optional[str]) -> str:
-> +      if s is None:
-> +        return ''
-> +      return s
-> +
-> +    return (j.desc is not None, fix_none(j.pmu), fix_none(j.size))
-> +
-> +  global _pending_pmu_counts
-> +  if not _pending_pmu_counts:
-> +    return
-> +
-> +  global _pending_pmu_counts_tblname
-> +  global pmu_layouts_tables
-> +  _pmu_layouts_tables.append(_pending_pmu_counts_tblname)
-> +
-> +  _args.output_file.write(
-> +      f'static const struct compact_pmu_event {_pending_pmu_counts_tblna=
-me}[] =3D {{\n')
-> +
-> +  for pmu_layout in sorted(_pending_pmu_counts, key=3Dpmu_counts_cmp_key=
-):
-> +    _args.output_file.write(pmu_layout.to_c_string(metric=3DFalse, layou=
-t=3DTrue))
-> +    _pending_pmu_counts =3D []
-> +
-> +  _args.output_file.write('};\n\n')
-> +
->  def get_topic(topic: str) -> str:
->    if topic.endswith('metrics.json'):
->      return 'metrics'
-> @@ -604,6 +660,8 @@ def preprocess_one_file(parents: Sequence[str], item:=
- os.DirEntry) -> None:
->      if event.metric_name:
->        _bcs.add(pmu_name, metric=3DTrue)
->        _bcs.add(event.build_c_string(metric=3DTrue), metric=3DTrue)
-> +    if event.size:
-> +      _bcs.add(event.build_c_string(metric=3DFalse, layout=3DTrue), metr=
-ic=3DFalse)
->
->  def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
->    """Process a JSON file during the main walk."""
-> @@ -617,11 +675,14 @@ def process_one_file(parents: Sequence[str], item: =
-os.DirEntry) -> None:
->    if item.is_dir() and is_leaf_dir(item.path):
->      print_pending_events()
->      print_pending_metrics()
-> +    print_pending_pmu_counts()
->
->      global _pending_events_tblname
->      _pending_events_tblname =3D file_name_to_table_name('pmu_events_', p=
-arents, item.name)
->      global _pending_metrics_tblname
->      _pending_metrics_tblname =3D file_name_to_table_name('pmu_metrics_',=
- parents, item.name)
-> +    global _pending_pmu_counts_tblname
-> +    _pending_pmu_counts_tblname =3D file_name_to_table_name('pmu_layouts=
-_', parents, item.name)
->
->      if item.name =3D=3D 'sys':
->        _sys_event_table_to_metric_table_mapping[_pending_events_tblname] =
-=3D _pending_metrics_tblname
-> @@ -655,6 +716,12 @@ struct pmu_metrics_table {
->          uint32_t num_pmus;
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index ced6fffe8110..42d5fc5d6b7b 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -92,13 +92,6 @@ struct sched_atom {
+>         struct task_desc        *wakee;
 >  };
 >
-> +/* Struct used to make the PMU counter layout table implementation opaqu=
-e to callers. */
-> +struct pmu_layouts_table {
-> +        const struct compact_pmu_event *entries;
-> +        size_t length;
-> +};
-> +
->  /*
->   * Map a CPU to its table of PMU events. The CPU is identified by the
->   * cpuid field, which is an arch-specific identifier for the CPU.
-> @@ -668,6 +735,7 @@ struct pmu_events_map {
->          const char *cpuid;
->          struct pmu_events_table event_table;
->          struct pmu_metrics_table metric_table;
-> +        struct pmu_layouts_table layout_table;
->  };
+> -#define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
+> -
+> -/* task state bitmask, copied from include/linux/sched.h */
+> -#define TASK_RUNNING           0
+> -#define TASK_INTERRUPTIBLE     1
+> -#define TASK_UNINTERRUPTIBLE   2
+> -
+>  enum thread_state {
+>         THREAD_SLEEPING =3D 0,
+>         THREAD_WAIT_CPU,
+> @@ -255,7 +248,7 @@ struct thread_runtime {
+>         u64 total_preempt_time;
+>         u64 total_delay_time;
 >
->  /*
-> @@ -712,6 +780,12 @@ const struct pmu_events_map pmu_events_map[] =3D {
->                metric_size =3D '0'
->              if event_size =3D=3D '0' and metric_size =3D=3D '0':
->                continue
-> +            layout_tblname =3D file_name_to_table_name('pmu_layouts_', [=
-], row[2].replace('/', '_'))
-> +            if layout_tblname in _pmu_layouts_tables:
-> +              layout_size =3D f'ARRAY_SIZE({layout_tblname})'
-> +            else:
-> +              layout_tblname =3D 'NULL'
-> +              layout_size =3D '0'
->              cpuid =3D row[0].replace('\\', '\\\\')
->              _args.output_file.write(f"""{{
->  \t.arch =3D "{arch}",
-> @@ -723,6 +797,10 @@ const struct pmu_events_map pmu_events_map[] =3D {
->  \t.metric_table =3D {{
->  \t\t.pmus =3D {metric_tblname},
->  \t\t.num_pmus =3D {metric_size}
-> +\t}},
-> +\t.layout_table =3D {{
-> +\t\t.entries =3D {layout_tblname},
-> +\t\t.length =3D {layout_size}
->  \t}}
->  }},
->  """)
-> @@ -733,6 +811,7 @@ const struct pmu_events_map pmu_events_map[] =3D {
->  \t.cpuid =3D 0,
->  \t.event_table =3D { 0, 0 },
->  \t.metric_table =3D { 0, 0 },
-> +\t.layout_table =3D { 0, 0 },
->  }
->  };
->  """)
-> @@ -821,6 +900,24 @@ static void decompress_metric(int offset, struct pmu=
-_metric *pm)
->        _args.output_file.write('\twhile (*p++);')
->    _args.output_file.write("""}
+> -       int last_state;
+> +       char last_state;
 >
-> +static void decompress_layout(int offset, struct pmu_layout *pm)
-> +{
-> +\tconst char *p =3D &big_c_string[offset];
-> +""")
-> +  for attr in _json_layout_attributes:
-> +    _args.output_file.write(f'\n\tpm->{attr} =3D ')
-> +    if attr in _json_enum_attributes:
-> +      _args.output_file.write("*p - '0';\n")
-> +    else:
-> +      _args.output_file.write("(*p =3D=3D '\\0' ? NULL : p);\n")
-> +    if attr =3D=3D _json_layout_attributes[-1]:
-> +      continue
-> +    if attr in _json_enum_attributes:
-> +      _args.output_file.write('\tp++;')
-> +    else:
-> +      _args.output_file.write('\twhile (*p++);')
-> +  _args.output_file.write("""}
-> +
->  static int pmu_events_table__for_each_event_pmu(const struct pmu_events_=
-table *table,
->                                                  const struct pmu_table_e=
-ntry *pmu,
->                                                  pmu_event_iter_fn fn,
-> @@ -976,6 +1073,21 @@ int pmu_metrics_table__for_each_metric(const struct=
- pmu_metrics_table *table,
->          return 0;
+>         char shortname[3];
+>         bool comm_changed;
+> @@ -425,7 +418,7 @@ static void add_sched_event_wakeup(struct perf_sched =
+*sched, struct task_desc *t
 >  }
 >
-> +int pmu_layouts_table__for_each_layout(const struct pmu_layouts_table *t=
-able,
-> +                                     pmu_layout_iter_fn fn,
-> +                                     void *data) {
-> +        for (size_t i =3D 0; i < table->length; i++) {
-> +                struct pmu_layout pm;
-> +                int ret;
-> +
-> +                decompress_layout(table->entries[i].offset, &pm);
-> +                ret =3D fn(&pm, data);
-> +                if (ret)
-> +                        return ret;
-> +        }
-> +        return 0;
-> +}
-> +
->  static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
+>  static void add_sched_event_sleep(struct perf_sched *sched, struct task_=
+desc *task,
+> -                                 u64 timestamp, u64 task_state __maybe_u=
+nused)
+> +                                 u64 timestamp, const char task_state __=
+maybe_unused)
 >  {
->          static struct {
-> @@ -1071,6 +1183,33 @@ const struct pmu_metrics_table *perf_pmu__find_met=
-rics_table(struct perf_pmu *pm
->          return NULL;
+>         struct sched_atom *event =3D get_new_event(task, timestamp);
+>
+> @@ -849,7 +842,7 @@ static int replay_switch_event(struct perf_sched *sch=
+ed,
+>                    *next_comm  =3D evsel__strval(evsel, sample, "next_com=
+m");
+>         const u32 prev_pid =3D evsel__intval(evsel, sample, "prev_pid"),
+>                   next_pid =3D evsel__intval(evsel, sample, "next_pid");
+> -       const u64 prev_state =3D evsel__intval(evsel, sample, "prev_state=
+");
+> +       const char prev_state =3D evsel__taskstate(evsel, sample, "prev_s=
+tate");
+>         struct task_desc *prev, __maybe_unused *next;
+>         u64 timestamp0, timestamp =3D sample->time;
+>         int cpu =3D sample->cpu;
+> @@ -1039,13 +1032,6 @@ static int thread_atoms_insert(struct perf_sched *=
+sched, struct thread *thread)
+>         return 0;
 >  }
 >
-> +const struct pmu_layouts_table *perf_pmu__find_layouts_table(struct perf=
-_pmu *pmu)
-> +{
-> +        const struct pmu_layouts_table *table =3D NULL;
-> +        char *cpuid =3D perf_pmu__getcpuid(pmu);
-> +        int i;
-> +
-> +        /* on some platforms which uses cpus map, cpuid can be NULL for
-> +         * PMUs other than CORE PMUs.
-> +         */
-> +        if (!cpuid)
-> +                return NULL;
-> +
-> +        i =3D 0;
-> +        for (;;) {
-> +                const struct pmu_events_map *map =3D &pmu_events_map[i++=
-];
-> +                if (!map->arch)
-> +                        break;
-> +
-> +                if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
-> +                        table =3D &map->layout_table;
-> +                        break;
-> +                }
-> +        }
-> +        free(cpuid);
-> +        return table;
-> +}
-> +
->  const struct pmu_events_table *find_core_events_table(const char *arch, =
-const char *cpuid)
+> -static char sched_out_state(u64 prev_state)
+> -{
+> -       const char *str =3D TASK_STATE_TO_CHAR_STR;
+> -
+> -       return str[prev_state];
+> -}
+> -
+>  static int
+>  add_sched_out_event(struct work_atoms *atoms,
+>                     char run_state,
+> @@ -1121,7 +1107,7 @@ static int latency_switch_event(struct perf_sched *=
+sched,
 >  {
->          for (const struct pmu_events_map *tables =3D &pmu_events_map[0];
-> @@ -1092,6 +1231,16 @@ const struct pmu_metrics_table *find_core_metrics_=
-table(const char *arch, const
->          }
->          return NULL;
->  }
-> +const struct pmu_layouts_table *find_core_layouts_table(const char *arch=
-, const char *cpuid)
-> +{
-> +        for (const struct pmu_events_map *tables =3D &pmu_events_map[0];
-> +             tables->arch;
-> +             tables++) {
-> +                if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tab=
-les->cpuid, cpuid))
-> +                        return &tables->layout_table;
-> +        }
-> +        return NULL;
-> +}
+>         const u32 prev_pid =3D evsel__intval(evsel, sample, "prev_pid"),
+>                   next_pid =3D evsel__intval(evsel, sample, "next_pid");
+> -       const u64 prev_state =3D evsel__intval(evsel, sample, "prev_state=
+");
+> +       const char prev_state =3D evsel__taskstate(evsel, sample, "prev_s=
+tate");
+>         struct work_atoms *out_events, *in_events;
+>         struct thread *sched_out, *sched_in;
+>         u64 timestamp0, timestamp =3D sample->time;
+> @@ -1157,7 +1143,7 @@ static int latency_switch_event(struct perf_sched *=
+sched,
+>                         goto out_put;
+>                 }
+>         }
+> -       if (add_sched_out_event(out_events, sched_out_state(prev_state), =
+timestamp))
+> +       if (add_sched_out_event(out_events, prev_state, timestamp))
+>                 return -1;
 >
->  int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data)
->  {
-> @@ -1120,6 +1269,19 @@ int pmu_for_each_core_metric(pmu_metric_iter_fn fn=
-, void *data)
->          return 0;
+>         in_events =3D thread_atoms_search(&sched->atom_root, sched_in, &s=
+ched->cmp_pid);
+> @@ -2022,24 +2008,12 @@ static void timehist_header(struct perf_sched *sc=
+hed)
+>         printf("\n");
 >  }
 >
-> +int pmu_for_each_core_layout(pmu_layout_iter_fn fn, void *data)
-> +{
-> +        for (const struct pmu_events_map *tables =3D &pmu_events_map[0];
-> +             tables->arch;
-> +             tables++) {
-> +                int ret =3D pmu_layouts_table__for_each_layout(&tables->=
-layout_table, fn, data);
-> +
-> +                if (ret)
-> +                        return ret;
-> +        }
-> +        return 0;
-> +}
-> +
->  const struct pmu_events_table *find_sys_events_table(const char *name)
->  {
->          for (const struct pmu_sys_events *tables =3D &pmu_sys_event_tabl=
-es[0];
-> @@ -1276,6 +1438,7 @@ struct pmu_table_entry {
->      ftw(arch_path, [], process_one_file)
->      print_pending_events()
->      print_pending_metrics()
-> +    print_pending_pmu_counts()
->
->    print_mapping_table(archs)
->    print_system_mapping_table()
-> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/p=
-mu-events.h
-> index f5aa96f1685c..65e0c5dd8bb4 100644
-> --- a/tools/perf/pmu-events/pmu-events.h
-> +++ b/tools/perf/pmu-events/pmu-events.h
-> @@ -45,6 +45,7 @@ struct pmu_event {
->         const char *desc;
->         const char *topic;
->         const char *long_desc;
-
-nit: A comment/example for the counter value would be useful.
-
-> +       const char *counter;
->         const char *pmu;
->         const char *unit;
->         bool perpkg;
-> @@ -67,8 +68,16 @@ struct pmu_metric {
->         enum metric_event_groups event_grouping;
->  };
->
-> +struct pmu_layout {
-> +       const char *pmu;
-> +       const char *desc;
-> +       int size;
-> +       int fixed_size;
-
-So size is the number of generic counters and fixed size the number of
-fixed counters? Perhaps num_counters and num_fixed_counters, comments
-would be useful.
-
-> +};
-> +
->  struct pmu_events_table;
->  struct pmu_metrics_table;
-> +struct pmu_layouts_table;
->
->  typedef int (*pmu_event_iter_fn)(const struct pmu_event *pe,
->                                  const struct pmu_events_table *table,
-> @@ -78,15 +87,20 @@ typedef int (*pmu_metric_iter_fn)(const struct pmu_me=
-tric *pm,
->                                   const struct pmu_metrics_table *table,
->                                   void *data);
->
-> +typedef int (*pmu_layout_iter_fn)(const struct pmu_layout *pm,
-> +                                 void *data);
-> +
->  int pmu_events_table__for_each_event(const struct pmu_events_table *tabl=
-e,
->                                     struct perf_pmu *pmu,
->                                     pmu_event_iter_fn fn,
->                                     void *data);
->  int pmu_events_table__find_event(const struct pmu_events_table *table,
-> -                                 struct perf_pmu *pmu,
-> -                                 const char *name,
-> -                                 pmu_event_iter_fn fn,
-> -                                void *data);
-> +                               struct perf_pmu *pmu,
-> +                               const char *name,
-> +                               pmu_event_iter_fn fn,
-> +                               void *data);
-
-nit: I think this is just a whitespace difference and so should be avoided.
-
-> +int pmu_layouts_table__for_each_layout(const struct pmu_layouts_table *t=
-able, pmu_layout_iter_fn fn,
-> +                                    void *data);
-
-Perhaps we should cache the layout in the struct pmu and iterate those.
-
-Thanks,
-Ian
-
->  size_t pmu_events_table__num_events(const struct pmu_events_table *table=
-,
->                                     struct perf_pmu *pmu);
->
-> @@ -95,10 +109,13 @@ int pmu_metrics_table__for_each_metric(const struct =
-pmu_metrics_table *table, pm
->
->  const struct pmu_events_table *perf_pmu__find_events_table(struct perf_p=
-mu *pmu);
->  const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf=
-_pmu *pmu);
-> +const struct pmu_layouts_table *perf_pmu__find_layouts_table(struct perf=
-_pmu *pmu);
->  const struct pmu_events_table *find_core_events_table(const char *arch, =
-const char *cpuid);
->  const struct pmu_metrics_table *find_core_metrics_table(const char *arch=
-, const char *cpuid);
-> +const struct pmu_layouts_table *find_core_layouts_table(const char *arch=
-, const char *cpuid);
->  int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data);
->  int pmu_for_each_core_metric(pmu_metric_iter_fn fn, void *data);
-> +int pmu_for_each_core_layout(pmu_layout_iter_fn fn, void *data);
->
->  const struct pmu_events_table *find_sys_events_table(const char *name);
->  const struct pmu_metrics_table *find_sys_metrics_table(const char *name)=
+> -static char task_state_char(struct thread *thread, int state)
+> -{
+> -       static const char state_to_char[] =3D TASK_STATE_TO_CHAR_STR;
+> -       unsigned bit =3D state ? ffs(state) : 0;
+> -
+> -       /* 'I' for idle */
+> -       if (thread__tid(thread) =3D=3D 0)
+> -               return 'I';
+> -
+> -       return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?'=
 ;
+> -}
+> -
+>  static void timehist_print_sample(struct perf_sched *sched,
+>                                   struct evsel *evsel,
+>                                   struct perf_sample *sample,
+>                                   struct addr_location *al,
+>                                   struct thread *thread,
+> -                                 u64 t, int state)
+> +                                 u64 t, const char state)
+>  {
+>         struct thread_runtime *tr =3D thread__priv(thread);
+>         const char *next_comm =3D evsel__strval(evsel, sample, "next_comm=
+");
+> @@ -2080,7 +2054,7 @@ static void timehist_print_sample(struct perf_sched=
+ *sched,
+>         print_sched_time(tr->dt_run, 6);
+>
+>         if (sched->show_state)
+> -               printf(" %5c ", task_state_char(thread, state));
+> +               printf(" %5c ", thread__tid(thread) =3D=3D 0 ? 'I' : stat=
+e);
+>
+>         if (sched->show_next) {
+>                 snprintf(nstr, sizeof(nstr), "next: %s[%d]", next_comm, n=
+ext_pid);
+> @@ -2152,9 +2126,9 @@ static void timehist_update_runtime_stats(struct th=
+read_runtime *r,
+>                 else if (r->last_time) {
+>                         u64 dt_wait =3D tprev - r->last_time;
+>
+> -                       if (r->last_state =3D=3D TASK_RUNNING)
+> +                       if (r->last_state =3D=3D 'R')
+>                                 r->dt_preempt =3D dt_wait;
+> -                       else if (r->last_state =3D=3D TASK_UNINTERRUPTIBL=
+E)
+> +                       else if (r->last_state =3D=3D 'D')
+>                                 r->dt_iowait =3D dt_wait;
+>                         else
+>                                 r->dt_sleep =3D dt_wait;
+> @@ -2579,7 +2553,7 @@ static int timehist_sched_change_event(struct perf_=
+tool *tool,
+>         struct thread_runtime *tr =3D NULL;
+>         u64 tprev, t =3D sample->time;
+>         int rc =3D 0;
+> -       int state =3D evsel__intval(evsel, sample, "prev_state");
+> +       const char state =3D evsel__taskstate(evsel, sample, "prev_state"=
+);
+>
+>         addr_location__init(&al);
+>         if (machine__resolve(machine, &al, sample) < 0) {
 > --
-> 2.39.3
+> 2.41.0
 >
