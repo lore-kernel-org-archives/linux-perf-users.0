@@ -1,66 +1,66 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408D77F7D9
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 18:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A4812BEB0
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 18:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706120641; cv=none; b=me8f4xM/zFxoKmJxTbTTRrGKIlshyhaEv+jf9AB09mfNIhKmvulcBfhKRNDID7Z/TpgfQUeL95leWx/wYZ/hGmq6ihaclRgOMQSplM6cqHW4NIjhmfKcq0GZJ6lDJtZRD5neoXg2gsMUrU8bUgr4I6i+i0Lywy1hiox/GeY9CBE=
+	t=1706120695; cv=none; b=uoxxoGtYePtZuw6YYrikVuHzm6UkA1/B7zJArJeA5z/ceIP8tHfjT6bx4UbTCnhFsmB8QyNDYmr7XMIfbdmz5FN1jnohOcbbuESQCzLnY5LWktz7iV/Gz6XjYZns6uvs7NrDiFqVTBNV1xSF3Md90VJARIxfoYJOPXy8j4ubQdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706120641; c=relaxed/simple;
-	bh=aLdlWpro750gZBi5PSU2dkOK4wHdU0GzZ1iWLys3CjE=;
+	s=arc-20240116; t=1706120695; c=relaxed/simple;
+	bh=7MnZiWjiZNSA+2oL+dWWgGoCKkMueb2MkjrlB6aUd3g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PhubBWeNnxUoW5wxDba9eNi3GU/D2CYs/FLXJIGzijj0Pju0xoT0eCbXD3EE0S32bFpobOgif0duHNmakpX79KXXNr+6IBxd99dcKziq4bXn2TtdE3JCoKQ+XLjRvgrxseL4TWYLMu2L6iuX69srgpBuTWhZ74H4jc/TZ/hLz8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OyL1Mj7W; arc=none smtp.client-ip=209.85.166.175
+	 To:Cc:Content-Type; b=fBUMvQvDIYeJmDM/8MRf2ObLSDaG8ehMggWDGwGtKm9Ed7Clz+6QFL9s8OmaS8N7ZTo/zjm1ZsFG2Kcxqx0cmoeHF/wvqOgq9HSFMA43qhMXlzXh3xtIeMIv58vcYcglZz0a0/nEi4LeNXscV72fmo626bJcSFrD6iNZRMLEx/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L+B1rDBl; arc=none smtp.client-ip=209.85.166.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OyL1Mj7W"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3600b2c43a8so8325ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 10:24:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L+B1rDBl"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-361b24d1a9eso7845ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 10:24:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706120639; x=1706725439; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706120692; x=1706725492; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FYoVBveLHDJjbciWP+DoYEiv2kBqglZOhr3fp6u4H2I=;
-        b=OyL1Mj7WaLOFYDFsqeV+OXlDuf26js9ZcKsCb9omX9r1pVTG83RBsCacS4ZW6O2sDe
-         mDri1+h6AprVyh7p8OKEJ/DZT7Y7eefVnvsTvCnAc9foHo5FhbusAdotY2SGAzvTKGbH
-         f6Tz/GR/kzlr+ojhRkuPFqJpTEBdyLFliEKea3tslVbIPRiWL5OAY/TqEVSOmkvx8k0Y
-         5stp9x1VD4+od45Lo0sM9NQSrLIlJaEWXg6AO+vjr3T9jkGk9UGBxkpTgchSulfK236b
-         +rCxPh1gLMR5Nw4RMof7t8HJ6LG+Gcs6BmNJSRsL2KEB+ULrZ6S64bvO5KcdJ4Uh8Kki
-         qBpA==
+        bh=RRruUIVbFxxKKkU5wcaDpYZHLYv7MyzY0CJbOKyUNKQ=;
+        b=L+B1rDBlkYFhrKH/qdMy8CP5pEJb5Lj9LnOb+p3kwiIfFeNYcR9g31yHW+/rlHfsCj
+         7DnXqNmOz/dTfwVyz0Mo1UIKukl9L59jbM2zMEcY1v91st8w/UWuexa3OlsAlLedJy9x
+         tQapNagbU/AZnukrixKg8nwlUmHRyvplSZDNkQL5VNwuyZHbIN0Po/PoWCQPtWlQaxE3
+         hvLv2F6sskbyXjkvpx2njTXo9C36Y6o4UkDeyF38vq8CVF82m0mS3fhwmBc/OIt5ZgJc
+         sRiPCI+Q+nob0BDI6hC7OHhh4iigiO8Wgdnqndg9Xwl01vWN8yzd0qFxgggrHkXPw7np
+         pKgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706120639; x=1706725439;
+        d=1e100.net; s=20230601; t=1706120692; x=1706725492;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FYoVBveLHDJjbciWP+DoYEiv2kBqglZOhr3fp6u4H2I=;
-        b=EXAqhEP1zzFSQkcK4nscveFA57Y0CKc/EYvZTR9YUP6rtDO82I3yD8eyeJZt/qbpdE
-         vpVzCaKuKVg3gU+iJ3OLIF/jkSkCO+5juLUKZFcg0CNuXjsxfSi0EOg37gt0nyhDcIXE
-         eMGsAHAKQlIbxSfgToeg1f/vEUwyzLNBLziDkouddMQovxo9SQfw4JNZJVp40ZAvuvfF
-         N5I3b1GrWp19pE06YOyRVHlfQs+DjzyE6R0ckMnfFSKJeKlfdfaq2mTpofFrFZph98mS
-         pbDa0Ij4Elwja+Nr+1300gjCQocNnpKWJRmAw/Lgf+lcjRmcrzt7b6uxD6b+Qqu/gq+s
-         8jEQ==
-X-Gm-Message-State: AOJu0YziHBzC6PLu85JWdNKG2sK0Nz84rmCIjvlMkzN2hKq3LvSiwcOk
-	hfZrbE4g5JcXZ2q4OA9V3Y9J2mMJMY1qE3HHwBjvem77WF6pj97CiPlnEruH5SO+p7l+wqrfXHG
-	bNAk35xCidf17L1PS0L/JTbCruVYoOwSuKyr3fqgsNzAOwaTOlzx6up6D2g==
-X-Google-Smtp-Source: AGHT+IGB8WZaSPaA7Tut29f0/08UMT2HYAcBLpp6bk7rKBB6ojPrYFXh6ES9Uk5r8AqrBCM5UG29AmCO6rAeO/M6as4=
-X-Received: by 2002:a92:c801:0:b0:360:5e25:5c22 with SMTP id
- v1-20020a92c801000000b003605e255c22mr15253iln.8.1706120639249; Wed, 24 Jan
- 2024 10:23:59 -0800 (PST)
+        bh=RRruUIVbFxxKKkU5wcaDpYZHLYv7MyzY0CJbOKyUNKQ=;
+        b=uxPi89R5FkC1i/si04bh5AfDvwVP+Qr7chVoG3BMN6KCyHEaNXXtE/Me6Ao7977XGD
+         HW0Bzj42VXwrwbR6D64XWNr6MNh95kE0Et+8oZxU7LtDVIHvMzmxcHIPudWmqE7v+Fy4
+         W9HQNmbu9TPSq+PsyB/ACZwrkB0Vt8odCD9Gj/y3jlLjfitthWrWPcr8lU86/GXX1HBA
+         SRs+pmNyKFG3JPuI2/Ma6A90oL6uC/QFv7e9KPUaLFPtNmq7Te9+VXwqAf2ElPQib693
+         FAbTCO7eO9Es6EpvjBYyS5KlKhukw3UWJdMtGkYJc+XDSIUt0lVsEStdeMs4ZRCE82lk
+         8zJQ==
+X-Gm-Message-State: AOJu0YwbsvR8Mu2M1WAVh7R6dr7tJQj5rCvagb9R6w8zrOMGIFkIeGT0
+	oZH69FFv9WHAwmJK0ot9Z+5lubtd1WFs5wBg1sCumms6OdtIYJSAHyxMqqFcdTpcCStt6YwGrOa
+	dDM20uh+NAlLS6q0YltIhJZevn/xYyrX9Q6dq
+X-Google-Smtp-Source: AGHT+IEZJES0btr1lDHyyGuujn1l/uy1z9lgIem+254rw7jS5t2Kb6zvl+fPKGDI/dv4i+sx3FcjFgxNx8zqu+tZzxU=
+X-Received: by 2002:a92:c108:0:b0:35c:e232:f6d8 with SMTP id
+ p8-20020a92c108000000b0035ce232f6d8mr21129ile.0.1706120692450; Wed, 24 Jan
+ 2024 10:24:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123185036.3461837-1-kan.liang@linux.intel.com> <20240123185036.3461837-8-kan.liang@linux.intel.com>
-In-Reply-To: <20240123185036.3461837-8-kan.liang@linux.intel.com>
+References: <20240123185036.3461837-1-kan.liang@linux.intel.com>
+In-Reply-To: <20240123185036.3461837-1-kan.liang@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 24 Jan 2024 10:23:48 -0800
-Message-ID: <CAP-5=fVc1PYFr=wJMBvQVPnHon4uDOLWFFMPP2VYyne8S+M_ag@mail.gmail.com>
-Subject: Re: [PATCH V4 7/7] perf mem: Clean up perf_pmus__num_mem_pmus()
+Date: Wed, 24 Jan 2024 10:24:41 -0800
+Message-ID: <CAP-5=fWuUJHUMb4mq2oPo+eVH32cLrrzYrKVuMymkkrYqMAYFw@mail.gmail.com>
+Subject: Re: [PATCH V4 0/7] Clean up perf mem
 To: kan.liang@linux.intel.com
 Cc: acme@kernel.org, namhyung@kernel.org, peterz@infradead.org, 
 	mingo@redhat.com, jolsa@kernel.org, adrian.hunter@intel.com, 
@@ -76,153 +76,116 @@ On Tue, Jan 23, 2024 at 10:51=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
 >
 > From: Kan Liang <kan.liang@linux.intel.com>
 >
-> The number of mem PMUs can be calculated by searching the
-> perf_pmus__scan_mem().
+> Changes since V3:
+> - Fix the powerPC building error (Kajol Jain)
+> - The s390 does not support perf mem. Remove the code. (Thomas)
+> - Add reviewed-by and tested-by from Kajol Jain for patch 1 and 2
+> - Add tested-by from Leo
 >
-> Remove the ARCH specific perf_pmus__num_mem_pmus()
+> Changes since V2:
+> - Fix the Arm64 building error (Leo)
+> - Add two new patches to clean up perf_mem_events__record_args()
+>   and perf_pmus__num_mem_pmus() (Leo)
 >
-> Tested-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Changes since V1:
+> - Fix strcmp of PMU name checking (Ravi)
+> - Fix "/," typo (Ian)
+> - Rename several functions with perf_pmu__mem_events prefix. (Ian)
+> - Fold the header removal patch into the patch where the cleanups made.
+>   (Arnaldo)
+> - Add reviewed-by and tested-by from Ian and Ravi
+>
+> As discussed in the below thread, the patch set is to clean up perf mem.
+> https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@linux.i=
+ntel.com/
+>
+> Introduce generic functions perf_mem_events__ptr(),
+> perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+> ARCH specific ones.
+> Simplify the perf_mem_event__supported().
+>
+> Only keeps the ARCH-specific perf_mem_events array in the corresponding
+> mem-events.c for each ARCH.
+>
+> There is no functional change.
+>
+> The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power and
+> etc. But I can only test it on two Intel platforms.
+> Please give it try, if you have machines with other ARCHs.
+>
+> Here are the test results:
+> Intel hybrid machine:
+>
+> $perf mem record -e list
+> ldlat-loads  : available
+> ldlat-stores : available
+>
+> $perf mem record -e ldlat-loads -v --ldlat 50
+> calling: record -e cpu_atom/mem-loads,ldlat=3D50/P -e cpu_core/mem-loads,=
+ldlat=3D50/P
+>
+> $perf mem record -v
+> calling: record -e cpu_atom/mem-loads,ldlat=3D30/P -e cpu_atom/mem-stores=
+/P -e cpu_core/mem-loads,ldlat=3D30/P -e cpu_core/mem-stores/P
+>
+> $perf mem record -t store -v
+> calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+>
+>
+> Intel SPR:
+> $perf mem record -e list
+> ldlat-loads  : available
+> ldlat-stores : available
+>
+> $perf mem record -e ldlat-loads -v --ldlat 50
+> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=3D50/}:P
+>
+> $perf mem record -v
+> calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=3D30/}:P -e cp=
+u/mem-stores/P
+>
+> $perf mem record -t store -v
+> calling: record -e cpu/mem-stores/P
+>
+> Kan Liang (7):
+>   perf mem: Add mem_events into the supported perf_pmu
+>   perf mem: Clean up perf_mem_events__ptr()
+>   perf mem: Clean up perf_mem_events__name()
+>   perf mem: Clean up perf_mem_event__supported()
+>   perf mem: Clean up is_mem_loads_aux_event()
+>   perf mem: Clean up perf_mem_events__record_args()
+>   perf mem: Clean up perf_pmus__num_mem_pmus()
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I think this is ready to land in perf-tools-next, multiple Tested-by
+or Reviewed-by.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/arch/x86/util/pmu.c | 10 ----------
->  tools/perf/builtin-c2c.c       |  2 +-
->  tools/perf/builtin-mem.c       |  2 +-
->  tools/perf/util/mem-events.c   | 14 ++++++++++++++
->  tools/perf/util/mem-events.h   |  1 +
->  tools/perf/util/pmus.c         |  6 ------
->  tools/perf/util/pmus.h         |  1 -
->  7 files changed, 17 insertions(+), 19 deletions(-)
+>  tools/perf/arch/arm/util/pmu.c            |   3 +
+>  tools/perf/arch/arm64/util/mem-events.c   |  39 +---
+>  tools/perf/arch/arm64/util/mem-events.h   |   7 +
+>  tools/perf/arch/powerpc/util/Build        |   1 +
+>  tools/perf/arch/powerpc/util/mem-events.c |  16 +-
+>  tools/perf/arch/powerpc/util/mem-events.h |   7 +
+>  tools/perf/arch/powerpc/util/pmu.c        |  12 ++
+>  tools/perf/arch/x86/util/mem-events.c     |  99 ++--------
+>  tools/perf/arch/x86/util/mem-events.h     |  10 +
+>  tools/perf/arch/x86/util/pmu.c            |  19 +-
+>  tools/perf/builtin-c2c.c                  |  45 ++---
+>  tools/perf/builtin-mem.c                  |  48 ++---
+>  tools/perf/util/mem-events.c              | 217 +++++++++++++---------
+>  tools/perf/util/mem-events.h              |  19 +-
+>  tools/perf/util/pmu.c                     |   4 +-
+>  tools/perf/util/pmu.h                     |   7 +
+>  tools/perf/util/pmus.c                    |   6 -
+>  tools/perf/util/pmus.h                    |   1 -
+>  18 files changed, 279 insertions(+), 281 deletions(-)
+>  create mode 100644 tools/perf/arch/arm64/util/mem-events.h
+>  create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
+>  create mode 100644 tools/perf/arch/powerpc/util/pmu.c
+>  create mode 100644 tools/perf/arch/x86/util/mem-events.h
 >
-> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pm=
-u.c
-> index 0f49ff13cfe2..c3d89d6ba1bf 100644
-> --- a/tools/perf/arch/x86/util/pmu.c
-> +++ b/tools/perf/arch/x86/util/pmu.c
-> @@ -42,13 +42,3 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_=
-unused)
->                         pmu->mem_events =3D perf_mem_events_intel;
->         }
->  }
-> -
-> -int perf_pmus__num_mem_pmus(void)
-> -{
-> -       /* AMD uses IBS OP pmu and not a core PMU for perf mem/c2c */
-> -       if (x86__is_amd_cpu())
-> -               return 1;
-> -
-> -       /* Intel uses core pmus for perf mem/c2c */
-> -       return perf_pmus__num_core_pmus();
-> -}
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 3bcb903b6b38..16b40f5d43db 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -3278,7 +3278,7 @@ static int perf_c2c__record(int argc, const char **=
-argv)
->                              PARSE_OPT_KEEP_UNKNOWN);
->
->         /* Max number of arguments multiplied by number of PMUs that can =
-support them. */
-> -       rec_argc =3D argc + 11 * perf_pmus__num_mem_pmus();
-> +       rec_argc =3D argc + 11 * (perf_pmu__mem_events_num_mem_pmus(pmu) =
-+ 1);
->
->         rec_argv =3D calloc(rec_argc + 1, sizeof(char *));
->         if (!rec_argv)
-> diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-> index 1d92e309c97c..5b851e64e4a1 100644
-> --- a/tools/perf/builtin-mem.c
-> +++ b/tools/perf/builtin-mem.c
-> @@ -106,7 +106,7 @@ static int __cmd_record(int argc, const char **argv, =
-struct perf_mem *mem)
->                              PARSE_OPT_KEEP_UNKNOWN);
->
->         /* Max number of arguments multiplied by number of PMUs that can =
-support them. */
-> -       rec_argc =3D argc + 9 * perf_pmus__num_mem_pmus();
-> +       rec_argc =3D argc + 9 * (perf_pmu__mem_events_num_mem_pmus(pmu) +=
- 1);
->
->         if (mem->cpu_list)
->                 rec_argc +=3D 2;
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index a20611b4fb1b..637cbd4a7bfb 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -62,6 +62,20 @@ struct perf_pmu *perf_mem_events_find_pmu(void)
->         return perf_pmus__scan_mem(NULL);
->  }
->
-> +/**
-> + * perf_pmu__mem_events_num_mem_pmus - Get the number of mem PMUs since =
-the given pmu
-> + * @pmu: Start pmu. If it's NULL, search the entire PMU list.
-> + */
-> +int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu)
-> +{
-> +       int num =3D 0;
-> +
-> +       while ((pmu =3D perf_pmus__scan_mem(pmu)) !=3D NULL)
-> +               num++;
-> +
-> +       return num;
-> +}
-> +
->  static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu=
-)
->  {
->         struct perf_mem_event *e;
-> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-> index c97cd3caa766..15d5f0320d27 100644
-> --- a/tools/perf/util/mem-events.h
-> +++ b/tools/perf/util/mem-events.h
-> @@ -43,6 +43,7 @@ int perf_pmu__mem_events_init(struct perf_pmu *pmu);
->
->  struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, in=
-t i);
->  struct perf_pmu *perf_mem_events_find_pmu(void);
-> +int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu);
->  bool is_mem_loads_aux_event(struct evsel *leader);
->
->  void perf_pmu__mem_events_list(struct perf_pmu *pmu);
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index ce4931461741..16505071d362 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -345,12 +345,6 @@ const struct perf_pmu *perf_pmus__pmu_for_pmu_filter=
-(const char *str)
->         return NULL;
->  }
->
-> -int __weak perf_pmus__num_mem_pmus(void)
-> -{
-> -       /* All core PMUs are for mem events. */
-> -       return perf_pmus__num_core_pmus();
-> -}
-> -
->  /** Struct for ordering events as output in perf list. */
->  struct sevent {
->         /** PMU for event. */
-> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-> index 4c67153ac257..94d2a08d894b 100644
-> --- a/tools/perf/util/pmus.h
-> +++ b/tools/perf/util/pmus.h
-> @@ -17,7 +17,6 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *=
-pmu);
->
->  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
->
-> -int perf_pmus__num_mem_pmus(void);
->  void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb,=
- void *print_state);
->  bool perf_pmus__have_event(const char *pname, const char *name);
->  int perf_pmus__num_core_pmus(void);
 > --
 > 2.35.1
 >
