@@ -1,203 +1,146 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E727131E27
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 18:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA9B12C532
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 23:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706122744; cv=none; b=MWq1Jg8B/2dEhtKjls9+xfo9KYGfLn3TNEZtVdetSPrdsQkZbIfmKOW3lBtBZndf20Ag+LEBzPdpGFCzG3jGl25gbh8fJppeBhszYgIc6oVTEtoGkhzx/eUMGIPJXYNEDmqLq3Y35O3a6E7jK8OnF4mksr6zXZNBwjqXHZ+9epk=
+	t=1706139731; cv=none; b=FrxFHP8JXickouhgfcsHnfP4yEB8oQ1fVZMbrNWjEMPoGNzm5I8CbuUFOvzRunzcWlegQKgUt8Ae75XHnmjhTJ8FnrDedDKj5IehecCsP/IBaqhQDPkJvEqjm9ZIW7108naX519Ukv5ZvHSxTivEbO/2Jn6gwF/qXGZ8UwlBW8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706122744; c=relaxed/simple;
-	bh=pf6HAXY38MjiKrdrgIHZI2hzdVKiya6tRAX3fKMTagE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jYVPJPZCrIcYnxDp79DWX857Aq8C9C7KDYqabaE8WIfCOzky2k8f3UNphUcOqReOcM07dI78KHS88GNbrt9y89647A09SKcIogVo0ho446J8bDYN0R3IF0fSOF+rs1RGL3MkiPxH7fvqQAbZeFSjfNSEErSVRX9fRd8BOTbkfWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kvLPi7yF; arc=none smtp.client-ip=209.85.166.169
+	s=arc-20240116; t=1706139731; c=relaxed/simple;
+	bh=IKmIcga6k5Dg0BlXa1TCH4mzfOReTRLYuv6E/ZEXKag=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=LZoG7p6Rzua+U9f4giVz+ZiMTTN8CqkzfFRd90AbnDdale64yGny1oWpl5jTztYqADnfkw4wk5YEIEkNcUoivNNLz54arNxNgHwzgak/UdK+OQ+MlIAvt63AvxmtWzOFSRnhdQ/TD8HrK10kRvif36gQbgDlHsG1mmYx7u6dGgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a9gzdftA; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kvLPi7yF"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-361a829e012so7915ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 10:59:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9gzdftA"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5f6c12872fbso95804267b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 15:42:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706122742; x=1706727542; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B9asDGqDhkNFDxcWQSWQOBO5y+hvi+No9XWYkklaHfY=;
-        b=kvLPi7yFgB6g+F2eFTRZRU5cTbyhfWjiDz5+Dqxe6CYElZiMVUTUN0sT1C6uk0cXAg
-         AYvgulV60uMF9QA7L7ti8dXNzpmMMihCEbk9K5D5zk+PlkY5KDSl3Og6dbtnj2ln4WwM
-         DvFLQMTpRy8sSHc0L06Hq968QBBOVEKqVX0KcD+qmvftJ1u3KQmi52ie2vMTO7XosWBD
-         eW4SiJ5fmBvI8MQet3mbqFprDl8Ihk1eJRex1UJZuNF8T7W3bbOGonAJTgdxhCupKzQ/
-         EJub8WB1PANaL/9HODhQ7F3zSSJePwFMttjv6uBmqiFh3Odvzdvf/gOQsiSgoCS8MDYk
-         4DKw==
+        d=google.com; s=20230601; t=1706139728; x=1706744528; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RfW74auTs+0F7HhMDAnZCc535TjNzx9jhVgMO/Hoggc=;
+        b=a9gzdftAWUoGzIOczaW8J8FZ3/SM/8jxR4RKGiust+1szKi4gjEZYg0RW0HQYJ3dZu
+         rH4Ha7vePH5Zo3TFltsQn6G6Vlr5/5X6gGfsGJJnLcQZuGC0vY5Dw1lSskIFUuCivYX0
+         5p9ECpRocpU7PDTSxJzUzzbPNI7e2g1IkqbTnVPGCNUY469XzdkqYeoiHtCSmJZh2ONQ
+         hn4NPPxW/lYyTTNQ6JxCuYlBm7m5Xu8XpnqWWahZLc5Om+k8Cbfrac2F9oahBpPYamjB
+         3Vtaz0UD7Wx7b4/Z/QY0sMKduvPn7zjxCO1H239uKwMzC+fCYBGv6mEl/pNYBbiiW0VQ
+         RT0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706122742; x=1706727542;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B9asDGqDhkNFDxcWQSWQOBO5y+hvi+No9XWYkklaHfY=;
-        b=dwKoCZuwV3x3AwZFItdEwAAup/nrMLK8WH78iSXDqEy/i+8GZ9mWnNSRBhfRTU9yld
-         5xTDH9YEtI5Lx4tnjslOCI3CBArpMsCgKflDWEF98Zlew2wseGTcL0qtX8mO0KKOCamt
-         aHq9aTRSfrIx53VU2nYnQIDI2ISPA2uSF0J73UO8cW8Y+PM0FIedjeTMjB/0opfCCdFG
-         RYly/oVI7EkLyi7yZw2qf59SSQ+TE8lxNebQtzF2DvY9pCWRmgI1Yz0qtTH0UrY6Nw10
-         LFOlP+9JAzP862AJIwsMDauOVh9hFvpeZD5Svtgs1+9zZoC3YUiCQbJw2xFW1tsDR7ch
-         u5yA==
-X-Gm-Message-State: AOJu0YzKV2hESXAOdipoJ/7x87+k16861ftRkP7SB3gQpt6akbeN5a2r
-	vypnle+rHuH5haorFrMufD6QanSZJiT8Tj6GZo7cjs81ThzytyRmBqfNJkqv/idHhC4KCw2HgYs
-	3lSLPcV3IikWraFRq4lfAM4BHF2MTPDE4z7P2
-X-Google-Smtp-Source: AGHT+IEud34L//OA5jtGYMwK66C58nc43tzaCQZPGKNesGQqdsxO4FbQLZMsWuQ0yrFhdU9w3B4yN9gxnxauvhVEER8=
-X-Received: by 2002:a05:6e02:1c06:b0:360:1740:182b with SMTP id
- l6-20020a056e021c0600b003601740182bmr23482ilh.1.1706122741656; Wed, 24 Jan
- 2024 10:59:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706139728; x=1706744528;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RfW74auTs+0F7HhMDAnZCc535TjNzx9jhVgMO/Hoggc=;
+        b=KDDwgVy+ZHJ7zsCWGwNoVdvQbJrjaZxvmCFARSTrMmaVVpOlQxpyAR2DyT5nAg3xId
+         4A/3HEq4XuwsmOpoQe+G738raMd7OJNZvl5A3OaUy/sapG8ABQaV/rcpoBlKUUvXOs6I
+         dI1eo/Bi9boYTGoBRtRcFYBA7cRMKgr/wMgZsu+7ZhKnuTf/s9xo15j3Tpf0Uv0143ox
+         eIvgKxd1qQthDj1TeqcwIDrxwtXXRYAY2NdSbNiBThRywdSIE7zzCA5bmHcGip7N12uE
+         C2ndOSDoXOp1b3QvTo0eRk9v830buF4/RTXcUvT8BQBDyjlwAFIIgQIaNMeRSo5WRsFc
+         xaVg==
+X-Gm-Message-State: AOJu0YzXFkt+WNfRDEHCGZORvHUpEtsUEbwcZUzEgKyy8frNfmAkWwij
+	J/Tclm4nVkQkYRzvJPXeK5w5ynw4PhaVsUU2skieEYYk6BvG4DXPr/KXaLjdiTQ7UT1nadAnswU
+	hXBMekA==
+X-Google-Smtp-Source: AGHT+IE557Wa0s97f9sVCD0XX8RUVF49ObClcOfweWvyxtSeP1M6VsyAtIF2K58FzML/bjhFjlX1mr8SeV+Y
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4e5:2ab4:c78c:bc24])
+ (user=irogers job=sendgmr) by 2002:a05:690c:a90:b0:5f3:f658:ba2a with SMTP id
+ ci16-20020a05690c0a9000b005f3f658ba2amr569226ywb.7.1706139728536; Wed, 24 Jan
+ 2024 15:42:08 -0800 (PST)
+Date: Wed, 24 Jan 2024 15:42:00 -0800
+Message-Id: <20240124234200.1510417-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231212230224.1473300-1-weilin.wang@intel.com> <20231212230224.1473300-13-weilin.wang@intel.com>
-In-Reply-To: <20231212230224.1473300-13-weilin.wang@intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Subject: [PATCH v1] perf pmu: Treat the msr pmu as software
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 24 Jan 2024 10:58:50 -0800
-Message-ID: <CAP-5=fXRZuvTk4Ronkam72CgKVzEA_qU-5FCnzEsxDL7wTaShA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 11/18] perf stat: Add function to handle special
- events in hardware-grouping
-To: weilin.wang@intel.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Yang Jihong <yangjihong1@huawei.com>
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 3:03=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> There are some special events like topdown events and TSC that are not
-> decribed in pmu-event JSON files. Add support to handle this type of
+The msr PMU is a software one, meaning msr events may be grouped
+with events in a hardware context. As the msr PMU isn't marked as a
+software PMU by perf_pmu__is_software, groups with the msr PMU in
+are broken and the msr events placed in a different group. This
+may lead to multiplexing errors where a hardware event isn't
+counted while the msr event, such as tsc, is. Fix all of this by
+marking the msr PMU as software, which agrees with the driver.
 
-nit: described.
+Before:
+```
+$ perf stat -e '{slots,tsc}' -a true
+WARNING: events were regrouped to match PMUs
 
-> events. This should be considered as a temporary solution because includi=
-ng
-> these events in JSON files would be a better solution.
+ Performance counter stats for 'system wide':
 
-Agreed on this being temporary. We have a similar hack with
-arch_evsel__must_be_in_group, could that be reused here?
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/arch/x86/util/evsel.c?h=3Dperf-tools-next#n41
-It doesn't cover TSC but parse-events makes TSC a separate group
-during parsing as the PMU (msr) differs from the PMU of the events
-(typically cpu). Fixing the metrics and events to be json is very
-do-able. I see on Icelake, for example, TOPDOWN.BACKEND_BOUND_SLOTS is
-available while frontend isn't.
+         1,750,335      slots
+         4,243,557      tsc
 
-As an aside, we may want to treat msr as a software pmu:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n1761
-which may be a metric regression.
+       0.001456717 seconds time elapsed
+```
 
-Thanks,
-Ian
+After:
+```
+$ perf stat -e '{slots,tsc}' -a true
+ Performance counter stats for 'system wide':
 
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> ---
->  tools/perf/util/metricgroup.c | 25 +++++++++++++++++++++++--
->  tools/perf/util/metricgroup.h | 15 +++++++++++++++
->  2 files changed, 38 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index 5d9ed22963be..03383f820e06 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -2023,6 +2023,15 @@ static int create_grouping(struct list_head *pmu_i=
-nfo_list,
->         return ret;
->  };
->
-> +static bool is_special_event(const char *id)
-> +{
-> +       for (int i =3D 0; i < SPECIAL_EVENT_MAX; i++) {
-> +               if (!strncmp(id, special_event_names[i], strlen(special_e=
-vent_names[i])))
-> +                       return true;
-> +       }
-> +       return false;
-> +}
-> +
->  /**
->   * hw_aware_build_grouping - Build event groupings by reading counter
->   * requirement of the events and counter available on the system from
-> @@ -2047,7 +2056,17 @@ static int hw_aware_build_grouping(struct expr_par=
-se_ctx *ctx __maybe_unused,
->         hashmap__for_each_entry(ctx->ids, cur, bkt) {
->                 const char *id =3D cur->pkey;
->
-> -               pr_debug("found event %s\n", id);
-> +               if (is_special_event(id)) {
-> +                       struct metricgroup__event_info *event;
-> +
-> +                       event =3D event_info__new(id, "default_core", "0"=
-,
-> +                                               /*free_counter=3D*/true);
-> +                       if (!event)
-> +                               goto err_out;
-> +
-> +                       list_add(&event->nd, &event_info_list);
-> +                       continue;
-> +               }
->                 ret =3D get_metricgroup_events(id, etable, &event_info_li=
-st);
->                 if (ret)
->                         goto err_out;
-> @@ -2519,8 +2538,10 @@ int metricgroup__parse_groups(struct evlist *perf_=
-evlist,
->                 ret =3D hw_aware_parse_groups(perf_evlist, pmu, str,
->                             metric_no_threshold, user_requested_cpu_list,=
- system_wide,
->                             /*fake_pmu=3D*/NULL, metric_events, table);
-> -               if (!ret)
-> +               if (!ret) {
-> +                       pr_info("Hardware aware grouping completed\n");
->                         return 0;
-> +               }
->         }
->
->         return parse_groups(perf_evlist, pmu, str, metric_no_group, metri=
-c_no_merge,
-> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
-h
-> index 51596e4b4341..37fdf8c5ba77 100644
-> --- a/tools/perf/util/metricgroup.h
-> +++ b/tools/perf/util/metricgroup.h
-> @@ -79,6 +79,21 @@ struct metric_expr {
->  #define TRANSFER_FIRST_BYTE(pos) (7 - pos)
->  #define TRANSFER_SEC_BYTE(pos) (23 - pos)
->
-> +/* Special events that are not described in pmu-event JSON files.
-> + * topdown-* and TSC use dedicated registers, set as free
-> + * counter for grouping purpose
-> + */
-> +enum special_events {
-> +       TOPDOWN =3D 0,
-> +       TSC     =3D 1,
-> +       SPECIAL_EVENT_MAX,
-> +};
-> +
-> +static const char *const special_event_names[SPECIAL_EVENT_MAX] =3D {
-> +       "topdown-",
-> +       "TSC",
-> +};
-> +
->  /**
->   * An event used in a metric. This info is for metric grouping.
->   */
-> --
-> 2.39.3
->
+        12,526,380      slots
+         3,415,163      tsc
+
+       0.001488360 seconds time elapsed
+```
+
+Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+The fixes tag is close enough rather than being fully accurate. The
+regression was introduced earlier by the automatic event regrouping.
+---
+ tools/perf/util/pmu.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 3c9609944a2f..88b9aa7d3a27 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1760,6 +1760,12 @@ bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
+ 
+ bool perf_pmu__is_software(const struct perf_pmu *pmu)
+ {
++	const char *known_sw_pmus[] = {
++		"kprobe",
++		"msr",
++		"uprobe",
++	};
++
+ 	if (pmu->is_core || pmu->is_uncore || pmu->auxtrace)
+ 		return false;
+ 	switch (pmu->type) {
+@@ -1771,7 +1777,11 @@ bool perf_pmu__is_software(const struct perf_pmu *pmu)
+ 	case PERF_TYPE_BREAKPOINT:	return true;
+ 	default: break;
+ 	}
+-	return !strcmp(pmu->name, "kprobe") || !strcmp(pmu->name, "uprobe");
++	for (size_t i = 0; i < ARRAY_SIZE(known_sw_pmus); i++) {
++		if (!strcmp(pmu->name, known_sw_pmus[i]))
++			return true;
++	}
++	return false;
+ }
+ 
+ FILE *perf_pmu__open_file(const struct perf_pmu *pmu, const char *name)
+-- 
+2.43.0.429.g432eaa2c6b-goog
+
