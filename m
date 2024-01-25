@@ -1,88 +1,115 @@
-Received: from forward100a.mail.yandex.net (forward100a.mail.yandex.net [178.154.239.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C89135A57;
-	Thu, 25 Jan 2024 18:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C85CA7C
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jan 2024 20:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706208311; cv=none; b=n8CzeZ5sJOKmGwelz/4IWdH9OZCB7biw8t2wU0eHZQoyMLMkg498NBSGmV5Ozge+zBgoi41YtyPhl2MJ3LHHJafBDB406jOIc65TumgaJW6g9Sae78ogFSyqk0iKbWwUQrWzSw1ovxW3isHyySTmVfaG0Vb5jWocTWB3oxBwaP0=
+	t=1706216382; cv=none; b=GmNg8nSK3q/HnlGEzKcbrfy3RU00xI6d8DPGUs7P7WisEFocma2KRudQJlPRjYXfwi6tQu65+nQZ8rUFs9fcuXKxg/oxZADD00srJZ+JICuC015tnPi3fldx/Zuy+x7M68JFByw8PXdDtV9cMsExcppcL09tX9mMdy3R1ZnhG1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706208311; c=relaxed/simple;
-	bh=sknFg9YjLUkGOi+bdNa/wlBuPFMCgxZuVS5giXLTTSM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M+k+Lm3LRQIVy6OGuFl5rhutWoCfioorXl2PwRKe7+DT4Tc3/BeEpbChvW3XSONIoCSS5F7dIKlaGuRIbjrRawJPT4Edtp1uVhe7jjBdSLkoVRiQJWy7pAQpohfTFmaAyRasRNST+T4Sa3h+Ax+9VD+uEAYV3ZrSKcZMeGjjVwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awooo.ru; spf=pass smtp.mailfrom=awooo.ru; dkim=pass (1024-bit key) header.d=awooo.ru header.i=@awooo.ru header.b=etKWKqNC; arc=none smtp.client-ip=178.154.239.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awooo.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awooo.ru
+	s=arc-20240116; t=1706216382; c=relaxed/simple;
+	bh=kugWdLPRbZv+nvzTzXeYEHDhAGQHx+mp0pJFpgLrtHU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uiuvTHrCtxVRRk4Io7flrtMk0ovWrL3baZNV5H4AxV6jd1O0xPNsx+ES3QL6Wgj66rhJzwf8STGg0Rb1x1qq6eaZA4jE4JjJrpikAiBq7OWXtSReZqaa9su5aAUS7VwbmVQRSAL49IExlT/P6OOIf2v+vdmWhFKX0MM5CmWfzTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SMe0vKK4; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=awooo.ru header.i=@awooo.ru header.b="etKWKqNC"
-Received: from mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:2c95:0:640:f90:0])
-	by forward100a.mail.yandex.net (Yandex) with ESMTPS id 1320046C82;
-	Thu, 25 Jan 2024 21:44:58 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id siZhwt2CbeA0-zVloaVIl;
-	Thu, 25 Jan 2024 21:44:57 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=awooo.ru; s=mail;
-	t=1706208297; bh=mBLIg9GlT5gPcbCunKgcUcrc/pkQPGEuGacL3O8h1U4=;
-	h=Cc:To:Message-Id:Date:Subject:From;
-	b=etKWKqNCciYFq48C5RCbkV8Nqurj2lGteP1xEwvnIaqRDx4JCF/fPL1w9hKX0Mtxx
-	 G33cW4BLK/dPKWPco46uu481BCr4DAmXvPS97xtIUBb0ypJcnU/Y5wnaiqpvSCoOer
-	 JLEjE/XbDmwGavdzGx+DzReviIlN17BZ/kBnb3R4=
-Authentication-Results: mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net; dkim=pass header.i=@awooo.ru
-From: kotborealis@awooo.ru
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Evgeny Pistun <kotborealis@awooo.ru>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf data convert: Output empty string for null pointer
-Date: Thu, 25 Jan 2024 12:44:11 -0600
-Message-Id: <20240125184411.30757-1-kotborealis@awooo.ru>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SMe0vKK4"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-361a829e012so17225ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jan 2024 12:59:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706216380; x=1706821180; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fxhQjCPn4Rmv3lAxNtNAmeDVJacck3kwKzoL0OQKBYo=;
+        b=SMe0vKK4SSoZ8TR2ECS4eYh2DX7n11XvgPG2OIGXfJf2LSunohim7xvl+TvkNOzMnI
+         Pf37y0CNYNq5Pk0lkrGmN54EzrUZVezz9C2So+O0nhuKfmTVFjEyxl3MCTYUBhpCM3z5
+         s/tFi9rRLwE0yYxx+++17WEAl1yVnrKY1hBLFm2BvZuhz5U8UEmQDVviVzm+kYNXDyRY
+         rR82/b26bOiLhflumVwkStXiQlM+MEEoVy58JRawyt+eAWYxesZWwm9rVvQIfUOumLhv
+         xA9RVLLBmkDRgeZGmorJWEIB2wgc1VfiYlOoYrOGBDuTm1NUsCooYzHDIHW0EsMc7nS9
+         zSvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706216380; x=1706821180;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fxhQjCPn4Rmv3lAxNtNAmeDVJacck3kwKzoL0OQKBYo=;
+        b=DKOvBxIgu2YwOzyuwq5iOmA/lU7byI4A5Uo9vA1ymOL0N52JZuBcCasG+PdoomJCO0
+         zagPnQ5B8oR2Xkff7ksmWqqEMVI2//VuJ0LOdteTjZp2FnIruuvnKsTbYSag6tZFLjFd
+         I5tpA+ePu7qUL+2qs7Nlcozv6hsZEcfjD0Lp7/dE8veTaxx4YFRqj4/6+n9V4uwfQwK9
+         GgPwpOn1qZV8glxTRLnRhvHEHGudsbTpy3KbVJ9fqkbHadIbdr5r9tMEZiu7471PJttO
+         k0y1KdtJcegDJBwGcfcaiBXzpcuBQmE9c1Q1DIWrl4hIlJX4docDMYyB6MVdbcX+SXOP
+         svQg==
+X-Gm-Message-State: AOJu0Yz4mog6ApXre48HNgFtC3DRLrH+a8Xj18kMK5w2lVF57awkgiCV
+	6cXJ+zZhzv+568cI3JkdNhpfFQEjjv5reG/yhvdM7fgJAakb6qTMa6HmSD+NsYwslcqg6Y3Shuv
+	bilHvVHXTHwuh7w+lRL7kRvn9OZqsuwRNvTnd
+X-Google-Smtp-Source: AGHT+IH6w3OVXl5Xxvj+X6w0bhRST4tKM7ssjJkE4Ww6EnA/boQv6Rq+izaq72As41Kbl3V2NYqiU7fSbQrPhDQo8PY=
+X-Received: by 2002:a92:d4c9:0:b0:35f:6f66:286 with SMTP id
+ o9-20020a92d4c9000000b0035f6f660286mr3777ilm.11.1706216379661; Thu, 25 Jan
+ 2024 12:59:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240125184411.30757-1-kotborealis@awooo.ru>
+In-Reply-To: <20240125184411.30757-1-kotborealis@awooo.ru>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 25 Jan 2024 12:59:27 -0800
+Message-ID: <CAP-5=fXWALXbbDSv9rY9DN3vRy8aynk2MQEBCbqC7drP-Xzcrg@mail.gmail.com>
+Subject: Re: [PATCH] perf data convert: Output empty string for null pointer
+To: kotborealis@awooo.ru
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Evgeny Pistun <kotborealis@awooo.ru>
+On Thu, Jan 25, 2024 at 10:44=E2=80=AFAM <kotborealis@awooo.ru> wrote:
+>
+> From: Evgeny Pistun <kotborealis@awooo.ru>
+>
+> Providing ill-formed input to `perf data conver --to-json`
+> causes it to crash with segmentaton fault. There's a bug in
+> `output_json_string` functon: input string is not validated.
+> This could be reproduced by crafting input that does not specify
+> hostname/os-release/etc, which are written to 'headers' section of
+> outputted json.
+>
+> This patch adds a null pointer check. If `output_json_string` is
+> called with a null pointer, it should output empty string (`""`).
+>
+> Signed-off-by: Evgeny Pistun <kotborealis@awooo.ru>
 
-Providing ill-formed input to `perf data conver --to-json`
-causes it to crash with segmentaton fault. There's a bug in
-`output_json_string` functon: input string is not validated.
-This could be reproduced by crafting input that does not specify
-hostname/os-release/etc, which are written to 'headers' section of
-outputted json.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-This patch adds a null pointer check. If `output_json_string` is
-called with a null pointer, it should output empty string (`""`).
+Thanks,
+Ian
 
-Signed-off-by: Evgeny Pistun <kotborealis@awooo.ru>
----
- tools/perf/util/data-convert-json.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 5bb3c2ba9..f8fd22bd7 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -42,7 +42,7 @@ struct convert_json {
- static void output_json_string(FILE *out, const char *s)
- {
- 	fputc('"', out);
--	while (*s) {
-+	while (s != NULL && *s) {
- 		switch (*s) {
- 
- 		// required escapes with special forms as per RFC 8259
--- 
-2.25.1
-
+> ---
+>  tools/perf/util/data-convert-json.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-c=
+onvert-json.c
+> index 5bb3c2ba9..f8fd22bd7 100644
+> --- a/tools/perf/util/data-convert-json.c
+> +++ b/tools/perf/util/data-convert-json.c
+> @@ -42,7 +42,7 @@ struct convert_json {
+>  static void output_json_string(FILE *out, const char *s)
+>  {
+>         fputc('"', out);
+> -       while (*s) {
+> +       while (s !=3D NULL && *s) {
+>                 switch (*s) {
+>
+>                 // required escapes with special forms as per RFC 8259
+> --
+> 2.25.1
+>
