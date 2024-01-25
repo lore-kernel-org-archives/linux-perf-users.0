@@ -1,115 +1,164 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C85CA7C
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jan 2024 20:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3328E1350E8;
+	Thu, 25 Jan 2024 21:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706216382; cv=none; b=GmNg8nSK3q/HnlGEzKcbrfy3RU00xI6d8DPGUs7P7WisEFocma2KRudQJlPRjYXfwi6tQu65+nQZ8rUFs9fcuXKxg/oxZADD00srJZ+JICuC015tnPi3fldx/Zuy+x7M68JFByw8PXdDtV9cMsExcppcL09tX9mMdy3R1ZnhG1Q=
+	t=1706219101; cv=none; b=KXWJbbTAvw9hTRaWVdeEF4qNjoVZ31IIevYSokO+hPVEznugXeTqRjM8rfE1AozDeAL9pDtY/0Kd9BReuSPyYEx2ocxHUqmQdFbk+5DRVwJvkxo5GqSPzKuV0HotL8AG6KvQXQI8KKcYYCvSBdGcuxP9ThucUY9gCdAy8OCdob0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706216382; c=relaxed/simple;
-	bh=kugWdLPRbZv+nvzTzXeYEHDhAGQHx+mp0pJFpgLrtHU=;
+	s=arc-20240116; t=1706219101; c=relaxed/simple;
+	bh=9u4anSjlouTgw/2P/q/Jq3ADuTKVXo6TI+Vf4cQgPZw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uiuvTHrCtxVRRk4Io7flrtMk0ovWrL3baZNV5H4AxV6jd1O0xPNsx+ES3QL6Wgj66rhJzwf8STGg0Rb1x1qq6eaZA4jE4JjJrpikAiBq7OWXtSReZqaa9su5aAUS7VwbmVQRSAL49IExlT/P6OOIf2v+vdmWhFKX0MM5CmWfzTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SMe0vKK4; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SMe0vKK4"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-361a829e012so17225ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jan 2024 12:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706216380; x=1706821180; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fxhQjCPn4Rmv3lAxNtNAmeDVJacck3kwKzoL0OQKBYo=;
-        b=SMe0vKK4SSoZ8TR2ECS4eYh2DX7n11XvgPG2OIGXfJf2LSunohim7xvl+TvkNOzMnI
-         Pf37y0CNYNq5Pk0lkrGmN54EzrUZVezz9C2So+O0nhuKfmTVFjEyxl3MCTYUBhpCM3z5
-         s/tFi9rRLwE0yYxx+++17WEAl1yVnrKY1hBLFm2BvZuhz5U8UEmQDVviVzm+kYNXDyRY
-         rR82/b26bOiLhflumVwkStXiQlM+MEEoVy58JRawyt+eAWYxesZWwm9rVvQIfUOumLhv
-         xA9RVLLBmkDRgeZGmorJWEIB2wgc1VfiYlOoYrOGBDuTm1NUsCooYzHDIHW0EsMc7nS9
-         zSvw==
+	 To:Cc:Content-Type; b=lRXV7G/S7h62zqxmWAOohA1b0qsNZKi5yR3N/QcKZHdiwOMouek0ydegT/Z5p6XZxsaeX/e7/5FLCZcCIhWhFHN1So5A8cyTBw/ECJR3Spyjd5iXK1UdJBECY4l6S174xhmM47QjyEx4y4YlW9cm6YBZgMak+odivl18Mo4es0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-29041136f73so4552a91.0;
+        Thu, 25 Jan 2024 13:44:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706216380; x=1706821180;
+        d=1e100.net; s=20230601; t=1706219099; x=1706823899;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fxhQjCPn4Rmv3lAxNtNAmeDVJacck3kwKzoL0OQKBYo=;
-        b=DKOvBxIgu2YwOzyuwq5iOmA/lU7byI4A5Uo9vA1ymOL0N52JZuBcCasG+PdoomJCO0
-         zagPnQ5B8oR2Xkff7ksmWqqEMVI2//VuJ0LOdteTjZp2FnIruuvnKsTbYSag6tZFLjFd
-         I5tpA+ePu7qUL+2qs7Nlcozv6hsZEcfjD0Lp7/dE8veTaxx4YFRqj4/6+n9V4uwfQwK9
-         GgPwpOn1qZV8glxTRLnRhvHEHGudsbTpy3KbVJ9fqkbHadIbdr5r9tMEZiu7471PJttO
-         k0y1KdtJcegDJBwGcfcaiBXzpcuBQmE9c1Q1DIWrl4hIlJX4docDMYyB6MVdbcX+SXOP
-         svQg==
-X-Gm-Message-State: AOJu0Yz4mog6ApXre48HNgFtC3DRLrH+a8Xj18kMK5w2lVF57awkgiCV
-	6cXJ+zZhzv+568cI3JkdNhpfFQEjjv5reG/yhvdM7fgJAakb6qTMa6HmSD+NsYwslcqg6Y3Shuv
-	bilHvVHXTHwuh7w+lRL7kRvn9OZqsuwRNvTnd
-X-Google-Smtp-Source: AGHT+IH6w3OVXl5Xxvj+X6w0bhRST4tKM7ssjJkE4Ww6EnA/boQv6Rq+izaq72As41Kbl3V2NYqiU7fSbQrPhDQo8PY=
-X-Received: by 2002:a92:d4c9:0:b0:35f:6f66:286 with SMTP id
- o9-20020a92d4c9000000b0035f6f660286mr3777ilm.11.1706216379661; Thu, 25 Jan
- 2024 12:59:39 -0800 (PST)
+        bh=rbmRSc7ZlDh5JTNaoRV6DZxWPyFidEzfmHZVG8JBRMc=;
+        b=ez99wzURGVwz987S3LtCtJ39BWqxah4051tsR3D8LVNNpkZjn7kZ7XoZJnKtPChN0/
+         xoSw0DNVI3QiPjavauCrOW+bXq3D4VoFDX6Jgsr4jDt/LTieKv6trL0tM5TcFwMSmM7J
+         CRro7grk2OZyPK1W1WfEQYRCsUCNZHqQ0QHDGW690tR4oR1wG7LGG+HRKXyHiRTUgr/E
+         +K21+mKbKeXg+WzlYzAn+LOlRs3QYUmFh7KpppHHdVx1EsN1dUA2Y2F/dXfEiPkVVYeY
+         dlLIMupi9C4V1XtEfEgwevCM1/5ltj3M97M05K6y/vjgaP36rFmlAA9so53nrah4+5WN
+         pi5w==
+X-Gm-Message-State: AOJu0YwYQBM2aXy00xw+2abMmNjXKxVK9oioamzznS4LYVtJTnuVhNSA
+	7Chr1YYYaaTDikJnnz7ClxofEap8E8wpyhZnyDALMlAJSxeR5sUyg6SUl+SNiSWnAAMmbOQfIIj
+	UqzLC+LEH9nsiQ4r86FlUB/Zxohc=
+X-Google-Smtp-Source: AGHT+IHCMp/MWj1+jPa5h7pSxHiBv8GYZGu1MfqAEy53tVm0nxahs2oEaKw2fR+PKHL7GJSDjgpewKxB0Ru0WSL8hhs=
+X-Received: by 2002:a17:90b:3d90:b0:290:1cba:7ccc with SMTP id
+ pq16-20020a17090b3d9000b002901cba7cccmr234706pjb.75.1706219099258; Thu, 25
+ Jan 2024 13:44:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125184411.30757-1-kotborealis@awooo.ru>
-In-Reply-To: <20240125184411.30757-1-kotborealis@awooo.ru>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 25 Jan 2024 12:59:27 -0800
-Message-ID: <CAP-5=fXWALXbbDSv9rY9DN3vRy8aynk2MQEBCbqC7drP-Xzcrg@mail.gmail.com>
-Subject: Re: [PATCH] perf data convert: Output empty string for null pointer
-To: kotborealis@awooo.ru
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240123185036.3461837-1-kan.liang@linux.intel.com>
+ <CAP-5=fWuUJHUMb4mq2oPo+eVH32cLrrzYrKVuMymkkrYqMAYFw@mail.gmail.com> <CAM9d7chCdSSeoBnj2=suzou3udMRQ3XW_qYQe+oejHcO8y3PPQ@mail.gmail.com>
+In-Reply-To: <CAM9d7chCdSSeoBnj2=suzou3udMRQ3XW_qYQe+oejHcO8y3PPQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 25 Jan 2024 13:44:48 -0800
+Message-ID: <CAM9d7chRmZLLTKAPvANj4FButtxpK3H6iX7W35fOedG-tYMzZA@mail.gmail.com>
+Subject: Re: [PATCH V4 0/7] Clean up perf mem
+To: Ian Rogers <irogers@google.com>
+Cc: kan.liang@linux.intel.com, acme@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com, 
+	mike.leach@linaro.org, leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com, 
+	renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com, ravi.bangoria@amd.com, 
+	atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024 at 10:44=E2=80=AFAM <kotborealis@awooo.ru> wrote:
+On Wed, Jan 24, 2024 at 9:24=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> From: Evgeny Pistun <kotborealis@awooo.ru>
+> On Wed, Jan 24, 2024 at 10:24=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > On Tue, Jan 23, 2024 at 10:51=E2=80=AFAM <kan.liang@linux.intel.com> wr=
+ote:
+> > >
+> > > From: Kan Liang <kan.liang@linux.intel.com>
+> > >
+> > > Changes since V3:
+> > > - Fix the powerPC building error (Kajol Jain)
+> > > - The s390 does not support perf mem. Remove the code. (Thomas)
+> > > - Add reviewed-by and tested-by from Kajol Jain for patch 1 and 2
+> > > - Add tested-by from Leo
+> > >
+> > > Changes since V2:
+> > > - Fix the Arm64 building error (Leo)
+> > > - Add two new patches to clean up perf_mem_events__record_args()
+> > >   and perf_pmus__num_mem_pmus() (Leo)
+> > >
+> > > Changes since V1:
+> > > - Fix strcmp of PMU name checking (Ravi)
+> > > - Fix "/," typo (Ian)
+> > > - Rename several functions with perf_pmu__mem_events prefix. (Ian)
+> > > - Fold the header removal patch into the patch where the cleanups mad=
+e.
+> > >   (Arnaldo)
+> > > - Add reviewed-by and tested-by from Ian and Ravi
+> > >
+> > > As discussed in the below thread, the patch set is to clean up perf m=
+em.
+> > > https://lore.kernel.org/lkml/afefab15-cffc-4345-9cf4-c6a4128d4d9c@lin=
+ux.intel.com/
+> > >
+> > > Introduce generic functions perf_mem_events__ptr(),
+> > > perf_mem_events__name() ,and is_mem_loads_aux_event() to replace the
+> > > ARCH specific ones.
+> > > Simplify the perf_mem_event__supported().
+> > >
+> > > Only keeps the ARCH-specific perf_mem_events array in the correspondi=
+ng
+> > > mem-events.c for each ARCH.
+> > >
+> > > There is no functional change.
+> > >
+> > > The patch set touches almost all the ARCHs, Intel, AMD, ARM, Power an=
+d
+> > > etc. But I can only test it on two Intel platforms.
+> > > Please give it try, if you have machines with other ARCHs.
+> > >
+> > > Here are the test results:
+> > > Intel hybrid machine:
+> > >
+> > > $perf mem record -e list
+> > > ldlat-loads  : available
+> > > ldlat-stores : available
+> > >
+> > > $perf mem record -e ldlat-loads -v --ldlat 50
+> > > calling: record -e cpu_atom/mem-loads,ldlat=3D50/P -e cpu_core/mem-lo=
+ads,ldlat=3D50/P
+> > >
+> > > $perf mem record -v
+> > > calling: record -e cpu_atom/mem-loads,ldlat=3D30/P -e cpu_atom/mem-st=
+ores/P -e cpu_core/mem-loads,ldlat=3D30/P -e cpu_core/mem-stores/P
+> > >
+> > > $perf mem record -t store -v
+> > > calling: record -e cpu_atom/mem-stores/P -e cpu_core/mem-stores/P
+> > >
+> > >
+> > > Intel SPR:
+> > > $perf mem record -e list
+> > > ldlat-loads  : available
+> > > ldlat-stores : available
+> > >
+> > > $perf mem record -e ldlat-loads -v --ldlat 50
+> > > calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=3D50/}:P
+> > >
+> > > $perf mem record -v
+> > > calling: record -e {cpu/mem-loads-aux/,cpu/mem-loads,ldlat=3D30/}:P -=
+e cpu/mem-stores/P
+> > >
+> > > $perf mem record -t store -v
+> > > calling: record -e cpu/mem-stores/P
+> > >
+> > > Kan Liang (7):
+> > >   perf mem: Add mem_events into the supported perf_pmu
+> > >   perf mem: Clean up perf_mem_events__ptr()
+> > >   perf mem: Clean up perf_mem_events__name()
+> > >   perf mem: Clean up perf_mem_event__supported()
+> > >   perf mem: Clean up is_mem_loads_aux_event()
+> > >   perf mem: Clean up perf_mem_events__record_args()
+> > >   perf mem: Clean up perf_pmus__num_mem_pmus()
+> >
+> > I think this is ready to land in perf-tools-next, multiple Tested-by
+> > or Reviewed-by.
 >
-> Providing ill-formed input to `perf data conver --to-json`
-> causes it to crash with segmentaton fault. There's a bug in
-> `output_json_string` functon: input string is not validated.
-> This could be reproduced by crafting input that does not specify
-> hostname/os-release/etc, which are written to 'headers' section of
-> outputted json.
->
-> This patch adds a null pointer check. If `output_json_string` is
-> called with a null pointer, it should output empty string (`""`).
->
-> Signed-off-by: Evgeny Pistun <kotborealis@awooo.ru>
+> Sure, queued for a local testing.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Applied to perf-tools-next, thanks!
 
-Thanks,
-Ian
-
-> ---
->  tools/perf/util/data-convert-json.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-c=
-onvert-json.c
-> index 5bb3c2ba9..f8fd22bd7 100644
-> --- a/tools/perf/util/data-convert-json.c
-> +++ b/tools/perf/util/data-convert-json.c
-> @@ -42,7 +42,7 @@ struct convert_json {
->  static void output_json_string(FILE *out, const char *s)
->  {
->         fputc('"', out);
-> -       while (*s) {
-> +       while (s !=3D NULL && *s) {
->                 switch (*s) {
->
->                 // required escapes with special forms as per RFC 8259
-> --
-> 2.25.1
->
+Namhyung
