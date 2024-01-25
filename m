@@ -1,146 +1,87 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA9B12C532
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 23:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F75D566A
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jan 2024 04:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706139731; cv=none; b=FrxFHP8JXickouhgfcsHnfP4yEB8oQ1fVZMbrNWjEMPoGNzm5I8CbuUFOvzRunzcWlegQKgUt8Ae75XHnmjhTJ8FnrDedDKj5IehecCsP/IBaqhQDPkJvEqjm9ZIW7108naX519Ukv5ZvHSxTivEbO/2Jn6gwF/qXGZ8UwlBW8k=
+	t=1706158466; cv=none; b=O5i7Re7MtiGWb0rCKgi4cgSANLCFLgKldlCIYkkFOcE2PaUBkf29mS67wpxd46zJ1AlY2xvXVa/g3qvWI6wmOyeI9elQNo6/TfrZ68n7b/rddL7vVivr1lY1/09+pimiqbypn9XXFurTLHPH+ZLU6/MrFYey/lK7aBaCkFCITQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706139731; c=relaxed/simple;
-	bh=IKmIcga6k5Dg0BlXa1TCH4mzfOReTRLYuv6E/ZEXKag=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=LZoG7p6Rzua+U9f4giVz+ZiMTTN8CqkzfFRd90AbnDdale64yGny1oWpl5jTztYqADnfkw4wk5YEIEkNcUoivNNLz54arNxNgHwzgak/UdK+OQ+MlIAvt63AvxmtWzOFSRnhdQ/TD8HrK10kRvif36gQbgDlHsG1mmYx7u6dGgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a9gzdftA; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1706158466; c=relaxed/simple;
+	bh=RY0YpxLJVnkyOM+U4EyavUoYESYenKBNJ/vaR1IY6cM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kbWyLqNhH4uIf5xlPTUL1W3eqZMi4qZ0cPLTCxshJKkwwzokb421DLBQO2okq07Hw1zUu9se740a2u20CDdR7GcaVaI4k/vd29SNP5ON367lMGEkt1YvQTlYPmGSRodXt5ikJB3UJLt/5f9P0sT2i2wOlCCn5yV9afA7w93rnTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KYBslUBh; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9gzdftA"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5f6c12872fbso95804267b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 15:42:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KYBslUBh"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d72d240c69so54785ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jan 2024 20:54:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706139728; x=1706744528; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RfW74auTs+0F7HhMDAnZCc535TjNzx9jhVgMO/Hoggc=;
-        b=a9gzdftAWUoGzIOczaW8J8FZ3/SM/8jxR4RKGiust+1szKi4gjEZYg0RW0HQYJ3dZu
-         rH4Ha7vePH5Zo3TFltsQn6G6Vlr5/5X6gGfsGJJnLcQZuGC0vY5Dw1lSskIFUuCivYX0
-         5p9ECpRocpU7PDTSxJzUzzbPNI7e2g1IkqbTnVPGCNUY469XzdkqYeoiHtCSmJZh2ONQ
-         hn4NPPxW/lYyTTNQ6JxCuYlBm7m5Xu8XpnqWWahZLc5Om+k8Cbfrac2F9oahBpPYamjB
-         3Vtaz0UD7Wx7b4/Z/QY0sMKduvPn7zjxCO1H239uKwMzC+fCYBGv6mEl/pNYBbiiW0VQ
-         RT0w==
+        d=google.com; s=20230601; t=1706158465; x=1706763265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RY0YpxLJVnkyOM+U4EyavUoYESYenKBNJ/vaR1IY6cM=;
+        b=KYBslUBhHYnRbtEOssPRg1sIKHjI8Lo0tAolcbPFTk7Zz1yslplDzC1rXa2wBilOhm
+         zxPgKBBm3R/ZuM872QgdRU1RFvMN8AC0BH21pnHLDRn8oKpzTwlXu11WzJNNw9GqZBCn
+         eObwDyj14Va/2mzeQSBxazZBdQZgafH8Yw77xqr+Re/D6HKTvl4z8hvwqJNlb+c1Ucm6
+         Ip4//zYBB9FEXFvO1tWKYyTZyKd5jkzrKm1KxJdKoozrHoH6iXFKQazF2VPu4S3eit1C
+         XGe+H1zWts/U7p8MSSq3+TesHQvyOsEaeQGabkGicLmlCrRIIWPiM+3nUEZKbR9a+Bh3
+         3D9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706139728; x=1706744528;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RfW74auTs+0F7HhMDAnZCc535TjNzx9jhVgMO/Hoggc=;
-        b=KDDwgVy+ZHJ7zsCWGwNoVdvQbJrjaZxvmCFARSTrMmaVVpOlQxpyAR2DyT5nAg3xId
-         4A/3HEq4XuwsmOpoQe+G738raMd7OJNZvl5A3OaUy/sapG8ABQaV/rcpoBlKUUvXOs6I
-         dI1eo/Bi9boYTGoBRtRcFYBA7cRMKgr/wMgZsu+7ZhKnuTf/s9xo15j3Tpf0Uv0143ox
-         eIvgKxd1qQthDj1TeqcwIDrxwtXXRYAY2NdSbNiBThRywdSIE7zzCA5bmHcGip7N12uE
-         C2ndOSDoXOp1b3QvTo0eRk9v830buF4/RTXcUvT8BQBDyjlwAFIIgQIaNMeRSo5WRsFc
-         xaVg==
-X-Gm-Message-State: AOJu0YzXFkt+WNfRDEHCGZORvHUpEtsUEbwcZUzEgKyy8frNfmAkWwij
-	J/Tclm4nVkQkYRzvJPXeK5w5ynw4PhaVsUU2skieEYYk6BvG4DXPr/KXaLjdiTQ7UT1nadAnswU
-	hXBMekA==
-X-Google-Smtp-Source: AGHT+IE557Wa0s97f9sVCD0XX8RUVF49ObClcOfweWvyxtSeP1M6VsyAtIF2K58FzML/bjhFjlX1mr8SeV+Y
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4e5:2ab4:c78c:bc24])
- (user=irogers job=sendgmr) by 2002:a05:690c:a90:b0:5f3:f658:ba2a with SMTP id
- ci16-20020a05690c0a9000b005f3f658ba2amr569226ywb.7.1706139728536; Wed, 24 Jan
- 2024 15:42:08 -0800 (PST)
-Date: Wed, 24 Jan 2024 15:42:00 -0800
-Message-Id: <20240124234200.1510417-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1706158465; x=1706763265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RY0YpxLJVnkyOM+U4EyavUoYESYenKBNJ/vaR1IY6cM=;
+        b=a34REYVlHgD9LGMY2lcjPYcEhpo9mKDVluBoQu13Rik1V8JNberYHMprOJdaxIRaBj
+         ESTQ17EcIMgaY8O9BkAuyROmLHmxL/yqFYjsZnjfXNbkzeoiJlBsNZ3/9aqUgirqnDQG
+         8ESrVmt+Q50QG9hRtt4X/WXjC2ahmnAAMcbIUh7gfLeAGdFXf0f1WVc1PNntXvfs96mH
+         3N7E6hz26J6EVjKzm6teCINpEyiIqc7IgroFGswC7OJlKxun9C9W/PSeajV5A+UMGXXi
+         V2HV5F1soL0Q2UtLVa3mJXAO2Xf5S6r9IOb+7oFXdwtfIsuI8udREDv/SQlvHaC8FDxp
+         KNHg==
+X-Gm-Message-State: AOJu0Yz3S/rvCvZdOkLMQJWE+iRyPXPPi3vc0huEvlKAtWF3/PMV/qvo
+	4459nHPzFou+PERYzzlpL+S2ALG7S6wYEAZqO/efkvQKVtXsuf7vcfMrtmooh4lILCgcAB2a86c
+	sCTac2K4ZXwQOHqpfyxEPFr1QD2IvM5rggt+Y
+X-Google-Smtp-Source: AGHT+IGmwUyV7ad6tGGpwYKy06i1bLqX3aP6rnMCqtrP6eCDM/dw9PI9hnQa4rcswaKttl2+4JOZaCJ4y/v8gXKio/0=
+X-Received: by 2002:a17:903:22c8:b0:1d7:37f5:5619 with SMTP id
+ y8-20020a17090322c800b001d737f55619mr104642plg.25.1706158464470; Wed, 24 Jan
+ 2024 20:54:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Subject: [PATCH v1] perf pmu: Treat the msr pmu as software
+MIME-Version: 1.0
+References: <20231212230224.1473300-1-weilin.wang@intel.com> <20231212230224.1473300-8-weilin.wang@intel.com>
+In-Reply-To: <20231212230224.1473300-8-weilin.wang@intel.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+Date: Wed, 24 Jan 2024 20:54:12 -0800
+Message-ID: <CAP-5=fXDWbp90cQ62tjEahy68DF+YGiWWhXxjMLNfLq_Ce98-A@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 06/18] perf pmu-events: Add event counter data for Icelakex
+To: weilin.wang@intel.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>
+	Caleb Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The msr PMU is a software one, meaning msr events may be grouped
-with events in a hardware context. As the msr PMU isn't marked as a
-software PMU by perf_pmu__is_software, groups with the msr PMU in
-are broken and the msr events placed in a different group. This
-may lead to multiplexing errors where a hardware event isn't
-counted while the msr event, such as tsc, is. Fix all of this by
-marking the msr PMU as software, which agrees with the driver.
+On Tue, Dec 12, 2023 at 3:03=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> The added new fields are required in this new grouping method. Currently,
+> the format of added fields are temporary for experiments.
 
-Before:
-```
-$ perf stat -e '{slots,tsc}' -a true
-WARNING: events were regrouped to match PMUs
+It'd be nice in the commit message to state which fields are added.
+I'm somewhat confused about the meaning of TakenAlone on an event.
 
- Performance counter stats for 'system wide':
-
-         1,750,335      slots
-         4,243,557      tsc
-
-       0.001456717 seconds time elapsed
-```
-
-After:
-```
-$ perf stat -e '{slots,tsc}' -a true
- Performance counter stats for 'system wide':
-
-        12,526,380      slots
-         3,415,163      tsc
-
-       0.001488360 seconds time elapsed
-```
-
-Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-The fixes tag is close enough rather than being fully accurate. The
-regression was introduced earlier by the automatic event regrouping.
----
- tools/perf/util/pmu.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 3c9609944a2f..88b9aa7d3a27 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1760,6 +1760,12 @@ bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
- 
- bool perf_pmu__is_software(const struct perf_pmu *pmu)
- {
-+	const char *known_sw_pmus[] = {
-+		"kprobe",
-+		"msr",
-+		"uprobe",
-+	};
-+
- 	if (pmu->is_core || pmu->is_uncore || pmu->auxtrace)
- 		return false;
- 	switch (pmu->type) {
-@@ -1771,7 +1777,11 @@ bool perf_pmu__is_software(const struct perf_pmu *pmu)
- 	case PERF_TYPE_BREAKPOINT:	return true;
- 	default: break;
- 	}
--	return !strcmp(pmu->name, "kprobe") || !strcmp(pmu->name, "uprobe");
-+	for (size_t i = 0; i < ARRAY_SIZE(known_sw_pmus); i++) {
-+		if (!strcmp(pmu->name, known_sw_pmus[i]))
-+			return true;
-+	}
-+	return false;
- }
- 
- FILE *perf_pmu__open_file(const struct perf_pmu *pmu, const char *name)
--- 
-2.43.0.429.g432eaa2c6b-goog
-
+Thanks,
+Ian
