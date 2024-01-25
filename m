@@ -1,44 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2B25DF32;
-	Thu, 25 Jan 2024 14:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FA86E2C5;
+	Thu, 25 Jan 2024 14:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706193938; cv=none; b=QmAAR6iUz05iBRx+8Bbcquje3RqQiVJvrHw4F8sQDlg2UkmAlL3hlntIlqIgAR1T1FP7Fpcfo9YxoDvDkw/yDeOKw88bvbWoouMU4Lg4v5JSXcpsVEyPySqJlqu+pZJZtXlQvB+2HRWo7EQQx8zqyzhPchdhn5k2yk7ahD17Qbc=
+	t=1706194011; cv=none; b=Qa5eyMibEhGCloMvTcqE4DQX0uRNreVjojVFzef8rbfU5SMi2tOsNlpL0kOYHD3992OcoMkb8jyZsUZS7+0hlhWM1oblquT8ZUbuJQS24hrDIaPFFIgDUB9xDNR3eJjQ0MfOpJDgHxbDzCI3HNUswkVuxHgN59AnBkdVtDx/yhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706193938; c=relaxed/simple;
-	bh=yAbogpXndtoZKLrZHxVbYr0m4Eqw8wm5YjgaFBUP2o0=;
+	s=arc-20240116; t=1706194011; c=relaxed/simple;
+	bh=cxVwapVppq42oAZrH32flGGzQVK5S4EcrH9NiMkGKv8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tRyg6ypKroT4gqvyb+935B/MhLj6s+SAfjChztZsXLrfNqlqFlitUV/UDC1zeaCDoSOd7vo/EYIOWABXDUb5MAIQuTpnnsO+H4mNxQwcnVceuH1UvKxS27UvBBLGVV2JngQpiAvgQukR1RkOs8ELyh6ZRYRblwvmwbSew/nBoHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2SJsb2z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fyKzDG6guXE5FOBp4f1YJCLjvPZSzu5PaK1Ea+WramX7qvuL4IWP7T9vhTBO1dvNZdqf5qeRCKlPlG1K18+9IDe5tGHig7fYEAlIx4PiEppyiGZlhf7TR4ZiGovGuaU6SYVY3MzUVyUipz/iqNDNLxKKc7/AOrg0tpfMrx65x3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HNLztXyc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2SJsb2z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99A27C433C7;
-	Thu, 25 Jan 2024 14:45:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HNLztXyc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA60FC433C7;
+	Thu, 25 Jan 2024 14:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706193937;
-	bh=yAbogpXndtoZKLrZHxVbYr0m4Eqw8wm5YjgaFBUP2o0=;
+	s=k20201202; t=1706194011;
+	bh=cxVwapVppq42oAZrH32flGGzQVK5S4EcrH9NiMkGKv8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M2SJsb2zTgPxeRd3Usls2naa5E3F/yUgSYiDxCE0ElziFKwBAgE7cKzAXceKJnjMP
-	 D495+J8GkV05X8Kj9Ig4uNl/9S9J/bf0pVfO18CUf5gXw1ARDa0twhTNRb5dlLeGrN
-	 iXj/k/a0ErzI7M7wIIrv2Ooy45LYYW36te7QqjkZbk/n4rQHy/xS85LWDAgXCUVO7l
-	 Di4jOQZ8uepNNACUydpxImWTZZNykraTtErMG1EHA+y/RKu1u3TudPIAJsX6UdDGRF
-	 bY4mjzlhMh8v1lqZWHsc4Tb+8AjANk1POZzyj/YdlVd3YWgaIjEj0Ah98rR0aRxnD5
-	 qBHg8EJNdVIMg==
+	b=HNLztXycF0nsyMlSyvF/HgQiVL6IERit4V7eF/i+lrNGgBjQYe3Z3bnlP1D24kFlN
+	 hDBFddZhY0VCLKqOT9FGTCsrJxZ20Hn01F2Zo88hVpEgfJ424CQQJQtoYaR974XT5f
+	 hpG9b81m9mH690MKNVnl6cfK18YMTnyLxPcYOSsOkMVGmWVay1rKm7GgGUU7o3HgDE
+	 36ZCHlvlIbJDSuWIA/e0GMFcqAvAbuJbTG5eI5vSwgoZz8743DypftYI3Xr3gQkEot
+	 HNPxRRpLxVRmcfhhwN/3RufPuHh71RdGxY7e0Zyy3a9DsCh9iGNZ1VQlSjj53CQ9Cl
+	 2dkZCgGEq6uIg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 21ECE405B2; Thu, 25 Jan 2024 11:45:35 -0300 (-03)
-Date: Thu, 25 Jan 2024 11:45:35 -0300
+	id 730AA405B2; Thu, 25 Jan 2024 11:46:43 -0300 (-03)
+Date: Thu, 25 Jan 2024 11:46:43 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH RESEND] perf tools: Add -H short option for --hierarchy
-Message-ID: <ZbJ0DyIx9bW-7HjM@kernel.org>
-References: <20240125055124.1579617-1-namhyung@kernel.org>
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Ross Zwisler <zwisler@chromium.org>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Shirisha G <shirisha@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Fixes for 6.8 PR1
+Message-ID: <ZbJ0U8QVZ1LIDuxg@kernel.org>
+References: <20240124043015.1388867-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,180 +55,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240125055124.1579617-1-namhyung@kernel.org>
+In-Reply-To: <20240124043015.1388867-1-irogers@google.com>
 X-Url: http://acmel.wordpress.com
 
-Em Wed, Jan 24, 2024 at 09:51:24PM -0800, Namhyung Kim escreveu:
-> I found the hierarchy mode useful, but it's easy to make a typo when
-> using it.  Let's add a short option for that.
+Em Tue, Jan 23, 2024 at 08:30:10PM -0800, Ian Rogers escreveu:
+> Discovered some testing issues around perf list, perf script and perf
+> daemon based on Linux 6.8-rc1. Some of the issues were discovered in
+> the context of an Alderlake system.
+> 
+> v2 - address Namhyung's review comment and add his Acked-by.
 
-Fair enough, but:
-
-[root@quaco ~]# perf report --hi + head -15
- Error: Ambiguous option: hi (could be --hide-unresolved or --hierarchy)
-
- Usage: perf report [<options>]
-
-    -U, --hide-unresolved
-                          Only display entries resolved to a symbol
-        --hierarchy       Show entries in a hierarchy
-	[root@quaco ~]# perf report --hie | head -15
-# To display the perf.data header info, please use --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 56  of event 'cycles:P'
-# Event count (approx.): 13456952
-#
-#       Overhead  Command / Shared Object / Symbol
-# ..............  ........................................
-#
-    72.56%        swapper
-       72.56%        [kernel.kallsyms]
-          72.56%        [k] intel_idle_ibrs
-    18.53%        perf
-[root@quaco ~]#
- 
-> Also update the documentation. :)
-
-Thanks, as a suggestion maybe we should have a:
-
-  $ perf config ui.hierarchy 
-
-as we have:
-
-[root@quaco ~]# perf config ui.show-headers=true
-[root@quaco ~]# perf config ui.show-headers
-ui.show-headers=true
-[root@quaco ~]#
-
-
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thanks, applied to perf-tools.
 
 - Arnaldo
 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Documentation/perf-report.txt | 29 ++++++++++++++++++++-
->  tools/perf/Documentation/perf-top.txt    | 32 +++++++++++++++++++++++-
->  tools/perf/builtin-report.c              |  2 +-
->  tools/perf/builtin-top.c                 |  2 +-
->  4 files changed, 61 insertions(+), 4 deletions(-)
+ 
+> Ian Rogers (5):
+>   perf list: Switch error message to pr_err
+>   perf list: Add output file option
+>   perf test: Workaround debug output in list test
+>   perf test: Fix script test for python being disabled
+>   perf test: Make daemon signal test less racy
 > 
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> index 38f59ac064f7..d8b863e01fe0 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -531,8 +531,35 @@ include::itrace.txt[]
->  --raw-trace::
->  	When displaying traceevent output, do not use print fmt or plugins.
->  
-> +-H::
->  --hierarchy::
-> -	Enable hierarchical output.
-> +	Enable hierarchical output.  In the hierarchy mode, each sort key groups
-> +	samples based on the criteria and then sub-divide it using the lower
-> +	level sort key.
-> +
-> +	For example:
-> +	In normal output:
-> +
-> +	  perf report -s dso,sym
-> +	  # Overhead  Shared Object      Symbol
-> +	      50.00%  [kernel.kallsyms]  [k] kfunc1
-> +	      20.00%  perf               [.] foo
-> +	      15.00%  [kernel.kallsyms]  [k] kfunc2
-> +	      10.00%  perf               [.] bar
-> +	       5.00%  libc.so            [.] libcall
-> +
-> +	In hierarchy output:
-> +
-> +	  perf report -s dso,sym --hierarchy
-> +	  #   Overhead  Shared Object / Symbol
-> +	      65.00%    [kernel.kallsyms]
-> +	        50.00%    [k] kfunc1
-> +	        15.00%    [k] kfunc2
-> +	      30.00%    perf
-> +	        20.00%    [.] foo
-> +	        10.00%    [.] bar
-> +	       5.00%    libc.so
-> +	         5.00%    [.] libcall
->  
->  --inline::
->  	If a callgraph address belongs to an inlined function, the inline stack
-> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-> index 3c202ec080ba..a754875fa5bb 100644
-> --- a/tools/perf/Documentation/perf-top.txt
-> +++ b/tools/perf/Documentation/perf-top.txt
-> @@ -261,8 +261,38 @@ Default is to monitor all CPUS.
->  --raw-trace::
->  	When displaying traceevent output, do not use print fmt or plugins.
->  
-> +-H::
->  --hierarchy::
-> -	Enable hierarchy output.
-> +	Enable hierarchical output.  In the hierarchy mode, each sort key groups
-> +	samples based on the criteria and then sub-divide it using the lower
-> +	level sort key.
-> +
-> +	For example, in normal output:
-> +
-> +	  perf report -s dso,sym
-> +	  #
-> +	  # Overhead  Shared Object      Symbol
-> +	  # ........  .................  ...........
-> +	      50.00%  [kernel.kallsyms]  [k] kfunc1
-> +	      20.00%  perf               [.] foo
-> +	      15.00%  [kernel.kallsyms]  [k] kfunc2
-> +	      10.00%  perf               [.] bar
-> +	       5.00%  libc.so            [.] libcall
-> +
-> +	In hierarchy output:
-> +
-> +	  perf report -s dso,sym --hierarchy
-> +	  #
-> +	  #   Overhead  Shared Object / Symbol
-> +	  # ..........  ......................
-> +	      65.00%    [kernel.kallsyms]
-> +	        50.00%    [k] kfunc1
-> +	        15.00%    [k] kfunc2
-> +	      30.00%    perf
-> +	        20.00%    [.] foo
-> +	        10.00%    [.] bar
-> +	       5.00%    libc.so
-> +	         5.00%    [.] libcall
->  
->  --overwrite::
->  	Enable this to use just the most recent records, which helps in high core count
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index f2ed2b7e80a3..ccb91fe6b876 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1410,7 +1410,7 @@ int cmd_report(int argc, const char **argv)
->  		    "only show processor socket that match with this filter"),
->  	OPT_BOOLEAN(0, "raw-trace", &symbol_conf.raw_trace,
->  		    "Show raw trace event output (do not use print fmt or plugins)"),
-> -	OPT_BOOLEAN(0, "hierarchy", &symbol_conf.report_hierarchy,
-> +	OPT_BOOLEAN('H', "hierarchy", &symbol_conf.report_hierarchy,
->  		    "Show entries in a hierarchy"),
->  	OPT_CALLBACK_DEFAULT(0, "stdio-color", NULL, "mode",
->  			     "'always' (default), 'never' or 'auto' only applicable to --stdio mode",
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index baf1ab083436..03cf45088fd8 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1573,7 +1573,7 @@ int cmd_top(int argc, const char **argv)
->  		    "add last branch records to call history"),
->  	OPT_BOOLEAN(0, "raw-trace", &symbol_conf.raw_trace,
->  		    "Show raw trace event output (do not use print fmt or plugins)"),
-> -	OPT_BOOLEAN(0, "hierarchy", &symbol_conf.report_hierarchy,
-> +	OPT_BOOLEAN('H', "hierarchy", &symbol_conf.report_hierarchy,
->  		    "Show entries in a hierarchy"),
->  	OPT_BOOLEAN(0, "overwrite", &top.record_opts.overwrite,
->  		    "Use a backward ring buffer, default: no"),
+>  tools/perf/Documentation/perf-list.txt |   4 +
+>  tools/perf/builtin-list.c              | 211 +++++++++++++++----------
+>  tools/perf/tests/shell/daemon.sh       |  34 ++--
+>  tools/perf/tests/shell/list.sh         |  21 ++-
+>  tools/perf/tests/shell/script.sh       |   3 +-
+>  tools/perf/util/print-events.c         |   2 +-
+>  6 files changed, 177 insertions(+), 98 deletions(-)
+> 
 > -- 
 > 2.43.0.429.g432eaa2c6b-goog
+> 
 > 
 
 -- 
