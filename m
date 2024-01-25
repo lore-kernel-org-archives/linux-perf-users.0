@@ -1,46 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A5F02231E;
-	Thu, 25 Jan 2024 09:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96361CA80;
+	Thu, 25 Jan 2024 10:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706175742; cv=none; b=irfTGIaSuOJmRJ38ULQKyn6YfI7BM/IpDnpZskCfcHDalVwG8X3P6cZb8xLwvO6AbHLG6g3ivLENvSVyBG/Sbcn2qJi7O+8IfT7wykZPv/WcV+UOfSiVBNmgZaqtMuHQAVRgrU3q3Qt/nxY/I8rchmVVitj46cxEHlbNCkiTrZQ=
+	t=1706177049; cv=none; b=m4rdu9ykWaFPZ9Aq5hbCqjf9fJjsmGBHJ6B65N31wzsnr7vuB1i3ESHRHIFnL1xdZPj6t2lS5j40jYVXrIZpizPOS+xQXUJm8OLHDB0gKLmu+xhrGtLhQjruzW+QS2bwWFyS06wHCq2unxm64SS8aYfyCTuIl9xC2XfiJ8E5Ymo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706175742; c=relaxed/simple;
-	bh=iha9lIT8tWEBCDldgD5w17x1FYFzupge+jOEAX12YzQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dzg1czI4UDXSLaGKo7MNxMsFe4lYvhjX9NEP/8Kgupq3BNC+d2CPbSTQyH0P4TVP9X2QCw2+PvyCSovtEzipAOYCHpXOw7xN0dgbrFE93gvtsJ8pihI3u1C2kNSCuThVM5SVhu3/akeqAxVuIwLbpicuof8gG24uvePEulGBB1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EA221595;
-	Thu, 25 Jan 2024 01:43:04 -0800 (PST)
-Received: from a077893.arm.com (unknown [10.163.40.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B06053F73F;
-	Thu, 25 Jan 2024 01:42:14 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	German Gomez <german.gomez@arm.com>
-Subject: [PATCH V16 8/8] perf: test: Extend branch stack sampling test for Arm64 BRBE
-Date: Thu, 25 Jan 2024 15:11:19 +0530
-Message-Id: <20240125094119.2542332-9-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240125094119.2542332-1-anshuman.khandual@arm.com>
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1706177049; c=relaxed/simple;
+	bh=7lJZvMAj51BkqXLUovg3jYW19XUo9wOqZUP/JCL4edQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KQXd0BThldChRYaLigwtvaB4yE9GW3R3NfYGX40Xki4uX58Rm4ZGaRqzeGrzQYHBejAGgq70owaAc6Kpl5BgckgLsVw5nwgg1axnqu4CyRTgt/qbp5/Tex3mnEwfmjkMCknRrva6A+ViP21SXpCi0V1YvgojZX9FkEhA8qYe+Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H2zNI/fl; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H2zNI/fl"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40P87glc011509;
+	Thu, 25 Jan 2024 10:04:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=l11VXT8hic+ZuAE/Hw1KQJD9GYpo1tnGYt9Nny3oBB8=;
+ b=H2zNI/flARliMyN2bYeK3raO5CzXAviz5DHLtmzlzK5ELqns8blJJl3N9DxOYZhOO2XA
+ LAdye91ripcjB4DeN5DsPRs5x4IKi+zr1MbAx5q8rvGxnfbYvz5Ks57mz8sQvo4vbY1k
+ Dgv7wJDi1wl7bhC9DrQlB8oTTC0TlU2+V+2qolli3xujf6f4GioKIkStvkamTWsVOhLr
+ sBDtdMI589KuGm3ncvA4XV7VSnKfkck16cg06JabX6wybRJVQnMnJ+UPHsL3WJo8X7tD
+ xV0Fks8u6tlLVX2LuDe9H57Q585cJJSoLX55gbfmdYNqOUJ4A6/hYOiAsA0IRVUU1Ksr Iw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vukuuapp3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 10:04:04 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40PA1pDX028048;
+	Thu, 25 Jan 2024 10:04:03 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vukuuapnc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 10:04:03 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40P8DVV2010850;
+	Thu, 25 Jan 2024 10:04:02 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vrrw03stu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 10:04:02 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40PA3xqN32702798
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Jan 2024 10:03:59 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 150B12004E;
+	Thu, 25 Jan 2024 10:03:59 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CB7A92004D;
+	Thu, 25 Jan 2024 10:03:58 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Jan 2024 10:03:58 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, namhyung@kernel.org
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>
+Subject: [PING PATCH v2] perf test: Fix test case perf script tests on s390
+Date: Thu, 25 Jan 2024 11:03:51 +0100
+Message-Id: <20240125100351.936262-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,182 +74,62 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: x4NZDRyOUgZ8vxVhtOO7WKRLNcHIuIE5
+X-Proofpoint-GUID: 9EEcyfGOR0vkQQNC3UD39JsX-Flqmc1b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-25_05,2024-01-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ mlxlogscore=999 impostorscore=0 malwarescore=0 adultscore=0 phishscore=0
+ bulkscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401250069
 
-From: James Clark <james.clark@arm.com>
+In linux next repo, test case 'perf script tests' fails on s390.
+The root case is a command line invocation of perf record with
+call-graph information. On s390 only dwarf formatted call-graphs
+are supported and only on software events.
 
-Add Arm64 BRBE-specific testing to the existing branch stack sampling test.
-The test currently passes on the Arm FVP RevC model, but no hardware has
-been tested yet.
+Change the command line parameters fors s390.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Co-developed-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Output before:
+ # perf test 89
+ 89: perf script tests              : FAILED!
+ #
+
+Output after:
+ # perf test 89
+ 89: perf script tests              : Ok
+ #
+
+Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c        |  1 +
- tools/perf/tests/shell/test_brstack.sh | 42 ++++++++++++++++++++++++--
- tools/perf/tests/tests.h               |  1 +
- tools/perf/tests/workloads/Build       |  2 ++
- tools/perf/tests/workloads/traploop.c  | 39 ++++++++++++++++++++++++
- 5 files changed, 82 insertions(+), 3 deletions(-)
- create mode 100644 tools/perf/tests/workloads/traploop.c
+ tools/perf/tests/shell/script.sh | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 4a5973f9bb9b..bd7202ff5cca 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -139,6 +139,7 @@ static struct test_workload *workloads[] = {
- 	&workload__sqrtloop,
- 	&workload__brstack,
- 	&workload__datasym,
-+	&workload__traploop
- };
- 
- static int num_subtests(const struct test_suite *t)
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index 928790f35747..6a4069c930e8 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -53,12 +53,43 @@ test_user_branches() {
- 	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"	$TMPDIR/perf.script
- 	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"	$TMPDIR/perf.script
- 	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"		$TMPDIR/perf.script
+diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+index 5ae7bd0031a8..2973adab445d 100755
+--- a/tools/perf/tests/shell/script.sh
++++ b/tools/perf/tests/shell/script.sh
+@@ -54,7 +54,14 @@ def sample_table(*args):
+ def call_path_table(*args):
+     print(f'call_path_table({args}')
+ _end_of_file_
+-	perf record -g -o "${perfdatafile}" true
++	case $(uname -m)
++	in s390x)
++		cmd_flags="--call-graph dwarf -e cpu-clock";;
++	*)
++		cmd_flags="-g";;
++	esac
 +
-+	if is_arm64; then
-+		# in arm64 with BRBE, we get IRQ entries that correspond
-+		# to any point in the process
-+		grep -m1 "/IRQ/"					$TMPDIR/perf.script
-+	fi
- 	set +x
- 
- 	# some branch types are still not being tested:
- 	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
++	perf record $cmd_flags -o "${perfdatafile}" true
+ 	perf script -i "${perfdatafile}" -s "${db_test}"
+ 	echo "DB test [Success]"
  }
- 
-+test_arm64_trap_eret_branches() {
-+	echo "Testing trap & eret branches (arm64 brbe)"
-+	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- \
-+		perf test -w traploop 250
-+	perf script -i $TMPDIR/perf.data --fields brstacksym | tr ' ' '\n' > $TMPDIR/perf.script
-+	set -x
-+	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_SYSCALL by the BRBE driver
-+	grep -E -m1 "^trap_bench\+[^ ]*/\[unknown\][^ ]*/SYSCALL/" $TMPDIR/perf.script
-+	grep -E -m1 "^\[unknown\][^ ]*/trap_bench\+[^ ]*/ERET/"	$TMPDIR/perf.script
-+	set +x
-+}
-+
-+test_arm64_kernel_branches() {
-+	echo "Testing kernel branches (arm64 brbe)"
-+	# skip if perf doesn't have enough privileges
-+	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
-+		echo "[skipped: not enough privileges]"
-+		return 0
-+	fi
-+	perf record -o $TMPDIR/perf.data --branch-filter any,k -- uname -a
-+	perf script -i $TMPDIR/perf.data --fields brstack | tr ' ' '\n' > $TMPDIR/perf.script
-+	grep -E -m1 "0xffff[0-9a-f]{12}" $TMPDIR/perf.script
-+	! egrep -E -m1 "0x0000[0-9a-f]{12}" $TMPDIR/perf.script
-+}
-+
- # first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
- # second argument are the expected branch types for the given filter
- test_filter() {
-@@ -81,11 +112,16 @@ set -e
- 
- test_user_branches
- 
--test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ"
-+if is_arm64; then
-+	test_arm64_trap_eret_branches
-+	test_arm64_kernel_branches
-+fi
-+
-+test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|FAULT_DATA|FAULT_INST"
- test_filter "call"	"CALL|SYSCALL"
- test_filter "cond"	"COND"
- test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
- 
- test_filter "call,cond"		"CALL|SYSCALL|COND"
--test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
--test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
-+test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND|FAULT_DATA|FAULT_INST"
-+test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET|FAULT_DATA|FAULT_INST"
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index dad3d7414142..6d3d575352d5 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -205,6 +205,7 @@ DECLARE_WORKLOAD(leafloop);
- DECLARE_WORKLOAD(sqrtloop);
- DECLARE_WORKLOAD(brstack);
- DECLARE_WORKLOAD(datasym);
-+DECLARE_WORKLOAD(traploop);
- 
- extern const char *dso_to_test;
- extern const char *test_objdump_path;
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index a1f34d5861e3..a9dc93d8468b 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -6,8 +6,10 @@ perf-y += leafloop.o
- perf-y += sqrtloop.o
- perf-y += brstack.o
- perf-y += datasym.o
-+perf-y += traploop.o
- 
- CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
- CFLAGS_brstack.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/traploop.c b/tools/perf/tests/workloads/traploop.c
-new file mode 100644
-index 000000000000..7dac94897e49
---- /dev/null
-+++ b/tools/perf/tests/workloads/traploop.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include "../tests.h"
-+
-+#define BENCH_RUNS 999999
-+
-+static volatile int cnt;
-+
-+#ifdef __aarch64__
-+static void trap_bench(void)
-+{
-+	unsigned long val;
-+
-+	asm("mrs %0, ID_AA64ISAR0_EL1" : "=r" (val));   /* TRAP + ERET */
-+}
-+#else
-+static void trap_bench(void)
-+{
-+
-+}
-+#endif
-+
-+static int traploop(int argc, const char **argv)
-+{
-+	int num_loops = BENCH_RUNS;
-+
-+	if (argc > 0)
-+		num_loops = atoi(argv[0]);
-+
-+	while (1) {
-+		if ((cnt++) > num_loops)
-+			break;
-+
-+		trap_bench();
-+	}
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(traploop);
 -- 
-2.25.1
+2.43.0
 
