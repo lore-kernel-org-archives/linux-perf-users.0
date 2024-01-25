@@ -1,86 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8569D633F4;
-	Thu, 25 Jan 2024 14:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76621634E2;
+	Thu, 25 Jan 2024 14:25:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706192465; cv=none; b=MrCorPo8S8zEYP2dkUpNqvKMBvrFRuKc+L2j5UbT6keYZvxFlJHL62vDHmxJIbPxiI2OclGDVJ47McSp4ABOA27k7CgZFrakbXkET12D9bW7zk3GZj73vXCVc5JBlZPxtOaf50bmtnlNKAy2B2rdpZv4SvPBBJUz9/IBWVzSbcM=
+	t=1706192751; cv=none; b=XZdgQWOEVRjTEIL/9ThxCp7z5OvlM/Zb/Oms1umu0VW+cucuB2B0mWLXGCbQldGoMpQdYyggiaeEsajx4T+zsghHs6UppoLSr4TvMP236QaKwtbp9nisTJry0MlaSZKYJOo/Dtv1IxwPrpkEPhTb16C1HhFALXTSB1BVaWWJzcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706192465; c=relaxed/simple;
-	bh=MNIgi+b3t8zEWYR3iuNyPFdo/g4cOlipsxaAEiU4R/c=;
+	s=arc-20240116; t=1706192751; c=relaxed/simple;
+	bh=y0AHJz/cSEFxr9QLzShQYbT6jnUa7PBGIUzcQ3GpxJY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tw39Gch1UZIr/8LdaOb0BofomonOVczgQDXSeWEKtoQ3FJbOqW2oqHJxSA/pJf9oozrxN7DwK8vpmV35eQCaDAEitye4RRXe5nkK6XZbygLRhADoqMBVShnqqvr6hKxVXNAFaT3OSzuBU8FCfTW/ZUpw8L9gpgz3FzNh3AyAPuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPBMy9P1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HzVw2Bwqv7a0/N8egPTLp8f27RgnnNQN8jAiLv+gCCAImMigPkA2coHdZZd230upeiSOXsr7UcsMt41kZb/J8JnlMveT2wmaANmEUPdpLrZ109YLAdnrZ4S4QIwDp/yFXo4XogxvJ7Fwbf/umlillZAA6U4cEFMOkShqiYkekGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+LbDEj9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPBMy9P1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB3A7C433C7;
-	Thu, 25 Jan 2024 14:21:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+LbDEj9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59AEC433F1;
+	Thu, 25 Jan 2024 14:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706192465;
-	bh=MNIgi+b3t8zEWYR3iuNyPFdo/g4cOlipsxaAEiU4R/c=;
+	s=k20201202; t=1706192750;
+	bh=y0AHJz/cSEFxr9QLzShQYbT6jnUa7PBGIUzcQ3GpxJY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EPBMy9P14kelBFAkx5aDrWkGpOtB0+cYKu1CE7M/TdEROHq88tUk7EjHvIHPo0Twc
-	 1mO7tDsZHHyRsU9OrtlMs2wcXBt/CzZMVzxcKEY13IENKVj+PuLFFsDZwQz977qPeU
-	 jGtnhst02LWR/Ozsybmy/43puOIKDIkjWGidIY5KihtuV4G7Z21CT3sMJy/WFsNW0R
-	 yYngWuqHRp6K31iKdyibEYmnM8wZwPSATjljwJRYcOGJVgqgkVtEDukRjrCNdj3141
-	 A6wwybdSM+1aQhrftQBcmwfP6TDDWBKnW7llB+NlZpxBmubBECceXBrZhu+SVri6T/
-	 MCukgKqw4Z3Ng==
-Date: Thu, 25 Jan 2024 14:20:58 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-	James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V16 1/8] arm64/sysreg: Add BRBE registers and fields
-Message-ID: <bfef9ef2-e1e8-4097-a683-8aff625f7091@sirena.org.uk>
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
- <20240125094119.2542332-2-anshuman.khandual@arm.com>
+	b=Q+LbDEj958J3cKPesoEGPWoY516viVcaQ2v4BZtJ3puY+iYQ/eF5ou7WbSWVgINnb
+	 FK56NRvdMl3O6SbCFFYjYMp4NXMXhByYrvFIdt0akFUqSBzqZX+jvZXFnOsQj9HPPj
+	 BS0y60q3fsxArpF+wD5AFdrRjtvt+R/Vr+Uw3F4uiZycjjrdFnAtTN6iTA3Rfzyeso
+	 IedlfbNYQjxx+8C2PnX0s2B7GAH2UNGIq20Cf3zFHP1+NvwpVDAp9SdwxbgCY8Fo9z
+	 TgYBUTm62da8BGH2CbWZYoz7x/K1ugN7NSRthmDJeWd1Z33YeyeL7coMdfW6cjybv4
+	 tS1Y7y4cWmY4g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id BEBB9405B2; Thu, 25 Jan 2024 11:25:47 -0300 (-03)
+Date: Thu, 25 Jan 2024 11:25:47 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	namhyung@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
+	sumanthk@linux.ibm.com, hca@linux.ibm.com,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PING PATCH v2] perf test: Fix test case perf script tests on
+ s390
+Message-ID: <ZbJvawngTmVC4pN7@kernel.org>
+References: <20240125100351.936262-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MiSmjfR9RuqrtYah"
-Content-Disposition: inline
-In-Reply-To: <20240125094119.2542332-2-anshuman.khandual@arm.com>
-X-Cookie: Entropy isn't what it used to be.
-
-
---MiSmjfR9RuqrtYah
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240125100351.936262-1-tmricht@linux.ibm.com>
+X-Url: http://acmel.wordpress.com
 
-On Thu, Jan 25, 2024 at 03:11:12PM +0530, Anshuman Khandual wrote:
-> This adds BRBE related register definitions and various other related field
-> macros there in. These will be used subsequently in a BRBE driver, which is
-> being added later on.
+Em Thu, Jan 25, 2024 at 11:03:51AM +0100, Thomas Richter escreveu:
+> In linux next repo, test case 'perf script tests' fails on s390.
+> The root case is a command line invocation of perf record with
+> call-graph information. On s390 only dwarf formatted call-graphs
+> are supported and only on software events.
+> 
+> Change the command line parameters fors s390.
 
-Checked against DDI0601 2023-12.
+Thanks, applied to perf-tools.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+- Arnaldo
 
---MiSmjfR9RuqrtYah
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWybkoACgkQJNaLcl1U
-h9Dwzgf9FNtXB8s0Ee+Ieyg34xIqlufx1AHq7PXMwIcKshRsPL5yLd/nzWL0zwi1
-mHfyX02YU5K2nWCo0oFusfPr2fkHih0DVCIpz6h4iBWPxkbeiEq4qrvpE/oppe0R
-p6fDnvG7F+w/NvdJ0IYGofL6CyzT7f7sEX2ddydwoW35Rd+c/n5/6D3mq6N7Z9eH
-4TjO8JOA0vcoy3AO7N6lj6Hkk5AW4ziw26f4IlAHtYbzI94tRSqYJq8eOOhrgSq7
-zFC8CmC33IZ43UUibpVknH0iFeelr7y1nvi1iyYl+nM+9haI+DCwqu7CbBQVLyuk
-wR6P/Ku/wfRzFH2H93WsdMWDXF2KWQ==
-=xysw
------END PGP SIGNATURE-----
-
---MiSmjfR9RuqrtYah--
