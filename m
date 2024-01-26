@@ -1,174 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F89C152E1B;
-	Fri, 26 Jan 2024 08:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7172E1DDC9
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jan 2024 14:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259550; cv=none; b=GxZZELuxBL39632COGLIGqXJ8NdSMytqyM7rEba09I1A8CqSYJBj7Z1QWynHcdOZOBaKzEldj5StQys8UzSUhD1eru9jPz15rLiEPZuisGo/mh9Lkg8rWnxPOXXlNB8QpByZqnSZTRq0JjCfItOnRe5eB8vbb28fE14PvLFrjCI=
+	t=1706279202; cv=none; b=dDxx9/UidPS1P0UpbFOLHRCN32fzCUMOIkrdrTnNHtcx+QyLpdD7MIQVWgO5vxjmiAQLLVYu/Ja2nBAMBjn9pmBKmkHIO5OruWBLuKJLk6oRC0TS0kr+/0nv8t3cBFiHVMkfOWms2wqgp9pBpscVAlGMUxrIq1JQkYkYS6bZQPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259550; c=relaxed/simple;
-	bh=mgcdLFdOZk7gOOt9XdDDqqjGJmhtjqnbjRyaGP4Ga8A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gfYLPvm13NNDb6qCRHUCp/TZf7e5AVFi3XRkGjLBjIfIfmeg1aSvCTWUMAqhmaITF91Lmvgj6+uSy2EylEvtkkdSiSHuIzo8pkdBdBdofDir6TG6yRwyBkJGO7KJV1u2VgF40SETyHchMHcRZsZrvx+2TWbZtfRnn/6gVxP3v/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=khCX0w5K; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706279202; c=relaxed/simple;
+	bh=KDjzYBuqBbsZeawvlW2Qdi1zx/tzi2/9POHY7OiGijM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQNIa8ARqcugtEEfeF6coNRZ7wFPjAfZsXqEonQ+zt/bYeO609FVmI6Y4qLkdvmwJ0MqBUSOYNNDBtqf7uPEZTu3zVd5nuV+LZZ6HD6Fg8GSsoXLlv7+mTlE2E9TO5Z6QZGfE0h/bGHPaLFdpgeUgg7imksppXmOPVjxdu5HMA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYncyqA5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="khCX0w5K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706259549; x=1737795549;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mgcdLFdOZk7gOOt9XdDDqqjGJmhtjqnbjRyaGP4Ga8A=;
-  b=khCX0w5KRRPr71rdTVykMeVPkTlAyp55tmlcUtyr26Q+cT8LVSbtE5eW
-   DTT3qFFQuUFQQ1bt3sYUPcSAbfNcqUmGtIOqt5CAVDHmcdmBd+4hg4J2W
-   PjxlDkIpIoJ/ReZhSeGc8vvIrQ4Y4psCdPleooU7tmLkAer7NRJK4cI1B
-   TGqCyWpCaIvGOqsPzrYavumVCiy1/sbSg4euBSkwMZV7UHyI1rp5js+o2
-   7+Mt6Ls+QH+fkLOStAZHiZERj/Tca6PM6BrlkKIUO8Duqls2EcNWRzwsJ
-   dkXhnHz54AtQO0izTQNIJlK05wA4+hHTMtPuadfm1Z5qGuViIERnFX7oo
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9793186"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9793186"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:59:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930310591"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="930310591"
-Received: from yanli3-mobl.ccr.corp.intel.com (HELO xiongzha-desk1.ccr.corp.intel.com) ([10.254.213.178])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:59:00 -0800
-From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-To: seanjc@google.com,
-	pbonzini@redhat.com,
-	peterz@infradead.org,
-	mizhang@google.com,
-	kan.liang@intel.com,
-	zhenyuw@linux.intel.com,
-	dapeng1.mi@linux.intel.com,
-	jmattson@google.com
-Cc: kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhiyuan.lv@intel.com,
-	eranian@google.com,
-	irogers@google.com,
-	samantha.alt@intel.com,
-	like.xu.linux@gmail.com,
-	chao.gao@intel.com,
-	xiong.y.zhang@linux.intel.com
-Subject: [RFC PATCH 41/41] KVM: nVMX: Add nested virtualization support for passthrough PMU
-Date: Fri, 26 Jan 2024 16:54:44 +0800
-Message-Id: <20240126085444.324918-42-xiong.y.zhang@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYncyqA5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADBF5C43390;
+	Fri, 26 Jan 2024 14:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706279201;
+	bh=KDjzYBuqBbsZeawvlW2Qdi1zx/tzi2/9POHY7OiGijM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GYncyqA56AqhLFSjku7DOSpQfUkDJGDHyuQmGqH8lqrN8gCRqKDgzKp3qOvNOTHRh
+	 rMX9zqa2XEBH+iFedo/OL1YfqKOznH3qOzLcQPETLlSYgIMQZ1quQ29iEPoXEflFaR
+	 9CVYJi/pzcqrtwu5khqZSVxlNv87gzMaSvLrXRGm7UyuuRZUwvqpnxzd7pLNhRzKWj
+	 UEom7vf3e3WXmCeulaTcj/485nHaMfRoAMM9H7iBF1mDunSDz9MGsahZYaJjEhxY8q
+	 ZFQ4W9sDeMvi1aME+9GvuOFlnNOgttXUpmjhRmSmzrRrfq7uGkH7x3L11GekU3hhJ9
+	 WmpaM8z/esK0g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id F28E7405B2; Fri, 26 Jan 2024 11:26:38 -0300 (-03)
+Date: Fri, 26 Jan 2024 11:26:38 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Yicong Yang <yangyicong@huawei.com>, namhyung@kernel.org,
+	peterz@infradead.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	linux-perf-users@vger.kernel.org, yangyicong@hisilicon.com,
+	hejunhao3@huawei.com, linuxarm@huawei.com
+Subject: Re: [PATCH] perf build: Make minimal shellcheck version to v0.6.0
+Message-ID: <ZbPBHmvKJJlprxac@kernel.org>
+References: <20240122080406.28678-1-yangyicong@huawei.com>
+ <CAP-5=fVzaRycRX2+NNMRp423sU5qpBa8z8p-WmF5sX+ty1Xf8A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVzaRycRX2+NNMRp423sU5qpBa8z8p-WmF5sX+ty1Xf8A@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-From: Mingwei Zhang <mizhang@google.com>
+Em Tue, Jan 23, 2024 at 08:04:55AM -0800, Ian Rogers escreveu:
+> On Mon, Jan 22, 2024 at 12:08 AM Yicong Yang <yangyicong@huawei.com> wrote:
+> >
+> > From: Yicong Yang <yangyicong@hisilicon.com>
+> >
+> > perf build failed due to the shellcheck on my machine (v0.4.6 on Ubuntu
+> > 18.04.1 LTS) doesn't support -a/--check-sourced and -S/--severity option.
+> > These two options are introduced in shellcheck v0.4.7 and v0.6.0
+> > respectively. So restrict the minimal version of shellcheck to v0.6.0.
+> >
+> > Fixes: b809fc656e76 ("perf build: Shellcheck support for OUTPUT directory")
+> > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Add nested virtualization support for passthrough PMU by combining the MSR
-interception bitmaps of vmcs01 and vmcs12. Readers may argue even without
-this patch, nested virtualization works for passthrough PMU because L1 will
-see Perfmon v2 and will have to use legacy vPMU implementation if it is
-Linux. However, any assumption made on L1 may be invalid, e.g., L1 may not
-even be Linux.
+Thanks, applied to perf-tools.
 
-If both L0 and L1 pass through PMU MSRs, the correct behavior is to allow
-MSR access from L2 directly touch HW MSRs, since both L0 and L1 passthrough
-the access.
-
-However, in current implementation, if without adding anything for nested,
-KVM always set MSR interception bits in vmcs02. This leads to the fact that
-L0 will emulate all MSR read/writes for L2, leading to errors, since the
-current passthrough vPMU never implements set_msr() and get_msr() for any
-counter access except counter accesses from the VMM side.
-
-So fix the issue by setting up the correct MSR interception for PMU MSRs.
-
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
----
- arch/x86/kvm/vmx/nested.c | 52 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index c5ec0ef51ff7..95e1c78152da 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -561,6 +561,55 @@ static inline void nested_vmx_set_intercept_for_msr(struct vcpu_vmx *vmx,
- 						   msr_bitmap_l0, msr);
- }
- 
-+/* Pass PMU MSRs to nested VM if L0 and L1 are set to passthrough. */
-+static void nested_vmx_set_passthru_pmu_intercept_for_msr(struct kvm_vcpu *vcpu,
-+							  unsigned long *msr_bitmap_l1,
-+							  unsigned long *msr_bitmap_l0)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	int i;
-+
-+	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-+		nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-+						 msr_bitmap_l0,
-+						 MSR_ARCH_PERFMON_EVENTSEL0 + i,
-+						 MSR_TYPE_RW);
-+		nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-+						 msr_bitmap_l0,
-+						 MSR_IA32_PERFCTR0 + i,
-+						 MSR_TYPE_RW);
-+		nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-+						 msr_bitmap_l0,
-+						 MSR_IA32_PMC0 + i,
-+						 MSR_TYPE_RW);
-+	}
-+
-+	for (i = 0; i < vcpu_to_pmu(vcpu)->nr_arch_fixed_counters; i++) {
-+		nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-+						 msr_bitmap_l0,
-+						 MSR_CORE_PERF_FIXED_CTR0 + i,
-+						 MSR_TYPE_RW);
-+	}
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-+					 msr_bitmap_l0,
-+					 MSR_CORE_PERF_FIXED_CTR_CTRL,
-+					 MSR_TYPE_RW);
-+
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-+					 msr_bitmap_l0,
-+					 MSR_CORE_PERF_GLOBAL_STATUS,
-+					 MSR_TYPE_RW);
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-+					 msr_bitmap_l0,
-+					 MSR_CORE_PERF_GLOBAL_CTRL,
-+					 MSR_TYPE_RW);
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-+					 msr_bitmap_l0,
-+					 MSR_CORE_PERF_GLOBAL_OVF_CTRL,
-+					 MSR_TYPE_RW);
-+}
-+
- /*
-  * Merge L0's and L1's MSR bitmap, return false to indicate that
-  * we do not use the hardware.
-@@ -660,6 +709,9 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
- 	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
- 					 MSR_IA32_FLUSH_CMD, MSR_TYPE_W);
- 
-+	if (is_passthrough_pmu_enabled(vcpu))
-+		nested_vmx_set_passthru_pmu_intercept_for_msr(vcpu, msr_bitmap_l1, msr_bitmap_l0);
-+
- 	kvm_vcpu_unmap(vcpu, &vmx->nested.msr_bitmap_map, false);
- 
- 	vmx->nested.force_msr_bitmap_recalc = false;
--- 
-2.34.1
+- Arnaldo
 
