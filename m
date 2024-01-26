@@ -1,51 +1,51 @@
 Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C460BC8CE;
-	Fri, 26 Jan 2024 06:13:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60BD11199;
+	Fri, 26 Jan 2024 06:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706249628; cv=none; b=lIeZ+FJ2dCIAylFyNHKiSLCfH2AdvjztsuN0VCzJYwSWJiFQ6TbW0rdVEl3g/eo36Z83A+fE7hdmAlvZHFrwTpjJ4ra1NtjzoAvjoa9XxbcYqr6eaquy3pGZX3SAJcvtaYS5IsigKXB5qy9LekfO2DGoXXVbZC/PbQejIZp0B54=
+	t=1706249631; cv=none; b=KmvkMPEIGt1o41gWy40b5YOCK45YG+vo0byYgvVFlnjAJQHvo21L7lhhGgiUSohDIRbE63X4LUNv+P+cCgUHNHq8eGizT7Twr0rVzkgzl8rQTjXnmpwDnNgxwusSkHGzeFW9vbcpbPFQdS0UU2td9pF9RV+nfZvAhzUP4dR6ys4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706249628; c=relaxed/simple;
-	bh=l6yTGzECnxbB8OZB0NJoYVxxgTP+SkP164E/mu28NUY=;
+	s=arc-20240116; t=1706249631; c=relaxed/simple;
+	bh=NSY2jyTpYUJkOi3qGPBcaqscnscOFJ7dKzxcGQNhZc8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mn6xyIAF3HygIXe9JrfeE7BfyzD53noy/x5WAsSXpxt+uk+wBua3mkGqaVNoJBrsBzePafWVc5y9x3lbrkEB9pTIJ1HZrbjo1BiLYuMJwre6oFi+yT/cQX/uq6/IH7C8kKnimeQn4qh/SHcP8DBybTdlHUfIdm8zj3Evjb4tbow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=A+23pySW; arc=none smtp.client-ip=207.54.90.49
+	 MIME-Version; b=sWtIMmxzFBU1ZamD/rbp3VYWJ+/8ks8ushuusYvdGmJXIHniBxo/2r+zOoWsHpv/TKspS3onAMZLh6xe61vubXGlEIRWACz0epG8t6MUXuUSVMs0xUNOfOj/7FxK435GCbPFsdFTnVN/sU0iavU2Q+4TD+mlrrUCU7juYdOpmZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=cSZ8EPuL; arc=none smtp.client-ip=207.54.90.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="A+23pySW"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="cSZ8EPuL"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1706249625; x=1737785625;
+  t=1706249629; x=1737785629;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=l6yTGzECnxbB8OZB0NJoYVxxgTP+SkP164E/mu28NUY=;
-  b=A+23pySWMiQxkiv7XBfBU663Wi7UjNqKCWOJqC5EUz31f4/b38zYrMWA
-   /0ltrtLRoDKBE3dO0dFx/sQvlb/sRSJrEdhzyxs+OowQVxyA4C67rx2rx
-   DXT511R/jdl4D5JM05Z3WJU7CVveTh2zIoAEBEaP9bcVbQixbOTu3E5Ct
-   uOiIs8XNtqFgtf4lH+oYvm00NCFe1+lhMECl6GB+0h59GU9V8pKIA9x87
-   NUC9VXeWJOHp/UJZoHceu5MBIGXazGkZyR7WRc/PonZJsn1KCblaNy2RJ
-   FHqPye15dx0pDzJMsBeR9q4JTiEqq6Z0fF8OSe+yFdxXIxVP7OeH7sxEK
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="147342519"
+  bh=NSY2jyTpYUJkOi3qGPBcaqscnscOFJ7dKzxcGQNhZc8=;
+  b=cSZ8EPuLHwWX5l5szgQ/jAX3U7q1bPVLbR7uqN0qUIG60jI2qgNNSN4x
+   ++q43oX0YieJiUoEoCkd+2DvopyWWmzDch+JP0J7PY+t0rWTrlhta+Uoj
+   dudopEF2NQ0crVuZO53LWd9xe/KyL7WLmWA/uRd8VXgFlEHp0uWZliSOS
+   Vyvfw6Q3dPfkOlicXZTY8X0RsbaqGzBMlgxXkuFxxHA1u1DN4Mxn0kQ8w
+   03wkUvVbSGDYTWzZM22gmwPguQVl7gdGUqTNKrfeOoZdOynrmyXfqA3xe
+   cLIAJuROBK6KRFAi1WjfN+ixxO+CS/7kPwra6HQdWmzVx8bL3mS+qbC4O
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="147342526"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701097200"; 
-   d="scan'208";a="147342519"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:13:36 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 4BBB2E05A3;
+   d="scan'208";a="147342526"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:13:37 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id A624AD9D97;
+	Fri, 26 Jan 2024 15:13:34 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id C64A1D8BBB;
 	Fri, 26 Jan 2024 15:13:33 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 7EEBED2945;
-	Fri, 26 Jan 2024 15:13:32 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id E7DF5200A7EC5;
-	Fri, 26 Jan 2024 15:13:31 +0900 (JST)
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 4F758E55AE;
+	Fri, 26 Jan 2024 15:13:33 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 2C4411A006C;
-	Fri, 26 Jan 2024 14:13:31 +0800 (CST)
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 8052B1A006C;
+	Fri, 26 Jan 2024 14:13:32 +0800 (CST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: linux-kernel@vger.kernel.org
 Cc: Li Zhijian <lizhijian@fujitsu.com>,
@@ -64,9 +64,9 @@ Cc: Li Zhijian <lizhijian@fujitsu.com>,
 	x86@kernel.org,
 	"H. Peter Anvin" <hpa@zytor.com>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/4] arch/x86/events/core: Convert sprintf/snprintf to sysfs_emit
-Date: Fri, 26 Jan 2024 14:13:17 +0800
-Message-Id: <20240126061319.245901-2-lizhijian@fujitsu.com>
+Subject: [PATCH v2 4/4] arch/x86/events/intel: Convert snprintf/sprintf to sysfs_emit
+Date: Fri, 26 Jan 2024 14:13:19 +0800
+Message-Id: <20240126061319.245901-4-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240126061319.245901-1-lizhijian@fujitsu.com>
 References: <20240126061319.245901-1-lizhijian@fujitsu.com>
@@ -81,13 +81,14 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28142.005
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28142.005
-X-TMASE-Result: 10--14.067700-10.000000
-X-TMASE-MatchedRID: APZBv0eB5fI4ibokZ3+Q0CoiRKlBVkYIBXngI6jFvpfvd49YGReckE1N
-	J2MN+nPkgxCMf8A0YpTFw+98ljZmfsCiHTNtFGyJzYK5U+QI3O5MVCcj56k8hs+FXdgLGTDcTR/
-	R9+KYBGh755lTx6LDRoNGRAnK6GInCcAKiiVrTVKdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VSArq
-	oIZrVn15fzUkBpc072p43H9nP9RJduk59MVAVjnWLvWLmiffgqWQ3R4k5PTnC3L2aPW6sT0v2Sw
-	ev/tyUib7vhAFDgsdOEor9sr5DKkJH0YXYnbGozFEUknJ/kEl7dB/CxWTRRu25FeHtsUoHuRBO+
-	kqv47y8sCB9viE8u5u1NAh58qD9DpMnHtLJr2mUfwV6sBPR0lg==
+X-TMASE-Result: 10--15.300200-10.000000
+X-TMASE-MatchedRID: dBi1avXuVWw4ibokZ3+Q0CoiRKlBVkYIBXngI6jFvpfvd49YGReckE1N
+	J2MN+nPkgxCMf8A0YpRzqfit7JyUVv+tuWXZk8lIEVuC0eNRYvLSvRkgO4EJeqyitsTk3SfXhQ6
+	YZNvnIb96nBST4xyrLMMeFc5zbLKUj56IjTnLR+m5x7uAXGEprcE5XPQnBzGXq8KsbROd9VR3Ib
+	SSOjBC48Inj1es+UVqJmT/R1dRpcrvEJY6jb7huii1gp0ZxaqK0MQw+++ihy+4GyTmeN+AbP2gE
+	+jwlmhQBEleHrOyiTdSV1ufuEL9uf+XuscWvkzguLt50vtxBA7865QlVwxmG6c25vF67O2XGEG9
+	aBmVf7zi8zVgXoAltsIJ+4gwXrEtIAcCikR3vq+mTbRaoIcTcyQytwlNX6GZLZ798+FR1TyRZXy
+	e0LVu8G7Gx1BMuFPw
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
 Per filesystems/sysfs.rst, show() should only use sysfs_emit()
@@ -96,15 +97,14 @@ or sysfs_emit_at() when formatting the value to be returned to user space.
 coccinelle complains that there are still a couple of functions that use
 snprintf(). Convert them to sysfs_emit().
 
-> ./arch/x86/events/core.c:1895:11-19: WARNING: please use sysfs_emit
-                           ^^^^^ this one cannot convert to sysfs_emit
-                                 where it intends to print a sub-string.
-
-> ./arch/x86/events/core.c:2542:8-16: WARNING: please use sysfs_emit
-> ./arch/x86/events/core.c:2600:8-16: WARNING: please use sysfs_emit
+> ./arch/x86/events/intel/core.c:5614:8-16: WARNING: please use sysfs_emit or sysfs_emit_at
+> ./arch/x86/events/intel/core.c:5623:8-16: WARNING: please use sysfs_emit or sysfs_emit_at
+> ./arch/x86/events/intel/core.c:5605:8-16: WARNING: please use sysfs_emit or sysfs_emit_at
+> ./arch/x86/events/intel/core.c:5651:8-16: WARNING: please use sysfs_emit or sysfs_emit_at
+> ./arch/x86/events/intel/core.c:5571:8-16: WARNING: please use sysfs_emit or sysfs_emit_at
 
 Most of this patch is generated by:
-$ make coccicheck MODE=patch COCCI=scripts/coccinelle/api/device_attr_show.cocci M=arch/x86/events/core.c | sed -n '6,$p' | patch -p1
+$ make coccicheck MODE=patch COCCI=scripts/coccinelle/api/device_attr_show.cocci M=arch/x86/events/intel | sed -n '6,$p' | patch -p1
 
 No functional change intended
 
@@ -126,75 +126,130 @@ CC: linux-perf-users@vger.kernel.org
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
 V2:
-- Address Adrian's comment:
-  leave "snprintf(page, next_str - str + 1, "%s", str)" alone, it
-  intends to print a sub-string, that cannot covert to sysfs_emit simply.
--
-V2: extract patch from the patch set[1] so that maintainer accept it separately.
-[1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
+- Rebase to v6.8-rc1(Fix 2 newly introduced abused cases)
+- Extract patch from the patch set[1] so that maintainer accept it separately.
+ [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
- arch/x86/events/core.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/events/intel/core.c         | 12 ++++++------
+ arch/x86/events/intel/pt.c           | 10 +++++-----
+ arch/x86/events/intel/uncore.c       |  2 +-
+ arch/x86/events/intel/uncore_snbep.c |  2 +-
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 09050641ce5d..20d963196e4c 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1832,7 +1832,7 @@ ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr, cha
- 
- 	/* string trumps id */
- 	if (pmu_attr->event_str)
--		return sprintf(page, "%s\n", pmu_attr->event_str);
-+		return sysfs_emit(page, "%s\n", pmu_attr->event_str);
- 
- 	return x86_pmu.events_sysfs_show(page, config);
- }
-@@ -1855,7 +1855,7 @@ ssize_t events_ht_sysfs_show(struct device *dev, struct device_attribute *attr,
- 	 * if they are owned by some other guest.  The user tool
- 	 * has to re-read when a thread sibling gets onlined later.
- 	 */
--	return sprintf(page, "%s",
-+	return sysfs_emit(page, "%s",
- 			topology_max_smt_threads() > 1 ?
- 			pmu_attr->event_str_ht :
- 			pmu_attr->event_str_noht);
-@@ -1872,7 +1872,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
- 	int i;
- 
- 	if (hweight64(pmu_attr->pmu_type) == 1)
--		return sprintf(page, "%s", pmu_attr->event_str);
-+		return sysfs_emit(page, "%s", pmu_attr->event_str);
- 
- 	/*
- 	 * Hybrid PMUs may support the same event name, but with different
-@@ -1894,7 +1894,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
- 			if (next_str)
- 				return snprintf(page, next_str - str + 1, "%s", str);
- 			else
--				return sprintf(page, "%s", str);
-+				return sysfs_emit(page, "%s", str);
- 		}
- 		str = strchr(str, ';');
- 		str++;
-@@ -2539,7 +2539,7 @@ static ssize_t get_attr_rdpmc(struct device *cdev,
- 			      struct device_attribute *attr,
- 			      char *buf)
- {
--	return snprintf(buf, 40, "%d\n", x86_pmu.attr_rdpmc);
-+	return sysfs_emit(buf, "%d\n", x86_pmu.attr_rdpmc);
- }
- 
- static ssize_t set_attr_rdpmc(struct device *cdev,
-@@ -2597,7 +2597,7 @@ static ssize_t max_precise_show(struct device *cdev,
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 3804f21ab049..7effb715dfaa 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5517,7 +5517,7 @@ static ssize_t freeze_on_smi_show(struct device *cdev,
  				  struct device_attribute *attr,
  				  char *buf)
  {
--	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu_max_precise());
-+	return sysfs_emit(buf, "%d\n", x86_pmu_max_precise());
+-	return sprintf(buf, "%lu\n", x86_pmu.attr_freeze_on_smi);
++	return sysfs_emit(buf, "%lu\n", x86_pmu.attr_freeze_on_smi);
  }
  
- static DEVICE_ATTR_RO(max_precise);
+ static DEFINE_MUTEX(freeze_on_smi_mutex);
+@@ -5568,7 +5568,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
+ 			      struct device_attribute *attr,
+ 			      char *buf)
+ {
+-	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
++	return sysfs_emit(buf, "%d\n", allow_tsx_force_abort);
+ }
+ 
+ static ssize_t set_sysctl_tfa(struct device *cdev,
+@@ -5602,7 +5602,7 @@ static ssize_t branches_show(struct device *cdev,
+ 			     struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
++	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
+ }
+ 
+ static DEVICE_ATTR_RO(branches);
+@@ -5611,7 +5611,7 @@ static ssize_t branch_counter_nr_show(struct device *cdev,
+ 				      struct device_attribute *attr,
+ 				      char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", fls(x86_pmu.lbr_counters));
++	return sysfs_emit(buf, "%d\n", fls(x86_pmu.lbr_counters));
+ }
+ 
+ static DEVICE_ATTR_RO(branch_counter_nr);
+@@ -5620,7 +5620,7 @@ static ssize_t branch_counter_width_show(struct device *cdev,
+ 					 struct device_attribute *attr,
+ 					 char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", LBR_INFO_BR_CNTR_BITS);
++	return sysfs_emit(buf, "%d\n", LBR_INFO_BR_CNTR_BITS);
+ }
+ 
+ static DEVICE_ATTR_RO(branch_counter_width);
+@@ -5648,7 +5648,7 @@ static ssize_t pmu_name_show(struct device *cdev,
+ 			     struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
++	return sysfs_emit(buf, "%s\n", pmu_name_str);
+ }
+ 
+ static DEVICE_ATTR_RO(pmu_name);
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 8e2a12235e62..178238d096cd 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -96,7 +96,7 @@ static ssize_t pt_cap_show(struct device *cdev,
+ 		container_of(attr, struct dev_ext_attribute, attr);
+ 	enum pt_capabilities cap = (long)ea->var;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%x\n", intel_pt_validate_hw_cap(cap));
++	return sysfs_emit(buf, "%x\n", intel_pt_validate_hw_cap(cap));
+ }
+ 
+ static struct attribute_group pt_cap_group __ro_after_init = {
+@@ -150,11 +150,11 @@ pt_timing_attr_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	switch (pmu_attr->id) {
+ 	case 0:
+-		return sprintf(page, "%lu\n", pt_pmu.max_nonturbo_ratio);
++		return sysfs_emit(page, "%lu\n", pt_pmu.max_nonturbo_ratio);
+ 	case 1:
+-		return sprintf(page, "%u:%u\n",
+-			       pt_pmu.tsc_art_num,
+-			       pt_pmu.tsc_art_den);
++		return sysfs_emit(page, "%u:%u\n",
++				  pt_pmu.tsc_art_num,
++				  pt_pmu.tsc_art_den);
+ 	default:
+ 		break;
+ 	}
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 7927c0b832fa..b6bb3aa286fe 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -131,7 +131,7 @@ ssize_t uncore_event_show(struct device *dev,
+ {
+ 	struct uncore_event_desc *event =
+ 		container_of(attr, struct uncore_event_desc, attr);
+-	return sprintf(buf, "%s", event->config);
++	return sysfs_emit(buf, "%s", event->config);
+ }
+ 
+ struct intel_uncore_box *uncore_pmu_to_box(struct intel_uncore_pmu *pmu, int cpu)
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index a96496bef678..553ba9422677 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3754,7 +3754,7 @@ static ssize_t skx_iio_mapping_show(struct device *dev,
+ 	long die = (long)ea->var;
+ 	struct intel_uncore_topology *pmut = pmu_topology(pmu, die);
+ 
+-	return sprintf(buf, "%04x:%02x\n", pmut ? pmut->iio->segment : 0,
++	return sysfs_emit(buf, "%04x:%02x\n", pmut ? pmut->iio->segment : 0,
+ 					   pmut ? pmut->iio->pci_bus_no : 0);
+ }
+ 
 -- 
 2.29.2
 
