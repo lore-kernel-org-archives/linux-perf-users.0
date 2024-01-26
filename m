@@ -1,79 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629F11D6BE;
-	Fri, 26 Jan 2024 16:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53AA20313;
+	Fri, 26 Jan 2024 17:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706286334; cv=none; b=OUJ2FvgUKOXKetThMK4zRtYeEntbIPNJUBwwg8FEAhYWhFw0TCKeq25jCEk1hxg+FkLk/y7/E2AFdrIrzMG8MrYR57V2/RDmSytjyx8Dek6dkWFKpFr3T1y+vraU6QiVXxm8Q5XT4mEWxnr7X0G9TiMMB1YrquF/aHxjPh5I7vI=
+	t=1706289614; cv=none; b=aK+z3dCjcM0WviZYIYoali5FFYICLSwXMVcyhInhqSb7DHPOpwp9iE3cqB9ZgEG2F1SFZn2tZKY182lylOUwkmrXwuDD7rDdqwPbDUdxG62BvXR+pSM127VsCAERK0sw/NpA6zBeutMJj18lYCf8kSjBtjRJaIdwQr+rWlVxyeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706286334; c=relaxed/simple;
-	bh=DfiRLIgoHi+38BtPH3e3fTQLMA+gmNR/PlVDe0aSLE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KTI0AH1ZP3dqVGFczwixgKwgdvNIj+BsEEeZstqxXCHv2zskG6byjrYlHa16ZeOtfR6izvZAGDSe4dNSxWjLAxfRGciBgVYFXS9e1tEqFLV/hhI13GOvEZrwnIL4VkRbWiY/Ql4z13wKy2OS6ozen09/4d71BMOljAU89UNZEi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRuSvS9x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706289614; c=relaxed/simple;
+	bh=yZbujbmp4iPcH4g/pDDSyux54jtmDQTUzmF3y2qq+J0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QrcrVD7mC6W9PvIWFiaDxXc3qokPWe9hUqgasdYJVa8xLMlKmMGZFD7q8cNAzATaQhpFVGgV2eXrZ1YkOKO3Ao+M+TCfUnDgQeRLLDvThW/y6WrCNzdIZnJnxv5bfl9AiXQsvO8KCZY2K2+5rcA1u7/86dmOJD8E0zad5/dizM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=Nd2EDYim; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRuSvS9x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA9C7C43399;
-	Fri, 26 Jan 2024 16:25:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706286333;
-	bh=DfiRLIgoHi+38BtPH3e3fTQLMA+gmNR/PlVDe0aSLE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qRuSvS9x/ormIZak+Jk7Smge4qyqYrGWGsPT0Ssq3xD6YwTLemD861CFKeMhfaelk
-	 +H10YzOrhQvtRuLzeW2TcV1LEwRSHqZGhd9TQa1tY7UJBsZ4upPSPCjQ/N1nnLRxcD
-	 YN+U8pdtHDroTkuz7dwXN4YPQcHDTcWoKzuX95U2wcuQUmO9otv7s7TYlw3LjW9OgO
-	 jlNjoXkb+dBZHGJ0uMwlYqIpFJSm3MneJbQ1mYpHWXQ1psJNpm/x0Q3rqNGV23qNHo
-	 Jj1Oss9R5C/VC/KfaQbXYqneahf5tQ9ahmcxBnT2bPS+taGXdqqsL4EenHmuGpxjFx
-	 oNwAb33+MyIjg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 23DFE40441; Fri, 26 Jan 2024 13:25:31 -0300 (-03)
-Date: Fri, 26 Jan 2024 13:25:31 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
-	irogers@google.com, kan.liang@linux.intel.com, mark.rutland@arm.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf evlist: Fix evlist__new_default() for > 1 core
- PMU
-Message-ID: <ZbPc-1sqFgb7dJlF@kernel.org>
-References: <20240123102728.239147-1-james.clark@arm.com>
- <20240123103918.241423-1-james.clark@arm.com>
- <CAM9d7ciSY25Jf-MG24NWJu3aKJWXT2GN43qrV5WCuohLNZn1iw@mail.gmail.com>
- <ea054381-6ba2-d2f6-8de4-978a78a2ed8b@arm.com>
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="Nd2EDYim"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=2aQ/5SPBHX3H32sZDZ/AUotko7QKwWoHPSdoc1DV/Lc=; b=Nd2EDYimhSbgghey2T/VCHrT0t
+	1Z1JQPqbO7ZLChRbm+MTSqQtQHbKtRDMasoAd4r1K6ml66knvrAgcWQNPAZEFvqSxjZZSokyxs1s2
+	gm5xTGgAYMV8EuYaN+mtQj3NZtfboNZDueAIZeipA4d1SoJfHe4juTitt/AxppoO2ZFTCwfnjhtrz
+	wpVnpAY2IfgGDGdSLbeLjEBTVHmEgMyUuXBYKM1XUqJfZDwp/4BIUR+AzyVaSi0R7wovae/I1ytDU
+	a08lueO5keniV71gGnvGmiWeTjb1VPbGUY/i3IMhNtDi60TUgJ+GYTk3XceXTzAAcP4iRqhHlvibI
+	ITb/CXHQ==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rTPs0-0004xN-SI; Fri, 26 Jan 2024 18:20:00 +0100
+Received: from [85.1.206.226] (helo=linux.home)
+	by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rTPs0-0005nC-63; Fri, 26 Jan 2024 18:20:00 +0100
+Subject: Re: [PATCH bpf-next] perf/bpf: Fix duplicate type check
+To: Florian Lehner <dev@der-flo.net>, bpf@vger.kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240120150920.3370-1-dev@der-flo.net>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <4cf4c371-f922-e061-debf-3642374a34da@iogearbox.net>
+Date: Fri, 26 Jan 2024 18:19:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ea054381-6ba2-d2f6-8de4-978a78a2ed8b@arm.com>
-X-Url: http://acmel.wordpress.com
+In-Reply-To: <20240120150920.3370-1-dev@der-flo.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27166/Fri Jan 26 10:46:50 2024)
 
-Em Wed, Jan 24, 2024 at 09:03:57AM +0000, James Clark escreveu:
-> On 24/01/2024 00:46, Namhyung Kim wrote:
-> > On Tue, Jan 23, 2024 at 2:39 AM James Clark <james.clark@arm.com> wrote:
-> >> +++ b/tools/perf/util/evlist.c
-> >> @@ -106,6 +106,13 @@ struct evlist *evlist__new_default(void)
-> >>                 evlist = NULL;
-> >>         }
+On 1/20/24 4:09 PM, Florian Lehner wrote:
+> Remove the duplicate check on type and unify result.
+> 
+> Signed-off-by: Florian Lehner <dev@der-flo.net>
 
-> >> +       if (evlist->core.nr_entries > 1) {
-
-> > I think you need a NULL check for evlist here.
- 
-> Oops yes. Or just return on the error above.
-
-Was there a v4? I'm assuming this is for perf-tools, i.e. for v6.8-rc,
-right?
-
-- Arnaldo
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
