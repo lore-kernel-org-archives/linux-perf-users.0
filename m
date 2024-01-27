@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7F12E832;
-	Sat, 27 Jan 2024 19:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9632A1C9;
+	Sat, 27 Jan 2024 19:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706383858; cv=none; b=Av1W63y7o+dcmnvAzl95Lpo9IOU2eqzYcwD+j6RkijL/AU2e01udVF08QKZt91DcQqgadvRLbiOunhUShIvttWMiTOHqiTawpuOjrrK2psAyuNN697xDTsjYzdor0w1PFLqFxpMu7ra6GLoulI0r47FOqHm3FmdpQZs5XONaNMQ=
+	t=1706384820; cv=none; b=A/msNkDANBUPEzkSJN75JDrePT18NDHOiFOf3C/eeov+/7qqOdFD3PXFi6X6cstjmMC2TRXPufw0a4S4mJwzIm6AXTc5seCrCqycH19e1pWUdT4o72s3aWtB+fn86t2JXLT4uHUeVH4vH637cwjFTrruJynj3G37HQEIcCsv66g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706383858; c=relaxed/simple;
-	bh=jpSz+9HoQ20a03AqhQ+2jQlTm9eUGl7jm8uBou5eYtk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mW9M4fUCfw7dS2PsL9pFJN/35brSuCumdbdmF8Ujy0Nu4g9SMX4EgpFobNlGw8HsC0g5mnlEfOvQtS4Jc+YtawaocbPfBlsWyLWWlRjRmMFQQilxDFAYg16M2T4ZU32lp2DXsxDGzqlX4DnoaDcfUaIfuzhbM8Jw2lbb6sQikL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fV4hLgFd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706384820; c=relaxed/simple;
+	bh=9wu/rXDEi0M+UJTHlnsY5RuZUwgSUdzZITIxuYPhs7A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DUsw1wdHpfUnIW6Hp53Nc8F4Acl943Ayg9D+8mXUICr8dbSXZIdZUDSQRSbmH++uOsKSS4j2oSt6poM/VU8T5Y0uhHrvc35nNIbL3V1G1nPcQ7cVxRPXjg9s9gyoRaUqTB335FlGMQAXCxSLndpdWUGmRJm2wqFcKSjehbFuIGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGCDGmW4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fV4hLgFd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED792C433C7;
-	Sat, 27 Jan 2024 19:30:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGCDGmW4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92791C433F1;
+	Sat, 27 Jan 2024 19:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706383858;
-	bh=jpSz+9HoQ20a03AqhQ+2jQlTm9eUGl7jm8uBou5eYtk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fV4hLgFdAa09oj3pNJ9e+Rxeo7Usg7KxUWlGBqEd5pgESG6U8zd1Zt8YDnb+8vi1I
-	 FvuIpsLUobbqcMfDmjHvzSpTg1Go0bOU9PaEGB1fSIEpivQmRrvJAnYQsekdwUeSSV
-	 pLhRN4Iff8229cCZX62I92zbJVJOKgnb6BhOF674eYPUDee46oegIL8aW2IX4aNiQl
-	 Hh9d0vW1jbHTbzf6dBgDN1rvqumpgNEglYBvow5SwKFxyL2ASZQTYX+D5yLVm2IxTi
-	 Ao9rWz4tfPBpvdzPq3CZ9IV8fhTFU4tYxtv2iqjn8D6Us1YYUSQ+iweVGR7cCTz+Kl
-	 Gl+HqnIgOukYw==
+	s=k20201202; t=1706384819;
+	bh=9wu/rXDEi0M+UJTHlnsY5RuZUwgSUdzZITIxuYPhs7A=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AGCDGmW4dyGZ7bY47P5RPoOutHDW6imACdiY+XOeSzi8lvzVSRZvf3eXSgvxKq3IA
+	 KwHp9A2uj2lxxLBBKKjBXNfBwWuQoUJ4TCK8iqDWKVt3uKJErm7FQmdfZ1su3eZqcL
+	 p6AAvR40FTcKmiV6fH4BQf0yJe0rQdAT5AkjO5DFS5j7Ve2C/wVaAJAR4GBoWDwUq3
+	 /J98xRQMe1zLyncr9fddteTDvNbHW47fnNHJI07Vzb/yR9euH80tAW8w9D1Yp/TsVI
+	 KwSAxoWvJ+BMUtYdkSxs/rKMADfjUWP+EV5rtThuyr24KgdNh/JVEK0ambzYG/0wPR
+	 BXDZMRyddCyPA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id C759640441; Sat, 27 Jan 2024 16:30:55 -0300 (-03)
-Date: Sat, 27 Jan 2024 16:30:55 -0300
+	id 5017240441; Sat, 27 Jan 2024 16:46:57 -0300 (-03)
+Date: Sat, 27 Jan 2024 16:46:57 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: "perf test 103: perf all metrics test" failing on hybrid i7
- 14700k
-Message-ID: <ZbVZ75hvYSzS3ReL@kernel.org>
-References: <ZbVYhxQzodvh5Cob@kernel.org>
- <ZbVYqYEw_w4eTSdf@kernel.org>
+Subject: perf test bpf-counters failing on some hybrid machines
+Message-ID: <ZbVdsbIUQMqHol7V@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,26 +45,84 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZbVYqYEw_w4eTSdf@kernel.org>
 X-Url: http://acmel.wordpress.com
 
-Em Sat, Jan 27, 2024 at 04:25:29PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Sat, Jan 27, 2024 at 04:24:55PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > FYI:
-> > 
-> > root@number:~# grep -m1 "model name" /proc/cpuinfo 
-> > model name	: Intel(R) Core(TM) i7-14700K
-> > 
-> > And see after that another hybrid machine, a Lenovo Thinkpad Carbon X1:
-> > 
-> > root@x1:~# grep -m1 "model name" /proc/cpuinfo
-> > model name	: 13th Gen Intel(R) Core(TM) i7-1365U
-> 
-> Ah, this is with was in perf-tools/tmp.perf-tools, that I'm prepping up
-> to send for v6.8-rc
+IIRC there is a patch by Thomas Richter for s390 for this? I'll check
 
-This one cured it:
+Fails:
 
-Subject: Re: [PATCH v1] perf vendor events intel: Alderlake/sapphirerapids metric fixes
+root@number:~# uname -a
+Linux number 6.6.13-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Jan 20 18:03:28 UTC 2024 x86_64 GNU/Linux
+root@number:~#
+root@number:~# perf test -v 106
+106: perf stat --bpf-counters test                                   :
+--- start ---
+test child forked, pid 997337
+The difference between 292281328 and 383336121 are greater than 10%.
+test child finished with -1
+---- end ----
+perf stat --bpf-counters test: FAILED!
+root@number:~# grep -m1 "model name" /proc/cpuinfo
+model name	: Intel(R) Core(TM) i7-14700K
+root@number:~#
+
+Fails sometimes:
+
+root@x1:~# uname -a
+Linux x1 6.6.13-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Jan 20 18:03:28 UTC 2024 x86_64 GNU/Linux
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# grep -m1 "model name" /proc/cpuinfo
+model name	: 13th Gen Intel(R) Core(TM) i7-1365U
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : FAILED!
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : FAILED!
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test 106
+106: perf stat --bpf-counters test                                   : Ok
+root@x1:~# perf test -v 106
+106: perf stat --bpf-counters test                                   :
+--- start ---
+test child forked, pid 279934
+test child finished with 0
+---- end ----
+perf stat --bpf-counters test: Ok
+root@x1:~# perf test -v 106
+106: perf stat --bpf-counters test                                   :
+--- start ---
+test child forked, pid 280029
+The difference between 261175698 and 219929411 are greater than 10%.
+test child finished with -1
+---- end ----
+perf stat --bpf-counters test: FAILED!
+root@x1:~# perf test -v 106
+106: perf stat --bpf-counters test                                   :
+--- start ---
+test child forked, pid 280124
+The difference between 251455173 and 299125735 are greater than 10%.
+test child finished with -1
+---- end ----
+perf stat --bpf-counters test: FAILED!
+root@x1:~#
+
+
 
 - Arnaldo
