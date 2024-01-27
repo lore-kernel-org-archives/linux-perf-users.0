@@ -1,85 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2582E62A;
-	Sat, 27 Jan 2024 19:28:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0C12D610;
+	Sat, 27 Jan 2024 19:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706383689; cv=none; b=Z9g6vWRLXWaXjzrFtAuCZHzKP6Su6e++/AxW4RlQ2hMF054v3s0MInKl/LWqjjMhaCSHMuX+kKpjuPUNkP5kShC9oiY4UTD/uPKMSgMlsa9B4NvMBb9e2UWxfCXEOx1JJN/xeD5joq4v53PPv1acUlhOVfWY9zS1y8kmWLvi4Qw=
+	t=1706383838; cv=none; b=LSYObZ2izMnzx3zE5Jn1JIrPJXtXR1j+LUxu9OVrkMJLGWQGscCVe445QXw8UVm8xbiiLbmjMY/ggs0RRIS8jjrMbXQ9lRigOHl8hjlBeCUlH3bjTMB9WPX/7PHcha4gqk0l66Z7a0dShjTyAx7q0WDi05QhQscVeSEXAU2/ibs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706383689; c=relaxed/simple;
-	bh=YMYC8xwt8ah1USUk80LJ7Mt2nKL7aHi1219QW6IDjng=;
+	s=arc-20240116; t=1706383838; c=relaxed/simple;
+	bh=80ymeHrsW5HH2OWf8Lr/T2iAX4+IhNBKg4APIwfV+Ss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H0MhZ5kGV/MPLZvztniv0tZsTzAHidhVka8ezAWq9UHSWkZBONB2TSCPSRpkdh2xgfoNu8KYw1nFYxebLXIUNCgKwqe6u+jl2+RGpqjvzN0InkNMLWjITWshhVnDxaPEUXW9AK08Jlp7NAkHwqGB3Lf7MV1AzcAC/V0hBFyc77M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U9E0yrrt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8+o3xsFjv9gRK+LLxQcZuWoqilSe9CKFMUVnHU3SzQ9lXsfqZYKbJiHcb8WBrHnm07tJFG3p7KxnelUk4bcLp0e/RoNGMZ4l1k3VtRezoKUU4JPjvUqRBotZKTcTxElTfp+aWJ+4nXKDmatAWmX0Sqk6buVTlp5uVj9zBGNypQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plMVjyja; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9E0yrrt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 104E7C433F1;
-	Sat, 27 Jan 2024 19:28:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plMVjyja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5067C433C7;
+	Sat, 27 Jan 2024 19:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706383689;
-	bh=YMYC8xwt8ah1USUk80LJ7Mt2nKL7aHi1219QW6IDjng=;
+	s=k20201202; t=1706383838;
+	bh=80ymeHrsW5HH2OWf8Lr/T2iAX4+IhNBKg4APIwfV+Ss=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U9E0yrrtTGewSobcxMxtcNm7YC2CWC/gCv1fmW3G4AEbRdGwPq8MOW9jjaWrrFkmU
-	 H1hoTmaxwPGzvccZJQ2+cBsZr8k8fo0R0dgZ+Q67V+uZJE1hTmk+76vkr2PGnvmvgM
-	 DNpIM8J23VSvQ8JnQgxb1FKROWxjH2HaJ7wY/ZmGFXCIasvsVMe4jAkjLCWXmpG9ef
-	 dy0k8rBYTllg5MjvyVPJYwNrhcOLpNgjkJEO+jrbOItU6pizkOkas3NlRpKqAqkaIj
-	 PwjfT0+19xX9GJSGkmFeyAEH1xA214KR5ZXX1kfs/zg2BRntbX5KUfHikWb5J36q83
-	 DYkwVgFnqKmxA==
+	b=plMVjyja2hI0UNua4E75oIuAWmcdL5d7p8AR+KbPOT1Acgq2tfrlpYiSbgAl/26cm
+	 XG5Gl0d/KjKBdrQHKgY/IInpeD6LG56BEFwnH4zW65rabCiGRjSgjJKivcH5YK2B9s
+	 Lw6Z7hEcBRRKKynFZmsO4aVSs7JnzG3kVMEzNkAwQrt6siYENiKPMlMzJf464VhErZ
+	 ZJgoDxG4BCfgAYFB5zviIyQYJm2p3Hw2UBWH79NsXwm22rqAZXhPRWQScYAcgBCudt
+	 47qTGXAN0Je7P264LCiWyZKmLpYGfYbYMpQo7zkIebq7cTOZar5JZ6F23BPrpzzFpX
+	 q32IvSuDIVjxw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id BC43A40441; Sat, 27 Jan 2024 16:28:06 -0300 (-03)
-Date: Sat, 27 Jan 2024 16:28:06 -0300
+	id 4CB2240441; Sat, 27 Jan 2024 16:30:35 -0300 (-03)
+Date: Sat, 27 Jan 2024 16:30:35 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf evsel: Fix duplicate initialization of data->id in
- evsel__parse_sample()
-Message-ID: <ZbVZRrPp9YusOHzB@kernel.org>
-References: <20240127025756.4041808-1-yangjihong1@huawei.com>
+To: Ian Rogers <irogers@google.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Edward Baker <edward.baker@intel.com>
+Subject: Re: [PATCH v1] perf vendor events intel: Alderlake/sapphirerapids
+ metric fixes
+Message-ID: <ZbVZ2yeWTRKNS-1R@kernel.org>
+References: <20240104231903.775717-1-irogers@google.com>
+ <8c060937-0351-4c4f-afb3-aa6e5aa1e685@linux.intel.com>
+ <CAP-5=fXpkMP0yphYLAUFNwHjBZvapzkop41LGnKDc1QAOoi7qg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240127025756.4041808-1-yangjihong1@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXpkMP0yphYLAUFNwHjBZvapzkop41LGnKDc1QAOoi7qg@mail.gmail.com>
 X-Url: http://acmel.wordpress.com
 
-Em Sat, Jan 27, 2024 at 02:57:56AM +0000, Yang Jihong escreveu:
-> data->id has been initialized at line 2362, remove duplicate initialization.
+Em Fri, Jan 26, 2024 at 05:46:33PM -0800, Ian Rogers escreveu:
+> On Fri, Jan 5, 2024 at 11:22 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> >
+> >
+> >
+> > On 2024-01-04 6:19 p.m., Ian Rogers wrote:
+> > > As events are deduplicated by name, ensure PMU prefixes are always
+> > > used in metrics. Previously they may be missed on the first event in a
+> > > formula.
+> > >
+> > > Update metric constraints for architectures with topdown l2 events.
+> > >
+> > > Conversion script updated in:
+> > > https://github.com/intel/perfmon/pull/128
+> > >
+> > > Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Closes: https://lore.kernel.org/lkml/ZZam-EG-UepcXtWw@kernel.org/
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > Thanks Ian.
+> >
+> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> >
+> > Thanks,
+> > Kan
 > 
-> Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> Ping.
 
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-- Arnaldo
-
-> ---
->  tools/perf/util/evsel.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 4d14f14f2506..a0f36a6b8a2d 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2363,7 +2363,6 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
->  	data->period = evsel->core.attr.sample_period;
->  	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
->  	data->misc    = event->header.misc;
-> -	data->id = -1ULL;
->  	data->data_src = PERF_MEM_DATA_SRC_NONE;
->  	data->vcpu = -1;
->  
-> -- 
-> 2.34.1
-> 
-
--- 
+Applied and it fixes the problem I just reported (perf test 103),
+thanks!
 
 - Arnaldo
