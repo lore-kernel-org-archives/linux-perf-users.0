@@ -1,128 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9632A1C9;
-	Sat, 27 Jan 2024 19:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80B5469E;
+	Sun, 28 Jan 2024 04:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706384820; cv=none; b=A/msNkDANBUPEzkSJN75JDrePT18NDHOiFOf3C/eeov+/7qqOdFD3PXFi6X6cstjmMC2TRXPufw0a4S4mJwzIm6AXTc5seCrCqycH19e1pWUdT4o72s3aWtB+fn86t2JXLT4uHUeVH4vH637cwjFTrruJynj3G37HQEIcCsv66g=
+	t=1706415585; cv=none; b=UedSX4UxHNSssfcAiGfInpEPR56lA9e5OjvumT0HQo34wY2S8Dy3bmczTgBCZU4PnCouRZ98d3TIom+1ANSBwQDBCPSq9YJxk48LnqvaS5ri+cxFU/pMAy+/tUS5c27z++TzFmi0aHHpsd2658bWbjPx3NoAN5wCPG0nNfA9ldI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706384820; c=relaxed/simple;
-	bh=9wu/rXDEi0M+UJTHlnsY5RuZUwgSUdzZITIxuYPhs7A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DUsw1wdHpfUnIW6Hp53Nc8F4Acl943Ayg9D+8mXUICr8dbSXZIdZUDSQRSbmH++uOsKSS4j2oSt6poM/VU8T5Y0uhHrvc35nNIbL3V1G1nPcQ7cVxRPXjg9s9gyoRaUqTB335FlGMQAXCxSLndpdWUGmRJm2wqFcKSjehbFuIGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGCDGmW4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706415585; c=relaxed/simple;
+	bh=ouvRLb+Ds//L/skH9q1zWlfq8nHjlpo/XAlc5ITQhLs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bU7wTswN9YYMrqmTuDiebxCgyhdyQj71B7mTF4qAzYzdY8KDiYEq13360HsNHfJ7J1Ei+JsTk95CeQ6hgEXSrmhBL7IUYs2ONT/qh4QMrE/wX1++7Noqzuk73sCGgOz9OskP7057bFYx02bKULztan1co6agVdQwXSnLkiCDc9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bsDweI7/; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGCDGmW4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92791C433F1;
-	Sat, 27 Jan 2024 19:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706384819;
-	bh=9wu/rXDEi0M+UJTHlnsY5RuZUwgSUdzZITIxuYPhs7A=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AGCDGmW4dyGZ7bY47P5RPoOutHDW6imACdiY+XOeSzi8lvzVSRZvf3eXSgvxKq3IA
-	 KwHp9A2uj2lxxLBBKKjBXNfBwWuQoUJ4TCK8iqDWKVt3uKJErm7FQmdfZ1su3eZqcL
-	 p6AAvR40FTcKmiV6fH4BQf0yJe0rQdAT5AkjO5DFS5j7Ve2C/wVaAJAR4GBoWDwUq3
-	 /J98xRQMe1zLyncr9fddteTDvNbHW47fnNHJI07Vzb/yR9euH80tAW8w9D1Yp/TsVI
-	 KwSAxoWvJ+BMUtYdkSxs/rKMADfjUWP+EV5rtThuyr24KgdNh/JVEK0ambzYG/0wPR
-	 BXDZMRyddCyPA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 5017240441; Sat, 27 Jan 2024 16:46:57 -0300 (-03)
-Date: Sat, 27 Jan 2024 16:46:57 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: perf test bpf-counters failing on some hybrid machines
-Message-ID: <ZbVdsbIUQMqHol7V@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bsDweI7/"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-59502aa878aso887244eaf.1;
+        Sat, 27 Jan 2024 20:19:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706415582; x=1707020382; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=15t886RIABr313J9wigXhAHcQ7ucTJcHxOCOzS75ZHE=;
+        b=bsDweI7/nGrXbmx3KMtbaaTJzJPPb1ag2iHaFAARU3rZEB+6eLkuG11MGygoP8ksuD
+         dFfwgZFl38jLezGlJ7oM4m7QNcjv3ruVaq7K4alC1s+ogBc+HU1cnDRxRRF2j1SYzWaJ
+         wgG58MIISfrbR8Epg/e7oli2q2wPp5Ac0MjeKRVLxmJE1lom+ko4k6o6MdYLDfckRYgc
+         9NEB3fgbu4hqDBeoUQmAjtfjYvBhcL0SYRCR0A1eWOJAl14OmaBARFoKGQzHkyqvzC4y
+         A8CWfsE7yaniEFktQI+ArsfpJgR/RIyYOIthGt4GeTGS2xNMPPF7fsdlNViOSDwH2BEa
+         kZSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706415582; x=1707020382;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=15t886RIABr313J9wigXhAHcQ7ucTJcHxOCOzS75ZHE=;
+        b=fD9/yp+bKc7p7Lvy+Wnx4TPH2nfxK8P5DFPKW26FgXwOr2c7tkyvrgAMwT1B55Jx+y
+         YC1+V/B3s2cZ7RfCBmN/muycb4QTvT72s/OOFNNlsvdVJOg2heOMcNlrXdCAVvKKxT4I
+         mgxnuaFUaHlaYrF0u3cS1EkVnhiV/t1wwlOYh2R0rx3cfIz2t1dG87rPVzsVvMQ9a2t/
+         7icyU6r/f11uQXfG6ZRf5heKukQpnagDqfbCKcbYu2Tdy14HLbH8GjfmmAZQc3E2FRDh
+         u5+NofUJ8M2Buio6K2hOzyp431KHiQBvhRXeNRnmOXWwgTMZpo7GrxVcfdlz90I0Rf/g
+         5NqQ==
+X-Gm-Message-State: AOJu0Yy6F206bBonPAEzyQy7nf7NKHp4qZZV+MSUrFEL3rKI/wT9/vV0
+	GXhGixLOG9CAaVv+MeEZQ/tvdJMcTKyJJORYcDXIN0UtpHJ14cnl
+X-Google-Smtp-Source: AGHT+IEBSQgi7IiC6vD8LPU9eld5W2djGlEuzGvkzp59fjqExYM58z4CUAPqsm22eW81t5/Baln3DQ==
+X-Received: by 2002:a05:6359:1501:b0:175:c16b:126f with SMTP id jt1-20020a056359150100b00175c16b126fmr2599450rwb.56.1706415582367;
+        Sat, 27 Jan 2024 20:19:42 -0800 (PST)
+Received: from ubuntu.localdomain ([219.143.159.9])
+        by smtp.gmail.com with ESMTPSA id x15-20020a17090a164f00b00295210e5a9asm2442047pje.48.2024.01.27.20.19.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jan 2024 20:19:41 -0800 (PST)
+From: Donglin Peng <dolinux.peng@gmail.com>
+To: peterz@infradead.org
+Cc: jolsa@kernel.org,
+	wangnan0@huawei.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Donglin Peng <dolinux.peng@gmail.com>
+Subject: [PATCH] perf/ring-buffer: refactor code of reading the value of data_tail
+Date: Sat, 27 Jan 2024 20:19:35 -0800
+Message-Id: <20240128041935.513800-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Url: http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 
-IIRC there is a patch by Thomas Richter for s390 for this? I'll check
+The tail variable will only be accessed when overwrite is 0, so we can
+put the assignment statement in the if branch.
 
-Fails:
+Fixes: d1b26c70246b ("perf/ring_buffer: Prepare writing into the ring-buffer from the end")
+Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
+---
+ kernel/events/ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-root@number:~# uname -a
-Linux number 6.6.13-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Jan 20 18:03:28 UTC 2024 x86_64 GNU/Linux
-root@number:~#
-root@number:~# perf test -v 106
-106: perf stat --bpf-counters test                                   :
---- start ---
-test child forked, pid 997337
-The difference between 292281328 and 383336121 are greater than 10%.
-test child finished with -1
----- end ----
-perf stat --bpf-counters test: FAILED!
-root@number:~# grep -m1 "model name" /proc/cpuinfo
-model name	: Intel(R) Core(TM) i7-14700K
-root@number:~#
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 60ed43d1c29e..86b150a822b7 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -194,8 +194,8 @@ __perf_output_begin(struct perf_output_handle *handle,
+ 	offset = local_read(&rb->head);
+ 	do {
+ 		head = offset;
+-		tail = READ_ONCE(rb->user_page->data_tail);
+ 		if (!rb->overwrite) {
++			tail = READ_ONCE(rb->user_page->data_tail);
+ 			if (unlikely(!ring_buffer_has_space(head, tail,
+ 							    perf_data_size(rb),
+ 							    size, backward)))
+-- 
+2.25.1
 
-Fails sometimes:
-
-root@x1:~# uname -a
-Linux x1 6.6.13-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Jan 20 18:03:28 UTC 2024 x86_64 GNU/Linux
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# grep -m1 "model name" /proc/cpuinfo
-model name	: 13th Gen Intel(R) Core(TM) i7-1365U
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : FAILED!
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : FAILED!
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test 106
-106: perf stat --bpf-counters test                                   : Ok
-root@x1:~# perf test -v 106
-106: perf stat --bpf-counters test                                   :
---- start ---
-test child forked, pid 279934
-test child finished with 0
----- end ----
-perf stat --bpf-counters test: Ok
-root@x1:~# perf test -v 106
-106: perf stat --bpf-counters test                                   :
---- start ---
-test child forked, pid 280029
-The difference between 261175698 and 219929411 are greater than 10%.
-test child finished with -1
----- end ----
-perf stat --bpf-counters test: FAILED!
-root@x1:~# perf test -v 106
-106: perf stat --bpf-counters test                                   :
---- start ---
-test child forked, pid 280124
-The difference between 251455173 and 299125735 are greater than 10%.
-test child finished with -1
----- end ----
-perf stat --bpf-counters test: FAILED!
-root@x1:~#
-
-
-
-- Arnaldo
