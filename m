@@ -1,75 +1,71 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2077.outbound.protection.outlook.com [40.107.212.77])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCE1604A6;
-	Mon, 29 Jan 2024 11:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706526457; cv=fail; b=OZOAKcGt7uunuIVCOTAo3/xfRoF/2YpXR0iJHd4lGxDZ1xk2T8lG5I2A92ea/WqC+2/+FR7jxitq8UwBaaWNOFCTKiucStrLek+4KSQMvUJixI6WJ4CJ5o5H6Gbg8tbxqMp/7EdrFttMOs2eip8ItSQMhh3kopinZjMaUCO0RW8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706526457; c=relaxed/simple;
-	bh=gV2MKB5K6UVyjqqJUMBcPmK3kixaTcrJgvfs09bwCYU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WaQ1u9ZftaCh/N93zMFXpZVZ3Pm+Luo855qMSQM9vFx65o/9RcVaZzoHJIBCe7B5ppMIH6oT2vs1XcEUSCFHnvgGnO51EaxiWx5k01VHCmyjl5e+dQOQ9AF0ia2oDIvC8S01zvaj/WD2sgUodYW8f9W/pky46FSTbvAP6DQiK38=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=x56ToNpY; arc=fail smtp.client-ip=40.107.212.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3008D5FEF9
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jan 2024 12:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706530154; cv=none; b=LRp8ZoXQntd6YjNWVAn79Ik4sGQmFRe0tu5xx5Wfi7B33jvi8W9t4bYVpPwB5zZ5VvuP2Gduwsl9A7WWrM/OknUQ9zdRtp7FdSZs2Ccv66VqQr+4FSczJRYzKUk1ZwKK991xHNrcNgASkkOXeGM8sml8wuueQEwCJosDerJEA94=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706530154; c=relaxed/simple;
+	bh=KUknzVHm6fDIVzPCYpYE6sCdqVSBsvXxjlBAaFX84qY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EKj1jcI8vo/Lav32xtyKsibe9lmHnuJ1DtEIBv7jPTCW+RH90Pz8fnAI/NfG2J2Xw5HRWM1kQM2FFta44gTM/zArXuOOMF3C3D1p2SRxPwkBlXDfvR9LEE+5BexttlPjkt1XMdHirPjiPexr2ln3mCNtvoc9XDif+ryOUl72b/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=f85O+330; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="x56ToNpY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AwuwNl7nYCy+N2xAxm4syTHpTuJ9m4Oy2qhM514t8CLYb3HeuGN+IFkDtzQw+Iqmtnu3d3yIFXsVmeiv6ZzkpkO0rC9W4K35vSKNNYIi3V7n/WEX29z6AOqUgSFzCevNc2GIjOqwBuDYabhnYmMbvBZAqt3qurRkN0Quq0fw2ND0wMcqwxkrTknaUmpKAlSliLAJ0YoVUfG24Z5RfRt1UXIgkqHLLws/Vtb8o4FORb9MqtuyNi185PvHBt/O+TRtm+3quXMCQfJLedYVmkwDakkVezxHmAB3hNfO7bvd+RXCNq1hZ6JZz7wUKPGtjSHPZvIptMBdkQBhtZR7f8AnHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VPMy8QQOvVtzv+5yS5UcoCje3KI+shnpnly5qLELA8w=;
- b=VikRFJM2kGf0A8G853zCkS9rav9iYVjYDx7KapHKn+CMa2K3NCZvNcqckYTrm89kOVL1JKbE5jv2tg2AmYBk39j9riqZOcFBOSZlvgQZL7XpFA5sBA84YJsqU4qmwbbwskwjiEk2U1+HpfvvN4yrWcFOETgCmhbJ7mSHMS31BXYs1laXXx4Qp8zuEvXWb3QesX97LCG8bi0YLZbpcNPhgbGy9mJLZk0PSvxgbmE0roE71RlCBFE1+2PYjbU5weM9dK9dPtiNm/2KVz9NGCy/Za1Uji+7qbDg94ZTCDmzQWgsktpUTw5SfjWlpWs6XXTDOlpY3F0OhZebHO/f8h+l1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VPMy8QQOvVtzv+5yS5UcoCje3KI+shnpnly5qLELA8w=;
- b=x56ToNpYdqtTN/vlX1vIXGS07s2a2QHfcVoIxNq6avTgvT/0/5zYzzjiP0eJi0jd52/XJxPa9yz9Ah4tkEkDPt1jXFZoo+Sq5iN+aulTTZ76rKlCwaZrYlA6qwDYJcQpCilU+mIuCDk1il1yU25722qqqZPl0DWrNC3C/i3deUg=
-Received: from DS7PR03CA0070.namprd03.prod.outlook.com (2603:10b6:5:3bb::15)
- by IA1PR12MB7637.namprd12.prod.outlook.com (2603:10b6:208:427::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
- 2024 11:07:33 +0000
-Received: from DS1PEPF00017096.namprd05.prod.outlook.com
- (2603:10b6:5:3bb:cafe::5f) by DS7PR03CA0070.outlook.office365.com
- (2603:10b6:5:3bb::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32 via Frontend
- Transport; Mon, 29 Jan 2024 11:07:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017096.mail.protection.outlook.com (10.167.18.100) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7202.16 via Frontend Transport; Mon, 29 Jan 2024 11:07:32 +0000
-Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 29 Jan
- 2024 05:07:26 -0600
-From: Sandipan Das <sandipan.das@amd.com>
-To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <x86@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<namhyung@kernel.org>, <adrian.hunter@intel.com>, <tglx@linutronix.de>,
-	<bp@alien8.de>, <eranian@google.com>, <irogers@google.com>,
-	<mario.limonciello@amd.com>, <ravi.bangoria@amd.com>,
-	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH v3 3/3] perf/x86/amd/core: Avoid register reset when CPU is dead
-Date: Mon, 29 Jan 2024 16:36:26 +0530
-Message-ID: <550a026764342cf7e5812680e3e2b91fe662b5ac.1706526029.git.sandipan.das@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1706526029.git.sandipan.das@amd.com>
-References: <cover.1706526029.git.sandipan.das@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="f85O+330"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40T9xXfK019941;
+	Mon, 29 Jan 2024 12:09:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=KcGhYSqbvopmT+SNtGkwaw3B+Hv9hZeMUrhNfChZ2A8=;
+ b=f85O+330DA0jjM4CqpFRyqrIxEFJEImo9jjAenGI1k8MllvsW/tnRZOpvTtXAcfnuEGX
+ lyda1opsdw/op6MgySmviNQIxW31+kBaeNfFzm+10Kmsr65XIwqLuaL/nvSNQ6AKZ27P
+ DCBP1QGbUk5XFI7Njszbaj6lA0rRyRAeRfmxVz5I0zPAJrQ+ZG7A+vGV8dHe/BpMfgv+
+ hMLUjUrqZkuZ+q3pdeD6iRBlOwfIgcc5IXUg4QKBX59RJ5iK/bxU9lJ7pAg78E3OMXtn
+ U4nKUFHsgoKqDncL8FIVCPI3SPxXoFUb8APmFfrylpl7hH3Omu9oJK6o+JALpNQTRWGO og== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vwthyapbp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jan 2024 12:09:05 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40TBtQc3000376;
+	Mon, 29 Jan 2024 12:09:05 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vwthyapb9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jan 2024 12:09:05 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40TBr8sP011067;
+	Mon, 29 Jan 2024 12:09:04 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vwd5ng10b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jan 2024 12:09:04 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40TC915g42992162
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 29 Jan 2024 12:09:01 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 34B4820040;
+	Mon, 29 Jan 2024 12:09:01 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0F60520043;
+	Mon, 29 Jan 2024 12:08:59 +0000 (GMT)
+Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.in.ibm.com (unknown [9.204.207.44])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 29 Jan 2024 12:08:58 +0000 (GMT)
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: [PATCH] perf/pmu-events/powerpc: Update json mapfile with Power11 PVR
+Date: Mon, 29 Jan 2024 17:38:55 +0530
+Message-ID: <20240129120855.551529-1-maddy@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -77,59 +73,36 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017096:EE_|IA1PR12MB7637:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84f62cbe-498d-400b-9040-08dc20ba7de6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	tTqJW20Ojp8i5j1lJ4EUh+czBZvucvUBYJMcgg59LiY9aAiUVbzzIU1PVqJgHRRophA8Ka20PEIWmavxctq/I5hFerByZypfK4+vRKhIpt+l3/Ap5ctKHah1Kj/9Tr7nYjyzIXhsDElc6LAE62ikl2ZQ0m9EHxesgagb/TMeWPSazMygTuTXhTV59h8Jo2cd5C72T66ebg/rGobIgLDJr0Ss1NaZxFI3yqfwOQudMfm43iOJUCma1c7zYbHGILe1+iPSRhELeZ1ZMSg6rkaqI+IUpJ4mWebb18Xmv3mnsxqXnfk0wHmsHAkRc31Lh3Tkm8CXa6g1YWyxFnsK6KOML1CnjcWUwRO52cp5lBhnvZhDTsZ+mVo/b8BSam59dTHhb3qENHwRw5juhJbimx++VVPo8c2lAsc905lFxhV8hHnnliUp8puiYVlVB6dQHUhPdhGP03XBkKFwzJOINXylCeuuvvJBh2OnQLx4CjdGufCqpIFZ+JmJgsjMo8O1P0fZbyW+ZHz85HFpCeAPx/oLb0Wc1k7Gz+lB2dBfDLPDn3NWBnTYPPfzWrMO1pXQRv9T1G5GHqc0tCSMHpnCVW+iscxBARE5K6rDoOYoFcZR1AjXYNmSEALQpeqgIg+J994I+/VoQaULkjySZKfu+tkXtGfGmnHx7YwHvUIn3QyTbh/1FQ2ma60WxGUstdiDXuE5+cOMQ3UU0B7/g+WDc+O01EVDFLhkM4xdiMVIUoffK0ghr0QA4o/xVqNYoF9Xo/7H3X+8bDD/M+hVltNnIeIDdQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(346002)(376002)(230922051799003)(451199024)(1800799012)(64100799003)(82310400011)(186009)(36840700001)(46966006)(40470700004)(2616005)(83380400001)(8676002)(426003)(16526019)(26005)(336012)(41300700001)(4326008)(7416002)(5660300002)(8936002)(36756003)(2906002)(44832011)(316002)(54906003)(110136005)(70206006)(70586007)(86362001)(478600001)(966005)(356005)(47076005)(81166007)(40480700001)(40460700003)(82740400003)(36860700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 11:07:32.5848
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84f62cbe-498d-400b-9040-08dc20ba7de6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017096.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7637
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3X0hkpYshCB14owOqCvry76HR5t7tVYN
+X-Proofpoint-ORIG-GUID: u6caXPrPMFqG9q7E96_4JeigrDO73Hi9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-29_06,2024-01-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=945 mlxscore=0
+ malwarescore=0 clxscore=1011 adultscore=0 phishscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401290087
 
-When bringing a CPU online, some of the PMC and LBR related registers
-are reset. The same is done when a CPU is taken offline although that
-is unnecessary. This currently happens in the "cpu_dead" callback which
-is also incorrect as the callback runs on a control CPU instead of the
-one that is being taken offline. This also affects hibernation and
-suspend to RAM on some platforms as reported in the link below.
+Update the Power11 PVR to json mapfile to enable
+json events. Power11 is PowerISA v3.1 compliant
+and support Power10 events.
 
-Link: https://lore.kernel.org/all/20231026170330.4657-3-mario.limonciello@amd.com/
-Reported-by: Mario Limonciello <mario.limonciello@amd.com>
-Fixes: 21d59e3e2c40 ("perf/x86/amd/core: Detect PerfMonV2 support")
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
 ---
- arch/x86/events/amd/core.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/pmu-events/arch/powerpc/mapfile.csv | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index ffdfaee08b08..63514c311f44 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -604,7 +604,6 @@ static void amd_pmu_cpu_dead(int cpu)
- 
- 	kfree(cpuhw->lbr_sel);
- 	cpuhw->lbr_sel = NULL;
--	amd_pmu_cpu_reset(cpu);
- 
- 	if (!x86_pmu.amd_nb_constraints)
- 		return;
+diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+index 599a588dbeb4..4d5e9138d4cc 100644
+--- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
++++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+@@ -15,3 +15,4 @@
+ 0x0066[[:xdigit:]]{4},1,power8,core
+ 0x004e[[:xdigit:]]{4},1,power9,core
+ 0x0080[[:xdigit:]]{4},1,power10,core
++0x0082[[:xdigit:]]{4},1,power10,core
 -- 
-2.34.1
+2.43.0
 
