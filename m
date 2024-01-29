@@ -1,25 +1,46 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44016026B;
-	Mon, 29 Jan 2024 12:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD379657B3;
+	Mon, 29 Jan 2024 12:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706530816; cv=none; b=c39wYyc8L0Jnt4+7Uh8y+jclB1VpLBcvfqGKsfMkAha7Z3Fo3oyaOkxEFjddVf/IB9mRINym1ZMhEd8odbiJhZ//9IO6lSonYPBvvqwjOgoDSe/65rSEL34XRdd5EL9WSmDZbvuzkt7kFFspnuIS+zuKxSDseR5QwKgSJWoHIA4=
+	t=1706532548; cv=none; b=K+UHK/mRXoB3PLzSJw4Hc1Ud2iv3rBy3JwrwATxPZQz5Qerc/nYX4ieQx9DHJJ0kecw8ooNJoyBY7nKf72llJmCFQTGMD+V8IrxOwIaw2Q1QdrimdnqEO0qYx1XIwdMDJlwTe4WUI21qUgze8ysDyZE24vlVHY8lmvgt8ft7ioE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706530816; c=relaxed/simple;
-	bh=FxPMJ7QeaXRJqjNkFk9dqwdB7KatB3cW4vpSSPc4bL0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ScBA945QtJ9/pTKA8STWA/NuohLErR5BPh6s2X+CxVcythK7EV5r+gpam13rFCEZOBvNQVCNB9G5mKx2LTutY4UaUxHFX8+JPYClRaGlEnARmw4p4NFIsrKw/rtqlJQ6BbQEKKLTAoiRyFKvf7xUj0oavlBybNihobve/JPlXFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 283EF1FB;
-	Mon, 29 Jan 2024 04:20:58 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D3283F5A1;
-	Mon, 29 Jan 2024 04:20:10 -0800 (PST)
-Message-ID: <f30f3b77-0c72-49ab-8d30-48ba642ba0e8@arm.com>
-Date: Mon, 29 Jan 2024 12:20:08 +0000
+	s=arc-20240116; t=1706532548; c=relaxed/simple;
+	bh=VL5pNvnkQOiSj9vwY01FvxPpPTQKiMSBL6wrtNUbUDg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=LBeka4O+1QJkdYjtye9buwY9fo4Khl0qRFkpmGrNsxZHYvssW6He0pRCnYJtrwFZHHsn+PQpqpchgsuyu44r4zC7HSGHigb2qXXmhUE3C+Wdb67gIsqdZysDkbxPyaEctMX9IRAYs3ceZmpdU4WB/qbjsateY3m+8U359oWlfkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bj792J1p; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bj792J1p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706532546; x=1738068546;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=VL5pNvnkQOiSj9vwY01FvxPpPTQKiMSBL6wrtNUbUDg=;
+  b=Bj792J1pv0KOcpq4Bq1utHM3EKK/VT4Ciimnpl7S8FCX7GOX9FwmBpxQ
+   vGnVpOFs57a9wuMEc3zXAQAFn2oRl1biQVYz/Q12js9fr2WwEuu0VJOX/
+   LjZGLQUzYH9XQl545oboShsgYw9DSNkLIWWIIsmT1cwnv0hxOsRFbmxsU
+   fneJQIOppp6MPdtB6JAy9OM0ov/SW6zP9j9FeVDIz0bJCM6ZIyxlE/D/0
+   zu2AiC1dxPQNiBuX64McA451X7lo/7U0O9t3mf3R1UPZia9CjQYXTVKb6
+   S0PAkO9y9Qn9IUqIObPvIC2JWioqR62SYLyO5HsYejgtihCzmWjJt8Vy+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="16466990"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="16466990"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 04:48:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="29508479"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.212])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 04:48:46 -0800
+Message-ID: <31bae596-ecb1-4b9c-9f1c-aaec4bcefd38@intel.com>
+Date: Mon, 29 Jan 2024 14:48:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,167 +48,78 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
+Subject: Re: [PATCH V4 00/11] perf/core: Add ability for an event to "pause"
+ or "resume" AUX area tracing
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
+ <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240111081914.3123-1-adrian.hunter@intel.com>
 Content-Language: en-US
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc: Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
- Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
- <20240125094119.2542332-6-anshuman.khandual@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240125094119.2542332-6-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240111081914.3123-1-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/01/2024 09:41, Anshuman Khandual wrote:
-> Disable the BRBE before we enter the guest, saving the status and enable it
-> back once we get out of the guest. This avoids capturing branch records in
-> the guest kernel or userspace, which would be confusing the host samples.
+On 11/01/24 10:19, Adrian Hunter wrote:
+> Hi
 > 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: kvmarm@lists.linux.dev
-> Cc: linux-arm-kernel@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> Changes in V16:
+> Hardware traces, such as instruction traces, can produce a vast amount of
+> trace data, so being able to reduce tracing to more specific circumstances
+> can be useful.
 > 
-> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
-> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
->    element, and dropped the previous dependency on Jame's coresight series
+> The ability to pause or resume tracing when another event happens, can do
+> that.
 > 
->   arch/arm64/include/asm/kvm_host.h  |  5 ++++-
->   arch/arm64/kvm/debug.c             |  5 +++++
->   arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
->   3 files changed, 42 insertions(+), 1 deletion(-)
+> These patches add such a facilty and show how it would work for Intel
+> Processor Trace.
 > 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 21c57b812569..bce8792092af 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
->   	u8 cflags;
->   
->   	/* Input flags to the hypervisor code, potentially cleared after use */
-> -	u8 iflags;
-> +	u16 iflags;
->   
->   	/* State flags for kernel bookkeeping, unused by the hypervisor code */
->   	u8 sflags;
-> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
->   		u64 pmscr_el1;
->   		/* Self-hosted trace */
->   		u64 trfcr_el1;
-> +		u64 brbcr_el1;
->   	} host_debug_state;
->   
->   	/* VGIC state */
-> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
->   #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
->   /* vcpu running in HYP context */
->   #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
-> +/* Save BRBE context if active  */
-> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(8))
->   
->   /* SVE enabled for host EL0 */
->   #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index 8725291cb00a..99f85d8acbf3 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
->   	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
->   	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
->   		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-> +
-> +	/* Check if we have BRBE implemented and available at the host */
-> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
-> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->   }
->   
->   void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
->   {
->   	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
->   	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->   }
-> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> index 4558c02eb352..79bcf0fb1326 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
->   	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
->   }
->   
-> +static void __debug_save_brbe(u64 *brbcr_el1)
-> +{
-> +	*brbcr_el1 = 0;
-> +
-> +	/* Check if the BRBE is enabled */
-> +	if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
-> +		return;
-> +
-> +	/*
-> +	 * Prohibit branch record generation while we are in guest.
-> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
-> +	 * modify the filtering set by the host.
-> +	 */
-> +	*brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
-> +	write_sysreg_s(0, SYS_BRBCR_EL1);
-> +	isb();
+> Maintainers of other AUX area tracing implementations are requested to
+> consider if this is something they might employ and then whether or not
+> the ABI would work for them.
+> 
+> Changes to perf tools are now (since V4) fleshed out.
+> 
+> 
+> Changes in V4:
+> 
+>     perf/core: Add aux_pause, aux_resume, aux_start_paused
+> 	Rename aux_output_cfg -> aux_action
+> 	Reorder aux_action bits from:
+> 		aux_pause, aux_resume, aux_start_paused
+> 	to:
+> 		aux_start_paused, aux_pause, aux_resume
+> 	Fix aux_action bits __u64 -> __u32
+> 
+>     coresight: Have a stab at support for pause / resume
+> 	Dropped
+> 
+>     perf tools
+> 	All new patches
+> 
+> Changes in RFC V3:
+> 
+>     coresight: Have a stab at support for pause / resume
+> 	'mode' -> 'flags' so it at least compiles
+> 
+> Changes in RFC V2:
+> 
+> 	Use ->stop() / ->start() instead of ->pause_resume()
+> 	Move aux_start_paused bit into aux_output_cfg
+> 	Tighten up when Intel PT pause / resume is allowed
+> 	Add an example of how it might work for CoreSight
 
-Is this isb() required here ? This can be synchronised with the Guest 
-entry ?
-
-> +}
-> +
-> +static void __debug_restore_brbe(u64 brbcr_el1)
-> +{
-> +	if (!brbcr_el1)
-> +		return;
-> +
-> +	/* Restore BRBE controls */
-> +	write_sysreg_s(brbcr_el1, SYS_BRBCR_EL1);
-> +	isb();
-
-Similarly here, exit back to EL1 host can synchronise the setting ?
-
-Suzuki
-
-> +}
-> +
->   void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
->   {
->   	/* Disable and flush SPE data generation */
-> @@ -87,6 +115,9 @@ void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
->   	/* Disable and flush Self-Hosted Trace generation */
->   	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
->   		__debug_save_trace(&vcpu->arch.host_debug_state.trfcr_el1);
-> +	/* Disable BRBE branch records */
-> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
-> +		__debug_save_brbe(&vcpu->arch.host_debug_state.brbcr_el1);
->   }
->   
->   void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
-> @@ -100,6 +131,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_vcpu *vcpu)
->   		__debug_restore_spe(vcpu->arch.host_debug_state.pmscr_el1);
->   	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
->   		__debug_restore_trace(vcpu->arch.host_debug_state.trfcr_el1);
-> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
-> +		__debug_restore_brbe(vcpu->arch.host_debug_state.brbcr_el1);
->   }
->   
->   void __debug_switch_to_host(struct kvm_vcpu *vcpu)
+Any more comments?
 
