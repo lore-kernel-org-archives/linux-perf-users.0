@@ -1,125 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD379657B3;
-	Mon, 29 Jan 2024 12:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9922B152DF7;
+	Mon, 29 Jan 2024 14:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706532548; cv=none; b=K+UHK/mRXoB3PLzSJw4Hc1Ud2iv3rBy3JwrwATxPZQz5Qerc/nYX4ieQx9DHJJ0kecw8ooNJoyBY7nKf72llJmCFQTGMD+V8IrxOwIaw2Q1QdrimdnqEO0qYx1XIwdMDJlwTe4WUI21qUgze8ysDyZE24vlVHY8lmvgt8ft7ioE=
+	t=1706538809; cv=none; b=RaSrRAi/QXNi6Qp/Nb1mm80BCL7ivVmsqGeMM705DPxQfgSKB3mkzWsTIKU6FuSfLDf6KC1H8b7nRMiJo5EobH0DPqtrduy1lRilf9Q2PsTxga0/h0SwVssx+ftLf/27xiCiWt0tSSQsW96vns9dMsPgARbhwZRGMx5zWabzO3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706532548; c=relaxed/simple;
-	bh=VL5pNvnkQOiSj9vwY01FvxPpPTQKiMSBL6wrtNUbUDg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=LBeka4O+1QJkdYjtye9buwY9fo4Khl0qRFkpmGrNsxZHYvssW6He0pRCnYJtrwFZHHsn+PQpqpchgsuyu44r4zC7HSGHigb2qXXmhUE3C+Wdb67gIsqdZysDkbxPyaEctMX9IRAYs3ceZmpdU4WB/qbjsateY3m+8U359oWlfkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bj792J1p; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706538809; c=relaxed/simple;
+	bh=kW2g6Dz+tIXorByc+AhAFneeAB1zVin/42tC9xQolBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GaUAPU6LJAWJgam5srVg6bWA1/N3CL/8k3CCNBf+ian8+g7DmjcCVzbKijpoNCYnJmFSYCl/cCY5rxWFFAqZoep7qfj/Z63UpDkflhbtOpaZkJKdKu7duvvhsRaCNOR2aT9vPZvhPSZ2HLBw65/VEtngdKoYYhIQALAEveYUp3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmzDCe6X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bj792J1p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706532546; x=1738068546;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=VL5pNvnkQOiSj9vwY01FvxPpPTQKiMSBL6wrtNUbUDg=;
-  b=Bj792J1pv0KOcpq4Bq1utHM3EKK/VT4Ciimnpl7S8FCX7GOX9FwmBpxQ
-   vGnVpOFs57a9wuMEc3zXAQAFn2oRl1biQVYz/Q12js9fr2WwEuu0VJOX/
-   LjZGLQUzYH9XQl545oboShsgYw9DSNkLIWWIIsmT1cwnv0hxOsRFbmxsU
-   fneJQIOppp6MPdtB6JAy9OM0ov/SW6zP9j9FeVDIz0bJCM6ZIyxlE/D/0
-   zu2AiC1dxPQNiBuX64McA451X7lo/7U0O9t3mf3R1UPZia9CjQYXTVKb6
-   S0PAkO9y9Qn9IUqIObPvIC2JWioqR62SYLyO5HsYejgtihCzmWjJt8Vy+
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="16466990"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="16466990"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 04:48:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="29508479"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.212])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 04:48:46 -0800
-Message-ID: <31bae596-ecb1-4b9c-9f1c-aaec4bcefd38@intel.com>
-Date: Mon, 29 Jan 2024 14:48:42 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmzDCe6X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7D8C433F1;
+	Mon, 29 Jan 2024 14:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706538809;
+	bh=kW2g6Dz+tIXorByc+AhAFneeAB1zVin/42tC9xQolBE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=HmzDCe6Xp0KRQAGqE588CvOyhRKpzHVKRJ1HVUq0QRfuY/0qFQXnGgajuZk9PlOHW
+	 Vg5JelFMXzyuIlmsN8ZQ309c8+gK5ZRy0ki7/s42WZ3MpLFSN/ZLgmBWxlJQD+pz1g
+	 w+aZuaPHi5sffhrtrOE2L+WCEUMNribFKUpj2i7YNrAbV0O7DcTjQlWyh2fvFb+aZ+
+	 II8U4B6nIxJWPaXGVa3pecfqacDZVXEeb32QhDTGRvKCajntdBmn3GcMWMaDLLrmb9
+	 +nX/A23tNbQ8ZNAmltyv3cZm62miWs2w3e6Mb3PRkeabQtRqbnPcO3jjMBH7oj4Loj
+	 RU+glkRzLnWGg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 8542440441; Mon, 29 Jan 2024 11:33:26 -0300 (-03)
+Date: Mon, 29 Jan 2024 11:33:26 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Quentin Monnet <quentin@isovalent.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] bpftool: Be more portable by using POSIX's basename()
+Message-ID: <Zbe3NuOgaupvUcpF@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 00/11] perf/core: Add ability for an event to "pause"
- or "resume" AUX area tracing
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
- <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240111081914.3123-1-adrian.hunter@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240111081914.3123-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/01/24 10:19, Adrian Hunter wrote:
-> Hi
-> 
-> Hardware traces, such as instruction traces, can produce a vast amount of
-> trace data, so being able to reduce tracing to more specific circumstances
-> can be useful.
-> 
-> The ability to pause or resume tracing when another event happens, can do
-> that.
-> 
-> These patches add such a facilty and show how it would work for Intel
-> Processor Trace.
-> 
-> Maintainers of other AUX area tracing implementations are requested to
-> consider if this is something they might employ and then whether or not
-> the ABI would work for them.
-> 
-> Changes to perf tools are now (since V4) fleshed out.
-> 
-> 
-> Changes in V4:
-> 
->     perf/core: Add aux_pause, aux_resume, aux_start_paused
-> 	Rename aux_output_cfg -> aux_action
-> 	Reorder aux_action bits from:
-> 		aux_pause, aux_resume, aux_start_paused
-> 	to:
-> 		aux_start_paused, aux_pause, aux_resume
-> 	Fix aux_action bits __u64 -> __u32
-> 
->     coresight: Have a stab at support for pause / resume
-> 	Dropped
-> 
->     perf tools
-> 	All new patches
-> 
-> Changes in RFC V3:
-> 
->     coresight: Have a stab at support for pause / resume
-> 	'mode' -> 'flags' so it at least compiles
-> 
-> Changes in RFC V2:
-> 
-> 	Use ->stop() / ->start() instead of ->pause_resume()
-> 	Move aux_start_paused bit into aux_output_cfg
-> 	Tighten up when Intel PT pause / resume is allowed
-> 	Add an example of how it might work for CoreSight
+musl libc had the basename() prototype in string.h, but this is a
+glibc-ism, now they removed the _GNU_SOURCE bits in their devel distro,
+Alpine Linux edge:
 
-Any more comments?
+  https://git.musl-libc.org/cgit/musl/commit/?id=725e17ed6dff4d0cd22487bb64470881e86a92e7
+
+So lets use the POSIX version, the whole rationale is spelled out at:
+
+  https://gitlab.alpinelinux.org/alpine/aports/-/issues/15643
+
+Acked-by: Jiri Olsa <olsajiri@gmail.com>
+Acked-by: Quentin Monnet <quentin@isovalent.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/lkml/ZZhsPs00TI75RdAr@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/bpf/bpftool/gen.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
+index ee3ce2b8000d75d2..a5cc5938c3d7951e 100644
+--- a/tools/bpf/bpftool/gen.c
++++ b/tools/bpf/bpftool/gen.c
+@@ -7,6 +7,7 @@
+ #include <ctype.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#include <libgen.h>
+ #include <linux/err.h>
+ #include <stdbool.h>
+ #include <stdio.h>
+@@ -56,9 +57,10 @@ static bool str_has_suffix(const char *str, const char *suffix)
+ 
+ static void get_obj_name(char *name, const char *file)
+ {
+-	/* Using basename() GNU version which doesn't modify arg. */
+-	strncpy(name, basename(file), MAX_OBJ_NAME_LEN - 1);
+-	name[MAX_OBJ_NAME_LEN - 1] = '\0';
++	char file_copy[PATH_MAX];
++	/* Using basename() POSIX version to be more portable. */
++	strncpy(file_copy, file, PATH_MAX - 1)[PATH_MAX - 1] = '\0';
++	strncpy(name, basename(file_copy), MAX_OBJ_NAME_LEN - 1)[MAX_OBJ_NAME_LEN - 1] = '\0';
+ 	if (str_has_suffix(name, ".o"))
+ 		name[strlen(name) - 2] = '\0';
+ 	sanitize_identifier(name);
+-- 
+2.43.0
 
