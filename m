@@ -1,108 +1,112 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3008D5FEF9
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jan 2024 12:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BF0C605C3;
+	Mon, 29 Jan 2024 12:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706530154; cv=none; b=LRp8ZoXQntd6YjNWVAn79Ik4sGQmFRe0tu5xx5Wfi7B33jvi8W9t4bYVpPwB5zZ5VvuP2Gduwsl9A7WWrM/OknUQ9zdRtp7FdSZs2Ccv66VqQr+4FSczJRYzKUk1ZwKK991xHNrcNgASkkOXeGM8sml8wuueQEwCJosDerJEA94=
+	t=1706530554; cv=none; b=khGZPKAlQTzYUEEO95fClLqZoU1PQjXvDS7e9EnEz/HGXhGlpDE13OaAZiEFLLydaE+KAaMhoZ90oX+BlF8D7YkwCdvSv3UgVMNPlukaWxMGN1nFW72UJfDjHUVirlGU3xKJR8eCCVK/2BslHqKV49WU5S5WjjmLB/2IehTC0CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706530154; c=relaxed/simple;
-	bh=KUknzVHm6fDIVzPCYpYE6sCdqVSBsvXxjlBAaFX84qY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EKj1jcI8vo/Lav32xtyKsibe9lmHnuJ1DtEIBv7jPTCW+RH90Pz8fnAI/NfG2J2Xw5HRWM1kQM2FFta44gTM/zArXuOOMF3C3D1p2SRxPwkBlXDfvR9LEE+5BexttlPjkt1XMdHirPjiPexr2ln3mCNtvoc9XDif+ryOUl72b/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=f85O+330; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="f85O+330"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40T9xXfK019941;
-	Mon, 29 Jan 2024 12:09:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=KcGhYSqbvopmT+SNtGkwaw3B+Hv9hZeMUrhNfChZ2A8=;
- b=f85O+330DA0jjM4CqpFRyqrIxEFJEImo9jjAenGI1k8MllvsW/tnRZOpvTtXAcfnuEGX
- lyda1opsdw/op6MgySmviNQIxW31+kBaeNfFzm+10Kmsr65XIwqLuaL/nvSNQ6AKZ27P
- DCBP1QGbUk5XFI7Njszbaj6lA0rRyRAeRfmxVz5I0zPAJrQ+ZG7A+vGV8dHe/BpMfgv+
- hMLUjUrqZkuZ+q3pdeD6iRBlOwfIgcc5IXUg4QKBX59RJ5iK/bxU9lJ7pAg78E3OMXtn
- U4nKUFHsgoKqDncL8FIVCPI3SPxXoFUb8APmFfrylpl7hH3Omu9oJK6o+JALpNQTRWGO og== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vwthyapbp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 12:09:05 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40TBtQc3000376;
-	Mon, 29 Jan 2024 12:09:05 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vwthyapb9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 12:09:05 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40TBr8sP011067;
-	Mon, 29 Jan 2024 12:09:04 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vwd5ng10b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 12:09:04 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40TC915g42992162
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jan 2024 12:09:01 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 34B4820040;
-	Mon, 29 Jan 2024 12:09:01 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0F60520043;
-	Mon, 29 Jan 2024 12:08:59 +0000 (GMT)
-Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.in.ibm.com (unknown [9.204.207.44])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 29 Jan 2024 12:08:58 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: [PATCH] perf/pmu-events/powerpc: Update json mapfile with Power11 PVR
-Date: Mon, 29 Jan 2024 17:38:55 +0530
-Message-ID: <20240129120855.551529-1-maddy@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1706530554; c=relaxed/simple;
+	bh=4aaVTj6t2XkRkc4zxYijDiQs0KtJMNVXjj4V9tdn+6Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t7Q+o9KOOH89+DIrtHid/uuYSeps3N+BewF6zz/nFDKhhihfoMPfczLfEjK+p8dCBaf5daf4sToFLBJUjzTXV+pyCQYTx81RRnItW1WY1cOTp1aktvP+0uSmGCfZ17RlZQAjruWV76Y4rbyC5dRsM1EKuZnNRkQeuYmX7AKx4DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 676B61FB;
+	Mon, 29 Jan 2024 04:16:35 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7DAE3F5A1;
+	Mon, 29 Jan 2024 04:15:48 -0800 (PST)
+Message-ID: <95d829b3-d30e-4dcd-a7ca-69d80b9be418@arm.com>
+Date: Mon, 29 Jan 2024 12:15:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3X0hkpYshCB14owOqCvry76HR5t7tVYN
-X-Proofpoint-ORIG-GUID: u6caXPrPMFqG9q7E96_4JeigrDO73Hi9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-29_06,2024-01-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=945 mlxscore=0
- malwarescore=0 clxscore=1011 adultscore=0 phishscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401290087
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V16 2/8] KVM: arm64: Prevent guest accesses into BRBE
+ system registers/instructions
+Content-Language: en-US
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc: Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+ Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-3-anshuman.khandual@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240125094119.2542332-3-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Update the Power11 PVR to json mapfile to enable
-json events. Power11 is PowerISA v3.1 compliant
-and support Power10 events.
+On 25/01/2024 09:41, Anshuman Khandual wrote:
+> Currently BRBE feature is not supported in a guest environment. This hides
+> BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field. This also
+> blocks guest accesses into BRBE system registers and instructions as if the
+> underlying hardware never implemented FEAT_BRBE feature.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Changes in V16:
+> 
+> - Added BRB_INF_SRC_TGT_EL1 macro for corresponding BRB_[INF|SRC|TGT] expansion
+> 
+>   arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 56 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 30253bd19917..6a06dc2f0c06 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1304,6 +1304,11 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+>   	return 0;
+>   }
+>   
+> +#define BRB_INF_SRC_TGT_EL1(n)					\
+> +	{ SYS_DESC(SYS_BRBINF##n##_EL1), undef_access },	\
+> +	{ SYS_DESC(SYS_BRBSRC##n##_EL1), undef_access },	\
+> +	{ SYS_DESC(SYS_BRBTGT##n##_EL1), undef_access }		\
+> +
+>   /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
+>   #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
+>   	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
+> @@ -1707,6 +1712,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+>   	/* Hide SPE from guests */
+>   	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+>   
+> +	/* Hide BRBE from guests */
+> +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+> +
+>   	return val;
+>   }
+>   
+> @@ -2195,6 +2203,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>   	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
+>   	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
+>   	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
+> +	{ SYS_DESC(OP_BRB_IALL), undef_access },
+> +	{ SYS_DESC(OP_BRB_INJ), undef_access },
+>   
 
-Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
----
- tools/perf/pmu-events/arch/powerpc/mapfile.csv | 1 +
- 1 file changed, 1 insertion(+)
+heads up: This may conflict with Marc's patches to move the sys 
+instructions to a separate table. But otherwise, looks good to me.
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-index 599a588dbeb4..4d5e9138d4cc 100644
---- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
-@@ -15,3 +15,4 @@
- 0x0066[[:xdigit:]]{4},1,power8,core
- 0x004e[[:xdigit:]]{4},1,power9,core
- 0x0080[[:xdigit:]]{4},1,power10,core
-+0x0082[[:xdigit:]]{4},1,power10,core
--- 
-2.43.0
+
+Suzuki
 
