@@ -1,164 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE3E36133;
-	Tue, 30 Jan 2024 03:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FEF5645F
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jan 2024 08:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706586099; cv=none; b=UAbNEBFNfYhKDoGnzOjot7ko270jdbp/m2nN0xkGrkMHUteQdancJ8UxpnN6u+ht+HWgQhmx/6H5hz8Ba0WRLEt+7FGGALkUu9BRmdxST0/W8TARn4UX5QQSciVWNHXRtKG6r7WFZg8dAV6OFuAbMVrD64R+V7gVi3dbf8gn7bc=
+	t=1706602331; cv=none; b=NfwvxhKH+bHXWybcuEGisCl2TNfgzBID6k8PPVJnJ0zN6bfMIQXMru62/ejtg+NARCqYG9hFMqfo0KFjoSSuMNY5eCW2rowyM+jqpLzROyxtI3MCwn4LE1LYy4QZ5S913cbcLOm1QgkQjah/JXWUY0EgpiW1HmMrr5k3xnft8/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706586099; c=relaxed/simple;
-	bh=MS9XkrHIxAOgVMwkPgUdkJNkZsvXrigVFaMPH+MQ3tg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G4c7qY+2+qfpPolS4Vur3iUf+g3Wkzf49raIc7dAmDNOWmPbzD4TPOXyK5d8pk1L9hrwXsZRKraVvAfN5pBqn+m8JVndXSrsMLCKkeIy5xhnnGg8wJf/bVZ76ZUqaXNsZT1aLE2RJJanpsjvCy62C/0Lg4sx9lZXMJJ5lXM72ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6419DA7;
-	Mon, 29 Jan 2024 19:42:20 -0800 (PST)
-Received: from [10.163.41.110] (unknown [10.163.41.110])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE7BE3F738;
-	Mon, 29 Jan 2024 19:41:30 -0800 (PST)
-Message-ID: <a575d0d0-a882-40e5-95a4-d59dd010e047@arm.com>
-Date: Tue, 30 Jan 2024 09:11:30 +0530
+	s=arc-20240116; t=1706602331; c=relaxed/simple;
+	bh=FQqk5bgIymA2h3AOp2AOhLuIZ5Mr2uKbmZHieP9quSE=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=lZXJiC+kEgECZJlHCt/Hx/IwFfMv5fYrw/ZEBXmBMhcY6pIrs5mI7vt8oI5R9n+31CwMcAsrf7rxqg/ha4NNEEOUYyVaMvM9cCCP2ChGxZFtyffhNVFkhjHdPWbqF2uvmPHGYfQTv60AxZxVfZR3TkxhvqpGa87s556OHy+rHtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gsj3GZff; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsj3GZff"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706602328;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=dztU367JQMlugGJ2nAxDmIAtTR/QV+FtA1cZNHkVWn4=;
+	b=gsj3GZff9HlJ2WjSFXaUtqrJvDEKIWrCZj7hvT+N99OVWUfHjcxf2zjgeCixsjL3O0H6oT
+	k+9cGZW03hrbT0ePGOY37i3dkn0f2frF2+VCI6Hnx6SuWHLZ/W15rq4MfLXVVMdBXzf9WP
+	qYClpoNyEiqOhtBmY9Se/ysUmjBd+sA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-73-1GVXa2T9O6-5xe2L0Z89JQ-1; Tue, 30 Jan 2024 03:12:04 -0500
+X-MC-Unique: 1GVXa2T9O6-5xe2L0Z89JQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 001C2837227;
+	Tue, 30 Jan 2024 08:12:04 +0000 (UTC)
+Received: from Diego (unknown [10.39.208.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C5588B;
+	Tue, 30 Jan 2024 08:12:01 +0000 (UTC)
+Date: Tue, 30 Jan 2024 09:11:59 +0100 (CET)
+From: Michael Petlan <mpetlan@redhat.com>
+X-X-Sender: Michael@Diego
+To: irogers@google.com
+cc: vmolnaro@redhat.com, edward.baker@intel.com, perry.taylor@intel.com, 
+    samantha.alt@intel.com, weilin.wang@intel.com, acme@kernel.org, 
+    alexander.shishkin@linux.intel.com, kan.liang@linux.intel.com, 
+    zhengjun.xing@linux.intel.com, linux-perf-users@vger.kernel.org
+Subject: Intel Sapphire Rapids uncore: umask too big
+Message-ID: <alpine.LRH.2.20.2401300733310.11354@Diego>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-Content-Language: en-US
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc: Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
- Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
- <20240125094119.2542332-6-anshuman.khandual@arm.com>
- <f30f3b77-0c72-49ab-8d30-48ba642ba0e8@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <f30f3b77-0c72-49ab-8d30-48ba642ba0e8@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
+Hello Ian and others,
 
+we have encountered some issues with uncore events on Sapphire Rapids. There are
+a couple types of problems. One of them is the following:
 
-On 1/29/24 17:50, Suzuki K Poulose wrote:
-> On 25/01/2024 09:41, Anshuman Khandual wrote:
->> Disable the BRBE before we enter the guest, saving the status and enable it
->> back once we get out of the guest. This avoids capturing branch records in
->> the guest kernel or userspace, which would be confusing the host samples.
->>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Oliver Upton <oliver.upton@linux.dev>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: kvmarm@lists.linux.dev
->> Cc: linux-arm-kernel@lists.infradead.org
->> CC: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> Changes in V16:
->>
->> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
->> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
->>    element, and dropped the previous dependency on Jame's coresight series
->>
->>   arch/arm64/include/asm/kvm_host.h  |  5 ++++-
->>   arch/arm64/kvm/debug.c             |  5 +++++
->>   arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
->>   3 files changed, 42 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->> index 21c57b812569..bce8792092af 100644
->> --- a/arch/arm64/include/asm/kvm_host.h
->> +++ b/arch/arm64/include/asm/kvm_host.h
->> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
->>       u8 cflags;
->>         /* Input flags to the hypervisor code, potentially cleared after use */
->> -    u8 iflags;
->> +    u16 iflags;
->>         /* State flags for kernel bookkeeping, unused by the hypervisor code */
->>       u8 sflags;
->> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
->>           u64 pmscr_el1;
->>           /* Self-hosted trace */
->>           u64 trfcr_el1;
->> +        u64 brbcr_el1;
->>       } host_debug_state;
->>         /* VGIC state */
->> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
->>   #define DEBUG_STATE_SAVE_TRBE    __vcpu_single_flag(iflags, BIT(6))
->>   /* vcpu running in HYP context */
->>   #define VCPU_HYP_CONTEXT    __vcpu_single_flag(iflags, BIT(7))
->> +/* Save BRBE context if active  */
->> +#define DEBUG_STATE_SAVE_BRBE    __vcpu_single_flag(iflags, BIT(8))
->>     /* SVE enabled for host EL0 */
->>   #define HOST_SVE_ENABLED    __vcpu_single_flag(sflags, BIT(0))
->> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
->> index 8725291cb00a..99f85d8acbf3 100644
->> --- a/arch/arm64/kvm/debug.c
->> +++ b/arch/arm64/kvm/debug.c
->> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
->>       if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
->>           !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
->>           vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
->> +
->> +    /* Check if we have BRBE implemented and available at the host */
->> +    if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
->> +        vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->>   }
->>     void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
->>   {
->>       vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
->>       vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
->> +    vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->>   }
->> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
->> index 4558c02eb352..79bcf0fb1326 100644
->> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
->> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
->> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
->>       write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
->>   }
->>   +static void __debug_save_brbe(u64 *brbcr_el1)
->> +{
->> +    *brbcr_el1 = 0;
->> +
->> +    /* Check if the BRBE is enabled */
->> +    if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
->> +        return;
->> +
->> +    /*
->> +     * Prohibit branch record generation while we are in guest.
->> +     * Since access to BRBCR_EL1 is trapped, the guest can't
->> +     * modify the filtering set by the host.
->> +     */
->> +    *brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
->> +    write_sysreg_s(0, SYS_BRBCR_EL1);
->> +    isb();
-> 
-> Is this isb() required here ? This can be synchronised with the Guest entry ?
-> 
->> +}
->> +
->> +static void __debug_restore_brbe(u64 brbcr_el1)
->> +{
->> +    if (!brbcr_el1)
->> +        return;
->> +
->> +    /* Restore BRBE controls */
->> +    write_sysreg_s(brbcr_el1, SYS_BRBCR_EL1);
->> +    isb();
-> 
-> Similarly here, exit back to EL1 host can synchronise the setting ?
+    # perf stat -e uncore_cha_55/event=0x35,umask=0x10c0008101/ -a -- ls 
+    event syntax error: '..0x35,umask=0x10c0008101/'
+                                      \___ Bad event or PMU
+    
+    Unable to find PMU or event on a PMU of 'uncore_cha_55'
+    
+    Initial error:
+    event syntax error: '..0x35,umask=0x10c0008101/'
+                                      \___ value too big for format, maximum is 4294967295
+    Run 'perf list' for a list of valid events
 
-Sure, will drop both the isb() here.
+There is a 34bit umask that can handle it, namely umask_ext2, but it is not
+used for sapphire rapids:
+
+uncore_snbep.c:5958:static struct attribute *spr_uncore_cha_formats_attr[] = {
+uncore_snbep.c-5959-    &format_attr_event.attr,
+uncore_snbep.c-5960-    &format_attr_umask_ext4.attr,
+uncore_snbep.c-5961-    &format_attr_tid_en2.attr,
+uncore_snbep.c-5962-    &format_attr_edge.attr,
+uncore_snbep.c-5963-    &format_attr_inv.attr,
+uncore_snbep.c-5964-    &format_attr_thresh8.attr,
+uncore_snbep.c-5965-    &format_attr_filter_tid5.attr,
+uncore_snbep.c-5966-    NULL,
+uncore_snbep.c-5967-};
+
+(I see umask_ext4 there and means 32bit:
+uncore_snbep.c:479:DEFINE_UNCORE_FORMAT_ATTR(umask_ext4, umask, "config:8-15,32-55");
+)
+
+What is wrong? The json files specifying umask=0x10c0008101 for the event,
+or the structure that should rather support umask_ext2 ?
+
+There are a few more issues, I will update when analyzing them deeper.
+
+Thanks.
+Michael
+
