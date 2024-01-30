@@ -1,117 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AFE6D1B1;
-	Tue, 30 Jan 2024 13:56:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8136D1B1
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jan 2024 13:56:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706622963; cv=none; b=OqqpW28sy++GOEiS11UaMlyU4pPE2QGFNy8VOf4EBAl/mz5HHZ257gIvEX22hEQlytnLZmbVmaZPb2AqnpS8O8E/o2Zjw850qAm0IBQxxSLdtII/WZE0xlnoeGbJyA9VYNWk42WAPMoKVWs0ylwT23vdtiGRgb2I5xiXGJJBFWY=
+	t=1706623019; cv=none; b=X/Ph29e+C0BOfiyILt2p3TCH8u25s4JjXXidtK2PYQc+uwc3RSVnbby4YutSahIzIkn+8SyDr0WzHwvE6482u3YPjdKk5QBuqLAPbnV4tpByP7LpH/XzTLi1zrTKzjDvEh8il+6HmMeIALBnvfbNiKptpfAtFZm2IzOVMa0Q7Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706622963; c=relaxed/simple;
-	bh=6kOSaJfqPSlJRouPhGEV8c/CvXVYQ46pRD4QgFVwYZQ=;
+	s=arc-20240116; t=1706623019; c=relaxed/simple;
+	bh=IgblYM/JvKwkvJhjHiQfRZlMtKCKoimbaVQrirtPfz4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RQYGExTfZfU+6qYSRZzu21tAbbmWh63iCIpzM33q51QghetSP3jASGSW6dYAunNEeWl9EWOW3LRZPZdL5Dv0ZVBIzXsfLL56gqha/txYpkMsmeaHHzLu2B5LTcG0bgwkfZK3CypfXHycofuxoMKd2JLpTSe0UKHnJrzrpxqANr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7hZ76Vk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lg2XgY0q9QPpKXapqrBnveh9V9r3l1paeSx2pYexOXU+t2+oep/kVqg5TuVMPe43oIDjwIXNTbKVhcLM5/LjhK5QMZRsXn8OLxz1Tz5yce+O+dEM04t7VsJGX8HTuZN+rBjHJQt0CGDNncAVAn2aFeLGjt1APZGDhD8f9RFqGu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4soGmin; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7hZ76Vk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C33BC43394;
-	Tue, 30 Jan 2024 13:56:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4soGmin"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86706C43390;
+	Tue, 30 Jan 2024 13:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706622963;
-	bh=6kOSaJfqPSlJRouPhGEV8c/CvXVYQ46pRD4QgFVwYZQ=;
+	s=k20201202; t=1706623018;
+	bh=IgblYM/JvKwkvJhjHiQfRZlMtKCKoimbaVQrirtPfz4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V7hZ76Vk1Em6icF9OhasDsoYYK0WkRj27XOXCvffrY+h0S43BNXsnVZHHr8QPcJLe
-	 VCpq5YoIKKVUFVOk+H+A6YsGej/kVNfOeuYD733hXkemmB0PwUHGM4bTCCzxfDB/2d
-	 5RKfiw0zKLq6/Wd40VX36BOS2U3fQewkQcgFL29/YcSptsW3MGY/ggN4M6YakTgzqD
-	 buryrKgyDY40/8Qgd3hnVkNFEk6/BMN7PU71pG24DTEHlf2TptqY21xaLSRf32b9ii
-	 aq7VnBh3ehIwHnzigdXKleeopI2C2qdL3IlzQ1OL9KLogpqyO0e5ETVJF1bkG9VbLR
-	 qMXEWfPsFtt5g==
+	b=q4soGminCkMF2vlSbwev2AqwzhvzhzYe6eAC+IJ1RozcJLdHiygbLiezXMMEALSJp
+	 mbdipEg9TFUJxMqgu/vE3bJmZX+5FJfNNOD+ohHRXLv8RkY6455xdrAMYiKdUId/v2
+	 ibiUHVsMhM0WLWbPwu/pMN8GKdaOQ3IAxN9yIiZMgH9Vqh8x7Kk5XE6zoZE5EFB9TM
+	 smib6uO87rxgBCzw1QdVijiPzkUDTIBwL7u5y5YjW1mBkaioIS+XBNklykafuYA4uc
+	 1dhc0T2BS5mU6sVS84QlYgeazp6+A5vHkxVlp97g6ptLkvo4fFJUFVPHQVLspWu3x6
+	 8XxleNLKJ7dsw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 4E31940441; Tue, 30 Jan 2024 10:56:00 -0300 (-03)
-Date: Tue, 30 Jan 2024 10:56:00 -0300
+	id 1CDBC40441; Tue, 30 Jan 2024 10:56:56 -0300 (-03)
+Date: Tue, 30 Jan 2024 10:56:56 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Kan Liang <kan.liang@intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: perf test hybrid failing on 14700K
-Message-ID: <Zbj_8KkXWnCJB-8M@kernel.org>
-References: <ZYbm5L7tw7bdpDpE@kernel.org>
- <CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com>
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: peterz@infradead.org, mingo@redhat.com,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	Sun Haiyong <sunhaiyong@loongson.cn>
+Subject: Re: [PATCH] tools/perf: Fix compiler error when using gcc-14.
+Message-ID: <ZbkAKA8g4Z_XlMNh@kernel.org>
+References: <20240106094129.3337057-1-siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com>
+In-Reply-To: <20240106094129.3337057-1-siyanteng@loongson.cn>
 X-Url: http://acmel.wordpress.com
 
-Em Fri, Jan 19, 2024 at 10:09:10PM -0800, Ian Rogers escreveu:
-> On Sat, Dec 23, 2023 at 5:55 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Hi Kan,
-> >
-> > I noticed the following problem, are you able to reproduce it?
-> >
-> > Happy solstice!
-> >
-> > - Arnaldo
+Em Sat, Jan 06, 2024 at 05:41:29PM +0800, Yanteng Si escreveu:
+> From: Sun Haiyong <sunhaiyong@loongson.cn>
 > 
-> Hi Arnaldo,
+> the definition of calloc is as follows:
+>     void *calloc(size_t nmemb, size_t size);
+> number of members is in the first parameter and the size is in the second
+> parameter.
 > 
-> I'm seeing a test failure on Alderlake in perf-tools-next and wondered
-> if it was on your radar:
-> ```
->  32: Session topology                                                :
-> --- start ---
-> test child forked, pid 539222
-> templ file: /tmp/perf-test-HMet21
-> Using CPUID GenuineIntel-6-97-2
-> ------------------------------------------------------------
-> perf_event_attr:
->  type                             0 (PERF_TYPE_HARDWARE)
->  config                           0x800000000
->  disabled                         1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 4
-> ------------------------------------------------------------
-> perf_event_attr:
->  type                             0 (PERF_TYPE_HARDWARE)
->  config                           0x400000000
->  disabled                         1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
-> non matching sample_type
-> FAILED tests/topology.c:73 can't get session
-> test child finished with -1
-> ---- end ----
-> Session topology: FAILED!
-> ```
-> 
-> The code is hitting this line in evlist__valid_sample_type as
-> core.nr_entries is 2 on hybrid not 1:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/evlist.c?h=perf-tools-next#n1215
-> this causes perf_session__open to fail:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/session.c?h=perf-tools-next#n129
+> fixed error message on the gcc 14 20240102:
+> error: 'calloc' sizes specified with 'sizeof' in the earlier argument and
+> not in the later argument [-Werror=calloc-transposed-args]
 
-Yes, I see this as well, haven't yet analysed it
+Just fyi I merged this into perf-tools.
 
-root@number:~# perf test -v topology
- 38: Session topology                                                :
---- start ---
-test child forked, pid 260120
-templ file: /tmp/perf-test-WMa4M5
-Using CPUID GenuineIntel-6-B7-1
-non matching sample_type
-FAILED tests/topology.c:73 can't get session
-test child finished with -1
----- end ----
-Session topology: FAILED!
-root@number:~#
+- Arnaldo
+ 
+> Signed-off-by: Sun Haiyong <sunhaiyong@loongson.cn>
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> ---
+>  tools/perf/builtin-record.c        | 4 ++--
+>  tools/perf/util/hist.c             | 4 ++--
+>  tools/perf/util/metricgroup.c      | 2 +-
+>  tools/perf/util/synthetic-events.c | 4 ++--
+>  4 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 91e6828c38cc..86c910125172 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -4080,8 +4080,8 @@ int cmd_record(int argc, const char **argv)
+>  	}
+>  
+>  	if (rec->switch_output.num_files) {
+> -		rec->switch_output.filenames = calloc(sizeof(char *),
+> -						      rec->switch_output.num_files);
+> +		rec->switch_output.filenames = calloc(rec->switch_output.num_files,
+> +						      sizeof(char *));
+>  		if (!rec->switch_output.filenames) {
+>  			err = -EINVAL;
+>  			goto out_opts;
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 0888b7163b7c..fa359180ebf8 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -491,8 +491,8 @@ static int hist_entry__init(struct hist_entry *he,
+>  	}
+>  
+>  	if (symbol_conf.res_sample) {
+> -		he->res_samples = calloc(sizeof(struct res_sample),
+> -					symbol_conf.res_sample);
+> +		he->res_samples = calloc(symbol_conf.res_sample,
+> +					sizeof(struct res_sample));
+>  		if (!he->res_samples)
+>  			goto err_srcline;
+>  	}
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index ca3e0404f187..966cca5a3e88 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -286,7 +286,7 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
+>  	*out_metric_events = NULL;
+>  	ids_size = hashmap__size(ids);
+>  
+> -	metric_events = calloc(sizeof(void *), ids_size + 1);
+> +	metric_events = calloc(ids_size + 1, sizeof(void *));
+>  	if (!metric_events)
+>  		return -ENOMEM;
+>  
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 3712186353fb..2a0289c14959 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -1055,11 +1055,11 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
+>  	if (thread_nr > n)
+>  		thread_nr = n;
+>  
+> -	synthesize_threads = calloc(sizeof(pthread_t), thread_nr);
+> +	synthesize_threads = calloc(thread_nr, sizeof(pthread_t));
+>  	if (synthesize_threads == NULL)
+>  		goto free_dirent;
+>  
+> -	args = calloc(sizeof(*args), thread_nr);
+> +	args = calloc(thread_nr, sizeof(*args));
+>  	if (args == NULL)
+>  		goto free_threads;
+>  
+> -- 
+> 2.31.4
+> 
+
+-- 
+
+- Arnaldo
