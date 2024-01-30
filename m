@@ -1,101 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FEF5645F
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jan 2024 08:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AFE6D1B1;
+	Tue, 30 Jan 2024 13:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706602331; cv=none; b=NfwvxhKH+bHXWybcuEGisCl2TNfgzBID6k8PPVJnJ0zN6bfMIQXMru62/ejtg+NARCqYG9hFMqfo0KFjoSSuMNY5eCW2rowyM+jqpLzROyxtI3MCwn4LE1LYy4QZ5S913cbcLOm1QgkQjah/JXWUY0EgpiW1HmMrr5k3xnft8/0=
+	t=1706622963; cv=none; b=OqqpW28sy++GOEiS11UaMlyU4pPE2QGFNy8VOf4EBAl/mz5HHZ257gIvEX22hEQlytnLZmbVmaZPb2AqnpS8O8E/o2Zjw850qAm0IBQxxSLdtII/WZE0xlnoeGbJyA9VYNWk42WAPMoKVWs0ylwT23vdtiGRgb2I5xiXGJJBFWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706602331; c=relaxed/simple;
-	bh=FQqk5bgIymA2h3AOp2AOhLuIZ5Mr2uKbmZHieP9quSE=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=lZXJiC+kEgECZJlHCt/Hx/IwFfMv5fYrw/ZEBXmBMhcY6pIrs5mI7vt8oI5R9n+31CwMcAsrf7rxqg/ha4NNEEOUYyVaMvM9cCCP2ChGxZFtyffhNVFkhjHdPWbqF2uvmPHGYfQTv60AxZxVfZR3TkxhvqpGa87s556OHy+rHtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gsj3GZff; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706622963; c=relaxed/simple;
+	bh=6kOSaJfqPSlJRouPhGEV8c/CvXVYQ46pRD4QgFVwYZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RQYGExTfZfU+6qYSRZzu21tAbbmWh63iCIpzM33q51QghetSP3jASGSW6dYAunNEeWl9EWOW3LRZPZdL5Dv0ZVBIzXsfLL56gqha/txYpkMsmeaHHzLu2B5LTcG0bgwkfZK3CypfXHycofuxoMKd2JLpTSe0UKHnJrzrpxqANr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7hZ76Vk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsj3GZff"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706602328;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=dztU367JQMlugGJ2nAxDmIAtTR/QV+FtA1cZNHkVWn4=;
-	b=gsj3GZff9HlJ2WjSFXaUtqrJvDEKIWrCZj7hvT+N99OVWUfHjcxf2zjgeCixsjL3O0H6oT
-	k+9cGZW03hrbT0ePGOY37i3dkn0f2frF2+VCI6Hnx6SuWHLZ/W15rq4MfLXVVMdBXzf9WP
-	qYClpoNyEiqOhtBmY9Se/ysUmjBd+sA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-73-1GVXa2T9O6-5xe2L0Z89JQ-1; Tue, 30 Jan 2024 03:12:04 -0500
-X-MC-Unique: 1GVXa2T9O6-5xe2L0Z89JQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 001C2837227;
-	Tue, 30 Jan 2024 08:12:04 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C5588B;
-	Tue, 30 Jan 2024 08:12:01 +0000 (UTC)
-Date: Tue, 30 Jan 2024 09:11:59 +0100 (CET)
-From: Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To: irogers@google.com
-cc: vmolnaro@redhat.com, edward.baker@intel.com, perry.taylor@intel.com, 
-    samantha.alt@intel.com, weilin.wang@intel.com, acme@kernel.org, 
-    alexander.shishkin@linux.intel.com, kan.liang@linux.intel.com, 
-    zhengjun.xing@linux.intel.com, linux-perf-users@vger.kernel.org
-Subject: Intel Sapphire Rapids uncore: umask too big
-Message-ID: <alpine.LRH.2.20.2401300733310.11354@Diego>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7hZ76Vk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C33BC43394;
+	Tue, 30 Jan 2024 13:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706622963;
+	bh=6kOSaJfqPSlJRouPhGEV8c/CvXVYQ46pRD4QgFVwYZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V7hZ76Vk1Em6icF9OhasDsoYYK0WkRj27XOXCvffrY+h0S43BNXsnVZHHr8QPcJLe
+	 VCpq5YoIKKVUFVOk+H+A6YsGej/kVNfOeuYD733hXkemmB0PwUHGM4bTCCzxfDB/2d
+	 5RKfiw0zKLq6/Wd40VX36BOS2U3fQewkQcgFL29/YcSptsW3MGY/ggN4M6YakTgzqD
+	 buryrKgyDY40/8Qgd3hnVkNFEk6/BMN7PU71pG24DTEHlf2TptqY21xaLSRf32b9ii
+	 aq7VnBh3ehIwHnzigdXKleeopI2C2qdL3IlzQ1OL9KLogpqyO0e5ETVJF1bkG9VbLR
+	 qMXEWfPsFtt5g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 4E31940441; Tue, 30 Jan 2024 10:56:00 -0300 (-03)
+Date: Tue, 30 Jan 2024 10:56:00 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Kan Liang <kan.liang@intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf test hybrid failing on 14700K
+Message-ID: <Zbj_8KkXWnCJB-8M@kernel.org>
+References: <ZYbm5L7tw7bdpDpE@kernel.org>
+ <CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-Hello Ian and others,
+Em Fri, Jan 19, 2024 at 10:09:10PM -0800, Ian Rogers escreveu:
+> On Sat, Dec 23, 2023 at 5:55 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Hi Kan,
+> >
+> > I noticed the following problem, are you able to reproduce it?
+> >
+> > Happy solstice!
+> >
+> > - Arnaldo
+> 
+> Hi Arnaldo,
+> 
+> I'm seeing a test failure on Alderlake in perf-tools-next and wondered
+> if it was on your radar:
+> ```
+>  32: Session topology                                                :
+> --- start ---
+> test child forked, pid 539222
+> templ file: /tmp/perf-test-HMet21
+> Using CPUID GenuineIntel-6-97-2
+> ------------------------------------------------------------
+> perf_event_attr:
+>  type                             0 (PERF_TYPE_HARDWARE)
+>  config                           0x800000000
+>  disabled                         1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 4
+> ------------------------------------------------------------
+> perf_event_attr:
+>  type                             0 (PERF_TYPE_HARDWARE)
+>  config                           0x400000000
+>  disabled                         1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
+> non matching sample_type
+> FAILED tests/topology.c:73 can't get session
+> test child finished with -1
+> ---- end ----
+> Session topology: FAILED!
+> ```
+> 
+> The code is hitting this line in evlist__valid_sample_type as
+> core.nr_entries is 2 on hybrid not 1:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/evlist.c?h=perf-tools-next#n1215
+> this causes perf_session__open to fail:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/session.c?h=perf-tools-next#n129
 
-we have encountered some issues with uncore events on Sapphire Rapids. There are
-a couple types of problems. One of them is the following:
+Yes, I see this as well, haven't yet analysed it
 
-    # perf stat -e uncore_cha_55/event=0x35,umask=0x10c0008101/ -a -- ls 
-    event syntax error: '..0x35,umask=0x10c0008101/'
-                                      \___ Bad event or PMU
-    
-    Unable to find PMU or event on a PMU of 'uncore_cha_55'
-    
-    Initial error:
-    event syntax error: '..0x35,umask=0x10c0008101/'
-                                      \___ value too big for format, maximum is 4294967295
-    Run 'perf list' for a list of valid events
-
-There is a 34bit umask that can handle it, namely umask_ext2, but it is not
-used for sapphire rapids:
-
-uncore_snbep.c:5958:static struct attribute *spr_uncore_cha_formats_attr[] = {
-uncore_snbep.c-5959-    &format_attr_event.attr,
-uncore_snbep.c-5960-    &format_attr_umask_ext4.attr,
-uncore_snbep.c-5961-    &format_attr_tid_en2.attr,
-uncore_snbep.c-5962-    &format_attr_edge.attr,
-uncore_snbep.c-5963-    &format_attr_inv.attr,
-uncore_snbep.c-5964-    &format_attr_thresh8.attr,
-uncore_snbep.c-5965-    &format_attr_filter_tid5.attr,
-uncore_snbep.c-5966-    NULL,
-uncore_snbep.c-5967-};
-
-(I see umask_ext4 there and means 32bit:
-uncore_snbep.c:479:DEFINE_UNCORE_FORMAT_ATTR(umask_ext4, umask, "config:8-15,32-55");
-)
-
-What is wrong? The json files specifying umask=0x10c0008101 for the event,
-or the structure that should rather support umask_ext2 ?
-
-There are a few more issues, I will update when analyzing them deeper.
-
-Thanks.
-Michael
-
+root@number:~# perf test -v topology
+ 38: Session topology                                                :
+--- start ---
+test child forked, pid 260120
+templ file: /tmp/perf-test-WMa4M5
+Using CPUID GenuineIntel-6-B7-1
+non matching sample_type
+FAILED tests/topology.c:73 can't get session
+test child finished with -1
+---- end ----
+Session topology: FAILED!
+root@number:~#
