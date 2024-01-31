@@ -1,177 +1,148 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB44136E
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 00:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED70A4C80
+	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 01:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706662738; cv=none; b=AI0Ob6GKdT10y3wf6O45HRnAKpewb7fw/Eyu11OeoNoi5t0Y4H1SDgvVzHjM9WNOaUi4KplbpnNBUWVuZnYY7+n/npo/JmALQ/gymHQ3sUZgfndANeYlsolk0RkY7gIlPuZ2yi/5ZkdLdal9omDbsdfIYL24gdZFw38KagCw1gQ=
+	t=1706665236; cv=none; b=Te5u0W4ekfBsgs6sexJJfJu9JVlv36QZUUh/izoS9FCvVlU5MLi7qHOqRkhBk1UOg1r8C3T3JSZG0EYJK3ZYKGMM802vhGBTCh9kwP2WX9G3lgbI5TaY+x4KzR2bti5PDk0J3yESHBcBKx6Y+9naGeIwxkJFcm5gfcSUICToet4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706662738; c=relaxed/simple;
-	bh=jukf1qJEiaQpCr2oJgpuHgIktzRCOEL/zjYLzWJ+SwQ=;
+	s=arc-20240116; t=1706665236; c=relaxed/simple;
+	bh=xuWjEFle0dQBWaWrHdHz6iXg5CQrNte1Zysakt2gVd8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cqc67h0dX6l4HXKurVizntlFfyylx1pxOgLnOYleO9Q3nuwcvML5EOkvJSS+cMdGIcyXRQSAPEGOOYPuZox3y9aCq80FVOHc4IzPzsCxrqsn7Gden8R7KCUvtLjOy0AEVw0seud/tBfZs4rBjJPVl06/2Sb5ATtUqoKTO3v+1R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aaBJeo3q; arc=none smtp.client-ip=209.85.214.175
+	 To:Cc:Content-Type; b=GwoB/d8FYfgUpwAqqg0nOvT/+evd1HX9AWYC6lnZWsHtmIb38jnR4JRNTBDytBl1j4vSWTKF6Ug5Tu4Tk96xgm1yNkxDlHjnwMWvwyIMm6F7NeRrSmI/puzFDLl/GQ11GSnuJ6pyM64JH+pwlSWc6mf8OR7UgesniRrDZ2n5/vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MGcflw3p; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aaBJeo3q"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d8d08f9454so43185ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Jan 2024 16:58:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MGcflw3p"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-363961cfbe2so35045ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Jan 2024 17:40:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706662736; x=1707267536; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706665234; x=1707270034; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rBK5SqU1TpYjbkcqIZDOGnRteHGzHhaOnkrNvuaK/2E=;
-        b=aaBJeo3q9WMScJghDL48nXjPUBUROFtMM+OXEEq/TnC1mqqrc4KSPjRMEjiDAJfodK
-         YasRP39in+bSmQyjdIuRv3wiRG5IsvUx0SCduoPw/N9n0RGJlRS4GlKJfWlo8F58sEsX
-         Q3oVtrL2akGJaFWhSsC685toH5f5Me+NE5vf6zWlGmBUccivvTBIXlFHhvHmBxCB0zX7
-         ubzwnEEcL/rttjjY335skbF9Pjl+wfl7XLzp07biOL4ns3CVdX0tmZwWVVOcqXbxfsn4
-         d+x0klhWg8XzLRZ8pi+zl5fqDVLefxSHCn4THhWJQXkzZkFb6wvYGwwsHr0HJfYmxVyu
-         1Onw==
+        bh=KgfiRGByYS+pq3G6aWPgh8zg9GUqK9qq/oEIcJCDY4M=;
+        b=MGcflw3pMQM5ZQStMzqMEWLOI34ZJ/0uF6comsDt7uhBpSdJ95w2/ezN8F4cKA60C0
+         XwaczbPjLjps1DVUHAUjWBKlhfsMyijM5bbKG1sWaYf1jYVi/FRJo0ID1XesLTqExCKH
+         Ttzo/Plq3MNl0pZ8HqnfQTs8SYpgF77lcT9U7LYgI7zhMpri8fZkJoXGNP+d1HZ7k3Sm
+         iHnsHE7F8/gauzbkEJ898iu7lY/nyrd7XnI6lWp1K6hFvmImqdF1KbFFyaFRK69XBLVm
+         G7sxYkJxzuUbv2/X4ufLF72awrSlJSAxYWfBhCsZwBH9Yc283Dsl3RySR80oGl5tvLV8
+         DwlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706662736; x=1707267536;
+        d=1e100.net; s=20230601; t=1706665234; x=1707270034;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rBK5SqU1TpYjbkcqIZDOGnRteHGzHhaOnkrNvuaK/2E=;
-        b=cyT18XFX+T1wB549TDrzpCTBFe3XyGUsU6zkFgLk8TdMuRuBIbQkgPN0+A912mmXHj
-         UF/6Fog9xk3rYb+BO709S/c7q1ll47Hqhg4WFWPlj9FFreednORE9p4KyHpvGGj4Vdx9
-         1TUu5eM2ziKdvLSHlaTP86pMxmWUJIfLPUFlBm6ztKkNjrERB/Ybh8mwFXs2br6nBPlp
-         xiLJ1ksJhBIi8nVMCUqJ15sX2z5XWPn7DHPpSJN/SfLyhAye3ds1zkKQMiAZraEr/lwt
-         dxXCnIlRBaz9H1kaoruY3AO04FLsV0qrp0miVrNHtigd47HmHmRJQztHa9R8RcrOQxkV
-         j7qA==
-X-Gm-Message-State: AOJu0Yzh5vgimtb9gZu9ZO2ykvEDSIqUAqVjII28mdZKng+f+aH/NMzV
-	REPYMxXOBi7tBTr26LAi6hpEZ2McIv8x62DjrIjZyLuT8XedMDWRK2tHDCx/H/FBGA4qpnIhuhR
-	P60+Y8bcZcUUNqFBKu7mTxLjgS5JKwGr7C2Md
-X-Google-Smtp-Source: AGHT+IHQtez9ISc25L7y5s1XKhZxoc4EBvanOIxPtEFKElYLXy0LZmiyvc1/LJyifO+b7QahA3tbPMDrWOclS03NqiQ=
-X-Received: by 2002:a17:902:e5c8:b0:1d8:da36:d0ae with SMTP id
- u8-20020a170902e5c800b001d8da36d0aemr371032plf.3.1706662735801; Tue, 30 Jan
- 2024 16:58:55 -0800 (PST)
+        bh=KgfiRGByYS+pq3G6aWPgh8zg9GUqK9qq/oEIcJCDY4M=;
+        b=Q1+KevYlQ1sV6mZSwjzkrwbJEU/N7/8vC+gI/WZO5KUkEPFC2rsevRMy8Uqs8KI4U6
+         M2/ELSFRrOk6AA6ZMZXFjIT042UUrpet2ceDsoXqP+i80F0VtlRNcDU68j14PSgFKy9M
+         kJA2VXzfz+RFawzNyG4gLoONZc9V5jCwnizSGyn9v7j27lnjyFp9YoQaI+TWfdARA2oT
+         4ggF5877RwuX2qIQ+iGuzByCcMUhcUgImGs1TKFpDlbxw1LNk6Clbksl55sutBHbh7ov
+         U7fedBhb6rRYX/ZHxxWx+9mxeUhr9CPPWSHxRdvIYDNca2Gpv8E3Kc0tkbHUUXe7pNBS
+         5Ytw==
+X-Gm-Message-State: AOJu0YxXSeq+EbWDBDmoreV1WUw7aV+DMZTu5vxZ6n/nh4X+CBqrdY3P
+	c3/dKnW+ezeZpEk+YluODAa11WQpwVTrTo73mMc43GGADoQV7UHN+Y1r3uVawj0MmJjrD+wf+qb
+	i/EMgKcq+EL1hHmr6ksldLuIeGzxf207u6DRN
+X-Google-Smtp-Source: AGHT+IH1Us8QLQolRkQ0N6URcVjvh46AhLYNl3OWINT5TlS9BM3Rpn7wbE5OUp/UmPI8GqmfwsP/5hFJFf9VhMmRANw=
+X-Received: by 2002:a05:6e02:510:b0:363:7b1b:fc44 with SMTP id
+ d16-20020a056e02051000b003637b1bfc44mr447318ils.14.1706665233872; Tue, 30 Jan
+ 2024 17:40:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGjhMsg_bVKJ_zfsLUR32+oZwGDr3OiBHV_BJ3QtFjyKAs7Sgg@mail.gmail.com>
-In-Reply-To: <CAGjhMsg_bVKJ_zfsLUR32+oZwGDr3OiBHV_BJ3QtFjyKAs7Sgg@mail.gmail.com>
+References: <alpine.LRH.2.20.2401300733310.11354@Diego> <596f6329-1619-4fec-8fde-f97a3e3169b5@linux.intel.com>
+In-Reply-To: <596f6329-1619-4fec-8fde-f97a3e3169b5@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 30 Jan 2024 16:58:43 -0800
-Message-ID: <CAP-5=fW9M3U2U5UXd3QfTjMe=kSe=x1_GC3DW3Mg7HTyHy1atg@mail.gmail.com>
-Subject: Re: [Intel Alderlake CPUID issue]
-To: Tingrun Chen <tchen168@asu.edu>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Kan Liang <kan.liang@intel.com>
-Cc: linux-perf-users@vger.kernel.org, Ian Rogers <rogers.email@gmail.com>
+Date: Tue, 30 Jan 2024 17:40:22 -0800
+Message-ID: <CAP-5=fWs+dGuC4CNvAG6hsO=MhSYHGJje1JizO-aVpJ+PkpoMA@mail.gmail.com>
+Subject: Re: Intel Sapphire Rapids uncore: umask too big
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>, vmolnaro@redhat.com, edward.baker@intel.com, 
+	perry.taylor@intel.com, samantha.alt@intel.com, weilin.wang@intel.com, 
+	acme@kernel.org, alexander.shishkin@linux.intel.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 30, 2024 at 4:35=E2=80=AFPM Tingrun Chen <tchen168@asu.edu> wro=
-te:
+On Tue, Jan 30, 2024 at 6:13=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
 >
-> `perf test 7` fail on Alderlake virtual machine, The test is failing
-> as #system_tsc_freq has a zero value.Below is the output of `./perf
-> test 7 -vv`:
-> ```
-> Couldn't bump rlimit(MEMLOCK), failures may take place when creating
-> BPF maps, etc
->   7: Simple expression parser                                        :
-> --- start ---
-> test child forked, pid 82095
-> Using CPUID GenuineIntel-6-BA-2
-> parsing metric: 1+1
-> parsing metric: FOO+BAR
-> lookup(FOO): val 1.000000
-> lookup(BAR): val 2.000000
-> parsing metric: (BAR/2)%2
-> lookup(BAR): val 2.000000
-> parsing metric: 1 - -4
-> parsing metric: (FOO-1)*2 + (BAR/2)%2 - -4
-> lookup(FOO): val 1.000000
-> lookup(BAR): val 2.000000
-> parsing metric: 1-1 | 1
-> parsing metric: 1-1 & 1
-> parsing metric: min(1,2) + 1
-> parsing metric: max(1,2) + 1
-> parsing metric: 1+1 if 3*4 else 0
-> parsing metric: 100 if 1 else 200 if 1 else 300
-> parsing metric: 100 if 0 else 200 if 1 else 300
-> parsing metric: 100 if 1 else 200 if 0 else 300
-> parsing metric: 100 if 0 else 200 if 0 else 300
-> parsing metric: 1.1 + 2.1
-> parsing metric: .1 + 2.
-> parsing metric: d_ratio(1, 2)
-> parsing metric: d_ratio(2.5, 0)
-> parsing metric: 1.1 < 2.2
-> parsing metric: 2.2 > 1.1
-> parsing metric: 1.1 < 1.1
-> parsing metric: 2.2 > 2.2
-> parsing metric: 2.2 < 1.1
-> parsing metric: 1.1 > 2.2
-> parsing metric: 1.1e10 < 1.1e100
-> parsing metric: 1.1e2 > 1.1e-2
-> parsing metric: FOO/0
-> lookup(FOO): val 1.000000
-> division by zero
-> parsing metric: BAR/
-> lookup(BAR): val 2.000000
-> syntax error
-> parsing metric: FOO + BAR + BAZ + BOZO
-> parsing metric: EVENT1\,param\=3D?@ + EVENT2\,param\=3D?@
-> parsing metric: dash\-event1 - dash\-event2
-> parsing metric: EVENT1 if #smt_on else EVENT2
-> literal: #smt_on =3D 0.000000
-> parsing metric: EVENT1 if #core_wide else EVENT2
-> literal: #core_wide =3D 0.000000
-> parsing metric: 1.0 if EVENT1 > 100.0 else 1.0
-> parsing metric: 0 & EVENT1 > 0
-> parsing metric: EVENT1 > 0 & 0
-> parsing metric: 1 & EVENT1 > 0
-> parsing metric: EVENT1 > 0 & 1
-> parsing metric: 1 | EVENT1 > 0
-> parsing metric: EVENT1 > 0 | 1
-> parsing metric: 0 | EVENT1 > 0
-> parsing metric: EVENT1 > 0 | 0
-> parsing metric: #num_cpus_online
-> literal: #num_cpus_online =3D 8.000000
-> parsing metric: #num_cpus
-> literal: #num_cpus =3D 8.000000
-> parsing metric: #num_cores
-> literal: #num_cores =3D 8.000000
-> parsing metric: #num_dies
-> literal: #num_dies =3D 1.000000
-> parsing metric: #num_packages
-> literal: #num_packages =3D 1.000000
-> parsing metric: #system_tsc_freq
-> Failed to find TSC frequency in /proc/cpuinfoliteral: #system_tsc_freq
-> =3D 0.000000
-> FAILED tests/expr.c:249 #system_tsc_freq > 0
-> test child finished with -1
-> ---- end ----
-> Simple expression parser: FAILED!
-> ```
-> The test can pass in my AlderLakephysical machine. So, in my physical
-> machine it seems that in the `arch_get_tsc_freq`
-> (https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git=
-/tree/tools/perf/arch/x86/util/tsc.c?h=3Dperf-tools-next)
-> function, the call to `get_cpuid_0` will read a valid value for lvl,
-> then it will calculate the tsc using the information directly from the
-> intel instruction `cpuid`; however, in the virtual machine, the lvl
-> will be less than 0x15, then it will fall back to read `/proc/cpuinfo`
-> and it does not contain something like `@ 3.0GHz`. Interestingly, the
-> `model name` entry of `/proc/cpuinfo` in both my physical machine and
-> the virtual machine does not contain the frequency information like `@
-> 3.0GHz`.
+>
+>
+> On 2024-01-30 3:11 a.m., Michael Petlan wrote:
+> > Hello Ian and others,
+> >
+> > we have encountered some issues with uncore events on Sapphire Rapids. =
+There are
+> > a couple types of problems. One of them is the following:
+> >
+> >     # perf stat -e uncore_cha_55/event=3D0x35,umask=3D0x10c0008101/ -a =
+-- ls
+> >     event syntax error: '..0x35,umask=3D0x10c0008101/'
+> >                                       \___ Bad event or PMU
+> >
+> >     Unable to find PMU or event on a PMU of 'uncore_cha_55'
+> >
+> >     Initial error:
+> >     event syntax error: '..0x35,umask=3D0x10c0008101/'
+> >                                       \___ value too big for format, ma=
+ximum is 4294967295
+> >     Run 'perf list' for a list of valid events
+> >
+> > There is a 34bit umask that can handle it, namely umask_ext2, but it is=
+ not
+> > used for sapphire rapids:
+> >
+> > uncore_snbep.c:5958:static struct attribute *spr_uncore_cha_formats_att=
+r[] =3D {
+> > uncore_snbep.c-5959-    &format_attr_event.attr,
+> > uncore_snbep.c-5960-    &format_attr_umask_ext4.attr,
+> > uncore_snbep.c-5961-    &format_attr_tid_en2.attr,
+> > uncore_snbep.c-5962-    &format_attr_edge.attr,
+> > uncore_snbep.c-5963-    &format_attr_inv.attr,
+> > uncore_snbep.c-5964-    &format_attr_thresh8.attr,
+> > uncore_snbep.c-5965-    &format_attr_filter_tid5.attr,
+> > uncore_snbep.c-5966-    NULL,
+> > uncore_snbep.c-5967-};
+> >
+> > (I see umask_ext4 there and means 32bit:
+> > uncore_snbep.c:479:DEFINE_UNCORE_FORMAT_ATTR(umask_ext4, umask, "config=
+:8-15,32-55");
+> > )
+> >
+> > What is wrong? The json files specifying umask=3D0x10c0008101 for the e=
+vent,
+> > or the structure that should rather support umask_ext2 ?
+>
+> The 8-15,32-55 is from the SPR uncore spec. But apparently, there is an
+> inconsistency between the event list and the spec. I will check
+> internally and send a fix.
+>
+> >
+> > There are a few more issues, I will update when analyzing them deeper.
+>
+> Sure, please let me know when you find something.
+>
+> Thanks,
+> Kan
+> >
+> > Thanks.
+> > Michael
 
-+Kan Liang
-
-Thanks Tingrun,
-
-IIRC the "@ 3.0GHz" parsing approach was for older machines that
-lacked the information in the cpuid. Could there be anything special
-in your virtual machine set up that will cause the cpuid to look older
-than it is? Kan, any thoughts and can we work around this?
+Thanks Michael, this is a discrepancy between the PMU driver and the
+json which Kan has in hand. Was this caught by the "perf all PMU test"
+?
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/tests/shell/stat_all_pmu.sh?h=3Dperf-tools-next
+I'll try to improve the error message :-)
 
 Thanks,
 Ian
+
+> >
+> >
