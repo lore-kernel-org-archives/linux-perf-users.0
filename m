@@ -1,51 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5191E6DD01
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 11:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C6D76919
+	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 11:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706701205; cv=none; b=qGszI1pU0GfJsMgvf6lVYl01I/TGYD0QwmDKlgUQpj48OHc2pAOmCygDrV1D7Q/HcCNA1bISO/Uwm3ljgQOOc8GkMpUCDLp3nd+tZYv2q4dF6SPDh7ssfjYs4Cl8J6NCnHUMn9UAvwHcXAVTLBTMkFNT2mLsok4qCReX9JUZDG8=
+	t=1706701208; cv=none; b=OIQlzizIH9/FuIwLlzKdNA5Wm2lBAoIQ/JTFyjgImzr9c4FG3BfAXkhxys2SFMbY4m2aRIe7UJABn9qh8zVaYlTHifWmXdoJc2dWq8oOf9VyrhheFCNM2exa2GKhcQ5RDy3s/cpEPVmm3BSj4yhnhMTq6U06Wa4MUk2CX3rfAnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706701205; c=relaxed/simple;
-	bh=uF2YHsySeNDi0rz4G6Fhip9qbAZRdh8amglk05+MufU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=QQZTc8f5+Lv1/IMFIoAXkffiUEx3wMsw1fST1NZ6lZmqefqyrhkmCYbPpxK8VS7HG2OiButEsygLDQn8mEjPjJffvnfZmIuEeju4D9ILL8ntVjzVjhH/6jVvab+BvoH7GG/ORIEcPGlHSRmzdvH92IWPeoN1seteCbStASvV+6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=calbsoU6; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1706701208; c=relaxed/simple;
+	bh=xQaUnXL564A8q0DolnzGBGBhWfKS4rWBSFxtLFmk6QA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BiW1KyCveGjjy6lZds4G+rWFx7ci2X99Y0PA9xOVBy87W6idw+TgrZIwKIjWd+OYwqklryqlVHpwIqfLUUIggwVWYyYeD7wvffWTUz8wg5VwNjQTdVH6zIrufxVmkbZcT6A6M+xi3qib/Fq7fUJHEhWllGyX8APqoucR/LBiAfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YbgUa8wL; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="calbsoU6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YbgUa8wL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706701201;
+	s=mimecast20190719; t=1706701205;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-	bh=YSA+QL1r+oXwd1lAFTZjRfm0QMnrBE/BoylCBbUSqZE=;
-	b=calbsoU6cYm17utGZWWmD6GaseaqDZUIHE9T2SN51FHEcqk0kx2BJm43pHZz+8aCkmLnhy
-	HgnTPusHIVkNrRIY8VuKOexuNNSXp6ZjeWWCQTPgjbwAo1IiDpCPdnNev3AayTHSUNLgV7
-	L+oOqvh6EOaG/zQF9spxOIojtLUrqO4=
+	bh=Fqiyxf5mXZYRvUO7L5nvKegn29f04O1dCrlzvp7gewU=;
+	b=YbgUa8wLlFuWEAn0TRJ7qFncbI9A2iMUa1hC1dMpQlpx2evT9AlAbWHrbhuX7Dhhbv+T6F
+	hG3D6Pix0tNjgRkRB6biKGktV9W+hjfSL10XPlSYFruPBggIjcaibLF1gSQu2hjN522rqm
+	Lzo9JyZBHhJC1CHarx/JDSnjzdXCiOo=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-686-iwiOO1bZPn2JCaJdmCFVZw-1; Wed,
- 31 Jan 2024 06:39:58 -0500
-X-MC-Unique: iwiOO1bZPn2JCaJdmCFVZw-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-BRpQhy0qNSiIQRXgLpWAtQ-1; Wed,
+ 31 Jan 2024 06:40:01 -0500
+X-MC-Unique: BRpQhy0qNSiIQRXgLpWAtQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AF21438212CB;
-	Wed, 31 Jan 2024 11:39:57 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1AFCA1C0518D;
+	Wed, 31 Jan 2024 11:40:01 +0000 (UTC)
 Received: from Diego.redhat.com (unknown [10.39.208.45])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C2B3C1ED63;
-	Wed, 31 Jan 2024 11:39:56 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id BA59DC1ED64;
+	Wed, 31 Jan 2024 11:39:59 +0000 (UTC)
 From: Michael Petlan <mpetlan@redhat.com>
 To: linux-perf-users@vger.kernel.org,
 	vmolnaro@redhat.com,
 	acme@redhat.com,
 	acme@kernel.org
 Cc: mhiramat@kernel.org
-Subject: [PATCH 3/7] perf testsuite: Add initialization script for shell tests
-Date: Wed, 31 Jan 2024 12:39:47 +0100
-Message-Id: <20240131113951.17077-3-mpetlan@redhat.com>
+Subject: [PATCH 5/7] perf testsuite: Add common output checking helpers
+Date: Wed, 31 Jan 2024 12:39:49 +0100
+Message-Id: <20240131113951.17077-5-mpetlan@redhat.com>
 In-Reply-To: <20240131113951.17077-1-mpetlan@redhat.com>
 References: <20240131113951.17077-1-mpetlan@redhat.com>
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
@@ -57,139 +57,153 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Initialize reporting and logging functions that unifies formatting
-of the test output used for shell tests.
+As a form of validation, it is a common practice to check the outputs
+of commands whether they contain expected patterns or match a certain
+regex.
+
+Add helpers for verifying that all regexes are found in the output, that
+all lines match any pattern from a set and that a certain expression is
+not present in the output.
+
+In verbose mode these helpers log mismatches for easier failure
+investigation.
 
 Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- tools/perf/tests/shell/common/init.sh | 117 ++++++++++++++++++++++++++
- 1 file changed, 117 insertions(+)
- create mode 100644 tools/perf/tests/shell/common/init.sh
+ .../shell/common/check_all_lines_matched.pl   | 39 +++++++++++++++++++
+ .../shell/common/check_all_patterns_found.pl  | 34 ++++++++++++++++
+ .../shell/common/check_no_patterns_found.pl   | 34 ++++++++++++++++
+ 3 files changed, 107 insertions(+)
+ create mode 100755 tools/perf/tests/shell/common/check_all_lines_matched.pl
+ create mode 100755 tools/perf/tests/shell/common/check_all_patterns_found.pl
+ create mode 100755 tools/perf/tests/shell/common/check_no_patterns_found.pl
 
-diff --git a/tools/perf/tests/shell/common/init.sh b/tools/perf/tests/shell/common/init.sh
-new file mode 100644
-index 000000000000..aadeaf782e03
+diff --git a/tools/perf/tests/shell/common/check_all_lines_matched.pl b/tools/perf/tests/shell/common/check_all_lines_matched.pl
+new file mode 100755
+index 000000000000..fded48959a3f
 --- /dev/null
-+++ b/tools/perf/tests/shell/common/init.sh
-@@ -0,0 +1,117 @@
++++ b/tools/perf/tests/shell/common/check_all_lines_matched.pl
+@@ -0,0 +1,39 @@
++#!/usr/bin/perl
 +# SPDX-License-Identifier: GPL-2.0
-+#
-+#	init.sh
-+#	Author: Michael Petlan <mpetlan@redhat.com>
-+#
-+#	Description:
-+#
-+#		This file should be used for initialization of basic functions
-+#	for checking, reporting results etc.
-+#
-+#
 +
++@regexps = @ARGV;
 +
-+. ../common/settings.sh
-+. ../common/patterns.sh
++$max_printed_lines = 20;
++$max_printed_lines = $ENV{TESTLOG_ERR_MSG_MAX_LINES} if (defined $ENV{TESTLOG_ERR_MSG_MAX_LINES});
 +
-+THIS_TEST_NAME=`basename $0 .sh`
++$quiet = 1;
++$quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
 +
-+_echo()
++$passed = 1;
++$lines_printed = 0;
++
++while (<STDIN>)
 +{
-+	test "$TESTLOG_VERBOSITY" -ne 0 && echo -e "$@"
++	s/\n//;
++
++	$line_matched = 0;
++	for $r (@regexps)
++	{
++		if (/$r/)
++		{
++			$line_matched = 1;
++			last;
++		}
++	}
++
++	unless ($line_matched)
++	{
++		if ($lines_printed++ < $max_printed_lines)
++		{
++			print "Line did not match any pattern: \"$_\"\n" unless $quiet;
++		}
++		$passed = 0;
++	}
 +}
 +
-+print_results()
++exit ($passed == 0);
+diff --git a/tools/perf/tests/shell/common/check_all_patterns_found.pl b/tools/perf/tests/shell/common/check_all_patterns_found.pl
+new file mode 100755
+index 000000000000..11bdf1d3460a
+--- /dev/null
++++ b/tools/perf/tests/shell/common/check_all_patterns_found.pl
+@@ -0,0 +1,34 @@
++#!/usr/bin/perl
++# SPDX-License-Identifier: GPL-2.0
++
++@regexps = @ARGV;
++
++$quiet = 1;
++$quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
++
++%found = ();
++$passed = 1;
++
++while (<STDIN>)
 +{
-+	PERF_RETVAL="$1"; shift
-+	CHECK_RETVAL="$1"; shift
-+	FAILURE_REASON=""
-+	TASK_COMMENT="$@"
-+	if [ $PERF_RETVAL -eq 0 -a $CHECK_RETVAL -eq 0 ]; then
-+		_echo "$MPASS-- [ PASS ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT"
-+		return 0
-+	else
-+		if [ $PERF_RETVAL -ne 0 ]; then
-+			FAILURE_REASON="command exitcode"
-+		fi
-+		if [ $CHECK_RETVAL -ne 0 ]; then
-+			test -n "$FAILURE_REASON" && FAILURE_REASON="$FAILURE_REASON + "
-+			FAILURE_REASON="$FAILURE_REASON""output regexp parsing"
-+		fi
-+		_echo "$MFAIL-- [ FAIL ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT ($FAILURE_REASON)"
-+		return 1
-+	fi
++	s/\n//;
++
++	for $r (@regexps)
++	{
++		if (/$r/)
++		{
++			$found{$r} = 1;	# FIXME: maybe add counters -- how many times was the regexp matched
++		}
++	}
 +}
 +
-+print_overall_results()
++for $r (@regexps)
 +{
-+	RETVAL="$1"; shift
-+	if [ $RETVAL -eq 0 ]; then
-+		_echo "$MALLPASS## [ PASS ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY"
-+	else
-+		_echo "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY :: $RETVAL failures found"
-+	fi
-+	return $RETVAL
++	unless (exists $found{$r})
++	{
++		print "Regexp not found: \"$r\"\n" unless $quiet;
++		$passed = 0;
++	}
 +}
 +
-+print_testcase_skipped()
++exit ($passed == 0);
+diff --git a/tools/perf/tests/shell/common/check_no_patterns_found.pl b/tools/perf/tests/shell/common/check_no_patterns_found.pl
+new file mode 100755
+index 000000000000..770999e87a5f
+--- /dev/null
++++ b/tools/perf/tests/shell/common/check_no_patterns_found.pl
+@@ -0,0 +1,34 @@
++#!/usr/bin/perl
++# SPDX-License-Identifier: GPL-2.0
++
++@regexps = @ARGV;
++
++$quiet = 1;
++$quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
++
++%found = ();
++$passed = 1;
++
++while (<STDIN>)
 +{
-+	TASK_COMMENT="$@"
-+	_echo "$MSKIP-- [ SKIP ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT :: testcase skipped"
-+	return 0
++	s/\n//;
++
++	for $r (@regexps)
++	{
++		if (/$r/)
++		{
++			$found{$r} = 1;
++		}
++	}
 +}
 +
-+print_overall_skipped()
++for $r (@regexps)
 +{
-+	_echo "$MSKIP## [ SKIP ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME :: testcase skipped"
-+	return 0
++	if (exists $found{$r})
++	{
++		print "Regexp found: \"$r\"\n" unless $quiet;
++		$passed = 0;
++	}
 +}
 +
-+print_warning()
-+{
-+	WARN_COMMENT="$@"
-+	_echo "$MWARN-- [ WARN ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $WARN_COMMENT"
-+	return 0
-+}
-+
-+# this function should skip a testcase if the testsuite is not run in
-+# a runmode that fits the testcase --> if the suite runs in BASIC mode
-+# all STANDARD and EXPERIMENTAL testcases will be skipped; if the suite
-+# runs in STANDARD mode, all EXPERIMENTAL testcases will be skipped and
-+# if the suite runs in EXPERIMENTAL mode, nothing is skipped
-+consider_skipping()
-+{
-+	TESTCASE_RUNMODE="$1"
-+	# the runmode of a testcase needs to be at least the current suite's runmode
-+	if [ $PERFTOOL_TESTSUITE_RUNMODE -lt $TESTCASE_RUNMODE ]; then
-+		print_overall_skipped
-+		exit 0
-+	fi
-+}
-+
-+detect_baremetal()
-+{
-+	# return values:
-+	# 0 = bare metal
-+	# 1 = virtualization detected
-+	# 2 = unknown state
-+	VIRT=`systemd-detect-virt 2>/dev/null`
-+	test $? -eq 127 && return 2
-+	test "$VIRT" = "none"
-+}
-+
-+detect_intel()
-+{
-+	# return values:
-+	# 0 = is Intel
-+	# 1 = is not Intel or unknown
-+	grep "vendor_id" < /proc/cpuinfo | grep -q "GenuineIntel"
-+}
-+
-+detect_amd()
-+{
-+	# return values:
-+	# 0 = is AMD
-+	# 1 = is not AMD or unknown
-+	grep "vendor_id" < /proc/cpuinfo | grep -q "AMD"
-+}
++exit ($passed == 0);
 -- 
 2.43.0
 
