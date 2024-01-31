@@ -1,270 +1,342 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A237D41A
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 13:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF7D7F495
+	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 13:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706708125; cv=none; b=PJr+Q/2UUlcM4Trxf+a+tASS1y4kMcPWwN0OqPaui/ipCkFxL31Zn5BV+FEvk8aBBj/umxWUPZV2KJ6MMn7CW1lI4LveyrTVHlCd5VQb16MbhiF/QRCPDsZ1Uaiy9qh+QD5EuUgskFzLjKXnZOdT7wltMe4ewJm4diRH0m3sBrY=
+	t=1706708847; cv=none; b=XTZblpaTDkQd4C60Us6ziEja0HODRCvwK3/zPRPmYVWfOdIgR7ygZ9uvsPXXa0q9XcnOc8ZV4VrAB/1PeGd/jWUtQCMH53S6mZQMq8rfmqHKU3+4KyXNM39aHxC01KfLUpKKStJgKtxM/3x2c+TPOUMIuw61n0FXOfuy+EvA2hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706708125; c=relaxed/simple;
-	bh=ydzLkdCnFVzoPB32RrVVo8uHZg97gf4+x7uw+fQjei4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MKiiHTs6fifMIYo+B9HsVu95gbOqP/vKl7WxAkJLpaTeJofvMvqKvuvKUIbtwCW1ajJz41p3C9Hu4z7FMPo8QZhkQcCB0TWAzeL2dWPUJXrCGqJwciCP9oJ9TsFUt+Ixjz24zS3hfUgsek+a+UzzyBKVkYlzhFRG8SYtFpatZAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hBEjrfOZ; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706708847; c=relaxed/simple;
+	bh=KxKgbhtx26meVRTLEpsG0VTAzEyuTlN/lzTgb9Djepw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZC12KQ/yyZE1mXR61mfJQZKDHwOF2tjA//4xq5XuU4UzLylX5fo4hwCLnsivLi48T3BoBvHXm3MCsIlAxQQByGpLqT0nQeT4mtsDdfaI6QYiL0czDnMXy3RJ/17LXhlSFf/1ggKBeqUQTOeBRdkQXH0Sz9K2vqRCre2JrzHcL+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eG51h1A4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hBEjrfOZ"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d8d08f9454so133585ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 05:35:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706708123; x=1707312923; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7gvo+nk/86/TyM2cTbiYpO1g/G/U4L+hxaJg0S82coo=;
-        b=hBEjrfOZyiPgqHSamfg4gbWFDv6hjjHDkPKWkA//gw7eE0xnfQgjMYPX8ARIDusTGk
-         XlDitri2w4KN1qRXIikTxP+P34Ao1Xr0ufcEagN0U7xVaQ4180UrJR6qbL1CTX1OSlsf
-         N/NkMrQU4JSATZtf4Sy0OUtmuKaMEvh8vpR8hh55ebOh6AV1X/VnebXL1rZB0woc+SNp
-         lGLNX6kb+pffrQ52sVgXkLnb6tsrcgO3H6syi1rX45dNl8V0kBemfJzOMaJmJEggeMwl
-         UFvj6Rutk2yxZzK5O1fmFO8vypXsbpqCOwQsKFj9GCBlWhtYx+tCXBYYOMmA9+Ddk1Zn
-         HcHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706708123; x=1707312923;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7gvo+nk/86/TyM2cTbiYpO1g/G/U4L+hxaJg0S82coo=;
-        b=VMDVssDrbnztlYdrd7WDgWFvEYNlew238Whpf9szxYRUg2aiWto5ltmryfiClrQmKB
-         ldOwMnhN+/MRmGUhOUadyIhntGnzOINMKQGn56TP6/x8Cb0d9B/3ipiVBjkbWj7ibevM
-         Rl51JWwMPf7dx9eVRbJHIaFsSysfREoiaaEJPtHPv+RNfqIJtF4JuV+ScHLetZNvudk8
-         nHMnw3tjSiiIBk4+4GDqWuwgJfkLCSlq2vCkKqS4rAm/5cxcS5IUya82mgC0GHNvwVSD
-         fGg/LNrdEJhyQqXwimMxh1fORsPhfPWxnL0LXR7uQgoOXKTIZdMW0P9mGa8ac19K0fdx
-         MYLQ==
-X-Gm-Message-State: AOJu0YzKcE7qgKcZ6siDfxin/W/1tnx6SUm5XGGRIgctV6JtZ5Axles5
-	FUKw6/N5iml1319LBaKNKACMk1UVOSJXDMdydqMAgSbqisjsbYcp119Bv0935+XWWaEzCwwDt6W
-	EWwJHVZhjE+9nv2OscSXNks+xPUPBKWv0mOB4bi976SlbhP20fIzzBng=
-X-Google-Smtp-Source: AGHT+IHzGTOIPw9NU+VRVoMpGQnQSYFloJTi32mGv8LOCNj1zHIl37h9twrU72XSLcL1QqihGrmcbv2460+rytXDV1c=
-X-Received: by 2002:a17:903:d4:b0:1d8:cc74:b11e with SMTP id
- x20-20020a17090300d400b001d8cc74b11emr543640plc.6.1706708123038; Wed, 31 Jan
- 2024 05:35:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eG51h1A4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B92C433C7;
+	Wed, 31 Jan 2024 13:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706708846;
+	bh=KxKgbhtx26meVRTLEpsG0VTAzEyuTlN/lzTgb9Djepw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eG51h1A4M3gVFHUcvvPM2xk8AhgeAI86dq8SQ7uVNF2LIAGf7dxnAqFhq+k4gvsGN
+	 cao5yZgVCE+yq/39m9zjy+J6J00FzOcoLJJ+mBYbIOeEK0GAoyzISO0G4Vs29fmsbg
+	 Ign34QHzMRCgCGzWuHzSBAVatyj0ADtQxSUysndN+SWhIFxwf2fTITMOTbHzXBdmSn
+	 Fu7kZhTNdejjx1yTqvRzMBFHSELhZoKLN1sXiP56VvFjj21LTZaDSkxRCOFjQ5DUNY
+	 S6brusT1z7skhF5qsTAyD2pDqaRH5BQNswCwcEuOpXwd7N5lMtaRtiH+OEuxj1XneA
+	 Zeh/rQiCyocAQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id A4F5140441; Wed, 31 Jan 2024 10:47:23 -0300 (-03)
+Date: Wed, 31 Jan 2024 10:47:23 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Michael Petlan <mpetlan@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, vmolnaro@redhat.com, acme@redhat.com,
+	mhiramat@kernel.org
+Subject: Re: [PATCH 1/7] perf testsuite: Add common regex patters
+Message-ID: <ZbpPa1ZjoOdGw9Yd@kernel.org>
+References: <20240131113951.17077-1-mpetlan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131063048.492010-1-irogers@google.com> <20240131063048.492010-2-irogers@google.com>
- <9dd303cb-0455-d8ac-ce0c-f4a8320b787b@arm.com>
-In-Reply-To: <9dd303cb-0455-d8ac-ce0c-f4a8320b787b@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 31 Jan 2024 05:35:11 -0800
-Message-ID: <CAP-5=fX1fPc_GpY0UG0=GgnUrex0tNLfSxEqcJjro=SZdtYB9A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf parse-events: Improve error location of terms
- cloned from an event
-To: James Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	tchen168@asu.edu, Michael Petlan <mpetlan@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240131113951.17077-1-mpetlan@redhat.com>
+X-Url: http://acmel.wordpress.com
 
-On Wed, Jan 31, 2024 at 3:49=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
->
->
-> On 31/01/2024 06:30, Ian Rogers wrote:
-> > A PMU event/alias will have a set of format terms that replace it when
-> > an event is parsed. The location of the terms is their position when
-> > parsed for the event/alias either from sysfs or json. This location is
-> > of little use when an event fails to parse as the error will be given
-> > in terms of the location in the string of events parsed not the json
-> > or sysfs string. Fix this by making the cloned terms location that of
-> > the event/alias.
-> >
-> > If a cloned term from an event/alias is invalid the bad format is hard
-> > to determine from the error string. Add the name of the bad format
-> > into the error string.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> > These fixes were inspired by the poor error output in:
-> > https://lore.kernel.org/linux-perf-users/alpine.LRH.2.20.2401300733310.=
-11354@Diego/
-> > ---
-> >  tools/perf/util/pmu.c | 9 +++++----
-> >  1 file changed, 5 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 355f813f960d..437386dedd5c 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -657,7 +657,7 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
-> >       return 0;
-> >  }
-> >
-> > -static int pmu_alias_terms(struct perf_pmu_alias *alias, struct list_h=
-ead *terms)
-> > +static int pmu_alias_terms(struct perf_pmu_alias *alias, int err_loc, =
-struct list_head *terms)
-> >  {
-> >       struct parse_events_term *term, *cloned;
-> >       struct parse_events_terms clone_terms;
-> > @@ -675,6 +675,7 @@ static int pmu_alias_terms(struct perf_pmu_alias *a=
-lias, struct list_head *terms
-> >                * which we don't want for implicit terms in aliases.
-> >                */
-> >               cloned->weak =3D true;
-> > +             cloned->err_term =3D cloned->err_val =3D err_loc;
-> >               list_add_tail(&cloned->list, &clone_terms.terms);
-> >       }
-> >       list_splice_init(&clone_terms.terms, terms);
-> > @@ -1363,8 +1364,8 @@ static int pmu_config_term(const struct perf_pmu =
-*pmu,
-> >
-> >                       parse_events_error__handle(err, term->err_val,
-> >                               asprintf(&err_str,
-> > -                                 "value too big for format, maximum is=
- %llu",
-> > -                                 (unsigned long long)max_val) < 0
-> > +                                 "value too big for format (%s), maxim=
-um is %llu",
-> > +                                 format->name, (unsigned long long)max=
-_val) < 0
-> >                                   ? strdup("value too big for format")
-> >                                   : err_str,
-> >                                   NULL);
->
-> Hi Ian,
->
-> I went to test this, but since b30d4f0b6954 ("perf parse-events:
-> Additional error reporting") I don't get this size error message
-> anymore, just a "bad event/PMU not found" type error. I'm not sure if
-> this is something Arm specific, or you're seeing the same thing?
->
-> Before b30d4f0b6954:
->
->   $ perf record -e bus_access_rd/long=3D2
->   event syntax error: '..ss_rd/long=3D2/'
->                                   \___ value too big for format, maximum
->                                        is 1
->
->   Initial error:
->   event syntax error: 'bus_access_rd/long=3D2/'
->                      \___ Cannot find PMU `bus_access_rd'. Missing
->                           kernel support?
->   Run 'perf list' for a list of valid events
->
->    Usage: perf record [<options>] [<command>]
->     or: perf record [<options>] -- <command> [<options>]
->
->     -e, --event <event>   event selector. use 'perf list' to list
->       available events
->
-> After b30d4f0b6954:
->
->   $ perf record -e bus_access_rd/long=3D2
->   event syntax error: '..ss_rd/long=3D2/'
->                                   \___ Bad event or PMU
->
->   Unabled to find PMU or event on a PMU of 'bus_access_rd'
->
->   Initial error:
->   event syntax error: 'bus_access_rd/long=3D2/'
->                      \___ Cannot find PMU `bus_access_rd'. Missing
->                           kernel support?
->
->   Run 'perf list' for a list of valid events
->
->    Usage: perf record [<options>] [<command>]
->     or: perf record [<options>] -- <command> [<options>]
->
->     -e, --event <event>   event selector. use 'perf list' to list
->       available events
->
+Em Wed, Jan 31, 2024 at 12:39:45PM +0100, Michael Petlan escreveu:
+> From: Veronika Molnarova <vmolnaro@redhat.com>
+> 
+> Unify perf regexes for checking testing output into a single file
+> to reduce duplicates and prevent errors when editing.
+> 
+> This will be used in upcomming patches in shell tests.
 
-Hi James, this is a different case. Here you have bus_access_rd being
-matched as a wildcard event or PMU. This is done here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/parse-events.y?h=3Dperf-tools-next#n318
-The "long=3D2" is a term to be applied to that event, its index is
-passed through from the yacc code and not cloned from the original
-sysfs/json event (which this patch modifies). Doing something similar
-to your test on x86 I see:
+Thanks for working on this!
 
-```
-$ perf stat -e 'slots/edge=3D2/' true
-event syntax error: 'slots/edge=3D2/'
-                               \___ Bad event or PMU
+The cover letter could've said that this is an effort to upstream a
+pre-existing test suite that is being used for quite a long time, that
+it is available in github, etc :-)
 
-Unable to find PMU or event on a PMU of 'slots'
+- Arnaldo
+ 
+> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> ---
+>  tools/perf/tests/shell/common/patterns.sh | 256 ++++++++++++++++++++++
+>  1 file changed, 256 insertions(+)
+>  create mode 100644 tools/perf/tests/shell/common/patterns.sh
+> 
+> diff --git a/tools/perf/tests/shell/common/patterns.sh b/tools/perf/tests/shell/common/patterns.sh
+> new file mode 100644
+> index 000000000000..919a07b8b454
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/common/patterns.sh
+> @@ -0,0 +1,256 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +export RE_NUMBER="[0-9\.]+"
+> +# Number
+> +# Examples:
+> +#    123.456
+> +
+> +
+> +export RE_NUMBER_HEX="[0-9A-Fa-f]+"
+> +# Hexadecimal number
+> +# Examples:
+> +#    1234
+> +#    a58d
+> +#    aBcD
+> +#    deadbeef
+> +
+> +
+> +export RE_DATE_YYYYMMDD="[0-9]{4}-(?:(?:01|03|05|07|08|10|12)-(?:[0-2][0-9]|3[0-1])|02-[0-2][0-9]|(?:(?:04|06|09|11)-(?:[0-2][0-9]|30)))"
+> +# Date in YYYY-MM-DD form
+> +# Examples:
+> +#    1990-02-29
+> +#    0015-07-31
+> +#    2456-12-31
+> +#!   2012-13-01
+> +#!   1963-09-31
+> +
+> +
+> +export RE_TIME="(?:[0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
+> +# Time
+> +# Examples:
+> +#    15:12:27
+> +#    23:59:59
+> +#!   24:00:00
+> +#!   11:25:60
+> +#!   17:60:15
+> +
+> +
+> +export RE_DATE_TIME="\w+\s+\w+\s+$RE_NUMBER\s+$RE_TIME\s+$RE_NUMBER"
+> +# Time and date
+> +# Examples:
+> +#    Wed Feb 12 10:46:26 2020
+> +#    Mon Mar  2 13:27:06 2020
+> +#!   St úno 12 10:57:21 CET 2020
+> +#!   Po úno 14 15:17:32 2010
+> +
+> +
+> +export RE_ADDRESS="0x$RE_NUMBER_HEX"
+> +# Memory address
+> +# Examples:
+> +#    0x123abc
+> +#    0xffffffff9abe8ae8
+> +#    0x0
+> +
+> +
+> +export RE_ADDRESS_NOT_NULL="0x[0-9A-Fa-f]*[1-9A-Fa-f]+[0-9A-Fa-f]*"
+> +# Memory address (not NULL)
+> +# Examples:
+> +#    0xffffffff9abe8ae8
+> +#!   0x0
+> +#!   0x0000000000000000
+> +
+> +export RE_PROCESS_PID="\w+\/\d+"
+> +# A process with PID
+> +# Example:
+> +#    sleep/4102
+> +
+> +
+> +export RE_EVENT_ANY="[\w\-\:\/_=,]+"
+> +# Name of any event (universal)
+> +# Examples:
+> +#    cpu-cycles
+> +#    cpu/event=12,umask=34/
+> +#    r41e1
+> +#    nfs:nfs_getattr_enter
+> +
+> +
+> +export RE_EVENT="[\w\-:_]+"
+> +# Name of an usual event
+> +# Examples:
+> +#    cpu-cycles
+> +
+> +
+> +export RE_EVENT_RAW="r$RE_NUMBER_HEX"
+> +# Specification of a raw event
+> +# Examples:
+> +#    r41e1
+> +#    r1a
+> +
+> +
+> +export RE_EVENT_CPU="cpu/(\w+=$RE_NUMBER_HEX,?)+/p*"
+> +# Specification of a CPU event
+> +# Examples:
+> +#    cpu/event=12,umask=34/pp
+> +
+> +
+> +export RE_EVENT_UNCORE="uncore/[\w_]+/"
+> +# Specification of an uncore event
+> +# Examples:
+> +#    uncore/qhl_request_local_reads/
+> +
+> +
+> +export RE_EVENT_SUBSYSTEM="[\w\-]+:[\w\-]+"
+> +# Name of an event from subsystem
+> +# Examples:
+> +#    ext4:ext4_ordered_write_end
+> +#    sched:sched_switch
+> +
+> +
+> +export RE_FILE_NAME="[\w\+\.-]+"
+> +# A filename
+> +# Examples:
+> +#    libstdc++.so.6
+> +#!   some/path
+> +
+> +
+> +export RE_PATH_ABSOLUTE="(?:\/$RE_FILE_NAME)+"
+> +# A full filepath
+> +# Examples:
+> +#    /usr/lib64/somelib.so.5.4.0
+> +#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
+> +#    /usr/bin/mv
+> +#!   some/relative/path
+> +#!   ./some/relative/path
+> +
+> +
+> +export RE_PATH="(?:$RE_FILE_NAME)?$RE_PATH_ABSOLUTE"
+> +# A filepath
+> +# Examples:
+> +#    /usr/lib64/somelib.so.5.4.0
+> +#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
+> +#    ./.emacs
+> +#    src/fs/file.c
+> +
+> +
+> +export RE_DSO="(?:$RE_PATH_ABSOLUTE(?: \(deleted\))?|\[kernel\.kallsyms\]|\[unknown\]|\[vdso\]|\[kernel\.vmlinux\][\.\w]*)"
+> +# A DSO name in various result tables
+> +# Examples:
+> +#    /usr/lib64/somelib.so.5.4.0
+> +#    /usr/bin/somebinart (deleted)
+> +#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
+> +#    [kernel.kallsyms]
+> +#    [kernel.vmlinux]
+> +#    [vdso]
+> +#    [unknown]
+> +
+> +
+> +export RE_LINE_COMMENT="^#.*"
+> +# A comment line
+> +# Examples:
+> +#    # Started on Thu Sep 10 11:43:00 2015
+> +
+> +
+> +export RE_LINE_EMPTY="^\s*$"
+> +# An empty line with possible whitespaces
+> +# Examples:
+> +#
+> +
+> +
+> +export RE_LINE_RECORD1="^\[\s+perf\s+record:\s+Woken up $RE_NUMBER times? to write data\s+\].*$"
+> +# The first line of perf-record "OK" output
+> +# Examples:
+> +#    [ perf record: Woken up 1 times to write data ]
+> +
+> +
+> +export RE_LINE_RECORD2="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\.data(?:\.\d+)?\s*\(~?$RE_NUMBER samples\)\s+\].*$"
+> +# The second line of perf-record "OK" output
+> +# Examples:
+> +#    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB perf.data (~109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB /some/temp/dir/perf.data (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB ./perf.data (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB ./perf.data.3 (109 samples) ]
+> +
+> +
+> +export RE_LINE_RECORD2_TOLERANT="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\.data(?:\.\d+)?\s*(?:\(~?$RE_NUMBER samples\))?\s+\].*$"
+> +# The second line of perf-record "OK" output, even no samples is OK here
+> +# Examples:
+> +#    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB perf.data (~109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB /some/temp/dir/perf.data (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB ./perf.data (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB ./perf.data.3 (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB perf.data ]
+> +
+> +
+> +export RE_LINE_RECORD2_TOLERANT_FILENAME="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\w*\.data(?:\.\d+)?\s*\(~?$RE_NUMBER samples\)\s+\].*$"
+> +# The second line of perf-record "OK" output
+> +# Examples:
+> +#    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB perf_ls.data (~109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB perf_aNyCaSe.data (109 samples) ]
+> +#    [ perf record: Captured and wrote 0.405 MB ./perfdata.data.3 (109 samples) ]
+> +#!    [ perf record: Captured and wrote 0.405 MB /some/temp/dir/my_own.data (109 samples) ]
+> +#!    [ perf record: Captured and wrote 0.405 MB ./UPPERCASE.data (109 samples) ]
+> +#!    [ perf record: Captured and wrote 0.405 MB ./aNyKiNDoF.data.3 (109 samples) ]
+> +#!    [ perf record: Captured and wrote 0.405 MB perf.data ]
+> +
+> +
+> +export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+\-?$RE_NUMBER|$RE_NUMBER_HEX.*$"
+> +# A line of perf-trace output
+> +# Examples:
+> +#    0.115 ( 0.005 ms): sleep/4102 open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
+> +#    0.157 ( 0.005 ms): sleep/4102 mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
+> +
+> +export RE_LINE_TRACE_ONE_PROC="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\w+\(.*\)\s+=\s+(?:\-?$RE_NUMBER)|(?:0x$RE_NUMBER_HEX).*$"
+> +# A line of perf-trace output
+> +# Examples:
+> +#    0.115 ( 0.005 ms): open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
+> +#    0.157 ( 0.005 ms): mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
+> +
+> +export RE_LINE_TRACE_CONTINUED="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\.\.\.\s*\[continued\]:\s+\w+\(\).*\s+=\s+(?:\-?$RE_NUMBER)|(?:0x$RE_NUMBER_HEX).*$"
+> +# A line of perf-trace output
+> +# Examples:
+> +#    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0
+> +#    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0x00000000
+> +
+> +export RE_LINE_TRACE_SUMMARY_HEADER="\s*syscall\s+calls\s+(?:errors\s+)?total\s+min\s+avg\s+max\s+stddev"
+> +# A header of a perf-trace summary table
+> +# Example:
+> +#    syscall            calls    total       min       avg       max      stddev
+> +#    syscall            calls  errors  total       min       avg       max       stddev
+> +
+> +
+> +export RE_LINE_TRACE_SUMMARY_CONTENT="^\s*\w+\s+(?:$RE_NUMBER\s+){5,6}$RE_NUMBER%"
+> +# A line of a perf-trace summary table
+> +# Example:
+> +#    open                   3     0.017     0.005     0.006     0.007     10.90%
+> +#    openat                 2      0     0.017     0.008     0.009     0.010     12.29%
+> +
+> +
+> +export RE_LINE_REPORT_CONTENT="^\s+$RE_NUMBER%\s+\w+\s+\S+\s+\S+\s+\S+" # FIXME
+> +# A line from typicap perf report --stdio output
+> +# Example:
+> +#     100.00%  sleep    [kernel.vmlinux]  [k] syscall_return_slowpath
+> +
+> +
+> +export RE_TASK="\s+[\w~\/ \.\+:#-]+(?:\[-1(?:\/\d+)?\]|\[\d+(?:\/\d+)?\])"
+> +# A name of a task used for perf sched timehist -s
+> +# Example:
+> +#     sleep[62755]
+> +#     runtest.sh[62762]
+> +#     gmain[705/682]
+> +#     xfsaild/dm-0[495]
+> +#     kworker/u8:1-ev[62714]
+> +#     :-1[-1/62756]
+> +#     :-1[-1]
+> +#     :-1[62756]
+> +
+> +
+> +export RE_SEGFAULT=".*(?:Segmentation\sfault|SIGSEGV|\score\s|dumped|segfault).*"
+> +# Possible variations of the segfault message
+> +# Example:
+> +#     /bin/bash: line 1:    32 Segmentation fault      timeout 15s
+> +#     Segmentation fault (core dumped)
+> +#     Program terminated with signal SIGSEGV
+> +#!     WARNING: 12323431 isn't a 'cpu_core', please use a CPU list in the 'cpu_core' range (0-15)
+> -- 
+> 2.43.0
+> 
 
-Initial error:
-event syntax error: 'slots/edge=3D2/'
-                    \___ Cannot find PMU `slots'. Missing kernel support?
-Run 'perf list' for a list of valid events
+-- 
 
-Usage: perf stat [<options>] [<command>]
-
-   -e, --event <event>   event selector. use 'perf list' to list
-available events
-```
-
-The string indexes look correct, but in the mail here they look wonky
-due to not having a fixed width font. The error message isn't the best
-and -vv reveals why:
-
-```
-$ perf stat -vv -e 'slots/edge=3D2/' true
-Using CPUID GenuineIntel-6-8D-1
-Attempt to add: cpu/edge=3D0x2,slots/
-..after resolving event: cpu/edge=3D0x2,event=3D0,umask=3D0x4/
-Multiple errors dropping message: value too big for format (edge),
-maximum is 1 (<no help>)
-event syntax error: 'slots/edge=3D2/'
-                               \___ Bad event or PMU
-
-Unable to find PMU or event on a PMU of 'slots'
-
-Initial error:
-event syntax error: 'slots/edge=3D2/'
-                    \___ Cannot find PMU `slots'. Missing kernel support?
-Run 'perf list' for a list of valid events
-
-Usage: perf stat [<options>] [<command>]
-
-   -e, --event <event>   event selector. use 'perf list' to list
-available events
-```
-
-The dropped help message is the most useful. I've written a patch to
-keep all errors in a list and dump them all on failure. I'll send a v2
-patch with that added. The output looks like:
-
-```
-$ perf stat -e 'slots/edge=3D2/' true
-event syntax error: 'slots/edge=3D2/'
-                    \___ Bad event or PMU
-
-Unable to find PMU or event on a PMU of 'slots'
-event syntax error: 'slots/edge=3D2/'
-                               \___ value too big for format (edge),
-maximum is 1
-event syntax error: 'slots/edge=3D2/'
-                    \___ Cannot find PMU `slots'. Missing kernel support?
-Run 'perf list' for a list of valid events
-
-Usage: perf stat [<options>] [<command>]
-
-   -e, --event <event>   event selector. use 'perf list' to list
-available events
-```
-
-Thanks,
-Ian
+- Arnaldo
