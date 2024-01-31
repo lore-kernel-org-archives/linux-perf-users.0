@@ -1,203 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3633610A;
-	Wed, 31 Jan 2024 19:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F473F8F7
+	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 20:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706729075; cv=none; b=t2bD7clOuO2ZAy09jpgUOJdn7XyMuSaob/7ogoRwOHAJNvx4Gv0RXpJcVbTUGBnoAz8pZGdRkGOHmHtPEyMpZKHnAMs6W8D27O6NQ+Y8ZKq2HC0aYfJLK24+mdHlwUKkLqi5FFUEkuP9J8COhD4QReooVvuOXnbuFMXvzqASg20=
+	t=1706732081; cv=none; b=ATj6WK95g63yC5n1+PJXwHaLmHhqx43XMZChKs0/YThseXzHrMLT+SwcR1vkq4BsPCTQlAd5GYXqgykHexHLQVe4YM/Yu/aAVkEsCZYWKiWXVLz8Y8NPBDNNR+kIrtnmTIjub8Xdr1UFjDIihP0byIxgL9mfIWiMe2SjORZUXQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706729075; c=relaxed/simple;
-	bh=T8MDEuGVKv/mgfa9CO6cBEqeOvKSrL1fjA0wmbjS61A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a4mT32vJR0b91kVIfB1t0nLSiEx8PSRsozsa/S6CPe0TcRDQbuKiB0M/PooaCKskTTgEQnHEnMsbSNCE+GudkFJwTWFJDJULcYO0zSIrrEwziYQ0BUlth7BmS5rugZPQ+J7GF94Qgjle6157OEr1hmNQlBQecItt0HMx8Y2jR6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QK4rhbG/; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706732081; c=relaxed/simple;
+	bh=Ax5JEIPjw4jWPtHEm7pQrjMLSrDe/wM672XsGNmMJ/0=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=fIXFZng1NxeNQUUdR35dOxyjPg0REyO+hPjljqGKWhXNR3hi6StKzno1FyvJBH7jYW7RRmHB28zDnXNp3AG5qfpEmsuxblYHpp5Hw362Ac/Poge739A6RcCr6DKwV2PM4PfFlqN/7+wQCuRhi+E6Nlykd2NNchXYa20N2mMrH68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uynVu288; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QK4rhbG/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706729074; x=1738265074;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=T8MDEuGVKv/mgfa9CO6cBEqeOvKSrL1fjA0wmbjS61A=;
-  b=QK4rhbG/vLXfdUU0iUVa1lthr4DQgqJh2KvRplk0d6hTXSbBM5ARm+a8
-   +qftyjtI4Q3oIkwWw9R13B8890BIweCgsESRrwVsiL4YQ6gIeZl/tVgOC
-   5UhQU+Qh2e+nBvQE+sA/CUn8v5gVdUi2rHqxnUbPtCmNlJ5p5AXqC0hCY
-   B32FHQUzrQalC5H+ZSueJNyzJFbQJrK6Vz+DXqz68So6iimGJC7hQm9m1
-   Q0O5sw+maEkn/WGwg0Nc/mLy58MHWZc8cyqLR8cspWuC092UDBtPBEyiS
-   PbuR+wv+DSv62UZKD383V9PpKvyUfJ80ssS2+zeLOmFVrr2/qPNPNTcMY
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3562151"
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="3562151"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 11:24:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="4269805"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.217.93])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 11:24:30 -0800
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf test: Enable Symbols test to work with a current module dso
-Date: Wed, 31 Jan 2024 21:24:16 +0200
-Message-Id: <20240131192416.16387-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uynVu288"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6040a34c24bso3118587b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 12:14:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706732078; x=1707336878; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e2rDkqb+E2xnp8mp8D2lOafAWaTbfc+6G88WUXMkCnU=;
+        b=uynVu288tuT6FM9IUjM89aS+6yNJbrhQ9ePKfKm2pzhiNhuMjVZU3Dj0CSSCcIiyaO
+         HsEDTIc9Q/z9RJgWfz46lEkCcmSx2VmiKNKS+EWZ+9Ttz6NuYBEIAV/30l+89NqQDsHg
+         gtI3BBgCMjmfQrKSKYj6OBXlDA+bO1F6xtG9O4pON+68N/326cXIqLfcujK6J/EIF3Wb
+         Bn5K0HpOXoYjeua2ET+Us13Yg1c01qFuJDpICEWOXHXJxVuZZ9ruFt9aS68j8FVnbGG1
+         jYG4UEepdhyIH8CkOKCdm2Cvxgpyr2ctJgrDBkH3QFI4Oc2s2pDcIl2XJHIKn9Xl/QnL
+         68Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706732078; x=1707336878;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e2rDkqb+E2xnp8mp8D2lOafAWaTbfc+6G88WUXMkCnU=;
+        b=GF0xoBwFWxka8QNGlOM9REj8IVPg3RoAfuHNyJM0Ms4+qWSrAng/7mBUd8MysTUlIg
+         npxCylumYtryXAjmDNoFPlCTJyqpyov3QSqzj7hA3L7P9NOoG0WmRugUl304NeYaDU3i
+         yPYCAytgDkQU7xJLujO3nUt3g2TtcAzLXHRxjRlRaQ/Dg62TNFu1zr9q7r1TlLfHlnTj
+         YyBRTyKQ1b90dc4RJffI5SxR+lnarp+M4fSRCgzT1glczNHqtK47VKGj02+ehamwToW3
+         Y4qpG3OC1S4xQhXSUhlkTiUumOawywtecoykPwQDr5Z8iKdCYdueGHShJhMFb00z2GRF
+         u7MA==
+X-Gm-Message-State: AOJu0Yzrs1cFs/3ydhO8P5ZicCZv0fUf6ess/SB7qnvPy2GF03knwp6s
+	N7G0noikl3l39kaylSjGvyfcIric1EZ6sbRSh2uxjIaexIsCNtpawf2+nk/TFrZyQ24c+XqJYFM
+	BMWMhRA==
+X-Google-Smtp-Source: AGHT+IFkL/HMYecG4pjlmM4yPPuHGrpUEc/72BDkAeeoCz3jqncXNV5/D+bTqDzVyiVwPgHnDVcvwQwGIfR7
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:16c5:1feb:bf99:a5d1])
+ (user=irogers job=sendgmr) by 2002:a05:690c:f85:b0:5f9:abfe:243c with SMTP id
+ df5-20020a05690c0f8500b005f9abfe243cmr424360ywb.3.1706732078491; Wed, 31 Jan
+ 2024 12:14:38 -0800 (PST)
+Date: Wed, 31 Jan 2024 12:14:29 -0800
+Message-Id: <20240131201429.792138-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Subject: [PATCH v1] perf jevents: Drop or simplify small integer values
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, John Garry <john.g.garry@oracle.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Weilin Wang <weilin.wang@intel.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Edward Baker <edward.baker@intel.com>, 
+	Perry Taylor <perry.taylor@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The test needs a struct machine and creates one for the current host,
-but a side-effect is that struct machine has set up kernel maps
-including module maps.
+Prior to this patch '0' would be dropped as the config values default
+to 0. Some json values are hex and the string '0' wouldn't match '0x0'
+as zero. Add a more robust is_zero test to drop these event terms.
 
-If the 'Symbols' test --dso option specifies a current kernel module,
-it will already be present as a kernel dso, and a map with kmaps needs
-to be used otherwise there will be a segfault - see below.
+When encoding numbers as hex, if the number is between 0 and 9
+inclusive then don't add a 0x prefix.
 
-For that case, find the existing map and use that. In that case also,
-the dso is split by section into multiple dsos, so test those dsos
-also. That in turn, shows up that those dsos have not had overlapping
-symbols removed, so the test fails.
+Update test expectations for these changes.
 
-Example:
+On x86 this reduces the event/metric C string by 58,411 bytes.
 
-  Before:
-
-    $ perf test -F -v Symbols --dso /lib/modules/$(uname -r)/kernel/arch/x86/kvm/kvm-intel.ko
-     70: Symbols                                                         :
-    --- start ---
-    Testing /lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko
-    Segmentation fault (core dumped)
-
-  After:
-
-    $ perf test -F -v Symbols --dso /lib/modules/$(uname -r)/kernel/arch/x86/kvm/kvm-intel.ko
-     70: Symbols                                                         :
-    --- start ---
-    Testing /lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko
-    Overlapping symbols:
-     41d30-41fbb l vmx_init
-     41d30-41fbb g init_module
-    ---- end ----
-    Symbols: FAILED!
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/symbols.c | 68 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ tools/perf/pmu-events/jevents.py | 23 ++++++++++++++++++++---
+ tools/perf/tests/pmu-events.c    | 22 +++++++++++-----------
+ 2 files changed, 31 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
-index 16e1c5502b09..2fed6d67f50f 100644
---- a/tools/perf/tests/symbols.c
-+++ b/tools/perf/tests/symbols.c
-@@ -41,6 +41,30 @@ static void exit_test_info(struct test_info *ti)
- 	machine__delete(ti->machine);
- }
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 53ab050c8fa4..2c7e5d61ce92 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -203,7 +203,7 @@ class JsonEvent:
  
-+struct dso_map {
-+	struct dso *dso;
-+	struct map *map;
-+};
-+
-+static int find_map_cb(struct map *map, void *d)
-+{
-+	struct dso_map *data = d;
-+
-+	if (map__dso(map) != data->dso)
-+		return 0;
-+	data->map = map;
-+	return 1;
-+}
-+
-+static struct map *find_module_map(struct machine *machine, struct dso *dso)
-+{
-+	struct dso_map data = { .dso = dso };
-+
-+	machine__for_each_kernel_map(machine, find_map_cb, &data);
-+
-+	return data.map;
-+}
-+
- static void get_test_dso_filename(char *filename, size_t max_sz)
- {
- 	if (dso_to_test)
-@@ -51,6 +75,26 @@ static void get_test_dso_filename(char *filename, size_t max_sz)
+     def llx(x: int) -> str:
+       """Convert an int to a string similar to a printf modifier of %#llx."""
+-      return '0' if x == 0 else hex(x)
++      return str(x) if x >= 0 and x < 10 else hex(x)
  
- static int create_map(struct test_info *ti, char *filename, struct map **map_p)
- {
-+	struct dso *dso = machine__findnew_dso(ti->machine, filename);
-+
-+	/*
-+	 * If 'filename' matches a current kernel module, must use a kernel
-+	 * map. Find the one that already exists.
-+	 */
-+	if (dso && dso->kernel) {
-+		*map_p = find_module_map(ti->machine, dso);
-+		dso__put(dso);
-+		if (!*map_p) {
-+			pr_debug("Failed to find map for curent kernel module %s",
-+				 filename);
-+			return TEST_FAIL;
-+		}
-+		map__get(*map_p);
-+		return TEST_OK;
-+	}
-+
-+	dso__put(dso);
-+
- 	/* Create a dummy map at 0x100000 */
- 	*map_p = map__new(ti->machine, 0x100000, 0xffffffff, 0, NULL,
- 			  PROT_EXEC, 0, NULL, filename, ti->thread);
-@@ -97,6 +141,26 @@ static int test_dso(struct dso *dso)
- 	return ret;
- }
+     def fixdesc(s: str) -> str:
+       """Fix formatting issue for the desc string."""
+@@ -294,6 +294,23 @@ class JsonEvent:
+       }
+       return table[unit] if unit in table else f'uncore_{unit.lower()}'
  
-+static int subdivided_dso_cb(struct dso *dso, struct machine *machine __maybe_unused, void *d)
-+{
-+	struct dso *text_dso = d;
++    def is_zero(val: str) -> bool:
++        try:
++            if val.startswith('0x'):
++                return int(val, 16) == 0
++            else:
++                return int(val) == 0
++        except e:
++            return False
 +
-+	if (dso != text_dso && strstarts(dso->short_name, text_dso->short_name))
-+		if (test_dso(dso) != TEST_OK)
-+			return -1;
++    def canonicalize_value(val: str) -> str:
++        try:
++            if val.startswith('0x'):
++                return llx(int(val, 16))
++            return str(int(val))
++        except e:
++            return val
 +
-+	return 0;
-+}
-+
-+static int process_subdivided_dso(struct machine *machine, struct dso *dso)
-+{
-+	int ret;
-+
-+	ret = machine__for_each_dso(machine, subdivided_dso_cb, dso);
-+
-+	return ret < 0 ? TEST_FAIL : TEST_OK;
-+}
-+
- static int test_file(struct test_info *ti, char *filename)
- {
- 	struct map *map = NULL;
-@@ -124,6 +188,10 @@ static int test_file(struct test_info *ti, char *filename)
- 	}
+     eventcode = 0
+     if 'EventCode' in jd:
+       eventcode = int(jd['EventCode'].split(',', 1)[0], 0)
+@@ -358,8 +375,8 @@ class JsonEvent:
+         ('RdWrMask', 'rdwrmask='),
+     ]
+     for key, value in event_fields:
+-      if key in jd and jd[key] != '0':
+-        event += ',' + value + jd[key]
++      if key in jd and not is_zero(jd[key]):
++        event += f',{value}{canonicalize_value(jd[key])}'
+     if filter:
+       event += f',{filter}'
+     if msr:
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index a56d32905743..47a7c3277540 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -70,7 +70,7 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
+ 	.event = {
+ 		.pmu = "default_core",
+ 		.name = "segment_reg_loads.any",
+-		.event = "event=0x6,period=200000,umask=0x80",
++		.event = "event=6,period=200000,umask=0x80",
+ 		.desc = "Number of segment register loads",
+ 		.topic = "other",
+ 	},
+@@ -82,7 +82,7 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
+ 	.event = {
+ 		.pmu = "default_core",
+ 		.name = "dispatch_blocked.any",
+-		.event = "event=0x9,period=200000,umask=0x20",
++		.event = "event=9,period=200000,umask=0x20",
+ 		.desc = "Memory cluster signals to block micro-op dispatch for any reason",
+ 		.topic = "other",
+ 	},
+@@ -94,11 +94,11 @@ static const struct perf_pmu_test_event eist_trans = {
+ 	.event = {
+ 		.pmu = "default_core",
+ 		.name = "eist_trans",
+-		.event = "event=0x3a,period=200000,umask=0x0",
++		.event = "event=0x3a,period=200000",
+ 		.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+ 		.topic = "other",
+ 	},
+-	.alias_str = "event=0x3a,period=0x30d40,umask=0",
++	.alias_str = "event=0x3a,period=0x30d40",
+ 	.alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+ };
  
- 	ret = test_dso(dso);
-+
-+	/* Module dso is split into many dsos by section */
-+	if (ret == TEST_OK && dso->kernel)
-+		ret = process_subdivided_dso(ti->machine, dso);
- out_put:
- 	map__put(map);
- 
+@@ -128,7 +128,7 @@ static const struct perf_pmu_test_event *core_events[] = {
+ static const struct perf_pmu_test_event uncore_hisi_ddrc_flux_wcmd = {
+ 	.event = {
+ 		.name = "uncore_hisi_ddrc.flux_wcmd",
+-		.event = "event=0x2",
++		.event = "event=2",
+ 		.desc = "DDRC write commands",
+ 		.topic = "uncore",
+ 		.long_desc = "DDRC write commands",
+@@ -156,13 +156,13 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
+ static const struct perf_pmu_test_event uncore_hyphen = {
+ 	.event = {
+ 		.name = "event-hyphen",
+-		.event = "event=0xe0,umask=0x00",
++		.event = "event=0xe0",
+ 		.desc = "UNC_CBO_HYPHEN",
+ 		.topic = "uncore",
+ 		.long_desc = "UNC_CBO_HYPHEN",
+ 		.pmu = "uncore_cbox",
+ 	},
+-	.alias_str = "event=0xe0,umask=0",
++	.alias_str = "event=0xe0",
+ 	.alias_long_desc = "UNC_CBO_HYPHEN",
+ 	.matching_pmu = "uncore_cbox_0",
+ };
+@@ -170,13 +170,13 @@ static const struct perf_pmu_test_event uncore_hyphen = {
+ static const struct perf_pmu_test_event uncore_two_hyph = {
+ 	.event = {
+ 		.name = "event-two-hyph",
+-		.event = "event=0xc0,umask=0x00",
++		.event = "event=0xc0",
+ 		.desc = "UNC_CBO_TWO_HYPH",
+ 		.topic = "uncore",
+ 		.long_desc = "UNC_CBO_TWO_HYPH",
+ 		.pmu = "uncore_cbox",
+ 	},
+-	.alias_str = "event=0xc0,umask=0",
++	.alias_str = "event=0xc0",
+ 	.alias_long_desc = "UNC_CBO_TWO_HYPH",
+ 	.matching_pmu = "uncore_cbox_0",
+ };
+@@ -184,7 +184,7 @@ static const struct perf_pmu_test_event uncore_two_hyph = {
+ static const struct perf_pmu_test_event uncore_hisi_l3c_rd_hit_cpipe = {
+ 	.event = {
+ 		.name = "uncore_hisi_l3c.rd_hit_cpipe",
+-		.event = "event=0x7",
++		.event = "event=7",
+ 		.desc = "Total read hits",
+ 		.topic = "uncore",
+ 		.long_desc = "Total read hits",
+@@ -265,7 +265,7 @@ static const struct perf_pmu_test_event sys_ccn_pmu_read_cycles = {
+ static const struct perf_pmu_test_event sys_cmn_pmu_hnf_cache_miss = {
+ 	.event = {
+ 		.name = "sys_cmn_pmu.hnf_cache_miss",
+-		.event = "eventid=0x1,type=0x5",
++		.event = "eventid=1,type=5",
+ 		.desc = "Counts total cache misses in first lookup result (high priority)",
+ 		.topic = "uncore",
+ 		.pmu = "uncore_sys_cmn_pmu",
 -- 
-2.34.1
+2.43.0.429.g432eaa2c6b-goog
 
