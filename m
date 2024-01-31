@@ -1,77 +1,92 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF106A00F;
-	Tue, 30 Jan 2024 20:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A79363
+	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 00:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706648350; cv=none; b=R76CVF3SyHLH2c4de1wr0/9G+dxR8PwT+Yw1IuETvgYy1nhEzB0XbfGhEsS+kXePRh/Yb8/5hio1M5uQ2EuebPLbpm0wKJpXQZItitXxVFk8sXEXHwnDQ7bYovjdMamR/tCYXxYJmoAylk+4/SA2R3J5F9XGSjG+dEQBUV2L+3Q=
+	t=1706660232; cv=none; b=B4OlBH2DKZcS9CnNzIUuHAgrtqRP5sqVA6twXkUnY6giFz2xplg76AY9U2HOxoiIgD83DheRBV5Ag1tllJvRrm8jjfuHXSTh1qGZGkEBpHE0iWZcK9lwVp5B+pWt7nqrKYlMJqF3yrwYPMyKiZiBS7I/DP+Jx/zjQMpmd+hIvDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706648350; c=relaxed/simple;
-	bh=MJJXb4qG2owFQ8t6ZUQMC31iJNYtleq0l6H3DZgMq7s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dtup2BUlmTBlld6EeTnf8w+g2FGUecPR39tHAvj/N5qWIn00IWoiNSNcAiGtEnP31qKKtPUESQeYAOM8fWwTiJ0KHCVO2HZqPE+KCn5GVC/8BEOGGmanGyiiBbx4H9wJi/pFFpEyiXSk6w70IxDiOQfeE7RZPETs+FfHPX3Vo0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=H6jT2K0w; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="H6jT2K0w"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net BAAAB41A47
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1706648347; bh=vRKu2O/0VPzoBZOtxNzJJj2/lV4jOxX7B02gcKXYkV8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=H6jT2K0wd4Q1sbqGP0dO9KBXWHIMmBwpf1ZLGQbfFE0jLFDSam3yYaMKU9C4OFAlB
-	 mTFTOSYbDUyHYSd7ERV+KYeCcY8/j0RbgkreeIe874YqiERc0/UWTXno2oLxBRCwD7
-	 9Y5+RHU6QGPpencdsfLbRcAfM67F2XftD8SxFpm0U06JreMmMeWsj4xAmxIn6jsA7K
-	 /SdaIqOU1K/YBAwbX9BN2d3heZ9GJP4mh+Vkw5dk+Yw7dScwdygEPm/EfauGuvYiQS
-	 yBzhuncio/SVDkruYfLtlV7V5NtKGV/MOWb+MmLeYyqWqDo1IZX7EzsmjcnIoQR0tu
-	 qba1bKL6JhGEg==
-Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id BAAAB41A47;
-	Tue, 30 Jan 2024 20:59:07 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Leo Yan <leo.yan@linaro.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Ian Rogers <irogers@google.com>, Thomas Richter
- <tmricht@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Adrian
- Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Ingo
- Molnar <mingo@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v8] Documentation: userspace-api: Document perf ring
- buffer mechanism
-In-Reply-To: <20240102085001.228815-1-leo.yan@linaro.org>
-References: <20240102085001.228815-1-leo.yan@linaro.org>
-Date: Tue, 30 Jan 2024 13:59:06 -0700
-Message-ID: <87sf2ea679.fsf@meer.lwn.net>
+	s=arc-20240116; t=1706660232; c=relaxed/simple;
+	bh=KwKhk0ly1qcZSHTw4wHNizU0tG72WrpaT4ovmkbAmYQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GFY+6rV9lUSNPXTHzCieTTzOq7q5KgaO9RL00LFYzXjtuRWItdBtgDbqvun9+1ffFJbnd9akkcxiGhzXCWLmTf+HikH9epoKFSH7BWKptelqr7Wf1MBeZiAOHNj/8JZIjcq2NRbbVlqGVFfhGTELa0Wu5umyDlz92/C+Ww9XFZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5986d902ae6so2779455eaf.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Jan 2024 16:17:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706660230; x=1707265030;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/UDsTsRelxoU8Mo567YSPLBAQgbgDIHAcVOQ/uXHGPg=;
+        b=t8PijWH0Ndsmh7LYMYw0HXrM2/ILExvI3xlGkSULLUxL2nnFZd4N82PwcYJ48ISlti
+         /VGw5lGYnG2i8ievHcLdcHO6dZeueMJ9DIjzxnfdKiMs3+/2yll1nkpCAYuo6sWmKTwW
+         P9mcPSerz0lObhV6iqEWNLfBXHrQr5vtc0xxpmdNDgtXCq9XjXNKE2oaia3bDwmEximn
+         Ho5a95ebMp5pBpPyDL7WG6QGwx4IDid3mPiZZbj0idUf0FXVmzcedEIO8y86DXwXaQeq
+         2rK6ltpF6aK4qwQops6AQvDUMwzOvPbyEBWLAXZILLXmANVSkTzwmBFYkpVY1gDCe/cU
+         3haw==
+X-Gm-Message-State: AOJu0YynJ2oRQLJ0yg9oX1I2tARWurqCEGaGHMJpKocDIQKLDz62C2+J
+	KD0RxON1DLU1GqJlxAqlIQYz5vOuymeR/rH15DtVTSPr5o64jQyhLD9hEudb+nI+xoa2ssejYnU
+	XEj7taTQCiwpwmOAvHsRa7HJV7vs=
+X-Google-Smtp-Source: AGHT+IF0UO3Ofrc0zgCfTw+TZuCyoXAM/eraGUQxWUin50af3BONTezzDrbycHcpmrlYdfar4CMGhpDNkJT21MhfeY4=
+X-Received: by 2002:a05:6358:99a8:b0:178:99cc:e52e with SMTP id
+ j40-20020a05635899a800b0017899cce52emr2085167rwb.20.1706660229968; Tue, 30
+ Jan 2024 16:17:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240130185552.150578-1-ak@linux.intel.com>
+In-Reply-To: <20240130185552.150578-1-ak@linux.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 30 Jan 2024 16:16:58 -0800
+Message-ID: <CAM9d7choHiivk9i3_iKLPCwRwEyrc-tSereLt4Aw7orzW2x3Ew@mail.gmail.com>
+Subject: Re: [PATCH] perf report: Prevent segfault with --no-parent
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Leo Yan <leo.yan@linaro.org> writes:
+Hi Andi,
 
-> In the Linux perf tool, the ring buffer serves not only as a medium for
-> transferring PMU event data but also as a vital mechanism for hardware
-> tracing using technologies like Intel PT and Arm CoreSight, etc.
+On Tue, Jan 30, 2024 at 10:56=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wr=
+ote:
 >
-> Consequently, the ring buffer mechanism plays a crucial role by ensuring
-> high throughput for data transfer between the kernel and user space
-> while avoiding excessive overhead caused by the ring buffer itself.
+> Prevent a perf report segfault with the (non sensical) --no-parent
+> option
 >
-> This commit documents the ring buffer mechanism in detail.  It explains
-> the implementation of both the regular ring buffer and the AUX ring
-> buffer.  Additionally, it covers how these ring buffers support various
-> tracing modes and explains the synchronization with memory barriers.
->
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-By: Andi Kleen <ak@linux.intel.com>
+
+Acked-by: Namhyung <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
 > ---
-
-Applied, thanks.
-
-jon
+>  tools/perf/util/sort.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index 30254eb63709..92a1bd695e8a 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -3372,7 +3372,7 @@ int sort_dimension__add(struct perf_hpp_list *list,=
+ const char *tok,
+>                                 sort_dimension_add_dynamic_header(sd);
+>                 }
+>
+> -               if (sd->entry =3D=3D &sort_parent) {
+> +               if (sd->entry =3D=3D &sort_parent && parent_pattern) {
+>                         int ret =3D regcomp(&parent_regex, parent_pattern=
+, REG_EXTENDED);
+>                         if (ret) {
+>                                 char err[BUFSIZ];
+> --
+> 2.43.0
+>
+>
