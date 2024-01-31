@@ -1,158 +1,338 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2132D69DE2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409416DD01
 	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 11:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706701200; cv=none; b=h6GO1n8V3zPCueU6dQWHr3tFDjRWcNbck8hyh/jWwhxNv15ys9ylK5UQoUKBY8+yeXLxwsUt6TiomKDHpWCH1auqSDPJhVRKuZi0LHLK09S3nfCnhofdwsEIxs6wedCqqk5MOBV4oANlR1fyE9DvgjUP1ISqCtvUe8zP8wy3kzQ=
+	t=1706701201; cv=none; b=nCifMDTnB+7syjfG7W+wkKPJVcgf9OnvgaLkrpEpI7N1R6wdM9B8AHvzatCSRcHeQY7fqDjjYIIg0xVgZ3F5lo01vEA0dtco+JNNoHXzuM5mhN6kToRqxV2iD8h3faBq1WB7H7fUWeXYm+mL0f9o/WZSDgQounpEXyv13+f/tAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706701200; c=relaxed/simple;
-	bh=Ja2wyTqd6TawugghFGrlGAbkXGQU1r4jistN0Fpp3hk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=l1Iv5MM9t+/JcGqZ/v+bUGIWiA1mxdjXABG5TAh7JqgBHrbcHZqieLqhmhP2zBLnsTf9EiZFrZJmf68wS9nwOJBL/R498bmi691pv1n9D5p7mltxfmL02eGaevHb11oG2fMt8h+tKllNwRaB1N1P4guPGUSu9L0O4dBXnzhZlRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E+gJXbjT; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1706701201; c=relaxed/simple;
+	bh=su4xQoS8OsswbigucYQh+l/flsRyuirrWo7e7gChbVY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=oraQQ1BfmVOolxL/YN3KjFkvH3ARRnrXKQSB25R3y0NYFl6535fUKSU5eHqzrdBDHE/0kO1k+KfyYVASAs6WfBpWG6/fwPiRK0XCIph216DEf+CLf/XyIOkch7f4RT/gwQo8iZJwuoJ/7qiT/VS4pF0sQCivDQPiVXasAtGGqrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sew52pnz; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E+gJXbjT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sew52pnz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1706701198;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-	bh=RGB0zeVyPSdtr0KY627eXELrXuq4JNgDew1+NFMFRBY=;
-	b=E+gJXbjTDpBKNP25OVKy6wSywPgVUSYrGeoTQGKxZDiA8FcNDX6llIgpN3x35wOA3cUtZn
-	mIc7ILlCGi3j6EPktDpmYpVCX2GRzB3bwtoGb4wEf5pe1//Ht9RiAgA/39Mv6RtmmvjXxl
-	4KFohu/wwSuI5j42adl6cNmPduOOugE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-683-NvZxB7fPPxe-xoy0CXaaLg-1; Wed,
- 31 Jan 2024 06:39:56 -0500
-X-MC-Unique: NvZxB7fPPxe-xoy0CXaaLg-1
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XmGDP6vdnMewoOgMPRlkH8/KZYASd+P88cnuSRMBaAw=;
+	b=Sew52pnzUnv6KRJsltrWKZblOlNKgbNSw+Xih0S2lmoeMIOAg9e1j8um8WiVpGtXNeCCVf
+	zMZjzrJqRq7icI76egnuwHVOlh1+ehSNdrxVxrE0JulO843un+I8oclQw9KKCuo7nhLpL6
+	Z3x98Ua4Occ296oh/SenyVRNyja4FPA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-654-n7iYNo0NMQ2NVnX7NG5QJQ-1; Wed, 31 Jan 2024 06:39:54 -0500
+X-MC-Unique: n7iYNo0NMQ2NVnX7NG5QJQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0CE633C2E0A9;
-	Wed, 31 Jan 2024 11:39:56 +0000 (UTC)
-Received: from Diego.redhat.com (unknown [10.39.208.45])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A90BAC1ED63;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 56FD6863010;
 	Wed, 31 Jan 2024 11:39:54 +0000 (UTC)
+Received: from Diego.redhat.com (unknown [10.39.208.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id BE796C1ED63;
+	Wed, 31 Jan 2024 11:39:52 +0000 (UTC)
 From: Michael Petlan <mpetlan@redhat.com>
 To: linux-perf-users@vger.kernel.org,
 	vmolnaro@redhat.com,
 	acme@redhat.com,
 	acme@kernel.org
 Cc: mhiramat@kernel.org
-Subject: [PATCH 2/7] perf testsuite: Add common setting for shell tests
-Date: Wed, 31 Jan 2024 12:39:46 +0100
-Message-Id: <20240131113951.17077-2-mpetlan@redhat.com>
-In-Reply-To: <20240131113951.17077-1-mpetlan@redhat.com>
-References: <20240131113951.17077-1-mpetlan@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Subject: [PATCH 1/7] perf testsuite: Add common regex patters
+Date: Wed, 31 Jan 2024 12:39:45 +0100
+Message-Id: <20240131113951.17077-1-mpetlan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
 From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Add settings defining sample commands later shared by shell tests. This
-adds the possibility to globally adjust the default values for the whole
-testsuite.
+Unify perf regexes for checking testing output into a single file
+to reduce duplicates and prevent errors when editing.
+
+This will be used in upcomming patches in shell tests.
 
 Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- tools/perf/tests/shell/common/settings.sh | 79 +++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 tools/perf/tests/shell/common/settings.sh
+ tools/perf/tests/shell/common/patterns.sh | 256 ++++++++++++++++++++++
+ 1 file changed, 256 insertions(+)
+ create mode 100644 tools/perf/tests/shell/common/patterns.sh
 
-diff --git a/tools/perf/tests/shell/common/settings.sh b/tools/perf/tests/shell/common/settings.sh
+diff --git a/tools/perf/tests/shell/common/patterns.sh b/tools/perf/tests/shell/common/patterns.sh
 new file mode 100644
-index 000000000000..361641dbaaad
+index 000000000000..919a07b8b454
 --- /dev/null
-+++ b/tools/perf/tests/shell/common/settings.sh
-@@ -0,0 +1,79 @@
++++ b/tools/perf/tests/shell/common/patterns.sh
+@@ -0,0 +1,256 @@
 +# SPDX-License-Identifier: GPL-2.0
++
++export RE_NUMBER="[0-9\.]+"
++# Number
++# Examples:
++#    123.456
++
++
++export RE_NUMBER_HEX="[0-9A-Fa-f]+"
++# Hexadecimal number
++# Examples:
++#    1234
++#    a58d
++#    aBcD
++#    deadbeef
++
++
++export RE_DATE_YYYYMMDD="[0-9]{4}-(?:(?:01|03|05|07|08|10|12)-(?:[0-2][0-9]|3[0-1])|02-[0-2][0-9]|(?:(?:04|06|09|11)-(?:[0-2][0-9]|30)))"
++# Date in YYYY-MM-DD form
++# Examples:
++#    1990-02-29
++#    0015-07-31
++#    2456-12-31
++#!   2012-13-01
++#!   1963-09-31
++
++
++export RE_TIME="(?:[0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
++# Time
++# Examples:
++#    15:12:27
++#    23:59:59
++#!   24:00:00
++#!   11:25:60
++#!   17:60:15
++
++
++export RE_DATE_TIME="\w+\s+\w+\s+$RE_NUMBER\s+$RE_TIME\s+$RE_NUMBER"
++# Time and date
++# Examples:
++#    Wed Feb 12 10:46:26 2020
++#    Mon Mar  2 13:27:06 2020
++#!   St úno 12 10:57:21 CET 2020
++#!   Po úno 14 15:17:32 2010
++
++
++export RE_ADDRESS="0x$RE_NUMBER_HEX"
++# Memory address
++# Examples:
++#    0x123abc
++#    0xffffffff9abe8ae8
++#    0x0
++
++
++export RE_ADDRESS_NOT_NULL="0x[0-9A-Fa-f]*[1-9A-Fa-f]+[0-9A-Fa-f]*"
++# Memory address (not NULL)
++# Examples:
++#    0xffffffff9abe8ae8
++#!   0x0
++#!   0x0000000000000000
++
++export RE_PROCESS_PID="\w+\/\d+"
++# A process with PID
++# Example:
++#    sleep/4102
++
++
++export RE_EVENT_ANY="[\w\-\:\/_=,]+"
++# Name of any event (universal)
++# Examples:
++#    cpu-cycles
++#    cpu/event=12,umask=34/
++#    r41e1
++#    nfs:nfs_getattr_enter
++
++
++export RE_EVENT="[\w\-:_]+"
++# Name of an usual event
++# Examples:
++#    cpu-cycles
++
++
++export RE_EVENT_RAW="r$RE_NUMBER_HEX"
++# Specification of a raw event
++# Examples:
++#    r41e1
++#    r1a
++
++
++export RE_EVENT_CPU="cpu/(\w+=$RE_NUMBER_HEX,?)+/p*"
++# Specification of a CPU event
++# Examples:
++#    cpu/event=12,umask=34/pp
++
++
++export RE_EVENT_UNCORE="uncore/[\w_]+/"
++# Specification of an uncore event
++# Examples:
++#    uncore/qhl_request_local_reads/
++
++
++export RE_EVENT_SUBSYSTEM="[\w\-]+:[\w\-]+"
++# Name of an event from subsystem
++# Examples:
++#    ext4:ext4_ordered_write_end
++#    sched:sched_switch
++
++
++export RE_FILE_NAME="[\w\+\.-]+"
++# A filename
++# Examples:
++#    libstdc++.so.6
++#!   some/path
++
++
++export RE_PATH_ABSOLUTE="(?:\/$RE_FILE_NAME)+"
++# A full filepath
++# Examples:
++#    /usr/lib64/somelib.so.5.4.0
++#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
++#    /usr/bin/mv
++#!   some/relative/path
++#!   ./some/relative/path
++
++
++export RE_PATH="(?:$RE_FILE_NAME)?$RE_PATH_ABSOLUTE"
++# A filepath
++# Examples:
++#    /usr/lib64/somelib.so.5.4.0
++#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
++#    ./.emacs
++#    src/fs/file.c
++
++
++export RE_DSO="(?:$RE_PATH_ABSOLUTE(?: \(deleted\))?|\[kernel\.kallsyms\]|\[unknown\]|\[vdso\]|\[kernel\.vmlinux\][\.\w]*)"
++# A DSO name in various result tables
++# Examples:
++#    /usr/lib64/somelib.so.5.4.0
++#    /usr/bin/somebinart (deleted)
++#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
++#    [kernel.kallsyms]
++#    [kernel.vmlinux]
++#    [vdso]
++#    [unknown]
++
++
++export RE_LINE_COMMENT="^#.*"
++# A comment line
++# Examples:
++#    # Started on Thu Sep 10 11:43:00 2015
++
++
++export RE_LINE_EMPTY="^\s*$"
++# An empty line with possible whitespaces
++# Examples:
 +#
-+#	settings.sh
-+#	Author: Michael Petlan <mpetlan@redhat.com>
-+#
-+#	Description:
-+#
-+#		This file contains global settings for the whole testsuite.
-+#	Its purpose is to make it easier when it is necessary i.e. to
-+#	change the usual sample command which is used in all of the tests
-+#	in many files.
-+#
-+#		This file is intended to be sourced in the tests.
-+#
-+
-+#### which perf to use in the testing
-+export CMD_PERF=${CMD_PERF:-`which perf`}
-+
-+#### basic programs examinated by perf
-+export CMD_BASIC_SLEEP="sleep 0.1"
-+export CMD_QUICK_SLEEP="sleep 0.01"
-+export CMD_LONGER_SLEEP="sleep 2"
-+export CMD_DOUBLE_LONGER_SLEEP="sleep 4"
-+export CMD_VERY_LONG_SLEEP="sleep 30"
-+export CMD_SIMPLE="true"
-+
-+#### testsuite run mode
-+# define constants:
-+export RUNMODE_BASIC=0
-+export RUNMODE_STANDARD=1
-+export RUNMODE_EXPERIMENTAL=2
-+# default runmode is STANDARD
-+export PERFTOOL_TESTSUITE_RUNMODE=${PERFTOOL_TESTSUITE_RUNMODE:-$RUNMODE_STANDARD}
-+
-+#### common settings
-+export TESTLOG_VERBOSITY=${TESTLOG_VERBOSITY:-2}
-+export TESTLOG_FORCE_COLOR=${TESTLOG_FORCE_COLOR:-n}
-+export TESTLOG_ERR_MSG_MAX_LINES=${TESTLOG_ERR_MSG_MAX_LINES:-20}
-+export TESTLOG_CLEAN=${TESTLOG_CLEAN:-y}
-+
-+#### other environment-related settings
-+export TEST_IGNORE_MISSING_PMU=${TEST_IGNORE_MISSING_PMU:-n}
-+
-+#### clear locale
-+export LC_ALL=C
-+
-+#### colors
-+if [ -t 1 -o "$TESTLOG_FORCE_COLOR" = "yes" ]; then
-+	export MPASS="\e[32m"
-+	export MALLPASS="\e[1;32m"
-+	export MFAIL="\e[31m"
-+	export MALLFAIL="\e[1;31m"
-+	export MWARN="\e[1;35m"
-+	export MSKIP="\e[33m"
-+	export MHIGH="\e[1;33m"
-+	export MEND="\e[m"
-+else
-+	export MPASS=""
-+	export MALLPASS=""
-+	export MFAIL=""
-+	export MALLFAIL=""
-+	export MWARN=""
-+	export MSKIP=""
-+	export MHIGH=""
-+	export MEND=""
-+fi
 +
 +
-+#### test parametrization
-+if [ ! -d ./common ]; then
-+	# set parameters based on runmode
-+	if [ -f ../common/parametrization.$PERFTOOL_TESTSUITE_RUNMODE.sh ]; then
-+		. ../common/parametrization.$PERFTOOL_TESTSUITE_RUNMODE.sh
-+	fi
-+	# if some parameters haven't been set until now, set them to default
-+	if [ -f ../common/parametrization.sh ]; then
-+		. ../common/parametrization.sh
-+	fi
-+fi
++export RE_LINE_RECORD1="^\[\s+perf\s+record:\s+Woken up $RE_NUMBER times? to write data\s+\].*$"
++# The first line of perf-record "OK" output
++# Examples:
++#    [ perf record: Woken up 1 times to write data ]
++
++
++export RE_LINE_RECORD2="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\.data(?:\.\d+)?\s*\(~?$RE_NUMBER samples\)\s+\].*$"
++# The second line of perf-record "OK" output
++# Examples:
++#    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB perf.data (~109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB /some/temp/dir/perf.data (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB ./perf.data (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB ./perf.data.3 (109 samples) ]
++
++
++export RE_LINE_RECORD2_TOLERANT="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\.data(?:\.\d+)?\s*(?:\(~?$RE_NUMBER samples\))?\s+\].*$"
++# The second line of perf-record "OK" output, even no samples is OK here
++# Examples:
++#    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB perf.data (~109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB /some/temp/dir/perf.data (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB ./perf.data (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB ./perf.data.3 (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB perf.data ]
++
++
++export RE_LINE_RECORD2_TOLERANT_FILENAME="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\w*\.data(?:\.\d+)?\s*\(~?$RE_NUMBER samples\)\s+\].*$"
++# The second line of perf-record "OK" output
++# Examples:
++#    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB perf_ls.data (~109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB perf_aNyCaSe.data (109 samples) ]
++#    [ perf record: Captured and wrote 0.405 MB ./perfdata.data.3 (109 samples) ]
++#!    [ perf record: Captured and wrote 0.405 MB /some/temp/dir/my_own.data (109 samples) ]
++#!    [ perf record: Captured and wrote 0.405 MB ./UPPERCASE.data (109 samples) ]
++#!    [ perf record: Captured and wrote 0.405 MB ./aNyKiNDoF.data.3 (109 samples) ]
++#!    [ perf record: Captured and wrote 0.405 MB perf.data ]
++
++
++export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+\-?$RE_NUMBER|$RE_NUMBER_HEX.*$"
++# A line of perf-trace output
++# Examples:
++#    0.115 ( 0.005 ms): sleep/4102 open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
++#    0.157 ( 0.005 ms): sleep/4102 mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
++
++export RE_LINE_TRACE_ONE_PROC="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\w+\(.*\)\s+=\s+(?:\-?$RE_NUMBER)|(?:0x$RE_NUMBER_HEX).*$"
++# A line of perf-trace output
++# Examples:
++#    0.115 ( 0.005 ms): open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
++#    0.157 ( 0.005 ms): mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
++
++export RE_LINE_TRACE_CONTINUED="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\.\.\.\s*\[continued\]:\s+\w+\(\).*\s+=\s+(?:\-?$RE_NUMBER)|(?:0x$RE_NUMBER_HEX).*$"
++# A line of perf-trace output
++# Examples:
++#    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0
++#    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0x00000000
++
++export RE_LINE_TRACE_SUMMARY_HEADER="\s*syscall\s+calls\s+(?:errors\s+)?total\s+min\s+avg\s+max\s+stddev"
++# A header of a perf-trace summary table
++# Example:
++#    syscall            calls    total       min       avg       max      stddev
++#    syscall            calls  errors  total       min       avg       max       stddev
++
++
++export RE_LINE_TRACE_SUMMARY_CONTENT="^\s*\w+\s+(?:$RE_NUMBER\s+){5,6}$RE_NUMBER%"
++# A line of a perf-trace summary table
++# Example:
++#    open                   3     0.017     0.005     0.006     0.007     10.90%
++#    openat                 2      0     0.017     0.008     0.009     0.010     12.29%
++
++
++export RE_LINE_REPORT_CONTENT="^\s+$RE_NUMBER%\s+\w+\s+\S+\s+\S+\s+\S+" # FIXME
++# A line from typicap perf report --stdio output
++# Example:
++#     100.00%  sleep    [kernel.vmlinux]  [k] syscall_return_slowpath
++
++
++export RE_TASK="\s+[\w~\/ \.\+:#-]+(?:\[-1(?:\/\d+)?\]|\[\d+(?:\/\d+)?\])"
++# A name of a task used for perf sched timehist -s
++# Example:
++#     sleep[62755]
++#     runtest.sh[62762]
++#     gmain[705/682]
++#     xfsaild/dm-0[495]
++#     kworker/u8:1-ev[62714]
++#     :-1[-1/62756]
++#     :-1[-1]
++#     :-1[62756]
++
++
++export RE_SEGFAULT=".*(?:Segmentation\sfault|SIGSEGV|\score\s|dumped|segfault).*"
++# Possible variations of the segfault message
++# Example:
++#     /bin/bash: line 1:    32 Segmentation fault      timeout 15s
++#     Segmentation fault (core dumped)
++#     Program terminated with signal SIGSEGV
++#!     WARNING: 12323431 isn't a 'cpu_core', please use a CPU list in the 'cpu_core' range (0-15)
 -- 
 2.43.0
 
