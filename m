@@ -1,349 +1,312 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CD195D473;
-	Thu,  1 Feb 2024 13:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48FA5F464
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Feb 2024 14:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706795992; cv=none; b=FOSgmlC/h9NPaBXSqnV8ltpPcRTRACV95AagCTlySg66iWkyNru95vT13VXcS1z/GFuaBJOCLFFPG6+nWIcvfK3LHONlkmtJ53VwWAjELhL/dzTgaTVYTC/VG3w0UQCLNsBDiJRvRervwyYZZaKLisydSAFWxj3ehghO7YLsNcQ=
+	t=1706797505; cv=none; b=XzXVj+QC0ctQeQUIWsX6pgKmdLgjvl42SZEjlskV627ANDkCRxUZBhEs/Yn13WIXkmjqNuezfjXxnS8XjOYpdpLdjZVvmhqLGTvAA5JZ5/dTPmUWxF8gFF5LzpxVMeT2WLlwPFc+j11sxhcDnuWXGL2E+2AwLRn219Wm86eIrLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706795992; c=relaxed/simple;
-	bh=K7q5cSAIeTM8WqX9EyF/nwFh8i796tFFyNlq5vThvZk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=I7bXBk4tSZW+ao3Z6Ydmu6DafXsj9n8UH3/NMRXTU0IHhF3WPG9sC66OrpY2VTyNqo+hbMInEFmUq9CSGeLRNBJ70PiA+/JD+8wGTlkQkcfJHUxvKQJlh4Yzvq7enBc74eMdrcUh/pm5bvI3YLGqNZzQSh7b9DEMAwYnMJRj9Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 815F6DA7;
-	Thu,  1 Feb 2024 06:00:32 -0800 (PST)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BC9D3F762;
-	Thu,  1 Feb 2024 05:59:48 -0800 (PST)
-Message-ID: <a86103e9-fe26-70ec-7cbd-4a67c68f165d@arm.com>
-Date: Thu, 1 Feb 2024 13:59:46 +0000
+	s=arc-20240116; t=1706797505; c=relaxed/simple;
+	bh=urTC8c/x4GjOmh3DyV8iK3vfUq7I4Kdkr8Ip1YAlpbU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kpbUHgXAqb/spuck1yA15L/lzVsZceUMKqpBJRwFQhF//jl3hOuO5TGj3jO3Cr/GosHQ7N8iAGlMrADWCoK9vSQbtRS/XduiIRoUAJkRUkjc4JsSIaMGvcuJdRtRFlizIl8rH/OynYymlhLPghIHB3nq2HK50IlGCNYeReEocLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vIA7Zmft; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vIA7Zmft"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d89f0ab02bso101675ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Feb 2024 06:25:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706797503; x=1707402303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3oik3gsH7UCRMxBdMG02de4OGV898umiHRSHwrLUdZI=;
+        b=vIA7ZmftqW1QTWmyWPq9JEbOmBVd8wve5m8oPT7SROsE3310AomOg28ZHVHk/uYyOO
+         R5uzmYW5fsNgdv9qw7AlmlBltH76NW+N6kjoamqTj2lcS25gOPFZ5pICobcfAsGeauMF
+         mqkQ9V9kJ8MxLkYEbKieEz8GJD+AVFt6A3J+tpmMnj+KOQ7ID9aCY6SYImXgAQz40psM
+         gDELNuES+y1I1SZda7P+mJmH8Co7iQrHKsH6PTP2ZADsiRFWFewKIuS1Yh15sMw3858m
+         ova2xsQDxokCUNlX5eOYK0ZDaAyOt4vEcxMKEx1yQtq2FS2v9ru2WkBxQu+xMX+HPsCh
+         HTsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706797503; x=1707402303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3oik3gsH7UCRMxBdMG02de4OGV898umiHRSHwrLUdZI=;
+        b=AwHciRwr05nDDlK1oRuE1SeQUJ+PgRA9glmneSEh56K8RRKvRdUbugImerDSH0t7/P
+         DGDLuXiInjZ/lSpKPBi4V5WmkZwgQyvW9JxkMyOQBuqzjcpsW0PZOeu3yaF2V4lrOPYR
+         FCFDbflMmwI1Ii/xiajVH31AVz4mdxrfiiv0adYfYdwdNaVSqLBO3jzbwqiAwt4tygnK
+         q0NrNzPUsFnFj46sS68/kQW4yMIfG6hViUIDxk8EntCnOrDkHCnfj89LTmkJezd42+Oz
+         ZZLrfPBYwUXtgs7FovTXQBWOMJPSdaa+54mKMboRS/MqEq3BlNoqiAqmU5SeumQGrKRi
+         IaOg==
+X-Gm-Message-State: AOJu0YyD0858/x+lhnv37O3dSH56XxW6ZH9HfNbfJttxvgD7aznStKEO
+	jvRcIGOt6esMuBqvXL7c8JfJyprCHVuNN8D55cTav57ZUxSB7UdKjEP8f81T7lpWBDVoeLAYFI5
+	AGJ1bzyn7nDI8FUNXcTNOSmcBXsnoplrfHU4IpVig8QIK5dekIUqunN4=
+X-Google-Smtp-Source: AGHT+IHI1zkSF24WGgfobv3gzLaErXwwm+tRmNbiHxBAsTDDC816FuOmnpUy05KzuzVXoUjvif2HUxanJbXCQ6xr+OI=
+X-Received: by 2002:a17:903:41cb:b0:1d8:fc6f:e1da with SMTP id
+ u11-20020a17090341cb00b001d8fc6fe1damr245879ple.2.1706797502666; Thu, 01 Feb
+ 2024 06:25:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 3/3] perf parse-events: Print all errors
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>
-References: <20240131134940.593788-1-irogers@google.com>
- <20240131134940.593788-3-irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, tchen168@asu.edu,
- Michael Petlan <mpetlan@redhat.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240131134940.593788-3-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240201042236.1538928-1-irogers@google.com> <20240201042236.1538928-4-irogers@google.com>
+ <9d177173-c66f-a0d3-ba4d-2261f8663fce@arm.com>
+In-Reply-To: <9d177173-c66f-a0d3-ba4d-2261f8663fce@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 1 Feb 2024 06:24:51 -0800
+Message-ID: <CAP-5=fVDjOfM8rZStYJCFPcTD3uhJDNSf_=JrkwYjFrnoOLC=w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] perf arm-spe/cs-etm: Directly iterate CPU maps
+To: James Clark <james.clark@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
+	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 1, 2024 at 3:25=E2=80=AFAM James Clark <james.clark@arm.com> wr=
+ote:
+>
+>
+>
+> On 01/02/2024 04:22, Ian Rogers wrote:
+> > Rather than iterate all CPUs and see if they are in CPU maps, directly
+> > iterate the CPU map. Similarly make use of the intersect
+> > function. Switch perf_cpu_map__has_any_cpu_or_is_empty to more
+> > appropriate alternatives.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/arch/arm/util/cs-etm.c    | 77 ++++++++++++----------------
+> >  tools/perf/arch/arm64/util/arm-spe.c |  4 +-
+> >  2 files changed, 34 insertions(+), 47 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/ut=
+il/cs-etm.c
+> > index 77e6663c1703..f4378ba0b8d6 100644
+> > --- a/tools/perf/arch/arm/util/cs-etm.c
+> > +++ b/tools/perf/arch/arm/util/cs-etm.c
+> > @@ -197,38 +197,32 @@ static int cs_etm_validate_timestamp(struct auxtr=
+ace_record *itr,
+> >  static int cs_etm_validate_config(struct auxtrace_record *itr,
+> >                                 struct evsel *evsel)
+> >  {
+> > -     int i, err =3D -EINVAL;
+> > +     int idx, err =3D -EINVAL;
+> >       struct perf_cpu_map *event_cpus =3D evsel->evlist->core.user_requ=
+ested_cpus;
+> >       struct perf_cpu_map *online_cpus =3D perf_cpu_map__new_online_cpu=
+s();
+> > +     struct perf_cpu_map *intersect_cpus =3D perf_cpu_map__intersect(e=
+vent_cpus, online_cpus);
+>
+> Hi Ian,
+>
+> This has the same issue as V1. 'any' intersect 'online' =3D=3D empty. Now=
+ no
+> validation happens anymore. For this to be the same as it used to be,
+> validation has to happen on _all_ cores when event_cpus =3D=3D -1. So it
+> needs to be 'any' intersect 'online' =3D=3D 'online'.
+>
+> Same issue below with cs_etm_info_priv_size()
 
+Thanks James, sorry for the churn. I'll work on that for v3.
 
-On 31/01/2024 13:49, Ian Rogers wrote:
-> Prior to this patch the first and the last error encountered during
-> parsing are printed. To see other errors verbose needs
-> enabling. Unfortunately this can drop useful errors, in particular on
-> terms. This patch changes the errors so that instead of the first and
-> last all errors are recorded and printed, the underlying data
-> structure is changed to a list.
-> 
-> Before:
-> ```
-> $ perf stat -e 'slots/edge=2/' true
-> event syntax error: 'slots/edge=2/'
->                                 \___ Bad event or PMU
-> 
-> Unable to find PMU or event on a PMU of 'slots'
-> 
-> Initial error:
-> event syntax error: 'slots/edge=2/'
->                      \___ Cannot find PMU `slots'. Missing kernel support?
-> Run 'perf list' for a list of valid events
-> 
->  Usage: perf stat [<options>] [<command>]
-> 
->     -e, --event <event>   event selector. use 'perf list' to list available events
-> ```
-> 
-> After:
-> ```
-> $ perf stat -e 'slots/edge=2/' true
-> event syntax error: 'slots/edge=2/'
->                      \___ Bad event or PMU
-> 
-> Unable to find PMU or event on a PMU of 'slots'
-> 
-> event syntax error: 'slots/edge=2/'
->                                 \___ value too big for format (edge), maximum is 1
-> 
-> event syntax error: 'slots/edge=2/'
->                      \___ Cannot find PMU `slots'. Missing kernel support?
-> Run 'perf list' for a list of valid events
-> 
->  Usage: perf stat [<options>] [<command>]
-> 
->     -e, --event <event>   event selector. use 'perf list' to list available events
-> ```
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Ian
 
-Reviewed-by: James Clark <james.clark@arm.com>
-
-> ---
-> Prompted by discussion:
-> https://lore.kernel.org/linux-perf-users/9dd303cb-0455-d8ac-ce0c-f4a8320b787b@arm.com/
-> ---
->  tools/perf/arch/x86/tests/hybrid.c |  5 +-
->  tools/perf/tests/expand-cgroup.c   |  3 +-
->  tools/perf/tests/parse-events.c    |  9 ++-
->  tools/perf/util/parse-events.c     | 92 ++++++++++++++++++------------
->  tools/perf/util/parse-events.h     | 14 ++---
->  tools/perf/util/parse-events.y     |  2 -
->  6 files changed, 67 insertions(+), 58 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/tests/hybrid.c b/tools/perf/arch/x86/tests/hybrid.c
-> index 40f5d17fedab..e221ea104174 100644
-> --- a/tools/perf/arch/x86/tests/hybrid.c
-> +++ b/tools/perf/arch/x86/tests/hybrid.c
-> @@ -259,11 +259,10 @@ static int test_event(const struct evlist_test *e)
->  	parse_events_error__init(&err);
->  	ret = parse_events(evlist, e->name, &err);
->  	if (ret) {
-> -		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
-> -			 e->name, ret, err.str);
-> +		pr_debug("failed to parse event '%s', err %d\n", e->name, ret);
->  		parse_events_error__print(&err, e->name);
->  		ret = TEST_FAIL;
-> -		if (strstr(err.str, "can't access trace events"))
-> +		if (parse_events_error__contains(&err, "can't access trace events"))
->  			ret = TEST_SKIP;
->  	} else {
->  		ret = e->check(evlist);
-> diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-> index 9c1a1f18db75..31966ff856f8 100644
-> --- a/tools/perf/tests/expand-cgroup.c
-> +++ b/tools/perf/tests/expand-cgroup.c
-> @@ -127,8 +127,7 @@ static int expand_group_events(void)
->  	parse_events_error__init(&err);
->  	ret = parse_events(evlist, event_str, &err);
->  	if (ret < 0) {
-> -		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
-> -			 event_str, ret, err.str);
-> +		pr_debug("failed to parse event '%s', err %d\n", event_str, ret);
->  		parse_events_error__print(&err, event_str);
->  		goto out;
->  	}
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index fbdf710d5eea..feb5727584d1 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -2506,11 +2506,10 @@ static int test_event(const struct evlist_test *e)
->  	parse_events_error__init(&err);
->  	ret = parse_events(evlist, e->name, &err);
->  	if (ret) {
-> -		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
-> -			 e->name, ret, err.str);
-> +		pr_debug("failed to parse event '%s', err %d\n", e->name, ret);
->  		parse_events_error__print(&err, e->name);
->  		ret = TEST_FAIL;
-> -		if (err.str && strstr(err.str, "can't access trace events"))
-> +		if (parse_events_error__contains(&err, "can't access trace events"))
->  			ret = TEST_SKIP;
->  	} else {
->  		ret = e->check(evlist);
-> @@ -2535,8 +2534,8 @@ static int test_event_fake_pmu(const char *str)
->  	ret = __parse_events(evlist, str, /*pmu_filter=*/NULL, &err,
->  			     &perf_pmu__fake, /*warn_if_reordered=*/true);
->  	if (ret) {
-> -		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
-> -			 str, ret, err.str);
-> +		pr_debug("failed to parse event '%s', err %d\n",
-> +			 str, ret);
->  		parse_events_error__print(&err, str);
->  	}
->  
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 66eabcea4242..6f8b0fa17689 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -2181,50 +2181,53 @@ int parse_event(struct evlist *evlist, const char *str)
->  	return ret;
->  }
->  
-> +struct parse_events_error_entry {
-> +	/** @list: The list the error is part of. */
-> +	struct list_head list;
-> +	/** @idx: index in the parsed string */
-> +	int   idx;
-> +	/** @str: string to display at the index */
-> +	char *str;
-> +	/** @help: optional help string */
-> +	char *help;
-> +};
-> +
->  void parse_events_error__init(struct parse_events_error *err)
->  {
-> -	bzero(err, sizeof(*err));
-> +	INIT_LIST_HEAD(&err->list);
->  }
->  
->  void parse_events_error__exit(struct parse_events_error *err)
->  {
-> -	zfree(&err->str);
-> -	zfree(&err->help);
-> -	zfree(&err->first_str);
-> -	zfree(&err->first_help);
-> +	struct parse_events_error_entry *pos, *tmp;
-> +
-> +	list_for_each_entry_safe(pos, tmp, &err->list, list) {
-> +		zfree(&pos->str);
-> +		zfree(&pos->help);
-> +		list_del_init(&pos->list);
-> +		free(pos);
-> +	}
->  }
->  
->  void parse_events_error__handle(struct parse_events_error *err, int idx,
->  				char *str, char *help)
->  {
-> +	struct parse_events_error_entry *entry;
-> +
->  	if (WARN(!str || !err, "WARNING: failed to provide error string or struct\n"))
->  		goto out_free;
-> -	switch (err->num_errors) {
-> -	case 0:
-> -		err->idx = idx;
-> -		err->str = str;
-> -		err->help = help;
-> -		break;
-> -	case 1:
-> -		err->first_idx = err->idx;
-> -		err->idx = idx;
-> -		err->first_str = err->str;
-> -		err->str = str;
-> -		err->first_help = err->help;
-> -		err->help = help;
-> -		break;
-> -	default:
-> -		pr_debug("Multiple errors dropping message: %s (%s)\n",
-> -			err->str, err->help ?: "<no help>");
-> -		free(err->str);
-> -		err->str = str;
-> -		free(err->help);
-> -		err->help = help;
-> -		break;
-> +
-> +	entry = zalloc(sizeof(*entry));
-> +	if (!entry) {
-> +		pr_err("Failed to allocate memory for event parsing error: %s (%s)\n",
-> +			str, help ?: "<no help>");
-> +		goto out_free;
->  	}
-> -	err->num_errors++;
-> +	entry->idx = idx;
-> +	entry->str = str;
-> +	entry->help = help;
-> +	list_add(&entry->list, &err->list);
->  	return;
-> -
->  out_free:
->  	free(str);
->  	free(help);
-> @@ -2294,19 +2297,34 @@ static void __parse_events_error__print(int err_idx, const char *err_str,
->  	}
->  }
->  
-> -void parse_events_error__print(struct parse_events_error *err,
-> +void parse_events_error__print(const struct parse_events_error *err,
->  			       const char *event)
->  {
-> -	if (!err->num_errors)
-> -		return;
-> +	struct parse_events_error_entry *pos;
-> +	bool first = true;
-> +
-> +	list_for_each_entry(pos, &err->list, list) {
-> +		if (!first)
-> +			fputs("\n", stderr);
-> +		__parse_events_error__print(pos->idx, pos->str, pos->help, event);
-> +		first = false;
-> +	}
-> +}
->  
-> -	__parse_events_error__print(err->idx, err->str, err->help, event);
-> +/*
-> + * In the list of errors err, do any of the error strings (str) contain the
-> + * given needle string?
-> + */
-> +bool parse_events_error__contains(const struct parse_events_error *err,
-> +				  const char *needle)
-> +{
-> +	struct parse_events_error_entry *pos;
->  
-> -	if (err->num_errors > 1) {
-> -		fputs("\nInitial error:\n", stderr);
-> -		__parse_events_error__print(err->first_idx, err->first_str,
-> -					err->first_help, event);
-> +	list_for_each_entry(pos, &err->list, list) {
-> +		if (strstr(pos->str, needle) != NULL)
-> +			return true;
->  	}
-> +	return false;
->  }
->  
->  #undef MAX_WIDTH
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index 63c0a36a4bf1..809359e8544e 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -130,13 +130,8 @@ struct parse_events_term {
->  };
->  
->  struct parse_events_error {
-> -	int   num_errors;       /* number of errors encountered */
-> -	int   idx;	/* index in the parsed string */
-> -	char *str;      /* string to display at the index */
-> -	char *help;	/* optional help string */
-> -	int   first_idx;/* as above, but for the first encountered error */
-> -	char *first_str;
-> -	char *first_help;
-> +	/** @list: The head of a list of errors. */
-> +	struct list_head list;
->  };
->  
->  /* A wrapper around a list of terms for the sake of better type safety. */
-> @@ -247,9 +242,10 @@ void parse_events_error__init(struct parse_events_error *err);
->  void parse_events_error__exit(struct parse_events_error *err);
->  void parse_events_error__handle(struct parse_events_error *err, int idx,
->  				char *str, char *help);
-> -void parse_events_error__print(struct parse_events_error *err,
-> +void parse_events_error__print(const struct parse_events_error *err,
->  			       const char *event);
-> -
-> +bool parse_events_error__contains(const struct parse_events_error *err,
-> +				  const char *needle);
->  #ifdef HAVE_LIBELF_SUPPORT
->  /*
->   * If the probe point starts with '%',
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index de098caf0c1c..d70f5d84af92 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -536,8 +536,6 @@ tracepoint_name opt_event_config
->  	list = alloc_list();
->  	if (!list)
->  		YYNOMEM;
-> -	if (error)
-> -		error->idx = @1.first_column;
->  
->  	err = parse_events_add_tracepoint(list, &parse_state->idx, $1.sys, $1.event,
->  					error, $2, &@1);
+> Thanks
+> James
+>
+> > +     struct perf_cpu cpu;
+> >
+> > -     /* Set option of each CPU we have */
+> > -     for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
+> > -             struct perf_cpu cpu =3D { .cpu =3D i, };
+> > -
+> > -             /*
+> > -              * In per-cpu case, do the validation for CPUs to work wi=
+th.
+> > -              * In per-thread case, the CPU map is empty.  Since the t=
+raced
+> > -              * program can run on any CPUs in this case, thus don't s=
+kip
+> > -              * validation.
+> > -              */
+> > -             if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus) &&
+> > -                 !perf_cpu_map__has(event_cpus, cpu))
+> > -                     continue;
+> > -
+> > -             if (!perf_cpu_map__has(online_cpus, cpu))
+> > -                     continue;
+> > +     perf_cpu_map__put(online_cpus);
+> >
+> > -             err =3D cs_etm_validate_context_id(itr, evsel, i);
+> > +     /*
+> > +      * Set option of each CPU we have. In per-cpu case, do the valida=
+tion
+> > +      * for CPUs to work with.  In per-thread case, the CPU map is emp=
+ty.
+> > +      * Since the traced program can run on any CPUs in this case, thu=
+s don't
+> > +      * skip validation.
+> > +      */
+> > +     perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
+> > +             err =3D cs_etm_validate_context_id(itr, evsel, cpu.cpu);
+> >               if (err)
+> >                       goto out;
+> > -             err =3D cs_etm_validate_timestamp(itr, evsel, i);
+> > +             err =3D cs_etm_validate_timestamp(itr, evsel, cpu.cpu);
+> >               if (err)
+> >                       goto out;
+> >       }
+> >
+> >       err =3D 0;
+> >  out:
+> > -     perf_cpu_map__put(online_cpus);
+> > +     perf_cpu_map__put(intersect_cpus);
+> >       return err;
+> >  }
+> >
+> > @@ -435,7 +429,7 @@ static int cs_etm_recording_options(struct auxtrace=
+_record *itr,
+> >        * Also the case of per-cpu mmaps, need the contextID in order to=
+ be notified
+> >        * when a context switch happened.
+> >        */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+> >               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+> >                                          "timestamp", 1);
+> >               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+> > @@ -461,7 +455,7 @@ static int cs_etm_recording_options(struct auxtrace=
+_record *itr,
+> >       evsel->core.attr.sample_period =3D 1;
+> >
+> >       /* In per-cpu case, always need the time of mmap events etc */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
+> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
+> >               evsel__set_sample_bit(evsel, TIME);
+> >
+> >       err =3D cs_etm_validate_config(itr, cs_etm_evsel);
+> > @@ -533,38 +527,32 @@ static size_t
+> >  cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+> >                     struct evlist *evlist __maybe_unused)
+> >  {
+> > -     int i;
+> > +     int idx;
+> >       int etmv3 =3D 0, etmv4 =3D 0, ete =3D 0;
+> >       struct perf_cpu_map *event_cpus =3D evlist->core.user_requested_c=
+pus;
+> >       struct perf_cpu_map *online_cpus =3D perf_cpu_map__new_online_cpu=
+s();
+> > +     struct perf_cpu cpu;
+> >
+> >       /* cpu map is not empty, we have specific CPUs to work with */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
+> > -             for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
+> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
+> > -
+> > -                     if (!perf_cpu_map__has(event_cpus, cpu) ||
+> > -                         !perf_cpu_map__has(online_cpus, cpu))
+> > -                             continue;
+> > +     if (!perf_cpu_map__is_empty(event_cpus)) {
+> > +             struct perf_cpu_map *intersect_cpus =3D
+> > +                     perf_cpu_map__intersect(event_cpus, online_cpus);
+> >
+> > -                     if (cs_etm_is_ete(itr, i))
+> > +             perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_c=
+pus) {
+> > +                     if (cs_etm_is_ete(itr, cpu.cpu))
+> >                               ete++;
+> > -                     else if (cs_etm_is_etmv4(itr, i))
+> > +                     else if (cs_etm_is_etmv4(itr, cpu.cpu))
+> >                               etmv4++;
+> >                       else
+> >                               etmv3++;
+> >               }
+> > +             perf_cpu_map__put(intersect_cpus);
+> >       } else {
+> >               /* get configuration for all CPUs in the system */
+> > -             for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
+> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
+> > -
+> > -                     if (!perf_cpu_map__has(online_cpus, cpu))
+> > -                             continue;
+> > -
+> > -                     if (cs_etm_is_ete(itr, i))
+> > +             perf_cpu_map__for_each_cpu(cpu, idx, online_cpus) {
+> > +                     if (cs_etm_is_ete(itr, cpu.cpu))
+> >                               ete++;
+> > -                     else if (cs_etm_is_etmv4(itr, i))
+> > +                     else if (cs_etm_is_etmv4(itr, cpu.cpu))
+> >                               etmv4++;
+> >                       else
+> >                               etmv3++;
+> > @@ -814,15 +802,14 @@ static int cs_etm_info_fill(struct auxtrace_recor=
+d *itr,
+> >               return -EINVAL;
+> >
+> >       /* If the cpu_map is empty all online CPUs are involved */
+> > -     if (perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
+> > +     if (perf_cpu_map__is_empty(event_cpus)) {
+> >               cpu_map =3D online_cpus;
+> >       } else {
+> >               /* Make sure all specified CPUs are online */
+> > -             for (i =3D 0; i < perf_cpu_map__nr(event_cpus); i++) {
+> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
+> > +             struct perf_cpu cpu;
+> >
+> > -                     if (perf_cpu_map__has(event_cpus, cpu) &&
+> > -                         !perf_cpu_map__has(online_cpus, cpu))
+> > +             perf_cpu_map__for_each_cpu(cpu, i, event_cpus) {
+> > +                     if (!perf_cpu_map__has(online_cpus, cpu))
+> >                               return -EINVAL;
+> >               }
+> >
+> > diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm=
+64/util/arm-spe.c
+> > index 51ccbfd3d246..0b52e67edb3b 100644
+> > --- a/tools/perf/arch/arm64/util/arm-spe.c
+> > +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> > @@ -232,7 +232,7 @@ static int arm_spe_recording_options(struct auxtrac=
+e_record *itr,
+> >        * In the case of per-cpu mmaps, sample CPU for AUX event;
+> >        * also enable the timestamp tracing for samples correlation.
+> >        */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+> >               evsel__set_sample_bit(arm_spe_evsel, CPU);
+> >               evsel__set_config_if_unset(arm_spe_pmu, arm_spe_evsel,
+> >                                          "ts_enable", 1);
+> > @@ -265,7 +265,7 @@ static int arm_spe_recording_options(struct auxtrac=
+e_record *itr,
+> >       tracking_evsel->core.attr.sample_period =3D 1;
+> >
+> >       /* In per-cpu case, always need the time of mmap events etc */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+> >               evsel__set_sample_bit(tracking_evsel, TIME);
+> >               evsel__set_sample_bit(tracking_evsel, CPU);
+> >
