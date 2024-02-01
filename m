@@ -1,352 +1,324 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6611F14C5A2;
-	Thu,  1 Feb 2024 08:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986D73B282;
+	Thu,  1 Feb 2024 11:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706774634; cv=none; b=oSwDCV3WiJyR1qwBrHPKqXVAdDY5dySdoFFOYhpEIOGvEiIAj1IqItKY/oxC88WSBv9a0mabebT8EJeYN1uVorF3n46hfJQMqqXjyjP428Q9XWr8BEGUGDJO6qBAdrQGzAKQjZt0+H4hGsxfxQD6n2BfwMgnVHiM4Z/ve4spUhQ=
+	t=1706785620; cv=none; b=qMJ9qpsngBX8Glg575F86+smvwlBswluEOmdugyu9JxqjZjRdBafPB/td2w8ueV2Gtob5S8eejMxOaRdFBdqHJMkxi+tXASzc/IccC4OXMwrvfiUED4qeIOR4oDL+vHVZBJma0GVvjUsRUBBCSpLwoupqel8YOnG3711kiNeJxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706774634; c=relaxed/simple;
-	bh=tKcwMRDgvBFJP+WtgVhk6nVNrLK6Rc4EnYPBvWe7TCA=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XFrY4CBqJjd+GyOZzYfKlLUQWuy9TZgi/RRN6dBhXsIsLWG95Mu9TV2f3SqPGQrBIGMz2+nAzCBxVWuqT6DRDSYr6JXZhEGfHMcbc2Gg5FEwjIKTfKX+xvIAJOhI1VdmFrnuN8GEO5G8HnPM5RW/tcmYu1R6b2RVhFj9IRqt8lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TQWZk4bnLz1Q83V;
-	Thu,  1 Feb 2024 16:01:50 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2D0C714040D;
-	Thu,  1 Feb 2024 16:03:42 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 1 Feb 2024 16:03:39 +0800
-Subject: Re: [PATCH v2 8/8] perf cpumap: Use perf_cpu_map__for_each_cpu when
- possible
-To: Ian Rogers <irogers@google.com>
-References: <20240201042236.1538928-1-irogers@google.com>
- <20240201042236.1538928-9-irogers@google.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Suzuki K
- Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, James
- Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, John Garry
-	<john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Thomas Gleixner
-	<tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
-	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak
-	<kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, Paolo
- Bonzini <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>, Athira
- Rajeev <atrajeev@linux.vnet.ibm.com>, Andrew Jones <ajones@ventanamicro.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>,
-	"Steinar H. Gunderson" <sesse@google.com>, Yang Li
-	<yang.lee@linux.alibaba.com>, Changbin Du <changbin.du@huawei.com>, Sandipan
- Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee
-	<p4ranlee@gmail.com>, Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen
-	<chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-	<bpf@vger.kernel.org>
-From: Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <aa719d3b-5b96-a341-b776-a67cc6fad64a@huawei.com>
-Date: Thu, 1 Feb 2024 16:03:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+	s=arc-20240116; t=1706785620; c=relaxed/simple;
+	bh=H5fbf7vA0daW3oGdysGxxF0VofT8Xb/xsjrcUWSTRa4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tZPc8xWiWFEVLGUOQSHEeeWckDFTHSi7cJgCuosH5vpvykXmsHKp3UH+prDqCqD+MEMsQc0PK49eY4m92Pab08ipPzqNAunBpoMiQ1O6TmQr8/OZ8EJV17p+i3qKb2pZKmkg9FmBFWU6Wew4G7qrjJbt/qrzEPckRlNY0p58+/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0753DA7;
+	Thu,  1 Feb 2024 03:07:39 -0800 (PST)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 629993F762;
+	Thu,  1 Feb 2024 03:06:48 -0800 (PST)
+Message-ID: <b9b3cca0-57c8-572b-916b-61916bd750d4@arm.com>
+Date: Thu, 1 Feb 2024 11:06:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240201042236.1538928-9-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1 07/14] perf arm-spe/cs-etm: Directly iterate CPU maps
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Andrew Jones <ajones@ventanamicro.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>,
+ "Steinar H. Gunderson" <sesse@google.com>,
+ Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>,
+ Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ bpf@vger.kernel.org, Leo Yan <leo.yan@linaro.org>
+References: <20231129060211.1890454-1-irogers@google.com>
+ <20231129060211.1890454-8-irogers@google.com>
+ <e3a01313-ed03-bc54-0260-5445fb2c15ee@arm.com>
+ <2adf8e9c-e08d-a772-bfe2-378d6759721f@arm.com>
+ <CAP-5=fVkwz4fb4hn=cg_RaEW-s_N-4t2nm4mX_oWOduP+0QdOA@mail.gmail.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fVkwz4fb4hn=cg_RaEW-s_N-4t2nm4mX_oWOduP+0QdOA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
 
-On 2024/2/1 12:22, Ian Rogers wrote:
-> Rather than manually iterating the CPU map, use
-> perf_cpu_map__for_each_cpu. When possible tidy local variables.
+
+On 01/02/2024 02:12, Ian Rogers wrote:
+> On Tue, Dec 12, 2023 at 6:36 AM James Clark <james.clark@arm.com> wrote:
+>>
+>>
+>>
+>> On 12/12/2023 14:17, James Clark wrote:
+>>>
+>>>
+>>> On 29/11/2023 06:02, Ian Rogers wrote:
+>>>> Rather than iterate all CPUs and see if they are in CPU maps, directly
+>>>> iterate the CPU map. Similarly make use of the intersect
+>>>> function. Switch perf_cpu_map__has_any_cpu_or_is_empty to more
+>>>> appropriate alternatives.
+>>>>
+>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>>> ---
+>>>>  tools/perf/arch/arm/util/cs-etm.c    | 77 ++++++++++++----------------
+>>>>  tools/perf/arch/arm64/util/arm-spe.c |  4 +-
+>>>>  2 files changed, 34 insertions(+), 47 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+>>>> index 77e6663c1703..a68a72f2f668 100644
+>>>> --- a/tools/perf/arch/arm/util/cs-etm.c
+>>>> +++ b/tools/perf/arch/arm/util/cs-etm.c
+>>>> @@ -197,38 +197,32 @@ static int cs_etm_validate_timestamp(struct auxtrace_record *itr,
+>>>>  static int cs_etm_validate_config(struct auxtrace_record *itr,
+>>>>                                struct evsel *evsel)
+>>>>  {
+>>>> -    int i, err = -EINVAL;
+>>>> +    int idx, err = -EINVAL;
+>>>>      struct perf_cpu_map *event_cpus = evsel->evlist->core.user_requested_cpus;
+>>>>      struct perf_cpu_map *online_cpus = perf_cpu_map__new_online_cpus();
+>>>> +    struct perf_cpu_map *intersect_cpus = perf_cpu_map__intersect(event_cpus, online_cpus);
+>>>> +    struct perf_cpu cpu;
+>>>>
+>>>> -    /* Set option of each CPU we have */
+>>>> -    for (i = 0; i < cpu__max_cpu().cpu; i++) {
+>>>> -            struct perf_cpu cpu = { .cpu = i, };
+>>>> -
+>>>> -            /*
+>>>> -             * In per-cpu case, do the validation for CPUs to work with.
+>>>> -             * In per-thread case, the CPU map is empty.  Since the traced
+>>>> -             * program can run on any CPUs in this case, thus don't skip
+>>>> -             * validation.
+>>>> -             */
+>>>> -            if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus) &&
+>>>> -                !perf_cpu_map__has(event_cpus, cpu))
+>>>> -                    continue;
+>>>
+>>> This has broken validation for per-thread sessions.
+>>> perf_cpu_map__intersect() doesn't seem to be able to handle the case
+>>> where an 'any' map intersected with an online map should return the
+>>> online map. Or at least it should for this to work, and it seems to make
+>>> sense for it to work that way.
+>>>
+>>> At least that was my initial impression, but I only debugged it and saw
+>>> that the loop is now skipped entirely.
+>>>
+>>>> -
+>>>> -            if (!perf_cpu_map__has(online_cpus, cpu))
+>>>> -                    continue;
+>>>> +    perf_cpu_map__put(online_cpus);
+>>>>
+>>>> -            err = cs_etm_validate_context_id(itr, evsel, i);
+>>>> +    /*
+>>>> +     * Set option of each CPU we have. In per-cpu case, do the validation
+>>>> +     * for CPUs to work with.  In per-thread case, the CPU map is empty.
+>>>> +     * Since the traced program can run on any CPUs in this case, thus don't
+>>>> +     * skip validation.
+>>>> +     */
+>>>> +    perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
+>>>> +            err = cs_etm_validate_context_id(itr, evsel, cpu.cpu);
+>>>>              if (err)
+>>>>                      goto out;
+>>>> -            err = cs_etm_validate_timestamp(itr, evsel, i);
+>>>> +            err = cs_etm_validate_timestamp(itr, evsel, idx);
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: James Clark <james.clark@arm.com>
-> ---
->   tools/perf/arch/arm64/util/header.c           | 10 ++--
->   tools/perf/tests/bitmap.c                     | 13 +++---
->   tools/perf/tests/topology.c                   | 46 +++++++++----------
->   tools/perf/util/bpf_kwork.c                   | 16 ++++---
->   tools/perf/util/bpf_kwork_top.c               | 12 ++---
->   tools/perf/util/cpumap.c                      | 12 ++---
->   .../scripting-engines/trace-event-python.c    | 12 +++--
->   tools/perf/util/session.c                     |  5 +-
->   tools/perf/util/svghelper.c                   | 20 ++++----
->   9 files changed, 72 insertions(+), 74 deletions(-)
+> I think this is an error, idx shouldn't be used here, cpu.cpu should.
 > 
-> diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
-> index a9de0b5187dd..741df3614a09 100644
-> --- a/tools/perf/arch/arm64/util/header.c
-> +++ b/tools/perf/arch/arm64/util/header.c
-> @@ -4,8 +4,6 @@
->   #include <stdio.h>
->   #include <stdlib.h>
->   #include <perf/cpumap.h>
-> -#include <util/cpumap.h>
-> -#include <internal/cpumap.h>
->   #include <api/fs/fs.h>
->   #include <errno.h>
->   #include "debug.h"
-> @@ -19,18 +17,18 @@
->   static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
->   {
->   	const char *sysfs = sysfs__mountpoint();
-> -	int cpu;
-> -	int ret = EINVAL;
-> +	struct perf_cpu cpu;
-> +	int idx, ret = EINVAL;
->   
->   	if (!sysfs || sz < MIDR_SIZE)
->   		return EINVAL;
->   
-> -	for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
-> +	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
->   		char path[PATH_MAX];
->   		FILE *file;
->   
->   		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d" MIDR,
-> -			  sysfs, RC_CHK_ACCESS(cpus)->map[cpu].cpu);
-> +			  sysfs, cpu.cpu);
->   
->   		file = fopen(path, "r");
->   		if (!file) {
-> diff --git a/tools/perf/tests/bitmap.c b/tools/perf/tests/bitmap.c
-> index 0173f5402a35..98956e0e0765 100644
-> --- a/tools/perf/tests/bitmap.c
-> +++ b/tools/perf/tests/bitmap.c
-> @@ -11,18 +11,19 @@
->   static unsigned long *get_bitmap(const char *str, int nbits)
->   {
->   	struct perf_cpu_map *map = perf_cpu_map__new(str);
-> -	unsigned long *bm = NULL;
-> -	int i;
-> +	unsigned long *bm;
->   
->   	bm = bitmap_zalloc(nbits);
->   
->   	if (map && bm) {
-> -		for (i = 0; i < perf_cpu_map__nr(map); i++)
-> -			__set_bit(perf_cpu_map__cpu(map, i).cpu, bm);
-> +		int i;
-> +		struct perf_cpu cpu;
-> +
-> +		perf_cpu_map__for_each_cpu(cpu, i, map)
-> +			__set_bit(cpu.cpu, bm);
->   	}
->   
-> -	if (map)
-> -		perf_cpu_map__put(map);
-> +	perf_cpu_map__put(map);
->   	return bm;
->   }
->   
-> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-> index 2a842f53fbb5..a8cb5ba898ab 100644
-> --- a/tools/perf/tests/topology.c
-> +++ b/tools/perf/tests/topology.c
-> @@ -68,6 +68,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->   	};
->   	int i;
->   	struct aggr_cpu_id id;
-> +	struct perf_cpu cpu;
->   
->   	session = perf_session__new(&data, NULL);
->   	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
-> @@ -113,8 +114,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->   	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
->   
->   	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
-> -		struct perf_cpu cpu = { .cpu = i };
-> -
-> +		cpu.cpu = i;
->   		if (!perf_cpu_map__has(map, cpu))
->   			continue;
->   		pr_debug("CPU %d, core %d, socket %d\n", i,
-> @@ -123,48 +123,48 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->   	}
->   
->   	// Test that CPU ID contains socket, die, core and CPU
-> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
-> -		id = aggr_cpu_id__cpu(perf_cpu_map__cpu(map, i), NULL);
-> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
-> +		id = aggr_cpu_id__cpu(cpu, NULL);
->   		TEST_ASSERT_VAL("Cpu map - CPU ID doesn't match",
-> -				perf_cpu_map__cpu(map, i).cpu == id.cpu.cpu);
-> +				cpu.cpu == id.cpu.cpu);
->   
->   		TEST_ASSERT_VAL("Cpu map - Core ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].core_id == id.core);
-> +			session->header.env.cpu[cpu.cpu].core_id == id.core);
->   		TEST_ASSERT_VAL("Cpu map - Socket ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
-> +			session->header.env.cpu[cpu.cpu].socket_id ==
->   			id.socket);
->   
->   		TEST_ASSERT_VAL("Cpu map - Die ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
-> +			session->header.env.cpu[cpu.cpu].die_id == id.die);
->   		TEST_ASSERT_VAL("Cpu map - Node ID is set", id.node == -1);
->   		TEST_ASSERT_VAL("Cpu map - Thread IDX is set", id.thread_idx == -1);
->   	}
->   
->   	// Test that core ID contains socket, die and core
-> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
-> -		id = aggr_cpu_id__core(perf_cpu_map__cpu(map, i), NULL);
-> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
-> +		id = aggr_cpu_id__core(cpu, NULL);
->   		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].core_id == id.core);
-> +			session->header.env.cpu[cpu.cpu].core_id == id.core);
->   
->   		TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
-> +			session->header.env.cpu[cpu.cpu].socket_id ==
->   			id.socket);
->   
->   		TEST_ASSERT_VAL("Core map - Die ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
-> +			session->header.env.cpu[cpu.cpu].die_id == id.die);
->   		TEST_ASSERT_VAL("Core map - Node ID is set", id.node == -1);
->   		TEST_ASSERT_VAL("Core map - Thread IDX is set", id.thread_idx == -1);
->   	}
->   
->   	// Test that die ID contains socket and die
-> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
-> -		id = aggr_cpu_id__die(perf_cpu_map__cpu(map, i), NULL);
-> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
-> +		id = aggr_cpu_id__die(cpu, NULL);
->   		TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
-> +			session->header.env.cpu[cpu.cpu].socket_id ==
->   			id.socket);
->   
->   		TEST_ASSERT_VAL("Die map - Die ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
-> +			session->header.env.cpu[cpu.cpu].die_id == id.die);
->   
->   		TEST_ASSERT_VAL("Die map - Node ID is set", id.node == -1);
->   		TEST_ASSERT_VAL("Die map - Core is set", id.core == -1);
-> @@ -173,10 +173,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->   	}
->   
->   	// Test that socket ID contains only socket
-> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
-> -		id = aggr_cpu_id__socket(perf_cpu_map__cpu(map, i), NULL);
-> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
-> +		id = aggr_cpu_id__socket(cpu, NULL);
->   		TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
-> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
-> +			session->header.env.cpu[cpu.cpu].socket_id ==
->   			id.socket);
->   
->   		TEST_ASSERT_VAL("Socket map - Node ID is set", id.node == -1);
-> @@ -187,10 +187,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->   	}
->   
->   	// Test that node ID contains only node
-> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
-> -		id = aggr_cpu_id__node(perf_cpu_map__cpu(map, i), NULL);
-> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
-> +		id = aggr_cpu_id__node(cpu, NULL);
->   		TEST_ASSERT_VAL("Node map - Node ID doesn't match",
-> -				cpu__get_node(perf_cpu_map__cpu(map, i)) == id.node);
-> +				cpu__get_node(cpu) == id.node);
->   		TEST_ASSERT_VAL("Node map - Socket is set", id.socket == -1);
->   		TEST_ASSERT_VAL("Node map - Die ID is set", id.die == -1);
->   		TEST_ASSERT_VAL("Node map - Core is set", id.core == -1);
-> diff --git a/tools/perf/util/bpf_kwork.c b/tools/perf/util/bpf_kwork.c
-> index 6eb2c78fd7f4..44f0f708a15d 100644
-> --- a/tools/perf/util/bpf_kwork.c
-> +++ b/tools/perf/util/bpf_kwork.c
-> @@ -147,12 +147,12 @@ static bool valid_kwork_class_type(enum kwork_class_type type)
->   
->   static int setup_filters(struct perf_kwork *kwork)
->   {
-> -	u8 val = 1;
-> -	int i, nr_cpus, key, fd;
-> -	struct perf_cpu_map *map;
-> -
->   	if (kwork->cpu_list != NULL) {
-> -		fd = bpf_map__fd(skel->maps.perf_kwork_cpu_filter);
-> +		int idx, nr_cpus;
-> +		struct perf_cpu_map *map;
-> +		struct perf_cpu cpu;
-> +		int fd = bpf_map__fd(skel->maps.perf_kwork_cpu_filter);
-> +
->   		if (fd < 0) {
->   			pr_debug("Invalid cpu filter fd\n");
->   			return -1;
-> @@ -165,8 +165,8 @@ static int setup_filters(struct perf_kwork *kwork)
->   		}
->   
->   		nr_cpus = libbpf_num_possible_cpus();
-> -		for (i = 0; i < perf_cpu_map__nr(map); i++) {
-> -			struct perf_cpu cpu = perf_cpu_map__cpu(map, i);
-> +		perf_cpu_map__for_each_cpu(cpu, idx, map) {
-> +			u8 val = 1;
->   
->   			if (cpu.cpu >= nr_cpus) {
->   				perf_cpu_map__put(map);
-> @@ -181,6 +181,8 @@ static int setup_filters(struct perf_kwork *kwork)
->   	}
->   
->   	if (kwork->profile_name != NULL) {
-> +		int key, fd;
-> +
->   		if (strlen(kwork->profile_name) >= MAX_KWORKNAME) {
->   			pr_err("Requested name filter %s too large, limit to %d\n",
->   			       kwork->profile_name, MAX_KWORKNAME - 1);
-> diff --git a/tools/perf/util/bpf_kwork_top.c b/tools/perf/util/bpf_kwork_top.c
-> index 035e02272790..22a3b00a1e23 100644
-> --- a/tools/perf/util/bpf_kwork_top.c
-> +++ b/tools/perf/util/bpf_kwork_top.c
-> @@ -122,11 +122,11 @@ static bool valid_kwork_class_type(enum kwork_class_type type)
->   
->   static int setup_filters(struct perf_kwork *kwork)
->   {
-> -	u8 val = 1;
-> -	int i, nr_cpus, fd;
-> -	struct perf_cpu_map *map;
-> -
->   	if (kwork->cpu_list) {
-> +		int idx, nr_cpus, fd;
-> +		struct perf_cpu_map *map;
-> +		struct perf_cpu cpu;
-> +
->   		fd = bpf_map__fd(skel->maps.kwork_top_cpu_filter);
->   		if (fd < 0) {
->   			pr_debug("Invalid cpu filter fd\n");
-> @@ -140,8 +140,8 @@ static int setup_filters(struct perf_kwork *kwork)
->   		}
->   
->   		nr_cpus = libbpf_num_possible_cpus();
-> -		for (i = 0; i < perf_cpu_map__nr(map); i++) {
-> -			struct perf_cpu cpu = perf_cpu_map__cpu(map, i);
-> +		perf_cpu_map__for_each_cpu(cpu, idx, map) {
-> +			u8 val = 1;
->   
->   			if (cpu.cpu >= nr_cpus) {
->   				perf_cpu_map__put(map);
 
-For part of perf-kwork utility:
-Reviewed-and-tested-by: Yang Jihong <yangjihong1@huawei.com>
+Yes I think you're right. But when I tested this it was on a machine
+with all CPUs online, and all traced, so I think idx == cpu.cpu. So
+although this might need to be fixed it didn't cause the breakage.
 
+Also this line of code was also never hit because the issue was the
+intersect returning an empty map before here.
 
-Thanks,
-Yang
+>>>>              if (err)
+>>>>                      goto out;
+>>>>      }
+>>>>
+>>>>      err = 0;
+>>>>  out:
+>>>> -    perf_cpu_map__put(online_cpus);
+>>>> +    perf_cpu_map__put(intersect_cpus);
+>>>>      return err;
+>>>>  }
+>>>>
+>>>> @@ -435,7 +429,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>>>>       * Also the case of per-cpu mmaps, need the contextID in order to be notified
+>>>>       * when a context switch happened.
+>>>>       */
+>>>> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+>>>> +    if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+>>>>              evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+>>>>                                         "timestamp", 1);
+>>>>              evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+>>>> @@ -461,7 +455,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>>>>      evsel->core.attr.sample_period = 1;
+>>>>
+>>>>      /* In per-cpu case, always need the time of mmap events etc */
+>>>> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
+>>>> +    if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
+>>>>              evsel__set_sample_bit(evsel, TIME);
+>>>>
+>>>>      err = cs_etm_validate_config(itr, cs_etm_evsel);
+>>>> @@ -533,38 +527,32 @@ static size_t
+>>>>  cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+>>>>                    struct evlist *evlist __maybe_unused)
+>>>>  {
+>>>> -    int i;
+>>>> +    int idx;
+>>>>      int etmv3 = 0, etmv4 = 0, ete = 0;
+>>>>      struct perf_cpu_map *event_cpus = evlist->core.user_requested_cpus;
+>>>>      struct perf_cpu_map *online_cpus = perf_cpu_map__new_online_cpus();
+>>>> +    struct perf_cpu cpu;
+>>>>
+>>>>      /* cpu map is not empty, we have specific CPUs to work with */
+>>>> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
+>>>> -            for (i = 0; i < cpu__max_cpu().cpu; i++) {
+>>>> -                    struct perf_cpu cpu = { .cpu = i, };
+>>>> -
+>>>> -                    if (!perf_cpu_map__has(event_cpus, cpu) ||
+>>>> -                        !perf_cpu_map__has(online_cpus, cpu))
+>>>> -                            continue;
+>>>> +    if (!perf_cpu_map__is_empty(event_cpus)) {
+>>>> +            struct perf_cpu_map *intersect_cpus =
+>>>> +                    perf_cpu_map__intersect(event_cpus, online_cpus);
+>>>>
+>>>> -                    if (cs_etm_is_ete(itr, i))
+>>>> +            perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
+>>>> +                    if (cs_etm_is_ete(itr, cpu.cpu))
+>>
+>> Similar problem here. For a per-thread session, the CPU map is not empty
+>> (it's an 'any' map, presumably length 1), so it comes into this first
+>> if, rather than the else below which is for the 'any' scenario.
+>>
+>> Then the intersect with online CPUs results in an empty map, so no CPU
+>> metadata is recorded, then the session fails.
+>>
+>> If you made the intersect work in the way I mentioned above we could
+>> also delete the else below, because that's just another way to convert
+>> from 'any' to 'all online'.
+> 
+> I don't think intersect of "all online" with an "any CPU" should
+> return "all online" as these would be quite different options to
+> perf_event_open. Let's see if the issue above fixes this change
+> otherwise I can revert it to a more mechanical translation of the
+> existing code into the new APIs.
+> 
+
+If you're not ok with the intersection behavior that I suggested, then
+maybe we need a new function like perf_cpu_map__flatten() or
+perf_cpu_map__expand() which can be used in these two cases which does
+behave in that way. It doesn't look like it needs any more re-writing,
+it's just the perf_cpu_map__intersect() needs to behave slightly
+differently in this case.
+
+It's because ETM cares about validating and saving the configuration
+per-core, even if you finally open the event with CPU==-1, because later
+we'll need all that info to decode the trace.
+
+Although I can't see what scenario that you wouldn't want ('any'
+intersect '1,2') == '1,2'. Is there any code in Perf that's already
+doing that that would be broken by that change? It might be best to have
+that behavior earlier rather than later in case something does start
+depending on it.
+
+As far as I know you can't do both per-thread and per-cpu sessions in
+Perf, so it doesn't really matter how the intersection behaves in that
+scenario.
+
+> Thanks,
+> Ian
+> 
+>>>>                              ete++;
+>>>> -                    else if (cs_etm_is_etmv4(itr, i))
+>>>> +                    else if (cs_etm_is_etmv4(itr, cpu.cpu))
+>>>>                              etmv4++;
+>>>>                      else
+>>>>                              etmv3++;
+>>>>              }
+>>>> +            perf_cpu_map__put(intersect_cpus);
+>>>>      } else {
+>>>>              /* get configuration for all CPUs in the system */
+>>>> -            for (i = 0; i < cpu__max_cpu().cpu; i++) {
+>>>> -                    struct perf_cpu cpu = { .cpu = i, };
+>>>> -
+>>>> -                    if (!perf_cpu_map__has(online_cpus, cpu))
+>>>> -                            continue;
+>>>> -
+>>>> -                    if (cs_etm_is_ete(itr, i))
+>>>> +            perf_cpu_map__for_each_cpu(cpu, idx, online_cpus) {
+>>>> +                    if (cs_etm_is_ete(itr, cpu.cpu))
+>>>>                              ete++;
+>>>> -                    else if (cs_etm_is_etmv4(itr, i))
+>>>> +                    else if (cs_etm_is_etmv4(itr, cpu.cpu))
+>>>>                              etmv4++;
+>>>>                      else
+>>>>                              etmv3++;
+>>>> @@ -814,15 +802,14 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
+>>>>              return -EINVAL;
+>>>>
+>>>>      /* If the cpu_map is empty all online CPUs are involved */
+>>>> -    if (perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
+>>>> +    if (perf_cpu_map__is_empty(event_cpus)) {
+>>>>              cpu_map = online_cpus;
+>>>>      } else {
+>>>>              /* Make sure all specified CPUs are online */
+>>>> -            for (i = 0; i < perf_cpu_map__nr(event_cpus); i++) {
+>>>> -                    struct perf_cpu cpu = { .cpu = i, };
+>>>> +            struct perf_cpu cpu;
+>>>>
+>>>> -                    if (perf_cpu_map__has(event_cpus, cpu) &&
+>>>> -                        !perf_cpu_map__has(online_cpus, cpu))
+>>>> +            perf_cpu_map__for_each_cpu(cpu, i, event_cpus) {
+>>>> +                    if (!perf_cpu_map__has(online_cpus, cpu))
+>>>>                              return -EINVAL;
+>>>>              }
+>>>>
+>>>> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+>>>> index 51ccbfd3d246..0b52e67edb3b 100644
+>>>> --- a/tools/perf/arch/arm64/util/arm-spe.c
+>>>> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+>>>> @@ -232,7 +232,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>>>>       * In the case of per-cpu mmaps, sample CPU for AUX event;
+>>>>       * also enable the timestamp tracing for samples correlation.
+>>>>       */
+>>>> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+>>>> +    if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+>>>>              evsel__set_sample_bit(arm_spe_evsel, CPU);
+>>>>              evsel__set_config_if_unset(arm_spe_pmu, arm_spe_evsel,
+>>>>                                         "ts_enable", 1);
+>>>> @@ -265,7 +265,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>>>>      tracking_evsel->core.attr.sample_period = 1;
+>>>>
+>>>>      /* In per-cpu case, always need the time of mmap events etc */
+>>>> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+>>>> +    if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+>>>>              evsel__set_sample_bit(tracking_evsel, TIME);
+>>>>              evsel__set_sample_bit(tracking_evsel, CPU);
+>>>>
