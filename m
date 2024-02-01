@@ -1,650 +1,352 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B873C49B;
-	Thu,  1 Feb 2024 05:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6611F14C5A2;
+	Thu,  1 Feb 2024 08:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706766426; cv=none; b=T0TflEcVrAMsC5GpmZxTnojiKgPw3xwqmdh7zDOXnMylOHKI/fSnGUg1ua1y7bSrEXMjlJQdTdJZb4CD09CUwzHXtrQKhBcWV1BEfWCXCEn3TkDupNy5hRNl8KgL+gtnrbMKu3EIMXrq6nar2YRtGye26CYHRfWu+Auu19Vb0UI=
+	t=1706774634; cv=none; b=oSwDCV3WiJyR1qwBrHPKqXVAdDY5dySdoFFOYhpEIOGvEiIAj1IqItKY/oxC88WSBv9a0mabebT8EJeYN1uVorF3n46hfJQMqqXjyjP428Q9XWr8BEGUGDJO6qBAdrQGzAKQjZt0+H4hGsxfxQD6n2BfwMgnVHiM4Z/ve4spUhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706766426; c=relaxed/simple;
-	bh=DPHiEOhjxsM3Rjoc6y/DfyHo8rtHRh3orm7rZ62bXo8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eiUO2fxkAFtxzVAqR3WkopTcbHOjD0E82LeG4R3y0F8qwUsrU/xiquEQ4Gj+eF1EvxnSG1YairswZta4ygcRyvdJFXJsiIsMOlLwuZdhj5oXigs1oW37yW7NWTbNox1fdJL9BSFwwQzzlO0pmfpTsTWwvAycCMkIHwAUHtoTrOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=EGk8uS4R; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EGk8uS4R"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4115kU5J3816769
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 31 Jan 2024 21:46:37 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4115kU5J3816769
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024011201; t=1706766397;
-	bh=83EE8CoxNBVo+Wdn+2GRozH+rbrgR4nbHmHY9grt9iM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EGk8uS4RYGnrJLy5loYj4rCv2fVlmvmbsO4gGIGUt2U0FEvCLIgq3YZ/NUkb1juGb
-	 obgXxZVsdyhcDtMXOygtB8P2Op/nXifbv11qGOLOaD3UjCHNB+mi2rF9aDWDpkgvJE
-	 YGMK1uoLR/vQnaCCAKKVMN1I0WUhRIbPYtpZWZOETMJwZI9Ten9drRFbQePzgYgB7r
-	 BnopF3gyz0MxlP8F00QRmcSHlDISi66lMJdzCMxyHZsUnvlhnlpfSiCGDSHpGSb1qO
-	 VmBa73A65fUzLCXrYcx6xwpLGXfjyjj9mdI8eDmy0hbG8iBDFcXTlxA0dUN241rcOJ
-	 ZWmf33JoB/fYQ==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        acme@kernel.org, namhyung@kernel.org
-Subject: [PATCH v1 3/3] x86/cpufeatures: Remove {disabled,required}-features.h
-Date: Wed, 31 Jan 2024 21:46:29 -0800
-Message-ID: <20240201054629.3816748-4-xin@zytor.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240201054629.3816748-1-xin@zytor.com>
-References: <20240201054629.3816748-1-xin@zytor.com>
+	s=arc-20240116; t=1706774634; c=relaxed/simple;
+	bh=tKcwMRDgvBFJP+WtgVhk6nVNrLK6Rc4EnYPBvWe7TCA=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=XFrY4CBqJjd+GyOZzYfKlLUQWuy9TZgi/RRN6dBhXsIsLWG95Mu9TV2f3SqPGQrBIGMz2+nAzCBxVWuqT6DRDSYr6JXZhEGfHMcbc2Gg5FEwjIKTfKX+xvIAJOhI1VdmFrnuN8GEO5G8HnPM5RW/tcmYu1R6b2RVhFj9IRqt8lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TQWZk4bnLz1Q83V;
+	Thu,  1 Feb 2024 16:01:50 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2D0C714040D;
+	Thu,  1 Feb 2024 16:03:42 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 1 Feb 2024 16:03:39 +0800
+Subject: Re: [PATCH v2 8/8] perf cpumap: Use perf_cpu_map__for_each_cpu when
+ possible
+To: Ian Rogers <irogers@google.com>
+References: <20240201042236.1538928-1-irogers@google.com>
+ <20240201042236.1538928-9-irogers@google.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Suzuki K
+ Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, James
+ Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, John Garry
+	<john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Thomas Gleixner
+	<tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso
+	<dave@stgolabs.net>, =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
+	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak
+	<kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>, Athira
+ Rajeev <atrajeev@linux.vnet.ibm.com>, Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>,
+	"Steinar H. Gunderson" <sesse@google.com>, Yang Li
+	<yang.lee@linux.alibaba.com>, Changbin Du <changbin.du@huawei.com>, Sandipan
+ Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee
+	<p4ranlee@gmail.com>, Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen
+	<chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<bpf@vger.kernel.org>
+From: Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <aa719d3b-5b96-a341-b776-a67cc6fad64a@huawei.com>
+Date: Thu, 1 Feb 2024 16:03:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240201042236.1538928-9-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 
-The functionalities of {disabled,required}-features.h are replaced
-with the auto-generated header cpufeature_masks.h. Thus they are no
-longer needed. So delete them.
+Hello,
 
-None of the macros defined in {disabled,required}-features.h is used
-in tools directory, delete them.
+On 2024/2/1 12:22, Ian Rogers wrote:
+> Rather than manually iterating the CPU map, use
+> perf_cpu_map__for_each_cpu. When possible tidy local variables.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: James Clark <james.clark@arm.com>
+> ---
+>   tools/perf/arch/arm64/util/header.c           | 10 ++--
+>   tools/perf/tests/bitmap.c                     | 13 +++---
+>   tools/perf/tests/topology.c                   | 46 +++++++++----------
+>   tools/perf/util/bpf_kwork.c                   | 16 ++++---
+>   tools/perf/util/bpf_kwork_top.c               | 12 ++---
+>   tools/perf/util/cpumap.c                      | 12 ++---
+>   .../scripting-engines/trace-event-python.c    | 12 +++--
+>   tools/perf/util/session.c                     |  5 +-
+>   tools/perf/util/svghelper.c                   | 20 ++++----
+>   9 files changed, 72 insertions(+), 74 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
+> index a9de0b5187dd..741df3614a09 100644
+> --- a/tools/perf/arch/arm64/util/header.c
+> +++ b/tools/perf/arch/arm64/util/header.c
+> @@ -4,8 +4,6 @@
+>   #include <stdio.h>
+>   #include <stdlib.h>
+>   #include <perf/cpumap.h>
+> -#include <util/cpumap.h>
+> -#include <internal/cpumap.h>
+>   #include <api/fs/fs.h>
+>   #include <errno.h>
+>   #include "debug.h"
+> @@ -19,18 +17,18 @@
+>   static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
+>   {
+>   	const char *sysfs = sysfs__mountpoint();
+> -	int cpu;
+> -	int ret = EINVAL;
+> +	struct perf_cpu cpu;
+> +	int idx, ret = EINVAL;
+>   
+>   	if (!sysfs || sz < MIDR_SIZE)
+>   		return EINVAL;
+>   
+> -	for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
+> +	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+>   		char path[PATH_MAX];
+>   		FILE *file;
+>   
+>   		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d" MIDR,
+> -			  sysfs, RC_CHK_ACCESS(cpus)->map[cpu].cpu);
+> +			  sysfs, cpu.cpu);
+>   
+>   		file = fopen(path, "r");
+>   		if (!file) {
+> diff --git a/tools/perf/tests/bitmap.c b/tools/perf/tests/bitmap.c
+> index 0173f5402a35..98956e0e0765 100644
+> --- a/tools/perf/tests/bitmap.c
+> +++ b/tools/perf/tests/bitmap.c
+> @@ -11,18 +11,19 @@
+>   static unsigned long *get_bitmap(const char *str, int nbits)
+>   {
+>   	struct perf_cpu_map *map = perf_cpu_map__new(str);
+> -	unsigned long *bm = NULL;
+> -	int i;
+> +	unsigned long *bm;
+>   
+>   	bm = bitmap_zalloc(nbits);
+>   
+>   	if (map && bm) {
+> -		for (i = 0; i < perf_cpu_map__nr(map); i++)
+> -			__set_bit(perf_cpu_map__cpu(map, i).cpu, bm);
+> +		int i;
+> +		struct perf_cpu cpu;
+> +
+> +		perf_cpu_map__for_each_cpu(cpu, i, map)
+> +			__set_bit(cpu.cpu, bm);
+>   	}
+>   
+> -	if (map)
+> -		perf_cpu_map__put(map);
+> +	perf_cpu_map__put(map);
+>   	return bm;
+>   }
+>   
+> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+> index 2a842f53fbb5..a8cb5ba898ab 100644
+> --- a/tools/perf/tests/topology.c
+> +++ b/tools/perf/tests/topology.c
+> @@ -68,6 +68,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>   	};
+>   	int i;
+>   	struct aggr_cpu_id id;
+> +	struct perf_cpu cpu;
+>   
+>   	session = perf_session__new(&data, NULL);
+>   	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
+> @@ -113,8 +114,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>   	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
+>   
+>   	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
+> -		struct perf_cpu cpu = { .cpu = i };
+> -
+> +		cpu.cpu = i;
+>   		if (!perf_cpu_map__has(map, cpu))
+>   			continue;
+>   		pr_debug("CPU %d, core %d, socket %d\n", i,
+> @@ -123,48 +123,48 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>   	}
+>   
+>   	// Test that CPU ID contains socket, die, core and CPU
+> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
+> -		id = aggr_cpu_id__cpu(perf_cpu_map__cpu(map, i), NULL);
+> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
+> +		id = aggr_cpu_id__cpu(cpu, NULL);
+>   		TEST_ASSERT_VAL("Cpu map - CPU ID doesn't match",
+> -				perf_cpu_map__cpu(map, i).cpu == id.cpu.cpu);
+> +				cpu.cpu == id.cpu.cpu);
+>   
+>   		TEST_ASSERT_VAL("Cpu map - Core ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].core_id == id.core);
+> +			session->header.env.cpu[cpu.cpu].core_id == id.core);
+>   		TEST_ASSERT_VAL("Cpu map - Socket ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
+> +			session->header.env.cpu[cpu.cpu].socket_id ==
+>   			id.socket);
+>   
+>   		TEST_ASSERT_VAL("Cpu map - Die ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
+> +			session->header.env.cpu[cpu.cpu].die_id == id.die);
+>   		TEST_ASSERT_VAL("Cpu map - Node ID is set", id.node == -1);
+>   		TEST_ASSERT_VAL("Cpu map - Thread IDX is set", id.thread_idx == -1);
+>   	}
+>   
+>   	// Test that core ID contains socket, die and core
+> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
+> -		id = aggr_cpu_id__core(perf_cpu_map__cpu(map, i), NULL);
+> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
+> +		id = aggr_cpu_id__core(cpu, NULL);
+>   		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].core_id == id.core);
+> +			session->header.env.cpu[cpu.cpu].core_id == id.core);
+>   
+>   		TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
+> +			session->header.env.cpu[cpu.cpu].socket_id ==
+>   			id.socket);
+>   
+>   		TEST_ASSERT_VAL("Core map - Die ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
+> +			session->header.env.cpu[cpu.cpu].die_id == id.die);
+>   		TEST_ASSERT_VAL("Core map - Node ID is set", id.node == -1);
+>   		TEST_ASSERT_VAL("Core map - Thread IDX is set", id.thread_idx == -1);
+>   	}
+>   
+>   	// Test that die ID contains socket and die
+> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
+> -		id = aggr_cpu_id__die(perf_cpu_map__cpu(map, i), NULL);
+> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
+> +		id = aggr_cpu_id__die(cpu, NULL);
+>   		TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
+> +			session->header.env.cpu[cpu.cpu].socket_id ==
+>   			id.socket);
+>   
+>   		TEST_ASSERT_VAL("Die map - Die ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
+> +			session->header.env.cpu[cpu.cpu].die_id == id.die);
+>   
+>   		TEST_ASSERT_VAL("Die map - Node ID is set", id.node == -1);
+>   		TEST_ASSERT_VAL("Die map - Core is set", id.core == -1);
+> @@ -173,10 +173,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>   	}
+>   
+>   	// Test that socket ID contains only socket
+> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
+> -		id = aggr_cpu_id__socket(perf_cpu_map__cpu(map, i), NULL);
+> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
+> +		id = aggr_cpu_id__socket(cpu, NULL);
+>   		TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
+> -			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
+> +			session->header.env.cpu[cpu.cpu].socket_id ==
+>   			id.socket);
+>   
+>   		TEST_ASSERT_VAL("Socket map - Node ID is set", id.node == -1);
+> @@ -187,10 +187,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>   	}
+>   
+>   	// Test that node ID contains only node
+> -	for (i = 0; i < perf_cpu_map__nr(map); i++) {
+> -		id = aggr_cpu_id__node(perf_cpu_map__cpu(map, i), NULL);
+> +	perf_cpu_map__for_each_cpu(cpu, i, map) {
+> +		id = aggr_cpu_id__node(cpu, NULL);
+>   		TEST_ASSERT_VAL("Node map - Node ID doesn't match",
+> -				cpu__get_node(perf_cpu_map__cpu(map, i)) == id.node);
+> +				cpu__get_node(cpu) == id.node);
+>   		TEST_ASSERT_VAL("Node map - Socket is set", id.socket == -1);
+>   		TEST_ASSERT_VAL("Node map - Die ID is set", id.die == -1);
+>   		TEST_ASSERT_VAL("Node map - Core is set", id.core == -1);
+> diff --git a/tools/perf/util/bpf_kwork.c b/tools/perf/util/bpf_kwork.c
+> index 6eb2c78fd7f4..44f0f708a15d 100644
+> --- a/tools/perf/util/bpf_kwork.c
+> +++ b/tools/perf/util/bpf_kwork.c
+> @@ -147,12 +147,12 @@ static bool valid_kwork_class_type(enum kwork_class_type type)
+>   
+>   static int setup_filters(struct perf_kwork *kwork)
+>   {
+> -	u8 val = 1;
+> -	int i, nr_cpus, key, fd;
+> -	struct perf_cpu_map *map;
+> -
+>   	if (kwork->cpu_list != NULL) {
+> -		fd = bpf_map__fd(skel->maps.perf_kwork_cpu_filter);
+> +		int idx, nr_cpus;
+> +		struct perf_cpu_map *map;
+> +		struct perf_cpu cpu;
+> +		int fd = bpf_map__fd(skel->maps.perf_kwork_cpu_filter);
+> +
+>   		if (fd < 0) {
+>   			pr_debug("Invalid cpu filter fd\n");
+>   			return -1;
+> @@ -165,8 +165,8 @@ static int setup_filters(struct perf_kwork *kwork)
+>   		}
+>   
+>   		nr_cpus = libbpf_num_possible_cpus();
+> -		for (i = 0; i < perf_cpu_map__nr(map); i++) {
+> -			struct perf_cpu cpu = perf_cpu_map__cpu(map, i);
+> +		perf_cpu_map__for_each_cpu(cpu, idx, map) {
+> +			u8 val = 1;
+>   
+>   			if (cpu.cpu >= nr_cpus) {
+>   				perf_cpu_map__put(map);
+> @@ -181,6 +181,8 @@ static int setup_filters(struct perf_kwork *kwork)
+>   	}
+>   
+>   	if (kwork->profile_name != NULL) {
+> +		int key, fd;
+> +
+>   		if (strlen(kwork->profile_name) >= MAX_KWORKNAME) {
+>   			pr_err("Requested name filter %s too large, limit to %d\n",
+>   			       kwork->profile_name, MAX_KWORKNAME - 1);
+> diff --git a/tools/perf/util/bpf_kwork_top.c b/tools/perf/util/bpf_kwork_top.c
+> index 035e02272790..22a3b00a1e23 100644
+> --- a/tools/perf/util/bpf_kwork_top.c
+> +++ b/tools/perf/util/bpf_kwork_top.c
+> @@ -122,11 +122,11 @@ static bool valid_kwork_class_type(enum kwork_class_type type)
+>   
+>   static int setup_filters(struct perf_kwork *kwork)
+>   {
+> -	u8 val = 1;
+> -	int i, nr_cpus, fd;
+> -	struct perf_cpu_map *map;
+> -
+>   	if (kwork->cpu_list) {
+> +		int idx, nr_cpus, fd;
+> +		struct perf_cpu_map *map;
+> +		struct perf_cpu cpu;
+> +
+>   		fd = bpf_map__fd(skel->maps.kwork_top_cpu_filter);
+>   		if (fd < 0) {
+>   			pr_debug("Invalid cpu filter fd\n");
+> @@ -140,8 +140,8 @@ static int setup_filters(struct perf_kwork *kwork)
+>   		}
+>   
+>   		nr_cpus = libbpf_num_possible_cpus();
+> -		for (i = 0; i < perf_cpu_map__nr(map); i++) {
+> -			struct perf_cpu cpu = perf_cpu_map__cpu(map, i);
+> +		perf_cpu_map__for_each_cpu(cpu, idx, map) {
+> +			u8 val = 1;
+>   
+>   			if (cpu.cpu >= nr_cpus) {
+>   				perf_cpu_map__put(map);
 
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/include/asm/disabled-features.h      | 154 ------------------
- arch/x86/include/asm/required-features.h      | 104 ------------
- tools/arch/x86/include/asm/cpufeatures.h      |   8 -
- .../arch/x86/include/asm/disabled-features.h  | 154 ------------------
- .../arch/x86/include/asm/required-features.h  | 104 ------------
- tools/perf/check-headers.sh                   |   2 -
- 6 files changed, 526 deletions(-)
- delete mode 100644 arch/x86/include/asm/disabled-features.h
- delete mode 100644 arch/x86/include/asm/required-features.h
- delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
- delete mode 100644 tools/arch/x86/include/asm/required-features.h
+For part of perf-kwork utility:
+Reviewed-and-tested-by: Yang Jihong <yangjihong1@huawei.com>
 
-diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-deleted file mode 100644
-index 1f23960d2b06..000000000000
---- a/arch/x86/include/asm/disabled-features.h
-+++ /dev/null
-@@ -1,154 +0,0 @@
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#define _ASM_X86_DISABLED_FEATURES_H
--
--/* These features, although they might be available in a CPU
-- * will not be used because the compile options to support
-- * them are not present.
-- *
-- * This code allows them to be checked and disabled at
-- * compile time without an explicit #ifdef.  Use
-- * cpu_feature_enabled().
-- */
--
--#ifdef CONFIG_X86_UMIP
--# define DISABLE_UMIP	0
--#else
--# define DISABLE_UMIP	(1<<(X86_FEATURE_UMIP & 31))
--#endif
--
--#ifdef CONFIG_X86_64
--# define DISABLE_VME		(1<<(X86_FEATURE_VME & 31))
--# define DISABLE_K6_MTRR	(1<<(X86_FEATURE_K6_MTRR & 31))
--# define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
--# define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
--# define DISABLE_PCID		0
--#else
--# define DISABLE_VME		0
--# define DISABLE_K6_MTRR	0
--# define DISABLE_CYRIX_ARR	0
--# define DISABLE_CENTAUR_MCR	0
--# define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
--#endif /* CONFIG_X86_64 */
--
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
--# define DISABLE_PKU		0
--# define DISABLE_OSPKE		0
--#else
--# define DISABLE_PKU		(1<<(X86_FEATURE_PKU & 31))
--# define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
--#endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
--
--#ifdef CONFIG_X86_5LEVEL
--# define DISABLE_LA57	0
--#else
--# define DISABLE_LA57	(1<<(X86_FEATURE_LA57 & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
--# define DISABLE_PTI		0
--#else
--# define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_RETPOLINE
--# define DISABLE_RETPOLINE	0
--#else
--# define DISABLE_RETPOLINE	((1 << (X86_FEATURE_RETPOLINE & 31)) | \
--				 (1 << (X86_FEATURE_RETPOLINE_LFENCE & 31)))
--#endif
--
--#ifdef CONFIG_MITIGATION_RETHUNK
--# define DISABLE_RETHUNK	0
--#else
--# define DISABLE_RETHUNK	(1 << (X86_FEATURE_RETHUNK & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_UNRET_ENTRY
--# define DISABLE_UNRET		0
--#else
--# define DISABLE_UNRET		(1 << (X86_FEATURE_UNRET & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
--# define DISABLE_CALL_DEPTH_TRACKING	0
--#else
--# define DISABLE_CALL_DEPTH_TRACKING	(1 << (X86_FEATURE_CALL_DEPTH & 31))
--#endif
--
--#ifdef CONFIG_ADDRESS_MASKING
--# define DISABLE_LAM		0
--#else
--# define DISABLE_LAM		(1 << (X86_FEATURE_LAM & 31))
--#endif
--
--#ifdef CONFIG_INTEL_IOMMU_SVM
--# define DISABLE_ENQCMD		0
--#else
--# define DISABLE_ENQCMD		(1 << (X86_FEATURE_ENQCMD & 31))
--#endif
--
--#ifdef CONFIG_X86_SGX
--# define DISABLE_SGX	0
--#else
--# define DISABLE_SGX	(1 << (X86_FEATURE_SGX & 31))
--#endif
--
--#ifdef CONFIG_XEN_PV
--# define DISABLE_XENPV		0
--#else
--# define DISABLE_XENPV		(1 << (X86_FEATURE_XENPV & 31))
--#endif
--
--#ifdef CONFIG_INTEL_TDX_GUEST
--# define DISABLE_TDX_GUEST	0
--#else
--# define DISABLE_TDX_GUEST	(1 << (X86_FEATURE_TDX_GUEST & 31))
--#endif
--
--#ifdef CONFIG_X86_USER_SHADOW_STACK
--#define DISABLE_USER_SHSTK	0
--#else
--#define DISABLE_USER_SHSTK	(1 << (X86_FEATURE_USER_SHSTK & 31))
--#endif
--
--#ifdef CONFIG_X86_KERNEL_IBT
--#define DISABLE_IBT	0
--#else
--#define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
--#endif
--
--#ifdef CONFIG_X86_FRED
--# define DISABLE_FRED	0
--#else
--# define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
--#endif
--
--/*
-- * Make sure to add features to the correct mask
-- */
--#define DISABLED_MASK0	(DISABLE_VME)
--#define DISABLED_MASK1	0
--#define DISABLED_MASK2	0
--#define DISABLED_MASK3	(DISABLE_CYRIX_ARR|DISABLE_CENTAUR_MCR|DISABLE_K6_MTRR)
--#define DISABLED_MASK4	(DISABLE_PCID)
--#define DISABLED_MASK5	0
--#define DISABLED_MASK6	0
--#define DISABLED_MASK7	(DISABLE_PTI)
--#define DISABLED_MASK8	(DISABLE_XENPV|DISABLE_TDX_GUEST)
--#define DISABLED_MASK9	(DISABLE_SGX)
--#define DISABLED_MASK10	0
--#define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
--			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
--#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
--#define DISABLED_MASK13	0
--#define DISABLED_MASK14	0
--#define DISABLED_MASK15	0
--#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
--			 DISABLE_ENQCMD)
--#define DISABLED_MASK17	0
--#define DISABLED_MASK18	(DISABLE_IBT)
--#define DISABLED_MASK19	0
--#define DISABLED_MASK20	0
--#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
--
--#endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
-deleted file mode 100644
-index 13018e507f76..000000000000
---- a/arch/x86/include/asm/required-features.h
-+++ /dev/null
-@@ -1,104 +0,0 @@
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#define _ASM_X86_REQUIRED_FEATURES_H
--
--/* Define minimum CPUID feature set for kernel These bits are checked
--   really early to actually display a visible error message before the
--   kernel dies.  Make sure to assign features to the proper mask!
--
--   Some requirements that are not in CPUID yet are also in the
--   CONFIG_X86_MINIMUM_CPU_FAMILY which is checked too.
--
--   The real information is in arch/x86/Kconfig.cpu, this just converts
--   the CONFIGs into a bitmask */
--
--#ifndef CONFIG_MATH_EMULATION
--# define NEED_FPU	(1<<(X86_FEATURE_FPU & 31))
--#else
--# define NEED_FPU	0
--#endif
--
--#if defined(CONFIG_X86_PAE) || defined(CONFIG_X86_64)
--# define NEED_PAE	(1<<(X86_FEATURE_PAE & 31))
--#else
--# define NEED_PAE	0
--#endif
--
--#ifdef CONFIG_X86_REQUIRED_FEATURE_CX8
--# define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
--#else
--# define NEED_CX8	0
--#endif
--
--#if defined(CONFIG_X86_REQUIRED_FEATURE_CMOV) || defined(CONFIG_X86_64)
--# define NEED_CMOV	(1<<(X86_FEATURE_CMOV & 31))
--#else
--# define NEED_CMOV	0
--#endif
--
--# define NEED_3DNOW	0
--
--#if defined(CONFIG_X86_P6_NOP) || defined(CONFIG_X86_64)
--# define NEED_NOPL	(1<<(X86_FEATURE_NOPL & 31))
--#else
--# define NEED_NOPL	0
--#endif
--
--#ifdef CONFIG_MATOM
--# define NEED_MOVBE	(1<<(X86_FEATURE_MOVBE & 31))
--#else
--# define NEED_MOVBE	0
--#endif
--
--#ifdef CONFIG_X86_64
--#ifdef CONFIG_PARAVIRT_XXL
--/* Paravirtualized systems may not have PSE or PGE available */
--#define NEED_PSE	0
--#define NEED_PGE	0
--#else
--#define NEED_PSE	(1<<(X86_FEATURE_PSE) & 31)
--#define NEED_PGE	(1<<(X86_FEATURE_PGE) & 31)
--#endif
--#define NEED_MSR	(1<<(X86_FEATURE_MSR & 31))
--#define NEED_FXSR	(1<<(X86_FEATURE_FXSR & 31))
--#define NEED_XMM	(1<<(X86_FEATURE_XMM & 31))
--#define NEED_XMM2	(1<<(X86_FEATURE_XMM2 & 31))
--#define NEED_LM		(1<<(X86_FEATURE_LM & 31))
--#else
--#define NEED_PSE	0
--#define NEED_MSR	0
--#define NEED_PGE	0
--#define NEED_FXSR	0
--#define NEED_XMM	0
--#define NEED_XMM2	0
--#define NEED_LM		0
--#endif
--
--#define REQUIRED_MASK0	(NEED_FPU|NEED_PSE|NEED_MSR|NEED_PAE|\
--			 NEED_CX8|NEED_PGE|NEED_FXSR|NEED_CMOV|\
--			 NEED_XMM|NEED_XMM2)
--#define SSE_MASK	(NEED_XMM|NEED_XMM2)
--
--#define REQUIRED_MASK1	(NEED_LM|NEED_3DNOW)
--
--#define REQUIRED_MASK2	0
--#define REQUIRED_MASK3	(NEED_NOPL)
--#define REQUIRED_MASK4	(NEED_MOVBE)
--#define REQUIRED_MASK5	0
--#define REQUIRED_MASK6	0
--#define REQUIRED_MASK7	0
--#define REQUIRED_MASK8	0
--#define REQUIRED_MASK9	0
--#define REQUIRED_MASK10	0
--#define REQUIRED_MASK11	0
--#define REQUIRED_MASK12	0
--#define REQUIRED_MASK13	0
--#define REQUIRED_MASK14	0
--#define REQUIRED_MASK15	0
--#define REQUIRED_MASK16	0
--#define REQUIRED_MASK17	0
--#define REQUIRED_MASK18	0
--#define REQUIRED_MASK19	0
--#define REQUIRED_MASK20	0
--#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
--
--#endif /* _ASM_X86_REQUIRED_FEATURES_H */
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 953e6efead26..fcf3ea6ffaf0 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -2,14 +2,6 @@
- #ifndef _ASM_X86_CPUFEATURES_H
- #define _ASM_X86_CPUFEATURES_H
- 
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#include <asm/required-features.h>
--#endif
--
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#include <asm/disabled-features.h>
--#endif
--
- /*
-  * Defines x86 CPU feature bits
-  */
-diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
-deleted file mode 100644
-index 1f23960d2b06..000000000000
---- a/tools/arch/x86/include/asm/disabled-features.h
-+++ /dev/null
-@@ -1,154 +0,0 @@
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#define _ASM_X86_DISABLED_FEATURES_H
--
--/* These features, although they might be available in a CPU
-- * will not be used because the compile options to support
-- * them are not present.
-- *
-- * This code allows them to be checked and disabled at
-- * compile time without an explicit #ifdef.  Use
-- * cpu_feature_enabled().
-- */
--
--#ifdef CONFIG_X86_UMIP
--# define DISABLE_UMIP	0
--#else
--# define DISABLE_UMIP	(1<<(X86_FEATURE_UMIP & 31))
--#endif
--
--#ifdef CONFIG_X86_64
--# define DISABLE_VME		(1<<(X86_FEATURE_VME & 31))
--# define DISABLE_K6_MTRR	(1<<(X86_FEATURE_K6_MTRR & 31))
--# define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
--# define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
--# define DISABLE_PCID		0
--#else
--# define DISABLE_VME		0
--# define DISABLE_K6_MTRR	0
--# define DISABLE_CYRIX_ARR	0
--# define DISABLE_CENTAUR_MCR	0
--# define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
--#endif /* CONFIG_X86_64 */
--
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
--# define DISABLE_PKU		0
--# define DISABLE_OSPKE		0
--#else
--# define DISABLE_PKU		(1<<(X86_FEATURE_PKU & 31))
--# define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
--#endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
--
--#ifdef CONFIG_X86_5LEVEL
--# define DISABLE_LA57	0
--#else
--# define DISABLE_LA57	(1<<(X86_FEATURE_LA57 & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
--# define DISABLE_PTI		0
--#else
--# define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_RETPOLINE
--# define DISABLE_RETPOLINE	0
--#else
--# define DISABLE_RETPOLINE	((1 << (X86_FEATURE_RETPOLINE & 31)) | \
--				 (1 << (X86_FEATURE_RETPOLINE_LFENCE & 31)))
--#endif
--
--#ifdef CONFIG_MITIGATION_RETHUNK
--# define DISABLE_RETHUNK	0
--#else
--# define DISABLE_RETHUNK	(1 << (X86_FEATURE_RETHUNK & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_UNRET_ENTRY
--# define DISABLE_UNRET		0
--#else
--# define DISABLE_UNRET		(1 << (X86_FEATURE_UNRET & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
--# define DISABLE_CALL_DEPTH_TRACKING	0
--#else
--# define DISABLE_CALL_DEPTH_TRACKING	(1 << (X86_FEATURE_CALL_DEPTH & 31))
--#endif
--
--#ifdef CONFIG_ADDRESS_MASKING
--# define DISABLE_LAM		0
--#else
--# define DISABLE_LAM		(1 << (X86_FEATURE_LAM & 31))
--#endif
--
--#ifdef CONFIG_INTEL_IOMMU_SVM
--# define DISABLE_ENQCMD		0
--#else
--# define DISABLE_ENQCMD		(1 << (X86_FEATURE_ENQCMD & 31))
--#endif
--
--#ifdef CONFIG_X86_SGX
--# define DISABLE_SGX	0
--#else
--# define DISABLE_SGX	(1 << (X86_FEATURE_SGX & 31))
--#endif
--
--#ifdef CONFIG_XEN_PV
--# define DISABLE_XENPV		0
--#else
--# define DISABLE_XENPV		(1 << (X86_FEATURE_XENPV & 31))
--#endif
--
--#ifdef CONFIG_INTEL_TDX_GUEST
--# define DISABLE_TDX_GUEST	0
--#else
--# define DISABLE_TDX_GUEST	(1 << (X86_FEATURE_TDX_GUEST & 31))
--#endif
--
--#ifdef CONFIG_X86_USER_SHADOW_STACK
--#define DISABLE_USER_SHSTK	0
--#else
--#define DISABLE_USER_SHSTK	(1 << (X86_FEATURE_USER_SHSTK & 31))
--#endif
--
--#ifdef CONFIG_X86_KERNEL_IBT
--#define DISABLE_IBT	0
--#else
--#define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
--#endif
--
--#ifdef CONFIG_X86_FRED
--# define DISABLE_FRED	0
--#else
--# define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
--#endif
--
--/*
-- * Make sure to add features to the correct mask
-- */
--#define DISABLED_MASK0	(DISABLE_VME)
--#define DISABLED_MASK1	0
--#define DISABLED_MASK2	0
--#define DISABLED_MASK3	(DISABLE_CYRIX_ARR|DISABLE_CENTAUR_MCR|DISABLE_K6_MTRR)
--#define DISABLED_MASK4	(DISABLE_PCID)
--#define DISABLED_MASK5	0
--#define DISABLED_MASK6	0
--#define DISABLED_MASK7	(DISABLE_PTI)
--#define DISABLED_MASK8	(DISABLE_XENPV|DISABLE_TDX_GUEST)
--#define DISABLED_MASK9	(DISABLE_SGX)
--#define DISABLED_MASK10	0
--#define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
--			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
--#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
--#define DISABLED_MASK13	0
--#define DISABLED_MASK14	0
--#define DISABLED_MASK15	0
--#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
--			 DISABLE_ENQCMD)
--#define DISABLED_MASK17	0
--#define DISABLED_MASK18	(DISABLE_IBT)
--#define DISABLED_MASK19	0
--#define DISABLED_MASK20	0
--#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
--
--#endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/tools/arch/x86/include/asm/required-features.h b/tools/arch/x86/include/asm/required-features.h
-deleted file mode 100644
-index 13018e507f76..000000000000
---- a/tools/arch/x86/include/asm/required-features.h
-+++ /dev/null
-@@ -1,104 +0,0 @@
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#define _ASM_X86_REQUIRED_FEATURES_H
--
--/* Define minimum CPUID feature set for kernel These bits are checked
--   really early to actually display a visible error message before the
--   kernel dies.  Make sure to assign features to the proper mask!
--
--   Some requirements that are not in CPUID yet are also in the
--   CONFIG_X86_MINIMUM_CPU_FAMILY which is checked too.
--
--   The real information is in arch/x86/Kconfig.cpu, this just converts
--   the CONFIGs into a bitmask */
--
--#ifndef CONFIG_MATH_EMULATION
--# define NEED_FPU	(1<<(X86_FEATURE_FPU & 31))
--#else
--# define NEED_FPU	0
--#endif
--
--#if defined(CONFIG_X86_PAE) || defined(CONFIG_X86_64)
--# define NEED_PAE	(1<<(X86_FEATURE_PAE & 31))
--#else
--# define NEED_PAE	0
--#endif
--
--#ifdef CONFIG_X86_REQUIRED_FEATURE_CX8
--# define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
--#else
--# define NEED_CX8	0
--#endif
--
--#if defined(CONFIG_X86_REQUIRED_FEATURE_CMOV) || defined(CONFIG_X86_64)
--# define NEED_CMOV	(1<<(X86_FEATURE_CMOV & 31))
--#else
--# define NEED_CMOV	0
--#endif
--
--# define NEED_3DNOW	0
--
--#if defined(CONFIG_X86_P6_NOP) || defined(CONFIG_X86_64)
--# define NEED_NOPL	(1<<(X86_FEATURE_NOPL & 31))
--#else
--# define NEED_NOPL	0
--#endif
--
--#ifdef CONFIG_MATOM
--# define NEED_MOVBE	(1<<(X86_FEATURE_MOVBE & 31))
--#else
--# define NEED_MOVBE	0
--#endif
--
--#ifdef CONFIG_X86_64
--#ifdef CONFIG_PARAVIRT_XXL
--/* Paravirtualized systems may not have PSE or PGE available */
--#define NEED_PSE	0
--#define NEED_PGE	0
--#else
--#define NEED_PSE	(1<<(X86_FEATURE_PSE) & 31)
--#define NEED_PGE	(1<<(X86_FEATURE_PGE) & 31)
--#endif
--#define NEED_MSR	(1<<(X86_FEATURE_MSR & 31))
--#define NEED_FXSR	(1<<(X86_FEATURE_FXSR & 31))
--#define NEED_XMM	(1<<(X86_FEATURE_XMM & 31))
--#define NEED_XMM2	(1<<(X86_FEATURE_XMM2 & 31))
--#define NEED_LM		(1<<(X86_FEATURE_LM & 31))
--#else
--#define NEED_PSE	0
--#define NEED_MSR	0
--#define NEED_PGE	0
--#define NEED_FXSR	0
--#define NEED_XMM	0
--#define NEED_XMM2	0
--#define NEED_LM		0
--#endif
--
--#define REQUIRED_MASK0	(NEED_FPU|NEED_PSE|NEED_MSR|NEED_PAE|\
--			 NEED_CX8|NEED_PGE|NEED_FXSR|NEED_CMOV|\
--			 NEED_XMM|NEED_XMM2)
--#define SSE_MASK	(NEED_XMM|NEED_XMM2)
--
--#define REQUIRED_MASK1	(NEED_LM|NEED_3DNOW)
--
--#define REQUIRED_MASK2	0
--#define REQUIRED_MASK3	(NEED_NOPL)
--#define REQUIRED_MASK4	(NEED_MOVBE)
--#define REQUIRED_MASK5	0
--#define REQUIRED_MASK6	0
--#define REQUIRED_MASK7	0
--#define REQUIRED_MASK8	0
--#define REQUIRED_MASK9	0
--#define REQUIRED_MASK10	0
--#define REQUIRED_MASK11	0
--#define REQUIRED_MASK12	0
--#define REQUIRED_MASK13	0
--#define REQUIRED_MASK14	0
--#define REQUIRED_MASK15	0
--#define REQUIRED_MASK16	0
--#define REQUIRED_MASK17	0
--#define REQUIRED_MASK18	0
--#define REQUIRED_MASK19	0
--#define REQUIRED_MASK20	0
--#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
--
--#endif /* _ASM_X86_REQUIRED_FEATURES_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 66ba33dbcef2..b85ab7c3f3c5 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -33,8 +33,6 @@ FILES=(
-   "include/linux/hash.h"
-   "include/linux/list-sort.h"
-   "include/uapi/linux/hw_breakpoint.h"
--  "arch/x86/include/asm/disabled-features.h"
--  "arch/x86/include/asm/required-features.h"
-   "arch/x86/include/asm/cpufeatures.h"
-   "arch/x86/include/asm/inat_types.h"
-   "arch/x86/include/asm/emulate_prefix.h"
--- 
-2.43.0
 
+Thanks,
+Yang
