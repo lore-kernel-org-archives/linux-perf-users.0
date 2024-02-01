@@ -1,230 +1,111 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A24B3A1C2
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 22:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EA223A8
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Feb 2024 00:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706739789; cv=none; b=SzBgTiaNxPC5CFgruRmC0V6Hj15H/iBpDemxFVp2uTLdovLEXW7M2ZNTUoXU+T5lAOMbGYAG04Ejs5nhRHgE0QD+riwZTvW6iKQpVXVXYBJToj+9r8NzboyvEfG51opSV7NBSedkis0okcl3iaAsNpe5SH2FaZHQFOMDNjgBI8M=
+	t=1706746523; cv=none; b=h/aUaRy+BLZcNloNaWQkRctxO3lOxF8IOrqfYPoBtrzjDvRkRdMH8AmLgKh0hKGV2ALRwIvK5uq7cPhNbGk4PC4EX0LLeUx8cW3wYc8h+9hhJCXirwbcGjm3m3E/8/rwRt4n23ApeBiDNZpwVhnnbhISNPvqkQvzHpuL/Mz37TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706739789; c=relaxed/simple;
-	bh=6+8ttMZH+a1iPHq99hGjUHdtQF7PaS1+G02SVxU80DE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=JRWHcRs2qrIHN5rxPmFhfYYCEKTFmmXnj3GpoQtklieJi7Jf/GLXt2CXRFMsh/izmCSHaHWvLpgnDuCktUxnViGkc54ObUW/61t0oIOvonm4qLGOVMWkHKHWG27fsPmKzkLtTUCZ3gMlMdGBAVBYH5aiCY4SBjLCN1gH0CypAjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ti5dhSzs; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1706746523; c=relaxed/simple;
+	bh=27wmXzsgBuwC0/tRLzTcix6eSwjml4hF8vNJfLSfj4s=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=h46l9i4HCO/yeRUzNr4F+9vC4MmnEJQV5Cp5mwqPwSUzsuiTiX2odq0fZ52k6NQ+sIcB+FISg9LTYQ5kmeFcCXsAUeEufdWMqZ8Jzl8LcimZV2ViSiQ6j6kVhcM0zNClUEKL11fz8BuLrIvdWd5NLIMKZ/lI6+Yhr5gM1AZfbUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RCpoy+4x; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ti5dhSzs"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d89f0ab02bso13535ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 14:23:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RCpoy+4x"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6ade10cb8so753458276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jan 2024 16:15:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706739787; x=1707344587; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VLZjnnQr1hSsjDpZ3P3+76TqgNoCqvXQ4Y9R9TvsEfc=;
-        b=Ti5dhSzsmScIcVuDKx/VlZ4+KbmyKophgSBwGylHVrEdh5qC65W1iUJ/ywfPfmxq2P
-         tAg2dxoIaloo4VVT4fYLoyMUnXG0Vc1GQO+7WI4e8wIVGUuDwdCnL9bP7+o/dQC8ys1J
-         ZNyWzcHZ+sCRVQRQLCeNZQH5wy+ksd+6NPMI6UZ+2WcZydov/uqh+PeLIHCjdJsLxlpH
-         2dQD8ogbOdRDDyNece6ag0dnAT+XpaQxye2OUgOlLIDRApuA1k6nwmJLcPOo8J48NpHF
-         pLyF0RARpYECAGkPCC4mjTC61vcL1A2RxO2Marzy5Fr0uCCu71xd1e/DSCKG2+DmtOhH
-         MpGQ==
+        d=google.com; s=20230601; t=1706746521; x=1707351321; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2F04A0OfF26PLB6g2tCcO6N4OtMZoaSU7mdBY8RaIms=;
+        b=RCpoy+4xNYVZ43QkZLSHHifaV4kGY06lOGdGP8aikinISvVYTnjmdhEBoBqYIuEn0a
+         EhDartG/g472QtNgZgtuXDjDPF7RiW6RC8VmXElaZSVjWi/XPvQrvqGkeseDFDYBPhwl
+         MN7+/UYkBS75VH7yCrVq627ZIocrbAPgAzRfQSkQDm5utQJ5edzgyynXwLGCe8zFrsKL
+         P6CIv4Dg3JKvGXV1kb+dZwsIhTideAFzyflIim862YviQZpVSY+YnVjhSiynJSFMQ8n8
+         AvV6Npkt4Z5zgQlyKYG+noi6oGEGI5yaewQuGbTZmaEoDEwx1CSniwprfkPJezsbBXRl
+         tMTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706739787; x=1707344587;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VLZjnnQr1hSsjDpZ3P3+76TqgNoCqvXQ4Y9R9TvsEfc=;
-        b=Dxf7h5BXTJOgMeJJyx2Wws5GgCfkDykTS8TtnM9SNhXHa49L80V8OD0XyA5Pgl7rcv
-         gshuYBZLBdGwPzsbYMojXpfguvOw0uYQ71jggoGlzo1u+i9n2fx1gnLktFrU3PwN4ele
-         wNnZX7NMVOGkkMUXoEQOed+r4h4M7Xgsc2RpODTGlbmbicrYMlKzn77oGciCSLXfQHOw
-         9OZEwVAOH405tgBSNvFf/viA30MtrQ6gFKcrAbHtpXDJi8hSbudgozjU2nQ3/VxrNg7D
-         4PJKMVoQiQjKIJplHQ9a0bpg1w4N7dW7fKpsGFpWAlb7fclwYf5hBhm4nG4YSpDIcCGV
-         WUaw==
-X-Gm-Message-State: AOJu0Yw5UPBg5X9R6PBIPtnZwaDhG7ZRM0Ukz4a5AxYOFI8In9BaFvD6
-	sctaCAcBNIyRuNEpjPB5UuSuOFxAUbsWAFD47sI3J+tVkSErDqT5LTPCflbDYKf4GzGp7blAjKe
-	dtMQ3GPKtn0ioBeTnNtK59E9shCIkFUmePffG
-X-Google-Smtp-Source: AGHT+IESkS6TrhOS6lYf62UWcE3qIGRmQGUnqsw+Dky0H/SLbbYVBJ8sL7NPCGG71xw7pMkaike3pJgrfm6D4Wo3seA=
-X-Received: by 2002:a17:902:ecc5:b0:1d5:7463:523a with SMTP id
- a5-20020a170902ecc500b001d57463523amr32635plh.5.1706739787124; Wed, 31 Jan
- 2024 14:23:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706746521; x=1707351321;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2F04A0OfF26PLB6g2tCcO6N4OtMZoaSU7mdBY8RaIms=;
+        b=HrTHqvNDVDPWErCwx1GkZSih6L7yZBM6C2vboUWTc090ccDOjZ/XDNtrH2lf0zqgSj
+         +UHR+MwoizHTqCoSO2IfcG0qFKgmzQn6NFgYjfWmQBpPEJ/Z3WcRAW/cviAPBMmJGsHu
+         KJ+reoyev+FtsEnvhU9za94DY8XZTwnsJwKy6vl2YBZMOp9gHbLSR0AwaxoLJTlRKZGe
+         wiYtEWahXuRm/G5G550LXMu82D0q22XF9L+LBwMqeNSGsQUekauyYH58kwtXHnx2gnyE
+         X+ahSCUAyRyZLmk9/1Os1bf6KwjG3vFgW81032eojkRL8xn2HDQKmLfIDWa2xs6gTUnb
+         cXGg==
+X-Gm-Message-State: AOJu0Yx0i/gP7bO2P6kZuaNPMmK5qaqMHBatRtSgbUmbDgmBSWWmUU1p
+	w6sOGGOud9yYj1aLxROVT9I5gLkCwvTxHBTHnnt3Bk5m4SKHDqBrkvPaT+oeShhoDAtcaZs6hRe
+	gdnrKIg==
+X-Google-Smtp-Source: AGHT+IEK8rHCIOvwsV2OYlNOOUXAaJ8tOl4BTM1Fvzt31QXvwhU+AVupSdgj4QJrnxEwKerQdml7nlb2kwFT
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:16c5:1feb:bf99:a5d1])
+ (user=irogers job=sendgmr) by 2002:a25:8912:0:b0:dc6:19b9:5b83 with SMTP id
+ e18-20020a258912000000b00dc619b95b83mr1132435ybl.6.1706746521125; Wed, 31 Jan
+ 2024 16:15:21 -0800 (PST)
+Date: Wed, 31 Jan 2024 16:14:55 -0800
+Message-Id: <20240201001504.1348511-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240103050635.391888-1-irogers@google.com>
-In-Reply-To: <20240103050635.391888-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Subject: [PATCH v2 1/9] perf thread_map: Skip exited threads when scanning /proc
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 31 Jan 2024 14:22:55 -0800
-Message-ID: <CAP-5=fVnWKiHNLXbNgseabcVHXp9PkukmOGSD9SFnUQCYhk8Og@mail.gmail.com>
-Subject: Re: [PATCH v7 00/25] maps/threads/dsos memory improvements and fixes
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
-	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Guilherme Amadio <amadio@gentoo.org>
+	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 2, 2024 at 9:06=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> Modify the implementation of maps to not use an rbtree as the
-> container for maps, instead use a sorted array. Improve locking and
-> reference counting issues.
->
-> Similar to maps separate out and reimplement threads to use a hashmap
-> for lower memory consumption and faster look up. The fixes a
-> regression in memory usage where reference count checking switched to
-> using non-invasive tree nodes.  Reduce its default size by 32 times
-> and improve locking discipline. Also, fix regressions where tids had
-> become unordered to make `perf report --tasks` and
-> `perf trace --summary` output easier to read.
->
-> Better encapsulate the dsos abstraction. Remove the linked list and
-> rbtree used for faster iteration and log(n) lookup to a sorted array
-> for similar performance but half the memory usage per dso. Improve
-> reference counting and locking discipline, adding reference count
-> checking to dso.
->
-> v7:
->  - rebase to latest perf-tools-next where 22 patches were applied by Arna=
-ldo.
->  - resolve merge conflicts, in particular with fc044c53b99f ("perf
->    annotate-data: Add dso->data_types tree") that required more dso
->    accessor functions.
+Scanning /proc is inherently racy. Scanning /proc/pid/task within that
+is also racy as the pid can terminate. Rather than failing in
+__thread_map__new_all_cpus, skip pids for such failures.
 
-Ping. No review comments:
-https://lore.kernel.org/lkml/20240103050635.391888-1-irogers@google.com/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/thread_map.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-This may start to conflict with Adrian's work:
-https://lore.kernel.org/lkml/20240131192416.16387-1-adrian.hunter@intel.com=
-/
-but should just need minor get/put cleanup.
+diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
+index e848579e61a8..18fbc41d09f3 100644
+--- a/tools/perf/util/thread_map.c
++++ b/tools/perf/util/thread_map.c
+@@ -109,9 +109,10 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
+ 
+ 		snprintf(path, sizeof(path), "/proc/%d/task", pid);
+ 		items = scandir(path, &namelist, filter, NULL);
+-		if (items <= 0)
+-			goto out_free_closedir;
+-
++		if (items <= 0) {
++			pr_debug("scandir for %d returned empty, skipping\n", pid);
++			continue;
++		}
+ 		while (threads->nr + items >= max_threads) {
+ 			max_threads *= 2;
+ 			grow = true;
+@@ -152,8 +153,6 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
+ 	for (i = 0; i < items; i++)
+ 		zfree(&namelist[i]);
+ 	free(namelist);
+-
+-out_free_closedir:
+ 	zfree(&threads);
+ 	goto out_closedir;
+ }
+-- 
+2.43.0.429.g432eaa2c6b-goog
 
-Thanks,
-Ian
-
-
-> v6 series is here:
-> https://lore.kernel.org/lkml/20231207011722.1220634-1-irogers@google.com/
->
-> Ian Rogers (25):
->   perf maps: Switch from rbtree to lazily sorted array for addresses
->   perf maps: Get map before returning in maps__find
->   perf maps: Get map before returning in maps__find_by_name
->   perf maps: Get map before returning in maps__find_next_entry
->   perf maps: Hide maps internals
->   perf maps: Locking tidy up of nr_maps
->   perf dso: Reorder variables to save space in struct dso
->   perf report: Sort child tasks by tid
->   perf trace: Ignore thread hashing in summary
->   perf machine: Move fprintf to for_each loop and a callback
->   perf threads: Move threads to its own files
->   perf threads: Switch from rbtree to hashmap
->   perf threads: Reduce table size from 256 to 8
->   perf dsos: Attempt to better abstract dsos internals
->   perf dsos: Tidy reference counting and locking
->   perf dsos: Add dsos__for_each_dso
->   perf dso: Move dso functions out of dsos
->   perf dsos: Switch more loops to dsos__for_each_dso
->   perf dsos: Switch backing storage to array from rbtree/list
->   perf dsos: Remove __dsos__addnew
->   perf dsos: Remove __dsos__findnew_link_by_longname_id
->   perf dsos: Switch hand code to bsearch
->   perf dso: Add reference count checking and accessor functions
->   perf dso: Reference counting related fixes
->   perf dso: Use container_of to avoid a pointer in dso_data
->
->  tools/perf/arch/x86/tests/dwarf-unwind.c      |    1 +
->  tools/perf/builtin-annotate.c                 |    8 +-
->  tools/perf/builtin-buildid-cache.c            |    2 +-
->  tools/perf/builtin-buildid-list.c             |   18 +-
->  tools/perf/builtin-inject.c                   |   96 +-
->  tools/perf/builtin-kallsyms.c                 |    2 +-
->  tools/perf/builtin-mem.c                      |    4 +-
->  tools/perf/builtin-record.c                   |    2 +-
->  tools/perf/builtin-report.c                   |  209 +--
->  tools/perf/builtin-script.c                   |    8 +-
->  tools/perf/builtin-top.c                      |    4 +-
->  tools/perf/builtin-trace.c                    |   43 +-
->  tools/perf/tests/code-reading.c               |    8 +-
->  tools/perf/tests/dso-data.c                   |   67 +-
->  tools/perf/tests/hists_common.c               |    6 +-
->  tools/perf/tests/hists_cumulate.c             |    4 +-
->  tools/perf/tests/hists_output.c               |    2 +-
->  tools/perf/tests/maps.c                       |    7 +-
->  tools/perf/tests/symbols.c                    |    2 +-
->  tools/perf/tests/thread-maps-share.c          |    8 +-
->  tools/perf/tests/vmlinux-kallsyms.c           |   16 +-
->  tools/perf/ui/browsers/annotate.c             |    6 +-
->  tools/perf/ui/browsers/hists.c                |    8 +-
->  tools/perf/ui/browsers/map.c                  |    4 +-
->  tools/perf/util/Build                         |    1 +
->  tools/perf/util/annotate-data.c               |    6 +-
->  tools/perf/util/annotate.c                    |   45 +-
->  tools/perf/util/auxtrace.c                    |    2 +-
->  tools/perf/util/block-info.c                  |    2 +-
->  tools/perf/util/bpf-event.c                   |    9 +-
->  tools/perf/util/bpf_lock_contention.c         |    8 +-
->  tools/perf/util/build-id.c                    |  136 +-
->  tools/perf/util/build-id.h                    |    2 -
->  tools/perf/util/callchain.c                   |    4 +-
->  tools/perf/util/data-convert-json.c           |    2 +-
->  tools/perf/util/db-export.c                   |    6 +-
->  tools/perf/util/dlfilter.c                    |   12 +-
->  tools/perf/util/dso.c                         |  469 +++---
->  tools/perf/util/dso.h                         |  549 +++++--
->  tools/perf/util/dsos.c                        |  529 ++++---
->  tools/perf/util/dsos.h                        |   40 +-
->  tools/perf/util/event.c                       |   12 +-
->  tools/perf/util/header.c                      |    8 +-
->  tools/perf/util/hist.c                        |    4 +-
->  tools/perf/util/intel-pt.c                    |   22 +-
->  tools/perf/util/machine.c                     |  570 +++-----
->  tools/perf/util/machine.h                     |   32 +-
->  tools/perf/util/map.c                         |   73 +-
->  tools/perf/util/maps.c                        | 1280 +++++++++++------
->  tools/perf/util/maps.h                        |   65 +-
->  tools/perf/util/probe-event.c                 |   26 +-
->  tools/perf/util/rb_resort.h                   |    5 -
->  .../util/scripting-engines/trace-event-perl.c |    6 +-
->  .../scripting-engines/trace-event-python.c    |   21 +-
->  tools/perf/util/session.c                     |   21 +
->  tools/perf/util/session.h                     |    2 +
->  tools/perf/util/sort.c                        |   19 +-
->  tools/perf/util/srcline.c                     |   65 +-
->  tools/perf/util/symbol-elf.c                  |  132 +-
->  tools/perf/util/symbol.c                      |  217 +--
->  tools/perf/util/symbol_fprintf.c              |    4 +-
->  tools/perf/util/synthetic-events.c            |   24 +-
->  tools/perf/util/thread.c                      |    8 +-
->  tools/perf/util/thread.h                      |    6 -
->  tools/perf/util/threads.c                     |  186 +++
->  tools/perf/util/threads.h                     |   35 +
->  tools/perf/util/unwind-libunwind-local.c      |   20 +-
->  tools/perf/util/unwind-libunwind.c            |    9 +-
->  tools/perf/util/vdso.c                        |   56 +-
->  69 files changed, 3127 insertions(+), 2158 deletions(-)
->  create mode 100644 tools/perf/util/threads.c
->  create mode 100644 tools/perf/util/threads.h
->
-> --
-> 2.43.0.472.g3155946c3a-goog
->
