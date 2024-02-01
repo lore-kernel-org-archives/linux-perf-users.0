@@ -1,90 +1,119 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F1212FB03;
-	Thu,  1 Feb 2024 18:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374E385631;
+	Thu,  1 Feb 2024 19:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706811759; cv=none; b=lDFMN0ch5kYe9PJQxrGHKfEVeZRP3kGJ4qyrQXnTuQkY0U3Sg2IvLcHO2c2iAGjbgzPyb9fpPuiCBqQSwA4SMG4FbPwo8nbbJdAD/KMpzEEjUB1eRYE0FTuUAQNhW9AVJY3O7+6PHcJicreaFuzJrhKzbRqZLQgbgTLjqwDFeDs=
+	t=1706815255; cv=none; b=l0cR3j85vHqnmwSsZObmIBR5ThTNiuDmA3de38nvhXX25mu+BcowdtvsrXncy667izPxQlC/e3zD+z/TLahEH3nptOHeTdohlfgpaad5ZXgeTlFbm1f0cxkHuiZ2gIqR8jW074A2oAyeDZqN0Mq76WdurAoCH94oCeHt3rj0fN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706811759; c=relaxed/simple;
-	bh=75P+PiyZ7hmvzVmev6Os4atfaZaMVdujAHmGyUGpB8Y=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Vfus2NmLVMhp99yqGRu9cbDBE5dKb+XXqe0PvVNnNMOsBf/kSLz8mOsvdRXIGxk+KVSGtywptDokKb9o5XWk+ivXa57BhwyL+wz/FfZ+Ur/6vgtpp2NQV2150HdNOJXYDrX5BAFVM18IJA8HM5jrn7SQHHxA6KjGF6SINxRkIGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=uksK0Oo3; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1706815255; c=relaxed/simple;
+	bh=8ByGpw4Ub5BR+JBxRpGU9i868XZCdYzjzStzYSpZcaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bsUPpHUtbFsu/Ed5QV2N2czMWI5dFaJNmKrdSztkUNWjPmrxC9sl9F7OTL3YxUSSUDdHaPXEKFwZKFH9f/RZjSvdGxwFc8GAOfP0z+CAvQ3ZreSeoy1disB4PPPTo1f4n/EKPE5VKPC8p/RF3Aui95zMH7NIgGVwgrU8Q/1Oiqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzOTlHxm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="uksK0Oo3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1706811716; x=1707416516; i=markus.elfring@web.de;
-	bh=75P+PiyZ7hmvzVmev6Os4atfaZaMVdujAHmGyUGpB8Y=;
-	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
-	b=uksK0Oo3yuVjhH4hfyACu1PJdt+2P+7Lms9PpsWfq0leDSgF5uVVH7SuSvzLC4xi
-	 tDEGLdnV1Hizx/ksx17X4idOFueLUQp0BgSiO4p0smMMpz4RGqv5t0ipQUKJ+lxf5
-	 lYZx9NHu0mR+6BkG2k9qGuydLg0WvJ+jD8xkI75AMiiRzKV33NmedfySJaqjq6rAN
-	 MVWbKZIAG7uBUhzjvmuUtqHUEeUxSwTOe9d5mKOtQyfWxS1VkYRagg/jCTIMw5zLw
-	 5lwNeuKPj2RtFISaXCJIDsZUwCexGBlTqMb63VUss2s8b3En2BRagnLVfTeCjdPUN
-	 xlMWm2UIAIROdfq7DA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MCGSU-1rME2o0Vdq-009f7d; Thu, 01
- Feb 2024 19:21:56 +0100
-Message-ID: <f15f0df1-92be-4bc9-82a2-1d8fa3275dd7@web.de>
-Date: Thu, 1 Feb 2024 19:21:53 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzOTlHxm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 633ADC43390;
+	Thu,  1 Feb 2024 19:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706815254;
+	bh=8ByGpw4Ub5BR+JBxRpGU9i868XZCdYzjzStzYSpZcaQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gzOTlHxm42AJzkNvcYod5FnctsxVUpkGYpyxL9dB/i5vickaagyGDQy88hFm6bvWd
+	 ym2Or4Z3hANT+/xKff/LMtVY7gByIg1NEQV6iwKx+p2if0vrq3QYo3cTcDTFFcShEv
+	 lP6eBu7rbxfcWW9OhOo8goiC+3ojDDate/8Xs8mv0JROO0tSumWzZzVpnPcn8q14sl
+	 xr3llIpr0hWmFH+2nI/I+gGbBFaNpYeXgJNSNBmWJcqo+bgBOATo01kTtH5naD1sXr
+	 KjLYcXCO7Di2+O/qd0iSDZRNo2khimWLVX7voXP+nM9u48FJ+BwemSnndvvUUa5lTd
+	 T92SMb2YjNJzQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 14D5C40441; Thu,  1 Feb 2024 16:20:52 -0300 (-03)
+Date: Thu, 1 Feb 2024 16:20:52 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Anders Roxell <anders.roxell@linaro.org>
+Cc: linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	james.clark@arm.com, Arnd Bergmann <arnd@arndb.de>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: Perf not able to cross compile
+Message-ID: <ZbvvFLN32si2fhGD@kernel.org>
+References: <CADYN=9+DUzu6xEThaWQKp0udCsPs7h3XijyE5zmn-UYG8oM+AA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [RFC] perf: Reconsider an error code selection in bpf_map__fprintf()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cmkOoJ6w0GHniCFLXbNn4qAMPHQQID28NOsh0VbKnt7oG2/4vLY
- N3LSphl5OJ7CYzzBrSPJHzxyk4TbrukdvwhAK1dO3AJRFqwxZ3BeqvE8tQzOyq1lZPzXmNu
- OLARulhDKN0GqoMS6cBGdnj3Cdpib4Dwdl4BezGOOvgUo6UPvh5T+9hsAcmIwaIPAOMIfKv
- CRLkAmBjEFdLsEKk3imOQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:R/WYptCQz68=;Af7l6S2LLeGwo2+U+rjah1l8f+D
- tU7jQ/yUuY0bVzzQk/a4ndgouHE+8utWOXYL4aDt4GQplhqtqnU4nQKOiYh/5rCbacfYm4gc2
- IzDol4D9leBFHe0/tWopNyHGHcxx6vAS0HPEpPI8MZSkBIo3ZNUNVxVmi+u/jTaQBhoqLMJ+N
- sLSnVmTI3I3powb2d9GN12qnUDGuwsLnvnsQp6myEPZdrIz+AMD4X/mziPqumh1FBc0YgeS4q
- 5wSoN4mbgmab2WrmmCaskpSwQLgVY5H6/Gh+TWyqarew8jAQqDX+OeO9Td6tWyCcPXV6tsogb
- qIwqWTtPS2HfOCW4OeU1mXGOusethmW94aKnEYgS/nHwjMlvZLzvsQGR1FYrGHz4DH1j0k8FU
- L6M84isgd1WNHzH/ix7XRQildp2t0+IjRiyt4QD8ora9HockRpFtaMhLDli3PG/qQ0V/yJtz8
- Ob5I0HEe03VGoRX/EFV6SLm3KIVqkou1KIscS8iZF9Omj1ALHJykIGq+aey8CS1fKRq+WDcGf
- cGy0vqbbkPU9uIEv1jkegAXDy/AK5IffWP/xzgjnNHalTxLO9Un4PA5He5VNjC++NwO/swaFw
- paXdR4g8DRUjPROJyeau8dh/rotsfoPlHdv0V6yVzCg6mBOvqGaKJ2eGBCWfRx5rZW6kk4mWi
- zdttA/99o2u4ghPhRM8nF/OOEiHORYFr9wFb37YOCSwnvNgu4CR5NyfxtBP+6aAwt7l3sLumc
- LzFt7fjb9ddgp0XuEyeZA+Egacp8l8XuANOqH9zk1Y9lV/lPFmi7/X4W34iHrBVMjaBAXeChd
- Ne4Pm+i5ALojTKuXTVZ87vFU7u6hrzhZDgsgamlGkB6qM=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADYN=9+DUzu6xEThaWQKp0udCsPs7h3XijyE5zmn-UYG8oM+AA@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-Hello,
+Em Thu, Feb 01, 2024 at 12:32:09PM +0100, Anders Roxell escreveu:
+> Hey,
+> 
+> I'm trying to cross compile perf ARCH=arm64 on my x86_64 host from
+> linus tree [1], branch master.
+> 
+> 
+> This is the failue I see, full log [2]:
+> 
+> ...
+>   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/elf.o
+>   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/features.o
+> cc1: error: ‘-fcf-protection=full’ is not supported for this target
+> error: command '/usr/local/bin/sccache' failed with exit code 1
 
-A null pointer check is performed for the input parameter =E2=80=9Cmap=E2=
-=80=9D.
-It looks suspicious that the function =E2=80=9CPTR_ERR=E2=80=9D is applied=
- then for
-a corresponding return statement.
-https://elixir.bootlin.com/linux/v6.8-rc2/source/tools/perf/util/bpf_map.c=
-#L29
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/to=
-ols/perf/util/bpf_map.c?h=3Dv6.8-rc2&id=3D41bccc98fb7931d63d03f326a746ac4d=
-429c1dd3#n29
+We have some checks to deal with unknown options that came from python,
+perl config, but it seems in your case there is something that is not
+being covered, worth of further investigation.
 
-This issue was detected by using the Coccinelle software.
+Can you simply first try disabling python support? Look at
+tools/perf/Makefile.perf, first trying with NO_LIBPYTHON=1 to your
+make command line?
 
-Would any other error code determination be more appropriate here?
+- Arnaldo
 
-Regards,
-Markus
+> cp: cannot stat
+> '/home/tuxbuild/.cache/tuxmake/builds/1/build/python_ext_build/lib/perf*.so':
+> No such file or directory
+> make[2]: *** [Makefile.perf:678:
+> /home/tuxbuild/.cache/tuxmake/builds/1/build/python/perf.cpython-311-x86_64-linux-gnu.so]
+> Error 1
+> make[2]: *** Waiting for unfinished jobs....
+>   LD      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/libbpf-in.o
+>   LINK    /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/libbpf.a
+> make[1]: *** [Makefile.perf:261: sub-make] Error 2
+> make: *** [Makefile:70: all] Error 2
+> 
+> Running 'x86_64-linux-gnu-python3-config --cflags' I see
+> '-fcf-protection' in the output and this happens when I'm building
+> cross compile arm64 on my x86_64 host machine. Building on an arm64
+> host works. cross compile x86_64 on my x86_64 host works too.
+> 
+> I have 'aarch64-linux-gnu-python3-config' installed but that isn't used.
+> 
+> $ x86_64-linux-gnu-python3-config --cflags
+> -I/usr/include/python3.11 -I/usr/include/python3.11  -Wsign-compare -g
+>   -fstack-protector-strong -fstack-clash-protection -Wformat
+> -Werror=format-security -fcf-protection  -DNDEBUG -g -fwrapv -O2 -Wall
+> $ aarch64-linux-gnu-python3-config --cflags
+> -I/usr/include/python3.11 -I/usr/include/python3.11  -Wsign-compare -g
+>   -fstack-protector-strong -fstack-clash-protection -Wformat
+> -Werror=format-security -mbranch-protection=standard  -DNDEBUG -g
+> -fwrapv -O2 -Wall
+> 
+> I tried to set PYTHON and PYTHON_CONFIG too, but didn't work.
+> 
+> It doesn't try to use $(CROSS_COMPILE)python3-config, any idea how to
+> use the correct config?
+> 
+> Cheers,
+> Anders
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> [2]  https://storage.tuxsuite.com/public/linaro/lkft/builds/2bc6x6cISHzG9Jgo0oAVv2OgLOG/build.log
+
+-- 
+
+- Arnaldo
