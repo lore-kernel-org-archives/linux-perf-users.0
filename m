@@ -1,312 +1,123 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48FA5F464
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Feb 2024 14:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27CE27E0F7;
+	Thu,  1 Feb 2024 16:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706797505; cv=none; b=XzXVj+QC0ctQeQUIWsX6pgKmdLgjvl42SZEjlskV627ANDkCRxUZBhEs/Yn13WIXkmjqNuezfjXxnS8XjOYpdpLdjZVvmhqLGTvAA5JZ5/dTPmUWxF8gFF5LzpxVMeT2WLlwPFc+j11sxhcDnuWXGL2E+2AwLRn219Wm86eIrLI=
+	t=1706804978; cv=none; b=UgUQUoihobVZanaun1GAlc+z2BFln2vOfEzmsKGMhtdG3FA+Gz2DxwbsMLs4f//fSzyvSvNArtt+6X0dEZfRayNMDcZ+49HkjkzDjU7J+lGC+eZIpIlzvp6oxnfBqF94JDijFmBu4zDlsZ4vdGnj5JaER98pJfJJ/Zvrh83HDXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706797505; c=relaxed/simple;
-	bh=urTC8c/x4GjOmh3DyV8iK3vfUq7I4Kdkr8Ip1YAlpbU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kpbUHgXAqb/spuck1yA15L/lzVsZceUMKqpBJRwFQhF//jl3hOuO5TGj3jO3Cr/GosHQ7N8iAGlMrADWCoK9vSQbtRS/XduiIRoUAJkRUkjc4JsSIaMGvcuJdRtRFlizIl8rH/OynYymlhLPghIHB3nq2HK50IlGCNYeReEocLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vIA7Zmft; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vIA7Zmft"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d89f0ab02bso101675ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Feb 2024 06:25:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706797503; x=1707402303; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3oik3gsH7UCRMxBdMG02de4OGV898umiHRSHwrLUdZI=;
-        b=vIA7ZmftqW1QTWmyWPq9JEbOmBVd8wve5m8oPT7SROsE3310AomOg28ZHVHk/uYyOO
-         R5uzmYW5fsNgdv9qw7AlmlBltH76NW+N6kjoamqTj2lcS25gOPFZ5pICobcfAsGeauMF
-         mqkQ9V9kJ8MxLkYEbKieEz8GJD+AVFt6A3J+tpmMnj+KOQ7ID9aCY6SYImXgAQz40psM
-         gDELNuES+y1I1SZda7P+mJmH8Co7iQrHKsH6PTP2ZADsiRFWFewKIuS1Yh15sMw3858m
-         ova2xsQDxokCUNlX5eOYK0ZDaAyOt4vEcxMKEx1yQtq2FS2v9ru2WkBxQu+xMX+HPsCh
-         HTsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706797503; x=1707402303;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3oik3gsH7UCRMxBdMG02de4OGV898umiHRSHwrLUdZI=;
-        b=AwHciRwr05nDDlK1oRuE1SeQUJ+PgRA9glmneSEh56K8RRKvRdUbugImerDSH0t7/P
-         DGDLuXiInjZ/lSpKPBi4V5WmkZwgQyvW9JxkMyOQBuqzjcpsW0PZOeu3yaF2V4lrOPYR
-         FCFDbflMmwI1Ii/xiajVH31AVz4mdxrfiiv0adYfYdwdNaVSqLBO3jzbwqiAwt4tygnK
-         q0NrNzPUsFnFj46sS68/kQW4yMIfG6hViUIDxk8EntCnOrDkHCnfj89LTmkJezd42+Oz
-         ZZLrfPBYwUXtgs7FovTXQBWOMJPSdaa+54mKMboRS/MqEq3BlNoqiAqmU5SeumQGrKRi
-         IaOg==
-X-Gm-Message-State: AOJu0YyD0858/x+lhnv37O3dSH56XxW6ZH9HfNbfJttxvgD7aznStKEO
-	jvRcIGOt6esMuBqvXL7c8JfJyprCHVuNN8D55cTav57ZUxSB7UdKjEP8f81T7lpWBDVoeLAYFI5
-	AGJ1bzyn7nDI8FUNXcTNOSmcBXsnoplrfHU4IpVig8QIK5dekIUqunN4=
-X-Google-Smtp-Source: AGHT+IHI1zkSF24WGgfobv3gzLaErXwwm+tRmNbiHxBAsTDDC816FuOmnpUy05KzuzVXoUjvif2HUxanJbXCQ6xr+OI=
-X-Received: by 2002:a17:903:41cb:b0:1d8:fc6f:e1da with SMTP id
- u11-20020a17090341cb00b001d8fc6fe1damr245879ple.2.1706797502666; Thu, 01 Feb
- 2024 06:25:02 -0800 (PST)
+	s=arc-20240116; t=1706804978; c=relaxed/simple;
+	bh=t/R3Rd5j1ZopSjwuU3Ihq0mN+ll9tFu0mR7SnKDgZhk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U5+Bi/w++aqvcKIVk0pSUAEbXESQ4ed24UjWIZm9ICnPWOhfSvp2UqN8ISS+k1hmLyfWttRkEu4kpEneB8c9VZ/oZMjRWm0wnrowc95E4TAttDwPKUgDYf1VbV9czvEtrgch2G6jcXfdJszYy5CMeuUqwdEYkFkBslhvEMR8ix8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C7A1DA7;
+	Thu,  1 Feb 2024 08:30:18 -0800 (PST)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC1A63F738;
+	Thu,  1 Feb 2024 08:29:32 -0800 (PST)
+Message-ID: <a4c616ff-12bf-592b-b74d-407013a68cb7@arm.com>
+Date: Thu, 1 Feb 2024 16:29:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201042236.1538928-1-irogers@google.com> <20240201042236.1538928-4-irogers@google.com>
- <9d177173-c66f-a0d3-ba4d-2261f8663fce@arm.com>
-In-Reply-To: <9d177173-c66f-a0d3-ba4d-2261f8663fce@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 Feb 2024 06:24:51 -0800
-Message-ID: <CAP-5=fVDjOfM8rZStYJCFPcTD3uhJDNSf_=JrkwYjFrnoOLC=w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] perf arm-spe/cs-etm: Directly iterate CPU maps
-To: James Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
-	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH V4 00/11] perf/core: Add ability for an event to "pause"
+ or "resume" AUX area tracing
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, Yicong Yang
+ <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240111081914.3123-1-adrian.hunter@intel.com>
+ <31bae596-ecb1-4b9c-9f1c-aaec4bcefd38@intel.com>
+ <CAP-5=fUo96EABpH6=7i2cXFmZhAB2MM=UsnG-+vL4HJtLGS=bA@mail.gmail.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fUo96EABpH6=7i2cXFmZhAB2MM=UsnG-+vL4HJtLGS=bA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 1, 2024 at 3:25=E2=80=AFAM James Clark <james.clark@arm.com> wr=
-ote:
->
->
->
-> On 01/02/2024 04:22, Ian Rogers wrote:
-> > Rather than iterate all CPUs and see if they are in CPU maps, directly
-> > iterate the CPU map. Similarly make use of the intersect
-> > function. Switch perf_cpu_map__has_any_cpu_or_is_empty to more
-> > appropriate alternatives.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/arch/arm/util/cs-etm.c    | 77 ++++++++++++----------------
-> >  tools/perf/arch/arm64/util/arm-spe.c |  4 +-
-> >  2 files changed, 34 insertions(+), 47 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/ut=
-il/cs-etm.c
-> > index 77e6663c1703..f4378ba0b8d6 100644
-> > --- a/tools/perf/arch/arm/util/cs-etm.c
-> > +++ b/tools/perf/arch/arm/util/cs-etm.c
-> > @@ -197,38 +197,32 @@ static int cs_etm_validate_timestamp(struct auxtr=
-ace_record *itr,
-> >  static int cs_etm_validate_config(struct auxtrace_record *itr,
-> >                                 struct evsel *evsel)
-> >  {
-> > -     int i, err =3D -EINVAL;
-> > +     int idx, err =3D -EINVAL;
-> >       struct perf_cpu_map *event_cpus =3D evsel->evlist->core.user_requ=
-ested_cpus;
-> >       struct perf_cpu_map *online_cpus =3D perf_cpu_map__new_online_cpu=
-s();
-> > +     struct perf_cpu_map *intersect_cpus =3D perf_cpu_map__intersect(e=
-vent_cpus, online_cpus);
->
-> Hi Ian,
->
-> This has the same issue as V1. 'any' intersect 'online' =3D=3D empty. Now=
- no
-> validation happens anymore. For this to be the same as it used to be,
-> validation has to happen on _all_ cores when event_cpus =3D=3D -1. So it
-> needs to be 'any' intersect 'online' =3D=3D 'online'.
->
-> Same issue below with cs_etm_info_priv_size()
 
-Thanks James, sorry for the churn. I'll work on that for v3.
 
-Ian
+On 31/01/2024 16:53, Ian Rogers wrote:
+> On Mon, Jan 29, 2024 at 4:49 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 11/01/24 10:19, Adrian Hunter wrote:
+>>> Hi
+>>>
+>>> Hardware traces, such as instruction traces, can produce a vast amount of
+>>> trace data, so being able to reduce tracing to more specific circumstances
+>>> can be useful.
+>>>
+>>> The ability to pause or resume tracing when another event happens, can do
+>>> that.
+>>>
+>>> These patches add such a facilty and show how it would work for Intel
+>>> Processor Trace.
+>>>
+>>> Maintainers of other AUX area tracing implementations are requested to
+>>> consider if this is something they might employ and then whether or not
+>>> the ABI would work for them.
+>>>
+>>> Changes to perf tools are now (since V4) fleshed out.
+>>>
+>>>
+>>> Changes in V4:
+>>>
+>>>     perf/core: Add aux_pause, aux_resume, aux_start_paused
+>>>       Rename aux_output_cfg -> aux_action
+>>>       Reorder aux_action bits from:
+>>>               aux_pause, aux_resume, aux_start_paused
+>>>       to:
+>>>               aux_start_paused, aux_pause, aux_resume
+>>>       Fix aux_action bits __u64 -> __u32
+>>>
+>>>     coresight: Have a stab at support for pause / resume
+>>>       Dropped
+>>>
+>>>     perf tools
+>>>       All new patches
+>>>
+>>> Changes in RFC V3:
+>>>
+>>>     coresight: Have a stab at support for pause / resume
+>>>       'mode' -> 'flags' so it at least compiles
+>>>
+>>> Changes in RFC V2:
+>>>
+>>>       Use ->stop() / ->start() instead of ->pause_resume()
+>>>       Move aux_start_paused bit into aux_output_cfg
+>>>       Tighten up when Intel PT pause / resume is allowed
+>>>       Add an example of how it might work for CoreSight
+>>
+>> Any more comments?
+> 
+> I think the tools side looks good. The parsing changes match the
+> existing style. I wonder if it wouldn't be better to handle the valid
+> strings (pause, resume, etc.) in the lexer rather than a separate
+> parse function, but the pattern used matches the existing one. You can
+> have my Acked-by on the tools changes, although the subtleties of ARM
+> PMUs makes me somewhat nervous in this regard.
+> 
+> Thanks,
+> Ian
 
-> Thanks
-> James
->
-> > +     struct perf_cpu cpu;
-> >
-> > -     /* Set option of each CPU we have */
-> > -     for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
-> > -             struct perf_cpu cpu =3D { .cpu =3D i, };
-> > -
-> > -             /*
-> > -              * In per-cpu case, do the validation for CPUs to work wi=
-th.
-> > -              * In per-thread case, the CPU map is empty.  Since the t=
-raced
-> > -              * program can run on any CPUs in this case, thus don't s=
-kip
-> > -              * validation.
-> > -              */
-> > -             if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus) &&
-> > -                 !perf_cpu_map__has(event_cpus, cpu))
-> > -                     continue;
-> > -
-> > -             if (!perf_cpu_map__has(online_cpus, cpu))
-> > -                     continue;
-> > +     perf_cpu_map__put(online_cpus);
-> >
-> > -             err =3D cs_etm_validate_context_id(itr, evsel, i);
-> > +     /*
-> > +      * Set option of each CPU we have. In per-cpu case, do the valida=
-tion
-> > +      * for CPUs to work with.  In per-thread case, the CPU map is emp=
-ty.
-> > +      * Since the traced program can run on any CPUs in this case, thu=
-s don't
-> > +      * skip validation.
-> > +      */
-> > +     perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
-> > +             err =3D cs_etm_validate_context_id(itr, evsel, cpu.cpu);
-> >               if (err)
-> >                       goto out;
-> > -             err =3D cs_etm_validate_timestamp(itr, evsel, i);
-> > +             err =3D cs_etm_validate_timestamp(itr, evsel, cpu.cpu);
-> >               if (err)
-> >                       goto out;
-> >       }
-> >
-> >       err =3D 0;
-> >  out:
-> > -     perf_cpu_map__put(online_cpus);
-> > +     perf_cpu_map__put(intersect_cpus);
-> >       return err;
-> >  }
-> >
-> > @@ -435,7 +429,7 @@ static int cs_etm_recording_options(struct auxtrace=
-_record *itr,
-> >        * Also the case of per-cpu mmaps, need the contextID in order to=
- be notified
-> >        * when a context switch happened.
-> >        */
-> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
-> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-> >               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> >                                          "timestamp", 1);
-> >               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> > @@ -461,7 +455,7 @@ static int cs_etm_recording_options(struct auxtrace=
-_record *itr,
-> >       evsel->core.attr.sample_period =3D 1;
-> >
-> >       /* In per-cpu case, always need the time of mmap events etc */
-> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
-> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
-> >               evsel__set_sample_bit(evsel, TIME);
-> >
-> >       err =3D cs_etm_validate_config(itr, cs_etm_evsel);
-> > @@ -533,38 +527,32 @@ static size_t
-> >  cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
-> >                     struct evlist *evlist __maybe_unused)
-> >  {
-> > -     int i;
-> > +     int idx;
-> >       int etmv3 =3D 0, etmv4 =3D 0, ete =3D 0;
-> >       struct perf_cpu_map *event_cpus =3D evlist->core.user_requested_c=
-pus;
-> >       struct perf_cpu_map *online_cpus =3D perf_cpu_map__new_online_cpu=
-s();
-> > +     struct perf_cpu cpu;
-> >
-> >       /* cpu map is not empty, we have specific CPUs to work with */
-> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
-> > -             for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
-> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
-> > -
-> > -                     if (!perf_cpu_map__has(event_cpus, cpu) ||
-> > -                         !perf_cpu_map__has(online_cpus, cpu))
-> > -                             continue;
-> > +     if (!perf_cpu_map__is_empty(event_cpus)) {
-> > +             struct perf_cpu_map *intersect_cpus =3D
-> > +                     perf_cpu_map__intersect(event_cpus, online_cpus);
-> >
-> > -                     if (cs_etm_is_ete(itr, i))
-> > +             perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_c=
-pus) {
-> > +                     if (cs_etm_is_ete(itr, cpu.cpu))
-> >                               ete++;
-> > -                     else if (cs_etm_is_etmv4(itr, i))
-> > +                     else if (cs_etm_is_etmv4(itr, cpu.cpu))
-> >                               etmv4++;
-> >                       else
-> >                               etmv3++;
-> >               }
-> > +             perf_cpu_map__put(intersect_cpus);
-> >       } else {
-> >               /* get configuration for all CPUs in the system */
-> > -             for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
-> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
-> > -
-> > -                     if (!perf_cpu_map__has(online_cpus, cpu))
-> > -                             continue;
-> > -
-> > -                     if (cs_etm_is_ete(itr, i))
-> > +             perf_cpu_map__for_each_cpu(cpu, idx, online_cpus) {
-> > +                     if (cs_etm_is_ete(itr, cpu.cpu))
-> >                               ete++;
-> > -                     else if (cs_etm_is_etmv4(itr, i))
-> > +                     else if (cs_etm_is_etmv4(itr, cpu.cpu))
-> >                               etmv4++;
-> >                       else
-> >                               etmv3++;
-> > @@ -814,15 +802,14 @@ static int cs_etm_info_fill(struct auxtrace_recor=
-d *itr,
-> >               return -EINVAL;
-> >
-> >       /* If the cpu_map is empty all online CPUs are involved */
-> > -     if (perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
-> > +     if (perf_cpu_map__is_empty(event_cpus)) {
-> >               cpu_map =3D online_cpus;
-> >       } else {
-> >               /* Make sure all specified CPUs are online */
-> > -             for (i =3D 0; i < perf_cpu_map__nr(event_cpus); i++) {
-> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
-> > +             struct perf_cpu cpu;
-> >
-> > -                     if (perf_cpu_map__has(event_cpus, cpu) &&
-> > -                         !perf_cpu_map__has(online_cpus, cpu))
-> > +             perf_cpu_map__for_each_cpu(cpu, i, event_cpus) {
-> > +                     if (!perf_cpu_map__has(online_cpus, cpu))
-> >                               return -EINVAL;
-> >               }
-> >
-> > diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm=
-64/util/arm-spe.c
-> > index 51ccbfd3d246..0b52e67edb3b 100644
-> > --- a/tools/perf/arch/arm64/util/arm-spe.c
-> > +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> > @@ -232,7 +232,7 @@ static int arm_spe_recording_options(struct auxtrac=
-e_record *itr,
-> >        * In the case of per-cpu mmaps, sample CPU for AUX event;
-> >        * also enable the timestamp tracing for samples correlation.
-> >        */
-> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
-> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-> >               evsel__set_sample_bit(arm_spe_evsel, CPU);
-> >               evsel__set_config_if_unset(arm_spe_pmu, arm_spe_evsel,
-> >                                          "ts_enable", 1);
-> > @@ -265,7 +265,7 @@ static int arm_spe_recording_options(struct auxtrac=
-e_record *itr,
-> >       tracking_evsel->core.attr.sample_period =3D 1;
-> >
-> >       /* In per-cpu case, always need the time of mmap events etc */
-> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
-> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-> >               evsel__set_sample_bit(tracking_evsel, TIME);
-> >               evsel__set_sample_bit(tracking_evsel, CPU);
-> >
+Acked-by: James Clark <james.clark@arm.com>
+
+I will get round to adding the Coresight support at some point. I
+checked the new parsing in this version and it seems to work ok.
