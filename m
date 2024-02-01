@@ -1,128 +1,206 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C599312FB11;
-	Thu,  1 Feb 2024 19:22:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35E98527E;
+	Thu,  1 Feb 2024 20:23:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706815321; cv=none; b=Wy86/Mjv30JAs7IXWKg8XuKU4EsABB2lIueHlWAmYK1KbRQYFnJXrEsJCZGTVjm4qQLOWmjanePK2mxlvJ+RBKZMQK/2euf5kxm3SFANUdLZv81KjEuR0x18fNGHgsWzsiDlUb93yxnRpAl77LNwQrKfZDe70Itv9E3kXvl5mnE=
+	t=1706818987; cv=none; b=czjTgXT9JxRhJoM85oqMVDnU4cJk/00heApmhHVtFW2x57wgt51eVgEMC9JTxHsZrHxtw3Z4cmNjEqE7eMqG6FD0yEV+qma0UIdEovp4DC0kGRWCilCZXu3xp4NXLbkspxlXnssaV+SbKMbCle1pq/0r/bEdzQk/x97z9nv2JnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706815321; c=relaxed/simple;
-	bh=/GVp+KkWn8FbjPzBszbZ74s0vJwipfrVV+J3uWTKmO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hwwpsPnr+nb3e7dxpbYOJFWUlcLqQi94X4IuzSE5WqJ4K+ye3gWjxxx3SEGQjrbW1Gkyan5tPdvMGRNj8bxuBv3o/sw3I3zThMsQaME+g+S4rYj9K4u6QmgKFho3SCVAywDnnEXGg5cpPlzIB4iCGR0BsTbABlyApjorP3S+Nus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwgaHeTy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706818987; c=relaxed/simple;
+	bh=R238ACRc7Yd3i4LA4FkGtAqjAgNIiVAR0SlpktbetVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GKA2ifKMhr5+461gfsu+4ReCZWTzYRkQLI2WxMeil1WYnC07YreyzKAYN3O+fRPkydsCRp8jlG5a1XiJPuJbpFJYwiaTfnhHynn4/IBBGCnqmxg+QB6W3IX/0UyOBcG4FR1f7tVj4NSQ3bXmgHOd+6AgYdKdhDedBLV7pTh5wNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBUtnAKk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwgaHeTy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A0DC433C7;
-	Thu,  1 Feb 2024 19:22:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBUtnAKk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC5D4C433C7;
+	Thu,  1 Feb 2024 20:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706815321;
-	bh=/GVp+KkWn8FbjPzBszbZ74s0vJwipfrVV+J3uWTKmO4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TwgaHeTyLUp69ZlVFY3x7ngz1RK5hWTi7OZQ6FYlfXtaHqU9TCc58hNAv5Ch2StAa
-	 SuYlanJMLgGmBvBsCYdQlgWJeeK4HPQBPS/TtQ5/NVUI60Em5ozQJadYRYKo2AJYzo
-	 kDq8ASD/6BJm8m+rwPU6B43lPV7VA1ulkPu+sHxVvvYi7b7KTbyoUMmLG5SoUrfU+K
-	 cIAihcKLxKasiI7p6PyowNUSnoGNQa8Tp/SF2m67saGfMei/nubiyilawnz5RBMdbC
-	 b7cq/Mqm43Z7YIaDLuU3/VLRju4mjnNO7Vbe0w9WphkkAqGEByer3wTLS5yfIMXTCF
-	 4egtnuTz1pGTA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id ECED740441; Thu,  1 Feb 2024 16:21:58 -0300 (-03)
-Date: Thu, 1 Feb 2024 16:21:58 -0300
+	s=k20201202; t=1706818987;
+	bh=R238ACRc7Yd3i4LA4FkGtAqjAgNIiVAR0SlpktbetVc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WBUtnAKkcH6iuep6aNV4f9hAgM6tzS6Ld+j5cblWk1kIiAyEjT9Taksch2kto0iHQ
+	 z9tD/bDhBQVtBngZfPoEOXTJ1oyzBplattFQABcQjYymT9zJD6/tqNUECvka+rOClq
+	 mxslsZtCIOppAPn5uqxgxPM5guNxQnaCSCrdKYFWnsAxfICQAVOk9K61F0BrsXX+k3
+	 vGyVzEKIhQUsf7QNwOaFpCfEm3uB6Y5tyEYYepbkPwerwRyGe73Gj1vyej804sCWTi
+	 jO27an+OozYhCaNusMCZiufEais88jB+oc6NoqfT10ePapHn+AMqQL9tNr2+BFQvJ1
+	 1GEkfbSmKY4DQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: Anders Roxell <anders.roxell@linaro.org>,
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	Kate Carcia <kcarcia@redhat.com>,
+	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>
-Subject: Re: Perf not able to cross compile
-Message-ID: <ZbvvVjqWByL1385l@kernel.org>
-References: <CADYN=9+DUzu6xEThaWQKp0udCsPs7h3XijyE5zmn-UYG8oM+AA@mail.gmail.com>
- <511f5874-3c97-5928-fd59-b49516ca6b2a@arm.com>
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.8
+Date: Thu,  1 Feb 2024 17:22:54 -0300
+Message-ID: <20240201202254.15588-1-acme@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <511f5874-3c97-5928-fd59-b49516ca6b2a@arm.com>
-X-Url: http://acmel.wordpress.com
 
-Em Thu, Feb 01, 2024 at 11:52:07AM +0000, James Clark escreveu:
-> 
-> 
-> On 01/02/2024 11:32, Anders Roxell wrote:
-> > Hey,
-> > 
-> > I'm trying to cross compile perf ARCH=arm64 on my x86_64 host from
-> > linus tree [1], branch master.
-> > 
-> > 
-> > This is the failue I see, full log [2]:
-> > 
-> > ...
-> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/elf.o
-> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/features.o
-> > cc1: error: ‘-fcf-protection=full’ is not supported for this target
-> > error: command '/usr/local/bin/sccache' failed with exit code 1
-> > cp: cannot stat
-> > '/home/tuxbuild/.cache/tuxmake/builds/1/build/python_ext_build/lib/perf*.so':
-> > No such file or directory
-> > make[2]: *** [Makefile.perf:678:
-> > /home/tuxbuild/.cache/tuxmake/builds/1/build/python/perf.cpython-311-x86_64-linux-gnu.so]
-> > Error 1
-> > make[2]: *** Waiting for unfinished jobs....
-> >   LD      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/libbpf-in.o
-> >   LINK    /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/libbpf.a
-> > make[1]: *** [Makefile.perf:261: sub-make] Error 2
-> > make: *** [Makefile:70: all] Error 2
-> > 
-> > Running 'x86_64-linux-gnu-python3-config --cflags' I see
-> > '-fcf-protection' in the output and this happens when I'm building
-> > cross compile arm64 on my x86_64 host machine. Building on an arm64
-> > host works. cross compile x86_64 on my x86_64 host works too.
-> > 
-> > I have 'aarch64-linux-gnu-python3-config' installed but that isn't used.
-> > 
-> > $ x86_64-linux-gnu-python3-config --cflags
-> > -I/usr/include/python3.11 -I/usr/include/python3.11  -Wsign-compare -g
-> >   -fstack-protector-strong -fstack-clash-protection -Wformat
-> > -Werror=format-security -fcf-protection  -DNDEBUG -g -fwrapv -O2 -Wall
-> > $ aarch64-linux-gnu-python3-config --cflags
-> > -I/usr/include/python3.11 -I/usr/include/python3.11  -Wsign-compare -g
-> >   -fstack-protector-strong -fstack-clash-protection -Wformat
-> > -Werror=format-security -mbranch-protection=standard  -DNDEBUG -g
-> > -fwrapv -O2 -Wall
-> > 
-> > I tried to set PYTHON and PYTHON_CONFIG too, but didn't work.
-> > 
-> > It doesn't try to use $(CROSS_COMPILE)python3-config, any idea how to
-> > use the correct config?
-> > 
-> > Cheers,
-> > Anders
-> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > [2]  https://storage.tuxsuite.com/public/linaro/lkft/builds/2bc6x6cISHzG9Jgo0oAVv2OgLOG/build.log
-> 
-> 
-> Hi Anders,
-> 
-> I see something similar but in the end it works. Despite the name, I
-> also get perf.cpython-311-x86_64-linux-gnu.so generated in my build, but
-> it's actually an arm binary.
-> 
-> For me I'm using python3.10, and the x86 config options don't include
-> -fcf-protection which is probably why it can compile successfully with
-> the arm compiler.
-> 
-> It looks like your assumption is correct and it's not using
-> $(CROSS_COMPILE)python3-config but just python3-config. The answer to
-> how to fix it is probably to start hacking at the makefiles, if PYTHON
-> and PYTHON_CONFIG don't work either.
+Hi Linus,
 
-Right, that seems like a good direction in trying to fix this.
+	Please consider pulling, mostly 'perf test' issues, which in its
+turn are mostly related to myself having Intel hybrid systems at home.
+
+	All in all its about making the build and 'perf test' output
+clean in more systems.
+
+	This is being done after a laptop refresh, so maybe something is
+out of place, lemme know if you find something broken, last refresh was
+before the pandemic, so...
+
+Best regards,
 
 - Arnaldo
+
+The following changes since commit ecb1b8288dc7ccbdcb3b9df005fa1c0e0c0388a7:
+
+  Merge tag 'net-6.8-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2024-01-25 10:58:35 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools-fixes-for-v6.8-1-2024-02-01
+
+for you to fetch changes up to fdd0ae72b34e56eb5e896d067c49a78ecb451032:
+
+  perf tools headers: update the asm-generic/unaligned.h copy with the kernel sources (2024-01-31 14:02:41 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.8:
+
+Vendor events:
+
+- Intel Alderlake/Sapphire Rapids metric fixes, the CPU type ("cpu_atom", "cpu_core")
+  needs to be used as a prefix to be considered on a metric formula, detected via one
+  of the 'perf test' entries.
+
+'perf test' fixes:
+
+- Fix the creation of event selector lists on 'perf test' entries, by initializing
+  the sample ID flag, which is done by 'perf record', so this fix only the tests,
+  the common case isn't affected.
+
+- Make 'perf list' respect debug settings (-v) to fix its 'perf test' entry.
+
+- Fix 'perf script' test when python support isn't enabled.
+
+- Special case 'perf script' tests on s390, where only DWARF call graphs are
+  supported and only on software events.
+
+- Make 'perf daemon' signal test less racy.
+
+Compiler warnings/errors:
+
+- Remove needless malloc(0) call in 'perf top' that triggers -Walloc-size.
+
+- Fix calloc() argument order to address error introduced in gcc-14.
+
+Build:
+
+- Make minimal shellcheck version to v0.6.0, avoiding the build to fail with older versions.
+
+Sync kernel header copies:
+
+  - stat.h to pick STATX_MNT_ID_UNIQUE.
+
+  - msr-index.h to pick IA32_MKTME_KEYID_PARTITIONING.
+
+  - drm.h to pick DRM_IOCTL_MODE_CLOSEFB.
+
+  - unistd.h to pick {list,stat}mount, lsm_{[gs]et_self_attr,list_modules} syscall numbers.
+
+  - x86 cpufeatures to pick TDX, Zen, APIC MSR fence changes.
+
+  - x86's mem{cpy,set}_64.S used in 'perf bench'.
+
+  - Also, without tooling effects: asm-generic/unaligned.h, mount.h, fcntl.h, kvm headers.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (10):
+      tools headers uapi: Sync linux/stat.h with the kernel sources to pick STATX_MNT_ID_UNIQUE
+      tools arch x86: Sync the msr-index.h copy with the kernel sources to pick IA32_MKTME_KEYID_PARTITIONING
+      tools headers UAPI: Sync linux/fcntl.h with the kernel sources
+      tools headers UAPI: Update tools's copy of drm.h headers to pick DRM_IOCTL_MODE_CLOSEFB
+      tools headers UAPI: Sync kvm headers with the kernel sources
+      tools headers UAPI: Sync unistd.h to pick {list,stat}mount, lsm_{[gs]et_self_attr,list_modules} syscall numbers
+      tools headers x86 cpufeatures: Sync with the kernel sources to pick TDX, Zen, APIC MSR fence changes
+      tools headers: Update the copy of x86's mem{cpy,set}_64.S used in 'perf bench'
+      tools include UAPI: Sync linux/mount.h copy with the kernel sources
+      perf tools headers: update the asm-generic/unaligned.h copy with the kernel sources
+
+Ian Rogers (6):
+      perf list: Switch error message to pr_err() to respect debug settings (-v)
+      perf list: Add output file option
+      perf test: Workaround debug output in list test
+      perf test shell script: Fix test for python being disabled
+      perf test shell daemon: Make signal test less racy
+      perf vendor events intel: Alderlake/sapphirerapids metric fixes
+
+James Clark (1):
+      perf evlist: Fix evlist__new_default() for > 1 core PMU
+
+Sun Haiyong (2):
+      perf top: Remove needless malloc(0) call that triggers -Walloc-size
+      perf tools: Fix calloc() arguments to address error introduced in gcc-14
+
+Thomas Richter (1):
+      perf test: Fix 'perf script' tests on s390
+
+Yicong Yang (1):
+      perf build: Make minimal shellcheck version to v0.6.0
+
+ tools/arch/x86/include/asm/cpufeatures.h           |   8 +-
+ tools/arch/x86/include/asm/msr-index.h             |   8 +
+ tools/arch/x86/include/uapi/asm/kvm.h              |   3 +
+ tools/arch/x86/lib/memcpy_64.S                     |   4 +-
+ tools/arch/x86/lib/memset_64.S                     |   4 +-
+ tools/include/asm-generic/unaligned.h              |  24 +-
+ tools/include/uapi/asm-generic/unistd.h            |  15 +-
+ tools/include/uapi/drm/drm.h                       |  72 +++++-
+ tools/include/uapi/drm/i915_drm.h                  |  12 +-
+ tools/include/uapi/linux/fcntl.h                   |   3 +
+ tools/include/uapi/linux/kvm.h                     | 140 ++++--------
+ tools/include/uapi/linux/mount.h                   |  70 ++++++
+ tools/include/uapi/linux/stat.h                    |   1 +
+ tools/perf/Documentation/perf-list.txt             |   4 +
+ tools/perf/Makefile.perf                           |  10 +
+ tools/perf/builtin-list.c                          | 211 ++++++++++-------
+ tools/perf/builtin-record.c                        |   4 +-
+ tools/perf/builtin-top.c                           |   2 +-
+ .../pmu-events/arch/x86/alderlake/adl-metrics.json | 254 ++++++++++-----------
+ .../arch/x86/alderlaken/adln-metrics.json          |   4 -
+ .../arch/x86/sapphirerapids/spr-metrics.json       |  25 +-
+ tools/perf/tests/shell/daemon.sh                   |  34 ++-
+ tools/perf/tests/shell/list.sh                     |  21 +-
+ tools/perf/tests/shell/script.sh                   |  12 +-
+ tools/perf/trace/beauty/statx.c                    |   1 +
+ tools/perf/util/evlist.c                           |   9 +-
+ tools/perf/util/hist.c                             |   4 +-
+ tools/perf/util/include/linux/linkage.h            |   4 +
+ tools/perf/util/metricgroup.c                      |   2 +-
+ tools/perf/util/print-events.c                     |   2 +-
+ tools/perf/util/synthetic-events.c                 |   4 +-
+ 31 files changed, 588 insertions(+), 383 deletions(-)
