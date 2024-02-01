@@ -1,93 +1,84 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5923CF48
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Feb 2024 20:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717693BB43;
+	Thu,  1 Feb 2024 21:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706821043; cv=none; b=mFznSXmSVUMD2MaFnB8CNf1ZAfTjy3+RXM6Hh8HmkSlPrDJgYQyEPFgIZ4l3dZoE+Hl7qHObfakcDFOGxpDn2FNnQ44cXAdJWNVZpS8NvloaN+64hJCOkZhXKxk70nMHiSqLmMYPjYdVial+neaKd8GhhWxJ6MzUV/WQkuVDsWk=
+	t=1706822066; cv=none; b=fkH9wA725vstVih1k5D+XKmAl0kyEyOmObRzUHNUs7hKuXgPgGWUhPd+bQLM2coiQ0RVxhmNmnZxdL3sKEMIYrs6MZH1YefGHs4DCAOcoL/rmyQMlci1SYloOx3R3H09K+M0TmWrVut/etmUceu8433lUsHa36MeDqudQGXrZsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706821043; c=relaxed/simple;
-	bh=urrJyHrBIsQS9KKLtMLnx2kfVk9RVyLYlhfhNo7Fw9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cL0vPBvouqxVrcdr2I09EN5S4Woz2GmJ00E9q5Bh9vxFVr8n9+o/xv3ywWBYsBSvTzky0OazCMlSfZJjsZtB+T4Ne6wQrWv6DV13vJrbWiog5aHUtMPt5FVF9D/FZXARiQoZxn2ZM7G/RPHDMOtDtVeV/96tWeHI/c7/lPsZXWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WXSzkJrL; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706822066; c=relaxed/simple;
+	bh=oYuwgQHvj3cLJDNe/eSNutQdYZiRYjbNOF45uQlcVgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sjGQccPxlwbi/gzmDDIqEGR60BxObdeY3mxcv+aTGVGBXAYFD6Px195Lu8Ighcb5an3yV7EziZKZL2rXGp6Xy5BsPRN4A9aZJBa9S1rsavBEHK6lQ8goR1lMiWKxje0B2YXsmjAFHVFkQUx5fxaM/lvuoTt9D4QJ4uA4Ekh9OSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bhu0w7nY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WXSzkJrL"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so196961166b.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Feb 2024 12:57:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706821039; x=1707425839; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=U47R3tnrX6FGfSIGHpWmTF5rVj64ObwGeUEFtVpqF+4=;
-        b=WXSzkJrLLBo8YfVKcsrBuqSwO+C00sqHv4+52wN8SkmmO6vg/ve0XyX4syEEryiFeb
-         60PthlqmwyHj1UVt2fkW2gjabVjMXmha55/zvvIEUa4GmdmDrawFV2Ur5RykRoP4ZiZF
-         wyo/bVSvoIN/vw3uPa2yEwl7NCvxpdNZ/SuqY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706821039; x=1707425839;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U47R3tnrX6FGfSIGHpWmTF5rVj64ObwGeUEFtVpqF+4=;
-        b=ecUn0c3Kv14TUnwk+8n2hKiWjknr2UnRUk4MwwwVYm/zhJutn096qlq6sVuxcYy0oi
-         Yq49orG2z2F0XHkUGXGRYPkRxmx22QJy4wjrXwqIVSWTSBBcy2KgS9HNFLjClrmoUZih
-         nBeoAswUrR9oHYM48Z4880uqzR7J3LTxjE+FfZp0BeJ3TSY7llZLIyKUJU1KiuXp/MfM
-         Jo88fNnrqAysDPbShXIOF5KjqPPou05jsiwbU1avTgJKr+8r8XwfgXBdMaZc8OdpvGPS
-         MEMqRRHNxwJLtaoyLeC9Itkopv6glH725NPk5EP/kpWCOi3brTg7DYq3hhzbR0b2ZVcr
-         zV9g==
-X-Gm-Message-State: AOJu0Yz6yOAvoMFWhiHMY6Ktes6C9AVJsBU16hrQsxCVpl5xX2V6S58t
-	Wem9vVTzoQaVnFC5Kb8chyXGW2pdjdfy2sWqv0ULNy8TmHwUXW/YeXj713AF1tn70iEFCpuMcSL
-	ud6KcPw==
-X-Google-Smtp-Source: AGHT+IFz3ioh7vosY1mF7Dqqzpl6jX7WhNIp0zFHAuPly185SUX+j6UMUGpvsruEUlXIEDzkAiYOyg==
-X-Received: by 2002:a17:907:7711:b0:a36:f672:6e8d with SMTP id kw17-20020a170907771100b00a36f6726e8dmr224107ejc.5.1706821039289;
-        Thu, 01 Feb 2024 12:57:19 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXKfWKRMNhhLkunUncMSwsFqqdYFFKM508dwhzrxakPnriLlatlVZyaZF542woXml3dpYzs4HYdG8gU9yr4DRgIRqACuOulwSXweSQ6YWTamg==
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
-        by smtp.gmail.com with ESMTPSA id tk12-20020a170907c28c00b00a30e1f233b4sm152285ejc.128.2024.02.01.12.57.17
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 12:57:18 -0800 (PST)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55f2b0c5ae9so1878740a12.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Feb 2024 12:57:17 -0800 (PST)
-X-Received: by 2002:a05:6402:3181:b0:55c:d503:764c with SMTP id
- di1-20020a056402318100b0055cd503764cmr4327080edb.22.1706821037656; Thu, 01
- Feb 2024 12:57:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bhu0w7nY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A8EC433F1;
+	Thu,  1 Feb 2024 21:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706822065;
+	bh=oYuwgQHvj3cLJDNe/eSNutQdYZiRYjbNOF45uQlcVgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bhu0w7nYSbf9cLgUhi7cLUCL4CH1Fa/2vQ7pmXU4ExDqRrbAYH51mYkXQ3a9y6kwL
+	 8PQPJ/uzM5WbP+aJJVGHVspSlBs53NpAYuVm7zkc5+uce60257x90uR6iOmS66fIM9
+	 5q8KFFxLUQK6hT4w1GR6OZCkB6Frla91QBACR9I+lO7buDBBwWq8Ziit93wItXsBh2
+	 OHeyCc+AfUQ2vVOq72APv7/PVKz9JH/xq/gSs8VWcb0odaBgW/BpoUiqtHC0DDpX5N
+	 O2r4q0BFxlKCCgLvCyYPVv+8/FShvjs/TGk41iueHo93382HTzTpGeT73mEIbSiqHK
+	 U52GrmE4gt+Uw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 9723E40441; Thu,  1 Feb 2024 18:14:22 -0300 (-03)
+Date: Thu, 1 Feb 2024 18:14:22 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, James Clark <james.clark@arm.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf tools fixes for v6.8
+Message-ID: <ZbwJrkkQbUxw-hyb@kernel.org>
+References: <20240201202254.15588-1-acme@kernel.org>
+ <CAHk-=wgkTKyon279Rfd_20ot9sfHmCh=t=v8GD8yHCM3Bna_hw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201202254.15588-1-acme@kernel.org>
-In-Reply-To: <20240201202254.15588-1-acme@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 1 Feb 2024 12:57:00 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgkTKyon279Rfd_20ot9sfHmCh=t=v8GD8yHCM3Bna_hw@mail.gmail.com>
-Message-ID: <CAHk-=wgkTKyon279Rfd_20ot9sfHmCh=t=v8GD8yHCM3Bna_hw@mail.gmail.com>
-Subject: Re: [GIT PULL] perf tools fixes for v6.8
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, 
-	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, James Clark <james.clark@arm.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Yanteng Si <siyanteng@loongson.cn>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgkTKyon279Rfd_20ot9sfHmCh=t=v8GD8yHCM3Bna_hw@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-On Thu, 1 Feb 2024 at 12:23, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
->         Please consider pulling, mostly 'perf test' issues, which in its
-> turn are mostly related to myself having Intel hybrid systems at home.
+Em Thu, Feb 01, 2024 at 12:57:00PM -0800, Linus Torvalds escreveu:
+> On Thu, 1 Feb 2024 at 12:23, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >         Please consider pulling, mostly 'perf test' issues, which in its
+> > turn are mostly related to myself having Intel hybrid systems at home.
+ 
+> I started pulling, but there's some truly odd noise in the tag, so you
+> clearly have done something wrong.
+ 
+> You need to fix your odd tagging process, they are normally noisy, but
+> this is just so far off the norm that I can't overlook the craziness.
 
-I started pulling, but there's some truly odd noise in the tag, so you
-clearly have done something wrong.
+You're right, this can be routed instead thru perf-tools-next, for v6.9.
 
-You need to fix your odd tagging process, they are normally noisy, but
-this is just so far off the norm that I can't overlook the craziness.
+I should've known better and not send the noisy JSON changes at this
+point in time.
 
-                  Linus
+And the other stuff doesn't affect normal day to day operation, just a
+matter of addressiong artifacts in 'perf test' output so can wait.
+
+Namhyung, please check if you agree to have this merged into
+perf-tools-next on the way to v6.9.
+
+- Arnaldo
