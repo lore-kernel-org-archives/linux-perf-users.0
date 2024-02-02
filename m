@@ -1,62 +1,65 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FB217546
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Feb 2024 06:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22851756E
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Feb 2024 06:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706854549; cv=none; b=kw/7uUJ22UmPF7vez6Fz63TWv701SNURU37wyDtulZbHBtp63cy9eD5T83PVjEyZuwlAcXDPCUyPnA9aP62uzvxnJ+5eYzWrUehExnEByceO6thEsq12j7e8wA7kPL41YhszGnvlLg6WTor4vnJn3WOBbMKuIZODdsVvhAZ1N30=
+	t=1706854553; cv=none; b=ZA5lq88eT/vDTRErsz5+vKK+yHNVn2W6DIAZEnymdqyhfoePyxpeTIAfJAl7QtaYvhlAUHGIbhj3MZgJGi0EC0dZzOFI0vEJ+rD405V3rxrau4GeAmQJ77nL477nDP69SsYIA0VRYkBfe/f10ao0DCm22H/5MUEuWCYq82dNn1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706854549; c=relaxed/simple;
-	bh=OCQzyEernErTiBbOinzinjqKGcvOczIkmmI+fHqcj4M=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=fnuWHSPEF0M/ZCIEmWlAPfnPew26oeSWkb8y/JpFchLlUHXE55qrfV3sGdadKfjMjXH2pF28oK6jeArZX8vEZhpFrYqk24dHi6F3+M6FZpv2Ls92GCwk861pU+QC50b2QYOh8C8l1J5YUAjfnVC9yp7YZq8rrRPPdKFHm4c6fxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LwF5HFzu; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1706854553; c=relaxed/simple;
+	bh=Y96V0rvU+Ma2laWtDGnXqBdJjwnDCvtjHq78CaW9p78=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=AhxWQRR2iVI+o4+bYrRir/kmZmvxi5TSH4TAAfmvBNvwlxTwkDjpjL0nT6MbHzNLMzgqs53yUssGKkpTSEAoVPC8f+V3yL22BIs5/hdpcT8dNw207ltIDTo1LnkN4M4QOx/wZ2afB2AQl0rKPtJTX0YT52qppFuaTmJyvbFucA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MSIZ9SL2; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LwF5HFzu"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so2264252276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Feb 2024 22:15:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MSIZ9SL2"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6041e5b4367so24405107b3.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Feb 2024 22:15:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706854546; x=1707459346; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ToMQh9MBYwlmTbfVjgqllQD0+5gjP+gk6l8SI0jON1k=;
-        b=LwF5HFzuP1u+49UNK//0LwDWo3Kz+5UoDwQ5ByVF42OwYFyszfOtEBwYUuGZeMCKEb
-         VkmHG1mbaFfSiKdTkFi9lrjuvDw+ghlk03FpYg5MS8ogGz+61FjiKJ8mdKoomHVq2QI3
-         XHTNQtUaq9XooDhfLRe7GKg7/TdHnjAsLUYuhAQzocZSdl4Lqciv7EpdZjDKNw+wgzbJ
-         +hKSyVkYOFv2BwUPMrwIr0l1I9FlUrdQ+yBM/9Qh+7h/MJjopJZzrlUFNVdW8IO/9FuO
-         xaVAXlwvo7simVD3xrohdQbBgsvdsWVcwhgSCRQDsYK33P6XAUARKs0S+PnzsspzWOJh
-         HBuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706854546; x=1707459346;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1706854551; x=1707459351; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ToMQh9MBYwlmTbfVjgqllQD0+5gjP+gk6l8SI0jON1k=;
-        b=eMBywCo+XpmgHZVLWhceJwuqcg1oMDXRU3pa0MCFwwRNYPM1ofhennrSdh42lt6Agp
-         oPfuPad+113uoUbjfcH7svz5RQa+yLlI2CdvdghxjM1hna1I3BjLhclISEmRNmYDmnWk
-         4qwydPtDKyYzsYqa7mViaYAu/KShfjqeoP0IveN0g7eEvjJOUeEXH/CUzeu45Wp0BKw8
-         1BHx43jq8kp6aAcz9a8AJYu9ubOgORPd3XHwY2PEbWvQBtxUanex8vK5TkSL6YQQffqe
-         n72dwBQQOf+LVsaljIgK3uG138xVZNkvBb42O6ZdCq3bCFEn+/+vwEbIVop/o9PegHR7
-         tS2g==
-X-Gm-Message-State: AOJu0Yx99XqZs8yPHEOMDqHqCIzduXmiVlrg0A2upkPIHnLiAcKII8DY
-	e66/5snsFyrDmg1M/3wwZOX+w4sJtpKqFLMfD05uy0dIDqy+AcpkVwrwRj48C4tzht36Vd2+aza
-	LVn4rGw==
-X-Google-Smtp-Source: AGHT+IEGuUtuz4V+hJTjTG5ndRXX1/JkjFWcK4HLGjCODrcsINQMSzqIEv6DOD9ZaJ0v+SXcY224B/wiqwfs
+        bh=Ns6s7UIGkTM/nycvAWwyFQvgVrl7UVyKC0csznO8c+s=;
+        b=MSIZ9SL2BYZSGMeGKbhFO9CTLJRQXzuLvnJ2UW184DJXVDhtOXnZuiE9K71aBpoHIz
+         yQtnm/kLzT39fSSZVSps8VpSV/8KWdzETPsoedTyKp9Pc9loQKkzb5hbFQmgdNOCXzXS
+         j22KAmVTpbNNJ4ySreMjj7lFr6zl37ZVXcTdACnTEliETRz534ctaZj6BwHU5r5Qkn+X
+         4ug7fdzeQYxvLMc9Cgg5WU8bdQQx7k0II/ShTsSTYrr2Om8LJZQGO4WUVk44HPHgi+Hu
+         QnzmlkdSzNEqwLrz8aEVwUF2ZEZi0wEAWMSX70BmkqMvKh9IMkzz7nfL7jUQR+yWcPqn
+         2sFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706854551; x=1707459351;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ns6s7UIGkTM/nycvAWwyFQvgVrl7UVyKC0csznO8c+s=;
+        b=bNlaBjFft8VriCBWSM8WKrwql2mGJwczY0w1WqgsFHTP+ZBjWFxRN87VU5lMMiWQ1H
+         9k5E74yd7k4hYtiChiOXNwbpYjalzJjNUTiBuf4LxXVlUb55nZVfJUM6kgtTUkmFUyoB
+         Lwhyil81UkTC/el34XZepufhA4sOaqncuTn0z22Y05I5cIuQ92QuY9uEYiPybn4IymBP
+         w079BYI/N+WUVU2mBv21YjG+dgjIHyuIXWwCHHXlj4X8o2qpKSfAqbngj8yb+ihqskqx
+         LcEO7bd+lyoh7pZNYlm5UYSnuRWEHCDmDK65iJr3+THbmidhYR8xNDBqSlw4bciF3vKa
+         IpUg==
+X-Gm-Message-State: AOJu0Yz69/lMZQRFeZ26wxOMETCGNFOwnF3wh5D7aiVOkfkWKXUc1TPC
+	TPtyh1Lq69OLk3sdnAXpHxS/sWWettQAtxVQA118Q3qiAMH4dqyn5LAxCxzkT00lQF9nhfp/LIm
+	Vc1g+pw==
+X-Google-Smtp-Source: AGHT+IFfoyhmAC9YqB8yPX5NVqCQvx3pYH1BNQyUoL4WxFB5pDOFzyLyEMk+FtmmCLRq2CFOC6GcQ0sILBHs
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a85f:db1d:a66b:7f53])
- (user=irogers job=sendgmr) by 2002:a05:6902:11ce:b0:dc6:b982:cfa2 with SMTP
- id n14-20020a05690211ce00b00dc6b982cfa2mr156881ybu.8.1706854546285; Thu, 01
- Feb 2024 22:15:46 -0800 (PST)
-Date: Thu,  1 Feb 2024 22:15:07 -0800
-Message-Id: <20240202061532.1939474-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:19:b0:5ee:d5ed:5f70 with SMTP id
+ bc25-20020a05690c001900b005eed5ed5f70mr1172776ywb.9.1706854551036; Thu, 01
+ Feb 2024 22:15:51 -0800 (PST)
+Date: Thu,  1 Feb 2024 22:15:09 -0800
+In-Reply-To: <20240202061532.1939474-1-irogers@google.com>
+Message-Id: <20240202061532.1939474-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240202061532.1939474-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Subject: [PATCH v8 00/25] maps/threads/dsos memory improvements and fixes
+Subject: [PATCH v8 02/25] perf maps: Get map before returning in maps__find
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -77,138 +80,247 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Modify the implementation of maps to not use an rbtree as the
-container for maps, instead use a sorted array. Improve locking and
-reference counting issues.
+Finding a map is done under a lock, returning the map without a
+reference count means it can be removed without notice and causing
+uses after free. Grab a reference count to the map within the lock
+region and return this. Fix up locations that need a map__put
+following this.
 
-Similar to maps separate out and reimplement threads to use a hashmap
-for lower memory consumption and faster look up. The fixes a
-regression in memory usage where reference count checking switched to
-using non-invasive tree nodes.  Reduce its default size by 32 times
-and improve locking discipline. Also, fix regressions where tids had
-become unordered to make `perf report --tasks` and
-`perf trace --summary` output easier to read.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/arch/x86/tests/dwarf-unwind.c |  1 +
+ tools/perf/tests/vmlinux-kallsyms.c      |  5 ++---
+ tools/perf/util/bpf-event.c              |  1 +
+ tools/perf/util/event.c                  |  4 ++--
+ tools/perf/util/machine.c                | 22 ++++++++--------------
+ tools/perf/util/maps.c                   | 17 ++++++++++-------
+ tools/perf/util/symbol.c                 |  3 ++-
+ 7 files changed, 26 insertions(+), 27 deletions(-)
 
-Better encapsulate the dsos abstraction. Remove the linked list and
-rbtree used for faster iteration and log(n) lookup to a sorted array
-for similar performance but half the memory usage per dso. Improve
-reference counting and locking discipline, adding reference count
-checking to dso.
-
-v8:
- - in "perf maps: Switch from rbtree to lazily sorted array for
-   addresses" use accessors and remove some duplicative invariant checks as
-   requested by Namhyung.
-
-v7:
- - rebase to latest perf-tools-next where 22 patches were applied by Arnaldo.
- - resolve merge conflicts, in particular with fc044c53b99f ("perf
-   annotate-data: Add dso->data_types tree") that required more dso
-   accessor functions.
-
-v6 series is here:
-https://lore.kernel.org/lkml/20231207011722.1220634-1-irogers@google.com/
-
-Ian Rogers (25):
-  perf maps: Switch from rbtree to lazily sorted array for addresses
-  perf maps: Get map before returning in maps__find
-  perf maps: Get map before returning in maps__find_by_name
-  perf maps: Get map before returning in maps__find_next_entry
-  perf maps: Hide maps internals
-  perf maps: Locking tidy up of nr_maps
-  perf dso: Reorder variables to save space in struct dso
-  perf report: Sort child tasks by tid
-  perf trace: Ignore thread hashing in summary
-  perf machine: Move fprintf to for_each loop and a callback
-  perf threads: Move threads to its own files
-  perf threads: Switch from rbtree to hashmap
-  perf threads: Reduce table size from 256 to 8
-  perf dsos: Attempt to better abstract dsos internals
-  perf dsos: Tidy reference counting and locking
-  perf dsos: Add dsos__for_each_dso
-  perf dso: Move dso functions out of dsos
-  perf dsos: Switch more loops to dsos__for_each_dso
-  perf dsos: Switch backing storage to array from rbtree/list
-  perf dsos: Remove __dsos__addnew
-  perf dsos: Remove __dsos__findnew_link_by_longname_id
-  perf dsos: Switch hand code to bsearch
-  perf dso: Add reference count checking and accessor functions
-  perf dso: Reference counting related fixes
-  perf dso: Use container_of to avoid a pointer in dso_data
-
- tools/perf/arch/x86/tests/dwarf-unwind.c      |    1 +
- tools/perf/builtin-annotate.c                 |    8 +-
- tools/perf/builtin-buildid-cache.c            |    2 +-
- tools/perf/builtin-buildid-list.c             |   18 +-
- tools/perf/builtin-inject.c                   |   96 +-
- tools/perf/builtin-kallsyms.c                 |    2 +-
- tools/perf/builtin-mem.c                      |    4 +-
- tools/perf/builtin-record.c                   |    2 +-
- tools/perf/builtin-report.c                   |  209 +--
- tools/perf/builtin-script.c                   |    8 +-
- tools/perf/builtin-top.c                      |    4 +-
- tools/perf/builtin-trace.c                    |   43 +-
- tools/perf/tests/code-reading.c               |    8 +-
- tools/perf/tests/dso-data.c                   |   67 +-
- tools/perf/tests/hists_common.c               |    6 +-
- tools/perf/tests/hists_cumulate.c             |    4 +-
- tools/perf/tests/hists_output.c               |    2 +-
- tools/perf/tests/maps.c                       |    7 +-
- tools/perf/tests/symbols.c                    |    2 +-
- tools/perf/tests/thread-maps-share.c          |    8 +-
- tools/perf/tests/vmlinux-kallsyms.c           |   16 +-
- tools/perf/ui/browsers/annotate.c             |    6 +-
- tools/perf/ui/browsers/hists.c                |    8 +-
- tools/perf/ui/browsers/map.c                  |    4 +-
- tools/perf/util/Build                         |    1 +
- tools/perf/util/annotate-data.c               |    6 +-
- tools/perf/util/annotate.c                    |   45 +-
- tools/perf/util/auxtrace.c                    |    2 +-
- tools/perf/util/block-info.c                  |    2 +-
- tools/perf/util/bpf-event.c                   |    9 +-
- tools/perf/util/bpf_lock_contention.c         |    8 +-
- tools/perf/util/build-id.c                    |  136 +-
- tools/perf/util/build-id.h                    |    2 -
- tools/perf/util/callchain.c                   |    4 +-
- tools/perf/util/data-convert-json.c           |    2 +-
- tools/perf/util/db-export.c                   |    6 +-
- tools/perf/util/dlfilter.c                    |   12 +-
- tools/perf/util/dso.c                         |  469 +++---
- tools/perf/util/dso.h                         |  549 ++++++-
- tools/perf/util/dsos.c                        |  529 ++++---
- tools/perf/util/dsos.h                        |   40 +-
- tools/perf/util/event.c                       |   12 +-
- tools/perf/util/header.c                      |    8 +-
- tools/perf/util/hist.c                        |    4 +-
- tools/perf/util/intel-pt.c                    |   22 +-
- tools/perf/util/machine.c                     |  570 +++-----
- tools/perf/util/machine.h                     |   32 +-
- tools/perf/util/map.c                         |   73 +-
- tools/perf/util/maps.c                        | 1298 +++++++++++------
- tools/perf/util/maps.h                        |   65 +-
- tools/perf/util/probe-event.c                 |   26 +-
- tools/perf/util/rb_resort.h                   |    5 -
- .../util/scripting-engines/trace-event-perl.c |    6 +-
- .../scripting-engines/trace-event-python.c    |   21 +-
- tools/perf/util/session.c                     |   21 +
- tools/perf/util/session.h                     |    2 +
- tools/perf/util/sort.c                        |   19 +-
- tools/perf/util/srcline.c                     |   65 +-
- tools/perf/util/symbol-elf.c                  |  132 +-
- tools/perf/util/symbol.c                      |  217 +--
- tools/perf/util/symbol_fprintf.c              |    4 +-
- tools/perf/util/synthetic-events.c            |   24 +-
- tools/perf/util/thread.c                      |    8 +-
- tools/perf/util/thread.h                      |    6 -
- tools/perf/util/threads.c                     |  186 +++
- tools/perf/util/threads.h                     |   35 +
- tools/perf/util/unwind-libunwind-local.c      |   20 +-
- tools/perf/util/unwind-libunwind.c            |    9 +-
- tools/perf/util/vdso.c                        |   56 +-
- 69 files changed, 3143 insertions(+), 2160 deletions(-)
- create mode 100644 tools/perf/util/threads.c
- create mode 100644 tools/perf/util/threads.h
-
+diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
+index 5bfec3345d59..c05c0a85dad4 100644
+--- a/tools/perf/arch/x86/tests/dwarf-unwind.c
++++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
+@@ -34,6 +34,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 	}
+ 
+ 	stack_size = map__end(map) - sp;
++	map__put(map);
+ 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
+ 
+ 	memcpy(buf, (void *) sp, stack_size);
+diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+index 822f893e67d5..e808e6fc8f76 100644
+--- a/tools/perf/tests/vmlinux-kallsyms.c
++++ b/tools/perf/tests/vmlinux-kallsyms.c
+@@ -151,10 +151,8 @@ static int test__vmlinux_matches_kallsyms_cb2(struct map *map, void *data)
+ 	u64 mem_end = map__unmap_ip(args->vmlinux_map, map__end(map));
+ 
+ 	pair = maps__find(args->kallsyms.kmaps, mem_start);
+-	if (pair == NULL || map__priv(pair))
+-		return 0;
+ 
+-	if (map__start(pair) == mem_start) {
++	if (pair != NULL && !map__priv(pair) && map__start(pair) == mem_start) {
+ 		struct dso *dso = map__dso(map);
+ 
+ 		if (!args->header_printed) {
+@@ -170,6 +168,7 @@ static int test__vmlinux_matches_kallsyms_cb2(struct map *map, void *data)
+ 		pr_info(" %s\n", dso->name);
+ 		map__set_priv(pair, 1);
+ 	}
++	map__put(pair);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 3573e0b7ef3e..83709146a48a 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -63,6 +63,7 @@ static int machine__process_bpf_event_load(struct machine *machine,
+ 			dso->bpf_prog.id = id;
+ 			dso->bpf_prog.sub_id = i;
+ 			dso->bpf_prog.env = env;
++			map__put(map);
+ 		}
+ 	}
+ 	return 0;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 68f45e9e63b6..198903157f9e 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -511,7 +511,7 @@ size_t perf_event__fprintf_text_poke(union perf_event *event, struct machine *ma
+ 		struct addr_location al;
+ 
+ 		addr_location__init(&al);
+-		al.map = map__get(maps__find(machine__kernel_maps(machine), tp->addr));
++		al.map = maps__find(machine__kernel_maps(machine), tp->addr);
+ 		if (al.map && map__load(al.map) >= 0) {
+ 			al.addr = map__map_ip(al.map, tp->addr);
+ 			al.sym = map__find_symbol(al.map, al.addr);
+@@ -641,7 +641,7 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 		return NULL;
+ 	}
+ 	al->maps = maps__get(maps);
+-	al->map = map__get(maps__find(maps, al->addr));
++	al->map = maps__find(maps, al->addr);
+ 	if (al->map != NULL) {
+ 		/*
+ 		 * Kernel maps might be changed when loading symbols so loading
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index b397a769006f..e8eb9f0b073f 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -896,7 +896,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	struct symbol *sym;
+ 	struct dso *dso;
+ 	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+-	bool put_map = false;
+ 	int err = 0;
+ 
+ 	if (!map) {
+@@ -913,12 +912,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 			err = -ENOMEM;
+ 			goto out;
+ 		}
+-		/*
+-		 * The inserted map has a get on it, we need to put to release
+-		 * the reference count here, but do it after all accesses are
+-		 * done.
+-		 */
+-		put_map = true;
+ 		if (event->ksymbol.ksym_type == PERF_RECORD_KSYMBOL_TYPE_OOL) {
+ 			dso->binary_type = DSO_BINARY_TYPE__OOL;
+ 			dso->data.file_size = event->ksymbol.len;
+@@ -952,8 +945,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	}
+ 	dso__insert_symbol(dso, sym);
+ out:
+-	if (put_map)
+-		map__put(map);
++	map__put(map);
+ 	return err;
+ }
+ 
+@@ -977,7 +969,7 @@ static int machine__process_ksymbol_unregister(struct machine *machine,
+ 		if (sym)
+ 			dso__delete_symbol(dso, sym);
+ 	}
+-
++	map__put(map);
+ 	return 0;
+ }
+ 
+@@ -1005,11 +997,11 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
+ 		perf_event__fprintf_text_poke(event, machine, stdout);
+ 
+ 	if (!event->text_poke.new_len)
+-		return 0;
++		goto out;
+ 
+ 	if (cpumode != PERF_RECORD_MISC_KERNEL) {
+ 		pr_debug("%s: unsupported cpumode - ignoring\n", __func__);
+-		return 0;
++		goto out;
+ 	}
+ 
+ 	if (dso) {
+@@ -1032,7 +1024,8 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
+ 		pr_debug("Failed to find kernel text poke address map for %#" PRI_lx64 "\n",
+ 			 event->text_poke.addr);
+ 	}
+-
++out:
++	map__put(map);
+ 	return 0;
+ }
+ 
+@@ -1300,9 +1293,10 @@ static int machine__map_x86_64_entry_trampolines_cb(struct map *map, void *data)
+ 		return 0;
+ 
+ 	dest_map = maps__find(args->kmaps, map__pgoff(map));
+-	if (dest_map != map)
++	if (RC_CHK_ACCESS(dest_map) != RC_CHK_ACCESS(map))
+ 		map__set_pgoff(map, map__map_ip(dest_map, map__pgoff(map)));
+ 
++	map__put(dest_map);
+ 	args->found = true;
+ 	return 0;
+ }
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 2fd81e2d622e..252a3b1f8f81 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -500,15 +500,18 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
+ struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp)
+ {
+ 	struct map *map = maps__find(maps, addr);
++	struct symbol *result = NULL;
+ 
+ 	/* Ensure map is loaded before using map->map_ip */
+ 	if (map != NULL && map__load(map) >= 0) {
+-		if (mapp != NULL)
+-			*mapp = map; // TODO: map_put on else path when find returns a get.
+-		return map__find_symbol(map, map__map_ip(map, addr));
+-	}
++		if (mapp)
++			*mapp = map;
+ 
+-	return NULL;
++		result = map__find_symbol(map, map__map_ip(map, addr));
++		if (!mapp)
++			map__put(map);
++	}
++	return result;
+ }
+ 
+ struct maps__find_symbol_by_name_args {
+@@ -552,7 +555,7 @@ int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams)
+ 	if (ams->addr < map__start(ams->ms.map) || ams->addr >= map__end(ams->ms.map)) {
+ 		if (maps == NULL)
+ 			return -1;
+-		ams->ms.map = maps__find(maps, ams->addr);  // TODO: map_get
++		ams->ms.map = maps__find(maps, ams->addr);
+ 		if (ams->ms.map == NULL)
+ 			return -1;
+ 	}
+@@ -862,7 +865,7 @@ struct map *maps__find(struct maps *maps, u64 ip)
+ 					sizeof(*mapp), map__addr_cmp);
+ 
+ 			if (mapp)
+-				result = *mapp; // map__get(*mapp);
++				result = map__get(*mapp);
+ 			done = true;
+ 		}
+ 		up_read(maps__lock(maps));
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index be212ba157dc..1710b89e207c 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -757,7 +757,6 @@ static int dso__load_all_kallsyms(struct dso *dso, const char *filename)
+ 
+ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ {
+-	struct map *curr_map;
+ 	struct symbol *pos;
+ 	int count = 0;
+ 	struct rb_root_cached old_root = dso->symbols;
+@@ -770,6 +769,7 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ 	*root = RB_ROOT_CACHED;
+ 
+ 	while (next) {
++		struct map *curr_map;
+ 		struct dso *curr_map_dso;
+ 		char *module;
+ 
+@@ -796,6 +796,7 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ 			pos->end -= map__start(curr_map) - map__pgoff(curr_map);
+ 		symbols__insert(&curr_map_dso->symbols, pos);
+ 		++count;
++		map__put(curr_map);
+ 	}
+ 
+ 	/* Symbols have been adjusted */
 -- 
 2.43.0.594.gd9cf4e227d-goog
 
