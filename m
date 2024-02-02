@@ -1,135 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F74132498;
-	Fri,  2 Feb 2024 22:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965E412C7E5
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Feb 2024 23:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706911510; cv=none; b=B9XujTkVVcfeRZe5ZHM7RsuuemsGBPfw+KIBb3CQIO8rZKNPs3cwAUmEWjr0Azb4/0s1UpJj1tb6lMGCQtDcpWOIhYm92pEkWSbGGQ/dUdSPjz0zPEZXdbVRP5VpGrytQd3gMqtdFIANhsTgiiBEVk6ovxxzJzgBti2K+9lZ0m4=
+	t=1706917272; cv=none; b=HPBscpuLxQwAB+v+gp00o2yyDBExXwWlJme809WNsOMsASLlDYYzGGxUtRNL2wLWBnMIf1f78+R9XLC0qF0nYMzOfl8dLSqSxVDpsvdDvlm8L5ox86nWiDVcju3Qd4OXafA0NmNs7S2NB1wuJ80kNiZifOIFyXB912vcCEPnk+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706911510; c=relaxed/simple;
-	bh=u+3b408czl7+mH8GeTAKvju9aWQhRxzD0hyW0Dr5iWE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oBJLpojbZbIoZ0Yc0ozK85KovEb4V7Y2NodPbDy0GB/dg19qkvKotcaEyrDBVhdaVhLs22L+l2eGE5/fsmFYryndUzVnioigkno4bVKnQqug5tNFsHKM+xJStAjgn8THs6XlOdrOVA49LXXWGnaO4YWP0mZxZA+DAI6qAcpMW08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rj1bKvcP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706917272; c=relaxed/simple;
+	bh=MMnuh1Oc8aQIK4NgPRT+2TknlqEUkEHoJeYCwVzCcjI=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=YJkYlm0p5acSBHqg5zREAM+0QiLTVDGVgT9rCrJgYRuiUA2F0ueJQcfQNNx+nivk9U7CRkBO8UpWNjnY9F5q/7oaqFPusZwL5BKJmg6+gMkRZtxRXUWVGi82IslIz+2Rr5mmKhlZRQGEiqpN0XQPDXvgE2kjfgp6RWydZ+HT3GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RelY/ddO; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rj1bKvcP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFC0C433C7;
-	Fri,  2 Feb 2024 22:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706911510;
-	bh=u+3b408czl7+mH8GeTAKvju9aWQhRxzD0hyW0Dr5iWE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rj1bKvcPX27x+4M1i+jYh7SuVlGttIBX9A5CC5LblU9hEvwGe2Od18VdDnFcbjFRk
-	 no3J1Xy5wkzm48aOCRzIo3KckxAdIxPqejNlRdZhTiAnV05sFv513YXo8N4sRXvNkc
-	 yc+SzlRdzjfBfA34VHkqBEWe0P6toRYi1gqtprXwEoJKSgtxfYXYe9gyyVK/u8gkcp
-	 zHn4niC9G0eo5JBaPs1Ib35wfDrhZjU769cjkQL+edF94vJBNMNwaBOdaKde9+v+ia
-	 L9d4L64ku4JADxIXdeXwwFnhW5HsYdcM9eaVLLWJxQwBESMMTkM1ZcHhL0gYCx2a1d
-	 fzw9QfMK+Ysdw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-toolchains@vger.kernel.org,
-	linux-trace-devel@vger.kernel.org
-Subject: [PATCH 14/14] perf annotate-data: Add stack canary type
-Date: Fri,  2 Feb 2024 14:04:59 -0800
-Message-ID: <20240202220459.527138-15-namhyung@kernel.org>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-In-Reply-To: <20240202220459.527138-1-namhyung@kernel.org>
-References: <20240202220459.527138-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RelY/ddO"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b267bf11so3139756276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Feb 2024 15:41:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706917269; x=1707522069; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CGn7q3AR6sBJnuW0w7X+aFdd8u9EK+5apJ+BcUW3hYQ=;
+        b=RelY/ddOhKc1+BmeSxPyTBj+bqIGPOtpzXzfuW+1LK++0ycq4is/vC5KhNDldKi4SW
+         MBNk7bzIv1GsR8vj/a0/k5IrQLl7nK5BkgnkbwEx7lI4jVtJWiPC70uj0A1LFsS+TThm
+         tUd43kdOtxmYGLDldWDKqwu5vROtwM/T+gBik3pyPaLvOZLWoOc0JNaWA7RiXY8EZndY
+         lUyxTR5aLOYgq5JPmD+INa/VVA508/0wB1mwl83WiO5IVddC+wPJNOeWnTrehfEj8ktl
+         jp9xAp8/btUWmk09/vn1nso/03+LIrM6CSX6gvhqwNzkTftuN+WMZGw1g5I4dEbgAAHd
+         gkPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706917269; x=1707522069;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CGn7q3AR6sBJnuW0w7X+aFdd8u9EK+5apJ+BcUW3hYQ=;
+        b=ltoP6FHItAEMYyBiaKWnDznPNjhMApFjj5b95sB7dAN2hqnOUPIxKQ3CDeaec6ksPg
+         5/ldWqwwTwlpnYfAa0i6zfWywgzaEDIWhPVuv6Tv/1lQazOi4/WLpiu8emyJclhw2gXj
+         UNcs447J6RVvaaKeLuIDOpDxqFRXKtqgi9Ry1W9e7HqxXKF7YTFQGkltJq5xnXzQgoQu
+         JhaIMeQuGMovh53tUyw3LIWYnn3yoI6oa6IO203+XPAW5me8oAxXs1l+lIy3yxoyidPy
+         t3GY5Sakp4irRxaqdfbep2I5EsfkB+oki3LqbUY05POlDpJhDXjbogPE707LRk2v+Lut
+         c/ag==
+X-Gm-Message-State: AOJu0YyT98a0yoVTF3FAqb9/YmgbHf77pR4O21i6HSRls/rf2Lcx4zuz
+	J1JReRMAqQKwFZcxYNMGIoDfUO1Pbgjhuv6d7t9F5ThprqIWltIbpQUxK8U3IYTCIG8brUsxM9B
+	66JjEjg==
+X-Google-Smtp-Source: AGHT+IHylMNHjoaYXoYqqOOZFoFT4X3A3hWj7pDcXfX2BSwpZDbVFcOqv6wqndJbEhdaoK213X6R34ETA+tx
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7732:d863:503:f53d])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1b0d:b0:dc6:ee66:da6b with SMTP
+ id eh13-20020a0569021b0d00b00dc6ee66da6bmr100341ybb.7.1706917269595; Fri, 02
+ Feb 2024 15:41:09 -0800 (PST)
+Date: Fri,  2 Feb 2024 15:40:49 -0800
+Message-Id: <20240202234057.2085863-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Subject: [PATCH v3 0/8] Clean up libperf cpumap's empty function
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
+	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, 
+	"=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Yang Li <yang.lee@linux.alibaba.com>, Changbin Du <changbin.du@huawei.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Paran Lee <p4ranlee@gmail.com>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-When the stack protector is enabled, compiler would generate code to
-check stack overflow with a special value called 'stack carary' at
-runtime.  On x86_64, GCC hard-codes the stack canary as %gs:40.
+Rename and clean up the use of libperf CPU map functions particularly
+focussing on perf_cpu_map__empty that may return true for maps
+containing CPUs but also with an "any CPU"/dummy value.
 
-While there's a definition of fixed_percpu_data in asm/processor.h,
-it seems that the header is not included everywhere and many places
-it cannot find the type info.  As it's in the well-known location (at
-%gs:40), let's add a pseudo stack canary type to handle it specially.
+perf_cpu_map__nr is also troubling in that iterating an empty CPU map
+will yield the "any CPU"/dummy value. Reduce the appearance of some
+calls to this by using the perf_cpu_map__for_each_cpu macro.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate-data.h |  1 +
- tools/perf/util/annotate.c      | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+v3: Address handling of "any" is arm-spe/cs-etm patch.
+v2: 6 patches were merged by Arnaldo. New patch added ensure empty
+    maps are allocated as NULL (suggested by James Clark). Hopefully a
+    fix to "perf arm-spe/cs-etm: Directly iterate CPU maps".
 
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 0bfef29fa52c..e293980eb11b 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -77,6 +77,7 @@ struct annotated_data_type {
- 
- extern struct annotated_data_type unknown_type;
- extern struct annotated_data_type stackop_type;
-+extern struct annotated_data_type canary_type;
- 
- /**
-  * struct data_loc_info - Data location information
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 5f3136f57c62..f2683dadf3cf 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -116,6 +116,13 @@ struct annotated_data_type stackop_type = {
- 	},
- };
- 
-+struct annotated_data_type canary_type = {
-+	.self = {
-+		.type_name = (char *)"(stack canary)",
-+		.children = LIST_HEAD_INIT(canary_type.self.children),
-+	},
-+};
-+
- static int arch__grow_instructions(struct arch *arch)
- {
- 	struct ins *new_instructions;
-@@ -3764,6 +3771,17 @@ static bool is_stack_operation(struct arch *arch, struct disasm_line *dl)
- 	return false;
- }
- 
-+static bool is_stack_canary(struct arch *arch, struct annotated_op_loc *loc)
-+{
-+	/* On x86_64, %gs:40 is used for stack canary */
-+	if (arch__is(arch, "x86")) {
-+		if (loc->segment == INSN_SEG_X86_GS && loc->offset == 40)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
- 			struct disasm_line *dl)
- {
-@@ -3938,6 +3956,12 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 		}
- 
- 		mem_type = find_data_type(&dloc);
-+
-+		if (mem_type == NULL && is_stack_canary(arch, op_loc)) {
-+			mem_type = &canary_type;
-+			dloc.type_offset = 0;
-+		}
-+
- 		if (mem_type)
- 			istat->good++;
- 		else
+Ian Rogers (8):
+  libperf cpumap: Add any, empty and min helpers
+  libperf cpumap: Ensure empty cpumap is NULL from alloc
+  perf arm-spe/cs-etm: Directly iterate CPU maps
+  perf intel-pt/intel-bts: Switch perf_cpu_map__has_any_cpu_or_is_empty
+    use
+  perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_empty
+  perf arm64 header: Remove unnecessary CPU map get and put
+  perf stat: Remove duplicate cpus_map_matched function
+  perf cpumap: Use perf_cpu_map__for_each_cpu when possible
+
+ tools/lib/perf/cpumap.c                       |  33 ++++-
+ tools/lib/perf/include/perf/cpumap.h          |  16 +++
+ tools/lib/perf/libperf.map                    |   4 +
+ tools/perf/arch/arm/util/cs-etm.c             | 114 ++++++++----------
+ tools/perf/arch/arm64/util/arm-spe.c          |   4 +-
+ tools/perf/arch/arm64/util/header.c           |  13 +-
+ tools/perf/arch/x86/util/intel-bts.c          |   4 +-
+ tools/perf/arch/x86/util/intel-pt.c           |  10 +-
+ tools/perf/builtin-c2c.c                      |   6 +-
+ tools/perf/builtin-stat.c                     |  31 +----
+ tools/perf/tests/bitmap.c                     |  13 +-
+ tools/perf/tests/topology.c                   |  46 +++----
+ tools/perf/util/auxtrace.c                    |   4 +-
+ tools/perf/util/bpf_kwork.c                   |  16 +--
+ tools/perf/util/bpf_kwork_top.c               |  12 +-
+ tools/perf/util/cpumap.c                      |  12 +-
+ tools/perf/util/record.c                      |   2 +-
+ .../scripting-engines/trace-event-python.c    |  12 +-
+ tools/perf/util/session.c                     |   5 +-
+ tools/perf/util/stat.c                        |   2 +-
+ tools/perf/util/svghelper.c                   |  20 ++-
+ 21 files changed, 192 insertions(+), 187 deletions(-)
+
 -- 
 2.43.0.594.gd9cf4e227d-goog
 
