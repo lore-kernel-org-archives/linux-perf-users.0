@@ -1,56 +1,56 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0CC130AD2
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Feb 2024 23:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE6E130AF1
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Feb 2024 23:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706917281; cv=none; b=pcym/6ymd8NUzh0GfFcGsJxkUa7Ugrqt8IABHQaDNe4KSvT02BRAznIJ8AEQuxDIhnd7rxiL44pJUgkEYLUTJDM4Kbn1XkHVj6tKs+etJtLpHISz/dckzfCaSGvlyIFRDHr+gedLYCjx4Mto6y+glsrNt18kcvQIZloMHfhaJBY=
+	t=1706917283; cv=none; b=Y5+ILJ6ckJ1SwwQv2ZWQ2zm2MGw4Rs8rh8ClQdsjU9OfLo+R9U8ru8bj9P5ya8Y0o3t+Do/CsKUyA4F3KGDAUBmeiAUzOAkasePnFgoxSC/LQIi3CEWnJ+ka/FbjMQNtvHX80FtGNJb5IJd+6hYRtDBo0KzvIIu3Gc2fIxBceiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706917281; c=relaxed/simple;
-	bh=vrKD5r788IsBMcWd7p/Y0rFlE9n9DwipYIJHOz74tOw=;
+	s=arc-20240116; t=1706917283; c=relaxed/simple;
+	bh=TXC4fY94F4QG3R5rAXB5MKDuVhvys01fhTTOf+9TuDM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=F39gbAn2DDa6VQGl7Ogphkov2BlVzW9Hznv8e0EgWvXjfpNDtW6iIEipmk5q3nunwBg9MjCnhYQYS3rQnOXSVkcSmDpwBdGPQIR+ELtsw0TLAAPh44XgpbPILZBvl90W5MmshmSXhNLQZ70GA1z199vCmAlZYN1ZdDZuMcCvtHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4w0kFDQh; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=MjNbVMywgfqJ9LSTHKtNUxeBm0VDZwjh4ocVqygFBJ/htOvHj7Haz8Ac0lPElod0mZsRaGftS8rsnh5uQlJPRUMbn8tYIIWPyNVZGoMFwTedbNxRTGd8+Ka8xWshsj8TMZOK6McG2BFgfjFKlZifjdnRhtD37+xbMdwgo3Vb/h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sMuuW/oA; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4w0kFDQh"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6041bb56dbfso39392237b3.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Feb 2024 15:41:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sMuuW/oA"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc3645a6790so4709127276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Feb 2024 15:41:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706917278; x=1707522078; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706917281; x=1707522081; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=wr65K6vWppDQ/+c7LXR1fsKtLh163OjTy8d5391wuIk=;
-        b=4w0kFDQhOhQz0WvuFPLIj+zyJzPgZ2QMlZ8lOM2cYWh6Z4Ij6FGdLBiXomLeP0p71c
-         DA/VgJmxdEYjbM45a1wHLR1NS3uNSD1HcXFzNRby4Z5vUmGTVEwz3bkjCY3wUSEr8rQU
-         w+UZk3cT0KO9U80IG7izxhul43cDXV94QRsCXmCZvr8cseO4t7p5445D+s2YJji64eWt
-         cueuLaf1fo3+B/IlixcdhaF2bLIT88OWgL+1Y3HCIQHgPOGZBeO/sEo+ShO/n91sV0DQ
-         EqCSpaIRpEloNRKb8nYA/9DdeiGhuv/gTENpBB+eKYcqnQ7+QmQSUAHTAm+B5zVmzasB
-         MLUw==
+        bh=9PKn59qI/eEru2iRWjl8r3A2NQszSA8YlNSVgwlBz0k=;
+        b=sMuuW/oAwOEVa93y3Ljf4HwsW9FKQ/j+oHFKLOuY1zE1iGOnRqhmjnRRaE4Z8jwLR3
+         gEQcjNhVLPW1yyMJWUR9nnCwtNM1m8j9Q6zssgfYlyUWfiC7mEo2LyLETLlD/dU0kqhO
+         ejm/n+48PbiQFl4x9qw9MB73KRCtRZJZ8A8q2kzTUwZr06x7IyiWJPjJAi9XbbssnAYz
+         JmqupUkqXZy52FfPvWgUSeqAddd5T9PmV8fiH8wwTV1VyiQKNaK5hnkd+hEc2tovNRhO
+         ifi4wFsNI43STWImWgqqeBtMCdXi2saFTZ4DT1sEVa4E2GhDd/VzKPWLOOv5bloQu7+o
+         zo9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706917278; x=1707522078;
+        d=1e100.net; s=20230601; t=1706917281; x=1707522081;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wr65K6vWppDQ/+c7LXR1fsKtLh163OjTy8d5391wuIk=;
-        b=WHeWMUFYuFg/n7EVPrNyPLI3w3IL2O2VquxfMwGqDD7rXRbbjes3PVgL3CQAWeU7Rc
-         EDu/YibKuaZi/XFmvsAYcW98c8zSXG85e2hUV63MHZ4pXtjpEt0W8U7Fug86BITk1bkr
-         sAjQRuMtGS0gEjPUNbeFMyPb70xlSwABiCCPtF5w94kd1RkHitWlx0ZFzNnuQGLAYIIp
-         qky7OTWzijoVfS++mt8T0VX+6Ec05ggkm1g20wUfYK+SDORE2SnagDI8SMztmHTwX4+h
-         /+XEFCF31BnS+fQDuCfMQ7sLjCnpiObYp30ZtPV6ap0MORpb2FM0UrJQpazNL6O3SBoU
-         AE0w==
-X-Gm-Message-State: AOJu0YwYubEzh4r1l6lUn/g0ikoNBoEBV2iO6XKP897/XeEdNGbzTXWe
-	OxV8pRjNuXgzDgy6AnrMNKwKs/4P03ak5/X1JKVlUcTKNCJkiLnjesaahG1DL0Nl84/GGN7gOFP
-	fGOhzvw==
-X-Google-Smtp-Source: AGHT+IGiumDXxsvYIccaz3gyylhqySyEc2Gp6C4lsSrfI9fwfZwbahfbAwRGdXwWOlR7Ts4vtw193bh3ieUX
+        bh=9PKn59qI/eEru2iRWjl8r3A2NQszSA8YlNSVgwlBz0k=;
+        b=dQeEvcNj7D2TzCkVy8hvg5Kxh7YRM3yctt4LJl+FCvzJLtllE14uwGNkxGaVgtXi3q
+         E+hkwmQqJuCOvUMldH2DhvwgAT05cw0+eB52TYH7DsvtnyApkzpyvAzUP3kwcXLG7e1F
+         fip5XdVpp33KmnjoL2IH6DHaUqzEVglwjil5HL4zMYfWeyhHq4gyNT3DVg+/zNyTQUs/
+         Ue6Xe1bN8t/wPHJ7fopjPoOkHOtOiBwnyZd4qg2bFao0I/JbrKPiU89oRplCpcstKyEh
+         Crv7i/ytvxBvPxRyYkDjo3c/cXqJLqX4Tq5qoigUKb+uM/zUDpYiv7fMcouvf4xIy0dg
+         2Skw==
+X-Gm-Message-State: AOJu0YxT3Dfed/7fbE/kX8E57egaj50AsFx1PyFdsByK8gPGtn/iDv00
+	Pxj9UeRJy+j1mTHInuj9EAx7dnBkxGdwUQARXXu2jEdlAClL93zt57yrCtPiZX4rTXFj/y5F+lW
+	6va0fvw==
+X-Google-Smtp-Source: AGHT+IHWmLxSFYG5o2YfD0f8kFtxG69QWwfC87vLwnlWGI5t07xlvynFj+vFP0PXcxWx19/9iJha3k0Bf84P
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7732:d863:503:f53d])
- (user=irogers job=sendgmr) by 2002:a05:690c:f8d:b0:5ff:b07b:fb83 with SMTP id
- df13-20020a05690c0f8d00b005ffb07bfb83mr1162438ywb.4.1706917278493; Fri, 02
- Feb 2024 15:41:18 -0800 (PST)
-Date: Fri,  2 Feb 2024 15:40:53 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:2512:b0:dc2:1dd0:c517 with SMTP
+ id dt18-20020a056902251200b00dc21dd0c517mr2454050ybb.7.1706917280766; Fri, 02
+ Feb 2024 15:41:20 -0800 (PST)
+Date: Fri,  2 Feb 2024 15:40:54 -0800
 In-Reply-To: <20240202234057.2085863-1-irogers@google.com>
-Message-Id: <20240202234057.2085863-5-irogers@google.com>
+Message-Id: <20240202234057.2085863-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,8 +59,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240202234057.2085863-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Subject: [PATCH v3 4/8] perf intel-pt/intel-bts: Switch perf_cpu_map__has_any_cpu_or_is_empty
- use
+Subject: [PATCH v3 5/8] perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_empty
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -86,88 +85,122 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Switch perf_cpu_map__has_any_cpu_or_is_empty to
-perf_cpu_map__is_any_cpu_or_is_empty as a CPU map may contain CPUs as
-well as the dummy event and perf_cpu_map__is_any_cpu_or_is_empty is a
-more correct alternative.
+Most uses of what was perf_cpu_map__empty but is now
+perf_cpu_map__has_any_cpu_or_is_empty want to do something with the
+CPU map if it contains CPUs. Replace uses of
+perf_cpu_map__has_any_cpu_or_is_empty with other helpers so that CPUs
+within the map can be handled.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/arch/x86/util/intel-bts.c |  4 ++--
- tools/perf/arch/x86/util/intel-pt.c  | 10 +++++-----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/builtin-c2c.c   | 6 +-----
+ tools/perf/builtin-stat.c  | 9 ++++-----
+ tools/perf/util/auxtrace.c | 4 ++--
+ tools/perf/util/record.c   | 2 +-
+ tools/perf/util/stat.c     | 2 +-
+ 5 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index af8ae4647585..34696f3d3d5d 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -143,7 +143,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
- 	if (!opts->full_auxtrace)
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 16b40f5d43db..24107062c43e 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2319,11 +2319,7 @@ static int setup_nodes(struct perf_session *session)
+ 
+ 		nodes[node] = set;
+ 
+-		/* empty node, skip */
+-		if (perf_cpu_map__has_any_cpu_or_is_empty(map))
+-			continue;
+-
+-		perf_cpu_map__for_each_cpu(cpu, idx, map) {
++		perf_cpu_map__for_each_cpu_skip_any(cpu, idx, map) {
+ 			__set_bit(cpu.cpu, set);
+ 
+ 			if (WARN_ONCE(cpu2node[cpu.cpu] != -1, "node/cpu topology bug"))
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5fe9abc6a524..280eb0c99d2b 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1317,10 +1317,9 @@ static int cpu__get_cache_id_from_map(struct perf_cpu cpu, char *map)
+ 	 * be the first online CPU in the cache domain else use the
+ 	 * first online CPU of the cache domain as the ID.
+ 	 */
+-	if (perf_cpu_map__has_any_cpu_or_is_empty(cpu_map))
++	id = perf_cpu_map__min(cpu_map).cpu;
++	if (id == -1)
+ 		id = cpu.cpu;
+-	else
+-		id = perf_cpu_map__cpu(cpu_map, 0).cpu;
+ 
+ 	/* Free the perf_cpu_map used to find the cache ID */
+ 	perf_cpu_map__put(cpu_map);
+@@ -1623,7 +1622,7 @@ static int perf_stat_init_aggr_mode(void)
+ 	 * taking the highest cpu number to be the size of
+ 	 * the aggregation translate cpumap.
+ 	 */
+-	if (!perf_cpu_map__has_any_cpu_or_is_empty(evsel_list->core.user_requested_cpus))
++	if (!perf_cpu_map__is_any_cpu_or_is_empty(evsel_list->core.user_requested_cpus))
+ 		nr = perf_cpu_map__max(evsel_list->core.user_requested_cpus).cpu;
+ 	else
+ 		nr = 0;
+@@ -2290,7 +2289,7 @@ int process_stat_config_event(struct perf_session *session,
+ 
+ 	perf_event__read_stat_config(&stat_config, &event->stat_config);
+ 
+-	if (perf_cpu_map__has_any_cpu_or_is_empty(st->cpus)) {
++	if (perf_cpu_map__is_empty(st->cpus)) {
+ 		if (st->aggr_mode != AGGR_UNSET)
+ 			pr_warning("warning: processing task data, aggregation mode not set\n");
+ 	} else if (st->aggr_mode != AGGR_UNSET) {
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 3684e6009b63..6b1d4bafad59 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -174,7 +174,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+ 				   struct evlist *evlist,
+ 				   struct evsel *evsel, int idx)
+ {
+-	bool per_cpu = !perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus);
++	bool per_cpu = !perf_cpu_map__has_any_cpu(evlist->core.user_requested_cpus);
+ 
+ 	mp->mmap_needed = evsel->needs_auxtrace_mmap;
+ 
+@@ -648,7 +648,7 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+ 
+ static int evlist__enable_event_idx(struct evlist *evlist, struct evsel *evsel, int idx)
+ {
+-	bool per_cpu_mmaps = !perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus);
++	bool per_cpu_mmaps = !perf_cpu_map__has_any_cpu(evlist->core.user_requested_cpus);
+ 
+ 	if (per_cpu_mmaps) {
+ 		struct perf_cpu evlist_cpu = perf_cpu_map__cpu(evlist->core.all_cpus, idx);
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index 87e817b3cf7e..e867de8ddaaa 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -237,7 +237,7 @@ bool evlist__can_select_event(struct evlist *evlist, const char *str)
+ 
+ 	evsel = evlist__last(temp_evlist);
+ 
+-	if (!evlist || perf_cpu_map__has_any_cpu_or_is_empty(evlist->core.user_requested_cpus)) {
++	if (!evlist || perf_cpu_map__is_any_cpu_or_is_empty(evlist->core.user_requested_cpus)) {
+ 		struct perf_cpu_map *cpus = perf_cpu_map__new_online_cpus();
+ 
+ 		if (cpus)
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index b0bcf92f0f9c..0bd5467389e4 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -315,7 +315,7 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
+ 	if (!counter->per_pkg)
  		return 0;
  
--	if (opts->full_auxtrace && !perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
-+	if (opts->full_auxtrace && !perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
- 		pr_err(INTEL_BTS_PMU_NAME " does not support per-cpu recording\n");
- 		return -EINVAL;
- 	}
-@@ -224,7 +224,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
- 		 * In the case of per-cpu mmaps, we need the CPU on the
- 		 * AUX event.
- 		 */
--		if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
-+		if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
- 			evsel__set_sample_bit(intel_bts_evsel, CPU);
- 	}
+-	if (perf_cpu_map__has_any_cpu_or_is_empty(cpus))
++	if (perf_cpu_map__is_any_cpu_or_is_empty(cpus))
+ 		return 0;
  
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index d199619df3ab..6de7e2d21075 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -369,7 +369,7 @@ static int intel_pt_info_fill(struct auxtrace_record *itr,
- 			ui__warning("Intel Processor Trace: TSC not available\n");
- 	}
- 
--	per_cpu_mmaps = !perf_cpu_map__has_any_cpu_or_is_empty(session->evlist->core.user_requested_cpus);
-+	per_cpu_mmaps = !perf_cpu_map__is_any_cpu_or_is_empty(session->evlist->core.user_requested_cpus);
- 
- 	auxtrace_info->type = PERF_AUXTRACE_INTEL_PT;
- 	auxtrace_info->priv[INTEL_PT_PMU_TYPE] = intel_pt_pmu->type;
-@@ -774,7 +774,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 	 * Per-cpu recording needs sched_switch events to distinguish different
- 	 * threads.
- 	 */
--	if (have_timing_info && !perf_cpu_map__has_any_cpu_or_is_empty(cpus) &&
-+	if (have_timing_info && !perf_cpu_map__is_any_cpu_or_is_empty(cpus) &&
- 	    !record_opts__no_switch_events(opts)) {
- 		if (perf_can_record_switch_events()) {
- 			bool cpu_wide = !target__none(&opts->target) &&
-@@ -832,7 +832,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 		 * In the case of per-cpu mmaps, we need the CPU on the
- 		 * AUX event.
- 		 */
--		if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
-+		if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
- 			evsel__set_sample_bit(intel_pt_evsel, CPU);
- 	}
- 
-@@ -858,7 +858,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 			tracking_evsel->immediate = true;
- 
- 		/* In per-cpu case, always need the time of mmap events etc */
--		if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
-+		if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
- 			evsel__set_sample_bit(tracking_evsel, TIME);
- 			/* And the CPU for switch events */
- 			evsel__set_sample_bit(tracking_evsel, CPU);
-@@ -870,7 +870,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 	 * Warn the user when we do not have enough information to decode i.e.
- 	 * per-cpu with no sched_switch (except workload-only).
- 	 */
--	if (!ptr->have_sched_switch && !perf_cpu_map__has_any_cpu_or_is_empty(cpus) &&
-+	if (!ptr->have_sched_switch && !perf_cpu_map__is_any_cpu_or_is_empty(cpus) &&
- 	    !target__none(&opts->target) &&
- 	    !intel_pt_evsel->core.attr.exclude_user)
- 		ui__warning("Intel Processor Trace decoding will not be possible except for kernel tracing!\n");
+ 	if (!mask) {
 -- 
 2.43.0.594.gd9cf4e227d-goog
 
