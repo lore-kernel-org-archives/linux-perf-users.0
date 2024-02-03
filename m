@@ -1,107 +1,383 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C425522C;
-	Sat,  3 Feb 2024 01:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3185398
+	for <linux-perf-users@vger.kernel.org>; Sat,  3 Feb 2024 02:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706925286; cv=none; b=Y+ndncEYVjgDyj3b5W2gtf8zGiwYSfbhQnkRGQxswl1FhFhiHJkB89LODe3t3R3WQDTAIlEQBs18VnYej6gPvbTnByXwt2GquQrq4LGFQG57+HUe6236CujH6fW0H2yXAauiKPopleo7rfXLun+xTnc0MFIFSeqm9A/b7AgJrT0=
+	t=1706928308; cv=none; b=JjaRZw5haK0IOXLTWg9C6CQm9OKGZeHSxz6yQDiHNHBffRApikIYK41vjHsBaZ6VRYHNX8VTcl+f91PlmwtmzqscIG3DdcK3rrbSKhYkKSytIHH8tuq5Lz2m0fG4BCnIGg2ArpZlCq/Hs8SWTCPVGtsNxiy4BQ7sEH3YxbIk7k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706925286; c=relaxed/simple;
-	bh=ru3a+7plwttqZ2saoByjAcpMkbi4wbz86/ikmmtOWfE=;
+	s=arc-20240116; t=1706928308; c=relaxed/simple;
+	bh=fmcpXMknfWCuzBxr/aoRznuV0ZYBo5hPAGuro3wj+S4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZI6XMQQFrpsJIvahAjqCos95LaIxZg1sbvabgkMjcoO1kGgcTi3ZU25PS0pTeOzs/Es5v6ez3NsrUTTK42g+C7Ptnila/SOduxpMCigrydGllepR1bY078rlPT1orCzx6bj0fn5CNuTcZJxBkKRZRKgFMkMhDe7cWFABrR89uXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2963ddea851so1094889a91.3;
-        Fri, 02 Feb 2024 17:54:45 -0800 (PST)
+	 To:Cc:Content-Type; b=AEHJvhZyJWp+EhJNmF1vdlDezxAkeODJMm4NAG+qv5aVxDjc3yK2VUe43f3X6ltAOjiKsgfF6wPlAUjrVXmqEpJffLL98QMMODD6rpwaleaQmyeJWbRc6WXphNNhDwm5Uu4pQyO8vo+o7ktdsHkmRjK9lAHK9Z47Twmx4lVzQ/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H7J3JUvI; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H7J3JUvI"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3638bd37107so51435ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Feb 2024 18:45:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706928305; x=1707533105; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dPJhc6ARWb0ZIE8QVQO5KUklK/OzZ3mi6kTQhpYsUXM=;
+        b=H7J3JUvInzh8T6HQVMuBWG9naGuHgX9QpJcyfy4m4yVk3jHiwu246+/7h/ckK11yAO
+         1/o+pwf0E+zjmdzkQjGSeC3cZbR2wWOQxf+haN/McvXDK8vD7lYm03aBKkHEMhrZSsVW
+         9Bp4Nh4J0OznOzUJX8HPvChTpX8CObq6lla3HDzkbMxZRQcFjq1//eDsqi8E3ntcutKM
+         tb6NAgThVIHnBk3K5dZSVhQpMavdQfgqbOdSl25L3t8/cUpl8oAtNLufea/oMoZsaP+E
+         Kp+2X7l6oSrYq8kj4bUbwLcpwKQh7NCReDZjLrVcVwd7ccaFenp2AXb4Fr3H18Vn5BgX
+         2nwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706925285; x=1707530085;
+        d=1e100.net; s=20230601; t=1706928305; x=1707533105;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tyHFg4Q3szLDlbtLnSwgKC+pD1zvFdMTcgfevkc4/bs=;
-        b=i6WNOkLUPP6Wbe0Eb8rnqINcysXos9G/o7ezPJjI+jYDV4NHuc3TwotsP67kg57+36
-         BtZVJWP13kgNB7T74O+aWprfHTDrAEy2f9lh1JhMiuwtl9LdY1LeKpQ9InbU+Mk2cNXL
-         O8SgudQvZAnqDzmtPreqJrzoLABM2T03EUEIBQHahvXsPt0auildxi9m3N7ArpjiseY7
-         4YN7WZI6AqKDbTGzFDd+A/dfET2TwNx3lka8nN/2UHpxNDwhAIhbhrqOQ0i6Rb50bFP1
-         6WnNeDYi4HR6s++z5gSbkwQG23hHOQ7yA5uEbtNdb4kiKlYzyuoXLcur/Q2AdGGReRs0
-         0jSg==
-X-Gm-Message-State: AOJu0YybJpJnH7gQGunz+rvO3lec6dhq/9ZLgY9VZFFEVnhjT89+w3t5
-	Wd5AF9EGn/D0GbOv8nZ2tm5oJLwE1E4JDiHwZ4GJp1I9CB/rFnYDNAbZbMxgLyLRO5bPzzl6vil
-	QKpB9sYG5Oip0U2OhqOwX/WgJV18=
-X-Google-Smtp-Source: AGHT+IE68NUGHJAcWfnjwco7PqFYhaQkuaZkWiv7BrCZ1e+RcjYI9I+0uhathfurw5+smL+Pgi5FzYF94RayljJigTc=
-X-Received: by 2002:a17:90b:295:b0:295:e8ea:3724 with SMTP id
- az21-20020a17090b029500b00295e8ea3724mr4039304pjb.34.1706925284654; Fri, 02
- Feb 2024 17:54:44 -0800 (PST)
+        bh=dPJhc6ARWb0ZIE8QVQO5KUklK/OzZ3mi6kTQhpYsUXM=;
+        b=JAfr/06IfJCbtvL17wZkJfhDKHYslG6nbV475p4GUetJpIMoYU1WZQce3mh1UGf9qq
+         MHXlYy+UXydwxNgaJBT9f/zKcu+SrE3i8PZd4hWNAVrPX2adr43LZpyzwE9OrdxcxK8M
+         9N6SRc+qo+7A0IgwU9siO/OAA02Hh8V2vh2d+d7W2v2FeTgEyCgLzHCDpsqLvfDWDcM/
+         Cy+QiOG2x1eIIdquUiVdkXnQ4vLUMsmqWi9ApGB6Q8HvhouOpO+kxmrD1FApDoF0r5/o
+         EumZSRVHjx/OQDEo/BvEcdsUleN9VABswdTI0SiYrU9z2kxfzbZBB1oAHFkHkqbdSVO1
+         UsRw==
+X-Gm-Message-State: AOJu0YxIo02mYXLTvfJjEFAfCqAfXkN3pi1yCb4THTzvdoIZ5OP7+yKh
+	QDLzz+vt9QuO6FYC3dUzGWeNIkhy8ojbO0i7VODQUGT6GN1MGFrTXARlArusK5sVyr+hWxnajEH
+	e0VHiCA+7WZB2bQ/OJ0DLIWeEXpbIIaVPN4mY
+X-Google-Smtp-Source: AGHT+IEFgkagKgN/9PYKFEL64LnSsGENnpdyNkduQ9hVEERhWpAyw/MxAiXAvSTyy7f2fr2evij30tOm7zv1DS8pyOs=
+X-Received: by 2002:a05:6e02:240d:b0:363:babf:dc3c with SMTP id
+ bs13-20020a056e02240d00b00363babfdc3cmr81081ilb.2.1706928304655; Fri, 02 Feb
+ 2024 18:45:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123103137.1890779-1-ben.gainey@arm.com>
-In-Reply-To: <20240123103137.1890779-1-ben.gainey@arm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 2 Feb 2024 17:54:33 -0800
-Message-ID: <CAM9d7cjTm0y9cPy7RpRVGaphD6TBEbnRANc+8kRAvjrBtfq6NQ@mail.gmail.com>
-Subject: Re: [PATCH 0/1] tools: perf: Expose sample ID / stream ID to python scripts
-To: Ben Gainey <ben.gainey@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	will@kernel.org
+References: <20240202220459.527138-1-namhyung@kernel.org> <20240202220459.527138-7-namhyung@kernel.org>
+In-Reply-To: <20240202220459.527138-7-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 2 Feb 2024 18:44:53 -0800
+Message-ID: <CAP-5=fX-LASq92NCAd-8+41S9Bo_8xiH7iEGvKZqRbSdM-9zkw@mail.gmail.com>
+Subject: Re: [PATCH 06/14] perf annotate-data: Maintain variable type info
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, Feb 2, 2024 at 2:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> As it collected basic block and variable information in each scope, it
+> now can build a state table to find matching variable at the location.
+>
+> The struct type_state is to keep the type info saved in each register
+> and stack slot.  The update_var_state() updates the table when it finds
+> variables in the current address.  It expects die_collect_vars() filled
+> a list of variables with type info and starting address.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/annotate-data.c | 155 ++++++++++++++++++++++++++++++++
+>  tools/perf/util/annotate-data.h |  29 ++++++
+>  tools/perf/util/dwarf-aux.c     |   4 +
+>  3 files changed, 188 insertions(+)
+>
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-d=
+ata.c
+> index b8e60c42af8c..f8768c224bcc 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -23,6 +23,57 @@
+>  #include "symbol.h"
+>  #include "symbol_conf.h"
+>
+> +/* Type information in a register, valid when ok is true */
+> +struct type_state_reg {
+> +       Dwarf_Die type;
+> +       bool ok;
+> +       bool scratch;
+> +};
+> +
+> +/* Type information in a stack location, dynamically allocated */
+> +struct type_state_stack {
+> +       struct list_head list;
+> +       Dwarf_Die type;
+> +       int offset;
+> +       int size;
+> +       bool compound;
+> +};
+> +
+> +/* FIXME: This should be arch-dependent */
+> +#define TYPE_STATE_MAX_REGS  16
 
-On Tue, Jan 23, 2024 at 2:32=E2=80=AFAM Ben Gainey <ben.gainey@arm.com> wro=
-te:
->
-> This patch modifies the perf python scripting engine so that the ID and
-> STREAM_ID are exposed as part of the sample so that they may be
-> correlated to the corresponding throttle/unthrottle event (for example).
->
-> NB: For scripts where perf_db_export_mode =3D True, this may be a breakin=
-g
-> change depending on how the script is constructed. Each field is passed
-> to `sample_table` as an argument so any script that is written as:
->
->     def sample_table(db_id, evsel_id, machine_id, ..., cyc_cnt, flags)
->
-> will now fail due to the changed number of arguments with:
->
->     TypeError: sample_table() takes 25 positional arguments but 27 were g=
-iven
->
-> Scripts that use:
->
->     def sample_table(*args)
->
-> or some variation thereof will not be affected.
->
-> When `perf_db_export_mode =3D False`, the script should be unaffected as
-> all the arguments are inserted into a dictionary.
->
-> The export-to-xxx.py scripts use the (..., *x) form so are not affected.
-
-As long as all in-tree users are fine, I think it's ok.
+Perhaps 32, presumably 16 won't work on Arm64.
 
 Thanks,
-Namhyung
+Ian
 
+> +
+> +/*
+> + * State table to maintain type info in each register and stack location=
+.
+> + * It'll be updated when new variable is allocated or type info is moved
+> + * to a new location (register or stack).  As it'd be used with the
+> + * shortest path of basic blocks, it only maintains a single table.
+> + */
+> +struct type_state {
+> +       struct type_state_reg regs[TYPE_STATE_MAX_REGS];
+> +       struct list_head stack_vars;
+> +};
+> +
+> +static bool has_reg_type(struct type_state *state, int reg)
+> +{
+> +       return (unsigned)reg < ARRAY_SIZE(state->regs);
+> +}
+> +
+> +void init_type_state(struct type_state *state, struct arch *arch __maybe=
+_unused)
+> +{
+> +       memset(state, 0, sizeof(*state));
+> +       INIT_LIST_HEAD(&state->stack_vars);
+> +}
+> +
+> +void exit_type_state(struct type_state *state)
+> +{
+> +       struct type_state_stack *stack, *tmp;
+> +
+> +       list_for_each_entry_safe(stack, tmp, &state->stack_vars, list) {
+> +               list_del(&stack->list);
+> +               free(stack);
+> +       }
+> +}
+> +
+>  /*
+>   * Compare type name and size to maintain them in a tree.
+>   * I'm not sure if DWARF would have information of a single type in many
+> @@ -238,6 +289,110 @@ static int check_variable(Dwarf_Die *var_die, Dwarf=
+_Die *type_die, int offset,
+>         return 0;
+>  }
 >
+> +static struct type_state_stack *find_stack_state(struct type_state *stat=
+e,
+> +                                                int offset)
+> +{
+> +       struct type_state_stack *stack;
+> +
+> +       list_for_each_entry(stack, &state->stack_vars, list) {
+> +               if (offset =3D=3D stack->offset)
+> +                       return stack;
+> +
+> +               if (stack->compound && stack->offset < offset &&
+> +                   offset < stack->offset + stack->size)
+> +                       return stack;
+> +       }
+> +       return NULL;
+> +}
+> +
+> +static void set_stack_state(struct type_state_stack *stack, int offset,
+> +                           Dwarf_Die *type_die)
+> +{
+> +       int tag;
+> +       Dwarf_Word size;
+> +
+> +       if (dwarf_aggregate_size(type_die, &size) < 0)
+> +               size =3D 0;
+> +
+> +       tag =3D dwarf_tag(type_die);
+> +
+> +       stack->type =3D *type_die;
+> +       stack->size =3D size;
+> +       stack->offset =3D offset;
+> +
+> +       switch (tag) {
+> +       case DW_TAG_structure_type:
+> +       case DW_TAG_union_type:
+> +               stack->compound =3D true;
+> +               break;
+> +       default:
+> +               stack->compound =3D false;
+> +               break;
+> +       }
+> +}
+> +
+> +static struct type_state_stack *findnew_stack_state(struct type_state *s=
+tate,
+> +                                                   int offset, Dwarf_Die=
+ *type_die)
+> +{
+> +       struct type_state_stack *stack =3D find_stack_state(state, offset=
+);
+> +
+> +       if (stack) {
+> +               set_stack_state(stack, offset, type_die);
+> +               return stack;
+> +       }
+> +
+> +       stack =3D malloc(sizeof(*stack));
+> +       if (stack) {
+> +               set_stack_state(stack, offset, type_die);
+> +               list_add(&stack->list, &state->stack_vars);
+> +       }
+> +       return stack;
+> +}
+> +
+> +/**
+> + * update_var_state - Update type state using given variables
+> + * @state: type state table
+> + * @dloc: data location info
+> + * @addr: instruction address to update
+> + * @var_types: list of variables with type info
+> + *
+> + * This function fills the @state table using @var_types info.  Each var=
+iable
+> + * is used only at the given location and updates an entry in the table.
+> + */
+> +void update_var_state(struct type_state *state, struct data_loc_info *dl=
+oc,
+> +                     u64 addr, struct die_var_type *var_types)
+> +{
+> +       Dwarf_Die mem_die;
+> +       struct die_var_type *var;
+> +       int fbreg =3D dloc->fbreg;
+> +       int fb_offset =3D 0;
+> +
+> +       if (dloc->fb_cfa) {
+> +               if (die_get_cfa(dloc->di->dbg, addr, &fbreg, &fb_offset) =
+< 0)
+> +                       fbreg =3D -1;
+> +       }
+> +
+> +       for (var =3D var_types; var !=3D NULL; var =3D var->next) {
+> +               if (var->addr !=3D addr)
+> +                       continue;
+> +               /* Get the type DIE using the offset */
+> +               if (!dwarf_offdie(dloc->di->dbg, var->die_off, &mem_die))
+> +                       continue;
+> +
+> +               if (var->reg =3D=3D DWARF_REG_FB) {
+> +                       findnew_stack_state(state, var->offset, &mem_die)=
+;
+> +               } else if (var->reg =3D=3D fbreg) {
+> +                       findnew_stack_state(state, var->offset - fb_offse=
+t, &mem_die);
+> +               } else if (has_reg_type(state, var->reg)) {
+> +                       struct type_state_reg *reg;
+> +
+> +                       reg =3D &state->regs[var->reg];
+> +                       reg->type =3D mem_die;
+> +                       reg->ok =3D true;
+> +               }
+> +       }
+> +}
+> +
+>  /* The result will be saved in @type_die */
+>  static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *typ=
+e_die)
+>  {
+> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-d=
+ata.h
+> index ad6493ea2c8e..7fbb9eb2e96f 100644
+> --- a/tools/perf/util/annotate-data.h
+> +++ b/tools/perf/util/annotate-data.h
+> @@ -8,9 +8,12 @@
+>  #include <linux/types.h>
 >
-> Ben Gainey (1):
->   tools: perf: Expose sample ID / stream ID to python scripts
+>  struct annotated_op_loc;
+> +struct arch;
+>  struct debuginfo;
+> +struct die_var_type;
+>  struct evsel;
+>  struct map_symbol;
+> +struct type_state;
 >
->  tools/perf/Documentation/perf-script-python.txt        | 4 ++--
->  tools/perf/util/scripting-engines/trace-event-python.c | 8 +++++++-
->  2 files changed, 9 insertions(+), 3 deletions(-)
+>  /**
+>   * struct annotated_member - Type of member field
+> @@ -146,6 +149,16 @@ int annotated_data_type__update_samples(struct annot=
+ated_data_type *adt,
+>  /* Release all data type information in the tree */
+>  void annotated_data_type__tree_delete(struct rb_root *root);
 >
+> +/* Initialize type state table */
+> +void init_type_state(struct type_state *state, struct arch *arch);
+> +
+> +/* Destroy type state table */
+> +void exit_type_state(struct type_state *state);
+> +
+> +/* Update type state table using variables */
+> +void update_var_state(struct type_state *state, struct data_loc_info *dl=
+oc,
+> +                     u64 addr, struct die_var_type *var_types);
+> +
+>  #else /* HAVE_DWARF_SUPPORT */
+>
+>  static inline struct annotated_data_type *
+> @@ -168,6 +181,22 @@ static inline void annotated_data_type__tree_delete(=
+struct rb_root *root __maybe
+>  {
+>  }
+>
+> +static inline void init_type_state(struct type_state *state __maybe_unus=
+ed,
+> +                                  struct arch *arch __maybe_unused)
+> +{
+> +}
+> +
+> +static inline void exit_type_state(struct type_state *state __maybe_unus=
+ed)
+> +{
+> +}
+> +
+> +static inline void update_var_state(struct type_state *state __maybe_unu=
+sed,
+> +                                   struct data_loc_info *dloc __maybe_un=
+used,
+> +                                   u64 addr __maybe_unused,
+> +                                   struct die_var_type *var_types __mayb=
+e_unused)
+> +{
+> +}
+> +
+>  #endif /* HAVE_DWARF_SUPPORT */
+>
+>  #endif /* _PERF_ANNOTATE_DATA_H */
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 39851ff1d5c4..f88a8fb4a350 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -9,6 +9,7 @@
+>  #include <stdlib.h>
+>  #include "debug.h"
+>  #include "dwarf-aux.h"
+> +#include "dwarf-regs.h"
+>  #include "strbuf.h"
+>  #include "string2.h"
+>
+> @@ -1147,6 +1148,8 @@ static int reg_from_dwarf_op(Dwarf_Op *op)
+>         case DW_OP_regx:
+>         case DW_OP_bregx:
+>                 return op->number;
+> +       case DW_OP_fbreg:
+> +               return DWARF_REG_FB;
+>         default:
+>                 break;
+>         }
+> @@ -1160,6 +1163,7 @@ static int offset_from_dwarf_op(Dwarf_Op *op)
+>         case DW_OP_regx:
+>                 return 0;
+>         case DW_OP_breg0 ... DW_OP_breg31:
+> +       case DW_OP_fbreg:
+>                 return op->number;
+>         case DW_OP_bregx:
+>                 return op->number2;
 > --
-> 2.43.0
+> 2.43.0.594.gd9cf4e227d-goog
 >
