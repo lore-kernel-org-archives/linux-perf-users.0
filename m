@@ -1,142 +1,107 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82536FC7;
-	Sat,  3 Feb 2024 01:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C425522C;
+	Sat,  3 Feb 2024 01:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706925034; cv=none; b=XTAgcKWbfNRBvIDL5MifMogjJcoTDatuS5QfYg/Uhe99/wzF5pkEWXJIG8Xv2xOrxLb0I+GtL11M0D6P9dhWIk2vBOavkg2Up82FOOiDOswOQOB7RXXoydPmAd8EOaTBWNn297MMuAikXE6zhSge0BsRX3A3/rFueGwpS2NWTUQ=
+	t=1706925286; cv=none; b=Y+ndncEYVjgDyj3b5W2gtf8zGiwYSfbhQnkRGQxswl1FhFhiHJkB89LODe3t3R3WQDTAIlEQBs18VnYej6gPvbTnByXwt2GquQrq4LGFQG57+HUe6236CujH6fW0H2yXAauiKPopleo7rfXLun+xTnc0MFIFSeqm9A/b7AgJrT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706925034; c=relaxed/simple;
-	bh=wO/AAN7qkMOANrzj2oDNliIrqUtXa0hARBodmlndRVY=;
+	s=arc-20240116; t=1706925286; c=relaxed/simple;
+	bh=ru3a+7plwttqZ2saoByjAcpMkbi4wbz86/ikmmtOWfE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=liVCGqSk1O53lh03mKDVvF1pgFHl5Tdf1sQ7hi1jEM1zQwSFonPbVPmxteE+Maeo8u5aN86GO+VAZJuZjIKTxLg6IfcjJW9YN9tQ06L4yZutmSRfeJwbLXZuTOWtSo6rqkTHoeqdEo0xeD7K+lZLW7LP/Qy0Hr29BRMzCQWot1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
+	 To:Cc:Content-Type; b=ZI6XMQQFrpsJIvahAjqCos95LaIxZg1sbvabgkMjcoO1kGgcTi3ZU25PS0pTeOzs/Es5v6ez3NsrUTTK42g+C7Ptnila/SOduxpMCigrydGllepR1bY078rlPT1orCzx6bj0fn5CNuTcZJxBkKRZRKgFMkMhDe7cWFABrR89uXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cdf76cde78so2485180a12.1;
-        Fri, 02 Feb 2024 17:50:32 -0800 (PST)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2963ddea851so1094889a91.3;
+        Fri, 02 Feb 2024 17:54:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706925032; x=1707529832;
+        d=1e100.net; s=20230601; t=1706925285; x=1707530085;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x7SrZrWWwvN/Zz751LjEUwz2jtidjtV8u+us50VcWCc=;
-        b=CLxDGDI+E3DWDyZePji3ykQowqiyIE7mfpLxTU1uC0CRdeCw51D8KAbELrTgR9/PJa
-         hsD5JFIL0ieAUO4TmZz6lmVu7kAY4MIiTnSugkYLQDv+mk2egJUgMhPyzG9yriw6/x6L
-         ebazlNWmFZeaym/gmYUkwJRVEKBuvwCA2qWBuFwaRx2s5aztHX1wLXR5Ynhan2673MOx
-         8EJrUDHhN8unmvSAYXS+R/imP2gRuUocrK6wbXqLEKNzRJcf9dPIQ55OEa0n1CJpccYJ
-         yR6dvl5Vdb7fXx08R2pYzqK+TitmXDMnSFRXtE+z2mO89QqN8lOzR6DMOiGjBB9zLkd7
-         lLqw==
-X-Gm-Message-State: AOJu0YwPflTISAzlCAWOvFf2V8ZiYJGySSuL6o8akkN5gKGf9c5jpkhO
-	wM5DNw1AKUpdmATTn15hGeANElWH6xljPyfwOJvRA+CG6OaqRdUjLiWo/40bfhVVzyezweMfiP5
-	0h0iYvYBCGs1cYLjJEP6BQ8fCLnPo1qpicfk=
-X-Google-Smtp-Source: AGHT+IF+lKbwnE57FXGXoShKSBpJLM8jGkJoDGJQaP1ZdF8uGcAU4DJrjR5hZPmZ9KV6h38FXOc5aoMEDWgHG0yOcws=
-X-Received: by 2002:a05:6a20:e54b:b0:19c:b4f1:4538 with SMTP id
- nf11-20020a056a20e54b00b0019cb4f14538mr3121864pzb.24.1706925031801; Fri, 02
- Feb 2024 17:50:31 -0800 (PST)
+        bh=tyHFg4Q3szLDlbtLnSwgKC+pD1zvFdMTcgfevkc4/bs=;
+        b=i6WNOkLUPP6Wbe0Eb8rnqINcysXos9G/o7ezPJjI+jYDV4NHuc3TwotsP67kg57+36
+         BtZVJWP13kgNB7T74O+aWprfHTDrAEy2f9lh1JhMiuwtl9LdY1LeKpQ9InbU+Mk2cNXL
+         O8SgudQvZAnqDzmtPreqJrzoLABM2T03EUEIBQHahvXsPt0auildxi9m3N7ArpjiseY7
+         4YN7WZI6AqKDbTGzFDd+A/dfET2TwNx3lka8nN/2UHpxNDwhAIhbhrqOQ0i6Rb50bFP1
+         6WnNeDYi4HR6s++z5gSbkwQG23hHOQ7yA5uEbtNdb4kiKlYzyuoXLcur/Q2AdGGReRs0
+         0jSg==
+X-Gm-Message-State: AOJu0YybJpJnH7gQGunz+rvO3lec6dhq/9ZLgY9VZFFEVnhjT89+w3t5
+	Wd5AF9EGn/D0GbOv8nZ2tm5oJLwE1E4JDiHwZ4GJp1I9CB/rFnYDNAbZbMxgLyLRO5bPzzl6vil
+	QKpB9sYG5Oip0U2OhqOwX/WgJV18=
+X-Google-Smtp-Source: AGHT+IE68NUGHJAcWfnjwco7PqFYhaQkuaZkWiv7BrCZ1e+RcjYI9I+0uhathfurw5+smL+Pgi5FzYF94RayljJigTc=
+X-Received: by 2002:a17:90b:295:b0:295:e8ea:3724 with SMTP id
+ az21-20020a17090b029500b00295e8ea3724mr4039304pjb.34.1706925284654; Fri, 02
+ Feb 2024 17:54:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202110130.3553-1-adrian.hunter@intel.com> <20240202110130.3553-2-adrian.hunter@intel.com>
-In-Reply-To: <20240202110130.3553-2-adrian.hunter@intel.com>
+References: <20240123103137.1890779-1-ben.gainey@arm.com>
+In-Reply-To: <20240123103137.1890779-1-ben.gainey@arm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 2 Feb 2024 17:50:20 -0800
-Message-ID: <CAM9d7cipqHheaZOj9Qr56COjjdU2Qk1pLtUzkjZxtq4g3irLww@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf script: Make it possible to see perf's kernel
- and module memory mappings
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Like Xu <like.xu.linux@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Fri, 2 Feb 2024 17:54:33 -0800
+Message-ID: <CAM9d7cjTm0y9cPy7RpRVGaphD6TBEbnRANc+8kRAvjrBtfq6NQ@mail.gmail.com>
+Subject: Re: [PATCH 0/1] tools: perf: Expose sample ID / stream ID to python scripts
+To: Ben Gainey <ben.gainey@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	will@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 2, 2024 at 3:01=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.c=
-om> wrote:
->
-> Dump kmaps if verbose > 2.
+Hello,
 
-Maybe we can add '--debug kmap' option rather than using an
-arbitrary verbose level.
+On Tue, Jan 23, 2024 at 2:32=E2=80=AFAM Ben Gainey <ben.gainey@arm.com> wro=
+te:
+>
+> This patch modifies the perf python scripting engine so that the ID and
+> STREAM_ID are exposed as part of the sample so that they may be
+> correlated to the corresponding throttle/unthrottle event (for example).
+>
+> NB: For scripts where perf_db_export_mode =3D True, this may be a breakin=
+g
+> change depending on how the script is constructed. Each field is passed
+> to `sample_table` as an argument so any script that is written as:
+>
+>     def sample_table(db_id, evsel_id, machine_id, ..., cyc_cnt, flags)
+>
+> will now fail due to the changed number of arguments with:
+>
+>     TypeError: sample_table() takes 25 positional arguments but 27 were g=
+iven
+>
+> Scripts that use:
+>
+>     def sample_table(*args)
+>
+> or some variation thereof will not be affected.
+>
+> When `perf_db_export_mode =3D False`, the script should be unaffected as
+> all the arguments are inserted into a dictionary.
+>
+> The export-to-xxx.py scripts use the (..., *x) form so are not affected.
+
+As long as all in-tree users are fine, I think it's ok.
 
 Thanks,
 Namhyung
 
 >
-> Example:
 >
->   $ perf script -vvv 2>&1 >/dev/null | grep kvm.intel
->   build id event received for /lib/modules/6.7.2-local/kernel/arch/x86/kv=
-m/kvm-intel.ko: 0691d75e10e72ebbbd45a44c59f6d00a5604badf [20]
->   Map: 0-3a3 4f5d8 [kvm_intel].modinfo
->   Map: 0-5240 5f280 [kvm_intel]__versions
->   Map: 0-30 64 [kvm_intel].note.Linux
->   Map: 0-14 644c0 [kvm_intel].orc_header
->   Map: 0-5297 43680 [kvm_intel].rodata
->   Map: 0-5bee 3b837 [kvm_intel].text.unlikely
->   Map: 0-7e0 41430 [kvm_intel].noinstr.text
->   Map: 0-2080 713c0 [kvm_intel].bss
->   Map: 0-26 705c8 [kvm_intel].data..read_mostly
->   Map: 0-5888 6a4c0 [kvm_intel].data
->   Map: 0-22 70220 [kvm_intel].data.once
->   Map: 0-40 705f0 [kvm_intel].data..percpu
->   Map: 0-1685 41d20 [kvm_intel].init.text
->   Map: 0-4b8 6fd60 [kvm_intel].init.data
->   Map: 0-380 70248 [kvm_intel]__dyndbg
->   Map: 0-8 70218 [kvm_intel].exit.data
->   Map: 0-438 4f980 [kvm_intel]__param
->   Map: 0-5f5 4ca0f [kvm_intel].rodata.str1.1
->   Map: 0-3657 493b8 [kvm_intel].rodata.str1.8
->   Map: 0-e0 70640 [kvm_intel].data..ro_after_init
->   Map: 0-500 70ec0 [kvm_intel].gnu.linkonce.this_module
->   Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-local/kern=
-el/arch/x86/kvm/kvm-intel.ko
+> Ben Gainey (1):
+>   tools: perf: Expose sample ID / stream ID to python scripts
 >
-> The example above shows how the module section mappings are all wrong
-> except for the main .text mapping at 0xffffffffc13a7000.
+>  tools/perf/Documentation/perf-script-python.txt        | 4 ++--
+>  tools/perf/util/scripting-engines/trace-event-python.c | 8 +++++++-
+>  2 files changed, 9 insertions(+), 3 deletions(-)
 >
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/builtin-script.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index b1f57401ff23..e764b319ef59 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -3806,6 +3806,16 @@ static int parse_callret_trace(const struct option=
- *opt __maybe_unused,
->         return 0;
->  }
->
-> +static void dump_kmaps(struct perf_session *session)
-> +{
-> +       int save_verbose =3D verbose;
-> +
-> +       pr_debug("Kernel and module maps:\n");
-> +       verbose =3D 0; /* Suppress verbose to print a summary only */
-> +       maps__fprintf(machine__kernel_maps(&session->machines.host), stde=
-rr);
-> +       verbose =3D save_verbose;
-> +}
-> +
->  int cmd_script(int argc, const char **argv)
->  {
->         bool show_full_info =3D false;
-> @@ -4366,6 +4376,9 @@ int cmd_script(int argc, const char **argv)
->
->         flush_scripting();
->
-> +       if (verbose > 2)
-> +               dump_kmaps(session);
-> +
->  out_delete:
->         if (script.ptime_range) {
->                 itrace_synth_opts__clear_time_range(&itrace_synth_opts);
 > --
-> 2.34.1
+> 2.43.0
 >
