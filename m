@@ -1,481 +1,146 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBDD134CD4
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Feb 2024 23:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186CA3D62
+	for <linux-perf-users@vger.kernel.org>; Sat,  3 Feb 2024 01:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706917290; cv=none; b=e9BOyePBewj2TKZ1OzmohSjitq/D1M8vceRi84h58vjI0Pg1VQJhoEfphWLNnmRT6hvFmU3aVNstV+6pKxuVl/LMQHSSZMVfSVfAYBR5EXLRNopEfI9emx237A3acv4zpdfn17S/WBIEf9wBULOGW5rBke9edl7ALSiR1r/c8iw=
+	t=1706924529; cv=none; b=gvy9OzDbpciVVMws7K6HW1IJBcIEI9Lt9uX9J9Bsc1AJfHynl+dW3blVCi7h9MVdOz5vSR5/u0jTvYh+ierl0L1awN4dCaCCXUkan8IjjC2ybwrJxKvAKDXWlLAED7YMTLS1tmOOBCJnP2JuJH5IR48bFWA4IsjdPDsmYcbupQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706917290; c=relaxed/simple;
-	bh=Pj322BHyXG2gYzt70812aeyUBm7YX+GP878Iql8M7M0=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=SmT5BGC/BCSty2Q0X0xTv4saNPkPE5vh4TpYcBgt26I3BpMbcfX7qDQsipzu2RTWKa+Yd5SWjMJniyCD7oMsbLz/q8IygEvg7VeNI/ue43/Gzlh4Lvon8r5wS+w/oqtbT9JPdanszAKf35L/Qr+ndZW1bQDjje914Xb5z8UMbo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DIuNlx0u; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1706924529; c=relaxed/simple;
+	bh=GL/NWsRNvwetg0ZgKm/CnIK8EZZYE3j8znwpXi+d+6k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nt2ODNB0Z57h70uupBF/jCC79TttMUeg56kPWLB6y6H6ZU+FAfdsblZSsE7yg2RkxlKdlSx0iqwq9lcjngS0ChswHEOT9y8CbnV/cHdGHKVDL3BICnIVZ4A/9bmrwG8NpTO6X4/hPPqVKV+o6ai9+tD/p1bQvbdzvUhPkTwMFik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D/WBXHhD; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DIuNlx0u"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b9f4a513so4065863276.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Feb 2024 15:41:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D/WBXHhD"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d89f0ab02bso31035ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Feb 2024 17:42:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706917287; x=1707522087; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oAZu4qV7GRrZlOn2fzXe1/O/dsnDVPHUY/jAFql6qE8=;
-        b=DIuNlx0u6wSWGys6ouJSMYxes9hEfYlyXok/OWotLRxVI35LFDYpfJH8coIYc0681B
-         b9NXDeLR2MwM0bjymnAnENA9wDAJIPZ1pXNLfwC9jyhjYcpOXKEr7Zx8c/uXW0f5+yOR
-         WOlNjjAKMX44JyyITWLYLd2jrMM6Cwe8DP/iJgOMPFCGUI4e0YOmmQPEHupBuc+JTlNW
-         R4ltew9kBb8wstgn6E6eZXSGGmSmJyOoMxX9ab3V/XMLI0t4CQ9RziX+aAGsWZXnIJi7
-         69xRVNVv9to9TYv5c0GRE3SqaEO/jvrCEA3eM3o6gqv5lWvaVpbHXmIJPOMN8AFkgJuJ
-         rVzw==
+        d=google.com; s=20230601; t=1706924527; x=1707529327; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W1tmXsSnp3camgDs1JiIWN7PNv+Db/yDFJhwZXZV06A=;
+        b=D/WBXHhDzyKrowiHj1GMrP31KK5M/OAnZsRTqSjBT438hdoJcLSiMQ8wGVoWjgBEKb
+         lCqzFLtXIHtrY/fuIhFYdy+9ledBCKhQMlPPMHMH+TAqoLn6kucLBW7aSNQsKrhLMYt1
+         Jv3iFm51hQ73wUqAkAJHa0ny1D7Bpbi6CkwhBeB6MlVKjcfzPtCP1doz/PL5F+iNR7yw
+         sK7QmlpUtBRuLPsuGZ4V/avM0VafKTgE+2A3gKy/vcq41XqLN5dCFc+XFh++Ig+R8JFr
+         9zI7SgNHzXOi/iFdWHAr+5vI7aVXesPoluqm87X8V8kiqHPznjJ7/SF0Pn0FnbKAWaNy
+         TG3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706917287; x=1707522087;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oAZu4qV7GRrZlOn2fzXe1/O/dsnDVPHUY/jAFql6qE8=;
-        b=EqZYT/eaBTKv4l1RZvSK0R7w2PWlBHHQ1eiWbv0+3zZ/YRxJx7D9qhOXDjX4U2kHoh
-         +5ZuirOTeIYugrBAbk1ZxVCgTk+OaAtCdEO2X67BhhjZiWlqMAGPrk6nRmxfrIemh+0I
-         Py8EA7zlJ9gUCgtkfI/Fs8YoxdKoCvm7hA4QEP2tQIc8LIepez+rH6sLzMsmBZ/Q1faZ
-         orgABYkx2Oy2Jwq4R1dBjwH4zqMen86S/ewNfOLArSXdoV7EucNnUkkiDJ8MzJPcakaT
-         l7TfNKpAMd/HedapXg0KsigJwOHuFBvle8bygLDpoceyXf5SXDVXFdB3GRFJh/CVV5t+
-         a1sw==
-X-Gm-Message-State: AOJu0Yw/2IoXYCmCpLsML3wI5xoENDmOOU/rAI7Ey2vclBjwboLERb+t
-	5djXMIqfL9E09/KnsGEteD4rk8y1pwzR5T9xyDmQ0vIAYc1MV2xEsp/UbgUhZo5DLTC7MFuVmIG
-	caRGJ7Q==
-X-Google-Smtp-Source: AGHT+IGWKHJPQ+srMx8iTQjHmNcONKoF9irN1wBz1oJLHeiCGaYjrokUE8W5/hfZBgPHowpVLv93UI3h+uEW
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7732:d863:503:f53d])
- (user=irogers job=sendgmr) by 2002:a05:6902:1b90:b0:dc6:de8c:f4fb with SMTP
- id ei16-20020a0569021b9000b00dc6de8cf4fbmr1026637ybb.9.1706917287710; Fri, 02
- Feb 2024 15:41:27 -0800 (PST)
-Date: Fri,  2 Feb 2024 15:40:57 -0800
-In-Reply-To: <20240202234057.2085863-1-irogers@google.com>
-Message-Id: <20240202234057.2085863-9-irogers@google.com>
+        d=1e100.net; s=20230601; t=1706924527; x=1707529327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W1tmXsSnp3camgDs1JiIWN7PNv+Db/yDFJhwZXZV06A=;
+        b=G3ec7SMJXvNCWQVoonxfVMhhiNQc3zcWOkQmpkoWPG14WBNw/jR5UbYb3ZRaobZ2XF
+         T0xQnZCd6TDsfdx7c40qOvbrsY9uHN2m6gXOIuolTmC0vy7u6d2TKiWzDaGA+KBYayLw
+         BsdeaTNhZB1vfYPdY4UNK1qhylfkURH4tZLuEwqgZw5OjvGsVnAqw2iHa6Ho9trBdJpI
+         MzUCc6xse+UET8TQ3frJKo0kDTH3nreKI89og3/MeGMDIVZLbq1JbdhYCSNah3a9IOqq
+         R/LFs5QAAioTZsfr8kmKFp+Tn7J5GXc6D8DScMdD/MHJJ+e9+anbDSdPgPQC4MmRZWJl
+         wktQ==
+X-Gm-Message-State: AOJu0Yxy+lPUWasShXBhn4y3vPUjAsxQxy04Jc4eOV5/e7C4RBF0yPgn
+	xE05NtvUO+LTPznHDfpMy9PFMgAMZx5Yiko7TeUjnDj6HDAmF1P1Rbb5csMZOjMtXA7GHPrYc2I
+	ZxxMpnaYzhZGDt2Lwg2NCnJ6aegzQ8/9czZDF
+X-Google-Smtp-Source: AGHT+IFvVXrppMHSh7EsMSe+LktgAY1bvnADV80hP2rmsBLFLZkqA4D0C/pdQHOx+A5VfLjdqqxNYj4YHwkYqewRHaI=
+X-Received: by 2002:a17:902:b489:b0:1d7:48ef:e239 with SMTP id
+ y9-20020a170902b48900b001d748efe239mr72459plr.18.1706924527056; Fri, 02 Feb
+ 2024 17:42:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240202234057.2085863-1-irogers@google.com>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Subject: [PATCH v3 8/8] perf cpumap: Use perf_cpu_map__for_each_cpu when possible
+MIME-Version: 1.0
+References: <20240202220459.527138-1-namhyung@kernel.org> <20240202220459.527138-5-namhyung@kernel.org>
+In-Reply-To: <20240202220459.527138-5-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
-	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, 
-	"=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Yang Li <yang.lee@linux.alibaba.com>, Changbin Du <changbin.du@huawei.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Paran Lee <p4ranlee@gmail.com>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	bpf@vger.kernel.org
+Date: Fri, 2 Feb 2024 17:41:55 -0800
+Message-ID: <CAP-5=fU=P-ib+n+OfqJAbm8gS2RY-W-KcBskoSHkC+aCmXYcXQ@mail.gmail.com>
+Subject: Re: [PATCH 04/14] perf map: Add map__objdump_2rip()
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Rather than manually iterating the CPU map, use
-perf_cpu_map__for_each_cpu. When possible tidy local variables.
+On Fri, Feb 2, 2024 at 2:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Sometimes we want to convert an address in objdump output to
+> map-relative address to match with a sample data.  Let's add
+> map__objdump_2rip() for that.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: James Clark <james.clark@arm.com>
----
- tools/perf/arch/arm64/util/header.c           | 10 ++--
- tools/perf/tests/bitmap.c                     | 13 +++---
- tools/perf/tests/topology.c                   | 46 +++++++++----------
- tools/perf/util/bpf_kwork.c                   | 16 ++++---
- tools/perf/util/bpf_kwork_top.c               | 12 ++---
- tools/perf/util/cpumap.c                      | 12 ++---
- .../scripting-engines/trace-event-python.c    | 12 +++--
- tools/perf/util/session.c                     |  5 +-
- tools/perf/util/svghelper.c                   | 20 ++++----
- 9 files changed, 72 insertions(+), 74 deletions(-)
+Hi Namhyung,
 
-diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
-index a9de0b5187dd..741df3614a09 100644
---- a/tools/perf/arch/arm64/util/header.c
-+++ b/tools/perf/arch/arm64/util/header.c
-@@ -4,8 +4,6 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <perf/cpumap.h>
--#include <util/cpumap.h>
--#include <internal/cpumap.h>
- #include <api/fs/fs.h>
- #include <errno.h>
- #include "debug.h"
-@@ -19,18 +17,18 @@
- static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
- {
- 	const char *sysfs = sysfs__mountpoint();
--	int cpu;
--	int ret = EINVAL;
-+	struct perf_cpu cpu;
-+	int idx, ret = EINVAL;
- 
- 	if (!sysfs || sz < MIDR_SIZE)
- 		return EINVAL;
- 
--	for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
-+	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
- 		char path[PATH_MAX];
- 		FILE *file;
- 
- 		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d" MIDR,
--			  sysfs, RC_CHK_ACCESS(cpus)->map[cpu].cpu);
-+			  sysfs, cpu.cpu);
- 
- 		file = fopen(path, "r");
- 		if (!file) {
-diff --git a/tools/perf/tests/bitmap.c b/tools/perf/tests/bitmap.c
-index 0173f5402a35..98956e0e0765 100644
---- a/tools/perf/tests/bitmap.c
-+++ b/tools/perf/tests/bitmap.c
-@@ -11,18 +11,19 @@
- static unsigned long *get_bitmap(const char *str, int nbits)
- {
- 	struct perf_cpu_map *map = perf_cpu_map__new(str);
--	unsigned long *bm = NULL;
--	int i;
-+	unsigned long *bm;
- 
- 	bm = bitmap_zalloc(nbits);
- 
- 	if (map && bm) {
--		for (i = 0; i < perf_cpu_map__nr(map); i++)
--			__set_bit(perf_cpu_map__cpu(map, i).cpu, bm);
-+		int i;
-+		struct perf_cpu cpu;
-+
-+		perf_cpu_map__for_each_cpu(cpu, i, map)
-+			__set_bit(cpu.cpu, bm);
- 	}
- 
--	if (map)
--		perf_cpu_map__put(map);
-+	perf_cpu_map__put(map);
- 	return bm;
- }
- 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 2a842f53fbb5..a8cb5ba898ab 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -68,6 +68,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	};
- 	int i;
- 	struct aggr_cpu_id id;
-+	struct perf_cpu cpu;
- 
- 	session = perf_session__new(&data, NULL);
- 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
-@@ -113,8 +114,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
- 
- 	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
--		struct perf_cpu cpu = { .cpu = i };
--
-+		cpu.cpu = i;
- 		if (!perf_cpu_map__has(map, cpu))
- 			continue;
- 		pr_debug("CPU %d, core %d, socket %d\n", i,
-@@ -123,48 +123,48 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	}
- 
- 	// Test that CPU ID contains socket, die, core and CPU
--	for (i = 0; i < perf_cpu_map__nr(map); i++) {
--		id = aggr_cpu_id__cpu(perf_cpu_map__cpu(map, i), NULL);
-+	perf_cpu_map__for_each_cpu(cpu, i, map) {
-+		id = aggr_cpu_id__cpu(cpu, NULL);
- 		TEST_ASSERT_VAL("Cpu map - CPU ID doesn't match",
--				perf_cpu_map__cpu(map, i).cpu == id.cpu.cpu);
-+				cpu.cpu == id.cpu.cpu);
- 
- 		TEST_ASSERT_VAL("Cpu map - Core ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].core_id == id.core);
-+			session->header.env.cpu[cpu.cpu].core_id == id.core);
- 		TEST_ASSERT_VAL("Cpu map - Socket ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
-+			session->header.env.cpu[cpu.cpu].socket_id ==
- 			id.socket);
- 
- 		TEST_ASSERT_VAL("Cpu map - Die ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
-+			session->header.env.cpu[cpu.cpu].die_id == id.die);
- 		TEST_ASSERT_VAL("Cpu map - Node ID is set", id.node == -1);
- 		TEST_ASSERT_VAL("Cpu map - Thread IDX is set", id.thread_idx == -1);
- 	}
- 
- 	// Test that core ID contains socket, die and core
--	for (i = 0; i < perf_cpu_map__nr(map); i++) {
--		id = aggr_cpu_id__core(perf_cpu_map__cpu(map, i), NULL);
-+	perf_cpu_map__for_each_cpu(cpu, i, map) {
-+		id = aggr_cpu_id__core(cpu, NULL);
- 		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].core_id == id.core);
-+			session->header.env.cpu[cpu.cpu].core_id == id.core);
- 
- 		TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
-+			session->header.env.cpu[cpu.cpu].socket_id ==
- 			id.socket);
- 
- 		TEST_ASSERT_VAL("Core map - Die ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
-+			session->header.env.cpu[cpu.cpu].die_id == id.die);
- 		TEST_ASSERT_VAL("Core map - Node ID is set", id.node == -1);
- 		TEST_ASSERT_VAL("Core map - Thread IDX is set", id.thread_idx == -1);
- 	}
- 
- 	// Test that die ID contains socket and die
--	for (i = 0; i < perf_cpu_map__nr(map); i++) {
--		id = aggr_cpu_id__die(perf_cpu_map__cpu(map, i), NULL);
-+	perf_cpu_map__for_each_cpu(cpu, i, map) {
-+		id = aggr_cpu_id__die(cpu, NULL);
- 		TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
-+			session->header.env.cpu[cpu.cpu].socket_id ==
- 			id.socket);
- 
- 		TEST_ASSERT_VAL("Die map - Die ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].die_id == id.die);
-+			session->header.env.cpu[cpu.cpu].die_id == id.die);
- 
- 		TEST_ASSERT_VAL("Die map - Node ID is set", id.node == -1);
- 		TEST_ASSERT_VAL("Die map - Core is set", id.core == -1);
-@@ -173,10 +173,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	}
- 
- 	// Test that socket ID contains only socket
--	for (i = 0; i < perf_cpu_map__nr(map); i++) {
--		id = aggr_cpu_id__socket(perf_cpu_map__cpu(map, i), NULL);
-+	perf_cpu_map__for_each_cpu(cpu, i, map) {
-+		id = aggr_cpu_id__socket(cpu, NULL);
- 		TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
--			session->header.env.cpu[perf_cpu_map__cpu(map, i).cpu].socket_id ==
-+			session->header.env.cpu[cpu.cpu].socket_id ==
- 			id.socket);
- 
- 		TEST_ASSERT_VAL("Socket map - Node ID is set", id.node == -1);
-@@ -187,10 +187,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	}
- 
- 	// Test that node ID contains only node
--	for (i = 0; i < perf_cpu_map__nr(map); i++) {
--		id = aggr_cpu_id__node(perf_cpu_map__cpu(map, i), NULL);
-+	perf_cpu_map__for_each_cpu(cpu, i, map) {
-+		id = aggr_cpu_id__node(cpu, NULL);
- 		TEST_ASSERT_VAL("Node map - Node ID doesn't match",
--				cpu__get_node(perf_cpu_map__cpu(map, i)) == id.node);
-+				cpu__get_node(cpu) == id.node);
- 		TEST_ASSERT_VAL("Node map - Socket is set", id.socket == -1);
- 		TEST_ASSERT_VAL("Node map - Die ID is set", id.die == -1);
- 		TEST_ASSERT_VAL("Node map - Core is set", id.core == -1);
-diff --git a/tools/perf/util/bpf_kwork.c b/tools/perf/util/bpf_kwork.c
-index 6eb2c78fd7f4..44f0f708a15d 100644
---- a/tools/perf/util/bpf_kwork.c
-+++ b/tools/perf/util/bpf_kwork.c
-@@ -147,12 +147,12 @@ static bool valid_kwork_class_type(enum kwork_class_type type)
- 
- static int setup_filters(struct perf_kwork *kwork)
- {
--	u8 val = 1;
--	int i, nr_cpus, key, fd;
--	struct perf_cpu_map *map;
--
- 	if (kwork->cpu_list != NULL) {
--		fd = bpf_map__fd(skel->maps.perf_kwork_cpu_filter);
-+		int idx, nr_cpus;
-+		struct perf_cpu_map *map;
-+		struct perf_cpu cpu;
-+		int fd = bpf_map__fd(skel->maps.perf_kwork_cpu_filter);
-+
- 		if (fd < 0) {
- 			pr_debug("Invalid cpu filter fd\n");
- 			return -1;
-@@ -165,8 +165,8 @@ static int setup_filters(struct perf_kwork *kwork)
- 		}
- 
- 		nr_cpus = libbpf_num_possible_cpus();
--		for (i = 0; i < perf_cpu_map__nr(map); i++) {
--			struct perf_cpu cpu = perf_cpu_map__cpu(map, i);
-+		perf_cpu_map__for_each_cpu(cpu, idx, map) {
-+			u8 val = 1;
- 
- 			if (cpu.cpu >= nr_cpus) {
- 				perf_cpu_map__put(map);
-@@ -181,6 +181,8 @@ static int setup_filters(struct perf_kwork *kwork)
- 	}
- 
- 	if (kwork->profile_name != NULL) {
-+		int key, fd;
-+
- 		if (strlen(kwork->profile_name) >= MAX_KWORKNAME) {
- 			pr_err("Requested name filter %s too large, limit to %d\n",
- 			       kwork->profile_name, MAX_KWORKNAME - 1);
-diff --git a/tools/perf/util/bpf_kwork_top.c b/tools/perf/util/bpf_kwork_top.c
-index 035e02272790..22a3b00a1e23 100644
---- a/tools/perf/util/bpf_kwork_top.c
-+++ b/tools/perf/util/bpf_kwork_top.c
-@@ -122,11 +122,11 @@ static bool valid_kwork_class_type(enum kwork_class_type type)
- 
- static int setup_filters(struct perf_kwork *kwork)
- {
--	u8 val = 1;
--	int i, nr_cpus, fd;
--	struct perf_cpu_map *map;
--
- 	if (kwork->cpu_list) {
-+		int idx, nr_cpus, fd;
-+		struct perf_cpu_map *map;
-+		struct perf_cpu cpu;
-+
- 		fd = bpf_map__fd(skel->maps.kwork_top_cpu_filter);
- 		if (fd < 0) {
- 			pr_debug("Invalid cpu filter fd\n");
-@@ -140,8 +140,8 @@ static int setup_filters(struct perf_kwork *kwork)
- 		}
- 
- 		nr_cpus = libbpf_num_possible_cpus();
--		for (i = 0; i < perf_cpu_map__nr(map); i++) {
--			struct perf_cpu cpu = perf_cpu_map__cpu(map, i);
-+		perf_cpu_map__for_each_cpu(cpu, idx, map) {
-+			u8 val = 1;
- 
- 			if (cpu.cpu >= nr_cpus) {
- 				perf_cpu_map__put(map);
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 0581ee0fa5f2..e2287187babd 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -629,10 +629,10 @@ static char hex_char(unsigned char val)
- 
- size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
- {
--	int i, cpu;
-+	int idx;
- 	char *ptr = buf;
- 	unsigned char *bitmap;
--	struct perf_cpu last_cpu = perf_cpu_map__cpu(map, perf_cpu_map__nr(map) - 1);
-+	struct perf_cpu c, last_cpu = perf_cpu_map__max(map);
- 
- 	if (buf == NULL)
- 		return 0;
-@@ -643,12 +643,10 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
- 		return 0;
- 	}
- 
--	for (i = 0; i < perf_cpu_map__nr(map); i++) {
--		cpu = perf_cpu_map__cpu(map, i).cpu;
--		bitmap[cpu / 8] |= 1 << (cpu % 8);
--	}
-+	perf_cpu_map__for_each_cpu(c, idx, map)
-+		bitmap[c.cpu / 8] |= 1 << (c.cpu % 8);
- 
--	for (cpu = last_cpu.cpu / 4 * 4; cpu >= 0; cpu -= 4) {
-+	for (int cpu = last_cpu.cpu / 4 * 4; cpu >= 0; cpu -= 4) {
- 		unsigned char bits = bitmap[cpu / 8];
- 
- 		if (cpu % 8)
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 860e1837ba96..8ef0e5ac03c2 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1693,13 +1693,15 @@ static void python_process_stat(struct perf_stat_config *config,
- {
- 	struct perf_thread_map *threads = counter->core.threads;
- 	struct perf_cpu_map *cpus = counter->core.cpus;
--	int cpu, thread;
- 
--	for (thread = 0; thread < perf_thread_map__nr(threads); thread++) {
--		for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
--			process_stat(counter, perf_cpu_map__cpu(cpus, cpu),
-+	for (int thread = 0; thread < perf_thread_map__nr(threads); thread++) {
-+		int idx;
-+		struct perf_cpu cpu;
-+
-+		perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
-+			process_stat(counter, cpu,
- 				     perf_thread_map__pid(threads, thread), tstamp,
--				     perf_counts(counter->counts, cpu, thread));
-+				     perf_counts(counter->counts, idx, thread));
- 		}
- 	}
- }
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 199d3e8df315..d52b58344dbc 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2738,6 +2738,7 @@ int perf_session__cpu_bitmap(struct perf_session *session,
- 	int i, err = -1;
- 	struct perf_cpu_map *map;
- 	int nr_cpus = min(session->header.env.nr_cpus_avail, MAX_NR_CPUS);
-+	struct perf_cpu cpu;
- 
- 	for (i = 0; i < PERF_TYPE_MAX; ++i) {
- 		struct evsel *evsel;
-@@ -2759,9 +2760,7 @@ int perf_session__cpu_bitmap(struct perf_session *session,
- 		return -1;
- 	}
- 
--	for (i = 0; i < perf_cpu_map__nr(map); i++) {
--		struct perf_cpu cpu = perf_cpu_map__cpu(map, i);
--
-+	perf_cpu_map__for_each_cpu(cpu, i, map) {
- 		if (cpu.cpu >= nr_cpus) {
- 			pr_err("Requested CPU %d too large. "
- 			       "Consider raising MAX_NR_CPUS\n", cpu.cpu);
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index 1892e9b6aa7f..2b04f47f4db0 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -725,26 +725,24 @@ static void scan_core_topology(int *map, struct topology *t, int nr_cpus)
- 
- static int str_to_bitmap(char *s, cpumask_t *b, int nr_cpus)
- {
--	int i;
--	int ret = 0;
--	struct perf_cpu_map *m;
--	struct perf_cpu c;
-+	int idx, ret = 0;
-+	struct perf_cpu_map *map;
-+	struct perf_cpu cpu;
- 
--	m = perf_cpu_map__new(s);
--	if (!m)
-+	map = perf_cpu_map__new(s);
-+	if (!map)
- 		return -1;
- 
--	for (i = 0; i < perf_cpu_map__nr(m); i++) {
--		c = perf_cpu_map__cpu(m, i);
--		if (c.cpu >= nr_cpus) {
-+	perf_cpu_map__for_each_cpu(cpu, idx, map) {
-+		if (cpu.cpu >= nr_cpus) {
- 			ret = -1;
- 			break;
- 		}
- 
--		__set_bit(c.cpu, cpumask_bits(b));
-+		__set_bit(cpu.cpu, cpumask_bits(b));
- 	}
- 
--	perf_cpu_map__put(m);
-+	perf_cpu_map__put(map);
- 
- 	return ret;
- }
--- 
-2.43.0.594.gd9cf4e227d-goog
+I think the naming can be better here. Aren't the objdump addresses
+DSO relative offsets? Is the relative IP relative to the map or the
+DSO?
 
+Thanks,
+Ian
+
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/map.c | 20 ++++++++++++++++++++
+>  tools/perf/util/map.h |  3 +++
+>  2 files changed, 23 insertions(+)
+>
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index 54c67cb7ecef..66542864b7b5 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -594,6 +594,26 @@ u64 map__objdump_2mem(struct map *map, u64 ip)
+>         return ip + map__reloc(map);
+>  }
+>
+> +u64 map__objdump_2rip(struct map *map, u64 ip)
+> +{
+> +       const struct dso *dso =3D map__dso(map);
+> +
+> +       if (!dso->adjust_symbols)
+> +               return ip;
+> +
+> +       if (dso->rel)
+> +               return ip + map__pgoff(map);
+> +
+> +       /*
+> +        * kernel modules also have DSO_TYPE_USER in dso->kernel,
+> +        * but all kernel modules are ET_REL, so won't get here.
+> +        */
+> +       if (dso->kernel =3D=3D DSO_SPACE__USER)
+> +               return ip - dso->text_offset;
+> +
+> +       return map__map_ip(map, ip + map__reloc(map));
+> +}
+> +
+>  bool map__contains_symbol(const struct map *map, const struct symbol *sy=
+m)
+>  {
+>         u64 ip =3D map__unmap_ip(map, sym->start);
+> diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+> index 49756716cb13..65e2609fa1b1 100644
+> --- a/tools/perf/util/map.h
+> +++ b/tools/perf/util/map.h
+> @@ -132,6 +132,9 @@ u64 map__rip_2objdump(struct map *map, u64 rip);
+>  /* objdump address -> memory address */
+>  u64 map__objdump_2mem(struct map *map, u64 ip);
+>
+> +/* objdump address -> rip */
+> +u64 map__objdump_2rip(struct map *map, u64 ip);
+> +
+>  struct symbol;
+>  struct thread;
+>
+> --
+> 2.43.0.594.gd9cf4e227d-goog
+>
