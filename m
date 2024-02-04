@@ -1,87 +1,62 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41089224D5;
-	Sun,  4 Feb 2024 13:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310E522F03;
+	Sun,  4 Feb 2024 14:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707054552; cv=none; b=ox8qRW0sU9aR+0v8s1S+R7U559YpLhexqPuk3dY4EpcjwE5Ca2PHQwuJwV1cABKc923LjwSH7bOSRPQaUJUZH6XkWU7U+lfqNSqh4tjui02Rf/4K+3cBJhh3qhzxQ1VPSNM+J3Oa9bCEeFen7B6cOlo04+g8FU1X5RaxztOhfiM=
+	t=1707056737; cv=none; b=KrvZsLoItadyAy96LynSDCok+YJttyKV94wzQuGelLKqy++qfLZSFCv4vG6llYmC3jgfq0csbL71ej50xnEjAj3ii3S2fYNmVbGeG6uzym7lkGtPVhQjc1g4AlX3SReRrh2eWiiLOOtfRKZ4HTueHj+XC69xM43zY3Wg9PLF8NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707054552; c=relaxed/simple;
-	bh=PBAj8pYVayUNKv2kDcL/faNAsbTdiZimmpd85dfB2ZI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MPyXq2lO+4CcYCL0dKC5PTBWq/VKrZ/J26pcRyXiz2VtBVr2H1kB6ZWvQqGSBkjogdZwTDKUl5TQ4KBGrshjJyZWWZMolc0af7ZLWC+czco4ien8t/pc5yQrHTPyNvpyGujX4qZ3GzvGqiqxZDMw4yxzJv297BbhSz+jtfO3WLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=MH57cDeK; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1707056737; c=relaxed/simple;
+	bh=tzIIx1NlqpaSYKxtHJxg/xYuYYs8oFTP8cl3GJ0R6Kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iw+PpmXmuLNNAywdVVExgn0D/mFpbRzyOkA1NkQc/w5ThGQyfnLkQmK0Ry4Alk3LrjL+JhBZhbljLXBJJA8bbnxELaOa3d9qZ+Shw8GTn1jTbzC314yzi9jrRRL5O+mty8shhYrtU/chwVrNL/HaOcn0g/0l0XuFoqwc2lvRvvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Kvfou9IU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="MH57cDeK"
-Received: from fpc.intra.ispras.ru (unknown [10.10.165.4])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 5DE6C40F1DC7;
-	Sun,  4 Feb 2024 13:49:06 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 5DE6C40F1DC7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1707054546;
-	bh=TRbuuNKODNr0ZF9osYOg1TOt2Lw0Gxq1svVXRYqAlxE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MH57cDeKZyKtqOiF4JcYFV5LKdyE1Xj8W3l2U6ibIoBbwLR0r8StuM88Vg/CGKo60
-	 I5Rrb/lnpkvbvnwOvlnpm54OApiu7w4CHwWr8Tk7nC7jtS5hyWPTjmqUrlgMEyJr1g
-	 2/tPQDc+0doFPjNAgd3QYbKFXuVruhkEpKshEZX4=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Kvfou9IU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F8FC433F1;
+	Sun,  4 Feb 2024 14:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707056736;
+	bh=tzIIx1NlqpaSYKxtHJxg/xYuYYs8oFTP8cl3GJ0R6Kw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kvfou9IUCWbytQE+DIm1p1q4jaZgGDhX2rbyPJbpTzF8eIg3E5B6fmZfcuQJygDP8
+	 Thzl46l2ERX/ii57rADRBaDqF4F27F5jfD5Of0yJ+3jc7KWyhlnQBzQMWJ7Suxsm8N
+	 Ycp/U0FgoWBb3KIybNeLEARc3H/5nmEpCOGf9ZLk=
+Date: Sun, 4 Feb 2024 06:25:34 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	x86@kernel.org,
-	Alexander Antonov <alexander.antonov@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] perf/x86/uncore: avoid null-ptr-deref on error in pmu_alloc_topology
-Date: Sun,  4 Feb 2024 16:48:41 +0300
-Message-Id: <20240204134841.80003-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.39.2
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: make pmu_bus const
+Message-ID: <2024020420-cupbearer-cape-9543@gregkh>
+References: <20240204-bus_cleanup-events-v1-1-c779d1639c3a@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240204-bus_cleanup-events-v1-1-c779d1639c3a@marliere.net>
 
-If topology[die] array allocation fails then topology[die][idx] elements
-can't be accessed on error path.
+On Sun, Feb 04, 2024 at 10:29:39AM -0300, Ricardo B. Marliere wrote:
+> Now that the driver core can properly handle constant struct bus_type,
+> move the pmu_bus variable to be a constant structure as well,
+> placing it into read-only memory which can not be modified at runtime.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> ---
+>  kernel/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Checking this on the error path probably looks more readable than
-decrementing the counter in the allocation loop.
-
-Found by Linux Verification Center (linuxtesting.org).
-
-Fixes: 4d13be8ab5d4 ("perf/x86/intel/uncore: Generalize IIO topology support")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- arch/x86/events/intel/uncore_snbep.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index a96496bef678..7d4deb9126be 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -3831,9 +3831,11 @@ static int pmu_alloc_topology(struct intel_uncore_type *type, int topology_type)
- 	return 0;
- clear:
- 	for (; die >= 0; die--) {
--		for (idx = 0; idx < type->num_boxes; idx++)
--			kfree(topology[die][idx].untyped);
--		kfree(topology[die]);
-+		if (topology[die]) {
-+			for (idx = 0; idx < type->num_boxes; idx++)
-+				kfree(topology[die][idx].untyped);
-+			kfree(topology[die]);
-+		}
- 	}
- 	kfree(topology);
- err:
--- 
-2.39.2
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
