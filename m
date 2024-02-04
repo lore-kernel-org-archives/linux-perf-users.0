@@ -1,96 +1,128 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D05EBE;
-	Sun,  4 Feb 2024 02:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE2A224D2;
+	Sun,  4 Feb 2024 13:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707012210; cv=none; b=DzJoNHfqx761nt9RCDvxvPCT1otxO2IKszJTdyrzluzxKtv/P45NaunLTTROs+rXiJuMIDXrLNX7OLQwuup7rXdxLfZ6BxFwR+/sqoI+xkXF/S7eFtYjQy1+Xgb7ym8802VPZCzsiukJqkGQSTU3XsgXitX7rxbkeVniafeXD+0=
+	t=1707053360; cv=none; b=Z7B15bt4Dw2LxK9JHx9Wf5B1iQM02SK5+ShDnWRzi8e7uZHtV30OGJ+BOYkkykuCIe7SjxnqHn9iXtf0JIS9Eirc7oBmofP0GCwQGCMAIvJtqFUe2EwJoECHVMHJPS/k8b5+gwKuyrBBaStqr2gWicoLAmXgx/RcZeyHzrDHH5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707012210; c=relaxed/simple;
-	bh=AUt8VuLGRKU7qxymeevr2SFj22Xexc0ft3yOv6MyTLI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PLK+hcuc31E/MkQmSQBHfPiWKPzGoHoVagWSDzwaUWs4ZrYIRjV79g2+HIp7PUvurbn/mxImcIJN+PYWANgKLOjFIGfK6p0H10ziG5ZX67ck3VPNa2qVAosL/NwtV6il6/N/1JyHuao+dLiByW7l+vW7/SZcKDQylJqgbA6YOwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BTPnHY06; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1707053360; c=relaxed/simple;
+	bh=JM+4cXRZO8fIkL2koBG39D9ifJnLbSeAqF3/Wh6APII=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nhu8SeC49UQD0oDu9XphXz5YhYC9kgHXMsX5j3IbUWZuuep2ap1KT/8Uq3846RMK0SPIpQMKDSxGLWFti+DYcleJdjhrC7d/eaGwPJB58cu5YUPIRNReWI6b5GepO+ZYQ94RDj4e3U2Z1GzPSAb1FI6oV+Y2ia9aUJ793fFMEbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=M7Tk1yVt reason="key not found in DNS"; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTPnHY06"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56001b47285so1831504a12.1;
-        Sat, 03 Feb 2024 18:03:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707012207; x=1707617007; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VXnV3FuSH15/EZDsqwVdARdYIlKbWNGmlgGyKaw0PvI=;
-        b=BTPnHY06/eoB6mXBYqUGd+5UwZvG3g9JuSRg9D5zzZKguiBwlBMIyZCHDbtBSKSUvg
-         BBNIBotWuXlSwDnDijkBkpGUD/+ek24o9po1ziLyL6cn9WIAcV09H/s1DTIEZGHel445
-         YSnEt0SgmHmQAZdxM2fuy3V+ct4edU1kuRUAHw8jVfRSmfzX9NYS+CnSE9xD6tWKTBiI
-         uCX4slHSZQCWTkGuXoBtsOEL40wUTk0PZcWYbyUavtoGsOAH/6TfoEWFpx7mVi97M0EO
-         q4ooD7GJgbDY2OPhOO9zjCOLHcU117e6epWhGmSAYxxIhg3KdcjwDNZG7RPnEBv/Tlwh
-         VHPQ==
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="M7Tk1yVt"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3bd4e6a7cb0so2447211b6e.3;
+        Sun, 04 Feb 2024 05:29:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707012207; x=1707617007;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VXnV3FuSH15/EZDsqwVdARdYIlKbWNGmlgGyKaw0PvI=;
-        b=U9RVwtHG5nvgPjB1q1Ej43bG0iCWtNcnU1CeV5Fbh4/Lqt7ljXIoZbBJOLniB+HBib
-         9uOYk5HSntKuryJ/3lrwrA5qDAUpET07ft/OSFEYj6Sx2AnMCmuVbR4eHRAdoclJ3siG
-         MaEONrxQsSUo3K+7ZCDeG7ZPD2+cWaqtpqu4W1SN1iTjb+dc3p0d2mqPnhR9Co9d8uic
-         x2EdG7Yd35isFJY2OrgBRDPQjUz9pqci28KB5Nplo0/EEVxj9ifcLrNSUV1MsNSHRQ76
-         P8rb5ykm9G1ffLcjdahGlv7XnTauWP44uQ6rQ9HOjFCKmz50oksmkVWq4bSr7DFJEAf6
-         MUGg==
-X-Gm-Message-State: AOJu0YzQ0Z2LLYIVoV01e/a+LtTHOy21GqTNeCicUw2DDq1A238KneJL
-	5oyG1OG76POWLCVlGmTkhMCdsoyFczjVgmoOOJpHufknJK0y9d8lvoIgHu6ojHNfbNbFti+7KKP
-	NY95LSL+njkTF5DWQhWLS4X3Sw+s=
-X-Google-Smtp-Source: AGHT+IGqmiFmgxvtSlh2/xfVcv0fNlc0wWnA7ES7OVcU/L7aAirs1S/8tfvyn47XiJWr44uKmTBYYZRt8yuvnn0EAYk=
-X-Received: by 2002:aa7:d30e:0:b0:560:6a0:c52a with SMTP id
- p14-20020aa7d30e000000b0056006a0c52amr1918535edq.29.1707012207197; Sat, 03
- Feb 2024 18:03:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707053358; x=1707658158;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TmTYu8gBuYUWmnBfvEGkbpRkd3FkMWxeuI8Kl4keTd0=;
+        b=RyVAmDlNefBCq4tjZ6nOrgOisg8C1YxGQ4JZLMNWoJCxIyn8OgJ/u+KAX8qYP2YMpF
+         QAeFmT2LXttOmWco6uRKAtQGzD4k2GGvcJeFGc1qSNuZlk1UKlD7/r0Oln3V1jNuc/FJ
+         Deqxo1Z5qOudh3ImKxtNJtcSn0+rF8UU/pOPRCmjldLSNW/KmAy5WJCfzMXmhYuPzTuA
+         7nZK9pYGMnaFi+OgXdEF0TW536v9FJXMq1jOzg0RdA1S+7LKXErAhbWygGWvpwFj/+4W
+         x7ig07NXOc0WfKJDwaaNiq8LNV3OEIpHe2wWjdKtp/61OH15rU55p/n4+wIfSPVfY5Fq
+         IjGw==
+X-Gm-Message-State: AOJu0YzX7PjN+j4ljb/TFWXAQ260Y1B1t85nheL8MkLorqPHjaEPfwpv
+	lELUPJN2z88eP8LGVT2EQlU322ZmQo6Pcvyylsi1KUeybgONDRq4
+X-Google-Smtp-Source: AGHT+IF39EBQyvm4NeIzwqAue8ADbu7l2GappUv82mBZYtDZCHqU5GFkWOxFUGdih+bJoMNmu3rsCw==
+X-Received: by 2002:a05:6359:4591:b0:176:b2af:9bf2 with SMTP id no17-20020a056359459100b00176b2af9bf2mr12917886rwb.15.1707053357931;
+        Sun, 04 Feb 2024 05:29:17 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVdPilafCD3v+3ZlNZcMqfjhLfL+8L1kgNFk3pkiG+OL7mBsqsI5IjkOYNLI/Yh7cKK1HtQgcH8xqWIIpCJF68Zt/fkq0M3mRCGAlEQjEbvwqEpPNuWXUBmtEG9YK4espWmNj96eFxAA7lSOKHCSvyaKpwq1ZZ0F8MpAqxbtjLYS0EQsaxWRZXfVz7nJ9XjbDwvOOSY16E742HmTzHT9AbFANjD1hcCUBZfmyY5+qSmZBivaYKJnJ7fCS9HK7RpS3HFC3QYBgV+wxbf5HSFAgirWTQJc72cCm2dxNUhlPqBPmmQaHf4+mMn9Sg1+YXGhZhOzG+wUTnXSIodwBnlU0xRvlfS5OAkvPP+NPYNb762bAlNLTrYYV5zMg==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id x15-20020aa784cf000000b006e03ab56acbsm1110931pfn.217.2024.02.04.05.29.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 05:29:17 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707053355;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TmTYu8gBuYUWmnBfvEGkbpRkd3FkMWxeuI8Kl4keTd0=;
+	b=M7Tk1yVt7h/LWhmNfKETeCcmBqV1jWVrzlYkHykLu8x7W8Ajlb1Fo24OiPCn/y8O7xp65y
+	ODFKKh6zcl25QgnagvEkOjiw320KToUntOwm7oAX+ia9NJgZXoOxxhNttnSXhtoTXv5X6p
+	9W3r0Suk1Bqh0QAI+Jj3yPOjbVzxXUqSBiB8CNh0jYSiHjSw906OK54QK8kZx5k9kfAC6q
+	0f4yudcQguKBMniiPUux0x1o3knDUUzAOcqx4jwuOoPiWN3+TiGqQXJLtfLvXPW9UOQBaU
+	6jNdGwqctv1VLapFGeEFE0g7kAP8DSWJKUscTnwwJReNgiacuIWEttWnQ/R8YA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Sun, 04 Feb 2024 10:29:39 -0300
+Subject: [PATCH] perf: make pmu_bus const
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122070859.1394479-2-zegao@tencent.com> <20240123070210.1669843-2-zegao@tencent.com>
- <170690725031.1264496.18004455069191563889.b4-ty@kernel.org>
-In-Reply-To: <170690725031.1264496.18004455069191563889.b4-ty@kernel.org>
-From: Ze Gao <zegao2021@gmail.com>
-Date: Sun, 4 Feb 2024 10:03:16 +0800
-Message-ID: <CAD8CoPAmB0wB-9JrfsJdiKnCPi026fJ0Qwp9CTpsqjUEvoHZMQ@mail.gmail.com>
-Subject: Re: [PATCH] perf evsel: Rename get_states() to parse_task_states()
- and make it public
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Ze Gao <zegao@tencent.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-bus_cleanup-events-v1-1-c779d1639c3a@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAEKRv2UC/x3MSwqAMAwA0atI1hZiqRW9ioj4iRqQKo0WoXh3i
+ 8u3mIkg5JkEmiyCp8DCh0so8gymbXArKZ6TQaM2qNGo8ZZ+2mlw96kokLtEVbYsbKmtwRohhae
+ nhZ9/2nbv+wFGCfgtZAAAAA==
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1072; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=JM+4cXRZO8fIkL2koBG39D9ifJnLbSeAqF3/Wh6APII=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv5FDsFeQSd95hVHg2Xt7JWSdjbrkmuuTZxM8m
+ skW7iQDSuCJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+RQwAKCRDJC4p8Y4ZY
+ plGqD/0WMQItUAk9/5riaS0MIkoCues5IFu6j0B5m52VK0WGGVGZuFf/99aPDd6o18zipSQVk0Z
+ c70I5Li5OrOqZ2oWmAd+MP8YHV8Vq9IX+MfRNIkxgWExrLczruCmR2SKwyX6PHounpvcCLrVQgL
+ Y8UkIV4rDk/DkiuVNGa0H3iVrO/1poyhY0cf5SBkxeEfvKvvrw8+wgBOmuMzzRSufkQ/ka+qHm7
+ qYqauNY02YK7gDUyjgVxQjDzI6qYfRZvzUgMEeO5zwzQxJJgNkRXBMhtFCAHb4pet3EsBfWFxlI
+ PgiMWLzgceK7iG++temordVkRFEuXGVjLGoqSA411fokBmni1aRD9iNE3pTfkxY9aA87OGR0dlr
+ RLr4XuPrq+GHKQ7WZG8TjA1NU9uENRqqZNdAkcpIGfjp183N7UGhZN/EuYYSVSgAP7oMQ0YZ2Q9
+ k6+vJieazPSBXfVM7zv8MPRLGMIAed62BEuUxiw+BCONCpTDwm98mfPVR/zE2NikPnTUiCZC80E
+ c5BS9KeQAsfRTuNnJxYl+Z6DAqhLhj6BRyCgc4ZT1kvakrStiTI9R2xmrTuozfmvz82WFD5XIDU
+ hakLJrmxlV/V5eJj2mrqRUq7DcnI6wvQWgCL85QDMJEACVf15yYUSAefG7wvXkJASIoTcet6OnB
+ sewoLtzylSVdykw==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Sat, Feb 3, 2024 at 4:57=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Tue, 23 Jan 2024 02:02:11 -0500, Ze Gao wrote:
-> > Since get_states() assumes the existence of libtraceevent, so move
-> > to where it should belong, i.e, util/trace-event-parse.c, and also
-> > rename it to parse_task_states().
-> >
-> > Leave evsel_getstate() untouched as it fits well in the evsel
-> > category.
-> >
-> > [...]
->
-> Applied to perf-tools-next now, thanks for your work!
+Now that the driver core can properly handle constant struct bus_type,
+move the pmu_bus variable to be a constant structure as well,
+placing it into read-only memory which can not be modified at runtime.
 
-Thanks for your update! :)
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-        -- Ze
-> --
-> Namhyung Kim <namhyung@kernel.org>
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 59b332cce9e7..decd994bfca4 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11434,7 +11434,7 @@ static const struct attribute_group *pmu_dev_groups[] = {
+ };
+ 
+ static int pmu_bus_running;
+-static struct bus_type pmu_bus = {
++static const struct bus_type pmu_bus = {
+ 	.name		= "event_source",
+ 	.dev_groups	= pmu_dev_groups,
+ };
+
+---
+base-commit: fdd041028f2294228e10610b4fca6a1a83ac683d
+change-id: 20240204-bus_cleanup-events-765165264090
+
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
+
