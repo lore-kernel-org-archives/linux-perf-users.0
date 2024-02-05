@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64982E3FD;
-	Mon,  5 Feb 2024 18:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD484E1D1;
+	Mon,  5 Feb 2024 19:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159598; cv=none; b=OSKFGDUiGs7ixZ/J3wV23XGoSDFSILoEMK2Rs6wm2WEL+n7L6FbbxBpkTiMtbfUOLy9KrxX+7fE1UeAjw4iJnzgS/HudtK1McV/dPrBKg7ccHtbDz1mwiYeEfGItbh29ia2/zLfHZX6TepU5FAUPjAU6tc0v0K+nV0mXve9HzaE=
+	t=1707159705; cv=none; b=Brjkxio5ZmJph/EIRAy+q91LD7obe6EVYWKFSMZkhSmK8Wt+1oOwtURoI4m17kVcpWkYp0/B49z/D2zHrjQAtLbmfyGhmLsk4B0hzcfgrItfSU8GHcYsshTHPtUeHoW1DZV0PLD6huJX8XbXszsvWeLW788OSbvirFygbHqcxqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159598; c=relaxed/simple;
-	bh=24FU41oSYj4xFt0JsE0eIhXDNfjo9usWgVMXWyc9vzA=;
+	s=arc-20240116; t=1707159705; c=relaxed/simple;
+	bh=qD9zp37TlJaB9gD6Uqgvcewd1tv1LpYiBSx2wrUucoQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JV3BITW+RDFuEpgovbsDiqeCheSRiSV0dLzLqBa+0PG4JV0Z9u/XKhaGJpWgC/Ntj0k6ZCnISrkBp4np+1FOE8V2a/fKyfHhFsAqfv1kH5rZpkJDN6SSjlv6Owdd38a7dd6i9Sk4ATYi6s1xpYrNH2EbN3LtwWCEZccEwzAyS0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mh2Pe9fY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gyopDdJMkn2x15LQNnXk23huYSqVbgGX/ABYwuRyHxspUIHaPiVoK8KD9nJ0VcH4AL6d4ysP/JZg5yFC1sh/o+rGTbyYXm+yWDOh1jwzNr/RXLY2aYvnYFV/4DI2603cXL+sY129xiLWSHjv3D6SPFhWilG8K2aS5fmbmnYgAAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXteL2r3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mh2Pe9fY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A85C43390;
-	Mon,  5 Feb 2024 18:59:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXteL2r3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F26C43601;
+	Mon,  5 Feb 2024 19:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707159597;
-	bh=24FU41oSYj4xFt0JsE0eIhXDNfjo9usWgVMXWyc9vzA=;
+	s=k20201202; t=1707159705;
+	bh=qD9zp37TlJaB9gD6Uqgvcewd1tv1LpYiBSx2wrUucoQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mh2Pe9fYchh9i5SGvsYyXPPRAGJdbb4COKD/CZDghDcgfj60stOk+7wnZofU2Hnh2
-	 aqXTgp/+sH3/SUSGMAPSQfWj/8trfZ0CUlc+AX0KPKRJUabYkMbq222DuhotCdfled
-	 uybJhGMlsL+5mhIcYJ5d8tQ7xcpQJKinoh4GV4T6vhS5DdN8wUIggXj8aGMdihPzI5
-	 ZXhulqsd9K/EwXPS5HILLqWiGycF/I8+fVuTpRxQ8WmOLsnaMbFJ0lzU3oNUKf9zVa
-	 MRNcxOgb51R1LExf+lTNgquBQhWyF7kJMor4vDKmHH5F/wRp63x2zybhbBYSL/Ihpy
-	 aEOj3hwk0t19Q==
-Date: Mon, 5 Feb 2024 15:59:53 -0300
+	b=JXteL2r3dcthFeAGBE999GG/d4Bf7wjliuH2UGu3tEjax6Xih3i9oDe9b8J6e0Ub9
+	 5haFVQ2XEprqX6F8Ugh19+iV3RZTFIwZgRQ6hnZ/cXBgAx5V0eK64XSoFoOMZ0TqmC
+	 2QpUwunSYhYURaEx4j8eCXrNswE6KmO0gS4CxhIt8IDbdl3RVYv1Jja0/CNMiu7DKS
+	 j5uiDYoUUZH6QoNUGy5+z7Hu3WP/rb0RpXkicaq3dzyK3Lg+6wTzEFRgrAr4f4zY+K
+	 T7+jrU7silz10yg1HCBI8BQZ75ixj6jovuWF6VE+DlWol69Z0+/VpLjWGCbaz9CzM+
+	 GFlKivzoRSL5g==
+Date: Mon, 5 Feb 2024 16:01:41 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Yang Jihong <yangjihong1@huawei.com>
 Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
 	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
 	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] perf sched: Move curr_thread initialization to
- perf_sched__map()
-Message-ID: <ZcEwKf8Jmd6yciWa@x1>
+Subject: Re: [PATCH 4/5] perf sched: Move curr_pid and cpu_last_switched
+ initialization to perf_sched__{lat|map|replay}()
+Message-ID: <ZcEwlR9itdN6tIL1@x1>
 References: <20240205104616.132417-1-yangjihong1@huawei.com>
- <20240205104616.132417-4-yangjihong1@huawei.com>
+ <20240205104616.132417-5-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,106 +46,212 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240205104616.132417-4-yangjihong1@huawei.com>
+In-Reply-To: <20240205104616.132417-5-yangjihong1@huawei.com>
 
-On Mon, Feb 05, 2024 at 10:46:14AM +0000, Yang Jihong wrote:
-> The curr_thread is used only for the 'perf sched map'. Put initialization
-> in perf_sched__map() to reduce unnecessary actions in other commands.
-> 
-> Simple functional testing:
-> 
->   # perf sched record perf bench sched messaging
->   # Running 'sched/messaging' benchmark:
->   # 20 sender and receiver processes per group
->   # 10 groups == 400 processes run
-> 
->        Total time: 0.197 [sec]
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 15.526 MB perf.data (140095 samples) ]
-> 
->   # perf sched map
->     *A0                                                               451264.532445 secs A0 => migration/0:15
->     *.                                                                451264.532468 secs .  => swapper:0
->      .  *B0                                                           451264.532537 secs B0 => migration/1:21
->      .  *.                                                            451264.532560 secs
->      .   .  *C0                                                       451264.532644 secs C0 => migration/2:27
->      .   .  *.                                                        451264.532668 secs
->      .   .   .  *D0                                                   451264.532753 secs D0 => migration/3:33
->      .   .   .  *.                                                    451264.532778 secs
->      .   .   .   .  *E0                                               451264.532861 secs E0 => migration/4:39
->      .   .   .   .  *.                                                451264.532886 secs
->      .   .   .   .   .  *F0                                           451264.532973 secs F0 => migration/5:45
->   <SNIP>
->      A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .   .   .   .   .    451264.790785 secs
->      A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .   .   .   .    451264.790858 secs
->      A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .   .   .    451264.790934 secs
->      A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .   .    451264.791004 secs
->      A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .    451264.791075 secs
->      A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .    451264.791143 secs
->      A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .    451264.791232 secs
->      A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .    451264.791336 secs
->      A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .    451264.791407 secs
->      A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .    451264.791484 secs
->      A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7   451264.791553 secs
->   # echo $?
->   0
-> 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/builtin-sched.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 26dbfa4aab61..54d79e560617 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -3266,9 +3266,13 @@ static int perf_sched__map(struct perf_sched *sched)
+On Mon, Feb 05, 2024 at 10:46:15AM +0000, Yang Jihong wrote:
+> +static int setup_cpus_switch_event(struct perf_sched *sched)
+> +{
+> +	unsigned int i;
+> +
+> +	sched->cpu_last_switched = calloc(MAX_CPUS, sizeof(*(sched->cpu_last_switched)));
+> +	if (!sched->cpu_last_switched)
+> +		return -1;
+> +
+> +	sched->curr_pid = malloc(MAX_CPUS * sizeof(*(sched->curr_pid)));
+> +	if (!sched->curr_pid) {
+> +		free(sched->cpu_last_switched);
+
+		zfree(&sched->cpu_last_switched);
+
+> +		return -1;
+> +	}
+> +
+> +	for (i = 0; i < MAX_CPUS; i++)
+> +		sched->curr_pid[i] = -1;
+> +
+> +	return 0;
+> +}
+> +
+> +static void free_cpus_switch_event(struct perf_sched *sched)
+> +{
+> +	free(sched->curr_pid);
+> +	free(sched->cpu_last_switched);
+
+	zfree(&sched->curr_pid);
+	zfree(&sched->cpu_last_switched);
+
+> +}
+> +
+>  static int perf_sched__lat(struct perf_sched *sched)
 >  {
->  	int rc = -1;
+> +	int rc = -1;
+>  	struct rb_node *next;
 >  
-> -	if (setup_map_cpus(sched))
-> +	sched->curr_thread = calloc(MAX_CPUS, sizeof(*(sched->curr_thread)));
-> +	if (!sched->curr_thread)
+>  	setup_pager();
+>  
+> +	if (setup_cpus_switch_event(sched))
+> +		return rc;
+> +
+>  	if (perf_sched__read_events(sched))
+> -		return -1;
+> +		goto out_free_cpus_switch_event;
+>  
+>  	perf_sched__merge_lat(sched);
+>  	perf_sched__sort_lat(sched);
+> @@ -3203,7 +3233,11 @@ static int perf_sched__lat(struct perf_sched *sched)
+>  	print_bad_events(sched);
+>  	printf("\n");
+>  
+> -	return 0;
+> +	rc = 0;
+> +
+> +out_free_cpus_switch_event:
+> +	free_cpus_switch_event(sched);
+> +	return rc;
+>  }
+>  
+>  static int setup_map_cpus(struct perf_sched *sched)
+> @@ -3270,9 +3304,12 @@ static int perf_sched__map(struct perf_sched *sched)
+>  	if (!sched->curr_thread)
 >  		return rc;
 >  
+> -	if (setup_map_cpus(sched))
+> +	if (setup_cpus_switch_event(sched))
+>  		goto out_free_curr_thread;
+>  
 > +	if (setup_map_cpus(sched))
-> +		goto out_free_curr_thread;
+> +		goto out_free_cpus_switch_event;
 > +
 >  	if (setup_color_pids(sched))
 >  		goto out_free_map_cpus;
 >  
-> @@ -3291,6 +3295,9 @@ static int perf_sched__map(struct perf_sched *sched)
->  out_free_map_cpus:
+> @@ -3296,6 +3333,9 @@ static int perf_sched__map(struct perf_sched *sched)
 >  	free(sched->map.comp_cpus);
 >  	perf_cpu_map__put(sched->map.cpus);
+>  
+> +out_free_cpus_switch_event:
+> +	free_cpus_switch_event(sched);
 > +
-> +out_free_curr_thread:
-> +	free(sched->curr_thread);
-
-	zfree(&sched->curr_thread);
-
+>  out_free_curr_thread:
+>  	free(sched->curr_thread);
 >  	return rc;
->  }
+> @@ -3309,6 +3349,10 @@ static int perf_sched__replay(struct perf_sched *sched)
+>  	mutex_init(&sched->start_work_mutex);
+>  	mutex_init(&sched->work_done_wait_mutex);
 >  
-> @@ -3576,11 +3583,6 @@ int cmd_sched(int argc, const char **argv)
->  	unsigned int i;
->  	int ret = 0;
+> +	ret = setup_cpus_switch_event(sched);
+> +	if (ret)
+> +		goto out_mutex_destroy;
+> +
+>  	calibrate_run_measurement_overhead(sched);
+>  	calibrate_sleep_measurement_overhead(sched);
 >  
-> -	sched.curr_thread = calloc(MAX_CPUS, sizeof(*sched.curr_thread));
-> -	if (!sched.curr_thread) {
+> @@ -3316,7 +3360,7 @@ static int perf_sched__replay(struct perf_sched *sched)
+>  
+>  	ret = perf_sched__read_events(sched);
+>  	if (ret)
+> -		goto out_mutex_destroy;
+> +		goto out_free_cpus_switch_event;
+>  
+>  	printf("nr_run_events:        %ld\n", sched->nr_run_events);
+>  	printf("nr_sleep_events:      %ld\n", sched->nr_sleep_events);
+> @@ -3342,6 +3386,9 @@ static int perf_sched__replay(struct perf_sched *sched)
+>  	sched->thread_funcs_exit = true;
+>  	destroy_tasks(sched);
+>  
+> +out_free_cpus_switch_event:
+> +	free_cpus_switch_event(sched);
+> +
+>  out_mutex_destroy:
+>  	mutex_destroy(&sched->start_work_mutex);
+>  	mutex_destroy(&sched->work_done_wait_mutex);
+> @@ -3580,21 +3627,7 @@ int cmd_sched(int argc, const char **argv)
+>  		.switch_event	    = replay_switch_event,
+>  		.fork_event	    = replay_fork_event,
+>  	};
+> -	unsigned int i;
+> -	int ret = 0;
+> -
+> -	sched.cpu_last_switched = calloc(MAX_CPUS, sizeof(*sched.cpu_last_switched));
+> -	if (!sched.cpu_last_switched) {
 > -		ret = -ENOMEM;
 > -		goto out;
 > -	}
->  	sched.cpu_last_switched = calloc(MAX_CPUS, sizeof(*sched.cpu_last_switched));
->  	if (!sched.cpu_last_switched) {
->  		ret = -ENOMEM;
-> @@ -3662,7 +3664,6 @@ int cmd_sched(int argc, const char **argv)
->  out:
->  	free(sched.curr_pid);
->  	free(sched.cpu_last_switched);
-> -	free(sched.curr_thread);
+> -	sched.curr_pid = malloc(MAX_CPUS * sizeof(*sched.curr_pid));
+> -	if (!sched.curr_pid) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> -	}
+> -	for (i = 0; i < MAX_CPUS; i++)
+> -		sched.curr_pid[i] = -1;
+> +	int ret;
 >  
->  	return ret;
+>  	argc = parse_options_subcommand(argc, argv, sched_options, sched_subcommands,
+>  					sched_usage, PARSE_OPT_STOP_AT_NON_OPTION);
+> @@ -3605,9 +3638,9 @@ int cmd_sched(int argc, const char **argv)
+>  	 * Aliased to 'perf script' for now:
+>  	 */
+>  	if (!strcmp(argv[0], "script")) {
+> -		ret = cmd_script(argc, argv);
+> +		return cmd_script(argc, argv);
+>  	} else if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+> -		ret = __cmd_record(argc, argv);
+> +		return __cmd_record(argc, argv);
+>  	} else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) {
+>  		sched.tp_handler = &lat_ops;
+>  		if (argc > 1) {
+> @@ -3616,7 +3649,7 @@ int cmd_sched(int argc, const char **argv)
+>  				usage_with_options(latency_usage, latency_options);
+>  		}
+>  		setup_sorting(&sched, latency_options, latency_usage);
+> -		ret = perf_sched__lat(&sched);
+> +		return perf_sched__lat(&sched);
+>  	} else if (!strcmp(argv[0], "map")) {
+>  		if (argc) {
+>  			argc = parse_options(argc, argv, map_options, map_usage, 0);
+> @@ -3625,7 +3658,7 @@ int cmd_sched(int argc, const char **argv)
+>  		}
+>  		sched.tp_handler = &map_ops;
+>  		setup_sorting(&sched, latency_options, latency_usage);
+> -		ret = perf_sched__map(&sched);
+> +		return perf_sched__map(&sched);
+>  	} else if (strlen(argv[0]) > 2 && strstarts("replay", argv[0])) {
+>  		sched.tp_handler = &replay_ops;
+>  		if (argc) {
+> @@ -3633,7 +3666,7 @@ int cmd_sched(int argc, const char **argv)
+>  			if (argc)
+>  				usage_with_options(replay_usage, replay_options);
+>  		}
+> -		ret = perf_sched__replay(&sched);
+> +		return perf_sched__replay(&sched);
+>  	} else if (!strcmp(argv[0], "timehist")) {
+>  		if (argc) {
+>  			argc = parse_options(argc, argv, timehist_options,
+> @@ -3649,21 +3682,16 @@ int cmd_sched(int argc, const char **argv)
+>  				parse_options_usage(NULL, timehist_options, "w", true);
+>  			if (sched.show_next)
+>  				parse_options_usage(NULL, timehist_options, "n", true);
+> -			ret = -EINVAL;
+> -			goto out;
+> +			return -EINVAL;
+>  		}
+>  		ret = symbol__validate_sym_arguments();
+>  		if (ret)
+> -			goto out;
+> +			return ret;
+>  
+> -		ret = perf_sched__timehist(&sched);
+> +		return perf_sched__timehist(&sched);
+>  	} else {
+>  		usage_with_options(sched_usage, sched_options);
+>  	}
+>  
+> -out:
+> -	free(sched.curr_pid);
+> -	free(sched.cpu_last_switched);
+> -
+> -	return ret;
+> +	return 0;
 >  }
 > -- 
 > 2.34.1
