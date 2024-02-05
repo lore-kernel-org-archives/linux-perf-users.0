@@ -1,175 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CEB2C84F;
-	Mon,  5 Feb 2024 14:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5585524B50;
+	Mon,  5 Feb 2024 15:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707145131; cv=none; b=rTnUJqoQPfeMpDQQlD7ZkTF4BgVfs/bJzRensaxaO+2Ue9Tu2Bkhp0WXcNvUcGbPu8cjhO+DgdByJg6UzmxflUXBkdi1L0x1Ps/aWL+O4tUio6ds7Hve9CqrN4TJiT0Gn3JoVl7j/bAptjB3vq94Cv+y85I1gotA8lYFzoC3EJA=
+	t=1707145720; cv=none; b=JJBINrLxKUiZ6LLum3sVS5VXlg8mHGCTMEAJ5suwgCJN4YZQWxFrWbQdEzHz+0ayjGwmE1gS2/oOKjjGPtaGmQAehCwSGu2QL8GE4/wrDzOgybhjbRosWw6sFIBx9jP/xvQaL2jA5vHWkjU0CD/jYgn4KmAD/sy8fKBsISJsnOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707145131; c=relaxed/simple;
-	bh=tXJR2T7k5Uq6FwdUAH5rqufg2PWRQL0MIQHWeqNj4NU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tKjzV2Xnz3+sIX5Vc1suuxSDP4ED2PrlwaeH80EPHD7PaTje8g3FUE4hBbfrrLrzqGVhiGdXd40y9l+ff0bzkP/8cuo3EGHjE1zJCSfHPrr7SjTAOwLFu8b+pkZTAFvMIjS5h5B49VOd/UmeBDwKaDtNeFb2mx2iDKe90eEyvCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b3QTN7G6; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1707145720; c=relaxed/simple;
+	bh=R1O30Os6ncIReZnfo4sDU46nxhgxKyi/5Cr1MDh1cEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fYzymi06j1zNlrVlDAkNFOWnBFYjuT0IJi7TMStsqGInB46F4xVLNL1SSUDVpGPAYZstm+36FcpkwowFirrzhyelU4zCnLuqsXy3wzTWYZTDy7Q4eFTXnwXTD3mvYBjaY1Zh5t2qw+Hg43kd5eOyDhxOf2q2q/nClS4RFPocnKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K8K0fpAO; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b3QTN7G6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K8K0fpAO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707145130; x=1738681130;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tXJR2T7k5Uq6FwdUAH5rqufg2PWRQL0MIQHWeqNj4NU=;
-  b=b3QTN7G6wxPpAWUJOnFCho92dBdWMDgOmLNqW4u9yKwZr+74KofMIQqH
-   UiIOnZpiSaUSO/f/IZwldNpDdFVsnYNdxgQ+dakiP4dtY0EeZTT8IEtkl
-   vKBVvYQ6xaUCZSOgVnAOM0/V+G6T02r3e/Bwp99T1LkA12d2eaDQXDcmL
-   eB/93CPmE74Ofqv5/ePStlS7Y5pC2zl4SitUsDMQa8Gu2JCnFWBJNBEO3
-   K00QDy+LN/Nw0/UnPb/FGM+Kdtc5q8Z0gZq14fxzOTZ0jlIe62ZVDGHcL
-   pDv3T2P7wS4V+p/SMayAVYdxxWHc+pj/FxYgrvjmTVHld7RgFJovfIayp
+  t=1707145718; x=1738681718;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=R1O30Os6ncIReZnfo4sDU46nxhgxKyi/5Cr1MDh1cEI=;
+  b=K8K0fpAOIF7sD0K7iOACkMli20wb3SPQn93E/6UFaU5tcGTKl6HqvBkC
+   pN/slB3pb+aZl2ALE+KGWB05rlYhAJMt7Ih8ZScpdnA5RyaFeZpTDbkeA
+   GT9OmL+/AmuIEXmCpQCKM6iwBBWvgqIx+wekP0Q+36FkL6Jpvu1kQsy5f
+   YdDJwmWPqcGqwj6ZU+56xpRGMX17I6Ju1PJ7ktwb8ugkDqrW9BlRq0MyN
+   I+TSe2TT6ulGS31nosVNFqbENHNGS6i4FEajLVs3LGHbua2lKr7HmCyP4
+   wb0QbkkY8vk68Q/9mvHdHWPI37tx4Rx1fwfCD0Fs9TIS/mbtMoaQ2Ao8G
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="23017575"
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="686568"
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="23017575"
+   d="scan'208";a="686568"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 06:58:50 -0800
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 07:08:30 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="1045388"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa006.jf.intel.com with ESMTP; 05 Feb 2024 06:58:50 -0800
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	mingo@kernel.org,
-	peterz@infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: irogers@google.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	ak@linux.intel.com,
-	amiri.khalil@intel.com,
-	ahmad.yasin@intel.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH] perf script: Print source line for each jump in brstackinsn
-Date: Mon,  5 Feb 2024 06:58:19 -0800
-Message-Id: <20240205145819.1943114-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+   d="scan'208";a="1048740"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 07:08:30 -0800
+Received: from [10.212.74.66] (kliang2-mobl1.ccr.corp.intel.com [10.212.74.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1A7EC580D9C;
+	Mon,  5 Feb 2024 07:08:28 -0800 (PST)
+Message-ID: <a5e8e3fe-a8c2-45e7-9139-84967cba06eb@linux.intel.com>
+Date: Mon, 5 Feb 2024 10:08:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/uncore: avoid null-ptr-deref on error in
+ pmu_alloc_topology
+To: Fedor Pchelkin <pchelkin@ispras.ru>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, x86@kernel.org,
+ Alexander Antonov <alexander.antonov@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+References: <20240204134841.80003-1-pchelkin@ispras.ru>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240204134841.80003-1-pchelkin@ispras.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-With the srcline option, the perf script only prints a source line at
-the beginning of a sample with call/ret from functions, but not for
-each jump in brstackinsn. It's useful to print a source line for each
-jump in brstackinsn when the end user analyze the full assembler
-sequences of branch sequences for the sample.
 
-The srccode option can also be used to locate the source code line.
-However, it's printed almost for every line and makes the output less
-readable.
+On 2024-02-04 8:48 a.m., Fedor Pchelkin wrote:
+> If topology[die] array allocation fails then topology[die][idx] elements
+> can't be accessed on error path.
+> 
+> Checking this on the error path probably looks more readable than
+> decrementing the counter in the allocation loop.
+> 
+> Found by Linux Verification Center (linuxtesting.org).
+> 
+> Fixes: 4d13be8ab5d4 ("perf/x86/intel/uncore: Generalize IIO topology support")
+> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+> ---
 
- $perf script -F +brstackinsn,+srcline --xed
+It seems the code just jumps to the wrong kfree on the error path.
+Does the below patch work?
 
-Before the patch,
-
- tchain_edit_deb 1463275 15228549.107820:     282495 instructions:u:            401133 f3+0xd (/home/kan/os.li>
-  tchain_edit.c:22
-        f3+40:  tchain_edit.c:20
-        000000000040114e                        jle 0x401133                    # PRED 6 cycles [6]
-        0000000000401133                        movl  -0x4(%rbp), %eax
-        0000000000401136                        and $0x1, %eax
-        0000000000401139                        test %eax, %eax
-        000000000040113b                        jz 0x401143
-        000000000040113d                        addl  $0x1, -0x4(%rbp)
-        0000000000401141                        jmp 0x401147                    # PRED 3 cycles [9] 2.00 IPC
-        0000000000401147                        cmpl  $0x3e7, -0x4(%rbp)
-        000000000040114e                        jle 0x401133                    # PRED 6 cycles [15] 0.33 IPC
-
-After the patch,
-
- tchain_edit_deb 1463275 15228549.107820:     282495 instructions:u:            401133 f3+0xd (/home/kan/os.li>
-  tchain_edit.c:22
-        f3+40:  tchain_edit.c:20
-        000000000040114e                        jle 0x401133                     srcline: tchain_edit.c:20      # PRED 6 cycles [6]
-        0000000000401133                        movl  -0x4(%rbp), %eax
-        0000000000401136                        and $0x1, %eax
-        0000000000401139                        test %eax, %eax
-        000000000040113b                        jz 0x401143
-        000000000040113d                        addl  $0x1, -0x4(%rbp)
-        0000000000401141                        jmp 0x401147                     srcline: tchain_edit.c:23      # PRED 3 cycles [9] 2.00 IPC
-        0000000000401147                        cmpl  $0x3e7, -0x4(%rbp)
-        000000000040114e                        jle 0x401133                     srcline: tchain_edit.c:20      # PRED 6 cycles [15] 0.33 IPC
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/builtin-script.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index b1f57401ff23..af63b7c37c8a 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1162,7 +1162,8 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
- static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			    struct perf_insn *x, u8 *inbuf, int len,
- 			    int insn, FILE *fp, int *total_cycles,
--			    struct perf_event_attr *attr)
-+			    struct perf_event_attr *attr,
-+			    struct thread *thread)
- {
- 	int ilen = 0;
- 	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
-@@ -1171,6 +1172,16 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 	if (PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += fprintf(fp, "ilen: %d\t", ilen);
- 
-+	if (PRINT_FIELD(SRCLINE)) {
-+		struct addr_location al;
-+
-+		addr_location__init(&al);
-+		thread__find_map(thread, x->cpumode, ip, &al);
-+		printed += map__fprintf_srcline(al.map, al.addr, " srcline: ", fp);
-+		printed += fprintf(fp, "\t");
-+		addr_location__exit(&al);
-+	}
-+
- 	printed += fprintf(fp, "#%s%s%s%s",
- 			      en->flags.predicted ? " PRED" : "",
- 			      en->flags.mispred ? " MISPRED" : "",
-@@ -1182,6 +1193,7 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 		if (insn)
- 			printed += fprintf(fp, " %.2f IPC", (float)insn / en->flags.cycles);
+diff --git a/arch/x86/events/intel/uncore_snbep.c
+b/arch/x86/events/intel/uncore_snbep.c
+index 8250f0f59c2b..5481fd00d861 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3808,7 +3808,7 @@ static int pmu_alloc_topology(struct
+intel_uncore_type *type, int topology_type)
+ 	for (die = 0; die < uncore_max_dies(); die++) {
+ 		topology[die] = kcalloc(type->num_boxes, sizeof(**topology), GFP_KERNEL);
+ 		if (!topology[die])
+-			goto clear;
++			goto free_topology;
+ 		for (idx = 0; idx < type->num_boxes; idx++) {
+ 			topology[die][idx].untyped = kcalloc(type->num_boxes,
+ 							     topology_size[topology_type],
+@@ -3827,6 +3827,7 @@ static int pmu_alloc_topology(struct
+intel_uncore_type *type, int topology_type)
+ 			kfree(topology[die][idx].untyped);
+ 		kfree(topology[die]);
  	}
-+
- 	return printed + fprintf(fp, "\n");
- }
- 
-@@ -1260,7 +1272,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 					   x.cpumode, x.cpu, &lastsym, attr, fp);
- 		printed += ip__fprintf_jump(entries[nr - 1].from, &entries[nr - 1],
- 					    &x, buffer, len, 0, fp, &total_cycles,
--					    attr);
-+					    attr, thread);
- 		if (PRINT_FIELD(SRCCODE))
- 			printed += print_srccode(thread, x.cpumode, entries[nr - 1].from);
- 	}
-@@ -1291,7 +1303,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
- 			if (ip == end) {
- 				printed += ip__fprintf_jump(ip, &entries[i], &x, buffer + off, len - off, ++insn, fp,
--							    &total_cycles, attr);
-+							    &total_cycles, attr, thread);
- 				if (PRINT_FIELD(SRCCODE))
- 					printed += print_srccode(thread, x.cpumode, ip);
- 				break;
--- 
-2.35.1
++free_topology:
+ 	kfree(topology);
+ err:
+ 	return -ENOMEM;
 
+Thanks,
+Kan
+
+>  arch/x86/events/intel/uncore_snbep.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index a96496bef678..7d4deb9126be 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -3831,9 +3831,11 @@ static int pmu_alloc_topology(struct intel_uncore_type *type, int topology_type)
+>  	return 0;
+>  clear:
+>  	for (; die >= 0; die--) {
+> -		for (idx = 0; idx < type->num_boxes; idx++)
+> -			kfree(topology[die][idx].untyped);
+> -		kfree(topology[die]);
+> +		if (topology[die]) {
+> +			for (idx = 0; idx < type->num_boxes; idx++)
+> +				kfree(topology[die][idx].untyped);
+> +			kfree(topology[die]);
+> +		}
+>  	}
+>  	kfree(topology);
+>  err:
