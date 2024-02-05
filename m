@@ -1,29 +1,28 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0249F17592;
-	Mon,  5 Feb 2024 10:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632DC17582;
+	Mon,  5 Feb 2024 10:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707130279; cv=none; b=GZK/gnUDzufdSHaeVkw94t3lxcC1kUVcX2M8tg9vm6sbxSsEl4OhEAwCjOKYwfArLroJBcc/Zin8wHUGjKWBNyXduZWmWDg4d1u5vLwqZ3Yzhq+yfHXwD84IHC/bohMXPeF0q+4R/CFdgLfS11xU8M4KgGJ/WRITHvVjW1ASO5s=
+	t=1707130279; cv=none; b=Bzn37d7lkVog2T59am/Sml+M+fyLee5aBqIaJvzNouj7NI2SpWXBXS/DKeeBoHVlEZSF1083+uInD0DIuoE2o7R0RKFw9k+BfiMKugNTf7MVmgZz21yUoTVouyzmNcMvWhGKMTLa2IX/I1SCl0eWiQ8O9Fj7HmYYpz4f2SxPmfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707130279; c=relaxed/simple;
-	bh=DoB2mUJR1wZPUsVzLJzgRS7J/E0RabBNUzGJ8kWAyao=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UkvoByI9BSS3UvcPZS6sCZLneFb59kMA/dc8iTip0dl0A+L7m9KCHA+e3Poni7jbCSsG28vmIsYzSOaTQU3sJIRoYtaFau7vUPcMHQj/XOUf8dH2mNqLKsKNWUinnbvXd2C6H69JSuFbg7qZSfig7NWOgW75QAmzpPp0iUst/TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	bh=x20H/xqFye1CUB/tnJpjcfP8jCPUoLwmX5KDeuLTrdI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZrJcHylQkDdT0oPQRR8uKDcKm7CgPkVL/ehAA/ojbRb5VWaBaijxA+eKBki5E5x63WlBVEtPg6csvgiCyW3JgB9Lf2dZXsRPoOc+3gtED/l1fA+cIXcMyuT71d2i9EIyjpMLTE9C2CMfKWC8Qm5+wSSHkvTLhJ2UNYEEiD8TtQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TT3673tzZz1gy2M;
-	Mon,  5 Feb 2024 18:49:19 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TT373275Yz1xnFK;
+	Mon,  5 Feb 2024 18:50:07 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id 315371A0178;
-	Mon,  5 Feb 2024 18:51:14 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A299C1A016B;
+	Mon,  5 Feb 2024 18:51:12 +0800 (CST)
 Received: from ubuntu2204.huawei.com (10.67.174.22) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 5 Feb 2024 18:51:13 +0800
+ 15.1.2507.35; Mon, 5 Feb 2024 18:51:11 +0800
 From: Yang Jihong <yangjihong1@huawei.com>
 To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<namhyung@kernel.org>, <mark.rutland@arm.com>,
@@ -31,12 +30,10 @@ To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<irogers@google.com>, <adrian.hunter@intel.com>,
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <yangjihong1@huawei.com>
-Subject: [PATCH 3/5] perf sched: Move curr_thread initialization to perf_sched__map()
-Date: Mon, 5 Feb 2024 10:46:14 +0000
-Message-ID: <20240205104616.132417-4-yangjihong1@huawei.com>
+Subject: [PATCH 0/5] perf sched: Minor optimizations for resource initialization
+Date: Mon, 5 Feb 2024 10:46:11 +0000
+Message-ID: <20240205104616.132417-1-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240205104616.132417-1-yangjihong1@huawei.com>
-References: <20240205104616.132417-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,8 +45,12 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 
-The curr_thread is used only for the 'perf sched map'. Put initialization
-in perf_sched__map() to reduce unnecessary actions in other commands.
+start_work_mutex, work_done_wait_mutex, curr_thread, curr_pid, and
+cpu_last_switched are initialized together in cmd_sched(),
+but for different perf sched subcommands, some actions are unnecessary,
+especially perf sched record. 
+This series of patches initialize only required resources for different
+subcommands.
 
 Simple functional testing:
 
@@ -57,92 +58,129 @@ Simple functional testing:
   # Running 'sched/messaging' benchmark:
   # 20 sender and receiver processes per group
   # 10 groups == 400 processes run
-
-       Total time: 0.197 [sec]
+  
+       Total time: 0.204 [sec]
   [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 15.526 MB perf.data (140095 samples) ]
-
-  # perf sched map
-    *A0                                                               451264.532445 secs A0 => migration/0:15
-    *.                                                                451264.532468 secs .  => swapper:0
-     .  *B0                                                           451264.532537 secs B0 => migration/1:21
-     .  *.                                                            451264.532560 secs
-     .   .  *C0                                                       451264.532644 secs C0 => migration/2:27
-     .   .  *.                                                        451264.532668 secs
-     .   .   .  *D0                                                   451264.532753 secs D0 => migration/3:33
-     .   .   .  *.                                                    451264.532778 secs
-     .   .   .   .  *E0                                               451264.532861 secs E0 => migration/4:39
-     .   .   .   .  *.                                                451264.532886 secs
-     .   .   .   .   .  *F0                                           451264.532973 secs F0 => migration/5:45
+  [ perf record: Captured and wrote 14.868 MB perf.data (133947 samples) ]
+  
+  # perf sched latency
+  
+   -------------------------------------------------------------------------------------------------------------------------------------------
+    Task                  |   Runtime ms  | Switches | Avg delay ms    | Max delay ms    | Max delay start           | Max delay end          |
+   -------------------------------------------------------------------------------------------------------------------------------------------
+    qemu-system-x86:(3)   |      2.753 ms |       10 | avg:   0.963 ms | max:   8.526 ms | max start: 457541.695704 s | max end: 457541.704230 s
+    sched-messaging:(401) |   2995.481 ms |    36312 | avg:   0.944 ms | max: 111.551 ms | max start: 457541.645349 s | max end: 457541.756900 s
+    rcu_sched:14          |      0.402 ms |       32 | avg:   0.266 ms | max:   7.996 ms | max start: 457541.581363 s | max end: 457541.589359 s
+    sshd:48125            |      0.461 ms |        2 | avg:   0.033 ms | max:   0.036 ms | max start: 457541.584374 s | max end: 457541.584410 s
+    perf:112408           |      2.321 ms |        2 | avg:   0.031 ms | max:   0.032 ms | max start: 457541.846874 s | max end: 457541.846906 s
   <SNIP>
-     A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .   .   .   .   .    451264.790785 secs
-     A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .   .   .   .    451264.790858 secs
-     A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .   .   .    451264.790934 secs
-     A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .   .    451264.791004 secs
-     A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .   .    451264.791075 secs
-     A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .   .    451264.791143 secs
-     A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .   .    451264.791232 secs
-     A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .   .    451264.791336 secs
-     A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .   .    451264.791407 secs
-     A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7  .    451264.791484 secs
-     A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7  A7 *A7   451264.791553 secs
+    ksoftirqd/1:22        |      0.704 ms |        3 | avg:   0.005 ms | max:   0.005 ms | max start: 457541.845388 s | max end: 457541.845393 s
+    kworker/15:0-mm:61886 |      0.227 ms |       21 | avg:   0.005 ms | max:   0.006 ms | max start: 457541.739187 s | max end: 457541.739193 s
+    kworker/13:1-ev:92643 |      0.249 ms |       22 | avg:   0.005 ms | max:   0.006 ms | max start: 457541.768695 s | max end: 457541.768701 s
+    kworker/12:1-ev:61202 |      0.418 ms |       40 | avg:   0.005 ms | max:   0.007 ms | max start: 457541.739679 s | max end: 457541.739687 s
+   -----------------------------------------------------------------------------------------------------------------
+    TOTAL:                |   3007.424 ms |    36776 |
+   ---------------------------------------------------
+  
+  # echo $?
+  0
+  
+  # perf sched map
+    *A0                                                               457541.580856 secs A0 => migration/0:15
+    *.                                                                457541.580886 secs .  => swapper:0
+     .  *B0                                                           457541.581018 secs B0 => migration/1:21
+     .  *.                                                            457541.581050 secs
+     .   .  *C0                                                       457541.581147 secs C0 => migration/2:27
+     .   .  *.                                                        457541.581174 secs
+     .   .   .  *D0                                                   457541.581259 secs D0 => migration/3:33
+  <SNIP>
+     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7  .   .   .   .    457541.847783 secs
+     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7  .   .   .    457541.847873 secs
+     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7  .   .    457541.847954 secs
+     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7  .    457541.848034 secs
+     E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7  E7 *E7   457541.848108 secs
+  # echo $?
+  0
+  
+  # perf sched replay
+  run measurement overhead: 108 nsecs
+  sleep measurement overhead: 65244 nsecs
+  the run test took 1000002 nsecs
+  the sleep test took 1079677 nsecs
+  nr_run_events:        40700
+  nr_sleep_events:      41415
+  nr_wakeup_events:     31601
+  target-less wakeups:  15
+  multi-target wakeups: 805
+  task      0 (             swapper:         0), nr_events: 7307
+  task      1 (             swapper:         1), nr_events: 1
+  task      2 (             swapper:         2), nr_events: 1
+  <SNIP>
+  task    713 (     sched-messaging:    112809), nr_events: 987
+  task    714 (     sched-messaging:    112810), nr_events: 2706
+  ------------------------------------------------------------
+  #1  : 1298.443, ravg: 1298.44, cpu: 8281.74 / 8281.74
+  #2  : 1316.426, ravg: 1300.24, cpu: 7577.61 / 8211.32
+  #3  : 1323.864, ravg: 1302.60, cpu: 7932.48 / 8183.44
+  #4  : 1329.423, ravg: 1305.29, cpu: 7646.17 / 8129.71
+  #5  : 1321.419, ravg: 1306.90, cpu: 7669.90 / 8083.73
+  #6  : 1322.082, ravg: 1308.42, cpu: 7755.66 / 8050.92
+  #7  : 1324.330, ravg: 1310.01, cpu: 7361.51 / 7981.98
+  #8  : 1312.489, ravg: 1310.26, cpu: 7170.11 / 7900.80
+  #9  : 1312.002, ravg: 1310.43, cpu: 7176.40 / 7828.36
+  #10 : 1311.737, ravg: 1310.56, cpu: 7121.14 / 7757.63
+  # echo $?
+  0
+  
+  # perf sched script
+              perf  112408 [000] 457541.580826: sched:sched_stat_runtime: comm=perf pid=112408 runtime=53050 [ns] vruntime=621244222333 [ns]
+              perf  112408 [000] 457541.580831:       sched:sched_waking: comm=migration/0 pid=15 prio=0 target_cpu=000
+              perf  112408 [000] 457541.580853: sched:sched_stat_runtime: comm=perf pid=112408 runtime=24379 [ns] vruntime=621244246712 [ns]
+              perf  112408 [000] 457541.580856:       sched:sched_switch: prev_comm=perf prev_pid=112408 prev_prio=120 prev_state=R+ ==> next_comm=migration/0 next_pid=15 next_prio=0
+  <SNIP>
+           swapper       0 [012] 457541.847873:       sched:sched_switch: prev_comm=swapper/12 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=112408 next_prio=120
+           swapper       0 [013] 457541.847954:       sched:sched_switch: prev_comm=swapper/13 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=112408 next_prio=120
+           swapper       0 [014] 457541.848034:       sched:sched_switch: prev_comm=swapper/14 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=112408 next_prio=120
+           swapper       0 [015] 457541.848108:       sched:sched_switch: prev_comm=swapper/15 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=112408 next_prio=120
+  # echo $?
+  0
+  
+  # perf sched timehist
+  Samples do not have callchains.
+             time    cpu  task name                       wait time  sch delay   run time
+                          [tid/pid]                          (msec)     (msec)     (msec)
+  --------------- ------  ------------------------------  ---------  ---------  ---------
+    457541.580856 [0000]  perf[112408]                        0.000      0.000      0.000
+    457541.580886 [0000]  migration/0[15]                     0.000      0.024      0.029
+    457541.581018 [0001]  perf[112408]                        0.000      0.000      0.000
+    457541.581050 [0001]  migration/1[21]                     0.000      0.006      0.032
+    457541.581147 [0002]  perf[112408]                        0.000      0.000      0.000
+    457541.581174 [0002]  migration/2[27]                     0.000      0.005      0.026
+  <SNIP>
+    457541.847623 [0009]  <idle>                              0.010      0.000      1.489
+    457541.847704 [0010]  <idle>                              0.012      0.000      1.777
+    457541.847783 [0011]  <idle>                              0.233      0.000      1.213
+    457541.847873 [0012]  <idle>                              0.008      0.000     24.188
+    457541.847954 [0013]  <idle>                              0.009      0.000      1.734
+    457541.848034 [0014]  <idle>                              0.009      0.000      2.969
+    457541.848108 [0015]  <idle>                              0.220      0.000      1.205
   # echo $?
   0
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/builtin-sched.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+Yang Jihong (5):
+  perf sched: Move start_work_mutex and work_done_wait_mutex
+    initialization to perf_sched__replay()
+  perf sched: Fix memory leak in perf_sched__map()
+  perf sched: Move curr_thread initialization to perf_sched__map()
+  perf sched: Move curr_pid and cpu_last_switched initialization to
+    perf_sched__{lat|map|replay}()
+  perf thread_map: Free strlist on normal path in
+    thread_map__new_by_tid_str()
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 26dbfa4aab61..54d79e560617 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -3266,9 +3266,13 @@ static int perf_sched__map(struct perf_sched *sched)
- {
- 	int rc = -1;
- 
--	if (setup_map_cpus(sched))
-+	sched->curr_thread = calloc(MAX_CPUS, sizeof(*(sched->curr_thread)));
-+	if (!sched->curr_thread)
- 		return rc;
- 
-+	if (setup_map_cpus(sched))
-+		goto out_free_curr_thread;
-+
- 	if (setup_color_pids(sched))
- 		goto out_free_map_cpus;
- 
-@@ -3291,6 +3295,9 @@ static int perf_sched__map(struct perf_sched *sched)
- out_free_map_cpus:
- 	free(sched->map.comp_cpus);
- 	perf_cpu_map__put(sched->map.cpus);
-+
-+out_free_curr_thread:
-+	free(sched->curr_thread);
- 	return rc;
- }
- 
-@@ -3576,11 +3583,6 @@ int cmd_sched(int argc, const char **argv)
- 	unsigned int i;
- 	int ret = 0;
- 
--	sched.curr_thread = calloc(MAX_CPUS, sizeof(*sched.curr_thread));
--	if (!sched.curr_thread) {
--		ret = -ENOMEM;
--		goto out;
--	}
- 	sched.cpu_last_switched = calloc(MAX_CPUS, sizeof(*sched.cpu_last_switched));
- 	if (!sched.cpu_last_switched) {
- 		ret = -ENOMEM;
-@@ -3662,7 +3664,6 @@ int cmd_sched(int argc, const char **argv)
- out:
- 	free(sched.curr_pid);
- 	free(sched.cpu_last_switched);
--	free(sched.curr_thread);
- 
- 	return ret;
- }
+ tools/perf/builtin-sched.c   | 163 ++++++++++++++++++++++-------------
+ tools/perf/util/thread_map.c |   2 +-
+ 2 files changed, 105 insertions(+), 60 deletions(-)
+
 -- 
 2.34.1
 
