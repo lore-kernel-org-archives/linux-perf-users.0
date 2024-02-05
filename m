@@ -1,174 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AFE125BB;
-	Mon,  5 Feb 2024 09:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6330F17586;
+	Mon,  5 Feb 2024 10:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707125007; cv=none; b=qiXC8Lwtgk1sQAKIJytcQf4n1TWwHgEDWYwwuU3cMUjCjprq4qK5nvJa6ZS5W/nPu79dO/mUshNl7A5Usp71+edbaQ8lbDMqescoqatoaEEIzMCpmA6mUDcYvLjt8kzNTH0E4mWmeGa5dwD6meFV01zQJaonGyNe0upsw0ohM7A=
+	t=1707130278; cv=none; b=QBa6owSr2eO3quJHU3cGWUkU0MWAaTM2Vcdl/J8xmC2SFXMqBzULMDdAGmVBE9u+l2sClHXkbJzu9uSVP8wTuo/Z448Ak8Lq4Y2vVsrVC0mPdT8KAwaEj3NO66gxbGqh1AnISdyeSsEkmVbJvig0bGTaX5TuK+7O9c5FOB4p2FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707125007; c=relaxed/simple;
-	bh=ko6rApyixerLqoyBttIoaqJ9suv9OgBvHgI7V7WR3YE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kDsR4sxph2KoSWQA7zSfcbm5NPby3u9L20B+REJhBpDdpmgb69J2r0EGcwQZ/wH4MVJ+uP4B3D0SdfnctcQVbbgKc3SMQeqg+GYCldnbzBERHO2HLVMRnqHQzt3eGTboKQtN0w1NxkJs6vmdQCqqtsljtpAj2aJ6gIzl95GXiWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RIrK+qNd; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RIrK+qNd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707125005; x=1738661005;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ko6rApyixerLqoyBttIoaqJ9suv9OgBvHgI7V7WR3YE=;
-  b=RIrK+qNdUqiYfUqw22FoN2UuTpAL8OymCjA5qdcdkv04Ul3U76jWAAEp
-   heTI2gpVUr5slYsexXjotCo+PALXCu1qv8W5oUFjBJOVXlMA86bYFqwEt
-   VI9HKnyjbhhjziPfEekm4893UK22bBcRHWyn0EblwAK0AX47v4tJ3bT/J
-   J2oblSJ2br4EwlUObuSTREtIRYuSHOXZk/lIM+wzRnoswSQRNxG9+tU6Y
-   1wjziRwFjos6wWAbtfz9WLXBC8CeGg1aqOKPkRQFnfhszX98eMvAy/oRl
-   5prCVhuuBCfii2uDVOERh/g7r/McavRi7tKzvOMxtIooZFK7jH1NA5NnQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="18010593"
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="18010593"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 01:23:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
-   d="scan'208";a="31765259"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.164])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 01:23:21 -0800
-Message-ID: <f8c1b042-2b65-4dd7-a692-79fead351e5a@intel.com>
-Date: Mon, 5 Feb 2024 11:23:21 +0200
+	s=arc-20240116; t=1707130278; c=relaxed/simple;
+	bh=akxPEgyMnsMulfBbKHAmf+qbvnaNRYhrNfJ8MDEIybA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XR8muLUagK5opN0/wO0v3hnRK1OlFDBdhgNqOAVqzxn+wAxoxgSeGXYVzHIPZz0hqLJlNf+YqRM/inOiclCz+c5idgl4h8GlVw05W3rwh81Ag2givoMD3BM/vTlmfW+Ykyerf/zQNhz9stgYG87s5DXxIEc3Pr2trpyKOELkFQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TT3735jqCz1xnGw;
+	Mon,  5 Feb 2024 18:50:07 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2B8211402E0;
+	Mon,  5 Feb 2024 18:51:13 +0800 (CST)
+Received: from ubuntu2204.huawei.com (10.67.174.22) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 5 Feb 2024 18:51:12 +0800
+From: Yang Jihong <yangjihong1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <yangjihong1@huawei.com>
+Subject: [PATCH 1/5] perf sched: Move start_work_mutex and work_done_wait_mutex initialization to perf_sched__replay()
+Date: Mon, 5 Feb 2024 10:46:12 +0000
+Message-ID: <20240205104616.132417-2-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240205104616.132417-1-yangjihong1@huawei.com>
+References: <20240205104616.132417-1-yangjihong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] perf: script: add field 'disasm' to display
- mnemonic instructions
-Content-Language: en-US
-To: Changbin Du <changbin.du@huawei.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
- Thomas Richter <tmricht@linux.ibm.com>, changbin.du@gmail.com
-References: <20240122112054.1576835-1-changbin.du@huawei.com>
- <20240122112054.1576835-4-changbin.du@huawei.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240122112054.1576835-4-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 
-On 22/01/24 13:20, Changbin Du wrote:
-> In addition to the 'insn' field, this adds a new field 'disasm' to
-> display mnemonic instructions instead of the raw code.
-> 
-> $ sudo perf script -F +disasm
->        perf-exec 1443864 [006] 2275506.209848:          psb:  psb offs: 0                                      0 [unknown] ([unknown])
->        perf-exec 1443864 [006] 2275506.209848:          cbr:  cbr: 41 freq: 4100 MHz (114%)                    0 [unknown] ([unknown])
->               ls 1443864 [006] 2275506.209905:          1  branches:uH:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	movq %rsp, %rdi
->               ls 1443864 [006] 2275506.209908:          1  branches:uH:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	callq _dl_start+0x0
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> 
-> ---
-> v2:
->   - update Documentation.
-> ---
->  tools/perf/Documentation/perf-script.txt | 13 +++++++------
->  tools/perf/builtin-script.c              |  8 +++++++-
->  2 files changed, 14 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> index ff9a52e44688..578fa59f51a5 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-> @@ -132,9 +132,10 @@ OPTIONS
->          Comma separated list of fields to print. Options are:
->          comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
->          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-> -        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
-> -        phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
-> -        machine_pid, vcpu, cgroup, retire_lat.
-> +        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-> +        insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
-> +        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-> +
->          Field list can be prepended with the type, trace, sw or hw,
->          to indicate to which event type the field list applies.
->          e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
-> @@ -217,9 +218,9 @@ OPTIONS
->  	Instruction Trace decoding. For calls and returns, it will display the
->  	name of the symbol indented with spaces to reflect the stack depth.
->  
-> -	When doing instruction trace decoding insn and insnlen give the
-> -	instruction bytes and the instruction length of the current
-> -	instruction.
-> +	When doing instruction trace decoding, insn, disasm and insnlen give the
-> +	instruction bytes, disassembled instructions (requires libcapstone support)
-> +	and the instruction length of the current instruction respectively.
->  
->  	The synth field is used by synthesized events which may be created when
->  	Instruction Trace decoding.
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 4817a37f16e2..4ac9670704ff 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -135,6 +135,7 @@ enum perf_output_field {
->  	PERF_OUTPUT_CGROUP          = 1ULL << 39,
->  	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
->  	PERF_OUTPUT_DSOFF           = 1ULL << 41,
-> +	PERF_OUTPUT_DISASM          = 1ULL << 42,
->  };
->  
->  struct perf_script {
-> @@ -190,6 +191,7 @@ struct output_option {
->  	{.str = "bpf-output",   .field = PERF_OUTPUT_BPF_OUTPUT},
->  	{.str = "callindent", .field = PERF_OUTPUT_CALLINDENT},
->  	{.str = "insn", .field = PERF_OUTPUT_INSN},
-> +	{.str = "disasm", .field = PERF_OUTPUT_DISASM},
->  	{.str = "insnlen", .field = PERF_OUTPUT_INSNLEN},
->  	{.str = "brstackinsn", .field = PERF_OUTPUT_BRSTACKINSN},
->  	{.str = "brstackoff", .field = PERF_OUTPUT_BRSTACKOFF},
-> @@ -1515,6 +1517,10 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
->  		printed += fprintf(fp, " insn: ");
->  		printed += sample__fprintf_insn_raw(sample, fp);
->  	}
-> +	if (PRINT_FIELD(DISASM) && sample->insn_len) {
-> +		printed += fprintf(fp, "\t\t");
+The start_work_mutex and work_done_wait_mutex are used only for the
+'perf sched replay'. Put their initialization in perf_sched__replay () to
+reduce unnecessary actions in other commands.
 
-This is good, except if both 'insn' and 'disasm' are used together.
-It either:
- a) without libcapstone, prints insn bytes twice
+Simple functional testing:
 
-	Probably simpler to make 'disasm' without libcapstone
-	a fatal error explaining that perf needs to be built
-	with libcapstone support for 'disasm' to work.
+  # perf sched record perf bench sched messaging
+  # Running 'sched/messaging' benchmark:
+  # 20 sender and receiver processes per group
+  # 10 groups == 400 processes run
 
- b) with libcapstone, disassembly does not line up nicely
+       Total time: 0.197 [sec]
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 14.952 MB perf.data (134165 samples) ]
 
-> +		printed += sample__fprintf_insn(sample, thread, machine, fp);
-> +	}
->  	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
->  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
->  
-> @@ -3900,7 +3906,7 @@ int cmd_script(int argc, const char **argv)
->  		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
->  		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
->  		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
-> -		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
-> +		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
->  		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
->  		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
->  		     parse_output_fields),
+  # perf sched replay
+  run measurement overhead: 108 nsecs
+  sleep measurement overhead: 65658 nsecs
+  the run test took 999991 nsecs
+  the sleep test took 1079324 nsecs
+  nr_run_events:        42378
+  nr_sleep_events:      43102
+  nr_wakeup_events:     31852
+  target-less wakeups:  17
+  multi-target wakeups: 712
+  task      0 (             swapper:         0), nr_events: 10451
+  task      1 (             swapper:         1), nr_events: 3
+  task      2 (             swapper:         2), nr_events: 1
+  <SNIP>
+  task    717 (     sched-messaging:     74483), nr_events: 152
+  task    718 (     sched-messaging:     74484), nr_events: 1944
+  task    719 (     sched-messaging:     74485), nr_events: 73
+  task    720 (     sched-messaging:     74486), nr_events: 163
+  task    721 (     sched-messaging:     74487), nr_events: 942
+  task    722 (     sched-messaging:     74488), nr_events: 78
+  task    723 (     sched-messaging:     74489), nr_events: 1090
+  ------------------------------------------------------------
+  #1  : 1366.507, ravg: 1366.51, cpu: 7682.70 / 7682.70
+  #2  : 1410.072, ravg: 1370.86, cpu: 7723.88 / 7686.82
+  #3  : 1396.296, ravg: 1373.41, cpu: 7568.20 / 7674.96
+  #4  : 1381.019, ravg: 1374.17, cpu: 7531.81 / 7660.64
+  #5  : 1393.826, ravg: 1376.13, cpu: 7725.25 / 7667.11
+  #6  : 1401.581, ravg: 1378.68, cpu: 7594.82 / 7659.88
+  #7  : 1381.337, ravg: 1378.94, cpu: 7371.22 / 7631.01
+  #8  : 1373.842, ravg: 1378.43, cpu: 7894.92 / 7657.40
+  #9  : 1364.697, ravg: 1377.06, cpu: 7324.91 / 7624.15
+  #10 : 1363.613, ravg: 1375.72, cpu: 7209.55 / 7582.69
+  # echo $?
+  0
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-sched.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 42d5fc5d6b7b..08dec557e6be 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3285,15 +3285,20 @@ static int perf_sched__map(struct perf_sched *sched)
+ 
+ static int perf_sched__replay(struct perf_sched *sched)
+ {
++	int ret;
+ 	unsigned long i;
+ 
++	mutex_init(&sched->start_work_mutex);
++	mutex_init(&sched->work_done_wait_mutex);
++
+ 	calibrate_run_measurement_overhead(sched);
+ 	calibrate_sleep_measurement_overhead(sched);
+ 
+ 	test_calibrations(sched);
+ 
+-	if (perf_sched__read_events(sched))
+-		return -1;
++	ret = perf_sched__read_events(sched);
++	if (ret)
++		goto out_mutex_destroy;
+ 
+ 	printf("nr_run_events:        %ld\n", sched->nr_run_events);
+ 	printf("nr_sleep_events:      %ld\n", sched->nr_sleep_events);
+@@ -3318,7 +3323,11 @@ static int perf_sched__replay(struct perf_sched *sched)
+ 
+ 	sched->thread_funcs_exit = true;
+ 	destroy_tasks(sched);
+-	return 0;
++
++out_mutex_destroy:
++	mutex_destroy(&sched->start_work_mutex);
++	mutex_destroy(&sched->work_done_wait_mutex);
++	return ret;
+ }
+ 
+ static void setup_sorting(struct perf_sched *sched, const struct option *options,
+@@ -3556,8 +3565,6 @@ int cmd_sched(int argc, const char **argv)
+ 	unsigned int i;
+ 	int ret = 0;
+ 
+-	mutex_init(&sched.start_work_mutex);
+-	mutex_init(&sched.work_done_wait_mutex);
+ 	sched.curr_thread = calloc(MAX_CPUS, sizeof(*sched.curr_thread));
+ 	if (!sched.curr_thread) {
+ 		ret = -ENOMEM;
+@@ -3645,8 +3652,6 @@ int cmd_sched(int argc, const char **argv)
+ 	free(sched.curr_pid);
+ 	free(sched.cpu_last_switched);
+ 	free(sched.curr_thread);
+-	mutex_destroy(&sched.start_work_mutex);
+-	mutex_destroy(&sched.work_done_wait_mutex);
+ 
+ 	return ret;
+ }
+-- 
+2.34.1
 
