@@ -1,578 +1,243 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA6012E43
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Feb 2024 09:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9470912B7A;
+	Mon,  5 Feb 2024 09:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707123707; cv=none; b=P3MWr7pq0yiInZN6RKFclPRatZKZuf8Pc0MaUZgSq0DPwWbTyvE8A87ca019uOIVpTw1dxSoPtHzVltUE25z5Tj4pfbIzYtRSo96UWSlDG/wJ2aCN9fUIkuByvQqZlWrYWWRDZBtuc6brU6cD7W9eVcr+N6DMdK3VRMViT85ZNw=
+	t=1707124894; cv=none; b=b92uljuV2Q+RFVMKA8ZPey89pSQywOcYm5YHF7is6EVeYgrjMAzAZzkvmQMCMD9ChFR/oUX44kboLFIVxrihOfAlKSocJ//BbQKMbcP01B6N6LzvhpgCLxeqx0CSIeBF87F8q9dHeewG9QKSZw3t8+CBsBE6MxxbP1HtPA9OS4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707123707; c=relaxed/simple;
-	bh=3RJE3ThXTjSn6m5e0sTL0XeeGVgWGwUNW1kHrc1f7BQ=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DZvJ9NA4nQhVnCiSkgCN2ey/MUseq/oFaKczzxTuGc+XSWqgjis8lBHsmmdE2xALuNg55GCAOP6G1IXbfNZnkgUIRabMTITr64lH0QzKRn0hFLe4xPAEb34cuujBOYEI0SrxjsFfNx9FfOj2UacgU8lGHJVKbmeEJJ7nLsDrmnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TT0gd3s2Dz1Q8hm;
-	Mon,  5 Feb 2024 16:59:41 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id A258618002F;
-	Mon,  5 Feb 2024 17:01:36 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 5 Feb 2024 17:01:36 +0800
-CC: <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-	<hejunhao3@huawei.com>, <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH] perf stat: Enable iostat mode for HiSilicon PCIe PMU
-To: <will@kernel.org>, <john.g.garry@oracle.com>, <james.clark@arm.com>,
-	<mike.leach@linaro.org>, <leo.yan@linaro.org>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
-References: <20240123071201.30914-1-yangyicong@huawei.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <ed2e65de-1d12-0284-a5ec-03f170fdff83@huawei.com>
-Date: Mon, 5 Feb 2024 17:01:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1707124894; c=relaxed/simple;
+	bh=paGI1RDfUiXo+kSzw9iNTY7r4/um3ISRwxQ+S61xmr0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=odWV1QO5dfxdIMwH6QWVy5sBwKbJo430w0Bei1zvUODSp+LVgAz4Br/NHdOTaLBhRDulTGMuPoAaeVt7rRgI07gkn4hwghQIYB/1h9WZs9nFYV3ptPq/9WpnPLTngqkVtrJxQcbjgEPNLpS3uVk52cynWa8ICtHrQrOtcCyKr78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EsHC+mTS; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EsHC+mTS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707124891; x=1738660891;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=paGI1RDfUiXo+kSzw9iNTY7r4/um3ISRwxQ+S61xmr0=;
+  b=EsHC+mTSlYcTFy63d3GAZE/2wYx/vZFoDa4gxhFbncnyQv18aOiTmwUB
+   +lSf3L/jZUOwuZT/H7XQGzXxshAePgoE8cRtp5/3X7kjxc6Lv+GDHI0vy
+   5aUFEwDxAmYUGKAXQn0erv2PLGtUKxM8iUNvoujCRY0Uby8GzptkzCTQX
+   wqUWX8tGuowRA4333QiqyiluWvh3j2KQ2J9C6zYoLG+f9NTfQ/p1T1Zwb
+   EVBr5zVmdiFWWBNbIimqw/7yKMrH1o3zn8CpVl6OiJ86sqfW1iiPBPg5P
+   IdLYUwJh5TZDH8rI0FVqJFpZcZQRcfkL3lcVZEUf/Kygct0ekfR+XdRTB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="18010128"
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="18010128"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 01:21:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,242,1701158400"; 
+   d="scan'208";a="31764973"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.164])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 01:21:26 -0800
+Message-ID: <fbd131d2-a4c2-4b7a-95ae-6593b7a3a997@intel.com>
+Date: Mon, 5 Feb 2024 11:21:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240123071201.30914-1-yangyicong@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/5] perf: build: introduce the libcapstone
+Content-Language: en-US
+To: Changbin Du <changbin.du@huawei.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, changbin.du@gmail.com
+References: <20240122112054.1576835-1-changbin.du@huawei.com>
+ <20240122112054.1576835-2-changbin.du@huawei.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240122112054.1576835-2-changbin.du@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
 
-Hi Perf and ARM folks,
-
-A gentle ping...
-
-Thanks.
-
-On 2024/1/23 15:12, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
+On 22/01/24 13:20, Changbin Du wrote:
+> Later we will use libcapstone to disassemble instructions of samples.
 > 
-> Some HiSilicon platforms provide PCIe PMU devices for monitoring the
-> throughout and latency of PCIe traffic. With the support of PCIe PMU
-> we can enable the perf iostat mode.
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
 > 
-> The HiSilicon PCIe PMU can support measuring the throughout of certain
-> TLP types and of certian root port. Totally 6 metrics are provided in
-> the unit of MB:
-> 
-> - Inbound MWR: The memory write TLPs from the devices downstream the root port
-> - Inbound MRD: The memory read TLPs from the devices downstream the root port
-> - Inbound CPL: The completion TLPs from the devices downstream the root port
-> - Outbound MWR: The memory write TLPs from the CPU to the downstream devices
-> - Outbound MRD: The memory read TLPs from the CPU to the downstream devices
-> - Outbound CPL: The completions TLPs from the CPU to the downstream devices
-> 
-> Since the PMU measures the throughout with unit of DWords. So we need to
-> calculate the throughout in MB like:
->   Count * 4B / 1024 / 1024
-> 
-> Some of the display of the `perf iostat` will be like:
-> [root@localhost tmp]# ./perf iostat list
-> hisi_pcie0_core2<0000:40:00.0>
-> hisi_pcie2_core2<0000:5f:00.0>
-> hisi_pcie0_core1<0000:16:00.0>
-> hisi_pcie0_core1<0000:16:04.0>
-> [root@localhost tmp]# ./perf iostat --timeout 10000
-> 
->  Performance counter stats for 'system wide':
-> 
->     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
-> 0000:40:00.0                    0                    0                    0                    0                    0                    0
-> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
-> 0000:16:00.0             16272.99               366.58                    0                15.09                    0             16156.85
-> 0000:16:04.0                    0                    0                    0                    0                    0                    0
-> 
->       10.008227512 seconds time elapsed
-> 
-> [root@localhost tmp]# ./perf iostat 0000:16:00.0 -- fio -name=read
-> -numjobs=30 -filename=/dev/nvme0n1 -rw=rw -iodepth=128 -direct=1 -sync=0
-> -norandommap -group_reporting -runtime=10 -time_based -bs=64k
-> 
->  Performance counter stats for 'system wide':
-> 
->     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
-> 0000:40:00.0                    0                    0                    0                    0                    0                    0
-> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
-> 0000:16:00.0             16314.30               371.22                    0                15.21                    0             16362.20
-> 0000:16:04.0                    0                    0                    0                    0                    0                    0
-> 
->       10.168561767 seconds time elapsed
-> 
->        0.465373000 seconds user
->        1.952948000 seconds sys
-> 
-> More information of the HiSilicon PCIe PMU can be found at
-> Documentation/admin-guide/perf/hisi-pcie-pmu.rst.
-> 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 > ---
->  tools/perf/arch/arm64/util/Build         |   1 +
->  tools/perf/arch/arm64/util/hisi-iostat.c | 433 +++++++++++++++++++++++
->  2 files changed, 434 insertions(+)
->  create mode 100644 tools/perf/arch/arm64/util/hisi-iostat.c
+> v2:
+>   - change tools/perf/tests/make also.
+> ---
+>  tools/build/Makefile.feature           |  2 ++
+>  tools/build/feature/Makefile           |  4 ++++
+>  tools/build/feature/test-all.c         |  4 ++++
+>  tools/build/feature/test-libcapstone.c | 11 +++++++++++
+>  tools/perf/Makefile.config             | 21 +++++++++++++++++++++
+>  tools/perf/Makefile.perf               |  3 +++
+>  tools/perf/tests/make                  |  2 ++
+>  7 files changed, 47 insertions(+)
+>  create mode 100644 tools/build/feature/test-libcapstone.c
+
+Perhaps add it also to display with perf version --build-options
+
 > 
-> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-> index 78ef7115be3d..4e8dabf98b29 100644
-> --- a/tools/perf/arch/arm64/util/Build
-> +++ b/tools/perf/arch/arm64/util/Build
-> @@ -3,6 +3,7 @@ perf-y += machine.o
->  perf-y += perf_regs.o
->  perf-y += tsc.o
->  perf-y += pmu.o
-> +perf-y += hisi-iostat.o
->  perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
->  perf-$(CONFIG_DWARF)     += dwarf-regs.o
->  perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-> diff --git a/tools/perf/arch/arm64/util/hisi-iostat.c b/tools/perf/arch/arm64/util/hisi-iostat.c
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 64df118376df..1e2ab148d5db 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -87,6 +87,7 @@ FEATURE_TESTS_EXTRA :=                  \
+>           gtk2-infobar                   \
+>           hello                          \
+>           libbabeltrace                  \
+> +         libcapstone                    \
+>           libbfd-liberty                 \
+>           libbfd-liberty-z               \
+>           libopencsd                     \
+> @@ -134,6 +135,7 @@ FEATURE_DISPLAY ?=              \
+>           libcrypto              \
+>           libunwind              \
+>           libdw-dwarf-unwind     \
+> +         libcapstone            \
+>           zlib                   \
+>           lzma                   \
+>           get_cpuid              \
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 37722e509eb9..ed54cef450f5 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -54,6 +54,7 @@ FILES=                                          \
+>           test-timerfd.bin                       \
+>           test-libdw-dwarf-unwind.bin            \
+>           test-libbabeltrace.bin                 \
+> +         test-libcapstone.bin			\
+>           test-compile-32.bin                    \
+>           test-compile-x32.bin                   \
+>           test-zlib.bin                          \
+> @@ -286,6 +287,9 @@ $(OUTPUT)test-libdw-dwarf-unwind.bin:
+>  $(OUTPUT)test-libbabeltrace.bin:
+>  	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
+>  
+> +$(OUTPUT)test-libcapstone.bin:
+> +	$(BUILD) # -lcapstone provided by $(FEATURE_CHECK_LDFLAGS-libcapstone)
+> +
+>  $(OUTPUT)test-compile-32.bin:
+>  	$(CC) -m32 -o $@ test-compile.c
+>  
+> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+> index 6f4bf386a3b5..dd0a18c2ef8f 100644
+> --- a/tools/build/feature/test-all.c
+> +++ b/tools/build/feature/test-all.c
+> @@ -134,6 +134,10 @@
+>  #undef main
+>  #endif
+>  
+> +#define main main_test_libcapstone
+> +# include "test-libcapstone.c"
+> +#undef main
+> +
+>  #define main main_test_lzma
+>  # include "test-lzma.c"
+>  #undef main
+> diff --git a/tools/build/feature/test-libcapstone.c b/tools/build/feature/test-libcapstone.c
 > new file mode 100644
-> index 000000000000..418eebece184
+> index 000000000000..fbe8dba189e9
 > --- /dev/null
-> +++ b/tools/perf/arch/arm64/util/hisi-iostat.c
-> @@ -0,0 +1,433 @@
+> +++ b/tools/build/feature/test-libcapstone.c
+> @@ -0,0 +1,11 @@
 > +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * perf iostat support for HiSilicon PCIe PMU.
-> + * Partly derived from tools/perf/arch/x86/util/iostat.c.
-> + *
-> + * Copyright (c) 2024 HiSilicon Technologies Co., Ltd.
-> + * Author: Yicong Yang <yangyicong@hisilicon.com>
-> + */
 > +
-> +#include <api/fs/fs.h>
-> +#include <linux/err.h>
-> +#include <linux/zalloc.h>
-> +#include <linux/limits.h>
-> +#include <dirent.h>
-> +#include <stdio.h>
-> +#include <errno.h>
-> +#include <stdlib.h>
+> +#include <capstone/capstone.h>
 > +
-> +#include "util/counts.h"
-> +#include "util/cpumap.h"
-> +#include "util/debug.h"
-> +#include "util/iostat.h"
-> +#include "util/pmu.h"
-> +
-> +#define PCI_DEFAULT_DOMAIN		0
-> +#define PCI_DEVICE_NAME_PATTERN		"%04x:%02hhx:%02hhx.%hhu"
-> +#define PCI_ROOT_BUS_DEVICES_PATH	"bus/pci/devices"
-> +
-> +static const char * const hisi_iostat_metrics[] = {
-> +	"Inbound MWR(MB)",
-> +	"Inbound MRD(MB)",
-> +	"Inbound CPL(MB)",
-> +	"Outbound MWR(MB)",
-> +	"Outbound MRD(MB)",
-> +	"Outbound CPL(MB)",
-> +};
-> +
-> +static const char * const hisi_iostat_cmd_template[] = {
-> +	/* Inbound Memory Write */
-> +	"hisi_pcie%hu_core%hu/event=0x0104,port=0x%hx/",
-> +	/* Inbound Memory Read */
-> +	"hisi_pcie%hu_core%hu/event=0x0804,port=0x%hx/",
-> +	/* Inbound Memory Completion */
-> +	"hisi_pcie%hu_core%hu/event=0x2004,port=0x%hx/",
-> +	/* Outbound Memory Write */
-> +	"hisi_pcie%hu_core%hu/event=0x0105,port=0x%hx/",
-> +	/* Outbound Memory Read */
-> +	"hisi_pcie%hu_core%hu/event=0x0405,port=0x%hx/",
-> +	/* Outbound Memory Completion */
-> +	"hisi_pcie%hu_core%hu/event=0x1005,port=0x%hx/",
-> +};
-> +
-> +struct hisi_pcie_root_port {
-> +	struct list_head list;
-> +	/* Is this Root Port selected for monitoring */
-> +	bool selected;
-> +	/* IDs to locate the PMU */
-> +	u16 sicl_id;
-> +	u16 core_id;
-> +	/* Filter mask for this Root Port */
-> +	u16 mask;
-> +	/* PCIe Root Port's <domain>:<bus>:<device>.<function> */
-> +	u32 domain;
-> +	u8 bus;
-> +	u8 dev;
-> +	u8 fn;
-> +};
-> +
-> +LIST_HEAD(hisi_pcie_root_ports_list);
-> +static int hisi_pcie_root_ports_num;
-> +
-> +static void hisi_pcie_init_root_port_mask(struct hisi_pcie_root_port *rp)
+> +int main(void)
 > +{
-> +	rp->mask = BIT(rp->dev << 1);
+> +	csh handle;
+> +
+> +	cs_open(CS_ARCH_X86, CS_MODE_64, &handle);
+> +	return 0;
 > +}
-> +
-> +/*
-> + * Select specific Root Port to monitor. Return 0 if successfully find the
-> + * Root Port, Otherwise -EINVAL.
-> + */
-> +static int hisi_pcie_root_ports_select_one(u32 domain, u8 bus, u8 dev, u8 fn)
-> +{
-> +	struct hisi_pcie_root_port *rp;
-> +
-> +	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list)
-> +		if (domain == rp->domain && bus == rp->bus &&
-> +		    dev == rp->dev && fn == rp->fn) {
-> +			rp->selected = true;
-> +			return 0;
-> +		}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static void hisi_pcie_root_ports_select_all(void)
-> +{
-> +	struct hisi_pcie_root_port *rp;
-> +
-> +	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list)
-> +		rp->selected = true;
-> +}
-> +
-> +static void hisi_pcie_root_ports_add(u16 sicl_id, u16 core_id, u8 target_bus)
-> +{
-> +	const char *sysfs = sysfs__mountpoint();
-> +	struct hisi_pcie_root_port *rp;
-> +	struct dirent *dent;
-> +	char path[PATH_MAX];
-> +	u8 bus, dev, fn;
-> +	u32 domain;
-> +	DIR *dir;
-> +	int ret;
-> +
-> +	snprintf(path, PATH_MAX, "%s/%s", sysfs, PCI_ROOT_BUS_DEVICES_PATH);
-> +	dir = opendir(path);
-> +	if (!dir)
-> +		return;
-> +
-> +	/* Scan the PCI root bus to find the match root port on @target_bus */
-> +	while ((dent = readdir(dir))) {
-> +		ret = sscanf(dent->d_name, PCI_DEVICE_NAME_PATTERN,
-> +			     &domain, &bus, &dev, &fn);
-> +		if (ret != 4 || bus != target_bus)
-> +			continue;
-> +
-> +		rp = zalloc(sizeof(*rp));
-> +		if (!rp)
-> +			continue;
-> +
-> +		rp->selected = false;
-> +		rp->sicl_id = sicl_id;
-> +		rp->core_id = core_id;
-> +		rp->domain = domain;
-> +		rp->bus = bus;
-> +		rp->dev = dev;
-> +		rp->fn = fn;
-> +
-> +		hisi_pcie_init_root_port_mask(rp);
-> +
-> +		list_add(&rp->list, &hisi_pcie_root_ports_list);
-> +		hisi_pcie_root_ports_num++;
-> +
-> +		pr_debug3("Found root port %s\n", dent->d_name);
-> +	}
-> +
-> +	closedir(dir);
-> +}
-> +
-> +/* Scan the PMUs and build the mapping of the Root Ports to the PMU */
-> +static int hisi_pcie_root_ports_init(void)
-> +{
-> +	char event_source[PATH_MAX], bus_path[PATH_MAX];
-> +	unsigned long long bus;
-> +	u16 sicl_id, core_id;
-> +	struct dirent *dent;
-> +	DIR *dir;
-> +
-> +	perf_pmu__event_source_devices_scnprintf(event_source, sizeof(event_source));
-> +	dir = opendir(event_source);
-> +	if (!dir)
-> +		return -ENOENT;
-> +
-> +	while ((dent = readdir(dir))) {
-> +		/*
-> +		 * This HiSilicon PCIe PMU will be named as:
-> +		 *   hisi_pcie<sicl_id>_core<core_id>
-> +		 */
-> +		if ((sscanf(dent->d_name, "hisi_pcie%hu_core%hu", &sicl_id, &core_id)) != 2)
-> +			continue;
-> +
-> +		/*
-> +		 * Driver will export the root port it can monitor through
-> +		 * the "bus" sysfs attribute.
-> +		 */
-> +		scnprintf(bus_path, sizeof(bus_path), "%s/hisi_pcie%hu_core%hu/bus",
-> +			  event_source, sicl_id, core_id);
-> +
-> +		/*
-> +		 * Per PCIe spec the bus should be 8bit, use unsigned long long
-> +		 * for the convience of the library function.
-> +		 */
-> +		if (filename__read_ull(bus_path, &bus))
-> +			continue;
-> +
-> +		pr_debug3("Found pmu %s bus 0x%llx\n", dent->d_name, bus);
-> +
-> +		hisi_pcie_root_ports_add(sicl_id, core_id, (u8)bus);
-> +	}
-> +
-> +	closedir(dir);
-> +	return hisi_pcie_root_ports_num > 0 ? 0 : -ENOENT;
-> +}
-> +
-> +static void hisi_pcie_root_ports_free(void)
-> +{
-> +	struct hisi_pcie_root_port *rp, *tmp;
-> +
-> +	if (hisi_pcie_root_ports_num == 0)
-> +		return;
-> +
-> +	list_for_each_entry_safe(rp, tmp, &hisi_pcie_root_ports_list, list) {
-> +		list_del(&rp->list);
-> +		zfree(&rp);
-> +		hisi_pcie_root_ports_num--;
-> +	}
-> +}
-> +
-> +static int hisi_iostat_add_events(struct evlist *evl)
-> +{
-> +	struct hisi_pcie_root_port *rp;
-> +	struct evsel *evsel;
-> +	unsigned int i, j;
-> +	char *iostat_cmd;
-> +	int pos = 0;
-> +	int ret;
-> +
-> +	if (!hisi_pcie_root_ports_num)
-> +		return -ENOENT;
-> +
-> +	iostat_cmd = zalloc(PATH_MAX);
-> +	if (!iostat_cmd)
-> +		return -ENOMEM;
-> +
-> +	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list) {
-> +		if (!rp->selected)
-> +			continue;
-> +
-> +		iostat_cmd[pos++] = '{';
-> +		for (j = 0; j < ARRAY_SIZE(hisi_iostat_cmd_template); j++) {
-> +			pos += snprintf(iostat_cmd + pos, ARG_MAX - pos - 1,
-> +					hisi_iostat_cmd_template[j],
-> +					rp->sicl_id, rp->core_id, rp->mask);
-> +
-> +			if (j == ARRAY_SIZE(hisi_iostat_cmd_template) - 1)
-> +				iostat_cmd[pos++] = '}';
-> +			else
-> +				iostat_cmd[pos++] = ',';
-> +		}
-> +
-> +		ret = parse_event(evl, iostat_cmd);
-> +		if (ret)
-> +			break;
-> +
-> +		i = 0;
-> +		evlist__for_each_entry_reverse(evl, evsel) {
-> +			if (i == ARRAY_SIZE(hisi_iostat_cmd_template))
-> +				break;
-> +
-> +			evsel->priv = rp;
-> +			i++;
-> +		}
-> +
-> +		memset(iostat_cmd, 0, PATH_MAX);
-> +		pos = 0;
-> +	}
-> +
-> +	zfree(&iostat_cmd);
-> +	return ret;
-> +}
-> +
-> +int iostat_prepare(struct evlist *evlist,
-> +		   struct perf_stat_config *config)
-> +{
-> +	if (evlist->core.nr_entries > 0) {
-> +		pr_warning("The -e and -M options are not supported."
-> +			   "All chosen events/metrics will be dropped\n");
-> +		evlist__delete(evlist);
-> +		evlist = evlist__new();
-> +		if (!evlist)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	config->metric_only = true;
-> +	config->aggr_mode = AGGR_GLOBAL;
-> +
-> +	return hisi_iostat_add_events(evlist);
-> +}
-> +
-> +static int hisi_pcie_root_ports_list_filter(const char *str)
-> +{
-> +	char *tok, *tmp, *copy = NULL;
-> +	u8 bus, dev, fn;
-> +	u32 domain;
-> +	int ret;
-> +
-> +	copy = strdup(str);
-> +	if (!copy)
-> +		return -ENOMEM;
-> +
-> +	for (tok = strtok_r(copy, ",", &tmp); tok; tok = strtok_r(NULL, ",", &tmp)) {
-> +		ret = sscanf(tok, PCI_DEVICE_NAME_PATTERN, &domain, &bus, &dev, &fn);
-> +		if (ret != 4) {
-> +			ret = -EINVAL;
-> +			break;
-> +		}
-> +
-> +		ret = hisi_pcie_root_ports_select_one(domain, bus, dev, fn);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	zfree(&copy);
-> +	return ret;
-> +}
-> +
-> +int iostat_parse(const struct option *opt, const char *str, int unset __maybe_unused)
-> +{
-> +	struct perf_stat_config *config = (struct perf_stat_config *)opt->data;
-> +	int ret;
-> +
-> +	ret = hisi_pcie_root_ports_init();
-> +	if (!ret) {
-> +		config->iostat_run = true;
-> +
-> +		if (!str) {
-> +			iostat_mode = IOSTAT_RUN;
-> +			hisi_pcie_root_ports_select_all();
-> +		} else if (!strcmp(str, "list")) {
-> +			iostat_mode = IOSTAT_LIST;
-> +			hisi_pcie_root_ports_select_all();
-> +		} else {
-> +			iostat_mode = IOSTAT_RUN;
-> +			ret = hisi_pcie_root_ports_list_filter(str);
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void hisi_pcie_root_port_show(FILE *output,
-> +				     const struct hisi_pcie_root_port * const rp)
-> +{
-> +	if (output && rp)
-> +		fprintf(output, "hisi_pcie%hu_core%hu<" PCI_DEVICE_NAME_PATTERN ">\n",
-> +			rp->sicl_id, rp->core_id, rp->domain, rp->bus, rp->dev, rp->fn);
-> +}
-> +
-> +void iostat_list(struct evlist *evlist __maybe_unused, struct perf_stat_config *config)
-> +{
-> +	struct hisi_pcie_root_port *rp = NULL;
-> +	struct evsel *evsel;
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (rp != evsel->priv) {
-> +			hisi_pcie_root_port_show(config->output, evsel->priv);
-> +			rp = evsel->priv;
-> +		}
-> +	}
-> +}
-> +
-> +void iostat_release(struct evlist *evlist)
-> +{
-> +	struct evsel *evsel;
-> +
-> +	evlist__for_each_entry(evlist, evsel)
-> +		evsel->priv = NULL;
-> +
-> +	hisi_pcie_root_ports_free();
-> +}
-> +
-> +void iostat_print_header_prefix(struct perf_stat_config *config)
-> +{
-> +	if (config->csv_output)
-> +		fputs("port,", config->output);
-> +	else if (config->interval)
-> +		fprintf(config->output, "#          time    port         ");
-> +	else
-> +		fprintf(config->output, "   port         ");
-> +}
-> +
-> +void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
-> +			 struct perf_stat_output_ctx *out)
-> +{
-> +	struct perf_counts_values *count;
-> +	const char *iostat_metric;
-> +	double iostat_value;
-> +
-> +	iostat_metric = hisi_iostat_metrics[evsel->core.idx % ARRAY_SIZE(hisi_iostat_metrics)];
-> +
-> +	/* We're using AGGR_GLOBAL so there's only one aggr counts aggr[0]. */
-> +	count = &evsel->stats->aggr[0].counts;
-> +
-> +	/* The counts has been scaled, we can use it directly. */
-> +	iostat_value = (double)count->val;
-> +
-> +	/*
-> +	 * Display two digits after decimal point for better accuracy if the
-> +	 * value is non-zero.
-> +	 */
-> +	out->print_metric(config, out->ctx, NULL,
-> +			  iostat_value > 0 ? "%8.2f" : "%8.0f",
-> +			  iostat_metric, iostat_value / (256 * 1024));
-> +}
-> +
-> +void iostat_prefix(struct evlist *evlist, struct perf_stat_config *config,
-> +		   char *prefix, struct timespec *ts)
-> +{
-> +	struct hisi_pcie_root_port *rp = evlist->selected->priv;
-> +
-> +	if (rp) {
-> +		if (ts)
-> +			sprintf(prefix, "%6lu.%09lu%s" PCI_DEVICE_NAME_PATTERN "%s",
-> +				ts->tv_sec, ts->tv_nsec, config->csv_sep,
-> +				rp->domain, rp->bus, rp->dev, rp->fn,
-> +				config->csv_sep);
-> +		else
-> +			sprintf(prefix, PCI_DEVICE_NAME_PATTERN "%s",
-> +				rp->domain, rp->bus, rp->dev, rp->fn,
-> +				config->csv_sep);
-> +	}
-> +}
-> +
-> +void iostat_print_counters(struct evlist *evlist, struct perf_stat_config *config,
-> +			   struct timespec *ts, char *prefix,
-> +			   iostat_print_counter_t print_cnt_cb, void *arg)
-> +{
-> +	struct evsel *counter = evlist__first(evlist);
-> +	void *perf_device;
-> +
-> +	evlist__set_selected(evlist, counter);
-> +	iostat_prefix(evlist, config, prefix, ts);
-> +	fprintf(config->output, "%s", prefix);
-> +	evlist__for_each_entry(evlist, counter) {
-> +		perf_device = evlist->selected->priv;
-> +		if (perf_device && perf_device != counter->priv) {
-> +			evlist__set_selected(evlist, counter);
-> +			iostat_prefix(evlist, config, prefix, ts);
-> +			fprintf(config->output, "\n%s", prefix);
-> +		}
-> +		print_cnt_cb(config, counter, arg);
-> +	}
-> +	fputc('\n', config->output);
-> +}
-> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index aa55850fbc21..3e1072c59757 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -191,6 +191,15 @@ endif
+>  FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
+>  FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
+>  
+> +# for linking with debug library, run like:
+> +# make DEBUG=1 LIBCAPSTONE_DIR=/opt/capstone/
+> +ifdef LIBCAPSTONE_DIR
+> +  LIBCAPSTONE_CFLAGS  := -I$(LIBCAPSTONE_DIR)/include
+> +  LIBCAPSTONE_LDFLAGS := -L$(LIBCAPSTONE_DIR)/
+> +endif
+> +FEATURE_CHECK_CFLAGS-libcapstone := $(LIBCAPSTONE_CFLAGS)
+> +FEATURE_CHECK_LDFLAGS-libcapstone := $(LIBCAPSTONE_LDFLAGS) -lcapstone
+> +
+>  ifdef LIBZSTD_DIR
+>    LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
+>    LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
+> @@ -1094,6 +1103,18 @@ ifndef NO_LIBBABELTRACE
+>    endif
+>  endif
+>  
+> +ifndef NO_CAPSTONE
+> +  $(call feature_check,libcapstone)
+> +  ifeq ($(feature-libcapstone), 1)
+> +    CFLAGS += -DHAVE_LIBCAPSTONE_SUPPORT $(LIBCAPSTONE_CFLAGS)
+> +    LDFLAGS += $(LICAPSTONE_LDFLAGS)
+> +    EXTLIBS += -lcapstone
+> +    $(call detected,CONFIG_LIBCAPSTONE)
+> +  else
+> +    msg := $(warning No libcapstone found, disables disasm engine support for 'perf script', please install libcapstone-dev/capstone-devel);
+> +  endif
+> +endif
+> +
+>  ifndef NO_AUXTRACE
+>    ifeq ($(SRCARCH),x86)
+>      ifeq ($(feature-get_cpuid), 0)
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 27e7c478880f..56c2720c1d0f 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -84,6 +84,9 @@ include ../scripts/utilities.mak
+>  # Define NO_LIBBABELTRACE if you do not want libbabeltrace support
+>  # for CTF data format.
+>  #
+> +# Define NO_CAPSTONE if you do not want libcapstone support
+> +# for disasm engine.
+> +#
+>  # Define NO_LZMA if you do not want to support compressed (xz) kernel modules
+>  #
+>  # Define NO_AUXTRACE if you do not want AUX area tracing support
+> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+> index 8a4da7eb637a..b08026f5d4e7 100644
+> --- a/tools/perf/tests/make
+> +++ b/tools/perf/tests/make
+> @@ -83,6 +83,7 @@ make_no_libelf      := NO_LIBELF=1
+>  make_no_libunwind   := NO_LIBUNWIND=1
+>  make_no_libdw_dwarf_unwind := NO_LIBDW_DWARF_UNWIND=1
+>  make_no_backtrace   := NO_BACKTRACE=1
+> +make_no_libcapstone := NO_CAPSTONE=1
+>  make_no_libnuma     := NO_LIBNUMA=1
+>  make_no_libaudit    := NO_LIBAUDIT=1
+>  make_no_libbionic   := NO_LIBBIONIC=1
+
+Also needs to be added to make_minimal
+
+> @@ -152,6 +153,7 @@ run += make_no_libelf
+>  run += make_no_libunwind
+>  run += make_no_libdw_dwarf_unwind
+>  run += make_no_backtrace
+> +run += make_no_libcapstone
+>  run += make_no_libnuma
+>  run += make_no_libaudit
+>  run += make_no_libbionic
+
