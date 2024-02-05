@@ -1,105 +1,137 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AF52C861;
-	Mon,  5 Feb 2024 15:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CF732C91;
+	Mon,  5 Feb 2024 15:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707146341; cv=none; b=DEmEGDWgDaigcHoJW9B8iFUy3OZPThZfrsk4i9Zka5avzJQb9tLahyD/MKIHhPKRdMCXZzJa3iaKEoDkWeKVoIt3lLyCs/0c3OqTtjtUDxU0QHwmYV5XHdvcgd8PlpBnVNbZntGpA5mlOUsIW3p42rUs4bAsev/PbnypcjNDA6s=
+	t=1707147161; cv=none; b=JFKmYeSdYUDaUkAOkJGm3UGmWsX3U9pf8DhwhTXxxVDEoIeRXT5SCNyPrFGI5+6i5Rut0SYRkfhY5k3MmjmDhjwmNbG4eTtnUihMfwVyvF6idWQSNtSjlUXaPqtn4Fmq5MIDXXVpuqrFKS3+uNVt3VmLFAFHQ2cNe3pp36cNUNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707146341; c=relaxed/simple;
-	bh=/oDW4VkCzBttrAvBPA7G49GfJJ6qlbRu0FSR1olVBxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K98gRf9iVTACCxuOetiC8k/cP4obGjzCNOxoDi/swyjPybO+9nfigjSL84HtsCMndpBlPPghhOIEiBn+B1CeDtO8JiUrOgx28A5Tb0x6k2L/rxLqE5734tMYEbq+acsbmZTPFUF1bcJYgd2+1C2z39CcdIfsNfyrAqMZ5SBXFWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=eya33dR4; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1707147161; c=relaxed/simple;
+	bh=/zcq73sYVUW+h0jnwspQL/RXLud8ceA7/Ln5O42NPho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kGzWs0NF+LINa9s6JD6QFBfRI+7sww51M4PLlkVXwDYNXJkAAbwiNOKAJmseVF2t/NgDsuyKOvTfaz9XqW9myjDC14gMWd6KXSqe+4iTVoJPP5bawpHawryV84Ld9td3wAsZJ2Ejyl7cwbcXt6MgCbQ5gkWr1+PUMktW1AK5GjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Talj3SxN; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="eya33dR4"
-Received: from localhost (unknown [10.10.165.6])
-	by mail.ispras.ru (Postfix) with ESMTPSA id AA50C4017243;
-	Mon,  5 Feb 2024 15:18:56 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru AA50C4017243
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1707146336;
-	bh=zLU8L9M1HzCeEuXoR+1c7zl0qLtECLfP/n7spRh3ewM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eya33dR4PSlpytfdtydfdJpDJY9s0lP7QUrwuZgSPvkZC5plV2BRqLrBUPvQdBgwK
-	 9fZBGYFeo3/Yn5jqt9C/YqB0mgo53ZAsKdRNSSaNlQJGeLstcIyrAB6e9rIVfOlrl+
-	 PHYlkCPz2RpWLsA5JTXu1a/eLWDMWvcsmSljEVic=
-Date: Mon, 5 Feb 2024 18:18:56 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, x86@kernel.org, 
-	Alexander Antonov <alexander.antonov@linux.intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lvc-project@linuxtesting.org
-Subject: Re: Re: [PATCH] perf/x86/uncore: avoid null-ptr-deref on error in
- pmu_alloc_topology
-Message-ID: <2b5c4fbc-67c8-42f6-84a0-2adb4fbb0a2a-pchelkin@ispras.ru>
-References: <20240204134841.80003-1-pchelkin@ispras.ru>
- <a5e8e3fe-a8c2-45e7-9139-84967cba06eb@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Talj3SxN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707147159; x=1738683159;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/zcq73sYVUW+h0jnwspQL/RXLud8ceA7/Ln5O42NPho=;
+  b=Talj3SxNm35vEMjlAIfTXmsGslXhDuMOo72i0upM6ABGUC8dgpTBZ1cS
+   3db3iz+mhA814qRR94iuvqvmA0vksrse67b6eFYNeNJASxt5LFFcKOccP
+   gEkSz0BhWRTVI9tTaIwlBnwKepD32dhtgvHzCQG1f254ZBscnVv6aXTKm
+   H0LQ4zW3LS/2dwk+bAavCN2qzk3f/qICEPhXP1eVssctab5k3bmXrWhOz
+   h+oh875GTaV8f2p43gcOzK2EwYUPiTf6YIF0vynC9yWQkHsHeljNVDKZn
+   /l2luxJFaq/PMsa4GnzteSBi5BiQz7CwIbMfEC50ta8jetpWUJSs4pj19
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="17965270"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="17965270"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 07:32:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="31829884"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 07:32:38 -0800
+Received: from [10.212.74.66] (kliang2-mobl1.ccr.corp.intel.com [10.212.74.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 6A84D580ABB;
+	Mon,  5 Feb 2024 07:32:36 -0800 (PST)
+Message-ID: <82dbb7de-8211-4bab-8289-eb2573d8ef1d@linux.intel.com>
+Date: Mon, 5 Feb 2024 10:32:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5e8e3fe-a8c2-45e7-9139-84967cba06eb@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/uncore: avoid null-ptr-deref on error in
+ pmu_alloc_topology
+Content-Language: en-US
+To: Fedor Pchelkin <pchelkin@ispras.ru>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, x86@kernel.org,
+ Alexander Antonov <alexander.antonov@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+References: <20240204134841.80003-1-pchelkin@ispras.ru>
+ <a5e8e3fe-a8c2-45e7-9139-84967cba06eb@linux.intel.com>
+ <2b5c4fbc-67c8-42f6-84a0-2adb4fbb0a2a-pchelkin@ispras.ru>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <2b5c4fbc-67c8-42f6-84a0-2adb4fbb0a2a-pchelkin@ispras.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On 24/02/05 10:08AM, Liang, Kan wrote:
-> 
-> 
-> On 2024-02-04 8:48 a.m., Fedor Pchelkin wrote:
-> > If topology[die] array allocation fails then topology[die][idx] elements
-> > can't be accessed on error path.
-> > 
-> > Checking this on the error path probably looks more readable than
-> > decrementing the counter in the allocation loop.
-> > 
-> > Found by Linux Verification Center (linuxtesting.org).
-> > 
-> > Fixes: 4d13be8ab5d4 ("perf/x86/intel/uncore: Generalize IIO topology support")
-> > Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> > ---
-> 
-> It seems the code just jumps to the wrong kfree on the error path.
-> Does the below patch work?
-> 
-> diff --git a/arch/x86/events/intel/uncore_snbep.c
-> b/arch/x86/events/intel/uncore_snbep.c
-> index 8250f0f59c2b..5481fd00d861 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -3808,7 +3808,7 @@ static int pmu_alloc_topology(struct
-> intel_uncore_type *type, int topology_type)
->  	for (die = 0; die < uncore_max_dies(); die++) {
->  		topology[die] = kcalloc(type->num_boxes, sizeof(**topology), GFP_KERNEL);
->  		if (!topology[die])
-> -			goto clear;
-> +			goto free_topology;
->  		for (idx = 0; idx < type->num_boxes; idx++) {
->  			topology[die][idx].untyped = kcalloc(type->num_boxes,
->  							     topology_size[topology_type],
-> @@ -3827,6 +3827,7 @@ static int pmu_alloc_topology(struct
-> intel_uncore_type *type, int topology_type)
->  			kfree(topology[die][idx].untyped);
->  		kfree(topology[die]);
->  	}
-> +free_topology:
->  	kfree(topology);
->  err:
->  	return -ENOMEM;
-> 
-> Thanks,
-> Kan
-> 
 
-In this way the already allocated topology[die] elements won't be freed.
+On 2024-02-05 10:18 a.m., Fedor Pchelkin wrote:
+> Hello,
+> 
+> On 24/02/05 10:08AM, Liang, Kan wrote:
+>>
+>>
+>> On 2024-02-04 8:48 a.m., Fedor Pchelkin wrote:
+>>> If topology[die] array allocation fails then topology[die][idx] elements
+>>> can't be accessed on error path.
+>>>
+>>> Checking this on the error path probably looks more readable than
+>>> decrementing the counter in the allocation loop.
+>>>
+>>> Found by Linux Verification Center (linuxtesting.org).
+>>>
+>>> Fixes: 4d13be8ab5d4 ("perf/x86/intel/uncore: Generalize IIO topology support")
+>>> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+>>> ---
+>>
+>> It seems the code just jumps to the wrong kfree on the error path.
+>> Does the below patch work?
+>>
+>> diff --git a/arch/x86/events/intel/uncore_snbep.c
+>> b/arch/x86/events/intel/uncore_snbep.c
+>> index 8250f0f59c2b..5481fd00d861 100644
+>> --- a/arch/x86/events/intel/uncore_snbep.c
+>> +++ b/arch/x86/events/intel/uncore_snbep.c
+>> @@ -3808,7 +3808,7 @@ static int pmu_alloc_topology(struct
+>> intel_uncore_type *type, int topology_type)
+>>  	for (die = 0; die < uncore_max_dies(); die++) {
+>>  		topology[die] = kcalloc(type->num_boxes, sizeof(**topology), GFP_KERNEL);
+>>  		if (!topology[die])
+>> -			goto clear;
+>> +			goto free_topology;
+>>  		for (idx = 0; idx < type->num_boxes; idx++) {
+>>  			topology[die][idx].untyped = kcalloc(type->num_boxes,
+>>  							     topology_size[topology_type],
+>> @@ -3827,6 +3827,7 @@ static int pmu_alloc_topology(struct
+>> intel_uncore_type *type, int topology_type)
+>>  			kfree(topology[die][idx].untyped);
+>>  		kfree(topology[die]);
+>>  	}
+>> +free_topology:
+>>  	kfree(topology);
+>>  err:
+>>  	return -ENOMEM;
+>>
+>> Thanks,
+>> Kan
+>>
+> 
+> In this way the already allocated topology[die] elements won't be freed.
+>
 
---
-Fedor
+Ah, right. The patch looks good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+> --
+> Fedor
+> 
