@@ -1,224 +1,317 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C534A06;
-	Tue,  6 Feb 2024 01:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D491256755;
+	Tue,  6 Feb 2024 01:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707182044; cv=none; b=BFl26vgpeR2x+r+7sxU7IATasAXhbhTf8uTfv+BjrRMf5vreNSsna0vdhJdD1UOrBoxy+ZXpNXviVuCle+hw0PAvgXVOTf2cK9qnKeyOOkJRxhA64dv1zONw1e72hA76dMj7t0Cbosj9yAzz3n+Cryl2A8kkgrtoBUQGNYi136Q=
+	t=1707184763; cv=none; b=bgdWTHUb9kIbXKfa+c2qIJENk50g7/ggPf+7iHHSEvVCzP6xRVDNdXadIq5elSZccECRKferVj1o85CkbacuCKaRYaVW/HLwdaiIGOg9Ns6ZblRMMXvqPLI1Qd2/0juN9/IRuN9T4zILN6bMndre7MxSxSZPhaiom4Yr3FEbM+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707182044; c=relaxed/simple;
-	bh=pMhiY7dOHzMLKuexGo6Y2Dvwut2S7WBuuFy0mbEgBbo=;
+	s=arc-20240116; t=1707184763; c=relaxed/simple;
+	bh=r9vumAN298IoFTVS6I0M+7tr2vqxdeO5Wmn0EhONg0M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FcvEKzUW5/Lh9hCb9p+dYyHC/6LQl/mE2BecoL8dI6WDsm6Vn4043I860pG2i++fOi6/ntLhonmzQ4fpYDV+7wRqeqzyUyf/8n+/Lz1Au3TxBkpfO3isKJtG19aH5Gp/12LgqTfQoL9ALCIRYh9ZoRNBb5RyFJIryOEsfYwK78o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
+	 To:Cc:Content-Type; b=pTQ6CJ0pO0B4KkGarDdl3vBrScbMeKhZlQvc/BrYgLvG2yZ8ivRYfq8ATkTDbjZJBd04d8nvLhvQg0JvIbdTw39l+ji7keCM1BLLgmvjErWxvXf18reCbY3riQ0OQ/bW4hcHPygKlHfHSGEqIune7uCeFoXxS6F9XG/lPBzr9To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso4574871a12.0;
-        Mon, 05 Feb 2024 17:14:02 -0800 (PST)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e055baec89so85711b3a.1;
+        Mon, 05 Feb 2024 17:59:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707182042; x=1707786842;
+        d=1e100.net; s=20230601; t=1707184761; x=1707789561;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3L7hTGKnHQO1yhpr6n5deEhCG4zJbFmaDzbOK4JnIok=;
-        b=HqujMMnlYOZpymxPiSSN6PwsGKKJtO5OO/2sBTPyt8yyJm1+C/tu5w4eAMRCHtX6Lz
-         iKHPsowpMhBXJBGPyN1aVIh+ie+v0lhUMwlRpoX2bc7ya1sItm2rHbW5HWKQ+VxzhA1v
-         Q4apdBAOEsX7loTk4BKrkjAALReKlvkVV+oGRKMnUh/gTYQE56i8a2ggmxwEjECj8c4d
-         8GQEj16bjLy3i0vBfQfUEqx08uS0GfMlc9ixNvv8QlORDcXe+vcmkcYFk/qPc2yzHOu9
-         ewhvoq39i53tMHAwJcKAWLnXrZHTRsYFDLzNZHuHQaX4iyY9EEkW5mGL08hyMVD1DdZs
-         etfA==
-X-Gm-Message-State: AOJu0Yz6rjHU9bKnbq4tJe4Ys10kiA2La+v44TcE4o68A2hgyeHLRkzA
-	4jzNHOyLJRPoXpJcmIMUL7W7XSsr5wUi5mh6kaH1vsra86uFI4xB9a+ecFcJaJW+8c+s0j/PDPr
-	/scNfK5HkmmYk3LCcYDvv3p/KDSI=
-X-Google-Smtp-Source: AGHT+IGRKIKutnhyB/UfAu1pKRjuW5LRocoRpDq2a8zfi4eTsJCQt4qBIdFARW444kVJa5dXmg7Pt71F8keah2xVI+s=
-X-Received: by 2002:a05:6a20:9012:b0:19c:881d:78e6 with SMTP id
- d18-20020a056a20901200b0019c881d78e6mr165482pzc.42.1707182041636; Mon, 05 Feb
- 2024 17:14:01 -0800 (PST)
+        bh=pEiZj/ZXcZZxKH4nqZMCH9OZNvgzBPAEeqnI2Uq/nDI=;
+        b=Xun1Xv8nYH470q9JO9Cilq0RYObM83gocZ3hyJkOEbHcBGDrI6+nHgkqEe4Z4ghHYw
+         LTZp2g3ctrOesd/YU7wLywnNo2yTV48MnbPGsFt0JZtl+Yp6d0YLbvWe2KB2EroeYGGE
+         d234+0LXvEVfIfJlK32/q4sm7pkanM0WHYW5Re+mPinI2Smtn8q4l16D25F8sz2Jq5Zx
+         yfZj+Fcw3BI00rLW+7Iwne7UxOA0xFgNrrQGYquhIoTwIcamYvCxURoqsgMI8gFd1juL
+         p/8eyaaNd9/wf2o3hm0Is5d4XQOhGWdks/bS1B8Kp3rf3Zp2442KO1sHw4N5T0vskUzD
+         Dtyw==
+X-Gm-Message-State: AOJu0Yz/6HotvCtemkfDqSteh3ZBafoF49W0dNiDwkJ7nUXVYnHvEQit
+	WIwgeUGDiKUH4Ln+jQ4KJMuqazc+rqW2+7QWCi5m/JxsN527ENYMaqSIJ3NlUfks68Br2idOlGd
+	dGmd8nSm0y8u90hfJ767ueGre2to=
+X-Google-Smtp-Source: AGHT+IFtTT+cNJ2Ga/C9pnXdHHiwdsgl3cX+ktVlsQ113oFR3LoU8gSJJmD60Ez0iQMFxRs82lHfzl6iuApxo9YT+js=
+X-Received: by 2002:a05:6a00:23cc:b0:6e0:5372:48a2 with SMTP id
+ g12-20020a056a0023cc00b006e0537248a2mr3004692pfc.15.1707184760909; Mon, 05
+ Feb 2024 17:59:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202061532.1939474-1-irogers@google.com>
-In-Reply-To: <20240202061532.1939474-1-irogers@google.com>
+References: <20240202022512.467636-1-irogers@google.com>
+In-Reply-To: <20240202022512.467636-1-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 5 Feb 2024 17:13:50 -0800
-Message-ID: <CAM9d7cgeEmoKmk3qCUdxsCRRx1mUERf6Mz6PgRtsaY+7+F9FhQ@mail.gmail.com>
-Subject: Re: [PATCH v8 00/25] maps/threads/dsos memory improvements and fixes
+Date: Mon, 5 Feb 2024 17:59:09 -0800
+Message-ID: <CAM9d7chAU=arK2y7RDHtxfRcQ80Az6dzGB0_+01iZ346tSob3w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] perf stat: Pass fewer metric arguments
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Liam Howlett <liam.howlett@oracle.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Colin Ian King <colin.i.king@gmail.com>, 
-	Dmitrii Dolgov <9erthalion6@gmail.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Ming Wang <wangming01@loongson.cn>, James Clark <james.clark@arm.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Guilherme Amadio <amadio@gentoo.org>
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, John Garry <john.g.garry@oracle.com>, Kaige Ye <ye@kaige.org>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 1, 2024 at 10:15=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Thu, Feb 1, 2024 at 6:25=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> Modify the implementation of maps to not use an rbtree as the
-> container for maps, instead use a sorted array. Improve locking and
-> reference counting issues.
+> Pass metric_expr and evsel rather than specific variables from the
+> struct, thereby reducing the number of arguments. This will enable
+> later fixes.
 >
-> Similar to maps separate out and reimplement threads to use a hashmap
-> for lower memory consumption and faster look up. The fixes a
-> regression in memory usage where reference count checking switched to
-> using non-invasive tree nodes.  Reduce its default size by 32 times
-> and improve locking discipline. Also, fix regressions where tids had
-> become unordered to make `perf report --tasks` and
-> `perf trace --summary` output easier to read.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/stat-shadow.c | 75 +++++++++++++++--------------------
+>  1 file changed, 33 insertions(+), 42 deletions(-)
 >
-> Better encapsulate the dsos abstraction. Remove the linked list and
-> rbtree used for faster iteration and log(n) lookup to a sorted array
-> for similar performance but half the memory usage per dso. Improve
-> reference counting and locking discipline, adding reference count
-> checking to dso.
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.=
+c
+> index e31426167852..f6c9d2f98835 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -355,23 +355,22 @@ static void print_nsecs(struct perf_stat_config *co=
+nfig,
+>                 print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0=
+);
+>  }
 >
-> v8:
->  - in "perf maps: Switch from rbtree to lazily sorted array for
->    addresses" use accessors and remove some duplicative invariant checks =
-as
->    requested by Namhyung.
->
-> v7:
->  - rebase to latest perf-tools-next where 22 patches were applied by Arna=
-ldo.
->  - resolve merge conflicts, in particular with fc044c53b99f ("perf
->    annotate-data: Add dso->data_types tree") that required more dso
->    accessor functions.
->
-> v6 series is here:
-> https://lore.kernel.org/lkml/20231207011722.1220634-1-irogers@google.com/
->
-> Ian Rogers (25):
->   perf maps: Switch from rbtree to lazily sorted array for addresses
->   perf maps: Get map before returning in maps__find
->   perf maps: Get map before returning in maps__find_by_name
->   perf maps: Get map before returning in maps__find_next_entry
->   perf maps: Hide maps internals
->   perf maps: Locking tidy up of nr_maps
+> -static int prepare_metric(struct evsel **metric_events,
+> -                         struct metric_ref *metric_refs,
+> +static int prepare_metric(const struct metric_expr *mexp,
+>                           struct expr_parse_ctx *pctx,
+>                           int aggr_idx)
+>  {
+>         int i;
 
-Can you please send patch 1-6 separately with my Ack? - provided
-you fixed the issue in the patch 1.
-
-For patch 1-6:
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-I'll review others later.
+You may add local variables with the same name to reduce
+the amount of diff.
 
 Thanks,
 Namhyung
 
-
->   perf dso: Reorder variables to save space in struct dso
->   perf report: Sort child tasks by tid
->   perf trace: Ignore thread hashing in summary
->   perf machine: Move fprintf to for_each loop and a callback
->   perf threads: Move threads to its own files
->   perf threads: Switch from rbtree to hashmap
->   perf threads: Reduce table size from 256 to 8
->   perf dsos: Attempt to better abstract dsos internals
->   perf dsos: Tidy reference counting and locking
->   perf dsos: Add dsos__for_each_dso
->   perf dso: Move dso functions out of dsos
->   perf dsos: Switch more loops to dsos__for_each_dso
->   perf dsos: Switch backing storage to array from rbtree/list
->   perf dsos: Remove __dsos__addnew
->   perf dsos: Remove __dsos__findnew_link_by_longname_id
->   perf dsos: Switch hand code to bsearch
->   perf dso: Add reference count checking and accessor functions
->   perf dso: Reference counting related fixes
->   perf dso: Use container_of to avoid a pointer in dso_data
 >
->  tools/perf/arch/x86/tests/dwarf-unwind.c      |    1 +
->  tools/perf/builtin-annotate.c                 |    8 +-
->  tools/perf/builtin-buildid-cache.c            |    2 +-
->  tools/perf/builtin-buildid-list.c             |   18 +-
->  tools/perf/builtin-inject.c                   |   96 +-
->  tools/perf/builtin-kallsyms.c                 |    2 +-
->  tools/perf/builtin-mem.c                      |    4 +-
->  tools/perf/builtin-record.c                   |    2 +-
->  tools/perf/builtin-report.c                   |  209 +--
->  tools/perf/builtin-script.c                   |    8 +-
->  tools/perf/builtin-top.c                      |    4 +-
->  tools/perf/builtin-trace.c                    |   43 +-
->  tools/perf/tests/code-reading.c               |    8 +-
->  tools/perf/tests/dso-data.c                   |   67 +-
->  tools/perf/tests/hists_common.c               |    6 +-
->  tools/perf/tests/hists_cumulate.c             |    4 +-
->  tools/perf/tests/hists_output.c               |    2 +-
->  tools/perf/tests/maps.c                       |    7 +-
->  tools/perf/tests/symbols.c                    |    2 +-
->  tools/perf/tests/thread-maps-share.c          |    8 +-
->  tools/perf/tests/vmlinux-kallsyms.c           |   16 +-
->  tools/perf/ui/browsers/annotate.c             |    6 +-
->  tools/perf/ui/browsers/hists.c                |    8 +-
->  tools/perf/ui/browsers/map.c                  |    4 +-
->  tools/perf/util/Build                         |    1 +
->  tools/perf/util/annotate-data.c               |    6 +-
->  tools/perf/util/annotate.c                    |   45 +-
->  tools/perf/util/auxtrace.c                    |    2 +-
->  tools/perf/util/block-info.c                  |    2 +-
->  tools/perf/util/bpf-event.c                   |    9 +-
->  tools/perf/util/bpf_lock_contention.c         |    8 +-
->  tools/perf/util/build-id.c                    |  136 +-
->  tools/perf/util/build-id.h                    |    2 -
->  tools/perf/util/callchain.c                   |    4 +-
->  tools/perf/util/data-convert-json.c           |    2 +-
->  tools/perf/util/db-export.c                   |    6 +-
->  tools/perf/util/dlfilter.c                    |   12 +-
->  tools/perf/util/dso.c                         |  469 +++---
->  tools/perf/util/dso.h                         |  549 ++++++-
->  tools/perf/util/dsos.c                        |  529 ++++---
->  tools/perf/util/dsos.h                        |   40 +-
->  tools/perf/util/event.c                       |   12 +-
->  tools/perf/util/header.c                      |    8 +-
->  tools/perf/util/hist.c                        |    4 +-
->  tools/perf/util/intel-pt.c                    |   22 +-
->  tools/perf/util/machine.c                     |  570 +++-----
->  tools/perf/util/machine.h                     |   32 +-
->  tools/perf/util/map.c                         |   73 +-
->  tools/perf/util/maps.c                        | 1298 +++++++++++------
->  tools/perf/util/maps.h                        |   65 +-
->  tools/perf/util/probe-event.c                 |   26 +-
->  tools/perf/util/rb_resort.h                   |    5 -
->  .../util/scripting-engines/trace-event-perl.c |    6 +-
->  .../scripting-engines/trace-event-python.c    |   21 +-
->  tools/perf/util/session.c                     |   21 +
->  tools/perf/util/session.h                     |    2 +
->  tools/perf/util/sort.c                        |   19 +-
->  tools/perf/util/srcline.c                     |   65 +-
->  tools/perf/util/symbol-elf.c                  |  132 +-
->  tools/perf/util/symbol.c                      |  217 +--
->  tools/perf/util/symbol_fprintf.c              |    4 +-
->  tools/perf/util/synthetic-events.c            |   24 +-
->  tools/perf/util/thread.c                      |    8 +-
->  tools/perf/util/thread.h                      |    6 -
->  tools/perf/util/threads.c                     |  186 +++
->  tools/perf/util/threads.h                     |   35 +
->  tools/perf/util/unwind-libunwind-local.c      |   20 +-
->  tools/perf/util/unwind-libunwind.c            |    9 +-
->  tools/perf/util/vdso.c                        |   56 +-
->  69 files changed, 3143 insertions(+), 2160 deletions(-)
->  create mode 100644 tools/perf/util/threads.c
->  create mode 100644 tools/perf/util/threads.h
+> -       for (i =3D 0; metric_events[i]; i++) {
+> +       for (i =3D 0; mexp->metric_events[i]; i++) {
+>                 char *n;
+>                 double val;
+>                 int source_count =3D 0;
 >
+> -               if (evsel__is_tool(metric_events[i])) {
+> +               if (evsel__is_tool(mexp->metric_events[i])) {
+>                         struct stats *stats;
+>                         double scale;
+>
+> -                       switch (metric_events[i]->tool_event) {
+> +                       switch (mexp->metric_events[i]->tool_event) {
+>                         case PERF_TOOL_DURATION_TIME:
+>                                 stats =3D &walltime_nsecs_stats;
+>                                 scale =3D 1e-9;
+> @@ -391,19 +390,20 @@ static int prepare_metric(struct evsel **metric_eve=
+nts,
+>                                 pr_err("Invalid tool event 'max'");
+>                                 abort();
+>                         default:
+> -                               pr_err("Unknown tool event '%s'", evsel__=
+name(metric_events[i]));
+> +                               pr_err("Unknown tool event '%s'",
+> +                                      evsel__name(mexp->metric_events[i]=
+));
+>                                 abort();
+>                         }
+>                         val =3D avg_stats(stats) * scale;
+>                         source_count =3D 1;
+>                 } else {
+> -                       struct perf_stat_evsel *ps =3D metric_events[i]->=
+stats;
+> +                       struct perf_stat_evsel *ps =3D mexp->metric_event=
+s[i]->stats;
+>                         struct perf_stat_aggr *aggr =3D &ps->aggr[aggr_id=
+x];
+>
+>                         if (!aggr)
+>                                 break;
+>
+> -                        if (!metric_events[i]->supported) {
+> +                       if (!mexp->metric_events[i]->supported) {
+>                                 /*
+>                                  * Not supported events will have a count=
+ of 0,
+>                                  * which can be confusing in a
+> @@ -419,19 +419,19 @@ static int prepare_metric(struct evsel **metric_eve=
+nts,
+>                                  * reverse the scale before computing the
+>                                  * metric.
+>                                  */
+> -                               val =3D aggr->counts.val * (1.0 / metric_=
+events[i]->scale);
+> -                               source_count =3D evsel__source_count(metr=
+ic_events[i]);
+> +                               val =3D aggr->counts.val * (1.0 / mexp->m=
+etric_events[i]->scale);
+> +                               source_count =3D evsel__source_count(mexp=
+->metric_events[i]);
+>                         }
+>                 }
+> -               n =3D strdup(evsel__metric_id(metric_events[i]));
+> +               n =3D strdup(evsel__metric_id(mexp->metric_events[i]));
+>                 if (!n)
+>                         return -ENOMEM;
+>
+>                 expr__add_id_val_source_count(pctx, n, val, source_count)=
+;
+>         }
+>
+> -       for (int j =3D 0; metric_refs && metric_refs[j].metric_name; j++)=
+ {
+> -               int ret =3D expr__add_ref(pctx, &metric_refs[j]);
+> +       for (int j =3D 0; mexp->metric_refs && mexp->metric_refs[j].metri=
+c_name; j++) {
+> +               int ret =3D expr__add_ref(pctx, &mexp->metric_refs[j]);
+>
+>                 if (ret)
+>                         return ret;
+> @@ -441,14 +441,8 @@ static int prepare_metric(struct evsel **metric_even=
+ts,
+>  }
+>
+>  static void generic_metric(struct perf_stat_config *config,
+> -                          const char *metric_expr,
+> -                          const char *metric_threshold,
+> -                          struct evsel **metric_events,
+> -                          struct metric_ref *metric_refs,
+> -                          char *name,
+> -                          const char *metric_name,
+> -                          const char *metric_unit,
+> -                          int runtime,
+> +                       struct metric_expr *mexp,
+> +                       struct evsel *evsel,
+>                            int aggr_idx,
+>                            struct perf_stat_output_ctx *out)
+>  {
+> @@ -465,55 +459,55 @@ static void generic_metric(struct perf_stat_config =
+*config,
+>
+>         if (config->user_requested_cpu_list)
+>                 pctx->sctx.user_requested_cpu_list =3D strdup(config->use=
+r_requested_cpu_list);
+> -       pctx->sctx.runtime =3D runtime;
+> +       pctx->sctx.runtime =3D mexp->runtime;
+>         pctx->sctx.system_wide =3D config->system_wide;
+> -       i =3D prepare_metric(metric_events, metric_refs, pctx, aggr_idx);
+> +       i =3D prepare_metric(mexp, pctx, aggr_idx);
+>         if (i < 0) {
+>                 expr__ctx_free(pctx);
+>                 return;
+>         }
+> -       if (!metric_events[i]) {
+> -               if (expr__parse(&ratio, pctx, metric_expr) =3D=3D 0) {
+> +       if (!mexp->metric_events[i]) {
+> +               if (expr__parse(&ratio, pctx, mexp->metric_expr) =3D=3D 0=
+) {
+>                         char *unit;
+>                         char metric_bf[64];
+>
+> -                       if (metric_threshold &&
+> -                           expr__parse(&threshold, pctx, metric_threshol=
+d) =3D=3D 0 &&
+> +                       if (mexp->metric_threshold &&
+> +                           expr__parse(&threshold, pctx, mexp->metric_th=
+reshold) =3D=3D 0 &&
+>                             !isnan(threshold)) {
+>                                 color =3D fpclassify(threshold) =3D=3D FP=
+_ZERO
+>                                         ? PERF_COLOR_GREEN : PERF_COLOR_R=
+ED;
+>                         }
+>
+> -                       if (metric_unit && metric_name) {
+> -                               if (perf_pmu__convert_scale(metric_unit,
+> +                       if (mexp->metric_unit && mexp->metric_name) {
+> +                               if (perf_pmu__convert_scale(mexp->metric_=
+unit,
+>                                         &unit, &scale) >=3D 0) {
+>                                         ratio *=3D scale;
+>                                 }
+> -                               if (strstr(metric_expr, "?"))
+> +                               if (strstr(mexp->metric_expr, "?"))
+>                                         scnprintf(metric_bf, sizeof(metri=
+c_bf),
+> -                                         "%s  %s_%d", unit, metric_name,=
+ runtime);
+> +                                         "%s  %s_%d", unit, mexp->metric=
+_name, mexp->runtime);
+>                                 else
+>                                         scnprintf(metric_bf, sizeof(metri=
+c_bf),
+> -                                         "%s  %s", unit, metric_name);
+> +                                         "%s  %s", unit, mexp->metric_na=
+me);
+>
+>                                 print_metric(config, ctxp, color, "%8.1f"=
+,
+>                                              metric_bf, ratio);
+>                         } else {
+>                                 print_metric(config, ctxp, color, "%8.2f"=
+,
+> -                                       metric_name ?
+> -                                       metric_name :
+> -                                       out->force_header ?  name : "",
+> +                                       mexp->metric_name ?
+> +                                       mexp->metric_name :
+> +                                       out->force_header ?  evsel->name =
+: "",
+>                                         ratio);
+>                         }
+>                 } else {
+>                         print_metric(config, ctxp, color, /*unit=3D*/NULL=
+,
+>                                      out->force_header ?
+> -                                    (metric_name ? metric_name : name) :=
+ "", 0);
+> +                                    (mexp->metric_name ?: evsel->name) :=
+ "", 0);
+>                 }
+>         } else {
+>                 print_metric(config, ctxp, color, /*unit=3D*/NULL,
+>                              out->force_header ?
+> -                            (metric_name ? metric_name : name) : "", 0);
+> +                            (mexp->metric_name ?: evsel->name) : "", 0);
+>         }
+>
+>         expr__ctx_free(pctx);
+> @@ -528,7 +522,7 @@ double test_generic_metric(struct metric_expr *mexp, =
+int aggr_idx)
+>         if (!pctx)
+>                 return NAN;
+>
+> -       if (prepare_metric(mexp->metric_events, mexp->metric_refs, pctx, =
+aggr_idx) < 0)
+> +       if (prepare_metric(mexp, pctx, aggr_idx) < 0)
+>                 goto out;
+>
+>         if (expr__parse(&ratio, pctx, mexp->metric_expr))
+> @@ -630,10 +624,7 @@ void *perf_stat__print_shadow_stats_metricgroup(stru=
+ct perf_stat_config *config,
+>
+>                 if ((*num)++ > 0)
+>                         out->new_line(config, ctxp);
+> -               generic_metric(config, mexp->metric_expr, mexp->metric_th=
+reshold,
+> -                              mexp->metric_events, mexp->metric_refs, ev=
+sel->name,
+> -                              mexp->metric_name, mexp->metric_unit, mexp=
+->runtime,
+> -                              aggr_idx, out);
+> +               generic_metric(config, mexp, evsel, aggr_idx, out);
+>         }
+>
+>         return NULL;
 > --
 > 2.43.0.594.gd9cf4e227d-goog
->
 >
