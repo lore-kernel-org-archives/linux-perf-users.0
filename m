@@ -1,271 +1,173 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1502C5675B;
-	Tue,  6 Feb 2024 02:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C2E5675F;
+	Tue,  6 Feb 2024 02:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707184974; cv=none; b=aN1d7GJgWH9v1B61ZdL/n9JbtzrVSwBPWzWsvwHQArCWGdZyA10IIt+xDITs6wI6sYlI0Z6SfzlkskCK7Udl9CWlqRg3t2J7k6Vw40+SArWPUC4onywzF+Leb2UTLcCdGPq+l/3WYwsygsK8p8VsnBGcPTUA/qaApCrT+qKVu34=
+	t=1707185346; cv=none; b=GbYQLpq4rcIE/1rYnR7HAKEwzMYFo1dvQvcvNhzvkr9blUH+lUqdnbS8FFsAFkiGzfc609kww8w1pBdz5xTQVJnWNR5BkZpusP/fnPdg6QCuzuKdIEQFAVE0fTgs8DCGoE7QgU2+P3ShaSTmlG+k5Ho1r4EIHxnbmxAEm94tgJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707184974; c=relaxed/simple;
-	bh=o7p4l451b42i8P3WAvXEX6P6/8g1ZcZZJ4JdcH7FOto=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mx0VwtlUfFynrneXMUQ36EZTAjJzTr2hxfQIH9wp9Q4J1I0WPdWGX7RnDkMsPHj27+lmMPnYa4nNkcoov0mJu9FelEH5/k4C1g/XasISfvTGTEsMy2nyrONr/1jnHb0KAxJ4DdWcpMoboTpORuyTg8ryDi6/euWFrJOw/EVW104=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3bda4bd14e2so4504754b6e.2;
-        Mon, 05 Feb 2024 18:02:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707184972; x=1707789772;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VbWG5P5LKH6JeXdd57gmbHwoExYBxYEX1BmES5BVCOg=;
-        b=vD46fO5BNzCxRD3Nx5FZBoadeKtpfSPtl6Y56MfEx/t5NYVRiIaDmU4MlcKrKIxBXe
-         ipUDAjLGUnQKp7HTJQpV+4S7UwRLd1mSVSrKCqV48GynkyswXIQ79iv0sXiPvcA2LFmp
-         XpGfrwhaR1XYjtIkaFGd7i19oFf8yr6ds/i7/SWqS/VdDW494yVLRvjyJq5GsiiUmoyQ
-         0ySjfxKHSXmoxaBrkFxiOD5XKo0nyXwBXXcJd2jGkC8ncLM89txFBGh6TJr114nu2Bb0
-         VbSd09wmId0kmI3zI7aMTCR7LaVINyz3VBud9tcMpDpbr7tyI6Wapl2d5yhYP8Nk4x5s
-         umIQ==
-X-Gm-Message-State: AOJu0YwdXymVPL6J8b0jbpoQ6Lc26QWuT0yvnYvvBMY5tnqboaYDgOhX
-	SxxNRBk4qIj59Fvrb7ILni7BN0MEKzTnhRfsTkYm0eSoccEayVf0Uz+TX5EPk5JSY994jdZZkUi
-	fiWjt7vLM5PbLRacUMSoTN++wRLE=
-X-Google-Smtp-Source: AGHT+IEOKicIAVppBbtoAv5yBeUTTbF86HVVLo8F8dMmYDIUqIBIQgVWb4dpIPckDmnVq8e/X7n4J7fi2jOy8jPmwUU=
-X-Received: by 2002:a05:6808:2019:b0:3bf:bd6e:9384 with SMTP id
- q25-20020a056808201900b003bfbd6e9384mr1108809oiw.33.1707184971903; Mon, 05
- Feb 2024 18:02:51 -0800 (PST)
+	s=arc-20240116; t=1707185346; c=relaxed/simple;
+	bh=WYfoRPya76Tqck0ScDgB0y5w0roJ0OYNP1LTT+2qcEk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LjTpMBNBxG7VMnyEmn5PV2y7SK5TK6sGGnAK4U/S9khqZrK+lM64AGfdTrrKttMcU1H3kw9b0UNyXkztJghtp2rWeRI9ybpoP6BLgS6wrWKdPG1RdpE3qqbAtUa/ljpWYk1LsD4UQv6wa7Uv9F1xHr/PIFYs8/9Zfi19AcLPs90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=b+KMj6tv; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b+KMj6tv"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4161Ewsc023386;
+	Tue, 6 Feb 2024 02:08:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2023-11-20;
+ bh=TNBqmrMN0GKiz0meyol2MTt7jK7ZOMX41ADnOQ7L/UU=;
+ b=b+KMj6tvO4efzEbKZhSG/xzlHnsPmbgMlBfcTWawkZTnAIffaQla4J5cVDofspUuJqWS
+ /o00HHnk0n3gN9qp3mx/3E4gJC1I52m2sdoqn6JFMG+i8UwxEXr0NcQnIWxdhEFBJn+E
+ /x8af1pQLtk1k1AM1L7u822p8aQ15VNJPSq8MPE9D4515Gx5HixPyTgAvA3/EgoqxoHI
+ QgW4sF8UUf5WKq6QgWwluTQ92vNZ9x/szjLyibVmDwZBAu8ox17jHGO02Dm+ih1uUcH6
+ DGK4SsClE47m3SK3AzW4xYXw6GyPWvrQpLAswBi0lOq+tWmzWKU14KToHTtMKtqix0Tu 5w== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w1dhddkp3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 06 Feb 2024 02:08:03 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4161MK9a039504;
+	Tue, 6 Feb 2024 02:08:02 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3w1bx6cdtx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 06 Feb 2024 02:08:02 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41627qHJ034652;
+	Tue, 6 Feb 2024 02:08:01 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3w1bx6cdrb-2;
+	Tue, 06 Feb 2024 02:08:01 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: linux-kernel@vger.kernel.org, Li Zhijian <lizhijian@fujitsu.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alistar Popple <alistair@popple.id.au>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        =?UTF-8?q?Bruno=20Pr=C3=A9mont?= <bonbons@linux-vserver.org>,
+        Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>, cocci@inria.fr,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Don Brace <don.brace@microchip.com>, dri-devel@lists.freedesktop.org,
+        Eddie James <eajames@linux.ibm.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Hannes Reinecke <hare@kernel.org>, Hannes Reinecke <hare@suse.de>,
+        Hans de Goede <hdegoede@redhat.com>, Helge Deller <deller@gmx.de>,
+        HighPoint Linux Team <linux@highpoint-tech.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ian Rogers <irogers@google.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morse <james.morse@arm.com>, Jeremy Kerr <jk@ozlabs.org>,
+        Jiri Kosina <jikos@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Joel Stanley <joel@jms.id.au>, Jonathan Cameron <jic23@kernel.org>,
+        Julia Lawall <Julia.Lawall@inria.fr>,
+        Karan Tilak Kumar <kartilak@cisco.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Ketan Mukadam <ketan.mukadam@broadcom.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-scsi@vger.kernel.org, Manish Rangankar <mrangankar@marvell.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, Michael Cyr <mikecyr@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Januszewski <spock@gentoo.org>,
+        MPT-FusionLinux.pdl@broadcom.com, Namhyung Kim <namhyung@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, netdev@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Nilesh Javali <njavali@marvell.com>,
+        Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Richard Cochran <richardcochran@gmail.com>,
+        Robert Richter <rric@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Satish Kharat <satishkh@cisco.com>,
+        Sesidhar Baddela <sebaddel@cisco.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Stefan Achatz <erazor_de@users.sourceforge.net>,
+        storagedev@microchip.com, Stuart Yoder <stuyoder@gmail.com>,
+        Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>, target-devel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, Tony Luck <tony.luck@intel.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Vadim Pasternak <vadimp@nvidia.com>, x86@kernel.org
+Subject: Re: (subset) [PATCH 00/42] Fix coccicheck warnings
+Date: Mon,  5 Feb 2024 21:07:38 -0500
+Message-ID: <170715263710.945763.16540743989774199712.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.42.1
+In-Reply-To: <20240116041129.3937800-1-lizhijian@fujitsu.com>
+References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202022512.467636-1-irogers@google.com> <20240202022512.467636-2-irogers@google.com>
-In-Reply-To: <20240202022512.467636-2-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 5 Feb 2024 18:02:40 -0800
-Message-ID: <CAM9d7cgv3zPNohz6eWwH7qaQyY0QMRK_sqtJdumeGrD5tMW9Yg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] perf metrics: Compute unmerged uncore metrics individually
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, John Garry <john.g.garry@oracle.com>, Kaige Ye <ye@kaige.org>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-05_18,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 phishscore=0
+ spamscore=0 adultscore=0 mlxlogscore=980 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402060013
+X-Proofpoint-GUID: fwziPvoQs2DBL9rAMuJ3Du7KSNls4Hgl
+X-Proofpoint-ORIG-GUID: fwziPvoQs2DBL9rAMuJ3Du7KSNls4Hgl
 
-On Thu, Feb 1, 2024 at 6:25=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> When merging counts from multiple uncore PMUs the metric is only
-> computed for the metric leader. When merging/aggregation is disabled,
-> prior to this patch just the leader's metric would be computed. Fix
-> this by computing the metric for each PMU.
->
-> On a SkylakeX:
-> Before:
-> ```
-> $ perf stat -A -M memory_bandwidth_total -a sleep 1
->
->  Performance counter stats for 'system wide':
->
-> CPU0               82,217      UNC_M_CAS_COUNT.RD [uncore_imc_0] #      9=
-.2 MB/s  memory_bandwidth_total
-> CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_0] #      0=
-.0 MB/s  memory_bandwidth_total
-> CPU0               61,395      UNC_M_CAS_COUNT.WR [uncore_imc_0]
-> CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_0]
-> CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_1]
-> CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_1]
-> CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
-> CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
-> CPU0               81,570      UNC_M_CAS_COUNT.RD [uncore_imc_2]
-> CPU18             113,886      UNC_M_CAS_COUNT.RD [uncore_imc_2]
-> CPU0               62,330      UNC_M_CAS_COUNT.WR [uncore_imc_2]
-> CPU18              66,942      UNC_M_CAS_COUNT.WR [uncore_imc_2]
-> CPU0               75,489      UNC_M_CAS_COUNT.RD [uncore_imc_3]
-> CPU18              27,958      UNC_M_CAS_COUNT.RD [uncore_imc_3]
-> CPU0               55,864      UNC_M_CAS_COUNT.WR [uncore_imc_3]
-> CPU18              38,727      UNC_M_CAS_COUNT.WR [uncore_imc_3]
-> CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_4]
-> CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_4]
-> CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
-> CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
-> CPU0               75,423      UNC_M_CAS_COUNT.RD [uncore_imc_5]
-> CPU18             104,527      UNC_M_CAS_COUNT.RD [uncore_imc_5]
-> CPU0               57,596      UNC_M_CAS_COUNT.WR [uncore_imc_5]
-> CPU18              56,777      UNC_M_CAS_COUNT.WR [uncore_imc_5]
-> CPU0        1,003,440,851 ns   duration_time
->
->        1.003440851 seconds time elapsed
-> ```
->
-> After:
-> ```
-> $ perf stat -A -M memory_bandwidth_total -a sleep 1
->
->  Performance counter stats for 'system wide':
->
-> CPU0               88,968      UNC_M_CAS_COUNT.RD [uncore_imc_0] #      9=
-.5 MB/s  memory_bandwidth_total
-> CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_0] #      0=
-.0 MB/s  memory_bandwidth_total
-> CPU0               59,498      UNC_M_CAS_COUNT.WR [uncore_imc_0]
-> CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_0]
-> CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_1] #      0=
-.0 MB/s  memory_bandwidth_total
-> CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_1] #      0=
-.0 MB/s  memory_bandwidth_total
-> CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
-> CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
-> CPU0               88,635      UNC_M_CAS_COUNT.RD [uncore_imc_2] #      9=
-.5 MB/s  memory_bandwidth_total
-> CPU18             117,975      UNC_M_CAS_COUNT.RD [uncore_imc_2] #     11=
-.5 MB/s  memory_bandwidth_total
-> CPU0               60,829      UNC_M_CAS_COUNT.WR [uncore_imc_2]
-> CPU18              62,105      UNC_M_CAS_COUNT.WR [uncore_imc_2]
-> CPU0               82,238      UNC_M_CAS_COUNT.RD [uncore_imc_3] #      8=
-.7 MB/s  memory_bandwidth_total
-> CPU18              22,906      UNC_M_CAS_COUNT.RD [uncore_imc_3] #      3=
-.6 MB/s  memory_bandwidth_total
-> CPU0               53,959      UNC_M_CAS_COUNT.WR [uncore_imc_3]
-> CPU18              32,990      UNC_M_CAS_COUNT.WR [uncore_imc_3]
-> CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_4] #      0=
-.0 MB/s  memory_bandwidth_total
-> CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_4] #      0=
-.0 MB/s  memory_bandwidth_total
-> CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
-> CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
-> CPU0               83,595      UNC_M_CAS_COUNT.RD [uncore_imc_5] #      8=
-.9 MB/s  memory_bandwidth_total
-> CPU18             110,151      UNC_M_CAS_COUNT.RD [uncore_imc_5] #     10=
-.5 MB/s  memory_bandwidth_total
-> CPU0               56,540      UNC_M_CAS_COUNT.WR [uncore_imc_5]
-> CPU18              53,816      UNC_M_CAS_COUNT.WR [uncore_imc_5]
-> CPU0        1,003,353,416 ns   duration_time
-> ```
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/metricgroup.c |  2 ++
->  tools/perf/util/stat-shadow.c | 31 +++++++++++++++++++++++++++----
->  2 files changed, 29 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index ca3e0404f187..c33ffee837ca 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -44,6 +44,8 @@ struct metric_event *metricgroup__lookup(struct rblist =
-*metric_events,
->         if (!metric_events)
->                 return NULL;
->
-> +       if (evsel->metric_leader)
-> +               me.evsel =3D evsel->metric_leader;
->         nd =3D rblist__find(metric_events, &me);
->         if (nd)
->                 return container_of(nd, struct metric_event, nd);
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.=
-c
-> index f6c9d2f98835..1be23b0eee2f 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -356,6 +356,7 @@ static void print_nsecs(struct perf_stat_config *conf=
-ig,
->  }
->
->  static int prepare_metric(const struct metric_expr *mexp,
-> +                         const struct evsel *evsel,
->                           struct expr_parse_ctx *pctx,
->                           int aggr_idx)
->  {
-> @@ -398,8 +399,29 @@ static int prepare_metric(const struct metric_expr *=
-mexp,
->                         source_count =3D 1;
->                 } else {
->                         struct perf_stat_evsel *ps =3D mexp->metric_event=
-s[i]->stats;
-> -                       struct perf_stat_aggr *aggr =3D &ps->aggr[aggr_id=
-x];
-> +                       struct perf_stat_aggr *aggr;
->
-> +                       /*
-> +                        * If there are multiple uncore PMUs and we're no=
-t
-> +                        * reading the leader's stats, determine the stat=
-s for
-> +                        * the appropriate uncore PMU.
-> +                        */
-> +                       if (evsel && evsel->metric_leader &&
-> +                           evsel->pmu !=3D evsel->metric_leader->pmu &&
-> +                           mexp->metric_events[i]->pmu =3D=3D evsel->met=
-ric_leader->pmu) {
+On Tue, 16 Jan 2024 12:10:47 +0800, Li Zhijian wrote:
 
-Is it just to check we're in --no-aggr (or --no-merge)?
-Then it'd be simpler to use stat_config->aggr_mode.
+> make coccicheck COCCI=$PWD/scripts/coccinelle/api/device_attr_show.cocci`
+> complians some warnnings as following[1]:
+> 
+> Not sure if someone had tried these fixes, feel free to ignore this
+> patch set if we have come to a *NOT-FIX* conclusion before :)
+> 
+> This patch set also fix a few snprintf() beside coccicheck reported.
+> For example, some thing like
+> xxx_show() {
+> 	rc = snprintf();
+> ...
+> 	return rc;
+> }
+> 
+> [...]
 
-Thanks,
-Namhyung
+Applied to 6.9/scsi-queue, thanks!
 
+[22/42] drivers/scsi/fnic: Convert snprintf to sysfs_emit
+        https://git.kernel.org/mkp/scsi/c/1ad717c92925
+[25/42] drivers/scsi/ibmvscsi: Convert snprintf to sysfs_emit
+        https://git.kernel.org/mkp/scsi/c/29ff822f466e
+[26/42] drivers/scsi/ibmvscsi_tgt: Convert snprintf to sysfs_emit
+        https://git.kernel.org/mkp/scsi/c/01105c23de42
+[27/42] drivers/scsi/isci: Convert snprintf to sysfs_emit
+        https://git.kernel.org/mkp/scsi/c/5fbf37e53091
+[34/42] drivers/scsi/pm8001: Convert snprintf to sysfs_emit
+        https://git.kernel.org/mkp/scsi/c/8179041f801d
 
-> +                               struct evsel *pos;
-> +
-> +                               evlist__for_each_entry(evsel->evlist, pos=
-) {
-> +                                       if (pos->pmu !=3D evsel->pmu)
-> +                                               continue;
-> +                                       if (pos->metric_leader !=3D mexp-=
->metric_events[i])
-> +                                               continue;
-> +                                       ps =3D pos->stats;
-> +                                       source_count =3D 1;
-> +                                       break;
-> +                               }
-> +                       }
-> +                       aggr =3D &ps->aggr[aggr_idx];
->                         if (!aggr)
->                                 break;
->
-> @@ -420,7 +442,8 @@ static int prepare_metric(const struct metric_expr *m=
-exp,
->                                  * metric.
->                                  */
->                                 val =3D aggr->counts.val * (1.0 / mexp->m=
-etric_events[i]->scale);
-> -                               source_count =3D evsel__source_count(mexp=
-->metric_events[i]);
-> +                               if (!source_count)
-> +                                       source_count =3D evsel__source_co=
-unt(mexp->metric_events[i]);
->                         }
->                 }
->                 n =3D strdup(evsel__metric_id(mexp->metric_events[i]));
-> @@ -461,7 +484,7 @@ static void generic_metric(struct perf_stat_config *c=
-onfig,
->                 pctx->sctx.user_requested_cpu_list =3D strdup(config->use=
-r_requested_cpu_list);
->         pctx->sctx.runtime =3D mexp->runtime;
->         pctx->sctx.system_wide =3D config->system_wide;
-> -       i =3D prepare_metric(mexp, pctx, aggr_idx);
-> +       i =3D prepare_metric(mexp, evsel, pctx, aggr_idx);
->         if (i < 0) {
->                 expr__ctx_free(pctx);
->                 return;
-> @@ -522,7 +545,7 @@ double test_generic_metric(struct metric_expr *mexp, =
-int aggr_idx)
->         if (!pctx)
->                 return NAN;
->
-> -       if (prepare_metric(mexp, pctx, aggr_idx) < 0)
-> +       if (prepare_metric(mexp, /*evsel=3D*/NULL, pctx, aggr_idx) < 0)
->                 goto out;
->
->         if (expr__parse(&ratio, pctx, mexp->metric_expr))
-> --
-> 2.43.0.594.gd9cf4e227d-goog
->
+-- 
+Martin K. Petersen	Oracle Linux Engineering
