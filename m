@@ -1,153 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6846C135A5C;
-	Tue,  6 Feb 2024 11:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847471DA3F;
+	Tue,  6 Feb 2024 13:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707220202; cv=none; b=nAOmutOK180aDA2uvYPYg3LVWnZBH0rHtakxxZKIYi+X/fc2TbggeO9OKlx8CSsl5kohX6wMpNfA281C7UtzN8g2P2gZmEMNj8sGLfvCxQEsqEPQb/63Zw6gi9gsfuSGoul3BAU/96yboZ2ufSerPUHrrMbtwl7nLKb1uxMsKRQ=
+	t=1707224715; cv=none; b=DJG/49QKaQnPtkN4nNqdSV3SgIjKdeTQTRJuixG6kfFCp8tqCby2ws2xSo49wJnQIgwyY7bAHVGb7Ft6nTafalzQL0u97WCuYVeOwxXDlUyVljwqIkVDyfD38S3T5kJa4KjjB8d3psF+DjxmhqfCz564iGK/zbVgrW0frzRo7B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707220202; c=relaxed/simple;
-	bh=JY/ecKxpqcoskN4SO4DbU7pB525Tsjxkek4gM3Dptkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U7Bjm9XaWqMdYRYOFPqpF+Lleirdgfb9UrHJ3B0XjUku+wLrJ3c+JBqTW+UxxSnUIzpJ10aNg+FT8NNvi7PBccFHIB6fwSxf/ojGH+mxWte+BzYt263KlXSK9UORX9JhYJQlyEXbWgqjJbA5+LCti3GSs4PXqI7K71kS8Kr0iyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h1SKcg6/; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1707224715; c=relaxed/simple;
+	bh=wVw9qf7WnHE9ADCIENN6XtG8+XAbmJBfpkrWnYewZjw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tvHGCL8FXFE7bzHbIqrE6BAjZX6/gXL/mtIP4OWDshGdm7ZBycklIjLNgy4v177hVpzYCWw3+kaLuNcPKxegsSsb9Lsh5TYxNOSdWpmSquMoVMEymE9H6nKe7Y40AJcGCA9xBOWvDVRtpF+6GGR3mqW2YRop8NiBNfzKd9+TZFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZB58BqL3; arc=none smtp.client-ip=134.134.136.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h1SKcg6/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZB58BqL3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707220200; x=1738756200;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JY/ecKxpqcoskN4SO4DbU7pB525Tsjxkek4gM3Dptkg=;
-  b=h1SKcg6/GRaDMl4Wo2NV3MR3c98emlsqaaFEeZ+POr62NQzjM7U3Apz0
-   dTEI0DsQSai2CupKkpJsdlArybh52a6ywv0nEmAAl1d+Ez48zCL1v/hth
-   5xwCrXT+L1GvR26qaD1M5F3BhOyd7RQjigiv54CFADEc1mJ6ccEyhVSN2
-   wLTt9pyyXIJ+xjNKN4hjJVc7c6NptPYimEdUL3Som2ahI0Qfr8ygST6cN
-   aKC33sff5NtKxONbHnCANwK81E3QXutSM0wq0czt9fxNvPPUdqZazJ05e
-   ColPQlj+u+UyKKgTqwYnaAL52vO0nW22R9j+5UFnPiLBUgw0Lkxme/+KO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="11375334"
+  t=1707224713; x=1738760713;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wVw9qf7WnHE9ADCIENN6XtG8+XAbmJBfpkrWnYewZjw=;
+  b=ZB58BqL3cLb4nSbj4OR27TQpNqXDVRRN0yN/A8ceBhTvgO352vO2nap1
+   WKgl4KrokU3gYOEx0Q6LHHxLl7R7EeowUJdqZ4FNIpgZi0jGBYCpWPPDU
+   +69jIwCTZ+wuH1LOZvXIe7GzqkMyg03pQIdiEiXq5su0bFcz5i7+nADuR
+   KmAv6WA2ZN5oZg/g+edr6ARcjRcu/ej328rHP//nZJ2DJtPqigIpVNspi
+   XaQqdC9cXr2SgFZztCrq4N4zLYf60y048jbsAfIkvA8OZCq4v4FyVZDN6
+   LqHs1eVBTlEyDnzmQ8HUMwv5cJcVSqYVgBKOzZYCXWiFl5uXuGsd7Ojsa
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="395161860"
 X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="11375334"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 03:49:53 -0800
+   d="scan'208";a="395161860"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 05:05:12 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="1232790"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.101])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 03:49:50 -0800
-Message-ID: <bd5ed9b2-cbb7-4b8b-b7b8-5db2eff75f17@intel.com>
-Date: Tue, 6 Feb 2024 13:49:45 +0200
+   d="scan'208";a="999413"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.42.101])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 05:05:10 -0800
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V2 0/2] perf symbols: Slightly improve module file executable section mappings
+Date: Tue,  6 Feb 2024 15:04:56 +0200
+Message-Id: <20240206130458.8867-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/5] perf: script: Intro capstone disasm engine to show
- instruction trace
-Content-Language: en-US
-To: Changbin Du <changbin.du@huawei.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
- Thomas Richter <tmricht@linux.ibm.com>, changbin.du@gmail.com
-References: <20240206112929.1035548-1-changbin.du@huawei.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240206112929.1035548-1-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-On 6/02/24 13:29, Changbin Du wrote:
-> This series introduces capstone disassembler engine to print instructions of
-> Intel PT trace, which was printed via the XED tool.
-> 
-> The advantages compared to XED tool:
->     * Support arm, arm64, x86-32, x86_64, s390 (more could be supported),
->       xed only for x86_64.
->     * More friendly to read. Immediate address operands are shown as symbol+offs.
-> 
-> Display raw instructions:
->     $ sudo perf record --event intel_pt//u -- ls
->     $ sudo perf script --insn-trace
->                 perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
->                 perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
->                 perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
->                 perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
->                 perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
->                 perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
->                 perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
-> 
-> Display mnemonic instructions:
->     $ sudo perf script --insn-trace=disasm
->                 perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so)		cmpq $-0xfff, %rax
->                 perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so)		jae __GI___ioctl+0x10
->                 perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so)		retq
->                 perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf)		testl %eax, %eax
->                 perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf)		jne perf_evsel__enable_cpu+0xad
->                 perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf)		movq 0xa8(%r12), %rax
->                 perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf)		movq 0x20(%rax), %rdx
->                 perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf)		cmpl %edx, %ebx
->                 perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf)		jl perf_evsel__enable_cpu+0x60
->                 perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf)		xorl %eax, %eax
-> 
-> v7:
->   - remove redundant space for raw instruction.
->   - rename sample__fprintf_insn() as sample__fprintf_insn_asm() and make it empty if libcapstone is not available.
-> v6:
->   - make '-F +disasm' fatal if libcapstone is not supported. (Adrian Hunter)
->   - display with perf version --build-options. (Adrian Hunter)
->   - exclude libcapstone from make_minimal. (Adrian Hunter)
-> v5:
->   - fixes and improments suggested by Adrian Hunter
-> v4:
->   - rename 'insn_disam' to 'disasm' (Adrian Hunter)
-> v3:
->   - fix s390 detection. (Thomas Richter)
-> v2:
->   - add a new field 'insn_disam' instead of changing the default output.
->   - preserve the old --xed option.
-> 
-> Changbin Du (5):
->   perf: build: introduce the libcapstone
->   perf: util: use capstone disasm engine to show assembly instructions
->   perf: script: add field 'disasm' to display mnemonic instructions
->   perf: script: add raw|disasm arguments to --insn-trace option
->   perf: script: prefer capstone to XED
-> 
->  tools/build/Makefile.feature               |   2 +
->  tools/build/feature/Makefile               |   4 +
->  tools/build/feature/test-all.c             |   4 +
->  tools/build/feature/test-libcapstone.c     |  11 ++
->  tools/perf/Documentation/perf-intel-pt.txt |  14 ++-
->  tools/perf/Documentation/perf-script.txt   |  20 +--
->  tools/perf/Makefile.config                 |  21 ++++
->  tools/perf/Makefile.perf                   |   3 +
->  tools/perf/builtin-script.c                |  45 +++++--
->  tools/perf/builtin-version.c               |   1 +
->  tools/perf/tests/make                      |   4 +-
->  tools/perf/ui/browsers/res_sample.c        |   2 +-
->  tools/perf/ui/browsers/scripts.c           |   2 +-
->  tools/perf/util/Build                      |   1 +
->  tools/perf/util/print_insn.c               | 135 +++++++++++++++++++++
->  tools/perf/util/print_insn.h               |  16 +++
->  16 files changed, 258 insertions(+), 27 deletions(-)
->  create mode 100644 tools/build/feature/test-libcapstone.c
->  create mode 100644 tools/perf/util/print_insn.c
->  create mode 100644 tools/perf/util/print_insn.h
-> 
+Hi
 
-For whole patch set:
+Currently perf does not record module section addresses except for
+the .text section. In general that means perf cannot get module section
+mappings correct (except for .text) when loading symbols from a kernel
+module file. (Note using --kcore does not have this issue)
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Here are a couple of patches to help shed light upon and slightly improve
+the situation.
 
+
+Changes in V2:
+
+  perf tools: Make it possible to see perf's kernel and module memory mappings
+    - add dump to perf report (if no browser) as well as perf script
+    - add 'perf --debug kmaps' option also to dump kmaps
+
+
+Adrian Hunter (2):
+      perf tools: Make it possible to see perf's kernel and module memory mappings
+      perf symbols: Slightly improve module file executable section mappings
+
+ tools/perf/Documentation/perf.txt |  2 ++
+ tools/perf/builtin-report.c       |  2 ++
+ tools/perf/builtin-script.c       |  3 ++
+ tools/perf/util/debug.c           |  3 ++
+ tools/perf/util/debug.h           |  1 +
+ tools/perf/util/python.c          |  1 +
+ tools/perf/util/session.c         | 11 ++++++
+ tools/perf/util/session.h         |  2 ++
+ tools/perf/util/symbol-elf.c      | 75 +++++++++++++++++++++++++++++++++++++--
+ 9 files changed, 98 insertions(+), 2 deletions(-)
+
+
+Regards
+Adrian
