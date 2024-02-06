@@ -1,664 +1,247 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE6412D148;
-	Tue,  6 Feb 2024 09:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE5712D17A
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 10:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707212347; cv=none; b=K/E9LSzoqGCidTtwxYqq4aQ7NBkZkz7atH2r3ckEoyxTRS2aVfTAWr4dXLDBv4L7MneQ2/K3C6A3WzzAUVBxJGMM/5B0Ex3Q/NGCy17AOZQfimBEvxl/wRMHQHNa/oZrJVT4C6Bpl29jpO5swhfmrwQlB0MIKJDZo3RwzXsKROs=
+	t=1707214177; cv=none; b=dZo9ZAcYiSSrmHs2evJUjKa8dRZqQJ0U+/n1MQ+0Vbz/YLFBLMFZ+d+FFPGiafpL9wwk5Rm429pGKAoTqTEiipf6+BCsCzR1rQ/5OrIiE8ElK5M+kj0E9yqc+MNp6mVqAS4QSYhaM1ieHJfh6rKNSaOzEv3JTrLMB8JsuDKzkgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707212347; c=relaxed/simple;
-	bh=XRi5FZtUfoJKGHz1xMeySQ+48TdeSOs5OUsvmHhQj6s=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JJjikWZd/jfQhNpnn1/KOIX/6dqJnh6+MQmdtUoP2jNoXcVsRgeA1MSw5qMF3AvRYdHTAPSLC03w4PVgAOg+zQcEFxL8GCyofRs2ECUwVq7HHvZVpi7lF/Bvj7fqh7uEvtiGDmHQkTilTAmHUEvAvWhiu4elrRsOz5dty+DLTuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	s=arc-20240116; t=1707214177; c=relaxed/simple;
+	bh=Cs2doAgftDMcg7geXNAFXFaOFW/SwuUYgLlQN6bw6Cw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A8oQXepZ2eAir3A87Ep8bLxoEeLcqe1AG6Dm1S+4VlMwEpL87pz3bFPAf4oaKHYVZdrqYytTuztT0/ZujBlmqTqK3wsFhlYYASzWZXmMlBVpr3pz9IrOoyTR7rumAb0GLTAx+M1KydekqZtfwUbX19IaiWm5fBJDL4nvJI5I2Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4TTdT04nwcz1Q8k8;
-	Tue,  6 Feb 2024 17:37:40 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5967D18006C;
-	Tue,  6 Feb 2024 17:39:00 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 6 Feb 2024 17:38:59 +0800
-CC: <yangyicong@hisilicon.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <james.clark@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<namhyung@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<zhanjie9@hisilicon.com>, <21cnbao@gmail.com>, <tim.c.chen@intel.com>,
-	<prime.zeng@hisilicon.com>, <fanghao11@huawei.com>, <linuxarm@huawei.com>,
-	<linux-arm-kernel@lists.infradead.org>, Tim Chen <tim.c.chen@linux.intel.com>
-Subject: Re: [RESEND v4] perf stat: Support per-cluster aggregation
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-References: <20240206082016.22292-1-yangyicong@huawei.com>
- <20240206091651.00007c1b@Huawei.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <8af31d10-4779-77e7-1774-baf4d9280fbb@huawei.com>
-Date: Tue, 6 Feb 2024 17:38:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TTf60574Wz67Q86;
+	Tue,  6 Feb 2024 18:06:16 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8FC44140D27;
+	Tue,  6 Feb 2024 18:09:31 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 6 Feb
+ 2024 10:09:30 +0000
+Date: Tue, 6 Feb 2024 10:09:29 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Yicong Yang <yangyicong@huawei.com>
+CC: <will@kernel.org>, <john.g.garry@oracle.com>, <james.clark@arm.com>,
+	<mike.leach@linaro.org>, <leo.yan@linaro.org>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+	<hejunhao3@huawei.com>, <prime.zeng@hisilicon.com>,
+	<yangyicong@hisilicon.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH] perf stat: Enable iostat mode for HiSilicon PCIe PMU
+Message-ID: <20240206100929.00007128@Huawei.com>
+In-Reply-To: <20240123071201.30914-1-yangyicong@huawei.com>
+References: <20240123071201.30914-1-yangyicong@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240206091651.00007c1b@Huawei.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500009.china.huawei.com (7.192.105.203)
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 2024/2/6 17:16, Jonathan Cameron wrote:
-> On Tue, 6 Feb 2024 16:20:16 +0800
-> Yicong Yang <yangyicong@huawei.com> wrote:
+On Tue, 23 Jan 2024 15:12:01 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
+
+> From: Yicong Yang <yangyicong@hisilicon.com>
+
+If you end up doing a v2, a few typos and grammar tweaks.
+A few other trivial comments inline on things that might improve readability
+a tiny bit.
+
+
 > 
->> From: Yicong Yang <yangyicong@hisilicon.com>
->>
->> Some platforms have 'cluster' topology and CPUs in the cluster will
->> share resources like L3 Cache Tag (for HiSilicon Kunpeng SoC) or L2
->> cache (for Intel Jacobsville). Currently parsing and building cluster
->> topology have been supported since [1].
->>
->> perf stat has already supported aggregation for other topologies like
->> die or socket, etc. It'll be useful to aggregate per-cluster to find
->> problems like L3T bandwidth contention.
->>
->> This patch add support for "--per-cluster" option for per-cluster
->> aggregation. Also update the docs and related test. The output will
->> be like:
->>
->> [root@localhost tmp]# perf stat -a -e LLC-load --per-cluster -- sleep 5
->>
->>  Performance counter stats for 'system wide':
->>
->> S56-D0-CLS158    4      1,321,521,570      LLC-load
->> S56-D0-CLS594    4        794,211,453      LLC-load
->> S56-D0-CLS1030    4             41,623      LLC-load
->> S56-D0-CLS1466    4             41,646      LLC-load
->> S56-D0-CLS1902    4             16,863      LLC-load
->> S56-D0-CLS2338    4             15,721      LLC-load
->> S56-D0-CLS2774    4             22,671      LLC-load
->> [...]
->>
->> On a legacy system without cluster or cluster support, the output will
->> be look like:
->> [root@localhost perf]# perf stat -a -e cycles --per-cluster -- sleep 1
->>
->>  Performance counter stats for 'system wide':
->>
->> S56-D0-CLS0   64         18,011,485      cycles
->> S7182-D0-CLS0   64         16,548,835      cycles
->>
->> Note that this patch doesn't mix the cluster information in the outputs
->> of --per-core to avoid breaking any tools/scripts using it.
->>
->> Note that perf recently supports "--per-cache" aggregation, but it's not
->> the same with the cluster although cluster CPUs may share some cache
->> resources. For example on my machine all clusters within a die share the
->> same L3 cache:
->> $ cat /sys/devices/system/cpu/cpu0/cache/index3/shared_cpu_list
->> 0-31
->> $ cat /sys/devices/system/cpu/cpu0/topology/cluster_cpus_list
->> 0-3
->>
->> [1] commit c5e22feffdd7 ("topology: Represent clusters of CPUs within a die")
->> Tested-by: Jie Zhan <zhanjie9@hisilicon.com>
->> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> ---
->> Change since v3:
->> - Rebase on v6.7-rc4 and resolve the conflicts
->> Link: https://lore.kernel.org/all/20230404104951.27537-1-yangyicong@huawei.com/
->>
->> Change since v2:
->> - Use 0 as cluster ID on legacy system without cluster support, keep consistenct
->>   with what --per-die does.
->> Link: https://lore.kernel.org/all/20230328112717.19573-1-yangyicong@huawei.com/
->>
->> Change since v1:
->> - Provides the information about how to map the cluster to the CPUs in the manual
-> Given this change incorporates both the case in the example above where PPTT doesn't
-> have the IDs set for the Processor Hierarchy nodes and the one where it does 
-> (which would be the UIDs of the Processor Containers in DSDT) I think this is sufficient.
+> Some HiSilicon platforms provide PCIe PMU devices for monitoring the
+> throughout and latency of PCIe traffic. With the support of PCIe PMU
+> we can enable the perf iostat mode.
 > 
+> The HiSilicon PCIe PMU can support measuring the throughout of certain
+> TLP types and of certian root port. Totally 6 metrics are provided in
 
-Yes the perf only read the IDs from sysfs and if the firmware fill the ID more meaningfully
-we should get a more readable output like:
-[root@localhost yang]# ./perf stat -e ll_cache_miss --per-cluster --timeout 1000
+certain
 
- Performance counter stats for 'system wide':
-
-S0-D0-CLS0    4             944838      ll_cache_miss
-S0-D0-CLS1    4            4067300      ll_cache_miss
-S0-D0-CLS2    4           14804515      ll_cache_miss
-S0-D0-CLS3    4           11664175      ll_cache_miss
-S0-D0-CLS4    4           11301486      ll_cache_miss
-S0-D0-CLS5    4           11300000      ll_cache_miss
-S0-D0-CLS6    4            1996552      ll_cache_miss
-[...]
-
-> Not an expert on perftool but in general this looks both useful and correct to me.
+> the unit of MB:
 > 
+> - Inbound MWR: The memory write TLPs from the devices downstream the root port
+> - Inbound MRD: The memory read TLPs from the devices downstream the root port
+> - Inbound CPL: The completion TLPs from the devices downstream the root port
+> - Outbound MWR: The memory write TLPs from the CPU to the downstream devices
+> - Outbound MRD: The memory read TLPs from the CPU to the downstream devices
+> - Outbound CPL: The completions TLPs from the CPU to the downstream devices
+> 
+> Since the PMU measures the throughout with unit of DWords. So we need to
+throughput in DWords
 
-Thanks.
+> calculate the throughout in MB like:
+>   Count * 4B / 1024 / 1024
+> 
+> Some of the display of the `perf iostat` will be like:
+> [root@localhost tmp]# ./perf iostat list
+> hisi_pcie0_core2<0000:40:00.0>
+> hisi_pcie2_core2<0000:5f:00.0>
+> hisi_pcie0_core1<0000:16:00.0>
+> hisi_pcie0_core1<0000:16:04.0>
+> [root@localhost tmp]# ./perf iostat --timeout 10000
+> 
+>  Performance counter stats for 'system wide':
+> 
+>     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
+> 0000:40:00.0                    0                    0                    0                    0                    0                    0
+> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
+> 0000:16:00.0             16272.99               366.58                    0                15.09                    0             16156.85
+> 0000:16:04.0                    0                    0                    0                    0                    0                    0
+> 
+>       10.008227512 seconds time elapsed
+> 
+> [root@localhost tmp]# ./perf iostat 0000:16:00.0 -- fio -name=read
+> -numjobs=30 -filename=/dev/nvme0n1 -rw=rw -iodepth=128 -direct=1 -sync=0
+> -norandommap -group_reporting -runtime=10 -time_based -bs=64k
+> 
+>  Performance counter stats for 'system wide':
+> 
+>     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
+> 0000:40:00.0                    0                    0                    0                    0                    0                    0
+> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
+> 0000:16:00.0             16314.30               371.22                    0                15.21                    0             16362.20
+> 0000:16:04.0                    0                    0                    0                    0                    0                    0
+> 
+>       10.168561767 seconds time elapsed
+> 
+>        0.465373000 seconds user
+>        1.952948000 seconds sys
+> 
+> More information of the HiSilicon PCIe PMU can be found at
+> Documentation/admin-guide/perf/hisi-pcie-pmu.rst.
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  tools/perf/arch/arm64/util/Build         |   1 +
+>  tools/perf/arch/arm64/util/hisi-iostat.c | 433 +++++++++++++++++++++++
+>  2 files changed, 434 insertions(+)
+>  create mode 100644 tools/perf/arch/arm64/util/hisi-iostat.c
+> 
+> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+> index 78ef7115be3d..4e8dabf98b29 100644
+> --- a/tools/perf/arch/arm64/util/Build
+> +++ b/tools/perf/arch/arm64/util/Build
+> @@ -3,6 +3,7 @@ perf-y += machine.o
+>  perf-y += perf_regs.o
+>  perf-y += tsc.o
+>  perf-y += pmu.o
+> +perf-y += hisi-iostat.o
+>  perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+>  perf-$(CONFIG_DWARF)     += dwarf-regs.o
+>  perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+> diff --git a/tools/perf/arch/arm64/util/hisi-iostat.c b/tools/perf/arch/arm64/util/hisi-iostat.c
+> new file mode 100644
+> index 000000000000..418eebece184
+> --- /dev/null
+> +++ b/tools/perf/arch/arm64/util/hisi-iostat.c
+> @@ -0,0 +1,433 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * perf iostat support for HiSilicon PCIe PMU.
+> + * Partly derived from tools/perf/arch/x86/util/iostat.c.
+> + *
+> + * Copyright (c) 2024 HiSilicon Technologies Co., Ltd.
+> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+> + */
+> +
+> +#include <api/fs/fs.h>
+> +#include <linux/err.h>
+> +#include <linux/zalloc.h>
+> +#include <linux/limits.h>
+> +#include <dirent.h>
+> +#include <stdio.h>
+> +#include <errno.h>
+> +#include <stdlib.h>
+> +
+> +#include "util/counts.h"
+> +#include "util/cpumap.h"
+> +#include "util/debug.h"
+> +#include "util/iostat.h"
+> +#include "util/pmu.h"
+> +
+> +#define PCI_DEFAULT_DOMAIN		0
+> +#define PCI_DEVICE_NAME_PATTERN		"%04x:%02hhx:%02hhx.%hhu"
+> +#define PCI_ROOT_BUS_DEVICES_PATH	"bus/pci/devices"
+> +
+> +static const char * const hisi_iostat_metrics[] = {
+> +	"Inbound MWR(MB)",
+> +	"Inbound MRD(MB)",
+> +	"Inbound CPL(MB)",
+> +	"Outbound MWR(MB)",
+> +	"Outbound MRD(MB)",
+> +	"Outbound CPL(MB)",
+> +};
+> +
+> +static const char * const hisi_iostat_cmd_template[] = {
 
-> Jonathan
-> 
->> - Thanks the review from Tim and test from Jie.
->> Link: https://lore.kernel.org/all/20230313085911.61359-1-yangyicong@huawei.com/
->>
->>  tools/perf/Documentation/perf-stat.txt        | 11 ++++
->>  tools/perf/builtin-stat.c                     | 52 +++++++++++++++++--
->>  .../tests/shell/lib/perf_json_output_lint.py  |  4 +-
->>  tools/perf/tests/shell/lib/stat_output.sh     | 12 +++++
->>  tools/perf/tests/shell/stat+csv_output.sh     |  2 +
->>  tools/perf/tests/shell/stat+json_output.sh    | 13 +++++
->>  tools/perf/tests/shell/stat+std_output.sh     |  2 +
->>  tools/perf/util/cpumap.c                      | 32 +++++++++++-
->>  tools/perf/util/cpumap.h                      | 19 +++++--
->>  tools/perf/util/env.h                         |  1 +
->>  tools/perf/util/stat-display.c                | 13 +++++
->>  tools/perf/util/stat.h                        |  1 +
->>  12 files changed, 153 insertions(+), 9 deletions(-)
->>
->> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
->> index 5af2e432b54f..29756a87ab6f 100644
->> --- a/tools/perf/Documentation/perf-stat.txt
->> +++ b/tools/perf/Documentation/perf-stat.txt
->> @@ -308,6 +308,14 @@ use --per-die in addition to -a. (system-wide).  The output includes the
->>  die number and the number of online processors on that die. This is
->>  useful to gauge the amount of aggregation.
->>  
->> +--per-cluster::
->> +Aggregate counts per processor cluster for system-wide mode measurement.  This
->> +is a useful mode to detect imbalance between clusters.  To enable this mode,
->> +use --per-cluster in addition to -a. (system-wide).  The output includes the
->> +cluster number and the number of online processors on that cluster. This is
->> +useful to gauge the amount of aggregation. The information of cluster ID and
->> +related CPUs can be gotten from /sys/devices/system/cpu/cpuX/topology/cluster_{id, cpus}.
->> +
->>  --per-cache::
->>  Aggregate counts per cache instance for system-wide mode measurements.  By
->>  default, the aggregation happens for the cache level at the highest index
->> @@ -396,6 +404,9 @@ Aggregate counts per processor socket for system-wide mode measurements.
->>  --per-die::
->>  Aggregate counts per processor die for system-wide mode measurements.
->>  
->> +--per-cluster::
->> +Aggregate counts perf processor cluster for system-wide mode measurements.
->> +
->>  --per-cache::
->>  Aggregate counts per cache instance for system-wide mode measurements.  By
->>  default, the aggregation happens for the cache level at the highest index
->> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->> index 5fe9abc6a524..6bba1a89d030 100644
->> --- a/tools/perf/builtin-stat.c
->> +++ b/tools/perf/builtin-stat.c
->> @@ -1238,6 +1238,8 @@ static struct option stat_options[] = {
->>  		     "aggregate counts per processor socket", AGGR_SOCKET),
->>  	OPT_SET_UINT(0, "per-die", &stat_config.aggr_mode,
->>  		     "aggregate counts per processor die", AGGR_DIE),
->> +	OPT_SET_UINT(0, "per-cluster", &stat_config.aggr_mode,
->> +		     "aggregate counts per processor cluster", AGGR_CLUSTER),
->>  	OPT_CALLBACK_OPTARG(0, "per-cache", &stat_config.aggr_mode, &stat_config.aggr_level,
->>  			    "cache level", "aggregate count at this cache level (Default: LLC)",
->>  			    parse_cache_level),
->> @@ -1428,6 +1430,7 @@ static struct aggr_cpu_id aggr_cpu_id__cache(struct perf_cpu cpu, void *data)
->>  static const char *const aggr_mode__string[] = {
->>  	[AGGR_CORE] = "core",
->>  	[AGGR_CACHE] = "cache",
->> +	[AGGR_CLUSTER] = "cluster",
->>  	[AGGR_DIE] = "die",
->>  	[AGGR_GLOBAL] = "global",
->>  	[AGGR_NODE] = "node",
->> @@ -1455,6 +1458,12 @@ static struct aggr_cpu_id perf_stat__get_cache_id(struct perf_stat_config *confi
->>  	return aggr_cpu_id__cache(cpu, /*data=*/NULL);
->>  }
->>  
->> +static struct aggr_cpu_id perf_stat__get_cluster(struct perf_stat_config *config __maybe_unused,
->> +						 struct perf_cpu cpu)
->> +{
->> +	return aggr_cpu_id__cluster(cpu, /*data=*/NULL);
->> +}
->> +
->>  static struct aggr_cpu_id perf_stat__get_core(struct perf_stat_config *config __maybe_unused,
->>  					      struct perf_cpu cpu)
->>  {
->> @@ -1507,6 +1516,12 @@ static struct aggr_cpu_id perf_stat__get_die_cached(struct perf_stat_config *con
->>  	return perf_stat__get_aggr(config, perf_stat__get_die, cpu);
->>  }
->>  
->> +static struct aggr_cpu_id perf_stat__get_cluster_cached(struct perf_stat_config *config,
->> +							struct perf_cpu cpu)
->> +{
->> +	return perf_stat__get_aggr(config, perf_stat__get_cluster, cpu);
->> +}
->> +
->>  static struct aggr_cpu_id perf_stat__get_cache_id_cached(struct perf_stat_config *config,
->>  							 struct perf_cpu cpu)
->>  {
->> @@ -1544,6 +1559,8 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr(enum aggr_mode aggr_mode)
->>  		return aggr_cpu_id__socket;
->>  	case AGGR_DIE:
->>  		return aggr_cpu_id__die;
->> +	case AGGR_CLUSTER:
->> +		return aggr_cpu_id__cluster;
->>  	case AGGR_CACHE:
->>  		return aggr_cpu_id__cache;
->>  	case AGGR_CORE:
->> @@ -1569,6 +1586,8 @@ static aggr_get_id_t aggr_mode__get_id(enum aggr_mode aggr_mode)
->>  		return perf_stat__get_socket_cached;
->>  	case AGGR_DIE:
->>  		return perf_stat__get_die_cached;
->> +	case AGGR_CLUSTER:
->> +		return perf_stat__get_cluster_cached;
->>  	case AGGR_CACHE:
->>  		return perf_stat__get_cache_id_cached;
->>  	case AGGR_CORE:
->> @@ -1737,6 +1756,21 @@ static struct aggr_cpu_id perf_env__get_cache_aggr_by_cpu(struct perf_cpu cpu,
->>  	return id;
->>  }
->>  
->> +static struct aggr_cpu_id perf_env__get_cluster_aggr_by_cpu(struct perf_cpu cpu,
->> +							    void *data)
->> +{
->> +	struct perf_env *env = data;
->> +	struct aggr_cpu_id id = aggr_cpu_id__empty();
->> +
->> +	if (cpu.cpu != -1) {
->> +		id.socket = env->cpu[cpu.cpu].socket_id;
->> +		id.die = env->cpu[cpu.cpu].die_id;
->> +		id.cluster = env->cpu[cpu.cpu].cluster_id;
->> +	}
->> +
->> +	return id;
->> +}
->> +
->>  static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(struct perf_cpu cpu, void *data)
->>  {
->>  	struct perf_env *env = data;
->> @@ -1744,12 +1778,12 @@ static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(struct perf_cpu cpu, vo
->>  
->>  	if (cpu.cpu != -1) {
->>  		/*
->> -		 * core_id is relative to socket and die,
->> -		 * we need a global id. So we set
->> -		 * socket, die id and core id
->> +		 * core_id is relative to socket, die and cluster, we need a
->> +		 * global id. So we set socket, die id, cluster id and core id.
->>  		 */
->>  		id.socket = env->cpu[cpu.cpu].socket_id;
->>  		id.die = env->cpu[cpu.cpu].die_id;
->> +		id.cluster = env->cpu[cpu.cpu].cluster_id;
->>  		id.core = env->cpu[cpu.cpu].core_id;
->>  	}
->>  
->> @@ -1805,6 +1839,12 @@ static struct aggr_cpu_id perf_stat__get_die_file(struct perf_stat_config *confi
->>  	return perf_env__get_die_aggr_by_cpu(cpu, &perf_stat.session->header.env);
->>  }
->>  
->> +static struct aggr_cpu_id perf_stat__get_cluster_file(struct perf_stat_config *config __maybe_unused,
->> +						      struct perf_cpu cpu)
->> +{
->> +	return perf_env__get_cluster_aggr_by_cpu(cpu, &perf_stat.session->header.env);
->> +}
->> +
->>  static struct aggr_cpu_id perf_stat__get_cache_file(struct perf_stat_config *config __maybe_unused,
->>  						    struct perf_cpu cpu)
->>  {
->> @@ -1842,6 +1882,8 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr_file(enum aggr_mode aggr_mode)
->>  		return perf_env__get_socket_aggr_by_cpu;
->>  	case AGGR_DIE:
->>  		return perf_env__get_die_aggr_by_cpu;
->> +	case AGGR_CLUSTER:
->> +		return perf_env__get_cluster_aggr_by_cpu;
->>  	case AGGR_CACHE:
->>  		return perf_env__get_cache_aggr_by_cpu;
->>  	case AGGR_CORE:
->> @@ -1867,6 +1909,8 @@ static aggr_get_id_t aggr_mode__get_id_file(enum aggr_mode aggr_mode)
->>  		return perf_stat__get_socket_file;
->>  	case AGGR_DIE:
->>  		return perf_stat__get_die_file;
->> +	case AGGR_CLUSTER:
->> +		return perf_stat__get_cluster_file;
->>  	case AGGR_CACHE:
->>  		return perf_stat__get_cache_file;
->>  	case AGGR_CORE:
->> @@ -2398,6 +2442,8 @@ static int __cmd_report(int argc, const char **argv)
->>  		     "aggregate counts per processor socket", AGGR_SOCKET),
->>  	OPT_SET_UINT(0, "per-die", &perf_stat.aggr_mode,
->>  		     "aggregate counts per processor die", AGGR_DIE),
->> +	OPT_SET_UINT(0, "per-cluster", &perf_stat.aggr_mode,
->> +		     "aggregate counts perf processor cluster", AGGR_CLUSTER),
->>  	OPT_CALLBACK_OPTARG(0, "per-cache", &perf_stat.aggr_mode, &perf_stat.aggr_level,
->>  			    "cache level",
->>  			    "aggregate count at this cache level (Default: LLC)",
->> diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
->> index ea55d5ea1ced..abc1fd737782 100644
->> --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
->> +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
->> @@ -15,6 +15,7 @@ ap.add_argument('--event', action='store_true')
->>  ap.add_argument('--per-core', action='store_true')
->>  ap.add_argument('--per-thread', action='store_true')
->>  ap.add_argument('--per-cache', action='store_true')
->> +ap.add_argument('--per-cluster', action='store_true')
->>  ap.add_argument('--per-die', action='store_true')
->>  ap.add_argument('--per-node', action='store_true')
->>  ap.add_argument('--per-socket', action='store_true')
->> @@ -49,6 +50,7 @@ def check_json_output(expected_items):
->>        'cgroup': lambda x: True,
->>        'cpu': lambda x: isint(x),
->>        'cache': lambda x: True,
->> +      'cluster': lambda x: True,
->>        'die': lambda x: True,
->>        'event': lambda x: True,
->>        'event-runtime': lambda x: isfloat(x),
->> @@ -88,7 +90,7 @@ try:
->>      expected_items = 7
->>    elif args.interval or args.per_thread or args.system_wide_no_aggr:
->>      expected_items = 8
->> -  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache:
->> +  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cluster or args.per_cache:
->>      expected_items = 9
->>    else:
->>      # If no option is specified, don't check the number of items.
->> diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
->> index 3cc158a64326..c81d6a9f7983 100644
->> --- a/tools/perf/tests/shell/lib/stat_output.sh
->> +++ b/tools/perf/tests/shell/lib/stat_output.sh
->> @@ -97,6 +97,18 @@ check_per_cache_instance()
->>  	echo "[Success]"
->>  }
->>  
->> +check_per_cluster()
->> +{
->> +	echo -n "Checking $1 output: per cluster "
->> +	if ParanoidAndNotRoot 0
->> +	then
->> +		echo "[Skip] paranoid and not root"
->> +		return
->> +	fi
->> +	perf stat --per-cluster -a $2 true
->> +	echo "[Success]"
->> +}
->> +
->>  check_per_die()
->>  {
->>  	echo -n "Checking $1 output: per die "
->> diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
->> index f1818fa6d9ce..fc2d8cc6e5e0 100755
->> --- a/tools/perf/tests/shell/stat+csv_output.sh
->> +++ b/tools/perf/tests/shell/stat+csv_output.sh
->> @@ -42,6 +42,7 @@ function commachecker()
->>  	;; "--per-socket")	exp=8
->>  	;; "--per-node")	exp=8
->>  	;; "--per-die")		exp=8
->> +	;; "--per-cluster")	exp=8
->>  	;; "--per-cache")	exp=8
->>  	esac
->>  
->> @@ -79,6 +80,7 @@ then
->>  	check_system_wide_no_aggr "CSV" "$perf_cmd"
->>  	check_per_core "CSV" "$perf_cmd"
->>  	check_per_cache_instance "CSV" "$perf_cmd"
->> +	check_per_cluster "CSV" "$perf_cmd"
->>  	check_per_die "CSV" "$perf_cmd"
->>  	check_per_socket "CSV" "$perf_cmd"
->>  else
->> diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
->> index 3bc900533a5d..2b9c6212dffc 100755
->> --- a/tools/perf/tests/shell/stat+json_output.sh
->> +++ b/tools/perf/tests/shell/stat+json_output.sh
->> @@ -122,6 +122,18 @@ check_per_cache_instance()
->>  	echo "[Success]"
->>  }
->>  
->> +check_per_cluster()
->> +{
->> +	echo -n "Checking json output: per cluster "
->> +	if ParanoidAndNotRoot 0
->> +	then
->> +		echo "[Skip] paranoia and not root"
->> +		return
->> +	fi
->> +	perf stat -j --per-cluster -a true 2>&1 | $PYTHON $pythonchecker --per-cluster
->> +	echo "[Success]"
->> +}
->> +
->>  check_per_die()
->>  {
->>  	echo -n "Checking json output: per die "
->> @@ -200,6 +212,7 @@ then
->>  	check_system_wide_no_aggr
->>  	check_per_core
->>  	check_per_cache_instance
->> +	check_per_cluster
->>  	check_per_die
->>  	check_per_socket
->>  else
->> diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
->> index 4fcdd1a9142c..16f61e86afc5 100755
->> --- a/tools/perf/tests/shell/stat+std_output.sh
->> +++ b/tools/perf/tests/shell/stat+std_output.sh
->> @@ -40,6 +40,7 @@ function commachecker()
->>  	;; "--per-node")	prefix=3
->>  	;; "--per-die")		prefix=3
->>  	;; "--per-cache")	prefix=3
->> +	;; "--per-cluster")	prefix=3
->>  	esac
->>  
->>  	while read line
->> @@ -99,6 +100,7 @@ then
->>  	check_system_wide_no_aggr "STD" "$perf_cmd"
->>  	check_per_core "STD" "$perf_cmd"
->>  	check_per_cache_instance "STD" "$perf_cmd"
->> +	check_per_cluster "STD" "$perf_cmd"
->>  	check_per_die "STD" "$perf_cmd"
->>  	check_per_socket "STD" "$perf_cmd"
->>  else
->> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
->> index 0581ee0fa5f2..5907456d42a2 100644
->> --- a/tools/perf/util/cpumap.c
->> +++ b/tools/perf/util/cpumap.c
->> @@ -222,6 +222,8 @@ static int aggr_cpu_id__cmp(const void *a_pointer, const void *b_pointer)
->>  		return a->socket - b->socket;
->>  	else if (a->die != b->die)
->>  		return a->die - b->die;
->> +	else if (a->cluster != b->cluster)
->> +		return a->cluster - b->cluster;
->>  	else if (a->cache_lvl != b->cache_lvl)
->>  		return a->cache_lvl - b->cache_lvl;
->>  	else if (a->cache != b->cache)
->> @@ -309,6 +311,29 @@ struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
->>  	return id;
->>  }
->>  
->> +int cpu__get_cluster_id(struct perf_cpu cpu)
->> +{
->> +	int value, ret = cpu__get_topology_int(cpu.cpu, "cluster_id", &value);
->> +	return ret ?: value;
->> +}
->> +
->> +struct aggr_cpu_id aggr_cpu_id__cluster(struct perf_cpu cpu, void *data)
->> +{
->> +	int cluster = cpu__get_cluster_id(cpu);
->> +	struct aggr_cpu_id id;
->> +
->> +	/* There is no cluster_id on legacy system. */
->> +	if (cluster == -1)
->> +		cluster = 0;
->> +
->> +	id = aggr_cpu_id__die(cpu, data);
->> +	if (aggr_cpu_id__is_empty(&id))
->> +		return id;
->> +
->> +	id.cluster = cluster;
->> +	return id;
->> +}
->> +
->>  int cpu__get_core_id(struct perf_cpu cpu)
->>  {
->>  	int value, ret = cpu__get_topology_int(cpu.cpu, "core_id", &value);
->> @@ -320,8 +345,8 @@ struct aggr_cpu_id aggr_cpu_id__core(struct perf_cpu cpu, void *data)
->>  	struct aggr_cpu_id id;
->>  	int core = cpu__get_core_id(cpu);
->>  
->> -	/* aggr_cpu_id__die returns a struct with socket and die set. */
->> -	id = aggr_cpu_id__die(cpu, data);
->> +	/* aggr_cpu_id__die returns a struct with socket die, and cluster set. */
->> +	id = aggr_cpu_id__cluster(cpu, data);
->>  	if (aggr_cpu_id__is_empty(&id))
->>  		return id;
->>  
->> @@ -683,6 +708,7 @@ bool aggr_cpu_id__equal(const struct aggr_cpu_id *a, const struct aggr_cpu_id *b
->>  		a->node == b->node &&
->>  		a->socket == b->socket &&
->>  		a->die == b->die &&
->> +		a->cluster == b->cluster &&
->>  		a->cache_lvl == b->cache_lvl &&
->>  		a->cache == b->cache &&
->>  		a->core == b->core &&
->> @@ -695,6 +721,7 @@ bool aggr_cpu_id__is_empty(const struct aggr_cpu_id *a)
->>  		a->node == -1 &&
->>  		a->socket == -1 &&
->>  		a->die == -1 &&
->> +		a->cluster == -1 &&
->>  		a->cache_lvl == -1 &&
->>  		a->cache == -1 &&
->>  		a->core == -1 &&
->> @@ -708,6 +735,7 @@ struct aggr_cpu_id aggr_cpu_id__empty(void)
->>  		.node = -1,
->>  		.socket = -1,
->>  		.die = -1,
->> +		.cluster = -1,
->>  		.cache_lvl = -1,
->>  		.cache = -1,
->>  		.core = -1,
->> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
->> index 9df2aeb34d3d..26cf76c693f5 100644
->> --- a/tools/perf/util/cpumap.h
->> +++ b/tools/perf/util/cpumap.h
->> @@ -20,6 +20,8 @@ struct aggr_cpu_id {
->>  	int socket;
->>  	/** The die id as read from /sys/devices/system/cpu/cpuX/topology/die_id. */
->>  	int die;
->> +	/** The cluster id as read from /sys/devices/system/cpu/cpuX/topology/cluster_id */
->> +	int cluster;
->>  	/** The cache level as read from /sys/devices/system/cpu/cpuX/cache/indexY/level */
->>  	int cache_lvl;
->>  	/**
->> @@ -86,6 +88,11 @@ int cpu__get_socket_id(struct perf_cpu cpu);
->>   * /sys/devices/system/cpu/cpuX/topology/die_id for the given CPU.
->>   */
->>  int cpu__get_die_id(struct perf_cpu cpu);
->> +/**
->> + * cpu__get_cluster_id - Returns the cluster id as read from
->> + * /sys/devices/system/cpu/cpuX/topology/cluster_id for the given CPU
->> + */
->> +int cpu__get_cluster_id(struct perf_cpu cpu);
->>  /**
->>   * cpu__get_core_id - Returns the core id as read from
->>   * /sys/devices/system/cpu/cpuX/topology/core_id for the given CPU.
->> @@ -127,9 +134,15 @@ struct aggr_cpu_id aggr_cpu_id__socket(struct perf_cpu cpu, void *data);
->>   */
->>  struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data);
->>  /**
->> - * aggr_cpu_id__core - Create an aggr_cpu_id with the core, die and socket
->> - * populated with the core, die and socket for cpu. The function signature is
->> - * compatible with aggr_cpu_id_get_t.
->> + * aggr_cpu_id__cluster - Create an aggr_cpu_id with cluster, die and socket
->> + * populated with the cluster, die and socket for cpu. The function signature
->> + * is compatible with aggr_cpu_id_get_t.
->> + */
->> +struct aggr_cpu_id aggr_cpu_id__cluster(struct perf_cpu cpu, void *data);
->> +/**
->> + * aggr_cpu_id__core - Create an aggr_cpu_id with the core, cluster, die and
->> + * socket populated with the core, die and socket for cpu. The function
->> + * signature is compatible with aggr_cpu_id_get_t.
->>   */
->>  struct aggr_cpu_id aggr_cpu_id__core(struct perf_cpu cpu, void *data);
->>  /**
->> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
->> index 7c527e65c186..2a2c37cc40b7 100644
->> --- a/tools/perf/util/env.h
->> +++ b/tools/perf/util/env.h
->> @@ -12,6 +12,7 @@ struct perf_cpu_map;
->>  struct cpu_topology_map {
->>  	int	socket_id;
->>  	int	die_id;
->> +	int	cluster_id;
->>  	int	core_id;
->>  };
->>  
->> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
->> index 8c61f8627ebc..4dfe7d9517a9 100644
->> --- a/tools/perf/util/stat-display.c
->> +++ b/tools/perf/util/stat-display.c
->> @@ -201,6 +201,9 @@ static void print_aggr_id_std(struct perf_stat_config *config,
->>  		snprintf(buf, sizeof(buf), "S%d-D%d-L%d-ID%d",
->>  			 id.socket, id.die, id.cache_lvl, id.cache);
->>  		break;
->> +	case AGGR_CLUSTER:
->> +		snprintf(buf, sizeof(buf), "S%d-D%d-CLS%d", id.socket, id.die, id.cluster);
->> +		break;
->>  	case AGGR_DIE:
->>  		snprintf(buf, sizeof(buf), "S%d-D%d", id.socket, id.die);
->>  		break;
->> @@ -251,6 +254,10 @@ static void print_aggr_id_csv(struct perf_stat_config *config,
->>  		fprintf(config->output, "S%d-D%d-L%d-ID%d%s%d%s",
->>  			id.socket, id.die, id.cache_lvl, id.cache, sep, aggr_nr, sep);
->>  		break;
->> +	case AGGR_CLUSTER:
->> +		fprintf(config->output, "S%d-D%d-CLS%d%s%d%s",
->> +			id.socket, id.die, id.cluster, sep, aggr_nr, sep);
->> +		break;
->>  	case AGGR_DIE:
->>  		fprintf(output, "S%d-D%d%s%d%s",
->>  			id.socket, id.die, sep, aggr_nr, sep);
->> @@ -300,6 +307,10 @@ static void print_aggr_id_json(struct perf_stat_config *config,
->>  		fprintf(output, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"aggregate-number\" : %d, ",
->>  			id.socket, id.die, id.cache_lvl, id.cache, aggr_nr);
->>  		break;
->> +	case AGGR_CLUSTER:
->> +		fprintf(output, "\"cluster\" : \"S%d-D%d-CLS%d\", \"aggregate-number\" : %d, ",
->> +			id.socket, id.die, id.cluster, aggr_nr);
->> +		break;
->>  	case AGGR_DIE:
->>  		fprintf(output, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d, ",
->>  			id.socket, id.die, aggr_nr);
->> @@ -1248,6 +1259,7 @@ static void print_header_interval_std(struct perf_stat_config *config,
->>  	case AGGR_NODE:
->>  	case AGGR_SOCKET:
->>  	case AGGR_DIE:
->> +	case AGGR_CLUSTER:
->>  	case AGGR_CACHE:
->>  	case AGGR_CORE:
->>  		fprintf(output, "#%*s %-*s cpus",
->> @@ -1550,6 +1562,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
->>  	switch (config->aggr_mode) {
->>  	case AGGR_CORE:
->>  	case AGGR_CACHE:
->> +	case AGGR_CLUSTER:
->>  	case AGGR_DIE:
->>  	case AGGR_SOCKET:
->>  	case AGGR_NODE:
->> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
->> index 4357ba114822..d6e5c8787ba2 100644
->> --- a/tools/perf/util/stat.h
->> +++ b/tools/perf/util/stat.h
->> @@ -48,6 +48,7 @@ enum aggr_mode {
->>  	AGGR_GLOBAL,
->>  	AGGR_SOCKET,
->>  	AGGR_DIE,
->> +	AGGR_CLUSTER,
->>  	AGGR_CACHE,
->>  	AGGR_CORE,
->>  	AGGR_THREAD,
-> 
-> .
-> 
+Given this array and the one above have to remain in same order, perhaps
+an enum?  Would also remove need to have the comments via
+[in_bound_wr] = "....
+etc
+
+
+> +	/* Inbound Memory Write */
+> +	"hisi_pcie%hu_core%hu/event=0x0104,port=0x%hx/",
+> +	/* Inbound Memory Read */
+> +	"hisi_pcie%hu_core%hu/event=0x0804,port=0x%hx/",
+> +	/* Inbound Memory Completion */
+> +	"hisi_pcie%hu_core%hu/event=0x2004,port=0x%hx/",
+> +	/* Outbound Memory Write */
+> +	"hisi_pcie%hu_core%hu/event=0x0105,port=0x%hx/",
+> +	/* Outbound Memory Read */
+> +	"hisi_pcie%hu_core%hu/event=0x0405,port=0x%hx/",
+> +	/* Outbound Memory Completion */
+> +	"hisi_pcie%hu_core%hu/event=0x1005,port=0x%hx/",
+> +};
+>
+
+...
+
+
+
+
+> +
+> +void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
+> +			 struct perf_stat_output_ctx *out)
+> +{
+> +	struct perf_counts_values *count;
+> +	const char *iostat_metric;
+> +	double iostat_value;
+> +
+> +	iostat_metric = hisi_iostat_metrics[evsel->core.idx % ARRAY_SIZE(hisi_iostat_metrics)];
+> +
+> +	/* We're using AGGR_GLOBAL so there's only one aggr counts aggr[0]. */
+> +	count = &evsel->stats->aggr[0].counts;
+> +
+> +	/* The counts has been scaled, we can use it directly. */
+> +	iostat_value = (double)count->val;
+> +
+> +	/*
+> +	 * Display two digits after decimal point for better accuracy if the
+> +	 * value is non-zero.
+> +	 */
+> +	out->print_metric(config, out->ctx, NULL,
+> +			  iostat_value > 0 ? "%8.2f" : "%8.0f",
+> +			  iostat_metric, iostat_value / (256 * 1024));
+
+I assume that 256 * 1024 is MiB/sizeof(dword)?  Perhaps express it as
+that to make the reasoning clearer?
+
+
+
+
