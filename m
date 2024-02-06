@@ -1,88 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC8A481B1;
-	Mon,  5 Feb 2024 19:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A137E137E;
+	Tue,  6 Feb 2024 00:18:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707160178; cv=none; b=ZRQx4qx958FrfxRPEkoIk4aiN90KahNxMY0CVoaTPvg+fkwtsPM2p4VgdHHVaaazRu7qwDM3+x6DwbJL3jZPfz6VOflInl0itOZWlozNgBy3FHPZz98osNYs5ePmHZKNntD7qZ6zfAY550eZ48OMb33pBBq9AGlgZ6MrIYgmmDg=
+	t=1707178703; cv=none; b=ZH7J65FkjC6FVAa0417VY4qPC0rj1EfNapW29dSK5gAddemaMMG29yKyfZIozr7Xa7Z+oNjX9DZzj+/eYgD0tnMd9xmLqKLj6tn+FHee6ph2h8aU0cXNjB3mI/GiC/a3dMOEBd5+jL3m4I/7f6l7yK93n33olB6u/A/rolJGKJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707160178; c=relaxed/simple;
-	bh=gIJqV3GMvqU06kq7guQE1A5kqVd2/defoIhiF42CLmo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KiyyaiKyfrDH07AOPk1TS90HVKdV1r/XQ5qDqtBoMSSxgA8DqmPio2G+58VpK8dplJSgy9SAm9X3fiAjegwDYMuKYZqIRnF1Fc+DNy1iIJQNC0MoiZLuBLW/r2+xBADONmgJfbWyfsaLln9ZVptMAu9ng2SeT0nPFjl0qOp9MM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSe+YHdd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707178703; c=relaxed/simple;
+	bh=cXJEh87Xv5oSBW12pIQI2CIX03PW+7inmAuDSsgTT38=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cImJIELHHDjuFxg4+Z7/kMx5xqoXt0QaFa97rWYya7p9zXp3J0zOvEhEb1TcwZr/EZaPkKjYlb0VXkhZ2W+Lg81xGUd6p5OSAtiUPOAhcmoQq4t2BhCFrFLBfqO3CY/SBAJoqlbITNjQ1yZY8m+r0YK081Z5VLNxqRfEFsjd0Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BOV2/5L7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSe+YHdd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCB2FC433F1;
-	Mon,  5 Feb 2024 19:09:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BOV2/5L7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9819BC433F1;
+	Tue,  6 Feb 2024 00:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707160178;
-	bh=gIJqV3GMvqU06kq7guQE1A5kqVd2/defoIhiF42CLmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PSe+YHddlccusr7ABupcCp9O5z2Agk20uLwXqeYelTWA+p8m4oijoUwBYjkcQ99e+
-	 LRKrCFcvW7e/yrIa7E/3kJD6xQaGb4wzGY1yWhj70QvXVLuM5zlRutfK0rVLYwS/EC
-	 RxCqGmMgoz/mOMhXWVkkh5fr0Ez6gXOssicvTxZTXDG7oR9gXL8tRxwI2P1B8kBUNT
-	 7YXTEhos2zRjgtI5Y46BA7RV0Fp2/dKLeE3bpvU6iBwXCWsf6BJ4YyfBjdnhlesIZx
-	 t5x60q4iJjl5fkVXLLbJJgoOV5qrd0imDwZJRFQXg5n29EEoEt7urLUbxS12v/2xD2
-	 gvrHW49p4PJbA==
-Date: Mon, 5 Feb 2024 16:09:32 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] perf thread_map: Free strlist on normal path in
- thread_map__new_by_tid_str()
-Message-ID: <ZcEybM9bV6vP9n7K@x1>
-References: <20240205104616.132417-1-yangjihong1@huawei.com>
- <20240205104616.132417-6-yangjihong1@huawei.com>
+	s=k20201202; t=1707178703;
+	bh=cXJEh87Xv5oSBW12pIQI2CIX03PW+7inmAuDSsgTT38=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=BOV2/5L7nQUaIYRS+30v0GbKmeczl40WzrjYzMFoTtcvu2jWWcvW4ALJJ34GKV4EA
+	 wFV4SVxP4r6HhzvRaGE98k22f/7hpN9GFN0mcrpFTbgD05H1o2T2pW9dF30zyPLqHj
+	 73waapod8T/qyUh1Iny7ncJgAVJguwFIW+L1LUonTX3ZOVxH6n6z09LLYvLEuedzMe
+	 RB6u+jQjOfYDTC68v3HkN40IIxgpXH8UPEsoKE9YIfUVlllyE7kSP6ZjRaJXtPuLPh
+	 iDq0EYpQBxo9ZXj/awdDGQ3fkuwf6ou32lYEVvrad/m9LIKIISXMihX/efdBXwDLkn
+	 SWIh8XLYyD8Lg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Michael Petlan <mpetlan@redhat.com>,
+	tchen168@asu.edu,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-perf-users@vger.kernel.org,
+	Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH v2 1/3] perf tsc: Add missing newlines to debug statements
+Date: Mon,  5 Feb 2024 16:18:19 -0800
+Message-ID: <170717858567.1700937.14873687194661225533.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+In-Reply-To: <20240131134940.593788-1-irogers@google.com>
+References: <20240131134940.593788-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240205104616.132417-6-yangjihong1@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 05, 2024 at 10:46:16AM +0000, Yang Jihong wrote:
-> slist needs to be freed in both error path and normal path in
-> thread_map__new_by_tid_str().
-
-Please add:
-
-Fixes: b52956c961be3a04 ("perf tools: Allow multiple threads or processes in record, stat, top")
-
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-- Arnaldo
- 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/util/thread_map.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, 31 Jan 2024 05:49:38 -0800, Ian Rogers wrote:
+> It is assumed that debug statements always print a newline, fix two
+> missing ones.
 > 
-> diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-> index e848579e61a8..ea3b431b9783 100644
-> --- a/tools/perf/util/thread_map.c
-> +++ b/tools/perf/util/thread_map.c
-> @@ -280,13 +280,13 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
->  		threads->nr = ntasks;
->  	}
->  out:
-> +	strlist__delete(slist);
->  	if (threads)
->  		refcount_set(&threads->refcnt, 1);
->  	return threads;
->  
->  out_free_threads:
->  	zfree(&threads);
-> -	strlist__delete(slist);
->  	goto out;
->  }
->  
-> -- 
-> 2.34.1
+> 
+
+Applied to perf-tools-next, thanks!
+
+[1/3] perf tsc: Add missing newlines to debug statements
+      commit: 2882358b8b83b417a9d82205ae6aae5be00bd989
+[2/3] perf parse-events: Improve error location of terms cloned from an event
+      commit: f5144ecad74101f87843aa08070df26a3937102a
+[3/3] perf parse-events: Print all errors
+      commit: fd7b8e8fb20f51d60dfee7792806548f3c6a4c2c
+
+Best regards,
+-- 
+Namhyung Kim <namhyung@kernel.org>
