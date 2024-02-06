@@ -1,344 +1,176 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43C857308
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 02:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4809F6E2B0
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 03:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707186245; cv=none; b=ceHge+GtoHE3lYGy/jnPWs53G9oCEYNGYEsLuB51wK0ylIM39PN7xpI85QoJHvLuBKPPLDwAp73N4TvSfF2OAhiUTJMNnSs/9gCcsp1+If7p9QX6BqHCQ4Hw6mm8rFtsSgHabMR2FaHY1/OGIWloEc4nheRf3yvWvnXrCnhLF4E=
+	t=1707188678; cv=none; b=GiiKharNqBVDmEJpx3kcc3pNrjtjLai8wzTQyvIjZeg91uNOJpd/FV4MdcuoVjLC/ocEd8N86UbkG2Ps/pd9FibG8kGg34PA7Ii+eciAjaeH0pjgLG4qn/jcpec8FOi3J5pCCqXf086dnvlJVnbnUfcmG80a22Svr5jLt/q3Ugw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707186245; c=relaxed/simple;
-	bh=JKM8I/B9eZxA1Vio29biL99BhsIYac/6T/kgJg3ZjjY=;
+	s=arc-20240116; t=1707188678; c=relaxed/simple;
+	bh=ne9JUsjTXyxLjlyYsZnE6He33Wl0F4KvtV6zAXvFlbA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tmKhCskZlHgxtHItZiu5wLeODpP4oz6yGrBPv9k6cvnK/KXLrCgk5/2YnDRz/3bmT1qjHxg8SdXBtDvW8ldFxh1KnatpTjztC5E85gdaQ+1YAdVobQhMqBjO53Po/0XfF5PRKNgVCuNWPDiLgxJ/8xLK50dBKMlGWZuANQPqaKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=giB9SrjI; arc=none smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=fyA2LNn/ZX8UXrcf0QnsmrMc97lUa43a6mVJ9XoQE/4cH/JdbUxzU9X4Thsip9GLPYAVO/HDdpXgEwf8tm2iIqJBENqPsL2KY1v7ElL2YUEca721w9aKFUrFsemYT7bPhPFMPb8+X3n9TMQOYDzfG0CuBD2od/R/A634m7v1LVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t+wZN6y9; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="giB9SrjI"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d89f0ab02bso44785ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Feb 2024 18:24:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t+wZN6y9"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d9daf74f41so18265ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Feb 2024 19:04:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707186243; x=1707791043; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707188676; x=1707793476; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JwXaroUJpTq8nvA/AngMuPCnuxdA2L8+vgWMQG7xp8s=;
-        b=giB9SrjI9khDHbGsH6Qka+8uAkw5sEMb8tZ/mgKCx6xjrVDFu5e08uQL7v4MNdu/Zn
-         Ye2fRE2mx+9MwiAo0JkH5hHULoQ64k1H58aLbDzOiIVILn2kEvptWv6+yH2YirMefuvl
-         kSsWG9uNe3nbK4So4a04oLBJDPnDRRbGCDMBdFfXZ75/iYifLypWhUruOPiuGJJUQ6ti
-         czMBYdpzX52sky4/hxC6FgEihdHtvN+cbploN2horgYnzKk1gmdiZ7fdyy6VL8pgsEwD
-         4vhNqi4D8BbDGaJdHw/Ki+tsR/22aYKWrlyT0dnAXVW6aEZzNTlUBFKtQ6QFTCkDbOVb
-         c8/A==
+        bh=0XVXU4jAI/ZUz/I4D5gYYVK37UMhSbbkdn1X91/JlTo=;
+        b=t+wZN6y9Ffl/AmEMSY0oio0GMdYUO/RablQv7b6jzA2IdbVFPaQ1qPLpKG+LIFTidY
+         5+ySQa0mGqmHOs0tdjkj0dlrWRJSpN8Gq+nSncL58cN3Yt9ceJFeE4YoPNN2Y7+XoYi4
+         U2zB3rTho2ODaDpcGPEr2dxHL8izaTWuX6trFoCHCQUFR0f9vI9sdCJKMa2Kw9m/4Ran
+         BWx+V+7Ij0rDFXR/qJIyASZMl9saqL4lIbEgzFOEdUnysTWyMZdaeEvnDv5gyBVi08Hv
+         5A/T/1Cwry2ZEpJsqsaaplGVedXxsWbG3q69yYEh4D9TRxT2YT7yceCxRxiEFgpjmuBO
+         mWdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707186243; x=1707791043;
+        d=1e100.net; s=20230601; t=1707188676; x=1707793476;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JwXaroUJpTq8nvA/AngMuPCnuxdA2L8+vgWMQG7xp8s=;
-        b=tKlXeIoraaApGT9nYk1c66mzXw08negc/RDilCsBzIJhyzu4gkjDPLrgxdce8XCJ+k
-         v3mXhOt1xyZj4MMLytrYXo6MKLp9dXvhm8Go6lo1Zw/dJ7v9KcJIICSWBVnzFQy4DeQj
-         nOjEBT/TH3wmr52MIEL+U2/Ab+M07fkM8QHPEqf73RjpUymXmd0hBVsvlvFYKeav/+u/
-         M8nvAbgEPNfcVFqPw4eU13gUt0jfZZy74nZrmzR27x2/7TcIb4QTjScI6ikNTGb38Jnh
-         k0M8ST/RYR9Dx6KsJ03xVnvO7eXkD29RsF0c/71G4K894j2KotqlXuTrZdq/Bar3LG1W
-         S0NA==
-X-Gm-Message-State: AOJu0Yx65WFbYuqaL0yxLWvlA0RyZLk3sWtbPBxutS+JLFby6gxyZB04
-	K1lP/EyfNKXlwI5D5q7mxumCBD5KYCmQJjWy634Y/SFtbg2gs6pJw+TOIhH2gg+nsyM6cJwZuIK
-	hNvwlvFULrvcPOaTrkFr5zVoA7juSCwAOX/mJ
-X-Google-Smtp-Source: AGHT+IF6XoNxUMheAr8q/n03EYvc0sHJUQDXl6NBTTIJeUS8hTnYpViEkLIZgJJ3SZ+4/2OXUTehhuWGGVIgb+9GvQ8=
-X-Received: by 2002:a17:902:cec2:b0:1d9:34c8:f88 with SMTP id
- d2-20020a170902cec200b001d934c80f88mr87604plg.19.1707186242653; Mon, 05 Feb
- 2024 18:24:02 -0800 (PST)
+        bh=0XVXU4jAI/ZUz/I4D5gYYVK37UMhSbbkdn1X91/JlTo=;
+        b=NfAoQBF3KXPNSn9474nbRRS8hA5Zz3p8ippFfgsi/Ub+Lldbjgc/1NLmAA4AD6Hmua
+         6yDtM4oAvEb4piyFJp8Z1Egrb2ZATuUmv1i05mL3MHXgoNs3xA55yCtHQJs9jya3uJRX
+         eFkAUR9wzPfcbamYyCp4cY/dQzdmH2UrX/RKCvZxRGKs5nZZLlYwRgpq6PRQwSr9PISN
+         xkao1izIeJtYx4IXvgpDOJxJVS13wTSU5EcWtWej2NYNdLDvIO7puiHiDMtntcyeBP5P
+         El69tO7KKTDqpFc1/2d058jfU+vExYdQEHTEM1DIeDOCYQlKUlJP+ZjlTh33jkOHI412
+         S5rg==
+X-Gm-Message-State: AOJu0YzTTa/bcdxPiCvJvBuVJXUYwn2aBehaT1k846rzPD91S5+RTgr8
+	UFNkJOUjX/YVXOl08tIB+FAjr3kY1ZWw93QQGtaNKuxmngGgR7LFndf/XDOOsvcW6SYUF2MpJUp
+	c9mZaTO1W9TFDHOTG0QLEF24XaI4P+Ez09Hbe
+X-Google-Smtp-Source: AGHT+IENXxmgQziH6fpQsqF7G4W2/PhhQ3etqtTZVXpMqrnIzVWVS5i2UCg5LADUiUHntlFr2fQ/EcYtDA0F+Y7n5+E=
+X-Received: by 2002:a17:902:d507:b0:1d9:aa55:e4c1 with SMTP id
+ b7-20020a170902d50700b001d9aa55e4c1mr149250plg.20.1707188676257; Mon, 05 Feb
+ 2024 19:04:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202022512.467636-1-irogers@google.com> <CAM9d7chAU=arK2y7RDHtxfRcQ80Az6dzGB0_+01iZ346tSob3w@mail.gmail.com>
-In-Reply-To: <CAM9d7chAU=arK2y7RDHtxfRcQ80Az6dzGB0_+01iZ346tSob3w@mail.gmail.com>
+References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-2-irogers@google.com>
+ <CAM9d7cjCO8e7nbrtrcy4rsbexemQ94=XK+b5byMFFTDDgoJ2eg@mail.gmail.com>
+ <CAP-5=fUBr60o22P4Op-J=TPkdfnby9vLetHQZ4UqjuX+nvbG9w@mail.gmail.com>
+ <CAM9d7cjO2vxa_bvKFrVpX2PViHqZy_dtyf28EaSACwKv6BEHiw@mail.gmail.com> <CAP-5=fUBf41b=p7iVwoANZtRifR8ftuE00zQqLWz54KZ-9VWtw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUBf41b=p7iVwoANZtRifR8ftuE00zQqLWz54KZ-9VWtw@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 5 Feb 2024 18:23:51 -0800
-Message-ID: <CAP-5=fXqi05ohSe7fH=7zo=DMCjBR1OcjdHETHZJPNAMvsmJaw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] perf stat: Pass fewer metric arguments
+Date: Mon, 5 Feb 2024 19:04:24 -0800
+Message-ID: <CAP-5=fVm4rcieqApYP9ai0FO10qW0Q8VWeYxnpfTKgeKFzwRPQ@mail.gmail.com>
+Subject: Re: [PATCH v5 01/50] perf comm: Use regular mutex
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, John Garry <john.g.garry@oracle.com>, Kaige Ye <ye@kaige.org>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
+	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
+	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
+	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 5, 2024 at 5:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
+On Wed, Dec 6, 2023 at 4:05=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> On Thu, Feb 1, 2024 at 6:25=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+> On Sat, Dec 2, 2023 at 3:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 > >
-> > Pass metric_expr and evsel rather than specific variables from the
-> > struct, thereby reducing the number of arguments. This will enable
-> > later fixes.
+> > On Thu, Nov 30, 2023 at 10:28=E2=80=AFAM Ian Rogers <irogers@google.com=
+> wrote:
+> > >
+> > > On Wed, Nov 29, 2023 at 4:56=E2=80=AFPM Namhyung Kim <namhyung@kernel=
+.org> wrote:
+> > > >
+> > > > On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.=
+com> wrote:
+> > > > >
+> > > > > The rwsem is only after used for writing so switch to a mutex tha=
+t has
+> > > > > better error checking.
+> > > > >
+> > > > > Fixes: 7a8f349e9d14 ("perf rwsem: Add debug mode that uses a mute=
+x")
+> > > >
+> > > > I think we talked about fixing this separately, no?
+> > >
+> > > Sorry, I'm unclear on an action to do. Currently changing the
+> > > RWS_ERRORCHECK in tools/perf/util/rwsem.h will break the build withou=
+t
+> > > this change.
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/stat-shadow.c | 75 +++++++++++++++--------------------
-> >  1 file changed, 33 insertions(+), 42 deletions(-)
+> > Can it be like this?
 > >
-> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shado=
-w.c
-> > index e31426167852..f6c9d2f98835 100644
-> > --- a/tools/perf/util/stat-shadow.c
-> > +++ b/tools/perf/util/stat-shadow.c
-> > @@ -355,23 +355,22 @@ static void print_nsecs(struct perf_stat_config *=
-config,
-> >                 print_metric(config, ctxp, NULL, NULL, "CPUs utilized",=
- 0);
-> >  }
+> > #ifdef RWS_ERRORCHECK
+> > #define RWSEM_INITIALIZER  { .lock =3D PTHREAD_MUTEX_INITIALIZER, }
+> > #else
+> > #define RWSEM_INITIALIZER  { .lock =3D PTHREAD_RWLOCK_INITIALIZER, }
+> > #endif
 > >
-> > -static int prepare_metric(struct evsel **metric_events,
-> > -                         struct metric_ref *metric_refs,
-> > +static int prepare_metric(const struct metric_expr *mexp,
-> >                           struct expr_parse_ctx *pctx,
-> >                           int aggr_idx)
-> >  {
-> >         int i;
+> > >
+> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > > ---
+> > > > >  tools/perf/util/comm.c | 10 +++++-----
+> > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > > >
+> > > > > diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+> > > > > index afb8d4fd2644..4ae7bc2aa9a6 100644
+> > > > > --- a/tools/perf/util/comm.c
+> > > > > +++ b/tools/perf/util/comm.c
+> > > > > @@ -17,7 +17,7 @@ struct comm_str {
+> > > > >
+> > > > >  /* Should perhaps be moved to struct machine */
+> > > > >  static struct rb_root comm_str_root;
+> > > > > -static struct rw_semaphore comm_str_lock =3D {.lock =3D PTHREAD_=
+RWLOCK_INITIALIZER,};
+> > > > > +static struct mutex comm_str_lock =3D {.lock =3D PTHREAD_ERRORCH=
+ECK_MUTEX_INITIALIZER_NP,};
+> > > >
+> > > > IIUC it has a problem with musl libc.  Actually I think it's better=
+ to
+> > > > hide the field and the pthread initializer under some macro like
+> > > > MUTEX_INITIALIZER or DEFINE_MUTEX() like in the kernel.
+> > >
+> > > Will there be enough use to justify this? I think ideally we'd not be
+> > > having global locks needing global initializers as we run into
+> > > problems like we see in metrics needing to mix counting and sampling.
+> >
+> > I don't know but there might be a reason to use global locks.
+> > Then we need to support the initialization and it'd be better
+> > to make it easier to handle internal changes like this.
 >
-> You may add local variables with the same name to reduce
-> the amount of diff.
+> Right. So you are suggesting I make a macro for initialization but
+> when this change is applied it will remove the only user of the macro.
+> The macro would clearly be redundant which is why I didn't do a
+> separate fix for that before doing this change - to use a mutex as the
+> rwsem here is only ever used as a write lock. If we're looking to
+> improve rwsem I don't think adding unused macros is the best thing,
+> for example, we could remove references to perf_singlethreaded which
+> is an idea that has had its day.
 
-I'll see what I can do in v2.
+Note, RWS_ERRORCHECK being enabled still is broken without this.
 
 Thanks,
 Ian
 
 > Thanks,
-> Namhyung
+> Ian
 >
-> >
-> > -       for (i =3D 0; metric_events[i]; i++) {
-> > +       for (i =3D 0; mexp->metric_events[i]; i++) {
-> >                 char *n;
-> >                 double val;
-> >                 int source_count =3D 0;
-> >
-> > -               if (evsel__is_tool(metric_events[i])) {
-> > +               if (evsel__is_tool(mexp->metric_events[i])) {
-> >                         struct stats *stats;
-> >                         double scale;
-> >
-> > -                       switch (metric_events[i]->tool_event) {
-> > +                       switch (mexp->metric_events[i]->tool_event) {
-> >                         case PERF_TOOL_DURATION_TIME:
-> >                                 stats =3D &walltime_nsecs_stats;
-> >                                 scale =3D 1e-9;
-> > @@ -391,19 +390,20 @@ static int prepare_metric(struct evsel **metric_e=
-vents,
-> >                                 pr_err("Invalid tool event 'max'");
-> >                                 abort();
-> >                         default:
-> > -                               pr_err("Unknown tool event '%s'", evsel=
-__name(metric_events[i]));
-> > +                               pr_err("Unknown tool event '%s'",
-> > +                                      evsel__name(mexp->metric_events[=
-i]));
-> >                                 abort();
-> >                         }
-> >                         val =3D avg_stats(stats) * scale;
-> >                         source_count =3D 1;
-> >                 } else {
-> > -                       struct perf_stat_evsel *ps =3D metric_events[i]=
-->stats;
-> > +                       struct perf_stat_evsel *ps =3D mexp->metric_eve=
-nts[i]->stats;
-> >                         struct perf_stat_aggr *aggr =3D &ps->aggr[aggr_=
-idx];
-> >
-> >                         if (!aggr)
-> >                                 break;
-> >
-> > -                        if (!metric_events[i]->supported) {
-> > +                       if (!mexp->metric_events[i]->supported) {
-> >                                 /*
-> >                                  * Not supported events will have a cou=
-nt of 0,
-> >                                  * which can be confusing in a
-> > @@ -419,19 +419,19 @@ static int prepare_metric(struct evsel **metric_e=
-vents,
-> >                                  * reverse the scale before computing t=
-he
-> >                                  * metric.
-> >                                  */
-> > -                               val =3D aggr->counts.val * (1.0 / metri=
-c_events[i]->scale);
-> > -                               source_count =3D evsel__source_count(me=
-tric_events[i]);
-> > +                               val =3D aggr->counts.val * (1.0 / mexp-=
->metric_events[i]->scale);
-> > +                               source_count =3D evsel__source_count(me=
-xp->metric_events[i]);
-> >                         }
-> >                 }
-> > -               n =3D strdup(evsel__metric_id(metric_events[i]));
-> > +               n =3D strdup(evsel__metric_id(mexp->metric_events[i]));
-> >                 if (!n)
-> >                         return -ENOMEM;
-> >
-> >                 expr__add_id_val_source_count(pctx, n, val, source_coun=
-t);
-> >         }
-> >
-> > -       for (int j =3D 0; metric_refs && metric_refs[j].metric_name; j+=
-+) {
-> > -               int ret =3D expr__add_ref(pctx, &metric_refs[j]);
-> > +       for (int j =3D 0; mexp->metric_refs && mexp->metric_refs[j].met=
-ric_name; j++) {
-> > +               int ret =3D expr__add_ref(pctx, &mexp->metric_refs[j]);
-> >
-> >                 if (ret)
-> >                         return ret;
-> > @@ -441,14 +441,8 @@ static int prepare_metric(struct evsel **metric_ev=
-ents,
-> >  }
-> >
-> >  static void generic_metric(struct perf_stat_config *config,
-> > -                          const char *metric_expr,
-> > -                          const char *metric_threshold,
-> > -                          struct evsel **metric_events,
-> > -                          struct metric_ref *metric_refs,
-> > -                          char *name,
-> > -                          const char *metric_name,
-> > -                          const char *metric_unit,
-> > -                          int runtime,
-> > +                       struct metric_expr *mexp,
-> > +                       struct evsel *evsel,
-> >                            int aggr_idx,
-> >                            struct perf_stat_output_ctx *out)
-> >  {
-> > @@ -465,55 +459,55 @@ static void generic_metric(struct perf_stat_confi=
-g *config,
-> >
-> >         if (config->user_requested_cpu_list)
-> >                 pctx->sctx.user_requested_cpu_list =3D strdup(config->u=
-ser_requested_cpu_list);
-> > -       pctx->sctx.runtime =3D runtime;
-> > +       pctx->sctx.runtime =3D mexp->runtime;
-> >         pctx->sctx.system_wide =3D config->system_wide;
-> > -       i =3D prepare_metric(metric_events, metric_refs, pctx, aggr_idx=
-);
-> > +       i =3D prepare_metric(mexp, pctx, aggr_idx);
-> >         if (i < 0) {
-> >                 expr__ctx_free(pctx);
-> >                 return;
-> >         }
-> > -       if (!metric_events[i]) {
-> > -               if (expr__parse(&ratio, pctx, metric_expr) =3D=3D 0) {
-> > +       if (!mexp->metric_events[i]) {
-> > +               if (expr__parse(&ratio, pctx, mexp->metric_expr) =3D=3D=
- 0) {
-> >                         char *unit;
-> >                         char metric_bf[64];
-> >
-> > -                       if (metric_threshold &&
-> > -                           expr__parse(&threshold, pctx, metric_thresh=
-old) =3D=3D 0 &&
-> > +                       if (mexp->metric_threshold &&
-> > +                           expr__parse(&threshold, pctx, mexp->metric_=
-threshold) =3D=3D 0 &&
-> >                             !isnan(threshold)) {
-> >                                 color =3D fpclassify(threshold) =3D=3D =
-FP_ZERO
-> >                                         ? PERF_COLOR_GREEN : PERF_COLOR=
-_RED;
-> >                         }
-> >
-> > -                       if (metric_unit && metric_name) {
-> > -                               if (perf_pmu__convert_scale(metric_unit=
-,
-> > +                       if (mexp->metric_unit && mexp->metric_name) {
-> > +                               if (perf_pmu__convert_scale(mexp->metri=
-c_unit,
-> >                                         &unit, &scale) >=3D 0) {
-> >                                         ratio *=3D scale;
-> >                                 }
-> > -                               if (strstr(metric_expr, "?"))
-> > +                               if (strstr(mexp->metric_expr, "?"))
-> >                                         scnprintf(metric_bf, sizeof(met=
-ric_bf),
-> > -                                         "%s  %s_%d", unit, metric_nam=
-e, runtime);
-> > +                                         "%s  %s_%d", unit, mexp->metr=
-ic_name, mexp->runtime);
-> >                                 else
-> >                                         scnprintf(metric_bf, sizeof(met=
-ric_bf),
-> > -                                         "%s  %s", unit, metric_name);
-> > +                                         "%s  %s", unit, mexp->metric_=
-name);
-> >
-> >                                 print_metric(config, ctxp, color, "%8.1=
-f",
-> >                                              metric_bf, ratio);
-> >                         } else {
-> >                                 print_metric(config, ctxp, color, "%8.2=
-f",
-> > -                                       metric_name ?
-> > -                                       metric_name :
-> > -                                       out->force_header ?  name : "",
-> > +                                       mexp->metric_name ?
-> > +                                       mexp->metric_name :
-> > +                                       out->force_header ?  evsel->nam=
-e : "",
-> >                                         ratio);
-> >                         }
-> >                 } else {
-> >                         print_metric(config, ctxp, color, /*unit=3D*/NU=
-LL,
-> >                                      out->force_header ?
-> > -                                    (metric_name ? metric_name : name)=
- : "", 0);
-> > +                                    (mexp->metric_name ?: evsel->name)=
- : "", 0);
-> >                 }
-> >         } else {
-> >                 print_metric(config, ctxp, color, /*unit=3D*/NULL,
-> >                              out->force_header ?
-> > -                            (metric_name ? metric_name : name) : "", 0=
-);
-> > +                            (mexp->metric_name ?: evsel->name) : "", 0=
-);
-> >         }
-> >
-> >         expr__ctx_free(pctx);
-> > @@ -528,7 +522,7 @@ double test_generic_metric(struct metric_expr *mexp=
-, int aggr_idx)
-> >         if (!pctx)
-> >                 return NAN;
-> >
-> > -       if (prepare_metric(mexp->metric_events, mexp->metric_refs, pctx=
-, aggr_idx) < 0)
-> > +       if (prepare_metric(mexp, pctx, aggr_idx) < 0)
-> >                 goto out;
-> >
-> >         if (expr__parse(&ratio, pctx, mexp->metric_expr))
-> > @@ -630,10 +624,7 @@ void *perf_stat__print_shadow_stats_metricgroup(st=
-ruct perf_stat_config *config,
-> >
-> >                 if ((*num)++ > 0)
-> >                         out->new_line(config, ctxp);
-> > -               generic_metric(config, mexp->metric_expr, mexp->metric_=
-threshold,
-> > -                              mexp->metric_events, mexp->metric_refs, =
-evsel->name,
-> > -                              mexp->metric_name, mexp->metric_unit, me=
-xp->runtime,
-> > -                              aggr_idx, out);
-> > +               generic_metric(config, mexp, evsel, aggr_idx, out);
-> >         }
-> >
-> >         return NULL;
-> > --
-> > 2.43.0.594.gd9cf4e227d-goog
-> >
+> > Thanks,
+> > Namhyung
