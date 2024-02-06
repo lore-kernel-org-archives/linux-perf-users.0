@@ -1,149 +1,297 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CA157327;
-	Tue,  6 Feb 2024 02:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAE356B62
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 02:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707185713; cv=none; b=deyJODwNqqVrQ/lGLbJ8tKZeGhmFAfzT2IpLJQYbJiwqVv2iHts163KGuii8qYvFpGdzkEhcV2Au+EDBHazQRM/i3PkXS/kgVCp0cZP0D5l9R6eSrYYntqA8qggodG9GkDYoEvIlq6Vc5RYH5XVdjuh0KiAT4FXzUu45PnFSDYM=
+	t=1707186076; cv=none; b=leLEpqZotxBIjV6NwldqOIV3zrOjr6yqupNI5NfSztUXyaitY8t1Kr8hf7wWX2U1z9izNaFORjgVZxKj0feDfcc510+cweUuqTYssGFK+E5f49BEq09ZaMhAdl3EZAL2+V2n2dsrr2tuLUENeVJI7IlZJEHbw+C+ftz+ca9Eepo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707185713; c=relaxed/simple;
-	bh=L+pZSq0Y2ocTmSe9NysyU/JS36LXhGL7+0Fxp73TbbE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HLANteqj4XSceuT8qKzD7vZP6D6gP+pPVmM8nyX4I1VM1WfvWWW4+pK7J2KJMHIJRZ4YGCyMetURFC7BmP8d2DDmgoM94CC169lpvWoXrqtMft/v9QS0fwGpcSd9wPW1fW8c66xUQ/sBDg9tPVAGIWEOJwnDADPWpW6lLIAJxIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TTRc90ZJMz29ktV;
-	Tue,  6 Feb 2024 10:13:13 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 77E061A0172;
-	Tue,  6 Feb 2024 10:15:08 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Tue, 6 Feb 2024 10:15:06 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
- Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
-	<changbin.du@huawei.com>
-Subject: [PATCH v6 5/5] perf: script: prefer capstone to XED
-Date: Tue, 6 Feb 2024 10:14:38 +0800
-Message-ID: <20240206021438.768731-6-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240206021438.768731-1-changbin.du@huawei.com>
-References: <20240206021438.768731-1-changbin.du@huawei.com>
+	s=arc-20240116; t=1707186076; c=relaxed/simple;
+	bh=DxnQTilcs1frMDhQEAdkQa2L2CZaUmwfBE+sReQ2Dqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wte7OI/60wa/VrGRSrIWa1jFKGGWQDoZYThB84/pSMTL7fDOCHergKTOHsT2q76DjVZxLZ9yMXgcuiGYZu3+PYL/k7FxbS7ETXHGwLUxl0q3Z9TVIzlJxmk9/Lb/CWIOOVkKWaYdUb5jfG1Yq6xKWIq4e4KyhfGcC9fgnrgWwOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ak2B+YmH; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ak2B+YmH"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d9daf74f41so14995ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Feb 2024 18:21:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707186074; x=1707790874; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VXrRAW8vvaakZvPZQQxowEWbRXWQ7xa7h/19RmdI5Cc=;
+        b=ak2B+YmH1DbT+aaG7UYxbDrDvoLuAMI+ji5wJgyMilCvEOY7UPs6nqm+4Y46MZsWmM
+         jFWDE6RvZd90PSmUcoKbau5XpS73gAgsgfZ2JPw6O+ALttQVibz/pzbD300ZaCJxQREq
+         n9QZNX+NGi7wPNE9VUcXRU7pB29JaEOhg4Nj+Jm4huxFac470ZjHE0b2kvXp2rQVP7Jp
+         X5O4hdoEKNt1SqYul7YPVMO/u2yXJScbGCwp32CxefR4Jyxbvwr5Uk4LAlIce49o8BGN
+         eOXmQqMRGCxwb39DOCixv619u7LKX2xkwpmbDUbJQzSCOU7shfEp6P2qUx70K9rT7HYu
+         yY/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707186074; x=1707790874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VXrRAW8vvaakZvPZQQxowEWbRXWQ7xa7h/19RmdI5Cc=;
+        b=wT1Pa8VrGGj+VRWGkjSoJbeHf4vmOS5Oisns+L9BwfTsLffuITmcXo8cC5IM8foc8Q
+         m1r8UpHX8Dp2XodcgWubqr4IGwAL9RGZgYwZYdDGGMszGQqFyjXlTWmxCs+ejZ/+BTSH
+         QsZZ8KiNlRZRE8fpIN8B34z71syyoOA8SJh0tCQuwiuq+U4w7FWHknGRsqGevBkiGmgV
+         xeA8hNa0k8/rsyXibfYHpG+yU7qQ7YfbP3D+82dByKdE37LhqxamBqlEizNVe3eIWry5
+         bsI0tm+6Id4xJPip7QmuTuGBHIjnYFJmc9L1echBF9mpecUQl2pKM2i0ZJVDwjq2twep
+         ncxw==
+X-Gm-Message-State: AOJu0YyEI/nPa+ve6hA5BJ6tg3IrescaTynXNjZyPCZAQsX0hH8Mu+ko
+	oHg5+r3hv4u5Gjwvyia5YZU/LZs9DdAUH7XhXFAabKBxLzN2q0kAatwt6jzDCNTJc7dipnna1MX
+	obYyUjvxE2jbJm9fhd2MSROTdpGRp9+xWBC3p
+X-Google-Smtp-Source: AGHT+IHFymfV2ud5X4sz138eYjRHmqyWpO+aaL/wS276ngJV2iqLJAnNZU1LskdGk+gP6go/aRv4xuC+OwO9msrdBNA=
+X-Received: by 2002:a17:902:fd10:b0:1d7:7e3c:59ce with SMTP id
+ mp16-20020a170902fd1000b001d77e3c59cemr88444plb.29.1707186074029; Mon, 05 Feb
+ 2024 18:21:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+References: <20240202022512.467636-1-irogers@google.com> <20240202022512.467636-2-irogers@google.com>
+ <CAM9d7cgv3zPNohz6eWwH7qaQyY0QMRK_sqtJdumeGrD5tMW9Yg@mail.gmail.com>
+In-Reply-To: <CAM9d7cgv3zPNohz6eWwH7qaQyY0QMRK_sqtJdumeGrD5tMW9Yg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 5 Feb 2024 18:21:02 -0800
+Message-ID: <CAP-5=fUThAUD6yJ+iDBbKvw4mFWbN3-j=bcBHwu-aY3_tMnQnQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] perf metrics: Compute unmerged uncore metrics individually
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, John Garry <john.g.garry@oracle.com>, Kaige Ye <ye@kaige.org>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now perf can show assembly instructions with libcapstone for x86, and the
-capstone is better in general.
+On Mon, Feb 5, 2024 at 6:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Thu, Feb 1, 2024 at 6:25=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > When merging counts from multiple uncore PMUs the metric is only
+> > computed for the metric leader. When merging/aggregation is disabled,
+> > prior to this patch just the leader's metric would be computed. Fix
+> > this by computing the metric for each PMU.
+> >
+> > On a SkylakeX:
+> > Before:
+> > ```
+> > $ perf stat -A -M memory_bandwidth_total -a sleep 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> > CPU0               82,217      UNC_M_CAS_COUNT.RD [uncore_imc_0] #     =
+ 9.2 MB/s  memory_bandwidth_total
+> > CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_0] #     =
+ 0.0 MB/s  memory_bandwidth_total
+> > CPU0               61,395      UNC_M_CAS_COUNT.WR [uncore_imc_0]
+> > CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_0]
+> > CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_1]
+> > CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_1]
+> > CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
+> > CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
+> > CPU0               81,570      UNC_M_CAS_COUNT.RD [uncore_imc_2]
+> > CPU18             113,886      UNC_M_CAS_COUNT.RD [uncore_imc_2]
+> > CPU0               62,330      UNC_M_CAS_COUNT.WR [uncore_imc_2]
+> > CPU18              66,942      UNC_M_CAS_COUNT.WR [uncore_imc_2]
+> > CPU0               75,489      UNC_M_CAS_COUNT.RD [uncore_imc_3]
+> > CPU18              27,958      UNC_M_CAS_COUNT.RD [uncore_imc_3]
+> > CPU0               55,864      UNC_M_CAS_COUNT.WR [uncore_imc_3]
+> > CPU18              38,727      UNC_M_CAS_COUNT.WR [uncore_imc_3]
+> > CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_4]
+> > CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_4]
+> > CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
+> > CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
+> > CPU0               75,423      UNC_M_CAS_COUNT.RD [uncore_imc_5]
+> > CPU18             104,527      UNC_M_CAS_COUNT.RD [uncore_imc_5]
+> > CPU0               57,596      UNC_M_CAS_COUNT.WR [uncore_imc_5]
+> > CPU18              56,777      UNC_M_CAS_COUNT.WR [uncore_imc_5]
+> > CPU0        1,003,440,851 ns   duration_time
+> >
+> >        1.003440851 seconds time elapsed
+> > ```
+> >
+> > After:
+> > ```
+> > $ perf stat -A -M memory_bandwidth_total -a sleep 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> > CPU0               88,968      UNC_M_CAS_COUNT.RD [uncore_imc_0] #     =
+ 9.5 MB/s  memory_bandwidth_total
+> > CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_0] #     =
+ 0.0 MB/s  memory_bandwidth_total
+> > CPU0               59,498      UNC_M_CAS_COUNT.WR [uncore_imc_0]
+> > CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_0]
+> > CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_1] #     =
+ 0.0 MB/s  memory_bandwidth_total
+> > CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_1] #     =
+ 0.0 MB/s  memory_bandwidth_total
+> > CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
+> > CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
+> > CPU0               88,635      UNC_M_CAS_COUNT.RD [uncore_imc_2] #     =
+ 9.5 MB/s  memory_bandwidth_total
+> > CPU18             117,975      UNC_M_CAS_COUNT.RD [uncore_imc_2] #     =
+11.5 MB/s  memory_bandwidth_total
+> > CPU0               60,829      UNC_M_CAS_COUNT.WR [uncore_imc_2]
+> > CPU18              62,105      UNC_M_CAS_COUNT.WR [uncore_imc_2]
+> > CPU0               82,238      UNC_M_CAS_COUNT.RD [uncore_imc_3] #     =
+ 8.7 MB/s  memory_bandwidth_total
+> > CPU18              22,906      UNC_M_CAS_COUNT.RD [uncore_imc_3] #     =
+ 3.6 MB/s  memory_bandwidth_total
+> > CPU0               53,959      UNC_M_CAS_COUNT.WR [uncore_imc_3]
+> > CPU18              32,990      UNC_M_CAS_COUNT.WR [uncore_imc_3]
+> > CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_4] #     =
+ 0.0 MB/s  memory_bandwidth_total
+> > CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_4] #     =
+ 0.0 MB/s  memory_bandwidth_total
+> > CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
+> > CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
+> > CPU0               83,595      UNC_M_CAS_COUNT.RD [uncore_imc_5] #     =
+ 8.9 MB/s  memory_bandwidth_total
+> > CPU18             110,151      UNC_M_CAS_COUNT.RD [uncore_imc_5] #     =
+10.5 MB/s  memory_bandwidth_total
+> > CPU0               56,540      UNC_M_CAS_COUNT.WR [uncore_imc_5]
+> > CPU18              53,816      UNC_M_CAS_COUNT.WR [uncore_imc_5]
+> > CPU0        1,003,353,416 ns   duration_time
+> > ```
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/metricgroup.c |  2 ++
+> >  tools/perf/util/stat-shadow.c | 31 +++++++++++++++++++++++++++----
+> >  2 files changed, 29 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgrou=
+p.c
+> > index ca3e0404f187..c33ffee837ca 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -44,6 +44,8 @@ struct metric_event *metricgroup__lookup(struct rblis=
+t *metric_events,
+> >         if (!metric_events)
+> >                 return NULL;
+> >
+> > +       if (evsel->metric_leader)
+> > +               me.evsel =3D evsel->metric_leader;
+> >         nd =3D rblist__find(metric_events, &me);
+> >         if (nd)
+> >                 return container_of(nd, struct metric_event, nd);
+> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shado=
+w.c
+> > index f6c9d2f98835..1be23b0eee2f 100644
+> > --- a/tools/perf/util/stat-shadow.c
+> > +++ b/tools/perf/util/stat-shadow.c
+> > @@ -356,6 +356,7 @@ static void print_nsecs(struct perf_stat_config *co=
+nfig,
+> >  }
+> >
+> >  static int prepare_metric(const struct metric_expr *mexp,
+> > +                         const struct evsel *evsel,
+> >                           struct expr_parse_ctx *pctx,
+> >                           int aggr_idx)
+> >  {
+> > @@ -398,8 +399,29 @@ static int prepare_metric(const struct metric_expr=
+ *mexp,
+> >                         source_count =3D 1;
+> >                 } else {
+> >                         struct perf_stat_evsel *ps =3D mexp->metric_eve=
+nts[i]->stats;
+> > -                       struct perf_stat_aggr *aggr =3D &ps->aggr[aggr_=
+idx];
+> > +                       struct perf_stat_aggr *aggr;
+> >
+> > +                       /*
+> > +                        * If there are multiple uncore PMUs and we're =
+not
+> > +                        * reading the leader's stats, determine the st=
+ats for
+> > +                        * the appropriate uncore PMU.
+> > +                        */
+> > +                       if (evsel && evsel->metric_leader &&
+> > +                           evsel->pmu !=3D evsel->metric_leader->pmu &=
+&
+> > +                           mexp->metric_events[i]->pmu =3D=3D evsel->m=
+etric_leader->pmu) {
+>
+> Is it just to check we're in --no-aggr (or --no-merge)?
+> Then it'd be simpler to use stat_config->aggr_mode.
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
+For most metrics the events will be on the same PMU, but there is
+nothing stopping mixing events from different PMUs (grouping can be
+disabled). There may also be software and tool evsels.
 
----
-v2:
-  - update Documentation.  (Adrian Hunter)
-  - fix typo.
----
- tools/perf/Documentation/perf-intel-pt.txt | 14 +++++++++-----
- tools/perf/ui/browsers/res_sample.c        |  2 +-
- tools/perf/ui/browsers/scripts.c           |  2 +-
- 3 files changed, 11 insertions(+), 7 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 2109690b0d5f..59ab1ff9d75f 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -115,9 +115,13 @@ toggle respectively.
- 
- perf script also supports higher level ways to dump instruction traces:
- 
-+	perf script --insn-trace=disasm
-+
-+or to use the xed disassembler, which requires installing the xed tool
-+(see XED below):
-+
- 	perf script --insn-trace --xed
- 
--Dump all instructions. This requires installing the xed tool (see XED below)
- Dumping all instructions in a long trace can be fairly slow. It is usually better
- to start with higher level decoding, like
- 
-@@ -130,12 +134,12 @@ or
- and then select a time range of interest. The time range can then be examined
- in detail with
- 
--	perf script --time starttime,stoptime --insn-trace --xed
-+	perf script --time starttime,stoptime --insn-trace=disasm
- 
- While examining the trace it's also useful to filter on specific CPUs using
- the -C option
- 
--	perf script --time starttime,stoptime --insn-trace --xed -C 1
-+	perf script --time starttime,stoptime --insn-trace=disasm -C 1
- 
- Dump all instructions in time range on CPU 1.
- 
-@@ -1306,7 +1310,7 @@ Without timestamps, --per-thread must be specified to distinguish threads.
- 
- perf script can be used to provide an instruction trace
- 
-- $ perf script --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script --guestkallsyms $KALLSYMS --insn-trace=disasm -F+ipc | grep -C10 vmresume | head -21
-        CPU 0/KVM  1440  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                movq  0x48(%rax), %r9
-        CPU 0/KVM  1440  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                movq  0x50(%rax), %r10
-        CPU 0/KVM  1440  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                movq  0x58(%rax), %r11
-@@ -1407,7 +1411,7 @@ There were none.
- 
- 'perf script' can be used to provide an instruction trace showing timestamps
- 
-- $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace=disasm -F+ipc | grep -C10 vmresume | head -21
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                 movq  0x48(%rax), %r9
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                 movq  0x50(%rax), %r10
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                 movq  0x58(%rax), %r11
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-index 7cb2d6678039..5f60e515b12e 100644
---- a/tools/perf/ui/browsers/res_sample.c
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -83,7 +83,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		     r->tid ? "--tid " : "",
- 		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
- 		     extra_format,
--		     rstype == A_ASM ? "-F +insn --xed" :
-+		     rstype == A_ASM ? "-F +disasm" :
- 		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
- 		     symbol_conf.inline_name ? "--inline" : "",
- 		     "--show-lost-events ",
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 50d45054ed6c..e437d7889de6 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -107,7 +107,7 @@ static int list_scripts(char *script_name, bool *custom,
- 	if (evsel)
- 		attr_to_script(scriptc.extra_format, &evsel->core.attr);
- 	add_script_option("Show individual samples", "", &scriptc);
--	add_script_option("Show individual samples with assembler", "-F +insn --xed",
-+	add_script_option("Show individual samples with assembler", "-F +disasm",
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
--- 
-2.25.1
-
+> Thanks,
+> Namhyung
+>
+>
+> > +                               struct evsel *pos;
+> > +
+> > +                               evlist__for_each_entry(evsel->evlist, p=
+os) {
+> > +                                       if (pos->pmu !=3D evsel->pmu)
+> > +                                               continue;
+> > +                                       if (pos->metric_leader !=3D mex=
+p->metric_events[i])
+> > +                                               continue;
+> > +                                       ps =3D pos->stats;
+> > +                                       source_count =3D 1;
+> > +                                       break;
+> > +                               }
+> > +                       }
+> > +                       aggr =3D &ps->aggr[aggr_idx];
+> >                         if (!aggr)
+> >                                 break;
+> >
+> > @@ -420,7 +442,8 @@ static int prepare_metric(const struct metric_expr =
+*mexp,
+> >                                  * metric.
+> >                                  */
+> >                                 val =3D aggr->counts.val * (1.0 / mexp-=
+>metric_events[i]->scale);
+> > -                               source_count =3D evsel__source_count(me=
+xp->metric_events[i]);
+> > +                               if (!source_count)
+> > +                                       source_count =3D evsel__source_=
+count(mexp->metric_events[i]);
+> >                         }
+> >                 }
+> >                 n =3D strdup(evsel__metric_id(mexp->metric_events[i]));
+> > @@ -461,7 +484,7 @@ static void generic_metric(struct perf_stat_config =
+*config,
+> >                 pctx->sctx.user_requested_cpu_list =3D strdup(config->u=
+ser_requested_cpu_list);
+> >         pctx->sctx.runtime =3D mexp->runtime;
+> >         pctx->sctx.system_wide =3D config->system_wide;
+> > -       i =3D prepare_metric(mexp, pctx, aggr_idx);
+> > +       i =3D prepare_metric(mexp, evsel, pctx, aggr_idx);
+> >         if (i < 0) {
+> >                 expr__ctx_free(pctx);
+> >                 return;
+> > @@ -522,7 +545,7 @@ double test_generic_metric(struct metric_expr *mexp=
+, int aggr_idx)
+> >         if (!pctx)
+> >                 return NAN;
+> >
+> > -       if (prepare_metric(mexp, pctx, aggr_idx) < 0)
+> > +       if (prepare_metric(mexp, /*evsel=3D*/NULL, pctx, aggr_idx) < 0)
+> >                 goto out;
+> >
+> >         if (expr__parse(&ratio, pctx, mexp->metric_expr))
+> > --
+> > 2.43.0.594.gd9cf4e227d-goog
+> >
