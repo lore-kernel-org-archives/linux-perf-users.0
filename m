@@ -1,176 +1,108 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4809F6E2B0
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 03:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A8F745C5
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 03:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707188678; cv=none; b=GiiKharNqBVDmEJpx3kcc3pNrjtjLai8wzTQyvIjZeg91uNOJpd/FV4MdcuoVjLC/ocEd8N86UbkG2Ps/pd9FibG8kGg34PA7Ii+eciAjaeH0pjgLG4qn/jcpec8FOi3J5pCCqXf086dnvlJVnbnUfcmG80a22Svr5jLt/q3Ugw=
+	t=1707190406; cv=none; b=Czh2cBsZbo9ILFFPyYsn5To8Z3uDyMh7xKnr3/v/MDUhLp/lp7cxwq7ssxgJHCNsgSZyuU7TosGrf1ncoBbJjd7gft+AuRNW4a6Lq25pqyHjHAu/UeZ3Cly2OqNdBK0KrV0qyIBFTJvY22zgMR/QRcjb2iFc+OukTRkjoZIHw1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707188678; c=relaxed/simple;
-	bh=ne9JUsjTXyxLjlyYsZnE6He33Wl0F4KvtV6zAXvFlbA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fyA2LNn/ZX8UXrcf0QnsmrMc97lUa43a6mVJ9XoQE/4cH/JdbUxzU9X4Thsip9GLPYAVO/HDdpXgEwf8tm2iIqJBENqPsL2KY1v7ElL2YUEca721w9aKFUrFsemYT7bPhPFMPb8+X3n9TMQOYDzfG0CuBD2od/R/A634m7v1LVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t+wZN6y9; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1707190406; c=relaxed/simple;
+	bh=37JfY9goEyfL1tils/65Mm1whb5ed6z34kDU6IWdu7c=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=YC0GFrcY/taUylSDMrYmKiuXFkWAap4+XhiD69U1oChOcjg+8+7q0JR+1ERaBlZadevWIWQsr5F/0EI6zFzgXuyrO14CcYFWWOZHUufudF0lSAcmlJhav4Lmn2cRTVY1LkyRX0E0nagOxvnpSBrom1VbqhVo4Rx7c+2zJSB1zqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hGJOeYPg; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t+wZN6y9"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d9daf74f41so18265ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Feb 2024 19:04:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hGJOeYPg"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6047f0741e2so865287b3.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Feb 2024 19:33:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707188676; x=1707793476; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0XVXU4jAI/ZUz/I4D5gYYVK37UMhSbbkdn1X91/JlTo=;
-        b=t+wZN6y9Ffl/AmEMSY0oio0GMdYUO/RablQv7b6jzA2IdbVFPaQ1qPLpKG+LIFTidY
-         5+ySQa0mGqmHOs0tdjkj0dlrWRJSpN8Gq+nSncL58cN3Yt9ceJFeE4YoPNN2Y7+XoYi4
-         U2zB3rTho2ODaDpcGPEr2dxHL8izaTWuX6trFoCHCQUFR0f9vI9sdCJKMa2Kw9m/4Ran
-         BWx+V+7Ij0rDFXR/qJIyASZMl9saqL4lIbEgzFOEdUnysTWyMZdaeEvnDv5gyBVi08Hv
-         5A/T/1Cwry2ZEpJsqsaaplGVedXxsWbG3q69yYEh4D9TRxT2YT7yceCxRxiEFgpjmuBO
-         mWdg==
+        d=google.com; s=20230601; t=1707190404; x=1707795204; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JuTvsdW4nPk5F0JAYEhrkK8gf2WJ2UoBgHHj4XMAB70=;
+        b=hGJOeYPgTCyBI/7HrtPjmLniUplSTtlj9eWkegtnOjNlPn29YBrnwyiQ+5t9mxHfkL
+         nmd63aS18V5hB3uGCE4VtS29IFMgcyVvVS6Ygme389FAli+PtUiWmKRyCRnQcMT05zlY
+         NzT5k7MognKEE/uw0meK6jv4nPlzkHsGm5DYLOjY8GBFWK6LLC72vYcrK9RpgNPEWg5L
+         UOswa2uBDs97pmUjsVqtAMjnwKi+8PPFtEbX8sv1e3nPkEDYj8NhB+JOLwLmeMct+LSg
+         8XXeztLF6daJ55ex7I8PePBgpHVdpfmtCqu6OTBJSmlWrGL8bIBgKdiNzdWCDSTkYXxe
+         FVNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707188676; x=1707793476;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0XVXU4jAI/ZUz/I4D5gYYVK37UMhSbbkdn1X91/JlTo=;
-        b=NfAoQBF3KXPNSn9474nbRRS8hA5Zz3p8ippFfgsi/Ub+Lldbjgc/1NLmAA4AD6Hmua
-         6yDtM4oAvEb4piyFJp8Z1Egrb2ZATuUmv1i05mL3MHXgoNs3xA55yCtHQJs9jya3uJRX
-         eFkAUR9wzPfcbamYyCp4cY/dQzdmH2UrX/RKCvZxRGKs5nZZLlYwRgpq6PRQwSr9PISN
-         xkao1izIeJtYx4IXvgpDOJxJVS13wTSU5EcWtWej2NYNdLDvIO7puiHiDMtntcyeBP5P
-         El69tO7KKTDqpFc1/2d058jfU+vExYdQEHTEM1DIeDOCYQlKUlJP+ZjlTh33jkOHI412
-         S5rg==
-X-Gm-Message-State: AOJu0YzTTa/bcdxPiCvJvBuVJXUYwn2aBehaT1k846rzPD91S5+RTgr8
-	UFNkJOUjX/YVXOl08tIB+FAjr3kY1ZWw93QQGtaNKuxmngGgR7LFndf/XDOOsvcW6SYUF2MpJUp
-	c9mZaTO1W9TFDHOTG0QLEF24XaI4P+Ez09Hbe
-X-Google-Smtp-Source: AGHT+IENXxmgQziH6fpQsqF7G4W2/PhhQ3etqtTZVXpMqrnIzVWVS5i2UCg5LADUiUHntlFr2fQ/EcYtDA0F+Y7n5+E=
-X-Received: by 2002:a17:902:d507:b0:1d9:aa55:e4c1 with SMTP id
- b7-20020a170902d50700b001d9aa55e4c1mr149250plg.20.1707188676257; Mon, 05 Feb
- 2024 19:04:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707190404; x=1707795204;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JuTvsdW4nPk5F0JAYEhrkK8gf2WJ2UoBgHHj4XMAB70=;
+        b=Xcmk+bfRXnm+0T/SIRQ6Mqh/GeZ6aZnzrQvYNURB9Io3BMQHjvqEz6Unsez0s08DsV
+         4iutj86ecZBvhHpZsCQe5G9JzUNEjM6OJOY1UVIy19899tQgZOjzUWOytZwTO2UcDqkT
+         pbVoFj580YaaSJzxqliiMWw4OkI0T0hDqATONePOakqyLebdhgprJ5MHI3mNKc+wT/H1
+         M+s8Lo58JGzJcjpnfHrXpIXfrQ8DZFcfF28++JxEkHhWVkSXXLLZwr/z0+ox7iXeRyOt
+         rNrj/eWhMcsReH1l0Dzjf8V7wDiMqtvBv1r1mGVVEKsNNAB8CAKxqWRIwhV+TzVBqjj8
+         viKw==
+X-Gm-Message-State: AOJu0YxVmeBhdCqInxN8/ALG6SYIDhjzYGhuPzrXp7WpZFyTG+xxf4AU
+	+tg44Yoy8lMqT4H08a8Oe6NfNY56kD8Vpy3w9YpDe3rzuVGYLiqnxRdUq6iI13n0aj2cKBLux1a
+	feMULYg==
+X-Google-Smtp-Source: AGHT+IHWG4Pm31Chn2HrVGdfYVjuO9iSdtbPqq26e1uGOzUQ85BvKCXVDXh/eDhIrtBGVkqLv94H0oTjHw4O
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:326b:71bb:e465:6f39])
+ (user=irogers job=sendgmr) by 2002:a05:690c:10c:b0:5e8:bea4:4d3b with SMTP id
+ bd12-20020a05690c010c00b005e8bea44d3bmr75549ywb.6.1707190403843; Mon, 05 Feb
+ 2024 19:33:23 -0800 (PST)
+Date: Mon,  5 Feb 2024 19:33:14 -0800
+Message-Id: <20240206033320.2657716-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231127220902.1315692-1-irogers@google.com> <20231127220902.1315692-2-irogers@google.com>
- <CAM9d7cjCO8e7nbrtrcy4rsbexemQ94=XK+b5byMFFTDDgoJ2eg@mail.gmail.com>
- <CAP-5=fUBr60o22P4Op-J=TPkdfnby9vLetHQZ4UqjuX+nvbG9w@mail.gmail.com>
- <CAM9d7cjO2vxa_bvKFrVpX2PViHqZy_dtyf28EaSACwKv6BEHiw@mail.gmail.com> <CAP-5=fUBf41b=p7iVwoANZtRifR8ftuE00zQqLWz54KZ-9VWtw@mail.gmail.com>
-In-Reply-To: <CAP-5=fUBf41b=p7iVwoANZtRifR8ftuE00zQqLWz54KZ-9VWtw@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Subject: [PATCH v1 0/6] maps memory improvements and fixes
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 5 Feb 2024 19:04:24 -0800
-Message-ID: <CAP-5=fVm4rcieqApYP9ai0FO10qW0Q8VWeYxnpfTKgeKFzwRPQ@mail.gmail.com>
-Subject: Re: [PATCH v5 01/50] perf comm: Use regular mutex
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
-	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
-	Sandipan Das <sandipan.das@amd.com>, liuwenyu <liuwenyu7@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Guilherme Amadio <amadio@gentoo.org>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	James Clark <james.clark@arm.com>, liuwenyu <liuwenyu7@huawei.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 6, 2023 at 4:05=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Sat, Dec 2, 2023 at 3:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> >
-> > On Thu, Nov 30, 2023 at 10:28=E2=80=AFAM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > On Wed, Nov 29, 2023 at 4:56=E2=80=AFPM Namhyung Kim <namhyung@kernel=
-.org> wrote:
-> > > >
-> > > > On Mon, Nov 27, 2023 at 2:09=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
-> > > > >
-> > > > > The rwsem is only after used for writing so switch to a mutex tha=
-t has
-> > > > > better error checking.
-> > > > >
-> > > > > Fixes: 7a8f349e9d14 ("perf rwsem: Add debug mode that uses a mute=
-x")
-> > > >
-> > > > I think we talked about fixing this separately, no?
-> > >
-> > > Sorry, I'm unclear on an action to do. Currently changing the
-> > > RWS_ERRORCHECK in tools/perf/util/rwsem.h will break the build withou=
-t
-> > > this change.
-> >
-> > Can it be like this?
-> >
-> > #ifdef RWS_ERRORCHECK
-> > #define RWSEM_INITIALIZER  { .lock =3D PTHREAD_MUTEX_INITIALIZER, }
-> > #else
-> > #define RWSEM_INITIALIZER  { .lock =3D PTHREAD_RWLOCK_INITIALIZER, }
-> > #endif
-> >
-> > >
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > ---
-> > > > >  tools/perf/util/comm.c | 10 +++++-----
-> > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > > > >
-> > > > > diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-> > > > > index afb8d4fd2644..4ae7bc2aa9a6 100644
-> > > > > --- a/tools/perf/util/comm.c
-> > > > > +++ b/tools/perf/util/comm.c
-> > > > > @@ -17,7 +17,7 @@ struct comm_str {
-> > > > >
-> > > > >  /* Should perhaps be moved to struct machine */
-> > > > >  static struct rb_root comm_str_root;
-> > > > > -static struct rw_semaphore comm_str_lock =3D {.lock =3D PTHREAD_=
-RWLOCK_INITIALIZER,};
-> > > > > +static struct mutex comm_str_lock =3D {.lock =3D PTHREAD_ERRORCH=
-ECK_MUTEX_INITIALIZER_NP,};
-> > > >
-> > > > IIUC it has a problem with musl libc.  Actually I think it's better=
- to
-> > > > hide the field and the pthread initializer under some macro like
-> > > > MUTEX_INITIALIZER or DEFINE_MUTEX() like in the kernel.
-> > >
-> > > Will there be enough use to justify this? I think ideally we'd not be
-> > > having global locks needing global initializers as we run into
-> > > problems like we see in metrics needing to mix counting and sampling.
-> >
-> > I don't know but there might be a reason to use global locks.
-> > Then we need to support the initialization and it'd be better
-> > to make it easier to handle internal changes like this.
->
-> Right. So you are suggesting I make a macro for initialization but
-> when this change is applied it will remove the only user of the macro.
-> The macro would clearly be redundant which is why I didn't do a
-> separate fix for that before doing this change - to use a mutex as the
-> rwsem here is only ever used as a write lock. If we're looking to
-> improve rwsem I don't think adding unused macros is the best thing,
-> for example, we could remove references to perf_singlethreaded which
-> is an idea that has had its day.
+First 6 patches from:
+https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
 
-Note, RWS_ERRORCHECK being enabled still is broken without this.
+Ian Rogers (6):
+  perf maps: Switch from rbtree to lazily sorted array for addresses
+  perf maps: Get map before returning in maps__find
+  perf maps: Get map before returning in maps__find_by_name
+  perf maps: Get map before returning in maps__find_next_entry
+  perf maps: Hide maps internals
+  perf maps: Locking tidy up of nr_maps
 
-Thanks,
-Ian
+ tools/perf/arch/x86/tests/dwarf-unwind.c |    1 +
+ tools/perf/tests/maps.c                  |    3 +
+ tools/perf/tests/thread-maps-share.c     |    8 +-
+ tools/perf/tests/vmlinux-kallsyms.c      |   10 +-
+ tools/perf/util/bpf-event.c              |    1 +
+ tools/perf/util/callchain.c              |    2 +-
+ tools/perf/util/event.c                  |    4 +-
+ tools/perf/util/machine.c                |   34 +-
+ tools/perf/util/map.c                    |    1 +
+ tools/perf/util/maps.c                   | 1296 ++++++++++++++--------
+ tools/perf/util/maps.h                   |   65 +-
+ tools/perf/util/probe-event.c            |    1 +
+ tools/perf/util/symbol-elf.c             |    4 +-
+ tools/perf/util/symbol.c                 |   31 +-
+ tools/perf/util/thread.c                 |    2 +-
+ tools/perf/util/unwind-libunwind-local.c |    2 +-
+ tools/perf/util/unwind-libunwind.c       |    7 +-
+ 17 files changed, 899 insertions(+), 573 deletions(-)
 
-> Thanks,
-> Ian
->
-> > Thanks,
-> > Namhyung
+-- 
+2.43.0.594.gd9cf4e227d-goog
+
