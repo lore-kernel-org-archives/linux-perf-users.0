@@ -1,108 +1,96 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7111CD1B
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 23:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C23D1CD2C
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 23:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707262843; cv=none; b=Ga6jYe0+r9bnBF8cfEWy19/Wbey454PrYlnmYwel5QeKDL09osmpLWHQS8QhU+h9AoL3PX08Dhlx6dJf1Xd+q1A/wO+1Xcd0gF/1NNxpWHqAt/qzKuGUk9BV8LqQ/AJQaT2Ad+r1iKFt7nEk3yAC6JFh4jp9pIRgaBa0D0dVl18=
+	t=1707263948; cv=none; b=OAuK+3wtDGNK8yOLSM2rlS2mA5zZMZM2mcofaFDktNS+sr2G6ei3/N6P491G+5WbiunHbY7dJnT89SBzrHTxkBlcb1629x7WdnBIUkLmJaxhuMwYyHo0EPIPcoezwQ8rqJXY4x305iG5mI+q6IIsdf9aT+LFZHOZvkrrGsd0Z5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707262843; c=relaxed/simple;
-	bh=SMfV3zP9TAVxc9qHJ5pF8CYvegtpia1rL9pv1jbHIgA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=USLiqegJPTfTlDRf1PxKfbA3UEKlBI88v8Mt4BUPtRknQqp4/6CZnRIWM5Hy9EqC7Rsqi8lAwVwjbfP0iSMI4hWuOXO2TTMlj98nBK/7296NTczhUrKrUVf9MlDRYppyrxDd15puQR1FqxCrN1uL+Uf/aJv6SV1mIgF/+4vPbPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TGbk96Ew; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1707263948; c=relaxed/simple;
+	bh=J/QN8zKxBRKEaursFD0Y5X672RX9T9JXQd5PC4sd3i8=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=FTCBWVq3KTYzJ060zi7s/G3+wg3i0576d0NbXB9MVfwgMJuqO6b8HFsWlePANk2Z+YEhvcmDAa3GodyRGlW0Z1Ql3JPJD6cnPG5cTNK5gH1gazPMkpv/Li5BzXBywfoXpdHQe5HExaCQCiquVW5WaY+bu7xTXPNG3ZXJyurhU1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1dPSKB+G; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TGbk96Ew"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d5ce88b51cso90935ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Feb 2024 15:40:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1dPSKB+G"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6047a047f58so1006617b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Feb 2024 15:59:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707262841; x=1707867641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uMZl2B6r90pWxe6d/UAGhzRXMHrchHR7+niCYeN7Fhg=;
-        b=TGbk96Ewq1REq9s2z/x5LddL5yHfbjQmeDEawV+AMUxdZx6zdXgPF+EmoSXDlF2nLR
-         YHnEvdafzHcNEbgdQGDpHyqyyNYmxmCjMZktu5MV6/+bb8AiP1hI3ZI7NVnniIzYiTVE
-         miZBP3zSyzstobqL6S7Y3u1zT0Sw3GOvbP4ezDTiTr6Uxq9iQuoz+j67s4B4UniNcHSc
-         Sm+dFigggiGJeAKowvLoU4lRCs6AqjwqR4lTS+V8qZzeJwFgHuGHYPPdCeFegMMJcvIb
-         gCa8d3wQFS/MkyPXD4/2T/qAr9a33XjGzyjIRSbwxmEiLY/5a15+zG6ZGcA9Kn0gRgYP
-         iUtg==
+        d=google.com; s=20230601; t=1707263946; x=1707868746; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BcvFG/3vRgvYTER/Aj2IaMSgKq/80efIXBEBLE9WTco=;
+        b=1dPSKB+Gel2PpzNtC68eR1GoVZz8G4/qhp3TNd19ewayqAKBQstja4NhNFgYzxSMtX
+         Vwujk0nVd/lgGH9QOFCWZ0RhAPtMRAIX3EkuBWppxasETtofXu/SVpgaEVdk9gcNOUjc
+         zawiFIaGUooh4uV9rXVxfaXVs+avyW1iaEUz45JhEnJDYUDnWRxXhgGyQzfctwQPoUfa
+         9jdV2BqD1x5iN8gWDmc0R/vm2AykA/u7LeVAtn9KeN09kbjFvEWuUE3I4Vx5fc4T8zoP
+         7faqPed2mHTngj54MxGrhQ/95xextfQ3kA1A/GW9n/NA/pytXeU/I8lPKa6HEBFg/9Zo
+         wGaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707262841; x=1707867641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uMZl2B6r90pWxe6d/UAGhzRXMHrchHR7+niCYeN7Fhg=;
-        b=JDseZgxvCBtYkoukB360awjCq71Eenpar9m3LYXq04py/S8YFxmJHYr0hLkg+L3tNj
-         5UJJr/vPR/WTmNL8GlTuqSYK5/3iuovjM81P3WviEr5yOZ3g96TwPASI9Mu6wBeqpkY+
-         h49ykg30pvsixbr/ZhqoJJUKhhmZWtZmSYz6d0udhmz1zVK7uKqrcjKNigTwXo5vMA1/
-         YFzboNNN4kE6h1fWokuEd8sh6WS2GTi89wiwnN/u6AJwQwKMZ3T3DK7l3zb5ixbPsMct
-         oO8aeJUEZcs52muu2zn3Uo1/hpIfdSXOcRnQxlAcaR72iV0erP3d/zQNOF4nbrh2ehqV
-         fgQQ==
-X-Gm-Message-State: AOJu0YwuhNab+6JeQhb4Qo9ki8csXjmnuDTKA2wHoYWBZuenm3rXTNId
-	cwOARGy1RJ0yil0jbywIEQ0MXOi/ZpPzELnw4fXGzgT+TkM/rhJtNewvvOqRlPRHJ9WOH6Pjxrm
-	Rk59HPuG5ChAqNPxAamlXz9DeUTpVja2PpMyJ
-X-Google-Smtp-Source: AGHT+IHk0GZQ2blDgfVf+w1vAv7QhoskH4BtElhsBkxqHLSk2Tcp1LsvWXMaotUCkZJtfW8YHpS5xDLHn+e73DW4hrM=
-X-Received: by 2002:a17:902:dac6:b0:1d8:d6bf:145b with SMTP id
- q6-20020a170902dac600b001d8d6bf145bmr46775plx.15.1707262840823; Tue, 06 Feb
- 2024 15:40:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707263946; x=1707868746;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BcvFG/3vRgvYTER/Aj2IaMSgKq/80efIXBEBLE9WTco=;
+        b=VRDIwSNAv5p9XmPCtEqEzTejSbIFdLxs2xH6s3ifDPNteRAPPE9/UtdqKKKdK2IA9t
+         wbB7j4WIv2OPtcEqzcA3X7al3ZOI7VFd9QBED4y6LxWNFNRSthTVjmCzmAf5r/n/d95g
+         ZLlVekeqBCp3kzwHB02XvJcxrQTPW84yaxwvzxLn7FSvxlrBI9LdlF9vh4E6c8gmk4UH
+         nMffhVH+p3BV1cXfbNViqfQ6J/YZRREFNKAHE99G0Oyw3FuXYk1rzLb0r8aXIj/MDITO
+         m0hKHwokVGrz6Wi5gwmRM0KUnItVNPTorcZ73cdlh6G5FWFAjzOJAVkof3tfelxkaBCu
+         pFMQ==
+X-Gm-Message-State: AOJu0YzFYLEepRW78LDuiasKtGyufQdijhCCcHKFrCpO1A9Wo3diL/XT
+	UY1X9gYUA1l/8Pf2dnCfZ7BrhZ4FzB7BZJr4256pX4/QqgloFqoTpqPwgh4lKXAs69EryrEvByw
+	a6qp6Jw==
+X-Google-Smtp-Source: AGHT+IESGOMBrNLysoqBfEec3Vp5mrNBDpipKfIEWH3i9r8/NRYTso38MmfMfZNYqoVy5gwpSx7XVVDq6+Nq
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7842:a360:67f8:5683])
+ (user=irogers job=sendgmr) by 2002:a81:9b82:0:b0:5fb:7e5b:b87f with SMTP id
+ s124-20020a819b82000000b005fb7e5bb87fmr642235ywg.1.1707263946437; Tue, 06 Feb
+ 2024 15:59:06 -0800 (PST)
+Date: Tue,  6 Feb 2024 15:59:02 -0800
+Message-Id: <20240206235902.2917395-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240202220459.527138-1-namhyung@kernel.org> <20240202220459.527138-15-namhyung@kernel.org>
- <CAP-5=fUWaKW7d6_YkET0o26=fjBwX6PPJ1gXQ9wndQM_Oi2O3A@mail.gmail.com> <CAM9d7cgF_PYm2fG1Vgu25u1hVZUK0wmFBqY7DHW2eVpRV=iERA@mail.gmail.com>
-In-Reply-To: <CAM9d7cgF_PYm2fG1Vgu25u1hVZUK0wmFBqY7DHW2eVpRV=iERA@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Subject: [PATCH v1] perf kvm powerpc: Fix build
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 6 Feb 2024 15:40:29 -0800
-Message-ID: <CAP-5=fV7fWHM53roUJOU+0vAYQJAbhdE1EkgzHLv7jPgeLc2HQ@mail.gmail.com>
-Subject: Re: [PATCH 14/14] perf annotate-data: Add stack canary type
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, 
+	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sfr@canb.auug.org.au
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 6, 2024 at 3:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Fri, Feb 2, 2024 at 7:21=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > On Fri, Feb 2, 2024 at 2:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > When the stack protector is enabled, compiler would generate code to
-> > > check stack overflow with a special value called 'stack carary' at
-> > > runtime.  On x86_64, GCC hard-codes the stack canary as %gs:40.
-> > >
-> > > While there's a definition of fixed_percpu_data in asm/processor.h,
-> > > it seems that the header is not included everywhere and many places
-> > > it cannot find the type info.  As it's in the well-known location (at
-> > > %gs:40), let's add a pseudo stack canary type to handle it specially.
-> >
-> > I wonder if cases like this can be handled by debug info rather than
-> > special cases in the tool. Special cases are fine too, but are
-> > potentially less portable.
->
-> Agreed, but I couldn't find anything special in DWARF.
+Updates to struct parse_events_error needed to be carried through to
+PowerPC specific event parsing.
 
-The fs and gs selectors are commonly used for thread local storage, so
-could something like DW_OP_form_tls_address be used?
-https://dwarfstd.org/issues/110803.1.html
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: fd7b8e8fb20f ("perf parse-events: Print all errors")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/arch/powerpc/util/kvm-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+index d9a0ac1cdf30..c8357b571ccf 100644
+--- a/tools/perf/arch/powerpc/util/kvm-stat.c
++++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+@@ -114,7 +114,7 @@ static int is_tracepoint_available(const char *str, struct evlist *evlist)
+ 
+ 	parse_events_error__init(&err);
+ 	ret = parse_events(evlist, str, &err);
+-	if (err.str)
++	if (ret)
+ 		parse_events_error__print(&err, "tracepoint");
+ 	parse_events_error__exit(&err);
+ 	return ret;
+-- 
+2.43.0.594.gd9cf4e227d-goog
 
-> Thanks,
-> Namhyung
