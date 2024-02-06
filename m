@@ -1,40 +1,40 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB2D56B8F;
-	Tue,  6 Feb 2024 02:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091F456B68;
+	Tue,  6 Feb 2024 02:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707186081; cv=none; b=N+dc/V/GI4MdC1cCYuTr5dihcleS3/9J0/E5883zVmNrwrUTlTn0x6js0ID03aqWiOSOqu6YZHw3ZB7nIldXA79emLDJdrbFVNVgg/wAShY2AhZsFl/o+DVgwL5uow1oLVSWsi4JGUiCFqtiSth57o3bf7nT2hJtvfgbNB6BeSM=
+	t=1707186119; cv=none; b=DUK4G+BHPXDBkLAaAPAyrLdNg6ru0IiC/w1cf2Iuj+gBnK6BeEph7Rhw6s9Wb0uaCJ8AwymT78Lyhb+40OdubTMRqTx/FoatxTf8ucV+V85ikt8XcmCf7JYJngdeKMpQ+ftjdYfAa/I2hMhwNMEejB5yh6KMLmClZB0IgqOaiQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707186081; c=relaxed/simple;
-	bh=RElkcGIX1JnV58ilDMaRWG242S1+SDXgDW8vkxla7EU=;
+	s=arc-20240116; t=1707186119; c=relaxed/simple;
+	bh=JKL7wAZAXuBWK5HxxxWHZnoaYHvzFfXq2MhpV++aGZw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RamX+dj8QGM5mF43rA/jFDXwoj4q+kxZ6t3eNULwT0vai1jC2u9guitS9uZXF1mhRVeJsNjNudvgfb45E4Do5WIsLl04I4s7ognNyIAe5lPaoeUQpMO8pd02YvqZOkKwPmrQjOuyRO8/VfUwoXeJyotWLOLoIxaJOz11GwaMhh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
+	 To:Cc:Content-Type; b=cVMM0InyU9d36msMcKUxrPtETrOA6kt8tDJUhdL5FDXJny1DlzZ7+qKnVP7jFJa0dEzI/jH/XRMp1tj7N4odUIYJ4H4cd3BrcFcddyoOLQD5RAQTCyPInBlTqLftDS1qFybA1An5C9c18gOLSRff5YNMO7CrCnuvkm7GAVLxgPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2967682b29aso1378974a91.2;
-        Mon, 05 Feb 2024 18:21:19 -0800 (PST)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e03c50dc68so644615b3a.1;
+        Mon, 05 Feb 2024 18:21:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707186079; x=1707790879;
+        d=1e100.net; s=20230601; t=1707186117; x=1707790917;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uCgV+C17HfH/BTi7HeGrLKXd5D1dF0W0dp4NG3kQMsU=;
-        b=uTZ64shCGQeyh18CYr7zAl1KULqngZ2dHGGaXnN2cTQV93zTSigwY2pi9yi6tcPaI+
-         lhbV1gwTqFJpnKtLfbl4gBPkwyXmUlrHyLfSZlvIbkDdHulhb8y4o7bmDtw+tk5Cr5A1
-         v/RenmMuUfYso9o/jLOGw3yrPcYw5OfgO3gfQuTWKd0Imft/PllP6jU0+YfyZ9+lcCpN
-         WXf6GzKcb7V5mm1vjYroEqa5aM/RNMBjix8BpslVaUKhbXmDOQw6r88m295dprKclTEu
-         1vTkkrHlD0N1p9i15Uu+ynR6v6ilFKAvKR4hgNNjhQ+NGf6khiTrvO/ymXtv6666JChK
-         JcNw==
-X-Gm-Message-State: AOJu0YyK3ZD4OXW0JozrxUsFYI1f2ZbzF4puupVBiUDo9Xy++r8S6nsC
-	Q61HAC7h1caKVdyRWY88fvOZjAykNEwnWL+4wdaQoakOBkzQFVt6Il9bayIKbC/7U8waDkPNsTN
-	pEyHa5Qh34QmEUV+OIwJ/DeEC4KM=
-X-Google-Smtp-Source: AGHT+IH7LYdqP0z/h8TQBGFlI0FE+HcTmiaF2MC3p3+8MiBfqg0Nta3Eb0DRPRUKuoWhTT/jbuVXjhVWNcJOxCIadlQ=
-X-Received: by 2002:a17:90b:888:b0:296:2f91:4121 with SMTP id
- bj8-20020a17090b088800b002962f914121mr1260671pjb.12.1707186078354; Mon, 05
- Feb 2024 18:21:18 -0800 (PST)
+        bh=MmX28T1cy+Xsix2lkwN9TrnUjoz290WoN/I+0YHG2R0=;
+        b=io43mXH0Hz/rEYYJ7t06QUb1g9C6GGxFjRLOLY8TduapALU4Gna7CbhsOfg7wK4F5I
+         /JTuolpS/6L/rNRGMboqtRjHmyS8BeFIkN1kAfOQ00b8UJehrmt0s3HiqdpRoFqZ0wme
+         kaEZ0sTS9VwthyvS68QZ7oCGeuc2lebY6Stq/6nz8KvAatrykQSNPFC33wBNfbgLLd8l
+         vft4WiixocDRZ5SgoaDaZr0i+Pk4g+jvSsJfWpn6nyld9/4XoV4vhg8JHuEesYjmCJT4
+         yDuCkLggwi0FTLyVOWy/n7Vv8px7ivaYtzNQEdbphGFbS3BMtwGKwMA28lQodNW39N/c
+         dLgw==
+X-Gm-Message-State: AOJu0YyQswAMT1lHh+It9JQVaj58g3ew5yR59yzbV54FT9Kr8ZUEvkZw
+	12mp/fUbyXJq8W1GD5ue8iIA2mrHapo2UOVTj17qKPKJach2ho0rMEnkem1190XIbDZz5v0NPzZ
+	GWD1kt3oCkGJ54ZzbLNeNN+OtWZFznLxSIOk=
+X-Google-Smtp-Source: AGHT+IFtlgDdUulA1zYhWambzZO9B9jEcg2dgjS8aP6UuZRCzzAXieISD7+88FCtoxv6HgKCjBx9kWv/zUaN92Mm80s=
+X-Received: by 2002:a05:6a00:b33:b0:6e0:3329:1044 with SMTP id
+ f51-20020a056a000b3300b006e033291044mr887349pfu.29.1707186117174; Mon, 05 Feb
+ 2024 18:21:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,152 +42,196 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240202110130.3553-1-adrian.hunter@intel.com>
- <20240202110130.3553-2-adrian.hunter@intel.com> <CAM9d7cipqHheaZOj9Qr56COjjdU2Qk1pLtUzkjZxtq4g3irLww@mail.gmail.com>
- <CA+JHD91GR=Jry_=Es4m+JnySjMoKrfajW40ZHq+eYFaF9Vsngg@mail.gmail.com> <4983cc09-20ad-450b-8eba-219f75a5fab2@intel.com>
-In-Reply-To: <4983cc09-20ad-450b-8eba-219f75a5fab2@intel.com>
+ <20240202110130.3553-3-adrian.hunter@intel.com> <Zb2akm1MGCv84T-7@google.com> <046baaea-217f-4ecc-b340-b5f6f1cee0b9@intel.com>
+In-Reply-To: <046baaea-217f-4ecc-b340-b5f6f1cee0b9@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 5 Feb 2024 18:21:07 -0800
-Message-ID: <CAM9d7chXSvhej4Evaq1gS_g-zPd0jOVBQDh3UmKAaE2UvP7-Hw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf script: Make it possible to see perf's kernel
- and module memory mappings
+Date: Mon, 5 Feb 2024 18:21:46 -0800
+Message-ID: <CAM9d7cgZi8jDDgHrAqJmLvz33VXkLb3KKiJ4uayEZniTnaFbBA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf symbols: Slightly improve module file executable
+ section mappings
 To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Like Xu <like.xu.linux@gmail.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Like Xu <like.xu.linux@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 4, 2024 at 11:08=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.=
+On Sun, Feb 4, 2024 at 10:58=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.=
 com> wrote:
 >
-> On 3/02/24 03:56, Arnaldo Carvalho de Melo wrote:
+> On 3/02/24 03:44, Namhyung Kim wrote:
+> > Hi Adrian,
+> >
+> > On Fri, Feb 02, 2024 at 01:01:30PM +0200, Adrian Hunter wrote:
+> >> Currently perf does not record module section addresses except for
+> >> the .text section. In general that means perf cannot get module sectio=
+n
+> >> mappings correct (except for .text) when loading symbols from a kernel
+> >> module file. (Note using --kcore does not have this issue)
+> >>
+> >> Improve that situation slightly by identifying executable sections tha=
+t
+> >> use the same mapping as the .text section. That happens when an
+> >> executable section comes directly after the .text section, both in mem=
+ory
+> >> and on file, something that can be determined by following the same la=
+yout
+> >> rules used by the kernel, refer kernel layout_sections(). Note whether
+> >> that happens is somewhat arbitrary, so this is not a final solution.
+> >>
+> >> Example from tracing a virtual machine process:
+> >>
+> >>  Before:
+> >>
+> >>   $ perf script | grep unknown
+> >>          CPU 0/KVM    1718   203.511270:     318341 cpu-cycles:P:  fff=
+fffffc13e8a70 [unknown] (/lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-i=
+ntel.ko)
+> >>   $ perf script -vvv 2>&1 >/dev/null | grep kvm.intel | grep 'noinstr.=
+text\|ffff'
+> >>   Map: 0-7e0 41430 [kvm_intel].noinstr.text
+> >>   Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-local/k=
+ernel/arch/x86/kvm/kvm-intel.ko
+> >>
+> >>  After:
+> >>
+> >>   $ perf script | grep 203.511270
+> >>          CPU 0/KVM    1718   203.511270:     318341 cpu-cycles:P:  fff=
+fffffc13e8a70 vmx_vmexit+0x0 (/lib/modules/6.7.2-local/kernel/arch/x86/kvm/=
+kvm-intel.ko)
+> >>   $ perf script -vvv 2>&1 >/dev/null | grep kvm.intel | grep 'noinstr.=
+text\|ffff'
+> >>   Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-local/k=
+ernel/arch/x86/kvm/kvm-intel.ko
+> >>
+> >> Reported-by: Like Xu <like.xu.linux@gmail.com>
+> >> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> >> ---
+> >>  tools/perf/util/symbol-elf.c | 75 +++++++++++++++++++++++++++++++++++=
+-
+> >>  1 file changed, 73 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf=
+.c
+> >> index 9e7eeaf616b8..98bf0881aaf6 100644
+> >> --- a/tools/perf/util/symbol-elf.c
+> >> +++ b/tools/perf/util/symbol-elf.c
+> >> @@ -23,6 +23,7 @@
+> >>  #include <linux/ctype.h>
+> >>  #include <linux/kernel.h>
+> >>  #include <linux/zalloc.h>
+> >> +#include <linux/string.h>
+> >>  #include <symbol/kallsyms.h>
+> >>  #include <internal/lib.h>
+> >>
+> >> @@ -1329,6 +1330,58 @@ int symsrc__init(struct symsrc *ss, struct dso =
+*dso, const char *name,
+> >>      return -1;
+> >>  }
+> >>
+> >> +static bool is_exe_text(int flags)
+> >> +{
+> >> +    return (flags & (SHF_ALLOC | SHF_EXECINSTR)) =3D=3D (SHF_ALLOC | =
+SHF_EXECINSTR);
+> >> +}
+> >> +
+> >> +/*
+> >> + * Some executable module sections like .noinstr.text might be laid o=
+ut with
+> >> + * .text so they can use the same mapping (memory address to file off=
+set).
+> >> + * Check if that is the case. Refer to kernel layout_sections(). Retu=
+rn the
+> >> + * maximum offset.
+> >> + */
+> >> +static u64 max_text_section(Elf *elf, GElf_Ehdr *ehdr)
+> >> +{
+> >> +    Elf_Scn *sec =3D NULL;
+> >> +    GElf_Shdr shdr;
+> >> +    u64 offs =3D 0;
+> >> +
+> >> +    /* Doesn't work for some arch */
+> >> +    if (ehdr->e_machine =3D=3D EM_PARISC ||
+> >> +        ehdr->e_machine =3D=3D EM_ALPHA)
+> >> +            return 0;
+> >> +
+> >> +    /* ELF is corrupted/truncated, avoid calling elf_strptr. */
+> >> +    if (!elf_rawdata(elf_getscn(elf, ehdr->e_shstrndx), NULL))
+> >> +            return 0;
+> >> +
+> >> +    while ((sec =3D elf_nextscn(elf, sec)) !=3D NULL) {
+> >> +            char *sec_name;
+> >> +
+> >> +            if (!gelf_getshdr(sec, &shdr))
+> >> +                    break;
+> >> +
+> >> +            if (!is_exe_text(shdr.sh_flags))
+> >> +                    continue;
+> >> +
+> >> +            /* .init and .exit sections are not placed with .text */
+> >> +            sec_name =3D elf_strptr(elf, ehdr->e_shstrndx, shdr.sh_na=
+me);
+> >> +            if (!sec_name ||
+> >> +                strstarts(sec_name, ".init") ||
+> >> +                strstarts(sec_name, ".exit"))
+> >> +                    break;
+> >
+> > Do we really need this?  It seems my module has .init.text section
+> > next to .text.
+> >
+> >   $ readelf -SW /lib/modules/`uname -r`/kernel/fs/ext4/ext4.ko
+> >   There are 77 section headers, starting at offset 0x252e90:
+> >
+> >   Section Headers:
+> >     [Nr] Name              Type            Address          Off    Size=
+   ES Flg Lk Inf Al
+> >     [ 0]                   NULL            0000000000000000 000000 0000=
+00 00      0   0  0
+> >     [ 1] .text             PROGBITS        0000000000000000 000040 079f=
+a7 00  AX  0   0 16
+> >     [ 2] .rela.text        RELA            0000000000000000 13c348 04f0=
+c8 18   I 74   1  8
+> >     [ 3] .init.text        PROGBITS        0000000000000000 079ff0 0006=
+0c 00  AX  0   0 16
+> >     ...
 > >
 > >
-> > On Fri, Feb 2, 2024, 10:50 PM Namhyung Kim <namhyung@kernel.org <mailto=
-:namhyung@kernel.org>> wrote:
-> >
-> >     On Fri, Feb 2, 2024 at 3:01=E2=80=AFAM Adrian Hunter <adrian.hunter=
-@intel.com <mailto:adrian.hunter@intel.com>> wrote:
-> >     >
-> >     > Dump kmaps if verbose > 2.
-> >
-> >     Maybe we can add '--debug kmap' option rather than using an
-> >     arbitrary verbose level.
+> > ALIGN(0x40 + 0x79fa7, 16) =3D 0x79ff0, right?
 >
-> That is a global option but would only work for tools that are
-> explicitly programmed to do the dump.  Could just do perf script
-> and perf report?
-
-I don't care.. actually `--debug perf-event-open` would work with
-commands that call the syscall only.  But I'm fine either way.
-
+> But not in memory e.g.
 >
-> >
-> >
-> > I think we have 'perf report --mmap', no?
+> Section Headers:
+>   [Nr] Name              Type            Address          Off    Size   E=
+S Flg Lk Inf Al
+>   [ 3] .text             PROGBITS        0000000000000000 0000a0 071719 0=
+0  AX  0   0 16
+>   [ 5] .text.unlikely    PROGBITS        0000000000000000 0717b9 000a59 0=
+0  AX  0   0  1
+>   [ 7] .init.text        PROGBITS        0000000000000000 072212 0004fe 0=
+0  AX  0   0  1
+>   [ 9] .altinstr_replacement PROGBITS    0000000000000000 072710 000004 0=
+0  AX  0   0  1
+>   [10] .static_call.text PROGBITS        0000000000000000 072714 000388 0=
+0  AX  0   0  4
+>   [12] .exit.text        PROGBITS        0000000000000000 072a9c 000078 0=
+0  AX  0   0  1
 >
-> Only shows user space maps.  Could add 'perf report --kmaps'?
+>
+> /sys/module/ext4/sections/.text:                 0xffffffffc0453000
+> /sys/module/ext4/sections/.text.unlikely:        0xffffffffc04c4719
+> /sys/module/ext4/sections/.init.text:            0xffffffffc053e000
+> /sys/module/ext4/sections/.altinstr_replacement: 0xffffffffc04c5172
+> /sys/module/ext4/sections/.static_call.text:     0xffffffffc04c5178
+> /sys/module/ext4/sections/.exit.text:            0xffffffffc04c5500
+>
+> Need to have:
+>
+>         section address - offset =3D=3D .text address - .text offset
+>
+> perf does not record the section address, but the kernel
+> layout_sections() lays out executable sections in order
+> starting with .text *until* it gets to .init* or .exit*.
 
-That'd work too.  It's up to you.
+Ok, thanks for the explanation!
 
-Thanks,
 Namhyung
-
-
->
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/tools/perf/Documentation/perf-report.txt#n542 <https://git.kernel.org/pub/=
-scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-=
-report.txt#n542>
-> >
-> > - Arnaldo
-> >
-> > Sent from smartphone
-> >
-> >
-> >     Thanks,
-> >     Namhyung
-> >
-> >     >
-> >     > Example:
-> >     >
-> >     >   $ perf script -vvv 2>&1 >/dev/null | grep kvm.intel
-> >     >   build id event received for /lib/modules/6.7.2-local/kernel/arc=
-h/x86/kvm/kvm-intel.ko: 0691d75e10e72ebbbd45a44c59f6d00a5604badf [20]
-> >     >   Map: 0-3a3 4f5d8 [kvm_intel].modinfo
-> >     >   Map: 0-5240 5f280 [kvm_intel]__versions
-> >     >   Map: 0-30 64 [kvm_intel].note.Linux
-> >     >   Map: 0-14 644c0 [kvm_intel].orc_header
-> >     >   Map: 0-5297 43680 [kvm_intel].rodata
-> >     >   Map: 0-5bee 3b837 [kvm_intel].text.unlikely
-> >     >   Map: 0-7e0 41430 [kvm_intel].noinstr.text
-> >     >   Map: 0-2080 713c0 [kvm_intel].bss
-> >     >   Map: 0-26 705c8 [kvm_intel].data..read_mostly
-> >     >   Map: 0-5888 6a4c0 [kvm_intel].data
-> >     >   Map: 0-22 70220 [kvm_intel].data.once
-> >     >   Map: 0-40 705f0 [kvm_intel].data..percpu
-> >     >   Map: 0-1685 41d20 [kvm_intel].init.text
-> >     >   Map: 0-4b8 6fd60 [kvm_intel].init.data
-> >     >   Map: 0-380 70248 [kvm_intel]__dyndbg
-> >     >   Map: 0-8 70218 [kvm_intel].exit.data
-> >     >   Map: 0-438 4f980 [kvm_intel]__param
-> >     >   Map: 0-5f5 4ca0f [kvm_intel].rodata.str1.1
-> >     >   Map: 0-3657 493b8 [kvm_intel].rodata.str1.8
-> >     >   Map: 0-e0 70640 [kvm_intel].data..ro_after_init
-> >     >   Map: 0-500 70ec0 [kvm_intel].gnu.linkonce.this_module
-> >     >   Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-lo=
-cal/kernel/arch/x86/kvm/kvm-intel.ko
-> >     >
-> >     > The example above shows how the module section mappings are all w=
-rong
-> >     > except for the main .text mapping at 0xffffffffc13a7000.
-> >     >
-> >     > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com <mailto:adr=
-ian.hunter@intel.com>>
-> >     > ---
-> >     >  tools/perf/builtin-script.c | 13 +++++++++++++
-> >     >  1 file changed, 13 insertions(+)
-> >     >
-> >     > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-scr=
-ipt.c
-> >     > index b1f57401ff23..e764b319ef59 100644
-> >     > --- a/tools/perf/builtin-script.c
-> >     > +++ b/tools/perf/builtin-script.c
-> >     > @@ -3806,6 +3806,16 @@ static int parse_callret_trace(const struc=
-t option *opt __maybe_unused,
-> >     >         return 0;
-> >     >  }
-> >     >
-> >     > +static void dump_kmaps(struct perf_session *session)
-> >     > +{
-> >     > +       int save_verbose =3D verbose;
-> >     > +
-> >     > +       pr_debug("Kernel and module maps:\n");
-> >     > +       verbose =3D 0; /* Suppress verbose to print a summary onl=
-y */
-> >     > +       maps__fprintf(machine__kernel_maps(&session->machines.hos=
-t), stderr);
-> >     > +       verbose =3D save_verbose;
-> >     > +}
-> >     > +
-> >     >  int cmd_script(int argc, const char **argv)
-> >     >  {
-> >     >         bool show_full_info =3D false;
-> >     > @@ -4366,6 +4376,9 @@ int cmd_script(int argc, const char **argv)
-> >     >
-> >     >         flush_scripting();
-> >     >
-> >     > +       if (verbose > 2)
-> >     > +               dump_kmaps(session);
-> >     > +
-> >     >  out_delete:
-> >     >         if (script.ptime_range) {
-> >     >                 itrace_synth_opts__clear_time_range(&itrace_synth=
-_opts);
-> >     > --
-> >     > 2.34.1
-> >     >
-> >
->
