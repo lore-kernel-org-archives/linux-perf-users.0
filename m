@@ -1,148 +1,196 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87727762F
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 03:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3617764F
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Feb 2024 04:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707190421; cv=none; b=qyObeklET+n66vJkbx/wWa3U3ON24rokqnmT4t85M8BgSZoU01Vo6HAZAqvgc5mP52pqOLBrqbHtrUkB+4aOGi+V4JlsTIC6Ne8aeT09xE8Sz5ELQIOaYrc9Vmt7rMEUWGjl2Lt8fcIP+jrmkRpAzuF/hikCetRJZnmeL8/wafw=
+	t=1707193928; cv=none; b=itY6sc35+DoqkK517Si7fPz5xBipSFVSoO66n29gwwH8zcfmVogIxVqyqrYHTslHBUBA/jCDDXSgHCONJdnDXqzFN21E5G8mZv1+uInJSaVL5AQOmcX7ruHfgOEwwSB5E4ZhKkK4IP/Kpi5AHk+CvcK9a2uYUJyg96ufzfBbsAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707190421; c=relaxed/simple;
-	bh=QOZ3AXSow+69/jSpTKwTzsRv+NqoTfrDzrJ1ZUXaoRk=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=BFl6aMPf3HzFtjHJMSE7ERtDXU5d1y9laws0+mrUGUvAAoQyXk9NO8EJkDOYTen7SezCpxv09VDYVxXKV4glTIBUYgkQRvPaoWQ0cO417bY/3EsBuoW5tJSKs6rVaatPXEtDcheg4N8YWW90oDSUq5R/vxc+fgmFnSJi8LWvt94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ixVwS9m/; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1707193928; c=relaxed/simple;
+	bh=AxYpZmmSfejTvSrlt2lrpZ90ipai/hGyIHlWgTXCTVA=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=EMe8TGamAStWjmxdoZhx5ZoUqO3Nxba6WDPQ/JZZj6XhaotW97EIGqvC9+O+4RS4ofgVxDK0KvO5GUmtF0JxpcwHwYbh6n74izVPN0o05ft819/nTZ+btDUfeREmUx9dKtZMeVTybb+PFNQQJn1/6t1onmaPeDH4N58G7RPtkIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bbieBiMO; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ixVwS9m/"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6041c633cfaso82398467b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Feb 2024 19:33:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bbieBiMO"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so5863763276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Feb 2024 20:32:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707190419; x=1707795219; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dvZ5WUWTj8QrlPAJDzYrQkQZ6y0b1KQREpo25gbb83I=;
-        b=ixVwS9m/0znAw4QZkK+GbKmrknuOyRgxRPKAwxgz4Pzfd5JnseVblOETA7o0GsOPWJ
-         n8Z+kXzC7suudMIuWBKVva54xQ2z2Q1hvaKh+pv1Q6/V5lZizFVEiHVOdB3lT4G3SuXR
-         NaJSvfD+2NcfveM1/4UUC44quCuVgFpNlGirB1EknN5317334GM1SJ0At0TJmYSh3+SD
-         oNcRHywDuoTW3Fz3vhLwkSTBcgytvJ9Mpfd89YlEsYYvGrRmYx9oMoHi5JhouDHYRJiy
-         hoTGDJ8h5LfmHk+4EeyoUnkEV5rF4MQacUR3g80gObvzRJGmgHTf1+RrX8tbeLp1JBNK
-         kiqg==
+        d=google.com; s=20230601; t=1707193926; x=1707798726; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZIdcfMjd0pHTXittFkoI9gm5TNhxImmZIlV61ZvhK6g=;
+        b=bbieBiMOmqBOUN+WUpr4Rc66yF75zBos5jrQxiZUcDGMXh0m03DuuL+vL22w0gfUHM
+         ajXO3zbbfDLEbvfowwQbJW7Z1bUsOlcVCg2kjXjFjIx5wN8Csv5soyYBI4rPdhgLCJj3
+         0wVD1XD7sct48s7yIIld2HvVDyv7gG35vzHrMY+lfy+Ayv0RoC58OLz+FyeHcjXEF/ti
+         FwCBDeP9MoEjza0xz2AuoURKmgXSMMV4N/rF9rKbljnYuo2m1yx0AKr0AvdOPpcmZKnm
+         98kIZza71eG2HYQZogY0EBjAnl2RqrwJK91+neVN3+Up1QGEXAa5eK2nTo3Q3pq5jtdv
+         fX7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707190419; x=1707795219;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dvZ5WUWTj8QrlPAJDzYrQkQZ6y0b1KQREpo25gbb83I=;
-        b=Ldeg0wxhNWCYYap4121cAC2avP27v36tJTuFP4d8LVlwsYZ22GzeC0z30wLGQfpy6y
-         pM8PFW5zNKbU+GvlePVwRDd88EIAVDkbyPYRo28ZSykQhQWpMJNhR6i1Fw5xMad3BIlD
-         Uo8C4I57Oko+6W6m8elKC8Ji8Mr3dzdiTYOhQQOh93BZr60oU15+uBl+DoHQejKni0qG
-         /hj3wn3jam7KPlNLO9ASx9AqXL7hAFdhJTYu1VOi6rEK0qP1y6dhhtys+LQFNGom0Bih
-         b/8n+GCMwjGUe5LzPJLua77EwORKNHsyjoixsRp5hVBisvYL/uiXVsvQXAsCqqwmx5ct
-         nQ0w==
-X-Gm-Message-State: AOJu0Yy36ybwrX8Inz2n0bHvcKQj4JLiTjCPFfSZcxZB37LVO4G34l88
-	Mq1wkJq0GzGApLfHuRLfYquABVz7vGn+W+yuporny95H0qL72KE86iPV+ut6OXaNjCSj/SZ6Hdx
-	ezIKZkg==
-X-Google-Smtp-Source: AGHT+IFQ5Cjk0u4xcaI5JLcWkiiRAFVFGcAFLgvP/B977DrcT5aY6dBkcszM6l3wtqyHQ4ROSouzvTQuGzhZ
+        d=1e100.net; s=20230601; t=1707193926; x=1707798726;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZIdcfMjd0pHTXittFkoI9gm5TNhxImmZIlV61ZvhK6g=;
+        b=e19RPYxYcQ/WnrWIjOau/ztHptF2ZJF1zg0ncpjkwCKXJYA62JAy/3WkSlQhXId1ar
+         Uw306LcysAXc8VGmsj8JNV3KgmYe1srWS/fmVpK4vPZ0999ePhscwEAIdzR4m01gGXkj
+         BP2473yg7c4HNuUCPqcnK7zvrhXAS0Tey8YXl7ARdvIuXlo53u/uK/rYCic1HcUwFSe2
+         DOROrjMXZ4cCWcuIHhHAXYhp1x66RFLRSMpKUfBSFOd7/tjc1LaL6szbPuCAUtnKZwRr
+         sNt+Iwu70NQmUepKOI3cljXSgcEArbSleyyCHLBHlNwlFctWhR77rDTVzOgmtwqs5qZ0
+         Y2pQ==
+X-Gm-Message-State: AOJu0YyZI0TAuOAkrzBgKxO92p2KQ7hOHLVvG37+le47iuTTBK+uZLkH
+	5azM4dqXZdIxPf7VS6yd94Ly4CKo0qPrkBlrTgq0XGqWx75WmSKrc7Av1CrqcIV0ZoAyrz4jCMJ
+	+adBD2g==
+X-Google-Smtp-Source: AGHT+IEHizuUSsLdvyZQlUQEn4TtgjoBKMA6PHcEPTFcdqoYThQruDguVEUCfTVhUoINolqsYyPuYAsyQaUX
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:326b:71bb:e465:6f39])
- (user=irogers job=sendgmr) by 2002:a81:9ac1:0:b0:5f9:4fa1:1a0b with SMTP id
- r184-20020a819ac1000000b005f94fa11a0bmr62908ywg.0.1707190418775; Mon, 05 Feb
- 2024 19:33:38 -0800 (PST)
-Date: Mon,  5 Feb 2024 19:33:20 -0800
-In-Reply-To: <20240206033320.2657716-1-irogers@google.com>
-Message-Id: <20240206033320.2657716-7-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:240b:b0:dc6:b982:cfa2 with SMTP
+ id dr11-20020a056902240b00b00dc6b982cfa2mr19283ybb.8.1707193925952; Mon, 05
+ Feb 2024 20:32:05 -0800 (PST)
+Date: Mon,  5 Feb 2024 20:31:57 -0800
+Message-Id: <20240206043159.2539981-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240206033320.2657716-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Subject: [PATCH v1 6/6] perf maps: Locking tidy up of nr_maps
+Subject: [PATCH v2 1/3] perf stat: Pass fewer metric arguments
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	James Clark <james.clark@arm.com>, liuwenyu <liuwenyu7@huawei.com>, Leo Yan <leo.yan@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	John Garry <john.g.garry@oracle.com>, Kaige Ye <ye@kaige.org>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-After this change maps__nr_maps is only used by tests, existing users
-are migrated to maps__empty. Compute maps__empty under the read lock.
+Pass metric_expr and evsel rather than specific variables from the
+struct, thereby reducing the number of arguments. This will enable
+later fixes.
+
+To reduce the size of the diff, local variables are added to match the
+previous parameter names. This isn't done in the case of "name" as
+evsel->name is more intention revealing. A whitespace issue is also
+addressed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/machine.c |  2 +-
- tools/perf/util/maps.c    | 10 ++++++++--
- tools/perf/util/maps.h    |  4 ++--
- 3 files changed, 11 insertions(+), 5 deletions(-)
+ tools/perf/util/stat-shadow.c | 38 +++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 4911734411b5..3da92f18814a 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -440,7 +440,7 @@ static struct thread *findnew_guest_code(struct machine *machine,
- 		return NULL;
- 
- 	/* Assume maps are set up if there are any */
--	if (maps__nr_maps(thread__maps(thread)))
-+	if (!maps__empty(thread__maps(thread)))
- 		return thread;
- 
- 	host_thread = machine__find_thread(host_machine, -1, pid);
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 0ab19e1de190..e59118648524 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -541,7 +541,13 @@ void maps__remove(struct maps *maps, struct map *map)
- 
- bool maps__empty(struct maps *maps)
- {
--	return maps__nr_maps(maps) == 0;
-+	bool res;
-+
-+	down_read(maps__lock(maps));
-+	res = maps__nr_maps(maps) == 0;
-+	up_read(maps__lock(maps));
-+
-+	return res;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index e31426167852..b3a25659b9e6 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -355,11 +355,12 @@ static void print_nsecs(struct perf_stat_config *config,
+ 		print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
  }
  
- bool maps__equal(struct maps *a, struct maps *b)
-@@ -865,7 +871,7 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
+-static int prepare_metric(struct evsel **metric_events,
+-			  struct metric_ref *metric_refs,
++static int prepare_metric(const struct metric_expr *mexp,
+ 			  struct expr_parse_ctx *pctx,
+ 			  int aggr_idx)
+ {
++	struct evsel * const *metric_events = mexp->metric_events;
++	struct metric_ref *metric_refs = mexp->metric_refs;
+ 	int i;
  
- 	parent_maps_by_address = maps__maps_by_address(parent);
- 	n = maps__nr_maps(parent);
--	if (maps__empty(dest)) {
-+	if (maps__nr_maps(dest) == 0) {
- 		/* No existing mappings so just copy from parent to avoid reallocs in insert. */
- 		unsigned int nr_maps_allocated = RC_CHK_ACCESS(parent)->nr_maps_allocated;
- 		struct map **dest_maps_by_address =
-diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index 4bcba136ffe5..d9aa62ed968a 100644
---- a/tools/perf/util/maps.h
-+++ b/tools/perf/util/maps.h
-@@ -43,8 +43,8 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
- void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
+ 	for (i = 0; metric_events[i]; i++) {
+@@ -403,7 +404,7 @@ static int prepare_metric(struct evsel **metric_events,
+ 			if (!aggr)
+ 				break;
  
- struct machine *maps__machine(const struct maps *maps);
--unsigned int maps__nr_maps(const struct maps *maps);
--refcount_t *maps__refcnt(struct maps *maps);
-+unsigned int maps__nr_maps(const struct maps *maps); /* Test only. */
-+refcount_t *maps__refcnt(struct maps *maps); /* Test only. */
+-                        if (!metric_events[i]->supported) {
++			if (!metric_events[i]->supported) {
+ 				/*
+ 				 * Not supported events will have a count of 0,
+ 				 * which can be confusing in a
+@@ -441,18 +442,18 @@ static int prepare_metric(struct evsel **metric_events,
+ }
  
- #ifdef HAVE_LIBUNWIND_SUPPORT
- void *maps__addr_space(const struct maps *maps);
+ static void generic_metric(struct perf_stat_config *config,
+-			   const char *metric_expr,
+-			   const char *metric_threshold,
+-			   struct evsel **metric_events,
+-			   struct metric_ref *metric_refs,
+-			   char *name,
+-			   const char *metric_name,
+-			   const char *metric_unit,
+-			   int runtime,
++			   struct metric_expr *mexp,
++			   struct evsel *evsel,
+ 			   int aggr_idx,
+ 			   struct perf_stat_output_ctx *out)
+ {
+ 	print_metric_t print_metric = out->print_metric;
++	const char *metric_name = mexp->metric_name;
++	const char *metric_expr = mexp->metric_expr;
++	const char *metric_threshold = mexp->metric_threshold;
++	const char *metric_unit = mexp->metric_unit;
++	struct evsel * const *metric_events = mexp->metric_events;
++	int runtime = mexp->runtime;
+ 	struct expr_parse_ctx *pctx;
+ 	double ratio, scale, threshold;
+ 	int i;
+@@ -467,7 +468,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 		pctx->sctx.user_requested_cpu_list = strdup(config->user_requested_cpu_list);
+ 	pctx->sctx.runtime = runtime;
+ 	pctx->sctx.system_wide = config->system_wide;
+-	i = prepare_metric(metric_events, metric_refs, pctx, aggr_idx);
++	i = prepare_metric(mexp, pctx, aggr_idx);
+ 	if (i < 0) {
+ 		expr__ctx_free(pctx);
+ 		return;
+@@ -502,18 +503,18 @@ static void generic_metric(struct perf_stat_config *config,
+ 				print_metric(config, ctxp, color, "%8.2f",
+ 					metric_name ?
+ 					metric_name :
+-					out->force_header ?  name : "",
++					out->force_header ?  evsel->name : "",
+ 					ratio);
+ 			}
+ 		} else {
+ 			print_metric(config, ctxp, color, /*unit=*/NULL,
+ 				     out->force_header ?
+-				     (metric_name ? metric_name : name) : "", 0);
++				     (metric_name ?: evsel->name) : "", 0);
+ 		}
+ 	} else {
+ 		print_metric(config, ctxp, color, /*unit=*/NULL,
+ 			     out->force_header ?
+-			     (metric_name ? metric_name : name) : "", 0);
++			     (metric_name ?: evsel->name) : "", 0);
+ 	}
+ 
+ 	expr__ctx_free(pctx);
+@@ -528,7 +529,7 @@ double test_generic_metric(struct metric_expr *mexp, int aggr_idx)
+ 	if (!pctx)
+ 		return NAN;
+ 
+-	if (prepare_metric(mexp->metric_events, mexp->metric_refs, pctx, aggr_idx) < 0)
++	if (prepare_metric(mexp, pctx, aggr_idx) < 0)
+ 		goto out;
+ 
+ 	if (expr__parse(&ratio, pctx, mexp->metric_expr))
+@@ -630,10 +631,7 @@ void *perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config *config,
+ 
+ 		if ((*num)++ > 0)
+ 			out->new_line(config, ctxp);
+-		generic_metric(config, mexp->metric_expr, mexp->metric_threshold,
+-			       mexp->metric_events, mexp->metric_refs, evsel->name,
+-			       mexp->metric_name, mexp->metric_unit, mexp->runtime,
+-			       aggr_idx, out);
++		generic_metric(config, mexp, evsel, aggr_idx, out);
+ 	}
+ 
+ 	return NULL;
 -- 
 2.43.0.594.gd9cf4e227d-goog
 
