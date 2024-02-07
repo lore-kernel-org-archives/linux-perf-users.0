@@ -1,111 +1,116 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F691241E4
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Feb 2024 09:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE63081AD3;
+	Wed,  7 Feb 2024 16:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707297398; cv=none; b=nkpyDQaD302lIXQRskt6dufhUMgocsBj4P/sWVukseIb/Pvm//7t0luHgu4lu/EDFx1PlWw7BXLufdyKGaR+LecBzVKf06tjDQZdCfReUbBzWnVl1IrRbCVzeJ/Qbf17cI7/kxuCovXOWMV2NJvRQbfSwu3fZCs8wBf2S/UDyQA=
+	t=1707324880; cv=none; b=H64GGn81xUaTqzpftBy0Nh/EbGptjZZmHBzl2rX9vSL315LEhbhRpTNVxJnJ7t8ezMg6cCgIYa/69pZC8iqdB0Q5zlxflSeoOvgSnHJMLyp/sQaj04Q+pL20DxKZSGH9bIni7otmgFPmA2mfGBjsbsWlG17YsHTJfWeEnG5r6mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707297398; c=relaxed/simple;
-	bh=sAfyil+E7gV/q0wyQpyw6RhHQEq6xQkhD7Re06uEatE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c2+71vlSFU/HwIXLJbtCvOCgYP8XGZsv1Q/iTcPf4bkAuYGG151CG9CAuu4SXag/vYcrfXiO4F0LjetK9qLmBJLiYC7KC4oSKJFCtCIfXadQy5/7a8/XU7oETwHc/CZEKwid8CqovQDfgfaVQD2IBnbuGNOoJR4XJ2cUW3tneqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TVDvv09Mfz1gy5q;
-	Wed,  7 Feb 2024 17:14:35 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5FF671400CF;
-	Wed,  7 Feb 2024 17:16:31 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 7 Feb 2024 17:16:31 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <acme@kernel.org>, <namhyung@kernel.org>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<linux-perf-users@vger.kernel.org>
-CC: <yangyicong@hisilicon.com>, <linuxarm@huawei.com>
-Subject: [PATCH] perf test: Skip metric w/o event name on arm64 in stat STD output linter
-Date: Wed, 7 Feb 2024 17:12:22 +0800
-Message-ID: <20240207091222.54096-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+	s=arc-20240116; t=1707324880; c=relaxed/simple;
+	bh=8SMGcPX1EaAbOnwuaOxFDCVdYeYRvn5HrRLClVWFJnI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m1HoqeAQntlJMOw9WEwMyhCeCMYr08zdlfvVfYpgzlRqTlDULEZNLR+gNcs9MPQNkQx7e0VNaSSO5WLv+IpbCaROBNH45hQhvoS895q7Bn0pXHHVWBc7pKWpCxk3pCd6sBnQfL4mv5EmFg6FHNLJu3avFM3cjM7B+RYR4/UjF28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e0507eb60cso598482b3a.3;
+        Wed, 07 Feb 2024 08:54:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707324878; x=1707929678;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JFWCuFlBLzCUWV4jwVKyNSgCubC/35Kvhe3/yYpj56I=;
+        b=Wkp8fDRsEzUCheBcXcNxdwgCL23/TnqwpsA+8R0XWboWTIaUpKCDswF4kVK2OlHdH+
+         iWy04F3GALoKWI9YFnJ8FSVhHkQbRTIpumsunZW7RQIaNs7uhIfID17vtj+oj+eYqbOh
+         pAhOHaCK7qLyIIhkhZqf21Mtxdt3Rv55I0P9pEXk+8x3QotWslsxsSTTsLpXHQ+s1wke
+         XU/85+lohOQVxPZhJu/C0D/r/iLxWwIkW8k/hzQR7P9ZTbwEPb+Gf3Ye9hnAI1fagqT9
+         WEWzBzDoZPHl7sp9i2BX9HNQ7gkCXBzbNzEf0FYqaPHbjN4LHMXkiI17vfvz8MgDYHFz
+         8RMA==
+X-Gm-Message-State: AOJu0Yzz2ZBWTPNbz6N+UgoISyTXdYgJ4sybm09oo8+FzsQrWq87h04X
+	ARNh0HQ700jfKBs6LftCvxlrQeOQzNxhzJuFZg1ePt35rZeuEMaYujxT3HWhqdFYKfgrHADI5hB
+	yb5U11Ld3ZQBpN6RNrJ21/mdmxlU=
+X-Google-Smtp-Source: AGHT+IFvVYIu3Ss1QbwMuQSQ7A3OklEFUl+QL08+W1ad4I0SqbvyPguE+z/5iIaQaILDY4/Dpvadp9TJctdIlcLrEWE=
+X-Received: by 2002:a05:6a00:44c5:b0:6e0:6c89:e308 with SMTP id
+ cv5-20020a056a0044c500b006e06c89e308mr1808249pfb.3.1707324878028; Wed, 07 Feb
+ 2024 08:54:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500009.china.huawei.com (7.192.105.203)
+References: <20240206033320.2657716-1-irogers@google.com>
+In-Reply-To: <20240206033320.2657716-1-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 7 Feb 2024 08:54:25 -0800
+Message-ID: <CAM9d7cix-TuMov+hsqVvvkeSRA2snhuddcY0zypR1F9yY4G2Wg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] maps memory improvements and fixes
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	James Clark <james.clark@arm.com>, liuwenyu <liuwenyu7@huawei.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+Hi Ian,
 
-stat+std_output.sh test fails on my arm64 machine:
-[root@localhost shell]# ./stat+std_output.sh
-Checking STD output: no args Unknown event name in TopDownL1                 #     0.18 retiring
-[root@localhost shell]# ./stat+std_output.sh
-Checking STD output: no args [Success]
-Checking STD output: system wide [Success]
-Checking STD output: interval [Success]
-Checking STD output: per thread Unknown event name in tmux: server-1114960                                                   #     0.41 frontend_bound
+On Mon, Feb 5, 2024 at 7:33=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> First 6 patches from:
+> https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+>
+> Ian Rogers (6):
+>   perf maps: Switch from rbtree to lazily sorted array for addresses
+>   perf maps: Get map before returning in maps__find
+>   perf maps: Get map before returning in maps__find_by_name
+>   perf maps: Get map before returning in maps__find_next_entry
+>   perf maps: Hide maps internals
+>   perf maps: Locking tidy up of nr_maps
 
-When no args specified `perf stat` will add TopdownL1 metric group
-and the output will be like:
-[root@localhost shell]# perf stat -- stress-ng --vm 1 --timeout 1
-stress-ng: info:  [3351733] setting to a 1 second run per stressor
-stress-ng: info:  [3351733] dispatching hogs: 1 vm
-stress-ng: info:  [3351733] successful run completed in 1.02s
+This fails to build with NO_LIBUNWIND=3D1
 
- Performance counter stats for 'stress-ng --vm 1 --timeout 1':
+util/unwind-libdw.c: In function =E2=80=98unwind__get_entries=E2=80=99:
+util/unwind-libdw.c:266:70: error: invalid use of undefined type =E2=80=98s=
+truct maps=E2=80=99
+  266 |                 .machine        =3D
+RC_CHK_ACCESS(thread__maps(thread))->machine,
 
-          1,037.71 msec task-clock                       #    1.000 CPUs utilized
-                13      context-switches                 #   12.528 /sec
-                 1      cpu-migrations                   #    0.964 /sec
-            67,544      page-faults                      #   65.090 K/sec
-     2,691,932,561      cycles                           #    2.594 GHz                         (74.56%)
-     6,571,333,653      instructions                     #    2.44  insn per cycle              (74.92%)
-       521,863,142      branches                         #  502.901 M/sec                       (75.21%)
-           425,879      branch-misses                    #    0.08% of all branches             (87.57%)
-                        TopDownL1                 #     0.61 retiring                    (87.67%)
-                                                  #     0.03 frontend_bound              (87.67%)
-                                                  #     0.02 bad_speculation             (87.67%)
-                                                  #     0.34 backend_bound               (74.61%)
+Thanks,
+Namhyung
 
-       1.038138390 seconds time elapsed
 
-       0.844849000 seconds user
-       0.189053000 seconds sys
-
-Metrics in group TopDownL1 don't have event name on arm64 but are not
-listed in the $skip_metric list which they should be listed. Add them
-to the skip list as what does for x86 platforms in [1].
-
-[1] commit 4d60e83dfcee ("perf test: Skip metrics w/o event name in stat STD output linter")
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- tools/perf/tests/shell/stat+std_output.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index 4fcdd1a9142c..f46a0c9908c0 100755
---- a/tools/perf/tests/shell/stat+std_output.sh
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -13,7 +13,7 @@ stat_output=$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
- 
- event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults stalled-cycles-frontend stalled-cycles-backend cycles instructions branches branch-misses)
- event_metric=("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "frontend cycles idle" "backend cycles idle" "GHz" "insn per cycle" "/sec" "of all branches")
--skip_metric=("stalled cycles per insn" "tma_")
-+skip_metric=("stalled cycles per insn" "tma_" "retiring" "frontend_bound" "bad_speculation" "backend_bound")
- 
- cleanup() {
-   rm -f "${stat_output}"
--- 
-2.24.0
-
+>
+>  tools/perf/arch/x86/tests/dwarf-unwind.c |    1 +
+>  tools/perf/tests/maps.c                  |    3 +
+>  tools/perf/tests/thread-maps-share.c     |    8 +-
+>  tools/perf/tests/vmlinux-kallsyms.c      |   10 +-
+>  tools/perf/util/bpf-event.c              |    1 +
+>  tools/perf/util/callchain.c              |    2 +-
+>  tools/perf/util/event.c                  |    4 +-
+>  tools/perf/util/machine.c                |   34 +-
+>  tools/perf/util/map.c                    |    1 +
+>  tools/perf/util/maps.c                   | 1296 ++++++++++++++--------
+>  tools/perf/util/maps.h                   |   65 +-
+>  tools/perf/util/probe-event.c            |    1 +
+>  tools/perf/util/symbol-elf.c             |    4 +-
+>  tools/perf/util/symbol.c                 |   31 +-
+>  tools/perf/util/thread.c                 |    2 +-
+>  tools/perf/util/unwind-libunwind-local.c |    2 +-
+>  tools/perf/util/unwind-libunwind.c       |    7 +-
+>  17 files changed, 899 insertions(+), 573 deletions(-)
+>
+> --
+> 2.43.0.594.gd9cf4e227d-goog
+>
