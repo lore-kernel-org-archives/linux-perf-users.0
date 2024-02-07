@@ -1,44 +1,45 @@
 Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5DA1CF87
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Feb 2024 07:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF711F5F0;
+	Wed,  7 Feb 2024 07:25:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707289350; cv=none; b=C/+/CXp5ZaqYFg/BTUn/cQxCou7NHIQuZt4XpNAjCoJDvB/mydUWng0PLn0Sgd6wP/DiLb+Y82J86AkQwl3/vB1lu61zFlwp7ffBxzP4sa61+o9qov3io93B1/39qlDE60w9/Jlo9NMvAKWSYsOfKl0mizLHycV0fV9Rmdyu2Wg=
+	t=1707290751; cv=none; b=jFF4v8xnxZgp/Veg2e7NAAKyNnqD2rhWnLQ1YjbOX96cgltbIkwXjITzoDVvWcqookLiXURXT34mAZk6QlqHyKKjkr8slyDk70rF3KqHn6h4JCMgTPt3mJ4c2bY+IspfmTrNDqTrdbpLiZaRuUTZcXFtF/Eo0B9xWwroh1U5Qig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707289350; c=relaxed/simple;
-	bh=1tcllk+dmnf2G/3fkLKNK5sVF94t14gedQ/GAw6FJiQ=;
+	s=arc-20240116; t=1707290751; c=relaxed/simple;
+	bh=O3sgm62nSGmbFRQsGxqyJmL69Gjp1V9NVkxQGdzVeqc=;
 	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dNQnGQCMmi7YQuUGsxSyvPnrxbFuXvB3dGvwiXPA+bDwYvmG4qz/88I1ImyAuUTYFTRyHZNQvgmKURrNprKoMhdZT9gv1Dk+PTJ2g8m09cDLkuPJJr1e/gKWrZrsaPtK3/7k6xybaq9HSW7+zH41mNVXRt3Q/DiH5m3oenHEiew=
+	 In-Reply-To:Content-Type; b=iaImtbtmet1UfyU3bFS7t8z+AAD7N5FUshMbnQTIZfkfUnbb1xgjbPrAa91rZKn0qR3mR0q88xJA+r5qyRdALxGD/RdGP8rPnHwQO2MpOQSL+0gOsY0Qm6hBapTwkSHxITEhv1oGNeomx1TtHjD7q4uP8kmt94rCW9oS5BtYmkE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TV9yr4P4zz1vtCb;
-	Wed,  7 Feb 2024 15:01:56 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TVBTm6p8nz1vtJJ;
+	Wed,  7 Feb 2024 15:25:16 +0800 (CST)
 Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id A8FEE1404DB;
-	Wed,  7 Feb 2024 15:02:24 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 09797140414;
+	Wed,  7 Feb 2024 15:25:45 +0800 (CST)
 Received: from [10.67.121.177] (10.67.121.177) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 7 Feb 2024 15:02:24 +0800
-CC: <yangyicong@hisilicon.com>, <will@kernel.org>, <john.g.garry@oracle.com>,
-	<james.clark@arm.com>, <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+ 15.1.2507.35; Wed, 7 Feb 2024 15:25:44 +0800
+CC: <yangyicong@hisilicon.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <james.clark@arm.com>,
 	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-	<hejunhao3@huawei.com>, <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH] perf stat: Enable iostat mode for HiSilicon PCIe PMU
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-References: <20240123071201.30914-1-yangyicong@huawei.com>
- <20240206100929.00007128@Huawei.com>
+	<namhyung@kernel.org>, <adrian.hunter@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<Jonathan.Cameron@huawei.com>, <zhanjie9@hisilicon.com>, <21cnbao@gmail.com>,
+	<tim.c.chen@intel.com>, <prime.zeng@hisilicon.com>, <fanghao11@huawei.com>,
+	<linuxarm@huawei.com>, <linux-arm-kernel@lists.infradead.org>, Tim Chen
+	<tim.c.chen@linux.intel.com>
+Subject: Re: [RESEND v4] perf stat: Support per-cluster aggregation
+To: Ian Rogers <irogers@google.com>
+References: <20240206082016.22292-1-yangyicong@huawei.com>
+ <CAP-5=fUaJSF1R_yDTeNwiNbm0isGTEpZSbp2m0q7BJox+TdRwg@mail.gmail.com>
 From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <693e27ed-48e6-5463-a827-a020f0ed5fc2@huawei.com>
-Date: Wed, 7 Feb 2024 15:02:23 +0800
+Message-ID: <d8382fd2-1c0c-5041-3c0e-cd15244ef9f6@huawei.com>
+Date: Wed, 7 Feb 2024 15:25:44 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 Precedence: bulk
@@ -47,222 +48,129 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240206100929.00007128@Huawei.com>
+In-Reply-To: <CAP-5=fUaJSF1R_yDTeNwiNbm0isGTEpZSbp2m0q7BJox+TdRwg@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  canpemm500009.china.huawei.com (7.192.105.203)
 
-On 2024/2/6 18:09, Jonathan Cameron wrote:
-> On Tue, 23 Jan 2024 15:12:01 +0800
-> Yicong Yang <yangyicong@huawei.com> wrote:
-> 
+On 2024/2/7 1:49, Ian Rogers wrote:
+> On Tue, Feb 6, 2024 at 12:24 AM Yicong Yang <yangyicong@huawei.com> wrote:
+>>
 >> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> If you end up doing a v2, a few typos and grammar tweaks.
-> A few other trivial comments inline on things that might improve readability
-> a tiny bit.
-> 
-
-Thanks for the comments.
-
-> 
 >>
->> Some HiSilicon platforms provide PCIe PMU devices for monitoring the
->> throughout and latency of PCIe traffic. With the support of PCIe PMU
->> we can enable the perf iostat mode.
+>> Some platforms have 'cluster' topology and CPUs in the cluster will
+>> share resources like L3 Cache Tag (for HiSilicon Kunpeng SoC) or L2
+>> cache (for Intel Jacobsville). Currently parsing and building cluster
+>> topology have been supported since [1].
 >>
->> The HiSilicon PCIe PMU can support measuring the throughout of certain
->> TLP types and of certian root port. Totally 6 metrics are provided in
-> 
-> certain
-> 
-
-ok.
-
->> the unit of MB:
+>> perf stat has already supported aggregation for other topologies like
+>> die or socket, etc. It'll be useful to aggregate per-cluster to find
+>> problems like L3T bandwidth contention.
 >>
->> - Inbound MWR: The memory write TLPs from the devices downstream the root port
->> - Inbound MRD: The memory read TLPs from the devices downstream the root port
->> - Inbound CPL: The completion TLPs from the devices downstream the root port
->> - Outbound MWR: The memory write TLPs from the CPU to the downstream devices
->> - Outbound MRD: The memory read TLPs from the CPU to the downstream devices
->> - Outbound CPL: The completions TLPs from the CPU to the downstream devices
+>> This patch add support for "--per-cluster" option for per-cluster
+>> aggregation. Also update the docs and related test. The output will
+>> be like:
 >>
->> Since the PMU measures the throughout with unit of DWords. So we need to
-> throughput in DWords
-> 
-
-ok.
-
->> calculate the throughout in MB like:
->>   Count * 4B / 1024 / 1024
->>
->> Some of the display of the `perf iostat` will be like:
->> [root@localhost tmp]# ./perf iostat list
->> hisi_pcie0_core2<0000:40:00.0>
->> hisi_pcie2_core2<0000:5f:00.0>
->> hisi_pcie0_core1<0000:16:00.0>
->> hisi_pcie0_core1<0000:16:04.0>
->> [root@localhost tmp]# ./perf iostat --timeout 10000
+>> [root@localhost tmp]# perf stat -a -e LLC-load --per-cluster -- sleep 5
 >>
 >>  Performance counter stats for 'system wide':
 >>
->>     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
->> 0000:40:00.0                    0                    0                    0                    0                    0                    0
->> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
->> 0000:16:00.0             16272.99               366.58                    0                15.09                    0             16156.85
->> 0000:16:04.0                    0                    0                    0                    0                    0                    0
+>> S56-D0-CLS158    4      1,321,521,570      LLC-load
+>> S56-D0-CLS594    4        794,211,453      LLC-load
+>> S56-D0-CLS1030    4             41,623      LLC-load
+>> S56-D0-CLS1466    4             41,646      LLC-load
+>> S56-D0-CLS1902    4             16,863      LLC-load
+>> S56-D0-CLS2338    4             15,721      LLC-load
+>> S56-D0-CLS2774    4             22,671      LLC-load
+>> [...]
 >>
->>       10.008227512 seconds time elapsed
->>
->> [root@localhost tmp]# ./perf iostat 0000:16:00.0 -- fio -name=read
->> -numjobs=30 -filename=/dev/nvme0n1 -rw=rw -iodepth=128 -direct=1 -sync=0
->> -norandommap -group_reporting -runtime=10 -time_based -bs=64k
+>> On a legacy system without cluster or cluster support, the output will
+>> be look like:
+>> [root@localhost perf]# perf stat -a -e cycles --per-cluster -- sleep 1
 >>
 >>  Performance counter stats for 'system wide':
 >>
->>     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
->> 0000:40:00.0                    0                    0                    0                    0                    0                    0
->> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
->> 0000:16:00.0             16314.30               371.22                    0                15.21                    0             16362.20
->> 0000:16:04.0                    0                    0                    0                    0                    0                    0
+>> S56-D0-CLS0   64         18,011,485      cycles
+>> S7182-D0-CLS0   64         16,548,835      cycles
 >>
->>       10.168561767 seconds time elapsed
+>> Note that this patch doesn't mix the cluster information in the outputs
+>> of --per-core to avoid breaking any tools/scripts using it.
 >>
->>        0.465373000 seconds user
->>        1.952948000 seconds sys
+>> Note that perf recently supports "--per-cache" aggregation, but it's not
+>> the same with the cluster although cluster CPUs may share some cache
+>> resources. For example on my machine all clusters within a die share the
+>> same L3 cache:
+>> $ cat /sys/devices/system/cpu/cpu0/cache/index3/shared_cpu_list
+>> 0-31
+>> $ cat /sys/devices/system/cpu/cpu0/topology/cluster_cpus_list
+>> 0-3
 >>
->> More information of the HiSilicon PCIe PMU can be found at
->> Documentation/admin-guide/perf/hisi-pcie-pmu.rst.
->>
+>> [1] commit c5e22feffdd7 ("topology: Represent clusters of CPUs within a die")
+>> Tested-by: Jie Zhan <zhanjie9@hisilicon.com>
+>> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
 >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+
+Thanks!
+
 >> ---
->>  tools/perf/arch/arm64/util/Build         |   1 +
->>  tools/perf/arch/arm64/util/hisi-iostat.c | 433 +++++++++++++++++++++++
->>  2 files changed, 434 insertions(+)
->>  create mode 100644 tools/perf/arch/arm64/util/hisi-iostat.c
+>> Change since v3:
+>> - Rebase on v6.7-rc4 and resolve the conflicts
+>> Link: https://lore.kernel.org/all/20230404104951.27537-1-yangyicong@huawei.com/
 >>
->> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
->> index 78ef7115be3d..4e8dabf98b29 100644
->> --- a/tools/perf/arch/arm64/util/Build
->> +++ b/tools/perf/arch/arm64/util/Build
->> @@ -3,6 +3,7 @@ perf-y += machine.o
->>  perf-y += perf_regs.o
->>  perf-y += tsc.o
->>  perf-y += pmu.o
->> +perf-y += hisi-iostat.o
->>  perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
->>  perf-$(CONFIG_DWARF)     += dwarf-regs.o
->>  perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
->> diff --git a/tools/perf/arch/arm64/util/hisi-iostat.c b/tools/perf/arch/arm64/util/hisi-iostat.c
->> new file mode 100644
->> index 000000000000..418eebece184
->> --- /dev/null
->> +++ b/tools/perf/arch/arm64/util/hisi-iostat.c
->> @@ -0,0 +1,433 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * perf iostat support for HiSilicon PCIe PMU.
->> + * Partly derived from tools/perf/arch/x86/util/iostat.c.
->> + *
->> + * Copyright (c) 2024 HiSilicon Technologies Co., Ltd.
->> + * Author: Yicong Yang <yangyicong@hisilicon.com>
->> + */
->> +
->> +#include <api/fs/fs.h>
->> +#include <linux/err.h>
->> +#include <linux/zalloc.h>
->> +#include <linux/limits.h>
->> +#include <dirent.h>
->> +#include <stdio.h>
->> +#include <errno.h>
->> +#include <stdlib.h>
->> +
->> +#include "util/counts.h"
->> +#include "util/cpumap.h"
->> +#include "util/debug.h"
->> +#include "util/iostat.h"
->> +#include "util/pmu.h"
->> +
->> +#define PCI_DEFAULT_DOMAIN		0
->> +#define PCI_DEVICE_NAME_PATTERN		"%04x:%02hhx:%02hhx.%hhu"
->> +#define PCI_ROOT_BUS_DEVICES_PATH	"bus/pci/devices"
->> +
->> +static const char * const hisi_iostat_metrics[] = {
->> +	"Inbound MWR(MB)",
->> +	"Inbound MRD(MB)",
->> +	"Inbound CPL(MB)",
->> +	"Outbound MWR(MB)",
->> +	"Outbound MRD(MB)",
->> +	"Outbound CPL(MB)",
->> +};
->> +
->> +static const char * const hisi_iostat_cmd_template[] = {
-> 
-> Given this array and the one above have to remain in same order, perhaps
-> an enum?  Would also remove need to have the comments via
-> [in_bound_wr] = "....
-> etc
-> 
-
-sure. Will use an enum to define both the metric event string and here
-for cmd template.
-
-> 
->> +	/* Inbound Memory Write */
->> +	"hisi_pcie%hu_core%hu/event=0x0104,port=0x%hx/",
->> +	/* Inbound Memory Read */
->> +	"hisi_pcie%hu_core%hu/event=0x0804,port=0x%hx/",
->> +	/* Inbound Memory Completion */
->> +	"hisi_pcie%hu_core%hu/event=0x2004,port=0x%hx/",
->> +	/* Outbound Memory Write */
->> +	"hisi_pcie%hu_core%hu/event=0x0105,port=0x%hx/",
->> +	/* Outbound Memory Read */
->> +	"hisi_pcie%hu_core%hu/event=0x0405,port=0x%hx/",
->> +	/* Outbound Memory Completion */
->> +	"hisi_pcie%hu_core%hu/event=0x1005,port=0x%hx/",
->> +};
+>> Change since v2:
+>> - Use 0 as cluster ID on legacy system without cluster support, keep consistenct
+>>   with what --per-die does.
+>> Link: https://lore.kernel.org/all/20230328112717.19573-1-yangyicong@huawei.com/
 >>
-> 
-> ...
-> 
-> 
-> 
-> 
->> +
->> +void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
->> +			 struct perf_stat_output_ctx *out)
+>> Change since v1:
+>> - Provides the information about how to map the cluster to the CPUs in the manual
+>> - Thanks the review from Tim and test from Jie.
+>> Link: https://lore.kernel.org/all/20230313085911.61359-1-yangyicong@huawei.com/
+>>
+>>  tools/perf/Documentation/perf-stat.txt        | 11 ++++
+>>  tools/perf/builtin-stat.c                     | 52 +++++++++++++++++--
+>>  .../tests/shell/lib/perf_json_output_lint.py  |  4 +-
+>>  tools/perf/tests/shell/lib/stat_output.sh     | 12 +++++
+>>  tools/perf/tests/shell/stat+csv_output.sh     |  2 +
+>>  tools/perf/tests/shell/stat+json_output.sh    | 13 +++++
+>>  tools/perf/tests/shell/stat+std_output.sh     |  2 +
+>>  tools/perf/util/cpumap.c                      | 32 +++++++++++-
+>>  tools/perf/util/cpumap.h                      | 19 +++++--
+>>  tools/perf/util/env.h                         |  1 +
+>>  tools/perf/util/stat-display.c                | 13 +++++
+>>  tools/perf/util/stat.h                        |  1 +
+>>  12 files changed, 153 insertions(+), 9 deletions(-)
+>>
+[...]
+>> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+>> index 0581ee0fa5f2..5907456d42a2 100644
+>> --- a/tools/perf/util/cpumap.c
+>> +++ b/tools/perf/util/cpumap.c
+>> @@ -222,6 +222,8 @@ static int aggr_cpu_id__cmp(const void *a_pointer, const void *b_pointer)
+>>                 return a->socket - b->socket;
+>>         else if (a->die != b->die)
+>>                 return a->die - b->die;
+>> +       else if (a->cluster != b->cluster)
+>> +               return a->cluster - b->cluster;
+>>         else if (a->cache_lvl != b->cache_lvl)
+>>                 return a->cache_lvl - b->cache_lvl;
+>>         else if (a->cache != b->cache)
+>> @@ -309,6 +311,29 @@ struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
+>>         return id;
+>>  }
+>>
+>> +int cpu__get_cluster_id(struct perf_cpu cpu)
 >> +{
->> +	struct perf_counts_values *count;
->> +	const char *iostat_metric;
->> +	double iostat_value;
->> +
->> +	iostat_metric = hisi_iostat_metrics[evsel->core.idx % ARRAY_SIZE(hisi_iostat_metrics)];
->> +
->> +	/* We're using AGGR_GLOBAL so there's only one aggr counts aggr[0]. */
->> +	count = &evsel->stats->aggr[0].counts;
->> +
->> +	/* The counts has been scaled, we can use it directly. */
->> +	iostat_value = (double)count->val;
->> +
->> +	/*
->> +	 * Display two digits after decimal point for better accuracy if the
->> +	 * value is non-zero.
->> +	 */
->> +	out->print_metric(config, out->ctx, NULL,
->> +			  iostat_value > 0 ? "%8.2f" : "%8.0f",
->> +			  iostat_metric, iostat_value / (256 * 1024));
+>> +       int value, ret = cpu__get_topology_int(cpu.cpu, "cluster_id", &value);
 > 
-> I assume that 256 * 1024 is MiB/sizeof(dword)?  Perhaps express it as
-> that to make the reasoning clearer?
-> 
+> nit: normal coding style is for a whitespace newline here.
 > 
 
-Yes you're right. I mentioned it in the commit. Will add some comment it to
-make it clearer here.
+Will fix. I may referred to cpu__get_core_id() below which is an exception.
 
 Thanks,
 Yicong
-
-
