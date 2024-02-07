@@ -1,176 +1,182 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF711F5F0;
-	Wed,  7 Feb 2024 07:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EA0200AD;
+	Wed,  7 Feb 2024 08:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707290751; cv=none; b=jFF4v8xnxZgp/Veg2e7NAAKyNnqD2rhWnLQ1YjbOX96cgltbIkwXjITzoDVvWcqookLiXURXT34mAZk6QlqHyKKjkr8slyDk70rF3KqHn6h4JCMgTPt3mJ4c2bY+IspfmTrNDqTrdbpLiZaRuUTZcXFtF/Eo0B9xWwroh1U5Qig=
+	t=1707293461; cv=none; b=VopBhpiPnm0h6FNoXqhHVujjsJ96wSD1I80twHI1QE/g9ZeNqgQ7y4yIMoR8FuO8YcaJmgQOizwpwa66iopF3+lOEF4a/VcxZSS4LMrd9ZMg2hpUpTaspYT5b9xHMI3cLqYh4QaDsDN/eq6UuDidsSp61GMQqQuPj3zjSP8rc8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707290751; c=relaxed/simple;
-	bh=O3sgm62nSGmbFRQsGxqyJmL69Gjp1V9NVkxQGdzVeqc=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=iaImtbtmet1UfyU3bFS7t8z+AAD7N5FUshMbnQTIZfkfUnbb1xgjbPrAa91rZKn0qR3mR0q88xJA+r5qyRdALxGD/RdGP8rPnHwQO2MpOQSL+0gOsY0Qm6hBapTwkSHxITEhv1oGNeomx1TtHjD7q4uP8kmt94rCW9oS5BtYmkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TVBTm6p8nz1vtJJ;
-	Wed,  7 Feb 2024 15:25:16 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id 09797140414;
-	Wed,  7 Feb 2024 15:25:45 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 7 Feb 2024 15:25:44 +0800
-CC: <yangyicong@hisilicon.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <james.clark@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<namhyung@kernel.org>, <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<Jonathan.Cameron@huawei.com>, <zhanjie9@hisilicon.com>, <21cnbao@gmail.com>,
-	<tim.c.chen@intel.com>, <prime.zeng@hisilicon.com>, <fanghao11@huawei.com>,
-	<linuxarm@huawei.com>, <linux-arm-kernel@lists.infradead.org>, Tim Chen
-	<tim.c.chen@linux.intel.com>
-Subject: Re: [RESEND v4] perf stat: Support per-cluster aggregation
-To: Ian Rogers <irogers@google.com>
-References: <20240206082016.22292-1-yangyicong@huawei.com>
- <CAP-5=fUaJSF1R_yDTeNwiNbm0isGTEpZSbp2m0q7BJox+TdRwg@mail.gmail.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <d8382fd2-1c0c-5041-3c0e-cd15244ef9f6@huawei.com>
-Date: Wed, 7 Feb 2024 15:25:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1707293461; c=relaxed/simple;
+	bh=WWW+c5tu4S/MBXxMtlC14ZlKqLEhduiv8dwYZ1sxo7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XtndNjj8+n8LLWiWOg5bxWBHYDR4HnTU4b6cbjjpInjHMcGaXZGaB/26iuZVKs2BCwG7puzYLyIb2Pkg6+ZQ/8GItH9lVX1/JAoelnG5G8jF4W8MT9h7w1qKZfgrmBnGLcLKrE530Gbh2bCHrL7S2rE1/vtbm6BsVjMf1C2QhYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=neznKzr5; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="neznKzr5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707293460; x=1738829460;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WWW+c5tu4S/MBXxMtlC14ZlKqLEhduiv8dwYZ1sxo7Y=;
+  b=neznKzr5cA8MUDSqErgu2OVeK+9RmP/Cfno09IdEPerugUq4J/BTDv3B
+   YVwmGNXSxt3gVAm2XLt5s6IXnYee91gYWs8G9O47Bt7JVT1SDxNtbAtiq
+   gecjUSRiSjQtdkJH+o5zyhe/3ZEFunNOSnpmKq5WtsqlEz2C6vnSV8CEz
+   szF5KzEoXf9tD2mM255SxNkrC+7lhwJjvdUIw7oi2wq/OGUw9IX540IHG
+   LeYtaeC54GQApAA0TQQK15cJZHcv/P04Nt6Wpkk9Yx+OTBYYChXTmSkfC
+   NE/BWnUhFGW+Xck0c3ZdHCF0x78dLPvbUmSC6UDmaECJ7wfjM23/JCWWV
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="23413966"
+X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
+   d="scan'208";a="23413966"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 00:10:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
+   d="scan'208";a="24486370"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.151])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 00:10:53 -0800
+Message-ID: <1b1a8514-e74f-439f-a3ab-ad19dda49c22@intel.com>
+Date: Wed, 7 Feb 2024 10:10:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fUaJSF1R_yDTeNwiNbm0isGTEpZSbp2m0q7BJox+TdRwg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500009.china.huawei.com (7.192.105.203)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] arch/x86/events/core: Convert sprintf/snprintf to
+ sysfs_emit
+Content-Language: en-US
+To: Li Zhijian <lizhijian@fujitsu.com>, linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org
+References: <20240126061319.245901-1-lizhijian@fujitsu.com>
+ <20240126061319.245901-2-lizhijian@fujitsu.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240126061319.245901-2-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2024/2/7 1:49, Ian Rogers wrote:
-> On Tue, Feb 6, 2024 at 12:24 AM Yicong Yang <yangyicong@huawei.com> wrote:
->>
->> From: Yicong Yang <yangyicong@hisilicon.com>
->>
->> Some platforms have 'cluster' topology and CPUs in the cluster will
->> share resources like L3 Cache Tag (for HiSilicon Kunpeng SoC) or L2
->> cache (for Intel Jacobsville). Currently parsing and building cluster
->> topology have been supported since [1].
->>
->> perf stat has already supported aggregation for other topologies like
->> die or socket, etc. It'll be useful to aggregate per-cluster to find
->> problems like L3T bandwidth contention.
->>
->> This patch add support for "--per-cluster" option for per-cluster
->> aggregation. Also update the docs and related test. The output will
->> be like:
->>
->> [root@localhost tmp]# perf stat -a -e LLC-load --per-cluster -- sleep 5
->>
->>  Performance counter stats for 'system wide':
->>
->> S56-D0-CLS158    4      1,321,521,570      LLC-load
->> S56-D0-CLS594    4        794,211,453      LLC-load
->> S56-D0-CLS1030    4             41,623      LLC-load
->> S56-D0-CLS1466    4             41,646      LLC-load
->> S56-D0-CLS1902    4             16,863      LLC-load
->> S56-D0-CLS2338    4             15,721      LLC-load
->> S56-D0-CLS2774    4             22,671      LLC-load
->> [...]
->>
->> On a legacy system without cluster or cluster support, the output will
->> be look like:
->> [root@localhost perf]# perf stat -a -e cycles --per-cluster -- sleep 1
->>
->>  Performance counter stats for 'system wide':
->>
->> S56-D0-CLS0   64         18,011,485      cycles
->> S7182-D0-CLS0   64         16,548,835      cycles
->>
->> Note that this patch doesn't mix the cluster information in the outputs
->> of --per-core to avoid breaking any tools/scripts using it.
->>
->> Note that perf recently supports "--per-cache" aggregation, but it's not
->> the same with the cluster although cluster CPUs may share some cache
->> resources. For example on my machine all clusters within a die share the
->> same L3 cache:
->> $ cat /sys/devices/system/cpu/cpu0/cache/index3/shared_cpu_list
->> 0-31
->> $ cat /sys/devices/system/cpu/cpu0/topology/cluster_cpus_list
->> 0-3
->>
->> [1] commit c5e22feffdd7 ("topology: Represent clusters of CPUs within a die")
->> Tested-by: Jie Zhan <zhanjie9@hisilicon.com>
->> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+On 26/01/24 08:13, Li Zhijian wrote:
+> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+> or sysfs_emit_at() when formatting the value to be returned to user space.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> coccinelle complains that there are still a couple of functions that use
+> snprintf(). Convert them to sysfs_emit().
 > 
-
-Thanks!
-
->> ---
->> Change since v3:
->> - Rebase on v6.7-rc4 and resolve the conflicts
->> Link: https://lore.kernel.org/all/20230404104951.27537-1-yangyicong@huawei.com/
->>
->> Change since v2:
->> - Use 0 as cluster ID on legacy system without cluster support, keep consistenct
->>   with what --per-die does.
->> Link: https://lore.kernel.org/all/20230328112717.19573-1-yangyicong@huawei.com/
->>
->> Change since v1:
->> - Provides the information about how to map the cluster to the CPUs in the manual
->> - Thanks the review from Tim and test from Jie.
->> Link: https://lore.kernel.org/all/20230313085911.61359-1-yangyicong@huawei.com/
->>
->>  tools/perf/Documentation/perf-stat.txt        | 11 ++++
->>  tools/perf/builtin-stat.c                     | 52 +++++++++++++++++--
->>  .../tests/shell/lib/perf_json_output_lint.py  |  4 +-
->>  tools/perf/tests/shell/lib/stat_output.sh     | 12 +++++
->>  tools/perf/tests/shell/stat+csv_output.sh     |  2 +
->>  tools/perf/tests/shell/stat+json_output.sh    | 13 +++++
->>  tools/perf/tests/shell/stat+std_output.sh     |  2 +
->>  tools/perf/util/cpumap.c                      | 32 +++++++++++-
->>  tools/perf/util/cpumap.h                      | 19 +++++--
->>  tools/perf/util/env.h                         |  1 +
->>  tools/perf/util/stat-display.c                | 13 +++++
->>  tools/perf/util/stat.h                        |  1 +
->>  12 files changed, 153 insertions(+), 9 deletions(-)
->>
-[...]
->> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
->> index 0581ee0fa5f2..5907456d42a2 100644
->> --- a/tools/perf/util/cpumap.c
->> +++ b/tools/perf/util/cpumap.c
->> @@ -222,6 +222,8 @@ static int aggr_cpu_id__cmp(const void *a_pointer, const void *b_pointer)
->>                 return a->socket - b->socket;
->>         else if (a->die != b->die)
->>                 return a->die - b->die;
->> +       else if (a->cluster != b->cluster)
->> +               return a->cluster - b->cluster;
->>         else if (a->cache_lvl != b->cache_lvl)
->>                 return a->cache_lvl - b->cache_lvl;
->>         else if (a->cache != b->cache)
->> @@ -309,6 +311,29 @@ struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
->>         return id;
->>  }
->>
->> +int cpu__get_cluster_id(struct perf_cpu cpu)
->> +{
->> +       int value, ret = cpu__get_topology_int(cpu.cpu, "cluster_id", &value);
+>> ./arch/x86/events/core.c:1895:11-19: WARNING: please use sysfs_emit
+>                            ^^^^^ this one cannot convert to sysfs_emit
+>                                  where it intends to print a sub-string.
 > 
-> nit: normal coding style is for a whitespace newline here.
+>> ./arch/x86/events/core.c:2542:8-16: WARNING: please use sysfs_emit
+>> ./arch/x86/events/core.c:2600:8-16: WARNING: please use sysfs_emit
 > 
+> Most of this patch is generated by:
+> $ make coccicheck MODE=patch COCCI=scripts/coccinelle/api/device_attr_show.cocci M=arch/x86/events/core.c | sed -n '6,$p' | patch -p1
+> 
+> No functional change intended
+> 
+> CC: Peter Zijlstra <peterz@infradead.org>
+> CC: Ingo Molnar <mingo@redhat.com>
+> CC: Arnaldo Carvalho de Melo <acme@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> CC: Jiri Olsa <jolsa@kernel.org>
+> CC: Namhyung Kim <namhyung@kernel.org>
+> CC: Ian Rogers <irogers@google.com>
+> CC: Adrian Hunter <adrian.hunter@intel.com>
+> CC: Thomas Gleixner <tglx@linutronix.de>
+> CC: Borislav Petkov <bp@alien8.de>
+> CC: Dave Hansen <dave.hansen@linux.intel.com>
+> CC: x86@kernel.org
+> CC: "H. Peter Anvin" <hpa@zytor.com>
+> CC: linux-perf-users@vger.kernel.org
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 
-Will fix. I may referred to cpu__get_core_id() below which is an exception.
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Thanks,
-Yicong
+> ---
+> V2:
+> - Address Adrian's comment:
+>   leave "snprintf(page, next_str - str + 1, "%s", str)" alone, it
+>   intends to print a sub-string, that cannot covert to sysfs_emit simply.
+> -
+> V2: extract patch from the patch set[1] so that maintainer accept it separately.
+> [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+>  arch/x86/events/core.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 09050641ce5d..20d963196e4c 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1832,7 +1832,7 @@ ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr, cha
+>  
+>  	/* string trumps id */
+>  	if (pmu_attr->event_str)
+> -		return sprintf(page, "%s\n", pmu_attr->event_str);
+> +		return sysfs_emit(page, "%s\n", pmu_attr->event_str);
+>  
+>  	return x86_pmu.events_sysfs_show(page, config);
+>  }
+> @@ -1855,7 +1855,7 @@ ssize_t events_ht_sysfs_show(struct device *dev, struct device_attribute *attr,
+>  	 * if they are owned by some other guest.  The user tool
+>  	 * has to re-read when a thread sibling gets onlined later.
+>  	 */
+> -	return sprintf(page, "%s",
+> +	return sysfs_emit(page, "%s",
+>  			topology_max_smt_threads() > 1 ?
+>  			pmu_attr->event_str_ht :
+>  			pmu_attr->event_str_noht);
+> @@ -1872,7 +1872,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
+>  	int i;
+>  
+>  	if (hweight64(pmu_attr->pmu_type) == 1)
+> -		return sprintf(page, "%s", pmu_attr->event_str);
+> +		return sysfs_emit(page, "%s", pmu_attr->event_str);
+>  
+>  	/*
+>  	 * Hybrid PMUs may support the same event name, but with different
+> @@ -1894,7 +1894,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
+>  			if (next_str)
+>  				return snprintf(page, next_str - str + 1, "%s", str);
+>  			else
+> -				return sprintf(page, "%s", str);
+> +				return sysfs_emit(page, "%s", str);
+>  		}
+>  		str = strchr(str, ';');
+>  		str++;
+> @@ -2539,7 +2539,7 @@ static ssize_t get_attr_rdpmc(struct device *cdev,
+>  			      struct device_attribute *attr,
+>  			      char *buf)
+>  {
+> -	return snprintf(buf, 40, "%d\n", x86_pmu.attr_rdpmc);
+> +	return sysfs_emit(buf, "%d\n", x86_pmu.attr_rdpmc);
+>  }
+>  
+>  static ssize_t set_attr_rdpmc(struct device *cdev,
+> @@ -2597,7 +2597,7 @@ static ssize_t max_precise_show(struct device *cdev,
+>  				  struct device_attribute *attr,
+>  				  char *buf)
+>  {
+> -	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu_max_precise());
+> +	return sysfs_emit(buf, "%d\n", x86_pmu_max_precise());
+>  }
+>  
+>  static DEVICE_ATTR_RO(max_precise);
+
