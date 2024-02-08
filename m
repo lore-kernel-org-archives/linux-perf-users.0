@@ -1,135 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE257B3F7
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Feb 2024 16:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4857776416;
+	Thu,  8 Feb 2024 17:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707410984; cv=none; b=nq+tf+V6PyGnKB1lcFXCL3I4sEL1RLRgzXg5ir96aK5Xl9gtWbrswfExxVJrqJLIVLGneKIcYXe/s0l6l3L1mXoZAEmaxujWHhJmH0vGbFTULqWGY1ZVEk0O9ZDbDK8d7v0+qzW7quCuIw8OyUNBpN2m3oau9nqNZyWgEdk3WSo=
+	t=1707414261; cv=none; b=ijTfFOOBNF4tp4Rnck1abbY23N5YQRP/i0yzK2noJauRsnkiiSrffWDHhX/HaxsETik9raPIhJeQrCJvLgAXoPy5nWlqMSBNeOT1VoAIDFnzToENqQfEOzlHMX2MVYRgXcYDQ7Tw7T0GPclwOwPN23PaVt84uoHHnxlTudhqm7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707410984; c=relaxed/simple;
-	bh=yvPbLu6iaxbF+Zl9aU5lxEwQiXlaIO7kvIsLJhKBweI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Rm9wJkpr9K/5gS5OJofRSKCNHGq2BZo+NPZDbaophdAt1YtKeesISTtd935IoLcacksB5YyQHNqG7/b56IL8fHNp/lNz/bkEWVAy965jMTzcPKWJZn39r7RKtBfAMDaKJt7vmJxaT7Zeq7mYHYH98t9SdTF3ujQZ0Zdcq0peYFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VZZo37P1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZZo37P1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707410981;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FQH/4KocqEh8aLQFBMs2v88RVeCnGaoZKpekJ/EFKuI=;
-	b=VZZo37P17aJH3+aytEuXhqVAEGXXKHyE26oyN5mJ5KO9pp4tLeGKfDyq1NEQ8+jP5QRHYe
-	+kJYkh4FP7vHhN7rfYjcX5iSiCMVxWk58ITlqyZVC265kltdZlTxlE7PiAOOZpmXWJxv+Q
-	LTYEmmSiR6NA1lqAUTCsGCNXeQavzhw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-M4fuM21EP0yB606-zTD7gQ-1; Thu,
- 08 Feb 2024 11:49:38 -0500
-X-MC-Unique: M4fuM21EP0yB606-zTD7gQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C69DF1C0F478;
-	Thu,  8 Feb 2024 16:49:37 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 930F140C9444;
-	Thu,  8 Feb 2024 16:49:35 +0000 (UTC)
-Date: Thu, 8 Feb 2024 17:49:32 +0100 (CET)
-From: Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To: Namhyung Kim <namhyung@kernel.org>
-cc: linux-perf-users@vger.kernel.org, vmolnaro@redhat.com, acme@redhat.com, 
-    acme@kernel.org, mhiramat@kernel.org
-Subject: Re: [PATCH 1/7] perf testsuite: Add common regex patters
-In-Reply-To: <CAM9d7chjET+Zy7EYcRNW=9XaC+DKcqqU+EatiGJouRCjjHscKA@mail.gmail.com>
-Message-ID: <alpine.LRH.2.20.2402081741080.11354@Diego>
-References: <20240131113951.17077-1-mpetlan@redhat.com> <CAM9d7chjET+Zy7EYcRNW=9XaC+DKcqqU+EatiGJouRCjjHscKA@mail.gmail.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+	s=arc-20240116; t=1707414261; c=relaxed/simple;
+	bh=5Hk8XS79Tvu+EaVRYexZemcqZTK+oRUJLjtcrvj0EDk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MzneRsPDMHLpDETc5cSNkDK86qUWqfRt0uJhueZqn2sYDE1z4A54XXLqCUM1f2I/apLvsxe2qLw6FO9GXHq4lRK65s+b2mTZdZBkJ8vLoPXNcZkiL31N2FurecFczDk2BLlnyLuJ7JZPcHT4PpcxHpSVjErK6o0/WZ6rh2u6F1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-290d59df3f0so56570a91.2;
+        Thu, 08 Feb 2024 09:44:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707414259; x=1708019059;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dfwEo5ig3aDCkVExP91yh1w0Yn3JnDCOxLSJevvADSI=;
+        b=KIyix9krphxGnr9gZZEjHFISZzSZ0opvEg3FBKN9GSbPL4pPAhokuYMqmvH4/fsaiS
+         GZYDrLw9wxeFOlTRrrGWUVrqKx5SsiCxU7ERadXTnwlEaNlEiNm3QhfXMkvzDPH+5lNY
+         fAdBsfGQCT5AB9bZTJQn1ZUAzJcZok35OWA6qVEC9vOAOJUtzt5xV6c08w6w63tucpFU
+         YrFSu9dsHCREZ++CRFzM9UzF77zFzwcwTd7gYWdoOtlAxJkf6eAoHNZftrZHMDY6EFK8
+         ZbMU27H6TQK7g52ww9eHwvXEhEFRdPFlinYVd1O12EyCKj7veXoA2I2QMe9WXHC6HkZr
+         DwzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJgzNRYOHm7wRFnlJwAN8W9zyKDc+24kqOw2hEx6NrRq3aQwz4enNU2waYooBx8nScwnXeb6YxEUpXa0TfcPnmgoGnns77mJ+ZN7deSUv6DJKZC4ZS2LFYsKvJinV1IGLtlM1JnP1y9tsSlvSsS3jmAQ5xbErylx9BFpG41QKHYvmtHw==
+X-Gm-Message-State: AOJu0YzZxrZaLATsn47EkTbd15pcykVnsNs6X3gPETfOctZZY0bchvKa
+	lmXoxseXNoglNy0U0+xxoJGqauJTj42Y83RRrmxpMMXsdqAHWw4Zy5rTMpBc3f61h7ikEyx0Zf2
+	NmxafqvnB3ZGsctclrZFTBJHRR9Q=
+X-Google-Smtp-Source: AGHT+IFniQ63mPXn5L5xgsHEHUVulxSZPZ3eaI2CqrNzSLvdsKnD2NBAOgn/pxnehcTAak/ymVEN2S9elx06C3NrYAA=
+X-Received: by 2002:a17:90b:1bc2:b0:296:a746:67f5 with SMTP id
+ oa2-20020a17090b1bc200b00296a74667f5mr6272038pjb.44.1707414259351; Thu, 08
+ Feb 2024 09:44:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="-1463784192-246822525-1707410977=:11354"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+References: <20240207223639.3139601-1-irogers@google.com>
+In-Reply-To: <20240207223639.3139601-1-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 8 Feb 2024 09:44:07 -0800
+Message-ID: <CAM9d7chBixXozCQztM2WKGbfs_8C70vy6ROzKpwLSqq-upz5iQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] maps memory improvements and fixes
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Ian,
 
----1463784192-246822525-1707410977=:11354
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+On Wed, Feb 7, 2024 at 2:37=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> First 6 patches from:
+> https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+>
+> v2. Fix NO_LIBUNWIND=3D1 build issue.
+>
+> Ian Rogers (6):
+>   perf maps: Switch from rbtree to lazily sorted array for addresses
+>   perf maps: Get map before returning in maps__find
+>   perf maps: Get map before returning in maps__find_by_name
+>   perf maps: Get map before returning in maps__find_next_entry
+>   perf maps: Hide maps internals
+>   perf maps: Locking tidy up of nr_maps
 
-On Thu, 1 Feb 2024, Namhyung Kim wrote:
-> On Wed, Jan 31, 2024 at 3:42 AM Michael Petlan <mpetlan@redhat.com> wrote:
-> >
-> > From: Veronika Molnarova <vmolnaro@redhat.com>
-> >
-> > Unify perf regexes for checking testing output into a single file
-> > to reduce duplicates and prevent errors when editing.
-> >
-> > This will be used in upcomming patches in shell tests.
-> >
-> > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> > ---
-> >  tools/perf/tests/shell/common/patterns.sh | 256 ++++++++++++++++++++++
-> >  1 file changed, 256 insertions(+)
-> >  create mode 100644 tools/perf/tests/shell/common/patterns.sh
-> >
-> > diff --git a/tools/perf/tests/shell/common/patterns.sh b/tools/perf/tests/shell/common/patterns.sh
-> > new file mode 100644
-> > index 000000000000..919a07b8b454
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/common/patterns.sh
-> 
-> We have tests/shell/lib directory, maybe better to put this there.
-> But maybe we can move it later once we apply the series.
+Now I see a perf test failure on the vmlinux test:
 
-Yes, in case the testsuite gets accepted, I plan to work further
-on the integration with the current shell test set, in order to
-unify the configuration, output, logging, etc. So, I'd prefer to
-merge the directories later.
-> 
-> > @@ -0,0 +1,256 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-[...]
+$ sudo ./perf test -v vmlinux
+  1: vmlinux symtab matches kallsyms                                 :
+--- start ---
+test child forked, pid 4164115
+/proc/{kallsyms,modules} inconsistency while looking for
+"[__builtin__kprobes]" module!
+/proc/{kallsyms,modules} inconsistency while looking for
+"[__builtin__kprobes]" module!
+/proc/{kallsyms,modules} inconsistency while looking for
+"[__builtin__ftrace]" module!
+Looking at the vmlinux_path (8 entries long)
+Using /usr/lib/debug/boot/vmlinux-6.5.13-1rodete2-amd64 for symbols
+perf: Segmentation fault
+Obtained 16 stack frames.
+./perf(+0x1b7dcd) [0x55c40be97dcd]
+./perf(+0x1b7eb7) [0x55c40be97eb7]
+/lib/x86_64-linux-gnu/libc.so.6(+0x3c510) [0x7f33d7a5a510]
+./perf(+0x1c2e9c) [0x55c40bea2e9c]
+./perf(+0x1c43f6) [0x55c40bea43f6]
+./perf(+0x1c4649) [0x55c40bea4649]
+./perf(+0x1c46d3) [0x55c40bea46d3]
+./perf(+0x1c7303) [0x55c40bea7303]
+./perf(+0x1c70b5) [0x55c40bea70b5]
+./perf(+0x1c73e6) [0x55c40bea73e6]
+./perf(+0x11833e) [0x55c40bdf833e]
+./perf(+0x118f78) [0x55c40bdf8f78]
+./perf(+0x103d49) [0x55c40bde3d49]
+./perf(+0x103e75) [0x55c40bde3e75]
+./perf(+0x1044c0) [0x55c40bde44c0]
+./perf(+0x104de0) [0x55c40bde4de0]
+test child interrupted
+---- end ----
+vmlinux symtab matches kallsyms: FAILED!
 
-> > +export RE_ADDRESS_NOT_NULL="0x[0-9A-Fa-f]*[1-9A-Fa-f]+[0-9A-Fa-f]*"
-> > +# Memory address (not NULL)
-> > +# Examples:
-> > +#    0xffffffff9abe8ae8
-> > +#!   0x0
-> > +#!   0x0000000000000000
-> > +
-> > +export RE_PROCESS_PID="\w+\/\d+"
-> 
-> I'm afraid the process name can have spaces like
-> "my proc A/9876".
-> 
-> Thanks,
-> Namhyung
-> 
-Good catch! Theoretically yes. It is not used yet (perf-trace tests use
-this regexp; we aim to post the rest of the testsuite later). However,
-looking at the perf-trace testcase, it runs also `perf trace -a`, so
-if there are any processes with non-standard name, they would appear
-there. But that's not only space, but also other characters, like '+',
-etc. We will try to fix this to match any valid process name. Thanks.
 
-Michael
-> > +# A process with PID
-> > +# Example:
-> > +#    sleep/4102
-> > +
-> 
-> 
----1463784192-246822525-1707410977=:11354--
-
+Thanks,
+Namhyung
