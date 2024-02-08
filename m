@@ -1,41 +1,40 @@
 Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F621D529;
-	Thu,  8 Feb 2024 02:44:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F5020335
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Feb 2024 03:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707360294; cv=none; b=U6ZhtgneyFEtBfgZHvyWJSyCIn2Lh8UeWjrs2wWHugaSXU0M6s9CFZUSjJl7EKbByrU7Vc6N5m2V+9114hRjK9y5Yt+XJTcjmi7bSNZM+pJQUb339f4+pBz6H5AB8Qc/XCyNpQMx7f+SjvUbkkhSzGnGs56yDqqMQnz0TQQAttA=
+	t=1707362975; cv=none; b=srl4hOWuFLmJezDd+d69wwJ/JHrp4yZZIm+vgqTjATWOvpkCJkWrpt3orvjCXFkURfXq9yjEIR12UfZVKxx09NdQzCz9KNiGPg4mMCjBN6zBnUfrOeGjy+WWxvhNngBMeLshUJPjBqr6F1QJ6R3ar9eG3kj/8rdCKgPMqvyPDZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707360294; c=relaxed/simple;
-	bh=M9fgCDd6U2+FRcl6NwuV2JdY4MZ6yRqfqpYTR/O0k6E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ABfao8BLMluhV+TMOun24N7IaIx3ejykQY5PzaqnUTQ7IIcwVrNjfI47e5cIFrnAebZ1y6i4l3AOsAj6JjoVe/VzzsxK8nDz/aJOWm8FxkNTqQBSJVBbM/oVXR2sxJY+kEnucG7H3jeV8tbgrL/3uVxf8/t8Rw7264jDn8w/mrg=
+	s=arc-20240116; t=1707362975; c=relaxed/simple;
+	bh=VoqyA2J6Z+H0qrn2L83efbvYQw66nNTmI/jep4wPQOU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XPTc9pdBe1vUl6nYb+v4rdVNXoHuZzlnPD1XJga2GjgbjDyOPr3OVWN4kIw4WE26p6uHxb2AHqE417Cmf8G2Q+iWPbOHx8v+61/ZY0MFBnwrJK1SXcUIWStT35th9TZC051BHIQd5D6JV+SZ4fn8w/O8VTTX8Xlw8IUuL8Juorw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TVh9Q4gdbz1gyjX;
-	Thu,  8 Feb 2024 10:42:50 +0800 (CST)
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TVj5t6vTjz1FK1Y;
+	Thu,  8 Feb 2024 11:24:50 +0800 (CST)
 Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id A1C1F140444;
-	Thu,  8 Feb 2024 10:44:47 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5834A140336;
+	Thu,  8 Feb 2024 11:29:28 +0800 (CST)
 Received: from localhost.localdomain (10.50.165.33) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 8 Feb 2024 10:44:47 +0800
+ 15.1.2507.35; Thu, 8 Feb 2024 11:29:27 +0800
 From: Yicong Yang <yangyicong@huawei.com>
-To: <acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <james.clark@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <Jonathan.Cameron@huawei.com>, <zhanjie9@hisilicon.com>,
-	<21cnbao@gmail.com>, <tim.c.chen@intel.com>, <prime.zeng@hisilicon.com>,
-	<fanghao11@huawei.com>, <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
-	<linux-arm-kernel@lists.infradead.org>, Tim Chen <tim.c.chen@linux.intel.com>
-Subject: [PATCH v5] perf stat: Support per-cluster aggregation
-Date: Thu, 8 Feb 2024 10:40:26 +0800
-Message-ID: <20240208024026.2691-1-yangyicong@huawei.com>
+To: <will@kernel.org>, <john.g.garry@oracle.com>, <james.clark@arm.com>,
+	<mike.leach@linaro.org>, <leo.yan@linaro.org>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
+CC: <jonathan.cameron@huawei.com>, <hejunhao3@huawei.com>,
+	<prime.zeng@hisilicon.com>, <yangyicong@hisilicon.com>, <linuxarm@huawei.com>
+Subject: [PATCH v2] perf stat: Enable iostat mode for HiSilicon PCIe PMU
+Date: Thu, 8 Feb 2024 11:25:18 +0800
+Message-ID: <20240208032518.25830-1-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -45,592 +44,538 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  canpemm500009.china.huawei.com (7.192.105.203)
 
 From: Yicong Yang <yangyicong@hisilicon.com>
 
-Some platforms have 'cluster' topology and CPUs in the cluster will
-share resources like L3 Cache Tag (for HiSilicon Kunpeng SoC) or L2
-cache (for Intel Jacobsville). Currently parsing and building cluster
-topology have been supported since [1].
+Some HiSilicon platforms provide PCIe PMU devices for monitoring the
+throughput and latency of PCIe traffic. With the support of PCIe PMU
+we can enable the perf iostat mode.
 
-perf stat has already supported aggregation for other topologies like
-die or socket, etc. It'll be useful to aggregate per-cluster to find
-problems like L3T bandwidth contention.
+The HiSilicon PCIe PMU can support measuring the throughput of certain
+TLP types and of certain root port. Totally 6 metrics are provided in
+the unit of MB:
 
-This patch add support for "--per-cluster" option for per-cluster
-aggregation. Also update the docs and related test. The output will
-be like:
+- Inbound MWR: The memory write TLPs from the devices downstream the root port
+- Inbound MRD: The memory read TLPs from the devices downstream the root port
+- Inbound CPL: The completion TLPs from the devices downstream the root port
+- Outbound MWR: The memory write TLPs from the CPU to the downstream devices
+- Outbound MRD: The memory read TLPs from the CPU to the downstream devices
+- Outbound CPL: The completions TLPs from the CPU to the downstream devices
 
-[root@localhost tmp]# perf stat -a -e LLC-load --per-cluster -- sleep 5
+Since the PMU measures the throughput in DWords. So we need to calculate
+the throughput in MB like:
+  Count * 4B / 1024 / 1024
 
- Performance counter stats for 'system wide':
-
-S56-D0-CLS158    4      1,321,521,570      LLC-load
-S56-D0-CLS594    4        794,211,453      LLC-load
-S56-D0-CLS1030    4             41,623      LLC-load
-S56-D0-CLS1466    4             41,646      LLC-load
-S56-D0-CLS1902    4             16,863      LLC-load
-S56-D0-CLS2338    4             15,721      LLC-load
-S56-D0-CLS2774    4             22,671      LLC-load
-[...]
-
-On a legacy system without cluster or cluster support, the output will
-be look like:
-[root@localhost perf]# perf stat -a -e cycles --per-cluster -- sleep 1
+Some of the display of the `perf iostat` will be like:
+[root@localhost tmp]# ./perf iostat list
+hisi_pcie0_core2<0000:40:00.0>
+hisi_pcie2_core2<0000:5f:00.0>
+hisi_pcie0_core1<0000:16:00.0>
+hisi_pcie0_core1<0000:16:04.0>
+[root@localhost tmp]# ./perf iostat --timeout 10000
 
  Performance counter stats for 'system wide':
 
-S56-D0-CLS0   64         18,011,485      cycles
-S7182-D0-CLS0   64         16,548,835      cycles
+    port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
+0000:40:00.0                    0                    0                    0                    0                    0                    0
+0000:5f:00.0                    0                    0                    0                    0                    0                    0
+0000:16:00.0             16272.99               366.58                    0                15.09                    0             16156.85
+0000:16:04.0                    0                    0                    0                    0                    0                    0
 
-Note that this patch doesn't mix the cluster information in the outputs
-of --per-core to avoid breaking any tools/scripts using it.
+      10.008227512 seconds time elapsed
 
-Note that perf recently supports "--per-cache" aggregation, but it's not
-the same with the cluster although cluster CPUs may share some cache
-resources. For example on my machine all clusters within a die share the
-same L3 cache:
-$ cat /sys/devices/system/cpu/cpu0/cache/index3/shared_cpu_list
-0-31
-$ cat /sys/devices/system/cpu/cpu0/topology/cluster_cpus_list
-0-3
+[root@localhost tmp]# ./perf iostat 0000:16:00.0 -- fio -name=read
+-numjobs=30 -filename=/dev/nvme0n1 -rw=rw -iodepth=128 -direct=1 -sync=0
+-norandommap -group_reporting -runtime=10 -time_based -bs=64k
 
-[1] commit c5e22feffdd7 ("topology: Represent clusters of CPUs within a die")
+ Performance counter stats for 'system wide':
 
-Tested-by: Jie Zhan <zhanjie9@hisilicon.com>
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+    port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
+0000:40:00.0                    0                    0                    0                    0                    0                    0
+0000:5f:00.0                    0                    0                    0                    0                    0                    0
+0000:16:00.0             16314.30               371.22                    0                15.21                    0             16362.20
+0000:16:04.0                    0                    0                    0                    0                    0                    0
+
+      10.168561767 seconds time elapsed
+
+       0.465373000 seconds user
+       1.952948000 seconds sys
+
+More information of the HiSilicon PCIe PMU can be found at
+Documentation/admin-guide/perf/hisi-pcie-pmu.rst.
+
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
-Change since v4:
-- Add the Tag from Ian, Thanks.
-- Fix the code style in cpu__get_cluster_id(), per Ian
-Link: https://lore.kernel.org/linux-perf-users/20240206082016.22292-1-yangyicong@huawei.com/
-
-Change since v3:
-- Rebase on v6.7-rc4 and resolve the conflicts
-Link: https://lore.kernel.org/all/20230404104951.27537-1-yangyicong@huawei.com/
-
-Change since v2:
-- Use 0 as cluster ID on legacy system without cluster support, keep consistenct
-  with what --per-die does.
-Link: https://lore.kernel.org/all/20230328112717.19573-1-yangyicong@huawei.com/
-
 Change since v1:
-- Provides the information about how to map the cluster to the CPUs in the manual
-- Thanks the review from Tim and test from Jie.
-Link: https://lore.kernel.org/all/20230313085911.61359-1-yangyicong@huawei.com/
+- Tweak the comments per Jonathan
+- Use an enum to define the metrics and relevant command templates per Jonathan
+Thanks!
+Link: https://lore.kernel.org/linux-perf-users/20240123071201.30914-1-yangyicong@huawei.com/
 
- tools/perf/Documentation/perf-stat.txt        | 11 ++++
- tools/perf/builtin-stat.c                     | 52 +++++++++++++++++--
- .../tests/shell/lib/perf_json_output_lint.py  |  4 +-
- tools/perf/tests/shell/lib/stat_output.sh     | 12 +++++
- tools/perf/tests/shell/stat+csv_output.sh     |  2 +
- tools/perf/tests/shell/stat+json_output.sh    | 13 +++++
- tools/perf/tests/shell/stat+std_output.sh     |  2 +
- tools/perf/util/cpumap.c                      | 33 +++++++++++-
- tools/perf/util/cpumap.h                      | 19 +++++--
- tools/perf/util/env.h                         |  1 +
- tools/perf/util/stat-display.c                | 13 +++++
- tools/perf/util/stat.h                        |  1 +
- 12 files changed, 154 insertions(+), 9 deletions(-)
+ tools/perf/arch/arm64/util/Build         |   1 +
+ tools/perf/arch/arm64/util/hisi-iostat.c | 439 +++++++++++++++++++++++
+ 2 files changed, 440 insertions(+)
+ create mode 100644 tools/perf/arch/arm64/util/hisi-iostat.c
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 5af2e432b54f..29756a87ab6f 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -308,6 +308,14 @@ use --per-die in addition to -a. (system-wide).  The output includes the
- die number and the number of online processors on that die. This is
- useful to gauge the amount of aggregation.
- 
-+--per-cluster::
-+Aggregate counts per processor cluster for system-wide mode measurement.  This
-+is a useful mode to detect imbalance between clusters.  To enable this mode,
-+use --per-cluster in addition to -a. (system-wide).  The output includes the
-+cluster number and the number of online processors on that cluster. This is
-+useful to gauge the amount of aggregation. The information of cluster ID and
-+related CPUs can be gotten from /sys/devices/system/cpu/cpuX/topology/cluster_{id, cpus}.
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index 78ef7115be3d..4e8dabf98b29 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -3,6 +3,7 @@ perf-y += machine.o
+ perf-y += perf_regs.o
+ perf-y += tsc.o
+ perf-y += pmu.o
++perf-y += hisi-iostat.o
+ perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+ perf-$(CONFIG_DWARF)     += dwarf-regs.o
+ perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+diff --git a/tools/perf/arch/arm64/util/hisi-iostat.c b/tools/perf/arch/arm64/util/hisi-iostat.c
+new file mode 100644
+index 000000000000..43df43b83f3f
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/hisi-iostat.c
+@@ -0,0 +1,439 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * perf iostat support for HiSilicon PCIe PMU.
++ * Partly derived from tools/perf/arch/x86/util/iostat.c.
++ *
++ * Copyright (c) 2024 HiSilicon Technologies Co., Ltd.
++ * Author: Yicong Yang <yangyicong@hisilicon.com>
++ */
 +
- --per-cache::
- Aggregate counts per cache instance for system-wide mode measurements.  By
- default, the aggregation happens for the cache level at the highest index
-@@ -396,6 +404,9 @@ Aggregate counts per processor socket for system-wide mode measurements.
- --per-die::
- Aggregate counts per processor die for system-wide mode measurements.
- 
-+--per-cluster::
-+Aggregate counts perf processor cluster for system-wide mode measurements.
++#include <api/fs/fs.h>
++#include <linux/err.h>
++#include <linux/zalloc.h>
++#include <linux/limits.h>
++#include <dirent.h>
++#include <stdio.h>
++#include <errno.h>
++#include <stdint.h>
++#include <stdlib.h>
 +
- --per-cache::
- Aggregate counts per cache instance for system-wide mode measurements.  By
- default, the aggregation happens for the cache level at the highest index
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5fe9abc6a524..6bba1a89d030 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1238,6 +1238,8 @@ static struct option stat_options[] = {
- 		     "aggregate counts per processor socket", AGGR_SOCKET),
- 	OPT_SET_UINT(0, "per-die", &stat_config.aggr_mode,
- 		     "aggregate counts per processor die", AGGR_DIE),
-+	OPT_SET_UINT(0, "per-cluster", &stat_config.aggr_mode,
-+		     "aggregate counts per processor cluster", AGGR_CLUSTER),
- 	OPT_CALLBACK_OPTARG(0, "per-cache", &stat_config.aggr_mode, &stat_config.aggr_level,
- 			    "cache level", "aggregate count at this cache level (Default: LLC)",
- 			    parse_cache_level),
-@@ -1428,6 +1430,7 @@ static struct aggr_cpu_id aggr_cpu_id__cache(struct perf_cpu cpu, void *data)
- static const char *const aggr_mode__string[] = {
- 	[AGGR_CORE] = "core",
- 	[AGGR_CACHE] = "cache",
-+	[AGGR_CLUSTER] = "cluster",
- 	[AGGR_DIE] = "die",
- 	[AGGR_GLOBAL] = "global",
- 	[AGGR_NODE] = "node",
-@@ -1455,6 +1458,12 @@ static struct aggr_cpu_id perf_stat__get_cache_id(struct perf_stat_config *confi
- 	return aggr_cpu_id__cache(cpu, /*data=*/NULL);
- }
- 
-+static struct aggr_cpu_id perf_stat__get_cluster(struct perf_stat_config *config __maybe_unused,
-+						 struct perf_cpu cpu)
++#include "util/counts.h"
++#include "util/cpumap.h"
++#include "util/debug.h"
++#include "util/iostat.h"
++#include "util/pmu.h"
++
++#define PCI_DEFAULT_DOMAIN		0
++#define PCI_DEVICE_NAME_PATTERN		"%04x:%02hhx:%02hhx.%hhu"
++#define PCI_ROOT_BUS_DEVICES_PATH	"bus/pci/devices"
++
++enum hisi_iostat_metric_type {
++	METRIC_IN_MWR,		/* Inbound Memory Write */
++	METRIC_IN_MRD,		/* Inbound Memory Read */
++	METRIC_IN_CPL,		/* Inbound Memory Completion */
++	METRIC_OUT_MWR,		/* Outbound Memory Write */
++	METRIC_OUT_MRD,		/* Outbound Memory Read */
++	METRIC_OUT_CPL,		/* Outbound Memory Completion */
++	METRIC_TYPE_MAX,
++};
++
++static const char * const hisi_iostat_metrics[] = {
++	[METRIC_IN_MWR] = "Inbound MWR(MB)",
++	[METRIC_IN_MRD] = "Inbound MRD(MB)",
++	[METRIC_IN_CPL] = "Inbound CPL(MB)",
++	[METRIC_OUT_MWR] = "Outbound MWR(MB)",
++	[METRIC_OUT_MRD] = "Outbound MRD(MB)",
++	[METRIC_OUT_CPL] = "Outbound CPL(MB)",
++};
++
++static const char * const hisi_iostat_cmd_template[] = {
++	[METRIC_IN_MWR] = "hisi_pcie%hu_core%hu/event=0x0104,port=0x%hx/",
++	[METRIC_IN_MRD] = "hisi_pcie%hu_core%hu/event=0x0804,port=0x%hx/",
++	[METRIC_IN_CPL] = "hisi_pcie%hu_core%hu/event=0x2004,port=0x%hx/",
++	[METRIC_OUT_MWR] = "hisi_pcie%hu_core%hu/event=0x0105,port=0x%hx/",
++	[METRIC_OUT_MRD] = "hisi_pcie%hu_core%hu/event=0x0405,port=0x%hx/",
++	[METRIC_OUT_CPL] = "hisi_pcie%hu_core%hu/event=0x1005,port=0x%hx/",
++};
++
++struct hisi_pcie_root_port {
++	struct list_head list;
++	/* Is this Root Port selected for monitoring */
++	bool selected;
++	/* IDs to locate the PMU */
++	u16 sicl_id;
++	u16 core_id;
++	/* Filter mask for this Root Port */
++	u16 mask;
++	/* PCIe Root Port's <domain>:<bus>:<device>.<function> */
++	u32 domain;
++	u8 bus;
++	u8 dev;
++	u8 fn;
++};
++
++LIST_HEAD(hisi_pcie_root_ports_list);
++static int hisi_pcie_root_ports_num;
++
++static void hisi_pcie_init_root_port_mask(struct hisi_pcie_root_port *rp)
 +{
-+	return aggr_cpu_id__cluster(cpu, /*data=*/NULL);
++	rp->mask = BIT(rp->dev << 1);
 +}
 +
- static struct aggr_cpu_id perf_stat__get_core(struct perf_stat_config *config __maybe_unused,
- 					      struct perf_cpu cpu)
- {
-@@ -1507,6 +1516,12 @@ static struct aggr_cpu_id perf_stat__get_die_cached(struct perf_stat_config *con
- 	return perf_stat__get_aggr(config, perf_stat__get_die, cpu);
- }
- 
-+static struct aggr_cpu_id perf_stat__get_cluster_cached(struct perf_stat_config *config,
-+							struct perf_cpu cpu)
++/*
++ * Select specific Root Port to monitor. Return 0 if successfully find the
++ * Root Port, Otherwise -EINVAL.
++ */
++static int hisi_pcie_root_ports_select_one(u32 domain, u8 bus, u8 dev, u8 fn)
 +{
-+	return perf_stat__get_aggr(config, perf_stat__get_cluster, cpu);
++	struct hisi_pcie_root_port *rp;
++
++	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list)
++		if (domain == rp->domain && bus == rp->bus &&
++		    dev == rp->dev && fn == rp->fn) {
++			rp->selected = true;
++			return 0;
++		}
++
++	return -EINVAL;
 +}
 +
- static struct aggr_cpu_id perf_stat__get_cache_id_cached(struct perf_stat_config *config,
- 							 struct perf_cpu cpu)
- {
-@@ -1544,6 +1559,8 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr(enum aggr_mode aggr_mode)
- 		return aggr_cpu_id__socket;
- 	case AGGR_DIE:
- 		return aggr_cpu_id__die;
-+	case AGGR_CLUSTER:
-+		return aggr_cpu_id__cluster;
- 	case AGGR_CACHE:
- 		return aggr_cpu_id__cache;
- 	case AGGR_CORE:
-@@ -1569,6 +1586,8 @@ static aggr_get_id_t aggr_mode__get_id(enum aggr_mode aggr_mode)
- 		return perf_stat__get_socket_cached;
- 	case AGGR_DIE:
- 		return perf_stat__get_die_cached;
-+	case AGGR_CLUSTER:
-+		return perf_stat__get_cluster_cached;
- 	case AGGR_CACHE:
- 		return perf_stat__get_cache_id_cached;
- 	case AGGR_CORE:
-@@ -1737,6 +1756,21 @@ static struct aggr_cpu_id perf_env__get_cache_aggr_by_cpu(struct perf_cpu cpu,
- 	return id;
- }
- 
-+static struct aggr_cpu_id perf_env__get_cluster_aggr_by_cpu(struct perf_cpu cpu,
-+							    void *data)
++static void hisi_pcie_root_ports_select_all(void)
 +{
-+	struct perf_env *env = data;
-+	struct aggr_cpu_id id = aggr_cpu_id__empty();
++	struct hisi_pcie_root_port *rp;
 +
-+	if (cpu.cpu != -1) {
-+		id.socket = env->cpu[cpu.cpu].socket_id;
-+		id.die = env->cpu[cpu.cpu].die_id;
-+		id.cluster = env->cpu[cpu.cpu].cluster_id;
++	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list)
++		rp->selected = true;
++}
++
++static void hisi_pcie_root_ports_add(u16 sicl_id, u16 core_id, u8 target_bus)
++{
++	const char *sysfs = sysfs__mountpoint();
++	struct hisi_pcie_root_port *rp;
++	struct dirent *dent;
++	char path[PATH_MAX];
++	u8 bus, dev, fn;
++	u32 domain;
++	DIR *dir;
++	int ret;
++
++	snprintf(path, PATH_MAX, "%s/%s", sysfs, PCI_ROOT_BUS_DEVICES_PATH);
++	dir = opendir(path);
++	if (!dir)
++		return;
++
++	/* Scan the PCI root bus to find the match root port on @target_bus */
++	while ((dent = readdir(dir))) {
++		ret = sscanf(dent->d_name, PCI_DEVICE_NAME_PATTERN,
++			     &domain, &bus, &dev, &fn);
++		if (ret != 4 || bus != target_bus)
++			continue;
++
++		rp = zalloc(sizeof(*rp));
++		if (!rp)
++			continue;
++
++		rp->selected = false;
++		rp->sicl_id = sicl_id;
++		rp->core_id = core_id;
++		rp->domain = domain;
++		rp->bus = bus;
++		rp->dev = dev;
++		rp->fn = fn;
++
++		hisi_pcie_init_root_port_mask(rp);
++
++		list_add(&rp->list, &hisi_pcie_root_ports_list);
++		hisi_pcie_root_ports_num++;
++
++		pr_debug3("Found root port %s\n", dent->d_name);
 +	}
 +
-+	return id;
++	closedir(dir);
 +}
 +
- static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(struct perf_cpu cpu, void *data)
- {
- 	struct perf_env *env = data;
-@@ -1744,12 +1778,12 @@ static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(struct perf_cpu cpu, vo
- 
- 	if (cpu.cpu != -1) {
- 		/*
--		 * core_id is relative to socket and die,
--		 * we need a global id. So we set
--		 * socket, die id and core id
-+		 * core_id is relative to socket, die and cluster, we need a
-+		 * global id. So we set socket, die id, cluster id and core id.
- 		 */
- 		id.socket = env->cpu[cpu.cpu].socket_id;
- 		id.die = env->cpu[cpu.cpu].die_id;
-+		id.cluster = env->cpu[cpu.cpu].cluster_id;
- 		id.core = env->cpu[cpu.cpu].core_id;
- 	}
- 
-@@ -1805,6 +1839,12 @@ static struct aggr_cpu_id perf_stat__get_die_file(struct perf_stat_config *confi
- 	return perf_env__get_die_aggr_by_cpu(cpu, &perf_stat.session->header.env);
- }
- 
-+static struct aggr_cpu_id perf_stat__get_cluster_file(struct perf_stat_config *config __maybe_unused,
-+						      struct perf_cpu cpu)
++/* Scan the PMUs and build the mapping of the Root Ports to the PMU */
++static int hisi_pcie_root_ports_init(void)
 +{
-+	return perf_env__get_cluster_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	char event_source[PATH_MAX], bus_path[PATH_MAX];
++	unsigned long long bus;
++	u16 sicl_id, core_id;
++	struct dirent *dent;
++	DIR *dir;
++
++	perf_pmu__event_source_devices_scnprintf(event_source, sizeof(event_source));
++	dir = opendir(event_source);
++	if (!dir)
++		return -ENOENT;
++
++	while ((dent = readdir(dir))) {
++		/*
++		 * This HiSilicon PCIe PMU will be named as:
++		 *   hisi_pcie<sicl_id>_core<core_id>
++		 */
++		if ((sscanf(dent->d_name, "hisi_pcie%hu_core%hu", &sicl_id, &core_id)) != 2)
++			continue;
++
++		/*
++		 * Driver will export the root port it can monitor through
++		 * the "bus" sysfs attribute.
++		 */
++		scnprintf(bus_path, sizeof(bus_path), "%s/hisi_pcie%hu_core%hu/bus",
++			  event_source, sicl_id, core_id);
++
++		/*
++		 * Per PCIe spec the bus should be 8bit, use unsigned long long
++		 * for the convience of the library function.
++		 */
++		if (filename__read_ull(bus_path, &bus))
++			continue;
++
++		pr_debug3("Found pmu %s bus 0x%llx\n", dent->d_name, bus);
++
++		hisi_pcie_root_ports_add(sicl_id, core_id, (u8)bus);
++	}
++
++	closedir(dir);
++	return hisi_pcie_root_ports_num > 0 ? 0 : -ENOENT;
 +}
 +
- static struct aggr_cpu_id perf_stat__get_cache_file(struct perf_stat_config *config __maybe_unused,
- 						    struct perf_cpu cpu)
- {
-@@ -1842,6 +1882,8 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr_file(enum aggr_mode aggr_mode)
- 		return perf_env__get_socket_aggr_by_cpu;
- 	case AGGR_DIE:
- 		return perf_env__get_die_aggr_by_cpu;
-+	case AGGR_CLUSTER:
-+		return perf_env__get_cluster_aggr_by_cpu;
- 	case AGGR_CACHE:
- 		return perf_env__get_cache_aggr_by_cpu;
- 	case AGGR_CORE:
-@@ -1867,6 +1909,8 @@ static aggr_get_id_t aggr_mode__get_id_file(enum aggr_mode aggr_mode)
- 		return perf_stat__get_socket_file;
- 	case AGGR_DIE:
- 		return perf_stat__get_die_file;
-+	case AGGR_CLUSTER:
-+		return perf_stat__get_cluster_file;
- 	case AGGR_CACHE:
- 		return perf_stat__get_cache_file;
- 	case AGGR_CORE:
-@@ -2398,6 +2442,8 @@ static int __cmd_report(int argc, const char **argv)
- 		     "aggregate counts per processor socket", AGGR_SOCKET),
- 	OPT_SET_UINT(0, "per-die", &perf_stat.aggr_mode,
- 		     "aggregate counts per processor die", AGGR_DIE),
-+	OPT_SET_UINT(0, "per-cluster", &perf_stat.aggr_mode,
-+		     "aggregate counts perf processor cluster", AGGR_CLUSTER),
- 	OPT_CALLBACK_OPTARG(0, "per-cache", &perf_stat.aggr_mode, &perf_stat.aggr_level,
- 			    "cache level",
- 			    "aggregate count at this cache level (Default: LLC)",
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index ea55d5ea1ced..abc1fd737782 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -15,6 +15,7 @@ ap.add_argument('--event', action='store_true')
- ap.add_argument('--per-core', action='store_true')
- ap.add_argument('--per-thread', action='store_true')
- ap.add_argument('--per-cache', action='store_true')
-+ap.add_argument('--per-cluster', action='store_true')
- ap.add_argument('--per-die', action='store_true')
- ap.add_argument('--per-node', action='store_true')
- ap.add_argument('--per-socket', action='store_true')
-@@ -49,6 +50,7 @@ def check_json_output(expected_items):
-       'cgroup': lambda x: True,
-       'cpu': lambda x: isint(x),
-       'cache': lambda x: True,
-+      'cluster': lambda x: True,
-       'die': lambda x: True,
-       'event': lambda x: True,
-       'event-runtime': lambda x: isfloat(x),
-@@ -88,7 +90,7 @@ try:
-     expected_items = 7
-   elif args.interval or args.per_thread or args.system_wide_no_aggr:
-     expected_items = 8
--  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache:
-+  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cluster or args.per_cache:
-     expected_items = 9
-   else:
-     # If no option is specified, don't check the number of items.
-diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
-index 3cc158a64326..c81d6a9f7983 100644
---- a/tools/perf/tests/shell/lib/stat_output.sh
-+++ b/tools/perf/tests/shell/lib/stat_output.sh
-@@ -97,6 +97,18 @@ check_per_cache_instance()
- 	echo "[Success]"
- }
- 
-+check_per_cluster()
++static void hisi_pcie_root_ports_free(void)
 +{
-+	echo -n "Checking $1 output: per cluster "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat --per-cluster -a $2 true
-+	echo "[Success]"
++	struct hisi_pcie_root_port *rp, *tmp;
++
++	if (hisi_pcie_root_ports_num == 0)
++		return;
++
++	list_for_each_entry_safe(rp, tmp, &hisi_pcie_root_ports_list, list) {
++		list_del(&rp->list);
++		zfree(&rp);
++		hisi_pcie_root_ports_num--;
++	}
 +}
 +
- check_per_die()
- {
- 	echo -n "Checking $1 output: per die "
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index f1818fa6d9ce..fc2d8cc6e5e0 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -42,6 +42,7 @@ function commachecker()
- 	;; "--per-socket")	exp=8
- 	;; "--per-node")	exp=8
- 	;; "--per-die")		exp=8
-+	;; "--per-cluster")	exp=8
- 	;; "--per-cache")	exp=8
- 	esac
- 
-@@ -79,6 +80,7 @@ then
- 	check_system_wide_no_aggr "CSV" "$perf_cmd"
- 	check_per_core "CSV" "$perf_cmd"
- 	check_per_cache_instance "CSV" "$perf_cmd"
-+	check_per_cluster "CSV" "$perf_cmd"
- 	check_per_die "CSV" "$perf_cmd"
- 	check_per_socket "CSV" "$perf_cmd"
- else
-diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
-index 3bc900533a5d..2b9c6212dffc 100755
---- a/tools/perf/tests/shell/stat+json_output.sh
-+++ b/tools/perf/tests/shell/stat+json_output.sh
-@@ -122,6 +122,18 @@ check_per_cache_instance()
- 	echo "[Success]"
- }
- 
-+check_per_cluster()
++static int hisi_iostat_add_events(struct evlist *evl)
 +{
-+	echo -n "Checking json output: per cluster "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	perf stat -j --per-cluster -a true 2>&1 | $PYTHON $pythonchecker --per-cluster
-+	echo "[Success]"
++	struct hisi_pcie_root_port *rp;
++	struct evsel *evsel;
++	unsigned int i, j;
++	char *iostat_cmd;
++	int pos = 0;
++	int ret;
++
++	if (!hisi_pcie_root_ports_num)
++		return -ENOENT;
++
++	iostat_cmd = zalloc(PATH_MAX);
++	if (!iostat_cmd)
++		return -ENOMEM;
++
++	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list) {
++		if (!rp->selected)
++			continue;
++
++		iostat_cmd[pos++] = '{';
++		for (j = 0; j < METRIC_TYPE_MAX; j++) {
++			pos += snprintf(iostat_cmd + pos, ARG_MAX - pos - 1,
++					hisi_iostat_cmd_template[j],
++					rp->sicl_id, rp->core_id, rp->mask);
++
++			if (j == METRIC_TYPE_MAX - 1)
++				iostat_cmd[pos++] = '}';
++			else
++				iostat_cmd[pos++] = ',';
++		}
++
++		ret = parse_event(evl, iostat_cmd);
++		if (ret)
++			break;
++
++		i = 0;
++		evlist__for_each_entry_reverse(evl, evsel) {
++			if (i == METRIC_TYPE_MAX)
++				break;
++
++			evsel->priv = rp;
++			i++;
++		}
++
++		memset(iostat_cmd, 0, PATH_MAX);
++		pos = 0;
++	}
++
++	zfree(&iostat_cmd);
++	return ret;
 +}
 +
- check_per_die()
- {
- 	echo -n "Checking json output: per die "
-@@ -200,6 +212,7 @@ then
- 	check_system_wide_no_aggr
- 	check_per_core
- 	check_per_cache_instance
-+	check_per_cluster
- 	check_per_die
- 	check_per_socket
- else
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index 4fcdd1a9142c..16f61e86afc5 100755
---- a/tools/perf/tests/shell/stat+std_output.sh
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -40,6 +40,7 @@ function commachecker()
- 	;; "--per-node")	prefix=3
- 	;; "--per-die")		prefix=3
- 	;; "--per-cache")	prefix=3
-+	;; "--per-cluster")	prefix=3
- 	esac
- 
- 	while read line
-@@ -99,6 +100,7 @@ then
- 	check_system_wide_no_aggr "STD" "$perf_cmd"
- 	check_per_core "STD" "$perf_cmd"
- 	check_per_cache_instance "STD" "$perf_cmd"
-+	check_per_cluster "STD" "$perf_cmd"
- 	check_per_die "STD" "$perf_cmd"
- 	check_per_socket "STD" "$perf_cmd"
- else
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 0581ee0fa5f2..356e30c42cd8 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -222,6 +222,8 @@ static int aggr_cpu_id__cmp(const void *a_pointer, const void *b_pointer)
- 		return a->socket - b->socket;
- 	else if (a->die != b->die)
- 		return a->die - b->die;
-+	else if (a->cluster != b->cluster)
-+		return a->cluster - b->cluster;
- 	else if (a->cache_lvl != b->cache_lvl)
- 		return a->cache_lvl - b->cache_lvl;
- 	else if (a->cache != b->cache)
-@@ -309,6 +311,30 @@ struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
- 	return id;
- }
- 
-+int cpu__get_cluster_id(struct perf_cpu cpu)
++int iostat_prepare(struct evlist *evlist,
++		   struct perf_stat_config *config)
 +{
-+	int value, ret = cpu__get_topology_int(cpu.cpu, "cluster_id", &value);
++	if (evlist->core.nr_entries > 0) {
++		pr_warning("The -e and -M options are not supported."
++			   "All chosen events/metrics will be dropped\n");
++		evlist__delete(evlist);
++		evlist = evlist__new();
++		if (!evlist)
++			return -ENOMEM;
++	}
 +
-+	return ret ?: value;
++	config->metric_only = true;
++	config->aggr_mode = AGGR_GLOBAL;
++
++	return hisi_iostat_add_events(evlist);
 +}
 +
-+struct aggr_cpu_id aggr_cpu_id__cluster(struct perf_cpu cpu, void *data)
++static int hisi_pcie_root_ports_list_filter(const char *str)
 +{
-+	int cluster = cpu__get_cluster_id(cpu);
-+	struct aggr_cpu_id id;
++	char *tok, *tmp, *copy = NULL;
++	u8 bus, dev, fn;
++	u32 domain;
++	int ret;
 +
-+	/* There is no cluster_id on legacy system. */
-+	if (cluster == -1)
-+		cluster = 0;
++	copy = strdup(str);
++	if (!copy)
++		return -ENOMEM;
 +
-+	id = aggr_cpu_id__die(cpu, data);
-+	if (aggr_cpu_id__is_empty(&id))
-+		return id;
++	for (tok = strtok_r(copy, ",", &tmp); tok; tok = strtok_r(NULL, ",", &tmp)) {
++		ret = sscanf(tok, PCI_DEVICE_NAME_PATTERN, &domain, &bus, &dev, &fn);
++		if (ret != 4) {
++			ret = -EINVAL;
++			break;
++		}
 +
-+	id.cluster = cluster;
-+	return id;
++		ret = hisi_pcie_root_ports_select_one(domain, bus, dev, fn);
++		if (ret)
++			break;
++	}
++
++	zfree(&copy);
++	return ret;
 +}
 +
- int cpu__get_core_id(struct perf_cpu cpu)
- {
- 	int value, ret = cpu__get_topology_int(cpu.cpu, "core_id", &value);
-@@ -320,8 +346,8 @@ struct aggr_cpu_id aggr_cpu_id__core(struct perf_cpu cpu, void *data)
- 	struct aggr_cpu_id id;
- 	int core = cpu__get_core_id(cpu);
- 
--	/* aggr_cpu_id__die returns a struct with socket and die set. */
--	id = aggr_cpu_id__die(cpu, data);
-+	/* aggr_cpu_id__die returns a struct with socket die, and cluster set. */
-+	id = aggr_cpu_id__cluster(cpu, data);
- 	if (aggr_cpu_id__is_empty(&id))
- 		return id;
- 
-@@ -683,6 +709,7 @@ bool aggr_cpu_id__equal(const struct aggr_cpu_id *a, const struct aggr_cpu_id *b
- 		a->node == b->node &&
- 		a->socket == b->socket &&
- 		a->die == b->die &&
-+		a->cluster == b->cluster &&
- 		a->cache_lvl == b->cache_lvl &&
- 		a->cache == b->cache &&
- 		a->core == b->core &&
-@@ -695,6 +722,7 @@ bool aggr_cpu_id__is_empty(const struct aggr_cpu_id *a)
- 		a->node == -1 &&
- 		a->socket == -1 &&
- 		a->die == -1 &&
-+		a->cluster == -1 &&
- 		a->cache_lvl == -1 &&
- 		a->cache == -1 &&
- 		a->core == -1 &&
-@@ -708,6 +736,7 @@ struct aggr_cpu_id aggr_cpu_id__empty(void)
- 		.node = -1,
- 		.socket = -1,
- 		.die = -1,
-+		.cluster = -1,
- 		.cache_lvl = -1,
- 		.cache = -1,
- 		.core = -1,
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 9df2aeb34d3d..26cf76c693f5 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -20,6 +20,8 @@ struct aggr_cpu_id {
- 	int socket;
- 	/** The die id as read from /sys/devices/system/cpu/cpuX/topology/die_id. */
- 	int die;
-+	/** The cluster id as read from /sys/devices/system/cpu/cpuX/topology/cluster_id */
-+	int cluster;
- 	/** The cache level as read from /sys/devices/system/cpu/cpuX/cache/indexY/level */
- 	int cache_lvl;
- 	/**
-@@ -86,6 +88,11 @@ int cpu__get_socket_id(struct perf_cpu cpu);
-  * /sys/devices/system/cpu/cpuX/topology/die_id for the given CPU.
-  */
- int cpu__get_die_id(struct perf_cpu cpu);
-+/**
-+ * cpu__get_cluster_id - Returns the cluster id as read from
-+ * /sys/devices/system/cpu/cpuX/topology/cluster_id for the given CPU
-+ */
-+int cpu__get_cluster_id(struct perf_cpu cpu);
- /**
-  * cpu__get_core_id - Returns the core id as read from
-  * /sys/devices/system/cpu/cpuX/topology/core_id for the given CPU.
-@@ -127,9 +134,15 @@ struct aggr_cpu_id aggr_cpu_id__socket(struct perf_cpu cpu, void *data);
-  */
- struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data);
- /**
-- * aggr_cpu_id__core - Create an aggr_cpu_id with the core, die and socket
-- * populated with the core, die and socket for cpu. The function signature is
-- * compatible with aggr_cpu_id_get_t.
-+ * aggr_cpu_id__cluster - Create an aggr_cpu_id with cluster, die and socket
-+ * populated with the cluster, die and socket for cpu. The function signature
-+ * is compatible with aggr_cpu_id_get_t.
-+ */
-+struct aggr_cpu_id aggr_cpu_id__cluster(struct perf_cpu cpu, void *data);
-+/**
-+ * aggr_cpu_id__core - Create an aggr_cpu_id with the core, cluster, die and
-+ * socket populated with the core, die and socket for cpu. The function
-+ * signature is compatible with aggr_cpu_id_get_t.
-  */
- struct aggr_cpu_id aggr_cpu_id__core(struct perf_cpu cpu, void *data);
- /**
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 7c527e65c186..2a2c37cc40b7 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -12,6 +12,7 @@ struct perf_cpu_map;
- struct cpu_topology_map {
- 	int	socket_id;
- 	int	die_id;
-+	int	cluster_id;
- 	int	core_id;
- };
- 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 8c61f8627ebc..4dfe7d9517a9 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -201,6 +201,9 @@ static void print_aggr_id_std(struct perf_stat_config *config,
- 		snprintf(buf, sizeof(buf), "S%d-D%d-L%d-ID%d",
- 			 id.socket, id.die, id.cache_lvl, id.cache);
- 		break;
-+	case AGGR_CLUSTER:
-+		snprintf(buf, sizeof(buf), "S%d-D%d-CLS%d", id.socket, id.die, id.cluster);
-+		break;
- 	case AGGR_DIE:
- 		snprintf(buf, sizeof(buf), "S%d-D%d", id.socket, id.die);
- 		break;
-@@ -251,6 +254,10 @@ static void print_aggr_id_csv(struct perf_stat_config *config,
- 		fprintf(config->output, "S%d-D%d-L%d-ID%d%s%d%s",
- 			id.socket, id.die, id.cache_lvl, id.cache, sep, aggr_nr, sep);
- 		break;
-+	case AGGR_CLUSTER:
-+		fprintf(config->output, "S%d-D%d-CLS%d%s%d%s",
-+			id.socket, id.die, id.cluster, sep, aggr_nr, sep);
-+		break;
- 	case AGGR_DIE:
- 		fprintf(output, "S%d-D%d%s%d%s",
- 			id.socket, id.die, sep, aggr_nr, sep);
-@@ -300,6 +307,10 @@ static void print_aggr_id_json(struct perf_stat_config *config,
- 		fprintf(output, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"aggregate-number\" : %d, ",
- 			id.socket, id.die, id.cache_lvl, id.cache, aggr_nr);
- 		break;
-+	case AGGR_CLUSTER:
-+		fprintf(output, "\"cluster\" : \"S%d-D%d-CLS%d\", \"aggregate-number\" : %d, ",
-+			id.socket, id.die, id.cluster, aggr_nr);
-+		break;
- 	case AGGR_DIE:
- 		fprintf(output, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d, ",
- 			id.socket, id.die, aggr_nr);
-@@ -1248,6 +1259,7 @@ static void print_header_interval_std(struct perf_stat_config *config,
- 	case AGGR_NODE:
- 	case AGGR_SOCKET:
- 	case AGGR_DIE:
-+	case AGGR_CLUSTER:
- 	case AGGR_CACHE:
- 	case AGGR_CORE:
- 		fprintf(output, "#%*s %-*s cpus",
-@@ -1550,6 +1562,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 	switch (config->aggr_mode) {
- 	case AGGR_CORE:
- 	case AGGR_CACHE:
-+	case AGGR_CLUSTER:
- 	case AGGR_DIE:
- 	case AGGR_SOCKET:
- 	case AGGR_NODE:
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 4357ba114822..d6e5c8787ba2 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -48,6 +48,7 @@ enum aggr_mode {
- 	AGGR_GLOBAL,
- 	AGGR_SOCKET,
- 	AGGR_DIE,
-+	AGGR_CLUSTER,
- 	AGGR_CACHE,
- 	AGGR_CORE,
- 	AGGR_THREAD,
++int iostat_parse(const struct option *opt, const char *str, int unset __maybe_unused)
++{
++	struct perf_stat_config *config = (struct perf_stat_config *)opt->data;
++	int ret;
++
++	ret = hisi_pcie_root_ports_init();
++	if (!ret) {
++		config->iostat_run = true;
++
++		if (!str) {
++			iostat_mode = IOSTAT_RUN;
++			hisi_pcie_root_ports_select_all();
++		} else if (!strcmp(str, "list")) {
++			iostat_mode = IOSTAT_LIST;
++			hisi_pcie_root_ports_select_all();
++		} else {
++			iostat_mode = IOSTAT_RUN;
++			ret = hisi_pcie_root_ports_list_filter(str);
++		}
++	}
++
++	return ret;
++}
++
++static void hisi_pcie_root_port_show(FILE *output,
++				     const struct hisi_pcie_root_port * const rp)
++{
++	if (output && rp)
++		fprintf(output, "hisi_pcie%hu_core%hu<" PCI_DEVICE_NAME_PATTERN ">\n",
++			rp->sicl_id, rp->core_id, rp->domain, rp->bus, rp->dev, rp->fn);
++}
++
++void iostat_list(struct evlist *evlist __maybe_unused, struct perf_stat_config *config)
++{
++	struct hisi_pcie_root_port *rp = NULL;
++	struct evsel *evsel;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (rp != evsel->priv) {
++			hisi_pcie_root_port_show(config->output, evsel->priv);
++			rp = evsel->priv;
++		}
++	}
++}
++
++void iostat_release(struct evlist *evlist)
++{
++	struct evsel *evsel;
++
++	evlist__for_each_entry(evlist, evsel)
++		evsel->priv = NULL;
++
++	hisi_pcie_root_ports_free();
++}
++
++void iostat_print_header_prefix(struct perf_stat_config *config)
++{
++	if (config->csv_output)
++		fputs("port,", config->output);
++	else if (config->interval)
++		fprintf(config->output, "#          time    port         ");
++	else
++		fprintf(config->output, "   port         ");
++}
++
++void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
++			 struct perf_stat_output_ctx *out)
++{
++	struct perf_counts_values *count;
++	const char *iostat_metric;
++	double iostat_value;
++
++	iostat_metric = hisi_iostat_metrics[evsel->core.idx % METRIC_TYPE_MAX];
++
++	/* We're using AGGR_GLOBAL so there's only one aggr counts aggr[0]. */
++	count = &evsel->stats->aggr[0].counts;
++
++	/* The counts has been scaled, we can use it directly. */
++	iostat_value = (double)count->val;
++
++	/*
++	 * Calculate the bandwidth in MiB since the PMU counts in DWord.
++	 * Display two digits after decimal point for better accuracy if the
++	 * value is non-zero.
++	 */
++	out->print_metric(config, out->ctx, NULL,
++			  iostat_value > 0 ? "%8.2f" : "%8.0f", iostat_metric,
++			  iostat_value * sizeof(uint32_t) / (1024 * 1024));
++}
++
++void iostat_prefix(struct evlist *evlist, struct perf_stat_config *config,
++		   char *prefix, struct timespec *ts)
++{
++	struct hisi_pcie_root_port *rp = evlist->selected->priv;
++
++	if (rp) {
++		if (ts)
++			sprintf(prefix, "%6lu.%09lu%s" PCI_DEVICE_NAME_PATTERN "%s",
++				ts->tv_sec, ts->tv_nsec, config->csv_sep,
++				rp->domain, rp->bus, rp->dev, rp->fn,
++				config->csv_sep);
++		else
++			sprintf(prefix, PCI_DEVICE_NAME_PATTERN "%s",
++				rp->domain, rp->bus, rp->dev, rp->fn,
++				config->csv_sep);
++	}
++}
++
++void iostat_print_counters(struct evlist *evlist, struct perf_stat_config *config,
++			   struct timespec *ts, char *prefix,
++			   iostat_print_counter_t print_cnt_cb, void *arg)
++{
++	struct evsel *counter = evlist__first(evlist);
++	void *perf_device;
++
++	evlist__set_selected(evlist, counter);
++	iostat_prefix(evlist, config, prefix, ts);
++	fprintf(config->output, "%s", prefix);
++	evlist__for_each_entry(evlist, counter) {
++		perf_device = evlist->selected->priv;
++		if (perf_device && perf_device != counter->priv) {
++			evlist__set_selected(evlist, counter);
++			iostat_prefix(evlist, config, prefix, ts);
++			fprintf(config->output, "\n%s", prefix);
++		}
++		print_cnt_cb(config, counter, arg);
++	}
++	fputc('\n', config->output);
++}
 -- 
 2.24.0
 
