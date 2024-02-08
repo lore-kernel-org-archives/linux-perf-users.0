@@ -1,135 +1,179 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB236A352
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Feb 2024 10:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8E51E884;
+	Thu,  8 Feb 2024 11:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707389210; cv=none; b=oxIYjNu6jUuy5P7YNMjJX/xy2NdK0jH1CzVGH+izXDm6GGvnxB7F+RgM2g1M9A+/z8CeDAT5J47MVSvkXzs67H4seb7DJcdlW35qSYj/mawTQgc/KgY+m9DxzP+FNgeC5+XUr8gDuMoYkmb+AbBvnhmkBMkfVihIxU/s05X6tgk=
+	t=1707391907; cv=none; b=AGGBaKBQeMMtSNivEowB9KJp8rDZ48ln3MzCYwC0wqHgwt7wn3vRTOi/8PUKwOtNscuXYRS2Edg7Cg6R5co9+BSaeZ7igIg9xYSiJNqPO2A4kngoRC+n1uSM8QW3ruqiKRQ4UG/d/sULpmm264gFOz3tbSmDmhNHRMIszbTB/Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707389210; c=relaxed/simple;
-	bh=9QWa9TWs8MUk2ZFRdewlxUMrn8h0ZBiMcXSYIsblDqg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s0iEx8bNNTt53TqCItaprh2OFtwglEpUMBxkc2hBCgkTvKpAzp6asKYb4DUEhN6HU6G4Qahtlvgm+x4dmnAjMJ53zIPyxtKvgFrDylNZWH62QW2xqqttonr0PKjK6vrZtpbH50Ae1I9Xl1jI6q5fmf/UmPaAhUnYWbsZyq6vmjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TVtqT54zlz6JB2p;
-	Thu,  8 Feb 2024 18:43:01 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 057DD140595;
-	Thu,  8 Feb 2024 18:46:44 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 8 Feb
- 2024 10:46:43 +0000
-Date: Thu, 8 Feb 2024 10:46:42 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Yicong Yang <yangyicong@huawei.com>
-CC: <will@kernel.org>, <john.g.garry@oracle.com>, <james.clark@arm.com>,
-	<mike.leach@linaro.org>, <leo.yan@linaro.org>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-	<hejunhao3@huawei.com>, <prime.zeng@hisilicon.com>,
-	<yangyicong@hisilicon.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v2] perf stat: Enable iostat mode for HiSilicon PCIe PMU
-Message-ID: <20240208104642.000001ad@Huawei.com>
-In-Reply-To: <20240208032518.25830-1-yangyicong@huawei.com>
-References: <20240208032518.25830-1-yangyicong@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1707391907; c=relaxed/simple;
+	bh=+Lq1+Yjwc1/TnXA6RrghdQBok9enssN3fOFULsujD9Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iWKb0seoD7Ia5DH0Tames/GJbtD3osetNhZtUkC5puzjlmkYVe1FwgEIMJVEvaHkLSeHWnvQ3Euq5bYEvsPe0aNujzQHopW66WBmc9O46gt05t0lrE6P05NXchbtPqyn/WIGr3e2plZCs5mqXIzyAb3U0LTg+2SZPpFdbXjWAmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A6syVpbv; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A6syVpbv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707391905; x=1738927905;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+Lq1+Yjwc1/TnXA6RrghdQBok9enssN3fOFULsujD9Y=;
+  b=A6syVpbv4AH0Fpe8JEDyPRVaAV+wYdmIox2EbSmoezPdPUoga+mSz+c8
+   JRaKRCfR7xuj7R7RoszdkDMMCs3bRZUykeQHPJnzy6E8lziCnoTygsIji
+   19Su1G2NgoYvP4rmkz0i4WYtEjHlVA+AfgzkrHUdHULYYBkZLNU8VfXfk
+   M5/310i5CeJHUi6JCdFWpcdEPhb7cD07OwyiyWZEBz7Igx2/yUEkFRbqK
+   QOzOw3BtckUsbUpy3ffiCQasSaoXEqm0P/i92rSqPefuUybap6Y2LZ+y5
+   9z/WC+2J0lUyEtuHzMM994QwyMdhmnxxboq4anHsw6IIuX9E1pXSaJ6AJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="1345406"
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="1345406"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 03:31:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,253,1701158400"; 
+   d="scan'208";a="1957417"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.219.88])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 03:31:38 -0800
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V5 00/12] perf/core: Add ability for an event to "pause" or "resume" AUX area tracing
+Date: Thu,  8 Feb 2024 13:31:15 +0200
+Message-Id: <20240208113127.22216-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-On Thu, 8 Feb 2024 11:25:18 +0800
-Yicong Yang <yangyicong@huawei.com> wrote:
+Hi
 
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> Some HiSilicon platforms provide PCIe PMU devices for monitoring the
-> throughput and latency of PCIe traffic. With the support of PCIe PMU
-> we can enable the perf iostat mode.
-> 
-> The HiSilicon PCIe PMU can support measuring the throughput of certain
-> TLP types and of certain root port. Totally 6 metrics are provided in
-> the unit of MB:
-> 
-> - Inbound MWR: The memory write TLPs from the devices downstream the root port
-> - Inbound MRD: The memory read TLPs from the devices downstream the root port
-> - Inbound CPL: The completion TLPs from the devices downstream the root port
-> - Outbound MWR: The memory write TLPs from the CPU to the downstream devices
-> - Outbound MRD: The memory read TLPs from the CPU to the downstream devices
-> - Outbound CPL: The completions TLPs from the CPU to the downstream devices
-> 
-> Since the PMU measures the throughput in DWords. So we need to calculate
-> the throughput in MB like:
->   Count * 4B / 1024 / 1024
-> 
-> Some of the display of the `perf iostat` will be like:
-> [root@localhost tmp]# ./perf iostat list
-> hisi_pcie0_core2<0000:40:00.0>
-> hisi_pcie2_core2<0000:5f:00.0>
-> hisi_pcie0_core1<0000:16:00.0>
-> hisi_pcie0_core1<0000:16:04.0>
-> [root@localhost tmp]# ./perf iostat --timeout 10000
-> 
->  Performance counter stats for 'system wide':
-> 
->     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
-> 0000:40:00.0                    0                    0                    0                    0                    0                    0
-> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
-> 0000:16:00.0             16272.99               366.58                    0                15.09                    0             16156.85
-> 0000:16:04.0                    0                    0                    0                    0                    0                    0
-> 
->       10.008227512 seconds time elapsed
-> 
-> [root@localhost tmp]# ./perf iostat 0000:16:00.0 -- fio -name=read
-> -numjobs=30 -filename=/dev/nvme0n1 -rw=rw -iodepth=128 -direct=1 -sync=0
-> -norandommap -group_reporting -runtime=10 -time_based -bs=64k
-> 
->  Performance counter stats for 'system wide':
-> 
->     port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
-> 0000:40:00.0                    0                    0                    0                    0                    0                    0
-> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
-> 0000:16:00.0             16314.30               371.22                    0                15.21                    0             16362.20
-> 0000:16:04.0                    0                    0                    0                    0                    0                    0
-> 
->       10.168561767 seconds time elapsed
-> 
->        0.465373000 seconds user
->        1.952948000 seconds sys
-> 
-> More information of the HiSilicon PCIe PMU can be found at
-> Documentation/admin-guide/perf/hisi-pcie-pmu.rst.
-> 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
-If you are doing a v3 for any reason, one trivial comment inline.
+Hardware traces, such as instruction traces, can produce a vast amount of
+trace data, so being able to reduce tracing to more specific circumstances
+can be useful.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The ability to pause or resume tracing when another event happens, can do
+that.
 
-> +
-> +enum hisi_iostat_metric_type {
-> +	METRIC_IN_MWR,		/* Inbound Memory Write */
-> +	METRIC_IN_MRD,		/* Inbound Memory Read */
-> +	METRIC_IN_CPL,		/* Inbound Memory Completion */
-> +	METRIC_OUT_MWR,		/* Outbound Memory Write */
-> +	METRIC_OUT_MRD,		/* Outbound Memory Read */
-> +	METRIC_OUT_CPL,		/* Outbound Memory Completion */
-> +	METRIC_TYPE_MAX,
+These patches add such a facilty and show how it would work for Intel
+Processor Trace.
 
-Given it is the terminator, no comma needed.
+Maintainers of other AUX area tracing implementations are requested to
+consider if this is something they might employ and then whether or not
+the ABI would work for them.  Note, thank you to James Clark (ARM) for
+evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
+positively to the RFC.
 
-> +};
+Changes to perf tools are now (since V4) fleshed out.
+
+
+Changes in V5:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Added James' Ack
+
+    perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+	New patch
+
+    perf tools
+	Added Ian's Ack
+
+Changes in V4:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Rename aux_output_cfg -> aux_action
+	Reorder aux_action bits from:
+		aux_pause, aux_resume, aux_start_paused
+	to:
+		aux_start_paused, aux_pause, aux_resume
+	Fix aux_action bits __u64 -> __u32
+
+    coresight: Have a stab at support for pause / resume
+	Dropped
+
+    perf tools
+	All new patches
+
+Changes in RFC V3:
+
+    coresight: Have a stab at support for pause / resume
+	'mode' -> 'flags' so it at least compiles
+
+Changes in RFC V2:
+
+	Use ->stop() / ->start() instead of ->pause_resume()
+	Move aux_start_paused bit into aux_output_cfg
+	Tighten up when Intel PT pause / resume is allowed
+	Add an example of how it might work for CoreSight
+
+
+Adrian Hunter (12):
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+      perf/x86/intel/pt: Add support for pause / resume
+      perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+      perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
+      perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
+      perf tools: Add aux_start_paused, aux_pause and aux_resume
+      perf tools: Add aux-action config term
+      perf tools: Parse aux-action
+      perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
+      perf intel-pt: Improve man page format
+      perf intel-pt: Add documentation for pause / resume
+      perf intel-pt: Add a test for pause / resume
+
+ arch/x86/events/intel/core.c               |  10 +-
+ arch/x86/events/intel/pt.c                 |  63 ++-
+ arch/x86/events/intel/pt.h                 |   4 +
+ include/linux/perf_event.h                 |  15 +
+ include/uapi/linux/perf_event.h            |  11 +-
+ kernel/events/core.c                       |  72 +++-
+ kernel/events/internal.h                   |   1 +
+ tools/include/uapi/linux/perf_event.h      |  11 +-
+ tools/perf/Documentation/perf-intel-pt.txt | 596 ++++++++++++++++++-----------
+ tools/perf/Documentation/perf-record.txt   |   4 +
+ tools/perf/arch/arm/util/pmu.c             |   3 +
+ tools/perf/builtin-record.c                |   4 +-
+ tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
+ tools/perf/util/auxtrace.c                 |  67 +++-
+ tools/perf/util/auxtrace.h                 |   6 +-
+ tools/perf/util/evsel.c                    |  13 +-
+ tools/perf/util/evsel.h                    |   1 +
+ tools/perf/util/evsel_config.h             |   1 +
+ tools/perf/util/parse-events.c             |  10 +
+ tools/perf/util/parse-events.h             |   1 +
+ tools/perf/util/parse-events.l             |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c  |   3 +
+ tools/perf/util/pmu.c                      |   6 +-
+ 23 files changed, 691 insertions(+), 240 deletions(-)
+
+
+Regards
+Adrian
