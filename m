@@ -1,97 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27ED851C34;
-	Fri,  9 Feb 2024 21:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1483A1AE;
+	Fri,  9 Feb 2024 22:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707513032; cv=none; b=ixV9qDLuCjAh4Ks8g+uiQQvIx6f6acaLpeyHubC+AY/rm3/NMEb0Q1hyx06lq4Cce6P/AqSdDbM3h92/SsZdYtV+baNlzI3X43JlYulsXVzMELh7K8VG7t4lYo34rcCwbiZgYH7ZNPGi02P/Lh+Tv1JulJN7BpIpz63Tb/JiSLo=
+	t=1707516974; cv=none; b=HIfkJ5n8oJ/D5oNY70pHKK8lveSdV5MDdtg5XraaEwehG/LVATfV7ScFnYbGUPesx+Lgrtx1vRHjC3qrmomYVZQtPX8KgKzQlhB0tQvSXqvLZ1/EcWr0S6tHXXvRy7JSFdAIxauxfZPS6Kqdtw8JiGwmtZqabVDopuXTpn++QZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707513032; c=relaxed/simple;
-	bh=UTi0h2ycj+oFBZj+dMWCDX4ZHwh89gcGHMCf1OfIwwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uFAYFjl3oCw7wQ2YBCY0cVPM1Q+If9r6WQyVvvArzbfhtNkShWEe/Oy0kppZXQ6veIbFxG6cRNpP3xF2PhLNMsDaAi6ZmlRO8NYuJx1X3cM6LQHKq6MpfdAcpsVbXK/fW8Gercym32OQXNjspew3sFxONnyCoRvdR44tBYmWaiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Us0Uyhor; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707516974; c=relaxed/simple;
+	bh=dx0uTAcPvK5EaAlFfSoV6xr64M9844uNyE8l2N+7hGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SgHt9qf5YUkEmrr96p86pCmg9ku6kNNhyLOFXqSFu9iQ1gVE2ipwvrPu70QOeWBHOWwHxq4Z2Y/ODB+Thpd3YdKa/sJoRiXZ42sUtW0jU2Z4BDaFL30t0jh+NbfK3IUTKT0nqZn/j3vNem6Xqk17+QUZ2osyPQoEdgNiZlyiN2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e10Jisck; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Us0Uyhor"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707513031; x=1739049031;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UTi0h2ycj+oFBZj+dMWCDX4ZHwh89gcGHMCf1OfIwwQ=;
-  b=Us0UyhorttjtXQAMO2KBkcHZttCuECcABMSaUEpKfJUvicdrVJL59EUh
-   IE83Wz2yQhKQW5uoUF9iNJJJTUiUuli13wkD/sSj4qrJt5a2L3iP5jq7G
-   5OQdiVgzETlzQ/JrVXvPg8qp9MkCKnKjnjFyv1HfidntAf6joLujFHw3P
-   ZNatMb0DDRMvafaltImVBYHuoDZ4nsZkItkCHcGTlPlyT/uBtTjuhVBuC
-   1Ia8lZJsJq2fnSfHCQQr7hDs0ZgetQ8p/uWl2p1whmH/yNGpuqR3geYTo
-   d0bfnDwTCvr5e6O0JdtW30GQCsUBsQT4P8+30ryEVLk3GcgSLhNwiX9Dx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1382166"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="1382166"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 13:10:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="2243886"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 13:10:28 -0800
-Date: Fri, 9 Feb 2024 13:10:27 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V5 01/12] perf/core: Add aux_pause, aux_resume,
- aux_start_paused
-Message-ID: <ZcaUw4xQT0VcC7IO@tassilo>
-References: <20240208113127.22216-1-adrian.hunter@intel.com>
- <20240208113127.22216-2-adrian.hunter@intel.com>
- <ZcVuK1nnxG18ps-a@tassilo>
- <d53ef26d-a7e6-4b3b-b593-be75425c0e77@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e10Jisck"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7441DC43330;
+	Fri,  9 Feb 2024 22:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707516973;
+	bh=dx0uTAcPvK5EaAlFfSoV6xr64M9844uNyE8l2N+7hGM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=e10Jisck0cSj/BUd92CiHK4hUvmXZfUjeGWSN2kn8kE2LtM+fmXbmxJ8wD4wvlP+S
+	 4Orqd/ATY19ywgWM0s045GK84GPRqdJ/jBhVp8YMXEuMkGP+UHWnA43csVZuJ715p5
+	 10waB5SKR2n46AX5XtHjiZQShDhSfUL0tk6TT0Lq0XNqZywv1IC04nV8E1LcIH1q6E
+	 TLq1irZb1DvmyAEKo5/3+C0yDqZ7XBEQOgKxG/Ftc2FnnqzjXxBbJw3t/I/7KqzROu
+	 lNAaDg3lreRlu11t5nFPV9KI80/e1UAwxAymFg22MPdtD117VdEtpYMNe31yfQV1mc
+	 213+gO9cbM81g==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Like Xu <like.xu.linux@gmail.com>,
+	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 0/2] perf symbols: Slightly improve module file executable section mappings
+Date: Fri,  9 Feb 2024 14:16:10 -0800
+Message-ID: <170751693770.1169242.13110612989281667030.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+In-Reply-To: <20240208085326.13432-1-adrian.hunter@intel.com>
+References: <20240208085326.13432-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d53ef26d-a7e6-4b3b-b593-be75425c0e77@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-> The writes to rb->aux_in_pause_resume must be done
-> only once.  It might be possible to get away without
-> WRITE_ONCE(), but really the compiler should be informed
-> not to make assumptions.
+On Thu, 8 Feb 2024 10:53:24 +0200, Adrian Hunter wrote:
+> Currently perf does not record module section addresses except for
+> the .text section. In general that means perf cannot get module section
+> mappings correct (except for .text) when loading symbols from a kernel
+> module file. (Note using --kcore does not have this issue)
+> 
+> Here are a couple of patches to help shed light upon and slightly improve
+> the situation.
+> 
+> [...]
 
-What stops the NMI from firing here?
+Applied to perf-tools-next, thanks!
 
-> >> +  if (READ_ONCE(rb->aux_in_pause_resume))
-> >> +	/* Guard against NMI, NMI loses here */
-> >> +          goto out_restore;
-<----------------------- NMI
-> >> +  WRITE_ONCE(rb->aux_in_pause_resume, 1);
-
-
-Even if it isn't racy it needs a clear comment.
-
--Andi
-
-
+Best regards,
+-- 
+Namhyung Kim <namhyung@kernel.org>
