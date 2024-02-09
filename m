@@ -1,45 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD553716F
-	for <linux-perf-users@vger.kernel.org>; Fri,  9 Feb 2024 13:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB244D595
+	for <linux-perf-users@vger.kernel.org>; Fri,  9 Feb 2024 13:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707486480; cv=none; b=TTnwewRtJ1M6eOWYsKFlXvzBRmaXPIV75wMEWFMZcJ8oqX+uUt5oVIbOZy6SNlcHsmZ8hUMUcKcp2tMImxmDr50gof+c5Ne7FQ6IEDeSDvK0NLPAmhG4X16Rek16geRR0AfF8RR/5YXB6igiB6XaCJkIJQVdgP/3I3Kg4t+zJlU=
+	t=1707486740; cv=none; b=CyGrS8+ql55KfY1wWQ5mdIkQCQoYF6aCcLAdMUabmNKt/BpHczPj9w2ROlh0lYTYi5O+kXBPz1sDEjo6SHcLBcSogl00r/T3IyPNixbaXpxSkiBlq+/Tc6ujfA0k5xnuCJPNR3tCUzDlbTJLvg386/yBro3wiwNI01a1O7MdBmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707486480; c=relaxed/simple;
-	bh=keJXc33ZdgHXMsoMSp5mRpPbIis5S5xUtg7Nh9F+yvE=;
+	s=arc-20240116; t=1707486740; c=relaxed/simple;
+	bh=EjAgdCUV+i/qjRfF16sBpQiVPTzCKkiDHcLvgHzwhDk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zmv4Iady3WqAXMbzzq+JXeqMS6Pqe4Jf1g6n9B92IbrU90Bipy6DyuxcjgpPqJBKneNl4XPATTTAZTNhemFnbLtPMx8QpXpisrQ0qGW5qrZni5QxwPrvLoeuS9y5XH0O3Qj7ksuEGnL0WTF+N3lJfgs3U3xKh00JCwizAkHmBgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkPChFG9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/vReFhvQ7MDYEaeV5W1WpLZtMIN1DcibQtZmI62iV+Kd0xcq0uN8zzYVO11H84MdZKZFWM2+xwwpSDyHY++FXlUpWpxa8s659Jy6qYZaRJJrQi6qICUxaY3IR+5UYbsgs8+B5ltF5f6qaozYVOfpTKYw5e/Zu6Ln8r/h/11az8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XxrDInWh; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkPChFG9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 806CFC433C7;
-	Fri,  9 Feb 2024 13:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707486480;
-	bh=keJXc33ZdgHXMsoMSp5mRpPbIis5S5xUtg7Nh9F+yvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JkPChFG9zVu+yKD0sbkQUWtC7KzqujMHyF321c4GiycRMwvQ8Fuq2ZWGu3QA5U2on
-	 nPGDByothQO4n2bgsFk3xODu2EfHaMzjN83ZqJuasGoBgVE6JhUZ6uNd4yyheVMcQX
-	 omRExs/BjLVpCYshnO0Q/AfiaLiYYMtBasgJu5GMRKEgP+HG/FCDkw4ZlfYnNaTop5
-	 pFG9CB5dDftU1AufA2I7QMb1PYPu343/DDReAX8bDVP6PJHCkCCxIHYinlhBT9eF++
-	 ltqdj5yuEUtQn6WDSN+OkidpS6mGQuZ3czkQOBKE3dvfE6HLfn1eeAR0VqPnU+XHGA
-	 vKhYKat0B1fZQ==
-Date: Fri, 9 Feb 2024 10:47:56 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XxrDInWh"
+Date: Fri, 9 Feb 2024 21:51:44 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707486735;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GGHfNP5g/jCj4oJO+gqdIYU+Z/GTT2Yrczho6IZQd84=;
+	b=XxrDInWhPMrS+hsKIW05djUjWnEzb9nKXL/+Gq6wP7VwWswJz74Z7Hdt787GafU4BzccFW
+	hqA70++1jjfmMX0qH5l46ME6DddZNRpufPDQP+lzkZeqff0zbbmsaUjo7U2/pGuV5tq34/
+	oosmYG1CtC/iBxvksUfyu9kmhc+EfOk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leo Yan <leo.yan@linux.dev>
 To: Yicong Yang <yangyicong@huawei.com>
 Cc: will@kernel.org, john.g.garry@oracle.com, james.clark@arm.com,
 	mike.leach@linaro.org, leo.yan@linaro.org, peterz@infradead.org,
-	mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org, jonathan.cameron@huawei.com,
 	hejunhao3@huawei.com, prime.zeng@hisilicon.com,
 	yangyicong@hisilicon.com, linuxarm@huawei.com
 Subject: Re: [PATCH v2] perf stat: Enable iostat mode for HiSilicon PCIe PMU
-Message-ID: <ZcYtDHLr6NQ-BFbx@x1>
+Message-ID: <20240209135144.GA1498@debian-dev>
 References: <20240208032518.25830-1-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -50,10 +50,11 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20240208032518.25830-1-yangyicong@huawei.com>
+X-Migadu-Flow: FLOW_OUT
+
+Hi Yicong,
 
 On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
 > Some HiSilicon platforms provide PCIe PMU devices for monitoring the
 > throughput and latency of PCIe traffic. With the support of PCIe PMU
 > we can enable the perf iostat mode.
@@ -63,6 +64,11 @@ On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
 > the unit of MB:
 > 
 > - Inbound MWR: The memory write TLPs from the devices downstream the root port
+
+I have no sufficient knowledge for PCI, but this description and below
+2 lines are not clear for me. Should not it be: "The memory write TLPs
+from the downstream devices to the root port"?
+
 > - Inbound MRD: The memory read TLPs from the devices downstream the root port
 > - Inbound CPL: The completion TLPs from the devices downstream the root port
 > - Outbound MWR: The memory write TLPs from the CPU to the downstream devices
@@ -107,11 +113,16 @@ On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
 > 
 >        0.465373000 seconds user
 >        1.952948000 seconds sys
-> 
+
+The command has specified the PCI port "0000:16:00.0", it still outputs
+stats for 'system wide'. And it also outputs results for other ports.
+This is confused.
+
 > More information of the HiSilicon PCIe PMU can be found at
 > Documentation/admin-guide/perf/hisi-pcie-pmu.rst.
 > 
 > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
 > Change since v1:
 > - Tweak the comments per Jonathan
@@ -160,6 +171,9 @@ On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
 > +#include <errno.h>
 > +#include <stdint.h>
 > +#include <stdlib.h>
+
+It's good to alphabet ordered for headers.
+
 > +
 > +#include "util/counts.h"
 > +#include "util/cpumap.h"
@@ -168,6 +182,9 @@ On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
 > +#include "util/pmu.h"
 > +
 > +#define PCI_DEFAULT_DOMAIN		0
+
+The macro is not used at all, remove it.
+
 > +#define PCI_DEVICE_NAME_PATTERN		"%04x:%02hhx:%02hhx.%hhu"
 > +#define PCI_ROOT_BUS_DEVICES_PATH	"bus/pci/devices"
 > +
@@ -216,11 +233,26 @@ On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
 > +};
 > +
 > +LIST_HEAD(hisi_pcie_root_ports_list);
+
+The list head can be 'static' type.
+
 > +static int hisi_pcie_root_ports_num;
+
+My feeling is 'hisi_pcie_root_ports_num' is redundant. You can check
+if the list is empty with list_empty() in below code, therefore, the
+variable 'hisi_pcie_root_ports_num' is not needed anymore.
+
 > +
 > +static void hisi_pcie_init_root_port_mask(struct hisi_pcie_root_port *rp)
 > +{
 > +	rp->mask = BIT(rp->dev << 1);
+
+I also think 'rp->mask' is not necessary as it can be replaced by
+BIT(rp->dev << 1).
+
+And it's not necessary to create hisi_pcie_init_root_port_mask(), as
+it's only used in a single place.
+
 > +}
 > +
 > +/*
@@ -235,11 +267,21 @@ On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
 > +		if (domain == rp->domain && bus == rp->bus &&
 > +		    dev == rp->dev && fn == rp->fn) {
 > +			rp->selected = true;
+
+
+The code firstly creates PCI port lists for all Hisilicon PCIe ports,
+then it selects the port based on passed port name.
+
+I am wandering why cannot create the PCI root port list based on the
+passed PCI port name, if so, the field 'rp->selected' is not needed
+anymore.
+
 > +			return 0;
 > +		}
 > +
 > +	return -EINVAL;
 > +}
+>
 > +
 > +static void hisi_pcie_root_ports_select_all(void)
 > +{
@@ -248,6 +290,11 @@ On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
 > +	list_for_each_entry(rp, &hisi_pcie_root_ports_list, list)
 > +		rp->selected = true;
 > +}
+
+Same as the comment above, the function
+hisi_pcie_root_ports_select_all() is not needed if a PCI list can be
+created properly in the first place.
+
 > +
 > +static void hisi_pcie_root_ports_add(u16 sicl_id, u16 core_id, u8 target_bus)
 > +{
@@ -275,10 +322,6 @@ On Thu, Feb 08, 2024 at 11:25:18AM +0800, Yicong Yang wrote:
 > +		rp = zalloc(sizeof(*rp));
 > +		if (!rp)
 > +			continue;
-
-shouldn't it emit some pr_debug message? Like you did with that
-pr_debug3() info message below.
-
 > +
 > +		rp->selected = false;
 > +		rp->sicl_id = sicl_id;
@@ -312,18 +355,6 @@ pr_debug3() info message below.
 > +	dir = opendir(event_source);
 > +	if (!dir)
 > +		return -ENOENT;
-
-Is this the only possibility? I.e. if a non root user tries this and the
-file is there, shouldn't we inform that root permission is needed? Or
-any other access mechanism that may be used.
-
-For instance, in perf we have things like kernel.perf_event_paranoid,
-capabilities, etc.
-
-Take a look at the evsel__open_strerror() function, to see how it tries
-to translate errors like the above to an informative message to help the
-user setup its system.
-
 > +
 > +	while ((dent = readdir(dir))) {
 > +		/*
@@ -345,11 +376,7 @@ user setup its system.
 > +		 * for the convience of the library function.
 > +		 */
 > +		if (filename__read_ull(bus_path, &bus))
-
-Shouldn't we have a pr_debug3() here as well?
-
 > +			continue;
-
 > +
 > +		pr_debug3("Found pmu %s bus 0x%llx\n", dent->d_name, bus);
 > +
@@ -369,16 +396,7 @@ Shouldn't we have a pr_debug3() here as well?
 > +
 > +	list_for_each_entry_safe(rp, tmp, &hisi_pcie_root_ports_list, list) {
 > +		list_del(&rp->list);
-
-list_del_init()
-
 > +		zfree(&rp);
-
-No need to use zfree here, its a local variable, not something that is
-in a data structure that may have some dangling connection somewhere and
-thus we better initialize to zero instead of reading random deleted
-memory.
-
 > +		hisi_pcie_root_ports_num--;
 > +	}
 > +}
@@ -414,12 +432,14 @@ memory.
 > +			else
 > +				iostat_cmd[pos++] = ',';
 > +		}
+
+Here is hard coded that every event must contains the all 6 metrics (
+IN_MWR/IN_MRD/IN_CPL/OUT_MWR/OUT_MRD/OUT_CPL). Thus, a user has no
+chance to specify metrics for statistics.
+
 > +
 > +		ret = parse_event(evl, iostat_cmd);
 > +		if (ret)
-
-pr_debug3()?
-
 > +			break;
 > +
 > +		i = 0;
@@ -436,9 +456,6 @@ pr_debug3()?
 > +	}
 > +
 > +	zfree(&iostat_cmd);
-
-no need for zfree here, again its a local variable.
-
 > +	return ret;
 > +}
 > +
@@ -452,16 +469,34 @@ no need for zfree here, again its a local variable.
 > +		evlist = evlist__new();
 > +		if (!evlist)
 > +			return -ENOMEM;
-
-Can you explain how this works? Shouldn't we just bail out completely
-instead of creating an empty evlist?
-
 > +	}
 > +
 > +	config->metric_only = true;
 > +	config->aggr_mode = AGGR_GLOBAL;
 > +
 > +	return hisi_iostat_add_events(evlist);
+
+As Robin mentioned in another email, PCI root port statistics should
+not bind to Arm architecture. After applying this code, it's binding
+iostat exclusively with Hisilicon PCI root ports on Arm, as a result,
+it is impossible to support other PMUs for iostat support.
+
+I understand you saw the implementation 'arch/x86/util/iostat.c' which
+binds the iostat with x86 arch. And your code just studies it to bind
+PCI root port stats with Arm arch.
+
+Here, I think the methodology should be: we need take Hisilicon PCI
+root port as a general PMU for I/O stats, it should not bind to any
+CPU arch. We need to consider to extend 'perf iostat' for this
+purpose.
+
+To be honest, I am not familiar with 'perf iostat', I will take a bit
+more time to look into it and share back if I have more finding.
+
+Thanks,
+Leo
+
+
 > +}
 > +
 > +static int hisi_pcie_root_ports_list_filter(const char *str)
@@ -488,9 +523,6 @@ instead of creating an empty evlist?
 > +	}
 > +
 > +	zfree(&copy);
-
-No need for zfree()
-
 > +	return ret;
 > +}
 > +
@@ -524,9 +556,6 @@ No need for zfree()
 > +	if (output && rp)
 > +		fprintf(output, "hisi_pcie%hu_core%hu<" PCI_DEVICE_NAME_PATTERN ">\n",
 > +			rp->sicl_id, rp->core_id, rp->domain, rp->bus, rp->dev, rp->fn);
-
-Multi line if blocks should be enclosed in {}
-
 > +}
 > +
 > +void iostat_list(struct evlist *evlist __maybe_unused, struct perf_stat_config *config)
@@ -535,13 +564,6 @@ Multi line if blocks should be enclosed in {}
 > +	struct evsel *evsel;
 > +
 > +	evlist__for_each_entry(evlist, evsel) {
-
-Can you add a comment explaining this evsel->priv check? Probably we
-have multiple ports and some are shared with multiple evsels and we
-don't have a ports list, so we reuse the evsel list, etc.
-
-Having a comment with the above info may help future reviewers?
-
 > +		if (rp != evsel->priv) {
 > +			hisi_pcie_root_port_show(config->output, evsel->priv);
 > +			rp = evsel->priv;
@@ -556,14 +578,7 @@ Having a comment with the above info may help future reviewers?
 > +	evlist__for_each_entry(evlist, evsel)
 > +		evsel->priv = NULL;
 > +
-
-But then here you zero out all the privs and still can iterate the list
-of ports in the following function:
-
 > +	hisi_pcie_root_ports_free();
-
-Why not iterate on hisi_pcie_root_ports_list in iostat_list()?
-
 > +}
 > +
 > +void iostat_print_header_prefix(struct perf_stat_config *config)
@@ -609,9 +624,6 @@ Why not iterate on hisi_pcie_root_ports_list in iostat_list()?
 > +	if (rp) {
 > +		if (ts)
 > +			sprintf(prefix, "%6lu.%09lu%s" PCI_DEVICE_NAME_PATTERN "%s",
-
-Can you use scnprintf? and pass the size of prefix to iostat_prefix()?
-
 > +				ts->tv_sec, ts->tv_nsec, config->csv_sep,
 > +				rp->domain, rp->bus, rp->dev, rp->fn,
 > +				config->csv_sep);
@@ -645,4 +657,3 @@ Can you use scnprintf? and pass the size of prefix to iostat_prefix()?
 > +}
 > -- 
 > 2.24.0
-> 
