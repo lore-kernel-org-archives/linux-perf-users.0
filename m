@@ -1,57 +1,56 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F6B15485
-	for <linux-perf-users@vger.kernel.org>; Fri,  9 Feb 2024 20:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41580179BA
+	for <linux-perf-users@vger.kernel.org>; Fri,  9 Feb 2024 20:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707511816; cv=none; b=PCoA7yw9i4qC4I27X02j8LEAnyZiZk35wusv5z3pOovBF4iPISiSukgLvYM8bxlII9xV9asjmJo2g6n9J+xnuzbN4uU+izRGcXC7sbGEzQ2kpThwHWhvrVmMNpvLz8nqE+9fax0Mjh4H98WOsCCQh7kXzTF5pE6lhs38mBcLA48=
+	t=1707511818; cv=none; b=Vb/07/LqtxrGAKjB8t9VlJs+0ucMW8UzJgGFooz1Lm9yb+ufT2uyb0b5LhwVoAyLPOaIsAwacZcO8ndO4tECkphnY/U7ja+3gfW6LLPApSPJ+dYc+NK7VkI9uLJppgI2DOCXuiAbyte3fLLFEKqUkIOPozs5V9McIJzs172x6Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707511816; c=relaxed/simple;
-	bh=CbVycyAyqWnjOhqGXZ0kFJxI7/ZRDcDTc9Vb1+mg4QU=;
+	s=arc-20240116; t=1707511818; c=relaxed/simple;
+	bh=FN1xH7txpWYfGe8oXzu7wp0Df0lMgRHZJT67LPNIglU=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=m1qrnPaBcTBk38My2I6q0/fl0VcOVoMugpLtTz5ReqYdF1FWoEcWFkhk8B0UFQYlNv1icaGEQdDywZ8b7BLhTPzlJQHrpxvF/ITmfgejGTIGVVQ4udUNhQXhI1dcFdo9hk1v6KwuLn9+eQmL3/N5bd/PGxbVsNIICqBuOFWRosU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NKSu/MlE; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=ZMfOa6UcHNfYV87tymwYchQmZZ5KMWqE+QqVy4YLRwgk7LH4JLkBoLxytg9xW0GdOgG+BYVsOdEE1eDR5wO0sJdTzuzAekCw3pC5F8HwjhZ3ri1Em22clTa/TISLJwQnRLrm6vdkk3/e8+XSb0r5nZ5UlknNG4zfAu9VmSRMsAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LewBizmV; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NKSu/MlE"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-604ab15463aso23982617b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 09 Feb 2024 12:50:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LewBizmV"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b5d1899eso3253616276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 09 Feb 2024 12:50:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707511814; x=1708116614; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707511816; x=1708116616; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qR84mNrslfcjY8XyWDHEQaLVA/4KGd9xMsI7WbfV4Ig=;
-        b=NKSu/MlEPjqRlXp2ajUFxbptngSq73PdhmcXYYJQxXkCeNkHLDQvO5N7rRS3KsAmO+
-         l8eVBCYgMTl3TT6A0utsFOZtMbPfLzbbMuUC+8Ew8d18IS0Lz9T/u9KeEbDoQ60K+lEl
-         QbvvNlTkfnDKt6zgOSU4CumTyXtONpNBVB+Pn7oz3h31Nvgz4Gw1xcs7uHCXYzPoeEQd
-         fM0LcnaRATYRZAjWslvZ1qtc+DT+YqTb97/dHTzR1Pw3hp03h6jWr3AYP6fWHWBI3bNS
-         kZrzhMLva2jF/76kLLSwtJr9hRUB0zTTgXBgpYxj/1KNffiF1c24A2Zk4z1D3Sw6gnkF
-         yr6w==
+        bh=oBdjorgQB0gt1zgRALPto7TpPrhqP+5PDX20bu5pfxU=;
+        b=LewBizmV3f85bnm5XnNTMrsb6wd4bKnUbo2UeCWJCHCqbmnGvOxlAZ15l0DIYFxFl/
+         CPBIGBzRno0n6DJz+9eFK6I02sBVwueMzR0I3qH59KT54tFalKPz31ylLZm4jqVcFW8S
+         6VOB+oEHsP30+eJAFq0L3QePhh2nn1MngvbtHS6ddGzK3NXW3i3E9fUiHq3iPsmokuwk
+         uLLM+TF7F03qEPMWNrY6S+JWezAOGxj6Qf+T6wyVBQQzPtUg4mu4soULBTGUPNax41qx
+         eRhl+g86T24DbNfaqKv6E1uv4YIByunJdfzT5BuZ1GjlZP9xqsWopZyCvGidgixHVCZw
+         Bauw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707511814; x=1708116614;
+        d=1e100.net; s=20230601; t=1707511816; x=1708116616;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qR84mNrslfcjY8XyWDHEQaLVA/4KGd9xMsI7WbfV4Ig=;
-        b=jEnJRosZJAMShhgPnDxOEpBNfbhLlUFgmRUkntfoly6DVmCrXNUBAH8cYPgLPmaa+d
-         E5dIkOSKuH7qQeMbUClKcDsyu0y8mIJhtbbQd/5MYV627v3ad0F6gXWUbJz0C2zqqWiz
-         lufwbCy30nSBAoEvmhUw7Npt9gdMd3C+gFPNvinuti85op/jIeGNFiRClFLLM3q6y5aU
-         toY4RRNVm3p9w8AB13GpQmu+8kd8Gv1bt0uaLlf9VtNu3cEFnpePqZ3Ze0QW/5thC4mR
-         PJD/LiZHtfk/VsLpk2Ytlhh95dZprYpqn1FQzthucnpwEhuwgGU96BfFqtNbQkypF+0V
-         7Ntg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0x9MCmGr8qsgni7MlAxKn6EauATE6pcjHT1XaQDLaJs/OrIWzaIp5EAb1L+gFzxbTRRaQlmFWnmtK+7drIflS7emf8FRHFXS1rV9g1Y5Hmg==
-X-Gm-Message-State: AOJu0YwVsZazXYp1Z0sra9cTAWLVY+tgvRLnwISBr6/A+Fudg5ZQyzo6
-	j/4PbwwDCAUPg0SrxTQrvw+00qQ9m63KsTRq9pXU1yCJ1Ub37rMiJf9+WqCc4/ryFLytUQZEDew
-	vUaAP2w==
-X-Google-Smtp-Source: AGHT+IGG1Rxf3SMcCpxfxkRqDUz7dHOOD8Ki4rNA4wYhKtISteoWwvV3FknwBD0NosqhldKZg4qJbWokC5mc
+        bh=oBdjorgQB0gt1zgRALPto7TpPrhqP+5PDX20bu5pfxU=;
+        b=ERoY4l4T6EKDfwEnzh9pzniziAhE48hjK0ftuwAswqZ79BvVduON4gcizbiTdyPBMx
+         4vAvbWHsIVpN1ZqXEn55wv1ONlxYejw7JgS9se89wrOm//3XlAHRrf51Sg8fBY+Vh18u
+         gKcknNkO0sRt4soU1Ve7X2FXSOoKD8nvcycdqGv6gfQboEvTrvdY7ycLf6s5pA9fL/Yn
+         i1V4BfYwfdeVu/pBM507J3/S83dWhoHy+8Pd1RwkIS2UjcqUtLJSUvgvrW2JpN+Mhs73
+         QHlEbrOe8pYHuVF3V+R83f1ZCcbVyvv9uSLIoeYFq5dDo46AtRKWbT/PDZ62YqpSOoyU
+         zz5A==
+X-Gm-Message-State: AOJu0YyWiL8OYsN7bTc+pOuXwBj9e1sm4ir4W3TYDGy6DpXdLEDxpWYt
+	BZnJWPt2D14hMu/D5iPV1WwQDZAzHLECgm/MkgzNqcQVu1peNCGpiJCCaDT75NaDuhVFBYVEgck
+	ChxZ6aQ==
+X-Google-Smtp-Source: AGHT+IGCVCKuACIOU1FX0kOaK8wcfhbRrM75EuyLpzkhf7rKyVv1U4leJ8uARRH2YSaI56YeXEYjmx0YsVza
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:877:241d:8c35:1c5b])
- (user=irogers job=sendgmr) by 2002:a05:6902:709:b0:dc7:59d9:7b46 with SMTP id
- k9-20020a056902070900b00dc759d97b46mr11144ybt.3.1707511813991; Fri, 09 Feb
- 2024 12:50:13 -0800 (PST)
-Date: Fri,  9 Feb 2024 12:49:45 -0800
+ (user=irogers job=sendgmr) by 2002:a25:ae03:0:b0:dc7:463a:46d2 with SMTP id
+ a3-20020a25ae03000000b00dc7463a46d2mr421048ybj.0.1707511816316; Fri, 09 Feb
+ 2024 12:50:16 -0800 (PST)
+Date: Fri,  9 Feb 2024 12:49:46 -0800
 In-Reply-To: <20240209204947.3873294-1-irogers@google.com>
-Message-Id: <20240209204947.3873294-3-irogers@google.com>
+Message-Id: <20240209204947.3873294-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +59,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240209204947.3873294-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Subject: [PATCH v1 2/4] perf expr: Fix "has_event" function for metric style events
+Subject: [PATCH v1 3/4] perf stat: Avoid metric-only segv
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,51 +71,31 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Events in metrics cannot use '/' as a separator, it would be
-recognized as a divide, so they use '@'. The '@' is recognized in the
-metricgroups code and changed to '/', do the same in the has_event
-function so that the parsing is only tried without the @s.
+Cycles is recognized as part of a hard coded metric in stat-shadow.c,
+it may call print_metric_only with a NULL fmt string leading to a
+segfault. Handle the NULL fmt explicitly.
 
-Fixes: 4a4a9bf9075f ("perf expr: Add has_event function")
+Fixes: 088519f318be ("perf stat: Move the display functions to stat-display.c")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Note, this fixes a has_event issue but as no metrics currently use
-metric style events like cpu@inst_retired.any@ no current metrics are
-broken.
+Note, the fixes tag is to a refactor that moved the function. The bug
+existed before this.
 ---
- tools/perf/util/expr.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ tools/perf/util/stat-display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 7be23b3ac082..b8875aac8f87 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -500,7 +500,25 @@ double expr__has_event(const struct expr_parse_ctx *ctx, bool compute_ids, const
- 	tmp = evlist__new();
- 	if (!tmp)
- 		return NAN;
--	ret = parse_event(tmp, id) ? 0 : 1;
-+
-+	if (strchr(id, '@')) {
-+		char *tmp_id, *p;
-+
-+		tmp_id = strdup(id);
-+		if (!tmp_id) {
-+			ret = NAN;
-+			goto out;
-+		}
-+		p = strchr(tmp_id, '@');
-+		*p = '/';
-+		p = strrchr(tmp_id, '@');
-+		*p = '/';
-+		ret = parse_event(tmp, tmp_id) ? 0 : 1;
-+		free(tmp_id);
-+	} else {
-+		ret = parse_event(tmp, id) ? 0 : 1;
-+	}
-+out:
- 	evlist__delete(tmp);
- 	return ret;
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 8c61f8627ebc..b7d00a538d70 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -560,7 +560,7 @@ static void print_metric_only(struct perf_stat_config *config,
+ 	if (color)
+ 		mlen += strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
+ 
+-	color_snprintf(str, sizeof(str), color ?: "", fmt, val);
++	color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
+ 	fprintf(out, "%*s ", mlen, str);
+ 	os->first = false;
  }
 -- 
 2.43.0.687.g38aa6559b0-goog
