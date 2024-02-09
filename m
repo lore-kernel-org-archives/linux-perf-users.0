@@ -1,211 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9961DA32;
-	Fri,  9 Feb 2024 03:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D068657A8
+	for <linux-perf-users@vger.kernel.org>; Fri,  9 Feb 2024 07:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707448502; cv=none; b=IWMzUzqgihIKCZ+kytDKyTg9UExLVdx7a+BqX8KqiYmAjVU+6YHga8TiDm+h0xoMxtLV8kP5fm8oREF6eAsyo+ww//a//v7sps0/XWA7X1JqX9dIRXlc88n+sdf5O/Pz2qBp7hQc9CEY5fcG4N0nUbWfPqN1mip+AVEH7eUpHTo=
+	t=1707462823; cv=none; b=kLohDO8PnjazQs6X0+m7WDUcuTaZa07rBvryBsQwJTh2Z517jgPZFiqteZmwvOOt5ny7vZSx5dgXCDGM3BZc32+mQSsUUVL44ZmVuuNDT2VYWqEXhacR4Vyv/TGnuX3H8vksuEp0tTnY82xWi+FHfjcg8N7PGGaVfJrytp7XcvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707448502; c=relaxed/simple;
-	bh=nObyFR7ak2CI9RBnkdMxnonoYCxryMBB96Dff9fIYBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dI65umDV6RloJtiyvk97h3nO8xhGXSd1vpz/sp7KlFJri9BnY8arp5cCwBkHEZiVy0YZSdm8XcQln6ZIejv3qPqYLBQuTQ2S96jF/TtY71wAvDCxbCqt6u1q932zEBNXrcitGMvktG6yKdxJgnPcb5TLh2kWoH+fnDA2+zDYnwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R9BoWN15; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R9BoWN15"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707448497; x=1738984497;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nObyFR7ak2CI9RBnkdMxnonoYCxryMBB96Dff9fIYBo=;
-  b=R9BoWN15C1kFRuH9fFbqY8GqeTunEeBspXuHep/iCV7ksZiGA5J9gem8
-   R3NMF7gRGmDlHThj1k49PQRoPA08YAEPwFV6t3ZFp1ZCVuplyJ6tKsyQG
-   4LIVdOs4kwJdrZcpX+WHOKviu0oFex1N2+pv4+HFrk+AVnryt9IjOSvFK
-   PcYyMuuYhbZ8gvk7sDrtljhvszGu3Qso2O6EN9TR5mzmF7OvvO7wVkZpY
-   qWpNydTUM1vCbydkdd7UtUt7/pPyx37jtPjUucRgtkilmk5j0EkJgGHnN
-   NTrJ4MLbV3Nz5lSL5Y2/CHiTcW99V4qKKxk5Dm3eovLp4heSqrPb6KNMj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1257948"
-X-IronPort-AV: E=Sophos;i="6.05,255,1701158400"; 
-   d="scan'208";a="1257948"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 19:14:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,255,1701158400"; 
-   d="scan'208";a="32631457"
-Received: from b49691a74b80.jf.intel.com ([10.165.54.183])
-  by orviesa002.jf.intel.com with ESMTP; 08 Feb 2024 19:14:48 -0800
-From: weilin.wang@intel.com
-To: weilin.wang@intel.com,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: [RFC PATCH v4 13/15] perf stat: Code refactoring in hardware-grouping
-Date: Thu,  8 Feb 2024 19:14:39 -0800
-Message-ID: <20240209031441.943012-14-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240209031441.943012-1-weilin.wang@intel.com>
-References: <20240209031441.943012-1-weilin.wang@intel.com>
+	s=arc-20240116; t=1707462823; c=relaxed/simple;
+	bh=N7IYJkWIQjsV2m3g4T9AVblWnB9WhQgPbKYgNguuh6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OKBahjGcPk+CGy+wcxspDtNAs9X4PqylTxGKLsXn6snHyDtqpEgTirowJTIT3MdLBkWeWKKSWpGgP8PBXFelN5G8XJGeIZVvQ5MdYb0egDvN1JXyoLnoCj+Z9ju2Gd3FYH8395eNn3Tt25+3N3FwUfG0N0T4iGktjuArFut02N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso459859a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Feb 2024 23:13:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707462821; x=1708067621;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bbZwuRwQwnHEylxz/xDzNyGpeBZ2Cv+gHCnWW3yvsCU=;
+        b=Y82P9TOAffvJ/x3C7+gfj8y+OieW1rKCUvEemTDf/NxZCQmANlqmcpi5/aOa174iks
+         s68+LnepqM+hsY2y1Ny+TuA4A0wsnU7gz2brfJeRV0J7bxWMGc7jRHPmUi6k9C+CzPCy
+         9V6UD8SAooJn8CwJBVOTIIN6LlaUwybaNh/rPL62i1C3hA0V2vI2LvCaMIT2bHnheDrW
+         Nd3iaNl9pX/wxvWUMHPBdB+k4ERG9g6k/ukhdTTcvXX7SSNIyM6cVFISaTROPCmDFHCv
+         Hd47/Kxk2sSx+WxMbzzlH3q8BE/u6dhLmG3b9yiIgaWkNBXXFORyoKztvCfJbrR7JK8x
+         IoaA==
+X-Gm-Message-State: AOJu0YzqVr7/LmIyuQHo+z0x1/gscgOKOwTsC+0A7FfPowBN/BfaRBa9
+	JFiDs+6r5BQIFiahPxDzAWsGRUMorx0i+u0kiTCXnDg2haX80wPpcN+g2Tyeb8As/A6HNugcquf
+	twEp75RpdyUEtXEJrFgZy1f8AlMnZj/PXTYA=
+X-Google-Smtp-Source: AGHT+IHrwUgDChbr+g9X1zRvi0PNYI3QYuPyRl7jsrJVgAfpTkveVBd5OJxjFtI43jV4Bxj7O1hVIJs2vggBcScqRZ0=
+X-Received: by 2002:a05:6a20:9593:b0:19c:5b32:9504 with SMTP id
+ iu19-20020a056a20959300b0019c5b329504mr1109026pzb.49.1707462820644; Thu, 08
+ Feb 2024 23:13:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240131113951.17077-1-mpetlan@redhat.com> <CAM9d7chjET+Zy7EYcRNW=9XaC+DKcqqU+EatiGJouRCjjHscKA@mail.gmail.com>
+ <alpine.LRH.2.20.2402081741080.11354@Diego>
+In-Reply-To: <alpine.LRH.2.20.2402081741080.11354@Diego>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 8 Feb 2024 23:13:29 -0800
+Message-ID: <CAM9d7chDp4_+Mk+-CNw2Es9MBtA7f6pbJ3X5cqpDfUjc+QkMQA@mail.gmail.com>
+Subject: Re: [PATCH 1/7] perf testsuite: Add common regex patters
+To: Michael Petlan <mpetlan@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, vmolnaro@redhat.com, acme@redhat.com, 
+	acme@kernel.org, mhiramat@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Weilin Wang <weilin.wang@intel.com>
+On Thu, Feb 8, 2024 at 8:49=E2=80=AFAM Michael Petlan <mpetlan@redhat.com> =
+wrote:
+>
+> On Thu, 1 Feb 2024, Namhyung Kim wrote:
+> > On Wed, Jan 31, 2024 at 3:42=E2=80=AFAM Michael Petlan <mpetlan@redhat.=
+com> wrote:
+> > >
+> > > From: Veronika Molnarova <vmolnaro@redhat.com>
+> > >
+> > > Unify perf regexes for checking testing output into a single file
+> > > to reduce duplicates and prevent errors when editing.
+> > >
+> > > This will be used in upcomming patches in shell tests.
+> > >
+> > > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> > > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> > > ---
+> > >  tools/perf/tests/shell/common/patterns.sh | 256 ++++++++++++++++++++=
+++
+> > >  1 file changed, 256 insertions(+)
+> > >  create mode 100644 tools/perf/tests/shell/common/patterns.sh
+> > >
+> > > diff --git a/tools/perf/tests/shell/common/patterns.sh b/tools/perf/t=
+ests/shell/common/patterns.sh
+> > > new file mode 100644
+> > > index 000000000000..919a07b8b454
+> > > --- /dev/null
+> > > +++ b/tools/perf/tests/shell/common/patterns.sh
+> >
+> > We have tests/shell/lib directory, maybe better to put this there.
+> > But maybe we can move it later once we apply the series.
+>
+> Yes, in case the testsuite gets accepted, I plan to work further
+> on the integration with the current shell test set, in order to
+> unify the configuration, output, logging, etc. So, I'd prefer to
+> merge the directories later.
 
-Decouple the step to generate final grouping strings out from the
-build_grouping step so that we could do single metric grouping and then
-merge groups if needed later.
+Sounds good.  I'd like to merge this series to improve the test
+coverage.  And then we can work on fixing problems.
 
-Signed-off-by: Weilin Wang <weilin.wang@intel.com>
----
- tools/perf/util/metricgroup.c | 50 +++++++++++++++++------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index f1eb73957765..cfdbb5f7fb77 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1896,9 +1896,10 @@ static int find_and_set_counters(struct metricgroup__event_info *e,
- {
- 	int ret;
- 	unsigned long find_bit = 0;
--
--	if (e->taken_alone && current_group->taken_alone)
-+	if (e->taken_alone && current_group->taken_alone) {
-+		pr_debug("current group with taken alone event already\n");
- 		return -ENOSPC;
-+	}
- 	if (e->free_counter)
- 		return 0;
- 	if (e->fixed_counter) {
-@@ -2017,7 +2018,8 @@ static int assign_event_grouping(struct metricgroup__event_info *e,
- 
- 	list_for_each_entry(g, groups, nd) {
- 		if (!strcasecmp(g->pmu_name, e->pmu_name)) {
--			pr_debug("found group for event %s in pmu %s\n", e->name, g->pmu_name);
-+			pr_debug("found group header for event %s in pmu %s\n",
-+				e->name, g->pmu_name);
- 			pmu_group_head = g;
- 			break;
- 		}
-@@ -2146,26 +2148,22 @@ static int hw_aware_metricgroup__build_event_string(struct list_head *group_strs
-  */
- static int create_grouping(struct list_head *pmu_info_list,
- 			  struct list_head *event_info_list,
--			  struct list_head *groupings,
--			  const char *modifier)
-+			  struct list_head *grouping)
- {
- 	int ret = 0;
- 	struct metricgroup__event_info *e;
--	LIST_HEAD(groups);
- 	char *bit_buf = malloc(NR_COUNTERS);
- 
--	//TODO: for each new core group, we should consider to add events that uses fixed counters
-+	//TODO: for each new core group, we could consider to add events that
-+	//uses fixed counters
- 	list_for_each_entry(e, event_info_list, nd) {
- 		bitmap_scnprintf(e->counters, NR_COUNTERS, bit_buf, NR_COUNTERS);
- 		pr_debug("Event name %s, [pmu]=%s, [counters]=%s, [taken_alone]=%d\n",
- 			e->name, e->pmu_name, bit_buf, e->taken_alone);
--		ret = assign_event_grouping(e, pmu_info_list, &groups);
-+		ret = assign_event_grouping(e, pmu_info_list, grouping);
- 		if (ret)
--			goto out;
-+			return ret;
- 	}
--	ret = hw_aware_metricgroup__build_event_string(groupings, modifier, &groups);
--out:
--	metricgroup__free_group_list(&groups);
- 	return ret;
- };
- 
-@@ -2186,9 +2184,8 @@ static bool is_special_event(const char *id)
-  * @groupings: header to the list of final event grouping.
-  * @modifier: any modifiers added to the events.
-  */
--static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
--				  struct list_head *groupings __maybe_unused,
--				  const char *modifier __maybe_unused)
-+static int hw_aware_build_grouping(struct expr_parse_ctx *ctx,
-+				   struct list_head *grouping)
- {
- 	int ret = 0;
- 	struct hashmap_entry *cur;
-@@ -2220,8 +2217,7 @@ static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
- 	ret = get_pmu_counter_layouts(&pmu_info_list, ltable);
- 	if (ret)
- 		goto err_out;
--	ret = create_grouping(&pmu_info_list, &event_info_list, groupings,
--			     modifier);
-+	ret = create_grouping(&pmu_info_list, &event_info_list, grouping);
- 
- err_out:
- 	metricgroup__free_event_info(&event_info_list);
-@@ -2267,23 +2263,25 @@ static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
- {
- 	struct parse_events_error parse_error;
- 	struct evlist *parsed_evlist;
--	LIST_HEAD(groupings);
-+	LIST_HEAD(grouping_str);
-+	LIST_HEAD(grouping);
- 	struct metricgroup__group_strs *group;
- 	int ret;
- 
- 	*out_evlist = NULL;
--	ret = hw_aware_build_grouping(ids, &groupings, modifier);
--	if (ret) {
--		metricgroup__free_grouping_strs(&groupings);
--		return ret;
--	}
-+	ret = hw_aware_build_grouping(ids, &grouping);
-+	if (ret)
-+		goto out;
-+	ret = hw_aware_metricgroup__build_event_string(&grouping_str, modifier, &grouping);
-+	if (ret)
-+		goto out;
- 
- 	parsed_evlist = evlist__new();
- 	if (!parsed_evlist) {
- 		ret = -ENOMEM;
- 		goto err_out;
- 	}
--	list_for_each_entry(group, &groupings, nd) {
-+	list_for_each_entry(group, &grouping_str, nd) {
- 		struct strbuf *events = &group->grouping_str;
- 
- 		pr_debug("Parsing metric events '%s'\n", events->buf);
-@@ -2303,7 +2301,9 @@ static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
- err_out:
- 	parse_events_error__exit(&parse_error);
- 	evlist__delete(parsed_evlist);
--	metricgroup__free_grouping_strs(&groupings);
-+out:
-+	metricgroup__free_group_list(&grouping);
-+	metricgroup__free_grouping_strs(&grouping_str);
- 	return ret;
- }
- 
--- 
-2.42.0
+> >
+> > > @@ -0,0 +1,256 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +
+> [...]
+>
+> > > +export RE_ADDRESS_NOT_NULL=3D"0x[0-9A-Fa-f]*[1-9A-Fa-f]+[0-9A-Fa-f]*=
+"
+> > > +# Memory address (not NULL)
+> > > +# Examples:
+> > > +#    0xffffffff9abe8ae8
+> > > +#!   0x0
+> > > +#!   0x0000000000000000
+> > > +
+> > > +export RE_PROCESS_PID=3D"\w+\/\d+"
+> >
+> > I'm afraid the process name can have spaces like
+> > "my proc A/9876".
+> >
+> > Thanks,
+> > Namhyung
+> >
+> Good catch! Theoretically yes. It is not used yet (perf-trace tests use
+> this regexp; we aim to post the rest of the testsuite later). However,
+> looking at the perf-trace testcase, it runs also `perf trace -a`, so
+> if there are any processes with non-standard name, they would appear
+> there. But that's not only space, but also other characters, like '+',
+> etc. We will try to fix this to match any valid process name. Thanks.
 
+Ok, I'm looking forward to seeing more test cases.
+
+Thanks,
+Namhyung
