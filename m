@@ -1,102 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B6366B5F;
-	Fri,  9 Feb 2024 09:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEF1C24B2F
+	for <linux-perf-users@vger.kernel.org>; Fri,  9 Feb 2024 10:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707472169; cv=none; b=ScCZ+f/SgVqnw1nURwlDcbAKLc3nTxsF9Jl1AcBSK21zCVWWioAu9y+h2s35vhwFr/6rhQ9kXEQiQpEune1rPkHgU7Dl3ZjQ7I5aeaCPSdL+kYmfimqcoP0+MHTw5rmnb8LuozMaXcWwna/X60qRH8vZ1sxGqsF1ZpDnckdFULE=
+	t=1707476351; cv=none; b=ZRqqbHmUD6s8nhG/fw9hAItL8HJ5WdCiesL72HYl7KGfZ2di7ES0PZnlK7jzMzMc1jNz9TcauSBQTlsZLv8QV8nunb2dnZMpvdLiAMNiDz3luGNfyf/VsO6Cs8bjp1k3re20NVKx+Cy4o9z+17B2E7ag0Xb0saWjuIwrUFikHtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707472169; c=relaxed/simple;
-	bh=ReUjtNoKI4AEfvdlJoQ9stY41QHkrHNfAjwN3V3muic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=axfdvZcJE8LIqiKBaysmPoIp1kUHWycJXwMK2gqDdJbyq6lPoEzA4kp+6CM5jjxo7KRZmeGYnk7tdG67N5uGNr2AV8YLWV5ufcGoXh5e4gAK2Zh1dqlkfexmN1UsEGKt5H7GgcjN3wxwW0+LieVcBcGRTJB1g1njggBe7M7WSus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g3BgVvF3; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g3BgVvF3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707472168; x=1739008168;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ReUjtNoKI4AEfvdlJoQ9stY41QHkrHNfAjwN3V3muic=;
-  b=g3BgVvF3D08Iqb6ZrD1q+4Z8vNVYQK0zoPWj1POv8vQYbvRqUSw/2wDe
-   v+G5wNFAhDscCeWGfM2cb54C7wD4gWl39E1JxK0tKAtC49pF8WhMZjtqK
-   NGkf9d37VPW4AMu/q82pbFJWwSSWPC0Ujfhtw0HgyVuUj77PjWqI92FyV
-   TolrVKKep+Tfr1tHL48XEXxCHvJsmf46qBQsLZve8zM41RDHtqI2OZHeH
-   HLAcccKn45VVcRXoiEiqi4YkRbwmMhFmz6uwXBmdAlj8MvP8IXoAy0DYj
-   cZgvYuARywZgyotdiAOJ2E/+2MEw7KtT0ariqVwVtxIQehKVWMRB2ObU3
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1551781"
-X-IronPort-AV: E=Sophos;i="6.05,256,1701158400"; 
-   d="scan'208";a="1551781"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 01:49:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,256,1701158400"; 
-   d="scan'208";a="6515835"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 01:49:27 -0800
-Date: Fri, 9 Feb 2024 01:49:25 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V5 01/12] perf/core: Add aux_pause, aux_resume,
- aux_start_paused
-Message-ID: <ZcX1JUyMMpngyRqd@tassilo>
-References: <20240208113127.22216-1-adrian.hunter@intel.com>
- <20240208113127.22216-2-adrian.hunter@intel.com>
- <ZcVuK1nnxG18ps-a@tassilo>
- <d53ef26d-a7e6-4b3b-b593-be75425c0e77@intel.com>
+	s=arc-20240116; t=1707476351; c=relaxed/simple;
+	bh=UH+ADFM4q5tUUm8Ma6D04uEKUBHOdyijSyujUBxhfIM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rVWV9J1sH5wQb9ByRRilglTNIvWfzfQP/XyXRue/5mA444Uf5uh4udDvSAGWnvrSeUEcnIevnK8jzNCv1HsxH407aGFKFKpxgriljuEGUmY0vzztgZwCmD2DzOorS6P+XlBiF4qLr+T95QufwMb0fni27kHE570J+AKZL5j6oSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07E97DA7;
+	Fri,  9 Feb 2024 02:59:51 -0800 (PST)
+Received: from [10.57.47.119] (unknown [10.57.47.119])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C61663F762;
+	Fri,  9 Feb 2024 02:59:05 -0800 (PST)
+Message-ID: <4688a613-c94a-49b0-9d0f-09173c64082d@arm.com>
+Date: Fri, 9 Feb 2024 10:59:04 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d53ef26d-a7e6-4b3b-b593-be75425c0e77@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf stat: Enable iostat mode for HiSilicon PCIe PMU
+Content-Language: en-GB
+To: Namhyung Kim <namhyung@kernel.org>, Yicong Yang <yangyicong@huawei.com>
+Cc: will@kernel.org, john.g.garry@oracle.com, james.clark@arm.com,
+ mike.leach@linaro.org, leo.yan@linaro.org, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, jonathan.cameron@huawei.com,
+ hejunhao3@huawei.com, prime.zeng@hisilicon.com, yangyicong@hisilicon.com,
+ linuxarm@huawei.com
+References: <20240208032518.25830-1-yangyicong@huawei.com>
+ <CAM9d7cga2rzcpUCa+5sZKQ3g_nC5=5XhSdkX1bRCQQUJca8uSw@mail.gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <CAM9d7cga2rzcpUCa+5sZKQ3g_nC5=5XhSdkX1bRCQQUJca8uSw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 09, 2024 at 10:14:44AM +0200, Adrian Hunter wrote:
-> On 9/02/24 02:13, Andi Kleen wrote:
-> >> +static void __perf_event_aux_pause(struct perf_event *event, bool pause)
-> >> +{
-> >> +	if (pause) {
-> >> +		if (!READ_ONCE(event->aux_paused)) {
-> >> +			WRITE_ONCE(event->aux_paused, 1);
-> >> +			event->pmu->stop(event, PERF_EF_PAUSE);
-> >> +		}
-> >> +	} else {
-> >> +		if (READ_ONCE(event->aux_paused)) {
-> >> +			WRITE_ONCE(event->aux_paused, 0);
-> >> +			event->pmu->start(event, PERF_EF_RESUME);
-> >> +		}
-> > 
-> > This doesn't look atomic. Either the READ/WRITE once are not needed,
-> > or you need an actually atomic construct.
+On 2024-02-08 11:58 pm, Namhyung Kim wrote:
+> Hello,
 > 
-> Yes READ_ONCE / WRITE_ONCE is not really needed here.
+> On Wed, Feb 7, 2024 at 7:29 PM Yicong Yang <yangyicong@huawei.com> wrote:
+>>
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> Some HiSilicon platforms provide PCIe PMU devices for monitoring the
+>> throughput and latency of PCIe traffic. With the support of PCIe PMU
+>> we can enable the perf iostat mode.
+> 
+> Hmm.. so it only works for HiSilicon.  What if users run it on a different
+> platform?
 
-Normally you are supposed to add a comment on what the interaction
-is (similar to what is done for spinlock declarations)
+Same thing as if they run it on an AMD or older Intel platform ;)
 
--Andi
+>  I think ARM should care about this.
+
+Arm don't make PCIe root ports, and there is no PMU standardisation 
+between all the myriad different implementers and vendors of PCIe IP, so 
+the best perf can reasonably do is simply support the particular PMUs 
+that people want perf to support.
+
+Thanks,
+Robin.
+
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>>
+>> The HiSilicon PCIe PMU can support measuring the throughput of certain
+>> TLP types and of certain root port. Totally 6 metrics are provided in
+>> the unit of MB:
+>>
+>> - Inbound MWR: The memory write TLPs from the devices downstream the root port
+>> - Inbound MRD: The memory read TLPs from the devices downstream the root port
+>> - Inbound CPL: The completion TLPs from the devices downstream the root port
+>> - Outbound MWR: The memory write TLPs from the CPU to the downstream devices
+>> - Outbound MRD: The memory read TLPs from the CPU to the downstream devices
+>> - Outbound CPL: The completions TLPs from the CPU to the downstream devices
+>>
+>> Since the PMU measures the throughput in DWords. So we need to calculate
+>> the throughput in MB like:
+>>    Count * 4B / 1024 / 1024
+>>
+>> Some of the display of the `perf iostat` will be like:
+>> [root@localhost tmp]# ./perf iostat list
+>> hisi_pcie0_core2<0000:40:00.0>
+>> hisi_pcie2_core2<0000:5f:00.0>
+>> hisi_pcie0_core1<0000:16:00.0>
+>> hisi_pcie0_core1<0000:16:04.0>
+>> [root@localhost tmp]# ./perf iostat --timeout 10000
+>>
+>>   Performance counter stats for 'system wide':
+>>
+>>      port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
+>> 0000:40:00.0                    0                    0                    0                    0                    0                    0
+>> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
+>> 0000:16:00.0             16272.99               366.58                    0                15.09                    0             16156.85
+>> 0000:16:04.0                    0                    0                    0                    0                    0                    0
+>>
+>>        10.008227512 seconds time elapsed
+>>
+>> [root@localhost tmp]# ./perf iostat 0000:16:00.0 -- fio -name=read
+>> -numjobs=30 -filename=/dev/nvme0n1 -rw=rw -iodepth=128 -direct=1 -sync=0
+>> -norandommap -group_reporting -runtime=10 -time_based -bs=64k
+>>
+>>   Performance counter stats for 'system wide':
+>>
+>>      port              Inbound MWR(MB)      Inbound MRD(MB)      Inbound CPL(MB)     Outbound MWR(MB)     Outbound MRD(MB)     Outbound CPL(MB)
+>> 0000:40:00.0                    0                    0                    0                    0                    0                    0
+>> 0000:5f:00.0                    0                    0                    0                    0                    0                    0
+>> 0000:16:00.0             16314.30               371.22                    0                15.21                    0             16362.20
+>> 0000:16:04.0                    0                    0                    0                    0                    0                    0
+>>
+>>        10.168561767 seconds time elapsed
+>>
+>>         0.465373000 seconds user
+>>         1.952948000 seconds sys
+>>
+>> More information of the HiSilicon PCIe PMU can be found at
+>> Documentation/admin-guide/perf/hisi-pcie-pmu.rst.
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
