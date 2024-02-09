@@ -1,45 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1483A1AE;
-	Fri,  9 Feb 2024 22:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3C23611B
+	for <linux-perf-users@vger.kernel.org>; Fri,  9 Feb 2024 22:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707516974; cv=none; b=HIfkJ5n8oJ/D5oNY70pHKK8lveSdV5MDdtg5XraaEwehG/LVATfV7ScFnYbGUPesx+Lgrtx1vRHjC3qrmomYVZQtPX8KgKzQlhB0tQvSXqvLZ1/EcWr0S6tHXXvRy7JSFdAIxauxfZPS6Kqdtw8JiGwmtZqabVDopuXTpn++QZQ=
+	t=1707517008; cv=none; b=sI678aqBuXLUU5iN8u2EMpOg6wtqErvecL5Pz60e1K3C3YTkL+qqseg5K8o6Z6IWnLAiBo+9vtcoQ5m9Qtmk5Tf0ZrUlb/NBNy+II6SPglIUYdU+MW+suriZ/bxcs4DUTwvtrKE2629EO7TjJFaYljxKILrLDhNYFO8nHnRDkEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707516974; c=relaxed/simple;
-	bh=dx0uTAcPvK5EaAlFfSoV6xr64M9844uNyE8l2N+7hGM=;
+	s=arc-20240116; t=1707517008; c=relaxed/simple;
+	bh=dlAbr4xUXhGEdynDOx+YIKbe0q3GVlsdx12RQre/f0U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SgHt9qf5YUkEmrr96p86pCmg9ku6kNNhyLOFXqSFu9iQ1gVE2ipwvrPu70QOeWBHOWwHxq4Z2Y/ODB+Thpd3YdKa/sJoRiXZ42sUtW0jU2Z4BDaFL30t0jh+NbfK3IUTKT0nqZn/j3vNem6Xqk17+QUZ2osyPQoEdgNiZlyiN2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e10Jisck; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=sr4KdUVvcd/hXXWWuASt9T7YdnGr096ynSl0/qj9+CiFe5ZNnSqavQ4hvb16Xvvud+k8OqcyGZPSab2hgTf5j8pJoxpSbnFX4whBT1svzRUEZNwJsXveToQ7EYIKgyNnkwqpCpT2vxOp2nqQO6iQ/HEbMkGs3bjS5gk3Gjjznrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyvnMoOm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e10Jisck"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7441DC43330;
-	Fri,  9 Feb 2024 22:16:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyvnMoOm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AED17C433C7;
+	Fri,  9 Feb 2024 22:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707516973;
-	bh=dx0uTAcPvK5EaAlFfSoV6xr64M9844uNyE8l2N+7hGM=;
+	s=k20201202; t=1707517008;
+	bh=dlAbr4xUXhGEdynDOx+YIKbe0q3GVlsdx12RQre/f0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e10Jisck0cSj/BUd92CiHK4hUvmXZfUjeGWSN2kn8kE2LtM+fmXbmxJ8wD4wvlP+S
-	 4Orqd/ATY19ywgWM0s045GK84GPRqdJ/jBhVp8YMXEuMkGP+UHWnA43csVZuJ715p5
-	 10waB5SKR2n46AX5XtHjiZQShDhSfUL0tk6TT0Lq0XNqZywv1IC04nV8E1LcIH1q6E
-	 TLq1irZb1DvmyAEKo5/3+C0yDqZ7XBEQOgKxG/Ftc2FnnqzjXxBbJw3t/I/7KqzROu
-	 lNAaDg3lreRlu11t5nFPV9KI80/e1UAwxAymFg22MPdtD117VdEtpYMNe31yfQV1mc
-	 213+gO9cbM81g==
+	b=RyvnMoOmiwScFVhneqSX6/sAiYrNMO+QWIARTzXmhHe99EBiQcs8271LwIJuH/xv6
+	 2ngOFdVTFy7t0JGYrOC3tJUlCi+AC2FB1zqVtnKgQTA5zLqgWg0YT2aQG2BzXhMgNe
+	 59zLDsDlaJL4StIt21GUW8gMa0bNMkqtwKchW+z5ja0q4GZvJdG9ZgZWgQ3gwQG/Lg
+	 F3dbjmF9XNqJv1lw6o77DP1g6oI9H/U5XWcQK7UNprWW/jFplY1G3GpkwHkSvlqkLO
+	 i09mvJxMtisIGFeNIoFH9jjbHQlmGPP5on9Ok04ic9ftB3knaICsApvEwazO/XayD+
+	 WBa3FsHIwxsYg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Like Xu <like.xu.linux@gmail.com>,
-	Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: adrian.hunter@intel.com,
+	mark.rutland@arm.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	kan.liang@linux.intel.com,
+	acme@kernel.org,
+	mingo@redhat.com,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 0/2] perf symbols: Slightly improve module file executable section mappings
-Date: Fri,  9 Feb 2024 14:16:10 -0800
-Message-ID: <170751693770.1169242.13110612989281667030.b4-ty@kernel.org>
+	Yicong Yang <yangyicong@huawei.com>,
+	peterz@infradead.org
+Cc: yangyicong@hisilicon.com,
+	linuxarm@huawei.com
+Subject: Re: [PATCH] perf test: Skip metric w/o event name on arm64 in stat STD output linter
+Date: Fri,  9 Feb 2024 14:16:46 -0800
+Message-ID: <170751693775.1169242.6949790751130648822.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-In-Reply-To: <20240208085326.13432-1-adrian.hunter@intel.com>
-References: <20240208085326.13432-1-adrian.hunter@intel.com>
+In-Reply-To: <20240207091222.54096-1-yangyicong@huawei.com>
+References: <20240207091222.54096-1-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,18 +55,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Thu, 8 Feb 2024 10:53:24 +0200, Adrian Hunter wrote:
-> Currently perf does not record module section addresses except for
-> the .text section. In general that means perf cannot get module section
-> mappings correct (except for .text) when loading symbols from a kernel
-> module file. (Note using --kcore does not have this issue)
+On Wed, 7 Feb 2024 17:12:22 +0800, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
 > 
-> Here are a couple of patches to help shed light upon and slightly improve
-> the situation.
+> stat+std_output.sh test fails on my arm64 machine:
+> [root@localhost shell]# ./stat+std_output.sh
+> Checking STD output: no args Unknown event name in TopDownL1                 #     0.18 retiring
+> [root@localhost shell]# ./stat+std_output.sh
+> Checking STD output: no args [Success]
+> Checking STD output: system wide [Success]
+> Checking STD output: interval [Success]
+> Checking STD output: per thread Unknown event name in tmux: server-1114960                                                   #     0.41 frontend_bound
 > 
 > [...]
 
-Applied to perf-tools-next, thanks!
+Applied perf-tools-next, thanks!
 
 Best regards,
 -- 
