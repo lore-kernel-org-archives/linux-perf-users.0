@@ -1,105 +1,196 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66ABB23B0;
-	Sat, 10 Feb 2024 04:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6AE5D483
+	for <linux-perf-users@vger.kernel.org>; Sat, 10 Feb 2024 18:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707540143; cv=none; b=nSKWRiMUdxZy0DSHd55qTFu9HuXNT7usZpm/fI5MiUxH0/+9f9fLUpVFSEFy3/MyA2n7Cqrwcr9/7xjVHeETH2vnL+vNeuY3dDryJcaaIzKxhtA/u5iZr9EkWAbVRpMs092ZKIxMGrZf2GUnUMP5B6rAax6TR5M1e9U20oM7YoE=
+	t=1707588531; cv=none; b=Lfi4ag45AsySgvV58CLoIRUI3xB+pbRdKGZsnSDoAtAK7CUbZ7BZ3MTcyc2RzJdTw9JvTsvppgwdN+5fr2CDQDhqCQmDGTT8DzhshBM9O2KOskd1TcU2r7KeAHssgIOYvk5we1u23FpgUpKNwyYGMPCf4RdAb0vAzatr4XSYkuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707540143; c=relaxed/simple;
-	bh=T2ASNije7gX81LNlvMmud6Kc73BC7zKEk9U2E6S4JHM=;
+	s=arc-20240116; t=1707588531; c=relaxed/simple;
+	bh=lcKrX2aRjFNkP4jX/gX7lMq1/swjJPiwcvS8JJ2UKac=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EZxflUoZ36MKd7XYQZQb213YBCsa172dRnqlAN79fcYtpOMAvs1WKzNvCt9Uw0H+VkdebBU5yJKT9WWOGoNy7gE5JHgqkprEhrsuaSPGkMcsik+Bqcm6HymxsnZJCgI0CfQTQGv86xEWYcUYiYmS+UCS8yExc9DZWIeAILZLdVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-296dc0cab6aso1162575a91.1;
-        Fri, 09 Feb 2024 20:42:22 -0800 (PST)
+	 To:Cc:Content-Type; b=D/XBOE8aYikBA5kUx8l8ft5OJdmhlTDyJHgu3hxpYcZaqHe1rsX0W0OKtWu2JzkVkHonPRltp/6p1OuLfL0nxymkoUJnKdcIMPLhxXppCalx7nGFaLAOnxnGFYG1f6Mdl9Twr2Tk9LvP5HIpTfxFmGptciulbsJuHo4RWec+xVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3ep2BltL; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3ep2BltL"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1da120617c7so74575ad.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 10 Feb 2024 10:08:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707588529; x=1708193329; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XDX7C5VgeWEhXGxm3lJpibeXlVT0VMTj0KZSmCI04qk=;
+        b=3ep2BltLEN5gir0RHo2QpZrZuyUylLdYUQ5P8DRgG3Jhg1CzABm9+zSXoMfprD440G
+         ktZPSs9/BhYcSPPgXftY36CPBb3PhidItAZO1FXoO6Yvybx0iOpcxgUVK7xIaKSUmrac
+         3J7t8/yClwC+pS5WwYjmCz00c/EiKfRQeXmH/zwGphwzc/gbtnyFgLL8qedleupuYJFX
+         VXO2AxLHm4ROXfEo3iw2BxjQjekyfkZjNPej3mfg7sNgcSqkGw8n4mn572jVCov2kjUY
+         jymESrrTFH/W+F5H/V/EnshydNjkr3d74DGFgob43OXsMBRCyFFp49J/HmUZjCkYEoK0
+         YIPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707540142; x=1708144942;
+        d=1e100.net; s=20230601; t=1707588529; x=1708193329;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qOncT+gChfuvB+kGoeOPvG9sQftVVeruKeAijPzHPfs=;
-        b=sDW29X7NCNTJ3BMDakpX2GDwOjk6OX1raT3c9YBRKzhhh+1rm67wne/fzSMoHpoFEB
-         DDJFGHRNWLqVyQu7s5tSBnnQtaiCQESQXWxlFT2vQJXUmrQlBNdERtqcDwFA7F1OU654
-         oOZsAMRnHMUTL8ITJKYcnPtr3k3V5aPP3ZrgITxWjPuO71RjXrGeIGkb1ZwCgP2KDS+7
-         h6m3pAlsoTX5f8jIz/GzsOFv19EcwziWB66Rzmp5e2OQb6jeBfKZvK9h/O2lG9vEQUDs
-         QhbBQtFZrOtJRcH5z1icRzTNt/jiNyeftlv9IWvX7Bl8o/ZfgC0rvt1fQNn4YDlwRr1x
-         t4lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Os+/5gpkwLNEHHWMB7HF+bjc973nHmzXBXaRw/O7oWyyHNcQYMMRUsFWaNHZOjwR/oGpzF7zRoXjtaJnPGGEoqi/z117pebTHjESNraQDW9WhHT46PpC/Wq9wD7vz8QTV06cqFC8rc4T3rDxVw==
-X-Gm-Message-State: AOJu0Yxz/3Q0RZ+8fyAqXKypP5GytVhNMUFSCHM9vW9T4PArL0A9HYkU
-	PGp/GvSOT5SmlFOg966lUNihjO52dtJLFSI2lqQkd/F3kNyre/0tipuMrwlUxQ6sKcWub9fqSYb
-	oUfb/p2wLXEP9G5dF3UbLjxqyTlI4kPIK7WY=
-X-Google-Smtp-Source: AGHT+IEEOGs8eYYJcn54c8V2Nckuq5c37tHGiBPyRpxxSegy6QGfNKKjHBSxfglzNgWTCxni6d3Zo8RdJT+D7EK6/r0=
-X-Received: by 2002:a17:90a:6f46:b0:296:4e2f:a680 with SMTP id
- d64-20020a17090a6f4600b002964e2fa680mr4366458pjk.10.1707540141565; Fri, 09
- Feb 2024 20:42:21 -0800 (PST)
+        bh=XDX7C5VgeWEhXGxm3lJpibeXlVT0VMTj0KZSmCI04qk=;
+        b=bXQpZ6MfkBoeSPI+INuTyXo0y9XdLp7IxSVyKqcJ0m6MEzsEWS72J5s6Xg66BcMtbU
+         GI4GaFaaQA1hknvrasgw9E8pgiiroYLFYH5ihuiqtx7XId2ObGYmphz4zO+jKgfi3ZFK
+         o+yVN08+XdzHnCWvfDRpixTO7l+fMqrlxsVvA0opLMYreNcY5unmgNmPflYvzpVDM6oE
+         YBKWdllI1thEGPWyfnFVilIBkCjL458TnHv/t7ALif4M92BLL5eDoOSizTGuL8bWuMmN
+         RhPvo96PaPkIfQ4ehGmZEFZjfjSZF3eWiv3WOm2eS1p490mutrq4J/HSvLTYJbMB1kqB
+         tsBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9WSkNkTzT3Ea9uox7unWoGyauu56UhnytiJ0GNdQuN7Bl6XWN4ZNZKfto3/k4M09D0AStTU0L9ajUW4ryTM2rPJUpdSwIret+2nJKQK2jcg==
+X-Gm-Message-State: AOJu0YxW8rNwy+t0W0up18R94yxQtgSTYj6hkPWOEjDzNSF5vrPjsD1c
+	NM2RuXyFdKn0tvJXHeMsbnSVuALNn3Drj5UREiXr35GIREGr8RO7HfW+00hcx2g68jouBv+bFTj
+	43FD2N4S6JdB/OkzHJBJdsbGYHdnwnw2uc1Ke
+X-Google-Smtp-Source: AGHT+IFy3H9+Iwf1AWzIzjSIJM9jx52R90mLMMKQKjC/oVRCYUD5d4W+fplaW0pXNusL1NHPcf+mHRVioCIfzLDLn9Q=
+X-Received: by 2002:a17:902:c24d:b0:1d9:6c20:b900 with SMTP id
+ 13-20020a170902c24d00b001d96c20b900mr64520plg.7.1707588529249; Sat, 10 Feb
+ 2024 10:08:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201001504.1348511-1-irogers@google.com> <20240201001504.1348511-8-irogers@google.com>
- <CAM9d7cih+JqmhVOSoYmRUK2+FRWnknQ6VucYpg5ZC01BYqdv=Q@mail.gmail.com>
-In-Reply-To: <CAM9d7cih+JqmhVOSoYmRUK2+FRWnknQ6VucYpg5ZC01BYqdv=Q@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 9 Feb 2024 20:42:09 -0800
-Message-ID: <CAM9d7ci-qxL0r6SOh0_bktS33OBf6JoOE3LJzmcZgZV_uNzcLA@mail.gmail.com>
-Subject: Re: [PATCH v2 8/9] perf srcline: Add missed addr2line closes
-To: Ian Rogers <irogers@google.com>
+References: <20240207223639.3139601-1-irogers@google.com> <CAM9d7chBixXozCQztM2WKGbfs_8C70vy6ROzKpwLSqq-upz5iQ@mail.gmail.com>
+ <CAP-5=fUVkaq3dDoeMYYEN1N-ghnL-GiP8PV3N3pWpjQKpDTCHw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUVkaq3dDoeMYYEN1N-ghnL-GiP8PV3N3pWpjQKpDTCHw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 10 Feb 2024 10:08:35 -0800
+Message-ID: <CAP-5=fXs8=HvjGpkLwuZBi0Hh8jtmz7=0Tp7HRgU8FOFN0GZvg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] maps memory improvements and fixes
+To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 9, 2024 at 4:21=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
+On Fri, Feb 9, 2024 at 6:46=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> On Wed, Jan 31, 2024 at 4:15=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
+> On Thu, Feb 8, 2024 at 9:44=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 > >
-> > The child_process for addr2line sets in and out to -1 so that pipes
-> > get created. It is the caller's responsibility to close the pipes,
-> > finish_command doesn't do it. Add the missed closes.
+> > Hi Ian,
 > >
-> > Fixes: b3801e791231 ("perf srcline: Simplify addr2line subprocess")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/srcline.c | 2 ++
-> >  1 file changed, 2 insertions(+)
+> > On Wed, Feb 7, 2024 at 2:37=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> > >
+> > > First 6 patches from:
+> > > https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.=
+com/
+> > >
+> > > v2. Fix NO_LIBUNWIND=3D1 build issue.
+> > >
+> > > Ian Rogers (6):
+> > >   perf maps: Switch from rbtree to lazily sorted array for addresses
+> > >   perf maps: Get map before returning in maps__find
+> > >   perf maps: Get map before returning in maps__find_by_name
+> > >   perf maps: Get map before returning in maps__find_next_entry
+> > >   perf maps: Hide maps internals
+> > >   perf maps: Locking tidy up of nr_maps
 > >
-> > diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> > index 034b496df297..7addc34afcf5 100644
-> > --- a/tools/perf/util/srcline.c
-> > +++ b/tools/perf/util/srcline.c
-> > @@ -399,6 +399,8 @@ static void addr2line_subprocess_cleanup(struct chi=
-ld_process *a2l)
-> >                 kill(a2l->pid, SIGKILL);
-> >                 finish_command(a2l); /* ignore result, we don't care */
-> >                 a2l->pid =3D -1;
-> > +               close(a2l->in);
-> > +               close(a2l->out);
+> > Now I see a perf test failure on the vmlinux test:
+> >
+> > $ sudo ./perf test -v vmlinux
+> >   1: vmlinux symtab matches kallsyms                                 :
+> > --- start ---
+> > test child forked, pid 4164115
+> > /proc/{kallsyms,modules} inconsistency while looking for
+> > "[__builtin__kprobes]" module!
+> > /proc/{kallsyms,modules} inconsistency while looking for
+> > "[__builtin__kprobes]" module!
+> > /proc/{kallsyms,modules} inconsistency while looking for
+> > "[__builtin__ftrace]" module!
+> > Looking at the vmlinux_path (8 entries long)
+> > Using /usr/lib/debug/boot/vmlinux-6.5.13-1rodete2-amd64 for symbols
+> > perf: Segmentation fault
+> > Obtained 16 stack frames.
+> > ./perf(+0x1b7dcd) [0x55c40be97dcd]
+> > ./perf(+0x1b7eb7) [0x55c40be97eb7]
+> > /lib/x86_64-linux-gnu/libc.so.6(+0x3c510) [0x7f33d7a5a510]
+> > ./perf(+0x1c2e9c) [0x55c40bea2e9c]
+> > ./perf(+0x1c43f6) [0x55c40bea43f6]
+> > ./perf(+0x1c4649) [0x55c40bea4649]
+> > ./perf(+0x1c46d3) [0x55c40bea46d3]
+> > ./perf(+0x1c7303) [0x55c40bea7303]
+> > ./perf(+0x1c70b5) [0x55c40bea70b5]
+> > ./perf(+0x1c73e6) [0x55c40bea73e6]
+> > ./perf(+0x11833e) [0x55c40bdf833e]
+> > ./perf(+0x118f78) [0x55c40bdf8f78]
+> > ./perf(+0x103d49) [0x55c40bde3d49]
+> > ./perf(+0x103e75) [0x55c40bde3e75]
+> > ./perf(+0x1044c0) [0x55c40bde44c0]
+> > ./perf(+0x104de0) [0x55c40bde4de0]
+> > test child interrupted
+> > ---- end ----
+> > vmlinux symtab matches kallsyms: FAILED!
 >
-> I was about to ask the stderr, but addr2line_subprocess_init()
-> sets a2l->no_stderr already.
+> Ah, tripped over a latent bug summarized in this part of an asan stack tr=
+ace:
+> ```
+> freed by thread T0 here:
+>    #0 0x7fa13bcd74b5 in __interceptor_realloc
+> ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:85
+>    #1 0x561d66377713 in __maps__insert util/maps.c:353
+>    #2 0x561d66377b89 in maps__insert util/maps.c:413
+>    #3 0x561d6652911d in dso__process_kernel_symbol util/symbol-elf.c:1460
+>    #4 0x561d6652aaae in dso__load_sym_internal util/symbol-elf.c:1675
+>    #5 0x561d6652b6dc in dso__load_sym util/symbol-elf.c:1771
+>    #6 0x561d66321a4e in dso__load util/symbol.c:1914
+>    #7 0x561d66372cd9 in map__load util/map.c:353
+>    #8 0x561d663730e7 in map__find_symbol_by_name_idx util/map.c:397
+>    #9 0x561d663731e7 in map__find_symbol_by_name util/map.c:410
+>    #10 0x561d66378208 in maps__find_symbol_by_name_cb util/maps.c:524
+>    #11 0x561d66377f49 in maps__for_each_map util/maps.c:471
+>    #12 0x561d663784a0 in maps__find_symbol_by_name util/maps.c:546
+>    #13 0x561d662093e8 in machine__find_kernel_symbol_by_name util/machine=
+.h:243
+>    #14 0x561d6620abbd in test__vmlinux_matches_kallsyms
+> tests/vmlinux-kallsyms.c:330
+> ...
+> ```
+> dso__process_kernel_symbol rewrites the kernel maps here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/perf/util/symbol-elf.c#n1378
+> which resizes the maps_by_address array causing the maps__for_each_map
+> iteration in frame 11 to be iterating over a stale/freed value.
 >
-> I wish it could be handled in finish_command() but it seems
-> the API allows setting external file descriptors (before calling
-> start_command).  Hmm..
->
-> Anyway it looks like an independent fix.
+> The most correct solutions would be to clone the maps_by_address array
+> prior to iteration, or reference count maps_by_address and its size.
+> Neither of these solutions particularly appeal, so just reloading the
+> maps_by_address and size on each iteration also fixes the problem, but
+> possibly causes some maps to be skipped/repeated. I think this is
+> acceptable correctness for the performance.
 
-I'll apply this separately.
+An aside, shouldn't taking a write lock to modify the maps deadlock
+with holding the read lock for iteration? Well no because
+perf_singlethreaded is true for the test:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/rwsem.c#n17
+Another perf_singlethreaded considered evil :-) Note, just getting rid
+of perf_singlethreaded means latent bugs like this will pop up and
+will need resolution.
 
 Thanks,
-Namhyung
+Ian
+
+> Thanks,
+> Ian
+>
+> > Thanks,
+> > Namhyung
