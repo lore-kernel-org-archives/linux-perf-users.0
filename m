@@ -1,148 +1,148 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7069B33CFC
-	for <linux-perf-users@vger.kernel.org>; Sat, 10 Feb 2024 03:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108E223B0;
+	Sat, 10 Feb 2024 04:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707535093; cv=none; b=aGVMbUQeAe44xO2Vrdjh5iQttEb+osLq12RFBpJfcL9q26J/jayPrU0rtWVmtMJO/OrbGUpKMLiVdSGS+1ineXu3emo3UigpQr3ZTWxhNh85tO9o/foKZLJX/AqjoX605VOvIbFS0gqzI6W4lQtZ98I0V53aVC5omS736bjQZnQ=
+	t=1707540069; cv=none; b=IFJDMVeb0ZhfEBuoSTab1jL6m5ubHVwRM9ZeMFH0tuxieimNAF2T1qja2HBooOA2pqIMyxwHO5PiuYrsAzjzQolYhsWJOtr4ceczPWuMtcITTrJPJONDeeLwTOPw7zVGhhXltRs2U1/Xk5UR5ZmKAR/EslxeIeCip44OdnrIeqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707535093; c=relaxed/simple;
-	bh=fmY7OGiQyoafs0dUqE06bQrvTXGFG0wOIGJr3qrBCDk=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=b3dzlblQ8CCEmmcIstBhZTLoL7ms8kFVZs8lrD6Sx6sYkL2fh64OP2O4W5BFHvw8sgcFxs2vDM1h61NZ/TshgBcRLEpSrm4FDr9ng1+7XVjyIY2lrdtFnBjNvCS490UMJowsJjTcEl7iUTFVCbdo++qaQGRSBR+NfKXE/KZ0pYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ueZrGJ0I; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ueZrGJ0I"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ee22efe5eeso31743007b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 09 Feb 2024 19:18:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707535090; x=1708139890; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ie89sB6IlXpvkiQnUaYF5PTvKc7dfqYdcE9ndiylfmM=;
-        b=ueZrGJ0IuPfGlwXCKjovy5gGGS30jkNrGtsNC8pnicR1KIk7lhl7dwkZUTTREAOoJn
-         NztsMiVXbJgsmEcNLj4vd4HNyYmGU6iDVlGEsEDePPLWhfY0MrnR1rsXNVEXNnrUx7Xq
-         Ya6tpJEpWKjWuLP/CZ7d5tmfZU0ulM+GHc7NbiuEBH9vpd/pt/jYMMkvWMnni+Zhlab1
-         x7qQZ8ux3//bPdqmSGd+SC2MqMA0k3M7nDu8yY6UgHEBm/SlbSS5PKGXZnL/lP0dawbD
-         gMm2dlCbtU9N4Rx+SXav2XKoBtqnExXgy4hn2CCnLJNAsuhuna7RTGWqy4QthZpYDbwg
-         Iv2Q==
+	s=arc-20240116; t=1707540069; c=relaxed/simple;
+	bh=glEKylj6hGoshCUUwb23D4sXjlqavO0BCnKPI92hvlo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZCEIMa6XCzcnHRG+VhUzPHL128gxYnkrweMGD9TMt+ccMmTmQQ9q16jFt0ifj8ro9Qsl3apKhF9U8YzFiCbW2QblZ9WPCQfZvyNU69ZUvVNkBrLOt/02GzGQ2ZJKmwv1/AsnxPB8uZZMWZoxKghksbpKUwqBU57F1rCqVKuPIdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-59d11e0b9e1so917264eaf.1;
+        Fri, 09 Feb 2024 20:41:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707535090; x=1708139890;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ie89sB6IlXpvkiQnUaYF5PTvKc7dfqYdcE9ndiylfmM=;
-        b=gXJ9316cP/Aoh2u3oiQlfjlfn3cCBjydsysaeGkqhUrXNau1+knuvasBl4jAjuJxqv
-         MIZSJPEHrk/QZn8s9gPESLBY3ZBbplVM8X8EcQuQPGfTAiXkoCRNxBctX6gVDBZ8/c/y
-         HrkQBVFNNgYFbc2lMtI9kd/H0NViwKhGpxbDnJO+m9/7sNRXSxjzh955AuW15BQhubTl
-         BYam/dyiRGBii68go/0Io+yuc8g0oKRCI2KzeVU8nGOxMLuV/B6gWbo3jGPnZXX+ZNWi
-         7jCwTPGHzXBhNku05SepMtu05ayrtv2pR8b41H2dlxV5GjJYUmvsGLDKnoAT1JJ0yFGl
-         ZlJw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1y5w2+KA2dCorwpapWb4VoNrpDU3RY/6wTs3PyLt9ch5ivpglotzFF3szkQTBMw5W/dSgbnt252sJTvp96s7SK36P9Kd1tYsrtVx9Lvu73w==
-X-Gm-Message-State: AOJu0YyTlmPYCTKTsc9bbJGSIwO8eJtuoyzg1JssG3PJOM1/6+TAtUR0
-	Gx7RVu16KXkxdyVlJRPIycv2FCPOR708Q3yHLwcVerYPsV0htLDcCKdx8/YutdgIyl17YDSgBBD
-	OImhYIg==
-X-Google-Smtp-Source: AGHT+IFrn1CHZlVjSpwmvdN+dl+BaRe9nkKsGon6NJpS0hJXAXYFpUNu2G/yduT8mliL5SE1aGM0Nbh2LJ+v
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:877:241d:8c35:1c5b])
- (user=irogers job=sendgmr) by 2002:a0d:d549:0:b0:604:499:fee1 with SMTP id
- x70-20020a0dd549000000b006040499fee1mr191533ywd.6.1707535090579; Fri, 09 Feb
- 2024 19:18:10 -0800 (PST)
-Date: Fri,  9 Feb 2024 19:17:46 -0800
-In-Reply-To: <20240210031746.4057262-1-irogers@google.com>
-Message-Id: <20240210031746.4057262-7-irogers@google.com>
+        d=1e100.net; s=20230601; t=1707540067; x=1708144867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7ZCGeaOgFb/POuILW7FEZXlx24Rn7F7T3YvkEdqGZn8=;
+        b=A2xBbxwe0JMbk/DL93RM3i181nBltz7HDElkyCQv9wADRh9DATvoVHXwo+DPTem04g
+         WfrXt6KtTUZjLgQtrvA2bzZpKyOX1G4bkFFGM4ci7vEXktiKbMYaGB5fvdLHN8s4TxS/
+         2Wbkd/s2pAId+2Uo+xebvlLY5Kr8/IOx96IudN2VQuS0poJklyJioqhYaBHQHq3t8ZP8
+         sJksiH1clmXXBXlIsZxCe0b72AhIGApk0/MyzuJ5DShOqPwp3HTnFY9qeyRP2QX2krvI
+         x2QS1/D+s4XwwFF3D/HBizx0J1ZSzyO7s6W3OKghXW2ICPBtu3Jek1y6oa4QSwSXYwRg
+         Xdzw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPjzNpcB+8g3XbMfvqPwkqGntGfMq0zKFnVlpgGYTp4ZJ4YMucbw4uwktmJvL89jzjqaewPmuWcH1wrw276R+9BB1jaBfiRN244a+X1lZc2Df0Hx9pfi9gx7LM1I+RMNeEWMceNxiq9QsfJ3zJuw==
+X-Gm-Message-State: AOJu0Yzu1hRnMQq/hG/vngozwGOUVFeoaGFdTTSUspVZC68BdFhaEFsL
+	MGYu45VtC4rxTxiCRn+yszXhNPjH+e2xAWiM19G3Y9nP8T4VuqxDccUQp9+VaYhTwA53+O+bFUe
+	zDIkWPxeOy9m8hQcHCaM+/aW80PQ=
+X-Google-Smtp-Source: AGHT+IEJ/x2TjQP1hdkhnSUv18VsQ0EdYULkKuKuNTVsNhbj3HngAA7gbe7Ti38jDWoSmT5WSwMTz2Cq/iSJVKXP2VQ=
+X-Received: by 2002:a05:6358:5985:b0:179:22c:4a4d with SMTP id
+ c5-20020a056358598500b00179022c4a4dmr2150235rwf.22.1707540066959; Fri, 09 Feb
+ 2024 20:41:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240210031746.4057262-1-irogers@google.com>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Subject: [PATCH v3 6/6] perf maps: Locking tidy up of nr_maps
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+MIME-Version: 1.0
+References: <20240201001504.1348511-1-irogers@google.com> <20240201001504.1348511-6-irogers@google.com>
+In-Reply-To: <20240201001504.1348511-6-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 9 Feb 2024 20:40:54 -0800
+Message-ID: <CAM9d7cjka_O5OmCxkrp-K6g45VnxEJNd73jjv6kQanutf+6sbg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] perf tests: Use scandirat for shell script finding
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Liam Howlett <liam.howlett@oracle.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Artem Savkov <asavkov@redhat.com>, 
-	Changbin Du <changbin.du@huawei.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Alexey Dobriyan <adobriyan@gmail.com>, 
-	James Clark <james.clark@arm.com>, Vincent Whitchurch <vincent.whitchurch@axis.com>, 
-	Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After this change maps__nr_maps is only used by tests, existing users
-are migrated to maps__empty. Compute maps__empty under the read lock.
+On Wed, Jan 31, 2024 at 4:15=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Avoid filename appending buffers by using openat, faccessat and
+> scandirat more widely. Turn the script's path back to a file name
+> using readlink from /proc/<pid>/fd/<fd>.
+>
+> Read the script's description using api/io.h to avoid fdopen
+> conversions. Whilst reading perform additional sanity checks on the
+> script's contents.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+[SNIP]
+> -static const char *shell_test__description(char *description, size_t siz=
+e,
+> -                                           const char *path, const char =
+*name)
+> +static char *shell_test__description(int dir_fd, const char *name)
+>  {
+> -       FILE *fp;
+> -       char filename[PATH_MAX];
+> -       int ch;
+> +       struct io io;
+> +       char buf[128], desc[256];
+> +       int ch, pos =3D 0;
+>
+> -       path__join(filename, sizeof(filename), path, name);
+> -       fp =3D fopen(filename, "r");
+> -       if (!fp)
+> +       io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf));
+> +       if (io.fd < 0)
+>                 return NULL;
+>
+>         /* Skip first line - should be #!/bin/sh Shebang */
+> +       if (io__get_char(&io) !=3D '#')
+> +               goto err_out;
+> +       if (io__get_char(&io) !=3D '!')
+> +               goto err_out;
+>         do {
+> -               ch =3D fgetc(fp);
+> -       } while (ch !=3D EOF && ch !=3D '\n');
+> -
+> -       description =3D fgets(description, size, fp);
+> -       fclose(fp);
+> +               ch =3D io__get_char(&io);
+> +               if (ch < 0)
+> +                       goto err_out;
+> +       } while (ch !=3D '\n');
+>
+> -       /* Assume first char on line is omment everything after that desc=
+ */
+> -       return description ? strim(description + 1) : NULL;
+> +       do {
+> +               ch =3D io__get_char(&io);
+> +               if (ch < 0)
+> +                       goto err_out;
+> +       } while (ch =3D=3D '#' || isspace(ch));
+> +       while (ch > 0 && ch !=3D '\n') {
+> +               desc[pos++] =3D ch;
+> +               if (pos >=3D (int)sizeof(desc) - 1)
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/machine.c |  2 +-
- tools/perf/util/maps.c    | 10 ++++++++--
- tools/perf/util/maps.h    |  4 ++--
- 3 files changed, 11 insertions(+), 5 deletions(-)
+Maybe (pos =3D=3D sizeof(desc) - 2) ?  I'm not sure what happens if it has =
+a
+description longer than the buffer size.
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 4911734411b5..3da92f18814a 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -440,7 +440,7 @@ static struct thread *findnew_guest_code(struct machine *machine,
- 		return NULL;
- 
- 	/* Assume maps are set up if there are any */
--	if (maps__nr_maps(thread__maps(thread)))
-+	if (!maps__empty(thread__maps(thread)))
- 		return thread;
- 
- 	host_thread = machine__find_thread(host_machine, -1, pid);
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 439cefab112a..53aea6d2ef93 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -541,7 +541,13 @@ void maps__remove(struct maps *maps, struct map *map)
- 
- bool maps__empty(struct maps *maps)
- {
--	return maps__nr_maps(maps) == 0;
-+	bool res;
-+
-+	down_read(maps__lock(maps));
-+	res = maps__nr_maps(maps) == 0;
-+	up_read(maps__lock(maps));
-+
-+	return res;
- }
- 
- bool maps__equal(struct maps *a, struct maps *b)
-@@ -871,7 +877,7 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
- 
- 	parent_maps_by_address = maps__maps_by_address(parent);
- 	n = maps__nr_maps(parent);
--	if (maps__empty(dest)) {
-+	if (maps__nr_maps(dest) == 0) {
- 		/* No existing mappings so just copy from parent to avoid reallocs in insert. */
- 		unsigned int nr_maps_allocated = RC_CHK_ACCESS(parent)->nr_maps_allocated;
- 		struct map **dest_maps_by_address =
-diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index 4bcba136ffe5..d9aa62ed968a 100644
---- a/tools/perf/util/maps.h
-+++ b/tools/perf/util/maps.h
-@@ -43,8 +43,8 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
- void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
- 
- struct machine *maps__machine(const struct maps *maps);
--unsigned int maps__nr_maps(const struct maps *maps);
--refcount_t *maps__refcnt(struct maps *maps);
-+unsigned int maps__nr_maps(const struct maps *maps); /* Test only. */
-+refcount_t *maps__refcnt(struct maps *maps); /* Test only. */
- 
- #ifdef HAVE_LIBUNWIND_SUPPORT
- void *maps__addr_space(const struct maps *maps);
--- 
-2.43.0.687.g38aa6559b0-goog
+> +                       break;
+> +               ch =3D io__get_char(&io);
+> +       }
+> +       while (pos > 0 && isspace(desc[--pos]))
+> +               ;
+> +       desc[++pos] =3D '\0';
 
+Wouldn't it overflow the buffer?
+
+Thanks,
+Namhyung
+
+
+> +       close(io.fd);
+> +       return strdup(desc);
+> +err_out:
+> +       close(io.fd);
+> +       return NULL;
+>  }
