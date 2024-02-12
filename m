@@ -1,112 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FC36FBE;
-	Mon, 12 Feb 2024 06:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D843D0DA
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 16:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707720202; cv=none; b=N6YrHNMgzyr3oVWqduI+bE7dcFybKyQq5KFbem/slGsRIDiK/wl53XODUULk1W4W4ErKy4FC0BcUvEtSQps/BS4E7iGSB3LUHdCBf/XAD9j6pszGoG1pkDmEkT5J/57p/SEnyp8MCGlKCSSXWlZG2XcRG/gpsoihjyli7U7IVdE=
+	t=1707754021; cv=none; b=LXwPau4gSsFoUSw3jrCACLpcOfkhltL8I7oAM56G9l2aQ+NifiR0hZedDPdsDEtJ9a/QePl/PXfceEOhJWhQjstYxa1l2vPM8qhou8ifsJMRMSbaZ5gK8zv1yPS7AQ0N9kk05jFupu9Ii3p3GzUiHik0npcxm9cmRBLEWw6xKkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707720202; c=relaxed/simple;
-	bh=JEaLXdeo6fNthLC6iDS4VCiLgLO+VSbXbp2Vu7m6SIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gH9+ePchbsQzWi1iFLpsYudyVwUIxbhw/jl45lBJVmLGCYD9zS5VvptrjCwqEQKU9mxPNVztUdPu024u0jPpEZtZffyMPH3KJ188pkq60o6SIOJQwLhL3YGLGq2kIsiVgSnlvKk4rNOhcSQFwZqUU5WA3U26JBPaQyp1bZtqN1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UcKcjJ2f; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707754021; c=relaxed/simple;
+	bh=6VljTnqgIgygVWGxmCUMJQmUDyt4BmVYXuCIwltV1hw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f34GxJqnKo/trTMYUG9IBzSgpF/KyTR5xE4V+/541DeS38dU9SnVia4HgExVUxS/E+mBXmMhA3kaR8Jn7EWCgrRpgBpl1WtuXYT4bF0MhL+tR6lAB03mJ3VdJAMJbIsRYpsCOTdWGbjsdwcxQrsIQUHbwOTddA7kCnIyZxGLYzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tRVmeHTG; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UcKcjJ2f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707720201; x=1739256201;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JEaLXdeo6fNthLC6iDS4VCiLgLO+VSbXbp2Vu7m6SIc=;
-  b=UcKcjJ2f/wix+61VRNgZFff2bSc4e9D1qWPoeIvGxS0A2te969f8iu8y
-   7uW0YKStJXIjiuUTPmOsw7ZHE43qDwgnAWbjhfzVKL5T5nv0mIEVDOi+1
-   ZpRhPPqrEWSwBNCPSL6BckfMj03A7gMK3z8mFfAbw532e33ZXEOOrxbxt
-   dW5s3/x7mF6jSaiIqdItEkV1WRtlyJHsmeesc3L/Vn4Akw/3USlAlRv8M
-   GWJiceSaWE+0gyzfE/i5u/4IdhfrCJnCIJkc+OF9ckNeBf/pCbcCwU0Yq
-   cQj4w+gCbA5V0s4GuhpJgv5WtSUbNfBWb5L0h6X59dROdTxtMKiFkeK6h
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="1585983"
-X-IronPort-AV: E=Sophos;i="6.05,262,1701158400"; 
-   d="scan'208";a="1585983"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2024 22:43:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,262,1701158400"; 
-   d="scan'208";a="33288927"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.43.27])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2024 22:43:14 -0800
-Message-ID: <05ac66fc-ddda-46ff-b08d-c15943c16bc1@intel.com>
-Date: Mon, 12 Feb 2024 08:43:11 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tRVmeHTG"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-363c980faa2so454775ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 08:06:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707754018; x=1708358818; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V812vhaPKlOTRNmWcK0bgkq24J9lpm1PdtO4QK4iOp4=;
+        b=tRVmeHTGJ343PbXRI26ljN03Kthcw0DA2oX03eGIFzh7MhehS105ifLE5DbtDsvRtz
+         PJLgfD+rZoTF1TxGNfsfQyEQWwUqf2ACcF6puFRqik69sBbgG3GbIjFuDBL8l04xrA14
+         gkRhYTJBhUSWkZj664s759XKv/F9L0O0bXc44vN2vE6wym511weJP/x0KGYqv/1gKWid
+         IMWG1arLK5LzqJ+7WHsH7kWrQbNNJUbuvlB7pQg5lGTjhJ3ZTmtvttEECONyun/0J+kO
+         N8qqO8ac2mxd6YFhC4kb1q7fVPM+Jr87WkLRBlbYYrYY+xdj7PzJFhWhUaBasV6Rm5+U
+         sXrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707754018; x=1708358818;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V812vhaPKlOTRNmWcK0bgkq24J9lpm1PdtO4QK4iOp4=;
+        b=iTFgLK5z1GFGP7QKWk+kEzmLKVeDvamtWcTjGUJlBcit4+tGh2B5JOwvqA/pPREujZ
+         YQPlNOo757F32UgQrNwLmzj6NXwqEfZyK7/oClnj4oNHWR+FObEKqJrwZ9a3s0EC6DCa
+         t6zsAh7FO0SACfzxsmracvRYOrmS09v2eKZjZmagw7KmDB81WJc4HYlcA18OXZnXuYcW
+         YIuyYL7OZVeUCOhT7jdo6gIRMPP8pggOlHNemv771MVmWVxkUI140KYk7NNEpeBJqzZp
+         vUVXCgj9SE51k5kFBvPWT4wXgGfacEBdWJuSQ099KAJm2CGwFhHYVazg6pbdSxx1sdbE
+         qCoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUa1di+CFsvJoshyl+KIcmHxaWdOa1ADZoMQ58H506+J699NRBgCXMRrCHbDAv6KZZ6AI5P70SUB+oD+WBCkK6CeGnxy1rnzD54Qgc7eA4xGw==
+X-Gm-Message-State: AOJu0Yx1e7AFrXFwzCQUsKUuoERXQyuFoEr5F5dS+4eBtNa4FO/sXwO9
+	z6dPDqk65sY/xDplLHZOw9b73hGbxI/t/QO0GEmfwBy2jui0f3X7OoXq/jGibb+/ChxOu32tH0P
+	mt2WlWw22IJSZqVGNxWz9IXwvyV1HElXemOIE
+X-Google-Smtp-Source: AGHT+IFN1k4a8xKqLL837bVzWrBksaHMIqM1/h45wRcG9S7HfMYRYNm1TbVw0RhAd9mTK+DTdio3lh12s3nw55K2q8I=
+X-Received: by 2002:a05:6e02:3385:b0:363:d56d:1b0c with SMTP id
+ bn5-20020a056e02338500b00363d56d1b0cmr435240ilb.26.1707754018456; Mon, 12 Feb
+ 2024 08:06:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 01/12] perf/core: Add aux_pause, aux_resume,
- aux_start_paused
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
- <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240208113127.22216-1-adrian.hunter@intel.com>
- <20240208113127.22216-2-adrian.hunter@intel.com> <ZcVuK1nnxG18ps-a@tassilo>
- <d53ef26d-a7e6-4b3b-b593-be75425c0e77@intel.com> <ZcaUw4xQT0VcC7IO@tassilo>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZcaUw4xQT0VcC7IO@tassilo>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240201001504.1348511-1-irogers@google.com> <20240201001504.1348511-6-irogers@google.com>
+ <CAM9d7cjka_O5OmCxkrp-K6g45VnxEJNd73jjv6kQanutf+6sbg@mail.gmail.com>
+In-Reply-To: <CAM9d7cjka_O5OmCxkrp-K6g45VnxEJNd73jjv6kQanutf+6sbg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 12 Feb 2024 08:06:43 -0800
+Message-ID: <CAP-5=fV1dA_hbH=UAZFL8DeuRzvRqW51-gQFSpuEsHpWEDDtWw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] perf tests: Use scandirat for shell script finding
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/02/24 23:10, Andi Kleen wrote:
->> The writes to rb->aux_in_pause_resume must be done
->> only once.  It might be possible to get away without
->> WRITE_ONCE(), but really the compiler should be informed
->> not to make assumptions.
-> 
-> What stops the NMI from firing here?
+On Fri, Feb 9, 2024 at 8:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Wed, Jan 31, 2024 at 4:15=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > Avoid filename appending buffers by using openat, faccessat and
+> > scandirat more widely. Turn the script's path back to a file name
+> > using readlink from /proc/<pid>/fd/<fd>.
+> >
+> > Read the script's description using api/io.h to avoid fdopen
+> > conversions. Whilst reading perform additional sanity checks on the
+> > script's contents.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> [SNIP]
+> > -static const char *shell_test__description(char *description, size_t s=
+ize,
+> > -                                           const char *path, const cha=
+r *name)
+> > +static char *shell_test__description(int dir_fd, const char *name)
+> >  {
+> > -       FILE *fp;
+> > -       char filename[PATH_MAX];
+> > -       int ch;
+> > +       struct io io;
+> > +       char buf[128], desc[256];
+> > +       int ch, pos =3D 0;
+> >
+> > -       path__join(filename, sizeof(filename), path, name);
+> > -       fp =3D fopen(filename, "r");
+> > -       if (!fp)
+> > +       io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf))=
+;
+> > +       if (io.fd < 0)
+> >                 return NULL;
+> >
+> >         /* Skip first line - should be #!/bin/sh Shebang */
+> > +       if (io__get_char(&io) !=3D '#')
+> > +               goto err_out;
+> > +       if (io__get_char(&io) !=3D '!')
+> > +               goto err_out;
+> >         do {
+> > -               ch =3D fgetc(fp);
+> > -       } while (ch !=3D EOF && ch !=3D '\n');
+> > -
+> > -       description =3D fgets(description, size, fp);
+> > -       fclose(fp);
+> > +               ch =3D io__get_char(&io);
+> > +               if (ch < 0)
+> > +                       goto err_out;
+> > +       } while (ch !=3D '\n');
+> >
+> > -       /* Assume first char on line is omment everything after that de=
+sc */
+> > -       return description ? strim(description + 1) : NULL;
+> > +       do {
+> > +               ch =3D io__get_char(&io);
+> > +               if (ch < 0)
+> > +                       goto err_out;
+> > +       } while (ch =3D=3D '#' || isspace(ch));
+> > +       while (ch > 0 && ch !=3D '\n') {
+> > +               desc[pos++] =3D ch;
+> > +               if (pos >=3D (int)sizeof(desc) - 1)
+>
+> Maybe (pos =3D=3D sizeof(desc) - 2) ?  I'm not sure what happens if it ha=
+s a
+> description longer than the buffer size.
 
-That would be fine.
+Thanks Namhyung!
 
-> 
->>>> +  if (READ_ONCE(rb->aux_in_pause_resume))
->>>> +	/* Guard against NMI, NMI loses here */
->>>> +          goto out_restore;
-> <----------------------- NMI
+sizeof(desc) - 1 =3D=3D sizeof(char[256]) - 1 =3D=3D 255 , so at this point
+pos can at most be 255 and there is one space after pos for a trailing
+'\0'.
 
-That would be fine.
+> > +                       break;
+> > +               ch =3D io__get_char(&io);
+> > +       }
+> > +       while (pos > 0 && isspace(desc[--pos]))
+> > +               ;
 
->>>> +  WRITE_ONCE(rb->aux_in_pause_resume, 1);
+Here pos is moved back to at least one to 254.
 
-From here on, the NMI will see rb->aux_in_pause_resume == 1
-and do nothing, up to the point when rb->aux_in_pause_resume == 0
-again.
+> > +       desc[++pos] =3D '\0';
+>
+> Wouldn't it overflow the buffer?
 
-This code is about guarding against NMI.  Interrupts are
-disabled, and the rb and event only operate on 1 cpu at a time.
+At this point pos can only have a maximum value of 255 which is within
+the bounds of desc.
 
-> 
-> 
-> Even if it isn't racy it needs a clear comment.
+Thanks,
+Ian
 
-It has a comment, but it could be more explanatory.  The code
-paradigm is also used in perf_pmu_snapshot_aux().
-
+> Thanks,
+> Namhyung
+>
+>
+> > +       close(io.fd);
+> > +       return strdup(desc);
+> > +err_out:
+> > +       close(io.fd);
+> > +       return NULL;
+> >  }
