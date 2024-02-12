@@ -1,192 +1,221 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC87A481A8
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 20:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807B747F6C
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 20:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707769184; cv=none; b=DVM2KODKFFSTIUVwqTybrqTqes7ubkrFJGHFklFe832C3Iy8RPC6xF+QmYnG8GjbAOTk2CdE/DJjqFqmRSxqd3T+kmauNUvkfxOO5prQAJZ/iFalfM6mvu2bbBhOAzQiYW7far1W21DIYkZeJQGXjyKQP3uU7oI3PgBgFTg+GB8=
+	t=1707769349; cv=none; b=ioC2YRfGlRITlGqk+I7udAtYiYqj352/eZkW6MAGQcm6by3UrhO0fXgxXRDLjkCXgZcAcMi0ly+brgWW6Hx094cZSrzmB9ELwvgDBjdiaiA16DHG67Ix+UdRGBfmly86KCqBBNXpYw6or1JacgQpA3sluruWJBlO/5IaNqF5774=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707769184; c=relaxed/simple;
-	bh=uJODUvONYUlc20hpmSj0J1uA1bYdfMjYs2on9f3uMaU=;
+	s=arc-20240116; t=1707769349; c=relaxed/simple;
+	bh=1jyb/LgyCJSFAs/iMDtWO35G1TCZMxoahITHRWxYqTM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dMOyMYcbEH5BFlWpomDO2WzwJbYFVfLhwaPPWmedbEyClAIJFFJuINeuKpJQIxaqSJ8+qvwD7t5aKrIVpPl5TNc75v4bE+G/FnXIzwHUmM++rWLYKA+xugS6JJB4GpU/L+eQ0S3hbGjtoIc7mOJLuoYNsoUwRHh5df6IWin/OG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=11FMG5XN; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=K7YKe7y2yIiyGp1HBlXkjeL6lY4rjgJxTmgxQCJnxPG0U42A5OWrvQ2uAzR1a9WX5qnUJ4ZoWBfQc9fstrbq/kN/WZQC7As7QyZct2K0NzZYNgFlhhgf32gdnpUGEaqGaYTQi7L6zIz6jQfBdj8SjaVACPGkpVp67N1lyrS98Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IA0NkTZj; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="11FMG5XN"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1da120617c7so21195ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 12:19:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IA0NkTZj"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d5ce88b51cso46695ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 12:22:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707769182; x=1708373982; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707769347; x=1708374147; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Icnm5yBA0aCxHiFxkqBy8LL31RhB/IB62tLF3Y2+Rh4=;
-        b=11FMG5XNHfIstKlv1zF3fyvh+Of51VOIQ2onsVY8flJARraF4gjA5LIN+TFj2G1O5W
-         JWiTYiKZ+SEZLn/+eX1i9XDfHJE+fcfUbAclkhxjoN9r6sxui/mioNKfqwkLfYqQ+lHA
-         H77yyFuuYc9HakPkptohUGOu4QJ7/e3wzSYQXPcQm6A3o6wGW2MciPyiWFpIvEBBCqjj
-         TI/wYJ34DXgJ6R5fHY/mLEUAuhJXGEUn2yghX4Mj2RL82+ltrj89lcoxG57yLODw4jGD
-         0/dmZyZAP206IU2Bk/rFDz0iwPpsvL4FvZvmbQbPZDKX6ctgz3naW+Tl+PG6p3a/gQsg
-         cRVg==
+        bh=CSkTVHBMewwnu8yq5IPAUhgGr9Iydcb2u3j6O+zxJnQ=;
+        b=IA0NkTZjJMhGTstt/Tvf42VjN7kaIRSv+wWKUktiXc9GtE88Rvf1tWqWcxtb1n3+1X
+         Wy2wIryxwznO4NRXMgQqRoBm3asizqsvcCaHUPq9mtq0W9MOrAgAn4mYKbr9qhaAlo5p
+         zr9/Krv3x7p3FxkbZNHI2xEAma+l6SmxdkWPdxtB5JjaVD40v2EBW36wXUjais8rJDKd
+         5/6mkmDLdwowRVcF+WLHTI3VsR9ByV2fTajyLtLsbLKfJcNiTepImBx7/NIDghG48Pkv
+         W8XTDFT5M1+WhMW5OskVsNqdtnHTNPH8qlOJcGkFuD6zC7jCFvHIzes19JuC81mJOBUK
+         QHYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707769182; x=1708373982;
+        d=1e100.net; s=20230601; t=1707769347; x=1708374147;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Icnm5yBA0aCxHiFxkqBy8LL31RhB/IB62tLF3Y2+Rh4=;
-        b=LPKnAeh5tx3w0KneNGP+dvFQYHmNeB+xdvNawasXW7ZatFYcqWI1CYrUYCaz4fJJfu
-         JmD7pFyoyoXtb35XkHZCSFcfp5Bs0bSs2vnboL64nZo2hB45RqfpwsYh/+/xNlCPkonu
-         Zbgswc7eIjaj7MWoRXc8iXfbF7DGEp0fS1/elGlRNJOgEB3NtP0Av2f+zb0qUBM3dX1o
-         GORDC0xXDqNZhTBhNEaZn1JlZwNq60Z1io1dR8h77t5bIqQh9GIs4nuWNm/q69LUQUrU
-         lZ39RcGSHNi09IHjlTPd/zX0tZJDuxyjr9LDhyaXhfrL/Ryv9Z1fByUVYECjulIT0o8d
-         4+7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVtlcRyA+sPP78Tfb2GPORjubPturNd1SHBWU5h1Huh+gKIfh49QwMtDMe+W7i8FXCc3e8RljnhkaGIPBaIbreqNyZy9lUirLzOkkBLiZf0kA==
-X-Gm-Message-State: AOJu0YxUBD4suO0EuZEQGEqhXTIfWg2fIFmgrPEJD6FEcrPelX60wFC/
-	FkZPmDLc+2cB3BNG3PHIEA0Uf6cybcBmktZwekuyB24fXYFzY2sOtz/VEv1LmymZcl+RyUeCydA
-	W5j/W1cA23j7kUSJEcfQuWpVROCmx4JLtOLSQ
-X-Google-Smtp-Source: AGHT+IFlMmc/VgL27uQvdpqBTW3rRUsQvhkAr01w85UMAaL7w4vejw2tDQTJNnyrG/NRrY5ESxZBez3SdEz5nMr0uSI=
-X-Received: by 2002:a17:902:c1d4:b0:1d8:e076:21f3 with SMTP id
- c20-20020a170902c1d400b001d8e07621f3mr550plc.2.1707769181746; Mon, 12 Feb
- 2024 12:19:41 -0800 (PST)
+        bh=CSkTVHBMewwnu8yq5IPAUhgGr9Iydcb2u3j6O+zxJnQ=;
+        b=VGIrm7yCr4ZUnrpKua4piYyfO/1WSe6qY2bfGkVDk3rH51iM7YDJi0xbpUB3hRQWdv
+         7yjNDMKqRIxSF8cF0o9FxOap2maI9oLc6S/1jO9lNeVY5YiQ11yFwm51FcVpofhLvDTe
+         6WOebCGwOyXEwASI16HlBVezmLsxXNW0yEXWDLuVWqHPta5K3egnFcKkVdK2Aa4Buj52
+         B7n3710NrRXxED1fdg6MrOB1y8ztAIuzE6VoQJuJHJtrZN+lqTOa1MmMJUU+LwofKU94
+         qPUmKmGpaZaSHhFM+zFxLamRWB32IbRuJ+gorsjhhDCA4tSZvXTQd1XxkrnJ+Eg6UqyS
+         LYGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpMc2VybyziX9Eu9hQHfX7uptYQ73ajlqHdw4Yj/j3KjOSyVofpxMd1EHSJVFFcyL5E6Q9umUVtIsZHB7z5kdDyqxNGDUYP0u8xz2aZ1AezQ==
+X-Gm-Message-State: AOJu0YxDJWgqK8nNxthlrmoOv3XrVOd5UEVFY9tqx3mwMAmLWXg7PS/P
+	FtrgW5O1OF96gLrALSQ+pT2LXTk89qofmM+3CYSvVmSwQQKsxs6A4nifH94xLBcObX+O+zCyLdO
+	1nyPpjBxlWnyAjq/s2Fm0YQHD0keeq+QbVu3I
+X-Google-Smtp-Source: AGHT+IE5+3kIF7GEm/jVEtuVk1CfrpPR482lIZqB7Gpm+RznoZw+6+B3gt0Ki+FE0pXZjN0hp8JTqOvZhK/qaYw6gao=
+X-Received: by 2002:a17:902:cece:b0:1d8:d6bf:145b with SMTP id
+ d14-20020a170902cece00b001d8d6bf145bmr341044plg.15.1707769346579; Mon, 12 Feb
+ 2024 12:22:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240210031746.4057262-1-irogers@google.com> <20240210031746.4057262-2-irogers@google.com>
- <CAM9d7chEKepmHY_Mgvq27CEcKB1e8bENwn2=pMe-yin30nfGLA@mail.gmail.com>
-In-Reply-To: <CAM9d7chEKepmHY_Mgvq27CEcKB1e8bENwn2=pMe-yin30nfGLA@mail.gmail.com>
+References: <20240207223639.3139601-1-irogers@google.com> <CAM9d7chBixXozCQztM2WKGbfs_8C70vy6ROzKpwLSqq-upz5iQ@mail.gmail.com>
+ <CAP-5=fUVkaq3dDoeMYYEN1N-ghnL-GiP8PV3N3pWpjQKpDTCHw@mail.gmail.com>
+ <CAP-5=fXs8=HvjGpkLwuZBi0Hh8jtmz7=0Tp7HRgU8FOFN0GZvg@mail.gmail.com> <CAM9d7choe-CruqcdkLMPC1Eu4Oca0CBaaq-uiCd=csiLY60NBw@mail.gmail.com>
+In-Reply-To: <CAM9d7choe-CruqcdkLMPC1Eu4Oca0CBaaq-uiCd=csiLY60NBw@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Feb 2024 12:19:26 -0800
-Message-ID: <CAP-5=fX7h9ku-XgjYe+3B5NWOJnapLnuJ_JqxywPaTu76VxazA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] perf maps: Switch from rbtree to lazily sorted
- array for addresses
+Date: Mon, 12 Feb 2024 12:22:15 -0800
+Message-ID: <CAP-5=fXAkbnpKpkCM8soy7pHzCZZJ8VWYrd9ewFtZoaoA6vZnQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] maps memory improvements and fixes
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
-	Colin Ian King <colin.i.king@gmail.com>, Liam Howlett <liam.howlett@oracle.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Artem Savkov <asavkov@redhat.com>, 
-	Changbin Du <changbin.du@huawei.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Alexey Dobriyan <adobriyan@gmail.com>, 
-	James Clark <james.clark@arm.com>, Vincent Whitchurch <vincent.whitchurch@axis.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, leo.yan@linux.dev
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2024 at 12:15=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+On Mon, Feb 12, 2024 at 12:10=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> On Fri, Feb 9, 2024 at 7:18=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+> On Sat, Feb 10, 2024 at 10:08=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
 > >
-> > Maps is a collection of maps primarily sorted by the starting address
-> > of the map. Prior to this change the maps were held in an rbtree
-> > requiring 4 pointers per node. Prior to reference count checking, the
-> > rbnode was embedded in the map so 3 pointers per node were
-> > necessary. This change switches the rbtree to an array lazily sorted
-> > by address, much as the array sorting nodes by name. 1 pointer is
-> > needed per node, but to avoid excessive resizing the backing array may
-> > be twice the number of used elements. Meaning the memory overhead is
-> > roughly half that of the rbtree. For a perf record with
-> > "--no-bpf-event -g -a" of true, the memory overhead of perf inject is
-> > reduce fom 3.3MB to 3MB, so 10% or 300KB is saved.
-> >
-> > Map inserts always happen at the end of the array. The code tracks
-> > whether the insertion violates the sorting property. O(log n) rb-tree
-> > complexity is switched to O(1).
-> >
-> > Remove slides the array, so O(log n) rb-tree complexity is degraded to
-> > O(n).
-> >
-> > A find may need to sort the array using qsort which is O(n*log n), but
-> > in general the maps should be sorted and so average performance should
-> > be O(log n) as with the rbtree.
-> >
-> > An rbtree node consumes a cache line, but with the array 4 nodes fit
-> > on a cache line. Iteration is simplified to scanning an array rather
-> > than pointer chasing.
-> >
-> > Overall it is expected the performance after the change should be
-> > comparable to before, but with half of the memory consumed.
-> >
-> > To avoid a list and repeated logic around splitting maps,
-> > maps__merge_in is rewritten in terms of
-> > maps__fixup_overlap_and_insert. maps_merge_in splits the given mapping
-> > inserting remaining gaps. maps__fixup_overlap_and_insert splits the
-> > existing mappings, then adds the incoming mapping. By adding the new
-> > mapping first, then re-inserting the existing mappings the splitting
-> > behavior matches.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> [SNIP]
-> >  int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, v=
-oid *data), void *data)
-> >  {
-> > -       struct map_rb_node *pos;
-> > +       bool done =3D false;
-> >         int ret =3D 0;
-> >
-> > -       down_read(maps__lock(maps));
-> > -       maps__for_each_entry(maps, pos) {
-> > -               ret =3D cb(pos->map, data);
-> > -               if (ret)
-> > -                       break;
-> > +       /* See locking/sorting note. */
-> > +       while (!done) {
-> > +               down_read(maps__lock(maps));
-> > +               if (maps__maps_by_address_sorted(maps)) {
-> > +                       /*
-> > +                        * maps__for_each_map callbacks may buggily/uns=
-afely
-> > +                        * insert into maps_by_address. Deliberately re=
-load
-> > +                        * maps__nr_maps and maps_by_address on each it=
-eration
-> > +                        * to avoid using memory freed by maps__insert =
-growing
-> > +                        * the array - this may cause maps to be skippe=
-d or
-> > +                        * repeated.
-> > +                        */
-> > +                       for (unsigned int i =3D 0; i < maps__nr_maps(ma=
-ps); i++) {
-> > +                               struct map **maps_by_address =3D maps__=
-maps_by_address(maps);
+> > On Fri, Feb 9, 2024 at 6:46=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> > >
+> > > On Thu, Feb 8, 2024 at 9:44=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > On Wed, Feb 7, 2024 at 2:37=E2=80=AFPM Ian Rogers <irogers@google.c=
+om> wrote:
+> > > > >
+> > > > > First 6 patches from:
+> > > > > https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@goo=
+gle.com/
+> > > > >
+> > > > > v2. Fix NO_LIBUNWIND=3D1 build issue.
+> > > > >
+> > > > > Ian Rogers (6):
+> > > > >   perf maps: Switch from rbtree to lazily sorted array for addres=
+ses
+> > > > >   perf maps: Get map before returning in maps__find
+> > > > >   perf maps: Get map before returning in maps__find_by_name
+> > > > >   perf maps: Get map before returning in maps__find_next_entry
+> > > > >   perf maps: Hide maps internals
+> > > > >   perf maps: Locking tidy up of nr_maps
+> > > >
+> > > > Now I see a perf test failure on the vmlinux test:
+> > > >
+> > > > $ sudo ./perf test -v vmlinux
+> > > >   1: vmlinux symtab matches kallsyms                               =
+  :
+> > > > --- start ---
+> > > > test child forked, pid 4164115
+> > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > "[__builtin__kprobes]" module!
+> > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > "[__builtin__kprobes]" module!
+> > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > "[__builtin__ftrace]" module!
+> > > > Looking at the vmlinux_path (8 entries long)
+> > > > Using /usr/lib/debug/boot/vmlinux-6.5.13-1rodete2-amd64 for symbols
+> > > > perf: Segmentation fault
+> > > > Obtained 16 stack frames.
+> > > > ./perf(+0x1b7dcd) [0x55c40be97dcd]
+> > > > ./perf(+0x1b7eb7) [0x55c40be97eb7]
+> > > > /lib/x86_64-linux-gnu/libc.so.6(+0x3c510) [0x7f33d7a5a510]
+> > > > ./perf(+0x1c2e9c) [0x55c40bea2e9c]
+> > > > ./perf(+0x1c43f6) [0x55c40bea43f6]
+> > > > ./perf(+0x1c4649) [0x55c40bea4649]
+> > > > ./perf(+0x1c46d3) [0x55c40bea46d3]
+> > > > ./perf(+0x1c7303) [0x55c40bea7303]
+> > > > ./perf(+0x1c70b5) [0x55c40bea70b5]
+> > > > ./perf(+0x1c73e6) [0x55c40bea73e6]
+> > > > ./perf(+0x11833e) [0x55c40bdf833e]
+> > > > ./perf(+0x118f78) [0x55c40bdf8f78]
+> > > > ./perf(+0x103d49) [0x55c40bde3d49]
+> > > > ./perf(+0x103e75) [0x55c40bde3e75]
+> > > > ./perf(+0x1044c0) [0x55c40bde44c0]
+> > > > ./perf(+0x104de0) [0x55c40bde4de0]
+> > > > test child interrupted
+> > > > ---- end ----
+> > > > vmlinux symtab matches kallsyms: FAILED!
+> > >
+> > > Ah, tripped over a latent bug summarized in this part of an asan stac=
+k trace:
+> > > ```
+> > > freed by thread T0 here:
+> > >    #0 0x7fa13bcd74b5 in __interceptor_realloc
+> > > ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:85
+> > >    #1 0x561d66377713 in __maps__insert util/maps.c:353
+> > >    #2 0x561d66377b89 in maps__insert util/maps.c:413
+> > >    #3 0x561d6652911d in dso__process_kernel_symbol util/symbol-elf.c:=
+1460
+> > >    #4 0x561d6652aaae in dso__load_sym_internal util/symbol-elf.c:1675
+> > >    #5 0x561d6652b6dc in dso__load_sym util/symbol-elf.c:1771
+> > >    #6 0x561d66321a4e in dso__load util/symbol.c:1914
+> > >    #7 0x561d66372cd9 in map__load util/map.c:353
+> > >    #8 0x561d663730e7 in map__find_symbol_by_name_idx util/map.c:397
+> > >    #9 0x561d663731e7 in map__find_symbol_by_name util/map.c:410
+> > >    #10 0x561d66378208 in maps__find_symbol_by_name_cb util/maps.c:524
+> > >    #11 0x561d66377f49 in maps__for_each_map util/maps.c:471
+> > >    #12 0x561d663784a0 in maps__find_symbol_by_name util/maps.c:546
+> > >    #13 0x561d662093e8 in machine__find_kernel_symbol_by_name util/mac=
+hine.h:243
+> > >    #14 0x561d6620abbd in test__vmlinux_matches_kallsyms
+> > > tests/vmlinux-kallsyms.c:330
+> > > ...
+> > > ```
+> > > dso__process_kernel_symbol rewrites the kernel maps here:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/symbol-elf.c#n1378
+> > > which resizes the maps_by_address array causing the maps__for_each_ma=
+p
+> > > iteration in frame 11 to be iterating over a stale/freed value.
+> > >
+> > > The most correct solutions would be to clone the maps_by_address arra=
+y
+> > > prior to iteration, or reference count maps_by_address and its size.
+> > > Neither of these solutions particularly appeal, so just reloading the
+> > > maps_by_address and size on each iteration also fixes the problem, bu=
+t
+> > > possibly causes some maps to be skipped/repeated. I think this is
+> > > acceptable correctness for the performance.
 >
-> Any chance they can move out of the loop?  I guess not as they are
-> not marked to const/pure functions..
+> Can we move map__load() out of maps__for_each_map() ?
+> I think the callback should just return the map and break the loop.
+> And it can call the map__load() out of the read lock.
 
-It's not because the cb(...) call below will potentially modify
-maps_by_address by inserting maps and reallocating the array. Having
-it outside the loop was what caused the original bug.
+It would need a rewrite of map__find_symbol_by_name which is being
+called by a callback from maps__find_symbol_by_name. Perhaps an
+initial pass to ensure everything is loaded and a safe version of the
+loop that copies the maps_by_address ahead of copying it. It'd be of a
+scope that'd be worth its own patch set.
+
+> >
+> > An aside, shouldn't taking a write lock to modify the maps deadlock
+> > with holding the read lock for iteration? Well no because
+> > perf_singlethreaded is true for the test:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/rwsem.c#n17
+> > Another perf_singlethreaded considered evil :-) Note, just getting rid
+> > of perf_singlethreaded means latent bugs like this will pop up and
+> > will need resolution.
+>
+> Yeah, maybe.  How about turning it on in the test code?
+
+Agreed, but I think it should be a follow up.
 
 Thanks,
 Ian
 
 > Thanks,
 > Namhyung
->
->
-> > +                               struct map *map =3D maps_by_address[i];
-> > +
-> > +                               ret =3D cb(map, data);
-> > +                               if (ret)
-> > +                                       break;
-> > +                       }
-> > +                       done =3D true;
-> > +               }
-> > +               up_read(maps__lock(maps));
-> > +               if (!done)
-> > +                       maps__sort_by_address(maps);
-> >         }
-> > -       up_read(maps__lock(maps));
-> >         return ret;
-> >  }
