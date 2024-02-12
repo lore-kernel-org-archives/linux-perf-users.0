@@ -1,68 +1,68 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D843D0DA
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 16:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EC53D556
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 17:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707754021; cv=none; b=LXwPau4gSsFoUSw3jrCACLpcOfkhltL8I7oAM56G9l2aQ+NifiR0hZedDPdsDEtJ9a/QePl/PXfceEOhJWhQjstYxa1l2vPM8qhou8ifsJMRMSbaZ5gK8zv1yPS7AQ0N9kk05jFupu9Ii3p3GzUiHik0npcxm9cmRBLEWw6xKkw=
+	t=1707759782; cv=none; b=IHdnJqG3Sv3hsdvnxV82g+4oOw3Mat2GGBasDmnUJhha2WTcOZFW9ihhAl1DYWxSHzQ9SwIOh0mUSI+KLfyhGPC7t2aPjXczuGU+ecWt7a+677DFgwyPzXZBnF5LS6IqE1XWaFMkVcghjIlDm66axh7fXjdACBG9B05KAq899bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707754021; c=relaxed/simple;
-	bh=6VljTnqgIgygVWGxmCUMJQmUDyt4BmVYXuCIwltV1hw=;
+	s=arc-20240116; t=1707759782; c=relaxed/simple;
+	bh=hBgrgSQ2WvIgsLwAhLEzviAF1OJWnbhtT5OgqSqwi+8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f34GxJqnKo/trTMYUG9IBzSgpF/KyTR5xE4V+/541DeS38dU9SnVia4HgExVUxS/E+mBXmMhA3kaR8Jn7EWCgrRpgBpl1WtuXYT4bF0MhL+tR6lAB03mJ3VdJAMJbIsRYpsCOTdWGbjsdwcxQrsIQUHbwOTddA7kCnIyZxGLYzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tRVmeHTG; arc=none smtp.client-ip=209.85.166.176
+	 To:Cc:Content-Type; b=ui2phKNWWvC6BJHvMQzWg6QqZ+De1zmAcBhaDMpPsxg4dcfahyrUAQ2osKna9LlXG2rNeCdgxc70+Uvpm+xm0zwVsRBXsaEb5O99/rLVC3K45Xk2H411bgQKkp6T4mFt8vM9J8Xg2kLrcdvs4FQN+g5Ui8HbodZRdAU3x5hBEZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UB9qaXmr; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tRVmeHTG"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-363c980faa2so454775ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 08:06:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UB9qaXmr"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d89f0ab02bso231405ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Feb 2024 09:42:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707754018; x=1708358818; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707759779; x=1708364579; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V812vhaPKlOTRNmWcK0bgkq24J9lpm1PdtO4QK4iOp4=;
-        b=tRVmeHTGJ343PbXRI26ljN03Kthcw0DA2oX03eGIFzh7MhehS105ifLE5DbtDsvRtz
-         PJLgfD+rZoTF1TxGNfsfQyEQWwUqf2ACcF6puFRqik69sBbgG3GbIjFuDBL8l04xrA14
-         gkRhYTJBhUSWkZj664s759XKv/F9L0O0bXc44vN2vE6wym511weJP/x0KGYqv/1gKWid
-         IMWG1arLK5LzqJ+7WHsH7kWrQbNNJUbuvlB7pQg5lGTjhJ3ZTmtvttEECONyun/0J+kO
-         N8qqO8ac2mxd6YFhC4kb1q7fVPM+Jr87WkLRBlbYYrYY+xdj7PzJFhWhUaBasV6Rm5+U
-         sXrA==
+        bh=aog8VNE4h8I2REQO4L/3hmawK8e9r1k2E9qbJbf6Tdg=;
+        b=UB9qaXmrNMz5+ZwcDWVfqTaX9RI38kYNBW80Tef9A/Q9PrAIkSlyCBXlD762zl/x23
+         9T+mZTH4K0rDuhWe/lYLRilo6AXYKAFD02N+bPtNI3vIZooDeAdYDwwlIOZEHMMHiJLR
+         Ba4AeLPshZrjEksiheltDym2Vu6uRgBwFkmKkNtkNFzJPAhByunAfZIN0TYSX5oX9IOT
+         9fyz+2lKbpJEIDuVQge7YiUUiJKSVUFJSThKnsVklGlyO5i5hM3PRVnRYPd3DPkMYscK
+         urfj542TLmcQdCUFU/lwuwWqEwvJb/WCNnG2IxiQmRdy6PXt6FX9uP1sA96csvsGn1Dx
+         bUNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707754018; x=1708358818;
+        d=1e100.net; s=20230601; t=1707759779; x=1708364579;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V812vhaPKlOTRNmWcK0bgkq24J9lpm1PdtO4QK4iOp4=;
-        b=iTFgLK5z1GFGP7QKWk+kEzmLKVeDvamtWcTjGUJlBcit4+tGh2B5JOwvqA/pPREujZ
-         YQPlNOo757F32UgQrNwLmzj6NXwqEfZyK7/oClnj4oNHWR+FObEKqJrwZ9a3s0EC6DCa
-         t6zsAh7FO0SACfzxsmracvRYOrmS09v2eKZjZmagw7KmDB81WJc4HYlcA18OXZnXuYcW
-         YIuyYL7OZVeUCOhT7jdo6gIRMPP8pggOlHNemv771MVmWVxkUI140KYk7NNEpeBJqzZp
-         vUVXCgj9SE51k5kFBvPWT4wXgGfacEBdWJuSQ099KAJm2CGwFhHYVazg6pbdSxx1sdbE
-         qCoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUa1di+CFsvJoshyl+KIcmHxaWdOa1ADZoMQ58H506+J699NRBgCXMRrCHbDAv6KZZ6AI5P70SUB+oD+WBCkK6CeGnxy1rnzD54Qgc7eA4xGw==
-X-Gm-Message-State: AOJu0Yx1e7AFrXFwzCQUsKUuoERXQyuFoEr5F5dS+4eBtNa4FO/sXwO9
-	z6dPDqk65sY/xDplLHZOw9b73hGbxI/t/QO0GEmfwBy2jui0f3X7OoXq/jGibb+/ChxOu32tH0P
-	mt2WlWw22IJSZqVGNxWz9IXwvyV1HElXemOIE
-X-Google-Smtp-Source: AGHT+IFN1k4a8xKqLL837bVzWrBksaHMIqM1/h45wRcG9S7HfMYRYNm1TbVw0RhAd9mTK+DTdio3lh12s3nw55K2q8I=
-X-Received: by 2002:a05:6e02:3385:b0:363:d56d:1b0c with SMTP id
- bn5-20020a056e02338500b00363d56d1b0cmr435240ilb.26.1707754018456; Mon, 12 Feb
- 2024 08:06:58 -0800 (PST)
+        bh=aog8VNE4h8I2REQO4L/3hmawK8e9r1k2E9qbJbf6Tdg=;
+        b=irkLg+t60BpqgHWOq+nOmMAl7dc8w6/eQMKMe+JjCrgPcPP6ZHQdI4hnieI1/Us6Nh
+         kN+RiOpoOXZcBu5TqSJMw2ZUOzRktUzJNt2PyPyXmxM/n917qSwoqQIqoJ7Pg/86X2WA
+         fSgz9Z+pFzISYG/2MCIbWmS7NaUf0QfFm6NwMsWUARFPyAkmZ2u/Nl638K1AVXfSRMhZ
+         Hm8227eeloZe1lNFQo5I04FOTRc5oFZgOSFoSqjYwx+KI5XYMieTyY3DewMDTbyooILK
+         /1H+SQ30WseYB5FIkn2N4yYhxBxvHG5cGubtCEIyum9Y1qKkvxqG+b+gbGAxxBzTI0MP
+         rtvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlceGPUWBQevaQdIgUqs5T+8xuc0iSDXcIWMbGJYkSGOBVlR1On7tDpWPKC2FjEymDhsZZPIQ2dWLLJTFHrtgAwvQ5LaqqcOl1KPld2iP9rQ==
+X-Gm-Message-State: AOJu0YzYmF2tNtMcXb9gMX0jjzMNesQ7V+Opg+WvPnDYT8mDDQqZ5Hya
+	OvWd8hVRHGia1NkK8wTVscZF0vKULEAbmcGzaAQVuevf5QXkczqkNVvD1Dx3ebJ+yL6lkjBt0ot
+	rN6FMGQRnbQ2F+v0SJCowI29uNHJvXRlCkf4d
+X-Google-Smtp-Source: AGHT+IG5gqqu63E2iPVSh2XOU/55eaq9aA8oeIvghGsL83zPoBMpXKfS+YHy3TgdRZn1nFQYlX8g7DScoHt+c1lkzJA=
+X-Received: by 2002:a17:902:7294:b0:1db:2acb:edfd with SMTP id
+ d20-20020a170902729400b001db2acbedfdmr38554pll.22.1707759778576; Mon, 12 Feb
+ 2024 09:42:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201001504.1348511-1-irogers@google.com> <20240201001504.1348511-6-irogers@google.com>
- <CAM9d7cjka_O5OmCxkrp-K6g45VnxEJNd73jjv6kQanutf+6sbg@mail.gmail.com>
-In-Reply-To: <CAM9d7cjka_O5OmCxkrp-K6g45VnxEJNd73jjv6kQanutf+6sbg@mail.gmail.com>
+References: <20240201001504.1348511-1-irogers@google.com> <20240201001504.1348511-7-irogers@google.com>
+ <CAM9d7ciaKQadAZJt1431iqZsvAvk9HrCgLp1mLpNwabQ4=_8tg@mail.gmail.com>
+In-Reply-To: <CAM9d7ciaKQadAZJt1431iqZsvAvk9HrCgLp1mLpNwabQ4=_8tg@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Feb 2024 08:06:43 -0800
-Message-ID: <CAP-5=fV1dA_hbH=UAZFL8DeuRzvRqW51-gQFSpuEsHpWEDDtWw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/9] perf tests: Use scandirat for shell script finding
+Date: Mon, 12 Feb 2024 09:42:45 -0800
+Message-ID: <CAP-5=fU+15n_bUExE6e+TcvoSaossORydBB8GEhOTtR3vC3ixA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] perf tests: Run time generate shell test suites
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -82,90 +82,346 @@ rote:
 > On Wed, Jan 31, 2024 at 4:15=E2=80=AFPM Ian Rogers <irogers@google.com> w=
 rote:
 > >
-> > Avoid filename appending buffers by using openat, faccessat and
-> > scandirat more widely. Turn the script's path back to a file name
-> > using readlink from /proc/<pid>/fd/<fd>.
-> >
-> > Read the script's description using api/io.h to avoid fdopen
-> > conversions. Whilst reading perform additional sanity checks on the
-> > script's contents.
+> > Rather than special shell test logic, do a single pass to create an
+> > array of test suites. Hold the shell test file name in the test suite
+> > priv field. This makes the special shell test logic in builtin-test.c
+> > redundant so remove it.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> [SNIP]
-> > -static const char *shell_test__description(char *description, size_t s=
-ize,
-> > -                                           const char *path, const cha=
-r *name)
-> > +static char *shell_test__description(int dir_fd, const char *name)
-> >  {
-> > -       FILE *fp;
-> > -       char filename[PATH_MAX];
-> > -       int ch;
-> > +       struct io io;
-> > +       char buf[128], desc[256];
-> > +       int ch, pos =3D 0;
+> >  tools/perf/tests/builtin-test.c  |  91 +----------------------
+> >  tools/perf/tests/tests-scripts.c | 120 ++++++++++++++++++-------------
+> >  tools/perf/tests/tests-scripts.h |  10 +--
+> >  3 files changed, 74 insertions(+), 147 deletions(-)
 > >
-> > -       path__join(filename, sizeof(filename), path, name);
-> > -       fp =3D fopen(filename, "r");
-> > -       if (!fp)
-> > +       io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf))=
-;
-> > +       if (io.fd < 0)
-> >                 return NULL;
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
+-test.c
+> > index 6d5001daaf63..c42cb40fc242 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -130,6 +130,7 @@ static struct test_suite *generic_tests[] =3D {
+> >  static struct test_suite **tests[] =3D {
+> >         generic_tests,
+> >         arch_tests,
+> > +       NULL, /* shell tests created at runtime. */
+> >  };
 > >
-> >         /* Skip first line - should be #!/bin/sh Shebang */
-> > +       if (io__get_char(&io) !=3D '#')
-> > +               goto err_out;
-> > +       if (io__get_char(&io) !=3D '!')
-> > +               goto err_out;
-> >         do {
-> > -               ch =3D fgetc(fp);
-> > -       } while (ch !=3D EOF && ch !=3D '\n');
+> >  static struct test_workload *workloads[] =3D {
+> > @@ -299,74 +300,12 @@ static int test_and_print(struct test_suite *t, i=
+nt subtest)
+> >         return err;
+> >  }
+> >
+> > -struct shell_test {
+> > -       const char *file;
+> > -};
 > > -
-> > -       description =3D fgets(description, size, fp);
-> > -       fclose(fp);
-> > +               ch =3D io__get_char(&io);
-> > +               if (ch < 0)
-> > +                       goto err_out;
-> > +       } while (ch !=3D '\n');
+> > -static int shell_test__run(struct test_suite *test, int subdir __maybe=
+_unused)
+> > -{
+> > -       int err;
+> > -       struct shell_test *st =3D test->priv;
+> > -       char *cmd;
+> > -
+> > -       asprintf(&cmd, "%s%s", st->file, verbose ? " -v" : "");
+> > -       if (!cmd)
+> > -               return TEST_FAIL;
+> > -       err =3D system(cmd);
+> > -       free(cmd);
+> > -       if (!err)
+> > -               return TEST_OK;
+> > -
+> > -       return WEXITSTATUS(err) =3D=3D 2 ? TEST_SKIP : TEST_FAIL;
+> > -}
+> > -
+> > -static int run_shell_tests(int argc, const char *argv[], int i, int wi=
+dth,
+> > -                               struct intlist *skiplist)
+> > -{
+> > -       struct shell_test st;
+> > -       const struct script_file *files, *file;
+> > -
+> > -       files =3D list_script_files();
+> > -       if (!files)
+> > -               return 0;
+> > -       for (file =3D files; file->file; file++) {
+> > -               int curr =3D i++;
+> > -               struct test_case test_cases[] =3D {
+> > -                       {
+> > -                               .desc =3D file->desc,
+> > -                               .run_case =3D shell_test__run,
+> > -                       },
+> > -                       { .name =3D NULL, }
+> > -               };
+> > -               struct test_suite test_suite =3D {
+> > -                       .desc =3D test_cases[0].desc,
+> > -                       .test_cases =3D test_cases,
+> > -                       .priv =3D &st,
+> > -               };
+> > -               st.file =3D file->file;
+> > -
+> > -               if (test_suite.desc =3D=3D NULL ||
+> > -                   !perf_test__matches(test_suite.desc, curr, argc, ar=
+gv))
+> > -                       continue;
+> > -
+> > -               pr_info("%3d: %-*s:", i, width, test_suite.desc);
+> > -
+> > -               if (intlist__find(skiplist, i)) {
+> > -                       color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip=
+ (user override)\n");
+> > -                       continue;
+> > -               }
+> > -
+> > -               test_and_print(&test_suite, 0);
+> > -       }
+> > -       return 0;
+> > -}
+> > -
+> >  static int __cmd_test(int argc, const char *argv[], struct intlist *sk=
+iplist)
+> >  {
+> >         struct test_suite *t;
+> >         unsigned int j, k;
+> >         int i =3D 0;
+> > -       int width =3D list_script_max_width();
+> > +       int width =3D 0;
 > >
-> > -       /* Assume first char on line is omment everything after that de=
-sc */
-> > -       return description ? strim(description + 1) : NULL;
-> > +       do {
-> > +               ch =3D io__get_char(&io);
-> > +               if (ch < 0)
-> > +                       goto err_out;
-> > +       } while (ch =3D=3D '#' || isspace(ch));
-> > +       while (ch > 0 && ch !=3D '\n') {
-> > +               desc[pos++] =3D ch;
-> > +               if (pos >=3D (int)sizeof(desc) - 1)
+> >         for_each_test(j, k, t) {
+> >                 int len =3D strlen(test_description(t, -1));
+> > @@ -441,28 +380,6 @@ static int __cmd_test(int argc, const char *argv[]=
+, struct intlist *skiplist)
+> >                         }
+> >                 }
+> >         }
+> > -
+> > -       return run_shell_tests(argc, argv, i, width, skiplist);
+> > -}
+> > -
+> > -static int perf_test__list_shell(int argc, const char **argv, int i)
+> > -{
+> > -       const struct script_file *files, *file;
+> > -
+> > -       files =3D list_script_files();
+> > -       if (!files)
+> > -               return 0;
+> > -       for (file =3D files; file->file; file++) {
+> > -               int curr =3D i++;
+> > -               struct test_suite t =3D {
+> > -                       .desc =3D file->desc
+> > -               };
+> > -
+> > -               if (!perf_test__matches(t.desc, curr, argc, argv))
+> > -                       continue;
+> > -
+> > -               pr_info("%3d: %s\n", i, t.desc);
+> > -       }
+> >         return 0;
+> >  }
+> >
+> > @@ -489,9 +406,6 @@ static int perf_test__list(int argc, const char **a=
+rgv)
+> >                                         test_description(t, subi));
+> >                 }
+> >         }
+> > -
+> > -       perf_test__list_shell(argc, argv, i);
+> > -
+> >         return 0;
+> >  }
+> >
+> > @@ -551,6 +465,7 @@ int cmd_test(int argc, const char **argv)
+> >         /* Unbuffered output */
+> >         setvbuf(stdout, NULL, _IONBF, 0);
+> >
+> > +       tests[2] =3D create_script_test_suites();
 >
-> Maybe (pos =3D=3D sizeof(desc) - 2) ?  I'm not sure what happens if it ha=
-s a
-> description longer than the buffer size.
-
-Thanks Namhyung!
-
-sizeof(desc) - 1 =3D=3D sizeof(char[256]) - 1 =3D=3D 255 , so at this point
-pos can at most be 255 and there is one space after pos for a trailing
-'\0'.
-
-> > +                       break;
-> > +               ch =3D io__get_char(&io);
+> I like this part! :)
+>
+>
+> >         argc =3D parse_options_subcommand(argc, argv, test_options, tes=
+t_subcommands, test_usage, 0);
+> >         if (argc >=3D 1 && !strcmp(argv[0], "list"))
+> >                 return perf_test__list(argc - 1, argv + 1);
+> > diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-=
+scripts.c
+> > index 9b3b66dd5508..b92a93c251c6 100644
+> > --- a/tools/perf/tests/tests-scripts.c
+> > +++ b/tools/perf/tests/tests-scripts.c
+> > @@ -26,16 +26,6 @@
+> >  #include "tests.h"
+> >  #include "util/rlimit.h"
+> >
+> > -
+> > -/*
+> > - * As this is a singleton built once for the run of the process, there=
+ is
+> > - * no value in trying to free it and just let it stay around until pro=
+cess
+> > - * exits when it's cleaned up.
+> > - */
+> > -static size_t files_num =3D 0;
+> > -static struct script_file *files =3D NULL;
+> > -static int files_max_width =3D 0;
+> > -
+> >  static int shell_tests__dir_fd(void)
+> >  {
+> >         char path[PATH_MAX], *exec_path;
+> > @@ -131,12 +121,31 @@ static char *strdup_check(const char *str)
+> >         return newstr;
+> >  }
+> >
+> > -static void append_script(int dir_fd, const char *name, char *desc)
+> > +static int shell_test__run(struct test_suite *test, int subtest __mayb=
+e_unused)
+> > +{
+> > +       const char *file =3D test->priv;
+> > +       int err;
+> > +       char *cmd;
+> > +
+> > +       asprintf(&cmd, "%s%s", file, verbose ? " -v" : "");
+> > +       if (!cmd)
+> > +               return TEST_FAIL;
+> > +       err =3D system(cmd);
+> > +       free(cmd);
+> > +       if (!err)
+> > +               return TEST_OK;
+> > +
+> > +       return WEXITSTATUS(err) =3D=3D 2 ? TEST_SKIP : TEST_FAIL;
+> > +}
+> > +
+> > +static void append_script(int dir_fd, const char *name, char *desc,
+> > +                         struct test_suite ***result,
+> > +                         size_t *result_sz)
+> >  {
+> >         char filename[PATH_MAX], link[128];
+> > -       struct script_file *files_tmp;
+> > -       size_t files_num_tmp, len;
+> > -       int width;
+> > +       struct test_suite *test_suite, **result_tmp;
+> > +       struct test_case *tests;
+> > +       size_t len;
+> >
+> >         snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd=
+);
+> >         len =3D readlink(link, filename, sizeof(filename));
+> > @@ -146,33 +155,43 @@ static void append_script(int dir_fd, const char =
+*name, char *desc)
+> >         }
+> >         filename[len++] =3D '/';
+> >         strcpy(&filename[len], name);
+> > -       files_num_tmp =3D files_num + 1;
+> > -       if (files_num_tmp >=3D SIZE_MAX) {
+> > -               pr_err("Too many script files\n");
+> > -               abort();
+> > +
+> > +       tests =3D calloc(2, sizeof(*tests));
+> > +       if (!tests) {
+> > +               pr_err("Out of memory while building script test suite =
+list\n");
+> > +               return;
 > > +       }
-> > +       while (pos > 0 && isspace(desc[--pos]))
-> > +               ;
-
-Here pos is moved back to at least one to 254.
-
-> > +       desc[++pos] =3D '\0';
+> > +       tests[0].name =3D strdup_check(name);
+> > +       tests[0].desc =3D strdup_check(desc);
+> > +       tests[0].run_case =3D shell_test__run;
+> > +
+> > +       test_suite =3D zalloc(sizeof(*test_suite));
+> > +       if (!test_suite) {
+> > +               pr_err("Out of memory while building script test suite =
+list\n");
+> > +               free(tests);
+> > +               return;
+> >         }
+> > +       test_suite->desc =3D desc;
+> > +       test_suite->test_cases =3D tests;
+> > +       test_suite->priv =3D strdup_check(filename);
+> >         /* Realloc is good enough, though we could realloc by chunks, n=
+ot that
+> >          * anyone will ever measure performance here */
+> > -       files_tmp =3D realloc(files,
+> > -                           (files_num_tmp + 1) * sizeof(struct script_=
+file));
+> > -       if (files_tmp =3D=3D NULL) {
+> > -               pr_err("Out of memory while building test list\n");
+> > -               abort();
+> > +       result_tmp =3D realloc(*result, (*result_sz + 1) * sizeof(*resu=
+lt_tmp));
+> > +       if (result_tmp =3D=3D NULL) {
+> > +               pr_err("Out of memory while building script test suite =
+list\n");
+> > +               free(tests);
+> > +               free(test_suite);
+> > +               return;
+> >         }
+> >         /* Add file to end and NULL terminate the struct array */
+> > -       files =3D files_tmp;
+> > -       files_num =3D files_num_tmp;
+> > -       files[files_num - 1].file =3D strdup_check(filename);
+> > -       files[files_num - 1].desc =3D desc;
+> > -       files[files_num].file =3D NULL;
+> > -       files[files_num].desc =3D NULL;
+> > -
+> > -       width =3D strlen(desc); /* Track max width of desc */
+> > -       if (width > files_max_width)
+> > -               files_max_width =3D width;
+> > +       *result =3D result_tmp;
+> > +       (*result)[*result_sz] =3D test_suite;
+> > +       (*result_sz)++;
+> >  }
+> >
+> > -static void append_scripts_in_dir(int dir_fd)
+> > +static void append_scripts_in_dir(int dir_fd,
+> > +                                 struct test_suite ***result,
+> > +                                 size_t *result_sz)
+> >  {
+> >         struct dirent **entlist;
+> >         struct dirent *ent;
+> > @@ -191,7 +210,7 @@ static void append_scripts_in_dir(int dir_fd)
+> >                         char *desc =3D shell_test__description(dir_fd, =
+ent->d_name);
+> >
+> >                         if (desc) /* It has a desc line - valid script =
+*/
+> > -                               append_script(dir_fd, ent->d_name, desc=
+);
+> > +                               append_script(dir_fd, ent->d_name, desc=
+, result, result_sz);
+> >                         continue;
+> >                 }
+> >                 if (ent->d_type !=3D DT_DIR) {
+> > @@ -204,32 +223,31 @@ static void append_scripts_in_dir(int dir_fd)
+> >                                 continue;
+> >                 }
+> >                 fd =3D openat(dir_fd, ent->d_name, O_PATH);
+> > -               append_scripts_in_dir(fd);
+> > +               append_scripts_in_dir(fd, result, result_sz);
+> >         }
+> >         for (i =3D 0; i < n_dirs; i++) /* Clean up */
+> >                 zfree(&entlist[i]);
+> >         free(entlist);
+> >  }
+> >
+> > -const struct script_file *list_script_files(void)
+> > +struct test_suite **create_script_test_suites(void)
+> >  {
+> > -       int dir_fd;
+> > -
+> > -       if (files)
+> > -               return files; /* Singleton - we already know our list *=
+/
+> > +       struct test_suite **result =3D NULL, **result_tmp;
+> > +       size_t result_sz =3D 0;
+> > +       int dir_fd =3D shell_tests__dir_fd(); /* Walk  dir */
+> >
+> > -       dir_fd =3D shell_tests__dir_fd(); /* Walk  dir */
+> >         if (dir_fd < 0)
+> >                 return NULL;
 >
-> Wouldn't it overflow the buffer?
+> When can it fail?  If the test directory doesn't exist?
+> I'm afraid returning NULL here can crash perf test.
+> I think you need to return a NULL entry result.
 
-At this point pos can only have a maximum value of 255 which is within
-the bounds of desc.
+Good catch, will fix in v3.
 
 Thanks,
 Ian
@@ -174,9 +430,52 @@ Ian
 > Namhyung
 >
 >
-> > +       close(io.fd);
-> > +       return strdup(desc);
-> > +err_out:
-> > +       close(io.fd);
-> > +       return NULL;
+> >
+> > -       append_scripts_in_dir(dir_fd);
+> > +       append_scripts_in_dir(dir_fd, &result, &result_sz);
+> > +       result_tmp =3D realloc(result, (result_sz + 1) * sizeof(*result=
+_tmp));
+> > +       if (result_tmp =3D=3D NULL) {
+> > +               pr_err("Out of memory while building script test suite =
+list\n");
+> > +               abort();
+> > +       }
+> > +       /* NULL terminate the test suite array. */
+> > +       result =3D result_tmp;
+> > +       result[result_sz] =3D NULL;
+> >         close(dir_fd);
+> > -
+> > -       return files;
+> > -}
+> > -
+> > -int list_script_max_width(void)
+> > -{
+> > -       list_script_files(); /* Ensure we have scanned all scripts */
+> > -       return files_max_width;
+> > +       return result;
 > >  }
+> > diff --git a/tools/perf/tests/tests-scripts.h b/tools/perf/tests/tests-=
+scripts.h
+> > index 3508a293aaf9..b553ad26ea17 100644
+> > --- a/tools/perf/tests/tests-scripts.h
+> > +++ b/tools/perf/tests/tests-scripts.h
+> > @@ -2,14 +2,8 @@
+> >  #ifndef TESTS_SCRIPTS_H
+> >  #define TESTS_SCRIPTS_H
+> >
+> > -struct script_file {
+> > -       char *file;
+> > -       char *desc;
+> > -};
+> > +#include "tests.h"
+> >
+> > -/* List available script tests to run - singleton - never freed */
+> > -const struct script_file *list_script_files(void);
+> > -/* Get maximum width of description string */
+> > -int list_script_max_width(void);
+> > +struct test_suite **create_script_test_suites(void);
+> >
+> >  #endif /* TESTS_SCRIPTS_H */
+> > --
+> > 2.43.0.429.g432eaa2c6b-goog
+> >
