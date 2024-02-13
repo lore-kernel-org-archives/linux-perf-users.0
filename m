@@ -1,96 +1,219 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D95755E72;
-	Tue, 13 Feb 2024 14:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707834505; cv=none; b=gwaT1vjSMSzOpWnQ/VqeQz2jeeHoUFCsWHBwfD82+USKDRiQuD2g3EKxRAIvjih8ptqPz1x1g3mO9LvDFU2Ry6JPcHHq4716MXeFIweW7JalehvshdKYC/vwxPnPhR8IUXhNgrfAciQnI7X6vBli7LaLeXx/0m/glum5t/Ry7Bs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707834505; c=relaxed/simple;
-	bh=I4IhygYKCgjk5I1/Tq5xU8MeghV4sj+uPYFSq/0BdHo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=afjxCbSwAlHlfx1fGj/yIBKdiXChbgNEH0mMA9/fu3MrwRJWsGHLG80cICUZqVYJ01gJeo46I4+QnQJL4kKU3HANZf/dhPqgx3WuBPebZGm+n/olGdvKmRI/CfYYu0kP79r0bIzGJPsyhNAbL6vJ4IX+OxxXxVR1vMncVgbSnmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PI6ZwoYq; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PI6ZwoYq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707834505; x=1739370505;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=I4IhygYKCgjk5I1/Tq5xU8MeghV4sj+uPYFSq/0BdHo=;
-  b=PI6ZwoYqizsG6XHs9XCJzrpS6/gpXIs+xMWEnJ0t1JcPjh3DqJtXBNjw
-   rGFvwK2RNF94YOUjZagzXnmPpOfv9vwQBguUV1Y3WrmZcpui9Su8KL+a+
-   qnh7TxWm5TK8ZfpjCDLcuh6Dl5z1zv6mMa0UfGLSAcTPHnM8ZbdsfAcV4
-   2FnCne5Yb/LFK/f3qPgU3Pl+iPpbrG3FXH1LTOq1M/mN8QuWs1xMgO4m/
-   4LCTeUXrM8PKWnnF6hCbqFEvEdRZA1r2UvEEJHFNO98JfpduccWX6z25s
-   EtR8voJMcIuqNTDdfDxenNpQ1KjknBlljbDmILY2xy1Bpmy9svypQKiZa
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="13236487"
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="13236487"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 06:28:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="2853604"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 06:28:23 -0800
-Received: from [10.213.163.172] (kliang2-mobl1.ccr.corp.intel.com [10.213.163.172])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E980F580CB7;
-	Tue, 13 Feb 2024 06:28:20 -0800 (PST)
-Message-ID: <7c3e08e8-899b-416c-a0b8-341f00fa9da9@linux.intel.com>
-Date: Tue, 13 Feb 2024 09:28:19 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11F15FF1A;
+	Tue, 13 Feb 2024 17:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707846816; cv=none; b=CmyehDEm0Iyivi0RaJoSpi7FPMJr1qovghkDHICniYCfSDb0Vnx31EPhPqXq095Vx9z7STIa+1xvnaCEJ82eJiXaBMKN68i36dYa9lS+OkHEI159mT7ayiNFiAYCrSzfTKhcgnabLShQVspt8441zkO1VqTdqFrHNRVHv4tBOXw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707846816; c=relaxed/simple;
+	bh=7WcguzORNUncVMI8yVHuEyVH6gHiNRJ99ytpWlcFL3k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VFPulARuy5GG+2UZfnnTrY2phOCEqMJpJCPIPijJI1mFkHFIqdSUsa3NpJmDZI4kzngTrXt55TB+kJpEP/NJtC8vsJ4CeG6YEl+ecW0v7/cQFXJe7ae8pYICeeQJNLbgBLZq2CVrwWF6fC2Q5QbOnhZRLyENeM1uStXNsE56yeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso3560604a12.2;
+        Tue, 13 Feb 2024 09:53:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707846814; x=1708451614;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jIAYX2by5VkQGQHZUnXlAIcJ91jHMtAdkIYxHslLShk=;
+        b=GIOl3Sa7sIotJN2x0eqwE3AVPICmLFiM3IuAHdp0szAgWJybgpKNwLtzpCX2nBT/jk
+         hTDJLZnuypxczgjgbDSorE2fRP1CMKQCDZ07gp/FqMbSCxfLW/Mwvf3crGP8lX+VuzLS
+         +KWbJORmtQJe5ksx4GEUja99NXESkNTJPxSCUxunyAhEIKPemdUB10Ve3YNssZl3Guy7
+         dZvqifJA4aPr6vuQf7hi5CUWT7uMPQi2IVCbZAv6REvKGZn+Zv1Uj8xZ40H5dnLLmVAk
+         A6VMl50K50rC7FVBEV79KUeQAj0pXrOFcpSoQAVZXYKPG7vmTeeOz2YxTJZVTk/+mUTW
+         8RlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxVtfvAvV2MVOU4+TaJvC9BNjlSSzlN2uOdyqe0yKVT6XeOkXLapZ/npd0mq3Sw/8xAx5oTfShJLeiEWHKF1AUpivj4MmLCZY9O79JxzYKXk7UnTV5Pw6ejLSpZ0ibrI1rfFLLoccb89UfgjH0pXjjD1JmbnbLPDnuK8lNuxrpv032XA==
+X-Gm-Message-State: AOJu0YzbsdCjDU4kRq5WbCWkbGvjys1rxzzc/4bieu9fa72P5tGAu6TE
+	nj70df0MZOwFHTdENEViRwlVkEfXRdBzszyhPe1pebZZtbfk4hMQwgj9m4qQT6/prY34OkRMQHM
+	P8kKOnM4GYL4fjoG635uXU7Og2Lw=
+X-Google-Smtp-Source: AGHT+IG/7yPnHipxkvG4GDwHRmNgX66LCK7NFEi9SYooQTwor/KSzpLbexwipqs0oK/vZHTUoy/+Fp9QbVLRF1qnt4I=
+X-Received: by 2002:a05:6a20:21ca:b0:19e:a9bf:d51a with SMTP id
+ p10-20020a056a2021ca00b0019ea9bfd51amr272928pzb.32.1707846813997; Tue, 13 Feb
+ 2024 09:53:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/4] Fixes/improvements to metric output
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- John Garry <john.g.garry@oracle.com>, James Clark <james.clark@arm.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>, Kaige Ye <ye@kaige.org>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240209204947.3873294-1-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240209204947.3873294-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240207223639.3139601-1-irogers@google.com> <CAM9d7chBixXozCQztM2WKGbfs_8C70vy6ROzKpwLSqq-upz5iQ@mail.gmail.com>
+ <CAP-5=fUVkaq3dDoeMYYEN1N-ghnL-GiP8PV3N3pWpjQKpDTCHw@mail.gmail.com>
+ <CAP-5=fXs8=HvjGpkLwuZBi0Hh8jtmz7=0Tp7HRgU8FOFN0GZvg@mail.gmail.com>
+ <CAM9d7choe-CruqcdkLMPC1Eu4Oca0CBaaq-uiCd=csiLY60NBw@mail.gmail.com> <CAP-5=fXAkbnpKpkCM8soy7pHzCZZJ8VWYrd9ewFtZoaoA6vZnQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fXAkbnpKpkCM8soy7pHzCZZJ8VWYrd9ewFtZoaoA6vZnQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 13 Feb 2024 09:53:21 -0800
+Message-ID: <CAM9d7cgGGw20t+VqzCd31CDUqo4roihknyH=2+_7CHuFhHh5fQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] maps memory improvements and fixes
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2024-02-09 3:49 p.m., Ian Rogers wrote:
-> A small addition to allow NaNs to be encoded in metrics and then 3
-> fixes to various metric related issues.
-> 
-> Ian Rogers (4):
->   perf expr: Allow NaN to be a valid number
->   perf expr: Fix "has_event" function for metric style events
->   perf stat: Avoid metric-only segv
->   perf metric: Don't remove scale from counts
+On Mon, Feb 12, 2024 at 12:22=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
+> On Mon, Feb 12, 2024 at 12:10=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> >
+> > On Sat, Feb 10, 2024 at 10:08=E2=80=AFAM Ian Rogers <irogers@google.com=
+> wrote:
+> > >
+> > > On Fri, Feb 9, 2024 at 6:46=E2=80=AFPM Ian Rogers <irogers@google.com=
+> wrote:
+> > > >
+> > > > On Thu, Feb 8, 2024 at 9:44=E2=80=AFAM Namhyung Kim <namhyung@kerne=
+l.org> wrote:
+> > > > >
+> > > > > Hi Ian,
+> > > > >
+> > > > > On Wed, Feb 7, 2024 at 2:37=E2=80=AFPM Ian Rogers <irogers@google=
+.com> wrote:
+> > > > > >
+> > > > > > First 6 patches from:
+> > > > > > https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@g=
+oogle.com/
+> > > > > >
+> > > > > > v2. Fix NO_LIBUNWIND=3D1 build issue.
+> > > > > >
+> > > > > > Ian Rogers (6):
+> > > > > >   perf maps: Switch from rbtree to lazily sorted array for addr=
+esses
+> > > > > >   perf maps: Get map before returning in maps__find
+> > > > > >   perf maps: Get map before returning in maps__find_by_name
+> > > > > >   perf maps: Get map before returning in maps__find_next_entry
+> > > > > >   perf maps: Hide maps internals
+> > > > > >   perf maps: Locking tidy up of nr_maps
+> > > > >
+> > > > > Now I see a perf test failure on the vmlinux test:
+> > > > >
+> > > > > $ sudo ./perf test -v vmlinux
+> > > > >   1: vmlinux symtab matches kallsyms                             =
+    :
+> > > > > --- start ---
+> > > > > test child forked, pid 4164115
+> > > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > > "[__builtin__kprobes]" module!
+> > > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > > "[__builtin__kprobes]" module!
+> > > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > > "[__builtin__ftrace]" module!
+> > > > > Looking at the vmlinux_path (8 entries long)
+> > > > > Using /usr/lib/debug/boot/vmlinux-6.5.13-1rodete2-amd64 for symbo=
+ls
+> > > > > perf: Segmentation fault
+> > > > > Obtained 16 stack frames.
+> > > > > ./perf(+0x1b7dcd) [0x55c40be97dcd]
+> > > > > ./perf(+0x1b7eb7) [0x55c40be97eb7]
+> > > > > /lib/x86_64-linux-gnu/libc.so.6(+0x3c510) [0x7f33d7a5a510]
+> > > > > ./perf(+0x1c2e9c) [0x55c40bea2e9c]
+> > > > > ./perf(+0x1c43f6) [0x55c40bea43f6]
+> > > > > ./perf(+0x1c4649) [0x55c40bea4649]
+> > > > > ./perf(+0x1c46d3) [0x55c40bea46d3]
+> > > > > ./perf(+0x1c7303) [0x55c40bea7303]
+> > > > > ./perf(+0x1c70b5) [0x55c40bea70b5]
+> > > > > ./perf(+0x1c73e6) [0x55c40bea73e6]
+> > > > > ./perf(+0x11833e) [0x55c40bdf833e]
+> > > > > ./perf(+0x118f78) [0x55c40bdf8f78]
+> > > > > ./perf(+0x103d49) [0x55c40bde3d49]
+> > > > > ./perf(+0x103e75) [0x55c40bde3e75]
+> > > > > ./perf(+0x1044c0) [0x55c40bde44c0]
+> > > > > ./perf(+0x104de0) [0x55c40bde4de0]
+> > > > > test child interrupted
+> > > > > ---- end ----
+> > > > > vmlinux symtab matches kallsyms: FAILED!
+> > > >
+> > > > Ah, tripped over a latent bug summarized in this part of an asan st=
+ack trace:
+> > > > ```
+> > > > freed by thread T0 here:
+> > > >    #0 0x7fa13bcd74b5 in __interceptor_realloc
+> > > > ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:85
+> > > >    #1 0x561d66377713 in __maps__insert util/maps.c:353
+> > > >    #2 0x561d66377b89 in maps__insert util/maps.c:413
+> > > >    #3 0x561d6652911d in dso__process_kernel_symbol util/symbol-elf.=
+c:1460
+> > > >    #4 0x561d6652aaae in dso__load_sym_internal util/symbol-elf.c:16=
+75
+> > > >    #5 0x561d6652b6dc in dso__load_sym util/symbol-elf.c:1771
+> > > >    #6 0x561d66321a4e in dso__load util/symbol.c:1914
+> > > >    #7 0x561d66372cd9 in map__load util/map.c:353
+> > > >    #8 0x561d663730e7 in map__find_symbol_by_name_idx util/map.c:397
+> > > >    #9 0x561d663731e7 in map__find_symbol_by_name util/map.c:410
+> > > >    #10 0x561d66378208 in maps__find_symbol_by_name_cb util/maps.c:5=
+24
+> > > >    #11 0x561d66377f49 in maps__for_each_map util/maps.c:471
+> > > >    #12 0x561d663784a0 in maps__find_symbol_by_name util/maps.c:546
+> > > >    #13 0x561d662093e8 in machine__find_kernel_symbol_by_name util/m=
+achine.h:243
+> > > >    #14 0x561d6620abbd in test__vmlinux_matches_kallsyms
+> > > > tests/vmlinux-kallsyms.c:330
+> > > > ...
+> > > > ```
+> > > > dso__process_kernel_symbol rewrites the kernel maps here:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/util/symbol-elf.c#n1378
+> > > > which resizes the maps_by_address array causing the maps__for_each_=
+map
+> > > > iteration in frame 11 to be iterating over a stale/freed value.
+> > > >
+> > > > The most correct solutions would be to clone the maps_by_address ar=
+ray
+> > > > prior to iteration, or reference count maps_by_address and its size=
+.
+> > > > Neither of these solutions particularly appeal, so just reloading t=
+he
+> > > > maps_by_address and size on each iteration also fixes the problem, =
+but
+> > > > possibly causes some maps to be skipped/repeated. I think this is
+> > > > acceptable correctness for the performance.
+> >
+> > Can we move map__load() out of maps__for_each_map() ?
+> > I think the callback should just return the map and break the loop.
+> > And it can call the map__load() out of the read lock.
+>
+> It would need a rewrite of map__find_symbol_by_name which is being
+> called by a callback from maps__find_symbol_by_name. Perhaps an
+> initial pass to ensure everything is loaded and a safe version of the
+> loop that copies the maps_by_address ahead of copying it. It'd be of a
+> scope that'd be worth its own patch set.
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Right, let's do it in a separate work.
+
+>
+> > >
+> > > An aside, shouldn't taking a write lock to modify the maps deadlock
+> > > with holding the read lock for iteration? Well no because
+> > > perf_singlethreaded is true for the test:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/rwsem.c#n17
+> > > Another perf_singlethreaded considered evil :-) Note, just getting ri=
+d
+> > > of perf_singlethreaded means latent bugs like this will pop up and
+> > > will need resolution.
+> >
+> > Yeah, maybe.  How about turning it on in the test code?
+>
+> Agreed, but I think it should be a follow up.
+
+Sounds good.
 
 Thanks,
-Kan
-
-
->  tools/perf/util/expr.c         | 20 +++++++++++++++++++-
->  tools/perf/util/expr.l         |  9 +++++++++
->  tools/perf/util/stat-display.c |  2 +-
->  tools/perf/util/stat-shadow.c  |  7 +------
->  4 files changed, 30 insertions(+), 8 deletions(-)
-> 
+Namhyung
