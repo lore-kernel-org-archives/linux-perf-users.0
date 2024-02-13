@@ -1,185 +1,108 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AD060BB6;
-	Tue, 13 Feb 2024 18:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3498B6167E;
+	Tue, 13 Feb 2024 21:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707850148; cv=none; b=B9bZ9soJYyncy6j1iHs7aSlXofNLjf/ciYBZEdcLsLuGXQ3af5N1SgJilnknw/F6tCoLh56QubV2vho4ctMOnoSs1hKDcvfr7MA4/wUJF+bjuB9GaMMg0EpLSyEsMtBuMAMK1d9Hi0DZgm4WqkH4Uz7PXNtXBe9dLHGV3dH4EO4=
+	t=1707860734; cv=none; b=uf94qJUWtzjLpUnFY2JUS8RVu/jBLMTxrqdfzoqNooxrZYabsJ4WQ83p1HgcvLqW/+kiXDENOKf5Fe8cb4t3pbhLc32wzzicTBjERmqBgvGNNrxuYa3qKX1n/438xjr1w9iYpg6D/8KgJCPQwFXXk+nUTRmNYBVBEYaPQW57mIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707850148; c=relaxed/simple;
-	bh=ePfBqnMY7g041J1LiUVXprEqQZe9Slt4ncaJ/PtpmbQ=;
+	s=arc-20240116; t=1707860734; c=relaxed/simple;
+	bh=zlrnLAVzSU1Jn8766Ja1eXbCBgSYS2I1GytV//3vZNg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bk3cPv7OMImF9yZsdaC8Msfr2r7jiUcV1kcpvWTtkIJxbhzF2m6DjHwjhuA3p2AqE8O66pL5f/SimCNZsM8f+ZY/kTuCu3Ef6NU2RVMsRIr/HRbXuXDJu3so5VmjJGHr303bs9mcbsIpjxtw9tXTXilRdwqbFqyNqdrWLObFQBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
+	 To:Cc:Content-Type; b=XsOWRVok3u/fS7a2JMLk7aKO+Kh7+j6HHnVGd4hcJwJKDkpIiLtq1Chr5XkYi6iN/wrGg4TNfqsaLcVu/+tpDQhZ9dI9HPCle0zfmjdvIxQxHZYQLDJXSBRlQCXGzgDWRPij6Hy8CwT2j/QXvDbHRsUZ102jXxKH0Uw21lfmpzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4c0819c604cso482019e0c.2;
-        Tue, 13 Feb 2024 10:49:06 -0800 (PST)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-297108e7001so2432070a91.1;
+        Tue, 13 Feb 2024 13:45:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707850146; x=1708454946;
+        d=1e100.net; s=20230601; t=1707860732; x=1708465532;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qXLJHoa2vhCu44dDFGcocGPGteAYTMOAGH0dmFHydLs=;
-        b=dxonKOFhlTpJtsj3imQC6qNzif3PRdnDEMBJ2yL3esFXVPSvWwhRKBfqJ9hBEnjROF
-         0pCkX9gmkAL0jY9x08nce0V0KEl5d9QNzFD1tB91gcPQs4skVqHobqKRvPklvE/NFCgc
-         n6N0dqsmNadtv6uBy8jz4cO6x1hkOS41O63XoHBLkXsXUiyXY0f8fPuQtZSF+YcZTD3l
-         7qAnKtnQyo+vK+F7Ak8VK4Vgj/PXTeH9qNxk8MGzSGKqCxqXDndidOcs//fuobhYjFaM
-         ej1bw/ypA8MwDrpUxR/BUeGRtK+vqbTCPeF4B3cFlM+Ld8lvq5db/UbR1Da2axIViyb6
-         qKmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrMEf5r3439LNm6XWlVtrKPqgg3EPy5knit15klj/rSOaooJX8dT7T0vCTuKQXIJ9d7Is2rOnrzaF7OvzCMHPJf/d1RZ88eeAmVNvAWwcfBuoKxlNelRsgwTH6wx1TNeSdxM2Di/Z0xWRLdTn4rA==
-X-Gm-Message-State: AOJu0YwraVY7vAXqf3YN6zmFRKm1sDkprKIqLe5b/H3s99X5sAye7gho
-	YKSGG+mw24rILcOs9vjAd7aGrgiqm9rHcICTl8nuSE056+vPHF08LDnRLs1qRcx+49KNUjq/+i8
-	D+q4zC2zZNC1ogNKj8E9a/fdt3pw=
-X-Google-Smtp-Source: AGHT+IFpWNGtmgroego7DusKSBmq3elwGvdkc7GAE2O1NgyzHZEdsgj1BXwffYzpzXnm/qhUfIXRfGCALUUmIGbYcJE=
-X-Received: by 2002:a1f:c7c5:0:b0:4c0:1918:27de with SMTP id
- x188-20020a1fc7c5000000b004c0191827demr513195vkf.16.1707850145639; Tue, 13
- Feb 2024 10:49:05 -0800 (PST)
+        bh=NF3MBlA6g5fE/nQpkUVGLsVhm1KDVfSDHE1cj8tEnnk=;
+        b=mmL++hYk7ca+lvx/ov0MK5P0PSo/MY/sAKXIpVbz8GKXM3jyOjEHazpsJSim1sgQnC
+         kclMpn4jm+AzyxOKMTDRKkdrLQzKL7kaoPEClKfePWa+5bb3edG016BXvsJfmg47qVX0
+         fRYpsw/f7gWv7bX6pfE07lj/vBmdIxFjB/+KIkQ1l/zLQ0tVix4NIgnqvHBzMGQaOgsA
+         ZI1F/lxZk/3H0/t5pmd0zXGLGGOlDTh08AXZG8R9CRy1qdwaEJAnwJLWGAedPAEUdGxv
+         n/YObxWdCupl4SZMo0eJDBrzuJUi1dKhHVrJLg08UWpIK9U0y8nuUp097UsUD+bGrF9/
+         gGvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWlnVGZXvb497sguWsE8nGFvk7nYto3hjcmBVaA4NeKvZISwBp+fNf4Gpd4SLeIRnuDMo3tPrQ49+xT2lLodqY1D7CR5uRv0Gn7pHraWiAoE3kKiiz45AGEuY/kKjNKiYDgHVX+kMDSrBsJb/dV2Q==
+X-Gm-Message-State: AOJu0YxfjkDFg+TwXJMe35QoUuqolK946vnNX3pCNnjoFEdiq3ncf3pw
+	hshAp2z/bY4lIuUt4LqrLiLHbUd7TSVHtaXjccc66ZE+d+lCH2CS6ii7UsXWQk9Ta94mwha9oUM
+	JVyQHOEVzsiZBV+JwEd8tLjM+khM=
+X-Google-Smtp-Source: AGHT+IHhfCe+4VNW8HkSiAA/uykrSChGIFotbydYKIvayu1h/zipDj4Ofp6vgsQItm8Nv+hV5RBh88WuUgojGb0ncIg=
+X-Received: by 2002:a17:90a:7406:b0:297:3305:a690 with SMTP id
+ a6-20020a17090a740600b002973305a690mr855014pjg.9.1707860732331; Tue, 13 Feb
+ 2024 13:45:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212233322.1855161-1-namhyung@kernel.org> <20240213033954.GB81405@debian-dev>
-In-Reply-To: <20240213033954.GB81405@debian-dev>
+References: <20240209204947.3873294-1-irogers@google.com> <20240209204947.3873294-4-irogers@google.com>
+In-Reply-To: <20240209204947.3873294-4-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 13 Feb 2024 10:48:53 -0800
-Message-ID: <CAM9d7ciTwYAgry-nW9z+_VMj+BJ7ZNZnkKH_t_AHvV5joNuWQQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Fixup module symbol end address properly
-To: Leo Yan <leo.yan@linux.dev>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	Mike Leach <mike.leach@linaro.org>
+Date: Tue, 13 Feb 2024 13:45:20 -0800
+Message-ID: <CAM9d7ch82xZ2-tfQz641Hj0CpzadVrpp-WfaNWA5R48QJARtbg@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] perf stat: Avoid metric-only segv
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Kaige Ye <ye@kaige.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Leo,
-
-Thanks for your review!
-
-On Mon, Feb 12, 2024 at 7:40=E2=80=AFPM Leo Yan <leo.yan@linux.dev> wrote:
+On Fri, Feb 9, 2024 at 12:50=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Mon, Feb 12, 2024 at 03:33:22PM -0800, Namhyung Kim wrote:
-> > I got a strange error on ARM to fail on processing FINISHED_ROUND
-> > record.  It turned out that it was failing in symbol__alloc_hist()
-> > because the symbol size is too big.
-> >
-> > When a sample is captured on a specific BPF program, it failed.  I've
-> > added a debug code and found the end address of the symbol is from
-> > the next module which is placed far way.
-> >
-> >   ffff800008795778-ffff80000879d6d8: bpf_prog_1bac53b8aac4bc58_netcg_so=
-ck    [bpf]
-> >   ffff80000879d6d8-ffff80000ad656b4: bpf_prog_76867454b5944e15_netcg_ge=
-tsockopt      [bpf]
-> >   ffff80000ad656b4-ffffd69b7af74048: bpf_prog_1d50286d2eb1be85_hn_egres=
-s     [bpf]   <---------- here
-> >   ffffd69b7af74048-ffffd69b7af74048: $x.5    [sha3_generic]
-> >   ffffd69b7af74048-ffffd69b7af740b8: crypto_sha3_init        [sha3_gene=
-ric]
-> >   ffffd69b7af740b8-ffffd69b7af741e0: crypto_sha3_update      [sha3_gene=
-ric]
-> >
-> > The logic in symbols__fixup_end() just uses curr->start to update the
-> > prev->end.  But in this case, it won't work as it's too different.
-> >
-> > I think ARM has a different kernel memory layout for modules and BPF
-> > than on x86.  Actually there's a logic to handle kernel and module
-> > boundary.  Let's do the same for symbols between different modules.
+> Cycles is recognized as part of a hard coded metric in stat-shadow.c,
+> it may call print_metric_only with a NULL fmt string leading to a
+> segfault. Handle the NULL fmt explicitly.
 >
-> Even Arm32 and Arm64 kernel have different memory layout for modules
-> and kernel image.
+> Fixes: 088519f318be ("perf stat: Move the display functions to stat-displ=
+ay.c")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> Note, the fixes tag is to a refactor that moved the function. The bug
+> existed before this.
+
+Yeah I noticed that.
+
+> ---
+>  tools/perf/util/stat-display.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> eBPF program (JITed) should be allocated from the vmalloc region, for
-> Arm64, see bpf_jit_alloc_exec() in arch/arm64/net/bpf_jit_comp.c.
-
-Ok, so chances are they can fall out far away right?
-
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
+y.c
+> index 8c61f8627ebc..b7d00a538d70 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -560,7 +560,7 @@ static void print_metric_only(struct perf_stat_config=
+ *config,
+>         if (color)
+>                 mlen +=3D strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
 >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/symbol.c | 21 +++++++++++++++++++--
-> >  1 file changed, 19 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index 35975189999b..9ebdb8e13c0b 100644
-> > --- a/tools/perf/util/symbol.c
-> > +++ b/tools/perf/util/symbol.c
-> > @@ -248,14 +248,31 @@ void symbols__fixup_end(struct rb_root_cached *sy=
-mbols, bool is_kallsyms)
-> >                * segment is very big.  Therefore do not fill this gap a=
-nd do
-> >                * not assign it to the kernel dso map (kallsyms).
-> >                *
-> > +              * Also BPF code can be allocated separately from text se=
-gments
-> > +              * and modules.  So the last entry in a module should not=
- fill
-> > +              * the gap too.
-> > +              *
-> >                * In kallsyms, it determines module symbols using '[' ch=
-aracter
-> >                * like in:
-> >                *   ffffffffc1937000 T hdmi_driver_init  [snd_hda_codec_=
-hdmi]
-> >                */
-> >               if (prev->end =3D=3D prev->start) {
-> > +                     const char *prev_mod;
-> > +                     const char *curr_mod;
-> > +
-> > +                     if (!is_kallsyms) {
-> > +                             prev->end =3D curr->start;
-> > +                             continue;
-> > +                     }
-> > +
-> > +                     prev_mod =3D strchr(prev->name, '[');
-> > +                     curr_mod =3D strchr(curr->name, '[');
-> > +
-> >                       /* Last kernel/module symbol mapped to end of pag=
-e */
-> > -                     if (is_kallsyms && (!strchr(prev->name, '[') !=3D
-> > -                                         !strchr(curr->name, '[')))
-> > +                     if (!prev_mod !=3D !curr_mod)
-> > +                             prev->end =3D roundup(prev->end + 4096, 4=
-096);
-> > +                     /* Last symbol in the previous module */
-> > +                     else if (prev_mod && strcmp(prev_mod, curr_mod))
->
-> Should two consecutive moudles fall into this case? I think we need to as=
-sign
-> 'prev->end =3D curr->start' for two two consecutive moudles.
+> -       color_snprintf(str, sizeof(str), color ?: "", fmt, val);
+> +       color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
 
-Yeah I thought about that case but I believe they would be on
-separate pages (hopefully there's a page gap between them).
-So I think it should not overlap.  But if you really care we can
-check it explicitly like this:
-
-    prev->end =3D min(roundup(...), curr->start);
-
->
-> If so, we should use a specific checking for eBPF program, e.g.:
->
->                         else if (prev_mod && strcmp(prev_mod, curr_mod) &=
-&
->                                  (!strcmp(prev->name, "bpf") ||
->                                   !strcmp(curr->name, "bpf")))
-
-I suspect it can happen on any module boundary so better
-to handle it in a more general way.
+I was thinking about fixing the callers to pass valid format strings
+but it seems they don't care about the output string anyway so
+I think it's fine.
 
 Thanks,
 Namhyung
 
+
+>         fprintf(out, "%*s ", mlen, str);
+>         os->first =3D false;
+>  }
+> --
+> 2.43.0.687.g38aa6559b0-goog
 >
-> >                               prev->end =3D roundup(prev->end + 4096, 4=
-096);
-> >                       else
-> >                               prev->end =3D curr->start;
-> > --
-> > 2.43.0.687.g38aa6559b0-goog
-> >
