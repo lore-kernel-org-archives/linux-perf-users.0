@@ -1,108 +1,110 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3498B6167E;
-	Tue, 13 Feb 2024 21:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9FD69D00;
+	Tue, 13 Feb 2024 21:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707860734; cv=none; b=uf94qJUWtzjLpUnFY2JUS8RVu/jBLMTxrqdfzoqNooxrZYabsJ4WQ83p1HgcvLqW/+kiXDENOKf5Fe8cb4t3pbhLc32wzzicTBjERmqBgvGNNrxuYa3qKX1n/438xjr1w9iYpg6D/8KgJCPQwFXXk+nUTRmNYBVBEYaPQW57mIA=
+	t=1707861550; cv=none; b=f6LkcAkr73xXd7di63hR+uJ2zhE3x6zi0LhBlegOjasuYjfN9YWac2aRMygkXnb+wvniEI0LjJN1BSp7RWBuJN6nAHOTMn7oTbd2O6eHMQxFJ5FWcdcLgR8WVWAqsOiJ4GHKovTTEsL0pCFGcXYS+Lfeief2wVvcWiAsxORIzYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707860734; c=relaxed/simple;
-	bh=zlrnLAVzSU1Jn8766Ja1eXbCBgSYS2I1GytV//3vZNg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XsOWRVok3u/fS7a2JMLk7aKO+Kh7+j6HHnVGd4hcJwJKDkpIiLtq1Chr5XkYi6iN/wrGg4TNfqsaLcVu/+tpDQhZ9dI9HPCle0zfmjdvIxQxHZYQLDJXSBRlQCXGzgDWRPij6Hy8CwT2j/QXvDbHRsUZ102jXxKH0Uw21lfmpzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-297108e7001so2432070a91.1;
-        Tue, 13 Feb 2024 13:45:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707860732; x=1708465532;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NF3MBlA6g5fE/nQpkUVGLsVhm1KDVfSDHE1cj8tEnnk=;
-        b=mmL++hYk7ca+lvx/ov0MK5P0PSo/MY/sAKXIpVbz8GKXM3jyOjEHazpsJSim1sgQnC
-         kclMpn4jm+AzyxOKMTDRKkdrLQzKL7kaoPEClKfePWa+5bb3edG016BXvsJfmg47qVX0
-         fRYpsw/f7gWv7bX6pfE07lj/vBmdIxFjB/+KIkQ1l/zLQ0tVix4NIgnqvHBzMGQaOgsA
-         ZI1F/lxZk/3H0/t5pmd0zXGLGGOlDTh08AXZG8R9CRy1qdwaEJAnwJLWGAedPAEUdGxv
-         n/YObxWdCupl4SZMo0eJDBrzuJUi1dKhHVrJLg08UWpIK9U0y8nuUp097UsUD+bGrF9/
-         gGvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlnVGZXvb497sguWsE8nGFvk7nYto3hjcmBVaA4NeKvZISwBp+fNf4Gpd4SLeIRnuDMo3tPrQ49+xT2lLodqY1D7CR5uRv0Gn7pHraWiAoE3kKiiz45AGEuY/kKjNKiYDgHVX+kMDSrBsJb/dV2Q==
-X-Gm-Message-State: AOJu0YxfjkDFg+TwXJMe35QoUuqolK946vnNX3pCNnjoFEdiq3ncf3pw
-	hshAp2z/bY4lIuUt4LqrLiLHbUd7TSVHtaXjccc66ZE+d+lCH2CS6ii7UsXWQk9Ta94mwha9oUM
-	JVyQHOEVzsiZBV+JwEd8tLjM+khM=
-X-Google-Smtp-Source: AGHT+IHhfCe+4VNW8HkSiAA/uykrSChGIFotbydYKIvayu1h/zipDj4Ofp6vgsQItm8Nv+hV5RBh88WuUgojGb0ncIg=
-X-Received: by 2002:a17:90a:7406:b0:297:3305:a690 with SMTP id
- a6-20020a17090a740600b002973305a690mr855014pjg.9.1707860732331; Tue, 13 Feb
- 2024 13:45:32 -0800 (PST)
+	s=arc-20240116; t=1707861550; c=relaxed/simple;
+	bh=JJZKe2t0kamyMzVROuPedbDxFm+zHMjxwqHfKjv86Vs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hNNx/AKoi6sNludGWLhIl+rJF7ZEZIkprNKtEAd3LJJvsCHg7Rb4ZSPKAZ0C6m9b9I2Qiuy8Q3ty2gGtoegGsrkkdFVSUaRrjSgpIX+WRC6IkDAoiAxttn98ei4rE5+k7y12cbbeyxsa0Lnm+CsjYeheuRA9FakQLOvp60SRxuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hFwIPqHd; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hFwIPqHd"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41DL4fIu001929;
+	Tue, 13 Feb 2024 21:59:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2023-11-20; bh=ukCGGXI9Jxb1GstaggI2PMFSAmqWV+ZT0DPIrBgA8Ns=;
+ b=hFwIPqHdkoDZYsVMHJ8zXgJ+TLgjlWOfxhztM+UJgYDB/AWOR/3a984ul5nwA8gnexMD
+ i2V7x9UOLzu2YlSdaCrIH9yAZYVhuetntb8L1SNgT0bRzg9aLZ6Mwr5D0guvTNOudA+x
+ KLXRDsLvFFFnEsrHxvZ5LGr6B4+jFRUu/i2Cd3rwZ/NskzqDODb5HID+pXZL7ryJ4m9f
+ VVixqT6zm3xj70AINFvCMrEjhDlRvMkXBtLayIl7LXq1EX5gk+fG9NBUmer1bF3WPTrS
+ kF3fRfvr/fZeyerU0eCJZO+rqqbCZL/2B8iGMaTBVKg+oDziNTRRhbiMtBRgtlApHTud Cg== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w8cxr8p2w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Feb 2024 21:58:59 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41DLFAtr015276;
+	Tue, 13 Feb 2024 21:58:59 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk80tj9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Feb 2024 21:58:59 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41DLwwaX037838;
+	Tue, 13 Feb 2024 21:58:58 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3w5yk80thj-1;
+	Tue, 13 Feb 2024 21:58:58 +0000
+From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, jolsa@kernel.org
+Cc: samasth.norway.ananda@oracle.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH ] perf daemon: Fix file leak in daemon_session__control
+Date: Tue, 13 Feb 2024 13:58:57 -0800
+Message-ID: <20240213215857.3081841-1-samasth.norway.ananda@oracle.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240209204947.3873294-1-irogers@google.com> <20240209204947.3873294-4-irogers@google.com>
-In-Reply-To: <20240209204947.3873294-4-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 13 Feb 2024 13:45:20 -0800
-Message-ID: <CAM9d7ch82xZ2-tfQz641Hj0CpzadVrpp-WfaNWA5R48QJARtbg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] perf stat: Avoid metric-only segv
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Kaige Ye <ye@kaige.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-13_14,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402130173
+X-Proofpoint-GUID: UmyLGXzZ-iwIc4jmZcmbUW1efb5iKuvz
+X-Proofpoint-ORIG-GUID: UmyLGXzZ-iwIc4jmZcmbUW1efb5iKuvz
 
-On Fri, Feb 9, 2024 at 12:50=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Cycles is recognized as part of a hard coded metric in stat-shadow.c,
-> it may call print_metric_only with a NULL fmt string leading to a
-> segfault. Handle the NULL fmt explicitly.
->
-> Fixes: 088519f318be ("perf stat: Move the display functions to stat-displ=
-ay.c")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> Note, the fixes tag is to a refactor that moved the function. The bug
-> existed before this.
+The open() function returns -1 on error.
+'control' and 'ack' both initialized with open() and further
+validated with 'if' statement. 'if (!control)' would evaluate
+to 'true' if returned value on error were '0' but it is actually '-1'.
 
-Yeah I noticed that.
+Fixes: edcaa47958c7 ("perf daemon: Add 'ping' command")
+Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+---
+Found this error through static analysis. This has only been compile
+tested.
+---
+ tools/perf/builtin-daemon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> ---
->  tools/perf/util/stat-display.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> index 8c61f8627ebc..b7d00a538d70 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -560,7 +560,7 @@ static void print_metric_only(struct perf_stat_config=
- *config,
->         if (color)
->                 mlen +=3D strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
->
-> -       color_snprintf(str, sizeof(str), color ?: "", fmt, val);
-> +       color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
+diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+index 83954af36753..de76bbc50bfb 100644
+--- a/tools/perf/builtin-daemon.c
++++ b/tools/perf/builtin-daemon.c
+@@ -523,7 +523,7 @@ static int daemon_session__control(struct daemon_session *session,
+ 		  session->base, SESSION_CONTROL);
+ 
+ 	control = open(control_path, O_WRONLY|O_NONBLOCK);
+-	if (!control)
++	if (control < 0)
+ 		return -1;
+ 
+ 	if (do_ack) {
+@@ -532,7 +532,7 @@ static int daemon_session__control(struct daemon_session *session,
+ 			  session->base, SESSION_ACK);
+ 
+ 		ack = open(ack_path, O_RDONLY, O_NONBLOCK);
+-		if (!ack) {
++		if (ack < 0) {
+ 			close(control);
+ 			return -1;
+ 		}
+-- 
+2.42.0
 
-I was thinking about fixing the callers to pass valid format strings
-but it seems they don't care about the output string anyway so
-I think it's fine.
-
-Thanks,
-Namhyung
-
-
->         fprintf(out, "%*s ", mlen, str);
->         os->first =3D false;
->  }
-> --
-> 2.43.0.687.g38aa6559b0-goog
->
