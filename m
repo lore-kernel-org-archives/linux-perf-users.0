@@ -1,110 +1,178 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9FD69D00;
-	Tue, 13 Feb 2024 21:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC08801;
+	Wed, 14 Feb 2024 00:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707861550; cv=none; b=f6LkcAkr73xXd7di63hR+uJ2zhE3x6zi0LhBlegOjasuYjfN9YWac2aRMygkXnb+wvniEI0LjJN1BSp7RWBuJN6nAHOTMn7oTbd2O6eHMQxFJ5FWcdcLgR8WVWAqsOiJ4GHKovTTEsL0pCFGcXYS+Lfeief2wVvcWiAsxORIzYs=
+	t=1707871930; cv=none; b=RFGcLyjKLhBktsOY0tNJ11hVO8fX7M/H2EWa64wHP55WAhVwsPgJ3TmzCNhpywUh2GZ8ulZCU/H5ois4bBfcvqvotBhk7e9xZCMacYdvykNVzyWJzy50YWH3BJizkQ8L+lTV8mSrLeWyIuQt1huwu4YzPJ3m1+e+KBKvsWbtdm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707861550; c=relaxed/simple;
-	bh=JJZKe2t0kamyMzVROuPedbDxFm+zHMjxwqHfKjv86Vs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hNNx/AKoi6sNludGWLhIl+rJF7ZEZIkprNKtEAd3LJJvsCHg7Rb4ZSPKAZ0C6m9b9I2Qiuy8Q3ty2gGtoegGsrkkdFVSUaRrjSgpIX+WRC6IkDAoiAxttn98ei4rE5+k7y12cbbeyxsa0Lnm+CsjYeheuRA9FakQLOvp60SRxuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hFwIPqHd; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hFwIPqHd"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41DL4fIu001929;
-	Tue, 13 Feb 2024 21:59:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=ukCGGXI9Jxb1GstaggI2PMFSAmqWV+ZT0DPIrBgA8Ns=;
- b=hFwIPqHdkoDZYsVMHJ8zXgJ+TLgjlWOfxhztM+UJgYDB/AWOR/3a984ul5nwA8gnexMD
- i2V7x9UOLzu2YlSdaCrIH9yAZYVhuetntb8L1SNgT0bRzg9aLZ6Mwr5D0guvTNOudA+x
- KLXRDsLvFFFnEsrHxvZ5LGr6B4+jFRUu/i2Cd3rwZ/NskzqDODb5HID+pXZL7ryJ4m9f
- VVixqT6zm3xj70AINFvCMrEjhDlRvMkXBtLayIl7LXq1EX5gk+fG9NBUmer1bF3WPTrS
- kF3fRfvr/fZeyerU0eCJZO+rqqbCZL/2B8iGMaTBVKg+oDziNTRRhbiMtBRgtlApHTud Cg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w8cxr8p2w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Feb 2024 21:58:59 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41DLFAtr015276;
-	Tue, 13 Feb 2024 21:58:59 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk80tj9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Feb 2024 21:58:59 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41DLwwaX037838;
-	Tue, 13 Feb 2024 21:58:58 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3w5yk80thj-1;
-	Tue, 13 Feb 2024 21:58:58 +0000
-From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, jolsa@kernel.org
-Cc: samasth.norway.ananda@oracle.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH ] perf daemon: Fix file leak in daemon_session__control
-Date: Tue, 13 Feb 2024 13:58:57 -0800
-Message-ID: <20240213215857.3081841-1-samasth.norway.ananda@oracle.com>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1707871930; c=relaxed/simple;
+	bh=2+YC4GCoCVjMy2Ct2cJUi3Cr5RlvqD+v+ENXkPB6w7M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gn3OxzZB7fHiohVw1p/S03KLbg85T2QB2nbJtmdRCoDYCyVeLM6PTCMSn1wwVekR8iPe1yw3JAz8l9EFNoABHP/wTOPypAbE4IcOtV6syStvGNzXhRMZE5OzE2Eo/4KeeHjnnsuSkge4wxbCuP1LiSqRvFrLp3kR4V67kgKUsyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d8b519e438so1225087a12.1;
+        Tue, 13 Feb 2024 16:52:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707871928; x=1708476728;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wD7TEKagSlKHEJT8nomaZPXwtx6sNloUd/DUQpDUnxI=;
+        b=lrT1HobS/S5bSZpGt/3tqfIm82B/AdM/ewvy9R5lgvcz5eCso759GfgRZnw3JSD9uV
+         XcLcRdAybOg4zlCuMa6MlTGiRcGA3/W8J0S+3igeg5zl3gjyHF0gnnVu3yXuPrDuZXxx
+         jB59Y4hIxOrFj9kJXPAOOPWFZHxyfxS8+MUCTVnTEQg3H4sGBhJ8BlzLxFZni2L5pCuM
+         lLq/oQu1BqgGmGIT1ToPt1CCf+GIlQvImlbFlQ8jgDl2yOQWFXmZL3iRbRZqTYbNjIzQ
+         E+UDBsYQOhq5Bai6VaOj8zwztxXVAh7+njt/KkgF1vOGkhIJQxWa6z8OuVqJFbX/1DNK
+         JDkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVLy3+cqPydrWyfQIVq2zarkbdLPoikjZDEvkVXX1JjvRCrpdC0cA1oouq3zIMxW8okN738yS66FzIHpO4/9Z/mX33+rmIQrjaAuS1RQIiMmCPQozqa8eCTc3db/wsBG5BMQjLtf7R08vCFFa4pg==
+X-Gm-Message-State: AOJu0YwToFl6AcHNVEEc0EarMN8xzb3eDbdd+rfN7MMg9CAaSoIhqr6r
+	iRx8B3PKgUjqwpwUxFGk9A3lYjZRGxdFRg2bpik+9hEx7YxOTfJHlY4vIKKtLbDJJPvvsxVR5Q5
+	kKD78mMhdgWa+UkJUHAv7HCFdXz0=
+X-Google-Smtp-Source: AGHT+IG+bcT6feAmOjm0Rab9dbCrben3IbMYbnj/T7bjKQwI4D7q2hILoTEpOFQyLG6+V+SMtW2W36vE+dFPbh/EGZc=
+X-Received: by 2002:a17:90a:d504:b0:297:bb6:cbe4 with SMTP id
+ t4-20020a17090ad50400b002970bb6cbe4mr1007302pju.27.1707871927459; Tue, 13 Feb
+ 2024 16:52:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_14,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402130173
-X-Proofpoint-GUID: UmyLGXzZ-iwIc4jmZcmbUW1efb5iKuvz
-X-Proofpoint-ORIG-GUID: UmyLGXzZ-iwIc4jmZcmbUW1efb5iKuvz
+References: <20240201001504.1348511-1-irogers@google.com> <20240201001504.1348511-6-irogers@google.com>
+ <CAM9d7cjka_O5OmCxkrp-K6g45VnxEJNd73jjv6kQanutf+6sbg@mail.gmail.com> <CAP-5=fV1dA_hbH=UAZFL8DeuRzvRqW51-gQFSpuEsHpWEDDtWw@mail.gmail.com>
+In-Reply-To: <CAP-5=fV1dA_hbH=UAZFL8DeuRzvRqW51-gQFSpuEsHpWEDDtWw@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 13 Feb 2024 16:51:56 -0800
+Message-ID: <CAM9d7cim3Geib9QNrtL6FVH-gg-=metH_u_yKnJFa+G=maOz3A@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] perf tests: Use scandirat for shell script finding
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The open() function returns -1 on error.
-'control' and 'ack' both initialized with open() and further
-validated with 'if' statement. 'if (!control)' would evaluate
-to 'true' if returned value on error were '0' but it is actually '-1'.
+On Mon, Feb 12, 2024 at 8:07=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Fri, Feb 9, 2024 at 8:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> >
+> > On Wed, Jan 31, 2024 at 4:15=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > Avoid filename appending buffers by using openat, faccessat and
+> > > scandirat more widely. Turn the script's path back to a file name
+> > > using readlink from /proc/<pid>/fd/<fd>.
+> > >
+> > > Read the script's description using api/io.h to avoid fdopen
+> > > conversions. Whilst reading perform additional sanity checks on the
+> > > script's contents.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > [SNIP]
+> > > -static const char *shell_test__description(char *description, size_t=
+ size,
+> > > -                                           const char *path, const c=
+har *name)
+> > > +static char *shell_test__description(int dir_fd, const char *name)
+> > >  {
+> > > -       FILE *fp;
+> > > -       char filename[PATH_MAX];
+> > > -       int ch;
+> > > +       struct io io;
+> > > +       char buf[128], desc[256];
+> > > +       int ch, pos =3D 0;
+> > >
+> > > -       path__join(filename, sizeof(filename), path, name);
+> > > -       fp =3D fopen(filename, "r");
+> > > -       if (!fp)
+> > > +       io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf=
+));
+> > > +       if (io.fd < 0)
+> > >                 return NULL;
+> > >
+> > >         /* Skip first line - should be #!/bin/sh Shebang */
+> > > +       if (io__get_char(&io) !=3D '#')
+> > > +               goto err_out;
+> > > +       if (io__get_char(&io) !=3D '!')
+> > > +               goto err_out;
+> > >         do {
+> > > -               ch =3D fgetc(fp);
+> > > -       } while (ch !=3D EOF && ch !=3D '\n');
+> > > -
+> > > -       description =3D fgets(description, size, fp);
+> > > -       fclose(fp);
+> > > +               ch =3D io__get_char(&io);
+> > > +               if (ch < 0)
+> > > +                       goto err_out;
+> > > +       } while (ch !=3D '\n');
+> > >
+> > > -       /* Assume first char on line is omment everything after that =
+desc */
+> > > -       return description ? strim(description + 1) : NULL;
+> > > +       do {
+> > > +               ch =3D io__get_char(&io);
+> > > +               if (ch < 0)
+> > > +                       goto err_out;
+> > > +       } while (ch =3D=3D '#' || isspace(ch));
+> > > +       while (ch > 0 && ch !=3D '\n') {
+> > > +               desc[pos++] =3D ch;
+> > > +               if (pos >=3D (int)sizeof(desc) - 1)
+> >
+> > Maybe (pos =3D=3D sizeof(desc) - 2) ?  I'm not sure what happens if it =
+has a
+> > description longer than the buffer size.
+>
+> Thanks Namhyung!
+>
+> sizeof(desc) - 1 =3D=3D sizeof(char[256]) - 1 =3D=3D 255 , so at this poi=
+nt
+> pos can at most be 255 and there is one space after pos for a trailing
+> '\0'.
+>
+> > > +                       break;
+> > > +               ch =3D io__get_char(&io);
+> > > +       }
+> > > +       while (pos > 0 && isspace(desc[--pos]))
+> > > +               ;
+>
+> Here pos is moved back to at least one to 254.
 
-Fixes: edcaa47958c7 ("perf daemon: Add 'ping' command")
-Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
----
-Found this error through static analysis. This has only been compile
-tested.
----
- tools/perf/builtin-daemon.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Oh, right.  I missed it moved the pos back.
 
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 83954af36753..de76bbc50bfb 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -523,7 +523,7 @@ static int daemon_session__control(struct daemon_session *session,
- 		  session->base, SESSION_CONTROL);
- 
- 	control = open(control_path, O_WRONLY|O_NONBLOCK);
--	if (!control)
-+	if (control < 0)
- 		return -1;
- 
- 	if (do_ack) {
-@@ -532,7 +532,7 @@ static int daemon_session__control(struct daemon_session *session,
- 			  session->base, SESSION_ACK);
- 
- 		ack = open(ack_path, O_RDONLY, O_NONBLOCK);
--		if (!ack) {
-+		if (ack < 0) {
- 			close(control);
- 			return -1;
- 		}
--- 
-2.42.0
+Thanks,
+Namhyung
 
+>
+> > > +       desc[++pos] =3D '\0';
+> >
+> > Wouldn't it overflow the buffer?
+>
+> At this point pos can only have a maximum value of 255 which is within
+> the bounds of desc.
+>
+> Thanks,
+> Ian
+>
+> > Thanks,
+> > Namhyung
+> >
+> >
+> > > +       close(io.fd);
+> > > +       return strdup(desc);
+> > > +err_out:
+> > > +       close(io.fd);
+> > > +       return NULL;
+> > >  }
