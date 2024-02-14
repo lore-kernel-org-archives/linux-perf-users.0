@@ -1,158 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8080B60DFD;
-	Wed, 14 Feb 2024 17:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9463584FD9
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 17:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707931533; cv=none; b=FaFLcUySzFO6VUFavtO4ZfEtXWrELpxY9Dnjvw7ypxQyi+AHK0tjbm78/30EWt6ca2nNH6h35jWUFTQjgVODPeBtc0VADaHaxoWt4VLJYGoRwmFe2bx5LXWlvWMDIqEFLCStqq1ZVMPWoKP3+4mAZ+KpY7pLu1mRH34JmKHHCDA=
+	t=1707932445; cv=none; b=W3bwdr1ZZHPS7CnoKpDg0fzyMY1GSLy54JNaNh05lMxvuQ0c/An8O4AIBDLyiEuJp2imMusPj5tq8QN1dYx1QQL+dZLnNuFUuCGzyNYPGPOoN0HwAtY6slE3xsMWfBOt996QoNdSxAJdJXvOVxYYhcqMH+XVbC+azgDUb55fEec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707931533; c=relaxed/simple;
-	bh=XWEFbPr3J4TJPSoFM3I3qh9skPV1hkdSIaXZRC1c4Ac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fcCqiMhKuCIn8Ep1kSToH+ElI34RY+evCp6nAJ5vsNc4MdOaDdqf+dEdyY38yzMiipZ3wx1d3BUa2nzggxULDOB08vlJhGM7heeDFEbsdybVq5AlC0O9xl/cftjnbRSj3VdhB1VgntORH0RNhqkVa4jYsnSThamu+0Im91pZFsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m02q2Qlg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707932445; c=relaxed/simple;
+	bh=BIEPrj8REzhp6IWPrzPDboiwJzkYVpJOVlkhzZJPWM0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aunpCVxCPxUakZzzp3t0z/fIUnx4exfawyscjOgy0RbtmJCmFyOHQjMU5UJpQ6AVxu0f9dfsaEZvMu/MXM57om9FDZgqr9iXjAKy/20TGVB6VeQ0SxstPlvXnnk4SaVOXlhN15ljyBCVC45YvTLBbwVTxEWRgUpma33ex6QwqMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=e4wo/Fo6; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m02q2Qlg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD530C433F1;
-	Wed, 14 Feb 2024 17:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707931533;
-	bh=XWEFbPr3J4TJPSoFM3I3qh9skPV1hkdSIaXZRC1c4Ac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m02q2QlgKjdzyutCzXk+eewAb85EmUrqwr7cxV5Xoonu4S0xNmB0UlYxIxdI3rDGc
-	 wyOqsaIbacDYUpDXaEf0ncUaye3wphukiNkpgrbwWhjVT8gFyxWX0WtZj1jcviI5X8
-	 KS4ChAmdJjHQyoLWWGm8wfHr1KYHs9rtkUmIQsDK8nxem4hOjV+l0j/vmZ2yRjKGMl
-	 wVFjbQbIduJTeKwHyfbc+Wf0k2Hjh/WQsxx26dtZnKH5fYkBzT7qp+EVXv/e0p6YcK
-	 bEfHCSv9vz3udz8INexjzm8BXmmzbTE881lwryqJCu/8R3D/dv6WIRAFuXFUsWKh+l
-	 K3RfXye7hK7YA==
-Date: Wed, 14 Feb 2024 14:25:29 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="e4wo/Fo6"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e0f5934813so27041b3a.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 09:40:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google; t=1707932443; x=1708537243; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=43jjz2Dnzl3sNSNdkk4MoD6bg1Ygi5eixyO/ZKWqbHM=;
+        b=e4wo/Fo6QxNFh0IxQmUgdwryTuJ3PRE+cjDmvgKCckTJko1GDzLC0ggpLsxUuAWkGo
+         +shzdRzidYNoWnegUUkTiPzbLNqEaRiVBf/ctXCL1Ot3ACDFidwfDQ3lNXlFAvUwqAie
+         vAYlv/xkIcRqJMppfD4U0TMXMee67KzDLKOCE0Z6l3CH4nh+VNEMsnCSZBnboCp2C8+O
+         jnIS7LKV3LqOzV9i6AVwrLD1Z0bZh7N9RED2yvstcUgPv4d/tM2wVrEx+HXY0EnIg7f4
+         Qed+b6usThKYFdcCoNwJFPwCN3yc8tvPMwyMVAejYTTPom2Z0rHAn+xUeIGQfVR+Jt17
+         wFrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707932443; x=1708537243;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=43jjz2Dnzl3sNSNdkk4MoD6bg1Ygi5eixyO/ZKWqbHM=;
+        b=F9MATJWh9CHHP55SqkcIkWUiOC2b8zdI65L8flkoVp3Ps6cnawORN0F0T6C+bqzLcP
+         OB0pdnJV8VX8n+/8NzBWt/TOAIuNJwSewjenK4WbGMnwnTvTAPkB5gpC8dQErnwPRkQB
+         XmgwBnm6TKYuI62jLtDzdNHV9/6WLHZwRR4zZyJmmIoaJ/5D/e20jHjSqz/Dseftj2hX
+         2eiDjQ8a4NjEh50HCQVFJ4M9UvAByh2Kxr5JMZXJAetxGf8hNhR7uV3wHGRaWl9buZve
+         xP7HNkwqj/VyHyEg618KxukJ95SI/CjDDc6SGCDO92rNP3J191vwTdUmz9XHWuVoUOV3
+         EUUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwPq5woKsQE7IV0YRYQiTceYWGljH7H+sDfomtpxjWDVjh6ugL96A0llggwkGg4PTQ/Uf3U6Zhtg81DJFOp+6xm7XA+GueimHCoMYep21dEQ==
+X-Gm-Message-State: AOJu0YxZt0TQG9DvJRA5IVpwla1jTrYZjbDcX1RBkROjgY/iKF1ZN1Rl
+	LnO6ca3AZFOWyz6bzACnzlryxbgoCKfEmJUUM7KHB9m39sH90RINFvkuSyIQ7A==
+X-Google-Smtp-Source: AGHT+IF5+DWod+4MkXnnxd/jBnxFQ4s7hRAAlKX7Hz1YGpB18O9PTm/20taXOa1gaXwFTkPVrERdMg==
+X-Received: by 2002:a05:6a21:87a9:b0:1a0:5a4c:c6b9 with SMTP id ph41-20020a056a2187a900b001a05a4cc6b9mr2530953pzb.18.1707932442821;
+        Wed, 14 Feb 2024 09:40:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXL+icLSBdWtKqx1QTTEjwliXPcrhmUTelRLNN/lM/h4HVf001c7XmlOcS0JZ3n+ia7tV8uceVKDrPeGvV2MlRtYmbZiXIUThQpWhXqnx488RE0t45AL0X93bh3WSh3hhMSeFZ6S+o+oJjan1WHX9pa4ztWS7DxoXVisF1BS66W8+6UGPsuXHOglUNklczRaF7df6NCCbk/z+OJcZ/1VfN0v7eqYvhtFh0vi+eKb4cJ5pQ0WmqHzpxC1E8D6Xo46EC3uK9Sv9pZ3ooHNuoWkgnpYR7W27K3QaBEeEjTMx0S0a23oiB+fuOnqk+JrZHdBCT+UEhA9n8R16etvgchT13S26YPV3iL2ccAcLbO9Ci8lLAY7GqTNwpECVGWOBm8tmHVFeonZqEV6jZIdFAkZVEftWCKmovdm5R0wtaUvqFG3GEDtVH8857ETPM7b8amr28IqwBdvAlRK+8qn8tWC8Yt6bn+PA4C2AgTQAQSJIyP5QOQKsq7qySFDsXBx21DolQmf007yH33vN3rqVOz/MTRYGyx5BW2NorExJm1VxPuFJE=
+Received: from zhadum.home.kylehuey.com (c-76-126-33-191.hsd1.ca.comcast.net. [76.126.33.191])
+        by smtp.gmail.com with ESMTPSA id p5-20020aa78605000000b006e0874cbaefsm9567604pfn.27.2024.02.14.09.40.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 09:40:42 -0800 (PST)
+From: Kyle Huey <me@kylehuey.com>
+X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
+To: Kyle Huey <khuey@kylehuey.com>,
+	linux-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Robert O'Callahan <robert@ocallahan.org>,
+	Song Liu <song@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v1 2/6] perf trace: Ignore thread hashing in summary
-Message-ID: <Zcz3iSt5k3_74O4J@x1>
-References: <20240214063708.972376-1-irogers@google.com>
- <20240214063708.972376-3-irogers@google.com>
+	linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [RESEND PATCH v5 1/4] perf/bpf: Call bpf handler directly, not through overflow machinery
+Date: Wed, 14 Feb 2024 09:39:32 -0800
+Message-Id: <20240214173950.18570-2-khuey@kylehuey.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240214173950.18570-1-khuey@kylehuey.com>
+References: <20240214173950.18570-1-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214063708.972376-3-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 13, 2024 at 10:37:04PM -0800, Ian Rogers wrote:
-> Commit 91e467bc568f ("perf machine: Use hashtable for machine
-> threads") made the iteration of thread tids unordered. The perf trace
-> --summary output sorts and prints each hash bucket, rather than all
-> threads globally. Change this behavior by turn all threads into a
-> list, sort the list by number of trace events then by tids, finally
-> print the list. This also allows the rbtree in threads to be not
-> accessed outside of machine.
+To ultimately allow bpf programs attached to perf events to completely
+suppress all of the effects of a perf event overflow (rather than just the
+sample output, as they do today), call bpf_overflow_handler() from
+__perf_event_overflow() directly rather than modifying struct perf_event's
+overflow_handler. Return the bpf program's return value from
+bpf_overflow_handler() so that __perf_event_overflow() knows how to
+proceed. Remove the now unnecessary orig_overflow_handler from struct
+perf_event.
 
-Can you please provide a refresh of the output that is changed by your patch?
+This patch is solely a refactoring and results in no behavior change.
 
-- Arnaldo
+Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Acked-by: Song Liu <song@kernel.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+---
+ include/linux/perf_event.h |  6 +-----
+ kernel/events/core.c       | 28 +++++++++++++++-------------
+ 2 files changed, 16 insertions(+), 18 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d2a15c0c6f8a..c7f54fd74d89 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -810,7 +810,6 @@ struct perf_event {
+ 	perf_overflow_handler_t		overflow_handler;
+ 	void				*overflow_handler_context;
+ #ifdef CONFIG_BPF_SYSCALL
+-	perf_overflow_handler_t		orig_overflow_handler;
+ 	struct bpf_prog			*prog;
+ 	u64				bpf_cookie;
+ #endif
+@@ -1357,10 +1356,7 @@ __is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
+ #ifdef CONFIG_BPF_SYSCALL
+ static inline bool uses_default_overflow_handler(struct perf_event *event)
+ {
+-	if (likely(is_default_overflow_handler(event)))
+-		return true;
+-
+-	return __is_default_overflow_handler(event->orig_overflow_handler);
++	return is_default_overflow_handler(event);
+ }
+ #else
+ #define uses_default_overflow_handler(event) \
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f0f0f71213a1..24a718e7eb98 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9548,6 +9548,12 @@ static inline bool sample_is_allowed(struct perf_event *event, struct pt_regs *r
+ 	return true;
+ }
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-trace.c  | 41 +++++++++++++++++++++----------------
->  tools/perf/util/rb_resort.h |  5 -----
->  2 files changed, 23 insertions(+), 23 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 109b8e64fe69..90eaff8c0f6e 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -74,6 +74,7 @@
->  #include <linux/err.h>
->  #include <linux/filter.h>
->  #include <linux/kernel.h>
-> +#include <linux/list_sort.h>
->  #include <linux/random.h>
->  #include <linux/stringify.h>
->  #include <linux/time64.h>
-> @@ -4312,34 +4313,38 @@ static unsigned long thread__nr_events(struct thread_trace *ttrace)
->  	return ttrace ? ttrace->nr_events : 0;
->  }
->  
-> -DEFINE_RESORT_RB(threads,
-> -		(thread__nr_events(thread__priv(a->thread)) <
-> -		 thread__nr_events(thread__priv(b->thread))),
-> -	struct thread *thread;
-> -)
-> +static int trace_nr_events_cmp(void *priv __maybe_unused,
-> +			       const struct list_head *la,
-> +			       const struct list_head *lb)
->  {
-> -	entry->thread = rb_entry(nd, struct thread_rb_node, rb_node)->thread;
-> +	struct thread_list *a = list_entry(la, struct thread_list, list);
-> +	struct thread_list *b = list_entry(lb, struct thread_list, list);
-> +	unsigned long a_nr_events = thread__nr_events(thread__priv(a->thread));
-> +	unsigned long b_nr_events = thread__nr_events(thread__priv(b->thread));
-> +
-> +	if (a_nr_events != b_nr_events)
-> +		return a_nr_events < b_nr_events ? -1 : 1;
-> +
-> +	/* Identical number of threads, place smaller tids first. */
-> +	return thread__tid(a->thread) < thread__tid(b->thread)
-> +		? -1
-> +		: (thread__tid(a->thread) > thread__tid(b->thread) ? 1 : 0);
->  }
->  
->  static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp)
->  {
->  	size_t printed = trace__fprintf_threads_header(fp);
-> -	struct rb_node *nd;
-> -	int i;
-> -
-> -	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
-> -		DECLARE_RESORT_RB_MACHINE_THREADS(threads, trace->host, i);
-> +	LIST_HEAD(threads);
->  
-> -		if (threads == NULL) {
-> -			fprintf(fp, "%s", "Error sorting output by nr_events!\n");
-> -			return 0;
-> -		}
-> +	if (machine__thread_list(trace->host, &threads) == 0) {
-> +		struct thread_list *pos;
->  
-> -		resort_rb__for_each_entry(nd, threads)
-> -			printed += trace__fprintf_thread(fp, threads_entry->thread, trace);
-> +		list_sort(NULL, &threads, trace_nr_events_cmp);
->  
-> -		resort_rb__delete(threads);
-> +		list_for_each_entry(pos, &threads, list)
-> +			printed += trace__fprintf_thread(fp, pos->thread, trace);
->  	}
-> +	thread_list__delete(&threads);
->  	return printed;
->  }
->  
-> diff --git a/tools/perf/util/rb_resort.h b/tools/perf/util/rb_resort.h
-> index 376e86cb4c3c..d927a0d25052 100644
-> --- a/tools/perf/util/rb_resort.h
-> +++ b/tools/perf/util/rb_resort.h
-> @@ -143,9 +143,4 @@ struct __name##_sorted *__name = __name##_sorted__new
->  	DECLARE_RESORT_RB(__name)(&__ilist->rblist.entries.rb_root,		\
->  				  __ilist->rblist.nr_entries)
->  
-> -/* For 'struct machine->threads' */
-> -#define DECLARE_RESORT_RB_MACHINE_THREADS(__name, __machine, hash_bucket)    \
-> - DECLARE_RESORT_RB(__name)(&__machine->threads[hash_bucket].entries.rb_root, \
-> -			   __machine->threads[hash_bucket].nr)
-> -
->  #endif /* _PERF_RESORT_RB_H_ */
-> -- 
-> 2.43.0.687.g38aa6559b0-goog
++#ifdef CONFIG_BPF_SYSCALL
++static int bpf_overflow_handler(struct perf_event *event,
++				struct perf_sample_data *data,
++				struct pt_regs *regs);
++#endif
++
+ /*
+  * Generic event overflow handling, sampling.
+  */
+@@ -9617,7 +9623,10 @@ static int __perf_event_overflow(struct perf_event *event,
+ 		irq_work_queue(&event->pending_irq);
+ 	}
+ 
+-	READ_ONCE(event->overflow_handler)(event, data, regs);
++#ifdef CONFIG_BPF_SYSCALL
++	if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
++#endif
++		READ_ONCE(event->overflow_handler)(event, data, regs);
+ 
+ 	if (*perf_event_fasync(event) && event->pending_kill) {
+ 		event->pending_wakeup = 1;
+@@ -10427,9 +10436,9 @@ static void perf_event_free_filter(struct perf_event *event)
+ }
+ 
+ #ifdef CONFIG_BPF_SYSCALL
+-static void bpf_overflow_handler(struct perf_event *event,
+-				 struct perf_sample_data *data,
+-				 struct pt_regs *regs)
++static int bpf_overflow_handler(struct perf_event *event,
++				struct perf_sample_data *data,
++				struct pt_regs *regs)
+ {
+ 	struct bpf_perf_event_data_kern ctx = {
+ 		.data = data,
+@@ -10450,10 +10459,8 @@ static void bpf_overflow_handler(struct perf_event *event,
+ 	rcu_read_unlock();
+ out:
+ 	__this_cpu_dec(bpf_prog_active);
+-	if (!ret)
+-		return;
+ 
+-	event->orig_overflow_handler(event, data, regs);
++	return ret;
+ }
+ 
+ static int perf_event_set_bpf_handler(struct perf_event *event,
+@@ -10489,8 +10496,6 @@ static int perf_event_set_bpf_handler(struct perf_event *event,
+ 
+ 	event->prog = prog;
+ 	event->bpf_cookie = bpf_cookie;
+-	event->orig_overflow_handler = READ_ONCE(event->overflow_handler);
+-	WRITE_ONCE(event->overflow_handler, bpf_overflow_handler);
+ 	return 0;
+ }
+ 
+@@ -10501,7 +10506,6 @@ static void perf_event_free_bpf_handler(struct perf_event *event)
+ 	if (!prog)
+ 		return;
+ 
+-	WRITE_ONCE(event->overflow_handler, event->orig_overflow_handler);
+ 	event->prog = NULL;
+ 	bpf_prog_put(prog);
+ }
+@@ -11975,13 +11979,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		overflow_handler = parent_event->overflow_handler;
+ 		context = parent_event->overflow_handler_context;
+ #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
+-		if (overflow_handler == bpf_overflow_handler) {
++		if (parent_event->prog) {
+ 			struct bpf_prog *prog = parent_event->prog;
+ 
+ 			bpf_prog_inc(prog);
+ 			event->prog = prog;
+-			event->orig_overflow_handler =
+-				parent_event->orig_overflow_handler;
+ 		}
+ #endif
+ 	}
+-- 
+2.34.1
+
