@@ -1,58 +1,58 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C686E60BBA
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 17:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E4485652
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 17:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707932447; cv=none; b=foHECdl3c5E5wemZEytXUgH1I3KggAWyBg3OqIvYcd6FuqYRCqFQhZm6OxYsQ83LMwEYsFVlsN7WcdMINcG6Sef3h+diml5J6bE9g2SjvpLB5tJtja1A5EyPztd4LNzYaUHMhXELmNmxTY4oPOd1dd2RdUHnJ6T78BK5gWplY0k=
+	t=1707932449; cv=none; b=mBwzGR4IjsfnkrvCJ8j1S2n4lvzKuEuL8+IgiZPbLNv0JXGgPXiTAeZH+MSdZszgyTvkQ0of+awaS4odwoBIE/kUws3U8qlphBfeOD28DkWPq16sFPd9qQmYXWMLStkKfXcsRK+g4gEMyTpr//RMUdC+DUNR7n7ZUeTzHMWgKyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707932447; c=relaxed/simple;
-	bh=zUABpjG2ub173w63GMgMTw18XVCHIXF84Q0edlKhxyE=;
+	s=arc-20240116; t=1707932449; c=relaxed/simple;
+	bh=PX2QIRe/Ic85BaGVX4Y1MwT3KJ9EiLQ96IEJSBjyAmE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ctndwgLJp57AGn9wf5faiI47SmSUM1AAVj92uoWoWrUjeKzlIm+EXgOycBhGhLYyDiwLcMeEMilGqWjGp8X35cMJRqMjtr0hkAu37sOPzNzeS3WkD66Uld/+BuXoJFSZp2eTkc9Y2N3VPvo1ELfGmCINsvmj7JlM/WB1aXpYnDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=IoqOV6s8; arc=none smtp.client-ip=209.85.215.174
+	 MIME-Version; b=MnrFyiJ3MdIt7mACB0Q+2eRvMHab4QohJgby1NlEGCz++4PzZHqGFeAxThiJuKJgDLTfdyYUN58Yut6JxAN/VesI/WaYuyHIAirvGsXy10Rpjl2kNgdJZaBe08SNX83tiQ8ddPa05V05C1il61pJ7zT9Xs3yFk+SyDk33w7sX9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=OPM2+jI5; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="IoqOV6s8"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5d8df34835aso26771a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 09:40:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="OPM2+jI5"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5dc816e4affso1893149a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 09:40:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1707932445; x=1708537245; darn=vger.kernel.org;
+        d=kylehuey.com; s=google; t=1707932447; x=1708537247; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/ElBvlPVPDuFmuEeY/T4KuG3RaPIc1GsemQ8p6vqiM4=;
-        b=IoqOV6s8Wx059NZmgJ9rmO7ZmLPt71UVBcT0WDfE7hDZ+0pKYLawhwp+c3i2Hsd+lh
-         SKl0qaVvsppcXqJ3kvIDRFrt3a/BjswkNyWZmas+ACVehWrGNw3KA4wvGXN6omMoz/LN
-         AH6DBp9pbZw9vbWMS0OgoEmF5Vz29UTdPwF4JIQMERu+mpTcneTZ3ffZimJMuEvjKmwb
-         S03uoj7ovWVn0atkhg5DfTwYPG88Borp/pCsqGv49udH2dEhhl++lMLoxizRgur0PT8W
-         FJat12JhuKe1wn++KDLETk3uKGMrz77t397fxZZcRtH73R9JXG7AYWtRQoOhLw76Adno
-         NWIA==
+        bh=HG1Z9345f9l/NkzG8Y/mlPsfRpv6azyFKs0IWGP/jfI=;
+        b=OPM2+jI5a1lsGQN7mpklD9h+LInX4e/9Kti3Ophc6GHXLnrZIOULn5dEbwoQ+cnVSM
+         /LsWpst9DYAO7/0u9Uz0o9wnwtFGILz9q0YRJvKVNfmG0Jl5aqKvirnRNa5OUWa8B1GP
+         SR5yGTs9QKvKp5Js+L7mzTpFNSZ3eJxEAYSFdvIr+twcCP+Le1AT6LQx+UWbpQMZQAN8
+         SVPyITIlvaUcFzbyLV9AMY7dzZHIQCDVthQwfXelaRmMkwC95H+OG+sUTSbWpfiCu+ns
+         CaITZlwXfkv6RMcdQ7UAgaKHQFCEHRhTs+xBtgga0XFo4XdmmTMdXRsIzUFjM1LfEOYj
+         m/+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707932445; x=1708537245;
+        d=1e100.net; s=20230601; t=1707932447; x=1708537247;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/ElBvlPVPDuFmuEeY/T4KuG3RaPIc1GsemQ8p6vqiM4=;
-        b=iZevP+m4dUkP6HiDyqA7pQ3I8hHJERYrdXeDpHwz7vf3GAyqLWaGqw85/797NSARMv
-         t196YyxTPAWVkSUcDwO61uE7Fw1hMi+g4VJgehCud8ANjXMjEb3xkN8PD/ZJbxu+PLzu
-         uA62P4MNEeEQnICWZLcrsyhZbNxc19PeCfdYiO17xmajK0G7WvZ9GDa/1lSBwEuHqIeu
-         j3x/ORbaUs0w6oA4eigXc1Oz11NCrOgN2TTCTFpiUkGIuP7LUrmdh9eXUcb3o7PQfBTQ
-         2a3qsZ3Ia3Sn5aF82oNrLV6j+zsupeGMn/OnNLeMm4uSmhnnu2Xy99wsHdq0Pn7JilO0
-         7bgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2t3TMJBm/JyBHtian1q0t+/ixqKduRsyDcdGyqq3dTJMbWNNLC5kSjwFqsTCJYIQgY8fimGfl0LtEtYGm6dPSb17LhaPAEguJK/MwgTXReg==
-X-Gm-Message-State: AOJu0YxincG+kUAcTBAISuLKwNH8B2Jiz8hrZdSILLmWWOnlEyDhRNWX
-	WOVOlcaCtQiraJFkjeDS8ksLbSPtiMNK+GmPsrNMCaJTRDVpX5UlNNqtG8+GiA==
-X-Google-Smtp-Source: AGHT+IFKJ2enC+iYjRYfjK0hAaVcw9L2SW4JceOswt+yl/hAiyoNanaf3Sr8OAjgf/m33sn8UysiTQ==
-X-Received: by 2002:a05:6a20:d818:b0:19e:b614:685c with SMTP id iv24-20020a056a20d81800b0019eb614685cmr4223312pzb.22.1707932444999;
-        Wed, 14 Feb 2024 09:40:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXBfzyE+xp/BPlirU8BbCNUyN9ay2yh+NMWrAWy4c76qJ1yppJZxe8xiOfc5BMTzaFpkXe3UVkwzuP7xcq8xBBkCBKiNiPp+12RTFq2CYHcu3qAvyC58hc4HuneYLJtyQnigIefY/GIMhc2iwaZk92xQSnhH94zzOGcvwSBsk8u9gIIQlOLDuURAj3u/lA8/45midZ5HMNzKnK0ywKeuuVVOJSslwMwHExU8lt7ybeAip41HXTRwZpYNugEaRiwKrZuAeCW9tdbOzDoGrkbJsgkkpUr/eHW4gyYN/FuussuWMaQFDwnAfhd3hc0TxkspyBnHxAmx0hfxuvMX8LDah+MopPTInvr6p+Z2xQQ0mGNmXEuTagrhCRvxp9QDo8FytDEsDjJUQl+fqldStC140ECBeOZSvpzlnKi9YLnTYZUfcP+5/Oh+wsQnProma40Rw7BHKV+fGL/zq3+ENEAvMKjLTwiN8xFxwztlkOTf53sOyiWszjhURi1aTa58u/6LPOpmGn91/8kLxYDfFV3YEtP346j5Gbck0lF192IeZ+zRKinjW5RQ5yOmPT0F7ohb9ckM4/rR8FJ3Q33v/dciL9JDZwZhLgSDsxHREHi/Bgj4f+EVwmLP3QOFsg5PWEfaeKBcWayXi3q8pqdtX1YML3asSjMw9Ml6ll5f+1kesxySZjAdHSZoF2w
+        bh=HG1Z9345f9l/NkzG8Y/mlPsfRpv6azyFKs0IWGP/jfI=;
+        b=JEc1ft/OYW5cPoOo5NKG8XpOqbkQTXFZxQ1padjODqdvtr8cfL/Vm9YwAa5EqLBemh
+         Od6Cogaxazd6q8ueABqlrcN9eSWh++j4o03i4iMA6e/7gQgbK9nFFcM6Cs8uBxT1/BS6
+         Qa9V1HcxgjlMRRfWdlL6W+HyOv/7BOlMsjpgidgYaCr8srGck0x55SoawDHu++oYOblI
+         PnZ7FwzWfE85dhYnlH1NvGqk4u1+rISxUmSjBtd9NHKquqfJvI68FMSo1TfLkBL468Eo
+         YUwZdygBgQWEs3oR7Jia5GU2zggsTpmYab0pNbubaF66ni9Nhch8EWQfLynQR0Bu0qK/
+         PaCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpRxkTBwKDNFH+5dRjHLRvuHwlm4RKk3TuNFZ+DYCczhW84+OqzpcuZQVDZOxoIfs9Ansg8XSyLcZCDpToh//fUWjOruXPZtHrz/LTW9iiTQ==
+X-Gm-Message-State: AOJu0YzQlaHU/S4D8P2PUYesvKYTIMOxf9BsB7qVQqWd7h96MLsUzWb2
+	WB+4buUEeFjM1alTteoOLv4T/mMYFd73Nuogf417Dw58/m/axxxTua8vTqU+rw==
+X-Google-Smtp-Source: AGHT+IENtoExpR4R0UgDDuR65Iu+tEswvgeW9/vs4xc1NOLROh77IEBzJgo5ubBcFQUYKsn2dOKbyw==
+X-Received: by 2002:a05:6a20:5a05:b0:19e:34ea:36ab with SMTP id jz5-20020a056a205a0500b0019e34ea36abmr2596022pzb.16.1707932446967;
+        Wed, 14 Feb 2024 09:40:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXCVm9x2c70Y3aUaKd5dJ9CyzyMqThObPmrRdxYZr+tKeNMU1F1t+87B11jHOCr3NjPSIjrc8unAoIFwG9j0ZWYfOUjq8Y//B8Ho60+jtM9/uIvVF7wEczEsKXfEZdbu4k/Y9gDo56B4zs5WTz7e8HU/vqmCrH6Z6MWpoEhr0laUxGnMeEoblbsvak/hKw7m0PitxNEgtda/ZfHIx0dItrJ+KMd2YuYqP6+nIRaMrV0tkWBYd60QoHOrxAP1b91xYjlvSOiS+hrHyKD+87Vj1ixhRsn3cZeOHk/i5mZamezp2z0CE4R0OzfEWoHj2rf9Ebdhn1/cnVD7Y+EXw1jOIXyYLZaQiQ2HfJEXyp/cgEvJd9nuISq0xMvVvHjqsdlKV2SDcOmjp1mCfBjDHkRZLt2pQEMu/cQUcGGi9PpWFjBJ0N3u1KcM3kfAj3rOcfBr8ouBYBh3YG/6Dn+nmnZP3fQNVfkKmR6Ilx/c0SR4B7kSy7dcKwVlQwpXqUThPCp6ernnDjQJbXCLoZAo4D5a47aC5fgS7he5A8wX+LihWY1lh8=
 Received: from zhadum.home.kylehuey.com (c-76-126-33-191.hsd1.ca.comcast.net. [76.126.33.191])
-        by smtp.gmail.com with ESMTPSA id p5-20020aa78605000000b006e0874cbaefsm9567604pfn.27.2024.02.14.09.40.43
+        by smtp.gmail.com with ESMTPSA id p5-20020aa78605000000b006e0874cbaefsm9567604pfn.27.2024.02.14.09.40.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 09:40:44 -0800 (PST)
+        Wed, 14 Feb 2024 09:40:46 -0800 (PST)
 From: Kyle Huey <me@kylehuey.com>
 X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
 To: Kyle Huey <khuey@kylehuey.com>,
@@ -66,20 +66,16 @@ To: Kyle Huey <khuey@kylehuey.com>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Robert O'Callahan <robert@ocallahan.org>,
-	Will Deacon <will@kernel.org>,
 	Song Liu <song@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	bpf@vger.kernel.org
-Subject: [RESEND PATCH v5 2/4] perf/bpf: Remove unneeded uses_default_overflow_handler.
-Date: Wed, 14 Feb 2024 09:39:33 -0800
-Message-Id: <20240214173950.18570-3-khuey@kylehuey.com>
+Subject: [RESEND PATCH v5 3/4] perf/bpf: Allow a bpf program to suppress all sample side effects
+Date: Wed, 14 Feb 2024 09:39:34 -0800
+Message-Id: <20240214173950.18570-4-khuey@kylehuey.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240214173950.18570-1-khuey@kylehuey.com>
 References: <20240214173950.18570-1-khuey@kylehuey.com>
@@ -91,119 +87,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that struct perf_event's orig_overflow_handler is gone, there's no need
-for the functions and macros to support looking past overflow_handler to
-orig_overflow_handler.
-
-This patch is solely a refactoring and results in no behavior change.
+Returning zero from a bpf program attached to a perf event already
+suppresses any data output. Return early from __perf_event_overflow() in
+this case so it will also suppress event_limit accounting, SIGTRAP
+generation, and F_ASYNC signalling.
 
 Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-Acked-by: Will Deacon <will@kernel.org>
 Acked-by: Song Liu <song@kernel.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
- arch/arm64/kernel/hw_breakpoint.c |  4 ++--
- include/linux/perf_event.h        | 16 ++--------------
- 3 files changed, 8 insertions(+), 20 deletions(-)
+ kernel/events/core.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index dc0fb7a81371..054e9199f30d 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address &= ~alignment_mask;
- 	hw->ctrl.len <<= offset;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 24a718e7eb98..a329bec42c4d 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9574,6 +9574,11 @@ static int __perf_event_overflow(struct perf_event *event,
  
--	if (uses_default_overflow_handler(bp)) {
-+	if (is_default_overflow_handler(bp)) {
- 		/*
- 		 * Mismatch breakpoints are required for single-stepping
- 		 * breakpoints.
-@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		 * Otherwise, insert a temporary mismatch breakpoint so that
- 		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (!uses_default_overflow_handler(wp))
-+		if (!is_default_overflow_handler(wp))
- 			continue;
- step:
- 		enable_single_step(wp, instruction_pointer(regs));
-@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		info->trigger = addr;
- 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
- 		perf_bp_event(wp, regs);
--		if (uses_default_overflow_handler(wp))
-+		if (is_default_overflow_handler(wp))
- 			enable_single_step(wp, instruction_pointer(regs));
+ 	ret = __perf_event_account_interrupt(event, throttle);
+ 
++#ifdef CONFIG_BPF_SYSCALL
++	if (event->prog && !bpf_overflow_handler(event, data, regs))
++		return ret;
++#endif
++
+ 	/*
+ 	 * XXX event_limit might not quite work as expected on inherited
+ 	 * events
+@@ -9623,10 +9628,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ 		irq_work_queue(&event->pending_irq);
  	}
  
-@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
- 			info->trigger = addr;
- 			pr_debug("breakpoint fired: address = 0x%x\n", addr);
- 			perf_bp_event(bp, regs);
--			if (uses_default_overflow_handler(bp))
-+			if (is_default_overflow_handler(bp))
- 				enable_single_step(bp, addr);
- 			goto unlock;
- 		}
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 35225632d70a..db2a1861bb97 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, unsigned long esr,
- 		perf_bp_event(bp, regs);
- 
- 		/* Do we need to handle the stepping? */
--		if (uses_default_overflow_handler(bp))
-+		if (is_default_overflow_handler(bp))
- 			step = 1;
- unlock:
- 		rcu_read_unlock();
-@@ -733,7 +733,7 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
- static int watchpoint_report(struct perf_event *wp, unsigned long addr,
- 			     struct pt_regs *regs)
- {
--	int step = uses_default_overflow_handler(wp);
-+	int step = is_default_overflow_handler(wp);
- 	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
- 
- 	info->trigger = addr;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index c7f54fd74d89..c8bd5bb6610c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1341,8 +1341,9 @@ extern int perf_event_output(struct perf_event *event,
- 			     struct pt_regs *regs);
- 
- static inline bool
--__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
-+is_default_overflow_handler(struct perf_event *event)
- {
-+	perf_overflow_handler_t overflow_handler = event->overflow_handler;
- 	if (likely(overflow_handler == perf_event_output_forward))
- 		return true;
- 	if (unlikely(overflow_handler == perf_event_output_backward))
-@@ -1350,19 +1351,6 @@ __is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
- 	return false;
- }
- 
--#define is_default_overflow_handler(event) \
--	__is_default_overflow_handler((event)->overflow_handler)
--
 -#ifdef CONFIG_BPF_SYSCALL
--static inline bool uses_default_overflow_handler(struct perf_event *event)
--{
--	return is_default_overflow_handler(event);
--}
--#else
--#define uses_default_overflow_handler(event) \
--	is_default_overflow_handler(event)
+-	if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
 -#endif
--
- extern void
- perf_event_header__init_id(struct perf_event_header *header,
- 			   struct perf_sample_data *data,
+-		READ_ONCE(event->overflow_handler)(event, data, regs);
++	READ_ONCE(event->overflow_handler)(event, data, regs);
+ 
+ 	if (*perf_event_fasync(event) && event->pending_kill) {
+ 		event->pending_wakeup = 1;
 -- 
 2.34.1
 
