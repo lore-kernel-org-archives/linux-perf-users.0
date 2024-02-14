@@ -1,57 +1,57 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D07125DB
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 04:54:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2767012B88
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 04:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707886488; cv=none; b=DQ7hWHbIBEueoaaTrS2ia4x1tkPg2zuDzQGKK4jTvBWH4TBf//ghEl6oLf4qRLRecAxa5mzLoa6DX8IS5jOWuZiWSiwrDTTmmgYCtTONOZ8gmUaPbdqWgWtUKKF8ysljK1UhKhCLRvJyYiN+Q1N+Fs7yyFmnH6OOW15W5c3HVSc=
+	t=1707886492; cv=none; b=sHncE9zkGxCUH9XM08kXcu7Wv1FCqDJ6GWPUSPDE0/Mj/rwkLY5E8Z8pl7k1J6t4MCl0O2ETJSDz9fI8+sctjaS/GgYYM/s8OvL24UC7xUcnPW/qLl8iGEwBZg5YP2v+/zsHku9bKrLbfNCoYs6wrX3vTPtDPhhfvS1HkbLJdtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707886488; c=relaxed/simple;
-	bh=pokSEbOrag3uWdO1RhTKTOPvPSFp8ZMJI6bQo7DbnNA=;
+	s=arc-20240116; t=1707886492; c=relaxed/simple;
+	bh=e3Zo3j0Y+lDByuniGWZetsyjr0YP2URaOB3bhuKdkPg=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=l37XI9jufytinyp5ogtWh3U56l7/X4gmBnpf6YD/srZWZxGbpRMIzv3MziKK1CP28n5CobLNkqihn9WlSeaWR6AX83lsWaaidrsilyWv3tWuhJ184Xgwxu34OyKTvH0sxXbTgYoXhkZy37koRTJqTgCukfwYN9BltkQkyeZwL5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ACbHuTxZ; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=PRatgCr71oks+lk4DO6zuuRb3LXAwoeWsFRay6eKNymDAEj2hs1z9A0dyywh1iTNMBQmvHyhKzIBAdogu4epwH9r9XFBedBUg1mhsTmcghfmJNL0rZy9P2LwwneAxeRiULQwlLiCySIGBlWjD0HcgaP9AF8E/VdYAZOriCeVEM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oItx5nx3; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ACbHuTxZ"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so3237278276.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2024 20:54:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oItx5nx3"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dccc49ef73eso1812013276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2024 20:54:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707886485; x=1708491285; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707886488; x=1708491288; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=mEeFv0uon5WQC9cFYvgD6Kwx90gDUxQUuXbCDfN9dJU=;
-        b=ACbHuTxZthtoTd3nlDYDquxbufe2cI9F5DQ5//GukYFAaBixZOoHUFcUW96QapMyk/
-         ExlAX3e/p1iLUUVQqBhzWUrpzMC264ZWNcMCNht60ypZnBZFojMsAtrbes5k8s/iJpTa
-         CAXmxjchT1drT0DcYEiLT1useD6vL8vHqNH9WcXY7NBpTjUf5nLu/tCoywQKU2rVpd59
-         S5AhBglynZ1heMcnXQUJhSB4v3XjKRZeAO8eG0+FCVtEDpzDVKMZsQ6D76s+GkpHu/W2
-         L1HvTtX9pZcd8pwRdt+2LnDKciSGY5Fo+fnmtHEe6AA4z5rPdM40AY/kNKyXn/U/UMO2
-         wNxw==
+        bh=pKUjhtJivPO8JCDFJHJoi47s/FDcERs+KA6j2+NQ9Pw=;
+        b=oItx5nx3UIe6WZ75ARaLb5jj4Xbv4VfdHC43b4fI3I+lG+GhyZyF/p0jGSRj+nKEkk
+         k6oMKgnLF40fVd+qow+fPsDwE/oiGMkCHns5El/TNCfecDJFL0TldL+A303VdGiBUJzs
+         hnQtrtUVJQGFXXM+PqcSRVd8Bky3fTQ7n1ZPkB0ff4ruKypAyji0ux/m327nhcTR9ldW
+         RpGyD6uEmmKkidi3jU6JQ8/ukskqHRnz5tUyctDcMtZFeLjfa7MiltiM+KIk91C76r4o
+         FeZRh2QzmDEaK0za6I5iNRvc0Hhux4HTHtPWV59+yEfinJjp/4spnsHe8nKtV/GJjSMj
+         k9Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707886485; x=1708491285;
+        d=1e100.net; s=20230601; t=1707886488; x=1708491288;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mEeFv0uon5WQC9cFYvgD6Kwx90gDUxQUuXbCDfN9dJU=;
-        b=j6Ibnlm0BwGDPK3tGKHtyuj6hDNEXfEy9pHaaxVena/gV2TNlM6xLeJKc1pF2S+DDw
-         MPiR76A4PkQGevdOxslOiXjls7PitD2qwyzKIPaGM8XMfVRBtqsfy4XnYWahMqAUBDl2
-         7emji6RM7Bq/vQBYo8GC5HMTTB8COnAVYpjYBS0Xvr59lYS626HXDzjSyrs66QFF3oSB
-         fL88iIlwlDYUXbltpSjOMZ4IVsP/oXM17DoFpTxRhRBPb1wlYBb12z/kSJJ86DwKXS1W
-         H2pcjrkGXciCqIf6mPUGVUNXCDcjLs+9oJZbc31nwITRmCUFrk159XmKhOFykkBNzBJL
-         VJtg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKGVfk1+vh8xZY1dkyBKyZQDxN81aTwRlZlIUtY+50spdy9JgygyB5eXTGUYfxlFH/MPNp6jYNVObpJZQ47/5HVUXgeXa6znY91hNlHArIiQ==
-X-Gm-Message-State: AOJu0YwJPvZpBJWfWKtXUBi7XxvT5HwXJosF1J8LblG0D7CoiDAETeLA
-	4hSY4vb/8rQ0DMuH3x5jH7dV7jyWdRcKvUNz1ss3F3MUlBk7zQBVfbXhcFGrpFLc6ECWA0nw6W0
-	pQ4vO8g==
-X-Google-Smtp-Source: AGHT+IHSet7A96qWebh2Ep2XW2Sl/AHHnGwI4zz+x2s/cywd8H/BYo3Mbauk3ICX2IgxKf7iHq+hE3T25yGQ
+        bh=pKUjhtJivPO8JCDFJHJoi47s/FDcERs+KA6j2+NQ9Pw=;
+        b=KDiR33nR33Ez+tqnERqzjUKQQ78utVbSUdWCFI6ggsDiA5XX4TrGsGOcWWy61GPmPy
+         xxleslnwPNRfmhW7yZPWSiTAKolhlM0HUffAra0biDc8nkO4yyvay9OpIESyoO1eOQGz
+         t3w5HhIu6FjeQid+TW5du0EDejwRSP5oEK455djDrlVcVtfmRmY5SKNXtEx0AmmOnXpb
+         N4RdsdjCrJsc+RVgqyORca7mziUYxbNV5Xxd0eb1RwDCPRrNIcGY48TZ+TVncMCtyRKY
+         4QLGTho82a3IzSs+eJ8ODmaza5gcHdOhfinrH1qJz9Fdxpcye1mKpJSa8MS48iF02kN1
+         hzqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWot2uAdSDstiqi7xs0Yr7pCpN+HO34MaMMx6n0TfyTY81uFGbpC0BE1qkvTZ0ybDAoGN3wOjII9/hUptJV/pgG4X5ZH2dQV7IU3vRyhGz7BA==
+X-Gm-Message-State: AOJu0YyYKz9Gd98kRJwEr5VHHjBNb3NZtJqb4HJAUtVvQFAaLqYil5N+
+	z3KQ78+pThRoOnRyDNgF35N8upu68xbD6/Pjr+0/qPRdNnKn6ftBsZc9hKZeAvyHvgsi3CjTqaX
+	EUKrOOQ==
+X-Google-Smtp-Source: AGHT+IFaN3HW0664XFpfWjVh+YIsZwjCWaY/qcAJfYwFw79REvzT+YK/wfYBlfPVn+iiGWFoQcPfD5tRp/xV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6d92:85eb:9adc:66dd])
- (user=irogers job=sendgmr) by 2002:a25:2e4c:0:b0:dc6:44d4:bee0 with SMTP id
- b12-20020a252e4c000000b00dc644d4bee0mr74284ybn.7.1707886485640; Tue, 13 Feb
- 2024 20:54:45 -0800 (PST)
-Date: Tue, 13 Feb 2024 20:53:54 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:1505:b0:dcc:8be2:7cb0 with SMTP
+ id q5-20020a056902150500b00dcc8be27cb0mr77852ybu.0.1707886488084; Tue, 13 Feb
+ 2024 20:54:48 -0800 (PST)
+Date: Tue, 13 Feb 2024 20:53:55 -0800
 In-Reply-To: <20240214045356.748330-1-irogers@google.com>
-Message-Id: <20240214045356.748330-7-irogers@google.com>
+Message-Id: <20240214045356.748330-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240214045356.748330-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Subject: [PATCH v4 6/8] perf tests: Use scandirat for shell script finding
+Subject: [PATCH v4 7/8] perf tests: Run time generate shell test suites
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,345 +75,359 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid filename appending buffers by using openat, faccessat and
-scandirat more widely. Turn the script's path back to a file name
-using readlink from /proc/<pid>/fd/<fd>.
-
-Read the script's description using api/io.h to avoid fdopen
-conversions. Whilst reading perform additional sanity checks on the
-script's contents.
+Rather than special shell test logic, do a single pass to create an
+array of test suites. Hold the shell test file name in the test suite
+priv field. This makes the special shell test logic in builtin-test.c
+redundant so remove it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c  |  21 ++---
- tools/perf/tests/tests-scripts.c | 144 ++++++++++++++++++-------------
- tools/perf/tests/tests-scripts.h |   1 -
- 3 files changed, 95 insertions(+), 71 deletions(-)
+ tools/perf/tests/builtin-test.c  |  91 +---------------------
+ tools/perf/tests/tests-scripts.c | 130 ++++++++++++++++++-------------
+ tools/perf/tests/tests-scripts.h |  10 +--
+ 3 files changed, 81 insertions(+), 150 deletions(-)
 
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index eff3c62e9b47..6d5001daaf63 100644
+index 6d5001daaf63..c42cb40fc242 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -300,22 +300,20 @@ static int test_and_print(struct test_suite *t, int subtest)
- }
- 
- struct shell_test {
--	const char *dir;
- 	const char *file;
+@@ -130,6 +130,7 @@ static struct test_suite *generic_tests[] = {
+ static struct test_suite **tests[] = {
+ 	generic_tests,
+ 	arch_tests,
++	NULL, /* shell tests created at runtime. */
  };
  
- static int shell_test__run(struct test_suite *test, int subdir __maybe_unused)
- {
- 	int err;
--	char script[PATH_MAX];
- 	struct shell_test *st = test->priv;
-+	char *cmd;
+ static struct test_workload *workloads[] = {
+@@ -299,74 +300,12 @@ static int test_and_print(struct test_suite *t, int subtest)
+ 	return err;
+ }
  
--	path__join(script, sizeof(script) - 3, st->dir, st->file);
+-struct shell_test {
+-	const char *file;
+-};
 -
--	if (verbose > 0)
--		strncat(script, " -v", sizeof(script) - strlen(script) - 1);
+-static int shell_test__run(struct test_suite *test, int subdir __maybe_unused)
+-{
+-	int err;
+-	struct shell_test *st = test->priv;
+-	char *cmd;
 -
--	err = system(script);
-+	asprintf(&cmd, "%s%s", st->file, verbose ? " -v" : "");
+-	asprintf(&cmd, "%s%s", st->file, verbose ? " -v" : "");
+-	if (!cmd)
+-		return TEST_FAIL;
+-	err = system(cmd);
+-	free(cmd);
+-	if (!err)
+-		return TEST_OK;
+-
+-	return WEXITSTATUS(err) == 2 ? TEST_SKIP : TEST_FAIL;
+-}
+-
+-static int run_shell_tests(int argc, const char *argv[], int i, int width,
+-				struct intlist *skiplist)
+-{
+-	struct shell_test st;
+-	const struct script_file *files, *file;
+-
+-	files = list_script_files();
+-	if (!files)
+-		return 0;
+-	for (file = files; file->file; file++) {
+-		int curr = i++;
+-		struct test_case test_cases[] = {
+-			{
+-				.desc = file->desc,
+-				.run_case = shell_test__run,
+-			},
+-			{ .name = NULL, }
+-		};
+-		struct test_suite test_suite = {
+-			.desc = test_cases[0].desc,
+-			.test_cases = test_cases,
+-			.priv = &st,
+-		};
+-		st.file = file->file;
+-
+-		if (test_suite.desc == NULL ||
+-		    !perf_test__matches(test_suite.desc, curr, argc, argv))
+-			continue;
+-
+-		pr_info("%3d: %-*s:", i, width, test_suite.desc);
+-
+-		if (intlist__find(skiplist, i)) {
+-			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
+-			continue;
+-		}
+-
+-		test_and_print(&test_suite, 0);
+-	}
+-	return 0;
+-}
+-
+ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ {
+ 	struct test_suite *t;
+ 	unsigned int j, k;
+ 	int i = 0;
+-	int width = list_script_max_width();
++	int width = 0;
+ 
+ 	for_each_test(j, k, t) {
+ 		int len = strlen(test_description(t, -1));
+@@ -441,28 +380,6 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 			}
+ 		}
+ 	}
+-
+-	return run_shell_tests(argc, argv, i, width, skiplist);
+-}
+-
+-static int perf_test__list_shell(int argc, const char **argv, int i)
+-{
+-	const struct script_file *files, *file;
+-
+-	files = list_script_files();
+-	if (!files)
+-		return 0;
+-	for (file = files; file->file; file++) {
+-		int curr = i++;
+-		struct test_suite t = {
+-			.desc = file->desc
+-		};
+-
+-		if (!perf_test__matches(t.desc, curr, argc, argv))
+-			continue;
+-
+-		pr_info("%3d: %s\n", i, t.desc);
+-	}
+ 	return 0;
+ }
+ 
+@@ -489,9 +406,6 @@ static int perf_test__list(int argc, const char **argv)
+ 					test_description(t, subi));
+ 		}
+ 	}
+-
+-	perf_test__list_shell(argc, argv, i);
+-
+ 	return 0;
+ }
+ 
+@@ -551,6 +465,7 @@ int cmd_test(int argc, const char **argv)
+ 	/* Unbuffered output */
+ 	setvbuf(stdout, NULL, _IONBF, 0);
+ 
++	tests[2] = create_script_test_suites();
+ 	argc = parse_options_subcommand(argc, argv, test_options, test_subcommands, test_usage, 0);
+ 	if (argc >= 1 && !strcmp(argv[0], "list"))
+ 		return perf_test__list(argc - 1, argv + 1);
+diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+index 9b3b66dd5508..e60867b1e5ce 100644
+--- a/tools/perf/tests/tests-scripts.c
++++ b/tools/perf/tests/tests-scripts.c
+@@ -26,16 +26,6 @@
+ #include "tests.h"
+ #include "util/rlimit.h"
+ 
+-
+-/*
+- * As this is a singleton built once for the run of the process, there is
+- * no value in trying to free it and just let it stay around until process
+- * exits when it's cleaned up.
+- */
+-static size_t files_num = 0;
+-static struct script_file *files = NULL;
+-static int files_max_width = 0;
+-
+ static int shell_tests__dir_fd(void)
+ {
+ 	char path[PATH_MAX], *exec_path;
+@@ -131,12 +121,31 @@ static char *strdup_check(const char *str)
+ 	return newstr;
+ }
+ 
+-static void append_script(int dir_fd, const char *name, char *desc)
++static int shell_test__run(struct test_suite *test, int subtest __maybe_unused)
++{
++	const char *file = test->priv;
++	int err;
++	char *cmd;
++
++	asprintf(&cmd, "%s%s", file, verbose ? " -v" : "");
 +	if (!cmd)
 +		return TEST_FAIL;
 +	err = system(cmd);
 +	free(cmd);
- 	if (!err)
- 		return TEST_OK;
- 
-@@ -331,7 +329,7 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
- 	files = list_script_files();
- 	if (!files)
- 		return 0;
--	for (file = files; file->dir; file++) {
-+	for (file = files; file->file; file++) {
- 		int curr = i++;
- 		struct test_case test_cases[] = {
- 			{
-@@ -345,13 +343,12 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
- 			.test_cases = test_cases,
- 			.priv = &st,
- 		};
--		st.dir = file->dir;
-+		st.file = file->file;
- 
- 		if (test_suite.desc == NULL ||
- 		    !perf_test__matches(test_suite.desc, curr, argc, argv))
- 			continue;
- 
--		st.file = file->file;
- 		pr_info("%3d: %-*s:", i, width, test_suite.desc);
- 
- 		if (intlist__find(skiplist, i)) {
-@@ -455,7 +452,7 @@ static int perf_test__list_shell(int argc, const char **argv, int i)
- 	files = list_script_files();
- 	if (!files)
- 		return 0;
--	for (file = files; file->dir; file++) {
-+	for (file = files; file->file; file++) {
- 		int curr = i++;
- 		struct test_suite t = {
- 			.desc = file->desc
-diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
-index 4ebd841da05b..9b3b66dd5508 100644
---- a/tools/perf/tests/tests-scripts.c
-+++ b/tools/perf/tests/tests-scripts.c
-@@ -14,6 +14,7 @@
- #include <subcmd/parse-options.h>
- #include <sys/wait.h>
- #include <sys/stat.h>
-+#include <api/io.h>
- #include "builtin.h"
- #include "tests-scripts.h"
- #include "color.h"
-@@ -35,55 +36,69 @@ static size_t files_num = 0;
- static struct script_file *files = NULL;
- static int files_max_width = 0;
- 
--static const char *shell_tests__dir(char *path, size_t size)
-+static int shell_tests__dir_fd(void)
++	if (!err)
++		return TEST_OK;
++
++	return WEXITSTATUS(err) == 2 ? TEST_SKIP : TEST_FAIL;
++}
++
++static void append_script(int dir_fd, const char *name, char *desc,
++			  struct test_suite ***result,
++			  size_t *result_sz)
  {
--	const char *devel_dirs[] = { "./tools/perf/tests", "./tests", };
--	char *exec_path;
--	unsigned int i;
-+	char path[PATH_MAX], *exec_path;
-+	static const char * const devel_dirs[] = { "./tools/perf/tests/shell", "./tests/shell", };
+ 	char filename[PATH_MAX], link[128];
+-	struct script_file *files_tmp;
+-	size_t files_num_tmp, len;
+-	int width;
++	struct test_suite *test_suite, **result_tmp;
++	struct test_case *tests;
++	size_t len;
  
--	for (i = 0; i < ARRAY_SIZE(devel_dirs); ++i) {
--		struct stat st;
-+	for (size_t i = 0; i < ARRAY_SIZE(devel_dirs); ++i) {
-+		int fd = open(devel_dirs[i], O_PATH);
- 
--		if (!lstat(devel_dirs[i], &st)) {
--			scnprintf(path, size, "%s/shell", devel_dirs[i]);
--			if (!lstat(devel_dirs[i], &st))
--				return path;
--		}
-+		if (fd >= 0)
-+			return fd;
+ 	snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
+ 	len = readlink(link, filename, sizeof(filename));
+@@ -146,33 +155,43 @@ static void append_script(int dir_fd, const char *name, char *desc)
  	}
- 
- 	/* Then installed path. */
- 	exec_path = get_argv_exec_path();
--	scnprintf(path, size, "%s/tests/shell", exec_path);
-+	scnprintf(path, sizeof(path), "%s/tests/shell", exec_path);
- 	free(exec_path);
--	return path;
-+	return open(path, O_PATH);
- }
- 
--static const char *shell_test__description(char *description, size_t size,
--                                           const char *path, const char *name)
-+static char *shell_test__description(int dir_fd, const char *name)
- {
--	FILE *fp;
--	char filename[PATH_MAX];
--	int ch;
-+	struct io io;
-+	char buf[128], desc[256];
-+	int ch, pos = 0;
- 
--	path__join(filename, sizeof(filename), path, name);
--	fp = fopen(filename, "r");
--	if (!fp)
-+	io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf));
-+	if (io.fd < 0)
- 		return NULL;
- 
- 	/* Skip first line - should be #!/bin/sh Shebang */
-+	if (io__get_char(&io) != '#')
-+		goto err_out;
-+	if (io__get_char(&io) != '!')
-+		goto err_out;
- 	do {
--		ch = fgetc(fp);
--	} while (ch != EOF && ch != '\n');
--
--	description = fgets(description, size, fp);
--	fclose(fp);
-+		ch = io__get_char(&io);
-+		if (ch < 0)
-+			goto err_out;
-+	} while (ch != '\n');
- 
--	/* Assume first char on line is omment everything after that desc */
--	return description ? strim(description + 1) : NULL;
-+	do {
-+		ch = io__get_char(&io);
-+		if (ch < 0)
-+			goto err_out;
-+	} while (ch == '#' || isspace(ch));
-+	while (ch > 0 && ch != '\n') {
-+		desc[pos++] = ch;
-+		if (pos >= (int)sizeof(desc) - 1)
-+			break;
-+		ch = io__get_char(&io);
-+	}
-+	while (pos > 0 && isspace(desc[--pos]))
-+		;
-+	desc[++pos] = '\0';
-+	close(io.fd);
-+	return strdup(desc);
-+err_out:
-+	close(io.fd);
-+	return NULL;
- }
- 
- /* Is this full file path a shell script */
--static bool is_shell_script(const char *path)
-+static bool is_shell_script(int dir_fd, const char *path)
- {
- 	const char *ext;
- 
-@@ -91,20 +106,16 @@ static bool is_shell_script(const char *path)
- 	if (!ext)
- 		return false;
- 	if (!strcmp(ext, ".sh")) { /* Has .sh extension */
--		if (access(path, R_OK | X_OK) == 0) /* Is executable */
-+		if (faccessat(dir_fd, path, R_OK | X_OK, 0) == 0) /* Is executable */
- 			return true;
+ 	filename[len++] = '/';
+ 	strcpy(&filename[len], name);
+-	files_num_tmp = files_num + 1;
+-	if (files_num_tmp >= SIZE_MAX) {
+-		pr_err("Too many script files\n");
+-		abort();
++
++	tests = calloc(2, sizeof(*tests));
++	if (!tests) {
++		pr_err("Out of memory while building script test suite list\n");
++		return;
  	}
- 	return false;
- }
- 
- /* Is this file in this dir a shell script (for test purposes) */
--static bool is_test_script(const char *path, const char *name)
-+static bool is_test_script(int dir_fd, const char *name)
- {
--	char filename[PATH_MAX];
--
--	path__join(filename, sizeof(filename), path, name);
--	if (!is_shell_script(filename)) return false;
--	return true;
-+	return is_shell_script(dir_fd, name);
- }
- 
- /* Duplicate a string and fall over and die if we run out of memory */
-@@ -120,12 +131,21 @@ static char *strdup_check(const char *str)
- 	return newstr;
- }
- 
--static void append_script(const char *dir, const char *file, const char *desc)
-+static void append_script(int dir_fd, const char *name, char *desc)
- {
-+	char filename[PATH_MAX], link[128];
- 	struct script_file *files_tmp;
--	size_t files_num_tmp;
-+	size_t files_num_tmp, len;
- 	int width;
- 
-+	snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
-+	len = readlink(link, filename, sizeof(filename));
-+	if (len < 0) {
-+		pr_err("Failed to readlink %s", link);
++	tests[0].name = strdup_check(name);
++	tests[0].desc = strdup_check(desc);
++	tests[0].run_case = shell_test__run;
++
++	test_suite = zalloc(sizeof(*test_suite));
++	if (!test_suite) {
++		pr_err("Out of memory while building script test suite list\n");
++		free(tests);
 +		return;
 +	}
-+	filename[len++] = '/';
-+	strcpy(&filename[len], name);
- 	files_num_tmp = files_num + 1;
- 	if (files_num_tmp >= SIZE_MAX) {
- 		pr_err("Too many script files\n");
-@@ -142,10 +162,8 @@ static void append_script(const char *dir, const char *file, const char *desc)
++	test_suite->desc = desc;
++	test_suite->test_cases = tests;
++	test_suite->priv = strdup_check(filename);
+ 	/* Realloc is good enough, though we could realloc by chunks, not that
+ 	 * anyone will ever measure performance here */
+-	files_tmp = realloc(files,
+-			    (files_num_tmp + 1) * sizeof(struct script_file));
+-	if (files_tmp == NULL) {
+-		pr_err("Out of memory while building test list\n");
+-		abort();
++	result_tmp = realloc(*result, (*result_sz + 1) * sizeof(*result_tmp));
++	if (result_tmp == NULL) {
++		pr_err("Out of memory while building script test suite list\n");
++		free(tests);
++		free(test_suite);
++		return;
+ 	}
  	/* Add file to end and NULL terminate the struct array */
- 	files = files_tmp;
- 	files_num = files_num_tmp;
--	files[files_num - 1].dir = strdup_check(dir);
--	files[files_num - 1].file = strdup_check(file);
--	files[files_num - 1].desc = strdup_check(desc);
--	files[files_num].dir = NULL;
-+	files[files_num - 1].file = strdup_check(filename);
-+	files[files_num - 1].desc = desc;
- 	files[files_num].file = NULL;
- 	files[files_num].desc = NULL;
- 
-@@ -154,32 +172,39 @@ static void append_script(const char *dir, const char *file, const char *desc)
- 		files_max_width = width;
+-	files = files_tmp;
+-	files_num = files_num_tmp;
+-	files[files_num - 1].file = strdup_check(filename);
+-	files[files_num - 1].desc = desc;
+-	files[files_num].file = NULL;
+-	files[files_num].desc = NULL;
+-
+-	width = strlen(desc); /* Track max width of desc */
+-	if (width > files_max_width)
+-		files_max_width = width;
++	*result = result_tmp;
++	(*result)[*result_sz] = test_suite;
++	(*result_sz)++;
  }
  
--static void append_scripts_in_dir(const char *path)
-+static void append_scripts_in_dir(int dir_fd)
+-static void append_scripts_in_dir(int dir_fd)
++static void append_scripts_in_dir(int dir_fd,
++				  struct test_suite ***result,
++				  size_t *result_sz)
  {
  	struct dirent **entlist;
  	struct dirent *ent;
- 	int n_dirs, i;
--	char filename[PATH_MAX];
- 
- 	/* List files, sorted by alpha */
--	n_dirs = scandir(path, &entlist, NULL, alphasort);
-+	n_dirs = scandirat(dir_fd, ".", &entlist, NULL, alphasort);
- 	if (n_dirs == -1)
- 		return;
- 	for (i = 0; i < n_dirs && (ent = entlist[i]); i++) {
-+		int fd;
-+
- 		if (ent->d_name[0] == '.')
- 			continue; /* Skip hidden files */
--		if (is_test_script(path, ent->d_name)) { /* It's a test */
--			char bf[256];
--			const char *desc = shell_test__description
--				(bf, sizeof(bf), path, ent->d_name);
-+		if (is_test_script(dir_fd, ent->d_name)) { /* It's a test */
-+			char *desc = shell_test__description(dir_fd, ent->d_name);
+@@ -191,7 +210,7 @@ static void append_scripts_in_dir(int dir_fd)
+ 			char *desc = shell_test__description(dir_fd, ent->d_name);
  
  			if (desc) /* It has a desc line - valid script */
--				append_script(path, ent->d_name, desc);
--		} else if (is_directory(path, ent)) { /* Scan the subdir */
--			path__join(filename, sizeof(filename),
--				   path, ent->d_name);
--			append_scripts_in_dir(filename);
-+				append_script(dir_fd, ent->d_name, desc);
-+			continue;
-+		}
-+		if (ent->d_type != DT_DIR) {
-+			struct stat st;
-+
-+			if (ent->d_type != DT_UNKNOWN)
-+				continue;
-+			fstatat(dir_fd, ent->d_name, &st, 0);
-+			if (!S_ISDIR(st.st_mode))
-+				continue;
+-				append_script(dir_fd, ent->d_name, desc);
++				append_script(dir_fd, ent->d_name, desc, result, result_sz);
+ 			continue;
  		}
-+		fd = openat(dir_fd, ent->d_name, O_PATH);
-+		append_scripts_in_dir(fd);
+ 		if (ent->d_type != DT_DIR) {
+@@ -204,32 +223,35 @@ static void append_scripts_in_dir(int dir_fd)
+ 				continue;
+ 		}
+ 		fd = openat(dir_fd, ent->d_name, O_PATH);
+-		append_scripts_in_dir(fd);
++		append_scripts_in_dir(fd, result, result_sz);
  	}
  	for (i = 0; i < n_dirs; i++) /* Clean up */
  		zfree(&entlist[i]);
-@@ -188,14 +213,17 @@ static void append_scripts_in_dir(const char *path)
+ 	free(entlist);
+ }
  
- const struct script_file *list_script_files(void)
+-const struct script_file *list_script_files(void)
++struct test_suite **create_script_test_suites(void)
  {
--	char path_dir[PATH_MAX];
--	const char *path;
-+	int dir_fd;
+-	int dir_fd;
+-
+-	if (files)
+-		return files; /* Singleton - we already know our list */
+-
+-	dir_fd = shell_tests__dir_fd(); /* Walk  dir */
+-	if (dir_fd < 0)
+-		return NULL;
++	struct test_suite **result = NULL, **result_tmp;
++	size_t result_sz = 0;
++	int dir_fd = shell_tests__dir_fd(); /* Walk  dir */
  
- 	if (files)
- 		return files; /* Singleton - we already know our list */
+-	append_scripts_in_dir(dir_fd);
+-	close(dir_fd);
++	/*
++	 * Append scripts if fd is good, otherwise return a NULL terminated zero
++	 * length array.
++	 */
++	if (dir_fd >= 0)
++		append_scripts_in_dir(dir_fd, &result, &result_sz);
  
--	path = shell_tests__dir(path_dir, sizeof(path_dir)); /* Walk  dir */
--	append_scripts_in_dir(path);
-+	dir_fd = shell_tests__dir_fd(); /* Walk  dir */
-+	if (dir_fd < 0)
-+		return NULL;
-+
-+	append_scripts_in_dir(dir_fd);
-+	close(dir_fd);
- 
- 	return files;
+-	return files;
+-}
+-
+-int list_script_max_width(void)
+-{
+-	list_script_files(); /* Ensure we have scanned all scripts */
+-	return files_max_width;
++	result_tmp = realloc(result, (result_sz + 1) * sizeof(*result_tmp));
++	if (result_tmp == NULL) {
++		pr_err("Out of memory while building script test suite list\n");
++		abort();
++	}
++	/* NULL terminate the test suite array. */
++	result = result_tmp;
++	result[result_sz] = NULL;
++	if (dir_fd >= 0)
++		close(dir_fd);
++	return result;
  }
 diff --git a/tools/perf/tests/tests-scripts.h b/tools/perf/tests/tests-scripts.h
-index 3a3ec6191848..3508a293aaf9 100644
+index 3508a293aaf9..b553ad26ea17 100644
 --- a/tools/perf/tests/tests-scripts.h
 +++ b/tools/perf/tests/tests-scripts.h
-@@ -3,7 +3,6 @@
+@@ -2,14 +2,8 @@
+ #ifndef TESTS_SCRIPTS_H
  #define TESTS_SCRIPTS_H
  
- struct script_file {
--	char *dir;
- 	char *file;
- 	char *desc;
- };
+-struct script_file {
+-	char *file;
+-	char *desc;
+-};
++#include "tests.h"
+ 
+-/* List available script tests to run - singleton - never freed */
+-const struct script_file *list_script_files(void);
+-/* Get maximum width of description string */
+-int list_script_max_width(void);
++struct test_suite **create_script_test_suites(void);
+ 
+ #endif /* TESTS_SCRIPTS_H */
 -- 
 2.43.0.687.g38aa6559b0-goog
 
