@@ -1,183 +1,131 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB99171A6
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 10:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BB818EA2
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 11:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905673; cv=none; b=B6V+M0CFySDo0eN0d3/OQlujrl8jtdiviJ5ip3PcuR1OAKuXs4l1f3IfNgU3w7P2Syqkt47ICKhhTlnqhJitMdJLOEv5izFpCm+9vErPeRji8emzc07WTImsEBCHQJBmik1PfjqztQA0GaJrsekw1iikEjO4NjHSFI9rZcWKTd8=
+	t=1707910815; cv=none; b=WVl/VCheB8Sj4XvLiFOI1KvOr3dqk0FDWpM/XATgPgylSu5zJMr2K9p9NKtlBCP9a0sZGUEld+Bm35f6lVjYSmuxaV86j3KapYKcBv9Wjr0VKdqplURNM4fzYiOEJIIb2FoLOSPV2QHRzrxdNzkWgoV/U8xDlJCkGYsUER4/DJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905673; c=relaxed/simple;
-	bh=wH6ZUUDxzWcvM9A5J/M26EhQbNj8CDbgdD8EHHWlvfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZKfHzZpBX2AfsOkNr4D++smERBUu6qS/eRQCLTSvikOotOiEc7sYHGLFUUSgO+nJCEr5CoWQXSsvar7Ak1bfoyWEjonk0hkV/6qj6am7co8yNZcfYFo2Kp9V8OlaobUuOz04eiuUa/IIdhi6siLme0xGhLezKijD7rjH+Qp9nXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bfq05XKp; arc=none smtp.client-ip=91.218.175.187
+	s=arc-20240116; t=1707910815; c=relaxed/simple;
+	bh=WNSlR33tBViXu08xbrYk0ySUbQI6bmCyn/fNCHmqg6U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ObmKbyJuhOCBX+ME/aj7TIFfcMsDVFTr//tGMwzbOgoVP1d3q46S4vEWSHYNRzIv1oWMv3EiOQMBNGgrlWVGtPTFoyXr6+mjeIMw3WkLC+PJ5xSBlDA7B7VvQaA4tZgApej4usvlgIKgrcrKAzboFYCrlUGqTGgVipWP1Aecbng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=i6yVSl6u; arc=none smtp.client-ip=91.218.175.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bfq05XKp"
-Date: Wed, 14 Feb 2024 18:14:20 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707905669;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Sq2ZgsBArKU+/0ptSnLdA9Td8CjugpWxYMkYPjmxX1A=;
-	b=Bfq05XKp+zIQtFUrDOsAp5gfblgGsPGVIhQuL7AsMzfWvqCzE7E7SBWMXoVUa+8taAJaWV
-	UACiCI8iKWwXqHb3AXKU5gpyvIE1rqnFKkoiJVPdrooLT2TN4tnZE+1HNCPTxnzp055tv5
-	JtWgQkUDVvmgHGNoTem+qlMG4Cn9+VQ=
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="i6yVSl6u"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707910810;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uT81D9JadSG4shnyPAzeCNq5QuDdA42vAVAwALPxupk=;
+	b=i6yVSl6uTdkrx6HNLprqf5oHzRLgtC5JZQkJuQR6agOvHCg/AMST2eLGx1vFU3A00TNMDc
+	W6HIk/+HvpVx4AhZasgIvsCQXJOr/PttA4KuQJETrVo5d3VvyVx4r36xtpuK4BnKIJ1efl
+	CE0D7myb/TkQwGbDq2rSHjzxZkTlhhI=
 From: Leo Yan <leo.yan@linux.dev>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	John Garry <john.g.garry@oracle.com>,
-	Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH] perf tools: Fixup module symbol end address properly
-Message-ID: <20240214101420.GF81405@debian-dev>
-References: <20240212233322.1855161-1-namhyung@kernel.org>
- <20240213033954.GB81405@debian-dev>
- <CAM9d7ciTwYAgry-nW9z+_VMj+BJ7ZNZnkKH_t_AHvV5joNuWQQ@mail.gmail.com>
+	Will Deacon <will@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ming Wang <wangming01@loongson.cn>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: Leo Yan <leo.yan@linux.dev>
+Subject: [PATCH v1 0/4] perf parse-regs: Cleanup config and building
+Date: Wed, 14 Feb 2024 19:39:43 +0800
+Message-Id: <20240214113947.240957-1-leo.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7ciTwYAgry-nW9z+_VMj+BJ7ZNZnkKH_t_AHvV5joNuWQQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-On Tue, Feb 13, 2024 at 10:48:53AM -0800, Namhyung Kim wrote:
-> Hi Leo,
-> 
-> Thanks for your review!
-> 
-> On Mon, Feb 12, 2024 at 7:40???PM Leo Yan <leo.yan@linux.dev> wrote:
-> >
-> > On Mon, Feb 12, 2024 at 03:33:22PM -0800, Namhyung Kim wrote:
-> > > I got a strange error on ARM to fail on processing FINISHED_ROUND
-> > > record.  It turned out that it was failing in symbol__alloc_hist()
-> > > because the symbol size is too big.
-> > >
-> > > When a sample is captured on a specific BPF program, it failed.  I've
-> > > added a debug code and found the end address of the symbol is from
-> > > the next module which is placed far way.
-> > >
-> > >   ffff800008795778-ffff80000879d6d8: bpf_prog_1bac53b8aac4bc58_netcg_sock    [bpf]
-> > >   ffff80000879d6d8-ffff80000ad656b4: bpf_prog_76867454b5944e15_netcg_getsockopt      [bpf]
-> > >   ffff80000ad656b4-ffffd69b7af74048: bpf_prog_1d50286d2eb1be85_hn_egress     [bpf]   <---------- here
-> > >   ffffd69b7af74048-ffffd69b7af74048: $x.5    [sha3_generic]
-> > >   ffffd69b7af74048-ffffd69b7af740b8: crypto_sha3_init        [sha3_generic]
-> > >   ffffd69b7af740b8-ffffd69b7af741e0: crypto_sha3_update      [sha3_generic]
-> > >
-> > > The logic in symbols__fixup_end() just uses curr->start to update the
-> > > prev->end.  But in this case, it won't work as it's too different.
-> > >
-> > > I think ARM has a different kernel memory layout for modules and BPF
-> > > than on x86.  Actually there's a logic to handle kernel and module
-> > > boundary.  Let's do the same for symbols between different modules.
-> >
-> > Even Arm32 and Arm64 kernel have different memory layout for modules
-> > and kernel image.
-> >
-> > eBPF program (JITed) should be allocated from the vmalloc region, for
-> > Arm64, see bpf_jit_alloc_exec() in arch/arm64/net/bpf_jit_comp.c.
-> 
-> Ok, so chances are they can fall out far away right?
+Currently, the perf building enables register parsing based on the
+target architecture has supported register feature.
 
-Yes, this is my understanding.
+Furthermore, the perf building system needs to maintain a variable
+'NO_PERF_REGS' and defines macro 'HAVE_PERF_REGS_SUPPORT' for statically
+compiling the tool.
 
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/util/symbol.c | 21 +++++++++++++++++++--
-> > >  1 file changed, 19 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > > index 35975189999b..9ebdb8e13c0b 100644
-> > > --- a/tools/perf/util/symbol.c
-> > > +++ b/tools/perf/util/symbol.c
-> > > @@ -248,14 +248,31 @@ void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms)
-> > >                * segment is very big.  Therefore do not fill this gap and do
-> > >                * not assign it to the kernel dso map (kallsyms).
-> > >                *
-> > > +              * Also BPF code can be allocated separately from text segments
-> > > +              * and modules.  So the last entry in a module should not fill
-> > > +              * the gap too.
-> > > +              *
-> > >                * In kallsyms, it determines module symbols using '[' character
-> > >                * like in:
-> > >                *   ffffffffc1937000 T hdmi_driver_init  [snd_hda_codec_hdmi]
-> > >                */
-> > >               if (prev->end == prev->start) {
-> > > +                     const char *prev_mod;
-> > > +                     const char *curr_mod;
-> > > +
-> > > +                     if (!is_kallsyms) {
-> > > +                             prev->end = curr->start;
-> > > +                             continue;
-> > > +                     }
-> > > +
-> > > +                     prev_mod = strchr(prev->name, '[');
-> > > +                     curr_mod = strchr(curr->name, '[');
-> > > +
-> > >                       /* Last kernel/module symbol mapped to end of page */
-> > > -                     if (is_kallsyms && (!strchr(prev->name, '[') !=
-> > > -                                         !strchr(curr->name, '[')))
-> > > +                     if (!prev_mod != !curr_mod)
-> > > +                             prev->end = roundup(prev->end + 4096, 4096);
-> > > +                     /* Last symbol in the previous module */
-> > > +                     else if (prev_mod && strcmp(prev_mod, curr_mod))
-> >
-> > Should two consecutive moudles fall into this case? I think we need to assign
-> > 'prev->end = curr->start' for two two consecutive moudles.
-> 
-> Yeah I thought about that case but I believe they would be on
-> separate pages (hopefully there's a page gap between them).
-> So I think it should not overlap.  But if you really care we can
-> check it explicitly like this:
-> 
->     prev->end = min(roundup(...), curr->start);
+As a result, the perf has no flexibilty for parsing register if an
+architecture doesn't support it. And the source files use the macro
+'HAVE_PERF_REGS_SUPPORT' to switch on and off the register parsing
+related code, which is not a good practice.
 
-I am not concerned that to assign a bigger end value for the 'prev'
-symbol. With an exaggerate end region, it will not cause any
-difficulty for parsing symbols. On the other hand, I am a bit concern
-for a big function (e.g. its code size > 4KiB), we might fail to find
-symbols in this case with the change above.
+This series is to remove the static building for register parsing. In
+theory, we should can dynamically detect if an arch has support this
+feature and functions can return errors when the feature is not
+supported.
 
-> > If so, we should use a specific checking for eBPF program, e.g.:
-> >
-> >                         else if (prev_mod && strcmp(prev_mod, curr_mod) &&
-> >                                  (!strcmp(prev->name, "bpf") ||
-> >                                   !strcmp(curr->name, "bpf")))
-> 
-> I suspect it can happen on any module boundary so better
-> to handle it in a more general way.
+The first patch is to remove unused build configuration
+CONFIG_PERF_REGS.
 
-I don't want to introduce over complexity at here. We can apply
-current patch as it is.
+The second patch is to build perf register functions, without using the
+macro 'HAVE_PERF_REGS_SUPPORT' to statically turn on or off code.
 
-A side topic, when I saw the code is hard coded for 4096 as the page
-size, this is not always true on Arm64 (the page size can be 4KiB,
-16KiB or 64KiB). We need to consider to extend the environment for
-recording the system's page size.
+The third patch is to introduce a weak function arch__sample_reg_masks(),
+this function can allow the target arch to return its sample register
+list.  With this change, we can totally remove the macro
+'HAVE_PERF_REGS_SUPPORT' in the source file.
 
-Thanks,
-Leo
+The forth patch is to clean up the Makefile for removing relevant
+configuration and macro definition, as they are not useful anymore.
 
-> Thanks,
-> Namhyung
-> 
-> >
-> > >                               prev->end = roundup(prev->end + 4096, 4096);
-> > >                       else
-> > >                               prev->end = curr->start;
-> > > --
-> > > 2.43.0.687.g38aa6559b0-goog
-> > >
+I tested this patch set on Arm64 and x86 for building and did a cross
+register parsing ('perf record' on Arm64 and 'perf report' on x86).
+
+
+Leo Yan (4):
+  perf build: Remove unused CONFIG_PERF_REGS
+  perf parse-regs: Always build perf register functions
+  perf parse-regs: Introduce a weak function arch__sample_reg_masks()
+  perf build: Cleanup perf register configuration
+
+ tools/perf/Makefile.config                    | 25 --------------
+ tools/perf/arch/arm/util/perf_regs.c          |  7 +++-
+ tools/perf/arch/arm64/util/machine.c          |  2 ++
+ tools/perf/arch/arm64/util/perf_regs.c        |  7 +++-
+ tools/perf/arch/csky/util/perf_regs.c         |  7 +++-
+ tools/perf/arch/loongarch/util/perf_regs.c    |  7 +++-
+ tools/perf/arch/mips/util/perf_regs.c         |  7 +++-
+ tools/perf/arch/powerpc/util/perf_regs.c      |  7 +++-
+ tools/perf/arch/riscv/util/perf_regs.c        |  7 +++-
+ tools/perf/arch/s390/util/perf_regs.c         |  7 +++-
+ tools/perf/arch/x86/util/perf_regs.c          |  7 +++-
+ tools/perf/util/parse-regs-options.c          |  8 ++---
+ .../util/perf-regs-arch/perf_regs_aarch64.c   |  4 ---
+ .../perf/util/perf-regs-arch/perf_regs_arm.c  |  4 ---
+ .../perf/util/perf-regs-arch/perf_regs_csky.c |  4 ---
+ .../util/perf-regs-arch/perf_regs_loongarch.c |  4 ---
+ .../perf/util/perf-regs-arch/perf_regs_mips.c |  4 ---
+ .../util/perf-regs-arch/perf_regs_powerpc.c   |  4 ---
+ .../util/perf-regs-arch/perf_regs_riscv.c     |  4 ---
+ .../perf/util/perf-regs-arch/perf_regs_s390.c |  4 ---
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  |  4 ---
+ tools/perf/util/perf_regs.c                   | 11 ++++--
+ tools/perf/util/perf_regs.h                   | 34 +------------------
+ 23 files changed, 67 insertions(+), 112 deletions(-)
+
+-- 
+2.34.1
+
