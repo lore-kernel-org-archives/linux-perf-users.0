@@ -1,144 +1,154 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4416113F018
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 22:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF371864C
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 22:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707948181; cv=none; b=busaFKbvWDz/IIEbxz4qEhdp4QwbD+7e/GVgA5clksbG6Vp1fGI2rx1EFKAqMLYZzn5ddsa+PafWRU7Vmhaegc8xuKmjLVd3IUlvrLigWh5QlUcPSMrEt0+DaTDo9J+vMLVS4MrkRqRBnUGbwyKsWL7m4oFH6pywRhyvOnSzV48=
+	t=1707950592; cv=none; b=NQ4umrf2g9FAHy8fNa3h5tP5oqPC2Kg0UwKEKUBIfLrs8BpZi/TG5w7Lxhdgu9EADevwGLUTrWvs0jkXVe23JLL/ZErz3uTDpVwCOpboQHRZO0S5CneXfXv8rzfuNdBpV3jX5xlg0UZH7Q7h1L2Uq5oosduQbwxjpRaHAfpmT+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707948181; c=relaxed/simple;
-	bh=mowh5P/4USMz1hX4Z6lQ+7O67PyHytCTcWCBD3Z33XA=;
+	s=arc-20240116; t=1707950592; c=relaxed/simple;
+	bh=iqpK3bPt1feEPfmct6sF2oKoz18fS9zOtT8gSIo6F24=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=OaAfL52OCuOcqykhLlPGYG7ze9Qh/TnnqP16gsv1jqhz4OF7phwr1rfGwUVaTXhd1bRGTL+RugH/n8jcvxRiiLplkD0sU3OyDw7s4aCApYzjgghFK4TYlGWrRzFUKlE6h9SpZsetG27MywtrJdCxWQRW/FpUOIeDpUSn2Z+jvQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S0lruz5D; arc=none smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=elzpJbrFAeGZgZbb9QDm9fCCWVUGCrK7O2z2iJ6ZUZgTyZ8AYooK6l+xQOZd7iESYqa1X7gbRxZENzvWeHSVvU/gm1bySgPcnWoA+WEo+NlCO/6gr7dPOxKIcah1YLnWUZg1RKtE8zeqUBN/+TIfJtPgNDr6yuNSmydvVAcx7R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QJQItLxn; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S0lruz5D"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1db35934648so11765ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 14:03:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QJQItLxn"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d5ce88b51cso33685ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 14:43:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707948179; x=1708552979; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1707950590; x=1708555390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8wYfCtUOcHCknKPxjQLZZJYk5nY9b53cOSCJihn+f7U=;
-        b=S0lruz5DM19Czn95YTg5N1eYWkyGuqgN2rW2k3HLvRXe6vU+6tfgFMul3IRePjVrJB
-         OoMwkuxojD+sa0da/NcMv6PDJdT0TQlmKteQIemHTw+LyrGT5+Sl3c9eTTPqVAolXFH/
-         8uhPAp0qCaR7VYXByn7CSzAJnHhDQmoYfmNectK5EXJDk3LMJNNEEmjJGVGh0bSkwApD
-         I/3Muv8zZfl7AzW0po/OAMSbtdRvFfDa//hUNUiiVTrLdKNAJ4zcXwaFO1tJE//HzRaf
-         xooz8e4hwOET5Bu8Ln8ek9UyAupr4DXplVSz0gOcvHRJ43+MjXPM8eQwz411Kmn3CAnx
-         PKdw==
+        bh=NNsPK+5tLWvdv+gYlhpHEpHeZeAqpOS89g5+h/Xob8s=;
+        b=QJQItLxnKo1IMO3sGw8Hz/U2admm+PaFEmnUJBUPaqLUOEs8X2kaBNQC/n+vJGVKmm
+         hC/WVoRZaBxbaV0tpE4vefpjbG034G2rvLzn3JVIdfCdAUV3yqx/3kFWKvkeYsYJn6gJ
+         YSuzE5HYAnnjViLgiM7bXxHsuOVQHDfom7XUirq2ImEV7oRe4xNA3BjO8q8YvjkWhiOq
+         0A0y8JVhTs5mHIouXhUV/pDhW+dc/JQ99GXERsi9ITzSLTOo9JzhC++8UzLKAcI6J0bP
+         E0llw0oBJexNEG+Dhkzm8AMoDD+ogKMaDNqGQYIqox6dMWPHi5hlUyEH63iXAHGCR+0G
+         YJwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707948179; x=1708552979;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1707950590; x=1708555390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8wYfCtUOcHCknKPxjQLZZJYk5nY9b53cOSCJihn+f7U=;
-        b=SZxK1tOkEHorCb/tiK2h/5Q0BqAs+GFiw7h5vGhs5YhM0b+tKwJt6vOKe8H5PfQLTW
-         AzsKM3iD0IRUzQvqR3GjkAvB6meleQZt1u70eR18yH7m+1mrhKA/HXKvxxZV9J6IoQcC
-         Npdlh2Gi3FUMcVsitNihB7QBO3FEkETkeUsIqNEkG5zznnoBQZRe2749YjeebrERrnxY
-         FnANkrhNOdG0V8xC79qY7yw7yMbT/LQyqf157h/ZYH9MDDbOpR4haF1GzpZ4T54DEtaC
-         HR5drIyLty0T6U3Lv7jWjsWI0hr0m50rdkoSGsY0x/dDOGOWReW+1B/7QoojTp3k3P4U
-         /C5A==
-X-Forwarded-Encrypted: i=1; AJvYcCW43tI0Ikt0SxGiOrRLBOV0wVs1qKA0Ml8GOgFUfHo4DRjZAEBb95+j8sAEp6t25VUK4x1n0Jq4+Q/QWJn3HyyOn2Sobk4tsS1p85uPSS3XZw==
-X-Gm-Message-State: AOJu0Yy6yJNbkk/JaKIbFPPZD75AyLomoO2tJ31y5FgS0LHf820x8Zb7
-	NhPHU45B5z6FObvfgrLJSvIEix5QRMUPt7BqCfHZSw/FKrvSL8nJ3HIzWkpfwlCdx9E6lD3Nwsz
-	lX7vlnh37V5QNnch+8zYtxagrWlaOILviVGbB
-X-Google-Smtp-Source: AGHT+IH8fTyTH+/fM9kh+waGifLqVnENEU1P+zY6NsEz1lp6qycSifgB+8s/ccRmemr7gEoPy9nvbyQJ7zrcjZ+apN0=
-X-Received: by 2002:a17:903:2053:b0:1da:292b:cf94 with SMTP id
- q19-20020a170903205300b001da292bcf94mr405169pla.4.1707948179247; Wed, 14 Feb
- 2024 14:02:59 -0800 (PST)
+        bh=NNsPK+5tLWvdv+gYlhpHEpHeZeAqpOS89g5+h/Xob8s=;
+        b=OsRxkQJyQiudxqLkXuqhP7Y4nazOL1DZOlxaZF0g0fr2YsJyjpOMeig4arFf6TN/+z
+         Ejvf4oucGAsHA6/h0Q4C2zttPEjLYcYegQEquTiR27xxZ/Yz+EcO2v2Y1XNwkX5jsylJ
+         56IpFNOI4Fia+oW+d82aSg3V5kZ6GQsdwDJ3SzLO/DH5v/L3TAA0Mt28ti9yNe+ZwCWB
+         t2UQsa2y+JJ1KYY27sWf7gq7hsfRPEYsFymbdjXev82DgB8pIqT0ait0u/8IGGNmXgmw
+         twfS26Eaxj7SrtGpXr+SytgqaqZyJ/6THCx/wjXqtUYrTYDI4MYA3JGz2bWDrP9tAOt+
+         Cyqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJeyFbpS+I5R3WnWajR57pjhf2Rk04VXvhw5j3wxQUz9CqMb3pWgBFxn6TRjRvyDz48PwXfmxf7f7Ze3/dw8Yl2/s33nJXTh7/7UM+Nz0gxg==
+X-Gm-Message-State: AOJu0Yx1DS3r7C/m9qz4MAoFE7IXA6gxk5ylMR59oHcUFwuypt0oyd2g
+	VfkRFhxX0MJHAYL9KSPIrNhnNv5sITgoopnN3DmJxxS8lR3Iwl2+5phrpXjLinz8rpjM2ZesAn2
+	1+5zZ1Hn/Zy9zunpFR6c5dXFMXQApLckk6op2
+X-Google-Smtp-Source: AGHT+IEWmx9o20zsYkRXJyB8zKsCSkKFNQNuZGphQlbFdMF3zSOKzL3jAFucrutS57uN43pDOJxLmDOolU9Ayg9Z7HM=
+X-Received: by 2002:a17:903:42cd:b0:1d9:aa55:e4bd with SMTP id
+ jy13-20020a17090342cd00b001d9aa55e4bdmr401175plb.6.1707950589903; Wed, 14 Feb
+ 2024 14:43:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202234057.2085863-1-irogers@google.com>
-In-Reply-To: <20240202234057.2085863-1-irogers@google.com>
+References: <20240214113947.240957-1-leo.yan@linux.dev>
+In-Reply-To: <20240214113947.240957-1-leo.yan@linux.dev>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 14 Feb 2024 14:02:44 -0800
-Message-ID: <CAP-5=fVjAHqAHHLqE=3v2bP6S6k98psiuZds7TUTFCT7RgMFdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Clean up libperf cpumap's empty function
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
-	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
-	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Date: Wed, 14 Feb 2024 14:42:55 -0800
+Message-ID: <CAP-5=fXqdFrTDY2a2dXK1ehP2AbwPfPF8vYWXgeSMcKh4mS+ow@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] perf parse-regs: Cleanup config and building
+To: Leo Yan <leo.yan@linux.dev>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, 
+	Ming Wang <wangming01@loongson.cn>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 2, 2024 at 3:41=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
+On Wed, Feb 14, 2024 at 3:40=E2=80=AFAM Leo Yan <leo.yan@linux.dev> wrote:
 >
-> Rename and clean up the use of libperf CPU map functions particularly
-> focussing on perf_cpu_map__empty that may return true for maps
-> containing CPUs but also with an "any CPU"/dummy value.
+> Currently, the perf building enables register parsing based on the
+> target architecture has supported register feature.
 >
-> perf_cpu_map__nr is also troubling in that iterating an empty CPU map
-> will yield the "any CPU"/dummy value. Reduce the appearance of some
-> calls to this by using the perf_cpu_map__for_each_cpu macro.
+> Furthermore, the perf building system needs to maintain a variable
+> 'NO_PERF_REGS' and defines macro 'HAVE_PERF_REGS_SUPPORT' for statically
+> compiling the tool.
 >
-> v3: Address handling of "any" is arm-spe/cs-etm patch.
-> v2: 6 patches were merged by Arnaldo. New patch added ensure empty
->     maps are allocated as NULL (suggested by James Clark). Hopefully a
->     fix to "perf arm-spe/cs-etm: Directly iterate CPU maps".
+> As a result, the perf has no flexibilty for parsing register if an
+> architecture doesn't support it. And the source files use the macro
+> 'HAVE_PERF_REGS_SUPPORT' to switch on and off the register parsing
+> related code, which is not a good practice.
 >
-> Ian Rogers (8):
->   libperf cpumap: Add any, empty and min helpers
->   libperf cpumap: Ensure empty cpumap is NULL from alloc
->   perf arm-spe/cs-etm: Directly iterate CPU maps
->   perf intel-pt/intel-bts: Switch perf_cpu_map__has_any_cpu_or_is_empty
->     use
->   perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_empty
->   perf arm64 header: Remove unnecessary CPU map get and put
->   perf stat: Remove duplicate cpus_map_matched function
->   perf cpumap: Use perf_cpu_map__for_each_cpu when possible
+> This series is to remove the static building for register parsing. In
+> theory, we should can dynamically detect if an arch has support this
+> feature and functions can return errors when the feature is not
+> supported.
+>
+> The first patch is to remove unused build configuration
+> CONFIG_PERF_REGS.
+>
+> The second patch is to build perf register functions, without using the
+> macro 'HAVE_PERF_REGS_SUPPORT' to statically turn on or off code.
+>
+> The third patch is to introduce a weak function arch__sample_reg_masks(),
+> this function can allow the target arch to return its sample register
+> list.  With this change, we can totally remove the macro
+> 'HAVE_PERF_REGS_SUPPORT' in the source file.
+>
+> The forth patch is to clean up the Makefile for removing relevant
+> configuration and macro definition, as they are not useful anymore.
+>
+> I tested this patch set on Arm64 and x86 for building and did a cross
+> register parsing ('perf record' on Arm64 and 'perf report' on x86).
+>
+>
+> Leo Yan (4):
+>   perf build: Remove unused CONFIG_PERF_REGS
+>   perf parse-regs: Always build perf register functions
+>   perf parse-regs: Introduce a weak function arch__sample_reg_masks()
+>   perf build: Cleanup perf register configuration
 
-Ping. Thanks,
+Thanks Leo, this is great cleanup! Series:
+Reviewed-by: Ian Rogers <irogers@google.com>
+
 Ian
 
->  tools/lib/perf/cpumap.c                       |  33 ++++-
->  tools/lib/perf/include/perf/cpumap.h          |  16 +++
->  tools/lib/perf/libperf.map                    |   4 +
->  tools/perf/arch/arm/util/cs-etm.c             | 114 ++++++++----------
->  tools/perf/arch/arm64/util/arm-spe.c          |   4 +-
->  tools/perf/arch/arm64/util/header.c           |  13 +-
->  tools/perf/arch/x86/util/intel-bts.c          |   4 +-
->  tools/perf/arch/x86/util/intel-pt.c           |  10 +-
->  tools/perf/builtin-c2c.c                      |   6 +-
->  tools/perf/builtin-stat.c                     |  31 +----
->  tools/perf/tests/bitmap.c                     |  13 +-
->  tools/perf/tests/topology.c                   |  46 +++----
->  tools/perf/util/auxtrace.c                    |   4 +-
->  tools/perf/util/bpf_kwork.c                   |  16 +--
->  tools/perf/util/bpf_kwork_top.c               |  12 +-
->  tools/perf/util/cpumap.c                      |  12 +-
->  tools/perf/util/record.c                      |   2 +-
->  .../scripting-engines/trace-event-python.c    |  12 +-
->  tools/perf/util/session.c                     |   5 +-
->  tools/perf/util/stat.c                        |   2 +-
->  tools/perf/util/svghelper.c                   |  20 ++-
->  21 files changed, 192 insertions(+), 187 deletions(-)
+>  tools/perf/Makefile.config                    | 25 --------------
+>  tools/perf/arch/arm/util/perf_regs.c          |  7 +++-
+>  tools/perf/arch/arm64/util/machine.c          |  2 ++
+>  tools/perf/arch/arm64/util/perf_regs.c        |  7 +++-
+>  tools/perf/arch/csky/util/perf_regs.c         |  7 +++-
+>  tools/perf/arch/loongarch/util/perf_regs.c    |  7 +++-
+>  tools/perf/arch/mips/util/perf_regs.c         |  7 +++-
+>  tools/perf/arch/powerpc/util/perf_regs.c      |  7 +++-
+>  tools/perf/arch/riscv/util/perf_regs.c        |  7 +++-
+>  tools/perf/arch/s390/util/perf_regs.c         |  7 +++-
+>  tools/perf/arch/x86/util/perf_regs.c          |  7 +++-
+>  tools/perf/util/parse-regs-options.c          |  8 ++---
+>  .../util/perf-regs-arch/perf_regs_aarch64.c   |  4 ---
+>  .../perf/util/perf-regs-arch/perf_regs_arm.c  |  4 ---
+>  .../perf/util/perf-regs-arch/perf_regs_csky.c |  4 ---
+>  .../util/perf-regs-arch/perf_regs_loongarch.c |  4 ---
+>  .../perf/util/perf-regs-arch/perf_regs_mips.c |  4 ---
+>  .../util/perf-regs-arch/perf_regs_powerpc.c   |  4 ---
+>  .../util/perf-regs-arch/perf_regs_riscv.c     |  4 ---
+>  .../perf/util/perf-regs-arch/perf_regs_s390.c |  4 ---
+>  .../perf/util/perf-regs-arch/perf_regs_x86.c  |  4 ---
+>  tools/perf/util/perf_regs.c                   | 11 ++++--
+>  tools/perf/util/perf_regs.h                   | 34 +------------------
+>  23 files changed, 67 insertions(+), 112 deletions(-)
 >
 > --
-> 2.43.0.594.gd9cf4e227d-goog
+> 2.34.1
 >
