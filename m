@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F324BA28
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 01:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1349D310
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 01:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707873528; cv=none; b=CZGKkRVKi6+oDY+AXv7gYUKDUZxii3oMvwM+11ESvwQg021PnZOeGiCDYOqQyGu5VbpxRAt0d9Q1hTdwsjDc1DT+02EVA9VyMPCfpxyCKLbG1dZpyMW7gLCuTNZrXozJ/jRB4c0H7KRHSKMzvRRn4/HbtztAXobMzWWviL5miew=
+	t=1707873532; cv=none; b=H/0cmmd2uAd6WO5aIOQcOg+V5GL3CiT9MCJHIZnEH8nB93bA/e3Ikr319/LjyBlcyzW6nMXb/ubf4Vo386Illvv9cGhSoEm2gHxQHZb1AGL4F+F2wuSbkxI0+IV3XEaSKXgIIQtJ6W38LrVITkCvYJtDBy40UMS3JOJ5dT+SUuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707873528; c=relaxed/simple;
-	bh=nltx0ZNGKq2LRa/WV33HGA+n5uua2MUmMdtinvc4nvE=;
+	s=arc-20240116; t=1707873532; c=relaxed/simple;
+	bh=AFVkYXo1+6MUZA8tuWK2rLAzbr5KD528RzfIiw7rR60=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=laB5VpFEd6nGgzhExnHt4YNeeQbK9bsb2TlFAOBnMxgXI07muhTSvgz42Eksl/BsRGR3iFMQ/yOtCvoXybpPXVhVAof3itW2MVIqYIYC3xoFcVIdcgJlBQZuviJ5wD4Y1YB2XnujK+EQ7syMTIO+kX9i/oX58uP9wgRLGg7ZD4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dbEKKJhV; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=R8u4PTbR5oQgoMTxx2EuSrJlhwIpavItqs85Zmflm9jt7el6NZ3EY9uiJ8GVHVm8dg8CwP7bxAhLkMEzjg3dupUO1XH54meSZ7Cyu0JLyD2IC/WSUefibTENa1hCNB4UeP/bEyRZz9lQ33YNu3/sh3DDxI4xLngYsItVb3H+dwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IiuJlcgl; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dbEKKJhV"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc74ac7d015so7195315276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2024 17:18:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IiuJlcgl"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60753c3fab9so4771707b3.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Feb 2024 17:18:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707873525; x=1708478325; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707873530; x=1708478330; darn=vger.kernel.org;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ygYJgmMpDEHO5OJjBU2OoKhL2Mtay9wnFPAHQl6VX8=;
-        b=dbEKKJhVVNE/KTybNHgtWvqEROYBT/6yAekKbDMwiqsRO/7JTB7s2S4Juf+s9H+Knw
-         uKWiVQfvpxjXv9+ObJJdlxhevXHpEGKXTH2+F2IgGQABsXg/N6/l9aWcZx5JcmDbEn0h
-         9puIE1jbCcnvMPKuVBasu9HPNerZ0UFgxx8LvKXbnaTpC1+XHnL1uxHLrCT7A7xsNgh+
-         6wILLVEuYwsRyMnRvx/B4EyP2oI/FZJwbAsEGW25bfDcBgFQ2pQfXaAQVgB2NAx/MDR8
-         0Frvkhr9N6r54l7D2ThlucuXbqQtfwtA0DSpde7fNPR1SeL29xDVtGfXRYGIpS7UmFrP
-         uyOQ==
+        bh=AXMYa+hwxkFMekcpnDWRRjLsoFXXEPSgsnGBhBzwdHI=;
+        b=IiuJlcglXUDL6RF3I8C78g/Ac3bLHyp9gzDfCIBN/ZUA7G0zaUngmMSpR+06DDHPDe
+         BYpi0zrPQXRrd4lNtl4t7cmabllnBO2EnJDboxRlKQZL5rTqOWJGOtvHJ6Q+3hY67u8Z
+         76oQzlULrl/Yy0t4Cs4M4Wv+XmKOTdiqcNDjR8t/SqT/8RfIKuHTiL//Q+B8TcvyMzyD
+         uxRF7VO73Siyt7d5cRUHnKTbTjBmfd7VdBqTk4UH4OP7l6GxXUTjcn2lFBFC05vuYTk5
+         i66lofW6LvaxB54Lfov1hqHV+g/8UcwKwZrXUv7OTvMfRak39rLiZbjqLsO8I9nOwkMH
+         q1fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707873525; x=1708478325;
+        d=1e100.net; s=20230601; t=1707873530; x=1708478330;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ygYJgmMpDEHO5OJjBU2OoKhL2Mtay9wnFPAHQl6VX8=;
-        b=nWqjYLVprSRE//IZv5cyFCMPMF6KoG9EwdFJ59bdeVMm8zbNJl33SyZPvoUd5N1kkE
-         v9R2/HNFmLKF34eCouWeHaOyTbYjVzSClhjujBUNW2IBsGMTi56vxdz1eSW0+ZPetqIE
-         SCYN/NYe+OuHpD84eDQHKFH8dnPLrXVtP66WeJlbert9scFCu3Tc4a16dFnr7kxm3bmZ
-         ghMrC2OWWtUHgNTCamnVjVQG8yutLtUGd/SpZ8Xp2oPqPsgcNoY48sQcip83KtZwLbed
-         xmQpXtN5ngjxki5SnjnqWbHsbOjD+5Qyu72bvPZfqLPTX64nrgTbEfFhvQu/A7NGmSbw
-         7KeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAM5MDd/Hv24miB8lgzb7C9xxlSB6sUbC/D0FmhF5NI1KtJpaC2wFDV8KNITsHpLUTbAjYfO46S+l74lWrMnkJOLyz6up7MvtpO1TjGAKATg==
-X-Gm-Message-State: AOJu0Ywq3Dj35A45onc9TkbZqdIqj7CSMEH+CRc5dxJ9ftIlC4uhL3ty
-	owc9qmCCYlvD2qAi5tVjQfqSKbP/EmQPgfUDlWGzNDa6gXR+LcaCfaF4aoiY0k9mqK+GlM7WkBk
-	2/czYRg==
-X-Google-Smtp-Source: AGHT+IGn9w8o47oKv0PAe9uzZx2I9jU23JD8Mqg5Ps3vgzZMw9x3chSwnuPlnMoZMlbrEzCm6gO0sbntV1Tt
+        bh=AXMYa+hwxkFMekcpnDWRRjLsoFXXEPSgsnGBhBzwdHI=;
+        b=BaaWmYH15CV/tAZIITWuu8eCIqhjsg8IBnK9liph15hPtORm0BTsFm2bSyhYyPdc+d
+         pQtm3EQ03EWBaxUmVetsC01Zz5phP8awFpZA6kXegnpTIoSLB9R93TDlZWcP7gJMHzOS
+         P4aCZue8+mZrBVj+YeCLyNwXWcyK+CkvH7aos3PlYuKdNXkzzC5/8z7HZ9m4eaWXTYnJ
+         ohVe5GfwvuyaGV9OE3GhVaLEqibanGTpcxtFlQUOxCQLxqZfPy36YZTMbqFmZXkJ9eLm
+         acoXbO4px+OAByGrPTH9ial1kAHSoGUr7W0PUAlPPvZJnbDjNOwQoUzN/CCdJF654DvR
+         Wdcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRJ9RWfc9gI+W9EKiR84qI7XF5wRVTq7oPiXTuaSQGAeCoO72q7WkptgsBx8IcrQHFTCWE8jSyMtlAr9LygM9LweyPVbeorRyeSaz/QWbYcw==
+X-Gm-Message-State: AOJu0Yx52IlR/nglnqAHIzgoUrv6JXYYu8ojD37IQ886Q+SNGLCUF4My
+	2nQBdCMP42d9jSMajKllj181qHp3Bdswgt9rftUYsKY78+T+kDnFToLZE4e1sYXVglRV6mDAuOk
+	Lx/Uilw==
+X-Google-Smtp-Source: AGHT+IGW0pTMv12UHpo/ZYgVugkInsPeqfGu/j6vj/eSF52iI4XBxZjPeTfK33CPWekfXKslnVsDMKKRAsXz
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6d92:85eb:9adc:66dd])
- (user=irogers job=sendgmr) by 2002:a05:6902:1029:b0:dcc:79ab:e522 with SMTP
- id x9-20020a056902102900b00dcc79abe522mr52950ybt.11.1707873525462; Tue, 13
- Feb 2024 17:18:45 -0800 (PST)
-Date: Tue, 13 Feb 2024 17:17:53 -0800
+ (user=irogers job=sendgmr) by 2002:a81:5702:0:b0:5ff:6ec3:b8da with SMTP id
+ l2-20020a815702000000b005ff6ec3b8damr108279ywb.1.1707873529994; Tue, 13 Feb
+ 2024 17:18:49 -0800 (PST)
+Date: Tue, 13 Feb 2024 17:17:55 -0800
 In-Reply-To: <20240214011820.644458-1-irogers@google.com>
-Message-Id: <20240214011820.644458-5-irogers@google.com>
+Message-Id: <20240214011820.644458-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240214011820.644458-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Subject: [PATCH v1 04/30] perf vendor events intel: Update emeraldrapids
- events to v1.03
+Subject: [PATCH v1 06/30] perf vendor events intel: Update haswell events to v35
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,259 +74,46 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Update emeraldrapids events to v1.03 released in:
-https://github.com/intel/perfmon/commit/c7c6f72dae07fee35d5982232829c0cd37f9e28e
+Update haswell events to v35 released in:
+https://github.com/intel/perfmon/commit/c0f9b34d421941bc3e13c6ca5554e6a54e8bd574
 
-Adds uncore CHA events.
+Updates "must be precise" on RTM_RETIRED.ABORTED.
 
 Event json automatically generated by:
 https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/emeraldrapids/uncore-cache.json  | 152 ++++++++++++++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
- 2 files changed, 153 insertions(+), 1 deletion(-)
+ tools/perf/pmu-events/arch/x86/haswell/memory.json | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-cache.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-cache.json
-index bf5a511b99d1..86a8f3b7fe1d 100644
---- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-cache.json
-@@ -3564,6 +3564,15 @@
-         "UMask": "0x10c8968201",
-         "Unit": "CHA"
+diff --git a/tools/perf/pmu-events/arch/x86/haswell/memory.json b/tools/perf/pmu-events/arch/x86/haswell/memory.json
+index 2fc25e22a42a..6ba0ea6e3fa6 100644
+--- a/tools/perf/pmu-events/arch/x86/haswell/memory.json
++++ b/tools/perf/pmu-events/arch/x86/haswell/memory.json
+@@ -371,7 +371,7 @@
+         "BriefDescription": "Number of times an RTM execution aborted due to any reasons (multiple categories may count as one).",
+         "EventCode": "0xc9",
+         "EventName": "RTM_RETIRED.ABORTED",
+-        "PEBS": "1",
++        "PEBS": "2",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x4"
      },
-+    {
-+        "BriefDescription": "UNC_CHA_TOR_INSERTS.IA_MISS_DRD_PREF_CXL_EXP_LOCAL",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_DRD_PREF_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "PortMask": "0x000",
-+        "UMask": "0x20c8968201",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Inserts : DRd_Prefs issued by iA Cores targeting DDR Mem that Missed the LLC",
-         "EventCode": "0x35",
-@@ -3715,6 +3724,15 @@
-         "UMask": "0x10ccd68201",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "UNC_CHA_TOR_INSERTS.IA_MISS_LLCPREFDATA_CXL_EXP_LOCAL",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_LLCPREFDATA_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "PortMask": "0x000",
-+        "UMask": "0x20ccd68201",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Inserts; LLCPrefRFO misses from local IA",
-         "EventCode": "0x35",
-@@ -3741,6 +3759,15 @@
-         "UMask": "0x10c8868201",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "UNC_CHA_TOR_INSERTS.IA_MISS_LLCPREFRFO_CXL_EXP_LOCAL",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_LLCPREFRFO_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "PortMask": "0x000",
-+        "UMask": "0x20c8868201",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Inserts : WCiLFs issued by iA Cores targeting DDR that missed the LLC - HOMed locally",
-         "EventCode": "0x35",
-@@ -3891,6 +3918,15 @@
-         "UMask": "0x10ccc68201",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "UNC_CHA_TOR_INSERTS.IA_MISS_RFO_PREF_CXL_EXP_LOCAL",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_RFO_PREF_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "PortMask": "0x000",
-+        "UMask": "0x20ccc68201",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Inserts; RFO prefetch misses from local IA",
-         "EventCode": "0x35",
-@@ -4428,6 +4464,46 @@
-         "UMask": "0x40",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "TOR Inserts for INVXTOM opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.RRQ_MISS_INVXTOM_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e87e8240",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts for RDCODE opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.RRQ_MISS_RDCODE_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e80e8240",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts for RDCUR opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.RRQ_MISS_RDCUR_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e8068240",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts for RDDATA opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.RRQ_MISS_RDDATA_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e8168240",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Inserts for RDINVOWN_OPT opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.RRQ_MISS_RDINVOWN_OPT_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e8268240",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Inserts; All Snoops from Remote",
-         "EventCode": "0x35",
-@@ -5011,6 +5087,15 @@
-         "UMask": "0x10c8968201",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_PREF_CXL_EXP_LOCAL",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_PREF_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "PortMask": "0x000",
-+        "UMask": "0x20c8968201",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Occupancy : DRd_Prefs issued by iA Cores targeting DDR Mem that Missed the LLC",
-         "EventCode": "0x36",
-@@ -5162,6 +5247,15 @@
-         "UMask": "0x10ccd68201",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LLCPREFDATA_CXL_EXP_LOCAL",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LLCPREFDATA_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "PortMask": "0x000",
-+        "UMask": "0x20ccd68201",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Occupancy; LLCPrefRFO misses from local IA",
-         "EventCode": "0x36",
-@@ -5188,6 +5282,15 @@
-         "UMask": "0x10c8868201",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LLCPREFRFO_CXL_EXP_LOCAL",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LLCPREFRFO_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "PortMask": "0x000",
-+        "UMask": "0x20c8868201",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Occupancy : WCiLFs issued by iA Cores targeting DDR that missed the LLC - HOMed locally",
-         "EventCode": "0x36",
-@@ -5338,6 +5441,15 @@
-         "UMask": "0x10ccc68201",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_RFO_PREF_CXL_EXP_LOCAL",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_RFO_PREF_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "PortMask": "0x000",
-+        "UMask": "0x20ccc68201",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Occupancy; RFO prefetch misses from local IA",
-         "EventCode": "0x36",
-@@ -5841,6 +5953,46 @@
-         "UMask": "0x40",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "TOR Occupancy for INVXTOM opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.RRQ_MISS_INVXTOM_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e87e8240",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Occupancy for RDCODE opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.RRQ_MISS_RDCODE_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e80e8240",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Occupancy for RDCUR opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.RRQ_MISS_RDCUR_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e8068240",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Occupancy for RDDATA opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.RRQ_MISS_RDDATA_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e8168240",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Occupancy for RDINVOWN_OPT opcodes received from a remote socket which miss the L3 and target memory in a CXL type 3 memory expander local to this socket.",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.RRQ_MISS_RDINVOWN_OPT_CXL_EXP_LOCAL",
-+        "PerPkg": "1",
-+        "UMask": "0x20e8268240",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Occupancy; All Snoops from Remote",
-         "EventCode": "0x36",
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 7b30c0eb036a..42cbbe35b52e 100644
+index 2e72e81669d5..932d7c094e41 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -7,7 +7,7 @@ GenuineIntel-6-56,v11,broadwellde,core
- GenuineIntel-6-4F,v22,broadwellx,core
- GenuineIntel-6-55-[56789ABCDEF],v1.20,cascadelakex,core
- GenuineIntel-6-9[6C],v1.04,elkhartlake,core
--GenuineIntel-6-CF,v1.02,emeraldrapids,core
-+GenuineIntel-6-CF,v1.03,emeraldrapids,core
- GenuineIntel-6-5[CF],v13,goldmont,core
+@@ -12,7 +12,7 @@ GenuineIntel-6-5[CF],v13,goldmont,core
  GenuineIntel-6-7A,v1.01,goldmontplus,core
- GenuineIntel-6-B6,v1.00,grandridge,core
+ GenuineIntel-6-B6,v1.01,grandridge,core
+ GenuineIntel-6-A[DE],v1.01,graniterapids,core
+-GenuineIntel-6-(3C|45|46),v33,haswell,core
++GenuineIntel-6-(3C|45|46),v35,haswell,core
+ GenuineIntel-6-3F,v28,haswellx,core
+ GenuineIntel-6-7[DE],v1.19,icelake,core
+ GenuineIntel-6-6[AC],v1.23,icelakex,core
 -- 
 2.43.0.687.g38aa6559b0-goog
 
