@@ -1,178 +1,233 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC08801;
-	Wed, 14 Feb 2024 00:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33AD7E2;
+	Wed, 14 Feb 2024 01:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707871930; cv=none; b=RFGcLyjKLhBktsOY0tNJ11hVO8fX7M/H2EWa64wHP55WAhVwsPgJ3TmzCNhpywUh2GZ8ulZCU/H5ois4bBfcvqvotBhk7e9xZCMacYdvykNVzyWJzy50YWH3BJizkQ8L+lTV8mSrLeWyIuQt1huwu4YzPJ3m1+e+KBKvsWbtdm4=
+	t=1707873269; cv=none; b=WcNwJ+aMAJtT6DeuydhmsGmhliwsEidU4XKefKdAYwHZuUIgMPinXTAUWPmYpKvC4mnCjZVT4wwW+3dDRObBLksVgBVWfSD3rSZs6ka7YOngrlgA2cI5PwxPO96S5SsOMvri9Iz1LVAZHYe3bZ/DDOF8oPj6K1lFkpW4lOZnBzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707871930; c=relaxed/simple;
-	bh=2+YC4GCoCVjMy2Ct2cJUi3Cr5RlvqD+v+ENXkPB6w7M=;
+	s=arc-20240116; t=1707873269; c=relaxed/simple;
+	bh=uaCmhwOn8mw1USdD5pf5zdexUd38umclcqM6RnhK7bY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gn3OxzZB7fHiohVw1p/S03KLbg85T2QB2nbJtmdRCoDYCyVeLM6PTCMSn1wwVekR8iPe1yw3JAz8l9EFNoABHP/wTOPypAbE4IcOtV6syStvGNzXhRMZE5OzE2Eo/4KeeHjnnsuSkge4wxbCuP1LiSqRvFrLp3kR4V67kgKUsyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
+	 To:Cc:Content-Type; b=bQFwU2BsYON+8302czLQqPfzJm+i7pUqCgxVtnveEOu+EJss+UNsNTjRd28lVN52SeQUu5oheJ0NptH5CSfki0dR7jRS4DrxTwSyXU+daAh/hR9cTb2uXXqd/cuid9Xnaa38+W7j7CBPs+QKfO2jIXfAAnradgmzohLOVspnZw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d8b519e438so1225087a12.1;
-        Tue, 13 Feb 2024 16:52:08 -0800 (PST)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-296c562ac70so3744100a91.2;
+        Tue, 13 Feb 2024 17:14:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707871928; x=1708476728;
+        d=1e100.net; s=20230601; t=1707873267; x=1708478067;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wD7TEKagSlKHEJT8nomaZPXwtx6sNloUd/DUQpDUnxI=;
-        b=lrT1HobS/S5bSZpGt/3tqfIm82B/AdM/ewvy9R5lgvcz5eCso759GfgRZnw3JSD9uV
-         XcLcRdAybOg4zlCuMa6MlTGiRcGA3/W8J0S+3igeg5zl3gjyHF0gnnVu3yXuPrDuZXxx
-         jB59Y4hIxOrFj9kJXPAOOPWFZHxyfxS8+MUCTVnTEQg3H4sGBhJ8BlzLxFZni2L5pCuM
-         lLq/oQu1BqgGmGIT1ToPt1CCf+GIlQvImlbFlQ8jgDl2yOQWFXmZL3iRbRZqTYbNjIzQ
-         E+UDBsYQOhq5Bai6VaOj8zwztxXVAh7+njt/KkgF1vOGkhIJQxWa6z8OuVqJFbX/1DNK
-         JDkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVLy3+cqPydrWyfQIVq2zarkbdLPoikjZDEvkVXX1JjvRCrpdC0cA1oouq3zIMxW8okN738yS66FzIHpO4/9Z/mX33+rmIQrjaAuS1RQIiMmCPQozqa8eCTc3db/wsBG5BMQjLtf7R08vCFFa4pg==
-X-Gm-Message-State: AOJu0YwToFl6AcHNVEEc0EarMN8xzb3eDbdd+rfN7MMg9CAaSoIhqr6r
-	iRx8B3PKgUjqwpwUxFGk9A3lYjZRGxdFRg2bpik+9hEx7YxOTfJHlY4vIKKtLbDJJPvvsxVR5Q5
-	kKD78mMhdgWa+UkJUHAv7HCFdXz0=
-X-Google-Smtp-Source: AGHT+IG+bcT6feAmOjm0Rab9dbCrben3IbMYbnj/T7bjKQwI4D7q2hILoTEpOFQyLG6+V+SMtW2W36vE+dFPbh/EGZc=
-X-Received: by 2002:a17:90a:d504:b0:297:bb6:cbe4 with SMTP id
- t4-20020a17090ad50400b002970bb6cbe4mr1007302pju.27.1707871927459; Tue, 13 Feb
- 2024 16:52:07 -0800 (PST)
+        bh=qiVVTshxLf488JtQvB4freL8sn2VgHj3EfM+SItvhFw=;
+        b=Yol66MnO5G2RnB+rbrpkAztmT/8kPAwBboIx5TPG6cdhuQJzJtnitp0Ii8yPZaDIeV
+         v6wjK78bn06e6dyCYU9ua3scjGXxw4YmIuHlvAzCujL5JM2dZxeegNJL82Q/xQ5d/0fy
+         f/2BnvY6fiK/v80B3sd+XYS11rrMHYpSsTH2QldrB7jXDbVYk4OHDSeoWy8hfwNinmnN
+         oEs+jXogFo8Lx05YE5xZEaj+51YGvAOpkZJUlXVR2Q0dkJls9kAJTFz83XuIzqPf0BM3
+         hFbeOgMOCt7QGVNEjCvK0W5GNIKhJNneWU0VgAylQBz6uXowvxSBpK7yiiY830pVVtyk
+         Ptgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWqyJfJOPdJzR/iLva4/xA8d5jn/NKEEtfC67rUfPnvaHaaOSQLFqCMCAEC6Dt7sbewuusvAZEec2jrux9MEMFLb46bzE3pMH1AEQLdJlXrxjqUtzJGDuJmaX//LnOVKoQaulV3iioLX+VEuJLpHw==
+X-Gm-Message-State: AOJu0YxfZMgwO4un0W1jjAP2yQXyqFxDvxkymqg6bTdegCM/dT7QbmXH
+	etDn2nOwoWyTjqF4CrLc7RvSdcboJ6wE4Q1PWLB5OOVaahzaeEeZK+Wk07shPfbfw/qpPE1Ukmr
+	ymBaYfZvEGC6ux5zKHlyonE2/91w=
+X-Google-Smtp-Source: AGHT+IErwkMc01Tf/azIdIDCC7FFkLqYU5zAjx8RMnonJ7nwDnz2JckEoxZsVS70HQzcgO7U5pDHLBjJ+/QXjxztTZ0=
+X-Received: by 2002:a17:90b:1054:b0:297:17b0:34e2 with SMTP id
+ gq20-20020a17090b105400b0029717b034e2mr1278414pjb.48.1707873267048; Tue, 13
+ Feb 2024 17:14:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201001504.1348511-1-irogers@google.com> <20240201001504.1348511-6-irogers@google.com>
- <CAM9d7cjka_O5OmCxkrp-K6g45VnxEJNd73jjv6kQanutf+6sbg@mail.gmail.com> <CAP-5=fV1dA_hbH=UAZFL8DeuRzvRqW51-gQFSpuEsHpWEDDtWw@mail.gmail.com>
-In-Reply-To: <CAP-5=fV1dA_hbH=UAZFL8DeuRzvRqW51-gQFSpuEsHpWEDDtWw@mail.gmail.com>
+References: <20240212185858.68189-1-irogers@google.com> <20240212185858.68189-9-irogers@google.com>
+In-Reply-To: <20240212185858.68189-9-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 13 Feb 2024 16:51:56 -0800
-Message-ID: <CAM9d7cim3Geib9QNrtL6FVH-gg-=metH_u_yKnJFa+G=maOz3A@mail.gmail.com>
-Subject: Re: [PATCH v2 6/9] perf tests: Use scandirat for shell script finding
+Date: Tue, 13 Feb 2024 17:14:15 -0800
+Message-ID: <CAM9d7chcdJ7zsOEWLo1q-U25YyvP=22+GGxcMEbdkQbW_csoyg@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] perf tests: Add option to run tests in parallel
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, James Clark <james.clark@arm.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@arm.com>, 
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2024 at 8:07=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Mon, Feb 12, 2024 at 10:59=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> On Fri, Feb 9, 2024 at 8:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> >
-> > On Wed, Jan 31, 2024 at 4:15=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > Avoid filename appending buffers by using openat, faccessat and
-> > > scandirat more widely. Turn the script's path back to a file name
-> > > using readlink from /proc/<pid>/fd/<fd>.
-> > >
-> > > Read the script's description using api/io.h to avoid fdopen
-> > > conversions. Whilst reading perform additional sanity checks on the
-> > > script's contents.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > [SNIP]
-> > > -static const char *shell_test__description(char *description, size_t=
- size,
-> > > -                                           const char *path, const c=
-har *name)
-> > > +static char *shell_test__description(int dir_fd, const char *name)
-> > >  {
-> > > -       FILE *fp;
-> > > -       char filename[PATH_MAX];
-> > > -       int ch;
-> > > +       struct io io;
-> > > +       char buf[128], desc[256];
-> > > +       int ch, pos =3D 0;
-> > >
-> > > -       path__join(filename, sizeof(filename), path, name);
-> > > -       fp =3D fopen(filename, "r");
-> > > -       if (!fp)
-> > > +       io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf=
-));
-> > > +       if (io.fd < 0)
-> > >                 return NULL;
-> > >
-> > >         /* Skip first line - should be #!/bin/sh Shebang */
-> > > +       if (io__get_char(&io) !=3D '#')
-> > > +               goto err_out;
-> > > +       if (io__get_char(&io) !=3D '!')
-> > > +               goto err_out;
-> > >         do {
-> > > -               ch =3D fgetc(fp);
-> > > -       } while (ch !=3D EOF && ch !=3D '\n');
-> > > -
-> > > -       description =3D fgets(description, size, fp);
-> > > -       fclose(fp);
-> > > +               ch =3D io__get_char(&io);
-> > > +               if (ch < 0)
-> > > +                       goto err_out;
-> > > +       } while (ch !=3D '\n');
-> > >
-> > > -       /* Assume first char on line is omment everything after that =
-desc */
-> > > -       return description ? strim(description + 1) : NULL;
-> > > +       do {
-> > > +               ch =3D io__get_char(&io);
-> > > +               if (ch < 0)
-> > > +                       goto err_out;
-> > > +       } while (ch =3D=3D '#' || isspace(ch));
-> > > +       while (ch > 0 && ch !=3D '\n') {
-> > > +               desc[pos++] =3D ch;
-> > > +               if (pos >=3D (int)sizeof(desc) - 1)
-> >
-> > Maybe (pos =3D=3D sizeof(desc) - 2) ?  I'm not sure what happens if it =
-has a
-> > description longer than the buffer size.
+> By default tests are forked, add an option (-p or --parallel) so that
+> the forked tests are all started in parallel and then their output
+> gathered serially. This is opt-in as running in parallel can cause
+> test flakes.
 >
-> Thanks Namhyung!
+> Rather than fork within the code, the start_command/finish_command
+> from libsubcmd are used. This changes how stderr and stdout are
+> handled. The child stderr and stdout are always read to avoid the
+> child blocking. If verbose is 1 (-v) then if the test fails the child
+> stdout and stderr are displayed. If the verbose is >1 (e.g. -vv) then
+> the stdout and stderr from the child are immediately displayed.
 >
-> sizeof(desc) - 1 =3D=3D sizeof(char[256]) - 1 =3D=3D 255 , so at this poi=
-nt
-> pos can at most be 255 and there is one space after pos for a trailing
-> '\0'.
+> An unscientific test on my laptop shows the wall clock time for perf
+> test without parallel being 5 minutes 21 seconds and with parallel
+> (-p) being 1 minute 50 seconds.
 >
-> > > +                       break;
-> > > +               ch =3D io__get_char(&io);
-> > > +       }
-> > > +       while (pos > 0 && isspace(desc[--pos]))
-> > > +               ;
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v1 of this code had a bug where stdout/stderr weren't read fully. This
+> and additional issues/improvements are dealt with in v2.
+> ---
+[SNIP]
+>  static int __cmd_test(int argc, const char *argv[], struct intlist *skip=
+list)
+>  {
+>         struct test_suite *t;
+>         unsigned int j, k;
+>         int i =3D 0;
+>         int width =3D 0;
+> +       size_t num_tests =3D 0;
+> +       struct child_test **child_tests;
+> +       int child_test_num =3D 0;
 >
-> Here pos is moved back to at least one to 254.
+>         for_each_test(j, k, t) {
+>                 int len =3D strlen(test_description(t, -1));
+>
+>                 if (width < len)
+>                         width =3D len;
+> +
+> +               if (has_subtests(t)) {
+> +                       for (int l =3D 0, subn =3D num_subtests(t); l < s=
+ubn; l++) {
+> +                               len =3D strlen(test_description(t, -1));
 
-Oh, right.  I missed it moved the pos back.
+Shouldn't it be strlen(test_description(t, i)) ?  Looks like it has len
+of parent test already.
 
 Thanks,
 Namhyung
 
+
+> +                               if (width < len)
+> +                                       width =3D len;
+> +                               num_tests++;
+> +                       }
+> +               } else
+> +                       num_tests++;
+>         }
+> +       child_tests =3D calloc(num_tests, sizeof(*child_tests));
+> +       if (!child_tests)
+> +               return -ENOMEM;
 >
-> > > +       desc[++pos] =3D '\0';
-> >
-> > Wouldn't it overflow the buffer?
+>         for_each_test(j, k, t) {
+>                 int curr =3D i++;
+> @@ -334,52 +458,47 @@ static int __cmd_test(int argc, const char *argv[],=
+ struct intlist *skiplist)
+>                                 continue;
+>                 }
 >
-> At this point pos can only have a maximum value of 255 which is within
-> the bounds of desc.
+> -               pr_info("%3d: %-*s:", i, width, test_description(t, -1));
+> -
+>                 if (intlist__find(skiplist, i)) {
+> +                       pr_info("%3d: %-*s:", curr + 1, width, test_descr=
+iption(t, -1));
+>                         color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (=
+user override)\n");
+>                         continue;
+>                 }
 >
-> Thanks,
-> Ian
+>                 if (!has_subtests(t)) {
+> -                       test_and_print(t, -1);
+> +                       int err =3D start_test(t, curr, -1, &child_tests[=
+child_test_num++], width);
+> +
+> +                       if (err) {
+> +                               /* TODO: if parallel waitpid the already =
+forked children. */
+> +                               free(child_tests);
+> +                               return err;
+> +                       }
+>                 } else {
+>                         int subn =3D num_subtests(t);
+> -                       /*
+> -                        * minus 2 to align with normal testcases.
+> -                        * For subtest we print additional '.x' in number=
+.
+> -                        * for example:
+> -                        *
+> -                        * 35: Test LLVM searching and compiling         =
+               :
+> -                        * 35.1: Basic BPF llvm compiling test           =
+               : Ok
+> -                        */
+> -                       int subw =3D width > 2 ? width - 2 : width;
+> -
+> -                       if (subn <=3D 0) {
+> -                               color_fprintf(stderr, PERF_COLOR_YELLOW,
+> -                                             " Skip (not compiled in)\n"=
+);
+> -                               continue;
+> -                       }
+> -                       pr_info("\n");
 >
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > > +       close(io.fd);
-> > > +       return strdup(desc);
-> > > +err_out:
-> > > +       close(io.fd);
-> > > +       return NULL;
-> > >  }
+>                         for (subi =3D 0; subi < subn; subi++) {
+> -                               int len =3D strlen(test_description(t, su=
+bi));
+> +                               int err;
+>
+> -                               if (subw < len)
+> -                                       subw =3D len;
+> -                       }
+> -
+> -                       for (subi =3D 0; subi < subn; subi++) {
+>                                 if (!perf_test__matches(test_description(=
+t, subi),
+>                                                         curr, argc, argv)=
+)
+>                                         continue;
+>
+> -                               pr_info("%3d.%1d: %-*s:", i, subi + 1, su=
+bw,
+> -                                       test_description(t, subi));
+> -                               test_and_print(t, subi);
+> +                               err =3D start_test(t, curr, subi, &child_=
+tests[child_test_num++],
+> +                                                width);
+> +                               if (err)
+> +                                       return err;
+>                         }
+>                 }
+>         }
+> +       for (i =3D 0; i < child_test_num; i++) {
+> +               if (parallel) {
+> +                       int ret  =3D finish_test(child_tests[i], width);
+> +
+> +                       if (ret)
+> +                               return ret;
+> +               }
+> +               free(child_tests[i]);
+> +       }
+> +       free(child_tests);
+>         return 0;
+>  }
+>
+> @@ -447,6 +566,8 @@ int cmd_test(int argc, const char **argv)
+>                     "be more verbose (show symbol address, etc)"),
+>         OPT_BOOLEAN('F', "dont-fork", &dont_fork,
+>                     "Do not fork for testcase"),
+> +       OPT_BOOLEAN('p', "parallel", &parallel,
+> +                   "Run the tests altogether in parallel"),
+>         OPT_STRING('w', "workload", &workload, "work", "workload to run f=
+or testing"),
+>         OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
+>         OPT_STRING(0, "objdump", &test_objdump_path, "path",
+> --
+> 2.43.0.687.g38aa6559b0-goog
+>
