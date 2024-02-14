@@ -1,67 +1,67 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86DE1419A2
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 23:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC6B145B37
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 23:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707954631; cv=none; b=YDJ2ET5L5hQX6JJGz30KDUwdKiQULLFZ9TSzrs0qqN23Jf0ze3rxtkO8g8+JRzKMMiFK3UCgove9Z/CyvF/CrMvbhkbSkIBnXA55zdR70ySFGsOeG0wJRTLDJ5K1d+WbZVJTfq/GT+CbYwa5swSCOyz+OdZW6SuLe4QPIuVUZPU=
+	t=1707955058; cv=none; b=crzuW1xv7foctCHKhasa92A5M5dsCyvMsbEkY0mX1J/5zI8/HcPFLbssMMixE7PRK1To+pO/gy/qExZGgx3d9ySmvjev6pvf9xUXfswab+LPn4l8tkR03RMgRnLkiOS6eXBKvPl/2DWBnMhH4v87IUYUAzrhEmQI14amz0bSF80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707954631; c=relaxed/simple;
-	bh=LjR2Xnv5w8P3uWdzHWgqQx1KlP4R++nOn3Ix96RndFU=;
+	s=arc-20240116; t=1707955058; c=relaxed/simple;
+	bh=8vPNE4CvmZCjziYpHcM1v12cyFLhM99eJn8J6lClXuI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G/82qBgNF+bscY66NBiM53uE8jCnKpINbeL/Apl39fJoxPmLnYV3pwQrK1NiHLcmKLdsp3ws8qmsaIZGxSg68Oem6fFPkbNf1aUaJKzg3k4uBgob7mSBlR0VCqDrgUEkpHP4SiIuiDjm3FfGiB7ojL0Ex+cGo58wch4WMdlhRtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F7of44bn; arc=none smtp.client-ip=209.85.214.179
+	 To:Cc:Content-Type; b=YX8p7+y4GuElY4YQAvfnDkWL9w4Ei0fuvwwdVa3A3t5/dmZi2wMQFpdS8H+qqWLjNxYgjhmB50XpK24NRz6rBi65k+YWDH+G5S1UsgLQtSStGlhXVC27xLYZ0hHeC2vqMv/cjdaLV+B+UVFM1S2ojK/Cf9VKPogpd9RgQFmTCIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TlZH3qPC; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F7of44bn"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1db61f7ebcbso34775ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 15:50:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TlZH3qPC"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d5ce88b51cso50105ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 15:57:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707954629; x=1708559429; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707955056; x=1708559856; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0hLkk26SkKRw8FMas9+HqAOG+Ra2K1devtEkfmg/Abk=;
-        b=F7of44bnvCadMk3qpclFp1z2yMm6S7v4SRY6nnILgD9Xk+DoYXeaBnOyVrk/VursvN
-         6rajrrXqBRZELKjDC0duEhu0rpN0ZEI16rMe/N5fZgNzoerx6xP7lLgWdCyrMccp9Gyj
-         gCLRoPtnx/BubQ6hQ8BgykqJ6fDJ8pxQBA2ABcqYgCS4wNPbMsdvPZ/v7K9RmAM7Jep0
-         sgBWYPgabXKviv5ReFFaS23XrvkRKkooMiALZY9PZ39Lm3smSxPsJkv/QUtrSrBwbVsI
-         l2EXoq0nS9znHTgMTObekMPXWuIzYDDw4LomuI48r7PerNxsEWgXD2x1yANC0zWv+Eu6
-         fffg==
+        bh=QIBxaHWarN7o+HmBexnudXdpGfzk7rHChsQ05quL728=;
+        b=TlZH3qPCZFPfQjhote24ik2btsOTl1P2vZHmsdz/bUbuZr4SpHmsoilPI5fedhJf5Y
+         uv59eAmy7SWE8hC6LMuXqgUHkdl22gS9y8vxZO1idamG36MgFr0u/YFz6bY5P0SwMDrl
+         8B0Td7aV1JzMlrTV/dYjHdixY83gXhzhsLPBJqbDan4H/EZmhN2aXikd+X7avOhWesRt
+         MAMPzsOo6wDjxm8HrnmrgkrpccD8H9MAMhySKfQ8JBjsPElEPVXAS/XxPIag2+IgO5zs
+         oLIEO5r3k/jKoJVC+o1BAKHuLMoK98hrje5mV8izzzvylve2z0cu0vkIM7IQB8pTI/2m
+         87yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707954629; x=1708559429;
+        d=1e100.net; s=20230601; t=1707955056; x=1708559856;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0hLkk26SkKRw8FMas9+HqAOG+Ra2K1devtEkfmg/Abk=;
-        b=Ak7xNz+R28rpbVQ5E4aNbfC1Cq3Ziia3exh7wmP/qUD5OQourp0BeoQu00s1KiDwOQ
-         IhL7QDHbf9Pdh1OUfwPAloi4aikrtyqCQPcoYNAiZLhH4Yvnb1Vp8/VWLHunuZd1jCph
-         +bXgqOMTLKfllHiSz3tdFXe74YncpFNNQi3S3UDso9m/k5WkGt36BWEp1KthFgSXvnWX
-         C3YormO1mulJlRENAz/4hA/1ZBLPfziDMzh8qGA9yqRtTqzge2eSkiXk0UhCfg2j9i0V
-         YeBSnuWZ58wro9EEV0vIoy4lcbS8Qp5irZpDszlk+GUVR4V5gZQuuOMY4Ua2QyRb9OAQ
-         3+iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdwvtjVku8wbEttao6PccpS91vUIc1Mti7KAG2KRSNgkyQoO26O6es5Z2nK0MovdKWfrPgfLfv+IJNqPyju6NbaS35agO+J9LgGddE8LEh7w==
-X-Gm-Message-State: AOJu0YxQ313Bm3wyFjUJQyqlAfeiJWxIHGQYzRym6P+HfSBE7jDMV8a+
-	xdc+JRKitemcndZMuJN6CNkm7qmqPpLnOfHHFyCAewW0fIjTiJSylui1gCW9dzLc8RahJRb3ahs
-	Kr6nonGlIGMEm68ObdhCgQKdSKf0JxRkBfwiK
-X-Google-Smtp-Source: AGHT+IEaYtCtfRfALjXKLxTfu9ipI8NqSOh4MowUemoPdlZzds56tsK1ladV4c8fkyXzoH6LsEAAEJK8gsFai2/JoIs=
-X-Received: by 2002:a17:902:f392:b0:1db:5d07:f8de with SMTP id
- f18-20020a170902f39200b001db5d07f8demr285617ple.5.1707954628911; Wed, 14 Feb
- 2024 15:50:28 -0800 (PST)
+        bh=QIBxaHWarN7o+HmBexnudXdpGfzk7rHChsQ05quL728=;
+        b=cNuChyP7O8KcrueKMvf8Tgk6kfQCQVcGaA9A/0EUlaBws5E/fhwZ6d8Fx/NdNGJkmn
+         de6nptGeTmY5uC4zNDUp9ZZKrL8cJ6cVrejMDkPx/risNlMlPudxCf0KMGE/E+EK6DTT
+         TJ0a4qrWqZgL81JNbThk3qZRxOFa1NaxRayRnje+OYjURuku/ItPbGR1APRItqJlsM/d
+         XHmIkJcbfT5XYVxlSJvfMliEAW1vkAHz9I9VwOSvneFZabbFyu9tjPXuOCOzbr95S2cc
+         IYbqQLkUIu+iB4VjsHHCYHwHCDW2SUmSQEkCp43XApPAQC4wdthv8YiyqouXrKsUG2RI
+         +Xmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgYh3X5QhhK39BuZSVXvzsxMLip1qhT4z+qgayEoJX+3aJ3SwPmhe4qLPFYCEj2IRPTCp+ZLkOz2hlVR9BGCaaO/8WUdtOoo28GGIY2x5DQg==
+X-Gm-Message-State: AOJu0YwpSyjsMd7Zrla7RYqIC8T4hPDv9iewVoeZz0gGRc5CAdQRXBBG
+	OnSiRhq8bZ8WfqAVtlQQ50bdZlw0Amj0cLlTunxrRRRQN380ZVlDfaK/H9wrHk2Hl9DHEfRlaTy
+	uKEC89u1q2FB/draNrbGHLxH8kBxqR7HbcP/C
+X-Google-Smtp-Source: AGHT+IFK6j6KIJNThyA/TwBKcdh2EobBpSmFy7M1sgQSgIfBkmDgs8oqmgVsKTfsyfH78edSFJfjw+Vk/88oD9Thn4g=
+X-Received: by 2002:a17:902:c385:b0:1db:7284:a766 with SMTP id
+ g5-20020a170902c38500b001db7284a766mr141128plg.0.1707955055615; Wed, 14 Feb
+ 2024 15:57:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213075256.1983638-1-namhyung@kernel.org> <20240213075256.1983638-2-namhyung@kernel.org>
-In-Reply-To: <20240213075256.1983638-2-namhyung@kernel.org>
+References: <20240213075256.1983638-1-namhyung@kernel.org> <20240213075256.1983638-3-namhyung@kernel.org>
+In-Reply-To: <20240213075256.1983638-3-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 14 Feb 2024 15:50:17 -0800
-Message-ID: <CAP-5=fVXgKc0r+fup0+2-JOAtJERAsPq61MZh_f7HYTk2XqObg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] libperf evlist: Update group info in perf_evlist__remove()
+Date: Wed, 14 Feb 2024 15:57:24 -0800
+Message-ID: <CAP-5=fWnVFabJ8MqsnAQAC5Bbk9AQmcnTCWJNrd3RGk8Ucoe-w@mail.gmail.com>
+Subject: Re: [PATCH 2/4] perf hist: Simplify hist printing logic for group events
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -70,57 +70,141 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2024 at 11:52=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+On Mon, Feb 12, 2024 at 11:53=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> When an event in a group is removed, it should update the group status
-> including the pointer to leader and number of member events.
+> It can uses an array to save the period (or percent) values for member
+> events and print them together in a loop.  This simplify the logic to
+> handle missing samples in members with zero values.
+>
+> No functional change intended.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/ui/hist.c | 55 +++++++++++++++++---------------------------
+>  1 file changed, 21 insertions(+), 34 deletions(-)
+>
+> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> index 2bf959d08354..5f4c110d840f 100644
+> --- a/tools/perf/ui/hist.c
+> +++ b/tools/perf/ui/hist.c
+> @@ -33,6 +33,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist=
+_entry *he,
+>         char *buf =3D hpp->buf;
+>         size_t size =3D hpp->size;
+>
+> +       /* print stand-alone or group leader events separately */
+>         if (fmt_percent) {
+>                 double percent =3D 0.0;
+>                 u64 total =3D hists__total_period(hists);
+> @@ -45,12 +46,19 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hi=
+st_entry *he,
+>                 ret =3D hpp__call_print_fn(hpp, print_fn, fmt, len, get_f=
+ield(he));
+>
+>         if (evsel__is_group_event(evsel)) {
+> -               int prev_idx, idx_delta;
+> +               int idx;
+>                 struct hist_entry *pair;
+>                 int nr_members =3D evsel->core.nr_members;
+> +               union {
+> +                       u64 period;
+> +                       double percent;
+> +               } *val;
+>
+> -               prev_idx =3D evsel__group_idx(evsel);
+> +               val =3D calloc(nr_members, sizeof(*val));
+> +               if (val =3D=3D NULL)
+> +                       return 0;
 
-Should we worry about evlist's all_cpus that could also be stale now?
+Looks good, but should this return value be negative to indicate an
+error? Snprintf gives a negative result on error, its result is
+sometimes returned from hpp__fmt_acc, as is this result.
 
 Thanks,
 Ian
 
-> ---
->  tools/lib/perf/evlist.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
 >
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 058e3ff10f9b..befdb062fa1d 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -102,8 +102,29 @@ void perf_evlist__add(struct perf_evlist *evlist,
->  void perf_evlist__remove(struct perf_evlist *evlist,
->                          struct perf_evsel *evsel)
->  {
-> +       struct perf_evsel *leader =3D evsel->leader;
-> +
->         list_del_init(&evsel->node);
->         evlist->nr_entries -=3D 1;
-> +
-> +       /* return stand-alone event */
-> +       if (leader =3D=3D evsel && leader->nr_members < 2)
-> +               return;
-> +
-> +       if (leader =3D=3D evsel) {
-> +               struct perf_evsel *member;
-> +
-> +               /* select the next event as a new leader */
-> +               leader =3D member =3D perf_evlist__next(evlist, evsel);
-> +
-> +               /* update members to see the new leader */
-> +               while (member && member->leader =3D=3D evsel) {
-> +                       member->leader =3D leader;
-> +                       member =3D perf_evlist__next(evlist, member);
-> +               }
-> +       }
-> +
-> +       leader->nr_members =3D evsel->leader->nr_members - 1;
->  }
+> +               /* collect values in the group members */
+>                 list_for_each_entry(pair, &he->pairs.head, pairs.node) {
+>                         u64 period =3D get_field(pair);
+>                         u64 total =3D hists__total_period(pair->hists);
+> @@ -59,47 +67,26 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hi=
+st_entry *he,
+>                                 continue;
 >
->  struct perf_evlist *perf_evlist__new(void)
+>                         evsel =3D hists_to_evsel(pair->hists);
+> -                       idx_delta =3D evsel__group_idx(evsel) - prev_idx =
+- 1;
+> -
+> -                       while (idx_delta--) {
+> -                               /*
+> -                                * zero-fill group members in the middle =
+which
+> -                                * have no sample
+> -                                */
+> -                               if (fmt_percent) {
+> -                                       ret +=3D hpp__call_print_fn(hpp, =
+print_fn,
+> -                                                                 fmt, le=
+n, 0.0);
+> -                               } else {
+> -                                       ret +=3D hpp__call_print_fn(hpp, =
+print_fn,
+> -                                                                 fmt, le=
+n, 0ULL);
+> -                               }
+> -                       }
+> -
+> -                       if (fmt_percent) {
+> -                               ret +=3D hpp__call_print_fn(hpp, print_fn=
+, fmt, len,
+> -                                                         100.0 * period =
+/ total);
+> -                       } else {
+> -                               ret +=3D hpp__call_print_fn(hpp, print_fn=
+, fmt,
+> -                                                         len, period);
+> -                       }
+> +                       idx =3D evsel__group_idx(evsel);
+>
+> -                       prev_idx =3D evsel__group_idx(evsel);
+> +                       if (fmt_percent)
+> +                               val[idx].percent =3D 100.0 * period / tot=
+al;
+> +                       else
+> +                               val[idx].period =3D period;
+>                 }
+>
+> -               idx_delta =3D nr_members - prev_idx - 1;
+> -
+> -               while (idx_delta--) {
+> -                       /*
+> -                        * zero-fill group members at last which have no =
+sample
+> -                        */
+> +               /* idx starts from 1 to skip the leader event */
+> +               for (idx =3D 1; idx < nr_members; idx++) {
+>                         if (fmt_percent) {
+>                                 ret +=3D hpp__call_print_fn(hpp, print_fn=
+,
+> -                                                         fmt, len, 0.0);
+> +                                                         fmt, len, val[i=
+dx].percent);
+>                         } else {
+>                                 ret +=3D hpp__call_print_fn(hpp, print_fn=
+,
+> -                                                         fmt, len, 0ULL)=
+;
+> +                                                         fmt, len, val[i=
+dx].period);
+>                         }
+>                 }
+> +
+> +               free(val);
+>         }
+>
+>         /*
 > --
 > 2.43.0.687.g38aa6559b0-goog
 >
