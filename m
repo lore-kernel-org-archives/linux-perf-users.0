@@ -1,30 +1,32 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BB818EA2
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 11:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37601B26E
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 11:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707910815; cv=none; b=WVl/VCheB8Sj4XvLiFOI1KvOr3dqk0FDWpM/XATgPgylSu5zJMr2K9p9NKtlBCP9a0sZGUEld+Bm35f6lVjYSmuxaV86j3KapYKcBv9Wjr0VKdqplURNM4fzYiOEJIIb2FoLOSPV2QHRzrxdNzkWgoV/U8xDlJCkGYsUER4/DJg=
+	t=1707910822; cv=none; b=tDNcxvp5VTsVvjkHryWMmBp/A8/5zbTikHnccNcuYOUSWrkZOoqMdXN34hpHEYHZE6mHA5NwPCGjcvEEI442YCNgo/OPdqTxiqmQFc62qwK1JwcnAcgPQ0UD7RTVs6CCdwcko4/oW1qn9+uFxM37RDB/IvmRAXQEtiL8DB/UuDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707910815; c=relaxed/simple;
-	bh=WNSlR33tBViXu08xbrYk0ySUbQI6bmCyn/fNCHmqg6U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ObmKbyJuhOCBX+ME/aj7TIFfcMsDVFTr//tGMwzbOgoVP1d3q46S4vEWSHYNRzIv1oWMv3EiOQMBNGgrlWVGtPTFoyXr6+mjeIMw3WkLC+PJ5xSBlDA7B7VvQaA4tZgApej4usvlgIKgrcrKAzboFYCrlUGqTGgVipWP1Aecbng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=i6yVSl6u; arc=none smtp.client-ip=91.218.175.189
+	s=arc-20240116; t=1707910822; c=relaxed/simple;
+	bh=x0tKh0h9jiEc+KxcZFZhTJt93jwtCYA79w+Ls4KWcgs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Lt8u93m49Hk9f3ey3DpiSpr3Z462WG5TeqKiq1sekKHFUFM1JpiriSg3ezkspIc0fAH0POSUuffCyDVuTNtk5ZCzXNoWNYkCGVnJkqkF2ITxXDNk/vOTK8H5TX7Soik4CVazAToAZscg6JlD1F/yCOmfc1PYNLMqc3HKZtEDobM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qoitnz4U; arc=none smtp.client-ip=91.218.175.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="i6yVSl6u"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qoitnz4U"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707910810;
+	t=1707910818;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uT81D9JadSG4shnyPAzeCNq5QuDdA42vAVAwALPxupk=;
-	b=i6yVSl6uTdkrx6HNLprqf5oHzRLgtC5JZQkJuQR6agOvHCg/AMST2eLGx1vFU3A00TNMDc
-	W6HIk/+HvpVx4AhZasgIvsCQXJOr/PttA4KuQJETrVo5d3VvyVx4r36xtpuK4BnKIJ1efl
-	CE0D7myb/TkQwGbDq2rSHjzxZkTlhhI=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VD63rmegeHIhLLGV64EOuqcCVX11XoTApOW/sI3SuGY=;
+	b=Qoitnz4UP5hNcUavGMoMUemm8tfGEtUwTIwDldz/MawdEPqsfElc6milVX9Vr4uJ14t5tu
+	jKyQlLzs5K/6MKFBpoQ4t/hExWMfhd73fjpBMPN5++7KvNey8dGfCiyo1Tt4y/Lt082eIj
+	7LG0CurF9nAeOF+L0NJyiPfBKt9jvCQ=
 From: Leo Yan <leo.yan@linux.dev>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -48,9 +50,11 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-csky@vger.kernel.org,
 	linux-riscv@lists.infradead.org
 Cc: Leo Yan <leo.yan@linux.dev>
-Subject: [PATCH v1 0/4] perf parse-regs: Cleanup config and building
-Date: Wed, 14 Feb 2024 19:39:43 +0800
-Message-Id: <20240214113947.240957-1-leo.yan@linux.dev>
+Subject: [PATCH v1 1/4] perf build: Remove unused CONFIG_PERF_REGS
+Date: Wed, 14 Feb 2024 19:39:44 +0800
+Message-Id: <20240214113947.240957-2-leo.yan@linux.dev>
+In-Reply-To: <20240214113947.240957-1-leo.yan@linux.dev>
+References: <20240214113947.240957-1-leo.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,72 +64,28 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Currently, the perf building enables register parsing based on the
-target architecture has supported register feature.
+CONFIG_PERF_REGS is not used, remove it.
 
-Furthermore, the perf building system needs to maintain a variable
-'NO_PERF_REGS' and defines macro 'HAVE_PERF_REGS_SUPPORT' for statically
-compiling the tool.
+Signed-off-by: Leo Yan <leo.yan@linux.dev>
+---
+ tools/perf/Makefile.config | 4 ----
+ 1 file changed, 4 deletions(-)
 
-As a result, the perf has no flexibilty for parsing register if an
-architecture doesn't support it. And the source files use the macro
-'HAVE_PERF_REGS_SUPPORT' to switch on and off the register parsing
-related code, which is not a good practice.
-
-This series is to remove the static building for register parsing. In
-theory, we should can dynamically detect if an arch has support this
-feature and functions can return errors when the feature is not
-supported.
-
-The first patch is to remove unused build configuration
-CONFIG_PERF_REGS.
-
-The second patch is to build perf register functions, without using the
-macro 'HAVE_PERF_REGS_SUPPORT' to statically turn on or off code.
-
-The third patch is to introduce a weak function arch__sample_reg_masks(),
-this function can allow the target arch to return its sample register
-list.  With this change, we can totally remove the macro
-'HAVE_PERF_REGS_SUPPORT' in the source file.
-
-The forth patch is to clean up the Makefile for removing relevant
-configuration and macro definition, as they are not useful anymore.
-
-I tested this patch set on Arm64 and x86 for building and did a cross
-register parsing ('perf record' on Arm64 and 'perf report' on x86).
-
-
-Leo Yan (4):
-  perf build: Remove unused CONFIG_PERF_REGS
-  perf parse-regs: Always build perf register functions
-  perf parse-regs: Introduce a weak function arch__sample_reg_masks()
-  perf build: Cleanup perf register configuration
-
- tools/perf/Makefile.config                    | 25 --------------
- tools/perf/arch/arm/util/perf_regs.c          |  7 +++-
- tools/perf/arch/arm64/util/machine.c          |  2 ++
- tools/perf/arch/arm64/util/perf_regs.c        |  7 +++-
- tools/perf/arch/csky/util/perf_regs.c         |  7 +++-
- tools/perf/arch/loongarch/util/perf_regs.c    |  7 +++-
- tools/perf/arch/mips/util/perf_regs.c         |  7 +++-
- tools/perf/arch/powerpc/util/perf_regs.c      |  7 +++-
- tools/perf/arch/riscv/util/perf_regs.c        |  7 +++-
- tools/perf/arch/s390/util/perf_regs.c         |  7 +++-
- tools/perf/arch/x86/util/perf_regs.c          |  7 +++-
- tools/perf/util/parse-regs-options.c          |  8 ++---
- .../util/perf-regs-arch/perf_regs_aarch64.c   |  4 ---
- .../perf/util/perf-regs-arch/perf_regs_arm.c  |  4 ---
- .../perf/util/perf-regs-arch/perf_regs_csky.c |  4 ---
- .../util/perf-regs-arch/perf_regs_loongarch.c |  4 ---
- .../perf/util/perf-regs-arch/perf_regs_mips.c |  4 ---
- .../util/perf-regs-arch/perf_regs_powerpc.c   |  4 ---
- .../util/perf-regs-arch/perf_regs_riscv.c     |  4 ---
- .../perf/util/perf-regs-arch/perf_regs_s390.c |  4 ---
- .../perf/util/perf-regs-arch/perf_regs_x86.c  |  4 ---
- tools/perf/util/perf_regs.c                   | 11 ++++--
- tools/perf/util/perf_regs.h                   | 34 +------------------
- 23 files changed, 67 insertions(+), 112 deletions(-)
-
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index aa55850fbc21..8b740c668ab7 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -105,10 +105,6 @@ ifeq ($(ARCH),mips)
+   LIBUNWIND_LIBS = -lunwind -lunwind-mips
+ endif
+ 
+-ifeq ($(NO_PERF_REGS),0)
+-  $(call detected,CONFIG_PERF_REGS)
+-endif
+-
+ # So far there's only x86 and arm libdw unwind support merged in perf.
+ # Disable it on all other architectures in case libdw unwind
+ # support is detected in system. Add supported architectures
 -- 
 2.34.1
 
