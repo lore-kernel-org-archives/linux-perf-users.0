@@ -1,154 +1,151 @@
 Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF371864C
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 22:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B3213F003
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 23:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707950592; cv=none; b=NQ4umrf2g9FAHy8fNa3h5tP5oqPC2Kg0UwKEKUBIfLrs8BpZi/TG5w7Lxhdgu9EADevwGLUTrWvs0jkXVe23JLL/ZErz3uTDpVwCOpboQHRZO0S5CneXfXv8rzfuNdBpV3jX5xlg0UZH7Q7h1L2Uq5oosduQbwxjpRaHAfpmT+k=
+	t=1707954344; cv=none; b=RYpAj2mvkPH+YjczTzePfrJlmNMyQnTGR33xwBdxq9Og1x22M1yek6yyCRsIj3QdiDZH2rchDBxEu6oHtQfAhRVDAmV+B4H61k90AnuBJ61e1SMJb41rxEsiutr6hSKZWVX76MtskN5+zfh9vhSOK6w3RQ0NDN4BuycJ+hzy66k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707950592; c=relaxed/simple;
-	bh=iqpK3bPt1feEPfmct6sF2oKoz18fS9zOtT8gSIo6F24=;
+	s=arc-20240116; t=1707954344; c=relaxed/simple;
+	bh=b10hcijK0qE3BkNp8u5VgKtBYxQGdaTD5bm686/cKgI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=elzpJbrFAeGZgZbb9QDm9fCCWVUGCrK7O2z2iJ6ZUZgTyZ8AYooK6l+xQOZd7iESYqa1X7gbRxZENzvWeHSVvU/gm1bySgPcnWoA+WEo+NlCO/6gr7dPOxKIcah1YLnWUZg1RKtE8zeqUBN/+TIfJtPgNDr6yuNSmydvVAcx7R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QJQItLxn; arc=none smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=fT2QdwWqMsFdaJCHMmae5wT29NMGmNXkznKC18AD1TXCJhYt5wBavc+3r8jKy+BOgEjMIOsVh8gdx/wD5oDfeDt25lzBLuK9JyU9p1xYsnC+RWzW62hJczS5wylhLAf3sw/Doxlp1sIBQHr5tc3AVUBACVsP8kmxBgk4HnHlMuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fLCjfMJx; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QJQItLxn"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d5ce88b51cso33685ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 14:43:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fLCjfMJx"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d5ce88b51cso47425ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Feb 2024 15:45:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707950590; x=1708555390; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707954342; x=1708559142; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NNsPK+5tLWvdv+gYlhpHEpHeZeAqpOS89g5+h/Xob8s=;
-        b=QJQItLxnKo1IMO3sGw8Hz/U2admm+PaFEmnUJBUPaqLUOEs8X2kaBNQC/n+vJGVKmm
-         hC/WVoRZaBxbaV0tpE4vefpjbG034G2rvLzn3JVIdfCdAUV3yqx/3kFWKvkeYsYJn6gJ
-         YSuzE5HYAnnjViLgiM7bXxHsuOVQHDfom7XUirq2ImEV7oRe4xNA3BjO8q8YvjkWhiOq
-         0A0y8JVhTs5mHIouXhUV/pDhW+dc/JQ99GXERsi9ITzSLTOo9JzhC++8UzLKAcI6J0bP
-         E0llw0oBJexNEG+Dhkzm8AMoDD+ogKMaDNqGQYIqox6dMWPHi5hlUyEH63iXAHGCR+0G
-         YJwA==
+        bh=D5gly/VFOoLySfRJOHKm6JFRHLJyyId6LtcsyMKAaXs=;
+        b=fLCjfMJx26kvH/a7e+AQNb5a7oa5KYsOJ06rk4iKwdq05QEjTevilVAWQsDaVv82af
+         /iD5LFFinVPpHlbv4P54VM0K0A898IZX0qIXDe7gs3xJXkM4ySGXwKjFhMMUY/TH1B6H
+         UA7sCPXT6dLwpao+CQjw5Eoow+1wwZts1pxEYmM87aZ4cFR2zQ+bPxIL44lPcr8aLBl1
+         SacTwpZVD3/PhYCUP0uV+jDuNSvp8hqelSd/cKRHrLtoN1xVgLanTgGSGPER0DEi6kB0
+         xGRf+re8G995TwBB6ZHgbnma7lSln/KmrFDgX+89m78eYwoQRQr3pdi+JMoDw7EGFvEe
+         BQgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707950590; x=1708555390;
+        d=1e100.net; s=20230601; t=1707954342; x=1708559142;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NNsPK+5tLWvdv+gYlhpHEpHeZeAqpOS89g5+h/Xob8s=;
-        b=OsRxkQJyQiudxqLkXuqhP7Y4nazOL1DZOlxaZF0g0fr2YsJyjpOMeig4arFf6TN/+z
-         Ejvf4oucGAsHA6/h0Q4C2zttPEjLYcYegQEquTiR27xxZ/Yz+EcO2v2Y1XNwkX5jsylJ
-         56IpFNOI4Fia+oW+d82aSg3V5kZ6GQsdwDJ3SzLO/DH5v/L3TAA0Mt28ti9yNe+ZwCWB
-         t2UQsa2y+JJ1KYY27sWf7gq7hsfRPEYsFymbdjXev82DgB8pIqT0ait0u/8IGGNmXgmw
-         twfS26Eaxj7SrtGpXr+SytgqaqZyJ/6THCx/wjXqtUYrTYDI4MYA3JGz2bWDrP9tAOt+
-         Cyqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJeyFbpS+I5R3WnWajR57pjhf2Rk04VXvhw5j3wxQUz9CqMb3pWgBFxn6TRjRvyDz48PwXfmxf7f7Ze3/dw8Yl2/s33nJXTh7/7UM+Nz0gxg==
-X-Gm-Message-State: AOJu0Yx1DS3r7C/m9qz4MAoFE7IXA6gxk5ylMR59oHcUFwuypt0oyd2g
-	VfkRFhxX0MJHAYL9KSPIrNhnNv5sITgoopnN3DmJxxS8lR3Iwl2+5phrpXjLinz8rpjM2ZesAn2
-	1+5zZ1Hn/Zy9zunpFR6c5dXFMXQApLckk6op2
-X-Google-Smtp-Source: AGHT+IEWmx9o20zsYkRXJyB8zKsCSkKFNQNuZGphQlbFdMF3zSOKzL3jAFucrutS57uN43pDOJxLmDOolU9Ayg9Z7HM=
-X-Received: by 2002:a17:903:42cd:b0:1d9:aa55:e4bd with SMTP id
- jy13-20020a17090342cd00b001d9aa55e4bdmr401175plb.6.1707950589903; Wed, 14 Feb
- 2024 14:43:09 -0800 (PST)
+        bh=D5gly/VFOoLySfRJOHKm6JFRHLJyyId6LtcsyMKAaXs=;
+        b=M3/hw+AE/Wux8vJX6N3WlaBDR2Ys/+eMUMKIterZNZn5UC40vvQwBxkZfzwghrvO82
+         zL28Ryb8efSptFcU+LdWeQSRk/0hHjj1s3amYE1MGYLbw80071ZNolIVRM+vLgT5Y5sh
+         zQY9Zo2Z+XFys2JmCc4Z9B1zuBjTgbMAtaaULqEfwzN2dm8th8E8pR3439espykLBKrC
+         PBVor+HSm6wEP9B77JMyvzLSghp+hCJKIaAMqVXu9AjL8NwjBYXxjbt5hACVsXfo2ren
+         kPndeC0dvIYZ85oz7vIyMSpqI3tk+Y0XETY4SUek6Qo37yelN2c9jVCNr0jd10M1G0Jw
+         U58g==
+X-Forwarded-Encrypted: i=1; AJvYcCXrT3h81+LV7WS588FstRatTczGA0nRvMo7dktcedSgRZGm4RWNA1gLqdEeerLgeOt5qkTG/I/DFwGLGYiLdZmSStNDk0uSi5xf6lAbxL82UQ==
+X-Gm-Message-State: AOJu0Yw1orB7lXIbK7EtElr/5v5+YvkpGBvypHjukstgqFf9N8irdyfC
+	CWz8nwhKPvfMGhQwt63lqAMwRV1hbqPLzyQ8qCrufiy65FPtvb7P1yU9psIPectElB2WiYvyMRl
+	w4qzY9eH4Gp5oyKZCBfQlUUkSeM4e79r4cmVP
+X-Google-Smtp-Source: AGHT+IHVwUB8LIh0FA6G+cYFDq6/LDCPW9SbA6YjALRn94EPRW5oD0V+gydguAGzjtnOf5jkpbatb3l7pLynjaUHRGY=
+X-Received: by 2002:a17:902:d101:b0:1d8:b92a:336 with SMTP id
+ w1-20020a170902d10100b001d8b92a0336mr371114plw.7.1707954341932; Wed, 14 Feb
+ 2024 15:45:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214113947.240957-1-leo.yan@linux.dev>
-In-Reply-To: <20240214113947.240957-1-leo.yan@linux.dev>
+References: <20240214155740.3256216-1-kan.liang@linux.intel.com>
+In-Reply-To: <20240214155740.3256216-1-kan.liang@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 14 Feb 2024 14:42:55 -0800
-Message-ID: <CAP-5=fXqdFrTDY2a2dXK1ehP2AbwPfPF8vYWXgeSMcKh4mS+ow@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] perf parse-regs: Cleanup config and building
-To: Leo Yan <leo.yan@linux.dev>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ming Wang <wangming01@loongson.cn>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
+Date: Wed, 14 Feb 2024 15:45:27 -0800
+Message-ID: <CAP-5=fVeQdNYPwxc02KVCM0uAhw0u5im99gZKvAo4NTvA+nUuw@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/intel/uncore: Fix the bits of the CHA extended
+ umask for SPR
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@kernel.org, acme@kernel.org, 
+	namhyung@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mpetlan@redhat.com, eranian@google.com, 
+	ak@linux.intel.com, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 3:40=E2=80=AFAM Leo Yan <leo.yan@linux.dev> wrote:
+On Wed, Feb 14, 2024 at 7:58=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
 >
-> Currently, the perf building enables register parsing based on the
-> target architecture has supported register feature.
+> From: Kan Liang <kan.liang@linux.intel.com>
 >
-> Furthermore, the perf building system needs to maintain a variable
-> 'NO_PERF_REGS' and defines macro 'HAVE_PERF_REGS_SUPPORT' for statically
-> compiling the tool.
+> The perf stat errors out with UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL
+> event.
 >
-> As a result, the perf has no flexibilty for parsing register if an
-> architecture doesn't support it. And the source files use the macro
-> 'HAVE_PERF_REGS_SUPPORT' to switch on and off the register parsing
-> related code, which is not a good practice.
+>  $perf stat -e uncore_cha_55/event=3D0x35,umask=3D0x10c0008101/ -a -- ls
+>     event syntax error: '..0x35,umask=3D0x10c0008101/'
+>                                       \___ Bad event or PMU
 >
-> This series is to remove the static building for register parsing. In
-> theory, we should can dynamically detect if an arch has support this
-> feature and functions can return errors when the feature is not
-> supported.
+> The definition of the CHA umask is config:8-15,32-55, which is 32bit.
+> However, the umask of the event is bigger than 32bit.
+> This is an error in the original uncore spec.
 >
-> The first patch is to remove unused build configuration
-> CONFIG_PERF_REGS.
+> Add a new umask_ext5 for the new CHA umask range.
 >
-> The second patch is to build perf register functions, without using the
-> macro 'HAVE_PERF_REGS_SUPPORT' to statically turn on or off code.
->
-> The third patch is to introduce a weak function arch__sample_reg_masks(),
-> this function can allow the target arch to return its sample register
-> list.  With this change, we can totally remove the macro
-> 'HAVE_PERF_REGS_SUPPORT' in the source file.
->
-> The forth patch is to clean up the Makefile for removing relevant
-> configuration and macro definition, as they are not useful anymore.
->
-> I tested this patch set on Arm64 and x86 for building and did a cross
-> register parsing ('perf record' on Arm64 and 'perf report' on x86).
->
->
-> Leo Yan (4):
->   perf build: Remove unused CONFIG_PERF_REGS
->   perf parse-regs: Always build perf register functions
->   perf parse-regs: Introduce a weak function arch__sample_reg_masks()
->   perf build: Cleanup perf register configuration
+> Fixes: 949b11381f81 ("perf/x86/intel/uncore: Add Sapphire Rapids server C=
+HA support")
+> Closes: https://lore.kernel.org/linux-perf-users/alpine.LRH.2.20.24013007=
+33310.11354@Diego/
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: stable@vger.kernel.org
 
-Thanks Leo, this is great cleanup! Series:
 Reviewed-by: Ian Rogers <irogers@google.com>
 
+Thanks,
 Ian
 
->  tools/perf/Makefile.config                    | 25 --------------
->  tools/perf/arch/arm/util/perf_regs.c          |  7 +++-
->  tools/perf/arch/arm64/util/machine.c          |  2 ++
->  tools/perf/arch/arm64/util/perf_regs.c        |  7 +++-
->  tools/perf/arch/csky/util/perf_regs.c         |  7 +++-
->  tools/perf/arch/loongarch/util/perf_regs.c    |  7 +++-
->  tools/perf/arch/mips/util/perf_regs.c         |  7 +++-
->  tools/perf/arch/powerpc/util/perf_regs.c      |  7 +++-
->  tools/perf/arch/riscv/util/perf_regs.c        |  7 +++-
->  tools/perf/arch/s390/util/perf_regs.c         |  7 +++-
->  tools/perf/arch/x86/util/perf_regs.c          |  7 +++-
->  tools/perf/util/parse-regs-options.c          |  8 ++---
->  .../util/perf-regs-arch/perf_regs_aarch64.c   |  4 ---
->  .../perf/util/perf-regs-arch/perf_regs_arm.c  |  4 ---
->  .../perf/util/perf-regs-arch/perf_regs_csky.c |  4 ---
->  .../util/perf-regs-arch/perf_regs_loongarch.c |  4 ---
->  .../perf/util/perf-regs-arch/perf_regs_mips.c |  4 ---
->  .../util/perf-regs-arch/perf_regs_powerpc.c   |  4 ---
->  .../util/perf-regs-arch/perf_regs_riscv.c     |  4 ---
->  .../perf/util/perf-regs-arch/perf_regs_s390.c |  4 ---
->  .../perf/util/perf-regs-arch/perf_regs_x86.c  |  4 ---
->  tools/perf/util/perf_regs.c                   | 11 ++++--
->  tools/perf/util/perf_regs.h                   | 34 +------------------
->  23 files changed, 67 insertions(+), 112 deletions(-)
+> ---
+>  arch/x86/events/intel/uncore_snbep.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 >
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel=
+/uncore_snbep.c
+> index a96496bef678..7924f315269a 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -461,6 +461,7 @@
+>  #define SPR_UBOX_DID                           0x3250
+>
+>  /* SPR CHA */
+> +#define SPR_CHA_EVENT_MASK_EXT                 0xffffffff
+>  #define SPR_CHA_PMON_CTL_TID_EN                        (1 << 16)
+>  #define SPR_CHA_PMON_EVENT_MASK                        (SNBEP_PMON_RAW_E=
+VENT_MASK | \
+>                                                  SPR_CHA_PMON_CTL_TID_EN)
+> @@ -477,6 +478,7 @@ DEFINE_UNCORE_FORMAT_ATTR(umask_ext, umask, "config:8=
+-15,32-43,45-55");
+>  DEFINE_UNCORE_FORMAT_ATTR(umask_ext2, umask, "config:8-15,32-57");
+>  DEFINE_UNCORE_FORMAT_ATTR(umask_ext3, umask, "config:8-15,32-39");
+>  DEFINE_UNCORE_FORMAT_ATTR(umask_ext4, umask, "config:8-15,32-55");
+> +DEFINE_UNCORE_FORMAT_ATTR(umask_ext5, umask, "config:8-15,32-63");
+>  DEFINE_UNCORE_FORMAT_ATTR(qor, qor, "config:16");
+>  DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
+>  DEFINE_UNCORE_FORMAT_ATTR(tid_en, tid_en, "config:19");
+> @@ -5957,7 +5959,7 @@ static struct intel_uncore_ops spr_uncore_chabox_op=
+s =3D {
+>
+>  static struct attribute *spr_uncore_cha_formats_attr[] =3D {
+>         &format_attr_event.attr,
+> -       &format_attr_umask_ext4.attr,
+> +       &format_attr_umask_ext5.attr,
+>         &format_attr_tid_en2.attr,
+>         &format_attr_edge.attr,
+>         &format_attr_inv.attr,
+> @@ -5993,7 +5995,7 @@ ATTRIBUTE_GROUPS(uncore_alias);
+>  static struct intel_uncore_type spr_uncore_chabox =3D {
+>         .name                   =3D "cha",
+>         .event_mask             =3D SPR_CHA_PMON_EVENT_MASK,
+> -       .event_mask_ext         =3D SPR_RAW_EVENT_MASK_EXT,
+> +       .event_mask_ext         =3D SPR_CHA_EVENT_MASK_EXT,
+>         .num_shared_regs        =3D 1,
+>         .constraints            =3D skx_uncore_chabox_constraints,
+>         .ops                    =3D &spr_uncore_chabox_ops,
 > --
-> 2.34.1
+> 2.35.1
 >
