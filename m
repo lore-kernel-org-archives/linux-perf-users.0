@@ -1,54 +1,54 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E9C6FD2;
-	Thu, 15 Feb 2024 05:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794F228E6;
+	Thu, 15 Feb 2024 05:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707974294; cv=none; b=Az6YA+8Dklu/4V0Q/QupoYGF3ZzEu2CZhUFE3N4oD5U5+WfvtBmUlzxOJmhlV6PrfDFnmIQpSWUqwHCexow7griLjVMdQv8RU4r3xzFzWC7BTyC1F6CngibHorNasrW1OQeXFZgR/ivtiDgmoaB44aIUe6wy2K2V110HpRxjeXo=
+	t=1707974815; cv=none; b=rVR1aebahD7A1B8M6RZ0pUomu6lp/GWyJ/XQJ3jph8LT/yHueAeuGKzpc4ditYirCczPDp6aT8j03oCAXk1H8otCM5aJz9jI2QacCAFRFXza/WUSOi7urATCI0/9HBDdvPXXO2fgkFWS4Jo9ihy1DRFjQ0Y9qclGnh2bBTpTNaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707974294; c=relaxed/simple;
-	bh=/WJh5kAIqWFyfeuvuTeGcPYOTrfUAW2OKzd99jofLAk=;
+	s=arc-20240116; t=1707974815; c=relaxed/simple;
+	bh=qudj50MsrXJBc2/l83E4vE1vsmzaPnBg5wtWaZSUQj0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=odMgeypkJbyc6o+onGt0J1SF5SX2BN6+aiQkw1ZahTNvEjO9DSRrETlemmUHRps5O8oB1Ho/lfTTEvVpF1JgqeKOu67LHDH54aQJ1ovhhdm2HF054XlKyFRzeqp4uqwneaXzMkxliEEQOp6FVrQ/8gVoPXCK1MPJX76XDFujYiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
+	 To:Cc:Content-Type; b=C4UIN2ioCLeUpoWI/+Ytsvy93r7Iwi4ed4VkCWMpWvqWi+akCRnX4ItZBFsZn1hATuwsW/ujSucjaZ+IXeb2wQ6qKPpWZjGzxBsMBmE7dUQltReyAO08plPqZLb8eqOd6AWw6enlM1Htr7cbdFI8zX/AS+/LkhfSiDSQpiV86ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-290da27f597so389363a91.2;
-        Wed, 14 Feb 2024 21:18:12 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e0a37751cbso487155b3a.2;
+        Wed, 14 Feb 2024 21:26:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707974292; x=1708579092;
+        d=1e100.net; s=20230601; t=1707974813; x=1708579613;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BgJC+lfotxXhHUTdhx2QibdOlvgYKRrR8Wj7ynaZvDc=;
-        b=h0hX3Pug27KtiDpCRr1Zi/R22x7ETdCzCt5woQaCSo+865oRf3HagHyYordl3ScSJJ
-         cfu4rhfswCLTl1zR/IGr+QvOrC5QV8+rWPfPUBUOeHj+hmWXzKZ4wiQYEsvKpedHoswo
-         4pzrDWXyzvJ1QVFZXkHih32/gmKZJ7RqXtP0tQuwL/Fy5+kewPuYgwpiFBW7x5dRS9ZJ
-         K6tWyJzFBF6RdEPt2CQ/65jHJ6Ni9czzONELJ4FB3DA+YOTi4W9XQz3REs6x52gFJfso
-         E9tNDK0J9ZGwgsFT2cdbC4n8Rvfij/T1gYlaFqJ/gi3KoUZ5TnNccOl094XFUnoY8JN+
-         O+oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0slmYUXBj2tmXqEJP2GM7MXx5XZvYcNfLghXrN+fiHtjS6cRQOXiGSiOWJd6H3oIfV5xESlUNtVsqnPOSGQ9d04slekEh8bkXV6dM0QdEWmGdlo+t8UFtG0lwqheZdDfJ9+6WSs5Agutd1YUX2Q==
-X-Gm-Message-State: AOJu0Ywy63+AY3Gbx6sOjjTD8ZuPdH2mxEiKJqsr9IBZ8VtySifEphE2
-	O23ubRghQ6q9q369+EctM0B2I4NxSEFeAOoKuWTsFYpW0mUbgIwjpfxH5T+lRi9sySr9jjOQi3r
-	qNg6X3w0euCAnCl2vS3actN7Mqqw=
-X-Google-Smtp-Source: AGHT+IEf/49e3VzCMhb4laTUvq8XxmlRwLmrj65hFoWNPA/PueTWJeeHsCGdyaRWkJ8zLOJxwTsMO0eb824GwCyggGg=
-X-Received: by 2002:a17:90a:ca85:b0:295:eaff:78f3 with SMTP id
- y5-20020a17090aca8500b00295eaff78f3mr759769pjt.8.1707974292001; Wed, 14 Feb
- 2024 21:18:12 -0800 (PST)
+        bh=wyxQNQK0uTNTZnSbnKT+Xd+wPCudPnqbKEQ4MhMWKww=;
+        b=MKvvTxz6I5o8Pp3hPlWDf5TTdcH96ErbNQHjC3xnHXQeqo2cFwrOUnL9Ia+ZKE8JAL
+         AkkReJMDlIPhXK0HTHx3w+koQwOlVZyzMb1nFwhKZlyPnm5PPqRHYXbpIClRVnM5YYXc
+         nBJFudn+Ay0sbTvnEbE5If9cXtG6DeeLxI//q5QjAQ/LT50l+VOsHPv5uDAj5hbwTN68
+         BU4iHlfew597Fv6Izs+u0t/WCfIpJaa+iIvh2ob9U2xSAIFNP1PziF6+wy5EJgQbEvpA
+         tz02ijqRf/ofmQGS126RwZ9JEkuPuSfiusYrdBcLTJ9jVGjElLGlAM1UoonhMRrlD6QK
+         xQHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLxaMRcHYrh2kCC6YvpUbdWNh/8VR/n8pc7pFQ3frVVIRAAKFlyTPcaApsiXCNgnuNRaWYXutUvqdUE5hV7U4/ZSelDwelocgpNW3StR7GAN6z/W1i58yWtwSUPgOCCKF03Oc6Dg6PJ+HVvYNirg==
+X-Gm-Message-State: AOJu0YwwhS1uxUi5d55xZXkBgVBMPKro+1Ee/v1B/4pnwJfMc0ltPm+K
+	SWarEI9GrWl147CrEgLtJAWii+F9jRHzGBaPmWILHBgjrqjCWOYuJE5zMf5ZvJM85LkK59bIOpN
+	Lz5vlOOKHAjLrp2WlIavIEdq6X2Q=
+X-Google-Smtp-Source: AGHT+IEKyBJy0sJXXBsHFFb1FNMTg2xrIDX2tzbjZziRV4o2wa90sAynADD13Lf1l/4XttxWvw/70AFodOP3rcjbs/s=
+X-Received: by 2002:a05:6a21:164e:b0:19e:b925:f191 with SMTP id
+ no14-20020a056a21164e00b0019eb925f191mr962704pzb.10.1707974813584; Wed, 14
+ Feb 2024 21:26:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213075256.1983638-1-namhyung@kernel.org> <20240213075256.1983638-3-namhyung@kernel.org>
- <CAP-5=fWnVFabJ8MqsnAQAC5Bbk9AQmcnTCWJNrd3RGk8Ucoe-w@mail.gmail.com>
-In-Reply-To: <CAP-5=fWnVFabJ8MqsnAQAC5Bbk9AQmcnTCWJNrd3RGk8Ucoe-w@mail.gmail.com>
+References: <20240213075256.1983638-1-namhyung@kernel.org> <20240213075256.1983638-4-namhyung@kernel.org>
+ <CAP-5=fVK3vvNoaGHPep8NCweGw9cztKBGQh5+0bVX91PhWp5Eg@mail.gmail.com>
+In-Reply-To: <CAP-5=fVK3vvNoaGHPep8NCweGw9cztKBGQh5+0bVX91PhWp5Eg@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 14 Feb 2024 21:18:00 -0800
-Message-ID: <CAM9d7cinDt0W73KJPaMBgWkG0oe3Kds7RC75pzqMJo+kfDkuTw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] perf hist: Simplify hist printing logic for group events
+Date: Wed, 14 Feb 2024 21:26:42 -0800
+Message-ID: <CAM9d7ci=A9rwZxEYYQRi-Cncs7NSpRG+TaH5knTdEPZYxJWp9Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf hist: Do not use event index in hpp__fmt()
 To: Ian Rogers <irogers@google.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -57,149 +57,138 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 3:57=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+On Wed, Feb 14, 2024 at 4:08=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
 te:
 >
-> On Mon, Feb 12, 2024 at 11:53=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+> On Mon, Feb 12, 2024 at 11:52=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
 g> wrote:
 > >
-> > It can uses an array to save the period (or percent) values for member
-> > events and print them together in a loop.  This simplify the logic to
-> > handle missing samples in members with zero values.
-> >
-> > No functional change intended.
+> > The __hpp__fmt() is to print period values in a hist entry.  It handles
+> > event groups using linked pair entries.  Until now, it used event index
+> > to print values of group members.  But we want to make it more robust
+> > and support groups even if some members in the group were removed.
+>
+> I'm unclear how it breaks currently. The evsel idx is set the evlist
+> nr_entries on creation and not updated by a remove. A remove may
+> change a groups leader, should the remove also make the next entry's
+> index idx that of the previous group leader?
+
+The evsel__group_idx() returns evsel->idx - leader->idx.
+If it has a group event {A, B, C} then the index would be 0, 1, 2.
+If it removes B, the group would be {A, C} with index 0 and 2.
+The nr_members is 2 now so it cannot use index 2 for C.
+
+Note that we cannot change the index of C because some information
+like annotation histogram relies on the index.
+
+>
+> > Let's use an index table from evsel to value array so that we can skip
+> > dummy events in the output later.
 > >
 > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >  tools/perf/ui/hist.c | 55 +++++++++++++++++---------------------------
-> >  1 file changed, 21 insertions(+), 34 deletions(-)
+> >  tools/perf/ui/hist.c | 34 ++++++++++++++++++++++++++++------
+> >  1 file changed, 28 insertions(+), 6 deletions(-)
 > >
 > > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-> > index 2bf959d08354..5f4c110d840f 100644
+> > index 5f4c110d840f..9c4c738edde1 100644
 > > --- a/tools/perf/ui/hist.c
 > > +++ b/tools/perf/ui/hist.c
-> > @@ -33,6 +33,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hi=
-st_entry *he,
-> >         char *buf =3D hpp->buf;
-> >         size_t size =3D hpp->size;
-> >
-> > +       /* print stand-alone or group leader events separately */
-> >         if (fmt_percent) {
-> >                 double percent =3D 0.0;
-> >                 u64 total =3D hists__total_period(hists);
-> > @@ -45,12 +46,19 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct =
+> > @@ -48,15 +48,30 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct =
 hist_entry *he,
-> >                 ret =3D hpp__call_print_fn(hpp, print_fn, fmt, len, get=
-_field(he));
-> >
 > >         if (evsel__is_group_event(evsel)) {
-> > -               int prev_idx, idx_delta;
-> > +               int idx;
+> >                 int idx;
 > >                 struct hist_entry *pair;
-> >                 int nr_members =3D evsel->core.nr_members;
-> > +               union {
-> > +                       u64 period;
-> > +                       double percent;
-> > +               } *val;
-> >
-> > -               prev_idx =3D evsel__group_idx(evsel);
-> > +               val =3D calloc(nr_members, sizeof(*val));
-> > +               if (val =3D=3D NULL)
-> > +                       return 0;
+> > -               int nr_members =3D evsel->core.nr_members;
+> > +               int nr_members =3D evsel->core.nr_members - 1;
 >
-> Looks good, but should this return value be negative to indicate an
-> error? Snprintf gives a negative result on error, its result is
-> sometimes returned from hpp__fmt_acc, as is this result.
+> A comment on the -1 would be useful.
 
-Sounds good, will change.
+The 'nr_members' includes the leader which is already printed.
+In this code, we want to print member events only, hence -1.
+I'll add it to the comment.
 
 Thanks,
 Namhyung
 
 >
+> Thanks,
+> Ian
+>
+>
+> >                 union {
+> >                         u64 period;
+> >                         double percent;
+> >                 } *val;
+> > +               struct evsel *member;
+> > +               struct evsel **idx_table;
 > >
-> > +               /* collect values in the group members */
+> >                 val =3D calloc(nr_members, sizeof(*val));
+> >                 if (val =3D=3D NULL)
+> > -                       return 0;
+> > +                       goto out;
+> > +
+> > +               idx_table =3D calloc(nr_members, sizeof(*idx_table));
+> > +               if (idx_table =3D=3D NULL)
+> > +                       goto out;
+> > +
+> > +               /*
+> > +                * Build an index table for each evsel to the val array=
+.
+> > +                * It cannot use evsel->core.idx because removed events=
+ might
+> > +                * create a hole so the index is not consecutive anymor=
+e.
+> > +                */
+> > +               idx =3D 0;
+> > +               for_each_group_member(member, evsel)
+> > +                       idx_table[idx++] =3D member;
+> >
+> >                 /* collect values in the group members */
 > >                 list_for_each_entry(pair, &he->pairs.head, pairs.node) =
 {
-> >                         u64 period =3D get_field(pair);
-> >                         u64 total =3D hists__total_period(pair->hists);
-> > @@ -59,47 +67,26 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct =
-hist_entry *he,
+> > @@ -66,8 +81,15 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct h=
+ist_entry *he,
+> >                         if (!total)
 > >                                 continue;
 > >
-> >                         evsel =3D hists_to_evsel(pair->hists);
-> > -                       idx_delta =3D evsel__group_idx(evsel) - prev_id=
-x - 1;
-> > -
-> > -                       while (idx_delta--) {
-> > -                               /*
-> > -                                * zero-fill group members in the middl=
-e which
-> > -                                * have no sample
-> > -                                */
-> > -                               if (fmt_percent) {
-> > -                                       ret +=3D hpp__call_print_fn(hpp=
-, print_fn,
-> > -                                                                 fmt, =
-len, 0.0);
-> > -                               } else {
-> > -                                       ret +=3D hpp__call_print_fn(hpp=
-, print_fn,
-> > -                                                                 fmt, =
-len, 0ULL);
-> > -                               }
-> > -                       }
-> > -
-> > -                       if (fmt_percent) {
-> > -                               ret +=3D hpp__call_print_fn(hpp, print_=
-fn, fmt, len,
-> > -                                                         100.0 * perio=
-d / total);
-> > -                       } else {
-> > -                               ret +=3D hpp__call_print_fn(hpp, print_=
-fn, fmt,
-> > -                                                         len, period);
-> > -                       }
-> > +                       idx =3D evsel__group_idx(evsel);
+> > -                       evsel =3D hists_to_evsel(pair->hists);
+> > -                       idx =3D evsel__group_idx(evsel);
+> > +                       member =3D hists_to_evsel(pair->hists);
+> > +                       for (idx =3D 0; idx < nr_members; idx++) {
+> > +                               if (idx_table[idx] =3D=3D member)
+> > +                                       break;
+> > +                       }
+> > +
+> > +                       /* this should not happen */
+> > +                       if (idx =3D=3D nr_members)
+> > +                               continue;
 > >
-> > -                       prev_idx =3D evsel__group_idx(evsel);
-> > +                       if (fmt_percent)
-> > +                               val[idx].percent =3D 100.0 * period / t=
+> >                         if (fmt_percent)
+> >                                 val[idx].percent =3D 100.0 * period / t=
 otal;
-> > +                       else
-> > +                               val[idx].period =3D period;
+> > @@ -75,8 +97,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hi=
+st_entry *he,
+> >                                 val[idx].period =3D period;
 > >                 }
 > >
-> > -               idx_delta =3D nr_members - prev_idx - 1;
-> > -
-> > -               while (idx_delta--) {
-> > -                       /*
-> > -                        * zero-fill group members at last which have n=
-o sample
-> > -                        */
-> > +               /* idx starts from 1 to skip the leader event */
-> > +               for (idx =3D 1; idx < nr_members; idx++) {
+> > -               /* idx starts from 1 to skip the leader event */
+> > -               for (idx =3D 1; idx < nr_members; idx++) {
+> > +               for (idx =3D 0; idx < nr_members; idx++) {
 > >                         if (fmt_percent) {
 > >                                 ret +=3D hpp__call_print_fn(hpp, print_=
 fn,
-> > -                                                         fmt, len, 0.0=
-);
-> > +                                                         fmt, len, val=
+> >                                                           fmt, len, val=
 [idx].percent);
-> >                         } else {
-> >                                 ret +=3D hpp__call_print_fn(hpp, print_=
-fn,
-> > -                                                         fmt, len, 0UL=
-L);
-> > +                                                         fmt, len, val=
-[idx].period);
-> >                         }
-> >                 }
-> > +
-> > +               free(val);
+> > @@ -89,6 +110,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct h=
+ist_entry *he,
+> >                 free(val);
 > >         }
 > >
+> > +out:
 > >         /*
+> >          * Restore original buf and size as it's where caller expects
+> >          * the result will be saved.
 > > --
 > > 2.43.0.687.g38aa6559b0-goog
 > >
