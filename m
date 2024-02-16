@@ -1,156 +1,180 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42571482F4
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 22:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C2F12CD81;
+	Fri, 16 Feb 2024 23:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708124041; cv=none; b=BxDAmDz5sQZfOCUj4xczOcU1+MV0MPZzJez0PROCUIF1yWS3X5u3UISMFs0lJHufRYtkwLsiaj6URWPUWtVmlUnPVsF0LLrx3eUtJEWpsaLABVa7ePEx396NaamyVSTm2x6L9zfJTRrXWE3Eq3IfQHez8qg8g24Qf/HLLkJkwtw=
+	t=1708127665; cv=none; b=Owm5eVAEq6DypLfapMjfFA8+hyR2r5iPW2u9cfrCIsaeBPXKgeIsePv/BmoW6rnkmxLnSuqxJuVhw+CC0CT5xn62/ckWJwED5kuavNRPX/ClbVIvAVsSbH3mr++xrYLFX1pX6Gh7sdW+bvRYERsf9AooaYlWbxmftopiPzyOEcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708124041; c=relaxed/simple;
-	bh=3q90EipWvvvaqgaI/6EsgApL9uUJGd4Z/CoVt0j/CKA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZyR4XRvbaMaW5kP0UzBUY8VY7z/TtXv8pQyWCF7EgeFEyfI8jMQ+ZmPBA8ZxfEf9EPBJpzlX2k6V0LBU+jhnq9uE8H4F4Kc3816TY00uhi5Q6yVOlDiUcNUus+dgaWv5Dafesfzf7J5jDqsnLMVVXt5NpST4NJpHDYGrlya41pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mN0jd+1b; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708127665; c=relaxed/simple;
+	bh=GGQvQ/+WBVLP8ch54nHxUo1wdtqt4gDJvXHKXUqMU3g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K0LbiAWc9cnLE6mH3WyaPRVQvOoT47K5MMayKJzzFl7TyJ3T3NU8drGiBgipjl6RBc2kl83ZEePLfS4Lo/2TfVQ4M53flapnQX70WlUupoxpuTX3dNgwgIuNJG+o8MrAclcJs06XqbtQ2wLEWdA4aFa9rm8Ez1eg08pd8U9ocIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIf4KlhW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mN0jd+1b"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d5ce88b51cso26615ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 14:53:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708124039; x=1708728839; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1kgkAZMrLqxerengCHS3AJVNNnKIBlki1eFX8UwCow0=;
-        b=mN0jd+1bqlXVWOMxV2oYaJFgarht5HM6CBpLxTrmBYuoevyiDrs7XuqNsy8C0KemiQ
-         adtEsjvLJ//YMMRr4wxZf4Y9h5eKcuzSNBtfS3hSvlZvjH7Oh94r9fhyT5Hyqhr5Ic0t
-         +013t1TXPWQjVHhHIuX+BeqJspdSoQtdlRhAmOdLs6SxeuyxhOKTwGqpCo8nXnhadi3a
-         xWdC4NT4nQSpbgu6/rCxyvg5DJ1+oV8D42YRqZL9PvfGWyeoqeWGK4gkFu4KuWHdbydf
-         HGOvH7P2GH5ihI1hHSZ0XsZGkmPdzNrolrrocas9DbCk068OOi3UoVtHvKi2Eag34ld1
-         nQxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708124039; x=1708728839;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1kgkAZMrLqxerengCHS3AJVNNnKIBlki1eFX8UwCow0=;
-        b=FpRJF0hSu5Q2Gku/7eM3pFGW99hjuHAsmlj/vC0fLgDcXlG+4IxN/9AfS9IL6zUroc
-         dyMVcw03PT7mVdE9iGI9Zu/KpSd5EXRpdec9SxlMhvQUaZKXow+D1d7Uh93Ex5CH4eC4
-         HpxWih1AidoGklclR5jwuabi3gwbQRP99zaN33lc6g9fUr4UI98WCafTOMx8ZEILrGvq
-         ScVNQ9JwhdDVtTnI1Wl0B0U/n5I77QKzYdu4QwvOd939l7KnYxrv4c1zpLH8cMklAFVK
-         27j5U2hGOj/vF0CtVrwSrX4DsBJ9qf4+qPISBkLjCkX8WEc+/LoYSBTmM3CmBOwA2m3t
-         4aZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhIetwDOjorZFNsRSreIi5KiJXQyegxIAtlp+Iczb+/bQvthOrHg8Wp51OO/olp6tXg+EMt8Rk2tQIVjTX4b+iJkpJFS/iecfuLZ8FDsLKew==
-X-Gm-Message-State: AOJu0YwwDjEeLmAIGqgvX8oPwxxVXSdjtEh3hHAqqJy9g17yXEYtgTLW
-	Bu6D84e/notHJHXnoiajOPynJ50FrZaeK/ywxNjS3dxFDPtjPaeGtsPh8kAfVsvhPWA2CDT7vk5
-	hH0znQ3ARcO4dvf7V5JCGhEK/8l6Dfhlmq6b/
-X-Google-Smtp-Source: AGHT+IGcRBWlQPnvx3Kjur7P29rXsE6x8UxTZTl+jz1tifGisUkPx/OhVZjPNCly11NUA3Yb4nsFQSg4KPNtSAplaQ8=
-X-Received: by 2002:a17:903:a47:b0:1da:21e3:b26f with SMTP id
- mn7-20020a1709030a4700b001da21e3b26fmr77326plb.25.1708124038849; Fri, 16 Feb
- 2024 14:53:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIf4KlhW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EBC5C433F1;
+	Fri, 16 Feb 2024 23:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708127665;
+	bh=GGQvQ/+WBVLP8ch54nHxUo1wdtqt4gDJvXHKXUqMU3g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VIf4KlhWG0HmbiDVvq7OxorlyHYzLCq64uHvqGDeiN4S4Emp2K4LOB4fLqNPz3Leu
+	 sjAPzNV4gr8JQq2HP03BHsnhXcZ5qvhcHbdktOsCeQAYljEeoszTXMzMIBMdvhnl1f
+	 /vhIFSw0ypHgDQXZyKbrhYu2Ig58ml+6hMU1ShH2QtUXdEjUjko2eJvSJvpTKwEsWP
+	 nsLBQDrUMDTuiiU7O8/rFOhLBq4Zivwd7K+WrVfJk8RSNcrxegfeflDEoVcIeuEFV+
+	 B8oSYGmUJevoi6MP3GiYx6EYMqLarnTgB8xhjAnt1zvib+tiO1uB7y+H78YrSL9Lpr
+	 QSGA4oc0lIRhA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Stephane Eranian <eranian@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-toolchains@vger.kernel.org,
+	linux-trace-devel@vger.kernel.org,
+	Ben Woodard <woodard@redhat.com>,
+	Joe Mario <jmario@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	David Blaikie <blaikie@google.com>,
+	Xu Liu <xliuprof@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Mark Wielaard <mark@klomp.org>,
+	Jason Merrill <jason@redhat.com>,
+	"Jose E . Marchesi" <jose.marchesi@oracle.com>,
+	William Huang <williamjhuang@google.com>
+Subject: [PATCHSET 00/14] perf tools: Remaining bits of data type profiling (v6)
+Date: Fri, 16 Feb 2024 15:54:09 -0800
+Message-ID: <20240216235423.2343167-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214045356.748330-1-irogers@google.com> <20240214045356.748330-7-irogers@google.com>
- <CAM9d7cg5O_1yKpk_X5vn380Cu28ObLjjjnOONHF75D07ZbkR3g@mail.gmail.com>
-In-Reply-To: <CAM9d7cg5O_1yKpk_X5vn380Cu28ObLjjjnOONHF75D07ZbkR3g@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 16 Feb 2024 14:53:44 -0800
-Message-ID: <CAP-5=fW14M5SM3=RidG-SNaugH7++o3Xq7gDS5S6RKnsf3wtwQ@mail.gmail.com>
-Subject: Re: [PATCH v4 6/8] perf tests: Use scandirat for shell script finding
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@arm.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 16, 2024 at 12:22=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Tue, Feb 13, 2024 at 8:54=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > Avoid filename appending buffers by using openat, faccessat and
-> > scandirat more widely. Turn the script's path back to a file name
-> > using readlink from /proc/<pid>/fd/<fd>.
-> >
-> > Read the script's description using api/io.h to avoid fdopen
-> > conversions. Whilst reading perform additional sanity checks on the
-> > script's contents.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/tests/builtin-test.c  |  21 ++---
-> >  tools/perf/tests/tests-scripts.c | 144 ++++++++++++++++++-------------
-> >  tools/perf/tests/tests-scripts.h |   1 -
-> >  3 files changed, 95 insertions(+), 71 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
--test.c
-> > index eff3c62e9b47..6d5001daaf63 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -300,22 +300,20 @@ static int test_and_print(struct test_suite *t, i=
-nt subtest)
-> >  }
-> >
-> >  struct shell_test {
-> > -       const char *dir;
-> >         const char *file;
-> >  };
-> >
-> >  static int shell_test__run(struct test_suite *test, int subdir __maybe=
-_unused)
-> >  {
-> >         int err;
-> > -       char script[PATH_MAX];
-> >         struct shell_test *st =3D test->priv;
-> > +       char *cmd;
-> >
-> > -       path__join(script, sizeof(script) - 3, st->dir, st->file);
-> > -
-> > -       if (verbose > 0)
-> > -               strncat(script, " -v", sizeof(script) - strlen(script) =
-- 1);
-> > -
-> > -       err =3D system(script);
-> > +       asprintf(&cmd, "%s%s", st->file, verbose ? " -v" : "");
-> > +       if (!cmd)
-> > +               return TEST_FAIL;
->
-> It fails to build.
->
-> tests/tests-scripts.c: In function =E2=80=98shell_test__run=E2=80=99:
-> tests/tests-scripts.c:130:9: error: ignoring return value of
-> =E2=80=98asprintf=E2=80=99 declared with attribute =E2=80=98warn_unused_r=
-esult=E2=80=99
-> [-Werror=3Dunused-result]
->   130 |         asprintf(&cmd, "%s%s", file, verbose ? " -v" : "");
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Hello,
 
-Thanks, 1 liner fix in v5 on its way. I'll add -Werror=3Dunused-result
-to my EXTRA_CFLAGS.
+This is the last part of the data type profiling series.
+So far we added the basic pointer variable support, and direct access to
+global/local variables.  Now it's time to add instruction tracking. :)
 
-Ian
+For the history and background, you can refer to the previous version
+[1] and the LWN article [2].
 
-> Thanks,
-> Namhyung
->
->
-> > +       err =3D system(cmd);
-> > +       free(cmd);
-> >         if (!err)
-> >                 return TEST_OK;
-> >
+ * Changes from v5
+  - rename register state from scratch to caller_saved
+  - change comment in map__objdump_2rip()
+
+
+Basically it needs to track variable (and its type) assignment to get
+a type of memory access at the sampled instruction.  Compilers don't
+generate DWARF information for every memory accesses so it cannot find
+all the necessary information from DWARF.  Therefore, it follows the
+path to the sample in the function, and update type information at
+each location when the instruction moves it.
+
+For the DWARF search, it has a list of scope entries (subroutines or
+blocks) that covers the sample already.  So it can use the scopes to
+find the shortest path to the sample instruction.
+
+Let's say we have this.  It got 5 scopes but couldn't find a matching
+variable for the sample.
+
+      +----------------  scope[0] subprogram
+      |
+      | +--------------  scope[1] lexical_block
+      | |
+      | | +------------  scope[2] inlined_subroutine
+      | | |
+      | | | +----------  scope[3] inlined_subroutine
+      | | | |
+      | | | | +--------  scope[4] lexical_block
+      | | | | |
+      | | | | |     ***  target instruction
+      ...
+
+Then it starts with the closest scope (at index 4), and find the
+shortest path from the start of the scope to the target instruction.
+Along the way, it updates type information in the scope and see if the
+location at the target instruction has the type.  If so, it can
+return with the type.
+
+Otherwise, it goes to the scope[3] and find the shortest path from the
+start of scope[3] to the start of scope[4].  And then it can combine
+the existing shortest path from the scope[4] to the target with the
+new path.  Now it can start from the scope[3] with new variables and
+types.  It can repeat this algorithm for the outer scopes.
+
+I did it this way because mostly it was able to find a type in the
+closest scope.  So it can avoid unnecessary work for outer scopes.
+
+And it added a basic per-cpu variable support for this CPU on x86_64
+which uses %gs segment register.  Also it can detect the stack-canary
+pattern which is added by compiler to detect stack overflow.
+
+The code is available at 'perf/data-profile-v6' branch in the tree
+below.  I've dropped the debug patch at the end in this series but you
+can find it in the git branch.
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+
+Cc: Ben Woodard <woodard@redhat.com>
+Cc: Joe Mario <jmario@redhat.com>
+CC: Kees Cook <keescook@chromium.org>
+Cc: David Blaikie <blaikie@google.com>
+Cc: Xu Liu <xliuprof@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Mark Wielaard <mark@klomp.org>
+Cc: Jason Merrill <jason@redhat.com>
+Cc: Jose E. Marchesi <jose.marchesi@oracle.com>
+Cc: William Huang <williamjhuang@google.com>
+
+
+[1] https://lore.kernel.org/linux-perf-users/20231110000012.3538610-1-namhyung@kernel.org/
+[2] https://lwn.net/Articles/955709/
+
+
+Namhyung Kim (14):
+  perf dwarf-aux: Add die_collect_vars()
+  perf dwarf-aux: Handle type transfer for memory access
+  perf annotate-data: Introduce struct data_loc_info
+  perf map: Add map__objdump_2rip()
+  perf annotate: Add annotate_get_basic_blocks()
+  perf annotate-data: Maintain variable type info
+  perf annotate-data: Add update_insn_state()
+  perf annotate-data: Handle global variable access
+  perf annotate-data: Handle call instructions
+  perf annotate-data: Implement instruction tracking
+  perf annotate: Parse x86 segment register location
+  perf annotate-data: Handle this-cpu variables in kernel
+  perf annotate-data: Track instructions with a this-cpu variable
+  perf annotate-data: Add stack canary type
+
+ tools/perf/util/annotate-data.c | 710 ++++++++++++++++++++++++++++++--
+ tools/perf/util/annotate-data.h |  87 +++-
+ tools/perf/util/annotate.c      | 366 ++++++++++++++--
+ tools/perf/util/annotate.h      |  38 ++
+ tools/perf/util/dwarf-aux.c     | 232 +++++++++--
+ tools/perf/util/dwarf-aux.h     |  23 ++
+ tools/perf/util/map.c           |  17 +
+ tools/perf/util/map.h           |   3 +
+ 8 files changed, 1370 insertions(+), 106 deletions(-)
+
+-- 
+2.44.0.rc0.258.g7320e95886-goog
+
