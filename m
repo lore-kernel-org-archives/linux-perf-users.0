@@ -1,115 +1,133 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B93135402;
-	Fri, 16 Feb 2024 20:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ABA137C5A;
+	Fri, 16 Feb 2024 20:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708114141; cv=none; b=pvSnSPi+D0ZPOQvPxPreZbEW39k+ujnNyAj27AtBPyyljvlmm5b7nLd9XjaDd9vWrA3hobQN2/A4l6aySjbQsjATCIcANPwrEChlKGmEEbhaBKo3YrzZ3BlBylJ9n3tw7o5O8Q6x0mC7DwQVsfeHoE2h3+e1YmyDbtna9UcAs6k=
+	t=1708114946; cv=none; b=THbKRU3mPW0TKxmEyVCBE+jCBZmDqY75qoyASNIEXwdqE/xBZrRc4WpNPoYdNjSser34sXYnEzwdm3bh1eoe6MO1fK89W4bkrIsQeXq4ThnBtKO/facJKB3TcKfsmJM4tkgZXdwh3KieweSLxcxfbnYZHEYba6G6HiGTChH/IgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708114141; c=relaxed/simple;
-	bh=zGDptjAq4jLL6sQvLop2+9PNm8IdwyOTG2jsi5pb8YA=;
+	s=arc-20240116; t=1708114946; c=relaxed/simple;
+	bh=pnCogIDz14LG5tHCuqzaTGDuVoRYHckFSaXPPX5xATI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D1ICwKWOdx6lnNpLMxaOigHPbLMwhbXknymvJcSmcGxPhtws1IyW0r69BjB4OaJsxXbSEmcgV9AYpB41Wx9986FnbVR+60qNwa7HnAe7rUUvRZOTdHfOSNcbZZSGYdLCE0wbAvRvROvbeYjUwZFOZ8KzTEPk8nbh2GVIeEC2pf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+	 To:Cc:Content-Type; b=C+jeZxzIvDTOHcNHNbn/AiMwru+8OT7/NVbuzS1+8vSW9x8u18oIEp0As2nPBfpawzqeYzMAfOFbVql6jtIsCiVN8iM1+Ke5cdyRUABpR8zRGYwFXt5olLnlloKGrtEX+YY2uImxZLAUg0/Tty26S84HioJh4UJC0K9em3HsuQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d70b0e521eso20760185ad.1;
-        Fri, 16 Feb 2024 12:08:59 -0800 (PST)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2995185dbbbso141325a91.3;
+        Fri, 16 Feb 2024 12:22:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708114139; x=1708718939;
+        d=1e100.net; s=20230601; t=1708114944; x=1708719744;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+K2Fgb8X/bk94h+IXdbaE/IqDHPns4xLfRpQ3CzppJ8=;
-        b=ClF1rtKXYi73uF3C/ZAD99JmoQusrMv3cmvLUljQ0lNUVbsQxRZ1XWW7Wub7zZTWd+
-         bhp6k/U2DmQi8ssy1LrnE+q323+QVXMzTxVYqaBD3S0gROs6VZS8kscEHIAaziTY70mj
-         hWnqkqXM60nuIMsY6qsw8J8xagvB8fjaDNhY67g4aCY/FVkvtqXBjn6K583qgLjXnK6S
-         hpaNDXdOZCeUoe+rgS4lMOG18quH9p4RF2iCdmfgpvqhtnpefEkjq/ClXNd0rHaSbxi0
-         bBtUk3rHEtOMybIcHHO17/CHPVmQt8MtIYMP4dNT1kIsaC3WQn6qNMqniuT7ZpNBBQWr
-         92rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRMyZK1oU7l10Az9vFfJ/8YX5epNP9P8rjWWKfu+laZARKp1XpE/PEZgDblVVC802NHkdULLUOMeNqtcNMq/b/EdfC5dlaPeF+xkNhWazErSJIZO8sPBpG3DLZLV0oxKb5+5eeDR22POCKsHljug==
-X-Gm-Message-State: AOJu0YzYR2nRPKHgYUP5ex3Fow23OWHVScx1wYpvhvUu0CBu6Hxzgh6O
-	t9szsdn/Gy5XbpgOfATHaJasIHv8suquOt8XwWGzSisM3x6iAQqcDnZ1nZMgxGZoiRE951leR7m
-	BK29PiNrvSLDmLq8f7knoFbdMzJs=
-X-Google-Smtp-Source: AGHT+IHZWDq9bOXMcAvX157mn+T/0988y0sNXqUdfnXVqfmZebDAaiCia2ydBIf1qLRjVwNydZL893BMKKUYu+/Giwk=
-X-Received: by 2002:a17:90a:dc0a:b0:299:3657:494c with SMTP id
- i10-20020a17090adc0a00b002993657494cmr2054663pjv.24.1708114138871; Fri, 16
- Feb 2024 12:08:58 -0800 (PST)
+        bh=Oq0A0N9FMvQiwLtedEjU1Y/XLo5XcWAr1iJu9cUBjms=;
+        b=XbjlfEqd+soG7CDvwv1svXhAN+6q+9p5qM1xGRrzcZCwmaLMe+cWmCQMP3tFLzK5s5
+         vZD4Q2P2MOQb1/WuCNKrOpeRIXzzX5YyMGLR5J7hdf6fepJMaOOatR2YlbWob6xPvNDi
+         Cdd4w9HP+T8uGIMRSKj1HrTGRdjr6Z8C2D2J1lvBhy+4RdePyZvLAw3yIwwZTwqn/+qT
+         h1t4caU/0DqaQ71pi1y3qB/FmSjLe75jZOex613fSdmer7IuXdxEFayS3lMbz6/+TGOc
+         Kr/oVYlJ10/LfaEmpYEWRiGl8QUuIH1Ums3Ctir4XR0P8TtdGgFhDAwiK60pIGVIZKyQ
+         OwTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViRTV6pk25t8bwPxbK1Ecv35GIy19g8oPun8kbS481pRrFx+YijGyOcwIcLTb8vpb3fNd7KKwMJlOVmlLaThOO3ME5V7QwPB5FCnajvXfZ70ZdvBTbmuCc60lfX3xUHHw3Lqq5/cXqGxZTgF8sJw==
+X-Gm-Message-State: AOJu0Yx4HBD9BFvtEnK9VDVtae3cMXJRoKLiw+xMJBavzAdWV4vv/TVH
+	hdfjFFSrQIMFbwVT9YaeZnpuGsAMXCUhXlM1Yv9ygEkoLx5/JmPzttHGSC3Vs8mCIDA5aN22YiR
+	EtKXHTEBjsAMyA0LBRZn5QcRH+2k=
+X-Google-Smtp-Source: AGHT+IFguJIhRwRsgj6T4qcPSOxXHVK81XmIp86YrUJaYpTa7bcm2JYGq7PJIvPTaMXl36nvaefa641o/QO8CYYI9Dw=
+X-Received: by 2002:a17:90a:a883:b0:299:1aaa:5ff with SMTP id
+ h3-20020a17090aa88300b002991aaa05ffmr4758561pjq.7.1708114944478; Fri, 16 Feb
+ 2024 12:22:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213075256.1983638-1-namhyung@kernel.org> <20240213075256.1983638-4-namhyung@kernel.org>
- <CAP-5=fVK3vvNoaGHPep8NCweGw9cztKBGQh5+0bVX91PhWp5Eg@mail.gmail.com>
- <CAM9d7ci=A9rwZxEYYQRi-Cncs7NSpRG+TaH5knTdEPZYxJWp9Q@mail.gmail.com> <CAP-5=fWwRjnv=BSdz2GV+EfKUrtzMCSvheR38hkbFadKpvW2eQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fWwRjnv=BSdz2GV+EfKUrtzMCSvheR38hkbFadKpvW2eQ@mail.gmail.com>
+References: <20240214045356.748330-1-irogers@google.com> <20240214045356.748330-7-irogers@google.com>
+In-Reply-To: <20240214045356.748330-7-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 16 Feb 2024 12:08:47 -0800
-Message-ID: <CAM9d7cg6c7t7zAgDEJP=+D1qM16SQuWN05fn4T-m1WPfXjaZvA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] perf hist: Do not use event index in hpp__fmt()
+Date: Fri, 16 Feb 2024 12:22:12 -0800
+Message-ID: <CAM9d7cg5O_1yKpk_X5vn380Cu28ObLjjjnOONHF75D07ZbkR3g@mail.gmail.com>
+Subject: Re: [PATCH v4 6/8] perf tests: Use scandirat for shell script finding
 To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@arm.com>, 
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 11:54=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+On Tue, Feb 13, 2024 at 8:54=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Wed, Feb 14, 2024 at 9:26=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > On Wed, Feb 14, 2024 at 4:08=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > On Mon, Feb 12, 2024 at 11:52=E2=80=AFPM Namhyung Kim <namhyung@kerne=
-l.org> wrote:
-> > > >
-> > > > The __hpp__fmt() is to print period values in a hist entry.  It han=
-dles
-> > > > event groups using linked pair entries.  Until now, it used event i=
-ndex
-> > > > to print values of group members.  But we want to make it more robu=
-st
-> > > > and support groups even if some members in the group were removed.
-> > >
-> > > I'm unclear how it breaks currently. The evsel idx is set the evlist
-> > > nr_entries on creation and not updated by a remove. A remove may
-> > > change a groups leader, should the remove also make the next entry's
-> > > index idx that of the previous group leader?
-> >
-> > The evsel__group_idx() returns evsel->idx - leader->idx.
-> > If it has a group event {A, B, C} then the index would be 0, 1, 2.
-> > If it removes B, the group would be {A, C} with index 0 and 2.
-> > The nr_members is 2 now so it cannot use index 2 for C.
-> >
-> > Note that we cannot change the index of C because some information
-> > like annotation histogram relies on the index.
+> Avoid filename appending buffers by using openat, faccessat and
+> scandirat more widely. Turn the script's path back to a file name
+> using readlink from /proc/<pid>/fd/<fd>.
 >
-> Ugh, the whole index thing is just messy - perhaps these days we could
-> have a hashmap with the evsel as a key instead. I remember that I also
-> forced the idx here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n2049
-> If it were invariant that the idx were always the position of an event
-> in the evlist then I think life would be easier, but that won't help
-> for the arrays of counters that need the index to be constant. I guess
-> this is why the previous work to do this skipped evsels rather than
-> removed them.
+> Read the script's description using api/io.h to avoid fdopen
+> conversions. Whilst reading perform additional sanity checks on the
+> script's contents.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/builtin-test.c  |  21 ++---
+>  tools/perf/tests/tests-scripts.c | 144 ++++++++++++++++++-------------
+>  tools/perf/tests/tests-scripts.h |   1 -
+>  3 files changed, 95 insertions(+), 71 deletions(-)
+>
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index eff3c62e9b47..6d5001daaf63 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -300,22 +300,20 @@ static int test_and_print(struct test_suite *t, int=
+ subtest)
+>  }
+>
+>  struct shell_test {
+> -       const char *dir;
+>         const char *file;
+>  };
+>
+>  static int shell_test__run(struct test_suite *test, int subdir __maybe_u=
+nused)
+>  {
+>         int err;
+> -       char script[PATH_MAX];
+>         struct shell_test *st =3D test->priv;
+> +       char *cmd;
+>
+> -       path__join(script, sizeof(script) - 3, st->dir, st->file);
+> -
+> -       if (verbose > 0)
+> -               strncat(script, " -v", sizeof(script) - strlen(script) - =
+1);
+> -
+> -       err =3D system(script);
+> +       asprintf(&cmd, "%s%s", st->file, verbose ? " -v" : "");
+> +       if (!cmd)
+> +               return TEST_FAIL;
 
-Actually I have a patch series to convert the annotation histogram
-to a hash map.  It'd reduce memory usage as well.  Will post.
+It fails to build.
 
-I think removing evsel is not a common operation and should be
-done with care.  In this patchset, it removed (dummy) events after
-processing all samples.  I can make the code to skip those event
-when printing the result but it'd be much easier if it can remove the
-unnecessary events.
+tests/tests-scripts.c: In function =E2=80=98shell_test__run=E2=80=99:
+tests/tests-scripts.c:130:9: error: ignoring return value of
+=E2=80=98asprintf=E2=80=99 declared with attribute =E2=80=98warn_unused_res=
+ult=E2=80=99
+[-Werror=3Dunused-result]
+  130 |         asprintf(&cmd, "%s%s", file, verbose ? " -v" : "");
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Thanks,
 Namhyung
+
+
+> +       err =3D system(cmd);
+> +       free(cmd);
+>         if (!err)
+>                 return TEST_OK;
+>
