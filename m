@@ -1,135 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728E3151CD1;
-	Fri, 16 Feb 2024 23:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1091487FB
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 23:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708127674; cv=none; b=S6sTxaWOvAsMZpd9DPADPCt27OfcJeiC8yDMci9A90RsjUc/b9xYFrO1wLu2tAHIUtTv47kI4Zyh3s5I7gbwMx3qmRUyo/muy4VMyc+C5A7LAFiLWorCCfEvenOc7hmWPLygCOdLaCBFcKZopqaNWhMs0IT3sG7zAQseBbO44KU=
+	t=1708127715; cv=none; b=q0+n0/m2m4/P74z/iKas+DaWhriCY0hVONm/yViL41cJrLghfI91Nviv2D7gb3O1vFK5uNl7UkKO1buHvPgnthc+D1Cy5DUKMRUhVefHy6cgNV0DyRpZndXTET98Wszn7HmxWT7S830H9PZEoeC7dYSCAflto88uVN87mXEHl4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708127674; c=relaxed/simple;
-	bh=JSCVTE9XqiSDlA8ej8yd/v+YYkjMI/c+XOMMHYmpMcI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N9xMtNa89UjGVftyZh1Pvf2NxyrpZyXmVJDNgODptdDZYiuvI+C0eAtVdHVT/q0Tv33/1zhHvVBSKUCj9UZlm0xAcx7UNKj6yBDJTD2NNOAdnVfEhVY/dHgR2lsjP2Q5x5gXcI0IeGzrQLQ7IMdPIfdfw0A8SMcP3mH6f2ZCWd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTAWCSTF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708127715; c=relaxed/simple;
+	bh=1Dvtya1H7/PzNMqdtVJUl8hBgvbrmgnqki4J5eyi26c=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=aDk2qx1AnDlO9mYO1hDejfxV+CEuo2mOSblB76ApgIL24VQnquUesuSDMkPrrZQt2VgPERJDNZeFbsFyvGJZgaRAFKdC105g4QSpPt2KNYeHBXGwJKr6bz8qChAaS6+E9jZ21vMVGLPUop6M1Sj2m4M7MLqcgWdZdvx8ePuTBbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bzBfo8QJ; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTAWCSTF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FEFFC43390;
-	Fri, 16 Feb 2024 23:54:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708127673;
-	bh=JSCVTE9XqiSDlA8ej8yd/v+YYkjMI/c+XOMMHYmpMcI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MTAWCSTFqFpQXQG/f3joQWMIncRQ5STu7HgSAMGWoppmG7mNaW/7UP7WCaKPO80OP
-	 PDAUkm64BEI/oIPTYpSJoVGDwyyqbp3bL/5ImyYfyvOQor5HIqw+JHIjQttryesqM7
-	 ZCnP31OeXbmcxL+hONZqbJ3VcHpNuQM8IBo0Ye/ZqY1tmOis6sJI+sxmlejm0Vfaim
-	 RzTuboxDG4k5ez7x38ETDoi/qM4dEjEOi4qu1vcJiS9DVdJQwK45+7pI0XhLYVOpUJ
-	 bNzYMjCQCG63xb4Ys6nUYvKaFb6lEbZ2vkdUBmZvGm2xRVW1XRD8tC5Rlq/Wqc7UtW
-	 jKFVz3evaBKRA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-toolchains@vger.kernel.org,
-	linux-trace-devel@vger.kernel.org
-Subject: [PATCH 14/14] perf annotate-data: Add stack canary type
-Date: Fri, 16 Feb 2024 15:54:23 -0800
-Message-ID: <20240216235423.2343167-15-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-In-Reply-To: <20240216235423.2343167-1-namhyung@kernel.org>
-References: <20240216235423.2343167-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bzBfo8QJ"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60665b5fabcso39126417b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 15:55:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708127712; x=1708732512; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QBl8zgtekWPhTI5Bs2qcCKwIbqRGQ//OBxDNQEaVnho=;
+        b=bzBfo8QJpzn1By3LMJZsELSoCDcddZwgB8ZPp4ZcOptyOoiQJkOBtt1GMXAo2dkyqM
+         eL2id5WuZwVoBz1LTV5Ev+oMLKPHXG8XWA3jP54Rv+ng2KInBbFhDcINI4IUzBVURTlq
+         WpS9GDgQCBIYPj3o0aa+d24e9nva2wVrgo/r2MFPc0E+XdUFPR1w/pLmzy0wrGheezLV
+         ZrY6rt4pmqd/60sVd29qIU5Dg5WbWn/xYHki8WcWyAvfzuNm66j2/KqT6WLQHrAjCJky
+         rbT5uevgEEMNsczT59YK84u9j4FFr+1YnWn+E1eLFBC2ZEcAb5murXDhnQ9aZLeOAY0O
+         Ta8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708127712; x=1708732512;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QBl8zgtekWPhTI5Bs2qcCKwIbqRGQ//OBxDNQEaVnho=;
+        b=qerKAj0STgXazGa19g07fMMRiid3DqZeF1lV1lQJotxbgIdZDKfzNJcyr88PPrj5qC
+         BrsyUyWg/ltWr9HIeb2EAzSMLyDlL23aE/PGVz3A1lxzWuRlC6f3ampHKTwqWgETymxp
+         jh3EuCp5eeqowAKZ5nhFKLxxra8IpBWZglGhQqnhqQ6+sv+U6xJEkJei5xk+gYM57KlQ
+         hQSUWOEdvvobV+gOcokBlr1rHX2nGstMmMBixeJCA3YNxRCE2oPjRpkA8xrKNlm2AVH8
+         MrRb3kGu7ezFl9jOGa+nRLhVc6vWFsIx7BFXcfCPr5EzOChMbjHLbSy13/WKtXbugO8X
+         V3aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmDKPRo/csJhnB2CIsjIFyLUYq8SQkWiQTeoZEhfmGZXieAB1SBEHMas0HaIKvjbngTttf6ISK5DOQbNnYD0uiEq9a1LjFnxFDnGLqLYdMXw==
+X-Gm-Message-State: AOJu0YxOPFn/6YWbS49sv0KMbk7xGB8FvWaV+YwOLYGMQFcxvaYEvhvz
+	TEPGtkvw9EggQuAoLvJy9dWJyukjGqFfSAnK6eBOi9+HKIdajqMQQxgJI1y6cvfXQLYPPgYfgY5
+	eeIiKow==
+X-Google-Smtp-Source: AGHT+IEMz+3RYNoGBF343NN7VH7kEkTuo9e+7EPD1rOracd954OtISvpyHGwVvDYBFvc29zPAHCM8qIzo6wC
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4b5c:352:4272:e34e])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1005:b0:dc7:59d9:7b46 with SMTP
+ id w5-20020a056902100500b00dc759d97b46mr224264ybt.3.1708127712581; Fri, 16
+ Feb 2024 15:55:12 -0800 (PST)
+Date: Fri, 16 Feb 2024 15:51:54 -0800
+Message-Id: <20240216235203.229256-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Subject: [PATCH v5 0/8] Run tests in parallel
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, James Clark <james.clark@arm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-When the stack protector is enabled, compiler would generate code to
-check stack overflow with a special value called 'stack carary' at
-runtime.  On x86_64, GCC hard-codes the stack canary as %gs:40.
+If command line option '-p' is provided, start/fork all tests in the
+main thread and then gather them in order at the end. On a laptop test
+time was reduced from 5 minutes 21 seconds to 1 minute 50 seconds. The
+option isn't default as the test shows up perf and test flakes.
 
-While there's a definition of fixed_percpu_data in asm/processor.h,
-it seems that the header is not included everywhere and many places
-it cannot find the type info.  As it's in the well-known location (at
-%gs:40), let's add a pseudo stack canary type to handle it specially.
+The '-v' option is modified so that 'perf test -v' will give verbose
+output only from failing tests.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate-data.h |  1 +
- tools/perf/util/annotate.c      | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+v5 - fix a -Wunused-result
+v4 - fix bug in width computation.
+v3 - fix a crash if shell test directory isn't found, remove merged patch.
+v2 - fix parallel test output/verbose issue
+v1 - initial PoC
 
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 0bfef29fa52c..e293980eb11b 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -77,6 +77,7 @@ struct annotated_data_type {
- 
- extern struct annotated_data_type unknown_type;
- extern struct annotated_data_type stackop_type;
-+extern struct annotated_data_type canary_type;
- 
- /**
-  * struct data_loc_info - Data location information
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 5f3136f57c62..f2683dadf3cf 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -116,6 +116,13 @@ struct annotated_data_type stackop_type = {
- 	},
- };
- 
-+struct annotated_data_type canary_type = {
-+	.self = {
-+		.type_name = (char *)"(stack canary)",
-+		.children = LIST_HEAD_INIT(canary_type.self.children),
-+	},
-+};
-+
- static int arch__grow_instructions(struct arch *arch)
- {
- 	struct ins *new_instructions;
-@@ -3764,6 +3771,17 @@ static bool is_stack_operation(struct arch *arch, struct disasm_line *dl)
- 	return false;
- }
- 
-+static bool is_stack_canary(struct arch *arch, struct annotated_op_loc *loc)
-+{
-+	/* On x86_64, %gs:40 is used for stack canary */
-+	if (arch__is(arch, "x86")) {
-+		if (loc->segment == INSN_SEG_X86_GS && loc->offset == 40)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
- 			struct disasm_line *dl)
- {
-@@ -3938,6 +3956,12 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 		}
- 
- 		mem_type = find_data_type(&dloc);
-+
-+		if (mem_type == NULL && is_stack_canary(arch, op_loc)) {
-+			mem_type = &canary_type;
-+			dloc.type_offset = 0;
-+		}
-+
- 		if (mem_type)
- 			istat->good++;
- 		else
+Ian Rogers (8):
+  perf thread_map: Skip exited threads when scanning /proc
+  perf list: Add scandirat compatibility function
+  perf tests: Avoid fork in perf_has_symbol test
+  tools subcmd: Add a no exec function call option
+  perf test: Rename builtin-test-list and add missed header guard
+  perf tests: Use scandirat for shell script finding
+  perf tests: Run time generate shell test suites
+  perf tests: Add option to run tests in parallel
+
+ tools/lib/subcmd/run-command.c                |   2 +
+ tools/lib/subcmd/run-command.h                |   2 +
+ tools/perf/tests/Build                        |   2 +-
+ tools/perf/tests/builtin-test-list.c          | 207 ----------
+ tools/perf/tests/builtin-test-list.h          |  12 -
+ tools/perf/tests/builtin-test.c               | 378 ++++++++++--------
+ tools/perf/tests/shell/lib/perf_has_symbol.sh |   2 +-
+ tools/perf/tests/tests-scripts.c              | 256 ++++++++++++
+ tools/perf/tests/tests-scripts.h              |   9 +
+ tools/perf/util/print-events.c                |  12 +-
+ tools/perf/util/thread_map.c                  |   9 +-
+ tools/perf/util/util.c                        |  19 +
+ tools/perf/util/util.h                        |   8 +
+ 13 files changed, 508 insertions(+), 410 deletions(-)
+ delete mode 100644 tools/perf/tests/builtin-test-list.c
+ delete mode 100644 tools/perf/tests/builtin-test-list.h
+ create mode 100644 tools/perf/tests/tests-scripts.c
+ create mode 100644 tools/perf/tests/tests-scripts.h
+
 -- 
 2.44.0.rc0.258.g7320e95886-goog
 
