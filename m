@@ -1,131 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215061292F4;
-	Fri, 16 Feb 2024 14:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F00130ACF
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 17:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708095456; cv=none; b=eQywxlq7oWvXVG4Vgswb2Nc4DBrXDcc2R1IS8ChARzfGnDVZY35FLGBm+FEgj4coYawRnBUHQmAEcKLiIM2gpV93S3Fl15tJjFrXTvAHPKAjtECGffvyeTJd26iYOa2D6kqT5Q8+GP9+tt5T4RlMkoEJUs0HZl0nd22d6QirsrU=
+	t=1708104243; cv=none; b=Z4nTal+Sd/MeWJ9Sg+k+iVGEmJY1iNOe/S9gUtE5Zr+vO2saj4DMXAPHRF+LYPUu0Ij1GLkO2LWpl0XNQtiUm0R8JxKJZbDkPz3vm3HZhVmC/kEX6QK6CXjREiNV7SGWHVNJUkNp2s5D5FGL78DR7DS6CqvsYrOVbtd2grW6Akw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708095456; c=relaxed/simple;
-	bh=bYPWSFzizc6hw98vYyVTqVDrmSgriMmL7bU5ekFvWl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fe0h17EyiSYFJ7/kmQehEdF39iC2Apconl5r+XVWHGh/5hgK1KWLd1D5A22HTxpvuAQgt0fFtA4u2RAASq8e/uLzjOtYgvmBjFkC4RbYTCDDdHBSlZ//xK9i72YFM+Gf/vBytGbQ5ml7+QIYHMbkTc1O4N3jvRj0ToFlOiYud8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON17NlzR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708104243; c=relaxed/simple;
+	bh=GrGGaI96hLQeFLK9l61R0YyUjHIsjanXspc3Z3zFwKg=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=I2jGYF95AHroqallUt9bJzwNnLC2GEeYdHIIWn+kT5IF9UMwfx7IiFusJPURvXm/mnh/eWSLAopw/lwU3opPCz8yBTGrJR0zt7uqqwCC1FK8Be/FMTgEgEV+YbAsTdv+WwHIcKGm03LRiliLP65EtgEtZQZ3Z4ADgyVStxhLOpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b+C/aKHU; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON17NlzR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D25FC433C7;
-	Fri, 16 Feb 2024 14:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708095455;
-	bh=bYPWSFzizc6hw98vYyVTqVDrmSgriMmL7bU5ekFvWl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ON17NlzRcf8XTrWnC+hTMNpCsGM1tAcbZi6+rqehI6NuTCTr+djCCRYLpsETn3VXC
-	 2BKbQzWxuhdpbQALNtUf2xld8nq5g4tO+x57/h0vP8eAN7WbVZOfnng4CBYDmXpNEr
-	 rSoUbLY6R5zQWsdGtMv9prHBcyWVgUuPHBlZJutDnIsvIJyw8KA0OWEDTi4w4hx6Gm
-	 OObeLuQQJU3FkXXNybRgLECXc9lZiNHBcppbA9MTF06VOtFC2Qmirapn/zuRXeHBwo
-	 zYApWHFl6BxJuL9bH5jcESqg3saem/kiO1gM4FohvD+bW+3Mmd49HS6LqU2odBEIQ0
-	 vMZtXxEyWKcNg==
-Date: Fri, 16 Feb 2024 11:57:32 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v1 2/6] perf trace: Ignore thread hashing in summary
-Message-ID: <Zc933IYjWlkMo4D2@x1>
-References: <20240214063708.972376-1-irogers@google.com>
- <20240214063708.972376-3-irogers@google.com>
- <Zcz3iSt5k3_74O4J@x1>
- <CAP-5=fV9Gd1Teak+EOcUSxe13KqSyfZyPNagK97GbLiOQRgGaw@mail.gmail.com>
- <CAP-5=fXb95JmfGygEKNhjqBMDAQdkQPcTE-gR0MNaDvHw=c-qQ@mail.gmail.com>
- <CAP-5=fWweUBP_-SHfoADswizMER6axNw89JyG7Fo_qiC883fNw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b+C/aKHU"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60802b0afd2so4783787b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 09:24:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708104241; x=1708709041; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9Sl1b2bCt2ETIANL315ip+LCb468TguLwgWryRSpCdA=;
+        b=b+C/aKHU42+tAw1dpVxjDPflc9At6XxPCj8S6g17Aw+l+fk3EARVsF9PSNr2UrildO
+         R9smrNRUAXoFNBf0RrzUzwTG4Juj3yaseCu7xsnSjU9YFy7HzHpgtuONhgRQBqrRHyw0
+         K3cLSvpdry9TAMG4GjxMH9iwwY5tshF+Gt4OtqhYrxz5vhGmlOHBNbtuEAni9oZICp6/
+         fbpAqcEZ+DAiLgQBaukPQ3+jWm9Eh1iXmcKU5aoFoOEYrj+zH6P0ABAbyVL3eY7ioztI
+         IqtPI9QzdtdEd/nKOzigrr0FmiXaehfzJEQboewGeTGYniXc8BJtRaOMprLMh7qbATCU
+         CVOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708104241; x=1708709041;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9Sl1b2bCt2ETIANL315ip+LCb468TguLwgWryRSpCdA=;
+        b=TOXj16Hz5WWqzixQrAcoJYCFJrrvuw+TJbrRvfMbRNKnG5LhE6Lt44i0LM6aiMBjoK
+         QOymqwykQ2AFqukGCqvSRpCu+tpMappT3myFEKS4en+yEDTnJhFZRw9vSK3MYBKY6ySJ
+         Ytgp/lf8JQUU0pvdno4OoR/RR9mmUQ/rzJu0rYZ8DV7XyrgTJj/9yoXYLQWd2TdjF2FI
+         itICVrnzCV6NhYPu2br8NVTQqwSvcuixOR8mTIk7ozZ0WMHZKtNx0Ic/ChXeyW9LVMJN
+         qKj0gwvOdJKSiwHHNwjC9xynICFDtbXBGncO669L5VpaDjgzezzrmbCCIe/p9wYHDJ9U
+         qtPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXzymW8uNukPlUif9azMvxREy3hhfGorEVFvPQYyqaNZMngFqR2FkqgKPw5RGbSvWdAP9ip1hPn6B4r+IGMr5/aX3TyqezOPA7ES4gE/XmiAA==
+X-Gm-Message-State: AOJu0YzxxH1x2zCLnyqLJPeNmm2haBN5Txe3cPOccphF05mpeD3qQs5j
+	e1hu4x7B6yrRgEqo/XmOV0a+phX1c4Jde1XcqsfloVKXN/ohTy0r8HJ/45USH4IYo4qIWU1WhSp
+	yi/c4Ww==
+X-Google-Smtp-Source: AGHT+IFqWeRYKSVcwa0vhgyD6jQU0oUmzZBrtVi6OdlKkHk9O5GXukUJnGWRIfC3D8Gq6rWn1TtS28ALGLoc
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:fe4:7382:151a:2e90])
+ (user=irogers job=sendgmr) by 2002:a81:4316:0:b0:607:f42f:70e1 with SMTP id
+ q22-20020a814316000000b00607f42f70e1mr529438ywa.4.1708104241244; Fri, 16 Feb
+ 2024 09:24:01 -0800 (PST)
+Date: Fri, 16 Feb 2024 09:23:57 -0800
+Message-Id: <20240216172357.65037-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWweUBP_-SHfoADswizMER6axNw89JyG7Fo_qiC883fNw@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Subject: [PATCH v1] perf trace: Disable syscall augmentation with record
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Feb 14, 2024 at 01:36:46PM -0800, Ian Rogers wrote:
-> On Wed, Feb 14, 2024 at 1:15 PM Ian Rogers <irogers@google.com> wrote:
-> > On Wed, Feb 14, 2024 at 10:27 AM Ian Rogers <irogers@google.com> wrote:
-> > > On Wed, Feb 14, 2024 at 9:25 AM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > > On Tue, Feb 13, 2024 at 10:37:04PM -0800, Ian Rogers wrote:
-> > > > > Commit 91e467bc568f ("perf machine: Use hashtable for machine
-> > > > > threads") made the iteration of thread tids unordered. The perf trace
-> > > > > --summary output sorts and prints each hash bucket, rather than all
-> > > > > threads globally. Change this behavior by turn all threads into a
-> > > > > list, sort the list by number of trace events then by tids, finally
-> > > > > print the list. This also allows the rbtree in threads to be not
-> > > > > accessed outside of machine.
+Syscall augmentation is causing samples not to be written to the
+perf.data file with "perf trace record". Disabling augmentation is
+sub-optimal, but it beats having a totally broken perf trace record.
 
-> > > > Can you please provide a refresh of the output that is changed by your patch?
-> > >
-> > > Hmm.. looks like perf trace record has broken and doesn't produce
-> > > output in newer perfs. It works on 6.5 and so a bisect is necessary.
-> >
-> > Bisect result:
-> > ```
-> > 9925495d96efc14d885ba66c5696f664fe0e663c is the first bad commit
-> > commit 9925495d96efc14d885ba66c5696f664fe0e663c
-> > Author: Ian Rogers <irogers@google.com>
-> > Date:   Thu Sep 14 14:19:45 2023 -0700
-> >
-> >    perf build: Default BUILD_BPF_SKEL, warn/disable for missing deps
-> > ...
-> > https://lore.kernel.org/r/20230914211948.814999-3-irogers@google.com
-> > ```
-> >
-> > Now to do the bisect with BUILD_BPF_SKEL=1 on each make.
-> 
-> This looks better (how could I be at fault :-) ):
-> ```
-> 1836480429d173c01664a633b61e525b13d41a2a is the first bad commit
-> commit 1836480429d173c01664a633b61e525b13d41a2a
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Wed Aug 16 13:53:26 2023 -0300
-> 
->    perf bpf_skel augmented_raw_syscalls: Cap the socklen parameter
-> using &= sizeof(saddr)
-> ...
->    Cc: Adrian Hunter <adrian.hunter@intel.com>
->    Cc: Ian Rogers <irogers@google.com>
->    Cc: Jiri Olsa <jolsa@kernel.org>
->    Cc: Namhyung Kim <namhyung@kernel.org>
->    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ```
-> No LKML link.
+Closes: https://lore.kernel.org/lkml/CAP-5=fV9Gd1Teak+EOcUSxe13KqSyfZyPNagK97GbLiOQRgGaw@mail.gmail.com/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-trace.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-So simple... ;-\
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 109b8e64fe69..192721261098 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -4864,6 +4864,11 @@ int cmd_trace(int argc, const char **argv)
+ 	if (!trace.trace_syscalls)
+ 		goto skip_augmentation;
+ 
++	if ((argc >= 1) && (strcmp(argv[0], "record") == 0)) {
++		pr_debug("Syscall augmentation fails with record, disabling augmentation");
++		goto skip_augmentation;
++	}
++
+ 	trace.skel = augmented_raw_syscalls_bpf__open();
+ 	if (!trace.skel) {
+ 		pr_debug("Failed to open augmented syscalls BPF skeleton");
+-- 
+2.44.0.rc0.258.g7320e95886-goog
 
-I've reproduced your steps and got to the same cset while testing on a
-recent distro kernel (6.6.13-200.fc39.x86_64), scratching my head now
-and trying to figure this out.
-
-Wonder if trying to run on an older kernel the problem would appear.
-
-Will try and add a perf test shell entry with a simple:
-
-root@number:~# perf trace record sleep 0.001 && perf script | head | wc -l
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.034 MB perf.data ]
-0
-root@number:~#
-
-Has to be 10 :-)
-
-Thanks,
-
-- Arnaldo
