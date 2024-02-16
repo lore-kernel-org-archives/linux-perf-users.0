@@ -1,133 +1,134 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ABA137C5A;
-	Fri, 16 Feb 2024 20:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C589A1369B4;
+	Fri, 16 Feb 2024 20:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708114946; cv=none; b=THbKRU3mPW0TKxmEyVCBE+jCBZmDqY75qoyASNIEXwdqE/xBZrRc4WpNPoYdNjSser34sXYnEzwdm3bh1eoe6MO1fK89W4bkrIsQeXq4ThnBtKO/facJKB3TcKfsmJM4tkgZXdwh3KieweSLxcxfbnYZHEYba6G6HiGTChH/IgY=
+	t=1708115152; cv=none; b=cwaKQRWcyROjG8dXlfROXWIKnyLCO+UcueuU9u5hOLqNBWCQemtDpTNS3lErkD3t4sJBZt/wX/kqqP6K4hKHBhsr9S+lOCmoE8KF1++Cxyzd8Pj6MEMkfnRL8dkeR/8Wa3/QX4UppO7ykXFErqHUN2smmZLsy7fKzFxGskwq+Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708114946; c=relaxed/simple;
-	bh=pnCogIDz14LG5tHCuqzaTGDuVoRYHckFSaXPPX5xATI=;
+	s=arc-20240116; t=1708115152; c=relaxed/simple;
+	bh=GJrtu7I2epYO6j1RMbl/uIUyxnpASqo4eBWtQdRkI+k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C+jeZxzIvDTOHcNHNbn/AiMwru+8OT7/NVbuzS1+8vSW9x8u18oIEp0As2nPBfpawzqeYzMAfOFbVql6jtIsCiVN8iM1+Ke5cdyRUABpR8zRGYwFXt5olLnlloKGrtEX+YY2uImxZLAUg0/Tty26S84HioJh4UJC0K9em3HsuQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
+	 To:Cc:Content-Type; b=YeozmY0sc60baxaS7N5aMPtEb3Cnm6xA3dXBoyAOVkYScsiZvDupekF9Xk9Od4EaZ4p1ewo2Ocj9B+DEMhJsOjlAYGQHLT7D3A753JhBQ7gEAoOJJGaTGJZLt/D4utTKu8NPMNq/S+HsRgIfdyDG5lw1QZka6ak77PQXGmK4e2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2995185dbbbso141325a91.3;
-        Fri, 16 Feb 2024 12:22:24 -0800 (PST)
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-297108e7001so1988170a91.1;
+        Fri, 16 Feb 2024 12:25:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708114944; x=1708719744;
+        d=1e100.net; s=20230601; t=1708115150; x=1708719950;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Oq0A0N9FMvQiwLtedEjU1Y/XLo5XcWAr1iJu9cUBjms=;
-        b=XbjlfEqd+soG7CDvwv1svXhAN+6q+9p5qM1xGRrzcZCwmaLMe+cWmCQMP3tFLzK5s5
-         vZD4Q2P2MOQb1/WuCNKrOpeRIXzzX5YyMGLR5J7hdf6fepJMaOOatR2YlbWob6xPvNDi
-         Cdd4w9HP+T8uGIMRSKj1HrTGRdjr6Z8C2D2J1lvBhy+4RdePyZvLAw3yIwwZTwqn/+qT
-         h1t4caU/0DqaQ71pi1y3qB/FmSjLe75jZOex613fSdmer7IuXdxEFayS3lMbz6/+TGOc
-         Kr/oVYlJ10/LfaEmpYEWRiGl8QUuIH1Ums3Ctir4XR0P8TtdGgFhDAwiK60pIGVIZKyQ
-         OwTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViRTV6pk25t8bwPxbK1Ecv35GIy19g8oPun8kbS481pRrFx+YijGyOcwIcLTb8vpb3fNd7KKwMJlOVmlLaThOO3ME5V7QwPB5FCnajvXfZ70ZdvBTbmuCc60lfX3xUHHw3Lqq5/cXqGxZTgF8sJw==
-X-Gm-Message-State: AOJu0Yx4HBD9BFvtEnK9VDVtae3cMXJRoKLiw+xMJBavzAdWV4vv/TVH
-	hdfjFFSrQIMFbwVT9YaeZnpuGsAMXCUhXlM1Yv9ygEkoLx5/JmPzttHGSC3Vs8mCIDA5aN22YiR
-	EtKXHTEBjsAMyA0LBRZn5QcRH+2k=
-X-Google-Smtp-Source: AGHT+IFguJIhRwRsgj6T4qcPSOxXHVK81XmIp86YrUJaYpTa7bcm2JYGq7PJIvPTaMXl36nvaefa641o/QO8CYYI9Dw=
-X-Received: by 2002:a17:90a:a883:b0:299:1aaa:5ff with SMTP id
- h3-20020a17090aa88300b002991aaa05ffmr4758561pjq.7.1708114944478; Fri, 16 Feb
- 2024 12:22:24 -0800 (PST)
+        bh=4hUD1Qj4ogPKSm/Sr3r1n8tx+Z+/CZkerzMxnHgkBW8=;
+        b=c8ntYFvOwISlE8oInaJpS+yJ17zr22z7L8TNmu8T8R0zKEGT88VcpEZ6AkHGWjAIxW
+         wQKyCRZJYBHFoVi4A2SQnvnSm+vK9izzl7k+n+PyikdS+7LLZ1uKmvxI35UxfO5+gp83
+         NtuLc8wUgxM9ywaHpR4QmU+mAc2HgVWWlUaqZW0+A15f8jlPRUCasxjtYScoPnejdaBS
+         NExIA/B8012JGvz4z+DPSwDm66RHLLfAgWOCYA3tdwggPbxr//u3YSZwmsthza4vgUnY
+         IOT2TMDg893t4q3APlG6l3Msobk+NnFOEKr4WJ4uJH97peMD3CVwIsBqreUKUWvqNHrM
+         Tahg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9kXpPjP3tJiolNJjyRYETpswgil3TKx+W0fAU8DAM/nZ2y8RizheWR7p+kshHBidVKO34Q8yRMqpQDo81yqZ2Rzm4ZFU2fMIN0UJVIiYY4oCWMjyde4hXiIGjCkUBhFi8Yds0g8GHJo/JIaSZcDIr0TMWzyUmk6jFKMnj3j8wKzB81w==
+X-Gm-Message-State: AOJu0YxKuANkwJtCvN1laMFZf/NaKkw6ghzcscVyC7wczKc4u8Ph+SIS
+	GVUtZaC4CYwI2BsuIohXYz5/7XEXZdCCrLYy9w7xH98NEmyUtsPnmA6bEjzmaXs1vsN0grjvNJV
+	gRoOzZKAJd/ne1vM+mHmDz8/wcEo=
+X-Google-Smtp-Source: AGHT+IG84yp2N2u//oppiy9VfZeUtMlsnudrPF6qYg6OzGwQn9hnl4H12B2h7YD93C53LomgBM+eXFKAJcl7j+eAqLE=
+X-Received: by 2002:a17:90b:1497:b0:299:3036:9ab5 with SMTP id
+ js23-20020a17090b149700b0029930369ab5mr3026822pjb.43.1708115149899; Fri, 16
+ Feb 2024 12:25:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214045356.748330-1-irogers@google.com> <20240214045356.748330-7-irogers@google.com>
-In-Reply-To: <20240214045356.748330-7-irogers@google.com>
+References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-2-irogers@google.com>
+ <Zcz3UO5Jq4zAqSfx@x1> <CAP-5=fXeLX8i8sK8EVquDqnV31rtum_K4TLtw5nG=nfL9-PKvQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fXeLX8i8sK8EVquDqnV31rtum_K4TLtw5nG=nfL9-PKvQ@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 16 Feb 2024 12:22:12 -0800
-Message-ID: <CAM9d7cg5O_1yKpk_X5vn380Cu28ObLjjjnOONHF75D07ZbkR3g@mail.gmail.com>
-Subject: Re: [PATCH v4 6/8] perf tests: Use scandirat for shell script finding
+Date: Fri, 16 Feb 2024 12:25:38 -0800
+Message-ID: <CAM9d7cjb7XDH6JgbKg07RJ4ypzPm12+mpBDE7mGXyUP3SJ8V1g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] perf report: Sort child tasks by tid
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@arm.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
 	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 13, 2024 at 8:54=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+On Wed, Feb 14, 2024 at 9:42=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
 te:
 >
-> Avoid filename appending buffers by using openat, faccessat and
-> scandirat more widely. Turn the script's path back to a file name
-> using readlink from /proc/<pid>/fd/<fd>.
+> On Wed, Feb 14, 2024 at 9:24=E2=80=AFAM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Tue, Feb 13, 2024 at 10:37:03PM -0800, Ian Rogers wrote:
+> > > Commit 91e467bc568f ("perf machine: Use hashtable for machine
+> > > threads") made the iteration of thread tids unordered. The perf repor=
+t
+> > > --tasks output now shows child threads in an order determined by the
+> > > hashing. For example, in this snippet tid 3 appears after tid 256 eve=
+n
+> > > though they have the same ppid 2:
+> > >
+> > > ```
+> > > $ perf report --tasks
+> > > %      pid      tid     ppid  comm
+> > >          0        0       -1 |swapper
+> > >          2        2        0 | kthreadd
+> > >        256      256        2 |  kworker/12:1H-k
+> > >     693761   693761        2 |  kworker/10:1-mm
+> > >    1301762  1301762        2 |  kworker/1:1-mm_
+> > >    1302530  1302530        2 |  kworker/u32:0-k
+> > >          3        3        2 |  rcu_gp
+> > > ...
+> > > ```
+> > >
+> > > The output is easier to read if threads appear numerically
+> > > increasing. To allow for this, read all threads into a list then sort
+> > > with a comparator that orders by the child task's of the first common
+> > > parent. The list creation and deletion are created as utilities on
+> > > machine.  The indentation is possible by counting the number of
+> > > parents a child has.
+> > >
+> > > With this change the output for the same data file is now like:
+> > > ```
+> > > $ perf report --tasks
+> > > %      pid      tid     ppid  comm
+> > >          0        0       -1 |swapper
+> > >          1        1        0 | systemd
+> > >        823      823        1 |  systemd-journal
+> > >        853      853        1 |  systemd-udevd
+> > >       3230     3230        1 |  systemd-timesyn
+> > >       3236     3236        1 |  auditd
+> > >       3239     3239     3236 |   audisp-syslog
+> > >       3321     3321        1 |  accounts-daemon
+> >
+> >
+> > Since we're adding extra code for sorting wouldn't be more convenient t=
+o
+> > have this done in an graphically hierarchical output?
+> >
+> > But maybe to make this honour asking for a CSV output the above is
+> > enough? Or can we have both, i.e. for people just doing --tasks, the
+> > hirarchical way, for CSV, then like above, with the comma separator.
+> >
+> > But then perf stat has -x to ask for CSV that is used by the more
+> > obscure --exclude-other option :-\
+> >
+> > Maybe we need a --csv that is consistent accross all tools.
 >
-> Read the script's description using api/io.h to avoid fdopen
-> conversions. Whilst reading perform additional sanity checks on the
-> script's contents.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/builtin-test.c  |  21 ++---
->  tools/perf/tests/tests-scripts.c | 144 ++++++++++++++++++-------------
->  tools/perf/tests/tests-scripts.h |   1 -
->  3 files changed, 95 insertions(+), 71 deletions(-)
->
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index eff3c62e9b47..6d5001daaf63 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -300,22 +300,20 @@ static int test_and_print(struct test_suite *t, int=
- subtest)
->  }
->
->  struct shell_test {
-> -       const char *dir;
->         const char *file;
->  };
->
->  static int shell_test__run(struct test_suite *test, int subdir __maybe_u=
-nused)
->  {
->         int err;
-> -       char script[PATH_MAX];
->         struct shell_test *st =3D test->priv;
-> +       char *cmd;
->
-> -       path__join(script, sizeof(script) - 3, st->dir, st->file);
-> -
-> -       if (verbose > 0)
-> -               strncat(script, " -v", sizeof(script) - strlen(script) - =
-1);
-> -
-> -       err =3D system(script);
-> +       asprintf(&cmd, "%s%s", st->file, verbose ? " -v" : "");
-> +       if (!cmd)
-> +               return TEST_FAIL;
+> I've no objection to a graphical/CSV output, I was in this code as I
+> was restructuring it for memory savings. Fixing the output ordering
+> was a side-effect, the "graphical" sorting/indentation is mentioned as
+> it is carrying forward a behavior from the previous code but done in a
+> somewhat different way. Let's have other output things as follow up
+> work.
 
-It fails to build.
-
-tests/tests-scripts.c: In function =E2=80=98shell_test__run=E2=80=99:
-tests/tests-scripts.c:130:9: error: ignoring return value of
-=E2=80=98asprintf=E2=80=99 declared with attribute =E2=80=98warn_unused_res=
-ult=E2=80=99
-[-Werror=3Dunused-result]
-  130 |         asprintf(&cmd, "%s%s", file, verbose ? " -v" : "");
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Agreed, maybe a good project for GSoC students..
 
 Thanks,
 Namhyung
-
-
-> +       err =3D system(cmd);
-> +       free(cmd);
->         if (!err)
->                 return TEST_OK;
->
