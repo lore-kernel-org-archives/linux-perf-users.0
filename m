@@ -1,224 +1,398 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4717EF;
-	Fri, 16 Feb 2024 05:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BBA1BC23;
+	Fri, 16 Feb 2024 09:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708060807; cv=none; b=TNj9qWryY/qK3YyRraC/kxe5aaGyPTIjDvC8IbahojxRIvXJ/vTWtYBj6b7o3DmI7dxW1W0Ob/XrGIHOy1T1YNb1RY6JLlyJkVAxQUnPtdRlF9nC9YjDwjCppvIizjjHt9Ro3T6Axyki49qwSt6EqafWc+5JvzDkHsL6WG8lAWY=
+	t=1708075911; cv=none; b=tDhTIFiGg/+t/bX3Od/gNrZJFudKzRAI6jswNABymHNC82fSaECio+C4rPrQDdXDZLmBAqpCSN4z41yy9RJJQ3HAwD06eS/onqRFNlvKIUXrRXrPv9Lc/lWXeiTSEczEKyiCmMp2oVBmQ7cKYiHuUxLGlzMR8qQKtgeispd4zw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708060807; c=relaxed/simple;
-	bh=U6hXNVQt351J/DhTewX+OZcdXZBZfn4AzdJHD2J2+M4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YprOfFLO8KGINdOoGXtVv37RN9Wvb/krB41pPVpXiSdSmI/sF9/Cil8OHttNu5oM8KKy36gr6qY6HQr+sAxAPaZclYGAmQ0y24C9xGdXZePaVFfujsmltAUiOvpZ1eS3pDEAhQ0/uUTKGX7D133RLg/kUuyT9OwWg/2QFkdCsTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d3907ff128so1417861a12.3;
-        Thu, 15 Feb 2024 21:20:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708060804; x=1708665604;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HOkv4nOPifpi80IkBp1vQTmLYuXm46+d52ga9BzQdQg=;
-        b=IRtIWwqT3Mi+0t9u52AaPtR0ZvP+CZN+BXlFQ6l9xXznCjqG7oB77wrFuQDiznTjcI
-         TtlCbYXZB8f7wtixWDC4v1m7DZi5z7nOK22QbzFl/JI4YT1ddHt+BmbuUWxZAtsEqTyX
-         iWKFMVmU+RU1tkgkJN0sBWj25bKxDB+8pU6FDYmao1V+/WMzF4Wpxo4iZv0TvTTZHCyt
-         02S7ymkP+5gqKdoh/TMNN8UzEoKxYJh1E3rrnt7yYu89mDADZUv4Y4idIGZBbsX+ESqa
-         rpRxEzKTTygmQunnbDItCCMKjGLuvpDV97LH6z0NHq3V1XFraWzo4Kdc2wZK1LJXT5t+
-         Ia9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUf+IF7i2a9p6bFO39tTPltUtSoWtJ/kWDk/qDfVbTKDJ1hNqVP0vTKTXHCtYhYvs4hZlEqoSSs2JW4+dXfCNvC2KZJ4PtsmJVvon3rY/z/2dFQ6W2BJWTP2R2TJxpsLsq9dbp8yNTCexqXYjwweg==
-X-Gm-Message-State: AOJu0YybJUrQbvBTw3ekcgzWzV7k+xhzJNdGrZdKtEtcAX6fankWItkt
-	sxYrOM+Cfs5JSaardh2UKW2d8vCl+frmmy+V1BFBnaPNFSAX3vGoeGnuWMEDK1eSrMcuk4s4Mti
-	A3dy7VKovpDbe9ZcJnTfRS1dOq4Y=
-X-Google-Smtp-Source: AGHT+IGIOb0Owwp8yzIIoHboFTczKfxi12EkiHcjbz+ReZOesNDp/0xfvVEPhWZh652ONXf3nALqBKgNhYaEEDwvlls=
-X-Received: by 2002:a05:6a20:c792:b0:1a0:6d4e:57bc with SMTP id
- hk18-20020a056a20c79200b001a06d4e57bcmr4771701pzb.58.1708060804393; Thu, 15
- Feb 2024 21:20:04 -0800 (PST)
+	s=arc-20240116; t=1708075911; c=relaxed/simple;
+	bh=BcxKMsxSrGKWzLGxNTqxIYjXJptoEYAbh8nekZm1kSI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kGvd7/29xgCw0WtDk3nx/nsJIUFts6PJCGJsqcwWN+/QU2xmCUCZ+PxuCGISV4AY0+L7fbJfOWXi1b4gt9TRjoMRyUkgn9sIOBwW/Ho7cCZtt3BFh6cTZoITz8LfZ28Qzazt87QXTKL69LUM0YOQqJNLR/IXZGW6mp338+MEYYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CO//ygtb; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CO//ygtb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708075908; x=1739611908;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BcxKMsxSrGKWzLGxNTqxIYjXJptoEYAbh8nekZm1kSI=;
+  b=CO//ygtbPQaisqvwrjbvEhVp+Z6m45KFtqJwjmQY93UA8Vfesg9FEggQ
+   l+M2MfZDEP151JMQ36gdLC4FVG4Q73yK1oCKPqwbx3z71vQ/lOt0c4RhY
+   QW9rkVHlDpzmQap2b1soPnRXYa33MY0+tpe/EMZ5Wnu6QOwOchQAwGEB1
+   Y6jQNaTsREIX6rpZVxP1g6CuqZKQlO00J7DpHunmoKJ84Eb7qp//X/kKD
+   zX7Rleuuc26g06yLUpe0UewEMQpzXrizpAvZXqtYpiBSAcjfqzhEIJf26
+   cVXtu6gn5PX/AMs/zbi7mJewBkgDz+YPfCEN4ocpMBSod8x+jBM/iySCn
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="19720156"
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="19720156"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 01:31:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="26945784"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.220.122])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 01:31:41 -0800
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V6] perf/core: Add aux_pause, aux_resume, aux_start_paused
+Date: Fri, 16 Feb 2024 11:31:28 +0200
+Message-Id: <20240216093128.77452-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <05ac66fc-ddda-46ff-b08d-c15943c16bc1@intel.com>
+References: <05ac66fc-ddda-46ff-b08d-c15943c16bc1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212233322.1855161-1-namhyung@kernel.org> <20240213033954.GB81405@debian-dev>
- <CAM9d7ciTwYAgry-nW9z+_VMj+BJ7ZNZnkKH_t_AHvV5joNuWQQ@mail.gmail.com> <20240214101420.GF81405@debian-dev>
-In-Reply-To: <20240214101420.GF81405@debian-dev>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 15 Feb 2024 21:19:51 -0800
-Message-ID: <CAM9d7cgWXyv1Uy=ZWsT6K=KaztgtszZp0BOxPAbgjuKuX6OzdQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Fixup module symbol end address properly
-To: Leo Yan <leo.yan@linux.dev>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	Mike Leach <mike.leach@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 14, 2024 at 2:14=E2=80=AFAM Leo Yan <leo.yan@linux.dev> wrote:
->
-> On Tue, Feb 13, 2024 at 10:48:53AM -0800, Namhyung Kim wrote:
-> > Hi Leo,
-> >
-> > Thanks for your review!
-> >
-> > On Mon, Feb 12, 2024 at 7:40???PM Leo Yan <leo.yan@linux.dev> wrote:
-> > >
-> > > On Mon, Feb 12, 2024 at 03:33:22PM -0800, Namhyung Kim wrote:
-> > > > I got a strange error on ARM to fail on processing FINISHED_ROUND
-> > > > record.  It turned out that it was failing in symbol__alloc_hist()
-> > > > because the symbol size is too big.
-> > > >
-> > > > When a sample is captured on a specific BPF program, it failed.  I'=
-ve
-> > > > added a debug code and found the end address of the symbol is from
-> > > > the next module which is placed far way.
-> > > >
-> > > >   ffff800008795778-ffff80000879d6d8: bpf_prog_1bac53b8aac4bc58_netc=
-g_sock    [bpf]
-> > > >   ffff80000879d6d8-ffff80000ad656b4: bpf_prog_76867454b5944e15_netc=
-g_getsockopt      [bpf]
-> > > >   ffff80000ad656b4-ffffd69b7af74048: bpf_prog_1d50286d2eb1be85_hn_e=
-gress     [bpf]   <---------- here
-> > > >   ffffd69b7af74048-ffffd69b7af74048: $x.5    [sha3_generic]
-> > > >   ffffd69b7af74048-ffffd69b7af740b8: crypto_sha3_init        [sha3_=
-generic]
-> > > >   ffffd69b7af740b8-ffffd69b7af741e0: crypto_sha3_update      [sha3_=
-generic]
-> > > >
-> > > > The logic in symbols__fixup_end() just uses curr->start to update t=
-he
-> > > > prev->end.  But in this case, it won't work as it's too different.
-> > > >
-> > > > I think ARM has a different kernel memory layout for modules and BP=
-F
-> > > > than on x86.  Actually there's a logic to handle kernel and module
-> > > > boundary.  Let's do the same for symbols between different modules.
-> > >
-> > > Even Arm32 and Arm64 kernel have different memory layout for modules
-> > > and kernel image.
-> > >
-> > > eBPF program (JITed) should be allocated from the vmalloc region, for
-> > > Arm64, see bpf_jit_alloc_exec() in arch/arm64/net/bpf_jit_comp.c.
-> >
-> > Ok, so chances are they can fall out far away right?
->
-> Yes, this is my understanding.
->
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/util/symbol.c | 21 +++++++++++++++++++--
-> > > >  1 file changed, 19 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > > > index 35975189999b..9ebdb8e13c0b 100644
-> > > > --- a/tools/perf/util/symbol.c
-> > > > +++ b/tools/perf/util/symbol.c
-> > > > @@ -248,14 +248,31 @@ void symbols__fixup_end(struct rb_root_cached=
- *symbols, bool is_kallsyms)
-> > > >                * segment is very big.  Therefore do not fill this g=
-ap and do
-> > > >                * not assign it to the kernel dso map (kallsyms).
-> > > >                *
-> > > > +              * Also BPF code can be allocated separately from tex=
-t segments
-> > > > +              * and modules.  So the last entry in a module should=
- not fill
-> > > > +              * the gap too.
-> > > > +              *
-> > > >                * In kallsyms, it determines module symbols using '[=
-' character
-> > > >                * like in:
-> > > >                *   ffffffffc1937000 T hdmi_driver_init  [snd_hda_co=
-dec_hdmi]
-> > > >                */
-> > > >               if (prev->end =3D=3D prev->start) {
-> > > > +                     const char *prev_mod;
-> > > > +                     const char *curr_mod;
-> > > > +
-> > > > +                     if (!is_kallsyms) {
-> > > > +                             prev->end =3D curr->start;
-> > > > +                             continue;
-> > > > +                     }
-> > > > +
-> > > > +                     prev_mod =3D strchr(prev->name, '[');
-> > > > +                     curr_mod =3D strchr(curr->name, '[');
-> > > > +
-> > > >                       /* Last kernel/module symbol mapped to end of=
- page */
-> > > > -                     if (is_kallsyms && (!strchr(prev->name, '[') =
-!=3D
-> > > > -                                         !strchr(curr->name, '['))=
-)
-> > > > +                     if (!prev_mod !=3D !curr_mod)
-> > > > +                             prev->end =3D roundup(prev->end + 409=
-6, 4096);
-> > > > +                     /* Last symbol in the previous module */
-> > > > +                     else if (prev_mod && strcmp(prev_mod, curr_mo=
-d))
-> > >
-> > > Should two consecutive moudles fall into this case? I think we need t=
-o assign
-> > > 'prev->end =3D curr->start' for two two consecutive moudles.
-> >
-> > Yeah I thought about that case but I believe they would be on
-> > separate pages (hopefully there's a page gap between them).
-> > So I think it should not overlap.  But if you really care we can
-> > check it explicitly like this:
-> >
-> >     prev->end =3D min(roundup(...), curr->start);
->
-> I am not concerned that to assign a bigger end value for the 'prev'
-> symbol. With an exaggerate end region, it will not cause any
-> difficulty for parsing symbols.
+Hardware traces, such as instruction traces, can produce a vast amount of
+trace data, so being able to reduce tracing to more specific circumstances
+can be useful.
 
-Right, but my problem was not in parsing.  It failed to allocate
-memory for the symbol because it's too big.
+The ability to pause or resume tracing when another event happens, can do
+that.
 
-> On the other hand, I am a bit concern
-> for a big function (e.g. its code size > 4KiB), we might fail to find
-> symbols in this case with the change above.
+Add ability for an event to "pause" or "resume" AUX area tracing.
 
-Yes, it's another problem.  But it cannot know the exact size
-so it just assumes it fits in a page.
+Add aux_pause bit to perf_event_attr to indicate that, if the event
+happens, the associated AUX area tracing should be paused. Ditto
+aux_resume. Do not allow aux_pause and aux_resume to be set together.
 
->
-> > > If so, we should use a specific checking for eBPF program, e.g.:
-> > >
-> > >                         else if (prev_mod && strcmp(prev_mod, curr_mo=
-d) &&
-> > >                                  (!strcmp(prev->name, "bpf") ||
-> > >                                   !strcmp(curr->name, "bpf")))
-> >
-> > I suspect it can happen on any module boundary so better
-> > to handle it in a more general way.
->
-> I don't want to introduce over complexity at here. We can apply
-> current patch as it is.
+Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
+event that it should start in a "paused" state.
 
-Good, can I get your Reviewed-by then? :)
+Add aux_paused to struct perf_event for AUX area events to keep track of
+the "paused" state. aux_paused is initialized to aux_start_paused.
 
->
-> A side topic, when I saw the code is hard coded for 4096 as the page
-> size, this is not always true on Arm64 (the page size can be 4KiB,
-> 16KiB or 64KiB). We need to consider to extend the environment for
-> recording the system's page size.
+Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
+callbacks. Call as needed, during __perf_event_output(). Add
+aux_in_pause_resume to struct perf_buffer to prevent races with the NMI
+handler. Pause/resume in NMI context will miss out if it coincides with
+another pause/resume.
 
-Sounds good.  But until then, 4K would be the reasonable choice.
+To use aux_pause or aux_resume, an event must be in a group with the AUX
+area event as the group leader.
 
-Thanks,
-Namhyung
+Example (requires Intel PT and tools patches also):
 
-> >
-> > >
-> > > >                               prev->end =3D roundup(prev->end + 409=
-6, 4096);
-> > > >                       else
-> > > >                               prev->end =3D curr->start;
-> > > > --
-> > > > 2.43.0.687.g38aa6559b0-goog
-> > > >
+ $ perf record --kcore -e intel_pt/aux-action=start-paused/k,syscalls:sys_enter_newuname/aux-action=resume/,syscalls:sys_exit_newuname/aux-action=pause/ uname
+ Linux
+ [ perf record: Woken up 1 times to write data ]
+ [ perf record: Captured and wrote 0.043 MB perf.data ]
+ $ perf script --call-trace
+ uname   30805 [000] 24001.058782799: name: 0x7ffc9c1865b0
+ uname   30805 [000] 24001.058784424:  psb offs: 0
+ uname   30805 [000] 24001.058784424:  cbr: 39 freq: 3904 MHz (139%)
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])        debug_smp_processor_id
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])        __x64_sys_newuname
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])            down_read
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                __cond_resched
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_add
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                    in_lock_functions
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_sub
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])            up_read
+ uname   30805 [000] 24001.058784629: ([kernel.kallsyms])                preempt_count_add
+ uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                    in_lock_functions
+ uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                preempt_count_sub
+ uname   30805 [000] 24001.058784838: ([kernel.kallsyms])            _copy_to_user
+ uname   30805 [000] 24001.058784838: ([kernel.kallsyms])        syscall_exit_to_user_mode
+ uname   30805 [000] 24001.058784838: ([kernel.kallsyms])            syscall_exit_work
+ uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                perf_syscall_exit
+ uname   30805 [000] 24001.058784838: ([kernel.kallsyms])                    debug_smp_processor_id
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                    perf_trace_buf_alloc
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_swevent_get_recursion_context
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            debug_smp_processor_id
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        debug_smp_processor_id
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                    perf_tp_event
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_trace_buf_update
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            tracing_gen_ctx_irq_test
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                        perf_swevent_event
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            __perf_event_account_interrupt
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                __this_cpu_preempt_check
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                            perf_event_output_forward
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                perf_event_aux_pause
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                    ring_buffer_get
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                        __rcu_read_lock
+ uname   30805 [000] 24001.058785046: ([kernel.kallsyms])                                        __rcu_read_unlock
+ uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                    pt_event_stop
+ uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        debug_smp_processor_id
+ uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        debug_smp_processor_id
+ uname   30805 [000] 24001.058785254: ([kernel.kallsyms])                                        native_write_msr
+ uname   30805 [000] 24001.058785463: ([kernel.kallsyms])                                        native_write_msr
+ uname   30805 [000] 24001.058785639: 0x0
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: James Clark <james.clark@arm.com>
+---
+
+
+Changes in V6:
+	Removed READ/WRITE_ONCEfrom __perf_event_aux_pause()
+	Expanded comment about guarding against NMI
+
+Changes in V5:
+	Added James' Ack
+
+Changes in V4:
+	Rename aux_output_cfg -> aux_action
+	Reorder aux_action bits from:
+		aux_pause, aux_resume, aux_start_paused
+	to:
+		aux_start_paused, aux_pause, aux_resume
+	Fix aux_action bits __u64 -> __u32
+
+
+ include/linux/perf_event.h      | 15 +++++++
+ include/uapi/linux/perf_event.h | 11 ++++-
+ kernel/events/core.c            | 76 +++++++++++++++++++++++++++++++--
+ kernel/events/internal.h        |  1 +
+ 4 files changed, 99 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d2a15c0c6f8a..6c1600b9bdb3 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -291,6 +291,7 @@ struct perf_event_pmu_context;
+ #define PERF_PMU_CAP_NO_EXCLUDE			0x0040
+ #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
+ #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
++#define PERF_PMU_CAP_AUX_PAUSE			0x0200
+ 
+ struct perf_output_handle;
+ 
+@@ -363,6 +364,8 @@ struct pmu {
+ #define PERF_EF_START	0x01		/* start the counter when adding    */
+ #define PERF_EF_RELOAD	0x02		/* reload the counter when starting */
+ #define PERF_EF_UPDATE	0x04		/* update the counter when stopping */
++#define PERF_EF_PAUSE	0x08		/* AUX area event, pause tracing */
++#define PERF_EF_RESUME	0x10		/* AUX area event, resume tracing */
+ 
+ 	/*
+ 	 * Adds/Removes a counter to/from the PMU, can be done inside a
+@@ -402,6 +405,15 @@ struct pmu {
+ 	 *
+ 	 * ->start() with PERF_EF_RELOAD will reprogram the counter
+ 	 *  value, must be preceded by a ->stop() with PERF_EF_UPDATE.
++	 *
++	 * ->stop() with PERF_EF_PAUSE will stop as simply as possible. Will not
++	 * overlap another ->stop() with PERF_EF_PAUSE nor ->start() with
++	 * PERF_EF_RESUME.
++	 *
++	 * ->start() with PERF_EF_RESUME will start as simply as possible but
++	 * only if the counter is not otherwise stopped. Will not overlap
++	 * another ->start() with PERF_EF_RESUME nor ->stop() with
++	 * PERF_EF_PAUSE.
+ 	 */
+ 	void (*start)			(struct perf_event *event, int flags);
+ 	void (*stop)			(struct perf_event *event, int flags);
+@@ -798,6 +810,9 @@ struct perf_event {
+ 	/* for aux_output events */
+ 	struct perf_event		*aux_event;
+ 
++	/* for AUX area events */
++	unsigned int			aux_paused;
++
+ 	void (*destroy)(struct perf_event *);
+ 	struct rcu_head			rcu_head;
+ 
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 3a64499b0f5d..0c557f0a17b3 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -511,7 +511,16 @@ struct perf_event_attr {
+ 	__u16	sample_max_stack;
+ 	__u16	__reserved_2;
+ 	__u32	aux_sample_size;
+-	__u32	__reserved_3;
++
++	union {
++		__u32	aux_action;
++		struct {
++			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
++				aux_pause        :  1, /* on overflow, pause AUX area tracing */
++				aux_resume       :  1, /* on overflow, resume AUX area tracing */
++				__reserved_3     : 29;
++		};
++	};
+ 
+ 	/*
+ 	 * User provided data if sigtrap=1, passed back to user via
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f0f0f71213a1..c7ed4e64f1d8 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2097,7 +2097,8 @@ static void perf_put_aux_event(struct perf_event *event)
+ 
+ static bool perf_need_aux_event(struct perf_event *event)
+ {
+-	return !!event->attr.aux_output || !!event->attr.aux_sample_size;
++	return event->attr.aux_output || event->attr.aux_sample_size ||
++	       event->attr.aux_pause || event->attr.aux_resume;
+ }
+ 
+ static int perf_get_aux_event(struct perf_event *event,
+@@ -2122,6 +2123,10 @@ static int perf_get_aux_event(struct perf_event *event,
+ 	    !perf_aux_output_match(event, group_leader))
+ 		return 0;
+ 
++	if ((event->attr.aux_pause || event->attr.aux_resume) &&
++	    !(group_leader->pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE))
++		return 0;
++
+ 	if (event->attr.aux_sample_size && !group_leader->pmu->snapshot_aux)
+ 		return 0;
+ 
+@@ -7854,6 +7859,51 @@ void perf_prepare_header(struct perf_event_header *header,
+ 	WARN_ON_ONCE(header->size & 7);
+ }
+ 
++static void __perf_event_aux_pause(struct perf_event *event, bool pause)
++{
++	if (pause) {
++		if (!event->aux_paused) {
++			event->aux_paused = 1;
++			event->pmu->stop(event, PERF_EF_PAUSE);
++		}
++	} else {
++		if (event->aux_paused) {
++			event->aux_paused = 0;
++			event->pmu->start(event, PERF_EF_RESUME);
++		}
++	}
++}
++
++static void perf_event_aux_pause(struct perf_event *event, bool pause)
++{
++	struct perf_buffer *rb;
++	unsigned long flags;
++
++	if (WARN_ON_ONCE(!event))
++		return;
++
++	rb = ring_buffer_get(event);
++	if (!rb)
++		return;
++
++	local_irq_save(flags);
++	/*
++	 * Guard against NMI, NMI loses here. The critical setion is demarked by
++	 * rb->aux_in_pause_resume == 1. An NMI in the critical section will not
++	 * process a pause/resume.
++	 */
++	if (READ_ONCE(rb->aux_in_pause_resume))
++		goto out_restore;
++	WRITE_ONCE(rb->aux_in_pause_resume, 1);
++	barrier();
++	__perf_event_aux_pause(event, pause);
++	barrier();
++	WRITE_ONCE(rb->aux_in_pause_resume, 0);
++out_restore:
++	local_irq_restore(flags);
++	ring_buffer_put(rb);
++}
++
+ static __always_inline int
+ __perf_event_output(struct perf_event *event,
+ 		    struct perf_sample_data *data,
+@@ -7867,6 +7917,9 @@ __perf_event_output(struct perf_event *event,
+ 	struct perf_event_header header;
+ 	int err;
+ 
++	if (event->attr.aux_pause)
++		perf_event_aux_pause(event->aux_event, true);
++
+ 	/* protect the callchain buffers */
+ 	rcu_read_lock();
+ 
+@@ -7883,6 +7936,10 @@ __perf_event_output(struct perf_event *event,
+ 
+ exit:
+ 	rcu_read_unlock();
++
++	if (event->attr.aux_resume)
++		perf_event_aux_pause(event->aux_event, false);
++
+ 	return err;
+ }
+ 
+@@ -12036,10 +12093,23 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	}
+ 
+ 	if (event->attr.aux_output &&
+-	    !(pmu->capabilities & PERF_PMU_CAP_AUX_OUTPUT)) {
++	    (!(pmu->capabilities & PERF_PMU_CAP_AUX_OUTPUT) ||
++	     event->attr.aux_pause || event->attr.aux_resume)) {
++		err = -EOPNOTSUPP;
++		goto err_pmu;
++	}
++
++	if (event->attr.aux_pause && event->attr.aux_resume) {
++		err = -EINVAL;
++		goto err_pmu;
++	}
++
++	if (event->attr.aux_start_paused &&
++	    !(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE)) {
+ 		err = -EOPNOTSUPP;
+ 		goto err_pmu;
+ 	}
++	event->aux_paused = event->attr.aux_start_paused;
+ 
+ 	if (cgroup_fd != -1) {
+ 		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+@@ -12836,7 +12906,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 	 * Grouping is not supported for kernel events, neither is 'AUX',
+ 	 * make sure the caller's intentions are adjusted.
+ 	 */
+-	if (attr->aux_output)
++	if (attr->aux_output || attr->aux_action)
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	event = perf_event_alloc(attr, cpu, task, NULL, NULL,
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index 5150d5f84c03..3320f78117dc 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -51,6 +51,7 @@ struct perf_buffer {
+ 	void				(*free_aux)(void *);
+ 	refcount_t			aux_refcount;
+ 	int				aux_in_sampling;
++	int				aux_in_pause_resume;
+ 	void				**aux_pages;
+ 	void				*aux_priv;
+ 
+-- 
+2.34.1
+
