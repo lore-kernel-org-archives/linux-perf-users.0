@@ -1,154 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4C6132463;
-	Fri, 16 Feb 2024 17:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F191350F4
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 19:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708105062; cv=none; b=OuaqCoBpGTGHUdSohKBRWFkAIwneqX02QP3+tsZ/wN5gZSrEjcq2yVnwz8OkAxRr+A7cmJY1xIj6O6weHPT/xbyLECu8EtRRX1OtrrccpfGQpfUEpDz11wvbjjho1PWN+2OmRA+08YK9fvpFvsUKKGL+WJagnnc/w30CSGZtzZU=
+	t=1708111250; cv=none; b=K6xFEyn1xXp+MbJaQlfaZq79tJxIQ6an7Xybe+7Ir+dHJXUiVqlpkCIYrWV1mArgzpPtyIaJwOcFLP1xekgAyTemZgZA12pIO1gKNHd8uG1CH01YaD0vnWVjRwX6sPuvApT9pZQftx0TRaizw8ZXt/aWFQdcwvyQ8+sXwR08qiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708105062; c=relaxed/simple;
-	bh=QDgGlctVC+QiXow3a/bDwKXWJ0/M+rG8O0JHyczFLdo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l92pVwLTdHbeMyJlHSkdcrMMtrn9VCHMwCxzOU/PZ6NDBFZfRbZeBGtLmdrh7Uacfyrnr5vlmJ6ldiDDYB4sP9O54m0afeGdaajOC58QpyN4HHEQDam6dxwDMJcEtBvVmTgjOM/lTmrtOCVbwk6va4tuHjtKHZj8tFr36KZiwpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqb1t/vD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708111250; c=relaxed/simple;
+	bh=hzaxoakXROKnRJ1C4f1sq6rI3UoGJj8IleqSmH8R1vE=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=qSZUFx3XXvtmEdConTyZEgSanng3YV8L6t0HfkdjX4eEvDw/w2K3Lcfaz+FvvRfps/tDZmdWb4sV9u+/LRPcUiBIC4KlA+y3xQ7j9W51FQCj9Nj44dqkJ3ss/XhwnrpAJbB9hDVv/bExnzD3bAEiM81CAE1kp1qJB6LJG3hwEfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YAYd1qKQ; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqb1t/vD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95A08C433C7;
-	Fri, 16 Feb 2024 17:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708105062;
-	bh=QDgGlctVC+QiXow3a/bDwKXWJ0/M+rG8O0JHyczFLdo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lqb1t/vD3bRl0YjtaMjccyNjyb7OuSOXe1kcFVOIpMtqzAp12qdko2vZXDBuzqQjt
-	 MwN3vww4yIpYbqjGdqUqBN6VnPZyHM5Nh+1vhV1hvF6BwSFk8F51jh926jgdAYFFt1
-	 rO5+IoeYxYga4h9dtUV5O4mKr3rvh7piDaay2v1XyAP8ydxvO6hL/ZgOLCIBLetgHc
-	 14iRBP4v7YgnN6cVGpWy0agIqUXWaJWVXi9HjZFyK7s3ca7ACENyRztzNlgU1Tuw6U
-	 h8lXzS339jhd6er8Lm8JIoZOcwPdWhTWkCZhLXW2/FM+fo2rXjxkynCjINtpfun1zd
-	 00a1smQ9Vj5Eg==
-Date: Fri, 16 Feb 2024 14:37:38 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Disable syscall augmentation with record
-Message-ID: <Zc-dYrNMt3Wsinax@x1>
-References: <20240216172357.65037-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YAYd1qKQ"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-607fbfc2584so16056347b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 11:20:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708111248; x=1708716048; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=meszDWVr+WK9vZcLqk0e2fu64K4eX/Xq5d5kxnUSTVw=;
+        b=YAYd1qKQmi3b7OIzroA6kRwD+8y3mztD5alVgQredwbg5Az5UIRQUXbsTOeILyE9zq
+         eySGpcKb2XSUEE1ME1/YpgxnfqahhFk8b/Sg2sv3St6a6wd3qOO0gSqgJJzKzxPA/9eB
+         C81p4DX+SREo9hsQFpuWV+GwETBcc8d0zxY3B73Featt7pcEaZeK6Nw8FUFvfX9lSq2l
+         JJT5siq9qBbXDP9DCaLXWTww2cQ/OXkb16RRgCQZBCKFbvLEGo/0xixb9SpP3y7oadDT
+         Dggdhs080S5qCskISolpYDbMoI2Aq6VafewYK0LjfEsv3lPtbGKlOZJ2MMmYbVOBfmsR
+         yFXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708111248; x=1708716048;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=meszDWVr+WK9vZcLqk0e2fu64K4eX/Xq5d5kxnUSTVw=;
+        b=sxKKrlH9onHRz3D6c8/Hzs1hj9Fq9S2QhBET/z4eP+vCPTpMu+pzR9xVScH6VG5R6j
+         c5lFXaxhptgtE7DsR9VCx63siPE8yj0uWlZ+hGokutIcww8UmUstUKkUnbO+xbSJNLqe
+         MDIjwXLey03e04bsLvjtyFMDzLYFetFLAIvROs2ggXFETQio0Xa5EUGZjTZbMNljc9LY
+         epftYdk6R0M9xey9qaOBAQN1DotGpmfahEshTo/hWYfW78FYKF5XTeoUu2Lw0SjCOcUV
+         4rekldO/qJfrLACgzFHVR/HBnBrQIFyYPqgHAq9r2m1jMCmQC8LPVBhFt8lviGOwHDsP
+         mLNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrrP5JqqCgzqJD06pmxUdjlLc90Khkafbw+y0qbDQY6JjbTb+jJZw023x7ghQXnxuXI/fRbBV6lRLzJkSiII4Ajl0XMimvVGVAGD4Is+S//g==
+X-Gm-Message-State: AOJu0YzKZd+snJuv6ow6Vmi1RaJzRAX0WjyWufz6YVGyyrj75y0FS9WX
+	c9BBxoZyhbhdtkfL9sfprEL36cXK1Mctce/Adq1XIYPPfw6VOUpDIJAGw4bUu32cYam0SyTrlVN
+	CjCiFkA==
+X-Google-Smtp-Source: AGHT+IFd5YfFbZwtV7cT/VlHdN9K2fe2lBmafMny/iGIIW5e9gwseuiwlWljLcHbG6jW1vGdn0ybSSOZRMfV
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4b5c:352:4272:e34e])
+ (user=irogers job=sendgmr) by 2002:a0d:cc4a:0:b0:5ff:4789:a406 with SMTP id
+ o71-20020a0dcc4a000000b005ff4789a406mr1224133ywd.1.1708111248392; Fri, 16 Feb
+ 2024 11:20:48 -0800 (PST)
+Date: Fri, 16 Feb 2024 11:20:44 -0800
+Message-Id: <20240216192044.119897-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240216172357.65037-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Subject: [PATCH v2] perf list: For metricgroup only list include description
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 16, 2024 at 09:23:57AM -0800, Ian Rogers wrote:
-> Syscall augmentation is causing samples not to be written to the
-> perf.data file with "perf trace record". Disabling augmentation is
-> sub-optimal, but it beats having a totally broken perf trace record.
+If perf list is invoked with 'metricgroups' include the description
+unless it is invoked with flags to exclude it. Make the description of
+metricgroup dumping dependent on the desc flag in print_state as with
+metrics.
 
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Before:
+```
+$ perf list metricgroups
+List of pre-defined events (to be used in -e or -M):
 
-'perf trace record' needs to be more tested, we need to have a shell
-'perf test' for it, maybe Michael has something on his test suite?
+Metric Groups:
 
-Testing your patch:
+Backend
+Bad
+BadSpec
+...
+```
 
-root@number:~# perf trace record ls
-anaconda-ks.cfg  bin  perf.all-number-20231219-104854.tar.bz2  perfconfig.off  perf.data  perf.data.baseline  perf.data.old
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.050 MB perf.data (170 samples) ]
-root@number:~# perf evlist -v
-raw_syscalls:sys_enter: type: 2 (PERF_TYPE_TRACEPOINT), size: 136, config: 0x168 (raw_syscalls:sys_enter), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, enable_on_exec: 1, sample_id_all: 1, exclude_guest: 1
-raw_syscalls:sys_exit: type: 2 (PERF_TYPE_TRACEPOINT), size: 136, config: 0x167 (raw_syscalls:sys_exit), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, enable_on_exec: 1, sample_id_all: 1, exclude_guest: 1
-dummy:u: type: 1 (PERF_TYPE_SOFTWARE), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|IDENTIFIER, read_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-# Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
-root@number:~# perf script | head -5
-              ls  145954 [021] 64113.916047:  raw_syscalls:sys_exit: NR 59 = 0
-              ls  145954 [021] 64113.916065: raw_syscalls:sys_enter: NR 12 (0, 528, 0, 0, 0, 27)
-              ls  145954 [021] 64113.916065:  raw_syscalls:sys_exit: NR 12 = 94098335809536
-              ls  145954 [021] 64113.916077: raw_syscalls:sys_enter: NR 158 (3001, 7fff9bc13790, 7f4bd6f4b4c0, 1, 3, 800)
-              ls  145954 [021] 64113.916078:  raw_syscalls:sys_exit: NR 158 = -22
-root@number:~# perf trace -i perf.data |& head 
-         ? (         ): ls/145954  ... [continued]: execve())                                           = 0
-     0.018 ( 0.000 ms): ls/145954 brk()                                                                 = 0x5594f9e14000
-     0.030 ( 0.000 ms): ls/145954 arch_prctl(option: 0x3001, arg2: 0x7fff9bc13790)                      = -1 EINVAL (Invalid argument)
-     0.045 ( 0.002 ms): ls/145954 access(filename: 0xd6f5b2c0, mode: R)                                 = -1 ENOENT (No such file or directory)
-     0.050 ( 0.003 ms): ls/145954 openat(dfd: CWD, filename: 0xd6f5a144, flags: RDONLY|CLOEXEC)         = 3
-     0.053 ( 0.001 ms): ls/145954 newfstatat(dfd: 3, filename: 0xd6f5ace8, statbuf: 0x7fff9bc129a0, flag: 4096) = 0
-     0.055 ( 0.004 ms): ls/145954 mmap(len: 78087, prot: READ, flags: PRIVATE, fd: 3)                   = 0x7f4bd6f1c000
-     0.059 ( 0.000 ms): ls/145954 close(fd: 3)                                                          = 0
-     0.066 ( 0.003 ms): ls/145954 openat(dfd: CWD, filename: 0xd6f65fa0, flags: RDONLY|CLOEXEC)         = 3
-     0.068 ( 0.001 ms): ls/145954 read(fd: 3, buf: 0x7fff9bc12b08, count: 832)                          = 832
-root@number:~#
+After:
+```
+$ perf list metricgroups
+List of pre-defined events (to be used in -e or -M):
 
-root@number:~# perf trace -v record ls
-Syscall augmentation fails with record, disabling augmentationUsing CPUID GenuineIntel-6-B7-1
-DEBUGINFOD_URLS=
-nr_cblocks: 0
-affinity: SYS
-mmap flush: 1
-comp level: 0
-mmap size 4198400B
-Control descriptor is not initialized
-mmap size 528384B
-anaconda-ks.cfg  bin  perf.all-number-20231219-104854.tar.bz2  perfconfig.off  perf.data  perf.data.baseline  perf.data.old
-[ perf record: Woken up 1 times to write data ]
-failed to write feature CPU_PMU_CAPS
-[ perf record: Captured and wrote 0.050 MB perf.data (170 samples) ]
-root@number:~#
+Metric Groups:
 
-There is a missing newline and we can avoid repeating a term, and I also
-added some extra explanation about "augmentation":
+Backend [Grouping from Top-down Microarchitecture Analysis Metrics spreadsheet]
+Bad [Grouping from Top-down Microarchitecture Analysis Metrics spreadsheet]
+BadSpec
+...
+```
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 192721261098832e..3f77dd3eb70dc37a 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4865,7 +4865,7 @@ int cmd_trace(int argc, const char **argv)
- 		goto skip_augmentation;
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v2 rebases on top of perf-tools-next patch:
+79bacb6ad73c perf list: Add output file option
+https://lore.kernel.org/r/20240124043015.1388867-3-irogers@google.com
+---
+ tools/perf/builtin-list.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index e27a1b1288c2..02bf608d585e 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -208,17 +208,24 @@ static void default_print_metric(void *ps,
+ 	if (!print_state->last_metricgroups ||
+ 	    strcmp(print_state->last_metricgroups, group ?: "")) {
+ 		if (group && print_state->metricgroups) {
+-			if (print_state->name_only)
++			if (print_state->name_only) {
+ 				fprintf(fp, "%s ", group);
+-			else if (print_state->metrics) {
+-				const char *gdesc = describe_metricgroup(group);
++			} else {
++				const char *gdesc = print_state->desc
++					? describe_metricgroup(group)
++					: NULL;
++				const char *print_colon = "";
++
++				if (print_state->metrics) {
++					print_colon = ":";
++					fputc('\n', fp);
++				}
  
- 	if ((argc >= 1) && (strcmp(argv[0], "record") == 0)) {
--		pr_debug("Syscall augmentation fails with record, disabling augmentation");
-+		pr_debug("Syscall augmentation (reading pointer args using BPF) fails with record, disabling it.\n");
- 		goto skip_augmentation;
- 	}
- 
-I'll see if I come up with the test and a fix that allows augmentation
-to work with 'perf trace record'.
+ 				if (gdesc)
+-					fprintf(fp, "\n%s: [%s]\n", group, gdesc);
++					fprintf(fp, "%s%s [%s]\n", group, print_colon, gdesc);
+ 				else
+-					fprintf(fp, "\n%s:\n", group);
+-			} else
+-				fprintf(fp, "%s\n", group);
++					fprintf(fp, "%s%s\n", group, print_colon);
++			}
+ 		}
+ 		zfree(&print_state->last_metricgroups);
+ 		print_state->last_metricgroups = strdup(group ?: "");
+-- 
+2.44.0.rc0.258.g7320e95886-goog
 
-- Arnaldo
-
- 
-> Closes: https://lore.kernel.org/lkml/CAP-5=fV9Gd1Teak+EOcUSxe13KqSyfZyPNagK97GbLiOQRgGaw@mail.gmail.com/
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-trace.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 109b8e64fe69..192721261098 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -4864,6 +4864,11 @@ int cmd_trace(int argc, const char **argv)
->  	if (!trace.trace_syscalls)
->  		goto skip_augmentation;
->  
-> +	if ((argc >= 1) && (strcmp(argv[0], "record") == 0)) {
-> +		pr_debug("Syscall augmentation fails with record, disabling augmentation");
-> +		goto skip_augmentation;
-> +	}
-> +
->  	trace.skel = augmented_raw_syscalls_bpf__open();
->  	if (!trace.skel) {
->  		pr_debug("Failed to open augmented syscalls BPF skeleton");
-> -- 
-> 2.44.0.rc0.258.g7320e95886-goog
-> 
