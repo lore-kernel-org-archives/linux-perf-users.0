@@ -1,148 +1,299 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BC64C8F
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Feb 2024 00:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C040314F61
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Feb 2024 00:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708131167; cv=none; b=AjOXgP0vswqrFSBLoOS6W6ZiI64ErmY9B+vZWdIj2j0QpNLsoQsJdY1cv9OLjw6eHCY8Yoc4om4lezTLJcjospiOeCb+CMUOJPO1FvObphLqhfbaSayVJgt36KAzUWK1yByFWkUW0JwCAX2496x8JiMZLCYTTylQidu79GnqN4Y=
+	t=1708131497; cv=none; b=rPJIE2xfKsNHTzV1zpvZ2q5FSc+wA6Og9VAPPpKXEa82PZw6FPXLulf7IQavy0qck3zwt0NyHYUyid263taJ7JYmSdpA4ZJTTx7qeIca8FMpIjvnFRfmEWfyG0icQpqZCMsATVKslaykqgQe6NhYYpMwxdv0qFfuQnL6wUogSc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708131167; c=relaxed/simple;
-	bh=xMjUVfiyxmaguXvZrW6crG3aoQIwn8QnYYLwV+KSSWA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EjGmt6tnmNmPIty9/m3B8ZoHPOF7x3NWlqYTS5qgT3hbzAKGKRyQte7NMhyoInW1j0+YJew0lFANwVnbMs973BhqU2HMMqArzqmTRUlXUBootETy6t8SMeLK4BiLIn+C4nj9y8mrjI7FyQqG+b2xHrd+64ufbAQ3fBmL3JQ/8Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pVfEHcpu; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708131497; c=relaxed/simple;
+	bh=T/rm/p4zZLrZ8lUQrOICPzaapq/vW9EgZQVSXWVG5rw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uf7a6PB+AzqK968XuaHtEypqnQ9ggpzkDiahmEG1+TFF6e8XrZIjnroI7aWKntMyPxk1xMcgL28yfUbwohjicslawVVHVnIVD3bT0jGLNBKbWwQQB+r7YJCejiRk7gLOknQ18SOjXXaEAkiOE8IbkKK9gcuA/uwocwnMlJy1Cc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=OPrkRoIE; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pVfEHcpu"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1db61f7ebcbso39535ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 16:52:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="OPrkRoIE"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-59d489e8d68so483897eaf.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 16:58:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708131165; x=1708735965; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zvr57WXSGKgreDl2S3+cS6Q3DlJ9MFO+tZDONyxR8WE=;
-        b=pVfEHcpu9cuLDlTbA+B73bEzwdSAI33O59xw1XUAjm+2D2RkU9FhRwtiOCZjT6ONmO
-         ITGz9nCbcps+KSWsv8DUSqlo1PfN4HqtS9FswiKLIw4aPZELISMRKWHQvz2tC8mpvvsw
-         0giSomXQOEjZQYjpkEE8wOT2VVrl0dGT5MZn4XxAolJpH1PdZRvtj2A40rMh7B4889RC
-         UuiaKXm0GX2v+KNcFb/ERPMvQCxHJTH5+l8t+Oz1pq5j5Acsl6aMzFwnRE7gvyYORY9Z
-         8qp1BeVLyJh427UCoeqPgWrZk0MzF6GaTaqJJvxmhyLRi2rk8HPXtN+7iZkjiXxYxSjC
-         TBBA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1708131494; x=1708736294; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IzVo2l1UeODXlFr9ZspobMSeOz6FqRsDzZRtwqz0aks=;
+        b=OPrkRoIEKkCbQ4YuvXA/KDHVjR4g1oj2QRLXipeRksevCbLgIO8J+1WlN6T4pSgHYZ
+         Vi5gZH+89WqV3vpAHcshLk+4WPfIL5JHvq9c8Lkn2vrVDswj7d2Mzg777l276+8f02+h
+         CU6JPhzNg1Odohqi3nnEA/lPJjbKdzhn4gdmweF2UyeFFdtvpwjfiAo2LWp/H9sWy7GK
+         1S7PlaO2dqils+OSU6wOKKkgClBy2xxr2oyglgKUcbTajrX1SmpmwIzc4JkaXeciUByZ
+         BSPc9GBZw/q6CU8UIMIGh5s+5EDQ/7IKSyAyYj/Dtn+eAjWaAQUJGVuatk57oqfD/VL0
+         hQ8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708131165; x=1708735965;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zvr57WXSGKgreDl2S3+cS6Q3DlJ9MFO+tZDONyxR8WE=;
-        b=r72Zyc1u+lMO+JkltfNJBiYq6I1wea+Eh7DjKuZ9yl9KNvBQ6h3BbmC2Fw6Vcyx3sn
-         rrbw5IrVkHTLYDCHZQX1WPQk0EME0gmdfed/qvudMHLum9XMrha2Ak62dAiAmCNUZyV5
-         Iwsu/zh+9xQyLxh8MbszxTFlz6Hq+X00ezS4e7o1h0IyhCxnN7mJOfLiFvFK/1RFfgj7
-         Aw/G+Bje1qPYxjgjvSAjO8wFVmSfXJXJqXwpmIzR0SvvbYwdpE37g0DB0oMP+9K3MEow
-         HFUbcEh61QwvkE2eHP18oCGFoDN5Il2rliyuPfHjlhlwIJkxYpPC/MlLgnXCvSF1nIDM
-         dMZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAjs57kRMAWjsXJpJV2cBlaIBTcXnhKogC9VO91adpxszSYEBo7BdQ+fO54yH+gX5G9KwsfNCtelP5W2UMzzb4bdbKPY68O+3LKzqSF8r0fg==
-X-Gm-Message-State: AOJu0YxdUEsw2NWXvACSfeM4p29RL13xl5Vmh64Ak1JqQKpEEUJAWgXU
-	cooSYjes087U3Nv4G9ylcSRdYqC4xWaEKPzFnQ9TdyugElE+X8Wi6QWlfoq4wjlY8UOFPOoZ4xm
-	wlT0voayj8OeTQQ5te6CldMMhmNcuzg6TwIez
-X-Google-Smtp-Source: AGHT+IE3HGUrOS/cMjy3dK83NQcHQ7z42RJxNSfu2ZjNKxNaIs4MfqHN+ZrLaeTNVN7unFneCe3UnNRtF7B+qxo7VzY=
-X-Received: by 2002:a17:902:c70c:b0:1d8:eac9:bbfc with SMTP id
- p12-20020a170902c70c00b001d8eac9bbfcmr98349plp.15.1708131164390; Fri, 16 Feb
- 2024 16:52:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708131494; x=1708736294;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IzVo2l1UeODXlFr9ZspobMSeOz6FqRsDzZRtwqz0aks=;
+        b=Br2c8obI7wMDzDKiT7FkWk/6Nhz2PQxgAzravmwoZRlZ/MuI+vlPQruVDwTywU2M0a
+         MeLzF8tPdEpqrAqncuNTC8y+j4mscdHMonL4QJDCDR8vT0l6ECckHu5yoQCnIVLnKdfL
+         QCr5mCnCW+sH9YpL3mwNek8+z3tRIHxhULcCZ1bVfLyedA+JhCCxeLdvGpQIh6Rxmhp9
+         FxG9M+vUPVST1wjQ1hwAOtUq3Mo4F6iRhgF4seCHoNy7buDjIzhYwOT52oDm/WzNLpMY
+         vmYCY7kp9ohaFy4slh5jD4JQN5J+nQWISb0A3bHoxdK+Vm6+DqY4Sasdw37k53XMkYpL
+         QL1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWqOQ3PIQkjPFY6GhVrYwWGITh4CLB4Fw5p2XRharviONeXp35cNHbDjCWWI1sCYRw+4625EmE5A2eHex2Ore/QXa63TwuZoOtpst8J0cXZeg==
+X-Gm-Message-State: AOJu0Yy8ieDYCkM9wQFbcEbrDiRadbJrTA3pXJLZHJsC32f+0lwbu9l4
+	ZLsPRik5t6YCWlm8LLHKGnoINS4pSxE8U8fQ7VKkGS+bb54GSQwEcZDDWfn6+9Q=
+X-Google-Smtp-Source: AGHT+IF2qj5VG2aWGKmy+Z/F9xqjxzKMZfdoF+ZXES4kZiPGRVxWB31P4WLI9MkML3OCwmckEUxPAA==
+X-Received: by 2002:a05:6358:659b:b0:178:fd13:d6e4 with SMTP id x27-20020a056358659b00b00178fd13d6e4mr7493295rwh.25.1708131493668;
+        Fri, 16 Feb 2024 16:58:13 -0800 (PST)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d188-20020a6336c5000000b005dc89957e06sm487655pga.71.2024.02.16.16.58.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 16:58:13 -0800 (PST)
+From: Atish Patra <atishp@rivosinc.com>
+To: linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Christian Brauner <brauner@kernel.org>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Conor Dooley <conor@kernel.org>,
+	devicetree@vger.kernel.org,
+	Evan Green <evan@rivosinc.com>,
+	Guo Ren <guoren@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@arm.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	kvm-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Will Deacon <will@kernel.org>,
+	kaiwenxue1@gmail.com,
+	Yang Jihong <yangjihong1@huawei.com>
+Subject: [PATCH RFC 00/20] Add Counter delegation ISA extension support 
+Date: Fri, 16 Feb 2024 16:57:18 -0800
+Message-Id: <20240217005738.3744121-1-atishp@rivosinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202234057.2085863-1-irogers@google.com> <20240202234057.2085863-3-irogers@google.com>
- <CAM9d7ci3VO7reyxPc8WOczdoyYYCUshxCJDMZ7wPpHknCubNXQ@mail.gmail.com>
-In-Reply-To: <CAM9d7ci3VO7reyxPc8WOczdoyYYCUshxCJDMZ7wPpHknCubNXQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 16 Feb 2024 16:52:31 -0800
-Message-ID: <CAP-5=fVNLoes2VaCcqrueiDLBZAZNthSJVD17z77cnyE7wF7ag@mail.gmail.com>
-Subject: Re: [PATCH v3 2/8] libperf cpumap: Ensure empty cpumap is NULL from alloc
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
-	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
-	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 16, 2024 at 4:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, Feb 2, 2024 at 3:41=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > Potential corner cases could cause a cpumap to be allocated with size
-> > 0, but an empty cpumap should be represented as NULL. Add a path in
-> > perf_cpu_map__alloc to ensure this.
-> >
-> > Suggested-by: James Clark <james.clark@arm.com>
-> > Closes: https://lore.kernel.org/lkml/2cd09e7c-eb88-6726-6169-647dcd0a81=
-01@arm.com/
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/perf/cpumap.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > index ba49552952c5..cae799ad44e1 100644
-> > --- a/tools/lib/perf/cpumap.c
-> > +++ b/tools/lib/perf/cpumap.c
-> > @@ -18,9 +18,13 @@ void perf_cpu_map__set_nr(struct perf_cpu_map *map, =
-int nr_cpus)
-> >
-> >  struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-> >  {
-> > -       RC_STRUCT(perf_cpu_map) *cpus =3D malloc(sizeof(*cpus) + sizeof=
-(struct perf_cpu) * nr_cpus);
-> > +       RC_STRUCT(perf_cpu_map) *cpus;
-> >         struct perf_cpu_map *result;
-> >
-> > +       if (nr_cpus =3D=3D 0)
-> > +               return NULL;
->
-> But allocation failure also returns NULL.  Then callers should check
-> what's the expected result.
+This series adds the counter delegation extension support. It is based on
+very early PoC work done by Kevin Xue and mostly rewritten after that.
+The counter delegation ISA extension(Smcdeleg/Ssccfg) actually depends
+on multiple ISA extensions.
 
-Right, we don't have a habit of just aborting on memory allocation
-errors. In the case that NULL is returned it is assumed that an empty
-CPU map is appropriate. Adding checks throughout the code base that an
-empty CPU map is only returned when 0 is given is beyond the scope of
-this patch set.
+1. S[m|s]csrind : The indirect CSR extension[1] which defines additional
+   5 ([M|S|VS]IREG2-[M|S|VS]IREG6) register to address size limitation of
+   RISC-V CSR address space.
+2. Smstateen: The stateen bit[60] controls the access to the registers
+   indirectly via the above indirect registers.
+3. Smcdeleg/Ssccfg: The counter delegation extensions[2]
 
-Thanks,
-Ian
+The counter delegation extension allows Supervisor mode to program the
+hpmevent and hpmcounters directly without needing the assistance from the
+M-mode via SBI calls. This results in a faster perf profiling and very
+few traps. This extension also introduces a scountinhibit CSR which allows
+to stop/start any counter directly from the S-mode. As the counter
+delegation extension potentially can have more than 100 CSRs, the specification
+leverages the indirect CSR extension to save the precious CSR address range.
 
-> Thanks,
-> Namhyung
->
-> > +
-> > +       cpus =3D malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cp=
-us);
-> >         if (ADD_RC_CHK(result, cpus)) {
-> >                 cpus->nr =3D nr_cpus;
-> >                 refcount_set(&cpus->refcnt, 1);
-> > --
-> > 2.43.0.594.gd9cf4e227d-goog
-> >
+Due to the dependency of these extensions, the following extensions must be
+enabled in qemu to use the counter delegation feature in S-mode.
+
+"smstateen=true,sscofpmf=true,ssccfg=true,smcdeleg=true,smcsrind=true,sscsrind=true"
+
+When we access the counters directly in S-mode, we also need to solve the
+following problems.
+
+1. Event to counter mapping
+2. Event encoding discovery
+
+The RISC-V ISA doesn't define any standard either for event encoding or the
+event to counter mapping rules.
+
+Until now, the SBI PMU implementation relies on device tree binding[3] to
+discover the event to counter mapping in RISC-V platform in the firmware. The
+SBI PMU specification[4] defines event encoding for standard perf events as well.
+Thus, the kernel can query the appropriate counter for an given event from the
+firmware.
+
+However, the kernel doesn't need any firmware interaction for hardware
+counters if counter delegation is available in the hardware. Thus, the driver
+needs to discover the above mappings/encodings by itself without any assistance
+from firmware. One of the options considered was to extend the PMU DT parsing
+support to kernel as well. However, that requires additional support in ACPI
+based system. It also needs more infrastructure in the virtualization as well.
+
+This patch series solves the above problem #1 by extending the perf tool in a
+way so that event json file can specify the counter constraints of each event
+and that can be passed to the driver to choose the best counter for a given
+event. The perf stat metric series[5] from Weilin already extend the perf tool
+to parse "Counter" property to specify the hardware counter restriction.
+I have included the patch from Weilin in this series for verification purposes
+only. I will rebase as that series evolves.
+
+This series extends that support by converting comma separated string to a
+bitmap. The counter constraint bitmap is passed to the perf driver via
+newly introduced "counterid_mask" property set in "config2". Even though, this
+is a generic perf tool change, this should not affect any other architecture
+if "counterid_mask" is not mapped. 
+
+@Weilin: Please let me know if there is a better way to solve the problem I
+described. 
+
+The problem #2 is solved by defining a architecture specific override function
+that will replace the perf standard event encoding with an encoding specified
+in the json file with the same event name. The alternate solution considered
+was to specify the encodings in the driver. However, these encodings are vendor
+specific in absence of an ISA guidelines and will become unmanageable with
+so many RISC-V vendors touching the driver for their encoding. 
+
+The override is only required when counter delegation is available in the
+platform which is detected at the runtime. The SBI PMU (current implementation)
+doesn't require any override as it defines the standard event encoding. The
+hwprobe syscall defined for RISC-V is used for this detection in this series.
+A sysfs based property can be explored to do the same but we may require
+hwprobe in future given the churn of extensions in RISC-V. That's why, I went
+with hwprobe. Let me know if anybody thinks that's a bad idea. 
+
+The perf tool also hook allows RISC-V ISA platform vendors to define their
+encoding for any standard perf or ISA event. I have tried to cover all the use
+cases that I am aware of (stat, record, top). Please let me know if I have
+missed any particular use case where architecture hook must be invoked. I am
+also open to any other idea to solve the above said problem.
+
+PATCH organization:
+PATCH 1 is from the perf metric series[5]
+PATCH 2-5 defines and implements the indirect CSR extension.
+PATCH 6-10 defines the other required ISA extensions.
+PATCH 11 just an overall restructure of the RISC-V PMU driver.
+PATCH 12-14 implements the counter delegation extension and new perf tool
+plumbings to solve #1 and #2.
+PATCH 15-16 improves the perf tool support to solve #1 and #2.
+PATCH 17 adds a perf json file for qemu virt machine.
+PATCH 18-20 adds hwprobe mechanism to enable perf to detect if platform supports
+delegation extensions.
+
+There is no change in process to run perf stat/record and will continue to work
+as it is as long as the relevant extensions have been enabled in Qemu.
+
+However, the perf tool needs to be recompiled with as it requires new kenrel
+headers.
+
+The Qemu patches can be found here:
+https://github.com/atishp04/qemu/tree/counter_delegation_rfc
+
+The opensbi patch can be found here:
+https://github.com/atishp04/opensbi/tree/counter_delegation_v1
+
+The Linux kernel patches can be found here:
+https://github.com/atishp04/linux/tree/counter_delegation_rfc
+
+[1] https://github.com/riscv/riscv-indirect-csr-access
+[2] https://github.com/riscv/riscv-smcdeleg-ssccfg
+[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/perf/riscv%2Cpmu.yaml
+[4] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc
+[5] https://lore.kernel.org/all/20240209031441.943012-4-weilin.wang@intel.com/
+
+Atish Patra (17):
+RISC-V: Add Sxcsrind ISA extension definition and parsing
+dt-bindings: riscv: add Sxcsrind ISA extension description
+RISC-V: Define indirect CSR access helpers
+RISC-V: Add Ssccfg ISA extension definition and parsing
+dt-bindings: riscv: add Ssccfg ISA extension description
+RISC-V: Add Smcntrpmf extension parsing
+dt-bindings: riscv: add Smcntrpmf ISA extension description
+RISC-V: perf: Restructure the SBI PMU code
+RISC-V: perf: Modify the counter discovery mechanism
+RISC-V: perf: Implement supervisor counter delegation support
+RISC-V: perf: Use config2 for event to counter mapping
+tools/perf: Add arch hooks to override perf standard events
+tools/perf: Pass the Counter constraint values in the pmu events
+perf: Add json file for virt machine supported events
+tools arch uapi: Sync the uinstd.h header file for RISC-V
+RISC-V: Add hwprobe support for Counter delegation extensions
+tools/perf: Detect if platform supports counter delegation
+
+Kaiwen Xue (2):
+RISC-V: Add Sxcsrind ISA extension CSR definitions
+RISC-V: Add Sscfg extension CSR definition
+
+Weilin Wang (1):
+perf pmu-events: Add functions in jevent.py to parse counter and event
+info for hardware aware grouping
+
+Documentation/arch/riscv/hwprobe.rst          |  10 +
+.../devicetree/bindings/riscv/extensions.yaml |  34 +
+MAINTAINERS                                   |   4 +-
+arch/riscv/include/asm/csr.h                  |  47 ++
+arch/riscv/include/asm/csr_ind.h              |  42 ++
+arch/riscv/include/asm/hwcap.h                |   5 +
+arch/riscv/include/asm/sbi.h                  |   2 +-
+arch/riscv/include/uapi/asm/hwprobe.h         |   4 +
+arch/riscv/kernel/cpufeature.c                |   5 +
+arch/riscv/kernel/sys_hwprobe.c               |   3 +
+arch/riscv/kvm/vcpu_pmu.c                     |   2 +-
+drivers/perf/Kconfig                          |  16 +-
+drivers/perf/Makefile                         |   4 +-
+.../perf/{riscv_pmu.c => riscv_pmu_common.c}  |   0
+.../perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c} | 654 ++++++++++++++----
+include/linux/perf/riscv_pmu.h                |  13 +-
+tools/arch/riscv/include/uapi/asm/unistd.h    |  14 +-
+tools/perf/arch/riscv/util/Build              |   2 +
+tools/perf/arch/riscv/util/evlist.c           |  60 ++
+tools/perf/arch/riscv/util/pmu.c              |  41 ++
+tools/perf/arch/riscv/util/pmu.h              |  11 +
+tools/perf/builtin-record.c                   |   3 +
+tools/perf/builtin-stat.c                     |   2 +
+tools/perf/builtin-top.c                      |   3 +
+.../pmu-events/arch/riscv/arch-standard.json  |  10 +
+tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
+.../pmu-events/arch/riscv/qemu/virt/cpu.json  |  30 +
+.../arch/riscv/qemu/virt/firmware.json        |  68 ++
+tools/perf/pmu-events/jevents.py              | 186 ++++-
+tools/perf/pmu-events/pmu-events.h            |  25 +-
+tools/perf/util/evlist.c                      |   6 +
+tools/perf/util/evlist.h                      |   6 +
+32 files changed, 1167 insertions(+), 146 deletions(-)
+create mode 100644 arch/riscv/include/asm/csr_ind.h
+rename drivers/perf/{riscv_pmu.c => riscv_pmu_common.c} (100%)
+rename drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c} (61%)
+create mode 100644 tools/perf/arch/riscv/util/evlist.c
+create mode 100644 tools/perf/arch/riscv/util/pmu.c
+create mode 100644 tools/perf/arch/riscv/util/pmu.h
+create mode 100644 tools/perf/pmu-events/arch/riscv/arch-standard.json
+create mode 100644 tools/perf/pmu-events/arch/riscv/qemu/virt/cpu.json
+create mode 100644 tools/perf/pmu-events/arch/riscv/qemu/virt/firmware.json
+
+--
+2.34.1
+
