@@ -1,108 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6401BF38;
-	Sat, 17 Feb 2024 02:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA12C33CA;
+	Sat, 17 Feb 2024 07:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708137219; cv=none; b=Lp5ycs5obvBQxqQjwMTC24dF+uA+bxHogLs8KCjG6Zg+IXnvb8m80R3j1WM4kcDBX5ps40YXx4ou0WHBr2DtVxnl6xS0KbW2CZD7sSmQL3qaJ/Uc6woST5u75l1xSFPcWBIlgmaxIqd4b+3dOCBQkpzpaE50sNR7l4+gRPXzFI4=
+	t=1708155691; cv=none; b=XNBKYHYXM1ewlyA2OBt70PZUO+b9xaFgH2gePaHTuW69DWI4/Jm7STS+UcuCSYRLHBURKmxiPK+qpusS7ZGzpkEZtPyE1o+1J6ppaJhqt7f7lufPIB2njtZZK0P4gbLekzG2mZ/LAIJ+BTx7qdRzCGqw7nVBDpeQZ3n4cJtxMkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708137219; c=relaxed/simple;
-	bh=haW+Geg9Bw9o5VNvbhSkBi54T3SIdZhLVbkvZSHVfug=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=PswhJY4oeBbpKj4AZBl/qlbryXA2FquNbEjAhrOxWd99Q3C58Hj88WOHKXZjk/1DUGb+xh3YK6LstDc29hu786uKF3kg31VvtlXXCFrppBroHB4x+uPLzmer9m70Py0TQWSrGJmXyvp3mkrUlVpmFWNoEWiSBGT678kL/hz/Lmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAdqEnNF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAdqEnNF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0062DC433C7;
-	Sat, 17 Feb 2024 02:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708137219;
-	bh=haW+Geg9Bw9o5VNvbhSkBi54T3SIdZhLVbkvZSHVfug=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=TAdqEnNFcSJfD3bOPI1EINwJx7FszBiVIwFOA3zMEaTkObGLRoZjOTratYn0b5Nna
-	 yZfq/eY/nLs4qzPIKZ95OQQeGjSEySP3+ozJAt+oYBhtm82DoOZVXeMQsDo4X7hDmp
-	 N6FxBrhpr+h8Jd0Sn7oyVjyHAUXKLCjkSiHAnyfmS8BjHEDO7N6BqwS5eHCW6mT8EJ
-	 zrChd9I6JCiTMnmILWmQdOdy6Asx+wLWJCenXaEfEt9z1DU/bUxMqgtb6zGwl4pBdl
-	 QAJLMWDV2TuvtZ9Jm++JJzBIHs88GYcFNOoR2yVm17FRw7wzFc6SJhbnF8D+Xzm2+R
-	 6wwPzFNws8HGw==
-Date: Fri, 16 Feb 2024 20:33:38 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1708155691; c=relaxed/simple;
+	bh=aDWhbEHWYOpQxrhK0TlBO6coqL3Tj0XLbexDX1TfbHg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q7vvB7YtrHNf3GAPM0jHTFReqHdqOSXsS8qLWYyykLieBeDceuxP0i9lCDNVrfrJTfOdCbbUBzccdt51s7pdnad6Os+9IBvZlEA8Ss05jxvGZQP1tjz9R3DwL5+mOXoZ2nrUUbXBdFGmIW6wYaIwATpr9xRwcf5MMfIEpZEOp9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TcLLH1fjVz1xnNg;
+	Sat, 17 Feb 2024 15:40:07 +0800 (CST)
+Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5EBE51400FD;
+	Sat, 17 Feb 2024 15:41:25 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1258.28; Sat, 17 Feb 2024 15:41:23 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
+ Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
+	<changbin.du@huawei.com>
+Subject: [PATCH v8 0/5] perf: script: Intro capstone disasm engine to show instruction trace
+Date: Sat, 17 Feb 2024 15:40:41 +0800
+Message-ID: <20240217074046.4100789-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Guo Ren <guoren@kernel.org>, 
- Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, 
- linux-perf-users@vger.kernel.org, Weilin Wang <weilin.wang@intel.com>, 
- Ian Rogers <irogers@google.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
- Heiko Stuebner <heiko@sntech.de>, Yang Jihong <yangjihong1@huawei.com>, 
- =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
- kvm-riscv@lists.infradead.org, Evan Green <evan@rivosinc.com>, 
- Christian Brauner <brauner@kernel.org>, 
- John Garry <john.g.garry@oracle.com>, 
- Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
- Andrew Jones <ajones@ventanamicro.com>, 
- Kan Liang <kan.liang@linux.intel.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, kvm@vger.kernel.org, 
- Alexandre Ghiti <alexghiti@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>, 
- Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
- Jing Zhang <renyu.zj@linux.alibaba.com>, 
- Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, kaiwenxue1@gmail.com, 
- Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
- James Clark <james.clark@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
- linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>
-In-Reply-To: <20240217005738.3744121-11-atishp@rivosinc.com>
-References: <20240217005738.3744121-1-atishp@rivosinc.com>
- <20240217005738.3744121-11-atishp@rivosinc.com>
-Message-Id: <170813721439.1034411.7264728567495824984.robh@kernel.org>
-Subject: Re: [PATCH RFC 10/20] dt-bindings: riscv: add Smcntrpmf ISA
- extension description
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd100002.china.huawei.com (7.221.188.184)
 
+This series introduces capstone disassembler engine to print instructions of
+Intel PT trace, which was printed via the XED tool.
 
-On Fri, 16 Feb 2024 16:57:28 -0800, Atish Patra wrote:
-> Add the description for Smcntrpmf ISA extension
-> 
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->  Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+The advantages compared to XED tool:
+    * Support arm, arm64, x86-32, x86_64, s390 (more could be supported),
+      xed only for x86_64.
+    * More friendly to read. Immediate address operands are shown as symbol+offs.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Display raw instructions:
+    $ sudo perf record --event intel_pt//u -- ls
+    $ sudo perf script --insn-trace
+                perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
+                perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
+                perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
+                perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
+                perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
+                perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
+                perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
 
-yamllint warnings/errors:
+Display mnemonic instructions:
+    $ sudo perf script --insn-trace=disasm
+                perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so)		cmpq $-0xfff, %rax
+                perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so)		jae __GI___ioctl+0x10
+                perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so)		retq
+                perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf)		testl %eax, %eax
+                perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf)		jne perf_evsel__enable_cpu+0xad
+                perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf)		movq 0xa8(%r12), %rax
+                perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf)		movq 0x20(%rax), %rdx
+                perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf)		cmpl %edx, %ebx
+                perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf)		jl perf_evsel__enable_cpu+0x60
+                perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf)		xorl %eax, %eax
 
-dtschema/dtc warnings/errors:
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
+v8:
+  - fix conflicting header bpf.h problem, aka, capstone/bpf.h and uapi/linux/bpf.h. (Namhyung Kim, Adrian Hunter)
+v7:
+  - remove redundant space for raw instruction.
+  - rename sample__fprintf_insn() as sample__fprintf_insn_asm() and make it empty if libcapstone is not available.
+v6:
+  - make '-F +disasm' fatal if libcapstone is not supported. (Adrian Hunter)
+  - display with perf version --build-options. (Adrian Hunter)
+  - exclude libcapstone from make_minimal. (Adrian Hunter)
+v5:
+  - fixes and improments suggested by Adrian Hunter
+v4:
+  - rename 'insn_disam' to 'disasm' (Adrian Hunter)
+v3:
+  - fix s390 detection. (Thomas Richter)
+v2:
+  - add a new field 'insn_disam' instead of changing the default output.
+  - preserve the old --xed option.
 
-doc reference errors (make refcheckdocs):
+Changbin Du (5):
+  perf: build: introduce the libcapstone
+  perf: util: use capstone disasm engine to show assembly instructions
+  perf: script: add field 'disasm' to display mnemonic instructions
+  perf: script: add raw|disasm arguments to --insn-trace option
+  perf: script: prefer capstone to XED
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240217005738.3744121-11-atishp@rivosinc.com
+ tools/build/Makefile.feature               |   2 +
+ tools/build/feature/Makefile               |   4 +
+ tools/build/feature/test-all.c             |   4 +
+ tools/build/feature/test-libcapstone.c     |  11 ++
+ tools/perf/Documentation/perf-intel-pt.txt |  14 ++-
+ tools/perf/Documentation/perf-script.txt   |  20 +--
+ tools/perf/Makefile.config                 |  21 ++++
+ tools/perf/Makefile.perf                   |   3 +
+ tools/perf/builtin-script.c                |  45 +++++--
+ tools/perf/builtin-version.c               |   1 +
+ tools/perf/tests/make                      |   4 +-
+ tools/perf/ui/browsers/res_sample.c        |   2 +-
+ tools/perf/ui/browsers/scripts.c           |   2 +-
+ tools/perf/util/Build                      |   1 +
+ tools/perf/util/print_insn.c               | 135 +++++++++++++++++++++
+ tools/perf/util/print_insn.h               |  16 +++
+ tools/perf/util/thread.h                   |   1 -
+ 17 files changed, 258 insertions(+), 28 deletions(-)
+ create mode 100644 tools/build/feature/test-libcapstone.c
+ create mode 100644 tools/perf/util/print_insn.c
+ create mode 100644 tools/perf/util/print_insn.h
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.25.1
 
