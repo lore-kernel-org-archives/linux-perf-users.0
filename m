@@ -1,149 +1,218 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88641D526;
-	Sat, 17 Feb 2024 07:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6444917727;
+	Sat, 17 Feb 2024 07:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708155695; cv=none; b=Wx73OWi76J6ct66nSnQ5WksZEx6S92Ler89plC9ygzu+VvDhomeFdd8GnJUTAtSLpGEAfEVHcVTB5b1JuSnrrwg1y9FgaGbG30/hDaPRiquAkKh/lmq/3wrdRqXdaWwBYQnjyObEDapQTvnUYSQLD1Eu4nkmm3IPUtESqKVCHhM=
+	t=1708156034; cv=none; b=o3JNtcr+KcvdDRo/73vgpmTPh7q09MCS6KwFojZl5wG0S/w4I2Oli8HetBVDneEp8bazTHAYVqeE5pk333CBWtjoDvTjvCrQc4EcBTDcRLaijr6qRlq/z/3r3EEzMwq9hsg35kaK1orxXTtfWRE6GEtRfjB81SuhMj5u4hOChrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708155695; c=relaxed/simple;
-	bh=L+pZSq0Y2ocTmSe9NysyU/JS36LXhGL7+0Fxp73TbbE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jN21R4RXzKd9+sBDiNsFbQll3h2w+pBjXMBykVgn5JsdGOBkkJnX5SY6Ih00lkie20XdyO+u05BSwsVJpUrreTFYIlFk8rHCFaDCL5cyMvJ+8cGI0JbkwuG6EoLe5VnShngpHTM/8Bw84AgXIJvCHua6Ijqipcsk+idBMlr3+GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	s=arc-20240116; t=1708156034; c=relaxed/simple;
+	bh=HmzuyM8t+XxaVKKmw70+Ucvminrx6xAAlrX2nPERuyU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EBp1TqIX9OEHHcP/Zca/NNGOtfqIBNL4ebwoW3YtX/Z00UtLvAjJdA9gcVNaKhTgprUzZnslSY5zQwPDrIss1cseAm911EADB1EkFEekaA8xjyGsoDelwmTlRq+VrM9dKhkAC2lgDv53EpiWasF+TgtGfeXtxtaevfBOn7wk9KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TcLLP1yFnz1xnl6;
-	Sat, 17 Feb 2024 15:40:13 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TcL6F04sQz1vth8;
+	Sat, 17 Feb 2024 15:29:41 +0800 (CST)
 Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 68AC3140485;
-	Sat, 17 Feb 2024 15:41:31 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Sat, 17 Feb 2024 15:41:30 +0800
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C00218001B;
+	Sat, 17 Feb 2024 15:30:13 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemd100002.china.huawei.com
+ (7.221.188.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Sat, 17 Feb
+ 2024 15:30:11 +0800
+Date: Sat, 17 Feb 2024 15:29:36 +0800
 From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
+To: Adrian Hunter <adrian.hunter@intel.com>
+CC: Namhyung Kim <namhyung@kernel.org>, Changbin Du <changbin.du@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, <linux-kernel@vger.kernel.org>,
 	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
- Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
-	<changbin.du@huawei.com>
-Subject: [PATCH v8 5/5] perf: script: prefer capstone to XED
-Date: Sat, 17 Feb 2024 15:40:46 +0800
-Message-ID: <20240217074046.4100789-6-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240217074046.4100789-1-changbin.du@huawei.com>
-References: <20240217074046.4100789-1-changbin.du@huawei.com>
+ Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>
+Subject: Re: [PATCH v7 0/5] perf: script: Intro capstone disasm engine to
+ show instruction trace
+Message-ID: <20240217072936.6siuj3pvi6hzx3u6@M910t>
+References: <20240206112929.1035548-1-changbin.du@huawei.com>
+ <bd5ed9b2-cbb7-4b8b-b7b8-5db2eff75f17@intel.com>
+ <CAM9d7cieSFcbPj-PH=9EKzAmNJCkVCoytUbQaEz9iRi47CiF7w@mail.gmail.com>
+ <dcb11888-444a-40d4-9baf-4e2045156726@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+In-Reply-To: <dcb11888-444a-40d4-9baf-4e2045156726@intel.com>
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemd100002.china.huawei.com (7.221.188.184)
 
-Now perf can show assembly instructions with libcapstone for x86, and the
-capstone is better in general.
+On Fri, Feb 16, 2024 at 01:20:31PM +0200, Adrian Hunter wrote:
+> On 9/02/24 20:49, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > For some reason, I cannot see Changbin's email in my mailbox. :(
+> > 
+> > On Tue, Feb 6, 2024 at 3:50 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>
+> >> On 6/02/24 13:29, Changbin Du wrote:
+> >>> This series introduces capstone disassembler engine to print instructions of
+> >>> Intel PT trace, which was printed via the XED tool.
+> >>>
+> >>> The advantages compared to XED tool:
+> >>>     * Support arm, arm64, x86-32, x86_64, s390 (more could be supported),
+> >>>       xed only for x86_64.
+> >>>     * More friendly to read. Immediate address operands are shown as symbol+offs.
+> >>>
+> >>> Display raw instructions:
+> >>>     $ sudo perf record --event intel_pt//u -- ls
+> >>>     $ sudo perf script --insn-trace
+> >>>                 perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
+> >>>                 perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
+> >>>                 perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
+> >>>
+> >>> Display mnemonic instructions:
+> >>>     $ sudo perf script --insn-trace=disasm
+> >>>                 perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so)            cmpq $-0xfff, %rax
+> >>>                 perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so)            jae __GI___ioctl+0x10
+> >>>                 perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so)            retq
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf)                testl %eax, %eax
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf)                jne perf_evsel__enable_cpu+0xad
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf)                movq 0xa8(%r12), %rax
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf)                movq 0x20(%rax), %rdx
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf)                cmpl %edx, %ebx
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346e9 perf_evsel__enable_cpu+0xa9 (/work/linux/tools/perf/perf)                jl perf_evsel__enable_cpu+0x60
+> >>>                 perf 17423 [000] 423271.557970338:      5593ad3346eb perf_evsel__enable_cpu+0xab (/work/linux/tools/perf/perf)                xorl %eax, %eax
+> >>>
+> >>> v7:
+> >>>   - remove redundant space for raw instruction.
+> >>>   - rename sample__fprintf_insn() as sample__fprintf_insn_asm() and make it empty if libcapstone is not available.
+> >>> v6:
+> >>>   - make '-F +disasm' fatal if libcapstone is not supported. (Adrian Hunter)
+> >>>   - display with perf version --build-options. (Adrian Hunter)
+> >>>   - exclude libcapstone from make_minimal. (Adrian Hunter)
+> >>> v5:
+> >>>   - fixes and improments suggested by Adrian Hunter
+> >>> v4:
+> >>>   - rename 'insn_disam' to 'disasm' (Adrian Hunter)
+> >>> v3:
+> >>>   - fix s390 detection. (Thomas Richter)
+> >>> v2:
+> >>>   - add a new field 'insn_disam' instead of changing the default output.
+> >>>   - preserve the old --xed option.
+> >>>
+> >>> Changbin Du (5):
+> >>>   perf: build: introduce the libcapstone
+> >>>   perf: util: use capstone disasm engine to show assembly instructions
+> >>>   perf: script: add field 'disasm' to display mnemonic instructions
+> >>>   perf: script: add raw|disasm arguments to --insn-trace option
+> >>>   perf: script: prefer capstone to XED
+> >>>
+> >>>  tools/build/Makefile.feature               |   2 +
+> >>>  tools/build/feature/Makefile               |   4 +
+> >>>  tools/build/feature/test-all.c             |   4 +
+> >>>  tools/build/feature/test-libcapstone.c     |  11 ++
+> >>>  tools/perf/Documentation/perf-intel-pt.txt |  14 ++-
+> >>>  tools/perf/Documentation/perf-script.txt   |  20 +--
+> >>>  tools/perf/Makefile.config                 |  21 ++++
+> >>>  tools/perf/Makefile.perf                   |   3 +
+> >>>  tools/perf/builtin-script.c                |  45 +++++--
+> >>>  tools/perf/builtin-version.c               |   1 +
+> >>>  tools/perf/tests/make                      |   4 +-
+> >>>  tools/perf/ui/browsers/res_sample.c        |   2 +-
+> >>>  tools/perf/ui/browsers/scripts.c           |   2 +-
+> >>>  tools/perf/util/Build                      |   1 +
+> >>>  tools/perf/util/print_insn.c               | 135 +++++++++++++++++++++
+> >>>  tools/perf/util/print_insn.h               |  16 +++
+> >>>  16 files changed, 258 insertions(+), 27 deletions(-)
+> >>>  create mode 100644 tools/build/feature/test-libcapstone.c
+> >>>  create mode 100644 tools/perf/util/print_insn.c
+> >>>  create mode 100644 tools/perf/util/print_insn.h
+> >>>
+> >>
+> >> For whole patch set:
+> >>
+> >> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> > 
+> > Anyway, I see a build failure on Fedora 40.
+> > 
+> > In file included from /usr/include/capstone/capstone.h:325,
+> >                  from util/print_insn.c:29:
+> > /usr/include/capstone/bpf.h:94:14: error: 'bpf_insn' defined as wrong
+> > kind of tag
+> >    94 | typedef enum bpf_insn {
+> >       |              ^~~~~~~~
+> 
+> libcapstone header files seem to trample on other namespaces.
+Yes, the tag 'bpf_insn' are both defined by capstone/bpf.h and uapi/linux/bpf.h.
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
+. util/event.h
+.. /work/linux/tools/include/uapi/linux/stddef.h
+.. /work/linux/tools/perf/libperf/include/perf/event.h
+... /work/linux/tools/include/uapi/linux/perf_event.h
+.... /usr/include/linux/ioctl.h
+..... /usr/include/asm/ioctl.h
+...... /usr/include/asm-generic/ioctl.h
+.... /usr/include/asm/byteorder.h
+..... /usr/include/linux/byteorder/little_endian.h
+...... /usr/include/linux/swab.h
+....... /work/linux/tools/perf/util/include/asm/swab.h
+... /usr/include/linux/limits.h
+... /work/linux/tools/include/uapi/linux/bpf.h
+.... /work/linux/tools/include/uapi/linux/bpf_common.h
 
----
-v2:
-  - update Documentation.  (Adrian Hunter)
-  - fix typo.
----
- tools/perf/Documentation/perf-intel-pt.txt | 14 +++++++++-----
- tools/perf/ui/browsers/res_sample.c        |  2 +-
- tools/perf/ui/browsers/scripts.c           |  2 +-
- 3 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 2109690b0d5f..59ab1ff9d75f 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -115,9 +115,13 @@ toggle respectively.
- 
- perf script also supports higher level ways to dump instruction traces:
- 
-+	perf script --insn-trace=disasm
-+
-+or to use the xed disassembler, which requires installing the xed tool
-+(see XED below):
-+
- 	perf script --insn-trace --xed
- 
--Dump all instructions. This requires installing the xed tool (see XED below)
- Dumping all instructions in a long trace can be fairly slow. It is usually better
- to start with higher level decoding, like
- 
-@@ -130,12 +134,12 @@ or
- and then select a time range of interest. The time range can then be examined
- in detail with
- 
--	perf script --time starttime,stoptime --insn-trace --xed
-+	perf script --time starttime,stoptime --insn-trace=disasm
- 
- While examining the trace it's also useful to filter on specific CPUs using
- the -C option
- 
--	perf script --time starttime,stoptime --insn-trace --xed -C 1
-+	perf script --time starttime,stoptime --insn-trace=disasm -C 1
- 
- Dump all instructions in time range on CPU 1.
- 
-@@ -1306,7 +1310,7 @@ Without timestamps, --per-thread must be specified to distinguish threads.
- 
- perf script can be used to provide an instruction trace
- 
-- $ perf script --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script --guestkallsyms $KALLSYMS --insn-trace=disasm -F+ipc | grep -C10 vmresume | head -21
-        CPU 0/KVM  1440  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                movq  0x48(%rax), %r9
-        CPU 0/KVM  1440  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                movq  0x50(%rax), %r10
-        CPU 0/KVM  1440  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                movq  0x58(%rax), %r11
-@@ -1407,7 +1411,7 @@ There were none.
- 
- 'perf script' can be used to provide an instruction trace showing timestamps
- 
-- $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace --xed -F+ipc | grep -C10 vmresume | head -21
-+ $ perf script -i perf.data.kvm --guestkallsyms $KALLSYMS --insn-trace=disasm -F+ipc | grep -C10 vmresume | head -21
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133cdd __vmx_vcpu_run+0x3d ([kernel.kallsyms])                 movq  0x48(%rax), %r9
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce1 __vmx_vcpu_run+0x41 ([kernel.kallsyms])                 movq  0x50(%rax), %r10
-        CPU 1/KVM 17006 [001] 11500.262865593:  ffffffff82133ce5 __vmx_vcpu_run+0x45 ([kernel.kallsyms])                 movq  0x58(%rax), %r11
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-index 7cb2d6678039..5f60e515b12e 100644
---- a/tools/perf/ui/browsers/res_sample.c
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -83,7 +83,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		     r->tid ? "--tid " : "",
- 		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
- 		     extra_format,
--		     rstype == A_ASM ? "-F +insn --xed" :
-+		     rstype == A_ASM ? "-F +disasm" :
- 		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
- 		     symbol_conf.inline_name ? "--inline" : "",
- 		     "--show-lost-events ",
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 50d45054ed6c..e437d7889de6 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -107,7 +107,7 @@ static int list_scripts(char *script_name, bool *custom,
- 	if (evsel)
- 		attr_to_script(scriptc.extra_format, &evsel->core.attr);
- 	add_script_option("Show individual samples", "", &scriptc);
--	add_script_option("Show individual samples with assembler", "-F +insn --xed",
-+	add_script_option("Show individual samples with assembler", "-F +disasm",
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
+> We might have to wrap the libcapstone API at some point, but
+> for now I suggest avoiding including the conflicting headers
+> in the same C file.  Below works for me:
+> 
+> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+> index c10ccda529b13..459e0e93d7b1b 100644
+> --- a/tools/perf/util/print_insn.c
+> +++ b/tools/perf/util/print_insn.c
+> @@ -7,7 +7,7 @@
+>  #include <string.h>
+>  #include <stdbool.h>
+>  #include "debug.h"
+> -#include "event.h"
+> +#include "sample.h"
+>  #include "symbol.h"
+>  #include "machine.h"
+>  #include "thread.h"
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index 0df775b5c1105..df344262eaee0 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -13,7 +13,6 @@
+>  #include <strlist.h>
+>  #include <intlist.h>
+>  #include "rwsem.h"
+> -#include "event.h"
+>  #include "callchain.h"
+>  #include <internal/rc_check.h>
+>
+This works for me, too. I'll include this fix and keep Adrian's Reviewed-by.
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+
 -- 
-2.25.1
-
+Cheers,
+Changbin Du
