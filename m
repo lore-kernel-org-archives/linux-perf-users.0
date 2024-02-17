@@ -1,57 +1,57 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34A0383A1
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Feb 2024 00:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA483C49D
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Feb 2024 00:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708131546; cv=none; b=NYFQrtsn6mNXk9C5Wp7fH6PJpif00NxljQPweRvqVVt0yzQY8wNPFLMb8BNv98SLROtvLQaH78saBgZuBOwpYy4eRCtBm2AOYMQPS4zIIbqRmLXzAKR9NGjk+gfQT1vC/pYBmskJYdJEHGO7nNgFchP9KfaTmz0IKyyh7BonINg=
+	t=1708131549; cv=none; b=r++PQas5ppUiedVj/7AmQMh04T9Y9cMMoJyQFjoofOp3mPq2Ejyqhym8oqB5V6c/rfALIq1uopVEQe8n3ISCCyZhirzGZQmjfDUsL7eS4BaBTQARct9d9kqZCLddKo+IV8pK6ekyqhIX3zHhtfkV1+lWfl0BX98vnzovW6/2OT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708131546; c=relaxed/simple;
-	bh=Ya/XJ2BT1y/8netb6r38TrbSiZPgoHRnwGgVEj7mjLI=;
+	s=arc-20240116; t=1708131549; c=relaxed/simple;
+	bh=osmo9iVSqMNbUFvao8pXhJqFdDiZLR1ciOsr86k36JI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Rzd+5UE+AlL5QqUNEi/40ZjJSFO9ugYB+U6YAVeqFKwj8KXDWdSdXic57XEAD8ULi09keW/c/OzpM75zb0rO+a9O0Ptwp7L5YeuaIGNtNVtMf+KvA1x0g1QeP6H/f1mkk0b/JVn0TDkooEFLURx2B68nDAuKDyxpxcQWCp6KTHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=zRcBWut3; arc=none smtp.client-ip=209.85.160.41
+	 MIME-Version; b=KHNr+7k8PSChRNtAGfhh17Px1VQoAm8EIGw00yz9rwjHfXIqDX0egFsMSup2PQwKEvnP91RZdbyHFOs7ehIpxODUGbqQtZFUq+xThna0cgDWo+BkiKfb3w/qKUkO1wlh2hBBlG+qQgxmpUot6P/5L5zscuzlX0xhvlGct91pEqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=0ERtyIzF; arc=none smtp.client-ip=209.85.166.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="zRcBWut3"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-204f50f305cso1848600fac.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 16:59:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="0ERtyIzF"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7bf2c826a5aso115220839f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Feb 2024 16:59:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1708131544; x=1708736344; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1708131546; x=1708736346; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5vDBckQYWb4Du0H7yzxJq6wilfl8k4fp2vqlUJD6o0E=;
-        b=zRcBWut3qUJoRlhpLenL/xuQkn+Otm0lxoDneVn8x+LMh07BjbeAjVhfxRNJcMI9rz
-         RV+jICeQq3nXoKGvqWX4kzQnv990v5r6FjOI3b++PkVzYlOuqd7KVWFXSzOCZeAFTc2r
-         GVRBVXwv0bcYIqHbcWgF6wwAB97bW7944wPAx6Ass+57ffTQVWV2OFmyLlDp5A7rRdwK
-         VyG8qNZavf4f5HsAoFB6NYKuBzIf3J9TiTZ5oHYmWFDKCwiCgToGMUiV1aFG9XMpqd2I
-         1706Whong9dVsYQtugESgecqqgUIN6BIoH6EK6pnBuoevnmFSmhGTYK/Qp7tR8zRPKgo
-         ClKw==
+        bh=Lkx6F3sDxrDVxzkfg/gwx98H53iZQ+xAtDorLNCTdGY=;
+        b=0ERtyIzFowQI/dqyFP48mX8Em31tjyRQilNnwthZnKVNBW5mdFHRbsqs2A7Hy8NxLF
+         PFhY/0fzaKLikY1tDpg24eiGYWHI37XE+BFuZQTFvNjw4BaCDjG1wKlZu0R8ljsHVWg8
+         rXw2v092r5WtQ5iVP9F0yccNVhtDkIxef62dRmY7O7VfEL8ZnyzCb+KtfqqSqLEtEHsa
+         X10ILu2ropeNaiOOyarjWBQqKiRsJsLvjGysWKeYLkf7qylVYvukl67+hO9jW6pRXbMo
+         E1dLqmL6a8c8G+w1KVtIDWzH1BWNwmYtHNpjIJU8wxJoTnXjgfY3LWy+9ZEOp16ISWG0
+         V1VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708131544; x=1708736344;
+        d=1e100.net; s=20230601; t=1708131546; x=1708736346;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5vDBckQYWb4Du0H7yzxJq6wilfl8k4fp2vqlUJD6o0E=;
-        b=p2VQIP30B1thw8FTGRh5aKFIzWMH2ujISMhC4Tu7ibDMKRHAMzyasWBEtz3lgnsQbs
-         Ui61QlZKVaECo3FTt5zZ0zVB15ru5ctXbf2/BaQIbhBoeaU5fCg/CS/+7XGTNU35KApS
-         o6ooNZFaww+p43fqF0DVv4CkPnwCvCxMLlLU1knxEXLt+lzeTWPccQNAMu3ntLkFbI9i
-         RwufK/W9JIpX14xdrg7Wos7diKhfnIw9tT+dg9vUet2tBDoOe+lVEoh1M6x0U0lVYW8/
-         q5GeGk6SbU7XtwGvFp1it/EIcQo08h5Hk62aIJcw/KALnZ8vCPpd0FyGTepKL82FoC9A
-         1qow==
-X-Forwarded-Encrypted: i=1; AJvYcCXFTQdfIoj2LjIzA/9S9xylhzpbZu/3oapwbtzDpr4T1eQUlR33KTDp52Yci97UmhXGUtSXTKky0qyBoiN9jwGuIL/Kx66fTCgDP9ZkMe8kvQ==
-X-Gm-Message-State: AOJu0YzLaihLGGWOP/Bm1SP/PNKgE8Tb5b94Myv3OkfzS2p5boPRQkLa
-	bs1oA+upytDSpj4RDYvyDMCMx3zWHwkfzFVeuXaOSuPSNc2jaGIo7mPW/58Sinc=
-X-Google-Smtp-Source: AGHT+IHqkQqjQYTImWOgjE8Z+USH8QzipcCkOvNcsVcXAj1JgydRRCEivR2TUgJmzC2SDHg1vvWlZA==
-X-Received: by 2002:a05:6870:478a:b0:21e:698f:5c91 with SMTP id c10-20020a056870478a00b0021e698f5c91mr3327913oaq.41.1708131544105;
-        Fri, 16 Feb 2024 16:59:04 -0800 (PST)
+        bh=Lkx6F3sDxrDVxzkfg/gwx98H53iZQ+xAtDorLNCTdGY=;
+        b=EBidlayTz+Y0MpP0OSxX2KlWx6zg5Iace+TEtqLTrRNqCEVEZxmq7mGbWE+DBneAE9
+         zlbuvQBqygEse57AKb39E/ME5tohSjRrjMzbv79WEF5weTpLjYSVx25tz9ttD+D0oeFz
+         4VRUwIev7iUIyBZlJsv/YnnYWDIZVmDCEoQY5V1QzLhqo4M+Lp5UB2m8YmFBYdNMz/d+
+         A+0DNVoicwrUF7vpGfTlXczyZKW7+LSecsyQDlIRH8L38VSqzcPzdMMYKFUav3dWH4m4
+         D3OrprA/7zvvz1vWV6T/ZTHrz3TauYajqi7l+Kwj/MANu55N20eyBF/yJLvu+9MZsCqv
+         90cw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4/jKHvVZMGSO84AArpaneOOAG0Jp/DYC9PLs6gnjO1d6tejEtPoZOgm/GDpIPHxnG7TW5R52MB2q0DVIVHSEV/79teiI3aXNBtqg7wh8rrg==
+X-Gm-Message-State: AOJu0YwDuYducgMDU7QLtALZ+g9sChVlXE7Qyo/4MQkN3CNs5N2bG8Zk
+	1yCzGy43c/iBefoUrT3F8Lc+I6OJqPrIVLw4LMRLJbMlhCZnwFby/H4rgfLOWkc=
+X-Google-Smtp-Source: AGHT+IEe3ejDyxspMJxarQru2mpOZGVU3gTQalogFZ4IV/qmTtJpwp0XG9IR02+mun9kkUrwLV3/Rw==
+X-Received: by 2002:a05:6602:2766:b0:7c4:9618:5fcb with SMTP id l6-20020a056602276600b007c496185fcbmr7195778ioe.8.1708131546705;
+        Fri, 16 Feb 2024 16:59:06 -0800 (PST)
 Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d188-20020a6336c5000000b005dc89957e06sm487655pga.71.2024.02.16.16.59.01
+        by smtp.gmail.com with ESMTPSA id d188-20020a6336c5000000b005dc89957e06sm487655pga.71.2024.02.16.16.59.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 16:59:03 -0800 (PST)
+        Fri, 16 Feb 2024 16:59:06 -0800 (PST)
 From: Atish Patra <atishp@rivosinc.com>
 To: linux-kernel@vger.kernel.org
 Cc: Atish Patra <atishp@rivosinc.com>,
@@ -96,9 +96,9 @@ Cc: Atish Patra <atishp@rivosinc.com>,
 	Will Deacon <will@kernel.org>,
 	kaiwenxue1@gmail.com,
 	Yang Jihong <yangjihong1@huawei.com>
-Subject: [PATCH RFC 19/20] RISC-V: Add hwprobe support for Counter delegation extensions
-Date: Fri, 16 Feb 2024 16:57:37 -0800
-Message-Id: <20240217005738.3744121-20-atishp@rivosinc.com>
+Subject: [PATCH RFC 20/20] tools/perf: Detect if platform supports counter delegation
+Date: Fri, 16 Feb 2024 16:57:38 -0800
+Message-Id: <20240217005738.3744121-21-atishp@rivosinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240217005738.3744121-1-atishp@rivosinc.com>
 References: <20240217005738.3744121-1-atishp@rivosinc.com>
@@ -110,68 +110,122 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Even though the counter delegation extensions are all S-mode extension,
-perf tool can use it decide whether it wants to map standard events
-or not. Remapping is not required for if SBI PMU is being used
-for hardware events.
+The perf tool currently remap the standard events to the encoding
+specified by the platform in the json file. We need that only if
+the counter delegation extension is present. Otherwise, SBI PMU
+interface is used which defines the encoding for all standard
+events.
+
+The hwprobe mechanism can be used to detect the presence of these
+extensions and remap the encoding space only in that case.
 
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- Documentation/arch/riscv/hwprobe.rst  | 10 ++++++++++
- arch/riscv/include/uapi/asm/hwprobe.h |  4 ++++
- arch/riscv/kernel/sys_hwprobe.c       |  3 +++
- 3 files changed, 17 insertions(+)
+ tools/perf/arch/riscv/util/Build    |  1 +
+ tools/perf/arch/riscv/util/evlist.c |  3 ++-
+ tools/perf/arch/riscv/util/pmu.c    | 41 +++++++++++++++++++++++++++++
+ tools/perf/arch/riscv/util/pmu.h    | 11 ++++++++
+ 4 files changed, 55 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/arch/riscv/util/pmu.c
+ create mode 100644 tools/perf/arch/riscv/util/pmu.h
 
-diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
-index b2bcc9eed9aa..77fa0ed09366 100644
---- a/Documentation/arch/riscv/hwprobe.rst
-+++ b/Documentation/arch/riscv/hwprobe.rst
-@@ -188,6 +188,16 @@ The following keys are defined:
-        manual starting from commit 95cf1f9 ("Add changes requested by Ved
-        during signoff")
+diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
+index b581fb3d8677..2358f0666e8d 100644
+--- a/tools/perf/arch/riscv/util/Build
++++ b/tools/perf/arch/riscv/util/Build
+@@ -1,6 +1,7 @@
+ perf-y += perf_regs.o
+ perf-y += header.o
+ perf-y += evlist.o
++perf-y += pmu.o
  
-+  * :c:macro:`RISCV_HWPROBE_EXT_SMCDELEG`: The Smcdeleg extension is supported as
-+       defined in the RISC-V Counter Delegation extension manual starting from
-+       commit ff61c1f ("switch to v1.0.0 and frozen")
-+  * :c:macro:`RISCV_HWPROBE_EXT_SSCCFG`: The Ssccfg extension is supported as
-+       defined in the RISC-V Counter Delegation extension manual starting from
-+       commit ff61c1f ("switch to v1.0.0 and frozen")
-+  * :c:macro:`RISCV_HWPROBE_EXT_SSCSRIND`: The Sscsrind extension is supported as
-+       defined in the RISC-V Indirect CSR extension manual starting from
-+       commit a28625c ("mark spec as frozen")
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/riscv/util/evlist.c b/tools/perf/arch/riscv/util/evlist.c
+index 9ad287c6f396..aa7eef7280ca 100644
+--- a/tools/perf/arch/riscv/util/evlist.c
++++ b/tools/perf/arch/riscv/util/evlist.c
+@@ -6,6 +6,7 @@
+ #include "util/parse-events.h"
+ #include "util/event.h"
+ #include "evsel.h"
++#include "pmu.h"
+ 
+ static int pmu_update_cpu_stdevents_callback(const struct pmu_event *pe,
+ 					     const struct pmu_events_table *table __maybe_unused,
+@@ -41,7 +42,7 @@ int arch_evlist__override_default_attrs(struct evlist *evlist, const char *pmu_n
+ 							  "iTLB-load-misses"};
+ 	unsigned int i, len = sizeof(overriden_event_arr) / sizeof(char *);
+ 
+-	if (!pmu)
++	if (!pmu || !perf_pmu_riscv_cdeleg_present())
+ 		return 0;
+ 
+ 	for (i = 0; i < len; i++) {
+diff --git a/tools/perf/arch/riscv/util/pmu.c b/tools/perf/arch/riscv/util/pmu.c
+new file mode 100644
+index 000000000000..79f0974e27f8
+--- /dev/null
++++ b/tools/perf/arch/riscv/util/pmu.c
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0
 +
- * :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: A bitmask that contains performance
-   information about the selected set of processors.
- 
-diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
-index 9f2a8e3ff204..fb7c6bd6822a 100644
---- a/arch/riscv/include/uapi/asm/hwprobe.h
-+++ b/arch/riscv/include/uapi/asm/hwprobe.h
-@@ -59,6 +59,10 @@ struct riscv_hwprobe {
- #define		RISCV_HWPROBE_EXT_ZTSO		(1ULL << 33)
- #define		RISCV_HWPROBE_EXT_ZACAS		(1ULL << 34)
- #define		RISCV_HWPROBE_EXT_ZICOND	(1ULL << 35)
-+#define		RISCV_HWPROBE_EXT_SSCSRIND	(1ULL << 36)
-+#define		RISCV_HWPROBE_EXT_SMCDELEG	(1ULL << 37)
-+#define		RISCV_HWPROBE_EXT_SSCCFG	(1ULL << 38)
++/*
++ * Copyright Rivos Inc 2024
++ * Author(s): Atish Patra <atishp@rivosinc.com>
++ */
 +
- #define RISCV_HWPROBE_KEY_CPUPERF_0	5
- #define		RISCV_HWPROBE_MISALIGNED_UNKNOWN	(0 << 0)
- #define		RISCV_HWPROBE_MISALIGNED_EMULATED	(1 << 0)
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index a7c56b41efd2..befb6582b1ce 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -111,6 +111,9 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
- 		EXT_KEY(ZTSO);
- 		EXT_KEY(ZACAS);
- 		EXT_KEY(ZICOND);
-+		EXT_KEY(SSCSRIND);
-+		EXT_KEY(SMCDELEG);
-+		EXT_KEY(SSCCFG);
- 
- 		if (has_vector()) {
- 			EXT_KEY(ZVBB);
++#include <string.h>
++#include <stdio.h>
++#include <asm/hwprobe.h>
++#include <unistd.h>
++#include <sys/syscall.h>
++
++#include "pmu.h"
++
++static bool counter_deleg_present;
++
++bool perf_pmu_riscv_cdeleg_present(void)
++{
++	return counter_deleg_present;
++}
++
++void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
++{
++	struct riscv_hwprobe isa_ext;
++	int ret;
++
++	isa_ext.key = RISCV_HWPROBE_KEY_IMA_EXT_0;
++
++	ret = syscall(__NR_riscv_hwprobe, &isa_ext, 1, 0, NULL, 0);
++	if (ret)
++		return;
++
++	if (isa_ext.key < 0)
++		return;
++
++	if ((isa_ext.value & RISCV_HWPROBE_EXT_SSCSRIND) &&
++	    (isa_ext.value & RISCV_HWPROBE_EXT_SMCDELEG) &&
++	    (isa_ext.value & RISCV_HWPROBE_EXT_SSCCFG))
++		counter_deleg_present = true;
++}
+diff --git a/tools/perf/arch/riscv/util/pmu.h b/tools/perf/arch/riscv/util/pmu.h
+new file mode 100644
+index 000000000000..21f33f7d323d
+--- /dev/null
++++ b/tools/perf/arch/riscv/util/pmu.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef __RISCV_UTIL_PMU_H
++#define __RISCV_UTIL_PMU_H
++
++#include "../../../util/pmu.h"
++
++
++bool perf_pmu_riscv_cdeleg_present(void);
++
++#endif
 -- 
 2.34.1
 
