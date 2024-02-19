@@ -1,332 +1,307 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCB8C8D6;
-	Mon, 19 Feb 2024 06:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39D4225628;
+	Mon, 19 Feb 2024 10:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708324393; cv=none; b=AxcooZ2iGPRRWlaIkxYoPG1BZjQmpRYy3xsNyiyWRF+gCQLEakDnBgsNSErjR8vm80Fv0qz+a0AXvY3o2LugI0qe9VWy1avOl+rftWve8wz1X6r9TJqOV/lNo/TWSgVxqTl/LHH4SrFwrvDbfib/D2Cpp8eo4KDgobZQ1WyK+UE=
+	t=1708337825; cv=none; b=I3wqNnLTDglI4FO8KcGVPFhmmf1fEFNcPL4GlQLeBvSzPqZmmti+MbS53eF7p3xlfLjWp8SWXyiC+wGH++BK4WPvvBDKK+zIhWZsQZ+Bbe7+XO38zyRVg6ugMxareXHd77VuduPdevOyfAeTfDKskDzZEBZEDrWG7xdw0jrv1Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708324393; c=relaxed/simple;
-	bh=1AE+JZg/i9ql7giDuNGWy1AG4WO9ss9G3PqIKCX8CLM=;
+	s=arc-20240116; t=1708337825; c=relaxed/simple;
+	bh=mfeqi+V0Uk81dQGUCG750LmHcTV8G6MdZH+WxBvptxs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pQmhuQ0Qkaj4AOKuzn+VcbNOWZlmxbVUh6q7B14IdurGmtCtLOaYaK+2RRsNzTtbUajMCzOEgIPrchUIPDxHIutoXsYTIkkBKeHJenXvDpXO3lq1SsBfknma1f/1SwiSuXGQzwpzKal3+BjHeqQgEOtZieU7fGhHPzlX6XL029M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A4JRVBpl; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A4JRVBpl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708324391; x=1739860391;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1AE+JZg/i9ql7giDuNGWy1AG4WO9ss9G3PqIKCX8CLM=;
-  b=A4JRVBplwpaqp55Wz7HfqkpUBdtRupKD3UhI7HKS7pZohO3WaG4a16Xh
-   B6THZCeirbFuXsKkmApART5aKV/tVRusKCY+oUy3K8VJQgOViHhR+ZyO4
-   /TCo+CbLimMy1K30PvCp93NQu9/LEX738boqEUj7cTCykw2YpwRhxTLDC
-   61BLH4Po68PURxTGydYY4GxOccXhKhx9z+2qP+/jSC+2VG0da8jl0qO4/
-   xX8Lfgd3F0lFMMBSzIIDT2gYnBvDqFxhw6QxWKTJW1b/3XvXWKgIZFkF6
-   15ynIZ0EKCaRMKWUs8kh4KIolAjjxbBiqyS5fJwjtJYRauZBr9XuvIqbz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2252261"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2252261"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 22:33:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="4657685"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.63.178])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 22:33:06 -0800
-Message-ID: <9699d30b-f6cb-44d5-ae58-0bdefe3f24eb@intel.com>
-Date: Mon, 19 Feb 2024 08:33:04 +0200
+	 In-Reply-To:Content-Type; b=LBTlkS1uReiPtuXvR+bOK0MczWgipnrHCWh6rRmK2v3WikEy3EQFblMl1/wRdV9YBlZVke4K3dBfdqIdX4slxs6Div1vNCfhi+2wyySmDY3mzSG5dP4RrMjwtkrT33v6dcG77tAUEbEA9OhLcy41/1ewZoRC9cSVmENT/gQ4wjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B8331007;
+	Mon, 19 Feb 2024 02:17:42 -0800 (PST)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34D783F762;
+	Mon, 19 Feb 2024 02:16:54 -0800 (PST)
+Message-ID: <b8bb3b4c-9774-e4e8-5705-5a6e01f68eb6@arm.com>
+Date: Mon, 19 Feb 2024 10:16:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/5] perf: util: use capstone disasm engine to show
- assembly instructions
-To: Changbin Du <changbin.du@huawei.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 3/8] perf arm-spe/cs-etm: Directly iterate CPU maps
+To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Andi Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>,
- changbin.du@gmail.com, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>
-References: <20240217074046.4100789-1-changbin.du@huawei.com>
- <20240217074046.4100789-3-changbin.du@huawei.com>
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Andrew Jones <ajones@ventanamicro.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Atish Patra <atishp@rivosinc.com>,
+ "Steinar H. Gunderson" <sesse@google.com>,
+ Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>,
+ Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ bpf@vger.kernel.org, Leo Yan <leo.yan@linux.dev>
+References: <20240202234057.2085863-1-irogers@google.com>
+ <20240202234057.2085863-4-irogers@google.com>
+ <CAM9d7chPqFGEih7z7rp=eS5P30gSMvG=6fi=0QqT=EdfdMOH_A@mail.gmail.com>
+ <CAP-5=fXzqF--KUOo1awmxDewupF-r_a2=yFC75tuGasNE-WpXg@mail.gmail.com>
 Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240217074046.4100789-3-changbin.du@huawei.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fXzqF--KUOo1awmxDewupF-r_a2=yFC75tuGasNE-WpXg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 17/02/24 09:40, Changbin Du wrote:
-> Currently, the instructions of samples are shown as raw hex strings
-> which are hard to read. x86 has a special option '--xed' to disassemble
-> the hex string via intel XED tool.
+
+
+On 17/02/2024 01:33, Ian Rogers wrote:
+> On Fri, Feb 16, 2024 at 5:02 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>
+>> On Fri, Feb 2, 2024 at 3:41 PM Ian Rogers <irogers@google.com> wrote:
+>>>
+>>> Rather than iterate all CPUs and see if they are in CPU maps, directly
+>>> iterate the CPU map. Similarly make use of the intersect function
+>>> taking care for when "any" CPU is specified. Switch
+>>> perf_cpu_map__has_any_cpu_or_is_empty to more appropriate
+>>> alternatives.
+>>>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>>  tools/perf/arch/arm/util/cs-etm.c    | 114 ++++++++++++---------------
+>>>  tools/perf/arch/arm64/util/arm-spe.c |   4 +-
+>>>  2 files changed, 51 insertions(+), 67 deletions(-)
+>>>
+>>> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+>>> index 77e6663c1703..07be32d99805 100644
+>>> --- a/tools/perf/arch/arm/util/cs-etm.c
+>>> +++ b/tools/perf/arch/arm/util/cs-etm.c
+>>> @@ -197,38 +197,37 @@ static int cs_etm_validate_timestamp(struct auxtrace_record *itr,
+>>>  static int cs_etm_validate_config(struct auxtrace_record *itr,
+>>>                                   struct evsel *evsel)
+>>>  {
+>>> -       int i, err = -EINVAL;
+>>> +       int idx, err = 0;
+>>>         struct perf_cpu_map *event_cpus = evsel->evlist->core.user_requested_cpus;
+>>> -       struct perf_cpu_map *online_cpus = perf_cpu_map__new_online_cpus();
+>>> -
+>>> -       /* Set option of each CPU we have */
+>>> -       for (i = 0; i < cpu__max_cpu().cpu; i++) {
+>>> -               struct perf_cpu cpu = { .cpu = i, };
+>>> +       struct perf_cpu_map *intersect_cpus;
+>>> +       struct perf_cpu cpu;
+>>>
+>>> -               /*
+>>> -                * In per-cpu case, do the validation for CPUs to work with.
+>>> -                * In per-thread case, the CPU map is empty.  Since the traced
+>>> -                * program can run on any CPUs in this case, thus don't skip
+>>> -                * validation.
+>>> -                */
+>>> -               if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus) &&
+>>> -                   !perf_cpu_map__has(event_cpus, cpu))
+>>> -                       continue;
+>>> +       /*
+>>> +        * Set option of each CPU we have. In per-cpu case, do the validation
+>>> +        * for CPUs to work with. In per-thread case, the CPU map has the "any"
+>>> +        * CPU value. Since the traced program can run on any CPUs in this case,
+>>> +        * thus don't skip validation.
+>>> +        */
+>>> +       if (!perf_cpu_map__has_any_cpu(event_cpus)) {
+>>> +               struct perf_cpu_map *online_cpus = perf_cpu_map__new_online_cpus();
+>>>
+>>> -               if (!perf_cpu_map__has(online_cpus, cpu))
+>>> -                       continue;
+>>> +               intersect_cpus = perf_cpu_map__intersect(event_cpus, online_cpus);
+>>> +               perf_cpu_map__put(online_cpus);
+>>> +       } else {
+>>> +               intersect_cpus = perf_cpu_map__new_online_cpus();
+>>> +       }
+>>
+>> Would it be ok if any of these operations fail?  I believe the
+>> cpu map functions work well with NULL already.
 > 
-> Here we use capstone as our disassembler engine to give more friendly
-> instructions. We select libcapstone because capstone can provide more
-> insn details. Perf will fallback to raw instructions if libcapstone is
-> not available.
+> If the allocation fails then the loop below won't iterate (the map
+> will be empty). The map is released and not used elsewhere in the
+> code. An allocation failure here won't cause the code to crash, but
+> there are other places where the code assumes what the properties of
+> having done this function are and they won't be working as intended.
+> It's not uncommon to see ENOMEM to just be abort for this reason.
 > 
-> The advantages compared to XED tool:
->  * Support arm, arm64, x86-32, x86_64 (more could be supported),
->    xed only for x86_64.
->  * Immediate address operands are shown as symbol+offs.
+> Thanks,
+> Ian
 > 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+>> Thanks,
+>> Namhyung
+>>
 
-This is the only patch of V8 that made it to my inbox, Namhyung
-also mentioned problems receiving V7, but the patches are on lore.
+Reviewed-by: James Clark <james.clark@arm.com>
 
-For whole patch set:
+About the out of memory case, I don't really have much preference about
+that. I doubt much of the code is tested or resiliant to it and the
+behaviour is probably already unpredictable.
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> 
-> ---
-> v4:
->   - fix conflicting header bpf.h problem, aka, capstone/bpf.h and
->     uapi/linux/bpf.h. (Namhyung Kim, Adrian Hunter)
-> v3:
->   - show warning msg if libcapstone is not available.
-> v2:
->   - line up the output by preceding two tabs. (Adrian Hunter)
->   - removed the tailing space. (Adrian Hunter)
->   - forward declaration for perf_sample, thread, machine. (Adrian Hunter)
->   - other trivial fixes (Adrian Hunter)
-> ---
->  tools/perf/builtin-script.c  |   8 +--
->  tools/perf/util/Build        |   1 +
->  tools/perf/util/print_insn.c | 135 +++++++++++++++++++++++++++++++++++
->  tools/perf/util/print_insn.h |  16 +++++
->  tools/perf/util/thread.h     |   1 -
->  5 files changed, 155 insertions(+), 6 deletions(-)
->  create mode 100644 tools/perf/util/print_insn.c
->  create mode 100644 tools/perf/util/print_insn.h
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index b1f57401ff23..4817a37f16e2 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -34,6 +34,7 @@
->  #include "util/event.h"
->  #include "ui/ui.h"
->  #include "print_binary.h"
-> +#include "print_insn.h"
->  #include "archinsn.h"
->  #include <linux/bitmap.h>
->  #include <linux/kernel.h>
-> @@ -1511,11 +1512,8 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
->  	if (PRINT_FIELD(INSNLEN))
->  		printed += fprintf(fp, " ilen: %d", sample->insn_len);
->  	if (PRINT_FIELD(INSN) && sample->insn_len) {
-> -		int i;
-> -
-> -		printed += fprintf(fp, " insn:");
-> -		for (i = 0; i < sample->insn_len; i++)
-> -			printed += fprintf(fp, " %02x", (unsigned char)sample->insn[i]);
-> +		printed += fprintf(fp, " insn: ");
-> +		printed += sample__fprintf_insn_raw(sample, fp);
->  	}
->  	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
->  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 8027f450fa3e..2cbeeb79b6ef 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -32,6 +32,7 @@ perf-y += perf_regs.o
->  perf-y += perf-regs-arch/
->  perf-y += path.o
->  perf-y += print_binary.o
-> +perf-y += print_insn.o
->  perf-y += rlimit.o
->  perf-y += argv_split.o
->  perf-y += rbtree.o
-> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-> new file mode 100644
-> index 000000000000..459e0e93d7b1
-> --- /dev/null
-> +++ b/tools/perf/util/print_insn.c
-> @@ -0,0 +1,135 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Instruction binary disassembler based on capstone.
-> + *
-> + * Author(s): Changbin Du <changbin.du@huawei.com>
-> + */
-> +#include <string.h>
-> +#include <stdbool.h>
-> +#include "debug.h"
-> +#include "sample.h"
-> +#include "symbol.h"
-> +#include "machine.h"
-> +#include "thread.h"
-> +#include "print_insn.h"
-> +
-> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
-> +{
-> +	int printed = 0;
-> +
-> +	for (int i = 0; i < sample->insn_len; i++) {
-> +		printed += fprintf(fp, "%02x", (unsigned char)sample->insn[i]);
-> +		if (sample->insn_len - i > 1)
-> +			printed += fprintf(fp, " ");
-> +	}
-> +	return printed;
-> +}
-> +
-> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
-> +#include <capstone/capstone.h>
-> +
-> +static int capstone_init(struct machine *machine, csh *cs_handle)
-> +{
-> +	cs_arch arch;
-> +	cs_mode mode;
-> +
-> +	if (machine__is(machine, "x86_64")) {
-> +		arch = CS_ARCH_X86;
-> +		mode = CS_MODE_64;
-> +	} else if (machine__normalized_is(machine, "x86")) {
-> +		arch = CS_ARCH_X86;
-> +		mode = CS_MODE_32;
-> +	} else if (machine__normalized_is(machine, "arm64")) {
-> +		arch = CS_ARCH_ARM64;
-> +		mode = CS_MODE_ARM;
-> +	} else if (machine__normalized_is(machine, "arm")) {
-> +		arch = CS_ARCH_ARM;
-> +		mode = CS_MODE_ARM + CS_MODE_V8;
-> +	} else if (machine__normalized_is(machine, "s390")) {
-> +		arch = CS_ARCH_SYSZ;
-> +		mode = CS_MODE_BIG_ENDIAN;
-> +	} else {
-> +		return -1;
-> +	}
-> +
-> +	if (cs_open(arch, mode, cs_handle) != CS_ERR_OK) {
-> +		pr_warning_once("cs_open failed\n");
-> +		return -1;
-> +	}
-> +
-> +	if (machine__normalized_is(machine, "x86")) {
-> +		cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
-> +		/*
-> +		 * Resolving address operands to symbols is implemented
-> +		 * on x86 by investigating instruction details.
-> +		 */
-> +		cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
-> +			     cs_insn *insn, FILE *fp)
-> +{
-> +	struct addr_location al;
-> +	size_t printed = 0;
-> +
-> +	if (insn->detail && insn->detail->x86.op_count == 1) {
-> +		cs_x86_op *op = &insn->detail->x86.operands[0];
-> +
-> +		addr_location__init(&al);
-> +		if (op->type == X86_OP_IMM &&
-> +		    thread__find_symbol(thread, sample->cpumode, op->imm, &al)) {
-> +			printed += fprintf(fp, "%s ", insn[0].mnemonic);
-> +			printed += symbol__fprintf_symname_offs(al.sym, &al, fp);
-> +			addr_location__exit(&al);
-> +			return printed;
-> +		}
-> +		addr_location__exit(&al);
-> +	}
-> +
-> +	printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
-> +	return printed;
-> +}
-> +
-> +size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
-> +				struct machine *machine, FILE *fp)
-> +{
-> +	csh cs_handle;
-> +	cs_insn *insn;
-> +	size_t count;
-> +	size_t printed = 0;
-> +	int ret;
-> +
-> +	/* TODO: Try to initiate capstone only once but need a proper place. */
-> +	ret = capstone_init(machine, &cs_handle);
-> +	if (ret < 0) {
-> +		/* fallback */
-> +		return sample__fprintf_insn_raw(sample, fp);
-> +	}
-> +
-> +	count = cs_disasm(cs_handle, (uint8_t *)sample->insn, sample->insn_len,
-> +			  sample->ip, 1, &insn);
-> +	if (count > 0) {
-> +		if (machine__normalized_is(machine, "x86"))
-> +			printed += print_insn_x86(sample, thread, &insn[0], fp);
-> +		else
-> +			printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
-> +		cs_free(insn, count);
-> +	} else {
-> +		printed += fprintf(fp, "illegal instruction");
-> +	}
-> +
-> +	cs_close(&cs_handle);
-> +	return printed;
-> +}
-> +#else
-> +size_t sample__fprintf_insn_asm(struct perf_sample *sample __maybe_unused,
-> +				struct thread *thread __maybe_unused,
-> +				struct machine *machine __maybe_unused,
-> +				FILE *fp __maybe_unused)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
-> new file mode 100644
-> index 000000000000..465bdcfcc2fd
-> --- /dev/null
-> +++ b/tools/perf/util/print_insn.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef PERF_PRINT_INSN_H
-> +#define PERF_PRINT_INSN_H
-> +
-> +#include <stddef.h>
-> +#include <stdio.h>
-> +
-> +struct perf_sample;
-> +struct thread;
-> +struct machine;
-> +
-> +size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
-> +				struct machine *machine, FILE *fp);
-> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
-> +
-> +#endif /* PERF_PRINT_INSN_H */
-> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> index 0df775b5c110..df344262eaee 100644
-> --- a/tools/perf/util/thread.h
-> +++ b/tools/perf/util/thread.h
-> @@ -13,7 +13,6 @@
->  #include <strlist.h>
->  #include <intlist.h>
->  #include "rwsem.h"
-> -#include "event.h"
->  #include "callchain.h"
->  #include <internal/rc_check.h>
->  
-
+>>>
+>>> -               err = cs_etm_validate_context_id(itr, evsel, i);
+>>> +       perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
+>>> +               err = cs_etm_validate_context_id(itr, evsel, cpu.cpu);
+>>>                 if (err)
+>>> -                       goto out;
+>>> -               err = cs_etm_validate_timestamp(itr, evsel, i);
+>>> +                       break;
+>>> +
+>>> +               err = cs_etm_validate_timestamp(itr, evsel, cpu.cpu);
+>>>                 if (err)
+>>> -                       goto out;
+>>> +                       break;
+>>>         }
+>>>
+>>> -       err = 0;
+>>> -out:
+>>> -       perf_cpu_map__put(online_cpus);
+>>> +       perf_cpu_map__put(intersect_cpus);
+>>>         return err;
+>>>  }
+>>>
+>>> @@ -435,7 +434,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>>>          * Also the case of per-cpu mmaps, need the contextID in order to be notified
+>>>          * when a context switch happened.
+>>>          */
+>>> -       if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+>>> +       if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+>>>                 evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+>>>                                            "timestamp", 1);
+>>>                 evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+>>> @@ -461,7 +460,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>>>         evsel->core.attr.sample_period = 1;
+>>>
+>>>         /* In per-cpu case, always need the time of mmap events etc */
+>>> -       if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
+>>> +       if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
+>>>                 evsel__set_sample_bit(evsel, TIME);
+>>>
+>>>         err = cs_etm_validate_config(itr, cs_etm_evsel);
+>>> @@ -533,45 +532,31 @@ static size_t
+>>>  cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+>>>                       struct evlist *evlist __maybe_unused)
+>>>  {
+>>> -       int i;
+>>> +       int idx;
+>>>         int etmv3 = 0, etmv4 = 0, ete = 0;
+>>>         struct perf_cpu_map *event_cpus = evlist->core.user_requested_cpus;
+>>> -       struct perf_cpu_map *online_cpus = perf_cpu_map__new_online_cpus();
+>>> -
+>>> -       /* cpu map is not empty, we have specific CPUs to work with */
+>>> -       if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
+>>> -               for (i = 0; i < cpu__max_cpu().cpu; i++) {
+>>> -                       struct perf_cpu cpu = { .cpu = i, };
+>>> +       struct perf_cpu_map *intersect_cpus;
+>>> +       struct perf_cpu cpu;
+>>>
+>>> -                       if (!perf_cpu_map__has(event_cpus, cpu) ||
+>>> -                           !perf_cpu_map__has(online_cpus, cpu))
+>>> -                               continue;
+>>> +       if (!perf_cpu_map__has_any_cpu(event_cpus)) {
+>>> +               /* cpu map is not "any" CPU , we have specific CPUs to work with */
+>>> +               struct perf_cpu_map *online_cpus = perf_cpu_map__new_online_cpus();
+>>>
+>>> -                       if (cs_etm_is_ete(itr, i))
+>>> -                               ete++;
+>>> -                       else if (cs_etm_is_etmv4(itr, i))
+>>> -                               etmv4++;
+>>> -                       else
+>>> -                               etmv3++;
+>>> -               }
+>>> +               intersect_cpus = perf_cpu_map__intersect(event_cpus, online_cpus);
+>>> +               perf_cpu_map__put(online_cpus);
+>>>         } else {
+>>> -               /* get configuration for all CPUs in the system */
+>>> -               for (i = 0; i < cpu__max_cpu().cpu; i++) {
+>>> -                       struct perf_cpu cpu = { .cpu = i, };
+>>> -
+>>> -                       if (!perf_cpu_map__has(online_cpus, cpu))
+>>> -                               continue;
+>>> -
+>>> -                       if (cs_etm_is_ete(itr, i))
+>>> -                               ete++;
+>>> -                       else if (cs_etm_is_etmv4(itr, i))
+>>> -                               etmv4++;
+>>> -                       else
+>>> -                               etmv3++;
+>>> -               }
+>>> +               /* Event can be "any" CPU so count all online CPUs. */
+>>> +               intersect_cpus = perf_cpu_map__new_online_cpus();
+>>>         }
+>>> -
+>>> -       perf_cpu_map__put(online_cpus);
+>>> +       perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
+>>> +               if (cs_etm_is_ete(itr, cpu.cpu))
+>>> +                       ete++;
+>>> +               else if (cs_etm_is_etmv4(itr, cpu.cpu))
+>>> +                       etmv4++;
+>>> +               else
+>>> +                       etmv3++;
+>>> +       }
+>>> +       perf_cpu_map__put(intersect_cpus);
+>>>
+>>>         return (CS_ETM_HEADER_SIZE +
+>>>                (ete   * CS_ETE_PRIV_SIZE) +
+>>> @@ -813,16 +798,15 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
+>>>         if (!session->evlist->core.nr_mmaps)
+>>>                 return -EINVAL;
+>>>
+>>> -       /* If the cpu_map is empty all online CPUs are involved */
+>>> -       if (perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
+>>> +       /* If the cpu_map has the "any" CPU all online CPUs are involved */
+>>> +       if (perf_cpu_map__has_any_cpu(event_cpus)) {
+>>>                 cpu_map = online_cpus;
+>>>         } else {
+>>>                 /* Make sure all specified CPUs are online */
+>>> -               for (i = 0; i < perf_cpu_map__nr(event_cpus); i++) {
+>>> -                       struct perf_cpu cpu = { .cpu = i, };
+>>> +               struct perf_cpu cpu;
+>>>
+>>> -                       if (perf_cpu_map__has(event_cpus, cpu) &&
+>>> -                           !perf_cpu_map__has(online_cpus, cpu))
+>>> +               perf_cpu_map__for_each_cpu(cpu, i, event_cpus) {
+>>> +                       if (!perf_cpu_map__has(online_cpus, cpu))
+>>>                                 return -EINVAL;
+>>>                 }
+>>>
+>>> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+>>> index 51ccbfd3d246..0b52e67edb3b 100644
+>>> --- a/tools/perf/arch/arm64/util/arm-spe.c
+>>> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+>>> @@ -232,7 +232,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>>>          * In the case of per-cpu mmaps, sample CPU for AUX event;
+>>>          * also enable the timestamp tracing for samples correlation.
+>>>          */
+>>> -       if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+>>> +       if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+>>>                 evsel__set_sample_bit(arm_spe_evsel, CPU);
+>>>                 evsel__set_config_if_unset(arm_spe_pmu, arm_spe_evsel,
+>>>                                            "ts_enable", 1);
+>>> @@ -265,7 +265,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>>>         tracking_evsel->core.attr.sample_period = 1;
+>>>
+>>>         /* In per-cpu case, always need the time of mmap events etc */
+>>> -       if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+>>> +       if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+>>>                 evsel__set_sample_bit(tracking_evsel, TIME);
+>>>                 evsel__set_sample_bit(tracking_evsel, CPU);
+>>>
+>>> --
+>>> 2.43.0.594.gd9cf4e227d-goog
+>>>
