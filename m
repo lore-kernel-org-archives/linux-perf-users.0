@@ -1,145 +1,332 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3672E31A66;
-	Sun, 18 Feb 2024 12:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCB8C8D6;
+	Mon, 19 Feb 2024 06:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708260617; cv=none; b=oWG5B4qiXtnW8xAS7ONRcjs5bwWW4Xy/69AJP8ICbKXK4Z+1crFz8adsRDMWSWcYJNUz2GRhgC88vlHbc6OdLOZ/Cv85GZ1tfmigUNP2MG8RpUx6uGyHVEZBl4++pnz0Gg9IxmQPUqXI8ebwK2bQPbS8lofXP+JhXn3sBbmxlF0=
+	t=1708324393; cv=none; b=AxcooZ2iGPRRWlaIkxYoPG1BZjQmpRYy3xsNyiyWRF+gCQLEakDnBgsNSErjR8vm80Fv0qz+a0AXvY3o2LugI0qe9VWy1avOl+rftWve8wz1X6r9TJqOV/lNo/TWSgVxqTl/LHH4SrFwrvDbfib/D2Cpp8eo4KDgobZQ1WyK+UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708260617; c=relaxed/simple;
-	bh=ZOuHC5/gemoLsv0gAHH7UQAs52/xaQ/OjKNR4b7C5iU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fp//aWFZ326cQpo9UgzfDljvUW7EL6jsngx6gYnmXHzfHaicelOJr9kXGYnsjqSy90kiLoV5NPzCsHgrd9rAFv27T8C2D4Tex8W989K/KpKNX2yaE4U48GfgTdq7esrisH5XgWvhkirbVQhsv0abmVCaFC5zzf2Fr78gQoAaXWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSRhxkun; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708324393; c=relaxed/simple;
+	bh=1AE+JZg/i9ql7giDuNGWy1AG4WO9ss9G3PqIKCX8CLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pQmhuQ0Qkaj4AOKuzn+VcbNOWZlmxbVUh6q7B14IdurGmtCtLOaYaK+2RRsNzTtbUajMCzOEgIPrchUIPDxHIutoXsYTIkkBKeHJenXvDpXO3lq1SsBfknma1f/1SwiSuXGQzwpzKal3+BjHeqQgEOtZieU7fGhHPzlX6XL029M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A4JRVBpl; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSRhxkun"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FFAC433F1;
-	Sun, 18 Feb 2024 12:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708260616;
-	bh=ZOuHC5/gemoLsv0gAHH7UQAs52/xaQ/OjKNR4b7C5iU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OSRhxkunjvuVg+kQQrNev5yXaSd763FyHTmF8BVOi3oTkf5Yz8WIvE/LNareLfcxr
-	 GB9AZQ25nviU4M8kNbK1Dpg454Eli1ortScnmzbw7i20Ji3RYdJkpkqh9qDyFeXYfz
-	 Xf0yGZkd6whMp2e8tr8Ay0mtu1J/d9AaY8P03GQsC+8xKQM2Bm4j/RCIZbTg9cWKKA
-	 bCZ/TwBhym8gTzbH/oWsYVkoVdPHeCB8VRQxdj1QkPcti/61YXZ17jD0pzJPkYa+U0
-	 LwOEGuHNJX8SoWikhUPsGQusnIFa0aXaswxiHjizlSzfw7ifaj/nU9NzNMuV1ikYnD
-	 7PB3+V1R9PTJQ==
-Date: Sun, 18 Feb 2024 12:50:06 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Christian Brauner <brauner@kernel.org>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	devicetree@vger.kernel.org, Evan Green <evan@rivosinc.com>,
-	Guo Ren <guoren@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@arm.com>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Weilin Wang <weilin.wang@intel.com>, Will Deacon <will@kernel.org>,
-	kaiwenxue1@gmail.com, Yang Jihong <yangjihong1@huawei.com>
-Subject: Re: [PATCH RFC 09/20] RISC-V: Add Smcntrpmf extension parsing
-Message-ID: <20240218-contort-profile-53593ed8d391@spud>
-References: <20240217005738.3744121-1-atishp@rivosinc.com>
- <20240217005738.3744121-10-atishp@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A4JRVBpl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708324391; x=1739860391;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1AE+JZg/i9ql7giDuNGWy1AG4WO9ss9G3PqIKCX8CLM=;
+  b=A4JRVBplwpaqp55Wz7HfqkpUBdtRupKD3UhI7HKS7pZohO3WaG4a16Xh
+   B6THZCeirbFuXsKkmApART5aKV/tVRusKCY+oUy3K8VJQgOViHhR+ZyO4
+   /TCo+CbLimMy1K30PvCp93NQu9/LEX738boqEUj7cTCykw2YpwRhxTLDC
+   61BLH4Po68PURxTGydYY4GxOccXhKhx9z+2qP+/jSC+2VG0da8jl0qO4/
+   xX8Lfgd3F0lFMMBSzIIDT2gYnBvDqFxhw6QxWKTJW1b/3XvXWKgIZFkF6
+   15ynIZ0EKCaRMKWUs8kh4KIolAjjxbBiqyS5fJwjtJYRauZBr9XuvIqbz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2252261"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="2252261"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 22:33:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="4657685"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.63.178])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 22:33:06 -0800
+Message-ID: <9699d30b-f6cb-44d5-ae58-0bdefe3f24eb@intel.com>
+Date: Mon, 19 Feb 2024 08:33:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jbzKRUs6kj78gPRQ"
-Content-Disposition: inline
-In-Reply-To: <20240217005738.3744121-10-atishp@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 2/5] perf: util: use capstone disasm engine to show
+ assembly instructions
+To: Changbin Du <changbin.du@huawei.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Andi Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ changbin.du@gmail.com, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>
+References: <20240217074046.4100789-1-changbin.du@huawei.com>
+ <20240217074046.4100789-3-changbin.du@huawei.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240217074046.4100789-3-changbin.du@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 17/02/24 09:40, Changbin Du wrote:
+> Currently, the instructions of samples are shown as raw hex strings
+> which are hard to read. x86 has a special option '--xed' to disassemble
+> the hex string via intel XED tool.
+> 
+> Here we use capstone as our disassembler engine to give more friendly
+> instructions. We select libcapstone because capstone can provide more
+> insn details. Perf will fallback to raw instructions if libcapstone is
+> not available.
+> 
+> The advantages compared to XED tool:
+>  * Support arm, arm64, x86-32, x86_64 (more could be supported),
+>    xed only for x86_64.
+>  * Immediate address operands are shown as symbol+offs.
+> 
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
 
---jbzKRUs6kj78gPRQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is the only patch of V8 that made it to my inbox, Namhyung
+also mentioned problems receiving V7, but the patches are on lore.
 
-On Fri, Feb 16, 2024 at 04:57:27PM -0800, Atish Patra wrote:
-> Smcntrpmf extension allows M-mode to enable privilege mode filtering
-> for cycle/instret counters. However, the cyclecfg/instretcfg CSRs are
-> only available only in Ssccfg only Smcntrpmf is present.
+For whole patch set:
 
-There's some typos in this opening paragraph that makes it hard to
-follow.
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
->=20
-> That's why, kernel needs to detect presence of Smcntrpmf extension and
-> enable privilege mode filtering for cycle/instret counters.
->=20
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> 
 > ---
->  arch/riscv/include/asm/hwcap.h | 1 +
->  arch/riscv/kernel/cpufeature.c | 1 +
->  2 files changed, 2 insertions(+)
->=20
-> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwca=
-p.h
-> index 5f4401e221ee..b82a8d7a9b3b 100644
-> --- a/arch/riscv/include/asm/hwcap.h
-> +++ b/arch/riscv/include/asm/hwcap.h
-> @@ -84,6 +84,7 @@
->  #define RISCV_ISA_EXT_SMCSRIND		75
->  #define RISCV_ISA_EXT_SSCCFG            76
->  #define RISCV_ISA_EXT_SMCDELEG          77
-> +#define RISCV_ISA_EXT_SMCNTRPMF         78
-> =20
->  #define RISCV_ISA_EXT_MAX		128
->  #define RISCV_ISA_EXT_INVALID		U32_MAX
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
-e.c
-> index 77cc5dbd73bf..c30be2c924e7 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -302,6 +302,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D {
->  	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
->  	__RISCV_ISA_EXT_DATA(smcdeleg, RISCV_ISA_EXT_SMCDELEG),
->  	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
-> +	__RISCV_ISA_EXT_DATA(smcntrpmf, RISCV_ISA_EXT_SMCNTRPMF),
->  	__RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
->  	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
->  	__RISCV_ISA_EXT_DATA(sscsrind, RISCV_ISA_EXT_SSCSRIND),
-> --=20
-> 2.34.1
->=20
+> v4:
+>   - fix conflicting header bpf.h problem, aka, capstone/bpf.h and
+>     uapi/linux/bpf.h. (Namhyung Kim, Adrian Hunter)
+> v3:
+>   - show warning msg if libcapstone is not available.
+> v2:
+>   - line up the output by preceding two tabs. (Adrian Hunter)
+>   - removed the tailing space. (Adrian Hunter)
+>   - forward declaration for perf_sample, thread, machine. (Adrian Hunter)
+>   - other trivial fixes (Adrian Hunter)
+> ---
+>  tools/perf/builtin-script.c  |   8 +--
+>  tools/perf/util/Build        |   1 +
+>  tools/perf/util/print_insn.c | 135 +++++++++++++++++++++++++++++++++++
+>  tools/perf/util/print_insn.h |  16 +++++
+>  tools/perf/util/thread.h     |   1 -
+>  5 files changed, 155 insertions(+), 6 deletions(-)
+>  create mode 100644 tools/perf/util/print_insn.c
+>  create mode 100644 tools/perf/util/print_insn.h
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index b1f57401ff23..4817a37f16e2 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -34,6 +34,7 @@
+>  #include "util/event.h"
+>  #include "ui/ui.h"
+>  #include "print_binary.h"
+> +#include "print_insn.h"
+>  #include "archinsn.h"
+>  #include <linux/bitmap.h>
+>  #include <linux/kernel.h>
+> @@ -1511,11 +1512,8 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>  	if (PRINT_FIELD(INSNLEN))
+>  		printed += fprintf(fp, " ilen: %d", sample->insn_len);
+>  	if (PRINT_FIELD(INSN) && sample->insn_len) {
+> -		int i;
+> -
+> -		printed += fprintf(fp, " insn:");
+> -		for (i = 0; i < sample->insn_len; i++)
+> -			printed += fprintf(fp, " %02x", (unsigned char)sample->insn[i]);
+> +		printed += fprintf(fp, " insn: ");
+> +		printed += sample__fprintf_insn_raw(sample, fp);
+>  	}
+>  	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
+>  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 8027f450fa3e..2cbeeb79b6ef 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -32,6 +32,7 @@ perf-y += perf_regs.o
+>  perf-y += perf-regs-arch/
+>  perf-y += path.o
+>  perf-y += print_binary.o
+> +perf-y += print_insn.o
+>  perf-y += rlimit.o
+>  perf-y += argv_split.o
+>  perf-y += rbtree.o
+> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+> new file mode 100644
+> index 000000000000..459e0e93d7b1
+> --- /dev/null
+> +++ b/tools/perf/util/print_insn.c
+> @@ -0,0 +1,135 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Instruction binary disassembler based on capstone.
+> + *
+> + * Author(s): Changbin Du <changbin.du@huawei.com>
+> + */
+> +#include <string.h>
+> +#include <stdbool.h>
+> +#include "debug.h"
+> +#include "sample.h"
+> +#include "symbol.h"
+> +#include "machine.h"
+> +#include "thread.h"
+> +#include "print_insn.h"
+> +
+> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+> +{
+> +	int printed = 0;
+> +
+> +	for (int i = 0; i < sample->insn_len; i++) {
+> +		printed += fprintf(fp, "%02x", (unsigned char)sample->insn[i]);
+> +		if (sample->insn_len - i > 1)
+> +			printed += fprintf(fp, " ");
+> +	}
+> +	return printed;
+> +}
+> +
+> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> +#include <capstone/capstone.h>
+> +
+> +static int capstone_init(struct machine *machine, csh *cs_handle)
+> +{
+> +	cs_arch arch;
+> +	cs_mode mode;
+> +
+> +	if (machine__is(machine, "x86_64")) {
+> +		arch = CS_ARCH_X86;
+> +		mode = CS_MODE_64;
+> +	} else if (machine__normalized_is(machine, "x86")) {
+> +		arch = CS_ARCH_X86;
+> +		mode = CS_MODE_32;
+> +	} else if (machine__normalized_is(machine, "arm64")) {
+> +		arch = CS_ARCH_ARM64;
+> +		mode = CS_MODE_ARM;
+> +	} else if (machine__normalized_is(machine, "arm")) {
+> +		arch = CS_ARCH_ARM;
+> +		mode = CS_MODE_ARM + CS_MODE_V8;
+> +	} else if (machine__normalized_is(machine, "s390")) {
+> +		arch = CS_ARCH_SYSZ;
+> +		mode = CS_MODE_BIG_ENDIAN;
+> +	} else {
+> +		return -1;
+> +	}
+> +
+> +	if (cs_open(arch, mode, cs_handle) != CS_ERR_OK) {
+> +		pr_warning_once("cs_open failed\n");
+> +		return -1;
+> +	}
+> +
+> +	if (machine__normalized_is(machine, "x86")) {
+> +		cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
+> +		/*
+> +		 * Resolving address operands to symbols is implemented
+> +		 * on x86 by investigating instruction details.
+> +		 */
+> +		cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+> +			     cs_insn *insn, FILE *fp)
+> +{
+> +	struct addr_location al;
+> +	size_t printed = 0;
+> +
+> +	if (insn->detail && insn->detail->x86.op_count == 1) {
+> +		cs_x86_op *op = &insn->detail->x86.operands[0];
+> +
+> +		addr_location__init(&al);
+> +		if (op->type == X86_OP_IMM &&
+> +		    thread__find_symbol(thread, sample->cpumode, op->imm, &al)) {
+> +			printed += fprintf(fp, "%s ", insn[0].mnemonic);
+> +			printed += symbol__fprintf_symname_offs(al.sym, &al, fp);
+> +			addr_location__exit(&al);
+> +			return printed;
+> +		}
+> +		addr_location__exit(&al);
+> +	}
+> +
+> +	printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
+> +	return printed;
+> +}
+> +
+> +size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+> +				struct machine *machine, FILE *fp)
+> +{
+> +	csh cs_handle;
+> +	cs_insn *insn;
+> +	size_t count;
+> +	size_t printed = 0;
+> +	int ret;
+> +
+> +	/* TODO: Try to initiate capstone only once but need a proper place. */
+> +	ret = capstone_init(machine, &cs_handle);
+> +	if (ret < 0) {
+> +		/* fallback */
+> +		return sample__fprintf_insn_raw(sample, fp);
+> +	}
+> +
+> +	count = cs_disasm(cs_handle, (uint8_t *)sample->insn, sample->insn_len,
+> +			  sample->ip, 1, &insn);
+> +	if (count > 0) {
+> +		if (machine__normalized_is(machine, "x86"))
+> +			printed += print_insn_x86(sample, thread, &insn[0], fp);
+> +		else
+> +			printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
+> +		cs_free(insn, count);
+> +	} else {
+> +		printed += fprintf(fp, "illegal instruction");
+> +	}
+> +
+> +	cs_close(&cs_handle);
+> +	return printed;
+> +}
+> +#else
+> +size_t sample__fprintf_insn_asm(struct perf_sample *sample __maybe_unused,
+> +				struct thread *thread __maybe_unused,
+> +				struct machine *machine __maybe_unused,
+> +				FILE *fp __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
+> new file mode 100644
+> index 000000000000..465bdcfcc2fd
+> --- /dev/null
+> +++ b/tools/perf/util/print_insn.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef PERF_PRINT_INSN_H
+> +#define PERF_PRINT_INSN_H
+> +
+> +#include <stddef.h>
+> +#include <stdio.h>
+> +
+> +struct perf_sample;
+> +struct thread;
+> +struct machine;
+> +
+> +size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+> +				struct machine *machine, FILE *fp);
+> +size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
+> +
+> +#endif /* PERF_PRINT_INSN_H */
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index 0df775b5c110..df344262eaee 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -13,7 +13,6 @@
+>  #include <strlist.h>
+>  #include <intlist.h>
+>  #include "rwsem.h"
+> -#include "event.h"
+>  #include "callchain.h"
+>  #include <internal/rc_check.h>
+>  
 
---jbzKRUs6kj78gPRQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdH8/gAKCRB4tDGHoIJi
-0isjAP4q6xpgI0SAprv3/kjAyM2CkWmD6mwTd7LPsrl/J8GTIwEAn19T671J/0t4
-0ezPoULwYy8T4LILe16iToWJlXnvhAk=
-=28GE
------END PGP SIGNATURE-----
-
---jbzKRUs6kj78gPRQ--
