@@ -1,155 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B024876411;
-	Tue, 20 Feb 2024 15:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4759D23C5;
+	Wed, 21 Feb 2024 01:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708443747; cv=none; b=hHSs5rKyvhRUd6nmhLMQSwDAi0EMRj5d+Wadj1Qgaxtpewo4EGrm3+au3ePO8jrlyXTyj+MiXpC71Yg7MaovttBXRnH336raZzZGwAN6lbKnYVJQYIHI/hgxNGRLHZ1oMI2cFXoC+A0BtYt+4qpY7Mnt5Jx55SgJRL3mlCTQ4Xk=
+	t=1708480399; cv=none; b=ca9LHSV6pzNlQpRcgDGwmt5MddPbGLUqJUYr/HUO0aRQvrkH7+h9wd9urWRSA7YacA0qo6mdfpsAVRBdt43iaQwegdpQV+NN0JxzADNiW6rsd627wf3ST8PeaasKaxdqtjW/VboQRQ79bAUTT2IeBv2js5H3wCLk64y/bpPLxzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708443747; c=relaxed/simple;
-	bh=kYdSQC9Wpn67FHvtXtQYWqDXcKHPW+LqtaL7SkwNwi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hT7atA4s3HvZ22C2M8Bpn4a3TPT7sX6Y7yy6a5VPkFmiRsnZ+8nXuMreHKoqxAjAJbqWDKdKbvIQbDO5/yGsVrt3wwwYCn3Y3zQ7ohorT6ahXxv/pVnwl2FcC2VBvR/TlXC7Tbkr9LOZuBf0lF+Fg3NpR6z+5bjLtn62z+ny8f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKSESiIC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKSESiIC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FBAC433C7;
-	Tue, 20 Feb 2024 15:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708443747;
-	bh=kYdSQC9Wpn67FHvtXtQYWqDXcKHPW+LqtaL7SkwNwi4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IKSESiICcx/M53se7cXMGIuBqSRu0lEsxQO4kEyir1C0mY1HApxU0ywXTySiBza8H
-	 o7mZxG0z+8yJNa7lJa4DsWAVcOEn0ILt9ymEdWtgyPargeUKheiBNG6BPhACws+r5Z
-	 NKbsz0/bNYALLwzaqc6U9IEVsrZqCpD6mrPlK7Oc586ZBQq8eRexCHykXL/kg9wykU
-	 CSZIgjS/gWB41eHLJ07A5G/FlhxwtAIBInqQUKEy+R9IW4WkAlQGEqRe1OpgvbZd5h
-	 a/3PxTN8+E+9RXAAIaXjO9mmU5P6iXPH8ChFSmfq3LiQBBz5y0HYQdlcv3LrI6nuRS
-	 oJ2teBd2IxHZQ==
-Date: Tue, 20 Feb 2024 12:42:24 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Jann Horn <jannh@google.com>, Joe Mario <jmario@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Feng Tang <feng.tang@intel.com>, Andi Kleen <ak@linux.intel.com>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	kernel list <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Stephane Eranian <eranian@google.com>,
-	"Taylor, Perry" <perry.taylor@intel.com>,
-	"Alt, Samantha" <samantha.alt@intel.com>,
-	"Biggers, Caleb" <caleb.biggers@intel.com>,
-	"Wang, Weilin" <weilin.wang@intel.com>
-Subject: Re: [BUG] perf/x86/intel: HitM false-positives on Ice Lake / Tiger
- Lake (I think?)
-Message-ID: <ZdTIYLoJOdyu62LU@x1>
-References: <CAG48ez3RmV6SsVw9oyTXxQXHp3rqtKDk2qwJWo9TGvXCq7Xr-w@mail.gmail.com>
- <CAP-5=fXsFBwt9ARmQja0pKGL-_Vms_NDKeaH5CX=_om1aSvssw@mail.gmail.com>
+	s=arc-20240116; t=1708480399; c=relaxed/simple;
+	bh=txkMZ/Gg8fpSCMJTWXUn8JbtYWC6xphivOjGiTiGjsw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MWjYmWmb06RTEo5DvBdGwaLs5AgVTcBki5V28G4qp0T5VMs3gKEg1ybh+P6QyhgRYksMDzvSfEWRC0gZWSG4FqJR25COyOZy4aGLrMRFGsgxblFE8suRKGvRxz83uZ1IqlOnNydt2Y5fFi7Cnn/sgOaaIYIUW/ercp54wY7LXZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-299c11b250fso1573103a91.2;
+        Tue, 20 Feb 2024 17:53:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708480395; x=1709085195;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TBly6Q2PEojVSg3uLNQmMXendkI9nh//XLo8bYv5jdA=;
+        b=simQ3dK+nY/208EPPRr7RztAp289DTLBF/4r6tEgNUK65IeOJoUFE7ziqrO94yTFR6
+         BIgQw846y+wzqFR16YV6RWhDnkxoadJnETxj81gRcI9winH+3LsiWMI1G9+YYHqJnADI
+         /HHqciZCjDI3zt+W9Gxnt+Xx5tgD5yh7v4GNloBPxycTCx9cP2qMsYGQQiAyu3yOx2vi
+         n1JUa95DsGmNSYNVPRpH+Udo7iM3eil5opiIPqgA2XuIrifsi/VBEU97DqVNs6e1Z7/1
+         gNQVC3jIIzY1EygJff7l+xx+98if8efImm/nyw4ANafZTsUoZYH3fzBJ551SO0pEn4Bz
+         4VaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYdNA12kaDC2WDZ2RfeApnJSobnZAG6Y2v4k/fUn6y6T5htvCYjKEvT54h/AesYxbfLHbPrQXGzY3u23Jw3hYbXt6jNb3hwVBnfP16okHnrCPDlIQQlvEX1vw5VmzWvkPzAU3l95lbvLsqQB1tpw==
+X-Gm-Message-State: AOJu0YxGxgF5kyBSJ3IlX86aGIFDNLAWIEzk13WF4Uv0k41PM8b/mmNE
+	daA9ZDHP9FjCXuYij894pqkJJq++xda3bsxFnUEf+vO/0nOyX5SjwbZ3VF1uYp694ZWJMcRQ9KC
+	j7XjbnL1PsNqFurvWAeP1vsXS5AM=
+X-Google-Smtp-Source: AGHT+IGyfZl8zQrLCDq95vXqsW3gTFcoH6OrHCZMebf7zF6Qz5F5m+BE5cvJk2Dn+v+46Is9jDoSaI4hLFX36Rx0Gdc=
+X-Received: by 2002:a17:90b:4a0c:b0:299:3334:51d1 with SMTP id
+ kk12-20020a17090b4a0c00b00299333451d1mr11485895pjb.10.1708480395448; Tue, 20
+ Feb 2024 17:53:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXsFBwt9ARmQja0pKGL-_Vms_NDKeaH5CX=_om1aSvssw@mail.gmail.com>
+References: <20240216235203.229256-1-irogers@google.com> <20240216235203.229256-3-irogers@google.com>
+In-Reply-To: <20240216235203.229256-3-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 20 Feb 2024 17:53:03 -0800
+Message-ID: <CAM9d7cgqpvXLgq35B5MoysFzLeUBg7bJzX+pTK_ER=-hM0D=AQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/8] perf list: Add scandirat compatibility function
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Just adding Joe Mario to the CC list.
+Hi Ian,
 
-On Mon, Feb 19, 2024 at 03:20:00PM -0800, Ian Rogers wrote:
-> On Mon, Feb 19, 2024 at 5:01 AM Jann Horn <jannh@google.com> wrote:
-> >
-> > Hi!
-> >
-> > From what I understand, "perf c2c" shows bogus HitM events on Ice Lake
-> > (and newer) because Intel added some feature where *clean* cachelines
-> > can get snoop-forwarded ("cross-core FWD"), and the PMU apparently
-> > treats this mostly the same as snoop-forwarding of modified cache
-> > lines (HitM)? On a Tiger Lake CPU, I can see addresses from the kernel
-> > rodata section in "perf c2c report".
-> >
-> > This is mentioned in the SDM, Volume 3B, section "20.9.7 Load Latency
-> > Facility", table "Table 20-101. Data Source Encoding for Memory
-> > Accesses (Ice Lake and Later Microarchitectures)", encoding 07H:
-> > "XCORE FWD. This request was satisfied by a sibling core where either
-> > a modified (cross-core HITM) or a non-modified (cross-core FWD)
-> > cache-line copy was found."
-> >
-> > I don't see anything about this in arch/x86/events/intel/ds.c - if I
-> > understand correctly, the kernel's PEBS data source decoding assumes
-> > that 0x07 means "L3 hit, snoop hitm" on these CPUs. I think this needs
-> > to be adjusted somehow - and maybe it just isn't possible to actually
-> > distinguish between HitM and cross-core FWD in PEBS events on these
-> > CPUs (without big-hammer chicken bit trickery)? Maybe someone from
-> > Intel can clarify?
-> >
-> > (The SDM describes that E-cores on the newer 12th Gen have more
-> > precise PEBS encodings that distinguish between "L3 HITM" and "L3
-> > HITF"; but I guess the P-cores there maybe still don't let you
-> > distinguish HITM/HITF?)
-> >
-> >
-> > I think https://perfmon-events.intel.com/tigerLake.html is also
-> > outdated, or at least it uses ambiguous grammar: The
-> > MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD event (EventSel=D2H UMask=04H) is
-> > documented as "Counts retired load instructions where a cross-core
-> > snoop hit in another cores caches on this socket, the data was
-> > forwarded back to the requesting core as the data was modified
-> > (SNOOP_HITM) or the L3 did not have the data(SNOOP_HIT_WITH_FWD)" -
-> > from what I understand, a "cross-core FWD" should be a case where the
-> > L3 does have the data, unless L3 has become non-inclusive on Ice Lake?
-> >
-> > On a Tiger Lake CPU, I can see this event trigger for the
-> > sys_call_table, which is located in the rodata region and probably
-> > shouldn't be containing Modified cache lines:
-> >
-> > # grep -A1 -w sys_call_table /proc/kallsyms
-> > ffffffff82800280 D sys_call_table
-> > ffffffff82801100 d vdso_mapping
-> > # perf record -e mem_load_l3_hit_retired.xsnp_fwd:ppp --all-kernel -c 100 --data
-> > ^C[ perf record: Woken up 11 times to write data ]
-> > [ perf record: Captured and wrote 22.851 MB perf.data (43176 samples) ]
-> > # perf script -F event,ip,sym,addr | egrep --color 'ffffffff828002[89abcdef]'
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002d8
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800288
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
-> > ffffffff82526275 do_syscall_64
-> >
-> >
-> > (For what it's worth, there is a thread on LKML where "cross-core FWD"
-> > got mentioned: <https://lore.kernel.org/lkml/b4aaf1ed-124d-1339-3e99-a120f6cc4d28@linux.intel.com/>)
-> 
-> +others better qualified than me to respond.
-> 
-> Hi Jann,
-> 
-> I'm not overly familiar with the issue, but it appears a similar issue
-> has been reported for Broadwell Xeon here:
-> https://community.intel.com/t5/Software-Tuning-Performance/Broadwell-Xeon-perf-c2c-showing-remote-HITM-but-remote-socket-is/td-p/1172120
-> I'm not sure that thread will be particularly useful, but having the
-> Intel people better qualified than me to answer is probably the better
-> service of this email.
-> 
-> Thanks,
-> Ian
+On Fri, Feb 16, 2024 at 3:55=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> scandirat is used during the printing of tracepoint events but may be
+> missing from certain libcs. Add a compatibility implementation that
+> uses the symlink of an fd in /proc as a path for the reliably present
+> scandir.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+This fails to build in alpine:
+
+  util/print-events.c: In function 'print_tracepoint_events':
+  util/print-events.c:92:29: error: implicit declaration of function
+'scandirat'; did you mean 'scandir'?
+[-Werror=3Dimplicit-function-declaration]
+  92 |                 evt_items =3D scandirat(events_fd,
+sys_dirent->d_name, &evt_namelist, NULL, alphasort);
+  |                             ^~~~~~~~~
+  |                             scandir
+
+Thanks,
+Namhyung
+
+
+> ---
+>  tools/perf/util/print-events.c | 12 +++---------
+>  tools/perf/util/util.c         | 19 +++++++++++++++++++
+>  tools/perf/util/util.h         |  8 ++++++++
+>  3 files changed, 30 insertions(+), 9 deletions(-)
+>
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
+s.c
+> index 9e47712507cc..bf79dd366e2e 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -63,6 +63,8 @@ void print_tracepoint_events(const struct print_callbac=
+ks *print_cb __maybe_unus
+>  {
+>         char *events_path =3D get_tracing_file("events");
+>         int events_fd =3D open(events_path, O_PATH);
+> +       struct dirent **sys_namelist =3D NULL;
+> +       int sys_items;
+>
+>         put_tracing_file(events_path);
+>         if (events_fd < 0) {
+> @@ -70,10 +72,7 @@ void print_tracepoint_events(const struct print_callba=
+cks *print_cb __maybe_unus
+>                 return;
+>         }
+>
+> -#ifdef HAVE_SCANDIRAT_SUPPORT
+> -{
+> -       struct dirent **sys_namelist =3D NULL;
+> -       int sys_items =3D tracing_events__scandir_alphasort(&sys_namelist=
+);
+> +       sys_items =3D tracing_events__scandir_alphasort(&sys_namelist);
+>
+>         for (int i =3D 0; i < sys_items; i++) {
+>                 struct dirent *sys_dirent =3D sys_namelist[i];
+> @@ -130,11 +129,6 @@ void print_tracepoint_events(const struct print_call=
+backs *print_cb __maybe_unus
+>         }
+>
+>         free(sys_namelist);
+> -}
+> -#else
+> -       printf("\nWARNING: Your libc doesn't have the scandirat function,=
+ please ask its maintainers to implement it.\n"
+> -              "         As a rough fallback, please do 'ls %s' to see th=
+e available tracepoint events.\n", events_path);
+> -#endif
+>         close(events_fd);
+>  }
+>
+> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+> index c1fd9ba6d697..4f561e5e4162 100644
+> --- a/tools/perf/util/util.c
+> +++ b/tools/perf/util/util.c
+> @@ -552,3 +552,22 @@ int sched_getcpu(void)
+>         return -1;
+>  }
+>  #endif
+> +
+> +#ifndef HAVE_SCANDIRAT_SUPPORT
+> +int scandirat(int dirfd, const char *dirp,
+> +             struct dirent ***namelist,
+> +             int (*filter)(const struct dirent *),
+> +             int (*compar)(const struct dirent **, const struct dirent *=
+*))
+> +{
+> +       char path[PATH_MAX];
+> +       int err, fd =3D openat(dirfd, dirp, O_PATH);
+> +
+> +       if (fd < 0)
+> +               return fd;
+> +
+> +       snprintf(path, sizeof(path), "/proc/%d/fd/%d", getpid(), fd);
+> +       err =3D scandir(path, namelist, filter, compar);
+> +       close(fd);
+> +       return err;
+> +}
+> +#endif
+> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+> index 7c8915d92dca..9966c21aaf04 100644
+> --- a/tools/perf/util/util.h
+> +++ b/tools/perf/util/util.h
+> @@ -6,6 +6,7 @@
+>  /* glibc 2.20 deprecates _BSD_SOURCE in favour of _DEFAULT_SOURCE */
+>  #define _DEFAULT_SOURCE 1
+>
+> +#include <dirent.h>
+>  #include <fcntl.h>
+>  #include <stdbool.h>
+>  #include <stddef.h>
+> @@ -56,6 +57,13 @@ int perf_tip(char **strp, const char *dirpath);
+>  int sched_getcpu(void);
+>  #endif
+>
+> +#ifndef HAVE_SCANDIRAT_SUPPORT
+> +int scandirat(int dirfd, const char *dirp,
+> +             struct dirent ***namelist,
+> +             int (*filter)(const struct dirent *),
+> +             int (*compar)(const struct dirent **, const struct dirent *=
+*));
+> +#endif
+> +
+>  extern bool perf_singlethreaded;
+>
+>  void perf_set_singlethreaded(void);
+> --
+> 2.44.0.rc0.258.g7320e95886-goog
+>
