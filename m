@@ -1,190 +1,188 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94E07BB10;
-	Wed, 21 Feb 2024 14:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977B5839E0;
+	Wed, 21 Feb 2024 17:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708527493; cv=none; b=ls2HPD84j9rzrL39dx83K3dKo+jQPu+1R6jyaMz4xCCH56pk7DnBAvxezq4lxuOSflmogNcmznMLZmYL5miec0hOR79hrUI84eBD2IErJcPDL4B4Yhbk5C1IfEOsuIuLM6KJ6WkgH5Yi5OlwV2kcYFBVI4CHN3rtsHUiHwB01Vw=
+	t=1708535083; cv=none; b=ZzIr8hGqR8YOIiD30DuOmPHidnPTS/j4zUrdRsIkg+dAUkxyS0LFrt0ySSYfCBkXoFk+4/ABVrcyZjxJNOnIjpAlx2/CoXisWTdb66mcztB1SNvMu+ogB3oVWDkFRmsrveuswdapw6K2lsbs0Zg3Dq7UtrZa08fPAU4Xe1ai+z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708527493; c=relaxed/simple;
-	bh=Kpg2M2QZRiGjUu821krbE6v4k9hm8j0fi+Jc/wSfflE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uXjw8ftkUdbEqBCGfaVNOHbQEIMbXtvBeuLPa2TQZriK9NUC/LHvAM+s5GrdM52psg/pbvPoCSVwbRPmtXPQdMbusogHUmk8l5iXlNVfWHYC5WWQxkqGqKYARWdbHhBphlCtq/VhzdbiKryCZnrmqenDuc4S5EQT8LVjtQiM92M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clF4JkFO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708535083; c=relaxed/simple;
+	bh=7qKbGwaEKrIs5CEKuJzoB1E1+PJ1uNtIk55d8WvXuWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tRe/Hs6X44oePkeLLKEFcMCWmvsCFjxSfl5RvaA9jBs7jNMnmvfdZlew9/ZI9s38h4X4pn582b5AFAxlI2m0J08+4FYzGm1aRSBMJV00+nFvRX7lLXqW+a5RDioPvsqxfI3dO1IpdmzjQ2C/3IGh2DRphuVQJR3Msg+Ohn45vJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOD15bXa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clF4JkFO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1906C433C7;
-	Wed, 21 Feb 2024 14:58:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOD15bXa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E802C433C7;
+	Wed, 21 Feb 2024 17:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708527493;
-	bh=Kpg2M2QZRiGjUu821krbE6v4k9hm8j0fi+Jc/wSfflE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=clF4JkFOmqsDSRq5GAqZAC0WEOVC7qPYuxARNhtUwWQ7/v3BgVv2mJX3zLvcXb05g
-	 pmfteZ82fBsuP7pDpLtoH1v2tjTMMlPkfeu2xu8YVB3p7HaupFtK/8Wiq/Z9ti5ily
-	 kPwJ86MjMEfqtaY0kTrxSVF5hYJ4DnL4v8Ly78DnxLdWslNesrZEAkNNJ7yrgn+br8
-	 FoGx6OkrBfPaOLTe+0i0C7lmQDjEIdlU0GvSJMshYeLEx8FUJ5PdzStOoZMtIzFFKw
-	 e9Os3O5QvVOObQBMxhiBhjT8KhbBLIPwTutqXHgwbmnDtJhElkyYmAENpV7/gWjHDu
-	 JTmiJhYUeYbCg==
-Date: Wed, 21 Feb 2024 11:58:07 -0300
+	s=k20201202; t=1708535083;
+	bh=7qKbGwaEKrIs5CEKuJzoB1E1+PJ1uNtIk55d8WvXuWg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=nOD15bXa7Csn7bTVsgw2dPxCBjVqJFWuLJjfyMjCmSuf6w78iwxId925yJ7IFcV7y
+	 vXl3We1TGQMGF3J26yXbxQZPHzjiflMw3gKKTP3esJp5449Lrw0G5yZPDrGS+HlCrN
+	 IufQLHdMl8Py1sSHMjid1HJLRbAE+1zmcPcLz7PJvJCxXGoOpvDw7aOzV7v7J9GluI
+	 s0xslSwpOTNO4NQ13jt2hocaJF3999b3QphL0uY3GHVKLqsxaD1EBvgRTYkVY2uj3S
+	 2gXq+KZxGWMSU6Tn0HRJliQfaCzFiPXcgBYHNJT2pF9XN3x1kY617ak4cnwzZlupIx
+	 YFdZt83PycAMQ==
+Date: Wed, 21 Feb 2024 14:04:38 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>,
-	linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] perf tools: Only treat files as map files when they
- have the extension .map
-Message-ID: <ZdYPf3wMl35VemsL@x1>
-References: <20240220042957.2022391-1-ChaitanyaS.Prakash@arm.com>
- <20240220042957.2022391-3-ChaitanyaS.Prakash@arm.com>
- <CAP-5=fUFmeoTjLuZTgcaV23iGQU1AdddG+7Rw=d6buMU007+1Q@mail.gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf trace: Collect sys_nanosleep first argument
+Message-ID: <ZdYtJs8nWt6ALprh@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUFmeoTjLuZTgcaV23iGQU1AdddG+7Rw=d6buMU007+1Q@mail.gmail.com>
 
-On Tue, Feb 20, 2024 at 06:40:47AM -0800, Ian Rogers wrote:
-> On Mon, Feb 19, 2024 at 8:30 PM Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com> wrote:
-> > +++ b/tools/perf/util/string2.h
-> > @@ -40,5 +40,6 @@ char *strdup_esc(const char *str);
-> >
-> >  unsigned int hex(char c);
-> >  char *strreplace_chars(char needle, const char *haystack, const char *replace);
-> > +const char *ends_with(const char *str, const char *suffix);
-> 
-> nit: string2.h is an extension of linux's string.h. The tools copy of
-> that is missing functions in the kernel version:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/include/linux/string.h?h=perf-tools-next
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/include/linux/string.h?h=perf-tools-next#n398
-> specifically str_has_prefix.
-> 
-> The naming ends_with makes sense but there is also strstarts and
-> str_has_prefix, perhaps str_has_suffix would be the most consistent
-> and intention revealing name?
-> 
-> Also, we have strtailcmp which behaves like a reverse strcmp that
-> doesn't compare the lengths of the strings. It seems all uses of
-> strtailcmp are just for a "str_has_suffix". It would make sense to me
-> to remove that function and switch to a common str_has_suffix function
-> which I think is a more intention revealing way of naming what the
-> code is doing.
+That is a 'struct timespec' passed from userspace to the kernel as we
+can see with a system wide syscall tracing:
 
-So far in perf we try to just reuse whatever function the kernel has for
-the purpose at hand, right now the kernel has:
+  root@number:~# perf trace -e nanosleep
+       0.000 (10.102 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+      38.924 (10.077 ms): podman/2195174 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     100.177 (10.107 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     139.171 (10.063 ms): podman/2195174 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     200.603 (10.105 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     239.399 (10.064 ms): podman/2195174 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     300.994 (10.096 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     339.584 (10.067 ms): podman/2195174 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     401.335 (10.057 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     439.758 (10.166 ms): podman/2195174 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     501.814 (10.110 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     539.983 (10.227 ms): podman/2195174 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     602.284 (10.199 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     640.208 (10.105 ms): podman/2195174 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     702.662 (10.163 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     740.440 (10.107 ms): podman/2195174 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+     802.993 (10.159 ms): podman/9150 nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 10000000 })                   = 0
+  ^Croot@number:~# strace -p 9150 -e nanosleep
 
-/**
- * strstarts - does @str start with @prefix?
- * @str: string to examine
- * @prefix: prefix to look for.
- */
-static inline bool strstarts(const char *str, const char *prefix)
-{
-        return strncmp(str, prefix, strlen(prefix)) == 0;
-}
+If we then use the ptrace method to look at that podman process:
 
-And:
+  root@number:~# strace -p 9150 -e nanosleep
+  strace: Process 9150 attached
+  nanosleep({tv_sec=0, tv_nsec=10000000}, NULL) = 0
+  nanosleep({tv_sec=0, tv_nsec=10000000}, NULL) = 0
+  nanosleep({tv_sec=0, tv_nsec=10000000}, NULL) = 0
+  nanosleep({tv_sec=0, tv_nsec=10000000}, NULL) = 0
+  nanosleep({tv_sec=0, tv_nsec=10000000}, NULL) = 0
+  nanosleep({tv_sec=0, tv_nsec=10000000}, NULL) = 0
+  nanosleep({tv_sec=0, tv_nsec=10000000}, NULL) = 0
+  ^Cstrace: Process 9150 detached
+  root@number:~#
 
-/**
- * str_has_prefix - Test if a string has a given prefix
- * @str: The string to test
- * @prefix: The string to see if @str starts with
- *
- * A common way to test a prefix of a string is to do:
- *  strncmp(str, prefix, sizeof(prefix) - 1)
- *
- * But this can lead to bugs due to typos, or if prefix is a pointer
- * and not a constant. Instead use str_has_prefix().
- *
- * Returns:
- * * strlen(@prefix) if @str starts with @prefix
- * * 0 if @str does not start with @prefix
- */
-static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
-{
-        size_t len = strlen(prefix);
-        return strncmp(str, prefix, len) == 0 ? len : 0;
-}
+With some changes we can get something closer to the strace output,
+still in system wide mode:
 
-The later seems to give more bang for the buck, so to say, returning the
-prefix lenght.
+  root@number:~# perf config trace.show_arg_names=false
+  root@number:~# perf config trace.show_duration=false
+  root@number:~# perf config trace.show_timestamp=false
+  root@number:~# perf config trace.show_zeros=true
+  root@number:~# perf config trace.args_alignment=0
+  root@number:~# perf trace -e nanosleep --max-events=10
+  podman/2195174 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/9150 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/2195174 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/9150 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/2195174 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/9150 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/2195174 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/9150 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/2195174 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  podman/9150 nanosleep({ .tv_sec: 0, .tv_nsec: 10000000 }, NULL) = 0
+  root@number:~#
+  root@number:~# perf config
+  trace.show_arg_names=false
+  trace.show_duration=false
+  trace.show_timestamp=false
+  trace.show_zeros=true
+  trace.args_alignment=0
+  root@number:~# cat ~/.perfconfig
+  # this file is auto-generated.
+  [trace]
+  	show_arg_names = false
+  	show_duration = false
+  	show_timestamp = false
+  	show_zeros = true
+  	args_alignment = 0
+  root@number:~#
 
-It is a new addition:
+This will not get reused by any other syscall as nanosleep is the only
+one to have as its first argument a 'struct timespec" pointer argument
+passed from userspace to the kernel:
 
-72921427d46bf9731 (Steven Rostedt (VMware) 2018-12-21 18:10:14 -0500 398) static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
+  root@number:~# grep timespec /sys/kernel/tracing/events/syscalls/sys_enter_*/format | grep offset:16
+  /sys/kernel/tracing/events/syscalls/sys_enter_nanosleep/format:	field:struct __kernel_timespec * rqtp;	offset:16;	size:8;	signed:0;
+  root@number:~#
 
-While:
+BTF based pretty printing will simplify all this, but then lets just get
+the low hanging fruits first.
 
-66f92cf9d415e96a5 (Rusty Russell           2009-03-31 13:05:36 -0600 249)  * strstarts - does @str start with @prefix?
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-trace.c                    |  2 ++
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 21 +++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-⬢[acme@toolbox linux]$ git grep str_has_prefix| wc -l
-94
-⬢[acme@toolbox linux]$ git grep strstarts| wc -l
-177
-⬢[acme@toolbox linux]$ 
-
-Some places use it:
-
-kernel/printk/printk.c: len = str_has_prefix(str, "on");
-kernel/printk/printk.c: len = str_has_prefix(str, "off");
-kernel/printk/printk.c: len = str_has_prefix(str, "ratelimit");
-
-
-static int __control_devkmsg(char *str)
-{
-	size_t len;
-
-	if (!str)
-		return -EINVAL;
-
-	len = str_has_prefix(str, "on");
-	if (len) {
-		devkmsg_log = DEVKMSG_LOG_MASK_ON;
-		return len;
-	}
-
-	len = str_has_prefix(str, "off");
-	if (len) {
-		devkmsg_log = DEVKMSG_LOG_MASK_OFF;
-		return len;
-	}
-
-	len = str_has_prefix(str, "ratelimit");
-	if (len) {
-		devkmsg_log = DEVKMSG_LOG_MASK_DEFAULT;
-		return len;
-	}
-
-	return -EINVAL;
-}
-
-
-                err = __control_devkmsg(devkmsg_log_str);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 109b8e64fe69ae32..6abe280dc38f1921 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1048,6 +1048,8 @@ static const struct syscall_fmt syscall_fmts[] = {
+ 	  .arg = { [3] = { .scnprintf = SCA_MREMAP_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "name_to_handle_at",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
++	{ .name	    = "nanosleep",
++	  .arg = { [0] = { .scnprintf = SCA_TIMESPEC,  /* req */ }, }, },
+ 	{ .name	    = "newfstatat",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
+ 	{ .name	    = "open",
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index 2872f9bc07850bd7..0acbd74e8c760956 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -341,6 +341,27 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+ 	return 1; /* Failure: don't filter */
+ }
  
-                /*
-                 * Do not accept an unknown string OR a known string with
-                 * trailing crap...
-                 */
-                if (err < 0 || (err + 1 != *lenp)) {
++SEC("tp/syscalls/sys_enter_nanosleep")
++int sys_enter_nanosleep(struct syscall_enter_args *args)
++{
++	struct augmented_args_payload *augmented_args = augmented_args_payload();
++	const void *req_arg = (const void *)args->args[0];
++	unsigned int len = sizeof(augmented_args->args);
++	__u32 size = sizeof(struct timespec64);
++
++        if (augmented_args == NULL)
++		goto failure;
++
++	if (size > sizeof(augmented_args->__data))
++                goto failure;
++
++	bpf_probe_read_user(&augmented_args->__data, size, req_arg);
++
++	return augmented__output(args, augmented_args, len + size);
++failure:
++	return 1; /* Failure: don't filter */
++}
++
+ static pid_t getpid(void)
+ {
+ 	return bpf_get_current_pid_tgid();
+-- 
+2.43.0
 
-                        /* ... and restore old setting. */
-                        devkmsg_log = old;
-                        strncpy(devkmsg_log_str, old_str, DEVKMSG_STR_MAX_SIZE);
-
-                        return -EINVAL;
-                }
-
-
-So yeah, I agree with Ian that it is more intention revealing, has this
-bonus of returning the strlen for the above use cases, is in the kernel
-sources, so I'm in favour of grabbing a copy of it and replacing the
-strstarts() usage with it, drop strstarts(), then also introduce
-str_has_suffix(), the kernel will get it when it needs, possibly from
-tools/lib/ :-)
-
-- Arnaldo
