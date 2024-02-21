@@ -1,275 +1,250 @@
 Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93BF8563B
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 18:36:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03621272A9
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 20:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708540563; cv=none; b=cZFC89UjUTbzSpEB7HhztTkEh3tSHBVcpf91CZkjpCaBgvi7IqX6eBCzf+GMmFHKbJSHV8wqO78HG5UeCPJ7aLFJIC97H9JTTNNu5lVnPucVfTLYP0JjBH67vBVTXZp2qORNvbkcbMJ98NNNA2d+VDozfYeZ7bEVtEyY5Oha+sY=
+	t=1708546792; cv=none; b=CRRnFNRfIlJq5/y1w8u1YZrBRTDDz6nPB5JxfmgCQuV/Rjy/9TnQ/SVb/093Te+7qdK3P/9KT82Bi5r2KzYC9VEH7Ki0WDL75Ojcr39CpGmwhCmr9F1sG5qSwCHNHWrPUZVkajCT+AfOYiKerupubrHSJz8tPmrP+TUzfxZL1/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708540563; c=relaxed/simple;
-	bh=JzXkEkAkZFt6tQSDJ0a/WDHwD2LKtf6I1CtX9A8t9gk=;
+	s=arc-20240116; t=1708546792; c=relaxed/simple;
+	bh=bDP0uOp71ZJ40SPhEcYqiixXc34u57l7lBzJrlk2B0E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EmqT3xJlMwUQVZZP1bQAhUz4EAg3qdiO1LVpbZZ7UitEBqsKxvvH444oR31FLbDwS1Ym9hwWmsE20mSNn9VsNaxMczqnhMRVjN0333oj3uvXBW+WQHSuTpC+ox2xMZKwxp77Vm5oyFaGlIxa6ZqxabHOIp9B1tDN8wSvcCO0lp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rg2q7U8n; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=gSVBtbUoNAdJPfiLzD1eu1WRVqC5p9HiHsPeZx6uldLirrkNyGZm0Sjsv0y18LznskW/DDdqki7CrBkbBELm+5GxPvWat+G/nkKeY7RIb58w4HZMICOBrI2lQwZH3DzWZqnQDzMgjibdvT9qi+XL7OVLowf0JbG1Eb3AJcYPe+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lQxararq; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rg2q7U8n"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dbe7e51f91so12315ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 10:36:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lQxararq"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dbcf58b05cso35805ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 12:19:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708540560; x=1709145360; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708546777; x=1709151577; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GN/hJ0GELYNvoKL9mhGdK5MwPicVkqUQ3Gg9Bl/EC/o=;
-        b=rg2q7U8n2QcCuCKA3ohp5fiHOOM/3mNv8tJg7SrEKFeWdDZy8+q57o5xqy4A/oTrFZ
-         BmEEoAxLrpbZ07GWXY7HA/p9ICz4ypOrE+wNGFsZDzYiCyjhgkg8X7MJUwANB8A+M5Ey
-         Fy1Lx4eKEyZdLXSrMERX3beE2J4xRkjk8cJ0bV1BnQ7XvDyXZi/4322e9cRCt8FpRtgP
-         VLxXEVcKhJQDoKCMI5LX/A7DADqa00kA7ExARoaxIeZcN5cKF7o5zu7xLIBG7bn5ETQ7
-         GvVN3gNLRuyO1Z17KyaNv3lw/WaE7CG6auxmk4CaplX30JOVW0kfvQ0Ls7wTeORskfaf
-         bSgg==
+        bh=BBnEL2Nv2EtdY0R7cxkdDh94aICzF8VYHKyI9ju4cqU=;
+        b=lQxararqoLm6XEyXgZOZdyZQam5QOKSPAIfhCU4OCzXPQJCoMd3px3khOh86myk1yU
+         9Si0EryC0Si5Ze+wr2jjTv9ohcsMVq7rCsDawFlzI6z1NQ4xFAePrrc84FLd3O3hBpNK
+         lcpkgNIgWtdjZEMcS4ij84Y7bCeMMNGCKPohaUTtCoQh/muawnoi2qIETQSeydtGA4Bh
+         V/bS7MafDllxeJo80UtlfWTlZ3HG67OXHC+dALHKqXO2443Vo18XVA8sI9U0otXVsFmD
+         Kq3yCv1YKPY+1m9fFhe7UJXvRZv0YUW5iXOJ+NJ3DBNg9GY4M3SsdkGL07BbI4hefSFW
+         nSXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708540560; x=1709145360;
+        d=1e100.net; s=20230601; t=1708546777; x=1709151577;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GN/hJ0GELYNvoKL9mhGdK5MwPicVkqUQ3Gg9Bl/EC/o=;
-        b=kpY8HH/b7+FmaZ+7lkXpWrTpWgHDL693OL7gAjngOEXuCDP9NHtiucV4L6Bi9M4r+q
-         Sceu/XLajlK5RHbwQcTknigDJqRM37oj++V6Zui3czKzronQqSMqxlxgF46aMJm3EpCg
-         BC8hQ6UBJnUV8DwjFZEgd2+MK4IMeO9XF58Y+MLQPY0ZgJ8khVttJtUu4irhAEQ6jiBA
-         FDjgVtDlBR4RY9wyugoPv57+vi69giF//BLiGYW4PNcjCzAzAU/ZVz5wmmqqy6K5+H4w
-         nY42NwNO0PNGQlJOAxvlAnCqrGv3nwuDZeWwothfld98G6MAcod/JIDEYWiNeorpnFoK
-         IK1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXKkVeN3bC5WuMQcvHZkKRJ7lBgkESHmuf9VPM7vdYGwuc9+VuhbSq7Vi5WP7oOx5DJtN/CggrDeXZWdyZqE1wUGSsg1nl2DiZ6YaIn3ORYeQ==
-X-Gm-Message-State: AOJu0YwzRIUHU0HGRbc6maCZEDc2wflT69CaMn9Jj7qXTdorzYJqPKx5
-	pZskZui0FNSYtqg+zpaBsGMsV68M7jkc2YYKBwN2nKVOTYBTCFxPuH72IqIaVltFsXMxt7Wci0A
-	oCBlQvqNflzd15a6zicy9Vbd8cZP5nQ+GAmg4Xz/JgipcpFTj4MDI
-X-Google-Smtp-Source: AGHT+IHeZE8/mcjExoQZJoCHRSaPbX90Sxfl4B3Ofs6EyvbBVns2+y/ssJTLEwWNVbm41tka1GX9UJpkI4TwCReypAw=
-X-Received: by 2002:a17:902:e9d5:b0:1dc:f0e:51 with SMTP id
- 21-20020a170902e9d500b001dc0f0e0051mr243176plk.17.1708540559906; Wed, 21 Feb
- 2024 10:35:59 -0800 (PST)
+        bh=BBnEL2Nv2EtdY0R7cxkdDh94aICzF8VYHKyI9ju4cqU=;
+        b=SwGHT6wpKJf2z86sZ5vMHUJSEmCk15Rf2lTSf0kqjx5olL4eLKMwsILrD9HToe96IU
+         gftuK8XFBVaf/2/XUARncteKyhSwXubGd3vtEoFN2X6fIeNsLk9nPP4i27a4Be4nDISA
+         KPvYmYLdd6Do6kvihPPxq3pP4Nkrl9aCNyp0ipVlTmWySyfT6khi9UO+vJlUtCf+DNLK
+         eiVZxgz0V1VPNCKMFPtZQvyT/ZHEwjKXRXEyf/bKbgF5R/WZ9YHgaGyMEzw7RQLrLGM1
+         Q2zFZCP5ntMzJRM95J4jnizsvh9svNlKcdtSfhBgB94seUC4DEoJpbMsRPREkqjY5INW
+         gmJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfff1/4A6IqTX3Jp8Wb92hmcB+7FsGTqcgC9D1ofsbyCupQVpJ7QTnw3HgTrEQFuHno0s/7uJOd5Xm6wDoHjrv6Hmyqi5PEAaqJ5kR8dp5Kg==
+X-Gm-Message-State: AOJu0Yw8PUBJSnbKm10TOedd/w8+GlZeNw5GJFf2m/x5UVTJ4L2GyqHx
+	FxaBTk40Uy3dwXrnLPvaLE7fMfwml3fjzJ2yxNFmhK8YrTL22U5ERzbNDoEROT9vnHnrzSdOVSP
+	lEAlg+rjazgnhDX7Dqxmcdooc0pkB+qDNzmPd
+X-Google-Smtp-Source: AGHT+IEftC3CAOyYPuNtEgw2Qhn1fJdvdDmS7a2SXukzfo4kwiSPBH0aTLNADF7WZMl4BWy3giXAJdshznQ3TSNsx8M=
+X-Received: by 2002:a17:903:2808:b0:1d9:aa55:e4c1 with SMTP id
+ kp8-20020a170903280800b001d9aa55e4c1mr323224plb.20.1708546777286; Wed, 21 Feb
+ 2024 12:19:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221175210.19936-1-khuey@kylehuey.com> <20240221175210.19936-2-khuey@kylehuey.com>
-In-Reply-To: <20240221175210.19936-2-khuey@kylehuey.com>
+References: <20240126145605.1005472-1-mark.rutland@arm.com>
+In-Reply-To: <20240126145605.1005472-1-mark.rutland@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 Feb 2024 10:35:45 -0800
-Message-ID: <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Test FASYNC with watermark wakeups.
-To: Kyle Huey <me@kylehuey.com>
-Cc: Kyle Huey <khuey@kylehuey.com>, "Robert O'Callahan" <robert@ocallahan.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 21 Feb 2024 12:19:22 -0800
+Message-ID: <CAP-5=fURS0OQxHcukS1+NprgyMpAQSr3+BMiYPj5x7=+tcZ8hw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf print-events: make is_event_supported() more robust
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, acme@redhat.com, james.clark@arm.com, 
+	john.g.garry@oracle.com, leo.yan@linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	marcan@marcan.st, maz@kernel.org, mike.leach@linaro.org, namhyung@kernel.org, 
+	suzuki.poulose@arm.com, tmricht@linux.ibm.com, will@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 9:52=E2=80=AFAM Kyle Huey <me@kylehuey.com> wrote:
+On Fri, Jan 26, 2024 at 6:56=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
+ wrote:
 >
-> The test uses PERF_RECORD_SWITCH records to fill the ring buffer and
-> trigger the watermark wakeup, which in turn should trigger an IO
-> signal.
+> Currently the perf tool doesn't detect support for extended event types
+> on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
+> hardware events into per-PMU events. This is due to the detection of
+> extended event types not handling mandatory filters required by the
+> M1/M2 PMU driver.
 >
-> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-> ---
->  tools/perf/tests/Build              |   1 +
->  tools/perf/tests/builtin-test.c     |   1 +
->  tools/perf/tests/tests.h            |   1 +
->  tools/perf/tests/watermark_signal.c | 123 ++++++++++++++++++++++++++++
->  4 files changed, 126 insertions(+)
->  create mode 100644 tools/perf/tests/watermark_signal.c
+> PMU drivers and the core perf_events code can require that
+> perf_event_attr::exclude_* filters are configured in a specific way and
+> may reject certain configurations of filters, for example:
 >
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index 53ba9c3e20e0..de43eb60b280 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -67,6 +67,7 @@ perf-y +=3D sigtrap.o
->  perf-y +=3D event_groups.o
->  perf-y +=3D symbols.o
->  perf-y +=3D util.o
-> +perf-y +=3D watermark_signal.o
+> (a) Many PMUs lack support for any event filtering, and require all
+>     perf_event_attr::exclude_* bits to be clear. This includes Alpha's
+>     CPU PMU, and ARM CPU PMUs prior to the introduction of PMUv2 in
+>     ARMv7,
 >
->  ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
->  perf-$(CONFIG_DWARF_UNWIND) +=3D dwarf-unwind.o
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index 4a5973f9bb9b..715c01a2172a 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -124,6 +124,7 @@ static struct test_suite *generic_tests[] =3D {
->         &suite__event_groups,
->         &suite__symbols,
->         &suite__util,
-> +       &suite__watermark_signal,
->         NULL,
->  };
+> (b) When /proc/sys/kernel/perf_event_paranoid >=3D 2, the perf core
+>     requires that perf_event_attr::exclude_kernel is set.
 >
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index dad3d7414142..7ef4e0d0a77b 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -146,6 +146,7 @@ DECLARE_SUITE(sigtrap);
->  DECLARE_SUITE(event_groups);
->  DECLARE_SUITE(symbols);
->  DECLARE_SUITE(util);
-> +DECLARE_SUITE(watermark_signal);
+> (c) The Apple M1/M2 PMU requires that perf_event_attr::exclude_guest is
+>     set as the hardware PMU does not count while a guest is running (but
+>     might be extended in future to do so).
 >
->  /*
->   * PowerPC and S390 do not support creation of instruction breakpoints u=
-sing the
-> diff --git a/tools/perf/tests/watermark_signal.c b/tools/perf/tests/water=
-mark_signal.c
-> new file mode 100644
-> index 000000000000..ae4abedc4b7c
-> --- /dev/null
-> +++ b/tools/perf/tests/watermark_signal.c
-> @@ -0,0 +1,123 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <stddef.h>
-> +#include <signal.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/ioctl.h>
-> +#include <sys/mman.h>
-> +#include <sys/wait.h>
-> +#include <unistd.h>
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +
-> +#include "tests.h"
-> +#include "debug.h"
-> +#include "event.h"
-> +#include "../perf-sys.h"
-> +#include "cloexec.h"
-> +#include <internal/lib.h> // page_size
-> +
-> +static int sigio_count;
-> +
-> +static void handle_sigio(int sig __always_unused)
-> +{
-> +       ++sigio_count;
-> +}
-> +
-> +static void do_child(void)
-> +{
-> +       for (int i =3D 0; i < 20; ++i)
-> +               sleep(1);
-> +
-> +       exit(0);
-> +}
-> +
-> +static int test__watermark_signal(struct test_suite *test __maybe_unused=
-, int subtest __maybe_unused)
-> +{
-> +       struct perf_event_attr attr;
-> +       struct perf_event_mmap_page *p =3D NULL;
-> +       sighandler_t previous_sigio =3D SIG_ERR;
-> +       pid_t child =3D -1;
-> +       int fd =3D -1;
-> +       int ret =3D TEST_FAIL;
-> +
-> +       previous_sigio =3D signal(SIGIO, handle_sigio);
-> +       if (previous_sigio =3D=3D SIG_ERR) {
-> +               pr_debug("failed setting SIGIO handler\n");
-> +               goto cleanup;
-> +       }
-> +
-> +       memset(&attr, 0, sizeof(attr));
-> +       attr.size =3D sizeof(attr);
-> +       attr.type =3D PERF_TYPE_SOFTWARE;
-> +       attr.config =3D PERF_COUNT_SW_DUMMY;
-> +       attr.sample_period =3D 1;
-> +       attr.disabled =3D 1;
-> +       attr.watermark =3D 1;
-> +       attr.context_switch =3D 1;
-> +       attr.wakeup_watermark =3D 1;
-> +
-> +       child =3D fork();
-> +       if (child =3D=3D 0)
-> +               do_child();
-> +       else if (child < 0) {
-> +               pr_debug("failed fork() %d\n", errno);
-> +               goto cleanup;
-> +       }
-> +
-> +       fd =3D sys_perf_event_open(&attr, child, -1, -1,
-> +                                perf_event_open_cloexec_flag());
-> +       if (fd < 0) {
-> +               pr_debug("failed opening event %llx\n", attr.config);
-> +               goto cleanup;
-> +       }
-> +
-> +       if (fcntl(fd, F_SETFL, FASYNC)) {
-> +               pr_debug("failed F_SETFL FASYNC %d\n", errno);
-> +               goto cleanup;
-> +       }
+> In is_event_supported(), we try to account for cases (a) and (b), first
+> attempting to open an event without any filters, and if this fails,
+> retrying with perf_event_attr::exclude_kernel set. We do not account for
+> case (c), or any other filters that drivers could theoretically require
+> to be set.
+>
+> Thus is_event_supported() will fail to detect support for any events
+> targeting an Apple M1/M2 PMU, even where events would be supported with
+> perf_event_attr:::exclude_guest set.
+>
+> Since commit:
+>
+>   82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in =
+perf_event_attr.type")
+>
+> ... we use is_event_supported() to detect support for extended types,
+> with the PMU ID encoded into the perf_event_attr::type. As above, on an
+> Apple M1/M2 system this will always fail to detect that the event is
+> supported, and consequently we fail to detect support for extended types
+> even when these are supported, as they have been since commit:
+>
+>   5c816728651ae425 ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capabilit=
+y")
+>
+> Due to this, the perf tool will not automatically expand plain
+> PERF_TYPE_HARDWARE events into per-PMU events, even when all the
+> necessary kernel support is present.
+>
+> This patch updates is_event_supported() to additionally try opening
+> events with perf_event_attr::exclude_guest set, allowing support for
+> events to be detected on Apple M1/M2 systems. I believe that this is
+> sufficient for all contemporary CPU PMU drivers, though in future it may
+> be necessary to check for other combinations of filter bits.
+>
+> I've deliberately changed the check to not expect a specific error code
+> for missing filters, as today ;the kernel may return a number of
+> different error codes for missing filters (e.g. -EACCESS, -EINVAL, or
+> -EOPNOTSUPP) depending on why and where the filter configuration is
+> rejected, and retrying for any error is more robust.
+>
+> Note that this does not remove the need for commit:
+>
+>   a24d9d9dc096fc0d ("perf parse-events: Make legacy events lower priority=
+ than sysfs/JSON")
+>
+> ... which is still necessary so that named-pmu/event/ events work on
+> kernels without extended type support, even if the event name happens to
+> be the same as a PERF_EVENT_TYPE_HARDWARE event (e.g. as is the case for
+> the M1/M2 PMU's 'cycles' and 'instructions' events).
+>
+> Fixes: 82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU numbe=
+r in perf_event_attr.type")
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Tested-by: Ian Rogers <irogers@google.com>
+> Tested-by: James Clark <james.clark@arm.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Hector Martin <marcan@marcan.st>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@arm.com>
+> Cc: John Garry <john.g.garry@oracle.com>
+> Cc: Leo Yan <leo.yan@linaro.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Will Deacon <will@kernel.org>
 
-Thanks for the work! The perf tool and perf test should run on older
-kernels ideally without failure. I'm assuming this would fail on an
-older kernel. Could we make the return value skip in that case?
-
-> +
-> +       if (fcntl(fd, F_SETOWN, getpid())) {
-> +               pr_debug("failed F_SETOWN getpid() %d\n", errno);
-> +               goto cleanup;
-> +       }
-> +
-> +       if (fcntl(fd, F_SETSIG, SIGIO)) {
-> +               pr_debug("failed F_SETSIG SIGIO %d\n", errno);
-> +               goto cleanup;
-> +       }
-> +
-> +       p =3D mmap(NULL, 2 * page_size, PROT_READ | PROT_WRITE, MAP_SHARE=
-D, fd, 0);
-> +       if (p =3D=3D NULL) {
-> +               pr_debug("failed to mmap\n");
-> +               goto cleanup;
-> +       }
-> +
-> +       if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0)) {
-> +               pr_debug("failed PERF_EVENT_IOC_ENABLE %d\n", errno);
-> +               goto cleanup;
-> +       }
-> +
-> +       sleep(30);
-
-This is kind of a painful wait, could it be less? No sleeps would be best :=
--)
+Ping. Could we land this one?
 
 Thanks,
 Ian
 
+> ---
+>  tools/perf/util/print-events.c | 27 +++++++++++++++++++--------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+>
+> Since v1 [1]:
+> * Fix typos in commit message
+> * Accumulate tags
+>
+> [1] https://lore.kernel.org/lkml/20240116170348.463479-1-mark.rutland@arm=
+.com/
+>
+> Mark.
+>
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
+s.c
+> index b0fc48be623f3..4f67e8f00a4d6 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -232,7 +232,6 @@ void print_sdt_events(const struct print_callbacks *p=
+rint_cb, void *print_state)
+>  bool is_event_supported(u8 type, u64 config)
+>  {
+>         bool ret =3D true;
+> -       int open_return;
+>         struct evsel *evsel;
+>         struct perf_event_attr attr =3D {
+>                 .type =3D type,
+> @@ -246,20 +245,32 @@ bool is_event_supported(u8 type, u64 config)
+>
+>         evsel =3D evsel__new(&attr);
+>         if (evsel) {
+> -               open_return =3D evsel__open(evsel, NULL, tmap);
+> -               ret =3D open_return >=3D 0;
+> +               ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
+>
+> -               if (open_return =3D=3D -EACCES) {
+> +               if (!ret) {
+>                         /*
+> -                        * This happens if the paranoid value
+> +                        * The event may fail to open if the paranoid val=
+ue
+>                          * /proc/sys/kernel/perf_event_paranoid is set to=
+ 2
+> -                        * Re-run with exclude_kernel set; we don't do th=
+at
+> -                        * by default as some ARM machines do not support=
+ it.
+> -                        *
+> +                        * Re-run with exclude_kernel set; we don't do th=
+at by
+> +                        * default as some ARM machines do not support it=
+.
+>                          */
+>                         evsel->core.attr.exclude_kernel =3D 1;
+>                         ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
+>                 }
 > +
-> +       ret =3D (sigio_count =3D=3D 1) ? TEST_OK : TEST_FAIL;
+> +               if (!ret) {
+> +                       /*
+> +                        * The event may fail to open if the PMU requires
+> +                        * exclude_guest to be set (e.g. as the Apple M1 =
+PMU
+> +                        * requires).
+> +                        * Re-run with exclude_guest set; we don't do tha=
+t by
+> +                        * default as it's equally legitimate for another=
+ PMU
+> +                        * driver to require that exclude_guest is clear.
+> +                        */
+> +                       evsel->core.attr.exclude_guest =3D 1;
+> +                       ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
+> +               }
 > +
-> +cleanup:
-> +       if (p !=3D NULL)
-> +               munmap(p, 2 * page_size);
-> +
-> +       if (fd >=3D 0)
-> +               close(fd);
-> +
-> +       if (child > 0) {
-> +               kill(child, SIGTERM);
-> +               waitpid(child, NULL, 0);
-> +       }
-> +
-> +       if (previous_sigio !=3D SIG_ERR)
-> +               signal(SIGIO, previous_sigio);
-> +
-> +       return ret;
-> +}
-> +
-> +DEFINE_SUITE("Watermark signal handler", watermark_signal);
+>                 evsel__delete(evsel);
+>         }
+>
 > --
-> 2.34.1
+> 2.30.2
 >
