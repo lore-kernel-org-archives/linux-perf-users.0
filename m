@@ -1,51 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E49D3207
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 01:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919B6566A;
+	Wed, 21 Feb 2024 01:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708480733; cv=none; b=tJCrqWlbtLZn5hklLx25g306kG2B6QiSjmc9lBVk4jmyXWdkta1XvfaQm6XALEvNpvlFta8PSivMUcP35PI8eibX+6tIZv2vYj4KmYPC1cvSukNhsUyWva9uU5acvZm2yMArHgkWY+PxHvBFr1NcEYev1w+CXULRd2jk5G1z+Ss=
+	t=1708480764; cv=none; b=lorUmgUFtdpAoeBkRA1BLGWlamUzyNp/cQkPizVlHWBpUqQUsWsmihQwjh1VPEi/yHdUee11CeYj/w4WWXVbH8QdhpIVreOog6lXU3rb3Koi2kWX1AjY0cUISf6Vt1dJcar6hVYJ9f+ovUk3Rr8bZTIjyhZAi1KHY2TCPKH6Cz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708480733; c=relaxed/simple;
-	bh=xW0fQ01mst+fvg1mHKrHcLsI0nhbNPQoNwnfdkLFSI4=;
+	s=arc-20240116; t=1708480764; c=relaxed/simple;
+	bh=NLwamubHOdxN0Lj8uKc4TckyhPGFH9znJF09/t3gByk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BQ9TLJfreq5Wwqd2UBX6GiboXE6AjjaOCgIvHs4nZ6J+FjbqH7tdT1kd1E+xoTqKJwAX/b93DyRAxDMZMKaiBz619TX1YMOJKvYKp+ydq//6iEUWg/GEvf5nlxvu62RFBmmXTmrdW/j7871axiXG+nsyWhpd9LR9kahPlQt3cs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBFwXJZO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=IM6rmYrMPjf30PfVpUYUKzXim0e+wNiBslHG7oMMBrV+efTDc5mjFyUnP19f6QMqKxHSeNlWJO1pxWEleI1dqiZ7u8uqLUX37WGaHEOu8HfZshd8YbNcuNq9Ifg6B1/vLIWXpK/wxI6x1LZCS/aCSXRuc8uVIyhDjXZL/HQKiXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RaGYHyb4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBFwXJZO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D3BC433F1;
-	Wed, 21 Feb 2024 01:58:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RaGYHyb4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7324C433C7;
+	Wed, 21 Feb 2024 01:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708480732;
-	bh=xW0fQ01mst+fvg1mHKrHcLsI0nhbNPQoNwnfdkLFSI4=;
+	s=k20201202; t=1708480764;
+	bh=NLwamubHOdxN0Lj8uKc4TckyhPGFH9znJF09/t3gByk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mBFwXJZOikT1BjYRPIsqiJTLaG+vSi00vqM9oCffMM5sWrylSbpIdpiql2bcURr4T
-	 fZCIKs33dj0I0fYjWWDnZI6y9lnP3aHAXiv0SoYSf4ZniGB/Mmqf3FYU1CfRV5OjYL
-	 qXhoV++vzX3AqL/9jDaQ7dtfrdD+A7SnARqlZ9wWu9M9MAN+UZLrjk44Jvh3pT8g7w
-	 WlHGgOCdq3HiUl9BoceF8ewKcEN+vBPCtpyuzEmRLOWsmfItyD8A58oKQbwpn2B6pb
-	 jBKkFDkPVxE/Mqelw1lSXLjDHchmQWTSmQeIks0ivPGrCf+XBU6wTNubvL51bVujNm
-	 1qvJekuvo2cCg==
+	b=RaGYHyb4l+bgPYKFdVnKDbP716aWAKfQCalo5xWSEgzV7wmSjC3SvgNsUVpe5DSh1
+	 G6+zXoXpOLqmXz1U1LneF7KB56L0M7EvjqTqfaxg5m6PETHel8ltpKhK01tnpJw512
+	 AaHYW7Y4zUdryOXAQBZATc9BjeEwzs8919eoOKico34Gv1/O5V4HwHDQOZ2IDHdG1W
+	 ORr2x/jGn0RvBmZODyDu993CfU41nt4Kug/HIT/JlwSIzTdrO2uQ4P4uYdBIT+EZfh
+	 JIN/UD5W8RoL83f6sfb/7uQuhdVwhRZTEnoXjC3jMoz/5IpH4l1+qQavbGcKw9oD1w
+	 wtI0rlfp/oZXw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	acme@redhat.com
-Cc: mingo@redhat.com,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	peterz@infradead.org,
-	mark.rutland@arm.com,
-	atrajeev@linux.vnet.ibm.com,
-	kjain@linux.ibm.com,
-	irogers@google.com,
-	acme@kernel.org
-Subject: Re: [PATCH v2 0/7] Add perf testsuite into perf-test
-Date: Tue, 20 Feb 2024 17:58:49 -0800
-Message-ID: <170848061720.1313505.9675212976046086736.b4-ty@kernel.org>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH 1/1 v2] perf augmented_raw_syscalls.bpf: Move 'struct timespec64' to vmlinux.h
+Date: Tue, 20 Feb 2024 17:59:21 -0800
+Message-ID: <170848061720.1313505.18406074637867075838.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-In-Reply-To: <20240215110231.15385-1-mpetlan@redhat.com>
-References: <20240131113951.17077-1-mpetlan@redhat.com> <20240215110231.15385-1-mpetlan@redhat.com>
+In-Reply-To: <Zc_fp6CgDClPhS_O@x1>
+References: <Zc_fp6CgDClPhS_O@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,17 +48,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Thu, 15 Feb 2024 12:02:24 +0100, Michael Petlan wrote:
-> as Arnaldo said, this is a first patchset of an effort to upstream
-> the external perftool-testsuite [1] and merge it into perf-test.
+On Fri, 16 Feb 2024 19:20:23 -0300, Arnaldo Carvalho de Melo wrote:
+> If we instead decide to generate vmlinux.h from BTF info, it will be
+> there:
 > 
-> The perftool-testsuite originates back to 2015, when there were no
-> shell-based testcases for perf. At that point, perf-test contained
-> rather "unit-tests" and there was a need to test perf as a tool too.
+>   $ pahole timespec64
+>   struct timespec64 {
+>   	time64_t                   tv_sec;               /*     0     8 */
+>   	long int                   tv_nsec;              /*     8     8 */
 > 
 > [...]
 
-Applied to perf-tools-next.  Looking forward to seeing more tests!
+Applied to perf-tools-next, thanks!
 
-Thanks,
-Namhyung
+Best regards,
+-- 
+Namhyung Kim <namhyung@kernel.org>
