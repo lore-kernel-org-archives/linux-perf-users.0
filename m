@@ -1,55 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B1353AC;
-	Wed, 21 Feb 2024 01:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C474F747F;
+	Wed, 21 Feb 2024 02:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708480793; cv=none; b=Yqv2/9wwFtveUbJRMkTQkvCU50MMSRIec+WdJAa6gs6oKjG2fGfATwuqyhXdtqgWln7BwC6V5+LVtNPFjw0cayWfP8rU9G6sboUguzccFgbYA4aJ1/XiTXJSUbcXedPe/2XMxRofW+i3DStIrlGfs0rI2QECXAhfutPOK9TlxMU=
+	t=1708480815; cv=none; b=IzV9akzuiHrrFv9F2oroiy8QLStzzVViKv7L4UdrKQl+rTJawbpOI8n0p4Nv0ozb3tvqBAGiUfeXIHqJF3TEo/dmXAgE43yU7u89EEYfTesXstt3zOEtud+so925CPdehWYhTN+L7KVNBYYBT2Tg/BvJQkztsCGbIffXky+3ANM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708480793; c=relaxed/simple;
-	bh=sEkCxHX6RnAczbZivO5ymv01uGSyS7puhDorwgbbBbo=;
+	s=arc-20240116; t=1708480815; c=relaxed/simple;
+	bh=CRfAO8B4DzGYtfLCTm5XleHv9ObeYH9Wo1VmI8sIwK0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PAZscqknEclF7QL1FhwQBzZ3B2YbvbdS1yClkGWtA6wVxqNmMIsPEhTLS73nWAJChwT4zUpts9ryMCHIA4dmc23uVx34zN/5BUHxhstsVXEpPiz3PwXMgeaJxaVnheTXzNgSp6uJqrY6/SrB1pXp3UvY0sGpilL0Qk1thPDn2vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZ1Kex7B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=WnsOwj11BX+O5RJarlRh2S5LqrZ9nFZnGv+XhccvUvLfAubihYTRvNPbZyY9xF4g/zLJrKGMmmSASaciLi5oMrlBoPWXwfZunUBJDlMRgTqVsmNIGZObWwB2lkbxnXQCBlJFJU26h1YmxP4o99h4At8oPRPetbIbnSvceFrxIJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQ2GxswR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZ1Kex7B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B931C433C7;
-	Wed, 21 Feb 2024 01:59:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQ2GxswR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBEA3C433C7;
+	Wed, 21 Feb 2024 02:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708480793;
-	bh=sEkCxHX6RnAczbZivO5ymv01uGSyS7puhDorwgbbBbo=;
+	s=k20201202; t=1708480815;
+	bh=CRfAO8B4DzGYtfLCTm5XleHv9ObeYH9Wo1VmI8sIwK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sZ1Kex7BbWPkjHWC8fZf6PW1rYnJzz3Sqgpz77CtVwj5WhIsBJBcWGDLnTfy7k7Q0
-	 l2c4YLtODQlIbNy/EHdd+TJtKuzxbJ79ZSPeaVViEvi+D8kHnFPVSP7gUicEL0hGMH
-	 7+c4ceU9asQttKPVBLGv7qIh6dl/5Tw3ZU2YTOO0LlyxKzePOyEzgFGBHGTUfEQWjb
-	 1YeRiNgRonvsUKlRk9Onys74vQrIEwtXoTfBsdkr6M/eHXDJzXMneHG9cJZbya7x8w
-	 fAMkcmib9Jlie5k44idY71rx3fiw9VrNtXHRoz0K5fqZTwMk3USkUdhmfkhrETZMuJ
-	 qa8bQFJ/UtapQ==
+	b=pQ2GxswRNmsF4vpZiqBWAFKvJZV9uVGIwbBspL2x8/x3wElIop3fv+XTQoWoISz5S
+	 cH9LZ5Whqu0gWniZQN7E7ARein2vdPtMAkiH/S//D7IMesYVnF02oNvDBUfTEs7Ooq
+	 9uh5zNHpaIePnxyqivtz+xfUb/DUoYzA+LRia7tNU6ERDRrDVa9550vPEHSMTZbnF5
+	 EOMbd1VMvKEt40OCm3w73DN1Mf3MNrb+hHpn8YMPfDAaAbSqq5UXzAZWdmOWHdOnlO
+	 6EbHUcc/8I+wKg1ywGNYZGCFt8ks0nyfTSH01sacKHKu0WciWloPH0NJLrq77WpEnI
+	 HmrmCzIcWtS1Q==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Caleb Biggers <caleb.biggers@intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Perry Taylor <perry.taylor@intel.com>,
+To: Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Edward Baker <edward.baker@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 00/30] perf vendor event and TMA 4.7 metric update
-Date: Tue, 20 Feb 2024 17:59:50 -0800
-Message-ID: <170848061724.1313505.6465396484131071224.b4-ty@kernel.org>
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Mike Leach <mike.leach@linaro.org>,
+	Will Deacon <will@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>
+Subject: Re: [PATCH] perf tools: Fixup module symbol end address properly
+Date: Tue, 20 Feb 2024 18:00:13 -0800
+Message-ID: <170848061727.1313505.8320377887775957635.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-In-Reply-To: <20240214011820.644458-1-irogers@google.com>
-References: <20240214011820.644458-1-irogers@google.com>
+In-Reply-To: <20240212233322.1855161-1-namhyung@kernel.org>
+References: <20240212233322.1855161-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,18 +56,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 13 Feb 2024 17:17:49 -0800, Ian Rogers wrote:
-> The first 12 patches update vendor events to those in:
-> https://github.com/intel/perfmon
+On Mon, 12 Feb 2024 15:33:22 -0800, Namhyung Kim wrote:
+> I got a strange error on ARM to fail on processing FINISHED_ROUND
+> record.  It turned out that it was failing in symbol__alloc_hist()
+> because the symbol size is too big.
 > 
-> The next 18 patches update the TMA metrics from version 4.5 to version
-> 4.7. This includes improvements to many models like the
-> tma_info_bottleneck* metrics, an abstraction or summarization of the
-> 100+ TMA tree nodes into 12-entry familiar performance metrics.
+> When a sample is captured on a specific BPF program, it failed.  I've
+> added a debug code and found the end address of the symbol is from
+> the next module which is placed far way.
 > 
 > [...]
 
 Applied to perf-tools-next, thanks!
+
+[1/1] perf tools: Fixup module symbol end address properly
+      commit: bacefe0c7b77b7527a613e053b6d378412a8a779
 
 Best regards,
 -- 
