@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97EA376EA
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 06:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4643A1D1
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 06:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708497935; cv=none; b=L4HwAEwwnfSikoHMgQ/kPfCpy7ztBzMsoLaLT+9FXy0hkAMqJaEQ9uwQysJUd60EowKCX599DUhkH4FvI1YGeEZKDo01UPDqWKInxNmgXx1jS3QRGXmUg8BiAxMFFlaENx8zyS+tKOXFz7DS4e7orWS5+6zPUkeOvVtL1Dich7I=
+	t=1708497937; cv=none; b=KDZTVMVNgARx6FDs+qrmVzjD9FV3v3BDWEw7NyDfMT6o7wwu6xe4Lb5Jp86wLTfhqTdS0KsII89Nv9tmjwO4oI/eqC2hLKKaBUeJJzQsRevg9EHwx0pD0vrKp2ESlMjKmoYddOgtGuDj3QMlDaJdIx25UHPrvWth2VlSYu/AV6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708497935; c=relaxed/simple;
-	bh=p2BFm98alOENnWqviYTCy9ucqswGbAxkTLrhYtaIgqA=;
+	s=arc-20240116; t=1708497937; c=relaxed/simple;
+	bh=/6zujSE566bACQeKSvHvMpYeeTA8PlC2Y0AN3XU66zc=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=X1Qwww8lx88xtdoUnWHz79/ciIyQSQnPXXfpv95PRwNX9F9tqwloi1JNKUJC8eA7KUAABgFrNJKCAVgazYUvQ4ShP3MRrVqnsjNoBL/+XIJA9KLZx6QjDK5davlLtrypkAZH/ECHQX2vWo84UyeG4En1ZXX8UNZm5wWpYrATmL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L7arW2xe; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=FreJb8J9H8sPWU+HxOiJQI6TAQoTc+J+7FH/dJd7wQt+7dwDN6W2p3qaRP0hNTFWgxFL0PkEslyjmQo4N1G4ZVvJ2kUnsaEHDrk4M7GULFhRwYuH6q11RL+IQf6sYzBKD0FXHvc1ED7Vc+a2yKtfSWoKvFXKT60LKNGYX34fm6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fp/fwxhE; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L7arW2xe"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-603c0e020a6so48409177b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Feb 2024 22:45:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fp/fwxhE"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6ade10cb8so12781538276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Feb 2024 22:45:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708497933; x=1709102733; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708497935; x=1709102735; darn=vger.kernel.org;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvthopvNRdGOZJq8hSaBpJ0dA5xV4FM2S9eVhI67i9I=;
-        b=L7arW2xeroCatEAI/S0tIoebBlSOUDaDW2LlOwa9CQE9bSZDfkaQ5hsUQJ4cBBxFdc
-         JIGPDRIwSAKhOHOjNl0ke83hJXbiRJQC2PkLna3A63MGn5NVrOl06vleehJ7nbg5U9a6
-         4qdiCXC8ivoxitYWyK0HWRPs605alLD52PeMLcmQZAi9GJaIJgv0QK9MH4E9G2Htf/EX
-         u8uqfbODdtapITajOPsREiA6fOSEcmzgsbOHmXMaN2hKNpvjv79ERJ4JlSM+bdufta6/
-         uShnAFT8Irjh/XWKlsSrbE7F+XMjHkKCuv7NInGdMEPH8m4TX/N6Y4nErS5g4PYW/YQi
-         ml/A==
+        bh=6/pI7AtchfWx5feeWTlX63xH7EqjzW5vpXnx4QlPqwg=;
+        b=fp/fwxhEI01Fqx/jks8ALYZtPem7JIH9Lv2V8MUXGgo2PRCpRHXkjL7oo2/ddP2607
+         5rSY3Tzh7RQBJoMduCexR5JFm3/nRVTnSOTVGZQnGsX+qKQ0NXy4hE8rDd5Pm6+oSVko
+         Hd6mEHrewL9X8vOdVeMoTw+BBqojr9t5OhByVJNCcE3Epwbbm7yYhPYt50fFbsZyMgu3
+         BZo3JZh5cYk3DwEyxhx62c7pbIhyy1HeaYviwkgbqPp1C0qVOvJNOLuPHlm6wiSBHTRl
+         b/89ulYshwOkdgqQEG6YYxjucxivheF0wmbf0r7UrZS1DocBGB2TJMz/cHdwf3HXHqWH
+         uGUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708497933; x=1709102733;
+        d=1e100.net; s=20230601; t=1708497935; x=1709102735;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvthopvNRdGOZJq8hSaBpJ0dA5xV4FM2S9eVhI67i9I=;
-        b=WnB5A7J98bSIAq983Jw4uCS3vLATNJW9g9qN+5finSgVeGaSPOAcP5OiZvdXUSTGvi
-         hMTLFGPHTYpbtzhvqOMS1YvYqbRiSOyolobUxvKFi0oQUDYGVBKECQR0t3CxbIcWQJH3
-         z6Db47w3DgK0yq2SUuSU3qllP9/fddda2lxPdrr18VXWUZUOSGzUXS0Tn4znXcvFQAVu
-         e7NId9p77Tv2oTKXcOTrkSctf76EjR2sM/zmxA8TPEmj3RsDhzC4nShJzAG1DWle10gV
-         eg0d1TPDati9jyD5DZ8dTi5KzkKr5y0kd33gUX7D3YLS6GvmNBJiJF8qKQL6gt+AyX4W
-         l38w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7t2dpx1sLhPmGU4avwVwP2jtUzUjotv/lkrJrXJvlj3kOqYspVPlxNhV05Y/2xMIs3av2b6y7Cn8iFoGT35u75Bs9xUZ2yRvda9ON/F/G/A==
-X-Gm-Message-State: AOJu0YwQDLYzK7VRuobWSJK4dtNIAfA/1CvQCaeTr+poLrk4fBjcz8j8
-	wmdvwzhWeDBv5h1qiXneQqg8ZX95yB5A4A9B1MLvnIV8Vk6qh77buHJGFLK/BG40c3YwC2EEfDv
-	1QaMgzw==
-X-Google-Smtp-Source: AGHT+IFf97MAYgZA2M6FgTZl1w7ndLv5a8Z8QbZFGhM4VY7vsAcfKic/WjsCJ5vJOtuLaAD7Ju/L7hQs3X+a
+        bh=6/pI7AtchfWx5feeWTlX63xH7EqjzW5vpXnx4QlPqwg=;
+        b=pHajJ7TRd7WJtPwM9f2afvS2btW+U+qUFGl+9Wjeivz792jBhN+Z1YUjxdjRRH3n3J
+         jb9+1IoawFhoFIQ+7kSa7sp05tEQd8zkhJAbQ1eimQZdD1NXm9bjDDB83BSP9gFROpay
+         +yq5pmgBFi0HIzYaOzBS4EAjvVkQ3nO3iptEhcxDNO2yuFoXLPDQsVqHtQKtlBL/L+Uu
+         BzAwGFX0/C8xwXQV/2bRGbcEQ9CZarNXP/1o1vM72R1cDD5O84ITi/OkDFTuLW5hziXV
+         0cX5rvExOblWPWLEw0DPuJ2JXYk0rOtsT9Zi7UP3Po7gcfcwFBEc7j2O3pdTrJU0ku6g
+         blXw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4JyMUBus90ZtUCLXRCGPBliGVPr0I8SIUrTZPkzIp8nIKJLEAypcX/KJTS9x+M3OkjcvvEuPlJsdSgU85HLDSJYT1b5k47IXjg+1D3swLfg==
+X-Gm-Message-State: AOJu0YxCNdltRbb1+ni4Dz06tRymxR6m2wGGz22rxk/mS56sxoz8Sfux
+	J027AniflLmg2ZhhsXWcq8LtS6eChQls7H/7TsBfGYY23jA/PpCdVyFDyzNptDPrID+AXlLRXIb
+	eGP2nMw==
+X-Google-Smtp-Source: AGHT+IEwYgbJA0O1mFJMicyN/Dg0T7MX19vCpK193t3RzYHu3hebTrqejNfBSKs8JWdQ4ffOe+kV7ZVsQhYl
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3c02:f882:5876:b7ab])
- (user=irogers job=sendgmr) by 2002:a0d:d5d7:0:b0:607:9bfd:d0bc with SMTP id
- x206-20020a0dd5d7000000b006079bfdd0bcmr2958361ywd.7.1708497932795; Tue, 20
- Feb 2024 22:45:32 -0800 (PST)
-Date: Tue, 20 Feb 2024 22:45:25 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:1104:b0:dbd:b4e8:1565 with SMTP
+ id o4-20020a056902110400b00dbdb4e81565mr5476893ybu.4.1708497935001; Tue, 20
+ Feb 2024 22:45:35 -0800 (PST)
+Date: Tue, 20 Feb 2024 22:45:26 -0800
 In-Reply-To: <20240221064527.4157979-1-irogers@google.com>
-Message-Id: <20240221064527.4157979-2-irogers@google.com>
+Message-Id: <20240221064527.4157979-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240221064527.4157979-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Subject: [PATCH v3 2/3] perf metrics: Compute unmerged uncore metrics individually
+Subject: [PATCH v3 3/3] perf stat: Fix metric-only aggregation index 1;115;0c
+ Aggregation index was being computed using the evsel's cpumap which may have
+ a different (typically the same or fewer) entries.
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,171 +76,61 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When merging counts from multiple uncore PMUs the metric is only
-computed for the metric leader. When merging/aggregation is disabled,
-prior to this patch just the leader's metric would be computed. Fix
-this by computing the metric for each PMU.
-
-On a SkylakeX:
 Before:
 ```
-$ perf stat -A -M memory_bandwidth_total -a sleep 1
+$ perf stat --metric-only -A -M memory_bandwidth_total -a sleep 1
 
  Performance counter stats for 'system wide':
 
-CPU0               82,217      UNC_M_CAS_COUNT.RD [uncore_imc_0] #      9.2 MB/s  memory_bandwidth_total
-CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_0] #      0.0 MB/s  memory_bandwidth_total
-CPU0               61,395      UNC_M_CAS_COUNT.WR [uncore_imc_0]
-CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_0]
-CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_1]
-CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_1]
-CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
-CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
-CPU0               81,570      UNC_M_CAS_COUNT.RD [uncore_imc_2]
-CPU18             113,886      UNC_M_CAS_COUNT.RD [uncore_imc_2]
-CPU0               62,330      UNC_M_CAS_COUNT.WR [uncore_imc_2]
-CPU18              66,942      UNC_M_CAS_COUNT.WR [uncore_imc_2]
-CPU0               75,489      UNC_M_CAS_COUNT.RD [uncore_imc_3]
-CPU18              27,958      UNC_M_CAS_COUNT.RD [uncore_imc_3]
-CPU0               55,864      UNC_M_CAS_COUNT.WR [uncore_imc_3]
-CPU18              38,727      UNC_M_CAS_COUNT.WR [uncore_imc_3]
-CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_4]
-CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_4]
-CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
-CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
-CPU0               75,423      UNC_M_CAS_COUNT.RD [uncore_imc_5]
-CPU18             104,527      UNC_M_CAS_COUNT.RD [uncore_imc_5]
-CPU0               57,596      UNC_M_CAS_COUNT.WR [uncore_imc_5]
-CPU18              56,777      UNC_M_CAS_COUNT.WR [uncore_imc_5]
-CPU0        1,003,440,851 ns   duration_time
+       MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total
+CPU0                            12.8                           0.0                          12.9                          12.7                           0.0                          12.6
+CPU1
 
-       1.003440851 seconds time elapsed
+       1.007806367 seconds time elapsed
 ```
 
 After:
 ```
-$ perf stat -A -M memory_bandwidth_total -a sleep 1
+$ perf stat --metric-only -A -M memory_bandwidth_total -a sleep 1
 
  Performance counter stats for 'system wide':
 
-CPU0               88,968      UNC_M_CAS_COUNT.RD [uncore_imc_0] #      9.5 MB/s  memory_bandwidth_total
-CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_0] #      0.0 MB/s  memory_bandwidth_total
-CPU0               59,498      UNC_M_CAS_COUNT.WR [uncore_imc_0]
-CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_0]
-CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_1] #      0.0 MB/s  memory_bandwidth_total
-CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_1] #      0.0 MB/s  memory_bandwidth_total
-CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
-CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_1]
-CPU0               88,635      UNC_M_CAS_COUNT.RD [uncore_imc_2] #      9.5 MB/s  memory_bandwidth_total
-CPU18             117,975      UNC_M_CAS_COUNT.RD [uncore_imc_2] #     11.5 MB/s  memory_bandwidth_total
-CPU0               60,829      UNC_M_CAS_COUNT.WR [uncore_imc_2]
-CPU18              62,105      UNC_M_CAS_COUNT.WR [uncore_imc_2]
-CPU0               82,238      UNC_M_CAS_COUNT.RD [uncore_imc_3] #      8.7 MB/s  memory_bandwidth_total
-CPU18              22,906      UNC_M_CAS_COUNT.RD [uncore_imc_3] #      3.6 MB/s  memory_bandwidth_total
-CPU0               53,959      UNC_M_CAS_COUNT.WR [uncore_imc_3]
-CPU18              32,990      UNC_M_CAS_COUNT.WR [uncore_imc_3]
-CPU0                    0      UNC_M_CAS_COUNT.RD [uncore_imc_4] #      0.0 MB/s  memory_bandwidth_total
-CPU18                   0      UNC_M_CAS_COUNT.RD [uncore_imc_4] #      0.0 MB/s  memory_bandwidth_total
-CPU0                    0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
-CPU18                   0      UNC_M_CAS_COUNT.WR [uncore_imc_4]
-CPU0               83,595      UNC_M_CAS_COUNT.RD [uncore_imc_5] #      8.9 MB/s  memory_bandwidth_total
-CPU18             110,151      UNC_M_CAS_COUNT.RD [uncore_imc_5] #     10.5 MB/s  memory_bandwidth_total
-CPU0               56,540      UNC_M_CAS_COUNT.WR [uncore_imc_5]
-CPU18              53,816      UNC_M_CAS_COUNT.WR [uncore_imc_5]
-CPU0        1,003,353,416 ns   duration_time
+       MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total
+CPU0                            15.4                           0.0                          15.3                          15.0                           0.0                          14.9
+CPU18                            0.0                           0.0                          13.5                           5.2                           0.0                          11.9
+
+       1.007858736 seconds time elapsed
 ```
 
 Signed-off-by: Ian Rogers <irogers@google.com>                                  |
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/metricgroup.c |  2 ++
- tools/perf/util/stat-shadow.c | 31 +++++++++++++++++++++++++++----
- 2 files changed, 29 insertions(+), 4 deletions(-)
+ tools/perf/util/stat-display.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 966cca5a3e88..b24a1c177a80 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -44,6 +44,8 @@ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
- 	if (!metric_events)
- 		return NULL;
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index ae37395f90c0..bfc1d705f437 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1137,11 +1137,16 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 			u64 ena, run, val;
+ 			double uval;
+ 			struct perf_stat_evsel *ps = counter->stats;
+-			int aggr_idx = perf_cpu_map__idx(evsel__cpus(counter), cpu);
++			int aggr_idx = 0;
  
-+	if (evsel->metric_leader)
-+		me.evsel = evsel->metric_leader;
- 	nd = rblist__find(metric_events, &me);
- 	if (nd)
- 		return container_of(nd, struct metric_event, nd);
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 10b452792037..3466aa952442 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -356,6 +356,7 @@ static void print_nsecs(struct perf_stat_config *config,
- }
+-			if (aggr_idx < 0)
++			if (!perf_cpu_map__has(evsel__cpus(counter), cpu))
+ 				continue;
  
- static int prepare_metric(const struct metric_expr *mexp,
-+			  const struct evsel *evsel,
- 			  struct expr_parse_ctx *pctx,
- 			  int aggr_idx)
- {
-@@ -399,8 +400,29 @@ static int prepare_metric(const struct metric_expr *mexp,
- 			source_count = 1;
- 		} else {
- 			struct perf_stat_evsel *ps = metric_events[i]->stats;
--			struct perf_stat_aggr *aggr = &ps->aggr[aggr_idx];
-+			struct perf_stat_aggr *aggr;
- 
-+			/*
-+			 * If there are multiple uncore PMUs and we're not
-+			 * reading the leader's stats, determine the stats for
-+			 * the appropriate uncore PMU.
-+			 */
-+			if (evsel && evsel->metric_leader &&
-+			    evsel->pmu != evsel->metric_leader->pmu &&
-+			    mexp->metric_events[i]->pmu == evsel->metric_leader->pmu) {
-+				struct evsel *pos;
-+
-+				evlist__for_each_entry(evsel->evlist, pos) {
-+					if (pos->pmu != evsel->pmu)
-+						continue;
-+					if (pos->metric_leader != mexp->metric_events[i])
-+						continue;
-+					ps = pos->stats;
-+					source_count = 1;
++			cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
++				if (config->aggr_map->map[aggr_idx].cpu.cpu == cpu.cpu)
 +					break;
-+				}
 +			}
-+			aggr = &ps->aggr[aggr_idx];
- 			if (!aggr)
- 				break;
- 
-@@ -416,7 +438,8 @@ static int prepare_metric(const struct metric_expr *mexp,
- 				source_count = 0;
- 			} else {
- 				val = aggr->counts.val;
--				source_count = evsel__source_count(metric_events[i]);
-+				if (!source_count)
-+					source_count = evsel__source_count(metric_events[i]);
- 			}
- 		}
- 		n = strdup(evsel__metric_id(metric_events[i]));
-@@ -463,7 +486,7 @@ static void generic_metric(struct perf_stat_config *config,
- 		pctx->sctx.user_requested_cpu_list = strdup(config->user_requested_cpu_list);
- 	pctx->sctx.runtime = runtime;
- 	pctx->sctx.system_wide = config->system_wide;
--	i = prepare_metric(mexp, pctx, aggr_idx);
-+	i = prepare_metric(mexp, evsel, pctx, aggr_idx);
- 	if (i < 0) {
- 		expr__ctx_free(pctx);
- 		return;
-@@ -524,7 +547,7 @@ double test_generic_metric(struct metric_expr *mexp, int aggr_idx)
- 	if (!pctx)
- 		return NAN;
- 
--	if (prepare_metric(mexp, pctx, aggr_idx) < 0)
-+	if (prepare_metric(mexp, /*evsel=*/NULL, pctx, aggr_idx) < 0)
- 		goto out;
- 
- 	if (expr__parse(&ratio, pctx, mexp->metric_expr))
++
+ 			os->evsel = counter;
+ 			os->id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+ 			if (first) {
 -- 
 2.44.0.rc1.240.g4c46232300-goog
 
