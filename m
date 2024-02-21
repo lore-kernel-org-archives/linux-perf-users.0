@@ -1,517 +1,201 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EB83BB24
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 03:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92481365
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 06:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708486946; cv=none; b=bxCPYiwvcT7AeAyzZC2DrCdyCF5C30ZjILks2GNuLcA2StGE5dCwt8+pELmyEjNt6Sb0HuEOLkex2HhPvGii52VHBR8r3UDDdenw16OEqCWZhGyAMOJtdAUY46Z960OI9DsL1OoQ9vHeIVwGvXq6a51Ga77JxQX6mLrHDXu+Zjk=
+	t=1708497933; cv=none; b=AjpEI+/M6hejB7kr9GC0KF+MqgiYgK/McR1joUY4PdvSFtIlghvvAT2kd2vheSNmn1Npd5619G17DHGriA4f6Gwah9oWRXym0G3pKvT+xkwWJGIoHk3MHNrD6qLcaap8V/IkRbKahkqkuIH0KPRA2HZGoNJVIS3XzrOWKSKMBCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708486946; c=relaxed/simple;
-	bh=SV8Q2XP3AEzUCdEScST86iV7qnjMAWaIiYJHWAwVraA=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=COr3A6lYUX2fK6/CsfU+qnZBsCzWyupP4qi/kIWp6QYC2gF+9thno6PFsXR3hnVr0EdmU9Fx3ZGLawLBAAGWbfPBL7L3TNAJOxN2nHFNlIf45anevo4AxODLofuQ3zbskkvTcUbevdCKWBGELV6tpjcrUE4HUxXxRmgp0tEwc2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bDP546u8; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1708497933; c=relaxed/simple;
+	bh=Vctcg2i0KcfuRuGiF34q8FKyaNU+WFLIoo1taHhTiGA=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=iyBKMu50ObvjAse66GX22ruKgVFVH55N0vTh2sxyhLZx0326lLAVs4VMacysKvhF8Qya/3n3S5vpDmj1H9ePNGFcMQsRbUYekANDZf29u27PrgzIErQhLMnQQ5apBo3TprnjVHyEu+5q1vXqrrNGsYOZdVhGt15jOVbG4zzRNxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FBhQP58N; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bDP546u8"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608808c9646so2285137b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Feb 2024 19:42:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FBhQP58N"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b267bf11so5794480276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Feb 2024 22:45:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708486943; x=1709091743; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=46NbERsw+rX6VfHxglAqwzl8LfYw4J5J2BPeonbB4cQ=;
-        b=bDP546u8vC4zpylxVQlXWnWOqiRNTzOLPp7wHjt9tq3M9goHm7W7F2bw2GEqJdCNXc
-         uONh6tVlKsxas3WZkKqD90CkSaV7r8VtRzlpC0aA+qbg1NtIbwoqv5fTZTDluWfSX3QZ
-         ZYvWfaCtef+c4q796dHEUXByE8zuQwG804jjgbtFJalVkSbMrakwQZgc0NilDyY6aeIu
-         du54+MqOjDvqDFMPWiqyPYzaboPNmYfOshRcSHzqVrDAdsaaYFO7YGljUeSv+Gxu5fO5
-         3m/jTuVWEK6IV74WQNw9AG35FH+drOluBEkNWWALKQJEvLdninu4crih7IoSXMrtkI7+
-         JNvg==
+        d=google.com; s=20230601; t=1708497930; x=1709102730; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tjKYmJzQl8F9/gAiKS0z/bm1yBfw+nAatzaAOGPVP0k=;
+        b=FBhQP58NRwd1yBJeVqRM+xpj6OxfCDLKxyPC5i7cndR11vjnLz1RPNJSvMtpvb7lbi
+         5pE7fYyeuT/gdg+bPboMnkEOGtqv3DaGZuv24+8MsiwrETBWhF1L0Q3PJVQK0aENDOyY
+         soIyPd6Rhk6FX2OxaFCJGHKAkeNHRmaDjG6J1WMWlPw2IeUxWlP9ylmhFCC4NXbRVy4X
+         J8cIqIk3BfPMqpFAm2KqeB5wZ0HX6ywaFj/PmkmB4qqczSbNUSWZgtuE5HyrptcAWeQH
+         hYH8iGFxPkhJrmVqjmo5ff42JVd5D3+81bbm+kGCGoEWWwxOYmquP8NWViXncb9gx91N
+         ekCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708486943; x=1709091743;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=46NbERsw+rX6VfHxglAqwzl8LfYw4J5J2BPeonbB4cQ=;
-        b=e3i2rekdU1AT7NLqe+p0WuL0ptiODHKmuOP6i3okmx9ND2pB5Y7ybe9dUvFHdv7eTF
-         2F01Yevnasgdj8PdV7LkJL+YIXp9vRktPDZy5z3Mkkd85ohmphQPh/iaCUzLgsnrxCv+
-         cV5s0T1Nzn05zLt42QMM+RyalB7PSwUmqspocQszp0bEicaA9zY9RSSx9tfTnjcsXiIP
-         xbdA6ks7Wukp0kBt97CrJpCQgDhouceDPYHfc+kJFJba0OLJsPp3XOz8vxdW8sr0JzWV
-         6SYN7C0CZq3DAYdmzEPaQ5QJt7rEVVRW99D9fxAxXvnHJJdma4deLCPOukFXXVbLhlrk
-         ryUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVw32RSgMOulB6oJ4yNO8c2uS1nE6GAdK1MRhIEYZn74I69BZq70pSZQZNDp/a3wv/pH1Qao+dQWE8z0Bv/S6nXg/KJNqQ7htB8+gbJdGlu5A==
-X-Gm-Message-State: AOJu0YyYCgPOV9W32O9WoryCtDotZwzhG5sbNF5vOdIrPtl2hNYchaoU
-	AG/Eww7tPiSoj93W6DZ6/T+TDl5b7z6/KbcU/UYmNHUXIDT+Ipkjm91peT+AH2H1KXs5ayk18gh
-	FBvJDzw==
-X-Google-Smtp-Source: AGHT+IET82N9VxF3P0mhswunlFqpZ962xGtp3e+douDh41h855ffc3i/FuxyiiNEpPVBfAizCbtju+rDiPsA
+        d=1e100.net; s=20230601; t=1708497930; x=1709102730;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tjKYmJzQl8F9/gAiKS0z/bm1yBfw+nAatzaAOGPVP0k=;
+        b=hwR5RqqKMALB7H9TF/vNa7Q3O1uuBFc1Df7yRDMbunjlWCZGT8VLgM0dglkLymWwsf
+         Fy7ELKjR720kSrEpf+8VWegm4e2/7G4sPvnNkYTi7G4Hu3zOKhfSBu3hcP3FQFDOavgr
+         Vxg4kc/FJpSWFTh8VxHssKHbvnqP7DspNc57iBaksrII6JuiUKg5e8Vg7c8E8MkTBnql
+         OXVlhecR2EcKXc8FkwnencPoJXX4ugh3Hq76lYtrPuEFvp8nMw6e2x0iqjSIDbtVmIzz
+         /Wbg7glQw59GQ6tCqA0uAiAMCJIVj86/AK00yiQigsjVBws86zKzc5SsjH1I3UNFoXnw
+         h2Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRHJoIXeU10nUhmiOvnGmi7KXINe/GN6aZTwfjunvm8zmZcEacPIVZUe24rSqDi2Gq1+htbr8yWXeF/5ZCcpasGWkLZt1IO4ZUsnDEKZfQDQ==
+X-Gm-Message-State: AOJu0YxsZ/WmzE/VqQ/laQosPolLOBDtiVLP9pDaahLlJeRXZ4M2Aqlo
+	kgE0sF35RaNGTVeGValBJ5jXSQ8L27Dt8xy6+IkKWExL5uFnh1fuAu7fuH7/flia2Tvl63PqQWX
+	WDDfCwA==
+X-Google-Smtp-Source: AGHT+IErgek7Kgr7Qh+HAKx6rhClJue5n+B3yY7ppgGbqxhtIfZLsovYIalBTJkT2C2mm8wmjSuiWkDPhJcS
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3c02:f882:5876:b7ab])
- (user=irogers job=sendgmr) by 2002:a0d:db4b:0:b0:607:81e1:8b83 with SMTP id
- d72-20020a0ddb4b000000b0060781e18b83mr3197747ywe.8.1708486942813; Tue, 20 Feb
- 2024 19:42:22 -0800 (PST)
-Date: Tue, 20 Feb 2024 19:41:55 -0800
-In-Reply-To: <20240221034155.1500118-1-irogers@google.com>
-Message-Id: <20240221034155.1500118-9-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:704:b0:dc7:6f13:61d9 with SMTP id
+ k4-20020a056902070400b00dc76f1361d9mr667105ybt.4.1708497930543; Tue, 20 Feb
+ 2024 22:45:30 -0800 (PST)
+Date: Tue, 20 Feb 2024 22:45:24 -0800
+Message-Id: <20240221064527.4157979-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240221034155.1500118-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Subject: [PATCH v6 8/8] perf tests: Add option to run tests in parallel
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+Subject: [PATCH v3 1/3] perf stat: Pass fewer metric arguments
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, James Clark <james.clark@arm.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev
+	Kan Liang <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	John Garry <john.g.garry@oracle.com>, Kaige Ye <ye@kaige.org>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-By default tests are forked, add an option (-p or --parallel) so that
-the forked tests are all started in parallel and then their output
-gathered serially. This is opt-in as running in parallel can cause
-test flakes.
+Pass metric_expr and evsel rather than specific variables from the
+struct, thereby reducing the number of arguments. This will enable
+later fixes.
 
-Rather than fork within the code, the start_command/finish_command
-from libsubcmd are used. This changes how stderr and stdout are
-handled. The child stderr and stdout are always read to avoid the
-child blocking. If verbose is 1 (-v) then if the test fails the child
-stdout and stderr are displayed. If the verbose is >1 (e.g. -vv) then
-the stdout and stderr from the child are immediately displayed.
-
-An unscientific test on my laptop shows the wall clock time for perf
-test without parallel being 5 minutes 21 seconds and with parallel
-(-p) being 1 minute 50 seconds.
+To reduce the size of the diff, local variables are added to match the
+previous parameter names. This isn't done in the case of "name" as
+evsel->name is more intention revealing. A whitespace issue is also
+addressed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/builtin-test.c | 314 ++++++++++++++++++++++----------
- 1 file changed, 215 insertions(+), 99 deletions(-)
+v3 is a rebase fixing a merge conflict with
+6d6be5eb45b4 ("perf metric: Don't remove scale from counts")
+---
+ tools/perf/util/stat-shadow.c | 38 +++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index c42cb40fc242..d13ee7683d9d 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -6,6 +6,7 @@
-  */
- #include <fcntl.h>
- #include <errno.h>
-+#include <poll.h>
- #include <unistd.h>
- #include <string.h>
- #include <stdlib.h>
-@@ -21,9 +22,11 @@
- #include "debug.h"
- #include "color.h"
- #include <subcmd/parse-options.h>
-+#include <subcmd/run-command.h>
- #include "string2.h"
- #include "symbol.h"
- #include "util/rlimit.h"
-+#include "util/strbuf.h"
- #include <linux/kernel.h>
- #include <linux/string.h>
- #include <subcmd/exec-cmd.h>
-@@ -31,7 +34,13 @@
- 
- #include "tests-scripts.h"
- 
-+/*
-+ * Command line option to not fork the test running in the same process and
-+ * making them easier to debug.
-+ */
- static bool dont_fork;
-+/* Fork the tests in parallel and then wait for their completion. */
-+static bool parallel;
- const char *dso_to_test;
- const char *test_objdump_path = "objdump";
- 
-@@ -209,76 +218,36 @@ static bool perf_test__matches(const char *desc, int curr, int argc, const char
- 	return false;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index cf573ff3fa84..10b452792037 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -355,11 +355,12 @@ static void print_nsecs(struct perf_stat_config *config,
+ 		print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
  }
  
--static int run_test(struct test_suite *test, int subtest)
--{
--	int status, err = -1, child = dont_fork ? 0 : fork();
--	char sbuf[STRERR_BUFSIZE];
--
--	if (child < 0) {
--		pr_err("failed to fork test: %s\n",
--			str_error_r(errno, sbuf, sizeof(sbuf)));
--		return -1;
--	}
--
--	if (!child) {
--		if (!dont_fork) {
--			pr_debug("test child forked, pid %d\n", getpid());
--
--			if (verbose <= 0) {
--				int nullfd = open("/dev/null", O_WRONLY);
--
--				if (nullfd >= 0) {
--					close(STDERR_FILENO);
--					close(STDOUT_FILENO);
--
--					dup2(nullfd, STDOUT_FILENO);
--					dup2(STDOUT_FILENO, STDERR_FILENO);
--					close(nullfd);
--				}
--			} else {
--				signal(SIGSEGV, sighandler_dump_stack);
--				signal(SIGFPE, sighandler_dump_stack);
--			}
--		}
--
--		err = test_function(test, subtest)(test, subtest);
--		if (!dont_fork)
--			exit(err);
--	}
--
--	if (!dont_fork) {
--		wait(&status);
-+struct child_test {
-+	struct child_process process;
-+	struct test_suite *test;
-+	int test_num;
-+	int subtest;
-+};
- 
--		if (WIFEXITED(status)) {
--			err = (signed char)WEXITSTATUS(status);
--			pr_debug("test child finished with %d\n", err);
--		} else if (WIFSIGNALED(status)) {
--			err = -1;
--			pr_debug("test child interrupted\n");
--		}
--	}
-+static int run_test_child(struct child_process *process)
-+{
-+	struct child_test *child = container_of(process, struct child_test, process);
-+	int err;
- 
--	return err;
-+	pr_debug("--- start ---\n");
-+	pr_debug("test child forked, pid %d\n", getpid());
-+	err = test_function(child->test, child->subtest)(child->test, child->subtest);
-+	pr_debug("---- end(%d) ----\n", err);
-+	fflush(NULL);
-+	return -err;
- }
- 
--#define for_each_test(j, k, t)			\
--	for (j = 0, k = 0; j < ARRAY_SIZE(tests); j++, k = 0)	\
--		while ((t = tests[j][k++]) != NULL)
--
--static int test_and_print(struct test_suite *t, int subtest)
-+static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width)
+-static int prepare_metric(struct evsel **metric_events,
+-			  struct metric_ref *metric_refs,
++static int prepare_metric(const struct metric_expr *mexp,
+ 			  struct expr_parse_ctx *pctx,
+ 			  int aggr_idx)
  {
--	int err;
-+	if (has_subtests(t)) {
-+		int subw = width > 2 ? width - 2 : width;
++	struct evsel * const *metric_events = mexp->metric_events;
++	struct metric_ref *metric_refs = mexp->metric_refs;
+ 	int i;
  
--	pr_debug("\n--- start ---\n");
--	err = run_test(t, subtest);
--	pr_debug("---- end ----\n");
-+		pr_info("%3d.%1d: %-*s:", i + 1, subtest + 1, subw, test_description(t, subtest));
-+	} else
-+		pr_info("%3d: %-*s:", i + 1, width, test_description(t, subtest));
+ 	for (i = 0; metric_events[i]; i++) {
+@@ -403,7 +404,7 @@ static int prepare_metric(struct evsel **metric_events,
+ 			if (!aggr)
+ 				break;
  
--	if (!has_subtests(t))
--		pr_debug("%s:", t->desc);
--	else
--		pr_debug("%s subtest %d:", t->desc, subtest + 1);
--
--	switch (err) {
-+	switch (result) {
- 	case TEST_OK:
- 		pr_info(" Ok\n");
- 		break;
-@@ -297,34 +266,186 @@ static int test_and_print(struct test_suite *t, int subtest)
- 		break;
- 	}
- 
--	return err;
-+	return 0;
-+}
-+
-+static int finish_test(struct child_test *child_test, int width)
-+{
-+	struct test_suite *t = child_test->test;
-+	int i = child_test->test_num;
-+	int subi = child_test->subtest;
-+	int out = child_test->process.out;
-+	int err = child_test->process.err;
-+	bool out_done = out <= 0;
-+	bool err_done = err <= 0;
-+	struct strbuf out_output = STRBUF_INIT;
-+	struct strbuf err_output = STRBUF_INIT;
-+	int ret;
-+
-+	/*
-+	 * For test suites with subtests, display the suite name ahead of the
-+	 * sub test names.
-+	 */
-+	if (has_subtests(t) && subi == 0)
-+		pr_info("%3d: %-*s:\n", i + 1, width, test_description(t, -1));
-+
-+	/*
-+	 * Busy loop reading from the child's stdout and stderr that are set to
-+	 * be non-blocking until EOF.
-+	 */
-+	if (!out_done)
-+		fcntl(out, F_SETFL, O_NONBLOCK);
-+	if (!err_done)
-+		fcntl(err, F_SETFL, O_NONBLOCK);
-+	if (verbose > 1) {
-+		if (has_subtests(t))
-+			pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_description(t, subi));
-+		else
-+			pr_info("%3d: %s:\n", i + 1, test_description(t, -1));
-+	}
-+	while (!out_done || !err_done) {
-+		struct pollfd pfds[2] = {
-+			{ .fd = out,
-+			  .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
-+			},
-+			{ .fd = err,
-+			  .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
-+			},
-+		};
-+		char buf[512];
-+		ssize_t len;
-+
-+		/* Poll to avoid excessive spinning, timeout set for 1000ms. */
-+		poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/1000);
-+		if (!out_done && pfds[0].revents) {
-+			errno = 0;
-+			len = read(out, buf, sizeof(buf) - 1);
-+
-+			if (len <= 0) {
-+				out_done = errno != EAGAIN;
-+			} else {
-+				buf[len] = '\0';
-+				if (verbose > 1)
-+					fprintf(stdout, "%s", buf);
-+				else
-+					strbuf_addstr(&out_output, buf);
-+			}
-+		}
-+		if (!err_done && pfds[1].revents) {
-+			errno = 0;
-+			len = read(err, buf, sizeof(buf) - 1);
-+
-+			if (len <= 0) {
-+				err_done = errno != EAGAIN;
-+			} else {
-+				buf[len] = '\0';
-+				if (verbose > 1)
-+					fprintf(stdout, "%s", buf);
-+				else
-+					strbuf_addstr(&err_output, buf);
-+			}
-+		}
-+	}
-+	/* Clean up child process. */
-+	ret = finish_command(&child_test->process);
-+	if (verbose == 1 && ret == TEST_FAIL) {
-+		/* Add header for test that was skipped above. */
-+		if (has_subtests(t))
-+			pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_description(t, subi));
-+		else
-+			pr_info("%3d: %s:\n", i + 1, test_description(t, -1));
-+		fprintf(stdout, "%s", out_output.buf);
-+		fprintf(stderr, "%s", err_output.buf);
-+	}
-+	strbuf_release(&out_output);
-+	strbuf_release(&err_output);
-+	print_test_result(t, i, subi, ret, width);
-+	if (out > 0)
-+		close(out);
-+	if (err > 0)
-+		close(err);
-+	return 0;
-+}
-+
-+static int start_test(struct test_suite *test, int i, int subi, struct child_test **child,
-+		      int width)
-+{
-+	int err;
-+
-+	*child = NULL;
-+	if (dont_fork) {
-+		pr_debug("--- start ---\n");
-+		err = test_function(test, subi)(test, subi);
-+		pr_debug("---- end ----\n");
-+		print_test_result(test, i, subi, err, width);
-+		return 0;
-+	}
-+
-+	*child = zalloc(sizeof(**child));
-+	if (!*child)
-+		return -ENOMEM;
-+
-+	(*child)->test = test;
-+	(*child)->test_num = i;
-+	(*child)->subtest = subi;
-+	(*child)->process.pid = -1;
-+	(*child)->process.no_stdin = 1;
-+	if (verbose <= 0) {
-+		(*child)->process.no_stdout = 1;
-+		(*child)->process.no_stderr = 1;
-+	} else {
-+		(*child)->process.out = -1;
-+		(*child)->process.err = -1;
-+	}
-+	(*child)->process.no_exec_cmd = run_test_child;
-+	err = start_command(&(*child)->process);
-+	if (err || parallel)
-+		return  err;
-+	return finish_test(*child, width);
+-                        if (!metric_events[i]->supported) {
++			if (!metric_events[i]->supported) {
+ 				/*
+ 				 * Not supported events will have a count of 0,
+ 				 * which can be confusing in a
+@@ -436,18 +437,18 @@ static int prepare_metric(struct evsel **metric_events,
  }
  
-+#define for_each_test(j, k, t)					\
-+	for (j = 0, k = 0; j < ARRAY_SIZE(tests); j++, k = 0)	\
-+		while ((t = tests[j][k++]) != NULL)
-+
- static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ static void generic_metric(struct perf_stat_config *config,
+-			   const char *metric_expr,
+-			   const char *metric_threshold,
+-			   struct evsel **metric_events,
+-			   struct metric_ref *metric_refs,
+-			   char *name,
+-			   const char *metric_name,
+-			   const char *metric_unit,
+-			   int runtime,
++			   struct metric_expr *mexp,
++			   struct evsel *evsel,
+ 			   int aggr_idx,
+ 			   struct perf_stat_output_ctx *out)
  {
- 	struct test_suite *t;
- 	unsigned int j, k;
- 	int i = 0;
- 	int width = 0;
-+	size_t num_tests = 0;
-+	struct child_test **child_tests;
-+	int child_test_num = 0;
- 
- 	for_each_test(j, k, t) {
- 		int len = strlen(test_description(t, -1));
- 
- 		if (width < len)
- 			width = len;
-+
-+		if (has_subtests(t)) {
-+			for (int subi = 0, subn = num_subtests(t); subi < subn; subi++) {
-+				len = strlen(test_description(t, subi));
-+				if (width < len)
-+					width = len;
-+				num_tests++;
-+			}
-+		} else {
-+			num_tests++;
-+		}
- 	}
-+	child_tests = calloc(num_tests, sizeof(*child_tests));
-+	if (!child_tests)
-+		return -ENOMEM;
- 
- 	for_each_test(j, k, t) {
- 		int curr = i++;
--		int subi;
- 
- 		if (!perf_test__matches(test_description(t, -1), curr, argc, argv)) {
- 			bool skip = true;
--			int subn;
--
--			subn = num_subtests(t);
- 
--			for (subi = 0; subi < subn; subi++) {
-+			for (int subi = 0, subn = num_subtests(t); subi < subn; subi++) {
- 				if (perf_test__matches(test_description(t, subi),
- 							curr, argc, argv))
- 					skip = false;
-@@ -334,52 +455,45 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- 				continue;
- 		}
- 
--		pr_info("%3d: %-*s:", i, width, test_description(t, -1));
--
- 		if (intlist__find(skiplist, i)) {
-+			pr_info("%3d: %-*s:", curr + 1, width, test_description(t, -1));
- 			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
- 			continue;
- 		}
- 
- 		if (!has_subtests(t)) {
--			test_and_print(t, -1);
--		} else {
--			int subn = num_subtests(t);
--			/*
--			 * minus 2 to align with normal testcases.
--			 * For subtest we print additional '.x' in number.
--			 * for example:
--			 *
--			 * 35: Test LLVM searching and compiling                        :
--			 * 35.1: Basic BPF llvm compiling test                          : Ok
--			 */
--			int subw = width > 2 ? width - 2 : width;
--
--			if (subn <= 0) {
--				color_fprintf(stderr, PERF_COLOR_YELLOW,
--					      " Skip (not compiled in)\n");
--				continue;
--			}
--			pr_info("\n");
-+			int err = start_test(t, curr, -1, &child_tests[child_test_num++], width);
- 
--			for (subi = 0; subi < subn; subi++) {
--				int len = strlen(test_description(t, subi));
--
--				if (subw < len)
--					subw = len;
-+			if (err) {
-+				/* TODO: if parallel waitpid the already forked children. */
-+				free(child_tests);
-+				return err;
+ 	print_metric_t print_metric = out->print_metric;
++	const char *metric_name = mexp->metric_name;
++	const char *metric_expr = mexp->metric_expr;
++	const char *metric_threshold = mexp->metric_threshold;
++	const char *metric_unit = mexp->metric_unit;
++	struct evsel * const *metric_events = mexp->metric_events;
++	int runtime = mexp->runtime;
+ 	struct expr_parse_ctx *pctx;
+ 	double ratio, scale, threshold;
+ 	int i;
+@@ -462,7 +463,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 		pctx->sctx.user_requested_cpu_list = strdup(config->user_requested_cpu_list);
+ 	pctx->sctx.runtime = runtime;
+ 	pctx->sctx.system_wide = config->system_wide;
+-	i = prepare_metric(metric_events, metric_refs, pctx, aggr_idx);
++	i = prepare_metric(mexp, pctx, aggr_idx);
+ 	if (i < 0) {
+ 		expr__ctx_free(pctx);
+ 		return;
+@@ -497,18 +498,18 @@ static void generic_metric(struct perf_stat_config *config,
+ 				print_metric(config, ctxp, color, "%8.2f",
+ 					metric_name ?
+ 					metric_name :
+-					out->force_header ?  name : "",
++					out->force_header ?  evsel->name : "",
+ 					ratio);
  			}
-+		} else {
-+			for (int subi = 0, subn = num_subtests(t); subi < subn; subi++) {
-+				int err;
- 
--			for (subi = 0; subi < subn; subi++) {
- 				if (!perf_test__matches(test_description(t, subi),
- 							curr, argc, argv))
- 					continue;
- 
--				pr_info("%3d.%1d: %-*s:", i, subi + 1, subw,
--					test_description(t, subi));
--				test_and_print(t, subi);
-+				err = start_test(t, curr, subi, &child_tests[child_test_num++],
-+						 width);
-+				if (err)
-+					return err;
- 			}
+ 		} else {
+ 			print_metric(config, ctxp, color, /*unit=*/NULL,
+ 				     out->force_header ?
+-				     (metric_name ? metric_name : name) : "", 0);
++				     (metric_name ?: evsel->name) : "", 0);
  		}
+ 	} else {
+ 		print_metric(config, ctxp, color, /*unit=*/NULL,
+ 			     out->force_header ?
+-			     (metric_name ? metric_name : name) : "", 0);
++			     (metric_name ?: evsel->name) : "", 0);
  	}
-+	for (i = 0; i < child_test_num; i++) {
-+		if (parallel) {
-+			int ret  = finish_test(child_tests[i], width);
-+
-+			if (ret)
-+				return ret;
-+		}
-+		free(child_tests[i]);
-+	}
-+	free(child_tests);
- 	return 0;
- }
  
-@@ -447,6 +561,8 @@ int cmd_test(int argc, const char **argv)
- 		    "be more verbose (show symbol address, etc)"),
- 	OPT_BOOLEAN('F', "dont-fork", &dont_fork,
- 		    "Do not fork for testcase"),
-+	OPT_BOOLEAN('p', "parallel", &parallel,
-+		    "Run the tests altogether in parallel"),
- 	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing"),
- 	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
- 	OPT_STRING(0, "objdump", &test_objdump_path, "path",
+ 	expr__ctx_free(pctx);
+@@ -523,7 +524,7 @@ double test_generic_metric(struct metric_expr *mexp, int aggr_idx)
+ 	if (!pctx)
+ 		return NAN;
+ 
+-	if (prepare_metric(mexp->metric_events, mexp->metric_refs, pctx, aggr_idx) < 0)
++	if (prepare_metric(mexp, pctx, aggr_idx) < 0)
+ 		goto out;
+ 
+ 	if (expr__parse(&ratio, pctx, mexp->metric_expr))
+@@ -625,10 +626,7 @@ void *perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config *config,
+ 
+ 		if ((*num)++ > 0)
+ 			out->new_line(config, ctxp);
+-		generic_metric(config, mexp->metric_expr, mexp->metric_threshold,
+-			       mexp->metric_events, mexp->metric_refs, evsel->name,
+-			       mexp->metric_name, mexp->metric_unit, mexp->runtime,
+-			       aggr_idx, out);
++		generic_metric(config, mexp, evsel, aggr_idx, out);
+ 	}
+ 
+ 	return NULL;
 -- 
-2.44.0.rc0.258.g7320e95886-goog
+2.44.0.rc1.240.g4c46232300-goog
 
