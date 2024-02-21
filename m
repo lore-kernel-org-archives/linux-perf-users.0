@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8434639AFD
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 03:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE9239FFE
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 03:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708486932; cv=none; b=X0MiP8P6aWPTC6d+BRXLFYPi0Kx7rGO9VNWWdRfGE+ozr4W1cyZ/oBtVtLPnAZa/lRTCnFF57/5mRg/1W+KcVFEy4H0fytDoPcAzLnkEkYmlX0OVUEgemO4upvxaJ0cmjF7mkQIQqpcgmVZOVH9SobgVABws4fQJ7ybD8nBK/d8=
+	t=1708486934; cv=none; b=f5ruhkUHEyoDnIGX/LWYTWR9kZUdk8ydBGc1fscbvfK6BXwiTtNcrOgaXvkDf9p4AGu02CkaacqXBYxGaKJVfcZadmW/IKIrTYcakiP2q2p9+EhrzMH/qkTHGkKQCK8xTISRGMJRKjW86vkjfLt11KEhGvu7eHEdZMKiNXNHZiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708486932; c=relaxed/simple;
-	bh=9QHqj0EQvOX6+a6MNptism09KshtnOJS+VQ0pDYpZf8=;
+	s=arc-20240116; t=1708486934; c=relaxed/simple;
+	bh=nIwADbFncYymlWUg/R60jRadSx8+xe1bkn0KEBii9rU=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=OGoH5kyoRQmIqt4NeTT9JpJxTf4O1e3Szb4DrnNuz637LzCuFNxvKlrVXfHT0qdjZ0Q4Ap4/KGV+tJ0W36CH8151rlXXn5UOaMCN7KfRtgfGW9LlDvmb1wEw4uZNm8YgU8vBOZ0ko7A6ytSPgV32Hl0B4MOrFI4WHbpyAb2L4Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cz5q/b+E; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=aU05VRF3cspvmfriS9PWeSYJTXvqcdQy5N4yVrZoVEDqB7+2/Ikr5M3utOAuYFEZj4M4+0d1te64tUim3uCASocKtReGx72PKL5AAjhT2oBigNmBObFZIFGbZOnxJXeNNw9e9k84GfrecVLWcHI3v8Zd+OjFj4GalTJ+ZvDNEJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h3bnIIED; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cz5q/b+E"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26eef6cso9161639276.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Feb 2024 19:42:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h3bnIIED"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-607b3038b3fso65275147b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Feb 2024 19:42:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708486929; x=1709091729; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708486932; x=1709091732; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=OwHudnCNl5wfpV2IMol1tp79ctLuVP/i5n4Lz8j3mXY=;
-        b=cz5q/b+EfWRt2txHILY61V/gXJBUL2CSnvB009BhTjTdw0aWlisPpCaFRExuFxZ1uF
-         Y3WlZN5mnjzsqRFTaNoGjelMHbxXk+4n7L7BvT7JRhEUYrdpSbjP7rERkiRlJBezQSTp
-         XcHIOqPVFIR6HR9+Wudknqxh2oWHF0fUfqUCXIVCQK7Ql8dbeuopjnFCa2R52wevmNZO
-         aq/+IaFdflieT2tcK/0j6Ui0b7DHwu78N8hGKTzTll8emsj9rD2uinslvX8g+CoTELyA
-         2IXklu85A8AW3tqVTP9f+EXf+jHh4WlNSstn3f6Bpe4yS4ph436vFtCEvylHz56y65US
-         S/0w==
+        bh=eF36kSIEMlGOGF+Ru4Ee+ArAeIU+1BDlU+YfXMm89FI=;
+        b=h3bnIIEDWRDfKD/YMR00cbHb9S5+to8IdxcG+rp2/cD33J5Rqai7CqWB3pkNS+9ILI
+         +1fMJ3foXETnFYJhMICrxS6uy3cYGIPqwvb92Mv1ZkXgN734XZP4igLGLSUANfrxcus4
+         hOovDO3gRWuoMCNEdivgzGzsJM9FBUPaugc0fTcnSRtSItvvg7Dla6Qxm22LLl7MYa2N
+         fegE7djwCJP418WFzc4M75C2H7QwTPg/Dk4E/MtBGY0prZUdeOndGof3+GtyTCXp6JXO
+         ICmMHxT33+SOgDb933qi0nzWrW4UMK9W3Sai9royTTQ5ko7A6SxjyC6CJ+BqPoTNKuAr
+         re4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708486929; x=1709091729;
+        d=1e100.net; s=20230601; t=1708486932; x=1709091732;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OwHudnCNl5wfpV2IMol1tp79ctLuVP/i5n4Lz8j3mXY=;
-        b=KVlCChG/eogXE2rBrUhTA16/0dWTsGU8cAU3h0lcSpaCkCpps7rXV3K0pe1a/A5Ztn
-         CmF7xYyD56RUMQvH8UWwFUOvUByxXiizhJX0sKUTT8qih5RjKOkVy/rXI774GbofIA5a
-         I8WymP9rWR1BocPg6/oxkEEs4Br9QqS4hhZn8sRCk/YeYNf0PCrYd+OtTKG51e+6COjf
-         M1aPIrey4mwJOn9ZloqPE2LjtJfYkmVV5in8FoGZvduaWKvwtrgwjQ4QhMUNFWko7fkI
-         pR0ORar38oMoyCXzHfetiZsK14mHBoiGfgPo8nNbqhLHmfu7fS8QOhiyzhisFNhR/9qp
-         SKQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQcVrSSguMfWo+sAS4PMAp1frmHwc2m/u+wz0XtHl+K2lW0/k7UsxxFSgzDl4XifcsC/yPFH9OyBEHS/PQLb9O6PhdpxcaZBp+dsKoEq5YyQ==
-X-Gm-Message-State: AOJu0YxzTKtEF3MF23CACWVgQC7eWmBygCoBcpkw7Pb0S3vdA3jaHrYB
-	H7UrtxmONaCGnLchWknqTgSYGuaOd7pX2u28Ouj1HxnyYflT5IHg4o8zAnAD4AtUsmg842aQlSI
-	lmn4cng==
-X-Google-Smtp-Source: AGHT+IGpVA7if143B0lJXVmaSTTYwpcK6AvkiAGNahJ11h9vd94Ww2nCxr5eJbFyGeAX/DDo5vhoCpkHB36Q
+        bh=eF36kSIEMlGOGF+Ru4Ee+ArAeIU+1BDlU+YfXMm89FI=;
+        b=t9vzC1s9umALJn5mAA6Q228dhjdHgfYZIlMXRb7v98wXTFYT9JO0EJSQkzXTyuRJDD
+         eDtnZgKIRutdj7hFH8eGRcQVSq+7flQwGEQdc9lW25oipoDI4r8k1S8HQNo0zfbUzbiA
+         tDHLFKTDthaQUlf2TRmKn/Bj81M5uaJgytMjEcJBcLcqYHRkjGux8W8LHIlDbwWVmh4K
+         EyOuGYzKTPxzQoHQ90VpF78JzOVS509IeuZSNRu7wI1yNuC7J6aA5Zd2U+MJRDsmSYsz
+         apvRZDcM25zmlyB7fodaNv/eMfqTdhxRhiEcUXrufLyJOKOjUdMPerHTHEoH/bRbbilT
+         8A5g==
+X-Forwarded-Encrypted: i=1; AJvYcCX44BQT1AuT+M6RtYsenTOiNtDTYlk99IyCgo1ezPIy0t0EjI12NDd33ZC9430sEukJ8B3ZiNgcm0qZx/aMsCUV+5eWT23cCLkwLw6c2SO4EQ==
+X-Gm-Message-State: AOJu0YzFOI546ZcwduDxp7tvkzlgkD6zeAlN1FCSTGrQ46r28QWIMd1m
+	YEsnE87zDXGoBo1JWBGvEbf2DnGdfptX+Jcb9b7LYvwfhhf94dn84nksONmI36Nii+wECO5nBRH
+	/JXCUcA==
+X-Google-Smtp-Source: AGHT+IE/on57IS2xafUtNQKU7p+VrGTBQkCYynjxRso5yRXY1KPrBnnB3HTy5IyNKzr/8fPp2V2mhgp0xx+K
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3c02:f882:5876:b7ab])
- (user=irogers job=sendgmr) by 2002:a25:a447:0:b0:dcc:41ad:fb3b with SMTP id
- f65-20020a25a447000000b00dcc41adfb3bmr602386ybi.10.1708486929422; Tue, 20 Feb
- 2024 19:42:09 -0800 (PST)
-Date: Tue, 20 Feb 2024 19:41:50 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:704:b0:dc7:6f13:61d9 with SMTP id
+ k4-20020a056902070400b00dc76f1361d9mr660785ybt.4.1708486932038; Tue, 20 Feb
+ 2024 19:42:12 -0800 (PST)
+Date: Tue, 20 Feb 2024 19:41:51 -0800
 In-Reply-To: <20240221034155.1500118-1-irogers@google.com>
-Message-Id: <20240221034155.1500118-4-irogers@google.com>
+Message-Id: <20240221034155.1500118-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240221034155.1500118-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Subject: [PATCH v6 3/8] perf tests: Avoid fork in perf_has_symbol test
+Subject: [PATCH v6 4/8] tools subcmd: Add a no exec function call option
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,29 +75,45 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-perf test -vv Symbols is used to indentify symbols within the perf
-binary. Add the -F flag so that the test command doesn't fork the test
-before running. This removes a little overhead.
+Tools like perf fork tests in case they crash, but they don't want to
+exec a full binary. Add an option to call a function rather than do an
+exec. The child process exits with the result of the function call and
+is passed the struct of the run_command, things like container_of can
+then allow the child process function to determine additional
+arguments.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/lib/perf_has_symbol.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/subcmd/run-command.c | 2 ++
+ tools/lib/subcmd/run-command.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/tests/shell/lib/perf_has_symbol.sh b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-index 5d59c32ae3e7..561c93b75d77 100644
---- a/tools/perf/tests/shell/lib/perf_has_symbol.sh
-+++ b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-@@ -3,7 +3,7 @@
+diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+index 5cdac2162532..d435eb42354b 100644
+--- a/tools/lib/subcmd/run-command.c
++++ b/tools/lib/subcmd/run-command.c
+@@ -122,6 +122,8 @@ int start_command(struct child_process *cmd)
+ 		}
+ 		if (cmd->preexec_cb)
+ 			cmd->preexec_cb();
++		if (cmd->no_exec_cmd)
++			exit(cmd->no_exec_cmd(cmd));
+ 		if (cmd->exec_cmd) {
+ 			execv_cmd(cmd->argv);
+ 		} else {
+diff --git a/tools/lib/subcmd/run-command.h b/tools/lib/subcmd/run-command.h
+index 17d969c6add3..d794138a797f 100644
+--- a/tools/lib/subcmd/run-command.h
++++ b/tools/lib/subcmd/run-command.h
+@@ -47,6 +47,8 @@ struct child_process {
+ 	unsigned exec_cmd:1; /* if this is to be external sub-command */
+ 	unsigned stdout_to_stderr:1;
+ 	void (*preexec_cb)(void);
++	 /* If set, call function in child rather than doing an exec. */
++	int (*no_exec_cmd)(struct child_process *process);
+ };
  
- perf_has_symbol()
- {
--	if perf test -vv "Symbols" 2>&1 | grep "[[:space:]]$1$"; then
-+	if perf test -vv -F "Symbols" 2>&1 | grep "[[:space:]]$1$"; then
- 		echo "perf does have symbol '$1'"
- 		return 0
- 	fi
+ int start_command(struct child_process *);
 -- 
 2.44.0.rc0.258.g7320e95886-goog
 
