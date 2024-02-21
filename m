@@ -1,250 +1,373 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03621272A9
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 20:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFA6EEB3
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 20:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708546792; cv=none; b=CRRnFNRfIlJq5/y1w8u1YZrBRTDDz6nPB5JxfmgCQuV/Rjy/9TnQ/SVb/093Te+7qdK3P/9KT82Bi5r2KzYC9VEH7Ki0WDL75Ojcr39CpGmwhCmr9F1sG5qSwCHNHWrPUZVkajCT+AfOYiKerupubrHSJz8tPmrP+TUzfxZL1/A=
+	t=1708547658; cv=none; b=pAgIOj1S1frOSCv77kf1yoqDtsYp36l41Lm9CPB+jmY7GkErRVLu1XsChWN31JRVuZAxWy1FVq8cjnxTGScdaanJvIlzCEx2i4rM7SUjY5aHL0pgwwLfgEy4/zvp2DjWiVtsGmLHTMw0wmSpvPlKSACFiT93fMUHVIcGrUveXi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708546792; c=relaxed/simple;
-	bh=bDP0uOp71ZJ40SPhEcYqiixXc34u57l7lBzJrlk2B0E=;
+	s=arc-20240116; t=1708547658; c=relaxed/simple;
+	bh=SiupudMJoNKgfnwPD/G3NbDN8EQRSKJaq6TSUmKk8ok=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gSVBtbUoNAdJPfiLzD1eu1WRVqC5p9HiHsPeZx6uldLirrkNyGZm0Sjsv0y18LznskW/DDdqki7CrBkbBELm+5GxPvWat+G/nkKeY7RIb58w4HZMICOBrI2lQwZH3DzWZqnQDzMgjibdvT9qi+XL7OVLowf0JbG1Eb3AJcYPe+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lQxararq; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=uV1tYPEQl32SAF9PZmd7WNdEH2+jbNu8aHzG2iEKrPrsW+cvjgJXf+sCbQF7qIWQuxsaNqz5xaETwq7c+7pDmwvuA62uFzO+Ko+OJDJqgWAmB6hZIPVAjJrjjahjxgGozxoijQ8W5jv5kn1WOFg6r6cBIkwEnSuQ/q+cH/NFoSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a+E6SJlN; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lQxararq"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dbcf58b05cso35805ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 12:19:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+E6SJlN"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d89f0ab02bso27305ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 12:34:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708546777; x=1709151577; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708547655; x=1709152455; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BBnEL2Nv2EtdY0R7cxkdDh94aICzF8VYHKyI9ju4cqU=;
-        b=lQxararqoLm6XEyXgZOZdyZQam5QOKSPAIfhCU4OCzXPQJCoMd3px3khOh86myk1yU
-         9Si0EryC0Si5Ze+wr2jjTv9ohcsMVq7rCsDawFlzI6z1NQ4xFAePrrc84FLd3O3hBpNK
-         lcpkgNIgWtdjZEMcS4ij84Y7bCeMMNGCKPohaUTtCoQh/muawnoi2qIETQSeydtGA4Bh
-         V/bS7MafDllxeJo80UtlfWTlZ3HG67OXHC+dALHKqXO2443Vo18XVA8sI9U0otXVsFmD
-         Kq3yCv1YKPY+1m9fFhe7UJXvRZv0YUW5iXOJ+NJ3DBNg9GY4M3SsdkGL07BbI4hefSFW
-         nSXQ==
+        bh=JwfkGZoa5Dspw+GR9yTHlF9nFPplhuKt9FvO6nNwJpQ=;
+        b=a+E6SJlNZF/QY/Phg72/h9IynghoU8rapSElWeQ5iRrmGl7OmroIoHLOkbizpqisia
+         X6WyJCAyQiHUpHpeW9TkEGZl6qWZbHW0fWXNn6FF/6WlHP/BM4KlZRGX2pYa52cmPXCn
+         Aip8RJSbipEQaUx8GfN4wMt0FZUWdLklQ1qHWhR1v2nUIQcO4ZMmVwLgGsuiStQ/ZKXY
+         9CZEMqp6/pF2P/3U///Jqs4UxjAdW2JUHoz0dPTqFEagsgF/+WtTMVSEnseEJufpZRzL
+         scyWc7LHWN8ytWG2cu8ADyvIUc00jNAKscXBXq52+5sRKyg2xBm90nDLaF28jrA5s2tV
+         pRaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708546777; x=1709151577;
+        d=1e100.net; s=20230601; t=1708547655; x=1709152455;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BBnEL2Nv2EtdY0R7cxkdDh94aICzF8VYHKyI9ju4cqU=;
-        b=SwGHT6wpKJf2z86sZ5vMHUJSEmCk15Rf2lTSf0kqjx5olL4eLKMwsILrD9HToe96IU
-         gftuK8XFBVaf/2/XUARncteKyhSwXubGd3vtEoFN2X6fIeNsLk9nPP4i27a4Be4nDISA
-         KPvYmYLdd6Do6kvihPPxq3pP4Nkrl9aCNyp0ipVlTmWySyfT6khi9UO+vJlUtCf+DNLK
-         eiVZxgz0V1VPNCKMFPtZQvyT/ZHEwjKXRXEyf/bKbgF5R/WZ9YHgaGyMEzw7RQLrLGM1
-         Q2zFZCP5ntMzJRM95J4jnizsvh9svNlKcdtSfhBgB94seUC4DEoJpbMsRPREkqjY5INW
-         gmJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfff1/4A6IqTX3Jp8Wb92hmcB+7FsGTqcgC9D1ofsbyCupQVpJ7QTnw3HgTrEQFuHno0s/7uJOd5Xm6wDoHjrv6Hmyqi5PEAaqJ5kR8dp5Kg==
-X-Gm-Message-State: AOJu0Yw8PUBJSnbKm10TOedd/w8+GlZeNw5GJFf2m/x5UVTJ4L2GyqHx
-	FxaBTk40Uy3dwXrnLPvaLE7fMfwml3fjzJ2yxNFmhK8YrTL22U5ERzbNDoEROT9vnHnrzSdOVSP
-	lEAlg+rjazgnhDX7Dqxmcdooc0pkB+qDNzmPd
-X-Google-Smtp-Source: AGHT+IEftC3CAOyYPuNtEgw2Qhn1fJdvdDmS7a2SXukzfo4kwiSPBH0aTLNADF7WZMl4BWy3giXAJdshznQ3TSNsx8M=
-X-Received: by 2002:a17:903:2808:b0:1d9:aa55:e4c1 with SMTP id
- kp8-20020a170903280800b001d9aa55e4c1mr323224plb.20.1708546777286; Wed, 21 Feb
- 2024 12:19:37 -0800 (PST)
+        bh=JwfkGZoa5Dspw+GR9yTHlF9nFPplhuKt9FvO6nNwJpQ=;
+        b=krnnvkNSZUyQdOxKMawJuCON3Q/tKzumgEDq4X8G1zj9361Sa7RwFKWKA02auEL3Hw
+         DGVANqjwyffkgD8caYpBcR5AT4vZO/f7fObSr6+QBQM91QAK6hgKB9il0xQ6emVc0hl2
+         R5LG+I1AGayHvUfw2i28yW51+WudUbpSQ1KleFTlSGXwSYt9qIT+/w4wz5fJCycywATz
+         NAyJDOMc/2cKl/5HGnqknUmm0lNGvgxmWlEEIx2dlrMXNuFM7ISyckc4906tlOHgqoyn
+         hndScGsT/lwi4hQ4+SFy5Ir4CO2ScDFW2VLrVlqARbi77d38JWMN+Bnffnci5PTcEXYK
+         9NgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHXw+tL4vCTQxRbWsUOlo9+joCXRTK7/9BYY+Li4w5PF+nB07FkuFQMa1r/oveIoocIKtfd3FbdSXr+2i/141RDk23cCYAtJJlupEXtgnA0w==
+X-Gm-Message-State: AOJu0YwsF1A/Wq4p+nMKqGLTzZ0e/2ohyxdKo/7Vw5IRCB/5lSfKHtJl
+	P8D9j2+m8yM9Me5XQpNwVUentxBDodTi1LiBZ6EpA7E4ELABWKreQeQ7R/rwRBqTAr56lZ2lmyl
+	nSfHyTrGFqjZ6INC6IQwPRs2s1DrD/nSB/EC3
+X-Google-Smtp-Source: AGHT+IFnRe/L4K/FhFrpxaBYLG/1m1uLG/I0cYuZEVmUPijEfgfo2makPFZmHQyt+4MXACR/nhNvcvwmF2fazYmk0e0=
+X-Received: by 2002:a17:903:25d4:b0:1db:ad46:fa9 with SMTP id
+ jc20-20020a17090325d400b001dbad460fa9mr278598plb.5.1708547655303; Wed, 21 Feb
+ 2024 12:34:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126145605.1005472-1-mark.rutland@arm.com>
-In-Reply-To: <20240126145605.1005472-1-mark.rutland@arm.com>
+References: <20240221072100.412939-1-weilin.wang@intel.com>
+ <20240221072100.412939-3-weilin.wang@intel.com> <ZdY4a5yx-C9ziobq@x1>
+In-Reply-To: <ZdY4a5yx-C9ziobq@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 Feb 2024 12:19:22 -0800
-Message-ID: <CAP-5=fURS0OQxHcukS1+NprgyMpAQSr3+BMiYPj5x7=+tcZ8hw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf print-events: make is_event_supported() more robust
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, acme@redhat.com, james.clark@arm.com, 
-	john.g.garry@oracle.com, leo.yan@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	marcan@marcan.st, maz@kernel.org, mike.leach@linaro.org, namhyung@kernel.org, 
-	suzuki.poulose@arm.com, tmricht@linux.ibm.com, will@kernel.org
+Date: Wed, 21 Feb 2024 12:34:01 -0800
+Message-ID: <CAP-5=fU5JVki4OCYvYyPoBLguwHSwXripiO3Gq+MddV9ZWfnTQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 2/5] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2024 at 6:56=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
+On Wed, Feb 21, 2024 at 9:52=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Currently the perf tool doesn't detect support for extended event types
-> on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
-> hardware events into per-PMU events. This is due to the detection of
-> extended event types not handling mandatory filters required by the
-> M1/M2 PMU driver.
+> On Wed, Feb 21, 2024 at 02:20:56AM -0500, weilin.wang@intel.com wrote:
+> > From: Weilin Wang <weilin.wang@intel.com>
 >
-> PMU drivers and the core perf_events code can require that
-> perf_event_attr::exclude_* filters are configured in a specific way and
-> may reject certain configurations of filters, for example:
+> You wrote no description for this patch, please add one and show
+> examples of the feature being used, if possible.
 >
-> (a) Many PMUs lack support for any event filtering, and require all
->     perf_event_attr::exclude_* bits to be clear. This includes Alpha's
->     CPU PMU, and ARM CPU PMUs prior to the introduction of PMUv2 in
->     ARMv7,
+> See below for more comments.
 >
-> (b) When /proc/sys/kernel/perf_event_paranoid >=3D 2, the perf core
->     requires that perf_event_attr::exclude_kernel is set.
+> > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> > +static int __cmd_script(struct child_process *cmd __maybe_unused)
+> > +{
+> > +     int err =3D 0;
+> > +     struct perf_session *session;
+> > +     struct perf_data data =3D {
+> > +             .mode =3D PERF_DATA_MODE_READ,
+> > +             .path =3D PERF_DATA,
+> > +             .fd   =3D cmd->out,
+> > +     };
+> > +     struct perf_script script =3D {
+> > +             .tool =3D {
+> > +             .sample          =3D process_sample_event,
+> > +             .ordered_events  =3D true,
+> > +             .ordering_requires_timestamps =3D true,
+> > +             .feature         =3D process_feature_event,
+> > +             .attr            =3D perf_event__process_attr,
+> > +             },
+> > +     };
+> > +     struct tpebs_event *e;
+> > +
+> > +     list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> > +             struct tpebs_retire_lat *new =3D malloc(sizeof(struct tpe=
+bs_retire_lat));
+> > +
+> > +             if (!new)
+> > +                     return -1;
+> > +             new->name =3D strdup(e->name);
+> > +             new->tpebs_name =3D strdup(e->tpebs_name);
+> > +             new->count =3D 0;
+> > +             new->sum =3D 0;
 >
-> (c) The Apple M1/M2 PMU requires that perf_event_attr::exclude_guest is
->     set as the hardware PMU does not count while a guest is running (but
->     might be extended in future to do so).
+> Without even having thought that much about this overall architecture,
+> that looks too heavy at first sight, the above is done in tools/perf/
+> as:
 >
-> In is_event_supported(), we try to account for cases (a) and (b), first
-> attempting to open an event without any filters, and if this fails,
-> retrying with perf_event_attr::exclude_kernel set. We do not account for
-> case (c), or any other filters that drivers could theoretically require
-> to be set.
+> void tpebs_retire_lat__delete(struct tpebs_retire_lat *retire_lat)
+> {
+>         if (retire_lat =3D=3D NULL)
+>                 return;
 >
-> Thus is_event_supported() will fail to detect support for any events
-> targeting an Apple M1/M2 PMU, even where events would be supported with
-> perf_event_attr:::exclude_guest set.
+>         zfree(&retire_lat->tpebs_name);
+>         zfree(&retire_lat->tpebs_name);
+> }
 >
-> Since commit:
+> struct tpebs_retire_lat__new(tpebs_event *e)
+> {
+>         struct tpebs_retire_lat *retire_lat =3D zalloc(sizeof(*retire_lat=
+));
 >
->   82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in =
-perf_event_attr.type")
+>         if (retire_lat !=3D NULL) {
+>                 retire_lat->name =3D strdup(e->name);
+>                 retire_lat->tpebs_name =3D strdup(e->tpebs_name);
 >
-> ... we use is_event_supported() to detect support for extended types,
-> with the PMU ID encoded into the perf_event_attr::type. As above, on an
-> Apple M1/M2 system this will always fail to detect that the event is
-> supported, and consequently we fail to detect support for extended types
-> even when these are supported, as they have been since commit:
+>                 if (retire_lat->name =3D=3D NULL || retire_lat->tpebs_nam=
+e =3D=3D NULL) {
+>                         tpebs_retire_lat__delete(retire_lat);
+>                         retire_lat =3D NULL;
+>                 }
+>         }
 >
->   5c816728651ae425 ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capabilit=
-y")
+>         return retire_lat;
+> }
 >
-> Due to this, the perf tool will not automatically expand plain
-> PERF_TYPE_HARDWARE events into per-PMU events, even when all the
-> necessary kernel support is present.
+> And then you call the constructor  in that loop, and the destructor at
+> some point when those data structures are not needed.
 >
-> This patch updates is_event_supported() to additionally try opening
-> events with perf_event_attr::exclude_guest set, allowing support for
-> events to be detected on Apple M1/M2 systems. I believe that this is
-> sufficient for all contemporary CPU PMU drivers, though in future it may
-> be necessary to check for other combinations of filter bits.
+> We do it because perf has a TUI mode and we may end up calling tools
+> from them in a long running session, so we need to avoid leaks.
 >
-> I've deliberately changed the check to not expect a specific error code
-> for missing filters, as today ;the kernel may return a number of
-> different error codes for missing filters (e.g. -EACCESS, -EINVAL, or
-> -EOPNOTSUPP) depending on why and where the filter configuration is
-> rejected, and retrying for any error is more robust.
->
-> Note that this does not remove the need for commit:
->
->   a24d9d9dc096fc0d ("perf parse-events: Make legacy events lower priority=
- than sysfs/JSON")
->
-> ... which is still necessary so that named-pmu/event/ events work on
-> kernels without extended type support, even if the event name happens to
-> be the same as a PERF_EVENT_TYPE_HARDWARE event (e.g. as is the case for
-> the M1/M2 PMU's 'cycles' and 'instructions' events).
->
-> Fixes: 82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU numbe=
-r in perf_event_attr.type")
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Tested-by: Ian Rogers <irogers@google.com>
-> Tested-by: James Clark <james.clark@arm.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Hector Martin <marcan@marcan.st>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@arm.com>
-> Cc: John Garry <john.g.garry@oracle.com>
-> Cc: Leo Yan <leo.yan@linaro.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Will Deacon <will@kernel.org>
+> Also can we somehow hide Intel specific terms in arch specific files
+> while leaving something generic, possibly implementable in other arches
+> in the core code? I mean hiding clearly intel specific stuff like the
+> "tpebs" term in tools/perf/arch/x86/.
 
-Ping. Could we land this one?
+Thanks Arnaldo, TPEBS support is necessary to support TMA metrics 4.7
+on meteorlake. The timed values replace hard coded constants that
+assume worst case latencies. You can see the metrics here:
+https://github.com/intel/perfmon/blob/main/TMA_Metrics-full.csv
+in the MTL (meteorlake) column row 29 there is:
+MEM_INST_RETIRED.STLB_HIT_LOADS*min($PEBS, #Mem_STLB_Hit_Cost) / CLKS
++ Load_STLB_Miss
+where the $PEBS is supposed to be replaced with the latency from a
+sample of MEM_INST_RETIRED.STLB_HIT_LOADS. There are meteorlake
+machines shipping but currently there are no perf metrics.
+
+Weilin raised the TPEBS problem in the LPC 2023 talk, the issue being
+that sampling and counting don't really exist in the current perf tool
+code at the same time. BPF could be a workaround but permissions are
+an issue. Perhaps leader sampling but then what to do if two latencies
+are needed. Forking perf to do this is an expedient and ideally we'd
+not do it.
+
+I'm against stuff going in the arch directory in general. If something
+is specific to a PMU, let's special case the logic for that PMU in the
+tool. The arch directory gets us into messes like:
+https://lore.kernel.org/lkml/CAP-5=3DfVABSBZnsmtRn1uF-k-G1GWM-L5SgiinhPTfHb=
+QsKXb_g@mail.gmail.com/
+Where a heterogenous/hybrid/big.little fix is in the x86 arch folder
+(overriding a weak symbol) but not in the arm or other ones leading to
+an arm bug.
+
+I think the idea of a count coming from an external or tool source is
+something of a more generic concept. I think what Weilin is doing here
+is setting the groundwork for doing that, a first implementation. I'd
+like the expr literals, like #smt_on, #num_cpus, etc. to be more like
+tool events such as duration_time. I think we can move in the
+direction that Weilin is adding here and then iterate to clean up
+these things, hopefully move them to events that then other tools
+could use, etc.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/print-events.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
+
+
+
+> > +             list_add_tail(&new->nd, &stat_config.tpebs_results);
+> > +     }
+> > +
+> > +     kill(cmd->pid, SIGTERM);
+> > +     session =3D perf_session__new(&data, &script.tool);
+> > +     if (IS_ERR(session))
+> > +             return PTR_ERR(session);
+> > +     script.session =3D session;
+> > +     err =3D perf_session__process_events(session);
+> > +     perf_session__delete(session);
+> > +
+> > +     return err;
+> > +}
+> > +
+> >  static int __run_perf_stat(int argc, const char **argv, int run_idx)
+> >  {
+> >       int interval =3D stat_config.interval;
+> > @@ -709,12 +866,14 @@ static int __run_perf_stat(int argc, const char *=
+*argv, int run_idx)
+> >       struct affinity saved_affinity, *affinity =3D NULL;
+> >       int err;
+> >       bool second_pass =3D false;
+> > +     struct child_process cmd;
+> >
+> >       //Prepare perf record for sampling event retire_latency before fo=
+rk and prepare workload
+> >       if (stat_config.tpebs_event_size > 0) {
+> >               int ret;
+> >
+> > -             ret =3D __run_perf_record();
+> > +             pr_debug("perf stat pid =3D %d\n", getpid());
+> > +             ret =3D prepare_perf_record(&cmd);
+> >               if (ret)
+> >                       return ret;
+> >       }
+> > @@ -924,6 +1083,17 @@ static int __run_perf_stat(int argc, const char *=
+*argv, int run_idx)
+> >
+> >       t1 =3D rdclock();
+> >
+> > +     if (stat_config.tpebs_event_size > 0) {
+> > +             int ret;
+> > +
+> > +             pr_debug("pid =3D %d\n", getpid());
+> > +             pr_debug("cmd.pid =3D %d\n", cmd.pid);
+> > +
+> > +             ret =3D __cmd_script(&cmd);
+> > +             close(cmd.out);
+> > +             pr_debug("%d\n", ret);
+> > +     }
+> > +
+> >       if (stat_config.walltime_run_table)
+> >               stat_config.walltime_run[run_idx] =3D t1 - t0;
+> >
+> > @@ -2714,6 +2884,7 @@ int cmd_stat(int argc, const char **argv)
+> >       }
+> >
+> >       INIT_LIST_HEAD(&stat_config.tpebs_events);
+> > +     INIT_LIST_HEAD(&stat_config.tpebs_results);
+> >
+> >       /*
+> >        * Metric parsing needs to be delayed as metrics may optimize eve=
+nts
+> > @@ -2921,5 +3092,7 @@ int cmd_stat(int argc, const char **argv)
+> >       metricgroup__rblist_exit(&stat_config.metric_events);
+> >       evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack,=
+ &stat_config.ctl_fd_close);
+> >
+> > +     tpebs_data__delete();
+> > +
+> >       return status;
+> >  }
+> > diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> > index fc16299c915f..2298ca3b370b 100644
+> > --- a/tools/perf/util/data.c
+> > +++ b/tools/perf/util/data.c
+> > @@ -173,6 +173,10 @@ static bool check_pipe(struct perf_data *data)
+> >       int fd =3D perf_data__is_read(data) ?
+> >                STDIN_FILENO : STDOUT_FILENO;
+> >
+> > +     if (data->fd > 0) {
+> > +             fd =3D data->fd;
+> > +     }
+> > +
+> >       if (!data->path) {
+> >               if (!fstat(fd, &st) && S_ISFIFO(st.st_mode))
+> >                       is_pipe =3D true;
+> > diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+> > index effcc195d7e9..5554d46ad212 100644
+> > --- a/tools/perf/util/data.h
+> > +++ b/tools/perf/util/data.h
+> > @@ -28,6 +28,7 @@ struct perf_data_file {
+> >
+> >  struct perf_data {
+> >       const char              *path;
+> > +     int                      fd;
+> >       struct perf_data_file    file;
+> >       bool                     is_pipe;
+> >       bool                     is_dir;
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgrou=
+p.c
+> > index 6c16e5a0b1fc..8518e2b3e5be 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -691,8 +691,17 @@ static int metricgroup__build_event_string(struct =
+strbuf *events,
+> >
+> >               if (p) {
+> >                       struct tpebs_event *new_event =3D malloc(sizeof(s=
+truct tpebs_event));
+> > -                     *p =3D '\0';
+> > +                     char *name;
+> > +
+> >                       new_event->tpebs_name =3D strdup(id);
+> > +                     *p =3D '\0';
+> > +                     name =3D malloc(strlen(id) + 2);
+> > +                     if (!name)
+> > +                             return -ENOMEM;
+> > +
+> > +                     strcpy(name, id);
+> > +                     strcat(name, ":p");
+> > +                     new_event->name =3D name;
 >
-> Since v1 [1]:
-> * Fix typos in commit message
-> * Accumulate tags
+> For such cases we use asprintf(), that allocates and formats the string
+> in one call, look for examples in other tools/perf/ files.
 >
-> [1] https://lore.kernel.org/lkml/20240116170348.463479-1-mark.rutland@arm=
-.com/
+> >                       *tpebs_event_size +=3D 1;
+> >                       pr_debug("retire_latency required, tpebs_event_si=
+ze=3D%lu, new_event=3D%s\n",
+> >                       *tpebs_event_size, new_event->name);
+> > diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgrou=
+p.h
+> > index 7c24ed768ff3..1fa12cc3294e 100644
+> > --- a/tools/perf/util/metricgroup.h
+> > +++ b/tools/perf/util/metricgroup.h
+> > @@ -71,6 +71,13 @@ struct tpebs_event {
+> >       const char *name;
+> >       const char *tpebs_name;
+> >  };
+> > +struct tpebs_retire_lat {
+> > +     struct list_head nd;
+> > +     const char *name;
+> > +     const char *tpebs_name;
+> > +     size_t count;
+> > +     int sum;
+> > +};
 >
-> Mark.
+> Here you declare the constructor and destructor I suggested above.
 >
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
-s.c
-> index b0fc48be623f3..4f67e8f00a4d6 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -232,7 +232,6 @@ void print_sdt_events(const struct print_callbacks *p=
-rint_cb, void *print_state)
->  bool is_event_supported(u8 type, u64 config)
->  {
->         bool ret =3D true;
-> -       int open_return;
->         struct evsel *evsel;
->         struct perf_event_attr attr =3D {
->                 .type =3D type,
-> @@ -246,20 +245,32 @@ bool is_event_supported(u8 type, u64 config)
->
->         evsel =3D evsel__new(&attr);
->         if (evsel) {
-> -               open_return =3D evsel__open(evsel, NULL, tmap);
-> -               ret =3D open_return >=3D 0;
-> +               ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
->
-> -               if (open_return =3D=3D -EACCES) {
-> +               if (!ret) {
->                         /*
-> -                        * This happens if the paranoid value
-> +                        * The event may fail to open if the paranoid val=
-ue
->                          * /proc/sys/kernel/perf_event_paranoid is set to=
- 2
-> -                        * Re-run with exclude_kernel set; we don't do th=
-at
-> -                        * by default as some ARM machines do not support=
- it.
-> -                        *
-> +                        * Re-run with exclude_kernel set; we don't do th=
-at by
-> +                        * default as some ARM machines do not support it=
-.
->                          */
->                         evsel->core.attr.exclude_kernel =3D 1;
->                         ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
->                 }
-> +
-> +               if (!ret) {
-> +                       /*
-> +                        * The event may fail to open if the PMU requires
-> +                        * exclude_guest to be set (e.g. as the Apple M1 =
-PMU
-> +                        * requires).
-> +                        * Re-run with exclude_guest set; we don't do tha=
-t by
-> +                        * default as it's equally legitimate for another=
- PMU
-> +                        * driver to require that exclude_guest is clear.
-> +                        */
-> +                       evsel->core.attr.exclude_guest =3D 1;
-> +                       ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
-> +               }
-> +
->                 evsel__delete(evsel);
->         }
->
-> --
-> 2.30.2
->
+> >  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+> >                                        struct evsel *evsel,
+> > diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> > index 9d0186316b29..8e180f13aa2d 100644
+> > --- a/tools/perf/util/stat.h
+> > +++ b/tools/perf/util/stat.h
+> > @@ -111,6 +111,9 @@ struct perf_stat_config {
+> >       struct rblist            metric_events;
+> >       struct list_head         tpebs_events;
+> >       size_t                   tpebs_event_size;
+> > +     struct list_head         tpebs_results;
+> > +     pid_t                    tpebs_pid;
+> > +     int                      tpebs_pipe;
+> >       int                      ctl_fd;
+> >       int                      ctl_fd_ack;
+> >       bool                     ctl_fd_close;
+> > --
+> > 2.43.0
+> >
