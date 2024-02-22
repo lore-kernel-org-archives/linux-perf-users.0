@@ -1,193 +1,92 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BE36AFA8
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 20:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51A371738;
+	Thu, 22 Feb 2024 21:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708632483; cv=none; b=W0XgWdXu1THKU0fNlkDeCNlwaTFkSDe60GBwfNAiBy2oIQw94lZA1mrO98JZbLxXrTDHGvwop1z2pIh3XiqDNpnNllkuGcCO/jvU3iWDEIGr2A++/gcoG/2MXEa4KBfNE24ql1AYggMB7qmkwpSvGv8CjLD3C4lrmIU0EUHRS/Y=
+	t=1708637643; cv=none; b=JQm7MX14UL2nG0kVqJfpjIusaTj/5z0ROUKboGTeba8ED4EQYKbQjKCHxImFageE+kMwKuOTiOMKEYGGgHTMGu0F9IpTwp7NpnLL9lUROQL7xP8TlhX5rSDmpxn229fI7SH1zC4tuRuoHh3xBhS386Q071C7geuLkB4QwjTd9L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708632483; c=relaxed/simple;
-	bh=82P1KJmwIp1GzLjUuOrvLBi/uz+qn/Qr7VEYjUni8CM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Olly3ZGueAABJDq+NP052ZNNPK1apiPrKkjz6rvHTAZn6TIYDy3dK+4alAeEqU5ab7bpg6kuLGRld0FX9QdafISXYT17DDQC0GRWk04VnDYjBBXpSoyy77ucRXXeq8SvPi4TRrbCJzNt4vIcjFbVWHeIVZD+E0KI94oYzvDVC/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=moqCb7pi; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708637643; c=relaxed/simple;
+	bh=PrJ6YaFxatvY2iijd5Wqk9LxjgKfLoik+dqgECHQvCc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Uonv+t4+HGuEb97sm1ymxd39DdydwpQzmY9S8RdNxenn0qc6MA52nfD7K/lHKMdfUjlVXOMR/+RK34SAfyECyEjec1gs7+mcUosSg/vJ+qOtM/3yUZCWZkLyouXjJtybYyK5q4LFFV/j5a2BFcsk1lF4ARiImkxy8t9kR4Ly7Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E8IKGWFo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fDIU63ci; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="moqCb7pi"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso3121a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 12:08:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708632479; x=1709237279; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yGjajmrXJJz1DiKWcZdtHNQG+dgh6yAQECPS6jCJk9s=;
-        b=moqCb7piLDVTFbEGYhl6L/AdHQGG1tZ93UBosuPQxWIwSAXsCbEXWsKbFfXr4iX6oH
-         hMXHWkKBfdurFUuA5A68Xwfq0s4Pss5Gyzw5GFk2pnDFnezNLC/7bGM6T9Kk7R2l0Old
-         gkH2yKQJzenJe9mfhPSCV/grduzf48tlqtZvtRUMA41EztoavZ8gOQwvpZtx6VlYtLjl
-         D9CW/s/NYJKoEm/8qeVn4gUlokw3ZUT2IOttfuVSGJqVUWaGB81IkQkMwAf6MfUPF4qe
-         OCfVdADilxzpCLOiUD90x13/RrhIl4w2F7niO7FB5BnkbiCzKI8B3ZhDGXPP/1qodFxt
-         fOZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708632479; x=1709237279;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yGjajmrXJJz1DiKWcZdtHNQG+dgh6yAQECPS6jCJk9s=;
-        b=FPuQ1MENENQY+CIlesLJGmwoPEFiZ+UHrTkXwgXuiMsGn181D58iLNXMDYcNQHupn1
-         mC3UzWb34xdLh96PeZrU5mw1eksactGwqFmBiMK0sjnTDhhOw9QlNqh2dDVMe5LPBzQ1
-         pnn3jryf7aJRfdDBTHYahFP7wmTjtXr8OTJ7nKdpiY6l89SzHJYo/f1Ah513WnfvZsQ2
-         PCshqvVhUrS66p1k3r2arpa66ymspl1dXSTqum/Is7WBgYRRqP75ujucLVWHmqft0eHe
-         fPqE+bBKhPY/vq/Ey0ozA8a6i0acEkgMlwLWWYzVmzkcXMF4w4QFyGRK08K/SM2l2MuE
-         ixag==
-X-Forwarded-Encrypted: i=1; AJvYcCWfConkTglzsdjU6WJ54qxkxQ2CEStxYqJvYeULX2Dw0/WebDWB5xhoL+cupU4GWeDkkbzS28yWzIEm5T1N2z1DqG8OXflVBbOW8JzWTgUnug==
-X-Gm-Message-State: AOJu0YyC3tD9sAiYVWPrmqMkC0pwHiAy0d8I620mN5RHsspe+tEe1Y7U
-	MMxyV3R73i1bKNlhD3oJ5UuyzG1GXrzrWF6gcGNEjWSdnUwy2l0noaJhom7ZmvaM/bfeBbfY+1T
-	LCYRe3q2yaMdie4CqwlWbPsumv+hWLFMj80KNXt54Wmn1fSYVSg==
-X-Google-Smtp-Source: AGHT+IFH7pQjMIQyqJyE2tlVt68jFcFGrK+k3c9V41QTz3+HY0KpOu9w8BIxTwkPrIEnO9fpPC5sSJH5y073HadJfAo=
-X-Received: by 2002:a50:f615:0:b0:563:c0e0:667c with SMTP id
- c21-20020a50f615000000b00563c0e0667cmr570330edn.0.1708632479435; Thu, 22 Feb
- 2024 12:07:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E8IKGWFo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fDIU63ci"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708637638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PrJ6YaFxatvY2iijd5Wqk9LxjgKfLoik+dqgECHQvCc=;
+	b=E8IKGWFobvMuydi/MYlCGtioOqkIyOjB766pK5NO0O5XAbWMgtCQk2EakY7kz56uIkMp3A
+	fJbScBQ7wtn6rKFXSCse7HAP0zIHNNRFq8Ui3HnKIRcHVv/O9A7dOQ6zsE4xtAO/3shZDu
+	23y7JebnE1ZqgWTCB3f+GBIYWpf2KD4JcGH/n7wROMMpEU5bjsYRQQkyvREUxOWN/82puZ
+	yudaq144aPD64IIrSwauXD1UAtqhEMgF3BHJg+rFhOCmk9oLQQttGgkoVbUWVsWI1tTVVf
+	mqGzlP45wJkqZqOGx/jyqNSr6gyeRP5Z+KfnumjcBO+2r6ws4mpxbJxuDmtoag==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708637638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PrJ6YaFxatvY2iijd5Wqk9LxjgKfLoik+dqgECHQvCc=;
+	b=fDIU63ciUTcRIKaxF7jIPyC9HLb4PBqsycE7avUV7D+2/qWfEpyl+pqC54WNOiNeW+0k7b
+	moIvBy70qNb/RwAw==
+To: Yu Chien Peter Lin <peterlin@andestech.com>, acme@kernel.org,
+ adrian.hunter@intel.com, ajones@ventanamicro.com,
+ alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
+ anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
+ conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org,
+ devicetree@vger.kernel.org, evan@rivosinc.com, geert+renesas@glider.be,
+ guoren@kernel.org, heiko@sntech.de, irogers@google.com,
+ jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com,
+ mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com,
+ namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
+ peterlin@andestech.com, peterz@infradead.org,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
+ robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
+ tim609@andestech.com, uwu@icenowy.me, wens@csie.org, will@kernel.org,
+ inochiama@outlook.com, unicorn_wang@outlook.com, wefu@redhat.com
+Cc: Randolph <randolph@andestech.com>, Atish Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH v9 02/10] irqchip/riscv-intc: Allow large non-standard
+ interrupt number
+In-Reply-To: <20240222083946.3977135-3-peterlin@andestech.com>
+References: <20240222083946.3977135-1-peterlin@andestech.com>
+ <20240222083946.3977135-3-peterlin@andestech.com>
+Date: Thu, 22 Feb 2024 22:33:58 +0100
+Message-ID: <87r0h4dvzt.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAG48ez3RmV6SsVw9oyTXxQXHp3rqtKDk2qwJWo9TGvXCq7Xr-w@mail.gmail.com>
- <CAP-5=fXsFBwt9ARmQja0pKGL-_Vms_NDKeaH5CX=_om1aSvssw@mail.gmail.com>
- <ZdTIYLoJOdyu62LU@x1> <05d29733-cfc4-42e1-bbb1-a496d9522d0e@linux.intel.com>
-In-Reply-To: <05d29733-cfc4-42e1-bbb1-a496d9522d0e@linux.intel.com>
-From: Jann Horn <jannh@google.com>
-Date: Thu, 22 Feb 2024 21:07:19 +0100
-Message-ID: <CAG48ez2MVNBMcoa+Cm8CZR3ZAHfBms92RD+fEa-kCdirALxxjg@mail.gmail.com>
-Subject: Re: [BUG] perf/x86/intel: HitM false-positives on Ice Lake / Tiger
- Lake (I think?)
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Joe Mario <jmario@redhat.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Feng Tang <feng.tang@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
-	kernel list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>, "Taylor, Perry" <perry.taylor@intel.com>, 
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>, 
-	"Wang, Weilin" <weilin.wang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Feb 22, 2024 at 9:05=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
+On Thu, Feb 22 2024 at 16:39, Yu Chien Peter Lin wrote:
+> Currently, the implementation of the RISC-V INTC driver uses the
+> interrupt cause as the hardware interrupt number, with a maximum of
+> 64 interrupts. However, the platform can expand the interrupt number
+> further for custom local interrupts.
 >
-> Hi Jann,
+> To fully utilize the available local interrupt sources, switch
+> to using irq_domain_create_tree() that creates the radix tree
+> map, add global variables (riscv_intc_nr_irqs, riscv_intc_custom_base
+> and riscv_intc_custom_nr_irqs) to determine the valid range of local
+> interrupt number (hwirq).
 >
-> Sorry for the late response.
->
-> On 2024-02-20 10:42 a.m., Arnaldo Carvalho de Melo wrote:
-> > Just adding Joe Mario to the CC list.
-> >
-> > On Mon, Feb 19, 2024 at 03:20:00PM -0800, Ian Rogers wrote:
-> >> On Mon, Feb 19, 2024 at 5:01=E2=80=AFAM Jann Horn <jannh@google.com> w=
-rote:
-> >>>
-> >>> Hi!
-> >>>
-> >>> From what I understand, "perf c2c" shows bogus HitM events on Ice Lak=
-e
-> >>> (and newer) because Intel added some feature where *clean* cachelines
-> >>> can get snoop-forwarded ("cross-core FWD"), and the PMU apparently
-> >>> treats this mostly the same as snoop-forwarding of modified cache
-> >>> lines (HitM)? On a Tiger Lake CPU, I can see addresses from the kerne=
-l
-> >>> rodata section in "perf c2c report".
-> >>>
-> >>> This is mentioned in the SDM, Volume 3B, section "20.9.7 Load Latency
-> >>> Facility", table "Table 20-101. Data Source Encoding for Memory
-> >>> Accesses (Ice Lake and Later Microarchitectures)", encoding 07H:
-> >>> "XCORE FWD. This request was satisfied by a sibling core where either
-> >>> a modified (cross-core HITM) or a non-modified (cross-core FWD)
-> >>> cache-line copy was found."
-> >>>
-> >>> I don't see anything about this in arch/x86/events/intel/ds.c - if I
-> >>> understand correctly, the kernel's PEBS data source decoding assumes
-> >>> that 0x07 means "L3 hit, snoop hitm" on these CPUs. I think this need=
-s
-> >>> to be adjusted somehow - and maybe it just isn't possible to actually
-> >>> distinguish between HitM and cross-core FWD in PEBS events on these
-> >>> CPUs (without big-hammer chicken bit trickery)? Maybe someone from
-> >>> Intel can clarify?
-> >>>
-> >>> (The SDM describes that E-cores on the newer 12th Gen have more
-> >>> precise PEBS encodings that distinguish between "L3 HITM" and "L3
-> >>> HITF"; but I guess the P-cores there maybe still don't let you
-> >>> distinguish HITM/HITF?)
->
-> Right, there is no way to distinguish HITM/HITF on Tiger Lake.
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Reviewed-by: Randolph <randolph@andestech.com>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
-Aah, okay, thank you very much for the clarification!
-
-> I think what we can do is to add both HITM and HITF for the 0x07 to
-> match the SDM description.
->
-> How about the below patch (not tested yet)?
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index d49d661ec0a7..8c966b5b23cb 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -84,7 +84,7 @@ static u64 pebs_data_source[] =3D {
->         OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, NONE),  /* 0x04: L3 hi=
-t */
->         OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, MISS),  /* 0x05: L3 hi=
-t,
-> snoop miss */
->         OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HIT),   /* 0x06: L3 hi=
-t,
-> snoop hit */
-> -       OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HITM),  /* 0x07: L3 hi=
-t,
-> snoop hitm */
-> +       OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HITM) | P(SNOOPX, FWD)=
-,  /*
-> 0x07: L3 hit, snoop hitm & fwd */
->         OP_LH | P(LVL, REM_CCE1) | REM | LEVEL(L3) | P(SNOOP, HIT),  /* 0=
-x08:
-> L3 miss snoop hit */
->         OP_LH | P(LVL, REM_CCE1) | REM | LEVEL(L3) | P(SNOOP, HITM), /* 0=
-x09:
-> L3 miss snoop hitm*/
->         OP_LH | P(LVL, LOC_RAM)  | LEVEL(RAM) | P(SNOOP, HIT),       /* 0=
-x0a:
-> L3 miss, shared */
-
-(I'm not familiar enough with the perf semantics to know how the event
-encoding works, maybe someone else can have a look?)
-
->
->
-> >>>
-> >>>
-> >>> I think https://perfmon-events.intel.com/tigerLake.html is also
-> >>> outdated, or at least it uses ambiguous grammar: The
-> >>> MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD event (EventSel=3DD2H UMask=3D04H) i=
-s
-> >>> documented as "Counts retired load instructions where a cross-core
-> >>> snoop hit in another cores caches on this socket, the data was
-> >>> forwarded back to the requesting core as the data was modified
-> >>> (SNOOP_HITM) or the L3 did not have the data(SNOOP_HIT_WITH_FWD)" -
-> >>> from what I understand, a "cross-core FWD" should be a case where the
-> >>> L3 does have the data, unless L3 has become non-inclusive on Ice Lake=
-?
-> >>>
->
-> For the event, the BriefDescription in the event list json file gives a
-> more accurate description.
-> "BriefDescription": "Snoop hit a modified(HITM) or clean line(HIT_W_FWD)
-> in another on-pkg core which forwarded the data back due to a retired
-> load instruction.",
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
-ools/perf/pmu-events/arch/x86/tigerlake/cache.json#n286
-
-Ah, right, that's clearer.
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
