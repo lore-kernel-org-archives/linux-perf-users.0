@@ -1,103 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC781DFD9;
-	Thu, 22 Feb 2024 20:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BE36AFA8
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 20:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708632443; cv=none; b=trxk4hWQf9fd4P8E3Lf62YhDiA2703viZJHQLRUKMg2C7h5f92onTOsPyJRGxxeVX0GFVSJvrnGWBZ0s/iRxQLVMn8Perl8WbQTK4+mTltCJCjkJSL9LW44japxmZT0/D/Dr5jCXJBfYCnnoccPsZfkKEgRmZ6lKcCsT6xoOWmQ=
+	t=1708632483; cv=none; b=W0XgWdXu1THKU0fNlkDeCNlwaTFkSDe60GBwfNAiBy2oIQw94lZA1mrO98JZbLxXrTDHGvwop1z2pIh3XiqDNpnNllkuGcCO/jvU3iWDEIGr2A++/gcoG/2MXEa4KBfNE24ql1AYggMB7qmkwpSvGv8CjLD3C4lrmIU0EUHRS/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708632443; c=relaxed/simple;
-	bh=KVIBnT2LtbhcVP80MhdOB/x/YdmrcAklBvoJsn7DqUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CknjpuMxgkW6H5xlhKvxFthV4JE6To0d1ihY8ExkMq7hVjB0uKooWL48lvTFbrIuVGSPhh2xZS6O9oBnwc+e6Tw8GNgE2cIoKeXS01z2mbj4XHPTbdh30aRv+nuty+QwwLcUcb7gkJjqksmipmj5v0X49hFVUJjyv4NREj0OyLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IipYHtpi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708632483; c=relaxed/simple;
+	bh=82P1KJmwIp1GzLjUuOrvLBi/uz+qn/Qr7VEYjUni8CM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Olly3ZGueAABJDq+NP052ZNNPK1apiPrKkjz6rvHTAZn6TIYDy3dK+4alAeEqU5ab7bpg6kuLGRld0FX9QdafISXYT17DDQC0GRWk04VnDYjBBXpSoyy77ucRXXeq8SvPi4TRrbCJzNt4vIcjFbVWHeIVZD+E0KI94oYzvDVC/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=moqCb7pi; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IipYHtpi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25506C433C7;
-	Thu, 22 Feb 2024 20:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708632443;
-	bh=KVIBnT2LtbhcVP80MhdOB/x/YdmrcAklBvoJsn7DqUU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=IipYHtpidMTbQoEZw7xa2XR/0ci+6GjBFLQy0jm2yAYyWUA9JIU3ZnpOMpAtOQFFa
-	 wG88tHFznzmblRpm2W3+hoLyMVKiQ2HlMkbA/CsD6dUBmEIG/jkGlVCjsRc1GqDC7i
-	 xkAy3jwoxMP4n4Sx2EtffrWmpaY3OMh3y0Okj+OX1L6Cdp2V/0pqrva/y3Ci1wV+n8
-	 ymgVTMDNXpZ5nct9VNIk/EkG4K2HSAwn+LTOFCvzD8Ea6X8m2vESOGJ90yv3k1QUGS
-	 DwBT9U0dKPFjdrUyYkGy/bgLpBvxJDeJPCclYgo6Mlu/Bz2khN29uPxfjJJVb9DZ3C
-	 5HUnwJX9JPdvQ==
-Date: Thu, 22 Feb 2024 17:07:20 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf test: Use TEST_FAIL in the TEST_ASSERT macros
- instead of -1
-Message-ID: <ZdepeMsjagbf1ufD@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="moqCb7pi"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso3121a12.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 12:08:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708632479; x=1709237279; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yGjajmrXJJz1DiKWcZdtHNQG+dgh6yAQECPS6jCJk9s=;
+        b=moqCb7piLDVTFbEGYhl6L/AdHQGG1tZ93UBosuPQxWIwSAXsCbEXWsKbFfXr4iX6oH
+         hMXHWkKBfdurFUuA5A68Xwfq0s4Pss5Gyzw5GFk2pnDFnezNLC/7bGM6T9Kk7R2l0Old
+         gkH2yKQJzenJe9mfhPSCV/grduzf48tlqtZvtRUMA41EztoavZ8gOQwvpZtx6VlYtLjl
+         D9CW/s/NYJKoEm/8qeVn4gUlokw3ZUT2IOttfuVSGJqVUWaGB81IkQkMwAf6MfUPF4qe
+         OCfVdADilxzpCLOiUD90x13/RrhIl4w2F7niO7FB5BnkbiCzKI8B3ZhDGXPP/1qodFxt
+         fOZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708632479; x=1709237279;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yGjajmrXJJz1DiKWcZdtHNQG+dgh6yAQECPS6jCJk9s=;
+        b=FPuQ1MENENQY+CIlesLJGmwoPEFiZ+UHrTkXwgXuiMsGn181D58iLNXMDYcNQHupn1
+         mC3UzWb34xdLh96PeZrU5mw1eksactGwqFmBiMK0sjnTDhhOw9QlNqh2dDVMe5LPBzQ1
+         pnn3jryf7aJRfdDBTHYahFP7wmTjtXr8OTJ7nKdpiY6l89SzHJYo/f1Ah513WnfvZsQ2
+         PCshqvVhUrS66p1k3r2arpa66ymspl1dXSTqum/Is7WBgYRRqP75ujucLVWHmqft0eHe
+         fPqE+bBKhPY/vq/Ey0ozA8a6i0acEkgMlwLWWYzVmzkcXMF4w4QFyGRK08K/SM2l2MuE
+         ixag==
+X-Forwarded-Encrypted: i=1; AJvYcCWfConkTglzsdjU6WJ54qxkxQ2CEStxYqJvYeULX2Dw0/WebDWB5xhoL+cupU4GWeDkkbzS28yWzIEm5T1N2z1DqG8OXflVBbOW8JzWTgUnug==
+X-Gm-Message-State: AOJu0YyC3tD9sAiYVWPrmqMkC0pwHiAy0d8I620mN5RHsspe+tEe1Y7U
+	MMxyV3R73i1bKNlhD3oJ5UuyzG1GXrzrWF6gcGNEjWSdnUwy2l0noaJhom7ZmvaM/bfeBbfY+1T
+	LCYRe3q2yaMdie4CqwlWbPsumv+hWLFMj80KNXt54Wmn1fSYVSg==
+X-Google-Smtp-Source: AGHT+IFH7pQjMIQyqJyE2tlVt68jFcFGrK+k3c9V41QTz3+HY0KpOu9w8BIxTwkPrIEnO9fpPC5sSJH5y073HadJfAo=
+X-Received: by 2002:a50:f615:0:b0:563:c0e0:667c with SMTP id
+ c21-20020a50f615000000b00563c0e0667cmr570330edn.0.1708632479435; Thu, 22 Feb
+ 2024 12:07:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAG48ez3RmV6SsVw9oyTXxQXHp3rqtKDk2qwJWo9TGvXCq7Xr-w@mail.gmail.com>
+ <CAP-5=fXsFBwt9ARmQja0pKGL-_Vms_NDKeaH5CX=_om1aSvssw@mail.gmail.com>
+ <ZdTIYLoJOdyu62LU@x1> <05d29733-cfc4-42e1-bbb1-a496d9522d0e@linux.intel.com>
+In-Reply-To: <05d29733-cfc4-42e1-bbb1-a496d9522d0e@linux.intel.com>
+From: Jann Horn <jannh@google.com>
+Date: Thu, 22 Feb 2024 21:07:19 +0100
+Message-ID: <CAG48ez2MVNBMcoa+Cm8CZR3ZAHfBms92RD+fEa-kCdirALxxjg@mail.gmail.com>
+Subject: Re: [BUG] perf/x86/intel: HitM false-positives on Ice Lake / Tiger
+ Lake (I think?)
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Joe Mario <jmario@redhat.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Feng Tang <feng.tang@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
+	kernel list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>, 
+	"Wang, Weilin" <weilin.wang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Just to make things clearer, return TEST_FAIL (-1) instead of an open
-coded -1.
+On Thu, Feb 22, 2024 at 9:05=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+> Hi Jann,
+>
+> Sorry for the late response.
+>
+> On 2024-02-20 10:42 a.m., Arnaldo Carvalho de Melo wrote:
+> > Just adding Joe Mario to the CC list.
+> >
+> > On Mon, Feb 19, 2024 at 03:20:00PM -0800, Ian Rogers wrote:
+> >> On Mon, Feb 19, 2024 at 5:01=E2=80=AFAM Jann Horn <jannh@google.com> w=
+rote:
+> >>>
+> >>> Hi!
+> >>>
+> >>> From what I understand, "perf c2c" shows bogus HitM events on Ice Lak=
+e
+> >>> (and newer) because Intel added some feature where *clean* cachelines
+> >>> can get snoop-forwarded ("cross-core FWD"), and the PMU apparently
+> >>> treats this mostly the same as snoop-forwarding of modified cache
+> >>> lines (HitM)? On a Tiger Lake CPU, I can see addresses from the kerne=
+l
+> >>> rodata section in "perf c2c report".
+> >>>
+> >>> This is mentioned in the SDM, Volume 3B, section "20.9.7 Load Latency
+> >>> Facility", table "Table 20-101. Data Source Encoding for Memory
+> >>> Accesses (Ice Lake and Later Microarchitectures)", encoding 07H:
+> >>> "XCORE FWD. This request was satisfied by a sibling core where either
+> >>> a modified (cross-core HITM) or a non-modified (cross-core FWD)
+> >>> cache-line copy was found."
+> >>>
+> >>> I don't see anything about this in arch/x86/events/intel/ds.c - if I
+> >>> understand correctly, the kernel's PEBS data source decoding assumes
+> >>> that 0x07 means "L3 hit, snoop hitm" on these CPUs. I think this need=
+s
+> >>> to be adjusted somehow - and maybe it just isn't possible to actually
+> >>> distinguish between HitM and cross-core FWD in PEBS events on these
+> >>> CPUs (without big-hammer chicken bit trickery)? Maybe someone from
+> >>> Intel can clarify?
+> >>>
+> >>> (The SDM describes that E-cores on the newer 12th Gen have more
+> >>> precise PEBS encodings that distinguish between "L3 HITM" and "L3
+> >>> HITF"; but I guess the P-cores there maybe still don't let you
+> >>> distinguish HITM/HITF?)
+>
+> Right, there is no way to distinguish HITM/HITF on Tiger Lake.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/tests.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Aah, okay, thank you very much for the clarification!
 
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index dad3d7414142d1be..3aa7701ee0e939f7 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -4,11 +4,17 @@
- 
- #include <stdbool.h>
- 
-+enum {
-+	TEST_OK   =  0,
-+	TEST_FAIL = -1,
-+	TEST_SKIP = -2,
-+};
-+
- #define TEST_ASSERT_VAL(text, cond)					 \
- do {									 \
- 	if (!(cond)) {							 \
- 		pr_debug("FAILED %s:%d %s\n", __FILE__, __LINE__, text); \
--		return -1;						 \
-+		return TEST_FAIL;					 \
- 	}								 \
- } while (0)
- 
-@@ -17,16 +23,10 @@ do {									 \
- 	if (val != expected) {						 \
- 		pr_debug("FAILED %s:%d %s (%d != %d)\n",		 \
- 			 __FILE__, __LINE__, text, val, expected);	 \
--		return -1;						 \
-+		return TEST_FAIL;						 \
- 	}								 \
- } while (0)
- 
--enum {
--	TEST_OK   =  0,
--	TEST_FAIL = -1,
--	TEST_SKIP = -2,
--};
--
- struct test_suite;
- 
- typedef int (*test_fnptr)(struct test_suite *, int);
--- 
-2.43.0
+> I think what we can do is to add both HITM and HITF for the 0x07 to
+> match the SDM description.
+>
+> How about the below patch (not tested yet)?
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index d49d661ec0a7..8c966b5b23cb 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -84,7 +84,7 @@ static u64 pebs_data_source[] =3D {
+>         OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, NONE),  /* 0x04: L3 hi=
+t */
+>         OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, MISS),  /* 0x05: L3 hi=
+t,
+> snoop miss */
+>         OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HIT),   /* 0x06: L3 hi=
+t,
+> snoop hit */
+> -       OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HITM),  /* 0x07: L3 hi=
+t,
+> snoop hitm */
+> +       OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HITM) | P(SNOOPX, FWD)=
+,  /*
+> 0x07: L3 hit, snoop hitm & fwd */
+>         OP_LH | P(LVL, REM_CCE1) | REM | LEVEL(L3) | P(SNOOP, HIT),  /* 0=
+x08:
+> L3 miss snoop hit */
+>         OP_LH | P(LVL, REM_CCE1) | REM | LEVEL(L3) | P(SNOOP, HITM), /* 0=
+x09:
+> L3 miss snoop hitm*/
+>         OP_LH | P(LVL, LOC_RAM)  | LEVEL(RAM) | P(SNOOP, HIT),       /* 0=
+x0a:
+> L3 miss, shared */
 
+(I'm not familiar enough with the perf semantics to know how the event
+encoding works, maybe someone else can have a look?)
+
+>
+>
+> >>>
+> >>>
+> >>> I think https://perfmon-events.intel.com/tigerLake.html is also
+> >>> outdated, or at least it uses ambiguous grammar: The
+> >>> MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD event (EventSel=3DD2H UMask=3D04H) i=
+s
+> >>> documented as "Counts retired load instructions where a cross-core
+> >>> snoop hit in another cores caches on this socket, the data was
+> >>> forwarded back to the requesting core as the data was modified
+> >>> (SNOOP_HITM) or the L3 did not have the data(SNOOP_HIT_WITH_FWD)" -
+> >>> from what I understand, a "cross-core FWD" should be a case where the
+> >>> L3 does have the data, unless L3 has become non-inclusive on Ice Lake=
+?
+> >>>
+>
+> For the event, the BriefDescription in the event list json file gives a
+> more accurate description.
+> "BriefDescription": "Snoop hit a modified(HITM) or clean line(HIT_W_FWD)
+> in another on-pkg core which forwarded the data back due to a retired
+> load instruction.",
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
+ools/perf/pmu-events/arch/x86/tigerlake/cache.json#n286
+
+Ah, right, that's clearer.
