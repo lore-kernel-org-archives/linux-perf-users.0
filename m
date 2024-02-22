@@ -1,218 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338B4548F3;
-	Thu, 22 Feb 2024 20:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC781DFD9;
+	Thu, 22 Feb 2024 20:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708632315; cv=none; b=WV3Ur6hfTxwiTd6IvnJ7wUGWMTRthoegFiWD1ADs7JAzpX+IXlkVyqnRuSYF7X99o8LaqPziYrGyoKspGkPWovIQSyvk3t0My3KHON0Zo88wBIyTpi0tcTsCSv67B7v4q4yMmmuyUAASTTUytjjPcKQlzHT5dmbsjfYiVBbP6+k=
+	t=1708632443; cv=none; b=trxk4hWQf9fd4P8E3Lf62YhDiA2703viZJHQLRUKMg2C7h5f92onTOsPyJRGxxeVX0GFVSJvrnGWBZ0s/iRxQLVMn8Perl8WbQTK4+mTltCJCjkJSL9LW44japxmZT0/D/Dr5jCXJBfYCnnoccPsZfkKEgRmZ6lKcCsT6xoOWmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708632315; c=relaxed/simple;
-	bh=NNN5sIYqYmoNZjYzCoccvYjI75lw8cPlmAS3bA9uaqQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a2yrhPgCmWs+m1S1/go+mO/C/xXBqOXLBCg+znLbVi/6y9ZZ0o0S37r1FL97iuq35hco/cfcgjdPCj1Fa+qb5LqfwDdJJT5jWkznsZ483tr/Zx7GZiZhbeT14dmJQZwQoDaNx0EpU3HU2lqmfQY4idJmMZAJBCWSCvDZoq/l4wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MYhQ90J7; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708632443; c=relaxed/simple;
+	bh=KVIBnT2LtbhcVP80MhdOB/x/YdmrcAklBvoJsn7DqUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=CknjpuMxgkW6H5xlhKvxFthV4JE6To0d1ihY8ExkMq7hVjB0uKooWL48lvTFbrIuVGSPhh2xZS6O9oBnwc+e6Tw8GNgE2cIoKeXS01z2mbj4XHPTbdh30aRv+nuty+QwwLcUcb7gkJjqksmipmj5v0X49hFVUJjyv4NREj0OyLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IipYHtpi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MYhQ90J7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708632314; x=1740168314;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=NNN5sIYqYmoNZjYzCoccvYjI75lw8cPlmAS3bA9uaqQ=;
-  b=MYhQ90J7Ah8DAE01j+Jpb2Lxda40odLF4oQBM0UvWUTrwRcKynuJDIAb
-   0OBviFQFQAsGKReJ2/znXo4GD+Xnru1Ve4EU0mDuVn3zUMDT5B7ad7y7T
-   p9YaW5OZForxUl0+KCoXTcraUsvi8j9JhCqgencfekm1hcOYuCUp6oKkh
-   WLWcI38Tx0Q8StfrTMOabg9zYE1C/hcxKIWk2Nf4haoYZ/v4u3fVzT33G
-   +kZf7+TWqzjZfR/GvLtIqGDH1THFaPYnCn2aPxVkpiGKzd9igIVvUMiOJ
-   lAyc4sYEjF5ywZYF0XlMJ2Kmny78nwVSqCX6+ak5JjXFFjyi3ouJ/NVRt
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="13596797"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="13596797"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 12:05:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="936897396"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="936897396"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 12:05:12 -0800
-Received: from [10.212.89.194] (kliang2-mobl1.ccr.corp.intel.com [10.212.89.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 241E1580DED;
-	Thu, 22 Feb 2024 12:05:10 -0800 (PST)
-Message-ID: <05d29733-cfc4-42e1-bbb1-a496d9522d0e@linux.intel.com>
-Date: Thu, 22 Feb 2024 15:05:08 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IipYHtpi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25506C433C7;
+	Thu, 22 Feb 2024 20:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708632443;
+	bh=KVIBnT2LtbhcVP80MhdOB/x/YdmrcAklBvoJsn7DqUU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IipYHtpidMTbQoEZw7xa2XR/0ci+6GjBFLQy0jm2yAYyWUA9JIU3ZnpOMpAtOQFFa
+	 wG88tHFznzmblRpm2W3+hoLyMVKiQ2HlMkbA/CsD6dUBmEIG/jkGlVCjsRc1GqDC7i
+	 xkAy3jwoxMP4n4Sx2EtffrWmpaY3OMh3y0Okj+OX1L6Cdp2V/0pqrva/y3Ci1wV+n8
+	 ymgVTMDNXpZ5nct9VNIk/EkG4K2HSAwn+LTOFCvzD8Ea6X8m2vESOGJ90yv3k1QUGS
+	 DwBT9U0dKPFjdrUyYkGy/bgLpBvxJDeJPCclYgo6Mlu/Bz2khN29uPxfjJJVb9DZ3C
+	 5HUnwJX9JPdvQ==
+Date: Thu, 22 Feb 2024 17:07:20 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf test: Use TEST_FAIL in the TEST_ASSERT macros
+ instead of -1
+Message-ID: <ZdepeMsjagbf1ufD@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] perf/x86/intel: HitM false-positives on Ice Lake / Tiger
- Lake (I think?)
-Content-Language: en-US
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Jann Horn <jannh@google.com>
-Cc: Joe Mario <jmario@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Feng Tang <feng.tang@intel.com>,
- Andi Kleen <ak@linux.intel.com>, the arch/x86 maintainers <x86@kernel.org>,
- kernel list <linux-kernel@vger.kernel.org>,
- linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>,
- "Taylor, Perry" <perry.taylor@intel.com>,
- "Alt, Samantha" <samantha.alt@intel.com>,
- "Biggers, Caleb" <caleb.biggers@intel.com>,
- "Wang, Weilin" <weilin.wang@intel.com>
-References: <CAG48ez3RmV6SsVw9oyTXxQXHp3rqtKDk2qwJWo9TGvXCq7Xr-w@mail.gmail.com>
- <CAP-5=fXsFBwt9ARmQja0pKGL-_Vms_NDKeaH5CX=_om1aSvssw@mail.gmail.com>
- <ZdTIYLoJOdyu62LU@x1>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <ZdTIYLoJOdyu62LU@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Jann,
+Just to make things clearer, return TEST_FAIL (-1) instead of an open
+coded -1.
 
-Sorry for the late response.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/tests.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-On 2024-02-20 10:42 a.m., Arnaldo Carvalho de Melo wrote:
-> Just adding Joe Mario to the CC list.
-> 
-> On Mon, Feb 19, 2024 at 03:20:00PM -0800, Ian Rogers wrote:
->> On Mon, Feb 19, 2024 at 5:01 AM Jann Horn <jannh@google.com> wrote:
->>>
->>> Hi!
->>>
->>> From what I understand, "perf c2c" shows bogus HitM events on Ice Lake
->>> (and newer) because Intel added some feature where *clean* cachelines
->>> can get snoop-forwarded ("cross-core FWD"), and the PMU apparently
->>> treats this mostly the same as snoop-forwarding of modified cache
->>> lines (HitM)? On a Tiger Lake CPU, I can see addresses from the kernel
->>> rodata section in "perf c2c report".
->>>
->>> This is mentioned in the SDM, Volume 3B, section "20.9.7 Load Latency
->>> Facility", table "Table 20-101. Data Source Encoding for Memory
->>> Accesses (Ice Lake and Later Microarchitectures)", encoding 07H:
->>> "XCORE FWD. This request was satisfied by a sibling core where either
->>> a modified (cross-core HITM) or a non-modified (cross-core FWD)
->>> cache-line copy was found."
->>>
->>> I don't see anything about this in arch/x86/events/intel/ds.c - if I
->>> understand correctly, the kernel's PEBS data source decoding assumes
->>> that 0x07 means "L3 hit, snoop hitm" on these CPUs. I think this needs
->>> to be adjusted somehow - and maybe it just isn't possible to actually
->>> distinguish between HitM and cross-core FWD in PEBS events on these
->>> CPUs (without big-hammer chicken bit trickery)? Maybe someone from
->>> Intel can clarify?
->>>
->>> (The SDM describes that E-cores on the newer 12th Gen have more
->>> precise PEBS encodings that distinguish between "L3 HITM" and "L3
->>> HITF"; but I guess the P-cores there maybe still don't let you
->>> distinguish HITM/HITF?)
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index dad3d7414142d1be..3aa7701ee0e939f7 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -4,11 +4,17 @@
+ 
+ #include <stdbool.h>
+ 
++enum {
++	TEST_OK   =  0,
++	TEST_FAIL = -1,
++	TEST_SKIP = -2,
++};
++
+ #define TEST_ASSERT_VAL(text, cond)					 \
+ do {									 \
+ 	if (!(cond)) {							 \
+ 		pr_debug("FAILED %s:%d %s\n", __FILE__, __LINE__, text); \
+-		return -1;						 \
++		return TEST_FAIL;					 \
+ 	}								 \
+ } while (0)
+ 
+@@ -17,16 +23,10 @@ do {									 \
+ 	if (val != expected) {						 \
+ 		pr_debug("FAILED %s:%d %s (%d != %d)\n",		 \
+ 			 __FILE__, __LINE__, text, val, expected);	 \
+-		return -1;						 \
++		return TEST_FAIL;						 \
+ 	}								 \
+ } while (0)
+ 
+-enum {
+-	TEST_OK   =  0,
+-	TEST_FAIL = -1,
+-	TEST_SKIP = -2,
+-};
+-
+ struct test_suite;
+ 
+ typedef int (*test_fnptr)(struct test_suite *, int);
+-- 
+2.43.0
 
-Right, there is no way to distinguish HITM/HITF on Tiger Lake.
-
-I think what we can do is to add both HITM and HITF for the 0x07 to
-match the SDM description.
-
-How about the below patch (not tested yet)?
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index d49d661ec0a7..8c966b5b23cb 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -84,7 +84,7 @@ static u64 pebs_data_source[] = {
-	OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, NONE),  /* 0x04: L3 hit */
-	OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, MISS),  /* 0x05: L3 hit,
-snoop miss */
-	OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HIT),   /* 0x06: L3 hit,
-snoop hit */
--	OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HITM),  /* 0x07: L3 hit,
-snoop hitm */
-+	OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HITM) | P(SNOOPX, FWD),  /*
-0x07: L3 hit, snoop hitm & fwd */
-	OP_LH | P(LVL, REM_CCE1) | REM | LEVEL(L3) | P(SNOOP, HIT),  /* 0x08:
-L3 miss snoop hit */
-	OP_LH | P(LVL, REM_CCE1) | REM | LEVEL(L3) | P(SNOOP, HITM), /* 0x09:
-L3 miss snoop hitm*/
-	OP_LH | P(LVL, LOC_RAM)  | LEVEL(RAM) | P(SNOOP, HIT),       /* 0x0a:
-L3 miss, shared */
-
-
->>>
->>>
->>> I think https://perfmon-events.intel.com/tigerLake.html is also
->>> outdated, or at least it uses ambiguous grammar: The
->>> MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD event (EventSel=D2H UMask=04H) is
->>> documented as "Counts retired load instructions where a cross-core
->>> snoop hit in another cores caches on this socket, the data was
->>> forwarded back to the requesting core as the data was modified
->>> (SNOOP_HITM) or the L3 did not have the data(SNOOP_HIT_WITH_FWD)" -
->>> from what I understand, a "cross-core FWD" should be a case where the
->>> L3 does have the data, unless L3 has become non-inclusive on Ice Lake?
->>>
-
-For the event, the BriefDescription in the event list json file gives a
-more accurate description.
-"BriefDescription": "Snoop hit a modified(HITM) or clean line(HIT_W_FWD)
-in another on-pkg core which forwarded the data back due to a retired
-load instruction.",
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/pmu-events/arch/x86/tigerlake/cache.json#n286
-
-Thanks,
-Kan
->>> On a Tiger Lake CPU, I can see this event trigger for the
->>> sys_call_table, which is located in the rodata region and probably
->>> shouldn't be containing Modified cache lines:
->>>
->>> # grep -A1 -w sys_call_table /proc/kallsyms
->>> ffffffff82800280 D sys_call_table
->>> ffffffff82801100 d vdso_mapping
->>> # perf record -e mem_load_l3_hit_retired.xsnp_fwd:ppp --all-kernel -c 100 --data
->>> ^C[ perf record: Woken up 11 times to write data ]
->>> [ perf record: Captured and wrote 22.851 MB perf.data (43176 samples) ]
->>> # perf script -F event,ip,sym,addr | egrep --color 'ffffffff828002[89abcdef]'
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
->>> ffffffff82526275 do_syscall_64
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002d8
->>> ffffffff82526275 do_syscall_64
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
->>> ffffffff82526275 do_syscall_64
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
->>> ffffffff82526275 do_syscall_64
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
->>> ffffffff82526275 do_syscall_64
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
->>> ffffffff82526275 do_syscall_64
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
->>> ffffffff82526275 do_syscall_64
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800288
->>> ffffffff82526275 do_syscall_64
->>> mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
->>> ffffffff82526275 do_syscall_64
->>>
->>>
->>> (For what it's worth, there is a thread on LKML where "cross-core FWD"
->>> got mentioned: <https://lore.kernel.org/lkml/b4aaf1ed-124d-1339-3e99-a120f6cc4d28@linux.intel.com/>)
->>
->> +others better qualified than me to respond.
->>
->> Hi Jann,
->>
->> I'm not overly familiar with the issue, but it appears a similar issue
->> has been reported for Broadwell Xeon here:
->> https://community.intel.com/t5/Software-Tuning-Performance/Broadwell-Xeon-perf-c2c-showing-remote-HITM-but-remote-socket-is/td-p/1172120
->> I'm not sure that thread will be particularly useful, but having the
->> Intel people better qualified than me to answer is probably the better
->> service of this email.
->>
->> Thanks,
->> Ian
-> 
