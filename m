@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35B72BB1B;
-	Thu, 22 Feb 2024 12:24:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208355FBA5;
+	Thu, 22 Feb 2024 12:25:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708604687; cv=none; b=aZ1ubA5i+q4JC/vNgpKfWMvsalJErXS+5oYUbLrfH6EDTGVNsSM/lannvOYsBEv7qEEnRKAjRrreMhee8vcr1T78clJtJdHnCE+/w8rjB1HCl7fKGnlsDtA30od6pS9AuBDlsXL3YB29DhtsdfRVWMETzK8qABRzLCQyj3fmElo=
+	t=1708604742; cv=none; b=tABR5cWKjFOsWMrIB+Frh7CySvH2FG4ofYvnNE/Wr2ld7DK8KtKsnUKvWtepDWCg/e/vnv6AHt0eU5wFBghjOd+xIKyIbq75XCMQ1vXG3qn7pY7/WuRTP/Xc68h6XQaWOAbBv00kjhxzI3dbllngUjcH8ek9V7q/x80bG1XPmpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708604687; c=relaxed/simple;
-	bh=vepoCvUA87NndiRWHPhBF1/XeR6TA9jZpkQrmwbjNUM=;
+	s=arc-20240116; t=1708604742; c=relaxed/simple;
+	bh=aGAfs6jmsNG6QGI752Z3kOdPKVMUa2RCagcGhOm450c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=erLHIVhOOD8msiT/s+bWX/+RWZ4oNfCMeFdUGEssWjZKPUJH9nHkvHuMLEq8yfTOk8JwFIklsoJouhDAqJacNpROhWPUwjQJi92u4Ps3wBHSJjuZiiUlw2ZQ5PMHCuzpv5EYUx6d2gBLvsedx6gAhsoi7jVYrbepxzuSdViGefg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RxjsYAIP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=T+n3QiEvCWlvH1LIl8sewG69A5fU80MORTHS/Jq5lUO2liOfGZVtK5VIXJdIRfueKfKlwxS4qfwVsTvZPJamesyr0jPiHAq1JARlZIscx6RuGlAqNRt2HIO2F1VqFUecudpu8rodivDdNqn9GkMBco4T589oqthdTLdulg3fOlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y90FYbRZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RxjsYAIP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C72B5C433C7;
-	Thu, 22 Feb 2024 12:24:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y90FYbRZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F024AC433C7;
+	Thu, 22 Feb 2024 12:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708604686;
-	bh=vepoCvUA87NndiRWHPhBF1/XeR6TA9jZpkQrmwbjNUM=;
+	s=k20201202; t=1708604741;
+	bh=aGAfs6jmsNG6QGI752Z3kOdPKVMUa2RCagcGhOm450c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RxjsYAIPU0mncAH7vf7kcWpQARm8xbPVWHRkKQqPfZ3aujv4lELoWzaa/Wo9KXyc8
-	 g+dlCFRr9WSdoulAVmAb3VYjUVmDU10iRtdRT3GjulsF2J8FJRGdXcFGJONp5WA6iN
-	 03Zxb91VTkWK2KFjpEdxxaohbUWzZD5OygXgwt1evDdGRsi523YqCRspx4Xzb33/+q
-	 Hk1qrKY1AmFEkipAgn6xZ3lnkgyKx4Zc+MeYcfy9hylgZQ90uvg1xtUyFV89I5iG/g
-	 z2tQDcrBw2wUiE7/WoGATr/LL18XqyzDHCciq3ySsPXiKeygxbO4ulfkltG5fmgFwp
-	 FBe53I2NoMv3g==
-Date: Thu, 22 Feb 2024 12:24:38 +0000
+	b=Y90FYbRZxnZ2Rg/dECWSnrAORMVngwV8sBdRfaaDCmbK4STyurf8m20j/N7QO8vrE
+	 9DGu0JGOdw2LFrPXdzpgwUov1BkWbz77XhKsVG8YTV37knB6Yl3lVpk6apXsRyaARY
+	 BwzpuWH7tbblNcEOezIQ2rNBShSTGt5oUf0oakprvJyXeoEjOMJ9xzxuTuu7aqCHsI
+	 w6JdeCoTHgItp68w2jJ78EXsmTdNDTGIs9bsyQTmvbmgWPEet+BPrrMssmenUrMvL6
+	 psnJogKojzVc4/wh9iDGS8C3eSMn7av8utNixGM33TptmejAtbNs0HlxMmOc2z4wPg
+	 qPF0AD4TBu7Lw==
+Date: Thu, 22 Feb 2024 12:25:33 +0000
 From: Will Deacon <will@kernel.org>
 To: Xu Yang <xu.yang_2@nxp.com>
 Cc: Frank.li@nxp.com, mark.rutland@arm.com, robh+dt@kernel.org,
@@ -40,11 +40,11 @@ Cc: Frank.li@nxp.com, mark.rutland@arm.com, robh+dt@kernel.org,
 	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	imx@lists.linux.dev
-Subject: Re: [PATCH v4 5/6] perf: imx_perf: limit counter ID from user space
- and optimize counter usage
-Message-ID: <20240222122438.GD8308@willie-the-truck>
+Subject: Re: [PATCH v4 6/6] perf vendor events arm64:: Add i.MX95 DDR
+ Performane Monitor metrics
+Message-ID: <20240222122533.GE8308@willie-the-truck>
 References: <20240131055811.3035741-1-xu.yang_2@nxp.com>
- <20240131055811.3035741-5-xu.yang_2@nxp.com>
+ <20240131055811.3035741-6-xu.yang_2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,61 +53,12 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240131055811.3035741-5-xu.yang_2@nxp.com>
+In-Reply-To: <20240131055811.3035741-6-xu.yang_2@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, Jan 31, 2024 at 01:58:10PM +0800, Xu Yang wrote:
-> The user can pass any counter ID to perf app. However, current pmu driver
-> doesn't judge the validity of the counter ID. This will add necessary
-> check for counter ID from user space. Besides, this pmu has 10 counters
-> except cycle counter which can be used to count reference events and
-> counter specific evnets. This will also add supports to auto allocate
-> counter if the user doesn't pass it the perf. Then, the usage of counter
-> will be optimized.
-> 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> 
-> ---
-> Changes in v2:
->  - limit counter ID from user to 0-10
->  - combine dynamic and static allocation of counter
-> Changes in v3:
->  - no changes
-> Changes in v4:
->  - rename ddr_perf_is_specific_event()
->  - use macro definitions to parse config attr
-> ---
->  drivers/perf/fsl_imx9_ddr_perf.c | 72 +++++++++++++++++++++++++++++++-
->  1 file changed, 71 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
-> index 94041f06c152..e71496809c52 100644
-> --- a/drivers/perf/fsl_imx9_ddr_perf.c
-> +++ b/drivers/perf/fsl_imx9_ddr_perf.c
-> @@ -51,6 +51,7 @@
->  
->  #define NUM_COUNTERS		11
->  #define CYCLES_COUNTER		0
-> +#define CYCLES_EVENT_ID		0
->  
->  #define CONFIG_EVENT_MASK	0x00FF
->  #define CONFIG_EVENT_OFFSET	0
-> @@ -240,6 +241,19 @@ static struct attribute *ddr_perf_events_attrs[] = {
->  	NULL,
->  };
->  
-> +/*
-> + * An event is either reference evnet or counter specific event.
-> + * For counter specific event, the event count will only be incremented
-> + * on the corresponding counter.
-> + */
-> +static bool ddr_perf_is_counter_specific_event(int event)
-> +{
-> +	if (event >= 64 && event <= 73)
-> +		return true;
-> +	else
-> +		return false;
+On Wed, Jan 31, 2024 at 01:58:11PM +0800, Xu Yang wrote:
+> Add JSON metrics for i.MX95 DDR Performane Monitor.
 
-Just collapse this to 'return event >= 64 && event <= 73;'
+(nit: "Performane" => "Performance" here and in the subject)
 
 Will
