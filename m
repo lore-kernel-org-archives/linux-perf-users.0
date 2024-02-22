@@ -1,80 +1,145 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F78E156E4
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 03:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C52A17578;
+	Thu, 22 Feb 2024 03:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708571259; cv=none; b=gFfIcNB933HMDle3zFSGNKrOhm4w2Z3UI9WUW36IEoNZFtAeV0860RkWeABa6T1IOIh+64hXe2R1iiQJoA15FjdV2KvwCFj/VNWy/FlURFburuyUKCEX6uorWT11x5KS8nPze93GDIY267MEcTHrLPwdMVAikB+WMXzU+FboqdI=
+	t=1708572730; cv=none; b=dCtxiqdggmHKS2LTygLPTkWzgujsN2/QboyKkaMNigBwIQLTMCN4jHDnIVUrUl7+RBLXSaMV+K72wumEhp1ZSt0xT8NBs97OjSZQhEgn1XE6Ti+MRiR1gtsKXT9qNeD55bfi1FxmhoiCtVjrynvqaGXl/O0odUkfaGIJsGndvJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708571259; c=relaxed/simple;
-	bh=UabPiaAmMwydJjTXsv1ZMVcE7S3OTCfsgnAax3slu6g=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=tsx1gVH7R+ZCFU1xeUMm0IrsyI09Fpq73SeTXfGVqpKuihd5D3qkm0n3lx68WgE7+NWFMrvjTuLJX2OYidNsHc0zEi+QEBslgKXUh3xiyATHJDRmc2iRSvCUjSFF0G88A9UB8m3irsAA1I4V2765cUhC7be98V+bQr8mWgi4a4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQrfPsKc; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQrfPsKc"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d5ce88b51cso73115ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Feb 2024 19:07:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708571257; x=1709176057; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UabPiaAmMwydJjTXsv1ZMVcE7S3OTCfsgnAax3slu6g=;
-        b=JQrfPsKc/2cS63UlAB8oJAWh3MseucoLVorBhhbsR+LjmXAl/jOxd6Kpp5tpxSpnPm
-         c8rr+FBcIkLZ5CUIA0UkZp8mpmvqHjKcP3OuX2WH7HeZMJqdyyaSBpW+wDH/xgSU+SkC
-         R4vTSgXjtoVFaTuErtywqAUJeWErjmqgTrxWMr/xDmo6GWuQfSX33+o7aJW5p1Fo+rwF
-         2biddAMVHVT3GfWk5ysLflkn5uLbj2JBw2FjXwUsW+FL6wIaegXabecOP6XSaFUvT/jx
-         MV+wn6PEQP/9Q4KtENQyV6GFJJg0kgKlCOur3AtZh+OutZSY/0GSpqjWHZ+5PFPkjk3l
-         1xFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708571257; x=1709176057;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UabPiaAmMwydJjTXsv1ZMVcE7S3OTCfsgnAax3slu6g=;
-        b=G6zbd8du75i/2CUv5FhDCefNeuh9eCdEYSvxwDBhpJYXYqdXEIn83eqz7Jh/FREgxi
-         KhWVaMghyn5fxsD5ky/vgYro7yMsMu5wAgg87XC8PhGKpO4e7LLkDC6dbqjA04F39tOI
-         r8ILuhhxrAr0rKAZPANjv73EznATT64S5euqT6QMH5LKllK+7uRVk3IB3UG0jiZ+koUG
-         JI5WbomO+UXec3Wfyav+pieWa0AB+w+whZ8Hj2OiPJl1SNM355mAdDkWCF8A6AuNl7Eq
-         nJZGf5iqUhYEUXJlh2xG4pU5/eaY5Nrkd8JfNM/wmIKHus8yBaQQpUGyuioRl9ska02t
-         s4PQ==
-X-Gm-Message-State: AOJu0Yz50IiKoz7Ab3AbNIObA8FGEYTTdhcGaFPib3HGdI6Fy9OuBhWz
-	6hIw4SxRBSudS7rJNfOahjDXD6Y1xepihYF5slg//zwmZKf2rOLdbr88bCjCVybiVjvzpKdZSiV
-	jKGuDkj83aTM+H6BXNPfVdFF7j5GRSE//mEB8uNVYTyk5mgrYRoJI8pI=
-X-Google-Smtp-Source: AGHT+IGPRh6Rpnga2U1E+7RoJn1TcwGm4/2TeSdivy54czM/Q0G7ZYBd+jX2qZHIErtNTC6IlMHgPCW9fVObEqyfRuQ=
-X-Received: by 2002:a17:903:784:b0:1db:90dd:2939 with SMTP id
- kn4-20020a170903078400b001db90dd2939mr353884plb.23.1708571256782; Wed, 21 Feb
- 2024 19:07:36 -0800 (PST)
+	s=arc-20240116; t=1708572730; c=relaxed/simple;
+	bh=E7Z8pSK89+sDDxGUmJjzBockun9fP/w10U/EGjDCcDY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fmk9l2vGwoM5PWCUuYt/5Jw1sfDXxeQ1N7XXTiXn/NweDN8gdQzkL11d0OlTl62/heRRshDLaqvkE890dG7KCO7Dlub4SVCWWbYj3JzD8o/paczolIESdiXxfwEt7VTzTpyfJGep3TkHluuQ76AUeRzpbUEQiXIZggG+WyMZXhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
+	by Atcsqr.andestech.com with ESMTP id 41M3PcR8080879;
+	Thu, 22 Feb 2024 11:25:38 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
+ Microsoft SMTP Server id 14.3.498.0; Thu, 22 Feb 2024 11:25:35 +0800
+Date: Thu, 22 Feb 2024 11:25:35 +0800
+From: Yu-Chien Peter Lin <peterlin@andestech.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
+        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
+        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
+        <conor.dooley@microchip.com>, <conor@kernel.org>,
+        <devicetree@vger.kernel.org>, <evan@rivosinc.com>,
+        <geert+renesas@glider.be>, <guoren@kernel.org>, <heiko@sntech.de>,
+        <irogers@google.com>, <jernej.skrabec@gmail.com>, <jolsa@kernel.org>,
+        <jszhang@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
+        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
+        <paul.walmsley@sifive.com>, <peterz@infradead.org>,
+        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
+        <robh+dt@kernel.org>, <samuel@sholland.org>,
+        <sunilvl@ventanamicro.com>, <tim609@andestech.com>, <uwu@icenowy.me>,
+        <wens@csie.org>, <will@kernel.org>, <inochiama@outlook.com>,
+        <unicorn_wang@outlook.com>, <wefu@redhat.com>,
+        Randolph <randolph@andestech.com>, Atish Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH v8 02/10] irqchip/riscv-intc: Allow large non-standard
+ interrupt number
+Message-ID: <Zda-r16ysaKzPdLV@APC323>
+References: <20240129092553.2058043-1-peterlin@andestech.com>
+ <20240129092553.2058043-3-peterlin@andestech.com>
+ <877cj8issa.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 Feb 2024 19:07:23 -0800
-Message-ID: <CAP-5=fWALQGhqNqh+hsEDZ9p1O3uS=0T4_hqx-fz_VNQF96Zzg@mail.gmail.com>
-Subject: Google Summer-of-Code 2024
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <877cj8issa.ffs@tglx>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 41M3PcR8080879
 
-Hi,
+Hi Thomas,
 
-I'm happy to say that the Linux Foundation has once again been
-successfully chosen as an organization for Google Summer-of-Code
-(GSoC) 2024. This means we're looking for contributors to do work and
-get paid as part of the Google Summer-of-Code program!
+On Tue, Feb 13, 2024 at 11:04:53AM +0100, Thomas Gleixner wrote:
+> On Mon, Jan 29 2024 at 17:25, Yu Chien Peter Lin wrote:
+> >  static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
+> >  {
+> >  	unsigned long cause = regs->cause & ~CAUSE_IRQ_FLAG;
+> >  
+> > -	if (unlikely(cause >= BITS_PER_LONG))
+> > -		panic("unexpected interrupt cause");
+> > -
+> > -	generic_handle_domain_irq(intc_domain, cause);
+> > +	if (generic_handle_domain_irq(intc_domain, cause))
+> > +		pr_warn_ratelimited("Failed to handle interrupt (cause: %ld)\n",
+> > +				    cause);
+> 
+> Either let the cause stick out or you need brackets. See:
+> 
+>   https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#bracket-rules
+> 
+> >  }
+> >  
+> >  /*
+> > @@ -93,6 +95,14 @@ static int riscv_intc_domain_alloc(struct irq_domain *domain,
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > +	/*
+> > +	 * Only allow hwirq for which we have corresponding standard or
+> > +	 * custom interrupt enable register.
+> > +	 */
+> > +	if ((riscv_intc_nr_irqs <= hwirq && hwirq < riscv_intc_custom_base) ||
+> > +	    (riscv_intc_custom_base + riscv_intc_custom_nr_irqs) <= hwirq)
+> > +		return -EINVAL;
+> 
+> Duh. This mix of ordering required to read this 3 times. What's wrong
+> with writing this consistently:
+> 
+> 	if ((hwirq >= riscv_intc_nr_irqs && hwirq < riscv_intc_custom_base) ||
+> 	    (hwirq >= iscv_intc_custom_base + riscv_intc_custom_nr_irqs)
+> 		return -EINVAL;
+> 
+> Hmm?
+> 
+> > -	pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
+> > +	pr_info("%d local interrupts mapped\n", riscv_intc_nr_irqs);
+> > +	if (riscv_intc_custom_nr_irqs)
+> > +		pr_info("%d custom local interrupts mapped\n",
+> > +			riscv_intc_custom_nr_irqs);
+> 
+> See bracket rules.
+>   
+> >  	return 0;
+> >  }
+> > @@ -166,6 +178,10 @@ static int __init riscv_intc_init(struct device_node *node,
+> >  		return 0;
+> >  	}
+> >  
+> > +	riscv_intc_nr_irqs = BITS_PER_LONG;
+> > +	riscv_intc_custom_base = riscv_intc_nr_irqs;
+> 
+> Why don't you initialize the static variables with constants right away?
+> 
+> > +	riscv_intc_custom_nr_irqs = 0;
+> 
+> It's already 0, no?
+> 
+> >  	return riscv_intc_init_common(of_node_to_fwnode(node));
+> >  }
+> 
+> Thanks,
+> 
+>         tglx
 
-A full timeline is here:
-https://developers.google.com/open-source/gsoc/timeline
-We're in the part, "Potential GSoC contributors discuss application
-ideas with mentoring organizations".
+Thanks for pointing these out, I'll fix them in PATCH v9.
 
-Project ideas and more information here:
-https://wiki.linuxfoundation.org/gsoc/2024-gsoc-perf
-
-Please help spread the word, volunteer to help out. etc.
-
-Thanks,
-Ian
+Regards,
+Peter Lin
