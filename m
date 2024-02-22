@@ -1,64 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208355FBA5;
-	Thu, 22 Feb 2024 12:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA756153BC9;
+	Thu, 22 Feb 2024 16:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708604742; cv=none; b=tABR5cWKjFOsWMrIB+Frh7CySvH2FG4ofYvnNE/Wr2ld7DK8KtKsnUKvWtepDWCg/e/vnv6AHt0eU5wFBghjOd+xIKyIbq75XCMQ1vXG3qn7pY7/WuRTP/Xc68h6XQaWOAbBv00kjhxzI3dbllngUjcH8ek9V7q/x80bG1XPmpA=
+	t=1708620804; cv=none; b=XJz1z1rPCCcz5e6y/iZLlj7aowdRT28TEf1XL/aFWQOzM0VxtrJjOCi+2OcK6wgfWxGYBNPBi7tu1FCncBAvreRFOEcWwtQusqROM+NvCwHDyqPPAxVQr0Zhw0Ag2gUMbBoUUcyCTw/apOWrNL45btYR/+9jxkpiSaWRPKzrUMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708604742; c=relaxed/simple;
-	bh=aGAfs6jmsNG6QGI752Z3kOdPKVMUa2RCagcGhOm450c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+n3QiEvCWlvH1LIl8sewG69A5fU80MORTHS/Jq5lUO2liOfGZVtK5VIXJdIRfueKfKlwxS4qfwVsTvZPJamesyr0jPiHAq1JARlZIscx6RuGlAqNRt2HIO2F1VqFUecudpu8rodivDdNqn9GkMBco4T589oqthdTLdulg3fOlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y90FYbRZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708620804; c=relaxed/simple;
+	bh=9Ux3/1Qnwjn25pAAnhZvRLEmk9F6Wz6WljZVmjWNokE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OAV1fVLW+TmCDKLHAD10kUBuhKBbkzfTuWMY+FH5Yf/xEZIaibohSI7q5dZhXu5DJK0QuksVKtmMgP1Z37XGU7JATCbGfRNl3lqhzgUlEMfH8kgRhxt1SFdGEVezj9Ep68k6/CBcjf7iau9wy1nDVWHFo3MCvkpoxEqiUb0zeFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0Wh3HJi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y90FYbRZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F024AC433C7;
-	Thu, 22 Feb 2024 12:25:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0Wh3HJi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC37C433C7;
+	Thu, 22 Feb 2024 16:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708604741;
-	bh=aGAfs6jmsNG6QGI752Z3kOdPKVMUa2RCagcGhOm450c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y90FYbRZxnZ2Rg/dECWSnrAORMVngwV8sBdRfaaDCmbK4STyurf8m20j/N7QO8vrE
-	 9DGu0JGOdw2LFrPXdzpgwUov1BkWbz77XhKsVG8YTV37knB6Yl3lVpk6apXsRyaARY
-	 BwzpuWH7tbblNcEOezIQ2rNBShSTGt5oUf0oakprvJyXeoEjOMJ9xzxuTuu7aqCHsI
-	 w6JdeCoTHgItp68w2jJ78EXsmTdNDTGIs9bsyQTmvbmgWPEet+BPrrMssmenUrMvL6
-	 psnJogKojzVc4/wh9iDGS8C3eSMn7av8utNixGM33TptmejAtbNs0HlxMmOc2z4wPg
-	 qPF0AD4TBu7Lw==
-Date: Thu, 22 Feb 2024 12:25:33 +0000
-From: Will Deacon <will@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: Frank.li@nxp.com, mark.rutland@arm.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, linux-imx@nxp.com,
-	mike.leach@linaro.org, leo.yan@linaro.org, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v4 6/6] perf vendor events arm64:: Add i.MX95 DDR
- Performane Monitor metrics
-Message-ID: <20240222122533.GE8308@willie-the-truck>
-References: <20240131055811.3035741-1-xu.yang_2@nxp.com>
- <20240131055811.3035741-6-xu.yang_2@nxp.com>
+	s=k20201202; t=1708620804;
+	bh=9Ux3/1Qnwjn25pAAnhZvRLEmk9F6Wz6WljZVmjWNokE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=E0Wh3HJiRvTyY1Et+pZBgl3FkA6p/dz7m7xrQjJ4ZRZcqFSejXZoLI9scHWFoHPHU
+	 0MP/WayrcNjgBGr4e5BLrz9OFuHc7oCEvHJ74RmBCXvV8BQfdn9f1Cpv8Hcephh+Mx
+	 j9r3y8VLmUKMWX4pU+jrcxSQsXQZM2MVljvMdavvldGARq1/3NDh8kf8umlXj0llAm
+	 gGWx3T7G4fpa7080Z1JucwOJNDY7oyKntFwIsZiNW7XtIYC52Be6XO0wJPjXvw1gng
+	 +XvXryHdTllppvr074uRizGIXlJFryEw5gikDwnBhIT9qORgg19Hlg4OEbrhKhtDtA
+	 LNi59L1BCxE3A==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Andi Kleen <ak@linux.intel.com>,
+	linux-perf-users@vger.kernel.org,
+	Ian Rogers <irogers@google.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Changbin Du <changbin.du@intel.com>
+Subject: Re: [PATCH v8 0/5] perf: script: Intro capstone disasm engine to show instruction trace
+Date: Thu, 22 Feb 2024 08:53:21 -0800
+Message-ID: <170862076568.3024784.8799548310369120740.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+In-Reply-To: <20240217074046.4100789-1-changbin.du@huawei.com>
+References: <20240217074046.4100789-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131055811.3035741-6-xu.yang_2@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 31, 2024 at 01:58:11PM +0800, Xu Yang wrote:
-> Add JSON metrics for i.MX95 DDR Performane Monitor.
+On Sat, 17 Feb 2024 15:40:41 +0800, Changbin Du wrote:
+> This series introduces capstone disassembler engine to print instructions of
+> Intel PT trace, which was printed via the XED tool.
+> 
+> The advantages compared to XED tool:
+>     * Support arm, arm64, x86-32, x86_64, s390 (more could be supported),
+>       xed only for x86_64.
+>     * More friendly to read. Immediate address operands are shown as symbol+offs.
+> 
+> [...]
 
-(nit: "Performane" => "Performance" here and in the subject)
+Applied to perf-tools-next, thanks!
 
-Will
+Best regards,
+-- 
+Namhyung Kim <namhyung@kernel.org>
