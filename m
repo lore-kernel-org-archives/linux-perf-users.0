@@ -1,55 +1,55 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0A6156960
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 17:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B035A143C78
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 18:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708624554; cv=none; b=eeakZc07lczhP/S9ppzZR4zFA0oRn/W0i+S43u5U+OU9xXbyyev4FBMS95m/kb7m/5qJpuDlbZe/bXfQwVIPcTzRb6XkiirfUwB32CA/V195iH3BtVdKQRPMWUf7xgJW6BGgVHR6LgaIM3JZaIOj1aTe/3jX9QgP4GW3KoWYDU0=
+	t=1708626791; cv=none; b=XSTWNgk5M/ZE1DalgsGTPEdrthTWKyJ6LQrdr+XjUmsaZVZtaqu3B0QMO9RseeA49JQgdqGMBd5dlxQKQsVwBsmGO/6O1WVSnHj9ngDLQ17p9vUarD4GKsAqdCLIGdF1zLspEzvU8bW6sSHBw/19wC04bDVgEqdO65iSN2EOAzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708624554; c=relaxed/simple;
-	bh=9Ehscx9YJtzqhsAAorDMp+5YYVPvswAX7ZmOOyjUa0U=;
+	s=arc-20240116; t=1708626791; c=relaxed/simple;
+	bh=HsYrxcq5tk165uSW3sWTCmo4aIzGksWtXmlA+cPuDG8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VHtT0+iahdjMDj+n19yho35pZK7es54vpSN45GkmOhtg/+qY1lQ99ys3kpbP00b3XpMJ0E2Se8qC2bDDOlVi71YuNszE2smDQE38tfcVk2xLYEJlx6CFoBH6mkwTRbjNSgXr3BHeyEZCmN0IJe0vAuJVG5vCaTbRIlf+EgtFHec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=Fw1RGfB6; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	 To:Cc:Content-Type; b=JwR5I450FtF7jTwPo2dfDMVoqkCtgeL3Wli/3Tw9hPs2yRLIW+w5syL9ADzKfkUS32+7JvGgWyO8mJ+Rsfjmbv6opwsCJS29PuSCpNtCgHFiYNIfjzYF0KXBhfYqRIwbAKbn3WEh1wtaKbKMxLqqA4uZbfB6uM1zJI5TQYEp7uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HDsXer1z; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="Fw1RGfB6"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3f5808b0dfso14766b.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 09:55:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDsXer1z"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d5ce88b51cso10865ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 10:33:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1708624548; x=1709229348; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708626789; x=1709231589; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KmIq5FHO3/Gwj6AT3YZvrf/NJzx2ZnfmImuv+tUNbJc=;
-        b=Fw1RGfB6jTnOnyYRYoCHx2Ke2o1SEhdC8SrnQRGpQD3n0SB2EWvYJ1JkR5ky3IT5rV
-         LFoy3P5CsyECfy8Jvm5nczfQHFIqaoHS4bnf44m4PEsHJqL867W82LOh3lVbjxXywbKs
-         2FSECKdZn+XLNV8VSWAQ50emKEUMvyGp/JoRGzxclXD4tx3nZssyJww9EILxykPMRcFT
-         TU8V7kBloKuS17jfTc9E4dcvq4BG4YfDt0yqYbND0cNc5PKzAOsH5fY2aNDaLMCYthgM
-         xhRpyfPjUb2SR4dOwOiCTeCClBLepYKEcjoC6rfirGSDKCCWH+9E6aXu393IMV8b2hqj
-         fY6Q==
+        bh=d9jAQ6vztnGbguyhKBccVgks3srQ+6XA4/hNYShYVTw=;
+        b=HDsXer1zRivKi9BmCSX3bSiyuoZ4Hi2fTfstfZFQS1O4YJTJRMqBilU/rj39IKqjHR
+         LQ5yaoCwXSssMkUVAIS7EsPd0uUcArXGR45hHebq4dshgIcH99o7qOw0LsEYWBBwqFfu
+         IspXvC6jMQ1miCOBWIX+KCNBqBp5eC8qtvcdvaAoE7kCsuaFYQmELEcCWJ4Czx+lLWm2
+         LTn23W7tQTz7BO7yVrKMx0+0UKcmakWjtd2gaDBvzIG8NvUOCAV8xjCVPjd4z/NbG7gS
+         EUKI75afMGdWVGUSfd3XmIHLpA8XbEQxMjAms8E5qev9ww4kymNM7XuOAzk7DAO2oQku
+         Fo/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708624548; x=1709229348;
+        d=1e100.net; s=20230601; t=1708626789; x=1709231589;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KmIq5FHO3/Gwj6AT3YZvrf/NJzx2ZnfmImuv+tUNbJc=;
-        b=xAmZ9UvPzA8g6Mv75nHhBGghQLUpwOXlyigjFkzaixK/mraFZ3GCCP2sYeUlARje9k
-         7hx/fiXHjwpcKHE13gu+468CLfMw4hsjPUPMnWxImWee5/NAoAT44Hg8qKGKncG6Gy23
-         +laMsmsYYNXmadgJ8GPYOdRSu9v4PMRBwq7GnbPuVjVMQbZtJg6rGoudCUmLfkzXQTOO
-         SAL3E37SCkmh+Km543vJvGGh8YNKRX4HztHOgRXaR/ZvJLV9LDgQSwAJ0U6kJwJ5yF2W
-         C9aL+jF3v2YbAtwMJ/B5mEoVzzWChdXYXn2b6+cMm40H9GNgC+FyuDuYVwHuUmmCZQsC
-         ihmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTfcIEwaraD7gylvS1me75NRQhBIfJEENc2HVwren37z8HhQuMXEZUnoZh6OQcCJZ/PSYYHdYmnUzlxCcsjbPBpDs2uWEnr7AB/rZt5q+GOQ==
-X-Gm-Message-State: AOJu0Yx/3436vPuecKYqIpRBHer5Eo87hHCyA5M9yJseNkThQJq42gbk
-	M7NbjNhG/JY1A40EUMzI2c8fjXYetC2jR0Mz3HPXWAHsxsRRd3ZVmwXh+jiy0sroxHo7THFhBLW
-	O+2BIr2cWkJIfyOnUp04D4oRB061yp5IL8E4Z
-X-Google-Smtp-Source: AGHT+IF/iNczouT7U3E36vKc0oD7YuI+MlOwBabsQm2U9dQAgV0PWOHlBkweu0I6QcpnYWmYz2QvebgcGTWvmFtT1Es=
-X-Received: by 2002:a17:906:240a:b0:a3f:4516:ecf2 with SMTP id
- z10-20020a170906240a00b00a3f4516ecf2mr3478631eja.32.1708624547884; Thu, 22
- Feb 2024 09:55:47 -0800 (PST)
+        bh=d9jAQ6vztnGbguyhKBccVgks3srQ+6XA4/hNYShYVTw=;
+        b=pN0k0dCxGZ3w80sMO4pJ2/TgV/dU9j7rWYK16DKKnOzxy0yd/SowZHVLGv56Pouq0w
+         HPyJgisd3/WM/DlGARmXCNSrkym+g2RlvpzN+65UDjUaPr+Ji/J4gmSOleN4k5KTfbUD
+         oX8UG3leYXmRngJ2ZonhHJ6+a3qZ1rPSa8GiJXQNLZkxWTs5lXcZRV2fpSOP68hUJFL2
+         CmZVkE9V/Uj8zoYE06nie5GVFdG2C0CxsvC1SkVb5++bl9tcA2RAx8A0kdSBG3lZwv+J
+         QVYLzWRL9WMHpUvLkiZqo/sfbSVPmc2gqsKuSbwNQJqTlr6t0rTKvXCl2eYVzn5y0Nlq
+         bNSg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9MGG67m4WpY6IuxycDQRNcGJyexOZxbc38hysmMP8xDEUHCs2K3bXXPG20SsjrPG7oZRVfkdmkuRZhW3SIcEMb7hRIz8o6UnBstDsPJ8Eow==
+X-Gm-Message-State: AOJu0Yxe16B5Q1n4gDAcQAZtxDt1YNtRVy9GAl/FeZBR7PzdnByhY6mt
+	Ixe2Ns4CEAyALO0nB8R8HfauV78/KhgVdpzCOO9c9KM+ADZ66v3/xUx2a26E5HLhiCztO6+3Kbh
+	PbsE1Y9ZgHjrUCqmgv9vBxKeB0VCwLYCA5Lmh
+X-Google-Smtp-Source: AGHT+IEOdmTEhF3GXiTovqgdmBWSFWJ1yTgGWCkKgjLlSaZUhaKVDLajj4yuSD9kH67iimbz3JjZQRwPrk18uNy1hwE=
+X-Received: by 2002:a17:902:8c8b:b0:1db:640f:cb43 with SMTP id
+ t11-20020a1709028c8b00b001db640fcb43mr559978plo.8.1708626788451; Thu, 22 Feb
+ 2024 10:33:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,13 +57,13 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240221175210.19936-1-khuey@kylehuey.com> <20240221175210.19936-2-khuey@kylehuey.com>
- <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
-From: Kyle Huey <me@kylehuey.com>
-Date: Thu, 22 Feb 2024 09:55:36 -0800
-Message-ID: <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com>
+ <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com> <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com>
+In-Reply-To: <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 22 Feb 2024 10:32:54 -0800
+Message-ID: <CAP-5=fVWUAWa4vZ7_Zb_3DjaMiTGT6grfFO2j_kOFbuZemJZTA@mail.gmail.com>
 Subject: Re: [PATCH 2/2] perf test: Test FASYNC with watermark wakeups.
-To: Ian Rogers <irogers@google.com>
+To: Kyle Huey <me@kylehuey.com>
 Cc: Kyle Huey <khuey@kylehuey.com>, "Robert O'Callahan" <robert@ocallahan.org>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,222 +74,234 @@ Cc: Kyle Huey <khuey@kylehuey.com>, "Robert O'Callahan" <robert@ocallahan.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 10:36=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+On Thu, Feb 22, 2024 at 9:55=E2=80=AFAM Kyle Huey <me@kylehuey.com> wrote:
 >
-> On Wed, Feb 21, 2024 at 9:52=E2=80=AFAM Kyle Huey <me@kylehuey.com> wrote=
-:
+> On Wed, Feb 21, 2024 at 10:36=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
 > >
-> > The test uses PERF_RECORD_SWITCH records to fill the ring buffer and
-> > trigger the watermark wakeup, which in turn should trigger an IO
-> > signal.
+> > On Wed, Feb 21, 2024 at 9:52=E2=80=AFAM Kyle Huey <me@kylehuey.com> wro=
+te:
+> > >
+> > > The test uses PERF_RECORD_SWITCH records to fill the ring buffer and
+> > > trigger the watermark wakeup, which in turn should trigger an IO
+> > > signal.
+> > >
+> > > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> > > ---
+> > >  tools/perf/tests/Build              |   1 +
+> > >  tools/perf/tests/builtin-test.c     |   1 +
+> > >  tools/perf/tests/tests.h            |   1 +
+> > >  tools/perf/tests/watermark_signal.c | 123 ++++++++++++++++++++++++++=
+++
+> > >  4 files changed, 126 insertions(+)
+> > >  create mode 100644 tools/perf/tests/watermark_signal.c
+> > >
+> > > diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> > > index 53ba9c3e20e0..de43eb60b280 100644
+> > > --- a/tools/perf/tests/Build
+> > > +++ b/tools/perf/tests/Build
+> > > @@ -67,6 +67,7 @@ perf-y +=3D sigtrap.o
+> > >  perf-y +=3D event_groups.o
+> > >  perf-y +=3D symbols.o
+> > >  perf-y +=3D util.o
+> > > +perf-y +=3D watermark_signal.o
+> > >
+> > >  ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
+> > >  perf-$(CONFIG_DWARF_UNWIND) +=3D dwarf-unwind.o
+> > > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/built=
+in-test.c
+> > > index 4a5973f9bb9b..715c01a2172a 100644
+> > > --- a/tools/perf/tests/builtin-test.c
+> > > +++ b/tools/perf/tests/builtin-test.c
+> > > @@ -124,6 +124,7 @@ static struct test_suite *generic_tests[] =3D {
+> > >         &suite__event_groups,
+> > >         &suite__symbols,
+> > >         &suite__util,
+> > > +       &suite__watermark_signal,
+> > >         NULL,
+> > >  };
+> > >
+> > > diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> > > index dad3d7414142..7ef4e0d0a77b 100644
+> > > --- a/tools/perf/tests/tests.h
+> > > +++ b/tools/perf/tests/tests.h
+> > > @@ -146,6 +146,7 @@ DECLARE_SUITE(sigtrap);
+> > >  DECLARE_SUITE(event_groups);
+> > >  DECLARE_SUITE(symbols);
+> > >  DECLARE_SUITE(util);
+> > > +DECLARE_SUITE(watermark_signal);
+> > >
+> > >  /*
+> > >   * PowerPC and S390 do not support creation of instruction breakpoin=
+ts using the
+> > > diff --git a/tools/perf/tests/watermark_signal.c b/tools/perf/tests/w=
+atermark_signal.c
+> > > new file mode 100644
+> > > index 000000000000..ae4abedc4b7c
+> > > --- /dev/null
+> > > +++ b/tools/perf/tests/watermark_signal.c
+> > > @@ -0,0 +1,123 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +#include <stddef.h>
+> > > +#include <signal.h>
+> > > +#include <stdlib.h>
+> > > +#include <string.h>
+> > > +#include <sys/ioctl.h>
+> > > +#include <sys/mman.h>
+> > > +#include <sys/wait.h>
+> > > +#include <unistd.h>
+> > > +#include <errno.h>
+> > > +#include <fcntl.h>
+> > > +
+> > > +#include "tests.h"
+> > > +#include "debug.h"
+> > > +#include "event.h"
+> > > +#include "../perf-sys.h"
+> > > +#include "cloexec.h"
+> > > +#include <internal/lib.h> // page_size
+> > > +
+> > > +static int sigio_count;
+> > > +
+> > > +static void handle_sigio(int sig __always_unused)
+> > > +{
+> > > +       ++sigio_count;
+> > > +}
+> > > +
+> > > +static void do_child(void)
+> > > +{
+> > > +       for (int i =3D 0; i < 20; ++i)
+> > > +               sleep(1);
+> > > +
+> > > +       exit(0);
+> > > +}
+> > > +
+> > > +static int test__watermark_signal(struct test_suite *test __maybe_un=
+used, int subtest __maybe_unused)
+> > > +{
+> > > +       struct perf_event_attr attr;
+> > > +       struct perf_event_mmap_page *p =3D NULL;
+> > > +       sighandler_t previous_sigio =3D SIG_ERR;
+> > > +       pid_t child =3D -1;
+> > > +       int fd =3D -1;
+> > > +       int ret =3D TEST_FAIL;
+> > > +
+> > > +       previous_sigio =3D signal(SIGIO, handle_sigio);
+> > > +       if (previous_sigio =3D=3D SIG_ERR) {
+> > > +               pr_debug("failed setting SIGIO handler\n");
+> > > +               goto cleanup;
+> > > +       }
+> > > +
+> > > +       memset(&attr, 0, sizeof(attr));
+> > > +       attr.size =3D sizeof(attr);
+> > > +       attr.type =3D PERF_TYPE_SOFTWARE;
+> > > +       attr.config =3D PERF_COUNT_SW_DUMMY;
+> > > +       attr.sample_period =3D 1;
+> > > +       attr.disabled =3D 1;
+> > > +       attr.watermark =3D 1;
+> > > +       attr.context_switch =3D 1;
+> > > +       attr.wakeup_watermark =3D 1;
+> > > +
+> > > +       child =3D fork();
+> > > +       if (child =3D=3D 0)
+> > > +               do_child();
+> > > +       else if (child < 0) {
+> > > +               pr_debug("failed fork() %d\n", errno);
+> > > +               goto cleanup;
+> > > +       }
+> > > +
+> > > +       fd =3D sys_perf_event_open(&attr, child, -1, -1,
+> > > +                                perf_event_open_cloexec_flag());
+> > > +       if (fd < 0) {
+> > > +               pr_debug("failed opening event %llx\n", attr.config);
+> > > +               goto cleanup;
+> > > +       }
+> > > +
+> > > +       if (fcntl(fd, F_SETFL, FASYNC)) {
+> > > +               pr_debug("failed F_SETFL FASYNC %d\n", errno);
+> > > +               goto cleanup;
+> > > +       }
 > >
-> > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-> > ---
-> >  tools/perf/tests/Build              |   1 +
-> >  tools/perf/tests/builtin-test.c     |   1 +
-> >  tools/perf/tests/tests.h            |   1 +
-> >  tools/perf/tests/watermark_signal.c | 123 ++++++++++++++++++++++++++++
-> >  4 files changed, 126 insertions(+)
-> >  create mode 100644 tools/perf/tests/watermark_signal.c
-> >
-> > diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> > index 53ba9c3e20e0..de43eb60b280 100644
-> > --- a/tools/perf/tests/Build
-> > +++ b/tools/perf/tests/Build
-> > @@ -67,6 +67,7 @@ perf-y +=3D sigtrap.o
-> >  perf-y +=3D event_groups.o
-> >  perf-y +=3D symbols.o
-> >  perf-y +=3D util.o
-> > +perf-y +=3D watermark_signal.o
-> >
-> >  ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
-> >  perf-$(CONFIG_DWARF_UNWIND) +=3D dwarf-unwind.o
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
--test.c
-> > index 4a5973f9bb9b..715c01a2172a 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -124,6 +124,7 @@ static struct test_suite *generic_tests[] =3D {
-> >         &suite__event_groups,
-> >         &suite__symbols,
-> >         &suite__util,
-> > +       &suite__watermark_signal,
-> >         NULL,
-> >  };
-> >
-> > diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> > index dad3d7414142..7ef4e0d0a77b 100644
-> > --- a/tools/perf/tests/tests.h
-> > +++ b/tools/perf/tests/tests.h
-> > @@ -146,6 +146,7 @@ DECLARE_SUITE(sigtrap);
-> >  DECLARE_SUITE(event_groups);
-> >  DECLARE_SUITE(symbols);
-> >  DECLARE_SUITE(util);
-> > +DECLARE_SUITE(watermark_signal);
-> >
-> >  /*
-> >   * PowerPC and S390 do not support creation of instruction breakpoints=
- using the
-> > diff --git a/tools/perf/tests/watermark_signal.c b/tools/perf/tests/wat=
-ermark_signal.c
-> > new file mode 100644
-> > index 000000000000..ae4abedc4b7c
-> > --- /dev/null
-> > +++ b/tools/perf/tests/watermark_signal.c
-> > @@ -0,0 +1,123 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include <stddef.h>
-> > +#include <signal.h>
-> > +#include <stdlib.h>
-> > +#include <string.h>
-> > +#include <sys/ioctl.h>
-> > +#include <sys/mman.h>
-> > +#include <sys/wait.h>
-> > +#include <unistd.h>
-> > +#include <errno.h>
-> > +#include <fcntl.h>
-> > +
-> > +#include "tests.h"
-> > +#include "debug.h"
-> > +#include "event.h"
-> > +#include "../perf-sys.h"
-> > +#include "cloexec.h"
-> > +#include <internal/lib.h> // page_size
-> > +
-> > +static int sigio_count;
-> > +
-> > +static void handle_sigio(int sig __always_unused)
-> > +{
-> > +       ++sigio_count;
-> > +}
-> > +
-> > +static void do_child(void)
-> > +{
-> > +       for (int i =3D 0; i < 20; ++i)
-> > +               sleep(1);
-> > +
-> > +       exit(0);
-> > +}
-> > +
-> > +static int test__watermark_signal(struct test_suite *test __maybe_unus=
-ed, int subtest __maybe_unused)
-> > +{
-> > +       struct perf_event_attr attr;
-> > +       struct perf_event_mmap_page *p =3D NULL;
-> > +       sighandler_t previous_sigio =3D SIG_ERR;
-> > +       pid_t child =3D -1;
-> > +       int fd =3D -1;
-> > +       int ret =3D TEST_FAIL;
-> > +
-> > +       previous_sigio =3D signal(SIGIO, handle_sigio);
-> > +       if (previous_sigio =3D=3D SIG_ERR) {
-> > +               pr_debug("failed setting SIGIO handler\n");
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       memset(&attr, 0, sizeof(attr));
-> > +       attr.size =3D sizeof(attr);
-> > +       attr.type =3D PERF_TYPE_SOFTWARE;
-> > +       attr.config =3D PERF_COUNT_SW_DUMMY;
-> > +       attr.sample_period =3D 1;
-> > +       attr.disabled =3D 1;
-> > +       attr.watermark =3D 1;
-> > +       attr.context_switch =3D 1;
-> > +       attr.wakeup_watermark =3D 1;
-> > +
-> > +       child =3D fork();
-> > +       if (child =3D=3D 0)
-> > +               do_child();
-> > +       else if (child < 0) {
-> > +               pr_debug("failed fork() %d\n", errno);
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       fd =3D sys_perf_event_open(&attr, child, -1, -1,
-> > +                                perf_event_open_cloexec_flag());
-> > +       if (fd < 0) {
-> > +               pr_debug("failed opening event %llx\n", attr.config);
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       if (fcntl(fd, F_SETFL, FASYNC)) {
-> > +               pr_debug("failed F_SETFL FASYNC %d\n", errno);
-> > +               goto cleanup;
-> > +       }
+> > Thanks for the work! The perf tool and perf test should run on older
+> > kernels ideally without failure. I'm assuming this would fail on an
+> > older kernel. Could we make the return value skip in that case?
 >
-> Thanks for the work! The perf tool and perf test should run on older
-> kernels ideally without failure. I'm assuming this would fail on an
-> older kernel. Could we make the return value skip in that case?
+> Ah, hmm, I wasn't aware of that. This would fail on an older kernel,
+> yes. It's not possible to distinguish between an older kernel and a
+> kernel where this fix broke (at least not without hardcoding in an
+> expected good kernel version, which seems undesirable), so that would
+> mean the test would always return ok or skip, not ok or fail. Is that
+> ok?
 
-Ah, hmm, I wasn't aware of that. This would fail on an older kernel,
-yes. It's not possible to distinguish between an older kernel and a
-kernel where this fix broke (at least not without hardcoding in an
-expected good kernel version, which seems undesirable), so that would
-mean the test would always return ok or skip, not ok or fail. Is that
-ok?
+Not great :-) Is there any hint from the errno? I was hoping for
+EOPNOTSUPP but I'm guessing it will be EINVAL, in which case probably
+something like:
+/* Older kernels lack support. */
+ret =3D (errno =3D=3D EINVAL) ? TEST_SKIP : TEST_FAIL;
 
-> > +
-> > +       if (fcntl(fd, F_SETOWN, getpid())) {
-> > +               pr_debug("failed F_SETOWN getpid() %d\n", errno);
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       if (fcntl(fd, F_SETSIG, SIGIO)) {
-> > +               pr_debug("failed F_SETSIG SIGIO %d\n", errno);
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       p =3D mmap(NULL, 2 * page_size, PROT_READ | PROT_WRITE, MAP_SHA=
-RED, fd, 0);
-> > +       if (p =3D=3D NULL) {
-> > +               pr_debug("failed to mmap\n");
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0)) {
-> > +               pr_debug("failed PERF_EVENT_IOC_ENABLE %d\n", errno);
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       sleep(30);
->
-> This is kind of a painful wait, could it be less? No sleeps would be best=
- :-)
-
-We could synchronize with the child using SIGSTOP instead of sleeping
-here. Not sure about getting rid of the tiny sleeps in the child. I
-have observed that sched_yield() doesn't reliably trigger context
-switches (which isn't surprising). I'll experiment with blocking on a
-pipe or something.
-
-- Kyle
-
-> Thanks,
-> Ian
->
-> > +
-> > +       ret =3D (sigio_count =3D=3D 1) ? TEST_OK : TEST_FAIL;
-> > +
-> > +cleanup:
-> > +       if (p !=3D NULL)
-> > +               munmap(p, 2 * page_size);
-> > +
-> > +       if (fd >=3D 0)
-> > +               close(fd);
-> > +
-> > +       if (child > 0) {
-> > +               kill(child, SIGTERM);
-> > +               waitpid(child, NULL, 0);
-> > +       }
-> > +
-> > +       if (previous_sigio !=3D SIG_ERR)
-> > +               signal(SIGIO, previous_sigio);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +DEFINE_SUITE("Watermark signal handler", watermark_signal);
-> > --
-> > 2.34.1
+> > > +
+> > > +       if (fcntl(fd, F_SETOWN, getpid())) {
+> > > +               pr_debug("failed F_SETOWN getpid() %d\n", errno);
+> > > +               goto cleanup;
+> > > +       }
+> > > +
+> > > +       if (fcntl(fd, F_SETSIG, SIGIO)) {
+> > > +               pr_debug("failed F_SETSIG SIGIO %d\n", errno);
+> > > +               goto cleanup;
+> > > +       }
+> > > +
+> > > +       p =3D mmap(NULL, 2 * page_size, PROT_READ | PROT_WRITE, MAP_S=
+HARED, fd, 0);
+> > > +       if (p =3D=3D NULL) {
+> > > +               pr_debug("failed to mmap\n");
+> > > +               goto cleanup;
+> > > +       }
+> > > +
+> > > +       if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0)) {
+> > > +               pr_debug("failed PERF_EVENT_IOC_ENABLE %d\n", errno);
+> > > +               goto cleanup;
+> > > +       }
+> > > +
+> > > +       sleep(30);
 > >
+> > This is kind of a painful wait, could it be less? No sleeps would be be=
+st :-)
+>
+> We could synchronize with the child using SIGSTOP instead of sleeping
+> here. Not sure about getting rid of the tiny sleeps in the child. I
+> have observed that sched_yield() doesn't reliably trigger context
+> switches (which isn't surprising). I'll experiment with blocking on a
+> pipe or something.
+
+Great, thanks!
+Ian
+
+> - Kyle
+>
+> > Thanks,
+> > Ian
+> >
+> > > +
+> > > +       ret =3D (sigio_count =3D=3D 1) ? TEST_OK : TEST_FAIL;
+> > > +
+> > > +cleanup:
+> > > +       if (p !=3D NULL)
+> > > +               munmap(p, 2 * page_size);
+> > > +
+> > > +       if (fd >=3D 0)
+> > > +               close(fd);
+> > > +
+> > > +       if (child > 0) {
+> > > +               kill(child, SIGTERM);
+> > > +               waitpid(child, NULL, 0);
+> > > +       }
+> > > +
+> > > +       if (previous_sigio !=3D SIG_ERR)
+> > > +               signal(SIGIO, previous_sigio);
+> > > +
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +DEFINE_SUITE("Watermark signal handler", watermark_signal);
+> > > --
+> > > 2.34.1
+> > >
