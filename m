@@ -1,105 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5269B674;
-	Fri, 23 Feb 2024 02:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558B3BE5A
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Feb 2024 03:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708655143; cv=none; b=NEwNOxJuWy3PoX592C6PPndHrHNL5re0YXH3zm1VJ3oZ+EMQCZe7ZX2JTyFDXvISEquft/Ar+alf8bjSFJ7u49HcWUQ2l0yTw8hotJUIIHOHrg3RIRwb4f7Rr7RpKjk6c1DQS0WT6m1euh32yLDwX7ef6bcALr3EpaZRvnjviWY=
+	t=1708660684; cv=none; b=KKwA8s2xa2KjbSaBUhw0ZWZLvnkMTCld6JniggWTCHlfqmQIVN/Kh/MvvUcAwcfZlYSIcqtkRu5/OUzaGeMpirfMJmNxzgm2iQwnxn0HTSez53vlybL3lIrXTOYTWVm18avlVt818Bjiu2TqkYPkDfLL96TkMgbW6Q4TxsYITKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708655143; c=relaxed/simple;
-	bh=5a15H4gjG9Z8VNMVpz9Ni3AuhpV4Czq4UmRYp26Cahk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kWqBPXc4n+/H//paxgF5FIy46/DDuofFqg4N6EXJATEjmc8zbc8VNVQvTvoDrwjdP5ZZdyZfRIXULgRRbzHcYwAg+vCV9R/xMc0mA+RrT2G33U3+liA5t4KjG10QBe/I2CSrlrhmb/zBA6yvPblZNt1nTGXL+pCQtaIUye+b8eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ceiWdK8i; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ceiWdK8i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AE79C43399;
-	Fri, 23 Feb 2024 02:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708655143;
-	bh=5a15H4gjG9Z8VNMVpz9Ni3AuhpV4Czq4UmRYp26Cahk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ceiWdK8i45R9/jlFuwzOrVBtzkeXJCgWncbvtP9JDZiYppVhRfLFm+IWKPKVOD7zr
-	 6p4W2ahnepM5LVyps8O44sqYdktoki3Aps3NkRh+cdUzU6epRU2xYIkK9nIvOzKPEk
-	 gwuXWqQn1bReolpRgOK6mH7O59TTQxNmArVf/dbv6vQ4fY4pzwFTX6quBeh1pf9wke
-	 v2EhIkzomYqee7IqNMTxwJYqxlLce0jz/GrRy+kdn9SFRnCxsObQpVhEaekHaNW1l4
-	 /tL+mGrK9goTlG8oIKPojos8M6j3aTXECl7mI31dl9QeQAhXWm3SL17kkHmqZ8B6/K
-	 MY2yslwhj720A==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d21a68dd3bso5212631fa.1;
-        Thu, 22 Feb 2024 18:25:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVgqSlTOPPhF83xQLuXqrzRmLqOGEZVuoCphnlkm362sNmBDgdGbw0GN/7aFdHXjJHPGOC0eHM/NojRKzAZxiq/uAFPuscN0qnlnr7Xh+JHNum8cMhDaft9KywfCU6TDMk5rAmFDum3LsS+PyYL7O/PTrg5RioYp7hEnPjr0W7efJ2VzdwBPTzvPz8asQ==
-X-Gm-Message-State: AOJu0YwDKnWIfNuwoaaaDRbRgkUF9WP/+C4eCDM8sPAcsJWH0s7o7u87
-	jYJNcdcEfJ81UpLNyig1t5dQEY/9DOrb3iL1Cc/U31OXh73loPUtcnAkIgnwUdfIf+hjt/ux8pk
-	KhuYY/ZW3WlqrUvzUTi6lYGOsn2U=
-X-Google-Smtp-Source: AGHT+IHv/pqSXOqGKS7AHlfuR7hjQALuFEIFDcK1HpkE2N7ySttizVh9qLS0Xl/Y8NUQ9GCaKzp4frWkxaJzXnWCDBs=
-X-Received: by 2002:a2e:8613:0:b0:2d2:3b61:a2b with SMTP id
- a19-20020a2e8613000000b002d23b610a2bmr452895lji.11.1708655141667; Thu, 22 Feb
- 2024 18:25:41 -0800 (PST)
+	s=arc-20240116; t=1708660684; c=relaxed/simple;
+	bh=s+Yr8P+VZymK9qUi2vr1SoV91WEqxauNSC7lkuGa/xg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=dUdNwvcZhb3JyK609oUyMcX2ljI8fZIRNedC6CzzA7RM4Kv1s9pUdcU9sQzAipXw8xSZH6QTjvIXRkdOko2RqNA3wHhTnPj/F2UxmBy81kSMHg+0/fC3/SbD6wJaYF+2OUKgZNUNnl/aweK33VlJH6yMsfWG4eztZ62bbw9TPMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3657bb7b8e9so257495ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 19:58:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708660682; x=1709265482;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CVs5Oi5l1ePOylG0jUHhDMQMafgobc0WLkQhm+3MvSM=;
+        b=N+j3ZBo3nRdbyocKxAecZRPFO4kxY9B6LLUhrLGwrcod6yd7dQOvP3zUTlcomGbpEZ
+         gIzF9tYetE/MmHQCNunslLQkKyn8apY/JNAVXCJHSGyAWqStfD8/rQ39TzFL0CiKHTBG
+         n8dv16XuM6YGm/Ri/JYdL/BvEEK+3+ecTQZ51RNtx5hJO4oFbqHiRn+aCQkIsQeLhKgc
+         xoOg7SOk6Odg09Eh4GJUOia6mvSHJQqDKClWG9YWKfeITEyrG9pua7AM79672K+2G3XO
+         4iaeh10N7g+J0Qhrh9AOPbFtHulEc3ZxNc6VAn5jinJwgpv0xJR1/KgkX+U5LRo0IMeb
+         jDGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtbsj3diXxROMytRJI+Uc01VSF3Vt6FC9d1DOK6RrI+CBxfhdWNIH8cmuLDeykzVdyCuueAGFlqDr4m333DoAiIDQMLWAQ+8bWsPNnQgcUxA==
+X-Gm-Message-State: AOJu0YxQKyoh9x0574GmcDiUImRjBsovmKc4JK6uK7Muk8NkolA5Gjfd
+	caB/9HCxZBajUzsqBPiS6lPTeiiEWTdtQOR4CpxtzPUo6tZ/VA0QaGrwnSlqq66GLWjkcBbp1Or
+	xQ1e15RtxEyEW86LZR/dzZHH6axqrsKhgCutnb08BSCdz8aOBcu9PaIE=
+X-Google-Smtp-Source: AGHT+IGlcRizHCRgaUTzalw5tG83myQ4oP0d1O6esy9NhIaiXm4C4MgMAuZpmVfWtX9Mughu91Y1G2V3x1iThJZHqYRsQqJAXxDN
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221134201.2656908-1-masahiroy@kernel.org> <CAM9d7cjQ0wbPu9NWcg_Rj66jcJ=6HoNMcTnfR4wvjaJ47FDVQA@mail.gmail.com>
-In-Reply-To: <CAM9d7cjQ0wbPu9NWcg_Rj66jcJ=6HoNMcTnfR4wvjaJ47FDVQA@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 23 Feb 2024 11:25:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASch8P49gNagJ3OhMDqFNuzxcRRKatet2iedWFi76qoog@mail.gmail.com>
-Message-ID: <CAK7LNASch8P49gNagJ3OhMDqFNuzxcRRKatet2iedWFi76qoog@mail.gmail.com>
-Subject: Re: [PATCH] treewide: remove meaningless assignments in Makefiles
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+X-Received: by 2002:a05:6e02:20ee:b0:365:1611:5d5b with SMTP id
+ q14-20020a056e0220ee00b0036516115d5bmr49958ilv.2.1708660682602; Thu, 22 Feb
+ 2024 19:58:02 -0800 (PST)
+Date: Thu, 22 Feb 2024 19:58:02 -0800
+In-Reply-To: <000000000000e8099a060cee1003@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000007401c061204919d@google.com>
+Subject: Re: [syzbot] [perf?] WARNING in perf_event_open
+From: syzbot <syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, eadavis@qq.com, irogers@google.com, 
+	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, netdev@vger.kernel.org, olsajiri@gmail.com, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2024 at 2:08=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> On Wed, Feb 21, 2024 at 5:42=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
-.org> wrote:
-> >
-> > In Makefiles, $(error ), $(warning ), and $(info ) expand to the empty
-> > string, as explained in the GNU Make manual [1]:
-> >  "The result of the expansion of this function is the empty string."
-> >
-> > Therefore, they are no-op except for logging purposes.
-> >
-> > $(shell ...) expands to the output of the command. It expands to the
-> > empty string when the command does not print anything to stdout.
-> > Hence, $(shell mkdir ...) is no-op except for creating the directory.
-> >
-> > Remove meaningless assignments.
-> >
-> > [1]: https://www.gnu.org/software/make/manual/make.html#Make-Control-Fu=
-nctions
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> > This is a treewide cleanup, but in practice, this is touching mostly
-> > perf Makefiles. I am sending this to perf subsystem.
->
-> How do you want to route this?  I can take it to perf tree if you're ok.
+syzbot suspects this issue was fixed by commit:
 
+commit 7e2c1e4b34f07d9aa8937fab88359d4a0fce468e
+Author: Mark Rutland <mark.rutland@arm.com>
+Date:   Fri Dec 15 11:24:50 2023 +0000
 
-Yes, that is my expectation because it will reduce the risk
-of merge conflicts.
+    perf: Fix perf_event_validate_size() lockdep splat
 
-I only included the perf maintainers and ML to To:,
-and anything else in CC:
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=157c509c180000
+start commit:   5abde6246522 bpf: Avoid unnecessary use of comma operator ..
+git tree:       bpf-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f565e10f0b1e1fc
+dashboard link: https://syzkaller.appspot.com/bug?extid=07144c543a5c002c7305
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ba8929e80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17be7265e80000
 
+If the result looks correct, please mark the issue as fixed by replying with:
 
+#syz fix: perf: Fix perf_event_validate_size() lockdep splat
 
-
---=20
-Best Regards
-Masahiro Yamada
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
