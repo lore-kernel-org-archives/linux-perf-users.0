@@ -1,151 +1,105 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B276519B
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Feb 2024 00:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5269B674;
+	Fri, 23 Feb 2024 02:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708646545; cv=none; b=GHSDNjPvTrwQzxBmlAo7nO4QD6621jNPpXHN0zbxkznG49LSdbH37yDI27a0LBWvJVo/vIzQLRZk2HivvGetsLIzM6LKO0JpZN5GkIk0TvnxqtnhTvMXxbLOv2jHtkTXhpBAuOciWPGszihQ6qTTxJeFZ5zunSwwQMqczucE3jQ=
+	t=1708655143; cv=none; b=NEwNOxJuWy3PoX592C6PPndHrHNL5re0YXH3zm1VJ3oZ+EMQCZe7ZX2JTyFDXvISEquft/Ar+alf8bjSFJ7u49HcWUQ2l0yTw8hotJUIIHOHrg3RIRwb4f7Rr7RpKjk6c1DQS0WT6m1euh32yLDwX7ef6bcALr3EpaZRvnjviWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708646545; c=relaxed/simple;
-	bh=e+0tBc5rl3AsuopjGEnlgHYKkTUemBC1S0uodgi3rj8=;
+	s=arc-20240116; t=1708655143; c=relaxed/simple;
+	bh=5a15H4gjG9Z8VNMVpz9Ni3AuhpV4Czq4UmRYp26Cahk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ff3XXxaRwVyCI57i45mbEp74mhoBqffOqlfies3CxROCB1UPfk+aJR4lHF+eRYvDySgH6r8pm7GJvkv/RpQBSoIQzq4aAPwXbq9Jo13pqngOXPHBhM6RCmB2fF0/3ekyKgKdeSR9vmqQAdhpVbVmeAu7KdjFJ5LIcbAAZP9+C9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=obHVaBWm; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=kWqBPXc4n+/H//paxgF5FIy46/DDuofFqg4N6EXJATEjmc8zbc8VNVQvTvoDrwjdP5ZZdyZfRIXULgRRbzHcYwAg+vCV9R/xMc0mA+RrT2G33U3+liA5t4KjG10QBe/I2CSrlrhmb/zBA6yvPblZNt1nTGXL+pCQtaIUye+b8eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ceiWdK8i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="obHVaBWm"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d5ce88b51cso36135ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 16:02:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708646543; x=1709251343; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YKIqei624U8pNnH0un8neNQZM9OozSHq1mh1Op7pFks=;
-        b=obHVaBWmN2MUW8UVZkDATg3Eh6mC8E/svZFewFXut+0YRIgCGRAES2gnH8zfUHxUp1
-         cDpVN+MICjIpv1l2xiDoVBPOMlzTI8CBTV/kK/cWR4v85gjzncbe2W7UdcmmqDfgQFt2
-         nZC9YnB0aFeD47dbjoq4FMNf3VaymQHRhDoqmG//EkRP2EuHGKm3Yes8QWSar+lIQkuB
-         s4dp7/p9BbFk8qrg+bYyMrh4lLJw5uAePzRv5Y7+rE8rb/oO1gBrAtP4N6xWxItSOKD+
-         5eVZbcafepdjCo2lV/J5QV/E4Y4xkOyc5e9OdQQ5JsEicVC7rPeiIvvkDtLQKS2EiI8V
-         SiCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708646543; x=1709251343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YKIqei624U8pNnH0un8neNQZM9OozSHq1mh1Op7pFks=;
-        b=Pp4DyOOvyqL7hJ97JPbvkvaUtbmk344bWrnGH1GdpKau81vJOmpysBRafQVjdKEQpn
-         sgiegyrzCqShZNERdYbAzB/khZA+G9jjP/wVFvJ2jPaxa8IT+3r6dAUNPAP9LBjEQv2d
-         mhx1K7QMbydfB/yeO68OnRHFaWIJpgZFHYQVYSjhJdzWsBC9Lc8vZPQEKUPbhp0tOc5W
-         6pJfv/E2dUnhbOZcFpRu9WZaRLAQKVOAPDIS66t3IOJ5FgDT3xNff+PoUKcV5IckX2ON
-         9HvlKaoiVz71lwtplnDpSkoStGc+D7ZWm001D5RMJOIXZla/ONvNZCp7zWJNsTmqEceT
-         QMdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWW6DD/tBTdtNRAUsD1VXV2z1HxFiQIMPtEVR90K7+EbnvPUCXtWZ3GBJY905uyQTEok9hCRwnirotJZVWfT07nKCcUPUML3ugRenDMOlDvoQ==
-X-Gm-Message-State: AOJu0YwjG37NGw+ngQ4d3cN+rwAQKGWKIpikrCxhbvo/D2ruGzcbgXFz
-	Vcx9JNMK4KT7KJuwgwnDAp66ZeAFVkyjQk0rvGM3MrVapg2WETrEoS7BxQ8qjxv0qn2QCi4FhDd
-	NFbt2laDr3pPpGWbwRbXuUo3Uq/E+llzJyYdi
-X-Google-Smtp-Source: AGHT+IER6ZkSQzG0kj2Bw1ykdDF9DFfTp86VxCrkri92YG1vjri132FLxMLOD4+5Zql5MBIoVXrxSQvCBDFa7V50Cs8=
-X-Received: by 2002:a17:903:4093:b0:1d9:6949:6c88 with SMTP id
- z19-20020a170903409300b001d969496c88mr606312plc.17.1708646542627; Thu, 22 Feb
- 2024 16:02:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ceiWdK8i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AE79C43399;
+	Fri, 23 Feb 2024 02:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708655143;
+	bh=5a15H4gjG9Z8VNMVpz9Ni3AuhpV4Czq4UmRYp26Cahk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ceiWdK8i45R9/jlFuwzOrVBtzkeXJCgWncbvtP9JDZiYppVhRfLFm+IWKPKVOD7zr
+	 6p4W2ahnepM5LVyps8O44sqYdktoki3Aps3NkRh+cdUzU6epRU2xYIkK9nIvOzKPEk
+	 gwuXWqQn1bReolpRgOK6mH7O59TTQxNmArVf/dbv6vQ4fY4pzwFTX6quBeh1pf9wke
+	 v2EhIkzomYqee7IqNMTxwJYqxlLce0jz/GrRy+kdn9SFRnCxsObQpVhEaekHaNW1l4
+	 /tL+mGrK9goTlG8oIKPojos8M6j3aTXECl7mI31dl9QeQAhXWm3SL17kkHmqZ8B6/K
+	 MY2yslwhj720A==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d21a68dd3bso5212631fa.1;
+        Thu, 22 Feb 2024 18:25:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVgqSlTOPPhF83xQLuXqrzRmLqOGEZVuoCphnlkm362sNmBDgdGbw0GN/7aFdHXjJHPGOC0eHM/NojRKzAZxiq/uAFPuscN0qnlnr7Xh+JHNum8cMhDaft9KywfCU6TDMk5rAmFDum3LsS+PyYL7O/PTrg5RioYp7hEnPjr0W7efJ2VzdwBPTzvPz8asQ==
+X-Gm-Message-State: AOJu0YwDKnWIfNuwoaaaDRbRgkUF9WP/+C4eCDM8sPAcsJWH0s7o7u87
+	jYJNcdcEfJ81UpLNyig1t5dQEY/9DOrb3iL1Cc/U31OXh73loPUtcnAkIgnwUdfIf+hjt/ux8pk
+	KhuYY/ZW3WlqrUvzUTi6lYGOsn2U=
+X-Google-Smtp-Source: AGHT+IHv/pqSXOqGKS7AHlfuR7hjQALuFEIFDcK1HpkE2N7ySttizVh9qLS0Xl/Y8NUQ9GCaKzp4frWkxaJzXnWCDBs=
+X-Received: by 2002:a2e:8613:0:b0:2d2:3b61:a2b with SMTP id
+ a19-20020a2e8613000000b002d23b610a2bmr452895lji.11.1708655141667; Thu, 22 Feb
+ 2024 18:25:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZdepeMsjagbf1ufD@x1>
-In-Reply-To: <ZdepeMsjagbf1ufD@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 22 Feb 2024 16:02:07 -0800
-Message-ID: <CAP-5=fVkA0-JMn-Xu-typJYFod-+LfyAwdUKCKEDQdQu4V_NNw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf test: Use TEST_FAIL in the TEST_ASSERT macros
- instead of -1
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+References: <20240221134201.2656908-1-masahiroy@kernel.org> <CAM9d7cjQ0wbPu9NWcg_Rj66jcJ=6HoNMcTnfR4wvjaJ47FDVQA@mail.gmail.com>
+In-Reply-To: <CAM9d7cjQ0wbPu9NWcg_Rj66jcJ=6HoNMcTnfR4wvjaJ47FDVQA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 23 Feb 2024 11:25:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASch8P49gNagJ3OhMDqFNuzxcRRKatet2iedWFi76qoog@mail.gmail.com>
+Message-ID: <CAK7LNASch8P49gNagJ3OhMDqFNuzxcRRKatet2iedWFi76qoog@mail.gmail.com>
+Subject: Re: [PATCH] treewide: remove meaningless assignments in Makefiles
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 22, 2024 at 12:07=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, Feb 23, 2024 at 2:08=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Just to make things clearer, return TEST_FAIL (-1) instead of an open
-> coded -1.
+> Hello,
 >
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> On Wed, Feb 21, 2024 at 5:42=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
+.org> wrote:
+> >
+> > In Makefiles, $(error ), $(warning ), and $(info ) expand to the empty
+> > string, as explained in the GNU Make manual [1]:
+> >  "The result of the expansion of this function is the empty string."
+> >
+> > Therefore, they are no-op except for logging purposes.
+> >
+> > $(shell ...) expands to the output of the command. It expands to the
+> > empty string when the command does not print anything to stdout.
+> > Hence, $(shell mkdir ...) is no-op except for creating the directory.
+> >
+> > Remove meaningless assignments.
+> >
+> > [1]: https://www.gnu.org/software/make/manual/make.html#Make-Control-Fu=
+nctions
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> > This is a treewide cleanup, but in practice, this is touching mostly
+> > perf Makefiles. I am sending this to perf subsystem.
+>
+> How do you want to route this?  I can take it to perf tree if you're ok.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+Yes, that is my expectation because it will reduce the risk
+of merge conflicts.
 
-> ---
->  tools/perf/tests/tests.h | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index dad3d7414142d1be..3aa7701ee0e939f7 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -4,11 +4,17 @@
->
->  #include <stdbool.h>
->
-> +enum {
-> +       TEST_OK   =3D  0,
-> +       TEST_FAIL =3D -1,
-> +       TEST_SKIP =3D -2,
-> +};
-> +
->  #define TEST_ASSERT_VAL(text, cond)                                     =
-\
->  do {                                                                    =
-\
->         if (!(cond)) {                                                   =
-\
->                 pr_debug("FAILED %s:%d %s\n", __FILE__, __LINE__, text); =
-\
-> -               return -1;                                               =
-\
-> +               return TEST_FAIL;                                        =
-\
->         }                                                                =
-\
->  } while (0)
->
-> @@ -17,16 +23,10 @@ do {                                                 =
-                        \
->         if (val !=3D expected) {                                         =
-  \
->                 pr_debug("FAILED %s:%d %s (%d !=3D %d)\n",               =
-  \
->                          __FILE__, __LINE__, text, val, expected);       =
-\
-> -               return -1;                                               =
-\
-> +               return TEST_FAIL;                                        =
-        \
->         }                                                                =
-\
->  } while (0)
->
-> -enum {
-> -       TEST_OK   =3D  0,
-> -       TEST_FAIL =3D -1,
-> -       TEST_SKIP =3D -2,
-> -};
-> -
->  struct test_suite;
->
->  typedef int (*test_fnptr)(struct test_suite *, int);
-> --
-> 2.43.0
->
+I only included the perf maintainers and ML to To:,
+and anything else in CC:
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
