@@ -1,79 +1,75 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558B3BE5A
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Feb 2024 03:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC97A11CBC;
+	Fri, 23 Feb 2024 05:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708660684; cv=none; b=KKwA8s2xa2KjbSaBUhw0ZWZLvnkMTCld6JniggWTCHlfqmQIVN/Kh/MvvUcAwcfZlYSIcqtkRu5/OUzaGeMpirfMJmNxzgm2iQwnxn0HTSez53vlybL3lIrXTOYTWVm18avlVt818Bjiu2TqkYPkDfLL96TkMgbW6Q4TxsYITKE=
+	t=1708666107; cv=none; b=M/OvewAtzz2Ug+jSc1z3wzEug5c1wMgdwN9ghpcg13CNzNCH4g/+GAZK5Mmjxi/kFdPrKv98s+lSeEFV6rZtNW7JdTrLhlSaC49oTB+BQwHdOFPgq90ZDiPG5PCL2LVmSY0PoOWompXxX3bWLixcmuHh4p3+/eK07dfIe3nGxig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708660684; c=relaxed/simple;
-	bh=s+Yr8P+VZymK9qUi2vr1SoV91WEqxauNSC7lkuGa/xg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=dUdNwvcZhb3JyK609oUyMcX2ljI8fZIRNedC6CzzA7RM4Kv1s9pUdcU9sQzAipXw8xSZH6QTjvIXRkdOko2RqNA3wHhTnPj/F2UxmBy81kSMHg+0/fC3/SbD6wJaYF+2OUKgZNUNnl/aweK33VlJH6yMsfWG4eztZ62bbw9TPMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3657bb7b8e9so257495ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Feb 2024 19:58:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708660682; x=1709265482;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CVs5Oi5l1ePOylG0jUHhDMQMafgobc0WLkQhm+3MvSM=;
-        b=N+j3ZBo3nRdbyocKxAecZRPFO4kxY9B6LLUhrLGwrcod6yd7dQOvP3zUTlcomGbpEZ
-         gIzF9tYetE/MmHQCNunslLQkKyn8apY/JNAVXCJHSGyAWqStfD8/rQ39TzFL0CiKHTBG
-         n8dv16XuM6YGm/Ri/JYdL/BvEEK+3+ecTQZ51RNtx5hJO4oFbqHiRn+aCQkIsQeLhKgc
-         xoOg7SOk6Odg09Eh4GJUOia6mvSHJQqDKClWG9YWKfeITEyrG9pua7AM79672K+2G3XO
-         4iaeh10N7g+J0Qhrh9AOPbFtHulEc3ZxNc6VAn5jinJwgpv0xJR1/KgkX+U5LRo0IMeb
-         jDGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtbsj3diXxROMytRJI+Uc01VSF3Vt6FC9d1DOK6RrI+CBxfhdWNIH8cmuLDeykzVdyCuueAGFlqDr4m333DoAiIDQMLWAQ+8bWsPNnQgcUxA==
-X-Gm-Message-State: AOJu0YxQKyoh9x0574GmcDiUImRjBsovmKc4JK6uK7Muk8NkolA5Gjfd
-	caB/9HCxZBajUzsqBPiS6lPTeiiEWTdtQOR4CpxtzPUo6tZ/VA0QaGrwnSlqq66GLWjkcBbp1Or
-	xQ1e15RtxEyEW86LZR/dzZHH6axqrsKhgCutnb08BSCdz8aOBcu9PaIE=
-X-Google-Smtp-Source: AGHT+IGlcRizHCRgaUTzalw5tG83myQ4oP0d1O6esy9NhIaiXm4C4MgMAuZpmVfWtX9Mughu91Y1G2V3x1iThJZHqYRsQqJAXxDN
+	s=arc-20240116; t=1708666107; c=relaxed/simple;
+	bh=BxFIY73UwVqcn1XxxMS8/BIuaTqDQWKPcpVpw9L/lYc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uhcA+UbJs2UmUimFpcOoFyYIDWr7qS/uzC33WoMBmWDGLROgi6S4j71zNWDu0b2N6jJLtZwjeAWuO5R6EZBMmzX5FaftL/+dxlvEpax8L26yb18ILl1kOu+5b1hJz9WvYhvfW8kInXvPspphVaoc1QpN3AHrhE1kYmdzQtGL8Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A7CE15DB;
+	Thu, 22 Feb 2024 21:28:57 -0800 (PST)
+Received: from [10.163.46.223] (unknown [10.163.46.223])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 290E43F766;
+	Thu, 22 Feb 2024 21:28:13 -0800 (PST)
+Message-ID: <b2dfcaf1-f466-4e81-8ca4-02bf3fa837e5@arm.com>
+Date: Fri, 23 Feb 2024 10:58:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20ee:b0:365:1611:5d5b with SMTP id
- q14-20020a056e0220ee00b0036516115d5bmr49958ilv.2.1708660682602; Thu, 22 Feb
- 2024 19:58:02 -0800 (PST)
-Date: Thu, 22 Feb 2024 19:58:02 -0800
-In-Reply-To: <000000000000e8099a060cee1003@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000007401c061204919d@google.com>
-Subject: Re: [syzbot] [perf?] WARNING in perf_event_open
-From: syzbot <syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, eadavis@qq.com, irogers@google.com, 
-	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	namhyung@kernel.org, netdev@vger.kernel.org, olsajiri@gmail.com, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V16 1/8] arm64/sysreg: Add BRBE registers and fields
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
+ Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-2-anshuman.khandual@arm.com>
+ <ZdYAJvZf4Ut5f5Rf@FVFF77S0Q05N>
+ <e89ecbde-0967-4b8e-af77-3a72f207f3d7@sirena.org.uk>
+ <ZdYDJPe1n5-V-AnT@FVFF77S0Q05N>
+ <7fe52cb9-12b9-4b03-8e55-08e59b4bef27@sirena.org.uk>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <7fe52cb9-12b9-4b03-8e55-08e59b4bef27@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-syzbot suspects this issue was fixed by commit:
 
-commit 7e2c1e4b34f07d9aa8937fab88359d4a0fce468e
-Author: Mark Rutland <mark.rutland@arm.com>
-Date:   Fri Dec 15 11:24:50 2023 +0000
 
-    perf: Fix perf_event_validate_size() lockdep splat
+On 2/21/24 19:37, Mark Brown wrote:
+> On Wed, Feb 21, 2024 at 02:05:24PM +0000, Mark Rutland wrote:
+>> On Wed, Feb 21, 2024 at 01:59:03PM +0000, Mark Brown wrote:
+>>> On Wed, Feb 21, 2024 at 01:52:38PM +0000, Mark Rutland wrote:
+> 
+>>> It's a good point about the sorting, though the file is currently mostly
+>>> sorted by encoding rather than alphanumerically (similarly to how
+>>> sysreg.h was done).
+> 
+>> Sure, we're inconsistent. I'd just prefer that there's *some* local ordering
+>> here, as the patch is neither ordered as above nor by encoding:
+> 
+> I agree, I'm just saying that if we're going to fix the ordering it'd
+> probably be better to go along with what the rest of the file is doing.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=157c509c180000
-start commit:   5abde6246522 bpf: Avoid unnecessary use of comma operator ..
-git tree:       bpf-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f565e10f0b1e1fc
-dashboard link: https://syzkaller.appspot.com/bug?extid=07144c543a5c002c7305
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ba8929e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17be7265e80000
+Sure, will change the registers order as has been suggested earlier i.e
+alphanumerically instead. Because ordering registers with encoding will
+push BRBCR_EL2/12 after all other BRBE registers, including BRBIDR0_EL1.
 
-If the result looks correct, please mark the issue as fixed by replying with:
+After the change
 
-#syz fix: perf: Fix perf_event_validate_size() lockdep splat
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+BRBCR_EL1
+BRBCR_EL12
+BRBCR_EL2
