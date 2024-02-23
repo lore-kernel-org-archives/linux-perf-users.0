@@ -1,381 +1,378 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD7EB12B6A;
-	Fri, 23 Feb 2024 06:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1B214ABC;
+	Fri, 23 Feb 2024 07:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708670225; cv=none; b=er1F0VmgdDKrP2l4qXIRJ/1R2UL1Rl1UWPan+AsmrnDIh1ayPHCUFW4H1zOAbCTO9DBJu07sPNxnhBtG82unfcPfhHv5lzwNz5XD8YySpLK9+kMzBg//dNtKRFn90WZd/+yYzv9dWO/XSG50z/27hQNRemIdgn4A435SNHXjX1U=
+	t=1708671824; cv=none; b=gTOo8gS36KakBaj5ca1ywQ2LpdkBd3eLJsXYFRWhdQHtbAnPGLO7F8cBSduZ9dBTKCsfMCSJlinik1M9liu+cwX892sPKcsp0lHbWmNw+jqdxT0BiGIgFQXGAaVFh4CGus+rRwKnJesClZeycwIghgLKsJfkkI8+HY6f4PDr038=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708670225; c=relaxed/simple;
-	bh=zS2EaFw8+d9PcNi0yXywHVn87r3cIrAx3HMdbv+Fs6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K4sIOlitfpM+Owsp/k63buP0FZI0NfQBw42CcUcaQL31NhIspuJC6poq59HJ+rlItrqXkfWIxosNTg6gc0eukfJR75RIhmJ+nLZBfDcyCXF6NgfHXx0/Y8bkAYwWazefvsvoM9alsDihpfM/vPtP4CiSFeEy9o131GlmlWbnnzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53A9015DB;
-	Thu, 22 Feb 2024 22:37:39 -0800 (PST)
-Received: from [10.163.46.223] (unknown [10.163.46.223])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B5223F73F;
-	Thu, 22 Feb 2024 22:36:56 -0800 (PST)
-Message-ID: <008e381b-52cd-44c5-8a18-ece90db8bba8@arm.com>
-Date: Fri, 23 Feb 2024 12:06:54 +0530
+	s=arc-20240116; t=1708671824; c=relaxed/simple;
+	bh=DvidK+BwA4XC7j1b3ErnjAMJ41R3Y2kSDLAtltxl2n0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u41mWyPoou/PG15kWtBjRHJlRQyNgDy1nLQ1AfJQyVAOFhMrHFl/0fStrFswQsT3T/vKAMRLtbO7uY7Uab5Bx5uIu+Yd9dZiGixnhax9mjNxmiOaoO9c8C0paafh+2xmO7nbXIr2WMpcwsR8h6kcsxuG/wVH2yot2d2mh5J+SG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d71cb97937so6404945ad.3;
+        Thu, 22 Feb 2024 23:03:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708671822; x=1709276622;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h+RtyEjqjLSZcCJR7b/S+5MN0v+3X08UVKwBPdQrpbg=;
+        b=LDI/dwmTIM5k9nJMpB6pNFv7NYvBl0ckFHvRyHNCY9pPWpOD2xekIx2bzjShgapraO
+         izHamOAPYaWU2QLXUyC8KaPTq53VwgOEK8xQwcE8kscesxxTTS05c5fkylKzIKRE4TXG
+         D2egDfaduzw2kkBQwDTbsZGUYkTHO9LR4oWDkCfxIRhSg3QbWxhv6BrV2SJIfqdF7EaH
+         2pmI84dXboTMYghzs9fbeWC8OTHsVm1rQ/Y5DCcaIG+zxpxCxL+aIQji/wy4MZTsoBHM
+         /gxVGtEhTBNbPDPVgQkaSSSvFzgh9VfxPFGpIukQPHhF8uJ7I/hSm6b38Xy/GQoe0zfz
+         Cw5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVvogVXRmeatm47h93OCxZYhSpuAA345amq8fpdD2mE+Q2gz5elVTsbsmhy0IDqSM82tlRuo7Ip+1RNn3alOBJYeVySnM/5vtjThLdm7IWyIoRlEezccR3AdUrkv2q3UL6KHaCUTWf1kGJO8dYTBw==
+X-Gm-Message-State: AOJu0YxGUgEeeJtFWsWajAvlyWb3UGS7l99VJ7VPFYvkvo/U3xGzPK9R
+	5BPSlg2uMtjEUHO8v5DPKr/hlgXcEdE9XVuWE4HKFo5NRiqMTbt5g8N+h+VfVInOR9tJbSDBi25
+	QkA86Qnajq22Th7oYTrK5X74PsX4=
+X-Google-Smtp-Source: AGHT+IHvcYqh8Vgf+udRu/l9WdtX7y3TioaZt757n2bImqSl4oeV3YGutpPCj1n7CvDcLIOck4zfS6+LJ2apfh3Jh2s=
+X-Received: by 2002:a17:90a:5206:b0:299:36dd:15d3 with SMTP id
+ v6-20020a17090a520600b0029936dd15d3mr824087pjh.27.1708671821816; Thu, 22 Feb
+ 2024 23:03:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V16 1/8] arm64/sysreg: Add BRBE registers and fields
-Content-Language: en-US
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- will@kernel.org, catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
- James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
- <20240125094119.2542332-2-anshuman.khandual@arm.com>
- <ZdYAJvZf4Ut5f5Rf@FVFF77S0Q05N>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <ZdYAJvZf4Ut5f5Rf@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240221072100.412939-1-weilin.wang@intel.com>
+ <20240221072100.412939-3-weilin.wang@intel.com> <ZdY4a5yx-C9ziobq@x1> <CAP-5=fU5JVki4OCYvYyPoBLguwHSwXripiO3Gq+MddV9ZWfnTQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fU5JVki4OCYvYyPoBLguwHSwXripiO3Gq+MddV9ZWfnTQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 22 Feb 2024 23:03:30 -0800
+Message-ID: <CAM9d7ch3E=hNbX6=xUHZ+B_Dphy_sALzaCki1he3-O00DAoYXg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 2/5] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, weilin.wang@intel.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/21/24 19:22, Mark Rutland wrote:
-> On Thu, Jan 25, 2024 at 03:11:12PM +0530, Anshuman Khandual wrote:
->> This adds BRBE related register definitions and various other related field
->> macros there in. These will be used subsequently in a BRBE driver, which is
->> being added later on.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> Changes in V16:
->>
->> - Updated BRBINFx_EL1.TYPE = 0b110000 as field IMPDEF_TRAP_EL3
->> - Updated BRBCR_ELx[9] as field FZPSS
->> - Updated BRBINFINJ_EL1 to use sysreg field BRBINFx_EL1
->>
->>  arch/arm64/include/asm/sysreg.h | 109 ++++++++++++++++++++++++++
->>  arch/arm64/tools/sysreg         | 131 ++++++++++++++++++++++++++++++++
->>  2 files changed, 240 insertions(+)
->>
->> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->> index c3b19b376c86..72544b5c4951 100644
->> --- a/arch/arm64/include/asm/sysreg.h
->> +++ b/arch/arm64/include/asm/sysreg.h
->> @@ -272,6 +272,109 @@
->>  
->>  #define SYS_BRBCR_EL2			sys_reg(2, 4, 9, 0, 0)
->>  
->> +#define __SYS_BRBINF(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10) >> 2) + 0))
->> +#define __SYS_BRBSRC(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10) >> 2) + 1))
->> +#define __SYS_BRBTGT(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10) >> 2) + 2))
-> 
-> We already have definitions for these since v6.5, added in commit:
-> 
->   57596c8f991c9aac ("arm64: Add debug registers affected by HDFGxTR_EL2:)
-> 
-> That commit also added register encoding definitions:
-> 
-> | #define SYS_BRBINF_EL1(n)              sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 0))
-> | #define SYS_BRBINFINJ_EL1              sys_reg(2, 1, 9, 1, 0)
-> | #define SYS_BRBSRC_EL1(n)              sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 1))
-> | #define SYS_BRBSRCINJ_EL1              sys_reg(2, 1, 9, 1, 1)
-> | #define SYS_BRBTGT_EL1(n)              sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 2))
-> | #define SYS_BRBTGTINJ_EL1              sys_reg(2, 1, 9, 1, 2)
-> | #define SYS_BRBTS_EL1                  sys_reg(2, 1, 9, 0, 2)
-> 
-> I don't think we need to add new encoding definitions for BRBINF<n>_EL1,
-> BRBSRC<n>_EL1, or BRBTGT<n>_EL1; we can just use those existing defintions
-> directly. That also means we don't need to add all of the expanded 0..31
-> definitions; the driver can use SYS_BRBINF_EL1(n) and friends directly.
+Hi,
 
-Right, that seems feasible. Hence with the following change to the BRBE driver
-and arm64 KVM, we can convert using existing SYS_BRBXXX_EL1(n) format.
+On Wed, Feb 21, 2024 at 12:34=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Wed, Feb 21, 2024 at 9:52=E2=80=AFAM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Wed, Feb 21, 2024 at 02:20:56AM -0500, weilin.wang@intel.com wrote:
+> > > From: Weilin Wang <weilin.wang@intel.com>
+> >
+> > You wrote no description for this patch, please add one and show
+> > examples of the feature being used, if possible.
+> >
+> > See below for more comments.
+> >
+> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> > > +static int __cmd_script(struct child_process *cmd __maybe_unused)
+> > > +{
+> > > +     int err =3D 0;
+> > > +     struct perf_session *session;
+> > > +     struct perf_data data =3D {
+> > > +             .mode =3D PERF_DATA_MODE_READ,
+> > > +             .path =3D PERF_DATA,
+> > > +             .fd   =3D cmd->out,
+> > > +     };
+> > > +     struct perf_script script =3D {
+> > > +             .tool =3D {
+> > > +             .sample          =3D process_sample_event,
+> > > +             .ordered_events  =3D true,
+> > > +             .ordering_requires_timestamps =3D true,
+> > > +             .feature         =3D process_feature_event,
+> > > +             .attr            =3D perf_event__process_attr,
+> > > +             },
+> > > +     };
+> > > +     struct tpebs_event *e;
+> > > +
+> > > +     list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> > > +             struct tpebs_retire_lat *new =3D malloc(sizeof(struct t=
+pebs_retire_lat));
+> > > +
+> > > +             if (!new)
+> > > +                     return -1;
+> > > +             new->name =3D strdup(e->name);
+> > > +             new->tpebs_name =3D strdup(e->tpebs_name);
+> > > +             new->count =3D 0;
+> > > +             new->sum =3D 0;
+> >
+> > Without even having thought that much about this overall architecture,
+> > that looks too heavy at first sight, the above is done in tools/perf/
+> > as:
+> >
+> > void tpebs_retire_lat__delete(struct tpebs_retire_lat *retire_lat)
+> > {
+> >         if (retire_lat =3D=3D NULL)
+> >                 return;
+> >
+> >         zfree(&retire_lat->tpebs_name);
+> >         zfree(&retire_lat->tpebs_name);
+> > }
+> >
+> > struct tpebs_retire_lat__new(tpebs_event *e)
+> > {
+> >         struct tpebs_retire_lat *retire_lat =3D zalloc(sizeof(*retire_l=
+at));
+> >
+> >         if (retire_lat !=3D NULL) {
+> >                 retire_lat->name =3D strdup(e->name);
+> >                 retire_lat->tpebs_name =3D strdup(e->tpebs_name);
+> >
+> >                 if (retire_lat->name =3D=3D NULL || retire_lat->tpebs_n=
+ame =3D=3D NULL) {
+> >                         tpebs_retire_lat__delete(retire_lat);
+> >                         retire_lat =3D NULL;
+> >                 }
+> >         }
+> >
+> >         return retire_lat;
+> > }
+> >
+> > And then you call the constructor  in that loop, and the destructor at
+> > some point when those data structures are not needed.
+> >
+> > We do it because perf has a TUI mode and we may end up calling tools
+> > from them in a long running session, so we need to avoid leaks.
+> >
+> > Also can we somehow hide Intel specific terms in arch specific files
+> > while leaving something generic, possibly implementable in other arches
+> > in the core code? I mean hiding clearly intel specific stuff like the
+> > "tpebs" term in tools/perf/arch/x86/.
+>
+> Thanks Arnaldo, TPEBS support is necessary to support TMA metrics 4.7
+> on meteorlake. The timed values replace hard coded constants that
+> assume worst case latencies. You can see the metrics here:
+> https://github.com/intel/perfmon/blob/main/TMA_Metrics-full.csv
+> in the MTL (meteorlake) column row 29 there is:
+> MEM_INST_RETIRED.STLB_HIT_LOADS*min($PEBS, #Mem_STLB_Hit_Cost) / CLKS
+> + Load_STLB_Miss
+> where the $PEBS is supposed to be replaced with the latency from a
+> sample of MEM_INST_RETIRED.STLB_HIT_LOADS. There are meteorlake
+> machines shipping but currently there are no perf metrics.
+>
+> Weilin raised the TPEBS problem in the LPC 2023 talk, the issue being
+> that sampling and counting don't really exist in the current perf tool
+> code at the same time. BPF could be a workaround but permissions are
+> an issue. Perhaps leader sampling but then what to do if two latencies
+> are needed. Forking perf to do this is an expedient and ideally we'd
+> not do it.
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 6a06dc2f0c06..739d861b9ef3 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1304,10 +1304,10 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
-        return 0;
- }
- 
--#define BRB_INF_SRC_TGT_EL1(n)                                 \
--       { SYS_DESC(SYS_BRBINF##n##_EL1), undef_access },        \
--       { SYS_DESC(SYS_BRBSRC##n##_EL1), undef_access },        \
--       { SYS_DESC(SYS_BRBTGT##n##_EL1), undef_access }         \
-+#define BRB_INF_SRC_TGT_EL1(n)                         \
-+       { SYS_DESC(SYS_BRBINF_EL1(n)), undef_access },  \
-+       { SYS_DESC(SYS_BRBSRC_EL1(n)), undef_access },  \
-+       { SYS_DESC(SYS_BRBTGT_EL1(n)), undef_access }   \
- 
- /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
- #define DBG_BCR_BVR_WCR_WVR_EL1(n)                                     \
-diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-index 22924023e0f1..dfaf098432ff 100644
---- a/drivers/perf/arm_brbe.c
-+++ b/drivers/perf/arm_brbe.c
-@@ -104,13 +104,13 @@ enum brbe_bank_idx {
- };
- 
- #define RETURN_READ_BRBSRCN(n) \
--       read_sysreg_s(SYS_BRBSRC##n##_EL1)
-+       read_sysreg_s(SYS_BRBSRC_EL1(n))
- 
- #define RETURN_READ_BRBTGTN(n) \
--       read_sysreg_s(SYS_BRBTGT##n##_EL1)
-+       read_sysreg_s(SYS_BRBTGT_EL1(n))
- 
- #define RETURN_READ_BRBINFN(n) \
--       read_sysreg_s(SYS_BRBINF##n##_EL1)
-+       read_sysreg_s(SYS_BRBINF_EL1(n))
- 
- #define BRBE_REGN_CASE(n, case_macro) \
-        case n: return case_macro(n); break
+Even with BPF, I think it needs two instances of an event - one for
+counting and the other for sampling, right?  I wonder if it can just
+use a single event for sampling and show the sum of periods in
+PERF_SAMPLE_READ.
 
-But while here, will also drop previously added other BRBE registers
-from (arch/arm64/include/asm/sysreg.h), as they are now being added
-via (arch/arm64/tools/sysreg) instead which is the right place.
+I'm not sure if an event group can have sampling and non-sampling
+events at the same time.  But it can be done without groups then.
+Anyway what's the issue with two latencies?
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 9a919a102cf1..481c7d186dfa 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -195,16 +195,8 @@
- #define SYS_DBGVCR32_EL2               sys_reg(2, 4, 0, 7, 0)
- 
- #define SYS_BRBINF_EL1(n)              sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 0))
--#define SYS_BRBINFINJ_EL1              sys_reg(2, 1, 9, 1, 0)
- #define SYS_BRBSRC_EL1(n)              sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 1))
--#define SYS_BRBSRCINJ_EL1              sys_reg(2, 1, 9, 1, 1)
- #define SYS_BRBTGT_EL1(n)              sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 2))
--#define SYS_BRBTGTINJ_EL1              sys_reg(2, 1, 9, 1, 2)
--#define SYS_BRBTS_EL1                  sys_reg(2, 1, 9, 0, 2)
--
--#define SYS_BRBCR_EL1                  sys_reg(2, 1, 9, 0, 0)
--#define SYS_BRBFCR_EL1                 sys_reg(2, 1, 9, 0, 1)
--#define SYS_BRBIDR0_EL1                        sys_reg(2, 1, 9, 2, 0)
- 
- #define SYS_TRCITECR_EL1               sys_reg(3, 0, 1, 2, 3)
- #define SYS_TRCACATR(m)                        sys_reg(2, 1, 2, ((m & 7) << 1), (2 | (m >> 3)))
-@@ -270,8 +262,6 @@
- /* ETM */
- #define SYS_TRCOSLAR                   sys_reg(2, 1, 1, 0, 4)
- 
--#define SYS_BRBCR_EL2                  sys_reg(2, 4, 9, 0, 0)
--
- #define SYS_MIDR_EL1                   sys_reg(3, 0, 0, 0, 0)
- #define SYS_MPIDR_EL1                  sys_reg(3, 0, 0, 0, 5)
- #define SYS_REVIDR_EL1                 sys_reg(3, 0, 0, 0, 6)
-@@ -601,7 +591,6 @@
- #define SYS_CNTHV_CVAL_EL2             sys_reg(3, 4, 14, 3, 2)
- 
- /* VHE encodings for architectural EL0/1 system registers */
--#define SYS_BRBCR_EL12                 sys_reg(2, 5, 9, 0, 0)
- #define SYS_SCTLR_EL12                 sys_reg(3, 5, 1, 0, 0)
- #define SYS_CPACR_EL12                 sys_reg(3, 5, 1, 0, 2)
- #define SYS_SCTLR2_EL12                        sys_reg(3, 5, 1, 0, 3)
+Thanks,
+Namhyung
 
-
-> 
-> [...]
-> 
->> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
->> index 4c9b67934367..caf851ba5dc0 100644
->> --- a/arch/arm64/tools/sysreg
->> +++ b/arch/arm64/tools/sysreg
->> @@ -1023,6 +1023,137 @@ UnsignedEnum	3:0	MTEPERM
->>  EndEnum
->>  EndSysreg
->>  
->> +
->> +SysregFields BRBINFx_EL1
->> +Res0	63:47
->> +Field	46	CCU
->> +Field	45:32	CC
->> +Res0	31:18
->> +Field	17	LASTFAILED
->> +Field	16	T
->> +Res0	15:14
->> +Enum	13:8		TYPE
->> +	0b000000	UNCOND_DIRECT
->> +	0b000001	INDIRECT
->> +	0b000010	DIRECT_LINK
->> +	0b000011	INDIRECT_LINK
->> +	0b000101	RET
->> +	0b000111	ERET
->> +	0b001000	COND_DIRECT
-> 
-> Minor nit, but for consistency with DIRECT_LINK, could we please use
-> DIRECT_UNCOND and DIRECT_COND?
-
-Sure, will change as above.
-
-> 
->> +	0b100001	DEBUG_HALT
->> +	0b100010	CALL
->> +	0b100011	TRAP
->> +	0b100100	SERROR
->> +	0b100110	INSN_DEBUG
->> +	0b100111	DATA_DEBUG
->> +	0b101010	ALIGN_FAULT
->> +	0b101011	INSN_FAULT
->> +	0b101100	DATA_FAULT
->> +	0b101110	IRQ
->> +	0b101111	FIQ
->> +	0b110000	IMPDEF_TRAP_EL3
->> +	0b111001	DEBUG_EXIT
-> 
-> That IMPDEF_TRAP_EL3 encoding doesn't seem to exist in the latest ARM ARM (ARM
-> DDI 0487J.a), and I see Mark Brown checked against the "Arm A-profile
-> Architecture Registers" document (ARM DDI 0601 ID121123, AKA 2023-12).
-
-That's correct.
-
-> 
-> Could you please mention that in the commihttps://developer.arm.com/documentation/ddi0601/2023-12/) ?
-> That'll make it easier for anyone else to review this, and it'll be good it message, and link to that version
-> of the document (n
-> case anyone needs to figure out where this came from in future.
-> 
-
-Sure, will do that.
-
->> +EndEnum
->> +Enum	7:6	EL
->> +	0b00	EL0
->> +	0b01	EL1
->> +	0b10	EL2
->> +	0b11	EL3
->> +EndEnum
->> +Field	5	MPRED
->> +Res0	4:2
->> +Enum	1:0	VALID
->> +	0b00	NONE
->> +	0b01	TARGET
->> +	0b10	SOURCE
->> +	0b11	FULL
->> +EndEnum
->> +EndSysregFields
-> 
-> The other fields here all look good per the ARM ARM and sysreg document.
-> 
->> +SysregFields	BRBCR_ELx
->> +Res0	63:24
->> +Field	23 	EXCEPTION
->> +Field	22 	ERTN
->> +Res0	21:10
->> +Field	9	FZPSS
->> +Field	8 	FZP
->> +Res0	7
->> +Enum	6:5	TS
->> +	0b01	VIRTUAL
->> +	0b10	GUEST_PHYSICAL
->> +	0b11	PHYSICAL
->> +EndEnum
->> +Field	4	MPRED
->> +Field	3	CC
->> +Res0	2
->> +Field	1	ExBRE
->> +Field	0	E0BRE
->> +EndSysregFields
-> 
-> This looks good per the ARM ARM and sysreg document.
-> 
->> +Sysreg	BRBCR_EL2	2	4	9	0	0
->> +Fields	BRBCR_ELx
->> +EndSysreg
->> +
->> +Sysreg	BRBCR_EL1	2	1	9	0	0
->> +Fields	BRBCR_ELx
->> +EndSysreg
->> +
->> +Sysreg	BRBCR_EL12	2	5	9	0	0
->> +Fields	BRBCR_ELx
->> +EndSysreg
-> 
-> These all look good per the ARM ARM and sysreg document.
-> 
-> Minor nit, but could we please list thse in order:
-> 
-> 	BRBCR_EL1
-> 	BRBCR_EL12
-> 	BRBCR_EL2
-> 
-> ... since that way the names are ordered alphnumerically, which is what we've
-> done for other groups (e.g. PIR_EL{1,12,2}), and it's the way the ARM ARM
-> happens to be ordered.
-> 
->> +Sysreg	BRBFCR_EL1	2	1	9	0	1
->> +Res0	63:30
->> +Enum	29:28	BANK
->> +	0b0	FIRST
->> +	0b1	SECOND
-> 
-> Nit: since this is a 2-bit field, please pad these as '0b00' and '0b01'.
-> 
-> Could we please use BANK_0 and BANK_1 rather than FIRST and SECOND?
-> 
-> That'd also be easier to use behind macros.
-
-Sure, will change as above.
-
-> 
->> +EndEnum
->> +Res0	27:23
->> +Field	22	CONDDIR
->> +Field	21	DIRCALL
->> +Field	20	INDCALL
->> +Field	19	RTN
->> +Field	18	INDIRECT
->> +Field	17	DIRECT
->> +Field	16	EnI
->> +Res0	15:8
->> +Field	7	PAUSED
->> +Field	6	LASTFAILED
->> +Res0	5:0
->> +EndSysreg
-> 
-> Other than the nit, this looks good per the ARM ARM and sysreg document.
-
-Okay
-
-> 
-> [...]
-> 
->> +Sysreg	BRBIDR0_EL1	2	1	9	2	0
->> +Res0	63:16
->> +Enum	15:12	CC
->> +	0b101	20_BIT
->> +EndEnum
->> +Enum	11:8	FORMAT
->> +	0b0	0
->> +EndEnum
->> +Enum	7:0		NUMREC
->> +	0b0001000	8
->> +	0b0010000	16
->> +	0b0100000	32
->> +	0b1000000	64
-> 
-> This is an 8-bit field; please pad these to 8 bits (they all need a leading
-> '0').
-
-Sure, will change as above.
-
-> 
->> +EndEnum
->> +EndSysreg
-> 
-> Aside from the comments above, this looks good to me.
-> 
-> Mark.
+>
+> I'm against stuff going in the arch directory in general. If something
+> is specific to a PMU, let's special case the logic for that PMU in the
+> tool. The arch directory gets us into messes like:
+> https://lore.kernel.org/lkml/CAP-5=3DfVABSBZnsmtRn1uF-k-G1GWM-L5SgiinhPTf=
+HbQsKXb_g@mail.gmail.com/
+> Where a heterogenous/hybrid/big.little fix is in the x86 arch folder
+> (overriding a weak symbol) but not in the arm or other ones leading to
+> an arm bug.
+>
+> I think the idea of a count coming from an external or tool source is
+> something of a more generic concept. I think what Weilin is doing here
+> is setting the groundwork for doing that, a first implementation. I'd
+> like the expr literals, like #smt_on, #num_cpus, etc. to be more like
+> tool events such as duration_time. I think we can move in the
+> direction that Weilin is adding here and then iterate to clean up
+> these things, hopefully move them to events that then other tools
+> could use, etc.
+>
+> Thanks,
+> Ian
+>
+>
+>
+>
+> > > +             list_add_tail(&new->nd, &stat_config.tpebs_results);
+> > > +     }
+> > > +
+> > > +     kill(cmd->pid, SIGTERM);
+> > > +     session =3D perf_session__new(&data, &script.tool);
+> > > +     if (IS_ERR(session))
+> > > +             return PTR_ERR(session);
+> > > +     script.session =3D session;
+> > > +     err =3D perf_session__process_events(session);
+> > > +     perf_session__delete(session);
+> > > +
+> > > +     return err;
+> > > +}
+> > > +
+> > >  static int __run_perf_stat(int argc, const char **argv, int run_idx)
+> > >  {
+> > >       int interval =3D stat_config.interval;
+> > > @@ -709,12 +866,14 @@ static int __run_perf_stat(int argc, const char=
+ **argv, int run_idx)
+> > >       struct affinity saved_affinity, *affinity =3D NULL;
+> > >       int err;
+> > >       bool second_pass =3D false;
+> > > +     struct child_process cmd;
+> > >
+> > >       //Prepare perf record for sampling event retire_latency before =
+fork and prepare workload
+> > >       if (stat_config.tpebs_event_size > 0) {
+> > >               int ret;
+> > >
+> > > -             ret =3D __run_perf_record();
+> > > +             pr_debug("perf stat pid =3D %d\n", getpid());
+> > > +             ret =3D prepare_perf_record(&cmd);
+> > >               if (ret)
+> > >                       return ret;
+> > >       }
+> > > @@ -924,6 +1083,17 @@ static int __run_perf_stat(int argc, const char=
+ **argv, int run_idx)
+> > >
+> > >       t1 =3D rdclock();
+> > >
+> > > +     if (stat_config.tpebs_event_size > 0) {
+> > > +             int ret;
+> > > +
+> > > +             pr_debug("pid =3D %d\n", getpid());
+> > > +             pr_debug("cmd.pid =3D %d\n", cmd.pid);
+> > > +
+> > > +             ret =3D __cmd_script(&cmd);
+> > > +             close(cmd.out);
+> > > +             pr_debug("%d\n", ret);
+> > > +     }
+> > > +
+> > >       if (stat_config.walltime_run_table)
+> > >               stat_config.walltime_run[run_idx] =3D t1 - t0;
+> > >
+> > > @@ -2714,6 +2884,7 @@ int cmd_stat(int argc, const char **argv)
+> > >       }
+> > >
+> > >       INIT_LIST_HEAD(&stat_config.tpebs_events);
+> > > +     INIT_LIST_HEAD(&stat_config.tpebs_results);
+> > >
+> > >       /*
+> > >        * Metric parsing needs to be delayed as metrics may optimize e=
+vents
+> > > @@ -2921,5 +3092,7 @@ int cmd_stat(int argc, const char **argv)
+> > >       metricgroup__rblist_exit(&stat_config.metric_events);
+> > >       evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ac=
+k, &stat_config.ctl_fd_close);
+> > >
+> > > +     tpebs_data__delete();
+> > > +
+> > >       return status;
+> > >  }
+> > > diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> > > index fc16299c915f..2298ca3b370b 100644
+> > > --- a/tools/perf/util/data.c
+> > > +++ b/tools/perf/util/data.c
+> > > @@ -173,6 +173,10 @@ static bool check_pipe(struct perf_data *data)
+> > >       int fd =3D perf_data__is_read(data) ?
+> > >                STDIN_FILENO : STDOUT_FILENO;
+> > >
+> > > +     if (data->fd > 0) {
+> > > +             fd =3D data->fd;
+> > > +     }
+> > > +
+> > >       if (!data->path) {
+> > >               if (!fstat(fd, &st) && S_ISFIFO(st.st_mode))
+> > >                       is_pipe =3D true;
+> > > diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+> > > index effcc195d7e9..5554d46ad212 100644
+> > > --- a/tools/perf/util/data.h
+> > > +++ b/tools/perf/util/data.h
+> > > @@ -28,6 +28,7 @@ struct perf_data_file {
+> > >
+> > >  struct perf_data {
+> > >       const char              *path;
+> > > +     int                      fd;
+> > >       struct perf_data_file    file;
+> > >       bool                     is_pipe;
+> > >       bool                     is_dir;
+> > > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgr=
+oup.c
+> > > index 6c16e5a0b1fc..8518e2b3e5be 100644
+> > > --- a/tools/perf/util/metricgroup.c
+> > > +++ b/tools/perf/util/metricgroup.c
+> > > @@ -691,8 +691,17 @@ static int metricgroup__build_event_string(struc=
+t strbuf *events,
+> > >
+> > >               if (p) {
+> > >                       struct tpebs_event *new_event =3D malloc(sizeof=
+(struct tpebs_event));
+> > > -                     *p =3D '\0';
+> > > +                     char *name;
+> > > +
+> > >                       new_event->tpebs_name =3D strdup(id);
+> > > +                     *p =3D '\0';
+> > > +                     name =3D malloc(strlen(id) + 2);
+> > > +                     if (!name)
+> > > +                             return -ENOMEM;
+> > > +
+> > > +                     strcpy(name, id);
+> > > +                     strcat(name, ":p");
+> > > +                     new_event->name =3D name;
+> >
+> > For such cases we use asprintf(), that allocates and formats the string
+> > in one call, look for examples in other tools/perf/ files.
+> >
+> > >                       *tpebs_event_size +=3D 1;
+> > >                       pr_debug("retire_latency required, tpebs_event_=
+size=3D%lu, new_event=3D%s\n",
+> > >                       *tpebs_event_size, new_event->name);
+> > > diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgr=
+oup.h
+> > > index 7c24ed768ff3..1fa12cc3294e 100644
+> > > --- a/tools/perf/util/metricgroup.h
+> > > +++ b/tools/perf/util/metricgroup.h
+> > > @@ -71,6 +71,13 @@ struct tpebs_event {
+> > >       const char *name;
+> > >       const char *tpebs_name;
+> > >  };
+> > > +struct tpebs_retire_lat {
+> > > +     struct list_head nd;
+> > > +     const char *name;
+> > > +     const char *tpebs_name;
+> > > +     size_t count;
+> > > +     int sum;
+> > > +};
+> >
+> > Here you declare the constructor and destructor I suggested above.
+> >
+> > >  struct metric_event *metricgroup__lookup(struct rblist *metric_event=
+s,
+> > >                                        struct evsel *evsel,
+> > > diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> > > index 9d0186316b29..8e180f13aa2d 100644
+> > > --- a/tools/perf/util/stat.h
+> > > +++ b/tools/perf/util/stat.h
+> > > @@ -111,6 +111,9 @@ struct perf_stat_config {
+> > >       struct rblist            metric_events;
+> > >       struct list_head         tpebs_events;
+> > >       size_t                   tpebs_event_size;
+> > > +     struct list_head         tpebs_results;
+> > > +     pid_t                    tpebs_pid;
+> > > +     int                      tpebs_pipe;
+> > >       int                      ctl_fd;
+> > >       int                      ctl_fd_ack;
+> > >       bool                     ctl_fd_close;
+> > > --
+> > > 2.43.0
+> > >
