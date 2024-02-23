@@ -1,106 +1,172 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2136.outbound.protection.outlook.com [40.107.237.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F54F14AD04;
-	Fri, 23 Feb 2024 21:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708724663; cv=none; b=ZDOsSd3iUkiA5t/xrSbTv4jh3YAju6gtOgsNcSuQWFl5EiUkmIkT08nRUxoGIpp1Z2Z8aX84t5cIarAJl7dCTKxepsv5x/3Z3lcSwdTyGgIgbV1fBWszU842LlMWCh9XvsgflB28u1qpZ3VurZZzFyDzJNmHvfsP9qlOK8QjTR0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708724663; c=relaxed/simple;
-	bh=Pe5erZHyCvS6VkWlhzfR04p/Sev+tZt7VSqDg3j4P8Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SLqWKOwGeqShL6Gl+QfKdFkgdP3XpdKm6DXfTGDJvBDts0VdRztg2yq+DjQSj9UDbvCjglWLOxppja/8KP4GxIUlefhoOVkxZ3s+JgPuU1TcQxRYaDDJSrMU52y4AqMWG7Lefd+LNqdxf2whRAEUOB66zaOToYhKs2yVNRar0W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ocallahan.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail-com.20230601.gappssmtp.com header.i=@gmail-com.20230601.gappssmtp.com header.b=yPUj50H3; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ocallahan.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D5C14CAB3;
+	Fri, 23 Feb 2024 22:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708725931; cv=fail; b=Tu+7R0kvqk86/t/hzcQ8hDyJ0geQyR0jaBd219JUTkjqMm80H/vI858RL946ON/k3CZDN+46lVbJAWxB3AjBUGUniTxRhX6IFL7daaeVs79hfJlmyKGYkZTg15eE8sSLxPJJzjiLW0wYWPtJSSDalJb3aCqxCXxymXQr3qCdZWs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708725931; c=relaxed/simple;
+	bh=GSZnvlyhRqvkJEpVrAyRi5pzQ7cXeZ2hmCnBan1qQpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=TpNY4lW8hKF4TzrAJ8cJFlMwJVXtCtbuecEuD5Y2cxeKRl9TM26v5KnLau+BBsZ6ObuMllgNGbKinzcnanqJuULHkcUcspq2jiNyD+/Zn0vZK4NuHfysFT/98OkMW4YbwwdQwyGq48oUnS1i37SlNLdR+l+P6YW24SDk79hma6c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=qlakDd5Z; arc=fail smtp.client-ip=40.107.237.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail-com.20230601.gappssmtp.com header.i=@gmail-com.20230601.gappssmtp.com header.b="yPUj50H3"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-42a9f4935a6so6190461cf.1;
-        Fri, 23 Feb 2024 13:44:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="qlakDd5Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R4rIr1dGNUPVg0mbDPjO+s5a5eEaM18TXARjHOQtfAU8oJZOvmayr0XBHTy55U04rcUqdRHljRqVPXj7ImyGUdOuutrQdNqhVlhlQ1obiYeCIp5bNH8V2GCtzhelQ3A73iI4ywbzrViuiTFXTuD6+BTeg871deQZegS25a4OLyB8uaLwLCPGf+wqCvJxvX6Ci7uj9Oub2UlmHR2zsBgXi431u+bkuB4QssUOBz9gAtp9icLptKo87eA+p/gO6QrTCOAQyFfCBmsKjgAYkMbwOfW7HVpieG5jeymuPefpPcQclhJK/qTCZnUM+JXiVM+2dsfeVZNWnSZn2pgNlsrX2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LYocEINSBT+cAXSdB6UQfPq6Kbe65EERiaNcdq4rwTY=;
+ b=RmtjLISbVnkbcEb0ESVhVH6hf10Kxp/G6CG6NdU4qi9ERwDfeKCqM8DWu1EgHz/GhNxnK+qCZc5kI0B1FuGk6VIck3IfuCu9VFTR4UAOP3JRbm3tNVYGnTdk/G8J347Oa5IH9qb0jHqPzFNHwySmg6wEnDlpIC9BSwY1UEe7WCQDXtD/5Qpn43E745UKu+3jtFWG2Mhbodi+APCC0QeplWcvw/vysqnpwpRO4TEzaKmexr+YReW21Q5lquc4859yndxOyQ/ViyVJ5PxXUW/qEqpWk2YXaXojouHcJ58YzU5k6NZr1bo0e+TOJsnE2JoFH544UtXxEti3xCg8E7V+iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail-com.20230601.gappssmtp.com; s=20230601; t=1708724660; x=1709329460; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dflXWGJiHy7MbSy8pXkZb9NeeYUWtRBjyhK7A4GkIig=;
-        b=yPUj50H34+iXkWP9ZoINgCfeRvzn6tJnjokRnGWvxpxq64M8AbuGVzv6z1C8niRJkc
-         x8Wag+5AsU6w0Rhza3+xw0leWKf5t5FcfMPe1drtcgssIr6Jn+sVSAm8B5iWiMbZNmFw
-         Ad9pFgJOzPRgXam5QpgajJz9PoKeDRSraS4lPweW3+70wUaYQaifg4xcmHV4qgyJ5uzf
-         wDNIaUS57t4Le+KrJ+vaXlWNQokkXzZsn58aGSm8HyiBEIjYs+KD/qQGJ70cFvStel1Y
-         t6JF9XB0CWbI0CvmQ6nBO9AV93rqcd8Xz/bJSwgNLZ0YWucR8bHz96ZXvkAkJ9O1RJ8t
-         icww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708724660; x=1709329460;
-        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dflXWGJiHy7MbSy8pXkZb9NeeYUWtRBjyhK7A4GkIig=;
-        b=TeqAYOZHOStIQzU1EE7I2PxG95XCvb/jVwDV4RgxktTfTirlR0WxSacdSwNuQ+u/t6
-         KS6tuhLJxBNO4fgmNKVS/BrH6WCmG+/fYMQ2QdSxDoijAvi/8ncxIYE4ISonlGVm21/m
-         Igj++AQONZ3OzWAa2njnNY0+uXKjGJaznBaTp4EdLCTlQYdacZqICefIKzcvJWWzn718
-         dEQZ/yWJlU7lxN7Xg+EmHgu8g2Is7wmepS3GIrWjVEY7HLlImNx7KRf0aeQ7/clduyUl
-         F2ef7hfkEtxTQS8YKE2L/Sf62QnRAVAqXCqoRq13lYX5NeO3SfnGC6j+v5o1XNeTioiW
-         +UTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUPULJpGqeK0ofqwPdo6FvBte1Z2HFgAxoUvU98NiuW8ubsn8p+ER2b886djN7dbxH6Oy+lmTmSIavLCtdsHLifNtsos0cEc/58FA/wXwj/ZqKubFHh5ETNmg0zdks5r5Z/eKNAQR88Neisg4YAQ==
-X-Gm-Message-State: AOJu0YyScr9VITtFLPGSOKOZO6fymQUHNPo/9yliQ0+ba5+RfPXU/4Uj
-	52d3x+0jzhc3OJZ3gWL94jpWmsC3yBkI4wueNpw7OjfZKZy8vU38CDAOmu9HM0A1Mnfkgyo8Bf4
-	5ji2CGuFTxBPvmMHKTXrQTWA7eDY=
-X-Google-Smtp-Source: AGHT+IEdqbE3nTHzTHVnvtCEoIC2+Cn09Y4dZAXa8zWYlw3yYVCckBoDOV8siFuX1rqxLf21t2FTt18kB0pJV1s+ch4=
-X-Received: by 2002:ac8:7dca:0:b0:42d:de30:83e1 with SMTP id
- c10-20020ac87dca000000b0042dde3083e1mr694373qte.29.1708724659935; Fri, 23 Feb
- 2024 13:44:19 -0800 (PST)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LYocEINSBT+cAXSdB6UQfPq6Kbe65EERiaNcdq4rwTY=;
+ b=qlakDd5Z1QOE3jJw+VP2YDmnanIl45iToP49sJItO+WU//JbnsTfNNlPhNbY30NJ9IEt1jtyPzVgHXCc1BEbITtTLBJ4Jjxnggusia3s56RhaeyAWJLg6O8Ox9sQeidwYEfyRYIMnAMWU4Q5S73kXdaZB7joUTKI8mNEcHKTjms=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from SJ2PR01MB8257.prod.exchangelabs.com (2603:10b6:a03:53d::8) by
+ PH0PR01MB8022.prod.exchangelabs.com (2603:10b6:510:285::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7316.24; Fri, 23 Feb 2024 22:05:23 +0000
+Received: from SJ2PR01MB8257.prod.exchangelabs.com
+ ([fe80::ecb2:1446:ac3:26b2]) by SJ2PR01MB8257.prod.exchangelabs.com
+ ([fe80::ecb2:1446:ac3:26b2%4]) with mapi id 15.20.7316.023; Fri, 23 Feb 2024
+ 22:05:22 +0000
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Ian Rogers <irogers@google.com>
+Cc: Evgeny Pistun <kotborealis@awooo.ru>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Subject: [PATCH v4] perf data convert: Fix segfault when converting to json when cpu_desc isn't set
+Date: Fri, 23 Feb 2024 14:04:58 -0800
+Message-ID: <20240223220458.15282-1-ilkka@os.amperecomputing.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH5PR05CA0014.namprd05.prod.outlook.com
+ (2603:10b6:610:1f0::24) To SJ2PR01MB8257.prod.exchangelabs.com
+ (2603:10b6:a03:53d::8)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221175210.19936-1-khuey@kylehuey.com> <20240221175210.19936-2-khuey@kylehuey.com>
- <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
- <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com>
- <ZdemibZepMqWvv6U@x1> <CAP045Aqc6woHGYKJG4d=x4gPd0=PmrLeFv25Rkts1a8xFuocOQ@mail.gmail.com>
- <ZdjdAKIV39A-jpR5@x1>
-In-Reply-To: <ZdjdAKIV39A-jpR5@x1>
-Reply-To: robert@ocallahan.org
-From: "Robert O'Callahan" <robert@ocallahan.org>
-Date: Sat, 24 Feb 2024 10:43:38 +1300
-Message-ID: <CAOp6jLZKZKyYrJrzjZ90ZdxzzuDV0wp+XS3Rzssd-kvZV45JSQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Test FASYNC with watermark wakeups.
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Kyle Huey <me@kylehuey.com>, Ian Rogers <irogers@google.com>, Kyle Huey <khuey@kylehuey.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR01MB8257:EE_|PH0PR01MB8022:EE_
+X-MS-Office365-Filtering-Correlation-Id: f63acb81-749e-421f-b520-08dc34bb881d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	OS/RXwKGOblKdy3126vzXd/3V1kaIVsEm08+Nb89lZBTpgWHK0frq1xen4Ujqx88HfU5UDk2DGGr4pxRuTY34TcVmz1WCPYvaMEZBEE5fsbuMfPxxRXWJCj72AswnEkI0T8DNb1eXLxXbfwuODxgnHf8sPA7c1lMk+FCh4v0pobpJK1uwb1mYWDLzwnnPGp/ujJCx8alCncRUB8mqpfWEaG1XhDWClN5DHM2bY8D7vUPAk2QDuCrksS3g8GHcjIYBo33cU3lbIGAQn+EeAu6HY7f2NkzjThharMC3oobspXGGucjo+cJE9wezyv9hkJ35l6RX1Fbm+EDZGrGf5yBGbmponAewmdQ1HbRKmGV4WhNRdpUIP/TQ1TTqf4lvlL5MQPLOIRCNvXkaQY6FrTpbS1rdFasAI66gSV4DeZ4UwYtSfMB6QDmIsTzyzJxuxv2ZKyJhJSG/UAi6joSkRh5EQlBYqK6hFHWUY/xAXkHaf0i5qRLV6InNbM4V2guzZRwGHrvTOw+K/cT35rqgY+jLExQLJhnTVnAe5zsjlrGGcnmjtlGkT7blYRJNzxPp8Ff+bi6dHcLQTmEprqDVOoOSbuJslCuYmg2GrTpxciFOUs=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR01MB8257.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3izKFjqYMgqvJerVJpEat7Z54zdxQj9C3+ISk/8KRMWMse7uh1Gx9T4vbef9?=
+ =?us-ascii?Q?whXUoc5bVRgh7fpX+K/E6365mKLz/waSZp2n30s/Uw0Es5rUvT6US7sFBQfI?=
+ =?us-ascii?Q?YAX4ce3EbzgbMN1kFl23Z5RUEjoKv6dAC9VexDldgNNsEuH/9Q0l7mNafHxg?=
+ =?us-ascii?Q?+slfUeYBUAJgW5ROXwlltwGfpO9c2MVVEtsnJdSJ1fc3UWnMn/70k0latE8d?=
+ =?us-ascii?Q?3B6mJsfooiJ4rX3KaevtJiJWCxCGliZv+b2SFfBoKUuWAuXMw4X1IcDWsLxX?=
+ =?us-ascii?Q?ZX4boL0o/ESyP0ldq7mFfEevRNZGP7bEG8F8CIYPqsXRDXbuorR3VJ3gpLA4?=
+ =?us-ascii?Q?CJ8QEWrZI/0LwtU1mOuKA+WdSpE6v88U/xWx1gjhOHMf1oxEYo1/lqaBbjBy?=
+ =?us-ascii?Q?wTxW+gjRE9KerH5X02QyY77R+LrKCBH7JnfnZ9lx/LL4rfRagbgMfgpSWh09?=
+ =?us-ascii?Q?C30OCHuYX7T2C61WYXPZJC1yPjWayt7u8kMZSkLXnJKylfCS0WMVwK2THm5m?=
+ =?us-ascii?Q?1297Be+pa91eZ2+NfdyM29rU8bME43RGd0b74mOadPZ/SoydAp+V7kjpHKX9?=
+ =?us-ascii?Q?/vkEIodC7ZFWsrzPzC66yDruI2/DHbgRwrtMkWro/rHS+s7FJVYpK75cxHE5?=
+ =?us-ascii?Q?utTjTlp/6NWO0MYpRWV52eIHiZyqrmk7mrQYHKGy+Wsdg2JKfKO8BRtcrl9s?=
+ =?us-ascii?Q?TzR+fq6hyOpAx86Po5ruqXCpIhjJew9H6Djtj8/ThbcRh2En2Gco5VdxyBsf?=
+ =?us-ascii?Q?wVZF++zdhziTG4p9so0TxKT+mhrX35wFUh88rn28oOZyIXaqHcDp1uk/3O/g?=
+ =?us-ascii?Q?+7MYJjsQ7HxAxx2iufJJVGM/+EygQ1bylFvaHlQakd43c5OxjAFuRj4k32Pz?=
+ =?us-ascii?Q?ejuY/atA6gdVwS3pP5Sc7t04amxB97IHIja/pcsztx3DBXhKQg8viXqtMIZr?=
+ =?us-ascii?Q?RTX76FcxslEzuRya9GQH7PprMSpEnlJFttt3JNmhPSNmUvtq1kDF4wbeexYf?=
+ =?us-ascii?Q?WolsJCCzkqc6ChzyQjaE/618z2Ok+9PSdGGHyC4TdCEciExHf+VWZLzgwvrH?=
+ =?us-ascii?Q?Dw0luf0zqWa96GLD4vqpOKgQcfWSOI8lAELYIZQUG7V+ip/yBcX8t59WbWv0?=
+ =?us-ascii?Q?Mn2Mz0xCBiDIz4fBVkENbBt1kOcQE82stRqVP23CswkQ5YlZVRcUB3x3g83o?=
+ =?us-ascii?Q?JI3MlCsIen43RGOdwy+xyOTg7DYTKaXXY8MO303vtjuLpvJzGSQEemWHtnHz?=
+ =?us-ascii?Q?Tfl9YipK5ma2IKiAW5o8Ohi3f58oWy8j8aSwaLoOc4rHlouukzqnYxtG83eC?=
+ =?us-ascii?Q?te0itRIKFNOyUJncFFaTG5p5cxnNYRNf0LNyXccMW6PS36kPn9jW+ur5TUKg?=
+ =?us-ascii?Q?S4QM5Jm6D9qEk+6aBZ4Uhm88bSFUiFvBKonEqKH950y9kO1lUSFzufI1vqjN?=
+ =?us-ascii?Q?4rXZLx2MLh9s1X4zBSvahFN5zn0YDewHuRwUImyGN+HJPbtlseEQ2l4rHfL8?=
+ =?us-ascii?Q?h8zgFFMesVeezBrfXxjXlKgnMETwOsD5xXHG8N2DFQvzIVWmjam7qegEY/w+?=
+ =?us-ascii?Q?fe8a9FQmzPzQTRRUCsNm10iU1SbCPiTuC2IME+dNshlXDj4D0f2OdjXkFuEs?=
+ =?us-ascii?Q?odX2kZyz6CV02mQj048oCnA=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f63acb81-749e-421f-b520-08dc34bb881d
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR01MB8257.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 22:05:22.8397
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F3Ldda1HBnuJmruHKmDAN3un4DFItmnJd3aNgHJcN8Phy7HI87tPvRovqxXMrR4dAVnLXtGpQqENEXhZHwxrvDhCgwyvzbglTU812cPiTbz0/vWp07vhTju+T6PcnZ72
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB8022
 
-(I work with Kyle.)
+Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't get
+assigned.
 
-IMHO this is more of a bug fix than a feature. `man perf_event_open`
-expects this to work already: "watermark: If set, have an overflow
-notification happen when we cross the wakeup_watermark boundary" and
-later "Alternatively, the overflow events can be captured via a signal
-handler, by enabling I/O signaling".
+Running
+	$ perf data convert --to-json perf.data.json
 
-Bug fixes need regression tests. Such tests should fail on any kernel
-where the bug is present. It seems strange to expect each such test to
-detect whether the bug "should be fixed" in the kernel it's running on
-and skip when that's not the case. I haven't seen any other project
-try to do this. Instead (as in kernel selftests) the tests, the code
-under test, and any metadata about which tests are expected to pass
-are all in the repository together and updated together.
+ends up calling output_json_string() with NULL pointer, which causes a
+segmentation fault.
 
-It makes sense that tests for the code in tools/perf should not fail
-on older kernels, given that the code in tools/perf is expected to
-work on older kernels. But tests for bug fixes in the kernel itself
-should be expected to fail on older kernels and therefore should live
-somewhere else, IMHO.
+Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+---
 
-Rob
+v1:
+    - https://lore.kernel.org/all/20240111232923.8138-1-ilkka@os.amperecomputing.com/
+v2:
+    - Changed the patch based on James's comments.
+v3:
+    - The architecture is checked from the actual data file to allow one to do
+      conversion on another system. (thanks to James for the feedback)
+    - https://lore.kernel.org/all/20240117215101.77713-1-ilkka@os.amperecomputing.com/
+v4:
+    - Made the fix more generic in case there are other architectures where cpu_desc
+      isn't assigned as asked by Namhyung
+    - Rephrased the subject line
+---
+
+tools/perf/util/data-convert-json.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 5bb3c2ba95ca..09d57efd2d9d 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -284,7 +284,9 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+ 	output_json_key_string(out, true, 2, "os-release", header->env.os_release);
+ 	output_json_key_string(out, true, 2, "arch", header->env.arch);
+ 
+-	output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
++	if (header->env.cpu_desc)
++		output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
++
+ 	output_json_key_string(out, true, 2, "cpuid", header->env.cpuid);
+ 	output_json_key_format(out, true, 2, "nrcpus-online", "%u", header->env.nr_cpus_online);
+ 	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", header->env.nr_cpus_avail);
 -- 
-Su ot deraeppa sah dna Rehtaf eht htiw saw hcihw, efil lanrete eht uoy
-ot mialcorp ew dna, ti ot yfitset dna ti nees evah ew; deraeppa efil
-eht. Efil fo Drow eht gninrecnoc mialcorp ew siht - dehcuot evah sdnah
-ruo dna ta dekool evah ew hcihw, seye ruo htiw nees evah ew hcihw,
-draeh evah ew hcihw, gninnigeb eht morf saw hcihw taht.
+2.43.0
+
