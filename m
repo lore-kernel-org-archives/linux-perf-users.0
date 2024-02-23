@@ -1,108 +1,74 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7F1B26E;
-	Fri, 23 Feb 2024 09:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BCC75C902;
+	Fri, 23 Feb 2024 10:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708679208; cv=none; b=hJDZtnpBITW6eUxs8DRTUGnzEJiZmCNbQrGJR/ioNLMnd0zmTEvr0uQ/BRtKHScCmdFf2ig2fM/H/l3kgL7/QCwCzZgDeXMU4qIWsN/z3eJzF/2lllwqAlAgbzHj9sYBBS0Qc2BAzwKIcG1J1rXxujliUrdEiaJVhrobexcAPKQ=
+	t=1708684950; cv=none; b=X/UgveILCZeNVerDYBfd2lmG1R3pnv9mPFqEqoAS/ocai4jr9UuDLGF4IVykUhQ6x/h68iGfWJHchlCG1ZfBJbeclDXIETetXlOZWuPkE8khu2zjKd4bS0dvm5bkNGv4PPuMCGprthfiFODpv2TfanjcQCKth/Bsyk9UuPgCHGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708679208; c=relaxed/simple;
-	bh=Dtxf5IRHfwQSaHxpcYXPqB9KEFKDcDvvm3ijqoxjNko=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=F2DjSlAsg7ZvyvP+t5tb6s2HBSqfbWo2EXR/e3ud9Eh6G42ZWDsZEjrUMbEY39D0DGOsrISPqgdhzBnQJuURJvDfw0a1uG2iVln5QgFFTKUahRxzWJyUV0e3j4cZfU17gSMSf+6aGoXv6hwzGZegQtduMOGURmQQT8WyXvtplwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ee4b7daX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7ha8i2Rq; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ee4b7daX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7ha8i2Rq"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708679204;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Wf50sMB7P17099HKyOgeF0+Md1dpE2WNC2PraYzo5E=;
-	b=ee4b7daXsqpkzj6vKmrWIdzYGHDrctEvl72qqapmJw5l+m5h9+rQnszLKqgtbz67CkyKaR
-	WiMvXNIZsrslicsWhHvb0IPfX70yMh0lNgbISA9r7cigPedZh6slKTWBHi4halEN+oOBPK
-	uv6XMbitjMAdDya3tn7TMg8uPVLSwUvMhHUebFmzrdwdWJr7ba7KPWOK1fIKyV2TYSvZah
-	bEOw1gXqncVBmMR/J+bbL5+HvI7JHCvQEP37562Lo2ih3FWVAjs1BDt83/UKs1/3UZ5PLB
-	GJvuHh/dLG/ug1oz4/+RcnyxFVo7XizOq4Kd5qWMP/H2sLDgP0fXV398sL6wTg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708679204;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Wf50sMB7P17099HKyOgeF0+Md1dpE2WNC2PraYzo5E=;
-	b=7ha8i2Rqp856wi8VCmskiECtA8C/RuvjDd5/eucA2Ii/vV3XWHmq5b2SmysDpGNCorrVUH
-	079KsBv1vbaQ/pDg==
-To: Yu Chien Peter Lin <peterlin@andestech.com>, acme@kernel.org,
- adrian.hunter@intel.com, ajones@ventanamicro.com,
- alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
- anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
- conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org,
- devicetree@vger.kernel.org, evan@rivosinc.com, geert+renesas@glider.be,
- guoren@kernel.org, heiko@sntech.de, irogers@google.com,
- jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com,
- mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com,
- namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
- peterlin@andestech.com, peterz@infradead.org,
- prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
- robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
- tim609@andestech.com, uwu@icenowy.me, wens@csie.org, will@kernel.org,
- inochiama@outlook.com, unicorn_wang@outlook.com, wefu@redhat.com
-Cc: Randolph <randolph@andestech.com>
-Subject: Re: [PATCH v9 03/10] irqchip/riscv-intc: Introduce Andes hart-level
- interrupt controller
-In-Reply-To: <874jdzef1j.ffs@tglx>
-References: <20240222083946.3977135-1-peterlin@andestech.com>
- <20240222083946.3977135-4-peterlin@andestech.com> <87o7c8dvv4.ffs@tglx>
- <877civefa5.ffs@tglx> <874jdzef1j.ffs@tglx>
-Date: Fri, 23 Feb 2024 10:06:44 +0100
-Message-ID: <871q93eehn.ffs@tglx>
+	s=arc-20240116; t=1708684950; c=relaxed/simple;
+	bh=TuRfPZIINLDlgF89geTHSbS2hhL4J/pD5I7aljCqZF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dOv8lRulHmXAhi/4PX5VH6WQU9PsgFdhUWZZviNUHUBO9yFYLbZBbTmFK9RSf1d3u0JY4I2/FlhZhcm8HXwsuAzHAr4jKIAOnIz8i4tU4TUDp+3+wKJof6Cp5zgSPVKCorkmnBmP2uEI+Qm7M+X6e8h6XRB7PacEeAzDrDDnFTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28E9F1596;
+	Fri, 23 Feb 2024 02:43:06 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.66.180])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45B013F762;
+	Fri, 23 Feb 2024 02:42:25 -0800 (PST)
+Date: Fri, 23 Feb 2024 10:42:16 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: syzbot <syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, eadavis@qq.com,
+	irogers@google.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mingo@redhat.com,
+	namhyung@kernel.org, netdev@vger.kernel.org, olsajiri@gmail.com,
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+	xrivendell7@gmail.com
+Subject: Re: [syzbot] [perf?] WARNING in perf_event_open
+Message-ID: <Zdh2fjuWi0sQIhpV@FVFF77S0Q05N>
+References: <000000000000e8099a060cee1003@google.com>
+ <00000000000007401c061204919d@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000007401c061204919d@google.com>
 
-On Fri, Feb 23 2024 at 09:54, Thomas Gleixner wrote:
-> On Fri, Feb 23 2024 at 09:49, Thomas Gleixner wrote:
->> On Thu, Feb 22 2024 at 22:36, Thomas Gleixner wrote:
->>> Palmer, feel free to take this through the riscv tree. I have no other
->>> changes pending against that driver.
->>
->> Aargh. Spoken too early. This conflicts with Anups AIA series.
->>
->>   https://lore.kernel.org/all/20240222094006.1030709-1-apatel@ventanamicro.com
->>
->> So I rather take the pile through my tree and deal with the conflicts
->> localy than inflicting it on next.
->
->> Palmer?
->
-> Nah. I just apply the two intc patches localy and give you a tag to pull
-> from so we carry both the same commits. Then I can deal with the
-> conflicts on my side trivially.
+On Thu, Feb 22, 2024 at 07:58:02PM -0800, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
+> 
+> commit 7e2c1e4b34f07d9aa8937fab88359d4a0fce468e
+> Author: Mark Rutland <mark.rutland@arm.com>
+> Date:   Fri Dec 15 11:24:50 2023 +0000
+> 
+>     perf: Fix perf_event_validate_size() lockdep splat
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=157c509c180000
+> start commit:   5abde6246522 bpf: Avoid unnecessary use of comma operator ..
+> git tree:       bpf-next
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8f565e10f0b1e1fc
+> dashboard link: https://syzkaller.appspot.com/bug?extid=07144c543a5c002c7305
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ba8929e80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17be7265e80000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
+> 
+> #syz fix: perf: Fix perf_event_validate_size() lockdep splat
 
-Here you go:
+I believe syzbot is correct; this is fixed by commit:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-for-riscv-02-23-24
+  7e2c1e4b34f07d9a ("perf: Fix perf_event_validate_size() lockdep splat")
 
-Contains:
+... so:
 
-  f4cc33e78ba8 ("irqchip/riscv-intc: Introduce Andes hart-level interrupt controller")
-  96303bcb401c ("irqchip/riscv-intc: Allow large non-standard interrupt number")
+#syz fix: perf: Fix perf_event_validate_size() lockdep splat
 
-on top of v6.8-rc1
-
-Thanks,
-
-        tglx
+Mark.
