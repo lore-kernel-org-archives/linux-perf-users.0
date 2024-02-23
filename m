@@ -1,54 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39431448DE;
-	Fri, 23 Feb 2024 21:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A45A143C7B;
+	Fri, 23 Feb 2024 21:15:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708722882; cv=none; b=qmYjKijV+1NGFg5sv5DvWooicxPjuPjyayQ0h6wf4mwKvui17lXjNdcFTNANE7Xv50htYCjJbgIHPchWsFqeS5Nnw/vw/shFLi7NiaswU0TePPxxYSZcurJDjDxVA0zMPF70N1GOozNLqC3IqV5IGkHTE3dmgCkhAoaOmpR9DkE=
+	t=1708722929; cv=none; b=JKJZvs4CDZvOUGmmjeCiFuQSruHM5bRvHFXG/4NOreuHlAu2D/+DBn+88a9hlq2Ig2pi37As+VyDhimZHc0bWu20XBgcZD1DSikZVMnnYO/BefY/aiBnQ45efkP18j9G7abFI9Fu2q8meiNutOl+7oTDmVtHnbtvvblb7UYsTQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708722882; c=relaxed/simple;
-	bh=yl3CZeQj3q+MbODgHmMHwet9xKy0k4nfEARp/YeN2cs=;
+	s=arc-20240116; t=1708722929; c=relaxed/simple;
+	bh=cPqJsOwJ2Igj6PpBlc/1N1gBQrxKIGjPyX4ikWmrH5w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e2gy79U3b/CtwReM8Q9an/pQpvVtGn3Lsg899ihPJIrMIUyIhM0Yhe2cyEmOq9/XDF8FKdqwhtTjLW6/of4J9o5mT2J0tU1DiHR7LbLcpdpbaNJdT/okZPGYdveGKBTsQn9/oQT5NUxFCXH6ducSdQLrUqU4c2Z7OsEWZqeWVJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gx27df/w; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=cil61BBMBezAWb+sMNd443rKXCPTq/jAr6sxLgNc47v3AV6pr5IwGc5yy6o0LZRfxieQL/o9UJUtA/DASxY8ipb2gyhHvKgskkdk+bTib71YYvCIsk8EQcT7OI0TFp28xliNOFgvDBXfn0DE/M2XBKEuamIMythNwRleDln12ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIkZx0bf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gx27df/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFFEC433F1;
-	Fri, 23 Feb 2024 21:14:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIkZx0bf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85852C433F1;
+	Fri, 23 Feb 2024 21:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708722881;
-	bh=yl3CZeQj3q+MbODgHmMHwet9xKy0k4nfEARp/YeN2cs=;
+	s=k20201202; t=1708722928;
+	bh=cPqJsOwJ2Igj6PpBlc/1N1gBQrxKIGjPyX4ikWmrH5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gx27df/wdNJMr8+1CuZZ+3TaPkaZVRZX1o3fo9UZJNOXzo55Zj/MwVpoDNj4qydMt
-	 yn6/WzHu0ZLTrOzllX1C9D5qukIg7QlPp/oN4H3kfJajOfiVhuSMOeypsxxT9RZcm9
-	 EZ3TNnMDrI/yu8KM8729XCHFGblfKl/ICHkc8LmpgBQvvEncAkn6ajDqHwGcDInvbH
-	 aO+GI34pX7KMAJxHNZcG5bl1hWOlwpMCGxhHRYsMxRu+XLj8PGUw5GMxwSFtCS8vve
-	 UY5XvC/8+posYtErQlydXsAa1JJg+OcN7dFuim7Q/I080httJhRD8Kf16u8oP4I8af
-	 2S578ThexXzVA==
+	b=KIkZx0bfh9gOKZ5rWDl6Jfv4Bboy+q3eSEMNNFrNwGE1+BRc5BR8s+9i1k+FjA8p7
+	 ovSTR8Ga2+IkQn/Frjo0gQ2zjALzQLkNguDSb8tpJ77JE5t6VFD3DSoXbh8zROfzin
+	 p1kmRU9djDjWPXJiJegxBl+VvUXiTKlQIrj1XbE0gULlNZsRrze9Efmao5bkmmWoQQ
+	 ZPVh/4rxt2zGX6ox+qEL4Q1FGORjppOrC8ypEHJfVn3FftHCWUVdzVG61NEQLS65zV
+	 qGp1WoNZfzSKCTT1NSzXFALE7XGUs1P17+Zm/I7pZ/gOwPCpE/crQ/hGFtddXE/IPv
+	 7cDzZ3lDhAKyQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Kaige Ye <ye@kaige.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 1/3] perf stat: Pass fewer metric arguments
-Date: Fri, 23 Feb 2024 13:14:38 -0800
-Message-ID: <170872283702.3880577.15255792223602721084.b4-ty@kernel.org>
+To: linux-perf-users@vger.kernel.org,
+	acme@kernel.org,
+	krebbel@linux.ibm.com,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	linux-kernel@vger.kernel.org
+Cc: hca@linux.ibm.com,
+	svens@linux.ibm.com,
+	gor@linux.ibm.com,
+	sumanthk@linux.ibm.com
+Subject: Re: [PATCH] perf list: fix short description for some cache events
+Date: Fri, 23 Feb 2024 13:15:26 -0800
+Message-ID: <170872283705.3880577.6190909972006697810.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-In-Reply-To: <20240221070754.4163916-1-irogers@google.com>
-References: <20240221070754.4163916-1-irogers@google.com>
+In-Reply-To: <20240221091908.1759083-1-tmricht@linux.ibm.com>
+References: <20240221091908.1759083-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,26 +51,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 20 Feb 2024 23:07:52 -0800, Ian Rogers wrote:
-> Pass metric_expr and evsel rather than specific variables from the
-> struct, thereby reducing the number of arguments. This will enable
-> later fixes.
-> 
-> To reduce the size of the diff, local variables are added to match the
-> previous parameter names. This isn't done in the case of "name" as
-> evsel->name is more intention revealing. A whitespace issue is also
-> addressed.
+On Wed, 21 Feb 2024 10:19:08 +0100, Thomas Richter wrote:
+> Correct the short description of the following events:
+> DCW_REQ, DCW_REQ_CHIP_HIT, DCW_REQ_DRAWER_HIT, DCW_REQ_IV,
+> DCW_ON_CHIP, DCW_ON_CHIP_IV, DCW_ON_CHIP_CHIP_HIT,
+> DCW_ON_CHIP_DRAWER_HIT, CW_ON_MODULE, DCW_ON_DRAWER,
+> DCW_OFF_DRAWER, IDCW_ON_MODULE_IV, IDCW_ON_MODULE_CHIP_HIT,
+> IDCW_ON_MODULE_DRAWER_HIT, IDCW_ON_DRAWER_IV, IDCW_ON_DRAWER_CHIP_HIT,
+> IDCW_ON_DRAWER_DRAWER_HIT, IDCW_OFF_DRAWER_IV, IDCW_OFF_DRAWER_CHIP_HIT,
+> IDCW_OFF_DRAWER_DRAWER_HIT, ICW_REQ, ICW_REQ_IV, CW_REQ_CHIP_HIT,
+> ICW_REQ_DRAWER_HIT, ICW_ON_CHIP, ICW_ON_CHIP_IV, ICW_ON_CHIP_CHIP_HIT,
+> ICW_ON_CHIP_DRAWER_HIT, ICW_ON_MODULE and ICW_OFF_DRAWER.
 > 
 > [...]
 
 Applied to perf-tools-next, thanks!
-
-[1/3] perf stat: Pass fewer metric arguments
-      commit: eee41e6b287e2adfefbe3b6fc80c66097c076f89
-[2/3] perf metrics: Compute unmerged uncore metrics individually
-      commit: a59fb796a36bb6c2b7e6e256a9e5f9ba18109937
-[3/3] perf stat: Fix metric-only aggregation index
-      commit: bafd4e75c1ac5a9da0aec5c7c52c7a72613a0cf3
 
 Best regards,
 -- 
