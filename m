@@ -1,104 +1,108 @@
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC9723CE
-	for <linux-perf-users@vger.kernel.org>; Sat, 24 Feb 2024 10:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF91417E9;
+	Sat, 24 Feb 2024 15:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708770914; cv=none; b=g2c5/beD+c1E43vC2bCxoHrI8zkEDCipEq4t8UlWvBfvNBvWTBJJrAgzI2Z99NG8tOO2FnqFkILicXsSiJiNAEX8GgYPq6D4AzfuxzKXRrLOz+/lf2AN+h3nM1DOvzNehKWWwqufe6j6hzT+NAgf57q3d1wwN1vXf7lRymH0JXE=
+	t=1708789682; cv=none; b=lKt04wTMNV48ZFEy5Le4rnZe4MSV8xuxl724WAA69jujgLvFjXDpPBE+EXXtn7SARWFmVEYwrEt3hqa5XfGtcukbP957VJAy7Ioc416JtTniorBi6qEH6N5XWcm9rfGt4eY71KDKzHbcMXm9HenOxQS1BWEaRD1pbBjpAqV1xEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708770914; c=relaxed/simple;
-	bh=FKVmx7HpE2ep54ZS8eZHiCvcg/1cKYk/1oKsrQ+s+sU=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=dOkFuZyg3cULt8PGOTpZXj7xiZrL8UM5+RhYG8XCyuWYj4qJt9s+ezbNF8oGWhDSxsjvhSzlIOh1cbzJsXpjj2npRoqqAx2GTKIxQgApphVDxZJpEy2nBOh0qzapMaUR/85h8Vo8wmcTHt6XBPaiBCbXS91Iv6S+zkwdJbClFlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=L+sCxD86; arc=none smtp.client-ip=203.205.221.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1708789682; c=relaxed/simple;
+	bh=AgfceBaBph7sVUR2Dyn5Iudnt1yeQy1TvBMVEfuCNOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mdgD7E6H9eFC1yhwIiQao3sVT03DghTc58OfHEouJKYSfbkNjXG+3PpZbWo2nAtOsqyGl3ZLpauT+jboLFy7aFdUTb7vvwoGOZ0HyK8lHjZtJszNFiS3ukfUYhiM/yd3AGuiglBtNCzjAxyRGUuaeMsOTEtFMOBWq+SdSzApKf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jGRs+thD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="L+sCxD86"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1708770609; bh=JakpM4UpT9WYC+dBrABZ4HnlbAhvwlK1yGteAKNIH+E=;
-	h=From:To:Cc:Subject:Date;
-	b=L+sCxD86ctMNDKC3SXM/rxpus5vEsoqVF/yXnJXbXjUZVhk4hU2LeghogRxCnKemY
-	 bfKMWwdgY9SRowMsHkNPCJAXJ1qyQ+pP2iLVW/lNk+4QqfeRhQyiigxV0Uyr2wcihM
-	 0yWCuHmRnUwwlXnC9FJj6thP30CUXzXsgiDj6g0Y=
-Received: from localhost.localdomain ([153.3.164.50])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id 7861CABA; Sat, 24 Feb 2024 18:30:06 +0800
-X-QQ-mid: xmsmtpt1708770606tm0ddc59u
-Message-ID: <tencent_088804E150842691191FD0021AEE8649EB0A@qq.com>
-X-QQ-XMAILINFO: NDgMZBR9sMmaOdGZZpJJ3799IWdt1+NiWL4BNUWo1Bx4tCkhNDvqXhvPEh/qGL
-	 iBOJlnBuZVivtyd2vNm4pCf3RGWVtqUIn3zJfC1kL0Gjhiok2Y+SWIM02Vt8heXevfTMq6d2zPCT
-	 3v0pi/AkS4hm4VwJamQt75chtZ8VM6h2VGs/3QeXACVajLxYkjEfl7amUr6VoIRhzrlvsCifQTjg
-	 z3uWDpDyBObbYrC7fgLUkoSNf9V+al2J4UyE9ZH4bs7C75br5ytVZ3RIGm3/datk1zh3Om75dwH9
-	 49dDkGcjBWX6yu/6QzpVsegEigXAN/j08HS/ESpiXnESkWLHNmXppdAkf4g/fOcayNU1kCtZzFxe
-	 kqFVu5u388bpsfuLGKpVYLzHgCKIygHiYkLWClvDxo+ywLnP/Qc9xB9hq49+eQNP/tY4hL17MAbe
-	 5hl5j0T3y3npONMOKjVGQ3kp1tEGMjD+QQl3XEtQdRKNijpQHGOcq0/FfBTvQ5PAXoiSnS2odcEo
-	 YRbOC8d6m+3noj8tCbpC9jimpTDO+Z/4iVImY16kp38B9FUnibxFIHfEmODfeDFdxVMGp6YaF2AD
-	 quC51p9pVX2pKaI82ATMleV08QokfwwUV2gd6S50WV4QgareSAqV64fPqD2fiaFEAH/R9VSer6Jk
-	 5sEfkoqb6Rys5O0/46/nvRGNZhFUY9mt7DD/tjUpC63pwhKkL+abBqEmxKzGH5bbes2ZNBTtDiia
-	 QnWS4/37WpxetcLzBMX1R5W3lTgx7qRlnXshcqthwwJPLJdulv84phKNgqTnwWfgSUUDfdxnbxqh
-	 ZDNF4bantifcdeyf/vZKjyyD0EA2seJjYbd0z3lQTwTM3OzN/W8xd3nCMzVFKTxmCmYoBH/1PIIK
-	 Zaiq3zwjIGFtZx49boURPANaxoMpjb9T5Q9i6PoUhbY5gpR5rXwflCB4bi+T9CvV4DYZAknjGTXv
-	 H+MoDsConeTSaAmZfoaK4DLvsFnnjnBBweRHi3JEwEkq9a5ilpYpxGKJ3ui5Z6OQYuxhOLgVLfXm
-	 hNzQWirQ==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: linke li <lilinke99@qq.com>
-To: 
-Cc: lilinke99@qq.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jGRs+thD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A62C433F1;
+	Sat, 24 Feb 2024 15:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708789681;
+	bh=AgfceBaBph7sVUR2Dyn5Iudnt1yeQy1TvBMVEfuCNOg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=jGRs+thDgYc2Z/T7N/Fu8f+hNqNixXrAff/1MLj1FSVAkW91gg/HPMawZL5VG0h9a
+	 oeb2IPch8CcZI8haaHwOrPyOGcfTTmmCHjdys8lQR6F9hs6SMj+8s3wTTADXg7wFNq
+	 lV7Bt4Mgk4KheisZz+8YsA5I5jQbCYXcPLfKpqTtTddSsQOXSq9rOPCHcpaKnRR3Fh
+	 6nvIOJgJ080M5x0xaLhjdWUEYuJo9vhR5+GRioqL5oBM66cLAcnD2beU4blxPhqoPh
+	 9TL6cgxII40I7E7IDpi5jawHBZMvgFQD8UYfEJaeAVmRd7zbImC8RmXnWdzwA0pDC8
+	 amwspg7nh49Ew==
+Date: Sat, 24 Feb 2024 12:47:57 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
 	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] uprobes: use READ_ONCE() to read mm->uprobes_state.xol_area in concurrent environment
-Date: Sat, 24 Feb 2024 18:25:19 +0800
-X-OQ-MSGID: <20240224102519.19874-1-lilinke99@qq.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf bpf: Check that the minimal vmlinux.h installed is
+ the latest one
+Message-ID: <ZdoPrWg-qYFpBJbz@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In function get_xol_area(), mm->uprobes_state.xol_area is read using 
-READ_ONCE() in line 1534
+When building BPF skels perf will, by default, install a minimalistic
+vmlinux.h file with the types needed by the BPF skels in
+tools/perf/util/bpf_skel/ in its build directory.
 
-1534   area = READ_ONCE(mm->uprobes_state.xol_area); /* ^^^ */
+When 29d16de26df17e94 ("perf augmented_raw_syscalls.bpf: Move 'struct
+timespec64' to vmlinux.h") was added, a type used in the augmented_raw_syscalls
+BPF skel, 'struct timespec64' was not found when building from a pre-existing
+build directory, because the vmlinux.h there didn't contain that type,
+ending up with this error, spotted in linux-next:
 
-while read directly in line 1530
+    CLANG   /tmp/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o
+  util/bpf_skel/augmented_raw_syscalls.bpf.c:329:15: error: invalid application of 'sizeof' to an incomplete type 'struct timespec64'
+    329 |         __u32 size = sizeof(struct timespec64);
+        |                      ^     ~~~~~~~~~~~~~~~~~~~
+  util/bpf_skel/augmented_raw_syscalls.bpf.c:329:29: note: forward declaration of 'struct timespec64'
+    329 |         __u32 size = sizeof(struct timespec64);
+        |                                    ^
+  util/bpf_skel/augmented_raw_syscalls.bpf.c:350:15: error: invalid application of 'sizeof' to an incomplete type 'struct timespec64'
+    350 |         __u32 size = sizeof(struct timespec64);
+        |                      ^     ~~~~~~~~~~~~~~~~~~~
+  util/bpf_skel/augmented_raw_syscalls.bpf.c:350:29: note: forward declaration of 'struct timespec64'
+    350 |         __u32 size = sizeof(struct timespec64);
+        |                                    ^
+  2 errors generated.
+  make[2]: *** [Makefile.perf:1158: /tmp/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o] Error 1
+  make[2]: *** Waiting for unfinished jobs....
+  make[1]: *** [Makefile.perf:261: sub-make] Error 2
+  make: *** [Makefile:113: install-bin] Error 2
+  make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
 
-1530   	if (!mm->uprobes_state.xol_area)
-1531	    __create_xol_area(0);
+So add a Makefile dependency (Namhyung's suggestion) to make sure that
+the new tools/perf/util/bpf_skel/vmlinux/vmlinux.h minimal vmlinux is
+updated in the build directory, providing the moved 'struct timespec64'
+type.
 
-In the same environment, reads in two places should have the same
-protection.
-
-Signed-off-by: linke li <lilinke99@qq.com>
+Fixes: 29d16de26df17e94 ("perf augmented_raw_syscalls.bpf: Move 'struct timespec64' to vmlinux.h")
+Cc: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Link: https://lore.kernel.org/lkml/CAM9d7ciaj80QZL0AS_T2HNBdMOyS-j1wBHQSYs=U3kHQimY1mQ@mail.gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/uprobes.c | 2 +-
+ tools/perf/Makefile.perf | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 929e98c62965..e110941fbc6b 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1527,7 +1527,7 @@ static struct xol_area *get_xol_area(void)
- 	struct mm_struct *mm = current->mm;
- 	struct xol_area *area;
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 3cecd51b239707ba..33621114135ee2c8 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1147,7 +1147,7 @@ ifeq ($(VMLINUX_H),)
+   endif
+ endif
  
--	if (!mm->uprobes_state.xol_area)
-+	if (!READ_ONCE(mm->uprobes_state.xol_area))
- 		__create_xol_area(0);
- 
- 	/* Pairs with xol_add_vma() smp_store_release() */
+-$(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL)
++$(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL) $(VMLINUX_H)
+ ifeq ($(VMLINUX_H),)
+ 	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
+ else
 -- 
-2.39.3 (Apple Git-145)
+2.43.0
 
