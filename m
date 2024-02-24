@@ -1,97 +1,121 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD4E4416;
-	Sat, 24 Feb 2024 02:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81B113AE9;
+	Sat, 24 Feb 2024 02:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708741659; cv=none; b=KVKKym7Yb7cBvwnUy/JwRucJwG02zgky4SUYYkkezJFID9xaTM4d30JYbaAxY3ug8jnAy23SXfEM25aXQBLGnmC3eQeMij9fl13znASmI9zoP7tkFmWiX34mgWtll5KWjNNd4fTrsk/sFIDmJVcl8LZ0SnufcchCFxO2nw5Ys8Q=
+	t=1708742718; cv=none; b=IM6vRWt9XaGq98Kw+zLLVkWVPDoxNiSgMPYP+bdAKozOcVWQ0zwPsB83ugMd1wxl4clc9tDe41U84blM+z6nOBsGoimZc9q5mgMQR36NDOG3DNq1wAaY6213jEoy2UHSkWukzjcS2v3nyMV1LX8dsRfOqlvh5u9+7qNS8kOuJVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708741659; c=relaxed/simple;
-	bh=SnnpXhRiXHZaJWui/ynS44fsl2ahacrRzi43O20s2Mg=;
+	s=arc-20240116; t=1708742718; c=relaxed/simple;
+	bh=tkQEf05oq2kmii+ClsY92Oy+mus+/9mjeSBNHOROiwo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p3/0Vctbxp0t3j6s/949TojPGV0gcvSHTWYNb9wQ7R10h0r2KHBo3k3xDI5RebvmTa6jjprxntDYSF+UM2JARuLaT+iOn0qo5HJe13zNtUGi7r45Ba6EDdqv/82UB1BUcgEndfq45p92wWMWW/senM6HfTAAYE/D8euGA3hcEE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.171
+	 To:Cc:Content-Type; b=JHbz/vljEzcOEpEzUlRpZH3oU2KFtmDZagBcV/dwf+IbqwIVPuNYqmiYqDCogcOwS1c1PZ4k60Xz9/8dE4sfRmDgp2iZuiyRizk0z6oWN8IbBnz6ruiAnS4FU56KNnQYcdQkXJ6DG5+Uql1rI4vW4KhCuXJIeOklTzyUc4z80Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso1340503a12.1;
-        Fri, 23 Feb 2024 18:27:37 -0800 (PST)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2995fa850ddso712637a91.0;
+        Fri, 23 Feb 2024 18:45:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708741657; x=1709346457;
+        d=1e100.net; s=20230601; t=1708742706; x=1709347506;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3eFeIpWyw0JX2LXENpyJpoKJYL5eW5CDm89clQT1CXo=;
-        b=q9VXi26rgCfa9b4PCWL4ze0B38OMQWPsCpn+yY0ZVFCaDg2r6DGS+zk/D67fXO/b6O
-         r8404biRwrdnyJSGgq98bVA5slLH4CWGzdA8JQzKmMsQxN3istaNonNM48xd6/KsTjFA
-         CWRrH5YwnJsacP5tkB8PeOK2UpgcBf6xxplRp5d3KJpNODSuDUqvBw5CwsuCOZX06K/U
-         wxRNzwZDWzSkiYUy1a//56Q5+ZCjj8kiqjZgTqb+1ri6b+nSZgElXn0ZFlSZhcf/moLO
-         gXrebSYPo/Rea8l9kmLfzfGDTA+eed9ka+MxCkfHnY1qfIF8cQKNdVmOdf0QFj6ukA69
-         DECQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgdtPL9hmVBoBM9zcY2DH/F1Sn0iy6HDNirhhnUXAe/pIekmsq1exUzFCSjiLPh15rsP/aUYK7mcsRKY//Z8t4992zY+7imv44V6SWgePOxtgkg3hy11Z9N81H7535pBSvhMys4xIvkq92JX1aOQ==
-X-Gm-Message-State: AOJu0Yw+37CCntuhg96Km4i81xNcn4vAs91G4jD1DZMTH9OnTxQ5fFSf
-	uPl1MsDMM409XuT2jIJOdw/ow93ZnRsjQVXrv+74Q0z0GT/nz0KSeaKIH1GXgC+Izo+w4X/R3Yl
-	nA/YGikQkaeBORQhOmy9zU3LcNOA=
-X-Google-Smtp-Source: AGHT+IHqVqHVttZpquBqRuC3S3h2BN6FKvmXVVp8hoov/EKaZg9Jim7KyH/g1jdrYG6Q16kH1FSmYChpSEC5GNstSS0=
-X-Received: by 2002:a05:6a20:428a:b0:19e:aaba:a7cb with SMTP id
- o10-20020a056a20428a00b0019eaabaa7cbmr1765148pzj.39.1708741656872; Fri, 23
- Feb 2024 18:27:36 -0800 (PST)
+        bh=mPPv8r1RSsDRM/zfoDy7ZupsBXVuitqH/rRRBSdP66M=;
+        b=cNekbBS/dpwTLfeP9nBHN6gNpak+307Fe9YkpOoXw3tJR6yNM4op8kDdfTBneOK4Lc
+         ekNu1PCc7whro2zJGVIP7VCsvj/XcbjBGvyCmY7ZgoMRdbur7S0q/e7k+L1xdviL7dqr
+         tCI05kquDiJVPfMI6u+Hwk/mDtUoDZADA78/cUgVl8MRv7kd8PCSbB2YIhRgGQsYG15Q
+         xIQxtfoDFxbYTkkIJZ4bBJp4T5UpC0STjbbY9VeI0fFA6WG1PH8ZLDakvu8PR+VIEVdc
+         B9Fs6y9sbRnkmN3nYdi+JM92oyHr2EnEhQP01TIMFHqLh6JQnl/Smyj+oXxjN29p6Y0g
+         pEDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtWyaOQ5X5DHwP20CiA4fQ4qOzk4rvRNnLhG0PKETYRPJ7IISTYmiLgvJ/kz1KLyvJ2XJFGDIzH7p5DfMmdn2+ireorQM2c6sa4VRY73a7fmGxZizuHQcdmlhC65625Y9bc8tCuOD8UdZJ7gldjw==
+X-Gm-Message-State: AOJu0YyXqduRP2LXpIXFL5mGSDQEI8HxZUoknt9lNqv/KZb4R1i2PUE8
+	+GhDSyypmzj4i6pKRW/3n3sN8WCBuz5Q1CdGa58lO1WTa3KuQ+m9qNU9H2ULCUCahEjOIevgjxb
+	aTZSYOGOUUfn73KGh7ILvp2k11ao=
+X-Google-Smtp-Source: AGHT+IFR/f3udUFSXOTvTpD+RswtOEM5KE3C5Ak2h+Y+7fUTo0ahihL6PLsWilwsOPmnpeeRyGDSNst8cMjrPmTxeUY=
+X-Received: by 2002:a17:90a:5b07:b0:29a:89db:7581 with SMTP id
+ o7-20020a17090a5b0700b0029a89db7581mr1985562pji.13.1708742705745; Fri, 23 Feb
+ 2024 18:45:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221175210.19936-1-khuey@kylehuey.com> <20240221175210.19936-2-khuey@kylehuey.com>
- <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
- <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com>
- <ZdemibZepMqWvv6U@x1> <CAP045Aqc6woHGYKJG4d=x4gPd0=PmrLeFv25Rkts1a8xFuocOQ@mail.gmail.com>
- <ZdjdAKIV39A-jpR5@x1> <CAOp6jLZKZKyYrJrzjZ90ZdxzzuDV0wp+XS3Rzssd-kvZV45JSQ@mail.gmail.com>
-In-Reply-To: <CAOp6jLZKZKyYrJrzjZ90ZdxzzuDV0wp+XS3Rzssd-kvZV45JSQ@mail.gmail.com>
+References: <20240221072100.412939-1-weilin.wang@intel.com>
+ <20240221072100.412939-3-weilin.wang@intel.com> <ZdY4a5yx-C9ziobq@x1>
+ <CAP-5=fU5JVki4OCYvYyPoBLguwHSwXripiO3Gq+MddV9ZWfnTQ@mail.gmail.com>
+ <CAM9d7ch3E=hNbX6=xUHZ+B_Dphy_sALzaCki1he3-O00DAoYXg@mail.gmail.com> <CAP-5=fWf4YxOZUmuZsUt9na=CpXL-eLkd9d6OvtsgJkONC1gzQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWf4YxOZUmuZsUt9na=CpXL-eLkd9d6OvtsgJkONC1gzQ@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 23 Feb 2024 18:27:24 -0800
-Message-ID: <CAM9d7cg1RDHhaNr94+Gbk+UqZ18gidwDMJnhH2ad1E0Tw5X1xw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Test FASYNC with watermark wakeups.
-To: robert@ocallahan.org
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kyle Huey <me@kylehuey.com>, Ian Rogers <irogers@google.com>, 
-	Kyle Huey <khuey@kylehuey.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+Date: Fri, 23 Feb 2024 18:44:54 -0800
+Message-ID: <CAM9d7chwXoBjkEb7itS84UUDzbARETvU7w4d0Mni4vbGHURFxA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 2/5] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, weilin.wang@intel.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Feb 22, 2024 at 11:48=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Thu, Feb 22, 2024 at 11:03=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Feb 21, 2024 at 12:34=E2=80=AFPM Ian Rogers <irogers@google.com=
+> wrote:
+> > > Weilin raised the TPEBS problem in the LPC 2023 talk, the issue being
+> > > that sampling and counting don't really exist in the current perf too=
+l
+> > > code at the same time. BPF could be a workaround but permissions are
+> > > an issue. Perhaps leader sampling but then what to do if two latencie=
+s
+> > > are needed. Forking perf to do this is an expedient and ideally we'd
+> > > not do it.
+> >
+> > Even with BPF, I think it needs two instances of an event - one for
+> > counting and the other for sampling, right?  I wonder if it can just
+> > use a single event for sampling and show the sum of periods in
+> > PERF_SAMPLE_READ.
+> >
+> > I'm not sure if an event group can have sampling and non-sampling
+> > events at the same time.  But it can be done without groups then.
+> > Anyway what's the issue with two latencies?
+>
+> The latencies come from samples and with leader sampling only the
+> leader gets sampled so we can't get two latencies. For 2 latencies
+> we'd need 2 groups for 2 leaders or to modify leader sampling
 
-On Fri, Feb 23, 2024 at 1:44=E2=80=AFPM Robert O'Callahan <robert@ocallahan=
-.org> wrote:
->
-> (I work with Kyle.)
->
-> IMHO this is more of a bug fix than a feature. `man perf_event_open`
-> expects this to work already: "watermark: If set, have an overflow
-> notification happen when we cross the wakeup_watermark boundary" and
-> later "Alternatively, the overflow events can be captured via a signal
-> handler, by enabling I/O signaling".
->
-> Bug fixes need regression tests. Such tests should fail on any kernel
-> where the bug is present. It seems strange to expect each such test to
-> detect whether the bug "should be fixed" in the kernel it's running on
-> and skip when that's not the case. I haven't seen any other project
-> try to do this. Instead (as in kernel selftests) the tests, the code
-> under test, and any metadata about which tests are expected to pass
-> are all in the repository together and updated together.
->
-> It makes sense that tests for the code in tools/perf should not fail
-> on older kernels, given that the code in tools/perf is expected to
-> work on older kernels. But tests for bug fixes in the kernel itself
-> should be expected to fail on older kernels and therefore should live
-> somewhere else, IMHO.
+Do those 2 latencies come from 2 events or a single event?
 
-I think it makes sense to put the test in the selftests and to be
-deployed with the kernel.  AFAICS it doesn't have anything
-specific to the perf tools and tests the general kernel behavior.
+But I realized that PERF_SAMPLE_READ would return the period
+only and I guess the latency is in PERF_SAMPLE_WEIGHT(_STRUCT), right?
+Then it won't work with PERF_SAMPLE_READ unless we extend the
+read format to include the weights.
+
+> - if we
+> could encode that we want to sample but don't need the sample in the
+> mmap, just want the latency being available to be read, etc. This and
+> BPF are both long-term viable solutions, but forking is the expedient
+> solution to get something going - we'd likely want it as a fallback
+> anyway.
+
+Maybe we can add it to the read format, but I'm not sure how the
+kernel maintains the value.  PERF_SAMPLE_READ would be fine
+to return the value in the sample.  But it should support read(2) too.
+
+Simply adding the values might not be what users want.  Maybe
+average latency/weight is meaningful but it could depend on
+what the event measures..
 
 Thanks,
 Namhyung
