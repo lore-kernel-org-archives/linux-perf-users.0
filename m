@@ -1,99 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B2446544;
-	Sat, 24 Feb 2024 15:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCB94879B;
+	Sat, 24 Feb 2024 19:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708790331; cv=none; b=iEoNFwfEeSCv33wkpaGvtmBUSPTrJnXZx4VoSTNWERNa81FpFG9cb7Rb2kiMcNhG+fjVnmkUvARnAO4c//kGkOfCn/j2tsLMYCADCtZn6fYWBmFxer3F2RcrhCRy356b+BQjrpLPPnsYeaeD6bDmdD9GVucQE//iulDco//38Yc=
+	t=1708802352; cv=none; b=a5tBvTuW9zQr3wk4MHoobovW/9K185PnslQA6Xlf1Af0jpwXWKZ8U02JmJ/cBH4aImerUHKv+EGVejdG4wfTiUCwkpI5xC/RrCtlST51wI2ra7K/TLmcasSM1Ayccr8U87jnGNgVLbHJ50E/FC8n4d/Ch6aKk5ncunMBsTR/zSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708790331; c=relaxed/simple;
-	bh=ymKqKz0uEEANxmgT8GLsJEyIWmA5nB8NdlwU00hW8TA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wms/30kM15DrLBS6RAVeOlpiKR6YYLgMCcayz1zAWH0R56wMc/46vkXOYCXIrCMvBu09bXaDbUOkqUzZxlwapyA8HgQ0bv3XF6gmjih6+xUR8F0zNC/NgcJ6jsOfhBOCFfURT5MAfmFjiNTNarV7LgeUM79UT7buDDXM5y4UU3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dEVBuFq6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dEVBuFq6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 987B8C433F1;
-	Sat, 24 Feb 2024 15:58:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708790331;
-	bh=ymKqKz0uEEANxmgT8GLsJEyIWmA5nB8NdlwU00hW8TA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dEVBuFq6oJDdAP1MaqLFUlcv2816kENsCzujuM1m4gOap4OVMsQSTjdtJsr5GfPC5
-	 KSEbXmYYX91ADpokA/uP3LixK5WMdaRA8BmnhM2UUplhgnrH/YisHWuLc7ipNDLx6T
-	 GHR1TwDCOOyCc/YlQuDWUt1i+BiMniv3Vjz6BMmTCRY2sxUBTWQGtDk6kAoBWWr7qp
-	 duxBPVQlmrYzhejxhImM50cONNy6wYJgvXu/OYUOK764M3dWmGuTuPxd2T6nz3Pbis
-	 fLqYAEszJLvgW1KEbKMcIBWXor5W0JarQ8hKozW/YOTBNMPEEAUH1K2i1ItfMiSca1
-	 sOYHEDqSTi9qA==
-Date: Sat, 24 Feb 2024 12:58:47 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Robert O'Callahan <robert@ocallahan.org>
-Cc: Kyle Huey <me@kylehuey.com>, Ian Rogers <irogers@google.com>,
-	Kyle Huey <khuey@kylehuey.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf test: Test FASYNC with watermark wakeups.
-Message-ID: <ZdoSN9FA46NfrkzJ@x1>
-References: <20240221175210.19936-1-khuey@kylehuey.com>
- <20240221175210.19936-2-khuey@kylehuey.com>
- <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
- <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com>
- <ZdemibZepMqWvv6U@x1>
- <CAP045Aqc6woHGYKJG4d=x4gPd0=PmrLeFv25Rkts1a8xFuocOQ@mail.gmail.com>
- <ZdjdAKIV39A-jpR5@x1>
- <CAOp6jLZKZKyYrJrzjZ90ZdxzzuDV0wp+XS3Rzssd-kvZV45JSQ@mail.gmail.com>
+	s=arc-20240116; t=1708802352; c=relaxed/simple;
+	bh=EIBC3ik/1IgUIYuIzkjpB25tXBwPX2pnTpaTkdtCpig=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IOmLIwgz9P+W1CUieD8WmAkk5ZbOgmt/aFBjZ9HU5++ScYp2R1zXTON+MiEPAerjrxWkcjzfZj1BNSwJuY3yr0DpesgzSV0OFleFNXHsEA1I5cor4mn8v78dGq6ZQ1s8J0YaqTntIRv8LWp7Yz7OmnAR9jPzd2X79PXygo/uzEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-29aa77e86b2so178949a91.0;
+        Sat, 24 Feb 2024 11:19:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708802350; x=1709407150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qR6Uf/hJ5IVuBEGWnR8Fp0SCf+fS67gdVlvmoGdV0Io=;
+        b=P/rGLcq9GBPyuYJGFRYlxp9dCLUGl8P6xfvG2etlZpPyIZrxPWN64hm4sFwh10c8Jk
+         KA9vX4IPDWawA9lEU5Z/GNskvA7ClGaa5O4qBmCq464m+6sC5eYf8z8A4miD4ZGsMb0I
+         Z8FAMLiNoOdmuGTddnhy/M6r1ypHUHxhLMpph4S/1v+03zfZVoPDcS70ADkwEvdTQpax
+         /HvNmn5Ktl9q+jXV2r7mgCrwAUZabZGMvqjQsqQ9Ov+oYsa/lZvN+L1ho/74N5JQKO99
+         W2HSNBBRwfm/3CdgIYfTtsjV03gQRBAmAu0DbI1FwHLBPDqgWPAikPx9ElR+iftX1l1y
+         L25A==
+X-Forwarded-Encrypted: i=1; AJvYcCUETSyDTToRnzzkvQ0/Osqn7/Dn/YffaKojPlcacXEqWGPZoAuMbpJ66QO7faYtHcCSfHNZrgwdimctogLzOTNcxAB8yQKLxBBxqmWtdR4gCZgctskE1DJUKgfxNTI/qGq1gUcf4pzOdW5OVGLa5Q==
+X-Gm-Message-State: AOJu0YxzTGeXppjfAQLuGHHSFuhYR1r5J4MjYnI4dcqGEfUhqx+m6Wkf
+	2OzhcdSv0CA7Mp9hweYdEk7TTlEgS0IYvMJoZDwWGQto9it1aSyqWyPfUIHAo7o8KJuSs2PegqI
+	Vg3gq2pGWpcSSnxi2ByQDNIg/44R8e/0x
+X-Google-Smtp-Source: AGHT+IHRwNME7UDzdtOZh8uhim3VicNZdVOq4acklVIhqN414Zrxcd6TE1HeIkuojoco6AKAERyT3NcvLuTpivozbXs=
+X-Received: by 2002:a17:90b:3017:b0:299:7c4f:c8ee with SMTP id
+ hg23-20020a17090b301700b002997c4fc8eemr1967496pjb.19.1708802350152; Sat, 24
+ Feb 2024 11:19:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOp6jLZKZKyYrJrzjZ90ZdxzzuDV0wp+XS3Rzssd-kvZV45JSQ@mail.gmail.com>
+References: <ZdoPrWg-qYFpBJbz@x1> <CAP-5=fVhQLSXb7GSn3H=CLCq+n7hr2FXgQLrOyJZAeBOJUOveA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVhQLSXb7GSn3H=CLCq+n7hr2FXgQLrOyJZAeBOJUOveA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Sat, 24 Feb 2024 11:18:58 -0800
+Message-ID: <CAM9d7ch3iaVDAFsVmmrF_BHCEcT=sEUUKx7TjJ8bOY7+zspuTA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf bpf: Check that the minimal vmlinux.h installed
+ is the latest one
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 24, 2024 at 10:43:38AM +1300, Robert O'Callahan wrote:
-> (I work with Kyle.)
-> 
-> IMHO this is more of a bug fix than a feature. `man perf_event_open`
-> expects this to work already: "watermark: If set, have an overflow
-> notification happen when we cross the wakeup_watermark boundary" and
-> later "Alternatively, the overflow events can be captured via a signal
-> handler, by enabling I/O signaling".
-> 
-> Bug fixes need regression tests. Such tests should fail on any kernel
-> where the bug is present. It seems strange to expect each such test to
-> detect whether the bug "should be fixed" in the kernel it's running on
-> and skip when that's not the case. I haven't seen any other project
-> try to do this. Instead (as in kernel selftests) the tests, the code
-> under test, and any metadata about which tests are expected to pass
-> are all in the repository together and updated together.
-> 
-> It makes sense that tests for the code in tools/perf should not fail
-> on older kernels, given that the code in tools/perf is expected to
-> work on older kernels. But tests for bug fixes in the kernel itself
-> should be expected to fail on older kernels and therefore should live
-> somewhere else, IMHO.
+On Sat, Feb 24, 2024 at 7:57=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Sat, Feb 24, 2024 at 7:48=E2=80=AFAM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > When building BPF skels perf will, by default, install a minimalistic
+> > vmlinux.h file with the types needed by the BPF skels in
+> > tools/perf/util/bpf_skel/ in its build directory.
+> >
+> > When 29d16de26df17e94 ("perf augmented_raw_syscalls.bpf: Move 'struct
+> > timespec64' to vmlinux.h") was added, a type used in the augmented_raw_=
+syscalls
+> > BPF skel, 'struct timespec64' was not found when building from a pre-ex=
+isting
+> > build directory, because the vmlinux.h there didn't contain that type,
+> > ending up with this error, spotted in linux-next:
+> >
+> >     CLANG   /tmp/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw=
+_syscalls.bpf.o
+> >   util/bpf_skel/augmented_raw_syscalls.bpf.c:329:15: error: invalid app=
+lication of 'sizeof' to an incomplete type 'struct timespec64'
+> >     329 |         __u32 size =3D sizeof(struct timespec64);
+> >         |                      ^     ~~~~~~~~~~~~~~~~~~~
+> >   util/bpf_skel/augmented_raw_syscalls.bpf.c:329:29: note: forward decl=
+aration of 'struct timespec64'
+> >     329 |         __u32 size =3D sizeof(struct timespec64);
+> >         |                                    ^
+> >   util/bpf_skel/augmented_raw_syscalls.bpf.c:350:15: error: invalid app=
+lication of 'sizeof' to an incomplete type 'struct timespec64'
+> >     350 |         __u32 size =3D sizeof(struct timespec64);
+> >         |                      ^     ~~~~~~~~~~~~~~~~~~~
+> >   util/bpf_skel/augmented_raw_syscalls.bpf.c:350:29: note: forward decl=
+aration of 'struct timespec64'
+> >     350 |         __u32 size =3D sizeof(struct timespec64);
+> >         |                                    ^
+> >   2 errors generated.
+> >   make[2]: *** [Makefile.perf:1158: /tmp/build/perf-tools-next/util/bpf=
+_skel/.tmp/augmented_raw_syscalls.bpf.o] Error 1
+> >   make[2]: *** Waiting for unfinished jobs....
+> >   make[1]: *** [Makefile.perf:261: sub-make] Error 2
+> >   make: *** [Makefile:113: install-bin] Error 2
+> >   make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> >
+> > So add a Makefile dependency (Namhyung's suggestion) to make sure that
+> > the new tools/perf/util/bpf_skel/vmlinux/vmlinux.h minimal vmlinux is
+> > updated in the build directory, providing the moved 'struct timespec64'
+> > type.
+> >
+> > Fixes: 29d16de26df17e94 ("perf augmented_raw_syscalls.bpf: Move 'struct=
+ timespec64' to vmlinux.h")
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Link: https://lore.kernel.org/lkml/CAM9d7ciaj80QZL0AS_T2HNBdMOyS-j1wBHQ=
+SYs=3DU3kHQimY1mQ@mail.gmail.com
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-That is fine, I was mostly trying to help in having the 'perf test'
-patch posted to address the review comments from Ian.
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
 
-And I'm biased because I work on a company that does lots of backports
-and then test perf functionality using 'perf test'.
-
-And also because the kernel now has this BTF information that can be
-used for introspection.
-
-Being able to run the installed 'perf' tool and check if some fix is in
-place and its regression test is passing looked like an improvement
-when compared to the selftests method.
-
-If in the end people decide to do this in selftests, that is ok with me.
-
-- Arnaldo
+Thanks,
+Namhyung
