@@ -1,99 +1,97 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE93C6ABF
-	for <linux-perf-users@vger.kernel.org>; Sat, 24 Feb 2024 01:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD4E4416;
+	Sat, 24 Feb 2024 02:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708737278; cv=none; b=ilwr2OTX80DXWDF4r7I8bYk+xJC9auWwhlSBKR7ZiDID2Leze+aN0aSxxZOQ6vOgtwmPKO7R/3iZjixCjlL+3zgVJqSWa6k7EBS6NR8H+lJ4NlVGoOufMWvDEEiAp0ZZFmKODLCjMcAR2Fblpiq5RIndssfmZYYVKL8Z+MSX17s=
+	t=1708741659; cv=none; b=KVKKym7Yb7cBvwnUy/JwRucJwG02zgky4SUYYkkezJFID9xaTM4d30JYbaAxY3ug8jnAy23SXfEM25aXQBLGnmC3eQeMij9fl13znASmI9zoP7tkFmWiX34mgWtll5KWjNNd4fTrsk/sFIDmJVcl8LZ0SnufcchCFxO2nw5Ys8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708737278; c=relaxed/simple;
-	bh=XueJjsnWsBuj0mZHI8nibC04MzRPfGYeRVMOYJGX0is=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=qdBSJftUnjwt5qAbG/g+rIozKTTNYk48VpFd/DUB10iGVI6RnTAcEMnkgZsUO1D2TcM/ZR9pvnH78B5sGsOXc9FBf04WCZ3gvJlIhARpniQMfHw2/lZonvSJ6vsoZguZ1iPVPV6edPfQiPP/zkIiqHmX8e7/bDgKcLO1ZBx5G/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YycqST1M; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YycqST1M"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-607e613a1baso18543027b3.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Feb 2024 17:14:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708737276; x=1709342076; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4+YELOrJctqfBDK565STy+1m3qLbN+ispRcJAtvKeFk=;
-        b=YycqST1M0NOy4vYKBn+f6sL5ZgrF3JZLPe2fNamoC9GK7lg3wgLLXYrGUKIkRP3sH3
-         o0wM4ctafyhhrhF/JA2w7T1fU7fCSLe/8geh7eACdCnu4Gof4k3kCn2EyRt0cRcIdTEv
-         9OcvlWG93UBPg0UWVjx3eaWPP/dDAdop/Jy9ZeJqr4GrYt/Rrv6KnKZPa2c2CPu/cTSd
-         XcuRJi/laHTyGcfW7R7HBKnE4EyoiVqbf5oJwG+WLQQO5o0warBiq1tVPdFjgIfON+0a
-         fg/XN6g8MDsAVNuZX4iUPf1Z6HjBU8m85cMOx+bkpY28yfqT5Tj4Mez19EJjVgwsv9mL
-         1xIA==
+	s=arc-20240116; t=1708741659; c=relaxed/simple;
+	bh=SnnpXhRiXHZaJWui/ynS44fsl2ahacrRzi43O20s2Mg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p3/0Vctbxp0t3j6s/949TojPGV0gcvSHTWYNb9wQ7R10h0r2KHBo3k3xDI5RebvmTa6jjprxntDYSF+UM2JARuLaT+iOn0qo5HJe13zNtUGi7r45Ba6EDdqv/82UB1BUcgEndfq45p92wWMWW/senM6HfTAAYE/D8euGA3hcEE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso1340503a12.1;
+        Fri, 23 Feb 2024 18:27:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708737276; x=1709342076;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4+YELOrJctqfBDK565STy+1m3qLbN+ispRcJAtvKeFk=;
-        b=slUisEoJrkAl8xFh2cso7W6pqjj4NpVd+rfF+8fkgynMI7DK9zn1E+3sTOpnumVZAe
-         PHqHF+OiAvSpiYnHHCIq3l8Ublx/48KX1lnG7c7e9HySvQI5niItXXWMNLbJG5gTnyxe
-         v7VRJziweenL1VeN8hGkuHyjRsNlpyjg48xYHE+tNLXDGhgh1PBiT63NgacBzJgbSVC6
-         iP+HaC3xI/aVCZZWE2CClCMv1PjbdNZV4yFmxGAggminwTSXVaGwpShsYpSSVEHbgzjQ
-         jy+JsajQenTctJvo7c4skuzol52UZgF0Zh+F2U+SWVxdRvc5eH//cBFIcMoO7Zp3tzzB
-         MBFw==
-X-Forwarded-Encrypted: i=1; AJvYcCWn3tqyIGnlnHgcMA1pXqWOp7/BSbURtyzNk/bTP3xuCwuKzAgUEfkn3rxkF10G7egxlbwlvBNB5fuwCD01Yv49RBcvFeOKJKq+rQBeQJ3d9A==
-X-Gm-Message-State: AOJu0YztFRyvKYlAV6KmcCfuGzGCaxn3CJEnxcbry2QErSVbrvlfKlQo
-	ndoQGmCkQiM3EiREuDmWe23lI2xszJEmFCaTnaCpc8HM6yUGvexIfF/uZNBKJYtfizwEnAAIZay
-	wbfBWLQ==
-X-Google-Smtp-Source: AGHT+IGOFSwDF96U+oZnXcs8GXW7FnIY7FN7qbMOXBfE1wQ0lPzupUOj5R5YIbQ6mjxgr/b8Xcpb5LJ9oa/r
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3cf6:588d:1bf:3fa8])
- (user=irogers job=sendgmr) by 2002:a81:4f0b:0:b0:607:f6f0:bdca with SMTP id
- d11-20020a814f0b000000b00607f6f0bdcamr353865ywb.7.1708737275907; Fri, 23 Feb
- 2024 17:14:35 -0800 (PST)
-Date: Fri, 23 Feb 2024 17:14:20 -0800
-In-Reply-To: <20240224011420.3066322-1-irogers@google.com>
-Message-Id: <20240224011420.3066322-2-irogers@google.com>
+        d=1e100.net; s=20230601; t=1708741657; x=1709346457;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3eFeIpWyw0JX2LXENpyJpoKJYL5eW5CDm89clQT1CXo=;
+        b=q9VXi26rgCfa9b4PCWL4ze0B38OMQWPsCpn+yY0ZVFCaDg2r6DGS+zk/D67fXO/b6O
+         r8404biRwrdnyJSGgq98bVA5slLH4CWGzdA8JQzKmMsQxN3istaNonNM48xd6/KsTjFA
+         CWRrH5YwnJsacP5tkB8PeOK2UpgcBf6xxplRp5d3KJpNODSuDUqvBw5CwsuCOZX06K/U
+         wxRNzwZDWzSkiYUy1a//56Q5+ZCjj8kiqjZgTqb+1ri6b+nSZgElXn0ZFlSZhcf/moLO
+         gXrebSYPo/Rea8l9kmLfzfGDTA+eed9ka+MxCkfHnY1qfIF8cQKNdVmOdf0QFj6ukA69
+         DECQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgdtPL9hmVBoBM9zcY2DH/F1Sn0iy6HDNirhhnUXAe/pIekmsq1exUzFCSjiLPh15rsP/aUYK7mcsRKY//Z8t4992zY+7imv44V6SWgePOxtgkg3hy11Z9N81H7535pBSvhMys4xIvkq92JX1aOQ==
+X-Gm-Message-State: AOJu0Yw+37CCntuhg96Km4i81xNcn4vAs91G4jD1DZMTH9OnTxQ5fFSf
+	uPl1MsDMM409XuT2jIJOdw/ow93ZnRsjQVXrv+74Q0z0GT/nz0KSeaKIH1GXgC+Izo+w4X/R3Yl
+	nA/YGikQkaeBORQhOmy9zU3LcNOA=
+X-Google-Smtp-Source: AGHT+IHqVqHVttZpquBqRuC3S3h2BN6FKvmXVVp8hoov/EKaZg9Jim7KyH/g1jdrYG6Q16kH1FSmYChpSEC5GNstSS0=
+X-Received: by 2002:a05:6a20:428a:b0:19e:aaba:a7cb with SMTP id
+ o10-20020a056a20428a00b0019eaabaa7cbmr1765148pzj.39.1708741656872; Fri, 23
+ Feb 2024 18:27:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240224011420.3066322-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Subject: [PATCH v1 2/2] perf metrics: Fix segv for metrics with no events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+MIME-Version: 1.0
+References: <20240221175210.19936-1-khuey@kylehuey.com> <20240221175210.19936-2-khuey@kylehuey.com>
+ <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
+ <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com>
+ <ZdemibZepMqWvv6U@x1> <CAP045Aqc6woHGYKJG4d=x4gPd0=PmrLeFv25Rkts1a8xFuocOQ@mail.gmail.com>
+ <ZdjdAKIV39A-jpR5@x1> <CAOp6jLZKZKyYrJrzjZ90ZdxzzuDV0wp+XS3Rzssd-kvZV45JSQ@mail.gmail.com>
+In-Reply-To: <CAOp6jLZKZKyYrJrzjZ90ZdxzzuDV0wp+XS3Rzssd-kvZV45JSQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 23 Feb 2024 18:27:24 -0800
+Message-ID: <CAM9d7cg1RDHhaNr94+Gbk+UqZ18gidwDMJnhH2ad1E0Tw5X1xw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf test: Test FASYNC with watermark wakeups.
+To: robert@ocallahan.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kyle Huey <me@kylehuey.com>, Ian Rogers <irogers@google.com>, 
+	Kyle Huey <khuey@kylehuey.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A metric may have no events, for example, the transaction metrics on
-x86 are dependent on there being TSX events. Fix a segv where an evsel
-of NULL is dereferenced for a metric leader value.
+Hello,
 
-Fixes: a59fb796a36b ("perf metrics: Compute unmerged uncore metrics individually")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/metricgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Feb 23, 2024 at 1:44=E2=80=AFPM Robert O'Callahan <robert@ocallahan=
+.org> wrote:
+>
+> (I work with Kyle.)
+>
+> IMHO this is more of a bug fix than a feature. `man perf_event_open`
+> expects this to work already: "watermark: If set, have an overflow
+> notification happen when we cross the wakeup_watermark boundary" and
+> later "Alternatively, the overflow events can be captured via a signal
+> handler, by enabling I/O signaling".
+>
+> Bug fixes need regression tests. Such tests should fail on any kernel
+> where the bug is present. It seems strange to expect each such test to
+> detect whether the bug "should be fixed" in the kernel it's running on
+> and skip when that's not the case. I haven't seen any other project
+> try to do this. Instead (as in kernel selftests) the tests, the code
+> under test, and any metadata about which tests are expected to pass
+> are all in the repository together and updated together.
+>
+> It makes sense that tests for the code in tools/perf should not fail
+> on older kernels, given that the code in tools/perf is expected to
+> work on older kernels. But tests for bug fixes in the kernel itself
+> should be expected to fail on older kernels and therefore should live
+> somewhere else, IMHO.
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 2d6865c392ef..79ef6095ab28 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -44,7 +44,7 @@ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
- 	if (!metric_events)
- 		return NULL;
- 
--	if (evsel->metric_leader)
-+	if (evsel && evsel->metric_leader)
- 		me.evsel = evsel->metric_leader;
- 	nd = rblist__find(metric_events, &me);
- 	if (nd)
--- 
-2.44.0.rc0.258.g7320e95886-goog
+I think it makes sense to put the test in the selftests and to be
+deployed with the kernel.  AFAICS it doesn't have anything
+specific to the perf tools and tests the general kernel behavior.
 
+Thanks,
+Namhyung
