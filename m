@@ -1,121 +1,104 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81B113AE9;
-	Sat, 24 Feb 2024 02:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC9723CE
+	for <linux-perf-users@vger.kernel.org>; Sat, 24 Feb 2024 10:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708742718; cv=none; b=IM6vRWt9XaGq98Kw+zLLVkWVPDoxNiSgMPYP+bdAKozOcVWQ0zwPsB83ugMd1wxl4clc9tDe41U84blM+z6nOBsGoimZc9q5mgMQR36NDOG3DNq1wAaY6213jEoy2UHSkWukzjcS2v3nyMV1LX8dsRfOqlvh5u9+7qNS8kOuJVU=
+	t=1708770914; cv=none; b=g2c5/beD+c1E43vC2bCxoHrI8zkEDCipEq4t8UlWvBfvNBvWTBJJrAgzI2Z99NG8tOO2FnqFkILicXsSiJiNAEX8GgYPq6D4AzfuxzKXRrLOz+/lf2AN+h3nM1DOvzNehKWWwqufe6j6hzT+NAgf57q3d1wwN1vXf7lRymH0JXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708742718; c=relaxed/simple;
-	bh=tkQEf05oq2kmii+ClsY92Oy+mus+/9mjeSBNHOROiwo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JHbz/vljEzcOEpEzUlRpZH3oU2KFtmDZagBcV/dwf+IbqwIVPuNYqmiYqDCogcOwS1c1PZ4k60Xz9/8dE4sfRmDgp2iZuiyRizk0z6oWN8IbBnz6ruiAnS4FU56KNnQYcdQkXJ6DG5+Uql1rI4vW4KhCuXJIeOklTzyUc4z80Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2995fa850ddso712637a91.0;
-        Fri, 23 Feb 2024 18:45:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708742706; x=1709347506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mPPv8r1RSsDRM/zfoDy7ZupsBXVuitqH/rRRBSdP66M=;
-        b=cNekbBS/dpwTLfeP9nBHN6gNpak+307Fe9YkpOoXw3tJR6yNM4op8kDdfTBneOK4Lc
-         ekNu1PCc7whro2zJGVIP7VCsvj/XcbjBGvyCmY7ZgoMRdbur7S0q/e7k+L1xdviL7dqr
-         tCI05kquDiJVPfMI6u+Hwk/mDtUoDZADA78/cUgVl8MRv7kd8PCSbB2YIhRgGQsYG15Q
-         xIQxtfoDFxbYTkkIJZ4bBJp4T5UpC0STjbbY9VeI0fFA6WG1PH8ZLDakvu8PR+VIEVdc
-         B9Fs6y9sbRnkmN3nYdi+JM92oyHr2EnEhQP01TIMFHqLh6JQnl/Smyj+oXxjN29p6Y0g
-         pEDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtWyaOQ5X5DHwP20CiA4fQ4qOzk4rvRNnLhG0PKETYRPJ7IISTYmiLgvJ/kz1KLyvJ2XJFGDIzH7p5DfMmdn2+ireorQM2c6sa4VRY73a7fmGxZizuHQcdmlhC65625Y9bc8tCuOD8UdZJ7gldjw==
-X-Gm-Message-State: AOJu0YyXqduRP2LXpIXFL5mGSDQEI8HxZUoknt9lNqv/KZb4R1i2PUE8
-	+GhDSyypmzj4i6pKRW/3n3sN8WCBuz5Q1CdGa58lO1WTa3KuQ+m9qNU9H2ULCUCahEjOIevgjxb
-	aTZSYOGOUUfn73KGh7ILvp2k11ao=
-X-Google-Smtp-Source: AGHT+IFR/f3udUFSXOTvTpD+RswtOEM5KE3C5Ak2h+Y+7fUTo0ahihL6PLsWilwsOPmnpeeRyGDSNst8cMjrPmTxeUY=
-X-Received: by 2002:a17:90a:5b07:b0:29a:89db:7581 with SMTP id
- o7-20020a17090a5b0700b0029a89db7581mr1985562pji.13.1708742705745; Fri, 23 Feb
- 2024 18:45:05 -0800 (PST)
+	s=arc-20240116; t=1708770914; c=relaxed/simple;
+	bh=FKVmx7HpE2ep54ZS8eZHiCvcg/1cKYk/1oKsrQ+s+sU=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=dOkFuZyg3cULt8PGOTpZXj7xiZrL8UM5+RhYG8XCyuWYj4qJt9s+ezbNF8oGWhDSxsjvhSzlIOh1cbzJsXpjj2npRoqqAx2GTKIxQgApphVDxZJpEy2nBOh0qzapMaUR/85h8Vo8wmcTHt6XBPaiBCbXS91Iv6S+zkwdJbClFlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=L+sCxD86; arc=none smtp.client-ip=203.205.221.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="L+sCxD86"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1708770609; bh=JakpM4UpT9WYC+dBrABZ4HnlbAhvwlK1yGteAKNIH+E=;
+	h=From:To:Cc:Subject:Date;
+	b=L+sCxD86ctMNDKC3SXM/rxpus5vEsoqVF/yXnJXbXjUZVhk4hU2LeghogRxCnKemY
+	 bfKMWwdgY9SRowMsHkNPCJAXJ1qyQ+pP2iLVW/lNk+4QqfeRhQyiigxV0Uyr2wcihM
+	 0yWCuHmRnUwwlXnC9FJj6thP30CUXzXsgiDj6g0Y=
+Received: from localhost.localdomain ([153.3.164.50])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id 7861CABA; Sat, 24 Feb 2024 18:30:06 +0800
+X-QQ-mid: xmsmtpt1708770606tm0ddc59u
+Message-ID: <tencent_088804E150842691191FD0021AEE8649EB0A@qq.com>
+X-QQ-XMAILINFO: NDgMZBR9sMmaOdGZZpJJ3799IWdt1+NiWL4BNUWo1Bx4tCkhNDvqXhvPEh/qGL
+	 iBOJlnBuZVivtyd2vNm4pCf3RGWVtqUIn3zJfC1kL0Gjhiok2Y+SWIM02Vt8heXevfTMq6d2zPCT
+	 3v0pi/AkS4hm4VwJamQt75chtZ8VM6h2VGs/3QeXACVajLxYkjEfl7amUr6VoIRhzrlvsCifQTjg
+	 z3uWDpDyBObbYrC7fgLUkoSNf9V+al2J4UyE9ZH4bs7C75br5ytVZ3RIGm3/datk1zh3Om75dwH9
+	 49dDkGcjBWX6yu/6QzpVsegEigXAN/j08HS/ESpiXnESkWLHNmXppdAkf4g/fOcayNU1kCtZzFxe
+	 kqFVu5u388bpsfuLGKpVYLzHgCKIygHiYkLWClvDxo+ywLnP/Qc9xB9hq49+eQNP/tY4hL17MAbe
+	 5hl5j0T3y3npONMOKjVGQ3kp1tEGMjD+QQl3XEtQdRKNijpQHGOcq0/FfBTvQ5PAXoiSnS2odcEo
+	 YRbOC8d6m+3noj8tCbpC9jimpTDO+Z/4iVImY16kp38B9FUnibxFIHfEmODfeDFdxVMGp6YaF2AD
+	 quC51p9pVX2pKaI82ATMleV08QokfwwUV2gd6S50WV4QgareSAqV64fPqD2fiaFEAH/R9VSer6Jk
+	 5sEfkoqb6Rys5O0/46/nvRGNZhFUY9mt7DD/tjUpC63pwhKkL+abBqEmxKzGH5bbes2ZNBTtDiia
+	 QnWS4/37WpxetcLzBMX1R5W3lTgx7qRlnXshcqthwwJPLJdulv84phKNgqTnwWfgSUUDfdxnbxqh
+	 ZDNF4bantifcdeyf/vZKjyyD0EA2seJjYbd0z3lQTwTM3OzN/W8xd3nCMzVFKTxmCmYoBH/1PIIK
+	 Zaiq3zwjIGFtZx49boURPANaxoMpjb9T5Q9i6PoUhbY5gpR5rXwflCB4bi+T9CvV4DYZAknjGTXv
+	 H+MoDsConeTSaAmZfoaK4DLvsFnnjnBBweRHi3JEwEkq9a5ilpYpxGKJ3ui5Z6OQYuxhOLgVLfXm
+	 hNzQWirQ==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: lilinke99@qq.com,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] uprobes: use READ_ONCE() to read mm->uprobes_state.xol_area in concurrent environment
+Date: Sat, 24 Feb 2024 18:25:19 +0800
+X-OQ-MSGID: <20240224102519.19874-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221072100.412939-1-weilin.wang@intel.com>
- <20240221072100.412939-3-weilin.wang@intel.com> <ZdY4a5yx-C9ziobq@x1>
- <CAP-5=fU5JVki4OCYvYyPoBLguwHSwXripiO3Gq+MddV9ZWfnTQ@mail.gmail.com>
- <CAM9d7ch3E=hNbX6=xUHZ+B_Dphy_sALzaCki1he3-O00DAoYXg@mail.gmail.com> <CAP-5=fWf4YxOZUmuZsUt9na=CpXL-eLkd9d6OvtsgJkONC1gzQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fWf4YxOZUmuZsUt9na=CpXL-eLkd9d6OvtsgJkONC1gzQ@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 23 Feb 2024 18:44:54 -0800
-Message-ID: <CAM9d7chwXoBjkEb7itS84UUDzbARETvU7w4d0Mni4vbGHURFxA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 2/5] perf stat: Fork and launch perf record when
- perf stat needs to get retire latency value for a metric.
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, weilin.wang@intel.com, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 22, 2024 at 11:48=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Thu, Feb 22, 2024 at 11:03=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Feb 21, 2024 at 12:34=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> > > Weilin raised the TPEBS problem in the LPC 2023 talk, the issue being
-> > > that sampling and counting don't really exist in the current perf too=
-l
-> > > code at the same time. BPF could be a workaround but permissions are
-> > > an issue. Perhaps leader sampling but then what to do if two latencie=
-s
-> > > are needed. Forking perf to do this is an expedient and ideally we'd
-> > > not do it.
-> >
-> > Even with BPF, I think it needs two instances of an event - one for
-> > counting and the other for sampling, right?  I wonder if it can just
-> > use a single event for sampling and show the sum of periods in
-> > PERF_SAMPLE_READ.
-> >
-> > I'm not sure if an event group can have sampling and non-sampling
-> > events at the same time.  But it can be done without groups then.
-> > Anyway what's the issue with two latencies?
->
-> The latencies come from samples and with leader sampling only the
-> leader gets sampled so we can't get two latencies. For 2 latencies
-> we'd need 2 groups for 2 leaders or to modify leader sampling
+In function get_xol_area(), mm->uprobes_state.xol_area is read using 
+READ_ONCE() in line 1534
 
-Do those 2 latencies come from 2 events or a single event?
+1534   area = READ_ONCE(mm->uprobes_state.xol_area); /* ^^^ */
 
-But I realized that PERF_SAMPLE_READ would return the period
-only and I guess the latency is in PERF_SAMPLE_WEIGHT(_STRUCT), right?
-Then it won't work with PERF_SAMPLE_READ unless we extend the
-read format to include the weights.
+while read directly in line 1530
 
-> - if we
-> could encode that we want to sample but don't need the sample in the
-> mmap, just want the latency being available to be read, etc. This and
-> BPF are both long-term viable solutions, but forking is the expedient
-> solution to get something going - we'd likely want it as a fallback
-> anyway.
+1530   	if (!mm->uprobes_state.xol_area)
+1531	    __create_xol_area(0);
 
-Maybe we can add it to the read format, but I'm not sure how the
-kernel maintains the value.  PERF_SAMPLE_READ would be fine
-to return the value in the sample.  But it should support read(2) too.
+In the same environment, reads in two places should have the same
+protection.
 
-Simply adding the values might not be what users want.  Maybe
-average latency/weight is meaningful but it could depend on
-what the event measures..
+Signed-off-by: linke li <lilinke99@qq.com>
+---
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Namhyung
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 929e98c62965..e110941fbc6b 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1527,7 +1527,7 @@ static struct xol_area *get_xol_area(void)
+ 	struct mm_struct *mm = current->mm;
+ 	struct xol_area *area;
+ 
+-	if (!mm->uprobes_state.xol_area)
++	if (!READ_ONCE(mm->uprobes_state.xol_area))
+ 		__create_xol_area(0);
+ 
+ 	/* Pairs with xol_add_vma() smp_store_release() */
+-- 
+2.39.3 (Apple Git-145)
+
