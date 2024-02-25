@@ -1,121 +1,100 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from smtp.smtpout.orange.fr (smtp-29.smtpout.orange.fr [80.12.242.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCB94879B;
-	Sat, 24 Feb 2024 19:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53E414276
+	for <linux-perf-users@vger.kernel.org>; Sun, 25 Feb 2024 15:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708802352; cv=none; b=a5tBvTuW9zQr3wk4MHoobovW/9K185PnslQA6Xlf1Af0jpwXWKZ8U02JmJ/cBH4aImerUHKv+EGVejdG4wfTiUCwkpI5xC/RrCtlST51wI2ra7K/TLmcasSM1Ayccr8U87jnGNgVLbHJ50E/FC8n4d/Ch6aKk5ncunMBsTR/zSw=
+	t=1708875753; cv=none; b=jzs3Fpd/aQQYbP8X/GsjjBMK8+n5iM3zdhNy/92tYS3X0hgyOhmPqGdKti5Kh0DhA3ZBtnzYqTlPUZsG/wiudlPd4ovkEf6pnwE99+A/BePAkGc5V5TxLfzQTZo2601zS7D6MoN43+FpMRl4/MSjaniO27wlV/WCm9Bw2pi3mS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708802352; c=relaxed/simple;
-	bh=EIBC3ik/1IgUIYuIzkjpB25tXBwPX2pnTpaTkdtCpig=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IOmLIwgz9P+W1CUieD8WmAkk5ZbOgmt/aFBjZ9HU5++ScYp2R1zXTON+MiEPAerjrxWkcjzfZj1BNSwJuY3yr0DpesgzSV0OFleFNXHsEA1I5cor4mn8v78dGq6ZQ1s8J0YaqTntIRv8LWp7Yz7OmnAR9jPzd2X79PXygo/uzEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-29aa77e86b2so178949a91.0;
-        Sat, 24 Feb 2024 11:19:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708802350; x=1709407150;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qR6Uf/hJ5IVuBEGWnR8Fp0SCf+fS67gdVlvmoGdV0Io=;
-        b=P/rGLcq9GBPyuYJGFRYlxp9dCLUGl8P6xfvG2etlZpPyIZrxPWN64hm4sFwh10c8Jk
-         KA9vX4IPDWawA9lEU5Z/GNskvA7ClGaa5O4qBmCq464m+6sC5eYf8z8A4miD4ZGsMb0I
-         Z8FAMLiNoOdmuGTddnhy/M6r1ypHUHxhLMpph4S/1v+03zfZVoPDcS70ADkwEvdTQpax
-         /HvNmn5Ktl9q+jXV2r7mgCrwAUZabZGMvqjQsqQ9Ov+oYsa/lZvN+L1ho/74N5JQKO99
-         W2HSNBBRwfm/3CdgIYfTtsjV03gQRBAmAu0DbI1FwHLBPDqgWPAikPx9ElR+iftX1l1y
-         L25A==
-X-Forwarded-Encrypted: i=1; AJvYcCUETSyDTToRnzzkvQ0/Osqn7/Dn/YffaKojPlcacXEqWGPZoAuMbpJ66QO7faYtHcCSfHNZrgwdimctogLzOTNcxAB8yQKLxBBxqmWtdR4gCZgctskE1DJUKgfxNTI/qGq1gUcf4pzOdW5OVGLa5Q==
-X-Gm-Message-State: AOJu0YxzTGeXppjfAQLuGHHSFuhYR1r5J4MjYnI4dcqGEfUhqx+m6Wkf
-	2OzhcdSv0CA7Mp9hweYdEk7TTlEgS0IYvMJoZDwWGQto9it1aSyqWyPfUIHAo7o8KJuSs2PegqI
-	Vg3gq2pGWpcSSnxi2ByQDNIg/44R8e/0x
-X-Google-Smtp-Source: AGHT+IHRwNME7UDzdtOZh8uhim3VicNZdVOq4acklVIhqN414Zrxcd6TE1HeIkuojoco6AKAERyT3NcvLuTpivozbXs=
-X-Received: by 2002:a17:90b:3017:b0:299:7c4f:c8ee with SMTP id
- hg23-20020a17090b301700b002997c4fc8eemr1967496pjb.19.1708802350152; Sat, 24
- Feb 2024 11:19:10 -0800 (PST)
+	s=arc-20240116; t=1708875753; c=relaxed/simple;
+	bh=gsM9a6Mc7KRpO2GMiLUk350/Meg4kzVFv8IZGDNJ0fw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CPAfuORoH2Mi1pOd5Ir5gi4Wqxm/B1li5PRpvJgjJDxqyTJzU7dodB75oWBbDTazD4zBdzGE9SW6pJVC6UtUreUwNuVJi3dlp2pLNk/aT7FzBZ4IOOZVUPbLXUnczR6shWGp9iYyiEmmO4iVAAjFCzWZvu8Aik+S4I1lPOIuV/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UWOhwDlb; arc=none smtp.client-ip=80.12.242.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UWOhwDlb"
+Received: from [192.168.1.18] ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id eGdsrKKdF2O9zeGdsrr969; Sun, 25 Feb 2024 16:42:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1708875742;
+	bh=9e1FNx9pudMReeRV6NQ804WVGDMkcO8ttobtPAafOyU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=UWOhwDlbWx7TnTuJvKnzyuzsrX9Qbky0ZpXBCY2f54IMnBPMS2cU/3/QXECRKpBQ+
+	 CmZ4jNgMx9qsHVG0Jg/mFV6xbcMT5nrY13JkWA5WPL9D+DTi23QiFqH78rIHymPK/E
+	 EjdSoGsXSYF+s46aekLHj4QjmbXwjSITy7gm6jwItsg8NzLCeHy/cFl4hksxZkdC/c
+	 JEi1hbEPtmmv12iSpxJJBdN9FOhqY9GoSExA16u7Ss/hXW6ZxrPSx+LGxFN1u83dvB
+	 QXZlbCv4z7kWcCg8W2L50rlYBPWkiyP/gDtLJLQEDnILIv+wE9rLRW+Lng74e6xRe+
+	 nCZWix0zKqcmQ==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 25 Feb 2024 16:42:22 +0100
+X-ME-IP: 92.140.202.140
+Message-ID: <3e1ed5a3-55dc-4652-936d-fd36e0442d79@wanadoo.fr>
+Date: Sun, 25 Feb 2024 16:42:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZdoPrWg-qYFpBJbz@x1> <CAP-5=fVhQLSXb7GSn3H=CLCq+n7hr2FXgQLrOyJZAeBOJUOveA@mail.gmail.com>
-In-Reply-To: <CAP-5=fVhQLSXb7GSn3H=CLCq+n7hr2FXgQLrOyJZAeBOJUOveA@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Sat, 24 Feb 2024 11:18:58 -0800
-Message-ID: <CAM9d7ch3iaVDAFsVmmrF_BHCEcT=sEUUKx7TjJ8bOY7+zspuTA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf bpf: Check that the minimal vmlinux.h installed
- is the latest one
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf pmu: Fix a potential memory leak in
+ perf_pmu__lookup()
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org
+References: <9538b2b634894c33168dfe9d848d4df31fd4d801.1693085544.git.christophe.jaillet@wanadoo.fr>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <9538b2b634894c33168dfe9d848d4df31fd4d801.1693085544.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 24, 2024 at 7:57=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Sat, Feb 24, 2024 at 7:48=E2=80=AFAM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > When building BPF skels perf will, by default, install a minimalistic
-> > vmlinux.h file with the types needed by the BPF skels in
-> > tools/perf/util/bpf_skel/ in its build directory.
-> >
-> > When 29d16de26df17e94 ("perf augmented_raw_syscalls.bpf: Move 'struct
-> > timespec64' to vmlinux.h") was added, a type used in the augmented_raw_=
-syscalls
-> > BPF skel, 'struct timespec64' was not found when building from a pre-ex=
-isting
-> > build directory, because the vmlinux.h there didn't contain that type,
-> > ending up with this error, spotted in linux-next:
-> >
-> >     CLANG   /tmp/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw=
-_syscalls.bpf.o
-> >   util/bpf_skel/augmented_raw_syscalls.bpf.c:329:15: error: invalid app=
-lication of 'sizeof' to an incomplete type 'struct timespec64'
-> >     329 |         __u32 size =3D sizeof(struct timespec64);
-> >         |                      ^     ~~~~~~~~~~~~~~~~~~~
-> >   util/bpf_skel/augmented_raw_syscalls.bpf.c:329:29: note: forward decl=
-aration of 'struct timespec64'
-> >     329 |         __u32 size =3D sizeof(struct timespec64);
-> >         |                                    ^
-> >   util/bpf_skel/augmented_raw_syscalls.bpf.c:350:15: error: invalid app=
-lication of 'sizeof' to an incomplete type 'struct timespec64'
-> >     350 |         __u32 size =3D sizeof(struct timespec64);
-> >         |                      ^     ~~~~~~~~~~~~~~~~~~~
-> >   util/bpf_skel/augmented_raw_syscalls.bpf.c:350:29: note: forward decl=
-aration of 'struct timespec64'
-> >     350 |         __u32 size =3D sizeof(struct timespec64);
-> >         |                                    ^
-> >   2 errors generated.
-> >   make[2]: *** [Makefile.perf:1158: /tmp/build/perf-tools-next/util/bpf=
-_skel/.tmp/augmented_raw_syscalls.bpf.o] Error 1
-> >   make[2]: *** Waiting for unfinished jobs....
-> >   make[1]: *** [Makefile.perf:261: sub-make] Error 2
-> >   make: *** [Makefile:113: install-bin] Error 2
-> >   make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-> >
-> > So add a Makefile dependency (Namhyung's suggestion) to make sure that
-> > the new tools/perf/util/bpf_skel/vmlinux/vmlinux.h minimal vmlinux is
-> > updated in the build directory, providing the moved 'struct timespec64'
-> > type.
-> >
-> > Fixes: 29d16de26df17e94 ("perf augmented_raw_syscalls.bpf: Move 'struct=
- timespec64' to vmlinux.h")
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Link: https://lore.kernel.org/lkml/CAM9d7ciaj80QZL0AS_T2HNBdMOyS-j1wBHQ=
-SYs=3DU3kHQimY1mQ@mail.gmail.com
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> Reviewed-by: Ian Rogers <irogers@google.com>
+Le 26/08/2023 à 23:32, Christophe JAILLET a écrit :
+> The commit in Fixes has reordered some code, but missed an error handling
+> path.
+> 
+> 'goto err' now, in order to avoid a memory leak in case of error.
+> 
+> Fixes: f63a536f03a2 ("perf pmu: Merge JSON events with sysfs at load time")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
 
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Hi,
 
-Thanks,
-Namhyung
+polite reminder.
+
+CJ
+
+
+>   tools/perf/util/pmu.c | 7 +++----
+>   1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index bb2ca29cd7bd..8dfce84ad9fe 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1018,10 +1018,9 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+>   	 * type value and format definitions. Load both right
+>   	 * now.
+>   	 */
+> -	if (pmu_format(pmu, dirfd, name)) {
+> -		free(pmu);
+> -		return NULL;
+> -	}
+> +	if (pmu_format(pmu, dirfd, name))
+> +		goto err;
+> +
+>   	pmu->is_core = is_pmu_core(name);
+>   	pmu->cpus = pmu_cpumask(dirfd, name, pmu->is_core);
+>   
+
