@@ -1,131 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33FA12BEA1;
-	Mon, 26 Feb 2024 16:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C6A12C55B;
+	Mon, 26 Feb 2024 16:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708963213; cv=none; b=q8LCmuLIkW+k5uxJazRjmXvoRbGhMQ5Xn2c1W/U/3ZwY7ru8VjGSHoglfXDErPCry3HBClK29qzOygblmC0kYlkmyestcKqFttWQ09h18vxs9eKZhiWGtMGmSUnwVyNDNf3y/NmkMCFWTV8cNn9U0QdbiVf/7wpn2hese0kNLck=
+	t=1708964428; cv=none; b=eadV7NaZARUL1NQrcnLoY/uzt85yKumTkU0CHosBwaER4e2lTSPVtxvLxejZwGKrnG4/Iy3+paG/1WvmOtPqzwLgp6+Z1M1VbyKGUvR9/In4TBZR65eDz/AaSvU6kgFNpFo4+ReKHq+4iIAz1Til1cj82JVIttQepcB02tTE1GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708963213; c=relaxed/simple;
-	bh=eiEN98yjHWpgsNieB++vFqM13GnLlyTzpq+LgyXfNJQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=m0s0fTy228gOGuB0P73Ph+InQfkcIruaBof91YjEqCFbVWzsM2aw4ImC4nDDPb4cWb77kdhHzRCtKEi+ytQHnWTxONA86Qd2au5BYcKSwNoWC23cwERgw9z8oPDsQEeDHg+eGDXkTTTaiMqZkEWwwN1qCGApvK5txKJzOnRkc5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkD/LCs3; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708964428; c=relaxed/simple;
+	bh=Py+EiuCHVOS32tKSo962ALIXuh08KKc75p5mmglk/ds=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p+RoJCfBXTGazaa3Tlo+mMmbkGCEMmkSChBkZM94xc5lYqjSZs5wD+bcX7FWdr8FTQjNawPtrQyns8O7qup8DPkUi8jaoPLtB9QIU58Ya6J4J+qg3e323IH38Y8LtY0HcvnEJPMy8+r1bmlrjxsLREqILaO/5P4G27HHImzhbSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3trr8Zm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkD/LCs3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708963212; x=1740499212;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=eiEN98yjHWpgsNieB++vFqM13GnLlyTzpq+LgyXfNJQ=;
-  b=QkD/LCs3soZs/MyJ4+ilDzn1vFS0yW7zn3SycV0yvs4uOM8EMhOOTHyi
-   wVbwY2938XgYxfaW+0vwBDMNhpzZdua8hVHfEUTbzlY5HYX15QYlr/syQ
-   fUikc+i57oAhVLSDGXNTX4qrlHu2oaru7fY0m/ueSjdtjg5SeyGgK4Vjx
-   ErkCUjQUIHt4V0bRTrlIPPk5IU98945LjkcPT+XFwXZjxvT6E/lP8KbKk
-   ZTwCuNcZm3vxI2J/dckpa+r2QTwph85+LKqI5rtOkywmrmAIklQJyY9Xb
-   zHUv5Ss4ln6QmhmPVAUo8jbKSvRkvxKxG5dn+2bd5/ET+zJq+wCTKiuo0
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3419570"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3419570"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:00:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6914761"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:00:10 -0800
-Received: from [10.213.175.136] (kliang2-mobl1.ccr.corp.intel.com [10.213.175.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 11EDC580ABD;
-	Mon, 26 Feb 2024 08:00:08 -0800 (PST)
-Message-ID: <cf12ec88-0a15-4aa8-b6b8-948841d7d66d@linux.intel.com>
-Date: Mon, 26 Feb 2024 11:00:07 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3trr8Zm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D31C43390;
+	Mon, 26 Feb 2024 16:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708964427;
+	bh=Py+EiuCHVOS32tKSo962ALIXuh08KKc75p5mmglk/ds=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=i3trr8Zm/qviZuukloOC43cIzB/tXqiH0CevHvbXXhgPcgvv+i2RH3PjPs8uslMCp
+	 RfRPBFPaWVMaKnrJuUjfD+X2wyMshe8kfqMq57MvS6d/VoosUS6JsMO/6JYQDcsXqQ
+	 ylLLVB4oZ7dGURlY/EHs5aJao5z/lNpxtgLvZiihmdU9T+Fnby5q0W1q8dEijazUyt
+	 cXT9e12jj+YSfbDxBw5FH3NFEzAFCeSqX420h+rltyuSNMCLSu/FHE/CyP3KvB3cwp
+	 ET3F5d7v5oRTkUaRZgUDcwWtWu1rQ55hgZJ+konXepmLwYNS3D34J2reXQ2fTuMeWK
+	 XtkXfWdh0E2xg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: linux-perf-users@vger.kernel.org,
+	leo.yan@linaro.org,
+	suzuki.poulose@arm.com,
+	acme@redhat.com,
+	mike.leach@linaro.org,
+	marcan@marcan.st,
+	maz@kernel.org,
+	john.g.garry@oracle.com,
+	james.clark@arm.com,
+	irogers@google.com,
+	will@kernel.org,
+	tmricht@linux.ibm.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] perf print-events: make is_event_supported() more robust
+Date: Mon, 26 Feb 2024 08:20:24 -0800
+Message-ID: <170896440860.1919080.16667714946535783711.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+In-Reply-To: <20240126145605.1005472-1-mark.rutland@arm.com>
+References: <20240126145605.1005472-1-mark.rutland@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] perf metrics: Fix metric matching
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240224011420.3066322-1-irogers@google.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240224011420.3066322-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2024-02-23 8:14 p.m., Ian Rogers wrote:
-> The metric match function fails for cases like looking for "metric" in
-> the string "all;foo_metric;metric" as the "metric" in "foo_metric"
-> matches but isn't preceeded by a ';'. Fix this by matching the first
-> list item and recursively matching on failure the next item after a
-> semicolon.
+On Fri, 26 Jan 2024 14:56:05 +0000, Mark Rutland wrote:
+> Currently the perf tool doesn't detect support for extended event types
+> on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
+> hardware events into per-PMU events. This is due to the detection of
+> extended event types not handling mandatory filters required by the
+> M1/M2 PMU driver.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-For the series,
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
-> ---
->  tools/perf/util/metricgroup.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
+> PMU drivers and the core perf_events code can require that
+> perf_event_attr::exclude_* filters are configured in a specific way and
+> may reject certain configurations of filters, for example:
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index b24a1c177a80..2d6865c392ef 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -352,25 +352,23 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
->  	return 0;
->  }
->  
-> -static bool match_metric(const char *n, const char *list)
-> +static bool match_metric(const char *metric_or_groups, const char *sought)
->  {
->  	int len;
->  	char *m;
->  
-> -	if (!list)
-> +	if (!sought)
->  		return false;
-> -	if (!strcmp(list, "all"))
-> +	if (!strcmp(sought, "all"))
->  		return true;
-> -	if (!n)
-> -		return !strcasecmp(list, "No_group");
-> -	len = strlen(list);
-> -	m = strcasestr(n, list);
-> -	if (!m)
-> -		return false;
-> -	if ((m == n || m[-1] == ';' || m[-1] == ' ') &&
-> -	    (m[len] == 0 || m[len] == ';'))
-> +	if (!metric_or_groups)
-> +		return !strcasecmp(sought, "No_group");
-> +	len = strlen(sought);
-> +	if (!strncasecmp(metric_or_groups, sought, len) &&
-> +	    (metric_or_groups[len] == 0 || metric_or_groups[len] == ';'))
->  		return true;
-> -	return false;
-> +	m = strchr(metric_or_groups, ';');
-> +	return m && match_metric(m + 1, sought);
->  }
->  
->  static bool match_pm_metric(const struct pmu_metric *pm, const char *pmu, const char *metric)
+> [...]
+
+Applied to perf-tools-next, thanks!
+
+Best regards,
+-- 
+Namhyung Kim <namhyung@kernel.org>
