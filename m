@@ -1,101 +1,94 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C351DA37;
-	Mon, 26 Feb 2024 10:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DE45A7BB;
+	Mon, 26 Feb 2024 11:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944810; cv=none; b=rycdXJEpSIbjy4LXadLZ9wJwuK0jAQpV9O7JGO53QuoJG1CXZih0Xue1IEdgmLss8xPs0mpquMPrcGGIRnrtle/6Z/2IjnwOiBr6GQRErEuaTzV2DbVty7myG3ETwc8DQvb2wf79tPX1aUZ/nNWbuyewBRNge/L9ykkD+QOjTk4=
+	t=1708948789; cv=none; b=ppOjswkVkVtIIEBFvRu5JBXhdxDDD/qUiU4QS/Ea8v6PgDtrmVf765FX0zGz9amDXA7C/Ookaje2zG76UN+wQMnyG03Kc5kLanfPqkrHlv97ldWSzIi4fyS9y0/TN0Ef0xK65wWlBaHBexS0lZaEYqKn48pENv0NEyAGaiiam9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944810; c=relaxed/simple;
-	bh=MfMjSREicPDXRC/3aBTnncTM7gNapB8ABPtYerIMlIA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=deI7jONRoc4iK1BheaJN1O7/9Pt6tevZBu2VKdH//ClJQdofJV+DvIG+wwBnSixCJzVcWXzthHKVDaD+smthk9lhTbc661d7GclLqs1qsrBPMPsI8EG+v8gIbhA1/FU5GMZSuHTKhPDZj8mzipT2+nmXjjQaLcFTpWiLEuqKTfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7PzBfJs; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708948789; c=relaxed/simple;
+	bh=ggq0gLZC5vBuL4MnHfBB0kPJ74QpbJ7V8VcT0K/xY5w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VSnP06FM3XcM/VbQEpXnJwsb47UVPmHAMLf2D0436yiU8sIQUOBB7NeAawln8KKfF9GH6RGvcr+vhgM5FwbaJbl9/3dtgYOaKT1PoiRFudSgnk8GgSmhGDrNli4lmJerx+kB8pyjtgGhiHAAIa7DzRVcmVuFpt5Om1WtYJAkOz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PvnoWVjK; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7PzBfJs"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-412a4a932f4so6106185e9.0;
-        Mon, 26 Feb 2024 02:53:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708944807; x=1709549607; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WxImVZgrwHuDPLvTHCT/J1rnzl1rCH1Ccw5OGBwvHPM=;
-        b=R7PzBfJsDaz8s4ebbFMOBi29olB4Q804x5i/YuENyYPh3ukOJurzrHmnVV/ZIZk5y5
-         AUZp5u7jZWgF3IQRrZoZw2IjoMT5hKPQ2xmcQv2Uwl+FtT6w2GZ4lNAcSDkEz8R71kXN
-         MhazCB3To/Y+E7plDtqOnHiF7qYcw9TuHo3j+SRiUYItkqbNQc+3ojYvxJSa0SrrE8g5
-         n4N9hQW2j86CycxkUMepi4Pb+ZBLN5pBFIIsDS092oExmM/SO+EL6ncIypOIRctZuSwn
-         ffP0DGx1EotUpI2ccoDbFftFHCwJrhHLv3CXteg4HZyWFenJyLkeVJFdpkQAzPp0lO8U
-         88QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708944807; x=1709549607;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WxImVZgrwHuDPLvTHCT/J1rnzl1rCH1Ccw5OGBwvHPM=;
-        b=xGFdXVG64Q2gVsl2J1F8fR07S3B5N3xAGutdY949uZIw2ybrkoMiv54jdGz761MrjP
-         PVFQjgkzZ42jb8V8oJwVX4/aUqEckpcTOtnDvm9Vx/N0WRBQ0OoJPBDJcmQG5+hBFE9d
-         w8gqpBM5jHugvNdbNLWBrUOXhyWYPVxbPHgxQZV4Jx96BNgvn0Ssq8ZggsJaRYfOoDFZ
-         6AEBReVEZwnopUxuR2tK92FJGjBVRjbnpFYwM/05e0b0VG7JrSZxCJLUnbY3j2xR5MQC
-         N8ypjfj5xD4orT84eRjvDQzy6pdoXzCTCOS4bIsjEu5gNnwpqTnUgXqweJQfTbaDqQF0
-         AFsA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQimkaG601L87evuTKiCx9FbYqeVXYUc3eY20yOAoklCJkQBZDwN5CTvBf+dO69FvHoHHDC8NkdtcaiKZEIXx62oe9SKdvjdMNw0dziC6m5MtDfIwY4mge01wMr7Z7DtZQ9fArf8wvA1jQjEZVdQ==
-X-Gm-Message-State: AOJu0Yz8loiPI+FJT2dUVkjCioi1VOksFYRbaDBxAZ52bC1RGzHmWFAd
-	fz9Ic+4XvPxB/ofBB8u1j7Sug87LBA8vWz41HW4LsW1Wy+B4vJWV
-X-Google-Smtp-Source: AGHT+IFS46DdNEiDIIuLjUalKwqRgb8fMiohPHldcIt0jR12r1ZO9era2cs2BvZcIixNBzEHG1yWqg==
-X-Received: by 2002:a05:600c:1f0f:b0:412:a4fc:219b with SMTP id bd15-20020a05600c1f0f00b00412a4fc219bmr1780452wmb.41.1708944807012;
-        Mon, 26 Feb 2024 02:53:27 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id o25-20020a05600c379900b004129051a8f7sm11378892wmr.41.2024.02.26.02.53.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 02:53:26 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] perf test: Fix spelling mistake "curent" -> "current"
-Date: Mon, 26 Feb 2024 10:53:26 +0000
-Message-Id: <20240226105326.3944887-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PvnoWVjK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708948788; x=1740484788;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ggq0gLZC5vBuL4MnHfBB0kPJ74QpbJ7V8VcT0K/xY5w=;
+  b=PvnoWVjKW38wEeMkwT30lahec3oHjkSEI2kl5eiy4ol/H0/bX3qjW1Y9
+   Li41/8acmFM+nx+08+l8+cw9hXCdaacgr1oYTMlbpfye0PnLsACk4v/Ie
+   0qgYAs6CH8xN5Dm81Vm2Wrdk5ZmoHh5YIq1P8vU/LXinn0p6iluD96tm7
+   HDKDG9KE6DfgpGAds52avVTOw+LTswZBYrwg55sZY3S6Bf6QYecEZtGxU
+   51XyRaaZltt0piAZegSy2wrVEFspLenc5N3yjEIMXEv95pQd5DvyJWesV
+   iSid/7kAKE/5lXaisHx58zauMVREBSIxVZC6CHPGnNZUyI6gj996ePsdv
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14360062"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="14360062"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 03:59:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="37426369"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.48.254])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 03:59:42 -0800
+Message-ID: <5a1ad9a5-52d8-4d78-9c26-ee5b9eb00b40@intel.com>
+Date: Mon, 26 Feb 2024 13:59:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] perf test: Fix spelling mistake "curent" ->
+ "current"
+To: Colin Ian King <colin.i.king@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240226105326.3944887-1-colin.i.king@gmail.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240226105326.3944887-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-There is a spelling mistake in a pr_debug message. Fix it.
+On 26/02/24 12:53, Colin Ian King wrote:
+> There is a spelling mistake in a pr_debug message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/perf/tests/symbols.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
-index 2fed6d67f50f..d208105919ed 100644
---- a/tools/perf/tests/symbols.c
-+++ b/tools/perf/tests/symbols.c
-@@ -85,7 +85,7 @@ static int create_map(struct test_info *ti, char *filename, struct map **map_p)
- 		*map_p = find_module_map(ti->machine, dso);
- 		dso__put(dso);
- 		if (!*map_p) {
--			pr_debug("Failed to find map for curent kernel module %s",
-+			pr_debug("Failed to find map for current kernel module %s",
- 				 filename);
- 			return TEST_FAIL;
- 		}
--- 
-2.39.2
+> ---
+>  tools/perf/tests/symbols.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
+> index 2fed6d67f50f..d208105919ed 100644
+> --- a/tools/perf/tests/symbols.c
+> +++ b/tools/perf/tests/symbols.c
+> @@ -85,7 +85,7 @@ static int create_map(struct test_info *ti, char *filename, struct map **map_p)
+>  		*map_p = find_module_map(ti->machine, dso);
+>  		dso__put(dso);
+>  		if (!*map_p) {
+> -			pr_debug("Failed to find map for curent kernel module %s",
+> +			pr_debug("Failed to find map for current kernel module %s",
+>  				 filename);
+>  			return TEST_FAIL;
+>  		}
 
