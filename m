@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798C21D531;
-	Mon, 26 Feb 2024 16:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10CC12BEA1;
+	Mon, 26 Feb 2024 16:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708964452; cv=none; b=B+0jr28mRa3mAI+L9/d5eo6hbQ6Qazvyuo8qEbuQE9DqNnuWBHz6ZZA43C68Q/H2kEiMq74zByn5c2v0Ji6ahXfErEiFGS6uRmnub/iaLQ1RIS+6uFsgtHemAZIOL7Z+CtCmZo3ysCgnNCCEjKyB89iAiCRebSLs8KRq0Ez5nwo=
+	t=1708964480; cv=none; b=FcMXVJHyZXV/ZgINGYAtKakRnbiaNpzpBMreT5qcmqTUWVmv/usz3s+bdVHrlJJBwkXxRGFti7iGWuOulhQiSm5v+19xAKJDKJpayWx8aTYzCBIL7MeLJznNyKvLjyru9a6A8QPKBHIB2ndCqLcxYuiIfGPxxw5j7/CxI+PDfhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708964452; c=relaxed/simple;
-	bh=gArGAXVnpE5wCkOHveh26QKEoX9Yp10b+7qwd6t/iag=;
+	s=arc-20240116; t=1708964480; c=relaxed/simple;
+	bh=R6yxrXujX0jfOIll4TI/UYi3wy+Ea/LBT8jqilVrwiE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pQzRaE7jZXYgcbwDoGLsi+ptB/xkkYRUvR40Y9B40KPrdPXmdxmGNLJGqomIvHPED5JAUPzGpJT398gBytesziHikZ/BSQJwk7Z28/ECStiilabZEAsPTL9YEyTA/iEIvsgYm4I7zYHU63Lcig+OsuJltr6w+Ondsgz/hre9cxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfF1ejIn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hKIK8JN3/VJqVyCZvHyVxx0LVGfQStFr8EK30C2tTuDTV0jM2ut3f2N78QcfJMOULf0umeRfAd8UP+e/scymdEaHmT98eiWwK7foWkTCK5tJbkg77GG3jzGuMthny8CngSitSDS2t7vLu+KpGM4wXI5pJCAWTRxGcaaJv28r7fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cF//Q6Fc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfF1ejIn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E68C433F1;
-	Mon, 26 Feb 2024 16:20:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cF//Q6Fc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F23C433F1;
+	Mon, 26 Feb 2024 16:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708964452;
-	bh=gArGAXVnpE5wCkOHveh26QKEoX9Yp10b+7qwd6t/iag=;
+	s=k20201202; t=1708964479;
+	bh=R6yxrXujX0jfOIll4TI/UYi3wy+Ea/LBT8jqilVrwiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UfF1ejInB0H1Dxv8QbMqP7Pev4bJJtNkrpaEQB3D89R3e89let86tLiuENwQvdtHP
-	 qO1owpg2d9XJL3gGbgB6b8RZc0wnm5NgUj+8ICIY14TvFPEwikT1fcs50W90hR6mN2
-	 VeUALXgYRRGypIUApdvip2+ZaTk4vrItNOA/3HeTUE7i3H0F2xZdwDlZJrYVEMMIs1
-	 yY21q4570mUBIidnyf2I93LWmHTKpT7x+DlPoN8GUR4B5sICLcIdIvd9J0V+uQor5V
-	 0A8plbBOHCPkJjzBxkfkIlmfwdYnJMHscMa3xInrpF6JUIRTIzaH5MtJiFDG6BEMW3
-	 JC/7tA2OUmiZg==
+	b=cF//Q6FcrtHLiC6DHEAN7oNTERuKBhSi5/isIxW21Evf5p/DcR3/FuYyfUsvnsEkh
+	 qjA+Slr8PrLNa3alCeX4PjxGOc0utZt7bw+LtvgKb8/2JndUCDO7wkMz9m5TDK90/U
+	 ZwvGLkqdzLBBXsooZd7RcXs/x3WPLa0iMgl5W6yEThdYW+lld5YJ0t78le4PK2CSR4
+	 xyOcaAdFW8uzOB4Xjalvdf/YqwnmkKVuNsTXI1Z6qqD2LahZvXnmPqWl0QhcxAppw7
+	 RdfW1nOyPLerJL45Mzk6yahRE1I7A/CzTkVZt4xcTZH308RV3pG1KScy5P7auBRIJM
+	 pprr1F7/T2vew==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-kbuild@vger.kernel.org,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] treewide: remove meaningless assignments in Makefiles
-Date: Mon, 26 Feb 2024 08:20:50 -0800
-Message-ID: <170896440863.1919080.13935215273444154098.b4-ty@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH 1/1] perf bpf: Check that the minimal vmlinux.h installed is the latest one
+Date: Mon, 26 Feb 2024 08:21:17 -0800
+Message-ID: <170896440864.1919080.11021929412128903940.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-In-Reply-To: <20240221134201.2656908-1-masahiroy@kernel.org>
-References: <20240221134201.2656908-1-masahiroy@kernel.org>
+In-Reply-To: <ZdoPrWg-qYFpBJbz@x1>
+References: <ZdoPrWg-qYFpBJbz@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,16 +47,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Wed, 21 Feb 2024 22:42:01 +0900, Masahiro Yamada wrote:
-> In Makefiles, $(error ), $(warning ), and $(info ) expand to the empty
-> string, as explained in the GNU Make manual [1]:
->  "The result of the expansion of this function is the empty string."
+On Sat, 24 Feb 2024 12:47:57 -0300, Arnaldo Carvalho de Melo wrote:
+> When building BPF skels perf will, by default, install a minimalistic
+> vmlinux.h file with the types needed by the BPF skels in
+> tools/perf/util/bpf_skel/ in its build directory.
 > 
-> Therefore, they are no-op except for logging purposes.
-> 
-> $(shell ...) expands to the output of the command. It expands to the
-> empty string when the command does not print anything to stdout.
-> Hence, $(shell mkdir ...) is no-op except for creating the directory.
+> When 29d16de26df17e94 ("perf augmented_raw_syscalls.bpf: Move 'struct
+> timespec64' to vmlinux.h") was added, a type used in the augmented_raw_syscalls
+> BPF skel, 'struct timespec64' was not found when building from a pre-existing
+> build directory, because the vmlinux.h there didn't contain that type,
+> ending up with this error, spotted in linux-next:
 > 
 > [...]
 
