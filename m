@@ -1,123 +1,101 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694B91B800
-	for <linux-perf-users@vger.kernel.org>; Sun, 25 Feb 2024 18:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C351DA37;
+	Mon, 26 Feb 2024 10:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708887072; cv=none; b=f/aCQ1kJTY7FpN/9Th9NPcn6JJau2TbbhfZsG2FYxNchVntTCvriuQDMCGCxvODfGGTOfymcj9+PAwLjop/psuNx3ks4znbdDlOj170+kVwr+u1wnhoTVa6rWBmovF4BUIzLRirOSKfrI8FXDRLPt1BeZuScq6VDkRXOAraOBjE=
+	t=1708944810; cv=none; b=rycdXJEpSIbjy4LXadLZ9wJwuK0jAQpV9O7JGO53QuoJG1CXZih0Xue1IEdgmLss8xPs0mpquMPrcGGIRnrtle/6Z/2IjnwOiBr6GQRErEuaTzV2DbVty7myG3ETwc8DQvb2wf79tPX1aUZ/nNWbuyewBRNge/L9ykkD+QOjTk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708887072; c=relaxed/simple;
-	bh=GcjXzUspWJyHWnXifYzzK/sflMFCO8s+VX1t10MLqac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=fMkPov+L/t7ifqNGUCIqdhmkNsnLF65OVM37wnFkaZn7fi5agC6/yn/47f45WjPzcyd59JP4Kb6mjfmfSkFw8eKUER1Fw+ihtaZ6TOmFhFe8BR0w1ivpPKoAHp4QGMZbiPg21WprSl8UfjRM56MK3hvCLDZD/lhHGZYUCtTUV+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d8yCu0fr; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708944810; c=relaxed/simple;
+	bh=MfMjSREicPDXRC/3aBTnncTM7gNapB8ABPtYerIMlIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=deI7jONRoc4iK1BheaJN1O7/9Pt6tevZBu2VKdH//ClJQdofJV+DvIG+wwBnSixCJzVcWXzthHKVDaD+smthk9lhTbc661d7GclLqs1qsrBPMPsI8EG+v8gIbhA1/FU5GMZSuHTKhPDZj8mzipT2+nmXjjQaLcFTpWiLEuqKTfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7PzBfJs; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d8yCu0fr"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dc744f54d0so165645ad.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 25 Feb 2024 10:51:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7PzBfJs"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-412a4a932f4so6106185e9.0;
+        Mon, 26 Feb 2024 02:53:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708887071; x=1709491871; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A7KE24MU9eBDBjtTNbfc43uuaCFDb+3UMGms8jPvzDQ=;
-        b=d8yCu0frenTOD+F9N7YYvm6/YatnRt6BJy0ft7ukkD+ibLUjghcBSK8UCExwF2aPAw
-         WsAPuRFtayq4z/IxkinNvNLzPXqybsNC6PDHn5AG0MqqS+1pnjbuyt6PV7rrozGSx87K
-         wG5gotrtq/ei3kEX+RGgZKIDYxk/TzxpnAuWFRQTEtpgR62ODYg3GsMFh/gsXkBiLvfG
-         0J92vH5gjIcUI7A25ooeI5QnLNWgMhCzBIt6ERmp+LcMpNXsXpD4Gg5UXz0/nMQspm7L
-         mIvhAlmqBWu4QP9PFH1ZdhE+YQxFF5ZHyt3LPQDWi2NceL0AauNo+a9f/wL9YfUdOZIx
-         neOg==
+        d=gmail.com; s=20230601; t=1708944807; x=1709549607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxImVZgrwHuDPLvTHCT/J1rnzl1rCH1Ccw5OGBwvHPM=;
+        b=R7PzBfJsDaz8s4ebbFMOBi29olB4Q804x5i/YuENyYPh3ukOJurzrHmnVV/ZIZk5y5
+         AUZp5u7jZWgF3IQRrZoZw2IjoMT5hKPQ2xmcQv2Uwl+FtT6w2GZ4lNAcSDkEz8R71kXN
+         MhazCB3To/Y+E7plDtqOnHiF7qYcw9TuHo3j+SRiUYItkqbNQc+3ojYvxJSa0SrrE8g5
+         n4N9hQW2j86CycxkUMepi4Pb+ZBLN5pBFIIsDS092oExmM/SO+EL6ncIypOIRctZuSwn
+         ffP0DGx1EotUpI2ccoDbFftFHCwJrhHLv3CXteg4HZyWFenJyLkeVJFdpkQAzPp0lO8U
+         88QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708887071; x=1709491871;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A7KE24MU9eBDBjtTNbfc43uuaCFDb+3UMGms8jPvzDQ=;
-        b=CKbmqO4WhwKbrT1P5YJBe+hJkNclD5y0Ip22uz/bESFcERzye1bIqKM0TcM4nFJVTZ
-         aJLAB21pXSZEMKUUeKDYjILNnCp5HwUO2CDvdl4/yRa0LwVOqYfFRBcHUpXVlBuzAiLo
-         TSSH5mbcH/aWkE4d8hifSMobs2oZ/n8EJ3brYSDwt/wwoxiiqH31dqRV6NAr+LWUtU0Y
-         yaT18o83MZQ6aRnFZ4n9hGfw/Ku2qCPR2sxGtQ3t4KRf2e5TmznzQ/iYthiHTXGL+6Gw
-         wCDIh9IE/WmqOIobb7L2+AYeiNINvFFhDWLvgG56csFODkQQEIQkVe5OeaPpbQBUap7U
-         CJ3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUFhdYyMAbfdCZC+DzGaamr296ScwDYHg4pPNw+FyciRZQQSMjuDGwA9a9gZDW3wGlXaMH7eikxToRAR1UrCVvE7txriV4o6eEKeFk2O2JqWQ==
-X-Gm-Message-State: AOJu0Ywvt6nlLSyP53V6YiwtPBMxgE7SBkp4uKRp5tfcs9jLZDpr52Ui
-	OGUAw/LEZ5H4uxk+UHehuRptrUeN9vYwiN0bJJ1rB21cXvjAOFzgKHmgxcXFH/bLojBQxJ2E90r
-	TNAn/tBwn1hkNAEIR2N0NB/Zq9urvJNQN9tG9GWrtyu9aKY4yK8em
-X-Google-Smtp-Source: AGHT+IHlyeuRMm9XjLl4GPQEhwwJdCgz/3HCmZEfXLKbYFWdnA6DoDHqOg/2Z0w5L+na/YNYO5L72bfgxGPFrVwl8Sw=
-X-Received: by 2002:a17:903:410c:b0:1db:90e9:43dd with SMTP id
- r12-20020a170903410c00b001db90e943ddmr237497pld.22.1708887070453; Sun, 25 Feb
- 2024 10:51:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708944807; x=1709549607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WxImVZgrwHuDPLvTHCT/J1rnzl1rCH1Ccw5OGBwvHPM=;
+        b=xGFdXVG64Q2gVsl2J1F8fR07S3B5N3xAGutdY949uZIw2ybrkoMiv54jdGz761MrjP
+         PVFQjgkzZ42jb8V8oJwVX4/aUqEckpcTOtnDvm9Vx/N0WRBQ0OoJPBDJcmQG5+hBFE9d
+         w8gqpBM5jHugvNdbNLWBrUOXhyWYPVxbPHgxQZV4Jx96BNgvn0Ssq8ZggsJaRYfOoDFZ
+         6AEBReVEZwnopUxuR2tK92FJGjBVRjbnpFYwM/05e0b0VG7JrSZxCJLUnbY3j2xR5MQC
+         N8ypjfj5xD4orT84eRjvDQzy6pdoXzCTCOS4bIsjEu5gNnwpqTnUgXqweJQfTbaDqQF0
+         AFsA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQimkaG601L87evuTKiCx9FbYqeVXYUc3eY20yOAoklCJkQBZDwN5CTvBf+dO69FvHoHHDC8NkdtcaiKZEIXx62oe9SKdvjdMNw0dziC6m5MtDfIwY4mge01wMr7Z7DtZQ9fArf8wvA1jQjEZVdQ==
+X-Gm-Message-State: AOJu0Yz8loiPI+FJT2dUVkjCioi1VOksFYRbaDBxAZ52bC1RGzHmWFAd
+	fz9Ic+4XvPxB/ofBB8u1j7Sug87LBA8vWz41HW4LsW1Wy+B4vJWV
+X-Google-Smtp-Source: AGHT+IFS46DdNEiDIIuLjUalKwqRgb8fMiohPHldcIt0jR12r1ZO9era2cs2BvZcIixNBzEHG1yWqg==
+X-Received: by 2002:a05:600c:1f0f:b0:412:a4fc:219b with SMTP id bd15-20020a05600c1f0f00b00412a4fc219bmr1780452wmb.41.1708944807012;
+        Mon, 26 Feb 2024 02:53:27 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id o25-20020a05600c379900b004129051a8f7sm11378892wmr.41.2024.02.26.02.53.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 02:53:26 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf test: Fix spelling mistake "curent" -> "current"
+Date: Mon, 26 Feb 2024 10:53:26 +0000
+Message-Id: <20240226105326.3944887-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214063708.972376-1-irogers@google.com>
-In-Reply-To: <20240214063708.972376-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 25 Feb 2024 10:50:55 -0800
-Message-ID: <CAP-5=fUhK9FaP4c5sSsM_DdNB+MipEvDDwO1e-n9fK5GLn87wA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/6] Thread memory improvements and fixes
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 13, 2024 at 10:37=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> The next 6 patches from:
-> https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
-> now the initial maps fixes have landed:
-> https://lore.kernel.org/all/20240210031746.4057262-1-irogers@google.com/
->
-> Separate out and reimplement threads to use a hashmap for lower memory
-> consumption and faster look up. The fixes a regression in memory usage
-> where reference count checking switched to using non-invasive tree
-> nodes.  Reduce threads default size by 32 times and improve locking
-> discipline. Also, fix regressions where tids had become unordered to
-> make `perf report --tasks` and `perf trace --summary` output easier to
-> read.
->
-> Ian Rogers (6):
->   perf report: Sort child tasks by tid
->   perf trace: Ignore thread hashing in summary
->   perf machine: Move fprintf to for_each loop and a callback
->   perf threads: Move threads to its own files
->   perf threads: Switch from rbtree to hashmap
->   perf threads: Reduce table size from 256 to 8
->
->  tools/perf/builtin-report.c           | 203 ++++++++-------
->  tools/perf/builtin-trace.c            |  41 +--
->  tools/perf/util/Build                 |   1 +
->  tools/perf/util/bpf_lock_contention.c |   8 +-
->  tools/perf/util/machine.c             | 344 +++++++-------------------
->  tools/perf/util/machine.h             |  30 +--
->  tools/perf/util/rb_resort.h           |   5 -
->  tools/perf/util/thread.c              |   2 +-
->  tools/perf/util/thread.h              |   6 -
->  tools/perf/util/threads.c             | 186 ++++++++++++++
->  tools/perf/util/threads.h             |  35 +++
->  11 files changed, 464 insertions(+), 397 deletions(-)
->  create mode 100644 tools/perf/util/threads.c
->  create mode 100644 tools/perf/util/threads.h
+There is a spelling mistake in a pr_debug message. Fix it.
 
-Arnaldo/Namhyung, anything outstanding that needs addressing in a v2?
-I'm looking for reviewed-by/acked-by tags :-)
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/perf/tests/symbols.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
+index 2fed6d67f50f..d208105919ed 100644
+--- a/tools/perf/tests/symbols.c
++++ b/tools/perf/tests/symbols.c
+@@ -85,7 +85,7 @@ static int create_map(struct test_info *ti, char *filename, struct map **map_p)
+ 		*map_p = find_module_map(ti->machine, dso);
+ 		dso__put(dso);
+ 		if (!*map_p) {
+-			pr_debug("Failed to find map for curent kernel module %s",
++			pr_debug("Failed to find map for current kernel module %s",
+ 				 filename);
+ 			return TEST_FAIL;
+ 		}
+-- 
+2.39.2
 
-> --
-> 2.43.0.687.g38aa6559b0-goog
->
