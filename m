@@ -1,463 +1,482 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6585130E37
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Feb 2024 20:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620CE37145;
+	Tue, 27 Feb 2024 06:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708978526; cv=none; b=qkSTbwNUWis4Y93NMPDAzjf8v4SQhLxigM5bhCBbBgt6q1XldstFGziyDQ3yGNsqauaHuRVz8wyFD4S6IBtzvdnbafrCVIKeMtlkpTBKJwW2NVjdyl+rv1tFTWYLyFhRVAYPrpWg9t2SdCFfhpeSAS99MzjDyH4AmjyfQxnHJt0=
+	t=1709015961; cv=none; b=N7+BncGePorHlFUuugiv2h1BQ6LkB2v+FhAbcAJGJficpKjzP/XMKohF/yFkQ37Ib3EnbvFLeBCgHo0xZycuTVIgppMuxvwJoBjDgWKJ31JUd/9Y5XtyF0mA/K0R+OZKgvEAX1kh4prS/6HYJYoZfTJIXnUh/JaLXPe1VtrcYYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708978526; c=relaxed/simple;
-	bh=NNiM3D/uuKlEcf27+1HPpmPCZhZ9boOWuiyiscV8lX8=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=VH75sYPWUkY8EaZdRggPm8yXLG3J0fL7nhC1VDTCRip1ae6fDR0u/FvHux7AEWPXxr9VmsX7Epv81Q5GxkqgsrK01LH+2L8PC81vuhjTrvZLZXSnHeA2VR0PwSJsktJckJHNTO2ALSp+inZanWq0rHLERojQQpky0gQX0EWtK5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YYwXQLkx; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YYwXQLkx"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6ceade361so6435649276.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Feb 2024 12:15:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708978522; x=1709583322; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:mime-version:message-id
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fjvMMh1/RPX49toTuJH8e40Pdvy8Pa7opxy8T5kBAfs=;
-        b=YYwXQLkxc86C45B9nShCBz2zWAa35uIzSR1NEFcMUkuT+XcObb4+dfCtDAm16/KFTC
-         JdshRtof+S4gyu+S4LtOOhcE7KmgYnYn63iaRDzx9XnbPCN38qEkR2tlN8Gj/EnC+1er
-         sKSqU7ksnAsUwbH6iemq93iwaUR7VaPk9B8Pi8P9yYpdlGEi7djmAD7Y7dsRZPpmyFlj
-         M5UUOP1hui1Z70vk9ASPWNUcCRjDtSySFZpp67GLsfn9ZeAqdExrQlbuMjs2SYc/53L0
-         RaS/ZdkaMkIOOa1WuiOmuPVb0JCvbnPMjMlmWXjuql6xzmPzMi2soeraaW5ZZ3N2Ge0U
-         BscQ==
+	s=arc-20240116; t=1709015961; c=relaxed/simple;
+	bh=R6EdHF9/U5YZm4C5cKXx3XqJqmaYB1m+UdFHorhDED0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hvsdjc0GWV6tcu1Oip+VvNFZI1QRhrZuMvo0hLuYPTVLllRl8zK8DdS1I4bz/2dAHVvNwrxNppfGs0YRDF/d32RX2RvYEKhDO2bJ8C4ySVaBj25LgT5tHItwDCtFXuTAuZAtqqX3sko/E+LNEc4o9lRV8VVf8EG2W1nDS6ggams=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6da4a923b1bso3058386b3a.2;
+        Mon, 26 Feb 2024 22:39:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708978522; x=1709583322;
-        h=content-transfer-encoding:to:from:subject:mime-version:message-id
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fjvMMh1/RPX49toTuJH8e40Pdvy8Pa7opxy8T5kBAfs=;
-        b=UiOBWOsqxt7ZoMuPhx7/fBBU7chpWp34hHO/9HPJZNRmLrId/O0h5IgJV9PXNjVARA
-         n6QtAhLXtG9z1P1e78P1O4pGhqKBJ072x96SSS+eK9SGCyOUQiwIAm8bsvWMU9hkCBOq
-         BUwVtUy76s/6cSBDmluk81X7kGr/K/rbtsvtwRC1OaQzJzPibzYJxDCSZXR32Z1xIHpo
-         wfZwJ1YW01lMZFSCHkxg7343w37QTIat9cFqQN7TzeombJdrpSN4Pl3KOBbjXNLoE5zd
-         924Bw2b21oa7YtZPwmN2RzutA8enn1ynMzNtJuHZZxfsWVVzdqW/4D1jmcnqNZzEehNg
-         9WRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQchGIoqb54lfb4YWkl9nEGSOcS8MTFV7z75/E0tH76ra8i4SxcxX3usFvdwjiEZZQy/Dc0p9IsC8zidMqvc1IPHGlbh7yvWBTbep6FZdFBw==
-X-Gm-Message-State: AOJu0Yy5OyezCAm1JUrdHQejR9g/4t7Iy8kpYxYaXtneGxu0rnaBA1mQ
-	6dEdsFSuG09Yln4aUkVT+9UCd1sW2EBH5rNth6J42BvQUyhjL5z+CMgSwGDbabYmudBuQLscKTY
-	7CbGnsQ==
-X-Google-Smtp-Source: AGHT+IE+emjy60hBbgDbHhq9WioYQLq3zd0RxFYNdOL0bVnjPK4zFyOfoPjjc+B5u9tbxY1FHDk1fE6eSGvD
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:637a:6466:7021:bcc5])
- (user=irogers job=sendgmr) by 2002:a25:4f08:0:b0:dc7:68b5:4f21 with SMTP id
- d8-20020a254f08000000b00dc768b54f21mr66802ybb.9.1708978521983; Mon, 26 Feb
- 2024 12:15:21 -0800 (PST)
-Date: Mon, 26 Feb 2024 12:15:17 -0800
-Message-Id: <20240226201517.3540187-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1709015959; x=1709620759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WOOtXRsrQNdGcOq5AMB8/CDD2LeeemzfK7SDv2AxfVY=;
+        b=tLAuwn7fHSitPut2JWXOUgKh1U8pP+cotq4yUMU/xTlaZNPFuYiZo9adHwqaitY4wE
+         VqySjHeLrElf3VaaYs1nUHPqOD9NVZOVbR2LUDdWIbMywTFRmPYu7D+rs1vkj9OCMwtk
+         uMOwriuydaCofRgWqcmL9Fd+nkEDn6CdmIdItqGY5HRyNcF/RGIeaO4Y86VgVkMk19en
+         3eQ5xtp9JZowhkr5+he4EtZiY6bbH/kpvUcWmlSw83J+Hhf7BfNFVewCHOZxYRESGvVM
+         6Rh7wJKpn9fvByYk+dpBcwN8Z/E3RFzZ15tss7ajh4lR/AFg2ovVkkqAJ941mLb8AY13
+         z3jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJkG1uEwtfgvi3Ki1qsJ3jWusMUmUyUGYzSsslmq+0l3mOPwuNLzRlEnjpDpdUdjfpH1D/E2ZN9q6ZlIuLk2/eBnpjALDQVcG5MbMP0k+LGe7sPsU3n0sfcTwMHJnA51r6RkbwIPllhregnnbZT82M4fpCbk/5ktPZcLkEG3p0HCQNNw==
+X-Gm-Message-State: AOJu0Yzqs0VITqgz7wrF61R9FHWzLkkGqRwxph2+I0zcbhv4oEeVWmKI
+	i+Y1AtggcJjr/f19scB9WIG0/VcDamgBF9Jfk92nwM8ZvLVF64mAvmUpZKeJexvW8ppR88ukWQ0
+	P9Be28lTz7BLjuaqHJjjVUUf3Vks=
+X-Google-Smtp-Source: AGHT+IHIlsxCcK+m01cq7HCfK5M0vFENt/Lj9Y9piuUcl/h9uaihKMh7Qe/8WHPgVTB9+pEFrpeLNyO6utNXSouzhPY=
+X-Received: by 2002:a05:6a20:d391:b0:1a0:e4ac:9c7a with SMTP id
+ iq17-20020a056a20d39100b001a0e4ac9c7amr1692598pzb.1.1709015958545; Mon, 26
+ Feb 2024 22:39:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Subject: [PATCH v1] perf vendor events intel: Add umasks to PCU events.
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+MIME-Version: 1.0
+References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-2-irogers@google.com>
+In-Reply-To: <20240214063708.972376-2-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 26 Feb 2024 22:39:07 -0800
+Message-ID: <CAM9d7ciB8JAgU9P6qKh-VdVCjH0ZK+Q-n6mdXTO_nRAv6kSSyA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] perf report: Sort child tasks by tid
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-UMasks were being dropped leading to all PCU
-UNC_P_POWER_STATE_OCCUPANCY events having the same encoding. Don't
-drop the umask trying to be consistent with other sources of events
-like libpfm4 [1]. This applies the change from [2].
+On Tue, Feb 13, 2024 at 10:37=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Commit 91e467bc568f ("perf machine: Use hashtable for machine
+> threads") made the iteration of thread tids unordered. The perf report
+> --tasks output now shows child threads in an order determined by the
+> hashing. For example, in this snippet tid 3 appears after tid 256 even
+> though they have the same ppid 2:
+>
+> ```
+> $ perf report --tasks
+> %      pid      tid     ppid  comm
+>          0        0       -1 |swapper
+>          2        2        0 | kthreadd
+>        256      256        2 |  kworker/12:1H-k
+>     693761   693761        2 |  kworker/10:1-mm
+>    1301762  1301762        2 |  kworker/1:1-mm_
+>    1302530  1302530        2 |  kworker/u32:0-k
+>          3        3        2 |  rcu_gp
+> ...
+> ```
+>
+> The output is easier to read if threads appear numerically
+> increasing. To allow for this, read all threads into a list then sort
+> with a comparator that orders by the child task's of the first common
+> parent. The list creation and deletion are created as utilities on
+> machine.  The indentation is possible by counting the number of
+> parents a child has.
+>
+> With this change the output for the same data file is now like:
+> ```
+> $ perf report --tasks
+> %      pid      tid     ppid  comm
+>          0        0       -1 |swapper
+>          1        1        0 | systemd
+>        823      823        1 |  systemd-journal
+>        853      853        1 |  systemd-udevd
+>       3230     3230        1 |  systemd-timesyn
+>       3236     3236        1 |  auditd
+>       3239     3239     3236 |   audisp-syslog
+>       3321     3321        1 |  accounts-daemon
+> ...
+> ```
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-report.c | 203 ++++++++++++++++++++----------------
+>  tools/perf/util/machine.c   |  30 ++++++
+>  tools/perf/util/machine.h   |  10 ++
+>  3 files changed, 155 insertions(+), 88 deletions(-)
+>
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 8e16fa261e6f..b48f1d5309e3 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -59,6 +59,7 @@
+>  #include <linux/ctype.h>
+>  #include <signal.h>
+>  #include <linux/bitmap.h>
+> +#include <linux/list_sort.h>
+>  #include <linux/string.h>
+>  #include <linux/stringify.h>
+>  #include <linux/time64.h>
+> @@ -828,35 +829,6 @@ static void tasks_setup(struct report *rep)
+>         rep->tool.no_warn =3D true;
+>  }
+>
+> -struct task {
+> -       struct thread           *thread;
+> -       struct list_head         list;
+> -       struct list_head         children;
+> -};
+> -
+> -static struct task *tasks_list(struct task *task, struct machine *machin=
+e)
+> -{
+> -       struct thread *parent_thread, *thread =3D task->thread;
+> -       struct task   *parent_task;
+> -
+> -       /* Already listed. */
+> -       if (!list_empty(&task->list))
+> -               return NULL;
+> -
+> -       /* Last one in the chain. */
+> -       if (thread__ppid(thread) =3D=3D -1)
+> -               return task;
+> -
+> -       parent_thread =3D machine__find_thread(machine, -1, thread__ppid(=
+thread));
+> -       if (!parent_thread)
+> -               return ERR_PTR(-ENOENT);
+> -
+> -       parent_task =3D thread__priv(parent_thread);
+> -       thread__put(parent_thread);
+> -       list_add_tail(&task->list, &parent_task->children);
+> -       return tasks_list(parent_task, machine);
+> -}
+> -
+>  struct maps__fprintf_task_args {
+>         int indent;
+>         FILE *fp;
+> @@ -900,89 +872,144 @@ static size_t maps__fprintf_task(struct maps *maps=
+, int indent, FILE *fp)
+>         return args.printed;
+>  }
+>
+> -static void task__print_level(struct task *task, FILE *fp, int level)
+> +static int thread_level(struct machine *machine, const struct thread *th=
+read)
+>  {
+> -       struct thread *thread =3D task->thread;
+> -       struct task *child;
+> -       int comm_indent =3D fprintf(fp, "  %8d %8d %8d |%*s",
+> -                                 thread__pid(thread), thread__tid(thread=
+),
+> -                                 thread__ppid(thread), level, "");
+> +       struct thread *parent_thread;
+> +       int res;
+>
+> -       fprintf(fp, "%s\n", thread__comm_str(thread));
+> +       if (thread__tid(thread) <=3D 0)
+> +               return 0;
+>
+> -       maps__fprintf_task(thread__maps(thread), comm_indent, fp);
+> +       if (thread__ppid(thread) <=3D 0)
+> +               return 1;
+>
+> -       if (!list_empty(&task->children)) {
+> -               list_for_each_entry(child, &task->children, list)
+> -                       task__print_level(child, fp, level + 1);
+> +       parent_thread =3D machine__find_thread(machine, -1, thread__ppid(=
+thread));
+> +       if (!parent_thread) {
+> +               pr_err("Missing parent thread of %d\n", thread__tid(threa=
+d));
+> +               return 0;
+>         }
+> +       res =3D 1 + thread_level(machine, parent_thread);
+> +       thread__put(parent_thread);
+> +       return res;
+>  }
+>
+> -static int tasks_print(struct report *rep, FILE *fp)
+> +static void task__print_level(struct machine *machine, struct thread *th=
+read, FILE *fp)
+>  {
+> -       struct perf_session *session =3D rep->session;
+> -       struct machine      *machine =3D &session->machines.host;
+> -       struct task *tasks, *task;
+> -       unsigned int nr =3D 0, itask =3D 0, i;
+> -       struct rb_node *nd;
+> -       LIST_HEAD(list);
+> +       int level =3D thread_level(machine, thread);
+> +       int comm_indent =3D fprintf(fp, "  %8d %8d %8d |%*s",
+> +                                 thread__pid(thread), thread__tid(thread=
+),
+> +                                 thread__ppid(thread), level, "");
+>
+> -       /*
+> -        * No locking needed while accessing machine->threads,
+> -        * because --tasks is single threaded command.
+> -        */
+> +       fprintf(fp, "%s\n", thread__comm_str(thread));
+>
+> -       /* Count all the threads. */
+> -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++)
+> -               nr +=3D machine->threads[i].nr;
+> +       maps__fprintf_task(thread__maps(thread), comm_indent, fp);
+> +}
+>
+> -       tasks =3D malloc(sizeof(*tasks) * nr);
+> -       if (!tasks)
+> -               return -ENOMEM;
+> +static int task_list_cmp(void *priv, const struct list_head *la, const s=
+truct list_head *lb)
 
-[1] https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/lib/events/in=
-tel_skx_unc_pcu_events.h#l30
-[2] https://github.com/captain5050/perfmon/commit/661a229996493448095fb5541=
-5ed568ceabc631b
+I'm a little afraid that this comparison logic becomes complex.
+But I think it's better than having a tree of thread relationship.
+Just a comment that explains why we need this would be nice.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/broadwellde/uncore-power.json  | 3 +++
- tools/perf/pmu-events/arch/x86/broadwellx/uncore-power.json   | 3 +++
- tools/perf/pmu-events/arch/x86/cascadelakex/uncore-power.json | 3 +++
- tools/perf/pmu-events/arch/x86/haswellx/uncore-power.json     | 3 +++
- tools/perf/pmu-events/arch/x86/icelakex/uncore-power.json     | 3 +++
- tools/perf/pmu-events/arch/x86/ivytown/uncore-power.json      | 3 +++
- tools/perf/pmu-events/arch/x86/jaketown/uncore-power.json     | 3 +++
- tools/perf/pmu-events/arch/x86/skylakex/uncore-power.json     | 3 +++
- tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json   | 3 +++
- 9 files changed, 27 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/uncore-power.json b=
-/tools/perf/pmu-events/arch/x86/broadwellde/uncore-power.json
-index 83d20130c217..9a0bc34c08e1 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellde/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellde/uncore-power.json
-@@ -396,6 +396,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -404,6 +405,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -412,6 +414,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-power.json b/=
-tools/perf/pmu-events/arch/x86/broadwellx/uncore-power.json
-index 83d20130c217..9a0bc34c08e1 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-power.json
-@@ -396,6 +396,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -404,6 +405,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -412,6 +414,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-power.json =
-b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-power.json
-index c6254af7a468..ceef46046488 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-power.json
-@@ -144,6 +144,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -152,6 +153,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -160,6 +162,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/haswellx/uncore-power.json b/to=
-ols/perf/pmu-events/arch/x86/haswellx/uncore-power.json
-index daebf1050acb..15097511cbd8 100644
---- a/tools/perf/pmu-events/arch/x86/haswellx/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/haswellx/uncore-power.json
-@@ -428,6 +428,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -436,6 +437,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -444,6 +446,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-power.json b/to=
-ols/perf/pmu-events/arch/x86/icelakex/uncore-power.json
-index ee4dac6fc797..920cab6ffe37 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-power.json
-@@ -151,6 +151,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "Number of cores in C-State : C0 and C1 : Thi=
-s is an occupancy event that tracks the number of cores that are in the cho=
-sen C-State.  It can be used by itself to get the average number of cores i=
-n that C-state with thresholding to generate histograms, or with other PCU =
-events and occupancy triggering to capture other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -159,6 +160,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "Number of cores in C-State : C3 : This is an=
- occupancy event that tracks the number of cores that are in the chosen C-S=
-tate.  It can be used by itself to get the average number of cores in that =
-C-state with thresholding to generate histograms, or with other PCU events =
-and occupancy triggering to capture other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -167,6 +169,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "Number of cores in C-State : C6 and C7 : Thi=
-s is an occupancy event that tracks the number of cores that are in the cho=
-sen C-State.  It can be used by itself to get the average number of cores i=
-n that C-state with thresholding to generate histograms, or with other PCU =
-events and occupancy triggering to capture other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/uncore-power.json b/too=
-ls/perf/pmu-events/arch/x86/ivytown/uncore-power.json
-index 5df1ebfb89ea..4dac5810324b 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/uncore-power.json
-@@ -516,6 +516,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -524,6 +525,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -532,6 +534,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/uncore-power.json b/to=
-ols/perf/pmu-events/arch/x86/jaketown/uncore-power.json
-index b3ee5d741015..a83e07dce947 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/uncore-power.json
-@@ -235,6 +235,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in C0.  It can be used by itself to get the average=
- number of cores in C0, with thresholding to generate histograms, or with o=
-ther PCU events and occupancy triggering to capture other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -243,6 +244,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in C0.  It can be used by itself to get the average=
- number of cores in C0, with thresholding to generate histograms, or with o=
-ther PCU events and occupancy triggering to capture other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -251,6 +253,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in C0.  It can be used by itself to get the average=
- number of cores in C0, with thresholding to generate histograms, or with o=
-ther PCU events and occupancy triggering to capture other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-power.json b/to=
-ols/perf/pmu-events/arch/x86/skylakex/uncore-power.json
-index c6254af7a468..ceef46046488 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-power.json
-@@ -144,6 +144,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -152,6 +153,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -160,6 +162,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "This is an occupancy event that tracks the n=
-umber of cores that are in the chosen C-State.  It can be used by itself to=
- get the average number of cores in that C-state with thresholding to gener=
-ate histograms, or with other PCU events and occupancy triggering to captur=
-e other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json b/=
-tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
-index a61ffca2dfea..dcf268467db9 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
-@@ -150,6 +150,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
-         "PublicDescription": "Number of cores in C-State : C0 and C1 : Thi=
-s is an occupancy event that tracks the number of cores that are in the cho=
-sen C-State.  It can be used by itself to get the average number of cores i=
-n that C-state with thresholding to generate histograms, or with other PCU =
-events and occupancy triggering to capture other details.",
-+        "UMask": "0x40",
-         "Unit": "PCU"
-     },
-     {
-@@ -158,6 +159,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
-         "PublicDescription": "Number of cores in C-State : C3 : This is an=
- occupancy event that tracks the number of cores that are in the chosen C-S=
-tate.  It can be used by itself to get the average number of cores in that =
-C-state with thresholding to generate histograms, or with other PCU events =
-and occupancy triggering to capture other details.",
-+        "UMask": "0x80",
-         "Unit": "PCU"
-     },
-     {
-@@ -166,6 +168,7 @@
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
-         "PublicDescription": "Number of cores in C-State : C6 and C7 : Thi=
-s is an occupancy event that tracks the number of cores that are in the cho=
-sen C-State.  It can be used by itself to get the average number of cores i=
-n that C-state with thresholding to generate histograms, or with other PCU =
-events and occupancy triggering to capture other details.",
-+        "UMask": "0xc0",
-         "Unit": "PCU"
-     },
-     {
---=20
-2.44.0.rc1.240.g4c46232300-goog
+> +{
+> +       struct machine *machine =3D priv;
+> +       struct thread_list *task_a =3D list_entry(la, struct thread_list,=
+ list);
+> +       struct thread_list *task_b =3D list_entry(lb, struct thread_list,=
+ list);
+> +       struct thread *a =3D task_a->thread;
+> +       struct thread *b =3D task_b->thread;
+> +       int level_a, level_b, res;
+> +
+> +       /* Compare a and b to root. */
+> +       if (thread__tid(a) =3D=3D thread__tid(b))
+> +               return 0;
+>
+> -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
+> -               struct threads *threads =3D &machine->threads[i];
+> +       if (thread__tid(a) =3D=3D 0)
+> +               return -1;
+>
+> -               for (nd =3D rb_first_cached(&threads->entries); nd;
+> -                    nd =3D rb_next(nd)) {
+> -                       task =3D tasks + itask++;
+> +       if (thread__tid(b) =3D=3D 0)
+> +               return 1;
+>
+> -                       task->thread =3D rb_entry(nd, struct thread_rb_no=
+de, rb_node)->thread;
+> -                       INIT_LIST_HEAD(&task->children);
+> -                       INIT_LIST_HEAD(&task->list);
+> -                       thread__set_priv(task->thread, task);
+> -               }
+> +       /* If parents match sort by tid. */
+> +       if (thread__ppid(a) =3D=3D thread__ppid(b)) {
+> +               return thread__tid(a) < thread__tid(b)
+> +                       ? -1
+> +                       : (thread__tid(a) > thread__tid(b) ? 1 : 0);
 
+Can it be simply like this?  We know tid(a) !=3D tid(b).
+
+  return thread__tid(a) < thread__tid(b) ? -1 : 1;
+
+
+>         }
+>
+>         /*
+> -        * Iterate every task down to the unprocessed parent
+> -        * and link all in task children list. Task with no
+> -        * parent is added into 'list'.
+> +        * Find a and b such that if they are a child of each other a and=
+ b's
+> +        * tid's match, otherwise a and b have a common parent and distin=
+ct
+> +        * tid's to sort by. First make the depths of the threads match.
+>          */
+> -       for (itask =3D 0; itask < nr; itask++) {
+> -               task =3D tasks + itask;
+> -
+> -               if (!list_empty(&task->list))
+> -                       continue;
+> -
+> -               task =3D tasks_list(task, machine);
+> -               if (IS_ERR(task)) {
+> -                       pr_err("Error: failed to process tasks\n");
+> -                       free(tasks);
+> -                       return PTR_ERR(task);
+> +       level_a =3D thread_level(machine, a);
+> +       level_b =3D thread_level(machine, b);
+> +       a =3D thread__get(a);
+> +       b =3D thread__get(b);
+> +       for (int i =3D level_a; i > level_b; i--) {
+> +               struct thread *parent =3D machine__find_thread(machine, -=
+1, thread__ppid(a));
+> +
+> +               thread__put(a);
+> +               if (!parent) {
+> +                       pr_err("Missing parent thread of %d\n", thread__t=
+id(a));
+> +                       thread__put(b);
+> +                       return -1;
+>                 }
+> +               a =3D parent;
+> +       }
+> +       for (int i =3D level_b; i > level_a; i--) {
+> +               struct thread *parent =3D machine__find_thread(machine, -=
+1, thread__ppid(b));
+>
+> -               if (task)
+> -                       list_add_tail(&task->list, &list);
+> +               thread__put(b);
+> +               if (!parent) {
+> +                       pr_err("Missing parent thread of %d\n", thread__t=
+id(b));
+> +                       thread__put(a);
+> +                       return 1;
+> +               }
+> +               b =3D parent;
+> +       }
+> +       /* Search up to a common parent. */
+> +       while (thread__ppid(a) !=3D thread__ppid(b)) {
+> +               struct thread *parent;
+> +
+> +               parent =3D machine__find_thread(machine, -1, thread__ppid=
+(a));
+> +               thread__put(a);
+> +               if (!parent)
+> +                       pr_err("Missing parent thread of %d\n", thread__t=
+id(a));
+> +               a =3D parent;
+> +               parent =3D machine__find_thread(machine, -1, thread__ppid=
+(b));
+> +               thread__put(b);
+> +               if (!parent)
+> +                       pr_err("Missing parent thread of %d\n", thread__t=
+id(b));
+> +               b =3D parent;
+> +               if (!a || !b)
+> +                       return !a && !b ? 0 : (!a ? -1 : 1);
+
+Wouldn't it leak a refcount if either a or b is NULL (not both)?
+
+
+> +       }
+> +       if (thread__tid(a) =3D=3D thread__tid(b)) {
+> +               /* a is a child of b or vice-versa, deeper levels appear =
+later. */
+> +               res =3D level_a < level_b ? -1 : (level_a > level_b ? 1 :=
+ 0);
+> +       } else {
+> +               /* Sort by tid now the parent is the same. */
+> +               res =3D thread__tid(a) < thread__tid(b) ? -1 : 1;
+>         }
+> +       thread__put(a);
+> +       thread__put(b);
+> +       return res;
+> +}
+> +
+> +static int tasks_print(struct report *rep, FILE *fp)
+> +{
+> +       struct machine *machine =3D &rep->session->machines.host;
+> +       LIST_HEAD(tasks);
+> +       int ret;
+>
+> -       fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", "comm");
+> +       ret =3D machine__thread_list(machine, &tasks);
+> +       if (!ret) {
+> +               struct thread_list *task;
+
+Do we really need this thread_list?  Why not use an
+array of threads directly?
+
+Thanks,
+Namhyung
+
+>
+> -       list_for_each_entry(task, &list, list)
+> -               task__print_level(task, fp, 0);
+> +               list_sort(machine, &tasks, task_list_cmp);
+>
+> -       free(tasks);
+> -       return 0;
+> +               fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", =
+"comm");
+> +
+> +               list_for_each_entry(task, &tasks, list)
+> +                       task__print_level(machine, task->thread, fp);
+> +       }
+> +       thread_list__delete(&tasks);
+> +       return ret;
+>  }
+>
+>  static int __cmd_report(struct report *rep)
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 3da92f18814a..7872ce92c9fc 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -3261,6 +3261,36 @@ int machines__for_each_thread(struct machines *mac=
+hines,
+>         return rc;
+>  }
+>
+> +
+> +static int thread_list_cb(struct thread *thread, void *data)
+> +{
+> +       struct list_head *list =3D data;
+> +       struct thread_list *entry =3D malloc(sizeof(*entry));
+> +
+> +       if (!entry)
+> +               return -ENOMEM;
+> +
+> +       entry->thread =3D thread__get(thread);
+> +       list_add_tail(&entry->list, list);
+> +       return 0;
+> +}
+> +
+> +int machine__thread_list(struct machine *machine, struct list_head *list=
+)
+> +{
+> +       return machine__for_each_thread(machine, thread_list_cb, list);
+> +}
+> +
+> +void thread_list__delete(struct list_head *list)
+> +{
+> +       struct thread_list *pos, *next;
+> +
+> +       list_for_each_entry_safe(pos, next, list, list) {
+> +               thread__zput(pos->thread);
+> +               list_del(&pos->list);
+> +               free(pos);
+> +       }
+> +}
+> +
+>  pid_t machine__get_current_tid(struct machine *machine, int cpu)
+>  {
+>         if (cpu < 0 || (size_t)cpu >=3D machine->current_tid_sz)
+> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+> index 1279acda6a8a..b738ce84817b 100644
+> --- a/tools/perf/util/machine.h
+> +++ b/tools/perf/util/machine.h
+> @@ -280,6 +280,16 @@ int machines__for_each_thread(struct machines *machi=
+nes,
+>                               int (*fn)(struct thread *thread, void *p),
+>                               void *priv);
+>
+> +struct thread_list {
+> +       struct list_head         list;
+> +       struct thread           *thread;
+> +};
+> +
+> +/* Make a list of struct thread_list based on threads in the machine. */
+> +int machine__thread_list(struct machine *machine, struct list_head *list=
+);
+> +/* Free up the nodes within the thread_list list. */
+> +void thread_list__delete(struct list_head *list);
+> +
+>  pid_t machine__get_current_tid(struct machine *machine, int cpu);
+>  int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid=
+,
+>                              pid_t tid);
+> --
+> 2.43.0.687.g38aa6559b0-goog
+>
