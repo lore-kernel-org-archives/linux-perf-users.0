@@ -1,288 +1,327 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E766456460
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 23:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885857335
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 23:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709077699; cv=none; b=bprm9LVDaw3+nooRp7aunLZS0bTHMgFmJhTb1yR9+Ojs/txO+eb+JvtyV5Y/RePhXSyAiaZ3/CK7Ds9h31uGQkxIjMhKPzfjUZB+yfdNHDgmwLqjXqlgb3p29oh2NbZNF6oIGAq0Sw0jfVD7QY18EHmkJqrWMRp03F+SFcNirCg=
+	t=1709077764; cv=none; b=cG2GUt7C799wKqwBOCjFcYDwPxA6ExT8Wa3FsKZfnfrWLIQZA3x4iJXIiGKnkVNqHhNoZhsMp1rQtuRDlr3vMZ3uHSlyvLxsTs6VPG1ung7dOqXSBA45/2lc9cn3HU4GRZ/S2Qc17lQfQklF2cY0qILNb4gIyhfHsK16d79dSaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709077699; c=relaxed/simple;
-	bh=BE2f61CqaZ0ZG1WzCT1Hr/kmYokG5goSopoH0QcT1dQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tAjL8ih4GprzzhetvHhiT31eM8gDOiHTU4gM1YmrnB1coW6GKv5uGHSPkOvTA2wtvbQLJWyzKDj/O0FWGUx61xbOVVu4myGAE8zhPIVI7lOsvJwWLEfAWEQ/lGlMFrkPI80crFuNA97yXzVmBNfcf6TWVUefFDugZEnU2ZecITE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IkOJYfwM; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709077764; c=relaxed/simple;
+	bh=BjSVREnwaKKfnQy0EFg96CDxrUW/Z3xtym2JUrP5j7o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TOAKopTnGQXLHX72GpDdlo+C2PDSgmm70GRkgkN3LvlQ/2vijnxGC3hq7RhlgjEfewoYEmTnM+Qm5c5jxLtFkve0MNd+L0WxyUg0kS14UWghQ9XvXzw21ls9Xbjp7jtPc1niUvH66bo/DbFJg+mkH35TCLQIaih15xYmFIp5t2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G7+iayxK; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IkOJYfwM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709077699; x=1740613699;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BE2f61CqaZ0ZG1WzCT1Hr/kmYokG5goSopoH0QcT1dQ=;
-  b=IkOJYfwMXpnO5mkm5l2g54XCmDV0VgF2sHklyxewDEXN53SFH+uus1UC
-   bFuXDL8b9vIHDvP/oXWQERo+lACL4EUBFIx13VUv/Q8FAEUoLPfuFfmC3
-   4NScVS+1MXgDah2JSdgx/HHgG8skTB7pzI9CCO8K+nr4b66UV2PjNieAI
-   3CLOysh8GGApbN89czjPfG5jGXHp9nPl+wBAJe/dIvhhoAcSVA57R5t4w
-   w92PfyuGeFQAaboOA8qP4CGE9A0k4qrI2yEIPZP4jw9swZ5L91cBwyAeZ
-   dXmAKIX6iLWaLd/arQ6nSZvYzAncVbyaaQ+OpFs4/2GjTkgJemS3FDw/C
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3311770"
-X-IronPort-AV: E=Sophos;i="6.06,189,1705392000"; 
-   d="scan'208";a="3311770"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 15:48:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,189,1705392000"; 
-   d="scan'208";a="11783013"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 15:48:15 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: changbin.du@huawei.com,
-	adrian.hunter@intel.com,
-	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 2/2] perf, capstone: Support capstone for -F +brstackinsn
-Date: Tue, 27 Feb 2024 15:48:05 -0800
-Message-ID: <20240227234806.82694-2-ak@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240227234806.82694-1-ak@linux.intel.com>
-References: <20240227234806.82694-1-ak@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G7+iayxK"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-42e6939d34fso127101cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 15:49:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709077762; x=1709682562; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iB+oDvTegAoqW/a6zO4hY697uXjjJMY31kDG8xh1h4o=;
+        b=G7+iayxKJGT6tCK7nTG4kpm3V1iH5N7oOvNYyX/EgR/kEden4sZwdAiCU78+9li9Ry
+         TVqEYEaVNV4iAQjBHJi6GxDjVMJkoAKU8753w8Cy0Inct6wmlC6LxsmAPEup/LDL/2jk
+         ANeimdvTfIvZe0R3Z+SrwV01+LAIGkdU9BIDPK8O0VyR+hir1aV14KJz0zSeueqamUaM
+         dQvyyTNpvccs6VBDY4dQIAWA8DvRTALx+OrhLXW0wfFhwRBxWcqy9w396uAuo4S7hQc+
+         XB4nc0T+A72A2yp1w4tJV+5wkzWI4h8zAvsN7hVEhzE2WfSEKCS3xjIf0/jaRvq6/R/O
+         u9fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709077762; x=1709682562;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iB+oDvTegAoqW/a6zO4hY697uXjjJMY31kDG8xh1h4o=;
+        b=V/FTwRhoMcV4NaGm97X4v20muVjyYVZD0exiEX19oMH/faAa/mL+nPDoMX+HN5e8U1
+         9iMo6d0lBNMN9mnla/vSiGH7WCsj3chD3QR9GiczYQMiSUDriZITOIDDLDwBXTXKWxgo
+         FpCdVOwyDul2a8VY8KB156TJKp+sI2GDHy/uxpQk7by7b5k9u7lu2g5bqNxecKHj1SQQ
+         gvdoHdQW8vXeNPOchoqecvT/MiFc0xVNKPOlJ6d1uqi1RDJFKaaoMhwZoZaVzMBYaIil
+         JcyZDmtltw5ePmP2nU5YXPpE7a+2HomaWUK0Qx61OkLhmPEhIpbT8NAd4kjYZXmbqp4F
+         JYBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWE9YtPcv4+gApl3IZreKA6jqBz/+T6yaqYbDxeRvbhpP8LDnB/GAAg2bVEai6mCWX2ktAJWywAYPU+tU6Qu8wvIDzIzoejcqJpdDob8VGkpw==
+X-Gm-Message-State: AOJu0YzFpzBf5BUK1eTjXDu7FK48k4NNTXotFskdqrm27Ug3AAbpMSBy
+	c7bEUz7Wq+5ZhRt2pLJAiN0r1q92OQV1KzoF5oHAerrm2Esimtq0ewV+q1FhNCCj3t4Spnr5ZgD
+	rdAqh+6Q6R8Vq1rkmFsoHQMNSXT2Qf6qQgnjN
+X-Google-Smtp-Source: AGHT+IHM7TEANHzIYObsHNi671bgtwi0eCmbByAIOUPbycwTPKqBP83wkpna9tjc8pKZoCwpg6kB2WplhLAR5igeWLk=
+X-Received: by 2002:a05:622a:104c:b0:42e:8e9e:3a1f with SMTP id
+ f12-20020a05622a104c00b0042e8e9e3a1fmr47990qte.10.1709077761778; Tue, 27 Feb
+ 2024 15:49:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240209230657.1546739-1-namhyung@kernel.org>
+In-Reply-To: <20240209230657.1546739-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 27 Feb 2024 15:49:07 -0800
+Message-ID: <CAP-5=fWS-5vbX+dF+bjPLf4OkkQg2kV515oLGTwL6C8kU7Gu3g@mail.gmail.com>
+Subject: Re: [PATCH RESEND] perf lock contention: Account contending locks too
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Support capstone output for the -F +brstackinsn branch dump.
-It is only enabled when -F +disasm is specified.
-This was possible before with --xed, but now also allow
-it for users that don't have xed using the builtin capstone support.
+On Fri, Feb 9, 2024 at 3:07=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Currently it accounts the contention using delta between timestamps in
+> lock:contention_begin and lock:contention_end tracepoints.  But it means
+> the lock should see the both events during the monitoring period.
+>
+> Actually there are 4 cases that happen with the monitoring:
+>
+>                 monitoring period
+>             /                       \
+>             |                       |
+>  1:  B------+-----------------------+--------E
+>  2:    B----+-------------E         |
+>  3:         |           B-----------+----E
+>  4:         |     B-------------E   |
+>             |                       |
+>             t0                      t1
+>
+> where B and E mean contention BEGIN and END, respectively.  So it only
+> accounts the case 4 for now.  It seems there's no way to handle the case
+> 1.  The case 2 might be handled if it saved the timestamp (t0), but it
+> lacks the information from the B notably the flags which shows the lock
+> types.  Also it could be a nested lock which it currently ignores.  So
+> I think we should ignore the case 2.
+>
+> However we can handle the case 3 if we save the timestamp (t1) at the
+> end of the period.  And then it can iterate the map entries in the
+> userspace and update the lock stat accordinly.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_lock_contention.c         | 116 ++++++++++++++++++
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  |  16 +--
+>  tools/perf/util/bpf_skel/lock_data.h          |   7 ++
+>  3 files changed, 132 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
+lock_contention.c
+> index 31ff19afc20c..d6bafd9a3955 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -179,6 +179,119 @@ int lock_contention_prepare(struct lock_contention =
+*con)
+>         return 0;
+>  }
+>
+> +static void mark_end_timestamp(void)
+> +{
+> +       DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
+> +               .flags =3D BPF_F_TEST_RUN_ON_CPU,
 
-Before:
+It seems strange that this and the raw tracepoint are both test. I see
+similar non-test uses in libbpf-tools. It would be worth documenting
+that this isn't test code. Everything else LGTM.
 
-perf record -b emacs -Q --batch '()'
-perf script -F +brstackinsn
-...
-          emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [3]
-        00007f0ab2d17105        insn: 73 51
-        00007f0ab2d17107        insn: 48 89 c1
-        00007f0ab2d1710a        insn: 48 39 ca
-        00007f0ab2d1710d        insn: 73 96
-        00007f0ab2d1710f        insn: 48 8d 04 11
-        00007f0ab2d17113        insn: 48 d1 e8
-        00007f0ab2d17116        insn: 49 8d 34 c1
-        00007f0ab2d1711a        insn: 44 3a 06
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        insn: 73 51                     # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        insn: 48 8d 50 01
-        00007f0ab2d1715c        insn: eb 92                     # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        insn: 48 39 ca
-        00007f0ab2d170f3        insn: 73 b0                     # PRED 1 cycles [9] 2.00 IPC
+Thanks,
+Ian
 
-After (perf must be compiled with capstone):
-
-perf script -F +brstackinsn,+disasm
-
-...
-           emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [3]
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128
-        00007f0ab2d17107        movq %rax, %rcx
-        00007f0ab2d1710a        cmpq %rcx, %rdx
-        00007f0ab2d1710d        jae intel_check_word.constprop.0+0x75
-        00007f0ab2d1710f        leaq (%rcx, %rdx), %rax
-        00007f0ab2d17113        shrq $1, %rax
-        00007f0ab2d17116        leaq (%r9, %rax, 8), %rsi
-        00007f0ab2d1711a        cmpb (%rsi), %r8b
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128  # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        leaq 1(%rax), %rdx
-        00007f0ab2d1715c        jmp intel_check_word.constprop.0+0xc0   # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        cmpq %rcx, %rdx
-        00007f0ab2d170f3        jae intel_check_word.constprop.0+0x75   # PRED 1 cycles [9] 2.00 IPC
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/builtin-script.c  | 23 +++++++++++++---
- tools/perf/util/dump-insn.h  |  1 +
- tools/perf/util/print_insn.c | 52 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/print_insn.h |  3 +++
- 4 files changed, 75 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 37088cc0ff1b..f18bcf61be8b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1162,6 +1162,20 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
- 	return ret;
- }
- 
-+static const char *any_dump_insn(struct perf_event_attr *attr,
-+			struct perf_insn *x, uint64_t ip,
-+			u8 *inbuf, int inlen, int *lenp)
-+{
-+#ifdef HAVE_LIBCAPSTONE_SUPPORT
-+	if (PRINT_FIELD(DISASM)) {
-+		const char *p = cs_dump_insn(x, ip, inbuf, inlen, lenp);
-+		if (p)
-+			return p;
-+	}
-+#endif
-+	return dump_insn(x, ip, inbuf, inlen, lenp);
-+}
-+
- static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			    struct perf_insn *x, u8 *inbuf, int len,
- 			    int insn, FILE *fp, int *total_cycles,
-@@ -1170,7 +1184,7 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- {
- 	int ilen = 0;
- 	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
--			      dump_insn(x, ip, inbuf, len, &ilen));
-+			      any_dump_insn(attr, x, ip, inbuf, len, &ilen));
- 
- 	if (PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += fprintf(fp, "ilen: %d\t", ilen);
-@@ -1262,6 +1276,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		nr = max_blocks + 1;
- 
- 	x.thread = thread;
-+	x.machine = machine;
- 	x.cpu = sample->cpu;
- 
- 	printed += fprintf(fp, "%c", '\n');
-@@ -1313,7 +1328,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			} else {
- 				ilen = 0;
- 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
--						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
-+						   any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen));
- 				if (PRINT_FIELD(BRSTACKINSNLEN))
- 					printed += fprintf(fp, "\tilen: %d", ilen);
- 				printed += fprintf(fp, "\n");
-@@ -1361,7 +1376,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			goto out;
- 		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
--			dump_insn(&x, sample->ip, buffer, len, &ilen));
-+			any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen));
- 		if (PRINT_FIELD(BRSTACKINSNLEN))
- 			printed += fprintf(fp, "\tilen: %d", ilen);
- 		printed += fprintf(fp, "\n");
-@@ -1372,7 +1387,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 	for (off = 0; off <= end - start; off += ilen) {
- 		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
--				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
-+				   any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen));
- 		if (PRINT_FIELD(BRSTACKINSNLEN))
- 			printed += fprintf(fp, "\tilen: %d", ilen);
- 		printed += fprintf(fp, "\n");
-diff --git a/tools/perf/util/dump-insn.h b/tools/perf/util/dump-insn.h
-index 650125061530..4a7797dd6d09 100644
---- a/tools/perf/util/dump-insn.h
-+++ b/tools/perf/util/dump-insn.h
-@@ -11,6 +11,7 @@ struct thread;
- struct perf_insn {
- 	/* Initialized by callers: */
- 	struct thread *thread;
-+	struct machine *machine;
- 	u8	      cpumode;
- 	bool	      is64bit;
- 	int	      cpu;
-diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-index bd7a95e64ce5..35785ab22c07 100644
---- a/tools/perf/util/print_insn.c
-+++ b/tools/perf/util/print_insn.c
-@@ -12,6 +12,7 @@
- #include "machine.h"
- #include "thread.h"
- #include "print_insn.h"
-+#include "dump-insn.h"
- #include "map.h"
- #include "dso.h"
- 
-@@ -71,6 +72,57 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
- 	return 0;
- }
- 
-+static void dump_insn_x86(struct thread *thread, cs_insn *insn, struct perf_insn *x)
-+{
-+	struct addr_location al;
-+	bool printed = false;
-+
-+	if (insn->detail && insn->detail->x86.op_count == 1) {
-+		cs_x86_op *op = &insn->detail->x86.operands[0];
-+
-+		addr_location__init(&al);
-+		if (op->type == X86_OP_IMM &&
-+		    thread__find_symbol(thread, x->cpumode, op->imm, &al) &&
-+		    al.sym &&
-+		    al.addr < al.sym->end) {
-+			snprintf(x->out, sizeof(x->out), "%s %s+%#" PRIx64 " [%#" PRIx64 "]", insn[0].mnemonic,
-+					al.sym->name, al.addr - al.sym->start, op->imm);
-+			printed = true;
-+		}
-+		addr_location__exit(&al);
-+	}
-+
-+	if (!printed)
-+		snprintf(x->out, sizeof(x->out), "%s %s", insn[0].mnemonic, insn[0].op_str);
-+}
-+
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+			 u8 *inbuf, int inlen, int *lenp)
-+{
-+	int ret;
-+	int count;
-+	cs_insn *insn;
-+	csh cs_handle;
-+
-+	ret = capstone_init(x->machine, &cs_handle, x->is64bit);
-+	if (ret < 0)
-+		return NULL;
-+
-+	count = cs_disasm(cs_handle, (uint8_t *)inbuf, inlen, ip, 1, &insn);
-+	if (count > 0) {
-+		if (machine__normalized_is(x->machine, "x86"))
-+			dump_insn_x86(x->thread, &insn[0], x);
-+		else
-+			snprintf(x->out, sizeof(x->out), "%s %s",
-+					insn[0].mnemonic, insn[0].op_str);
-+		*lenp = insn->size;
-+		cs_free(insn, count);
-+	} else {
-+		return NULL;
-+	}
-+	return x->out;
-+}
-+
- static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
- 			     cs_insn *insn, FILE *fp)
- {
-diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
-index 465bdcfcc2fd..135d78322f71 100644
---- a/tools/perf/util/print_insn.h
-+++ b/tools/perf/util/print_insn.h
-@@ -8,9 +8,12 @@
- struct perf_sample;
- struct thread;
- struct machine;
-+struct perf_insn;
- 
- size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
- 				struct machine *machine, FILE *fp);
- size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+                         u8 *inbuf, int inlen, int *lenp);
- 
- #endif /* PERF_PRINT_INSN_H */
--- 
-2.43.0
-
+> +       );
+> +       int prog_fd =3D bpf_program__fd(skel->progs.end_timestamp);
+> +
+> +       bpf_prog_test_run_opts(prog_fd, &opts);
+> +}
+> +
+> +static void update_lock_stat(int map_fd, int pid, u64 end_ts,
+> +                            enum lock_aggr_mode aggr_mode,
+> +                            struct tstamp_data *ts_data)
+> +{
+> +       u64 delta;
+> +       struct contention_key stat_key =3D {};
+> +       struct contention_data stat_data;
+> +
+> +       if (ts_data->timestamp >=3D end_ts)
+> +               return;
+> +
+> +       delta =3D end_ts - ts_data->timestamp;
+> +
+> +       switch (aggr_mode) {
+> +       case LOCK_AGGR_CALLER:
+> +               stat_key.stack_id =3D ts_data->stack_id;
+> +               break;
+> +       case LOCK_AGGR_TASK:
+> +               stat_key.pid =3D pid;
+> +               break;
+> +       case LOCK_AGGR_ADDR:
+> +               stat_key.lock_addr_or_cgroup =3D ts_data->lock;
+> +               break;
+> +       case LOCK_AGGR_CGROUP:
+> +               /* TODO */
+> +               return;
+> +       default:
+> +               return;
+> +       }
+> +
+> +       if (bpf_map_lookup_elem(map_fd, &stat_key, &stat_data) < 0)
+> +               return;
+> +
+> +       stat_data.total_time +=3D delta;
+> +       stat_data.count++;
+> +
+> +       if (delta > stat_data.max_time)
+> +               stat_data.max_time =3D delta;
+> +       if (delta < stat_data.min_time)
+> +               stat_data.min_time =3D delta;
+> +
+> +       bpf_map_update_elem(map_fd, &stat_key, &stat_data, BPF_EXIST);
+> +}
+> +
+> +/*
+> + * Account entries in the tstamp map (which didn't see the corresponding
+> + * lock:contention_end tracepoint) using end_ts.
+> + */
+> +static void account_end_timestamp(struct lock_contention *con)
+> +{
+> +       int ts_fd, stat_fd;
+> +       int *prev_key, key;
+> +       u64 end_ts =3D skel->bss->end_ts;
+> +       int total_cpus;
+> +       enum lock_aggr_mode aggr_mode =3D con->aggr_mode;
+> +       struct tstamp_data ts_data, *cpu_data;
+> +
+> +       /* Iterate per-task tstamp map (key =3D TID) */
+> +       ts_fd =3D bpf_map__fd(skel->maps.tstamp);
+> +       stat_fd =3D bpf_map__fd(skel->maps.lock_stat);
+> +
+> +       prev_key =3D NULL;
+> +       while (!bpf_map_get_next_key(ts_fd, prev_key, &key)) {
+> +               if (bpf_map_lookup_elem(ts_fd, &key, &ts_data) =3D=3D 0) =
+{
+> +                       int pid =3D key;
+> +
+> +                       if (aggr_mode =3D=3D LOCK_AGGR_TASK && con->owner=
+)
+> +                               pid =3D ts_data.flags;
+> +
+> +                       update_lock_stat(stat_fd, pid, end_ts, aggr_mode,
+> +                                        &ts_data);
+> +               }
+> +
+> +               prev_key =3D &key;
+> +       }
+> +
+> +       /* Now it'll check per-cpu tstamp map which doesn't have TID. */
+> +       if (aggr_mode =3D=3D LOCK_AGGR_TASK || aggr_mode =3D=3D LOCK_AGGR=
+_CGROUP)
+> +               return;
+> +
+> +       total_cpus =3D cpu__max_cpu().cpu;
+> +       ts_fd =3D bpf_map__fd(skel->maps.tstamp_cpu);
+> +
+> +       cpu_data =3D calloc(total_cpus, sizeof(*cpu_data));
+> +       if (cpu_data =3D=3D NULL)
+> +               return;
+> +
+> +       prev_key =3D NULL;
+> +       while (!bpf_map_get_next_key(ts_fd, prev_key, &key)) {
+> +               if (bpf_map_lookup_elem(ts_fd, &key, cpu_data) < 0)
+> +                       goto next;
+> +
+> +               for (int i =3D 0; i < total_cpus; i++) {
+> +                       update_lock_stat(stat_fd, -1, end_ts, aggr_mode,
+> +                                        &cpu_data[i]);
+> +               }
+> +
+> +next:
+> +               prev_key =3D &key;
+> +       }
+> +       free(cpu_data);
+> +}
+> +
+>  int lock_contention_start(void)
+>  {
+>         skel->bss->enabled =3D 1;
+> @@ -188,6 +301,7 @@ int lock_contention_start(void)
+>  int lock_contention_stop(void)
+>  {
+>         skel->bss->enabled =3D 0;
+> +       mark_end_timestamp();
+>         return 0;
+>  }
+>
+> @@ -301,6 +415,8 @@ int lock_contention_read(struct lock_contention *con)
+>         if (stack_trace =3D=3D NULL)
+>                 return -1;
+>
+> +       account_end_timestamp(con);
+> +
+>         if (con->aggr_mode =3D=3D LOCK_AGGR_TASK) {
+>                 struct thread *idle =3D __machine__findnew_thread(machine=
+,
+>                                                                 /*pid=3D*=
+/0,
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
+util/bpf_skel/lock_contention.bpf.c
+> index 95cd8414f6ef..fb54bd38e7d0 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -19,13 +19,6 @@
+>  #define LCB_F_PERCPU   (1U << 4)
+>  #define LCB_F_MUTEX    (1U << 5)
+>
+> -struct tstamp_data {
+> -       __u64 timestamp;
+> -       __u64 lock;
+> -       __u32 flags;
+> -       __s32 stack_id;
+> -};
+> -
+>  /* callstack storage  */
+>  struct {
+>         __uint(type, BPF_MAP_TYPE_STACK_TRACE);
+> @@ -140,6 +133,8 @@ int perf_subsys_id =3D -1;
+>  /* determine the key of lock stat */
+>  int aggr_mode;
+>
+> +__u64 end_ts;
+> +
+>  /* error stat */
+>  int task_fail;
+>  int stack_fail;
+> @@ -559,4 +554,11 @@ int BPF_PROG(collect_lock_syms)
+>         return 0;
+>  }
+>
+> +SEC("raw_tp/bpf_test_finish")
+> +int BPF_PROG(end_timestamp)
+> +{
+> +       end_ts =3D bpf_ktime_get_ns();
+> +       return 0;
+> +}
+> +
+>  char LICENSE[] SEC("license") =3D "Dual BSD/GPL";
+> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_s=
+kel/lock_data.h
+> index 08482daf61be..36af11faad03 100644
+> --- a/tools/perf/util/bpf_skel/lock_data.h
+> +++ b/tools/perf/util/bpf_skel/lock_data.h
+> @@ -3,6 +3,13 @@
+>  #ifndef UTIL_BPF_SKEL_LOCK_DATA_H
+>  #define UTIL_BPF_SKEL_LOCK_DATA_H
+>
+> +struct tstamp_data {
+> +       u64 timestamp;
+> +       u64 lock;
+> +       u32 flags;
+> +       u32 stack_id;
+> +};
+> +
+>  struct contention_key {
+>         u32 stack_id;
+>         u32 pid;
+> --
+> 2.43.0.687.g38aa6559b0-goog
+>
