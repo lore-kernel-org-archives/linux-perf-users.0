@@ -1,191 +1,129 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2575C535B8;
-	Tue, 27 Feb 2024 06:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6811C537FC;
+	Tue, 27 Feb 2024 06:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709016927; cv=none; b=MqKCgz5e//c6YPm4cQLpzaqLENDZMo1qA2SwQI08Ovv3BLk+QDKgYrDgHRaTaAyEgcXiYy+Xfbos+Yl0MHnzT/BSRGXGlqoGGSY4vOZwodboBw8Wo/FCxUUTYJ9qefPyRZCTG+/jgaA9W2/4+97B9KmuuRECf2RWTHaZ8EvNQxo=
+	t=1709017122; cv=none; b=hGtL0VvKz5Sv//A33eoimYMpsNGYqTwatheos4CIL+lRqlRhaJS/IplzSM/n6EUTcXexD6ijcx1tuAtQywOC2vImjCv7EE7hSxkafKlvo0N1w4BHWfv6mn6nRLttDJ6k8X0Y0Gwigt+Y+89guNrWIW2E1Jobil3Ar0rK1GAxyUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709016927; c=relaxed/simple;
-	bh=gG5CMlrl+GPx0nv6WJg9sxLLdFwObEWxvNr02omKWMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b5DIgEowaxs4adIsfbMHWCr8AfUjoA/EA5Uio5Zq7DBFnExTETHIUDeCuqb+SpMS6oC1CIsATurRUbuNmtiAWVMexXGxRDPeO4NTpQyn1pnqliOZKLoaxJ7l7OxgfkQD8yDcm0TD3eZ28d3Jm5QNjF6PFqVYZyml5IpneENS+dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5dbf7b74402so3152679a12.0;
-        Mon, 26 Feb 2024 22:55:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709016925; x=1709621725;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pfYPVo8PlMx484tYtZ4NtC24FP1qjCc+CfFFfGRz5dA=;
-        b=sJyHj4pduRQlovNl15Ut8pBZ6CD6IwLFXQ51sLG+Z0rwgl4c3nV99L9tJGPGnX9xxR
-         6s+fJ98ZI8OFRrUHcf1639V2WJh03Sr5IyvfPRSgiqFxsUFpiNYdhzI0mdUxcW9tM+X2
-         4BL/FM4D+yOfp2Zc3LS7XjWY/cxMlnw7ssYBE3u/4mMkmmzBbWadaoFom/slK0cSwnqA
-         HTs2wCMHU0QX1pANmI/pBLd3YrQslJp/OcSYIJWu2torFbMDe9ummBK8n24oAAI5Pu9e
-         WS9uHtJZl8V29wPqkS8D+QNrWn3opD9HmbmTEwOxly4YXzNjICJ+svBJzNYn+Olj6mfL
-         cuLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBrOl+RDIUzFOImjmzGwy5jUz2vTJg6kHCl49PtcFkdxKaGqY86WSfJNBR4Y5TdKa7mNLlRMIUar+CLH3xN0VXnSDFc8dkmL20LrZFqMiI6UWb30AccStIst1l62PK8cSQPDOhRAp+IYK5xsLrRNsrtdIV6LWAt8+0PpAyAFOoRcJEAw==
-X-Gm-Message-State: AOJu0YxE0lceurDCPOpyfg19nhY1ldL1kyiH+Ca7GtRgENyDR3jXS+4n
-	juXb2f6laS+YMZoIIcxInRiaSvQ8lRoJQanGIMtxPp7G8SNA1gFeKU/MoyhuOLCZQFturhyv2TN
-	G5c4XAN/HXI4ZiQ97t4oLOp6Zh5w=
-X-Google-Smtp-Source: AGHT+IE1/w/Ox4YK0hHwTMKs7yZKvHP3jxpt9iUkaVJEYi+86QMxyUzPWlTgWS6MSN6CSMs56va8/J/sZSfBwQ0nWQ8=
-X-Received: by 2002:a17:90b:2243:b0:29a:d8ff:1b98 with SMTP id
- hk3-20020a17090b224300b0029ad8ff1b98mr2584869pjb.48.1709016925178; Mon, 26
- Feb 2024 22:55:25 -0800 (PST)
+	s=arc-20240116; t=1709017122; c=relaxed/simple;
+	bh=BRtV5Vyn4aIy+xz+W1iBw7ybgHIQuX2mDWeZHMIzSSU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rE/AbHJe1UR86xDUvKMYgsJYs95Hdn5RNfRx2Aq1Y2JgZNXnP5jdxwMb7P/Po7RsMnL7Smw4Spnls4qpATwokZDeZriCUNe+SSdfAGibKpF3NRE0nf7G9/p0GMERLICjHqp+BEtMfcJek5kOO7oOPz7mqTihggghtGaLYM5JGgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Qzur8aGv; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Qzur8aGv"
+X-UUID: a0265130d53d11eea528b71b88a53856-20240227
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=vC9iEcm/UVcOWv/4cFobjCd65sEBEJQ4MqFHTs+Wa6w=;
+	b=Qzur8aGvsvZIWeyj/jFoU4of/xGIbIK4l1CpVw4ZuIBqMKqEkjUZyYa2bycq4AZSF4TVCCDJYHHtBubajO+vyxDP2VPkAm3gAR7wXqMxnnhBCKl9R9Qgm+RF2rcA6JlUEnqwhNDpz0ZYLDl88D1sc/OH5/jrqhIdwLKa5NwIvIU=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:d29753cf-a4e0-4717-a8b1-8adcaaee442c,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:26ad41ff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:817|102,TC:nil,Content:0|-5,EDM:-3,I
+	P:nil,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,A
+	V:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 1,FCT|NGT
+X-CID-BAS: 1,FCT|NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: a0265130d53d11eea528b71b88a53856-20240227
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <haibo.li@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1377718937; Tue, 27 Feb 2024 14:58:35 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 27 Feb 2024 14:58:32 +0800
+Received: from mszsdtlt102.gcn.mediatek.inc (10.16.4.142) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 27 Feb 2024 14:58:32 +0800
+From: Haibo Li <haibo.li@mediatek.com>
+To: <tnovak@fb.com>
+CC: <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux@armlinux.org.uk>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+	<namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>,
+	<xiaoming.yu@mediatek.com>, Haibo Li <haibo.li@mediatek.com>
+Subject: [PATCH] ARM: perf: Use correct unwind info for tracepoint events
+Date: Tue, 27 Feb 2024 14:58:28 +0800
+Message-ID: <20240227065828.24598-1-haibo.li@mediatek.com>
+X-Mailer: git-send-email 2.34.3
+In-Reply-To: <20220921002446.3096120-1-tnovak@fb.com>
+References: <20220921002446.3096120-1-tnovak@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-3-irogers@google.com>
-In-Reply-To: <20240214063708.972376-3-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 26 Feb 2024 22:55:13 -0800
-Message-ID: <CAM9d7ch3xpuOwZkr5eiOCZj3b_az2=nErOahbsMajZtkQmK9tw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] perf trace: Ignore thread hashing in summary
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10-2.641300-8.000000
+X-TMASE-MatchedRID: 6neWtTD7fHEIKTbeRIBWzDWQg1yejS72OlW1BAebvzDCfgNAnrDKhRla
+	aIjbFjxvaxE9Kn8Vayr7znzPpwZYC45S9RIYp1E+VU3yVpaj3QwhauGyjTkf9YfAYSb4KlgZ94V
+	amfVCBA6C6LDcSmpL7JD/QawhxLCoHaQ9wyk4fkCeAiCmPx4NwGmRqNBHmBve8JnRnNG2x81JKW
+	4mDlJsMVgXepbcl7r7C1hm4mTjU4ykZlHOxJ/5IyzxsmTyithGEGtYF56J97pbcCRXcd0pINGpK
+	guv+DtLld+Vz+P9nRtWu8gdZjpy+shfslRL5TighJVRlkc0uv5GBXoeyrLHXVBo425nomviD2Te
+	XwRpghw5Asr9kfiuVn7cGd19dSFd
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10-2.641300-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	06FEA735E92AB0FA45F424D20DA30440FB6FE2F3E550F1E46D4E31AEE356D07B2000:8
+X-MTK: N
 
-On Tue, Feb 13, 2024 at 10:37=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> Commit 91e467bc568f ("perf machine: Use hashtable for machine
-> threads") made the iteration of thread tids unordered. The perf trace
-> --summary output sorts and prints each hash bucket, rather than all
-> threads globally. Change this behavior by turn all threads into a
-> list, sort the list by number of trace events then by tids, finally
-> print the list. This also allows the rbtree in threads to be not
-> accessed outside of machine.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-trace.c  | 41 +++++++++++++++++++++----------------
->  tools/perf/util/rb_resort.h |  5 -----
->  2 files changed, 23 insertions(+), 23 deletions(-)
->
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 109b8e64fe69..90eaff8c0f6e 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -74,6 +74,7 @@
->  #include <linux/err.h>
->  #include <linux/filter.h>
->  #include <linux/kernel.h>
-> +#include <linux/list_sort.h>
->  #include <linux/random.h>
->  #include <linux/stringify.h>
->  #include <linux/time64.h>
-> @@ -4312,34 +4313,38 @@ static unsigned long thread__nr_events(struct thr=
-ead_trace *ttrace)
->         return ttrace ? ttrace->nr_events : 0;
->  }
->
-> -DEFINE_RESORT_RB(threads,
-> -               (thread__nr_events(thread__priv(a->thread)) <
-> -                thread__nr_events(thread__priv(b->thread))),
-> -       struct thread *thread;
-> -)
-> +static int trace_nr_events_cmp(void *priv __maybe_unused,
-> +                              const struct list_head *la,
-> +                              const struct list_head *lb)
->  {
-> -       entry->thread =3D rb_entry(nd, struct thread_rb_node, rb_node)->t=
-hread;
-> +       struct thread_list *a =3D list_entry(la, struct thread_list, list=
-);
-> +       struct thread_list *b =3D list_entry(lb, struct thread_list, list=
-);
-> +       unsigned long a_nr_events =3D thread__nr_events(thread__priv(a->t=
-hread));
-> +       unsigned long b_nr_events =3D thread__nr_events(thread__priv(b->t=
-hread));
-> +
-> +       if (a_nr_events !=3D b_nr_events)
-> +               return a_nr_events < b_nr_events ? -1 : 1;
-> +
-> +       /* Identical number of threads, place smaller tids first. */
-> +       return thread__tid(a->thread) < thread__tid(b->thread)
-> +               ? -1
-> +               : (thread__tid(a->thread) > thread__tid(b->thread) ? 1 : =
-0);
+>Unwinding tends to work okay in practice 
+>because perf_trace_* functions and their callers 
+>usually have similar prologues.A common unwind insn sequence
+>is "sp=fp, sp-=X, pop_r4_to_rN", so even if prologues don't match exactly,
+>stored LR gets correctly popped off the stack.
 
-I'm not sure if it can have a case where two different threads in the
-hash table can have the same tid.  If not, it can simplify the last case.
+It does not work well for all tracepoint events.
+perf gets incomplete stacktrace after below commands
+if CONFIG_ARM_UNWIND is on:
 
+perf record -e block:block_rq_complete  -g sleep 10
+perf script
+'''
+swapper     0 [000] 50333.927556: block:block_rq_complete:
+ 254,0 WSM () 376888 + 18 [0]
+      804ac458 __traceiter_block_rq_complete+0x3c ([kernel.kallsyms])
+      806bdd70 virtblk_done+0xc8 ([kernel.kallsyms])
+      10 [unknown] ([unknown])
+'''
+In experiment,
+ext4:ext4_da_write_begin,
+block:block_rq_complete,
+csd:csd_function_entry
+suffer from above problem(maybe more).
 
->  }
->
->  static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *f=
-p)
->  {
->         size_t printed =3D trace__fprintf_threads_header(fp);
-> -       struct rb_node *nd;
-> -       int i;
-> -
-> -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> -               DECLARE_RESORT_RB_MACHINE_THREADS(threads, trace->host, i=
-);
-> +       LIST_HEAD(threads);
->
-> -               if (threads =3D=3D NULL) {
-> -                       fprintf(fp, "%s", "Error sorting output by nr_eve=
-nts!\n");
-> -                       return 0;
-> -               }
-> +       if (machine__thread_list(trace->host, &threads) =3D=3D 0) {
-> +               struct thread_list *pos;
->
-> -               resort_rb__for_each_entry(nd, threads)
-> -                       printed +=3D trace__fprintf_thread(fp, threads_en=
-try->thread, trace);
-> +               list_sort(NULL, &threads, trace_nr_events_cmp);
+As you said,it is caused by mismatched ARM_pc.
 
-Same concern, it'd be nice if we can use an array instead.
+After apply similar patch,now perf gets correct stacktrace:
+swapper     0 [000]   122.003800: block:block_rq_complete:
+ 254,0 WSM () 377064 + 16 [0]
+ 804acdd4 perf_trace_block_rq_completion+0x80 ([kernel.kallsyms])
+ 804ac2b0 __traceiter_block_rq_complete+0x3c ([kernel.kallsyms])
+ 804b9388 blk_update_request+0x64 ([kernel.kallsyms])
+ 804b9ab4 blk_mq_end_request+0x14 ([kernel.kallsyms])
+ 804c0bac blk_done_softirq+0x58 ([kernel.kallsyms])
+ 8010135c __softirqentry_text_start+0x138 ([kernel.kallsyms])
+ 801298f8 __irq_exit_rcu+0x58 ([kernel.kallsyms])
+ 801299a0 irq_exit+0x8 ([kernel.kallsyms])
+ 80100ba8 __irq_svc+0x88 ([kernel.kallsyms])
+ 80165628 arch_local_irq_enable+0x4 ([kernel.kallsyms])
+ 801659d8 do_idle+0xdc ([kernel.kallsyms])
+ 80165bf4 cpu_startup_entry+0x28 ([kernel.kallsyms])
+ 809c8764 kernel_init+0x0 ([kernel.kallsyms])
 
-Thanks,
-Namhyung
+Acked-by: Haibo Li <haibo.li@mediatek.com>
 
-
->
-> -               resort_rb__delete(threads);
-> +               list_for_each_entry(pos, &threads, list)
-> +                       printed +=3D trace__fprintf_thread(fp, pos->threa=
-d, trace);
->         }
-> +       thread_list__delete(&threads);
->         return printed;
->  }
->
-> diff --git a/tools/perf/util/rb_resort.h b/tools/perf/util/rb_resort.h
-> index 376e86cb4c3c..d927a0d25052 100644
-> --- a/tools/perf/util/rb_resort.h
-> +++ b/tools/perf/util/rb_resort.h
-> @@ -143,9 +143,4 @@ struct __name##_sorted *__name =3D __name##_sorted__n=
-ew
->         DECLARE_RESORT_RB(__name)(&__ilist->rblist.entries.rb_root,      =
-       \
->                                   __ilist->rblist.nr_entries)
->
-> -/* For 'struct machine->threads' */
-> -#define DECLARE_RESORT_RB_MACHINE_THREADS(__name, __machine, hash_bucket=
-)    \
-> - DECLARE_RESORT_RB(__name)(&__machine->threads[hash_bucket].entries.rb_r=
-oot, \
-> -                          __machine->threads[hash_bucket].nr)
-> -
->  #endif /* _PERF_RESORT_RB_H_ */
-> --
-> 2.43.0.687.g38aa6559b0-goog
->
