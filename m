@@ -1,123 +1,170 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118104EB4C;
-	Tue, 27 Feb 2024 17:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AA64A2D
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 18:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709055107; cv=none; b=Qn2w9MGQle+21Om1xg1f+PSLtsRBHsqo4Gip9j2e9dVFI8Uzfw7ge5bok6GflxabmE69jsYjGZITmH0gcAmFTEeZvidfdBYy3wbEWPDmhnoKL/PGbhXl6OQA5Mb4uZNaPfCPf+SFCaaHZDzQECAyY29NOsV8U6q0hkUb024Ewck=
+	t=1709059162; cv=none; b=ILjeF+J8MKUFPe+iO5fPlSiuRUnamaqwjLATg9P/QqM7gz3+geAuIzHIpHrWuu155P3CwrEd0AzXJquTQnCPxJNSs5p5JiWyXmYoQaPFe+yCAQGAr9RP1P90dQduHfwVfjBFdZ6MzRUcmU2PKIUTBohFRSJ4up6IqxddlqZUyF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709055107; c=relaxed/simple;
-	bh=N4qrca1gfNLM7XkrrAkeiIRez2lQIublb/jwq59mkcY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Acr3wva4AHXSlP2JA056regS4qTt4G6DESGAnQiAzMXdEj4ljeiMq0EcggvDuPF7mrzqXkKKHRMM6fVwx7b9k38UUILRoDKlX35R65P7+xpChwsrLIxGnFY6BtYTmpfW8SPRJzgbLYSZ40B8S/pXNj1085kH341HTCau3mksgxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc9222b337so26716125ad.2;
-        Tue, 27 Feb 2024 09:31:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709055105; x=1709659905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iPTm1iNR6NeamAnZRn8ji0Wn/OzjaL8ol//B5bTYhxE=;
-        b=H8YXRpSsMSARCT8EkE56YPxIO3BhN/vkBea6Tu8GTn9XtmJfJzHlsll3TlKlMTtCxO
-         LSoMqv9qW5T6ixbu3ByoJMsDUUFQNWg17SVhAaufmPPBkaUxb4cSA3WVYWrBol97WL3p
-         YX1O37rNWR50lEZWwByz5h2LMDkPbtmRfg0d+V1j5QD727JeEtV0N7Vb/wiW6zoKuiSF
-         wRKOYAH4IwYn3fhy7Ta9P26BLpz0fU/RriAWATIX6MbSyyWY7HtKq71FtXi2QzXsBnGS
-         t2DQx4MsJR3Vj9AwFdhy77zGdbeS05b/0M5+kMGU2HIINMQSknYyHyqQGy3nBG+91oZj
-         9L1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV+Ch6HqYEF2YCfKD11RDaGTrmzDKR3922h09noKaxuHWKBeyVxYaPl/8PoWvj8MtHEG9Swb7HHPt9NwFzlxn3uNS5Ypb1VWzo4fCqP4E38F9OBZcc4+IHmL4IvhRcbpy6GcfuoS7pg1eaFKWsreaEiZ+t0K4uF6j6Eo7Yoqbg56v7B7Q==
-X-Gm-Message-State: AOJu0YyXsCElPHyA/Soif6SLA0iYrdJiPj6VFBOh6voBQfZT5nqWFFnp
-	+YYfxoSiltFclfVWJAQMGnK5xq8EZuvuytR9/DjxRzoIJKnPT5KmRO9JyUJxtWdyooLmCxkrppf
-	Ek+fepnWHML72/AQkTkK6yB9Qc0M=
-X-Google-Smtp-Source: AGHT+IEYnA++zMUlSPGbKP161F1yBAC/gQGUg58ZRFIL5eD1XfGpeOtD1G827LxcOTVtzAYilTC/PZifSULEVoZx0LM=
-X-Received: by 2002:a17:902:6e16:b0:1dc:82bc:c073 with SMTP id
- u22-20020a1709026e1600b001dc82bcc073mr8293776plk.41.1709055105322; Tue, 27
- Feb 2024 09:31:45 -0800 (PST)
+	s=arc-20240116; t=1709059162; c=relaxed/simple;
+	bh=nFY6P1xRIBjiu4AA/goQz67sgBFkaRM/S5YF547VUMc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hEDX6NzIgOHbvf58nmoyA/ngjFImBHTEzrtJ9+PBLWp4XRzKGBCXAOIm4sO0YpxwxMhacV/S/YZF1UufQiWlbv5k8u5TTSoGdem82B1jxD6rKoPgmYD32THf5fwEcVFOedXb2tV8v6uFBTOMvPHPK0QeskYzLbxh33easgi1FDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjY25HoW; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjY25HoW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709059162; x=1740595162;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nFY6P1xRIBjiu4AA/goQz67sgBFkaRM/S5YF547VUMc=;
+  b=hjY25HoWa8zaXN2aKZMsVxh/TLxkGFy/Xd53UjUXbhYeKBFnD1pvObHj
+   eP/2RcGwfOCz4ScFbrqcRFZW47ZqCW65mOsZLLpq+AMLDMTI+i/jMEaL4
+   bnN3PZf5jqVR5bfoiDW2H3QNrly4nqvixJOZn0lD9RLNqXt57bPGI4FRO
+   FVBqYrmF0wA1xSLUAtZbC0n5r/fIWgiVXQnK86MeOT0WQ9n15oYrWZoSN
+   E9GPwhG8z+NaQLcUEv9ky5ZfN6Sw9nCGZtBKXg1YArAC2/+1jcJSOnQ89
+   6ArA0icQdl/lEGEpd87S33/9hIFuOKf/tuatK/5LEune4WdSv6uL9MU4z
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3542381"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="3542381"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 10:39:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="11716373"
+Received: from tassilo.jf.intel.com ([10.54.38.190])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 10:39:20 -0800
+From: Andi Kleen <ak@linux.intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: adrian.hunter@intel.com,
+	Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH] perf, script: Minimize "not reaching sample" for brstackinsn
+Date: Tue, 27 Feb 2024 10:39:10 -0800
+Message-ID: <20240227183910.55824-1-ak@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-5-irogers@google.com>
- <CAM9d7cjuv2VAVfGM6qQEMYO--WvgPvAvmnF73QrS_PzGzCF32w@mail.gmail.com> <CAP-5=fUUSpHUUAc3jvJkPAUuuJAiSAO4mjCxa9qUppnqk76wWg@mail.gmail.com>
-In-Reply-To: <CAP-5=fUUSpHUUAc3jvJkPAUuuJAiSAO4mjCxa9qUppnqk76wWg@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 27 Feb 2024 09:31:33 -0800
-Message-ID: <CAM9d7chXtmfaC73ykiwn+RqJmy5jZFWFaV_QNs10c_Td+zmLBQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/6] perf threads: Move threads to its own files
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Mon, Feb 26, 2024 at 11:07=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> >
-> > On Tue, Feb 13, 2024 at 10:37=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > Move threads out of machine and move thread_rb_node into the C
-> > > file. This hides the implementation of threads from the rest of the
-> > > code allowing for it to be refactored.
-> > >
-> > > Locking discipline is tightened up in this change.
-> >
-> > Doesn't look like a simple code move.  Can we split the locking
-> > change from the move to make the reviewer's life a bit easier? :)
->
-> Not sure I follow. Take threads_nr as an example.
->
-> The old code is in machine.c, so:
-> -static size_t machine__threads_nr(const struct machine *machine)
-> -{
-> -       size_t nr =3D 0;
-> -
-> -       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++)
-> -               nr +=3D machine->threads[i].nr;
-> -
-> -       return nr;
-> -}
->
-> The new code is in threads.c:
-> +size_t threads__nr(struct threads *threads)
-> +{
-> +       size_t nr =3D 0;
-> +
-> +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> +               struct threads_table_entry *table =3D &threads->table[i];
-> +
-> +               down_read(&table->lock);
-> +               nr +=3D table->nr;
-> +               up_read(&table->lock);
-> +       }
-> +       return nr;
-> +}
->
-> So it is a copy paste from one file to the other. The only difference
-> is that the old code failed to take a lock when reading "nr" so the
-> locking is added. I wanted to make sure all the functions in threads.c
-> were properly correct wrt locking, semaphore creation and destruction,
-> etc.  We could have a broken threads.c and fix it in the next change,
-> but given that's a bug it could make bisection more difficult.
-> Ultimately I thought the locking changes were small enough to not
-> warrant being on their own compared to the advantages of having a sane
-> threads abstraction.
+In some situations perf script -F +brstackinsn sees a lot of
+"not reaching sample" messages. This happens when the last LBR block
+before the sample contains a branch that is not in the LBR,
+and the instruction dumping stops.
 
-I can see some other differences like machine__findnew_thread()
-which I think is due to the locking change.  Maybe we can fix the
-problem before moving the code and let the code move simple.
+$ perf record -b  emacs -Q --batch '()'
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.396 MB perf.data (443 samples) ]
+$ perf script -F +brstackinsn
+...
+        00007f0ab2d171a4        insn: 41 0f 94 c0
+        00007f0ab2d171a8        insn: 83 fa 01
+        00007f0ab2d171ab        insn: 74 d3                     # PRED 6 cycles [313] 1.00 IPC
+        00007f0ab2d17180        insn: 45 84 c0
+        00007f0ab2d17183        insn: 74 28
+        ... not reaching sample ...
 
-Thanks,
-Namhyung
+$ perf script -F +brstackinsn | grep -c reach
+136
+
+This is a problem for further analysis that wants to see the full
+code upto the sample.
+
+There are two common cases where the message is bogus:
+- The LBR only logs taken branches, but the branch might be a
+conditional branch that is not taken (that is the most common
+case actually)
+- The LBR sampling uses a filter ignoring some branches,
+but the perf script check checks for all branches.
+
+This patch fixes these two conditions, by only checking
+for conditional branches, as well as checking the perf_event_attr's
+branch filter attributes.
+
+For the test case above it fixes all the messages:
+
+$ ./perf script -F +brstackinsn | grep -c reach
+0
+
+Note that there are still conditions when the message is hit --
+sometimes there can be a unconditional branch that misses the LBR
+update before the sample -- but they are much more rare now.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/builtin-script.c                              | 4 +++-
+ tools/perf/util/dump-insn.c                              | 2 +-
+ tools/perf/util/dump-insn.h                              | 2 +-
+ tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c | 5 +++--
+ 4 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 37088cc0ff1b..df2555fdb18f 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1378,7 +1378,9 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 		printed += fprintf(fp, "\n");
+ 		if (ilen == 0)
+ 			break;
+-		if (arch_is_branch(buffer + off, len - off, x.is64bit) && start + off != sample->ip) {
++		if ((attr->branch_sample_type == 0 || attr->branch_sample_type & PERF_SAMPLE_BRANCH_ANY)
++				&& arch_is_uncond_branch(buffer + off, len - off, x.is64bit)
++				&& start + off != sample->ip) {
+ 			/*
+ 			 * Hit a missing branch. Just stop.
+ 			 */
+diff --git a/tools/perf/util/dump-insn.c b/tools/perf/util/dump-insn.c
+index 2bd8585db93c..c1cc0ade48d0 100644
+--- a/tools/perf/util/dump-insn.c
++++ b/tools/perf/util/dump-insn.c
+@@ -15,7 +15,7 @@ const char *dump_insn(struct perf_insn *x __maybe_unused,
+ }
+ 
+ __weak
+-int arch_is_branch(const unsigned char *buf __maybe_unused,
++int arch_is_uncond_branch(const unsigned char *buf __maybe_unused,
+ 		   size_t len __maybe_unused,
+ 		   int x86_64 __maybe_unused)
+ {
+diff --git a/tools/perf/util/dump-insn.h b/tools/perf/util/dump-insn.h
+index 650125061530..a5de239679d7 100644
+--- a/tools/perf/util/dump-insn.h
++++ b/tools/perf/util/dump-insn.h
+@@ -20,6 +20,6 @@ struct perf_insn {
+ 
+ const char *dump_insn(struct perf_insn *x, u64 ip,
+ 		      u8 *inbuf, int inlen, int *lenp);
+-int arch_is_branch(const unsigned char *buf, size_t len, int x86_64);
++int arch_is_uncond_branch(const unsigned char *buf, size_t len, int x86_64);
+ 
+ #endif
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+index c5d57027ec23..292027a984a9 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+@@ -200,12 +200,13 @@ int intel_pt_get_insn(const unsigned char *buf, size_t len, int x86_64,
+ 	return 0;
+ }
+ 
+-int arch_is_branch(const unsigned char *buf, size_t len, int x86_64)
++int arch_is_uncond_branch(const unsigned char *buf, size_t len, int x86_64)
+ {
+ 	struct intel_pt_insn in;
+ 	if (intel_pt_get_insn(buf, len, x86_64, &in) < 0)
+ 		return -1;
+-	return in.branch != INTEL_PT_BR_NO_BRANCH;
++	return in.branch == INTEL_PT_BR_UNCONDITIONAL ||
++	       in.branch == INTEL_PT_BR_INDIRECT;
+ }
+ 
+ const char *dump_insn(struct perf_insn *x, uint64_t ip __maybe_unused,
+-- 
+2.43.0
+
