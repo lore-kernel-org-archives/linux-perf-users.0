@@ -1,111 +1,112 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C11314EFE1
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 21:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5505B14F961
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 22:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709070164; cv=none; b=JGxXNSQrWeu25IIgq1F0y7U26YuaSIWNaDI9JkTPbz3jYvIbgN5x4maaabhFeE/RWwRWUU7G+Zx1dMAwPSTIiJXkoeDGk3A3QAE6LqkEJa9tdHyzsDrGl/suCaUdhscBw017dQ36Tr2kc3WXBcqp9fLsZE7spzXlaJ+/bYOfsBk=
+	t=1709071324; cv=none; b=ICWSlJ0cNn3Ko1/vGIb8BRNm2vOikKq6SMWm9SPQKTQ9t/90OCnN4k9zOP87mB6+9FDkqgzeLDY+GVOMzKN3Qmj8ALR6pLo3QWodyW0UMUQBVkskoxM03JgT8VJsuBBojgCOg6+EmE0u75OtGhfX6mp/WH8t6GHn1Jzr6bmNlKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709070164; c=relaxed/simple;
-	bh=n5FIMjfE37+j9d561iGl2ezJT/CkGpTEZldVzUTyWHQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JPevXFHyTqt4EBaHZpQdtCV6qdIE56hJ8wdBpfsD/eYZ0eKl4YMFJksP3kXSjOiIllOjTThynW1nqOJbn0hbs0G1yBoev8BjokeJ84xbWphyUncngKzaPAHG13EI/sVv0RF2yHUteUnF5PPsavPl6JlxeiG9kWZtVcMMRjlb6jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YGEPLyw6; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1709071324; c=relaxed/simple;
+	bh=ukWrWX/4QAJImSWXYY9VHw3tM0MRjPKz7OGm8pghIEE=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=CHd2bglXWaGbt+Dj0/jJNm87JoTSRFgf1m1TiPgmxkqRkRB/n5sRyrNK3kSxf4w0/2v1s6RLR86f+OSb6o/szAGqOv+rJneVA2cdb8IrCTh3I3WEYMiOKzOZqujEA6xn0alFwo04QA2iCgaNXaRAGipQ5g3VQyjAQvBWgoTHwA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NAQjr5l2; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YGEPLyw6"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dc9f4d1106so32865ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 13:42:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NAQjr5l2"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcc0bcf9256so6184772276.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 14:02:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709070162; x=1709674962; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qIWxi8YYDZGmvXgDqB8jhLHPDMkUkjHOrDPhN8BD6oo=;
-        b=YGEPLyw6JC3Y9W+7c6dOfono+CzRwrKuWTykN5UyZwlL7QAnVRgHZXssONAvrlQPyt
-         X06QfeteD8JQ7ETzAw4fi5m/cen+GL69pogAzVFb5F/GCAvNvCJcOm/L9q00coaEX/7I
-         Zt1Dv1I/oHpM3ED5IzWCeUa5aVLNN5J83Uwj5Xvp+y83jvsQ0UQ/SuhP+tkjchjzEmbD
-         2R9GSq3udheW9TJRo5T/siAxnYBs5fPkdRVxV4RG11iM+JvUvnHSnm5vaVU35c1JTM7A
-         K+lIQwGZERgPpflYftqWOHfyeNx1F6akYjO0xOBrHIexbsJjyefLHosrZp4XbINTcOvt
-         x7Ow==
+        d=google.com; s=20230601; t=1709071321; x=1709676121; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oJ3hOQ4sjw8PBE4NTH5bCPktPJ1q6cfg+IS2J6sU/VQ=;
+        b=NAQjr5l257jm1gv8jDmx2tFDw/wgZulnnPZ5bqUJrWR66P44wMmguOuKe9zS+ll74S
+         3g9u1pLv0f7mLjdnmxp1LS0fRI/kflnnOhnmJbCbKhnTeKpXQkvGhSe9PHtMKwH1fl+5
+         dV/5MM23ez7Q0vw1nE7i3SmHdJ98ksnMAGTTEjj59omYvgpYHtD6VzaHWdUdVPw32Tzd
+         LMi0OA3NujgLQbQIhEE9iymb3H6NT2nJpEAIz3WML81TiDUBJLzMNI8M/BJYRGiYfW4k
+         exAkr0tVWCWAk9HTnY7LhymptE34zt9zo/mY/uuvVM4eIKIY5L2Xh5b3z3lhEiUIoOcF
+         /qsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709070162; x=1709674962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qIWxi8YYDZGmvXgDqB8jhLHPDMkUkjHOrDPhN8BD6oo=;
-        b=WOs2WXp2smmCj0eFannNFDuOer3NgSdDN3fKNC5KR8MVnaZISOgJshF4u1vX9krgxy
-         zZyfeVl5QF4nWUqxm4gMCEmTN8Hg9nCCALr1tAHAjxvP71oNwJ+Fx9IiPs0XGGzKVKFz
-         sNWuwejeNLhTA1KWi23tuNNYffmLBAMfSDr7RU4MM+wj4jfD5ieyue4pvOMUEFN2IxYf
-         FKNDmIlsdl3hxMsgA01UEPanNjoXSbkp5h0Nqp2Mfijqp9AIFVj4PIe9l/PnwO0Q+C37
-         LOwaHeOUZI1nLvQGTKyUXbT4UDHdVMp7MEla9xXcRbgNbMEO8KTM+Rt11OcQ8ugLlE3C
-         9GcA==
-X-Forwarded-Encrypted: i=1; AJvYcCWscxiFcMJ30ekdfNM5uoqFwnD9yYxOUPezBRveAnvQB0oSED1wjqfSXZDxuSVHmkEbJHjF+HdbzNgHK1gqrzrA8wZJlHTHBw3xCPB+oLgO+w==
-X-Gm-Message-State: AOJu0YyapDVPsgFDkSLuUvQXlJ4aH45qJL/UnqtaAH2EAxlZyf0WQf0z
-	JthOgSKXaAFjtXx0o7+RcheZrZ5EqZIhxcq7JgtJDiUVS0rfsIr0q0QBkO2xkjOUMwH+dcWCCSk
-	hGtkpWGgkBBCMI/GZvmLRoAdJrgqT9goJHgF5
-X-Google-Smtp-Source: AGHT+IFCeNuUHe3l4Xcv3rin00rIFck+iVA5pNN3AmoOCXmTodoMOzGspF8/MPHg8AR27A0t7PpDEeb3Er1yyYSyYc4=
-X-Received: by 2002:a17:902:8d91:b0:1db:f1fc:3deb with SMTP id
- v17-20020a1709028d9100b001dbf1fc3debmr306811plo.1.1709070161471; Tue, 27 Feb
- 2024 13:42:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709071321; x=1709676121;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oJ3hOQ4sjw8PBE4NTH5bCPktPJ1q6cfg+IS2J6sU/VQ=;
+        b=UtMRIOdnJzBfjOXvzUmusvHtqhvQAMXJLJC98HPriPvBlfntJw2uyQciJ9y4jUZsY7
+         kdZPh1OeewMxOVPNsWy14kZWimRiGiIDUxk/cp3UqPdXZLbZuUFYaX0eoIeMvm+0oO+u
+         JMnGqpc3N1C2mvBnqMXymAXTKfi7G3EgH+ZPkfnqfYhtuEZKnYXiyL97+u54EDGaUFCb
+         F2WdJyNYJnroQHHaM4axuLF3Lf6f1bQbVBrEamBsHvIo8I1rdagR1eM5BCkXr65l7Zes
+         TAPK2bBW+N8psmRNIRWkfhny+3VIUpa89c6OkfOQ7YXL30RrGdopo1Nk1XzBRBRdvOzJ
+         Fmyg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+W16QnBnhz9IwPecjHG2BH6DncWzwpjm+1bEu5sOiFBVpwJSMT3UH95yl1E5OBPbr7nhqVV7EiofGSJqdHWzAJgOIacIFrWGosDDLkLC6+A==
+X-Gm-Message-State: AOJu0YwHaT+NXIQPfGsizU5SMyRGTG22OgmnlBAvmMYEb8h2HJ4cDUC/
+	B4jdJ+j8jheHFypF4Tu2HVMLrovb5EIWn56xHrD7tZXDHcZRMJoMz2zWLzfZ5nR9cmWlvCGUVwh
+	1BkjPqw==
+X-Google-Smtp-Source: AGHT+IG/cUONmoV+4UzbT+d/Hd3lVMVO8hBLQGFKSS3+qo3Oz7AGukS9JYSGimVkX4knBHbcAzSdbLvwNS/x
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4ff1:8af6:9e1a:6382])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1891:b0:dc7:82ba:ba6e with SMTP
+ id cj17-20020a056902189100b00dc782baba6emr55224ybb.7.1709071321432; Tue, 27
+ Feb 2024 14:02:01 -0800 (PST)
+Date: Tue, 27 Feb 2024 14:01:44 -0800
+Message-Id: <20240227220150.3876198-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-5-irogers@google.com>
- <CAM9d7cjuv2VAVfGM6qQEMYO--WvgPvAvmnF73QrS_PzGzCF32w@mail.gmail.com>
- <CAP-5=fUUSpHUUAc3jvJkPAUuuJAiSAO4mjCxa9qUppnqk76wWg@mail.gmail.com>
- <CAM9d7chXtmfaC73ykiwn+RqJmy5jZFWFaV_QNs10c_Td+zmLBQ@mail.gmail.com> <Zd41Nltnoen0cPYX@x1>
-In-Reply-To: <Zd41Nltnoen0cPYX@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+Subject: [PATCH v2 0/6] Thread memory improvements and fixes
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 Feb 2024 13:42:26 -0800
-Message-ID: <CAP-5=fWv25WgY82ZY3V1erUvCb+jdhLd_d91p4akjqFgynvAgg@mail.gmail.com>
-Subject: Re: [PATCH v1 4/6] perf threads: Move threads to its own files
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
 	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024 at 11:17=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, Feb 27, 2024 at 09:31:33AM -0800, Namhyung Kim wrote:
-> > I can see some other differences like machine__findnew_thread()
-> > which I think is due to the locking change.  Maybe we can fix the
-> > problem before moving the code and let the code move simple.
->
-> I was going to suggest that, agreed.
->
-> We may start doing a refactoring, then find a bug, at that point we
-> first fix the problem them go back to refactoring.
+The next 6 patches from:
+https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+now the initial maps fixes have landed:
+https://lore.kernel.org/all/20240210031746.4057262-1-irogers@google.com/
 
-Sure I do this all the time. Your typical complaint on the v+1 patch
-set is to move the bug fixes to the front of the changes. On the v+2
-patch set the bug fixes get applied but not the rest of the patch
-series, etc.
+Separate out and reimplement threads to use a hashmap for lower memory
+consumption and faster look up. The fixes a regression in memory usage
+where reference count checking switched to using non-invasive tree
+nodes.  Reduce threads default size by 32 times and improve locking
+discipline. Also, fix regressions where tids had become unordered to
+make `perf report --tasks` and `perf trace --summary` output easier to
+read.
 
-Here we are refactoring code for an rb-tree implementation of threads
-and worrying about its correctness. There's no indication it's not
-correct, it is largely copy and paste, there is also good evidence in
-the locking disciple it is more correct. The next patch deletes that
-implementation, replacing it with a hash table. Were I not trying to
-break things apart I could squash those 2 patches together, but I've
-tried to do the right thing. Now we're trying to micro correct, break
-apart, etc. a state that gets deleted. A reviewer could equally
-criticise this being 2 changes rather than 1, and the cognitive load
-of having to look at code that gets deleted. At some point it is a
-judgement call, and I think this patch is actually the right size. I
-think what is missing here is some motivation in the commit message to
-the findnew refactoring and so I'll add that.
+v2: improve comments and a commit message.
 
-Thanks,
-Ian
+Ian Rogers (6):
+  perf report: Sort child tasks by tid
+  perf trace: Ignore thread hashing in summary
+  perf machine: Move fprintf to for_each loop and a callback
+  perf threads: Move threads to its own files
+  perf threads: Switch from rbtree to hashmap
+  perf threads: Reduce table size from 256 to 8
+
+ tools/perf/builtin-report.c           | 217 +++++++++-------
+ tools/perf/builtin-trace.c            |  41 +--
+ tools/perf/util/Build                 |   1 +
+ tools/perf/util/bpf_lock_contention.c |   8 +-
+ tools/perf/util/machine.c             | 344 +++++++-------------------
+ tools/perf/util/machine.h             |  30 +--
+ tools/perf/util/rb_resort.h           |   5 -
+ tools/perf/util/thread.c              |   2 +-
+ tools/perf/util/thread.h              |   6 -
+ tools/perf/util/threads.c             | 186 ++++++++++++++
+ tools/perf/util/threads.h             |  35 +++
+ 11 files changed, 477 insertions(+), 398 deletions(-)
+ create mode 100644 tools/perf/util/threads.c
+ create mode 100644 tools/perf/util/threads.h
+
+-- 
+2.44.0.rc1.240.g4c46232300-goog
+
