@@ -1,44 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F264E1BA;
-	Tue, 27 Feb 2024 17:26:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607CE14E2CD;
+	Tue, 27 Feb 2024 17:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709054766; cv=none; b=AuuQdNlhROgsAOerbRFQoRQewnrH1ts41nzQB2mcUptsMxgUtKTDg/sQ8+dzUrkLqLbDbxgPhByQsgfyunmBsWpjZ3ZY3f2Etwm77TlkJlmVwNNa0bLrP7I+nciOq4gSNtEVGUDv6E6Jin++5ESA8Og/P5mxR/lcSAIsF6hkusI=
+	t=1709054801; cv=none; b=HZvZq1jaUS7nOapDYeB7FkZD7g4NArgiYzK5ZiepFlw6xHdT18FWZkVGR042OAkYXVD7J9+YNKjHYA6iGDwJIm2I+zEWIT1ATYd/JTYHo3kS9j2LYApywKXatmuoucNJtdrIkOxaR7+tddy/OXkCRq5gb9UxBWMLVwYYEqJKUKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709054766; c=relaxed/simple;
-	bh=UH1cf71yVZ+IE48mE2u9YsgYD+cbHTinf+arR0nEbeQ=;
+	s=arc-20240116; t=1709054801; c=relaxed/simple;
+	bh=ouPMAhLoOctS4gogkt4FxAcqliZ0vW6BKsZD92ALIzo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sh4hzvg/nAUm1Whck/KdqJo+nVxpqxYnTYjt1wiCozNFkJFS8vfNfHAU0ZF3V8K7I4wSWcCTUEvilceZJMSCS34/qQfnhof0IKPzoIslOM6CrdtCYNGUqsRiJFxvhLA9xxUyw4C6OB3F/z96Mdm9+h/C5EQI7zJBPqRnZXuaTjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1CrSK+z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=f7RE3+58ysgyobz5d4uUYaWLbSWXmKwHEH5GstQHRICg4LEIKarwdT1NFinQ5ugiMVFsGSMqPLiOOUuQakVbIn0injIhx6XdSeQpUHpMcwBvLN8Rg+/AMKlsiSqjuMHzorum1JBpAD+sRlCViSojI5FtqZHZ2m3qbZGkwl5x9Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ov2zixir; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1CrSK+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2205EC433C7;
-	Tue, 27 Feb 2024 17:26:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ov2zixir"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 846F5C433C7;
+	Tue, 27 Feb 2024 17:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709054766;
-	bh=UH1cf71yVZ+IE48mE2u9YsgYD+cbHTinf+arR0nEbeQ=;
+	s=k20201202; t=1709054801;
+	bh=ouPMAhLoOctS4gogkt4FxAcqliZ0vW6BKsZD92ALIzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i1CrSK+z+mVXBevddBCSKX7U2BVrksMh+NRk4AhCK0Uv+aKuno3yUn5yt3hxgcWoS
-	 tizbR/OeBf+RgoYnzPUpDK6ujxvp6zG2zHpBbGETQhM4g8ZEYZC2e3PGKMGbhJci5V
-	 nz1TxZ6Jpx70/6IOQDFbd0ZlWzl3DbBLTRTtCeRrgH6mWCOGdqDTAp6XY7WqEmNDc+
-	 dLY6yXkyxnhkmctWftp90V350T3InCH6BvJ/oltXh6v8ga6n48VwvLEazx83R8fMst
-	 lgGu67H1UGdWpEizd4z/ldkdB9biZYna0q/iCl431r8Y6+UkKAqkpElx+FSPMwclyg
-	 JC2UREjXRGc3A==
+	b=ov2zixirrR8BKHoP3qJyfyE2KKdqC+ylLK50ztDAbObiUUw1f2kcFId9Bf1cctxlH
+	 UTWcDoiq3f4gAwexs8eYKhpnprNcRQ/gQlh4v8CzMeOUo+Y/Z6hAvIv/GXBhOMhpOq
+	 LxNC6bXClttStT+J/ACvLgZekTlXNRXLhQp7VoQ+q48BhSbztR/US5TU0R8VBTWtRl
+	 CcKJdKNsPif9Si5/nYq8myuKSptGSTSieuB14FBuUJIooFd4dOMNITUyg9ieeaINuC
+	 tNURGVzP7YR2+fFLAWKNsaZoea+dLvjg2X2PLFrP9KJhE8Euoze5zY5ZpqL8dsHdFA
+	 Uic53ab5rGn6g==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH 1/1] perf test: Use TEST_FAIL in the TEST_ASSERT macros instead of -1
-Date: Tue, 27 Feb 2024 09:26:04 -0800
-Message-ID: <170905469226.501091.7003094916625866194.b4-ty@kernel.org>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH] perf pmu: Fix a potential memory leak in perf_pmu__lookup()
+Date: Tue, 27 Feb 2024 09:26:38 -0800
+Message-ID: <170905469229.501091.5601373719556598823.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-In-Reply-To: <ZdepeMsjagbf1ufD@x1>
-References: <ZdepeMsjagbf1ufD@x1>
+In-Reply-To: <9538b2b634894c33168dfe9d848d4df31fd4d801.1693085544.git.christophe.jaillet@wanadoo.fr>
+References: <9538b2b634894c33168dfe9d848d4df31fd4d801.1693085544.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,9 +55,11 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Thu, 22 Feb 2024 17:07:20 -0300, Arnaldo Carvalho de Melo wrote:
-> Just to make things clearer, return TEST_FAIL (-1) instead of an open
-> coded -1.
+On Sat, 26 Aug 2023 23:32:45 +0200, Christophe JAILLET wrote:
+> The commit in Fixes has reordered some code, but missed an error handling
+> path.
+> 
+> 'goto err' now, in order to avoid a memory leak in case of error.
 > 
 > 
 
