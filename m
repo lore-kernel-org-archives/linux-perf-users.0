@@ -1,1065 +1,232 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994FA5466E
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Feb 2024 07:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A60C136665;
+	Tue, 27 Feb 2024 10:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709018684; cv=none; b=CV70i4t9ZWNoFmXMTHXPl9rTvcxZHKJY2hwx26nLLij+qd/dc/EIejlzwlAuhva+VspiqQoV3Up9dHIq3DKSFMSDTqxtO5e8iRe+FkP2nNqMGEz2oKMmhurYkYoE+vdBIeh4kF79f9HPNIax3xjQTbWjWnTotDQRMwtKAy5/KyU=
+	t=1709028311; cv=none; b=gwlhO/Umpzkl/ofIG65u9pFpoUA7UNJ7Djis4ybhCf3JLKfmrVAioN8LKMjOaw6RTpr+Kuy9ubERUHgr4fsyA5XvhKAthdGuQMGVCbrJ9Cft1cFvggZSnFlDDp50TZ5IjBm8ag2sVAs7BT62Eff0sBvvbkyAYQkMMWBYmSBgLRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709018684; c=relaxed/simple;
-	bh=4A8EcY/zAHPKC2C0hymoe2B8x3j3OXvU5Dz5KwfL7Rw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KmFsiiaMOSpPityrTRAPT4iyZZTmrTqUjqkyMbbnJv/XJJ9UQ7K49wCjQLmPrc2cdHH37LzJzFs2863CXOzwAidCnSXsRu+Lo3ECjmbK9FqZKScnVYJogqtst16k1O+t6P8nhsNC/yUL7sjsyBylrMMYzfBN6sPT1fRuIFyoygY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2kjWd075; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2kjWd075"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dc744f54d0so101955ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Feb 2024 23:24:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709018682; x=1709623482; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tGmmFD6VdtvwNnv2X5OzWAQwXsuV3gU6fcFHMRZaCJY=;
-        b=2kjWd075SfXEhyj/V5NIxsn5P4FWhueXuQMUd5QvrKRnIAGR45n3cGht2ubcFWwWXi
-         LFW60FVtgDyVJIRgfGF2TddVgt9xIHjsj6wiQ9z6+RaLP2oyXN1BBZeyVKJgiq1Gg3Co
-         Y26p4nlSmuG7TJH+owWGjOGRwrqRMVsW8yM0J2lwA4ub1SoQvRDuwuA0nmWNZjVSsoey
-         sSbdFGrwtZo7Cxu4BdtmiNxYjMB9KYYGQCjuQ15Jm7beEfYEu4AutmXUzy/iockANs6m
-         RdQFG+ypHIljjIA7rlweXZfP6RNZebfyk+EqQIeRTuT1gm0FNDxRn64SpUvhrcqzoXXs
-         GC3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709018682; x=1709623482;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tGmmFD6VdtvwNnv2X5OzWAQwXsuV3gU6fcFHMRZaCJY=;
-        b=IJRphdfLsJmyAMyU+G6O7HfGHle2AgssN8MA58yfWhaqlRrrIwcdEAGaGEcsSm0mMJ
-         3lNvdsHpen+6fbZqmhMciG9BUH0umohD/zB77WDy8K68rSwO5rTR5BsZlGJbfu4YPmXf
-         CpBCTxTg3WkAdQF2+StN+qGvJQKQ6tz91fI4YLqwZzVbNimNT/JsvVyAaO/hKRUG3POb
-         iE1EFhn1HVQND7gewFj+ZNYWeA/RM9x1WDjvA0RWBvvsZTkmVtdxIywcep0RQXL9HUa6
-         mLWychZ3rFy5gaM5aisw8uv7nPXAgJloZY196ATlKyTD1/HFFq73AfCrbqGw/I5iZjuN
-         naLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwaIcpf1MSfvZhdTAjRMWXfCgORW3fz1iLMis5aP/oFHxtkswWsWWxZgQOCkT1SFmeU3LRE5sJZSwOIMdYRnCYrzuv5ivSUTO+3tTTGtx7zg==
-X-Gm-Message-State: AOJu0Yy9Q5PkCpbBLHCkrzNau97Nz0oMKqyKFepqvoU3+K2f6vvX5I/K
-	ai5vQNYu/CmxitYTRFz/A+M7XzE1ugij5VizxtogYKJbIaiZ9mv4i7nXBx2C44laRad/QR2FsWv
-	h9JIpvf92vDXikF6mhDQSwFUoL+zmd8GrQRPP
-X-Google-Smtp-Source: AGHT+IEMFKmVxGvCZk8yC+No7EN4KW3T+rZiWqbqXtCFP58KcD9E97sZI+mpYjRrvWkvDI8yS1z43P2Naz6y2VZeGIA=
-X-Received: by 2002:a17:903:94b:b0:1dc:b16c:63b3 with SMTP id
- ma11-20020a170903094b00b001dcb16c63b3mr185134plb.18.1709018681415; Mon, 26
- Feb 2024 23:24:41 -0800 (PST)
+	s=arc-20240116; t=1709028311; c=relaxed/simple;
+	bh=zc3K2y4HYZYpQe/0M78zHPkZOoeKRZUHrD9sAX/ihp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l5YtgXsc4ePVjwL2RXKYEeCBvly7igwU4rlos5GiUp6mnQLRPQ6IxXF4EeCw/xCB+dnUIOczV1DCt52nW9U27mQnetmvw6lLwumLVaKLvOByFrXalhydvSiRA7Zbsj9yy7c9yiHd5mwfTOn9+eNwK7rIdC8wgOZ6NjjfeBeun+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BC61DA7;
+	Tue, 27 Feb 2024 02:05:46 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.79.110])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7349C3F762;
+	Tue, 27 Feb 2024 02:05:05 -0800 (PST)
+Date: Tue, 27 Feb 2024 10:04:59 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com,
+	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+Subject: Re: [PATCH V16 2/8] KVM: arm64: Prevent guest accesses into BRBE
+ system registers/instructions
+Message-ID: <Zd2zy0oUk8XvoDJM@FVFF77S0Q05N>
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-3-anshuman.khandual@arm.com>
+ <ZdYCUi9YVDNDz7fr@FVFF77S0Q05N>
+ <ab50e67e-3d06-4ba7-a5f8-4684e9ef98a4@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-5-irogers@google.com>
- <CAM9d7cjuv2VAVfGM6qQEMYO--WvgPvAvmnF73QrS_PzGzCF32w@mail.gmail.com>
-In-Reply-To: <CAM9d7cjuv2VAVfGM6qQEMYO--WvgPvAvmnF73QrS_PzGzCF32w@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 26 Feb 2024 23:24:27 -0800
-Message-ID: <CAP-5=fUUSpHUUAc3jvJkPAUuuJAiSAO4mjCxa9qUppnqk76wWg@mail.gmail.com>
-Subject: Re: [PATCH v1 4/6] perf threads: Move threads to its own files
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab50e67e-3d06-4ba7-a5f8-4684e9ef98a4@arm.com>
 
-On Mon, Feb 26, 2024 at 11:07=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Tue, Feb 13, 2024 at 10:37=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > Move threads out of machine and move thread_rb_node into the C
-> > file. This hides the implementation of threads from the rest of the
-> > code allowing for it to be refactored.
-> >
-> > Locking discipline is tightened up in this change.
->
-> Doesn't look like a simple code move.  Can we split the locking
-> change from the move to make the reviewer's life a bit easier? :)
+On Fri, Feb 23, 2024 at 12:58:48PM +0530, Anshuman Khandual wrote:
+> 
+> 
+> On 2/21/24 19:31, Mark Rutland wrote:
+> > On Thu, Jan 25, 2024 at 03:11:13PM +0530, Anshuman Khandual wrote:
+> >> Currently BRBE feature is not supported in a guest environment. This hides
+> >> BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field.
+> > 
+> > Does that means that a guest can currently see BRBE advertised in the
+> > ID_AA64DFR0_EL1.BRB field, or is that hidden by the regular cpufeature code
+> > today?
+> 
+> IIRC it is hidden, but will have to double check. When experimenting for BRBE
+> guest support enablement earlier, following changes were need for the feature
+> to be visible in ID_AA64DFR0_EL1.
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 646591c67e7a..f258568535a8 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -445,6 +445,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+>  };
+>  
+>  static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+> +       S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_IMP),
+>         S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+>         ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+>         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+> 
+> Should we add the following entry - explicitly hiding BRBE from the guest
+> as a prerequisite patch ?
+> 
+> S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_NI)
 
-Not sure I follow. Take threads_nr as an example.
+Is it visbile currently, or is it hidden currently?
 
-The old code is in machine.c, so:
--static size_t machine__threads_nr(const struct machine *machine)
--{
--       size_t nr =3D 0;
--
--       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++)
--               nr +=3D machine->threads[i].nr;
--
--       return nr;
--}
+* If it is visible before this patch, that's a latent bug that we need to go
+  fix first, and that'll require more coordination.
 
-The new code is in threads.c:
-+size_t threads__nr(struct threads *threads)
-+{
-+       size_t nr =3D 0;
-+
-+       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-+               struct threads_table_entry *table =3D &threads->table[i];
-+
-+               down_read(&table->lock);
-+               nr +=3D table->nr;
-+               up_read(&table->lock);
-+       }
-+       return nr;
-+}
+* If it is not visible before this patch, there's no problem in the code, but
+  the commit message needs to explicitly mention that's the case as the commit
+  message currently implies it is visible by only mentioning hiding it.
 
-So it is a copy paste from one file to the other. The only difference
-is that the old code failed to take a lock when reading "nr" so the
-locking is added. I wanted to make sure all the functions in threads.c
-were properly correct wrt locking, semaphore creation and destruction,
-etc.  We could have a broken threads.c and fix it in the next change,
-but given that's a bug it could make bisection more difficult.
-Ultimately I thought the locking changes were small enough to not
-warrant being on their own compared to the advantages of having a sane
-threads abstraction.
+... so can you please double check as you suggested above? We should be able to
+explain why it is or is not visible today.
 
-Thanks,
-Ian
+Mark.
 
-> Thanks,
-> Namhyung
->
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/Build                 |   1 +
-> >  tools/perf/util/bpf_lock_contention.c |   8 +-
-> >  tools/perf/util/machine.c             | 287 ++++----------------------
-> >  tools/perf/util/machine.h             |  20 +-
-> >  tools/perf/util/thread.c              |   2 +-
-> >  tools/perf/util/thread.h              |   6 -
-> >  tools/perf/util/threads.c             | 244 ++++++++++++++++++++++
-> >  tools/perf/util/threads.h             |  35 ++++
-> >  8 files changed, 325 insertions(+), 278 deletions(-)
-> >  create mode 100644 tools/perf/util/threads.c
-> >  create mode 100644 tools/perf/util/threads.h
-> >
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 8027f450fa3e..a0e8cd68d490 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -71,6 +71,7 @@ perf-y +=3D ordered-events.o
-> >  perf-y +=3D namespaces.o
-> >  perf-y +=3D comm.o
-> >  perf-y +=3D thread.o
-> > +perf-y +=3D threads.o
-> >  perf-y +=3D thread_map.o
-> >  perf-y +=3D parse-events-flex.o
-> >  perf-y +=3D parse-events-bison.o
-> > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bp=
-f_lock_contention.c
-> > index 31ff19afc20c..3992c8a9fd96 100644
-> > --- a/tools/perf/util/bpf_lock_contention.c
-> > +++ b/tools/perf/util/bpf_lock_contention.c
-> > @@ -210,7 +210,7 @@ static const char *lock_contention_get_name(struct =
-lock_contention *con,
-> >
-> >                 /* do not update idle comm which contains CPU number */
-> >                 if (pid) {
-> > -                       struct thread *t =3D __machine__findnew_thread(=
-machine, /*pid=3D*/-1, pid);
-> > +                       struct thread *t =3D machine__findnew_thread(ma=
-chine, /*pid=3D*/-1, pid);
-> >
-> >                         if (t =3D=3D NULL)
-> >                                 return name;
-> > @@ -302,9 +302,9 @@ int lock_contention_read(struct lock_contention *co=
-n)
-> >                 return -1;
-> >
-> >         if (con->aggr_mode =3D=3D LOCK_AGGR_TASK) {
-> > -               struct thread *idle =3D __machine__findnew_thread(machi=
-ne,
-> > -                                                               /*pid=
-=3D*/0,
-> > -                                                               /*tid=
-=3D*/0);
-> > +               struct thread *idle =3D machine__findnew_thread(machine=
-,
-> > +                                                             /*pid=3D*=
-/0,
-> > +                                                             /*tid=3D*=
-/0);
-> >                 thread__set_comm(idle, "swapper", /*timestamp=3D*/0);
-> >         }
-> >
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index e072b2115b64..e668a97255f8 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -43,9 +43,6 @@
-> >  #include <linux/string.h>
-> >  #include <linux/zalloc.h>
-> >
-> > -static void __machine__remove_thread(struct machine *machine, struct t=
-hread_rb_node *nd,
-> > -                                    struct thread *th, bool lock);
-> > -
-> >  static struct dso *machine__kernel_dso(struct machine *machine)
-> >  {
-> >         return map__dso(machine->vmlinux_map);
-> > @@ -58,35 +55,6 @@ static void dsos__init(struct dsos *dsos)
-> >         init_rwsem(&dsos->lock);
-> >  }
-> >
-> > -static void machine__threads_init(struct machine *machine)
-> > -{
-> > -       int i;
-> > -
-> > -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > -               struct threads *threads =3D &machine->threads[i];
-> > -               threads->entries =3D RB_ROOT_CACHED;
-> > -               init_rwsem(&threads->lock);
-> > -               threads->nr =3D 0;
-> > -               threads->last_match =3D NULL;
-> > -       }
-> > -}
-> > -
-> > -static int thread_rb_node__cmp_tid(const void *key, const struct rb_no=
-de *nd)
-> > -{
-> > -       int to_find =3D (int) *((pid_t *)key);
-> > -
-> > -       return to_find - (int)thread__tid(rb_entry(nd, struct thread_rb=
-_node, rb_node)->thread);
-> > -}
-> > -
-> > -static struct thread_rb_node *thread_rb_node__find(const struct thread=
- *th,
-> > -                                                  struct rb_root *tree=
-)
-> > -{
-> > -       pid_t to_find =3D thread__tid(th);
-> > -       struct rb_node *nd =3D rb_find(&to_find, tree, thread_rb_node__=
-cmp_tid);
-> > -
-> > -       return rb_entry(nd, struct thread_rb_node, rb_node);
-> > -}
-> > -
-> >  static int machine__set_mmap_name(struct machine *machine)
-> >  {
-> >         if (machine__is_host(machine))
-> > @@ -120,7 +88,7 @@ int machine__init(struct machine *machine, const cha=
-r *root_dir, pid_t pid)
-> >         RB_CLEAR_NODE(&machine->rb_node);
-> >         dsos__init(&machine->dsos);
-> >
-> > -       machine__threads_init(machine);
-> > +       threads__init(&machine->threads);
-> >
-> >         machine->vdso_info =3D NULL;
-> >         machine->env =3D NULL;
-> > @@ -221,27 +189,11 @@ static void dsos__exit(struct dsos *dsos)
-> >
-> >  void machine__delete_threads(struct machine *machine)
-> >  {
-> > -       struct rb_node *nd;
-> > -       int i;
-> > -
-> > -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > -               struct threads *threads =3D &machine->threads[i];
-> > -               down_write(&threads->lock);
-> > -               nd =3D rb_first_cached(&threads->entries);
-> > -               while (nd) {
-> > -                       struct thread_rb_node *trb =3D rb_entry(nd, str=
-uct thread_rb_node, rb_node);
-> > -
-> > -                       nd =3D rb_next(nd);
-> > -                       __machine__remove_thread(machine, trb, trb->thr=
-ead, false);
-> > -               }
-> > -               up_write(&threads->lock);
-> > -       }
-> > +       threads__remove_all_threads(&machine->threads);
-> >  }
-> >
-> >  void machine__exit(struct machine *machine)
-> >  {
-> > -       int i;
-> > -
-> >         if (machine =3D=3D NULL)
-> >                 return;
-> >
-> > @@ -254,12 +206,7 @@ void machine__exit(struct machine *machine)
-> >         zfree(&machine->current_tid);
-> >         zfree(&machine->kallsyms_filename);
-> >
-> > -       machine__delete_threads(machine);
-> > -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > -               struct threads *threads =3D &machine->threads[i];
-> > -
-> > -               exit_rwsem(&threads->lock);
-> > -       }
-> > +       threads__exit(&machine->threads);
-> >  }
-> >
-> >  void machine__delete(struct machine *machine)
-> > @@ -526,7 +473,7 @@ static void machine__update_thread_pid(struct machi=
-ne *machine,
-> >         if (thread__pid(th) =3D=3D thread__tid(th))
-> >                 return;
-> >
-> > -       leader =3D __machine__findnew_thread(machine, thread__pid(th), =
-thread__pid(th));
-> > +       leader =3D machine__findnew_thread(machine, thread__pid(th), th=
-read__pid(th));
-> >         if (!leader)
-> >                 goto out_err;
-> >
-> > @@ -560,160 +507,55 @@ static void machine__update_thread_pid(struct ma=
-chine *machine,
-> >         goto out_put;
-> >  }
-> >
-> > -/*
-> > - * Front-end cache - TID lookups come in blocks,
-> > - * so most of the time we dont have to look up
-> > - * the full rbtree:
-> > - */
-> > -static struct thread*
-> > -__threads__get_last_match(struct threads *threads, struct machine *mac=
-hine,
-> > -                         int pid, int tid)
-> > -{
-> > -       struct thread *th;
-> > -
-> > -       th =3D threads->last_match;
-> > -       if (th !=3D NULL) {
-> > -               if (thread__tid(th) =3D=3D tid) {
-> > -                       machine__update_thread_pid(machine, th, pid);
-> > -                       return thread__get(th);
-> > -               }
-> > -               thread__put(threads->last_match);
-> > -               threads->last_match =3D NULL;
-> > -       }
-> > -
-> > -       return NULL;
-> > -}
-> > -
-> > -static struct thread*
-> > -threads__get_last_match(struct threads *threads, struct machine *machi=
-ne,
-> > -                       int pid, int tid)
-> > -{
-> > -       struct thread *th =3D NULL;
-> > -
-> > -       if (perf_singlethreaded)
-> > -               th =3D __threads__get_last_match(threads, machine, pid,=
- tid);
-> > -
-> > -       return th;
-> > -}
-> > -
-> > -static void
-> > -__threads__set_last_match(struct threads *threads, struct thread *th)
-> > -{
-> > -       thread__put(threads->last_match);
-> > -       threads->last_match =3D thread__get(th);
-> > -}
-> > -
-> > -static void
-> > -threads__set_last_match(struct threads *threads, struct thread *th)
-> > -{
-> > -       if (perf_singlethreaded)
-> > -               __threads__set_last_match(threads, th);
-> > -}
-> > -
-> >  /*
-> >   * Caller must eventually drop thread->refcnt returned with a successf=
-ul
-> >   * lookup/new thread inserted.
-> >   */
-> > -static struct thread *____machine__findnew_thread(struct machine *mach=
-ine,
-> > -                                                 struct threads *threa=
-ds,
-> > -                                                 pid_t pid, pid_t tid,
-> > -                                                 bool create)
-> > +static struct thread *__machine__findnew_thread(struct machine *machin=
-e,
-> > +                                               pid_t pid,
-> > +                                               pid_t tid,
-> > +                                               bool create)
-> >  {
-> > -       struct rb_node **p =3D &threads->entries.rb_root.rb_node;
-> > -       struct rb_node *parent =3D NULL;
-> > -       struct thread *th;
-> > -       struct thread_rb_node *nd;
-> > -       bool leftmost =3D true;
-> > +       struct thread *th =3D threads__find(&machine->threads, tid);
-> > +       bool created;
-> >
-> > -       th =3D threads__get_last_match(threads, machine, pid, tid);
-> > -       if (th)
-> > +       if (th) {
-> > +               machine__update_thread_pid(machine, th, pid);
-> >                 return th;
-> > -
-> > -       while (*p !=3D NULL) {
-> > -               parent =3D *p;
-> > -               th =3D rb_entry(parent, struct thread_rb_node, rb_node)=
-->thread;
-> > -
-> > -               if (thread__tid(th) =3D=3D tid) {
-> > -                       threads__set_last_match(threads, th);
-> > -                       machine__update_thread_pid(machine, th, pid);
-> > -                       return thread__get(th);
-> > -               }
-> > -
-> > -               if (tid < thread__tid(th))
-> > -                       p =3D &(*p)->rb_left;
-> > -               else {
-> > -                       p =3D &(*p)->rb_right;
-> > -                       leftmost =3D false;
-> > -               }
-> >         }
-> > -
-> >         if (!create)
-> >                 return NULL;
-> >
-> > -       th =3D thread__new(pid, tid);
-> > -       if (th =3D=3D NULL)
-> > -               return NULL;
-> > -
-> > -       nd =3D malloc(sizeof(*nd));
-> > -       if (nd =3D=3D NULL) {
-> > -               thread__put(th);
-> > -               return NULL;
-> > -       }
-> > -       nd->thread =3D th;
-> > -
-> > -       rb_link_node(&nd->rb_node, parent, p);
-> > -       rb_insert_color_cached(&nd->rb_node, &threads->entries, leftmos=
-t);
-> > -       /*
-> > -        * We have to initialize maps separately after rb tree is updat=
-ed.
-> > -        *
-> > -        * The reason is that we call machine__findnew_thread within
-> > -        * thread__init_maps to find the thread leader and that would s=
-crewed
-> > -        * the rb tree.
-> > -        */
-> > -       if (thread__init_maps(th, machine)) {
-> > -               pr_err("Thread init failed thread %d\n", pid);
-> > -               rb_erase_cached(&nd->rb_node, &threads->entries);
-> > -               RB_CLEAR_NODE(&nd->rb_node);
-> > -               free(nd);
-> > -               thread__put(th);
-> > -               return NULL;
-> > -       }
-> > -       /*
-> > -        * It is now in the rbtree, get a ref
-> > -        */
-> > -       threads__set_last_match(threads, th);
-> > -       ++threads->nr;
-> > -
-> > -       return thread__get(th);
-> > -}
-> > +       th =3D threads__findnew(&machine->threads, pid, tid, &created);
-> > +       if (created) {
-> > +               /*
-> > +                * We have to initialize maps separately after rb tree =
-is
-> > +                * updated.
-> > +                *
-> > +                * The reason is that we call machine__findnew_thread w=
-ithin
-> > +                * thread__init_maps to find the thread leader and that=
- would
-> > +                * screwed the rb tree.
-> > +                */
-> > +               if (thread__init_maps(th, machine)) {
-> > +                       pr_err("Thread init failed thread %d\n", pid);
-> > +                       threads__remove(&machine->threads, th);
-> > +                       thread__put(th);
-> > +                       return NULL;
-> > +               }
-> > +       } else
-> > +               machine__update_thread_pid(machine, th, pid);
-> >
-> > -struct thread *__machine__findnew_thread(struct machine *machine, pid_=
-t pid, pid_t tid)
-> > -{
-> > -       return ____machine__findnew_thread(machine, machine__threads(ma=
-chine, tid), pid, tid, true);
-> > +       return th;
-> >  }
-> >
-> > -struct thread *machine__findnew_thread(struct machine *machine, pid_t =
-pid,
-> > -                                      pid_t tid)
-> > +struct thread *machine__findnew_thread(struct machine *machine, pid_t =
-pid, pid_t tid)
-> >  {
-> > -       struct threads *threads =3D machine__threads(machine, tid);
-> > -       struct thread *th;
-> > -
-> > -       down_write(&threads->lock);
-> > -       th =3D __machine__findnew_thread(machine, pid, tid);
-> > -       up_write(&threads->lock);
-> > -       return th;
-> > +       return __machine__findnew_thread(machine, pid, tid, /*create=3D=
-*/true);
-> >  }
-> >
-> > -struct thread *machine__find_thread(struct machine *machine, pid_t pid=
-,
-> > -                                   pid_t tid)
-> > +struct thread *machine__find_thread(struct machine *machine, pid_t pid=
-, pid_t tid)
-> >  {
-> > -       struct threads *threads =3D machine__threads(machine, tid);
-> > -       struct thread *th;
-> > -
-> > -       down_read(&threads->lock);
-> > -       th =3D  ____machine__findnew_thread(machine, threads, pid, tid,=
- false);
-> > -       up_read(&threads->lock);
-> > -       return th;
-> > +       return __machine__findnew_thread(machine, pid, tid, /*create=3D=
-*/false);
-> >  }
-> >
-> >  /*
-> > @@ -1127,23 +969,13 @@ static int machine_fprintf_cb(struct thread *thr=
-ead, void *data)
-> >         return 0;
-> >  }
-> >
-> > -static size_t machine__threads_nr(const struct machine *machine)
-> > -{
-> > -       size_t nr =3D 0;
-> > -
-> > -       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++)
-> > -               nr +=3D machine->threads[i].nr;
-> > -
-> > -       return nr;
-> > -}
-> > -
-> >  size_t machine__fprintf(struct machine *machine, FILE *fp)
-> >  {
-> >         struct machine_fprintf_cb_args args =3D {
-> >                 .fp =3D fp,
-> >                 .printed =3D 0,
-> >         };
-> > -       size_t ret =3D fprintf(fp, "Threads: %zu\n", machine__threads_n=
-r(machine));
-> > +       size_t ret =3D fprintf(fp, "Threads: %zu\n", threads__nr(&machi=
-ne->threads));
-> >
-> >         machine__for_each_thread(machine, machine_fprintf_cb, &args);
-> >         return ret + args.printed;
-> > @@ -2069,36 +1901,9 @@ int machine__process_mmap_event(struct machine *=
-machine, union perf_event *event
-> >         return 0;
-> >  }
-> >
-> > -static void __machine__remove_thread(struct machine *machine, struct t=
-hread_rb_node *nd,
-> > -                                    struct thread *th, bool lock)
-> > -{
-> > -       struct threads *threads =3D machine__threads(machine, thread__t=
-id(th));
-> > -
-> > -       if (!nd)
-> > -               nd =3D thread_rb_node__find(th, &threads->entries.rb_ro=
-ot);
-> > -
-> > -       if (threads->last_match && RC_CHK_EQUAL(threads->last_match, th=
-))
-> > -               threads__set_last_match(threads, NULL);
-> > -
-> > -       if (lock)
-> > -               down_write(&threads->lock);
-> > -
-> > -       BUG_ON(refcount_read(thread__refcnt(th)) =3D=3D 0);
-> > -
-> > -       thread__put(nd->thread);
-> > -       rb_erase_cached(&nd->rb_node, &threads->entries);
-> > -       RB_CLEAR_NODE(&nd->rb_node);
-> > -       --threads->nr;
-> > -
-> > -       free(nd);
-> > -
-> > -       if (lock)
-> > -               up_write(&threads->lock);
-> > -}
-> > -
-> >  void machine__remove_thread(struct machine *machine, struct thread *th=
-)
-> >  {
-> > -       return __machine__remove_thread(machine, NULL, th, true);
-> > +       return threads__remove(&machine->threads, th);
-> >  }
-> >
-> >  int machine__process_fork_event(struct machine *machine, union perf_ev=
-ent *event,
-> > @@ -3232,23 +3037,7 @@ int machine__for_each_thread(struct machine *mac=
-hine,
-> >                              int (*fn)(struct thread *thread, void *p),
-> >                              void *priv)
-> >  {
-> > -       struct threads *threads;
-> > -       struct rb_node *nd;
-> > -       int rc =3D 0;
-> > -       int i;
-> > -
-> > -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > -               threads =3D &machine->threads[i];
-> > -               for (nd =3D rb_first_cached(&threads->entries); nd;
-> > -                    nd =3D rb_next(nd)) {
-> > -                       struct thread_rb_node *trb =3D rb_entry(nd, str=
-uct thread_rb_node, rb_node);
-> > -
-> > -                       rc =3D fn(trb->thread, priv);
-> > -                       if (rc !=3D 0)
-> > -                               return rc;
-> > -               }
-> > -       }
-> > -       return rc;
-> > +       return threads__for_each_thread(&machine->threads, fn, priv);
-> >  }
-> >
-> >  int machines__for_each_thread(struct machines *machines,
-> > diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> > index b738ce84817b..e28c787616fe 100644
-> > --- a/tools/perf/util/machine.h
-> > +++ b/tools/perf/util/machine.h
-> > @@ -7,6 +7,7 @@
-> >  #include "maps.h"
-> >  #include "dsos.h"
-> >  #include "rwsem.h"
-> > +#include "threads.h"
-> >
-> >  struct addr_location;
-> >  struct branch_stack;
-> > @@ -28,16 +29,6 @@ extern const char *ref_reloc_sym_names[];
-> >
-> >  struct vdso_info;
-> >
-> > -#define THREADS__TABLE_BITS    8
-> > -#define THREADS__TABLE_SIZE    (1 << THREADS__TABLE_BITS)
-> > -
-> > -struct threads {
-> > -       struct rb_root_cached  entries;
-> > -       struct rw_semaphore    lock;
-> > -       unsigned int           nr;
-> > -       struct thread          *last_match;
-> > -};
-> > -
-> >  struct machine {
-> >         struct rb_node    rb_node;
-> >         pid_t             pid;
-> > @@ -48,7 +39,7 @@ struct machine {
-> >         char              *root_dir;
-> >         char              *mmap_name;
-> >         char              *kallsyms_filename;
-> > -       struct threads    threads[THREADS__TABLE_SIZE];
-> > +       struct threads    threads;
-> >         struct vdso_info  *vdso_info;
-> >         struct perf_env   *env;
-> >         struct dsos       dsos;
-> > @@ -69,12 +60,6 @@ struct machine {
-> >         bool              trampolines_mapped;
-> >  };
-> >
-> > -static inline struct threads *machine__threads(struct machine *machine=
-, pid_t tid)
-> > -{
-> > -       /* Cast it to handle tid =3D=3D -1 */
-> > -       return &machine->threads[(unsigned int)tid % THREADS__TABLE_SIZ=
-E];
-> > -}
-> > -
-> >  /*
-> >   * The main kernel (vmlinux) map
-> >   */
-> > @@ -220,7 +205,6 @@ bool machine__is(struct machine *machine, const cha=
-r *arch);
-> >  bool machine__normalized_is(struct machine *machine, const char *arch)=
-;
-> >  int machine__nr_cpus_avail(struct machine *machine);
-> >
-> > -struct thread *__machine__findnew_thread(struct machine *machine, pid_=
-t pid, pid_t tid);
-> >  struct thread *machine__findnew_thread(struct machine *machine, pid_t =
-pid, pid_t tid);
-> >
-> >  struct dso *machine__findnew_dso_id(struct machine *machine, const cha=
-r *filename, struct dso_id *id);
-> > diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> > index c59ab4d79163..1aa8962dcf52 100644
-> > --- a/tools/perf/util/thread.c
-> > +++ b/tools/perf/util/thread.c
-> > @@ -26,7 +26,7 @@ int thread__init_maps(struct thread *thread, struct m=
-achine *machine)
-> >         if (pid =3D=3D thread__tid(thread) || pid =3D=3D -1) {
-> >                 thread__set_maps(thread, maps__new(machine));
-> >         } else {
-> > -               struct thread *leader =3D __machine__findnew_thread(mac=
-hine, pid, pid);
-> > +               struct thread *leader =3D machine__findnew_thread(machi=
-ne, pid, pid);
-> >
-> >                 if (leader) {
-> >                         thread__set_maps(thread, maps__get(thread__maps=
-(leader)));
-> > diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> > index 0df775b5c110..4b8f3e9e513b 100644
-> > --- a/tools/perf/util/thread.h
-> > +++ b/tools/perf/util/thread.h
-> > @@ -3,7 +3,6 @@
-> >  #define __PERF_THREAD_H
-> >
-> >  #include <linux/refcount.h>
-> > -#include <linux/rbtree.h>
-> >  #include <linux/list.h>
-> >  #include <stdio.h>
-> >  #include <unistd.h>
-> > @@ -30,11 +29,6 @@ struct lbr_stitch {
-> >         struct callchain_cursor_node    *prev_lbr_cursor;
-> >  };
-> >
-> > -struct thread_rb_node {
-> > -       struct rb_node rb_node;
-> > -       struct thread *thread;
-> > -};
-> > -
-> >  DECLARE_RC_STRUCT(thread) {
-> >         /** @maps: mmaps associated with this thread. */
-> >         struct maps             *maps;
-> > diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
-> > new file mode 100644
-> > index 000000000000..d984ec939c7b
-> > --- /dev/null
-> > +++ b/tools/perf/util/threads.c
-> > @@ -0,0 +1,244 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include "threads.h"
-> > +#include "machine.h"
-> > +#include "thread.h"
-> > +
-> > +struct thread_rb_node {
-> > +       struct rb_node rb_node;
-> > +       struct thread *thread;
-> > +};
-> > +
-> > +static struct threads_table_entry *threads__table(struct threads *thre=
-ads, pid_t tid)
-> > +{
-> > +       /* Cast it to handle tid =3D=3D -1 */
-> > +       return &threads->table[(unsigned int)tid % THREADS__TABLE_SIZE]=
-;
-> > +}
-> > +
-> > +void threads__init(struct threads *threads)
-> > +{
-> > +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > +               struct threads_table_entry *table =3D &threads->table[i=
-];
-> > +
-> > +               table->entries =3D RB_ROOT_CACHED;
-> > +               init_rwsem(&table->lock);
-> > +               table->nr =3D 0;
-> > +               table->last_match =3D NULL;
-> > +       }
-> > +}
-> > +
-> > +void threads__exit(struct threads *threads)
-> > +{
-> > +       threads__remove_all_threads(threads);
-> > +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > +               struct threads_table_entry *table =3D &threads->table[i=
-];
-> > +
-> > +               exit_rwsem(&table->lock);
-> > +       }
-> > +}
-> > +
-> > +size_t threads__nr(struct threads *threads)
-> > +{
-> > +       size_t nr =3D 0;
-> > +
-> > +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > +               struct threads_table_entry *table =3D &threads->table[i=
-];
-> > +
-> > +               down_read(&table->lock);
-> > +               nr +=3D table->nr;
-> > +               up_read(&table->lock);
-> > +       }
-> > +       return nr;
-> > +}
-> > +
-> > +/*
-> > + * Front-end cache - TID lookups come in blocks,
-> > + * so most of the time we dont have to look up
-> > + * the full rbtree:
-> > + */
-> > +static struct thread *__threads_table_entry__get_last_match(struct thr=
-eads_table_entry *table,
-> > +                                                           pid_t tid)
-> > +{
-> > +       struct thread *th, *res =3D NULL;
-> > +
-> > +       th =3D table->last_match;
-> > +       if (th !=3D NULL) {
-> > +               if (thread__tid(th) =3D=3D tid)
-> > +                       res =3D thread__get(th);
-> > +       }
-> > +       return res;
-> > +}
-> > +
-> > +static void __threads_table_entry__set_last_match(struct threads_table=
-_entry *table,
-> > +                                                 struct thread *th)
-> > +{
-> > +       thread__put(table->last_match);
-> > +       table->last_match =3D thread__get(th);
-> > +}
-> > +
-> > +static void threads_table_entry__set_last_match(struct threads_table_e=
-ntry *table,
-> > +                                               struct thread *th)
-> > +{
-> > +       down_write(&table->lock);
-> > +       __threads_table_entry__set_last_match(table, th);
-> > +       up_write(&table->lock);
-> > +}
-> > +
-> > +struct thread *threads__find(struct threads *threads, pid_t tid)
-> > +{
-> > +       struct threads_table_entry *table  =3D threads__table(threads, =
-tid);
-> > +       struct rb_node **p;
-> > +       struct thread *res =3D NULL;
-> > +
-> > +       down_read(&table->lock);
-> > +       res =3D __threads_table_entry__get_last_match(table, tid);
-> > +       if (res)
-> > +               return res;
-> > +
-> > +       p =3D &table->entries.rb_root.rb_node;
-> > +       while (*p !=3D NULL) {
-> > +               struct rb_node *parent =3D *p;
-> > +               struct thread *th =3D rb_entry(parent, struct thread_rb=
-_node, rb_node)->thread;
-> > +
-> > +               if (thread__tid(th) =3D=3D tid) {
-> > +                       res =3D thread__get(th);
-> > +                       break;
-> > +               }
-> > +
-> > +               if (tid < thread__tid(th))
-> > +                       p =3D &(*p)->rb_left;
-> > +               else
-> > +                       p =3D &(*p)->rb_right;
-> > +       }
-> > +       up_read(&table->lock);
-> > +       if (res)
-> > +               threads_table_entry__set_last_match(table, res);
-> > +       return res;
-> > +}
-> > +
-> > +struct thread *threads__findnew(struct threads *threads, pid_t pid, pi=
-d_t tid, bool *created)
-> > +{
-> > +       struct threads_table_entry *table  =3D threads__table(threads, =
-tid);
-> > +       struct rb_node **p;
-> > +       struct rb_node *parent =3D NULL;
-> > +       struct thread *res =3D NULL;
-> > +       struct thread_rb_node *nd;
-> > +       bool leftmost =3D true;
-> > +
-> > +       *created =3D false;
-> > +       down_write(&table->lock);
-> > +       p =3D &table->entries.rb_root.rb_node;
-> > +       while (*p !=3D NULL) {
-> > +               struct thread *th;
-> > +
-> > +               parent =3D *p;
-> > +               th =3D rb_entry(parent, struct thread_rb_node, rb_node)=
-->thread;
-> > +
-> > +               if (thread__tid(th) =3D=3D tid) {
-> > +                       __threads_table_entry__set_last_match(table, th=
-);
-> > +                       res =3D thread__get(th);
-> > +                       goto out_unlock;
-> > +               }
-> > +
-> > +               if (tid < thread__tid(th))
-> > +                       p =3D &(*p)->rb_left;
-> > +               else {
-> > +                       leftmost =3D false;
-> > +                       p =3D &(*p)->rb_right;
-> > +               }
-> > +       }
-> > +       nd =3D malloc(sizeof(*nd));
-> > +       if (nd =3D=3D NULL)
-> > +               goto out_unlock;
-> > +       res =3D thread__new(pid, tid);
-> > +       if (!res)
-> > +               free(nd);
-> > +       else {
-> > +               *created =3D true;
-> > +               nd->thread =3D thread__get(res);
-> > +               rb_link_node(&nd->rb_node, parent, p);
-> > +               rb_insert_color_cached(&nd->rb_node, &table->entries, l=
-eftmost);
-> > +               ++table->nr;
-> > +               __threads_table_entry__set_last_match(table, res);
-> > +       }
-> > +out_unlock:
-> > +       up_write(&table->lock);
-> > +       return res;
-> > +}
-> > +
-> > +void threads__remove_all_threads(struct threads *threads)
-> > +{
-> > +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > +               struct threads_table_entry *table =3D &threads->table[i=
-];
-> > +               struct rb_node *nd;
-> > +
-> > +               down_write(&table->lock);
-> > +               __threads_table_entry__set_last_match(table, NULL);
-> > +               nd =3D rb_first_cached(&table->entries);
-> > +               while (nd) {
-> > +                       struct thread_rb_node *trb =3D rb_entry(nd, str=
-uct thread_rb_node, rb_node);
-> > +
-> > +                       nd =3D rb_next(nd);
-> > +                       thread__put(trb->thread);
-> > +                       rb_erase_cached(&trb->rb_node, &table->entries)=
-;
-> > +                       RB_CLEAR_NODE(&trb->rb_node);
-> > +                       --table->nr;
-> > +
-> > +                       free(trb);
-> > +               }
-> > +               assert(table->nr =3D=3D 0);
-> > +               up_write(&table->lock);
-> > +       }
-> > +}
-> > +
-> > +void threads__remove(struct threads *threads, struct thread *thread)
-> > +{
-> > +       struct rb_node **p;
-> > +       struct threads_table_entry *table  =3D threads__table(threads, =
-thread__tid(thread));
-> > +       pid_t tid =3D thread__tid(thread);
-> > +
-> > +       down_write(&table->lock);
-> > +       if (table->last_match && RC_CHK_EQUAL(table->last_match, thread=
-))
-> > +               __threads_table_entry__set_last_match(table, NULL);
-> > +
-> > +       p =3D &table->entries.rb_root.rb_node;
-> > +       while (*p !=3D NULL) {
-> > +               struct rb_node *parent =3D *p;
-> > +               struct thread_rb_node *nd =3D rb_entry(parent, struct t=
-hread_rb_node, rb_node);
-> > +               struct thread *th =3D nd->thread;
-> > +
-> > +               if (RC_CHK_EQUAL(th, thread)) {
-> > +                       thread__put(nd->thread);
-> > +                       rb_erase_cached(&nd->rb_node, &table->entries);
-> > +                       RB_CLEAR_NODE(&nd->rb_node);
-> > +                       --table->nr;
-> > +                       free(nd);
-> > +                       break;
-> > +               }
-> > +
-> > +               if (tid < thread__tid(th))
-> > +                       p =3D &(*p)->rb_left;
-> > +               else
-> > +                       p =3D &(*p)->rb_right;
-> > +       }
-> > +       up_write(&table->lock);
-> > +}
-> > +
-> > +int threads__for_each_thread(struct threads *threads,
-> > +                            int (*fn)(struct thread *thread, void *dat=
-a),
-> > +                            void *data)
-> > +{
-> > +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > +               struct threads_table_entry *table =3D &threads->table[i=
-];
-> > +               struct rb_node *nd;
-> > +
-> > +               for (nd =3D rb_first_cached(&table->entries); nd; nd =
-=3D rb_next(nd)) {
-> > +                       struct thread_rb_node *trb =3D rb_entry(nd, str=
-uct thread_rb_node, rb_node);
-> > +                       int rc =3D fn(trb->thread, data);
-> > +
-> > +                       if (rc !=3D 0)
-> > +                               return rc;
-> > +               }
-> > +       }
-> > +       return 0;
-> > +
-> > +}
-> > diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
-> > new file mode 100644
-> > index 000000000000..ed67de627578
-> > --- /dev/null
-> > +++ b/tools/perf/util/threads.h
-> > @@ -0,0 +1,35 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __PERF_THREADS_H
-> > +#define __PERF_THREADS_H
-> > +
-> > +#include <linux/rbtree.h>
-> > +#include "rwsem.h"
-> > +
-> > +struct thread;
-> > +
-> > +#define THREADS__TABLE_BITS    8
-> > +#define THREADS__TABLE_SIZE    (1 << THREADS__TABLE_BITS)
-> > +
-> > +struct threads_table_entry {
-> > +       struct rb_root_cached  entries;
-> > +       struct rw_semaphore    lock;
-> > +       unsigned int           nr;
-> > +       struct thread          *last_match;
-> > +};
-> > +
-> > +struct threads {
-> > +       struct threads_table_entry table[THREADS__TABLE_SIZE];
-> > +};
-> > +
-> > +void threads__init(struct threads *threads);
-> > +void threads__exit(struct threads *threads);
-> > +size_t threads__nr(struct threads *threads);
-> > +struct thread *threads__find(struct threads *threads, pid_t tid);
-> > +struct thread *threads__findnew(struct threads *threads, pid_t pid, pi=
-d_t tid, bool *created);
-> > +void threads__remove_all_threads(struct threads *threads);
-> > +void threads__remove(struct threads *threads, struct thread *thread);
-> > +int threads__for_each_thread(struct threads *threads,
-> > +                            int (*fn)(struct thread *thread, void *dat=
-a),
-> > +                            void *data);
-> > +
-> > +#endif /* __PERF_THREADS_H */
-> > --
-> > 2.43.0.687.g38aa6559b0-goog
-> >
+> >> This also blocks guest accesses into BRBE system registers and instructions
+> >> as if the underlying hardware never implemented FEAT_BRBE feature.
+> >>
+> >> Cc: Marc Zyngier <maz@kernel.org>
+> >> Cc: Oliver Upton <oliver.upton@linux.dev>
+> >> Cc: James Morse <james.morse@arm.com>
+> >> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >> Cc: Will Deacon <will@kernel.org>
+> >> Cc: kvmarm@lists.linux.dev
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >> Changes in V16:
+> >>
+> >> - Added BRB_INF_SRC_TGT_EL1 macro for corresponding BRB_[INF|SRC|TGT] expansion
+> >>
+> >>  arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 56 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> >> index 30253bd19917..6a06dc2f0c06 100644
+> >> --- a/arch/arm64/kvm/sys_regs.c
+> >> +++ b/arch/arm64/kvm/sys_regs.c
+> >> @@ -1304,6 +1304,11 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +#define BRB_INF_SRC_TGT_EL1(n)					\
+> >> +	{ SYS_DESC(SYS_BRBINF##n##_EL1), undef_access },	\
+> >> +	{ SYS_DESC(SYS_BRBSRC##n##_EL1), undef_access },	\
+> >> +	{ SYS_DESC(SYS_BRBTGT##n##_EL1), undef_access }		\
+> > 
+> > With the changes suggested on the previous patch, this would need to change to be:
+> > 
+> > 	#define BRB_INF_SRC_TGT_EL1(n)					\
+> > 		{ SYS_DESC(SYS_BRBINF_EL1(n)), undef_access },	\
+> > 		{ SYS_DESC(SYS_BRBSRC_EL1(n)), undef_access },	\
+> > 		{ SYS_DESC(SYS_BRBTGT_EL1(n)), undef_access }	\
+> 
+> Sure, already folded back in these above changes.
+> 
+> > 
+> > 
+> > ... which would also be easier for backporting (if necessary), since those
+> > definitions have existed for a while.
+> > 
+> > Otherwise (modulo Suzuki's comment about rebasing), this looks good to me.
+> 
+> Okay.
+> 
+> > 
+> > Mark.
+> > 
+> >>  /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
+> >>  #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
+> >>  	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
+> >> @@ -1707,6 +1712,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+> >>  	/* Hide SPE from guests */
+> >>  	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+> >>  
+> >> +	/* Hide BRBE from guests */
+> >> +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+> >> +
+> >>  	return val;
+> >>  }
+> >>  
+> >> @@ -2195,6 +2203,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+> >>  	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
+> >>  	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
+> >>  	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
+> >> +	{ SYS_DESC(OP_BRB_IALL), undef_access },
+> >> +	{ SYS_DESC(OP_BRB_INJ), undef_access },
+> >>  
+> >>  	DBG_BCR_BVR_WCR_WVR_EL1(0),
+> >>  	DBG_BCR_BVR_WCR_WVR_EL1(1),
+> >> @@ -2225,6 +2235,52 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+> >>  	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
+> >>  	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
+> >>  
+> >> +	/*
+> >> +	 * BRBE branch record sysreg address space is interleaved between
+> >> +	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
+> >> +	 */
+> >> +	BRB_INF_SRC_TGT_EL1(0),
+> >> +	BRB_INF_SRC_TGT_EL1(16),
+> >> +	BRB_INF_SRC_TGT_EL1(1),
+> >> +	BRB_INF_SRC_TGT_EL1(17),
+> >> +	BRB_INF_SRC_TGT_EL1(2),
+> >> +	BRB_INF_SRC_TGT_EL1(18),
+> >> +	BRB_INF_SRC_TGT_EL1(3),
+> >> +	BRB_INF_SRC_TGT_EL1(19),
+> >> +	BRB_INF_SRC_TGT_EL1(4),
+> >> +	BRB_INF_SRC_TGT_EL1(20),
+> >> +	BRB_INF_SRC_TGT_EL1(5),
+> >> +	BRB_INF_SRC_TGT_EL1(21),
+> >> +	BRB_INF_SRC_TGT_EL1(6),
+> >> +	BRB_INF_SRC_TGT_EL1(22),
+> >> +	BRB_INF_SRC_TGT_EL1(7),
+> >> +	BRB_INF_SRC_TGT_EL1(23),
+> >> +	BRB_INF_SRC_TGT_EL1(8),
+> >> +	BRB_INF_SRC_TGT_EL1(24),
+> >> +	BRB_INF_SRC_TGT_EL1(9),
+> >> +	BRB_INF_SRC_TGT_EL1(25),
+> >> +	BRB_INF_SRC_TGT_EL1(10),
+> >> +	BRB_INF_SRC_TGT_EL1(26),
+> >> +	BRB_INF_SRC_TGT_EL1(11),
+> >> +	BRB_INF_SRC_TGT_EL1(27),
+> >> +	BRB_INF_SRC_TGT_EL1(12),
+> >> +	BRB_INF_SRC_TGT_EL1(28),
+> >> +	BRB_INF_SRC_TGT_EL1(13),
+> >> +	BRB_INF_SRC_TGT_EL1(29),
+> >> +	BRB_INF_SRC_TGT_EL1(14),
+> >> +	BRB_INF_SRC_TGT_EL1(30),
+> >> +	BRB_INF_SRC_TGT_EL1(15),
+> >> +	BRB_INF_SRC_TGT_EL1(31),
+> >> +
+> >> +	/* Remaining BRBE sysreg addresses space */
+> >> +	{ SYS_DESC(SYS_BRBCR_EL1), undef_access },
+> >> +	{ SYS_DESC(SYS_BRBFCR_EL1), undef_access },
+> >> +	{ SYS_DESC(SYS_BRBTS_EL1), undef_access },
+> >> +	{ SYS_DESC(SYS_BRBINFINJ_EL1), undef_access },
+> >> +	{ SYS_DESC(SYS_BRBSRCINJ_EL1), undef_access },
+> >> +	{ SYS_DESC(SYS_BRBTGTINJ_EL1), undef_access },
+> >> +	{ SYS_DESC(SYS_BRBIDR0_EL1), undef_access },
+> >> +
+> >>  	{ SYS_DESC(SYS_MDCCSR_EL0), trap_raz_wi },
+> >>  	{ SYS_DESC(SYS_DBGDTR_EL0), trap_raz_wi },
+> >>  	// DBGDTR[TR]X_EL0 share the same encoding
+> >> -- 
+> >> 2.25.1
+> >>
