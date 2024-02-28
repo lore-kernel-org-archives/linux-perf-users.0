@@ -1,42 +1,43 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21CBA7353F;
-	Wed, 28 Feb 2024 11:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AAF3BBD0;
+	Wed, 28 Feb 2024 12:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709121136; cv=none; b=FJN5DkQm/lkBTD8kzcGqDMjNwtIONWXHzknzLsPUV+5sX4DRPlq0JVolD6aXKI9gS60nb02Canb+be9WuzvhfVjUNt01JqjTNpFcP0mlEoS/ie87PqYJHk/ksnLeGRhX7hGWjcvsnNtc0gLfHYY9qVBjPPAKfu7f6b9dDLLPv5M=
+	t=1709122967; cv=none; b=GE91KE5rJlddlqnxRRlzn79AuPDUTNTTBUd3IS/XmWL8Bjlo2Gr6GjMPur81XyTbq58Hzu44vLJ1AHvGNEsCAcc2KSbA5JlathMWjey2B6YpgpCLIoObz9M6Gu6QxftkXdVYmEsTqKpSVCGAB2saOlyOiyRtI9H54OHJeHqSDyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709121136; c=relaxed/simple;
-	bh=2WlL3MKim5BA9DPtobT0T+QuzovrPwZOzIxQn5vg7gU=;
+	s=arc-20240116; t=1709122967; c=relaxed/simple;
+	bh=Vtf8uiKYo2k9u20FWxvxPIPbVyK9vLwi1nNSnIilD74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RSokLNvOUvoqf4v0zEYN5gv0UDVkh/RnZuqGj5Q6W8ZgQ+M6c6zUuWAbz20gDVlr8ZHQ0E62BJfV/qFJnXGLjqKZHvxLPQbjxafvgxBoRqnNOJKCK7jQjmPdpgHiyiRv0OQmXdLvgn2dDTSG7pqF9I/sC5ehgnj/VSckeh8mWZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F611C15;
-	Wed, 28 Feb 2024 03:52:51 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.68.152])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26AD03F6C4;
-	Wed, 28 Feb 2024 03:52:10 -0800 (PST)
-Date: Wed, 28 Feb 2024 11:52:00 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com,
-	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=HgltxOmTxQOWUqoU2nHtl8jK5/iIIGs+KIlcYWaTwtqW38VekBw02z5QZJu68Lh+JOM0rX/g65VfcB0pbYIOoB6AfepztAaGmLO/rwjxhuDwPTOXCETuHjxng+W1Rj7bAEWHCAvj2wFRW14NYwIXH2dC27t/kV9iHYgI2FS9/NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gfwyb1nR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gfwyb1nR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11943C433F1;
+	Wed, 28 Feb 2024 12:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709122966;
+	bh=Vtf8uiKYo2k9u20FWxvxPIPbVyK9vLwi1nNSnIilD74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gfwyb1nRErLkTkRKYm3WcN1bCr4Cdya+HMKWySLtYNHYLDqbge4lPY0Z/Js4wfmK8
+	 YK/W3ZqxBtUuuI7CTYa6/rW8gD6bkSygxSc0HIXoauSzRkBdx7Q3wvSZcqTeg7g20+
+	 nIbiDqIKMHA6yjWfJOjPb9LV5mn1k9XY0bZ5nJ3pXgTDrwgywcE524Mqak7sHkkifs
+	 Jl2IpnRaC3ZsNPPTPTRK3uIToBV9DBVjXGPkT3xtjOFa9nOejgempF4CygOgNd2ZOj
+	 3Ivi00u6U5jv2I1gCNyOrexjkGbFJjQJjKuagvGny7CytY7zXp880eBoew1PYcsJyM
+	 DWlWZIZcFaimg==
+Date: Wed, 28 Feb 2024 09:22:41 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V16 4/8] drivers: perf: arm_pmuv3: Enable branch stack
- sampling via FEAT_BRBE
-Message-ID: <Zd8eYHbLebKLV648@FVFF77S0Q05N>
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
- <20240125094119.2542332-5-anshuman.khandual@arm.com>
- <ZdY_oEYPGSj7nwvP@FVFF77S0Q05N>
- <781dd6a8-cf18-48ab-93f3-5256d161b359@arm.com>
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2] perf lock contention: Account contending locks too
+Message-ID: <Zd8lkcb5irCOY4-m@x1>
+References: <20240228053335.312776-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,216 +46,259 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <781dd6a8-cf18-48ab-93f3-5256d161b359@arm.com>
+In-Reply-To: <20240228053335.312776-1-namhyung@kernel.org>
 
-On Wed, Feb 28, 2024 at 01:41:05PM +0530, Anshuman Khandual wrote:
-> On 2/21/24 23:53, Mark Rutland wrote:
-> > On Thu, Jan 25, 2024 at 03:11:15PM +0530, Anshuman Khandual wrote:
-
-> >> +============================================
-> >> +Branch Record Buffer Extension aka FEAT_BRBE
-> >> +============================================
-> >> +
-> >> +Author: Anshuman Khandual <anshuman.khandual@arm.com>
-> >> +
-> >> +FEAT_BRBE is an optional architecture feature, which creates branch records
-> >> +containing information about change in control flow. The branch information
-> >> +contains source address, target address, and some relevant metadata related
-> >> +to that change in control flow. BRBE can be configured to filter out branch
-> >> +records based on their type and privilege level.
-> > 
-> > Do we actually need this documentation?
+On Tue, Feb 27, 2024 at 09:33:35PM -0800, Namhyung Kim wrote:
+> Currently it accounts the contention using delta between timestamps in
+> lock:contention_begin and lock:contention_end tracepoints.  But it means
+> the lock should see the both events during the monitoring period.
 > 
-> IMHO we do need some documentation.
+> Actually there are 4 cases that happen with the monitoring:
 > 
-> > The set of peopl writing kernel code can read the ARM ARM or the kernel code,
-> > and there's not much here useful to users.
+>                 monitoring period
+>             /                       \
+>             |                       |
+>  1:  B------+-----------------------+--------E
+>  2:    B----+-------------E         |
+>  3:         |           B-----------+----E
+>  4:         |     B-------------E   |
+>             |                       |
+>             t0                      t1
 > 
-> But not all documentation write ups in the kernel are only for the users, there
-> are examples in many subsystems where documentations help explain implementation
-> details including data structures and function flows, for upcoming developers to
-> understand the code better and make further improvements.
+> where B and E mean contention BEGIN and END, respectively.  So it only
+> accounts the case 4 for now.  It seems there's no way to handle the case
+> 1.  The case 2 might be handled if it saved the timestamp (t0), but it
+> lacks the information from the B notably the flags which shows the lock
+> types.  Also it could be a nested lock which it currently ignores.  So
+> I think we should ignore the case 2.
 
-Sure, but that's for things where there are *many* kernel developers that will
-consume this. The set of people who will modify the BRBE code in a meaningful
-way can be counted on a hand or two, and so I don't think there's a need or
-justification for having this detail under Documentation/.
+Perhaps have a separate output listing locks that were found to be with
+at least tE - t0 time, with perhaps a backtrace at that END time?
 
-> > I think it may make sense to document what userspace and/or VMs can and cannot
-> > do (which is why we describe the ID registers), and any 'gotchas' (e.g.
-> > restrictions we have that other architectures don't, or vice-versa). I do not
+With that we wouldn't miss that info, however incomplete it is and the
+user would try running again, perhaps for a longer time, or start
+monitoring before the observed workload starts, etc.
+
+Anyway:
+
+Reviwed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
+ 
+> However we can handle the case 3 if we save the timestamp (t1) at the
+> end of the period.  And then it can iterate the map entries in the
+> userspace and update the lock stat accordinly.
 > 
-> Agreed - such documentations must be included for better technology adoption, but
-> those are not the only type of documentation available in the kernel - even right
-> now.
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+> v2: add a comment on mark_end_timestamp  (Ian)
 > 
-> > think that we should try to describe the hardware beyond what is necessary to
-> > describe that, and I do not think that we should describe the structure of the
-> > perf code beyond what is necessary to desribe that.
-> > 
-> > Otherwise, this is just a maintenance burden
+>  tools/perf/util/bpf_lock_contention.c         | 120 ++++++++++++++++++
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  |  16 ++-
+>  tools/perf/util/bpf_skel/lock_data.h          |   7 +
+>  3 files changed, 136 insertions(+), 7 deletions(-)
 > 
-> I think we should have some documentation for BRBE implementation, and if there
-> are suggestions to improve the proposed one, will be happy to change. But for
-> now, will try and rewrite the documentation with your above suggestions in mind.
-
-I think that any documentation on the implementation details should be within
-the driver itself; please limit anything under Documentation/ to be on details
-relevant to userspace.
-
-[...]
-
-> I believe the proposed code is already well documented but will revisit and
-> try to fill gaps if any but the point being in code documentation might not
-> be a substitute for a Documentation/arch/arm64/ based file.
-
-For the moment I'm not asking that you add new comments to the BRBE code, so
-please don't feel like you need to add anything there. I'm only asking that you
-limit the Documentation/ coverage to details which are directly relevant to
-userspace.
-
-> 
-> > 
-> > [...]
-> > 
-> >> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> >> index b7afaa026842..649b926bf69d 100644
-> >> --- a/arch/arm64/include/asm/el2_setup.h
-> >> +++ b/arch/arm64/include/asm/el2_setup.h
-> >> @@ -154,6 +154,51 @@
-> >>  .Lskip_set_cptr_\@:
-> >>  .endm
-> >>  
-> >> +#ifdef CONFIG_ARM64_BRBE
-> >> +/*
-> >> + * Enable BRBE cycle count
-> >> + *
-> >> + * BRBE requires both BRBCR_EL1.CC and BRBCR_EL2.CC fields, be set
-> >> + * for the cycle counts to be available in BRBINF<N>_EL1.CC during
-> >> + * branch record processing after a PMU interrupt. This enables CC
-> >> + * field on both these registers while still executing inside EL2.
-> >> + *
-> >> + * BRBE driver would still be able to toggle branch records cycle
-> >> + * count support via BRBCR_EL1.CC field regardless of whether the
-> >> + * kernel ends up executing in EL1 or EL2.
-> >> + */
-> >> +.macro __init_el2_brbe
-> >> +	mrs	x1, id_aa64dfr0_el1
-> >> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> >> +	cbz	x1, .Lskip_brbe_cc_\@
-> >> +
-> >> +	mrs_s	x0, SYS_BRBCR_EL2
-> >> +	orr	x0, x0, BRBCR_ELx_CC
-> >> +	msr_s	SYS_BRBCR_EL2, x0
-> > 
-> > Please initialise this to a specific value rather than using a
-> > read-modify-write.
-> 
-> I will change this as follows - which will be written into both BRBCR_EL2
-> and BRBCR_EL12 registers as applicable.
-> 
->         mov     x0, xzr
->         orr     x0, x0, #(BRBCR_ELx_CC |BRBCR_ELx_MPRED)
-
-Please generate the value directly, and only use ORR for bits that need to be
-conditionally set, e.g. the above can be:
-
-	mov_q	x0, #(BRBCR_ELx_CC | BRBCR_ELx_MPRED)
-	msr_s	SYS_BRBCR_EL2, x0
-
-[...]
-
-> >> +/*
-> >> + * A branch record with BRBINFx_EL1.LASTFAILED set, implies that all
-> >> + * preceding consecutive branch records, that were in a transaction
-> >> + * (i.e their BRBINFx_EL1.TX set) have been aborted.
-> >> + *
-> >> + * Similarly BRBFCR_EL1.LASTFAILED set, indicate that all preceding
-> >> + * consecutive branch records up to the last record, which were in a
-> >> + * transaction (i.e their BRBINFx_EL1.TX set) have been aborted.
-> >> + *
-> >> + * --------------------------------- -------------------
-> >> + * | 00 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX success]
-> >> + * --------------------------------- -------------------
-> >> + * | 01 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX success]
-> >> + * --------------------------------- -------------------
-> >> + * | 02 | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 0 |
-> >> + * --------------------------------- -------------------
-> >> + * | 03 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
-> >> + * --------------------------------- -------------------
-> >> + * | 04 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
-> >> + * --------------------------------- -------------------
-> >> + * | 05 | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 1 |
-> >> + * --------------------------------- -------------------
-> >> + * | .. | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 0 |
-> >> + * --------------------------------- -------------------
-> >> + * | 61 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
-> >> + * --------------------------------- -------------------
-> >> + * | 62 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
-> >> + * --------------------------------- -------------------
-> >> + * | 63 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
-> >> + * --------------------------------- -------------------
-> >> + *
-> >> + * BRBFCR_EL1.LASTFAILED == 1
-> >> + *
-> >> + * BRBFCR_EL1.LASTFAILED fails all those consecutive, in transaction
-> >> + * branches records near the end of the BRBE buffer.
-> >> + *
-> >> + * Architecture does not guarantee a non transaction (TX = 0) branch
-> >> + * record between two different transactions. So it is possible that
-> >> + * a subsequent lastfailed record (TX = 0, LF = 1) might erroneously
-> >> + * mark more than required transactions as aborted.
-> >> + */
-> >> +static void process_branch_aborts(struct pmu_hw_events *cpuc)
-> >> +{
-> >> +	u64 brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-> >> +	bool lastfailed = !!(brbfcr & BRBFCR_EL1_LASTFAILED);
-> >> +	int idx = brbe_get_numrec(cpuc->percpu_pmu->reg_brbidr) - 1;
-> >> +	struct perf_branch_entry *entry;
-> >> +
-> >> +	do {
-> >> +		entry = &cpuc->branches->branch_entries[idx];
-> >> +		if (entry->in_tx) {
-> >> +			entry->abort = lastfailed;
-> >> +		} else {
-> >> +			lastfailed = entry->abort;
-> >> +			entry->abort = false;
-> >> +		}
-> >> +	} while (idx--, idx >= 0);
-> >> +}
-> > 
-> > Please consider:
-> > 
-> > 1) There are no extant CPU implementations with TME.
-> > 2) There are no plans for anyone to build TME.
-> > 3) The kernel doesn't support TME.
-> > 
-> > ... so why are we tryting to handle this architectural edge-case (complete with
-> > what is arguably an architectural bug!) that can only happen on a CPU with TME,
-> > under a kernel that's using TME?
-> > 
-> > This cannot possibly have been tested, trivially by point 3.
-> > 
-> > This is purely a maintenance and review burden.
-> > 
-> > Please delete this and replace it with a comment somewhere that *if* we ever
-> > add support for TME this will need to be handled somehow.
-> 
-> Alright, will drop TME handling completely.
-> 
-> - Dropped process_branch_aborts() completely
-> 
-> - Added an warning if transaction states get detected some how unexpectedly
-> 
->                 /*
->                  * Currently TME feature is neither implemented in any hardware
->                  * nor it is being supported in the kernel. Just warn here once
->                  * if TME related information shows up rather unexpectedly.
->                  */
->                 if (entry->abort || entry->in_tx)
->                         pr_warn_once("Unknown transaction states %d %d\n",
->                                       entry->abort, entry->in_tx);
-
-Something of that shape sounds good; thanks!
-
-Mark.
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index 31ff19afc20c..9af76c6b2543 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -179,6 +179,123 @@ int lock_contention_prepare(struct lock_contention *con)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Run the BPF program directly using BPF_PROG_TEST_RUN to update the end
+> + * timestamp in ktime so that it can calculate delta easily.
+> + */
+> +static void mark_end_timestamp(void)
+> +{
+> +	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
+> +		.flags = BPF_F_TEST_RUN_ON_CPU,
+> +	);
+> +	int prog_fd = bpf_program__fd(skel->progs.end_timestamp);
+> +
+> +	bpf_prog_test_run_opts(prog_fd, &opts);
+> +}
+> +
+> +static void update_lock_stat(int map_fd, int pid, u64 end_ts,
+> +			     enum lock_aggr_mode aggr_mode,
+> +			     struct tstamp_data *ts_data)
+> +{
+> +	u64 delta;
+> +	struct contention_key stat_key = {};
+> +	struct contention_data stat_data;
+> +
+> +	if (ts_data->timestamp >= end_ts)
+> +		return;
+> +
+> +	delta = end_ts - ts_data->timestamp;
+> +
+> +	switch (aggr_mode) {
+> +	case LOCK_AGGR_CALLER:
+> +		stat_key.stack_id = ts_data->stack_id;
+> +		break;
+> +	case LOCK_AGGR_TASK:
+> +		stat_key.pid = pid;
+> +		break;
+> +	case LOCK_AGGR_ADDR:
+> +		stat_key.lock_addr_or_cgroup = ts_data->lock;
+> +		break;
+> +	case LOCK_AGGR_CGROUP:
+> +		/* TODO */
+> +		return;
+> +	default:
+> +		return;
+> +	}
+> +
+> +	if (bpf_map_lookup_elem(map_fd, &stat_key, &stat_data) < 0)
+> +		return;
+> +
+> +	stat_data.total_time += delta;
+> +	stat_data.count++;
+> +
+> +	if (delta > stat_data.max_time)
+> +		stat_data.max_time = delta;
+> +	if (delta < stat_data.min_time)
+> +		stat_data.min_time = delta;
+> +
+> +	bpf_map_update_elem(map_fd, &stat_key, &stat_data, BPF_EXIST);
+> +}
+> +
+> +/*
+> + * Account entries in the tstamp map (which didn't see the corresponding
+> + * lock:contention_end tracepoint) using end_ts.
+> + */
+> +static void account_end_timestamp(struct lock_contention *con)
+> +{
+> +	int ts_fd, stat_fd;
+> +	int *prev_key, key;
+> +	u64 end_ts = skel->bss->end_ts;
+> +	int total_cpus;
+> +	enum lock_aggr_mode aggr_mode = con->aggr_mode;
+> +	struct tstamp_data ts_data, *cpu_data;
+> +
+> +	/* Iterate per-task tstamp map (key = TID) */
+> +	ts_fd = bpf_map__fd(skel->maps.tstamp);
+> +	stat_fd = bpf_map__fd(skel->maps.lock_stat);
+> +
+> +	prev_key = NULL;
+> +	while (!bpf_map_get_next_key(ts_fd, prev_key, &key)) {
+> +		if (bpf_map_lookup_elem(ts_fd, &key, &ts_data) == 0) {
+> +			int pid = key;
+> +
+> +			if (aggr_mode == LOCK_AGGR_TASK && con->owner)
+> +				pid = ts_data.flags;
+> +
+> +			update_lock_stat(stat_fd, pid, end_ts, aggr_mode,
+> +					 &ts_data);
+> +		}
+> +
+> +		prev_key = &key;
+> +	}
+> +
+> +	/* Now it'll check per-cpu tstamp map which doesn't have TID. */
+> +	if (aggr_mode == LOCK_AGGR_TASK || aggr_mode == LOCK_AGGR_CGROUP)
+> +		return;
+> +
+> +	total_cpus = cpu__max_cpu().cpu;
+> +	ts_fd = bpf_map__fd(skel->maps.tstamp_cpu);
+> +
+> +	cpu_data = calloc(total_cpus, sizeof(*cpu_data));
+> +	if (cpu_data == NULL)
+> +		return;
+> +
+> +	prev_key = NULL;
+> +	while (!bpf_map_get_next_key(ts_fd, prev_key, &key)) {
+> +		if (bpf_map_lookup_elem(ts_fd, &key, cpu_data) < 0)
+> +			goto next;
+> +
+> +		for (int i = 0; i < total_cpus; i++) {
+> +			update_lock_stat(stat_fd, -1, end_ts, aggr_mode,
+> +					 &cpu_data[i]);
+> +		}
+> +
+> +next:
+> +		prev_key = &key;
+> +	}
+> +	free(cpu_data);
+> +}
+> +
+>  int lock_contention_start(void)
+>  {
+>  	skel->bss->enabled = 1;
+> @@ -188,6 +305,7 @@ int lock_contention_start(void)
+>  int lock_contention_stop(void)
+>  {
+>  	skel->bss->enabled = 0;
+> +	mark_end_timestamp();
+>  	return 0;
+>  }
+>  
+> @@ -301,6 +419,8 @@ int lock_contention_read(struct lock_contention *con)
+>  	if (stack_trace == NULL)
+>  		return -1;
+>  
+> +	account_end_timestamp(con);
+> +
+>  	if (con->aggr_mode == LOCK_AGGR_TASK) {
+>  		struct thread *idle = __machine__findnew_thread(machine,
+>  								/*pid=*/0,
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index 95cd8414f6ef..fb54bd38e7d0 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -19,13 +19,6 @@
+>  #define LCB_F_PERCPU	(1U << 4)
+>  #define LCB_F_MUTEX	(1U << 5)
+>  
+> -struct tstamp_data {
+> -	__u64 timestamp;
+> -	__u64 lock;
+> -	__u32 flags;
+> -	__s32 stack_id;
+> -};
+> -
+>  /* callstack storage  */
+>  struct {
+>  	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
+> @@ -140,6 +133,8 @@ int perf_subsys_id = -1;
+>  /* determine the key of lock stat */
+>  int aggr_mode;
+>  
+> +__u64 end_ts;
+> +
+>  /* error stat */
+>  int task_fail;
+>  int stack_fail;
+> @@ -559,4 +554,11 @@ int BPF_PROG(collect_lock_syms)
+>  	return 0;
+>  }
+>  
+> +SEC("raw_tp/bpf_test_finish")
+> +int BPF_PROG(end_timestamp)
+> +{
+> +	end_ts = bpf_ktime_get_ns();
+> +	return 0;
+> +}
+> +
+>  char LICENSE[] SEC("license") = "Dual BSD/GPL";
+> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
+> index 08482daf61be..36af11faad03 100644
+> --- a/tools/perf/util/bpf_skel/lock_data.h
+> +++ b/tools/perf/util/bpf_skel/lock_data.h
+> @@ -3,6 +3,13 @@
+>  #ifndef UTIL_BPF_SKEL_LOCK_DATA_H
+>  #define UTIL_BPF_SKEL_LOCK_DATA_H
+>  
+> +struct tstamp_data {
+> +	u64 timestamp;
+> +	u64 lock;
+> +	u32 flags;
+> +	u32 stack_id;
+> +};
+> +
+>  struct contention_key {
+>  	u32 stack_id;
+>  	u32 pid;
+> -- 
+> 2.44.0.rc1.240.g4c46232300-goog
