@@ -1,84 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EC970044
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Feb 2024 23:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1B013D2E3;
+	Wed, 28 Feb 2024 23:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709163206; cv=none; b=A1mgXfbXoxNId89/Eu3lGKHDXzeG5RE9cVQwt27e4JcZajgSjRi7KhDY/OdnLzboqVDQcC3k0P1t/xia9kKr0Ex8lw2sdbee4twvASoa+cx6YjCgjKYHNo+GrBFEdFGGaa8yaFiyfczTc5GSw06veI5PPra3zDfso34jxPJOYgk=
+	t=1709163853; cv=none; b=iSgUdBDvEw95S6YZAtJ7jABDeg0AlzSB7+MPou40BCxclefAQwq1bqbQOE6cOVCyUFvEsXDVIbhTmMkEFynNbuGDiTxRx34zT8rguvHiwdSYcrzcERLCyuaXZ8GoDmldfcSr5Snx6dTy6FYUA12mEnSlyU5arLh7HgfAk/AnRq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709163206; c=relaxed/simple;
-	bh=DYxzrlfhic/zi4aOTjZraFfrOWPY6p+SeeqZWFxEK30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SmMbwJCJ3wHihPkCLusk/kp9tILgMV2e+Pu3DA7Sjy1qGNDelSGXCvO0SnaATspDoVtnigZHUnGpWPEwgQ5M7MIPJsYsMHOD8NIO61esToF/icB9/WW0whO7YL405Wd35baZDdj3GHgA2MlRcLQJgZqjUP6n61QGBZ+lb2/k2+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HJSXhgkH; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HJSXhgkH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709163205; x=1740699205;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DYxzrlfhic/zi4aOTjZraFfrOWPY6p+SeeqZWFxEK30=;
-  b=HJSXhgkHmCgG3DAsa7z57wMomwbeE8KsPaVYR+YBf5hFfsHvW6M61y1s
-   eMBZzWRuABUhAxxIIRPHqF07pQ/d922JxBQBVOj2Ld2EDBZNtADDoqRfI
-   vJJqsAXJRylPTuy6PfD7DnAIU4xxxz2uBt5GnVxub4Oa2fxIrR4EuVYNo
-   YlS5GcVyoP7UbxbyIROrV8JvB3E1op6b5voftT9fNNh7+dX0O1bBpWjaC
-   EL1OIiMWxK49R38g906wueaujEg8qRwkpDxhKrRJmmOy56UqmHM+jy5+H
-   H3c1bsmO+GO4ZYnPZU16eagpWJ4+545xHwTqZgYIto1DlSBbLl+5Jfm1k
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="21059890"
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="21059890"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 15:33:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="45131385"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 15:33:25 -0800
-Date: Wed, 28 Feb 2024 15:33:23 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf, script: Minimize "not reaching sample" for
- brstackinsn
-Message-ID: <Zd_Cw6QeuGx-Dblm@tassilo>
-References: <20240227183910.55824-1-ak@linux.intel.com>
- <ceb7d039-5088-45e7-b7ea-8f2056f5f7dc@intel.com>
+	s=arc-20240116; t=1709163853; c=relaxed/simple;
+	bh=Bun5m8G8ZzV7ghqTD6WFlwdCGqvE8zICLBqsMSfoowQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JgJKcaeJnCAO1DmFUyEyfiqnzzlq6qcYKtydeRO9jUlAlr7hN3dIMVQ+lsgKWgcTKP8DaUry3rIRcwkdx0cMif7dZoCP65HOp/AJfs7RIR/hlrFjJRoARe5ThkWt5+I9Vj8moNRPOuPZZ7v8jaOliYJZOcbI94le8gTtLO4Xulo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5ca29c131ebso246030a12.0;
+        Wed, 28 Feb 2024 15:44:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709163851; x=1709768651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3Z2mKmaKj61Pf7pJc9lk5Bc9rbWv418rABeaEWh7OCw=;
+        b=M1QHbuC8e4WYt/BV8w6YfPy1Fcdkmoeg1tiTIM8zMlTMsXDjt9OGDK896nWwS0ZFZU
+         zSt3fM1k/e63thE2rARqhYZ7ePQhAXvUDUzeUMzv4wrCou5Z85RWsKsww5D6HbfN2W38
+         ztjX2CRgf2dMc857XrrUmoONfQ2tkAs7KtASqaWP+LmTQflzHaYyWOqbt+L5/+cVLgb6
+         pGN5kTPEraubkpN9/IeXdX81zayKldHjjxQ1UO+pmUtVKl3V5ConhJtM04ilIye0RFXU
+         gMU5D5UptQvErnvEho6zdBCJfcFdNYj537ERr/yCmMT+iSWk1f15eOMAbNYuBVAs+pQE
+         t1Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPf+RSiGcOoagnIMf/0EWHrc81ZcX3xUlVNtYgc0ZXJLWsRXGlxhoEGZzYHZt3BCJ0pPC9282yB+ZXEYmbX4rt5lTe2kPl8ipIqW6tkgTU8TNbL5kRDaTmf0BIm2DcEOclBW4aY6ukQCCVeY26C/yzAnGzOEBwkPgN35i59qWZM6YXEg==
+X-Gm-Message-State: AOJu0YzmueW24zWK1LsIQ/33nn5opazAv5mMZfCokNk7d0zJPoLvsb5M
+	VS4NQyNqJL+O0N/phAE9mLZqomkNxJtV16CY3crrXXv+Ip0y70aolpoMV6y2wHZkHq/Xn9c9XHF
+	HSqVtWn1HgOgnlK3gqWTEGyqDT1U=
+X-Google-Smtp-Source: AGHT+IGpXyr6rC4PgckoEC9vlZ9CvQ+9sOZHQ5msGedCpWHTuAGfHXRpjzvh8PLTjI5km7wdxKh2/j2tbDhvW4NDFNg=
+X-Received: by 2002:a17:90b:4b4f:b0:29b:b70:5ace with SMTP id
+ mi15-20020a17090b4b4f00b0029b0b705acemr248351pjb.16.1709163850993; Wed, 28
+ Feb 2024 15:44:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ceb7d039-5088-45e7-b7ea-8f2056f5f7dc@intel.com>
+References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-5-irogers@google.com>
+ <CAM9d7cjuv2VAVfGM6qQEMYO--WvgPvAvmnF73QrS_PzGzCF32w@mail.gmail.com>
+ <CAP-5=fUUSpHUUAc3jvJkPAUuuJAiSAO4mjCxa9qUppnqk76wWg@mail.gmail.com>
+ <CAM9d7chXtmfaC73ykiwn+RqJmy5jZFWFaV_QNs10c_Td+zmLBQ@mail.gmail.com>
+ <Zd41Nltnoen0cPYX@x1> <CAP-5=fWv25WgY82ZY3V1erUvCb+jdhLd_d91p4akjqFgynvAgg@mail.gmail.com>
+ <CAM9d7cjJTf_yed9nwXZkBPr6u6NH5n+V+u0m6Zgsc1JBy_LdyA@mail.gmail.com> <CAP-5=fWKdp7rf+v7t_T_0tU0OxQO9R2g+ZH7Ag7HgyBbGT3-nQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWKdp7rf+v7t_T_0tU0OxQO9R2g+ZH7Ag7HgyBbGT3-nQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 28 Feb 2024 15:43:59 -0800
+Message-ID: <CAM9d7cj-kxaQc18QG_cd6EzsDbk7vmhYqg-XzCV+g5oi9Giwww@mail.gmail.com>
+Subject: Re: [PATCH v1 4/6] perf threads: Move threads to its own files
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > There are two common cases where the message is bogus:
-> > - The LBR only logs taken branches, but the branch might be a
-> > conditional branch that is not taken (that is the most common
-> > case actually)
-> 
-> How do you know it is not a taken branch that missed the LBR update?
+On Tue, Feb 27, 2024 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Tue, Feb 27, 2024 at 10:40=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> >
+> > On Tue, Feb 27, 2024 at 1:42=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > On Tue, Feb 27, 2024 at 11:17=E2=80=AFAM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > On Tue, Feb 27, 2024 at 09:31:33AM -0800, Namhyung Kim wrote:
+> > > > > I can see some other differences like machine__findnew_thread()
+> > > > > which I think is due to the locking change.  Maybe we can fix the
+> > > > > problem before moving the code and let the code move simple.
+> > > >
+> > > > I was going to suggest that, agreed.
+> > > >
+> > > > We may start doing a refactoring, then find a bug, at that point we
+> > > > first fix the problem them go back to refactoring.
+> > >
+> > > Sure I do this all the time. Your typical complaint on the v+1 patch
+> > > set is to move the bug fixes to the front of the changes. On the v+2
+> > > patch set the bug fixes get applied but not the rest of the patch
+> > > series, etc.
+> > >
+> > > Here we are refactoring code for an rb-tree implementation of threads
+> > > and worrying about its correctness. There's no indication it's not
+> > > correct, it is largely copy and paste, there is also good evidence in
+> > > the locking disciple it is more correct. The next patch deletes that
+> > > implementation, replacing it with a hash table. Were I not trying to
+> > > break things apart I could squash those 2 patches together, but I've
+> > > tried to do the right thing. Now we're trying to micro correct, break
+> > > apart, etc. a state that gets deleted. A reviewer could equally
+> > > criticise this being 2 changes rather than 1, and the cognitive load
+> > > of having to look at code that gets deleted. At some point it is a
+> > > judgement call, and I think this patch is actually the right size. I
+> > > think what is missing here is some motivation in the commit message t=
+o
+> > > the findnew refactoring and so I'll add that.
+> >
+> > I'm not against your approach and actually appreciate your effort
+> > to split rb-tree refactoring and hash table introduction.  What I'm
+> > asking is just to separate out the code moving.  I think you can do
+> > whatever you want in the current file.  Once you have the final code
+> > you can move it to its own file exactly the same.  When I look at this
+> > commit, say a few years later, I won't expect a commit that says
+> > moving something to a new file has other changes.
+>
+> The problem is that the code in machine treats the threads lock as if
+> it is a lock in machine. So there is __machine__findnew_thread which
+> implies the thread lock is held. This change is making threads its own
+> separate concept/collection and the lock belongs with that collection.
+> Most of the implementation of threads__findnew matches
+> __machine__findnew_thread, so we may be able to engineer a smaller
+> line diff by moving "__machine__findnew_thread" code into threads.c,
+> then renaming it to build the collection, etc. We could also build the
+> threads collection inside of machine and then in a separate change
+> move it to threads.[ch].  In the commit history this seems muddier
+> than just splitting out threads as a collection. Also, some of the API
+> design choices are motivated more by the hash table implementation of
+> the next patch than trying to have a good rbtree abstracted collection
+> of threads. Essentially it'd be engineering a collection of threads
+> but only with a view to delete it in the next patch. I don't think it
+> would be for the best and the commit history for deleted code is
+> unlikely to be looked upon.
 
-I don't, but the not taken case is totally valid (and also common)
-so it doesn't make sense to have a mere sanity check make a common
-case unusable.
+I think the conversation is repeating. :)  Why not do this?
 
-> 
-> > - The LBR sampling uses a filter ignoring some branches,
-> > but the perf script check checks for all branches.
-> 
-> Not understanding this case.  Do you mean you expect not to reach
-> the sample, so there is no point printing the message?
+1. refactor threads code in machine.c and fix the locking
+2. move threads code to its own file
+3. use hash table in threads
 
-If the LBR is e.g. filtered on far branches it makes no sense to 
-check for non far branches. There are lot of filtering cases here which
-would be very complicated to handle for a mere sanity check,
-so the best way is to not do the bogus sanity check.
-
--Andi
+Thanks,
+Namhyung
