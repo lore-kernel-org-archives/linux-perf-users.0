@@ -1,51 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754EE6D538;
-	Thu, 29 Feb 2024 20:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67328143724;
+	Thu, 29 Feb 2024 21:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709240379; cv=none; b=UAh9cEvY0SYZD+MHZb0nh5/dSd2D2jK04lOi6Miw0nMTVZNg3evd/RlAiL/uOA+JIcPINQPjsu8T/Z6euCR2p4e4K9mBY8ntyBiKQ7OzZmIqZGr+lB7bpUieEI0DWFnpGpQMk4/HZRdVNrIZDi3//B5qEUVWbjZRiemrteGdQ5w=
+	t=1709240953; cv=none; b=rrgHH70a8tTGEvasTO/7sH7tY9S+pE8WYXAhu6/vKkAaf3kFgfm2cg0V5Qgsx/pR9GKjW0ckPdAIthEb/gn6MAdAwjyZSFkIIFQasLMGEjwzl0CZT367S+SdEJAmmMhYAuXy+CIDw/yOszFqF8ET5d1gU/bwRofSmf1N00mVnlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709240379; c=relaxed/simple;
-	bh=pzB9IxRRq+Rx+vVaEO+uogdqRWJOs+QMWQ8UmzsWilA=;
+	s=arc-20240116; t=1709240953; c=relaxed/simple;
+	bh=vI3JErcIXK8PkI3jc2jIkSRfvAVQ/YbU0r8nU36vXdA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=l9a6+RNpXXFm1xnW5Rbt30vC/omwEdyvXvbN05Id7X9hYjSJRRUpzeFSrZVFfvWCvyM1+tyYyFB89YqRGCc8UaS0++tnVKRDT9sRVbGnffQoN4sCwFrCk4gOVY/3U1JFPHYmpozdQG08pPWP0bmDadFSAdXJGMcF4DsP8tiA2jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QvZ3BZPm; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=ZU67VgxNNKHB/U9+pNuide+2jqEe9K/e9c8FqgPJo025qR9eIyIDQi2CoLKPcIwqedV1ZY14g6KZc144DGGLP1Ij7EyMpgXMVtFxdaIJ4VFGA0+Qha5WoSF3Cb8F0Hl+5HnCFAqc/ph6AMwMtfRHCgtwgW6hk08JAG72RgC8qNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f8vbRf1r; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QvZ3BZPm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f8vbRf1r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709240378; x=1740776378;
+  t=1709240951; x=1740776951;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=pzB9IxRRq+Rx+vVaEO+uogdqRWJOs+QMWQ8UmzsWilA=;
-  b=QvZ3BZPm0yTY4iudeF+ocBYn+MKChn+B6p3EJxrhc/kSfEIJvLQzgKsA
-   3FAoB04vz9m9OaBeP0/Vtq1apqNwKDgtbJCwwHNpHEhr03k3yQ6CSDh2x
-   5N9T5ohTX6LhKA3EYeF3m5m8XhGxv8DgITSEZ2ZZl9M7NHuz5yonR10Zh
-   WCXdRBckkiYHLM2a5cWp7T6TStT3FO6n9SaJEdre8lg38bdKcj+h5NN9+
-   5IbEM8LAfq6Tiwa0nQvXdVyfXWZ9husfoVl1TFYue4oU6U+XlCSVPXDXO
-   ckAMjoDeVmcKKxWDdSr7BY/72schtBJKGUswpMm+Td/739YFZ3Z5gNp7z
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="15186328"
+  bh=vI3JErcIXK8PkI3jc2jIkSRfvAVQ/YbU0r8nU36vXdA=;
+  b=f8vbRf1rszH2B0+Zi46r4K54MsoZOMtq3fOl7jnw8EP9gUs3FXM0YXUQ
+   9WvlOHfpV3cfQfehraXGAhpmGcnIEdiqd9pjYPLSSGkJDrsB1iT6OsdK3
+   Y+spqIHcm5fwjJgnVc5WdyKeVGfVTv4oH9tkxsBQvPWmg6ERPbX8zwLj+
+   sKlq0Yoiy+lybeu4Fm2VM9MAMjkNJVekaIN6Zi185IU7VuVskTbB+owds
+   ICZbioBhGZSmlR3qWk8O2xh+dvTlTPfMNpbdZXunizffAcql7/f6KzWSC
+   Vjyrh3Sjk4i5o10PILa7QLDThaA9V/NCHSvac7K+9eGj2qNM+ZaWt1Ioz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3865398"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="15186328"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:59:37 -0800
+   d="scan'208";a="3865398"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:09:08 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="8007119"
+   d="scan'208";a="8341044"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:59:37 -0800
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:09:04 -0800
 Received: from [10.212.85.217] (kliang2-mobl1.ccr.corp.intel.com [10.212.85.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 4AB3B580D37;
-	Thu, 29 Feb 2024 12:59:33 -0800 (PST)
-Message-ID: <28bc7ea0-ff3e-48a5-a8b3-20cc52728a5f@linux.intel.com>
-Date: Thu, 29 Feb 2024 15:59:31 -0500
+	by linux.intel.com (Postfix) with ESMTPS id A8308580D37;
+	Thu, 29 Feb 2024 13:09:01 -0800 (PST)
+Message-ID: <f2e34072-542a-4055-b8fd-20171e6783a1@linux.intel.com>
+Date: Thu, 29 Feb 2024 16:09:00 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,8 +53,9 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 01/20] perf jevents: Add RAPL metrics for all Intel
+Subject: Re: [PATCH v1 03/20] perf jevents: Add smi metric group for Intel
  models
+Content-Language: en-US
 To: Ian Rogers <irogers@google.com>, Perry Taylor <perry.taylor@intel.com>,
  Samantha Alt <samantha.alt@intel.com>,
  Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang
@@ -69,94 +70,67 @@ To: Ian Rogers <irogers@google.com>, Perry Taylor <perry.taylor@intel.com>,
  James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 References: <20240229001806.4158429-1-irogers@google.com>
- <20240229001806.4158429-2-irogers@google.com>
-Content-Language: en-US
+ <20240229001806.4158429-4-irogers@google.com>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240229001806.4158429-2-irogers@google.com>
+In-Reply-To: <20240229001806.4158429-4-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 2024-02-28 7:17 p.m., Ian Rogers wrote:
-> Add a 'cpu_power' metric group that computes the power consumption
-> from RAPL events if they are present.
+> Allow duplicated metric to be dropped from json files.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/pmu-events/intel_metrics.py | 45 ++++++++++++++++++++++++--
->  1 file changed, 42 insertions(+), 3 deletions(-)
+>  tools/perf/pmu-events/intel_metrics.py | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
 > diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-> index 4fbb31c9eccd..5827f555005f 100755
+> index 46866a25b166..20c25d142f24 100755
 > --- a/tools/perf/pmu-events/intel_metrics.py
 > +++ b/tools/perf/pmu-events/intel_metrics.py
-> @@ -1,9 +1,10 @@
->  #!/usr/bin/env python3
+> @@ -2,7 +2,7 @@
 >  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> -from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
-> -                    MetricGroup)
-> +from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
-> +                    LoadEvents, Metric, MetricGroup, Select)
+>  from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
+>                      JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
+> -                    MetricGroup, Select)
+> +                    MetricGroup, MetricRef, Select)
 >  import argparse
 >  import json
-> +import math
->  import os
+>  import math
+> @@ -62,9 +62,25 @@ def Rapl() -> MetricGroup:
+>                       description="Processor socket power consumption estimates")
 >  
->  parser = argparse.ArgumentParser(description="Intel perf json generator")
-> @@ -14,7 +15,45 @@ args = parser.parse_args()
->  directory = f"{os.path.dirname(os.path.realpath(__file__))}/arch/x86/{args.model}/"
->  LoadEvents(directory)
 >  
-> -all_metrics = MetricGroup("",[])
-> +interval_sec = Event("duration_time")
-> +
-> +def Rapl() -> MetricGroup:
-> +  """Processor socket power consumption estimate.
-> +
-> +  Use events from the running average power limit (RAPL) driver.
-> +  """
-> +  # Watts = joules/second
-> +  pkg = Event("power/energy\-pkg/")
-> +  cond_pkg = Select(pkg, has_event(pkg), math.nan)
-> +  cores = Event("power/energy\-cores/")
-> +  cond_cores = Select(cores, has_event(cores), math.nan)
-> +  ram = Event("power/energy\-ram/")
-> +  cond_ram = Select(ram, has_event(ram), math.nan)
-> +  gpu = Event("power/energy\-gpu/")
-> +  cond_gpu = Select(gpu, has_event(gpu), math.nan)
-> +  psys = Event("power/energy\-psys/")
-> +  cond_psys = Select(psys, has_event(psys), math.nan)
-> +  scale = 2.3283064365386962890625e-10
-> +  metrics = [
-> +      Metric("cpu_power_pkg", "",
-> +             d_ratio(cond_pkg * scale, interval_sec), "Watts"),
-> +      Metric("cpu_power_cores", "",
-> +             d_ratio(cond_cores * scale, interval_sec), "Watts"),
-> +      Metric("cpu_power_ram", "",
-> +             d_ratio(cond_ram * scale, interval_sec), "Watts"),
-> +      Metric("cpu_power_gpu", "",
-> +             d_ratio(cond_gpu * scale, interval_sec), "Watts"),
-> +      Metric("cpu_power_psys", "",
-> +             d_ratio(cond_psys * scale, interval_sec), "Watts"),
-> +  ]
-> +
-> +  return MetricGroup("cpu_power", metrics,
-> +                     description="Processor socket power consumption estimates")
+> +def Smi() -> MetricGroup:
+> +    aperf = Event('msr/aperf/')
 
-As far as I know, the RAPL counters are to monitor energy consumption
-across different domains. The scope may not always be a socket. I think
-the description may brings confusions.
-Maybe we just call it "RAPL power consumption estimates", or "Running
-Average Power Limit (RAPL) power consumption estimates".
+There are CPUID enumeration for the aperf and mperf. I believe they
+should be always available for a newer bare metal. But they may not be
+enumerated in an virtualization env. Should we add a has_event() check
+before using it?
 
 Thanks,
 Kan
+
+> +    cycles = Event('cycles')
+> +    smi_num = Event('msr/smi/')
+> +    smi_cycles = Select((aperf - cycles) / aperf, smi_num > 0, 0)
+> +    return MetricGroup('smi', [
+> +        Metric('smi_num', 'Number of SMI interrupts.',
+> +               smi_num, 'SMI#'),
+> +        # Note, the smi_cycles "Event" is really a reference to the metric.
+> +        Metric('smi_cycles',
+> +               'Percentage of cycles spent in System Management Interrupts.',
+> +               smi_cycles, '100%', threshold=(MetricRef('smi_cycles') > 0.10))
+> +    ])
 > +
 > +
-> +all_metrics = MetricGroup("", [
-> +    Rapl(),
-> +])
+>  all_metrics = MetricGroup("", [
+>      Idle(),
+>      Rapl(),
+> +    Smi(),
+>  ])
 >  
 >  if args.metricgroups:
->    print(JsonEncodeMetricGroupDescriptions(all_metrics))
