@@ -1,155 +1,261 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2063.outbound.protection.outlook.com [40.107.20.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CE267A1F;
-	Thu, 29 Feb 2024 10:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709202630; cv=fail; b=dwTk/kHoO84WISQjA35xMcyZumRLS8gNi/Yui5iEKmg9Eo/zU4b+cRb53hmwrg/VXec5W0HlWwVJ5i59Xj4KDBujfIThM2H7VdAcWkbacBSKKRbZtflbj7snU9aRcd37keA9OrpJ+jIrBBbBEd+5f3SrWSSAYB2q5ZFHqE/bygA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709202630; c=relaxed/simple;
-	bh=k88Ue6TeyheEKxlu53GHnX4Bz5XEViz0Va/+xqoo57U=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eY5kib+BufsihPoD9tT9ZbUyTBAAGrZ+kGJcc/xLcj+NGGgHmGpD78UOAmFZ0huSP1a8qxC8nW3mDbVJOzKY4yIwdNjAEL5oBuhpr7eDqekDg4yn/g5gqXAduCFEN6LFDL1K+gmCCUOKMBgCtl3CWd4TM8UP6qybgGus2sS8HXY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=pMVAd7yB; arc=fail smtp.client-ip=40.107.20.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pMVAd7yB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Aj/RdzpZgnXLH79sQDpkMG4AczfhAV5XqHRX0zdr9fAHo7C2jyqvmaepxPSpu5A05NjkxLpQft1ySBB+jEM4qBuWIqISnJQciE3nFPRFNUhtVKap26+q5TooW8hvMeslCWoBUmw5ld6t23asxeEd751a2Sd8SdUhlU2Bif082J7DCrd+4svgpC1ac6lEtcc19dkPJGVfRg3hg47EDFZIAFgeVbGKuAjJfaRQpGgCyPSnAQOzqDs4nJAsfeEGPSA4mMd2rEegAWxvpA+dtzH7O9LcBVEwVIuvxaoMtSV24Po77DkMKL7q/89gSnpbih+zhKnQOvzis15CNFXUbbS+tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k88Ue6TeyheEKxlu53GHnX4Bz5XEViz0Va/+xqoo57U=;
- b=SQ8RndkAZNLdrs+4vI/SYAInoBDwRTjMO1ynR8AGInKHz51rm+nYNUE+dM3X8u/Jey8HWFF7aMDx5xrQcDahKBk5tOznHcNbtrhiKOJnA71SPdAUllPc9cra5YQhKYJYQZXYSX0ogRecErLmF51SJRw9oaPnjeCzbhPnBatEGd6Y3Kl4Hl0Eo19yP3DOqN93SkWr1b6Gw4wM0nTmfYrMQFeSnGgpLQ8pvxrlgBfcSVbJ7iOKuc3keFj/SrMq+pc5P0uxKJ0/bWEkuhkViI6DiO3/ynfuvshJouPkK/CArqRWbKOOZBsB1CMmbTa2+D1C/pcIR/5u9cge94rJMcg9Zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k88Ue6TeyheEKxlu53GHnX4Bz5XEViz0Va/+xqoo57U=;
- b=pMVAd7yBTUdqqHaxgnAaKy9HiJJymZCX5pewMbTR8qp7tGgh45YE3YF5CPNGbdXf9naWzw730jZ6q8YfB1fLzrl0jR8xt17PWYrUhqcPag6B5nFdlD205+33PAvBmPRo1cSaU78LPksYxsxDXaHQQzNNB3lkg6PYYr3iakIkNXM=
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
- by AS4PR04MB9361.eurprd04.prod.outlook.com (2603:10a6:20b:4e6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
- 2024 10:30:25 +0000
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::d45f:4483:c11:68b0]) by DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::d45f:4483:c11:68b0%7]) with mapi id 15.20.7316.039; Thu, 29 Feb 2024
- 10:30:25 +0000
-From: Xu Yang <xu.yang_2@nxp.com>
-To: Will Deacon <will@kernel.org>
-CC: Frank Li <frank.li@nxp.com>, "mark.rutland@arm.com"
-	<mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "shawnguo@kernel.org"
-	<shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com"
-	<festevam@gmail.com>, "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org"
-	<namhyung@kernel.org>, "irogers@google.com" <irogers@google.com>,
-	dl-linux-imx <linux-imx@nxp.com>, "mike.leach@linaro.org"
-	<mike.leach@linaro.org>, "leo.yan@linaro.org" <leo.yan@linaro.org>,
-	"peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "imx@lists.linux.dev"
-	<imx@lists.linux.dev>
-Subject: RE: [EXT] Re: [PATCH v4 6/6] perf vendor events arm64:: Add i.MX95
- DDR Performane Monitor metrics
-Thread-Topic: [EXT] Re: [PATCH v4 6/6] perf vendor events arm64:: Add i.MX95
- DDR Performane Monitor metrics
-Thread-Index: AQHaVAmpfH+wU+TeN02q4eZ9P4uLMrEWbGKAgArf/wA=
-Date: Thu, 29 Feb 2024 10:30:25 +0000
-Message-ID:
- <DU2PR04MB882237E2A26F535348F5090F8C5F2@DU2PR04MB8822.eurprd04.prod.outlook.com>
-References: <20240131055811.3035741-1-xu.yang_2@nxp.com>
- <20240131055811.3035741-6-xu.yang_2@nxp.com>
- <20240222122533.GE8308@willie-the-truck>
-In-Reply-To: <20240222122533.GE8308@willie-the-truck>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU2PR04MB8822:EE_|AS4PR04MB9361:EE_
-x-ms-office365-filtering-correlation-id: fcf7c31a-5477-414e-1802-08dc39117151
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- JsH8uvxLLwQODPwcdlXvsnV+/rR5u4u31Ai0mnO6Oomv4QKQTdLUCXa/ahc8RKJQ3iJC1HJmdHxBrwLhYKq9Fp82n4/FAZTw7OSor5g5irqLvyugOpq2P1uhGHyOXds0CLQBCEeJTixzVrwHkX19k16kkasfygWB5Gjr2DE5I3Bm2G9ilxxYhI0nnqOZLUUpdAOa9jGDMGELZT+Wl3EEJwp8r5LnWEiW7B178VG+daceCyCR3N1hTifyzpO2wBbCEd/01PlAlp4G09uIWbOtzExQeBtUSmm5zmLez0dqWZumV8Pl3zRY11AxkY18G6fypQthPk3QXJfP07Dld7v/kjtVVO0w4BJCG8Qx/9s7YRJi4p0tWEYoQ7xFRzIVOV2mPZ/UmZxerLgpNi4EzbPZY+BCwamU9NeguS/QYgBTTHfn7i8RfsT4589jEOVQlzHDo7BsKfAsynqhIdvoxVB8YE3aI43e3B/Xz1m8ZL4+GBxQE27VlON7oCLfT/pGBkhmABa0ksZYMznuPGU+8/Zt4bzGdOSVzVvvGXYM5YeIYh2HP0Bw4uyfC1flaOeg4d6Q1oHwjEJ2dzfROde2/erFAiboEj3r207fRW5HE+YuZXulTpE68nzxf8xzLdm+0JD4bdTEkHMrdT4z1h3mFMfzTTRUqYIsfiMDXfD5uzY2lRj89P3sjYwJlV2d5EyEwAbo0f9jWSqgu0SFnMLu7go32lluuQIA1Fc0TD/WteWEoa4=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?SIASYxbS4jSeV526RYgbeDNq+pSDpxzhE3K3TAOatYeqPiPJMPQDLRUFPeSh?=
- =?us-ascii?Q?6NqXveW7W2caIXqXD53zUriJ0Rlsjw6Ug4gLmNJOlPWlUhWLqeBLyT8Ym9Gs?=
- =?us-ascii?Q?nY8sZ/iuQXUjd0CfxaMbNPFIUAOpKgwqFTR2gI7ay67HzBkx7m5sCHPBz9Qx?=
- =?us-ascii?Q?7Ifi/mMTUGGhWwAtcgKfcDB+oDJ4KE6oyPzH0LewX0gxgZxb98j0u8yyWV5I?=
- =?us-ascii?Q?T/sAWZ3xtj+mfQy6YOv4ehFPr2cQKR9UjGMPorwh+SgdrhOCsxmYeClxBeIg?=
- =?us-ascii?Q?R4Mn/TPSEX3eu1uMB7gxIxebXHnsVr7JCRYYdW37wcJdsjfFCbqzOny9yGY4?=
- =?us-ascii?Q?CWvN2dfrb6mbx5MOTGWJLeri4qOxxgJBVeGpwmUT8azb+2zcQXICDqTRHamS?=
- =?us-ascii?Q?D/SkWtoXMXwpC3o2H3IAKRM6M6soj4EsZiYFq2zYzrrYf4igomaqQkRkdywk?=
- =?us-ascii?Q?iHt8LqTa5rUvdrzDlBacnF0cpHKc3cgydd+ILO4emiq5IQONIoEvTedEpLWO?=
- =?us-ascii?Q?uy98whPQmegAAMXa/Szxp9b8USZqBY0FGC/HnTzv4mWAMzxOdjE51o1HU/79?=
- =?us-ascii?Q?8RPSo0aLOFuKZTJy6BnmzAFqkOHNoEfhZMcms7gm2+M2wgEWs/NAJU+94xSm?=
- =?us-ascii?Q?dIfVki7NqsfMwPocaspJ3bRk8H+C+SXb5bTLq4rJJZV530JqaNXBn4YGZpwU?=
- =?us-ascii?Q?oRRZbC6kthgRTjIBty9A/jTHZ6sJGH/GwKeDyYwB777UR1sHZUYx/YcnBoaz?=
- =?us-ascii?Q?RSM3UsQWyV+3IyZjzOTtdTOiFNO2uwR9nmF4OtvBSbVUXfy25YsSw/SfblJE?=
- =?us-ascii?Q?tzj4EKL6yLwz5HJmd5GoK4rDrKL0Bq7VyYG0pyk3W6Ty/hG/kp3lk6fm4dYk?=
- =?us-ascii?Q?WfVGFDOUhRsalT5xvia7r7ByASDRrdKrJEg/CwWrz5h0WZmC/VeVqr5Jqlkq?=
- =?us-ascii?Q?OIUVNaQhwzZDy90lt7aPCd5mNSfD3yYHXgh5b1/wiZxYkZyvMZdMzIDWUlGO?=
- =?us-ascii?Q?NCvcfbtnt73C1+hyGmpKt1QChWEgtqw93SoLobjgj0P1/MvXs54EDbhZDVQo?=
- =?us-ascii?Q?kD5eRYbdr0X0J2G2ILpPv72CstJUr7z+ZazAsqI8b4BWpDzdZGgjBvGCNHJT?=
- =?us-ascii?Q?mZSuDGcp9YQK3x7vhEDM26ulamFrl+W3xoOuw1uLIBurIAUX02Tbqhv5nXe2?=
- =?us-ascii?Q?wfHc3QzHodCu+/Nb2QechmDq+suFm802X5CJv0a8volLWY5DHqo+WJd5lYCT?=
- =?us-ascii?Q?dSF5fsY73xWchzzbJhSzGAKBpz76SZ4uRrm4DDDXdH0FORch7UNabpxXPWuy?=
- =?us-ascii?Q?p7y+D54YeLTfZarybhZi7Fp2TxBVe+Xx3M/Nv/JdogguiLC8ApItsF1avkXh?=
- =?us-ascii?Q?EPF5I2bzPtNuVvmuecqjlFkgN2A/ab3EkuPCme3ydlZzsa0EmxDyuPhWAvaf?=
- =?us-ascii?Q?I5U08GNekRN01oykbfby85hpD6V+j6sRqTdZPDkyPKJ9fGJRc3qtsfWtWbHA?=
- =?us-ascii?Q?C2+dYpVYkq+f2mQ44UbnTrLolLQ6itHO6H1nR2vZNzV6sv8AJ429kpN90U1t?=
- =?us-ascii?Q?DmfPO9f4w71YmtmQvCY=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C29C7CF25;
+	Thu, 29 Feb 2024 11:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709207116; cv=none; b=i0iLVfr672bHpI2WBLhrZ+pPB6vn3B03DfvaxM3gMBDSmw91fFYIJpnuX1M90u8lw9YUE3uCNhh29cpqlp6/Xxxfovmz9C64NI7iXo2Gn6O064DmQE2FUIpSqx9xebVZdfuxuIsMCz9dirpDDqrtCCR6xk+4I8ajke8hbRrfEXQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709207116; c=relaxed/simple;
+	bh=nd/b2uYlCb8E5dfzti2/q6XqGYbwdWariXVO650ml4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=acJKjzf+ha6EeRk02y9gEkhctrK5njZxfcJJ9qzRTJhiZ4MqLcSWJyoIw74ySxdnM44Ooto8EntGUzFCAGhJ+iMoEGQSZFV6ndtMRUNjKWjXBdXWY76lxze1+iqoyyzU4O0MkuM/6T/HOLBL2nLXsT3chuHG7c1KooYWfbBTIfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77A24150C;
+	Thu, 29 Feb 2024 03:45:51 -0800 (PST)
+Received: from [10.57.50.133] (unknown [10.57.50.133])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19A5E3F762;
+	Thu, 29 Feb 2024 03:45:09 -0800 (PST)
+Message-ID: <62e64ddd-266c-414e-b66a-8ca94f3c2bbf@arm.com>
+Date: Thu, 29 Feb 2024 11:45:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcf7c31a-5477-414e-1802-08dc39117151
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2024 10:30:25.7529
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WahJIwrTHT/tAdsOH0QzDjCid0Me/j8xma+neQKmknH31ICtXMQ8b7bGpmE8ymPHdmMqb4BOtSkbm2kRGOA6uA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9361
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V16 2/8] KVM: arm64: Prevent guest accesses into BRBE
+ system registers/instructions
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
+ James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-3-anshuman.khandual@arm.com>
+ <ZdYCUi9YVDNDz7fr@FVFF77S0Q05N>
+ <ab50e67e-3d06-4ba7-a5f8-4684e9ef98a4@arm.com>
+ <Zd2zy0oUk8XvoDJM@FVFF77S0Q05N>
+ <b134c30d-d855-41bb-a260-9f6437b77697@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <b134c30d-d855-41bb-a260-9f6437b77697@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 27/02/2024 11:13, Anshuman Khandual wrote:
+> 
+> 
+> On 2/27/24 15:34, Mark Rutland wrote:
+>> On Fri, Feb 23, 2024 at 12:58:48PM +0530, Anshuman Khandual wrote:
+>>>
+>>>
+>>> On 2/21/24 19:31, Mark Rutland wrote:
+>>>> On Thu, Jan 25, 2024 at 03:11:13PM +0530, Anshuman Khandual wrote:
+>>>>> Currently BRBE feature is not supported in a guest environment. This hides
+>>>>> BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field.
+>>>>
+>>>> Does that means that a guest can currently see BRBE advertised in the
+>>>> ID_AA64DFR0_EL1.BRB field, or is that hidden by the regular cpufeature code
+>>>> today?
+>>>
+>>> IIRC it is hidden, but will have to double check. When experimenting for BRBE
+>>> guest support enablement earlier, following changes were need for the feature
+>>> to be visible in ID_AA64DFR0_EL1.
+>>>
+>>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>>> index 646591c67e7a..f258568535a8 100644
+>>> --- a/arch/arm64/kernel/cpufeature.c
+>>> +++ b/arch/arm64/kernel/cpufeature.c
+>>> @@ -445,6 +445,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+>>>   };
+>>>   
+>>>   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+>>> +       S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_IMP),
+>>>          S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+>>>          ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+>>>          ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+>>>
+>>> Should we add the following entry - explicitly hiding BRBE from the guest
+>>> as a prerequisite patch ?
+
+This has nothing to do with the Guest visibility of the BRBE. This is
+specifically for host "userspace" (via MRS emulation).
+
+>>>
+>>> S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_NI)
+>>
+>> Is it visbile currently, or is it hidden currently?
+>>
+>> * If it is visible before this patch, that's a latent bug that we need to go
+>>    fix first, and that'll require more coordination.
+>>
+>> * If it is not visible before this patch, there's no problem in the code, but
+>>    the commit message needs to explicitly mention that's the case as the commit
+>>    message currently implies it is visible by only mentioning hiding it.
+>>
+>> ... so can you please double check as you suggested above? We should be able to
+>> explain why it is or is not visible today.
+> 
+> It is currently hidden i.e following code returns 1 in the host
+> but returns 0 inside the guest.
+> 
+> aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
+> brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
+> 
+> Hence - will update the commit message here as suggested.
+
+This is by virtue of the masking we do in the kvm/sysreg.c below.
+
+> 
+>>
+>> Mark.
+>>
+>>>>> This also blocks guest accesses into BRBE system registers and instructions
+>>>>> as if the underlying hardware never implemented FEAT_BRBE feature.
+>>>>>
+>>>>> Cc: Marc Zyngier <maz@kernel.org>
+>>>>> Cc: Oliver Upton <oliver.upton@linux.dev>
+>>>>> Cc: James Morse <james.morse@arm.com>
+>>>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>>> Cc: Will Deacon <will@kernel.org>
+>>>>> Cc: kvmarm@lists.linux.dev
+>>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>> ---
+>>>>> Changes in V16:
+>>>>>
+>>>>> - Added BRB_INF_SRC_TGT_EL1 macro for corresponding BRB_[INF|SRC|TGT] expansion
+>>>>>
+>>>>>   arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
+>>>>>   1 file changed, 56 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>>>>> index 30253bd19917..6a06dc2f0c06 100644
+>>>>> --- a/arch/arm64/kvm/sys_regs.c
+>>>>> +++ b/arch/arm64/kvm/sys_regs.c
+>>>>> @@ -1304,6 +1304,11 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+>>>>>   	return 0;
+>>>>>   }
+>>>>>   
+>>>>> +#define BRB_INF_SRC_TGT_EL1(n)					\
+>>>>> +	{ SYS_DESC(SYS_BRBINF##n##_EL1), undef_access },	\
+>>>>> +	{ SYS_DESC(SYS_BRBSRC##n##_EL1), undef_access },	\
+>>>>> +	{ SYS_DESC(SYS_BRBTGT##n##_EL1), undef_access }		\
+>>>>
+>>>> With the changes suggested on the previous patch, this would need to change to be:
+>>>>
+>>>> 	#define BRB_INF_SRC_TGT_EL1(n)					\
+>>>> 		{ SYS_DESC(SYS_BRBINF_EL1(n)), undef_access },	\
+>>>> 		{ SYS_DESC(SYS_BRBSRC_EL1(n)), undef_access },	\
+>>>> 		{ SYS_DESC(SYS_BRBTGT_EL1(n)), undef_access }	\
+>>>
+>>> Sure, already folded back in these above changes.
+>>>
+>>>>
+>>>>
+>>>> ... which would also be easier for backporting (if necessary), since those
+>>>> definitions have existed for a while.
+>>>>
+>>>> Otherwise (modulo Suzuki's comment about rebasing), this looks good to me.
+>>>
+>>> Okay.
+>>>
+>>>>
+>>>> Mark.
+>>>>
+>>>>>   /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
+>>>>>   #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
+>>>>>   	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
+>>>>> @@ -1707,6 +1712,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+>>>>>   	/* Hide SPE from guests */
+>>>>>   	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+>>>>>   
+>>>>> +	/* Hide BRBE from guests */
+>>>>> +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+>>>>> +
+
+This controls what the guest sees.
+
+Suzuki
 
 
->=20
-> On Wed, Jan 31, 2024 at 01:58:11PM +0800, Xu Yang wrote:
-> > Add JSON metrics for i.MX95 DDR Performane Monitor.
->=20
-> (nit: "Performane" =3D> "Performance" here and in the subject)
+>>>>>   	return val;
+>>>>>   }
+>>>>>   
+>>>>> @@ -2195,6 +2203,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>>>>>   	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
+>>>>>   	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
+>>>>>   	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
+>>>>> +	{ SYS_DESC(OP_BRB_IALL), undef_access },
+>>>>> +	{ SYS_DESC(OP_BRB_INJ), undef_access },
+>>>>>   
+>>>>>   	DBG_BCR_BVR_WCR_WVR_EL1(0),
+>>>>>   	DBG_BCR_BVR_WCR_WVR_EL1(1),
+>>>>> @@ -2225,6 +2235,52 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>>>>>   	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
+>>>>>   	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
+>>>>>   
+>>>>> +	/*
+>>>>> +	 * BRBE branch record sysreg address space is interleaved between
+>>>>> +	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
+>>>>> +	 */
+>>>>> +	BRB_INF_SRC_TGT_EL1(0),
+>>>>> +	BRB_INF_SRC_TGT_EL1(16),
+>>>>> +	BRB_INF_SRC_TGT_EL1(1),
+>>>>> +	BRB_INF_SRC_TGT_EL1(17),
+>>>>> +	BRB_INF_SRC_TGT_EL1(2),
+>>>>> +	BRB_INF_SRC_TGT_EL1(18),
+>>>>> +	BRB_INF_SRC_TGT_EL1(3),
+>>>>> +	BRB_INF_SRC_TGT_EL1(19),
+>>>>> +	BRB_INF_SRC_TGT_EL1(4),
+>>>>> +	BRB_INF_SRC_TGT_EL1(20),
+>>>>> +	BRB_INF_SRC_TGT_EL1(5),
+>>>>> +	BRB_INF_SRC_TGT_EL1(21),
+>>>>> +	BRB_INF_SRC_TGT_EL1(6),
+>>>>> +	BRB_INF_SRC_TGT_EL1(22),
+>>>>> +	BRB_INF_SRC_TGT_EL1(7),
+>>>>> +	BRB_INF_SRC_TGT_EL1(23),
+>>>>> +	BRB_INF_SRC_TGT_EL1(8),
+>>>>> +	BRB_INF_SRC_TGT_EL1(24),
+>>>>> +	BRB_INF_SRC_TGT_EL1(9),
+>>>>> +	BRB_INF_SRC_TGT_EL1(25),
+>>>>> +	BRB_INF_SRC_TGT_EL1(10),
+>>>>> +	BRB_INF_SRC_TGT_EL1(26),
+>>>>> +	BRB_INF_SRC_TGT_EL1(11),
+>>>>> +	BRB_INF_SRC_TGT_EL1(27),
+>>>>> +	BRB_INF_SRC_TGT_EL1(12),
+>>>>> +	BRB_INF_SRC_TGT_EL1(28),
+>>>>> +	BRB_INF_SRC_TGT_EL1(13),
+>>>>> +	BRB_INF_SRC_TGT_EL1(29),
+>>>>> +	BRB_INF_SRC_TGT_EL1(14),
+>>>>> +	BRB_INF_SRC_TGT_EL1(30),
+>>>>> +	BRB_INF_SRC_TGT_EL1(15),
+>>>>> +	BRB_INF_SRC_TGT_EL1(31),
+>>>>> +
+>>>>> +	/* Remaining BRBE sysreg addresses space */
+>>>>> +	{ SYS_DESC(SYS_BRBCR_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBFCR_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBTS_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBINFINJ_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBSRCINJ_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBTGTINJ_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBIDR0_EL1), undef_access },
+>>>>> +
+>>>>>   	{ SYS_DESC(SYS_MDCCSR_EL0), trap_raz_wi },
+>>>>>   	{ SYS_DESC(SYS_DBGDTR_EL0), trap_raz_wi },
+>>>>>   	// DBGDTR[TR]X_EL0 share the same encoding
+>>>>> -- 
+>>>>> 2.25.1
+>>>>>
+> 
 
-Okay.
-
-Thanks,
-Xu Yang
-
->=20
-> Will
