@@ -1,84 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3109224D7
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 07:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7584F44391
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 07:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709190133; cv=none; b=qkIV/uVZIQXTRcEWLZP1HcMteBDJDd3DNK8iDBJQvQOqUORqPTY4rW0AXNxnxia+Fz4yjVzvHfkMNH0XbioRGV4txSRoYHzv9aHRQM5rnnlEc44k9tULvT0ifd2bn7edQSBMlbHw601s3zfurfByIInKjFdt/YcndU12QUefA0o=
+	t=1709190484; cv=none; b=RBU9MLPwf1dZ84vP73pyiXmH7K6kcaUwK9H+63Pa30XpkHnteUzf1Uw8ZD9YASx73rURCI5ZVRuvtZTXO/2surXmMOxJnl+5jwAGizD6uK+8WhpMiMXH1evqnnYf5NYiETr7Ny1UBwuv5ZuzBFb4fPPeUS5bjm17aR1IB704a8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709190133; c=relaxed/simple;
-	bh=wAVrFempWlg01MMi4r/5oignXr3XFhvoi0WWNMt/nyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TyJTbms8431G9Tz117ypHxeTClMCvQU6ryFv71dv11S4zoNsXOxc30tBMzcEzX2OYh8BvCFeGKHPIisLC1+1edIZFP8DWdPT1EYR27uAprP06jon6bwbbppwScYOXwSwld4NN7bsyvTDbJQzBYhZbkB9rWXzG8rfuY0dmnn9k94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QybLjQGK; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709190484; c=relaxed/simple;
+	bh=X5CjbOavFTdLCWMYm3y2Rv94aMC10AjSMyqm+ipd/P8=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=IOtj9hMTZi+LHRdm2ErhwgFPFWoza4TtacobaSxQjRNBbY4eTGIniBnisu1g7hTMWP59y3wYgobrt2Aoh4cQSitZyDQJAU337OXQQcW5btnklVMA+mcPL8Jv9qa3PNKALNHA18zNmvvl2oDhOuqCZqqbap5njkWOGX1lS70A5Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WQpY1uoc; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QybLjQGK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709190132; x=1740726132;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wAVrFempWlg01MMi4r/5oignXr3XFhvoi0WWNMt/nyI=;
-  b=QybLjQGKyl5mbILt3Fp6bpQ8CqUbLrjEARiyVP7A6dgX/ewGswdkrE/w
-   MQ9xPyrsmbWp+vHVlzaH4vgFT2tWqaEIkH0pNIYmray8UBto7+Bc5Vx5Q
-   QjP1M54zTjYCAApNMjS52d/y52ABhb40Z0XiQHJZbtrFEsexC5/V+3CHd
-   MFNg/KUCmJ8oI90r3O6+/4mOA1otBsvqHPHjqlxeG5XQ2AOVZ55w7oWoW
-   YhvSVs99LVKRZIA7rnd1i+NBdrN+/aWDFPlYLUb2389L84XJ5U+Lxsw4B
-   SDXR/4CKbuDdSCpDXcNhaJMuRUEvvv2PNhMCs+UBHBwb436uA++lwueI+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3563340"
-X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
-   d="scan'208";a="3563340"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 23:02:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
-   d="scan'208";a="12411729"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.103])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 23:02:09 -0800
-Message-ID: <9cc8cb50-fb42-4eea-bd23-e03e9a0f9205@intel.com>
-Date: Thu, 29 Feb 2024 09:02:05 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WQpY1uoc"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5ee22efe5eeso11509537b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Feb 2024 23:08:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709190481; x=1709795281; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=I9FoM/+qtTmDdR7edVTU9MewkXhRm/JQfAPMWm3w7Gg=;
+        b=WQpY1uoc8zh+vi6uC4OG/1bW4Kydx4kh7+FPWfy3sRpqNLYYZb3M0LdLsC7JASRaHy
+         WzUDDXsWUp+23DVBqRWYCaqmTaROfKPy1LE04RORSWVVfpydPX98D6L761xi8Qb+Atm0
+         Bdna1pUGoRCq6ob01hcwafC7j0uO6uTPUTdFBgIKfs4KZQb5g8fBNUdz/2mEpqF2tZkM
+         CaMrvFtwVStA0sxdG6AFMkt/yb/cUMV5hUWJQ5uwZgqEON5LpZzLhOlfSoP92q1gFnSB
+         nmK9JCZgs5n1yxWIu2xPLUCB8YZao0/LVJYhzu23qeIzyt5wmtndOk/hEPu+5XBHhL0C
+         LC3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709190481; x=1709795281;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I9FoM/+qtTmDdR7edVTU9MewkXhRm/JQfAPMWm3w7Gg=;
+        b=fuwKFbmsBvRZwbaoHy3TczzL5whc2PLecc+gZ5/HGo+uNimYuNedZ6/v2VrKJw7lMu
+         jdCw4i3K5XNQxPN771aBj3wOIpEDCZCKARJNqnUackiWl4UTivVb4Pcmy9J/dx9EkkRQ
+         kPXoEyFgQaLi52zjMfIRTuT+svw+nySn1YoMvDReaX9NB6M7BpL4nJVO4oEeHDAj3GiN
+         SxmBczmqzCzHc7ovLXaGMPcCAl+ruwWfUrSbGwMApG5ZQ9P2kp6/VkVKBvOhRdeHsCAe
+         EdD6c73JoNnMM6J7N2MPRGLMSMdV32rj/t4wBbYkHkQ9BQP6iCuTMtJ+q7grG39eXivU
+         6Zew==
+X-Forwarded-Encrypted: i=1; AJvYcCW3RnwX9vUd/JS/kU/3gGWg8+DjF129QaunWmv5G6hfj+kDty7YAbdQZs7+GE4xQ9jyM5WoF8yG8TdMLaXcZ+6IR1c/57WYYNzwRylJjkwe6A==
+X-Gm-Message-State: AOJu0YwYIq5DH3U/5X8JO/3CRLIvOOvE5xwmNzK0WB3HWdAfEoPYvhD9
+	jAw9J36e/tOjVa3kIgXfp4wqGgNm5yrYW0zzX1+Y6EnKAV5fNUAuhfe4FMvtEk1sT/qT1UxJ39K
+	vPwyqXA==
+X-Google-Smtp-Source: AGHT+IHlWorP4oTbxmh83gtnKSvh7NkNEGALjj7s+rjwojJPkv5tQUt0pKnr8V8DWymJkJUnd6ZyQfNtuDj9
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:77dc:144c:334e:e2dd])
+ (user=irogers job=sendgmr) by 2002:a25:aaec:0:b0:dcc:8927:7496 with SMTP id
+ t99-20020a25aaec000000b00dcc89277496mr56690ybi.5.1709190481547; Wed, 28 Feb
+ 2024 23:08:01 -0800 (PST)
+Date: Wed, 28 Feb 2024 23:07:57 -0800
+Message-Id: <20240229070757.796244-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf, capstone: Support 32bit code under 64bit OS
-To: Andi Kleen <ak@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, changbin.du@huawei.com
-References: <20240227234806.82694-1-ak@linux.intel.com>
- <7ca41f7f-28b2-4f3c-8c04-1dba110d3135@intel.com> <Zd_CHC8NOW5Ig7SE@tassilo>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <Zd_CHC8NOW5Ig7SE@tassilo>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v1] libperf evlist: Avoid out-of-bounds access
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 29/02/24 01:30, Andi Kleen wrote:
->>> +	bool is64bit = machine__is(machine, "x86_64");
->>> +	struct dso *dso;
->>> +
->>> +	addr_location__init(&al);
->>> +	if (thread__find_map(thread, sample->cpumode, sample->ip, &al) &&
->>> +		(dso = map__dso(al.map)) != NULL &&
->>> +		(dso->data.status != DSO_DATA_STATUS_ERROR)) {
->>> +		map__load(al.map);
->>> +		is64bit = dso->is_64_bit;
->>> +	}
->>> +	addr_location__exit(&al);
->>
->> Maybe 'al' could be passed down through perf_sample__fprintf_insn()
->>
-> 
-> These are different addresses -- one is for the IP and the other is for
-> the immediate. It seems cleaner to support separate ones.
+Parallel testing appears to show a race between allocating and setting
+evsel ids. As there is a bounds check on the xyarray it yields a segv
+like:
 
-They are both sample->ip
+```
+AddressSanitizer:DEADLYSIGNAL
+
+=================================================================
+
+==484408==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000010
+
+==484408==The signal is caused by a WRITE memory access.
+
+==484408==Hint: address points to the zero page.
+
+    #0 0x55cef5d4eff4 in perf_evlist__id_hash tools/lib/perf/evlist.c:256
+    #1 0x55cef5d4f132 in perf_evlist__id_add tools/lib/perf/evlist.c:274
+    #2 0x55cef5d4f545 in perf_evlist__id_add_fd tools/lib/perf/evlist.c:315
+    #3 0x55cef5a1923f in store_evsel_ids util/evsel.c:3130
+    #4 0x55cef5a19400 in evsel__store_ids util/evsel.c:3147
+    #5 0x55cef5888204 in __run_perf_stat tools/perf/builtin-stat.c:832
+    #6 0x55cef5888c06 in run_perf_stat tools/perf/builtin-stat.c:960
+    #7 0x55cef58932db in cmd_stat tools/perf/builtin-stat.c:2878
+...
+```
+
+Avoid this crash by early exiting the perf_evlist__id_add_fd and
+perf_evlist__id_add is the access is out-of-bounds.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/perf/evlist.c                  | 18 ++++++++++++------
+ tools/lib/perf/include/internal/evlist.h |  4 ++--
+ 2 files changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index 058e3ff10f9b..c6d67fc9e57e 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -248,10 +248,10 @@ u64 perf_evlist__read_format(struct perf_evlist *evlist)
+ 
+ static void perf_evlist__id_hash(struct perf_evlist *evlist,
+ 				 struct perf_evsel *evsel,
+-				 int cpu, int thread, u64 id)
++				 int cpu_map_idx, int thread, u64 id)
+ {
+ 	int hash;
+-	struct perf_sample_id *sid = SID(evsel, cpu, thread);
++	struct perf_sample_id *sid = SID(evsel, cpu_map_idx, thread);
+ 
+ 	sid->id = id;
+ 	sid->evsel = evsel;
+@@ -269,21 +269,27 @@ void perf_evlist__reset_id_hash(struct perf_evlist *evlist)
+ 
+ void perf_evlist__id_add(struct perf_evlist *evlist,
+ 			 struct perf_evsel *evsel,
+-			 int cpu, int thread, u64 id)
++			 int cpu_map_idx, int thread, u64 id)
+ {
+-	perf_evlist__id_hash(evlist, evsel, cpu, thread, id);
++	if (!SID(evsel, cpu_map_idx, thread))
++		return;
++
++	perf_evlist__id_hash(evlist, evsel, cpu_map_idx, thread, id);
+ 	evsel->id[evsel->ids++] = id;
+ }
+ 
+ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+ 			   struct perf_evsel *evsel,
+-			   int cpu, int thread, int fd)
++			   int cpu_map_idx, int thread, int fd)
+ {
+ 	u64 read_data[4] = { 0, };
+ 	int id_idx = 1; /* The first entry is the counter value */
+ 	u64 id;
+ 	int ret;
+ 
++	if (!SID(evsel, cpu_map_idx, thread))
++		return -1;
++
+ 	ret = ioctl(fd, PERF_EVENT_IOC_ID, &id);
+ 	if (!ret)
+ 		goto add;
+@@ -312,7 +318,7 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+ 	id = read_data[id_idx];
+ 
+ add:
+-	perf_evlist__id_add(evlist, evsel, cpu, thread, id);
++	perf_evlist__id_add(evlist, evsel, cpu_map_idx, thread, id);
+ 	return 0;
+ }
+ 
+diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
+index d86ffe8ed483..f43bdb9b6227 100644
+--- a/tools/lib/perf/include/internal/evlist.h
++++ b/tools/lib/perf/include/internal/evlist.h
+@@ -126,11 +126,11 @@ u64 perf_evlist__read_format(struct perf_evlist *evlist);
+ 
+ void perf_evlist__id_add(struct perf_evlist *evlist,
+ 			 struct perf_evsel *evsel,
+-			 int cpu, int thread, u64 id);
++			 int cpu_map_idx, int thread, u64 id);
+ 
+ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+ 			   struct perf_evsel *evsel,
+-			   int cpu, int thread, int fd);
++			   int cpu_map_idx, int thread, int fd);
+ 
+ void perf_evlist__reset_id_hash(struct perf_evlist *evlist);
+ 
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
