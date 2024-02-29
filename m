@@ -1,51 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67328143724;
-	Thu, 29 Feb 2024 21:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9310116FF31;
+	Thu, 29 Feb 2024 21:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709240953; cv=none; b=rrgHH70a8tTGEvasTO/7sH7tY9S+pE8WYXAhu6/vKkAaf3kFgfm2cg0V5Qgsx/pR9GKjW0ckPdAIthEb/gn6MAdAwjyZSFkIIFQasLMGEjwzl0CZT367S+SdEJAmmMhYAuXy+CIDw/yOszFqF8ET5d1gU/bwRofSmf1N00mVnlA=
+	t=1709241359; cv=none; b=d+2QyKKMV4m8riG3SCPZ+c80c4ZGh89bot8WivgkXwMrt6aLyL2UozbQWdnbBBYsJgU3zPi8UNPWakkJKdvRk8qP/jx618pWI3nBXAjZBHjMbuWYtWWA8SxI7ngiT3/VVmdsk3U8UZ8ZdCY9ZmsonwzEILswwcisQ3jh8A962CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709240953; c=relaxed/simple;
-	bh=vI3JErcIXK8PkI3jc2jIkSRfvAVQ/YbU0r8nU36vXdA=;
+	s=arc-20240116; t=1709241359; c=relaxed/simple;
+	bh=xOxDegQasEklfMTwb0uGHJaYs+H/kBKUxdhMsGU3IZ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZU67VgxNNKHB/U9+pNuide+2jqEe9K/e9c8FqgPJo025qR9eIyIDQi2CoLKPcIwqedV1ZY14g6KZc144DGGLP1Ij7EyMpgXMVtFxdaIJ4VFGA0+Qha5WoSF3Cb8F0Hl+5HnCFAqc/ph6AMwMtfRHCgtwgW6hk08JAG72RgC8qNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f8vbRf1r; arc=none smtp.client-ip=198.175.65.16
+	 In-Reply-To:Content-Type; b=EbkRhaPic9U5kUwCA3xrx5duHUzYiQ0yE6R5cZxspYvdbHew4M1eny4pC0kCgoIC8hBE+yIntmORlpRwXATTxJgAc6RV7z3K0/s2h6eaHQmRnFsC5Ul+ENQthOGG0vQmdJKzu7rNh+mnDKWTUaGWs4yXze+PnLvC0/M75d1wK4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JxnxiymL; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f8vbRf1r"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JxnxiymL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709240951; x=1740776951;
+  t=1709241358; x=1740777358;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=vI3JErcIXK8PkI3jc2jIkSRfvAVQ/YbU0r8nU36vXdA=;
-  b=f8vbRf1rszH2B0+Zi46r4K54MsoZOMtq3fOl7jnw8EP9gUs3FXM0YXUQ
-   9WvlOHfpV3cfQfehraXGAhpmGcnIEdiqd9pjYPLSSGkJDrsB1iT6OsdK3
-   Y+spqIHcm5fwjJgnVc5WdyKeVGfVTv4oH9tkxsBQvPWmg6ERPbX8zwLj+
-   sKlq0Yoiy+lybeu4Fm2VM9MAMjkNJVekaIN6Zi185IU7VuVskTbB+owds
-   ICZbioBhGZSmlR3qWk8O2xh+dvTlTPfMNpbdZXunizffAcql7/f6KzWSC
-   Vjyrh3Sjk4i5o10PILa7QLDThaA9V/NCHSvac7K+9eGj2qNM+ZaWt1Ioz
+  bh=xOxDegQasEklfMTwb0uGHJaYs+H/kBKUxdhMsGU3IZ8=;
+  b=JxnxiymLfJowhP2WLR+xVw+9vy39ULxCWEEOPhjS2GjHzyWwob/qvrPF
+   Evg7WbzZBsZiQmxRL78M0FuDlGk52kxLcssBxcwFEklCb5QOCs7GtL562
+   a35MsBMig504/BeyBuO11gInMYlUUWOM0xV3rhcnxrA+eZo2uy+hO9UAX
+   sS8s3QthXPD1m9upCqt9PoEugmtUe37JEL5xOjxxlSPOI9v64PrngkPec
+   LuPwcZ7peiO7BoFrHlv9Gw2Z9Cd6BSX9fPMR/BJh/ac9EXvW1CwoY2gLx
+   yJX6oL9Pqbugrisp/YGizNyw2vUWU7jRXq0JXmwAKdWC+bbSd3ibyUqEI
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3865398"
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3634344"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="3865398"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:09:08 -0800
+   d="scan'208";a="3634344"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:15:56 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="8341044"
+   d="scan'208";a="38803997"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:09:04 -0800
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:15:56 -0800
 Received: from [10.212.85.217] (kliang2-mobl1.ccr.corp.intel.com [10.212.85.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id A8308580D37;
-	Thu, 29 Feb 2024 13:09:01 -0800 (PST)
-Message-ID: <f2e34072-542a-4055-b8fd-20171e6783a1@linux.intel.com>
-Date: Thu, 29 Feb 2024 16:09:00 -0500
+	by linux.intel.com (Postfix) with ESMTPS id 46342580D37;
+	Thu, 29 Feb 2024 13:15:53 -0800 (PST)
+Message-ID: <7aa2d2a2-b8f9-478f-9699-7b717d38a8ab@linux.intel.com>
+Date: Thu, 29 Feb 2024 16:15:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/20] perf jevents: Add smi metric group for Intel
+Subject: Re: [PATCH v1 04/20] perf jevents: Add tsx metric group for Intel
  models
 Content-Language: en-US
 To: Ian Rogers <irogers@google.com>, Perry Taylor <perry.taylor@intel.com>,
@@ -70,9 +70,9 @@ To: Ian Rogers <irogers@google.com>, Perry Taylor <perry.taylor@intel.com>,
  James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 References: <20240229001806.4158429-1-irogers@google.com>
- <20240229001806.4158429-4-irogers@google.com>
+ <20240229001806.4158429-5-irogers@google.com>
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240229001806.4158429-4-irogers@google.com>
+In-Reply-To: <20240229001806.4158429-5-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -83,54 +83,92 @@ On 2024-02-28 7:17 p.m., Ian Rogers wrote:
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/pmu-events/intel_metrics.py | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+>  tools/perf/pmu-events/intel_metrics.py | 51 ++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 > 
 > diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-> index 46866a25b166..20c25d142f24 100755
+> index 20c25d142f24..1096accea2aa 100755
 > --- a/tools/perf/pmu-events/intel_metrics.py
 > +++ b/tools/perf/pmu-events/intel_metrics.py
-> @@ -2,7 +2,7 @@
->  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
->  from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
->                      JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
-> -                    MetricGroup, Select)
-> +                    MetricGroup, MetricRef, Select)
->  import argparse
+> @@ -7,6 +7,7 @@ import argparse
 >  import json
 >  import math
-> @@ -62,9 +62,25 @@ def Rapl() -> MetricGroup:
->                       description="Processor socket power consumption estimates")
+>  import os
+> +from typing import Optional
+>  
+>  parser = argparse.ArgumentParser(description="Intel perf json generator")
+>  parser.add_argument("-metricgroups", help="Generate metricgroups data", action='store_true')
+> @@ -77,10 +78,60 @@ def Smi() -> MetricGroup:
+>      ])
 >  
 >  
-> +def Smi() -> MetricGroup:
-> +    aperf = Event('msr/aperf/')
+> +def Tsx() -> Optional[MetricGroup]:
+> +    if args.model not in [
+> +        'alderlake',
+> +        'cascadelakex',
+> +        'icelake',
+> +        'icelakex',
+> +        'rocketlake',
+> +        'sapphirerapids',
+> +        'skylake',
+> +        'skylakex',
+> +        'tigerlake',> +    ]:
 
-There are CPUID enumeration for the aperf and mperf. I believe they
-should be always available for a newer bare metal. But they may not be
-enumerated in an virtualization env. Should we add a has_event() check
-before using it?
+Can we get ride of the model list? Otherwise, we have to keep updating
+the list.
+
+> +        return None
+> +> +    pmu = "cpu_core" if args.model == "alderlake" else "cpu"
+
+Is it possible to change the check to the existence of the "cpu" PMU
+here? has_pmu("cpu") ? "cpu" : "cpu_core"
+
+> +    cycles = Event('cycles')
+> +    cycles_in_tx = Event(f'{pmu}/cycles\-t/')
+> +    transaction_start = Event(f'{pmu}/tx\-start/')
+> +    cycles_in_tx_cp = Event(f'{pmu}/cycles\-ct/')
+> +    metrics = [
+> +        Metric('tsx_transactional_cycles',
+> +                      'Percentage of cycles within a transaction region.',
+> +                      Select(cycles_in_tx / cycles, has_event(cycles_in_tx), 0),
+> +                      '100%'),
+> +        Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted transactions.',
+> +                      Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / cycles,
+> +                                    has_event(cycles_in_tx),
+> +                                    0),
+> +                      '100%'),
+> +        Metric('tsx_cycles_per_transaction',
+> +                      'Number of cycles within a transaction divided by the number of transactions.',
+> +                      Select(cycles_in_tx / transaction_start,
+> +                                    has_event(cycles_in_tx),
+> +                                    0),
+> +                      "cycles / transaction"),
+> +    ]
+> +    if args.model != 'sapphirerapids':
+
+Add the "tsx_cycles_per_elision" metric only if
+has_event(f'{pmu}/el\-start/')?
 
 Thanks,
 Kan
 
-> +    cycles = Event('cycles')
-> +    smi_num = Event('msr/smi/')
-> +    smi_cycles = Select((aperf - cycles) / aperf, smi_num > 0, 0)
-> +    return MetricGroup('smi', [
-> +        Metric('smi_num', 'Number of SMI interrupts.',
-> +               smi_num, 'SMI#'),
-> +        # Note, the smi_cycles "Event" is really a reference to the metric.
-> +        Metric('smi_cycles',
-> +               'Percentage of cycles spent in System Management Interrupts.',
-> +               smi_cycles, '100%', threshold=(MetricRef('smi_cycles') > 0.10))
-> +    ])
+> +        elision_start = Event(f'{pmu}/el\-start/')
+> +        metrics += [
+> +            Metric('tsx_cycles_per_elision',
+> +                          'Number of cycles within a transaction divided by the number of elisions.',
+> +                          Select(cycles_in_tx / elision_start,
+> +                                        has_event(elision_start),
+> +                                        0),
+> +                          "cycles / elision"),
+> +        ]
+> +    return MetricGroup('transaction', metrics)
 > +
 > +
 >  all_metrics = MetricGroup("", [
 >      Idle(),
 >      Rapl(),
-> +    Smi(),
+>      Smi(),
+> +    Tsx(),
 >  ])
 >  
 >  if args.metricgroups:
