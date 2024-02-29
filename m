@@ -1,123 +1,186 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2346CBE3;
-	Thu, 29 Feb 2024 17:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139707828D;
+	Thu, 29 Feb 2024 18:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709227414; cv=none; b=iNuRKnT3UMwr+ok7g2Eohd9MdoOBurkC8BPpJlP4KiWbhZC8qQ912x5QgjEk0doZk+2UrpRYlJsFlKNGFBfJiQKd/vHq4JkBTcUKR9+pVyjPwHhwyfQTeJyMNOOL52eDxH9a2hy9EUD7VQm0vAxQC7AHtmk0hfnrleUqPQYRRHM=
+	t=1709232059; cv=none; b=l/y5ovLxuLvAhI14G6C5M0zUTvKgrHpEaeKMpCJiq3eDJBExvfMAFwUZqAOsTMgKlwyAaJaCl/tSiAYJbeRYgjW9BCZFqlWzEXO1qtgwzHz+aGZHFjaJlMygQUc6/AzVdXo4mquxZkTlUb+IBuDRJMb/TNTilpSJR1Y8QnIfqHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709227414; c=relaxed/simple;
-	bh=Oa4oT6c0wAHeOFyXLWOIs7ozD28bcI/Oq64bMT9EcJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TG5cYO5CM3NG3YBdGKwn10eay458B6+92wDCoATpbC1W4iCdM01YKKPNZLq9yU3utJ3vlPf/1NaVMg06r5Bs3iW0h6sGz+76UXuYyig1oQ00o0n5eE0rtZbZaPx+31UNbUE8HGjQ1TWqaRInfTAsNd4RfSuiIDyRLHJ5Sb3zP+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=athSDJtJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709232059; c=relaxed/simple;
+	bh=XOIwSKahWpPR9jGAWZnUuaG5OHH6sWJYuNj9i3WFYso=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S7uQqUJVScrQzx2qfpkpen3z3OFduL19my/oxwL80+9yt13pUXTA9AqvrYWr0zYQp+2K81ShkjG9xszAJGYLBqQ6m6zYBfOITkhzXo7hJvx91Uz5XwBDvw19BtNkPdF8Ozr1J5XV9Gc9ThVpu4ew+R/BCgGXnnpiJOD4c34ejI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4C0qKd/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="athSDJtJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4454EC433F1;
-	Thu, 29 Feb 2024 17:23:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4C0qKd/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B3F5C433C7;
+	Thu, 29 Feb 2024 18:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709227413;
-	bh=Oa4oT6c0wAHeOFyXLWOIs7ozD28bcI/Oq64bMT9EcJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=athSDJtJ8RuUu8fWSuuZtAHY+/s0ZdAujGSirhTSKDm+/GWp0C+aiudrumr6R8IRH
-	 tJN50ftZC/WUuPg26zLc3h6Pc+G6RYFagSlXWAK3lAzeZJD+qagCSAXYkMyz+q9Vvj
-	 Uqga1oiRlU9mhAsyCUVN9P5l8tuDd3u8fEKwYzO3OiM2bNStw1X+dW2lHQUPmRL3SR
-	 FkshneKh+/a1QToNkyGGsMo1Lsnr3hwR9zo2Top0LbKDRo8WMPow+45nOIJa5vdcLE
-	 4JKLfW96OOZpjYISfpxvrs7evO4dizAdNswCQiWnSRpOAAu20olEl7tIWDXWkgYJFw
-	 baswQ2+HSwgZQ==
-Date: Thu, 29 Feb 2024 14:23:30 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	s=k20201202; t=1709232058;
+	bh=XOIwSKahWpPR9jGAWZnUuaG5OHH6sWJYuNj9i3WFYso=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Z4C0qKd/Rb41/Yaf+xCj37agyrwn3r1ddkExRoiOTQQ1rOv6K0esta8w4jH7PujD+
+	 kD7/qP8No/C/78+0smVm9IZtu4d/jrk7LEqvuhyFtMxBc3j0LJtbp0URAThI+keGei
+	 qks/8U5YbqWJsiittU3E6aFngNaeGWrH/DmfvXcvuQjZSKoYhQxx9U49A0Gkb/15KR
+	 j9sQH34m8e6nV3/YFkW66ccdvDbTCUuikr9q5EpBgPuov6ncnUJDohVrx0fTvIKk01
+	 sVVwxjS5r90wPV2vfn4N5Gn1d3uC8zTkPgkNbpWl1EoFhHIEm+KMpBrfUVqBbnH6QE
+	 aw4KV5QlkVDCA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rflKx-0088Cq-QW;
+	Thu, 29 Feb 2024 18:40:56 +0000
+Date: Thu, 29 Feb 2024 18:40:54 +0000
+Message-ID: <8634tb2jwp.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2] perf lock contention: Account contending locks too
-Message-ID: <ZeC9ki-4SGa-iU0C@x1>
-References: <20240228053335.312776-1-namhyung@kernel.org>
- <Zd8lkcb5irCOY4-m@x1>
- <CAM9d7cicRtxCvMWu4pk6kdZAqT2pt3erpzL4_Jdt1pKLLYoFgQ@mail.gmail.com>
- <Zd-UmcqV0mbrKnd0@x1>
- <CAM9d7cg-M_8V0O2rv_gx+1u=axpRmCp4XcBkkqsiGmDgeU2xZw@mail.gmail.com>
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in nVHE guests
+In-Reply-To: <20240125094119.2542332-6-anshuman.khandual@arm.com>
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+	<20240125094119.2542332-6-anshuman.khandual@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cg-M_8V0O2rv_gx+1u=axpRmCp4XcBkkqsiGmDgeU2xZw@mail.gmail.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Feb 28, 2024 at 01:19:12PM -0800, Namhyung Kim wrote:
-> On Wed, Feb 28, 2024 at 12:16 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > On Wed, Feb 28, 2024 at 12:01:55PM -0800, Namhyung Kim wrote:
-> > > On Wed, Feb 28, 2024 at 4:22 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > On Tue, Feb 27, 2024 at 09:33:35PM -0800, Namhyung Kim wrote:
-> > > > > Currently it accounts the contention using delta between timestamps in
-> > > > > lock:contention_begin and lock:contention_end tracepoints.  But it means
-> > > > > the lock should see the both events during the monitoring period.
-
-> > > > > Actually there are 4 cases that happen with the monitoring:
-
-> > > > >                 monitoring period
-> > > > >             /                       \
-> > > > >             |                       |
-> > > > >  1:  B------+-----------------------+--------E
-> > > > >  2:    B----+-------------E         |
-> > > > >  3:         |           B-----------+----E
-> > > > >  4:         |     B-------------E   |
-> > > > >             |                       |
-> > > > >             t0                      t1
-
-> > > > > where B and E mean contention BEGIN and END, respectively.  So it only
-> > > > > accounts the case 4 for now.  It seems there's no way to handle the case
-> > > > > 1.  The case 2 might be handled if it saved the timestamp (t0), but it
-> > > > > lacks the information from the B notably the flags which shows the lock
-> > > > > types.  Also it could be a nested lock which it currently ignores.  So
-> > > > > I think we should ignore the case 2.
-
-> > > > Perhaps have a separate output listing locks that were found to be with
-> > > > at least tE - t0 time, with perhaps a backtrace at that END time?
-
-> > > Do you mean long contentions in case 3?  I'm not sure what do
-> > > you mean by tE, but they started after t0 so cannot be greater
-
-> > case 2
-
-> >                 monitoring period
-> >             /                       \
-> >             |                       |
-> >  2:    B----+-------------E         |
-> >             |             |         |
-> >             t0            tE        t1
-> >
-> > We get a notification for event E, right? We don´t have one for B,
-> > because it happened before we were monitoring.
+On Thu, 25 Jan 2024 09:41:16 +0000,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 > 
-> Ah, ok.  But there should be too many events in case 2 and
-> I don't think users want to see them all.  And they don't have
+> Disable the BRBE before we enter the guest, saving the status and enable it
+> back once we get out of the guest. This avoids capturing branch records in
+> the guest kernel or userspace, which would be confusing the host samples.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Changes in V16:
+> 
+> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
+> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
+>   element, and dropped the previous dependency on Jame's coresight series
+> 
+>  arch/arm64/include/asm/kvm_host.h  |  5 ++++-
+>  arch/arm64/kvm/debug.c             |  5 +++++
+>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
+>  3 files changed, 42 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 21c57b812569..bce8792092af 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
+>  	u8 cflags;
+>  
+>  	/* Input flags to the hypervisor code, potentially cleared after use */
+> -	u8 iflags;
+> +	u16 iflags;
+>  
+>  	/* State flags for kernel bookkeeping, unused by the hypervisor code */
+>  	u8 sflags;
+> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
+>  		u64 pmscr_el1;
+>  		/* Self-hosted trace */
+>  		u64 trfcr_el1;
+> +		u64 brbcr_el1;
+>  	} host_debug_state;
+>  
+>  	/* VGIC state */
+> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
+>  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
+>  /* vcpu running in HYP context */
+>  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
+> +/* Save BRBE context if active  */
+> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(8))
+>  
+>  /* SVE enabled for host EL0 */
+>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+> index 8725291cb00a..99f85d8acbf3 100644
+> --- a/arch/arm64/kvm/debug.c
+> +++ b/arch/arm64/kvm/debug.c
+> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
+>  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> +
+> +	/* Check if we have BRBE implemented and available at the host */
+> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
+> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+>  
+>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>  {
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> index 4558c02eb352..79bcf0fb1326 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
+>  	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
+>  }
+>  
+> +static void __debug_save_brbe(u64 *brbcr_el1)
+> +{
+> +	*brbcr_el1 = 0;
+> +
+> +	/* Check if the BRBE is enabled */
+> +	if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+> +		return;
+> +
+> +	/*
+> +	 * Prohibit branch record generation while we are in guest.
+> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
+> +	 * modify the filtering set by the host.
+> +	 */
+> +	*brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
+> +	write_sysreg_s(0, SYS_BRBCR_EL1);
 
-So maybe a summary, something like:
+As for TRFCR and PMSCR, this is broken on hVHE.
 
-  N locks that were locked before this session started have been
-  released, no further info besides this histogram of in-session
-  durations:
+Please see [1]
 
-    0-N units of time: ++
-  N+1-M units of time: ++++
-    ...
+	M.
 
-> flags.  But maybe we can update the flag when it sees exactly
-> the same callstack later.
+[1] https://lore.kernel.org/r/20240229145417.3606279-1-maz@kernel.org
 
-  The callstack, if going all the way to userspace may have the workload
-targeted in the command line ( some pid, tid, CPU, etc) and thus would
-point for things the user probably is interested than some other lock
-that may affect it but indirectly.
-
-- Arnaldo
+-- 
+Without deviation from the norm, progress is not possible.
