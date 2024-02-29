@@ -1,192 +1,160 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD5D6D501;
-	Thu, 29 Feb 2024 21:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520EF16FF46;
+	Thu, 29 Feb 2024 21:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709243170; cv=none; b=CRLHDx17/EG9DPIC7ZFBee7fu4JxQVgUlOsvqZloDoBNu1esKRT6mdc+xpwtolBhlaLIPV5/TTjjvlWG4px7CR/HL2AV4VLSE1RB55bzb10zG04YQKPv0r+t4jTOmLflQBSgj9XE63sIXhzlLQjUtqHyVEpihleVAf3qduazwaM=
+	t=1709243614; cv=none; b=VbhZuKQjLdQLpj1lTUplml4yLYb7N9z7wxSXYBrMW1XFs2ijQLMk6rz4j5Akl6sbQP0U6YTiMTYQDj0zhHFBweVZR1jeGmM+D8HrMIOQ9ly//8UG6tY7REyfDXElRQl7jzQ0E3TO+Z1ffae5R4gN6OGagwhu7urhm/ZNRSykX/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709243170; c=relaxed/simple;
-	bh=TBV7p/A9ZyHEDsiJkjjc53X01jTLQ40txA1U2ZF54Pw=;
+	s=arc-20240116; t=1709243614; c=relaxed/simple;
+	bh=POqv0h1t39Wybcz3NApqo2vEL4LbOvoTJUL75VTqPzc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kXcp5jQxaLq1BVzhdPfDRMHPjWzCRI+zt3xenP7ZrTreLNqd/mIUZElmGEK4oM0vPyK77ZpPTJTF4PJiPYi7KlaEKSEffhy5dL1sxdytxjZwbYE18K/o+UflQOIsMas7UJ+/aamedWAFBrtho0aDD03cwPXLzRTCLmlIG+qVyfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
+	 To:Cc:Content-Type; b=ZkRZLRrxRMbf8pBUB57CTlU0UdlWP4ye6YODUbu1XpwkIqopzOB+B4YwbksL/w2nwTTkmBVyMr45KWjHWxda3ug0AMF5bXeHJT/oOzujldLCtM2J2KV77uv7ZUPNRh1Yyt2e9xtBkIX94H6QfvyB02F4P2kmMrSIrd7IC3uLjGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29a2d0f69a6so1041715a91.3;
-        Thu, 29 Feb 2024 13:46:08 -0800 (PST)
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5d8b519e438so1278691a12.1;
+        Thu, 29 Feb 2024 13:53:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709243168; x=1709847968;
+        d=1e100.net; s=20230601; t=1709243612; x=1709848412;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FfW4L51998L0TyuxV9PTpRygcmWU5mrA12noE0Cj0WQ=;
-        b=nnSVOxOasuLmjL0znTZC7O6FpZmc76Wv1XzGfF48dCIdspys0erA5ku7X4i+vyESgR
-         z3CsV+rC2KgAnGh73d8QbC9Uu5YPLqT5M9Zx6c+uXCeKdCU7zh5dHUReFbzY8H+lCSiG
-         AK7qSf+SvQLdiwT2PdeRJy2PLT1R8XQi3jy5f3/uLtAEBIzGHb7aa45/oSu9ERkuydKZ
-         93DggwuqsHwNr3FzOsVlAH3W67qNWvuHtsJzA9DWTYc8GuTFWmMXuYA1HKSdEhHpSOuN
-         onuH+bSiLdJSd4Da6glP6Bb9ZlEacJaljM5orMfNGpvdz5tWIuJ7Y2A9bxYhGpo0pR8b
-         36+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWrbEpxXCSPO7yVidpUgrUfadT9eYzor+K2BN4GjtukWmkWUFD2XaY5juo0hbNKslDPdVvrP0I4Q2zetQzDhf+Fa5ID3JIbw9+BJ+bR9E1GANCcl5/P1gwx/kua7tAw+gqTlx4qzdSUpK+Jm2EgiQ==
-X-Gm-Message-State: AOJu0Yy/HRkGHpJOk6ENK2LwNkyUG+NmZCLE9E6SBkaBTnpUDQ3bQB10
-	8Qljc27Xy2uJJI20fRSMITqsmsDXmUvwtvlWZF8YMZnymAvl1L2c5boqMY8ayElhs53Uz9HJGuH
-	TVAKXVAUBaQutKyJOPy9vOEIcBbA=
-X-Google-Smtp-Source: AGHT+IGQQY+PNZqNy5SmeBd/wFkrNpFy/J39DvnWrygEt+Xrua7aIMppiLuKjugwfCdpUZ2aa1hJchliX0OOFCfzEDw=
-X-Received: by 2002:a17:90a:3d05:b0:29b:f79:2b75 with SMTP id
- h5-20020a17090a3d0500b0029b0f792b75mr346296pjc.7.1709243167868; Thu, 29 Feb
- 2024 13:46:07 -0800 (PST)
+        bh=haUJa+5TdcS6m1vT9CvX3WylWRv8eifDwIPUXf2O2d4=;
+        b=Do1ObdRP8QG+kkhUk6dkmaevdkREhUKq2DqKlKm+XYu1P8MxdNoF5GJWrgLYgaV5c/
+         Et1rU50JVnU7WT/dz2gYTsp+NYXIqWnUOtlXWEu9pe1trWEM5Z5b6Mo6aAt9lB2yBz3z
+         PaF7RnvOFUSWBo4PEIE/5Uxh4mzkorqTDFZpfcivto/y3IZxNsoewhZ5FOXVhv1fWx7b
+         tTnP1exq6BAmEzNjVP1HQ0jOe6axJIBM4OK8rVIDeo1aGVXlX2v6OXULAgmp9NjMMldz
+         wRMJV+R8bU3XTrgfrP/ZNINbxcrxkr3yFunDM4WTIX0QkZeYssc7tRFPYIU0GBuseb8Z
+         Ss1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXhGNq8JE5E4wjdLrmyLleWnpGNeVLF0XWB5SJ5QWQfADvVnJFced4I9DaVZTw2zVJTLuI+FsG/eUdvMWnh32Z58TPnysg/weSIBdrZJT5bHPWNIu/xTyHLZ9FFoUKlBKoevO8uw3ccXKfTfGq6ELpj4rDbZ/20bT2v2Rpmkn43wAyl7Q==
+X-Gm-Message-State: AOJu0YxpSYA9Ml7qGYhnsc0VNyBRtqCc5ZHgcH/PC+b07Zs/wCqZ+vY5
+	vJLMKMCL2vf78JlH2tPsPkzBJt02S7tDuwkQZI2kWZn5c8auVTqHgrt4sdjQsqQGlne4kTG1ASP
+	cChquKwRFwl/kzW2AsM/yavUojuaWuzvZ
+X-Google-Smtp-Source: AGHT+IFBSRvQ+r0EXa9q2GBrMWhn0LzDwgGCDrMn25SAlWV3W/po7XZ7pjMbxhZRxGVyf5m/1cmFj6Vee7TppEkoLO4=
+X-Received: by 2002:a17:902:a70c:b0:1dc:a844:a38b with SMTP id
+ w12-20020a170902a70c00b001dca844a38bmr3162774plq.67.1709243612496; Thu, 29
+ Feb 2024 13:53:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229070757.796244-1-irogers@google.com>
-In-Reply-To: <20240229070757.796244-1-irogers@google.com>
+References: <20240228053335.312776-1-namhyung@kernel.org> <Zd8lkcb5irCOY4-m@x1>
+ <CAM9d7cicRtxCvMWu4pk6kdZAqT2pt3erpzL4_Jdt1pKLLYoFgQ@mail.gmail.com>
+ <Zd-UmcqV0mbrKnd0@x1> <CAM9d7cg-M_8V0O2rv_gx+1u=axpRmCp4XcBkkqsiGmDgeU2xZw@mail.gmail.com>
+ <ZeC9ki-4SGa-iU0C@x1>
+In-Reply-To: <ZeC9ki-4SGa-iU0C@x1>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 29 Feb 2024 13:45:56 -0800
-Message-ID: <CAM9d7chNekmdJyPbOOzZVhR+cBWajscSg3pVFKN4A4evKwFXjg@mail.gmail.com>
-Subject: Re: [PATCH v1] libperf evlist: Avoid out-of-bounds access
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 29 Feb 2024 13:53:21 -0800
+Message-ID: <CAM9d7cgb+-treat5Mf_hitEjLDJH8B-RFZYoDxzaGXu0VbNr8A@mail.gmail.com>
+Subject: Re: [PATCH v2] perf lock contention: Account contending locks too
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 28, 2024 at 11:08=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+On Thu, Feb 29, 2024 at 9:23=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Parallel testing appears to show a race between allocating and setting
-> evsel ids. As there is a bounds check on the xyarray it yields a segv
-> like:
+> On Wed, Feb 28, 2024 at 01:19:12PM -0800, Namhyung Kim wrote:
+> > On Wed, Feb 28, 2024 at 12:16=E2=80=AFPM Arnaldo Carvalho de Melo <acme=
+@kernel.org> wrote:
+> > > On Wed, Feb 28, 2024 at 12:01:55PM -0800, Namhyung Kim wrote:
+> > > > On Wed, Feb 28, 2024 at 4:22=E2=80=AFAM Arnaldo Carvalho de Melo <a=
+cme@kernel.org> wrote:
+> > > > > On Tue, Feb 27, 2024 at 09:33:35PM -0800, Namhyung Kim wrote:
+> > > > > > Currently it accounts the contention using delta between timest=
+amps in
+> > > > > > lock:contention_begin and lock:contention_end tracepoints.  But=
+ it means
+> > > > > > the lock should see the both events during the monitoring perio=
+d.
 >
-> ```
-> AddressSanitizer:DEADLYSIGNAL
+> > > > > > Actually there are 4 cases that happen with the monitoring:
 >
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > > >                 monitoring period
+> > > > > >             /                       \
+> > > > > >             |                       |
+> > > > > >  1:  B------+-----------------------+--------E
+> > > > > >  2:    B----+-------------E         |
+> > > > > >  3:         |           B-----------+----E
+> > > > > >  4:         |     B-------------E   |
+> > > > > >             |                       |
+> > > > > >             t0                      t1
 >
-> =3D=3D484408=3D=3DERROR: AddressSanitizer: SEGV on unknown address 0x0000=
-00000010
+> > > > > > where B and E mean contention BEGIN and END, respectively.  So =
+it only
+> > > > > > accounts the case 4 for now.  It seems there's no way to handle=
+ the case
+> > > > > > 1.  The case 2 might be handled if it saved the timestamp (t0),=
+ but it
+> > > > > > lacks the information from the B notably the flags which shows =
+the lock
+> > > > > > types.  Also it could be a nested lock which it currently ignor=
+es.  So
+> > > > > > I think we should ignore the case 2.
 >
-> =3D=3D484408=3D=3DThe signal is caused by a WRITE memory access.
+> > > > > Perhaps have a separate output listing locks that were found to b=
+e with
+> > > > > at least tE - t0 time, with perhaps a backtrace at that END time?
 >
-> =3D=3D484408=3D=3DHint: address points to the zero page.
+> > > > Do you mean long contentions in case 3?  I'm not sure what do
+> > > > you mean by tE, but they started after t0 so cannot be greater
 >
->     #0 0x55cef5d4eff4 in perf_evlist__id_hash tools/lib/perf/evlist.c:256
->     #1 0x55cef5d4f132 in perf_evlist__id_add tools/lib/perf/evlist.c:274
->     #2 0x55cef5d4f545 in perf_evlist__id_add_fd tools/lib/perf/evlist.c:3=
-15
->     #3 0x55cef5a1923f in store_evsel_ids util/evsel.c:3130
->     #4 0x55cef5a19400 in evsel__store_ids util/evsel.c:3147
->     #5 0x55cef5888204 in __run_perf_stat tools/perf/builtin-stat.c:832
->     #6 0x55cef5888c06 in run_perf_stat tools/perf/builtin-stat.c:960
->     #7 0x55cef58932db in cmd_stat tools/perf/builtin-stat.c:2878
-> ...
-> ```
+> > > case 2
 >
-> Avoid this crash by early exiting the perf_evlist__id_add_fd and
-> perf_evlist__id_add is the access is out-of-bounds.
+> > >                 monitoring period
+> > >             /                       \
+> > >             |                       |
+> > >  2:    B----+-------------E         |
+> > >             |             |         |
+> > >             t0            tE        t1
+> > >
+> > > We get a notification for event E, right? We don=C2=B4t have one for =
+B,
+> > > because it happened before we were monitoring.
+> >
+> > Ah, ok.  But there should be too many events in case 2 and
+> > I don't think users want to see them all.  And they don't have
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> So maybe a summary, something like:
+>
+>   N locks that were locked before this session started have been
+>   released, no further info besides this histogram of in-session
+>   durations:
+>
+>     0-N units of time: ++
+>   N+1-M units of time: ++++
+>     ...
 
-While I'm ok with this change, the real fix would be changing
-evsel_store__ids() to use xyarray__max_{x,y} for fd instead
-of cpu and thread map numbers.
+Summary could work.  But I'm not sure about the histogram
+since different locks would have different behavior - spinlock
+vs. mutex/semaphore.  Maybe it's more meaningful when
+you have filters or separate histograms for each lock.
+
+
+>
+> > flags.  But maybe we can update the flag when it sees exactly
+> > the same callstack later.
+>
+>   The callstack, if going all the way to userspace may have the workload
+> targeted in the command line ( some pid, tid, CPU, etc) and thus would
+> point for things the user probably is interested than some other lock
+> that may affect it but indirectly.
+
+It doesn't collect user callstacks yet since it requires recording memory
+address space information of every process - basically FORK and MMAP.
+Maybe we can use callstacks with build-ID and offsets but it also requires
+mapping from build-ID to binary somewhere.
+
+Anyway, it's good to add more features to it.  Let me process this
+patch first and think about more later. :)
 
 Thanks,
 Namhyung
-
-> ---
->  tools/lib/perf/evlist.c                  | 18 ++++++++++++------
->  tools/lib/perf/include/internal/evlist.h |  4 ++--
->  2 files changed, 14 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 058e3ff10f9b..c6d67fc9e57e 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -248,10 +248,10 @@ u64 perf_evlist__read_format(struct perf_evlist *ev=
-list)
->
->  static void perf_evlist__id_hash(struct perf_evlist *evlist,
->                                  struct perf_evsel *evsel,
-> -                                int cpu, int thread, u64 id)
-> +                                int cpu_map_idx, int thread, u64 id)
->  {
->         int hash;
-> -       struct perf_sample_id *sid =3D SID(evsel, cpu, thread);
-> +       struct perf_sample_id *sid =3D SID(evsel, cpu_map_idx, thread);
->
->         sid->id =3D id;
->         sid->evsel =3D evsel;
-> @@ -269,21 +269,27 @@ void perf_evlist__reset_id_hash(struct perf_evlist =
-*evlist)
->
->  void perf_evlist__id_add(struct perf_evlist *evlist,
->                          struct perf_evsel *evsel,
-> -                        int cpu, int thread, u64 id)
-> +                        int cpu_map_idx, int thread, u64 id)
->  {
-> -       perf_evlist__id_hash(evlist, evsel, cpu, thread, id);
-> +       if (!SID(evsel, cpu_map_idx, thread))
-> +               return;
-> +
-> +       perf_evlist__id_hash(evlist, evsel, cpu_map_idx, thread, id);
->         evsel->id[evsel->ids++] =3D id;
->  }
->
->  int perf_evlist__id_add_fd(struct perf_evlist *evlist,
->                            struct perf_evsel *evsel,
-> -                          int cpu, int thread, int fd)
-> +                          int cpu_map_idx, int thread, int fd)
->  {
->         u64 read_data[4] =3D { 0, };
->         int id_idx =3D 1; /* The first entry is the counter value */
->         u64 id;
->         int ret;
->
-> +       if (!SID(evsel, cpu_map_idx, thread))
-> +               return -1;
-> +
->         ret =3D ioctl(fd, PERF_EVENT_IOC_ID, &id);
->         if (!ret)
->                 goto add;
-> @@ -312,7 +318,7 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist=
-,
->         id =3D read_data[id_idx];
->
->  add:
-> -       perf_evlist__id_add(evlist, evsel, cpu, thread, id);
-> +       perf_evlist__id_add(evlist, evsel, cpu_map_idx, thread, id);
->         return 0;
->  }
->
-> diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/in=
-clude/internal/evlist.h
-> index d86ffe8ed483..f43bdb9b6227 100644
-> --- a/tools/lib/perf/include/internal/evlist.h
-> +++ b/tools/lib/perf/include/internal/evlist.h
-> @@ -126,11 +126,11 @@ u64 perf_evlist__read_format(struct perf_evlist *ev=
-list);
->
->  void perf_evlist__id_add(struct perf_evlist *evlist,
->                          struct perf_evsel *evsel,
-> -                        int cpu, int thread, u64 id);
-> +                        int cpu_map_idx, int thread, u64 id);
->
->  int perf_evlist__id_add_fd(struct perf_evlist *evlist,
->                            struct perf_evsel *evsel,
-> -                          int cpu, int thread, int fd);
-> +                          int cpu_map_idx, int thread, int fd);
->
->  void perf_evlist__reset_id_hash(struct perf_evlist *evlist);
->
-> --
-> 2.44.0.278.ge034bb2e1d-goog
->
