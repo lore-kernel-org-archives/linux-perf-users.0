@@ -1,280 +1,327 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8842C54BFC;
-	Thu, 29 Feb 2024 08:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709196967; cv=none; b=akYYrDujQX/u1aB7hIVdANXWmzcoK27DaMzoq5uzSDiGwbpzdWKva6bteMP8pwYwYDlCt1X8CG4Q47v4P84z1RevNxyhrpVpWSfi1oxreFErs5YPklSbQ3tR+R7Dh7wj5ELEeV0Y8MQzgHhAr/DJTXd8IwPmEw8BWEjeSqBwJQg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709196967; c=relaxed/simple;
-	bh=kfnakJ2LhbIuc1MYqpnklalb+//KhlmKSZbOZPastVE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W2N21jVflCvDHmvBeauc9diA5iJL2v3ZdK1i43zkPb0yD5C7JKyZrGoDoQY7Im2A3cRbgSJp00YNGPsPI05fD8AlTwPbEPKM6qd3Ob/R2cvoXGT48xxnKyb4VlDyb2d0Z+lfLxkRRs7WDFELHj/N9lo8pIXK7TWFIoUjl/szhpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 460461FB;
-	Thu, 29 Feb 2024 00:56:43 -0800 (PST)
-Received: from [10.163.47.238] (unknown [10.163.47.238])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC5B73F6C4;
-	Thu, 29 Feb 2024 00:55:59 -0800 (PST)
-Message-ID: <feecbdd3-155a-4b95-8366-403637fd73d5@arm.com>
-Date: Thu, 29 Feb 2024 14:25:57 +0530
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2041.outbound.protection.outlook.com [40.107.249.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9B964AB6;
+	Thu, 29 Feb 2024 10:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709202429; cv=fail; b=HpF0BlAwy0ZZ9gf5X9mfNxdoCSH861WqST5gSFdsdl++b+SVVk7NKz0icUcLDbTBG11TwtmVYF559Q7gjXcAu4B5/YdoKELr/EpgMVkCe0AuVw8IZlCK+BYr7S/swzrKUQ4EjJr1FOBWyJ6BM5uJhPULwY0DntQj5KFALT0bihU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709202429; c=relaxed/simple;
+	bh=YTKAfTqQr4mehLGB32WNOnsj7fULVCUaqFcPdo7uP1I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tCU2BfMrWhcOAp7lpchfcVMgkSWNy26Cww43oqSZrjltRm2v8SCj5lUTzbBsEU7slv08LqivN9gWnUl2DB6yabSDTauyZX6aPjsS8+qGEcbh9iKuCPTbBOm7Uq31YO0nSp6myi3vwSrOe9D7XD+zR5fRhubSnC33Ya93kQbZAaM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=k2AxSKa0; arc=fail smtp.client-ip=40.107.249.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k2AxSKa0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fYu+5HF1gUVC9L0d3roV+6JoekQXxcTpasipFYQGXfPGQht5Hw4jnPVXsU7YXcCPupa6dfHfal7E2XvFLnhnK/euLkbufpzJL7h6qv/ShZedd+5/uBhh9UJ61EHejVzGIfEymv3h8qOTl6GbDpbg7Ds6ca7J/N7A4m+E1eyPlGBYBaNOzTAJFvAjISI2niuu6JAZwxSU0Nb1oZ+ALTiyxhEn+TjqkKhVDA4V+3Dp1vCyKZrgYaKk2F4xO7bKd3J4EgeDL7sdXttJEprP9zLTFTab8cT4BdmAf+lFqt6YuArRUqkYe7TMwolYSoU4oubn++wIEZLSZNbzQAA9Bqb//Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K50rJ63DeWNVIhulhbnKkIHiA0RFX4EfMikMJS8Jd4o=;
+ b=e/Lb/wMeE4o12Pix/y17MrhKg2eRHliinH1yYo73+RDISV+QcZbeZedaWEwQ7DKEpdG4ctro/Py1j0rHoHeFzqR+Mm1WzgNiTET17lUHDxg4IjXHIWK02Y2BNXk/c+BQyODH2+Meg+R8S8RIC/bjHX85R/hE8JWCC6aDpNAU9WV0aw4m/mOGW7vGqAzP8MlkRtgMWduqlhl0tbB7VSAJW0IfGxAuPs1IiHeAEKJj4AyWs601E4koL7IF2sH9DuEYXZxvHGZxxe7ETAkmfZt7CFIXOVvxUBFwpVRCVjEB+U63giYgzHHa3dc7IreYtt6ed5adWpGZZGnqqyLDtfQ7BQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K50rJ63DeWNVIhulhbnKkIHiA0RFX4EfMikMJS8Jd4o=;
+ b=k2AxSKa01+wV719Xo1QKFYA7edMm3BxXOYgYpRqalq6hkHzbhQoLxEK2kt3HDmwsh151Hi3PJSM5+mi1J3EbSkHgn+ySzcvjBu3Emxjv+y42a0/1ep+6NDvWDIiwtoa20cer4hllbKn5xIG+xxwForiHXrGhvJau8IfFcVd+Nx8=
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
+ by AS8PR04MB8360.eurprd04.prod.outlook.com (2603:10a6:20b:3f4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Thu, 29 Feb
+ 2024 10:27:04 +0000
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::d45f:4483:c11:68b0]) by DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::d45f:4483:c11:68b0%7]) with mapi id 15.20.7316.039; Thu, 29 Feb 2024
+ 10:27:03 +0000
+From: Xu Yang <xu.yang_2@nxp.com>
+To: Will Deacon <will@kernel.org>
+CC: Frank Li <frank.li@nxp.com>, "mark.rutland@arm.com"
+	<mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "shawnguo@kernel.org"
+	<shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com"
+	<festevam@gmail.com>, "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org"
+	<namhyung@kernel.org>, "irogers@google.com" <irogers@google.com>,
+	dl-linux-imx <linux-imx@nxp.com>, "mike.leach@linaro.org"
+	<mike.leach@linaro.org>, "leo.yan@linaro.org" <leo.yan@linaro.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
+	<mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>
+Subject: RE: [EXT] Re: [PATCH v4 3/6] perf: imx_perf: add support for i.MX95
+ platform
+Thread-Topic: [EXT] Re: [PATCH v4 3/6] perf: imx_perf: add support for i.MX95
+ platform
+Thread-Index: AQHaVAmbPv/9ruMYiUqsh+Jjk7/Y+7EWa6UAgArfnqA=
+Date: Thu, 29 Feb 2024 10:27:03 +0000
+Message-ID:
+ <DU2PR04MB882256B6BA4330F319CF61EB8C5F2@DU2PR04MB8822.eurprd04.prod.outlook.com>
+References: <20240131055811.3035741-1-xu.yang_2@nxp.com>
+ <20240131055811.3035741-3-xu.yang_2@nxp.com>
+ <20240222122253.GB8308@willie-the-truck>
+In-Reply-To: <20240222122253.GB8308@willie-the-truck>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU2PR04MB8822:EE_|AS8PR04MB8360:EE_
+x-ms-office365-filtering-correlation-id: ffa584d5-2f73-42ad-932f-08dc3910f8fd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ lF9chpMVz1OFgkw4Mfhd1KMt5xXooxdaBCubjdLLsiX7WSfXiSJemZgAKy3UqCm7rJfrPFbrnwhEwgObh9RkZJ+cZuLGD0VqEmeirJHMKPvL7C9jUJopLNjxl/mWheKhzozDfR6ri3BCZdv0BbhfjZqv94kMEaT3t+eJgDo0b/EzfAOcPi4GHf5tLcRSyMiCRmoSrJ+22r5P0htTB0zPEa800D8z10bLDV3+tH/VxcrDSMuuharmcxssikLCF6ANqnFGMQJIbtkMRSDvagl3zqCCP+/gpjbY/BI4VQRDOxDyursIbd2zR/3DVhm+ENIDScT39OIbLOagaGlUnNro0XmY7LX448c5Y35PxL1Sx29Ssynl7gAjWKje0XoLI5+dHCcu1i0gKS4AZE85OWCLpOf2eHa2IUo346yJe5NtvBjorK47wwPOkuKs32QcHplg86IFRVuTYtQW3wXosbVmuzgyRe1VXPNsfBb3TjJbteQEqpsuZKW3EO4NPRJGWNl4gTasd1KD6XwV5xh+Or1Xb40B4ff6jiV2qsEKwYJzHd7j3zm4oDQoxLwVEsysg9QtDEgDSvxMPg3UYxFENIpLXYQQE+nxZEEMAbBfykVMwxPJehHSUfsggwyXhsPhQkQfD9MFm6Hy7s3ElIl0xjQD/1ha6ST6CSJBqXdI/A8sgufFpGZCN3yekPbKYdMojg6M0txpIb9zKcC4C/wAz393IF1WDlgRTCh4H2SaV/vy2sk=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?rAxZKl5gEIYMigAO5R8iA6oJkQYZQCQ6uRX5hOCKoNaZpxdagGlEbKWE3efx?=
+ =?us-ascii?Q?CpP35a88O+gLK72DfCPGroYQyzT2NnpQOjD8hyZIwODaK9HjmB2/ui9K7XH9?=
+ =?us-ascii?Q?BpC9vfoEbREprxMM5dPDCBoKVDjuttqHXXOUhUrt6gUsLmSKWipPdHP/rIKh?=
+ =?us-ascii?Q?AKpQnJAi4xuFTPZ0XAwEpYbz/7mitm/NPSQs+guly9p13PMfCxBWS7M+DUh2?=
+ =?us-ascii?Q?guccJqrYgvVp3HhzWlmLcLdQiXZFpyfrNcIY1TB+SVsI9EDmkc6nswo70ZOQ?=
+ =?us-ascii?Q?YFg+66gqAnM0TozKAFHo+4aO8zzOTYJNj74LPaggK1XSiA+P5KgCkut9qLe8?=
+ =?us-ascii?Q?HowBwwg5qNYDDyWgpLw51PuUcxX93E3+rf4R69TpwQRhf9dzlJsp2Lc0nVvM?=
+ =?us-ascii?Q?G7DyWao9cXPXRBWMGDAovVWIejTD6/alx9+muC3d9/Pu5C4PuEF0mMf96FIf?=
+ =?us-ascii?Q?393xsz292KD46SP11OEo6BX6vPPbadktG1JxhU3Yr+G8SZV8O2yxsqCf+EnK?=
+ =?us-ascii?Q?6U3ZXzWZ1pWWQXq8p4llwKuzqUbq28rj72aWgztLo1UJ10CdEHEX0oXSKLMK?=
+ =?us-ascii?Q?hsgx8W1Vq85vOf6BJKS6fKMapHMRI9OowJTmKAZ5VEuv3RL0s9i9u6D/n8ju?=
+ =?us-ascii?Q?I+/gDjnXeMG1bKRsX63SunOhN7xSHKdzTz2cmHR3ieogNRQh5RHWLmAQSvt6?=
+ =?us-ascii?Q?1uzSm3ALafrFgUgKB9RZSOZAyHi7KiR4POx6wf/CRDEE2BCJYz8z5nxsOPOX?=
+ =?us-ascii?Q?2kars4z1p8hvoqIwe4DsBb/r2BkO0xHZripm5vkoT/JX4JRD/incwIY6SVCX?=
+ =?us-ascii?Q?iYXeqGCrRpjITvRvuT2xvf+aZ8T3RuwIaq6qSkatAi0EVmcgCi+wR7b5OJ+m?=
+ =?us-ascii?Q?Ltfi/6hhMz/+ro/4gmbIyLdIND9zOlUKlo0E+QMdgsM5AP9uRS2jS1qkOWNt?=
+ =?us-ascii?Q?B09z4KHd6WGCjHE9TLZPWvFPRIXRKgwhZswLDKg/Mrfn2huqKzTcbX4x6vj/?=
+ =?us-ascii?Q?NldXVPkU9lIcJkkyIQSaNon9aHTj3pOMombjfsV9zjv8k2UfPekXTnt40AtD?=
+ =?us-ascii?Q?WbYnwGp/0dOsrxWHEZHI5IyTS70NS+qPd0+QXU4zNID7OSXH+nADEldzWRvN?=
+ =?us-ascii?Q?WcTfGrm8TckycuYuTdURTxqiE0KwBg9WshpfOgY1vgXLi4D1Lq+y6FknYXDQ?=
+ =?us-ascii?Q?J+utVTYUUw5380NSpFbJm71vQg8VIq9FUtC8RCEmSk0Dv5CnNFBUXvG5mM0Y?=
+ =?us-ascii?Q?gf6uFFd2LWEwllFvCErX4NB7DOJVxEXPxMew/x99LwSCF3hzxpJmR8EEMb8E?=
+ =?us-ascii?Q?jSG8aEuBcRujQVN2a9pE0TP+nu989vUP3eHgPeabHVg7dE+euxXUCl8evw7S?=
+ =?us-ascii?Q?Q+huEQv6k5ImYAh0BnR6PMeRLlT69V4un71xO0W+eunNcoZENB/DF7ngy5lq?=
+ =?us-ascii?Q?WaBe9PWVbV8U15z2LiHSKtB2RJVv+NKJqIgbxgZkgxRCQw65HJievaayx7zf?=
+ =?us-ascii?Q?4sUpOhTL2ZyRHx7Wxu1kFA/FpayFdZAur+qefaPmFMsIUHUL/RLDKtSLIHyd?=
+ =?us-ascii?Q?sB40W7MR2CT1SZSfotA=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V16 4/8] drivers: perf: arm_pmuv3: Enable branch stack
- sampling via FEAT_BRBE
-Content-Language: en-US
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- will@kernel.org, catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
- James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
- <20240125094119.2542332-5-anshuman.khandual@arm.com>
- <ZdY_oEYPGSj7nwvP@FVFF77S0Q05N>
- <781dd6a8-cf18-48ab-93f3-5256d161b359@arm.com>
- <Zd8eYHbLebKLV648@FVFF77S0Q05N>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <Zd8eYHbLebKLV648@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffa584d5-2f73-42ad-932f-08dc3910f8fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2024 10:27:03.9118
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YJ9Wxs0Jj30wpTnh1wu6VS2BSiy3CTRi8057612Y4gLnlOm4xT6QodoHJP/U7y2tiaOJc4tGN6k4A0C/ysiNIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8360
 
+Hi Will,
 
+>=20
+> On Wed, Jan 31, 2024 at 01:58:08PM +0800, Xu Yang wrote:
+> > i.MX95 has a DDR PMU which is almostly same as i.MX93, it now supports
+> > read beat and write beat filter capabilities. This will add support for
+> > i.MX95 and enhance the driver to support specific filter handling for i=
+t.
+> >
+> > Usage:
+> >
+> > For read beat:
+> > ~# perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt2,counter=3D=
+3,axi_mask=3DID_MASK,axi_id=3DID/
+> > ~# perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt1,counter=3D=
+4,axi_mask=3DID_MASK,axi_id=3DID/
+> > ~# perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt0,counter=3D=
+5,axi_mask=3DID_MASK,axi_id=3DID/
+> > eg: For edma2: perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt=
+0,counter=3D5,axi_mask=3D0x00f,axi_id=3D0x00c/
+> >
+> > For write beat:
+> > ~# perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_wr_beat_filt,counter=3D2=
+,axi_mask=3DID_MASK,axi_id=3DID/
+> > eg: For edma2: perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_wr_beat_filt=
+,counter=3D2,axi_mask=3D0x00f,axi_id=3D0x00c/
+> >
+> > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> >
+> > ---
+> > Changes in v2:
+> >  - put soc spefific axi filter events to drvdata according
+> >    to franks suggestions.
+> >  - adjust pmcfg axi_id and axi_mask config
+> > Changes in v3:
+> >  - no changes
+> > Changes in v4:
+> >  - only contain imx95 parts
+> > ---
+> >  drivers/perf/fsl_imx9_ddr_perf.c | 86 +++++++++++++++++++++++++++++++-
+> >  1 file changed, 84 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_d=
+dr_perf.c
+> > index b1a58e9e1617..85aaaef7212f 100644
+> > --- a/drivers/perf/fsl_imx9_ddr_perf.c
+> > +++ b/drivers/perf/fsl_imx9_ddr_perf.c
+> > @@ -17,9 +17,19 @@
+> >  #define MX93_PMCFG1_RD_BT_FILT_EN    BIT(29)
+> >  #define MX93_PMCFG1_ID_MASK          GENMASK(17, 0)
+> >
+> > +#define MX95_PMCFG1_WR_BEAT_FILT_EN  BIT(31)
+> > +#define MX95_PMCFG1_RD_BEAT_FILT_EN  BIT(30)
+> > +
+> >  #define PMCFG2                               0x04
+> >  #define MX93_PMCFG2_ID                       GENMASK(17, 0)
+> >
+> > +#define PMCFG3                               0x08
+> > +#define PMCFG4                               0x0C
+> > +#define PMCFG5                               0x10
+> > +#define PMCFG6                               0x14
+> > +#define MX95_PMCFG_ID_MASK           GENMASK(9, 0)
+> > +#define MX95_PMCFG_ID                        GENMASK(25, 16)
+> > +
+> >  /* Global control register affects all counters and takes priority ove=
+r local control registers */
+> >  #define PMGC0                0x40
+> >  /* Global control register bits */
+> > @@ -240,6 +250,18 @@ static struct attribute *imx93_ddr_perf_events_att=
+rs[] =3D {
+> >       NULL,
+> >  };
+> >
+> > +static struct attribute *imx95_ddr_perf_events_attrs[] =3D {
+> > +     /* counter2 specific events */
+> > +     IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_wr_beat_filt, 73),
+> > +     /* counter3 specific events */
+> > +     IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt2, 73),
+> > +     /* counter4 specific events */
+> > +     IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt1, 73),
+> > +     /* counter5 specific events */
+> > +     IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt0, 73),
+> > +     NULL,
+> > +};
+> > +
+> >  PMU_FORMAT_ATTR(event, "config:0-7");
+> >  PMU_FORMAT_ATTR(counter, "config:8-15");
+> >  PMU_FORMAT_ATTR(axi_id, "config1:0-17");
+> > @@ -271,8 +293,14 @@ static const struct imx_ddr_devtype_data imx93_dev=
+type_data =3D {
+> >       .attrs =3D imx93_ddr_perf_events_attrs,
+> >  };
+> >
+> > +static const struct imx_ddr_devtype_data imx95_devtype_data =3D {
+> > +     .identifier =3D "imx95",
+> > +     .attrs =3D imx95_ddr_perf_events_attrs,
+> > +};
+> > +
+> >  static const struct of_device_id imx_ddr_pmu_dt_ids[] =3D {
+> >       { .compatible =3D "fsl,imx93-ddr-pmu", .data =3D &imx93_devtype_d=
+ata },
+> > +     { .compatible =3D "fsl,imx95-ddr-pmu", .data =3D &imx95_devtype_d=
+ata },
+> >       { /* sentinel */ }
+> >  };
+> >  MODULE_DEVICE_TABLE(of, imx_ddr_pmu_dt_ids);
+> > @@ -410,6 +438,56 @@ static void imx93_ddr_perf_monitor_config(struct d=
+dr_pmu *pmu, int cfg, int cfg1
+> >       writel(pmcfg2, pmu->base + PMCFG2);
+> >  }
+> >
+> > +static void imx95_ddr_perf_monitor_config(struct ddr_pmu *pmu, int cfg=
+, int cfg1, int cfg2)
+> > +{
+> > +     u32 pmcfg1, pmcfg, offset =3D 0;
+> > +     int event, counter;
+> > +
+> > +     event =3D cfg & 0x000000FF;
+> > +     counter =3D (cfg & 0x0000FF00) >> 8;
+> > +
+> > +     pmcfg1 =3D readl_relaxed(pmu->base + PMCFG1);
+> > +
+> > +     if (counter =3D=3D 2 && event =3D=3D 73) {
+> > +             pmcfg1 |=3D MX95_PMCFG1_WR_BEAT_FILT_EN;
+> > +             offset =3D PMCFG3;
+> > +     } else if (counter =3D=3D 2 && event !=3D 73) {
+> > +             pmcfg1 &=3D ~MX95_PMCFG1_WR_BEAT_FILT_EN;
+> > +     }
+> > +
+> > +     if (counter =3D=3D 3 && event =3D=3D 73) {
+> > +             pmcfg1 |=3D MX95_PMCFG1_RD_BEAT_FILT_EN;
+> > +             offset =3D PMCFG4;
+> > +     } else if (counter =3D=3D 3 && event !=3D 73) {
+> > +             pmcfg1 &=3D ~MX95_PMCFG1_RD_BEAT_FILT_EN;
+> > +     }
+> > +
+> > +     if (counter =3D=3D 4 && event =3D=3D 73) {
+> > +             pmcfg1 |=3D MX95_PMCFG1_RD_BEAT_FILT_EN;
+> > +             offset =3D PMCFG5;
+> > +     } else if (counter =3D=3D 4 && event !=3D 73) {
+> > +             pmcfg1 &=3D ~MX95_PMCFG1_RD_BEAT_FILT_EN;
+> > +     }
+> > +
+> > +     if (counter =3D=3D 5 && event =3D=3D 73) {
+> > +             pmcfg1 |=3D MX95_PMCFG1_RD_BEAT_FILT_EN;
+> > +             offset =3D PMCFG6;
+> > +     } else if (counter =3D=3D 5 && event !=3D 73) {
+> > +             pmcfg1 &=3D ~MX95_PMCFG1_RD_BEAT_FILT_EN;
+> > +     }
+>=20
+> I think this would be much easier to read if you rewrote it as:
+>=20
+>         switch (counter) {
+>         case 2:
+>                 ...
+>                 break;
+>         case 3:
+>=20
+>=20
+> etc.
 
-On 2/28/24 17:22, Mark Rutland wrote:
-> On Wed, Feb 28, 2024 at 01:41:05PM +0530, Anshuman Khandual wrote:
->> On 2/21/24 23:53, Mark Rutland wrote:
->>> On Thu, Jan 25, 2024 at 03:11:15PM +0530, Anshuman Khandual wrote:
-> 
->>>> +============================================
->>>> +Branch Record Buffer Extension aka FEAT_BRBE
->>>> +============================================
->>>> +
->>>> +Author: Anshuman Khandual <anshuman.khandual@arm.com>
->>>> +
->>>> +FEAT_BRBE is an optional architecture feature, which creates branch records
->>>> +containing information about change in control flow. The branch information
->>>> +contains source address, target address, and some relevant metadata related
->>>> +to that change in control flow. BRBE can be configured to filter out branch
->>>> +records based on their type and privilege level.
->>>
->>> Do we actually need this documentation?
->>
->> IMHO we do need some documentation.
->>
->>> The set of peopl writing kernel code can read the ARM ARM or the kernel code,
->>> and there's not much here useful to users.
->>
->> But not all documentation write ups in the kernel are only for the users, there
->> are examples in many subsystems where documentations help explain implementation
->> details including data structures and function flows, for upcoming developers to
->> understand the code better and make further improvements.
-> 
-> Sure, but that's for things where there are *many* kernel developers that will
-> consume this. The set of people who will modify the BRBE code in a meaningful
-> way can be counted on a hand or two, and so I don't think there's a need or
-> justification for having this detail under Documentation/.
+Okay, I will improve this.
 
-Understood.
+>=20
+> > +     writel(pmcfg1, pmu->base + PMCFG1);
+>=20
+> writel_relaxed()? (since you're already using readl_relaxed()).
 
-> 
->>> I think it may make sense to document what userspace and/or VMs can and cannot
->>> do (which is why we describe the ID registers), and any 'gotchas' (e.g.
->>> restrictions we have that other architectures don't, or vice-versa). I do not
->>
->> Agreed - such documentations must be included for better technology adoption, but
->> those are not the only type of documentation available in the kernel - even right
->> now.
->>
->>> think that we should try to describe the hardware beyond what is necessary to
->>> describe that, and I do not think that we should describe the structure of the
->>> perf code beyond what is necessary to desribe that.
->>>
->>> Otherwise, this is just a maintenance burden
->>
->> I think we should have some documentation for BRBE implementation, and if there
->> are suggestions to improve the proposed one, will be happy to change. But for
->> now, will try and rewrite the documentation with your above suggestions in mind.
-> 
-> I think that any documentation on the implementation details should be within
-> the driver itself; please limit anything under Documentation/ to be on details
-> relevant to userspace.
+Okay.
 
-Understood.
+>=20
+> > +
+> > +     if (offset) {
+> > +             pmcfg =3D readl_relaxed(pmu->base + offset);
+> > +             pmcfg &=3D ~(FIELD_PREP(MX95_PMCFG_ID_MASK, 0x3FF) |
+> > +                        FIELD_PREP(MX95_PMCFG_ID, 0x3FF));
+> > +             pmcfg |=3D (FIELD_PREP(MX95_PMCFG_ID_MASK, cfg2) |
+> > +                       FIELD_PREP(MX95_PMCFG_ID, cfg1));
+> > +             writel(pmcfg, pmu->base + offset);
+>=20
+> Similarly.
 
-> 
-> [...]
-> 
->> I believe the proposed code is already well documented but will revisit and
->> try to fill gaps if any but the point being in code documentation might not
->> be a substitute for a Documentation/arch/arm64/ based file.
-> 
-> For the moment I'm not asking that you add new comments to the BRBE code, so
-> please don't feel like you need to add anything there. I'm only asking that you
-> limit the Documentation/ coverage to details which are directly relevant to
-> userspace.
+Okay.
 
-BRBE enables perf branch stack sampling here, hence all user space related
-documentation should be done for the generic perf itself, unless there are
-arm64 specific things such as unsupported branch filters, any rationale for
-mapping the captured platform branch types into generic branch types etc. I
-will look into the Documentation/arch/arm64/brbe.rst requirement with this
-perspective, and get back with a new write up.
-
-> 
->>
->>>
->>> [...]
->>>
->>>> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
->>>> index b7afaa026842..649b926bf69d 100644
->>>> --- a/arch/arm64/include/asm/el2_setup.h
->>>> +++ b/arch/arm64/include/asm/el2_setup.h
->>>> @@ -154,6 +154,51 @@
->>>>  .Lskip_set_cptr_\@:
->>>>  .endm
->>>>  
->>>> +#ifdef CONFIG_ARM64_BRBE
->>>> +/*
->>>> + * Enable BRBE cycle count
->>>> + *
->>>> + * BRBE requires both BRBCR_EL1.CC and BRBCR_EL2.CC fields, be set
->>>> + * for the cycle counts to be available in BRBINF<N>_EL1.CC during
->>>> + * branch record processing after a PMU interrupt. This enables CC
->>>> + * field on both these registers while still executing inside EL2.
->>>> + *
->>>> + * BRBE driver would still be able to toggle branch records cycle
->>>> + * count support via BRBCR_EL1.CC field regardless of whether the
->>>> + * kernel ends up executing in EL1 or EL2.
->>>> + */
->>>> +.macro __init_el2_brbe
->>>> +	mrs	x1, id_aa64dfr0_el1
->>>> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
->>>> +	cbz	x1, .Lskip_brbe_cc_\@
->>>> +
->>>> +	mrs_s	x0, SYS_BRBCR_EL2
->>>> +	orr	x0, x0, BRBCR_ELx_CC
->>>> +	msr_s	SYS_BRBCR_EL2, x0
->>>
->>> Please initialise this to a specific value rather than using a
->>> read-modify-write.
->>
->> I will change this as follows - which will be written into both BRBCR_EL2
->> and BRBCR_EL12 registers as applicable.
->>
->>         mov     x0, xzr
->>         orr     x0, x0, #(BRBCR_ELx_CC |BRBCR_ELx_MPRED)
-> 
-> Please generate the value directly, and only use ORR for bits that need to be
-> conditionally set, e.g. the above can be:
-> 
-> 	mov_q	x0, #(BRBCR_ELx_CC | BRBCR_ELx_MPRED)
-> 	msr_s	SYS_BRBCR_EL2, x0
-
-Okay, will change as suggested above.
-
-> 
-> [...]
-> 
->>>> +/*
->>>> + * A branch record with BRBINFx_EL1.LASTFAILED set, implies that all
->>>> + * preceding consecutive branch records, that were in a transaction
->>>> + * (i.e their BRBINFx_EL1.TX set) have been aborted.
->>>> + *
->>>> + * Similarly BRBFCR_EL1.LASTFAILED set, indicate that all preceding
->>>> + * consecutive branch records up to the last record, which were in a
->>>> + * transaction (i.e their BRBINFx_EL1.TX set) have been aborted.
->>>> + *
->>>> + * --------------------------------- -------------------
->>>> + * | 00 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX success]
->>>> + * --------------------------------- -------------------
->>>> + * | 01 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX success]
->>>> + * --------------------------------- -------------------
->>>> + * | 02 | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 0 |
->>>> + * --------------------------------- -------------------
->>>> + * | 03 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
->>>> + * --------------------------------- -------------------
->>>> + * | 04 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
->>>> + * --------------------------------- -------------------
->>>> + * | 05 | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 1 |
->>>> + * --------------------------------- -------------------
->>>> + * | .. | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 0 |
->>>> + * --------------------------------- -------------------
->>>> + * | 61 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
->>>> + * --------------------------------- -------------------
->>>> + * | 62 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
->>>> + * --------------------------------- -------------------
->>>> + * | 63 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
->>>> + * --------------------------------- -------------------
->>>> + *
->>>> + * BRBFCR_EL1.LASTFAILED == 1
->>>> + *
->>>> + * BRBFCR_EL1.LASTFAILED fails all those consecutive, in transaction
->>>> + * branches records near the end of the BRBE buffer.
->>>> + *
->>>> + * Architecture does not guarantee a non transaction (TX = 0) branch
->>>> + * record between two different transactions. So it is possible that
->>>> + * a subsequent lastfailed record (TX = 0, LF = 1) might erroneously
->>>> + * mark more than required transactions as aborted.
->>>> + */
->>>> +static void process_branch_aborts(struct pmu_hw_events *cpuc)
->>>> +{
->>>> +	u64 brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
->>>> +	bool lastfailed = !!(brbfcr & BRBFCR_EL1_LASTFAILED);
->>>> +	int idx = brbe_get_numrec(cpuc->percpu_pmu->reg_brbidr) - 1;
->>>> +	struct perf_branch_entry *entry;
->>>> +
->>>> +	do {
->>>> +		entry = &cpuc->branches->branch_entries[idx];
->>>> +		if (entry->in_tx) {
->>>> +			entry->abort = lastfailed;
->>>> +		} else {
->>>> +			lastfailed = entry->abort;
->>>> +			entry->abort = false;
->>>> +		}
->>>> +	} while (idx--, idx >= 0);
->>>> +}
->>>
->>> Please consider:
->>>
->>> 1) There are no extant CPU implementations with TME.
->>> 2) There are no plans for anyone to build TME.
->>> 3) The kernel doesn't support TME.
->>>
->>> ... so why are we tryting to handle this architectural edge-case (complete with
->>> what is arguably an architectural bug!) that can only happen on a CPU with TME,
->>> under a kernel that's using TME?
->>>
->>> This cannot possibly have been tested, trivially by point 3.
->>>
->>> This is purely a maintenance and review burden.
->>>
->>> Please delete this and replace it with a comment somewhere that *if* we ever
->>> add support for TME this will need to be handled somehow.
->>
->> Alright, will drop TME handling completely.
->>
->> - Dropped process_branch_aborts() completely
->>
->> - Added an warning if transaction states get detected some how unexpectedly
->>
->>                 /*
->>                  * Currently TME feature is neither implemented in any hardware
->>                  * nor it is being supported in the kernel. Just warn here once
->>                  * if TME related information shows up rather unexpectedly.
->>                  */
->>                 if (entry->abort || entry->in_tx)
->>                         pr_warn_once("Unknown transaction states %d %d\n",
->>                                       entry->abort, entry->in_tx);
-> 
-> Something of that shape sounds good; thanks!
-
-Understood.
+Thanks,
+Xu Yang
